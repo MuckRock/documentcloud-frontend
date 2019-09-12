@@ -1,0 +1,97 @@
+
+<template>
+  <router-view></router-view>
+</template>
+
+<style>
+body {
+  font-family: Source Sans Pro, sans-serif;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body.modalopen {
+  overflow: hidden;
+}
+
+* {
+  /* Colors */
+  --primary: #4294f0;
+  --primary-faded: rgba(66, 148, 240, 0.13);
+  --sidebar: #edeeef;
+  --black: #000000;
+  --gray: rgba(0, 0, 0, 0.53);
+  --light-gray: rgba(255, 255, 255, 0.53);
+  --modal: #323232;
+  --secondary: #626262;
+  --light-primary: #eff7ff;
+  --tertiary: #0c8a01;
+
+  /* Shadows */
+  --overlay-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+
+  /* Opacity */
+  --hover-opacity: 0.8;
+
+  /* Sizes */
+  --sidebar-width: 272px;
+  --normal: 14px;
+  --small: 12px;
+  --radius: 3px;
+  --modal-horiz-padding: 42px;
+  --modal-vert-padding: 44px;
+
+  /* Animations */
+  --progress-transition: width 0.8s ease;
+
+  /* Document Viewer */
+  --document-header-height: 55px;
+  --document-body-bg: #e0e1e3;
+  --document-faded: #ffffff21;
+}
+</style>
+
+<script>
+import Vue from "vue";
+import Router from "vue-router";
+Vue.use(Router);
+
+// API apps
+import Auth from "./api/auth";
+import Document from "./api/document";
+Vue.use(Auth);
+Vue.use(Document);
+
+// Routes
+import Home from "./home/Home";
+import SignUp from "./home/SignUp";
+import Main from "./Main.vue";
+import DocumentViewer from "./document_viewer/DocumentViewer";
+
+const router = new Router({
+  mode: "history",
+  routes: [
+    {
+      path: "/",
+      component: Home,
+      name: "home"
+    },
+    {
+      path: "/signup",
+      component: SignUp,
+      name: "signup"
+    },
+    { path: "/app", component: Main, name: "app" },
+    { path: "/viewer/:id", component: DocumentViewer, name: "viewer" },
+    { path: "*", redirect: "/404" }
+  ]
+});
+
+export default {
+  router
+};
+</script>

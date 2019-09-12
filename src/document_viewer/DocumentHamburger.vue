@@ -1,0 +1,31 @@
+<template>
+  <div class="hamburger" @click="back()">
+    <img svg-inline src="../assets/document_back.svg" alt />
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    back() {
+      this.$router.push({ name: "app" });
+    }
+  }
+};
+</script>
+
+<style scoped>
+.hamburger {
+  padding: 0 45px 0 26px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.hamburger svg {
+  cursor: pointer;
+}
+
+.hamburger img:hover {
+  opacity: var(--hover-opacity);
+}
+</style>

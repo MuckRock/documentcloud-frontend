@@ -1,0 +1,46 @@
+<template>
+  <header>
+    <DocumentHamburgerTitle :doc="doc" />
+    <DocumentPaging
+      v-if="doc != null"
+      @jump="$emit('jump', $event)"
+      :currentPage="currentPage"
+      :numPages="numPages"
+    />
+    <DocumentZoomSearch v-if="doc != null" @zoom="$emit('zoom', $event)" />
+  </header>
+</template>
+
+<style scoped>
+header {
+  background: var(--primary);
+  color: white;
+  position: sticky;
+  top: 0;
+  height: var(--document-header-height);
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
+
+<script>
+import DocumentHamburgerTitle from "./DocumentHamburgerTitle";
+import DocumentPaging from "./DocumentPaging";
+import DocumentZoomSearch from "./DocumentZoomSearch";
+
+export default {
+  components: {
+    DocumentHamburgerTitle,
+    DocumentPaging,
+    DocumentZoomSearch
+  },
+  props: {
+    numPages: Number,
+    currentPage: Number,
+    doc: Object
+  }
+};
+</script>
