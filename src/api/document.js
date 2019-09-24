@@ -2,6 +2,10 @@ import session from './session';
 import wrapLoad from './wrapload';
 import {timeout} from '../api';
 
+let processingStarts = {};
+
+const MAX_PROCESSING_PROGRESS = 0.5;
+
 function calculateProcessingProgress(doc) {
   const pageCount = doc.pages;
   if (pageCount == 0) return 0;
@@ -11,10 +15,22 @@ function calculateProcessingProgress(doc) {
 
   if (imagesRemaining < 0) imagesRemaining = 0;
   if (textsRemaining < 0) textsRemaining = 0;
-  return (pageCount - imagesRemaining + (pageCount - textsRemaining)) / 2 / pageCount;
+
+  const strictProgress =
+    (pageCount - imagesRemaining + (pageCount - textsRemaining)) / 2 / pageCount;
+  const timeElapsed = (Date.now() - processingStarts[doc.id]) / 1000;
+  const timeProgress = timeElapsed / (timeElapsed + 1);
+  const progress =
+    strictProgress * MAX_PROCESSING_PROGRESS +
+    timeProgress * (1 - MAX_PROCESSING_PROGRESS);
+
+  return progress;
 }
 
 function convertDoc(doc) {
+  if (processingStarts[doc.id] == null) {
+    processingStarts[doc.id] = Date.now();
+  }
   return {
     id: doc.id,
     title: doc.title,
@@ -29,12 +45,15 @@ function convertDoc(doc) {
     processing: {
       done: doc.access != 'pending',
       loading: false,
+      imagesRemaining: doc.images_remaining,
+      textsRemaining: doc.texts_remaining,
       progress: calculateProcessingProgress(doc),
     },
   };
 }
 
-const PROGRESS_COMPLETE = 0.99;
+const PROGRESS_COMPLETE = 0.5;
+// const STATIC_PROGRESS_DELAY = 2500;
 
 const POLL_TIMEOUT = 4000;
 
@@ -45,7 +64,6 @@ export default {
     Vue.API.getDocuments = wrapLoad(async function() {
       const {data} = await session.get('/api/search/');
       const documents = data.documents;
-      window.console.log(documents[0]);
       return documents.map(doc => convertDoc(doc));
     });
 
@@ -56,7 +74,6 @@ export default {
 
     Vue.API.pollDocument = async function(id, docFn, doneFn) {
       const doc = await Vue.API.getDocument(null, id);
-      window.console.log('polled', doc);
       docFn(doc);
       if (doc.processing.done) {
         doneFn(doc);
@@ -80,7 +97,13 @@ export default {
       const progresses = [];
       const toComplete = [];
       for (let i = 0; i < docs.length; i++) {
-        progresses.push({index: i, progress: 0});
+        progresses.push({
+          index: i,
+          progress: 0,
+          startTime: Date.now(),
+          completeTime: null,
+          interval: null,
+        });
         toComplete.push(i);
       }
 
@@ -88,13 +111,10 @@ export default {
         const formData = new FormData();
         const file = docs[i].file;
         const name = docs[i].name;
-        window.console.log(file, name);
         formData.append('file', file);
         formData.append('title', name);
         formData.append('progress_updates', 'true');
 
-        window.console.log(document.cookie);
-        window.debugger;
         session
           .post('/api/upload/', formData, {
             headers: {
@@ -102,6 +122,31 @@ export default {
             },
             onUploadProgress: progressEvent => {
               // Handle upload progress
+              if (progressEvent.loaded == progressEvent.total) {
+                // Fully loaded. Simulate extra time delay for now.
+                if (progresses[i].completeTime == null) {
+                  progresses[i].completeTime = Date.now();
+                }
+                if (progresses[i].interval == null) {
+                  progresses[i].interval = setInterval(() => {
+                    const timeElapsedSinceCompletion =
+                      (Date.now() - progresses[i].completeTime) / 1000;
+                    // let newProgress =
+                    //   timeElapsedSinceCompletion /
+                    //   (progresses[i].completeTime -
+                    //     progresses[i].startTime +
+                    //     STATIC_PROGRESS_DELAY);
+                    let newProgress =
+                      timeElapsedSinceCompletion / (timeElapsedSinceCompletion + 1);
+                    newProgress =
+                      PROGRESS_COMPLETE + newProgress * (1 - PROGRESS_COMPLETE);
+                    if (newProgress > 1) newProgress = 1;
+                    progresses[i].progress = newProgress;
+                    progressFn(i, newProgress);
+                  }, 50);
+                }
+                return;
+              }
               const progress =
                 (progressEvent.loaded / progressEvent.total) * PROGRESS_COMPLETE;
               progresses[i].progress = progress;
@@ -109,8 +154,12 @@ export default {
             },
           })
           .then(response => {
-            window.console.log(response.data);
             // Handle complete upload
+            if (progresses[i].interval != null) {
+              // Clear existing fake timer.
+              clearTimeout(progresses[i].interval);
+              progresses[i].interval = null;
+            }
             for (let j = 0; j < toComplete.length; j++) {
               if (toComplete[j] == i) {
                 toComplete.splice(j, 1);

@@ -7,7 +7,12 @@
       :currentPage="currentPage"
       :numPages="numPages"
     />
-    <DocumentZoomSearch v-if="doc != null" @zoom="$emit('zoom', $event)" />
+    <DocumentControls
+      v-if="doc != null"
+      @zoom="$emit('zoom', $event)"
+      @mode="$emit('mode', $event)"
+      :mode="mode"
+    />
   </header>
 </template>
 
@@ -29,18 +34,19 @@ header {
 <script>
 import DocumentHamburgerTitle from "./DocumentHamburgerTitle";
 import DocumentPaging from "./DocumentPaging";
-import DocumentZoomSearch from "./DocumentZoomSearch";
+import DocumentControls from "./DocumentControls";
 
 export default {
   components: {
     DocumentHamburgerTitle,
     DocumentPaging,
-    DocumentZoomSearch
+    DocumentControls
   },
   props: {
     numPages: Number,
     currentPage: Number,
-    doc: Object
+    doc: Object,
+    mode: String
   }
 };
 </script>

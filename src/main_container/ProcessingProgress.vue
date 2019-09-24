@@ -43,7 +43,13 @@ export default {
   },
   computed: {
     percent() {
-      return `${Math.floor(this.processing.progress * 100)}%`;
+      if (this.processing.progress < 0.3) {
+        return "Extracting document information";
+      } else if (this.processing.progress < 0.6) {
+        return "Extracting images";
+      } else {
+        return "Extracting text";
+      }
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="doc">
     <div class="thumb">
-      <img v-if="doc.thumbnail != null" :src="doc.thumbnail" alt />
+      <PollImage v-if="doc.thumbnail != null" :src="doc.thumbnail" />
     </div>
     <div class="info">
       <h2>{{doc.title}}</h2>
@@ -23,9 +23,10 @@
 <script>
 import ProcessingProgress from "./ProcessingProgress";
 import Button from "../common/Button";
+import PollImage from "../common/PollImage";
 
 export default {
-  components: { ProcessingProgress, Button },
+  components: { ProcessingProgress, Button, PollImage },
   props: { doc: Object }
 };
 </script>

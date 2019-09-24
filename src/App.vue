@@ -52,6 +52,7 @@ body.modalopen {
   --document-header-height: 55px;
   --document-body-bg: #e0e1e3;
   --document-faded: #ffffff21;
+  --document-selected: #00000021;
 }
 </style>
 

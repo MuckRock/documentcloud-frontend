@@ -63,6 +63,7 @@ export default {
       }
     },
     handleDocFinishedProcessing(doc) {
+      window.console.log("handle doc finished", doc);
       this.documents.push(doc);
     }
   }

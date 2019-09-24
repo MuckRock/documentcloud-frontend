@@ -5,6 +5,7 @@
       :key="page.number"
       :page="page"
       :zoomLevel="zoomLevel"
+      :mode="mode"
       :horizontalPadding="pageHorizontalPadding"
     />
   </div>
@@ -29,7 +30,8 @@ export default {
   props: {
     pages: Array,
     currentPage: Number,
-    zoomLevel: Number
+    zoomLevel: Number,
+    mode: String
   },
   data() {
     return {

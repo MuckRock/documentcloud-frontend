@@ -103,6 +103,7 @@ export default {
             const pDoc = this.processingDocs[i];
             if (pDoc.id == doc.id) {
               this.processingDocs[i].processing = newDoc.processing;
+              this.processingDocs[i].pageCount = newDoc.pageCount;
               return;
             }
           }
@@ -113,7 +114,7 @@ export default {
             const pDoc = this.processingDocs[i];
             if (pDoc.id == doc.id) {
               this.processingDocs.splice(i, 1);
-              return;
+              break;
             }
           }
           this.$emit("docFinishedProcessing", doc);
