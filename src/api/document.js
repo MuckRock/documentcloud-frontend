@@ -1,6 +1,6 @@
 import session from './session';
 import wrapLoad from './wrapload';
-import {timeout} from '../api';
+import { timeout } from '../api';
 
 let processingStarts = {};
 
@@ -53,7 +53,6 @@ function convertDoc(doc) {
 }
 
 const PROGRESS_COMPLETE = 0.5;
-// const STATIC_PROGRESS_DELAY = 2500;
 
 const POLL_TIMEOUT = 4000;
 
@@ -61,18 +60,18 @@ export default {
   install(Vue) {
     if (Vue.API == null) Vue.API = {};
 
-    Vue.API.getDocuments = wrapLoad(async function() {
-      const {data} = await session.get('/api/search/');
-      const documents = data.documents;
+    Vue.API.getDocuments = wrapLoad(async function () {
+      const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'documents/');
+      const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
 
-    Vue.API.getDocument = wrapLoad(async function(id) {
-      const {data} = await session.get(`/api/documents/${id}`);
+    Vue.API.getDocument = wrapLoad(async function (id) {
+      const { data } = await session.get(`/api/documents/${id}`);
       return convertDoc(data.document);
     });
 
-    Vue.API.pollDocument = async function(id, docFn, doneFn) {
+    Vue.API.pollDocument = async function (id, docFn, doneFn) {
       const doc = await Vue.API.getDocument(null, id);
       docFn(doc);
       if (doc.processing.done) {
@@ -83,11 +82,11 @@ export default {
       Vue.API.pollDocument(id, docFn, doneFn);
     };
 
-    Vue.API.deleteDocument = wrapLoad(async function(document) {
+    Vue.API.deleteDocument = wrapLoad(async function (document) {
       await session.delete(`/api/documents/${document.id}/`);
     });
 
-    Vue.API.uploadDocuments = wrapLoad(async function(
+    Vue.API.uploadDocuments = wrapLoad(async function (
       docs,
       progressFn,
       completeFn,

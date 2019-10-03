@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Loader :active="signingIn">
     <div class="container">
       <header>
         <div class="headercontents">
@@ -9,7 +9,9 @@
             </router-link>
           </div>
           <div class="signupcontainer" v-if="!$auth.isAuthenticated">
-            <div class="signin">Sign in</div>
+            <div class="signin">
+              <a :href="squareletUrl">Sign in</a>
+            </div>
             <router-link :to="{name: 'signup'}">
               <Button>Sign up</Button>
             </router-link>
@@ -30,7 +32,7 @@
         <slot></slot>
       </div>
     </div>
-  </div>
+  </Loader>
 </template>
 
 <style scoped>
@@ -127,18 +129,36 @@ header {
 <script>
 import Button from "../common/Button";
 import Vue from "vue";
+import Loader from "../common/Loader";
 
 export default {
-  components: { Button },
+  components: { Button, Loader },
   props: {
     showMast: {
       type: Boolean,
       default: false
     }
   },
+  data() {
+    return {
+      squareletUrl: process.env.VUE_APP_SQUARELET_URL,
+      signingIn: false
+    };
+  },
   methods: {
     async logout() {
       await Vue.API.logout(null);
+    }
+  },
+  async mounted() {
+    const code = this.$route.query.code;
+    if (code != null) {
+      this.signingIn = true;
+      await Vue.API.login(null, code);
+      this.signingIn = false;
+      if (this.$auth.isAuthenticated) {
+        this.$router.replace({ name: "home" });
+      }
     }
   }
 };
