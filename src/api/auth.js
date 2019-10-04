@@ -19,28 +19,19 @@ export default {
     });
 
     if (Vue.API == null) Vue.API = {};
-    Vue.API.createAccount = wrapLoad(async function(
-      firstName,
-      lastName,
-      email,
-      password
-    ) {
-      const {data} = await session.post('registration/', {
-        first_name: firstName,
-        last_name: lastName,
-        password1: password,
-        password2: password,
-        email,
+
+    Vue.API.login = wrapLoad(async function (code) {
+      const { data } = await session.post(process.env.VUE_APP_API_SERVER + 'login/social/jwt-pair/', {
+        provider: process.env.VUE_APP_SQUARELET_PROVIDER,
+        code
       });
-      setToken(data.key);
+      setToken(data.token);
     });
 
-    Vue.API.logout = wrapLoad(async function() {
-      try {
-        await session.post('/auth/logout/', {});
-      } finally {
-        removeToken();
-      }
+    Vue.API.logout = wrapLoad(async function () {
+      // TODO: use some Squarelet method and have a finally clause of removeToken()
+      // for now, we just "forget" we're logged in
+      removeToken();
     });
 
     // Token methods
@@ -82,59 +73,3 @@ export default {
     initialize();
   },
 };
-
-// const _a = {
-//   data() {
-//     return {
-//       authUser: null,
-//     };
-//   },
-//   created() {
-//     this.initialize();
-//   },
-//   methods: {
-//     // Auth methods
-//     async createAccount(firstName, lastName, email, password) {
-//       const {data} = await session.post('registration/', {
-//         first_name: firstName,
-//         last_name: lastName,
-//         password1: password,
-//         password2: password,
-//         email,
-//       });
-//       this.setToken(data.key);
-//     },
-
-//     // Token internal methods
-//     initialize() {
-//       try {
-//         const storedData = localStorage.getItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY);
-//         if (storedData == null) {
-//           // Logged in
-//           return;
-//         }
-//         if (storedData != null) {
-//           const userData = JSON.parse(storedData);
-//           this.setToken(userData);
-//           return;
-//         }
-//       } catch (e) {
-//         this.removeToken();
-//         return;
-//       }
-
-//       this.removeToken();
-//       return;
-//     },
-//     setToken(userData) {
-//       // Set the token state.
-//       localStorage.setItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY, JSON.stringify(userData));
-//       this.authUser = userData;
-//     },
-//     removeToken() {
-//       localStorage.removeItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY);
-//       delete session.defaults.headers.Authorization;
-//       this.authUser = null;
-//     },
-//   },
-// };
