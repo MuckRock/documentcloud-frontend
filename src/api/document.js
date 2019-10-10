@@ -60,6 +60,12 @@ export default {
   install(Vue) {
     if (Vue.API == null) Vue.API = {};
 
+    Vue.API.getMe = wrapLoad(async function () {
+      const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'users/me');
+      window.console.log('GOT', data);
+      // return documents.map(doc => convertDoc(doc));
+    });
+
     Vue.API.getDocuments = wrapLoad(async function () {
       const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'documents/');
       const documents = data.results;

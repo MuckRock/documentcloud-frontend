@@ -151,13 +151,14 @@ export default {
     }
   },
   async mounted() {
+    // Check for
     const code = this.$route.query.code;
     if (code != null) {
       this.signingIn = true;
       await Vue.API.login(null, code);
       this.signingIn = false;
       if (this.$auth.isAuthenticated) {
-        this.$router.replace({ name: "home" });
+        this.$router.replace({ name: "app" });
       }
     }
   }

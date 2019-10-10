@@ -11,10 +11,10 @@ services:
     networks:
       default:
         aliases:
-          - dev.documentcloud.org
+          - www.dev.documentcloud.org
       squarelet_default:
         aliases:
-          - dev.documentcloud.org
+          - www.dev.documentcloud.org
   
 volumes:
   nodemodules:

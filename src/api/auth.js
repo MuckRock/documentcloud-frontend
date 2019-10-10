@@ -20,12 +20,14 @@ export default {
 
     if (Vue.API == null) Vue.API = {};
 
-    Vue.API.login = wrapLoad(async function (code) {
-      const { data } = await session.post(process.env.VUE_APP_API_SERVER + 'login/social/jwt-pair/', {
-        provider: process.env.VUE_APP_SQUARELET_PROVIDER,
-        code
-      });
-      setToken(data.token);
+    Vue.API.login = wrapLoad(async function () {
+      // window.console.log(session);
+      setToken(true);
+      // const { data } = await session.post(process.env.VUE_APP_API_SERVER + 'login/social/jwt-pair/', {
+      //   provider: process.env.VUE_APP_SQUARELET_PROVIDER,
+      //   code
+      // });
+      // setToken(data.token);
     });
 
     Vue.API.logout = wrapLoad(async function () {
@@ -60,13 +62,13 @@ export default {
       localStorage.setItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY, JSON.stringify(key));
 
       // Set the default session header.
-      session.defaults.headers.Authorization = `Token ${key}`;
+      // session.defaults.headers.Authorization = `Token ${key}`;
 
       Vue.prototype.$auth.key = key;
     }
     function removeToken() {
       localStorage.removeItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY);
-      delete session.defaults.headers.Authorization;
+      // delete session.defaults.headers.Authorization;
       Vue.prototype.$auth.key = null;
     }
 

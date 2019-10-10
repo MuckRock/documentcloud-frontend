@@ -48,6 +48,7 @@ export default {
     },
     async loadDocs() {
       this.documents = (await Vue.API.getDocuments(null)) || [];
+      await Vue.API.getMe();
       this.loadingDocs = false;
     },
     async handleDelete(doc) {
