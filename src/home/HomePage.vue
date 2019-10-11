@@ -10,11 +10,11 @@
           </div>
           <div class="signupcontainer" v-if="!$auth.isAuthenticated">
             <div class="signin">
-              <a :href="squareletUrl">Sign in</a>
+              <a :href="signInUrl">Sign in</a>
             </div>
-            <router-link :to="{name: 'signup'}">
+            <a :href="signUpUrl">
               <Button>Sign up</Button>
-            </router-link>
+            </a>
           </div>
           <div class="signupcontainer" v-if="$auth.isAuthenticated">
             <div class="signin" @click="logout()">Log out</div>
@@ -141,7 +141,11 @@ export default {
   },
   data() {
     return {
-      squareletUrl: process.env.VUE_APP_SQUARELET_URL,
+      signInUrl: process.env.VUE_APP_DC_BASE + process.env.VUE_APP_DC_LOGIN,
+      signUpUrl:
+        process.env.VUE_APP_SQUARELET_BASE +
+        process.env.VUE_APP_SQUARELET_SIGNUP +
+        encodeURIComponent(window.location.href),
       signingIn: false
     };
   },

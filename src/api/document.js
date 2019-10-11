@@ -61,13 +61,13 @@ export default {
     if (Vue.API == null) Vue.API = {};
 
     Vue.API.getMe = wrapLoad(async function () {
-      const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'users/me');
-      window.console.log('GOT', data);
+      const { data } = await session.get(Vue.API.apiUrl + 'users/me');
+      window.console.log('user profile', data);
       // return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocuments = wrapLoad(async function () {
-      const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'documents/');
+      const { data } = await session.get(Vue.API.apiUrl + 'documents/');
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });

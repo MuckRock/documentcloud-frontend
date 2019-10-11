@@ -62,14 +62,15 @@ import Router from "vue-router";
 Vue.use(Router);
 
 // API apps
+import ApiBase from "./api/base";
 import Auth from "./api/auth";
 import Document from "./api/document";
+Vue.use(ApiBase);
 Vue.use(Auth);
 Vue.use(Document);
 
 // Routes
 import Home from "./home/Home";
-import SignUp from "./home/SignUp";
 import Main from "./Main.vue";
 import DocumentViewer from "./document_viewer/DocumentViewer";
 
@@ -80,11 +81,6 @@ const router = new Router({
       path: "/",
       component: Home,
       name: "home"
-    },
-    {
-      path: "/signup",
-      component: SignUp,
-      name: "signup"
     },
     { path: "/app", component: Main, name: "app" },
     { path: "/viewer/:id", component: DocumentViewer, name: "viewer" },
