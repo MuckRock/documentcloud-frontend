@@ -7,10 +7,10 @@ let processingStarts = {};
 const MAX_PROCESSING_PROGRESS = 0.5;
 
 function calculateProcessingProgress(doc) {
-  const pageCount = doc.pages;
+  const pageCount = doc.page_count;
   if (pageCount == 0) return 0;
-  let imagesRemaining = doc.images_remaining;
-  let textsRemaining = doc.texts_remaining;
+  let imagesRemaining = parseInt(doc.images_remaining, 10);
+  let textsRemaining = parseInt(doc.texts_remaining, 10);
   if (imagesRemaining == null || textsRemaining == null) return 0;
 
   if (imagesRemaining < 0) imagesRemaining = 0;
@@ -28,25 +28,26 @@ function calculateProcessingProgress(doc) {
 }
 
 function convertDoc(doc) {
+  window.console.log(doc);
   if (processingStarts[doc.id] == null) {
     processingStarts[doc.id] = Date.now();
   }
   return {
     id: doc.id,
     title: doc.title,
-    pageCount: doc.pages,
-    thumbnail: doc.resources.thumbnail.replace('-thumbnail.gif', '-normal.gif'),
-    contributor: doc.contributor,
-    organization: 'DocumentCloud',
-    createdAt: doc.created_at
-      .split(' ')
-      .slice(1, 4)
-      .join(' '),
+    pageCount: doc.page_count,
+    thumbnail: null, // TODO: Get thumbnail (doc.resources && doc.resources.thumbnail && doc.resources.thumbnail.replace('-thumbnail.gif', '-normal.gif'),)
+    contributor: '', // TODO: get contributor (doc.contributor,)
+    organization: '', // TODO: get organization ('DocumentCloud'),
+    createdAt: doc.created_at, // TODO: parse time format
     processing: {
-      done: doc.access != 'pending',
+      done: doc.status != 'pending' || (
+        parseInt(doc.images_remaining, 10) == 0 &&
+        parseInt(doc.texts_remaining, 10) == 0
+      ),
       loading: false,
-      imagesRemaining: doc.images_remaining,
-      textsRemaining: doc.texts_remaining,
+      imagesRemaining: parseInt(doc.images_remaining, 10),
+      textsRemaining: parseInt(doc.texts_remaining, 10),
       progress: calculateProcessingProgress(doc),
     },
   };
@@ -61,20 +62,23 @@ export default {
     if (Vue.API == null) Vue.API = {};
 
     Vue.API.getMe = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.apiUrl + 'users/me');
+      const { data } = await session.get(Vue.API.url('users/me'));
       window.console.log('user profile', data);
       // return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.apiUrl + 'documents/');
+      const { data } = await session.get(Vue.API.url('documents/'));
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocument = wrapLoad(async function (id) {
-      const { data } = await session.get(`/api/documents/${id}`);
-      return convertDoc(data.document);
+      return null;
+      window.console.log("REQUESTING DOC", id);
+      const { data } = await session.get(Vue.API.url(`documents/${id}/`));
+      window.console.log("RAW", data);
+      return convertDoc(data);
     });
 
     Vue.API.pollDocument = async function (id, docFn, doneFn) {
@@ -89,7 +93,7 @@ export default {
     };
 
     Vue.API.deleteDocument = wrapLoad(async function (document) {
-      await session.delete(`/api/documents/${document.id}/`);
+      await session.delete(Vue.API.url(`documents/${document.id}/`));
     });
 
     Vue.API.uploadDocuments = wrapLoad(async function (
@@ -121,7 +125,7 @@ export default {
         formData.append('progress_updates', 'true');
 
         session
-          .post('/api/upload/', formData, {
+          .post(Vue.API.url('documents/'), formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
