@@ -4,10 +4,8 @@ import { timeout } from '../api';
 
 let processingStarts = {};
 
-const MAX_PROCESSING_PROGRESS = 0.5;
-
 function calculateProcessingProgress(doc) {
-  const pageCount = doc.pages;
+  const pageCount = doc.page_count;
   if (pageCount == 0) return 0;
   let imagesRemaining = doc.images_remaining;
   let textsRemaining = doc.texts_remaining;
@@ -16,37 +14,36 @@ function calculateProcessingProgress(doc) {
   if (imagesRemaining < 0) imagesRemaining = 0;
   if (textsRemaining < 0) textsRemaining = 0;
 
-  const strictProgress =
-    (pageCount - imagesRemaining + (pageCount - textsRemaining)) / 2 / pageCount;
-  const timeElapsed = (Date.now() - processingStarts[doc.id]) / 1000;
-  const timeProgress = timeElapsed / (timeElapsed + 1);
   const progress =
-    strictProgress * MAX_PROCESSING_PROGRESS +
-    timeProgress * (1 - MAX_PROCESSING_PROGRESS);
+    (pageCount - imagesRemaining + (pageCount - textsRemaining)) / 2 / pageCount;
 
   return progress;
 }
 
 function convertDoc(doc) {
+  window.console.log(doc);
   if (processingStarts[doc.id] == null) {
     processingStarts[doc.id] = Date.now();
   }
   return {
     id: doc.id,
+    slug: doc.slug,
+    slugId: [doc.id, doc.slug].join('-'),
     title: doc.title,
-    pageCount: doc.pages,
-    thumbnail: doc.resources.thumbnail.replace('-thumbnail.gif', '-normal.gif'),
-    contributor: doc.contributor,
-    organization: 'DocumentCloud',
-    createdAt: doc.created_at
-      .split(' ')
-      .slice(1, 4)
-      .join(' '),
+    pageCount: doc.page_count,
+    thumbnail: null, // TODO: Get thumbnail (doc.resources && doc.resources.thumbnail && doc.resources.thumbnail.replace('-thumbnail.gif', '-normal.gif'),)
+    contributor: '', // TODO: get contributor (doc.contributor,)
+    organization: '', // TODO: get organization ('DocumentCloud'),
+    createdAt: doc.created_at, // TODO: parse time format
     processing: {
-      done: doc.access != 'pending',
+      done: doc.status != 'pending' || (
+        doc.images_remaining == 0 &&
+        doc.texts_remaining == 0
+      ),
       loading: false,
       imagesRemaining: doc.images_remaining,
       textsRemaining: doc.texts_remaining,
+      totalPages: doc.page_count,
       progress: calculateProcessingProgress(doc),
     },
   };
@@ -54,27 +51,27 @@ function convertDoc(doc) {
 
 const PROGRESS_COMPLETE = 0.5;
 
-const POLL_TIMEOUT = 4000;
+const POLL_TIMEOUT = 1200;
 
 export default {
   install(Vue) {
     if (Vue.API == null) Vue.API = {};
 
     Vue.API.getMe = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.apiUrl + 'users/me');
+      const { data } = await session.get(Vue.API.url('users/me'));
       window.console.log('user profile', data);
       // return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.apiUrl + 'documents/');
+      const { data } = await session.get(Vue.API.url('documents/'));
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocument = wrapLoad(async function (id) {
-      const { data } = await session.get(`/api/documents/${id}`);
-      return convertDoc(data.document);
+      const { data } = await session.get(Vue.API.url(`documents/${id}/`));
+      return convertDoc(data);
     });
 
     Vue.API.pollDocument = async function (id, docFn, doneFn) {
@@ -89,7 +86,7 @@ export default {
     };
 
     Vue.API.deleteDocument = wrapLoad(async function (document) {
-      await session.delete(`/api/documents/${document.id}/`);
+      await session.delete(Vue.API.url(`documents/${document.id}/`));
     });
 
     Vue.API.uploadDocuments = wrapLoad(async function (
@@ -121,37 +118,12 @@ export default {
         formData.append('progress_updates', 'true');
 
         session
-          .post('/api/upload/', formData, {
+          .post(Vue.API.url('documents/'), formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
             onUploadProgress: progressEvent => {
               // Handle upload progress
-              if (progressEvent.loaded == progressEvent.total) {
-                // Fully loaded. Simulate extra time delay for now.
-                if (progresses[i].completeTime == null) {
-                  progresses[i].completeTime = Date.now();
-                }
-                if (progresses[i].interval == null) {
-                  progresses[i].interval = setInterval(() => {
-                    const timeElapsedSinceCompletion =
-                      (Date.now() - progresses[i].completeTime) / 1000;
-                    // let newProgress =
-                    //   timeElapsedSinceCompletion /
-                    //   (progresses[i].completeTime -
-                    //     progresses[i].startTime +
-                    //     STATIC_PROGRESS_DELAY);
-                    let newProgress =
-                      timeElapsedSinceCompletion / (timeElapsedSinceCompletion + 1);
-                    newProgress =
-                      PROGRESS_COMPLETE + newProgress * (1 - PROGRESS_COMPLETE);
-                    if (newProgress > 1) newProgress = 1;
-                    progresses[i].progress = newProgress;
-                    progressFn(i, newProgress);
-                  }, 50);
-                }
-                return;
-              }
               const progress =
                 (progressEvent.loaded / progressEvent.total) * PROGRESS_COMPLETE;
               progresses[i].progress = progress;

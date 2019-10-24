@@ -26,7 +26,7 @@ import DocumentBody from "./DocumentBody";
 import { pageSizesFromSpec } from "./pagesize.js";
 import Vue from "vue";
 
-const CLOUD_PREFIX = "https://documentcloud-staging-files.s3.amazonaws.com";
+const CLOUD_PREFIX = process.env.VUE_APP_STATIC_BASE;
 
 export default {
   components: { DocumentHeader, DocumentBody },
