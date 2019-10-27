@@ -98,10 +98,11 @@ export default {
     },
     open() {
       if (this.context.show) return;
+      window.console.log(this.document);
       this.$router.push({
         name: "viewer",
         params: {
-          id: this.document.id
+          id: this.document.slugId
         }
       });
     }

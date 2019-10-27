@@ -3,7 +3,7 @@
     <div class="bar">
       <div class="inner" :style="{width: `${processing.progress * 100}%`}"></div>
     </div>
-    <p class="status">{{percent}}</p>
+    <p class="status">{{progressMsg}}</p>
   </div>
 </template>
 
@@ -42,14 +42,46 @@ export default {
     processing: Object
   },
   computed: {
-    percent() {
-      if (this.processing.progress < 0.3) {
+    imagesProcessed() {
+      if (this.processing.totalPages == 0) return 0;
+      return this.processing.totalPages - this.processing.imagesRemaining;
+    },
+    textsProcessed() {
+      if (this.processing.totalPages == 0) return 0;
+      return this.processing.totalPages - this.processing.textsRemaining;
+    },
+    imageProgress() {
+      if (this.processing.totalPages == 0) return 0;
+      return this.imagesProcessed / this.processing.totalPages;
+    },
+    textProgress() {
+      if (this.processing.totalPages == 0) return 0;
+      return this.textsProcessed / this.processing.totalPages;
+    },
+    progressMsg() {
+      if (this.processing.totalPages == 0) {
         return "Extracting document information";
-      } else if (this.processing.progress < 0.6) {
-        return "Extracting images";
-      } else {
-        return "Extracting text";
       }
+
+      // Come up with a message
+      const parts = [];
+      if (this.processing.imagesRemaining > 0) {
+        parts.push(
+          `processing images (${this.imagesProcessed}/${this.processing.totalPages})`
+        );
+      }
+      if (this.processing.textsRemaining > 0) {
+        parts.push(
+          `processing text (${this.textsProcessed}/${this.processing.totalPages})`
+        );
+      }
+
+      if (parts.length == 0) {
+        return "Done processing";
+      }
+
+      const result = parts.join(", ");
+      return result.charAt(0).toUpperCase() + result.slice(1);
     }
   }
 };
