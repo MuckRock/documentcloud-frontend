@@ -129,7 +129,6 @@ export default {
           this.uploadFiles[index].progress = progress;
         },
         (document, index) => {
-          window.console.log("GOT DOC", document);
           // Complete handler
           this.uploadFiles[index].done = true;
           this.$emit("docUploaded", document);
@@ -139,37 +138,6 @@ export default {
           this.$emit("allUploaded");
         }
       );
-      // const uploadRequest = new UploadRequest(
-      //   this.files,
-      //   (index, progress) => {
-      //     // Progress handler
-      //     this.uploadFiles[index].progress = progress;
-      //   },
-      //   (index, id) => {
-      //     // Complete handler
-      //     this.uploadFiles[index].done = true;
-      //     this.$emit("docUploaded", {
-      //       title: "Doc4",
-      //       contributor: "Dylan Freedman",
-      //       organization: "DocumentCloud",
-      //       uploadDate: "Sep 6, 2019",
-      //       pageCount: null,
-      //       thumbnail: null,
-      //       id,
-      //       processing: {
-      //         textsProcessed: 0,
-      //         imagesProcessed: 0,
-      //         progress: 0,
-      //         done: false
-      //       }
-      //     });
-      //   },
-      //   () => {
-      //     // All complete handler
-      //     this.$emit("allUploaded");
-      //   }
-      // );
-      // uploadRequest.upload();
     }
   }
 };

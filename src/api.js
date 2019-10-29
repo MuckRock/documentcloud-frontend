@@ -27,7 +27,7 @@ export class UploadRequest {
     // Set initial progresses
     this.progresses = [];
     for (let i = 0; i < this.docs.length; i++) {
-      this.progresses.push({index: i, progress: 0});
+      this.progresses.push({ index: i, progress: 0 });
     }
   }
 
@@ -71,84 +71,5 @@ export class UploadRequest {
 
   upload() {
     setTimeout(() => this._updateProgress(), 100);
-  }
-}
-
-export class ProcessingRequest {
-  constructor(docId) {
-    this.docId = docId;
-
-    this.pageCount = null;
-    this.thumbnail = null;
-    this.imagesProcessed = 0;
-    this.textsProcessed = 0;
-
-    setTimeout(() => this.sendPageCount(), 500);
-  }
-
-  async requestProgress(doc) {
-    if (doc.processing == null) return;
-    await timeout(200);
-    if (this.pageCount > 0) {
-      doc.pageCount = this.pageCount;
-      doc.processing.imagesProcessed = this.imagesProcessed;
-      doc.processing.textsProcessed = this.textsProcessed;
-      doc.processing.progress =
-        (this.imagesProcessed + this.textsProcessed) / (this.pageCount * 2);
-      if (
-        this.imagesProcessed >= this.pageCount &&
-        this.textsProcessed >= this.pageCount
-      ) {
-        doc.processing.done = true;
-      }
-    } else {
-      doc.processing.progress = 0;
-    }
-    if (this.thumbnail != null) {
-      doc.thumbnail = this.thumbnail;
-    }
-  }
-
-  // Continually update doc until done
-  async progressLoop(doc) {
-    await this.requestProgress(doc);
-    if (doc.processing.done) return;
-    setTimeout(() => this.progressLoop(doc), 500);
-  }
-
-  sendProgressUpdate() {
-    setTimeout(() => {
-      if (Math.random() < 0.7) {
-        this.sendImageUpdate();
-      } else {
-        this.sendTextUpdate();
-      }
-    }, Math.random() * 700 + 300);
-  }
-
-  sendTextUpdate() {
-    if (this.textsProcessed < this.pageCount) {
-      this.textsProcessed++;
-    }
-    this.sendProgressUpdate();
-  }
-
-  sendImageUpdate() {
-    if (this.imagesProcessed < this.pageCount) {
-      this.imagesProcessed++;
-    }
-    this.sendProgressUpdate();
-  }
-
-  sendPageCount() {
-    this.pageCount = Math.floor(Math.random() * 20 + 1);
-
-    setTimeout(() => this.sendThumbnail(), 500);
-  }
-
-  sendThumbnail() {
-    this.thumbnail =
-      'https://www.documentcloud.org/documents/5973280/pages/doc4-p1-normal.gif';
-    this.sendProgressUpdate();
   }
 }

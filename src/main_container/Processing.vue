@@ -27,8 +27,7 @@ export default {
   },
   computed: {
     processing() {
-      window.console.log(this.docs);
-      return this.docs.filter(doc => !doc.processing.done);
+      return this.docs.filter(doc => !doc.doneProcessing);
     },
     done() {
       return this.processing.length == 0;

@@ -1,55 +1,92 @@
 import session from './session';
 import wrapLoad from './wrapload';
 import { timeout } from '../api';
+import Vue from 'vue';
 
-let processingStarts = {};
-
-function calculateProcessingProgress(doc) {
-  const pageCount = doc.page_count;
-  if (pageCount == 0) return 0;
-  let imagesRemaining = doc.images_remaining;
-  let textsRemaining = doc.texts_remaining;
-  if (imagesRemaining == null || textsRemaining == null) return 0;
-
-  if (imagesRemaining < 0) imagesRemaining = 0;
-  if (textsRemaining < 0) textsRemaining = 0;
-
-  const progress =
-    (pageCount - imagesRemaining + (pageCount - textsRemaining)) / 2 / pageCount;
-
-  return progress;
-}
+const CLOUD_PREFIX = process.env.VUE_APP_STATIC_BASE;
 
 function convertDoc(doc) {
-  window.console.log(doc);
-  if (processingStarts[doc.id] == null) {
-    processingStarts[doc.id] = Date.now();
-  }
-  return {
-    id: doc.id,
-    slug: doc.slug,
-    slugId: [doc.id, doc.slug].join('-'),
-    title: doc.title,
-    pageCount: doc.page_count,
-    thumbnail: null, // TODO: Get thumbnail (doc.resources && doc.resources.thumbnail && doc.resources.thumbnail.replace('-thumbnail.gif', '-normal.gif'),)
-    contributor: '', // TODO: get contributor (doc.contributor,)
-    organization: '', // TODO: get organization ('DocumentCloud'),
-    createdAt: doc.created_at, // TODO: parse time format
-    processing: {
-      done: doc.status != 'pending' || (
-        doc.images_remaining == 0 &&
-        doc.texts_remaining == 0
-      ),
-      loading: false,
-      imagesRemaining: doc.images_remaining,
-      textsRemaining: doc.texts_remaining,
-      totalPages: doc.page_count,
-      progress: calculateProcessingProgress(doc),
+  return new Vue({
+    data() {
+      return {
+        doc,
+        loading: false,
+      };
     },
-  };
-}
+    computed: {
+      id() {
+        return this.doc.id;
+      },
+      slug() {
+        return this.doc.slug;
+      },
+      slugId() {
+        return [this.doc.id, this.doc.slug].join('-');
+      },
+      thumbnail() {
+        // Calculate thumbnail route
+        return `${CLOUD_PREFIX}/documents/${this.id}/pages/${this.slug}-p1-normal.gif`;
+      },
+      title() {
+        return this.doc.title;
+      },
+      pageCount() {
+        return this.doc.page_count;
+      },
+      contributor() {
+        return this.doc.contributor; // TODO: get contributor as string
+      },
+      organization() {
+        return this.doc.organization; // TODO: get organization as string
+      },
+      rawCreatedAt() {
+        return this.doc.created_at;
+      },
+      createdAt() {
+        return this.rawCreatedAt; // TODO: parse time format
+      },
+      status() {
+        return this.doc.status;
+      },
+      imagesRemaining() {
+        return this.doc.images_remaining;
+      },
+      textsRemaining() {
+        return this.doc.texts_remaining;
+      },
+      imagesProcessed() {
+        if (this.pageCount == 0) return 0;
+        return this.pageCount - this.imagesRemaining;
+      },
+      textsProcessed() {
+        if (this.pageCount == 0) return 0;
+        return this.pageCount - this.textsRemaining;
+      },
+      imageProgress() {
+        if (this.pageCount == 0) return 0;
+        return this.imagesProcessed / this.pageCount;
+      },
+      textProgress() {
+        if (this.pageCount == 0) return 0;
+        return this.textsProcessed / this.pageCount;
+      },
+      doneProcessing() {
+        return this.doc.status != 'pending' || (
+          this.imagesRemaining == 0 &&
+          this.textsRemaining == 0
+        )
+      },
+      processingProgress() {
+        // Empty page count means 0 progress
+        if (this.pageCount == 0) return 0;
 
-const PROGRESS_COMPLETE = 0.5;
+        const progress =
+          (this.imagesProcessed + this.textsProcessed) / (this.pageCount * 2);
+        return progress;
+      }
+    },
+  });
+}
 
 const POLL_TIMEOUT = 1200;
 
@@ -59,25 +96,24 @@ export default {
 
     Vue.API.getMe = wrapLoad(async function () {
       const { data } = await session.get(Vue.API.url('users/me'));
-      window.console.log('user profile', data);
-      // return documents.map(doc => convertDoc(doc));
+      return data;
     });
 
     Vue.API.getDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.url('documents/'));
+      const { data } = await session.get(Vue.API.url('documents/?expand=user,organization'));
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocument = wrapLoad(async function (id) {
-      const { data } = await session.get(Vue.API.url(`documents/${id}/`));
+      const { data } = await session.get(Vue.API.url(`documents/${id}/?expand=user,organization`));
       return convertDoc(data);
     });
 
     Vue.API.pollDocument = async function (id, docFn, doneFn) {
       const doc = await Vue.API.getDocument(null, id);
       docFn(doc);
-      if (doc.processing.done) {
+      if (doc.doneProcessing) {
         doneFn(doc);
         return;
       }
@@ -124,8 +160,7 @@ export default {
             },
             onUploadProgress: progressEvent => {
               // Handle upload progress
-              const progress =
-                (progressEvent.loaded / progressEvent.total) * PROGRESS_COMPLETE;
+              const progress = progressEvent.loaded / progressEvent.total;
               progresses[i].progress = progress;
               progressFn(i, progress);
             },

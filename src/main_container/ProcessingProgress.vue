@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="bar">
-      <div class="inner" :style="{width: `${processing.progress * 100}%`}"></div>
+      <div class="inner" :style="{width: `${doc.processingProgress * 100}%`}"></div>
     </div>
     <p class="status">{{progressMsg}}</p>
   </div>
@@ -39,40 +39,24 @@
 <script>
 export default {
   props: {
-    processing: Object
+    doc: Object
   },
   computed: {
-    imagesProcessed() {
-      if (this.processing.totalPages == 0) return 0;
-      return this.processing.totalPages - this.processing.imagesRemaining;
-    },
-    textsProcessed() {
-      if (this.processing.totalPages == 0) return 0;
-      return this.processing.totalPages - this.processing.textsRemaining;
-    },
-    imageProgress() {
-      if (this.processing.totalPages == 0) return 0;
-      return this.imagesProcessed / this.processing.totalPages;
-    },
-    textProgress() {
-      if (this.processing.totalPages == 0) return 0;
-      return this.textsProcessed / this.processing.totalPages;
-    },
     progressMsg() {
-      if (this.processing.totalPages == 0) {
+      if (this.doc.pageCount == 0) {
         return "Extracting document information";
       }
 
       // Come up with a message
       const parts = [];
-      if (this.processing.imagesRemaining > 0) {
+      if (this.doc.imagesRemaining > 0) {
         parts.push(
-          `processing images (${this.imagesProcessed}/${this.processing.totalPages})`
+          `processing images (${this.doc.imagesProcessed}/${this.doc.pageCount})`
         );
       }
-      if (this.processing.textsRemaining > 0) {
+      if (this.doc.textsRemaining > 0) {
         parts.push(
-          `processing text (${this.textsProcessed}/${this.processing.totalPages})`
+          `processing text (${this.doc.textsProcessed}/${this.doc.pageCount})`
         );
       }
 

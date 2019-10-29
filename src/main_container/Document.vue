@@ -1,5 +1,5 @@
 <template>
-  <Loader :inline="true" :active="document.processing.loading">
+  <Loader :inline="true" :active="document.loading">
     <div @contextmenu="handleContextMenu($event)" class="document">
       <div class="documentinner" @click="open()">
         <img class="card" :src="cardImage" draggable="false" />
@@ -98,7 +98,6 @@ export default {
     },
     open() {
       if (this.context.show) return;
-      window.console.log(this.document);
       this.$router.push({
         name: "viewer",
         params: {

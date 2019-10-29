@@ -11,8 +11,8 @@
         <span v-if="doc.pageCount">{{doc.pageCount}} page{{doc.pageCount == 1 ? '' : 's'}} -</span>
         {{doc.createdAt}}
       </p>
-      <ProcessingProgress v-if="!doc.processing.done" :processing="doc.processing" />
-      <div v-if="doc.processing.done" class="complete">
+      <ProcessingProgress v-if="!doc.doneProcessing" :doc="doc" />
+      <div v-if="doc.doneProcessing" class="complete">
         <Button :small="true">Open</Button>
         <p>Processing complete</p>
       </div>

@@ -21,13 +21,7 @@ export default {
     if (Vue.API == null) Vue.API = {};
 
     Vue.API.login = wrapLoad(async function () {
-      // window.console.log(session);
       setToken(true);
-      // const { data } = await session.post(process.env.VUE_APP_API_SERVER + 'login/social/jwt-pair/', {
-      //   provider: process.env.VUE_APP_SQUARELET_PROVIDER,
-      //   code
-      // });
-      // setToken(data.token);
     });
 
     Vue.API.logout = wrapLoad(async function () {

@@ -102,8 +102,8 @@ export default {
           for (let i = 0; i < this.processingDocs.length; i++) {
             const pDoc = this.processingDocs[i];
             if (pDoc.id == doc.id) {
-              this.processingDocs[i].processing = newDoc.processing;
-              this.processingDocs[i].pageCount = newDoc.pageCount;
+              // Update document in-place
+              this.$set(this.processingDocs, i, newDoc);
               return;
             }
           }
@@ -120,11 +120,10 @@ export default {
           this.$emit("docFinishedProcessing", doc);
         }
       );
-      // new ProcessingRequest(doc.id).progressLoop(doc);
     },
     clearProcessing() {
       this.processingDocs = this.processingDocs.filter(
-        doc => !doc.processing.done
+        doc => !doc.processingDone
       );
     }
   }
