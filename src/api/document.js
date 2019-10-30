@@ -33,17 +33,27 @@ function convertDoc(doc) {
       pageCount() {
         return this.doc.page_count;
       },
-      contributor() {
-        return this.doc.contributor; // TODO: get contributor as string
+      user() {
+        return this.doc.user.name;
       },
-      organization() {
-        return this.doc.organization; // TODO: get organization as string
+      individualOrg() {
+        return this.doc.organization.individual;
+      },
+      org() {
+        return this.doc.organization.name;
+      },
+      userOrg() {
+        // Return user and organization formatted as a string
+        if (this.individualOrg) {
+          return this.user;
+        }
+        return `${this.user} ${this.org}`
       },
       rawCreatedAt() {
         return this.doc.created_at;
       },
       createdAt() {
-        return this.rawCreatedAt; // TODO: parse time format
+        return new Date(Date.parse(this.rawCreatedAt)).toLocaleDateString()
       },
       status() {
         return this.doc.status;

@@ -6,7 +6,7 @@
     <div class="info">
       <h2>{{doc.title}}</h2>
       <p>
-        {{doc.contributor}} ({{doc.organization}})
+        {{doc.userOrg}}
         <br />
         <span v-if="doc.pageCount">{{doc.pageCount}} page{{doc.pageCount == 1 ? '' : 's'}} -</span>
         {{doc.createdAt}}
