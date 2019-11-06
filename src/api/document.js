@@ -1,4 +1,5 @@
 import session from './session';
+import axios from 'axios';
 import wrapLoad from './wrapload';
 import { timeout } from '../api';
 import Vue from 'vue';
@@ -161,10 +162,16 @@ export default {
         const name = docs[i].name;
         formData.append('file', file);
         formData.append('title', name);
-        formData.append('progress_updates', 'true');
 
-        session
-          .post(Vue.API.url('documents/'), formData, {
+        session.post(Vue.API.url('documents/'), {
+          title: name,
+        }).then(response => {
+          // Allocate a document with title.
+          const responseData = response.data;
+          const url = responseData.presigned_url;
+          const id = responseData.id;
+
+          axios.put(url, file, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -174,25 +181,28 @@ export default {
               progresses[i].progress = progress;
               progressFn(i, progress);
             },
-          })
-          .then(response => {
-            // Handle complete upload
-            if (progresses[i].interval != null) {
-              // Clear existing fake timer.
-              clearTimeout(progresses[i].interval);
-              progresses[i].interval = null;
-            }
-            for (let j = 0; j < toComplete.length; j++) {
-              if (toComplete[j] == i) {
-                toComplete.splice(j, 1);
-                completeFn(convertDoc(response.data), i);
-                break;
+          }).then(() => {
+            // Upload completed. Post to start processing.
+            session.post(Vue.API.url(`documents/${id}/process/`)).then(() => {
+              // Handle complete upload
+              if (progresses[i].interval != null) {
+                // Clear existing fake timer.
+                clearTimeout(progresses[i].interval);
+                progresses[i].interval = null;
               }
-            }
-            if (toComplete.length == 0) {
-              allCompleteFn();
-            }
+              for (let j = 0; j < toComplete.length; j++) {
+                if (toComplete[j] == i) {
+                  toComplete.splice(j, 1);
+                  completeFn(id, i);
+                  break;
+                }
+              }
+              if (toComplete.length == 0) {
+                allCompleteFn();
+              }
+            });
           });
+        });
       }
     });
   },
