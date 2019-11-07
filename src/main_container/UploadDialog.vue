@@ -128,10 +128,10 @@ export default {
           // Progress handler
           this.uploadFiles[index].progress = progress;
         },
-        (document, index) => {
+        (id, index) => {
           // Complete handler
           this.uploadFiles[index].done = true;
-          this.$emit("docUploaded", document);
+          this.$emit("docUploaded", id);
         },
         () => {
           // All complete handler
