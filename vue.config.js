@@ -1,6 +1,8 @@
 module.exports = {
   devServer: {
     disableHostCheck: true,
+    host: '0.0.0.0',
+    public: '0.0.0.0:80',
   },
   chainWebpack: config => {
     config.module

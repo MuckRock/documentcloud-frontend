@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="bar">
-      <div class="inner" :style="{width: `${processing.progress * 100}%`}"></div>
+      <div class="inner" :style="{width: `${doc.processingProgress * 100}%`}"></div>
     </div>
-    <p class="status">{{percent}}</p>
+    <p class="status">{{progressMsg}}</p>
   </div>
 </template>
 
@@ -39,17 +39,33 @@
 <script>
 export default {
   props: {
-    processing: Object
+    doc: Object
   },
   computed: {
-    percent() {
-      if (this.processing.progress < 0.3) {
+    progressMsg() {
+      if (this.doc.pageCount == 0) {
         return "Extracting document information";
-      } else if (this.processing.progress < 0.6) {
-        return "Extracting images";
-      } else {
-        return "Extracting text";
       }
+
+      // Come up with a message
+      const parts = [];
+      if (this.doc.imagesRemaining > 0) {
+        parts.push(
+          `processing images (${this.doc.imagesProcessed}/${this.doc.pageCount})`
+        );
+      }
+      if (this.doc.textsRemaining > 0) {
+        parts.push(
+          `processing text (${this.doc.textsProcessed}/${this.doc.pageCount})`
+        );
+      }
+
+      if (parts.length == 0) {
+        return "Done processing";
+      }
+
+      const result = parts.join(", ");
+      return result.charAt(0).toUpperCase() + result.slice(1);
     }
   }
 };

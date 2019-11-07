@@ -21,7 +21,6 @@ export default {
   methods: {
     handleError(e) {
       if (this.makeNull) return;
-      window.console.log("image error", e);
       this.makeNull = true;
       setTimeout(() => {
         this.makeNull = false;

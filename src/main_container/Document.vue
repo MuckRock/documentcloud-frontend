@@ -1,10 +1,10 @@
 <template>
-  <Loader :inline="true" :active="document.processing.loading">
+  <Loader :inline="true" :active="document.loading">
     <div @contextmenu="handleContextMenu($event)" class="document">
       <div class="documentinner" @click="open()">
         <img class="card" :src="cardImage" draggable="false" />
         <div class="title">{{ document.title }}</div>
-        <div class="sub">{{document.contributor }} ({{document.organization}})</div>
+        <div class="sub">{{ document.userOrg }}</div>
         <div class="sub">{{document.pageCount}} pages - {{document.createdAt}}</div>
       </div>
       <ContextMenu v-if="context.show" @close="context.show = false" :x="context.x" :y="context.y">
@@ -101,7 +101,7 @@ export default {
       this.$router.push({
         name: "viewer",
         params: {
-          id: this.document.id
+          id: this.document.slugId
         }
       });
     }

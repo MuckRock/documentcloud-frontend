@@ -52,7 +52,7 @@ export default {
       this.loadingDocs = false;
     },
     async handleDelete(doc) {
-      doc.processing.loading = true;
+      doc.loading = true;
       await Vue.API.deleteDocument(null, doc);
 
       for (let i = 0; i < this.documents.length; i++) {
@@ -64,7 +64,6 @@ export default {
       }
     },
     handleDocFinishedProcessing(doc) {
-      window.console.log("handle doc finished", doc);
       this.documents.push(doc);
     }
   }

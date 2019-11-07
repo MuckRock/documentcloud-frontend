@@ -88,25 +88,26 @@ export default {
       this.uploading = false;
       this.processingStale = true;
     },
-    handleDocUploaded(doc) {
+    handleDocUploaded(id) {
       if (this.processingStale) {
         this.processingStale = false;
         this.clearProcessing();
       }
-      this.processingDocs.push(doc);
 
       Vue.API.pollDocument(
-        doc.id,
+        id,
         newDoc => {
           // Replace new doc
           for (let i = 0; i < this.processingDocs.length; i++) {
             const pDoc = this.processingDocs[i];
-            if (pDoc.id == doc.id) {
-              this.processingDocs[i].processing = newDoc.processing;
-              this.processingDocs[i].pageCount = newDoc.pageCount;
+            if (pDoc.id == id) {
+              // Update document in-place
+              this.$set(this.processingDocs, i, newDoc);
               return;
             }
           }
+          // Document wasn't found
+          this.processingDocs.push(newDoc);
         },
         doc => {
           // Remove doc
@@ -120,11 +121,10 @@ export default {
           this.$emit("docFinishedProcessing", doc);
         }
       );
-      // new ProcessingRequest(doc.id).progressLoop(doc);
     },
     clearProcessing() {
       this.processingDocs = this.processingDocs.filter(
-        doc => !doc.processing.done
+        doc => !doc.processingDone
       );
     }
   }

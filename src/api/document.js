@@ -1,86 +1,130 @@
 import session from './session';
+import axios from 'axios';
 import wrapLoad from './wrapload';
 import { timeout } from '../api';
+import Vue from 'vue';
 
-let processingStarts = {};
-
-const MAX_PROCESSING_PROGRESS = 0.5;
-
-function calculateProcessingProgress(doc) {
-  const pageCount = doc.pages;
-  if (pageCount == 0) return 0;
-  let imagesRemaining = doc.images_remaining;
-  let textsRemaining = doc.texts_remaining;
-  if (imagesRemaining == null || textsRemaining == null) return 0;
-
-  if (imagesRemaining < 0) imagesRemaining = 0;
-  if (textsRemaining < 0) textsRemaining = 0;
-
-  const strictProgress =
-    (pageCount - imagesRemaining + (pageCount - textsRemaining)) / 2 / pageCount;
-  const timeElapsed = (Date.now() - processingStarts[doc.id]) / 1000;
-  const timeProgress = timeElapsed / (timeElapsed + 1);
-  const progress =
-    strictProgress * MAX_PROCESSING_PROGRESS +
-    timeProgress * (1 - MAX_PROCESSING_PROGRESS);
-
-  return progress;
-}
+const CLOUD_PREFIX = process.env.VUE_APP_STATIC_BASE;
 
 function convertDoc(doc) {
-  if (processingStarts[doc.id] == null) {
-    processingStarts[doc.id] = Date.now();
-  }
-  return {
-    id: doc.id,
-    title: doc.title,
-    pageCount: doc.pages,
-    thumbnail: doc.resources.thumbnail.replace('-thumbnail.gif', '-normal.gif'),
-    contributor: doc.contributor,
-    organization: 'DocumentCloud',
-    createdAt: doc.created_at
-      .split(' ')
-      .slice(1, 4)
-      .join(' '),
-    processing: {
-      done: doc.access != 'pending',
-      loading: false,
-      imagesRemaining: doc.images_remaining,
-      textsRemaining: doc.texts_remaining,
-      progress: calculateProcessingProgress(doc),
+  return new Vue({
+    data() {
+      return {
+        doc,
+        loading: false,
+      };
     },
-  };
+    computed: {
+      id() {
+        return this.doc.id;
+      },
+      slug() {
+        return this.doc.slug;
+      },
+      slugId() {
+        return [this.doc.id, this.doc.slug].join('-');
+      },
+      thumbnail() {
+        // Calculate thumbnail route
+        return `${CLOUD_PREFIX}/documents/${this.id}/pages/${this.slug}-p1-normal.gif`;
+      },
+      title() {
+        return this.doc.title;
+      },
+      pageCount() {
+        return this.doc.page_count;
+      },
+      user() {
+        return this.doc.user.name;
+      },
+      individualOrg() {
+        return this.doc.organization.individual;
+      },
+      org() {
+        return this.doc.organization.name;
+      },
+      userOrg() {
+        // Return user and organization formatted as a string
+        if (this.individualOrg) {
+          return this.user;
+        }
+        return `${this.user} ${this.org}`
+      },
+      rawCreatedAt() {
+        return this.doc.created_at;
+      },
+      createdAt() {
+        return new Date(Date.parse(this.rawCreatedAt)).toLocaleDateString()
+      },
+      status() {
+        return this.doc.status;
+      },
+      imagesRemaining() {
+        return this.doc.images_remaining;
+      },
+      textsRemaining() {
+        return this.doc.texts_remaining;
+      },
+      imagesProcessed() {
+        if (this.pageCount == 0) return 0;
+        return this.pageCount - this.imagesRemaining;
+      },
+      textsProcessed() {
+        if (this.pageCount == 0) return 0;
+        return this.pageCount - this.textsRemaining;
+      },
+      imageProgress() {
+        if (this.pageCount == 0) return 0;
+        return this.imagesProcessed / this.pageCount;
+      },
+      textProgress() {
+        if (this.pageCount == 0) return 0;
+        return this.textsProcessed / this.pageCount;
+      },
+      doneProcessing() {
+        return this.doc.status != 'pending' || (
+          this.imagesRemaining == 0 &&
+          this.textsRemaining == 0
+        )
+      },
+      processingProgress() {
+        // Empty page count means 0 progress
+        if (this.pageCount == 0) return 0;
+
+        const progress =
+          (this.imagesProcessed + this.textsProcessed) / (this.pageCount * 2);
+        return progress;
+      }
+    },
+  });
 }
 
-const PROGRESS_COMPLETE = 0.5;
-
-const POLL_TIMEOUT = 4000;
+const POLL_TIMEOUT = 1200;
 
 export default {
   install(Vue) {
     if (Vue.API == null) Vue.API = {};
 
     Vue.API.getMe = wrapLoad(async function () {
-      const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'users/me');
-      window.console.log('GOT', data);
-      // return documents.map(doc => convertDoc(doc));
+      const { data } = await session.get(Vue.API.url('users/me'));
+      return data;
     });
 
     Vue.API.getDocuments = wrapLoad(async function () {
-      const { data } = await session.get(process.env.VUE_APP_API_SERVER + 'documents/');
+      const { data } = await session.get(Vue.API.url('documents/?expand=user,organization'));
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getDocument = wrapLoad(async function (id) {
-      const { data } = await session.get(`/api/documents/${id}`);
-      return convertDoc(data.document);
+      const { data } = await session.get(Vue.API.url(`documents/${id}/?expand=user,organization`));
+      return convertDoc(data);
     });
 
     Vue.API.pollDocument = async function (id, docFn, doneFn) {
       const doc = await Vue.API.getDocument(null, id);
       docFn(doc);
-      if (doc.processing.done) {
+      if (doc.doneProcessing) {
         doneFn(doc);
         return;
       }
@@ -89,7 +133,7 @@ export default {
     };
 
     Vue.API.deleteDocument = wrapLoad(async function (document) {
-      await session.delete(`/api/documents/${document.id}/`);
+      await session.delete(Vue.API.url(`documents/${document.id}/`));
     });
 
     Vue.API.uploadDocuments = wrapLoad(async function (
@@ -118,64 +162,47 @@ export default {
         const name = docs[i].name;
         formData.append('file', file);
         formData.append('title', name);
-        formData.append('progress_updates', 'true');
 
-        session
-          .post('/api/upload/', formData, {
+        session.post(Vue.API.url('documents/'), {
+          title: name,
+        }).then(response => {
+          // Allocate a document with title.
+          const responseData = response.data;
+          const url = responseData.presigned_url;
+          const id = responseData.id;
+
+          axios.put(url, file, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
             onUploadProgress: progressEvent => {
               // Handle upload progress
-              if (progressEvent.loaded == progressEvent.total) {
-                // Fully loaded. Simulate extra time delay for now.
-                if (progresses[i].completeTime == null) {
-                  progresses[i].completeTime = Date.now();
-                }
-                if (progresses[i].interval == null) {
-                  progresses[i].interval = setInterval(() => {
-                    const timeElapsedSinceCompletion =
-                      (Date.now() - progresses[i].completeTime) / 1000;
-                    // let newProgress =
-                    //   timeElapsedSinceCompletion /
-                    //   (progresses[i].completeTime -
-                    //     progresses[i].startTime +
-                    //     STATIC_PROGRESS_DELAY);
-                    let newProgress =
-                      timeElapsedSinceCompletion / (timeElapsedSinceCompletion + 1);
-                    newProgress =
-                      PROGRESS_COMPLETE + newProgress * (1 - PROGRESS_COMPLETE);
-                    if (newProgress > 1) newProgress = 1;
-                    progresses[i].progress = newProgress;
-                    progressFn(i, newProgress);
-                  }, 50);
-                }
-                return;
-              }
-              const progress =
-                (progressEvent.loaded / progressEvent.total) * PROGRESS_COMPLETE;
+              const progress = progressEvent.loaded / progressEvent.total;
               progresses[i].progress = progress;
               progressFn(i, progress);
             },
-          })
-          .then(response => {
-            // Handle complete upload
-            if (progresses[i].interval != null) {
-              // Clear existing fake timer.
-              clearTimeout(progresses[i].interval);
-              progresses[i].interval = null;
-            }
-            for (let j = 0; j < toComplete.length; j++) {
-              if (toComplete[j] == i) {
-                toComplete.splice(j, 1);
-                completeFn(convertDoc(response.data), i);
-                break;
+          }).then(() => {
+            // Upload completed. Post to start processing.
+            session.post(Vue.API.url(`documents/${id}/process/`)).then(() => {
+              // Handle complete upload
+              if (progresses[i].interval != null) {
+                // Clear existing fake timer.
+                clearTimeout(progresses[i].interval);
+                progresses[i].interval = null;
               }
-            }
-            if (toComplete.length == 0) {
-              allCompleteFn();
-            }
+              for (let j = 0; j < toComplete.length; j++) {
+                if (toComplete[j] == i) {
+                  toComplete.splice(j, 1);
+                  completeFn(id, i);
+                  break;
+                }
+              }
+              if (toComplete.length == 0) {
+                allCompleteFn();
+              }
+            });
           });
+        });
       }
     });
   },
