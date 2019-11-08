@@ -1,5 +1,5 @@
 <template>
-  <img ref="img" @error="handleError($event)" :src="computedSrc" alt />
+  <img ref="img" @error="handleError($event)" :src="computedSrc" alt draggable="false" />
 </template>
 
 <script>
@@ -19,12 +19,12 @@ export default {
     }
   },
   methods: {
-    handleError(e) {
+    handleError() {
       if (this.makeNull) return;
       this.makeNull = true;
       setTimeout(() => {
         this.makeNull = false;
-      }, 500);
+      }, 1200);
     }
   }
 };
