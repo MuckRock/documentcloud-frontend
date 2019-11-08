@@ -52,6 +52,10 @@
 }
 
 .card {
+  display: inline-block;
+}
+
+.card img {
   width: 171px;
   height: 217px;
   outline: 0.5px solid rgba(0, 0, 0, 0.25);
@@ -59,7 +63,6 @@
   object-fit: contain;
   background: white;
   user-select: none;
-  display: inline-block;
 }
 </style>
 
