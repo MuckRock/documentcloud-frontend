@@ -173,7 +173,7 @@ export default {
 
           axios.put(url, file, {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              'Content-Type': 'binary/octet-stream',
             },
             onUploadProgress: progressEvent => {
               // Handle upload progress
