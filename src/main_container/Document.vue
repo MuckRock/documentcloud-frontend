@@ -2,7 +2,9 @@
   <Loader :inline="true" :active="document.loading">
     <div @contextmenu="handleContextMenu($event)" class="document">
       <div class="documentinner" @click="open()">
-        <PollImage class="card" :src="cardImage" />
+        <div class="card">
+          <PollImage :src="cardImage" />
+        </div>
         <div class="title">{{ document.title }}</div>
         <div class="sub">{{ document.userOrg }}</div>
         <div class="sub">{{document.pageCount}} pages - {{document.createdAt}}</div>
@@ -57,6 +59,7 @@
   object-fit: contain;
   background: white;
   user-select: none;
+  display: inline-block;
 }
 </style>
 
