@@ -2,7 +2,9 @@
   <Loader :inline="true" :active="document.loading">
     <div @contextmenu="handleContextMenu($event)" class="document">
       <div class="documentinner" @click="open()">
-        <img class="card" :src="cardImage" draggable="false" />
+        <div class="card">
+          <PollImage :src="cardImage" />
+        </div>
         <div class="title">{{ document.title }}</div>
         <div class="sub">{{ document.userOrg }}</div>
         <div class="sub">{{document.pageCount}} pages - {{document.createdAt}}</div>
@@ -50,6 +52,10 @@
 }
 
 .card {
+  display: inline-block;
+}
+
+.card img {
   width: 171px;
   height: 217px;
   outline: 0.5px solid rgba(0, 0, 0, 0.25);
@@ -61,11 +67,12 @@
 </style>
 
 <script>
+import PollImage from "../common/PollImage";
 import ContextMenu from "../common/ContextMenu";
 import Loader from "../common/Loader";
 
 export default {
-  components: { ContextMenu, Loader },
+  components: { PollImage, ContextMenu, Loader },
   props: {
     document: {
       type: Object
