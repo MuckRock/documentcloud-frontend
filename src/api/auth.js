@@ -1,4 +1,3 @@
-import session from './session';
 import wrapLoad from './wrapload';
 
 const DOCUMENTCLOUD_TOKEN_STORAGE_KEY = 'documentcloud_token';

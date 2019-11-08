@@ -2,7 +2,7 @@
   <Loader :inline="true" :active="document.loading">
     <div @contextmenu="handleContextMenu($event)" class="document">
       <div class="documentinner" @click="open()">
-        <img class="card" :src="cardImage" draggable="false" />
+        <PollImage class="card" :src="cardImage" />
         <div class="title">{{ document.title }}</div>
         <div class="sub">{{ document.userOrg }}</div>
         <div class="sub">{{document.pageCount}} pages - {{document.createdAt}}</div>
@@ -61,11 +61,12 @@
 </style>
 
 <script>
+import PollImage from "../common/PollImage";
 import ContextMenu from "../common/ContextMenu";
 import Loader from "../common/Loader";
 
 export default {
-  components: { ContextMenu, Loader },
+  components: { PollImage, ContextMenu, Loader },
   props: {
     document: {
       type: Object
