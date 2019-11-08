@@ -53,16 +53,20 @@
 
 .card {
   display: inline-block;
+  outline: 0.5px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 .card img {
-  width: 171px;
-  height: 217px;
-  outline: 0.5px solid rgba(0, 0, 0, 0.25);
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
   object-fit: contain;
   background: white;
   user-select: none;
+}
+
+.card,
+.card img {
+  width: 171px;
+  height: 217px;
 }
 </style>
 
