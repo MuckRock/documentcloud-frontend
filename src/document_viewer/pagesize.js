@@ -9,15 +9,19 @@ export function pageSizesFromSpec(pageSpec) {
     const [width, height] = size.split('x').map(parseFloat);
     const aspect = height / width;
 
-    if (range.indexOf('-') != -1) {
-      // Range
-      const [start, end] = range.split('-').map(x => parseInt(x, 10));
-      for (let page = start; page <= end; page++) {
+    const rangeParts = range.split(',');
+    for (let j = 0; j < rangeParts.length; j++) {
+      const rangePart = rangeParts[j];
+      if (rangePart.indexOf('-') != -1) {
+        // Range
+        const [start, end] = rangePart.split('-').map(x => parseInt(x, 10));
+        for (let page = start; page <= end; page++) {
+          sizes[page] = aspect;
+        }
+      } else {
+        const page = parseInt(rangePart, 10);
         sizes[page] = aspect;
       }
-    } else {
-      const page = parseInt(range, 10);
-      sizes[page] = aspect;
     }
   }
 
