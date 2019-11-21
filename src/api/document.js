@@ -4,8 +4,6 @@ import wrapLoad from './wrapload';
 import { timeout } from '../api';
 import Vue from 'vue';
 
-const CLOUD_PREFIX = process.env.VUE_APP_STATIC_BASE;
-
 function convertDoc(doc) {
   return new Vue({
     data() {
@@ -24,9 +22,12 @@ function convertDoc(doc) {
       slugId() {
         return [this.doc.id, this.doc.slug].join('-');
       },
+      assetUrl() {
+        return this.doc.asset_url;
+      },
       thumbnail() {
         // Calculate thumbnail route
-        return `${CLOUD_PREFIX}/documents/${this.id}/pages/${this.slug}-p1-normal.gif`;
+        return `${this.assetUrl}documents/${this.id}/pages/${this.slug}-p1-normal.gif`;
       },
       title() {
         return this.doc.title;
@@ -173,7 +174,7 @@ export default {
 
           axios.put(url, file, {
             headers: {
-              'Content-Type': 'binary/octet-stream',
+              'Content-Type': 'application/pdf',
             },
             onUploadProgress: progressEvent => {
               // Handle upload progress
