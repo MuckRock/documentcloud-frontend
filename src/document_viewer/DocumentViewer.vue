@@ -23,10 +23,9 @@
 <script>
 import DocumentHeader from "./DocumentHeader";
 import DocumentBody from "./DocumentBody";
+import session from "@/api/session";
 import { pageSizesFromSpec } from "./pagesize.js";
 import Vue from "vue";
-
-const CLOUD_PREFIX = process.env.VUE_APP_STATIC_BASE;
 
 export default {
   components: { DocumentHeader, DocumentBody },
@@ -47,8 +46,8 @@ export default {
     this.id = this.combined.split("-")[0];
     this.slug = this.combined.substr(this.id.length + 1);
 
+    await this.getDoc();
     this.getPageSizes();
-    this.getDoc();
   },
   methods: {
     jump(pageNumber) {
@@ -62,17 +61,19 @@ export default {
     },
     async getPageSizes() {
       // Get page size information
-      const pageSpecUrl = `${CLOUD_PREFIX}/documents/${this.id}/${this.slug}.pagesize`;
-      const pageSpec = await (await fetch(pageSpecUrl)).text();
+      const pageSpecUrl = `${this.doc.assetUrl}documents/${this.id}/${this.slug}.pagesize`;
+      const pageSpec = await session.getStatic(pageSpecUrl);
       const pageAspects = pageSizesFromSpec(pageSpec);
 
       this.pages = pageAspects.map((aspect, i) => ({
         number: i + 1,
-        image: `${CLOUD_PREFIX}/documents/${this.id}/pages/${this.slug}-p${i +
-          1}-large.gif`,
+        image: `${this.doc.assetUrl}documents/${this.id}/pages/${
+          this.slug
+        }-p${i + 1}-large.gif`,
         aspect: aspect,
-        textUrl: `${CLOUD_PREFIX}/documents/${this.id}/pages/${this.slug}-p${i +
-          1}.txt`,
+        textUrl: `${this.doc.assetUrl}documents/${this.id}/pages/${
+          this.slug
+        }-p${i + 1}.txt`,
         text: null
       }));
       this.getPageTexts();
@@ -87,9 +88,9 @@ export default {
       }
     },
     async getPageText(page) {
-      this.pages[page - 1].text = await (await fetch(
+      this.pages[page - 1].text = await session.getStatic(
         this.pages[page - 1].textUrl
-      )).text();
+      );
     }
   }
 };
