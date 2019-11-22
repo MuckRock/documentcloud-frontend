@@ -100,7 +100,7 @@ function convertDoc(doc) {
   });
 }
 
-const POLL_TIMEOUT = 1200;
+const POLL_TIMEOUT = 5000;
 
 export default {
   install(Vue) {

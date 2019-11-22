@@ -24,7 +24,7 @@ export default {
       this.makeNull = true;
       setTimeout(() => {
         this.makeNull = false;
-      }, 1200);
+      }, 5000);
     }
   }
 };
