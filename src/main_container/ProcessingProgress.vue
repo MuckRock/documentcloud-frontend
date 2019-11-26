@@ -1,27 +1,30 @@
 <template>
   <div>
     <div class="bar">
-      <div class="inner" :style="{width: `${doc.processingProgress * 100}%`}"></div>
+      <div
+        class="inner"
+        :style="{ width: `${doc.processingProgress * 100}%` }"
+      ></div>
     </div>
-    <p class="status">{{progressMsg}}</p>
+    <p class="status">{{ progressMsg }}</p>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .inner {
   width: 23%;
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  background: var(--primary);
-  border-radius: var(--radius);
-  transition: var(--progress-transition);
+  background: $primary;
+  border-radius: $radius;
+  transition: $progress-transition;
 }
 
 .bar {
   height: 18px;
-  border-radius: var(--radius);
+  border-radius: $radius;
   width: 100%;
   max-width: 330px;
   background: #e0efff;
@@ -30,7 +33,7 @@
 }
 
 .status {
-  color: var(--gray);
+  color: $gray;
   font-size: 14px;
   margin: 0.5em 0;
 }
@@ -51,7 +54,9 @@ export default {
       const parts = [];
       if (this.doc.imagesRemaining > 0) {
         parts.push(
-          `processing images (${this.doc.imagesProcessed}/${this.doc.pageCount})`
+          `processing images (${this.doc.imagesProcessed}/${
+            this.doc.pageCount
+          })`
         );
       }
       if (this.doc.textsRemaining > 0) {

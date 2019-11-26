@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <div class="name">{{name}}</div>
+    <div class="name">{{ name }}</div>
     <div class="input">
       <input
         @keyup.enter="$emit('enter')"
@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .field {
   margin: 1em 0;
 }
@@ -24,8 +24,8 @@
 
 .input input {
   background: white;
-  border: solid 1px var(--primary);
-  border-radius: var(--radius);
+  border: solid 1px $primary;
+  border-radius: $radius;
   width: 100%;
   max-width: 300px;
   outline: none;

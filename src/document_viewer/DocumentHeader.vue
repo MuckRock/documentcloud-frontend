@@ -16,13 +16,13 @@
   </header>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 header {
-  background: var(--primary);
+  background: $primary;
   color: white;
   position: sticky;
   top: 0;
-  height: var(--document-header-height);
+  height: $document-header-height;
   left: 0;
   width: 100%;
   display: flex;

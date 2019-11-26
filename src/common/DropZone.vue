@@ -1,32 +1,36 @@
 <template>
-  <Draggable :class="{secondary}" @upload="$emit('files', $event)" class="dropzone">
+  <Draggable
+    :class="{ secondary }"
+    @upload="$emit('files', $event)"
+    class="dropzone"
+  >
     <div class="content">
       <slot></slot>
     </div>
   </Draggable>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .dropzone {
   width: 100%;
   height: 108px;
   display: table;
-  border: dashed 2px var(--primary);
-  background: var(--primary-faded);
+  border: dashed 2px $primary;
+  background: $primary-faded;
   user-select: none;
   box-sizing: border-box;
-}
 
-.dropzone.secondary {
-  border: dashed 2px var(--secondary);
-  background: #e6e6e6;
-  height: 65px;
-}
+  &.secondary {
+    border: dashed 2px $secondary;
+    background: #e6e6e6;
+    height: 65px;
+  }
 
-.dropzone.dragging {
-  background: var(--primary);
-  border: solid 2px var(--primary);
-  border-radius: var(--radius);
+  &.dragging {
+    background: $primary;
+    border: solid 2px $primary;
+    border-radius: $radius;
+  }
 }
 
 .content {

@@ -61,7 +61,9 @@ export default {
     },
     async getPageSizes() {
       // Get page size information
-      const pageSpecUrl = `${this.doc.assetUrl}documents/${this.id}/${this.slug}.pagesize`;
+      const pageSpecUrl = `${this.doc.assetUrl}documents/${this.id}/${
+        this.slug
+      }.pagesize`;
       const pageSpec = await session.getStatic(pageSpecUrl);
       const pageAspects = pageSizesFromSpec(pageSpec);
 
@@ -96,7 +98,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .shim {
   position: fixed;
   top: 0;
@@ -104,6 +106,6 @@ export default {
   right: 0;
   bottom: 0;
   z-index: -1;
-  background: var(--document-body-bg);
+  background: $document-body-bg;
 }
 </style>

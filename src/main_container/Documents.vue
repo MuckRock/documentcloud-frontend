@@ -131,11 +131,29 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .docscontainer {
   margin-top: 17px;
   margin-left: -25px;
   position: relative;
+
+  &.dragging {
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: $primary-faded;
+      border: 2px solid $primary;
+      pointer-events: none;
+    }
+
+    .toastouter {
+      visibility: visible;
+    }
+  }
 }
 
 .toastouter {
@@ -153,26 +171,10 @@ export default {
   position: -webkit-sticky;
   bottom: 5px;
   display: inline-block;
-  background: var(--primary);
+  background: $primary;
   color: white;
   border-radius: 3px;
-  box-shadow: var(--overlay-shadow);
+  box-shadow: $overlay-shadow;
   padding: 13px 55px;
-}
-
-.docscontainer.dragging::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--primary-faded);
-  border: 2px solid var(--primary);
-  pointer-events: none;
-}
-
-.docscontainer.dragging .toastouter {
-  visibility: visible;
 }
 </style>

@@ -7,31 +7,38 @@
         </div>
         <div class="title">{{ document.title }}</div>
         <div class="sub">{{ document.userOrg }}</div>
-        <div class="sub">{{document.pageCount}} pages - {{document.createdAt}}</div>
+        <div class="sub">
+          {{ document.pageCount }} pages - {{ document.createdAt }}
+        </div>
       </div>
-      <ContextMenu v-if="context.show" @close="context.show = false" :x="context.x" :y="context.y">
+      <ContextMenu
+        v-if="context.show"
+        @close="context.show = false"
+        :x="context.x"
+        :y="context.y"
+      >
         <div class="menuitem" @click="$emit('delete', document)">Delete</div>
       </ContextMenu>
     </div>
   </Loader>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .document {
   width: 222px;
   vertical-align: top;
   display: inline-block;
   padding: 10px 6px;
-  border-radius: var(--radius);
-}
+  border-radius: $radius;
 
-.document:hover {
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.03);
-}
+  &:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.03);
 
-.document:hover .card {
-  outline: 0.5px solid var(--primary);
+    .card {
+      outline: 0.5px solid $primary;
+    }
+  }
 }
 
 .documentinner {
@@ -39,28 +46,28 @@
 }
 
 .title {
-  font-size: var(--normal);
+  font-size: $normal;
   padding-top: 10px;
   padding-bottom: 6px;
   word-break: break-word;
 }
 
 .sub {
-  font-size: var(--small);
+  font-size: $small;
   line-height: 15px;
-  color: var(--gray);
+  color: $gray;
 }
 
 .card {
   display: inline-block;
   outline: 0.5px solid rgba(0, 0, 0, 0.25);
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
-}
 
-.card img {
-  object-fit: contain;
-  background: white;
-  user-select: none;
+  img {
+    object-fit: contain;
+    background: white;
+    user-select: none;
+  }
 }
 
 .card,

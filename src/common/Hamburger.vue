@@ -1,10 +1,16 @@
 <template>
-  <div class="hamburger" :style="{background: bg}">
-    <img svg-inline @click="$emit('toggle')" src="../assets/hamburger.svg" alt draggable="false" />
+  <div class="hamburger" :style="{ background: bg }">
+    <img
+      svg-inline
+      @click="$emit('toggle')"
+      src="../assets/hamburger.svg"
+      alt
+      draggable="false"
+    />
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .hamburger {
   user-select: none;
   position: sticky;
@@ -14,14 +20,14 @@
   background: white;
   padding: 1em 0;
   display: none;
-}
 
-.hamburger svg {
-  cursor: pointer;
-}
+  svg {
+    cursor: pointer;
+  }
 
-.hamburger svg:hover {
-  opacity: var(--hover-opacity);
+  svg:hover {
+    opacity: $hover-opacity;
+  }
 }
 
 @media only screen and (max-width: 600px) {

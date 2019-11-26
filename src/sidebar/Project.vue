@@ -1,30 +1,32 @@
 <template>
   <div class="project">
     <div class="title">{{ project.title }}</div>
-    <div v-if="ownProject" class="sub">Shared by {{ project.account_full_name }}</div>
+    <div v-if="ownProject" class="sub">
+      Shared by {{ project.account_full_name }}
+    </div>
     <div class="sub">{{ infoString }}</div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .project {
   padding: 11px 25px;
-}
 
-.project:hover {
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.03);
-  opacity: var(--hover-opacity);
+  &:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.03);
+    opacity: $hover-opacity;
+  }
 }
 
 .title {
-  font-size: var(--normal);
+  font-size: $normal;
 }
 
 .sub {
-  font-size: var(--small);
+  font-size: $small;
   line-height: 15px;
-  color: var(--gray);
+  color: $gray;
 }
 </style>
 

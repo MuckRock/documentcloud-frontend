@@ -18,22 +18,20 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .main {
   position: absolute;
-  left: var(--sidebar-width);
+  left: $sidebar-width;
   right: 0;
   top: 0;
+
+  @media only screen and (max-width: 600px) {
+    left: 0;
+  }
 }
 
 .container {
   padding: 36px 48px;
-}
-
-@media only screen and (max-width: 600px) {
-  .main {
-    left: 0;
-  }
 }
 </style>
 

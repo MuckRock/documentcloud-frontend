@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .zoom {
   display: inline-block;
   vertical-align: middle;
@@ -17,21 +17,21 @@
 
 .zoombutton {
   display: inline-block;
-  background: var(--document-faded);
+  background: $document-faded;
   padding: 0 12px;
   margin: 0 7px;
-  border-radius: var(--radius);
+  border-radius: $radius;
   cursor: pointer;
   vertical-align: middle;
   height: 27px;
   user-select: none;
-}
 
-.zoombutton:hover {
-  opacity: var(--hover-opacity);
-}
+  &:hover {
+    opacity: $hover-opacity;
+  }
 
-.zoombutton svg {
-  vertical-align: middle;
+  svg {
+    vertical-align: middle;
+  }
 }
 </style>

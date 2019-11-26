@@ -3,26 +3,47 @@
     <div class="mcontent">
       <div v-if="!uploadMode">
         <h1>Document Upload</h1>
-        <p
-          v-if="files.length == 0"
-        >Select or drag a .pdf document to begin the document upload process. You will then be able to edit document information.</p>
-        <p v-else>{{files.length}} file{{files.length == 1 ? '' : 's'}} ready to upload</p>
+        <p v-if="files.length == 0">
+          Select or drag a .pdf document to begin the document upload process.
+          You will then be able to edit document information.
+        </p>
+        <p v-else>
+          {{ files.length }} file{{ files.length == 1 ? "" : "s" }} ready to
+          upload
+        </p>
         <div class="actions">
-          <Button @click="upload()" class="padright" v-if="files.length > 0">Begin upload</Button>
-          <FilePicker v-if="files.length == 0" :multiselect="true" @files="handleFiles($event)">
+          <Button @click="upload()" class="padright" v-if="files.length > 0"
+            >Begin upload</Button
+          >
+          <FilePicker
+            v-if="files.length == 0"
+            :multiselect="true"
+            @files="handleFiles($event)"
+          >
             <Button>+ Select files</Button>
           </FilePicker>
         </div>
-        <DropZone class="dropper" v-if="files.length == 0" @files="handleFiles($event)">
+        <DropZone
+          class="dropper"
+          v-if="files.length == 0"
+          @files="handleFiles($event)"
+        >
           <span>Drag and drop files here</span>
         </DropZone>
       </div>
       <div v-if="uploadMode">
-        <h1>Uploading... ({{numUploaded}}/{{files.length}})</h1>
-        <p>Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.</p>
+        <h1>Uploading... ({{ numUploaded }}/{{ files.length }})</h1>
+        <p>
+          Please leave this page open while your documents upload. This dialog
+          will automatically close when they have finished uploading.
+        </p>
       </div>
 
-      <div class="files" v-if="files.length > 0" :class="{padder: uploadMode}">
+      <div
+        class="files"
+        v-if="files.length > 0"
+        :class="{ padder: uploadMode }"
+      >
         <File
           class="file"
           v-for="file in displayFiles"
@@ -40,11 +61,16 @@
             class="vpadded"
             :nondescript="true"
             @click="uploadAdditional = true"
-          >Upload additional files</Button>
+            >Upload additional files</Button
+          >
         </div>
         <div v-if="files.length > 0 && uploadAdditional">
           <div class="sectionbreak" v-if="files.length > 0"></div>
-          <FilePicker v-if="files.length > 0" :multiselect="true" @files="handleFiles($event)">
+          <FilePicker
+            v-if="files.length > 0"
+            :multiselect="true"
+            @files="handleFiles($event)"
+          >
             <Button :secondary="true" :small="true">+ Select more files</Button>
           </FilePicker>
           <DropZone
@@ -143,7 +169,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .actions {
   margin: 1.5em 0;
 }
@@ -152,19 +178,19 @@ export default {
 .drawer {
   position: sticky;
   position: -webkit-sticky;
-  background: var(--modal);
+  background: $modal;
 }
 
 .hdrawer {
   top: 0;
-  padding: var(--modal-vert-padding) 0 16px 0;
+  padding: $modal-vert-padding 0 16px 0;
   margin-top: -42px;
 }
 
 .drawer {
   bottom: 0;
   padding-top: 16px;
-  padding-bottom: var(--modal-vert-padding);
+  padding-bottom: $modal-vert-padding;
 }
 
 .files {
@@ -181,7 +207,7 @@ export default {
 }
 
 .sectionbreak {
-  border-bottom: solid 1px var(--gray);
+  border-bottom: solid 1px $gray;
   margin: 2em 0 1.5em 0;
 }
 

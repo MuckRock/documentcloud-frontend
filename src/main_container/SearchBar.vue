@@ -40,15 +40,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search {
   background: #f1f2f4;
   height: 42px;
-  border-radius: var(--radius);
+  border-radius: $radius;
   margin: 0 0 74px 0;
   width: 100%;
   position: relative;
   box-sizing: border-box;
+
+  @media only screen and (max-width: 600px) {
+    margin: 0 0 44px 0;
+  }
 }
 
 svg {
@@ -74,11 +78,5 @@ input {
 
 ::placeholder {
   color: rgba(0, 0, 0, 0.76);
-}
-
-@media only screen and (max-width: 600px) {
-  .search {
-    margin: 0 0 44px 0;
-  }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div
     class="outer"
-    :class="{dragging}"
+    :class="{ dragging }"
     @dragenter="enter($event)"
     @dragover="enter($event)"
     @dragleave="leave()"
@@ -39,7 +39,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .upload {
   height: 150px;
   width: 100%;
@@ -52,14 +52,7 @@ export default {
   background: #fffafb;
   color: black;
   transition: all 0.2s ease;
-  border: solid 1px var(--accent);
   border-radius: 6px;
-}
-
-input[type="file"]:hover + .upload,
-input[type="file"].dragging + .upload {
-  background: #fc4762;
-  color: white;
 }
 
 .outer {
@@ -76,5 +69,11 @@ input[type="file"] {
   bottom: 0;
   opacity: 0;
   cursor: pointer;
+
+  &:hover + .upload,
+  &.dragging + .upload {
+    background: #fc4762;
+    color: white;
+  }
 }
 </style>

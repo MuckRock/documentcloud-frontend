@@ -3,15 +3,19 @@
     <div class="cell doc">
       <img svg-inline src="../assets/document.svg" alt draggable="false" />
     </div>
-    <div class="cell name" :class="{readonly: uploadMode}">
+    <div class="cell name" :class="{ readonly: uploadMode }">
       <div class="progresscontainer">
-        <div class="progress" v-if="uploadMode" :style="{width: `${data.progress * 100}%`}">
-          <div class="progressinner">{{name}}</div>
+        <div
+          class="progress"
+          v-if="uploadMode"
+          :style="{ width: `${data.progress * 100}%` }"
+        >
+          <div class="progressinner">{{ name }}</div>
         </div>
       </div>
       <input :readonly="uploadMode" v-model="name" />
     </div>
-    <div class="cell size">{{size}}</div>
+    <div class="cell size">{{ size }}</div>
     <div v-if="uploadMode == false" class="cell close">
       <img
         svg-inline
@@ -24,7 +28,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 svg {
   user-select: none;
 }
@@ -42,7 +46,7 @@ svg {
 input {
   width: 100%;
   box-sizing: border-box;
-  border-radius: var(--radius);
+  border-radius: $radius;
   outline: none;
   height: 28px;
   padding: 0 12px;
@@ -59,10 +63,10 @@ input {
 
 .doc {
   width: 20px;
-}
 
-.doc svg {
-  vertical-align: middle;
+  svg {
+    vertical-align: middle;
+  }
 }
 
 .name {
@@ -71,20 +75,20 @@ input {
 
 .size {
   width: 45px;
-  color: var(--gray);
+  color: $gray;
   font-size: 12px;
 }
 
 .close {
   width: 15px;
-}
 
-.close svg {
-  cursor: pointer;
-}
+  svg {
+    cursor: pointer;
+  }
 
-.close img:hover {
-  opacity: var(--hover-opacity);
+  img:hover {
+    opacity: $hover-opacity;
+  }
 }
 
 .progresscontainer {
@@ -94,12 +98,12 @@ input {
 .progress {
   position: absolute;
   height: 28px;
-  background: var(--primary);
-  border-radius: var(--radius);
+  background: $primary;
+  border-radius: $radius;
   font-size: 13px;
   font-family: inherit;
   line-height: 28px;
-  transition: var(--progress-transition);
+  transition: $progress-transition;
 }
 
 .progressinner {

@@ -85,8 +85,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .documentbody {
-  background: var(--document-body-bg);
+  background: $document-body-bg;
 }
 </style>

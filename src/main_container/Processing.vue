@@ -1,13 +1,19 @@
 <template>
   <div class="processing">
-    <h2
-      v-if="!done"
-    >Processing {{processing.length}} document{{processing.length == 1 ? '' : 's'}}...</h2>
+    <h2 v-if="!done">
+      Processing {{ processing.length }} document{{
+        processing.length == 1 ? "" : "s"
+      }}...
+    </h2>
     <h2 v-if="done">Processing complete</h2>
-    <p v-if="!done">Documents will continue to process even if the window is closed</p>
+    <p v-if="!done">
+      Documents will continue to process even if the window is closed
+    </p>
     <p v-if="done">
       All documents have finished processing.
-      <Button class="hpadded" :nondescript="true" @click="$emit('dismiss')">Dismiss</Button>
+      <Button class="hpadded" :nondescript="true" @click="$emit('dismiss')"
+        >Dismiss</Button
+      >
     </p>
     <div class="docs">
       <div class="fadeout"></div>
@@ -36,10 +42,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .processing {
-  background: var(--light-primary);
-  border-radius: var(--radius);
+  background: $light-primary;
+  border-radius: $radius;
   margin-top: 1em;
   padding: 20px 32px;
 }
@@ -52,7 +58,7 @@ h2 {
 
 p {
   font-size: 14px;
-  color: var(--gray);
+  color: $gray;
   margin: 0.5em 0;
 }
 

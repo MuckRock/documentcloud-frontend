@@ -14,7 +14,7 @@
         id
         :value="currentPage"
       />
-      <span class="outof">/ {{numPages}}</span>
+      <span class="outof">/ {{ numPages }}</span>
     </div>
     <div class="pagingarrow" @click="jumpForward()">
       <img svg-inline src="../assets/paging_right.svg" alt />
@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .documentpaging {
   user-select: none;
   align-self: center;
@@ -69,10 +69,10 @@ export default {
 .pagingarrow {
   display: inline-block;
   cursor: pointer;
-}
 
-.pagingarrow:hover {
-  opacity: var(--hover-opacity);
+  &:hover {
+    opacity: $hover-opacity;
+  }
 }
 
 .pagetext {
@@ -81,21 +81,21 @@ export default {
 }
 
 .pageinput {
-  background: var(--document-faded);
+  background: $document-faded;
   color: white;
   outline: none;
   border: none;
-  border-radius: var(--radius);
+  border-radius: $radius;
   padding: 6px 8px;
   font-family: inherit;
   font-size: 14px;
   width: 30px;
   text-align: center;
-}
 
-.pageinput:focus {
-  background: white;
-  color: black;
+  &:focus {
+    background: white;
+    color: black;
+  }
 }
 
 .outof {

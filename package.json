@@ -23,7 +23,9 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "vue-svg-inline-loader": "^1.2.18",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0"
   },
   "eslintConfig": {
     "root": true,

@@ -3,56 +3,19 @@
   <router-view></router-view>
 </template>
 
-<style>
+<style lang="scss">
 body {
   font-family: Source Sans Pro, sans-serif;
+
+  &.modalopen {
+    overflow: hidden;
+  }
 }
 
 body,
 html {
   margin: 0;
   padding: 0;
-}
-
-body.modalopen {
-  overflow: hidden;
-}
-
-* {
-  /* Colors */
-  --primary: #4294f0;
-  --primary-faded: rgba(66, 148, 240, 0.13);
-  --sidebar: #edeeef;
-  --black: #000000;
-  --gray: rgba(0, 0, 0, 0.53);
-  --light-gray: rgba(255, 255, 255, 0.53);
-  --modal: #323232;
-  --secondary: #626262;
-  --light-primary: #eff7ff;
-  --tertiary: #0c8a01;
-
-  /* Shadows */
-  --overlay-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-
-  /* Opacity */
-  --hover-opacity: 0.8;
-
-  /* Sizes */
-  --sidebar-width: 272px;
-  --normal: 14px;
-  --small: 12px;
-  --radius: 3px;
-  --modal-horiz-padding: 42px;
-  --modal-vert-padding: 44px;
-
-  /* Animations */
-  --progress-transition: width 0.8s ease;
-
-  /* Document Viewer */
-  --document-header-height: 55px;
-  --document-body-bg: #e0e1e3;
-  --document-faded: #ffffff21;
-  --document-selected: #00000021;
 }
 </style>
 

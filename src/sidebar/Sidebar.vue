@@ -1,18 +1,22 @@
 <template>
-  <div ref="sidebar" class="sidebar" :class="{expanded}">
-    <Hamburger @toggle="$emit('retractSidebar')" bg="var(--sidebar)" style="padding: 25px;" />
+  <div ref="sidebar" class="sidebar" :class="{ expanded }">
+    <Hamburger
+      @toggle="$emit('retractSidebar')"
+      bg="sidebarColor"
+      style="padding: 25px;"
+    />
     <Logo />
     <Projects v-bind:projects="projects" />
     <div class="sidebarbg"></div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .sidebar {
   position: absolute;
   top: 0;
   left: 0;
-  width: var(--sidebar-width);
+  width: $sidebar-width;
   z-index: 10;
   -webkit-overflow-scrolling: touch;
 }
@@ -23,8 +27,8 @@
   left: 0;
   bottom: 0;
   z-index: -1;
-  width: var(--sidebar-width);
-  background: var(--sidebar);
+  width: $sidebar-width;
+  background: $sidebar;
   box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.12);
 }
 
@@ -52,9 +56,15 @@
 import Logo from "./Logo";
 import Projects from "./Projects";
 import Hamburger from "../common/Hamburger";
+import variables from "@/scss/variables.scss";
 
 export default {
   components: { Logo, Projects, Hamburger },
+  data() {
+    return {
+      sidebarColor: variables.sidebar
+    };
+  },
   props: {
     projects: Array,
     expanded: Boolean

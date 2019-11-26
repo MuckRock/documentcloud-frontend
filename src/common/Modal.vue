@@ -15,14 +15,18 @@
               draggable="false"
             />
           </div>
-          <component :is="component" @setDismissable="setDismissable($event)" v-on="$listeners" />
+          <component
+            :is="component"
+            @setDismissable="setDismissable($event)"
+            v-on="$listeners"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .shim {
   background: #051d38b5;
   z-index: 20;
@@ -55,13 +59,11 @@
 .modal {
   box-sizing: border-box;
   overflow-y: auto;
-  /* background: var(--modal); */
   background: white;
-  border-radius: var(--radius);
-  /* color: white; */
+  border-radius: $radius;
   color: black;
   padding: 0;
-  box-shadow: var(--overlay-shadow);
+  box-shadow: $overlay-shadow;
   position: relative;
   max-height: 100%;
   max-width: 766px;
@@ -84,7 +86,7 @@
   position: sticky;
   position: -webkit-sticky;
   top: 0;
-  height: var(--modal-vert-padding);
+  height: $modal-vert-padding;
   margin-bottom: 2px;
   z-index: 29;
 }
@@ -96,17 +98,17 @@
 }
 
 .close:hover {
-  opacity: var(--hover-opacity);
+  opacity: $hover-opacity;
   cursor: pointer;
 }
 
-.modal >>> h1 {
+.modal ::v-deep h1 {
   font-size: 18px;
   font-weight: 600;
 }
 
-.modal >>> .mcontent {
-  padding: 0 var(--modal-horiz-padding);
+.modal ::v-deep .mcontent {
+  padding: 0 $modal-horiz-padding;
 }
 </style>
 

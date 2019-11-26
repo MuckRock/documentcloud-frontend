@@ -4,8 +4,13 @@
       <header>
         <div class="headercontents">
           <div class="logo">
-            <router-link :to="{name: 'home'}">
-              <img svg-inline class="mastlogo" src="../assets/mastlogo.svg" alt />
+            <router-link :to="{ name: 'home' }">
+              <img
+                svg-inline
+                class="mastlogo"
+                src="../assets/mastlogo.svg"
+                alt
+              />
             </router-link>
           </div>
           <div class="signupcontainer" v-if="!$auth.isAuthenticated">
@@ -18,7 +23,7 @@
           </div>
           <div class="signupcontainer" v-if="$auth.isAuthenticated">
             <div class="signin" @click="logout()">Log out</div>
-            <router-link :to="{name: 'app'}">
+            <router-link :to="{ name: 'app' }">
               <Button>Go to app</Button>
             </router-link>
           </div>
@@ -26,7 +31,12 @@
       </header>
       <div v-if="showMast" class="mastcontainer">
         <img svg-inline class="masthead" src="../assets/masthead.svg" alt />
-        <img svg-inline class="mastheadresponsive" src="../assets/masthead_responsive.svg" alt />
+        <img
+          svg-inline
+          class="mastheadresponsive"
+          src="../assets/masthead_responsive.svg"
+          alt
+        />
       </div>
       <div class="content">
         <slot></slot>
@@ -35,7 +45,7 @@
   </Loader>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .masthead {
   width: 100%;
   max-width: 1200px;
@@ -84,10 +94,10 @@ header {
   display: inline-block;
   margin-right: 1.5em;
   cursor: pointer;
-}
 
-.signin:hover {
-  opacity: var(--hover-opacity);
+  &:hover {
+    opacity: $hover-opacity;
+  }
 }
 
 .content {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="{loader: active, inline}">
+  <div :class="{ loader: active, inline }">
     <div v-if="active" class="shim"></div>
     <div v-if="active" class="spinner"></div>
     <div class="contents">
@@ -8,20 +8,9 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .inline {
   display: inline-block;
-}
-
-.loader {
-  pointer-events: none;
-  position: relative;
-  user-select: none;
-}
-
-.loader .contents {
-  opacity: 0.1;
-  transition: opacity 1s ease;
 }
 
 .shim {
@@ -34,19 +23,28 @@
   pointer-events: none;
 }
 
-.loader .shim {
-  display: block;
-  pointer-events: inherit;
+.loader {
+  pointer-events: none;
+  position: relative;
+  user-select: none;
+  .contents {
+    opacity: 0.1;
+    transition: opacity 1s ease;
+  }
+
+  .shim {
+    display: block;
+    pointer-events: inherit;
+  }
 }
 
 .spinner {
-  /* display: none; */
   position: absolute;
   left: 8px;
   top: 8px;
-  border: 4px solid transparent; /* Light grey */
-  border-top: 4px solid var(--gray); /* Blue */
-  border-bottom: 4px solid var(--gray); /* Blue */
+  border: 4px solid transparent;
+  border-top: 4px solid $gray;
+  border-bottom: 4px solid $gray;
   border-radius: 50%;
   box-sizing: border-radius;
   width: 10px;

@@ -1,13 +1,18 @@
 <template>
   <div>
     <div class="shim" @click="dismiss()"></div>
-    <div @click="dismiss()" ref="menu" class="contextmenu" :style="{left: `${x}px`, top: `${y}px`}">
+    <div
+      @click="dismiss()"
+      ref="menu"
+      class="contextmenu"
+      :style="{ left: `${x}px`, top: `${y}px` }"
+    >
       <slot></slot>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .shim {
   background: none;
   z-index: 10;
@@ -34,11 +39,11 @@
   padding: 3px 21px;
   cursor: pointer;
   font-size: 14px;
-}
 
-.menuitem:hover {
-  background: var(--primary);
-  color: white;
+  &:hover {
+    background: $primary;
+    color: white;
+  }
 }
 </style>
 

@@ -4,12 +4,14 @@
       <PollImage v-if="doc.thumbnail != null" :src="doc.thumbnail" />
     </div>
     <div class="info">
-      <h2>{{doc.title}}</h2>
+      <h2>{{ doc.title }}</h2>
       <p>
-        {{doc.userOrg}}
+        {{ doc.userOrg }}
         <br />
-        <span v-if="doc.pageCount">{{doc.pageCount}} page{{doc.pageCount == 1 ? '' : 's'}} -</span>
-        {{doc.createdAt}}
+        <span v-if="doc.pageCount"
+          >{{ doc.pageCount }} page{{ doc.pageCount == 1 ? "" : "s" }} -</span
+        >
+        {{ doc.createdAt }}
       </p>
       <ProcessingProgress v-if="!doc.doneProcessing" :doc="doc" />
       <div v-if="doc.doneProcessing" class="complete">
@@ -67,7 +69,7 @@ h2 {
 
 p {
   font-size: 14px;
-  color: var(--gray);
+  color: $gray;
   margin: 0.5em 0;
 }
 
