@@ -17,6 +17,7 @@
           </div>
           <component
             :is="component"
+            v-bind="properties"
             @setDismissable="setDismissable($event)"
             v-on="$listeners"
           />
@@ -122,7 +123,11 @@ export default {
     };
   },
   props: {
-    component: Object
+    component: Object,
+    properties: {
+      type: Object,
+      default: () => {}
+    }
   },
   methods: {
     dismiss() {

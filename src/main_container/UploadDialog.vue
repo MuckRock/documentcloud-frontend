@@ -52,7 +52,7 @@
           :data="file"
           :uploadMode="uploadMode"
           @name="file.name = $event"
-          @delete="removeFile(index)"
+          @delete="removeFile(file.index)"
         />
       </div>
       <div v-if="!uploadMode">
@@ -106,6 +106,16 @@ export default {
       uploadFiles: [],
       uploadAdditional: false
     };
+  },
+  props: {
+    initialFiles: {
+      type: Array,
+      default: () => []
+    }
+  },
+  mounted() {
+    // Add any initial files to the mix.
+    this.handleFiles(this.initialFiles);
   },
   computed: {
     displayFiles() {

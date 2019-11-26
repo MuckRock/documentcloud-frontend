@@ -5,6 +5,7 @@
         v-if="uploading"
         @close="uploading = false"
         :component="UploadDialog"
+        :properties="{ initialFiles: preUploadFiles }"
         @allUploaded="handleAllUploaded()"
         @docUploaded="handleDocUploaded($event)"
       ></Modal>
@@ -64,6 +65,7 @@ export default {
   },
   data() {
     return {
+      preUploadFiles: [],
       uploading: false,
       processingDocs: [],
       UploadDialog,
@@ -81,7 +83,13 @@ export default {
     }
   },
   methods: {
-    showUploadModal() {
+    showUploadModal(files) {
+      if (files != null) {
+        window.console.log(files);
+        this.preUploadFiles = Array.from(files);
+      } else {
+        this.preUploadFiles = [];
+      }
       this.uploading = true;
     },
     handleAllUploaded() {
@@ -136,6 +144,7 @@ export default {
   margin-top: 17px;
   margin-left: -25px;
   position: relative;
+  padding-bottom: 28px;
 
   &.dragging {
     &::after {
@@ -161,7 +170,7 @@ export default {
   text-align: center;
   position: sticky;
   position: -webkit-sticky;
-  bottom: 58px;
+  bottom: 28px;
   z-index: 3;
   pointer-events: none;
 }
