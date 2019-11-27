@@ -137,12 +137,19 @@ export default {
     },
     setDismissable(dismissable) {
       this.dismissable = dismissable;
+    },
+    handleKeyDown(e) {
+      if (e.key == "Escape") {
+        this.dismiss();
+      }
     }
   },
   mounted() {
+    window.addEventListener("keydown", this.handleKeyDown);
     disableBodyScroll(this.$refs.modal);
   },
   beforeDestroy() {
+    window.removeEventListener("keydown", this.handleKeyDown);
     enableBodyScroll(this.$refs.modal);
   }
 };
