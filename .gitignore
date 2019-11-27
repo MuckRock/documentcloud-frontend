@@ -2,3 +2,5 @@
 ._*
 node_modules/
 dist/
+e2e/cypress/screenshots
+e2e/cypress/videos

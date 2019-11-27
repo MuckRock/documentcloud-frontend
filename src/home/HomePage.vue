@@ -88,12 +88,16 @@ header {
 }
 
 .signin {
-  color: #494949;
-  font-weight: bold;
-  font-size: 16px;
   display: inline-block;
-  margin-right: 1.5em;
-  cursor: pointer;
+
+  a {
+    text-decoration: inherit;
+    color: #494949;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 1.5em;
+    cursor: pointer;
+  }
 
   &:hover {
     opacity: $hover-opacity;

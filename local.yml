@@ -15,6 +15,15 @@ services:
       squarelet_default:
         aliases:
           - www.dev.documentcloud.org
+  cypress:
+    image: "cypress/included:3.6.1"
+    depends_on:
+      - documentcloud_frontend
+    environment:
+      - CYPRESS_baseUrl=http://documentcloud_frontend:80
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
   
 volumes:
   nodemodules:

@@ -66,7 +66,7 @@
   padding: 0;
   box-shadow: $overlay-shadow;
   position: relative;
-  max-height: 100%;
+  max-height: 80vh;
   max-width: 766px;
   margin: 0 auto;
   text-align: left;
