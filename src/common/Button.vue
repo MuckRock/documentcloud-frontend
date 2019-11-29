@@ -1,7 +1,7 @@
 <template>
   <button
     @click="$emit('click')"
-    :class="{ secondary, tertiary, small, nondescript }"
+    :class="{ secondary, tertiary, small, caution, nondescript }"
   >
     <slot></slot>
   </button>
@@ -48,6 +48,14 @@ button {
     color: black;
     font-weight: normal;
   }
+
+  &.caution {
+    color: $caution;
+
+    &.nondescript {
+      border-bottom: dashed 1px rgba($caution, 0.5);
+    }
+  }
 }
 </style>
 
@@ -67,6 +75,10 @@ export default {
       default: false
     },
     nondescript: {
+      type: Boolean,
+      default: false
+    },
+    caution: {
       type: Boolean,
       default: false
     }

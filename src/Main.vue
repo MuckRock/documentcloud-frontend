@@ -12,6 +12,7 @@
         :documents="documents"
         :loadingDocuments="loadingDocs"
         @delete="handleDelete($event)"
+        @pollDocument="pollDocument($event)"
         @docFinishedProcessing="handleDocFinishedProcessing($event)"
       />
     </div>
@@ -47,7 +48,10 @@ export default {
       }
     },
     async loadDocs() {
-      this.documents = (await Vue.API.getDocuments(null)) || [];
+      this.documents = (await Vue.API.getAllDocuments(null)) || [];
+      this.documents.forEach(doc => {
+        if (doc.pending) this.pollDocument(doc.id);
+      });
       await Vue.API.getMe();
       this.loadingDocs = false;
     },
@@ -62,6 +66,28 @@ export default {
           return;
         }
       }
+    },
+    async pollDocument(id) {
+      Vue.API.pollDocument(
+        id,
+        newDoc => {
+          // Replace new doc
+          for (let i = 0; i < this.documents.length; i++) {
+            const pDoc = this.documents[i];
+            if (pDoc.id == id) {
+              // Update document in-place
+              this.$set(this.documents, i, newDoc);
+              return;
+            }
+          }
+          // Document wasn't found
+          this.documents.push(newDoc);
+        },
+        doc => {
+          // Set doc to be done processing without removing it
+          doc.currentProcessingFinished = true;
+        }
+      );
     },
     handleDocFinishedProcessing(doc) {
       this.documents.push(doc);

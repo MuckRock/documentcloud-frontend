@@ -12,6 +12,7 @@
         :documents="documents"
         :filter="filter"
         @delete="$emit('delete', $event)"
+        @pollDocument="$emit('pollDocument', $event)"
         @docFinishedProcessing="$emit('docFinishedProcessing', $event)"
       />
     </div>

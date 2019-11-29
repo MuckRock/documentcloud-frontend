@@ -10,6 +10,7 @@ function convertDoc(doc) {
       return {
         doc,
         loading: false,
+        currentProcessingFinished: false,
       };
     },
     computed: {
@@ -60,6 +61,15 @@ function convertDoc(doc) {
       status() {
         return this.doc.status;
       },
+      pending() {
+        return this.doc.status == 'pending';
+      },
+      nonPending() {
+        return !this.pending;
+      },
+      error() {
+        return this.doc.status == 'error';
+      },
       imagesRemaining() {
         return this.doc.images_remaining;
       },
@@ -83,10 +93,10 @@ function convertDoc(doc) {
         return this.textsProcessed / this.pageCount;
       },
       doneProcessing() {
-        return this.doc.status != 'pending' || (
-          this.imagesRemaining == 0 &&
-          this.textsRemaining == 0
-        )
+        return this.status == 'success';
+      },
+      fresh() {
+        return this.doneProcessing && this.currentProcessingFinished;
       },
       processingProgress() {
         // Empty page count means 0 progress
@@ -111,8 +121,20 @@ export default {
       return data;
     });
 
-    Vue.API.getDocuments = wrapLoad(async function () {
+    Vue.API.getAllDocuments = wrapLoad(async function () {
+      const nonPendingDocs = await Vue.API.getNonPendingDocuments(null);
+      const pendingDocs = await Vue.API.getPendingDocuments(null);
+      return pendingDocs.concat(nonPendingDocs);
+    });
+
+    Vue.API.getNonPendingDocuments = wrapLoad(async function () {
       const { data } = await session.get(Vue.API.url('documents/?expand=user,organization'));
+      const documents = data.results.filter(doc => doc.status != 'pending');
+      return documents.map(doc => convertDoc(doc));
+    });
+
+    Vue.API.getPendingDocuments = wrapLoad(async function () {
+      const { data } = await session.get(Vue.API.url('documents/?status=2&expand=user,organization'));
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
@@ -125,8 +147,8 @@ export default {
     Vue.API.pollDocument = async function (id, docFn, doneFn) {
       const doc = await Vue.API.getDocument(null, id);
       docFn(doc);
-      if (doc.doneProcessing) {
-        doneFn(doc);
+      if (doc.nonPending) {
+        if (doneFn != null) doneFn(doc);
         return;
       }
       await timeout(POLL_TIMEOUT);

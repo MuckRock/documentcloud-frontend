@@ -13,11 +13,7 @@
         <Title>Your documents</Title>
         <Button @click="showUploadModal()">+ Upload</Button>
       </div>
-      <Processing
-        v-if="processingDocs.length > 0"
-        :docs="processingDocs"
-        @dismiss="clearProcessing()"
-      />
+      <Processing v-if="processingDocs.length > 0" :docs="processingDocs" />
       <Draggable class="docscontainer" @upload="showUploadModal($event)">
         <Document
           v-for="document in filteredDocs"
@@ -45,8 +41,6 @@ import Modal from "../common/Modal";
 import Draggable from "../common/Draggable";
 import Loader from "../common/Loader";
 
-import Vue from "vue";
-
 export default {
   components: {
     Document,
@@ -67,17 +61,27 @@ export default {
     return {
       preUploadFiles: [],
       uploading: false,
-      processingDocs: [],
-      UploadDialog,
-      processingStale: false
+      UploadDialog
     };
   },
   computed: {
+    nonPendingDocs() {
+      return this.documents.filter(doc => doc.nonPending);
+    },
+    pendingDocs() {
+      return this.documents.filter(doc => doc.pending);
+    },
+    processingDocs() {
+      return this.documents.filter(
+        doc => doc.pending || doc.currentProcessingFinished
+      );
+    },
     filteredDocs() {
+      // TODO: use actual search
       if (this.filter == null || this.filter.trim() == "") {
-        return this.documents;
+        return this.nonPendingDocs;
       }
-      return this.documents.filter(doc => {
+      return this.nonPendingDocs.filter(doc => {
         return doc.title.toLowerCase().indexOf(this.filter.toLowerCase()) != -1;
       });
     }
@@ -85,7 +89,6 @@ export default {
   methods: {
     showUploadModal(files) {
       if (files != null) {
-        window.console.log(files);
         this.preUploadFiles = Array.from(files);
       } else {
         this.preUploadFiles = [];
@@ -94,46 +97,9 @@ export default {
     },
     handleAllUploaded() {
       this.uploading = false;
-      this.processingStale = true;
     },
     handleDocUploaded(id) {
-      if (this.processingStale) {
-        this.processingStale = false;
-        this.clearProcessing();
-      }
-
-      Vue.API.pollDocument(
-        id,
-        newDoc => {
-          // Replace new doc
-          for (let i = 0; i < this.processingDocs.length; i++) {
-            const pDoc = this.processingDocs[i];
-            if (pDoc.id == id) {
-              // Update document in-place
-              this.$set(this.processingDocs, i, newDoc);
-              return;
-            }
-          }
-          // Document wasn't found
-          this.processingDocs.push(newDoc);
-        },
-        doc => {
-          // Remove doc
-          for (let i = 0; i < this.processingDocs.length; i++) {
-            const pDoc = this.processingDocs[i];
-            if (pDoc.id == doc.id) {
-              this.processingDocs.splice(i, 1);
-              break;
-            }
-          }
-          this.$emit("docFinishedProcessing", doc);
-        }
-      );
-    },
-    clearProcessing() {
-      this.processingDocs = this.processingDocs.filter(
-        doc => !doc.processingDone
-      );
+      this.$emit("pollDocument", id);
     }
   }
 };

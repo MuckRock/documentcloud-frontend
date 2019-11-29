@@ -51,6 +51,10 @@ const router = new Router({
   ]
 });
 
+// Extensions
+import DocumentExtensions from "./extensions/document";
+Vue.use(DocumentExtensions, router);
+
 export default {
   router
 };

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="bar">
+    <div class="bar" :class="{ initializing }">
       <div
         class="inner"
-        :style="{ width: `${doc.processingProgress * 100}%` }"
+        :style="{ width: `${processingProgress * 100}%` }"
       ></div>
     </div>
-    <p class="status">{{ progressMsg }}</p>
+    <p class="status" :class="{ complete }">{{ progressMsg }}</p>
   </div>
 </template>
 
@@ -18,6 +18,15 @@
   top: 0;
   bottom: 0;
   background: $primary;
+  background: repeating-linear-gradient(
+    57deg,
+    rgba($primary, 0.8),
+    rgba($primary, 0.8) 20px,
+    $primary 20px,
+    $primary 40px /* determines size */
+  );
+  background-size: 48px 48px;
+  animation: slide 1s infinite linear forwards;
   border-radius: $radius;
   transition: $progress-transition;
 }
@@ -25,26 +34,86 @@
 .bar {
   height: 18px;
   border-radius: $radius;
-  width: 100%;
-  max-width: 330px;
-  background: #e0efff;
+  width: 330px;
+  background: $barFaded;
   position: relative;
   margin-top: 1em;
+
+  &.initializing {
+    background: repeating-linear-gradient(
+      57deg,
+      darken($barFaded, 10%),
+      darken($barFaded, 10%) 20px,
+      $barFaded 20px,
+      $barFaded 40px /* determines size */
+    );
+    background-size: 48px 48px;
+    animation: slide 1s infinite linear forwards;
+  }
+}
+
+@keyframes slide {
+  0% {
+    background-position: 48px 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }
 
 .status {
   color: $gray;
   font-size: 14px;
   margin: 0.5em 0;
+
+  &.complete {
+    color: green;
+  }
 }
 </style>
 
 <script>
+import { tween } from "@/tween.js";
+
+const RATE = 0.01;
+const INSTANT_PROGRESS = 0.2;
+
 export default {
+  data() {
+    return {
+      imagesProcessed: 0,
+      textsProcessed: 0
+    };
+  },
   props: {
     doc: Object
   },
+  watch: {
+    "doc.imagesProcessed": function(newValue) {
+      tween(this.$data, RATE, "imagesProcessed", newValue);
+    },
+    "doc.textsProcessed": function(newValue) {
+      tween(this.$data, RATE, "textsProcessed", newValue);
+    }
+  },
   computed: {
+    pageCount() {
+      return this.doc.pageCount;
+    },
+    processingProgress() {
+      if (this.pageCount == 0) return 0;
+      return (
+        INSTANT_PROGRESS +
+        ((this.imagesProcessed + this.textsProcessed) / (this.pageCount * 2)) *
+          (1 - INSTANT_PROGRESS)
+      );
+    },
+    initializing() {
+      return this.processingProgress == 0;
+    },
+    complete() {
+      return this.doc.processingProgress == 1;
+    },
     progressMsg() {
       if (this.doc.pageCount == 0) {
         return "Extracting document information";
@@ -52,17 +121,23 @@ export default {
 
       // Come up with a message
       const parts = [];
-      if (this.doc.imagesRemaining > 0) {
+      if (this.imagesProcessed < this.pageCount) {
         parts.push(
-          `processing images (${this.doc.imagesProcessed}/${
-            this.doc.pageCount
+          `processing images (${Math.round(this.imagesProcessed)}/${
+            this.pageCount
           })`
         );
+      } else {
+        parts.push(`processed all images (${this.pageCount})`);
       }
-      if (this.doc.textsRemaining > 0) {
+      if (this.textsProcessed < this.pageCount) {
         parts.push(
-          `processing text (${this.doc.textsProcessed}/${this.doc.pageCount})`
+          `processing text (${Math.round(this.textsProcessed)}/${
+            this.pageCount
+          })`
         );
+      } else {
+        parts.push(`processed all texts (${this.pageCount})`);
       }
 
       if (parts.length == 0) {

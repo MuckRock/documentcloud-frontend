@@ -2,11 +2,24 @@
   <div class="container">
     <h2>Upload your first document</h2>
     <div class="img">
-      <img svg-inline src="../assets/document_cartoon.svg" alt draggable="false" />
+      <img
+        svg-inline
+        src="../assets/document_silhouette.svg"
+        alt
+        draggable="false"
+      />
     </div>
     <div class="text">
-      <p>Upload a PDF file to get started using DocumentCloud. You can drag the file into this window, or click on the blue “Upload” button above.</p>
-      <p>Once you upload a file, DocumentCloud will process the document and extract its contents. It may take a few minutes for this to complete, but once it’s done your document will be optimized for analysis and sharing on the web.</p>
+      <p>
+        Upload a PDF file to get started using DocumentCloud. You can drag the
+        file into this window, or click on the blue “Upload” button above.
+      </p>
+      <p>
+        Once you upload a file, DocumentCloud will process the document and
+        extract its contents. It may take a few minutes for this to complete,
+        but once it’s done your document will be optimized for analysis and
+        sharing on the web.
+      </p>
     </div>
   </div>
 </template>

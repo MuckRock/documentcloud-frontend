@@ -1,9 +1,14 @@
 <template>
   <Loader :inline="true" :active="document.loading">
-    <div @contextmenu="handleContextMenu($event)" class="document">
+    <div
+      @contextmenu="handleContextMenu($event)"
+      class="document"
+      :class="{ error, fresh }"
+    >
       <div class="documentinner" @click="open()">
         <div class="card">
-          <PollImage :src="cardImage" />
+          <PollImage v-if="!error" :src="cardImage" />
+          <ErrorCard v-if="error" @delete="$emit('delete', document)" />
         </div>
         <div class="title">{{ document.title }}</div>
         <div class="sub">{{ document.userOrg }}</div>
@@ -24,6 +29,10 @@
 </template>
 
 <style lang="scss" scoped>
+$errorbg: rgba($caution, 0.05);
+$freshbg: rgba($tertiary, 0.05);
+$normaloutline: 0.5px solid rgba(0, 0, 0, 0.25);
+
 .document {
   width: 222px;
   vertical-align: top;
@@ -38,6 +47,23 @@
     .card {
       outline: 0.5px solid $primary;
     }
+
+    &.error {
+      cursor: inherit;
+      background: $errorbg;
+
+      .card {
+        outline: $normaloutline;
+      }
+    }
+  }
+
+  &.error {
+    background: $errorbg;
+  }
+
+  &.fresh {
+    background: $freshbg;
   }
 }
 
@@ -60,7 +86,7 @@
 
 .card {
   display: inline-block;
-  outline: 0.5px solid rgba(0, 0, 0, 0.25);
+  outline: $normaloutline;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
 
   img {
@@ -79,11 +105,12 @@
 
 <script>
 import PollImage from "../common/PollImage";
+import ErrorCard from "../common/ErrorCard";
 import ContextMenu from "../common/ContextMenu";
 import Loader from "../common/Loader";
 
 export default {
-  components: { PollImage, ContextMenu, Loader },
+  components: { PollImage, ErrorCard, ContextMenu, Loader },
   props: {
     document: {
       type: Object
@@ -101,6 +128,12 @@ export default {
   computed: {
     cardImage() {
       return this.document.thumbnail;
+    },
+    error() {
+      return this.document.error;
+    },
+    fresh() {
+      return this.document.fresh;
     }
   },
   methods: {
@@ -115,13 +148,8 @@ export default {
       e.preventDefault();
     },
     open() {
-      if (this.context.show) return;
-      this.$router.push({
-        name: "viewer",
-        params: {
-          id: this.document.slugId
-        }
-      });
+      if (this.context.show || this.error) return;
+      this.$extensions.document.open(this.document);
     }
   }
 };

@@ -14,8 +14,16 @@
         {{ doc.createdAt }}
       </p>
       <ProcessingProgress v-if="!doc.doneProcessing" :doc="doc" />
-      <div v-if="doc.doneProcessing" class="complete">
-        <Button :small="true">Open</Button>
+      <div class="buttonpadded complete" v-if="doc.doneProcessing">
+        <Button :small="true" @click="$extensions.document.open(doc)"
+          >Open</Button
+        >
+        <Button
+          :small="true"
+          :secondary="true"
+          @click="doc.currentProcessingFinished = false"
+          >Dismiss</Button
+        >
         <p>Processing complete</p>
       </div>
     </div>
@@ -26,6 +34,8 @@
 import ProcessingProgress from "./ProcessingProgress";
 import Button from "../common/Button";
 import PollImage from "../common/PollImage";
+
+// import Vue from "vue";
 
 export default {
   components: { ProcessingProgress, Button, PollImage },
@@ -71,6 +81,14 @@ p {
   font-size: 14px;
   color: $gray;
   margin: 0.5em 0;
+}
+
+.buttonpadded {
+  margin: 0 -0.5em;
+
+  * {
+    margin: 0 0.5em;
+  }
 }
 
 .complete > p {

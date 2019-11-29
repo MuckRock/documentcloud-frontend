@@ -11,7 +11,7 @@
     </p>
     <p v-if="done">
       All documents have finished processing.
-      <Button class="hpadded" :nondescript="true" @click="$emit('dismiss')"
+      <Button class="hpadded" :nondescript="true" @click="dismissDocs()"
         >Dismiss</Button
       >
     </p>
@@ -37,6 +37,11 @@ export default {
     },
     done() {
       return this.processing.length == 0;
+    }
+  },
+  methods: {
+    dismissDocs() {
+      this.docs.forEach(doc => (doc.currentProcessingFinished = false));
     }
   }
 };
