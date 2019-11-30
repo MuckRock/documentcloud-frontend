@@ -43,7 +43,7 @@
         <p class="error" v-if="error">
           We failed to {{ errorMessage }}. Please try again later.
         </p>
-        <div>
+        <div v-if="error">
           <Button :secondary="true" @click="$emit('allUploaded')"
             >Dismiss</Button
           >
