@@ -57,6 +57,7 @@ $closePadding: 5px;
   background: $barFaded;
   position: relative;
   margin-top: 1em;
+  margin-right: 18px;
 
   &.initializing {
     background: repeating-linear-gradient(
