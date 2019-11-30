@@ -13,7 +13,7 @@
           <div class="progressinner">{{ name }}</div>
         </div>
       </div>
-      <input :readonly="uploadMode" v-model="name" />
+      <input :readonly="uploadMode" v-model="name" :class="{ error }" />
     </div>
     <div class="cell size">{{ size }}</div>
     <div v-if="uploadMode == false" class="cell close">
@@ -55,6 +55,11 @@ input {
   font-size: 13px;
   font-family: inherit;
   line-height: 28px;
+
+  &.error {
+    background: lighten($caution, 37%);
+    color: $caution;
+  }
 }
 
 .readonly {
@@ -134,7 +139,15 @@ function stripExtension(filename) {
 }
 
 export default {
-  props: { file: File, uploadMode: Boolean, data: Object },
+  props: {
+    file: File,
+    uploadMode: Boolean,
+    data: Object,
+    error: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       name: stripExtension(this.file.name)

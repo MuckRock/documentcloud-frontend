@@ -5,40 +5,52 @@
       class="document"
       :class="{ error, fresh }"
     >
-      <div class="documentinner" @click="open()">
-        <div class="card">
-          <PollImage v-if="!error" :src="cardImage" />
-          <ErrorCard v-if="error" @delete="$emit('delete', document)" />
+      <DocLink :document="document" :disabled="context.show || this.error">
+        <div class="documentinner">
+          <div class="card">
+            <img
+              v-if="!error"
+              class="card"
+              :src="cardImage"
+              draggable="false"
+            />
+            <ErrorCard v-if="error" @delete="$emit('delete', document)" />
+          </div>
+          <div class="title">{{ document.title }}</div>
+          <div class="sub">{{ document.userOrg }}</div>
+          <div class="sub">
+            {{ document.pageCount }} pages - {{ document.createdAt }}
+          </div>
         </div>
-        <div class="title">{{ document.title }}</div>
-        <div class="sub">{{ document.userOrg }}</div>
-        <div class="sub">
-          {{ document.pageCount }} pages - {{ document.createdAt }}
-        </div>
-      </div>
-      <ContextMenu
-        v-if="context.show"
-        @close="context.show = false"
-        :x="context.x"
-        :y="context.y"
-      >
-        <div class="menuitem" @click="$emit('delete', document)">Delete</div>
-      </ContextMenu>
+        <ContextMenu
+          v-if="context.show"
+          @close="context.show = false"
+          :x="context.x"
+          :y="context.y"
+        >
+          <div class="menuitem" @click="$emit('delete', document)">Delete</div>
+        </ContextMenu>
+      </DocLink>
     </div>
   </Loader>
 </template>
 
 <style lang="scss" scoped>
-$errorbg: rgba($caution, 0.05);
-$freshbg: rgba($tertiary, 0.05);
+$freshbg: rgba($tertiary, 0.1);
 $normaloutline: 0.5px solid rgba(0, 0, 0, 0.25);
 
 .document {
   width: 222px;
   vertical-align: top;
   display: inline-block;
-  padding: 10px 6px;
+  padding: 8px 4px;
+  margin: 2px;
   border-radius: $radius;
+
+  ::v-deep a {
+    color: inherit;
+    text-decoration: inherit;
+  }
 
   &:hover {
     cursor: pointer;
@@ -64,6 +76,11 @@ $normaloutline: 0.5px solid rgba(0, 0, 0, 0.25);
 
   &.fresh {
     background: $freshbg;
+
+    &:hover {
+      cursor: pointer;
+      background: rgba($freshbg, 0.15);
+    }
   }
 }
 
@@ -104,13 +121,13 @@ $normaloutline: 0.5px solid rgba(0, 0, 0, 0.25);
 </style>
 
 <script>
-import PollImage from "../common/PollImage";
 import ErrorCard from "../common/ErrorCard";
 import ContextMenu from "../common/ContextMenu";
+import DocLink from "../common/DocLink";
 import Loader from "../common/Loader";
 
 export default {
-  components: { PollImage, ErrorCard, ContextMenu, Loader },
+  components: { ErrorCard, ContextMenu, DocLink, Loader },
   props: {
     document: {
       type: Object

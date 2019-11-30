@@ -1,10 +1,20 @@
 <template>
-  <button
-    @click="$emit('click')"
-    :class="{ secondary, tertiary, small, caution, nondescript }"
-  >
-    <slot></slot>
-  </button>
+  <span style="display: inline-block">
+    <button
+      v-if="hasColor"
+      @click="$emit('click')"
+      :style="{ background: color }"
+    >
+      <slot></slot>
+    </button>
+    <button
+      v-if="!hasColor"
+      @click="$emit('click')"
+      :class="{ secondary, tertiary, small, caution, nondescript }"
+    >
+      <slot></slot>
+    </button>
+  </span>
 </template>
 
 <style lang="scss" scoped>
@@ -81,6 +91,15 @@ export default {
     caution: {
       type: Boolean,
       default: false
+    },
+    color: {
+      type: String,
+      default: null
+    }
+  },
+  computed: {
+    hasColor() {
+      return this.color != null;
     }
   }
 };

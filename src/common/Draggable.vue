@@ -32,6 +32,7 @@ export default {
     },
     handleFiles(files) {
       this.leave();
+      files = Array.from(files).filter(f => f.type == "application/pdf");
       if (files.length == 0) return;
       this.$emit("upload", files);
     }

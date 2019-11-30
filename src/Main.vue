@@ -11,6 +11,7 @@
         @expandSidebar="setSidebarExpanded(true)"
         :documents="documents"
         :loadingDocuments="loadingDocs"
+        :loadingError="error"
         @delete="handleDelete($event)"
         @pollDocument="pollDocument($event)"
         @docFinishedProcessing="handleDocFinishedProcessing($event)"
@@ -24,6 +25,7 @@ import Sidebar from "./sidebar/Sidebar";
 import MainContainer from "./main_container/MainContainer";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import Vue from "vue";
+import variables from "./scss/variables.scss";
 
 export default {
   components: { Sidebar, MainContainer },
@@ -32,11 +34,16 @@ export default {
       sidebarExpanded: false,
       projects: [],
       documents: [],
-      loadingDocs: true
+      loadingDocs: true,
+      error: false
     };
   },
   async mounted() {
-    await this.loadDocs();
+    try {
+      await this.loadDocs();
+    } catch (e) {
+      this.error = true;
+    }
   },
   methods: {
     setSidebarExpanded(expanded) {
@@ -56,16 +63,24 @@ export default {
       this.loadingDocs = false;
     },
     async handleDelete(doc) {
-      doc.loading = true;
-      await Vue.API.deleteDocument(null, doc);
+      this.$extensions.confirm(
+        "Confirm delete",
+        "Proceeding will permanently delete this document. Do you wish to continue?",
+        "Continue",
+        variables.caution,
+        async () => {
+          doc.loading = true;
+          await Vue.API.deleteDocument(null, doc);
 
-      for (let i = 0; i < this.documents.length; i++) {
-        // Remove document.
-        if (this.documents[i].id == doc.id) {
-          this.documents.splice(i, 1);
-          return;
+          for (let i = 0; i < this.documents.length; i++) {
+            // Remove document.
+            if (this.documents[i].id == doc.id) {
+              this.documents.splice(i, 1);
+              return;
+            }
+          }
         }
-      }
+      );
     },
     async pollDocument(id) {
       Vue.API.pollDocument(
@@ -81,7 +96,7 @@ export default {
             }
           }
           // Document wasn't found
-          this.documents.push(newDoc);
+          this.documents.splice(0, 0, newDoc);
         },
         doc => {
           // Set doc to be done processing without removing it

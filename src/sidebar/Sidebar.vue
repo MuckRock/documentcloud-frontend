@@ -56,7 +56,7 @@
 import Logo from "./Logo";
 import Projects from "./Projects";
 import Hamburger from "../common/Hamburger";
-import variables from "@/scss/variables.scss";
+import variables from "../scss/variables.scss";
 
 export default {
   components: { Logo, Projects, Hamburger },

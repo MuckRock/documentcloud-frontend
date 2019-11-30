@@ -1,5 +1,3 @@
-
-
 export default {
   install(Vue, router) {
     if (Vue.prototype.$extensions == null) Vue.prototype.$extensions = {};

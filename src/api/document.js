@@ -10,6 +10,7 @@ function convertDoc(doc) {
       return {
         doc,
         loading: false,
+        linger: false,
         currentProcessingFinished: false,
       };
     },
@@ -29,6 +30,10 @@ function convertDoc(doc) {
       thumbnail() {
         // Calculate thumbnail route
         return `${this.assetUrl}documents/${this.id}/pages/${this.slug}-p1-normal.gif`;
+      },
+      mightHaveThumbnail() {
+        // Returns if at least one page image has been processed
+        return this.success || this.imagesProcessed >= 1;
       },
       title() {
         return this.doc.title;
@@ -61,6 +66,15 @@ function convertDoc(doc) {
       status() {
         return this.doc.status;
       },
+      success() {
+        return this.doc.status == 'success';
+      },
+      successPreLinger() {
+        return this.doc.status == 'success' && this.linger;
+      },
+      successPostLinger() {
+        return this.doc.status == 'success' && !this.linger;
+      },
       pending() {
         return this.doc.status == 'pending';
       },
@@ -92,11 +106,8 @@ function convertDoc(doc) {
         if (this.pageCount == 0) return 0;
         return this.textsProcessed / this.pageCount;
       },
-      doneProcessing() {
-        return this.status == 'success';
-      },
       fresh() {
-        return this.doneProcessing && this.currentProcessingFinished;
+        return this.success && this.currentProcessingFinished;
       },
       processingProgress() {
         // Empty page count means 0 progress
@@ -128,13 +139,13 @@ export default {
     });
 
     Vue.API.getNonPendingDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.url('documents/?expand=user,organization'));
-      const documents = data.results.filter(doc => doc.status != 'pending');
+      const { data } = await session.get(Vue.API.url('documents/?ordering=-created_at&expand=user,organization'));
+      const documents = data.results.filter(doc => doc.status != 'pending' && doc.status != 'nofile');
       return documents.map(doc => convertDoc(doc));
     });
 
     Vue.API.getPendingDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.url('documents/?status=2&expand=user,organization'));
+      const { data } = await session.get(Vue.API.url('documents/?ordering=-created_at&status=2&expand=user,organization'));
       const documents = data.results;
       return documents.map(doc => convertDoc(doc));
     });
@@ -163,7 +174,8 @@ export default {
       docs,
       progressFn,
       completeFn,
-      allCompleteFn
+      allCompleteFn,
+      errorFn,
     ) {
       // Set initial progresses
       const progresses = [];
@@ -223,10 +235,16 @@ export default {
               if (toComplete.length == 0) {
                 allCompleteFn();
               }
+            }, e => {
+              errorFn('failed to start processing the document', e);
             });
+          }, e => {
+            errorFn('failed to upload the document', e);
           });
+        }, e => {
+          errorFn('failed to create the document', e);
         });
       }
     });
-  },
-};
+  }
+}

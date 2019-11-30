@@ -8,6 +8,7 @@
       ref="picker"
       class="picker"
       type="file"
+      accept="application/pdf"
       @change="handleFiles($event)"
     />
   </span>

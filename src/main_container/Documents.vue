@@ -13,7 +13,11 @@
         <Title>Your documents</Title>
         <Button @click="showUploadModal()">+ Upload</Button>
       </div>
-      <Processing v-if="processingDocs.length > 0" :docs="processingDocs" />
+      <Processing
+        v-if="processingDocs.length > 0"
+        :docs="processingDocs"
+        @delete="$emit('delete', $event)"
+      />
       <Draggable class="docscontainer" @upload="showUploadModal($event)">
         <Document
           v-for="document in filteredDocs"
@@ -66,7 +70,7 @@ export default {
   },
   computed: {
     nonPendingDocs() {
-      return this.documents.filter(doc => doc.nonPending);
+      return this.documents.filter(doc => doc.nonPending && !doc.linger);
     },
     pendingDocs() {
       return this.documents.filter(doc => doc.pending);

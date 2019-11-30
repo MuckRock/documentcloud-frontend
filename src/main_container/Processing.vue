@@ -17,7 +17,12 @@
     </p>
     <div class="docs">
       <div class="fadeout"></div>
-      <ProcessingDoc v-for="doc in docs" :key="doc.id" :doc="doc" />
+      <ProcessingDoc
+        v-for="doc in docs"
+        :key="doc.id"
+        :doc="doc"
+        @delete="$emit('delete', $event)"
+      />
     </div>
   </div>
 </template>
@@ -33,7 +38,7 @@ export default {
   },
   computed: {
     processing() {
-      return this.docs.filter(doc => !doc.doneProcessing);
+      return this.docs.filter(doc => doc.pending || doc.linger);
     },
     done() {
       return this.processing.length == 0;

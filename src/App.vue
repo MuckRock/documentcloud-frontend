@@ -53,7 +53,9 @@ const router = new Router({
 
 // Extensions
 import DocumentExtensions from "./extensions/document";
+import ConfirmDialogExtensions from "./extensions/confirmDialog";
 Vue.use(DocumentExtensions, router);
+Vue.use(ConfirmDialogExtensions);
 
 export default {
   router

@@ -1,45 +1,72 @@
 <template>
-  <div class="doc">
-    <div class="thumb">
-      <PollImage v-if="doc.thumbnail != null" :src="doc.thumbnail" />
-    </div>
-    <div class="info">
-      <h2>{{ doc.title }}</h2>
-      <p>
-        {{ doc.userOrg }}
-        <br />
-        <span v-if="doc.pageCount"
-          >{{ doc.pageCount }} page{{ doc.pageCount == 1 ? "" : "s" }} -</span
-        >
-        {{ doc.createdAt }}
-      </p>
-      <ProcessingProgress v-if="!doc.doneProcessing" :doc="doc" />
-      <div class="buttonpadded complete" v-if="doc.doneProcessing">
-        <Button :small="true" @click="$extensions.document.open(doc)"
-          >Open</Button
-        >
-        <Button
-          :small="true"
-          :secondary="true"
-          @click="doc.currentProcessingFinished = false"
-          >Dismiss</Button
-        >
-        <p>Processing complete</p>
+  <Loader :inline="true" :active="doc.loading">
+    <div class="doc">
+      <div class="thumb" :class="{ error: doc.error }">
+        <PollImage
+          v-if="!doc.error && doc.mightHaveThumbnail"
+          :src="doc.thumbnail"
+        />
+        <img v-if="doc.error" svg-inline src="../assets/error_icon.svg" />
+      </div>
+      <div class="info">
+        <h2>{{ doc.title }}</h2>
+        <p>
+          {{ doc.userOrg }}
+          <br />
+          <span v-if="doc.pageCount"
+            >{{ doc.pageCount }} page{{ doc.pageCount == 1 ? "" : "s" }} -</span
+          >
+          {{ doc.createdAt }}
+        </p>
+        <ProcessingProgress v-if="doc.pending || doc.linger" :doc="doc" />
+        <div class="buttonpadded" v-if="doc.error">
+          <Button :small="true" :secondary="true">Try again</Button>
+          <Button
+            :caution="true"
+            :nondescript="true"
+            @click="$emit('delete', doc)"
+            >Delete</Button
+          >
+          <p class="errorstatus">
+            An error occurred trying to process this document
+          </p>
+        </div>
+        <div class="buttonpadded complete" v-if="doc.successPostLinger">
+          <router-link :to="{ name: 'viewer', params: { id: doc.slugId } }"
+            ><Button :small="true">Open</Button></router-link
+          >
+          <Button
+            :small="true"
+            :secondary="true"
+            @click="doc.currentProcessingFinished = false"
+            >Dismiss</Button
+          >
+          <p>Processing complete</p>
+        </div>
       </div>
     </div>
-  </div>
+  </Loader>
 </template>
 
 <script>
 import ProcessingProgress from "./ProcessingProgress";
 import Button from "../common/Button";
+import Loader from "../common/Loader";
 import PollImage from "../common/PollImage";
 
 // import Vue from "vue";
 
 export default {
-  components: { ProcessingProgress, Button, PollImage },
-  props: { doc: Object }
+  components: { ProcessingProgress, Button, Loader, PollImage },
+  props: { doc: Object },
+  watch: {
+    "doc.pending"() {
+      if (!this.doc.pending && this.doc.success) {
+        this.doc.linger = true;
+        setTimeout(() => (this.doc.linger = false), 500);
+      }
+    }
+  }
 };
 </script>
 
@@ -63,6 +90,16 @@ img {
   display: inline-block;
   vertical-align: middle;
   margin: 1em 25px 1em 0;
+  text-align: center;
+
+  &.error {
+    background: $errorbg;
+  }
+
+  svg {
+    margin-top: 18px;
+    width: 42px;
+  }
 }
 
 .info {
@@ -84,10 +121,21 @@ p {
 }
 
 .buttonpadded {
-  margin: 0 -0.5em;
+  > * {
+    margin: 0 5px;
+  }
 
-  * {
-    margin: 0 0.5em;
+  > :first-child {
+    margin-left: 0;
+  }
+
+  p {
+    color: $tertiary;
+    margin: 0.5em 0;
+
+    &.errorstatus {
+      color: $black;
+    }
   }
 }
 

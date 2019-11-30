@@ -32,13 +32,26 @@
         </DropZone>
       </div>
       <div v-if="uploadMode">
-        <h1>Uploading... ({{ numUploaded }}/{{ files.length }})</h1>
-        <p>
+        <h1 v-if="!error">
+          Uploading... ({{ numUploaded }}/{{ files.length }})
+        </h1>
+        <h1 v-if="error">Error occurred while uploading</h1>
+        <p v-if="!error">
           Please leave this page open while your documents upload. This dialog
           will automatically close when they have finished uploading.
         </p>
+        <p class="error" v-if="error">
+          We failed to {{ errorMessage }}. Please try again later.
+        </p>
+        <div>
+          <Button :secondary="true" @click="$emit('allUploaded')"
+            >Dismiss</Button
+          >
+        </div>
       </div>
-
+      <div v-if="!uploadMode && files.length > 0">
+        <p class="subtitle">Edit document information:</p>
+      </div>
       <div
         class="files"
         v-if="files.length > 0"
@@ -51,16 +64,14 @@
           :file="file.file"
           :data="file"
           :uploadMode="uploadMode"
+          :error="error"
           @name="file.name = $event"
           @delete="removeFile(file.index)"
         />
       </div>
       <div v-if="!uploadMode">
-        <div v-if="files.length > 0 && !uploadAdditional">
-          <Button
-            class="vpadded"
-            :nondescript="true"
-            @click="uploadAdditional = true"
+        <div class="vpadded" v-if="files.length > 0 && !uploadAdditional">
+          <Button :nondescript="true" @click="uploadAdditional = true"
             >Upload additional files</Button
           >
         </div>
@@ -104,7 +115,8 @@ export default {
       id: 0,
       uploadMode: false,
       uploadFiles: [],
-      uploadAdditional: false
+      uploadAdditional: false,
+      errorMessage: null
     };
   },
   props: {
@@ -129,6 +141,9 @@ export default {
         total += this.uploadFiles[i].done ? 1 : 0;
       }
       return total;
+    },
+    error() {
+      return this.errorMessage != null;
     }
   },
   methods: {
@@ -172,6 +187,10 @@ export default {
         () => {
           // All complete handler
           this.$emit("allUploaded");
+        },
+        message => {
+          this.errorMessage = message;
+          this.$emit("setDismissable", true);
         }
       );
     }
@@ -227,5 +246,9 @@ export default {
 
 .vpadded {
   margin: 2em 0 2.5em 0;
+}
+
+p.subtitle {
+  color: $gray;
 }
 </style>

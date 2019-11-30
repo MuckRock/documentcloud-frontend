@@ -3,14 +3,26 @@
     <div class="bar" :class="{ initializing }">
       <div
         class="inner"
+        :class="{ animate, fast: doc.linger }"
         :style="{ width: `${processingProgress * 100}%` }"
       ></div>
+      <img
+        svg-inline
+        @click="cancelProcessing()"
+        class="close"
+        src="../assets/close.svg"
+        alt
+        draggable="false"
+      />
     </div>
     <p class="status" :class="{ complete }">{{ progressMsg }}</p>
   </div>
 </template>
 
 <style lang="scss" scoped>
+$progressWidth: 320px;
+$closePadding: 5px;
+
 .inner {
   width: 23%;
   position: absolute;
@@ -28,13 +40,20 @@
   background-size: 48px 48px;
   animation: slide 1s infinite linear forwards;
   border-radius: $radius;
-  transition: $progress-transition;
+
+  &.animate {
+    transition: $progress-transition;
+  }
+
+  &.fast {
+    transition: width 0.5s linear;
+  }
 }
 
 .bar {
   height: 18px;
   border-radius: $radius;
-  width: 330px;
+  width: $progressWidth;
   background: $barFaded;
   position: relative;
   margin-top: 1em;
@@ -49,6 +68,16 @@
     );
     background-size: 48px 48px;
     animation: slide 1s infinite linear forwards;
+  }
+
+  .close {
+    margin: 0 $closePadding 0 ($progressWidth + $closePadding);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .close:hover {
+    opacity: $hover-opacity;
   }
 }
 
@@ -76,13 +105,14 @@
 import { tween } from "@/tween.js";
 
 const RATE = 0.01;
-const INSTANT_PROGRESS = 0.2;
+const INSTANT_PROGRESS = 0.05;
 
 export default {
   data() {
     return {
       imagesProcessed: 0,
-      textsProcessed: 0
+      textsProcessed: 0,
+      animate: false
     };
   },
   props: {
@@ -90,11 +120,22 @@ export default {
   },
   watch: {
     "doc.imagesProcessed": function(newValue) {
-      tween(this.$data, RATE, "imagesProcessed", newValue);
+      if (this.animate) {
+        tween(this.$data, RATE, "imagesProcessed", newValue);
+      } else {
+        this.imagesProcessed = newValue;
+      }
     },
     "doc.textsProcessed": function(newValue) {
-      tween(this.$data, RATE, "textsProcessed", newValue);
+      if (this.animate) {
+        tween(this.$data, RATE, "textsProcessed", newValue);
+      } else {
+        this.textsProcessed = newValue;
+      }
     }
+  },
+  mounted() {
+    setTimeout(() => (this.animate = true), 1200);
   },
   computed: {
     pageCount() {
@@ -102,6 +143,9 @@ export default {
     },
     processingProgress() {
       if (this.pageCount == 0) return 0;
+      if (this.doc.successPreLinger) {
+        return 1;
+      }
       return (
         INSTANT_PROGRESS +
         ((this.imagesProcessed + this.textsProcessed) / (this.pageCount * 2)) *
@@ -146,6 +190,11 @@ export default {
 
       const result = parts.join(", ");
       return result.charAt(0).toUpperCase() + result.slice(1);
+    }
+  },
+  methods: {
+    cancelProcessing() {
+      // TODO: cancel processing
     }
   }
 };
