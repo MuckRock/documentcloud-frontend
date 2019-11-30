@@ -66,7 +66,7 @@ export default {
       this.$extensions.confirm(
         "Confirm delete",
         "Proceeding will permanently delete this document. Do you wish to continue?",
-        "Continue",
+        "Delete",
         variables.caution,
         async () => {
           doc.loading = true;
