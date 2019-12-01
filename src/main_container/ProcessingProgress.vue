@@ -121,6 +121,7 @@ export default {
   },
   watch: {
     "doc.imagesProcessed": function(newValue) {
+      if (newValue == null) return;
       if (this.animate) {
         tween(this.$data, RATE, "imagesProcessed", newValue);
       } else {
@@ -128,6 +129,7 @@ export default {
       }
     },
     "doc.textsProcessed": function(newValue) {
+      if (newValue == null) return;
       if (this.animate) {
         tween(this.$data, RATE, "textsProcessed", newValue);
       } else {
