@@ -87,11 +87,20 @@ function convertDoc(doc) {
       error() {
         return this.doc.status == 'error';
       },
+      remaining() {
+        let remaining = this.doc.remaining;
+        if (remaining == null) {
+          remaining = {
+            images: 0,
+            texts: 0,
+          }
+        }
+      },
       imagesRemaining() {
-        return this.doc.remaining.images;
+        return this.remaining.images;
       },
       textsRemaining() {
-        return this.doc.remaining.texts;
+        return this.remaining.texts;
       },
       imagesProcessed() {
         if (this.pageCount == 0) return 0;
