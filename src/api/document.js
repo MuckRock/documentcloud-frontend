@@ -29,7 +29,7 @@ function convertDoc(doc) {
       },
       thumbnail() {
         // Calculate thumbnail route
-        return `${this.assetUrl}documents/${this.id}/pages/${this.slug}-p1-normal.gif`;
+        return `${this.assetUrl}documents/${this.id}/pages/${this.slug}-p1-normal.gif?ts=${this.updatedStamp}`;
       },
       mightHaveThumbnail() {
         // Returns if at least one page image has been processed

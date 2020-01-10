@@ -81,7 +81,7 @@ export default {
         aspect: aspect,
         textUrl: `${this.doc.assetUrl}documents/${this.id}/pages/${
           this.slug
-        }-p${i + 1}.txt`,
+        }-p${i + 1}.txt?ts=${this.doc.updatedStamp}`,
         text: null
       }));
       this.getPageTexts();
