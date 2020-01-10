@@ -63,6 +63,7 @@ export default {
       this.$refs.body.zoom(direction);
     },
     handleMode(mode) {
+      console.log("HANDLE MODE", mode);
       this.mode = mode;
     },
     async getPageSizes() {
