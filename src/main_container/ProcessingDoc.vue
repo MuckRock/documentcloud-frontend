@@ -18,9 +18,13 @@
           >
           {{ doc.createdAt }}
         </p>
-        <ProcessingProgress v-if="doc.pending || doc.linger" :doc="doc" />
+        <ProcessingProgress
+          @refreshDoc="$emit('refreshDoc', $event)"
+          v-if="doc.pending || doc.linger"
+          :doc="doc"
+        />
         <div class="buttonpadded" v-if="doc.error">
-          <Button :small="true" :secondary="true">Try again</Button>
+          <Button :small="true" :secondary="true" @click="$emit('retry', doc)">Try again</Button>
           <Button
             :caution="true"
             :nondescript="true"

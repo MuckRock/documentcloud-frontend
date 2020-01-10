@@ -17,6 +17,8 @@
         :documents="documents"
         :filter="filter"
         @delete="$emit('delete', $event)"
+        @retry="$emit('retry', $event)"
+        @refreshDoc="$emit('refreshDoc', $event)"
         @pollDocument="$emit('pollDocument', $event)"
         @docFinishedProcessing="$emit('docFinishedProcessing', $event)"
       />

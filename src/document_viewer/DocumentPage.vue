@@ -1,9 +1,21 @@
 <template>
   <div class="pagecontainer">
-    <div class="page" :style="{maxWidth: `${zoomLevel}px`, padding: `20px ${horizontalPadding}px`}">
-      <img v-if="mode=='images'" :src="page.image" alt />
-      <div class="text" v-if="mode=='texts'">
-        <div class="chars">{{page.text}}</div>
+    <div
+      class="page"
+      :style="{
+        maxWidth: `${zoomLevel}px`,
+        padding: `20px ${horizontalPadding}px`
+      }"
+    >
+      <div class="imagepage">
+        <img draggable="false" v-if="imageMode" :src="page.image" alt />
+        <RedactDrag
+          v-if="imageMode && $editing.redactMode"
+          :page="page.number - 1"
+        />
+      </div>
+      <div class="text" v-if="textMode">
+        <div class="chars">{{ page.text }}</div>
       </div>
     </div>
   </div>
@@ -15,6 +27,12 @@
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+.imagepage {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 .page img {
@@ -37,15 +55,30 @@
   max-width: 66ch;
   margin: 0 auto;
 }
+
+img {
+  user-select: none;
+}
 </style>
 
 <script>
+import RedactDrag from "./RedactDrag";
+
 export default {
+  components: { RedactDrag },
   props: {
     page: Object,
     zoomLevel: Number,
     mode: String,
     horizontalPadding: Number
+  },
+  computed: {
+    imageMode() {
+      return this.mode == "images";
+    },
+    textMode() {
+      return this.mode == "text";
+    }
   }
 };
 </script>

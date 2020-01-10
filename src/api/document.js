@@ -78,6 +78,9 @@ function convertDoc(doc) {
       pending() {
         return this.doc.status == 'pending';
       },
+      deleted() {
+        return this.doc.status == 'deleted';
+      },
       nonPending() {
         return !this.pending;
       },
@@ -85,10 +88,10 @@ function convertDoc(doc) {
         return this.doc.status == 'error';
       },
       imagesRemaining() {
-        return this.doc.images_remaining;
+        return this.doc.remaining.images;
       },
       textsRemaining() {
-        return this.doc.texts_remaining;
+        return this.doc.remaining.texts;
       },
       imagesProcessed() {
         if (this.pageCount == 0) return 0;
@@ -156,7 +159,13 @@ export default {
     });
 
     Vue.API.pollDocument = async function (id, docFn, doneFn) {
-      const doc = await Vue.API.getDocument(null, id);
+      let doc;
+      try {
+        doc = await Vue.API.getDocument(null, id);
+      } catch (e) {
+        // Doc was deleted
+        return;
+      }
       docFn(doc);
       if (doc.nonPending) {
         if (doneFn != null) doneFn(doc);
@@ -168,6 +177,14 @@ export default {
 
     Vue.API.deleteDocument = wrapLoad(async function (document) {
       await session.delete(Vue.API.url(`documents/${document.id}/`));
+    });
+
+    Vue.API.reprocessDocument = wrapLoad(async function (id) {
+      await session.post(Vue.API.url(`documents/${id}/process/`));
+    });
+
+    Vue.API.redactDocument = wrapLoad(async function (id, redactions) {
+      await session.post(Vue.API.url(`documents/${id}/redactions/`), redactions);
     });
 
     Vue.API.uploadDocuments = wrapLoad(async function (
@@ -245,6 +262,11 @@ export default {
           errorFn('failed to create the document', e);
         });
       }
+    });
+
+    Vue.API.cancelProcessing = wrapLoad(async function (id) {
+      const { data } = await session.delete(Vue.API.url(`documents/${id}/process`));
+      return data;
     });
   }
 }

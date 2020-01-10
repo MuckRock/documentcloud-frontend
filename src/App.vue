@@ -53,8 +53,10 @@ const router = new Router({
 
 // Extensions
 import DocumentExtensions from "./extensions/document";
+import DocumentEditing from "./extensions/documentEditing";
 import ConfirmDialogExtensions from "./extensions/confirmDialog";
 Vue.use(DocumentExtensions, router);
+Vue.use(DocumentEditing, router);
 Vue.use(ConfirmDialogExtensions);
 
 export default {

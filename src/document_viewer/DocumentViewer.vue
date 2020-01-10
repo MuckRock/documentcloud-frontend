@@ -1,34 +1,40 @@
 <template>
-  <div>
-    <div class="shim"></div>
-    <DocumentHeader
-      @jump="jump($event)"
-      @zoom="handleZoom($event)"
-      @mode="handleMode($event)"
-      :currentPage="currentPage"
-      :numPages="pages.length"
-      :doc="doc"
-      :mode="mode"
-    />
-    <DocumentBody
-      ref="body"
-      :currentPage.sync="currentPage"
-      :pages="pages"
-      :zoomLevel.sync="zoomLevel"
-      :mode="mode"
-    />
-  </div>
+  <Loader :active="$editing.loading">
+    <div>
+      <div class="shim"></div>
+      <DocumentHeader
+        @jump="jump($event)"
+        @zoom="handleZoom($event)"
+        @mode="handleMode($event)"
+        @redact="$editing.enterRedactMode()"
+        :currentPage="currentPage"
+        :numPages="pages.length"
+        :doc="doc"
+        :mode="mode"
+      />
+      <DocumentEditor />
+      <DocumentBody
+        ref="body"
+        :currentPage.sync="currentPage"
+        :pages="pages"
+        :zoomLevel.sync="zoomLevel"
+        :mode="mode"
+      />
+    </div>
+  </Loader>
 </template>
 
 <script>
 import DocumentHeader from "./DocumentHeader";
 import DocumentBody from "./DocumentBody";
+import DocumentEditor from "./DocumentEditor";
 import session from "@/api/session";
+import Loader from "@/common/Loader";
 import { pageSizesFromSpec } from "./pagesize.js";
 import Vue from "vue";
 
 export default {
-  components: { DocumentHeader, DocumentBody },
+  components: { DocumentHeader, DocumentBody, DocumentEditor, Loader },
   data() {
     return {
       pages: [],

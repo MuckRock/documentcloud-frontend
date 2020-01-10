@@ -13,6 +13,14 @@
       @mode="$emit('mode', $event)"
       :mode="mode"
     />
+    <button
+      :disabled="$editing.editing"
+      @click="
+        $emit('redact', [{ page: 0, x1: 0.5, x2: 0.6, y1: 0.2, y2: 0.8 }])
+      "
+    >
+      Redact
+    </button>
   </header>
 </template>
 
@@ -28,6 +36,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 2;
 }
 </style>
 

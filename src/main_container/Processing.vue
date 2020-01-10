@@ -18,6 +18,8 @@
     <div class="docs">
       <div class="fadeout"></div>
       <ProcessingDoc
+        @refreshDoc="$emit('refreshDoc', $event)"
+        @retry="$emit('retry', $event)"
         v-for="doc in docs"
         :key="doc.id"
         :doc="doc"

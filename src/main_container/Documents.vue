@@ -16,6 +16,8 @@
       <Processing
         v-if="processingDocs.length > 0"
         :docs="processingDocs"
+        @refreshDoc="$emit('refreshDoc', $event)"
+        @retry="$emit('retry', $event)"
         @delete="$emit('delete', $event)"
       />
       <Draggable class="docscontainer" @upload="showUploadModal($event)">
@@ -24,6 +26,7 @@
           :key="document.id"
           :document="document"
           @delete="$emit('delete', $event)"
+          @retry="$emit('retry', $event)"
         />
         <NoDocuments v-if="documents.length == 0 && !loadingDocuments" />
         <div class="toastouter">

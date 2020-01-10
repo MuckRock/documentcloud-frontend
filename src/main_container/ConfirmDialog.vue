@@ -24,7 +24,7 @@
 </style>
 
 <script>
-import Button from "../common/Button";
+import Button from "@/common/Button";
 
 export default {
   components: { Button },

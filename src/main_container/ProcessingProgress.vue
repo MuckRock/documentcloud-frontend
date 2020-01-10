@@ -104,6 +104,7 @@ $closePadding: 5px;
 
 <script>
 import { tween } from "@/tween.js";
+import Vue from "vue";
 
 const RATE = 0.01;
 const INSTANT_PROGRESS = 0.05;
@@ -196,8 +197,9 @@ export default {
     }
   },
   methods: {
-    cancelProcessing() {
-      // TODO: cancel processing
+    async cancelProcessing() {
+      await Vue.API.cancelProcessing(null, this.doc.id);
+      this.$emit("refreshDoc", { id: this.doc.id, doneProcessing: true });
     }
   }
 };

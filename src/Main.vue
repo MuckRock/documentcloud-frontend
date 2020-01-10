@@ -13,6 +13,8 @@
         :loadingDocuments="loadingDocs"
         :loadingError="error"
         @delete="handleDelete($event)"
+        @retry="handleRetry($event)"
+        @refreshDoc="refreshDoc($event)"
         @pollDocument="pollDocument($event)"
         @docFinishedProcessing="handleDocFinishedProcessing($event)"
       />
@@ -82,27 +84,41 @@ export default {
         }
       );
     },
+    async handleRetry(doc) {
+      await Vue.API.reprocessDocument(null, doc.id);
+      this.pollDocument(doc.id);
+    },
+    replaceDoc(id, newDoc) {
+      // Replace new doc
+      for (let i = 0; i < this.documents.length; i++) {
+        const pDoc = this.documents[i];
+        if (pDoc.id == id) {
+          // Update document in-place
+          this.$set(this.documents, i, newDoc);
+          return;
+        }
+      }
+      // Document wasn't found
+      if (!newDoc.deleted) {
+        this.documents.splice(0, 0, newDoc);
+      }
+    },
     async pollDocument(id) {
       Vue.API.pollDocument(
         id,
-        newDoc => {
-          // Replace new doc
-          for (let i = 0; i < this.documents.length; i++) {
-            const pDoc = this.documents[i];
-            if (pDoc.id == id) {
-              // Update document in-place
-              this.$set(this.documents, i, newDoc);
-              return;
-            }
-          }
-          // Document wasn't found
-          this.documents.splice(0, 0, newDoc);
-        },
+        newDoc => this.replaceDoc(id, newDoc),
         doc => {
           // Set doc to be done processing without removing it
           doc.currentProcessingFinished = true;
         }
       );
+    },
+    async refreshDoc({ id, doneProcessing = false }) {
+      const newDoc = await Vue.API.getDocument(null, id);
+      if (doneProcessing) {
+        newDoc.currentProcessingFinished = true;
+      }
+      this.replaceDoc(id, newDoc);
     },
     handleDocFinishedProcessing(doc) {
       this.documents.push(doc);

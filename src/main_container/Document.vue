@@ -14,7 +14,11 @@
               :src="cardImage"
               draggable="false"
             />
-            <ErrorCard v-if="error" @delete="$emit('delete', document)" />
+            <ErrorCard
+              v-if="error"
+              @delete="$emit('delete', document)"
+              @retry="$emit('retry', document)"
+            />
           </div>
           <div class="title">{{ document.title }}</div>
           <div class="sub">{{ document.userOrg }}</div>

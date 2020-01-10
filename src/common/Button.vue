@@ -1,6 +1,7 @@
 <template>
   <span style="display: inline-block">
     <button
+      :disabled="disabled"
       v-if="hasColor"
       @click="$emit('click')"
       :style="{ background: color }"
@@ -8,6 +9,7 @@
       <slot></slot>
     </button>
     <button
+      :disabled="disabled"
       v-if="!hasColor"
       @click="$emit('click')"
       :class="{ secondary, tertiary, small, caution, nondescript }"
@@ -18,6 +20,8 @@
 </template>
 
 <style lang="scss" scoped>
+$disabled-opacity: 0.4;
+
 button {
   padding: 6px 15px;
   margin: 6px 0;
@@ -32,8 +36,18 @@ button {
   color: white;
   font-family: inherit;
 
+  &:disabled {
+    opacity: $disabled-opacity;
+    cursor: inherit;
+    filter: grayscale(70%);
+  }
+
   &:hover {
     opacity: $hover-opacity;
+
+    &:disabled {
+      opacity: $disabled-opacity;
+    }
   }
 
   &.secondary {
@@ -72,6 +86,10 @@ button {
 <script>
 export default {
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     small: {
       type: Boolean,
       default: false
