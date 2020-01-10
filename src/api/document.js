@@ -60,8 +60,14 @@ function convertDoc(doc) {
       rawCreatedAt() {
         return this.doc.created_at;
       },
+      rawUpdatedAt() {
+        return this.doc.updated_at;
+      },
       createdAt() {
         return new Date(Date.parse(this.rawCreatedAt)).toLocaleDateString()
+      },
+      updatedStamp() {
+        return Date.parse(this.rawUpdatedAt);
       },
       status() {
         return this.doc.status;

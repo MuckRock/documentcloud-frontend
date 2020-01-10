@@ -77,7 +77,7 @@ export default {
         number: i + 1,
         image: `${this.doc.assetUrl}documents/${this.id}/pages/${
           this.slug
-        }-p${i + 1}-large.gif`,
+        }-p${i + 1}-large.gif?ts=${this.doc.updatedStamp}`,
         aspect: aspect,
         textUrl: `${this.doc.assetUrl}documents/${this.id}/pages/${
           this.slug
