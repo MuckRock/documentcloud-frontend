@@ -74,12 +74,10 @@ export default {
   },
   computed: {
     imageMode() {
-      console.log("MODE", this.mode);
       return this.mode == "images";
     },
     textMode() {
-      console.log("MODE", this.mode);
-      return this.mode == "text";
+      return this.mode == "texts";
     }
   }
 };
