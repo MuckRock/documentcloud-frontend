@@ -97,10 +97,10 @@ function convertDoc(doc) {
         }
       },
       imagesRemaining() {
-        return this.remaining.images || 0;
+        return this.remaining == null ? 0 : (this.remaining.images || 0);
       },
       textsRemaining() {
-        return this.remaining.texts || 0;
+        return this.remaining == null ? 0 : (this.remaining.texts || 0);
       },
       imagesProcessed() {
         if (this.pageCount == 0) return 0;
