@@ -42,8 +42,7 @@ export default {
           if (this.redactions.length > 0) {
             await Vue.API.redactDocument(this, id, this.redactions);
             this.redactions = [];
-            // this.$router.push({ name: "app" });
-            window.location.replace(`/app?now=${new Date()}`);
+            this.$router.push({ name: "app" });
           }
         }
       }
