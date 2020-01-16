@@ -13,8 +13,12 @@ const session = axios.create({
 });
 
 session.getStatic = async function getStatic(url) {
-  const redirectUrl = (await session.get(url)).data.location;
-  return (await axios.get(redirectUrl)).data;
+  if (url.startsWith(process.env.DC_BASE)) {
+    const redirectUrl = (await session.get(url)).data.location;
+    return (await axios.get(redirectUrl)).data;
+  } else {
+    return (await axios.get(url)).data;
+  }
 }
 
 export default session;

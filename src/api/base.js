@@ -1,8 +1,5 @@
-export default {
-  install(Vue) {
-    if (Vue.API == null) Vue.API = {};
+const baseApiUrl = process.env.DC_BASE + process.env.API;
 
-    Vue.API.apiUrl = process.env.VUE_APP_DC_BASE + process.env.VUE_APP_API;
-    Vue.API.url = (x) => `${Vue.API.apiUrl}${x}`;
-  }
+export function apiUrl(url) {
+  return `${baseApiUrl}${url}`;
 }

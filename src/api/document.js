@@ -1,287 +1,179 @@
+/**
+ * Methods related to the DocumentCloud document API
+ */
+
 import session from './session';
+import { apiUrl } from './base';
+import { timeout } from '@/util/timeout';
+import { queryBuilder } from '@/util/url';
 import axios from 'axios';
-import wrapLoad from './wrapload';
-import { timeout } from '../api';
-import Vue from 'vue';
 
-function convertDoc(doc) {
-  return new Vue({
-    data() {
-      return {
-        doc,
-        loading: false,
-        linger: false,
-        currentProcessingFinished: false,
-      };
-    },
-    computed: {
-      id() {
-        return this.doc.id;
-      },
-      slug() {
-        return this.doc.slug;
-      },
-      slugId() {
-        return [this.doc.id, this.doc.slug].join('-');
-      },
-      assetUrl() {
-        return this.doc.asset_url;
-      },
-      thumbnail() {
-        // Calculate thumbnail route
-        return `${this.assetUrl}documents/${this.id}/pages/${this.slug}-p1-normal.gif?ts=${this.updatedStamp}`;
-      },
-      mightHaveThumbnail() {
-        // Returns if at least one page image has been processed
-        return this.success || this.imagesProcessed >= 1;
-      },
-      title() {
-        return this.doc.title;
-      },
-      pageCount() {
-        return this.doc.page_count;
-      },
-      user() {
-        return this.doc.user.name;
-      },
-      individualOrg() {
-        return this.doc.organization.individual;
-      },
-      org() {
-        return this.doc.organization.name;
-      },
-      userOrg() {
-        // Return user and organization formatted as a string
-        if (this.individualOrg) {
-          return this.user;
-        }
-        return `${this.user} ${this.org}`
-      },
-      rawCreatedAt() {
-        return this.doc.created_at;
-      },
-      rawUpdatedAt() {
-        return this.doc.updated_at;
-      },
-      createdAt() {
-        return new Date(Date.parse(this.rawCreatedAt)).toLocaleDateString()
-      },
-      updatedStamp() {
-        return Date.parse(this.rawUpdatedAt);
-      },
-      status() {
-        return this.doc.status;
-      },
-      success() {
-        return this.doc.status == 'success';
-      },
-      successPreLinger() {
-        return this.doc.status == 'success' && this.linger;
-      },
-      successPostLinger() {
-        return this.doc.status == 'success' && !this.linger;
-      },
-      pending() {
-        return this.doc.status == 'pending';
-      },
-      deleted() {
-        return this.doc.status == 'deleted';
-      },
-      nonPending() {
-        return !this.pending;
-      },
-      error() {
-        return this.doc.status == 'error';
-      },
-      remaining() {
-        let remaining = this.doc.remaining;
-        if (remaining == null) {
-          remaining = {
-            images: 0,
-            texts: 0,
-          }
-        }
-      },
-      imagesRemaining() {
-        return this.remaining == null ? 0 : (this.remaining.images || 0);
-      },
-      textsRemaining() {
-        return this.remaining == null ? 0 : (this.remaining.texts || 0);
-      },
-      imagesProcessed() {
-        if (this.pageCount == 0) return 0;
-        return this.pageCount - this.imagesRemaining;
-      },
-      textsProcessed() {
-        if (this.pageCount == 0) return 0;
-        return this.pageCount - this.textsRemaining;
-      },
-      imageProgress() {
-        if (this.pageCount == 0) return 0;
-        return this.imagesProcessed / this.pageCount;
-      },
-      textProgress() {
-        if (this.pageCount == 0) return 0;
-        return this.textsProcessed / this.pageCount;
-      },
-      fresh() {
-        return this.success && this.currentProcessingFinished;
-      },
-      processingProgress() {
-        // Empty page count means 0 progress
-        if (this.pageCount == 0) return 0;
+import { Document } from '@/structure/document';
 
-        const progress =
-          (this.imagesProcessed + this.textsProcessed) / (this.pageCount * 2);
-        return progress;
-      }
-    },
-  });
+const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
+
+export const DEFAULT_ORDERING = '-created_at';
+export const DEFAULT_EXPAND = 'user,organization';
+
+// Statuses
+export const PENDING = 2;
+
+export async function getMe() {
+  // Returns the currently logged in user
+  const { data } = await session.get(apiUrl('users/me'));
+  return data;
 }
 
-const POLL_TIMEOUT = 5000;
+export async function getDocuments(status = null, ordering = DEFAULT_ORDERING, expand = DEFAULT_EXPAND) {
+  // Return documents with the specified parameters
+  const { data } = await session.get(apiUrl(queryBuilder('documents', { ordering, expand, status })));
+  const documents = data.results;
+  return documents.map(document => new Document(document));
+}
 
-export default {
-  install(Vue) {
-    if (Vue.API == null) Vue.API = {};
+export async function getDocument(id, expand = DEFAULT_EXPAND) {
+  // Get a single document with the specified id
+  const { data } = await session.get(apiUrl(queryBuilder(`documents/${id}/`, { expand })));
+  return new Document(data);
+}
 
-    Vue.API.getMe = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.url('users/me'));
-      return data;
+export async function deleteDocument(id) {
+  // Delete the document with the specified id
+  await session.delete(apiUrl(`documents/${id}/`));
+}
+
+export async function renameDocument(id, title) {
+  // Delete the document with the specified id
+  await session.patch(apiUrl(`documents/${id}/`), { title });
+}
+
+export async function changeAccess(id, access) {
+  await session.patch(apiUrl(`documents/${id}/`), { access });
+}
+
+export async function reprocessDocument(id) {
+  // Reprocess the document with the specified id
+  await session.post(apiUrl(`documents/${id}/process/`));
+}
+
+export async function cancelProcessing(id) {
+  // Cancel processing the document with the specified id
+  const { data } = await session.delete(apiUrl(`documents/${id}/process`));
+  return data;
+}
+
+export async function redactDocument(id, redactions) {
+  // Redact the document with the specified id and redactions
+  await session.post(apiUrl(`documents/${id}/redactions/`), redactions);
+}
+
+/**
+ * Polls the specified document, repeatedly requesting it until the specified condition is met.
+ * @param {string} id The document id to poll
+ * @param {Function} docFn A function to run each time the document is retrieved
+ * @param {Function} doneFn A function to run when polling stops
+ * @param {Function} conditionFn A function to test each doc and stop polling if it returns true.
+ *     Defaults to check if the doc is not pending.
+ */
+export async function pollDocument(id, docFn, doneFn, conditionFn = doc => doc.nonPending) {
+  let doc;
+  try {
+    // Attempt to fetch the document
+    doc = await getDocument(id);
+  } catch (e) {
+    // Doc was potentially deleted
+    // TODO: Investigate whether should call done or add a deleteFn (or handle fn)
+    return;
+  }
+  // Trigger the new document function
+  if (docFn != null) docFn(doc);
+
+  // Test for the document being finished
+  if (conditionFn(doc)) {
+    if (doneFn != null) doneFn(doc);
+    return;
+  }
+
+  // Retrigger after timeout
+  await timeout(POLL_TIMEOUT);
+  pollDocument(id, docFn, doneFn, conditionFn);
+}
+
+/**
+ * Uploads the specified documents, providing callbacks for progress updates
+ * @param {Array<Document>} docs The documents to upload
+ * @param {Function} progressFn A function to call with upload progress
+ * @param {Function} completeFn A function to call when an individual doc uploads
+ * @param {Function} allCompleteFn A function to call when all docs upload
+ * @param {Function} errorFn A function to call when an error occurs
+ */
+export async function uploadDocuments(docs, progressFn, completeFn, allCompleteFn, errorFn) {
+  // Set initial progresses
+  const progresses = [];
+  const toComplete = [];
+  for (let i = 0; i < docs.length; i++) {
+    progresses.push({
+      index: i,
+      progress: 0,
+      startTime: Date.now(),
+      completeTime: null,
+      interval: null,
     });
+    toComplete.push(i);
+  }
 
-    Vue.API.getAllDocuments = wrapLoad(async function () {
-      const nonPendingDocs = await Vue.API.getNonPendingDocuments(null);
-      const pendingDocs = await Vue.API.getPendingDocuments(null);
-      return pendingDocs.concat(nonPendingDocs);
-    });
+  for (let i = 0; i < docs.length; i++) {
+    const formData = new FormData();
+    const file = docs[i].file;
+    const name = docs[i].name;
+    formData.append('file', file);
+    formData.append('title', name);
 
-    Vue.API.getNonPendingDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.url('documents/?ordering=-created_at&expand=user,organization'));
-      const documents = data.results.filter(doc => doc.status != 'pending' && doc.status != 'nofile');
-      return documents.map(doc => convertDoc(doc));
-    });
+    session.post(apiUrl('documents/'), {
+      title: name,
+    }).then(response => {
+      // Allocate a document with title.
+      const responseData = response.data;
+      const url = responseData.presigned_url;
+      const id = responseData.id;
 
-    Vue.API.getPendingDocuments = wrapLoad(async function () {
-      const { data } = await session.get(Vue.API.url('documents/?ordering=-created_at&status=2&expand=user,organization'));
-      const documents = data.results;
-      return documents.map(doc => convertDoc(doc));
-    });
-
-    Vue.API.getDocument = wrapLoad(async function (id) {
-      const { data } = await session.get(Vue.API.url(`documents/${id}/?expand=user,organization`));
-      return convertDoc(data);
-    });
-
-    Vue.API.pollDocument = async function (id, docFn, doneFn) {
-      let doc;
-      try {
-        doc = await Vue.API.getDocument(null, id);
-      } catch (e) {
-        // Doc was deleted
-        return;
-      }
-      docFn(doc);
-      if (doc.nonPending) {
-        if (doneFn != null) doneFn(doc);
-        return;
-      }
-      await timeout(POLL_TIMEOUT);
-      Vue.API.pollDocument(id, docFn, doneFn);
-    };
-
-    Vue.API.deleteDocument = wrapLoad(async function (document) {
-      await session.delete(Vue.API.url(`documents/${document.id}/`));
-    });
-
-    Vue.API.reprocessDocument = wrapLoad(async function (id) {
-      await session.post(Vue.API.url(`documents/${id}/process/`));
-    });
-
-    Vue.API.redactDocument = wrapLoad(async function (id, redactions) {
-      await session.post(Vue.API.url(`documents/${id}/redactions/`), redactions);
-    });
-
-    Vue.API.uploadDocuments = wrapLoad(async function (
-      docs,
-      progressFn,
-      completeFn,
-      allCompleteFn,
-      errorFn,
-    ) {
-      // Set initial progresses
-      const progresses = [];
-      const toComplete = [];
-      for (let i = 0; i < docs.length; i++) {
-        progresses.push({
-          index: i,
-          progress: 0,
-          startTime: Date.now(),
-          completeTime: null,
-          interval: null,
-        });
-        toComplete.push(i);
-      }
-
-      for (let i = 0; i < docs.length; i++) {
-        const formData = new FormData();
-        const file = docs[i].file;
-        const name = docs[i].name;
-        formData.append('file', file);
-        formData.append('title', name);
-
-        session.post(Vue.API.url('documents/'), {
-          title: name,
-        }).then(response => {
-          // Allocate a document with title.
-          const responseData = response.data;
-          const url = responseData.presigned_url;
-          const id = responseData.id;
-
-          axios.put(url, file, {
-            headers: {
-              'Content-Type': 'application/pdf',
-            },
-            onUploadProgress: progressEvent => {
-              // Handle upload progress
-              const progress = progressEvent.loaded / progressEvent.total;
-              progresses[i].progress = progress;
-              progressFn(i, progress);
-            },
-          }).then(() => {
-            // Upload completed. Post to start processing.
-            session.post(Vue.API.url(`documents/${id}/process/`)).then(() => {
-              // Handle complete upload
-              if (progresses[i].interval != null) {
-                // Clear existing fake timer.
-                clearTimeout(progresses[i].interval);
-                progresses[i].interval = null;
-              }
-              for (let j = 0; j < toComplete.length; j++) {
-                if (toComplete[j] == i) {
-                  toComplete.splice(j, 1);
-                  completeFn(id, i);
-                  break;
-                }
-              }
-              if (toComplete.length == 0) {
-                allCompleteFn();
-              }
-            }, e => {
-              errorFn('failed to start processing the document', e);
-            });
-          }, e => {
-            errorFn('failed to upload the document', e);
-          });
+      axios.put(url, file, {
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+        onUploadProgress: progressEvent => {
+          // Handle upload progress
+          const progress = progressEvent.loaded / progressEvent.total;
+          progresses[i].progress = progress;
+          progressFn(i, progress);
+        },
+      }).then(() => {
+        // Upload completed. Post to start processing.
+        session.post(apiUrl(`documents/${id}/process/`)).then(() => {
+          // Handle complete upload
+          if (progresses[i].interval != null) {
+            // Clear existing fake timer.
+            clearTimeout(progresses[i].interval);
+            progresses[i].interval = null;
+          }
+          for (let j = 0; j < toComplete.length; j++) {
+            if (toComplete[j] == i) {
+              toComplete.splice(j, 1);
+              completeFn(id, i);
+              break;
+            }
+          }
+          if (toComplete.length == 0) {
+            allCompleteFn();
+          }
         }, e => {
-          errorFn('failed to create the document', e);
+          errorFn('failed to start processing the document', e);
         });
-      }
-    });
-
-    Vue.API.cancelProcessing = wrapLoad(async function (id) {
-      const { data } = await session.delete(Vue.API.url(`documents/${id}/process`));
-      return data;
+      }, e => {
+        errorFn('failed to upload the document', e);
+      });
+    }, e => {
+      errorFn('failed to create the document', e);
     });
   }
 }

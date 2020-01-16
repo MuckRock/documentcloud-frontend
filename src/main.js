@@ -1,6 +1,9 @@
-import Vue from 'vue';
-import App from './App.vue';
+import Main from './Main.svelte';
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app');
+const app = new Main({
+  target: document.body,
+});
+
+window.app = app;
+
+export default app;

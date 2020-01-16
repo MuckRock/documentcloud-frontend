@@ -1,6 +1,11 @@
 .DS_Store
 ._*
-node_modules/
-dist/
-e2e/cypress/screenshots
-e2e/cypress/videos
+node_modules
+public/bundle.*
+package-lock.json
+yarn.lock
+stats.json
+public_test/main.*
+
+# Netlify
+.netlify
