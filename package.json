@@ -25,6 +25,7 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
+    "build-staging": "cross-env NODE_ENV=staging webpack",
     "dev": "webpack-dev-server --content-base public",
     "test": "webpack-dev-server --content-base public_test src/test/runner.js"
   },
