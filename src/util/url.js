@@ -4,8 +4,8 @@
  * @param {Object} params A dictionary of key-value pairs for each query parameter
  */
 export function queryBuilder(baseUrl, params) {
-  let prefix = '?';
-  let result = '';
+  let prefix = "?";
+  let result = "";
   const keys = Object.keys(params);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
@@ -16,7 +16,7 @@ export function queryBuilder(baseUrl, params) {
 
     result += `${prefix}${key}=${encodeURIComponent(value)}`;
     // Only the first prefix will be "?"
-    prefix = '&';
+    prefix = "&";
   }
   return `${baseUrl}${result}`;
 }

@@ -1,10 +1,6 @@
 import { Svue } from "svue";
-
-// API
+import { pageSizesFromSpec } from "@/api/pageSize";
 import { getDocument } from "@/api/document";
-import { getPageAspects } from "@/api/viewer";
-
-// Router
 import { router } from "@/router/router";
 
 export const viewer = new Svue({
@@ -30,11 +26,10 @@ export const viewer = new Svue({
       const doc = await getDocument(id);
       return doc;
     },
-    async pageAspects(document) {
+    pageAspects(document) {
       if (document == null) return null;
 
-      const aspects = await getPageAspects(document);
-      return aspects;
+      return pageSizesFromSpec(document.pageSpec);
     }
   }
 });

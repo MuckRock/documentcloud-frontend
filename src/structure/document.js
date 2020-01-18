@@ -1,5 +1,5 @@
-import { Svue } from 'svue';
-import { handlePlural } from '@/util/string';
+import { Svue } from "svue";
+import { handlePlural } from "@/util/string";
 
 export class Document extends Svue {
   constructor(rawDocument, structure = {}) {
@@ -23,7 +23,7 @@ export class Document extends Svue {
           return doc.slug;
         },
         slugId(id, slug) {
-          return [id, slug].join('-');
+          return [id, slug].join("-");
         },
         title(doc) {
           return doc.title;
@@ -47,10 +47,10 @@ export class Document extends Svue {
         assetUrl(doc) {
           return doc.asset_url;
         },
-        thumbnail(assetUrl, id, slug) {
+        thumbnail(assetUrl, id, slug, updatedAtTimestamp) {
           // Calculate thumbnail route
           // TODO: last modified
-          return `${assetUrl}documents/${id}/pages/${slug}-p1-normal.gif`;
+          return `${assetUrl}documents/${id}/pages/${slug}-p1-normal.gif?ts=${updatedAtTimestamp}`;
         },
         rawCreatedAt(doc) {
           // Unprocessed created at
@@ -69,19 +69,22 @@ export class Document extends Svue {
         updatedAt(updatedAtTimestamp) {
           return new Date(updatedAtTimestamp);
         },
+        pageSpec(doc) {
+          return doc.page_spec;
+        },
 
         // Access properties
         access(doc) {
           return doc.access;
         },
         privateAccess(access) {
-          return access == 'private';
+          return access == "private";
         },
         publicAccess(access) {
-          return access == 'public';
+          return access == "public";
         },
         organizationAccess(access) {
-          return access == 'organization';
+          return access == "organization";
         },
 
         // Status and processing-related properties
@@ -89,19 +92,19 @@ export class Document extends Svue {
           return doc.status;
         },
         success(status) {
-          return status == 'success';
+          return status == "success";
         },
         pending(status) {
-          return status == 'pending';
+          return status == "pending";
         },
         deleted(status) {
-          return status == 'deleted';
+          return status == "deleted";
         },
         error(status) {
-          return status == 'error';
+          return status == "error";
         },
         nofile(status) {
-          return status == 'nofile';
+          return status == "nofile";
         },
         nonPending(pending) {
           return !pending;
@@ -175,18 +178,24 @@ export class Document extends Svue {
           if (individualOrg) {
             return userName;
           }
-          return `${userName} (${organizationName})`
+          return `${userName} (${organizationName})`;
         },
         pageCountString(pageCount) {
-          if (pageCount == 0) return '';
-          return handlePlural(pageCount, 'page', true);
+          if (pageCount == 0) return "";
+          return handlePlural(pageCount, "page", true);
         },
         createdAtString(createdAt) {
-          return createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+          return createdAt.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
         },
         summary(pageCountString, userOrgString, createdAtString) {
-          return [pageCountString, userOrgString, createdAtString].filter(x => x.length > 0).join(' - ')
-        },
+          return [pageCountString, userOrgString, createdAtString]
+            .filter(x => x.length > 0)
+            .join(" - ");
+        }
       }
     });
   }

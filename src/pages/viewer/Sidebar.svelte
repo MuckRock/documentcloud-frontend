@@ -1,5 +1,5 @@
 <script>
-  import { layout, redact, annotate } from "@/viewer/layout";
+  import { layout, enterRedactMode, enterAnnotateMode } from "@/viewer/layout";
 </script>
 
 <style lang="scss">
@@ -41,14 +41,14 @@
   class="sidebar"
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; left:
   calc(100% - {$layout.sidebarWidth}px)">
-  <div class="action" on:click={redact}>
+  <div class="action" on:click={enterRedactMode}>
     <h3>Redact</h3>
     <p>
       Create redactions on the document to hide text. The document will
       reprocess afterwards.
     </p>
   </div>
-  <div class="action" on:click={annotate}>
+  <div class="action" on:click={enterAnnotateMode}>
     <h3>Annotate</h3>
     <p>Make annotations to keep notes on the document.</p>
   </div>

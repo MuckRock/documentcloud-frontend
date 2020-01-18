@@ -19,6 +19,7 @@
   export let document;
   export let pageNumber;
   export let aspect;
+  export let actionOffset = 0;
 
   $: readablePageNumber = pageNumber + 1;
 
@@ -81,6 +82,15 @@
     background: black;
     pointer-events: none;
   }
+
+  .annotation {
+    position: absolute;
+    pointer-events: none;
+    border: 3px solid #ffe325;
+    background: #ffe32533;
+    border-radius: $radius;
+    box-sizing: border-box;
+  }
 </style>
 
 <div style="padding: {$renderer.verticalPageMargin}px 0">
@@ -88,7 +98,9 @@
     class="page"
     style="width: {$renderer.fullPageWidth}px; padding: 0 {$renderer.pageRail}px;
     margin: 0 auto">
-    <div class="number">p. {readablePageNumber}</div>
+    <div class="number" style="top: {actionOffset}px">
+      p. {readablePageNumber}
+    </div>
     <div class="content">
       <Image
         src={pageImageUrl(document, pageNumber)}
@@ -102,13 +114,22 @@
         alt="Page {readablePageNumber} of {document.title} contributed by {document.userName}" />
       {#if $layout.redacting}
         {#each $layout.allRedactions as redaction}
-          {#if redaction.pageNumber == pageNumber}
+          {#if redaction.page == pageNumber}
             <div
               class="redaction"
-              style="left: {redaction.start.x * 100}%; top: {redaction.start.y * 100}%;
+              style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
               width: {redaction.width * 100}%; height: {redaction.height * 100}%" />
           {/if}
         {/each}
+      {:else if $layout.annotating}
+        {#if $layout.currentAnnotation != null}
+          {#if $layout.currentAnnotation.page == pageNumber}
+            <div
+              class="annotation"
+              style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
+              width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
+          {/if}
+        {/if}
       {/if}
     </div>
   </div>

@@ -1,4 +1,8 @@
 import { Svue } from "svue";
+import { viewer } from "./viewer";
+import { wrapLoad } from "@/util/wrapLoad";
+import { redactDocument } from "@/api/document";
+import { showConfirm } from "@/manager/confirmDialog";
 
 export const layout = new Svue({
   data() {
@@ -7,9 +11,18 @@ export const layout = new Svue({
       sidebarWidth: 350,
       footerHeight: 47,
 
+      // TODO: handle load and error
+      loading: false,
+      error: null,
+
       action: null,
+
+      // Redactions
       rawRedaction: null,
-      rawPendingRedactions: []
+      rawPendingRedactions: [],
+
+      // Annotations
+      rawAnnotation: null
     };
   },
   computed: {
@@ -22,46 +35,64 @@ export const layout = new Svue({
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
     },
+
+    // Redactions
     currentRedaction(redacting, rawRedaction) {
       if (!redacting || rawRedaction == null) return null;
 
-      const start = {
-        x: Math.min(rawRedaction.start.x, rawRedaction.end.x),
-        y: Math.min(rawRedaction.start.y, rawRedaction.end.y)
-      };
-      const end = {
-        x: Math.max(rawRedaction.start.x, rawRedaction.end.x),
-        y: Math.max(rawRedaction.start.y, rawRedaction.end.y)
-      };
-
-      console.log({ start, end });
-
-      return {
-        pageNumber: rawRedaction.pageNumber,
-        start: start,
-        end: end,
-        width: end.x - start.x,
-        height: end.y - start.y
-      };
+      return consolidateDragObject(rawRedaction);
     },
     pendingRedactions(redacting, rawPendingRedactions) {
       if (!redacting) return null;
       return rawPendingRedactions;
     },
+    redactionsUndoable(pendingRedactions) {
+      if (pendingRedactions == null) return false;
+      return pendingRedactions.length >= 1;
+    },
     allRedactions(currentRedaction, pendingRedactions) {
       if (currentRedaction == null) return pendingRedactions;
       return [...pendingRedactions, currentRedaction];
+    },
+
+    // Annotations
+    currentAnnotation(annotating, rawAnnotation) {
+      if (!annotating || rawAnnotation == null) return null;
+
+      return consolidateDragObject(rawAnnotation);
     }
   }
 });
 
-export function redact() {
+function consolidateDragObject(dragObject) {
+  const start = {
+    x: Math.min(dragObject.start.x, dragObject.end.x),
+    y: Math.min(dragObject.start.y, dragObject.end.y)
+  };
+  const end = {
+    x: Math.max(dragObject.start.x, dragObject.end.x),
+    y: Math.max(dragObject.start.y, dragObject.end.y)
+  };
+
+  return {
+    page: dragObject.pageNumber,
+    x1: start.x,
+    x2: end.x,
+    y1: start.y,
+    y2: end.y,
+    width: end.x - start.x,
+    height: end.y - start.y
+  };
+}
+
+export function enterRedactMode() {
   layout.rawRedaction = null;
   layout.rawPendingRedactions = [];
   layout.action = "redact";
 }
 
-export function annotate() {
+export function enterAnnotateMode() {
+  layout.rawAnnotation = null;
   layout.action = "annotate";
 }
 
@@ -72,12 +103,24 @@ export function pageDragStart(pageNumber, x, y) {
       start: { x, y },
       end: { x, y }
     };
+  } else if (layout.annotating) {
+    layout.rawAnnotation = {
+      pageNumber,
+      start: { x, y },
+      end: { x, y }
+    };
   }
 }
 
 export function pageDragMove(pageNumber, x, y) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
+  } else if (layout.annotating) {
+    layout.rawAnnotation = {
+      ...layout.rawAnnotation,
+      pageNumber,
+      end: { x, y }
+    };
   }
 }
 
@@ -85,10 +128,47 @@ export function pageDragEnd(pageNumber, x, y) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
     pushRedaction();
+  } else if (layout.annotating) {
+    layout.rawAnnotation = {
+      ...layout.rawAnnotation,
+      pageNumber,
+      end: { x, y }
+    };
   }
 }
 
 function pushRedaction() {
-  layout.rawPendingRedactions.push(layout.currentRedaction);
+  layout.rawPendingRedactions = [
+    ...layout.rawPendingRedactions,
+    layout.currentRedaction
+  ];
   layout.rawRedaction = null;
+}
+
+export function redact() {
+  console.log("Showing confirm");
+  showConfirm(
+    "Confirm redactions",
+    "Are you sure you wish to redact the current document? If you continue, the document viewer will close temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
+    "Continue",
+    async () => {
+      await wrapLoad(
+        layout,
+        async () => await redactDocument(viewer.id, layout.pendingRedactions)
+      );
+    }
+  );
+}
+
+export function undoRedaction() {
+  if (layout.rawPendingRedactions.length > 0) {
+    layout.rawPendingRedactions = layout.rawPendingRedactions.slice(
+      0,
+      layout.rawPendingRedactions.length - 1
+    );
+  }
+}
+
+export function cancelActions() {
+  layout.action = null;
 }

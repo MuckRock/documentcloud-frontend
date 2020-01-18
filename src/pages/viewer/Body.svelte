@@ -9,6 +9,9 @@
 
   let body;
 
+  let actionHeight;
+  $: actionOffset = actionHeight == null ? 0 : actionHeight;
+
   function updateDimension() {
     $renderer.bodyHeight = body.offsetHeight;
     $renderer.top = body.scrollTop;
@@ -53,7 +56,7 @@
   on:scroll={updateDimension}>
   {#if $viewer.loaded}
     {#if $layout.action != null}
-      <div class="actionpane">
+      <div class="actionpane" bind:clientHeight={actionHeight}>
         {#if $layout.redacting}
           <RedactPane />
         {:else if $layout.annotating}
@@ -69,6 +72,7 @@
           on:shift={handleShift}
           document={$viewer.document}
           pageNumber={chunk.number}
+          {actionOffset}
           aspect={$renderer.computedAspects[chunk.number].aspect} />
       {/if}
     {/each}
