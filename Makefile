@@ -7,8 +7,11 @@ build:
 dev:
 	docker-compose -f local.yml up documentcloud_frontend
 
-buildserve:
+build-serve:
 	docker-compose -f local.yml up documentcloud_frontend_build
+
+build-analyze:
+	docker-compose -f local.yml up documentcloud_frontend_analyze
 
 test:
 	docker-compose -f local.yml up documentcloud_frontend_test

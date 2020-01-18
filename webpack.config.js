@@ -7,8 +7,9 @@ const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
-const mode = process.env.NODE_ENV || "development";
-const prod = mode === "production";
+const prod = process.env.NODE_ENV.startsWith("production");
+const mode = prod ? "development" : "production";
+const useAnalyzer = process.env.NODE_ENV.endsWith("analyze");
 
 module.exports = {
   entry: {
@@ -79,12 +80,16 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "bundle.css"
     }),
-    new DotenvFlow()
-    // ...(prod ? [new BundleAnalyzerPlugin({
-    //   analyzerPort: 80,
-    //   analyzerHost: '0.0.0.0',
-    //   openAnalyzer: false
-    // })] : [])
+    new DotenvFlow(),
+    ...(useAnalyzer
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerPort: 80,
+            analyzerHost: "0.0.0.0",
+            openAnalyzer: false
+          })
+        ]
+      : [])
   ],
   optimization: {
     minimize: true,
