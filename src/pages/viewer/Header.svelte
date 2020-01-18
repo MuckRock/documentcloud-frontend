@@ -1,6 +1,7 @@
 <script>
   import Link from "@/router/Link";
   import { viewer } from "@/viewer/viewer";
+  import { layout } from "@/viewer/layout";
 
   // SVG assets
   import backArrowSvg from "@/assets/back_arrow.svg";
@@ -8,7 +9,6 @@
 
 <style lang="scss">
   header {
-    height: $viewerHeaderHeight;
     display: table;
     background: $viewerPaneColor;
     width: 100%;
@@ -24,13 +24,13 @@
     h1 {
       font-weight: bold;
       font-size: 16px;
-      color: #171717;
+      color: $viewerBlack;
       margin: 0;
     }
 
     h2 {
       font-weight: normal;
-      color: #525252;
+      color: $viewerGray;
       font-size: 14px;
       margin: 4px 0;
     }
@@ -41,7 +41,7 @@
   }
 </style>
 
-<header>
+<header style="height: {$layout.headerHeight}px">
   <div class="valign logo">
     <Link to="app">
       {@html backArrowSvg}

@@ -1,22 +1,22 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
 // API
-import { getDocument } from '@/api/document';
-import { getPageAspects } from '@/api/viewer';
+import { getDocument } from "@/api/document";
+import { getPageAspects } from "@/api/viewer";
 
 // Router
-import { router } from '@/router/router';
+import { router } from "@/router/router";
 
 export const viewer = new Svue({
   data() {
     return {
-      router,
-    }
+      router
+    };
   },
   computed: {
     id(router) {
       const route = router.resolvedRoute;
-      if (route.name == 'viewer' && route.props != null) {
+      if (route.name == "viewer" && route.props != null) {
         return route.props.id;
       }
       return null;
@@ -38,8 +38,3 @@ export const viewer = new Svue({
     }
   }
 });
-
-function heightForPage(width, aspect) {
-  const height = aspect * width;
-  return height + PAGE_PADDING * 2;
-}

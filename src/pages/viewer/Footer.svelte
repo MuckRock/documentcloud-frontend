@@ -1,6 +1,9 @@
+<script>
+  import { layout } from "@/viewer/layout";
+</script>
+
 <style lang="scss">
   footer {
-    height: $viewerFooterHeight;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -10,4 +13,4 @@
   }
 </style>
 
-<footer />
+<footer style="height: {$layout.footerHeight}px" />

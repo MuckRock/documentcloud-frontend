@@ -1,7 +1,10 @@
 <script>
   import Page from "./Page";
+  import RedactPane from "./pane/RedactPane";
+  import AnnotatePane from "./pane/AnnotatePane";
   import { onMount } from "svelte";
   import { viewer } from "@/viewer/viewer";
+  import { layout } from "@/viewer/layout";
   import { renderer } from "@/viewer/renderer";
 
   let body;
@@ -27,16 +30,37 @@
   .body {
     background: $viewerBodyBg;
     position: absolute;
-    top: $viewerHeaderHeight;
-    bottom: $viewerFooterHeight;
-    width: 100%;
+    left: 0;
     z-index: $viewerBodyZ;
     overflow: auto;
+
+    .actionpane {
+      position: sticky;
+      top: 0;
+      background: #fffdea;
+      z-index: 1;
+      padding: 20px;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+    }
   }
 </style>
 
-<div class="body" bind:this={body} on:scroll={updateDimension}>
+<div
+  class="body"
+  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
+  {$layout.sidebarWidth}px"
+  bind:this={body}
+  on:scroll={updateDimension}>
   {#if $viewer.loaded}
+    {#if $layout.action != null}
+      <div class="actionpane">
+        {#if $layout.redacting}
+          <RedactPane />
+        {:else if $layout.annotating}
+          <AnnotatePane />
+        {/if}
+      </div>
+    {/if}
     {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? chunk.number : `space${chunk.height}`)}
       {#if chunk.type == 'space'}
         <div style="height: {chunk.height}px" />

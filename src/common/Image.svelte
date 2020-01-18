@@ -5,6 +5,7 @@
    */
 
   import { onMount, onDestroy } from "svelte";
+  import { ensureBounds } from "@/util/bounds";
   import emitter from "@/emit";
 
   // The image source
@@ -14,9 +15,15 @@
   export let aspect = null;
   export let poll = false;
   export let pollTime = 5000;
+  export let crosshair = false;
 
   const emit = emitter({
-    aspect() {}
+    aspect() {},
+
+    // Dragging
+    dragStart() {},
+    dragMove() {},
+    dragEnd() {}
   });
 
   let makeNull = false;
@@ -59,13 +66,47 @@
     }
   }
 
+  let mousedown = false;
+
+  function normalize(x, y) {
+    x = ensureBounds(x, 0, img.offsetWidth);
+    y = ensureBounds(y, 0, img.offsetHeight);
+    return {
+      x: x / img.offsetWidth,
+      y: y / img.offsetHeight
+    };
+  }
+
+  function handleMouseDown(e) {
+    mousedown = true;
+    const x = e.offsetX;
+    const y = e.offsetY;
+    emit.dragStart(normalize(x, y));
+  }
+
+  function handleMouseMove(e) {
+    if (!mousedown) return;
+    const { left, top } = img.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    emit.dragMove(normalize(x, y));
+  }
+
+  function handleMouseUp(e) {
+    if (!mousedown) return;
+    mousedown = false;
+    const { left, top } = img.getBoundingClientRect();
+    const x = e.clientX - left;
+    const y = e.clientY - top;
+    emit.dragEnd(normalize(x, y));
+  }
+
   let pollInterval = null;
   onMount(() => {
     pollInterval = setInterval(getDimensions, 300);
   });
 
   onDestroy(() => {
-    console.log("destroy");
     clearPoll();
   });
 </script>
@@ -74,6 +115,10 @@
   span {
     display: inline-block;
     background: white;
+
+    &.crosshair {
+      cursor: crosshair;
+    }
 
     &.aspect {
       width: 100%;
@@ -108,7 +153,9 @@
 
 <span
   class:aspect={aspect != null}
-  style={aspect != null ? `padding-top: ${100 * aspect}%` : ''}>
+  class:crosshair
+  style={aspect != null ? `padding-top: ${100 * aspect}%` : ''}
+  on:mousedown={handleMouseDown}>
   <img
     on:load={handleLoad}
     class:fade
@@ -119,3 +166,5 @@
     {alt}
     draggable="false" />
 </span>
+
+<svelte:window on:mouseup={handleMouseUp} on:mousemove={handleMouseMove} />
