@@ -3,6 +3,7 @@ const path = require("path");
 const autoPreprocess = require("svelte-preprocess");
 const { preprocessOptions } = require("./preprocess.config.js");
 const DotenvFlow = require("dotenv-flow-webpack");
+const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
@@ -85,6 +86,16 @@ module.exports = {
     //   openAnalyzer: false
     // })] : [])
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          mangle: false
+        }
+      })
+    ]
+  },
   devtool: prod ? false : "source-map",
   devServer: {
     disableHostCheck: true,

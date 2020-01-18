@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   documentcloud_frontend:
@@ -8,6 +8,21 @@ services:
       - .:/app
     working_dir: /app
     command: npm run dev
+    networks:
+      default:
+        aliases:
+          - www.dev.documentcloud.org
+      squarelet_default:
+        aliases:
+          - www.dev.documentcloud.org
+
+  documentcloud_frontend_build:
+    image: node:12
+    volumes:
+      - nodemodules:/app/node_modules
+      - .:/app
+    working_dir: /app
+    command: npm run buildserve
     networks:
       default:
         aliases:
