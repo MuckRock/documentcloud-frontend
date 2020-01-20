@@ -1,22 +1,10 @@
 <script>
-  import { routes, router } from "@/router/router";
+  import { routes, router, getPath, pushUrl } from "@/router/router";
   export let to;
   export let params = null;
   export let newPage = false;
 
-  function getPath() {
-    let path = routes.lookup(to);
-    if (params != null) {
-      for (const param in params) {
-        if (params.hasOwnProperty(param)) {
-          path = path.replace(`:${param}`, params[param]);
-        }
-      }
-    }
-    return path;
-  }
-
-  $: toPath = getPath();
+  $: toPath = getPath(to, params);
   $: active = $router.resolvedRoute.name == to;
 
   function nav(e) {
@@ -25,14 +13,7 @@
 
     e.preventDefault();
 
-    // change current router path
-    router.currentUrl = toPath;
-    // push the path into web browser history API
-    window.history.pushState(
-      { path: toPath },
-      "",
-      window.location.origin + toPath
-    );
+    pushUrl(toPath);
   }
 </script>
 

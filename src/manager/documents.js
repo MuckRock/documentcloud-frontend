@@ -1,17 +1,25 @@
-import { Svue } from 'svue';
-import { getDocuments, getDocument, deleteDocument, reprocessDocument, changeAccess, renameDocument, PENDING } from '@/api/document';
-import { layout, unselectAll, hideAccess } from './layout';
-import { wrapMultiple } from '@/util/wrapLoad';
-import { showConfirm } from './confirmDialog';
+import { Svue } from "svue";
+import {
+  getDocuments,
+  getDocument,
+  deleteDocument,
+  reprocessDocument,
+  changeAccess,
+  renameDocument,
+  PENDING
+} from "@/api/document";
+import { layout, unselectAll, hideAccess } from "./layout";
+import { wrapMultiple } from "@/util/wrapLoad";
+import { showConfirm } from "./confirmDialog";
 
 export const documents = new Svue({
   data() {
     return {
       rawDocuments: {
         documents: [],
-        processingDocuments: [],
+        processingDocuments: []
       }
-    }
+    };
   },
   computed: {
     documents(rawDocuments) {
@@ -21,12 +29,18 @@ export const documents = new Svue({
       return rawDocuments.processingDocuments;
     },
     allDocuments(documents, processingDocumentsRaw) {
-      const processingExclusive = processingDocumentsRaw.filter(doc => !documentsInclude(documents, doc.id));
+      const processingExclusive = processingDocumentsRaw.filter(
+        doc => !documentsInclude(documents, doc.id)
+      );
       return [...documents, ...processingExclusive];
     },
     processingDocuments(processingDocumentsRaw, documents) {
-      const docsFromProcessing = processingDocumentsRaw.filter(doc => doc.pending);
-      const docsFromPrimary = documents.filter(doc => doc.pending && !documentsInclude(docsFromProcessing, doc.id));
+      const docsFromProcessing = processingDocumentsRaw.filter(
+        doc => doc.pending
+      );
+      const docsFromPrimary = documents.filter(
+        doc => doc.pending && !documentsInclude(docsFromProcessing, doc.id)
+      );
       return [...docsFromProcessing, ...docsFromPrimary];
     },
     numProcessing(processingDocuments) {
@@ -42,7 +56,7 @@ export const documents = new Svue({
       const pDocs = processingDocuments.filter(d => d.realProgress != null);
       if (pDocs.length == 0) return null;
       let sum = 0;
-      pDocs.forEach(doc => sum += doc.realProgress);
+      pDocs.forEach(doc => (sum += doc.realProgress));
       return sum / pDocs.length;
     },
     pollEvents(processingDocuments) {
@@ -50,10 +64,10 @@ export const documents = new Svue({
         return async () => {
           const newDoc = await getDocument(doc.id);
           replaceInCollection(newDoc);
-        }
+        };
       });
     }
-  },
+  }
 });
 
 function documentsInclude(documents, id) {
@@ -65,8 +79,13 @@ function documentsInclude(documents, id) {
 
 function removeFromCollection(document) {
   const newDocuments = documents.documents.filter(doc => doc.id != document.id);
-  const newProcessingDocuments = documents.processingDocumentsRaw.filter(doc => doc.id != document.id);
-  documents.rawDocuments = { documents: newDocuments, processingDocuments: newProcessingDocuments };
+  const newProcessingDocuments = documents.processingDocumentsRaw.filter(
+    doc => doc.id != document.id
+  );
+  documents.rawDocuments = {
+    documents: newDocuments,
+    processingDocuments: newProcessingDocuments
+  };
 }
 
 function updateInCollection(document, docFn) {
@@ -83,7 +102,10 @@ function updateInCollection(document, docFn) {
     return doc;
   });
 
-  documents.rawDocuments = { documents: newDocuments, processingDocuments: newProcessingDocuments };
+  documents.rawDocuments = {
+    documents: newDocuments,
+    processingDocuments: newProcessingDocuments
+  };
 }
 
 function replaceInCollection(document) {
@@ -103,13 +125,20 @@ export function removeDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Confirm delete",
-    `Proceeding will permanently delete the ${documents.length == 1 ? 'selected document' : `${documents.length} selected documents`}. Do you wish to continue?`,
+    `Proceeding will permanently delete the ${
+      documents.length == 1
+        ? "selected document"
+        : `${documents.length} selected documents`
+    }. Do you wish to continue?`,
     "Delete",
     async () => {
-      await wrapMultiple(layout, ...documents.map(doc => async () => {
-        await deleteDocument(doc.id);
-        removeFromCollection(doc);
-      }));
+      await wrapMultiple(
+        layout,
+        ...documents.map(doc => async () => {
+          await deleteDocument(doc.id);
+          removeFromCollection(doc);
+        })
+      );
       unselectAll();
     }
   );
@@ -119,24 +148,34 @@ export function reprocessDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Confirm reprocess",
-    `Proceeding will force the ${documents.length == 1 ? 'selected document' : `${documents.length} selected documents`} to reprocess page and image text. Do you wish to continue?`,
+    `Proceeding will force the ${
+      documents.length == 1
+        ? "selected document"
+        : `${documents.length} selected documents`
+    } to reprocess page and image text. Do you wish to continue?`,
     "Reprocess",
     async () => {
-      await wrapMultiple(layout, ...documents.map(doc => async () => {
-        await reprocessDocument(doc.id);
-        const reprocessingDoc = await getDocument(doc.id);
-        replaceInCollection(reprocessingDoc);
-      }));
+      await wrapMultiple(
+        layout,
+        ...documents.map(doc => async () => {
+          await reprocessDocument(doc.id);
+          const reprocessingDoc = await getDocument(doc.id);
+          replaceInCollection(reprocessingDoc);
+        })
+      );
       unselectAll();
     }
   );
 }
 
 export async function changeAccessForDocuments(access) {
-  await wrapMultiple(layout, ...layout.accessEditDocuments.map(doc => async () => {
-    await changeAccess(doc.id, access);
-    updateInCollection(doc, doc => doc.doc = { ...doc.doc, access });
-  }));
+  await wrapMultiple(
+    layout,
+    ...layout.accessEditDocuments.map(doc => async () => {
+      await changeAccess(doc.id, access);
+      updateInCollection(doc, doc => (doc.doc = { ...doc.doc, access }));
+    })
+  );
   hideAccess();
 }
 
@@ -145,11 +184,14 @@ export function removeDocument(document) {
 }
 
 export async function renameSelectedDocuments(title) {
-  await wrapMultiple(layout, ...layout.selected.map(doc => async () => {
-    await renameDocument(doc.id, title);
-    // Show changes in UI
-    updateInCollection(doc, doc => doc.doc = { ...doc.doc, title });
-  }));
+  await wrapMultiple(
+    layout,
+    ...layout.selected.map(doc => async () => {
+      await renameDocument(doc.id, title);
+      // Show changes in UI
+      updateInCollection(doc, doc => (doc.doc = { ...doc.doc, title }));
+    })
+  );
   unselectAll();
 }
 
@@ -158,13 +200,21 @@ export async function handleNewDocument(id) {
   if (documentsInclude(documents.allDocuments, newDoc)) {
     replaceInCollection(newDoc);
   } else {
-    documents.rawDocuments = { ...documents.rawDocuments, documents: [newDoc, ...documents.rawDocuments.documents] };
+    documents.rawDocuments = {
+      ...documents.rawDocuments,
+      documents: [newDoc, ...documents.rawDocuments.documents]
+    };
   }
 }
 
-async function init() {
-  const [newDocuments, newProcessingDocuments] = await wrapMultiple(layout, () => getDocuments(), () => getDocuments(PENDING));
-  documents.rawDocuments = { documents: newDocuments, processingDocuments: newProcessingDocuments };
+export async function initDocuments() {
+  const [newDocuments, newProcessingDocuments] = await wrapMultiple(
+    layout,
+    () => getDocuments(),
+    () => getDocuments(PENDING)
+  );
+  documents.rawDocuments = {
+    documents: newDocuments,
+    processingDocuments: newProcessingDocuments
+  };
 }
-
-init();

@@ -3,6 +3,7 @@ import { viewer } from "./viewer";
 import { wrapLoad } from "@/util/wrapLoad";
 import { redactDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
+import { nav } from "@/router/router";
 
 export const layout = new Svue({
   data() {
@@ -156,6 +157,7 @@ export function redact() {
         layout,
         async () => await redactDocument(viewer.id, layout.pendingRedactions)
       );
+      nav("app");
     }
   );
 }

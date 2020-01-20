@@ -17,6 +17,11 @@ export const renderer = new Svue({
       viewer
     };
   },
+  watch: {
+    viewer(viewer) {
+      if (viewer.pageAspects != null) initAspects();
+    }
+  },
   computed: {
     fullPageWidth(width, pageRail) {
       return width + pageRail * 2;
@@ -25,11 +30,7 @@ export const renderer = new Svue({
       return top + bodyHeight;
     },
     loaded(viewer) {
-      const loaded = viewer.loaded;
-      if (loaded) {
-        initAspects();
-      }
-      return loaded;
+      return viewer.loaded;
     },
     pageCount(aspects) {
       return aspects.length;
