@@ -1,10 +1,9 @@
 export async function wrapLoad(store, fn) {
   store.loading = true;
   try {
-    return (await fn());
+    return await fn();
   } catch (e) {
     store.error = e;
-    console.log(e);
   } finally {
     store.loading = false;
   }

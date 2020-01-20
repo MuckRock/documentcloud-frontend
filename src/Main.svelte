@@ -1,9 +1,16 @@
 <script>
-  import { globalState } from "@/globalstate/globalstate";
+  import { router, Router } from "@/router/router";
+  import { routes } from "@/routes";
   import { onMount } from "svelte";
 
+  // Patch poll events
+  import "@/ticker/ticker";
+
+  // Set up routes
+  router.routes = new Router(...routes);
+
   onMount(() => {
-    globalState.router.currentUrl = window.location.pathname;
+    router.currentUrl = window.location.pathname;
     if (!history.state) {
       window.history.replaceState(
         { path: window.location.pathname },
@@ -14,12 +21,14 @@
   });
 
   function handleBackNav(e) {
-    globalState.router.currentUrl = e.state.path;
+    router.currentUrl = e.state.path;
   }
 </script>
 
 <svelte:window on:popstate={handleBackNav} />
 
-<svelte:component
-  this={$globalState.router.resolvedRoute.component}
-  {...$globalState.router.resolvedRoute.props} />
+{#if $router.resolvedRoute != null}
+  <svelte:component
+    this={$router.resolvedRoute.component}
+    {...$router.resolvedRoute.props} />
+{/if}

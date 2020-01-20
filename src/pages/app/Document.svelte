@@ -6,13 +6,8 @@
   import DocumentThumbnail from "./DocumentThumbnail";
 
   // Stores
-  import {
-    layout,
-    selectDocument,
-    unselectDocument,
-    openAccess
-  } from "@/manager/layout";
-  import { removeDocument } from "@/manager/documents";
+  import { layout, unselectDocument, openAccess } from "@/manager/layout";
+  import { removeDocument, selectDocument } from "@/manager/documents";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
@@ -137,7 +132,7 @@
       <h3>{document.summary}</h3>
       <div class="actions">
         {#if document.status == 'success'}
-          <Link newPage={true} to="viewer" params={{ id: document.id }}>
+          <Link to="viewer" params={{ id: document.id }}>
             <Button action={true}>Open</Button>
           </Link>
         {:else if document.status == 'pending'}

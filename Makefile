@@ -14,4 +14,4 @@ build-analyze:
 	docker-compose -f local.yml up documentcloud_frontend_analyze
 
 test:
-	docker-compose -f local.yml up documentcloud_frontend_test
+	docker-compose -f local.builder.yml run --rm test

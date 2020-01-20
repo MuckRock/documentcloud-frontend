@@ -46,21 +46,6 @@ services:
         aliases:
           - www.dev.documentcloud.org
 
-  documentcloud_frontend_test:
-    image: node:12
-    volumes:
-      - nodemodules:/app/node_modules
-      - .:/app
-    working_dir: /app
-    command: npm run test
-    networks:
-      default:
-        aliases:
-          - test.dev.documentcloud.org
-      squarelet_default:
-        aliases:
-          - test.dev.documentcloud.org
-
 volumes:
   nodemodules:
     external: true

@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 
-import { documents } from '@/manager/documents';
+import { documents } from "@/manager/documents";
 
 const POLL_INTERVAL = process.env.POLL_INTERVAL;
 
@@ -8,11 +8,12 @@ export const ticker = new Svue({
   data() {
     return {
       documents,
-      triggered: false,
+      triggered: false
     };
   },
   computed: {
     events(documents) {
+      // Add events from all possible sources here
       return documents.pollEvents;
     },
     shouldTrigger(events, triggered) {
@@ -29,6 +30,5 @@ export async function triggerTimer() {
   await Promise.all(ticker.events.map(fn => fn()));
 
   // Set the timer after events have processed
-  setTimeout(triggerTimer, POLL_INTERVAL)
+  setTimeout(triggerTimer, POLL_INTERVAL);
 }
-

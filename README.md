@@ -109,3 +109,9 @@ documentcloud-svelte
 |   svelte.config.js
 |   webpack.config.js
 ```
+
+# Developing
+
+## Installing new packages
+
+Run the relevant `npm install ...` command and then get the change mirrored on the Docker image by running `make install`.

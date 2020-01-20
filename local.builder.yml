@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 
 services:
   base:
@@ -7,12 +7,17 @@ services:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-  
+
   install:
     extends:
       service: base
     command: npm i
-  
+
+  test:
+    extends:
+      service: base
+    command: npm run test
+
   build:
     extends:
       service: base
@@ -24,7 +29,7 @@ services:
       squarelet_default:
         aliases:
           - www.dev.documentcloud.org
-    
+
   create-bundles:
     extends:
       service: base

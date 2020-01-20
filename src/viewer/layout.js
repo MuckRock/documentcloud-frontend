@@ -147,7 +147,6 @@ function pushRedaction() {
 }
 
 export function redact() {
-  console.log("Showing confirm");
   showConfirm(
     "Confirm redactions",
     "Are you sure you wish to redact the current document? If you continue, the document viewer will close temporarily while the document reprocesses with the redactions in place. This change is irreversible.",

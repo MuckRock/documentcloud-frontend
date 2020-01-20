@@ -1,8 +1,7 @@
 import rlite from "rlite-router";
-import { routes as routesObj } from "@/routes";
 import { Svue } from "svue";
 
-import { initDocuments } from "@/manager/documents";
+// import { initDocuments } from "@/manager/documents";
 
 export class Router {
   constructor(notFound, routes) {
@@ -30,31 +29,23 @@ export class Router {
   }
 }
 
-export const routes = new Router(...routesObj);
-
 export const router = new Svue({
   data() {
     return {
       currentUrl: "",
-      routes
+      routes: null
     };
   },
   computed: {
     resolvedRoute(currentUrl, routes) {
+      if (routes == null) return null;
       return routes.resolve(currentUrl);
-    }
-  },
-  watch: {
-    resolvedRoute(route) {
-      // Handle route switching
-      if (route.name == "app") {
-        initDocuments();
-      }
     }
   }
 });
 
 export function getPath(to, params = null) {
+  const routes = router.routes;
   let path = routes.lookup(to);
   if (params != null) {
     for (const param in params) {

@@ -1,13 +1,12 @@
-import { Svue } from 'svue';
-import { getIndex, documents } from './documents';
+import { Svue } from "svue";
 
 // Used to calculate the most restricted level of access
 // in a group of documents
 const ACCESS_LEVELS = {
-  'public': 2,
-  'organization': 1,
-  'private': 0
-}
+  public: 2,
+  organization: 1,
+  private: 0
+};
 
 export const layout = new Svue({
   data() {
@@ -24,8 +23,8 @@ export const layout = new Svue({
       renameOpen: false,
 
       // Which documents the access is being edited for
-      accessEditDocuments: [],
-    }
+      accessEditDocuments: []
+    };
   },
   computed: {
     selected(selectedMap) {
@@ -81,23 +80,6 @@ let lastSelected = null;
 export function unselectAll() {
   layout.selectedMap = {};
   lastSelected = null;
-}
-
-export function selectDocument(document, shiftKey = true) {
-  layout.selectedMap = { ...layout.selectedMap, [document.id]: document };
-  if (shiftKey && lastSelected != null) {
-    // Handle shift key for multiple selection
-    const lastSelectedIndex = getIndex(lastSelected);
-    if (lastSelectedIndex != null) {
-      const toIndex = getIndex(document);
-      if (toIndex != null) {
-        for (let i = Math.min(lastSelectedIndex, toIndex) + 1; i < Math.max(lastSelectedIndex, toIndex); i++) {
-          selectDocument(documents.documents[i], false);
-        }
-      }
-    }
-  }
-  lastSelected = document;
 }
 
 export function unselectDocument(document) {

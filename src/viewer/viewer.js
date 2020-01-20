@@ -12,7 +12,7 @@ export const viewer = new Svue({
   computed: {
     id(router) {
       const route = router.resolvedRoute;
-      if (route.name == "viewer" && route.props != null) {
+      if (route != null && route.name == "viewer" && route.props != null) {
         return route.props.id;
       }
       return null;

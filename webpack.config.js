@@ -6,6 +6,7 @@ const DotenvFlow = require("dotenv-flow-webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 
 const environment =
   process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
@@ -86,6 +87,19 @@ module.exports = {
       filename: "bundle.css"
     }),
     new DotenvFlow(),
+    new CircularDependencyPlugin({
+      // exclude detection of files based on a RegExp
+      exclude: /node_modules/,
+      // include specific files based on a RegExp
+      include: /src/,
+      // add errors to webpack instead of warnings
+      failOnError: true,
+      // allow import cycles that include an asyncronous import,
+      // e.g. via import(/* webpackMode: "weak" */ './file.js')
+      allowAsyncCycles: false,
+      // set the current working directory for displaying module paths
+      cwd: process.cwd()
+    }),
     ...(useAnalyzer
       ? [
           new BundleAnalyzerPlugin({

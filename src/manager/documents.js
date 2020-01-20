@@ -11,6 +11,7 @@ import {
 import { layout, unselectAll, hideAccess } from "./layout";
 import { wrapMultiple } from "@/util/wrapLoad";
 import { showConfirm } from "./confirmDialog";
+import { router } from "@/router/router";
 
 export const documents = new Svue({
   data() {
@@ -18,8 +19,22 @@ export const documents = new Svue({
       rawDocuments: {
         documents: [],
         processingDocuments: []
-      }
+      },
+      router
     };
+  },
+  watch: {
+    router() {
+      const route = router.resolvedRoute;
+      if (route != null && route.name == "app") {
+        initDocuments();
+      } else {
+        this.rawDocuments = {
+          documents: [],
+          processingDocuments: []
+        };
+      }
+    }
   },
   computed: {
     documents(rawDocuments) {
@@ -205,6 +220,27 @@ export async function handleNewDocument(id) {
       documents: [newDoc, ...documents.rawDocuments.documents]
     };
   }
+}
+
+export function selectDocument(document, shiftKey = true) {
+  layout.selectedMap = { ...layout.selectedMap, [document.id]: document };
+  if (shiftKey && lastSelected != null) {
+    // Handle shift key for multiple selection
+    const lastSelectedIndex = getIndex(lastSelected);
+    if (lastSelectedIndex != null) {
+      const toIndex = getIndex(document);
+      if (toIndex != null) {
+        for (
+          let i = Math.min(lastSelectedIndex, toIndex) + 1;
+          i < Math.max(lastSelectedIndex, toIndex);
+          i++
+        ) {
+          selectDocument(documents.documents[i], false);
+        }
+      }
+    }
+  }
+  lastSelected = document;
 }
 
 export async function initDocuments() {
