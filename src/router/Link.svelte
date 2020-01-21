@@ -4,6 +4,7 @@
   export let to;
   export let params = null;
   export let newPage = false;
+  export let forceClick = false;
 
   const link = new Svue({
     data() {
@@ -22,7 +23,7 @@
   });
 
   function nav(e) {
-    if (link.toPath == null) return;
+    if (link.toPath == null || forceClick) return;
 
     // Don't programmatically nav if any modifier key is pressed
     if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return;

@@ -49,11 +49,11 @@
 </style>
 
 {#if !$documents.doneProcessing || !dismissed}
-  <div class="processingbar" transition:slide>
+  <div class="processingbar">
     <div class="info">
       {#if $documents.doneProcessing}
         <span class="valign">Done processing</span>
-        <span class="dismiss" in:slideHorizontal>
+        <span class="dismiss">
           <Button small={true} on:click={() => (dismissed = true)}>
             Dismiss
           </Button>

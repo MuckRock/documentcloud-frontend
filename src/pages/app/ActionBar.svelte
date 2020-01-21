@@ -7,8 +7,9 @@
   import EditMenu from "./menus/EditMenu";
 
   // Stores
-  import { layout, unselectAll } from "@/manager/layout";
+  import { layout } from "@/manager/layout";
   import { manager, selectAll } from "@/manager/manager";
+  import { unselectAll } from "@/manager/documents";
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();

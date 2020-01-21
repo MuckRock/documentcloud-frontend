@@ -8,7 +8,7 @@ import {
   renameDocument,
   PENDING
 } from "@/api/document";
-import { layout, unselectAll, hideAccess } from "./layout";
+import { layout, hideAccess } from "./layout";
 import { wrapMultiple } from "@/util/wrapLoad";
 import { showConfirm } from "./confirmDialog";
 import { router } from "@/router/router";
@@ -222,6 +222,8 @@ export async function handleNewDocument(id) {
   }
 }
 
+let lastSelected = null;
+
 export function selectDocument(document, shiftKey = true) {
   layout.selectedMap = { ...layout.selectedMap, [document.id]: document };
   if (shiftKey && lastSelected != null) {
@@ -241,6 +243,11 @@ export function selectDocument(document, shiftKey = true) {
     }
   }
   lastSelected = document;
+}
+
+export function unselectAll() {
+  layout.selectedMap = {};
+  lastSelected = null;
 }
 
 export async function initDocuments() {

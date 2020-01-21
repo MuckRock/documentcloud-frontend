@@ -4,8 +4,11 @@
   import AnnotatePane from "./pane/AnnotatePane";
   import { onMount } from "svelte";
   import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
+  import { layout, cancelActions } from "@/viewer/layout";
   import { renderer } from "@/viewer/renderer";
+
+  // SVG assets
+  import closeSvg from "@/assets/close.svg";
 
   let body;
 
@@ -19,6 +22,10 @@
 
   function handleShift({ detail: shift }) {
     body.scrollTop += shift;
+  }
+
+  function handleKeyDown(e) {
+    if (e.key == "Escape") cancelActions();
   }
 
   onMount(() => {
@@ -44,6 +51,38 @@
       z-index: 1;
       padding: 20px;
       box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+      display: table;
+      width: 100%;
+      box-sizing: border-box;
+
+      > * {
+        display: table-cell;
+        vertical-align: top;
+      }
+
+      .actioncontent {
+        padding: 0 10px;
+
+        :global(h3) {
+          font-size: 16px;
+          margin: 0;
+          margin: 12px 0;
+          color: $viewerDarkGray;
+        }
+
+        :global(p) {
+          font-size: 14px;
+          color: $viewerDarkGray;
+        }
+
+        :global(.buttonpadded) {
+          margin: 0 -4px;
+
+          :global(button) {
+            margin: 0 4px;
+          }
+        }
+      }
     }
   }
 </style>
@@ -57,11 +96,18 @@
   {#if $viewer.loaded}
     {#if $layout.action != null}
       <div class="actionpane" bind:clientHeight={actionHeight}>
-        {#if $layout.redacting}
-          <RedactPane />
-        {:else if $layout.annotating}
-          <AnnotatePane />
-        {/if}
+        <div class="actionclose">
+          <span on:click={cancelActions}>
+            {@html closeSvg}
+          </span>
+        </div>
+        <div class="actioncontent">
+          {#if $layout.redacting}
+            <RedactPane />
+          {:else if $layout.annotating}
+            <AnnotatePane />
+          {/if}
+        </div>
       </div>
     {/if}
     {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? chunk.number : `space${chunk.height}`)}
@@ -79,4 +125,4 @@
   {/if}
 </div>
 
-<svelte:window on:resize={updateDimension} />
+<svelte:window on:resize={updateDimension} on:keydown={handleKeyDown} />

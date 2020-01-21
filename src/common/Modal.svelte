@@ -133,14 +133,11 @@
   }
 
   :global(.close) {
-    user-select: none;
-    margin-left: 12px;
-    margin-top: 12px;
+    @include buttonLike;
 
-    &:hover {
-      opacity: $hover-opacity;
-      cursor: pointer;
-    }
+    user-select: none;
+    margin-left: $closePadding;
+    margin-top: $closePadding;
   }
 </style>
 

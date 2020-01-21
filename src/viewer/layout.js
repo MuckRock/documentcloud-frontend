@@ -156,6 +156,7 @@ export function redact() {
         layout,
         async () => await redactDocument(viewer.id, layout.pendingRedactions)
       );
+      cancelActions();
       nav("app");
     }
   );

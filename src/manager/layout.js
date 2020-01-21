@@ -75,13 +75,6 @@ export const layout = new Svue({
   }
 });
 
-let lastSelected = null;
-
-export function unselectAll() {
-  layout.selectedMap = {};
-  lastSelected = null;
-}
-
 export function unselectDocument(document) {
   const { [document.id]: _, ...everythingElse } = layout.selectedMap;
   layout.selectedMap = everythingElse;

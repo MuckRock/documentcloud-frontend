@@ -136,12 +136,12 @@
 
 <div class="container">
   {#if !isNull}
-    <div transition:fade class="bar" class:initializing>
+    <div class="bar" class:initializing>
       <div
         class="inner"
         class:complete
         style="width: {$smoothProgress * 100}%" />
     </div>
-    <div transition:fade class="text">{progressPercent}</div>
+    <div class="text">{progressPercent}</div>
   {/if}
 </div>
