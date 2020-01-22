@@ -76,8 +76,8 @@ export const layout = new Svue({
 });
 
 export function unselectDocument(document) {
-  const { [document.id]: _, ...everythingElse } = layout.selectedMap;
-  layout.selectedMap = everythingElse;
+  delete layout.selectedMap[document.id];
+  layout.selectedMap = layout.selectedMap;
 }
 
 // Dialogs
