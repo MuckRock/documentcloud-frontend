@@ -80,7 +80,7 @@ module.exports = {
   },
   mode,
   performance: {
-    hints: prod ? "error" : false
+    hints: prod ? "hint" : false
   },
   plugins: [
     new MiniCssExtractPlugin({
