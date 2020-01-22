@@ -7,14 +7,34 @@ const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 const CircularDependencyPlugin = require("circular-dependency-plugin");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
+// Speed measurer
+const smp = new SpeedMeasurePlugin();
 
 const environment =
   process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
 const prod = environment.startsWith("production");
-const mode = prod ? "development" : "production";
+const mode = prod ? "production" : "development";
 const useAnalyzer = environment.endsWith("analyze");
 
-module.exports = {
+function wrap(spec) {
+  if (mode == "production") {
+    spec.optimization = {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            mangle: false
+          }
+        })
+      ]
+    };
+  }
+  return smp.wrap(spec);
+}
+
+module.exports = wrap({
   entry: {
     bundle: ["./src/main.js"]
   },
@@ -110,16 +130,6 @@ module.exports = {
         ]
       : [])
   ],
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          mangle: false
-        }
-      })
-    ]
-  },
   devtool: prod ? false : "source-map",
   devServer: {
     disableHostCheck: true,
@@ -130,4 +140,4 @@ module.exports = {
       index: "index.html"
     }
   }
-};
+});
