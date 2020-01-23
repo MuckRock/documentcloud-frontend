@@ -11,7 +11,7 @@
 </p>
 <div class="buttonpadded">
   {#if $layout.redactionsUndoable}
-    <Button on:click={redact}>Redact</Button>
+    <Button on:click={redact}>Confirm Redactions</Button>
     <Button secondary={true} on:click={undoRedaction}>Undo</Button>
   {/if}
 </div>

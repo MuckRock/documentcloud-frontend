@@ -58,8 +58,8 @@ module.exports = wrap({
         use: {
           loader: "svelte-loader",
           options: {
-            emitCss: true,
-            hotReload: true,
+            emitCss: prod,
+            hotReload: !prod,
             preprocess: autoPreprocess(preprocessOptions)
           }
         }

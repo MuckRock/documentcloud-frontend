@@ -17,13 +17,15 @@ export const layout = new Svue({
       error: null,
 
       action: null,
+      editAnnotate: false,
 
       // Redactions
       rawRedaction: null,
       rawPendingRedactions: [],
 
       // Annotations
-      rawAnnotation: null
+      rawAnnotation: null,
+      annotationPending: false
     };
   },
   computed: {
@@ -35,6 +37,9 @@ export const layout = new Svue({
     },
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
+    },
+    disableControls(action, editAnnotate) {
+      return action != null || editAnnotate;
     },
 
     // Redactions
@@ -57,9 +62,14 @@ export const layout = new Svue({
     },
 
     // Annotations
-    currentAnnotation(annotating, rawAnnotation) {
-      if (!annotating || rawAnnotation == null) return null;
+    currentAnnotation(annotating, rawAnnotation, annotationPending) {
+      if (!annotating || rawAnnotation == null || annotationPending)
+        return null;
 
+      return consolidateDragObject(rawAnnotation);
+    },
+    shownAnnotation(rawAnnotation, annotationPending) {
+      if (!annotationPending) return null;
       return consolidateDragObject(rawAnnotation);
     }
   }
@@ -93,8 +103,14 @@ export function enterRedactMode() {
 }
 
 export function enterAnnotateMode() {
+  layout.annotationPending = false;
   layout.rawAnnotation = null;
   layout.action = "annotate";
+}
+
+export function enterEditAnnotateMode() {
+  cancelActions();
+  layout.editAnnotate = true;
 }
 
 export function pageDragStart(pageNumber, x, y) {
@@ -135,6 +151,8 @@ export function pageDragEnd(pageNumber, x, y) {
       pageNumber,
       end: { x, y }
     };
+    layout.annotationPending = true;
+    enterEditAnnotateMode();
   }
 }
 
@@ -173,4 +191,5 @@ export function undoRedaction() {
 
 export function cancelActions() {
   layout.action = null;
+  layout.editAnnotate = false;
 }

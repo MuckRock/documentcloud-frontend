@@ -61,7 +61,8 @@
       }
 
       .actioncontent {
-        padding: 0 10px;
+        padding: 0 25px;
+        width: 100%;
 
         :global(h3) {
           font-size: 16px;
@@ -94,6 +95,7 @@
   bind:this={body}
   on:scroll={updateDimension}>
   {#if $viewer.loaded}
+    <!-- Action pane -->
     {#if $layout.action != null}
       <div class="actionpane" bind:clientHeight={actionHeight}>
         <div class="actionclose">
@@ -110,6 +112,7 @@
         </div>
       </div>
     {/if}
+    <!-- Page contents -->
     {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? chunk.number : `space${chunk.height}`)}
       {#if chunk.type == 'space'}
         <div style="height: {chunk.height}px" />

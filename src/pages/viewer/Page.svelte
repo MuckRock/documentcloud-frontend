@@ -1,6 +1,7 @@
 <script>
   // Components
   import Image from "@/common/Image";
+  import Annotation from "./Annotation";
 
   import { renderer, setAspect } from "@/viewer/renderer";
   import {
@@ -66,6 +67,10 @@
     letter-spacing: 0px;
     word-spacing: 0px;
 
+    &.grayed .img {
+      filter: brightness(0.8);
+    }
+
     .content {
       position: relative;
     }
@@ -86,33 +91,40 @@
   .annotation {
     position: absolute;
     pointer-events: none;
-    border: 3px solid #ffe325;
+    border: $annotationBorderWidth solid #ffe325;
+    margin-left: -$annotationBorderWidth;
+    margin-top: -$annotationBorderWidth;
     background: #ffe32533;
     border-radius: $radius;
-    box-sizing: border-box;
+    box-sizing: content-box;
   }
 </style>
 
 <div style="padding: {$renderer.verticalPageMargin}px 0">
   <div
     class="page"
+    class:grayed={$layout.editAnnotate}
     style="width: {$renderer.fullPageWidth}px; padding: 0 {$renderer.pageRail}px;
     margin: 0 auto">
     <div class="number" style="top: {actionOffset}px">
       p. {readablePageNumber}
     </div>
     <div class="content">
-      <Image
-        src={pageImageUrl(document, pageNumber)}
-        {aspect}
-        fade={false}
-        crosshair={$layout.pageCrosshair}
-        on:aspect={handleAspect}
-        on:dragStart={({ detail }) => pageDragStart(pageNumber, detail.x, detail.y)}
-        on:dragMove={({ detail }) => pageDragMove(pageNumber, detail.x, detail.y)}
-        on:dragEnd={({ detail }) => pageDragEnd(pageNumber, detail.x, detail.y)}
-        alt="Page {readablePageNumber} of {document.title} contributed by {document.userName}" />
+      <!-- Actual page image -->
+      <div class="img">
+        <Image
+          src={pageImageUrl(document, pageNumber)}
+          {aspect}
+          fade={false}
+          crosshair={$layout.pageCrosshair}
+          on:aspect={handleAspect}
+          on:dragStart={({ detail }) => pageDragStart(pageNumber, detail.x, detail.y)}
+          on:dragMove={({ detail }) => pageDragMove(pageNumber, detail.x, detail.y)}
+          on:dragEnd={({ detail }) => pageDragEnd(pageNumber, detail.x, detail.y)}
+          alt="Page {readablePageNumber} of {document.title} contributed by {document.userName}" />
+      </div>
       {#if $layout.redacting}
+        <!-- Pending redactions -->
         {#each $layout.allRedactions as redaction}
           {#if redaction.page == pageNumber}
             <div
@@ -122,13 +134,18 @@
           {/if}
         {/each}
       {:else if $layout.annotating}
-        {#if $layout.currentAnnotation != null}
-          {#if $layout.currentAnnotation.page == pageNumber}
-            <div
-              class="annotation"
-              style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
-              width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
-          {/if}
+        {#if $layout.currentAnnotation != null && $layout.currentAnnotation.page == pageNumber}
+          <div
+            class="annotation"
+            style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
+            width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
+        {/if}
+      {:else if $layout.editAnnotate}
+        {#if $layout.shownAnnotation != null && $layout.shownAnnotation.page == pageNumber}
+          <Annotation
+            {document}
+            annotation={$layout.shownAnnotation}
+            {aspect} />
         {/if}
       {/if}
     </div>

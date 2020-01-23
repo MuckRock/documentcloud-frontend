@@ -10,6 +10,11 @@
     box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.12);
     z-index: $viewerSidebarZ;
 
+    &.disabled {
+      pointer-events: none;
+      filter: brightness(90%);
+    }
+
     .action {
       cursor: pointer;
       background: #ffffff;
@@ -39,6 +44,7 @@
 
 <div
   class="sidebar"
+  class:disabled={$layout.disableControls}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; left:
   calc(100% - {$layout.sidebarWidth}px)">
   <div class="action" on:click={enterRedactMode}>
