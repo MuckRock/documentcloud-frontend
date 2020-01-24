@@ -1,4 +1,6 @@
 <script>
+  import Tooltip from "./Tooltip";
+
   export let small = false;
   export let secondary = false;
   export let tertiary = false;
@@ -7,6 +9,8 @@
   export let caution = false;
   export let danger = false;
   export let disabled = false;
+
+  export let disabledReason = null;
 </script>
 
 <style lang="scss">
@@ -84,16 +88,18 @@
 </style>
 
 <span class="inlineblock">
-  <button
-    on:click
-    class:secondary
-    class:tertiary
-    class:danger
-    class:small
-    class:caution
-    class:nondescript
-    class:action
-    {disabled}>
-    <slot />
-  </button>
+  <Tooltip delay={500} show={disabledReason != null} caption={disabledReason}>
+    <button
+      on:click
+      class:secondary
+      class:tertiary
+      class:danger
+      class:small
+      class:caution
+      class:nondescript
+      class:action
+      disabled={disabled || disabledReason != null}>
+      <slot />
+    </button>
+  </Tooltip>
 </span>

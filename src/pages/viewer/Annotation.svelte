@@ -1,8 +1,9 @@
 <script>
   import Image from "@/common/Image";
   import Button from "@/common/Button";
+  import { onMount } from "svelte";
   import { pageImageUrl } from "@/api/viewer";
-  import { cancelActions } from "@/viewer/layout";
+  import { cancelAnnotation } from "@/viewer/layout";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
@@ -10,6 +11,15 @@
   export let document;
   export let annotation;
   export let aspect;
+
+  let title = "";
+  let description = "";
+
+  $: titleValid = title.trim().length > 0;
+
+  // Focus on title on mount
+  let titleInput;
+  onMount(() => titleInput.focus());
 </script>
 
 <style lang="scss">
@@ -185,11 +195,14 @@
   style="top: {annotation.y1 * 100}%; height: {annotation.height * 100}%">
   <header>
     <div class="closeflag">
-      <span class="closer" on:click={cancelActions}>
+      <span class="closer" on:click={cancelAnnotation}>
         {@html closeInlineSvg}
       </span>
     </div>
-    <input placeholder="Annotation Title" />
+    <input
+      bind:this={titleInput}
+      placeholder="Annotation Title"
+      bind:value={title} />
   </header>
   <div class="excerpt">
     <div class="body">
@@ -209,10 +222,15 @@
     </div>
   </div>
   <footer>
-    <textarea />
+    <textarea
+      placeholder="Annotation Description (optional)"
+      bind:value={description} />
     <div class="buttonpadded">
-      <Button>Save</Button>
-      <Button secondary={true}>Cancel</Button>
+      <Button
+        disabledReason={titleValid ? null : 'Enter a title for the annotation'}>
+        Save
+      </Button>
+      <Button secondary={true} on:click={cancelAnnotation}>Cancel</Button>
     </div>
   </footer>
 </div>

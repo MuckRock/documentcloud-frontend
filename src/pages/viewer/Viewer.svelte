@@ -4,15 +4,20 @@
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
 
-  import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
+  // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
+  import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
+  import EditSectionsDialog from "@/common/dialog/EditSectionsDialog";
+
   import Modal from "@/common/Modal";
   import Loader from "@/common/Loader";
-  import { layout } from "@/viewer/layout";
+  import { layout, hideEditSections } from "@/viewer/layout";
 </script>
 
 {#if $confirmDialog.open}
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
+{:else if $layout.showEditSections}
+  <Modal component={EditSectionsDialog} on:close={hideEditSections} />
 {/if}
 
 <Loader active={$layout.loading}>

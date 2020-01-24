@@ -3,6 +3,7 @@
 
   export let caption;
   export let delay = 0;
+  export let show = true;
 
   let mouseIn = false;
   let tooltip;
@@ -64,6 +65,7 @@
   .tooltip {
     position: fixed;
     font-weight: normal;
+    font-size: 14px;
     opacity: 0;
     pointer-events: none;
     background: rgba(0, 0, 0, 0.8);
@@ -81,16 +83,20 @@
   }
 </style>
 
-<span on:mouseenter={handleMouseOver} on:mouseleave={handleMouseOut}>
-  <div
-    bind:this={tooltip}
-    class="tooltip"
-    class:show={mouseIn && delayShow}
-    style="left: {$coords.x}px; top: {$coords.y}px;">
-    <slot name="caption">{caption}</slot>
-  </div>
+{#if show}
+  <span on:mouseenter={handleMouseOver} on:mouseleave={handleMouseOut}>
+    <div
+      bind:this={tooltip}
+      class="tooltip"
+      class:show={mouseIn && delayShow}
+      style="left: {$coords.x}px; top: {$coords.y}px;">
+      <slot name="caption">{caption}</slot>
+    </div>
+    <slot />
+  </span>
+{:else}
   <slot />
-</span>
+{/if}
 
 <svelte:window
   on:mousemove={handleMouseMove}

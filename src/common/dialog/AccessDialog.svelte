@@ -87,15 +87,11 @@
       </label>
     </div>
     <div class="buttonpadded">
-      {#if valid}
-        <Button on:click={() => changeAccess(access)}>Change access</Button>
-      {:else}
-        <Tooltip
-          caption={`Access is already set to ${$layout.sameAccess}. Select a different access level.`}
-          delay={500}>
-          <Button disabled={true}>Change access</Button>
-        </Tooltip>
-      {/if}
+      <Button
+        disabledReason={valid ? null : `Access is already set to ${$layout.sameAccess}. Select a different access level.`}
+        on:click={() => changeAccess(access)}>
+        Change access
+      </Button>
       <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
     </div>
   </div>

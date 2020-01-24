@@ -1,7 +1,7 @@
 <script>
   import { formatBytes, stripExtension } from "@/util/string";
   import emitter from "@/emit";
-  import {onMount} from 'svelte';
+  import { onMount } from "svelte";
 
   // SVG assets
   import documentIconSvg from "@/assets/document_icon.svg";

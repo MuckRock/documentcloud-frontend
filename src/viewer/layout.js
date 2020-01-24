@@ -25,7 +25,10 @@ export const layout = new Svue({
 
       // Annotations
       rawAnnotation: null,
-      annotationPending: false
+      annotationPending: false,
+
+      // Sections
+      showEditSections: false
     };
   },
   computed: {
@@ -106,6 +109,10 @@ export function enterAnnotateMode() {
   layout.annotationPending = false;
   layout.rawAnnotation = null;
   layout.action = "annotate";
+}
+
+export function enterSectionsMode() {
+  layout.showEditSections = true;
 }
 
 export function enterEditAnnotateMode() {
@@ -192,8 +199,13 @@ export function undoRedaction() {
 export function cancelActions() {
   layout.action = null;
   layout.editAnnotate = false;
+  layout.showEditSections = false;
 }
 
 export function cancelAnnotation() {
   if (layout.editAnnotate) cancelActions();
+}
+
+export function hideEditSections() {
+  if (layout.showEditSections) cancelActions();
 }

@@ -1,5 +1,10 @@
 <script>
-  import { layout, enterRedactMode, enterAnnotateMode } from "@/viewer/layout";
+  import {
+    layout,
+    enterRedactMode,
+    enterAnnotateMode,
+    enterSectionsMode
+  } from "@/viewer/layout";
 </script>
 
 <style lang="scss">
@@ -57,5 +62,9 @@
   <div class="action" on:click={enterAnnotateMode}>
     <h3>Annotate</h3>
     <p>Make annotations to keep notes on the document.</p>
+  </div>
+  <div class="action" on:click={enterSectionsMode}>
+    <h3>Edit sections</h3>
+    <p>Add sections to organize your document with a table of contents.</p>
   </div>
 </div>
