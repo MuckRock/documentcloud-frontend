@@ -44,6 +44,10 @@
     z-index: $viewerBodyZ;
     overflow: auto;
 
+    &.grayed {
+      background: $viewerBodyBgDarker;
+    }
+
     .actionpane {
       position: sticky;
       top: 0;
@@ -90,6 +94,7 @@
 
 <div
   class="body"
+  class:grayed={$layout.editAnnotate}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px"
   bind:this={body}

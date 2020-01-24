@@ -193,3 +193,7 @@ export function cancelActions() {
   layout.action = null;
   layout.editAnnotate = false;
 }
+
+export function cancelAnnotation() {
+  if (layout.editAnnotate) cancelActions();
+}

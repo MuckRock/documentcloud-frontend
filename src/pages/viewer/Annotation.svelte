@@ -1,6 +1,11 @@
 <script>
   import Image from "@/common/Image";
+  import Button from "@/common/Button";
   import { pageImageUrl } from "@/api/viewer";
+  import { cancelActions } from "@/viewer/layout";
+
+  // SVG assets
+  import closeInlineSvg from "@/assets/close_inline.svg";
 
   export let document;
   export let annotation;
@@ -119,15 +124,72 @@
       border-bottom-left-radius: $radius;
       border-bottom-right-radius: $radius;
       box-sizing: border-box;
+
+      .buttonpadded {
+        margin: 7px -4px;
+
+        :global(button) {
+          margin: 0 4px;
+        }
+      }
+    }
+
+    .closeflag {
+      $flagHeight: 25px;
+      $flagWidth: 29px;
+      $closeHeight: 14px;
+
+      position: absolute;
+      top: 20px;
+      left: -$flagWidth - $annotationBorderWidth;
+      width: $flagWidth;
+      height: $flagHeight;
+      border-top-left-radius: ($flagHeight / 2);
+      border-bottom-left-radius: ($flagHeight / 2);
+      background: $annotationBorder;
+
+      .closer {
+        @include buttonLike;
+        display: inline-block;
+
+        :global(svg) {
+          width: $closeHeight;
+          height: $closeHeight;
+          margin: ($flagHeight - $closeHeight) / 2;
+        }
+      }
+    }
+
+    input,
+    textarea {
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
+      font-size: 12px;
+      width: 100%;
+      padding: 2px 4px;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    textarea {
+      height: 110px;
+      min-height: 30px;
+      resize: vertical;
     }
   }
 </style>
 
 <div
   class="annotation"
+  on:mousedown|stopPropagation
   style="top: {annotation.y1 * 100}%; height: {annotation.height * 100}%">
   <header>
-    <input placeholder="Untitled note" />
+    <div class="closeflag">
+      <span class="closer" on:click={cancelActions}>
+        {@html closeInlineSvg}
+      </span>
+    </div>
+    <input placeholder="Annotation Title" />
   </header>
   <div class="excerpt">
     <div class="body">
@@ -148,5 +210,9 @@
   </div>
   <footer>
     <textarea />
+    <div class="buttonpadded">
+      <Button>Save</Button>
+      <Button secondary={true}>Cancel</Button>
+    </div>
   </footer>
 </div>

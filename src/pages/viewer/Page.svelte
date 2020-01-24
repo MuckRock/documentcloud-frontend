@@ -8,7 +8,8 @@
     layout,
     pageDragStart,
     pageDragMove,
-    pageDragEnd
+    pageDragEnd,
+    cancelAnnotation
   } from "@/viewer/layout";
   import { pageImageUrl } from "@/api/viewer";
   import emitter from "@/emit";
@@ -33,33 +34,6 @@
 </script>
 
 <style lang="scss">
-  .number {
-    position: sticky;
-    top: 0;
-    padding: 21px 0 0 0;
-    float: left;
-    margin-left: -$pageRail;
-    width: $pageRail;
-    font-weight: bold;
-    font-size: 12px;
-    color: #313131;
-    user-select: none;
-
-    &:before {
-      content: "";
-      position: absolute;
-      background: linear-gradient(
-        180deg,
-        rgba($viewerBodyBg, 0),
-        $viewerBodyBg 70%
-      );
-      top: -59px;
-      height: 49px;
-      width: 100%;
-      left: 0;
-    }
-  }
-
   .page {
     text-align: center;
     box-sizing: border-box;
@@ -67,8 +41,47 @@
     letter-spacing: 0px;
     word-spacing: 0px;
 
-    &.grayed .img {
-      filter: brightness(0.8);
+    .number {
+      position: sticky;
+      top: 0;
+      padding: 21px 0 0 0;
+      float: left;
+      margin-left: -$pageRail;
+      width: $pageRail;
+      font-weight: bold;
+      font-size: 12px;
+      color: #313131;
+      user-select: none;
+
+      &:before {
+        content: "";
+        position: absolute;
+        background: $viewerBodyBg;
+        background: linear-gradient(
+          180deg,
+          rgba($viewerBodyBg, 0),
+          $viewerBodyBg 70%
+        );
+        top: -59px;
+        height: 49px;
+        width: 100%;
+        left: 0;
+      }
+    }
+
+    &.grayed {
+      .number:before {
+        background: $viewerBodyBgDarker;
+        background: linear-gradient(
+          180deg,
+          rgba($viewerBodyBgDarker, 0),
+          $viewerBodyBgDarker 70%
+        );
+      }
+
+      .img {
+        filter: brightness(0.8);
+      }
     }
 
     .content {
@@ -100,7 +113,9 @@
   }
 </style>
 
-<div style="padding: {$renderer.verticalPageMargin}px 0">
+<div
+  on:mousedown={cancelAnnotation}
+  style="padding: {$renderer.verticalPageMargin}px 0">
   <div
     class="page"
     class:grayed={$layout.editAnnotate}
