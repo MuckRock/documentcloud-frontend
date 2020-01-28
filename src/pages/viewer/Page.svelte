@@ -128,7 +128,7 @@
       <!-- Actual page image -->
       <div class="img">
         <Image
-          src={pageImageUrl(document, pageNumber)}
+          src={pageImageUrl(document, pageNumber, $renderer.width)}
           {aspect}
           fade={false}
           wait={50}
