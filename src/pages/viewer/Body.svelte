@@ -13,7 +13,8 @@
   let body;
 
   let actionHeight;
-  $: actionOffset = actionHeight == null ? 0 : actionHeight;
+  $: actionOffset =
+    actionHeight == null || $layout.action == null ? 0 : actionHeight;
 
   function updateDimension() {
     $renderer.bodyHeight = body.offsetHeight;

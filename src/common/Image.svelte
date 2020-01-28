@@ -15,6 +15,7 @@
   export let aspect = null;
   export let poll = false;
   export let pollTime = 5000;
+  export let wait = null;
   export let crosshair = false;
 
   const emit = emitter({
@@ -30,6 +31,7 @@
   let show = false;
   let img;
   let foundDimensions = false;
+  let ready = false;
 
   $: computedSrc = makeNull
     ? 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'
@@ -104,6 +106,7 @@
   let pollInterval = null;
   onMount(() => {
     pollInterval = setInterval(getDimensions, 300);
+    if (wait != null) setTimeout(() => (ready = true), wait);
   });
 
   onDestroy(() => {
@@ -157,15 +160,17 @@
   class:crosshair
   style={aspect != null ? `padding-top: ${100 * aspect}%` : ''}
   on:mousedown={handleMouseDown}>
-  <img
-    on:load={handleLoad}
-    class:fade
-    class:show
-    on:error={handleError}
-    bind:this={img}
-    src={computedSrc}
-    {alt}
-    draggable="false" />
+  {#if wait == null || ready}
+    <img
+      on:load={handleLoad}
+      class:fade
+      class:show
+      on:error={handleError}
+      bind:this={img}
+      src={computedSrc}
+      {alt}
+      draggable="false" />
+  {/if}
 </span>
 
 <svelte:window on:mouseup={handleMouseUp} on:mousemove={handleMouseMove} />

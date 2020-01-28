@@ -131,6 +131,7 @@
           src={pageImageUrl(document, pageNumber)}
           {aspect}
           fade={false}
+          wait={50}
           crosshair={$layout.pageCrosshair}
           on:aspect={handleAspect}
           on:dragStart={({ detail }) => pageDragStart(pageNumber, detail.x, detail.y)}
