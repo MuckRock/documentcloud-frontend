@@ -2,6 +2,7 @@
   import Link from "@/router/Link";
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
+  import { renderer, changeMode } from "@/viewer/renderer";
 
   // SVG assets
   import backArrowSvg from "@/assets/back_arrow.svg";
@@ -54,5 +55,9 @@
         Contributed by {$viewer.document.userOrgString} - {$viewer.document.createdAtString}
       </h2>
     {/if}
+  </div>
+  <div class="valign">
+    <button on:click={() => changeMode('image')}>Image mode</button>
+    <button on:click={() => changeMode('text')}>Text mode</button>
   </div>
 </header>

@@ -1,6 +1,7 @@
 <script>
   // Components
   import Image from "@/common/Image";
+  import TextPage from "@/common/TextPage";
   import Annotation from "./Annotation";
 
   import { renderer, setAspect } from "@/viewer/renderer";
@@ -11,7 +12,7 @@
     pageDragEnd,
     cancelAnnotation
   } from "@/viewer/layout";
-  import { pageImageUrl } from "@/api/viewer";
+  import { pageImageUrl, textUrl } from "@/api/viewer";
   import emitter from "@/emit";
 
   const emit = emitter({
@@ -127,17 +128,26 @@
     <div class="content">
       <!-- Actual page image -->
       <div class="img">
-        <Image
-          src={pageImageUrl(document, pageNumber, $renderer.width)}
-          {aspect}
-          fade={false}
-          wait={50}
-          crosshair={$layout.pageCrosshair}
-          on:aspect={handleAspect}
-          on:dragStart={({ detail }) => pageDragStart(pageNumber, detail.x, detail.y)}
-          on:dragMove={({ detail }) => pageDragMove(pageNumber, detail.x, detail.y)}
-          on:dragEnd={({ detail }) => pageDragEnd(pageNumber, detail.x, detail.y)}
-          alt="Page {readablePageNumber} of {document.title} contributed by {document.userName}" />
+        {#if $renderer.mode == 'image'}
+          <Image
+            src={pageImageUrl(document, pageNumber, $renderer.width)}
+            {aspect}
+            fade={false}
+            delay={50}
+            crosshair={$layout.pageCrosshair}
+            on:aspect={handleAspect}
+            on:dragStart={({ detail }) => pageDragStart(pageNumber, detail.x, detail.y)}
+            on:dragMove={({ detail }) => pageDragMove(pageNumber, detail.x, detail.y)}
+            on:dragEnd={({ detail }) => pageDragEnd(pageNumber, detail.x, detail.y)}
+            alt="Page {readablePageNumber} of {document.title} contributed by {document.userName}" />
+        {:else if $renderer.mode == 'text'}
+          <TextPage
+            src={textUrl(document, pageNumber)}
+            width={$renderer.width}
+            delay={50}
+            {aspect}
+            on:aspect={handleAspect} />
+        {/if}
       </div>
       {#if $layout.redacting}
         <!-- Pending redactions -->

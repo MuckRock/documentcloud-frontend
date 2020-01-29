@@ -20,6 +20,11 @@
   // Focus on title on mount
   let titleInput;
   onMount(() => titleInput.focus());
+
+  // Create annotation
+  function createAnnotation() {
+    if (!titleValid) return;
+  }
 </script>
 
 <style lang="scss">
@@ -227,6 +232,7 @@
       bind:value={description} />
     <div class="buttonpadded">
       <Button
+        on:click={createAnnotation}
         disabledReason={titleValid ? null : 'Enter a title for the annotation'}>
         Save
       </Button>

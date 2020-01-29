@@ -7,7 +7,9 @@ const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
 export const renderer = new Svue({
   data() {
     return {
-      aspects: [],
+      imageAspects: [],
+      textAspects: [],
+      mode: "image",
       width: 800,
       pageRail: 69,
       verticalPageMargin: 6,
@@ -23,6 +25,11 @@ export const renderer = new Svue({
     }
   },
   computed: {
+    aspects(mode, imageAspects, textAspects) {
+      if (mode == "image") return imageAspects;
+      if (mode == "text") return textAspects;
+      throw new Error("Invalid mode");
+    },
     fullPageWidth(width, pageRail) {
       return width + pageRail * 2;
     },
@@ -95,10 +102,6 @@ export const renderer = new Svue({
         }
 
         totalHeight += height;
-      }
-
-      if (lastPageOffset == null) {
-        throw new Error("No pages visible?");
       }
 
       // Add document margin at the bottom.
@@ -178,7 +181,8 @@ export const renderer = new Svue({
 });
 
 function initAspects() {
-  renderer.aspects = viewer.pageAspects.map(aspect => ({ aspect }));
+  renderer.imageAspects = viewer.pageAspects.map(aspect => ({ aspect }));
+  renderer.textAspects = viewer.pageAspects.map(_ => ({ aspect: null }));
 }
 
 function heightOfAspect(aspect, width, verticalPageMargin) {
@@ -192,6 +196,7 @@ export function setAspect(pageNumber, aspect) {
   if (withinPercent(existingInfo.aspect, aspect, 0.0001)) {
     return;
   }
+
   if (renderer.pagesAboveTheFold.includes(pageNumber)) {
     // Check for startling page jumps
     const currentHeight = renderer.heights[pageNumber];
@@ -202,9 +207,38 @@ export function setAspect(pageNumber, aspect) {
     );
     heightShift = newHeight - currentHeight;
   }
-  renderer.aspects[pageNumber] = { ...existingInfo, aspect };
-  renderer.aspects = renderer.aspects;
+
+  // Tabulate previous heights before page we're updating
+  let prevHeights = 0;
+  for (let i = 0; i < pageNumber; i++) {
+    prevHeights += renderer.heights[i];
+  }
+
+  if (renderer.mode == "image") {
+    renderer.imageAspects[pageNumber] = { ...existingInfo, aspect };
+    renderer.imageAspects = renderer.aspects;
+  } else if (renderer.mode == "text") {
+    renderer.textAspects[pageNumber] = { ...existingInfo, aspect };
+    renderer.textAspects = renderer.aspects;
+  } else throw new Error("Invalid mode");
+
+  // Tabulate current heights before page we're updating
+  let currentHeights = 0;
+  for (let i = 0; i < pageNumber; i++) {
+    currentHeights += renderer.heights[i];
+  }
 
   // Return an offset to scroll to accommodate page jumps above the fold.
-  return heightShift;
+  return heightShift + currentHeights - prevHeights;
+}
+
+export function changeMode(mode) {
+  // TODO: Get current position
+
+  // TODO: Restore current position
+
+  renderer.mode = mode;
+
+  // Deselect any text
+  window.getSelection().removeAllRanges();
 }

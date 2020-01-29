@@ -15,7 +15,7 @@
   export let aspect = null;
   export let poll = false;
   export let pollTime = 5000;
-  export let wait = null;
+  export let delay = null;
   export let crosshair = false;
 
   const emit = emitter({
@@ -106,7 +106,7 @@
   let pollInterval = null;
   onMount(() => {
     pollInterval = setInterval(getDimensions, 300);
-    if (wait != null) setTimeout(() => (ready = true), wait);
+    if (delay != null) setTimeout(() => (ready = true), delay);
   });
 
   onDestroy(() => {
@@ -160,7 +160,7 @@
   class:crosshair
   style={aspect != null ? `padding-top: ${100 * aspect}%` : ''}
   on:mousedown={handleMouseDown}>
-  {#if wait == null || ready}
+  {#if delay == null || ready}
     <img
       on:load={handleLoad}
       class:fade

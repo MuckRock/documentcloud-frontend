@@ -1,24 +1,63 @@
-import axios from 'axios';
+import axios from "axios";
 
-const CSRF_COOKIE_NAME = 'csrftoken';
-const CSRF_HEADER_NAME = 'X-CSRFToken';
+const CSRF_COOKIE_NAME = "csrftoken";
+const CSRF_HEADER_NAME = "X-CSRFToken";
 
 const session = axios.create({
   xsrfCookieName: CSRF_COOKIE_NAME,
   xsrfHeaderName: CSRF_HEADER_NAME,
   withCredentials: true,
   headers: {
-    'X-Requested-With': 'XMLHttpRequest'
+    "X-Requested-With": "XMLHttpRequest"
   }
 });
 
-session.getStatic = async function getStatic(url) {
-  if (url.startsWith(process.env.DC_BASE)) {
-    const redirectUrl = (await session.get(url)).data.location;
-    return (await axios.get(redirectUrl)).data;
-  } else {
-    return (await axios.get(url)).data;
+const CACHE_LIMIT = 50;
+
+export class SessionCache {
+  constructor() {
+    this.cached = [];
+    this.cachedByUrl = {};
+  }
+
+  trimCache() {
+    while (this.cached.length > CACHE_LIMIT) {
+      const { url } = this.cached.shift();
+      delete this.cachedByUrl[url];
+    }
+  }
+
+  cache(url, contents) {
+    this.cached.push({ url, contents });
+    this.cachedByUrl[url] = contents;
+    this.trimCache();
+  }
+
+  has(url) {
+    return this.cachedByUrl.hasOwnProperty(url);
+  }
+
+  lookup(url) {
+    if (this.has(url)) return this.cachedByUrl[url];
+    return null;
   }
 }
+
+const sessionCache = new SessionCache();
+
+session.getStatic = async function getStatic(url) {
+  if (sessionCache.has(url)) return sessionCache.lookup(url);
+
+  if (url.startsWith(process.env.DC_BASE)) {
+    const redirectUrl = (await session.get(url)).data.location;
+    const result = (await axios.get(redirectUrl)).data;
+    sessionCache.cache(url, result);
+    return result;
+  } else {
+    const result = (await axios.get(url)).data;
+    sessionCache.cache(url, result);
+    return result;
+  }
+};
 
 export default session;

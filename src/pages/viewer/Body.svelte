@@ -22,6 +22,7 @@
   }
 
   function handleShift({ detail: shift }) {
+    if (body.scrollTop == 0) return;
     body.scrollTop += shift;
   }
 
@@ -119,7 +120,7 @@
       </div>
     {/if}
     <!-- Page contents -->
-    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? chunk.number : `space${chunk.height}`)}
+    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${chunk.height}`)}
       {#if chunk.type == 'space'}
         <div style="height: {chunk.height}px" />
       {:else if chunk.type == 'page'}
