@@ -5,7 +5,7 @@
   import { onMount } from "svelte";
   import { viewer } from "@/viewer/viewer";
   import { layout, cancelActions } from "@/viewer/layout";
-  import { renderer } from "@/viewer/renderer";
+  import { renderer, scroll } from "@/viewer/renderer";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
@@ -17,13 +17,21 @@
     actionHeight == null || $layout.action == null ? 0 : actionHeight;
 
   function updateDimension() {
-    $renderer.bodyHeight = body.offsetHeight;
-    $renderer.top = body.scrollTop;
+    if (renderer.blockScrollEvent) {
+      // Block scroll events if flag is set
+      renderer.blockScrollEvent = false;
+      return;
+    }
+    renderer.top = body.scrollTop;
+    renderer.bodyHeight = body.offsetHeight;
   }
 
-  function handleShift({ detail: shift }) {
+  async function handleShift({ detail: shift }) {
+    // Don't handle shifts that would jar away from document edges
     if (body.scrollTop == 0) return;
-    body.scrollTop += shift;
+    if (body.scrollTop + body.offsetHeight == body.scrollHeight) return;
+
+    await scroll(renderer.top + shift);
   }
 
   function handleKeyDown(e) {
@@ -31,8 +39,9 @@
   }
 
   onMount(() => {
-    if (body.offsetWidth < $renderer.width) {
-      $renderer.width = body.offsetWidth - $renderer.pageRail * 2;
+    renderer.elem = body;
+    if (body.offsetWidth < renderer.width) {
+      renderer.width = body.offsetWidth - renderer.pageRail * 2;
     }
     updateDimension();
   });

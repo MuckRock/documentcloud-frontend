@@ -2,7 +2,7 @@
   import Link from "@/router/Link";
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
-  import { renderer, changeMode } from "@/viewer/renderer";
+  import { scroll, changeMode } from "@/viewer/renderer";
 
   // SVG assets
   import backArrowSvg from "@/assets/back_arrow.svg";
@@ -59,5 +59,13 @@
   <div class="valign">
     <button on:click={() => changeMode('image')}>Image mode</button>
     <button on:click={() => changeMode('text')}>Text mode</button>
+    <button
+      on:click={async () => {
+        changeMode('image');
+        await scroll(2050);
+        window.setTimeout(() => changeMode('text'), 0);
+      }}>
+      Jump n switch
+    </button>
   </div>
 </header>
