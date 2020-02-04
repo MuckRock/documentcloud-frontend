@@ -258,11 +258,17 @@ export function setAspect(pageNumber, aspect) {
  * @param {number} pos The absolute scroll position to set.
  */
 export async function scroll(pos) {
+  // Fix bounds
+  const maxPos = renderer.overallHeight - renderer.bodyHeight;
+  if (pos > maxPos) pos = maxPos;
+  if (pos < 0) pos = 0;
+
   renderer.top = pos;
   // Let DOM updates sink in before updating scroll top
   await tick();
   renderer.blockScrollEvent = true;
   renderer.elem.scrollTop = pos;
+
   return pos;
 }
 
