@@ -9,7 +9,7 @@ import {
 const PAGE_MARGIN = 20;
 const BODY_MARGIN = 50;
 const PAGE_WIDTH = 500;
-const BODY_HEIGHT = 1000;
+const BODY_HEIGHT = 100; // low body height to ensure scrolling makes sense
 const DEFAULT_ASPECT = 1;
 
 beforeEach(() => {
@@ -234,7 +234,9 @@ test("image resize", async () => {
   let shift =
     (PAGE_WIDTH * newAspect + 2 * PAGE_MARGIN) * 3 -
     (PAGE_WIDTH * oldAspect + 2 * PAGE_MARGIN) * 3;
-  await scroll(renderer.top + setAspect(2, newAspect));
+  const actualShift = setAspect(2, newAspect);
+  expect(actualShift).toBe(shift);
+  await scroll(renderer.top + actualShift);
   expect(renderer.heights).toEqual([
     PAGE_WIDTH * newAspect + 2 * PAGE_MARGIN,
     PAGE_WIDTH * newAspect + 2 * PAGE_MARGIN,
