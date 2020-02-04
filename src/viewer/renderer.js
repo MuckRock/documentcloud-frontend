@@ -4,6 +4,7 @@ import { withinPercent } from "@/util/epsilon";
 import { tick } from "svelte";
 
 const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
+const DEFAULT_VISIBLE_OFFSET = -60; // offset at which to start next page number
 
 export const renderer = new Svue({
   data() {
@@ -19,6 +20,7 @@ export const renderer = new Svue({
       top: 0,
       elem: null,
       defaultAspect: DEFAULT_ASPECT,
+      visibleOffset: DEFAULT_VISIBLE_OFFSET,
       viewer,
       blockScrollEvent: false
     };
@@ -82,6 +84,20 @@ export const renderer = new Svue({
         offset += heights[i];
       }
       return heights.length - 1; // return last page if nothing matched
+    },
+    visiblePageNumber(
+      heights,
+      top,
+      verticalPageMargin,
+      verticalDocumentMargin,
+      visibleOffset
+    ) {
+      let offset = verticalDocumentMargin + verticalPageMargin + visibleOffset;
+      for (let i = 0; i < heights.length; i++) {
+        if (offset >= top) return i;
+        offset += heights[i];
+      }
+      return heights.length; // return last page if nothing matched
     },
     pagesAboveTheFold(elementsToShow, top) {
       return elementsToShow
