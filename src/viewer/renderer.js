@@ -1,6 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from "./viewer";
 import { withinPercent } from "@/util/epsilon";
+import { tick } from "svelte";
 
 const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
 
@@ -16,7 +17,10 @@ export const renderer = new Svue({
       verticalDocumentMargin: 18,
       bodyHeight: 0,
       top: 0,
-      viewer
+      elem: null,
+      defaultAspect: DEFAULT_ASPECT,
+      viewer,
+      blockScrollEvent: false
     };
   },
   watch: {
@@ -53,7 +57,7 @@ export const renderer = new Svue({
         }
       }
       if (count != 0) return sum / count;
-      return DEFAULT_ASPECT;
+      return this.defaultAspect;
     },
     computedAspects(aspects, averageAspect) {
       return aspects.map(aspect => ({
@@ -65,6 +69,19 @@ export const renderer = new Svue({
       return computedAspects.map(aspect =>
         heightOfAspect(aspect.aspect, width, verticalPageMargin)
       );
+    },
+    currentPageNumber(
+      heights,
+      top,
+      verticalPageMargin,
+      verticalDocumentMargin
+    ) {
+      let offset = verticalDocumentMargin + verticalPageMargin;
+      for (let i = 0; i < heights.length; i++) {
+        if (offset >= top) return i;
+        offset += heights[i];
+      }
+      return heights.length - 1; // return last page if nothing matched
     },
     pagesAboveTheFold(elementsToShow, top) {
       return elementsToShow
@@ -191,26 +208,14 @@ function heightOfAspect(aspect, width, verticalPageMargin) {
 
 export function setAspect(pageNumber, aspect) {
   const existingInfo = renderer.aspects[pageNumber];
-  let heightShift = 0;
-  // Don't trigger updates on same aspect
-  if (withinPercent(existingInfo.aspect, aspect, 0.0001)) {
-    return;
-  }
 
-  if (renderer.pagesAboveTheFold.includes(pageNumber)) {
-    // Check for startling page jumps
-    const currentHeight = renderer.heights[pageNumber];
-    const newHeight = heightOfAspect(
-      aspect,
-      renderer.width,
-      renderer.verticalPageMargin
-    );
-    heightShift = newHeight - currentHeight;
-  }
+  // Don't trigger updates on same aspect
+  if (withinPercent(existingInfo.aspect, aspect, 0.0001)) return 0;
 
   // Tabulate previous heights before page we're updating
   let prevHeights = 0;
-  for (let i = 0; i < pageNumber; i++) {
+  const currentPageNumber = renderer.currentPageNumber;
+  for (let i = 0; i < currentPageNumber; i++) {
     prevHeights += renderer.heights[i];
   }
 
@@ -224,21 +229,60 @@ export function setAspect(pageNumber, aspect) {
 
   // Tabulate current heights before page we're updating
   let currentHeights = 0;
-  for (let i = 0; i < pageNumber; i++) {
+  for (let i = 0; i < currentPageNumber; i++) {
     currentHeights += renderer.heights[i];
   }
 
   // Return an offset to scroll to accommodate page jumps above the fold.
-  return heightShift + currentHeights - prevHeights;
+  return currentHeights - prevHeights;
+}
+
+/**
+ * Scrolls the renderer to the desired position.
+ * @param {number} pos The absolute scroll position to set.
+ */
+export async function scroll(pos) {
+  renderer.top = pos;
+  // Let DOM updates sink in before updating scroll top
+  await tick();
+  renderer.blockScrollEvent = true;
+  renderer.elem.scrollTop = pos;
+  return pos;
+}
+
+export function getPosition() {
+  // Like getting current page number, but rounds to page before
+  const heights = renderer.heights;
+  const top = renderer.top;
+
+  let totalHeight = renderer.verticalDocumentMargin;
+  for (let i = 0; i < heights.length; i++) {
+    totalHeight += heights[i];
+    if (totalHeight >= top + 1) {
+      return i;
+    }
+  }
+}
+
+export async function restorePosition(pos) {
+  // Scroll to a desired page number.
+  const heights = renderer.heights;
+
+  let totalHeight = renderer.verticalDocumentMargin;
+  for (let i = 0; i < pos; i++) {
+    totalHeight += heights[i];
+  }
+  await scroll(totalHeight);
 }
 
 export function changeMode(mode) {
-  // TODO: Get current position
-
-  // TODO: Restore current position
+  // Change the mode while preserving position.
+  const position = getPosition();
 
   renderer.mode = mode;
 
+  restorePosition(position);
+
   // Deselect any text
-  window.getSelection().removeAllRanges();
+  if (window.getSelection) window.getSelection().removeAllRanges();
 }

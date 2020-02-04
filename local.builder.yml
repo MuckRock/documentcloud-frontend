@@ -18,6 +18,11 @@ services:
       service: base
     command: npm run test
 
+  test-watch:
+    extends:
+      service: base
+    command: npm run test-watch
+
   build:
     extends:
       service: base

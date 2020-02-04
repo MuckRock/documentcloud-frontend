@@ -35,7 +35,8 @@
     "build-serve": "cross-env NODE_ENV=production webpack && serve public -l 80",
     "build-analyze": "cross-env NODE_ENV=production-analyze webpack",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --content-base public",
-    "test": "jest --no-cache"
+    "test": "jest",
+    "test-watch": "jest --watchAll"
   },
   "dependencies": {
     "axios": "^0.19.0",
