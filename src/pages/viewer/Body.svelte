@@ -45,6 +45,9 @@
     }
     updateDimension();
   });
+
+  // Give spaces a unique ID in the keyed each block below
+  let spaceId = 1;
 </script>
 
 <style lang="scss">
@@ -129,7 +132,7 @@
       </div>
     {/if}
     <!-- Page contents -->
-    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${chunk.height}`)}
+    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${spaceId++}`)}
       {#if chunk.type == 'space'}
         <div style="height: {chunk.height}px" />
       {:else if chunk.type == 'page'}
