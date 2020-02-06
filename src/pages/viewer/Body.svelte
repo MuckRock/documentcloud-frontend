@@ -66,7 +66,7 @@
       position: sticky;
       top: 0;
       background: #fffdea;
-      z-index: 1;
+      z-index: $viewerActionPaneZ;
       padding: 20px;
       box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
       display: table;
@@ -108,7 +108,7 @@
 
 <div
   class="body"
-  class:grayed={$layout.editAnnotate}
+  class:grayed={$layout.displayAnnotate}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px"
   bind:this={body}

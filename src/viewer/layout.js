@@ -1,9 +1,15 @@
 import { Svue } from "svue";
-import { viewer } from "./viewer";
+import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { wrapLoad } from "@/util/wrapLoad";
 import { redactDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
 import { nav } from "@/router/router";
+import {
+  createAnnotation,
+  updateAnnotation,
+  deleteAnnotation
+} from "@/api/annotation";
+import { Note } from "@/structure/note";
 
 export const layout = new Svue({
   data() {
@@ -17,7 +23,8 @@ export const layout = new Svue({
       error: null,
 
       action: null,
-      editAnnotate: false,
+      displayedAnnotation: null,
+      annotateMode: "view",
 
       // Redactions
       rawRedaction: null,
@@ -26,12 +33,17 @@ export const layout = new Svue({
       // Annotations
       rawAnnotation: null,
       annotationPending: false,
+      defaultAnnotationAccess: "private",
+      hoveredNote: null,
 
       // Sections
       showEditSections: false
     };
   },
   computed: {
+    displayAnnotate(displayedAnnotation) {
+      return displayedAnnotation != null;
+    },
     redacting(action) {
       return action == "redact";
     },
@@ -41,8 +53,8 @@ export const layout = new Svue({
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
     },
-    disableControls(action, editAnnotate) {
-      return action != null || editAnnotate;
+    disableControls(action, displayAnnotate) {
+      return action != null || displayAnnotate;
     },
 
     // Redactions
@@ -71,7 +83,7 @@ export const layout = new Svue({
 
       return consolidateDragObject(rawAnnotation);
     },
-    shownAnnotation(rawAnnotation, annotationPending) {
+    shownEditAnnotation(rawAnnotation, annotationPending) {
       if (!annotationPending) return null;
       return consolidateDragObject(rawAnnotation);
     }
@@ -88,36 +100,32 @@ function consolidateDragObject(dragObject) {
     y: Math.max(dragObject.start.y, dragObject.end.y)
   };
 
-  return {
-    page: dragObject.pageNumber,
+  return new Note({
+    page_number: dragObject.pageNumber,
     x1: start.x,
     x2: end.x,
     y1: start.y,
-    y2: end.y,
-    width: end.x - start.x,
-    height: end.y - start.y
-  };
+    y2: end.y
+  });
 }
 
-export function enterRedactMode() {
-  layout.rawRedaction = null;
-  layout.rawPendingRedactions = [];
-  layout.action = "redact";
+function valid(annotation) {
+  if (annotation.x2 <= annotation.x1) return false;
+  if (annotation.y2 <= annotation.y1) return false;
+  return true;
 }
 
-export function enterAnnotateMode() {
-  layout.annotationPending = false;
-  layout.rawAnnotation = null;
-  layout.action = "annotate";
-}
-
-export function enterSectionsMode() {
-  layout.showEditSections = true;
-}
-
-export function enterEditAnnotateMode() {
+export function enterEditAnnotateMode(annotation) {
   cancelActions();
-  layout.editAnnotate = true;
+  if (!valid(annotation)) return;
+  layout.annotateMode = "edit";
+  layout.displayedAnnotation = annotation;
+}
+
+export function showAnnotation(annotation) {
+  if (!valid(annotation)) return;
+  layout.annotateMode = "view";
+  layout.displayedAnnotation = annotation;
 }
 
 export function pageDragStart(pageNumber, x, y) {
@@ -159,7 +167,7 @@ export function pageDragEnd(pageNumber, x, y) {
       end: { x, y }
     };
     layout.annotationPending = true;
-    enterEditAnnotateMode();
+    enterEditAnnotateMode(layout.shownEditAnnotation);
   }
 }
 
@@ -198,14 +206,75 @@ export function undoRedaction() {
 
 export function cancelActions() {
   layout.action = null;
-  layout.editAnnotate = false;
+  layout.displayedAnnotation = null;
   layout.showEditSections = false;
 }
 
 export function cancelAnnotation() {
-  if (layout.editAnnotate) cancelActions();
+  if (layout.displayAnnotate) cancelActions();
 }
 
 export function hideEditSections() {
   if (layout.showEditSections) cancelActions();
+}
+
+export async function updatePageAnnotation(
+  noteId,
+  docId,
+  title,
+  description,
+  access,
+  annotation
+) {
+  const newNote = await updateAnnotation(
+    noteId,
+    docId,
+    annotation.page,
+    title,
+    description,
+    access,
+    annotation.x1,
+    annotation.x2,
+    annotation.y1,
+    annotation.y2,
+    viewer.me
+  );
+  updateNote(newNote);
+  return newNote;
+}
+
+export async function createPageAnnotation(
+  id,
+  title,
+  description,
+  access,
+  annotation
+) {
+  const newNote = await createAnnotation(
+    id,
+    annotation.page,
+    title,
+    description,
+    access,
+    annotation.x1,
+    annotation.x2,
+    annotation.y1,
+    annotation.y2,
+    viewer.me
+  );
+  addNote(newNote);
+  return newNote;
+}
+
+export async function deletePageAnnotation(noteId, docId) {
+  showConfirm(
+    "Confirm delete",
+    "Are you sure you wish to delete the current note?",
+    "Continue",
+    async () => {
+      await deleteAnnotation(docId, noteId);
+      removeNote({ id: noteId });
+      cancelActions();
+    }
+  );
 }

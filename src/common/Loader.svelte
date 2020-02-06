@@ -3,6 +3,7 @@
   export let center = false;
   export let big = false;
   export let inline = false;
+  export let transparent = true;
 </script>
 
 <style lang="scss">
@@ -23,7 +24,7 @@
     pointer-events: none;
     position: relative;
     user-select: none;
-    .contents {
+    .contents.transparent {
       opacity: 0.1;
       transition: opacity 1s ease;
     }
@@ -105,7 +106,7 @@
       <div class="spinner" class:center class:big />
     </div>
   {/if}
-  <div class="contents">
+  <div class="contents" class:transparent>
     <slot />
   </div>
 </div>

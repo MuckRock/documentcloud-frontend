@@ -59,13 +59,5 @@
   <div class="valign">
     <button on:click={() => changeMode('image')}>Image mode</button>
     <button on:click={() => changeMode('text')}>Text mode</button>
-    <button
-      on:click={async () => {
-        changeMode('image');
-        await scroll(2050);
-        window.setTimeout(() => changeMode('text'), 0);
-      }}>
-      Jump n switch
-    </button>
   </div>
 </header>

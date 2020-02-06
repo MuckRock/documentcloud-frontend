@@ -5,15 +5,29 @@
   import Annotation from "./Annotation";
 
   import { renderer, setAspect } from "@/viewer/renderer";
+  import { viewer } from "@/viewer/viewer";
   import {
     layout,
     pageDragStart,
     pageDragMove,
     pageDragEnd,
+    showAnnotation,
     cancelAnnotation
   } from "@/viewer/layout";
+  import { hoveredNote } from "@/viewer/hoveredNote";
   import { pageImageUrl, textUrl } from "@/api/viewer";
   import emitter from "@/emit";
+
+  // SVG assets
+  import publicTagSvg from "@/assets/public_tag.svg";
+  import organizationTagSvg from "@/assets/organization_tag.svg";
+  import privateTagSvg from "@/assets/private_tag.svg";
+
+  const svgMap = {
+    public: publicTagSvg,
+    organization: organizationTagSvg,
+    private: privateTagSvg
+  };
 
   const emit = emitter({
     shift() {}
@@ -23,6 +37,8 @@
   export let pageNumber;
   export let aspect;
   export let actionOffset = 0;
+
+  let chosenNote = null;
 
   $: readablePageNumber = pageNumber + 1;
 
@@ -53,6 +69,7 @@
       font-size: 12px;
       color: #313131;
       user-select: none;
+      z-index: $viewerPageNumZ;
 
       &:before {
         content: "";
@@ -102,15 +119,62 @@
     pointer-events: none;
   }
 
+  .tag {
+    @include buttonLike;
+
+    position: absolute;
+    left: -35px;
+    opacity: 0.5;
+    z-index: $viewerTagZ;
+
+    &:hover,
+    &.hover {
+      opacity: 0.8;
+    }
+
+    &.grayed {
+      pointer-events: none;
+      visibility: hidden;
+    }
+  }
+
   .annotation {
     position: absolute;
     pointer-events: none;
-    border: $annotationBorderWidth solid #ffe325;
     margin-left: -$annotationBorderWidth;
     margin-top: -$annotationBorderWidth;
-    background: #ffe32533;
     border-radius: $radius;
     box-sizing: content-box;
+
+    &.selectable {
+      cursor: pointer;
+      pointer-events: all;
+
+      &:hover,
+      &.hover {
+        box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    &.public {
+      border: $annotationBorderWidth solid $annotationBorder;
+      background: rgba($annotationBorder, 0.2);
+    }
+
+    &.organization {
+      border: $annotationBorderWidth solid $organizationAnnotation;
+      background: rgba($organizationAnnotation, 0.2);
+    }
+
+    &.private {
+      border: $annotationBorderWidth solid $privateAnnotation;
+      background: rgba($privateAnnotation, 0.2);
+    }
+
+    &.grayed {
+      pointer-events: none;
+      visibility: hidden;
+    }
   }
 </style>
 
@@ -119,7 +183,7 @@
   style="padding: {$renderer.verticalPageMargin}px 0">
   <div
     class="page"
-    class:grayed={$layout.editAnnotate}
+    class:grayed={$layout.displayAnnotate}
     style="width: {$renderer.fullPageWidth}px; padding: 0 {$renderer.pageRail}px;
     margin: 0 auto">
     <div class="number" style="top: {actionOffset}px">
@@ -149,29 +213,61 @@
             on:aspect={handleAspect} />
         {/if}
       </div>
-      {#if $layout.redacting}
-        <!-- Pending redactions -->
-        {#each $layout.allRedactions as redaction}
-          {#if redaction.page == pageNumber}
+      {#if $renderer.mode == 'image'}
+        <!-- Only show annotations and redactions in image mode -->
+        {#if $viewer.notesByPage[pageNumber] != null}
+          <!-- Existing annotations -->
+          {#each $viewer.notesByPage[pageNumber] as note}
             <div
-              class="redaction"
-              style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
-              width: {redaction.width * 100}%; height: {redaction.height * 100}%" />
-          {/if}
-        {/each}
-      {:else if $layout.annotating}
-        {#if $layout.currentAnnotation != null && $layout.currentAnnotation.page == pageNumber}
-          <div
-            class="annotation"
-            style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
-            width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
+              class="tag"
+              class:hover={$layout.hoveredNote == note}
+              class:grayed={$layout.displayAnnotate}
+              use:hoveredNote={note}
+              on:click={() => showAnnotation(note)}
+              style="top: {note.y1 * 100}%">
+              {@html svgMap[note.access]}
+            </div>
+            <div
+              class="annotation selectable"
+              class:public={note.access == 'public'}
+              class:organization={note.access == 'organization'}
+              class:private={note.access == 'private'}
+              class:grayed={$layout.displayAnnotate}
+              class:hover={$layout.hoveredNote == note}
+              use:hoveredNote={note}
+              on:click={() => showAnnotation(note)}
+              style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; width: {(note.x2 - note.x1) * 100}%;
+              height: {(note.y2 - note.y1) * 100}%" />
+          {/each}
         {/if}
-      {:else if $layout.editAnnotate}
-        {#if $layout.shownAnnotation != null && $layout.shownAnnotation.page == pageNumber}
-          <Annotation
-            {document}
-            annotation={$layout.shownAnnotation}
-            {aspect} />
+        {#if $layout.redacting}
+          <!-- Pending redactions -->
+          {#each $layout.allRedactions as redaction}
+            {#if redaction.page == pageNumber}
+              <div
+                class="redaction"
+                style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
+                width: {redaction.width * 100}%; height: {redaction.height * 100}%" />
+            {/if}
+          {/each}
+        {:else if $layout.annotating}
+          {#if $layout.currentAnnotation != null && $layout.currentAnnotation.page == pageNumber}
+            <div
+              class="annotation"
+              class:public={$layout.currentAnnotation.access == 'public'}
+              class:organization={$layout.currentAnnotation.access == 'organization'}
+              class:private={$layout.currentAnnotation.access == 'private'}
+              style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
+              width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
+          {/if}
+        {:else if $layout.displayAnnotate}
+          {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == pageNumber}
+            <Annotation
+              {document}
+              annotation={$layout.displayedAnnotation}
+              mode={$layout.annotateMode}
+              {aspect} />
+          {/if}
         {/if}
       {/if}
     </div>

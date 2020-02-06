@@ -49,7 +49,8 @@ module.exports = wrap({
   output: {
     path: __dirname + "/public",
     filename: "[name].js",
-    chunkFilename: "[name].[id].js"
+    chunkFilename: "[name].[id].js",
+    publicPath: "/"
   },
   module: {
     rules: [
