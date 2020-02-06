@@ -1,5 +1,6 @@
 import { Svue } from "svue";
 import { viewer } from "./viewer";
+import { layout } from "./layout";
 import { withinPercent } from "@/util/epsilon";
 import { tick } from "svelte";
 
@@ -15,13 +16,15 @@ export const renderer = new Svue({
       width: 800,
       pageRail: 69,
       verticalPageMargin: 6,
-      verticalDocumentMargin: 18,
+      baseVerticalDocumentMargin: 18,
+      annotationDocumentMargin: 60,
       bodyHeight: 0,
       top: 0,
       elem: null,
       defaultAspect: DEFAULT_ASPECT,
       visibleOffset: DEFAULT_VISIBLE_OFFSET,
       viewer,
+      layout,
       blockScrollEvent: false
     };
   },
@@ -31,6 +34,19 @@ export const renderer = new Svue({
     }
   },
   computed: {
+    annotationDialogOpen(layout) {
+      return layout.editAnnotate;
+    },
+    verticalDocumentMargin(
+      baseVerticalDocumentMargin,
+      annotationDocumentMargin,
+      annotationDialogOpen
+    ) {
+      return (
+        baseVerticalDocumentMargin +
+        (annotationDialogOpen ? annotationDocumentMargin : 0)
+      );
+    },
     aspects(mode, imageAspects, textAspects) {
       if (mode == "image") return imageAspects;
       if (mode == "text") return textAspects;
@@ -298,6 +314,9 @@ export async function restorePosition(pos) {
 }
 
 export function changeMode(mode) {
+  // No effect when mode is same
+  if (mode == renderer.mode) return;
+
   // Change the mode while preserving position.
   const position = getPosition();
 

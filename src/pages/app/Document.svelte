@@ -73,9 +73,6 @@
 
     margin-left: 8px;
     vertical-align: middle;
-    :global(svg) {
-      height: 12px;
-    }
   }
 
   .valign {

@@ -80,7 +80,7 @@
       : renderer.visiblePageNumber;
     if (pageNumber == null) return;
 
-    pageNumber = Math.max(pageNumber - 1, 0);
+    pageNumber = Math.max(pageNumber - 1, 1);
 
     // Jump the viewer
     gotoPage(pageNumber);
@@ -113,7 +113,7 @@
 
     .page {
       position: relative;
-      font-weight: bold;
+      font-weight: normal;
       font-size: 15px;
       padding: 0 18px;
       background: #ffffff;

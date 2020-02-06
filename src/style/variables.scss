@@ -24,6 +24,11 @@ $viewerGray: #525252;
 $viewerDarkGray: #3c3c3c;
 $viewerBlack: #171717;
 $annotationBorder: #ffe325;
+$privateAnnotation: #6bc2f8;
+$organizationAnnotation: saturate(
+  mix($annotationBorder, $privateAnnotation, 40%),
+  30%
+);
 $faint-yellow: mix($annotationBorder, white, 10%);
 
 /* Shadows */
@@ -60,9 +65,13 @@ $checkboxZ: -9;
 $sidebarBg: -1;
 
 $viewerBodyZ: 1;
-$viewerSidebarZ: 2;
-$viewerHeaderZ: 3;
-$viewerFooterZ: 3;
+$viewerPageNumZ: 2;
+$viewerTagZ: 3;
+$viewerActionPaneZ: 4;
+$viewerAnnotationZ: 5;
+$viewerSidebarZ: 6;
+$viewerHeaderZ: 7;
+$viewerFooterZ: 7;
 
 $spinnerZ: 8;
 $hamburgerZ: 9;

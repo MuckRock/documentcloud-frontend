@@ -1,43 +1,208 @@
 <script>
   import Image from "@/common/Image";
   import Button from "@/common/Button";
+  import Loader from "@/common/Loader";
+  import { textAreaResize } from "@/util/textareaResize.js";
   import { onMount } from "svelte";
   import { pageImageUrl } from "@/api/viewer";
-  import { cancelAnnotation } from "@/viewer/layout";
+  import { viewer } from "@/viewer/viewer";
+  import {
+    layout,
+    cancelAnnotation,
+    updatePageAnnotation,
+    createPageAnnotation,
+    deletePageAnnotation
+  } from "@/viewer/layout";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
+  import privateIconSvg from "@/assets/private_icon.svg";
+  import publicIconSvg from "@/assets/public_icon.svg";
+  import organizationIconSvg from "@/assets/organization_icon.svg";
+  import pencilSvg from "@/assets/pencil.svg";
+
+  // Asynchronously load dompurify
+  let DomPurify = null;
+  import("dompurify").then(module => {
+    DomPurify = module;
+  });
 
   export let document;
   export let annotation;
   export let aspect;
+  export let mode;
 
-  let title = "";
-  let description = "";
+  let editOverride = false;
+  let loading = false;
+
+  let title = annotation.title;
+  let description = annotation.content;
+  export let access = annotation.access;
+
+  $: editMode = mode == "edit" || editOverride;
 
   $: titleValid = title.trim().length > 0;
+  $: accessValid =
+    access == "public" || access == "organization" || access == "private";
+
+  $: changed =
+    title != annotation.title ||
+    description != annotation.content ||
+    access != annotation.access;
+  $: changeValid = (mode == "view" && changed) || mode == "edit";
+
+  $: valid = titleValid && accessValid && changeValid;
 
   // Focus on title on mount
   let titleInput;
-  onMount(() => titleInput.focus());
+  onMount(async () => {
+    if (titleInput != null) titleInput.focus();
+  });
 
   // Create annotation
-  function createAnnotation() {
-    if (!titleValid) return;
+  async function createOrUpdateAnnotation() {
+    if (!valid) return;
+
+    loading = true;
+    if (editOverride) {
+      // Update annotation
+      annotation = await updatePageAnnotation(
+        annotation.id,
+        document.id,
+        title,
+        description,
+        access,
+        annotation
+      );
+    } else {
+      await createPageAnnotation(
+        document.id,
+        title,
+        description,
+        access,
+        annotation
+      );
+      layout.defaultAnnotationAccess = access;
+    }
+    loading = false;
+
+    handleCancel();
+  }
+
+  function handleCancel() {
+    if (editOverride) {
+      // Restore fields
+      title = annotation.title;
+      description = annotation.content;
+      access = annotation.access;
+      editOverride = false;
+    } else {
+      cancelAnnotation();
+    }
+  }
+
+  function handleDelete() {
+    loading = true;
+    deletePageAnnotation(annotation.id, document.id);
+    loading = false;
   }
 </script>
 
 <style lang="scss">
   $annotationBg: white;
-  $border: solid $annotationBorderWidth $annotationBorder;
   $padding: 10px;
   $insetMargin: 1px;
 
   .annotation {
+    &.disabled {
+      header *,
+      footer *,
+      .excerpt * {
+        pointer-events: none;
+      }
+
+      header .closeflag {
+        pointer-events: all;
+      }
+    }
+
+    &.public {
+      $border: solid $annotationBorderWidth $annotationBorder;
+      .excerpt::before {
+        border-left: $border;
+        border-right: $border;
+      }
+
+      header {
+        border-top: $border;
+        border-left: $border;
+        border-right: $border;
+      }
+
+      footer {
+        border-left: $border;
+        border-right: $border;
+        border-bottom: $border;
+      }
+
+      .closeflag {
+        background: $annotationBorder;
+      }
+    }
+
+    &.organization {
+      $border: solid $annotationBorderWidth $organizationAnnotation;
+      .excerpt::before {
+        border-left: $border;
+        border-right: $border;
+      }
+
+      header {
+        border-top: $border;
+        border-left: $border;
+        border-right: $border;
+      }
+
+      footer {
+        border-left: $border;
+        border-right: $border;
+        border-bottom: $border;
+      }
+
+      .closeflag {
+        background: $organizationAnnotation;
+      }
+    }
+
+    &.private {
+      $border: solid $annotationBorderWidth $privateAnnotation;
+      .excerpt::before {
+        border-left: $border;
+        border-right: $border;
+      }
+
+      header {
+        border-top: $border;
+        border-left: $border;
+        border-right: $border;
+      }
+
+      footer {
+        border-left: $border;
+        border-right: $border;
+        border-bottom: $border;
+      }
+
+      .closeflag {
+        background: $privateAnnotation;
+      }
+    }
+
     position: absolute;
     background: gainsboro;
     left: 0;
     right: 0;
+    z-index: $viewerAnnotationZ;
 
     .excerpt {
       overflow: hidden;
@@ -57,8 +222,6 @@
         left: -$padding - $insetMargin - $annotationBorderWidth;
         right: -$padding - $insetMargin - $annotationBorderWidth;
         bottom: -$padding + $insetMargin;
-        border-left: $border;
-        border-right: $border;
         box-sizing: border-box;
       }
 
@@ -119,11 +282,14 @@
       padding-top: $padding;
 
       // Borders
-      border-top: $border;
-      border-left: $border;
-      border-right: $border;
       border-top-left-radius: $radius;
       border-top-right-radius: $radius;
+
+      h1 {
+        font-weight: bold;
+        font-size: 14px;
+        margin: 0;
+      }
     }
 
     footer {
@@ -133,9 +299,6 @@
       padding-bottom: $padding;
 
       // Borders
-      border-left: $border;
-      border-right: $border;
-      border-bottom: $border;
       border-bottom-left-radius: $radius;
       border-bottom-right-radius: $radius;
       box-sizing: border-box;
@@ -161,7 +324,6 @@
       height: $flagHeight;
       border-top-left-radius: ($flagHeight / 2);
       border-bottom-left-radius: ($flagHeight / 2);
-      background: $annotationBorder;
 
       .closer {
         @include buttonLike;
@@ -187,15 +349,169 @@
     }
 
     textarea {
-      height: 110px;
-      min-height: 30px;
-      resize: vertical;
+      min-height: 44px;
+      max-height: 25vh;
+      resize: none;
+    }
+
+    .sidebyside {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+
+      > * {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+
+    .preview {
+      margin: 4px 0;
+
+      .title {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 10px;
+        margin: 2px 8px;
+        color: $viewerGray;
+      }
+
+      .content {
+        margin: 4px 8px;
+        font: 13px/18px Georgia, Times, serif;
+        cursor: text;
+        color: #3c3c3c;
+      }
+
+      &.static .content {
+        margin: 0 0 8px 0;
+      }
+    }
+
+    .access {
+      $spacing: 10px;
+
+      display: table;
+      table-layout: fixed;
+      width: calc(100% + #{$spacing * 2});
+      margin: 0 ($spacing * -1);
+      border-spacing: $spacing;
+      border-collapse: separate;
+
+      .container {
+        display: table-cell;
+        vertical-align: top;
+        border-radius: $radius;
+        border: solid 2px transparent;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        transition: border 0.2s ease;
+        opacity: 0.5;
+        user-select: none;
+
+        &:hover {
+          opacity: 0.9;
+        }
+
+        &.selected {
+          opacity: 1;
+        }
+
+        &.public {
+          &:hover {
+            border: solid 2px rgba($annotationBorder, 0.4);
+          }
+
+          &.selected {
+            border: solid 2px $annotationBorder;
+          }
+        }
+
+        &.organization {
+          &:hover {
+            border: solid 2px rgba($organizationAnnotation, 0.4);
+          }
+
+          &.selected {
+            border: solid 2px $organizationAnnotation;
+          }
+        }
+
+        &.private {
+          &:hover {
+            border: solid 2px rgba($privateAnnotation, 0.4);
+          }
+
+          &.selected {
+            border: solid 2px $privateAnnotation;
+          }
+        }
+
+        .item {
+          display: table;
+          border-spacing: 0;
+          width: 100%;
+
+          .icon {
+            display: table-cell;
+            vertical-align: top;
+            width: 30px;
+            text-align: center;
+            padding-top: 11px;
+          }
+
+          .contents {
+            display: table-cell;
+            vertical-align: top;
+            padding-right: 8px;
+
+            h3 {
+              font-size: 14px;
+              margin: 8px 0 0 0;
+            }
+
+            p {
+              margin: 6px 0 12px 0;
+            }
+          }
+        }
+      }
+    }
+
+    .pencil {
+      @include buttonLike;
+
+      vertical-align: middle;
+      margin-left: 3px;
+    }
+
+    .twopanel {
+      display: table;
+      width: 100%;
+      color: $viewerGray;
+      font-size: 11px;
+
+      .cell {
+        display: table-cell;
+      }
+
+      .leftalign {
+        text-align: left;
+      }
+
+      .rightalign {
+        text-align: right;
+      }
     }
   }
 </style>
 
 <div
   class="annotation"
+  class:public={access == 'public'}
+  class:organization={access == 'organization'}
+  class:private={access == 'private'}
+  class:disabled={loading}
   on:mousedown|stopPropagation
   style="top: {annotation.y1 * 100}%; height: {annotation.height * 100}%">
   <header>
@@ -204,10 +520,22 @@
         {@html closeInlineSvg}
       </span>
     </div>
-    <input
-      bind:this={titleInput}
-      placeholder="Annotation Title"
-      bind:value={title} />
+    <Loader active={loading} transparent={true}>
+      <!-- Title -->
+      {#if editMode}
+        <input
+          bind:this={titleInput}
+          placeholder="Annotation Title"
+          bind:value={title} />
+      {:else}
+        <h1>
+          {annotation.title}
+          <span class="pencil" on:click={() => (editOverride = true)}>
+            {@html pencilSvg}
+          </span>
+        </h1>
+      {/if}
+    </Loader>
   </header>
   <div class="excerpt">
     <div class="body">
@@ -227,16 +555,109 @@
     </div>
   </div>
   <footer>
-    <textarea
-      placeholder="Annotation Description (optional)"
-      bind:value={description} />
-    <div class="buttonpadded">
-      <Button
-        on:click={createAnnotation}
-        disabledReason={titleValid ? null : 'Enter a title for the annotation'}>
-        Save
-      </Button>
-      <Button secondary={true} on:click={cancelAnnotation}>Cancel</Button>
+    <div class="sidebyside">
+      <!-- Description/Content -->
+      {#if editMode}
+        <textarea
+          placeholder="Annotation Description (optional)"
+          use:textAreaResize
+          bind:value={description} />
+        {#if DomPurify != null && description.trim().length > 0}
+          <div class="preview">
+            <div class="title">Preview:</div>
+            <!-- Show a preview if possible -->
+            <div class="content">
+              {@html DomPurify.sanitize(description)}
+            </div>
+          </div>
+        {/if}
+      {:else}
+        <div class="preview static">
+          <div class="content">
+            {#if DomPurify != null}
+              {@html DomPurify.sanitize(annotation.content)}
+            {:else}
+              <!-- Risk showing server-provided HTML without sanitization -->
+              {@html annotation.content}
+            {/if}
+          </div>
+        </div>
+      {/if}
     </div>
+    <!-- Footer content -->
+    {#if editMode}
+      <div class="access">
+        <div
+          class="container public"
+          class:selected={access == 'public'}
+          on:click={() => (access = 'public')}>
+          <div class="item">
+            <span class="icon">
+              {@html publicIconSvg}
+            </span>
+            <div class="contents">
+              <h3>Public</h3>
+              <p>Note will be visible to anyone with access to the document.</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="container organization"
+          class:selected={access == 'organization'}
+          on:click={() => (access = 'organization')}>
+          <div class="item">
+            <span class="icon">
+              {@html organizationIconSvg}
+            </span>
+            <div class="contents">
+              <h3>Organization</h3>
+              <p>
+                Note will be visible to anyone within your organization with
+                access to the document.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="container private"
+          class:selected={access == 'private'}
+          on:click={() => (access = 'private')}>
+          <div class="item">
+            <span class="icon">
+              {@html privateIconSvg}
+            </span>
+            <div class="contents">
+              <h3>Private</h3>
+              <p>Note will be visible to you alone.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="buttonpadded">
+        <Button
+          on:click={createOrUpdateAnnotation}
+          disabledReason={titleValid ? (changeValid ? null : 'Note remains unchanged') : 'Enter a title for the annotation'}>
+          {#if editOverride}Update{:else}Save{/if}
+        </Button>
+        {#if editOverride}
+          <Button danger={true} on:click={handleDelete}>Delete</Button>
+        {/if}
+        <Button secondary={true} on:click={handleCancel}>Cancel</Button>
+      </div>
+    {:else}
+      <div class="twopanel">
+        <div class="cell leftalign">
+          {#if access == 'organization'}
+            This note is only visible to you and your organization
+          {:else if access == 'private'}
+            This private note is only visible to you
+          {/if}
+        </div>
+        <div class="cell rightalign">
+          Annotated by {annotation.username}
+          {#if annotation.organization != null}, {annotation.organization}{/if}
+        </div>
+      </div>
+    {/if}
   </footer>
 </div>
