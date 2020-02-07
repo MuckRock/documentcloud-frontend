@@ -2,6 +2,7 @@
   // Components
   import Image from "@/common/Image";
   import TextPage from "@/common/TextPage";
+  import VariableChunk from "@/common/VariableChunk";
   import Annotation from "./Annotation";
 
   import { renderer, setAspect } from "@/viewer/renderer";
@@ -36,15 +37,26 @@
   export let document;
   export let pageNumber;
   export let aspect;
+  export let additionalAspect;
+  export let fullAspect;
   export let actionOffset = 0;
 
   let chosenNote = null;
+  let newAdditionalAspect = additionalAspect;
+  let newAspect = aspect;
 
   $: readablePageNumber = pageNumber + 1;
 
-  function handleAspect(e) {
-    const shift = setAspect(pageNumber, e.detail);
+  function handleAspect({ detail }) {
+    newAspect = detail;
+  }
+
+  $: {
+    // if (additionalAspect == null) return;
+    console.log("UPDATING", pageNumber, newAspect, newAdditionalAspect);
+    const shift = setAspect(pageNumber, newAspect, newAdditionalAspect);
     if (shift != 0) {
+      console.log("SHIFTING", shift);
       emit.shift(shift);
     }
   }
@@ -180,7 +192,7 @@
 
 <div
   on:mousedown={cancelAnnotation}
-  style="padding: {$renderer.verticalPageMargin}px 0">
+  style="padding: {$renderer.verticalPageMargin}px 0; height: {$renderer.width * fullAspect - 6}px;">
   <div
     class="page"
     class:grayed={$layout.displayAnnotate}
@@ -190,6 +202,14 @@
       p. {readablePageNumber}
     </div>
     <div class="content">
+      {#if $renderer.mode == 'image'}
+        <!-- Handle slot content -->
+        <VariableChunk
+          width={$renderer.width}
+          bind:aspect={newAdditionalAspect}>
+          <div style="background: red;">Hi</div>
+        </VariableChunk>
+      {/if}
       <!-- Actual page image -->
       <div class="img">
         {#if $renderer.mode == 'image'}

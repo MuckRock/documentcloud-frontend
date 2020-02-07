@@ -2,7 +2,7 @@
   import Link from "@/router/Link";
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
-  import { scroll, changeMode } from "@/viewer/renderer";
+  import { renderer, scroll, changeMode } from "@/viewer/renderer";
 
   // SVG assets
   import backArrowSvg from "@/assets/back_arrow.svg";
@@ -59,5 +59,8 @@
   <div class="valign">
     <button on:click={() => changeMode('image')}>Image mode</button>
     <button on:click={() => changeMode('text')}>Text mode</button>
+  </div>
+  <div class="valign">
+    {JSON.stringify($renderer.additionalImageAspects[0])}
   </div>
 </header>

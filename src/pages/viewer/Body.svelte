@@ -132,7 +132,7 @@
       </div>
     {/if}
     <!-- Page contents -->
-    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${spaceId++}`)}
+    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `${chunk.type}-${spaceId++}`)}
       {#if chunk.type == 'space'}
         <div style="height: {chunk.height}px" />
       {:else if chunk.type == 'page'}
@@ -141,7 +141,9 @@
           document={$viewer.document}
           pageNumber={chunk.number}
           {actionOffset}
-          aspect={$renderer.computedAspects[chunk.number].aspect} />
+          aspect={$renderer.computedAspects[chunk.number].aspect}
+          additionalAspect={$renderer.additionalImageAspects[chunk.number].aspect}
+          fullAspect={$renderer.computedCompleteAspects[chunk.number].aspect} />
       {/if}
     {/each}
   {/if}

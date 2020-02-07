@@ -15,6 +15,7 @@ const DEFAULT_ASPECT = 1;
 beforeEach(() => {
   // Reset renderer
   renderer.imageAspects = [];
+  renderer.additionalImageAspects = [];
   renderer.width = PAGE_WIDTH;
   renderer.bodyHeight = BODY_HEIGHT;
   renderer.verticalPageMargin = PAGE_MARGIN;
@@ -32,6 +33,7 @@ function aspects(l) {
 
 test("page count", () => {
   // Page count should simply return the number of aspects
+  renderer.additionalImageAspects = aspects([0, 0, 0]);
   renderer.imageAspects = aspects([1, 1, 1]);
   expect(renderer.pageCount).toBe(3);
 
@@ -40,6 +42,7 @@ test("page count", () => {
 });
 
 test("average aspect", () => {
+  renderer.additionalImageAspects = aspects([0, 0, 0]);
   renderer.imageAspects = aspects([1, 2, 3]);
   // Average aspect should be 2
   expect(renderer.averageAspect).toBe(2);
@@ -60,6 +63,7 @@ test("average aspect", () => {
 });
 
 test("aspect runs", () => {
+  renderer.additionalImageAspects = aspects([0, 0, 0, 0]);
   renderer.imageAspects = [
     { aspect: 1 },
     { aspect: 2, note: 1 },
@@ -180,6 +184,7 @@ test("aspect runs", () => {
 });
 
 test("current page number", async () => {
+  renderer.additionalImageAspects = aspects([0, 0, 0, 0, 0]);
   renderer.imageAspects = aspects([2, 2, 2, 2, 2]);
   expect(renderer.currentPageNumber).toBe(0);
 
@@ -200,6 +205,7 @@ test("current page number", async () => {
 });
 
 test("image resize", async () => {
+  renderer.additionalImageAspects = aspects([0, 0, 0, 0, 0]);
   renderer.imageAspects = aspects([2, 2, 2, 2, 2]);
   renderer.textAspects = aspects([null, null, null, null, null]);
 

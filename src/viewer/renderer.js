@@ -11,6 +11,7 @@ export const renderer = new Svue({
   data() {
     return {
       imageAspects: [],
+      additionalImageAspects: [],
       textAspects: [],
       mode: "image",
       width: 800,
@@ -83,8 +84,25 @@ export const renderer = new Svue({
         aspect: aspect.aspect == null ? averageAspect : aspect.aspect
       }));
     },
-    heights(width, verticalPageMargin, computedAspects) {
-      return computedAspects.map(aspect =>
+    computedCompleteAspects(computedAspects, mode, additionalImageAspects) {
+      return computedAspects.map((aspect, i) => {
+        if (mode == "image") {
+          if (i == 0)
+            console.log({
+              mode,
+              aspect: aspect.aspect,
+              additional: additionalImageAspects[i].aspect
+            });
+          return {
+            ...aspect,
+            aspect: aspect.aspect + additionalImageAspects[i].aspect
+          };
+        }
+        return { ...aspect, aspect: aspect.aspect };
+      });
+    },
+    heights(width, verticalPageMargin, computedCompleteAspects) {
+      return computedCompleteAspects.map(aspect =>
         heightOfAspect(aspect.aspect, width, verticalPageMargin)
       );
     },
@@ -96,7 +114,9 @@ export const renderer = new Svue({
     ) {
       let offset = verticalDocumentMargin + verticalPageMargin;
       for (let i = 0; i < heights.length; i++) {
-        if (offset >= top) return i;
+        if (offset >= top) {
+          return i;
+        }
         offset += heights[i];
       }
       return heights.length - 1; // return last page if nothing matched
@@ -167,7 +187,7 @@ export const renderer = new Svue({
 
       return chunks;
     },
-    aspectRuns(computedAspects) {
+    aspectRuns(computedCompleteAspects) {
       // Helper methods
       const freshAspect = (start = 0) => ({
         total: 0,
@@ -190,8 +210,8 @@ export const renderer = new Svue({
       let currentRun = freshAspect();
 
       let i;
-      for (i = 0; i < computedAspects.length; i++) {
-        const { aspect, note } = computedAspects[i];
+      for (i = 0; i < computedCompleteAspects.length; i++) {
+        const { aspect, note } = computedCompleteAspects[i];
         let skipStartPageNumber = false;
 
         if (note != null) {
@@ -212,17 +232,10 @@ export const renderer = new Svue({
 
       return pageObjects;
     },
-    overallHeight(
-      computedAspects,
-      width,
-      verticalDocumentMargin,
-      verticalPageMargin
-    ) {
+    overallHeight(heights, verticalDocumentMargin) {
       let sum = verticalDocumentMargin * 2;
-      for (let i = 0; i < computedAspects.length; i++) {
-        const aspect = computedAspects[i].aspect;
-        const height = width * aspect;
-        sum += height + verticalPageMargin * 2;
+      for (let i = 0; i < heights.length; i++) {
+        sum += heights[i];
       }
       return sum;
     }
@@ -231,29 +244,65 @@ export const renderer = new Svue({
 
 function initAspects() {
   renderer.imageAspects = viewer.pageAspects.map(aspect => ({ aspect }));
-  renderer.textAspects = viewer.pageAspects.map(_ => ({ aspect: null }));
+  renderer.additionalImageAspects = viewer.pageAspects.map(() => ({
+    aspect: 0
+  }));
+  renderer.textAspects = viewer.pageAspects.map(() => ({ aspect: null }));
 }
 
 function heightOfAspect(aspect, width, verticalPageMargin) {
   return width * aspect + verticalPageMargin * 2;
 }
 
-export function setAspect(pageNumber, aspect) {
+export function setAspect(pageNumber, aspect, additionalAspect = null) {
   const existingInfo = renderer.aspects[pageNumber];
 
   // Don't trigger updates on same aspect
-  if (withinPercent(existingInfo.aspect, aspect, 0.0001)) return 0;
+  console.log(
+    "CHECKING",
+    pageNumber,
+    aspect,
+    additionalAspect,
+    renderer.additionalImageAspects[0]
+  );
+
+  const withinAspectPercent =
+    aspect == null || withinPercent(existingInfo.aspect, aspect, 0.0001);
+  const withinAdditionalPercent =
+    additionalAspect == null ||
+    withinPercent(
+      renderer.additionalImageAspects[pageNumber].aspect,
+      additionalAspect,
+      0.0001
+    );
+  if (withinAspectPercent && withinAdditionalPercent) return 0;
+  console.log("DIDNT RETURN", pageNumber, aspect, additionalAspect);
 
   // Tabulate previous heights before page we're updating
   let prevHeights = 0;
   const currentPageNumber = renderer.currentPageNumber;
   for (let i = 0; i < currentPageNumber; i++) {
+    console.log("*** BEFORE", renderer.heights[i]);
     prevHeights += renderer.heights[i];
   }
 
   if (renderer.mode == "image") {
-    renderer.imageAspects[pageNumber] = { ...existingInfo, aspect };
-    renderer.imageAspects = renderer.aspects;
+    if (aspect != null) {
+      renderer.imageAspects[pageNumber] = { ...existingInfo, aspect };
+      renderer.imageAspects = renderer.aspects;
+    }
+    if (additionalAspect != null) {
+      console.log("-+-SETTING", pageNumber, additionalAspect);
+      renderer.additionalImageAspects = renderer.additionalImageAspects.map(
+        (existing, i) => {
+          if (i != pageNumber) return existing;
+          return {
+            ...existing,
+            aspect: additionalAspect
+          };
+        }
+      );
+    }
   } else if (renderer.mode == "text") {
     renderer.textAspects[pageNumber] = { ...existingInfo, aspect };
     renderer.textAspects = renderer.aspects;
@@ -262,8 +311,11 @@ export function setAspect(pageNumber, aspect) {
   // Tabulate current heights before page we're updating
   let currentHeights = 0;
   for (let i = 0; i < currentPageNumber; i++) {
+    console.log("*** AFTER", renderer.heights[i]);
     currentHeights += renderer.heights[i];
   }
+
+  console.log("POST", renderer.additionalImageAspects[0]);
 
   // Return an offset to scroll to accommodate page jumps above the fold.
   return currentHeights - prevHeights;
@@ -279,6 +331,7 @@ export async function scroll(pos) {
   if (pos > maxPos) pos = maxPos;
   if (pos < 0) pos = 0;
 
+  console.log("SET TOP", pos);
   renderer.top = pos;
   // Let DOM updates sink in before updating scroll top
   await tick();
