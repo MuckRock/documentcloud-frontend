@@ -2,6 +2,7 @@
   // Components
   import Image from "@/common/Image";
   import TextPage from "@/common/TextPage";
+  import VariableChunk from "@/common/VariableChunk";
   import Annotation from "./Annotation";
 
   import { renderer, setAspect } from "@/viewer/renderer";
@@ -39,11 +40,19 @@
   export let actionOffset = 0;
 
   let chosenNote = null;
+  let additionalAspect = 0;
+  let newAspect = aspect;
+
+  let showPageNoteInsert = false;
 
   $: readablePageNumber = pageNumber + 1;
 
   function handleAspect(e) {
-    const shift = setAspect(pageNumber, e.detail);
+    newAspect = e.detail;
+  }
+
+  $: {
+    const shift = setAspect(pageNumber, newAspect + additionalAspect);
     if (shift != 0) {
       emit.shift(shift);
     }
@@ -136,6 +145,12 @@
       pointer-events: none;
       visibility: hidden;
     }
+
+    &.pageinsert {
+      top: -5px;
+      left: -3px;
+      opacity: 1;
+    }
   }
 
   .annotation {
@@ -176,11 +191,36 @@
       visibility: hidden;
     }
   }
+
+  hr {
+    height: 16px;
+    position: relative;
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      border-top: dashed 1px transparent;
+      width: 100%;
+    }
+
+    &.visible {
+      cursor: crosshair;
+
+      &:after {
+        border-top: dashed 1px gray;
+      }
+    }
+  }
 </style>
 
 <div
   on:mousedown={cancelAnnotation}
-  style="padding: {$renderer.verticalPageMargin}px 0">
+  style="padding: {$renderer.verticalPageMargin}px 0;">
   <div
     class="page"
     class:grayed={$layout.displayAnnotate}
@@ -189,13 +229,30 @@
     <div class="number" style="top: {actionOffset}px">
       p. {readablePageNumber}
     </div>
+    {#if $renderer.mode == 'image'}
+      <VariableChunk
+        width={$renderer.width}
+        bind:aspect={additionalAspect}
+        let:update>
+        <!-- TODO: page note support (visible={showPageNoteInsert}) -->
+        <hr
+          class:visible={false}
+          on:mouseover={() => (showPageNoteInsert = true)}
+          on:mouseout={() => (showPageNoteInsert = false)} />
+        {#if false}
+          <div class="tag pageinsert">
+            {@html publicTagSvg}
+          </div>
+        {/if}
+      </VariableChunk>
+    {/if}
     <div class="content">
       <!-- Actual page image -->
       <div class="img">
         {#if $renderer.mode == 'image'}
           <Image
             src={pageImageUrl(document, pageNumber, $renderer.width)}
-            {aspect}
+            aspect={aspect - additionalAspect}
             fade={false}
             delay={50}
             crosshair={$layout.pageCrosshair}
