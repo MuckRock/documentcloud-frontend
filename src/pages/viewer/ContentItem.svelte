@@ -1,8 +1,8 @@
 <script>
   export let sectionOrNote;
   import { hoveredNote } from "@/viewer/hoveredNote";
-  import { layout, showAnnotation } from "@/viewer/layout";
-  import { restorePosition } from "@/viewer/renderer";
+  import { layout } from "@/viewer/layout";
+  import { restorePosition, showAnnotation } from "@/viewer/renderer";
 
   // SVG assets
   import smallCircleSvg from "@/assets/small_circle.svg";
@@ -125,7 +125,7 @@
     class="note"
     class:hover={sectionOrNote.note == $layout.hoveredNote}
     use:hoveredNote={sectionOrNote.note}
-    on:click={() => showAnnotation(sectionOrNote.note)}>
+    on:click={() => showAnnotation(sectionOrNote.note, true)}>
     <span class="title">{sectionOrNote.note.title}</span>
     <span class="page">p. {sectionOrNote.note.page + 1}</span>
   </div>

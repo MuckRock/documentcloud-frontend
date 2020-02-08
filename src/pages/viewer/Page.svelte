@@ -5,14 +5,13 @@
   import VariableChunk from "@/common/VariableChunk";
   import Annotation from "./Annotation";
 
-  import { renderer, setAspect } from "@/viewer/renderer";
+  import { renderer, setAspect, showAnnotation } from "@/viewer/renderer";
   import { viewer } from "@/viewer/viewer";
   import {
     layout,
     pageDragStart,
     pageDragMove,
     pageDragEnd,
-    showAnnotation,
     cancelAnnotation
   } from "@/viewer/layout";
   import { hoveredNote } from "@/viewer/hoveredNote";

@@ -6,7 +6,7 @@
     enterAnnotateMode,
     enterSectionsMode
   } from "@/viewer/actions";
-  import { layout, showAnnotation } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout";
 </script>
 
 <style lang="scss">
