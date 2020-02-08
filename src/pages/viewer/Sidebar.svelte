@@ -1,12 +1,12 @@
 <script>
+  import TableOfContents from "./TableOfContents";
+
   import {
     enterRedactMode,
     enterAnnotateMode,
     enterSectionsMode
   } from "@/viewer/actions";
   import { layout, showAnnotation } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
-  import { hoveredNote } from "@/viewer/hoveredNote";
 </script>
 
 <style lang="scss">
@@ -21,40 +21,6 @@
     &.disabled {
       pointer-events: none;
       filter: brightness(90%);
-    }
-
-    .toc {
-      background: white;
-      padding: 8px 20px;
-
-      .note {
-        cursor: pointer;
-
-        .title {
-          color: #004276;
-          font-weight: bold;
-          font-size: 13px;
-        }
-
-        .page {
-          visibility: hidden;
-          color: #666;
-          font-size: 12px;
-          padding-left: 4px;
-          font-weight: normal;
-        }
-
-        &:hover,
-        &.hover {
-          .title {
-            text-decoration: underline;
-          }
-
-          .page {
-            visibility: visible;
-          }
-        }
-      }
     }
 
     .action {
@@ -90,18 +56,7 @@
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; left:
   calc(100% - {$layout.sidebarWidth}px)">
 
-  <div class="toc">
-    {#each $viewer.orderedNotes as note}
-      <div
-        class="note"
-        class:hover={note == $layout.hoveredNote}
-        use:hoveredNote={note}
-        on:click={() => showAnnotation(note)}>
-        <span class="title">{note.title}</span>
-        <span class="page">p. {note.page + 1}</span>
-      </div>
-    {/each}
-  </div>
+  <TableOfContents />
 
   <div class="action" on:click={enterRedactMode}>
     <h3>Redact</h3>

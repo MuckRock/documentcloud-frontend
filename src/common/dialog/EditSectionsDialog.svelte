@@ -1,13 +1,21 @@
 <script>
   import Button from "@/common/Button";
+  import Loader from "@/common/Loader";
   import { hideEditSections } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
+  import { layout } from "@/viewer/layout";
+
+  import { addSection, removeSection, replaceSection } from "@/api/section";
+  import { wrapLoadSeparate } from "@/util/wrapLoad";
+  import { showConfirm } from "@/manager/confirmDialog";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
   import closeSimpleSvg from "@/assets/close_simple.svg";
 
-  let pendingSections = [];
+  import { writable } from "svelte/store";
+
+  let loading = writable(false);
 
   let pendingPage = "";
   let pendingTitle = "";
@@ -16,42 +24,76 @@
   $: updatePage =
     !update || updatingIndex == null
       ? null
-      : pendingSections[updatingIndex].page;
+      : $viewer.sections[updatingIndex].page;
   $: updateTitle =
     !update || updatingIndex == null
       ? null
-      : pendingSections[updatingIndex].title;
+      : $viewer.sections[updatingIndex].title;
 
   $: {
     pendingPage = pendingPage.replace(/[^0-9]/g, "");
   }
 
-  function addSection() {
+  async function handleSectionAdd(callApi = true) {
     let alreadyAdded = false;
     if (update) {
       update = false;
       if (pageAsNumber == updatePage) {
         // Same page number: update in place
-        pendingSections[updatingIndex] = {
+        if (callApi) {
+          await wrapLoadSeparate(
+            loading,
+            layout,
+            async () =>
+              await replaceSection(
+                viewer.id,
+                viewer.sections[updatingIndex].id,
+                pageAsNumber,
+                pendingTitle
+              )
+          );
+        }
+        viewer.sections[updatingIndex] = {
           page: pageAsNumber,
           title: pendingTitle
         };
-        pendingSections = pendingSections;
+        viewer.sections = viewer.sections;
         alreadyAdded = true;
       } else {
         // Different page number: remove and add
-        removeSection(updatingIndex);
-        addSection();
+        if (callApi) {
+          await wrapLoadSeparate(
+            loading,
+            layout,
+            async () =>
+              await replaceSection(
+                viewer.id,
+                viewer.sections[updatingIndex].id,
+                pageAsNumber,
+                pendingTitle
+              )
+          );
+        }
+        await handleSectionRemove(updatingIndex, false);
+        handleSectionAdd(false);
         return;
       }
     }
 
     if (!alreadyAdded) {
-      pendingSections = [
-        ...pendingSections,
+      if (callApi) {
+        await wrapLoadSeparate(
+          loading,
+          layout,
+          async () => await addSection(viewer.id, pageAsNumber, pendingTitle)
+        );
+      }
+      viewer.sections = [
+        ...viewer.sections,
         { page: pageAsNumber, title: pendingTitle }
       ];
-      pendingSections.sort((a, b) => a.page - b.page);
+      viewer.sections.sort((a, b) => a.page - b.page);
+      viewer.sections = viewer.sections;
     }
 
     // Reset the inputs
@@ -59,15 +101,31 @@
     pendingTitle = "";
   }
 
-  function removeSection(idx) {
-    const removed = pendingSections.splice(idx, 1);
-    pendingSections = pendingSections;
-    return removed[0];
+  async function handleSectionRemove(idx, callApi = true) {
+    if (callApi) {
+      showConfirm(
+        "Confirm delete",
+        `Proceeding will remove the specified section (p. ${viewer.sections[idx].page} ${viewer.sections[idx].title}). Do you wish to continue?`,
+        "Delete",
+        async () => {
+          await wrapLoadSeparate(
+            loading,
+            layout,
+            async () => await removeSection(viewer.id, viewer.sections[idx].id)
+          );
+          handleSectionRemove(idx, false);
+        }
+      );
+    } else {
+      const removed = viewer.sections.splice(idx, 1);
+      viewer.sections = viewer.sections;
+      return removed[0];
+    }
   }
 
   function editSection(idx) {
     updatingIndex = idx;
-    const section = pendingSections[idx];
+    const section = viewer.sections[idx];
     pendingPage = `${section.page}`;
     pendingTitle = section.title;
     update = true;
@@ -81,10 +139,12 @@
     updatingIndex = null;
   }
 
+  function clearAllSections() {}
+
   $: pageAsNumber = parseInt(pendingPage);
   $: pageCollided =
     pageAsNumber != null &&
-    pendingSections.map(section => section.page).includes(pageAsNumber);
+    $viewer.sections.map(section => section.page).includes(pageAsNumber);
   $: pageSameAsEdit = update && updatePage == pageAsNumber;
   $: titleSameAsEdit = update && updateTitle == pendingTitle;
   $: pageValid =
@@ -182,67 +242,71 @@
   }
 </style>
 
-<div>
-  <div class="mcontent">
-    <h1>Edit Sections</h1>
-    <p>Manage sections to organize your document with a table of contents.</p>
+<Loader center={true} active={$loading}>
+  <div>
+    <div class="mcontent">
+      <h1>Edit Sections</h1>
+      <p>Manage sections to organize your document with a table of contents.</p>
 
-    <!-- Existing TOC -->
-    <div class="toc" class:disabled={update}>
-      {#if pendingSections.length > 0}
-        {#each pendingSections as section, i}
-          <div class="section" class:special={update && updatingIndex == i}>
-            <span class="edit" on:click={() => !update && editSection(i)}>
-              {@html pencilSvg}
-            </span>
-            <span class="remove" on:click={() => !update && removeSection(i)}>
-              {@html closeSimpleSvg}
-            </span>
-            <span class="page">p. {section.page}</span>
-            <span class="title">{section.title}</span>
-          </div>
-        {/each}
-      {:else}
-        <!-- No sections -->
-        <div class="empty">You have not added any sections</div>
-      {/if}
-    </div>
-
-    <!-- Add section input range -->
-    <div class="pendingsection">
-      <p>
-        {#if update}Edit the selected section{:else}Add a new section{/if}
-      </p>
-      <div class="actions">
-        <span class="page">p.</span>
-        <input
-          class="pageinput"
-          type="text"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          placeholder="#"
-          bind:value={pendingPage} />
-        <input
-          class="titleinput"
-          type="text"
-          placeholder="Title"
-          bind:value={pendingTitle} />
-        <span class="add">
-          <Button
-            disabledReason={pageValid ? (titleValid ? null : titleUpdateValid ? 'Please enter a title' : 'Enter a new title or page number') : pageCollided ? 'You must enter a unique page number' : 'Page number is invalid'}
-            on:click={addSection}>
-            {#if update}+ Update{:else}+ Add{/if}
-          </Button>
-        </span>
-        {#if update}
-          <span class="cancel">
-            <Button secondary={true} on:click={cancelUpdate}>Cancel</Button>
-          </span>
+      <!-- Existing TOC -->
+      <div class="toc" class:disabled={update}>
+        {#if $viewer.sections.length > 0}
+          {#each $viewer.sections as section, i}
+            <div class="section" class:special={update && updatingIndex == i}>
+              <span class="edit" on:click={() => !update && editSection(i)}>
+                {@html pencilSvg}
+              </span>
+              <span
+                class="remove"
+                on:click={async () => !update && (await handleSectionRemove(i))}>
+                {@html closeSimpleSvg}
+              </span>
+              <span class="page">p. {section.page}</span>
+              <span class="title">{section.title}</span>
+            </div>
+          {/each}
+        {:else}
+          <!-- No sections -->
+          <div class="empty">You have not added any sections</div>
         {/if}
       </div>
-      <div class="buttonpadded">
-        <Button secondary={true} on:click={hideEditSections}>Cancel</Button>
+
+      <!-- Add section input range -->
+      <div class="pendingsection">
+        <p>
+          {#if update}Edit the selected section{:else}Add a new section{/if}
+        </p>
+        <div class="actions">
+          <span class="page">p.</span>
+          <input
+            class="pageinput"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="#"
+            bind:value={pendingPage} />
+          <input
+            class="titleinput"
+            type="text"
+            placeholder="Title"
+            bind:value={pendingTitle} />
+          <span class="add">
+            <Button
+              disabledReason={pageValid ? (titleValid ? null : titleUpdateValid ? 'Please enter a title' : 'Enter a new title or page number') : pageCollided ? 'You must enter a unique page number' : 'Page number is invalid'}
+              on:click={handleSectionAdd}>
+              {#if update}+ Update{:else}+ Add{/if}
+            </Button>
+          </span>
+          {#if update}
+            <span class="cancel">
+              <Button secondary={true} on:click={cancelUpdate}>Cancel</Button>
+            </span>
+          {/if}
+        </div>
+        <div class="buttonpadded">
+          <Button primary={true} on:click={hideEditSections}>Done</Button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</Loader>

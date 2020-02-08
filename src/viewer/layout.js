@@ -18,7 +18,6 @@ export const layout = new Svue({
       sidebarWidth: 350,
       footerHeight: 47,
 
-      // TODO: handle load and error
       loading: false,
       error: null,
 
