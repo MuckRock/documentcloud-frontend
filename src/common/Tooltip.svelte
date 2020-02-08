@@ -12,6 +12,7 @@
   let delayTimer = null;
 
   function setPosition(e, hard = false) {
+    if (tooltip == null) return;
     let newX = e.clientX;
     let newY = e.clientY - tooltip.offsetHeight;
 

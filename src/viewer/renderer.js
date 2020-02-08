@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { viewer } from "./viewer";
-import { layout } from "./layout";
+import { layout, annotationValid } from "./layout";
 import { withinPercent } from "@/util/epsilon";
 import { tick } from "svelte";
 
@@ -35,7 +35,7 @@ export const renderer = new Svue({
   },
   computed: {
     annotationDialogOpen(layout) {
-      return layout.editAnnotate;
+      return layout.displayAnnotate;
     },
     verticalDocumentMargin(
       baseVerticalDocumentMargin,
@@ -288,6 +288,10 @@ export async function scroll(pos) {
   return pos;
 }
 
+export async function scrollOffset(offset) {
+  scroll(renderer.elem.scrollTop + offset);
+}
+
 export function getPosition() {
   // Like getting current page number, but rounds to page before
   const heights = renderer.heights;
@@ -326,4 +330,24 @@ export function changeMode(mode) {
 
   // Deselect any text
   if (window.getSelection) window.getSelection().removeAllRanges();
+}
+
+export async function scrollVisibleAnnotationIntoView() {
+  await tick();
+  const elem = layout.displayedAnnotationElem;
+  // Scroll into view if possible
+  if (elem != null && elem.scrollIntoView) {
+    elem.scrollIntoView();
+    // Scroll a little above
+    scrollOffset(-30);
+  }
+}
+
+export async function showAnnotation(annotation, scrollIntoView = false) {
+  if (!annotationValid(annotation)) return;
+  layout.annotateMode = "view";
+  layout.displayedAnnotation = annotation;
+
+  restorePosition(annotation.page);
+  await scrollVisibleAnnotationIntoView();
 }

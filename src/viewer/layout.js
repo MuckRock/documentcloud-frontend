@@ -18,12 +18,12 @@ export const layout = new Svue({
       sidebarWidth: 350,
       footerHeight: 47,
 
-      // TODO: handle load and error
       loading: false,
       error: null,
 
       action: null,
       displayedAnnotation: null,
+      displayedAnnotationElemRaw: null,
       annotateMode: "view",
 
       // Redactions
@@ -43,6 +43,10 @@ export const layout = new Svue({
   computed: {
     displayAnnotate(displayedAnnotation) {
       return displayedAnnotation != null;
+    },
+    displayedAnnotationElem(displayedAnnotation, displayedAnnotationElemRaw) {
+      if (displayedAnnotation == null) return null;
+      return displayedAnnotationElemRaw;
     },
     redacting(action) {
       return action == "redact";
@@ -109,7 +113,7 @@ function consolidateDragObject(dragObject) {
   });
 }
 
-function valid(annotation) {
+export function annotationValid(annotation) {
   if (annotation.x2 <= annotation.x1) return false;
   if (annotation.y2 <= annotation.y1) return false;
   return true;
@@ -117,14 +121,8 @@ function valid(annotation) {
 
 export function enterEditAnnotateMode(annotation) {
   cancelActions();
-  if (!valid(annotation)) return;
+  if (!annotationValid(annotation)) return;
   layout.annotateMode = "edit";
-  layout.displayedAnnotation = annotation;
-}
-
-export function showAnnotation(annotation) {
-  if (!valid(annotation)) return;
-  layout.annotateMode = "view";
   layout.displayedAnnotation = annotation;
 }
 

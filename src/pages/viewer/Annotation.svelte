@@ -55,8 +55,12 @@
 
   // Focus on title on mount
   let titleInput;
+  let annotationElem;
   onMount(async () => {
     if (titleInput != null) titleInput.focus();
+
+    // Update elem for scrolling purposes
+    layout.displayedAnnotationElemRaw = annotationElem;
   });
 
   // Create annotation
@@ -514,7 +518,7 @@
   class:disabled={loading}
   on:mousedown|stopPropagation
   style="top: {annotation.y1 * 100}%; height: {annotation.height * 100}%">
-  <header>
+  <header bind:this={annotationElem}>
     <div class="closeflag">
       <span class="closer" on:click={cancelAnnotation}>
         {@html closeInlineSvg}

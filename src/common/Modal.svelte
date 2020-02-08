@@ -103,14 +103,6 @@
 
     :global(.inputpadded) {
       padding: 12px 0;
-      :global(input) {
-        padding: 4px 10px;
-        font-family: inherit;
-        font-size: 16px;
-        border-radius: 3px;
-        border: solid 1px gainsboro;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
-      }
     }
   }
 
