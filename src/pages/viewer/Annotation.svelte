@@ -343,19 +343,11 @@
 
     input,
     textarea {
-      border: 1px solid #d0d0d0;
-      border-radius: 3px;
       font-size: 12px;
       width: 100%;
       padding: 2px 4px;
       box-sizing: border-box;
       outline: none;
-    }
-
-    textarea {
-      min-height: 44px;
-      max-height: 25vh;
-      resize: none;
     }
 
     .sidebyside {

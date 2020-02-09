@@ -5,12 +5,20 @@
   import Hamburger from "@/common/Hamburger";
   import Button from "@/common/Button";
   import Modal from "@/common/Modal";
+  import ErrorModal from "@/common/ErrorModal";
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import RenameDialog from "@/common/dialog/RenameDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
+  import ProjectDialog from "@/common/dialog/ProjectDialog";
 
-  import { layout, hideRename, hideAccess } from "@/manager/layout";
+  import {
+    layout,
+    hideRename,
+    hideAccess,
+    hideProject
+  } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
+  import { documents } from "@/manager/documents";
 
   import emitter from "@/emit";
 
@@ -56,18 +64,22 @@
 </style>
 
 <div class="main">
-  {#if $confirmDialog.open}
+  {#if $layout.error}
+    <ErrorModal store={$layout} />
+  {:else if $confirmDialog.open}
     <Modal component={ConfirmDialog} on:close={hideConfirm} />
   {:else if $layout.renameOpen}
     <Modal component={RenameDialog} on:close={hideRename} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
+  {:else if $layout.projectOpen}
+    <Modal component={ProjectDialog} on:close={hideProject} />
   {/if}
   <Hamburger
     on:toggle={emit.expandSidebar}
     white={true}
     style="margin-top: 16px; padding: 1.5em 36px;" />
-  {#if !$layout.error}
+  {#if !$documents.error}
     <div class="container">
       <SearchBar on:search={handleSearch} />
       <Documents />

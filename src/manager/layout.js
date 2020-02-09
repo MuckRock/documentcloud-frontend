@@ -21,6 +21,8 @@ export const layout = new Svue({
 
       // Custom dialogs
       renameOpen: false,
+      projectEdit: null,
+      projectOpen: false,
 
       // Which documents the access is being edited for
       accessEditDocuments: []
@@ -91,4 +93,18 @@ export function openAccess(documents) {
 
 export function hideAccess() {
   layout.accessEditDocuments = [];
+}
+
+export function newProject() {
+  layout.projectEdit = null;
+  layout.projectOpen = true;
+}
+
+export function editProject(project) {
+  layout.projectEdit = project;
+  layout.projectOpen = true;
+}
+
+export function hideProject() {
+  layout.projectOpen = false;
 }

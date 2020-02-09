@@ -9,7 +9,7 @@ import {
   PENDING
 } from "@/api/document";
 import { layout, hideAccess } from "./layout";
-import { wrapMultiple } from "@/util/wrapLoad";
+import { wrapMultiple, wrapMultipleSeparate } from "@/util/wrapLoad";
 import { showConfirm } from "./confirmDialog";
 import { router } from "@/router/router";
 
@@ -20,6 +20,7 @@ export const documents = new Svue({
         documents: [],
         processingDocuments: []
       },
+      error: null,
       router
     };
   },
@@ -251,8 +252,9 @@ export function unselectAll() {
 }
 
 export async function initDocuments() {
-  const [newDocuments, newProcessingDocuments] = await wrapMultiple(
+  const [newDocuments, newProcessingDocuments] = await wrapMultipleSeparate(
     layout,
+    documents,
     () => getDocuments(),
     () => getDocuments(PENDING)
   );
