@@ -15,11 +15,8 @@ export class Section extends Svue {
           return section.id;
         },
         page(section) {
-          return section.page_number;
-        },
-        actualPage(page) {
-          // 0-based page number
-          return page - 1;
+          // Normalize page number
+          return section.page_number - 1;
         },
         title(section) {
           return section.title;

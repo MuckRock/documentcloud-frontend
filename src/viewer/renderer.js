@@ -348,6 +348,8 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
   layout.annotateMode = "view";
   layout.displayedAnnotation = annotation;
 
-  restorePosition(annotation.page);
-  await scrollVisibleAnnotationIntoView();
+  if (scrollIntoView) {
+    restorePosition(annotation.page);
+    await scrollVisibleAnnotationIntoView();
+  }
 }
