@@ -10,6 +10,7 @@
   import RenameDialog from "@/common/dialog/RenameDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
+  import Toasts from "@/common/Toasts";
 
   import {
     layout,
@@ -64,6 +65,8 @@
 </style>
 
 <div class="main">
+  <Toasts />
+
   {#if $layout.error}
     <ErrorModal store={$layout} />
   {:else if $confirmDialog.open}

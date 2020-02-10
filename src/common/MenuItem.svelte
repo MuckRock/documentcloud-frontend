@@ -1,11 +1,12 @@
 <script>
   export let danger = false;
+  export let selectable = true;
+  export let primary = false;
 </script>
 
 <style lang="scss">
   .item {
     padding: 6px 21px;
-    cursor: pointer;
     font-size: 16px;
     user-select: none;
 
@@ -13,13 +14,21 @@
       color: $caution;
     }
 
-    &:hover {
-      background: $primary;
-      color: white;
+    &.primary {
+      color: $primary;
+    }
+
+    &.selectable {
+      cursor: pointer;
+
+      &:hover {
+        background: $primary;
+        color: white;
+      }
     }
   }
 </style>
 
-<div class="item" class:danger on:click>
+<div class="item" class:selectable class:danger class:primary on:click>
   <slot>Define an item</slot>
 </div>

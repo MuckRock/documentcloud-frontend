@@ -51,7 +51,7 @@
   async function remove() {
     showConfirm(
       "Confirm delete",
-      "Are you sure you want to delete the specified project?",
+      `Are you sure you want to delete this project (${layout.projectEdit.title})?`,
       "Delete",
       async () => {
         await wrapLoadSeparate(loading, layout, async () => {
@@ -70,6 +70,11 @@
   input {
     outline: none;
     width: 100%;
+    padding: 4px 7px;
+  }
+
+  textarea {
+    padding: 5px 7px;
   }
 
   p {
@@ -79,7 +84,9 @@
 
 <div>
   <div class="mcontent">
-    <h1>Create new project</h1>
+    <h1>
+      {#if editing}Edit Project{:else}Create New Project{/if}
+    </h1>
     <div class="inputpadded">
       <input placeholder="Title..." bind:value={name} bind:this={input} />
       <p>

@@ -54,6 +54,7 @@
           );
         }
         viewer.sections[updatingIndex] = {
+          id: viewer.sections[updatingIndex].id,
           page: pageAsNumber,
           title: pendingTitle
         };
@@ -105,7 +106,8 @@
     if (callApi) {
       showConfirm(
         "Confirm delete",
-        `Proceeding will remove the specified section (p. ${viewer.sections[idx].page} ${viewer.sections[idx].title}). Do you wish to continue?`,
+        `Proceeding will remove the specified section (p. ${viewer.sections[idx]
+          .page + 1} ${viewer.sections[idx].title}). Do you wish to continue?`,
         "Delete",
         async () => {
           await wrapLoadSeparate(
@@ -141,7 +143,7 @@
 
   function clearAllSections() {}
 
-  $: pageAsNumber = parseInt(pendingPage);
+  $: pageAsNumber = parseInt(pendingPage) - 1;
   $: pageCollided =
     pageAsNumber != null &&
     $viewer.sections.map(section => section.page).includes(pageAsNumber);
@@ -150,8 +152,8 @@
   $: pageValid =
     $viewer.loaded &&
     pageAsNumber != null &&
-    pageAsNumber > 0 &&
-    pageAsNumber <= $viewer.document.pageCount &&
+    pageAsNumber >= 0 &&
+    pageAsNumber < $viewer.document.pageCount &&
     (!pageCollided || pageSameAsEdit);
   $: titleTrimmed = pendingTitle.trim();
   $: titleUpdateValid = !update || !(pageSameAsEdit && titleSameAsEdit);
@@ -261,7 +263,7 @@
                 on:click={async () => !update && (await handleSectionRemove(i))}>
                 {@html closeSimpleSvg}
               </span>
-              <span class="page">p. {section.page}</span>
+              <span class="page">p. {section.page + 1}</span>
               <span class="title">{section.title}</span>
             </div>
           {/each}

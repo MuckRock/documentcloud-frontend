@@ -32,6 +32,12 @@ export async function updateProject(projectId, title, description) {
   return new Project(data);
 }
 
+export async function addDocToProject(projectId, docId) {
+  await session.post(apiUrl(`projects/${projectId}/documents/`), {
+    document: docId
+  });
+}
+
 export async function getProjects(expand = DEFAULT_EXPAND) {
   // Returns all projects
   const projects = await grabAllPages(

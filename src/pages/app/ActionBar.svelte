@@ -5,6 +5,7 @@
 
   // Menus
   import EditMenu from "./menus/EditMenu";
+  import ProjectsMenu from "./menus/ProjectsMenu";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -67,36 +68,45 @@
 </style>
 
 <div class="barcontainer">
-  <div class="bar">
-    <span class="action check scaledown">
-      <Checkbox
-        on:check={handleSelectAll}
-        on:uncheck={unselectAll}
-        indeterminate={$manager.someSelected}
-        checked={$layout.hasSelection} />
-    </span>
+  {#if !$layout.loading}
+    <div class="bar">
+      <span class="action check scaledown">
+        <Checkbox
+          on:check={handleSelectAll}
+          on:uncheck={unselectAll}
+          indeterminate={$manager.someSelected}
+          checked={$layout.hasSelection} />
+      </span>
 
-    {#if $layout.hasSelection}
+      {#if $layout.hasSelection}
+        <Dropdown table={true}>
+          <span class="action" slot="title">
+            Edit
+            <span class="dropper">▼</span>
+          </span>
+          <EditMenu />
+        </Dropdown>
+      {:else}
+        <span class="action disabled shortpad">
+          <Tooltip caption="Select some documents to reveal edit actions">
+            Edit
+            <span class="dropper">▼</span>
+          </Tooltip>
+        </span>
+      {/if}
       <Dropdown table={true}>
         <span class="action" slot="title">
-          Edit
+          Projects
           <span class="dropper">▼</span>
         </span>
-        <EditMenu />
+        <ProjectsMenu />
       </Dropdown>
-    {:else}
-      <span class="action disabled shortpad">
-        <Tooltip caption="Select some documents to reveal edit actions">
-          Edit
-          <span class="dropper">▼</span>
-        </Tooltip>
+      <span class="action disabled">
+        <Tooltip caption="Not implemented yet">Analyze</Tooltip>
       </span>
-    {/if}
-    <span class="action disabled">
-      <Tooltip caption="Not implemented yet">Analyze</Tooltip>
-    </span>
-    <span class="action disabled">
-      <Tooltip caption="Not implemented yet">Publish</Tooltip>
-    </span>
-  </div>
+      <span class="action disabled">
+        <Tooltip caption="Not implemented yet">Publish</Tooltip>
+      </span>
+    </div>
+  {/if}
 </div>

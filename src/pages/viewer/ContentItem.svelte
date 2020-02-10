@@ -33,6 +33,7 @@
 
   .section {
     @include buttonLike;
+    padding: 4px 0;
   }
 
   .note {
@@ -54,8 +55,8 @@
     }
   }
 
-  .section {
-    padding: 8px 0;
+  details {
+    margin: 8px 0 2px 0;
   }
 
   .note,
