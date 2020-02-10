@@ -7,12 +7,21 @@
 
   let dragging = false;
 
+  function filterFiles(files) {
+    files = Array.from(files).filter(f => f.type == "application/pdf");
+    return files;
+  }
+
   function enter(e) {
+    const files = filterFiles(e.dataTransfer.files);
+    if (files.length == 0) return;
     dragging = true;
   }
+
   function leave() {
     dragging = false;
   }
+
   function handleDrop(e) {
     handleFiles(e.dataTransfer.files);
   }
@@ -20,7 +29,7 @@
   function handleFiles(files) {
     leave();
     // Filter for just PDF files
-    files = Array.from(files).filter(f => f.type == "application/pdf");
+    files = filterFiles(files);
     if (files.length == 0) return;
     emit.files(files);
   }

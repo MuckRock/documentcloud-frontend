@@ -31,8 +31,21 @@
     font-family: inherit;
     font-size: 16px;
     border-radius: 3px;
-    border: solid 1px gainsboro;
+    border: solid 1px #d0d0d0;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+  }
+
+  :global(textarea) {
+    min-height: 44px;
+    max-height: 25vh;
+    resize: none;
+    border: 1px solid #d0d0d0;
+    border-radius: $radius;
+    font-size: 12px;
+    width: 100%;
+    padding: 2px 4px;
+    box-sizing: border-box;
+    outline: none;
   }
 </style>
 

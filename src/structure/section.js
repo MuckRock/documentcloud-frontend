@@ -17,10 +17,6 @@ export class Section extends Svue {
         page(section) {
           return section.page_number;
         },
-        actualPage(page) {
-          // 0-based page number
-          return page - 1;
-        },
         title(section) {
           return section.title;
         }

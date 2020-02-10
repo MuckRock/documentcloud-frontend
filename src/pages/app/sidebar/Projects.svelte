@@ -4,6 +4,7 @@
   import Project from "./Project";
 
   import { projects } from "@/manager/projects";
+  import { newProject } from "@/manager/layout";
 </script>
 
 <style lang="scss">
@@ -23,7 +24,7 @@
 <div class="projects">
   <div class="titlesection">
     <Title small={true}>Projects</Title>
-    <Button small={true}>+ New Project</Button>
+    <Button on:click={newProject} small={true}>+ New Project</Button>
   </div>
   <div class="projectcontainer">
     {#each $projects.projects as project}

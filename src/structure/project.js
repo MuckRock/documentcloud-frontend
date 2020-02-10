@@ -1,4 +1,4 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
 export class Project extends Svue {
   constructor(rawProject, structure = {}) {
@@ -11,26 +11,14 @@ export class Project extends Svue {
       },
       computed: {
         ...computed,
+        id(project) {
+          return project.id;
+        },
         title(project) {
           return project.title;
         },
-        collaborators(project) {
-          return project.collaborators;
-        },
-        collaboratorCount(collaborators) {
-          return collaborators.length;
-        },
-        accountName(project) {
-          return project.account_full_name;
-        },
-        ownProject(collaboratorCount) {
-          return collaboratorCount > 0;
-        },
-        documentCount(project) {
-          return project.document_count;
-        },
-        annotationCount(project) {
-          return project.annotation_count;
+        description(project) {
+          return project.description;
         }
       }
     });

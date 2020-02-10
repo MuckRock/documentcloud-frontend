@@ -1,27 +1,33 @@
 <script>
-  import { handlePlural } from "@/util/string";
   import { Svue } from "svue";
+  import { editProject } from "@/manager/layout";
+  import pencilSvg from "@/assets/pencil.svg";
 
   export let project;
-
-  $: docs = handlePlural(project.documentCount, "Document", true);
-  // Hide text for notes and collaborators if empty
-  $: notes = handlePlural(project.annotationCount, "Note");
-  $: collaborators = handlePlural(project.collaboratorCount, "Collaborator");
-
-  $: infoString = [docs, notes, collaborators]
-    .filter(x => x.length > 0)
-    .join(", ");
 </script>
 
 <style lang="scss">
   .project {
+    @include buttonLike;
     padding: 11px 25px;
 
     &:hover {
-      cursor: pointer;
       background: rgba(0, 0, 0, 0.03);
-      opacity: $hover-opacity;
+    }
+
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .edit {
+      @include buttonLike;
+
+      margin-right: 5px;
+
+      &:hover {
+        filter: brightness(0.3);
+      }
     }
   }
 
@@ -29,15 +35,16 @@
     font-size: $normal;
   }
 
-  .sub {
-    font-size: $small;
-    line-height: 15px;
-    color: $gray;
-  }
+  // .sub {
+  //   font-size: $small;
+  //   line-height: 15px;
+  //   color: $gray;
+  // }
 </style>
 
-<div class="project">
-  <div class="title">{project.title}</div>
-  <div v-if="ownProject" class="sub">Shared by {project.accountName}</div>
-  <div class="sub">{infoString}</div>
+<div class="project" on:click={() => console.log('hi')}>
+  <span class="edit" on:click|stopPropagation={() => editProject(project)}>
+    {@html pencilSvg}
+  </span>
+  <span class="title">{project.title}</span>
 </div>

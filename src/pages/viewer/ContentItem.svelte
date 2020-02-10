@@ -33,6 +33,7 @@
 
   .section {
     @include buttonLike;
+    padding: 4px 0;
   }
 
   .note {
@@ -54,8 +55,12 @@
     }
   }
 
-  .section,
-  .note {
+  details {
+    margin: 8px 0 2px 0;
+  }
+
+  .note,
+  .section {
     margin: 4px 0;
   }
 
@@ -73,7 +78,7 @@
 
     li {
       list-style: none;
-      margin: 3px 0;
+      margin: 0;
       padding: 0;
 
       .circle {
@@ -95,9 +100,9 @@
       <summary>
         <span
           class="section"
-          on:click|preventDefault={() => restorePosition(sectionOrNote.section.page - 1)}>
+          on:click|preventDefault={() => restorePosition(sectionOrNote.section.page)}>
           <span class="title">{sectionOrNote.section.title}</span>
-          <span class="page">p. {sectionOrNote.section.page}</span>
+          <span class="page">p. {sectionOrNote.section.page + 1}</span>
         </span>
       </summary>
       <ul class="children">
@@ -114,9 +119,9 @@
   {:else}
     <div
       class="section"
-      on:click={() => restorePosition(sectionOrNote.section.page - 1)}>
+      on:click={() => restorePosition(sectionOrNote.section.page)}>
       <span class="title">{sectionOrNote.section.title}</span>
-      <span class="page">p. {sectionOrNote.section.page}</span>
+      <span class="page">p. {sectionOrNote.section.page + 1}</span>
     </div>
   {/if}
 {:else}

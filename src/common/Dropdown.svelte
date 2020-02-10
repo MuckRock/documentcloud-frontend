@@ -1,7 +1,8 @@
 <script>
   import { onMount, tick } from "svelte";
 
-  const MENU_ITEM_PADDING = 10;
+  const MENU_ITEM_HORIZ_PADDING = 5;
+  const MENU_ITEM_VERT_PADDING = 10;
   const MENU_OFFSET = 1; // vert offset for menu
 
   export let table;
@@ -113,8 +114,8 @@
     class:active
     bind:this={titleBg}
     on:click={hide}
-    style="width: {titleWidth + MENU_ITEM_PADDING * 2}px; left: {-MENU_ITEM_PADDING}px;
-    top: {-MENU_ITEM_PADDING}px; bottom: {-MENU_ITEM_PADDING}px" />
+    style="width: {titleWidth + MENU_ITEM_HORIZ_PADDING * 2}px; left: {-MENU_ITEM_HORIZ_PADDING}px;
+    top: {-MENU_ITEM_VERT_PADDING}px; bottom: {-MENU_ITEM_VERT_PADDING}px" />
   <span class:table bind:this={title} on:click={revealOrHide}>
     <slot name="title" />
   </span>
