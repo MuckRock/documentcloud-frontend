@@ -9,6 +9,7 @@
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import RenameDialog from "@/common/dialog/RenameDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
+  import DataDialog from "@/common/dialog/DataDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import Toasts from "@/common/Toasts";
 
@@ -16,6 +17,7 @@
     layout,
     hideRename,
     hideAccess,
+    hideData,
     hideProject
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
@@ -75,6 +77,8 @@
     <Modal component={RenameDialog} on:close={hideRename} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
+  {:else if $layout.dataOpen}
+    <Modal component={DataDialog} on:close={hideData} />
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
   {/if}

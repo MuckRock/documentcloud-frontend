@@ -101,8 +101,7 @@
         <span
           class="section"
           on:click|preventDefault={() => restorePosition(sectionOrNote.section.page)}>
-          <span class="title">{sectionOrNote.section.title}</span>
-          <span class="page">p. {sectionOrNote.section.page + 1}</span>
+          <span class="title">{sectionOrNote.section.title}</span>&nbsp;<span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
         </span>
       </summary>
       <ul class="children">
@@ -120,8 +119,7 @@
     <div
       class="section"
       on:click={() => restorePosition(sectionOrNote.section.page)}>
-      <span class="title">{sectionOrNote.section.title}</span>
-      <span class="page">p. {sectionOrNote.section.page + 1}</span>
+      <span class="title">{sectionOrNote.section.title}</span>&nbsp;<span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
     </div>
   {/if}
 {:else}
@@ -131,7 +129,6 @@
     class:hover={sectionOrNote.note == $layout.hoveredNote}
     use:hoveredNote={sectionOrNote.note}
     on:click={() => showAnnotation(sectionOrNote.note, true)}>
-    <span class="title">{sectionOrNote.note.title}</span>
-    <span class="page">p. {sectionOrNote.note.page + 1}</span>
+    <span class="title">{sectionOrNote.note.title}</span>&nbsp;<span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
   </div>
 {/if}

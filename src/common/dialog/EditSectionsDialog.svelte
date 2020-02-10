@@ -34,25 +34,23 @@
     pendingPage = pendingPage.replace(/[^0-9]/g, "");
   }
 
-  async function handleSectionAdd(callApi = true) {
+  async function handleSectionAdd(callApi = true, newId = null) {
     let alreadyAdded = false;
     if (update) {
       update = false;
       if (pageAsNumber == updatePage) {
         // Same page number: update in place
-        if (callApi) {
-          await wrapLoadSeparate(
-            loading,
-            layout,
-            async () =>
-              await replaceSection(
-                viewer.id,
-                viewer.sections[updatingIndex].id,
-                pageAsNumber,
-                pendingTitle
-              )
-          );
-        }
+        await wrapLoadSeparate(
+          loading,
+          layout,
+          async () =>
+            await replaceSection(
+              viewer.id,
+              viewer.sections[updatingIndex].id,
+              pageAsNumber,
+              pendingTitle
+            )
+        );
         viewer.sections[updatingIndex] = {
           id: viewer.sections[updatingIndex].id,
           page: pageAsNumber,
@@ -62,36 +60,38 @@
         alreadyAdded = true;
       } else {
         // Different page number: remove and add
-        if (callApi) {
-          await wrapLoadSeparate(
-            loading,
-            layout,
-            async () =>
-              await replaceSection(
-                viewer.id,
-                viewer.sections[updatingIndex].id,
-                pageAsNumber,
-                pendingTitle
-              )
-          );
-        }
+        const newSection = await wrapLoadSeparate(
+          loading,
+          layout,
+          async () =>
+            await replaceSection(
+              viewer.id,
+              viewer.sections[updatingIndex].id,
+              pageAsNumber,
+              pendingTitle
+            )
+        );
         await handleSectionRemove(updatingIndex, false);
-        handleSectionAdd(false);
+        handleSectionAdd(false, newSection.id);
         return;
       }
     }
 
     if (!alreadyAdded) {
+      let id;
       if (callApi) {
-        await wrapLoadSeparate(
+        const section = await wrapLoadSeparate(
           loading,
           layout,
           async () => await addSection(viewer.id, pageAsNumber, pendingTitle)
         );
+        id = section.id;
+      } else {
+        id = newId;
       }
       viewer.sections = [
         ...viewer.sections,
-        { page: pageAsNumber, title: pendingTitle }
+        { page: pageAsNumber, title: pendingTitle, id }
       ];
       viewer.sections.sort((a, b) => a.page - b.page);
       viewer.sections = viewer.sections;
@@ -128,7 +128,7 @@
   function editSection(idx) {
     updatingIndex = idx;
     const section = viewer.sections[idx];
-    pendingPage = `${section.page}`;
+    pendingPage = `${section.page + 1}`;
     pendingTitle = section.title;
     update = true;
   }
@@ -183,6 +183,7 @@
     .section {
       &.special {
         opacity: 1;
+        background: rgba($annotationBorder, 0.3);
       }
 
       span {

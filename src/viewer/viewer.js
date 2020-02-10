@@ -155,7 +155,6 @@ function initViewer(id) {
   getDocument(id).then(doc => (viewer.document = doc));
   getAnnotations(id).then(notes => (viewer.notes = notes));
   getSections(id).then(sections => {
-    console.log("GOT SECTIONS", sections);
     viewer.sections = sections;
   });
   getMe().then(me => (viewer.me = me));

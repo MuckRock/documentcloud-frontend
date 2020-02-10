@@ -24,6 +24,10 @@ export const layout = new Svue({
       projectEdit: null,
       projectOpen: false,
 
+      // Data
+      dataDocuments: [],
+      dataOpen: false,
+
       // Which documents the access is being edited for
       accessEditDocuments: []
     };
@@ -93,6 +97,16 @@ export function openAccess(documents) {
 
 export function hideAccess() {
   layout.accessEditDocuments = [];
+}
+
+export function editData(documents) {
+  if (documents.length == 0) return;
+  layout.dataDocuments = documents;
+  layout.dataOpen = true;
+}
+
+export function hideData() {
+  layout.dataOpen = false;
 }
 
 export function newProject() {
