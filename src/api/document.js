@@ -138,14 +138,12 @@ export async function pollDocument(
  * Uploads the specified documents, providing callbacks for progress updates
  * @param {Array<Document>} docs The documents to upload
  * @param {Function} progressFn A function to call with upload progress
- * @param {Function} completeFn A function to call when an individual doc uploads
  * @param {Function} allCompleteFn A function to call when all docs upload
  * @param {Function} errorFn A function to call when an error occurs
  */
 export async function uploadDocuments(
   docs,
   progressFn,
-  completeFn,
   allCompleteFn,
   errorFn
 ) {
@@ -154,80 +152,59 @@ export async function uploadDocuments(
   const toComplete = [];
   for (let i = 0; i < docs.length; i++) {
     progresses.push({
-      index: i,
-      progress: 0,
-      startTime: Date.now(),
-      completeTime: null,
-      interval: null
+      progress: 0
     });
     toComplete.push(i);
   }
 
-  for (let i = 0; i < docs.length; i++) {
-    const formData = new FormData();
-    const file = docs[i].file;
-    const name = docs[i].name;
-    formData.append("file", file);
-    formData.append("title", name);
-
-    session
-      .post(apiUrl("documents/"), {
-        title: name
-      })
-      .then(
-        response => {
-          // Allocate a document with title.
-          const responseData = response.data;
-          const url = responseData.presigned_url;
-          const id = responseData.id;
-
-          axios
-            .put(url, file, {
-              headers: {
-                "Content-Type": "application/pdf"
-              },
-              onUploadProgress: progressEvent => {
-                // Handle upload progress
-                const progress = progressEvent.loaded / progressEvent.total;
-                progresses[i].progress = progress;
-                progressFn(i, progress);
-              }
-            })
-            .then(
-              () => {
-                // Upload completed. Post to start processing.
-                session.post(apiUrl(`documents/${id}/process/`)).then(
-                  () => {
-                    // Handle complete upload
-                    if (progresses[i].interval != null) {
-                      // Clear existing fake timer.
-                      clearTimeout(progresses[i].interval);
-                      progresses[i].interval = null;
-                    }
-                    for (let j = 0; j < toComplete.length; j++) {
-                      if (toComplete[j] == i) {
-                        toComplete.splice(j, 1);
-                        completeFn(id, i);
-                        break;
-                      }
-                    }
-                    if (toComplete.length == 0) {
-                      allCompleteFn();
-                    }
-                  },
-                  e => {
-                    errorFn("failed to start processing the document", e);
-                  }
-                );
-              },
-              e => {
-                errorFn("failed to upload the document", e);
-              }
-            );
-        },
-        e => {
-          errorFn("failed to create the document", e);
-        }
-      );
+  // Allocate documents with the appropriate titles.
+  let newDocuments;
+  try {
+    const { data } = await session.post(
+      apiUrl("documents/"),
+      docs.map(doc => ({ title: doc.name }))
+    );
+    newDocuments = data;
+  } catch (e) {
+    return errorFn("failed to create the document", e);
   }
+
+  console.log("GOT NEW DOCUMENTS", newDocuments);
+
+  // Upload all the files
+  try {
+    await Promise.all(
+      docs.map((doc, i) => {
+        const url = newDocuments[i].presigned_url;
+        const file = doc.file;
+
+        return axios.put(url, file, {
+          headers: {
+            "Content-Type": "application/pdf"
+          },
+          onUploadProgress: progressEvent => {
+            // Handle upload progress
+            const progress = progressEvent.loaded / progressEvent.total;
+            progresses[i].progress = progress;
+            progressFn(i, progress);
+          }
+        });
+      })
+    );
+  } catch (e) {
+    return errorFn("failed to upload the document", e);
+  }
+
+  // Once all the files have uploaded, begin processing.
+  const ids = newDocuments.map(doc => doc.id);
+  try {
+    await session.post(apiUrl(`documents/process/`), {
+      ids
+    });
+  } catch (e) {
+    return errorFn("failed to start processing the document", e);
+  }
+
+  // Handle document completion
+  allCompleteFn(ids);
 }

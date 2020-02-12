@@ -10,7 +10,7 @@ import {
   PENDING
 } from "@/api/document";
 import { layout, hideAccess } from "./layout";
-import { wrapLoad, wrapMultiple, wrapMultipleSeparate } from "@/util/wrapLoad";
+import { wrapLoad, wrapMultipleSeparate } from "@/util/wrapLoad";
 import { showConfirm } from "./confirmDialog";
 import { router } from "@/router/router";
 
@@ -77,12 +77,15 @@ export const documents = new Svue({
       return sum / pDocs.length;
     },
     pollEvents(processingDocuments) {
-      return processingDocuments.map(doc => {
-        return async () => {
-          const newDoc = await getDocument(doc.id);
-          replaceInCollection(newDoc);
-        };
-      });
+      if (processingDocuments.length == 0) return [];
+      return [
+        async () => {
+          const newDocs = await getDocumentsWithIds(
+            processingDocuments.map(doc => doc.id)
+          );
+          newDocs.forEach(doc => replaceInCollection(doc));
+        }
+      ];
     }
   }
 });
@@ -211,16 +214,18 @@ export async function renameSelectedDocuments(title) {
   unselectAll();
 }
 
-export async function handleNewDocument(id) {
-  const newDoc = await getDocument(id);
-  if (documentsInclude(documents.allDocuments, newDoc)) {
-    replaceInCollection(newDoc);
-  } else {
-    documents.rawDocuments = {
-      ...documents.rawDocuments,
-      documents: [newDoc, ...documents.rawDocuments.documents]
-    };
-  }
+export async function handleNewDocuments(ids) {
+  const newDocs = await getDocumentsWithIds(ids);
+  newDocs.forEach(newDoc => {
+    if (documentsInclude(documents.allDocuments, newDoc)) {
+      replaceInCollection(newDoc);
+    } else {
+      documents.rawDocuments = {
+        ...documents.rawDocuments,
+        documents: [newDoc, ...documents.rawDocuments.documents]
+      };
+    }
+  });
 }
 
 let lastSelected = null;
