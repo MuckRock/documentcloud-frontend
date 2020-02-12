@@ -2,7 +2,11 @@
   import Menu from "@/common/Menu";
   import MenuItem from "@/common/MenuItem";
 
-  import { layout, newProject } from "@/manager/layout";
+  import {
+    layout,
+    newProject,
+    showDocumentProjectDialog
+  } from "@/manager/layout";
   import { projects, addSelectedDocsToProject } from "@/manager/projects";
 </script>
 
@@ -25,10 +29,11 @@
   <MenuItem primary={true} on:click={newProject}>+ New Project</MenuItem>
   {#if $layout.hasSelection}
     <MenuItem selectable={false}>
-      <div class="small">Add to project</div>
+      <div class="small">Project Membership</div>
     </MenuItem>
     {#each $projects.projects as project}
-      <MenuItem on:click={() => addSelectedDocsToProject(project)}>
+      <MenuItem
+        on:click={() => showDocumentProjectDialog($layout.selected, project)}>
         {project.title}
       </MenuItem>
     {/each}

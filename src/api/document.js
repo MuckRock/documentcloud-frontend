@@ -7,6 +7,7 @@ import { apiUrl } from "./base";
 import { timeout } from "@/util/timeout";
 import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
+import { grabAllPages } from "@/util/paginate";
 import axios from "axios";
 
 import { Document } from "@/structure/document";
@@ -45,23 +46,44 @@ export async function getDocument(id, expand = DEFAULT_EXPAND) {
   return new Document(data);
 }
 
-export async function deleteDocument(id) {
-  // Delete the document with the specified id
-  await session.delete(apiUrl(`documents/${id}/`));
+export async function getDocumentsWithIds(ids, expand = DEFAULT_EXPAND) {
+  // Return documents with the specified ids
+  const documents = await grabAllPages(
+    apiUrl(queryBuilder("documents/", { expand, id__in: ids }))
+  );
+  return documents.map(document => new Document(document));
 }
 
-export async function renameDocument(id, title) {
-  // Delete the document with the specified id
-  await session.patch(apiUrl(`documents/${id}/`), { title });
+export async function deleteDocument(ids) {
+  // Delete the documents with the specified ids
+  await session.delete(
+    apiUrl(
+      queryBuilder(`documents/`, {
+        id__in: ids
+      })
+    )
+  );
 }
 
-export async function changeAccess(id, access) {
-  await session.patch(apiUrl(`documents/${id}/`), { access });
+export async function renameDocument(ids, title) {
+  // Rename the documents with the specified ids
+  await session.patch(
+    apiUrl(`documents/`),
+    ids.map(id => ({ id, title }))
+  );
 }
 
-export async function reprocessDocument(id) {
-  // Reprocess the document with the specified id
-  await session.post(apiUrl(`documents/${id}/process/`));
+export async function changeAccess(ids, access) {
+  // Change access for the documents with the specified ids
+  await session.patch(
+    apiUrl(`documents/`),
+    ids.map(id => ({ id, access }))
+  );
+}
+
+export async function reprocessDocument(ids) {
+  // Reprocess the documents with the specified ids
+  await session.post(apiUrl(`documents/process/`), { ids });
 }
 
 export async function cancelProcessing(id) {

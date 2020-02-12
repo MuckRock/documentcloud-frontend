@@ -5,7 +5,7 @@
 import session from "./session";
 import { apiUrl } from "./base";
 import { Project } from "@/structure/project";
-import { grabAllPages, MAX_PER_PAGE } from "@/util/paginate";
+import { grabAllPages } from "@/util/paginate";
 import { DEFAULT_EXPAND } from "./common";
 import { queryBuilder } from "@/util/url";
 
@@ -41,8 +41,7 @@ export async function addDocToProject(projectId, docId) {
 export async function getProjects(expand = DEFAULT_EXPAND) {
   // Returns all projects
   const projects = await grabAllPages(
-    queryBuilder(apiUrl("projects/"), { expand }),
-    MAX_PER_PAGE
+    queryBuilder(apiUrl("projects/"), { expand })
   );
   return projects.map(project => new Project(project));
 }
