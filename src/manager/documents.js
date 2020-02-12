@@ -2,6 +2,7 @@ import { Svue } from "svue";
 import {
   getDocuments,
   getDocument,
+  getDocumentsWithIds,
   deleteDocument,
   reprocessDocument,
   changeAccess,
@@ -9,7 +10,7 @@ import {
   PENDING
 } from "@/api/document";
 import { layout, hideAccess } from "./layout";
-import { wrapMultiple, wrapMultipleSeparate } from "@/util/wrapLoad";
+import { wrapLoad, wrapMultiple, wrapMultipleSeparate } from "@/util/wrapLoad";
 import { showConfirm } from "./confirmDialog";
 import { router } from "@/router/router";
 
@@ -148,13 +149,10 @@ export function removeDocuments(documents) {
     }. Do you wish to continue?`,
     "Delete",
     async () => {
-      await wrapMultiple(
-        layout,
-        ...documents.map(doc => async () => {
-          await deleteDocument(doc.id);
-          removeFromCollection(doc);
-        })
-      );
+      await wrapLoad(layout, async () => {
+        await deleteDocument(documents.map(doc => doc.id));
+        documents.map(doc => removeFromCollection(doc));
+      });
       unselectAll();
     }
   );
@@ -171,27 +169,27 @@ export function reprocessDocuments(documents) {
     } to reprocess page and image text. Do you wish to continue?`,
     "Reprocess",
     async () => {
-      await wrapMultiple(
-        layout,
-        ...documents.map(doc => async () => {
-          await reprocessDocument(doc.id);
-          const reprocessingDoc = await getDocument(doc.id);
-          replaceInCollection(reprocessingDoc);
-        })
-      );
+      await wrapLoad(layout, async () => {
+        const ids = documents.map(doc => doc.id);
+        await reprocessDocument(ids);
+        const reprocessingDocs = await getDocumentsWithIds(ids);
+        reprocessingDocs.map(doc => replaceInCollection(doc));
+      });
       unselectAll();
     }
   );
 }
 
 export async function changeAccessForDocuments(access) {
-  await wrapMultiple(
-    layout,
-    ...layout.accessEditDocuments.map(doc => async () => {
-      await changeAccess(doc.id, access);
-      updateInCollection(doc, doc => (doc.doc = { ...doc.doc, access }));
-    })
-  );
+  await wrapLoad(layout, async () => {
+    await changeAccess(
+      layout.accessEditDocuments.map(doc => doc.id),
+      access
+    );
+    layout.accessEditDocuments.forEach(doc =>
+      updateInCollection(doc, d => (d.doc = { ...d.doc, access }))
+    );
+  });
   hideAccess();
 }
 
@@ -200,14 +198,16 @@ export function removeDocument(document) {
 }
 
 export async function renameSelectedDocuments(title) {
-  await wrapMultiple(
-    layout,
-    ...layout.selected.map(doc => async () => {
-      await renameDocument(doc.id, title);
-      // Show changes in UI
-      updateInCollection(doc, doc => (doc.doc = { ...doc.doc, title }));
-    })
-  );
+  await wrapLoad(layout, async () => {
+    await renameDocument(
+      layout.selected.map(doc => doc.id),
+      title
+    );
+    // Show changes in UI
+    layout.selected.forEach(doc =>
+      updateInCollection(doc, d => (d.doc = { ...d.doc, title }))
+    );
+  });
   unselectAll();
 }
 

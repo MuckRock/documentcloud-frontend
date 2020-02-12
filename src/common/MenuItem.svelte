@@ -24,7 +24,16 @@
       &:hover {
         background: $primary;
         color: white;
+
+        :global(.info) {
+          color: white;
+        }
       }
+    }
+
+    :global(.info) {
+      font-size: 13px;
+      color: $gray;
     }
   }
 </style>

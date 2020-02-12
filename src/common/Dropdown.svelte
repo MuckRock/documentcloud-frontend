@@ -1,11 +1,13 @@
 <script>
   import { onMount, tick } from "svelte";
 
-  const MENU_ITEM_HORIZ_PADDING = 5;
-  const MENU_ITEM_VERT_PADDING = 10;
+  export let horizPadding = 5;
+  export let vertPadding = 10;
   const MENU_OFFSET = 1; // vert offset for menu
 
   export let table;
+  export let bordered;
+  export let fixed = false;
 
   let active = false;
 
@@ -38,8 +40,10 @@
     // Set menu dimensions relative to title background
     const titleBgRect = titleBg.getBoundingClientRect();
     const menuRect = menu.getBoundingClientRect();
-    menuLeft = titleBgRect.x - menuRect.x;
-    menuTop = titleBgRect.y + titleBgRect.height - menuRect.y;
+    menuLeft = fixed ? titleBgRect.x : titleBgRect.x - menuRect.x;
+    menuTop = fixed
+      ? titleBgRect.y + titleBgRect.height
+      : titleBgRect.y + titleBgRect.height - menuRect.y;
   }
 
   async function handleResize() {
@@ -56,6 +60,8 @@
   span {
     display: inline-block;
     position: relative;
+
+    cursor: pointer;
 
     &.table {
       display: table-cell;
@@ -75,12 +81,24 @@
         pointer-events: inherit;
         visibility: visible;
       }
+
+      &.bordered {
+        pointer-events: inherit;
+        box-shadow: none;
+        background: white;
+        border-radius: $radius;
+        visibility: visible;
+      }
     }
 
     &.menubg {
       position: absolute;
       pointer-events: none;
       visibility: hidden;
+
+      &.fixed {
+        position: fixed;
+      }
 
       &.active {
         pointer-events: inherit;
@@ -112,10 +130,17 @@
   <span
     class="titlebg"
     class:active
+    class:bordered={bordered && !active}
     bind:this={titleBg}
-    on:click={hide}
-    style="width: {titleWidth + MENU_ITEM_HORIZ_PADDING * 2}px; left: {-MENU_ITEM_HORIZ_PADDING}px;
-    top: {-MENU_ITEM_VERT_PADDING}px; bottom: {-MENU_ITEM_VERT_PADDING}px" />
+    on:click={() => {
+      if (bordered) {
+        revealOrHide();
+      } else {
+        hide();
+      }
+    }}
+    style="width: {titleWidth + horizPadding * 2}px; left: {-horizPadding}px;
+    top: {-vertPadding}px; bottom: {-vertPadding}px" />
   <span class:table bind:this={title} on:click={revealOrHide}>
     <slot name="title" />
   </span>
@@ -124,6 +149,7 @@
 <span
   class="menubg"
   class:active
+  class:fixed
   on:click={hide}
   bind:this={menu}
   style="left: {menuLeft}px; top: {menuTop - MENU_OFFSET}px">

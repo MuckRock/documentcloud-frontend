@@ -18,13 +18,6 @@
 </script>
 
 <style lang="scss">
-  .dropper {
-    font-size: 0.6em;
-    padding-left: 5px;
-    transform: scaleY(0.8) translateY(-1px);
-    display: inline-block;
-  }
-
   .barcontainer {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     padding: 14px 0;

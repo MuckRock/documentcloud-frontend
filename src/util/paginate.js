@@ -9,7 +9,7 @@ export const MAX_PER_PAGE = process.env.MAX_PER_PAGE;
  * @param {string} url The API url to request.
  * @param {number?} perPage If present, the per page to request
  */
-export async function grabAllPages(url, perPage = null) {
+export async function grabAllPages(url, perPage = MAX_PER_PAGE) {
   if (perPage != null) url = queryBuilder(url, { per_page: perPage });
   const { data } = await session.get(url);
   const results = data.results;

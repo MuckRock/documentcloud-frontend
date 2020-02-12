@@ -113,7 +113,7 @@
     margin-right: 12px;
   }
 
-  .dropper {
+  .droparea {
     margin: 24px 0;
   }
 
@@ -162,7 +162,7 @@
           {/if}
         </div>
         {#if files.length == 0}
-          <div class="dropper">
+          <div class="droparea">
             <DropZone on:files={handleFiles}>
               <span>Drag and drop files here</span>
             </DropZone>

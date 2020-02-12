@@ -5,7 +5,7 @@
 import session from "./session";
 import { apiUrl } from "./base";
 import { Section } from "@/structure/section";
-import { grabAllPages, MAX_PER_PAGE } from "@/util/paginate";
+import { grabAllPages } from "@/util/paginate";
 
 export async function addSection(docId, page_number, title) {
   // Create a section
@@ -35,9 +35,6 @@ export async function replaceSection(docId, sectionId, page_number, title) {
 
 export async function getSections(docId) {
   // Returns annotations for the specified document
-  const sections = await grabAllPages(
-    apiUrl(`documents/${docId}/sections/`),
-    MAX_PER_PAGE
-  );
+  const sections = await grabAllPages(apiUrl(`documents/${docId}/sections/`));
   return sections.map(section => new Section(section));
 }

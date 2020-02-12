@@ -83,29 +83,31 @@
 </style>
 
 <div>
-  <div class="mcontent">
-    <h1>
-      {#if editing}Edit Project{:else}Create New Project{/if}
-    </h1>
-    <div class="inputpadded">
-      <input placeholder="Title..." bind:value={name} bind:this={input} />
-      <p>
-        <textarea
-          placeholder="Project Description (optional)"
-          bind:value={description}
-          use:textAreaResize />
-      </p>
+  <Loader active={loading}>
+    <div class="mcontent">
+      <h1>
+        {#if editing}Edit Project{:else}Create New Project{/if}
+      </h1>
+      <div class="inputpadded">
+        <input placeholder="Title..." bind:value={name} bind:this={input} />
+        <p>
+          <textarea
+            placeholder="Project Description (optional)"
+            bind:value={description}
+            use:textAreaResize />
+        </p>
+      </div>
+      <div class="buttonpadded">
+        <Button
+          disabledReason={valid ? null : changed ? 'Enter a title' : 'Change the title or description'}
+          on:click={createOrUpdate}>
+          {#if editing}Update{:else}Create{/if}
+        </Button>
+        {#if editing}
+          <Button danger={true} on:click={remove}>Delete</Button>
+        {/if}
+        <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+      </div>
     </div>
-    <div class="buttonpadded">
-      {#if editing}
-        <Button danger={true} on:click={remove}>Delete</Button>
-      {/if}
-      <Button
-        disabledReason={valid ? null : changed ? 'Enter a title' : 'Change the title or description'}
-        on:click={createOrUpdate}>
-        {#if editing}Update{:else}Create{/if}
-      </Button>
-      <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
-    </div>
-  </div>
+  </Loader>
 </div>

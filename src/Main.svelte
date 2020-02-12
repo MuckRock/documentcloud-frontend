@@ -47,6 +47,13 @@
     box-sizing: border-box;
     outline: none;
   }
+
+  :global(.dropper) {
+    font-size: 0.6em;
+    padding-left: 5px;
+    transform: scaleY(0.8) translateY(-1px);
+    display: inline-block;
+  }
 </style>
 
 <svelte:window on:popstate={handleBackNav} />

@@ -7,7 +7,7 @@ import { Note } from "@/structure/note";
 import { apiUrl } from "./base";
 import { injectMe } from "@/util/data";
 import { queryBuilder } from "@/util/url";
-import { grabAllPages, MAX_PER_PAGE } from "@/util/paginate";
+import { grabAllPages } from "@/util/paginate";
 import { DEFAULT_EXPAND } from "./common";
 
 export async function createAnnotation(
@@ -69,8 +69,7 @@ export async function updateAnnotation(
 export async function getAnnotations(id, expand = DEFAULT_EXPAND) {
   // Returns annotations for the specified document
   const results = await grabAllPages(
-    apiUrl(queryBuilder(`documents/${id}/notes/`, { expand })),
-    MAX_PER_PAGE
+    apiUrl(queryBuilder(`documents/${id}/notes/`, { expand }))
   );
   return results.map(result => new Note(result));
 }

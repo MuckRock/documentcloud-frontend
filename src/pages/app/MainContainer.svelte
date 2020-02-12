@@ -11,6 +11,7 @@
   import AccessDialog from "@/common/dialog/AccessDialog";
   import DataDialog from "@/common/dialog/DataDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
+  import DocumentProjectDialog from "@/common/dialog/DocumentProjectDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -18,7 +19,8 @@
     hideRename,
     hideAccess,
     hideData,
-    hideProject
+    hideProject,
+    hideDocumentProjectDialog
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -81,6 +83,10 @@
     <Modal component={DataDialog} on:close={hideData} />
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
+  {:else if $layout.documentProjectOpen}
+    <Modal
+      component={DocumentProjectDialog}
+      on:close={hideDocumentProjectDialog} />
   {/if}
   <Hamburger
     on:toggle={emit.expandSidebar}
