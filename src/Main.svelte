@@ -2,6 +2,7 @@
   import { router, Router } from "@/router/router";
   import { routes } from "@/routes";
   import { onMount } from "svelte";
+  import { currentUrl } from "@/util/url";
 
   // Patch poll events
   import "@/ticker/ticker";
@@ -10,10 +11,10 @@
   router.routes = new Router(...routes);
 
   onMount(() => {
-    router.currentUrl = window.location.pathname;
+    router.currentUrl = currentUrl();
     if (!history.state) {
       window.history.replaceState(
-        { path: window.location.pathname },
+        { path: currentUrl() },
         "",
         window.location.href
       );

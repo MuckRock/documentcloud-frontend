@@ -8,6 +8,7 @@ import { timeout } from "@/util/timeout";
 import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
 import { grabAllPages } from "@/util/paginate";
+import { Results } from "@/structure/results";
 import axios from "axios";
 
 import { Document } from "@/structure/document";
@@ -28,14 +29,31 @@ export async function getMe(expand = DEFAULT_EXPAND) {
 export async function getDocuments(
   status = null,
   ordering = DEFAULT_ORDERING,
+  page = 0,
   expand = DEFAULT_EXPAND
 ) {
   // Return documents with the specified parameters
-  const { data } = await session.get(
-    apiUrl(queryBuilder("documents/", { ordering, expand, status }))
+  const params = { ordering, expand, status, page: page + 1 };
+  // Inject remaining if grabbing pending docs
+  if (status == PENDING) params["remaining"] = true;
+  const url = apiUrl(queryBuilder("documents/", params));
+  const { data } = await session.get(url);
+  data.results = data.results.map(document => new Document(document));
+  return new Results(url, data);
+}
+
+export async function searchDocuments(
+  query,
+  page = 0,
+  expand = DEFAULT_EXPAND
+) {
+  // Return documents with the specified parameters
+  const url = apiUrl(
+    queryBuilder("documents/search/", { q: query, expand, page: page + 1 })
   );
-  const documents = data.results;
-  return documents.map(document => new Document(document));
+  const { data } = await session.get(url);
+  data.results = data.results.map(document => new Document(document));
+  return new Results(url, data);
 }
 
 export async function getDocument(id, expand = DEFAULT_EXPAND) {
@@ -46,10 +64,16 @@ export async function getDocument(id, expand = DEFAULT_EXPAND) {
   return new Document(data);
 }
 
-export async function getDocumentsWithIds(ids, expand = DEFAULT_EXPAND) {
+export async function getDocumentsWithIds(
+  ids,
+  remaining = false,
+  expand = DEFAULT_EXPAND
+) {
   // Return documents with the specified ids
+  const params = { expand, id__in: ids };
+  if (remaining) params["remaining"] = true;
   const documents = await grabAllPages(
-    apiUrl(queryBuilder("documents/", { expand, id__in: ids }))
+    apiUrl(queryBuilder("documents/", params))
   );
   return documents.map(document => new Document(document));
 }
@@ -168,8 +192,6 @@ export async function uploadDocuments(
   } catch (e) {
     return errorFn("failed to create the document", e);
   }
-
-  console.log("GOT NEW DOCUMENTS", newDocuments);
 
   // Upload all the files
   try {

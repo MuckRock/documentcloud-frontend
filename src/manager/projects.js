@@ -1,10 +1,9 @@
 import { Svue } from "svue";
-import { getProjects, addDocToProject } from "@/api/project";
+import { getProjects, addDocumentsToProject } from "@/api/project";
 import { router } from "@/router/router";
 import { newProject, updateProject, deleteProject } from "@/api/project";
 import { layout } from "./layout";
 import { pushToast } from "./toast";
-import { wrapMultiple } from "@/util/wrapLoad";
 import { handlePlural } from "@/util/string";
 
 export const projects = new Svue({
@@ -50,11 +49,13 @@ export async function editProject(project, title, description) {
 
 export async function addDocsToProject(project, documents) {
   if (documents.length == 0) return;
-  await wrapMultiple(
+  await wrapLoad(
     layout,
-    ...documents.map(doc => async () => {
-      await addDocToProject(project.id, doc.id);
-    })
+    async () =>
+      await addDocumentsToProject(
+        project.id,
+        documents.map(doc => doc.id)
+      )
   );
   if (!layout.error) {
     pushToast(
