@@ -11,6 +11,7 @@
   import AccessDialog from "@/common/dialog/AccessDialog";
   import DataDialog from "@/common/dialog/DataDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
+  import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -18,7 +19,8 @@
     hideRename,
     hideAccess,
     hideData,
-    hideProject
+    hideProject,
+    hideCollaborators
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -73,6 +75,8 @@
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.dataOpen}
     <Modal component={DataDialog} on:close={hideData} />
+  {:else if $layout.projectCollaboratorsOpen}
+    <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
   {/if}

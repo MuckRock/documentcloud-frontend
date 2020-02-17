@@ -2,19 +2,34 @@
   import Checkbox from "@/common/Checkbox";
   import Button from "@/common/Button";
   import Tooltip from "@/common/Tooltip";
+  import Image from "@/common/Image";
   import Link from "@/router/Link";
   import DocumentThumbnail from "./DocumentThumbnail";
 
   // Stores
   import { layout, unselectDocument, openAccess } from "@/manager/layout";
   import { removeDocument, selectDocument } from "@/manager/documents";
+  import { projects } from "@/manager/projects";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
   import publicIconSvg from "@/assets/public_icon.svg";
   import organizationIconSvg from "@/assets/organization_icon.svg";
+  import closeSimpleSvg from "@/assets/close_inline.svg";
+
+  import { pageImageUrl } from "@/api/viewer";
 
   export let document;
+
+  $: trimmedHighlights = document.highlights.slice(0, 3);
+
+  let expandHighlights = false;
+  let closeHighlights = false;
+
+  $: moreToExpand =
+    !expandHighlights && trimmedHighlights.length != document.highlights.length;
+
+  $: highlights = expandHighlights ? document.highlights : trimmedHighlights;
 
   $: documentAccessString = document.organizationAccess
     ? "Only members of your organization can view this document"
@@ -53,18 +68,19 @@
 
   .card {
     display: table;
-  }
 
-  .row {
-    display: table-row;
-  }
+    .row {
+      display: table-row;
 
-  .check,
-  .info {
-    @include document-cell;
+      > * {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
   }
 
   .check {
+    padding-top: 30px;
     padding-left: 30px;
   }
 
@@ -94,6 +110,81 @@
 
       &.error {
         color: $caution;
+      }
+    }
+  }
+
+  .hinfo {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 15px 0;
+
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .x {
+      @include buttonLike;
+
+      padding-right: 5px;
+      height: 14px;
+
+      :global(svg) {
+        height: 12px;
+        opacity: 0.7;
+      }
+    }
+
+    .padleft {
+      padding-left: 5px;
+    }
+  }
+
+  .highlights {
+    color: #333;
+    font-size: 14px;
+    line-height: 18px;
+    display: table;
+    width: 100%;
+    padding-bottom: 27px;
+
+    .row {
+      display: table-row;
+
+      > * {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+
+    .page {
+      text-align: center;
+
+      :global(img) {
+        width: 40px;
+        height: 52px;
+        box-sizing: border-box;
+        border: solid 1px gainsboro;
+      }
+
+      .number {
+        font-weight: bold;
+        font-size: 11px;
+        padding-bottom: 15px;
+      }
+    }
+
+    .highlight {
+      width: 100%;
+      padding-top: 8px;
+      padding-left: 15px;
+      padding-bottom: 15px;
+
+      .passage {
+        &.highlighted {
+          background: $annotationBorder;
+        }
       }
     }
   }
@@ -132,6 +223,13 @@
           <Link to="viewer" params={{ id: document.id }}>
             <Button action={true}>Open</Button>
           </Link>
+          {#if document.projectIds != null}
+            {#each document.projectIds as id}
+              {#if $projects.projectsById[id] != null}
+                <Button plain={true}>{$projects.projectsById[id].title}</Button>
+              {/if}
+            {/each}
+          {/if}
         {:else if document.status == 'pending'}
           <span class="pending">Processing</span>
         {:else if document.status == 'error'}
@@ -156,6 +254,48 @@
           </Button>
         {/if}
       </div>
+      {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}
+        <div class="hinfo">
+          <span class="x" on:click={() => (closeHighlights = true)}>
+            {@html closeSimpleSvg}
+          </span>
+
+          {#if moreToExpand}
+            <span>
+              {highlights.length} of {document.highlights.length} pages matching
+              the query
+            </span>
+            <span class="padleft">
+              <Button action={true} on:click={() => (expandHighlights = true)}>
+                Show all
+              </Button>
+            </span>
+          {:else}
+            <span>{document.highlights.length} pages matching the query</span>
+          {/if}
+        </div>
+        <div class="highlights">
+          {#each highlights as highlight}
+            <div class="row">
+              <div class="page">
+                <Image
+                  fade={false}
+                  src={pageImageUrl(document, highlight.page, 40)} />
+                <div class="number">p. {highlight.page + 1}</div>
+              </div>
+              <div class="highlight">
+                {#each highlight.passages as passage}
+                  {#if passage.type == 'highlight'}
+                    <span class="passage highlighted">{passage.text}</span>
+                  {:else}
+                    <span class="passage">{passage.text}</span>
+                  {/if}
+                {/each}
+              </div>
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
   </div>
 </div>

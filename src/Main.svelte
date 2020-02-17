@@ -55,6 +55,15 @@
     transform: scaleY(0.8) translateY(-1px);
     display: inline-block;
   }
+
+  :global(summary) {
+    outline: none;
+    user-select: none;
+    cursor: pointer;
+    font-size: 10px;
+    color: $gray;
+    margin: 0 -10px;
+  }
 </style>
 
 <svelte:window on:popstate={handleBackNav} />

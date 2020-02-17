@@ -85,7 +85,7 @@
 
 <Loader active={$layout.loading}>
   <div class="documents">
-    {#if $layout.uploading}
+    {#if $layout.uploading && !$layout.error}
       <Modal
         on:close={() => ($layout.uploading = false)}
         component={UploadDialog}

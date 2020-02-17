@@ -35,7 +35,16 @@ export async function updateProject(projectId, title, description) {
 export async function addDocumentsToProject(projectId, docIds) {
   await session.post(
     apiUrl(`projects/${projectId}/documents/`),
-    docsIds.map(id => ({
+    docIds.map(id => ({
+      document: id
+    }))
+  );
+}
+
+export async function removeDocumentsFromProject(projectId, docIds) {
+  await session.delete(
+    apiUrl(`projects/${projectId}/documents/`),
+    docIds.map(id => ({
       document: id
     }))
   );
@@ -48,3 +57,20 @@ export async function getProjects(expand = DEFAULT_EXPAND) {
   );
   return projects.map(project => new Project(project));
 }
+
+export async function getUsers(projectId) {
+  const results = await session.get(apiUrl(`projects/${projectId}/users/`));
+  console.log(results);
+  return results;
+}
+
+export async function addUserToProject(projectId, email, access) {
+  await session.post(apiUrl(`projects/${projectId}/users/`), {
+    email,
+    access
+  });
+}
+
+// export async function updateUserAccess(projectId, userId, access) {
+
+// }

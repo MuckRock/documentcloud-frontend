@@ -9,6 +9,7 @@
   export let caution = false;
   export let danger = false;
   export let disabled = false;
+  export let plain = false;
 
   export let disabledReason = null;
 </script>
@@ -84,6 +85,16 @@
         border-bottom: dashed 1px rgba($caution, 0.5);
       }
     }
+
+    &.plain {
+      background: rgb(242, 242, 242);
+      font-size: 12px;
+      border: solid 1px gainsboro;
+      padding: 2px 7px;
+      color: black;
+      font-weight: normal;
+      margin: 0 5px;
+    }
   }
 </style>
 
@@ -98,6 +109,7 @@
       class:caution
       class:nondescript
       class:action
+      class:plain
       disabled={disabled || disabledReason != null}>
       <slot />
     </button>

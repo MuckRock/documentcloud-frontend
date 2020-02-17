@@ -103,7 +103,7 @@ function removeFromCollection(document) {
   };
 }
 
-function updateInCollection(document, docFn) {
+export function updateInCollection(document, docFn) {
   const newDocuments = documents.documents.map(doc => {
     if (doc.id == document.id) {
       docFn(doc);

@@ -85,12 +85,13 @@
       async ids => {
         // All complete handler
         uploadFiles = uploadFiles.map(file => ({ ...file, done: true }));
-        $layout.uploading = false;
+        layout.uploading = false;
         await handleNewDocuments(ids);
       },
       message => {
-        this.errorMessage = message;
-        this.$emit("setDismissable", true);
+        layout.error = message;
+        layout.uploading = false;
+        emit.setDismissable(true);
       }
     );
   }

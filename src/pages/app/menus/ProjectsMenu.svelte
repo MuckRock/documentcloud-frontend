@@ -1,9 +1,10 @@
 <script>
   import Menu from "@/common/Menu";
   import MenuItem from "@/common/MenuItem";
+  import ProjectMenuItem from "./ProjectMenuItem";
 
   import { layout, newProject } from "@/manager/layout";
-  import { projects, addSelectedDocsToProject } from "@/manager/projects";
+  import { projects } from "@/manager/projects";
 </script>
 
 <style lang="scss">
@@ -28,9 +29,7 @@
       <div class="small">Project Membership</div>
     </MenuItem>
     {#each $projects.projects as project}
-      <MenuItem on:click={() => addSelectedDocsToProject(project)}>
-        {project.title}
-      </MenuItem>
+      <ProjectMenuItem {project} />
     {/each}
   {:else}
     <MenuItem selectable={false}>

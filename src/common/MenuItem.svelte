@@ -25,7 +25,8 @@
         background: $primary;
         color: white;
 
-        :global(.info) {
+        :global(.info),
+        :global(.scope) {
           color: white;
         }
       }

@@ -10,20 +10,24 @@
   .project {
     @include buttonLike;
     padding: 11px 25px;
+    display: table;
+    width: 100%;
+    box-sizing: border-box;
 
     &:hover {
       background: rgba(0, 0, 0, 0.03);
     }
 
     > * {
-      display: inline-block;
-      vertical-align: middle;
+      display: table-cell;
+      vertical-align: top;
     }
 
     .edit {
       @include buttonLike;
 
-      margin-right: 5px;
+      padding-right: 5px;
+      width: 15px;
 
       &:hover {
         filter: brightness(0.3);
@@ -33,6 +37,7 @@
 
   .title {
     font-size: $normal;
+    user-select: none;
   }
 
   // .sub {

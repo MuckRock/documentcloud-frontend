@@ -1,6 +1,10 @@
 import { Svue } from "svue";
 import { handlePlural } from "@/util/string";
 
+const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
+const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
+const PAGE_NO_RE = /^page_no_(\d+)$/;
+
 export class Document extends Svue {
   constructor(rawDocument, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
@@ -11,6 +15,8 @@ export class Document extends Svue {
         data.lastProgress = null;
         data.lastImagesProcessed = null;
         data.lastTextsProcessed = null;
+        data.highlightStart = HIGHLIGHT_START;
+        data.highlightEnd = HIGHLIGHT_END;
         return data;
       },
       computed: {
@@ -172,6 +178,25 @@ export class Document extends Svue {
             return processingProgress;
           }
         },
+
+        // Projects
+        projectIds(doc) {
+          return doc.projects;
+        },
+
+        // Highlights
+        rawHighlights(doc) {
+          return doc.highlights;
+        },
+        highlights(rawHighlights, highlightStart, highlightEnd) {
+          if (rawHighlights == null) return null;
+          return transformHighlights(
+            rawHighlights,
+            highlightStart,
+            highlightEnd
+          );
+        },
+
         // Text properties
         userOrgString(individualOrg, userName, organizationName) {
           // Return user and organization formatted as a string
@@ -199,4 +224,87 @@ export class Document extends Svue {
       }
     });
   }
+}
+
+export function transformPassage(passage, highlightStart, highlightEnd) {
+  const chunks = [];
+
+  const advance = numChars => {
+    passage = passage.substr(numChars);
+  };
+
+  const pushRaw = numChars => {
+    if (numChars == null) numChars = passage.length;
+    if (numChars == 0) return;
+    chunks.push({
+      text: passage.substr(0, numChars),
+      type: "normal"
+    });
+    advance(numChars);
+  };
+
+  const pushHighlight = numChars => {
+    if (numChars == 0) return;
+    chunks.push({
+      text: passage.substr(0, numChars),
+      type: "highlight"
+    });
+    advance(numChars);
+  };
+
+  while (passage.length > 0) {
+    let foundHighlight = false;
+    let idxStart = passage.indexOf(highlightStart);
+    if (idxStart != -1) {
+      let idxEnd = passage.indexOf(
+        highlightEnd,
+        idxStart + highlightStart.length
+      );
+      if (idxEnd != -1) {
+        pushRaw(idxStart);
+        advance(highlightStart.length);
+        pushHighlight(idxEnd - idxStart - highlightStart.length);
+        advance(highlightEnd.length);
+        foundHighlight = true;
+      }
+    }
+    if (!foundHighlight) break;
+  }
+  pushRaw();
+
+  return chunks;
+}
+
+export function transformHighlights(
+  rawHighlights,
+  highlightStart,
+  highlightEnd
+) {
+  const highlights = [];
+  for (const pageKey in rawHighlights) {
+    if (rawHighlights.hasOwnProperty(pageKey)) {
+      // Get number out of page key
+      const match = pageKey.match(PAGE_NO_RE);
+      if (match == null) continue;
+      const page = parseInt(match[1]) - 1;
+
+      // Populate highlight object
+      const highlight = { page, passages: [] };
+      const passages = rawHighlights[pageKey];
+      for (let i = 0; i < passages.length; i++) {
+        const passage = passages[i];
+        // Transform passage
+        highlight.passages = transformPassage(
+          passage,
+          highlightStart,
+          highlightEnd
+        );
+      }
+      highlights.push(highlight);
+    }
+  }
+
+  // Sort results by page number
+  highlights.sort((a, b) => a.page - b.page);
+  return highlights;
 }

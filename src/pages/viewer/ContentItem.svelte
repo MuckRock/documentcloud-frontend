@@ -9,15 +9,6 @@
 </script>
 
 <style lang="scss">
-  summary {
-    outline: none;
-    user-select: none;
-    cursor: pointer;
-    font-size: 10px;
-    color: $gray;
-    margin: 0 -10px;
-  }
-
   .page {
     color: #666;
     font-size: 12px;
@@ -101,7 +92,9 @@
         <span
           class="section"
           on:click|preventDefault={() => restorePosition(sectionOrNote.section.page)}>
-          <span class="title">{sectionOrNote.section.title}</span>&nbsp;<span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+          <span class="title">{sectionOrNote.section.title}</span>
+          &nbsp;
+          <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
         </span>
       </summary>
       <ul class="children">
@@ -119,7 +112,9 @@
     <div
       class="section"
       on:click={() => restorePosition(sectionOrNote.section.page)}>
-      <span class="title">{sectionOrNote.section.title}</span>&nbsp;<span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+      <span class="title">{sectionOrNote.section.title}</span>
+      &nbsp;
+      <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
     </div>
   {/if}
 {:else}
@@ -129,6 +124,8 @@
     class:hover={sectionOrNote.note == $layout.hoveredNote}
     use:hoveredNote={sectionOrNote.note}
     on:click={() => showAnnotation(sectionOrNote.note, true)}>
-    <span class="title">{sectionOrNote.note.title}</span>&nbsp;<span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+    <span class="title">{sectionOrNote.note.title}</span>
+    &nbsp;
+    <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
   </div>
 {/if}
