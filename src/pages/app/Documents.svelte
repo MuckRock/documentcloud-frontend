@@ -1,5 +1,6 @@
 <script>
   // Components
+  import SearchBar from "./SearchBar";
   import Modal from "@/common/Modal";
   import Button from "@/common/Button";
   import Title from "@/common/Title";
@@ -60,6 +61,14 @@
     }
   }
 
+  .sticky {
+    position: sticky;
+    top: 0;
+    padding-top: $mainDocContainerPadding;
+    background: white;
+    z-index: $appStickyZ;
+  }
+
   .toastouter {
     visibility: hidden;
     text-align: center;
@@ -85,19 +94,23 @@
 
 <Loader active={$layout.loading}>
   <div class="documents">
-    {#if $layout.uploading && !$layout.error}
-      <Modal
-        on:close={() => ($layout.uploading = false)}
-        component={UploadDialog}
-        properties={{ initialFiles: preUploadFiles }} />
-    {/if}
-    <div>
-      <Title>Your documents</Title>
-      <Button on:click={showUploadModal}>+ Upload</Button>
-    </div>
-    <ActionBar />
+    <div class="sticky">
+      {#if $layout.uploading && !$layout.error}
+        <Modal
+          on:close={() => ($layout.uploading = false)}
+          component={UploadDialog}
+          properties={{ initialFiles: preUploadFiles }} />
+      {/if}
+      <SearchBar />
 
-    <ProcessingBar />
+      <div>
+        <Title>Your documents</Title>
+        <Button on:click={showUploadModal}>+ Upload</Button>
+      </div>
+      <ActionBar />
+
+      <ProcessingBar />
+    </div>
 
     <div class="docscontainer">
       <Draggable on:files={showUploadModal}>

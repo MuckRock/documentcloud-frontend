@@ -21,15 +21,25 @@
 
   export let document;
 
-  $: trimmedHighlights = document.highlights.slice(0, 3);
+  $: highlightsActive =
+    document.highlights != null && document.highlights.length > 0;
+  $: trimmedHighlights = highlightsActive
+    ? document.highlights.slice(0, 3)
+    : null;
 
   let expandHighlights = false;
   let closeHighlights = false;
 
-  $: moreToExpand =
-    !expandHighlights && trimmedHighlights.length != document.highlights.length;
+  $: moreToExpand = highlightsActive
+    ? !expandHighlights &&
+      trimmedHighlights.length != document.highlights.length
+    : false;
 
-  $: highlights = expandHighlights ? document.highlights : trimmedHighlights;
+  $: highlights = highlightsActive
+    ? expandHighlights
+      ? document.highlights
+      : trimmedHighlights
+    : null;
 
   $: documentAccessString = document.organizationAccess
     ? "Only members of your organization can view this document"

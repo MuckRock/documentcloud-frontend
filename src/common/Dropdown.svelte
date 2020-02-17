@@ -98,6 +98,8 @@
 
       &.fixed {
         position: fixed;
+        bottom: 0;
+        overflow: auto;
       }
 
       &.active {

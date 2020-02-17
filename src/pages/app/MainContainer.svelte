@@ -1,6 +1,5 @@
 <script>
   // Components
-  import SearchBar from "./SearchBar";
   import Documents from "./Documents";
   import Hamburger from "@/common/Hamburger";
   import Button from "@/common/Button";
@@ -42,6 +41,8 @@
     left: $sidebar-width;
     right: 0;
     top: 0;
+    bottom: 0;
+    overflow: auto;
 
     @media only screen and (max-width: 600px) {
       left: 0;
@@ -49,7 +50,7 @@
   }
 
   .container {
-    padding: 36px 48px;
+    padding: 0 48px $mainDocContainerPadding 48px;
 
     &.error {
       padding: 100px;
@@ -86,7 +87,6 @@
     style="margin-top: 16px; padding: 1.5em 36px;" />
   {#if !$documents.error}
     <div class="container">
-      <SearchBar />
       <Documents />
     </div>
   {:else}

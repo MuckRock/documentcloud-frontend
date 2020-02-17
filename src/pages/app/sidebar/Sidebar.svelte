@@ -3,8 +3,6 @@
   import emitter from "@/emit";
 
   // Components
-  import Hamburger from "@/common/Hamburger";
-  import Logo from "@/common/Logo";
   import Projects from "./Projects";
 
   const emit = emitter({
@@ -17,8 +15,10 @@
     position: absolute;
     top: 0;
     left: 0;
+    bottom: 0;
+    overflow: auto;
     width: $sidebar-width;
-    z-index: $sidebarZ;
+    // z-index: $sidebarZ;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -54,11 +54,6 @@
 </style>
 
 <div class="sidebar" class:expanded={$layout.expanded}>
-  <Hamburger
-    on:toggle={emit.retractSidebar}
-    white={false}
-    style="padding: 25px;" />
-  <Logo />
-  <Projects />
+  <Projects on:retractSidebar={emit.retractSidebar} />
   <div class="sidebarbg" />
 </div>
