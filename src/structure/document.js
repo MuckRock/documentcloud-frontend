@@ -181,7 +181,7 @@ export class Document extends Svue {
 
         // Projects
         projectIds(doc) {
-          return doc.projects;
+          return doc.projects == null ? [] : doc.projects;
         },
 
         // Data
