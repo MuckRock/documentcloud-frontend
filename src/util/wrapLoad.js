@@ -11,14 +11,14 @@ export async function wrapLoadSeparate(loadWritable, errorStore, fn) {
 }
 
 export async function wrapSeparate(loadStore, errorStore, fn) {
-  loadStore.loading = true;
+  if (loadStore != null) loadStore.loading = true;
   try {
     return await fn();
   } catch (e) {
     console.error(e);
     errorStore.error = e;
   } finally {
-    loadStore.loading = false;
+    if (loadStore != null) loadStore.loading = false;
   }
 }
 

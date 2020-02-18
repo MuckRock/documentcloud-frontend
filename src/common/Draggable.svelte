@@ -13,8 +13,6 @@
   }
 
   function enter(e) {
-    const files = filterFiles(e.dataTransfer.files);
-    if (files.length == 0) return;
     dragging = true;
   }
 

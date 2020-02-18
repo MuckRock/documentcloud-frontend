@@ -23,10 +23,7 @@ export const layout = new Svue({
       renameOpen: false,
       projectEdit: null,
       projectOpen: false,
-
-      // Document project dialog
-      projectDocuments: {},
-      documentProjectOpen: false,
+      projectCollaboratorsOpen: false,
 
       // Data
       dataDocuments: [],
@@ -127,12 +124,10 @@ export function hideProject() {
   layout.projectOpen = false;
 }
 
-export function showDocumentProjectDialog(documents, project) {
-  if (documents.length == 0) return;
-  layout.projectDocuments = { documents, project };
-  layout.documentProjectOpen = true;
+export function showCollaborators() {
+  layout.projectCollaboratorsOpen = true;
 }
 
-export function hideDocumentProjectDialog() {
-  layout.documentProjectOpen = false;
+export function hideCollaborators() {
+  layout.projectCollaboratorsOpen = false;
 }

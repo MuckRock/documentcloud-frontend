@@ -1,28 +1,27 @@
 import { Svue } from "svue";
 import {
   getDocuments,
-  getDocument,
   getDocumentsWithIds,
   deleteDocument,
   reprocessDocument,
   changeAccess,
   renameDocument,
-  PENDING
+  PENDING,
+  addData,
+  removeData
 } from "@/api/document";
 import { layout, hideAccess } from "./layout";
-import { wrapLoad, wrapMultiple, wrapMultipleSeparate } from "@/util/wrapLoad";
+import { wrapLoad, wrapSeparate } from "@/util/wrapLoad";
 import { showConfirm } from "./confirmDialog";
 import { router } from "@/router/router";
+import { search, handleUpload, setDocuments } from "@/search/search";
 
 export const documents = new Svue({
   data() {
     return {
-      rawDocuments: {
-        documents: [],
-        processingDocuments: []
-      },
-      error: null,
-      router
+      processingDocumentsRaw: [],
+      router,
+      search
     };
   },
   watch: {
@@ -31,19 +30,16 @@ export const documents = new Svue({
       if (route != null && route.name == "app") {
         initDocuments();
       } else {
-        this.rawDocuments = {
-          documents: [],
-          processingDocuments: []
-        };
+        this.processingDocumentsRaw = [];
       }
     }
   },
   computed: {
-    documents(rawDocuments) {
-      return rawDocuments.documents;
+    documents(search) {
+      return search.documents;
     },
-    processingDocumentsRaw(rawDocuments) {
-      return rawDocuments.processingDocuments;
+    error(search) {
+      return search.error;
     },
     allDocuments(documents, processingDocumentsRaw) {
       const processingExclusive = processingDocumentsRaw.filter(
@@ -77,12 +73,16 @@ export const documents = new Svue({
       return sum / pDocs.length;
     },
     pollEvents(processingDocuments) {
-      return processingDocuments.map(doc => {
-        return async () => {
-          const newDoc = await getDocument(doc.id);
-          replaceInCollection(newDoc);
-        };
-      });
+      if (processingDocuments.length == 0) return [];
+      return [
+        async () => {
+          const newDocs = await getDocumentsWithIds(
+            processingDocuments.map(doc => doc.id),
+            true
+          );
+          newDocs.forEach(doc => replaceInCollection(doc));
+        }
+      ];
     }
   }
 });
@@ -105,7 +105,7 @@ function removeFromCollection(document) {
   };
 }
 
-function updateInCollection(document, docFn) {
+export function updateInCollection(document, docFn) {
   const newDocuments = documents.documents.map(doc => {
     if (doc.id == document.id) {
       docFn(doc);
@@ -119,10 +119,8 @@ function updateInCollection(document, docFn) {
     return doc;
   });
 
-  documents.rawDocuments = {
-    documents: newDocuments,
-    processingDocuments: newProcessingDocuments
-  };
+  documents.processingDocumentsRaw = newProcessingDocuments;
+  setDocuments(newDocuments);
 }
 
 function replaceInCollection(document) {
@@ -172,7 +170,7 @@ export function reprocessDocuments(documents) {
       await wrapLoad(layout, async () => {
         const ids = documents.map(doc => doc.id);
         await reprocessDocument(ids);
-        const reprocessingDocs = await getDocumentsWithIds(ids);
+        const reprocessingDocs = await getDocumentsWithIds(ids, true);
         reprocessingDocs.map(doc => replaceInCollection(doc));
       });
       unselectAll();
@@ -180,13 +178,13 @@ export function reprocessDocuments(documents) {
   );
 }
 
-export async function changeAccessForDocuments(access) {
+export async function changeAccessForDocuments(documents, access) {
   await wrapLoad(layout, async () => {
     await changeAccess(
-      layout.accessEditDocuments.map(doc => doc.id),
+      documents.map(doc => doc.id),
       access
     );
-    layout.accessEditDocuments.forEach(doc =>
+    documents.forEach(doc =>
       updateInCollection(doc, d => (d.doc = { ...d.doc, access }))
     );
   });
@@ -211,16 +209,52 @@ export async function renameSelectedDocuments(title) {
   unselectAll();
 }
 
-export async function handleNewDocument(id) {
-  const newDoc = await getDocument(id);
-  if (documentsInclude(documents.allDocuments, newDoc)) {
-    replaceInCollection(newDoc);
-  } else {
-    documents.rawDocuments = {
-      ...documents.rawDocuments,
-      documents: [newDoc, ...documents.rawDocuments.documents]
-    };
+export async function addDocumentData(documents, key, value) {
+  for (let i = 0; i < documents.length; i++) {
+    const document = documents[i];
+    if (document.data[key] == null) {
+      document.data[key] = [value];
+    } else {
+      document.data[key].push(value);
+    }
+    // TODO: replace with bulk method
+    await addData(document.id, key, value);
   }
+  document.data = document.data;
+}
+
+export async function removeDocumentData(documents, key, value) {
+  for (let i = 0; i < documents.length; i++) {
+    const document = documents[i];
+    if (document.data[key] == null) {
+      // Don't do anything (throw?)
+    } else {
+      // Iterate backwards to be able to remove without affecting indices
+      for (let i = document.data[key].length - 1; i >= 0; i--) {
+        if (document.data[key][i] == value) {
+          // Remove matching key/value
+          document.data[key].splice(i, 1);
+        }
+      }
+      document.data[key].push(value);
+    }
+    // TODO: replace with bulk method
+    await removeData(document.id, key, value);
+  }
+  document.data = document.data;
+}
+
+export async function handleNewDocuments(ids) {
+  const newDocs = await getDocumentsWithIds(ids, true);
+  const remainingDocs = [];
+  newDocs.forEach(newDoc => {
+    if (documentsInclude(documents.allDocuments, newDoc)) {
+      replaceInCollection(newDoc);
+    } else {
+      remainingDocs.push(newDoc);
+    }
+  });
+  handleUpload(remainingDocs);
 }
 
 let lastSelected = null;
@@ -252,14 +286,10 @@ export function unselectAll() {
 }
 
 export async function initDocuments() {
-  const [newDocuments, newProcessingDocuments] = await wrapMultipleSeparate(
-    layout,
-    documents,
-    () => getDocuments(),
-    () => getDocuments(PENDING)
+  const results = await wrapSeparate(
+    null,
+    search,
+    () => getDocuments(PENDING) // disregard pagination of processing docs (only show first 25)
   );
-  documents.rawDocuments = {
-    documents: newDocuments,
-    processingDocuments: newProcessingDocuments
-  };
+  documents.processingDocumentsRaw = results.results;
 }

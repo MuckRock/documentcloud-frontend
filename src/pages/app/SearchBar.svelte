@@ -1,41 +1,35 @@
 <script>
-  import emitter from "@/emit";
+  import { onMount } from "svelte";
+
+  import { handleSearch } from "@/search/search";
+  import { router } from "@/router/router";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";
 
-  const emit = emitter({
-    search() {}
-  });
-
-  const SEARCH_DELAY = 500;
-  let timeout = null;
   let search = "";
 
-  $: {
-    if (timeout != null) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    timeout = setTimeout(() => {
-      emit.search(search);
-    }, SEARCH_DELAY);
-  }
-
-  function searchNow() {
-    if (timeout != null) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    emit.search(search);
-  }
-
-  function handleSearch(e) {
+  function handleKeyUp(e) {
     if (e.which == 13 || e.keyCode == 13) {
       // Search on enter
-      searchNow();
+      handleSearch(search);
     }
   }
+
+  onMount(() => {
+    router.subscribe(router => {
+      // Set query from URL if applicable
+      const route = router.resolvedRoute;
+      if (route != null && route.name == "app") {
+        if (route.props.q != null) {
+          let query = route.props.q.trim();
+          if (query.length > 0) search = query;
+        } else {
+          search = "";
+        }
+      }
+    });
+  });
 </script>
 
 <style lang="scss">
@@ -81,5 +75,5 @@
 
 <div class="search">
   {@html searchIconSvg}
-  <input v-model="search" placeholder="Search" on:keyup={handleSearch} />
+  <input bind:value={search} placeholder="Search" on:keyup={handleKeyUp} />
 </div>

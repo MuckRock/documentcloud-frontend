@@ -8,6 +8,7 @@ import { timeout } from "@/util/timeout";
 import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
 import { grabAllPages } from "@/util/paginate";
+import { Results } from "@/structure/results";
 import axios from "axios";
 
 import { Document } from "@/structure/document";
@@ -28,14 +29,31 @@ export async function getMe(expand = DEFAULT_EXPAND) {
 export async function getDocuments(
   status = null,
   ordering = DEFAULT_ORDERING,
+  page = 0,
   expand = DEFAULT_EXPAND
 ) {
   // Return documents with the specified parameters
-  const { data } = await session.get(
-    apiUrl(queryBuilder("documents/", { ordering, expand, status }))
+  const params = { ordering, expand, status, page: page + 1 };
+  // Inject remaining if grabbing pending docs
+  if (status == PENDING) params["remaining"] = true;
+  const url = apiUrl(queryBuilder("documents/", params));
+  const { data } = await session.get(url);
+  data.results = data.results.map(document => new Document(document));
+  return new Results(url, data);
+}
+
+export async function searchDocuments(
+  query,
+  page = 0,
+  expand = DEFAULT_EXPAND
+) {
+  // Return documents with the specified parameters
+  const url = apiUrl(
+    queryBuilder("documents/search/", { q: query, expand, page: page + 1 })
   );
-  const documents = data.results;
-  return documents.map(document => new Document(document));
+  const { data } = await session.get(url);
+  data.results = data.results.map(document => new Document(document));
+  return new Results(url, data);
 }
 
 export async function getDocument(id, expand = DEFAULT_EXPAND) {
@@ -46,10 +64,16 @@ export async function getDocument(id, expand = DEFAULT_EXPAND) {
   return new Document(data);
 }
 
-export async function getDocumentsWithIds(ids, expand = DEFAULT_EXPAND) {
+export async function getDocumentsWithIds(
+  ids,
+  remaining = false,
+  expand = DEFAULT_EXPAND
+) {
   // Return documents with the specified ids
+  const params = { expand, id__in: ids };
+  if (remaining) params["remaining"] = true;
   const documents = await grabAllPages(
-    apiUrl(queryBuilder("documents/", { expand, id__in: ids }))
+    apiUrl(queryBuilder("documents/", params))
   );
   return documents.map(document => new Document(document));
 }
@@ -97,6 +121,20 @@ export async function redactDocument(id, redactions) {
   await session.post(apiUrl(`documents/${id}/redactions/`), redactions);
 }
 
+export async function addData(id, key, value) {
+  // TODO: Url encode data key?
+  await session.patch(apiUrl(`documents/${id}/data/${key}/`), {
+    values: [value]
+  });
+}
+
+export async function removeData(id, key, value) {
+  // TODO: Url encode data key?
+  await session.patch(apiUrl(`documents/${id}/data/${key}/`), {
+    remove: [value]
+  });
+}
+
 /**
  * Polls the specified document, repeatedly requesting it until the specified condition is met.
  * @param {string} id The document id to poll
@@ -138,14 +176,12 @@ export async function pollDocument(
  * Uploads the specified documents, providing callbacks for progress updates
  * @param {Array<Document>} docs The documents to upload
  * @param {Function} progressFn A function to call with upload progress
- * @param {Function} completeFn A function to call when an individual doc uploads
  * @param {Function} allCompleteFn A function to call when all docs upload
  * @param {Function} errorFn A function to call when an error occurs
  */
 export async function uploadDocuments(
   docs,
   progressFn,
-  completeFn,
   allCompleteFn,
   errorFn
 ) {
@@ -154,80 +190,57 @@ export async function uploadDocuments(
   const toComplete = [];
   for (let i = 0; i < docs.length; i++) {
     progresses.push({
-      index: i,
-      progress: 0,
-      startTime: Date.now(),
-      completeTime: null,
-      interval: null
+      progress: 0
     });
     toComplete.push(i);
   }
 
-  for (let i = 0; i < docs.length; i++) {
-    const formData = new FormData();
-    const file = docs[i].file;
-    const name = docs[i].name;
-    formData.append("file", file);
-    formData.append("title", name);
-
-    session
-      .post(apiUrl("documents/"), {
-        title: name
-      })
-      .then(
-        response => {
-          // Allocate a document with title.
-          const responseData = response.data;
-          const url = responseData.presigned_url;
-          const id = responseData.id;
-
-          axios
-            .put(url, file, {
-              headers: {
-                "Content-Type": "application/pdf"
-              },
-              onUploadProgress: progressEvent => {
-                // Handle upload progress
-                const progress = progressEvent.loaded / progressEvent.total;
-                progresses[i].progress = progress;
-                progressFn(i, progress);
-              }
-            })
-            .then(
-              () => {
-                // Upload completed. Post to start processing.
-                session.post(apiUrl(`documents/${id}/process/`)).then(
-                  () => {
-                    // Handle complete upload
-                    if (progresses[i].interval != null) {
-                      // Clear existing fake timer.
-                      clearTimeout(progresses[i].interval);
-                      progresses[i].interval = null;
-                    }
-                    for (let j = 0; j < toComplete.length; j++) {
-                      if (toComplete[j] == i) {
-                        toComplete.splice(j, 1);
-                        completeFn(id, i);
-                        break;
-                      }
-                    }
-                    if (toComplete.length == 0) {
-                      allCompleteFn();
-                    }
-                  },
-                  e => {
-                    errorFn("failed to start processing the document", e);
-                  }
-                );
-              },
-              e => {
-                errorFn("failed to upload the document", e);
-              }
-            );
-        },
-        e => {
-          errorFn("failed to create the document", e);
-        }
-      );
+  // Allocate documents with the appropriate titles.
+  let newDocuments;
+  try {
+    const { data } = await session.post(
+      apiUrl("documents/"),
+      docs.map(doc => ({ title: doc.name }))
+    );
+    newDocuments = data;
+  } catch (e) {
+    return errorFn("failed to create the document", e);
   }
+
+  // Upload all the files
+  try {
+    await Promise.all(
+      docs.map((doc, i) => {
+        const url = newDocuments[i].presigned_url;
+        const file = doc.file;
+
+        return axios.put(url, file, {
+          headers: {
+            "Content-Type": "application/pdf"
+          },
+          onUploadProgress: progressEvent => {
+            // Handle upload progress
+            const progress = progressEvent.loaded / progressEvent.total;
+            progresses[i].progress = progress;
+            progressFn(i, progress);
+          }
+        });
+      })
+    );
+  } catch (e) {
+    return errorFn("failed to upload the document", e);
+  }
+
+  // Once all the files have uploaded, begin processing.
+  const ids = newDocuments.map(doc => doc.id);
+  try {
+    await session.post(apiUrl(`documents/process/`), {
+      ids
+    });
+  } catch (e) {
+    return errorFn("failed to start processing the document", e);
+  }
+
+  // Handle document completion
+  allCompleteFn(ids);
 }

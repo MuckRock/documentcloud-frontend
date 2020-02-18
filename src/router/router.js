@@ -64,6 +64,8 @@ export function pushUrl(url) {
   window.history.pushState({ path: url }, "", window.location.origin + url);
 }
 
+export function pushParams(params) {}
+
 export function nav(to, params = null) {
   const path = getPath(to, params);
   pushUrl(path);

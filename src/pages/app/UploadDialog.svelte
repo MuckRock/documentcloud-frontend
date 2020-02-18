@@ -10,7 +10,7 @@
 
   // Stores
   import { layout } from "@/manager/layout";
-  import { handleNewDocument } from "@/manager/documents";
+  import { handleNewDocuments } from "@/manager/documents";
 
   import { onMount } from "svelte";
   import emitter from "@/emit";
@@ -82,18 +82,16 @@
         // Progress handler
         uploadFiles[index].progress = progress;
       },
-      async (id, index) => {
-        // Complete handler
-        uploadFiles[index].done = true;
-        await handleNewDocument(id);
-      },
-      () => {
+      async ids => {
         // All complete handler
-        $layout.uploading = false;
+        uploadFiles = uploadFiles.map(file => ({ ...file, done: true }));
+        layout.uploading = false;
+        await handleNewDocuments(ids);
       },
       message => {
-        this.errorMessage = message;
-        this.$emit("setDismissable", true);
+        layout.error = message;
+        layout.uploading = false;
+        emit.setDismissable(true);
       }
     );
   }

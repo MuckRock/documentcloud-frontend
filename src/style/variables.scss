@@ -50,6 +50,7 @@ $menuActivePadding: 10px;
 $checkboxSize: 22px;
 $pageRail: 69px;
 $annotationBorderWidth: 3px;
+$mainDocContainerPadding: 36px;
 
 /* Animations */
 $progress-transition: width 0.8s ease;
@@ -64,6 +65,8 @@ $document-selected: #00000021;
 $checkboxZ: -9;
 $sidebarBg: -1;
 
+$sidebarStickyZ: 1;
+$appStickyZ: 2;
 $viewerBodyZ: 1;
 $viewerPageNumZ: 2;
 $viewerTagZ: 3;

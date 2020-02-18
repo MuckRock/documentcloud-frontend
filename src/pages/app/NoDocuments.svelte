@@ -1,5 +1,9 @@
 <script>
+  import { search } from "@/search/search";
+
+  // SVG assets
   import documentSilhouetteSvg from "@/assets/document_silhouette.svg";
+  import emptyResultsSvg from "@/assets/empty_results.svg";
 </script>
 
 <style lang="scss">
@@ -8,6 +12,10 @@
     background: #fbf9f3;
     padding: 1em;
     border-radius: 10px;
+
+    &.warn {
+      background: #fbf3f8;
+    }
   }
 
   h2 {
@@ -36,21 +44,34 @@
   }
 </style>
 
-<div class="container">
-  <h2>Upload your first document</h2>
-  <div class="img">
-    {@html documentSilhouetteSvg}
-  </div>
-  <div class="text">
-    <p>
-      Upload a PDF file to get started using DocumentCloud. You can drag the
-      file into this window, or click on the blue “Upload” button above.
-    </p>
-    <p>
-      Once you upload a file, DocumentCloud will process the document and
-      extract its contents. It may take a few minutes for this to complete, but
-      once it’s done your document will be optimized for analysis and sharing on
-      the web.
-    </p>
-  </div>
+<div class="container" class:warn={$search.isSearch}>
+  {#if $search.isSearch}
+    <h2>No search results</h2>
+    <div class="img">
+      {@html emptyResultsSvg}
+    </div>
+    <div class="text">
+      <p>
+        Your search query returned no results. Try again with a broader search
+        query.
+      </p>
+    </div>
+  {:else}
+    <h2>Upload your first document</h2>
+    <div class="img">
+      {@html documentSilhouetteSvg}
+    </div>
+    <div class="text">
+      <p>
+        Upload a PDF file to get started using DocumentCloud. You can drag the
+        file into this window, or click on the blue “Upload” button above.
+      </p>
+      <p>
+        Once you upload a file, DocumentCloud will process the document and
+        extract its contents. It may take a few minutes for this to complete,
+        but once it’s done your document will be optimized for analysis and
+        sharing on the web.
+      </p>
+    </div>
+  {/if}
 </div>

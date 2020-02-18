@@ -2,6 +2,7 @@
   import { router, Router } from "@/router/router";
   import { routes } from "@/routes";
   import { onMount } from "svelte";
+  import { currentUrl } from "@/util/url";
 
   // Patch poll events
   import "@/ticker/ticker";
@@ -10,10 +11,10 @@
   router.routes = new Router(...routes);
 
   onMount(() => {
-    router.currentUrl = window.location.pathname;
+    router.currentUrl = currentUrl();
     if (!history.state) {
       window.history.replaceState(
-        { path: window.location.pathname },
+        { path: currentUrl() },
         "",
         window.location.href
       );
@@ -53,6 +54,15 @@
     padding-left: 5px;
     transform: scaleY(0.8) translateY(-1px);
     display: inline-block;
+  }
+
+  :global(summary) {
+    outline: none;
+    user-select: none;
+    cursor: pointer;
+    font-size: 10px;
+    color: $gray;
+    margin: 0 -10px;
   }
 </style>
 

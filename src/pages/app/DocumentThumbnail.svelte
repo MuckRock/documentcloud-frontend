@@ -12,8 +12,9 @@
 
 <style lang="scss">
   .img {
-    padding: 10px 35px;
-    @include document-cell;
+    padding: 0 35px 20px 35px;
+    display: table-cell;
+    vertical-align: top;
 
     :global(img),
     > *,

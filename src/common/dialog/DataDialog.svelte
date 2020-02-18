@@ -1,30 +1,85 @@
 <script>
+  import Loader from "@/common/Loader";
   import Button from "@/common/Button";
   import emitter from "@/emit";
-  import { layout } from "@/manager/layout";
+  import { layout, addData } from "@/manager/layout";
+  import { addDocumentData, removeDocumentData } from "@/manager/documents";
+  import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { handlePlural } from "@/util/string";
+  import { writable } from "svelte/store";
 
   const emit = emitter({
     dismiss() {}
   });
+
+  let key = "";
+  let value = "";
+
+  let loading = writable(false);
+
+  $: keyTrimmed = key.trim();
+  $: valueTrimmed = value.trim();
+
+  $: inputValid = keyTrimmed.length > 0;
+
+  async function handleAdd() {
+    if (!inputValid) return;
+
+    await wrapLoadSeparate(
+      loading,
+      layout,
+      async () =>
+        await addDocumentData(layout.dataDocuments, keyTrimmed, valueTrimmed)
+    );
+  }
 </script>
 
-<div>
-  <div class="mcontent">
-    <h1>
-      Edit Data for {handlePlural($layout.dataDocuments.length, 'Document', true)}
-    </h1>
-    <p>Edit key/value pairs describing these documents.</p>
+<style lang="scss">
+  .add {
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
 
-    <div class="inputpadded">
-      <input type="text" placeholder="Key" class="key" />
-      :
-      <input type="text" placeholder="Value" class="value" />
-    </div>
+    .lpad {
+      margin-left: 5px;
+    }
+  }
+</style>
 
-    <div class="buttonpadded">
-      <Button>Save</Button>
-      <Button secondary={true} on:click={emit.dismiss}>Close</Button>
+<Loader center={true} active={$loading}>
+  <div>
+    <div class="mcontent">
+      <h1>
+        Edit Data for {handlePlural($layout.dataDocuments.length, 'Document', true)}
+      </h1>
+      <p>
+        Edit key/value pairs describing
+        {#if $layout.dataDocuments.length == 1}
+          this document
+        {:else}these documents{/if}
+        .
+      </p>
+
+      <div class="inputpadded">
+        <hr />
+        <div class="add">
+          <input type="text" placeholder="Key" class="key" bind:value={key} />
+          :
+          <input type="text" placeholder="Value" class="value" bind:value />
+          <span class="lpad">
+            <Button
+              disabledReason={inputValid ? null : 'Enter a key'}
+              on:click={handleAdd}>
+              + Add
+            </Button>
+          </span>
+        </div>
+      </div>
+
+      <div class="buttonpadded">
+        <Button on:click={emit.dismiss}>Done</Button>
+      </div>
     </div>
   </div>
-</div>
+</Loader>

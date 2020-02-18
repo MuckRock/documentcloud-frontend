@@ -16,7 +16,7 @@
 
   function changeAccess(access) {
     if (!valid) return;
-    changeAccessForDocuments(access);
+    changeAccessForDocuments(layout.accessEditDocuments, access);
     emit.dismiss();
   }
 </script>

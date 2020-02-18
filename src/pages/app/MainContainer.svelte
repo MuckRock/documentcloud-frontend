@@ -1,6 +1,5 @@
 <script>
   // Components
-  import SearchBar from "./SearchBar";
   import Documents from "./Documents";
   import Hamburger from "@/common/Hamburger";
   import Button from "@/common/Button";
@@ -11,7 +10,7 @@
   import AccessDialog from "@/common/dialog/AccessDialog";
   import DataDialog from "@/common/dialog/DataDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
-  import DocumentProjectDialog from "@/common/dialog/DocumentProjectDialog";
+  import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -20,7 +19,7 @@
     hideAccess,
     hideData,
     hideProject,
-    hideDocumentProjectDialog
+    hideCollaborators
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -31,14 +30,8 @@
     expandSidebar() {}
   });
 
-  let filter = "";
-
   function refresh() {
     window.location.reload();
-  }
-
-  function handleSearch({ detail }) {
-    filter = detail;
   }
 </script>
 
@@ -48,6 +41,8 @@
     left: $sidebar-width;
     right: 0;
     top: 0;
+    bottom: 0;
+    overflow: auto;
 
     @media only screen and (max-width: 600px) {
       left: 0;
@@ -55,7 +50,7 @@
   }
 
   .container {
-    padding: 36px 48px;
+    padding: 0 48px $mainDocContainerPadding 48px;
 
     &.error {
       padding: 100px;
@@ -81,12 +76,10 @@
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.dataOpen}
     <Modal component={DataDialog} on:close={hideData} />
+  {:else if $layout.projectCollaboratorsOpen}
+    <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
-  {:else if $layout.documentProjectOpen}
-    <Modal
-      component={DocumentProjectDialog}
-      on:close={hideDocumentProjectDialog} />
   {/if}
   <Hamburger
     on:toggle={emit.expandSidebar}
@@ -94,7 +87,6 @@
     style="margin-top: 16px; padding: 1.5em 36px;" />
   {#if !$documents.error}
     <div class="container">
-      <SearchBar on:search={handleSearch} />
       <Documents />
     </div>
   {:else}

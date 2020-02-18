@@ -72,7 +72,7 @@
       </span>
 
       {#if $layout.hasSelection}
-        <Dropdown table={true}>
+        <Dropdown table={true} fixed={true}>
           <span class="action" slot="title">
             Edit
             <span class="dropper">▼</span>
@@ -87,7 +87,7 @@
           </Tooltip>
         </span>
       {/if}
-      <Dropdown table={true}>
+      <Dropdown table={true} fixed={true}>
         <span class="action" slot="title">
           Projects
           <span class="dropper">▼</span>
