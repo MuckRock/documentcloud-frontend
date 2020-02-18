@@ -6,7 +6,9 @@ import {
   reprocessDocument,
   changeAccess,
   renameDocument,
-  PENDING
+  PENDING,
+  addData,
+  removeData
 } from "@/api/document";
 import { layout, hideAccess } from "./layout";
 import { wrapLoad, wrapSeparate } from "@/util/wrapLoad";
@@ -205,6 +207,41 @@ export async function renameSelectedDocuments(title) {
     );
   });
   unselectAll();
+}
+
+export async function addDocumentData(documents, key, value) {
+  for (let i = 0; i < documents.length; i++) {
+    const document = documents[i];
+    if (document.data[key] == null) {
+      document.data[key] = [value];
+    } else {
+      document.data[key].push(value);
+    }
+    // TODO: replace with bulk method
+    await addData(document.id, key, value);
+  }
+  document.data = document.data;
+}
+
+export async function removeDocumentData(documents, key, value) {
+  for (let i = 0; i < documents.length; i++) {
+    const document = documents[i];
+    if (document.data[key] == null) {
+      // Don't do anything (throw?)
+    } else {
+      // Iterate backwards to be able to remove without affecting indices
+      for (let i = document.data[key].length - 1; i >= 0; i--) {
+        if (document.data[key][i] == value) {
+          // Remove matching key/value
+          document.data[key].splice(i, 1);
+        }
+      }
+      document.data[key].push(value);
+    }
+    // TODO: replace with bulk method
+    await removeData(document.id, key, value);
+  }
+  document.data = document.data;
 }
 
 export async function handleNewDocuments(ids) {

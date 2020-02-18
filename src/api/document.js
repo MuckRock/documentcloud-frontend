@@ -121,6 +121,20 @@ export async function redactDocument(id, redactions) {
   await session.post(apiUrl(`documents/${id}/redactions/`), redactions);
 }
 
+export async function addData(id, key, value) {
+  // TODO: Url encode data key?
+  await session.patch(apiUrl(`documents/${id}/data/${key}/`), {
+    values: [value]
+  });
+}
+
+export async function removeData(id, key, value) {
+  // TODO: Url encode data key?
+  await session.patch(apiUrl(`documents/${id}/data/${key}/`), {
+    remove: [value]
+  });
+}
+
 /**
  * Polls the specified document, repeatedly requesting it until the specified condition is met.
  * @param {string} id The document id to poll

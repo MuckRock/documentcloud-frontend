@@ -184,6 +184,26 @@ export class Document extends Svue {
           return doc.projects;
         },
 
+        // Data
+        rawData(doc) {
+          return doc.data;
+        },
+        dataPoints(rawData) {
+          const results = [];
+          for (const key in rawData) {
+            if (rawData.hasOwnProperty(key)) {
+              const values = rawData[key];
+              for (let i = 0; i < values.length; i++) {
+                results.push({
+                  key,
+                  value: values[i]
+                });
+              }
+            }
+          }
+          return results;
+        },
+
         // Highlights
         rawHighlights(doc) {
           return doc.highlights;
