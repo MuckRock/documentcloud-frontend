@@ -30,7 +30,6 @@ export const search = new Svue({
       return results.results;
     },
     hasResults(results) {
-      console.log(results);
       return results != null;
     }
   }

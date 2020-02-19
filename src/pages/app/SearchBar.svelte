@@ -1,4 +1,5 @@
 <script>
+  import SearchInput from "./SearchInput";
   import { onMount } from "svelte";
 
   import { handleSearch } from "@/search/search";
@@ -9,11 +10,8 @@
 
   let search = "";
 
-  function handleKeyUp(e) {
-    if (e.which == 13 || e.keyCode == 13) {
-      // Search on enter
-      handleSearch(search);
-    }
+  function submitSearch() {
+    handleSearch(search);
   }
 
   onMount(() => {
@@ -41,6 +39,7 @@
     width: 100%;
     position: relative;
     box-sizing: border-box;
+    max-width: 700px;
 
     @media only screen and (max-width: 600px) {
       margin: 0 0 44px 0;
@@ -52,28 +51,9 @@
       padding: 13px 17px;
     }
   }
-
-  input {
-    width: 100%;
-    height: 100%;
-    padding-left: 56px;
-    padding-right: 12px;
-    font-family: inherit;
-    border: none;
-    line-height: 42px;
-    font-size: 16px;
-    color: black;
-    outline: none;
-    background: none;
-    box-sizing: border-box;
-  }
-
-  ::placeholder {
-    color: rgba(0, 0, 0, 0.76);
-  }
 </style>
 
 <div class="search">
   {@html searchIconSvg}
-  <input bind:value={search} placeholder="Search" on:keyup={handleKeyUp} />
+  <SearchInput bind:value={search} on:search={submitSearch} />
 </div>
