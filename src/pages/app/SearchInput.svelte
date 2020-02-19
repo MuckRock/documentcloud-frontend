@@ -1,6 +1,6 @@
 <script>
   import emitter from "@/emit";
-  import { highlight } from "@/search/query";
+  import { highlight, parse } from "@/search/query";
 
   const emit = emitter({
     search() {}
@@ -19,7 +19,14 @@
     if (mirror != null) mirror.scrollLeft = scrollLeft;
   }
 
+  function updateScroll() {
+    if (input != null && mirror != null) {
+      mirror.scrollLeft = input.scrollLeft;
+    }
+  }
+
   function handleCursor() {
+    updateScroll();
     selectionStart = input.selectionStart;
     selectionEnd = input.selectionEnd;
     if (selectionStart == null || selectionEnd == null) return;
@@ -27,6 +34,7 @@
   }
 
   function handleBlur() {
+    handleCursor();
     focused = false;
   }
 
@@ -43,6 +51,7 @@
 
 <style lang="scss">
   $fontSize: 16px;
+  $wordSpacing: 1px;
   input {
     -webkit-text-fill-color: transparent;
     outline: none;
@@ -60,35 +69,42 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    word-spacing: $wordSpacing;
   }
 
   .mirror {
-    // opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
     pointer-events: none;
-    overflow: auto;
+    overflow-x: scroll;
+    color: black;
 
     word-spacing: 0;
     font-size: 0;
 
     > span {
-      &.raw {
-        color: black;
-      }
-
       &.field {
-        color: green;
-      }
-
-      &.term {
-        color: blue;
+        > span:before {
+          position: absolute;
+          content: "";
+          left: -1px;
+          top: -2px;
+          right: -1px;
+          bottom: -2px;
+          border-radius: $radius;
+          background: rgba($annotationBorder, 0.45);
+          border: solid 1px rgba(black, 0.12);
+          z-index: -1;
+        }
       }
 
       > span {
+        position: relative;
+        z-index: 1;
         white-space: pre;
         font-size: $fontSize;
+        word-spacing: $wordSpacing;
       }
     }
   }
@@ -101,9 +117,6 @@
 <input
   bind:this={input}
   bind:value
-  on:scroll={() => {
-    if (input != null) scrollLeft = input.scrollLeft;
-  }}
   placeholder="Search"
   on:keyup={handleKeyUp}
   on:click={handleCursor}
@@ -114,7 +127,6 @@
   {#each highlights as highlight}
     <span
       class:raw={highlight.type == 'raw'}
-      class:term={highlight.type == 'term'}
       class:field={highlight.type == 'field'}>
       <span>{highlight.text}</span>
     </span>

@@ -53,29 +53,60 @@ test("maps parse positions for escaped query", () => {
       }
     }
   });
+
+  expect(parse(`(a:b`)).toMatchObject({
+    left: {
+      field: "a",
+      term: "b",
+      fieldLocation: {
+        start: {
+          offset: 1
+        }
+      }
+    }
+  });
 });
 
 test("gets highlights", () => {
-  expect(highlight("a hi:true b")).toEqual([
+  expect(highlight("a title:true b")).toEqual([
     {
-      type: "term",
+      type: "raw",
       text: "a "
     },
     {
       type: "field",
-      text: "hi"
+      text: "title:true"
     },
     {
       type: "raw",
-      text: ":"
+      text: " b"
+    }
+  ]);
+});
+
+test("highlight parens", () => {
+  expect(highlight("title:(a AND b)")).toEqual([
+    {
+      type: "field",
+      text: "title:(a AND b)"
+    }
+  ]);
+
+  expect(highlight("title:(a AND b )")).toEqual([
+    {
+      type: "field",
+      text: "title:(a AND b )"
+    }
+  ]);
+
+  expect(highlight("title:(a AND b) other")).toEqual([
+    {
+      type: "field",
+      text: "title:(a AND b)"
     },
     {
-      type: "term",
-      text: "true "
-    },
-    {
-      type: "term",
-      text: "b"
+      type: "raw",
+      text: " other"
     }
   ]);
 });
