@@ -6,32 +6,41 @@ import {
   newProject,
   updateProject,
   deleteProject,
-  getUsers,
+  getProjectUsers,
   addUserToProject
 } from "@/api/project";
+import { getUsers } from "@/api/orgAndUser";
 import { router } from "@/router/router";
 import { layout } from "./layout";
 import { pushToast } from "./toast";
 import { updateInCollection } from "@/manager/documents";
 import { handlePlural } from "@/util/string";
-import { removeFromArray } from "@/util/array";
+import { removeFromArray, uniquify } from "@/util/array";
 import { wrapLoad } from "@/util/wrapLoad";
+
+let previousRouteName = null;
 
 export const projects = new Svue({
   data() {
     return {
       projects: [],
+      projectUsers: [],
       router
     };
   },
   watch: {
-    router() {
+    "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (route != null && route.name == "app") {
+      if (
+        route != null &&
+        route.name == "app" &&
+        route.name != previousRouteName
+      ) {
         initProjects();
       } else {
         this.projects = [];
       }
+      previousRouteName = route == null ? null : route.name;
     }
   },
   computed: {
@@ -46,10 +55,23 @@ export const projects = new Svue({
   }
 });
 
-function initProjects() {
-  getProjects().then(newProjects => {
-    projects.projects = newProjects;
-  });
+function addUsers(...users) {
+  const allUsers = projects.projectUsers.concat(users);
+  projects.projectUsers = uniquify(allUsers);
+}
+
+async function addProjectUsers(...projects) {
+  const projectIds = projects.map(proj => proj.id);
+  const users = await getUsers({ projectIds });
+  addUsers(...users);
+}
+
+async function initProjects() {
+  const newProjects = await getProjects();
+  projects.projects = newProjects;
+
+  // Grab all users of projects
+  await addProjectUsers(...newProjects);
 }
 
 export async function createNewProject(title, description) {
@@ -161,10 +183,16 @@ export async function removeProject(project) {
   );
 }
 
-export async function getProjectUsers(project) {
-  return await getUsers(project.id);
+export async function getProjUsers(project) {
+  const users = await getProjectUsers(project.id);
+  // Add to known list of all users
+  addUsers(...users);
+  return users;
 }
 
 export async function addUser(project, email, access) {
-  return await addUserToProject(project.id, email, access);
+  const user = await addUserToProject(project.id, email, access);
+  // Add to known list of all users
+  addUsers(user);
+  return user;
 }
