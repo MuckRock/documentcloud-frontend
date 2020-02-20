@@ -25,7 +25,7 @@ export const documents = new Svue({
     };
   },
   watch: {
-    router() {
+    "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       if (route != null && route.name == "app") {
         initDocuments();

@@ -58,10 +58,9 @@ export async function getProjects(expand = DEFAULT_EXPAND) {
   return projects.map(project => new Project(project));
 }
 
-export async function getUsers(projectId) {
-  const results = await session.get(apiUrl(`projects/${projectId}/users/`));
-  console.log(results);
-  return results;
+export async function getProjectUsers(projectId) {
+  const users = await grabAllPages(apiUrl(`projects/${projectId}/users/`));
+  return users;
 }
 
 export async function addUserToProject(projectId, email, access) {

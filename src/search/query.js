@@ -1,37 +1,114 @@
 import lucene from "lucene";
 
+const validFields = [
+  /^id$/,
+  /^access$/,
+  /^created_at$/,
+  /^data_[^ ]+$/,
+  /^description$/,
+  /^language$/,
+  /^organization$/,
+  /^page_count$/,
+  /^projects$/,
+  /^slug$/,
+  /^source$/,
+  /^status$/,
+  /^title$/,
+  /^updated_at$/,
+  /^user$/
+];
+
+const NORMALIZE_PREFIX = /^[-+]+/g;
+
+export function validField(field) {
+  // Normalize away prefixes
+  field = field.replace(NORMALIZE_PREFIX, "");
+  for (let i = 0; i < validFields.length; i++) {
+    if (validFields[i].test(field)) return true;
+  }
+  return false;
+}
+
 export function highlight(query) {
   const parsed = parse(query);
   return parseHighlight(query, parsed);
 }
 
 export function parseHighlight(query, parsed) {
+  // Get outer bounds of positions from parsed structure
+  const getSuperPosition = (...parsedStructures) => {
+    let posMin = null;
+    let posMax = null;
+    const reconcile = (...nums) => {
+      for (let i = 0; i < nums.length; i++) {
+        const num = nums[i];
+        if (num != null) {
+          if (posMin == null || num < posMin) posMin = num;
+          if (posMax == null || num > posMax) posMax = num;
+        }
+      }
+    };
+
+    for (let i = 0; i < parsedStructures.length; i++) {
+      const parsed = parsedStructures[i];
+      if (parsed.left != null) {
+        reconcile(...getSuperPosition(parsed.left));
+      }
+      if (parsed.right != null) {
+        reconcile(...getSuperPosition(parsed.right));
+      }
+      if (parsed.fieldLocation != null) {
+        reconcile(
+          parsed.fieldLocation.start.offset,
+          parsed.fieldLocation.end.offset
+        );
+      }
+      if (parsed.termLocation != null) {
+        reconcile(
+          parsed.termLocation.start.offset,
+          parsed.termLocation.end.offset
+        );
+      }
+    }
+    return [posMin, posMax];
+  };
+
   const getChunks = parsed => {
     // Grab all field and term locations recursively
     let chunks = [];
-    if (parsed.left != null) {
-      chunks = chunks.concat(getChunks(parsed.left));
-    }
-    if (parsed.right != null) {
-      chunks = chunks.concat(getChunks(parsed.right));
-    }
-    if (parsed.fieldLocation != null) {
+    if (
+      parsed.fieldLocation != null &&
+      parsed.parenthesized &&
+      validField(parsed.field)
+    ) {
+      const position = getSuperPosition(parsed);
+      // Extend super position to grab end paren
+      const endParenIdx = query.indexOf(")", position[1]);
+      if (endParenIdx != -1) {
+        position[1] = endParenIdx + 1;
+      }
       chunks.push({
         type: "field",
-        position: [
-          parsed.fieldLocation.start.offset,
-          parsed.fieldLocation.end.offset
-        ]
+        position
       });
-    }
-    if (parsed.termLocation != null) {
-      chunks.push({
-        type: "term",
-        position: [
-          parsed.termLocation.start.offset,
-          parsed.termLocation.end.offset
-        ]
-      });
+    } else {
+      if (parsed.left != null) {
+        chunks = chunks.concat(getChunks(parsed.left));
+      }
+      if (parsed.right != null) {
+        chunks = chunks.concat(getChunks(parsed.right));
+      }
+      if (parsed.fieldLocation != null && parsed.termLocation != null) {
+        if (validField(parsed.field)) {
+          chunks.push({
+            type: "field",
+            position: [
+              parsed.fieldLocation.start.offset,
+              parsed.termLocation.end.offset
+            ]
+          });
+        }
+      }
     }
     return chunks;
   };
@@ -60,6 +137,9 @@ export function parseHighlight(query, parsed) {
   };
 
   const pushHighlight = (type, position) => {
+    while (position > 0 && isWhitespace.test(query.charAt(position - 1))) {
+      position--;
+    }
     if (position == 0) return;
     highlights.push({
       type,
@@ -339,9 +419,14 @@ function escapeUserQuery(clauses) {
     if (doQuote) {
       sb += '"';
     }
+    let shift = 0;
+    if (clause.field != clause.rawField && clause.field != null) {
+      // Accommodate shifts due to preceding characters
+      shift = clause.field.length - clause.rawField.length;
+    }
     // Skip adding user field boost
     const end = sb.length;
-    mapping.push([clause.pos, [start, end]]);
+    mapping.push([clause.pos, [start + shift, end + shift]]);
     sb += " ";
   }
   return { escaped: sb, mapping };

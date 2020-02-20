@@ -5,7 +5,7 @@
   import MenuItem from "@/common/MenuItem";
 
   import { layout } from "@/manager/layout";
-  import { getProjectUsers, addUser } from "@/manager/projects";
+  import { getProjUsers, addUser } from "@/manager/projects";
 
   import emitter from "@/emit";
 
@@ -20,7 +20,7 @@
     await addUser(layout.projectEdit, email, access);
   }
 
-  getProjectUsers(layout.projectEdit); // log users
+  getProjUsers(layout.projectEdit); // log users
 </script>
 
 <style lang="scss">

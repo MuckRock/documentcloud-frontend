@@ -14,7 +14,7 @@
     border-radius: 10px;
 
     &.warn {
-      background: #fbf3f8;
+      background: #ececec;
     }
   }
 

@@ -17,7 +17,7 @@ export const viewer = new Svue({
     };
   },
   watch: {
-    router() {
+    "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       if (route != null && route.name == "viewer" && route.props != null) {
         this.id = route.props.id;
