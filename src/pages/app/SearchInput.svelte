@@ -4,6 +4,7 @@
   import { highlight, parse } from "@/search/query";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
+  import { textAreaResize } from "@/util/textareaResize";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";
@@ -15,6 +16,19 @@
   export let value = "";
   let input;
   let mirror;
+
+  $: {
+    if (input != null) {
+      // Dispatch input event to handle textarea resize on load
+      input.value = value;
+      input.dispatchEvent(
+        new Event("input", {
+          bubbles: true,
+          target: input
+        })
+      );
+    }
+  }
 
   let selectionStart = null;
   let selectionEnd = null;
@@ -50,6 +64,13 @@
   }
 
   function handleKeyDown(e) {
+    if (e.which == 13 || e.keyCode == 13) {
+      // Search on enter
+      emit.search();
+      e.preventDefault();
+      return;
+    }
+
     handleCursor();
 
     // Prevent moving cursor to beginning/end
@@ -67,10 +88,6 @@
 
   function handleKeyUp(e) {
     handleCursor();
-    if (e.which == 13 || e.keyCode == 13) {
-      // Search on enter
-      emit.search();
-    }
   }
 
   $: highlights = highlight(value);
@@ -81,13 +98,12 @@
   $wordSpacing: 1px;
 
   .search {
-    height: 42px;
     border-radius: $radius;
     margin: 0;
     width: 100%;
     position: relative;
     box-sizing: border-box;
-    max-width: 700px;
+    max-width: 750px;
 
     @media only screen and (max-width: 600px) {
       margin: 0 0 44px 0;
@@ -100,7 +116,7 @@
     }
   }
 
-  input {
+  textarea {
     -webkit-text-fill-color: transparent;
     outline: none;
     font-size: $fontSize;
@@ -117,15 +133,20 @@
   }
 
   .mirror,
-  input {
-    line-height: 42px;
+  textarea {
+    line-height: 1.6;
     font-family: inherit;
     border: none;
     padding-left: 56px;
     padding-right: 12px;
+    padding: 9px 12px 9px 56px;
     box-sizing: border-box;
+    border: solid 1px transparent;
     width: 100%;
     height: 100%;
+    overflow: none;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
     word-spacing: $wordSpacing;
   }
 
@@ -134,8 +155,8 @@
     top: 0;
     left: 0;
     pointer-events: none;
-    overflow-x: scroll;
     color: black;
+    -webkit-text-fill-color: black;
 
     word-spacing: 0;
     font-size: 0;
@@ -148,25 +169,15 @@
       }
 
       &.field {
-        > span:before {
-          position: absolute;
-          content: "";
-          left: -1px;
-          top: -2px;
-          right: -1px;
-          bottom: -2px;
+        > span {
           border-radius: $radius;
           background: rgba(blue, 0.02);
-          // background: rgba($primary, 0.12);
-          border: solid 1px rgba(black, 0.12);
-          z-index: -1;
+          box-shadow: 0 0 0 1px rgba(black, 0.12);
         }
       }
 
       > span {
         position: relative;
-        z-index: 1;
-        white-space: pre;
         font-size: $fontSize;
         word-spacing: $wordSpacing;
       }
@@ -206,12 +217,14 @@
 
   ::placeholder {
     color: rgba(0, 0, 0, 0.76);
+    -webkit-text-fill-color: $gray;
   }
 </style>
 
 <div class="search">
   {@html searchIconSvg}
-  <input
+  <textarea
+    use:textAreaResize={0}
     bind:this={input}
     bind:value
     placeholder="Search"
@@ -223,11 +236,18 @@
     on:blur={handleBlur} />
   <div class="mirror" bind:this={mirror}>
     {#each highlights as highlight}
-      <span
-        class:raw={highlight.type == 'raw'}
-        class:field={highlight.type == 'field'}>
-        <span>{highlight.text}</span>
-      </span>
+      {#if highlight.type == 'field'}
+        <span class="field">
+          <span>{highlight.text}</span>
+        </span>
+      {:else}
+        {#each highlight.text.split(/( )/g) as rawText}
+          <!-- Split raw text by space to avoid line-break issues -->
+          <span>
+            <span>{rawText}</span>
+          </span>
+        {/each}
+      {/if}
     {/each}
     {#if autocomplete.length > 0}
       <span class="autocomplete">
