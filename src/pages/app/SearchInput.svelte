@@ -243,16 +243,24 @@
       );
     } else if (fieldPre == "user") {
       setCompletionX(fieldPreIndex);
-      completions = completionFilter(
-        $orgsAndUsers.allUsers.map(user => {
-          return {
-            type: "field",
-            text: user.name,
-            feed: slugify(user.name, user.id)
-          };
-        }),
-        fieldPost
-      );
+
+      const mappedUsers = [];
+      for (let i = 0; i < $orgsAndUsers.allUsers.length; i++) {
+        const user = $orgsAndUsers.allUsers[i];
+        const isMe = orgsAndUsers.me != null && user.id == orgsAndUsers.me.id;
+        const mappedUser = {
+          type: "field",
+          text: `${user.name}${isMe ? " (me)" : ""}`,
+          feed: slugify(user.name, user.id)
+        };
+        if (isMe) {
+          mappedUsers.unshift(mappedUser);
+        } else {
+          mappedUsers.push(mappedUser);
+        }
+      }
+
+      completions = completionFilter(mappedUsers, fieldPost);
     } else if (fieldPre == "organization") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
@@ -389,7 +397,7 @@
     return highlights;
   }
 
-  $: highlights = ensureValidity(highlight(value), $projects);
+  $: highlights = ensureValidity(highlight(value), $projects, $orgsAndUsers);
   export let transformedQuery;
   $: transformedQuery = highlights
     .map(x => (x.transform != null ? x.transform : x.text))
