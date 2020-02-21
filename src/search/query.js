@@ -9,7 +9,7 @@ const validFields = [
   /^language$/,
   /^organization$/,
   /^page_count$/,
-  /^projects$/,
+  /^projects?$/,
   /^slug$/,
   /^source$/,
   /^status$/,
@@ -141,9 +141,21 @@ export function parseHighlight(query, parsed) {
       position--;
     }
     if (position == 0) return;
+
+    const text = advance(position);
+    const colonIdx = text.indexOf(":");
+    let field = null;
+    let value = null;
+    if (colonIdx != -1) {
+      field = text.substr(0, colonIdx + 1);
+      value = text.substr(colonIdx + 1);
+    }
+
     highlights.push({
       type,
-      text: advance(position)
+      field,
+      value,
+      text
     });
   };
 

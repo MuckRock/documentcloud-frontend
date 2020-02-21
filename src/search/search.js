@@ -57,9 +57,18 @@ export function handleUpload(newDocs) {
   setDocuments([...newDocs, ...search.documents]);
 }
 
-export function handleSearch(query) {
-  query = query.trim();
+export function handleSearch(query, transformedQuery) {
+  const q =
+    transformedQuery != null && transformedQuery.length > 0
+      ? transformedQuery
+      : null;
+
   pushUrl(
-    queryBuilder(null, { q: query.length > 0 ? query : null, page: null })
+    queryBuilder(null, {
+      q,
+      // Display query
+      dq: query,
+      page: null
+    })
   );
 }

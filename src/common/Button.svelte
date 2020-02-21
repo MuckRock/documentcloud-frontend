@@ -76,6 +76,10 @@
 
     &.action {
       color: $primary;
+
+      &.secondary {
+        color: $gray;
+      }
     }
 
     &.caution {

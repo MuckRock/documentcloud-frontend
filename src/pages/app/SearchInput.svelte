@@ -1,10 +1,12 @@
 <script>
   import Button from "@/common/Button";
+  import NoWhitespace from "@/common/NoWhitespace";
   import emitter from "@/emit";
-  import { highlight, parse } from "@/search/query";
+  import { highlight } from "@/search/query";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
   import { textAreaResize } from "@/util/textareaResize";
+  import { slugify, extractSlugId } from "@/util/string";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";
@@ -17,9 +19,8 @@
   let input;
   let mirror;
 
-  $: {
+  function forceInput() {
     if (input != null) {
-      // Dispatch input event to handle textarea resize on load
       input.value = value;
       input.dispatchEvent(
         new Event("input", {
@@ -30,40 +31,281 @@
     }
   }
 
+  $: {
+    // Dispatch input event to handle textarea resize on load
+    forceInput();
+  }
+
   let selectionStart = null;
   let selectionEnd = null;
   let focused = false;
-  let scrollLeft = 0;
 
-  let autocomplete = "";
+  let completions = [];
 
-  let completions = ["My project", "My other project"];
-  let completionIndex = 0;
-
-  $: {
-    if (mirror != null) mirror.scrollLeft = scrollLeft;
+  function processCompletions() {
+    let count = 0;
+    for (let i = 0; i < completions.length; i++) {
+      const completion = completions[i];
+      if (completion.type == "field") {
+        completion.index = count;
+        count++;
+      } else {
+        completion.index = null;
+      }
+    }
+    return {
+      completions,
+      count
+    };
   }
 
-  function updateScroll() {
-    if (input != null && mirror != null) {
-      mirror.scrollLeft = input.scrollLeft;
+  $: processedCompletions = processCompletions(completions);
+
+  let completionIndex = null;
+
+  $: selectedCompletion =
+    completionIndex == null || completions.length == 0
+      ? null
+      : completions.filter(
+          completion => completion.index == completionIndex
+        )[0];
+
+  $: noCompletion =
+    !selectionAtEnd ||
+    (selectedCompletion == null && completions.length == 0) ||
+    (fieldPost != null && fieldPost.length > 0);
+  $: autocomplete = noCompletion
+    ? ""
+    : selectedCompletion == null
+    ? completions[0].feed
+    : selectedCompletion.feed;
+
+  function triggerCompletion(completion, deleteChars = 0) {
+    if (
+      completion.feed != null &&
+      individualSelection &&
+      selectionStart != null
+    ) {
+      const insert = completion.feed + " ";
+      const restoreSelectionPosition =
+        selectionStart + insert.length - deleteChars;
+      value =
+        value.substr(0, selectionStart - deleteChars) +
+        insert +
+        value.substr(selectionStart);
+      forceInput();
+      if (input != null && input.setSelectionRange != null) {
+        input.setSelectionRange(
+          restoreSelectionPosition,
+          restoreSelectionPosition
+        );
+      }
+      selectionStart = restoreSelectionPosition;
+      selectionEnd = restoreSelectionPosition;
     }
   }
 
   function handleCursor() {
-    updateScroll();
     selectionStart = input.selectionStart;
     selectionEnd = input.selectionEnd;
     if (selectionStart == null || selectionEnd == null) return;
     focused = true;
   }
 
+  // Selection properties
+  $: hasSelection = selectionStart != null && selectionEnd != null;
+  $: individualSelection = hasSelection && selectionStart == selectionEnd;
+  $: selectionAtEnd = individualSelection && selectionStart == value.length;
+
+  // Autocomplete fields
+  $: searchPre = individualSelection ? value.substr(0, selectionStart) : null;
+  $: searchPost = individualSelection ? value.substr(selectionStart) : null;
+  // Show completions if the end of input follows or a whitespace followed by anything
+  $: showCompletions = searchPost != null && /^(\s.*|)$/.test(searchPost);
+  $: fieldRaw =
+    searchPre != null && showCompletions
+      ? searchPre.match(/([a-z]+):([a-zA-Z0-9-]*)$/)
+      : null;
+  $: fieldPreIndex = fieldRaw != null ? fieldRaw.index : null;
+  $: fieldPre = fieldRaw != null ? fieldRaw[1] : null;
+  $: fieldPost = fieldRaw != null ? fieldRaw[2] : null;
+
+  function completionScore(completion, filter) {
+    // Calculate a score by how many characters match the filter
+    const text = completion.text.toLowerCase();
+    let score = 0;
+    let lastPos = 0;
+    let highlightLetters = [];
+    for (let i = 0; i < filter.length; i++) {
+      const char = filter.charAt(i).toLowerCase();
+      const idx = text.indexOf(char, lastPos);
+      if (idx == -1) {
+        // Punish lack of match
+        score -= 1;
+      } else {
+        // Reward match based on proximity
+        score += 1 / (idx - lastPos + 1);
+        highlightLetters.push(idx);
+        lastPos = idx;
+      }
+    }
+    return { score, highlightLetters };
+  }
+
+  function completionFilter(candidates, filter) {
+    if (filter.length == 0) return candidates;
+    // Filter completion candidates based on what you've started typing
+    const results = [];
+    for (let i = 0; i < candidates.length; i++) {
+      const candidate = candidates[i];
+      const { score, highlightLetters } = completionScore(candidate, filter);
+      if (score != null) {
+        results.push({ score, highlightLetters, ...candidate });
+      }
+    }
+    results.sort((a, b) => b.score - a.score);
+    return results;
+  }
+
+  let completionX = "";
+
+  function setCompletionX(idx) {
+    if (
+      idx == null ||
+      mirror == null ||
+      highlights == null ||
+      highlights.length == 0
+    ) {
+      return;
+    }
+
+    // Find which highlight the idx corresponds to
+
+    // First get all child chunk elements by following same rules as DOM
+    let allChunks = [];
+    for (let i = 0; i < highlights.length; i++) {
+      const highlight = highlights[i];
+      allChunks = allChunks.concat(
+        highlight.type == "raw"
+          ? highlight.text.split(/( )/g).filter(x => x.length > 0)
+          : [highlight.text]
+      );
+    }
+
+    let pos = 0;
+    let highlightIdx = allChunks.length - 1;
+    for (let i = 0; i < allChunks.length; i++) {
+      let end = pos + allChunks[i].length;
+      if (idx >= pos && idx < end) {
+        highlightIdx = i;
+        break;
+      }
+      pos = end;
+    }
+
+    console.log("FIELD POS", highlightIdx);
+
+    if (
+      highlightIdx == null ||
+      highlightIdx < 0 ||
+      highlightIdx >= mirror.children.length
+    ) {
+      return;
+    }
+
+    // Update completion X position
+    const completionLeft =
+      mirror.children[highlightIdx].firstChild.getBoundingClientRect().x -
+      mirror.getBoundingClientRect().x;
+    const completionRight =
+      mirror.getBoundingClientRect().right -
+      mirror.children[highlightIdx].firstChild.getBoundingClientRect().right;
+    // Anchor to left or right depending on which edge is closer
+    if (completionLeft <= completionRight) {
+      completionX = `left: ${completionLeft}px`;
+    } else {
+      completionX = `right: ${completionRight}px`;
+    }
+  }
+
+  $: {
+    if (fieldPre == "project") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        $projects.projects.map(project => {
+          return {
+            type: "field",
+            text: project.title,
+            feed: slugify(project.title, project.id)
+          };
+        }),
+        fieldPost
+      );
+    } else if (fieldPre == "user") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        $orgsAndUsers.allUsers.map(user => {
+          return {
+            type: "field",
+            text: user.name,
+            feed: slugify(user.name, user.id)
+          };
+        }),
+        fieldPost
+      );
+    } else if (fieldPre == "organization") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        $orgsAndUsers.organizations.map(org => {
+          return {
+            type: "field",
+            text: org.name,
+            feed: slugify(org.name, org.id)
+          };
+        }),
+        fieldPost
+      );
+    } else {
+      completions = [];
+    }
+
+    if (completions.length > 0) {
+      completionIndex = 0;
+    } else {
+      completionIndex = null;
+    }
+  }
+
   function handleBlur() {
     handleCursor();
+    completionIndex = null;
     focused = false;
   }
 
   function handleKeyDown(e) {
+    // Tab or enter with completions
+    if (e.key == "Tab" || e.which == 13 || e.keyCode == 13) {
+      if (autocomplete != "") {
+        triggerCompletion({ feed: autocomplete });
+        e.preventDefault();
+        return;
+      }
+
+      if (selectedCompletion != null) {
+        triggerCompletion(
+          selectedCompletion,
+          fieldPost != null ? fieldPost.length : 0
+        );
+        e.preventDefault();
+        return;
+      }
+    }
+
+    if (e.key == "Escape") {
+      completions = [];
+      completionIndex = null;
+    }
+
     if (e.which == 13 || e.keyCode == 13) {
       // Search on enter
       emit.search();
@@ -74,14 +316,26 @@
     handleCursor();
 
     // Prevent moving cursor to beginning/end
-    if (completions.length > 0)
-      if (completions.length > 0) {
+    if (processedCompletions.count > 0)
+      if (processedCompletions.count > 0) {
         if (e.key == "ArrowUp") {
           e.preventDefault();
-          if (completionIndex > 0) completionIndex--;
+          if (completionIndex == null) {
+            completionIndex = processedCompletions.count - 1;
+          } else if (completionIndex > 0) {
+            completionIndex--;
+          } else {
+            completionIndex = null;
+          }
         } else if (e.key == "ArrowDown") {
           e.preventDefault();
-          if (completionIndex < completions.length - 1) completionIndex++;
+          if (completionIndex == null) {
+            completionIndex = 0;
+          } else if (completionIndex < processedCompletions.count - 1) {
+            completionIndex++;
+          } else {
+            completionIndex = null;
+          }
         }
       }
   }
@@ -90,7 +344,56 @@
     handleCursor();
   }
 
-  $: highlights = highlight(value);
+  function fieldValid(text) {
+    const fieldMatch = text.match(/^[^a-z]*([a-z]+):(.*)$/);
+    if (fieldMatch == null) return { valid: false };
+    const field = fieldMatch[1];
+    const value = fieldMatch[2];
+    const id = extractSlugId(value);
+
+    if (field == "project") {
+      if (id == null) return { valid: false };
+      for (let i = 0; i < projects.projects.length; i++) {
+        const project = projects.projects[i];
+        if (project.id == id)
+          return { valid: true, transform: `projects:${id}` };
+      }
+      return { valid: false };
+    } else if (field == "user") {
+      if (id == null) return { valid: false };
+      for (let i = 0; i < orgsAndUsers.allUsers.length; i++) {
+        const user = orgsAndUsers.allUsers[i];
+        if (user.id == id) return { valid: true, transform: `user:${id}` };
+      }
+      return { valid: false };
+    } else if (field == "organization") {
+      if (id == null) return { valid: false };
+      for (let i = 0; i < orgsAndUsers.organizations.length; i++) {
+        const org = orgsAndUsers.organizations[i];
+        if (org.id == id)
+          return { valid: true, transform: `organization:${id}` };
+      }
+      return { valid: false };
+    } else {
+      return { valid: true };
+    }
+  }
+
+  function ensureValidity(highlights) {
+    for (let i = 0; i < highlights.length; i++) {
+      const highlight = highlights[i];
+      if (highlight.type == "field") {
+        highlights[i] = { ...fieldValid(highlight.text), ...highlight };
+      }
+    }
+    return highlights;
+  }
+
+  $: highlights = ensureValidity(highlight(value), $projects);
+  export let transformedQuery;
+  $: transformedQuery = highlights
+    .map(x => (x.transform != null ? x.transform : x.text))
+    .join("");
 </script>
 
 <style lang="scss">
@@ -126,8 +429,18 @@
       background: white;
       border: solid 1px $viewerDarkGray;
 
-      & + .mirror .autocomplete {
-        display: inline-block;
+      & + .mirror {
+        .autocomplete {
+          display: inline;
+        }
+
+        > .field > :global(span) {
+          background: rgba(0, 0, 0, 0.03);
+        }
+      }
+
+      & ~ .tagbank {
+        display: block;
       }
     }
   }
@@ -154,6 +467,8 @@
     position: absolute;
     top: 0;
     left: 0;
+    overflow: hidden;
+    height: calc(100% - 10px);
     pointer-events: none;
     color: black;
     -webkit-text-fill-color: black;
@@ -163,53 +478,86 @@
 
     > span {
       &.autocomplete {
-        padding-left: 2px;
-        color: rgba(0, 0, 0, 0.33);
+        $autocompleteColor: rgba(0, 0, 0, 0.33);
+
+        color: $autocompleteColor;
+        -webkit-text-fill-color: $autocompleteColor;
         display: none;
       }
 
-      &.field {
-        > span {
-          border-radius: $radius;
-          background: rgba(blue, 0.02);
-          box-shadow: 0 0 0 1px rgba(black, 0.12);
-        }
-      }
-
-      > span {
+      > :global(span) {
         position: relative;
         font-size: $fontSize;
         word-spacing: $wordSpacing;
+
+        :global(b) {
+          font-weight: normal;
+        }
+      }
+
+      &.field {
+        position: relative;
+
+        > :global(span) {
+          $fieldColor: rgba(0, 0, 0, 0.8);
+
+          border-radius: $radius;
+          background: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.19);
+          color: $fieldColor;
+          -webkit-text-fill-color: $fieldColor;
+
+          :global(b) {
+            $keyColor: #5a00ff;
+            color: $keyColor;
+            -webkit-text-fill-color: $keyColor;
+          }
+        }
       }
     }
   }
 
   .tagbank {
-    padding: 25px 0;
-    border-bottom: solid 1px gainsboro;
-
-    h1 {
-      font-size: 18px;
-      margin-bottom: 20px;
-
-      .small {
-        font-size: 14px;
-        color: $gray;
-        font-weight: normal;
-        margin-left: 10px;
-      }
-    }
+    display: none;
+    position: absolute;
+    background: white;
+    padding: 10px 0 5px 0;
+    z-index: 1;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+    border-radius: $radius;
+    margin-top: -4px;
 
     .completions {
-      color: $gray;
+      color: black;
       font-size: 16px;
       max-width: 450px;
+      user-select: none;
 
       .completion {
-        padding: 5px;
+        padding: 5px 15px;
+
+        $activeColor: rgba(66, 148, 240, 0.15);
+
+        &.groupstart {
+          text-transform: uppercase;
+          font-weight: bold;
+          color: $gray;
+          font-size: 11px;
+        }
+
+        .negative {
+          color: $gray;
+        }
+
+        .info {
+          color: $gray;
+          font-size: 12px;
+          margin-top: 2px;
+          margin-bottom: 2px;
+        }
 
         &.active {
-          background: rgba(66, 148, 240, 0.15);
+          background: $activeColor;
         }
       }
     }
@@ -224,12 +572,14 @@
 <div class="search">
   {@html searchIconSvg}
   <textarea
-    use:textAreaResize={0}
     bind:this={input}
     bind:value
     placeholder="Search"
+    use:textAreaResize={0}
+    spellcheck="false"
     on:keydown={handleKeyDown}
     on:keyup={handleKeyUp}
+    on:input={handleCursor}
     on:click={handleCursor}
     on:touchend={handleCursor}
     on:focus={handleCursor}
@@ -237,15 +587,20 @@
   <div class="mirror" bind:this={mirror}>
     {#each highlights as highlight}
       {#if highlight.type == 'field'}
-        <span class="field">
-          <span>{highlight.text}</span>
+        <span class:field={highlight.valid}>
+          <NoWhitespace>
+            <b>{highlight.field}</b>
+            <span>{highlight.value}</span>
+          </NoWhitespace>
         </span>
       {:else}
         {#each highlight.text.split(/( )/g) as rawText}
           <!-- Split raw text by space to avoid line-break issues -->
-          <span>
-            <span>{rawText}</span>
-          </span>
+          {#if rawText != ''}
+            <span>
+              <span>{rawText}</span>
+            </span>
+          {/if}
         {/each}
       {/if}
     {/each}
@@ -255,35 +610,38 @@
       </span>
     {/if}
   </div>
-</div>
-<div class="tagbank">
-  <h1>
-    Filter by projects:
-    <span class="small">Keep typing to filter this list.</span>
-  </h1>
-  <div class="completions">
-    {#each completions as completion, i}
-      <div class="completion" class:active={completionIndex == i}>
-        {completion}
-      </div>
-    {/each}
+  <div class="tagbank" style={completionX}>
+    <div class="completions">
+      {#each processedCompletions.completions as completion}
+        <div
+          class="completion"
+          class:active={completionIndex != null && completionIndex == completion.index}
+          on:mouseover={() => {
+            if (completion.index != null) completionIndex = completion.index;
+          }}
+          on:mouseout={() => {
+            if (completion.index != null) completionIndex = null;
+          }}
+          on:mousedown|preventDefault={() => triggerCompletion(completion, fieldPost != null ? fieldPost.length : 0)}
+          class:groupstart={completion.type == 'groupstart'}>
+          <div
+            class:negative={completion.score != null && completion.score < 0}>
+            <div>
+              <!-- Highlight completion letters -->
+              {#each completion.text as letter, i}
+                {#if completion.highlightLetters != null && completion.highlightLetters.includes(i)}
+                  <b>{letter}</b>
+                {:else}
+                  <span>{letter}</span>
+                {/if}
+              {/each}
+            </div>
+          </div>
+          {#if completion.info != null}
+            <div class="info">{completion.info}</div>
+          {/if}
+        </div>
+      {/each}
+    </div>
   </div>
-  <div>All users:</div>
-  <ul>
-    {#each $orgsAndUsers.allUsers as user}
-      <li>{JSON.stringify(user)}</li>
-    {/each}
-  </ul>
-  <div>All orgs:</div>
-  <ul>
-    {#each $orgsAndUsers.organizations as org}
-      <li>{JSON.stringify(org)}</li>
-    {/each}
-  </ul>
-  <div>All projects:</div>
-  <ul>
-    {#each $projects.projects as project}
-      <li>{project.id} - {project.title} - {project.description}</li>
-    {/each}
-  </ul>
 </div>

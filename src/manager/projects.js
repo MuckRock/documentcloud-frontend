@@ -31,12 +31,8 @@ export const projects = new Svue({
   watch: {
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (
-        route != null &&
-        route.name == "app" &&
-        route.name != previousRouteName
-      ) {
-        initProjects();
+      if (route != null && route.name == "app") {
+        if (route.name != previousRouteName) initProjects();
       } else {
         this.projects = [];
       }

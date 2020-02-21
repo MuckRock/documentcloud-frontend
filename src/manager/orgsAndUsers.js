@@ -19,12 +19,8 @@ export const orgsAndUsers = new Svue({
     // Don't re-request across searches within the app
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (
-        route != null &&
-        route.name == "app" &&
-        route.name != previousRouteName
-      ) {
-        initOrgsAndUsers();
+      if (route != null && route.name == "app") {
+        if (route.name != previousRouteName) initOrgsAndUsers();
       } else {
         this.organizations = [];
         this.users = [];
@@ -40,9 +36,11 @@ export const orgsAndUsers = new Svue({
 });
 
 async function initOrgsAndUsers() {
-  // Change to individual false
-  orgsAndUsers.organizations = await getOrganizations(true);
+  // Get non-individual organizations
+  orgsAndUsers.organizations = await getOrganizations(false);
 
   const orgIds = orgsAndUsers.organizations.map(proj => proj.id);
   orgsAndUsers.organizationUsers = await getUsers({ orgIds });
+  console.log(orgsAndUsers.allUsers);
+  console.log(orgsAndUsers.organizations);
 }

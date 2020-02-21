@@ -6,9 +6,10 @@
   import { router } from "@/router/router";
 
   let search = "";
+  let transformedQuery;
 
   function submitSearch() {
-    handleSearch(search);
+    handleSearch(search, transformedQuery);
   }
 
   onMount(() => {
@@ -16,9 +17,11 @@
       // Set query from URL if applicable
       const route = router.resolvedRoute;
       if (route != null && route.name == "app") {
-        if (route.props.q != null) {
-          let query = route.props.q.trim();
-          if (query.length > 0) search = query;
+        // Try to fill in display query first, then regular query if not present
+        if (route.props.dq != null && route.props.dq.length > 0) {
+          search = route.props.dq;
+        } else if (route.props.q != null && route.props.q.length > 0) {
+          search = route.props.q;
         } else {
           search = "";
         }
@@ -34,5 +37,8 @@
 </style>
 
 <div class="searchcontainer">
-  <SearchInput bind:value={search} on:search={submitSearch} />
+  <SearchInput
+    bind:value={search}
+    bind:transformedQuery
+    on:search={submitSearch} />
 </div>
