@@ -1,5 +1,3 @@
-import { encode, decode } from "@/util/baseConversion";
-
 /**
  * Appropriately pluralizes a word based on the quantity.
  * @param {number} value The number of items
@@ -63,7 +61,7 @@ export function slugify(str, id = null, maxLength = 25) {
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
-  if (id != null) return `${slug}-${encode(id)}`;
+  if (id != null) return `${slug}-${id}`;
   return slug;
 }
 
@@ -72,5 +70,5 @@ export function extractSlugId(str) {
   if (!/^[a-z0-9-]+$/.test(str)) return null;
   const parts = str.split("-");
   if (parts.length == 0) return null;
-  return decode(parts[parts.length - 1]);
+  return parts[parts.length - 1];
 }
