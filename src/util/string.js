@@ -1,3 +1,5 @@
+import { encode, decode } from "@/util/baseConversion";
+
 /**
  * Appropriately pluralizes a word based on the quantity.
  * @param {number} value The number of items
@@ -15,7 +17,7 @@ export function handlePlural(value, str, allowZero = false) {
  * @param {string} string The base string name of a single item
  */
 export function simplePlural(value, string) {
-  return string + (value != 1 ? 's' : '');
+  return string + (value != 1 ? "s" : "");
 }
 
 /**
@@ -25,7 +27,7 @@ export function simplePlural(value, string) {
  * @param {string} string The base string name of a single item
  */
 export function nameSingularNumberPlural(value, string) {
-  return `${(value == 1 ? '' : `${value} `)}${simplePlural(value, string)}`;
+  return `${value == 1 ? "" : `${value} `}${simplePlural(value, string)}`;
 }
 
 /**
@@ -53,4 +55,22 @@ export function formatBytes(bytes, decimals = 0) {
 export function stripExtension(filename) {
   const parts = filename.split(".");
   return parts.slice(0, parts.length - 1).join(".");
+}
+
+export function slugify(str, id = null, maxLength = 25) {
+  const slug = str
+    .substring(0, maxLength)
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+  if (id != null) return `${slug}-${encode(id)}`;
+  return slug;
+}
+
+export function extractSlugId(str) {
+  // Must be valid slug
+  if (!/^[a-z0-9-]+$/.test(str)) return null;
+  const parts = str.split("-");
+  if (parts.length == 0) return null;
+  return decode(parts[parts.length - 1]);
 }
