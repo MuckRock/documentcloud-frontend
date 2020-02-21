@@ -17,10 +17,14 @@
       box-sizing: border-box;
     }
 
-    &.secondary > :global(*) {
-      border: dashed 2px $secondary;
-      background: #e6e6e6;
-      height: 65px;
+    &.secondary {
+      background: none;
+
+      > :global(*) {
+        border: dashed 2px $secondary;
+        background: #e6e6e6;
+        height: 65px;
+      }
     }
 
     :global(.dragging) {

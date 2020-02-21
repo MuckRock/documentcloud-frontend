@@ -9,11 +9,15 @@ import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
 import { grabAllPages } from "@/util/paginate";
 import { Results } from "@/structure/results";
+import { batchDelay } from "@/util/batchDelay";
 import axios from "axios";
 
 import { Document } from "@/structure/document";
 
 const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
+
+const UPLOAD_BATCH = process.env.UPLOAD_BATCH;
+const UPLOAD_BATCH_DELAY = process.env.UPLOAD_BATCH_DELAY;
 
 // Statuses
 export const PENDING = 2;
@@ -198,12 +202,21 @@ export async function uploadDocuments(
   // Allocate documents with the appropriate titles.
   let newDocuments;
   try {
-    const { data } = await session.post(
-      apiUrl("documents/"),
-      docs.map(doc => ({ title: doc.name }))
+    const data = await batchDelay(
+      docs,
+      UPLOAD_BATCH,
+      UPLOAD_BATCH_DELAY,
+      async subDocs => {
+        const { data } = await session.post(
+          apiUrl("documents/"),
+          subDocs.map(doc => ({ title: doc.name }))
+        );
+        return data;
+      }
     );
     newDocuments = data;
   } catch (e) {
+    console.error(e);
     return errorFn("failed to create the document", e);
   }
 
@@ -228,16 +241,24 @@ export async function uploadDocuments(
       })
     );
   } catch (e) {
+    console.error(e);
     return errorFn("failed to upload the document", e);
   }
 
   // Once all the files have uploaded, begin processing.
   const ids = newDocuments.map(doc => doc.id);
   try {
-    await session.post(apiUrl(`documents/process/`), {
-      ids
-    });
+    await batchDelay(
+      ids,
+      UPLOAD_BATCH,
+      UPLOAD_BATCH_DELAY,
+      async subIds =>
+        await session.post(apiUrl(`documents/process/`), {
+          ids: subIds
+        })
+    );
   } catch (e) {
+    console.error(e);
     return errorFn("failed to start processing the document", e);
   }
 

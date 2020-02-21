@@ -28,6 +28,9 @@
   let uploadAdditional = false;
   let errorMessage = null;
 
+  const LIMIT = process.env.UPLOAD_LIMIT;
+  let tooManyFiles = false;
+
   $: displayFiles = uploadMode == false ? files : uploadFiles;
 
   let numUploaded;
@@ -52,16 +55,22 @@
 
   function handleFiles({ detail: newFiles }) {
     for (let i = 0; i < newFiles.length; i++) {
-      files.push({
-        index: id++,
-        file: newFiles[i]
-      });
+      if (files.length < LIMIT) {
+        files.push({
+          index: id++,
+          file: newFiles[i]
+        });
+        tooManyFiles = false;
+      } else {
+        tooManyFiles = true;
+      }
     }
     files = files;
   }
 
   function removeFile(index) {
     files = files.filter(file => file.index != index);
+    tooManyFiles = false;
   }
 
   function upload() {
@@ -128,8 +137,15 @@
     margin: 2em 0 2.5em 0;
   }
 
-  p.subtitle {
-    color: $gray;
+  p {
+    &.subtitle {
+      color: $gray;
+    }
+
+    &.danger {
+      color: $caution;
+      font-size: 13px;
+    }
   }
 </style>
 
@@ -145,8 +161,12 @@
           </p>
         {:else}
           <p>
+            <!-- TODO: use pluralization -->
             {files.length} file{files.length == 1 ? '' : 's'} ready to upload
           </p>
+          {#if tooManyFiles}
+            <p class="danger">You can only upload {LIMIT} files at once.</p>
+          {/if}
         {/if}
         <div class="actions">
           {#if files.length > 0}

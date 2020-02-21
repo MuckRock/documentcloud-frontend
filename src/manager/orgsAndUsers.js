@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { router } from "@/router/router";
-import { getOrganizations, getUsers } from "@/api/orgAndUser";
+import { getOrganizations, getUsers, getMe } from "@/api/orgAndUser";
 import { projects } from "./projects";
 import { uniquify } from "@/util/array";
 
@@ -9,6 +9,7 @@ let previousRouteName = null;
 export const orgsAndUsers = new Svue({
   data() {
     return {
+      me: null,
       organizations: [],
       organizationUsers: [],
       projects,
@@ -22,6 +23,7 @@ export const orgsAndUsers = new Svue({
       if (route != null && route.name == "app") {
         if (route.name != previousRouteName) initOrgsAndUsers();
       } else {
+        this.me = null;
         this.organizations = [];
         this.users = [];
       }
@@ -35,7 +37,14 @@ export const orgsAndUsers = new Svue({
   }
 });
 
+async function getSelfUser() {
+  orgsAndUsers.me = await getMe();
+  console.log("ME", orgsAndUsers.me);
+}
+
 async function initOrgsAndUsers() {
+  getSelfUser();
+
   // Get non-individual organizations
   orgsAndUsers.organizations = await getOrganizations(false);
 

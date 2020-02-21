@@ -1,7 +1,15 @@
+import session from "./session";
 import { USER_EXPAND, ORG_EXPAND } from "./common";
 import { queryBuilder } from "@/util/url";
 import { grabAllPages } from "@/util/paginate";
 import { apiUrl } from "./base";
+
+export async function getMe(expand = USER_EXPAND) {
+  const { data } = await session.get(
+    queryBuilder(apiUrl(`users/me/`), { expand })
+  );
+  return data;
+}
 
 export async function getOrganizations(
   individual = false,
