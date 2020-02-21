@@ -457,7 +457,7 @@
     border: solid 1px transparent;
     width: 100%;
     height: 100%;
-    overflow: none;
+    overflow: hidden;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-spacing: $wordSpacing;
