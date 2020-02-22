@@ -1,7 +1,9 @@
 <script>
   import { routes, router, getPath, pushUrl } from "@/router/router";
+  import { urlsEqual } from "@/util/url";
   import { Svue } from "svue";
-  export let to;
+  export let to = null;
+  export let toUrl = null;
   export let params = null;
   export let newPage = false;
   export let forceClick = false;
@@ -12,11 +14,15 @@
     },
     computed: {
       toPath(router) {
+        if (toUrl != null) return toUrl;
         if (router.routes == null) return null;
         return getPath(to, params);
       },
       active(router) {
         if (router.routes == null) return false;
+        if (toUrl != null) {
+          return urlsEqual(router.currentUrl, toUrl);
+        }
         return router.resolvedRoute.name == to;
       }
     }

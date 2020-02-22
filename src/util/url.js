@@ -27,6 +27,33 @@ export function getQueryStringParams(url) {
   return getQueryStringParamsFromQuery(query);
 }
 
+export function urlsEqual(url1, url2) {
+  const [base1, query1] = urlParts(url1);
+  const [base2, query2] = urlParts(url2);
+
+  // Base URLs must match
+  if (base1 != base2) return false;
+
+  const qp1 = getQueryStringParamsFromQuery(query1);
+  const qp2 = getQueryStringParamsFromQuery(query2);
+
+  const keys1 = Object.keys(qp1);
+  const keys2 = Object.keys(qp2);
+
+  if (keys1.length != keys2.length) return false;
+
+  keys1.sort();
+  keys2.sort();
+
+  for (let i = 0; i < keys1.length; i++) {
+    const k1 = keys1[i];
+    const k2 = keys2[i];
+    if (k1 != k2) return false;
+    if (qp1[k1] != qp2[k2]) return false;
+  }
+  return true;
+}
+
 export function currentUrl() {
   return window.location.pathname + window.location.search;
 }

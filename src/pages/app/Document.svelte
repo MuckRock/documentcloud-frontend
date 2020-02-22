@@ -10,6 +10,7 @@
   import { layout, unselectDocument, openAccess } from "@/manager/layout";
   import { removeDocument, selectDocument } from "@/manager/documents";
   import { projects } from "@/manager/projects";
+  import { projectUrl } from "@/search/search";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
@@ -236,7 +237,11 @@
           {#if document.projectIds != null}
             {#each document.projectIds as id}
               {#if $projects.projectsById[id] != null}
-                <Button plain={true}>{$projects.projectsById[id].title}</Button>
+                <Link toUrl={projectUrl($projects.projectsById[id])}>
+                  <Button plain={true}>
+                    {$projects.projectsById[id].title}
+                  </Button>
+                </Link>
               {/if}
             {/each}
           {/if}

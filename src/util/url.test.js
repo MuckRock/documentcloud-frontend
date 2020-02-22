@@ -1,4 +1,4 @@
-import { queryBuilder, urlParts, getQueryStringParams } from "./url";
+import { queryBuilder, urlParts, getQueryStringParams, urlsEqual } from "./url";
 
 test("query builder simple", () => {
   expect(queryBuilder("app/", { hi: true })).toBe("app/?hi=true");
@@ -32,4 +32,18 @@ test("extract query params", () => {
     hi: "false",
     page: "2"
   });
+});
+
+test("urls equal", () => {
+  expect(urlsEqual("app/", "app2/")).toBeFalsy();
+  expect(urlsEqual("app/", "app/")).toBeTruthy();
+  expect(urlsEqual("app/?q=1", "app/?q=1")).toBeTruthy();
+  expect(urlsEqual("app/?q=1", "app/?q=2")).toBeFalsy();
+  expect(urlsEqual("app/?q=1", "app/?")).toBeFalsy();
+  expect(urlsEqual("app/?q=1", "app/")).toBeFalsy();
+  expect(urlsEqual("app/?q=1&dq=2", "app/?q=1&dq=3")).toBeFalsy();
+  expect(urlsEqual("app/?q=1&dq=2", "app/?q=1&dq=2")).toBeTruthy();
+  expect(urlsEqual("app/?dq=2&q=1", "app/?q=1&dq=2")).toBeTruthy();
+  expect(urlsEqual("app/?dq=2&q=1", "app/?q=1&dq=2&x=1")).toBeFalsy();
+  expect(urlsEqual("app/?x=1&dq=2&q=1", "app/?q=1&dq=2&x=1")).toBeTruthy();
 });

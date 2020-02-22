@@ -9,7 +9,7 @@
   :global(.dclogo) {
     width: 166px;
     height: 29px;
-    padding: 41px 25px 80px 25px;
+    padding: 41px 25px 12px 25px;
     user-select: none;
   }
 
