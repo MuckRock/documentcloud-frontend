@@ -11,7 +11,6 @@
   import ProcessingBar from "./ProcessingBar";
   import Document from "./Document";
   import NoDocuments from "./NoDocuments";
-  import Paginator from "./Paginator";
 
   // Store properties
   import { layout } from "@/manager/layout";
@@ -119,7 +118,6 @@
             <Document {document} />
           </div>
         {/each}
-        <Paginator />
         {#if $documents.documents.length == 0 && !$layout.loading}
           <NoDocuments />
         {/if}

@@ -2,6 +2,7 @@
   import Checkbox from "@/common/Checkbox";
   import Tooltip from "@/common/Tooltip";
   import Dropdown from "@/common/Dropdown";
+  import Paginator from "./Paginator";
 
   // Menus
   import EditMenu from "./menus/EditMenu";
@@ -10,7 +11,7 @@
   // Stores
   import { layout } from "@/manager/layout";
   import { manager, selectAll } from "@/manager/manager";
-  import { unselectAll } from "@/manager/documents";
+  import { documents, unselectAll } from "@/manager/documents";
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();
@@ -21,6 +22,10 @@
   .barcontainer {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     padding: 14px 0;
+
+    .nowrap {
+      white-space: nowrap;
+    }
 
     .bar {
       display: table-row;
@@ -64,42 +69,46 @@
   {#if !$layout.loading}
     <div class="bar">
       <span class="action check scaledown">
-        <Checkbox
-          on:check={handleSelectAll}
-          on:uncheck={unselectAll}
-          indeterminate={$manager.someSelected}
-          checked={$layout.hasSelection} />
+        {#if $documents.documents.length > 0}
+          <Checkbox
+            on:check={handleSelectAll}
+            on:uncheck={unselectAll}
+            indeterminate={$manager.someSelected}
+            checked={$layout.hasSelection} />
+        {/if}
       </span>
 
       {#if $layout.hasSelection}
         <Dropdown table={true} fixed={true}>
           <span class="action" slot="title">
-            Edit
-            <span class="dropper">▼</span>
+            <span class="nowrap">
+              Edit
+              <span class="dropper">▼</span>
+            </span>
+            <EditMenu />
           </span>
-          <EditMenu />
         </Dropdown>
       {:else}
         <span class="action disabled shortpad">
           <Tooltip caption="Select some documents to reveal edit actions">
-            Edit
-            <span class="dropper">▼</span>
+            <span class="nowrap">
+              Edit
+              <span class="dropper">▼</span>
+            </span>
           </Tooltip>
         </span>
       {/if}
       <Dropdown table={true} fixed={true}>
         <span class="action" slot="title">
-          Projects
-          <span class="dropper">▼</span>
+          <span class="nowrap">
+            Projects
+            <span class="dropper">▼</span>
+          </span>
         </span>
         <ProjectsMenu />
       </Dropdown>
-      <span class="action disabled">
-        <Tooltip caption="Not implemented yet">Analyze</Tooltip>
-      </span>
-      <span class="action disabled">
-        <Tooltip caption="Not implemented yet">Publish</Tooltip>
-      </span>
+
+      <Paginator />
     </div>
   {/if}
 </div>
