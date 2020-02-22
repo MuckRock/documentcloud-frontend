@@ -31,13 +31,13 @@ export async function getMe(expand = DEFAULT_EXPAND) {
 }
 
 export async function getDocuments(
-  status = null,
+  extraParams = {},
   ordering = DEFAULT_ORDERING,
   page = 0,
   expand = DEFAULT_EXPAND
 ) {
   // Return documents with the specified parameters
-  const params = { ordering, expand, status, page: page + 1 };
+  const params = { ...extraParams, ordering, expand, page: page + 1 };
   // Inject remaining if grabbing pending docs
   if (status == PENDING) params["remaining"] = true;
   const url = apiUrl(queryBuilder("documents/", params));

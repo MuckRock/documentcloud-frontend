@@ -1,5 +1,6 @@
 <script>
   import { search } from "@/search/search";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
 
   // SVG assets
   import documentSilhouetteSvg from "@/assets/document_silhouette.svg";
@@ -45,7 +46,7 @@
 </style>
 
 <div class="container" class:warn={$search.isSearch}>
-  {#if $search.isSearch}
+  {#if $orgsAndUsers.me == null || $search.oneUserSearch != $orgsAndUsers.me}
     <h2>No search results</h2>
     <div class="img">
       {@html emptyResultsSvg}

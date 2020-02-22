@@ -10,8 +10,8 @@ export const search = new Svue({
   data() {
     return {
       router,
-      results: null,
-      isSearch: false
+      params: null,
+      results: null
     };
   },
   watch: {
@@ -36,11 +36,10 @@ export const search = new Svue({
 });
 
 async function initSearch(params) {
-  params = new SearchParams(params);
+  search.params = new SearchParams(params);
 
   // Get results
-  search.isSearch = params.isSearch;
-  const results = await wrapSeparate(layout, search, params.getMethod);
+  const results = await wrapSeparate(layout, search, search.params.getMethod);
   search.results = results;
 }
 

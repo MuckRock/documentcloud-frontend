@@ -2,7 +2,7 @@
   import Button from "@/common/Button";
   import NoWhitespace from "@/common/NoWhitespace";
   import emitter from "@/emit";
-  import { highlight } from "@/search/query";
+  import { highlight } from "@/search/parse";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
   import { textAreaResize } from "@/util/textareaResize";
@@ -33,7 +33,7 @@
 
   $: {
     // Dispatch input event to handle textarea resize on load
-    forceInput();
+    forceInput(value);
   }
 
   let selectionStart = null;
@@ -250,7 +250,7 @@
         const isMe = orgsAndUsers.me != null && user.id == orgsAndUsers.me.id;
         const mappedUser = {
           type: "field",
-          text: `${user.name}${isMe ? " (me)" : ""}`,
+          text: `${user.name}${isMe ? " (you)" : ""}`,
           feed: slugify(user.name, user.id)
         };
         if (isMe) {
@@ -271,6 +271,68 @@
             feed: slugify(org.name, org.id)
           };
         }),
+        fieldPost
+      );
+    } else if (fieldPre == "access") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        [
+          {
+            type: "field",
+            text: "public",
+            info: "Publicly accessible documents",
+            feed: "public"
+          },
+          {
+            type: "field",
+            text: "private",
+            info: "Privately accessible documents",
+            feed: "private"
+          },
+          {
+            type: "field",
+            text: "organization",
+            info: "Accessible at the organization level",
+            feed: "organization"
+          }
+        ],
+        fieldPost
+      );
+    } else if (fieldPre == "status") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        [
+          {
+            type: "field",
+            text: "success",
+            info: "Documents ready for viewing and publishing",
+            feed: "success"
+          },
+          {
+            type: "field",
+            text: "readable",
+            info: "Documents ready for reading but still processing text",
+            feed: "readable"
+          },
+          {
+            type: "field",
+            text: "pending",
+            info: "Documents currently processing",
+            feed: "pending"
+          },
+          {
+            type: "field",
+            text: "error",
+            info: "Documents with errors in preparation",
+            feed: "error"
+          },
+          {
+            type: "field",
+            text: "nofile",
+            info: "Documents that were not successfully uploaded",
+            feed: "nofile"
+          }
+        ],
         fieldPost
       );
     } else {
