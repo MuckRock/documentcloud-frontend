@@ -11,11 +11,13 @@
   import ProcessingBar from "./ProcessingBar";
   import Document from "./Document";
   import NoDocuments from "./NoDocuments";
-  import Paginator from "./Paginator";
 
   // Store properties
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
+  import { search } from "@/search/search";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { projects } from "@/manager/projects";
 
   // Animation
   import { flip } from "svelte/animate";
@@ -29,6 +31,60 @@
       preUploadFiles = [];
     }
     $layout.uploading = true;
+  }
+
+  let title = "Your Documents";
+
+  $: {
+    let newTitle = "Search Results";
+    if (
+      !$search.params.isSearch &&
+      $search.params.noStatus &&
+      $search.params.oneOrZeroAccesses
+    ) {
+      let access = $search.params.oneAccessSearch;
+      if (access == null) {
+        access = "";
+      } else {
+        access = `${access.charAt(0).toUpperCase() + access.substr(1)} `;
+      }
+
+      if ($search.params.oneUserSearch != null) {
+        // Show title based on a single user search
+        if (
+          $orgsAndUsers.me != null &&
+          $search.params.oneUserSearch == $orgsAndUsers.me.id
+        ) {
+          newTitle = `Your ${access}Documents`;
+        } else {
+          const users = $orgsAndUsers.allUsers.filter(
+            user => user.id == $search.params.oneUserSearch
+          );
+          if (users.length > 0) {
+            newTitle = `${users[0].name}’s ${access}Documents`;
+          }
+        }
+      } else if ($search.params.oneProjectSearch != null) {
+        // Show title based on a single project search
+        const projects = $projects.projects.filter(
+          project => project.id == $search.params.oneProjectSearch
+        );
+        if (projects.length > 0) {
+          newTitle = projects[0].title;
+        }
+      } else if ($search.params.oneOrgSearch != null) {
+        // Show title based on a single organization search
+        const organizations = $orgsAndUsers.organizations.filter(
+          org => org.id == $search.params.oneOrgSearch
+        );
+        if (organizations.length > 0) {
+          newTitle = `${organizations[0].name}’s ${access}Documents`;
+        }
+      } else if ($search.params.isAllSearch) {
+        newTitle = `All ${access}Documents`;
+      }
+    }
+    title = newTitle;
   }
 </script>
 
@@ -104,7 +160,7 @@
       <SearchBar />
 
       <div>
-        <Title>Your documents</Title>
+        <Title>{title}</Title>
         <Button on:click={showUploadModal}>+ Upload</Button>
       </div>
       <ActionBar />
@@ -119,7 +175,6 @@
             <Document {document} />
           </div>
         {/each}
-        <Paginator />
         {#if $documents.documents.length == 0 && !$layout.loading}
           <NoDocuments />
         {/if}

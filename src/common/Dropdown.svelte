@@ -1,5 +1,6 @@
 <script>
   import { onMount, tick } from "svelte";
+  import { router } from "@/router/router";
 
   export let horizPadding = 5;
   export let vertPadding = 10;
@@ -30,12 +31,14 @@
   }
 
   async function computeSizes() {
+    if (title == null || titleBg == null || menu == null) return;
     titleWidth = title.getBoundingClientRect().width;
 
     menuLeft = 0;
     menuTop = 0;
 
     await tick();
+    if (title == null || titleBg == null || menu == null) return;
 
     // Set menu dimensions relative to title background
     const titleBgRect = titleBg.getBoundingClientRect();
@@ -53,6 +56,9 @@
 
   onMount(async () => {
     await computeSizes();
+    router.writables.resolvedRoute.subscribe(async () => {
+      await computeSizes();
+    });
   });
 </script>
 

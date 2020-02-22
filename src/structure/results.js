@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { queryBuilder } from "@/util/url";
 
-const pageRe = /([&\?]page=)([0-9]+)$/;
+const pageRe = /([&\?]page=)([0-9]+)/;
 
 export class Results extends Svue {
   constructor(url, rawResults, structure = {}) {

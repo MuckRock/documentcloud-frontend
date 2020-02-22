@@ -1,4 +1,4 @@
-import { parse, highlight } from "./query";
+import { parse, highlight } from "./parse";
 
 const IMPLICIT = "<implicit>";
 
@@ -75,7 +75,9 @@ test("gets highlights", () => {
     },
     {
       type: "field",
-      text: "title:true"
+      text: "title:true",
+      field: "title:",
+      value: "true"
     },
     {
       type: "raw",
@@ -88,21 +90,27 @@ test("highlight parens", () => {
   expect(highlight("title:(a AND b)")).toEqual([
     {
       type: "field",
-      text: "title:(a AND b)"
+      text: "title:(a AND b)",
+      field: "title:",
+      value: "(a AND b)"
     }
   ]);
 
   expect(highlight("title:(a AND b )")).toEqual([
     {
       type: "field",
-      text: "title:(a AND b )"
+      text: "title:(a AND b )",
+      field: "title:",
+      value: "(a AND b )"
     }
   ]);
 
   expect(highlight("title:(a AND b) other")).toEqual([
     {
       type: "field",
-      text: "title:(a AND b)"
+      text: "title:(a AND b)",
+      field: "title:",
+      value: "(a AND b)"
     },
     {
       type: "raw",

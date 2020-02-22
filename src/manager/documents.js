@@ -289,7 +289,7 @@ export async function initDocuments() {
   const results = await wrapSeparate(
     null,
     search,
-    () => getDocuments(PENDING) // disregard pagination of processing docs (only show first 25)
+    () => getDocuments({ status: PENDING }) // disregard pagination of processing docs (only show first 25)
   );
   documents.processingDocumentsRaw = results.results;
 }
