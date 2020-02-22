@@ -43,9 +43,7 @@ export class SearchParams extends Svue {
         },
         parsedQuery(query) {
           if (query == null) return null;
-          const parsed = highlight(query);
-          console.log(parsed);
-          return parsed;
+          return highlight(query);
         },
         getDocumentParams(parsedQuery) {
           const params = {};

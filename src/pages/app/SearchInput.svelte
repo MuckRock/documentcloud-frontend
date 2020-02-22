@@ -203,8 +203,6 @@
       pos = end;
     }
 
-    console.log("FIELD POS", highlightIdx);
-
     if (
       highlightIdx == null ||
       highlightIdx < 0 ||

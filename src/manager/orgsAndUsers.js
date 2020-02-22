@@ -1,8 +1,9 @@
 import { Svue } from "svue";
-import { router } from "@/router/router";
+import { router, pushUrl } from "@/router/router";
 import { getOrganizations, getUsers, getMe } from "@/api/orgAndUser";
 import { projects } from "./projects";
 import { uniquify } from "@/util/array";
+import { userUrl } from "@/search/search";
 
 let previousRouteName = null;
 
@@ -39,7 +40,11 @@ export const orgsAndUsers = new Svue({
 
 async function getSelfUser() {
   orgsAndUsers.me = await getMe();
-  console.log("ME", orgsAndUsers.me);
+  const routeProps = router.resolvedRoute.props;
+  if (routeProps.q == null || routeProps.dq == null) {
+    // Redirect to get self user route if no search params are set
+    pushUrl(userUrl(orgsAndUsers.me));
+  }
 }
 
 async function initOrgsAndUsers() {
@@ -50,6 +55,4 @@ async function initOrgsAndUsers() {
 
   const orgIds = orgsAndUsers.organizations.map(proj => proj.id);
   orgsAndUsers.organizationUsers = await getUsers({ orgIds });
-  console.log(orgsAndUsers.allUsers);
-  console.log(orgsAndUsers.organizations);
 }
