@@ -89,6 +89,7 @@ export async function editProject(project, title, description) {
 }
 
 export async function addDocsToProject(project, documents) {
+  documents = documents.filter(doc => !doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
     await addDocumentsToProject(
@@ -108,12 +109,13 @@ export async function addDocsToProject(project, documents) {
         documents.length,
         "document",
         true
-      )} to project (${project.title}).`
+      )} to ${project.title}.`
     );
   }
 }
 
 export async function removeDocsFromProject(project, documents) {
+  documents = documents.filter(doc => doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
     await removeDocumentsFromProject(

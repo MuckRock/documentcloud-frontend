@@ -7,13 +7,17 @@
   $: unexpected = error.errorData == null;
 
   function extractErrorData(data) {
-    const items = [];
+    let items = [];
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
-        items.push({
-          key,
-          values: data[key]
-        });
+        if (/[0-9]+/.test(`${key}`)) {
+          items = items.concat(extractErrorData(data[key]));
+        } else {
+          items.push({
+            key,
+            values: data[key]
+          });
+        }
       }
     }
     return items;
@@ -76,7 +80,9 @@
       {/each}
     {/if}
     <div class="buttonpadded">
-      <Button on:click={emit.dismiss}>Close</Button>
+      <Button on:click={emit.dismiss}>
+        {#if unexpected}Close{:else}Dismiss{/if}
+      </Button>
     </div>
   </div>
 </div>

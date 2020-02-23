@@ -16,6 +16,8 @@ import { showConfirm } from "./confirmDialog";
 import { router } from "@/router/router";
 import { search, handleUpload, setDocuments } from "@/search/search";
 
+let lastSelected = null;
+
 export const documents = new Svue({
   data() {
     return {
@@ -27,6 +29,7 @@ export const documents = new Svue({
   watch: {
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
+      unselectAll();
       if (route != null && route.name == "app") {
         initDocuments();
       } else {
@@ -256,8 +259,6 @@ export async function handleNewDocuments(ids) {
   });
   handleUpload(remainingDocs);
 }
-
-let lastSelected = null;
 
 export function selectDocument(document, shiftKey = true) {
   layout.selectedMap = { ...layout.selectedMap, [document.id]: document };

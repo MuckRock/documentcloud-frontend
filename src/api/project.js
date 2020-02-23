@@ -43,10 +43,11 @@ export async function addDocumentsToProject(projectId, docIds) {
 
 export async function removeDocumentsFromProject(projectId, docIds) {
   await session.delete(
-    apiUrl(`projects/${projectId}/documents/`),
-    docIds.map(id => ({
-      document: id
-    }))
+    apiUrl(
+      `projects/${projectId}/documents/?document_id__in=${docIds
+        .map(x => `${x}`)
+        .join(",")}`
+    )
   );
 }
 
