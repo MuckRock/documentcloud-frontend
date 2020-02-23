@@ -11,6 +11,7 @@
   import DataDialog from "@/common/dialog/DataDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
+  import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -19,10 +20,13 @@
     hideAccess,
     hideData,
     hideProject,
-    hideCollaborators
+    hideCollaborators,
+    projectCollaboratorAccessOpen,
+    hideProjectCollaboratorAccess
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
+  import { nav } from "@/router/router";
 
   import emitter from "@/emit";
 
@@ -31,6 +35,7 @@
   });
 
   function refresh() {
+    nav("app");
     window.location.reload();
   }
 </script>
@@ -76,6 +81,10 @@
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.dataOpen}
     <Modal component={DataDialog} on:close={hideData} />
+  {:else if $layout.projectCollaboratorAccessOpen}
+    <Modal
+      component={ProjectAccessDialog}
+      on:close={hideProjectCollaboratorAccess} />
   {:else if $layout.projectCollaboratorsOpen}
     <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
   {:else if $layout.projectOpen}

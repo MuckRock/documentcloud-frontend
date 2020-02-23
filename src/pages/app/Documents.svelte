@@ -18,6 +18,7 @@
   import { search } from "@/search/search";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
+  import { titlecase } from "@/util/string";
 
   // Animation
   import { flip } from "svelte/animate";
@@ -46,7 +47,7 @@
       if (access == null) {
         access = "";
       } else {
-        access = `${access.charAt(0).toUpperCase() + access.substr(1)} `;
+        access = `${titlecase(access)} `;
       }
 
       if ($search.params.oneUserSearch != null) {

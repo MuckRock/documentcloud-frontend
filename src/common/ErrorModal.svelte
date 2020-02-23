@@ -7,5 +7,5 @@
 
 <Modal
   component={ErrorDialog}
-  error={$store.error}
+  properties={{ error: $store.error }}
   on:close={() => (store.error = null)} />

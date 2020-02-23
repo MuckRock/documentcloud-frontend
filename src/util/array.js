@@ -7,16 +7,17 @@ export function removeFromArray(array, elem) {
   return array;
 }
 
-export function uniquify(array, field = "id") {
+export function uniquify(array, fieldAccess = x => x.id) {
   // Remove duplicates
   let unique = {};
   const results = [];
   // Iterate backwards so most recent objects override past ones
   for (let i = array.length - 1; i >= 0; i--) {
     const obj = array[i];
-    if (unique[obj[field]] == null) {
+    const field = fieldAccess(obj);
+    if (unique[field] == null) {
       results.push(obj);
-      unique[obj[field]] = true;
+      unique[field] = true;
     }
   }
 

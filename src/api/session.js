@@ -12,6 +12,20 @@ const session = axios.create({
   }
 });
 
+session.interceptors.response.use(
+  response => {
+    // Keep response unchanged
+    return response;
+  },
+  error => {
+    // Do something with response error
+    if (error.response && error.response.data) {
+      return Promise.reject({ errorData: error.response.data });
+    }
+    return Promise.reject(error);
+  }
+);
+
 const CACHE_LIMIT = 50;
 
 export class SessionCache {

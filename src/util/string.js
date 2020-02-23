@@ -72,3 +72,7 @@ export function extractSlugId(str) {
   if (parts.length == 0) return null;
   return parts[parts.length - 1];
 }
+
+export function titlecase(str) {
+  return str.charAt(0).toUpperCase() + str.substr(1)
+}

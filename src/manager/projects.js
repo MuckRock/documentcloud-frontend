@@ -7,7 +7,9 @@ import {
   updateProject,
   deleteProject,
   getProjectUsers,
-  addUserToProject
+  addUserToProject,
+  updateUserAccess,
+  removeUser
 } from "@/api/project";
 import { getUsers } from "@/api/orgAndUser";
 import { router } from "@/router/router";
@@ -180,15 +182,29 @@ export async function removeProject(project) {
 }
 
 export async function getProjUsers(project) {
-  const users = await getProjectUsers(project.id);
+  const userAccesses = await getProjectUsers(project.id);
+  userAccesses.forEach(userAccess =>
+    project.addUser(userAccess.user, userAccess.access)
+  );
   // Add to known list of all users
-  addUsers(...users);
-  return users;
+  addUsers(...userAccesses.map(userAccess => userAccess.user));
+  return userAccesses;
 }
 
 export async function addUser(project, email, access) {
-  const user = await addUserToProject(project.id, email, access);
+  const userAccess = await addUserToProject(project.id, email, access);
+  project.addUser(userAccess.user, userAccess.access);
   // Add to known list of all users
-  addUsers(user);
-  return user;
+  addUsers(userAccess.user);
+  return userAccess;
+}
+
+export async function changeUserAccess(project, user, access) {
+  await updateUserAccess(project.id, user.id, access);
+  project.changeAccess(user, access);
+}
+
+export async function removeUserFromProject(project, user) {
+  await removeUser(project.id, user.id);
+  project.removeUser(user);
 }

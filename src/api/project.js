@@ -58,18 +58,41 @@ export async function getProjects(expand = DEFAULT_EXPAND) {
   return projects.map(project => new Project(project));
 }
 
-export async function getProjectUsers(projectId) {
-  const users = await grabAllPages(apiUrl(`projects/${projectId}/users/`));
+export async function getProjectUsers(projectId, expand = DEFAULT_EXPAND) {
+  const users = await grabAllPages(
+    apiUrl(queryBuilder(`projects/${projectId}/users/`, { expand }))
+  );
   return users;
 }
 
-export async function addUserToProject(projectId, email, access) {
-  await session.post(apiUrl(`projects/${projectId}/users/`), {
-    email,
+export async function addUserToProject(
+  projectId,
+  email,
+  access,
+  expand = DEFAULT_EXPAND
+) {
+  const { data: user } = await session.post(
+    apiUrl(`projects/${projectId}/users/`),
+    {
+      email,
+      access
+    }
+  );
+  // TODO: see if backend can get user expanded straight off the bat
+  const { data } = await session.get(
+    apiUrl(
+      queryBuilder(`projects/${projectId}/users/${user.user}/`, { expand })
+    )
+  );
+  return data;
+}
+
+export async function updateUserAccess(projectId, userId, access) {
+  await session.patch(apiUrl(`projects/${projectId}/users/${userId}/`), {
     access
   });
 }
 
-// export async function updateUserAccess(projectId, userId, access) {
-
-// }
+export async function removeUser(projectId, userId) {
+  await session.delete(apiUrl(`projects/${projectId}/users/${userId}/`));
+}

@@ -24,6 +24,7 @@ export const layout = new Svue({
       projectEdit: null,
       projectOpen: false,
       projectCollaboratorsOpen: false,
+      projectEditUser: null,
 
       // Data
       dataDocuments: [],
@@ -78,6 +79,9 @@ export const layout = new Svue({
         }
       }
       return access;
+    },
+    projectCollaboratorAccessOpen(projectEditUser) {
+      return projectEditUser != null;
     }
   }
 });
@@ -126,8 +130,21 @@ export function hideProject() {
 
 export function showCollaborators() {
   layout.projectCollaboratorsOpen = true;
+  layout.projectOpen = false;
 }
 
 export function hideCollaborators() {
   layout.projectCollaboratorsOpen = false;
+}
+
+export function updateProjectEdit() {
+  layout.projectEdit = layout.projectEdit;
+}
+
+export function editProjectCollaboratorAccess(collaborator) {
+  layout.projectEditUser = collaborator;
+}
+
+export function hideProjectCollaboratorAccess() {
+  layout.projectEditUser = null;
 }

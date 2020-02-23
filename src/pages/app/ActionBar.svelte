@@ -85,8 +85,8 @@
               Edit
               <span class="dropper">▼</span>
             </span>
-            <EditMenu />
           </span>
+          <EditMenu />
         </Dropdown>
       {:else}
         <span class="action disabled shortpad">
