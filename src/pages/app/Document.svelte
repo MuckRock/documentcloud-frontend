@@ -234,17 +234,6 @@
           <Link to="viewer" params={{ id: document.id }}>
             <Button action={true}>Open</Button>
           </Link>
-          {#if document.projectIds != null}
-            {#each document.projectIds as id}
-              {#if $projects.projectsById[id] != null}
-                <Link toUrl={projectUrl($projects.projectsById[id])}>
-                  <Button plain={true}>
-                    {$projects.projectsById[id].title}
-                  </Button>
-                </Link>
-              {/if}
-            {/each}
-          {/if}
         {:else if document.status == 'pending'}
           <span class="pending">Processing</span>
         {:else if document.status == 'error'}
@@ -267,6 +256,16 @@
             on:click={removeDocument(document)}>
             Remove
           </Button>
+        {/if}
+        <!-- Show project and data tags -->
+        {#if document.projectIds != null}
+          {#each document.projectIds as id}
+            {#if $projects.projectsById[id] != null}
+              <Link toUrl={projectUrl($projects.projectsById[id])}>
+                <Button plain={true}>{$projects.projectsById[id].title}</Button>
+              </Link>
+            {/if}
+          {/each}
         {/if}
       </div>
       {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}

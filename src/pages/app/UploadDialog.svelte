@@ -7,6 +7,8 @@
 
   // API
   import { uploadDocuments } from "@/api/document";
+  import { search } from "@/search/search";
+  import { projects } from "@/manager/projects";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -20,6 +22,12 @@
   });
 
   export let initialFiles = [];
+
+  $: uploadProject =
+    $search.params.oneProjectSearch &&
+    $projects.projectsById[$search.params.oneProjectSearch] != null
+      ? $projects.projectsById[$search.params.oneProjectSearch]
+      : null;
 
   let files = [];
   let id = 0;
@@ -95,7 +103,7 @@
         // All complete handler
         uploadFiles = uploadFiles.map(file => ({ ...file, done: true }));
         layout.uploading = false;
-        await handleNewDocuments(ids);
+        await handleNewDocuments(ids, uploadProject);
       },
       message => {
         layout.error = message;
@@ -153,7 +161,10 @@
   <div class="mcontent">
     {#if !uploadMode}
       <div>
-        <h1>Document Upload</h1>
+        <h1>
+          Document Upload
+          {#if uploadProject != null}to {uploadProject.title}{/if}
+        </h1>
         {#if files.length == 0}
           <p>
             Select or drag a .pdf document to begin the document upload process.
@@ -224,7 +235,9 @@
             {uploadMode}
             {error}
             on:name={({ detail: newName }) => {
-              file.name = newName;
+              let name = newName.trim();
+              if (name.length == 0) name = 'Untitled';
+              file.name = name;
             }}
             on:delete={() => removeFile(file.index)} />
         {/each}

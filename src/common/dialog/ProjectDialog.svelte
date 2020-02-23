@@ -101,7 +101,7 @@
         </p>
         <p>
           <Button nondescript={true} on:click={showCollaborators}>
-            + Add Collaborators
+            Manage Collaborators
           </Button>
         </p>
       </div>

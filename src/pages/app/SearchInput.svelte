@@ -226,8 +226,13 @@
     }
   }
 
+  let escPressed = false;
+
   $: {
-    if (fieldPre == "project") {
+    if (escPressed) {
+      completions = [];
+      escPressed = false;
+    } else if (fieldPre == "project") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $projects.projects.map(project => {
@@ -370,8 +375,11 @@
     }
 
     if (e.key == "Escape") {
-      completions = [];
-      completionIndex = null;
+      if (completions.length > 0) {
+        escPressed = true;
+        e.preventDefault();
+        return;
+      }
     }
 
     if (e.which == 13 || e.keyCode == 13) {

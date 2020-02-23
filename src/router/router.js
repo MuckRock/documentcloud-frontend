@@ -1,8 +1,6 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
 
-// import { initDocuments } from "@/manager/documents";
-
 export class Router {
   constructor(notFound, routes) {
     this.notFound = notFound;
@@ -63,8 +61,6 @@ export function pushUrl(url) {
   // push the path into web browser history API
   window.history.pushState({ path: url }, "", window.location.origin + url);
 }
-
-export function pushParams(params) {}
 
 export function nav(to, params = null) {
   const path = getPath(to, params);

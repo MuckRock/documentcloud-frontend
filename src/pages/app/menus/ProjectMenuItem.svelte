@@ -39,11 +39,11 @@
   }
 </style>
 
-<Tooltip delay={500} {caption}>
-  <MenuItem on:click={handleClick}>
+<MenuItem on:click={handleClick}>
+  <Tooltip delay={500} {caption}>
     {project.title}
     <span class="scope">
       {#if scope == 'fully'}✓{/if}
     </span>
-  </MenuItem>
-</Tooltip>
+  </Tooltip>
+</MenuItem>

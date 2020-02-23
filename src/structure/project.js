@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import { uniquify } from "@/util/array";
 
 export class Project extends Svue {
   constructor(rawProject, structure = {}) {
@@ -7,6 +8,7 @@ export class Project extends Svue {
       data() {
         const data = structure.data == null ? {} : structure.data();
         data.project = rawProject;
+        data.usersAndAccesses = [];
         return data;
       },
       computed: {
@@ -21,6 +23,28 @@ export class Project extends Svue {
           return project.description;
         }
       }
+    });
+  }
+
+  addUser(user, access) {
+    this.usersAndAccesses = uniquify(
+      [...this.usersAndAccesses, { user, access }],
+      x => x.user.id
+    );
+  }
+
+  removeUser(user) {
+    this.usersAndAccesses = this.usersAndAccesses.filter(
+      x => x.user.id != user.id
+    );
+  }
+
+  changeAccess(user, access) {
+    this.usersAndAccesses = this.usersAndAccesses.map(x => {
+      if (x.user.id == user.id) {
+        x.access = access;
+      }
+      return x;
     });
   }
 }
