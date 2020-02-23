@@ -10,7 +10,7 @@
   import { layout, unselectDocument, openAccess } from "@/manager/layout";
   import { removeDocument, selectDocument } from "@/manager/documents";
   import { projects } from "@/manager/projects";
-  import { projectUrl } from "@/search/search";
+  import { projectUrl, dataUrl } from "@/search/search";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
@@ -265,6 +265,11 @@
                 <Button plain={true}>{$projects.projectsById[id].title}</Button>
               </Link>
             {/if}
+          {/each}
+          {#each document.dataPoints as { key, value }}
+            <Link toUrl={dataUrl(key, value)}>
+              <Button plain={true}>{key}: {value}</Button>
+            </Link>
           {/each}
         {/if}
       </div>

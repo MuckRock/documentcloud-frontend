@@ -4,7 +4,7 @@
   import emitter from "@/emit";
   import { layout, addData } from "@/manager/layout";
   import { addDocumentData, removeDocumentData } from "@/manager/documents";
-  import { wrapLoadSeparate } from "@/util/wrapLoad";
+  import { wrapMultipleSeparate } from "@/util/wrapLoad";
   import { handlePlural } from "@/util/string";
   import { writable } from "svelte/store";
 
@@ -25,11 +25,13 @@
   async function handleAdd() {
     if (!inputValid) return;
 
-    await wrapLoadSeparate(
+    // TODO: replace with bulk method on backend
+    await wrapMultipleSeparate(
       loading,
       layout,
-      async () =>
-        await addDocumentData(layout.dataDocuments, keyTrimmed, valueTrimmed)
+      ...layout.dataDocuments.map(doc => async () =>
+        addDocumentData([doc], keyTrimmed, valueTrimmed)
+      )
     );
   }
 </script>

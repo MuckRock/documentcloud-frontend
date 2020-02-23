@@ -118,3 +118,14 @@ test("highlight parens", () => {
     }
   ]);
 });
+
+test("gets data highlights", () => {
+  expect(highlight("data_hi:there")).toEqual([
+    {
+      type: "field",
+      text: "data_hi:there",
+      field: "data_hi:",
+      value: "there"
+    }
+  ]);
+});

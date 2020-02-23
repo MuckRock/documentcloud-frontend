@@ -80,6 +80,12 @@ export function userUrl(user, publicAccessOnly = false) {
   return userOrgUrl(user, "user", publicAccessOnly);
 }
 
+export function dataUrl(key, value) {
+  // TODO: ensure data query is escaped properly
+  const dataQuery = `data_${key}:"${value}"`;
+  return searchUrl(dataQuery, dataQuery);
+}
+
 export function orgUrl(organization) {
   return userOrgUrl(organization, "organization");
 }

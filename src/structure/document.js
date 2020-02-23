@@ -1,5 +1,6 @@
 import { Svue } from "svue";
 import { handlePlural } from "@/util/string";
+import { uniquify } from "@/util/array";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
@@ -192,7 +193,7 @@ export class Document extends Svue {
           const results = [];
           for (const key in rawData) {
             if (rawData.hasOwnProperty(key)) {
-              const values = rawData[key];
+              const values = uniquify(rawData[key], x => x);
               for (let i = 0; i < values.length; i++) {
                 results.push({
                   key,

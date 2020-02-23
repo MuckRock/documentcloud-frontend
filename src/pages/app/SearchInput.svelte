@@ -421,12 +421,11 @@
   }
 
   function fieldValid(text) {
-    const fieldMatch = text.match(/^[^a-z]*([a-z]+):(.*)$/);
+    const fieldMatch = text.match(/^[^a-z]*([a-zA-Z0-9_-]+):(.*)$/);
     if (fieldMatch == null) return { valid: false };
     const field = fieldMatch[1];
     const value = fieldMatch[2];
     const id = extractSlugId(value);
-
     if (field == "project") {
       if (id == null) return { valid: false };
       for (let i = 0; i < projects.projects.length; i++) {
