@@ -1,8 +1,6 @@
 import { Svue } from "svue";
 import {
   getProjects,
-  addDocumentsToProject,
-  removeDocumentsFromProject,
   newProject,
   updateProject,
   deleteProject,
@@ -14,11 +12,8 @@ import {
 import { getUsers } from "@/api/orgAndUser";
 import { router } from "@/router/router";
 import { layout } from "./layout";
-import { pushToast } from "./toast";
-import { updateInCollection } from "@/manager/documents";
-import { handlePlural } from "@/util/string";
-import { removeFromArray, uniquify } from "@/util/array";
-import { wrapLoad } from "@/util/wrapLoad";
+import { addDocsToProject, removeDocsFromProject } from "@/manager/documents";
+import { uniquify } from "@/util/array";
 
 let previousRouteName = null;
 
@@ -86,62 +81,6 @@ export async function editProject(project, title, description) {
       return oldProject;
     }
   });
-}
-
-export async function addDocsToProject(project, documents) {
-  documents = documents.filter(doc => !doc.projectIds.includes(project.id));
-  if (documents.length == 0) return;
-  await wrapLoad(layout, async () => {
-    await addDocumentsToProject(
-      project.id,
-      documents.map(doc => doc.id)
-    );
-    documents.forEach(doc =>
-      updateInCollection(
-        doc,
-        d => (d.doc = { ...d.doc, projects: [...d.projectIds, project.id] })
-      )
-    );
-  });
-  if (!layout.error) {
-    pushToast(
-      `Successfully added ${handlePlural(
-        documents.length,
-        "document",
-        true
-      )} to ${project.title}.`
-    );
-  }
-}
-
-export async function removeDocsFromProject(project, documents) {
-  documents = documents.filter(doc => doc.projectIds.includes(project.id));
-  if (documents.length == 0) return;
-  await wrapLoad(layout, async () => {
-    await removeDocumentsFromProject(
-      project.id,
-      documents.map(doc => doc.id)
-    );
-    documents.forEach(doc =>
-      updateInCollection(
-        doc,
-        d =>
-          (d.doc = {
-            ...d.doc,
-            projects: removeFromArray(d.projectIds, project.id)
-          })
-      )
-    );
-  });
-  if (!layout.error) {
-    pushToast(
-      `Successfully removed ${handlePlural(
-        documents.length,
-        "document",
-        true
-      )} from project (${project.title}).`
-    );
-  }
 }
 
 export async function addSelectedDocsToProject(project) {

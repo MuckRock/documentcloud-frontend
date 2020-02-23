@@ -20,6 +20,11 @@
   let name = stripExtension(file.name);
   let size = formatBytes(file.size);
 
+  $: {
+    // Emit updates to name
+    emit.name(name);
+  }
+
   onMount(() => {
     emit.name(name);
   });
@@ -131,7 +136,11 @@
           </div>
         {/if}
       </div>
-      <input readonly={uploadMode} bind:value={name} class:error />
+      <input
+        placeholder="Untitled"
+        readonly={uploadMode}
+        bind:value={name}
+        class:error />
     </div>
     <div class="cell size">{size}</div>
     {#if !uploadMode}
