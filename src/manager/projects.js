@@ -69,7 +69,7 @@ async function initProjects() {
 
 export async function createNewProject(title, description) {
   const project = await newProject(title, description);
-  projects.projects = [...projects.projects, project.id];
+  projects.projects = [...projects.projects, project];
 }
 
 export async function editProject(project, title, description) {

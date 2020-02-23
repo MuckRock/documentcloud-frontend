@@ -99,11 +99,13 @@
             bind:value={description}
             use:textAreaResize />
         </p>
-        <p>
-          <Button nondescript={true} on:click={showCollaborators}>
-            Manage Collaborators
-          </Button>
-        </p>
+        {#if editing}
+          <p>
+            <Button nondescript={true} on:click={showCollaborators}>
+              Manage Collaborators
+            </Button>
+          </p>
+        {/if}
       </div>
       <div class="buttonpadded">
         <Button
