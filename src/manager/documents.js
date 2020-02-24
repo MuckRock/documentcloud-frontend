@@ -222,36 +222,45 @@ export async function renameSelectedDocuments(title) {
 export async function addDocumentData(documents, key, value) {
   for (let i = 0; i < documents.length; i++) {
     const document = documents[i];
-    if (document.data[key] == null) {
-      document.data[key] = [value];
-    } else {
-      document.data[key].push(value);
-    }
     // TODO: replace with bulk method
     await addData(document.id, key, value);
+
+    if (document.doc.data[key] == null) {
+      document.doc.data[key] = [value];
+    } else {
+      document.doc.data[key].push(value);
+    }
+    // Trigger document data update
+    document.doc = document.doc;
+    replaceInCollection(document);
   }
-  document.data = document.data;
+}
+
+export async function replaceDocumentData(
+  documents,
+  originalKey,
+  originalValue,
+  newKey,
+  newValue
+) {
+  // TODO: potentially optimize with partial add-remove hybrid on matching keys
+  await removeDocumentData(documents, originalKey, originalValue);
+  await addDocumentData(documents, newKey, newValue);
 }
 
 export async function removeDocumentData(documents, key, value) {
   for (let i = 0; i < documents.length; i++) {
     const document = documents[i];
-    if (document.data[key] == null) {
-      // Don't do anything (throw?)
-    } else {
-      // Iterate backwards to be able to remove without affecting indices
-      for (let i = document.data[key].length - 1; i >= 0; i--) {
-        if (document.data[key][i] == value) {
-          // Remove matching key/value
-          document.data[key].splice(i, 1);
-        }
-      }
-      document.data[key].push(value);
-    }
     // TODO: replace with bulk method
     await removeData(document.id, key, value);
+
+    if (document.doc.data[key] != null) {
+      // Only remove data from documents with data
+      document.doc.data[key] = document.doc.data[key].filter(x => x != value);
+      document.doc = document.doc;
+      replaceInCollection(document);
+    }
   }
-  document.data = document.data;
 }
 
 export async function handleNewDocuments(ids, project = null) {

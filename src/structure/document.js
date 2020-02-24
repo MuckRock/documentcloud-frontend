@@ -6,6 +6,8 @@ const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
 const PAGE_NO_RE = /^page_no_(\d+)$/;
 
+const TAG_KEY = process.env.TAG_KEY;
+
 export class Document extends Svue {
   constructor(rawDocument, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
@@ -187,6 +189,7 @@ export class Document extends Svue {
 
         // Data
         rawData(doc) {
+          console.log("NEW RAW", doc.data);
           return doc.data;
         },
         dataPoints(rawData) {
@@ -202,6 +205,18 @@ export class Document extends Svue {
               }
             }
           }
+          results.sort((a, b) => {
+            // Sort by value if it's a tag
+            const aKey = a.key == TAG_KEY ? a.value : a.key;
+            const bKey = b.key == TAG_KEY ? b.value : b.key;
+            const aValue = a.value;
+            const bValue = b.value;
+
+            const keyCompare = aKey.localeCompare(bKey);
+            if (keyCompare != 0) return keyCompare;
+            return aValue.localeCompare(bValue);
+          });
+          console.log("NEW DP", results);
           return results;
         },
 

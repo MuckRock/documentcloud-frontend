@@ -23,3 +23,15 @@ export function uniquify(array, fieldAccess = x => x.id) {
 
   return results;
 }
+
+export function includes(array, elem, eq = (a, b) => a == b) {
+  for (let i = 0; i < array.length; i++) {
+    if (eq(array[i], elem)) return true;
+  }
+  return false;
+}
+
+export function intersection(arrays, eq = (a, b) => a == b) {
+  // Adapted from https://stackoverflow.com/a/59176460
+  return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
+}
