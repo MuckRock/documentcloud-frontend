@@ -4,7 +4,7 @@ const validFields = [
   /^id$/,
   /^access$/,
   /^created_at$/,
-  /^data_[^ ]+$/,
+  /^data_[a-zA-Z0-9_-]+$/,
   /^description$/,
   /^language$/,
   /^organization$/,

@@ -7,16 +7,22 @@
   import DocumentThumbnail from "./DocumentThumbnail";
 
   // Stores
-  import { layout, unselectDocument, openAccess } from "@/manager/layout";
+  import {
+    layout,
+    unselectDocument,
+    openAccess,
+    editData
+  } from "@/manager/layout";
   import { removeDocument, selectDocument } from "@/manager/documents";
   import { projects } from "@/manager/projects";
-  import { projectUrl } from "@/search/search";
+  import { projectUrl, dataUrl } from "@/search/search";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
   import publicIconSvg from "@/assets/public_icon.svg";
   import organizationIconSvg from "@/assets/organization_icon.svg";
   import closeSimpleSvg from "@/assets/close_inline.svg";
+  import pencilSvg from "@/assets/pencil.svg";
 
   import { pageImageUrl } from "@/api/viewer";
 
@@ -57,6 +63,8 @@
   function handleKeyup(e) {
     if (e.key == "Shift") shiftKey = false;
   }
+
+  const TAG_KEY = process.env.TAG_KEY;
 </script>
 
 <style lang="scss">
@@ -199,6 +207,20 @@
       }
     }
   }
+
+  .smallinfo {
+    font-size: 12px;
+    color: $gray;
+    display: inline-block;
+    margin-right: 2px;
+    font-style: italic;
+  }
+
+  .pencil {
+    @include buttonLike;
+    vertical-align: middle;
+    height: 10px;
+  }
 </style>
 
 <div class="card">
@@ -262,10 +284,26 @@
           {#each document.projectIds as id}
             {#if $projects.projectsById[id] != null}
               <Link toUrl={projectUrl($projects.projectsById[id])}>
-                <Button plain={true}>{$projects.projectsById[id].title}</Button>
+                <Button plain={true}>
+                  <div class="smallinfo">Project</div>
+                  {$projects.projectsById[id].title}
+                </Button>
               </Link>
             {/if}
           {/each}
+          {#each document.dataPoints as { key, value }}
+            <Link toUrl={dataUrl(key, value)}>
+              <Button plain={true}>
+                {#if key != TAG_KEY}{key}:{/if}
+                {value}
+              </Button>
+            </Link>
+          {/each}
+          {#if document.dataPoints.length > 0}
+            <span class="pencil" on:click={() => editData([document])}>
+              {@html pencilSvg}
+            </span>
+          {/if}
         {/if}
       </div>
       {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}

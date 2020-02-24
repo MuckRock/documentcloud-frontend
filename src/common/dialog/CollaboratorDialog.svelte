@@ -101,7 +101,7 @@
   }
 
   .fyi {
-    background: #fbf9f3;
+    background: $fyi;
     padding: 1em;
     border-radius: 10px;
     color: $modal;
