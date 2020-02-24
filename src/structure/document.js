@@ -189,7 +189,6 @@ export class Document extends Svue {
 
         // Data
         rawData(doc) {
-          console.log("NEW RAW", doc.data);
           return doc.data;
         },
         dataPoints(rawData) {
@@ -216,7 +215,6 @@ export class Document extends Svue {
             if (keyCompare != 0) return keyCompare;
             return aValue.localeCompare(bValue);
           });
-          console.log("NEW DP", results);
           return results;
         },
 
