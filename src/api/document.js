@@ -20,7 +20,7 @@ const UPLOAD_BATCH = process.env.UPLOAD_BATCH;
 const UPLOAD_BATCH_DELAY = process.env.UPLOAD_BATCH_DELAY;
 
 // Statuses
-export const PENDING = 2;
+export const PENDING = "pending";
 
 export async function getMe(expand = DEFAULT_EXPAND) {
   // Returns the currently logged in user
