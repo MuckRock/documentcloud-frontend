@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { router, pushUrl } from "@/router/router";
 import { getOrganizations, getUsers, getMe } from "@/api/orgAndUser";
-import { projects } from "./projects";
+import { projects, initProjects } from "./projects";
 import { uniquify } from "@/util/array";
 import { userUrl } from "@/search/search";
 
@@ -45,6 +45,9 @@ async function getSelfUser() {
     // Redirect to get self user route if no search params are set
     pushUrl(userUrl(orgsAndUsers.me));
   }
+
+  // Populate projects
+  initProjects(orgsAndUsers.me);
 }
 
 async function initOrgsAndUsers() {
