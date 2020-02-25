@@ -42,7 +42,7 @@
 </style>
 
 <div class="container">
-  {#if $orgsAndUsers.me == null || $search.params.oneUserSearch != $orgsAndUsers.me}
+  {#if $orgsAndUsers.me == null || $search.params.oneUserSearch != $orgsAndUsers.me.id}
     <h2>No search results</h2>
     <div class="img">
       {@html emptyResultsSvg}
