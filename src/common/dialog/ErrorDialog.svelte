@@ -1,27 +1,11 @@
 <script>
   import Button from "@/common/Button";
   import emitter from "@/emit";
+  import { extractErrorData } from "@/manager/errorData";
 
   export let error;
 
   $: unexpected = error.errorData == null;
-
-  function extractErrorData(data) {
-    let items = [];
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        if (/[0-9]+/.test(`${key}`)) {
-          items = items.concat(extractErrorData(data[key]));
-        } else {
-          items.push({
-            key,
-            values: data[key]
-          });
-        }
-      }
-    }
-    return items;
-  }
 
   $: errorData =
     error.errorData != null ? extractErrorData(error.errorData) : null;
@@ -70,7 +54,9 @@
     {:else}
       {#each errorData as { key, values }}
         <div class="errorcontainer">
-          <div class="reason">{key}:</div>
+          {#if key != null}
+            <div class="reason">{key}:</div>
+          {/if}
           <ul>
             {#each values as value}
               <li class="error">{value}</li>
