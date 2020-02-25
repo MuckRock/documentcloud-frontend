@@ -10,31 +10,16 @@ import {
   removeUser
 } from "@/api/project";
 import { getUsers } from "@/api/orgAndUser";
-import { router } from "@/router/router";
 import { layout } from "./layout";
 import { addDocsToProject, removeDocsFromProject } from "@/manager/documents";
 import { uniquify } from "@/util/array";
-
-let previousRouteName = null;
 
 export const projects = new Svue({
   data() {
     return {
       projects: [],
-      projectUsers: [],
-      router
+      projectUsers: []
     };
-  },
-  watch: {
-    "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      if (route != null && route.name == "app") {
-        if (route.name != previousRouteName) initProjects();
-      } else {
-        this.projects = [];
-      }
-      previousRouteName = route == null ? null : route.name;
-    }
   },
   computed: {
     projectsById(projects) {
@@ -59,8 +44,8 @@ async function addProjectUsers(...projects) {
   addUsers(...users);
 }
 
-async function initProjects() {
-  const newProjects = await getProjects();
+export async function initProjects(me) {
+  const newProjects = await getProjects(me.id);
   projects.projects = newProjects;
 
   // Grab all users of projects

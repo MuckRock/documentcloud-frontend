@@ -65,6 +65,10 @@
       updateProjectEdit();
     });
   });
+
+  $: oneAdmin =
+    $layout.projectEdit.usersAndAccesses.filter(x => x.access == "admin")
+      .length == 1;
 </script>
 
 <style lang="scss">
@@ -218,21 +222,26 @@
                 {/if}
               </div>
               <div class="access">
-                <span
-                  class="pencil"
-                  on:click={() => editProjectCollaboratorAccess(userAccess)}>
-                  {@html pencilSvg}
-                </span>
+                {#if !oneAdmin || userAccess.access != 'admin'}
+                  <!-- Can't edit access on sole admin -->
+                  <span
+                    class="pencil"
+                    on:click={() => editProjectCollaboratorAccess(userAccess)}>
+                    {@html pencilSvg}
+                  </span>
+                {/if}
                 {titlecase(userAccess.access)}
               </div>
-              <div class="delete">
-                <Button
-                  on:click={() => removeProjectUser(userAccess.user)}
-                  nondescript={true}
-                  caution={true}>
-                  Remove
-                </Button>
-              </div>
+              {#if $orgsAndUsers.me == null || userAccess.user.id != $orgsAndUsers.me.id}
+                <div class="delete">
+                  <Button
+                    on:click={() => removeProjectUser(userAccess.user)}
+                    nondescript={true}
+                    caution={true}>
+                    Remove
+                  </Button>
+                </div>
+              {/if}
             </div>
           {/each}
         </div>

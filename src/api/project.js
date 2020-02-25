@@ -51,10 +51,10 @@ export async function removeDocumentsFromProject(projectId, docIds) {
   );
 }
 
-export async function getProjects(expand = DEFAULT_EXPAND) {
+export async function getProjects(userId, expand = DEFAULT_EXPAND) {
   // Returns all projects
   const projects = await grabAllPages(
-    queryBuilder(apiUrl("projects/"), { expand })
+    queryBuilder(apiUrl("projects/"), { user: userId, expand })
   );
   return projects.map(project => new Project(project));
 }
