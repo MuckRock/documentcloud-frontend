@@ -35,6 +35,18 @@ services:
         aliases:
           - www.dev.documentcloud.org
 
+  build_staging:
+    extends:
+      service: base
+    command: npm run build-staging
+    networks:
+      default:
+        aliases:
+          - www.dev.documentcloud.org
+      squarelet_default:
+        aliases:
+          - www.dev.documentcloud.org
+
   create-bundles:
     extends:
       service: base
