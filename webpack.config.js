@@ -14,7 +14,8 @@ const smp = new SpeedMeasurePlugin();
 
 const environment =
   process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
-const prod = environment.startsWith("production");
+const prod =
+  environment.startsWith("production") || environment.startsWith("staging");
 const mode = prod ? "production" : "development";
 const useAnalyzer = environment.endsWith("analyze");
 

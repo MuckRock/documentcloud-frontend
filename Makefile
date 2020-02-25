@@ -4,6 +4,9 @@ install:
 build:
 	docker-compose -f local.builder.yml run --rm build
 
+build-staging:
+	docker-compose -f local.builder.yml run --rm build_staging
+
 dev:
 	docker-compose -f local.yml up documentcloud_frontend
 
