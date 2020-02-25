@@ -13,10 +13,6 @@
     background: #fbf9f3;
     padding: 1em;
     border-radius: 10px;
-
-    &.warn {
-      background: #ececec;
-    }
   }
 
   h2 {
@@ -45,8 +41,8 @@
   }
 </style>
 
-<div class="container" class:warn={$search.isSearch}>
-  {#if $orgsAndUsers.me == null || $search.oneUserSearch != $orgsAndUsers.me}
+<div class="container">
+  {#if $orgsAndUsers.me == null || $search.params.oneUserSearch != $orgsAndUsers.me}
     <h2>No search results</h2>
     <div class="img">
       {@html emptyResultsSvg}
