@@ -60,6 +60,18 @@ export async function searchDocuments(
   return new Results(url, data);
 }
 
+export async function searchDocument(query, docId) {
+  // Return documents with the specified parameters
+  const url = apiUrl(
+    queryBuilder("documents/search/", { q: query, document: docId })
+  );
+  const { data } = await session.get(url);
+
+  const docs = data.results;
+  if (docs.length == 0) return null;
+  return new Document(docs[0]);
+}
+
 export async function getDocument(id, expand = DEFAULT_EXPAND) {
   // Get a single document with the specified id
   const { data } = await session.get(

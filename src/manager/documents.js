@@ -109,10 +109,8 @@ function removeFromCollection(document) {
   const newProcessingDocuments = documents.processingDocumentsRaw.filter(
     doc => doc.id != document.id
   );
-  documents.rawDocuments = {
-    documents: newDocuments,
-    processingDocuments: newProcessingDocuments
-  };
+  setDocuments(newDocuments);
+  documents.processingDocumentsRaw = newProcessingDocuments;
 }
 
 export function updateInCollection(document, docFn) {
