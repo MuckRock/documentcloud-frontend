@@ -12,12 +12,15 @@ import { Results } from "@/structure/results";
 import { batchDelay } from "@/util/batchDelay";
 import axios from "axios";
 
-import { Document } from "@/structure/document";
+import { Document, transformHighlights } from "@/structure/document";
 
 const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
 
 const UPLOAD_BATCH = process.env.UPLOAD_BATCH;
 const UPLOAD_BATCH_DELAY = process.env.UPLOAD_BATCH_DELAY;
+
+const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
+const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
 
 // Statuses
 export const PENDING = "pending";
@@ -62,14 +65,11 @@ export async function searchDocuments(
 
 export async function searchDocument(query, docId) {
   // Return documents with the specified parameters
-  const url = apiUrl(
-    queryBuilder("documents/search/", { q: query, document: docId })
-  );
+  const url = apiUrl(queryBuilder(`documents/${docId}/search/`, { q: query }));
   const { data } = await session.get(url);
 
-  const docs = data.results;
-  if (docs.length == 0) return null;
-  return new Document(docs[0]);
+  // Return search highlights in dictionary form
+  return transformHighlights(data, HIGHLIGHT_START, HIGHLIGHT_END, true);
 }
 
 export async function getDocument(id, expand = DEFAULT_EXPAND) {

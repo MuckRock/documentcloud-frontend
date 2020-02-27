@@ -312,9 +312,11 @@ export function transformPassage(passage, highlightStart, highlightEnd) {
 export function transformHighlights(
   rawHighlights,
   highlightStart,
-  highlightEnd
+  highlightEnd,
+  returnDict = false
 ) {
-  const highlights = [];
+  const highlights = returnDict ? {} : [];
+  const pages = [];
   for (const pageKey in rawHighlights) {
     if (rawHighlights.hasOwnProperty(pageKey)) {
       // Get number out of page key
@@ -328,17 +330,27 @@ export function transformHighlights(
       for (let i = 0; i < passages.length; i++) {
         const passage = passages[i];
         // Transform passage
-        highlight.passages = transformPassage(
-          passage,
-          highlightStart,
-          highlightEnd
+        highlight.passages.push(
+          transformPassage(passage, highlightStart, highlightEnd)
         );
       }
-      highlights.push(highlight);
+      // Handle response type
+      if (returnDict) {
+        if (highlights[page] == null) {
+          pages.push(page);
+        }
+        highlights[page] = highlight.passages;
+      } else {
+        highlights.push(highlight);
+      }
     }
   }
 
   // Sort results by page number
-  highlights.sort((a, b) => a.page - b.page);
-  return highlights;
+  if (!returnDict) {
+    highlights.sort((a, b) => a.page - b.page);
+    return highlights;
+  } else {
+    return { highlights, pages };
+  }
 }

@@ -64,6 +64,15 @@
     color: $gray;
     margin: 0 -10px;
   }
+
+  :global(.sticky) {
+    position: sticky;
+    top: 0;
+
+    @media only screen and (max-height: 600px) {
+      position: relative;
+    }
+  }
 </style>
 
 <svelte:window on:popstate={handleBackNav} />

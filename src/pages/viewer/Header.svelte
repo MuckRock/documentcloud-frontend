@@ -1,11 +1,13 @@
 <script>
   import Link from "@/router/Link";
   import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
+  import { layout, initiateSearch } from "@/viewer/layout";
   import { scroll, changeMode } from "@/viewer/renderer";
 
   // SVG assets
   import backArrowSvg from "@/assets/back_arrow.svg";
+
+  let query = "";
 </script>
 
 <style lang="scss">
@@ -59,5 +61,16 @@
   <div class="valign">
     <button on:click={() => changeMode('image')}>Image mode</button>
     <button on:click={() => changeMode('text')}>Text mode</button>
+  </div>
+  <div class="valign">
+    <input
+      disabled={$layout.searchPending}
+      on:keypress={e => {
+        if (e.key == 'Enter') {
+          initiateSearch(query);
+        }
+      }}
+      placeholder="Search"
+      bind:value={query} />
   </div>
 </header>

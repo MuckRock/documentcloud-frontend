@@ -264,6 +264,7 @@
           <TextPage
             src={textUrl(document, pageNumber)}
             width={$renderer.width}
+            highlights={$layout.searchHighlights != null ? $layout.searchHighlights[pageNumber] : null}
             delay={50}
             {aspect}
             on:aspect={handleAspect} />

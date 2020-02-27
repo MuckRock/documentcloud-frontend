@@ -335,15 +335,17 @@
                   src={pageImageUrl(document, highlight.page, 40)} />
                 <div class="number">p. {highlight.page + 1}</div>
               </div>
-              <div class="highlight">
-                {#each highlight.passages as passage}
-                  {#if passage.type == 'highlight'}
-                    <span class="passage highlighted">{passage.text}</span>
-                  {:else}
-                    <span class="passage">{passage.text}</span>
-                  {/if}
-                {/each}
-              </div>
+              {#each highlight.passages as passage}
+                <div class="highlight">
+                  {#each passage as term}
+                    {#if term.type == 'highlight'}
+                      <span class="passage highlighted">{term.text}</span>
+                    {:else}
+                      <span class="passage">{term.text}</span>
+                    {/if}
+                  {/each}
+                </div>
+              {/each}
             </div>
           {/each}
         </div>

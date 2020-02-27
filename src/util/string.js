@@ -74,5 +74,16 @@ export function extractSlugId(str) {
 }
 
 export function titlecase(str) {
-  return str.charAt(0).toUpperCase() + str.substr(1)
+  return str.charAt(0).toUpperCase() + str.substr(1);
+}
+
+export function allIndices(text, query) {
+  const results = [];
+  let pos = 0;
+  while (true) {
+    const idx = text.indexOf(query, pos);
+    if (idx == -1) return results;
+    results.push(idx);
+    pos = idx + 1;
+  }
 }
