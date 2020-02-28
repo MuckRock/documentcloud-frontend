@@ -1,0 +1,27 @@
+<script>
+  // Headers
+  import CompactHeader from "./CompactHeader";
+  import TitleHeader from "./TitleHeader";
+
+  import { layout, initiateSearch } from "@/viewer/layout";
+  import { scroll, changeMode } from "@/viewer/renderer";
+</script>
+
+<style lang="scss">
+  header {
+    z-index: $viewerHeaderZ;
+    position: relative;
+    border-bottom: $viewerHeaderBorder;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+  }
+</style>
+
+<header class="vheader" style="height: {$layout.headerHeight}px">
+  <div class="vcontent">
+    {#if $layout.compact}
+      <CompactHeader />
+    {:else}
+      <TitleHeader />
+    {/if}
+  </div>
+</header>

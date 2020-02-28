@@ -119,8 +119,6 @@
   }
 
   .sticky {
-    position: sticky;
-    top: 0;
     padding-top: $mainDocContainerPadding;
     background: white;
     z-index: $appStickyZ;

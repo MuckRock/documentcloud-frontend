@@ -16,10 +16,12 @@ test("highlighting", () => {
     {
       page: 259,
       passages: [
-        {
-          type: "normal",
-          text: "hi"
-        }
+        [
+          {
+            type: "normal",
+            text: "hi"
+          }
+        ]
       ]
     }
   ]);

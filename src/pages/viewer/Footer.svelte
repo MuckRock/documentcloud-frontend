@@ -1,20 +1,53 @@
 <script>
-  import Paginator from "./Paginator";
+  // Controls
+  import ViewDropdown from "./controls/ViewDropdown";
+  import Paginator from "./controls/Paginator";
+  import Zoom from "./controls/Zoom";
+  import FullScreen from "./controls/FullScreen";
+
   import { layout } from "@/viewer/layout";
+
+  $: style = `height: ${$layout.footerHeight}px;`;
 </script>
 
 <style lang="scss">
   footer {
     position: absolute;
     bottom: 0;
-    width: 100%;
-    background: $viewerPaneColor;
-    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
+    border-top: $viewerHeaderBorder;
     z-index: $viewerFooterZ;
     text-align: center;
   }
+
+  .cell {
+    display: table-cell;
+    vertical-align: middle;
+
+    &.side {
+      width: 200px;
+    }
+
+    &.center {
+      text-align: center;
+    }
+  }
 </style>
 
-<footer style="height: {$layout.footerHeight}px">
-  <Paginator />
+<footer class="vheader" style="height: {$layout.footerHeight}px">
+  <div class="vcontent">
+    {#if !$layout.compact}
+      <div class="cell side" {style}>
+        <ViewDropdown />
+      </div>
+      <div class="cell center" {style}>
+        <Paginator />
+      </div>
+      <div class="cell side" {style}>
+        <Zoom />
+        {#if $layout.embed}
+          <FullScreen />
+        {/if}
+      </div>
+    {/if}
+  </div>
 </footer>

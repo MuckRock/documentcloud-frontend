@@ -1,11 +1,14 @@
 <script>
   import { onMount } from "svelte";
+  import { layout } from "@/viewer/layout";
+  import { coalesceHighlights } from "@/util/coalesceHighlights";
   import session from "@/api/session";
   import emitter from "@/emit";
 
   export let src;
   export let width;
   export let delay = null;
+  export let highlights = null;
 
   export let aspect = null;
 
@@ -36,6 +39,9 @@
       setTimeout(() => (ready = true), delay);
     }
   });
+
+  // Highlights
+  $: regions = coalesceHighlights(text, highlights);
 </script>
 
 <style lang="scss">
@@ -48,6 +54,16 @@
     font-family: "Courier New", Courier, monospace;
     color: #333;
     line-height: 1.4;
+
+    .highlight {
+      background: #f3e94d;
+      background: linear-gradient(#f3e94d, #f5dd01);
+      border: 1px solid #f5e800;
+      padding: 1px;
+      color: #000;
+      border-radius: $radius;
+      box-shadow: 0 0 5px #666;
+    }
   }
 </style>
 
@@ -56,7 +72,13 @@
     class="text"
     bind:clientHeight={height}
     style="font-size: {width / 50}px; padding: {width / 15}px;">
-    {text == null ? '' : text}
+    {#each regions as region}
+      {#if region.type == 'normal'}
+        <span>{region.text}</span>
+      {:else}
+        <span class="highlight">{region.text}</span>
+      {/if}
+    {/each}
   </div>
 {:else}
   <div class="text" style="height: {aspect * width}px" />

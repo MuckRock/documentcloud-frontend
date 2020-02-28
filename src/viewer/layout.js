@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { wrapLoad } from "@/util/wrapLoad";
-import { redactDocument } from "@/api/document";
+import { redactDocument, searchDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
 import { nav } from "@/router/router";
 import {
@@ -14,9 +14,16 @@ import { Note } from "@/structure/note";
 export const layout = new Svue({
   data() {
     return {
-      headerHeight: 63,
+      // Height of header row
+      headerHeight: 46,
       sidebarWidth: 350,
-      footerHeight: 47,
+      // Height of footer row
+      footerHeight: 40,
+
+      // Show the title in the header (compact=false)
+      compact: false,
+      // In embedded mode
+      embed: false,
 
       loading: false,
       error: null,
@@ -37,7 +44,13 @@ export const layout = new Svue({
       hoveredNote: null,
 
       // Sections
-      showEditSections: false
+      showEditSections: false,
+
+      // Search
+      search: null,
+      searchPending: false,
+      searchHighlights: null,
+      searchPages: null
     };
   },
   computed: {
@@ -275,4 +288,18 @@ export async function deletePageAnnotation(noteId, docId) {
       cancelActions();
     }
   );
+}
+
+export async function initiateSearch(query) {
+  layout.search = query;
+  layout.searchPending = true;
+  layout.searchHighlights = null;
+  layout.searchPages = null;
+
+  const { highlights, pages } = await searchDocument(query, viewer.id);
+  if (highlights != null) {
+    layout.searchHighlights = highlights;
+    layout.searchPages = pages;
+  }
+  layout.searchPending = false;
 }

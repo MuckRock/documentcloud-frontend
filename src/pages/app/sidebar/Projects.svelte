@@ -31,8 +31,6 @@
   }
 
   .sticky {
-    position: sticky;
-    top: 0;
     background: $sidebar;
     z-index: $sidebarStickyZ;
   }

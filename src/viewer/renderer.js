@@ -7,13 +7,20 @@ import { tick } from "svelte";
 const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
 const DEFAULT_VISIBLE_OFFSET = -60; // offset at which to start next page number
 
+// Zoom
+export const ZOOM_VALUES = [50, 75, 100, 150, 200];
+export const ZOOM_OPTIONS = ["Fit", ...ZOOM_VALUES.map(x => `${x}%`)];
+const ZOOM_PERCENTS = ZOOM_VALUES.map(x => x / 100);
+export const BASE_WIDTH = 500;
+
 export const renderer = new Svue({
   data() {
     return {
       imageAspects: [],
       textAspects: [],
       mode: "image",
-      width: 800,
+      width: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
+      zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 1],
       pageRail: 69,
       verticalPageMargin: 6,
       baseVerticalDocumentMargin: 18,
@@ -352,4 +359,54 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
     restorePosition(annotation.page);
     await scrollVisibleAnnotationIntoView();
   }
+}
+
+// Zoom
+
+export function zoomFit() {
+  renderer.zoom = ZOOM_OPTIONS[0]; // fit
+  renderer.width = renderer.elem.offsetWidth - renderer.pageRail * 2;
+}
+
+export function zoomPercent(percent) {
+  let closest = null;
+  let minDelta = null;
+  for (let i = 1; i < ZOOM_OPTIONS.length; i++) {
+    const option = parseFloat(ZOOM_OPTIONS[i]) / 100;
+    if (option != null && !isNaN(option)) {
+      const diff = Math.abs(option - percent);
+      if (minDelta == null || diff < minDelta) {
+        minDelta = diff;
+        closest = ZOOM_OPTIONS[i];
+      }
+    }
+  }
+  if (closest != null) {
+    renderer.zoom = closest;
+  }
+  renderer.width = BASE_WIDTH * percent;
+}
+
+export function zoomIn() {
+  const currentWidth = renderer.width;
+  for (let i = 0; i < ZOOM_PERCENTS.length; i++) {
+    const percent = ZOOM_PERCENTS[i];
+    if (BASE_WIDTH * percent > currentWidth) {
+      zoomPercent(percent);
+      return;
+    }
+  }
+  // No more zoom possible, so don't do anything
+}
+
+export function zoomOut() {
+  const currentWidth = renderer.width;
+  for (let i = ZOOM_PERCENTS.length - 1; i >= 0; i--) {
+    const percent = ZOOM_PERCENTS[i];
+    if (BASE_WIDTH * percent < currentWidth) {
+      zoomPercent(percent);
+      return;
+    }
+  }
+  // No more zoom possible, so zoom to max
 }
