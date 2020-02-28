@@ -5,7 +5,7 @@
   import { onMount } from "svelte";
   import { viewer } from "@/viewer/viewer";
   import { layout, cancelActions } from "@/viewer/layout";
-  import { renderer, scroll } from "@/viewer/renderer";
+  import { renderer, scroll, zoomFit, ZOOM_OPTIONS } from "@/viewer/renderer";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
@@ -26,6 +26,23 @@
     renderer.bodyHeight = body.offsetHeight;
   }
 
+  let zoomTimeout = null;
+
+  function handleResize() {
+    if (renderer.zoom == ZOOM_OPTIONS[0]) {
+      // Zoom fit
+      if (zoomTimeout != null) {
+        clearTimeout(zoomTimeout);
+        zoomTimeout = null;
+      }
+      zoomTimeout = setTimeout(() => {
+        zoomFit();
+        zoomTimeout = null;
+      }, 50);
+    }
+    updateDimension();
+  }
+
   async function handleShift({ detail: shift }) {
     // Don't handle shifts that would jar away from document edges
     if (body.scrollTop == 0) return;
@@ -41,7 +58,7 @@
   onMount(() => {
     renderer.elem = body;
     if (body.offsetWidth < renderer.width) {
-      renderer.width = body.offsetWidth - renderer.pageRail * 2;
+      zoomFit();
     }
     updateDimension();
   });
@@ -147,4 +164,4 @@
   {/if}
 </div>
 
-<svelte:window on:resize={updateDimension} on:keydown={handleKeyDown} />
+<svelte:window on:resize={handleResize} on:keydown={handleKeyDown} />

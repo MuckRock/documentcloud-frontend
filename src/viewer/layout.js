@@ -14,9 +14,16 @@ import { Note } from "@/structure/note";
 export const layout = new Svue({
   data() {
     return {
-      headerHeight: 63,
+      // Height of header row
+      headerHeight: 46,
       sidebarWidth: 350,
-      footerHeight: 47,
+      // Height of footer row
+      footerHeight: 40,
+
+      // Show the title in the header (compact=false)
+      compact: false,
+      // In embedded mode
+      embed: false,
 
       loading: false,
       error: null,
@@ -293,7 +300,6 @@ export async function initiateSearch(query) {
   if (highlights != null) {
     layout.searchHighlights = highlights;
     layout.searchPages = pages;
-    console.log(highlights, pages);
   }
   layout.searchPending = false;
 }

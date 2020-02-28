@@ -41,8 +41,6 @@
   });
 
   // Highlights
-  $: console.log("HIGHLIGHTS", regions);
-
   $: regions = coalesceHighlights(text, highlights);
 </script>
 

@@ -93,23 +93,9 @@
   $arrowHeight: 18px;
   $arrowPadding: 13px;
 
-  .container {
-    display: table;
-    vertical-align: middle;
-    height: 100%;
-    padding-bottom: 1px; /* TODO: investigate adjustment */
-    margin: auto;
-
-    .wrapper {
-      display: table-cell;
-      vertical-align: middle;
-    }
-  }
-
   .paginator {
     user-select: none;
     color: $viewerDarkGray;
-    height: $inputHeight;
 
     .page {
       position: relative;
@@ -145,7 +131,6 @@
         font-family: inherit;
         font-size: inherit;
         color: inherit;
-        background: $faint-yellow;
 
         &:focus {
           opacity: 1;
@@ -180,47 +165,43 @@
 </style>
 
 {#if $viewer.loaded}
-  <div class="container">
-    <div class="wrapper">
-      <div class="paginator">
-        <span class="paginate left" on:click={() => decrement()}>
-          {@html leftPaginator}
-        </span>
-        <span class="page">
-          <span class="hidden">{$viewer.document.pageCount}</span>
-          <span class="absolute">{$renderer.visiblePageNumber}</span>
-          <input
-            type="text"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            bind:this={input}
-            bind:value={customPage}
-            on:focus={() => {
-              intentionalBlur = false;
-              customPage = `${$renderer.visiblePageNumber}`;
-              hadInput = false;
-              select();
-            }}
-            on:blur={handleInput}
-            on:input={() => (hadInput = true)}
-            on:keydown={e => {
-              if (input != document.activeElement) return;
-              if (e.key == 'Escape') {
-                dismiss();
-              } else if (e.key == 'Enter') {
-                handleInput();
-              } else if (e.key == 'ArrowUp') {
-                increment(true);
-              } else if (e.key == 'ArrowDown') {
-                decrement(true);
-              }
-            }} />
-        </span>
-        <span class="rest">of {$viewer.document.pageCount}</span>
-        <span class="paginate right" on:click={() => increment()}>
-          {@html rightPaginator}
-        </span>
-      </div>
-    </div>
+  <div class="paginator">
+    <span class="paginate left" on:click={() => decrement(false)}>
+      {@html leftPaginator}
+    </span>
+    <span class="page">
+      <span class="hidden">{$viewer.document.pageCount}</span>
+      <span class="absolute">{$renderer.visiblePageNumber}</span>
+      <input
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        bind:this={input}
+        bind:value={customPage}
+        on:focus={() => {
+          intentionalBlur = false;
+          customPage = `${$renderer.visiblePageNumber}`;
+          hadInput = false;
+          select();
+        }}
+        on:blur={handleInput}
+        on:input={() => (hadInput = true)}
+        on:keydown={e => {
+          if (input != document.activeElement) return;
+          if (e.key == 'Escape') {
+            dismiss();
+          } else if (e.key == 'Enter') {
+            handleInput();
+          } else if (e.key == 'ArrowUp') {
+            increment(true);
+          } else if (e.key == 'ArrowDown') {
+            decrement(true);
+          }
+        }} />
+    </span>
+    <span class="rest">of {$viewer.document.pageCount}</span>
+    <span class="paginate right" on:click={() => increment(false)}>
+      {@html rightPaginator}
+    </span>
   </div>
 {/if}

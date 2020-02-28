@@ -73,6 +73,42 @@
       position: relative;
     }
   }
+
+  :global(.vheader) {
+    overflow: hidden;
+    width: 100%;
+    text-shadow: 0 1px 0 #ddd;
+    background: #c2c2c2;
+    background: linear-gradient(#dfdfdf, #c2c2c2);
+
+    .vcontent {
+      display: table;
+      width: 100%;
+
+      svg {
+        display: block;
+      }
+    }
+
+    select {
+      @include buttonLike;
+
+      background: rgba(white, 0.7);
+      border-radius: 3px;
+      font-family: inherit;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 15px;
+      outline: none;
+      border: none;
+      padding: 3px 20px 3px 8px;
+      appearance: none;
+
+      background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IDAgMjAgNiI+PHBhdGggZD0iTTEwIDBMNSA2IDAgMGgxMHoiIGZpbGw9IiM1MzUyNTIiLz48L3N2Zz4K");
+      background-size: 21px 11px;
+      background-repeat: no-repeat;
+      background-position: right center;
+    }
+  }
 </style>
 
 <svelte:window on:popstate={handleBackNav} />

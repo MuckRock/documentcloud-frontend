@@ -112,12 +112,9 @@
 
     .content {
       position: relative;
-    }
-
-    :global(img) {
-      border: 1 solid #b0b0b0;
-      box-sizing: border-box;
-      box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
+      border: 1px solid #b0b0b0;
+      border-top-color: #c0c0c0;
+      border-bottom-color: #999;
     }
   }
 
