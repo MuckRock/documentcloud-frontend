@@ -2,7 +2,7 @@ import { Svue } from "svue";
 
 import { documents } from "@/manager/documents";
 
-const POLL_INTERVAL = process.env.POLL_INTERVAL;
+const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL);
 
 export const ticker = new Svue({
   data() {

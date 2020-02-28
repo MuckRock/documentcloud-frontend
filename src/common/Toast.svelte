@@ -6,8 +6,8 @@
   import closeSimpleSvg from "@/assets/close_simple.svg";
 
   // Constants
-  let toastLength = process.env.TOAST_LENGTH;
-  let toastFade = process.env.TOAST_FADE;
+  let toastLength = parseInt(process.env.TOAST_LENGTH);
+  let toastFade = parseInt(process.env.TOAST_FADE);
 
   export let toast;
   export let i;
