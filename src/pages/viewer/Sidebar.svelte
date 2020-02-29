@@ -50,27 +50,29 @@
   }
 </style>
 
-<div
-  class="sidebar"
-  class:disabled={$layout.disableControls}
-  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; left:
-  calc(100% - {$layout.sidebarWidth}px)">
+{#if $layout.showSidebar}
+  <div
+    class="sidebar"
+    class:disabled={$layout.disableControls}
+    style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
+    left: calc(100% - {$layout.sidebarWidth}px)">
 
-  <TableOfContents />
+    <TableOfContents />
 
-  <div class="action" on:click={enterRedactMode}>
-    <h3>Redact</h3>
-    <p>
-      Create redactions on the document to hide text. The document will
-      reprocess afterwards.
-    </p>
+    <div class="action" on:click={enterRedactMode}>
+      <h3>Redact</h3>
+      <p>
+        Create redactions on the document to hide text. The document will
+        reprocess afterwards.
+      </p>
+    </div>
+    <div class="action" on:click={enterAnnotateMode}>
+      <h3>Annotate</h3>
+      <p>Make annotations to keep notes on the document.</p>
+    </div>
+    <div class="action" on:click={enterSectionsMode}>
+      <h3>Edit sections</h3>
+      <p>Add sections to organize your document with a table of contents.</p>
+    </div>
   </div>
-  <div class="action" on:click={enterAnnotateMode}>
-    <h3>Annotate</h3>
-    <p>Make annotations to keep notes on the document.</p>
-  </div>
-  <div class="action" on:click={enterSectionsMode}>
-    <h3>Edit sections</h3>
-    <p>Add sections to organize your document with a table of contents.</p>
-  </div>
-</div>
+{/if}

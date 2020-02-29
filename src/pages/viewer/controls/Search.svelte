@@ -1,6 +1,6 @@
 <script>
   import { layout, initiateSearch } from "@/viewer/layout";
-  import {tick} from 'svelte';
+  import { tick } from "svelte";
 
   // SVG assets
   import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg";
@@ -23,7 +23,8 @@
     expand = true;
     tick().then(() => {
       if (searchElem != null) {
-      searchElem.focus();
+        searchElem.focus();
+      }
     });
   }
 

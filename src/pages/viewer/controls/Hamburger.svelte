@@ -1,4 +1,6 @@
 <script>
+  import { toggleSidebar } from "@/viewer/renderer";
+
   // SVG assets
   import viewerHamburgerSvg from "@/assets/viewer_hamburger.svg";
 </script>
@@ -11,6 +13,6 @@
   }
 </style>
 
-<div class="hamburger">
+<div class="hamburger" on:click={toggleSidebar}>
   {@html viewerHamburgerSvg}
 </div>

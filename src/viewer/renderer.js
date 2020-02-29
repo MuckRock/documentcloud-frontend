@@ -364,11 +364,14 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
 // Zoom
 
 export function zoomFit() {
+  const page = renderer.visiblePageNumber;
   renderer.zoom = ZOOM_OPTIONS[0]; // fit
   renderer.width = renderer.elem.offsetWidth - renderer.pageRail * 2;
+  restorePosition(page - 1);
 }
 
 export function zoomPercent(percent) {
+  const page = renderer.visiblePageNumber;
   let closest = null;
   let minDelta = null;
   for (let i = 1; i < ZOOM_OPTIONS.length; i++) {
@@ -385,6 +388,7 @@ export function zoomPercent(percent) {
     renderer.zoom = closest;
   }
   renderer.width = BASE_WIDTH * percent;
+  restorePosition(page - 1);
 }
 
 export function zoomIn() {
@@ -409,4 +413,13 @@ export function zoomOut() {
     }
   }
   // No more zoom possible, so zoom to max
+}
+
+// Layout
+export async function toggleSidebar() {
+  layout.showSidebar = !layout.showSidebar;
+  await tick();
+  if (renderer.zoom == ZOOM_OPTIONS[0]) {
+    zoomFit();
+  }
 }

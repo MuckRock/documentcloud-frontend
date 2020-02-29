@@ -16,7 +16,7 @@ export const layout = new Svue({
     return {
       // Height of header row
       headerHeight: 46,
-      sidebarWidth: 350,
+      baseSidebarWidth: 350,
       // Height of footer row
       footerHeight: 40,
 
@@ -24,6 +24,8 @@ export const layout = new Svue({
       compact: false,
       // In embedded mode
       embed: false,
+      // Whether to display sidebar
+      showSidebar: true,
 
       loading: false,
       error: null,
@@ -54,6 +56,9 @@ export const layout = new Svue({
     };
   },
   computed: {
+    sidebarWidth(baseSidebarWidth, showSidebar) {
+      return showSidebar ? baseSidebarWidth : 0;
+    },
     displayAnnotate(displayedAnnotation) {
       return displayedAnnotation != null;
     },
