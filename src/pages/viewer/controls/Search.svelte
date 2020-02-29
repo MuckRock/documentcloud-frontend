@@ -55,13 +55,23 @@
     top: 0;
     bottom: 0;
     transition: width 0.5s ease;
+    background: white;
 
-    input {
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding-left: 40px;
-      padding-right: 40px;
+    .container {
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      right: 30px;
+
+      input {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        box-shadow: none;
+      }
     }
 
     .searchicon {
@@ -99,16 +109,18 @@
 </style>
 
 <div class="input" class:expand>
-  <input
-    bind:this={searchElem}
-    placeholder="Search"
-    bind:value={query}
-    disabled={$layout.searchPending}
-    on:keypress={e => {
-      if (e.key == 'Enter') {
-        search();
-      }
-    }} />
+  <div class="container">
+    <input
+      bind:this={searchElem}
+      placeholder="Search"
+      bind:value={query}
+      disabled={$layout.searchPending}
+      on:keypress={e => {
+        if (e.key == 'Enter') {
+          search();
+        }
+      }} />
+  </div>
   <div
     class="searchicon"
     class:disabled={invalidQuery || $layout.searchPending}
