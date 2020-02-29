@@ -1,4 +1,5 @@
 <script>
+  import NoWhitespace from "@/common/NoWhitespace";
   export let sectionOrNote;
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { layout } from "@/viewer/layout";
@@ -92,9 +93,11 @@
         <span
           class="section"
           on:click|preventDefault={() => restorePosition(sectionOrNote.section.page)}>
-          <span class="title">{sectionOrNote.section.title}</span>
-          &nbsp;
-          <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+          <NoWhitespace>
+            <span class="title">{sectionOrNote.section.title}</span>
+            <span>&nbsp;</span>
+            <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+          </NoWhitespace>
         </span>
       </summary>
       <ul class="children">
@@ -112,9 +115,11 @@
     <div
       class="section"
       on:click={() => restorePosition(sectionOrNote.section.page)}>
-      <span class="title">{sectionOrNote.section.title}</span>
-      &nbsp;
-      <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+      <NoWhitespace>
+        <span class="title">{sectionOrNote.section.title}</span>
+        <span>&nbsp;</span>
+        <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+      </NoWhitespace>
     </div>
   {/if}
 {:else}
@@ -124,8 +129,10 @@
     class:hover={sectionOrNote.note == $layout.hoveredNote}
     use:hoveredNote={sectionOrNote.note}
     on:click={() => showAnnotation(sectionOrNote.note, true)}>
-    <span class="title">{sectionOrNote.note.title}</span>
-    &nbsp;
-    <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+    <NoWhitespace>
+      <span class="title">{sectionOrNote.note.title}</span>
+      <span>&nbsp;</span>
+      <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+    </NoWhitespace>
   </div>
 {/if}
