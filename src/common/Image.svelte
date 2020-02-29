@@ -135,6 +135,11 @@
         height: 100%;
         background: white;
         pointer-events: none;
+
+        // Fix blurry image bug
+        // https://stackoverflow.com/a/36787557
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
       }
     }
   }
