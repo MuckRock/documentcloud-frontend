@@ -247,23 +247,6 @@
         p. {readablePageNumber}
       </div>
     {/if}
-    {#if $renderer.mode == 'image'}
-      <VariableChunk
-        width={$renderer.width}
-        bind:aspect={additionalAspect}
-        let:update>
-        <!-- TODO: page note support (visible={showPageNoteInsert}) -->
-        <hr
-          class:visible={false}
-          on:mouseover={() => (showPageNoteInsert = true)}
-          on:mouseout={() => (showPageNoteInsert = false)} />
-        {#if false}
-          <div class="tag pageinsert">
-            {@html publicTagSvg}
-          </div>
-        {/if}
-      </VariableChunk>
-    {/if}
     <div class="content">
       <!-- Actual page image -->
       <div class="img">

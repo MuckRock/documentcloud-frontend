@@ -48,7 +48,6 @@ export const renderer = new Svue({
       return width >= BREAKPOINT;
     },
     pageRail(basePageRail, baseSmallRail, showRail) {
-      console.log("SHOW RAIL", showRail);
       return showRail ? basePageRail : baseSmallRail;
     },
     annotationDialogOpen(layout) {
