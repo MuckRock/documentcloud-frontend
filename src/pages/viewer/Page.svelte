@@ -129,9 +129,11 @@
 
     .content {
       position: relative;
-      border: 1px solid #b0b0b0;
-      border-top-color: #c0c0c0;
-      border-bottom-color: #999;
+
+      :global(img),
+      :global(.text) {
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.07);
+      }
     }
   }
 

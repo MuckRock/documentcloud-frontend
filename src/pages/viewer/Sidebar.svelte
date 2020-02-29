@@ -17,6 +17,8 @@
     box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.12);
     overflow: auto;
     z-index: $viewerSidebarZ;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
 
     &.disabled {
       pointer-events: none;
@@ -55,7 +57,7 @@
     class="sidebar"
     class:disabled={$layout.disableControls}
     style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
-    left: calc(100% - {$layout.sidebarWidth}px)">
+    width: {$layout.sidebarWidth}px">
 
     <TableOfContents />
 

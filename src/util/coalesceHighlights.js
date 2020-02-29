@@ -2,7 +2,6 @@ import { allIndices } from "./string";
 
 export function coalesceHighlights(text, highlights) {
   // Highlight text based on Solr search highlights.
-  console.log(text);
   if (text == null) text = "";
   if (highlights == null) return [{ type: "normal", text }];
 

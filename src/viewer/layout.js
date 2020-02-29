@@ -15,10 +15,10 @@ export const layout = new Svue({
   data() {
     return {
       // Height of header row
-      headerHeight: 46,
+      headerHeight: 36,
       baseSidebarWidth: 350,
       // Height of footer row
-      footerHeight: 40,
+      footerHeight: 36,
 
       // Show the title in the header (compact=false)
       compact: false,

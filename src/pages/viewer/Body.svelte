@@ -5,7 +5,14 @@
   import { onMount } from "svelte";
   import { viewer } from "@/viewer/viewer";
   import { layout, cancelActions } from "@/viewer/layout";
-  import { renderer, scroll, zoomFit, ZOOM_OPTIONS } from "@/viewer/renderer";
+  import {
+    renderer,
+    scroll,
+    zoomFit,
+    showSidebar,
+    ZOOM_OPTIONS,
+    BREAKPOINT
+  } from "@/viewer/renderer";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
@@ -16,7 +23,11 @@
   $: actionOffset =
     actionHeight == null || $layout.action == null ? 0 : actionHeight;
 
+  $: scrollable = $renderer.width - $layout.sidebarWidth > 0;
+
   function updateDimension() {
+    if (!scrollable) return;
+
     if (renderer.blockScrollEvent) {
       // Block scroll events if flag is set
       renderer.blockScrollEvent = false;
@@ -55,10 +66,13 @@
     if (e.key == "Escape") cancelActions();
   }
 
-  onMount(() => {
+  onMount(async () => {
     renderer.elem = body;
     if (body.offsetWidth < renderer.width) {
       zoomFit();
+    }
+    if (body.offsetWidth < BREAKPOINT) {
+      await showSidebar(false);
     }
     updateDimension();
   });
@@ -73,7 +87,12 @@
     position: absolute;
     left: 0;
     z-index: $viewerBodyZ;
-    overflow: auto;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    &.scrollable {
+      overflow: auto;
+    }
 
     &.grayed {
       background: $viewerBodyBgDarker;
@@ -128,6 +147,7 @@
   class:grayed={$layout.displayAnnotate}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px"
+  class:scrollable
   bind:this={body}
   on:scroll={updateDimension}>
   {#if $viewer.loaded}

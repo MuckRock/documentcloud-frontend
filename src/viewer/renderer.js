@@ -13,7 +13,7 @@ export const ZOOM_OPTIONS = ["Fit", ...ZOOM_VALUES.map(x => `${x}%`)];
 const ZOOM_PERCENTS = ZOOM_VALUES.map(x => x / 100);
 export const BASE_WIDTH = 500;
 
-const BREAKPOINT = 600;
+export const BREAKPOINT = 600;
 
 export const renderer = new Svue({
   data() {
@@ -35,7 +35,8 @@ export const renderer = new Svue({
       visibleOffset: DEFAULT_VISIBLE_OFFSET,
       viewer,
       layout,
-      blockScrollEvent: false
+      blockScrollEvent: false,
+      rememberPage: null
     };
   },
   watch: {
@@ -122,8 +123,10 @@ export const renderer = new Svue({
       top,
       verticalPageMargin,
       verticalDocumentMargin,
-      visibleOffset
+      visibleOffset,
+      rememberPage
     ) {
+      if (rememberPage != null) return rememberPage;
       let offset = verticalDocumentMargin + verticalPageMargin + visibleOffset;
       for (let i = 0; i < heights.length; i++) {
         if (offset >= top) return i;
@@ -323,6 +326,12 @@ export function getPosition() {
 }
 
 export async function restorePosition(pos) {
+  // Clear remembered page so it does not influence results
+  if (renderer.rememberPage != null) {
+    renderer.rememberPage = null;
+    await tick();
+  }
+
   // Scroll to a desired page number.
   const heights = renderer.heights;
 
@@ -426,9 +435,30 @@ export function zoomOut() {
 
 // Layout
 export async function toggleSidebar() {
-  layout.showSidebar = !layout.showSidebar;
-  await tick();
-  if (renderer.zoom == ZOOM_OPTIONS[0]) {
-    zoomFit();
+  await showSidebar(!layout.showSidebar);
+}
+
+export async function showSidebar(show) {
+  // Keep track of previous page
+  if (show) {
+    renderer.rememberPage = renderer.visiblePageNumber;
   }
+  layout.showSidebar = show;
+  await tick();
+  let restore = null;
+  if (!show) {
+    // Pop previously remembered page
+    if (renderer.rememberPage != null) {
+      restore = renderer.rememberPage - 1;
+      renderer.rememberPage = null;
+    }
+  }
+  if (renderer.zoom == ZOOM_OPTIONS[0]) {
+    // Zoom and preserve remembered page
+    const prevRemember = renderer.rememberPage;
+    zoomFit();
+    renderer.rememberPage = prevRemember;
+  }
+  // Restore page if necessary
+  if (restore != null) restorePosition(restore);
 }
