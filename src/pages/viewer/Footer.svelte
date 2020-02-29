@@ -25,6 +25,10 @@
 
     &.side {
       width: 200px;
+
+      @media only screen and (max-width: 600px) {
+        display: none;
+      }
     }
 
     &.center {

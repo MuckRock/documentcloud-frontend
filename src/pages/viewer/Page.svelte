@@ -17,6 +17,7 @@
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { pageImageUrl, textUrl } from "@/api/viewer";
   import emitter from "@/emit";
+  import { onMount, onDestroy } from "svelte";
 
   // SVG assets
   import publicTagSvg from "@/assets/public_tag.svg";
@@ -56,6 +57,24 @@
       emit.shift(shift);
     }
   }
+
+  let visualScale = 1;
+
+  function viewportHandler() {
+    visualScale = window.visualViewport.scale;
+  }
+
+  onMount(() => {
+    if (window.visualViewport != null) {
+      window.visualViewport.addEventListener("resize", viewportHandler);
+    }
+  });
+
+  onDestroy(() => {
+    if (window.visualViewport != null) {
+      window.visualViewport.removeEventListener("resize", viewportHandler);
+    }
+  });
 </script>
 
 <style lang="scss">
@@ -247,7 +266,7 @@
       <div class="img">
         {#if $renderer.mode == 'image'}
           <Image
-            src={pageImageUrl(document, pageNumber, $renderer.width)}
+            src={pageImageUrl(document, pageNumber, $renderer.width, visualScale)}
             aspect={aspect - additionalAspect}
             fade={false}
             delay={50}
