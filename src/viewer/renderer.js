@@ -13,6 +13,8 @@ export const ZOOM_OPTIONS = ["Fit", ...ZOOM_VALUES.map(x => `${x}%`)];
 const ZOOM_PERCENTS = ZOOM_VALUES.map(x => x / 100);
 export const BASE_WIDTH = 500;
 
+const BREAKPOINT = 600;
+
 export const renderer = new Svue({
   data() {
     return {
@@ -21,7 +23,8 @@ export const renderer = new Svue({
       mode: "image",
       width: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
       zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 1],
-      pageRail: 69,
+      basePageRail: 69,
+      baseSmallRail: 10,
       verticalPageMargin: 6,
       baseVerticalDocumentMargin: 18,
       annotationDocumentMargin: 60,
@@ -41,6 +44,13 @@ export const renderer = new Svue({
     }
   },
   computed: {
+    showRail(width) {
+      return width >= BREAKPOINT;
+    },
+    pageRail(basePageRail, baseSmallRail, showRail) {
+      console.log("SHOW RAIL", showRail);
+      return showRail ? basePageRail : baseSmallRail;
+    },
     annotationDialogOpen(layout) {
       return layout.displayAnnotate;
     },

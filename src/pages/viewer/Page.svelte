@@ -90,8 +90,6 @@
       top: 0;
       padding: 21px 0 0 0;
       float: left;
-      margin-left: -$pageRail;
-      width: $pageRail;
       font-weight: bold;
       font-size: 12px;
       color: #313131;
@@ -241,9 +239,14 @@
     class:grayed={$layout.displayAnnotate}
     style="width: {$renderer.fullPageWidth}px; padding: 0 {$renderer.pageRail}px;
     margin: 0 auto">
-    <div class="number" style="top: {actionOffset}px">
-      p. {readablePageNumber}
-    </div>
+    {#if $renderer.showRail}
+      <div
+        class="number"
+        style="top: {actionOffset}px; margin-left: {-$renderer.pageRail}px;
+        width: {$renderer.pageRail}px;">
+        p. {readablePageNumber}
+      </div>
+    {/if}
     {#if $renderer.mode == 'image'}
       <VariableChunk
         width={$renderer.width}
