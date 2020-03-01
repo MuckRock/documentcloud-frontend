@@ -87,7 +87,7 @@
     }
   });
 
-  let gestureStartZoom = null;
+  let gestureStartZoom = 100;
   const MAX_ZOOM = 3;
   const MIN_ZOOM = 0.5;
   let currentZoom = 1;
@@ -200,67 +200,10 @@
       }
     }
   }
-
-  .zoominfo {
-    position: absolute;
-    display: table;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    background: rgba(0, 128, 0, 0.74);
-    // background: linear-gradient(rgba(0, 128, 0, 0.74), rgba(0, 51, 0, 0.8));
-    background: linear-gradient(
-      rgba(lighten($viewerLink, 10%), 0.6),
-      rgba($viewerLink, 0.7)
-    );
-    text-shadow: 0 1px 0 black, 0 0 2px rgba(0, 0, 0, 0.12);
-
-    > div {
-      display: table-cell;
-      vertical-align: middle;
-      width: 100%;
-      height: 100%;
-      color: white;
-      font-size: 40px;
-      text-align: center;
-      letter-spacing: 3px;
-    }
-
-    .bar {
-      position: absolute;
-      top: 30%;
-      height: 8%;
-      left: 0;
-      right: 0;
-      z-index: -1;
-      border: solid 1px white;
-      box-sizing: border-box;
-
-      .rect {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 5%;
-        border: solid 1px white;
-        box-sizing: border-box;
-        background: rgba(255, 255, 255, 0.25);
-        z-index: 1;
-        margin-left: -5%;
-
-        &.solid {
-          background: rgba(255, 255, 255, 0.75);
-        }
-      }
-    }
-  }
 </style>
 
 <div
   class="body"
-  class:blurred={gestureStartZoom != null}
   class:grayed={$layout.displayAnnotate}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px"
@@ -303,17 +246,6 @@
     {/each}
   {/if}
 </div>
-{#if gestureStartZoom != null}
-  <div class="zoominfo">
-    <div>{zoomAmount}%</div>
-    <div class="bar">
-      <div
-        class="rect"
-        class:solid={zoomAmount == 100}
-        style="left: {zoomAmount >= 100 ? ((zoomAmount - 100) / 100 / (MAX_ZOOM - 1)) * 50 + 50 : (zoomAmount / 100 - MIN_ZOOM) * (MIN_ZOOM / 0.5) * 100 * (50 / 55) + 5}%" />
-    </div>
-  </div>
-{/if}
 
 <svelte:window
   on:resize={handleResize}
