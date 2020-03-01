@@ -18,7 +18,7 @@
   }
 
   .title {
-    color: #004276;
+    color: $viewerLink;
     font-weight: bold;
     font-size: 13px;
   }
@@ -31,18 +31,10 @@
   .note {
     cursor: pointer;
 
-    .page {
-      visibility: hidden;
-    }
-
     &:hover,
     &.hover {
       .title {
         text-decoration: underline;
-      }
-
-      .page {
-        visibility: visible;
       }
     }
   }
@@ -60,7 +52,7 @@
     :global(.title) {
       font-size: 12px;
       font-weight: normal;
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 

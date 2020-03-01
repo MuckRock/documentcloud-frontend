@@ -325,7 +325,9 @@ export function getPosition() {
   }
 }
 
-export async function restorePosition(pos) {
+export async function restorePosition(pos, closeSidebarIfNeeded = true) {
+  if (closeSidebarIfNeeded) await closeSidebarIfFullWidth();
+
   // Clear remembered page so it does not influence results
   if (renderer.rememberPage != null) {
     renderer.rememberPage = null;
@@ -369,23 +371,25 @@ export async function scrollVisibleAnnotationIntoView() {
 }
 
 export async function showAnnotation(annotation, scrollIntoView = false) {
+  await closeSidebarIfFullWidth();
+
   if (!annotationValid(annotation)) return;
   layout.annotateMode = "view";
   layout.displayedAnnotation = annotation;
 
   if (scrollIntoView) {
-    restorePosition(annotation.page);
+    await restorePosition(annotation.page);
     await scrollVisibleAnnotationIntoView();
   }
 }
 
 // Zoom
 
-export function zoomFit() {
+export function zoomFit(closeSidebarIfNeeded = true) {
   const page = renderer.visiblePageNumber;
   renderer.zoom = ZOOM_OPTIONS[0]; // fit
   renderer.width = renderer.elem.offsetWidth - renderer.pageRail * 2;
-  restorePosition(page - 1);
+  restorePosition(page - 1, closeSidebarIfNeeded);
 }
 
 export function zoomPercent(percent) {
@@ -456,9 +460,16 @@ export async function showSidebar(show) {
   if (renderer.zoom == ZOOM_OPTIONS[0]) {
     // Zoom and preserve remembered page
     const prevRemember = renderer.rememberPage;
-    zoomFit();
+    zoomFit(false);
     renderer.rememberPage = prevRemember;
   }
   // Restore page if necessary
-  if (restore != null) restorePosition(restore);
+  if (restore != null) restorePosition(restore, false);
+}
+
+export async function closeSidebarIfFullWidth() {
+  if (renderer.width - layout.sidebarWidth <= 0) {
+    // Close sidebar if necessary
+    await showSidebar(false);
+  }
 }

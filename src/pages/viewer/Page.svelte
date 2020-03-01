@@ -160,12 +160,6 @@
       pointer-events: none;
       visibility: hidden;
     }
-
-    &.pageinsert {
-      top: -5px;
-      left: -3px;
-      opacity: 1;
-    }
   }
 
   .annotation {
@@ -204,31 +198,6 @@
     &.grayed {
       pointer-events: none;
       visibility: hidden;
-    }
-  }
-
-  hr {
-    height: 16px;
-    position: relative;
-    border: none;
-    padding: 0;
-    margin: 0;
-
-    &:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 8px;
-      border-top: dashed 1px transparent;
-      width: 100%;
-    }
-
-    &.visible {
-      cursor: crosshair;
-
-      &:after {
-        border-top: dashed 1px gray;
-      }
     }
   }
 </style>

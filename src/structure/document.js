@@ -56,6 +56,9 @@ export class Document extends Svue {
         assetUrl(doc) {
           return doc.asset_url;
         },
+        pdf(assetUrl, id, slug) {
+          return `${assetUrl}documents/${id}/${slug}.pdf`;
+        },
         thumbnail(assetUrl, id, slug, updatedAtTimestamp) {
           // Calculate thumbnail route
           // TODO: last modified
