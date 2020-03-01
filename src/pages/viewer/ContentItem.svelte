@@ -64,14 +64,20 @@
       list-style: none;
       margin: 0;
       padding: 0;
+      padding-left: 10px;
+      text-indent: -6px;
 
       .circle {
-        margin-right: 2px;
+        margin-right: 5px;
       }
 
-      > * {
+      > :global(span > *) {
         display: inline-block;
         vertical-align: middle;
+      }
+
+      :global(.note) {
+        display: inline;
       }
     }
   }
@@ -95,10 +101,13 @@
       <ul class="children">
         {#each sectionOrNote.children as child}
           <li>
-            <span class="circle">
-              {@html smallCircleSvg}
-            </span>
-            <svelte:self sectionOrNote={child} />
+            <NoWhitespace>
+              <span class="circle">
+                {@html smallCircleSvg}
+              </span>
+              <span>&nbsp;</span>
+              <svelte:self sectionOrNote={child} />
+            </NoWhitespace>
           </li>
         {/each}
       </ul>

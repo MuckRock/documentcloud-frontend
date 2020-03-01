@@ -74,8 +74,59 @@
     if (body.offsetWidth < BREAKPOINT) {
       await showSidebar(false);
     }
+    // Set original width
+    renderer.originalWidth = renderer.width;
     updateDimension();
   });
+
+  let gestureStartZoom = null;
+  let gestureStartScrollX = null;
+  let gestureStartScrollY = null;
+  let gestureXOff = null;
+  let gestureYOff = null;
+  const MAX_WIDTH = 2000;
+  const MIN_WIDTH = 100;
+
+  function handleZoom(scale) {
+    if (gestureStartZoom == null) return;
+    scale = Math.min(MAX_WIDTH / gestureStartZoom, scale);
+    scale = Math.max(MIN_WIDTH / gestureStartZoom, scale);
+    renderer.width = gestureStartZoom * scale;
+    body.scrollLeft = gestureStartScrollX * scale - body.scrollWidth / 2;
+    body.scrollTop = gestureStartScrollY * scale;
+  }
+
+  function handleGestureStart(e) {
+    if (e.scale != null) {
+      gestureStartZoom = renderer.width;
+
+      const { left, top } = body.getBoundingClientRect();
+      const xOff = e.clientX - left;
+      const yOff = e.clientY - top;
+      gestureXOff = xOff;
+      gestureYOff = yOff;
+
+      gestureStartScrollX = body.scrollLeft + body.scrollWidth / 2;
+      gestureStartScrollY = body.scrollTop;
+      handleZoom(e.scale);
+    }
+  }
+
+  function handleGestureChange(e) {
+    if (e.scale != null) {
+      handleZoom(e.scale);
+    }
+  }
+
+  function handleGestureEnd(e) {
+    if (e.scale != null) {
+      gestureStartZoom = null;
+      gestureStartScrollX = null;
+      gestureStartScrollY = null;
+      gestureXOff = null;
+      gestureYOff = null;
+    }
+  }
 
   // Give spaces a unique ID in the keyed each block below
   let spaceId = 1;
@@ -89,6 +140,7 @@
     z-index: $viewerBodyZ;
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
 
     &.scrollable {
       overflow: auto;
@@ -149,6 +201,9 @@
   {$layout.sidebarWidth}px"
   class:scrollable
   bind:this={body}
+  on:gesturestart={handleGestureStart}
+  on:gesturechange={handleGestureChange}
+  on:gestureend={handleGestureEnd}
   on:scroll={updateDimension}>
   {#if $viewer.loaded}
     <!-- Action pane -->

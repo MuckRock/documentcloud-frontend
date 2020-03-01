@@ -78,6 +78,10 @@ export const layout = new Svue({
     disableControls(action, displayAnnotate) {
       return action != null || displayAnnotate;
     },
+    nomove(action) {
+      // Don't allow touchmove when an action is being applied
+      return action != null;
+    },
 
     // Redactions
     currentRedaction(redacting, rawRedaction) {

@@ -22,6 +22,7 @@ export const renderer = new Svue({
       textAspects: [],
       mode: "image",
       width: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
+      originalWidth: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
       zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 1],
       basePageRail: 69,
       baseSmallRail: 10,
@@ -45,8 +46,8 @@ export const renderer = new Svue({
     }
   },
   computed: {
-    showRail(width) {
-      return width >= BREAKPOINT;
+    showRail(originalWidth) {
+      return originalWidth >= BREAKPOINT;
     },
     pageRail(basePageRail, baseSmallRail, showRail) {
       return showRail ? basePageRail : baseSmallRail;
@@ -344,7 +345,9 @@ export async function restorePosition(pos, closeSidebarIfNeeded = true) {
   await scroll(totalHeight);
 }
 
-export function changeMode(mode) {
+export async function changeMode(mode) {
+  await closeSidebarIfFullWidth();
+
   // No effect when mode is same
   if (mode == renderer.mode) return;
 
