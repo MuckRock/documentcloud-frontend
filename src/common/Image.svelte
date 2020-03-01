@@ -106,7 +106,6 @@
     if (data == null) return;
     const { x, y } = data;
     mousedown = true;
-    console.log("MOUSE DOWN", x, y);
     emit.dragStart(normalize(x, y));
   }
 
@@ -117,12 +116,10 @@
     if (data == null) return;
 
     const { x, y } = data;
-    console.log("MOUSE MOVE", x, y);
     emit.dragMove(normalize(x, y));
   }
 
   function handleMouseUp(e) {
-    console.log("TOUCH END", e);
     if (!mousedown) return;
 
     mousedown = false;
@@ -130,7 +127,6 @@
     const data = getXY(e, true, true);
     if (data == null) return;
     const { x, y } = data;
-    console.log("MOUSE END", x, y);
     emit.dragEnd(normalize(x, y));
   }
 

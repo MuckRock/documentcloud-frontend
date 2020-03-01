@@ -388,10 +388,11 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
 
 // Zoom
 
-export function zoomFit(closeSidebarIfNeeded = true) {
+export function zoomFit(closeSidebarIfNeeded = true, multiplier = 1) {
   const page = renderer.visiblePageNumber;
   renderer.zoom = ZOOM_OPTIONS[0]; // fit
-  renderer.width = renderer.elem.offsetWidth - renderer.pageRail * 2;
+  renderer.width =
+    (renderer.elem.offsetWidth - renderer.pageRail * 2) * multiplier;
   restorePosition(page - 1, closeSidebarIfNeeded);
 }
 

@@ -55,8 +55,6 @@
   }
 
   async function handleShift({ detail: shift }) {
-    // Don't update scroll during zoom
-    if (gestureStartZoom != null) return;
     // Don't handle shifts that would jar away from document edges
     if (body.scrollTop == 0) return;
     if (body.scrollTop + body.offsetHeight == body.scrollHeight) return;
@@ -70,46 +68,53 @@
 
   onMount(async () => {
     renderer.elem = body;
-    if (body.offsetWidth < renderer.width) {
-      zoomFit();
+
+    let willZoom = body.offsetWidth < renderer.width;
+    if (willZoom) {
+      await zoomFit();
     }
+
     if (body.offsetWidth < BREAKPOINT) {
       await showSidebar(false);
     }
     // Set original width
     renderer.originalWidth = renderer.width;
-    updateDimension();
+    await updateDimension();
+
+    if (willZoom) {
+      // Zoom twice to fix issue if rails go away in the middle
+      await zoomFit();
+    }
   });
 
   let gestureStartZoom = null;
-  let gestureStartScrollX = null;
-  let gestureStartScrollY = null;
-  let gestureXOff = null;
-  let gestureYOff = null;
-  const MAX_WIDTH = 2000;
-  const MIN_WIDTH = 100;
+  const MAX_ZOOM = 3;
+  const MIN_ZOOM = 0.5;
+  let currentZoom = 1;
+  let startZooming = false;
+  $: zoomAmount = Math.round(currentZoom * 10) * 10;
+  $: {
+    if (startZooming) {
+      (async () => {
+        await zoomFit(true, zoomAmount / 100);
+        await updateDimension();
+      })();
+    }
+  }
 
   function handleZoom(scale) {
     if (gestureStartZoom == null) return;
-    scale = Math.min(MAX_WIDTH / gestureStartZoom, scale);
-    scale = Math.max(MIN_WIDTH / gestureStartZoom, scale);
-    renderer.width = gestureStartZoom * scale;
-    body.scrollLeft = gestureStartScrollX * scale - body.scrollWidth / 2;
-    body.scrollTop = gestureStartScrollY * scale;
+    // Apply curve on scale
+    scale = Math.pow(scale, 0.3);
+    scale = Math.min(MAX_ZOOM / gestureStartZoom, scale);
+    scale = Math.max(MIN_ZOOM / gestureStartZoom, scale);
+    currentZoom = scale * gestureStartZoom;
   }
 
   function handleGestureStart(e) {
     if (e.scale != null) {
-      gestureStartZoom = renderer.width;
-
-      const { left, top } = body.getBoundingClientRect();
-      const xOff = e.clientX - left;
-      const yOff = e.clientY - top;
-      gestureXOff = xOff;
-      gestureYOff = yOff;
-
-      gestureStartScrollX = body.scrollLeft + body.scrollWidth / 2;
-      gestureStartScrollY = body.scrollTop;
+      gestureStartZoom = currentZoom;
+      startZooming = true;
       handleZoom(e.scale);
     }
   }
@@ -121,13 +126,8 @@
   }
 
   function handleGestureEnd(e) {
-    if (e.scale != null) {
-      gestureStartZoom = null;
-      gestureStartScrollX = null;
-      gestureStartScrollY = null;
-      gestureXOff = null;
-      gestureYOff = null;
-    }
+    gestureStartZoom = null;
+    startZooming = false;
   }
 
   // Give spaces a unique ID in the keyed each block below
@@ -150,6 +150,10 @@
 
     &.grayed {
       background: $viewerBodyBgDarker;
+    }
+
+    &.blurred {
+      filter: blur(1px);
     }
 
     .actionpane {
@@ -194,10 +198,67 @@
       }
     }
   }
+
+  .zoominfo {
+    position: absolute;
+    display: table;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: rgba(0, 128, 0, 0.74);
+    // background: linear-gradient(rgba(0, 128, 0, 0.74), rgba(0, 51, 0, 0.8));
+    background: linear-gradient(
+      rgba(lighten($viewerLink, 10%), 0.6),
+      rgba($viewerLink, 0.7)
+    );
+    text-shadow: 0 1px 0 black, 0 0 2px rgba(0, 0, 0, 0.12);
+
+    > div {
+      display: table-cell;
+      vertical-align: middle;
+      width: 100%;
+      height: 100%;
+      color: white;
+      font-size: 40px;
+      text-align: center;
+      letter-spacing: 3px;
+    }
+
+    .bar {
+      position: absolute;
+      top: 30%;
+      height: 8%;
+      left: 0;
+      right: 0;
+      z-index: -1;
+      border: solid 1px white;
+      box-sizing: border-box;
+
+      .rect {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 5%;
+        border: solid 1px white;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.25);
+        z-index: 1;
+        margin-left: -5%;
+
+        &.solid {
+          background: rgba(255, 255, 255, 0.75);
+        }
+      }
+    }
+  }
 </style>
 
 <div
   class="body"
+  class:blurred={gestureStartZoom != null}
   class:grayed={$layout.displayAnnotate}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px"
@@ -240,5 +301,20 @@
     {/each}
   {/if}
 </div>
+{#if gestureStartZoom != null}
+  <div class="zoominfo">
+    <div>{zoomAmount}%</div>
+    <div class="bar">
+      <div
+        class="rect"
+        class:solid={zoomAmount == 100}
+        style="left: {zoomAmount >= 100 ? ((zoomAmount - 100) / 100 / (MAX_ZOOM - 1)) * 50 + 50 : (zoomAmount / 100 - MIN_ZOOM) * (MIN_ZOOM / 0.5) * 100 * (50 / 55) + 5}%" />
+    </div>
+  </div>
+{/if}
 
-<svelte:window on:resize={handleResize} on:keydown={handleKeyDown} />
+<svelte:window
+  on:resize={handleResize}
+  on:keydown={handleKeyDown}
+  on:mouseout={handleGestureEnd}
+  on:touchend={handleGestureEnd} />
