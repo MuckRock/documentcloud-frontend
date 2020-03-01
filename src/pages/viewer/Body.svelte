@@ -105,7 +105,7 @@
   function handleZoom(scale) {
     if (gestureStartZoom == null) return;
     // Apply curve on scale
-    scale = Math.pow(scale, 0.3);
+    scale = Math.pow(scale, 1);
     scale = Math.min(MAX_ZOOM / gestureStartZoom, scale);
     scale = Math.max(MIN_ZOOM / gestureStartZoom, scale);
     currentZoom = scale * gestureStartZoom;
@@ -122,10 +122,12 @@
   function handleGestureChange(e) {
     if (e.scale != null) {
       handleZoom(e.scale);
+    } else {
+      handleGestureEnd();
     }
   }
 
-  function handleGestureEnd(e) {
+  function handleGestureEnd() {
     gestureStartZoom = null;
     startZooming = false;
   }
