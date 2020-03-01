@@ -55,6 +55,8 @@
   }
 
   async function handleShift({ detail: shift }) {
+    // Don't update scroll during zoom
+    if (gestureStartZoom != null) return;
     // Don't handle shifts that would jar away from document edges
     if (body.scrollTop == 0) return;
     if (body.scrollTop + body.offsetHeight == body.scrollHeight) return;
