@@ -6,7 +6,8 @@
   import RedactPane from "./pane/RedactPane";
   import AnnotatePane from "./pane/AnnotatePane";
   import SearchPane from "./pane/SearchPane";
-  import { onMount } from "svelte";
+  import SearchResults from "./SearchResults";
+  import { onMount, tick } from "svelte";
   import { viewer } from "@/viewer/viewer";
   import { layout, cancelActions } from "@/viewer/layout";
   import {
@@ -95,6 +96,7 @@
   let gestureStartZoom = 100;
   const MAX_ZOOM = 3;
   const MIN_ZOOM = 0.5;
+  const ZOOM_RESISTANCE = 0.15; // if within this factor of 1, jump to 1 at end
   let currentZoom = 1;
   let startZooming = false;
   $: zoomAmount = Math.round(currentZoom * 10) * 10;
@@ -132,7 +134,13 @@
     }
   }
 
-  function handleGestureEnd() {
+  async function handleGestureEnd() {
+    console.log(currentZoom);
+    if (Math.abs(currentZoom - 1) <= ZOOM_RESISTANCE) {
+      currentZoom = 1;
+      await tick();
+    }
+
     gestureStartZoom = null;
     startZooming = false;
   }
@@ -150,6 +158,10 @@
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x pan-y;
+
+    &.textmode {
+      touch-action: initial;
+    }
 
     &.scrollable {
       overflow: auto;
@@ -244,6 +256,7 @@
 <div
   class="body"
   class:grayed={$layout.displayAnnotate}
+  class:textmode={$renderer.mode != 'image'}
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px"
   class:scrollable
@@ -272,24 +285,28 @@
         </div>
       </div>
     {/if}
-    <!-- Page contents -->
-    {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${spaceId++}`)}
-      {#if chunk.type == 'space'}
-        <div style="height: {chunk.height}px" />
-      {:else if chunk.type == 'page'}
-        <Page
-          on:shift={handleShift}
-          document={$viewer.document}
-          pageNumber={chunk.number}
-          {actionOffset}
-          aspect={$renderer.computedAspects[chunk.number].aspect} />
-      {/if}
-    {/each}
+    {#if $renderer.mode == 'image' || $renderer.mode == 'text'}
+      <!-- Page contents -->
+      {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${spaceId++}`)}
+        {#if chunk.type == 'space'}
+          <div style="height: {chunk.height}px" />
+        {:else if chunk.type == 'page'}
+          <Page
+            on:shift={handleShift}
+            document={$viewer.document}
+            pageNumber={chunk.number}
+            {actionOffset}
+            aspect={$renderer.computedAspects[chunk.number].aspect} />
+        {/if}
+      {/each}
+    {:else if $renderer.mode == 'search'}
+      <SearchResults />
+    {/if}
   {/if}
 </div>
 
 <!-- Search results -->
-{#if $layout.searchPages != null}
+{#if $layout.searchPages != null && $renderer.mode != 'search'}
   <div
     class="searchresults"
     style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;

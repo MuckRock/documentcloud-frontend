@@ -68,7 +68,7 @@ export const renderer = new Svue({
     aspects(mode, imageAspects, textAspects) {
       if (mode == "image") return imageAspects;
       if (mode == "text") return textAspects;
-      throw new Error("Invalid mode");
+      return []; // in another mode
     },
     fullPageWidth(width, pageRail) {
       return width + pageRail * 2;
@@ -498,7 +498,7 @@ let modeBeforeSearch = null;
 export async function initiateSearch(query) {
   if (await startSearch(query)) {
     modeBeforeSearch = renderer.mode;
-    await changeMode("text");
+    await changeMode("search");
   }
 }
 

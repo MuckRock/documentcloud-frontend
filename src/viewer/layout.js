@@ -115,6 +115,17 @@ export const layout = new Svue({
     shownEditAnnotation(rawAnnotation, annotationPending) {
       if (!annotationPending) return null;
       return consolidateDragObject(rawAnnotation);
+    },
+
+    // Search
+    totalResults(searchHighlights, searchPages) {
+      if (searchHighlights == null || searchPages == null) return 0;
+      let sum = 0;
+      for (let i = 0; i < searchPages.length; i++) {
+        const { page } = searchPages[i];
+        sum += searchHighlights[page].length;
+      }
+      return sum;
     }
   }
 });

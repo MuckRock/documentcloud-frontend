@@ -1,18 +1,22 @@
 <script>
-  import { changeMode } from "@/viewer/renderer";
+  import { renderer, changeMode } from "@/viewer/renderer";
+  import { layout } from "@/viewer/layout";
 
-  let view = "document";
-
-  $: {
+  async function handleChange(e) {
+    const view = e.target.value;
+    console.log("GOT VIEW", view);
     if (view == "text") {
-      changeMode("text");
-    } else {
-      changeMode("image");
+      await changeMode("text");
+    } else if (view == "image") {
+      await changeMode("image");
     }
   }
 </script>
 
-<select bind:value={view}>
-  <option value="document">Document</option>
+<select bind:value={$renderer.mode} on:change={handleChange}>
+  <option value="image">Document</option>
   <option value="text">Plain Text</option>
+  <option value="search" hidden={$layout.searchPages == null}>
+    Search Results
+  </option>
 </select>

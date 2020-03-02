@@ -1,5 +1,6 @@
 <script>
   import TableOfContents from "./TableOfContents";
+  import SpecialMessage from "@/common/SpecialMessage";
 
   import {
     enterRedactMode,
@@ -144,5 +145,7 @@
       <h3>Edit sections</h3>
       <p>Add sections to organize your document with a table of contents.</p>
     </div>
+
+    <SpecialMessage />
   </div>
 {/if}
