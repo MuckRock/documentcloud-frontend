@@ -12,6 +12,7 @@
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
+  import SpecialMessage from "@/common/SpecialMessage";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -96,6 +97,7 @@
     style="margin-top: 16px; padding: 1.5em 36px;" />
   {#if !$documents.error}
     <div class="container">
+      <SpecialMessage />
       <Documents />
     </div>
   {:else}

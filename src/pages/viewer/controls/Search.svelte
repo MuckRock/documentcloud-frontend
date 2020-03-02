@@ -1,5 +1,7 @@
 <script>
-  import { layout, initiateSearch } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout";
+  import { initiateSearch, exitSearch } from "@/viewer/renderer";
+  import { tick } from "svelte";
 
   // SVG assets
   import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg";
@@ -8,12 +10,24 @@
 
   let query = "";
   let expand = false;
+  let searchElem = null;
 
   $: invalidQuery = query.trim().length == 0;
 
-  function retract() {
+  async function retract() {
     query = "";
     expand = false;
+    await exitSearch();
+  }
+
+  function expandSearch() {
+    query = "";
+    expand = true;
+    tick().then(() => {
+      if (searchElem != null) {
+        searchElem.focus();
+      }
+    });
   }
 
   function search() {
@@ -43,13 +57,23 @@
     top: 0;
     bottom: 0;
     transition: width 0.5s ease;
+    background: white;
 
-    input {
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding-left: 40px;
-      padding-right: 40px;
+    .container {
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      right: 30px;
+
+      input {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        box-shadow: none;
+      }
     }
 
     .searchicon {
@@ -87,15 +111,18 @@
 </style>
 
 <div class="input" class:expand>
-  <input
-    placeholder="Search"
-    bind:value={query}
-    disabled={$layout.searchPending}
-    on:keypress={e => {
-      if (e.key == 'Enter') {
-        search();
-      }
-    }} />
+  <div class="container">
+    <input
+      bind:this={searchElem}
+      placeholder="Search"
+      bind:value={query}
+      disabled={$layout.searchPending}
+      on:keypress={e => {
+        if (e.key == 'Enter') {
+          search();
+        }
+      }} />
+  </div>
   <div
     class="searchicon"
     class:disabled={invalidQuery || $layout.searchPending}
@@ -106,6 +133,6 @@
     {@html closeInlineSvg}
   </div>
 </div>
-<div class="icon" class:hide={expand} on:click={() => (expand = true)}>
+<div class="icon" class:hide={expand} on:click={expandSearch}>
   {@html viewerSearchIconSvg}
 </div>

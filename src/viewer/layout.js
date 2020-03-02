@@ -15,15 +15,17 @@ export const layout = new Svue({
   data() {
     return {
       // Height of header row
-      headerHeight: 46,
-      sidebarWidth: 350,
+      headerHeight: 36,
+      baseSidebarWidth: 350,
       // Height of footer row
-      footerHeight: 40,
+      footerHeight: 36,
 
       // Show the title in the header (compact=false)
       compact: false,
       // In embedded mode
       embed: false,
+      // Whether to display sidebar
+      showSidebar: true,
 
       loading: false,
       error: null,
@@ -54,6 +56,9 @@ export const layout = new Svue({
     };
   },
   computed: {
+    sidebarWidth(baseSidebarWidth, showSidebar) {
+      return showSidebar ? baseSidebarWidth : 0;
+    },
     displayAnnotate(displayedAnnotation) {
       return displayedAnnotation != null;
     },
@@ -67,11 +72,18 @@ export const layout = new Svue({
     annotating(action) {
       return action == "annotate";
     },
+    searching(action) {
+      return action == "search";
+    },
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
     },
     disableControls(action, displayAnnotate) {
       return action != null || displayAnnotate;
+    },
+    nomove(action) {
+      // Don't allow touchmove when an action is being applied
+      return action != null;
     },
 
     // Redactions
@@ -103,6 +115,17 @@ export const layout = new Svue({
     shownEditAnnotation(rawAnnotation, annotationPending) {
       if (!annotationPending) return null;
       return consolidateDragObject(rawAnnotation);
+    },
+
+    // Search
+    totalResults(searchHighlights, searchPages) {
+      if (searchHighlights == null || searchPages == null) return 0;
+      let sum = 0;
+      for (let i = 0; i < searchPages.length; i++) {
+        const { page } = searchPages[i];
+        sum += searchHighlights[page].length;
+      }
+      return sum;
     }
   }
 });
@@ -290,7 +313,7 @@ export async function deletePageAnnotation(noteId, docId) {
   );
 }
 
-export async function initiateSearch(query) {
+export async function startSearch(query) {
   layout.search = query;
   layout.searchPending = true;
   layout.searchHighlights = null;
@@ -302,4 +325,12 @@ export async function initiateSearch(query) {
     layout.searchPages = pages;
   }
   layout.searchPending = false;
+  return highlights != null;
+}
+
+export function clearSearch() {
+  layout.search = "";
+  layout.searchPending = false;
+  layout.searchHighlights = null;
+  layout.searchPages = null;
 }

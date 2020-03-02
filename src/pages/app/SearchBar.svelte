@@ -32,7 +32,7 @@
 
 <style lang="scss">
   .searchcontainer {
-    margin: 0 0 74px 0;
+    margin: 0 0 20px 0;
   }
 </style>
 

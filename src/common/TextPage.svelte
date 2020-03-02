@@ -29,7 +29,7 @@
 
   async function loadText() {
     gettingText = true;
-    text = (await session.getStatic(src)).trim();
+    text = await session.getStatic(src);
   }
 
   onMount(() => {

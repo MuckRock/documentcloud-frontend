@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { viewer } from "./viewer";
-import { layout, annotationValid } from "./layout";
+import { layout, annotationValid, startSearch, clearSearch } from "./layout";
 import { withinPercent } from "@/util/epsilon";
 import { tick } from "svelte";
 
@@ -13,6 +13,8 @@ export const ZOOM_OPTIONS = ["Fit", ...ZOOM_VALUES.map(x => `${x}%`)];
 const ZOOM_PERCENTS = ZOOM_VALUES.map(x => x / 100);
 export const BASE_WIDTH = 500;
 
+export const BREAKPOINT = 600;
+
 export const renderer = new Svue({
   data() {
     return {
@@ -20,8 +22,10 @@ export const renderer = new Svue({
       textAspects: [],
       mode: "image",
       width: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
+      originalWidth: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
       zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 1],
-      pageRail: 69,
+      basePageRail: 69,
+      baseSmallRail: 10,
       verticalPageMargin: 6,
       baseVerticalDocumentMargin: 18,
       annotationDocumentMargin: 60,
@@ -32,7 +36,8 @@ export const renderer = new Svue({
       visibleOffset: DEFAULT_VISIBLE_OFFSET,
       viewer,
       layout,
-      blockScrollEvent: false
+      blockScrollEvent: false,
+      rememberPage: null
     };
   },
   watch: {
@@ -41,6 +46,12 @@ export const renderer = new Svue({
     }
   },
   computed: {
+    showRail(originalWidth) {
+      return originalWidth >= BREAKPOINT;
+    },
+    pageRail(basePageRail, baseSmallRail, showRail) {
+      return showRail ? basePageRail : baseSmallRail;
+    },
     annotationDialogOpen(layout) {
       return layout.displayAnnotate;
     },
@@ -57,7 +68,7 @@ export const renderer = new Svue({
     aspects(mode, imageAspects, textAspects) {
       if (mode == "image") return imageAspects;
       if (mode == "text") return textAspects;
-      throw new Error("Invalid mode");
+      return []; // in another mode
     },
     fullPageWidth(width, pageRail) {
       return width + pageRail * 2;
@@ -113,8 +124,10 @@ export const renderer = new Svue({
       top,
       verticalPageMargin,
       verticalDocumentMargin,
-      visibleOffset
+      visibleOffset,
+      rememberPage
     ) {
+      if (rememberPage != null) return rememberPage;
       let offset = verticalDocumentMargin + verticalPageMargin + visibleOffset;
       for (let i = 0; i < heights.length; i++) {
         if (offset >= top) return i;
@@ -219,6 +232,22 @@ export const renderer = new Svue({
 
       return pageObjects;
     },
+    overallHeights(
+      computedAspects,
+      width,
+      verticalDocumentMargin,
+      verticalPageMargin
+    ) {
+      const results = [];
+      let sum = verticalDocumentMargin * 2;
+      for (let i = 0; i < computedAspects.length; i++) {
+        results.push(sum);
+        const aspect = computedAspects[i].aspect;
+        const height = width * aspect;
+        sum += height + verticalPageMargin * 2;
+      }
+      return results;
+    },
     overallHeight(
       computedAspects,
       width,
@@ -313,7 +342,15 @@ export function getPosition() {
   }
 }
 
-export async function restorePosition(pos) {
+export async function restorePosition(pos, closeSidebarIfNeeded = true) {
+  if (closeSidebarIfNeeded) await closeSidebarIfFullWidth();
+
+  // Clear remembered page so it does not influence results
+  if (renderer.rememberPage != null) {
+    renderer.rememberPage = null;
+    await tick();
+  }
+
   // Scroll to a desired page number.
   const heights = renderer.heights;
 
@@ -324,7 +361,9 @@ export async function restorePosition(pos) {
   await scroll(totalHeight);
 }
 
-export function changeMode(mode) {
+export async function changeMode(mode) {
+  await closeSidebarIfFullWidth();
+
   // No effect when mode is same
   if (mode == renderer.mode) return;
 
@@ -351,24 +390,30 @@ export async function scrollVisibleAnnotationIntoView() {
 }
 
 export async function showAnnotation(annotation, scrollIntoView = false) {
+  await closeSidebarIfFullWidth();
+
   if (!annotationValid(annotation)) return;
   layout.annotateMode = "view";
   layout.displayedAnnotation = annotation;
 
   if (scrollIntoView) {
-    restorePosition(annotation.page);
+    await restorePosition(annotation.page);
     await scrollVisibleAnnotationIntoView();
   }
 }
 
 // Zoom
 
-export function zoomFit() {
+export function zoomFit(closeSidebarIfNeeded = true, multiplier = 1) {
+  const page = renderer.visiblePageNumber;
   renderer.zoom = ZOOM_OPTIONS[0]; // fit
-  renderer.width = renderer.elem.offsetWidth - renderer.pageRail * 2;
+  renderer.width =
+    (renderer.elem.offsetWidth - renderer.pageRail * 2) * multiplier;
+  restorePosition(page - 1, closeSidebarIfNeeded);
 }
 
 export function zoomPercent(percent) {
+  const page = renderer.visiblePageNumber;
   let closest = null;
   let minDelta = null;
   for (let i = 1; i < ZOOM_OPTIONS.length; i++) {
@@ -385,6 +430,7 @@ export function zoomPercent(percent) {
     renderer.zoom = closest;
   }
   renderer.width = BASE_WIDTH * percent;
+  restorePosition(page - 1);
 }
 
 export function zoomIn() {
@@ -409,4 +455,56 @@ export function zoomOut() {
     }
   }
   // No more zoom possible, so zoom to max
+}
+
+// Layout
+export async function toggleSidebar() {
+  await showSidebar(!layout.showSidebar);
+}
+
+export async function showSidebar(show) {
+  // Keep track of previous page
+  if (show) {
+    renderer.rememberPage = renderer.visiblePageNumber;
+  }
+  layout.showSidebar = show;
+  await tick();
+  let restore = null;
+  if (!show) {
+    // Pop previously remembered page
+    if (renderer.rememberPage != null) {
+      restore = renderer.rememberPage - 1;
+      renderer.rememberPage = null;
+    }
+  }
+  if (renderer.zoom == ZOOM_OPTIONS[0]) {
+    // Zoom and preserve remembered page
+    const prevRemember = renderer.rememberPage;
+    zoomFit(false);
+    renderer.rememberPage = prevRemember;
+  }
+  // Restore page if necessary
+  if (restore != null) restorePosition(restore, false);
+}
+
+export async function closeSidebarIfFullWidth() {
+  if (renderer.width - layout.sidebarWidth <= 0) {
+    // Close sidebar if necessary
+    await showSidebar(false);
+  }
+}
+
+let modeBeforeSearch = null;
+export async function initiateSearch(query) {
+  if (await startSearch(query)) {
+    modeBeforeSearch = renderer.mode;
+    await changeMode("search");
+  }
+}
+
+export async function exitSearch() {
+  clearSearch();
+  if (modeBeforeSearch != null) {
+    await changeMode(modeBeforeSearch);
+  }
 }

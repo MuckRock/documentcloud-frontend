@@ -25,6 +25,17 @@
 
     &.side {
       width: 200px;
+      text-align: left;
+      padding: 0 0 0 16px;
+
+      &.right {
+        text-align: right;
+        padding: 0 16px 0 0;
+      }
+
+      @media only screen and (max-width: 600px) {
+        display: none;
+      }
     }
 
     &.center {
@@ -42,7 +53,7 @@
       <div class="cell center" {style}>
         <Paginator />
       </div>
-      <div class="cell side" {style}>
+      <div class="cell side right" {style}>
         <Zoom />
         {#if $layout.embed}
           <FullScreen />

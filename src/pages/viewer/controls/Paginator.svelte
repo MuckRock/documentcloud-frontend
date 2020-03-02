@@ -164,7 +164,7 @@
   }
 </style>
 
-{#if $viewer.loaded}
+{#if $viewer.loaded && $renderer.mode != 'search'}
   <div class="paginator">
     <span class="paginate left" on:click={() => decrement(false)}>
       {@html leftPaginator}

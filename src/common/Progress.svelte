@@ -7,7 +7,7 @@
   export let progress;
   export let initializing = false;
 
-  const PROGRESS_DURATION = process.env.POLL_INTERVAL;
+  const PROGRESS_DURATION = parseInt(process.env.POLL_INTERVAL);
   const PROGRESS_END_DURATION = 400; // how quickly to jump at end
   const PROGRESS_BACKWARDS_DURATION = 400; // how quickly to jump backwards
 

@@ -24,7 +24,7 @@
   }
 
   .back {
-    margin: 0 16px 0 25px;
+    margin: 0 16px 0 16px;
   }
 
   .title {

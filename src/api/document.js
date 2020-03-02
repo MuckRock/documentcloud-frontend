@@ -16,8 +16,8 @@ import { Document, transformHighlights } from "@/structure/document";
 
 const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
 
-const UPLOAD_BATCH = process.env.UPLOAD_BATCH;
-const UPLOAD_BATCH_DELAY = process.env.UPLOAD_BATCH_DELAY;
+const UPLOAD_BATCH = parseInt(process.env.UPLOAD_BATCH);
+const UPLOAD_BATCH_DELAY = parseInt(process.env.UPLOAD_BATCH_DELAY);
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;

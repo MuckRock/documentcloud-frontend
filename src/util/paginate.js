@@ -1,7 +1,7 @@
 import session from "@/api/session";
 import { queryBuilder } from "./url";
 
-export const MAX_PER_PAGE = process.env.MAX_PER_PAGE;
+export const MAX_PER_PAGE = parseInt(process.env.MAX_PER_PAGE);
 
 /**
  * Requests the specified URL and paginates through to return all

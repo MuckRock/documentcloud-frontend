@@ -28,6 +28,7 @@
     display: table-cell;
     width: 100%;
     text-align: right;
+    white-space: nowrap;
 
     > * {
       display: inline-block;

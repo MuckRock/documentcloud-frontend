@@ -6,8 +6,7 @@
 
 <style lang="scss">
   .toc {
-    background: white;
-    padding: 8px 20px;
+    padding: 8px 0;
   }
 </style>
 

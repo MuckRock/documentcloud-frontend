@@ -111,6 +111,9 @@ function removeFromCollection(document) {
   );
   setDocuments(newDocuments);
   documents.processingDocumentsRaw = newProcessingDocuments;
+
+  // Refresh when you delete everything to pull new search
+  if (newDocuments.length == 0) window.location.reload();
 }
 
 export function updateInCollection(document, docFn) {

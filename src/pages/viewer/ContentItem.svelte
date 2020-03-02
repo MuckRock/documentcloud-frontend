@@ -1,4 +1,5 @@
 <script>
+  import NoWhitespace from "@/common/NoWhitespace";
   export let sectionOrNote;
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { layout } from "@/viewer/layout";
@@ -17,7 +18,7 @@
   }
 
   .title {
-    color: #004276;
+    color: $viewerLink;
     font-weight: bold;
     font-size: 13px;
   }
@@ -30,18 +31,10 @@
   .note {
     cursor: pointer;
 
-    .page {
-      visibility: hidden;
-    }
-
     &:hover,
     &.hover {
       .title {
         text-decoration: underline;
-      }
-
-      .page {
-        visibility: visible;
       }
     }
   }
@@ -59,7 +52,7 @@
     :global(.title) {
       font-size: 12px;
       font-weight: normal;
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 
@@ -71,14 +64,20 @@
       list-style: none;
       margin: 0;
       padding: 0;
+      padding-left: 10px;
+      text-indent: -6px;
 
       .circle {
-        margin-right: 2px;
+        margin-right: 5px;
       }
 
-      > * {
+      > :global(span > *) {
         display: inline-block;
         vertical-align: middle;
+      }
+
+      :global(.note) {
+        display: inline;
       }
     }
   }
@@ -92,18 +91,23 @@
         <span
           class="section"
           on:click|preventDefault={() => restorePosition(sectionOrNote.section.page)}>
-          <span class="title">{sectionOrNote.section.title}</span>
-          &nbsp;
-          <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+          <NoWhitespace>
+            <span class="title">{sectionOrNote.section.title}</span>
+            <span>&nbsp;</span>
+            <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+          </NoWhitespace>
         </span>
       </summary>
       <ul class="children">
         {#each sectionOrNote.children as child}
           <li>
-            <span class="circle">
-              {@html smallCircleSvg}
-            </span>
-            <svelte:self sectionOrNote={child} />
+            <NoWhitespace>
+              <span class="circle">
+                {@html smallCircleSvg}
+              </span>
+              <span>&nbsp;</span>
+              <svelte:self sectionOrNote={child} />
+            </NoWhitespace>
           </li>
         {/each}
       </ul>
@@ -112,9 +116,11 @@
     <div
       class="section"
       on:click={() => restorePosition(sectionOrNote.section.page)}>
-      <span class="title">{sectionOrNote.section.title}</span>
-      &nbsp;
-      <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+      <NoWhitespace>
+        <span class="title">{sectionOrNote.section.title}</span>
+        <span>&nbsp;</span>
+        <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+      </NoWhitespace>
     </div>
   {/if}
 {:else}
@@ -124,8 +130,10 @@
     class:hover={sectionOrNote.note == $layout.hoveredNote}
     use:hoveredNote={sectionOrNote.note}
     on:click={() => showAnnotation(sectionOrNote.note, true)}>
-    <span class="title">{sectionOrNote.note.title}</span>
-    &nbsp;
-    <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+    <NoWhitespace>
+      <span class="title">{sectionOrNote.note.title}</span>
+      <span>&nbsp;</span>
+      <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+    </NoWhitespace>
   </div>
 {/if}

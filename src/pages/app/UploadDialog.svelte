@@ -36,7 +36,7 @@
   let uploadAdditional = false;
   let errorMessage = null;
 
-  const LIMIT = process.env.UPLOAD_LIMIT;
+  const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
   let tooManyFiles = false;
 
   $: displayFiles = uploadMode == false ? files : uploadFiles;

@@ -17,6 +17,7 @@
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { pageImageUrl, textUrl } from "@/api/viewer";
   import emitter from "@/emit";
+  import { onMount, onDestroy } from "svelte";
 
   // SVG assets
   import publicTagSvg from "@/assets/public_tag.svg";
@@ -56,6 +57,24 @@
       emit.shift(shift);
     }
   }
+
+  let visualScale = 1;
+
+  function viewportHandler() {
+    visualScale = window.visualViewport.scale;
+  }
+
+  onMount(() => {
+    if (window.visualViewport != null) {
+      window.visualViewport.addEventListener("resize", viewportHandler);
+    }
+  });
+
+  onDestroy(() => {
+    if (window.visualViewport != null) {
+      window.visualViewport.removeEventListener("resize", viewportHandler);
+    }
+  });
 </script>
 
 <style lang="scss">
@@ -71,8 +90,6 @@
       top: 0;
       padding: 21px 0 0 0;
       float: left;
-      margin-left: -$pageRail;
-      width: $pageRail;
       font-weight: bold;
       font-size: 12px;
       color: #313131;
@@ -112,9 +129,11 @@
 
     .content {
       position: relative;
-      border: 1px solid #b0b0b0;
-      border-top-color: #c0c0c0;
-      border-bottom-color: #999;
+
+      :global(img),
+      :global(.text) {
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.07);
+      }
     }
   }
 
@@ -140,12 +159,6 @@
     &.grayed {
       pointer-events: none;
       visibility: hidden;
-    }
-
-    &.pageinsert {
-      top: -5px;
-      left: -3px;
-      opacity: 1;
     }
   }
 
@@ -187,31 +200,6 @@
       visibility: hidden;
     }
   }
-
-  hr {
-    height: 16px;
-    position: relative;
-    border: none;
-    padding: 0;
-    margin: 0;
-
-    &:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 8px;
-      border-top: dashed 1px transparent;
-      width: 100%;
-    }
-
-    &.visible {
-      cursor: crosshair;
-
-      &:after {
-        border-top: dashed 1px gray;
-      }
-    }
-  }
 </style>
 
 <div
@@ -222,32 +210,20 @@
     class:grayed={$layout.displayAnnotate}
     style="width: {$renderer.fullPageWidth}px; padding: 0 {$renderer.pageRail}px;
     margin: 0 auto">
-    <div class="number" style="top: {actionOffset}px">
-      p. {readablePageNumber}
-    </div>
-    {#if $renderer.mode == 'image'}
-      <VariableChunk
-        width={$renderer.width}
-        bind:aspect={additionalAspect}
-        let:update>
-        <!-- TODO: page note support (visible={showPageNoteInsert}) -->
-        <hr
-          class:visible={false}
-          on:mouseover={() => (showPageNoteInsert = true)}
-          on:mouseout={() => (showPageNoteInsert = false)} />
-        {#if false}
-          <div class="tag pageinsert">
-            {@html publicTagSvg}
-          </div>
-        {/if}
-      </VariableChunk>
+    {#if $renderer.showRail}
+      <div
+        class="number"
+        style="top: {actionOffset}px; margin-left: {-$renderer.pageRail}px;
+        width: {$renderer.pageRail}px;">
+        p. {readablePageNumber}
+      </div>
     {/if}
     <div class="content">
       <!-- Actual page image -->
       <div class="img">
         {#if $renderer.mode == 'image'}
           <Image
-            src={pageImageUrl(document, pageNumber, $renderer.width)}
+            src={pageImageUrl(document, pageNumber, $renderer.width, visualScale)}
             aspect={aspect - additionalAspect}
             fade={false}
             delay={50}

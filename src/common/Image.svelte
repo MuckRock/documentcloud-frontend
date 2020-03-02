@@ -5,6 +5,7 @@
    */
 
   import { onMount, onDestroy } from "svelte";
+  import { layout } from "@/viewer/layout";
   import { ensureBounds } from "@/util/bounds";
   import emitter from "@/emit";
 
@@ -79,27 +80,53 @@
     };
   }
 
+  function getXY(e, client = false, changedTouches = false) {
+    const touchAccessor = changedTouches ? "changedTouches" : "touches";
+    if (e[touchAccessor] != null) {
+      if (e[touchAccessor].length != 1) return null;
+      const touch = e[touchAccessor][0];
+      const { left, top } = img.getBoundingClientRect();
+      const x = touch.clientX - left;
+      const y = touch.clientY - top;
+      return { x, y };
+    } else {
+      if (client) {
+        const { left, top } = img.getBoundingClientRect();
+        const x = e.clientX - left;
+        const y = e.clientY - top;
+        return { x, y };
+      } else {
+        return { x: e.offsetX, y: e.offsetY };
+      }
+    }
+  }
+
   function handleMouseDown(e) {
+    const data = getXY(e);
+    if (data == null) return;
+    const { x, y } = data;
     mousedown = true;
-    const x = e.offsetX;
-    const y = e.offsetY;
     emit.dragStart(normalize(x, y));
   }
 
   function handleMouseMove(e) {
     if (!mousedown) return;
-    const { left, top } = img.getBoundingClientRect();
-    const x = e.clientX - left;
-    const y = e.clientY - top;
+
+    const data = getXY(e, true);
+    if (data == null) return;
+
+    const { x, y } = data;
     emit.dragMove(normalize(x, y));
   }
 
   function handleMouseUp(e) {
     if (!mousedown) return;
+
     mousedown = false;
-    const { left, top } = img.getBoundingClientRect();
-    const x = e.clientX - left;
-    const y = e.clientY - top;
+
+    const data = getXY(e, true, true);
+    if (data == null) return;
+    const { x, y } = data;
     emit.dragEnd(normalize(x, y));
   }
 
@@ -123,6 +150,10 @@
       cursor: crosshair;
     }
 
+    &.nomove {
+      touch-action: pinch-zoom;
+    }
+
     &.aspect {
       width: 100%;
       position: relative;
@@ -135,6 +166,11 @@
         height: 100%;
         background: white;
         pointer-events: none;
+
+        // Fix blurry image bug
+        // https://stackoverflow.com/a/36787557
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
       }
     }
   }
@@ -158,8 +194,10 @@
 <span
   class:aspect={aspect != null}
   class:crosshair
+  class:nomove={$layout.nomove}
   style={aspect != null ? `padding-top: ${100 * aspect}%` : ''}
-  on:mousedown={handleMouseDown}>
+  on:mousedown={handleMouseDown}
+  on:touchstart={handleMouseDown}>
   {#if delay == null || ready}
     <img
       on:load={handleLoad}
@@ -173,4 +211,8 @@
   {/if}
 </span>
 
-<svelte:window on:mouseup={handleMouseUp} on:mousemove={handleMouseMove} />
+<svelte:window
+  on:mouseup={handleMouseUp}
+  on:touchend={handleMouseUp}
+  on:mousemove={handleMouseMove}
+  on:touchmove={handleMouseMove} />
