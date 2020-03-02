@@ -81,7 +81,7 @@
           <MenuItem on:click={() => change(individualOrg)}>
             Personal Account
             {#if individualOrg.id == currentOrg.id}
-              <span class="check">✓</span>
+              <span class="scope">✓</span>
             {/if}
           </MenuItem>
         {/if}
