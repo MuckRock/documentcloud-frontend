@@ -1,20 +1,20 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
-const DOCUMENTCLOUD_TOKEN_STORAGE_KEY = 'documentcloud_token';
+const DOCUMENTCLOUD_TOKEN_STORAGE_KEY = "documentcloud_token";
 
 export const SIGN_IN_URL = process.env.DC_BASE + process.env.DC_LOGIN;
 export const SIGN_UP_URL =
   process.env.SQUARELET_BASE +
   process.env.SQUARELET_SIGNUP +
   encodeURIComponent(window.location.href);
-
+export const SIGN_OUT_URL = process.env.DC_BASE + process.env.DC_LOGOUT;
 
 export const auth = new Svue({
   data() {
     return {
       signingIn: false,
-      key: null,
-    }
+      key: null
+    };
   },
   computed: {
     isAuthenticated(key) {
@@ -22,7 +22,6 @@ export const auth = new Svue({
     }
   }
 });
-
 
 export function login() {
   setToken(true);

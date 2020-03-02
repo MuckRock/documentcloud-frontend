@@ -13,13 +13,6 @@
     font-style: italic;
     font-size: $small;
   }
-
-  .small {
-    color: $gray;
-    font-size: 11px;
-    text-transform: uppercase;
-    margin: 3px 0 0 0;
-  }
 </style>
 
 <Menu>

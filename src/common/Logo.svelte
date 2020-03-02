@@ -1,5 +1,7 @@
 <script>
   import Link from "@/router/Link";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { userUrl } from "@/search/search";
 
   // Svg assets
   import dcLogo from "@/assets/dc_logo.svg";
@@ -9,7 +11,7 @@
   :global(.dclogo) {
     width: 166px;
     height: 29px;
-    padding: 41px 25px 12px 25px;
+    padding: 5px 25px 12px 25px;
     user-select: none;
   }
 
@@ -20,6 +22,12 @@
   }
 </style>
 
-<Link to="home">
-  {@html dcLogo}
-</Link>
+{#if $orgsAndUsers.me != null}
+  <Link toUrl={userUrl($orgsAndUsers.me)}>
+    {@html dcLogo}
+  </Link>
+{:else}
+  <Link to="app">
+    {@html dcLogo}
+  </Link>
+{/if}

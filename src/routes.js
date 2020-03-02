@@ -6,8 +6,12 @@ import Viewer from "@/pages/viewer/Viewer";
 export const routes = [
   NotFound,
   {
+    default: {
+      path: "/",
+      component: Home
+    },
     home: {
-      path: "",
+      path: "/home",
       component: Home
     },
     app: {

@@ -2,6 +2,7 @@
   import Loader from "@/common/Loader";
   import Button from "@/common/Button";
   import Link from "@/router/Link";
+  import { router } from "@/router/router";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -115,7 +116,7 @@
     <header>
       <div class="headercontents">
         <div class="logo">
-          <Link to="home">
+          <Link to="app">
             {@html mastLogoSvg}
           </Link>
         </div>

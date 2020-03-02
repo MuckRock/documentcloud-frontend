@@ -11,6 +11,7 @@
   import ProcessingBar from "./ProcessingBar";
   import Document from "./Document";
   import NoDocuments from "./NoDocuments";
+  import AuthSection from "@/pages/app/AuthSection";
 
   // Store properties
   import { layout } from "@/manager/layout";
@@ -156,6 +157,8 @@
           component={UploadDialog}
           properties={{ initialFiles: preUploadFiles }} />
       {/if}
+
+      <AuthSection />
       <SearchBar />
 
       <div>

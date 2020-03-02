@@ -25,10 +25,10 @@
 
 {#if show}
   <div class="special">
-    {version}.
+    {version}
     {#if showContact}
       <a href={contact} target="_blank">Contact us</a>
-      if you have any feedback.
+      with bug reports, questions, and suggestions.
     {/if}
   </div>
 {/if}

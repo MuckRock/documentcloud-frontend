@@ -36,7 +36,7 @@
 
 <style lang="scss">
   .toast {
-    background: rgba($annotationBorder, 0.3);
+    background: rgba(mix($annotationBorder, white, 30%), 0.9);
     border: solid 1px $annotationBorder;
     padding: 5px 10px;
     margin: 10px;
@@ -56,7 +56,7 @@
     }
 
     &:hover {
-      background: rgba($annotationBorder, 0.4);
+      background: rgba(mix($annotationBorder, white, 30%), 0.95);
     }
 
     .x {

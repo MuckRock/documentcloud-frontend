@@ -4,7 +4,6 @@
 
   async function handleChange(e) {
     const view = e.target.value;
-    console.log("GOT VIEW", view);
     if (view == "text") {
       await changeMode("text");
     } else if (view == "image") {

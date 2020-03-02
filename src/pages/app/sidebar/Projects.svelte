@@ -10,6 +10,7 @@
   import { newProject } from "@/manager/layout";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { allDocumentsUrl, userUrl, orgUrl } from "@/search/search";
+
   import emitter from "@/emit";
 
   const emit = emitter({
@@ -19,7 +20,7 @@
 
 <style lang="scss">
   .projects {
-    padding: 0;
+    padding: 20px 0;
 
     .titlesection {
       padding: 0 25px;
@@ -35,6 +36,13 @@
     z-index: $sidebarStickyZ;
   }
 
+  small {
+    font-size: 13px;
+    color: $gray;
+    margin: 0 24px;
+    display: block;
+  }
+
   .linksection {
     margin: 20px 0 40px 0;
 
@@ -48,12 +56,6 @@
         background: $primary-faded;
       }
     }
-  }
-
-  small {
-    color: $gray;
-    margin: 0 25px;
-    display: block;
   }
 </style>
 
