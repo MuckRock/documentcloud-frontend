@@ -37,7 +37,11 @@
   let errorMessage = null;
 
   const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
+  const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
+  const PDF_SIZE_LIMIT_READABLE = process.env.PDF_SIZE_LIMIT_READABLE;
+
   let tooManyFiles = false;
+  let tooManyBigFiles = false;
 
   $: displayFiles = uploadMode == false ? files : uploadFiles;
 
@@ -62,22 +66,30 @@
   });
 
   function handleFiles({ detail: newFiles }) {
+    let hasTooBig = false;
+
     for (let i = 0; i < newFiles.length; i++) {
       if (files.length < LIMIT) {
-        files.push({
-          index: id++,
-          file: newFiles[i]
-        });
+        if (newFiles[i].size <= PDF_SIZE_LIMIT) {
+          files.push({
+            index: id++,
+            file: newFiles[i]
+          });
+        } else {
+          hasTooBig = true;
+        }
         tooManyFiles = false;
       } else {
         tooManyFiles = true;
       }
     }
+    tooManyBigFiles = hasTooBig;
     files = files;
   }
 
   function removeFile(index) {
     files = files.filter(file => file.index != index);
+    tooManyBigFiles = false;
     tooManyFiles = false;
   }
 
@@ -170,6 +182,11 @@
             Select or drag a .pdf document to begin the document upload process.
             You will then be able to edit document information.
           </p>
+          {#if tooManyBigFiles}
+            <p class="danger">
+              You can only upload files under {PDF_SIZE_LIMIT_READABLE}.
+            </p>
+          {/if}
         {:else}
           <p>
             <!-- TODO: use pluralization -->
