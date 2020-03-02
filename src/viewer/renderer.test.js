@@ -218,7 +218,7 @@ test("image resize", async () => {
   expect(renderer.currentPageNumber).toBe(3);
 
   // Switch modes
-  changeMode("text");
+  await changeMode("text");
 
   // We should be on page 4 of the texts
   expect(renderer.top).toBe(

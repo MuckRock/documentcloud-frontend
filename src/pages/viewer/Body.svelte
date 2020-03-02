@@ -1,7 +1,11 @@
 <script>
+  import Tooltip from "@/common/Tooltip";
+  import NoWhitespace from "@/common/NoWhitespace";
+
   import Page from "./Page";
   import RedactPane from "./pane/RedactPane";
   import AnnotatePane from "./pane/AnnotatePane";
+  import SearchPane from "./pane/SearchPane";
   import { onMount } from "svelte";
   import { viewer } from "@/viewer/viewer";
   import { layout, cancelActions } from "@/viewer/layout";
@@ -10,6 +14,7 @@
     scroll,
     zoomFit,
     showSidebar,
+    restorePosition,
     ZOOM_OPTIONS,
     BREAKPOINT
   } from "@/viewer/renderer";
@@ -154,10 +159,6 @@
       background: $viewerBodyBgDarker;
     }
 
-    &.blurred {
-      filter: blur(1px);
-    }
-
     .actionpane {
       position: sticky;
       top: 0;
@@ -200,6 +201,44 @@
       }
     }
   }
+
+  .searchresults {
+    $width: 25px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: $width;
+    z-index: 2;
+    pointer-events: none;
+
+    .result {
+      $height: 5px;
+      position: absolute;
+      height: $height;
+
+      > :global(span) {
+        display: block;
+      }
+
+      :global(.highlight) {
+        font-weight: bold;
+      }
+
+      .bubble {
+        @include buttonLike;
+
+        background: rgba($annotationBorder, 0.7);
+        height: $height;
+        width: $width;
+        border: solid 1px darken($annotationBorder, 10%);
+        box-sizing: border-box;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.12);
+        border-radius: 3px;
+        pointer-events: all;
+      }
+    }
+  }
 </style>
 
 <div
@@ -227,6 +266,8 @@
             <RedactPane />
           {:else if $layout.annotating}
             <AnnotatePane />
+          {:else if $layout.searching}
+            <SearchPane />
           {/if}
         </div>
       </div>
@@ -246,6 +287,39 @@
     {/each}
   {/if}
 </div>
+
+<!-- Search results -->
+{#if $layout.searchPages != null}
+  <div
+    class="searchresults"
+    style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
+    right: {$layout.sidebarWidth}px">
+    {#each $layout.searchPages as { page }}
+      {#each $layout.searchHighlights[page] as highlight, offset}
+        <div
+          class="result"
+          style="top: {(($renderer.overallHeights[page] + ((page < $renderer.overallHeights.length - 1 ? $renderer.overallHeights[page + 1] - $renderer.overallHeights[page] : $renderer.overallHeight - $renderer.overallHeights[page]) * offset) / $layout.searchHighlights[page].length) / $renderer.overallHeight) * 100}%"
+          on:click={() => restorePosition(page)}>
+          <Tooltip
+            offsetTop={$layout.headerHeight}
+            offsetRight={$layout.sidebarWidth}>
+            <div slot="caption" style="max-width: 150px">
+              <span>p. {page + 1} –</span>
+              <NoWhitespace>
+                {#each highlight as passage}
+                  <span class:highlight={passage.type == 'highlight'}>
+                    {passage.text}
+                  </span>
+                {/each}
+              </NoWhitespace>
+            </div>
+            <div class="bubble" />
+          </Tooltip>
+        </div>
+      {/each}
+    {/each}
+  </div>
+{/if}
 
 <svelte:window
   on:resize={handleResize}

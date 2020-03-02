@@ -583,7 +583,7 @@
           -webkit-text-fill-color: $fieldColor;
 
           :global(b) {
-            $keyColor: #5a00ff;
+            $keyColor: $searchSpecial;
             color: $keyColor;
             -webkit-text-fill-color: $keyColor;
           }

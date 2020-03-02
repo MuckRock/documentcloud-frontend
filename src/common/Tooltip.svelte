@@ -5,6 +5,11 @@
   export let delay = 0;
   export let show = true;
 
+  export let offsetTop = null;
+  export let offsetRight = null;
+
+  $: top = offsetTop == null ? 0 : offsetTop;
+
   let mouseIn = false;
   let tooltip;
   let coords = spring({ x: 0, y: 0 });
@@ -17,9 +22,12 @@
     let newY = e.clientY - tooltip.offsetHeight;
 
     // If the planned tooltip coordinates run offscreen, adjust accordingly
-    if (newX + tooltip.offsetWidth >= document.body.offsetWidth)
+    if (
+      newX + tooltip.offsetWidth >=
+      (offsetRight == null ? document.body.offsetWidth : offsetRight)
+    )
       newX -= tooltip.offsetWidth;
-    if (newY < 0) newY += tooltip.offsetHeight;
+    if (newY < top) newY += tooltip.offsetHeight;
 
     // Update x and y
     coords.set({ x: newX, y: newY }, { hard });

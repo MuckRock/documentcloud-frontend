@@ -1,5 +1,6 @@
 <script>
-  import { layout, initiateSearch } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout";
+  import { initiateSearch, exitSearch } from "@/viewer/renderer";
   import { tick } from "svelte";
 
   // SVG assets
@@ -13,9 +14,10 @@
 
   $: invalidQuery = query.trim().length == 0;
 
-  function retract() {
+  async function retract() {
     query = "";
     expand = false;
+    await exitSearch();
   }
 
   function expandSearch() {

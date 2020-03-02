@@ -340,7 +340,7 @@ export function transformHighlights(
       // Handle response type
       if (returnDict) {
         if (highlights[page] == null) {
-          pages.push(page);
+          pages.push({ page, count: highlight.passages.length });
         }
         highlights[page] = highlight.passages;
       } else {
@@ -354,6 +354,7 @@ export function transformHighlights(
     highlights.sort((a, b) => a.page - b.page);
     return highlights;
   } else {
+    pages.sort((a, b) => a.page - b.page);
     return { highlights, pages };
   }
 }

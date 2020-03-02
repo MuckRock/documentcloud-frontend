@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { viewer } from "./viewer";
-import { layout, annotationValid } from "./layout";
+import { layout, annotationValid, startSearch, clearSearch } from "./layout";
 import { withinPercent } from "@/util/epsilon";
 import { tick } from "svelte";
 
@@ -231,6 +231,22 @@ export const renderer = new Svue({
       addRun(i);
 
       return pageObjects;
+    },
+    overallHeights(
+      computedAspects,
+      width,
+      verticalDocumentMargin,
+      verticalPageMargin
+    ) {
+      const results = [];
+      let sum = verticalDocumentMargin * 2;
+      for (let i = 0; i < computedAspects.length; i++) {
+        results.push(sum);
+        const aspect = computedAspects[i].aspect;
+        const height = width * aspect;
+        sum += height + verticalPageMargin * 2;
+      }
+      return results;
     },
     overallHeight(
       computedAspects,
@@ -475,5 +491,20 @@ export async function closeSidebarIfFullWidth() {
   if (renderer.width - layout.sidebarWidth <= 0) {
     // Close sidebar if necessary
     await showSidebar(false);
+  }
+}
+
+let modeBeforeSearch = null;
+export async function initiateSearch(query) {
+  if (await startSearch(query)) {
+    modeBeforeSearch = renderer.mode;
+    await changeMode("text");
+  }
+}
+
+export async function exitSearch() {
+  clearSearch();
+  if (modeBeforeSearch != null) {
+    await changeMode(modeBeforeSearch);
   }
 }

@@ -72,6 +72,9 @@ export const layout = new Svue({
     annotating(action) {
       return action == "annotate";
     },
+    searching(action) {
+      return action == "search";
+    },
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
     },
@@ -299,7 +302,7 @@ export async function deletePageAnnotation(noteId, docId) {
   );
 }
 
-export async function initiateSearch(query) {
+export async function startSearch(query) {
   layout.search = query;
   layout.searchPending = true;
   layout.searchHighlights = null;
@@ -311,4 +314,12 @@ export async function initiateSearch(query) {
     layout.searchPages = pages;
   }
   layout.searchPending = false;
+  return highlights != null;
+}
+
+export function clearSearch() {
+  layout.search = "";
+  layout.searchPending = false;
+  layout.searchHighlights = null;
+  layout.searchPages = null;
 }

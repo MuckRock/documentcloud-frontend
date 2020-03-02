@@ -38,7 +38,31 @@ export function coalesceHighlights(text, highlights) {
   const results = [];
   const push = (start, end, type = "normal") => {
     if (start == end) return;
-    results.push({ type, text: text.substring(start, end) });
+    const contents = text.substring(start, end);
+
+    // Check for merge
+    let merged = contents;
+    let i;
+    for (i = results.length - 1; i >= 0; i--) {
+      const result = results[i];
+      if (result.type == type) {
+        merged = result.text + merged;
+      } else if (result.text.trim().length == 0) {
+        merged = result.text + merged;
+      } else {
+        break;
+      }
+    }
+    i++;
+
+    // Merge if successful
+    if (i < results.length) {
+      results[i].text = merged;
+      results.length = i + 1;
+    } else {
+      // Push normal block
+      results.push({ type, text: contents });
+    }
   };
 
   let pos = 0;

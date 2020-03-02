@@ -9,7 +9,7 @@
   .hamburger {
     @include buttonLike;
 
-    margin: 0 30px 0 10px;
+    margin: 0 16px 0 5px;
   }
 </style>
 

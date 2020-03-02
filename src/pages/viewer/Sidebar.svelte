@@ -65,8 +65,8 @@
     }
 
     .title {
-      background: white;
       padding: 16px 20px 16px 20px;
+      background: white;
 
       h2 {
         font-size: 16px;
