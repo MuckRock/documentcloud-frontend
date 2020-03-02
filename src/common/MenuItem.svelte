@@ -2,6 +2,7 @@
   export let danger = false;
   export let selectable = true;
   export let primary = false;
+  export let disabled = false;
 </script>
 
 <style lang="scss">
@@ -12,6 +13,11 @@
 
     &.danger {
       color: $caution;
+    }
+
+    &.disabled {
+      color: $gray;
+      pointer-events: none;
     }
 
     &.primary {
@@ -39,6 +45,12 @@
   }
 </style>
 
-<div class="item" class:selectable class:danger class:primary on:click>
+<div
+  class="item"
+  class:selectable
+  class:danger
+  class:primary
+  class:disabled
+  on:click>
   <slot>Define an item</slot>
 </div>
