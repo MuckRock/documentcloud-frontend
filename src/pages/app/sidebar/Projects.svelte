@@ -49,6 +49,12 @@
       }
     }
   }
+
+  small {
+    color: $gray;
+    margin: 0 25px;
+    display: block;
+  }
 </style>
 
 <div class="projects">
@@ -84,8 +90,12 @@
     </div>
   </div>
   <div class="projectcontainer">
-    {#each $projects.projects as project}
-      <Project {project} />
-    {/each}
+    {#if $projects.projects.length > 0}
+      {#each $projects.projects as project}
+        <Project {project} />
+      {/each}
+    {:else}
+      <small>Create your first project by clicking “New Project” above.</small>
+    {/if}
   </div>
 </div>
