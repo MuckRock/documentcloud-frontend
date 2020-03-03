@@ -195,7 +195,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 14px;
+    font-size: 12px;
     z-index: 1;
     text-align: right;
     padding: 7px;
