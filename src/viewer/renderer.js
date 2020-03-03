@@ -2,6 +2,7 @@ import { Svue } from "svue";
 import { viewer } from "./viewer";
 import { layout, annotationValid, startSearch, clearSearch } from "./layout";
 import { withinPercent } from "@/util/epsilon";
+import { router } from "@/router/router";
 import { tick } from "svelte";
 
 const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
@@ -18,6 +19,7 @@ export const BREAKPOINT = 600;
 export const renderer = new Svue({
   data() {
     return {
+      router,
       imageAspects: [],
       textAspects: [],
       mode: "image",
@@ -43,6 +45,12 @@ export const renderer = new Svue({
   watch: {
     viewer(viewer) {
       if (viewer.pageAspects != null) initAspects();
+    },
+    "router.resolvedRoute"() {
+      const route = router.resolvedRoute;
+      if (route != null && route.name != "viewer") {
+        reset();
+      }
     }
   },
   computed: {
@@ -507,4 +515,8 @@ export async function exitSearch() {
   if (modeBeforeSearch != null) {
     await changeMode(modeBeforeSearch);
   }
+}
+
+async function reset() {
+  await changeMode("image");
 }
