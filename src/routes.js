@@ -1,4 +1,5 @@
 import NotFound from "@/pages/NotFound";
+import Empty from "@/pages/home/Empty";
 import Home from "@/pages/home/Home";
 import App from "@/pages/app/App";
 import Viewer from "@/pages/viewer/Viewer";
@@ -8,7 +9,7 @@ export const routes = [
   {
     default: {
       path: "/",
-      component: Home
+      component: Empty
     },
     home: {
       path: "/home",
