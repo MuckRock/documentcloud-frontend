@@ -18,6 +18,7 @@
   export let pollTime = 5000;
   export let delay = null;
   export let crosshair = false;
+  export let showLoading = false;
 
   const emit = emitter({
     aspect() {},
@@ -189,6 +190,17 @@
       filter: blur(0);
     }
   }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 14px;
+    z-index: 1;
+    text-align: right;
+    padding: 7px;
+    color: gray;
+  }
 </style>
 
 <span
@@ -208,6 +220,9 @@
       src={computedSrc}
       {alt}
       draggable="false" />
+  {/if}
+  {#if showLoading && !show}
+    <div class="loading">Loading...</div>
   {/if}
 </span>
 
