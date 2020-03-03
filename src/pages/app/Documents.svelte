@@ -12,6 +12,7 @@
   import Document from "./Document";
   import NoDocuments from "./NoDocuments";
   import AuthSection from "@/pages/app/AuthSection";
+  import SpecialMessage from "@/common/SpecialMessage";
 
   // Store properties
   import { layout } from "@/manager/layout";
@@ -158,6 +159,7 @@
           properties={{ initialFiles: preUploadFiles }} />
       {/if}
 
+      <SpecialMessage />
       <AuthSection />
       <SearchBar />
 
