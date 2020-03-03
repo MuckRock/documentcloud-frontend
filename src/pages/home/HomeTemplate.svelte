@@ -3,6 +3,7 @@
   import Button from "@/common/Button";
   import Link from "@/router/Link";
   import { router } from "@/router/router";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -10,7 +11,13 @@
   import mastheadResponsiveSvg from "@/assets/masthead_responsive.svg";
 
   // Authentication
-  import { auth, logout, SIGN_IN_URL, SIGN_UP_URL } from "@/api/auth";
+  import {
+    auth,
+    logout,
+    SIGN_IN_URL,
+    SIGN_UP_URL,
+    SIGN_OUT_URL
+  } from "@/api/auth";
 
   // Show the masthead
   export let showMast;
@@ -109,6 +116,13 @@
       max-width: 200px;
     }
   }
+
+  .supplemental {
+    text-align: right;
+    font-size: 13px;
+    color: $gray;
+    margin: -10px 0 4px 0;
+  }
 </style>
 
 <Loader active={$auth.signingIn}>
@@ -120,9 +134,12 @@
             {@html mastLogoSvg}
           </Link>
         </div>
-        {#if $auth.isAuthenticated}
+        {#if $orgsAndUsers.me != null}
           <div class="signupcontainer">
-            <div class="signin" on:click={logout}>Log out</div>
+            <div class="supplemental">Signed in as {$orgsAndUsers.me.name}</div>
+            <div class="signin">
+              <a href={SIGN_OUT_URL}>Sign out</a>
+            </div>
             <router-link to="app">
               <Button>Go to app</Button>
             </router-link>
