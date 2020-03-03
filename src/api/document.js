@@ -134,7 +134,10 @@ export async function cancelProcessing(id) {
 
 export async function redactDocument(id, redactions) {
   // Redact the document with the specified id and redactions
-  await session.post(apiUrl(`documents/${id}/redactions/`), redactions);
+  await session.post(
+    apiUrl(`documents/${id}/redactions/`),
+    redactions.map(redaction => redaction.note)
+  );
 }
 
 export async function addData(id, key, value) {
