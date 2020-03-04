@@ -99,7 +99,12 @@ export function hideRename() {
   layout.renameOpen = false;
 }
 
+function canEdit(...documents) {
+  return documents.filter(doc => !doc.editAccess).length == 0;
+}
+
 export function openAccess(documents) {
+  if (documents.length == 0 || !canEdit(...documents)) return;
   layout.accessEditDocuments = documents;
 }
 
@@ -108,7 +113,8 @@ export function hideAccess() {
 }
 
 export function editData(documents) {
-  if (documents.length == 0) return;
+  if (documents.length == 0 || !canEdit(...documents)) return;
+
   layout.dataDocuments = documents;
   layout.dataOpen = true;
 }
