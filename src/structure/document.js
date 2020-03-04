@@ -98,6 +98,10 @@ export class Document extends Svue {
         organizationAccess(access) {
           return access == "organization";
         },
+        editAccess(doc) {
+          if (doc.edit_access == null) return false;
+          return doc.edit_access;
+        },
 
         // Status and processing-related properties
         status(doc) {

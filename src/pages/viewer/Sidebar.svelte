@@ -126,25 +126,33 @@
           <p>Contributed by {$viewer.document.userOrgString}</p>
         </small>
       </div>
+
+      <div class="actions">Document Actions</div>
+      {#if $viewer.document.editAccess}
+        <div class="action" on:click={enterRedactMode}>
+          <h3>Redact</h3>
+          <p>
+            Create redactions on the document to hide text. The document will
+            reprocess afterwards.
+          </p>
+        </div>
+        <div class="action" on:click={enterAnnotateMode}>
+          <h3>Annotate</h3>
+          <p>Make annotations to keep notes on the document.</p>
+        </div>
+        <div class="action" on:click={enterSectionsMode}>
+          <h3>Edit sections</h3>
+          <p>
+            Add sections to organize your document with a table of contents.
+          </p>
+        </div>
+      {:else}
+        <div class="action" on:click={enterAnnotateMode}>
+          <h3>Add Private Note</h3>
+          <p>Make annotations to keep notes on the document.</p>
+        </div>
+      {/if}
     {/if}
-
-    <div class="actions">Document Actions</div>
-
-    <div class="action" on:click={enterRedactMode}>
-      <h3>Redact</h3>
-      <p>
-        Create redactions on the document to hide text. The document will
-        reprocess afterwards.
-      </p>
-    </div>
-    <div class="action" on:click={enterAnnotateMode}>
-      <h3>Annotate</h3>
-      <p>Make annotations to keep notes on the document.</p>
-    </div>
-    <div class="action" on:click={enterSectionsMode}>
-      <h3>Edit sections</h3>
-      <p>Add sections to organize your document with a table of contents.</p>
-    </div>
 
     <SpecialMessage />
   </div>
