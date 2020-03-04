@@ -73,8 +73,6 @@ $document-selected: #00000021;
 $checkboxZ: -9;
 $sidebarBg: -1;
 
-$sidebarStickyZ: 1;
-$appStickyZ: 2;
 $viewerBodyZ: 1;
 $viewerPageNumZ: 2;
 $viewerTagZ: 3;
@@ -85,9 +83,13 @@ $viewerHeaderZ: 7;
 $viewerFooterZ: 7;
 
 $spinnerZ: 8;
-$hamburgerZ: 9;
-$toastOuterZ: 9;
-$sidebarZ: 10;
+
+$sidebarStickyZ: 9;
+$appStickyZ: 10;
+
+$hamburgerZ: 11;
+$toastOuterZ: 11;
+$sidebarZ: 12;
 $menuShim: 14;
 $menuTitleActive: 15;
 $menuActive: 16;
