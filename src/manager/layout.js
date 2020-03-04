@@ -44,6 +44,9 @@ export const layout = new Svue({
     hasSelection(selected) {
       return selected.length > 0;
     },
+    selectionEditable(selected) {
+      return selected.filter(doc => !doc.editAccess).length == 0;
+    },
     accessOpen(accessEditDocuments) {
       return accessEditDocuments.length > 0;
     },

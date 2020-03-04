@@ -78,7 +78,7 @@
         {/if}
       </span>
 
-      {#if $layout.hasSelection}
+      {#if $layout.hasSelection && $layout.selectionEditable}
         <Dropdown table={true} fixed={true}>
           <span class="action" slot="title">
             <span class="nowrap">
@@ -90,7 +90,8 @@
         </Dropdown>
       {:else}
         <span class="action disabled shortpad">
-          <Tooltip caption="Select some documents to reveal edit actions">
+          <Tooltip
+            caption={$layout.selectionEditable ? 'Select some documents to reveal edit actions' : 'You do not have permission to edit all of the selected documents'}>
             <span class="nowrap">
               Edit
               <span class="dropper">▼</span>
