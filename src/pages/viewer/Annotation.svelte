@@ -606,11 +606,8 @@
               {@html organizationIconSvg}
             </span>
             <div class="contents">
-              <h3>Organization</h3>
-              <p>
-                Note will be visible to anyone within your organization with
-                access to the document.
-              </p>
+              <h3>Collaborator</h3>
+              <p>Note will be visible to anyone who can edit this document.</p>
             </div>
           </div>
         </div>
