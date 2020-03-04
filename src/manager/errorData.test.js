@@ -23,3 +23,9 @@ test("extract array data", () => {
     { key: null, values: ["missing"] }
   ]);
 });
+
+test("extract detail data", () => {
+  expect(extractErrorData({ detail: "test" })).toEqual([
+    { key: "detail", values: ["test"] }
+  ]);
+});
