@@ -129,6 +129,7 @@ export function newProject() {
 }
 
 export function editProject(project) {
+  if (!project.editAccess) return;
   layout.projectEdit = project;
   layout.projectOpen = true;
 }
