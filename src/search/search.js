@@ -94,7 +94,9 @@ export function searchUrl(query, transformedQuery) {
   const q =
     transformedQuery != null && transformedQuery.length > 0
       ? transformedQuery
-      : null;
+      : transformedQuery == null
+      ? null
+      : "";
 
   return queryBuilder(null, {
     q,
