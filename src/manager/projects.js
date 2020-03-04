@@ -29,6 +29,9 @@ export const projects = new Svue({
         results[project.id] = project;
       }
       return results;
+    },
+    editableProjects(projects) {
+      return projects.filter(project => project.editAccess);
     }
   }
 });
