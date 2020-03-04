@@ -60,7 +60,7 @@
   }
 
   function getDimensions() {
-    if (foundDimensions) return;
+    if (makeNull || foundDimensions) return;
     if (img != null && img.naturalWidth != null && img.naturalWidth != 0) {
       if (pollInterval != null) {
         clearPoll();
@@ -221,8 +221,12 @@
       {alt}
       draggable="false" />
   {/if}
-  {#if showLoading && !show}
-    <div class="loading">Loading...</div>
+  {#if showLoading && (!show || makeNull)}
+    <div class="loading">
+      {#if makeNull}
+        An error occurred. Try refreshing the page
+      {:else}Loading...{/if}
+    </div>
   {/if}
 </span>
 
