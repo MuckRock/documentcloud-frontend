@@ -140,9 +140,9 @@
             <div class="signin">
               <a href={SIGN_OUT_URL}>Sign out</a>
             </div>
-            <router-link to="app">
+            <Link to="app">
               <Button>Go to app</Button>
-            </router-link>
+            </Link>
           </div>
         {:else}
           <div class="signupcontainer">
