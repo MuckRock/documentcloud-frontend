@@ -12,7 +12,7 @@ const DEFAULT_VISIBLE_OFFSET = -60; // offset at which to start next page number
 export const ZOOM_VALUES = [50, 75, 100, 150, 200];
 export const ZOOM_OPTIONS = ["Fit", ...ZOOM_VALUES.map(x => `${x}%`)];
 const ZOOM_PERCENTS = ZOOM_VALUES.map(x => x / 100);
-export const BASE_WIDTH = 500;
+export const BASE_WIDTH = 450;
 
 export const BREAKPOINT = 600;
 
@@ -23,9 +23,9 @@ export const renderer = new Svue({
       imageAspects: [],
       textAspects: [],
       mode: "image",
-      width: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
-      originalWidth: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
-      zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 1],
+      width: ZOOM_PERCENTS[ZOOM_VALUES.length - 2] * BASE_WIDTH,
+      originalWidth: ZOOM_PERCENTS[ZOOM_VALUES.length - 2] * BASE_WIDTH,
+      zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 2],
       basePageRail: 69,
       baseSmallRail: 10,
       verticalPageMargin: 6,
