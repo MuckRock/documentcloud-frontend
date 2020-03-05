@@ -33,6 +33,7 @@
       @media only screen and (max-width: $mobileBreak) {
         width: 43px;
         height: 54px;
+        font-size: 12px;
       }
     }
 
