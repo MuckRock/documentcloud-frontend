@@ -30,6 +30,8 @@
 
   import emitter from "@/emit";
 
+  export let concealed = false;
+
   const emit = emitter({
     expandSidebar() {}
   });
@@ -51,6 +53,10 @@
 
     @media only screen and (max-width: 600px) {
       left: 0;
+
+      &.concealed {
+        display: none;
+      }
     }
   }
 
@@ -68,7 +74,7 @@
   }
 </style>
 
-<div class="main">
+<div class="main" class:concealed>
   <Toasts />
 
   {#if $layout.error}

@@ -1,6 +1,7 @@
 <script>
   import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
   import { onMount, onDestroy } from "svelte";
+  import { layout } from "@/manager/layout";
   import emitter from "@/emit";
 
   // SVG assets
@@ -31,6 +32,8 @@
 
   onMount(() => {
     disableBodyScroll(modal);
+    // Exit out of sidebar
+    layout.sidebarExpanded = false;
   });
 
   onDestroy(() => {

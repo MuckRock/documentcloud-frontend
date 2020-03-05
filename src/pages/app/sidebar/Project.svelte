@@ -37,6 +37,10 @@
     width: 100%;
     box-sizing: border-box;
 
+    @media screen and (max-width: 600px) {
+      padding: 11px 25px 11px (25px + $sidebarAdd);
+    }
+
     &:hover {
       background: rgba(0, 0, 0, 0.03);
     }

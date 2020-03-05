@@ -24,6 +24,10 @@
 
     .titlesection {
       padding: 0 25px;
+
+      @media screen and (max-width: 600px) {
+        padding: 0 25px 0 (25px + $sidebarAdd);
+      }
     }
 
     .projectcontainer {
@@ -51,6 +55,10 @@
       padding: 5px 24px;
       font-size: 14px;
       color: rgba(0, 0, 0, 0.8);
+
+      @media screen and (max-width: 600px) {
+        padding: 5px 24px 5px (24px + $sidebarAdd);
+      }
 
       &.active {
         background: $primary-faded;

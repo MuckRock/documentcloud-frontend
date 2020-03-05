@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import { router } from "@/router/router";
 
 // Used to calculate the most restricted level of access
 // in a group of documents
@@ -11,6 +12,7 @@ const ACCESS_LEVELS = {
 export const layout = new Svue({
   data() {
     return {
+      router,
       sidebarExpanded: false,
       loading: true,
       error: false,
@@ -33,6 +35,11 @@ export const layout = new Svue({
       // Which documents the access is being edited for
       accessEditDocuments: []
     };
+  },
+  watch: {
+    "router.resolvedRoute"() {
+      this.sidebarExpanded = false;
+    }
   },
   computed: {
     selected(selectedMap) {

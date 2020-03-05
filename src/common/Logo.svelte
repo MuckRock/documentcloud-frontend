@@ -13,6 +13,10 @@
     height: 29px;
     padding: 5px 25px 12px 25px;
     user-select: none;
+
+    @media screen and (max-width: 600px) {
+      padding-left: 25px + $sidebarAdd !important;
+    }
   }
 
   @media only screen and (max-width: 600px) {
@@ -23,11 +27,11 @@
 </style>
 
 {#if $orgsAndUsers.me != null}
-  <Link toUrl={userUrl($orgsAndUsers.me)}>
+  <Link inlineBlock={true} toUrl={userUrl($orgsAndUsers.me)}>
     {@html dcLogo}
   </Link>
 {:else}
-  <Link to="app">
+  <Link inlineBlock={true} to="app">
     {@html dcLogo}
   </Link>
 {/if}

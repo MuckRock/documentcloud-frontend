@@ -5,6 +5,8 @@
   // Components
   import Projects from "./Projects";
 
+  export let expanded;
+
   const emit = emitter({
     retractSidebar() {}
   });
@@ -53,7 +55,7 @@
   }
 </style>
 
-<div class="sidebar" class:expanded={$layout.expanded}>
+<div class="sidebar" class:expanded>
   <Projects on:retractSidebar={emit.retractSidebar} />
   <div class="sidebarbg" />
 </div>
