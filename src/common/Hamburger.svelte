@@ -7,26 +7,16 @@
   const emit = emitter({
     toggle() {}
   });
-
-  // Boolean indicating if hamburger should be white
-  // (e.g. if on a dark background)
-  export let white;
 </script>
 
 <style lang="scss">
   .hamburger {
     user-select: none;
-    position: sticky;
-    position: -webkit-sticky;
+    position: fixed;
     top: 0;
+    padding: 14px;
     z-index: $hamburgerZ;
-    background: $sidebar;
-    padding: 1em 0;
     display: none;
-
-    &.white {
-      background: white;
-    }
 
     .svg {
       cursor: pointer;
@@ -44,7 +34,7 @@
   }
 </style>
 
-<div class="hamburger" class:white>
+<div class="hamburger">
   <span class="svg" on:click={emit.toggle}>
     {@html hamburgerSvg}
   </span>

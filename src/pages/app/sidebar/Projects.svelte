@@ -61,10 +61,7 @@
 
 <div class="projects">
   <div class="sticky">
-    <Hamburger
-      on:toggle={emit.retractSidebar}
-      white={false}
-      style="padding: 25px;" />
+    <Hamburger on:toggle={emit.retractSidebar} />
     <Logo />
     <div class="linksection">
       <Link toUrl={allDocumentsUrl()}>

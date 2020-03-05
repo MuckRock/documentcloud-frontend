@@ -88,6 +88,10 @@
   .card {
     display: table;
 
+    @media only screen and (max-width: 600px) {
+      margin-bottom: 20px;
+    }
+
     .row {
       display: table-row;
 

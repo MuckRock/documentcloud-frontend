@@ -90,10 +90,7 @@
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
   {/if}
-  <Hamburger
-    on:toggle={emit.expandSidebar}
-    white={true}
-    style="margin-top: 16px; padding: 1.5em 36px;" />
+  <Hamburger on:toggle={emit.expandSidebar} />
   {#if !$documents.error}
     <div class="container">
       <Documents />

@@ -124,6 +124,10 @@
     padding-top: $mainDocContainerPadding;
     background: white;
     z-index: $appStickyZ;
+
+    @media only screen and (max-width: 600px) {
+      padding-top: 0;
+    }
   }
 
   .toastouter {
