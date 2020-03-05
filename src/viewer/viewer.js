@@ -13,7 +13,8 @@ export const viewer = new Svue({
       sections: null,
       document: null,
       id: null,
-      me: null
+      me: null,
+      loadedMe: false
     };
   },
   watch: {
@@ -90,13 +91,13 @@ export const viewer = new Svue({
 
       return results;
     },
-    loaded(document, pageAspects, notes, sections, me) {
+    loaded(document, pageAspects, notes, sections, loadedMe) {
       return (
         document != null &&
         pageAspects != null &&
         notes != null &&
         sections != null &&
-        me != null
+        loadedMe
       );
     },
     orderedNotes(notes) {
@@ -157,5 +158,13 @@ function initViewer(id) {
   getSections(id).then(sections => {
     viewer.sections = sections;
   });
-  getMe().then(me => (viewer.me = me));
+  getMe()
+    .then(me => {
+      viewer.me = me;
+      viewer.loadedMe = true;
+    })
+    .catch(() => {
+      viewer.me = null;
+      viewer.loadedMe = true;
+    });
 }
