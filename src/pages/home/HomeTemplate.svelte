@@ -60,8 +60,7 @@
   }
 
   .signupcontainer {
-    display: table-cell;
-    vertical-align: middle;
+    display: block;
     text-align: right;
   }
 
@@ -123,6 +122,41 @@
     color: $gray;
     margin: -10px 0 4px 0;
   }
+
+  .narrowshow {
+    $bordersize: 16px;
+
+    display: none;
+    margin: 10px $bordersize 0 $bordersize;
+    padding-top: 20px;
+    border-top: solid 1px gainsboro;
+
+    .signupcontainer {
+      display: block;
+      margin: 0 (-$bordersize);
+    }
+
+    .signupcontainer,
+    .supplemental {
+      text-align: left;
+    }
+  }
+
+  .narrowhide {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+  }
+
+  @media only screen and (max-width: $mobileBreak) {
+    .narrowhide {
+      display: none;
+    }
+
+    .narrowshow {
+      display: block;
+    }
+  }
 </style>
 
 <Loader active={$auth.signingIn}>
@@ -134,6 +168,32 @@
             {@html mastLogoSvg}
           </Link>
         </div>
+        <div class="narrowhide">
+          {#if $orgsAndUsers.me != null}
+            <div class="signupcontainer">
+              <div class="supplemental">
+                Signed in as {$orgsAndUsers.me.name}
+              </div>
+              <div class="signin">
+                <a href={SIGN_OUT_URL}>Sign out</a>
+              </div>
+              <Link to="app">
+                <Button>Go to app</Button>
+              </Link>
+            </div>
+          {:else}
+            <div class="signupcontainer">
+              <div class="signin">
+                <a href={SIGN_IN_URL}>Sign in</a>
+              </div>
+              <a href={SIGN_UP_URL}>
+                <Button>Sign up</Button>
+              </a>
+            </div>
+          {/if}
+        </div>
+      </div>
+      <div class="narrowshow">
         {#if $orgsAndUsers.me != null}
           <div class="signupcontainer">
             <div class="supplemental">Signed in as {$orgsAndUsers.me.name}</div>
