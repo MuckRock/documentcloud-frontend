@@ -109,7 +109,7 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     .modalcontainer {
       top: 0;
       left: 0;

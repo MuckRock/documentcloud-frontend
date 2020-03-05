@@ -88,7 +88,7 @@
   .card {
     display: table;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       margin-bottom: 20px;
     }
 

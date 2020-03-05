@@ -7,12 +7,15 @@
 </script>
 
 <style lang="scss">
+  .container {
+    padding: 10px 0;
+  }
+
   .special {
     background: #82ffbb;
     display: block;
     padding: 2px 8px;
     border-radius: 3px;
-    margin: 10px 0;
     font-size: 13px;
     box-sizing: border-box;
     color: #043004;
@@ -24,11 +27,13 @@
 </style>
 
 {#if show}
-  <div class="special">
-    {version}
-    {#if showContact}
-      <a href={contact} target="_blank">Contact us</a>
-      with bug reports, questions, and suggestions.
-    {/if}
+  <div class="container">
+    <div class="special">
+      {version}
+      {#if showContact}
+        <a href={contact} target="_blank">Contact us</a>
+        with bug reports, questions, and suggestions.
+      {/if}
+    </div>
   </div>
 {/if}

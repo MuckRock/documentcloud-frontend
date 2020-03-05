@@ -51,7 +51,7 @@
     bottom: 0;
     overflow: auto;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       left: 0;
 
       &.concealed {

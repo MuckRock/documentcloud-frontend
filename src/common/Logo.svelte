@@ -14,12 +14,12 @@
     padding: 5px 25px 12px 25px;
     user-select: none;
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: $mobileBreak) {
       padding-left: 25px + $sidebarAdd !important;
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     :global(.dclogo) {
       padding: 10px 25px 40px 25px;
     }

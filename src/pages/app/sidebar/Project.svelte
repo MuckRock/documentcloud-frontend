@@ -37,7 +37,7 @@
     width: 100%;
     box-sizing: border-box;
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: $mobileBreak) {
       padding: 11px 25px 11px (25px + $sidebarAdd);
     }
 

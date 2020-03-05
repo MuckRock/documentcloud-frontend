@@ -25,7 +25,7 @@
     .titlesection {
       padding: 0 25px;
 
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: $mobileBreak) {
         padding: 0 25px 0 (25px + $sidebarAdd);
       }
     }
@@ -56,7 +56,7 @@
       font-size: 14px;
       color: rgba(0, 0, 0, 0.8);
 
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: $mobileBreak) {
         padding: 5px 24px 5px (24px + $sidebarAdd);
       }
 

@@ -16,7 +16,7 @@
     display: table-cell;
     vertical-align: top;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       padding: 10px 15px 20px 15px;
     }
 
@@ -30,7 +30,7 @@
       vertical-align: middle;
       object-fit: contain;
 
-      @media only screen and (max-width: 600px) {
+      @media only screen and (max-width: $mobileBreak) {
         width: 43px;
         height: 54px;
       }

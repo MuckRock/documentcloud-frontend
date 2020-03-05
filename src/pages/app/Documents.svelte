@@ -126,7 +126,7 @@
     background: white;
     z-index: $appStickyZ;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       padding-top: 0;
     }
   }
@@ -164,7 +164,7 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     .narrowshow {
       display: block;
     }

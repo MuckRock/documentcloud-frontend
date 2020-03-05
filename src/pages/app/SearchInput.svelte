@@ -483,7 +483,7 @@
     box-sizing: border-box;
     max-width: 750px;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       margin: 0 0 44px 0;
     }
 

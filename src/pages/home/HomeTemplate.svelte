@@ -103,7 +103,7 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     :global(.masthead) {
       display: none;
     }
