@@ -13,6 +13,7 @@
   import NoDocuments from "./NoDocuments";
   import AuthSection from "@/pages/app/AuthSection";
   import SpecialMessage from "@/common/SpecialMessage";
+  import Paginator from "./Paginator";
 
   // Store properties
   import { layout } from "@/manager/layout";
@@ -151,6 +152,23 @@
     box-shadow: $overlay-shadow;
     padding: 13px 55px;
   }
+
+  .narrowshow {
+    display: none;
+
+    > :global(div) {
+      margin-top: -50px;
+      margin-bottom: 28px;
+      display: block !important;
+      text-align: center !important;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .narrowshow {
+      display: block;
+    }
+  }
 </style>
 
 <Loader active={$layout.loading}>
@@ -190,6 +208,10 @@
           <div class="toast">Drop file to upload</div>
         </div>
       </Draggable>
+    </div>
+
+    <div class="narrowshow">
+      <Paginator />
     </div>
   </div>
 </Loader>

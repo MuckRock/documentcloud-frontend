@@ -66,39 +66,15 @@
     }
   }
 
-  .narrowshow {
-    display: none;
-  }
-
   @media only screen and (max-width: 600px) {
     .narrowhide {
       display: none;
-    }
-
-    .narrowshow {
-      display: block;
-    }
-  }
-
-  .right {
-    margin: 0 0 10px 0;
-    padding-bottom: 10px;
-    border-bottom: solid 1px rgb(238, 238, 238);
-
-    > :global(div) {
-      text-align: right;
-      display: block;
     }
   }
 </style>
 
 <div class="barcontainer">
   {#if !$layout.loading}
-    <span class="narrowshow">
-      <div class="right">
-        <Paginator />
-      </div>
-    </span>
     <div class="bar">
       <span class="action check scaledown">
         {#if $documents.documents.length > 0}
