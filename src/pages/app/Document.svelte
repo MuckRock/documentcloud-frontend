@@ -304,7 +304,7 @@
               </Button>
             </Link>
           {/each}
-          {#if document.dataPoints.length > 0}
+          {#if document.dataPoints.length > 0 && document.editAccess}
             <span class="pencil" on:click={() => editData([document])}>
               {@html pencilSvg}
             </span>
