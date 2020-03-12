@@ -13,27 +13,24 @@
     font-style: italic;
     font-size: $small;
   }
-
-  .small {
-    color: $gray;
-    font-size: 11px;
-    text-transform: uppercase;
-    margin: 3px 0 0 0;
-  }
 </style>
 
 <Menu>
   <MenuItem primary={true} on:click={newProject}>+ New Project</MenuItem>
-  {#if $layout.hasSelection}
+  {#if $layout.hasSelection && $projects.editableProjects.length > 0}
     <MenuItem selectable={false}>
       <div class="small">Project Membership</div>
     </MenuItem>
-    {#each $projects.projects as project}
+    {#each $projects.editableProjects as project}
       <ProjectMenuItem {project} />
     {/each}
   {:else}
     <MenuItem selectable={false}>
-      <div class="info">Select documents to place them in projects</div>
+      {#if $projects.editableProjects.length > 0}
+        <div class="info">Select documents to place them in projects</div>
+      {:else}
+        <div class="info">Create a project to organize and share documents</div>
+      {/if}
     </MenuItem>
   {/if}
 </Menu>

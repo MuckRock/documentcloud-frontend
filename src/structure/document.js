@@ -61,8 +61,7 @@ export class Document extends Svue {
         },
         thumbnail(assetUrl, id, slug, updatedAtTimestamp) {
           // Calculate thumbnail route
-          // TODO: last modified
-          return `${assetUrl}documents/${id}/pages/${slug}-p1-normal.gif?ts=${updatedAtTimestamp}`;
+          return `${assetUrl}documents/${id}/pages/${slug}-p1-small.gif?ts=${updatedAtTimestamp}`;
         },
         rawCreatedAt(doc) {
           // Unprocessed created at
@@ -97,6 +96,10 @@ export class Document extends Svue {
         },
         organizationAccess(access) {
           return access == "organization";
+        },
+        editAccess(doc) {
+          if (doc.edit_access == null) return false;
+          return doc.edit_access;
         },
 
         // Status and processing-related properties

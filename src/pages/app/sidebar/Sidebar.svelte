@@ -5,6 +5,8 @@
   // Components
   import Projects from "./Projects";
 
+  export let expanded;
+
   const emit = emitter({
     retractSidebar() {}
   });
@@ -33,7 +35,7 @@
     box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.12);
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     .sidebar {
       display: none;
       width: 100vw;
@@ -53,7 +55,7 @@
   }
 </style>
 
-<div class="sidebar" class:expanded={$layout.expanded}>
+<div class="sidebar" class:expanded>
   <Projects on:retractSidebar={emit.retractSidebar} />
   <div class="sidebarbg" />
 </div>

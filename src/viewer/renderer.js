@@ -2,6 +2,7 @@ import { Svue } from "svue";
 import { viewer } from "./viewer";
 import { layout, annotationValid, startSearch, clearSearch } from "./layout";
 import { withinPercent } from "@/util/epsilon";
+import { router } from "@/router/router";
 import { tick } from "svelte";
 
 const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
@@ -11,19 +12,20 @@ const DEFAULT_VISIBLE_OFFSET = -60; // offset at which to start next page number
 export const ZOOM_VALUES = [50, 75, 100, 150, 200];
 export const ZOOM_OPTIONS = ["Fit", ...ZOOM_VALUES.map(x => `${x}%`)];
 const ZOOM_PERCENTS = ZOOM_VALUES.map(x => x / 100);
-export const BASE_WIDTH = 500;
+export const BASE_WIDTH = 450;
 
 export const BREAKPOINT = 600;
 
 export const renderer = new Svue({
   data() {
     return {
+      router,
       imageAspects: [],
       textAspects: [],
       mode: "image",
-      width: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
-      originalWidth: ZOOM_PERCENTS[ZOOM_VALUES.length - 1] * BASE_WIDTH,
-      zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 1],
+      width: ZOOM_PERCENTS[ZOOM_VALUES.length - 2] * BASE_WIDTH,
+      originalWidth: ZOOM_PERCENTS[ZOOM_VALUES.length - 2] * BASE_WIDTH,
+      zoom: ZOOM_OPTIONS[ZOOM_OPTIONS.length - 2],
       basePageRail: 69,
       baseSmallRail: 10,
       verticalPageMargin: 6,
@@ -43,6 +45,12 @@ export const renderer = new Svue({
   watch: {
     viewer(viewer) {
       if (viewer.pageAspects != null) initAspects();
+    },
+    "router.resolvedRoute"() {
+      const route = router.resolvedRoute;
+      if (route != null && route.name != "viewer") {
+        reset();
+      }
     }
   },
   computed: {
@@ -507,4 +515,8 @@ export async function exitSearch() {
   if (modeBeforeSearch != null) {
     await changeMode(modeBeforeSearch);
   }
+}
+
+async function reset() {
+  await changeMode("image");
 }

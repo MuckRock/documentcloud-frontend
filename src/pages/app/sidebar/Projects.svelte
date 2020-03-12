@@ -10,6 +10,7 @@
   import { newProject } from "@/manager/layout";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { allDocumentsUrl, userUrl, orgUrl } from "@/search/search";
+
   import emitter from "@/emit";
 
   const emit = emitter({
@@ -19,10 +20,14 @@
 
 <style lang="scss">
   .projects {
-    padding: 0;
+    padding: 20px 0;
 
     .titlesection {
       padding: 0 25px;
+
+      @media screen and (max-width: $mobileBreak) {
+        padding: 0 25px 0 (25px + $sidebarAdd);
+      }
     }
 
     .projectcontainer {
@@ -35,6 +40,13 @@
     z-index: $sidebarStickyZ;
   }
 
+  small {
+    font-size: 13px;
+    color: $gray;
+    margin: 0 24px;
+    display: block;
+  }
+
   .linksection {
     margin: 20px 0 40px 0;
 
@@ -43,6 +55,10 @@
       padding: 5px 24px;
       font-size: 14px;
       color: rgba(0, 0, 0, 0.8);
+
+      @media screen and (max-width: $mobileBreak) {
+        padding: 5px 24px 5px (24px + $sidebarAdd);
+      }
 
       &.active {
         background: $primary-faded;
@@ -53,10 +69,7 @@
 
 <div class="projects">
   <div class="sticky">
-    <Hamburger
-      on:toggle={emit.retractSidebar}
-      white={false}
-      style="padding: 25px;" />
+    <Hamburger on:toggle={emit.retractSidebar} />
     <Logo />
     <div class="linksection">
       <Link toUrl={allDocumentsUrl()}>
@@ -84,8 +97,12 @@
     </div>
   </div>
   <div class="projectcontainer">
-    {#each $projects.projects as project}
-      <Project {project} />
-    {/each}
+    {#if $projects.projects.length > 0}
+      {#each $projects.projects as project}
+        <Project {project} />
+      {/each}
+    {:else}
+      <small>Create your first project by clicking “New Project” above.</small>
+    {/if}
   </div>
 </div>

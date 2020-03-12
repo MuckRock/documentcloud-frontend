@@ -3,7 +3,7 @@ import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { wrapLoad } from "@/util/wrapLoad";
 import { redactDocument, searchDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
-import { nav } from "@/router/router";
+import { router, nav } from "@/router/router";
 import {
   createAnnotation,
   updateAnnotation,
@@ -14,6 +14,8 @@ import { Note } from "@/structure/note";
 export const layout = new Svue({
   data() {
     return {
+      router,
+
       // Height of header row
       headerHeight: 36,
       baseSidebarWidth: 350,
@@ -54,6 +56,14 @@ export const layout = new Svue({
       searchHighlights: null,
       searchPages: null
     };
+  },
+  watch: {
+    "router.resolvedRoute"() {
+      const route = router.resolvedRoute;
+      if (route != null && route.name != "viewer") {
+        reset();
+      }
+    }
   },
   computed: {
     sidebarWidth(baseSidebarWidth, showSidebar) {
@@ -333,4 +343,9 @@ export function clearSearch() {
   layout.searchPending = false;
   layout.searchHighlights = null;
   layout.searchPages = null;
+}
+
+function reset() {
+  clearSearch();
+  cancelActions();
 }

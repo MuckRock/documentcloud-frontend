@@ -26,9 +26,14 @@ function getDesiredSize(desiredWidth) {
   return imageWidths[imageWidths.length - 1][1];
 }
 
-export function pageImageUrl(document, pageNumber, desiredWidth, visualScale) {
+export function pageImageUrl(
+  document,
+  pageNumber,
+  desiredWidth,
+  visualScale = 1
+) {
   // Incorporate device's DPI into scaling to avoid blurring.
-  const scaling = (window.devicePixelRatio || 1) * visualScale;
+  const scaling = visualScale;
   const size = getDesiredSize(desiredWidth * scaling);
 
   return `${document.assetUrl}documents/${document.id}/pages/${

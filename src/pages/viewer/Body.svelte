@@ -135,7 +135,6 @@
   }
 
   async function handleGestureEnd() {
-    console.log(currentZoom);
     if (Math.abs(currentZoom - 1) <= ZOOM_RESISTANCE) {
       currentZoom = 1;
       await tick();

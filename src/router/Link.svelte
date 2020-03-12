@@ -7,6 +7,7 @@
   export let params = null;
   export let newPage = false;
   export let forceClick = false;
+  export let inlineBlock = false;
 
   const link = new Svue({
     data() {
@@ -44,14 +45,26 @@
   .active {
     font-weight: bold;
   }
+
+  .ib {
+    display: inline-block;
+  }
 </style>
 
 {#if newPage}
-  <a class:active={$link.active} href={$link.toPath} target="_blank">
+  <a
+    class:ib={inlineBlock}
+    class:active={$link.active}
+    href={$link.toPath}
+    target="_blank">
     <slot />
   </a>
 {:else}
-  <a class:active={$link.active} href={$link.toPath} on:click={nav}>
+  <a
+    class:ib={inlineBlock}
+    class:active={$link.active}
+    href={$link.toPath}
+    on:click={nav}>
     <slot />
   </a>
 {/if}

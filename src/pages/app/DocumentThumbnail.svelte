@@ -16,6 +16,10 @@
     display: table-cell;
     vertical-align: top;
 
+    @media only screen and (max-width: $mobileBreak) {
+      padding: 10px 15px 20px 15px;
+    }
+
     :global(img),
     > *,
     .fullstatus {
@@ -25,6 +29,12 @@
       text-align: center;
       vertical-align: middle;
       object-fit: contain;
+
+      @media only screen and (max-width: $mobileBreak) {
+        width: 43px;
+        height: 54px;
+        font-size: 12px;
+      }
     }
 
     .error {

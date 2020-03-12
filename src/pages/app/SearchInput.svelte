@@ -483,7 +483,7 @@
     box-sizing: border-box;
     max-width: 750px;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       margin: 0 0 44px 0;
     }
 
@@ -525,9 +525,7 @@
     line-height: 1.6;
     font-family: inherit;
     border: none;
-    padding-left: 56px;
-    padding-right: 12px;
-    padding: 9px 12px 9px 56px;
+    padding: 9px 12px 9px 49px;
     box-sizing: border-box;
     border: solid 1px transparent;
     width: 100%;

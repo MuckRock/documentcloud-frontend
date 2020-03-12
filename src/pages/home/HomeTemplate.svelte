@@ -2,6 +2,8 @@
   import Loader from "@/common/Loader";
   import Button from "@/common/Button";
   import Link from "@/router/Link";
+  import { router } from "@/router/router";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -9,7 +11,13 @@
   import mastheadResponsiveSvg from "@/assets/masthead_responsive.svg";
 
   // Authentication
-  import { auth, logout, SIGN_IN_URL, SIGN_UP_URL } from "@/api/auth";
+  import {
+    auth,
+    logout,
+    SIGN_IN_URL,
+    SIGN_UP_URL,
+    SIGN_OUT_URL
+  } from "@/api/auth";
 
   // Show the masthead
   export let showMast;
@@ -52,8 +60,7 @@
   }
 
   .signupcontainer {
-    display: table-cell;
-    vertical-align: middle;
+    display: block;
     text-align: right;
   }
 
@@ -95,7 +102,7 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     :global(.masthead) {
       display: none;
     }
@@ -108,6 +115,48 @@
       max-width: 200px;
     }
   }
+
+  .supplemental {
+    text-align: right;
+    font-size: 13px;
+    color: $gray;
+    margin: -10px 0 4px 0;
+  }
+
+  .narrowshow {
+    $bordersize: 16px;
+
+    display: none;
+    margin: 10px $bordersize 0 $bordersize;
+    padding-top: 20px;
+    border-top: solid 1px gainsboro;
+
+    .signupcontainer {
+      display: block;
+      margin: 0 (-$bordersize);
+    }
+
+    .signupcontainer,
+    .supplemental {
+      text-align: left;
+    }
+  }
+
+  .narrowhide {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+  }
+
+  @media only screen and (max-width: $mobileBreak) {
+    .narrowhide {
+      display: none;
+    }
+
+    .narrowshow {
+      display: block;
+    }
+  }
 </style>
 
 <Loader active={$auth.signingIn}>
@@ -115,16 +164,45 @@
     <header>
       <div class="headercontents">
         <div class="logo">
-          <Link to="home">
+          <Link to="app">
             {@html mastLogoSvg}
           </Link>
         </div>
-        {#if $auth.isAuthenticated}
+        <div class="narrowhide">
+          {#if $orgsAndUsers.me != null}
+            <div class="signupcontainer">
+              <div class="supplemental">
+                Signed in as {$orgsAndUsers.me.name}
+              </div>
+              <div class="signin">
+                <a href={SIGN_OUT_URL}>Sign out</a>
+              </div>
+              <Link to="app">
+                <Button>Go to app</Button>
+              </Link>
+            </div>
+          {:else}
+            <div class="signupcontainer">
+              <div class="signin">
+                <a href={SIGN_IN_URL}>Sign in</a>
+              </div>
+              <a href={SIGN_UP_URL}>
+                <Button>Sign up</Button>
+              </a>
+            </div>
+          {/if}
+        </div>
+      </div>
+      <div class="narrowshow">
+        {#if $orgsAndUsers.me != null}
           <div class="signupcontainer">
-            <div class="signin" on:click={logout}>Log out</div>
-            <router-link to="app">
+            <div class="supplemental">Signed in as {$orgsAndUsers.me.name}</div>
+            <div class="signin">
+              <a href={SIGN_OUT_URL}>Sign out</a>
+            </div>
+            <Link to="app">
               <Button>Go to app</Button>
-            </router-link>
+            </Link>
           </div>
         {:else}
           <div class="signupcontainer">

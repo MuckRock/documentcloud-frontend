@@ -4,6 +4,7 @@
   import Loader from "@/common/Loader";
   import { textAreaResize } from "@/util/textareaResize.js";
   import { onMount } from "svelte";
+  import { writable } from "svelte/store";
   import { pageImageUrl } from "@/api/viewer";
   import { viewer } from "@/viewer/viewer";
   import {
@@ -13,6 +14,7 @@
     createPageAnnotation,
     deletePageAnnotation
   } from "@/viewer/layout";
+  import { wrapSeparate } from "@/util/wrapLoad";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
@@ -33,7 +35,7 @@
   export let mode;
 
   let editOverride = false;
-  let loading = false;
+  let loading = writable(false);
 
   let title = annotation.title;
   let description = annotation.content;
@@ -43,7 +45,10 @@
 
   $: titleValid = title.trim().length > 0;
   $: accessValid =
-    access == "public" || access == "organization" || access == "private";
+    (document.editAccess && access == "public") ||
+    access == "organization" ||
+    access == "private" ||
+    access == "private";
 
   $: changed =
     title != annotation.title ||
@@ -67,28 +72,28 @@
   async function createOrUpdateAnnotation() {
     if (!valid) return;
 
-    loading = true;
-    if (editOverride) {
-      // Update annotation
-      annotation = await updatePageAnnotation(
-        annotation.id,
-        document.id,
-        title,
-        description,
-        access,
-        annotation
-      );
-    } else {
-      await createPageAnnotation(
-        document.id,
-        title,
-        description,
-        access,
-        annotation
-      );
-      layout.defaultAnnotationAccess = access;
-    }
-    loading = false;
+    await wrapSeparate(loading, layout, async () => {
+      if (editOverride) {
+        // Update annotation
+        annotation = await updatePageAnnotation(
+          annotation.id,
+          document.id,
+          title,
+          description,
+          access,
+          annotation
+        );
+      } else {
+        await createPageAnnotation(
+          document.id,
+          title,
+          description,
+          access,
+          annotation
+        );
+        layout.defaultAnnotationAccess = access;
+      }
+    });
 
     handleCancel();
   }
@@ -105,10 +110,10 @@
     }
   }
 
-  function handleDelete() {
-    loading = true;
-    deletePageAnnotation(annotation.id, document.id);
-    loading = false;
+  async function handleDelete() {
+    await wrapSeparate(loading, layout, async () => {
+      await deletePageAnnotation(annotation.id, document.id);
+    });
   }
 </script>
 
@@ -507,7 +512,7 @@
   class:public={access == 'public'}
   class:organization={access == 'organization'}
   class:private={access == 'private'}
-  class:disabled={loading}
+  class:disabled={$loading}
   on:mousedown|stopPropagation
   style="top: {annotation.y1 * 100}%; height: {annotation.height * 100}%">
   <header bind:this={annotationElem}>
@@ -516,7 +521,7 @@
         {@html closeInlineSvg}
       </span>
     </div>
-    <Loader active={loading} transparent={true}>
+    <Loader active={$loading} transparent={true}>
       <!-- Title -->
       {#if editMode}
         <input
@@ -583,37 +588,40 @@
     <!-- Footer content -->
     {#if editMode}
       <div class="access">
-        <div
-          class="container public"
-          class:selected={access == 'public'}
-          on:click={() => (access = 'public')}>
-          <div class="item">
-            <span class="icon">
-              {@html publicIconSvg}
-            </span>
-            <div class="contents">
-              <h3>Public</h3>
-              <p>Note will be visible to anyone with access to the document.</p>
+        {#if document.editAccess}
+          <div
+            class="container public"
+            class:selected={access == 'public'}
+            on:click={() => (access = 'public')}>
+            <div class="item">
+              <span class="icon">
+                {@html publicIconSvg}
+              </span>
+              <div class="contents">
+                <h3>Public</h3>
+                <p>
+                  Note will be visible to anyone with access to the document.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="container organization"
-          class:selected={access == 'organization'}
-          on:click={() => (access = 'organization')}>
-          <div class="item">
-            <span class="icon">
-              {@html organizationIconSvg}
-            </span>
-            <div class="contents">
-              <h3>Organization</h3>
-              <p>
-                Note will be visible to anyone within your organization with
-                access to the document.
-              </p>
+          <div
+            class="container organization"
+            class:selected={access == 'organization'}
+            on:click={() => (access = 'organization')}>
+            <div class="item">
+              <span class="icon">
+                {@html organizationIconSvg}
+              </span>
+              <div class="contents">
+                <h3>Collaborator</h3>
+                <p>
+                  Note will be visible to anyone who can edit this document.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        {/if}
         <div
           class="container private"
           class:selected={access == 'private'}

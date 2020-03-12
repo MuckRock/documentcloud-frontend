@@ -5,16 +5,21 @@ import { grabAllPages } from "@/util/paginate";
 import { apiUrl } from "./base";
 
 export async function getMe(expand = DEFAULT_EXPAND) {
-  const { data } = await session.get(
-    queryBuilder(apiUrl(`users/me/`), { expand })
-  );
-  return data;
+  try {
+    const { data } = await session.get(
+      queryBuilder(apiUrl(`users/me/`), { expand })
+    );
+    return data;
+  } catch (e) {
+    return null;
+  }
 }
 
-export async function getOrganizations(
-  individual = false,
-  expand = ORG_EXPAND
-) {
+export async function changeActiveOrg(orgId) {
+  await session.patch(apiUrl(`users/me/`), { organization: orgId });
+}
+
+export async function getOrganizations(individual = null, expand = ORG_EXPAND) {
   const orgs = await grabAllPages(
     queryBuilder(apiUrl(`organizations/`), { individual, expand })
   );

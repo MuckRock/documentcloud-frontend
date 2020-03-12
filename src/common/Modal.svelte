@@ -1,6 +1,7 @@
 <script>
   import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
   import { onMount, onDestroy } from "svelte";
+  import { layout } from "@/manager/layout";
   import emitter from "@/emit";
 
   // SVG assets
@@ -31,6 +32,8 @@
 
   onMount(() => {
     disableBodyScroll(modal);
+    // Exit out of sidebar
+    layout.sidebarExpanded = false;
   });
 
   onDestroy(() => {
@@ -106,11 +109,11 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: $mobileBreak) {
     .modalcontainer {
       top: 0;
       left: 0;
-      height: 100vh;
+      height: 100%;
       width: 100vw;
     }
   }

@@ -10,7 +10,7 @@
 <style lang="scss">
   .container {
     margin: 1em 1.5em;
-    background: #fbf9f3;
+    background: $fyi;
     padding: 1em;
     border-radius: 10px;
   }

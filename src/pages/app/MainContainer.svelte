@@ -12,7 +12,6 @@
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
-  import SpecialMessage from "@/common/SpecialMessage";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -30,6 +29,8 @@
   import { nav } from "@/router/router";
 
   import emitter from "@/emit";
+
+  export let concealed = false;
 
   const emit = emitter({
     expandSidebar() {}
@@ -50,8 +51,12 @@
     bottom: 0;
     overflow: auto;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: $mobileBreak) {
       left: 0;
+
+      &.concealed {
+        display: none;
+      }
     }
   }
 
@@ -69,7 +74,7 @@
   }
 </style>
 
-<div class="main">
+<div class="main" class:concealed>
   <Toasts />
 
   {#if $layout.error}
@@ -91,13 +96,9 @@
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
   {/if}
-  <Hamburger
-    on:toggle={emit.expandSidebar}
-    white={true}
-    style="margin-top: 16px; padding: 1.5em 36px;" />
+  <Hamburger on:toggle={emit.expandSidebar} />
   {#if !$documents.error}
     <div class="container">
-      <SpecialMessage />
       <Documents />
     </div>
   {:else}

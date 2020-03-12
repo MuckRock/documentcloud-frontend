@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import { router } from "@/router/router";
 
 // Used to calculate the most restricted level of access
 // in a group of documents
@@ -11,6 +12,7 @@ const ACCESS_LEVELS = {
 export const layout = new Svue({
   data() {
     return {
+      router,
       sidebarExpanded: false,
       loading: true,
       error: false,
@@ -34,6 +36,11 @@ export const layout = new Svue({
       accessEditDocuments: []
     };
   },
+  watch: {
+    "router.resolvedRoute"() {
+      this.sidebarExpanded = false;
+    }
+  },
   computed: {
     selected(selectedMap) {
       return Object.values(selectedMap);
@@ -43,6 +50,9 @@ export const layout = new Svue({
     },
     hasSelection(selected) {
       return selected.length > 0;
+    },
+    selectionEditable(selected) {
+      return selected.filter(doc => !doc.editAccess).length == 0;
     },
     accessOpen(accessEditDocuments) {
       return accessEditDocuments.length > 0;
@@ -96,7 +106,12 @@ export function hideRename() {
   layout.renameOpen = false;
 }
 
+function canEdit(...documents) {
+  return documents.filter(doc => !doc.editAccess).length == 0;
+}
+
 export function openAccess(documents) {
+  if (documents.length == 0 || !canEdit(...documents)) return;
   layout.accessEditDocuments = documents;
 }
 
@@ -105,7 +120,8 @@ export function hideAccess() {
 }
 
 export function editData(documents) {
-  if (documents.length == 0) return;
+  if (documents.length == 0 || !canEdit(...documents)) return;
+
   layout.dataDocuments = documents;
   layout.dataOpen = true;
 }
@@ -120,6 +136,7 @@ export function newProject() {
 }
 
 export function editProject(project) {
+  if (!project.editAccess) return;
   layout.projectEdit = project;
   layout.projectOpen = true;
 }

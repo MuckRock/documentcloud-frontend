@@ -16,6 +16,8 @@
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();
   }
+
+  let outerHeight = 1000;
 </script>
 
 <style lang="scss">
@@ -63,6 +65,12 @@
       }
     }
   }
+
+  @media only screen and (max-width: $mobileBreak) {
+    .narrowhide {
+      display: none;
+    }
+  }
 </style>
 
 <div class="barcontainer">
@@ -78,8 +86,8 @@
         {/if}
       </span>
 
-      {#if $layout.hasSelection}
-        <Dropdown table={true} fixed={true}>
+      {#if $layout.hasSelection && $layout.selectionEditable}
+        <Dropdown table={true} fixed={outerHeight > 600}>
           <span class="action" slot="title">
             <span class="nowrap">
               Edit
@@ -90,7 +98,8 @@
         </Dropdown>
       {:else}
         <span class="action disabled shortpad">
-          <Tooltip caption="Select some documents to reveal edit actions">
+          <Tooltip
+            caption={$layout.selectionEditable ? 'Select some documents to reveal edit actions' : 'You do not have permission to edit all of the selected documents'}>
             <span class="nowrap">
               Edit
               <span class="dropper">▼</span>
@@ -98,7 +107,7 @@
           </Tooltip>
         </span>
       {/if}
-      <Dropdown table={true} fixed={true}>
+      <Dropdown table={true} fixed={outerHeight > 600}>
         <span class="action" slot="title">
           <span class="nowrap">
             Projects
@@ -108,7 +117,11 @@
         <ProjectsMenu />
       </Dropdown>
 
-      <Paginator />
+      <span class="narrowhide">
+        <Paginator />
+      </span>
     </div>
   {/if}
 </div>
+
+<svelte:window bind:outerHeight />

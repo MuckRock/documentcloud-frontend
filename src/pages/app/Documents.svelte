@@ -11,6 +11,9 @@
   import ProcessingBar from "./ProcessingBar";
   import Document from "./Document";
   import NoDocuments from "./NoDocuments";
+  import AuthSection from "@/pages/app/AuthSection";
+  import SpecialMessage from "@/common/SpecialMessage";
+  import Paginator from "./Paginator";
 
   // Store properties
   import { layout } from "@/manager/layout";
@@ -122,6 +125,10 @@
     padding-top: $mainDocContainerPadding;
     background: white;
     z-index: $appStickyZ;
+
+    @media only screen and (max-width: $mobileBreak) {
+      padding-top: 0;
+    }
   }
 
   .toastouter {
@@ -145,6 +152,23 @@
     box-shadow: $overlay-shadow;
     padding: 13px 55px;
   }
+
+  .narrowshow {
+    display: none;
+
+    > :global(div) {
+      margin-top: -50px;
+      margin-bottom: 28px;
+      display: block !important;
+      text-align: center !important;
+    }
+  }
+
+  @media only screen and (max-width: $mobileBreak) {
+    .narrowshow {
+      display: block;
+    }
+  }
 </style>
 
 <Loader active={$layout.loading}>
@@ -156,6 +180,9 @@
           component={UploadDialog}
           properties={{ initialFiles: preUploadFiles }} />
       {/if}
+
+      <SpecialMessage />
+      <AuthSection />
       <SearchBar />
 
       <div>
@@ -181,6 +208,10 @@
           <div class="toast">Drop file to upload</div>
         </div>
       </Draggable>
+    </div>
+
+    <div class="narrowshow">
+      <Paginator />
     </div>
   </div>
 </Loader>

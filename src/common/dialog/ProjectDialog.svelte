@@ -118,36 +118,6 @@
         {/if}
         <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
       </div>
-      <!-- <div class="inputpadded">
-        <h1>Collaborators</h1>
-        <div class="collaborator">
-          <div class="name">Dylan Freedman</div>
-          <span class="dropdown">
-            <Dropdown
-              table={true}
-              bordered={true}
-              horizPadding={15}
-              vertPadding={8}>
-              <span class="action" slot="title">
-                Admin
-                <span class="dropper">▼</span>
-              </span>
-              <Menu>
-                <MenuItem>
-                  Edit
-                  <div class="info">
-                    Collaborators with edit access can edit this doc
-                  </div>
-                </MenuItem>
-                <MenuItem>
-                  View
-                  <div class="info">Collaborators can only view this doc</div>
-                </MenuItem>
-              </Menu>
-            </Dropdown>
-          </span>
-        </div> 
-      </div> -->
     </div>
   </Loader>
 </div>

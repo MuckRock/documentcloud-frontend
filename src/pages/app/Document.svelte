@@ -88,6 +88,10 @@
   .card {
     display: table;
 
+    @media only screen and (max-width: $mobileBreak) {
+      margin-bottom: 20px;
+    }
+
     .row {
       display: table-row;
 
@@ -104,7 +108,9 @@
   }
 
   .access {
-    @include buttonLike;
+    &.selectable {
+      @include buttonLike;
+    }
 
     margin-left: 8px;
     vertical-align: middle;
@@ -238,7 +244,10 @@
         <span class="valign">{document.title}</span>
         <span class="valign">
           <Tooltip caption={documentAccessString}>
-            <span class="access" on:click={openAccess([document])}>
+            <span
+              class="access"
+              class:selectable={document.editAccess}
+              on:click={openAccess([document])}>
               {#if document.privateAccess}
                 {@html privateIconSvg}
               {:else if document.publicAccess}
@@ -299,7 +308,7 @@
               </Button>
             </Link>
           {/each}
-          {#if document.dataPoints.length > 0}
+          {#if document.dataPoints.length > 0 && document.editAccess}
             <span class="pencil" on:click={() => editData([document])}>
               {@html pencilSvg}
             </span>

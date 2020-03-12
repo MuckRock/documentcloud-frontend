@@ -37,6 +37,10 @@
     width: 100%;
     box-sizing: border-box;
 
+    @media screen and (max-width: $mobileBreak) {
+      padding: 11px 25px 11px (25px + $sidebarAdd);
+    }
+
     &:hover {
       background: rgba(0, 0, 0, 0.03);
     }
@@ -62,21 +66,17 @@
     font-size: $normal;
     user-select: none;
   }
-
-  // .sub {
-  //   font-size: $small;
-  //   line-height: 15px;
-  //   color: $gray;
-  // }
 </style>
 
 <Link toUrl={projectUrl(project)}>
   <div class="project">
-    <span
-      class="edit"
-      on:click|stopPropagation|preventDefault={() => editProject(project)}>
-      {@html pencilSvg}
-    </span>
+    {#if project.editAccess}
+      <span
+        class="edit"
+        on:click|stopPropagation|preventDefault={() => editProject(project)}>
+        {@html pencilSvg}
+      </span>
+    {/if}
     <span class="title">{project.title}</span>
   </div>
 </Link>

@@ -59,7 +59,18 @@ export async function searchDocuments(
     queryBuilder("documents/search/", { q: query, expand, page: page + 1 })
   );
   const { data } = await session.get(url);
-  data.results = data.results.map(document => new Document(document));
+
+  // Fill in document data with a subsequent API call
+  const docIds = data.results.map(document => document.id);
+  const newDocuments = await getDocumentsWithIds(docIds);
+  for (let i = 0; i < newDocuments.length; i++) {
+    newDocuments[i].doc = {
+      ...newDocuments[i].doc,
+      highlights: data.results[i].highlights
+    };
+    data.results[i] = newDocuments[i];
+  }
+
   return new Results(url, data);
 }
 
@@ -85,13 +96,21 @@ export async function getDocumentsWithIds(
   remaining = false,
   expand = DEFAULT_EXPAND
 ) {
+  if (ids.length == 0) return [];
   // Return documents with the specified ids
   const params = { expand, id__in: ids };
   if (remaining) params["remaining"] = true;
   const documents = await grabAllPages(
     apiUrl(queryBuilder("documents/", params))
   );
-  return documents.map(document => new Document(document));
+  const docs = documents.map(document => new Document(document));
+  const orderedDocs = [];
+  for (let i = 0; i < ids.length; i++) {
+    const matching = docs.filter(doc => doc.id == ids[i]);
+    if (matching.length == 0) continue;
+    orderedDocs.push(matching[0]);
+  }
+  return orderedDocs;
 }
 
 export async function deleteDocument(ids) {
@@ -134,7 +153,10 @@ export async function cancelProcessing(id) {
 
 export async function redactDocument(id, redactions) {
   // Redact the document with the specified id and redactions
-  await session.post(apiUrl(`documents/${id}/redactions/`), redactions);
+  await session.post(
+    apiUrl(`documents/${id}/redactions/`),
+    redactions.map(redaction => redaction.note)
+  );
 }
 
 export async function addData(id, key, value) {

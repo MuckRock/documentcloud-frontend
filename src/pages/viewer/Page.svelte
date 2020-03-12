@@ -228,6 +228,7 @@
             fade={false}
             delay={50}
             crosshair={$layout.pageCrosshair}
+            showLoading={true}
             on:aspect={handleAspect}
             on:dragStart={({ detail }) => pageDragStart(pageNumber, detail.x, detail.y)}
             on:dragMove={({ detail }) => pageDragMove(pageNumber, detail.x, detail.y)}

@@ -18,6 +18,7 @@
   export let pollTime = 5000;
   export let delay = null;
   export let crosshair = false;
+  export let showLoading = false;
 
   const emit = emitter({
     aspect() {},
@@ -59,7 +60,7 @@
   }
 
   function getDimensions() {
-    if (foundDimensions) return;
+    if (makeNull || foundDimensions) return;
     if (img != null && img.naturalWidth != null && img.naturalWidth != 0) {
       if (pollInterval != null) {
         clearPoll();
@@ -189,6 +190,17 @@
       filter: blur(0);
     }
   }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    z-index: 1;
+    text-align: right;
+    padding: 7px;
+    color: gray;
+  }
 </style>
 
 <span
@@ -208,6 +220,13 @@
       src={computedSrc}
       {alt}
       draggable="false" />
+  {/if}
+  {#if showLoading && (!show || makeNull)}
+    <div class="loading">
+      {#if makeNull}
+        An error occurred. Try refreshing the page
+      {:else}Loading...{/if}
+    </div>
   {/if}
 </span>
 
