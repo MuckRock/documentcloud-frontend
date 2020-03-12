@@ -5,7 +5,7 @@
   import Dropdown from "@/common/Dropdown";
 
   import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
-  import { SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
+  import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
 
   function transformOrgIds(ids) {
     const results = [];
@@ -71,6 +71,9 @@
         </span>
       </span>
       <Menu>
+        <a href={SQUARELET_URL} target="_blank" style="color: inherit">
+          <MenuItem>Account Settings</MenuItem>
+        </a>
         <a href={SIGN_OUT_URL} style="color: inherit">
           <MenuItem>Sign out</MenuItem>
         </a>
