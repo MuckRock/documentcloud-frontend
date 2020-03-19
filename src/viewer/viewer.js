@@ -17,7 +17,10 @@ export const viewer = new Svue({
       document: null,
       id: null,
       me: null,
-      loadedMe: false
+      loadedMe: false,
+
+      // Set to true if document fails to load
+      show404: false
     };
   },
   watch: {
@@ -156,7 +159,11 @@ export function removeNote(note) {
 
 function initViewer(id) {
   // Initialize the viewer.
-  getDocument(id).then(doc => (viewer.document = doc));
+  getDocument(id)
+    .then(doc => (viewer.document = doc))
+    .catch(() => {
+      viewer.show404 = true;
+    });
   getAnnotations(id).then(notes => (viewer.notes = notes));
   getSections(id).then(sections => {
     viewer.sections = sections;

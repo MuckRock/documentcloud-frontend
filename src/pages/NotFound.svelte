@@ -1,11 +1,26 @@
+<script>
+  import Link from "@/router/Link";
+
+  export let title = "Page not found";
+  export let message = "Please try another URL";
+</script>
+
 <style lang="scss">
   .notfound {
     padding: 2em;
+
+    :global(a) {
+      color: $primary;
+    }
   }
 </style>
 
 <div class="notfound">
-<h1>Page not found</h1>
+  <p>
+    <Link to="default">Home</Link>
+  </p>
 
-<div>404</div>
+  <h1>{title}</h1>
+
+  <div>{message}</div>
 </div>

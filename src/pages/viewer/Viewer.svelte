@@ -3,6 +3,7 @@
   import Body from "./Body";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
+  import NotFound from "@/pages/NotFound";
 
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
@@ -36,9 +37,16 @@
   <Modal component={EditSectionsDialog} on:close={hideEditSections} />
 {/if}
 
-<Loader active={$layout.loading}>
-  <Header />
-  <Body />
-  <Sidebar />
-  <Footer />
-</Loader>
+{#if $viewer.show404}
+  <NotFound
+    title="Document not found"
+    message="The document you requested either does not exist or you lack
+    permission to access it" />
+{:else}
+  <Loader active={$layout.loading}>
+    <Header />
+    <Body />
+    <Sidebar />
+    <Footer />
+  </Loader>
+{/if}
