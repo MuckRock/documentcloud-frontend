@@ -13,6 +13,7 @@
 
   let dismissable = true;
   export let component;
+  export let fullscreen = false;
   export let properties = {};
 
   // The modal element
@@ -62,6 +63,13 @@
     display: table;
     pointer-events: none;
     -webkit-overflow-scrolling: touch;
+
+    .fullscreen & {
+      top: 2.5vh;
+      left: 2.5vw;
+      height: 95vh;
+      width: 95vw;
+    }
   }
 
   .modalintermediate {
@@ -86,6 +94,11 @@
     text-align: left;
     pointer-events: all;
     -webkit-overflow-scrolling: touch;
+
+    .fullscreen & {
+      max-height: 95vh;
+      max-width: 95vw;
+    }
 
     :global(h1) {
       font-size: 18px;
@@ -138,7 +151,7 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<div>
+<div class:fullscreen>
   <div class="shim" on:click={dismiss} />
   <div class="modalcontainer">
     <div class="modalintermediate">

@@ -9,7 +9,7 @@
   import SearchResults from "./SearchResults";
   import { onMount, tick } from "svelte";
   import { viewer } from "@/viewer/viewer";
-  import { layout, cancelActions } from "@/viewer/layout";
+  import { layout, cancelActions, cancelAnnotation } from "@/viewer/layout";
   import {
     renderer,
     scroll,
@@ -288,7 +288,9 @@
       <!-- Page contents -->
       {#each $renderer.elementsToShow as chunk (chunk.type == 'page' ? `${renderer.mode}-${chunk.number}` : `space-${spaceId++}`)}
         {#if chunk.type == 'space'}
-          <div style="height: {chunk.height}px" />
+          <div
+            on:mousedown={cancelAnnotation}
+            style="height: {chunk.height}px" />
         {:else if chunk.type == 'page'}
           <Page
             on:shift={handleShift}

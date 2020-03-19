@@ -1,6 +1,7 @@
 import { Svue } from "svue";
 import { handlePlural } from "@/util/string";
 import { uniquify } from "@/util/array";
+import { pageSizesFromSpec } from "@/api/pageSize";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
@@ -82,6 +83,11 @@ export class Document extends Svue {
         },
         pageSpec(doc) {
           return doc.page_spec;
+        },
+        pageSizes(pageSpec) {
+          if (pageSpec == null) return null;
+
+          return pageSizesFromSpec(pageSpec);
         },
 
         // Access properties

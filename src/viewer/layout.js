@@ -54,7 +54,10 @@ export const layout = new Svue({
       search: null,
       searchPending: false,
       searchHighlights: null,
-      searchPages: null
+      searchPages: null,
+
+      // Embed
+      embedDocument: null
     };
   },
   watch: {
@@ -62,6 +65,10 @@ export const layout = new Svue({
       const route = router.resolvedRoute;
       if (route != null && route.name != "viewer") {
         reset();
+      } else if (route != null && route.name == "viewer") {
+        this.embed = route.props.embed == "1";
+        this.compact = route.props.compact == "1";
+        console.log("VIEWER PARAMS", route.props);
       }
     }
   },
@@ -136,6 +143,9 @@ export const layout = new Svue({
         sum += searchHighlights[page].length;
       }
       return sum;
+    },
+    showEmbedDialog(embedDocument) {
+      return embedDocument != null;
     }
   }
 });
@@ -348,4 +358,13 @@ export function clearSearch() {
 function reset() {
   clearSearch();
   cancelActions();
+}
+
+export function showEmbedFlow(document) {
+  console.log("SHOW EMBED", document);
+  layout.embedDocument = document;
+}
+
+export function hideEmbedFlow() {
+  layout.embedDocument = null;
 }
