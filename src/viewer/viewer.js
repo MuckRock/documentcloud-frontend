@@ -1,9 +1,12 @@
 import { Svue } from "svue";
-import { pageSizesFromSpec } from "@/api/pageSize";
 import { getDocument, getMe } from "@/api/document";
 import { getAnnotations } from "@/api/annotation";
 import { getSections } from "@/api/section";
 import { router } from "@/router/router";
+
+function extractId(idSlug) {
+  return parseInt(idSlug.split("-")[0]);
+}
 
 export const viewer = new Svue({
   data() {
@@ -14,15 +17,18 @@ export const viewer = new Svue({
       document: null,
       id: null,
       me: null,
-      loadedMe: false
+      loadedMe: false,
+
+      // Set to true if document fails to load
+      show404: false
     };
   },
   watch: {
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       if (route != null && route.name == "viewer" && route.props != null) {
-        this.id = route.props.id;
-        return initViewer(route.props.id);
+        this.id = extractId(route.props.id);
+        return initViewer(this.id);
       }
     }
   },
@@ -131,7 +137,7 @@ export const viewer = new Svue({
     pageAspects(document) {
       if (document == null) return null;
 
-      return pageSizesFromSpec(document.pageSpec);
+      return document.pageSizes;
     }
   }
 });
@@ -153,7 +159,11 @@ export function removeNote(note) {
 
 function initViewer(id) {
   // Initialize the viewer.
-  getDocument(id).then(doc => (viewer.document = doc));
+  getDocument(id)
+    .then(doc => (viewer.document = doc))
+    .catch(() => {
+      viewer.show404 = true;
+    });
   getAnnotations(id).then(notes => (viewer.notes = notes));
   getSections(id).then(sections => {
     viewer.sections = sections;

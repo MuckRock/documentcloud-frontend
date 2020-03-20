@@ -262,7 +262,7 @@
       <h3>{document.summary}</h3>
       <div class="actions">
         {#if document.status == 'success'}
-          <Link to="viewer" params={{ id: document.id }}>
+          <Link to="viewer" params={{ id: document.slugId }}>
             <Button action={true}>Open</Button>
           </Link>
         {:else if document.status == 'pending'}

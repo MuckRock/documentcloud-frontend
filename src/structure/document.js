@@ -1,12 +1,14 @@
 import { Svue } from "svue";
 import { handlePlural } from "@/util/string";
 import { uniquify } from "@/util/array";
+import { pageSizesFromSpec } from "@/api/pageSize";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
 const PAGE_NO_RE = /^page_no_(\d+)$/;
 
 const TAG_KEY = process.env.TAG_KEY;
+const APP_URL = process.env.APP_URL;
 
 export class Document extends Svue {
   constructor(rawDocument, structure = {}) {
@@ -33,6 +35,9 @@ export class Document extends Svue {
         },
         slugId(id, slug) {
           return [id, slug].join("-");
+        },
+        canonicalUrl(slugId) {
+          return APP_URL + "documents/" + slugId;
         },
         title(doc) {
           return doc.title;
@@ -82,6 +87,11 @@ export class Document extends Svue {
         },
         pageSpec(doc) {
           return doc.page_spec;
+        },
+        pageSizes(pageSpec) {
+          if (pageSpec == null) return null;
+
+          return pageSizesFromSpec(pageSpec);
         },
 
         // Access properties

@@ -7,7 +7,7 @@
     enterAnnotateMode,
     enterSectionsMode
   } from "@/viewer/actions";
-  import { layout } from "@/viewer/layout";
+  import { layout, showEmbedFlow } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
 </script>
 
@@ -135,16 +135,20 @@
       {#if $viewer.me != null}
         <div class="actions">Document Actions</div>
         {#if $viewer.document.editAccess}
+          <div class="action" on:click={() => showEmbedFlow($viewer.document)}>
+            <h3>Share</h3>
+            <p>Create an embed or share on social media.</p>
+          </div>
+          <div class="action" on:click={enterAnnotateMode}>
+            <h3>Annotate</h3>
+            <p>Make annotations to keep notes on the document.</p>
+          </div>
           <div class="action" on:click={enterRedactMode}>
             <h3>Redact</h3>
             <p>
               Create redactions on the document to hide text. The document will
               reprocess afterwards.
             </p>
-          </div>
-          <div class="action" on:click={enterAnnotateMode}>
-            <h3>Annotate</h3>
-            <p>Make annotations to keep notes on the document.</p>
           </div>
           <div class="action" on:click={enterSectionsMode}>
             <h3>Edit sections</h3>

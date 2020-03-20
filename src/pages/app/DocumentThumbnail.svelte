@@ -60,7 +60,7 @@
 <div class="img">
   <span class="imgwrap">
     {#if document.status == 'success'}
-      <Link to="viewer" params={{ id: document.id }}>
+      <Link to="viewer" params={{ id: document.slugId }}>
         <Image src={document.thumbnail} />
       </Link>
     {:else if document.status == 'pending'}
