@@ -136,8 +136,8 @@
         <div class="actions">Document Actions</div>
         {#if $viewer.document.editAccess}
           <div class="action" on:click={() => showEmbedFlow($viewer.document)}>
-            <h3>Embed</h3>
-            <p>Make annotations to keep notes on the document.</p>
+            <h3>Share</h3>
+            <p>Create an embed or share on social media.</p>
           </div>
           <div class="action" on:click={enterAnnotateMode}>
             <h3>Annotate</h3>

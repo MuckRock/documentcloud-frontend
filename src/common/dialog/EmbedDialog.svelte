@@ -20,7 +20,7 @@
   let embedded = true;
 
   // TODO: use canonical URL
-  $: embedUrl = queryBuilder(window.location.href, {
+  $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
     embed: embedded ? 1 : null
   });
 
@@ -31,15 +31,6 @@
       getEmbed(embedUrl).then(({ html }) => (embedCode = html));
     }
   }
-
-  $: console.log(embedCode);
-
-  // $: embedCode = `<iframe
-  // style="border: 1px solid #aaa;"
-  // width="${baseWidth}px"
-  // height="${height}px"
-  // title="${$layout.embedDocument.title}"
-  // src="${embedUrl}" />`;
 </script>
 
 <style lang="scss">
@@ -69,6 +60,7 @@
 <div>
   <div class="mcontent">
     <h1>Embed Document ({$layout.embedDocument.title})</h1>
+    <p>{$layout.embedDocument.access}</p>
     <div>
       <label>
         Embed mode:

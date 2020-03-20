@@ -16,14 +16,23 @@
   import Loader from "@/common/Loader";
   import { layout, hideEmbedFlow, hideEditSections } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
+  import { pageImageUrl } from "@/api/viewer";
 </script>
 
 <svelte:head>
   {#if $viewer.loaded}
     <!-- Insert canonical URL -->
-    <link
-      rel="canonical"
-      href={process.env.APP_URL + 'documents/' + $viewer.document.slugId} />
+    <link rel="canonical" href={$viewer.document.canonicalUrl} />
+
+    <!-- Social cards -->
+    <meta property="og:url" content={$viewer.document.canonicalUrl} />
+    <meta property="og:title" content={$viewer.document.title} />
+    {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
+      <meta property="og:description" content={$viewer.document.description} />
+    {/if}
+    <meta
+      property="og:image"
+      content={pageImageUrl($viewer.document, 0, 700, 1)} />
   {/if}
 </svelte:head>
 
