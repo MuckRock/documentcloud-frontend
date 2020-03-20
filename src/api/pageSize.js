@@ -6,22 +6,25 @@
  * @returns {Array<number>} An array of aspect ratios for each page
  */
 export function pageSizesFromSpec(pageSpec) {
-  const parts = pageSpec.split(';');
+  // Handle empty page spec
+  if (pageSpec.trim().length == 0) return [];
+
+  const parts = pageSpec.split(";");
   const sizes = [];
   for (let i = 0; i < parts.length; i++) {
     // Go through each part, e.g. 100x200:0-5
     const part = parts[i];
-    const [size, range] = part.split(':');
+    const [size, range] = part.split(":");
 
-    const [width, height] = size.split('x').map(parseFloat);
+    const [width, height] = size.split("x").map(parseFloat);
     const aspect = height / width;
 
-    const rangeParts = range.split(',');
+    const rangeParts = range.split(",");
     for (let j = 0; j < rangeParts.length; j++) {
       const rangePart = rangeParts[j];
-      if (rangePart.indexOf('-') != -1) {
+      if (rangePart.indexOf("-") != -1) {
         // Parse a range
-        const [start, end] = rangePart.split('-').map(x => parseInt(x, 10));
+        const [start, end] = rangePart.split("-").map(x => parseInt(x, 10));
         for (let page = start; page <= end; page++) {
           sizes[page] = aspect;
         }
