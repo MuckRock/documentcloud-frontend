@@ -25,14 +25,19 @@
     <link rel="canonical" href={$viewer.document.canonicalUrl} />
 
     <!-- Social cards -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content={$viewer.document.canonicalUrl} />
     <meta property="og:url" content={$viewer.document.canonicalUrl} />
     <meta property="og:title" content={$viewer.document.title} />
     {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
       <meta property="og:description" content={$viewer.document.description} />
     {/if}
+    <!-- <meta
+      property="og:image"
+      content={pageImageUrl($viewer.document, 0, 700, 1)} /> -->
     <meta
       property="og:image"
-      content={pageImageUrl($viewer.document, 0, 700, 1)} />
+      content="https://via.placeholder.com/728x280.png?text=Test%20of%20twitter%20card%20image" />
   {/if}
 </svelte:head>
 
