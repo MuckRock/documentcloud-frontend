@@ -4,6 +4,7 @@
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
+  import Toasts from "@/common/Toasts";
 
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
@@ -54,6 +55,8 @@
     message="The document you requested either does not exist or you lack
     permission to access it" />
 {:else}
+  <Toasts />
+
   <Loader active={$layout.loading}>
     <Header />
     <Body />

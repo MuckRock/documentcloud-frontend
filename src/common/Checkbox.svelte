@@ -1,5 +1,5 @@
 <script>
-  // SVG Assets
+  // SVG assets
   import checkmarkSvg from "@/assets/checkmark.svg";
   import checklineSvg from "@/assets/checkline.svg";
 
