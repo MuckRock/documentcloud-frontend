@@ -1,16 +1,35 @@
 <script>
+  import Loader from "@/common/Loader";
   import Button from "@/common/Button";
   import emitter from "@/emit";
   import { getEmbed } from "@/api/document";
   import { queryBuilder } from "@/util/url";
+  import { pushToast } from "@/manager/toast";
+  import { changeAccess } from "@/api/document";
+  import { wrapLoadSeparate } from "@/util/wrapLoad";
 
   // Stores
   import { layout } from "@/viewer/layout";
   import { renderer } from "@/viewer/renderer";
+  import { writable } from "svelte/store";
+
+  // SVG assets
+  import errorIconSvg from "@/assets/error_icon.svg";
+  import embedSvg from "@/assets/embed.svg";
+  import linkSvg from "@/assets/link.svg";
+  import twitterSvg from "@/assets/twitter.svg";
 
   const emit = emitter({
     dismiss() {}
   });
+
+  function copy(elem) {
+    elem.select();
+    document.execCommand("copy");
+
+    // Show toast
+    pushToast("Copied to clipboard");
+  }
 
   const baseWidth = 500;
   $: height =
@@ -19,7 +38,11 @@
     $layout.footerHeight;
   let embedded = true;
 
-  // TODO: use canonical URL
+  let loading = writable(false);
+
+  let embedElem;
+  let linkElem;
+
   $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
     embed: embedded ? 1 : null
   });
@@ -31,6 +54,19 @@
       getEmbed(embedUrl).then(({ html }) => (embedCode = html));
     }
   }
+
+  async function makePublic() {
+    await wrapLoadSeparate(loading, layout, async () => {
+      await changeAccess([layout.embedDocument.id], "public");
+      layout.embedDocument.doc = {
+        ...layout.embedDocument.doc,
+        access: "public"
+      };
+      layout.embedDocument = layout.embedDocument;
+    });
+  }
+
+  let shareOption = "embed";
 </script>
 
 <style lang="scss">
@@ -38,8 +74,14 @@
     height: 100px;
   }
 
+  input {
+    width: 100%;
+    max-width: 600px;
+  }
+
   .preview {
     position: relative;
+    margin-bottom: 25px;
 
     :global(iframe) {
       pointer-events: none;
@@ -55,32 +97,150 @@
       background: transparent;
     }
   }
+
+  .warning {
+    padding: 15px 30px;
+    background: #ffeded;
+    border-radius: 3px;
+    display: table;
+    max-width: 700px;
+
+    > * {
+      display: table-cell;
+      vertical-align: top;
+    }
+
+    .erroricon {
+      padding-top: 20px;
+      padding-right: 20px;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+  }
+
+  .shareoptions {
+    margin: 19px 0;
+
+    .shareoption {
+      @include buttonLike;
+
+      display: inline-block;
+      padding: 14px 14px;
+      border-radius: 3px;
+      text-align: center;
+      user-select: none;
+
+      &.selected {
+        background: #e1e1e1;
+        cursor: default;
+      }
+
+      &:hover {
+        background: #f4f4f4;
+
+        &.selected {
+          background: #e1e1e1;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .buttonpadded {
+    margin-top: 12px !important;
+  }
+
+  textarea {
+    height: 20px;
+  }
 </style>
 
-<div>
-  <div class="mcontent">
-    <h1>Embed Document ({$layout.embedDocument.title})</h1>
-    <p>{$layout.embedDocument.access}</p>
-    <div>
-      <label>
-        Embed mode:
-        <input type="checkbox" bind:checked={embedded} />
-      </label>
-    </div>
-    <p>
-      <b>Preview:</b>
-    </p>
-    <div class="preview">
-      {#if embedCode != null}
-        {@html embedCode}
+<Loader active={$loading}>
+  <div>
+    <div class="mcontent">
+      <h1>Share “{$layout.embedDocument.title}”</h1>
+
+      {#if $layout.embedDocument.access != 'public'}
+        <div class="warning">
+          <div class="erroricon">
+            {@html errorIconSvg}
+          </div>
+          <div class="message">
+            <h2>Make document public</h2>
+            <p>
+              The document is not currently public. If you embed or link it,
+              only you and collaborators will be able to view it until it is
+              made public. Click below when you’re ready to publish this
+              document to the public.
+            </p>
+            <Button on:click={makePublic}>Make document public</Button>
+          </div>
+        </div>
+      {/if}
+      <div class="shareoptions">
+        <div
+          class="shareoption"
+          class:selected={shareOption == 'embed'}
+          on:click={() => (shareOption = 'embed')}>
+          <div class="logo">
+            {@html embedSvg}
+          </div>
+          <div class="name">Embed</div>
+        </div>
+        <div
+          class="shareoption"
+          class:selected={shareOption == 'link'}
+          on:click={() => (shareOption = 'link')}>
+          <div class="logo">
+            {@html linkSvg}
+          </div>
+          <div class="name">Link</div>
+        </div>
+        <a
+          target="_blank"
+          href="https://twitter.com/intent/tweet?text={encodeURIComponent(`${$layout.embedDocument.title} ${$layout.embedDocument.canonicalUrl}`)}">
+          <div class="shareoption">
+            <div class="logo">
+              {@html twitterSvg}
+            </div>
+            <div class="name">Twitter</div>
+          </div>
+        </a>
+      </div>
+
+      {#if shareOption == 'embed'}
+        <p>
+          Copy the HTML code to embed this document within an article or post:
+        </p>
+
+        {#if embedCode != null}
+          <textarea bind:this={embedElem} value={embedCode} />
+        {:else}
+          <textarea disabled>Loading...</textarea>
+        {/if}
+
+        <div class="buttonpadded">
+          <Button on:click={() => copy(embedElem)}>Copy code</Button>
+        </div>
+
+        {#if embedCode != null}
+          <p>
+            <b>Preview:</b>
+          </p>
+          <div class="preview">
+            {@html embedCode}
+          </div>
+        {/if}
+      {:else if shareOption == 'link'}
+        <input
+          bind:this={linkElem}
+          value={$layout.embedDocument.canonicalUrl} />
+        <div class="buttonpadded">
+          <Button on:click={() => copy(linkElem)}>Copy URL</Button>
+        </div>
       {/if}
     </div>
-    <p>
-      <b>Embed code:</b>
-    </p>
-    <textarea readonly>{embedCode}</textarea>
-    <div class="buttonpadded">
-      <Button secondary={true} on:click={emit.dismiss}>Done</Button>
-    </div>
   </div>
-</div>
+</Loader>
