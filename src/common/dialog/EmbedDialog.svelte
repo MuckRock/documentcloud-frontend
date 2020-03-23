@@ -44,7 +44,8 @@
   let linkElem;
 
   $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
-    embed: embedded ? 1 : null
+    embed: embedded ? 1 : null,
+    title: 1
   });
 
   let embedCode = null;
