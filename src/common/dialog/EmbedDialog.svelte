@@ -44,7 +44,8 @@
   let linkElem;
 
   $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
-    embed: embedded ? 1 : null
+    embed: embedded ? 1 : null,
+    title: 1
   });
 
   let embedCode = null;
@@ -153,7 +154,8 @@
   }
 
   textarea {
-    height: 20px;
+    height: 120px;
+    max-width: 600px;
   }
 </style>
 
