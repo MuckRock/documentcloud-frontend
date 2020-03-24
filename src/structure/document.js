@@ -2,6 +2,8 @@ import { Svue } from "svue";
 import { handlePlural } from "@/util/string";
 import { uniquify } from "@/util/array";
 import { pageSizesFromSpec } from "@/api/pageSize";
+import { Note } from "@/structure/note";
+import { Section } from "@/structure/section";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
@@ -201,6 +203,16 @@ export class Document extends Svue {
         // Projects
         projectIds(doc) {
           return doc.projects == null ? [] : doc.projects;
+        },
+
+        // Notes/sections
+        notes(doc) {
+          return doc.notes == null ? [] : doc.notes.map(note => new Note(note));
+        },
+        sections(doc) {
+          return doc.sections == null
+            ? []
+            : doc.sections.map(section => new Section(section));
         },
 
         // Data

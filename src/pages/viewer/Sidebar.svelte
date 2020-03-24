@@ -163,7 +163,9 @@
           </div>
         {/if}
       {/if}
-      <SpecialMessage />
+      {#if !$layout.embed}
+        <SpecialMessage />
+      {/if}
     {/if}
 
   </div>

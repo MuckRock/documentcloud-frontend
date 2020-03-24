@@ -30,13 +30,13 @@ export class Router {
 export const router = new Svue({
   data() {
     return {
-      currentUrl: "",
+      currentUrl: null,
       routes: null
     };
   },
   computed: {
     resolvedRoute(currentUrl, routes) {
-      if (routes == null) return null;
+      if (currentUrl == null || routes == null) return null;
       return routes.resolve(currentUrl);
     }
   }

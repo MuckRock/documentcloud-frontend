@@ -22,8 +22,8 @@ export const layout = new Svue({
       // Height of footer row
       footerHeight: 36,
 
-      // Show the title in the header (compact=false)
-      compact: false,
+      // Show the title in the header (title=true)
+      title: true,
       // In embedded mode
       embed: false,
       // Whether to display sidebar
@@ -67,8 +67,7 @@ export const layout = new Svue({
         reset();
       } else if (route != null && route.name == "viewer") {
         this.embed = route.props.embed == "1";
-        this.compact = route.props.compact == "1";
-        console.log("VIEWER PARAMS", route.props);
+        this.title = !this.embed || route.props.title == "1";
       }
     }
   },

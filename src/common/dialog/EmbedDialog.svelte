@@ -154,7 +154,8 @@
   }
 
   textarea {
-    height: 20px;
+    height: 120px;
+    max-width: 600px;
   }
 </style>
 

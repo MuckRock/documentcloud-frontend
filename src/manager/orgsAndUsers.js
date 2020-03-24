@@ -30,13 +30,15 @@ export const orgsAndUsers = new Svue({
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       if (route != null && route.name == "app") {
+        // Initiate orgs and users in the app
         if (route.name != previousRouteName) initOrgsAndUsers();
       } else if (
         route != null &&
         (route.name == "home" || route.name == "default")
       ) {
-        if (previousRouteName != "home" && previousRouteName != "default")
+        if (previousRouteName != "home" && previousRouteName != "default") {
           getSelfUser();
+        }
       } else {
         this.me = null;
         this.allOrganizations = [];

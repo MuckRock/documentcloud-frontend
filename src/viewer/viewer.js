@@ -1,8 +1,7 @@
 import { Svue } from "svue";
 import { getDocument, getMe } from "@/api/document";
-import { getAnnotations } from "@/api/annotation";
-import { getSections } from "@/api/section";
 import { router } from "@/router/router";
+import { DEFAULT_EXPAND } from "../api/common";
 
 function extractId(idSlug) {
   return parseInt(idSlug.split("-")[0]);
@@ -15,6 +14,7 @@ export const viewer = new Svue({
       notes: null,
       sections: null,
       document: null,
+      embed: false,
       id: null,
       me: null,
       loadedMe: false,
@@ -28,6 +28,7 @@ export const viewer = new Svue({
       const route = router.resolvedRoute;
       if (route != null && route.name == "viewer" && route.props != null) {
         this.id = extractId(route.props.id);
+        this.embed = route.props.embed == "1";
         return initViewer(this.id);
       }
     }
@@ -159,22 +160,28 @@ export function removeNote(note) {
 
 function initViewer(id) {
   // Initialize the viewer.
-  getDocument(id)
-    .then(doc => (viewer.document = doc))
+  getDocument(id, [DEFAULT_EXPAND, "notes", "sections"].join(","))
+    .then(doc => {
+      viewer.document = doc;
+      viewer.notes = doc.notes;
+      viewer.sections = doc.sections;
+    })
     .catch(() => {
       viewer.show404 = true;
     });
-  getAnnotations(id).then(notes => (viewer.notes = notes));
-  getSections(id).then(sections => {
-    viewer.sections = sections;
-  });
-  getMe()
-    .then(me => {
-      viewer.me = me;
-      viewer.loadedMe = true;
-    })
-    .catch(() => {
-      viewer.me = null;
-      viewer.loadedMe = true;
-    });
+
+  if (viewer.embed) {
+    viewer.me = null;
+    viewer.loadedMe = true;
+  } else {
+    getMe()
+      .then(me => {
+        viewer.me = me;
+        viewer.loadedMe = true;
+      })
+      .catch(() => {
+        viewer.me = null;
+        viewer.loadedMe = true;
+      });
+  }
 }
