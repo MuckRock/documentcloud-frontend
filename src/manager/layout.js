@@ -54,9 +54,6 @@ export const layout = new Svue({
     selectionEditable(selected) {
       return selected.filter(doc => !doc.editAccess).length == 0;
     },
-    selectionNonpending(selected) {
-      return selected.filter(doc => doc.pending).length == 0;
-    },
     accessOpen(accessEditDocuments) {
       return accessEditDocuments.length > 0;
     },
@@ -98,6 +95,10 @@ export const layout = new Svue({
     }
   }
 });
+
+export function selectionNonpending() {
+  return layout.selected.filter(doc => doc.pending).length == 0;
+}
 
 export function unselectDocument(document) {
   delete layout.selectedMap[document.id];
