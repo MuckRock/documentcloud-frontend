@@ -12,6 +12,7 @@
 
   export let checked = false;
   export let indeterminate = false;
+  export let disabled = false;
   let checkbox;
 
   function handleChange() {
@@ -84,6 +85,29 @@
       box-shadow: 0 0 0 2px $primary-faded;
       border: solid 1px $primary;
     }
+
+    input:disabled + span {
+      background: rgba(0, 0, 0, 0.05);
+      cursor: default;
+
+      &:hover {
+        border: solid 1px #bbbbbb;
+      }
+    }
+
+    input:checked:disabled + span {
+      background: rgba(0, 0, 0, 0.05);
+      border: solid 1px #bbbbbb;
+
+      :global(.checkline),
+      :global(.checkmark) {
+        filter: #{"invert(0.5)"};
+      }
+
+      &:hover {
+        border: solid 1px #bbbbbb;
+      }
+    }
   }
 </style>
 
@@ -92,6 +116,7 @@
     type="checkbox"
     bind:this={checkbox}
     bind:checked
+    {disabled}
     on:change={handleChange} />
   <span>
     {#if checked}
