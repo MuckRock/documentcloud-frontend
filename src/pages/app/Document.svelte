@@ -261,13 +261,13 @@
       </h2>
       <h3>{document.summary}</h3>
       <div class="actions">
-        {#if document.status == 'success'}
+        {#if document.success}
           <Link to="viewer" params={{ id: document.slugId }}>
             <Button action={true}>Open</Button>
           </Link>
-        {:else if document.status == 'pending'}
+        {:else if document.pending}
           <span class="pending">Processing</span>
-        {:else if document.status == 'error'}
+        {:else if document.error}
           <span class="error">
             An error occurred trying to process your document
             <br />
@@ -278,7 +278,7 @@
               Remove
             </Button>
           </span>
-        {:else if document.status == 'nofile'}
+        {:else if document.nofile}
           <span class="error">Your document was uploaded improperly</span>
           <br />
           <Button

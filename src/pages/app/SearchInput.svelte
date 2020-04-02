@@ -146,7 +146,7 @@
         // Reward match based on proximity
         score += 1 / (idx - lastPos + 1);
         highlightLetters.push(idx);
-        lastPos = idx;
+        lastPos = idx + 1;
       }
     }
     return { score, highlightLetters };
