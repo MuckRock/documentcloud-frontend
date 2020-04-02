@@ -17,7 +17,11 @@
   <MenuItem disabled={$layout.numSelected != 1} on:click={renameSelected}>
     Rename
   </MenuItem>
-  <MenuItem on:click={changeAccessSelected}>Change Access</MenuItem>
+  <MenuItem
+    disabled={!$layout.selectionNonpending}
+    on:click={changeAccessSelected}>
+    Change Access
+  </MenuItem>
   <MenuItem on:click={editDataSelected}>Edit Document Data</MenuItem>
   <MenuItem on:click={reprocessSelected}>Force Reprocess</MenuItem>
   <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
