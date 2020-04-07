@@ -1,35 +1,30 @@
-export function extractErrorData(data, topLevel = true) {
-  let items = [];
+function addValue(collectedData, key, value) {
+  for (let i = 0; i < collectedData.length; i++) {
+    const { key: existingKey, values } = collectedData[i];
+    if (key == existingKey) {
+      collectedData[i].values = [...values, value];
+      return;
+    }
+  }
+
+  collectedData.push({ key, values: [value] });
+}
+
+export function extractErrorData(data, key = null, collectedData = []) {
   if (typeof data == "string") {
-    items.push(
-      topLevel
-        ? {
-            key: null,
-            values: [data]
-          }
-        : data
-    );
+    addValue(collectedData, key, data);
   } else if (Array.isArray(data)) {
     for (let i = 0; i < data.length; i++) {
-      items = topLevel
-        ? items.concat([
-            { key: null, values: extractErrorData(data[i], false) }
-          ])
-        : items.concat(extractErrorData(data[i], false));
+      extractErrorData(data[i], key, collectedData);
     }
   } else {
+    // Object-like
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
-        if (/[0-9]+/.test(`${key}`)) {
-          items = items.concat(extractErrorData(data[key], false));
-        } else {
-          items.push({
-            key,
-            values: extractErrorData(data[key], false)
-          });
-        }
+        extractErrorData(data[key], key, collectedData);
       }
     }
   }
-  return items;
+
+  return collectedData;
 }
