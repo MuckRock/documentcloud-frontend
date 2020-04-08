@@ -6,6 +6,7 @@
 
   export let progress;
   export let initializing = false;
+  export let compact = false;
 
   const PROGRESS_DURATION = parseInt(process.env.POLL_INTERVAL);
   const PROGRESS_END_DURATION = 400; // how quickly to jump at end
@@ -80,6 +81,13 @@
       margin-top: 1em;
       margin-right: 18px;
 
+      &.compact {
+        height: 12px;
+        display: inline-block;
+        margin-top: 0;
+        margin-right: 0;
+      }
+
       &.initializing {
         background: repeating-linear-gradient(
           57deg,
@@ -136,12 +144,14 @@
 
 <div class="container">
   {#if !isNull}
-    <div class="bar" class:initializing>
+    <div class="bar" class:initializing class:compact>
       <div
         class="inner"
         class:complete
         style="width: {$smoothProgress * 100}%" />
     </div>
-    <div class="text">{progressPercent}</div>
+    {#if !compact}
+      <div class="text">{progressPercent}</div>
+    {/if}
   {/if}
 </div>

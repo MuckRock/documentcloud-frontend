@@ -18,6 +18,7 @@
     &.disabled {
       color: $gray;
       pointer-events: none;
+      cursor: default;
     }
 
     &.primary {

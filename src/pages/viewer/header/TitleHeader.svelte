@@ -1,5 +1,6 @@
 <script>
   // Controls
+  import Loader from "@/common/Loader";
   import Search from "../controls/Search";
   import Hamburger from "../controls/Hamburger";
 
@@ -68,6 +69,9 @@
 <div class="cell expand" {style}>
   {#if $viewer.loaded}
     <div class="title" {style}>
+      {#if !$layout.embed && $viewer.document.readable}
+        <Loader active={true} pad={true} />
+      {/if}
       <h1 class:padleft={$layout.embed}>{$viewer.document.title}</h1>
       <h2>Contributed by {$viewer.document.userOrgString}</h2>
     </div>

@@ -3,7 +3,7 @@
   import MenuItem from "@/common/MenuItem";
 
   // Stores
-  import { layout, selectionNonpending } from "@/manager/layout";
+  import { layout, selectionProcessing } from "@/manager/layout";
   import {
     removeSelected,
     renameSelected,
@@ -13,12 +13,12 @@
   } from "@/manager/manager";
   import { onMount } from "svelte";
 
-  let nonPending = false;
+  let processing = false;
   export let visible = false;
 
   $: {
     if (visible) {
-      nonPending = selectionNonpending();
+      processing = selectionProcessing();
     }
   }
 </script>
@@ -27,10 +27,12 @@
   <MenuItem disabled={$layout.numSelected != 1} on:click={renameSelected}>
     Rename
   </MenuItem>
-  <MenuItem disabled={!nonPending} on:click={changeAccessSelected}>
+  <MenuItem disabled={processing} on:click={changeAccessSelected}>
     Change Access
   </MenuItem>
   <MenuItem on:click={editDataSelected}>Edit Document Data</MenuItem>
-  <MenuItem on:click={reprocessSelected}>Force Reprocess</MenuItem>
+  <MenuItem disabled={processing} on:click={reprocessSelected}>
+    Force Reprocess
+  </MenuItem>
   <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
 </Menu>

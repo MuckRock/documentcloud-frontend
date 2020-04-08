@@ -54,6 +54,11 @@
     title="Document not found"
     message="The document you requested either does not exist or you lack
     permission to access it" />
+{:else if $viewer.showPending}
+  <NotFound
+    title="Document not accessible"
+    message="The document you requested is still processing or you lack
+    permission to access to it" />
 {:else}
   <Toasts />
 

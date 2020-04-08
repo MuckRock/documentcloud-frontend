@@ -4,6 +4,7 @@
   export let big = false;
   export let inline = false;
   export let transparent = true;
+  export let pad = false;
 </script>
 
 <style lang="scss">
@@ -32,6 +33,13 @@
     .shim {
       display: block;
       pointer-events: inherit;
+    }
+
+    &.pad {
+      display: inline-block;
+      width: 30px;
+      height: 36px;
+      vertical-align: middle;
     }
   }
 
@@ -100,7 +108,7 @@
   }
 </style>
 
-<div class:loader={active} class:inline>
+<div class:loader={active} class:inline class:pad>
   {#if active}
     <div class="shim">
       <div class="spinner" class:center class:big />

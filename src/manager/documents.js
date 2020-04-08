@@ -8,11 +8,11 @@ import {
   renameDocument,
   PENDING,
   addData,
-  removeData
+  removeData,
 } from "@/api/document";
 import {
   addDocumentsToProject,
-  removeDocumentsFromProject
+  removeDocumentsFromProject,
 } from "@/api/project";
 import { layout, hideAccess } from "./layout";
 import { wrapLoad, wrapSeparate } from "@/util/wrapLoad";
@@ -30,7 +30,7 @@ export const documents = new Svue({
     return {
       processingDocumentsRaw: [],
       router,
-      search
+      search,
     };
   },
   watch: {
@@ -42,7 +42,7 @@ export const documents = new Svue({
       } else {
         this.processingDocumentsRaw = [];
       }
-    }
+    },
   },
   computed: {
     documents(search) {
@@ -53,18 +53,23 @@ export const documents = new Svue({
     },
     allDocuments(documents, processingDocumentsRaw) {
       const processingExclusive = processingDocumentsRaw.filter(
-        doc => !documentsInclude(documents, doc.id)
+        (doc) => !documentsInclude(documents, doc.id)
       );
       return [...documents, ...processingExclusive];
     },
     processingDocuments(processingDocumentsRaw, documents) {
-      const docsFromProcessing = processingDocumentsRaw.filter(
-        doc => doc.pending
+      return getDocumentsByCondition(
+        (doc) => doc.pending,
+        processingDocumentsRaw,
+        documents
       );
-      const docsFromPrimary = documents.filter(
-        doc => doc.pending && !documentsInclude(docsFromProcessing, doc.id)
+    },
+    updatingDocuments(processingDocumentsRaw, documents) {
+      return getDocumentsByCondition(
+        (doc) => doc.readable,
+        processingDocumentsRaw,
+        documents
       );
-      return [...docsFromProcessing, ...docsFromPrimary];
     },
     numProcessing(processingDocuments) {
       return processingDocuments.length;
@@ -76,26 +81,39 @@ export const documents = new Svue({
       if (processingDocuments.length == 0) return 1;
 
       // Operate on documents with non-null progresses
-      const pDocs = processingDocuments.filter(d => d.realProgress != null);
+      const pDocs = processingDocuments.filter((d) => d.realProgress != null);
       if (pDocs.length == 0) return null;
       let sum = 0;
-      pDocs.forEach(doc => (sum += doc.realProgress));
+      pDocs.forEach((doc) => (sum += doc.realProgress));
       return sum / pDocs.length;
     },
-    pollEvents(processingDocuments) {
-      if (processingDocuments.length == 0) return [];
+    pollDocuments(processingDocuments, updatingDocuments) {
+      return [...processingDocuments, ...updatingDocuments];
+    },
+    pollEvents(pollDocuments) {
+      if (pollDocuments.length == 0) return [];
       return [
         async () => {
           const newDocs = await getDocumentsWithIds(
-            processingDocuments.map(doc => doc.id),
+            pollDocuments.map((doc) => doc.id),
             true
           );
-          newDocs.forEach(doc => replaceInCollection(doc));
-        }
+          newDocs.forEach((doc) => replaceInCollection(doc));
+        },
       ];
-    }
-  }
+    },
+  },
 });
+
+function getDocumentsByCondition(condition, processingDocumentsRaw, documents) {
+  const docsFromProcessing = processingDocumentsRaw.filter((doc) =>
+    condition(doc)
+  );
+  const docsFromPrimary = documents.filter(
+    (doc) => condition(doc) && !documentsInclude(docsFromProcessing, doc.id)
+  );
+  return [...docsFromProcessing, ...docsFromPrimary];
+}
 
 function documentsInclude(documents, id) {
   for (let i = 0; i < documents.length; i++) {
@@ -105,9 +123,11 @@ function documentsInclude(documents, id) {
 }
 
 function removeFromCollection(document) {
-  const newDocuments = documents.documents.filter(doc => doc.id != document.id);
+  const newDocuments = documents.documents.filter(
+    (doc) => doc.id != document.id
+  );
   const newProcessingDocuments = documents.processingDocumentsRaw.filter(
-    doc => doc.id != document.id
+    (doc) => doc.id != document.id
   );
   setDocuments(newDocuments);
   documents.processingDocumentsRaw = newProcessingDocuments;
@@ -117,13 +137,13 @@ function removeFromCollection(document) {
 }
 
 export function updateInCollection(document, docFn) {
-  const newDocuments = documents.documents.map(doc => {
+  const newDocuments = documents.documents.map((doc) => {
     if (doc.id == document.id) {
       docFn(doc);
     }
     return doc;
   });
-  const newProcessingDocuments = documents.processingDocumentsRaw.map(doc => {
+  const newProcessingDocuments = documents.processingDocumentsRaw.map((doc) => {
     if (doc.id == document.id) {
       docFn(doc);
     }
@@ -135,7 +155,7 @@ export function updateInCollection(document, docFn) {
 }
 
 function replaceInCollection(document) {
-  updateInCollection(document, doc => {
+  updateInCollection(document, (doc) => {
     doc.doc = document.doc;
   });
 }
@@ -159,8 +179,8 @@ export function removeDocuments(documents) {
     "Delete",
     async () => {
       await wrapLoad(layout, async () => {
-        await deleteDocument(documents.map(doc => doc.id));
-        documents.map(doc => removeFromCollection(doc));
+        await deleteDocument(documents.map((doc) => doc.id));
+        documents.map((doc) => removeFromCollection(doc));
       });
       unselectAll();
     }
@@ -179,10 +199,10 @@ export function reprocessDocuments(documents) {
     "Reprocess",
     async () => {
       await wrapLoad(layout, async () => {
-        const ids = documents.map(doc => doc.id);
+        const ids = documents.map((doc) => doc.id);
         await reprocessDocument(ids);
         const reprocessingDocs = await getDocumentsWithIds(ids, true);
-        reprocessingDocs.map(doc => replaceInCollection(doc));
+        reprocessingDocs.map((doc) => replaceInCollection(doc));
       });
       unselectAll();
     }
@@ -192,11 +212,11 @@ export function reprocessDocuments(documents) {
 export async function changeAccessForDocuments(documents, access) {
   await wrapLoad(layout, async () => {
     await changeAccess(
-      documents.map(doc => doc.id),
+      documents.map((doc) => doc.id),
       access
     );
-    documents.forEach(doc =>
-      updateInCollection(doc, d => (d.doc = { ...d.doc, access }))
+    documents.forEach((doc) =>
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable" }))
     );
   });
   hideAccess();
@@ -209,12 +229,12 @@ export function removeDocument(document) {
 export async function renameSelectedDocuments(title) {
   await wrapLoad(layout, async () => {
     await renameDocument(
-      layout.selected.map(doc => doc.id),
+      layout.selected.map((doc) => doc.id),
       title
     );
     // Show changes in UI
-    layout.selected.forEach(doc =>
-      updateInCollection(doc, d => (d.doc = { ...d.doc, title }))
+    layout.selected.forEach((doc) =>
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, title }))
     );
   });
   unselectAll();
@@ -257,7 +277,7 @@ export async function removeDocumentData(documents, key, value) {
 
     if (document.doc.data[key] != null) {
       // Only remove data from documents with data
-      document.doc.data[key] = document.doc.data[key].filter(x => x != value);
+      document.doc.data[key] = document.doc.data[key].filter((x) => x != value);
       document.doc = document.doc;
       replaceInCollection(document);
     }
@@ -267,7 +287,7 @@ export async function removeDocumentData(documents, key, value) {
 export async function handleNewDocuments(ids, project = null) {
   const newDocs = await getDocumentsWithIds(ids, true);
   const remainingDocs = [];
-  newDocs.forEach(newDoc => {
+  newDocs.forEach((newDoc) => {
     if (documentsInclude(documents.allDocuments, newDoc)) {
       replaceInCollection(newDoc);
     } else {
@@ -318,17 +338,17 @@ export async function initDocuments() {
 }
 
 export async function addDocsToProject(project, documents, showToast = true) {
-  documents = documents.filter(doc => !doc.projectIds.includes(project.id));
+  documents = documents.filter((doc) => !doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
     await addDocumentsToProject(
       project.id,
-      documents.map(doc => doc.id)
+      documents.map((doc) => doc.id)
     );
-    documents.forEach(doc =>
+    documents.forEach((doc) =>
       updateInCollection(
         doc,
-        d => (d.doc = { ...d.doc, projects: [...d.projectIds, project.id] })
+        (d) => (d.doc = { ...d.doc, projects: [...d.projectIds, project.id] })
       )
     );
   });
@@ -348,20 +368,20 @@ export async function removeDocsFromProject(
   documents,
   showToast = true
 ) {
-  documents = documents.filter(doc => doc.projectIds.includes(project.id));
+  documents = documents.filter((doc) => doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
     await removeDocumentsFromProject(
       project.id,
-      documents.map(doc => doc.id)
+      documents.map((doc) => doc.id)
     );
-    documents.forEach(doc =>
+    documents.forEach((doc) =>
       updateInCollection(
         doc,
-        d =>
+        (d) =>
           (d.doc = {
             ...d.doc,
-            projects: removeFromArray(d.projectIds, project.id)
+            projects: removeFromArray(d.projectIds, project.id),
           })
       )
     );
