@@ -18,6 +18,7 @@
   }
 
   let outerHeight = 1000;
+  let editVisible = false;
 </script>
 
 <style lang="scss">
@@ -87,14 +88,17 @@
       </span>
 
       {#if $layout.hasSelection && $layout.selectionEditable}
-        <Dropdown table={true} fixed={outerHeight > 600}>
+        <Dropdown
+          table={true}
+          fixed={outerHeight > 600}
+          on:active={e => (editVisible = e.detail)}>
           <span class="action" slot="title">
             <span class="nowrap">
               Edit
               <span class="dropper">▼</span>
             </span>
           </span>
-          <EditMenu />
+          <EditMenu visible={editVisible} />
         </Dropdown>
       {:else}
         <span class="action disabled shortpad">

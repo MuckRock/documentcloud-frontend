@@ -1,6 +1,7 @@
 <script>
   import Loader from "@/common/Loader";
   import Button from "@/common/Button";
+  import Progress from "@/common/Progress";
   import emitter from "@/emit";
   import { getEmbed } from "@/api/document";
   import { queryBuilder } from "@/util/url";
@@ -9,6 +10,7 @@
   import { wrapLoadSeparate } from "@/util/wrapLoad";
 
   // Stores
+  import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
   import { renderer } from "@/viewer/renderer";
   import { writable } from "svelte/store";
@@ -61,9 +63,14 @@
       await changeAccess([layout.embedDocument.id], "public");
       layout.embedDocument.doc = {
         ...layout.embedDocument.doc,
-        access: "public"
+        status: "readable"
       };
       layout.embedDocument = layout.embedDocument;
+      if (layout.embedContext == "viewer") {
+        // Update viewer document as well
+        viewer.document.doc = { ...viewer.document.doc, status: "readable" };
+        viewer.document = viewer.document;
+      }
     });
   }
 
@@ -105,6 +112,11 @@
     border-radius: 3px;
     display: table;
     max-width: 700px;
+
+    &.readable {
+      background: $fyi;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.24);
+    }
 
     > * {
       display: table-cell;
@@ -164,7 +176,20 @@
     <div class="mcontent">
       <h1>Share “{$layout.embedDocument.title}”</h1>
 
-      {#if $layout.embedDocument.access != 'public'}
+      {#if $layout.embedDocument.readable}
+        <div class="warning readable">
+          <div class="message">
+            <h2>Updating document...</h2>
+            <p>
+              The document is currently updating. Once it is finished and made
+              public, embedding and linking will work to share the document.
+            </p>
+            <div>
+              <Progress initializing={true} progress={0} compact={true} />
+            </div>
+          </div>
+        </div>
+      {:else if $layout.embedDocument.access != 'public'}
         <div class="warning">
           <div class="erroricon">
             {@html errorIconSvg}

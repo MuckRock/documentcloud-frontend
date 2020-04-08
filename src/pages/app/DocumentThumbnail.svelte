@@ -59,11 +59,11 @@
 
 <div class="img">
   <span class="imgwrap">
-    {#if document.status == 'success'}
+    {#if document.viewable}
       <Link to="viewer" params={{ id: document.slugId }}>
         <Image src={document.thumbnail} />
       </Link>
-    {:else if document.status == 'pending'}
+    {:else if document.pending}
       <Tooltip>
         <div slot="caption" class="caption">
           {#if document.realProgress != null}

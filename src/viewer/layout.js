@@ -1,20 +1,22 @@
 import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { wrapLoad } from "@/util/wrapLoad";
-import { redactDocument, searchDocument } from "@/api/document";
+import { getDocument, redactDocument, searchDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
 import { router, nav } from "@/router/router";
 import {
   createAnnotation,
   updateAnnotation,
-  deleteAnnotation
+  deleteAnnotation,
 } from "@/api/annotation";
 import { Note } from "@/structure/note";
+import { DEFAULT_EXPAND } from "../api/common";
 
 export const layout = new Svue({
   data() {
     return {
       router,
+      viewer,
 
       // Height of header row
       headerHeight: 36,
@@ -57,7 +59,8 @@ export const layout = new Svue({
       searchPages: null,
 
       // Embed
-      embedDocument: null
+      embedDocument: null,
+      embedContext: "viewer",
     };
   },
   watch: {
@@ -69,9 +72,26 @@ export const layout = new Svue({
         this.embed = route.props.embed == "1";
         this.title = !this.embed || route.props.title == "1";
       }
-    }
+    },
   },
   computed: {
+    pollEvents(viewer) {
+      // Update document only if it is readable
+      if (viewer.document == null || !viewer.document.readable) return [];
+      return [
+        async () => {
+          const doc = await getDocument(viewer.document.id, [DEFAULT_EXPAND]);
+          viewer.document = doc;
+          // Update embed document if possible
+          if (
+            this.embedDocument != null &&
+            this.embedDocument.id == viewer.id
+          ) {
+            this.embedDocument = doc;
+          }
+        },
+      ];
+    },
     sidebarWidth(baseSidebarWidth, showSidebar) {
       return showSidebar ? baseSidebarWidth : 0;
     },
@@ -145,18 +165,18 @@ export const layout = new Svue({
     },
     showEmbedDialog(embedDocument) {
       return embedDocument != null;
-    }
-  }
+    },
+  },
 });
 
 function consolidateDragObject(dragObject) {
   const start = {
     x: Math.min(dragObject.start.x, dragObject.end.x),
-    y: Math.min(dragObject.start.y, dragObject.end.y)
+    y: Math.min(dragObject.start.y, dragObject.end.y),
   };
   const end = {
     x: Math.max(dragObject.start.x, dragObject.end.x),
-    y: Math.max(dragObject.start.y, dragObject.end.y)
+    y: Math.max(dragObject.start.y, dragObject.end.y),
   };
 
   return new Note({
@@ -164,7 +184,7 @@ function consolidateDragObject(dragObject) {
     x1: start.x,
     x2: end.x,
     y1: start.y,
-    y2: end.y
+    y2: end.y,
   });
 }
 
@@ -186,13 +206,13 @@ export function pageDragStart(pageNumber, x, y) {
     layout.rawRedaction = {
       pageNumber,
       start: { x, y },
-      end: { x, y }
+      end: { x, y },
     };
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       pageNumber,
       start: { x, y },
-      end: { x, y }
+      end: { x, y },
     };
   }
 }
@@ -204,7 +224,7 @@ export function pageDragMove(pageNumber, x, y) {
     layout.rawAnnotation = {
       ...layout.rawAnnotation,
       pageNumber,
-      end: { x, y }
+      end: { x, y },
     };
   }
 }
@@ -217,7 +237,7 @@ export function pageDragEnd(pageNumber, x, y) {
     layout.rawAnnotation = {
       ...layout.rawAnnotation,
       pageNumber,
-      end: { x, y }
+      end: { x, y },
     };
     layout.annotationPending = true;
     enterEditAnnotateMode(layout.shownEditAnnotation);
@@ -227,7 +247,7 @@ export function pageDragEnd(pageNumber, x, y) {
 function pushRedaction() {
   layout.rawPendingRedactions = [
     ...layout.rawPendingRedactions,
-    layout.currentRedaction
+    layout.currentRedaction,
   ];
   layout.rawRedaction = null;
 }
@@ -360,7 +380,6 @@ function reset() {
 }
 
 export function showEmbedFlow(document) {
-  console.log("SHOW EMBED", document);
   layout.embedDocument = document;
 }
 

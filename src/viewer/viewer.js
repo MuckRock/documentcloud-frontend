@@ -20,7 +20,8 @@ export const viewer = new Svue({
       loadedMe: false,
 
       // Set to true if document fails to load
-      show404: false
+      show404: false,
+      showPending: false,
     };
   },
   watch: {
@@ -31,7 +32,7 @@ export const viewer = new Svue({
         this.embed = route.props.embed == "1";
         return initViewer(this.id);
       }
-    }
+    },
   },
   computed: {
     orderedSections(sections) {
@@ -78,19 +79,19 @@ export const viewer = new Svue({
           currentSection = {
             type: "section",
             section: chunk.value,
-            children: []
+            children: [],
           };
           results.push(currentSection);
         } else {
           if (currentSection == null) {
             results.push({
               type: "note",
-              note: chunk.value
+              note: chunk.value,
             });
           } else {
             currentSection.children.push({
               type: "note",
-              note: chunk.value
+              note: chunk.value,
             });
           }
         }
@@ -127,7 +128,7 @@ export const viewer = new Svue({
     notesByPage(orderedNotes) {
       if (orderedNotes == null) return {};
       const index = {};
-      orderedNotes.forEach(note => {
+      orderedNotes.forEach((note) => {
         const existing = index.hasOwnProperty(note.page)
           ? index[note.page]
           : [];
@@ -139,12 +140,12 @@ export const viewer = new Svue({
       if (document == null) return null;
 
       return document.pageSizes;
-    }
-  }
+    },
+  },
 });
 
 export function updateNote(note) {
-  viewer.notes = viewer.notes.map(oldNote => {
+  viewer.notes = viewer.notes.map((oldNote) => {
     if (oldNote.id == note.id) return note;
     return oldNote;
   });
@@ -155,13 +156,16 @@ export function addNote(note) {
 }
 
 export function removeNote(note) {
-  viewer.notes = viewer.notes.filter(oldNote => oldNote.id != note.id);
+  viewer.notes = viewer.notes.filter((oldNote) => oldNote.id != note.id);
 }
 
 function initViewer(id) {
   // Initialize the viewer.
   getDocument(id, [DEFAULT_EXPAND, "notes", "sections"].join(","))
-    .then(doc => {
+    .then((doc) => {
+      if (!doc.viewable) {
+        viewer.showPending = true;
+      }
       viewer.document = doc;
       viewer.notes = doc.notes;
       viewer.sections = doc.sections;
@@ -175,7 +179,7 @@ function initViewer(id) {
     viewer.loadedMe = true;
   } else {
     getMe()
-      .then(me => {
+      .then((me) => {
         viewer.me = me;
         viewer.loadedMe = true;
       })

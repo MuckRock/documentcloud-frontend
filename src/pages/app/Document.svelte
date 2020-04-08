@@ -3,6 +3,7 @@
   import Button from "@/common/Button";
   import Tooltip from "@/common/Tooltip";
   import Image from "@/common/Image";
+  import Progress from "@/common/Progress";
   import Link from "@/router/Link";
   import DocumentThumbnail from "./DocumentThumbnail";
 
@@ -114,6 +115,11 @@
 
     margin-left: 8px;
     vertical-align: middle;
+  }
+
+  .updating {
+    color: $gray;
+    margin-bottom: 26px;
   }
 
   .valign {
@@ -261,13 +267,19 @@
       </h2>
       <h3>{document.summary}</h3>
       <div class="actions">
-        {#if document.status == 'success'}
+        {#if document.viewable}
           <Link to="viewer" params={{ id: document.slugId }}>
             <Button action={true}>Open</Button>
           </Link>
-        {:else if document.status == 'pending'}
+          {#if document.readable}
+            <div class="updating">
+              Updating document...
+              <Progress initializing={true} progress={0} compact={true} />
+            </div>
+          {/if}
+        {:else if document.pending}
           <span class="pending">Processing</span>
-        {:else if document.status == 'error'}
+        {:else if document.error}
           <span class="error">
             An error occurred trying to process your document
             <br />
@@ -278,7 +290,7 @@
               Remove
             </Button>
           </span>
-        {:else if document.status == 'nofile'}
+        {:else if document.nofile}
           <span class="error">Your document was uploaded improperly</span>
           <br />
           <Button

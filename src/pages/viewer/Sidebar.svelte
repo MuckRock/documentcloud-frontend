@@ -1,5 +1,6 @@
 <script>
   import TableOfContents from "./TableOfContents";
+  import Progress from "@/common/Progress";
   import SpecialMessage from "@/common/SpecialMessage";
 
   import {
@@ -31,6 +32,12 @@
       filter: brightness(90%);
     }
 
+    .updating {
+      color: $gray;
+      font-size: 12px;
+      margin: 10px 0;
+    }
+
     .actions {
       font-size: 12px;
       text-transform: uppercase;
@@ -49,6 +56,13 @@
       background: #ffffff;
       box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
       padding: 8px 20px;
+
+      &.disabled {
+        background: #e8e8e8;
+        opacity: 0.5;
+        cursor: default;
+        pointer-events: none;
+      }
 
       &:hover {
         background: rgba(black, 0.02);
@@ -110,6 +124,13 @@
 
     {#if $viewer.loaded}
       <div class="title">
+        {#if !$layout.embed && $viewer.document.readable}
+          <div class="updating">
+            Updating document...
+            <Progress initializing={true} progress={0} compact={true} />
+          </div>
+        {/if}
+
         {#if $viewer.document.description != null}
           <details open>
             <summary>
@@ -135,7 +156,10 @@
       {#if $viewer.me != null}
         <div class="actions">Document Actions</div>
         {#if $viewer.document.editAccess}
-          <div class="action" on:click={() => showEmbedFlow($viewer.document)}>
+          <div
+            class="action"
+            class:disabled={$viewer.document.readable}
+            on:click={() => showEmbedFlow($viewer.document)}>
             <h3>Share</h3>
             <p>Create an embed or share on social media.</p>
           </div>
@@ -143,7 +167,10 @@
             <h3>Annotate</h3>
             <p>Make annotations to keep notes on the document.</p>
           </div>
-          <div class="action" on:click={enterRedactMode}>
+          <div
+            class="action"
+            class:disabled={$viewer.document.readable}
+            on:click={enterRedactMode}>
             <h3>Redact</h3>
             <p>
               Create redactions on the document to hide text. The document will

@@ -1,6 +1,11 @@
 <script>
   import { onMount, tick } from "svelte";
   import { router } from "@/router/router";
+  import emitter from "@/emit";
+
+  const emit = emitter({
+    active() {}
+  });
 
   export let horizPadding = 5;
   export let vertPadding = 10;
@@ -11,6 +16,10 @@
   export let fixed = false;
 
   let active = false;
+
+  $: {
+    emit.active(active);
+  }
 
   // Sizes
   let titleWidth = 0;

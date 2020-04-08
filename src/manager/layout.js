@@ -6,7 +6,7 @@ import { router } from "@/router/router";
 const ACCESS_LEVELS = {
   public: 2,
   organization: 1,
-  private: 0
+  private: 0,
 };
 
 export const layout = new Svue({
@@ -33,13 +33,13 @@ export const layout = new Svue({
       dataOpen: false,
 
       // Which documents the access is being edited for
-      accessEditDocuments: []
+      accessEditDocuments: [],
     };
   },
   watch: {
     "router.resolvedRoute"() {
       this.sidebarExpanded = false;
-    }
+    },
   },
   computed: {
     selected(selectedMap) {
@@ -52,7 +52,7 @@ export const layout = new Svue({
       return selected.length > 0;
     },
     selectionEditable(selected) {
-      return selected.filter(doc => !doc.editAccess).length == 0;
+      return selected.filter((doc) => !doc.editAccess).length == 0;
     },
     accessOpen(accessEditDocuments) {
       return accessEditDocuments.length > 0;
@@ -92,9 +92,13 @@ export const layout = new Svue({
     },
     projectCollaboratorAccessOpen(projectEditUser) {
       return projectEditUser != null;
-    }
-  }
+    },
+  },
 });
+
+export function selectionProcessing() {
+  return isProcessing(...layout.selected);
+}
 
 export function unselectDocument(document) {
   delete layout.selectedMap[document.id];
@@ -107,11 +111,20 @@ export function hideRename() {
 }
 
 function canEdit(...documents) {
-  return documents.filter(doc => !doc.editAccess).length == 0;
+  return documents.filter((doc) => !doc.editAccess).length == 0;
+}
+
+function isProcessing(...documents) {
+  return documents.filter((doc) => doc.processing).length > 0;
 }
 
 export function openAccess(documents) {
-  if (documents.length == 0 || !canEdit(...documents)) return;
+  if (
+    documents.length == 0 ||
+    !canEdit(...documents) ||
+    isProcessing(...documents)
+  )
+    return;
   layout.accessEditDocuments = documents;
 }
 

@@ -121,6 +121,9 @@ export class Document extends Svue {
         success(status) {
           return status == "success";
         },
+        readable(status) {
+          return status == "readable";
+        },
         pending(status) {
           return status == "pending";
         },
@@ -132,6 +135,12 @@ export class Document extends Svue {
         },
         nofile(status) {
           return status == "nofile";
+        },
+        processing(pending, readable) {
+          return pending || readable;
+        },
+        viewable(success, readable, editAccess) {
+          return success || (readable && editAccess);
         },
         nonPending(pending) {
           return !pending;
@@ -207,12 +216,14 @@ export class Document extends Svue {
 
         // Notes/sections
         notes(doc) {
-          return doc.notes == null ? [] : doc.notes.map(note => new Note(note));
+          return doc.notes == null
+            ? []
+            : doc.notes.map((note) => new Note(note));
         },
         sections(doc) {
           return doc.sections == null
             ? []
-            : doc.sections.map(section => new Section(section));
+            : doc.sections.map((section) => new Section(section));
         },
 
         // Data
@@ -223,11 +234,11 @@ export class Document extends Svue {
           const results = [];
           for (const key in rawData) {
             if (rawData.hasOwnProperty(key)) {
-              const values = uniquify(rawData[key], x => x);
+              const values = uniquify(rawData[key], (x) => x);
               for (let i = 0; i < values.length; i++) {
                 results.push({
                   key,
-                  value: values[i]
+                  value: values[i],
                 });
               }
             }
@@ -275,15 +286,15 @@ export class Document extends Svue {
           return createdAt.toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
-            year: "numeric"
+            year: "numeric",
           });
         },
         summary(pageCountString, userOrgString, createdAtString) {
           return [pageCountString, userOrgString, createdAtString]
-            .filter(x => x.length > 0)
+            .filter((x) => x.length > 0)
             .join(" - ");
-        }
-      }
+        },
+      },
     });
   }
 }
@@ -291,25 +302,25 @@ export class Document extends Svue {
 export function transformPassage(passage, highlightStart, highlightEnd) {
   const chunks = [];
 
-  const advance = numChars => {
+  const advance = (numChars) => {
     passage = passage.substr(numChars);
   };
 
-  const pushRaw = numChars => {
+  const pushRaw = (numChars) => {
     if (numChars == null) numChars = passage.length;
     if (numChars == 0) return;
     chunks.push({
       text: passage.substr(0, numChars),
-      type: "normal"
+      type: "normal",
     });
     advance(numChars);
   };
 
-  const pushHighlight = numChars => {
+  const pushHighlight = (numChars) => {
     if (numChars == 0) return;
     chunks.push({
       text: passage.substr(0, numChars),
-      type: "highlight"
+      type: "highlight",
     });
     advance(numChars);
   };
