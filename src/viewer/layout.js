@@ -380,7 +380,6 @@ function reset() {
 }
 
 export function showEmbedFlow(document) {
-  console.log("SHOW EMBED", document);
   layout.embedDocument = document;
 }
 
