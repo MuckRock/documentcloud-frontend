@@ -142,7 +142,10 @@ export async function changeAccess(ids, access) {
 
 export async function reprocessDocument(ids) {
   // Reprocess the documents with the specified ids
-  await session.post(apiUrl(`documents/process/`), { ids });
+  await session.post(
+    apiUrl(`documents/process/`),
+    ids.map((id) => ({ id }))
+  );
 }
 
 export async function cancelProcessing(id) {
@@ -296,9 +299,10 @@ export async function uploadDocuments(
       UPLOAD_BATCH,
       UPLOAD_BATCH_DELAY,
       async (subIds) =>
-        await session.post(apiUrl(`documents/process/`), {
-          ids: subIds,
-        })
+        await session.post(
+          apiUrl(`documents/process/`),
+          subIds.map((id) => ({ id }))
+        )
     );
   } catch (e) {
     console.error(e);
