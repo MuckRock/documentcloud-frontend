@@ -4,6 +4,7 @@
   import Button from "@/common/Button";
   import DropZone from "@/common/DropZone";
   import FilePicker from "@/common/FilePicker";
+  import AccessToggle from "@/common/AccessToggle";
 
   // API
   import { uploadDocuments } from "@/api/document";
@@ -13,6 +14,9 @@
   // Stores
   import { layout } from "@/manager/layout";
   import { handleNewDocuments } from "@/manager/documents";
+
+  // Utils
+  import { handlePlural } from "@/util/string";
 
   import { onMount } from "svelte";
   import emitter from "@/emit";
@@ -35,6 +39,8 @@
   let uploadFiles = [];
   let uploadAdditional = false;
   let errorMessage = null;
+
+  let access = "private";
 
   const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
   const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
@@ -107,6 +113,7 @@
 
     uploadDocuments(
       files,
+      access,
       (index, progress) => {
         // Progress handler
         uploadFiles[index].progress = progress;
@@ -157,6 +164,10 @@
     margin: 2em 0 2.5em 0;
   }
 
+  .bottompadded {
+    margin-bottom: 25px;
+  }
+
   p {
     &.subtitle {
       color: $gray;
@@ -190,7 +201,7 @@
         {:else}
           <p>
             <!-- TODO: use pluralization -->
-            {files.length} file{files.length == 1 ? '' : 's'} ready to upload
+            {handlePlural(files.length, 'file', true)} ready to upload
           </p>
           {#if tooManyFiles}
             <p class="danger">You can only upload {LIMIT} files at once.</p>
@@ -214,6 +225,14 @@
             </DropZone>
           </div>
         {/if}
+        <div class="bottompadded">
+          <AccessToggle
+            bind:access
+            publicMessage="Document will be publicly visible."
+            collaboratorMessage="Document will be visible to your organization."
+            privateMessage="Document will be visible to you alone."
+            collaboratorName="Organization" />
+        </div>
       </div>
     {/if}
     {#if uploadMode}
