@@ -177,7 +177,6 @@ function initViewer(id) {
       }
       viewer.document = doc;
       viewer.notes = doc.notes;
-      console.log(doc.notes);
       viewer.sections = doc.sections;
     })
     .catch(() => {

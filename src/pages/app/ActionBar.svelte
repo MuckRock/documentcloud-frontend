@@ -12,6 +12,7 @@
   import { layout } from "@/manager/layout";
   import { manager, selectAll } from "@/manager/manager";
   import { documents, unselectAll } from "@/manager/documents";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();
@@ -77,49 +78,51 @@
 <div class="barcontainer">
   {#if !$layout.loading}
     <div class="bar">
-      <span class="action check scaledown">
-        {#if $documents.documents.length > 0}
-          <Checkbox
-            on:check={handleSelectAll}
-            on:uncheck={unselectAll}
-            indeterminate={$manager.someSelected}
-            checked={$layout.hasSelection} />
-        {/if}
-      </span>
+      {#if $orgsAndUsers.loggedIn}
+        <span class="action check scaledown">
+          {#if $documents.documents.length > 0}
+            <Checkbox
+              on:check={handleSelectAll}
+              on:uncheck={unselectAll}
+              indeterminate={$manager.someSelected}
+              checked={$layout.hasSelection} />
+          {/if}
+        </span>
 
-      {#if $layout.hasSelection && $layout.selectionEditable}
-        <Dropdown
-          table={true}
-          fixed={outerHeight > 600}
-          on:active={e => (editVisible = e.detail)}>
+        {#if $layout.hasSelection && $layout.selectionEditable}
+          <Dropdown
+            table={true}
+            fixed={outerHeight > 600}
+            on:active={e => (editVisible = e.detail)}>
+            <span class="action" slot="title">
+              <span class="nowrap">
+                Edit
+                <span class="dropper">▼</span>
+              </span>
+            </span>
+            <EditMenu visible={editVisible} />
+          </Dropdown>
+        {:else}
+          <span class="action disabled shortpad">
+            <Tooltip
+              caption={$layout.selectionEditable ? 'Select some documents to reveal edit actions' : 'You do not have permission to edit all of the selected documents'}>
+              <span class="nowrap">
+                Edit
+                <span class="dropper">▼</span>
+              </span>
+            </Tooltip>
+          </span>
+        {/if}
+        <Dropdown table={true} fixed={outerHeight > 600}>
           <span class="action" slot="title">
             <span class="nowrap">
-              Edit
+              Projects
               <span class="dropper">▼</span>
             </span>
           </span>
-          <EditMenu visible={editVisible} />
+          <ProjectsMenu />
         </Dropdown>
-      {:else}
-        <span class="action disabled shortpad">
-          <Tooltip
-            caption={$layout.selectionEditable ? 'Select some documents to reveal edit actions' : 'You do not have permission to edit all of the selected documents'}>
-            <span class="nowrap">
-              Edit
-              <span class="dropper">▼</span>
-            </span>
-          </Tooltip>
-        </span>
       {/if}
-      <Dropdown table={true} fixed={outerHeight > 600}>
-        <span class="action" slot="title">
-          <span class="nowrap">
-            Projects
-            <span class="dropper">▼</span>
-          </span>
-        </span>
-        <ProjectsMenu />
-      </Dropdown>
 
       <span class="narrowhide">
         <Paginator />
