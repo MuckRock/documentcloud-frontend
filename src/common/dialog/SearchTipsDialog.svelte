@@ -84,8 +84,8 @@
     ],
     [
       "Search by key/value pair",
-      "Type “data__&lt;key&gt;:” followed by the value you wish to be present (requires documents to be labeled ahead of time)",
-      "data__year:2020"
+      "Type “data_&lt;key&gt;:” followed by the value you wish to be present (requires documents to be labeled ahead of time)",
+      "data_year:2020"
     ],
     [
       "Search by page count",
@@ -98,9 +98,21 @@
 
     ["Advanced"],
     [
-      "Words with possible misspellings",
-      "Add ‘~’ followed by number of letters that can differ",
-      "building~3"
+      "Wildcard letter",
+      "Add ? in a word to match a single letter, e.g. “s?ar” matches “soar”, “star”, “scar”, etc.",
+      "s?ar"
+    ],
+    [
+      "Wildcard run",
+      "Add * in a word to match a run of zero or more letters, e.g. “s*ore” matches “sore”, “score”, “sophomore”, etc.",
+      "s*ore",
+      "report*",
+      "*ing"
+    ],
+    [
+      ("Fuzzy word search",
+      "Add ‘~’ at the end of a word to search that word along with common misspellings (useful for OCR errors, too)",
+      "building~")
     ],
     [
       "Phrase match with gap",
