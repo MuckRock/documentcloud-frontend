@@ -12,6 +12,7 @@
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
+  import SearchTipsDialog from "@/common/dialog/SearchTipsDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -22,7 +23,8 @@
     hideProject,
     hideCollaborators,
     projectCollaboratorAccessOpen,
-    hideProjectCollaboratorAccess
+    hideProjectCollaboratorAccess,
+    hideSearchTips
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -95,6 +97,8 @@
     <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
+  {:else if $layout.searchTipsOpen}
+    <Modal component={SearchTipsDialog} on:close={hideSearchTips} />
   {/if}
   <Hamburger on:toggle={emit.expandSidebar} />
   {#if !$documents.error}

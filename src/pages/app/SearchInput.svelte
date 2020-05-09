@@ -16,6 +16,9 @@
   });
 
   export let value = "";
+  export let example = false;
+  export let compact = false;
+
   let input;
   let mirror;
 
@@ -428,25 +431,32 @@
     const id = extractSlugId(value);
     if (field == "project") {
       if (id == null) return { valid: false };
+      if (example) return { valid: true, transform: `projects:${id}` };
       for (let i = 0; i < projects.projects.length; i++) {
         const project = projects.projects[i];
-        if (project.id == id)
+        if (project.id == id) {
           return { valid: true, transform: `projects:${id}` };
+        }
       }
       return { valid: false };
     } else if (field == "user") {
       if (id == null) return { valid: false };
+      if (example) return { valid: true, transform: `user:${id}` };
       for (let i = 0; i < orgsAndUsers.allUsers.length; i++) {
         const user = orgsAndUsers.allUsers[i];
-        if (user.id == id) return { valid: true, transform: `user:${id}` };
+        if (user.id == id) {
+          return { valid: true, transform: `user:${id}` };
+        }
       }
       return { valid: false };
     } else if (field == "organization") {
       if (id == null) return { valid: false };
+      if (example) return { valid: true, transform: `organization:${id}` };
       for (let i = 0; i < orgsAndUsers.organizations.length; i++) {
         const org = orgsAndUsers.organizations[i];
-        if (org.id == id)
+        if (org.id == id) {
           return { valid: true, transform: `organization:${id}` };
+        }
       }
       return { valid: false };
     } else {
@@ -492,6 +502,12 @@
       pointer-events: none;
       padding: 13px 17px;
     }
+
+    &.compact {
+      :global(svg) {
+        padding: 7px 17px;
+      }
+    }
   }
 
   textarea {
@@ -499,6 +515,10 @@
     outline: none;
     font-size: $fontSize;
     background: #f1f2f4;
+
+    &.compact {
+      min-height: 32px;
+    }
 
     &:focus {
       background: white;
@@ -534,6 +554,10 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-spacing: $wordSpacing;
+
+    &.compact {
+      padding: 3px 12px 3px 49px;
+    }
   }
 
   .mirror {
@@ -545,6 +569,10 @@
     pointer-events: none;
     color: black;
     -webkit-text-fill-color: black;
+
+    &.compact {
+      height: calc(100% - 7px);
+    }
 
     word-spacing: 0;
     font-size: 0;
@@ -642,11 +670,13 @@
   }
 </style>
 
-<div class="search">
+<div class="search" class:compact>
   {@html searchIconSvg}
   <textarea
     bind:this={input}
     bind:value
+    disabled={example}
+    class:compact
     placeholder="Search"
     use:textAreaResize={0}
     spellcheck="false"
@@ -657,7 +687,7 @@
     on:touchend={handleCursor}
     on:focus={handleCursor}
     on:blur={handleBlur} />
-  <div class="mirror" bind:this={mirror}>
+  <div class="mirror" bind:this={mirror} class:compact>
     {#each highlights as highlight}
       {#if highlight.type == 'field'}
         <span class:field={highlight.valid}>

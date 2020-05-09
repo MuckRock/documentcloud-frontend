@@ -80,6 +80,10 @@
       &.secondary {
         color: $gray;
       }
+
+      &.small {
+        font-size: 12px;
+      }
     }
 
     &.caution {
