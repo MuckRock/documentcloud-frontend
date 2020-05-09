@@ -4,6 +4,11 @@
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { slugify } from "@/util/string";
 
+  $: userExample =
+    $orgsAndUsers.me != null
+      ? `user:${slugify($orgsAndUsers.me.name, $orgsAndUsers.me.id)}`
+      : "user:example-123";
+
   const table = [
     // Basic usage
     ["Basic usage"],
@@ -45,7 +50,7 @@
     [
       "Group queries together",
       "Use parentheses to group logical queries together. These can be nested for complex queries",
-      "(hello OR hi) AND (goodbye OR bye)"
+      "(a OR b) AND (c OR d)"
     ],
     [
       "Exclude a term or filter",
@@ -79,7 +84,7 @@
     ],
     [
       "Search by key/value pair",
-      "Type “data__<key>:” followed by the value you wish to be present (requires documents to be labeled ahead of time)",
+      "Type “data__&lt;key&gt;:” followed by the value you wish to be present (requires documents to be labeled ahead of time)",
       "data__year:2020"
     ],
     [
@@ -186,22 +191,22 @@
     <div class="padded">
       <p>
         The search bar is a flexible and powerful tool for searching your
-        documents, your organization’s documents, and public documents.
-        {#if $orgsAndUsers.loggedIn}
-          The default search view, “Your Documents,” includes a user filter to
-          only display your documents. For example:
-        {/if}
+        documents, your organization’s documents, and public documents. The
+        default search view, “Your Documents,” includes a user filter to only
+        display your documents, but you can do a lot more.
       </p>
-      {#if $orgsAndUsers.loggedIn}
-        <SearchExample
-          content={`user:${slugify($orgsAndUsers.me.name, $orgsAndUsers.me.id)}`} />
-        <p>
-          You can add additional search terms to search within your document
-          collection, or remove the user filter to search within other
-          documents.
-        </p>
-      {/if}
-      <p>Reference table:</p>
+      <SearchExample
+        content={`${userExample} "mueller report" project:test-345  -page_count:448`} />
+      <p>
+        The above example, for instance, searches all documents within
+        {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
+        for a specific project that contain the exact text “mueller report” and
+        don’t have a page count of 448 (thus excluding the actual Mueller
+        Report).
+      </p>
+      <p>
+        <b>Reference table:</b>
+      </p>
 
       <table cellspacing="0">
         {#each table as row}

@@ -40,6 +40,10 @@
   .searchcontainer {
     margin: 0 0 20px 0;
 
+    @media only screen and (max-width: $mobileBreak) {
+      margin: 0 0 30px 0;
+    }
+
     &.example {
       margin: 0;
     }
@@ -83,7 +87,11 @@
         <code>organization:</code>
         , etc.
       </span>
-      <Button action={true} small={true} on:click={showSearchTips}>
+      <Button
+        action={true}
+        small={true}
+        nomargin={true}
+        on:click={showSearchTips}>
         Learn more
       </Button>
     </div>

@@ -7,6 +7,7 @@
   import { projects } from "@/manager/projects";
   import { textAreaResize } from "@/util/textareaResize";
   import { slugify, extractSlugId } from "@/util/string";
+  import { onMount } from "svelte";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";
@@ -479,6 +480,12 @@
   $: transformedQuery = highlights
     .map(x => (x.transform != null ? x.transform : x.text))
     .join("");
+
+  onMount(() => {
+    // Trigger input resizing
+    // TODO: find a more elegant solution
+    window.dispatchEvent(new Event("resize"));
+  });
 </script>
 
 <style lang="scss">
@@ -492,10 +499,6 @@
     position: relative;
     box-sizing: border-box;
     max-width: 750px;
-
-    @media only screen and (max-width: $mobileBreak) {
-      margin: 0 0 44px 0;
-    }
 
     :global(svg) {
       position: absolute;
