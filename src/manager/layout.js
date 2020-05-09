@@ -27,6 +27,7 @@ export const layout = new Svue({
       projectOpen: false,
       projectCollaboratorsOpen: false,
       projectEditUser: null,
+      searchTipsOpen: false,
 
       // Data
       dataDocuments: [],
@@ -177,4 +178,12 @@ export function editProjectCollaboratorAccess(collaborator) {
 
 export function hideProjectCollaboratorAccess() {
   layout.projectEditUser = null;
+}
+
+export function showSearchTips() {
+  layout.searchTipsOpen = true;
+}
+
+export function hideSearchTips() {
+  layout.searchTipsOpen = false;
 }

@@ -12,13 +12,17 @@ export function textAreaResize(el, offset = 2) {
     el.style.boxSizing = "border-box";
   }
 
-  const resizer = ({ target }) => resize({ target, offset });
+  const resizer = () => resize({ target: el, offset });
 
   el.addEventListener("input", resizer);
+  window.addEventListener("resize", resizer);
 
-  resizer({ target: el });
+  resizer();
 
   return {
-    destroy: () => el.removeEventListener("input", resizer)
+    destroy: () => {
+      el.removeEventListener("input", resizer);
+      window.removeEventListener("resize", resizer);
+    },
   };
 }

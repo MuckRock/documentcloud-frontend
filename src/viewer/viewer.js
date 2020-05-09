@@ -161,7 +161,16 @@ export function removeNote(note) {
 
 function initViewer(id) {
   // Initialize the viewer.
-  getDocument(id, [DEFAULT_EXPAND, "notes", "sections"].join(","))
+  getDocument(
+    id,
+    [
+      DEFAULT_EXPAND,
+      "notes",
+      "sections",
+      "notes.organization",
+      "notes.user",
+    ].join(",")
+  )
     .then((doc) => {
       if (!doc.viewable) {
         viewer.showPending = true;

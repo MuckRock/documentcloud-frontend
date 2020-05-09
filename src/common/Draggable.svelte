@@ -6,6 +6,7 @@
   });
 
   let dragging = false;
+  export let disabled = false;
 
   function filterFiles(files) {
     files = Array.from(files).filter(f => f.type == "application/pdf");
@@ -13,18 +14,22 @@
   }
 
   function enter(e) {
+    if (disabled) return;
     dragging = true;
   }
 
   function leave() {
+    if (disabled) return;
     dragging = false;
   }
 
   function handleDrop(e) {
+    if (disabled) return;
     handleFiles(e.dataTransfer.files);
   }
 
   function handleFiles(files) {
+    if (disabled) return;
     leave();
     // Filter for just PDF files
     files = filterFiles(files);

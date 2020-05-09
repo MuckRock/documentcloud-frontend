@@ -17,6 +17,7 @@
   import { removeDocument, selectDocument } from "@/manager/documents";
   import { projects } from "@/manager/projects";
   import { projectUrl, dataUrl } from "@/search/search";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
@@ -237,12 +238,14 @@
 
 <div class="card">
   <div class="row">
-    <div class="check">
-      <Checkbox
-        on:check={() => selectDocument(document, shiftKey)}
-        on:uncheck={() => unselectDocument(document)}
-        checked={$layout.selectedMap[document.id] != null} />
-    </div>
+    {#if $orgsAndUsers.loggedIn}
+      <div class="check">
+        <Checkbox
+          on:check={() => selectDocument(document, shiftKey)}
+          on:uncheck={() => unselectDocument(document)}
+          checked={$layout.selectedMap[document.id] != null} />
+      </div>
+    {/if}
     <DocumentThumbnail {document} />
 
     <div class="info">

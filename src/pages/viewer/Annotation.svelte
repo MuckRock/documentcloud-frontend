@@ -2,6 +2,7 @@
   import Image from "@/common/Image";
   import Button from "@/common/Button";
   import Loader from "@/common/Loader";
+  import AccessToggle from "@/common/AccessToggle";
   import { textAreaResize } from "@/util/textareaResize.js";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
@@ -18,9 +19,6 @@
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
-  import privateIconSvg from "@/assets/private_icon.svg";
-  import publicIconSvg from "@/assets/public_icon.svg";
-  import organizationIconSvg from "@/assets/organization_icon.svg";
   import pencilSvg from "@/assets/pencil.svg";
 
   // Asynchronously load dompurify
@@ -389,96 +387,6 @@
       }
     }
 
-    .access {
-      $spacing: 10px;
-
-      display: table;
-      table-layout: fixed;
-      width: calc(100% + #{$spacing * 2});
-      margin: 0 ($spacing * -1);
-      border-spacing: $spacing;
-      border-collapse: separate;
-
-      .container {
-        display: table-cell;
-        vertical-align: top;
-        border-radius: $radius;
-        border: solid 2px transparent;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
-        cursor: pointer;
-        transition: border 0.2s ease;
-        opacity: 0.5;
-        user-select: none;
-
-        &:hover {
-          opacity: 0.9;
-        }
-
-        &.selected {
-          opacity: 1;
-        }
-
-        &.public {
-          &:hover {
-            border: solid 2px rgba($annotationBorder, 0.4);
-          }
-
-          &.selected {
-            border: solid 2px $annotationBorder;
-          }
-        }
-
-        &.organization {
-          &:hover {
-            border: solid 2px rgba($organizationAnnotation, 0.4);
-          }
-
-          &.selected {
-            border: solid 2px $organizationAnnotation;
-          }
-        }
-
-        &.private {
-          &:hover {
-            border: solid 2px rgba($privateAnnotation, 0.4);
-          }
-
-          &.selected {
-            border: solid 2px $privateAnnotation;
-          }
-        }
-
-        .item {
-          display: table;
-          border-spacing: 0;
-          width: 100%;
-
-          .icon {
-            display: table-cell;
-            vertical-align: top;
-            width: 30px;
-            text-align: center;
-            padding-top: 11px;
-          }
-
-          .contents {
-            display: table-cell;
-            vertical-align: top;
-            padding-right: 8px;
-
-            h3 {
-              font-size: 14px;
-              margin: 8px 0 0 0;
-            }
-
-            p {
-              margin: 6px 0 12px 0;
-            }
-          }
-        }
-      }
-    }
-
     .pencil {
       @include buttonLike;
 
@@ -587,56 +495,7 @@
     </div>
     <!-- Footer content -->
     {#if editMode}
-      <div class="access">
-        {#if document.editAccess}
-          <div
-            class="container public"
-            class:selected={access == 'public'}
-            on:click={() => (access = 'public')}>
-            <div class="item">
-              <span class="icon">
-                {@html publicIconSvg}
-              </span>
-              <div class="contents">
-                <h3>Public</h3>
-                <p>
-                  Note will be visible to anyone with access to the document.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div
-            class="container organization"
-            class:selected={access == 'organization'}
-            on:click={() => (access = 'organization')}>
-            <div class="item">
-              <span class="icon">
-                {@html organizationIconSvg}
-              </span>
-              <div class="contents">
-                <h3>Collaborator</h3>
-                <p>
-                  Note will be visible to anyone who can edit this document.
-                </p>
-              </div>
-            </div>
-          </div>
-        {/if}
-        <div
-          class="container private"
-          class:selected={access == 'private'}
-          on:click={() => (access = 'private')}>
-          <div class="item">
-            <span class="icon">
-              {@html privateIconSvg}
-            </span>
-            <div class="contents">
-              <h3>Private</h3>
-              <p>Note will be visible to you alone.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AccessToggle bind:access editAccess={document.editAccess} />
       <div class="buttonpadded">
         <Button
           on:click={createOrUpdateAnnotation}

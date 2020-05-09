@@ -91,18 +91,24 @@
         {/if}
       {/if}
     </div>
-    <div class="titlesection">
-      <Title small={true}>Projects</Title>
-      <Button on:click={newProject} small={true}>+ New Project</Button>
-    </div>
-  </div>
-  <div class="projectcontainer">
-    {#if $projects.projects.length > 0}
-      {#each $projects.projects as project}
-        <Project {project} />
-      {/each}
-    {:else}
-      <small>Create your first project by clicking “New Project” above.</small>
+    {#if $orgsAndUsers.loggedIn}
+      <div class="titlesection">
+        <Title small={true}>Projects</Title>
+        <Button on:click={newProject} small={true}>+ New Project</Button>
+      </div>
     {/if}
   </div>
+  {#if $orgsAndUsers.loggedIn}
+    <div class="projectcontainer">
+      {#if $projects.projects.length > 0}
+        {#each $projects.projects as project}
+          <Project {project} />
+        {/each}
+      {:else}
+        <small>
+          Create your first project by clicking “New Project” above.
+        </small>
+      {/if}
+    </div>
+  {/if}
 </div>

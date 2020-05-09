@@ -56,7 +56,7 @@
       if ($search.params.oneUserSearch != null) {
         // Show title based on a single user search
         if (
-          $orgsAndUsers.me != null &&
+          $orgsAndUsers.loggedIn &&
           $search.params.oneUserSearch == $orgsAndUsers.me.id
         ) {
           newTitle = `Your ${access}Documents`;
@@ -187,7 +187,9 @@
 
       <div>
         <Title>{title}</Title>
-        <Button on:click={showUploadModal}>+ Upload</Button>
+        {#if $orgsAndUsers.loggedIn}
+          <Button on:click={showUploadModal}>+ Upload</Button>
+        {/if}
       </div>
       <ActionBar />
 
@@ -195,7 +197,7 @@
     </div>
 
     <div class="docscontainer">
-      <Draggable on:files={showUploadModal}>
+      <Draggable on:files={showUploadModal} disabled={!$orgsAndUsers.loggedIn}>
         {#each $documents.documents as document (document.id)}
           <div animate:flip={{ duration: 400 }}>
             <Document {document} />
@@ -204,9 +206,11 @@
         {#if $documents.documents.length == 0 && !$layout.loading}
           <NoDocuments />
         {/if}
-        <div class="toastouter">
-          <div class="toast">Drop file to upload</div>
-        </div>
+        {#if $orgsAndUsers.loggedIn}
+          <div class="toastouter">
+            <div class="toast">Drop file to upload</div>
+          </div>
+        {/if}
       </Draggable>
     </div>
 

@@ -10,6 +10,7 @@
   export let danger = false;
   export let disabled = false;
   export let plain = false;
+  export let nomargin = false;
 
   export let disabledReason = null;
 </script>
@@ -28,6 +29,10 @@
     background: $primary;
     color: white;
     font-family: inherit;
+
+    &.nomargin {
+      margin: 0;
+    }
 
     &:disabled {
       opacity: 0.7;
@@ -80,6 +85,10 @@
       &.secondary {
         color: $gray;
       }
+
+      &.small {
+        font-size: 12px;
+      }
     }
 
     &.caution {
@@ -114,6 +123,7 @@
       class:nondescript
       class:action
       class:plain
+      class:nomargin
       disabled={disabled || disabledReason != null}>
       <slot />
     </button>

@@ -4,7 +4,7 @@ import {
   getOrganizations,
   getUsers,
   getMe,
-  changeActiveOrg
+  changeActiveOrg,
 } from "@/api/orgAndUser";
 import { projects, initProjects } from "./projects";
 import { uniquify } from "@/util/array";
@@ -22,7 +22,7 @@ export const orgsAndUsers = new Svue({
       allOrganizations: [],
       organizationUsers: [],
       projects,
-      router
+      router,
     };
   },
   watch: {
@@ -45,14 +45,14 @@ export const orgsAndUsers = new Svue({
         this.users = [];
       }
       previousRouteName = route == null ? null : route.name;
-    }
+    },
   },
   computed: {
     allUsers(projects, organizationUsers) {
       return uniquify([...projects.projectUsers, ...organizationUsers]);
     },
     organizations(allOrganizations) {
-      return allOrganizations.filter(org => !org.individual);
+      return allOrganizations.filter((org) => !org.individual);
     },
     orgsById(allOrganizations) {
       const results = {};
@@ -61,8 +61,11 @@ export const orgsAndUsers = new Svue({
         results[organization.id] = organization;
       }
       return results;
-    }
-  }
+    },
+    loggedIn(me) {
+      return me != null;
+    },
+  },
 });
 
 async function getSelfUser() {
@@ -98,7 +101,7 @@ async function initOrgsAndUsers() {
   // Get non-individual organizations
   orgsAndUsers.allOrganizations = await getOrganizations();
 
-  const orgIds = orgsAndUsers.organizations.map(proj => proj.id);
+  const orgIds = orgsAndUsers.organizations.map((proj) => proj.id);
   orgsAndUsers.organizationUsers = await getUsers({ orgIds });
 }
 
