@@ -110,9 +110,9 @@
       "*ing"
     ],
     [
-      ("Fuzzy word search",
+      "Fuzzy word search",
       "Add ‘~’ at the end of a word to search that word along with common misspellings (useful for OCR errors, too)",
-      "building~")
+      "building~"
     ],
     [
       "Phrase match with gap",
