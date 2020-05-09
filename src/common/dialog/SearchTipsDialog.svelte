@@ -26,12 +26,12 @@
     ],
     [
       "Search by project",
-      "Type project:” followed by an autocompleted project name",
+      "Type “project:” followed by an autocompleted project name",
       "project:example-project-123"
     ],
     [
       "Search by organization",
-      "Type organization:” followed by an autocompleted organization name",
+      "Type “organization:” followed by an autocompleted organization name",
       "organization:example-org-123"
     ],
 
