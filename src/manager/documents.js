@@ -37,7 +37,7 @@ export const documents = new Svue({
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       unselectAll();
-      if (route != null && route.name == "app") {
+      if (route != null && route.name == "app" && route.props.q != null) {
         initDocuments();
       } else {
         this.processingDocumentsRaw = [];
@@ -172,9 +172,9 @@ export function removeDocuments(documents) {
   showConfirm(
     "Confirm delete",
     `Proceeding will permanently delete the ${
-      documents.length == 1
-        ? "selected document"
-        : `${documents.length} selected documents`
+    documents.length == 1
+      ? "selected document"
+      : `${documents.length} selected documents`
     }. Do you wish to continue?`,
     "Delete",
     async () => {
@@ -192,9 +192,9 @@ export function reprocessDocuments(documents) {
   showConfirm(
     "Confirm reprocess",
     `Proceeding will force the ${
-      documents.length == 1
-        ? "selected document"
-        : `${documents.length} selected documents`
+    documents.length == 1
+      ? "selected document"
+      : `${documents.length} selected documents`
     } to reprocess page and image text. Do you wish to continue?`,
     "Reprocess",
     async () => {

@@ -26,12 +26,12 @@
     ],
     [
       "Search by project",
-      "Type project:” followed by an autocompleted project name",
+      "Type “project:” followed by an autocompleted project name",
       "project:example-project-123"
     ],
     [
       "Search by organization",
-      "Type organization:” followed by an autocompleted organization name",
+      "Type “organization:” followed by an autocompleted organization name",
       "organization:example-org-123"
     ],
 
@@ -110,9 +110,9 @@
       "*ing"
     ],
     [
-      ("Fuzzy word search",
+      "Fuzzy word search",
       "Add ‘~’ at the end of a word to search that word along with common misspellings (useful for OCR errors, too)",
-      "building~")
+      "building~"
     ],
     [
       "Phrase match with gap",

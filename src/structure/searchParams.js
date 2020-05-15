@@ -167,6 +167,7 @@ export class SearchParams extends Svue {
           return getDocumentParams == null;
         },
         getMethod(query, isSearch, getDocumentParams, page) {
+          if (query == null) return null;  // Wait for redirect
           if (isSearch) {
             // Use search method
             return () => searchDocuments(query, page);

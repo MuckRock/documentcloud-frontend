@@ -40,8 +40,10 @@ async function initSearch(params) {
   search.params = new SearchParams(params);
 
   // Get results
-  const results = await wrapSeparate(layout, search, search.params.getMethod);
-  search.results = results;
+  if (search.params.getMethod != null) {
+    const results = await wrapSeparate(layout, search, search.params.getMethod);
+    search.results = results;
+  }
 }
 
 export function setDocuments(documents) {
@@ -95,8 +97,8 @@ export function searchUrl(query, transformedQuery) {
     transformedQuery != null && transformedQuery.length > 0
       ? transformedQuery
       : transformedQuery == null
-      ? null
-      : "";
+        ? null
+        : "";
 
   return queryBuilder(null, {
     q,
