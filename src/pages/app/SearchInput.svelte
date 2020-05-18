@@ -11,6 +11,7 @@
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";
+  import closeInlineSvg from "@/assets/close_inline.svg";
 
   const emit = emitter({
     search() {}
@@ -548,7 +549,7 @@
     line-height: 1.6;
     font-family: inherit;
     border: none;
-    padding: 9px 12px 9px 49px;
+    padding: 9px 49px 9px 49px;
     box-sizing: border-box;
     border: solid 1px transparent;
     width: 100%;
@@ -557,6 +558,10 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-spacing: $wordSpacing;
+
+    &.example {
+      padding: 9px 12px 9px 49px;
+    }
 
     &.compact {
       padding: 3px 12px 3px 49px;
@@ -621,6 +626,17 @@
     }
   }
 
+  .closeicon {
+    @include buttonLike;
+    position: absolute;
+    right: 0;
+    top: 8px;
+    margin-top: -7.5px;
+    z-index: 1;
+    width: 49px;
+    height: 41px;
+  }
+
   .tagbank {
     display: none;
     position: absolute;
@@ -680,6 +696,7 @@
     bind:value
     disabled={example}
     class:compact
+    class:example
     placeholder="Search"
     use:textAreaResize={0}
     spellcheck="false"
@@ -690,7 +707,7 @@
     on:touchend={handleCursor}
     on:focus={handleCursor}
     on:blur={handleBlur} />
-  <div class="mirror" bind:this={mirror} class:compact>
+  <div class="mirror" bind:this={mirror} class:compact class:example>
     {#each highlights as highlight}
       {#if highlight.type == 'field'}
         <span class:field={highlight.valid}>
@@ -716,6 +733,11 @@
       </span>
     {/if}
   </div>
+  {#if !example && value.length != 0}
+    <div class="closeicon" on:click={() => (value = '')}>
+      {@html closeInlineSvg}
+    </div>
+  {/if}
   <div class="tagbank" style={completionX}>
     <div class="completions">
       {#each processedCompletions.completions as completion}
