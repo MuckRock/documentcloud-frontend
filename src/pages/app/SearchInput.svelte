@@ -13,6 +13,17 @@
   import searchIconSvg from "@/assets/search_icon.svg";
   import closeInlineSvg from "@/assets/close_inline.svg";
 
+  const fieldAliases = {
+    projects: "project",
+    account: "user",
+    group: "organization"
+  };
+
+  function alias(field) {
+    if (fieldAliases[field] != null) return fieldAliases[field];
+    return field;
+  }
+
   const emit = emitter({
     search() {}
   });
@@ -237,7 +248,7 @@
     if (escPressed) {
       completions = [];
       escPressed = false;
-    } else if (fieldPre == "project") {
+    } else if (alias(fieldPre) == "project") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $projects.projects.map(project => {
@@ -249,7 +260,7 @@
         }),
         fieldPost
       );
-    } else if (fieldPre == "user") {
+    } else if (alias(fieldPre) == "user") {
       setCompletionX(fieldPreIndex);
 
       const mappedUsers = [];
@@ -269,7 +280,7 @@
       }
 
       completions = completionFilter(mappedUsers, fieldPost);
-    } else if (fieldPre == "organization") {
+    } else if (alias(fieldPre) == "organization") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $orgsAndUsers.organizations.map(org => {
@@ -281,7 +292,7 @@
         }),
         fieldPost
       );
-    } else if (fieldPre == "access") {
+    } else if (alias(fieldPre) == "access") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         [
@@ -306,7 +317,7 @@
         ],
         fieldPost
       );
-    } else if (fieldPre == "status") {
+    } else if (alias(fieldPre) == "status") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         [

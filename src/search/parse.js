@@ -2,20 +2,29 @@ import lucene from "lucene";
 
 const validFields = [
   /^id$/,
+  /^document$/,  // maps to id
   /^access$/,
   /^created_at$/,
   /^data_[a-zA-Z0-9_-]+$/,
+  /^tag$/,  // maps to data__tag
   /^description$/,
   /^language$/,
   /^organization$/,
+  /^group$/,  // maps to organization
   /^page_count$/,
+  /^pages$/,  // maps to page count
   /^projects?$/,
+  /^project?$/,  // maps to projects
   /^slug$/,
   /^source$/,
   /^status$/,
   /^title$/,
   /^updated_at$/,
-  /^user$/
+  /^user$/,
+  /^account$/,  // maps to user
+  /^doctext$/,
+  /^text$/,  // maps to doctext
+  /^page_no_[0-9]+$/
 ];
 
 const NORMALIZE_PREFIX = /^[-+]+/g;
@@ -86,6 +95,19 @@ export function parseHighlight(query, parsed) {
       const endParenIdx = query.indexOf(")", position[1]);
       if (endParenIdx != -1) {
         position[1] = endParenIdx + 1;
+      }
+      chunks.push({
+        type: "field",
+        position
+      });
+    } else if (parsed.fieldLocation != null && parsed.inclusive && validField(parsed.field)) {
+      const position = getSuperPosition(parsed);
+      // Extend super position to grab end bracket or brace
+      const endParenIndex = query.indexOf("]", position[1]);
+      const endBraceIndex = query.indexOf("}", position[1]);
+      const endIndex = Math.min(endParenIndex == -1 ? Infinity : endParenIndex, endBraceIndex == -1 ? Infinity : endBraceIndex);
+      if (endIndex != Infinity) {
+        position[1] = endIndex + 1;
       }
       chunks.push({
         type: "field",

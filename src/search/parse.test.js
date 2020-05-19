@@ -130,6 +130,53 @@ test("gets data highlights", () => {
   ]);
 });
 
+test('gets range highlights', () => {
+  expect(highlight("page_count:10")).toEqual([
+    {
+      type: 'field',
+      text: 'page_count:10',
+      field: 'page_count:',
+      value: '10'
+    }
+  ]);
+
+  expect(highlight("page_count:[10 TO *]")).toEqual([
+    {
+      type: 'field',
+      text: 'page_count:[10 TO *]',
+      field: 'page_count:',
+      value: '[10 TO *]'
+    }
+  ]);
+
+  expect(highlight("page_count:[10 TO *}")).toEqual([
+    {
+      type: 'field',
+      text: 'page_count:[10 TO *}',
+      field: 'page_count:',
+      value: '[10 TO *}'
+    }
+  ]);
+
+  expect(highlight("page_count:{10 TO 120}")).toEqual([
+    {
+      type: 'field',
+      text: 'page_count:{10 TO 120}',
+      field: 'page_count:',
+      value: '{10 TO 120}'
+    }
+  ]);
+
+  expect(highlight("page_count:{* TO 120]")).toEqual([
+    {
+      type: 'field',
+      text: 'page_count:{* TO 120]',
+      field: 'page_count:',
+      value: '{* TO 120]'
+    }
+  ]);
+});
+
 test("split and escape", () => {
   // Test cases copied from backend
   const cases = [

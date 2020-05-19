@@ -79,8 +79,8 @@
     ],
     [
       "Search by tag",
-      "Type “data__tag:” followed by the tag you wish to be present (requires documents to be tagged ahead of time)",
-      "data__tag:report"
+      "Type “tag:” followed by the tag you wish to be present (requires documents to be tagged ahead of time)",
+      "tag:report"
     ],
     [
       "Search by key/value pair",
