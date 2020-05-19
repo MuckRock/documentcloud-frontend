@@ -176,13 +176,17 @@ export function parse(query) {
   } catch (e) {
     // If query parsing fails, escape the query and try again
     // Just like how Solr does it for edismax
-    const clauses = splitIntoClauses(query, false);
-    const { escaped, mapping } = escapeUserQuery(clauses);
+    const { escaped, mapping } = splitAndEscape(query);
     const parsed = lucene.parse(escaped);
     // Restore positions using mapping
     transform(parsed, mapping);
     return parsed;
   }
+}
+
+export function splitAndEscape(query) {
+  const clauses = splitIntoClauses(query, false);
+  return escapeUserQuery(clauses);
 }
 
 function transform(parsed, mapping) {

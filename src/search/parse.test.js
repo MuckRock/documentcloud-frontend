@@ -1,4 +1,4 @@
-import { parse, highlight } from "./parse";
+import { parse, highlight, splitAndEscape } from "./parse";
 
 const IMPLICIT = "<implicit>";
 
@@ -129,3 +129,43 @@ test("gets data highlights", () => {
     }
   ]);
 });
+
+test("split and escape", () => {
+  // Test cases copied from backend
+  const cases = [
+    ["foo:bar (", "foo:bar \\("],
+    ["foo:bar :foo", "foo:bar \\:foo"],
+    ["foo:bar foo:", "foo:bar foo\\:"],
+    ["foo:bar :", "foo:bar \\:"],
+    ["foo:bar+baz", "foo:bar\\+baz"],
+    ["foo (", "foo \\("],
+    ["foo )", "foo \\)"],
+    ["foo [", "foo \\["],
+    ["foo ]", "foo \\]"],
+    ["foo {", "foo \\{"],
+    ["foo }", "foo \\}"],
+    ["foo ~", "foo \\~"],
+    ["foo ^", "foo \\^"],
+    ["foo + ", "foo \\+"],
+    ["foo - ", "foo \\-"],
+    ["foo !", "foo \\!"],
+    ["foo /", "foo \\/"],
+    ["foo \\", "foo \\\\"],
+    ['foo "', 'foo \\"'],
+    ["foo + AND", 'foo \\+ "AND"'],
+    ["foo AND", 'foo "AND"'],
+    ["foo OR", 'foo "OR"'],
+    ["foo NOT", 'foo "NOT"'],
+    ['foo "(" )', 'foo "(" \\)'],
+    ['foo "(" "', 'foo \\"\\(\\" \\"'],
+    [
+      "foo:foo AND (:bar OR baz:) (qux:qux AND",
+      'foo:foo "AND" \\(\\:bar "OR" baz:\\) qux:qux "AND"',
+    ],
+  ];
+
+  cases.forEach(([query, expectation]) => {
+    const escaped = splitAndEscape(query).escaped.trim();
+    expect(escaped).toBe(expectation);
+  });
+})
