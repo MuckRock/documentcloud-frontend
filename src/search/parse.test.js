@@ -177,6 +177,122 @@ test('gets range highlights', () => {
   ]);
 });
 
+test('quote highlights', () => {
+  expect(highlight(`"quoted phrase"`)).toEqual([
+    {
+      type: 'quote',
+      text: `"quoted phrase"`,
+      field: null, value: null
+    }
+  ]);
+
+  expect(highlight(`a "quoted phrase" b`)).toEqual([
+    {
+      type: "raw",
+      text: "a "
+    },
+    {
+      type: 'quote',
+      text: `"quoted phrase"`,
+      field: null, value: null
+    },
+    {
+      type: "raw",
+      text: " b"
+    },
+  ]);
+
+  expect(highlight(`"imbalanced`)).toEqual([
+    {
+      type: "raw",
+      text: `"imbalanced`
+    }
+  ]);
+});
+
+test('operator highlights', () => {
+  expect(highlight(`a AND b`)).toEqual([
+    {
+      type: 'raw',
+      text: 'a ',
+    },
+    {
+      type: 'operator',
+      text: 'AND'
+    },
+    {
+      type: 'raw',
+      text: ' b',
+    }
+  ]);
+
+  expect(highlight(`a OR b`)).toEqual([
+    {
+      type: 'raw',
+      text: 'a ',
+    },
+    {
+      type: 'operator',
+      text: 'OR'
+    },
+    {
+      type: 'raw',
+      text: ' b',
+    }
+  ]);
+
+  expect(highlight(`NOT b`)).toEqual([
+    {
+      type: 'operator',
+      text: 'NOT'
+    },
+    {
+      type: 'raw',
+      text: ' b',
+    }
+  ]);
+
+  expect(highlight('(a OR b) AND (c OR d)')).toEqual([
+    {
+      type: 'raw',
+      text: '(a ',
+    },
+    {
+      type: 'operator',
+      text: 'OR'
+    },
+    {
+      type: 'raw',
+      text: ' b) ',
+    },
+    {
+      type: 'operator',
+      text: 'AND'
+    },
+    {
+      type: 'raw',
+      text: ' (c ',
+    },
+    {
+      type: 'operator',
+      text: 'OR'
+    },
+    {
+      type: 'raw',
+      text: ' d)',
+    },
+  ]);
+
+
+  expect(highlight(`"a AND b"`)).toEqual([
+    {
+      type: 'quote',
+      text: `"a AND b"`,
+      field: null, value: null
+    },
+  ]);
+});
+
 test("split and escape", () => {
   // Test cases copied from backend
   const cases = [

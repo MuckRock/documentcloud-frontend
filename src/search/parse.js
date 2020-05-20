@@ -24,8 +24,13 @@ const validFields = [
   /^account$/,  // maps to user
   /^doctext$/,
   /^text$/,  // maps to doctext
-  /^page_no_[0-9]+$/
+  /^page_no_[0-9]+$/,
+  /^sort$/,
+  /^order$/,  // maps to order
 ];
+
+const OPERATORS = ['AND', 'OR', 'NOT'];
+const OPERATORS_RE = new RegExp(`${OPERATORS.map(x => `(${x})`).join('|')}|(.+?)`);
 
 const NORMALIZE_PREFIX = /^[-+]+/g;
 
@@ -130,6 +135,16 @@ export function parseHighlight(query, parsed) {
             ]
           });
         }
+      } else if (parsed.quoted) {
+        const position = [parsed.termLocation.start.offset,
+        parsed.termLocation.end.offset];
+        const text = query.substring(...position);
+        if (text.startsWith('"') || text.endsWith('"')) {
+          chunks.push({
+            type: "quote",
+            position
+          });
+        }
       }
     }
     return chunks;
@@ -152,10 +167,28 @@ export function parseHighlight(query, parsed) {
   const pushRaw = position => {
     if (position == null) position = query.length;
     if (position == 0) return;
-    highlights.push({
-      type: "raw",
-      text: advance(position)
-    });
+
+    // Match operators
+    const text = advance(position);
+    const textGroups = text.split(OPERATORS_RE).filter(x => x != null && x.length >= 1);
+
+    let rawBuffer = '';
+    const clearBuffer = () => {
+      if (rawBuffer.length > 0) {
+        highlights.push({ type: 'raw', text: rawBuffer });
+      }
+      rawBuffer = '';
+    };
+    for (let i = 0; i < textGroups.length; i++) {
+      const group = textGroups[i];
+      if (OPERATORS.includes(group)) {
+        clearBuffer();
+        highlights.push({ type: 'operator', text: group });
+      } else {
+        rawBuffer += group;
+      }
+    }
+    clearBuffer();
   };
 
   const pushHighlight = (type, position) => {
