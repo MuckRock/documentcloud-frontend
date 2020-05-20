@@ -79,13 +79,15 @@
   {#if !example}
     <div class="info">
       <span>
-        Search tips: you can add filters by typing
+        Search tips: add filters by typing
         <code>user:</code>
         ,
         <code>project:</code>
         , or
         <code>organization:</code>
-        , etc.
+        , etc. Use
+        <code>sort:</code>
+        to order results.
       </span>
       <Button
         action={true}
