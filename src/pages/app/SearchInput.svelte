@@ -13,6 +13,18 @@
   import searchIconSvg from "@/assets/search_icon.svg";
   import closeInlineSvg from "@/assets/close_inline.svg";
 
+  const fieldAliases = {
+    projects: "project",
+    account: "user",
+    group: "organization",
+    order: "sort"
+  };
+
+  function alias(field) {
+    if (fieldAliases[field] != null) return fieldAliases[field];
+    return field;
+  }
+
   const emit = emitter({
     search() {}
   });
@@ -237,7 +249,7 @@
     if (escPressed) {
       completions = [];
       escPressed = false;
-    } else if (fieldPre == "project") {
+    } else if (alias(fieldPre) == "project") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $projects.projects.map(project => {
@@ -249,7 +261,7 @@
         }),
         fieldPost
       );
-    } else if (fieldPre == "user") {
+    } else if (alias(fieldPre) == "user") {
       setCompletionX(fieldPreIndex);
 
       const mappedUsers = [];
@@ -269,7 +281,7 @@
       }
 
       completions = completionFilter(mappedUsers, fieldPost);
-    } else if (fieldPre == "organization") {
+    } else if (alias(fieldPre) == "organization") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $orgsAndUsers.organizations.map(org => {
@@ -281,7 +293,7 @@
         }),
         fieldPost
       );
-    } else if (fieldPre == "access") {
+    } else if (alias(fieldPre) == "access") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         [
@@ -306,7 +318,7 @@
         ],
         fieldPost
       );
-    } else if (fieldPre == "status") {
+    } else if (alias(fieldPre) == "status") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         [
@@ -339,6 +351,184 @@
             text: "nofile",
             info: "Documents that were not successfully uploaded",
             feed: "nofile"
+          }
+        ],
+        fieldPost
+      );
+    } else if (alias(fieldPre) == "language") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        [
+          {
+            type: "field",
+            text: "Arabic",
+            feed: "ara"
+          },
+          {
+            type: "field",
+            text: "Chinese (Simplified)",
+            feed: "zho"
+          },
+          {
+            type: "field",
+            text: "Chinese (Traditional)",
+            feed: "tra"
+          },
+          {
+            type: "field",
+            text: "Croatian",
+            feed: "hrv"
+          },
+          {
+            type: "field",
+            text: "Danish",
+            feed: "dan"
+          },
+          {
+            type: "field",
+            text: "Dutch",
+            feed: "nld"
+          },
+          {
+            type: "field",
+            text: "English",
+            feed: "eng"
+          },
+          {
+            type: "field",
+            text: "French",
+            feed: "fra"
+          },
+          {
+            type: "field",
+            text: "German",
+            feed: "deu"
+          },
+          {
+            type: "field",
+            text: "Hebrew",
+            feed: "heb"
+          },
+          {
+            type: "field",
+            text: "Hungarian",
+            feed: "hun"
+          },
+          {
+            type: "field",
+            text: "Indonesian",
+            feed: "ind"
+          },
+          {
+            type: "field",
+            text: "Italian",
+            feed: "ita"
+          },
+          {
+            type: "field",
+            text: "Japanese",
+            feed: "jpn"
+          },
+          {
+            type: "field",
+            text: "Korean",
+            feed: "kor"
+          },
+          {
+            type: "field",
+            text: "Norwegian",
+            feed: "nor"
+          },
+          {
+            type: "field",
+            text: "Portuguese",
+            feed: "por"
+          },
+          {
+            type: "field",
+            text: "Romanian",
+            feed: "ron"
+          },
+          {
+            type: "field",
+            text: "Russian",
+            feed: "rus"
+          },
+          {
+            type: "field",
+            text: "Spanish",
+            feed: "spa"
+          },
+          {
+            type: "field",
+            text: "Swedish",
+            feed: "swe"
+          },
+          {
+            type: "field",
+            text: "Ukrainian",
+            feed: "ukr"
+          }
+        ],
+        fieldPost
+      );
+    } else if (alias(fieldPre) == "sort") {
+      setCompletionX(fieldPreIndex);
+      completions = completionFilter(
+        [
+          {
+            type: "field",
+            text: "Created At (Descending)",
+            info: "Most Recent First",
+            feed: "created_at"
+          },
+          {
+            type: "field",
+            text: "Created At (Ascending)",
+            info: "Oldest First",
+            feed: "-created_at"
+          },
+          {
+            type: "field",
+            text: "Title (Ascending)",
+            info: "Document Title A-Z",
+            feed: "title"
+          },
+          {
+            type: "field",
+            text: "Title (Descending)",
+            info: "Document Title Z-A",
+            feed: "-title"
+          },
+          {
+            type: "field",
+            text: "Page Count (Descending)",
+            info: "Most Pages First",
+            feed: "page_count"
+          },
+          {
+            type: "field",
+            text: "Page Count (Ascending)",
+            info: "Least Pages First",
+            feed: "-page_count"
+          },
+          {
+            type: "field",
+            text: "Source (Ascending)",
+            info: "Document Source A-Z",
+            feed: "source"
+          },
+          {
+            type: "field",
+            text: "Source (Descending)",
+            info: "Document Source Z-A",
+            feed: "-source"
+          },
+          {
+            type: "field",
+            text: "Score",
+            info: "Default Sort Option by Relevance",
+            feed: "score"
           }
         ],
         fieldPost
@@ -533,7 +723,8 @@
           display: inline;
         }
 
-        > .field > :global(span) {
+        > .field > :global(span),
+        > .quote > :global(span) {
           background: rgba(0, 0, 0, 0.03);
         }
       }
@@ -604,7 +795,15 @@
         }
       }
 
-      &.field {
+      &.operator {
+        :global(b) {
+          color: $searchSpecial;
+          -webkit-text-fill-color: $searchSpecial;
+        }
+      }
+
+      &.field,
+      &.quote {
         position: relative;
 
         > :global(span) {
@@ -714,6 +913,18 @@
           <NoWhitespace>
             <b>{highlight.field}</b>
             <span>{highlight.value}</span>
+          </NoWhitespace>
+        </span>
+      {:else if highlight.type == 'quote'}
+        <span class="quote">
+          <NoWhitespace>
+            <span>{highlight.text}</span>
+          </NoWhitespace>
+        </span>
+      {:else if highlight.type == 'operator'}
+        <span class="operator">
+          <NoWhitespace>
+            <b>{highlight.text}</b>
           </NoWhitespace>
         </span>
       {:else}

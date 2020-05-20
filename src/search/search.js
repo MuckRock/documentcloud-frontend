@@ -7,6 +7,8 @@ import { pushUrl } from "@/router/router";
 import { queryBuilder } from "@/util/url";
 import { slugify } from "@/util/string";
 
+const TAG_KEY = process.env.TAG_KEY;
+
 export const search = new Svue({
   data() {
     return {
@@ -60,13 +62,12 @@ export function handleUpload(newDocs) {
 }
 
 export function allDocumentsUrl() {
-  return searchUrl("", "");
+  return searchUrl("");
 }
 
 export function projectUrl(project) {
   return searchUrl(
-    `project:${slugify(project.title, project.id)} `,
-    `projects:${project.id} `
+    `project:${slugify(project.title, project.id)} `
   );
 }
 
@@ -74,7 +75,6 @@ export function userOrgUrl(obj, key, publicAccessOnly = false) {
   const access = publicAccessOnly ? "access:public " : "";
   return searchUrl(
     `${key}:${slugify(obj.name, obj.id)} ${access}`,
-    `${key}:${obj.id} ${access}`
   );
 }
 
@@ -82,32 +82,28 @@ export function userUrl(user, publicAccessOnly = false) {
   return userOrgUrl(user, "user", publicAccessOnly);
 }
 
+export function escapeValue(value) {
+  // Properly escapes a value by placing it inside quotes and escaping quote characters
+  return `"${value.replace('"', '\\"')}"`;
+}
+
 export function dataUrl(key, value) {
   // TODO: ensure data query is escaped properly
-  const dataQuery = `data_${key}:"${value}"`;
-  return searchUrl(dataQuery, dataQuery);
+  const dataQuery = `${key == TAG_KEY ? 'tag' : `data_${key}`}:${escapeValue(value)}`;
+  return searchUrl(dataQuery);
 }
 
 export function orgUrl(organization) {
   return userOrgUrl(organization, "organization");
 }
 
-export function searchUrl(query, transformedQuery) {
-  const q =
-    transformedQuery != null && transformedQuery.length > 0
-      ? transformedQuery
-      : transformedQuery == null
-        ? null
-        : "";
-
+export function searchUrl(query) {
   return queryBuilder(null, {
-    q,
-    // Display query
-    dq: query,
+    q: query,
     page: null
   });
 }
 
-export function handleSearch(query, transformedQuery) {
-  pushUrl(searchUrl(query, transformedQuery));
+export function handleSearch(query) {
+  pushUrl(searchUrl(query));
 }

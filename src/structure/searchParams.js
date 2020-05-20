@@ -1,9 +1,11 @@
 import { Svue } from "svue";
-import { DEFAULT_ORDERING } from "@/api/common";
-import { getDocuments, searchDocuments } from "@/api/document";
+import { searchDocuments } from "@/api/document";
 import { highlight } from "@/search/parse";
 
 const GET_DOCUMENT_FIELDS = {
+  "project:": {
+    idType: true
+  },
   "projects:": {
     transform: "project",
     idType: true
@@ -11,7 +13,22 @@ const GET_DOCUMENT_FIELDS = {
   "user:": {
     idType: true
   },
+  "account:": {
+    transform: "user",
+    idType: true
+  },
   "organization:": {
+    idType: true
+  },
+  "group:": {
+    transform: "organization",
+    idType: true
+  },
+  "document:": {
+    idType: true
+  },
+  "id:": {
+    transform: "document",
     idType: true
   },
   "access:": {
@@ -163,19 +180,10 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        isSearch(getDocumentParams) {
-          return getDocumentParams == null;
-        },
-        getMethod(query, isSearch, getDocumentParams, page) {
+        getMethod(query, page) {
           if (query == null) return null;  // Wait for redirect
-          if (isSearch) {
-            // Use search method
-            return () => searchDocuments(query, page);
-          } else {
-            // Use get documents method
-            return () =>
-              getDocuments(getDocumentParams, DEFAULT_ORDERING, page);
-          }
+          // Use search method
+          return () => searchDocuments(query, page);
         }
       }
     });

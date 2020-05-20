@@ -28,16 +28,25 @@
   let key = "";
   let value = "";
 
+  $: {
+    key = key.replace(" ", "_");
+  }
+
   let loading = writable(false);
 
   const TAG_KEY = process.env.TAG_KEY;
+
+  // Technically needs to pass one or more of these characters,
+  // but keyTrimmed captures that and gives a more descriptive message
+  const KEY_REGEX = /^[A-Za-z0-9-_]*$/;
 
   let addTag = true;
 
   $: keyTrimmed = addTag ? TAG_KEY : key.trim();
   $: valueTrimmed = value.trim();
 
-  $: inputValid = addTag ? valueTrimmed.length > 0 : keyTrimmed.length > 0;
+  $: keyValid = KEY_REGEX.test(keyTrimmed);
+  $: inputValid = keyValid && valueTrimmed.length > 0 && keyTrimmed.length > 0;
 
   $: mutualDataPoints = intersection(
     $layout.dataDocuments.map(d => d.dataPoints),
@@ -53,10 +62,15 @@
   $: editKeyTrimmed = editKey == null ? null : editKey.trim();
   $: editValueTrimmed = editValue == null ? null : editValue.trim();
 
+  $: editKeyValid = KEY_REGEX.test(editKeyTrimmed);
   $: editTrimValid =
-    editKey == TAG_KEY
+    editKeyValid &&
+    (editKey == TAG_KEY
       ? editValueTrimmed != null && editValueTrimmed.length > 0
-      : editKeyTrimmed != null && editKeyTrimmed.length > 0;
+      : editKeyTrimmed != null &&
+        editKeyTrimmed.length > 0 &&
+        editValueTrimmed != null &&
+        editValueTrimmed.length > 0);
   $: editValid =
     editTrimValid &&
     (editKeyTrimmed != editingKey || editValueTrimmed != editingValue);
@@ -272,7 +286,7 @@
             bind:value />
           <span class="lpad">
             <Button
-              disabledReason={inputValid ? null : addTag ? 'Enter a tag' : 'Enter a key'}
+              disabledReason={inputValid ? null : keyValid ? (addTag ? 'Enter a tag' : 'Enter a key') : 'Keys can only contain letters, numbers, underscores (_), and dashes (-)'}
               on:click={handleAdd}>
               + Add
             </Button>
@@ -304,7 +318,7 @@
                   <span style="margin-right: 3px;">
                     <Button
                       small={true}
-                      disabledReason={editValid ? null : 'Value remains unchanged'}
+                      disabledReason={editKeyValid ? (editTrimValid ? (editValid ? null : 'Value remains unchanged') : 'Key/value cannot be empty') : 'Keys can only contain letters, numbers, underscores (_), and dashes (-)'}
                       on:click={handleEdit}>
                       Edit
                     </Button>

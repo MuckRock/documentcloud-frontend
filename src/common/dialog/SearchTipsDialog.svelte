@@ -54,9 +54,11 @@
     ],
     [
       "Exclude a term or filter",
-      "Type “-” followed by a word, quoted phrase, or filter",
+      "Type “-” or “NOT” followed by a word, quoted phrase, or filter",
       "-report",
-      '-title:"my doc"'
+      "NOT report",
+      '-title:"my doc"',
+      'NOT title:"my doc"'
     ],
     [
       "Require a term or filter",
@@ -79,8 +81,8 @@
     ],
     [
       "Search by tag",
-      "Type “data__tag:” followed by the tag you wish to be present (requires documents to be tagged ahead of time)",
-      "data__tag:report"
+      "Type “tag:” followed by the tag you wish to be present (requires documents to be tagged ahead of time)",
+      "tag:report"
     ],
     [
       "Search by key/value pair",
@@ -89,11 +91,29 @@
     ],
     [
       "Search by page count",
-      "Type “page_count:” followed by an exact number or a range",
-      "page_count:123",
-      "page_count:[100 TO *]",
-      "page_count:[* TO 20]",
-      "page_count:[50 TO 80]"
+      "Type “pages:” followed by an exact number or a range",
+      "pages:123",
+      "pages:[100 TO *]",
+      "pages:[* TO 20]",
+      "pages:[50 TO 80]"
+    ],
+    [
+      "Search by language",
+      "Type “language:” followed by an autocompleted language option",
+      "language:spa"
+    ],
+
+    // Sorting
+    ["Sorting"],
+    [
+      ["Add sort options"],
+      "Type “sort:” followed by an autocompleted sort option. The order of the sort can be reversed by prepending a ‘-’ to the sort value. For example, “sort:title” sorts by a document’s title in ascending order (A-Z). “sort:-title” sorts by a document’s title in descending order (Z-A). “sort:score” sorts by query relevance and is the default.",
+      "sort:created_at",
+      "sort:-created_at",
+      "sort:title",
+      "investigation sort:-page_count",
+      // TODO: add source when the field is implemented
+      "sort:score"
     ],
 
     ["Advanced"],
@@ -118,6 +138,11 @@
       "Phrase match with gap",
       "Surround two words with quotes and add ‘~’ followed by how many words can occur between the two words",
       '"taxpayers money"~5'
+    ],
+    [
+      "Search for text on a specific page number",
+      "Type “page_no_&lt;number&gt;:” followed by the search text, where “&lt;number&gt;” is the desired page number",
+      "page_no_23:findings"
     ],
     [
       "Custom search weight",
@@ -208,7 +233,7 @@
         display your documents, but you can do a lot more.
       </p>
       <SearchExample
-        content={`${userExample} "mueller report" project:test-345  -page_count:448`} />
+        content={`${userExample} "mueller report" project:test-345  -pages:448`} />
       <p>
         The above example, for instance, searches all documents within
         {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
