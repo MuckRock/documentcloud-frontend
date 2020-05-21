@@ -2,6 +2,7 @@
 
 import { closeEnough } from "../util/epsilon";
 
+// Friction-based drag
 const MOMENTUM_DRAG = 0.01;
 const MOMENTUM_FACTOR = 1;
 
