@@ -6,8 +6,8 @@ import { doc } from './document';
 
 const DEFAULT_VIEWPORT = [500, 500];
 
-const MAX_ZOOM = 8; // 8x
-const MIN_ZOOM = 1 / 5;
+const MAX_ZOOM = 20; // 20x
+const MIN_ZOOM = 1 / 3;
 
 const ZOOM_TO_PADDING = 20;
 
@@ -96,17 +96,6 @@ export class Transform extends Svue {
         inverseMatrix(matrix) {
           return inverse(matrix);
         },
-        visiblePages(matrix, document, viewportSize) {
-          return document.pages.filter(page => {
-            const position = page.position;
-            const [x1, y1] = applyToPoint(matrix, [position[0], position[1]]);
-            const [x2, y2] = applyToPoint(matrix, [position[2], position[3]]);
-
-            if (x2 < 0 || y2 < 0) return false;
-            if (x1 > viewportSize[0] || y1 > viewportSize[1]) return false;
-            return true;
-          });
-        },
         ...computed,
       }
     });
@@ -140,7 +129,7 @@ export class Transform extends Svue {
     const currentHeight = y2 - y1;
     if (currentHeight > this.height) {
       // Stay on top of page if zoomed out too far
-      dy = y1 - this.yBounds[0];
+      dy = y1;
     } else {
       // Prevent panning past page bounds
       if (y1 < this.yBounds[0]) {
@@ -150,28 +139,25 @@ export class Transform extends Svue {
       }
     }
 
-    if (!closeEnough(dx, 0) || !closeEnough(dy, 0)) {
-      this.translate(dx, dy);
+    if (forceDx) {
+      this.matrix = compose(this.matrix, translate(dx, 0));
+      dx = 0;
     }
-    // if (forceDx) {
-    //   this.matrix = compose(this.matrix, translate(dx, 0));
-    //   dx = 0;
-    // }
 
-    // if (!closeEnough(dx, 0) || !closeEnough(dy, 0)) {
-    //   const desiredMatrix = compose(this.matrix, translate(dx, dy));
-    //   if (this.bounceParams.desiredMatrix != null) {
-    //     this.bounceParams.desiredMatrix = desiredMatrix;
-    //   } else {
-    //     this.bounceParams = {
-    //       desiredMatrix,
-    //       lastTimestamp: null
-    //     };
-    //     requestAnimationFrame(ts => this.bounce(ts));
-    //   }
-    // } else {
-    //   this.bounceParams = {};
-    // }
+    if (!closeEnough(dx, 0) || !closeEnough(dy, 0)) {
+      const desiredMatrix = compose(this.matrix, translate(dx, dy));
+      if (this.bounceParams.desiredMatrix != null) {
+        this.bounceParams.desiredMatrix = desiredMatrix;
+      } else {
+        this.bounceParams = {
+          desiredMatrix,
+          lastTimestamp: null
+        };
+        requestAnimationFrame(ts => this.bounce(ts));
+      }
+    } else {
+      this.bounceParams = {};
+    }
   }
 
   bounce(ts) {
@@ -286,14 +272,6 @@ export class Transform extends Svue {
       // Start flying unless animation is already running
       requestAnimationFrame(ts => this.simulateFly(ts));
     }
-  }
-
-  fitPercents(leftPerc, topPerc, widthPerc, heightPerc) {
-    const x1 = this.xBounds[0] + leftPerc * this.width;
-    const y1 = this.yBounds[0] + topPerc * this.height;
-    const width = widthPerc * this.width;
-    const height = heightPerc * this.height;
-    return this.fitTransform([x1 + width / 2, y1 + height / 2], width, height);
   }
 
   fitTransform(centerPoint, width, height) {

@@ -13,16 +13,13 @@
   $: {
     if (bodyWidth != null && bodyHeight != null) {
       transform.viewportSize = [bodyWidth, bodyHeight];
-      transform.ensureBounds();
     }
   }
 </script>
 
 <style lang="scss">
   .body,
-  .container,
-  .scrollcontainer {
-    background: $viewerBodyBg;
+  .container {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -32,17 +29,6 @@
     user-select: none;
     z-index: $viewerBodyZ;
     touch-action: manipulation;
-  }
-
-  .scrollcontainer {
-    overflow: scroll;
-    z-index: $viewerScrollContainerZ;
-    background: none;
-    overscroll-behavior: none;
-  }
-
-  .container {
-    pointer-events: none;
   }
 </style>
 
@@ -54,13 +40,11 @@
   {$layout.sidebarWidth}px"
   bind:this={body}>
   <div
-    class="scrollcontainer"
+    class="container"
+    style="width: {$doc.containerWidth}px"
     use:panZoom={{ workspace: null, transform, workspaceElem: body }}>
-    <div />
-  </div>
-  <div class="container">
-    {#each $transform.visiblePages as page (page.pageNumber)}
-      <Page {page} {bodyWidth} transform={$transform} />
+    {#each $doc.pagePositions as [x1, y1, x2, y2]}
+      <Page {x1} {y1} {x2} {y2} transform={$transform} />
     {/each}
   </div>
 </div>
