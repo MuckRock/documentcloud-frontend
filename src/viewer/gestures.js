@@ -117,13 +117,20 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
         e.stopImmediatePropagation()
         e.preventDefault()
         const currentPosition = touchPosition(e);
+
+        // Stop any momentum
+        momentumParams = {
+          active: false,
+          startTime: null,
+          startDeltas: [0, 0]
+        };
+
         previousDelta = [currentPosition[0] - previousPosition[0], currentPosition[1] - previousPosition[1]];
         previousPosition = currentPosition;
         transform.translate(previousDelta[0], previousDelta[1], true, true);
       }
     }],
     [node, ['touchend'], (e) => {
-      // Adapted from https://stackoverflow.com/a/32761323
       if (!closeEnough(previousDelta[0], 0) || !closeEnough(previousDelta[1], 0)) {
         const wasActive = momentumParams.active;
         momentumParams = {
@@ -142,6 +149,7 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
         };
       }
 
+      // Adapted from https://stackoverflow.com/a/32761323
       // Only trigger off of single touch events
       if (e.touches.length != 0 || e.changedTouches.length != 1) return;
 
@@ -179,6 +187,10 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
     })
   });
 
+  // Disable global touch action
+  const prevTouchAction = getComputedStyle(document.body).touchAction;
+  document.body.style.touchAction = 'none';
+
   return {
     update({ workspace: newWorkspace, transform: newTransform, workspaceElem: newWorkspaceElem }) {
       workspace = newWorkspace;
@@ -192,6 +204,7 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
           event[0].removeEventListener(eventType, event[2], { passive: false });
         })
       });
+      document.body.style.touchAction = prevTouchAction;
     }
   };
 }
