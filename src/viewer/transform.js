@@ -139,25 +139,28 @@ export class Transform extends Svue {
       }
     }
 
-    if (forceDx) {
-      this.matrix = compose(this.matrix, translate(dx, 0));
-      dx = 0;
-    }
-
     if (!closeEnough(dx, 0) || !closeEnough(dy, 0)) {
-      const desiredMatrix = compose(this.matrix, translate(dx, dy));
-      if (this.bounceParams.desiredMatrix != null) {
-        this.bounceParams.desiredMatrix = desiredMatrix;
-      } else {
-        this.bounceParams = {
-          desiredMatrix,
-          lastTimestamp: null
-        };
-        requestAnimationFrame(ts => this.bounce(ts));
-      }
-    } else {
-      this.bounceParams = {};
+      this.translate(dx, dy);
     }
+    // if (forceDx) {
+    //   this.matrix = compose(this.matrix, translate(dx, 0));
+    //   dx = 0;
+    // }
+
+    // if (!closeEnough(dx, 0) || !closeEnough(dy, 0)) {
+    //   const desiredMatrix = compose(this.matrix, translate(dx, dy));
+    //   if (this.bounceParams.desiredMatrix != null) {
+    //     this.bounceParams.desiredMatrix = desiredMatrix;
+    //   } else {
+    //     this.bounceParams = {
+    //       desiredMatrix,
+    //       lastTimestamp: null
+    //     };
+    //     requestAnimationFrame(ts => this.bounce(ts));
+    //   }
+    // } else {
+    //   this.bounceParams = {};
+    // }
   }
 
   bounce(ts) {
