@@ -96,6 +96,17 @@ export class Transform extends Svue {
         inverseMatrix(matrix) {
           return inverse(matrix);
         },
+        visiblePages(matrix, document, viewportSize) {
+          return document.pages.filter(page => {
+            const position = page.position;
+            const [x1, y1] = applyToPoint(matrix, [position[0], position[1]]);
+            const [x2, y2] = applyToPoint(matrix, [position[2], position[3]]);
+
+            if (x2 < 0 || y2 < 0) return false;
+            if (x1 > viewportSize[0] || y1 > viewportSize[1]) return false;
+            return true;
+          });
+        },
         ...computed,
       }
     });
@@ -129,7 +140,7 @@ export class Transform extends Svue {
     const currentHeight = y2 - y1;
     if (currentHeight > this.height) {
       // Stay on top of page if zoomed out too far
-      dy = y1;
+      dy = y1 - this.yBounds[0];
     } else {
       // Prevent panning past page bounds
       if (y1 < this.yBounds[0]) {

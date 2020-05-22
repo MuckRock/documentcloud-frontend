@@ -1,23 +1,66 @@
 <script>
-  export let transform;
-  export let x1;
-  export let y1;
-  export let x2;
-  export let y2;
+  import { pageImageUrl } from "@/api/viewer";
 
-  $: topLeft = transform.project([x1, y1]);
-  $: bottomRight = transform.project([x2, y2]);
+  export let transform;
+  export let page;
+  export let bodyWidth;
+
+  // Minimum padding of number from top of screen
+  const NUMBER_TOP = 20;
+  const NUMBER_BOTTOM = 40;
+  const NUMBER_LEFT = 10;
+
+  $: railSize = transform.scaleFactor * transform.document.layout.rail;
+  $: topLeft = transform.project([page.position[0], page.position[1]]);
+  $: bottomRight = transform.project([page.position[2], page.position[3]]);
   $: width = bottomRight[0] - topLeft[0];
   $: height = bottomRight[1] - topLeft[1];
+
+  let numberWidth = 0;
+  $: numberRight = bodyWidth - topLeft[0];
+  $: numberTop = Math.min(
+    Math.max(topLeft[1], NUMBER_TOP),
+    bottomRight[1] - NUMBER_BOTTOM
+  );
+  $: numberLeft = topLeft[0] - numberWidth;
 </script>
 
 <style lang="scss">
+  .number {
+    position: absolute;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 12px 20px 0 0;
+    font-weight: bold;
+    font-size: 12px;
+    white-space: pre;
+  }
+
   .page {
     position: absolute;
     background: rgb(216, 216, 216);
+    border: solid 1px gainsboro;
+    box-sizing: border-box;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>
 
+{#if transform.viewportWidth > transform.document.containerWidth}
+  <div
+    class="number"
+    bind:clientWidth={numberWidth}
+    style="right: {numberRight}px; top: {numberTop}px; visibility: {numberLeft >= NUMBER_LEFT ? 'visible' : 'hidden'}">
+    p. {page.pageNumber + 1}
+  </div>
+{/if}
 <div
   class="page"
-  style="left: {topLeft[0]}px; top: {topLeft[1]}px; width: {width}px; height: {height}px" />
+  style="left: {topLeft[0]}px; top: {topLeft[1]}px; width: {width}px; height: {height}px">
+  <img
+    alt="Page {page.pageNumber + 1} of {page.document.title}"
+    src={pageImageUrl(page.document, page.pageNumber, 1000, 2)} />
+</div>

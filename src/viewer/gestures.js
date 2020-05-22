@@ -89,7 +89,6 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
 
       const { x, y } = getRelativeCoordinates(e, workspaceElem);
       const { deltaX, deltaY } = e;
-      // console.log("WHEEL", deltaX, deltaY);
       if (e.ctrlKey) {
         // Zoom
         if (deltaX == 0 && deltaY == 0) {
@@ -165,18 +164,13 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
       zoomToScene([x, y]);
     }],
     [node, ['gesturestart'], () => {
-      console.log('gesturestart');
       prevScale = 1;
     }],
     [node, ['gesturechange'], (e) => {
-      console.log('gesturechange', e);
       const scale = e.scale / prevScale;
       const { x, y } = getRelativeCoordinates(e, workspaceElem);
       transform.scale(x, y, scale);
       prevScale = e.scale;
-    }],
-    [node, ['gestureend'], (e) => {
-      console.log('gestureend', e);
     }],
   ];
 
