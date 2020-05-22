@@ -13,6 +13,7 @@
   $: {
     if (bodyWidth != null && bodyHeight != null) {
       transform.viewportSize = [bodyWidth, bodyHeight];
+      transform.ensureBounds();
     }
   }
 </script>
@@ -20,6 +21,7 @@
 <style lang="scss">
   .body,
   .container {
+    background: $viewerBodyBg;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -41,10 +43,9 @@
   bind:this={body}>
   <div
     class="container"
-    style="width: {$doc.containerWidth}px"
     use:panZoom={{ workspace: null, transform, workspaceElem: body }}>
-    {#each $doc.pagePositions as [x1, y1, x2, y2]}
-      <Page {x1} {y1} {x2} {y2} transform={$transform} />
+    {#each $transform.visiblePages as page (page.pageNumber)}
+      <Page {page} {bodyWidth} transform={$transform} />
     {/each}
   </div>
 </div>
