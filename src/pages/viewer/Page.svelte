@@ -27,7 +27,8 @@
 
   const WIDTH_BREAKPOINTS = process.env.IMAGE_WIDTHS.split(",")
     .map(x => parseInt(x.split(":")[1]))
-    .reverse();
+    .reverse()
+    .slice(1);
 
   function breakpointify(initialWidth, breakpoints, fn) {
     const fns = [];
