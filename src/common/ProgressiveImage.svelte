@@ -35,19 +35,17 @@
     }
   }
 
-  onMount(() => {
-    // Load all images simultaneously
-    imgs = srcs.map((src, i) => {
-      const img = new Image();
-      img.onload = () => {
-        if (!destroyed) {
-          handleLoad(img, i);
-        }
-      };
-      img.alt = alt;
-      img.src = src;
-      return img;
-    });
+  // Load all images simultaneously
+  $: imgs = srcs.map((src, i) => {
+    const img = new Image();
+    img.onload = () => {
+      if (!destroyed) {
+        handleLoad(img, i);
+      }
+    };
+    img.alt = alt;
+    img.src = src;
+    return img;
   });
 
   onDestroy(() => {
