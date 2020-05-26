@@ -6,8 +6,8 @@ import { doc } from './document';
 
 const DEFAULT_VIEWPORT = [500, 500];
 
-const MAX_ZOOM = 20; // 20x
-const MIN_ZOOM = 1 / 3;
+const MAX_ZOOM = 8; // 8x
+const MIN_ZOOM = 1 / 5;
 
 const ZOOM_TO_PADDING = 20;
 
