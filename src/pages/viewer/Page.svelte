@@ -1,4 +1,5 @@
 <script>
+  import ProgressiveImage from "@/common/ProgressiveImage";
   import { pageImageUrl } from "@/api/viewer";
 
   export let transform;
@@ -23,6 +24,30 @@
     bottomRight[1] - NUMBER_BOTTOM
   );
   $: numberLeft = topLeft[0] - numberWidth;
+
+  const WIDTH_BREAKPOINTS = process.env.IMAGE_WIDTHS.split(",")
+    .map(x => parseInt(x.split(":")[1]))
+    .reverse();
+
+  function breakpointify(initialWidth, breakpoints, fn) {
+    const fns = [];
+    for (let i = 0; i < WIDTH_BREAKPOINTS.length; i++) {
+      const width = WIDTH_BREAKPOINTS[i];
+      if (width < initialWidth) {
+        fns.push(fn(width));
+      } else break;
+    }
+    if (initialWidth < WIDTH_BREAKPOINTS[WIDTH_BREAKPOINTS.length - 1]) {
+      fns.push(fn(initialWidth));
+    }
+    return fns;
+  }
+
+  $: srcs = breakpointify(
+    width * window.devicePixelRatio || 1,
+    WIDTH_BREAKPOINTS,
+    x => pageImageUrl(page.document, page.pageNumber, x)
+  );
 </script>
 
 <style lang="scss">
@@ -42,7 +67,7 @@
     border: solid 1px gainsboro;
     box-sizing: border-box;
 
-    img {
+    :global(img) {
       width: 100%;
       height: 100%;
     }
@@ -60,7 +85,7 @@
 <div
   class="page"
   style="left: {topLeft[0]}px; top: {topLeft[1]}px; width: {width}px; height: {height}px">
-  <img
+  <ProgressiveImage
     alt="Page {page.pageNumber + 1} of {page.document.title}"
-    src={pageImageUrl(page.document, page.pageNumber, 1000, 2)} />
+    {srcs} />
 </div>
