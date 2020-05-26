@@ -4,46 +4,55 @@
   export let alt;
   export let srcs;
   let destroyed = false;
-  let elem;
+  let elem = null;
+  let elems = [];
   let img = null;
   let currentSrc = 0;
 
-  $: src = srcs[currentSrc];
-  $: highestRes = currentSrc == srcs.length;
+  let displayedImg = null;
+  let displayedIndex = -1;
+  let imgs = [];
 
-  function setElement(newImg, oldImage) {
-    if (oldImage == null) {
-      elem.appendChild(newImg);
-    } else {
-      elem.replaceChild(newImg, oldImage);
+  function nixOlder(idx) {
+    for (let i = 0; i < Math.min(idx, imgs.length); i++) {
+      imgs[i].src = "";
     }
   }
 
-  function setSrc() {
-    const oldImage = img;
-    img = new Image();
-    img.onload = () => {
-      if (!destroyed) {
-        setElement(img, oldImage);
-        if (!highestRes) {
-          currentSrc++;
-          setSrc();
-        }
+  function handleLoad(img, i) {
+    if (displayedImg == null) {
+      elem.appendChild(img);
+      displayedImg = img;
+      displayedIndex = i;
+      nixOlder(i);
+    } else {
+      if (i > displayedIndex) {
+        elem.replaceChild(img, displayedImg);
+        displayedImg = img;
+        displayedIndex = i;
+        nixOlder(i);
       }
-    };
-    img.alt = alt;
-    img.src = src;
-    if (oldImage == null) setElement(img, oldImage);
+    }
   }
 
   onMount(() => {
-    setSrc();
+    // Load all images simultaneously
+    imgs = srcs.map((src, i) => {
+      const img = new Image();
+      img.onload = () => {
+        if (!destroyed) {
+          handleLoad(img, i);
+        }
+      };
+      img.alt = alt;
+      img.src = src;
+      return img;
+    });
   });
 
   onDestroy(() => {
-    console.log("destroying");
     destroyed = true;
-    if (img != null) img.src = "";
+    imgs.forEach(img => (img.src = ""));
   });
 </script>
 
