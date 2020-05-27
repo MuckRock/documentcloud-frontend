@@ -22,10 +22,8 @@
         // Set query from URL if applicable
         const route = router.resolvedRoute;
         if (route != null && route.name == "app") {
-          // Try to fill in display query first, then regular query if not present
-          if (route.props.dq != null && route.props.dq.length > 0) {
-            search = route.props.dq;
-          } else if (route.props.q != null && route.props.q.length > 0) {
+          // Try to fill in regular query if not present
+          if (route.props.q != null && route.props.q.length > 0) {
             search = route.props.q;
           } else {
             search = "";
