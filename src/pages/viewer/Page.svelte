@@ -1,6 +1,7 @@
 <script>
   import ProgressiveImage from "@/common/ProgressiveImage";
   import { pageImageUrl } from "@/api/viewer";
+  import { arrayEq } from "@/util/array";
 
   export let transform;
   export let page;
@@ -25,30 +26,36 @@
   );
   $: numberLeft = topLeft[0] - numberWidth;
 
-  const WIDTH_BREAKPOINTS = process.env.IMAGE_WIDTHS.split(",")
-    .map(x => parseInt(x.split(":")[1]))
-    .reverse()
-    .slice(1);
+  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",").map(x =>
+    parseFloat(x.split(":")[1])
+  );
+  const NORMAL_BREAKPOINT = IMAGE_WIDTHS[IMAGE_WIDTHS.length - 3];
+  const NEXT_BREAKPOINT = IMAGE_WIDTHS[IMAGE_WIDTHS.length - 4];
 
-  function breakpointify(initialWidth, breakpoints, fn) {
+  function breakpointify(initialWidth, fn) {
     const fns = [];
-    for (let i = 0; i < WIDTH_BREAKPOINTS.length; i++) {
-      const width = WIDTH_BREAKPOINTS[i];
-      if (width < initialWidth) {
-        fns.push(fn(width));
-      } else break;
+    if (initialWidth >= NEXT_BREAKPOINT) {
+      fns.push(fn(NORMAL_BREAKPOINT));
     }
-    if (initialWidth < WIDTH_BREAKPOINTS[WIDTH_BREAKPOINTS.length - 1]) {
-      fns.push(fn(initialWidth));
-    }
+    fns.push(fn(initialWidth));
     return fns;
   }
 
-  $: srcs = breakpointify(
-    width * window.devicePixelRatio || 1,
-    WIDTH_BREAKPOINTS,
-    x => pageImageUrl(page.document, page.pageNumber, x)
-  );
+  let srcs = [];
+
+  let prevWidth = null;
+  $: {
+    if (prevWidth == null || width != prevWidth) {
+      const newSrcs = breakpointify(width * window.devicePixelRatio || 1, x =>
+        pageImageUrl(page.document, page.pageNumber, x)
+      );
+      if (!arrayEq(srcs, newSrcs)) {
+        srcs = newSrcs;
+        console.log("SRCS", srcs);
+      }
+    }
+    prevWidth = width;
+  }
 </script>
 
 <style lang="scss">
