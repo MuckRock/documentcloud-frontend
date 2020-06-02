@@ -288,13 +288,11 @@ export class Transform extends Svue {
     }
   }
 
-  fitPercents(left, top, right, bottom) {
-    const x1 = left * this.width;
-    const x2 = right * this.width;
-    const y1 = top * this.height;
-    const y2 = bottom * this.height;
-    const width = x2 - x1;
-    const height = y2 - y1;
+  fitPercents(leftPerc, topPerc, widthPerc, heightPerc) {
+    const x1 = this.xBounds[0] + leftPerc * this.width;
+    const y1 = this.yBounds[0] + topPerc * this.height;
+    const width = widthPerc * this.width;
+    const height = heightPerc * this.height;
     return this.fitTransform([x1 + width / 2, y1 + height / 2], width, height);
   }
 

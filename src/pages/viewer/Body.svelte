@@ -38,7 +38,7 @@
     overflow: scroll;
     z-index: $viewerScrollContainerZ;
     background: none;
-    // pointer-events: none;
+    overscroll-behavior: none;
   }
 
   .container {
