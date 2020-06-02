@@ -82,24 +82,58 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
     if (scene != null) transform.zoomToScene(scene);
   };
 
+  let matrixInitiatedScroll = false;
+
+  function transformSubscribe() {
+    return transform.subscribe(() => {
+      matrixInitiatedScroll = true;
+
+      // Set child height / width
+      const topLeft = transform.project([transform.xBounds[0], transform.yBounds[0]]);
+      const bottomRight = transform.project([transform.xBounds[1], transform.yBounds[1]]);
+      const width = bottomRight[0] - topLeft[0];
+      const height = bottomRight[1] - topLeft[1];
+      if (node.firstChild) {
+        // Set width/height of scroll child
+        node.firstChild.style.width = `${width}px`;
+        node.firstChild.style.height = `${height}px`;
+      }
+
+      // Set scroll position
+      const viewportTopLeft = transform.project([transform.viewportBounds[0], transform.viewportBounds[1]]);
+      node.scrollLeft = viewportTopLeft[0] - topLeft[0];
+      console.log("SCROLLLEFT", node.scrollLeft);
+      node.scrollTop = viewportTopLeft[1] - topLeft[1];
+    });
+  }
+
   const events = [
+    [node, ['scroll'], (e) => {
+      // Don't accept scroll events while transforming
+      if (matrixInitiatedScroll) {
+        matrixInitiatedScroll = false;
+        return;
+      }
+
+      const topPerc = node.scrollTop / node.scrollHeight;
+      const bottomPerc = (node.scrollTop + node.offsetHeight) / node.scrollHeight;
+      const leftPerc = node.scrollLeft / node.scrollWidth;
+      const rightPerc = (node.offsetLeft + node.offsetWidth) / node.scrollWidth;
+
+      transform.matrix = transform.fitPercents(leftPerc, topPerc, rightPerc, bottomPerc);
+    }],
     [node, ['wheel'], (e) => {
-      e.preventDefault();
-
-
       const { x, y } = getRelativeCoordinates(e, workspaceElem);
       const { deltaX, deltaY } = e;
       if (e.ctrlKey) {
         // Zoom
+        e.preventDefault();
         if (deltaX == 0 && deltaY == 0) {
           // Zoom to scene
           zoomToScene([x, y]);
         } else {
           transform.scale(x, y, Math.exp(-deltaY * zoomIntensity));
         }
-      } else {
-        // Translate
-        transform.translate(-deltaX, -deltaY, true, true);
       }
     }],
     [node, ['touchstart'], (e) => {
@@ -185,11 +219,16 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
   const prevTouchAction = getComputedStyle(document.body).touchAction;
   document.body.style.touchAction = 'none';
 
+  let unsubscribe = transformSubscribe();
+
   return {
     update({ workspace: newWorkspace, transform: newTransform, workspaceElem: newWorkspaceElem }) {
       workspace = newWorkspace;
       transform = newTransform;
       workspaceElem = newWorkspaceElem;
+
+      if (unsubscribe != null) unsubscribe();
+      unsubscribe = transformSubscribe();
     },
 
     destroy() {
@@ -199,6 +238,8 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
         })
       });
       document.body.style.touchAction = prevTouchAction;
+      // Unsubscribe from transform
+      if (unsubscribe != null) unsubscribe();
     }
   };
 }
