@@ -1,10 +1,8 @@
 // Pan and zoom action that works on desktop and mobile
 
-import { closeEnough } from "../util/epsilon";
-
-// Friction-based drag
-const MOMENTUM_DRAG = 0.01;
-const MOMENTUM_FACTOR = 1;
+import { closeEnough } from "@/util/epsilon";
+import { normalizeWheel } from '@/util/wheel';
+import { smoothify } from '@/util/closure';
 
 function getRelativeCoordinates(event, referenceElement) {
   const position = {
@@ -31,7 +29,7 @@ function getRelativeCoordinates(event, referenceElement) {
   };
 }
 
-const zoomIntensity = 0.01;
+const zoomIntensity = 0.007;
 
 const DOUBLE_TAP_TIMEOUT = 300;
 
@@ -40,38 +38,6 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
   let previousDelta = [0, 0];
   let prevScale = 1;
   let tappedTwice = false;
-
-  let momentumParams = {
-    active: false,
-    startTime: null,
-    startDeltas: [0, 0],
-  };
-
-  const momentum = ts => {
-    if (!momentumParams.active) return;
-
-    // Get start time if not set
-    if (momentumParams.startTime == null) {
-      momentumParams.startTime = ts;
-      return requestAnimationFrame(ts => momentum(ts));
-    }
-
-    // Calculate new deltas with lerps
-    const dt = (ts - momentumParams.startTime) / 1000;
-    previousDelta = momentumParams.startDeltas.map(x => {
-      return x * Math.pow(MOMENTUM_DRAG, dt * MOMENTUM_FACTOR);
-    });
-
-    // If done, stop momentum
-    if (previousDelta.every(x => closeEnough(x, 0))) {
-      momentumParams = { active: false, startTime: null, startDeltas: [0, 0] };
-      return;
-    };
-
-    // Otherwise, translate and recurse
-    transform.translate(previousDelta[0], previousDelta[1], true, true);
-    return requestAnimationFrame(ts => momentum(ts));
-  }
 
   const touchPosition = e => {
     return [e.touches[0].screenX, e.touches[0].screenY];
@@ -82,54 +48,77 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
     if (scene != null) transform.zoomToScene(scene);
   };
 
+  const setContainerSize = smoothify((width, height) => {
+    if (node.firstChild) {
+      // Set width/height of scroll child
+      if (!closeEnough(width, node.firstChild.offsetWidth) || !closeEnough(height, node.firstChild.offsetHeight)) {
+        node.firstChild.style.width = `${width}px`;
+        node.firstChild.style.height = `${height}px`;
+      }
+    }
+  });
+
+  const SCROLL_CLOSE_ENOUGH = 0.1;
+
+  const setContainerScroll = smoothify((left, top) => {
+    left = Math.max(left, 0);
+    top = Math.max(top, 0);
+
+    if (!closeEnough(left, node.scrollLeft, SCROLL_CLOSE_ENOUGH) || !closeEnough(top, node.scrollTop, SCROLL_CLOSE_ENOUGH)) {
+      console.log("NOT ENOUGH", left - node.scrollLeft, top - node.scrollTop);
+      matrixInitiatedScroll = true;
+      node.scrollLeft = left;
+      matrixInitiatedScroll = true;
+      node.scrollTop = top;
+    } else {
+      console.log("CLOSE ENOUGH");
+    }
+  });
+
   let matrixInitiatedScroll = false;
 
   function transformSubscribe() {
     return transform.subscribe(() => {
-      matrixInitiatedScroll = true;
-
       // Set child height / width
       const topLeft = transform.project([transform.xBounds[0], transform.yBounds[0]]);
       const bottomRight = transform.project([transform.xBounds[1], transform.yBounds[1]]);
       const width = bottomRight[0] - topLeft[0];
       const height = bottomRight[1] - topLeft[1];
-      if (node.firstChild) {
-        // Set width/height of scroll child
-        node.firstChild.style.width = `${width}px`;
-        node.firstChild.style.height = `${height}px`;
-      }
+      setContainerSize(width, height);
 
       // Set scroll position
       const viewportTopLeft = transform.project([transform.viewportBounds[0], transform.viewportBounds[1]]);
-      node.scrollLeft = viewportTopLeft[0] - topLeft[0];
-      console.log("SCROLLLEFT", node.scrollLeft);
-      node.scrollTop = viewportTopLeft[1] - topLeft[1];
+      setContainerScroll(viewportTopLeft[0] - topLeft[0], viewportTopLeft[1] - topLeft[1]);
     });
   }
 
   const events = [
-    [node, ['scroll'], (e) => {
+    [node, ['scroll'], () => {
       // Don't accept scroll events while transforming
       if (matrixInitiatedScroll) {
         matrixInitiatedScroll = false;
+        console.log("SCROLL BLOCKED");
         return;
       }
 
       const topPerc = node.scrollTop / node.scrollHeight;
-      const bottomPerc = (node.scrollTop + node.offsetHeight) / node.scrollHeight;
+      const heightPerc = node.offsetHeight / node.scrollHeight;
       const leftPerc = node.scrollLeft / node.scrollWidth;
-      const rightPerc = (node.offsetLeft + node.offsetWidth) / node.scrollWidth;
+      const widthPerc = node.offsetWidth / node.scrollWidth;
 
-      transform.matrix = transform.fitPercents(leftPerc, topPerc, rightPerc, bottomPerc);
+      transform.matrix = transform.fitPercents(leftPerc, topPerc, widthPerc, heightPerc);
     }],
     [node, ['wheel'], (e) => {
-      const { x, y } = getRelativeCoordinates(e, workspaceElem);
-      const { deltaX, deltaY } = e;
       if (e.ctrlKey) {
         // Zoom
         e.preventDefault();
+
+        const { x, y } = getRelativeCoordinates(e, workspaceElem);
+        const { deltaX, deltaY } = normalizeWheel(e);
+
         if (deltaX == 0 && deltaY == 0) {
           // Zoom to scene
+          // TODO: implement
           zoomToScene([x, y]);
         } else {
           transform.scale(x, y, Math.exp(-deltaY * zoomIntensity));
@@ -151,37 +140,12 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
         e.preventDefault()
         const currentPosition = touchPosition(e);
 
-        // Stop any momentum
-        momentumParams = {
-          active: false,
-          startTime: null,
-          startDeltas: [0, 0]
-        };
-
         previousDelta = [currentPosition[0] - previousPosition[0], currentPosition[1] - previousPosition[1]];
         previousPosition = currentPosition;
         transform.translate(previousDelta[0], previousDelta[1], true, true);
       }
     }],
     [node, ['touchend'], (e) => {
-      if (!closeEnough(previousDelta[0], 0) || !closeEnough(previousDelta[1], 0)) {
-        const wasActive = momentumParams.active;
-        momentumParams = {
-          active: true,
-          startTime: null,
-          startDeltas: previousDelta.slice()
-        };
-        if (!wasActive) {
-          requestAnimationFrame(ts => momentum(ts));
-        }
-      } else {
-        momentumParams = {
-          active: false,
-          startTime: null,
-          startDeltas: [0, 0]
-        };
-      }
-
       // Adapted from https://stackoverflow.com/a/32761323
       // Only trigger off of single touch events
       if (e.touches.length != 0 || e.changedTouches.length != 1) return;
