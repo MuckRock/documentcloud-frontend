@@ -20,7 +20,8 @@
 
 <style lang="scss">
   .body,
-  .container {
+  .container,
+  .scrollcontainer {
     background: $viewerBodyBg;
     position: absolute;
     top: 0;
@@ -32,6 +33,17 @@
     z-index: $viewerBodyZ;
     touch-action: manipulation;
   }
+
+  .scrollcontainer {
+    overflow: scroll;
+    z-index: $viewerScrollContainerZ;
+    background: none;
+    // pointer-events: none;
+  }
+
+  .container {
+    pointer-events: none;
+  }
 </style>
 
 <div
@@ -42,8 +54,11 @@
   {$layout.sidebarWidth}px"
   bind:this={body}>
   <div
-    class="container"
+    class="scrollcontainer"
     use:panZoom={{ workspace: null, transform, workspaceElem: body }}>
+    <div />
+  </div>
+  <div class="container">
     {#each $transform.visiblePages as page (page.pageNumber)}
       <Page {page} {bodyWidth} transform={$transform} />
     {/each}

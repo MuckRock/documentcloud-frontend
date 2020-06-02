@@ -288,6 +288,16 @@ export class Transform extends Svue {
     }
   }
 
+  fitPercents(left, top, right, bottom) {
+    const x1 = left * this.width;
+    const x2 = right * this.width;
+    const y1 = top * this.height;
+    const y2 = bottom * this.height;
+    const width = x2 - x1;
+    const height = y2 - y1;
+    return this.fitTransform([x1 + width / 2, y1 + height / 2], width, height);
+  }
+
   fitTransform(centerPoint, width, height) {
     // Return a matrix that encompasses the desired center point and encompasses the width/height
     const vw = this.viewportSize[0];
