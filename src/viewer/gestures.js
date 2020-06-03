@@ -39,6 +39,11 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
   let prevScale = 1;
   let tappedTwice = false;
 
+  let scrollPositions = {
+    left: node.scrollLeft,
+    top: node.scrollTop
+  };
+
   const touchPosition = e => {
     return [e.touches[0].screenX, e.touches[0].screenY];
   };
@@ -58,14 +63,22 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
     }
   });
 
-  const SCROLL_CLOSE_ENOUGH = 0.1;
+  const SCROLL_CLOSE_ENOUGH = 0.0001;
 
-  const setContainerScroll = smoothify((left, top) => {
+  const setContainerScroll = smoothify((left, top, scrollInitated = false) => {
     left = Math.max(left, 0);
     top = Math.max(top, 0);
 
-    if (!closeEnough(left, node.scrollLeft, SCROLL_CLOSE_ENOUGH) || !closeEnough(top, node.scrollTop, SCROLL_CLOSE_ENOUGH)) {
-      console.log("NOT ENOUGH", left - node.scrollLeft, top - node.scrollTop);
+    if (scrollInitated) {
+      scrollPositions = { left, top };
+      return;
+    }
+
+    if (!closeEnough(left, scrollPositions.left, SCROLL_CLOSE_ENOUGH) || !closeEnough(top, scrollPositions.top, SCROLL_CLOSE_ENOUGH)) {
+      console.log("NOT ENOUGH", left - scrollPositions.left, top - scrollPositions.top);
+      scrollPositions = {
+        left, top
+      };
       matrixInitiatedScroll = true;
       node.scrollLeft = left;
       matrixInitiatedScroll = true;
@@ -76,20 +89,32 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
   });
 
   let matrixInitiatedScroll = false;
+  let scrollInitiatedTransform = false;
+
+  function transformUpdate() {
+    // Set child height / width
+    const topLeft = transform.project([transform.xBounds[0], transform.yBounds[0]]);
+    const bottomRight = transform.project([transform.xBounds[1], transform.yBounds[1]]);
+    const width = bottomRight[0] - topLeft[0];
+    const height = bottomRight[1] - topLeft[1];
+    setContainerSize(width, height);
+
+    // Set scroll position
+    const viewportTopLeft = transform.project([transform.viewportBounds[0], transform.viewportBounds[1]]);
+    setContainerScroll(viewportTopLeft[0] - topLeft[0], viewportTopLeft[1] - topLeft[1], scrollInitiatedTransform);
+    if (scrollInitiatedTransform) {
+      console.log("SCROLL INITIATED TRANSFORM");
+    } else {
+      console.log("NO SCROLL INITIATED TRANSFORM");
+    }
+    scrollInitiatedTransform = false;
+  }
 
   function transformSubscribe() {
-    return transform.subscribe(() => {
-      // Set child height / width
-      const topLeft = transform.project([transform.xBounds[0], transform.yBounds[0]]);
-      const bottomRight = transform.project([transform.xBounds[1], transform.yBounds[1]]);
-      const width = bottomRight[0] - topLeft[0];
-      const height = bottomRight[1] - topLeft[1];
-      setContainerSize(width, height);
-
-      // Set scroll position
-      const viewportTopLeft = transform.project([transform.viewportBounds[0], transform.viewportBounds[1]]);
-      setContainerScroll(viewportTopLeft[0] - topLeft[0], viewportTopLeft[1] - topLeft[1]);
-    });
+    return [
+      transform.writables.matrix.subscribe(transformUpdate),
+      transform.writables.viewportSize.subscribe(transformUpdate),
+    ]
   }
 
   const events = [
@@ -101,11 +126,15 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
         return;
       }
 
-      const topPerc = node.scrollTop / node.scrollHeight;
+      scrollPositions = { left: node.scrollLeft, top: node.scrollTop };
+
+      const topPerc = scrollPositions.top / node.scrollHeight;
       const heightPerc = node.offsetHeight / node.scrollHeight;
-      const leftPerc = node.scrollLeft / node.scrollWidth;
+      const leftPerc = scrollPositions.left / node.scrollWidth;
       const widthPerc = node.offsetWidth / node.scrollWidth;
 
+      scrollInitiatedTransform = true;
+      console.log("CHANGE MATRIX");
       transform.matrix = transform.fitPercents(leftPerc, topPerc, widthPerc, heightPerc);
     }],
     [node, ['wheel'], (e) => {
@@ -183,7 +212,7 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
   const prevTouchAction = getComputedStyle(document.body).touchAction;
   document.body.style.touchAction = 'none';
 
-  let unsubscribe = transformSubscribe();
+  let unsubscribers = transformSubscribe();
 
   return {
     update({ workspace: newWorkspace, transform: newTransform, workspaceElem: newWorkspaceElem }) {
@@ -191,8 +220,10 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
       transform = newTransform;
       workspaceElem = newWorkspaceElem;
 
-      if (unsubscribe != null) unsubscribe();
-      unsubscribe = transformSubscribe();
+      if (unsubscribers != null) {
+        unsubscribers.forEach(unsubscribe => unsubscribe());
+      }
+      unsubscribers = transformSubscribe();
     },
 
     destroy() {
@@ -203,7 +234,9 @@ export function panZoom(node, { workspace, transform, workspaceElem }) {
       });
       document.body.style.touchAction = prevTouchAction;
       // Unsubscribe from transform
-      if (unsubscribe != null) unsubscribe();
+      if (unsubscribers != null) {
+        unsubscribers.forEach(unsubscribe => unsubscribe());
+      }
     }
   };
 }
