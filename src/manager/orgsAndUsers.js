@@ -73,7 +73,7 @@ async function getSelfUser() {
   if (router.resolvedRoute.name == "app") {
     // Push self search route if no search params are set in app
     const routeProps = router.resolvedRoute.props;
-    if (routeProps.q == null || routeProps.dq == null) {
+    if (routeProps.q == null) {
       if (orgsAndUsers.me != null) {
         // Redirect to get self user route if no search params are set
         pushUrl(userUrl(orgsAndUsers.me));
