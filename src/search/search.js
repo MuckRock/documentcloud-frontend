@@ -22,8 +22,6 @@ export const search = new Svue({
       const route = router.resolvedRoute;
       if (route != null && route.name == "app") {
         initSearch(route.props);
-      } else {
-        // TODO
       }
     }
   },

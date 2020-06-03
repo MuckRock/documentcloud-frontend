@@ -56,7 +56,7 @@ export class SearchParams extends Svue {
         },
         query(params) {
           const query = params.q == null ? null : params.q;
-          return query != null && query.length > 0 ? query : null;
+          return query;
         },
         parsedQuery(query) {
           if (query == null) return null;
