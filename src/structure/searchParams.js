@@ -79,8 +79,11 @@ export class SearchParams extends Svue {
                 let normalizedValue = null;
                 if (getDocumentField.idType) {
                   // Ensure the value is an integer ID
-                  if (!/^[0-9]+$/.test(highlight.value)) return null;
-                  normalizedValue = parseInt(highlight.value);
+                  const parts = highlight.value.split('-');
+                  if (parts.length == 0) return null;
+                  const lastPart = parts[parts.length - 1];
+                  if (!/^[0-9]+$/.test(lastPart)) return null;
+                  normalizedValue = parseInt(lastPart);
                 } else {
                   // Ensure the value matches the accepted values
                   if (!getDocumentField.accept.includes(highlight.value))
