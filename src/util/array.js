@@ -35,3 +35,11 @@ export function intersection(arrays, eq = (a, b) => a == b) {
   // Adapted from https://stackoverflow.com/a/59176460
   return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
 }
+
+export function arrayEq(x1, x2) {
+  if (x1.length != x2.length) return false;
+  for (let i = 0; i < x1.length; i++) {
+    if (x1[i] != x2[i]) return false;
+  }
+  return true;
+}

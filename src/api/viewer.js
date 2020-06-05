@@ -30,19 +30,17 @@ export function pageImageUrl(
   document,
   pageNumber,
   desiredWidth,
-  visualScale = 1
 ) {
   // Incorporate device's DPI into scaling to avoid blurring.
-  const scaling = visualScale;
-  const size = getDesiredSize(desiredWidth * scaling);
+  const size = getDesiredSize(desiredWidth);
 
   return `${document.assetUrl}documents/${document.id}/pages/${
     document.slug
-  }-p${pageNumber + 1}-${size}.gif?ts=${document.updatedAtTimestamp}`;
+    }-p${pageNumber + 1}-${size}.gif?ts=${document.updatedAtTimestamp}`;
 }
 
 export function textUrl(document, pageNumber) {
   return `${document.assetUrl}documents/${document.id}/pages/${
     document.slug
-  }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
+    }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
 }
