@@ -43,7 +43,8 @@
     "axios": "^0.19.0",
     "body-scroll-lock": "^2.6.4",
     "dompurify": "^2.0.8",
+    "gl-matrix": "^3.3.0",
     "lucene": "^2.1.1",
-    "transformation-matrix": "^2.3.0"
+    "scrollzoom": "git+https://github.com/freedmand/scrollzoom.git"
   }
 }
