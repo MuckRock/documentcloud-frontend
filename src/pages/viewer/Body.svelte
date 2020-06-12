@@ -1,6 +1,5 @@
 <script>
-  import Page from "./BlankPage";
-  import { pageImageUrl } from "@/api/viewer";
+  import Page from "./Page";
 
   // import { panZoom } from "@/viewer/gestures";
   import { layout } from "@/viewer/layout";
@@ -17,28 +16,53 @@
   $: {
     if ($doc.pages.length > 0) {
       const components = $doc.pages.map(page => {
+        let renderedComponent = null;
+        const destroy = () => {
+          if (renderedComponent != null) renderedComponent.$destroy();
+          renderedComponent = null;
+        };
         return {
           component: {
             render({ x, y, width, height }) {
-              console.log("r", x, y, width, height);
-              const div = document.createElement("img");
+              console.log("RENDER", x, y, width, height, page.pageNumber);
+              const div = document.createElement("div");
               div.style.position = "absolute";
-              div.style.background = "gainsboro";
+              div.style.background = "white";
               div.style.left = `${x}px`;
               div.style.top = `${y}px`;
               div.style.width = `${width}px`;
               div.style.height = `${height}px`;
               div.style.border = "solid 1px gainsboro";
               div.style.boxSizing = "border-box";
-              div.src = pageImageUrl(page.document, page.pageNumber, 2000);
+              destroy();
+              renderedComponent = new Page({
+                target: div,
+                props: {
+                  page,
+                  x,
+                  y,
+                  width,
+                  height
+                }
+              });
               return div;
             },
             update(div, { x, y, width, height }) {
-              console.log("u", x, y, width, height);
               div.style.left = `${x}px`;
               div.style.top = `${y}px`;
               div.style.width = `${width}px`;
               div.style.height = `${height}px`;
+              if (renderedComponent != null) {
+                renderedComponent.$set({
+                  x,
+                  y,
+                  width,
+                  height
+                });
+              }
+            },
+            destroy() {
+              destroy();
             }
           },
           x: page.position[0],
@@ -109,7 +133,7 @@
     overflow: scroll;
     z-index: $viewerBodyZ;
     touch-action: manipulation;
-    background: rgb(165, 165, 165);
+    background: $viewerBodyBg;
 
     :global(img) {
       background: white;

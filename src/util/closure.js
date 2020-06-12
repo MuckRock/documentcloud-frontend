@@ -14,3 +14,15 @@ export function smoothify(fn) {
   //   });
   // });
 }
+
+export function ignoreFirst(closure) {
+  // Ignore first invocation of a function
+  let first = true;
+  return (...args) => {
+    if (first) {
+      first = false;
+    } else {
+      closure(...args);
+    }
+  }
+}
