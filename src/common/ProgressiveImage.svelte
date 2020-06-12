@@ -20,19 +20,10 @@
   }
 
   function handleLoad(img, i) {
-    if (displayedImg == null) {
-      elem.appendChild(img);
-      displayedImg = img;
-      displayedIndex = i;
-      nixOlder(i);
-    } else {
-      if (i > displayedIndex) {
-        elem.replaceChild(img, displayedImg);
-        displayedImg = img;
-        displayedIndex = i;
-        nixOlder(i);
-      }
-    }
+    elem.appendChild(img);
+    displayedImg = img;
+    displayedIndex = i;
+    // requestAnimationFrame(() => nixOlder(i));
   }
 
   // Load all images simultaneously
@@ -45,6 +36,7 @@
     };
     img.alt = alt;
     img.src = src;
+    img.style.zIndex = i + 1;
     return img;
   });
 
@@ -53,5 +45,13 @@
     imgs.forEach(img => (img.src = ""));
   });
 </script>
+
+<style lang="scss">
+  :global(img) {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+</style>
 
 <span bind:this={elem} />
