@@ -23,8 +23,7 @@
     elem.appendChild(img);
     displayedImg = img;
     displayedIndex = i;
-    img.style.opacity = 1;
-    // requestAnimationFrame(() => nixOlder(i));
+    setTimeout(() => (img.className = "loaded"), 100);
   }
 
   // Load all images simultaneously
@@ -38,7 +37,6 @@
     img.alt = alt;
     img.src = src;
     img.style.zIndex = i + 1;
-    img.style.opacity = "0";
     return img;
   });
 
@@ -54,6 +52,11 @@
     height: 100%;
     position: absolute;
     transition: opacity 0.2s linear;
+    opacity: 0;
+
+    &.loaded {
+      opacity: 1;
+    }
   }
 </style>
 
