@@ -29,7 +29,7 @@ export const layout = new Svue({
       // In embedded mode
       embed: false,
       // Whether to display sidebar
-      showSidebar: true,
+      showSidebar: false,
 
       loading: false,
       error: null,

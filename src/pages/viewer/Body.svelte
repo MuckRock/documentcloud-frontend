@@ -67,11 +67,6 @@
 </script>
 
 <style lang="scss">
-<<<<<<< HEAD
-  .body,
-  .container {
-    background: $viewerBodyBg;
-=======
   // .body,
   // .container,
   // .scrollcontainer {
@@ -105,7 +100,6 @@
   }
 
   .doc {
->>>>>>> ec06fe8... Initial implementation of scrollzoom
     position: absolute;
     top: 0;
     bottom: 0;
@@ -115,14 +109,11 @@
     overflow: scroll;
     z-index: $viewerBodyZ;
     touch-action: manipulation;
-<<<<<<< HEAD
-=======
     background: rgb(165, 165, 165);
 
     :global(img) {
       background: white;
     }
->>>>>>> ec06fe8... Initial implementation of scrollzoom
   }
 </style>
 
