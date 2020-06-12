@@ -23,7 +23,7 @@
     elem.appendChild(img);
     displayedImg = img;
     displayedIndex = i;
-    setTimeout(() => (img.style.visibility = "visible"), 100);
+    img.style.opacity = 1;
     // requestAnimationFrame(() => nixOlder(i));
   }
 
@@ -38,7 +38,7 @@
     img.alt = alt;
     img.src = src;
     img.style.zIndex = i + 1;
-    img.style.visibility = "hidden";
+    img.style.opacity = "0";
     return img;
   });
 
@@ -53,6 +53,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
+    transition: opacity 0.2s linear;
   }
 </style>
 
