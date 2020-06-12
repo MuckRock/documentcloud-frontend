@@ -11,17 +11,25 @@
   function setSidebarExpanded(expanded) {
     layout.sidebarExpanded = expanded;
   }
+
+  function attempt(fn) {
+    try {
+      return fn();
+    } catch (e) {
+      return null;
+    }
+  }
 </script>
 
 <div>
   <Sidebar
     bind:this={sidebar}
     on:retractSidebar={() => setSidebarExpanded(false)}
-    expanded={$layout.sidebarExpanded} />
+    expanded={attempt(() => $layout.sidebarExpanded)} />
   <MainContainer
     on:expandSidebar={() => setSidebarExpanded(true)}
-    concealed={$layout.sidebarExpanded}
-    documents={$documents.documents}
-    loading={$layout.loading}
-    error={$layout.error} />
+    concealed={attempt(() => $layout.sidebarExpanded)}
+    documents={attempt(() => $documents.documents)}
+    loading={attempt(() => $layout.loading)}
+    error={attempt(() => $layout.error)} />
 </div>
