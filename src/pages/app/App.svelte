@@ -4,7 +4,7 @@
 
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
-  import { projects } from "@/manager/projects";
+  import { onMount, onDestroy } from "svelte";
 
   let sidebar = null;
 
@@ -12,24 +12,27 @@
     layout.sidebarExpanded = expanded;
   }
 
-  function attempt(fn) {
-    try {
-      return fn();
-    } catch (e) {
-      return null;
-    }
-  }
+  let reactiveLayout = {};
+  let reactiveDocuments = {};
+  let unsubscriptions = [];
+
+  onMount(() => {
+    unsubscriptions = [
+      layout.subscribe(() => (reactiveLayout = layout || {})),
+      documents.subscribe(() => (reactiveDocuments = documents || {}))
+    ];
+  });
 </script>
 
 <div>
   <Sidebar
     bind:this={sidebar}
     on:retractSidebar={() => setSidebarExpanded(false)}
-    expanded={attempt(() => $layout.sidebarExpanded)} />
+    expanded={reactiveLayout.sidebarExpanded} />
   <MainContainer
     on:expandSidebar={() => setSidebarExpanded(true)}
-    concealed={attempt(() => $layout.sidebarExpanded)}
-    documents={attempt(() => $documents.documents)}
-    loading={attempt(() => $layout.loading)}
-    error={attempt(() => $layout.error)} />
+    concealed={reactiveLayout.sidebarExpanded}
+    documents={reactiveDocuments.documents}
+    loading={reactiveLayout.loading}
+    error={reactiveLayout.error} />
 </div>
