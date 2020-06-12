@@ -47,15 +47,17 @@
 </script>
 
 <style lang="scss">
-  :global(img) {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transition: opacity 0.2s linear;
-    opacity: 0;
+  span {
+    :global(img) {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transition: opacity 0.2s linear;
+      opacity: 0;
 
-    &.loaded {
-      opacity: 1;
+      &.loaded {
+        opacity: 1;
+      }
     }
   }
 </style>
