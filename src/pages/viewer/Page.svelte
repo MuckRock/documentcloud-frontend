@@ -90,11 +90,6 @@
     background: white;
     border: solid 1px gainsboro;
     box-sizing: border-box;
-
-    :global(img) {
-      width: 100%;
-      height: 100%;
-    }
   }
 </style>
 
