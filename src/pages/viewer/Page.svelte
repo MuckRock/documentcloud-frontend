@@ -34,36 +34,6 @@
       observer.unobserve(number);
     }
   });
-
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",").map(x =>
-    parseFloat(x.split(":")[1])
-  );
-  const NORMAL_BREAKPOINT = IMAGE_WIDTHS[IMAGE_WIDTHS.length - 3];
-  const NEXT_BREAKPOINT = IMAGE_WIDTHS[IMAGE_WIDTHS.length - 4];
-
-  function breakpointify(initialWidth, fn) {
-    const fns = [];
-    if (initialWidth >= NEXT_BREAKPOINT) {
-      fns.push(fn(NORMAL_BREAKPOINT));
-    }
-    fns.push(fn(initialWidth));
-    return fns;
-  }
-
-  let srcs = [];
-
-  let prevWidth = null;
-  $: {
-    if (prevWidth == null || width != prevWidth) {
-      const newSrcs = breakpointify(width * window.devicePixelRatio || 1, x =>
-        pageImageUrl(page.document, page.pageNumber, x)
-      );
-      if (!arrayEq(srcs, newSrcs)) {
-        srcs = newSrcs;
-      }
-    }
-    prevWidth = width;
-  }
 </script>
 
 <style lang="scss">
@@ -104,5 +74,6 @@
 <div class="page">
   <ProgressiveImage
     alt="Page {page.pageNumber + 1} of {page.document.title}"
-    {srcs} />
+    {width}
+    {page} />
 </div>
