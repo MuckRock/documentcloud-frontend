@@ -12,7 +12,7 @@
   }
 </script>
 
-<select bind:value={$renderer.mode} on:change={handleChange}>
+<select bind:value={$renderer.mode} on:blur={handleChange}>
   <option value="image">Document</option>
   <option value="text">Plain Text</option>
   <option value="search" hidden={$layout.searchPages == null}>

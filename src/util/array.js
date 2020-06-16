@@ -32,6 +32,7 @@ export function includes(array, elem, eq = (a, b) => a == b) {
 }
 
 export function intersection(arrays, eq = (a, b) => a == b) {
+  if (arrays.length == 0) return [];
   // Adapted from https://stackoverflow.com/a/59176460
   return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
 }
