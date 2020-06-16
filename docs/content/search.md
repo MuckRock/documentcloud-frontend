@@ -3,17 +3,11 @@ layout: docs
 title: Search
 weight: "1"
 ---
-
 # DocumentCloud Search
-
-## Contents
-
-* [Syntax](#syntax)
-* [API](#api)
 
 ## Introduction
 
-DocumentCloud's search is powered by [Solr][1], an open source search engine by the Apache Software Foundation.  Most of the search syntax is passed through directly to Solr — you can read [Solr's documentation][2] directly for information on how its syntax works.  This document will reiterate the parts of that syntax that are applicable to DocumentCloud, as well as parts of the search that are specific to DocumentCloud.
+DocumentCloud's search is powered by [Solr](https://lucene.apache.org/solr/), an open source search engine by the Apache Software Foundation.  Most of the search syntax is passed through directly to Solr — you can read [Solr's documentation](https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html) directly for information on how its syntax works.  This document will reiterate the parts of that syntax that are applicable to DocumentCloud, as well as parts of the search that are specific to DocumentCloud.
 
 ## Syntax
 
@@ -27,7 +21,7 @@ Terms can use `?` to match any single character.  For example `?oat` will match 
 
 ### Fuzzy Searches
 
-By appending `~` to a term you can perform a fuzzy search which will match close variants of the term based on edit distance.  [Edit distance][3] is the number of letter insertions, deletions, substitutions, or transpositions needed to get from one word to another.  This can be useful for finding documents with misspelled words or with poor OCR.  By default `~` will allow an edit distance of 2, but you can specify an edit distance of 1 by using `~1`.  For example, `book~` will match book, books, and looks.
+By appending `~` to a term you can perform a fuzzy search which will match close variants of the term based on edit distance.  [Edit distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance) is the number of letter insertions, deletions, substitutions, or transpositions needed to get from one word to another.  This can be useful for finding documents with misspelled words or with poor OCR.  By default `~` will allow an edit distance of 2, but you can specify an edit distance of 1 by using `~1`.  For example, `book~` will match book, books, and looks.
 
 ### Proximity Searches
 
@@ -57,15 +51,14 @@ You can use parentheses to group terms, allowing for complex queries, such as `(
 
 ### Specifying Dates and Times
 
-Date times must be fully specified in the form `YYYY-MM-DDThh:mm:ssZ` where YYYY is the year, MM is the month, DD is the day, hh is the hour, mm is the minutes, and ss is the seconds.  T is the literal T character and Z is the literal Z character.  These are always expressed in UTC time.  You may optionally include fractional seconds (`YYYY-MM-DDThh:mm:ss.fZ`).
-You may also use `NOW` to stand in for the current time.  This is most useful when combined with date time math, which allows you to add or subtract time in the following units:
-`YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND`.  For example `NOW+1DAY` would be one day from now.  `NOW-2MONTHS` would be 2 months in the past.
+Date times must be fully specified in the form `YYYY-MM-DDThh:mm:ssZ` where YYYY is the year, MM is the month, DD is the day, hh is the hour, mm is the minutes, and ss is the seconds.  T is the literal T character and Z is the literal Z character.  These are always expressed in UTC time.  You may optionally include fractional seconds (`YYYY-MM-DDThh:mm:ss.fZ`). You may also use `NOW` to stand in for the current time.  This is most useful when combined with date time math, which allows you to add or subtract time in the following units: `YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND`.  For example `NOW+1DAY` would be one day from now.  `NOW-2MONTHS` would be 2 months in the past.
 
 You may also use `/` to round to the closest time unit.  For example, `NOW/HOUR` is the beginning of the current hour.  These can be combined: `NOW-1YEAR+2MONTHS/MONTH` would be the beginning of the month, 2 months past one year ago.  These are useful with ranged searches: `[NOW-1MONTH TO *]` would be all dates past one month ago.
 
 ### Sorting
 
 You may sort using the syntax `sort:<sort type>`.  Possible sortings include:
+
 * `score` (highest score first; default)
 * `created_at` (newest first)
 * `page_count` (largest first)
@@ -83,69 +76,89 @@ Special characters may be escaped by preceding them with a `\` — for example, 
 The following fields may be searched on, which will filter the resulting documents based on their properties.  By default, all fields included in the query are treated as required (e.g. `user:1 report` will show only documents from user 1 scored by the text query “report”).  If you include multiple of the same field, the query is equivalent to applying `OR` between each of the same field (e.g. `user:1 user:2 report` will show documents by user 1 or 2).  If you include distinct fields, the query is equivalent to applying `AND` between each set of distinct fields (e.g. `user:1 user:2 tag:email` will find documents by user 1 or 2 and which are tagged as email).  If you use any explicit boolean operators (`AND` or `OR`), that will take precedence (e.g. `(user:1 AND tag:email) OR (user:2 AND tag:contract)` would return documents by user 1 tagged as email as well as documents by user 2 tagged as contract.  This allows you to make complex boolean queries using any available field.
 
 Available fields
+
 * **user**
-    * Specify using the user ID.  Also accepts the slug preceding the ID for readability (e.g. `user:mitchell-kotler-1`).  `account` is an alias for user.
+
+  * Specify using the user ID.  Also accepts the slug preceding the ID for readability (e.g. `user:mitchell-kotler-1`).  `account` is an alias for user.
 * **organization**
-    * Specify using the organization ID.  Also accepts the slug preceding the ID for readability (e.g. `organization:muckrock-1`).  `group` is an alias for organization.
+
+  * Specify using the organization ID.  Also accepts the slug preceding the ID for readability (e.g. `organization:muckrock-1`).  `group` is an alias for organization.
 * **access**
-    * Specify the access level.  Valid choices are `public`, `organization`, and `private`.
+
+  * Specify the access level.  Valid choices are `public`, `organization`, and `private`.
 * **status**
-    * Specify the status of the document.  Valid choices are `success`, `readable`, `pending`, `error`, and `nofile`.
+
+  * Specify the status of the document.  Valid choices are `success`, `readable`, `pending`, `error`, and `nofile`.
 * **project**
-    * Specify using the project ID.  Also accepts the slug preceding the ID for readability (e.g. `project:panama-papers-1`).  `projects` is an alias for project.
+
+  * Specify using the project ID.  Also accepts the slug preceding the ID for readability (e.g. `project:panama-papers-1`).  `projects` is an alias for project.
 * **document**
-    * Specify using the document ID.  Also accepts the slug preceding the ID for readability (e.g. `document:mueller-report-1`).  `id` is an alias for document.
+
+  * Specify using the document ID.  Also accepts the slug preceding the ID for readability (e.g. `document:mueller-report-1`).  `id` is an alias for document.
 * **language**
-    * Specify the language the document is in.  Valid choices include:
-        * ara - Arabic
-        * zho - Chinese (Simplified)
-        * tra - Chinese (Traditional)
-        * hrv - Croatian
-        * dan - Danish
-        * nld - Dutch
-        * eng - English
-        * fra - French
-        * deu - German
-        * heb - Hebrew
-        * hun - Hungarian
-        * ind - Indonesian
-        * ita - Italian
-        * jpn - Japanese
-        * kor - Korean
-        * nor - Norwegian
-        * por - Portuguese
-        * ron - Romanian
-        * rus - Russian
-        * spa - Spanish
-        * swe - Swedish
-        * ukr - Ukrainian
+
+  * Specify the language the document is in.  Valid choices include:
+
+    * ara - Arabic
+    * zho - Chinese (Simplified)
+    * tra - Chinese (Traditional)
+    * hrv - Croatian
+    * dan - Danish
+    * nld - Dutch
+    * eng - English
+    * fra - French
+    * deu - German
+    * heb - Hebrew
+    * hun - Hungarian
+    * ind - Indonesian
+    * ita - Italian
+    * jpn - Japanese
+    * kor - Korean
+    * nor - Norwegian
+    * por - Portuguese
+    * ron - Romanian
+    * rus - Russian
+    * spa - Spanish
+    * swe - Swedish
+    * ukr - Ukrainian
 * **slug**
-    * Specify the slug of the document.
-* **created\_at**
-    * Specify the [date time](#specifying-dates-and-times) the document was created.
-* **updated\_at**
-    * Specify the [date time](#specifying-dates-and-times) the document was last updated.
-* **page\_count**
-    * Specify the number of pages the document has.  `pages` is an alias for page\_count.
-* **data\_\***
-    * Specify arbitrary key-value data pairs on the document (e.g. the search query `data_color: blue` returns documents with data `color`: `blue`).
+
+  * Specify the slug of the document.
+* **created_at**
+
+  * Specify the [date time](#specifying-dates-and-times) the document was created.
+* **updated_at**
+
+  * Specify the [date time](#specifying-dates-and-times) the document was last updated.
+* **page_count**
+
+  * Specify the number of pages the document has.  `pages` is an alias for page_count.
+* **data_***
+
+  * Specify arbitrary key-value data pairs on the document (e.g. the search query `data_color: blue` returns documents with data `color`: `blue`).
 * **tag**
-    * This is an alias to `data__tag` which is used by the site as a simple tagging system.
+
+  * This is an alias to `data__tag` which is used by the site as a simple tagging system.
 
 ### Text Fields
 
 Text fields can be used to search for text in a particular field of the document.  They are used to score the searches and are always treated as optional unless you use `+` or `AND` to require them.
 
 * **title**
-    * The title of the document.
+
+  * The title of the document.
 * **source**
-    * The source of the document.
+
+  * The source of the document.
 * **description**
-    * The description of the document.
+
+  * The description of the document.
 * **text**
-    * The full text of the document, as obtained by text embedded in the PDF or by OCR.  `doctext` is an alias for text.
-* **page\_no\_\***
-    * You may search the text on the given page of a document.  To find all documents which contain the word report on page 2, you could use `page_no_2:report`.
+
+  * The full text of the document, as obtained by text embedded in the PDF or by OCR.  `doctext` is an alias for text.
+* **page\_no\_***
+
+  * You may search the text on the given page of a document.  To find all documents which contain the word report on page 2, you could use `page_no_2:report`.
 
 ## API
 
@@ -166,6 +179,7 @@ You can also specify `per_page`, `page`, and `expand` as you would for `/api/doc
     "escaped": <bool>
 }
 ```
+
 with the addition of the `escaped` property to specify if the query had a syntax error and needed to be autoescaped.  Each document will also contain a `highlights` property, which will contain relevant snippets from the document containing the given search term.
 
 ```
@@ -229,7 +243,3 @@ Example response:
     ]
 }
 ```
-
-[1]: https://lucene.apache.org/solr/
-[2]: https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html
-[3]: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
