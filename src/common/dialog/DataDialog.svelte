@@ -17,7 +17,6 @@
   import { handlePlural } from "@/util/string";
   import { intersection } from "@/util/array";
   import { writable } from "svelte/store";
-  import { onMount, onDestroy } from "svelte";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -49,20 +48,8 @@
   $: keyValid = KEY_REGEX.test(keyTrimmed);
   $: inputValid = keyValid && valueTrimmed.length > 0 && keyTrimmed.length > 0;
 
-  let dataDocuments = [];
-  let subscriptions = [];
-  onMount(() => {
-    subscriptions = [
-      layout.subscribe(() => (dataDocuments = layout.dataDocuments))
-    ];
-  });
-
-  onDestroy(() => {
-    subscriptions.forEach(subscription => subscription());
-  });
-
   $: mutualDataPoints = intersection(
-    dataDocuments.map(d => d.dataPoints),
+    $layout.dataDocuments.map(d => d.dataPoints),
     (a, b) => a.key == b.key && a.value == b.value
   );
   $: emptyData = mutualDataPoints.length == 0;
@@ -232,7 +219,7 @@
   <div>
     <div class="mcontent">
       <h1 class:faded={editMode}>
-        Add Data for {handlePlural(dataDocuments.length, 'Document', true)}
+        Add Data for {handlePlural($layout.dataDocuments.length, 'Document', true)}
       </h1>
       <div class="inputpadded" class:faded={editMode}>
         <div class="add">

@@ -1,7 +1,7 @@
 <script>
   import SearchInput from "./SearchInput";
   import Button from "@/common/Button";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   import { handleSearch } from "@/search/search";
   import { showSearchTips } from "@/manager/layout";
@@ -16,21 +16,28 @@
     handleSearch(search, transformedQuery);
   }
 
+  let unsubscribe = [];
   onMount(() => {
     if (!example) {
-      router.subscribe(router => {
-        // Set query from URL if applicable
-        const route = router.resolvedRoute;
-        if (route != null && route.name == "app") {
-          // Try to fill in regular query if not present
-          if (route.props.q != null && route.props.q.length > 0) {
-            search = route.props.q;
-          } else {
-            search = "";
+      unsubscribe = [
+        router.subscribe(router => {
+          // Set query from URL if applicable
+          const route = router.resolvedRoute;
+          if (route != null && route.name == "app") {
+            // Try to fill in regular query if not present
+            if (route.props.q != null && route.props.q.length > 0) {
+              search = route.props.q;
+            } else {
+              search = "";
+            }
           }
-        }
-      });
+        })
+      ];
     }
+  });
+
+  onDestroy(() => {
+    unsubscribe.forEach(x => x());
   });
 </script>
 

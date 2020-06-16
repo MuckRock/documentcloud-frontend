@@ -10,7 +10,6 @@
   // Set up routes
   router.routes = new Router(...routes);
 
-  let resolvedRoute = null;
   onMount(() => {
     router.currentUrl = currentUrl();
     if (!history.state) {
@@ -20,7 +19,6 @@
         window.location.href
       );
     }
-    router.subscribe(() => (resolvedRoute = router.resolvedRoute));
   });
 
   function handleBackNav(e) {
@@ -83,16 +81,16 @@
     background: #c2c2c2;
     background: linear-gradient(#dfdfdf, #c2c2c2);
 
-    .vcontent {
+    :global(.vcontent) {
       display: table;
       width: 100%;
 
-      svg {
+      :global(svg) {
         display: block;
       }
     }
 
-    select {
+    :global(select) {
       @include buttonLike;
 
       background: rgba(white, 0.7);
@@ -115,6 +113,8 @@
 
 <svelte:window on:popstate={handleBackNav} />
 
-{#if resolvedRoute != null}
-  <svelte:component this={resolvedRoute.component} {...resolvedRoute.props} />
+{#if $router.resolvedRoute != null}
+  <svelte:component
+    this={$router.resolvedRoute.component}
+    {...$router.resolvedRoute.props} />
 {/if}
