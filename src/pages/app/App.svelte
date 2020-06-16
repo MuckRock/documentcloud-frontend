@@ -4,24 +4,38 @@
 
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
-  import { projects } from "@/manager/projects";
+  import { onMount, onDestroy } from "svelte";
 
   let sidebar = null;
 
   function setSidebarExpanded(expanded) {
     layout.sidebarExpanded = expanded;
   }
+
+  let subscriptions = [];
+  let layoutObj = {};
+  let documentsObj = {};
+  onMount(() => {
+    subscriptions = [
+      layout.subscribe(() => (layoutObj = layout)),
+      documents.subscribe(() => (documentsObj = documents))
+    ];
+  });
+
+  onDestroy(() => {
+    subscriptions.forEach(subscription => subscription());
+  });
 </script>
 
 <div>
   <Sidebar
     bind:this={sidebar}
     on:retractSidebar={() => setSidebarExpanded(false)}
-    expanded={$layout.sidebarExpanded} />
+    expanded={layoutObj.sidebarExpanded} />
   <MainContainer
     on:expandSidebar={() => setSidebarExpanded(true)}
-    concealed={$layout.sidebarExpanded}
-    documents={$documents.documents}
-    loading={$layout.loading}
-    error={$layout.error} />
+    concealed={layoutObj.sidebarExpanded}
+    documents={documentsObj.documents}
+    loading={layoutObj.loading}
+    error={layoutObj.error} />
 </div>

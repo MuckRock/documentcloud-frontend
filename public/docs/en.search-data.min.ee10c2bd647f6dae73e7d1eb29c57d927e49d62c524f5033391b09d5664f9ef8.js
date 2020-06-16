@@ -1,0 +1,1 @@
+'use strict';(function(){const indexCfg={cache:true};indexCfg.doc={id:'id',field:['title','content'],store:['title','href'],};const index=FlexSearch.create('balance',indexCfg);window.bookSearchIndex=index;index.add({'id':0,'href':'docs/docs/test/','title':"Test",'content':"Hi\n"});index.add({'id':1,'href':'docs/docs/','title':"Docs",'content':""});})();

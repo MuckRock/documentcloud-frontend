@@ -1,6 +1,6 @@
 {
-  "name": "DocumentCloud Docs",
-  "short_name": "DocumentCloud Docs",
+  "name": "DocumentCloud",
+  "short_name": "DocumentCloud",
   "start_url": "/docs/",
   "scope": "/docs/",
   "display": "standalone",
