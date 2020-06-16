@@ -1,9 +1,0 @@
-languageCode = "en-us"
-title = "DocumentCloud"
-theme = "book"
-baseURL = "/docs"
-publishDir = "../public/docs"
-
-[params]
-  BookLogo = '../images/logo.svg'
-  BookSection = '*'
