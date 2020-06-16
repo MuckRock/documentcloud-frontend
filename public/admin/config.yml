@@ -1,6 +1,8 @@
 # https://www.netlifycms.org/docs/add-to-your-site/#backend
 backend:
-  name: git-gateway
+  name: github
+  repo: muckrock/documentcloud-frontend
+  site_domain: beta.documentcloud.org
   branch: master # Branch to update (optional; defaults to master)
 
 # https://www.netlifycms.org/docs/add-to-your-site/#editorial-workflow
@@ -14,7 +16,7 @@ public_folder: "/images/uploads"
 collections:
   - name: "help" # Used in routes, e.g., /admin/collections/help
     label: "Help" # Used in the UI
-    folder: "public/help/pages" # The path to the folder where the documents are stored
+    folder: "src/help/pages" # The path to the folder where the documents are stored
     create: true # Allow users to create new documents in this collection
     slug: "{{slug}}" # Filename template
     fields: # The fields for each document, usually in front matter

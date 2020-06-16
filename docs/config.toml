@@ -1,0 +1,5 @@
+languageCode = "en-us"
+title = "DocumentCloud Docs"
+theme = "book"
+baseURL = "docs"
+publishDir = "../public/docs"

@@ -10,6 +10,7 @@
   // Set up routes
   router.routes = new Router(...routes);
 
+  let resolvedRoute = null;
   onMount(() => {
     router.currentUrl = currentUrl();
     if (!history.state) {
@@ -19,6 +20,7 @@
         window.location.href
       );
     }
+    router.subscribe(() => (resolvedRoute = router.resolvedRoute));
   });
 
   function handleBackNav(e) {
@@ -113,8 +115,6 @@
 
 <svelte:window on:popstate={handleBackNav} />
 
-{#if $router.resolvedRoute != null}
-  <svelte:component
-    this={$router.resolvedRoute.component}
-    {...$router.resolvedRoute.props} />
+{#if resolvedRoute != null}
+  <svelte:component this={resolvedRoute.component} {...resolvedRoute.props} />
 {/if}
