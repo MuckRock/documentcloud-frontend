@@ -16,6 +16,7 @@
     "node-sass": "^4.13.0",
     "rlite-router": "^2.0.3",
     "sass-loader": "^8.0.0",
+    "scrollzoom": "https://github.com/freedmand/scrollzoom",
     "serve": "^11.3.0",
     "speed-measure-webpack-plugin": "^1.3.1",
     "style-loader": "^0.23.1",
