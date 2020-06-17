@@ -33,7 +33,7 @@
     "webpack-dev-server": "^3.3.1"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack && cd docs && hugo -D",
+    "build": "cross-env NODE_ENV=production webpack",
     "build-staging": "cross-env NODE_ENV=staging webpack",
     "build-serve": "cross-env NODE_ENV=production webpack && serve public -l 80",
     "build-analyze": "cross-env NODE_ENV=production-analyze webpack",

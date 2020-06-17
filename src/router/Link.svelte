@@ -8,6 +8,7 @@
   export let newPage = false;
   export let forceClick = false;
   export let inlineBlock = false;
+  export let color = false;
 
   const link = new Svue({
     data() {
@@ -41,7 +42,7 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   .active {
     font-weight: bold;
   }
@@ -49,10 +50,15 @@
   .ib {
     display: inline-block;
   }
+
+  a.color {
+    color: $primary !important;
+  }
 </style>
 
 {#if newPage}
   <a
+    class:color
     class:ib={inlineBlock}
     class:active={$link.active}
     href={$link.toPath}
@@ -61,6 +67,7 @@
   </a>
 {:else}
   <a
+    class:color
     class:ib={inlineBlock}
     class:active={$link.active}
     href={$link.toPath}

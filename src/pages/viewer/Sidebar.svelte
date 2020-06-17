@@ -132,7 +132,7 @@
         {/if}
 
         {#if $viewer.document.description != null}
-          <details open>
+          <details class="dc" open>
             <summary>
               <h2>{$viewer.document.title}</h2>
             </summary>

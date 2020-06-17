@@ -86,7 +86,7 @@
 {#if sectionOrNote.type == 'section'}
   <!-- Show section -->
   {#if sectionOrNote.children.length > 0}
-    <details open>
+    <details class="dc" open>
       <summary>
         <span
           class="section"

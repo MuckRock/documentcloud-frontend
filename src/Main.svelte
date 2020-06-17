@@ -22,6 +22,7 @@
   });
 
   function handleBackNav(e) {
+    if (e.state == null) return;
     router.currentUrl = e.state.path;
   }
 </script>
@@ -56,7 +57,7 @@
     display: inline-block;
   }
 
-  :global(summary) {
+  :global(details.dc summary) {
     outline: none;
     user-select: none;
     cursor: pointer;

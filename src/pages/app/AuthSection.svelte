@@ -61,6 +61,23 @@
 <div class="auth">
   <Link to="home">Home</Link>
   <span class="dot">·</span>
+  <Dropdown fixed={true}>
+    <span class="action" slot="title">
+      <span class="nowrap title">
+        Help
+        <span class="dropper">▼</span>
+      </span>
+    </span>
+    <Menu>
+      <Link toUrl="/help/search" color={true}>
+        <MenuItem>Search Documentation</MenuItem>
+      </Link>
+      <Link toUrl="/help/api" color={true}>
+        <MenuItem>API Documentation</MenuItem>
+      </Link>
+    </Menu>
+  </Dropdown>
+  <span class="dot">·</span>
   {#if me != null}
     <Dropdown fixed={true}>
       <span class="action" slot="title">
