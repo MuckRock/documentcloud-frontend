@@ -235,12 +235,24 @@
         }
       }
 
+      :global(h5, h6) {
+        font-weight: bold;
+      }
+
       :global(h1) {
         font-size: 32px;
       }
 
       :global(h2) {
         font-size: 24px;
+      }
+
+      :global(h3) {
+        font-size: 20px;
+      }
+
+      :global(h4) {
+        font-size: 18px;
       }
 
       :global(code) {
@@ -275,6 +287,11 @@
         border: solid 1px #d1d6dc;
         padding: 6px 12px;
         vertical-align: middle;
+      }
+
+      :global(summary) {
+        outline: none;
+        cursor: pointer;
       }
     }
   }

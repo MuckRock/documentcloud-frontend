@@ -57,7 +57,7 @@
     display: inline-block;
   }
 
-  :global(summary) {
+  :global(details.dc summary) {
     outline: none;
     user-select: none;
     cursor: pointer;
