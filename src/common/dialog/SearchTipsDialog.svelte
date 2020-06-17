@@ -1,5 +1,6 @@
 <script>
   import SearchExample from "@/common/SearchExample";
+  import Link from "@/router/Link";
 
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { slugify } from "@/util/string";
@@ -240,6 +241,7 @@
         for a specific project that contain the exact text “mueller report” and
         don’t have a page count of 448 (thus excluding the actual Mueller
         Report).
+        <Link color={true} toUrl="/help/search">Additional documentation</Link>
       </p>
       <p>
         <b>Reference table:</b>
