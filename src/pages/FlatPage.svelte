@@ -7,6 +7,7 @@
 
   export let content;
   let contentElem = null;
+  let sidebarElem = null;
 
   function navTo(hash, smooth = false) {
     const elem = document.querySelector(hash);
@@ -32,6 +33,7 @@
     headers.forEach(header => {
       contents.push({
         text: header.textContent.trim(),
+        id: header.id,
         level: parseInt(header.tagName.substr(1))
       });
       let id = header.id;
@@ -49,7 +51,61 @@
 
   // Build table of contents
   function buildToc(headers) {
-    // TODO: implement
+    let root = { children: [] };
+
+    const addNode = (node, level, tree) => {
+      if (level == 1) {
+        tree.children.push({
+          node,
+          children: []
+        });
+        return;
+      }
+      if (tree.children.length == 0) {
+        const newNode = {
+          node: null,
+          children: []
+        };
+        tree.children.push(newNode);
+        return addNode(node, level - 1, newNode);
+      } else {
+        return addNode(
+          node,
+          level - 1,
+          tree.children[tree.children.length - 1]
+        );
+      }
+    };
+
+    headers.forEach(header => {
+      addNode({ text: header.text, id: header.id }, header.level, root);
+    });
+
+    // Strip single TOC root items
+    while (root.children.length == 1) {
+      root = root.children[0];
+    }
+
+    const generateToc = (tree, depth = 0, first = true) => {
+      if (tree.children.length == 0 || depth >= 2) return null;
+      const ul = document.createElement("ul");
+      tree.children.forEach(child => {
+        const li = document.createElement("li");
+        li.className = first ? "" : "deep";
+        if (child.node != null) {
+          const a = document.createElement("a");
+          a.textContent = child.node.text;
+          a.href = `#${child.node.id}`;
+          li.appendChild(a);
+        }
+        const subToc = generateToc(child, depth + 1, false);
+        if (subToc != null) li.appendChild(subToc);
+        ul.appendChild(li);
+      });
+      return ul;
+    };
+
+    sidebarElem.appendChild(generateToc(root));
   }
 
   onMount(async () => {
@@ -72,19 +128,91 @@
 
 <style lang="scss">
   .page {
-    max-width: 720px;
+    $contentWidth: 720px;
+    $tocWidth: 200px;
+    $tocPaddingRight: 10px;
+    $tocPaddingLeft: 30px;
+    $tocFinalWidth: $tocWidth + $tocPaddingLeft + $tocPaddingRight;
+
+    max-width: $contentWidth + $tocFinalWidth;
     margin: 0 auto;
+    box-sizing: border-box;
     padding: 40px 20px;
 
     :global(a) {
       color: $primary;
     }
 
+    .toccontainer {
+      position: absolute;
+      left: 100%;
+      width: $tocWidth;
+      padding: 40px $tocPaddingRight 40px $tocPaddingLeft;
+      top: 0;
+      bottom: 0;
+
+      @media only screen and (max-width: $mobileBreak) {
+        position: relative;
+        left: inherit;
+        width: inherit;
+        padding: 0;
+        padding-right: 10px;
+      }
+
+      .toc {
+        font-size: 14px;
+        position: sticky;
+        top: 20px;
+        overflow: auto;
+        height: calc(100vh - 40px);
+
+        @media only screen and (max-width: $mobileBreak) {
+          position: relative;
+          height: inherit;
+          top: 0;
+          overflow: none;
+
+          background: rgba($primary, 0.05);
+          border: solid 1px $primary;
+          padding: 0px 14px;
+          box-sizing: border-box;
+          border-radius: 3px;
+        }
+
+        :global(ul) {
+          padding: 0;
+          margin: 0;
+          list-style: none;
+
+          :global(ul) {
+            padding-inline-start: 1rem;
+          }
+        }
+
+        :global(li) {
+          @media only screen and (max-width: $mobileBreak) {
+            :global(.deep) {
+              display: none;
+            }
+          }
+
+          list-style: none;
+          margin: 0.8em 0;
+        }
+      }
+    }
+
     .content {
+      max-width: calc(100% - #{$tocFinalWidth});
       padding: 20px 0;
       margin: 20px 0;
       border-top: solid 1px gainsboro;
       font-size: 16px;
+      position: relative;
+
+      @media only screen and (max-width: $mobileBreak) {
+        max-width: 100%;
+      }
 
       // Inspired by https://github.com/alex-shpak/hugo-book
 
@@ -137,6 +265,17 @@
           padding: 0;
         }
       }
+
+      :global(table) {
+        border-spacing: 0;
+        border-collapse: collapse;
+      }
+
+      :global(td, th) {
+        border: solid 1px #d1d6dc;
+        padding: 6px 12px;
+        vertical-align: middle;
+      }
     }
   }
 </style>
@@ -150,6 +289,9 @@
     </div>
   </header>
   <div class="content" bind:this={contentElem}>
+    <div class="toccontainer">
+      <div class="toc" bind:this={sidebarElem} />
+    </div>
     {@html content}
   </div>
 </div>
