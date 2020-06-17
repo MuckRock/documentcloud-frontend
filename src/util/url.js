@@ -8,6 +8,24 @@ export function urlParts(url) {
   return [url.substr(0, qIndex), url.substr(qIndex + 1)];
 }
 
+/**
+ * Join a URL, normalizing for slashes in between
+ * @param  {...string} parts URL fragments to join
+ */
+export function urlJoin(...parts) {
+  return parts.reduce((a, b) => {
+    if (a.endsWith('/')) {
+      a = a.substr(0, a.length - 1);
+    }
+    if (b.startsWith('/')) {
+      b = b.substr(1);
+    }
+    if (a == '') return b;
+    if (b == '') return a;
+    return [a, b].join('/');
+  }, '');
+}
+
 // Adapted from: https://stackoverflow.com/a/3855394
 function getQueryStringParamsFromQuery(query) {
   if (query == null) return {};

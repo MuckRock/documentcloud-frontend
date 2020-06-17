@@ -22,6 +22,7 @@
   });
 
   function handleBackNav(e) {
+    if (e.state == null) return;
     router.currentUrl = e.state.path;
   }
 </script>
