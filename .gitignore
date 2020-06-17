@@ -2,6 +2,7 @@
 ._*
 node_modules
 public/bundle.*
+public/docs
 package-lock.json
 yarn.lock
 stats.json

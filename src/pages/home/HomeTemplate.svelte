@@ -20,7 +20,10 @@
   } from "@/api/auth";
 
   // Show the masthead
-  export let showMast;
+  export let showMast = false;
+
+  // Show the login controls
+  export let showLogin = true;
 </script>
 
 <style lang="scss">
@@ -69,7 +72,7 @@
 
     a {
       text-decoration: inherit;
-      color: #494949;
+      color: $homeBlack;
       font-weight: bold;
       font-size: 16px;
       margin-right: 1.5em;
@@ -84,7 +87,7 @@
   .content {
     margin: 2em 0;
     max-width: 80ch;
-    color: #494949;
+    color: $homeBlack;
     font-size: 16px;
     line-height: 24px;
   }
@@ -168,7 +171,35 @@
             {@html mastLogoSvg}
           </Link>
         </div>
-        <div class="narrowhide">
+        {#if showLogin}
+          <div class="narrowhide">
+            {#if $orgsAndUsers.me != null}
+              <div class="signupcontainer">
+                <div class="supplemental">
+                  Signed in as {$orgsAndUsers.me.name}
+                </div>
+                <div class="signin">
+                  <a href={SIGN_OUT_URL}>Sign out</a>
+                </div>
+                <Link to="app">
+                  <Button>Go to app</Button>
+                </Link>
+              </div>
+            {:else}
+              <div class="signupcontainer">
+                <div class="signin">
+                  <a href={SIGN_IN_URL}>Sign in</a>
+                </div>
+                <a href={SIGN_UP_URL}>
+                  <Button>Sign up</Button>
+                </a>
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </div>
+      {#if showLogin}
+        <div class="narrowshow">
           {#if $orgsAndUsers.me != null}
             <div class="signupcontainer">
               <div class="supplemental">
@@ -192,29 +223,7 @@
             </div>
           {/if}
         </div>
-      </div>
-      <div class="narrowshow">
-        {#if $orgsAndUsers.me != null}
-          <div class="signupcontainer">
-            <div class="supplemental">Signed in as {$orgsAndUsers.me.name}</div>
-            <div class="signin">
-              <a href={SIGN_OUT_URL}>Sign out</a>
-            </div>
-            <Link to="app">
-              <Button>Go to app</Button>
-            </Link>
-          </div>
-        {:else}
-          <div class="signupcontainer">
-            <div class="signin">
-              <a href={SIGN_IN_URL}>Sign in</a>
-            </div>
-            <a href={SIGN_UP_URL}>
-              <Button>Sign up</Button>
-            </a>
-          </div>
-        {/if}
-      </div>
+      {/if}
     </header>
     {#if showMast}
       <div class="mastcontainer">

@@ -63,7 +63,7 @@
     {@html minusSvg}
   </span>
 
-  <select bind:value={$renderer.zoom} on:change={handleChange}>
+  <select bind:value={$renderer.zoom} on:blur={handleChange}>
     {#each ZOOM_OPTIONS as option}
       <option value={option}>{option}</option>
     {/each}

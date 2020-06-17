@@ -26,6 +26,7 @@
   });
 
   function handleBackNav(e) {
+    if (e.state == null) return;
     router.currentUrl = e.state.path;
   }
 </script>
@@ -85,16 +86,16 @@
     background: #c2c2c2;
     background: linear-gradient(#dfdfdf, #c2c2c2);
 
-    .vcontent {
+    :global(.vcontent) {
       display: table;
       width: 100%;
 
-      svg {
+      :global(svg) {
         display: block;
       }
     }
 
-    select {
+    :global(select) {
       @include buttonLike;
 
       background: rgba(white, 0.7);

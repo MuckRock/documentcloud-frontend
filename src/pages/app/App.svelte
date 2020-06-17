@@ -4,7 +4,6 @@
 
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
-  import { projects } from "@/manager/projects";
 
   let sidebar = null;
 
