@@ -28,6 +28,9 @@ class Doc extends Svue {
         },
       },
       computed: {
+        document(viewer) {
+          return viewer.document;
+        },
         // Aspects
         averageAspect(rawAspects, defaultAspect) {
           let sum = 0;
@@ -47,7 +50,8 @@ class Doc extends Svue {
         },
 
         // Positions / Sizes
-        pages(aspects, layout, viewer) {
+        pages(aspects, layout, document) {
+          if (document == null) return [];
           let x = layout.rail;
           let y = layout.docMargin;
           const x2 = x + layout.pageWidth;
@@ -57,7 +61,7 @@ class Doc extends Svue {
             const height = layout.pageWidth * aspect;
             pages.push({
               position: [x, y, x2, y + height],
-              document: viewer.document, pageNumber: i
+              document, pageNumber: i
             });
             y += height + layout.pageGap;
           }

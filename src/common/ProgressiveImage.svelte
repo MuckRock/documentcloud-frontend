@@ -18,8 +18,6 @@
   const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
     x => x[0][1] == "normal"
   )[0];
-  // const NORMAL_INDEX
-  console.log("IW", IMAGE_WIDTHS, NORMAL_WIDTH);
   let srcs = [];
 
   onMount(() => {
@@ -28,7 +26,6 @@
 
   $: {
     const effectiveWidth = width * (window.devicePixelRatio || 1);
-    console.log(effectiveWidth);
     if (effectiveWidth > NORMAL_WIDTH[0][0]) {
       loadImg(NORMAL_WIDTH[1]);
     }
@@ -87,6 +84,10 @@
       if (!destroyed) {
         handleLoad(img, i);
       }
+    };
+    img.onerror = () => {
+      // On error, load previous res
+      if (i > 0) loadImg(i - 1);
     };
     img.alt = alt;
     img.src = src;

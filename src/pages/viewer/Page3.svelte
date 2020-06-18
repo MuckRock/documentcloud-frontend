@@ -51,7 +51,6 @@
       );
       if (!arrayEq(srcs, newSrcs)) {
         srcs = newSrcs;
-        console.log("SRCS", srcs);
       }
     }
     prevWidth = width;

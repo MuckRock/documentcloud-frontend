@@ -23,73 +23,80 @@
     }
   }
 
-  $: {
-    if ($doc.pages.length > 0) {
-      const components = $doc.pages.map(page => {
-        let renderedComponent = null;
-        const destroy = () => {
-          if (renderedComponent != null) renderedComponent.$destroy();
-          renderedComponent = null;
-        };
-        return {
-          component: {
-            render({ x, y, width, height }) {
-              console.log("RENDER", x, y, width, height, page.pageNumber);
-              const div = document.createElement("div");
-              div.style.position = "absolute";
-              div.style.background = "white";
-              div.style.left = `${x}px`;
-              div.style.top = `${y}px`;
-              div.style.width = `${width}px`;
-              div.style.height = `${height}px`;
-              div.style.border = "solid 1px gainsboro";
-              div.style.boxSizing = "border-box";
-              destroy();
-              renderedComponent = new Page({
-                target: div,
-                props: {
-                  page,
-                  x,
-                  y,
-                  width,
-                  height
-                }
-              });
-              return div;
-            },
-            update(div, { x, y, width, height }) {
-              div.style.left = `${x}px`;
-              div.style.top = `${y}px`;
-              div.style.width = `${width}px`;
-              div.style.height = `${height}px`;
-              if (renderedComponent != null) {
-                renderedComponent.$set({
-                  x,
-                  y,
-                  width,
-                  height
-                });
+  function setupScrollzoom() {
+    const components = doc.pages.map(page => {
+      let renderedComponent = null;
+      const destroy = () => {
+        if (renderedComponent != null) renderedComponent.$destroy();
+        renderedComponent = null;
+      };
+      return {
+        component: {
+          render({ x, y, width, height }) {
+            const div = document.createElement("div");
+            div.style.position = "absolute";
+            div.style.background = "white";
+            div.style.left = `${x}px`;
+            div.style.top = `${y}px`;
+            div.style.width = `${width}px`;
+            div.style.height = `${height}px`;
+            div.style.border = "solid 1px gainsboro";
+            div.style.boxSizing = "border-box";
+            destroy();
+            renderedComponent = new Page({
+              target: div,
+              props: {
+                page,
+                x,
+                y,
+                width,
+                height
               }
-            },
-            destroy() {
-              destroy();
+            });
+            return div;
+          },
+          update(div, { x, y, width, height }) {
+            div.style.left = `${x}px`;
+            div.style.top = `${y}px`;
+            div.style.width = `${width}px`;
+            div.style.height = `${height}px`;
+            if (renderedComponent != null) {
+              renderedComponent.$set({
+                x,
+                y,
+                width,
+                height
+              });
             }
           },
-          x: page.position[0],
-          y: page.position[1],
-          width: page.position[2] - page.position[0],
-          height: page.position[3] - page.position[1]
-        };
-      });
-      console.log(components);
+          destroy() {
+            destroy();
+          }
+        },
+        x: page.position[0],
+        y: page.position[1],
+        width: page.position[2] - page.position[0],
+        height: page.position[3] - page.position[1]
+      };
+    });
+    console.log(components);
 
-      // Init
-      destroyScrollzoom();
-      const scrollzoom = new ScrollZoom(docElem, {
-        components,
-        width: $doc.containerWidth,
-        height: $doc.containerHeight
-      });
+    // Init
+    destroyScrollzoom();
+    scrollzoom = new ScrollZoom(docElem, {
+      components,
+      width: $doc.containerWidth,
+      height: $doc.containerHeight
+    });
+  }
+
+  let initialized = false;
+
+  $: {
+    if (!initialized && $doc.pages.length > 0 && docElem != null) {
+      console.log("pages", $doc.pages);
+      initialized = true;
+      setupScrollzoom();
     }
   }
 

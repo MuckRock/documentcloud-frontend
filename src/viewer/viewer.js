@@ -32,6 +32,9 @@ export const viewer = new Svue({
         this.embed = route.props.embed == "1";
         return initViewer(this.id);
       }
+      if (route != null && route.name != 'viewer') {
+        this.document = null;
+      }
     },
   },
   computed: {
