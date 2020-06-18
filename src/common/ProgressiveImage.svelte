@@ -80,6 +80,8 @@
       IMAGE_WIDTHS[i][0]
     );
     const img = new Image();
+    // Adapted from comments on https://stackoverflow.com/a/12906840
+    img.ondragstart = () => false;
     img.onload = () => {
       if (!destroyed) {
         handleLoad(img, i);
@@ -108,6 +110,8 @@
       position: absolute;
       transition: opacity 0.2s linear;
       opacity: 0;
+      user-drag: none;
+      user-select: none;
 
       &.loaded {
         opacity: 1;

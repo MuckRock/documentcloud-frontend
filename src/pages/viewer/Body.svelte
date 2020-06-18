@@ -6,7 +6,7 @@
   // import { transform } from "@/viewer/transform";
   import { doc } from "@/viewer/document";
   import ScrollZoom from "scrollzoom";
-  import { onDestroy } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   let body;
   let bodyWidth;
@@ -79,7 +79,6 @@
         height: page.position[3] - page.position[1]
       };
     });
-    console.log(components);
 
     // Init
     destroyScrollzoom();
@@ -94,57 +93,54 @@
 
   $: {
     if (!initialized && $doc.pages.length > 0 && docElem != null) {
-      console.log("pages", $doc.pages);
       initialized = true;
       setupScrollzoom();
     }
   }
 
-  onDestroy(() => {
-    destroyScrollzoom();
+  function handlePinch(e) {
+    const target = e.target;
+    if (
+      e.ctrlKey &&
+      (target != docElem && (!docElem.contains || !docElem.contains(target)))
+    ) {
+      e.preventDefault();
+    }
+  }
+
+  const styles = [
+    ["touchAction", "pan-x pan-y"],
+    ["overscrollBehavior", "none"],
+    ["position", "fixed"],
+    ["overflow", "hidden"]
+  ];
+  const elements = [document.documentElement, document.body];
+  const prevStyles = styles.map(() => "");
+  onMount(() => {
+    // Set document root styles
+    for (let i = 0; i < styles.length; i++) {
+      elements.forEach(element => {
+        prevStyles[i] = element.style;
+        element.style[styles[i][0]] = styles[i][1];
+      });
+    }
+    document.body.addEventListener("wheel", handlePinch, { passive: false });
   });
 
-  // $: {
-  //   if (bodyWidth != null && bodyHeight != null) {
-  //     transform.viewportSize = [bodyWidth, bodyHeight];
-  //     transform.ensureBounds();
-  //   }
-  // }
+  onDestroy(() => {
+    // Restore document root styles
+    for (let i = 0; i < styles.length; i++) {
+      elements.forEach(element => {
+        element.style[styles[i][0]] = prevStyles[i];
+      });
+    }
+    document.body.removeEventListener("wheel", handlePinch, { passive: false });
+
+    destroyScrollzoom();
+  });
 </script>
 
 <style lang="scss">
-  // .body,
-  // .container,
-  // .scrollcontainer {
-  //   background: $viewerBodyBg;
-  //   position: absolute;
-  //   top: 0;
-  //   bottom: 0;
-  //   right: 0;
-  //   left: 0;
-  //   overflow: hidden;
-  //   user-select: none;
-  //   z-index: $viewerBodyZ;
-  //   touch-action: manipulation;
-  // }
-
-  // .scrollcontainer {
-  //   overflow: scroll;
-  //   z-index: $viewerScrollContainerZ;
-  //   background: none;
-  //   overscroll-behavior: none;
-  // }
-
-  // .container {
-  //   pointer-events: none;
-  // }
-
-  // TODO: refactor to only affect viewer
-  :global(body, html, :root) {
-    touch-action: pan-x pan-y;
-    overscroll-behavior: none;
-  }
-
   .doc {
     position: absolute;
     top: 0;

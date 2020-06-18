@@ -41,6 +41,7 @@
     position: absolute;
     top: 0;
     height: 100%;
+    user-select: none;
 
     .number {
       position: sticky;
@@ -60,6 +61,7 @@
     background: white;
     border: solid 1px gainsboro;
     box-sizing: border-box;
+    user-select: none;
   }
 </style>
 
