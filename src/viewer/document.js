@@ -4,7 +4,7 @@ import { viewer } from './viewer';
 const LAYOUT = {
   docMargin: 20,  // margin from top to first page, bottom to last
   pageGap: 20,  // margin between pages
-  rail: 69,  // max space on left and right on pages
+  rail: 10,  // max space on left and right on pages
   pageWidth: 700,  // the width of a page,
   pageBoundsWhenZoomed: 5,  // amount of padding when zoomed in past a page's width
 };
