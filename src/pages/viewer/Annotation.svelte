@@ -17,6 +17,7 @@
     deletePageAnnotation
   } from "@/viewer/layout";
   import { wrapSeparate } from "@/util/wrapLoad";
+  import emitter from "@/emit";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
@@ -26,6 +27,10 @@
   let DomPurify = null;
   import("dompurify").then(module => {
     DomPurify = module;
+  });
+
+  const emit = emitter({
+    stateChange() {}
   });
 
   export let page;
@@ -45,6 +50,12 @@
   export let access = annotation.access;
 
   $: editMode = mode == "edit" || editOverride;
+  $: {
+    editMode;
+    description;
+    // Emit state changes to capture mutations
+    emit.stateChange();
+  }
 
   $: titleValid = title.trim().length > 0;
   $: accessValid =

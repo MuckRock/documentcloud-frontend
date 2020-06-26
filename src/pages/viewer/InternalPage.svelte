@@ -3,7 +3,6 @@
   import PageNoteInsert from "./PageNoteInsert";
   import ProgressiveImage from "@/common/ProgressiveImage";
   import Annotation from "./Annotation";
-  import PageAnnotation from "./PageAnnotation";
 
   import { pageImageUrl } from "@/api/viewer";
   import { arrayEq } from "@/util/array";
@@ -21,6 +20,9 @@
   export let resizeCallback;
   export let height;
   export let y;
+
+  // Incrementer to mutate extra page content size when annotation sizes alter
+  let annotationChanger = 0;
 
   // SVG assets
   import publicTagSvg from "@/assets/public_tag.svg";
@@ -181,7 +183,7 @@
     {page}
     {width}
     {resizeCallback}
-    mutators={[$viewer.pageNotesByPage[page.pageNumber], $doc.showPageNoteInserts, $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote ? $layout.displayedAnnotation : null]}>
+    mutators={[$viewer.pageNotesByPage[page.pageNumber], $doc.showPageNoteInserts, $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote ? $layout.displayedAnnotation : null, annotationChanger]}>
     <div style="font-size: {scale * 100}%">
       <!-- Check for page notes -->
       {#if $layout.pageCrosshair}
@@ -196,7 +198,12 @@
       {/if}
       {#if $viewer.pageNotesByPage[page.pageNumber] != null}
         {#each $viewer.pageNotesByPage[page.pageNumber] as note}
-          <Annotation {page} pageNote={true} annotation={note} mode="view" />
+          <Annotation
+            on:stateChange={() => annotationChanger++}
+            {page}
+            pageNote={true}
+            annotation={note}
+            mode="view" />
         {/each}
       {/if}
     </div>
