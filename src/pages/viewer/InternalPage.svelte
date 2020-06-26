@@ -201,7 +201,7 @@
       {/if}
     </div>
   </ExtraPageContent>
-  <div use:markup={page.pageNumber}>
+  <div style="position: relative" use:markup={page.pageNumber}>
     <ProgressiveImage
       alt="Page {page.pageNumber + 1} of {page.document.title}"
       crosshair={$layout.pageCrosshair}
