@@ -7,6 +7,19 @@ function extractId(idSlug) {
   return parseInt(idSlug.split("-")[0]);
 }
 
+function collectNotes(orderedNotes, predicate) {
+  if (orderedNotes == null) return {};
+  const index = {};
+  orderedNotes.forEach((note) => {
+    if (!predicate(note)) return;
+    const existing = index.hasOwnProperty(note.page)
+      ? index[note.page]
+      : [];
+    index[note.page] = [...existing, note];
+  });
+  return index;
+}
+
 export const viewer = new Svue({
   data() {
     return {
@@ -129,15 +142,10 @@ export const viewer = new Svue({
       return notes;
     },
     notesByPage(orderedNotes) {
-      if (orderedNotes == null) return {};
-      const index = {};
-      orderedNotes.forEach((note) => {
-        const existing = index.hasOwnProperty(note.page)
-          ? index[note.page]
-          : [];
-        index[note.page] = [...existing, note];
-      });
-      return index;
+      return collectNotes(orderedNotes, note => !note.isPageNote);
+    },
+    pageNotesByPage(orderedNotes) {
+      return collectNotes(orderedNotes, note => note.isPageNote);
     },
     pageAspects(document) {
       if (document == null) return null;

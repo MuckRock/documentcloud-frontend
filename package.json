@@ -16,7 +16,6 @@
     "node-sass": "^4.13.0",
     "rlite-router": "^2.0.3",
     "sass-loader": "^8.0.0",
-    "scrollzoom": "https://github.com/freedmand/scrollzoom",
     "serve": "^11.3.0",
     "speed-measure-webpack-plugin": "^1.3.1",
     "style-loader": "^0.23.1",
@@ -45,8 +44,7 @@
     "axios": "^0.19.0",
     "body-scroll-lock": "^2.6.4",
     "dompurify": "^2.0.8",
-    "gl-matrix": "^3.3.0",
     "lucene": "^2.1.1",
-    "scrollzoom": "git+https://github.com/freedmand/scrollzoom.git"
+    "scrollzoom": "git+https://github.com/freedmand/scrollzoom#7aa33cd"
   }
 }

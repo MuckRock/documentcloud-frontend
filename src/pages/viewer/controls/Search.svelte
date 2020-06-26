@@ -1,6 +1,6 @@
 <script>
   import { layout } from "@/viewer/layout";
-  import { initiateSearch, exitSearch } from "@/viewer/renderer";
+  // import { initiateSearch, exitSearch } from "@/viewer/renderer";
   import { tick } from "svelte";
 
   // SVG assets
@@ -9,20 +9,21 @@
   import closeInlineSvg from "@/assets/close_inline.svg";
 
   let query = "";
-  let expand = false;
   let searchElem = null;
 
   $: invalidQuery = query.trim().length == 0;
 
+  // TODO: resolve
+
   async function retract() {
     query = "";
-    expand = false;
-    await exitSearch();
+    layout.searchExpanded = false;
+    // await exitSearch();
   }
 
   function expandSearch() {
     query = "";
-    expand = true;
+    layout.searchExpanded = true;
     tick().then(() => {
       if (searchElem != null) {
         searchElem.focus();
@@ -33,7 +34,7 @@
   function search() {
     if (invalidQuery) return;
 
-    initiateSearch(query);
+    // initiateSearch(query);
   }
 </script>
 
@@ -110,7 +111,7 @@
   }
 </style>
 
-<div class="input" class:expand>
+<div class="input" class:expand={$layout.searchExpanded}>
   <div class="container">
     <input
       bind:this={searchElem}
@@ -133,6 +134,6 @@
     {@html closeInlineSvg}
   </div>
 </div>
-<div class="icon" class:hide={expand} on:click={expandSearch}>
+<div class="icon" class:hide={$layout.searchExpanded} on:click={expandSearch}>
   {@html viewerSearchIconSvg}
 </div>

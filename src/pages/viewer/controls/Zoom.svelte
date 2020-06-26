@@ -1,28 +1,33 @@
 <script>
-  import {
-    ZOOM_OPTIONS,
-    renderer,
-    zoomFit,
-    zoomPercent,
-    zoomIn,
-    zoomOut
-  } from "@/viewer/renderer";
+  // import {
+  //   ZOOM_OPTIONS,
+  //   renderer,
+  //   zoomFit,
+  //   zoomPercent,
+  //   zoomIn,
+  //   zoomOut
+  // } from "@/viewer/renderer";
+  import { doc } from "@/viewer/document";
 
   // SVG assets
   import plusSvg from "@/assets/viewer_plus.svg";
   import minusSvg from "@/assets/viewer_minus.svg";
 
-  function handleChange(e) {
-    const zoom = e.target.value;
+  // TODO: resolve
 
-    if (zoom == ZOOM_OPTIONS[0]) {
-      zoomFit();
-    } else {
-      const percent = parseFloat(zoom) / 100;
-      if (percent != null && !isNaN(percent)) {
-        zoomPercent(percent);
-      }
-    }
+  function zoomIn() {}
+  function zoomOut() {}
+
+  function handleChange(e) {
+    // const zoom = e.target.value;
+    // if (zoom == ZOOM_OPTIONS[0]) {
+    //   zoomFit();
+    // } else {
+    //   const percent = parseFloat(zoom) / 100;
+    //   if (percent != null && !isNaN(percent)) {
+    //     zoomPercent(percent);
+    //   }
+    // }
   }
 </script>
 
@@ -63,9 +68,12 @@
     {@html minusSvg}
   </span>
 
-  <select bind:value={$renderer.zoom} on:blur={handleChange}>
+  <select>
+    <option>{($doc.viewerScale * 100).toFixed()}%</option>
+  </select>
+  <!-- <select bind:value={$renderer.zoom} on:blur={handleChange}>
     {#each ZOOM_OPTIONS as option}
       <option value={option}>{option}</option>
     {/each}
-  </select>
+  </select> -->
 </span>

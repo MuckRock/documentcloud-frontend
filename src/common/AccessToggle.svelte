@@ -6,6 +6,7 @@
 
   export let access = "private";
   export let editAccess = true;
+  export let stacked = false;
 
   export let publicName = "Public";
   export let collaboratorName = "Collaborator";
@@ -107,10 +108,22 @@
         }
       }
     }
+
+    &.stacked {
+      display: block;
+      margin: 10px 0;
+      box-sizing: border-box;
+      width: inherit;
+
+      .container {
+        display: block;
+        margin: 6px 0;
+      }
+    }
   }
 </style>
 
-<div class="access">
+<div class="access" class:stacked>
   {#if editAccess}
     <div
       class="container public"

@@ -1,71 +1,92 @@
 <script>
   import Page from "./Page";
 
-  // import { panZoom } from "@/viewer/gestures";
-  import { layout } from "@/viewer/layout";
-  // import { transform } from "@/viewer/transform";
+  import { layout, cancelAnnotation } from "@/viewer/layout";
   import { doc } from "@/viewer/document";
+  import { viewer } from "@/viewer/viewer";
   import ScrollZoom from "scrollzoom";
-  import { onMount, onDestroy } from "svelte";
+  import ActionPane from "./pane/ActionPane";
+  import { Note } from "@/structure/note";
+  import { onMount, onDestroy, tick } from "svelte";
+
+  import {
+    enterRedactMode,
+    enterAnnotateMode,
+    enterSectionsMode
+  } from "@/viewer/actions";
 
   let body;
   let bodyWidth;
   let bodyHeight;
 
   let docElem;
+  let actionHeight;
+  $: actionOffset =
+    actionHeight == null || $layout.action == null ? 0 : actionHeight;
 
   let scrollzoom = null;
 
   function destroyScrollzoom() {
-    if (scrollzoom != null) {
-      scrollzoom.destroy();
-      scrollzoom = null;
+    if (doc.scrollzoom != null) {
+      doc.scrollzoom.destroy();
+      doc.scrollzoom = null;
     }
   }
 
   function setupScrollzoom() {
     const components = doc.pages.map(page => {
-      let renderedComponent = null;
+      let renderedComponent = { component: null };
       const destroy = () => {
-        if (renderedComponent != null) renderedComponent.$destroy();
-        renderedComponent = null;
+        if (renderedComponent.component != null) {
+          renderedComponent.component.$destroy();
+        }
+        renderedComponent.component = null;
       };
       return {
         component: {
-          render({ x, y, width, height }) {
+          render({ x, y, width, height, docHeight }) {
             const div = document.createElement("div");
             div.style.position = "absolute";
-            div.style.background = "white";
             div.style.left = `${x}px`;
             div.style.top = `${y}px`;
             div.style.width = `${width}px`;
             div.style.height = `${height}px`;
-            div.style.border = "solid 1px gainsboro";
+            doc.docHeight = docHeight;
+            doc.viewerWidth = width;
+            doc.viewerScale = width / doc.layout.pageWidth;
             div.style.boxSizing = "border-box";
             destroy();
-            renderedComponent = new Page({
+            renderedComponent.component = new Page({
               target: div,
               props: {
                 page,
                 x,
                 y,
                 width,
-                height
+                height,
+                scale: doc.viewerScale,
+                resizeCallback(extraHeight, width) {
+                  handleExtraHeight(page, extraHeight, width);
+                }
               }
             });
             return div;
           },
-          update(div, { x, y, width, height }) {
+          update(div, { x, y, width, height, docHeight }) {
             div.style.left = `${x}px`;
             div.style.top = `${y}px`;
             div.style.width = `${width}px`;
             div.style.height = `${height}px`;
-            if (renderedComponent != null) {
-              renderedComponent.$set({
+            doc.docHeight = docHeight;
+            doc.viewerWidth = width;
+            doc.viewerScale = width / doc.layout.pageWidth;
+            if (renderedComponent.component != null) {
+              renderedComponent.component.$set({
                 x,
                 y,
                 width,
-                height
+                height,
+                scale: doc.viewerScale
               });
             }
           },
@@ -76,16 +97,24 @@
         x: page.position[0],
         y: page.position[1],
         width: page.position[2] - page.position[0],
-        height: page.position[3] - page.position[1]
+        height: page.position[3] - page.position[1],
+        page,
+        renderedComponent
       };
     });
 
     // Init
     destroyScrollzoom();
-    scrollzoom = new ScrollZoom(docElem, {
+    doc.scrollzoom = new ScrollZoom(docElem, {
       components,
       width: $doc.containerWidth,
-      height: $doc.containerHeight
+      height: $doc.containerHeight,
+      changeCallback: function() {
+        const components = Object.values(this.renderedComponents).sort(
+          (a, b) => a.page.pageNumber - b.page.pageNumber
+        );
+        doc.visiblePageNumber = components[0].page.pageNumber + 1;
+      }
     });
   }
 
@@ -98,11 +127,16 @@
     }
   }
 
+  function visualScaleCheck() {
+    return window.visualViewport != null && window.visualViewport.scale > 1;
+  }
+
   function handlePinch(e) {
     const target = e.target;
     if (
       e.ctrlKey &&
-      (target != docElem && (!docElem.contains || !docElem.contains(target)))
+      (target != docElem && (!docElem.contains || !docElem.contains(target))) &&
+      !visualScaleCheck()
     ) {
       e.preventDefault();
     }
@@ -138,6 +172,78 @@
 
     destroyScrollzoom();
   });
+
+  async function handleExtraHeight(page, extraHeight, width) {
+    if (doc.scrollzoom == null) return;
+
+    const delta = (doc.extraHeights[page.pageNumber] - extraHeight) * width;
+    if (delta == 0) return;
+
+    const topPosition =
+      doc.scrollzoom.components[page.pageNumber].y - docElem.scrollTop;
+    const prevHeight = doc.scrollzoom.components[page.pageNumber].height;
+    doc.extraHeights[page.pageNumber] = extraHeight;
+    doc.extraHeights = doc.extraHeights; // trigger update
+    await tick();
+
+    if (
+      prevHeight !=
+      doc.pages[page.pageNumber].position[3] -
+        doc.pages[page.pageNumber].position[1]
+    ) {
+      doc.scrollzoom.components[page.pageNumber].height =
+        doc.pages[page.pageNumber].position[3] -
+        doc.pages[page.pageNumber].position[1];
+
+      for (let i = page.pageNumber + 1; i < doc.pages.length; i++) {
+        doc.scrollzoom.components[i].y = doc.pages[i].position[1];
+      }
+      doc.scrollzoom.resizeContainer(
+        doc.scrollzoom.containerWidth,
+        doc.containerHeight
+      );
+      doc.scrollzoom.domCallback();
+      if (topPosition < 0) {
+        // Correct scroll if above viewport
+        docElem.scrollTop += delta;
+      }
+    }
+  }
+
+  function handleMouseDown(e) {
+    if ($layout.displayAnnotate) {
+      if (
+        e.path.some(
+          elem =>
+            elem.className != null &&
+            elem.className.includes("extrapagecontent")
+        )
+      ) {
+        // Ignore clicks on extra page content
+        return;
+      }
+      cancelAnnotation();
+    }
+  }
+
+  function handleKeyPress(e) {
+    if (
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      !e.shiftKey &&
+      !layout.disableControls &&
+      !layout.searchExpanded
+    ) {
+      if (e.key == "a") {
+        enterAnnotateMode();
+      } else if (e.key == "r") {
+        enterRedactMode();
+      } else if (e.key == "s") {
+        enterSectionsMode();
+      }
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -156,30 +262,21 @@
     :global(img) {
       background: white;
     }
+
+    &.grayed {
+      background: $viewerBodyBgDarker;
+    }
   }
 </style>
 
-<div
-  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
-  {$layout.sidebarWidth}px"
-  bind:this={docElem}
-  class="doc" />
+<ActionPane bind:actionHeight />
 
-<!-- <div
-  class="body"
-  bind:offsetWidth={bodyWidth}
-  bind:offsetHeight={bodyHeight}
-  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
-  {$layout.sidebarWidth}px"
-  bind:this={body}>
-  <div
-    class="scrollcontainer"
-    use:panZoom={{ workspace: null, transform, workspaceElem: body }}>
-    <div />
-  </div>
-  <div class="container">
-    {#each $transform.visiblePages as page (page.pageNumber)}
-      <Page {page} {bodyWidth} transform={$transform} />
-    {/each}
-  </div>
-</div> -->
+<div
+  style="top: {$layout.headerHeight + actionOffset}px; bottom: {$layout.footerHeight}px;
+  right: {$layout.sidebarWidth}px;"
+  bind:this={docElem}
+  class="doc"
+  on:mousedown={handleMouseDown}
+  class:grayed={$layout.displayAnnotate} />
+
+<svelte:window on:keypress={handleKeyPress} />

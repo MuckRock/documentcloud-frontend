@@ -12,7 +12,6 @@
   // Stores
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
-  import { renderer } from "@/viewer/renderer";
   import { writable } from "svelte/store";
 
   // SVG assets

@@ -54,6 +54,7 @@ export const layout = new Svue({
 
       // Search
       search: null,
+      searchExpanded: false,
       searchPending: false,
       searchHighlights: null,
       searchPages: null,
@@ -170,6 +171,7 @@ export const layout = new Svue({
 });
 
 function consolidateDragObject(dragObject) {
+  if (dragObject.start == null) return new Note({ page_number: dragObject.pageNumber });
   const start = {
     x: Math.min(dragObject.start.x, dragObject.end.x),
     y: Math.min(dragObject.start.y, dragObject.end.y),
@@ -189,6 +191,7 @@ function consolidateDragObject(dragObject) {
 }
 
 export function annotationValid(annotation) {
+  if (annotation.isPageNote) return true;
   if (annotation.x2 <= annotation.x1) return false;
   if (annotation.y2 <= annotation.y1) return false;
   return true;
@@ -201,7 +204,7 @@ export function enterEditAnnotateMode(annotation) {
   layout.displayedAnnotation = annotation;
 }
 
-export function pageDragStart(pageNumber, x, y) {
+export function pageDragStart(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = {
       pageNumber,
@@ -217,7 +220,7 @@ export function pageDragStart(pageNumber, x, y) {
   }
 }
 
-export function pageDragMove(pageNumber, x, y) {
+export function pageDragMove(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
   } else if (layout.annotating) {
@@ -229,7 +232,7 @@ export function pageDragMove(pageNumber, x, y) {
   }
 }
 
-export function pageDragEnd(pageNumber, x, y) {
+export function pageDragEnd(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
     pushRedaction();
@@ -242,6 +245,14 @@ export function pageDragEnd(pageNumber, x, y) {
     layout.annotationPending = true;
     enterEditAnnotateMode(layout.shownEditAnnotation);
   }
+}
+
+export function startPageNote(pageNumber) {
+  layout.rawAnnotation = {
+    pageNumber
+  };
+  layout.annotationPending = true;
+  enterEditAnnotateMode(layout.shownEditAnnotation);
 }
 
 function pushRedaction() {

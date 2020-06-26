@@ -4,7 +4,6 @@
   import TitleHeader from "./TitleHeader";
 
   import { layout, initiateSearch } from "@/viewer/layout";
-  import { scroll, changeMode } from "@/viewer/renderer";
 </script>
 
 <style lang="scss">

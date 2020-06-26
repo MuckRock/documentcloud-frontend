@@ -1,5 +1,5 @@
 <script>
-  import { toggleSidebar } from "@/viewer/renderer";
+  import { toggleSidebar } from "@/viewer/document";
 
   // SVG assets
   import viewerHamburgerSvg from "@/assets/viewer_hamburger.svg";

@@ -5,6 +5,9 @@
   export let alt;
   export let page;
   export let width;
+  export let aspect;
+  export let grayed = false;
+  export let crosshair = false;
   let elem;
   let destroyed = false;
   let imgs = [];
@@ -103,21 +106,43 @@
 </script>
 
 <style lang="scss">
-  span {
+  div {
+    position: relative;
+    width: 100%;
+    background: white;
+    border: solid 1px gainsboro;
+    box-sizing: border-box;
+
     :global(img) {
+      position: absolute;
       width: 100%;
       height: 100%;
-      position: absolute;
-      transition: opacity 0.2s linear;
-      opacity: 0;
+      top: 0;
+      left: 0;
+
       user-drag: none;
       user-select: none;
+
+      transition: opacity 0.2s linear;
+      opacity: 0;
 
       &.loaded {
         opacity: 1;
       }
     }
+
+    &.grayed {
+      filter: brightness(0.8);
+    }
+
+    &.crosshair {
+      cursor: crosshair;
+    }
   }
 </style>
 
-<span bind:this={elem} />
+<div
+  style="padding-top: {aspect * 100}%"
+  bind:this={elem}
+  class:grayed
+  class:crosshair />
