@@ -1,10 +1,12 @@
 <script>
   import ExtraPageContent from "./ExtraPageContent";
   import PageNoteInsert from "./PageNoteInsert";
+  import TextPage from "@/common/TextPage";
   import ProgressiveImage from "@/common/ProgressiveImage";
   import Annotation from "./Annotation";
 
-  import { pageImageUrl } from "@/api/viewer";
+  import { pageImageUrl, textUrl } from "@/api/viewer";
+  import { showIfFullyVisible } from "@/util/visibility";
   import { arrayEq } from "@/util/array";
   import { ignoreFirst } from "@/util/closure";
   import { doc, showAnnotation } from "@/viewer/document";
@@ -18,6 +20,7 @@
   export let width;
   export let scale;
   export let resizeCallback;
+  export let aspectCallback;
   export let height;
   export let y;
 
@@ -35,38 +38,13 @@
     private: privateTagSvg
   };
 
-  let number = null;
-  let observer = null;
-  let numberVisible = true;
-
   const border = 1;
+
+  let textPageUpdated = 0; // counter to mutate page height
 
   // Image height calculated from aspect
   $: effectiveWidth = width - border * 2;
   $: height = (width - border * 2) * page.aspect;
-
-  onMount(() => {
-    // Use an intersection observer to hide the number when it's only partially visible
-    observer = new IntersectionObserver(
-      ignoreFirst(e => {
-        if (e == null || e.length != 1) return;
-        numberVisible =
-          e[0].intersectionRatio == 1 ||
-          e[0].intersectionRect.width >= e[0].boundingClientRect.width;
-      }),
-      {
-        threshold: 1,
-        margin: "30px 0 30px 0"
-      }
-    );
-    observer.observe(number);
-  });
-
-  onDestroy(() => {
-    if (observer != null && number != null) {
-      observer.unobserve(number);
-    }
-  });
 </script>
 
 <style lang="scss">
@@ -172,9 +150,8 @@
 <div class="numbercontainer" style="right: {width}px;">
   <div
     class="number"
-    class:grayed={$layout.displayAnnotate}
-    bind:this={number}
-    style="visibility: {numberVisible ? 'visible' : 'hidden'}">
+    use:showIfFullyVisible
+    class:grayed={$layout.displayAnnotate}>
     <a href="#{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
   </div>
 </div>
@@ -183,7 +160,7 @@
     {page}
     {width}
     {resizeCallback}
-    mutators={[$viewer.pageNotesByPage[page.pageNumber], $doc.showPageNoteInserts, $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote ? $layout.displayedAnnotation : null, annotationChanger]}>
+    mutators={[$viewer.pageNotesByPage[page.pageNumber], $doc.showPageNoteInserts, $doc.mode, $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote ? $layout.displayedAnnotation : null, annotationChanger, textPageUpdated]}>
     <div style="font-size: {scale * 100}%">
       <!-- Check for page notes -->
       {#if $layout.pageCrosshair}
@@ -196,7 +173,7 @@
           annotation={$layout.displayedAnnotation}
           mode={$layout.annotateMode} />
       {/if}
-      {#if $viewer.pageNotesByPage[page.pageNumber] != null}
+      {#if $doc.mode == 'image' && $viewer.pageNotesByPage[page.pageNumber] != null}
         {#each $viewer.pageNotesByPage[page.pageNumber] as note}
           <Annotation
             on:stateChange={() => annotationChanger++}
@@ -208,75 +185,88 @@
       {/if}
     </div>
   </ExtraPageContent>
-  <div style="position: relative" use:markup={page.pageNumber}>
-    <ProgressiveImage
-      alt="Page {page.pageNumber + 1} of {page.document.title}"
-      crosshair={$layout.pageCrosshair}
+  {#if $doc.mode == 'image'}
+    <div style="position: relative" use:markup={page.pageNumber}>
+      <ProgressiveImage
+        alt="Page {page.pageNumber + 1} of {page.document.title}"
+        crosshair={$layout.pageCrosshair}
+        width={effectiveWidth}
+        aspect={page.aspect}
+        grayed={$layout.displayAnnotate}
+        {page} />
+
+      <!-- Markup -->
+      {#if $viewer.notesByPage[page.pageNumber] != null}
+        <!-- Existing annotations -->
+        {#each $viewer.notesByPage[page.pageNumber] as note}
+          {#if !note.isPageNote}
+            <div
+              class="tag"
+              class:hover={$layout.hoveredNote == note}
+              class:grayed={$layout.displayAnnotate}
+              use:hoveredNote={note}
+              on:click={() => showAnnotation(note)}
+              style="top: {note.y1 * 100}%">
+              {@html svgMap[note.access]}
+            </div>
+            <div
+              class="annotation selectable"
+              class:public={note.access == 'public'}
+              class:organization={note.access == 'organization'}
+              class:private={note.access == 'private'}
+              class:grayed={$layout.displayAnnotate}
+              class:hover={$layout.hoveredNote == note}
+              use:hoveredNote={note}
+              on:click={() => showAnnotation(note)}
+              style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; width: {(note.x2 - note.x1) * 100}%;
+              height: {(note.y2 - note.y1) * 100}%" />
+          {/if}
+        {/each}
+      {/if}
+
+      {#if $layout.redacting}
+        <!-- Pending redactions -->
+        {#each $layout.allRedactions as redaction}
+          {#if redaction.page == page.pageNumber}
+            <div
+              class="redaction"
+              style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
+              width: {redaction.width * 100}%; height: {redaction.height * 100}%" />
+          {/if}
+        {/each}
+      {:else if $layout.annotating}
+        {#if $layout.currentAnnotation != null && $layout.currentAnnotation.page == page.pageNumber && !$layout.currentAnnotation.isPageNote}
+          <div
+            class="annotation"
+            class:public={$layout.currentAnnotation.access == 'public'}
+            class:organization={$layout.currentAnnotation.access == 'organization'}
+            class:private={$layout.currentAnnotation.access == 'private'}
+            style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
+            width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
+        {/if}
+      {:else if $layout.displayAnnotate}
+        {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && !$layout.displayedAnnotation.isPageNote}
+          <Annotation
+            {page}
+            {y}
+            {height}
+            width={effectiveWidth}
+            annotation={$layout.displayedAnnotation}
+            mode={$layout.annotateMode}
+            aspect={page.aspect} />
+        {/if}
+      {/if}
+    </div>
+  {:else if $doc.mode == 'text'}
+    <TextPage
       width={effectiveWidth}
-      aspect={page.aspect}
-      grayed={$layout.displayAnnotate}
-      {page} />
-
-    <!-- Markup -->
-    {#if $viewer.notesByPage[page.pageNumber] != null}
-      <!-- Existing annotations -->
-      {#each $viewer.notesByPage[page.pageNumber] as note}
-        {#if !note.isPageNote}
-          <div
-            class="tag"
-            class:hover={$layout.hoveredNote == note}
-            class:grayed={$layout.displayAnnotate}
-            use:hoveredNote={note}
-            on:click={() => showAnnotation(note)}
-            style="top: {note.y1 * 100}%">
-            {@html svgMap[note.access]}
-          </div>
-          <div
-            class="annotation selectable"
-            class:public={note.access == 'public'}
-            class:organization={note.access == 'organization'}
-            class:private={note.access == 'private'}
-            class:grayed={$layout.displayAnnotate}
-            class:hover={$layout.hoveredNote == note}
-            use:hoveredNote={note}
-            on:click={() => showAnnotation(note)}
-            style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; width: {(note.x2 - note.x1) * 100}%;
-            height: {(note.y2 - note.y1) * 100}%" />
-        {/if}
-      {/each}
-    {/if}
-
-    {#if $layout.redacting}
-      <!-- Pending redactions -->
-      {#each $layout.allRedactions as redaction}
-        {#if redaction.page == page.pageNumber}
-          <div
-            class="redaction"
-            style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
-            width: {redaction.width * 100}%; height: {redaction.height * 100}%" />
-        {/if}
-      {/each}
-    {:else if $layout.annotating}
-      {#if $layout.currentAnnotation != null && $layout.currentAnnotation.page == page.pageNumber && !$layout.currentAnnotation.isPageNote}
-        <div
-          class="annotation"
-          class:public={$layout.currentAnnotation.access == 'public'}
-          class:organization={$layout.currentAnnotation.access == 'organization'}
-          class:private={$layout.currentAnnotation.access == 'private'}
-          style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
-          width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
-      {/if}
-    {:else if $layout.displayAnnotate}
-      {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && !$layout.displayedAnnotation.isPageNote}
-        <Annotation
-          {page}
-          {y}
-          {height}
-          width={effectiveWidth}
-          annotation={$layout.displayedAnnotation}
-          mode={$layout.annotateMode}
-          aspect={page.aspect} />
-      {/if}
-    {/if}
-  </div>
+      aspect={$doc.aspects[page.pageNumber]}
+      rawAspect={$doc.rawAspects[page.pageNumber]}
+      on:text={({ detail: text }) => (doc.texts[page.pageNumber] = text)}
+      cachedText={$doc.texts[page.pageNumber]}
+      on:aspect={({ detail: aspect }) => aspectCallback(aspect, width)}
+      src={textUrl(page.document, page.pageNumber)}
+      highlights={$layout.searchHighlights != null ? $layout.searchHighlights[page.pageNumber] : null}
+      delay={50} />
+  {/if}
 </div>

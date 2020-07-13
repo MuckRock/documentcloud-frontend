@@ -473,17 +473,22 @@
 
     &.pagenote {
       position: relative;
-      margin-bottom: 10px;
       margin-left: 10px;
       margin-right: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      bottom: 0;
+      background: none;
 
       header {
         margin-bottom: 0;
+        margin-top: 0;
         padding-bottom: 8px;
       }
 
       footer {
         margin-top: 0;
+        margin-bottom: 0;
       }
     }
   }

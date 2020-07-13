@@ -73,6 +73,7 @@
     });
   }
 
+  let embedOption = "document";
   let shareOption = "embed";
 </script>
 
@@ -129,6 +130,44 @@
 
     h2 {
       font-size: 18px;
+    }
+  }
+
+  .embedoptions {
+    font-size: 0;
+    border: solid 1px #a5a5a5;
+    display: inline-block;
+    border-radius: 3px;
+
+    div {
+      display: inline-block;
+      background: #f7f7f7;
+      margin: 0;
+      font-size: 15px;
+      padding: 3px 10px;
+      border-right: solid 1px #a5a5a5;
+      user-select: none;
+      cursor: pointer;
+
+      &:hover {
+        background: #ebebeb;
+      }
+
+      &.selected {
+        background: #dadada;
+        -webkit-text-stroke: 0.3px;
+      }
+
+      &:first-child {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+      }
+
+      &:last-child {
+        border-right: none;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
     }
   }
 
@@ -205,6 +244,26 @@
           </div>
         </div>
       {/if}
+      <div class="optionscontainer">
+        <span>Type:</span>
+        <div class="embedoptions">
+          <div
+            class:selected={embedOption == 'document'}
+            on:click={() => (embedOption = 'document')}>
+            Document
+          </div>
+          <div
+            class:selected={embedOption == 'page'}
+            on:click={() => (embedOption = 'page')}>
+            Page
+          </div>
+          <div
+            class:selected={embedOption == 'note'}
+            on:click={() => (embedOption = 'note')}>
+            Note
+          </div>
+        </div>
+      </div>
       <div class="shareoptions">
         <div
           class="shareoption"

@@ -1,6 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from './viewer';
-import { layout, annotationValid } from './layout';
+import { tick } from 'svelte';
+import { layout, annotationValid, startSearch, clearSearch } from './layout';
 
 const LAYOUT = {
   docMargin: 40,  // margin from top to first page, bottom to last
@@ -10,7 +11,8 @@ const LAYOUT = {
   pageBoundsWhenZoomed: 5,  // amount of padding when zoomed in past a page's width
 };
 
-const DEFAULT_ASPECT = 11 / 8.5; // letter size paper
+const DEFAULT_IMAGE_ASPECT = 11 / 8.5; // letter size paper
+const DEFAULT_TEXT_ASPECT = 11 / 8.5;
 
 class Doc extends Svue {
   constructor() {
@@ -18,16 +20,23 @@ class Doc extends Svue {
       data() {
         return {
           layout: LAYOUT,
-          defaultAspect: DEFAULT_ASPECT,
-          rawAspects: [],  // list of aspect ratios for each page
-          extraHeights: [],
+          allDefaultAspects: {
+            image: DEFAULT_IMAGE_ASPECT,
+            text: DEFAULT_TEXT_ASPECT,
+          },
+          allRawAspects: { image: [], text: [] },  // list of aspect ratios for each page
+          allExtraHeights: { image: [], text: [] },
           viewer,
+          texts: [],
           viewerWidth: 0,
           docHeight: 0,
           viewerScale: 1,
           scrollzoom: null,
+          simpleDocElem: null,
           visiblePageNumber: 1,
           sidebarExpanded: false,
+          textJump: null,
+          mode: 'image',
 
           // Show page note insert regions
           showPageNoteInserts: false,
@@ -39,6 +48,15 @@ class Doc extends Svue {
         },
       },
       computed: {
+        defaultAspect(mode, allDefaultAspects) {
+          return allDefaultAspects[mode];
+        },
+        rawAspects(mode, allRawAspects) {
+          return allRawAspects[mode] || [];
+        },
+        extraHeights(mode, allExtraHeights) {
+          return allExtraHeights[mode] || [];
+        },
         document(viewer) {
           return viewer.document;
         },
@@ -98,15 +116,44 @@ class Doc extends Svue {
 
   initAspects() {
     this.visiblePageNumber = 1;
-    this.extraHeights = this.viewer.pageAspects.map(() => 0);
-    this.rawAspects = this.viewer.pageAspects.slice();
+    this.texts = this.viewer.pageAspects.map(() => null);
+    this.allExtraHeights = {
+      image: this.viewer.pageAspects.map(() => 0),
+      text: this.viewer.pageAspects.map(() => 0),
+    };
+    this.allRawAspects = {
+      image: this.viewer.pageAspects.slice(),
+      text: this.viewer.pageAspects.map(() => null),
+    };
+  }
+
+  setExtraHeight(pageNumber, extraHeight) {
+    doc.allExtraHeights[doc.mode][pageNumber] = extraHeight;
+    doc.allExtraHeights = doc.allExtraHeights;  // trigger update
+  }
+
+  setPageAspect(pageNumber, aspect) {
+    doc.allRawAspects[doc.mode][pageNumber] = aspect;
+    doc.allRawAspects = doc.allRawAspects;  // trigger update
   }
 
   jumpToPage(pageNumber) {
-    if (this.scrollzoom == null) return;
+    if (this.mode == 'image') {
+      if (this.scrollzoom == null) return;
 
-    const scrollTop = (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) * this.scrollzoom.transform.matrix[0];
-    this.scrollzoom.element.scrollTop = scrollTop;
+      const scrollTop = (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) * this.scrollzoom.transform.matrix[0];
+      if (this.scrollzoom.element != null) this.scrollzoom.element.scrollTop = scrollTop;
+    } else if (this.mode == 'text') {
+      if (doc.simpleDocElem != null) doc.simpleDocElem.scrollTop = 0;
+      document.getElementById(`${pageNumber + 1}`).scrollIntoView();
+    }
+  }
+
+  jumpToTextJump() {
+    if (this.textJump != null) {
+      this.jumpToPage(this.textJump);
+      this.textJump = null;
+    }
   }
 }
 
@@ -128,6 +175,33 @@ export async function closeSidebarIfFullWidth() {
   }
 }
 
+export async function restorePosition(pageNumber) {
+  doc.jumpToPage(pageNumber);
+}
+
+export async function changeMode(mode) {
+  await closeSidebarIfFullWidth();
+
+  // No effect when mode is same
+  if (mode == doc.mode) return;
+
+  // Change the mode while preserving position.
+  const position = doc.visiblePageNumber - 1;
+
+  if (mode == 'text' && doc.mode == 'image') {
+    doc.textJump = position;
+  }
+  doc.mode = mode;
+
+  if (mode != 'text') {
+    await tick();
+    restorePosition(position);
+  }
+
+  // Deselect any text
+  if (window.getSelection) window.getSelection().removeAllRanges();
+}
+
 export async function showAnnotation(annotation, scrollIntoView = false) {
   await closeSidebarIfFullWidth();
 
@@ -138,5 +212,21 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
   if (scrollIntoView) {
     await restorePosition(annotation.page);
     await scrollVisibleAnnotationIntoView();
+  }
+}
+
+let modeBeforeSearch = 'image';
+
+export async function initiateSearch(query) {
+  if (await startSearch(query)) {
+    modeBeforeSearch = doc.mode;
+    await changeMode("search");
+  }
+}
+
+export async function exitSearch() {
+  clearSearch();
+  if (modeBeforeSearch != null) {
+    await changeMode(modeBeforeSearch);
   }
 }

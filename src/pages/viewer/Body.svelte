@@ -1,5 +1,6 @@
 <script>
   import Page from "./Page";
+  import SearchResults from "./SearchResults";
 
   import { layout, cancelAnnotation } from "@/viewer/layout";
   import { doc } from "@/viewer/document";
@@ -67,6 +68,9 @@
                 scale: doc.viewerScale,
                 resizeCallback(extraHeight, width) {
                   handleExtraHeight(page, extraHeight, width);
+                },
+                aspectCallback(aspect, width) {
+                  handlePageAspect(page, aspect, width);
                 }
               }
             });
@@ -173,17 +177,18 @@
     destroyScrollzoom();
   });
 
-  async function handleExtraHeight(page, extraHeight, width) {
-    if (doc.scrollzoom == null) return;
+  let noScroll = false;
 
-    const delta = (doc.extraHeights[page.pageNumber] - extraHeight) * width;
+  async function handlePageAspect(page, aspect, width) {
+    if (docElem == null || doc.scrollzoom == null) return;
+
+    const delta = (doc.aspects[page.pageNumber] - aspect) * width;
     if (delta == 0) return;
 
     const topPosition =
       doc.scrollzoom.components[page.pageNumber].y - docElem.scrollTop;
     const prevHeight = doc.scrollzoom.components[page.pageNumber].height;
-    doc.extraHeights[page.pageNumber] = extraHeight;
-    doc.extraHeights = doc.extraHeights; // trigger update
+    doc.setPageAspect(page.pageNumber, aspect);
     await tick();
 
     if (
@@ -203,9 +208,49 @@
         doc.containerHeight
       );
       doc.scrollzoom.domCallback();
-      if (topPosition < 0) {
+      if (topPosition < 0 && !noScroll) {
         // Correct scroll if above viewport
         docElem.scrollTop += delta;
+        // noScroll = true;
+        // setTimeout(() => (noScroll = false), 100);
+      }
+    }
+  }
+
+  async function handleExtraHeight(page, extraHeight) {
+    if (docElem == null || doc.scrollzoom == null) return;
+
+    const delta = doc.extraHeights[page.pageNumber] - extraHeight;
+    if (delta == 0) return;
+
+    const topPosition =
+      doc.scrollzoom.components[page.pageNumber].y - docElem.scrollTop;
+    const prevHeight = doc.scrollzoom.components[page.pageNumber].height;
+    doc.setExtraHeight(page.pageNumber, extraHeight);
+    await tick();
+
+    if (
+      prevHeight !=
+      doc.pages[page.pageNumber].position[3] -
+        doc.pages[page.pageNumber].position[1]
+    ) {
+      doc.scrollzoom.components[page.pageNumber].height =
+        doc.pages[page.pageNumber].position[3] -
+        doc.pages[page.pageNumber].position[1];
+
+      for (let i = page.pageNumber + 1; i < doc.pages.length; i++) {
+        doc.scrollzoom.components[i].y = doc.pages[i].position[1];
+      }
+      doc.scrollzoom.resizeContainer(
+        doc.scrollzoom.containerWidth,
+        doc.containerHeight
+      );
+      doc.scrollzoom.domCallback();
+      if (topPosition < 0 && !noScroll) {
+        // Correct scroll if above viewport
+        docElem.scrollTop += delta;
+        // noScroll = true;
+        // setTimeout(() => (noScroll = false), 100);
       }
     }
   }
@@ -277,6 +322,10 @@
   bind:this={docElem}
   class="doc"
   on:mousedown={handleMouseDown}
-  class:grayed={$layout.displayAnnotate} />
+  class:grayed={$layout.displayAnnotate}>
+  {#if $doc.mode == 'search'}
+    <SearchResults />
+  {/if}
+</div>
 
 <svelte:window on:keypress={handleKeyPress} />

@@ -7,6 +7,7 @@
   export let y;
   export let height;
   export let resizeCallback = () => {};
+  export let aspectCallback = () => {};
 </script>
 
 <style lang="scss">
@@ -15,6 +16,13 @@
 
 <div>
   {#if page.document != null}
-    <InternalPage {page} {width} {scale} {y} {height} {resizeCallback} />
+    <InternalPage
+      {page}
+      {width}
+      {scale}
+      {y}
+      {height}
+      {resizeCallback}
+      {aspectCallback} />
   {/if}
 </div>
