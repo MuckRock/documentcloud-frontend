@@ -185,8 +185,11 @@
     destroyScrollzoom();
   });
 
-  async function handleExtraHeight(page, extraHeight) {
+  async function handleExtraHeight(page, extraHeight, width) {
     if (docElem == null || doc.scrollzoom == null) return;
+
+    // Set scale offset
+    doc.scrollzoom.transform.setScaleOffset(0, extraHeight * width);
 
     // Get the extra height difference
     const delta = doc.extraHeights[page.pageNumber] - extraHeight;
