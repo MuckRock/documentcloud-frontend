@@ -6,6 +6,7 @@
   export let scale;
   export let y;
   export let height;
+  export let callback = null;
   export let resizeCallback = () => {};
   export let aspectCallback = () => {};
 </script>
@@ -23,6 +24,7 @@
       {y}
       {height}
       {resizeCallback}
-      {aspectCallback} />
+      {aspectCallback}
+      {callback} />
   {/if}
 </div>

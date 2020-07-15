@@ -14,7 +14,7 @@
   import { layout } from "@/viewer/layout";
   import { markup } from "@/util/markup";
   import { hoveredNote } from "@/viewer/hoveredNote";
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
 
   export let page;
   export let width;
@@ -23,6 +23,7 @@
   export let aspectCallback;
   export let height;
   export let y;
+  export let callback;
 
   // Incrementer to mutate extra page content size when annotation sizes alter
   let annotationChanger = 0;
@@ -45,6 +46,13 @@
   // Image height calculated from aspect
   $: effectiveWidth = width - border * 2;
   $: height = (width - border * 2) * page.aspect;
+
+  onMount(() => {
+    if (callback != null) {
+      callback();
+      callback = null;
+    }
+  });
 </script>
 
 <style lang="scss">
@@ -166,16 +174,10 @@
       {#if $layout.pageCrosshair}
         <PageNoteInsert pageNumber={page.pageNumber + 1} {scale} />
       {/if}
-      {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote}
-        <Annotation
-          {page}
-          pageNote={true}
-          annotation={$layout.displayedAnnotation}
-          mode={$layout.annotateMode} />
-      {/if}
       {#if $doc.mode == 'image' && $viewer.pageNotesByPage[page.pageNumber] != null}
         {#each $viewer.pageNotesByPage[page.pageNumber] as note}
           <Annotation
+            grayed={$layout.displayAnnotate}
             on:stateChange={() => annotationChanger++}
             {page}
             pageNote={true}

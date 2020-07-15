@@ -32,11 +32,16 @@ class Doc extends Svue {
           docHeight: 0,
           viewerScale: 1,
           scrollzoom: null,
+          docElem: null,
           simpleDocElem: null,
           visiblePageNumber: 1,
           sidebarExpanded: false,
           textJump: null,
           mode: 'image',
+
+          // Page image callbacks
+          rendered: {},
+          callbacks: {},
 
           // Show page note insert regions
           showPageNoteInserts: false,
@@ -137,16 +142,50 @@ class Doc extends Svue {
     doc.allRawAspects = doc.allRawAspects;  // trigger update
   }
 
-  jumpToPage(pageNumber) {
-    if (this.mode == 'image') {
-      if (this.scrollzoom == null) return;
-
-      const scrollTop = (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) * this.scrollzoom.transform.matrix[0];
-      if (this.scrollzoom.element != null) this.scrollzoom.element.scrollTop = scrollTop;
-    } else if (this.mode == 'text') {
-      if (doc.simpleDocElem != null) doc.simpleDocElem.scrollTop = 0;
-      document.getElementById(`${pageNumber + 1}`).scrollIntoView();
+  callbackWhenRendered(pageNumber, callback) {
+    if (this.rendered[pageNumber] != false) {
+      // Callback immediately
+      callback();
+    } else {
+      // Set callback
+      this.callbacks[pageNumber] = (this.callbacks[pageNumber] || []).concat([callback]);
     }
+  }
+
+  pageRendered(pageNumber) {
+    this.rendered[pageNumber] = true;
+    if (this.callbacks[pageNumber] != null) {
+      this.callbacks[pageNumber].forEach(callback => callback());
+      delete this.callbacks[pageNumber];
+    }
+  }
+
+  pageDestroyed(pageNumber) {
+    this.rendered[pageNumber] = false;
+  }
+
+  jumpToPage(pageNumber) {
+    return new Promise(resolve => {
+      if (this.mode == 'image') {
+        if (this.scrollzoom == null) return resolve();
+
+        const scrollTop = (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) * this.scrollzoom.transform.matrix[0];
+        if (this.scrollzoom.element != null) {
+          this.scrollzoom.element.scrollTop = scrollTop;
+          this.callbackWhenRendered(pageNumber, () => {
+            resolve();
+          });
+        } else {
+          resolve();
+        }
+      } else if (this.mode == 'text') {
+        if (doc.simpleDocElem != null) doc.simpleDocElem.scrollTop = 0;
+        document.getElementById(`${pageNumber + 1}`).scrollIntoView();
+        resolve();
+      } else {
+        resolve();
+      }
+    })
   }
 
   jumpToTextJump() {
@@ -176,7 +215,7 @@ export async function closeSidebarIfFullWidth() {
 }
 
 export async function restorePosition(pageNumber) {
-  doc.jumpToPage(pageNumber);
+  await doc.jumpToPage(pageNumber);
 }
 
 export async function changeMode(mode) {
@@ -202,16 +241,39 @@ export async function changeMode(mode) {
   if (window.getSelection) window.getSelection().removeAllRanges();
 }
 
+function scrollOffset(delta) {
+  if (doc.docElem != null) {
+    doc.docElem.scrollTop += delta;
+  } else if (doc.simpleDocElem != null) {
+    doc.simpleDocElem.scrollTop += delta;
+  }
+}
+
+export async function scrollVisibleAnnotationIntoView() {
+  await tick();
+  const elem = layout.displayedAnnotationElem;
+  // Scroll into view if possible
+  if (elem != null && elem.scrollIntoView) {
+    elem.scrollIntoView();
+    // Scroll a little above
+    scrollOffset(-30);
+  }
+}
+
 export async function showAnnotation(annotation, scrollIntoView = false) {
   await closeSidebarIfFullWidth();
 
   if (!annotationValid(annotation)) return;
   layout.annotateMode = "view";
-  layout.displayedAnnotation = annotation;
+  if (!annotation.isPageNote) {
+    layout.displayedAnnotation = annotation;
+  }
 
   if (scrollIntoView) {
     await restorePosition(annotation.page);
-    await scrollVisibleAnnotationIntoView();
+    if (!annotation.isPageNote) {
+      await scrollVisibleAnnotationIntoView();
+    }
   }
 }
 

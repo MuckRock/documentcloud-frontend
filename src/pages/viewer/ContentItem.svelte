@@ -3,13 +3,7 @@
   export let sectionOrNote;
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { layout } from "@/viewer/layout";
-  // import { restorePosition, showAnnotation } from "@/viewer/renderer";
-
-  // TODO: resolve
-
-  function restorePosition() {}
-
-  function showAnnotation() {}
+  import { restorePosition, showAnnotation } from "@/viewer/document";
 
   // SVG assets
   import smallCircleSvg from "@/assets/small_circle.svg";

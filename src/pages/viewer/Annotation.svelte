@@ -41,6 +41,7 @@
   export let mode;
   export let y;
   export let height;
+  export let grayed;
 
   let editOverride = false;
   let loading = writable(false);
@@ -168,6 +169,11 @@
       header .closeflag {
         pointer-events: all;
       }
+    }
+
+    &.grayed {
+      pointer-events: none;
+      filter: brightness(0.8);
     }
 
     &.public {
@@ -500,6 +506,7 @@
 
 <div
   class="annotation"
+  class:grayed
   class:pagenote={pageNote}
   class:up={shift == 'up'}
   class:public={access == 'public'}

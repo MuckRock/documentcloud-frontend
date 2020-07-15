@@ -34,6 +34,14 @@
     }
   }
 
+  function pageRendered(pageNumber) {
+    doc.pageRendered(pageNumber);
+  }
+
+  function pageDestroyed(pageNumber) {
+    doc.pageDestroyed(pageNumber);
+  }
+
   function setupScrollzoom() {
     const components = doc.pages.map(page => {
       let renderedComponent = { component: null };
@@ -65,6 +73,7 @@
                 y,
                 width,
                 height,
+                callback: () => pageRendered(page.pageNumber),
                 scale: doc.viewerScale,
                 resizeCallback(extraHeight, width) {
                   handleExtraHeight(page, extraHeight, width);
@@ -96,6 +105,7 @@
           },
           destroy() {
             destroy();
+            pageDestroyed(page.pageNumber);
           }
         },
         x: page.position[0],
@@ -120,6 +130,7 @@
         doc.visiblePageNumber = components[0].page.pageNumber + 1;
       }
     });
+    doc.docElem = docElem;
   }
 
   let initialized = false;
