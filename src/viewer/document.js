@@ -171,7 +171,7 @@ class Doc extends Svue {
 
         const scrollTop = (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) * this.scrollzoom.transform.matrix[0];
         if (this.scrollzoom.element != null) {
-          this.scrollzoom.element.scrollTop = scrollTop;
+          this.scrollzoom.scrollTo(scrollTop);
           this.callbackWhenRendered(pageNumber, () => {
             resolve();
           });
