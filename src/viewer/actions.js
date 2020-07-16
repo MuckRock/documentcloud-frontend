@@ -1,9 +1,5 @@
 import { layout } from "./layout";
-// import { changeMode } from "./renderer";
-
-function changeMode() {
-  // TODO: implement
-}
+import { changeMode } from "./document";
 
 export function enterRedactMode() {
   changeMode("image");
