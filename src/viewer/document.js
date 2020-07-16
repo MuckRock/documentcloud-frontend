@@ -14,6 +14,24 @@ const LAYOUT = {
 const DEFAULT_IMAGE_ASPECT = 11 / 8.5; // letter size paper
 const DEFAULT_TEXT_ASPECT = 11 / 8.5;
 
+export const zoomBreakpoints = [
+  20,
+  50,
+  75,
+  100,
+  125,
+  150,
+  200,
+  250,
+  300,
+  350,
+  400,
+  500,
+  600,
+  700,
+  800
+];
+
 class Doc extends Svue {
   constructor() {
     super({
@@ -194,6 +212,15 @@ class Doc extends Svue {
       this.textJump = null;
     }
   }
+
+  updateScrollZoom() {
+    if (this.scrollzoom == null) return;
+    this.scrollzoom.resizeContainer(
+      this.scrollzoom.containerWidth,
+      this.containerHeight
+    );
+    this.scrollzoom.domCallback();
+  }
 }
 
 export const doc = new Doc();
@@ -288,7 +315,9 @@ export async function initiateSearch(query) {
 
 export async function exitSearch() {
   clearSearch();
-  if (modeBeforeSearch != null) {
+  if (modeBeforeSearch != null && modeBeforeSearch != 'search') {
     await changeMode(modeBeforeSearch);
+  } else {
+    await changeMode('image');
   }
 }

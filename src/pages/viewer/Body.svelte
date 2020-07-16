@@ -217,11 +217,7 @@
       for (let i = page.pageNumber + 1; i < doc.pages.length; i++) {
         doc.scrollzoom.components[i].y = doc.pages[i].position[1];
       }
-      doc.scrollzoom.resizeContainer(
-        doc.scrollzoom.containerWidth,
-        doc.containerHeight
-      );
-      doc.scrollzoom.domCallback();
+      doc.updateScrollZoom();
 
       // TODO: make smoother
       if (topPosition < 0) {

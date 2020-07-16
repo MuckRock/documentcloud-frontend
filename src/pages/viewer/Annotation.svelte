@@ -353,6 +353,11 @@
       border-bottom-right-radius: $radius;
       box-sizing: border-box;
 
+      &.capsize {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
       .buttonpadded {
         margin: 7px -4px;
 
@@ -566,7 +571,10 @@
       </div>
     </div>
   {/if}
-  <footer bind:offsetHeight={footerHeight} bind:offsetWidth={footerWidth}>
+  <footer
+    bind:offsetHeight={footerHeight}
+    bind:offsetWidth={footerWidth}
+    class:capsize={pageNote && !editMode}>
     {#if shift == 'down'}
       <div class="closeflag">
         <span class="closer" on:click={cancelAnnotation}>
