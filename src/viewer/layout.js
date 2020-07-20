@@ -12,6 +12,8 @@ import {
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 
+const MOBILE_BREAKPOINT = 600;
+
 export const layout = new Svue({
   data() {
     return {
@@ -29,7 +31,7 @@ export const layout = new Svue({
       // In embedded mode
       embed: false,
       // Whether to display sidebar
-      showSidebar: false,
+      showSidebar: document.body.offsetWidth >= MOBILE_BREAKPOINT,
 
       loading: false,
       error: null,
@@ -211,31 +213,38 @@ export function pageDragStart(pageNumber, { x, y }) {
       start: { x, y },
       end: { x, y },
     };
+    return true;
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       pageNumber,
       start: { x, y },
       end: { x, y },
     };
+    return true;
   }
+  return false;
 }
 
 export function pageDragMove(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
+    return true;
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       ...layout.rawAnnotation,
       pageNumber,
       end: { x, y },
     };
+    return true;
   }
+  return false;
 }
 
 export function pageDragEnd(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
     pushRedaction();
+    return true;
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       ...layout.rawAnnotation,
@@ -244,7 +253,9 @@ export function pageDragEnd(pageNumber, { x, y }) {
     };
     layout.annotationPending = true;
     enterEditAnnotateMode(layout.shownEditAnnotation);
+    return true;
   }
+  return false;
 }
 
 export function startPageNote(pageNumber) {

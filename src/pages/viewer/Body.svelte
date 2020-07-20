@@ -3,7 +3,7 @@
   import SearchResults from "./SearchResults";
 
   import { layout, cancelAnnotation } from "@/viewer/layout";
-  import { doc } from "@/viewer/document";
+  import { doc, showSidebar } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import ScrollZoom from "scrollzoom";
   import ActionPane from "./pane/ActionPane";
@@ -26,6 +26,8 @@
     actionHeight == null || $layout.action == null ? 0 : actionHeight;
 
   let scrollzoom = null;
+
+  const MOBILE_BREAKPOINT = 600;
 
   function destroyScrollzoom() {
     if (doc.scrollzoom != null) {
@@ -121,7 +123,9 @@
       width: $doc.containerWidth,
       height: $doc.containerHeight,
       changeCallback: function() {
-        const components = Object.values(this.renderedComponents).sort(
+        const renderedComponents = Object.values(this.renderedComponents);
+        if (renderedComponents.length == 0) return;
+        const components = renderedComponents.sort(
           (a, b) => a.page.pageNumber - b.page.pageNumber
         );
         doc.visiblePageNumber = components[0].page.pageNumber + 1;
@@ -136,6 +140,9 @@
     if (!initialized && $doc.pages.length > 0 && docElem != null) {
       initialized = true;
       setupScrollzoom();
+      if (doc.containerWidth > docElem.offsetWidth) {
+        doc.zoomWidth();
+      }
     }
   }
 
@@ -304,4 +311,8 @@
   {/if}
 </div>
 
-<svelte:window on:keypress={handleKeyPress} />
+<svelte:window
+  on:gesturestart|preventDefault
+  on:gesturechange|preventDefault
+  on:gestureend|preventDefault
+  on:keypress={handleKeyPress} />

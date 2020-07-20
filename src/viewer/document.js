@@ -182,6 +182,35 @@ class Doc extends Svue {
     this.rendered[pageNumber] = false;
   }
 
+  scale(scale) {
+    if (this.scrollzoom != null) {
+      this.scrollzoom.scaleTo(scale);
+      this.updateScrollZoom();
+    }
+  }
+
+  zoomWidth() {
+    // Zoom to fit page width
+    if (this.scrollzoom != null) {
+      this.scale(
+        this.scrollzoom.bounds.width / this.scrollzoom.containerWidth
+      );
+    }
+  }
+
+  zoomHeight() {
+    // Zoom to fit page height
+    if (this.scrollzoom != null) {
+      const page = this.visiblePageNumber - 1;
+      this.scale(
+        this.scrollzoom.bounds.height /
+        this.scrollzoom.components[page].height
+      );
+      // Jump to page to reset position after zooming
+      setTimeout(() => this.jumpToPage(page), 0);
+    }
+  }
+
   jumpToPage(pageNumber) {
     return new Promise(resolve => {
       if (this.mode == 'image') {

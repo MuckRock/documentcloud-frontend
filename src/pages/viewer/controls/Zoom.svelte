@@ -24,46 +24,33 @@
     return zoomBreakpoints[zoomIn ? zoomBreakpoints.length - 1 : 0];
   }
 
-  function scale(percent) {
-    if (doc.scrollzoom != null) {
-      doc.scrollzoom.scaleTo(percent / 100);
-      doc.updateScrollZoom();
-    }
+  function scalePercent(percent) {
+    doc.scale(percent / 100);
   }
 
   function zoomIn() {
-    scale(roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, true));
+    scalePercent(
+      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, true)
+    );
   }
 
   function zoomOut() {
-    scale(roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, false));
+    scalePercent(
+      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, false)
+    );
   }
 
   function handleChange(e) {
     const zoom = e.target.value;
     if (zoom == "default") return;
     if (zoom == "width") {
-      // Zoom width
-      if (doc.scrollzoom != null) {
-        scale(
-          (doc.scrollzoom.bounds.width / doc.scrollzoom.containerWidth) * 100
-        );
-      }
+      doc.zoomWidth();
     } else if (zoom == "height") {
-      // Zoom height
-      if (doc.scrollzoom != null) {
-        const page = doc.visiblePageNumber - 1;
-        scale(
-          (doc.scrollzoom.bounds.height /
-            doc.scrollzoom.components[page].height) *
-            100
-        );
-        setTimeout(() => doc.jumpToPage(page), 0);
-      }
+      doc.zoomHeight();
     } else {
       const value = parseFloat(zoom);
       if (value != null && !isNaN(value)) {
-        scale(value);
+        scalePercent(value);
       }
     }
 

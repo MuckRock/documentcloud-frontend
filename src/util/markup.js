@@ -43,20 +43,26 @@ export function markup(node, pageNumber) {
       const data = getXY(e);
       if (data == null) return;
       down = true;
-      pageDragStart(pageNumber, normalize(data));
+      if (pageDragStart(pageNumber, normalize(data))) {
+        e.preventDefault();
+      }
     }],
     [window, ['mousemove', 'touchmove'], e => {
       if (!down) return;
       const data = getXY(e, true);
       if (data == null) return;
-      pageDragMove(pageNumber, normalize(data));
+      if (pageDragMove(pageNumber, normalize(data))) {
+        e.preventDefault();
+      }
     }],
     [window, ['mouseup', 'touchend'], e => {
       if (!down) return;
       down = false;
       const data = getXY(e, true, true);
       if (data == null) return;
-      pageDragEnd(pageNumber, normalize(data));
+      if (pageDragEnd(pageNumber, normalize(data))) {
+        e.preventDefault();
+      }
     }],
   ];
 
