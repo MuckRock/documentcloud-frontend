@@ -238,15 +238,18 @@
     }
   }
 
+  function elementOrAncestorsHasExtraContent(elem) {
+    // Determines if an element or any of its ancestors is extra page content
+    if (elem.className != null && elem.className.includes("extrapagecontent")) {
+      return true;
+    }
+    if (elem.parentNode == null) return false;
+    return elementOrAncestorsHasExtraContent(elem.parentNode);
+  }
+
   function handleMouseDown(e) {
     if ($layout.displayAnnotate) {
-      if (
-        e.path.some(
-          elem =>
-            elem.className != null &&
-            elem.className.includes("extrapagecontent")
-        )
-      ) {
+      if (elementOrAncestorsHasExtraContent(e.target)) {
         // Ignore clicks on extra page content
         return;
       }

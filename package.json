@@ -45,6 +45,6 @@
     "body-scroll-lock": "^2.6.4",
     "dompurify": "^2.0.8",
     "lucene": "^2.1.1",
-    "scrollzoom": "git+https://github.com/freedmand/scrollzoom#904f355"
+    "scrollzoom": "git+https://github.com/freedmand/scrollzoom#0081c33"
   }
 }

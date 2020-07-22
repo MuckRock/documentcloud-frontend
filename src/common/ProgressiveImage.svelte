@@ -22,26 +22,30 @@
     x => x[0][1] == "normal"
   )[0];
   let srcs = [];
+  let mounted = false;
 
   onMount(() => {
     loadImg(0);
+    mounted = true;
   });
 
   $: {
-    const effectiveWidth = width * (window.devicePixelRatio || 1);
-    if (effectiveWidth > NORMAL_WIDTH[0][0]) {
-      loadImg(NORMAL_WIDTH[1]);
-    }
-
-    let loaded = false;
-    for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
-      if (effectiveWidth < IMAGE_WIDTHS[i][0]) {
-        loadImg(i);
-        loaded = true;
-        break;
+    if (mounted) {
+      const effectiveWidth = width * (window.devicePixelRatio || 1);
+      if (effectiveWidth > NORMAL_WIDTH[0][0]) {
+        loadImg(NORMAL_WIDTH[1]);
       }
+
+      let loaded = false;
+      for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
+        if (effectiveWidth < IMAGE_WIDTHS[i][0]) {
+          loadImg(i);
+          loaded = true;
+          break;
+        }
+      }
+      if (!loaded) loadImg(IMAGE_WIDTHS.length - 1);
     }
-    if (!loaded) loadImg(IMAGE_WIDTHS.length - 1);
   }
 
   function nixOlder(keepIndex) {

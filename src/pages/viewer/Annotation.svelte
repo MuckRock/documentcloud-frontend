@@ -41,7 +41,8 @@
   export let mode;
   export let y;
   export let height;
-  export let grayed;
+  export let grayed = false;
+  export let behind = false;
 
   let editOverride = false;
   let loading = writable(false);
@@ -174,6 +175,10 @@
     &.grayed {
       pointer-events: none;
       filter: brightness(0.8);
+    }
+
+    &.behind {
+      z-index: ($viewerAnnotationZ - 1);
     }
 
     &.public {
@@ -394,7 +399,7 @@
 
     input,
     textarea {
-      font-size: 12px;
+      font-size: 16px;
       width: 100%;
       padding: 2px 4px;
       box-sizing: border-box;
@@ -512,6 +517,7 @@
 <div
   class="annotation"
   class:grayed
+  class:behind
   class:pagenote={pageNote}
   class:up={shift == 'up'}
   class:public={access == 'public'}

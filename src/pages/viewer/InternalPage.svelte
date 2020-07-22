@@ -185,6 +185,7 @@
           <Annotation
             grayed={$layout.displayAnnotate}
             on:stateChange={() => annotationChanger++}
+            behind={true}
             {page}
             pageNote={true}
             annotation={note}
