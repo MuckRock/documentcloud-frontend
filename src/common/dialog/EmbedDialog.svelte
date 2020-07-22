@@ -133,43 +133,43 @@
     }
   }
 
-  .embedoptions {
-    font-size: 0;
-    border: solid 1px #a5a5a5;
-    display: inline-block;
-    border-radius: 3px;
+  // .embedoptions {
+  //   font-size: 0;
+  //   border: solid 1px #a5a5a5;
+  //   display: inline-block;
+  //   border-radius: 3px;
 
-    div {
-      display: inline-block;
-      background: #f7f7f7;
-      margin: 0;
-      font-size: 15px;
-      padding: 3px 10px;
-      border-right: solid 1px #a5a5a5;
-      user-select: none;
-      cursor: pointer;
+  //   div {
+  //     display: inline-block;
+  //     background: #f7f7f7;
+  //     margin: 0;
+  //     font-size: 15px;
+  //     padding: 3px 10px;
+  //     border-right: solid 1px #a5a5a5;
+  //     user-select: none;
+  //     cursor: pointer;
 
-      &:hover {
-        background: #ebebeb;
-      }
+  //     &:hover {
+  //       background: #ebebeb;
+  //     }
 
-      &.selected {
-        background: #dadada;
-        -webkit-text-stroke: 0.3px;
-      }
+  //     &.selected {
+  //       background: #dadada;
+  //       -webkit-text-stroke: 0.3px;
+  //     }
 
-      &:first-child {
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-      }
+  //     &:first-child {
+  //       border-top-left-radius: 3px;
+  //       border-bottom-left-radius: 3px;
+  //     }
 
-      &:last-child {
-        border-right: none;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-      }
-    }
-  }
+  //     &:last-child {
+  //       border-right: none;
+  //       border-top-right-radius: 3px;
+  //       border-bottom-right-radius: 3px;
+  //     }
+  //   }
+  // }
 
   .shareoptions {
     margin: 19px 0;
@@ -244,7 +244,7 @@
           </div>
         </div>
       {/if}
-      <div class="optionscontainer">
+      <!-- <div class="optionscontainer">
         <span>Type:</span>
         <div class="embedoptions">
           <div
@@ -263,7 +263,7 @@
             Note
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="shareoptions">
         <div
           class="shareoption"
