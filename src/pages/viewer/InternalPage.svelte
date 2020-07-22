@@ -170,7 +170,7 @@
     mutators={[$viewer.pageNotesByPage[page.pageNumber], $doc.showPageNoteInserts, $doc.mode, $layout.displayAnnotate, $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote ? $layout.displayedAnnotation : null, annotationChanger, textPageUpdated]}>
     <div style="font-size: {scale * 100}%">
       <!-- Check for page notes -->
-      {#if $layout.pageCrosshair}
+      {#if $layout.annotating}
         <PageNoteInsert pageNumber={page.pageNumber + 1} {scale} />
       {/if}
       {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote}
@@ -180,7 +180,7 @@
           annotation={$layout.displayedAnnotation}
           mode={$layout.annotateMode} />
       {/if}
-      {#if $doc.mode == 'image' && $viewer.pageNotesByPage[page.pageNumber] != null}
+      {#if $viewer.pageNotesByPage[page.pageNumber] != null}
         {#each $viewer.pageNotesByPage[page.pageNumber] as note}
           <Annotation
             grayed={$layout.displayAnnotate}

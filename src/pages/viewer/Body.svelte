@@ -240,7 +240,11 @@
 
   function elementOrAncestorsHasExtraContent(elem) {
     // Determines if an element or any of its ancestors is extra page content
-    if (elem.className != null && elem.className.includes("extrapagecontent")) {
+    if (
+      elem.className != null &&
+      (elem.className.includes("extrapagecontent") ||
+        elem.className.includes("insert"))
+    ) {
       return true;
     }
     if (elem.parentNode == null) return false;
