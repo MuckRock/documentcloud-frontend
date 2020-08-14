@@ -31,6 +31,9 @@ export class Note extends Svue {
         page(note) {
           return note.page_number;
         },
+        isPageNote(note) {
+          return note.x1 == null;
+        },
         x1(note) {
           return note.x1;
         },

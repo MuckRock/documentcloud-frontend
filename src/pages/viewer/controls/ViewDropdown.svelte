@@ -1,20 +1,15 @@
 <script>
-  import { renderer, changeMode } from "@/viewer/renderer";
   import { layout } from "@/viewer/layout";
-
-  async function handleChange(e) {
-    const view = e.target.value;
-    if (view == "text") {
-      await changeMode("text");
-    } else if (view == "image") {
-      await changeMode("image");
-    }
-  }
+  import { viewer } from "@/viewer/viewer";
+  import { doc } from "@/viewer/document";
 </script>
 
-<select bind:value={$renderer.mode} on:blur={handleChange}>
+<select bind:value={$doc.mode}>
   <option value="image">Document</option>
   <option value="text">Plain Text</option>
+  {#if $viewer.notes != null && $viewer.notes.length > 0}
+    <option value="notes">Notes</option>
+  {/if}
   <option value="search" hidden={$layout.searchPages == null}>
     Search Results
   </option>

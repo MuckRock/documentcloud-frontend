@@ -1,6 +1,9 @@
 <script>
   import Header from "./header/Header";
   import Body from "./Body";
+  import SimpleBody from "./SimpleBody";
+  import NoteBody from "./NoteBody";
+  import TextBody from "./TextBody";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
@@ -16,6 +19,7 @@
   import ErrorModal from "@/common/ErrorModal";
   import Loader from "@/common/Loader";
   import { layout, hideEmbedFlow, hideEditSections } from "@/viewer/layout";
+  import { doc } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
 </script>
@@ -64,7 +68,13 @@
 
   <Loader active={$layout.loading}>
     <Header />
-    <Body />
+    {#if $doc.mode == 'image'}
+      <Body mode={$doc.mode} />
+    {:else if $doc.mode == 'text' || $doc.mode == 'search'}
+      <SimpleBody />
+    {:else if $doc.mode == 'notes'}
+      <NoteBody />
+    {/if}
     <Sidebar />
     <Footer />
   </Loader>

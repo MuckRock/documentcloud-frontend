@@ -44,3 +44,9 @@ export function textUrl(document, pageNumber) {
     document.slug
     }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
 }
+
+export function jsonUrl(document) {
+  return `${document.assetUrl}documents/${document.id}/${
+    document.slug
+    }.txt.json`;
+}

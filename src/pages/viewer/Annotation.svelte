@@ -1,5 +1,5 @@
 <script>
-  import Image from "@/common/Image";
+  import ProgressiveImage from "@/common/ProgressiveImage";
   import Button from "@/common/Button";
   import Loader from "@/common/Loader";
   import AccessToggle from "@/common/AccessToggle";
@@ -8,6 +8,7 @@
   import { writable } from "svelte/store";
   import { pageImageUrl } from "@/api/viewer";
   import { viewer } from "@/viewer/viewer";
+  import { doc } from "@/viewer/document";
   import {
     layout,
     cancelAnnotation,
@@ -16,6 +17,7 @@
     deletePageAnnotation
   } from "@/viewer/layout";
   import { wrapSeparate } from "@/util/wrapLoad";
+  import emitter from "@/emit";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
@@ -27,10 +29,21 @@
     DomPurify = module;
   });
 
-  export let document;
+  const emit = emitter({
+    stateChange() {}
+  });
+
+  export let page;
+  export let pageNote = false;
+  export let showImageOnPageNote = false;
+  export let width;
   export let annotation;
   export let aspect;
   export let mode;
+  export let y;
+  export let height;
+  export let grayed = false;
+  export let behind = false;
 
   let editOverride = false;
   let loading = writable(false);
@@ -40,10 +53,16 @@
   export let access = annotation.access;
 
   $: editMode = mode == "edit" || editOverride;
+  $: {
+    editMode;
+    description;
+    // Emit state changes to capture mutations
+    emit.stateChange();
+  }
 
   $: titleValid = title.trim().length > 0;
   $: accessValid =
-    (document.editAccess && access == "public") ||
+    (page.document.editAccess && access == "public") ||
     access == "organization" ||
     access == "private" ||
     access == "private";
@@ -55,6 +74,26 @@
   $: changeValid = (mode == "view" && changed) || mode == "edit";
 
   $: valid = titleValid && accessValid && changeValid;
+
+  // Heights
+  let headerHeight;
+  let footerHeight;
+  let footerWidth;
+
+  const ANNOTATION_PADDING = 20;
+  $: y1 =
+    headerHeight == null ? null : y + annotation.y1 * height - headerHeight;
+  $: y2 =
+    footerHeight == null ? null : y + annotation.y2 * height + footerHeight;
+
+  $: shift =
+    y1 == null || y2 == null
+      ? "none"
+      : y1 < ANNOTATION_PADDING
+      ? "down"
+      : y2 > $doc.docHeight - ANNOTATION_PADDING
+      ? "up"
+      : "none";
 
   // Focus on title on mount
   let titleInput;
@@ -75,7 +114,7 @@
         // Update annotation
         annotation = await updatePageAnnotation(
           annotation.id,
-          document.id,
+          page.document.id,
           title,
           description,
           access,
@@ -83,7 +122,7 @@
         );
       } else {
         await createPageAnnotation(
-          document.id,
+          page.document.id,
           title,
           description,
           access,
@@ -110,7 +149,7 @@
 
   async function handleDelete() {
     await wrapSeparate(loading, layout, async () => {
-      await deletePageAnnotation(annotation.id, document.id);
+      await deletePageAnnotation(annotation.id, page.document.id);
     });
   }
 </script>
@@ -118,6 +157,7 @@
 <style lang="scss">
   $annotationBg: white;
   $padding: 10px;
+  $subpadding: 8px;
   $insetMargin: 1px;
 
   .annotation {
@@ -131,6 +171,15 @@
       header .closeflag {
         pointer-events: all;
       }
+    }
+
+    &.grayed {
+      pointer-events: none;
+      filter: brightness(0.8);
+    }
+
+    &.behind {
+      z-index: ($viewerAnnotationZ - 1);
     }
 
     &.public {
@@ -257,6 +306,10 @@
           box-shadow: inset 0 0 5px #000;
           box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 
+          &.nobottom {
+            bottom: 0;
+          }
+
           &.left {
             border-right: 1px solid #ddd;
             border-right: 1px solid rgba(221, 221, 221, 0.4);
@@ -310,6 +363,11 @@
       border-bottom-right-radius: $radius;
       box-sizing: border-box;
 
+      &.capsize {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
       .buttonpadded {
         margin: 7px -4px;
 
@@ -346,11 +404,15 @@
 
     input,
     textarea {
-      font-size: 12px;
+      font-size: 16px;
       width: 100%;
       padding: 2px 4px;
       box-sizing: border-box;
       outline: none;
+    }
+
+    input.padded {
+      margin-bottom: $subpadding;
     }
 
     .sidebyside {
@@ -371,19 +433,19 @@
         font-weight: bold;
         text-transform: uppercase;
         font-size: 10px;
-        margin: 2px 8px;
+        margin: 2px $subpadding;
         color: $viewerGray;
       }
 
       .content {
-        margin: 4px 8px;
+        margin: 4px $subpadding;
         font: 13px/18px Georgia, Times, serif;
         cursor: text;
         color: #3c3c3c;
       }
 
       &.static .content {
-        margin: 0 0 8px 0;
+        margin: 0 0 $subpadding 0;
       }
     }
 
@@ -412,23 +474,83 @@
         text-align: right;
       }
     }
+
+    &.up,
+    &.pagenote {
+      bottom: $padding;
+
+      footer,
+      header {
+        position: relative;
+        margin-right: -$padding * 2 - $subpadding;
+      }
+
+      .excerpt {
+        position: relative;
+        overflow: visible;
+        margin: -10px -13px;
+      }
+    }
+
+    &.pagenote {
+      position: relative;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      bottom: 0;
+      background: none;
+
+      header {
+        margin-bottom: 0;
+        margin-top: 0;
+        padding-bottom: 8px;
+
+        &.showimage {
+          margin-bottom: 2px;
+        }
+      }
+
+      footer {
+        margin-top: 0;
+        margin-bottom: 0;
+
+        &.showimage {
+          margin-top: 8px;
+        }
+      }
+    }
+  }
+
+  .hidden {
+    visibility: hidden;
   }
 </style>
 
 <div
   class="annotation"
+  class:grayed
+  class:behind
+  class:pagenote={pageNote}
+  class:up={shift == 'up'}
   class:public={access == 'public'}
   class:organization={access == 'organization'}
   class:private={access == 'private'}
   class:disabled={$loading}
   on:mousedown|stopPropagation
-  style="top: {annotation.y1 * 100}%; height: {annotation.height * 100}%">
-  <header bind:this={annotationElem}>
-    <div class="closeflag">
-      <span class="closer" on:click={cancelAnnotation}>
-        {@html closeInlineSvg}
-      </span>
-    </div>
+  style={shift == 'up' || pageNote ? '' : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}>
+  <header
+    bind:this={annotationElem}
+    bind:offsetHeight={headerHeight}
+    class:showimage={showImageOnPageNote}
+    class:hidden={shift == 'down'}>
+    {#if !pageNote}
+      <div class="closeflag">
+        <span class="closer" on:click={cancelAnnotation}>
+          {@html closeInlineSvg}
+        </span>
+      </div>
+    {/if}
     <Loader active={$loading} transparent={true}>
       <!-- Title -->
       {#if editMode}
@@ -446,24 +568,64 @@
       {/if}
     </Loader>
   </header>
-  <div class="excerpt">
-    <div class="body">
-      <div style="margin-top: {-annotation.y1 * aspect * 100}%">
-        <Image
-          src={pageImageUrl(document, annotation.page)}
-          fade={false}
-          {aspect} />
-        <!-- Faded flanks -->
+  {#if shift == 'down'}
+    <header />
+  {/if}
+  {#if !pageNote || showImageOnPageNote}
+    <div class="excerpt">
+      <div
+        class="body"
+        style={showImageOnPageNote ? `height: 0; padding-top: ${annotation.height * aspect * 100}%` : ''}>
         <div
-          class="faded left"
-          style="left: 0; width: {annotation.x1 * 100}%" />
-        <div
-          class="faded right"
-          style="left: {annotation.x2 * 100}%; right: 0" />
+          style="margin-top: {-annotation.y1 * aspect * 100 - (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%">
+          <ProgressiveImage
+            alt="Page {page.pageNumber + 1} of {page.document.title}"
+            {width}
+            aspect={page.aspect}
+            {page} />
+          <!-- Faded flanks -->
+          <div
+            class="faded left"
+            class:nobottom={showImageOnPageNote}
+            style="left: 0; width: {annotation.x1 * 100}%" />
+          <div
+            class="faded right"
+            class:nobottom={showImageOnPageNote}
+            style="left: {annotation.x2 * 100}%; right: 0" />
+        </div>
       </div>
     </div>
-  </div>
-  <footer>
+  {/if}
+  <footer
+    bind:offsetHeight={footerHeight}
+    bind:offsetWidth={footerWidth}
+    class:showimage={showImageOnPageNote}
+    class:capsize={pageNote && !editMode}>
+    {#if shift == 'down'}
+      <div class="closeflag">
+        <span class="closer" on:click={cancelAnnotation}>
+          {@html closeInlineSvg}
+        </span>
+      </div>
+      <Loader active={$loading} transparent={true}>
+        <!-- Title -->
+        {#if editMode}
+          <input
+            bind:this={titleInput}
+            placeholder="Annotation Title"
+            bind:value={title}
+            class="padded" />
+        {:else}
+          <h1>
+            {annotation.title}
+            <span class="pencil" on:click={() => (editOverride = true)}>
+              {@html pencilSvg}
+            </span>
+          </h1>
+        {/if}
+      </Loader>
+    {/if}
+
     <div class="sidebyside">
       <!-- Description/Content -->
       {#if editMode}
@@ -495,7 +657,10 @@
     </div>
     <!-- Footer content -->
     {#if editMode}
-      <AccessToggle bind:access editAccess={document.editAccess} />
+      <AccessToggle
+        stacked={footerWidth < 350}
+        bind:access
+        editAccess={page.document.editAccess} />
       <div class="buttonpadded">
         <Button
           on:click={createOrUpdateAnnotation}

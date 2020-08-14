@@ -1,5 +1,5 @@
 <script>
-  import { renderer, restorePosition } from "@/viewer/renderer";
+  import { doc } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { tick } from "svelte";
 
@@ -40,7 +40,7 @@
 
   function gotoPage(readablePageNumber) {
     customPage = `${readablePageNumber}`;
-    restorePosition(readablePageNumber - 1);
+    doc.jumpToPage(readablePageNumber - 1);
   }
 
   function handleInput() {
@@ -62,9 +62,7 @@
   }
 
   function increment(fromInput = false) {
-    let pageNumber = fromInput
-      ? getPageFromInput()
-      : renderer.visiblePageNumber;
+    let pageNumber = fromInput ? getPageFromInput() : doc.visiblePageNumber;
     if (pageNumber == null) return;
 
     pageNumber = Math.min(pageNumber + 1, viewer.document.pageCount);
@@ -75,9 +73,7 @@
   }
 
   function decrement(fromInput = false) {
-    let pageNumber = fromInput
-      ? getPageFromInput()
-      : renderer.visiblePageNumber;
+    let pageNumber = fromInput ? getPageFromInput() : doc.visiblePageNumber;
     if (pageNumber == null) return;
 
     pageNumber = Math.max(pageNumber - 1, 1);
@@ -164,14 +160,14 @@
   }
 </style>
 
-{#if $viewer.loaded && $renderer.mode != 'search'}
+{#if $viewer.loaded && $doc.mode != 'search' && $doc.mode != 'notes'}
   <div class="paginator">
     <span class="paginate left" on:click={() => decrement(false)}>
       {@html leftPaginator}
     </span>
     <span class="page">
       <span class="hidden">{$viewer.document.pageCount}</span>
-      <span class="absolute">{$renderer.visiblePageNumber}</span>
+      <span class="absolute">{$doc.visiblePageNumber}</span>
       <input
         type="text"
         inputmode="numeric"
@@ -180,7 +176,7 @@
         bind:value={customPage}
         on:focus={() => {
           intentionalBlur = false;
-          customPage = `${$renderer.visiblePageNumber}`;
+          customPage = `${$doc.visiblePageNumber}`;
           hadInput = false;
           select();
         }}

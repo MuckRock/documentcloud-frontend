@@ -74,6 +74,11 @@ export async function getAnnotations(id, expand = DEFAULT_EXPAND) {
   return results.map(result => new Note(result));
 }
 
+export async function getAnnotationsPage(id, expand = DEFAULT_EXPAND, page) {
+  const { data } = await session.get(apiUrl(queryBuilder(`documents/${id}/notes/`, { expand, page_number: page })));
+  return data;
+}
+
 export async function deleteAnnotation(docId, noteId) {
   // Delete the note with the specified id
   await session.delete(apiUrl(`documents/${docId}/notes/${noteId}/`));

@@ -1,28 +1,60 @@
 <script>
-  import {
-    ZOOM_OPTIONS,
-    renderer,
-    zoomFit,
-    zoomPercent,
-    zoomIn,
-    zoomOut
-  } from "@/viewer/renderer";
+  import { doc, zoomBreakpoints } from "@/viewer/document";
 
   // SVG assets
   import plusSvg from "@/assets/viewer_plus.svg";
   import minusSvg from "@/assets/viewer_minus.svg";
 
-  function handleChange(e) {
-    const zoom = e.target.value;
+  let select;
 
-    if (zoom == ZOOM_OPTIONS[0]) {
-      zoomFit();
-    } else {
-      const percent = parseFloat(zoom) / 100;
-      if (percent != null && !isNaN(percent)) {
-        zoomPercent(percent);
+  function roundBreakpoint(percent, zoomIn) {
+    for (
+      let i = zoomIn ? 0 : zoomBreakpoints.length - 1;
+      zoomIn ? i < zoomBreakpoints.length : i >= 0;
+      i += zoomIn ? 1 : -1
+    ) {
+      if (
+        zoomIn
+          ? percent + 2 < zoomBreakpoints[i]
+          : percent - 2 > zoomBreakpoints[i]
+      ) {
+        return zoomBreakpoints[i];
       }
     }
+    return zoomBreakpoints[zoomIn ? zoomBreakpoints.length - 1 : 0];
+  }
+
+  function scalePercent(percent) {
+    doc.scale(percent / 100);
+  }
+
+  function zoomIn() {
+    scalePercent(
+      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, true)
+    );
+  }
+
+  function zoomOut() {
+    scalePercent(
+      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, false)
+    );
+  }
+
+  function handleChange(e) {
+    const zoom = e.target.value;
+    if (zoom == "default") return;
+    if (zoom == "width") {
+      doc.zoomWidth();
+    } else if (zoom == "height") {
+      doc.zoomHeight();
+    } else {
+      const value = parseFloat(zoom);
+      if (value != null && !isNaN(value)) {
+        scalePercent(value);
+      }
+    }
+
+    select.value = "default";
   }
 </script>
 
@@ -51,10 +83,15 @@
     select {
       margin: 0 0 0 5px;
     }
+
+    &.disabled {
+      pointer-events: none;
+      visibility: hidden;
+    }
   }
 </style>
 
-<span class="zoom">
+<span class="zoom" class:disabled={$doc.mode != 'image'}>
   <span class="icon" on:click={zoomIn}>
     {@html plusSvg}
   </span>
@@ -63,9 +100,15 @@
     {@html minusSvg}
   </span>
 
-  <select bind:value={$renderer.zoom} on:blur={handleChange}>
-    {#each ZOOM_OPTIONS as option}
-      <option value={option}>{option}</option>
-    {/each}
+  <select bind:this={select} on:change={handleChange}>
+    <option value="default">{($doc.viewerScale * 100).toFixed()}%</option>
+    <option disabled>---</option>
+    <option value="width">Fit width</option>
+    <option value="height">Fit height</option>
+    <option value="50">50%</option>
+    <option value="100">100%</option>
+    <option value="150">150%</option>
+    <option value="200">200%</option>
+    <option value="400">400%</option>
   </select>
 </span>

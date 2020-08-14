@@ -1,13 +1,14 @@
 <script>
   import { layout } from "@/viewer/layout";
-  import { renderer, changeMode, restorePosition } from "@/viewer/renderer";
+  import { doc, changeMode, restorePosition } from "@/viewer/document";
   import NoWhitespace from "@/common/NoWhitespace";
+  import { tick } from "svelte";
 
   import { handlePlural } from "@/util/string";
 
   async function handlePage(page) {
+    doc.textJump = page;
     await changeMode("text");
-    await restorePosition(page);
   }
 </script>
 

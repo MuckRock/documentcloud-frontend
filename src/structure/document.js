@@ -41,6 +41,12 @@ export class Document extends Svue {
         canonicalUrl(slugId) {
           return APP_URL + "documents/" + slugId;
         },
+        pageUrl(canonicalUrl) {
+          return page => `${canonicalUrl}#document/p${page}`;
+        },
+        noteUrl(pageUrl) {
+          return (page, note) => `${pageUrl(page)}/a${note}`;
+        },
         title(doc) {
           return doc.title;
         },

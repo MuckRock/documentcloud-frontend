@@ -3,6 +3,7 @@
 node_modules
 public/bundle.*
 public/docs
+public/embed/enhance.js.map
 package-lock.json
 yarn.lock
 stats.json

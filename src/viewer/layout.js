@@ -12,6 +12,9 @@ import {
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 
+// A little bigger than normal mobile break to hide sidebar in narrow viewports
+const MOBILE_BREAKPOINT = 800;
+
 export const layout = new Svue({
   data() {
     return {
@@ -29,7 +32,7 @@ export const layout = new Svue({
       // In embedded mode
       embed: false,
       // Whether to display sidebar
-      showSidebar: true,
+      showSidebar: document.body.offsetWidth >= MOBILE_BREAKPOINT,
 
       loading: false,
       error: null,
@@ -54,6 +57,7 @@ export const layout = new Svue({
 
       // Search
       search: null,
+      searchExpanded: false,
       searchPending: false,
       searchHighlights: null,
       searchPages: null,
@@ -80,7 +84,13 @@ export const layout = new Svue({
       if (viewer.document == null || !viewer.document.readable) return [];
       return [
         async () => {
-          const doc = await getDocument(viewer.document.id, [DEFAULT_EXPAND]);
+          const doc = await getDocument(viewer.document.id, [
+            DEFAULT_EXPAND,
+            "notes",
+            "sections",
+            "notes.organization",
+            "notes.user",
+          ].join(","));
           viewer.document = doc;
           // Update embed document if possible
           if (
@@ -170,6 +180,7 @@ export const layout = new Svue({
 });
 
 function consolidateDragObject(dragObject) {
+  if (dragObject.start == null) return new Note({ page_number: dragObject.pageNumber });
   const start = {
     x: Math.min(dragObject.start.x, dragObject.end.x),
     y: Math.min(dragObject.start.y, dragObject.end.y),
@@ -189,6 +200,7 @@ function consolidateDragObject(dragObject) {
 }
 
 export function annotationValid(annotation) {
+  if (annotation.isPageNote) return true;
   if (annotation.x2 <= annotation.x1) return false;
   if (annotation.y2 <= annotation.y1) return false;
   return true;
@@ -201,38 +213,45 @@ export function enterEditAnnotateMode(annotation) {
   layout.displayedAnnotation = annotation;
 }
 
-export function pageDragStart(pageNumber, x, y) {
+export function pageDragStart(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = {
       pageNumber,
       start: { x, y },
       end: { x, y },
     };
+    return true;
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       pageNumber,
       start: { x, y },
       end: { x, y },
     };
+    return true;
   }
+  return false;
 }
 
-export function pageDragMove(pageNumber, x, y) {
+export function pageDragMove(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
+    return true;
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       ...layout.rawAnnotation,
       pageNumber,
       end: { x, y },
     };
+    return true;
   }
+  return false;
 }
 
-export function pageDragEnd(pageNumber, x, y) {
+export function pageDragEnd(pageNumber, { x, y }) {
   if (layout.redacting) {
     layout.rawRedaction = { ...layout.rawRedaction, pageNumber, end: { x, y } };
     pushRedaction();
+    return true;
   } else if (layout.annotating) {
     layout.rawAnnotation = {
       ...layout.rawAnnotation,
@@ -241,7 +260,17 @@ export function pageDragEnd(pageNumber, x, y) {
     };
     layout.annotationPending = true;
     enterEditAnnotateMode(layout.shownEditAnnotation);
+    return true;
   }
+  return false;
+}
+
+export function startPageNote(pageNumber) {
+  layout.rawAnnotation = {
+    pageNumber
+  };
+  layout.annotationPending = true;
+  enterEditAnnotateMode(layout.shownEditAnnotation);
 }
 
 function pushRedaction() {

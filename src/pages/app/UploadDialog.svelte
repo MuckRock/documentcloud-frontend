@@ -199,10 +199,7 @@
             </p>
           {/if}
         {:else}
-          <p>
-            <!-- TODO: use pluralization -->
-            {handlePlural(files.length, 'file', true)} ready to upload
-          </p>
+          <p>{handlePlural(files.length, 'file', true)} ready to upload</p>
           {#if tooManyFiles}
             <p class="danger">You can only upload {LIMIT} files at once.</p>
           {/if}

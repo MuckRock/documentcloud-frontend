@@ -1,0 +1,44 @@
+<script>
+  import { layout } from "@/viewer/layout";
+  import { viewer } from "@/viewer/viewer";
+  import { doc } from "@/viewer/document";
+  import Annotation from "./Annotation";
+
+  let width = 0;
+</script>
+
+<style lang="scss">
+  .doc {
+    left: 0;
+    background: $viewerBodyBg;
+    position: absolute;
+    overflow: auto;
+    padding: 2em 0;
+
+    .notes {
+      max-width: $mobileBreak;
+      width: 90%;
+      margin: 0 auto;
+    }
+  }
+</style>
+
+<div
+  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
+  {$layout.sidebarWidth}px;"
+  class="doc">
+
+  <div class="notes" bind:clientWidth={width}>
+    {#each $viewer.orderedNotes as note}
+      <Annotation
+        page={{ aspect: $viewer.pageAspects[note.page], pageNumber: note.page, document: $viewer.document }}
+        pageNote={true}
+        {width}
+        mode={$layout.annotateMode}
+        aspect={$viewer.pageAspects[note.page]}
+        showImageOnPageNote={!note.isPageNote}
+        annotation={note} />
+    {/each}
+  </div>
+
+</div>

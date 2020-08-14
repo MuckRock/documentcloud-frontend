@@ -8,8 +8,14 @@
     enterAnnotateMode,
     enterSectionsMode
   } from "@/viewer/actions";
-  import { layout, showEmbedFlow } from "@/viewer/layout";
+  import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
+
+  function handleMouseDown() {
+    if ($layout.displayAnnotate) {
+      cancelAnnotation();
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -28,8 +34,12 @@
     }
 
     &.disabled {
-      pointer-events: none;
       filter: brightness(90%);
+      user-select: none;
+
+      * {
+        pointer-events: none;
+      }
     }
 
     .updating {
@@ -119,6 +129,7 @@
     class="sidebar"
     class:white={$viewer.me == null}
     class:disabled={$layout.disableControls}
+    on:mousedown={handleMouseDown}
     style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
     width: {$layout.sidebarWidth}px">
 
@@ -132,7 +143,7 @@
         {/if}
 
         {#if $viewer.document.description != null}
-          <details open>
+          <details class="dc" open>
             <summary>
               <h2>{$viewer.document.title}</h2>
             </summary>

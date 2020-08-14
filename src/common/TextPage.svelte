@@ -2,43 +2,9 @@
   import { onMount } from "svelte";
   import { layout } from "@/viewer/layout";
   import { coalesceHighlights } from "@/util/coalesceHighlights";
-  import session from "@/api/session";
-  import emitter from "@/emit";
 
-  export let src;
-  export let width;
-  export let delay = null;
+  export let text = "";
   export let highlights = null;
-
-  export let aspect = null;
-
-  let text = null;
-  let ready = false;
-  let gettingText = false;
-
-  const emit = emitter({
-    aspect() {}
-  });
-
-  let height;
-  $: if (text != null && height != null) {
-    emit.aspect(height / width);
-  }
-
-  $: if (ready && text == null && !gettingText) loadText();
-
-  async function loadText() {
-    gettingText = true;
-    text = await session.getStatic(src);
-  }
-
-  onMount(() => {
-    if (delay == null) {
-      loadText();
-    } else {
-      setTimeout(() => (ready = true), delay);
-    }
-  });
 
   // Highlights
   $: regions = coalesceHighlights(text, highlights);
@@ -54,6 +20,8 @@
     font-family: "Courier New", Courier, monospace;
     color: #333;
     line-height: 1.4;
+    user-select: text;
+    padding: 16px 20px;
 
     .highlight {
       background: #f3e94d;
@@ -67,19 +35,12 @@
   }
 </style>
 
-{#if text != null}
-  <div
-    class="text"
-    bind:clientHeight={height}
-    style="font-size: {width / 50}px; padding: {width / 15}px;">
-    {#each regions as region}
-      {#if region.type == 'normal'}
-        <span>{region.text}</span>
-      {:else}
-        <span class="highlight">{region.text}</span>
-      {/if}
-    {/each}
-  </div>
-{:else}
-  <div class="text" style="height: {aspect * width}px" />
-{/if}
+<div class="text">
+  {#each regions as region}
+    {#if region.type == 'normal'}
+      <span>{region.text}</span>
+    {:else}
+      <span class="highlight">{region.text}</span>
+    {/if}
+  {/each}
+</div>

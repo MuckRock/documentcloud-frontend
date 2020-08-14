@@ -1,57 +1,152 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import { pageImageUrl } from "@/api/viewer";
 
   export let alt;
-  export let srcs;
+  export let page;
+  export let width;
+  export let aspect;
+  export let grayed = false;
+  export let crosshair = false;
+  let elem;
   let destroyed = false;
-  let elem = null;
-  let elems = [];
-  let img = null;
-  let currentSrc = 0;
-
-  let displayedImg = null;
-  let displayedIndex = -1;
   let imgs = [];
+  let loading = {};
+  let largestLoaded = -1;
 
-  function nixOlder(idx) {
-    for (let i = 0; i < Math.min(idx, imgs.length); i++) {
-      imgs[i].src = "";
+  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
+    .map(x => x.split(":"))
+    .map(x => [parseFloat(x[1]), x[0]])
+    .sort((a, b) => a[0] - b[0]);
+  const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
+    x => x[0][1] == "normal"
+  )[0];
+  let srcs = [];
+  let mounted = false;
+
+  onMount(() => {
+    loadImg(0);
+    mounted = true;
+  });
+
+  $: {
+    if (mounted) {
+      const effectiveWidth = width * (window.devicePixelRatio || 1);
+      if (effectiveWidth > NORMAL_WIDTH[0][0]) {
+        loadImg(NORMAL_WIDTH[1]);
+      }
+
+      let loaded = false;
+      for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
+        if (effectiveWidth < IMAGE_WIDTHS[i][0]) {
+          loadImg(i);
+          loaded = true;
+          break;
+        }
+      }
+      if (!loaded) loadImg(IMAGE_WIDTHS.length - 1);
     }
+  }
+
+  function nixOlder(keepIndex) {
+    imgs
+      .filter(x => x[1] < keepIndex)
+      .forEach(x => {
+        x[0].src = "";
+        x[0].remove();
+      });
   }
 
   function handleLoad(img, i) {
-    if (displayedImg == null) {
-      elem.appendChild(img);
-      displayedImg = img;
-      displayedIndex = i;
-      nixOlder(i);
+    // If a higher res image has already been loaded, abort
+    if (i < largestLoaded) return;
+    elem.appendChild(img);
+    imgs.push([img, i]);
+    if (largestLoaded == -1) {
+      // Fade in immediately
+      img.style.opacity = 1;
     } else {
-      if (i > displayedIndex) {
-        elem.replaceChild(img, displayedImg);
-        displayedImg = img;
-        displayedIndex = i;
+      // Fade in smoothly
+      img.addEventListener("transitionend", () => {
         nixOlder(i);
-      }
+      });
+      setTimeout(() => (img.className = "loaded"), 100);
     }
+    largestLoaded = i;
   }
 
-  // Load all images simultaneously
-  $: imgs = srcs.map((src, i) => {
+  function loadImg(i) {
+    // If image is already being loaded, abort
+    if (i < largestLoaded) return;
+    if (loading[i]) return;
+    loading[i] = true;
+
+    const src = pageImageUrl(
+      page.document,
+      page.pageNumber,
+      IMAGE_WIDTHS[i][0]
+    );
     const img = new Image();
+    // Adapted from comments on https://stackoverflow.com/a/12906840
+    img.ondragstart = () => false;
     img.onload = () => {
       if (!destroyed) {
         handleLoad(img, i);
       }
     };
+    img.onerror = () => {
+      // On error, load previous res
+      if (i > 0) loadImg(i - 1);
+    };
     img.alt = alt;
     img.src = src;
     return img;
-  });
+  }
 
   onDestroy(() => {
     destroyed = true;
-    imgs.forEach(img => (img.src = ""));
+    imgs.forEach(img => (img[0].src = ""));
   });
 </script>
 
-<span bind:this={elem} />
+<style lang="scss">
+  div {
+    position: relative;
+    width: 100%;
+    background: white;
+    border: solid 1px gainsboro;
+    box-sizing: border-box;
+
+    :global(img) {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+
+      user-drag: none;
+      user-select: none;
+
+      transition: opacity 0.2s linear;
+      opacity: 0;
+
+      &.loaded {
+        opacity: 1;
+      }
+    }
+
+    &.grayed {
+      filter: brightness(0.8);
+    }
+
+    &.crosshair {
+      cursor: crosshair;
+    }
+  }
+</style>
+
+<div
+  style="padding-top: {aspect * 100}%"
+  bind:this={elem}
+  class:grayed
+  class:crosshair />
