@@ -35,6 +35,7 @@
 
   export let page;
   export let pageNote = false;
+  export let showImageOnPageNote = false;
   export let width;
   export let annotation;
   export let aspect;
@@ -305,6 +306,10 @@
           box-shadow: inset 0 0 5px #000;
           box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 
+          &.nobottom {
+            bottom: 0;
+          }
+
           &.left {
             border-right: 1px solid #ddd;
             border-right: 1px solid rgba(221, 221, 221, 0.4);
@@ -500,11 +505,19 @@
         margin-bottom: 0;
         margin-top: 0;
         padding-bottom: 8px;
+
+        &.showimage {
+          margin-bottom: 2px;
+        }
       }
 
       footer {
         margin-top: 0;
         margin-bottom: 0;
+
+        &.showimage {
+          margin-top: 8px;
+        }
       }
     }
   }
@@ -529,6 +542,7 @@
   <header
     bind:this={annotationElem}
     bind:offsetHeight={headerHeight}
+    class:showimage={showImageOnPageNote}
     class:hidden={shift == 'down'}>
     {#if !pageNote}
       <div class="closeflag">
@@ -557,10 +571,13 @@
   {#if shift == 'down'}
     <header />
   {/if}
-  {#if !pageNote}
+  {#if !pageNote || showImageOnPageNote}
     <div class="excerpt">
-      <div class="body">
-        <div style="margin-top: {-annotation.y1 * aspect * 100}%">
+      <div
+        class="body"
+        style={showImageOnPageNote ? `height: 0; padding-top: ${annotation.height * aspect * 100}%` : ''}>
+        <div
+          style="margin-top: {-annotation.y1 * aspect * 100 - (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%">
           <ProgressiveImage
             alt="Page {page.pageNumber + 1} of {page.document.title}"
             {width}
@@ -569,9 +586,11 @@
           <!-- Faded flanks -->
           <div
             class="faded left"
+            class:nobottom={showImageOnPageNote}
             style="left: 0; width: {annotation.x1 * 100}%" />
           <div
             class="faded right"
+            class:nobottom={showImageOnPageNote}
             style="left: {annotation.x2 * 100}%; right: 0" />
         </div>
       </div>
@@ -580,6 +599,7 @@
   <footer
     bind:offsetHeight={footerHeight}
     bind:offsetWidth={footerWidth}
+    class:showimage={showImageOnPageNote}
     class:capsize={pageNote && !editMode}>
     {#if shift == 'down'}
       <div class="closeflag">

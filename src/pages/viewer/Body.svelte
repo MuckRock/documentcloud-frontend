@@ -27,8 +27,6 @@
 
   let scrollzoom = null;
 
-  const MOBILE_BREAKPOINT = 600;
-
   function destroyScrollzoom() {
     if (doc.scrollzoom != null) {
       doc.scrollzoom.destroy();
@@ -268,7 +266,9 @@
       !e.altKey &&
       !e.shiftKey &&
       !layout.disableControls &&
-      !layout.searchExpanded
+      !layout.searchExpanded &&
+      !layout.showEditSections &&
+      !layout.showEmbedDialog
     ) {
       if (e.key == "a") {
         enterAnnotateMode();
@@ -289,7 +289,7 @@
     right: 0;
     left: 0;
     box-sizing: border-box;
-    overflow: scroll;
+    overflow: auto;
     z-index: $viewerBodyZ;
     touch-action: manipulation;
     background: $viewerBodyBg;

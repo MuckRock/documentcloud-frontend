@@ -320,6 +320,9 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
   await closeSidebarIfFullWidth();
 
   if (!annotationValid(annotation)) return;
+
+  await changeMode('image');
+
   layout.annotateMode = "view";
   if (!annotation.isPageNote) {
     layout.displayedAnnotation = annotation;

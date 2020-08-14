@@ -2,6 +2,7 @@
   import Header from "./header/Header";
   import Body from "./Body";
   import SimpleBody from "./SimpleBody";
+  import NoteBody from "./NoteBody";
   import TextBody from "./TextBody";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
@@ -71,6 +72,8 @@
       <Body mode={$doc.mode} />
     {:else if $doc.mode == 'text' || $doc.mode == 'search'}
       <SimpleBody />
+    {:else if $doc.mode == 'notes'}
+      <NoteBody />
     {/if}
     <Sidebar />
     <Footer />

@@ -12,7 +12,8 @@ import {
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 
-const MOBILE_BREAKPOINT = 600;
+// A little bigger than normal mobile break to hide sidebar in narrow viewports
+const MOBILE_BREAKPOINT = 800;
 
 export const layout = new Svue({
   data() {
@@ -83,7 +84,13 @@ export const layout = new Svue({
       if (viewer.document == null || !viewer.document.readable) return [];
       return [
         async () => {
-          const doc = await getDocument(viewer.document.id, [DEFAULT_EXPAND]);
+          const doc = await getDocument(viewer.document.id, [
+            DEFAULT_EXPAND,
+            "notes",
+            "sections",
+            "notes.organization",
+            "notes.user",
+          ].join(","));
           viewer.document = doc;
           // Update embed document if possible
           if (
