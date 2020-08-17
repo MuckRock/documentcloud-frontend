@@ -5,8 +5,6 @@
   import { doc } from "@/viewer/document";
   import { pageImageUrl, textUrl } from "@/api/viewer";
 
-  import { getAnnotationsPage } from "@/api/annotation";
-
   let selectedPage = null;
 
   const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
@@ -16,12 +14,6 @@
   const LARGE_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
     x => x[0][1] == "large"
   )[0];
-
-  function range(count) {
-    const result = [];
-    for (let i = 0; i < count; i++) result.push(i + 1);
-    return result;
-  }
 
   let page = "visible";
   let anotherNumber = 1;

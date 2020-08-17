@@ -1,13 +1,18 @@
 const baseConfig = require('./webpack.base.config');
 
-module.exports = {
+const targets = [
+  ['./src/enhance.js', '/public/embed', 'enhance.js'],
+  ['./src/noteLoader.js', '/public/notes', 'loader.js'],
+]
+
+module.exports = targets.map(([src, outputPath, outputFilename]) => ({
   ...baseConfig,
   entry: {
-    bundle: ["./src/enhance.js"]
+    bundle: [src]
   },
   output: {
-    path: __dirname + "/public/embed",
-    filename: "enhance.js",
+    path: __dirname + outputPath,
+    filename: outputFilename,
     publicPath: "/"
   },
   module: {
@@ -27,4 +32,4 @@ module.exports = {
     ]
   },
   watch: baseConfig.mode != 'production',
-};
+}));

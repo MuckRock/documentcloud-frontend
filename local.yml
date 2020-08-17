@@ -31,13 +31,13 @@ services:
         aliases:
           - www.dev.documentcloud.org
 
-  documentcloud_frontend_enhance:
+  documentcloud_frontend_embed:
     image: node:12
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run dev-enhance
+    command: npm run dev-embed
     networks:
       default:
         aliases:

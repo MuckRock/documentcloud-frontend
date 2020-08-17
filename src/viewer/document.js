@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from './viewer';
 import { tick } from 'svelte';
-import { layout, annotationValid, startSearch, clearSearch } from './layout';
+import { layout, annotationValid, startSearch, clearSearch, cancelActions } from './layout';
 
 const LAYOUT = {
   docMargin: 40,  // margin from top to first page, bottom to last
@@ -317,6 +317,15 @@ export async function scrollVisibleAnnotationIntoView() {
 }
 
 export async function showAnnotation(annotation, scrollIntoView = false) {
+  // Handle selecting an annotation
+  if (layout.selectNoteEmbed) {
+    const embedDocument = layout.embedDocument;
+    cancelActions();
+    layout.embedDocument = embedDocument;
+    layout.embedNote = annotation;
+    return;
+  }
+
   await closeSidebarIfFullWidth();
 
   if (!annotationValid(annotation)) return;

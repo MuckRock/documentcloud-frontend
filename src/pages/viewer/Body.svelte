@@ -312,7 +312,7 @@
   bind:this={docElem}
   class="doc"
   on:mousedown={handleMouseDown}
-  class:grayed={$layout.displayAnnotate}>
+  class:grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}>
   {#if $doc.mode == 'search'}
     <SearchResults />
   {/if}

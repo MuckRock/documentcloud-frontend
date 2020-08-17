@@ -64,6 +64,7 @@ export const layout = new Svue({
 
       // Embed
       embedDocument: null,
+      embedNote: null,
       embedContext: "viewer",
     };
   },
@@ -121,6 +122,9 @@ export const layout = new Svue({
     searching(action) {
       return action == "search";
     },
+    selectNoteEmbed(action) {
+      return action == 'selectnote';
+    },
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
     },
@@ -173,8 +177,8 @@ export const layout = new Svue({
       }
       return sum;
     },
-    showEmbedDialog(embedDocument) {
-      return embedDocument != null;
+    showEmbedDialog(embedDocument, selectNoteEmbed) {
+      return embedDocument != null && !selectNoteEmbed;
     },
   },
 });
@@ -308,6 +312,8 @@ export function undoRedaction() {
 
 export function cancelActions() {
   layout.action = null;
+  layout.embedDocument = null;
+  layout.embedNote = null;
   layout.displayedAnnotation = null;
   layout.showEditSections = false;
 }
@@ -409,6 +415,7 @@ function reset() {
 }
 
 export function showEmbedFlow(document) {
+  layout.embedNote = null;
   layout.embedDocument = document;
 }
 

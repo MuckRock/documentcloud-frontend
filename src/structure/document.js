@@ -45,7 +45,10 @@ export class Document extends Svue {
           return page => `${canonicalUrl}#document/p${page}`;
         },
         noteUrl(pageUrl) {
-          return (page, note) => `${pageUrl(page)}/a${note}`;
+          return (note) => `${pageUrl(note.page + 1)}/a${note.id}`;
+        },
+        fakeNoteUrl(canonicalUrl) {
+          return note => `${canonicalUrl}/annotations/${note.id}`;
         },
         title(doc) {
           return doc.title;

@@ -7,6 +7,8 @@
   import NoteEmbedDialog from "./NoteEmbedDialog";
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { changeAccess } from "@/api/document";
+  import { enterSelectNoteMode } from "@/viewer/actions";
+  import emitter from "@/emit";
 
   // Stores
   import { viewer } from "@/viewer/viewer";
@@ -18,6 +20,10 @@
   import shareDocumentSvg from "@/assets/share_document.svg";
   import sharePageSvg from "@/assets/share_page.svg";
   import shareNoteSvg from "@/assets/share_note.svg";
+
+  const emit = emitter({
+    close() {}
+  });
 
   let loading = writable(false);
   let firstStep = true;
@@ -40,6 +46,10 @@
         viewer.document = viewer.document;
       }
     });
+  }
+
+  function selectNote() {
+    enterSelectNoteMode();
   }
 </script>
 
@@ -153,14 +163,16 @@
 <Loader active={$loading}>
   <div>
     <div class="mcontent">
-      {#if shareOption == null}
+      {#if $layout.embedNote != null}
+        <NoteEmbedDialog />
+      {:else if shareOption == null}
         {#if $layout.embedDocument.readable}
           <div class="warning readable">
             <div class="message">
               <h2>Updating document...</h2>
               <p>
-                The document is currently being made public. This should only
-                take a few seconds.
+                The document is currently being made public. This may take a
+                minute or two.
               </p>
               <div>
                 <Progress initializing={true} progress={0} compact={true} />
@@ -219,7 +231,7 @@
                 class:hover={shareHover == 'note'}
                 on:mouseover={() => (shareHover = 'note')}
                 on:mouseout={() => (shareHover = null)}
-                on:click={() => (shareOption = 'note')}>
+                on:click={selectNote}>
                 {@html shareNoteSvg}
               </div>
             </div>
@@ -256,7 +268,7 @@
                 class:hover={shareHover == 'note'}
                 on:mouseover={() => (shareHover = 'note')}
                 on:mouseout={() => (shareHover = null)}
-                on:click={() => (shareOption = 'note')}>
+                on:click={selectNote}>
                 <h2 class:faded={!hasNotes}>Share specific note</h2>
                 <p>
                   {#if hasNotes}
@@ -275,8 +287,6 @@
         <DocumentEmbedDialog />
       {:else if shareOption == 'page'}
         <PageEmbedDialog />
-      {:else if shareOption == 'note'}
-        <NoteEmbedDialog />
       {/if}
     </div>
   </div>

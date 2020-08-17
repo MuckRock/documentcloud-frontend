@@ -37,9 +37,9 @@
     "build-staging": "cross-env NODE_ENV=staging webpack",
     "build-serve": "cross-env NODE_ENV=production webpack && serve public -l 80",
     "build-analyze": "cross-env NODE_ENV=production-analyze webpack",
-    "dev": "concurrently \"npm:dev-app\" \"npm:dev-enhance\"",
+    "dev": "concurrently \"npm:dev-app\" \"npm:dev-embed\"",
     "dev-app": "cross-env NODE_ENV=development webpack-dev-server --config webpack.app.config.js --content-base public",
-    "dev-enhance": "cross-env NODE_ENV=development webpack --config webpack.enhance.config.js",
+    "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },

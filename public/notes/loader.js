@@ -5470,6 +5470,417 @@ const DEFAULT_EXPAND = [USER_EXPAND, ORG_EXPAND].join(",");
 
 /***/ }),
 
+/***/ "./src/api/document.js":
+/*!*****************************!*\
+  !*** ./src/api/document.js ***!
+  \*****************************/
+/*! exports provided: PENDING, getMe, getDocuments, searchDocuments, searchDocument, getDocument, getDocumentsWithIds, deleteDocument, renameDocument, changeAccess, reprocessDocument, cancelProcessing, redactDocument, addData, removeData, getEmbed, pollDocument, uploadDocuments */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PENDING", function() { return PENDING; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMe", function() { return getMe; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDocuments", function() { return getDocuments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchDocuments", function() { return searchDocuments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchDocument", function() { return searchDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDocument", function() { return getDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDocumentsWithIds", function() { return getDocumentsWithIds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteDocument", function() { return deleteDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renameDocument", function() { return renameDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeAccess", function() { return changeAccess; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reprocessDocument", function() { return reprocessDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cancelProcessing", function() { return cancelProcessing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "redactDocument", function() { return redactDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addData", function() { return addData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeData", function() { return removeData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmbed", function() { return getEmbed; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pollDocument", function() { return pollDocument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uploadDocuments", function() { return uploadDocuments; });
+/* harmony import */ var _session__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./session */ "./src/api/session.js");
+/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base */ "./src/api/base.js");
+/* harmony import */ var _util_timeout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/util/timeout */ "./src/util/timeout.js");
+/* harmony import */ var _util_url__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/util/url */ "./src/util/url.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./common */ "./src/api/common.js");
+/* harmony import */ var _util_paginate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/util/paginate */ "./src/util/paginate.js");
+/* harmony import */ var _structure_results__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/structure/results */ "./src/structure/results.js");
+/* harmony import */ var _util_batchDelay__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/util/batchDelay */ "./src/util/batchDelay.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _structure_document__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/structure/document */ "./src/structure/document.js");
+/**
+ * Methods related to the DocumentCloud document API
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
+
+const UPLOAD_BATCH = parseInt("25");
+const UPLOAD_BATCH_DELAY = parseInt("1000");
+
+const HIGHLIGHT_START = "<em>";
+const HIGHLIGHT_END = "</em>";
+
+// Statuses
+const PENDING = "pending";
+
+async function getMe(expand = _common__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_EXPAND"]) {
+  // Returns the currently logged in user
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].get(
+    Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])(Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])("users/me/"), { expand })
+  );
+  return data;
+}
+
+async function getDocuments(
+  extraParams = {},
+  ordering = _common__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_ORDERING"],
+  page = 0,
+  expand = _common__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_EXPAND"]
+) {
+  // Return documents with the specified parameters
+  const params = { ...extraParams, ordering, expand, page: page + 1 };
+  // Inject remaining if grabbing pending docs
+  if (status == PENDING) params["remaining"] = true;
+  const url = Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])("documents/", params));
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].get(url);
+  data.results = data.results.map((document) => new _structure_document__WEBPACK_IMPORTED_MODULE_9__["Document"](document));
+  return new _structure_results__WEBPACK_IMPORTED_MODULE_6__["Results"](url, data);
+}
+
+async function searchDocuments(
+  query,
+  page = 0,
+  expand = _common__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_EXPAND"]
+) {
+  // Return documents with the specified parameters
+  const url = Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(
+    Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])("documents/search/", { q: query, expand, page: page + 1 })
+  );
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].get(url);
+
+  // Fill in document data with a subsequent API call
+  const docIds = data.results.map((document) => document.id);
+  const newDocuments = await getDocumentsWithIds(docIds);
+  for (let i = 0; i < newDocuments.length; i++) {
+    newDocuments[i].doc = {
+      ...newDocuments[i].doc,
+      highlights: data.results[i].highlights,
+    };
+    data.results[i] = newDocuments[i];
+  }
+
+  return new _structure_results__WEBPACK_IMPORTED_MODULE_6__["Results"](url, data);
+}
+
+async function searchDocument(query, docId) {
+  // Return documents with the specified parameters
+  const url = Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])(`documents/${docId}/search/`, { q: query }));
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].get(url);
+
+  // Return search highlights in dictionary form
+  return Object(_structure_document__WEBPACK_IMPORTED_MODULE_9__["transformHighlights"])(data, HIGHLIGHT_START, HIGHLIGHT_END, true);
+}
+
+async function getDocument(id, expand = _common__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_EXPAND"]) {
+  // Get a single document with the specified id
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].get(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])(`documents/${id}/`, { expand }))
+  );
+  return new _structure_document__WEBPACK_IMPORTED_MODULE_9__["Document"](data);
+}
+
+async function getDocumentsWithIds(
+  ids,
+  remaining = false,
+  expand = _common__WEBPACK_IMPORTED_MODULE_4__["DEFAULT_EXPAND"]
+) {
+  if (ids.length == 0) return [];
+  // Return documents with the specified ids
+  const params = { expand, id__in: ids };
+  if (remaining) params["remaining"] = true;
+  const documents = await Object(_util_paginate__WEBPACK_IMPORTED_MODULE_5__["grabAllPages"])(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])("documents/", params))
+  );
+  const docs = documents.map((document) => new _structure_document__WEBPACK_IMPORTED_MODULE_9__["Document"](document));
+  const orderedDocs = [];
+  for (let i = 0; i < ids.length; i++) {
+    const matching = docs.filter((doc) => doc.id == ids[i]);
+    if (matching.length == 0) continue;
+    orderedDocs.push(matching[0]);
+  }
+  return orderedDocs;
+}
+
+async function deleteDocument(ids) {
+  // Delete the documents with the specified ids
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].delete(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(
+      Object(_util_url__WEBPACK_IMPORTED_MODULE_3__["queryBuilder"])(`documents/`, {
+        id__in: ids,
+      })
+    )
+  );
+}
+
+async function renameDocument(ids, title) {
+  // Rename the documents with the specified ids
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].patch(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/`),
+    ids.map((id) => ({ id, title }))
+  );
+}
+
+async function changeAccess(ids, access) {
+  // Change access for the documents with the specified ids
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].patch(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/`),
+    ids.map((id) => ({ id, access }))
+  );
+}
+
+async function reprocessDocument(ids) {
+  // Reprocess the documents with the specified ids
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].post(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/process/`),
+    ids.map((id) => ({ id }))
+  );
+}
+
+async function cancelProcessing(id) {
+  // Cancel processing the document with the specified id
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].delete(Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/${id}/process`));
+  return data;
+}
+
+async function redactDocument(id, redactions) {
+  // Redact the document with the specified id and redactions
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].post(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/${id}/redactions/`),
+    redactions.map((redaction) => redaction.note)
+  );
+}
+
+async function addData(id, key, value) {
+  // TODO: Url encode data key?
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].patch(Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/${id}/data/${key}/`), {
+    values: [value],
+  });
+}
+
+async function removeData(id, key, value) {
+  // TODO: Url encode data key?
+  await _session__WEBPACK_IMPORTED_MODULE_0__["default"].patch(Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/${id}/data/${key}/`), {
+    remove: [value],
+  });
+}
+
+async function getEmbed(url) {
+  const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].get(
+    Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`oembed?url=${encodeURIComponent(url)}`)
+  );
+  return data;
+}
+
+/**
+ * Polls the specified document, repeatedly requesting it until the specified condition is met.
+ * @param {string} id The document id to poll
+ * @param {Function} docFn A function to run each time the document is retrieved
+ * @param {Function} doneFn A function to run when polling stops
+ * @param {Function} conditionFn A function to test each doc and stop polling if it returns true.
+ *     Defaults to check if the doc is not pending.
+ */
+async function pollDocument(
+  id,
+  docFn,
+  doneFn,
+  conditionFn = (doc) => doc.nonPending
+) {
+  let doc;
+  try {
+    // Attempt to fetch the document
+    doc = await getDocument(id);
+  } catch (e) {
+    // Doc was potentially deleted
+    // TODO: Investigate whether should call done or add a deleteFn (or handle fn)
+    return;
+  }
+  // Trigger the new document function
+  if (docFn != null) docFn(doc);
+
+  // Test for the document being finished
+  if (conditionFn(doc)) {
+    if (doneFn != null) doneFn(doc);
+    return;
+  }
+
+  // Retrigger after timeout
+  await Object(_util_timeout__WEBPACK_IMPORTED_MODULE_2__["timeout"])(POLL_TIMEOUT);
+  pollDocument(id, docFn, doneFn, conditionFn);
+}
+
+/**
+ * Uploads the specified documents, providing callbacks for progress updates
+ * @param {Array<Document>} docs The documents to upload
+ * @param {string} access The access level of the uploaded docs ("private", "organization", or "public")
+ * @param {Function} progressFn A function to call with upload progress
+ * @param {Function} allCompleteFn A function to call when all docs upload
+ * @param {Function} errorFn A function to call when an error occurs
+ */
+async function uploadDocuments(
+  docs,
+  access,
+  progressFn,
+  allCompleteFn,
+  errorFn
+) {
+  // Set initial progresses
+  const progresses = [];
+  const toComplete = [];
+  for (let i = 0; i < docs.length; i++) {
+    progresses.push({
+      progress: 0,
+    });
+    toComplete.push(i);
+  }
+
+  // Allocate documents with the appropriate titles.
+  let newDocuments;
+  try {
+    const data = await Object(_util_batchDelay__WEBPACK_IMPORTED_MODULE_7__["batchDelay"])(
+      docs,
+      UPLOAD_BATCH,
+      UPLOAD_BATCH_DELAY,
+      async (subDocs) => {
+        const { data } = await _session__WEBPACK_IMPORTED_MODULE_0__["default"].post(
+          Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])("documents/"),
+          subDocs.map((doc) => ({ title: doc.name, access }))
+        );
+        return data;
+      }
+    );
+    newDocuments = data;
+  } catch (e) {
+    console.error(e);
+    return errorFn("failed to create the document", e);
+  }
+
+  // Upload all the files
+  try {
+    await Promise.all(
+      docs.map((doc, i) => {
+        const url = newDocuments[i].presigned_url;
+        const file = doc.file;
+
+        return axios__WEBPACK_IMPORTED_MODULE_8___default.a.put(url, file, {
+          headers: {
+            "Content-Type": "application/pdf",
+          },
+          onUploadProgress: (progressEvent) => {
+            // Handle upload progress
+            const progress = progressEvent.loaded / progressEvent.total;
+            progresses[i].progress = progress;
+            progressFn(i, progress);
+          },
+        });
+      })
+    );
+  } catch (e) {
+    console.error(e);
+    return errorFn("failed to upload the document", e);
+  }
+
+  // Once all the files have uploaded, begin processing.
+  const ids = newDocuments.map((doc) => doc.id);
+  try {
+    await Object(_util_batchDelay__WEBPACK_IMPORTED_MODULE_7__["batchDelay"])(
+      ids,
+      UPLOAD_BATCH,
+      UPLOAD_BATCH_DELAY,
+      async (subIds) =>
+        await _session__WEBPACK_IMPORTED_MODULE_0__["default"].post(
+          Object(_base__WEBPACK_IMPORTED_MODULE_1__["apiUrl"])(`documents/process/`),
+          subIds.map((id) => ({ id }))
+        )
+    );
+  } catch (e) {
+    console.error(e);
+    return errorFn("failed to start processing the document", e);
+  }
+
+  // Handle document completion
+  allCompleteFn(ids);
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./src/api/pageSize.js":
+/*!*****************************!*\
+  !*** ./src/api/pageSize.js ***!
+  \*****************************/
+/*! exports provided: pageSizesFromSpec */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pageSizesFromSpec", function() { return pageSizesFromSpec; });
+/**
+ * Parses the page spec format (as "crunched" by the Python
+ * [listcrunch](https://github.com/MuckRock/listcrunch) modules) and returns an
+ * array of page aspect ratios.
+ * @param {string} pageSpec A string encoding page dimensions in a compact format
+ * @returns {Array<number>} An array of aspect ratios for each page
+ */
+function pageSizesFromSpec(pageSpec) {
+  // Handle empty page spec
+  if (pageSpec.trim().length == 0) return [];
+
+  const parts = pageSpec.split(";");
+  const sizes = [];
+  for (let i = 0; i < parts.length; i++) {
+    // Go through each part, e.g. 100x200:0-5
+    const part = parts[i];
+    const [size, range] = part.split(":");
+
+    const [width, height] = size.split("x").map(parseFloat);
+    const aspect = height / width;
+
+    const rangeParts = range.split(",");
+    for (let j = 0; j < rangeParts.length; j++) {
+      const rangePart = rangeParts[j];
+      if (rangePart.indexOf("-") != -1) {
+        // Parse a range
+        const [start, end] = rangePart.split("-").map(x => parseInt(x, 10));
+        for (let page = start; page <= end; page++) {
+          sizes[page] = aspect;
+        }
+      } else {
+        // Parse a single page
+        const page = parseInt(rangePart, 10);
+        sizes[page] = aspect;
+      }
+    }
+  }
+
+  return sizes;
+}
+
+
+/***/ }),
+
 /***/ "./src/api/session.js":
 /*!****************************!*\
   !*** ./src/api/session.js ***!
@@ -5563,20 +5974,89 @@ session.getStatic = async function getStatic(url) {
 
 /***/ }),
 
-/***/ "./src/embed/page/Annotation.svelte":
-/*!******************************************!*\
-  !*** ./src/embed/page/Annotation.svelte ***!
-  \******************************************/
+/***/ "./src/api/viewer.js":
+/*!***************************!*\
+  !*** ./src/api/viewer.js ***!
+  \***************************/
+/*! exports provided: imageWidths, documentDimensionUrl, pageImageUrl, textUrl, jsonUrl */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageWidths", function() { return imageWidths; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "documentDimensionUrl", function() { return documentDimensionUrl; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pageImageUrl", function() { return pageImageUrl; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "textUrl", function() { return textUrl; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "jsonUrl", function() { return jsonUrl; });
+function processImageWidths(widthSpec) {
+  let result = widthSpec.split(",").map(width => {
+    const parts = width.split(":");
+    return [parseFloat(parts[1]), parts[0]];
+  });
+  result = result.sort((a, b) => a[0] - b[0]);
+  return result;
+}
+
+const imageWidths = processImageWidths("xlarge:2000,large:1000,normal:700,small:180,thumbnail:60");
+
+function documentDimensionUrl(document) {
+  return `${document.assetUrl}documents/${document.id}/${document.slug}.pagesize`;
+}
+
+/**
+ * Returns the desired page image size (e.g. "large", "normal", "small") given
+ * a desired width to render at.
+ * @param {number} desiredWidth The desired width of the page image.
+ */
+function getDesiredSize(desiredWidth) {
+  for (let i = 0; i < imageWidths.length; i++) {
+    const [width, name] = imageWidths[i];
+    if (desiredWidth <= width) return name;
+  }
+  return imageWidths[imageWidths.length - 1][1];
+}
+
+function pageImageUrl(
+  document,
+  pageNumber,
+  desiredWidth,
+) {
+  // Incorporate device's DPI into scaling to avoid blurring.
+  const size = getDesiredSize(desiredWidth);
+
+  return `${document.assetUrl}documents/${document.id}/pages/${
+    document.slug
+    }-p${pageNumber + 1}-${size}.gif?ts=${document.updatedAtTimestamp}`;
+}
+
+function textUrl(document, pageNumber) {
+  return `${document.assetUrl}documents/${document.id}/pages/${
+    document.slug
+    }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
+}
+
+function jsonUrl(document) {
+  return `${document.assetUrl}documents/${document.id}/${
+    document.slug
+    }.txt.json`;
+}
+
+
+/***/ }),
+
+/***/ "./src/common/ProgressiveImage.svelte":
+/*!********************************************!*\
+  !*** ./src/common/ProgressiveImage.svelte ***!
+  \********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var svelte_internal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svelte/internal */ "./node_modules/svelte/internal/index.mjs");
-/* harmony import */ var dompurify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
-/* harmony import */ var dompurify__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dompurify__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var svelte__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! svelte */ "./node_modules/svelte/index.mjs");
-/* src/embed/page/Annotation.svelte generated by Svelte v3.16.7 */
+/* harmony import */ var svelte__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! svelte */ "./node_modules/svelte/index.mjs");
+/* harmony import */ var _api_viewer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/api/viewer */ "./src/api/viewer.js");
+/* src/common/ProgressiveImage.svelte generated by Svelte v3.16.7 */
 
 
 
@@ -5584,293 +6064,274 @@ __webpack_require__.r(__webpack_exports__);
 
 function add_css() {
 	var style = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("style");
-	style.id = "svelte-336ijq-style";
-	style.textContent = ".dc-embed-annotation.svelte-336ijq.svelte-336ijq{max-height:156px;position:absolute;background-color:#ebebeb;overflow-y:auto;padding:8px 16px;box-sizing:border-box;min-width:200px;max-width:400px;line-height:1.2;font-size:14px}.dc-embed-annotation.svelte-336ijq h1.svelte-336ijq{font-weight:700;margin:10px 0;font-size:14px}.dc-embed-annotation.svelte-336ijq .content.svelte-336ijq{margin:10px 0}.dc-embed-annotation.svelte-336ijq a.svelte-336ijq{text-decoration:none}.dc-embed-annotation.svelte-336ijq a.svelte-336ijq:hover{text-decoration:underline}";
+	style.id = "svelte-1jksr6q-style";
+	style.textContent = "div.svelte-1jksr6q{position:relative;width:100%;background:white;border:solid 1px gainsboro;box-sizing:border-box}div.svelte-1jksr6q img{position:absolute;width:100%;height:100%;top:0;left:0;user-drag:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;transition:opacity 0.2s linear;opacity:0}div.svelte-1jksr6q img.loaded{opacity:1}div.grayed.svelte-1jksr6q{-webkit-filter:brightness(0.8);filter:brightness(0.8)}div.crosshair.svelte-1jksr6q{cursor:crosshair}";
 	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(document.head, style);
 }
 
 function create_fragment(ctx) {
-	let div1;
-	let h1;
-	let a;
-	let t0_value = /*note*/ ctx[0].title + "";
-	let t0;
-	let t1;
-	let div0;
-	let raw_value = dompurify__WEBPACK_IMPORTED_MODULE_1___default.a.sanitize(/*note*/ ctx[0].content) + "";
-	let div1_style_value;
+	let div;
 
 	return {
 		c() {
-			div1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
-			h1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("h1");
-			a = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
-			t0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])(t0_value);
-			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
-			div0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a, "href", /*noteUrl*/ ctx[2]);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a, "target", "_blank");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a, "class", "svelte-336ijq");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(h1, "class", "svelte-336ijq");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div0, "class", "content svelte-336ijq");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div1, "class", "dc-embed-annotation svelte-336ijq");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div1, "style", div1_style_value = "" + (/*leftRightStyle*/ ctx[3] + ";" + /*topDownStyle*/ ctx[4]));
+			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "padding-top", /*aspect*/ ctx[0] * 100 + "%");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div, "class", "svelte-1jksr6q");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "grayed", /*grayed*/ ctx[1]);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "crosshair", /*crosshair*/ ctx[2]);
 		},
 		m(target, anchor) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, div1, anchor);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div1, h1);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(h1, a);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(a, t0);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div1, t1);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div1, div0);
-			div0.innerHTML = raw_value;
-			/*div1_binding*/ ctx[10](div1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, div, anchor);
+			/*div_binding*/ ctx[18](div);
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*note*/ 1 && t0_value !== (t0_value = /*note*/ ctx[0].title + "")) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_data"])(t0, t0_value);
-
-			if (dirty & /*noteUrl*/ 4) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a, "href", /*noteUrl*/ ctx[2]);
+			if (dirty & /*aspect*/ 1) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "padding-top", /*aspect*/ ctx[0] * 100 + "%");
 			}
 
-			if (dirty & /*note*/ 1 && raw_value !== (raw_value = dompurify__WEBPACK_IMPORTED_MODULE_1___default.a.sanitize(/*note*/ ctx[0].content) + "")) div0.innerHTML = raw_value;;
+			if (dirty & /*grayed*/ 2) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "grayed", /*grayed*/ ctx[1]);
+			}
 
-			if (dirty & /*leftRightStyle, topDownStyle*/ 24 && div1_style_value !== (div1_style_value = "" + (/*leftRightStyle*/ ctx[3] + ";" + /*topDownStyle*/ ctx[4]))) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div1, "style", div1_style_value);
+			if (dirty & /*crosshair*/ 4) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "crosshair", /*crosshair*/ ctx[2]);
 			}
 		},
 		i: svelte_internal__WEBPACK_IMPORTED_MODULE_0__["noop"],
 		o: svelte_internal__WEBPACK_IMPORTED_MODULE_0__["noop"],
 		d(detaching) {
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(div1);
-			/*div1_binding*/ ctx[10](null);
+			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(div);
+			/*div_binding*/ ctx[18](null);
 		}
 	};
 }
 
-const PADDING = 10;
-
-function nearestParent(elem, className) {
-	if (elem.className.indexOf(className) != -1) return elem;
-	return nearestParent(elem.parentElement, className);
-}
-
 function instance($$self, $$props, $$invalidate) {
-	const APP_URL = "http://www.dev.documentcloud.org/";
-	let { note } = $$props;
-	let { slugId } = $$props;
+	let { alt } = $$props;
 	let { page } = $$props;
-	let annotationElem;
-	let rightMount = false;
-	let bottomMount = false;
+	let { width } = $$props;
+	let { aspect } = $$props;
+	let { grayed = false } = $$props;
+	let { crosshair = false } = $$props;
+	let elem;
+	let destroyed = false;
+	let imgs = [];
+	let loading = {};
+	let largestLoaded = -1;
+	const IMAGE_WIDTHS = "xlarge:2000,large:1000,normal:700,small:180,thumbnail:60".split(",").map(x => x.split(":")).map(x => [parseFloat(x[1]), x[0]]).sort((a, b) => a[0] - b[0]);
+	const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(x => x[0][1] == "normal")[0];
+	let srcs = [];
+	let mounted = false;
 
-	Object(svelte__WEBPACK_IMPORTED_MODULE_2__["onMount"])(() => {
-		const container = nearestParent(annotationElem, "dc-embed-container");
-
-		if (annotationElem.offsetWidth + annotationElem.offsetLeft > container.offsetWidth - PADDING) {
-			$$invalidate(7, rightMount = true);
-		}
-
-		if (annotationElem.offsetHeight + annotationElem.offsetTop > container.offsetHeight - PADDING) {
-			$$invalidate(8, bottomMount = true);
-		}
+	Object(svelte__WEBPACK_IMPORTED_MODULE_1__["onMount"])(() => {
+		loadImg(0);
+		$$invalidate(10, mounted = true);
 	});
 
-	function div1_binding($$value) {
+	function nixOlder(keepIndex) {
+		imgs.filter(x => x[1] < keepIndex).forEach(x => {
+			x[0].src = "";
+			x[0].remove();
+		});
+	}
+
+	function handleLoad(img, i) {
+		if (i < largestLoaded) return;
+		elem.appendChild(img);
+		imgs.push([img, i]);
+
+		if (largestLoaded == -1) {
+			img.style.opacity = 1;
+		} else {
+			img.addEventListener("transitionend", () => {
+				nixOlder(i);
+			});
+
+			setTimeout(() => img.className = "loaded", 100);
+		}
+
+		largestLoaded = i;
+	}
+
+	function loadImg(i) {
+		if (i < largestLoaded) return;
+		if (loading[i]) return;
+		loading[i] = true;
+		const src = Object(_api_viewer__WEBPACK_IMPORTED_MODULE_2__["pageImageUrl"])(page.document, page.pageNumber, IMAGE_WIDTHS[i][0]);
+		const img = new Image();
+		img.ondragstart = () => false;
+
+		img.onload = () => {
+			if (!destroyed) {
+				handleLoad(img, i);
+			}
+		};
+
+		img.onerror = () => {
+			if (i > 0) loadImg(i - 1);
+		};
+
+		img.alt = alt;
+		img.src = src;
+		return img;
+	}
+
+	Object(svelte__WEBPACK_IMPORTED_MODULE_1__["onDestroy"])(() => {
+		destroyed = true;
+		imgs.forEach(img => img[0].src = "");
+	});
+
+	function div_binding($$value) {
 		svelte_internal__WEBPACK_IMPORTED_MODULE_0__["binding_callbacks"][$$value ? "unshift" : "push"](() => {
-			$$invalidate(1, annotationElem = $$value);
+			$$invalidate(3, elem = $$value);
 		});
 	}
 
 	$$self.$set = $$props => {
-		if ("note" in $$props) $$invalidate(0, note = $$props.note);
-		if ("slugId" in $$props) $$invalidate(5, slugId = $$props.slugId);
-		if ("page" in $$props) $$invalidate(6, page = $$props.page);
+		if ("alt" in $$props) $$invalidate(4, alt = $$props.alt);
+		if ("page" in $$props) $$invalidate(5, page = $$props.page);
+		if ("width" in $$props) $$invalidate(6, width = $$props.width);
+		if ("aspect" in $$props) $$invalidate(0, aspect = $$props.aspect);
+		if ("grayed" in $$props) $$invalidate(1, grayed = $$props.grayed);
+		if ("crosshair" in $$props) $$invalidate(2, crosshair = $$props.crosshair);
 	};
 
-	let noteUrl;
-	let leftRightStyle;
-	let topDownStyle;
-
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty & /*slugId, page, note*/ 97) {
-			$: $$invalidate(2, noteUrl = `${APP_URL}documents/${slugId}#document/p${page}/a${note.id}`);
-		}
+		if ($$self.$$.dirty & /*mounted, width*/ 1088) {
+			$: {
+				if (mounted) {
+					const effectiveWidth = width * (window.devicePixelRatio || 1);
 
-		if ($$self.$$.dirty & /*rightMount, note*/ 129) {
-			$: $$invalidate(3, leftRightStyle = rightMount
-			? `right:${(1 - note.x2) * 100}%`
-			: `left:${note.x1 * 100}%`);
-		}
+					if (effectiveWidth > NORMAL_WIDTH[0][0]) {
+						loadImg(NORMAL_WIDTH[1]);
+					}
 
-		if ($$self.$$.dirty & /*bottomMount, note*/ 257) {
-			$: $$invalidate(4, topDownStyle = bottomMount
-			? `bottom:${(1 - note.y1) * 100}%`
-			: `top:${note.y2 * 100}%`);
+					let loaded = false;
+
+					for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
+						if (effectiveWidth < IMAGE_WIDTHS[i][0]) {
+							loadImg(i);
+							loaded = true;
+							break;
+						}
+					}
+
+					if (!loaded) loadImg(IMAGE_WIDTHS.length - 1);
+				}
+			}
 		}
 	};
 
 	return [
-		note,
-		annotationElem,
-		noteUrl,
-		leftRightStyle,
-		topDownStyle,
-		slugId,
+		aspect,
+		grayed,
+		crosshair,
+		elem,
+		alt,
 		page,
-		rightMount,
-		bottomMount,
-		APP_URL,
-		div1_binding
+		width,
+		destroyed,
+		loading,
+		largestLoaded,
+		mounted,
+		imgs,
+		IMAGE_WIDTHS,
+		NORMAL_WIDTH,
+		srcs,
+		nixOlder,
+		handleLoad,
+		loadImg,
+		div_binding
 	];
 }
 
-class Annotation extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponent"] {
+class ProgressiveImage extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponent"] {
 	constructor(options) {
 		super();
-		if (!document.getElementById("svelte-336ijq-style")) add_css();
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { note: 0, slugId: 5, page: 6 });
+		if (!document.getElementById("svelte-1jksr6q-style")) add_css();
+
+		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], {
+			alt: 4,
+			page: 5,
+			width: 6,
+			aspect: 0,
+			grayed: 1,
+			crosshair: 2
+		});
 	}
 }
 
 
 if (false) {}
 
-/* harmony default export */ __webpack_exports__["default"] = (Annotation);
+/* harmony default export */ __webpack_exports__["default"] = (ProgressiveImage);
 
 
 /***/ }),
 
-/***/ "./src/embed/page/Note.svelte":
-/*!************************************!*\
-  !*** ./src/embed/page/Note.svelte ***!
-  \************************************/
+/***/ "./src/noteLoader.js":
+/*!***************************!*\
+  !*** ./src/noteLoader.js ***!
+  \***************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _pages_embed_Note__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/pages/embed/Note */ "./src/pages/embed/Note.svelte");
+
+
+const enhanced = 'DC-embed-enhanced';
+
+function loadNote(src) {
+  const parts = src.split('/').slice(-3);
+  if (parts.length != 3) return;
+  const slugId = parts[0];
+  const slugIdParts = slugId.split('-');
+  const id = slugIdParts[0];
+  const noteId = parts[2].replace(/[^0-9]/g, '');
+
+  document.querySelectorAll(`#DC-note-${noteId}`).forEach(noteElem => {
+    if (noteElem.className.indexOf(enhanced) != -1) return;
+    noteElem.className += ' ' + enhanced;
+    new _pages_embed_Note__WEBPACK_IMPORTED_MODULE_0__["default"]({
+      target: noteElem,
+      props: {
+        id, noteId
+      }
+    });
+  });
+
+}
+
+if (window['dc'] == null) window['dc'] = {};
+if (window['dc']['embed'] == null) window['dc']['embed'] = {};
+if (window['dc']['embed']['loadNote'] == null) window['dc']['embed']['loadNote'] = loadNote;
+
+
+/***/ }),
+
+/***/ "./src/pages/embed/Note.svelte":
+/*!*************************************!*\
+  !*** ./src/pages/embed/Note.svelte ***!
+  \*************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var svelte_internal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svelte/internal */ "./node_modules/svelte/internal/index.mjs");
-/* src/embed/page/Note.svelte generated by Svelte v3.16.7 */
+/* harmony import */ var _common_ProgressiveImage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/common/ProgressiveImage */ "./src/common/ProgressiveImage.svelte");
+/* harmony import */ var dompurify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
+/* harmony import */ var dompurify__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dompurify__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _api_annotation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/api/annotation */ "./src/api/annotation.js");
+/* harmony import */ var _api_document__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/api/document */ "./src/api/document.js");
+/* harmony import */ var _api_viewer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/api/viewer */ "./src/api/viewer.js");
+/* harmony import */ var svelte__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! svelte */ "./node_modules/svelte/index.mjs");
+/* src/pages/embed/Note.svelte generated by Svelte v3.16.7 */
 
 
-function add_css() {
-	var style = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("style");
-	style.id = "svelte-xet5f3-style";
-	style.textContent = ".dc-embed-note.svelte-xet5f3{display:inline-block;position:absolute;background:rgba(255, 255, 0, 0.2);cursor:pointer}.dc-embed-note.svelte-xet5f3:hover{box-shadow:1px 2px 7px rgba(0, 0, 0, 0.2)}.dc-embed-note.public.svelte-xet5f3{border:3px solid #ffe325;background:rgba(255, 227, 37, 0.2)}.dc-embed-note.organization.svelte-xet5f3{border:3px solid #93e48f;background:rgba(147, 228, 143, 0.2)}.dc-embed-note.private.svelte-xet5f3{border:3px solid #6bc2f8;background:rgba(107, 194, 248, 0.2)}.dc-embed-note.active.svelte-xet5f3{background:transparent;border:none;box-shadow:1px 2px 7px rgba(0, 0, 0, 0.2)}";
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(document.head, style);
-}
-
-function create_fragment(ctx) {
-	let div;
-	let dispose;
-
-	return {
-		c() {
-			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div, "class", "dc-embed-note svelte-xet5f3");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "left", /*note*/ ctx[0].x1 * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "top", /*note*/ ctx[0].y1 * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "right", (1 - /*note*/ ctx[0].x2) * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "bottom", (1 - /*note*/ ctx[0].y2) * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "public", /*note*/ ctx[0].access == "public");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "organization", /*note*/ ctx[0].access == "organization");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "private", /*note*/ ctx[0].access == "private");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "active", /*active*/ ctx[1]);
-			dispose = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen"])(div, "click", /*click_handler*/ ctx[2]);
-		},
-		m(target, anchor) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, div, anchor);
-		},
-		p(ctx, [dirty]) {
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "left", /*note*/ ctx[0].x1 * 100 + "%");
-			}
-
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "top", /*note*/ ctx[0].y1 * 100 + "%");
-			}
-
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "right", (1 - /*note*/ ctx[0].x2) * 100 + "%");
-			}
-
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "bottom", (1 - /*note*/ ctx[0].y2) * 100 + "%");
-			}
-
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "public", /*note*/ ctx[0].access == "public");
-			}
-
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "organization", /*note*/ ctx[0].access == "organization");
-			}
-
-			if (dirty & /*note*/ 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "private", /*note*/ ctx[0].access == "private");
-			}
-
-			if (dirty & /*active*/ 2) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["toggle_class"])(div, "active", /*active*/ ctx[1]);
-			}
-		},
-		i: svelte_internal__WEBPACK_IMPORTED_MODULE_0__["noop"],
-		o: svelte_internal__WEBPACK_IMPORTED_MODULE_0__["noop"],
-		d(detaching) {
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(div);
-			dispose();
-		}
-	};
-}
-
-function instance($$self, $$props, $$invalidate) {
-	let { note } = $$props;
-	let { active = false } = $$props;
-
-	function click_handler(event) {
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["bubble"])($$self, event);
-	}
-
-	$$self.$set = $$props => {
-		if ("note" in $$props) $$invalidate(0, note = $$props.note);
-		if ("active" in $$props) $$invalidate(1, active = $$props.active);
-	};
-
-	return [note, active, click_handler];
-}
-
-class Note extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponent"] {
-	constructor(options) {
-		super();
-		if (!document.getElementById("svelte-xet5f3-style")) add_css();
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { note: 0, active: 1 });
-	}
-}
-
-
-if (false) {}
-
-/* harmony default export */ __webpack_exports__["default"] = (Note);
-
-
-/***/ }),
-
-/***/ "./src/embed/page/Page.svelte":
-/*!************************************!*\
-  !*** ./src/embed/page/Page.svelte ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var svelte_internal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svelte/internal */ "./node_modules/svelte/internal/index.mjs");
-/* harmony import */ var _Note__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Note */ "./src/embed/page/Note.svelte");
-/* harmony import */ var _Annotation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Annotation */ "./src/embed/page/Annotation.svelte");
-/* harmony import */ var svelte__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! svelte */ "./node_modules/svelte/index.mjs");
-/* harmony import */ var _api_annotation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/api/annotation */ "./src/api/annotation.js");
-/* src/embed/page/Page.svelte generated by Svelte v3.16.7 */
+const { document: document_1 } = svelte_internal__WEBPACK_IMPORTED_MODULE_0__["globals"];
 
 
 
@@ -5880,327 +6341,240 @@ __webpack_require__.r(__webpack_exports__);
 
 function add_css() {
 	var style = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("style");
-	style.id = "svelte-sm1qeg-style";
-	style.textContent = ".dc-embed-shim.svelte-sm1qeg{position:absolute;background:rgba(0, 0, 0, 0.4);cursor:pointer}";
-	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(document.head, style);
+	style.id = "svelte-3k7imf-style";
+	style.textContent = ".DC-note.svelte-3k7imf.svelte-3k7imf{position:relative;padding:0 0.5em;margin:2em 0;border:1px solid #ebebeb;box-shadow:inset 0 0 40px #505050;font:400 10pt/14pt -apple-system, system-ui, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;color:black;background-color:white;background-size:100% auto;background-repeat:no-repeat;background-position:center center}.DC-note.svelte-3k7imf a.svelte-3k7imf{color:#5a76a0;text-decoration:underline}.DC-note.svelte-3k7imf>.svelte-3k7imf{position:relative;z-index:1}.DC-note.svelte-3k7imf .DC-note-header.svelte-3k7imf,.DC-note.svelte-3k7imf .DC-note-body.svelte-3k7imf,.DC-note.svelte-3k7imf .DC-note-credit.svelte-3k7imf{margin:10px auto;padding:0 5px;max-width:600px}.DC-note.svelte-3k7imf .DC-note-title.svelte-3k7imf{font-weight:bold}.DC-note.svelte-3k7imf .DC-note-image-max-bounds.svelte-3k7imf{box-sizing:border-box;border:2px solid #ffe325;border-radius:3px;box-shadow:0 0 7px rgba(0, 0, 0, 0.25);position:relative;font-size:0;overflow:hidden;margin:10px auto}.DC-note.svelte-3k7imf .DC-note-image-max-bounds .DC-note-image-aspect-ratio.svelte-3k7imf{position:relative;overflow:hidden;height:0;max-width:100%}.DC-note.svelte-3k7imf .DC-note-image-max-bounds .DC-note-image-aspect-ratio .DC-note-image-link.svelte-3k7imf{position:absolute;width:100%;height:100%;top:0;left:0;right:0;bottom:0;overflow:hidden;display:block}.DC-note.svelte-3k7imf .DC-note-image-max-bounds .DC-note-image-aspect-ratio .DC-note-image-link.svelte-3k7imf img{margin:0 !important;border:0 !important;outline:0 !important;max-width:none !important;max-height:none !important;display:block !important;position:absolute;height:auto}.DC-note.svelte-3k7imf .DC-note-credit.svelte-3k7imf{font-size:0.9em}.DC-note.svelte-3k7imf .DC-note-logotype-link.svelte-3k7imf{font-weight:700;font-family:-apple-system, system-ui, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif}.DC-note.svelte-3k7imf .DC-note-background-fader.svelte-3k7imf{position:absolute;width:100%;height:100%;top:0;left:0;right:0;bottom:0;z-index:0;background-color:rgba(255, 255, 255, 0.93)}";
+	Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(document_1.head, style);
 }
 
-function get_each_context(ctx, list, i) {
-	const child_ctx = ctx.slice();
-	child_ctx[10] = list[i];
-	return child_ctx;
-}
-
-function get_each_context_1(ctx, list, i) {
-	const child_ctx = ctx.slice();
-	child_ctx[13] = list[i];
-	return child_ctx;
-}
-
-// (54:2) {#if active != note}
-function create_if_block_1(ctx) {
-	let current;
-
-	function click_handler(...args) {
-		return /*click_handler*/ ctx[7](/*note*/ ctx[13], ...args);
-	}
-
-	const note = new _Note__WEBPACK_IMPORTED_MODULE_1__["default"]({ props: { note: /*note*/ ctx[13] } });
-	note.$on("click", click_handler);
-
-	return {
-		c() {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(note.$$.fragment);
-		},
-		m(target, anchor) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["mount_component"])(note, target, anchor);
-			current = true;
-		},
-		p(new_ctx, dirty) {
-			ctx = new_ctx;
-			const note_changes = {};
-			if (dirty & /*notes*/ 4) note_changes.note = /*note*/ ctx[13];
-			note.$set(note_changes);
-		},
-		i(local) {
-			if (current) return;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(note.$$.fragment, local);
-			current = true;
-		},
-		o(local) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(note.$$.fragment, local);
-			current = false;
-		},
-		d(detaching) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_component"])(note, detaching);
-		}
-	};
-}
-
-// (53:0) {#each notes as note}
-function create_each_block_1(ctx) {
-	let if_block_anchor;
-	let current;
-	let if_block = /*active*/ ctx[3] != /*note*/ ctx[13] && create_if_block_1(ctx);
-
-	return {
-		c() {
-			if (if_block) if_block.c();
-			if_block_anchor = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["empty"])();
-		},
-		m(target, anchor) {
-			if (if_block) if_block.m(target, anchor);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, if_block_anchor, anchor);
-			current = true;
-		},
-		p(ctx, dirty) {
-			if (/*active*/ ctx[3] != /*note*/ ctx[13]) {
-				if (if_block) {
-					if_block.p(ctx, dirty);
-					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(if_block, 1);
-				} else {
-					if_block = create_if_block_1(ctx);
-					if_block.c();
-					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(if_block, 1);
-					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-				}
-			} else if (if_block) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["group_outros"])();
-
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(if_block, 1, 1, () => {
-					if_block = null;
-				});
-
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["check_outros"])();
-			}
-		},
-		i(local) {
-			if (current) return;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(if_block);
-			current = true;
-		},
-		o(local) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(if_block);
-			current = false;
-		},
-		d(detaching) {
-			if (if_block) if_block.d(detaching);
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(if_block_anchor);
-		}
-	};
-}
-
-// (59:0) {#each shimPlacements as s}
-function create_each_block(ctx) {
-	let div;
-	let dispose;
-
-	return {
-		c() {
-			div = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div, "class", "dc-embed-shim svelte-sm1qeg");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "left", /*s*/ ctx[10][0] * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "top", /*s*/ ctx[10][1] * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "right", (1 - /*s*/ ctx[10][2]) * 100 + "%");
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "bottom", (1 - /*s*/ ctx[10][3]) * 100 + "%");
-			dispose = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["listen"])(div, "click", /*click_handler_1*/ ctx[8]);
-		},
-		m(target, anchor) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, div, anchor);
-		},
-		p(ctx, dirty) {
-			if (dirty & /*shimPlacements*/ 16) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "left", /*s*/ ctx[10][0] * 100 + "%");
-			}
-
-			if (dirty & /*shimPlacements*/ 16) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "top", /*s*/ ctx[10][1] * 100 + "%");
-			}
-
-			if (dirty & /*shimPlacements*/ 16) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "right", (1 - /*s*/ ctx[10][2]) * 100 + "%");
-			}
-
-			if (dirty & /*shimPlacements*/ 16) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div, "bottom", (1 - /*s*/ ctx[10][3]) * 100 + "%");
-			}
-		},
-		d(detaching) {
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(div);
-			dispose();
-		}
-	};
-}
-
-// (66:0) {#if active != null}
+// (124:0) {#if note != null && doc != null}
 function create_if_block(ctx) {
-	let t;
-	let current;
-
-	const annotation = new _Annotation__WEBPACK_IMPORTED_MODULE_2__["default"]({
-			props: {
-				note: /*active*/ ctx[3],
-				slugId: /*slugId*/ ctx[0],
-				page: /*page*/ ctx[1]
-			}
-		});
-
-	const note = new _Note__WEBPACK_IMPORTED_MODULE_1__["default"]({
-			props: { active: true, note: /*active*/ ctx[3] }
-		});
-
-	note.$on("click", /*click_handler_2*/ ctx[9]);
-
-	return {
-		c() {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(annotation.$$.fragment);
-			t = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(note.$$.fragment);
-		},
-		m(target, anchor) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["mount_component"])(annotation, target, anchor);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, t, anchor);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["mount_component"])(note, target, anchor);
-			current = true;
-		},
-		p(ctx, dirty) {
-			const annotation_changes = {};
-			if (dirty & /*active*/ 8) annotation_changes.note = /*active*/ ctx[3];
-			if (dirty & /*slugId*/ 1) annotation_changes.slugId = /*slugId*/ ctx[0];
-			if (dirty & /*page*/ 2) annotation_changes.page = /*page*/ ctx[1];
-			annotation.$set(annotation_changes);
-			const note_changes = {};
-			if (dirty & /*active*/ 8) note_changes.note = /*active*/ ctx[3];
-			note.$set(note_changes);
-		},
-		i(local) {
-			if (current) return;
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(annotation.$$.fragment, local);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(note.$$.fragment, local);
-			current = true;
-		},
-		o(local) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(annotation.$$.fragment, local);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(note.$$.fragment, local);
-			current = false;
-		},
-		d(detaching) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_component"])(annotation, detaching);
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(t);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_component"])(note, detaching);
-		}
-	};
-}
-
-function create_fragment(ctx) {
+	let div6;
+	let div0;
+	let a0;
+	let span0;
+	let t0_value = /*note*/ ctx[1].title + "";
 	let t0;
 	let t1;
-	let if_block_anchor;
+	let span1;
+	let t2;
+	let t3_value = /*note*/ ctx[1].page + 1 + "";
+	let t3;
+	let t4;
+	let a0_href_value;
+	let a0_title_value;
+	let t5;
+	let div2;
+	let div1;
+	let a1;
+	let a1_href_value;
+	let t6;
+	let div3;
+	let raw_value = dompurify__WEBPACK_IMPORTED_MODULE_2___default.a.sanitize(/*note*/ ctx[1].content) + "";
+	let t7;
+	let div4;
+	let a2;
+	let t8;
+	let span2;
+	let a2_href_value;
+	let a2_title_value;
+	let t10;
+	let div5;
 	let current;
-	let each_value_1 = /*notes*/ ctx[2];
-	let each_blocks_1 = [];
 
-	for (let i = 0; i < each_value_1.length; i += 1) {
-		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
-	}
-
-	const out = i => Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(each_blocks_1[i], 1, 1, () => {
-		each_blocks_1[i] = null;
-	});
-
-	let each_value = /*shimPlacements*/ ctx[4];
-	let each_blocks = [];
-
-	for (let i = 0; i < each_value.length; i += 1) {
-		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
-	}
-
-	let if_block = /*active*/ ctx[3] != null && create_if_block(ctx);
+	const progressiveimage = new _common_ProgressiveImage__WEBPACK_IMPORTED_MODULE_1__["default"]({
+			props: {
+				alt: "Page " + (/*note*/ ctx[1].page + 1) + " of " + /*doc*/ ctx[0].title,
+				width: docWidth,
+				aspect: /*aspect*/ ctx[2],
+				page: {
+					document: /*doc*/ ctx[0],
+					pageNumber: /*note*/ ctx[1].page
+				}
+			}
+		});
 
 	return {
 		c() {
-			for (let i = 0; i < each_blocks_1.length; i += 1) {
-				each_blocks_1[i].c();
-			}
-
-			t0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
-
-			for (let i = 0; i < each_blocks.length; i += 1) {
-				each_blocks[i].c();
-			}
-
+			div6 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			div0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			a0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
+			span0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("span");
+			t0 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])(t0_value);
 			t1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			span1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("span");
+			t2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])("(p. ");
+			t3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])(t3_value);
+			t4 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])(")");
+			t5 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			div2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			div1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			a1 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["create_component"])(progressiveimage.$$.fragment);
+			t6 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			div3 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			t7 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			div4 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			a2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("a");
+			t8 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["text"])("View the entire document with\n        ");
+			span2 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("span");
+			span2.textContent = "DocumentCloud";
+			t10 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["space"])();
+			div5 = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["element"])("div");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(span0, "class", "DC-note-title svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(span1, "class", "DC-note-page-number");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a0, "href", a0_href_value = /*doc*/ ctx[0].noteUrl(/*note*/ ctx[1]));
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a0, "class", "DC-note-embed-resource svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a0, "target", "_blank");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a0, "title", a0_title_value = "View the note ‘" + /*note*/ ctx[1].title + "’ in its original document context on\n        DocumentCloud in a new window or tab");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div0, "class", "DC-note-header svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a1, "href", a1_href_value = /*doc*/ ctx[0].noteUrl(/*note*/ ctx[1]));
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a1, "target", "_blank");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a1, "class", "DC-note-image-link svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "left", "-" + /*note*/ ctx[1].x1 * 100 / /*note*/ ctx[1].width + "%");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "top", "-" + /*note*/ ctx[1].y1 * 100 / /*note*/ ctx[1].height + "%");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "width", 100 / /*note*/ ctx[1].width + "%");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "height", 100 / /*note*/ ctx[1].height + "%");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div1, "class", "DC-note-image-aspect-ratio svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "padding-bottom", /*note*/ ctx[1].height / /*note*/ ctx[1].width * /*aspect*/ ctx[2] * 100 + "%");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div2, "class", "DC-note-image-max-bounds svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div2, "max-width", /*maxWidth*/ ctx[3] + "px");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div3, "class", "DC-note-body svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(span2, "class", "DC-note-logotype-link svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a2, "href", a2_href_value = /*doc*/ ctx[0].noteUrl(/*note*/ ctx[1]));
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a2, "target", "_blank");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a2, "title", a2_title_value = "View the note ‘" + /*note*/ ctx[1].title + "’ in its original document context on\n        DocumentCloud in a new window or tab");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a2, "class", "svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div4, "class", "DC-note-credit svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div5, "class", "DC-note-background-fader svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(div6, "class", "DC-note svelte-3k7imf");
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div6, "background-image", "url(" + Object(_api_viewer__WEBPACK_IMPORTED_MODULE_5__["pageImageUrl"])(/*doc*/ ctx[0], /*note*/ ctx[1].page, /*LARGE_WIDTH*/ ctx[4]) + ")");
+		},
+		m(target, anchor) {
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, div6, anchor);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, div0);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div0, a0);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(a0, span0);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(span0, t0);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(a0, t1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(a0, span1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(span1, t2);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(span1, t3);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(span1, t4);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, t5);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, div2);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div2, div1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div1, a1);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["mount_component"])(progressiveimage, a1, null);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, t6);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, div3);
+			div3.innerHTML = raw_value;
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, t7);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, div4);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div4, a2);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(a2, t8);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(a2, span2);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, t10);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["append"])(div6, div5);
+			current = true;
+		},
+		p(ctx, dirty) {
+			if ((!current || dirty & /*note*/ 2) && t0_value !== (t0_value = /*note*/ ctx[1].title + "")) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_data"])(t0, t0_value);
+			if ((!current || dirty & /*note*/ 2) && t3_value !== (t3_value = /*note*/ ctx[1].page + 1 + "")) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_data"])(t3, t3_value);
+
+			if (!current || dirty & /*doc, note*/ 3 && a0_href_value !== (a0_href_value = /*doc*/ ctx[0].noteUrl(/*note*/ ctx[1]))) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a0, "href", a0_href_value);
+			}
+
+			if (!current || dirty & /*note*/ 2 && a0_title_value !== (a0_title_value = "View the note ‘" + /*note*/ ctx[1].title + "’ in its original document context on\n        DocumentCloud in a new window or tab")) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a0, "title", a0_title_value);
+			}
+
+			const progressiveimage_changes = {};
+			if (dirty & /*note, doc*/ 3) progressiveimage_changes.alt = "Page " + (/*note*/ ctx[1].page + 1) + " of " + /*doc*/ ctx[0].title;
+			if (dirty & /*aspect*/ 4) progressiveimage_changes.aspect = /*aspect*/ ctx[2];
+
+			if (dirty & /*doc, note*/ 3) progressiveimage_changes.page = {
+				document: /*doc*/ ctx[0],
+				pageNumber: /*note*/ ctx[1].page
+			};
+
+			progressiveimage.$set(progressiveimage_changes);
+
+			if (!current || dirty & /*doc, note*/ 3 && a1_href_value !== (a1_href_value = /*doc*/ ctx[0].noteUrl(/*note*/ ctx[1]))) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a1, "href", a1_href_value);
+			}
+
+			if (!current || dirty & /*note*/ 2) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "left", "-" + /*note*/ ctx[1].x1 * 100 / /*note*/ ctx[1].width + "%");
+			}
+
+			if (!current || dirty & /*note*/ 2) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "top", "-" + /*note*/ ctx[1].y1 * 100 / /*note*/ ctx[1].height + "%");
+			}
+
+			if (!current || dirty & /*note*/ 2) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "width", 100 / /*note*/ ctx[1].width + "%");
+			}
+
+			if (!current || dirty & /*note*/ 2) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(a1, "height", 100 / /*note*/ ctx[1].height + "%");
+			}
+
+			if (!current || dirty & /*note, aspect*/ 6) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div1, "padding-bottom", /*note*/ ctx[1].height / /*note*/ ctx[1].width * /*aspect*/ ctx[2] * 100 + "%");
+			}
+
+			if (!current || dirty & /*maxWidth*/ 8) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div2, "max-width", /*maxWidth*/ ctx[3] + "px");
+			}
+
+			if ((!current || dirty & /*note*/ 2) && raw_value !== (raw_value = dompurify__WEBPACK_IMPORTED_MODULE_2___default.a.sanitize(/*note*/ ctx[1].content) + "")) div3.innerHTML = raw_value;;
+
+			if (!current || dirty & /*doc, note*/ 3 && a2_href_value !== (a2_href_value = /*doc*/ ctx[0].noteUrl(/*note*/ ctx[1]))) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a2, "href", a2_href_value);
+			}
+
+			if (!current || dirty & /*note*/ 2 && a2_title_value !== (a2_title_value = "View the note ‘" + /*note*/ ctx[1].title + "’ in its original document context on\n        DocumentCloud in a new window or tab")) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["attr"])(a2, "title", a2_title_value);
+			}
+
+			if (!current || dirty & /*doc, note*/ 3) {
+				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["set_style"])(div6, "background-image", "url(" + Object(_api_viewer__WEBPACK_IMPORTED_MODULE_5__["pageImageUrl"])(/*doc*/ ctx[0], /*note*/ ctx[1].page, /*LARGE_WIDTH*/ ctx[4]) + ")");
+			}
+		},
+		i(local) {
+			if (current) return;
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(progressiveimage.$$.fragment, local);
+			current = true;
+		},
+		o(local) {
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(progressiveimage.$$.fragment, local);
+			current = false;
+		},
+		d(detaching) {
+			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(div6);
+			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_component"])(progressiveimage);
+		}
+	};
+}
+
+function create_fragment(ctx) {
+	let if_block_anchor;
+	let current;
+	let if_block = /*note*/ ctx[1] != null && /*doc*/ ctx[0] != null && create_if_block(ctx);
+
+	return {
+		c() {
 			if (if_block) if_block.c();
 			if_block_anchor = Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["empty"])();
 		},
 		m(target, anchor) {
-			for (let i = 0; i < each_blocks_1.length; i += 1) {
-				each_blocks_1[i].m(target, anchor);
-			}
-
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, t0, anchor);
-
-			for (let i = 0; i < each_blocks.length; i += 1) {
-				each_blocks[i].m(target, anchor);
-			}
-
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, t1, anchor);
 			if (if_block) if_block.m(target, anchor);
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["insert"])(target, if_block_anchor, anchor);
 			current = true;
 		},
 		p(ctx, [dirty]) {
-			if (dirty & /*active, notes, handleClick*/ 44) {
-				each_value_1 = /*notes*/ ctx[2];
-				let i;
-
-				for (i = 0; i < each_value_1.length; i += 1) {
-					const child_ctx = get_each_context_1(ctx, each_value_1, i);
-
-					if (each_blocks_1[i]) {
-						each_blocks_1[i].p(child_ctx, dirty);
-						Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(each_blocks_1[i], 1);
-					} else {
-						each_blocks_1[i] = create_each_block_1(child_ctx);
-						each_blocks_1[i].c();
-						Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(each_blocks_1[i], 1);
-						each_blocks_1[i].m(t0.parentNode, t0);
-					}
-				}
-
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["group_outros"])();
-
-				for (i = each_value_1.length; i < each_blocks_1.length; i += 1) {
-					out(i);
-				}
-
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["check_outros"])();
-			}
-
-			if (dirty & /*shimPlacements, active*/ 24) {
-				each_value = /*shimPlacements*/ ctx[4];
-				let i;
-
-				for (i = 0; i < each_value.length; i += 1) {
-					const child_ctx = get_each_context(ctx, each_value, i);
-
-					if (each_blocks[i]) {
-						each_blocks[i].p(child_ctx, dirty);
-					} else {
-						each_blocks[i] = create_each_block(child_ctx);
-						each_blocks[i].c();
-						each_blocks[i].m(t1.parentNode, t1);
-					}
-				}
-
-				for (; i < each_blocks.length; i += 1) {
-					each_blocks[i].d(1);
-				}
-
-				each_blocks.length = each_value.length;
-			}
-
-			if (/*active*/ ctx[3] != null) {
+			if (/*note*/ ctx[1] != null && /*doc*/ ctx[0] != null) {
 				if (if_block) {
 					if_block.p(ctx, dirty);
 					Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(if_block, 1);
@@ -6222,174 +6596,504 @@ function create_fragment(ctx) {
 		},
 		i(local) {
 			if (current) return;
-
-			for (let i = 0; i < each_value_1.length; i += 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(each_blocks_1[i]);
-			}
-
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_in"])(if_block);
 			current = true;
 		},
 		o(local) {
-			each_blocks_1 = each_blocks_1.filter(Boolean);
-
-			for (let i = 0; i < each_blocks_1.length; i += 1) {
-				Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(each_blocks_1[i]);
-			}
-
 			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["transition_out"])(if_block);
 			current = false;
 		},
 		d(detaching) {
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_each"])(each_blocks_1, detaching);
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(t0);
-			Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["destroy_each"])(each_blocks, detaching);
-			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(t1);
 			if (if_block) if_block.d(detaching);
 			if (detaching) Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["detach"])(if_block_anchor);
 		}
 	};
 }
 
+const docWidth = 700;
+
 function instance($$self, $$props, $$invalidate) {
 	let { id } = $$props;
-	let { slugId } = $$props;
-	let { page } = $$props;
-	let notes = [];
-	let active = null;
+	let { noteId } = $$props;
+	let doc = null;
+	let note = null;
+	const IMAGE_WIDTHS = "xlarge:2000,large:1000,normal:700,small:180,thumbnail:60".split(",").map(x => x.split(":")).map(x => [parseFloat(x[1]), x[0]]).sort((a, b) => a[0] - b[0]);
+	const LARGE_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(x => x[0][1] == "large")[0];
 
-	Object(svelte__WEBPACK_IMPORTED_MODULE_3__["onMount"])(async () => {
-		$$invalidate(2, notes = (await Object(_api_annotation__WEBPACK_IMPORTED_MODULE_4__["getAnnotations"])(id, "")).filter(note => !note.isPageNote && note.page == page - 1));
+	Object(svelte__WEBPACK_IMPORTED_MODULE_6__["onMount"])(async () => {
+		document.body.style.height = "inherit";
+		document.documentElement.style.height = "inherit";
+		$$invalidate(0, doc = await Object(_api_document__WEBPACK_IMPORTED_MODULE_4__["getDocument"])(docId));
+		$$invalidate(1, note = await Object(_api_annotation__WEBPACK_IMPORTED_MODULE_3__["getAnnotation"])(docId, noteId));
 	});
 
-	function handleClick(note) {
-		if (active == note) {
-			$$invalidate(3, active = null);
-			return;
-		}
-
-		if (active != null) return;
-		$$invalidate(3, active = note);
-	}
-
-	const click_handler = note => handleClick(note);
-	const click_handler_1 = () => $$invalidate(3, active = null);
-	const click_handler_2 = () => handleClick(active);
-
 	$$self.$set = $$props => {
-		if ("id" in $$props) $$invalidate(6, id = $$props.id);
-		if ("slugId" in $$props) $$invalidate(0, slugId = $$props.slugId);
-		if ("page" in $$props) $$invalidate(1, page = $$props.page);
+		if ("id" in $$props) $$invalidate(5, id = $$props.id);
+		if ("noteId" in $$props) $$invalidate(6, noteId = $$props.noteId);
 	};
 
-	let shimPlacements;
+	let docId;
+	let aspect;
+	let maxWidth;
 
 	$$self.$$.update = () => {
-		if ($$self.$$.dirty & /*active*/ 8) {
-			$: $$invalidate(4, shimPlacements = active == null
-			? []
-			: [
-					[0, 0, 1, active.y1],
-					[0, active.y1, active.x1, active.y2],
-					[active.x2, active.y1, 1, active.y2],
-					[0, active.y2, 1, 1]
-				]);
+		if ($$self.$$.dirty & /*id*/ 32) {
+			$: docId = id.split("-")[0];
+		}
+
+		if ($$self.$$.dirty & /*doc, note*/ 3) {
+			$: $$invalidate(2, aspect = doc == null || note == null
+			? 0
+			: doc.pageSizes[note.page]);
+		}
+
+		if ($$self.$$.dirty & /*note*/ 2) {
+			$: $$invalidate(3, maxWidth = note == null ? 0 : docWidth * note.width);
 		}
 	};
 
-	return [
-		slugId,
-		page,
-		notes,
-		active,
-		shimPlacements,
-		handleClick,
-		id,
-		click_handler,
-		click_handler_1,
-		click_handler_2
-	];
+	return [doc, note, aspect, maxWidth, LARGE_WIDTH, id, noteId];
 }
 
-class Page extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponent"] {
+class Note extends svelte_internal__WEBPACK_IMPORTED_MODULE_0__["SvelteComponent"] {
 	constructor(options) {
 		super();
-		if (!document.getElementById("svelte-sm1qeg-style")) add_css();
-		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { id: 6, slugId: 0, page: 1 });
+		if (!document_1.getElementById("svelte-3k7imf-style")) add_css();
+		Object(svelte_internal__WEBPACK_IMPORTED_MODULE_0__["init"])(this, options, instance, create_fragment, svelte_internal__WEBPACK_IMPORTED_MODULE_0__["safe_not_equal"], { id: 5, noteId: 6 });
 	}
 }
 
 
 if (false) {}
 
-/* harmony default export */ __webpack_exports__["default"] = (Page);
+/* harmony default export */ __webpack_exports__["default"] = (Note);
 
 
 /***/ }),
 
-/***/ "./src/enhance.js":
-/*!************************!*\
-  !*** ./src/enhance.js ***!
-  \************************/
-/*! no exports provided */
+/***/ "./src/structure/document.js":
+/*!***********************************!*\
+  !*** ./src/structure/document.js ***!
+  \***********************************/
+/*! exports provided: Document, transformPassage, transformHighlights */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _embed_page_Page__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/embed/page/Page */ "./src/embed/page/Page.svelte");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Document", function() { return Document; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "transformPassage", function() { return transformPassage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "transformHighlights", function() { return transformHighlights; });
+/* harmony import */ var svue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svue */ "./node_modules/svue/src/svue.js");
+/* harmony import */ var _util_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/util/string */ "./src/util/string.js");
+/* harmony import */ var _util_array__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/util/array */ "./src/util/array.js");
+/* harmony import */ var _api_pageSize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/api/pageSize */ "./src/api/pageSize.js");
+/* harmony import */ var _structure_note__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/structure/note */ "./src/structure/note.js");
+/* harmony import */ var _structure_section__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/structure/section */ "./src/structure/section.js");
 
 
-const embeds = document.querySelectorAll('.DC-embed');
-const enhanced = 'DC-embed-enhanced';
 
-embeds.forEach(embed => {
-  if (embed.className.indexOf(enhanced) != -1) return;
 
-  // Make sure the embed isn't enhanced twice
-  embed.className += ' ' + enhanced;
-  embed.style.font = '400 10pt/14pt Source Sans Pro,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 
-  // Obtain the resource
-  const resource = embed.querySelector('.DC-embed-resource');
-  if (resource == null) return;
-  if (resource.href == null) return;
 
-  // Extract all components of the resource
-  let hash = resource.href.split('#');
-  if (hash.length != 2) return;
-  let slugId = hash[0];
-  hash = hash[1];
-  const parts = slugId.split('/');
-  if (parts.length < 2) return;
-  slugId = parts[parts.length - 1];
-  const id = slugId.split('-')[0];
-  let page = hash.split('/');
-  if (page.length != 2) return;
-  page = parseInt(page[1].substr(1));
-  if (page == null || isNaN(page)) return;
 
-  // Replace image with an image container
-  const img = embed.querySelector('img');
-  const container = document.createElement('div');
-  container.className = 'dc-embed-container';
-  container.style.display = 'inline-block';
-  container.style.position = 'relative';
-  container.style.lineHeight = '0';
-  container.style.margin = img.style.margin;
-  img.style.margin = '';
-  img.parentElement.replaceChild(container, img);
-  container.appendChild(img);
+const HIGHLIGHT_START = "<em>";
+const HIGHLIGHT_END = "</em>";
+const PAGE_NO_RE = /^page_no_(\d+)$/;
 
-  // Inject Svelte componet
-  new _embed_page_Page__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    target: container,
-    props: {
-      id,
-      slugId,
-      page
+const TAG_KEY = "_tag";
+const APP_URL = "http://www.dev.documentcloud.org/";
+
+class Document extends svue__WEBPACK_IMPORTED_MODULE_0__["Svue"] {
+  constructor(rawDocument, structure = {}) {
+    const computed = structure.computed == null ? {} : structure.computed;
+    super({
+      data() {
+        const data = structure.data == null ? {} : structure.data();
+        data.doc = rawDocument;
+        data.lastProgress = null;
+        data.lastImagesProcessed = null;
+        data.lastTextsProcessed = null;
+        data.highlightStart = HIGHLIGHT_START;
+        data.highlightEnd = HIGHLIGHT_END;
+        return data;
+      },
+      computed: {
+        ...computed,
+        // Base properties
+        id(doc) {
+          return doc.id;
+        },
+        slug(doc) {
+          return doc.slug;
+        },
+        slugId(id, slug) {
+          return [id, slug].join("-");
+        },
+        canonicalUrl(slugId) {
+          return APP_URL + "documents/" + slugId;
+        },
+        pageUrl(canonicalUrl) {
+          return page => `${canonicalUrl}#document/p${page}`;
+        },
+        noteUrl(pageUrl) {
+          return (note) => `${pageUrl(note.page + 1)}/a${note.id}`;
+        },
+        fakeNoteUrl(canonicalUrl) {
+          return note => `${canonicalUrl}/annotations/${note.id}`;
+        },
+        title(doc) {
+          return doc.title;
+        },
+        pageCount(doc) {
+          return doc.page_count;
+        },
+        userName(doc) {
+          return doc.user.name;
+        },
+        rawOrganization(doc) {
+          // Unprocessed organization object
+          return doc.organization;
+        },
+        individualOrg(rawOrganization) {
+          return rawOrganization.individual;
+        },
+        organizationName(rawOrganization) {
+          return rawOrganization.name;
+        },
+        assetUrl(doc) {
+          return doc.asset_url;
+        },
+        pdf(assetUrl, id, slug) {
+          return `${assetUrl}documents/${id}/${slug}.pdf`;
+        },
+        thumbnail(assetUrl, id, slug, updatedAtTimestamp) {
+          // Calculate thumbnail route
+          return `${assetUrl}documents/${id}/pages/${slug}-p1-small.gif?ts=${updatedAtTimestamp}`;
+        },
+        rawCreatedAt(doc) {
+          // Unprocessed created at
+          return doc.created_at;
+        },
+        createdAt(rawCreatedAt) {
+          return new Date(Date.parse(rawCreatedAt));
+        },
+        rawUpdatedAt(doc) {
+          // Unprocessed updated at
+          return doc.updated_at;
+        },
+        updatedAtTimestamp(rawUpdatedAt) {
+          return Date.parse(rawUpdatedAt);
+        },
+        updatedAt(updatedAtTimestamp) {
+          return new Date(updatedAtTimestamp);
+        },
+        pageSpec(doc) {
+          return doc.page_spec;
+        },
+        pageSizes(pageSpec) {
+          if (pageSpec == null) return null;
+
+          return Object(_api_pageSize__WEBPACK_IMPORTED_MODULE_3__["pageSizesFromSpec"])(pageSpec);
+        },
+
+        // Access properties
+        access(doc) {
+          return doc.access;
+        },
+        privateAccess(access) {
+          return access == "private";
+        },
+        publicAccess(access) {
+          return access == "public";
+        },
+        organizationAccess(access) {
+          return access == "organization";
+        },
+        editAccess(doc) {
+          if (doc.edit_access == null) return false;
+          return doc.edit_access;
+        },
+
+        // Status and processing-related properties
+        status(doc) {
+          return doc.status;
+        },
+        success(status) {
+          return status == "success";
+        },
+        readable(status) {
+          return status == "readable";
+        },
+        pending(status) {
+          return status == "pending";
+        },
+        deleted(status) {
+          return status == "deleted";
+        },
+        error(status) {
+          return status == "error";
+        },
+        nofile(status) {
+          return status == "nofile";
+        },
+        processing(pending, readable) {
+          return pending || readable;
+        },
+        viewable(success, readable, editAccess) {
+          return success || (readable && editAccess);
+        },
+        nonPending(pending) {
+          return !pending;
+        },
+        rawRemaining(doc) {
+          return doc.remaining;
+        },
+        hasRemaining(rawRemaining) {
+          return rawRemaining != null;
+        },
+        imagesRemaining(rawRemaining, hasRemaining) {
+          if (!hasRemaining) return null;
+          return rawRemaining.images;
+        },
+        textsRemaining(rawRemaining, hasRemaining) {
+          if (!hasRemaining) return null;
+          return rawRemaining.texts;
+        },
+        imagesProcessed(pageCount, imagesRemaining) {
+          if (imagesRemaining == null) {
+            return this.lastImagesProcessed;
+          }
+          if (pageCount == 0) {
+            this.lastImagesProcessed = 0;
+          } else {
+            this.lastImagesProcessed = pageCount - imagesRemaining;
+          }
+          return this.lastImagesProcessed;
+        },
+        textsProcessed(pageCount, textsRemaining) {
+          if (textsRemaining == null) {
+            return this.lastTextsProcessed;
+          }
+          if (pageCount == 0) {
+            this.lastTextsProcessed = 0;
+          } else {
+            this.lastTextsProcessed = pageCount - textsRemaining;
+          }
+          return this.lastTextsProcessed;
+        },
+        mightHaveThumbnail(success, imagesProcessed) {
+          // Returns if at least one page image has been processed
+          return success || imagesProcessed >= 1;
+        },
+        imageProgress(hasRemaining, imagesProcessed, pageCount) {
+          if (!hasRemaining) return null;
+          if (pageCount == 0) return 0;
+          return imagesProcessed / pageCount;
+        },
+        textProgress(hasRemaining, textsProcessed, pageCount) {
+          if (!hasRemaining) return null;
+          if (pageCount == 0) return 0;
+          return textsProcessed / pageCount;
+        },
+        processingProgress(hasRemaining, imageProgress, textProgress) {
+          if (!hasRemaining) return null;
+          // Overall processing progress is an average of image and text progress
+          return (imageProgress + textProgress) / 2;
+        },
+        realProgress(processingProgress) {
+          if (processingProgress == null) {
+            return this.lastProgress;
+          } else {
+            this.lastProgress = processingProgress;
+            return processingProgress;
+          }
+        },
+
+        // Projects
+        projectIds(doc) {
+          return doc.projects == null ? [] : doc.projects;
+        },
+
+        // Notes/sections
+        notes(doc) {
+          return doc.notes == null
+            ? []
+            : doc.notes.map((note) => new _structure_note__WEBPACK_IMPORTED_MODULE_4__["Note"](note));
+        },
+        sections(doc) {
+          return doc.sections == null
+            ? []
+            : doc.sections.map((section) => new _structure_section__WEBPACK_IMPORTED_MODULE_5__["Section"](section));
+        },
+
+        // Data
+        rawData(doc) {
+          return doc.data;
+        },
+        dataPoints(rawData) {
+          const results = [];
+          for (const key in rawData) {
+            if (rawData.hasOwnProperty(key)) {
+              const values = Object(_util_array__WEBPACK_IMPORTED_MODULE_2__["uniquify"])(rawData[key], (x) => x);
+              for (let i = 0; i < values.length; i++) {
+                results.push({
+                  key,
+                  value: values[i],
+                });
+              }
+            }
+          }
+          results.sort((a, b) => {
+            // Sort by value if it's a tag
+            const aKey = a.key == TAG_KEY ? a.value : a.key;
+            const bKey = b.key == TAG_KEY ? b.value : b.key;
+            const aValue = a.value;
+            const bValue = b.value;
+
+            const keyCompare = aKey.localeCompare(bKey);
+            if (keyCompare != 0) return keyCompare;
+            return aValue.localeCompare(bValue);
+          });
+          return results;
+        },
+
+        // Highlights
+        rawHighlights(doc) {
+          return doc.highlights;
+        },
+        highlights(rawHighlights, highlightStart, highlightEnd) {
+          if (rawHighlights == null) return null;
+          return transformHighlights(
+            rawHighlights,
+            highlightStart,
+            highlightEnd
+          );
+        },
+
+        // Text properties
+        userOrgString(individualOrg, userName, organizationName) {
+          // Return user and organization formatted as a string
+          if (individualOrg) {
+            return userName;
+          }
+          return `${userName} (${organizationName})`;
+        },
+        pageCountString(pageCount) {
+          if (pageCount == 0) return "";
+          return Object(_util_string__WEBPACK_IMPORTED_MODULE_1__["handlePlural"])(pageCount, "page", true);
+        },
+        createdAtString(createdAt) {
+          return createdAt.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          });
+        },
+        summary(pageCountString, userOrgString, createdAtString) {
+          return [pageCountString, userOrgString, createdAtString]
+            .filter((x) => x.length > 0)
+            .join(" - ");
+        },
+      },
+    });
+  }
+}
+
+function transformPassage(passage, highlightStart, highlightEnd) {
+  const chunks = [];
+
+  const advance = (numChars) => {
+    passage = passage.substr(numChars);
+  };
+
+  const pushRaw = (numChars) => {
+    if (numChars == null) numChars = passage.length;
+    if (numChars == 0) return;
+    chunks.push({
+      text: passage.substr(0, numChars),
+      type: "normal",
+    });
+    advance(numChars);
+  };
+
+  const pushHighlight = (numChars) => {
+    if (numChars == 0) return;
+    chunks.push({
+      text: passage.substr(0, numChars),
+      type: "highlight",
+    });
+    advance(numChars);
+  };
+
+  while (passage.length > 0) {
+    let foundHighlight = false;
+    let idxStart = passage.indexOf(highlightStart);
+    if (idxStart != -1) {
+      let idxEnd = passage.indexOf(
+        highlightEnd,
+        idxStart + highlightStart.length
+      );
+      if (idxEnd != -1) {
+        pushRaw(idxStart);
+        advance(highlightStart.length);
+        pushHighlight(idxEnd - idxStart - highlightStart.length);
+        advance(highlightEnd.length);
+        foundHighlight = true;
+      }
     }
-  });
-});
+    if (!foundHighlight) break;
+  }
+  pushRaw();
+
+  return chunks;
+}
+
+function transformHighlights(
+  rawHighlights,
+  highlightStart,
+  highlightEnd,
+  returnDict = false
+) {
+  const highlights = returnDict ? {} : [];
+  const pages = [];
+  for (const pageKey in rawHighlights) {
+    if (rawHighlights.hasOwnProperty(pageKey)) {
+      // Get number out of page key
+      const match = pageKey.match(PAGE_NO_RE);
+      if (match == null) continue;
+      const page = parseInt(match[1]) - 1;
+
+      // Populate highlight object
+      const highlight = { page, passages: [] };
+      const passages = rawHighlights[pageKey];
+      for (let i = 0; i < passages.length; i++) {
+        const passage = passages[i];
+        // Transform passage
+        highlight.passages.push(
+          transformPassage(passage, highlightStart, highlightEnd)
+        );
+      }
+      // Handle response type
+      if (returnDict) {
+        if (highlights[page] == null) {
+          pages.push({ page, count: highlight.passages.length });
+        }
+        highlights[page] = highlight.passages;
+      } else {
+        highlights.push(highlight);
+      }
+    }
+  }
+
+  // Sort results by page number
+  if (!returnDict) {
+    highlights.sort((a, b) => a.page - b.page);
+    return highlights;
+  } else {
+    pages.sort((a, b) => a.page - b.page);
+    return { highlights, pages };
+  }
+}
 
 
 /***/ }),
@@ -6475,6 +7179,254 @@ class Note extends svue__WEBPACK_IMPORTED_MODULE_0__["Svue"] {
 
 /***/ }),
 
+/***/ "./src/structure/results.js":
+/*!**********************************!*\
+  !*** ./src/structure/results.js ***!
+  \**********************************/
+/*! exports provided: Results */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Results", function() { return Results; });
+/* harmony import */ var svue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svue */ "./node_modules/svue/src/svue.js");
+/* harmony import */ var _util_url__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/util/url */ "./src/util/url.js");
+
+
+
+const pageRe = /([&\?]page=)([0-9]+)/;
+
+class Results extends svue__WEBPACK_IMPORTED_MODULE_0__["Svue"] {
+  constructor(url, rawResults, structure = {}) {
+    const computed = structure.computed == null ? {} : structure.computed;
+    super({
+      data() {
+        const data = structure.data == null ? {} : structure.data();
+        data.rawResults = rawResults;
+        data.url = url;
+        return data;
+      },
+      computed: {
+        ...computed,
+        count(rawResults) {
+          // Count of all results across pages
+          return rawResults.count;
+        },
+        results(rawResults) {
+          return rawResults.results;
+        },
+        length(results) {
+          // Count of results for current page
+          return results.length;
+        },
+        page(hasNext, hasPrev, nextUrl, prevUrl) {
+          // On the first and only page
+          if (!hasNext && !hasPrev) return 0;
+
+          if (hasNext) {
+            // Base current page off next page
+            const match = nextUrl.match(pageRe);
+            if (match == null) throw new Error("This should not happen");
+            const number = parseInt(match[2]) - 1;
+            return number - 1; // page before next
+          } else if (hasPrev) {
+            const match = prevUrl.match(pageRe);
+            if (match == null) {
+              // If the previous url doesn't match the regex, we are on the
+              // second page, since only the first page won't match.
+              return 1;
+            }
+            const number = parseInt(match[2]) - 1;
+            return number + 1; // page after previous
+          }
+        },
+        numPages(count, length, page, hasNext) {
+          if (!hasNext) return page + 1; // we are on the last page
+          return Math.ceil(count / length);
+        },
+        perPage(count, length, page, numPages) {
+          if (numPages == 1) return count;
+          if (page < numPages - 1) return length;
+          return (count - length) / (numPages - 1);
+        },
+
+        // Next / previous
+        nextUrl(rawResults) {
+          return rawResults.next;
+        },
+        prevUrl(rawResults) {
+          return rawResults.previous;
+        },
+        hasNext(nextUrl) {
+          return nextUrl != null;
+        },
+        hasPrev(prevUrl) {
+          return prevUrl != null;
+        },
+        nextPage(hasNext, page) {
+          if (!hasNext) return null;
+          return page + 1;
+        },
+        prevPage(hasPrev, page) {
+          if (!hasPrev) return null;
+          return page - 1;
+        },
+        onlyPage(hasPrev, hasNext) {
+          return !hasPrev && !hasNext;
+        },
+
+        // Indices
+        start(page, perPage) {
+          return page * perPage;
+        },
+        end(page, perPage, length) {
+          return page * perPage + length;
+        }
+      }
+    });
+  }
+
+  getUrl(page) {
+    const match = this.url.match(pageRe);
+    if (match == null) return Object(_util_url__WEBPACK_IMPORTED_MODULE_1__["queryBuilder"])(this.url, { page: page + 1 });
+    return this.url.replace(pageRe, `$1${page + 1}`);
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/structure/section.js":
+/*!**********************************!*\
+  !*** ./src/structure/section.js ***!
+  \**********************************/
+/*! exports provided: Section */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Section", function() { return Section; });
+/* harmony import */ var svue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! svue */ "./node_modules/svue/src/svue.js");
+
+
+class Section extends svue__WEBPACK_IMPORTED_MODULE_0__["Svue"] {
+  constructor(rawSection, structure = {}) {
+    const computed = structure.computed == null ? {} : structure.computed;
+    super({
+      data() {
+        const data = structure.data == null ? {} : structure.data();
+        data.section = rawSection;
+        return data;
+      },
+      computed: {
+        ...computed,
+        id(section) {
+          return section.id;
+        },
+        page(section) {
+          return section.page_number;
+        },
+        title(section) {
+          return section.title;
+        }
+      }
+    });
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/util/array.js":
+/*!***************************!*\
+  !*** ./src/util/array.js ***!
+  \***************************/
+/*! exports provided: removeFromArray, uniquify, includes, intersection, arrayEq */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeFromArray", function() { return removeFromArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uniquify", function() { return uniquify; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "includes", function() { return includes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "intersection", function() { return intersection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "arrayEq", function() { return arrayEq; });
+function removeFromArray(array, elem) {
+  const idx = array.indexOf(elem);
+  if (idx != -1) {
+    array.splice(idx, 1);
+    return array;
+  }
+  return array;
+}
+
+function uniquify(array, fieldAccess = x => x.id) {
+  // Remove duplicates
+  let unique = {};
+  const results = [];
+  // Iterate backwards so most recent objects override past ones
+  for (let i = array.length - 1; i >= 0; i--) {
+    const obj = array[i];
+    const field = fieldAccess(obj);
+    if (unique[field] == null) {
+      results.push(obj);
+      unique[field] = true;
+    }
+  }
+
+  return results;
+}
+
+function includes(array, elem, eq = (a, b) => a == b) {
+  for (let i = 0; i < array.length; i++) {
+    if (eq(array[i], elem)) return true;
+  }
+  return false;
+}
+
+function intersection(arrays, eq = (a, b) => a == b) {
+  if (arrays.length == 0) return [];
+  // Adapted from https://stackoverflow.com/a/59176460
+  return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
+}
+
+function arrayEq(x1, x2) {
+  if (x1.length != x2.length) return false;
+  for (let i = 0; i < x1.length; i++) {
+    if (x1[i] != x2[i]) return false;
+  }
+  return true;
+}
+
+
+/***/ }),
+
+/***/ "./src/util/batchDelay.js":
+/*!********************************!*\
+  !*** ./src/util/batchDelay.js ***!
+  \********************************/
+/*! exports provided: batchDelay */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "batchDelay", function() { return batchDelay; });
+/* harmony import */ var _util_timeout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/util/timeout */ "./src/util/timeout.js");
+
+
+async function batchDelay(collection, batchSize, delay, fn) {
+  let results = [];
+  for (let i = 0; i < collection.length; i += batchSize) {
+    const subCollection = collection.slice(i, i + batchSize);
+    results = results.concat(await fn(subCollection));
+    await Object(_util_timeout__WEBPACK_IMPORTED_MODULE_0__["timeout"])(delay);
+  }
+  return results;
+}
+
+
+/***/ }),
+
 /***/ "./src/util/data.js":
 /*!**************************!*\
   !*** ./src/util/data.js ***!
@@ -6534,6 +7486,134 @@ async function grabAllPages(url, perPage = MAX_PER_PAGE) {
   } else {
     return results;
   }
+}
+
+
+/***/ }),
+
+/***/ "./src/util/string.js":
+/*!****************************!*\
+  !*** ./src/util/string.js ***!
+  \****************************/
+/*! exports provided: handlePlural, simplePlural, nameSingularNumberPlural, formatBytes, stripExtension, slugify, extractSlugId, titlecase, allIndices */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handlePlural", function() { return handlePlural; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "simplePlural", function() { return simplePlural; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nameSingularNumberPlural", function() { return nameSingularNumberPlural; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatBytes", function() { return formatBytes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "stripExtension", function() { return stripExtension; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "slugify", function() { return slugify; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extractSlugId", function() { return extractSlugId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "titlecase", function() { return titlecase; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allIndices", function() { return allIndices; });
+/**
+ * Appropriately pluralizes a word based on the quantity.
+ * @param {number} value The number of items
+ * @param {string} str The base string name of a singular item
+ * @param {boolean} allowZero If false, return an empty string on zero items
+ */
+function handlePlural(value, str, allowZero = false) {
+  if (!allowZero && value == 0) return "";
+  return `${value} ${simplePlural(value, str)}`;
+}
+
+/**
+ * Returns a word with an "s" after it if appropriate
+ * @param {number} value The number of items
+ * @param {string} string The base string name of a single item
+ */
+function simplePlural(value, string) {
+  return string + (value != 1 ? "s" : "");
+}
+
+/**
+ * Pluralizes a word and puts the number before it only if non-singular,
+ * e.g. for the "selected document" vs. for the "3 selected documents"
+ * @param {number} value The number of items
+ * @param {string} string The base string name of a single item
+ */
+function nameSingularNumberPlural(value, string) {
+  return `${value == 1 ? "" : `${value} `}${simplePlural(value, string)}`;
+}
+
+/**
+ * Formats a size to a human-readable format
+ * @param {number} bytes The number of bytes
+ * @param {number} decimals Number of decimal places
+ */
+function formatBytes(bytes, decimals = 0) {
+  // from https://stackoverflow.com/a/18650828/1404888
+  if (bytes === 0) return "0 Bytes";
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+}
+
+/**
+ * Strips the extension part of a filename
+ * @param {string} filename The filename
+ */
+function stripExtension(filename) {
+  const parts = filename.split(".");
+  return parts.slice(0, parts.length - 1).join(".");
+}
+
+function slugify(str, id = null, maxLength = 25) {
+  const slug = str
+    .substring(0, maxLength)
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+  if (id != null) return `${slug}-${id}`;
+  return slug;
+}
+
+function extractSlugId(str) {
+  // Must be valid slug
+  if (!/^[a-z0-9-]+$/.test(str)) return null;
+  const parts = str.split("-");
+  if (parts.length == 0) return null;
+  return parts[parts.length - 1];
+}
+
+function titlecase(str) {
+  return str.charAt(0).toUpperCase() + str.substr(1);
+}
+
+function allIndices(text, query) {
+  const results = [];
+  let pos = 0;
+  while (true) {
+    const idx = text.indexOf(query, pos);
+    if (idx == -1) return results;
+    results.push(idx);
+    pos = idx + 1;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/util/timeout.js":
+/*!*****************************!*\
+  !*** ./src/util/timeout.js ***!
+  \*****************************/
+/*! exports provided: timeout */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timeout", function() { return timeout; });
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
@@ -6674,16 +7754,16 @@ function queryBuilder(baseUrl, params, cleanSlate = false) {
 /***/ }),
 
 /***/ 0:
-/*!******************************!*\
-  !*** multi ./src/enhance.js ***!
-  \******************************/
+/*!*********************************!*\
+  !*** multi ./src/noteLoader.js ***!
+  \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./src/enhance.js */"./src/enhance.js");
+module.exports = __webpack_require__(/*! ./src/noteLoader.js */"./src/noteLoader.js");
 
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=enhance.js.map
+//# sourceMappingURL=loader.js.map
