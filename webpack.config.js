@@ -1,4 +1,4 @@
 const appConfig = require('./webpack.app.config.js');
-const enhanceConfig = require('./webpack.enhance.config.js');
+const embedConfig = require('./webpack.embed.config.js');
 
-module.exports = [appConfig, enhanceConfig];
+module.exports = [appConfig, embedConfig];
