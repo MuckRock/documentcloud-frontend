@@ -27,10 +27,6 @@
   )[0];
 
   onMount(async () => {
-    // Hackily clear global height settings
-    document.body.style.height = "inherit";
-    document.documentElement.style.height = "inherit";
-
     // Get document/note
     doc = await getDocument(docId);
     note = await getAnnotation(docId, noteId);
@@ -76,13 +72,24 @@
 
     .DC-note-image-max-bounds {
       box-sizing: border-box;
-      border: 2px solid #ffe325;
-      border-radius: 3px;
+      border-radius: $radius;
       box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
       position: relative;
       font-size: 0;
       overflow: hidden;
       margin: 10px auto;
+
+      &.public {
+        border: $annotationBorderWidth solid $annotationBorder;
+      }
+
+      &.organization {
+        border: $annotationBorderWidth solid $organizationAnnotation;
+      }
+
+      &.private {
+        border: $annotationBorderWidth solid $privateAnnotation;
+      }
 
       .DC-note-image-aspect-ratio {
         position: relative;
@@ -156,7 +163,12 @@
       </a>
     </div>
 
-    <div class="DC-note-image-max-bounds" style="max-width: {maxWidth}px;">
+    <div
+      class="DC-note-image-max-bounds"
+      class:public={note.access == 'public'}
+      class:organization={note.access == 'organization'}
+      class:private={note.access == 'private'}
+      style="max-width: {maxWidth}px;">
       <div
         class="DC-note-image-aspect-ratio"
         style="padding-bottom: {(note.height / note.width) * aspect * 100}%">

@@ -175,7 +175,7 @@
     class="number"
     use:showIfFullyVisible
     class:grayed={$layout.displayAnnotate}>
-    <a href="#{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
+    <a href="#document/p{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
   </div>
 </div>
 <div class="page">

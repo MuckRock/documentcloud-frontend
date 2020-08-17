@@ -20,7 +20,6 @@ function loadNote(src) {
       }
     });
   });
-
 }
 
 if (window['dc'] == null) window['dc'] = {};
