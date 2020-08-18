@@ -1,4 +1,4 @@
-import Note from '@/pages/embed/Note';
+import { setupResizeEvent } from './iframeSizer';
 
 const enhanced = 'DC-embed-enhanced';
 
@@ -13,12 +13,18 @@ function loadNote(src) {
   document.querySelectorAll(`#DC-note-${noteId}`).forEach(noteElem => {
     if (noteElem.className.indexOf(enhanced) != -1) return;
     noteElem.className += ' ' + enhanced;
-    new Note({
-      target: noteElem,
-      props: {
-        id, noteId
-      }
-    });
+
+    // Clear the container
+    while (noteElem.firstChild) noteElem.removeChild(noteElem.firstChild);
+    noteElem.style = `max-width:${noteElem.style.maxWidth}`;
+
+    // Create the iframe
+    const iframe = document.createElement('iframe');
+    iframe.style = 'border: none; width: 100%;';
+    iframe.src = `${process.env.APP_URL}documents/${id}/annotations/${noteId}`;
+    setupResizeEvent(iframe);
+
+    noteElem.appendChild(iframe);
   });
 }
 

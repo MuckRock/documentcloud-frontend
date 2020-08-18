@@ -176,13 +176,6 @@ export async function removeData(id, key, value) {
   });
 }
 
-export async function getEmbed(url) {
-  const { data } = await session.get(
-    apiUrl(`oembed?url=${encodeURIComponent(url)}`)
-  );
-  return data;
-}
-
 /**
  * Polls the specified document, repeatedly requesting it until the specified condition is met.
  * @param {string} id The document id to poll

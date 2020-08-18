@@ -1,18 +1,33 @@
 export function smoothify(fn) {
-  return fn;
-  // let timer = null;
+  let timer = null;
 
-  // return ((...args) => {
-  //   if (timer != null) {
-  //     cancelAnimationFrame(timer);
-  //     timer = null;
-  //   }
+  return ((...args) => {
+    if (timer != null) {
+      cancelAnimationFrame(timer);
+      timer = null;
+    }
 
-  //   timer = requestAnimationFrame(() => {
-  //     timer = null;
-  //     fn(...args);
-  //   });
-  // });
+    timer = requestAnimationFrame(() => {
+      timer = null;
+      fn(...args);
+    });
+  });
+}
+
+export function timeoutify(fn, timeout = 100) {
+  let timer = null;
+
+  return ((...args) => {
+    if (timer != null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+
+    timer = setTimeout(() => {
+      timer = null;
+      fn(...args);
+    }, timeout);
+  });
 }
 
 export function ignoreFirst(closure) {

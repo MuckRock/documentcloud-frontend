@@ -56,6 +56,7 @@ class Doc extends Svue {
           sidebarExpanded: false,
           textJump: null,
           mode: 'image',
+          handledHash: false,
 
           // Page image callbacks
           rendered: {},

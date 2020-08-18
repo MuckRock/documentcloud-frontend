@@ -22,6 +22,29 @@
   import { doc } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
+  import { onMount } from "svelte";
+
+  const navHandlers = [
+    [
+      /^#document\/p([0-9]+)$/,
+      match => {
+        const pageNumber = parseInt(match[1]);
+        doc.jumpToPage(pageNumber);
+      }
+    ]
+  ];
+
+  onMount(() => {
+    const hash = window.location.hash;
+    for (let i = 0; i < navHandlers.length; i++) {
+      const [regex, handler] = navHandlers[i];
+      const match = regex.exec(hash);
+      if (match != null) {
+        handler(match);
+        return;
+      }
+    }
+  });
 </script>
 
 <svelte:head>

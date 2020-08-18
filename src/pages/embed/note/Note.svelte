@@ -1,10 +1,11 @@
 <script>
   import ProgressiveImage from "@/common/ProgressiveImage";
   import DomPurify from "dompurify";
+  import { informSize } from "@/embed/iframeSizer";
+  import { onMount, tick } from "svelte";
   import { getAnnotation } from "@/api/annotation";
   import { getDocument } from "@/api/document";
   import { pageImageUrl } from "@/api/viewer";
-  import { onMount } from "svelte";
 
   export let id;
   export let noteId;
@@ -13,6 +14,7 @@
 
   let doc = null;
   let note = null;
+  let elem;
 
   $: aspect = doc == null || note == null ? 0 : doc.pageSizes[note.page];
   const docWidth = 700;
@@ -30,6 +32,12 @@
     // Get document/note
     doc = await getDocument(docId);
     note = await getAnnotation(docId, noteId);
+
+    // Render content
+    await tick();
+
+    // Inform iframe of size updates
+    informSize(elem);
   });
 </script>
 
@@ -37,7 +45,6 @@
   .DC-note {
     position: relative;
     padding: 0 0.5em;
-    margin: 2em 0;
     border: 1px solid #ebebeb;
     box-shadow: inset 0 0 40px #505050;
     font: 400 10pt/14pt -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
@@ -146,11 +153,11 @@
   }
 </style>
 
-{#if note != null && doc != null}
-  <div
-    class="DC-note"
-    style="background-image: url({pageImageUrl(doc, note.page, LARGE_WIDTH)})">
-
+<div
+  class="DC-note"
+  bind:this={elem}
+  style={note != null && doc != null ? `background-image: url(${pageImageUrl(doc, note.page, LARGE_WIDTH)})` : ''}>
+  {#if note != null && doc != null}
     <div class="DC-note-header">
       <a
         href={doc.noteUrl(note)}
@@ -203,5 +210,5 @@
     </div>
 
     <div class="DC-note-background-fader" />
-  </div>
-{/if}
+  {/if}
+</div>

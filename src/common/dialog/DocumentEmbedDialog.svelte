@@ -1,7 +1,7 @@
 <script>
   import ShareOptions from "@/common/ShareOptions";
   import { layout } from "@/viewer/layout";
-  import { getEmbed } from "@/api/document";
+  import { getEmbed } from "@/api/embed";
   import { queryBuilder } from "@/util/url";
 
   let embedElem;

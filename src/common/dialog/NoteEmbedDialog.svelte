@@ -2,6 +2,7 @@
   import BoundedNumberInput from "@/common/BoundedNumberInput";
   import ShareOptions from "@/common/ShareOptions";
   import { layout } from "@/viewer/layout";
+  import { getEmbed } from "@/api/embed";
   import { doc } from "@/viewer/document";
   import { pageImageUrl, textUrl } from "@/api/viewer";
 
@@ -20,15 +21,23 @@
   )}.js`;
   $: annotationHtmlSrc = $layout.embedDocument.fakeNoteUrl($layout.embedNote);
 
-  $: embedCode = `<div id="DC-note-${$layout.embedNote.id}" class="DC-embed DC-embed-note DC-note-container"></div>
-\u003Cscript src="${loaderSrc}">\u003C/script>
-\u003Cscript>
-  dc.embed.loadNote('${annotationSrc}');
-\u003C/script>
-<noscript>
-  <a href="${annotationHtmlSrc}">View note</a>
-</noscript>
-`;
+  let embedCode = null;
+
+  $: {
+    if (noteUrl != null) {
+      getEmbed(noteUrl).then(({ html }) => (embedCode = html));
+    }
+  }
+
+  //   $: embedCode = `<div id="DC-note-${$layout.embedNote.id}" class="DC-embed DC-embed-note DC-note-container"></div>
+  // \u003Cscript src="${loaderSrc}">\u003C/script>
+  // \u003Cscript>
+  //   dc.embed.loadNote('${annotationSrc}');
+  // \u003C/script>
+  // <noscript>
+  //   <a href="${annotationHtmlSrc}">View note</a>
+  // </noscript>
+  // `;
 </script>
 
 <h1>Embed a note of “{$layout.embedDocument.title}”</h1>
