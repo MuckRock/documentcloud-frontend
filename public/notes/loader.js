@@ -106,7 +106,7 @@ function informSize(element) {
     window.parent.postMessage({
       width: Math.max(element.scrollWidth, element.offsetWidth),
       height: Math.max(element.scrollHeight, element.offsetHeight)
-    });
+    }, "*");
   };
 
   // Trigger event now and any time the window resizes
