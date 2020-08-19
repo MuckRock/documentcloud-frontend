@@ -2,7 +2,7 @@
   import Page from "./Page";
   import SearchResults from "./SearchResults";
 
-  import { layout, cancelAnnotation } from "@/viewer/layout";
+  import { layout, initializeViewer, cancelAnnotation } from "@/viewer/layout";
   import { doc, showSidebar } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import ScrollZoom from "scrollzoom";
@@ -141,6 +141,7 @@
       if (doc.containerWidth > docElem.offsetWidth) {
         doc.zoomWidth();
       }
+      tick().then(() => setTimeout(() => initializeViewer(), 0));
     }
   }
 

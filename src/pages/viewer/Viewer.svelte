@@ -18,18 +18,41 @@
   import Modal from "@/common/Modal";
   import ErrorModal from "@/common/ErrorModal";
   import Loader from "@/common/Loader";
-  import { layout, hideEmbedFlow, hideEditSections } from "@/viewer/layout";
-  import { doc } from "@/viewer/document";
+  import {
+    layout,
+    setViewerInitializeAction,
+    hideEmbedFlow,
+    hideEditSections
+  } from "@/viewer/layout";
+  import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
 
   const navHandlers = [
     [
       /^#document\/p([0-9]+)$/,
       match => {
         const pageNumber = parseInt(match[1]);
-        doc.jumpToPage(pageNumber);
+        doc.jumpToPage(pageNumber - 1);
+      }
+    ],
+    [
+      /^#document\/p([0-9]+)\/a([0-9]+)$/,
+      async match => {
+        const pageNumber = parseInt(match[1]);
+        const annotationId = match[2];
+
+        // Grab the appropriate annotation by id
+        const notes = viewer.notes.filter(x => x.id == annotationId);
+        if (notes.length == 1) {
+          // Show and scroll the annotation into view
+          // await tick();
+          await showAnnotation(notes[0], true);
+        } else {
+          // Annotation wasn't found: fall back to page number
+          await doc.jumpToPage(pageNumber - 1);
+        }
       }
     ]
   ];
@@ -40,7 +63,7 @@
       const [regex, handler] = navHandlers[i];
       const match = regex.exec(hash);
       if (match != null) {
-        handler(match);
+        setViewerInitializeAction(() => handler(match));
         return;
       }
     }

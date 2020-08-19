@@ -162,7 +162,7 @@ class Doc extends Svue {
   }
 
   callbackWhenRendered(pageNumber, callback) {
-    if (this.rendered[pageNumber] != false) {
+    if (this.rendered[pageNumber]) {
       // Callback immediately
       callback();
     } else {

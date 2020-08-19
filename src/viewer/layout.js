@@ -36,6 +36,8 @@ export const layout = new Svue({
 
       loading: false,
       error: null,
+      viewerInitialized: false,
+      viewerInitializeAction: null,
 
       action: null,
       displayedAnnotation: null,
@@ -183,6 +185,20 @@ export const layout = new Svue({
   },
 });
 
+// Loading
+export function initializeViewer() {
+  layout.viewerInitialized = true;
+  if (layout.viewerInitializeAction != null) layout.viewerInitializeAction();
+}
+
+export function setViewerInitializeAction(action) {
+  layout.viewerInitializeAction = action;
+  if (layout.viewerInitialized) {
+    layout.viewerInitializeAction();
+  }
+}
+
+// Annotations/redactions
 function consolidateDragObject(dragObject) {
   if (dragObject.start == null) return new Note({ page_number: dragObject.pageNumber });
   const start = {
