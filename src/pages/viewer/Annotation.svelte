@@ -21,6 +21,7 @@
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
+  import simpleLinkSvg from "@/assets/simplelink.svg";
   import pencilSvg from "@/assets/pencil.svg";
 
   // Asynchronously load dompurify
@@ -94,6 +95,8 @@
       : y2 > $doc.docHeight - ANNOTATION_PADDING
       ? "up"
       : "none";
+
+  $: noteUrl = page.document.noteHashUrl(annotation);
 
   // Focus on title on mount
   let titleInput;
@@ -449,6 +452,7 @@
       }
     }
 
+    .link,
     .pencil {
       @include buttonLike;
 
@@ -561,6 +565,9 @@
       {:else}
         <h1>
           {annotation.title}
+          <a class="link" href={noteUrl}>
+            {@html simpleLinkSvg}
+          </a>
           <span class="pencil" on:click={() => (editOverride = true)}>
             {@html pencilSvg}
           </span>
@@ -618,6 +625,9 @@
         {:else}
           <h1>
             {annotation.title}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
             <span class="pencil" on:click={() => (editOverride = true)}>
               {@html pencilSvg}
             </span>
