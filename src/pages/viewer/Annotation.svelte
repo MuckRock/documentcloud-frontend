@@ -568,9 +568,11 @@
           <a class="link" href={noteUrl}>
             {@html simpleLinkSvg}
           </a>
-          <span class="pencil" on:click={() => (editOverride = true)}>
-            {@html pencilSvg}
-          </span>
+          {#if page.document.editAccess}
+            <span class="pencil" on:click={() => (editOverride = true)}>
+              {@html pencilSvg}
+            </span>
+          {/if}
         </h1>
       {/if}
     </Loader>
@@ -628,9 +630,11 @@
             <a class="link" href={noteUrl}>
               {@html simpleLinkSvg}
             </a>
-            <span class="pencil" on:click={() => (editOverride = true)}>
-              {@html pencilSvg}
-            </span>
+            {#if page.document.editAccess}
+              <span class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </span>
+            {/if}
           </h1>
         {/if}
       </Loader>
