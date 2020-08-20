@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from './viewer';
 import { tick } from 'svelte';
-import { layout, annotationValid, startSearch, clearSearch, cancelActions } from './layout';
+import { layout, MOBILE_BREAKPOINT, annotationValid, startSearch, clearSearch, cancelActions } from './layout';
 
 const LAYOUT = {
   docMargin: 40,  // margin from top to first page, bottom to last
@@ -265,7 +265,7 @@ export async function showSidebar(show) {
 }
 
 export async function closeSidebarIfFullWidth() {
-  if (doc.viewerWidth - layout.sidebarWidth <= 0) {
+  if (window.innerWidth < MOBILE_BREAKPOINT) {
     // Close sidebar if necessary
     await showSidebar(false);
   }

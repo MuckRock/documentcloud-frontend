@@ -13,7 +13,7 @@ import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 
 // A little bigger than normal mobile break to hide sidebar in narrow viewports
-const MOBILE_BREAKPOINT = 800;
+export const MOBILE_BREAKPOINT = 800;
 
 export const layout = new Svue({
   data() {

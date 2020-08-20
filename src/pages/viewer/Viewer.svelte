@@ -31,14 +31,14 @@
 
   const navHandlers = [
     [
-      /^#document\/p([0-9]+)$/,
+      /^#document\/p([0-9]+)\/*$/,
       match => {
         const pageNumber = parseInt(match[1]);
         doc.jumpToPage(pageNumber - 1);
       }
     ],
     [
-      /^#document\/p([0-9]+)\/a([0-9]+)$/,
+      /^#document\/p([0-9]+)\/a([0-9]+)\/*$/,
       async match => {
         const pageNumber = parseInt(match[1]);
         const annotationId = match[2];
@@ -94,7 +94,7 @@
 {:else if $confirmDialog.open}
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
 {:else if $layout.showEmbedDialog}
-  <Modal fullscreen={true} component={EmbedDialog} on:close={hideEmbedFlow} />
+  <Modal component={EmbedDialog} on:close={hideEmbedFlow} />
 {:else if $layout.showEditSections}
   <Modal component={EditSectionsDialog} on:close={hideEditSections} />
 {/if}

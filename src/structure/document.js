@@ -41,8 +41,14 @@ export class Document extends Svue {
         canonicalUrl(slugId) {
           return APP_URL + "documents/" + slugId;
         },
-        pageUrl(canonicalUrl) {
-          return page => `${canonicalUrl}#document/p${page}`;
+        pageHashUrl() {
+          return page => `#document/p${page}`;
+        },
+        noteHashUrl(pageHashUrl) {
+          return note => `${pageHashUrl(note.page + 1)}/a${note.id}`;
+        },
+        pageUrl(canonicalUrl, pageHashUrl) {
+          return page => `${canonicalUrl}${pageHashUrl(page)}`;
         },
         noteUrl(pageUrl) {
           return (note) => `${pageUrl(note.page + 1)}/a${note.id}`;
