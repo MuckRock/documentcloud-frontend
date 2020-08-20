@@ -7,6 +7,7 @@
     "autoprefixer": "^9.7.3",
     "babel-jest": "^24.9.0",
     "circular-dependency-plugin": "^5.2.0",
+    "concurrently": "^5.3.0",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
     "dotenv-flow-webpack": "^1.0.0",
@@ -36,7 +37,9 @@
     "build-staging": "cross-env NODE_ENV=staging webpack",
     "build-serve": "cross-env NODE_ENV=production webpack && serve public -l 80",
     "build-analyze": "cross-env NODE_ENV=production-analyze webpack",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --content-base public",
+    "dev": "concurrently \"npm:dev-app\" \"npm:dev-embed\"",
+    "dev-app": "cross-env NODE_ENV=development webpack-dev-server --config webpack.app.config.js --content-base public",
+    "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
     "test": "jest",
     "test-watch": "jest --watchAll"
   },

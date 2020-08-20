@@ -12,7 +12,8 @@ import {
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 
-const MOBILE_BREAKPOINT = 600;
+// A little bigger than normal mobile break to hide sidebar in narrow viewports
+export const MOBILE_BREAKPOINT = 800;
 
 export const layout = new Svue({
   data() {
@@ -35,6 +36,8 @@ export const layout = new Svue({
 
       loading: false,
       error: null,
+      viewerInitialized: false,
+      viewerInitializeAction: null,
 
       action: null,
       displayedAnnotation: null,
@@ -63,6 +66,7 @@ export const layout = new Svue({
 
       // Embed
       embedDocument: null,
+      embedNote: null,
       embedContext: "viewer",
     };
   },
@@ -83,7 +87,13 @@ export const layout = new Svue({
       if (viewer.document == null || !viewer.document.readable) return [];
       return [
         async () => {
-          const doc = await getDocument(viewer.document.id, [DEFAULT_EXPAND]);
+          const doc = await getDocument(viewer.document.id, [
+            DEFAULT_EXPAND,
+            "notes",
+            "sections",
+            "notes.organization",
+            "notes.user",
+          ].join(","));
           viewer.document = doc;
           // Update embed document if possible
           if (
@@ -113,6 +123,9 @@ export const layout = new Svue({
     },
     searching(action) {
       return action == "search";
+    },
+    selectNoteEmbed(action) {
+      return action == 'selectnote';
     },
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
@@ -166,12 +179,26 @@ export const layout = new Svue({
       }
       return sum;
     },
-    showEmbedDialog(embedDocument) {
-      return embedDocument != null;
+    showEmbedDialog(embedDocument, selectNoteEmbed) {
+      return embedDocument != null && !selectNoteEmbed;
     },
   },
 });
 
+// Loading
+export function initializeViewer() {
+  layout.viewerInitialized = true;
+  if (layout.viewerInitializeAction != null) layout.viewerInitializeAction();
+}
+
+export function setViewerInitializeAction(action) {
+  layout.viewerInitializeAction = action;
+  if (layout.viewerInitialized) {
+    layout.viewerInitializeAction();
+  }
+}
+
+// Annotations/redactions
 function consolidateDragObject(dragObject) {
   if (dragObject.start == null) return new Note({ page_number: dragObject.pageNumber });
   const start = {
@@ -301,6 +328,8 @@ export function undoRedaction() {
 
 export function cancelActions() {
   layout.action = null;
+  layout.embedDocument = null;
+  layout.embedNote = null;
   layout.displayedAnnotation = null;
   layout.showEditSections = false;
 }
@@ -402,6 +431,7 @@ function reset() {
 }
 
 export function showEmbedFlow(document) {
+  layout.embedNote = null;
   layout.embedDocument = document;
 }
 

@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from './viewer';
 import { tick } from 'svelte';
-import { layout, annotationValid, startSearch, clearSearch } from './layout';
+import { layout, MOBILE_BREAKPOINT, annotationValid, startSearch, clearSearch, cancelActions } from './layout';
 
 const LAYOUT = {
   docMargin: 40,  // margin from top to first page, bottom to last
@@ -56,6 +56,7 @@ class Doc extends Svue {
           sidebarExpanded: false,
           textJump: null,
           mode: 'image',
+          handledHash: false,
 
           // Page image callbacks
           rendered: {},
@@ -161,7 +162,7 @@ class Doc extends Svue {
   }
 
   callbackWhenRendered(pageNumber, callback) {
-    if (this.rendered[pageNumber] != false) {
+    if (this.rendered[pageNumber]) {
       // Callback immediately
       callback();
     } else {
@@ -264,7 +265,7 @@ export async function showSidebar(show) {
 }
 
 export async function closeSidebarIfFullWidth() {
-  if (doc.viewerWidth - layout.sidebarWidth <= 0) {
+  if (window.innerWidth < MOBILE_BREAKPOINT) {
     // Close sidebar if necessary
     await showSidebar(false);
   }
@@ -317,9 +318,21 @@ export async function scrollVisibleAnnotationIntoView() {
 }
 
 export async function showAnnotation(annotation, scrollIntoView = false) {
+  // Handle selecting an annotation
+  if (layout.selectNoteEmbed) {
+    const embedDocument = layout.embedDocument;
+    cancelActions();
+    layout.embedDocument = embedDocument;
+    layout.embedNote = annotation;
+    return;
+  }
+
   await closeSidebarIfFullWidth();
 
   if (!annotationValid(annotation)) return;
+
+  await changeMode('image');
+
   layout.annotateMode = "view";
   if (!annotation.isPageNote) {
     layout.displayedAnnotation = annotation;

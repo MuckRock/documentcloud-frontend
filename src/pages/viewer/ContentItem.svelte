@@ -1,12 +1,23 @@
 <script>
   import NoWhitespace from "@/common/NoWhitespace";
   export let sectionOrNote;
+  import { viewer } from "@/viewer/viewer";
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { layout } from "@/viewer/layout";
   import { restorePosition, showAnnotation } from "@/viewer/document";
 
   // SVG assets
   import smallCircleSvg from "@/assets/small_circle.svg";
+
+  $: doc = $viewer.document;
+  $: pageUrl = page => {
+    if (doc == null) return "";
+    return doc.pageHashUrl(page + 1);
+  };
+  $: noteUrl = note => {
+    if (doc == null) return "";
+    return doc.noteHashUrl(note);
+  };
 </script>
 
 <style lang="scss">
@@ -88,15 +99,16 @@
   {#if sectionOrNote.children.length > 0}
     <details class="dc" open>
       <summary>
-        <span
+        <a
+          href={pageUrl(sectionOrNote.section.page)}
           class="section"
-          on:click|preventDefault={() => restorePosition(sectionOrNote.section.page)}>
+          on:click={() => restorePosition(sectionOrNote.section.page)}>
           <NoWhitespace>
             <span class="title">{sectionOrNote.section.title}</span>
             <span>&nbsp;</span>
             <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
           </NoWhitespace>
-        </span>
+        </a>
       </summary>
       <ul class="children">
         {#each sectionOrNote.children as child}
@@ -113,27 +125,32 @@
       </ul>
     </details>
   {:else}
-    <div
-      class="section"
+    <a
+      href={pageUrl(sectionOrNote.section.page)}
       on:click={() => restorePosition(sectionOrNote.section.page)}>
-      <NoWhitespace>
-        <span class="title">{sectionOrNote.section.title}</span>
-        <span>&nbsp;</span>
-        <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
-      </NoWhitespace>
-    </div>
+      <div class="section">
+        <NoWhitespace>
+          <span class="title">{sectionOrNote.section.title}</span>
+          <span>&nbsp;</span>
+          <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+        </NoWhitespace>
+      </div>
+    </a>
   {/if}
 {:else}
   <!-- Show note -->
-  <div
-    class="note"
-    class:hover={sectionOrNote.note == $layout.hoveredNote}
-    use:hoveredNote={sectionOrNote.note}
+  <a
+    href={noteUrl(sectionOrNote.note)}
     on:click={() => showAnnotation(sectionOrNote.note, true)}>
-    <NoWhitespace>
-      <span class="title">{sectionOrNote.note.title}</span>
-      <span>&nbsp;</span>
-      <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
-    </NoWhitespace>
-  </div>
+    <div
+      class="note"
+      class:hover={sectionOrNote.note == $layout.hoveredNote}
+      use:hoveredNote={sectionOrNote.note}>
+      <NoWhitespace>
+        <span class="title">{sectionOrNote.note.title}</span>
+        <span>&nbsp;</span>
+        <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+      </NoWhitespace>
+    </div>
+  </a>
 {/if}

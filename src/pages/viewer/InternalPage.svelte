@@ -151,6 +151,22 @@
       pointer-events: none;
       visibility: hidden;
     }
+
+    &.amplified {
+      backdrop-filter: brightness(125%);
+
+      &.public {
+        background: rgba($annotationBorder, 0.1);
+      }
+
+      &.organization {
+        background: rgba($organizationAnnotation, 0.1);
+      }
+
+      &.private {
+        background: rgba($privateAnnotation, 0.1);
+      }
+    }
   }
 </style>
 
@@ -159,7 +175,7 @@
     class="number"
     use:showIfFullyVisible
     class:grayed={$layout.displayAnnotate}>
-    <a href="#{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
+    <a href="#document/p{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
   </div>
 </div>
 <div class="page">
@@ -176,6 +192,7 @@
       {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote}
         <Annotation
           {page}
+          grayed={$layout.selectNoteEmbed}
           pageNote={true}
           annotation={$layout.displayedAnnotation}
           mode={$layout.annotateMode} />
@@ -183,7 +200,7 @@
       {#if $viewer.pageNotesByPage[page.pageNumber] != null}
         {#each $viewer.pageNotesByPage[page.pageNumber] as note}
           <Annotation
-            grayed={$layout.displayAnnotate}
+            grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
             on:stateChange={() => annotationChanger++}
             behind={true}
             {page}
@@ -200,7 +217,7 @@
       crosshair={$layout.pageCrosshair}
       width={effectiveWidth}
       aspect={page.aspect}
-      grayed={$layout.displayAnnotate}
+      grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
       {page} />
 
     <!-- Markup -->
@@ -223,6 +240,7 @@
             class:organization={note.access == 'organization'}
             class:private={note.access == 'private'}
             class:grayed={$layout.displayAnnotate}
+            class:amplified={$layout.selectNoteEmbed}
             class:hover={$layout.hoveredNote == note}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}

@@ -6,6 +6,7 @@
   export let page;
   export let width;
   export let aspect;
+  export let bordered = true;
   export let grayed = false;
   export let crosshair = false;
   let elem;
@@ -114,8 +115,11 @@
     position: relative;
     width: 100%;
     background: white;
-    border: solid 1px gainsboro;
     box-sizing: border-box;
+
+    &.bordered {
+      border: solid 1px gainsboro;
+    }
 
     :global(img) {
       position: absolute;
@@ -148,5 +152,6 @@
 <div
   style="padding-top: {aspect * 100}%"
   bind:this={elem}
+  class:bordered
   class:grayed
   class:crosshair />

@@ -10,6 +10,12 @@ build-staging:
 dev:
 	docker-compose -f local.yml up documentcloud_frontend
 
+dev-app:
+	docker-compose -f local.yml up documentcloud_frontend_app
+
+dev-embed:
+	docker-compose -f local.yml up documentcloud_frontend_embed
+
 build-serve:
 	docker-compose -f local.yml up documentcloud_frontend_build
 

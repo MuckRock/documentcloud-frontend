@@ -4,6 +4,10 @@ import Home from "@/pages/home/Home";
 import App from "@/pages/app/App";
 import Viewer from "@/pages/viewer/Viewer";
 
+// Embeds
+import Note from "@/pages/embed/note/Note";
+import Page from '@/pages/embed/page/Page';
+
 export const routes = [
   NotFound,
   {
@@ -22,6 +26,16 @@ export const routes = [
     viewer: {
       path: "/documents/:id",
       component: Viewer
+    },
+
+    // Embeds
+    note: {
+      path: "/documents/:id/annotations/:noteId",
+      component: Note,
+    },
+    page: {
+      path: "/documents/:id/pages/:page",
+      component: Page,
     }
   }
 ];

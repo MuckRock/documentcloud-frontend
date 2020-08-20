@@ -17,6 +17,11 @@
     border-top: $viewerHeaderBorder;
     z-index: $viewerFooterZ;
     text-align: center;
+
+    &.disabled {
+      pointer-events: none;
+      filter: brightness(90%);
+    }
   }
 
   .cell {
@@ -44,7 +49,10 @@
   }
 </style>
 
-<footer class="vheader" style="height: {$layout.footerHeight}px">
+<footer
+  class="vheader"
+  class:disabled={$layout.disableControls}
+  style="height: {$layout.footerHeight}px">
   <div class="vcontent">
     {#if !$layout.compact}
       <div class="cell side" {style}>

@@ -1,6 +1,8 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
 
+const endings = ['.html', '.html'];
+
 export class Router {
   constructor(notFound, routes) {
     this.notFound = notFound;
@@ -23,6 +25,14 @@ export class Router {
   }
 
   resolve(path) {
+    // Remove common endings
+    for (let i = 0; i < endings.length; i++) {
+      const ending = endings[i];
+      if (path.endsWith(ending)) {
+        path = path.substr(0, path.length - ending.length);
+        break;
+      }
+    }
     return this.router(path);
   }
 }

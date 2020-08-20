@@ -2,6 +2,7 @@
   import RedactPane from "./RedactPane";
   import AnnotatePane from "./AnnotatePane";
   import SearchPane from "./SearchPane";
+  import SelectNotePane from "./SelectNotePane";
   import { layout, cancelActions, cancelAnnotation } from "@/viewer/layout";
 
   // SVG assets
@@ -69,7 +70,9 @@
       </span>
     </div>
     <div class="actioncontent">
-      {#if $layout.redacting}
+      {#if $layout.selectNoteEmbed}
+        <SelectNotePane />
+      {:else if $layout.redacting}
         <RedactPane />
       {:else if $layout.annotating}
         <AnnotatePane />

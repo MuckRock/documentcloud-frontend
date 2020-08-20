@@ -2,7 +2,7 @@
   import Page from "./Page";
   import SearchResults from "./SearchResults";
 
-  import { layout, cancelAnnotation } from "@/viewer/layout";
+  import { layout, initializeViewer, cancelAnnotation } from "@/viewer/layout";
   import { doc, showSidebar } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import ScrollZoom from "scrollzoom";
@@ -26,8 +26,6 @@
     actionHeight == null || $layout.action == null ? 0 : actionHeight;
 
   let scrollzoom = null;
-
-  const MOBILE_BREAKPOINT = 600;
 
   function destroyScrollzoom() {
     if (doc.scrollzoom != null) {
@@ -143,6 +141,7 @@
       if (doc.containerWidth > docElem.offsetWidth) {
         doc.zoomWidth();
       }
+      tick().then(() => setTimeout(() => initializeViewer(), 0));
     }
   }
 
@@ -268,7 +267,9 @@
       !e.altKey &&
       !e.shiftKey &&
       !layout.disableControls &&
-      !layout.searchExpanded
+      !layout.searchExpanded &&
+      !layout.showEditSections &&
+      !layout.showEmbedDialog
     ) {
       if (e.key == "a") {
         enterAnnotateMode();
@@ -289,7 +290,7 @@
     right: 0;
     left: 0;
     box-sizing: border-box;
-    overflow: scroll;
+    overflow: auto;
     z-index: $viewerBodyZ;
     touch-action: manipulation;
     background: $viewerBodyBg;
@@ -312,7 +313,7 @@
   bind:this={docElem}
   class="doc"
   on:mousedown={handleMouseDown}
-  class:grayed={$layout.displayAnnotate}>
+  class:grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}>
   {#if $doc.mode == 'search'}
     <SearchResults />
   {/if}

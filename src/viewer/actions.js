@@ -15,6 +15,11 @@ export function enterAnnotateMode() {
   layout.action = "annotate";
 }
 
+export function enterSelectNoteMode() {
+  changeMode("image");
+  layout.action = "selectnote";
+}
+
 export function enterSectionsMode() {
   layout.showEditSections = true;
 }

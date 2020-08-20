@@ -74,6 +74,20 @@ export async function getAnnotations(id, expand = DEFAULT_EXPAND) {
   return results.map(result => new Note(result));
 }
 
+export async function getAnnotationsPage(id, expand = DEFAULT_EXPAND, page) {
+  // Returns annotations for the specified document at the specified page
+  const results = await grabAllPages(
+    apiUrl(queryBuilder(`documents/${id}/notes/`, { expand, page_number: page }))
+  );
+  return results.map(result => new Note(result));
+}
+
+export async function getAnnotation(docId, noteId) {
+  // Get the note with the specified id
+  const { data } = await session.get(apiUrl(`documents/${docId}/notes/${noteId}/`));
+  return new Note(data);
+}
+
 export async function deleteAnnotation(docId, noteId) {
   // Delete the note with the specified id
   await session.delete(apiUrl(`documents/${docId}/notes/${noteId}/`));

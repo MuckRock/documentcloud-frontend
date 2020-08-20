@@ -21,6 +21,7 @@
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
+  import simpleLinkSvg from "@/assets/simplelink.svg";
   import pencilSvg from "@/assets/pencil.svg";
 
   // Asynchronously load dompurify
@@ -35,6 +36,7 @@
 
   export let page;
   export let pageNote = false;
+  export let showImageOnPageNote = false;
   export let width;
   export let annotation;
   export let aspect;
@@ -93,6 +95,8 @@
       : y2 > $doc.docHeight - ANNOTATION_PADDING
       ? "up"
       : "none";
+
+  $: noteUrl = page.document.noteHashUrl(annotation);
 
   // Focus on title on mount
   let titleInput;
@@ -305,6 +309,10 @@
           box-shadow: inset 0 0 5px #000;
           box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 
+          &.nobottom {
+            bottom: 0;
+          }
+
           &.left {
             border-right: 1px solid #ddd;
             border-right: 1px solid rgba(221, 221, 221, 0.4);
@@ -444,6 +452,7 @@
       }
     }
 
+    .link,
     .pencil {
       @include buttonLike;
 
@@ -500,11 +509,19 @@
         margin-bottom: 0;
         margin-top: 0;
         padding-bottom: 8px;
+
+        &.showimage {
+          margin-bottom: 2px;
+        }
       }
 
       footer {
         margin-top: 0;
         margin-bottom: 0;
+
+        &.showimage {
+          margin-top: 8px;
+        }
       }
     }
   }
@@ -529,6 +546,7 @@
   <header
     bind:this={annotationElem}
     bind:offsetHeight={headerHeight}
+    class:showimage={showImageOnPageNote}
     class:hidden={shift == 'down'}>
     {#if !pageNote}
       <div class="closeflag">
@@ -547,9 +565,14 @@
       {:else}
         <h1>
           {annotation.title}
-          <span class="pencil" on:click={() => (editOverride = true)}>
-            {@html pencilSvg}
-          </span>
+          <a class="link" href={noteUrl}>
+            {@html simpleLinkSvg}
+          </a>
+          {#if page.document.editAccess}
+            <span class="pencil" on:click={() => (editOverride = true)}>
+              {@html pencilSvg}
+            </span>
+          {/if}
         </h1>
       {/if}
     </Loader>
@@ -557,10 +580,13 @@
   {#if shift == 'down'}
     <header />
   {/if}
-  {#if !pageNote}
+  {#if !pageNote || showImageOnPageNote}
     <div class="excerpt">
-      <div class="body">
-        <div style="margin-top: {-annotation.y1 * aspect * 100}%">
+      <div
+        class="body"
+        style={showImageOnPageNote ? `height: 0; padding-top: ${annotation.height * aspect * 100}%` : ''}>
+        <div
+          style="margin-top: {-annotation.y1 * aspect * 100 - (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%">
           <ProgressiveImage
             alt="Page {page.pageNumber + 1} of {page.document.title}"
             {width}
@@ -569,9 +595,11 @@
           <!-- Faded flanks -->
           <div
             class="faded left"
+            class:nobottom={showImageOnPageNote}
             style="left: 0; width: {annotation.x1 * 100}%" />
           <div
             class="faded right"
+            class:nobottom={showImageOnPageNote}
             style="left: {annotation.x2 * 100}%; right: 0" />
         </div>
       </div>
@@ -580,6 +608,7 @@
   <footer
     bind:offsetHeight={footerHeight}
     bind:offsetWidth={footerWidth}
+    class:showimage={showImageOnPageNote}
     class:capsize={pageNote && !editMode}>
     {#if shift == 'down'}
       <div class="closeflag">
@@ -598,9 +627,14 @@
         {:else}
           <h1>
             {annotation.title}
-            <span class="pencil" on:click={() => (editOverride = true)}>
-              {@html pencilSvg}
-            </span>
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <span class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </span>
+            {/if}
           </h1>
         {/if}
       </Loader>

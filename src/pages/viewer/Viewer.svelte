@@ -2,6 +2,7 @@
   import Header from "./header/Header";
   import Body from "./Body";
   import SimpleBody from "./SimpleBody";
+  import NoteBody from "./NoteBody";
   import TextBody from "./TextBody";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
@@ -17,10 +18,56 @@
   import Modal from "@/common/Modal";
   import ErrorModal from "@/common/ErrorModal";
   import Loader from "@/common/Loader";
-  import { layout, hideEmbedFlow, hideEditSections } from "@/viewer/layout";
-  import { doc } from "@/viewer/document";
+  import {
+    layout,
+    setViewerInitializeAction,
+    hideEmbedFlow,
+    hideEditSections
+  } from "@/viewer/layout";
+  import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
+  import { onMount, tick } from "svelte";
+
+  const navHandlers = [
+    [
+      /^#document\/p([0-9]+)\/*$/,
+      match => {
+        const pageNumber = parseInt(match[1]);
+        doc.jumpToPage(pageNumber - 1);
+      }
+    ],
+    [
+      /^#document\/p([0-9]+)\/a([0-9]+)\/*$/,
+      async match => {
+        const pageNumber = parseInt(match[1]);
+        const annotationId = match[2];
+
+        // Grab the appropriate annotation by id
+        const notes = viewer.notes.filter(x => x.id == annotationId);
+        if (notes.length == 1) {
+          // Show and scroll the annotation into view
+          // await tick();
+          await showAnnotation(notes[0], true);
+        } else {
+          // Annotation wasn't found: fall back to page number
+          await doc.jumpToPage(pageNumber - 1);
+        }
+      }
+    ]
+  ];
+
+  onMount(() => {
+    const hash = window.location.hash;
+    for (let i = 0; i < navHandlers.length; i++) {
+      const [regex, handler] = navHandlers[i];
+      const match = regex.exec(hash);
+      if (match != null) {
+        setViewerInitializeAction(() => handler(match));
+        return;
+      }
+    }
+  });
 </script>
 
 <svelte:head>
@@ -47,7 +94,7 @@
 {:else if $confirmDialog.open}
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
 {:else if $layout.showEmbedDialog}
-  <Modal fullscreen={true} component={EmbedDialog} on:close={hideEmbedFlow} />
+  <Modal component={EmbedDialog} on:close={hideEmbedFlow} />
 {:else if $layout.showEditSections}
   <Modal component={EditSectionsDialog} on:close={hideEditSections} />
 {/if}
@@ -71,6 +118,8 @@
       <Body mode={$doc.mode} />
     {:else if $doc.mode == 'text' || $doc.mode == 'search'}
       <SimpleBody />
+    {:else if $doc.mode == 'notes'}
+      <NoteBody />
     {/if}
     <Sidebar />
     <Footer />

@@ -16,6 +16,36 @@ services:
         aliases:
           - www.dev.documentcloud.org
 
+  documentcloud_frontend_app:
+    image: node:12
+    volumes:
+      - nodemodules:/app/node_modules
+      - .:/app
+    working_dir: /app
+    command: npm run dev-app
+    networks:
+      default:
+        aliases:
+          - www.dev.documentcloud.org
+      squarelet_default:
+        aliases:
+          - www.dev.documentcloud.org
+
+  documentcloud_frontend_embed:
+    image: node:12
+    volumes:
+      - nodemodules:/app/node_modules
+      - .:/app
+    working_dir: /app
+    command: npm run dev-embed
+    networks:
+      default:
+        aliases:
+          - www.dev.documentcloud.org
+      squarelet_default:
+        aliases:
+          - www.dev.documentcloud.org
+
   documentcloud_frontend_build:
     image: node:12
     volumes:
