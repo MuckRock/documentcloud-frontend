@@ -58,17 +58,22 @@ function initialize() {
 
 function setToken(key) {
   // Set the token state.
-  localStorage.setItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY, JSON.stringify(key));
-
-  // Set the default session header.
-  // session.defaults.headers.Authorization = `Token ${key}`;
+  try {
+    localStorage.setItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY, JSON.stringify(key));
+  } catch (e) {
+    // Ignore if local storage is not available
+  }
 
   auth.key = key;
 }
 
 function removeToken() {
-  localStorage.removeItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY);
-  // delete session.defaults.headers.Authorization;
+  try {
+    localStorage.removeItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY);
+  } catch (e) {
+    // Ignore if local storage is not available
+  }
+
   auth.key = null;
 }
 
