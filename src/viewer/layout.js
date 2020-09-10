@@ -1,5 +1,6 @@
 import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
+import { truthyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
 import { getDocument, redactDocument, searchDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
@@ -76,8 +77,15 @@ export const layout = new Svue({
       if (route != null && route.name != "viewer") {
         reset();
       } else if (route != null && route.name == "viewer") {
-        this.embed = route.props.embed == "1";
-        this.title = !this.embed || route.props.title == "1";
+        this.embed = truthyParamValue(route.props.embed);
+        this.title = !this.embed || truthyParamValue(route.props.title);
+        const sidebarValue = route.props.sidebar;
+        if (sidebarValue != null) {
+          this.showSidebar = truthyParamValue(sidebarValue);
+        } else if (this.embed) {
+          // Hide sidebar in embed mode by default unless explicitly set
+          this.showSidebar = false;
+        }
       }
     },
   },

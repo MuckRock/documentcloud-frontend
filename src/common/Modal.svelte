@@ -63,12 +63,18 @@
     display: table;
     pointer-events: none;
     -webkit-overflow-scrolling: touch;
+    .modal {
+      width: 60vw;
+    }
 
     .fullscreen & {
       top: 2.5vh;
       left: 2.5vw;
       height: 95vh;
       width: 95vw;
+      .modal {
+        width: 95vw;
+      }
     }
   }
 
@@ -128,6 +134,10 @@
       left: 0;
       height: 100%;
       width: 100vw;
+
+      .modal {
+        width: 100vw;
+      }
     }
   }
 

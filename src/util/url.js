@@ -113,3 +113,17 @@ export function queryBuilder(baseUrl, params, cleanSlate = false) {
 
   return `${url}${result}`;
 }
+
+// Return if a query parameter value is truthy
+export function truthyParamValue(value) {
+  if (value == null) return false;
+  const normalized = value.trim().toLowerCase();
+  return normalized == "1" || normalized == "true" || normalized == "yes";
+}
+
+// Return if a query parameter value is explicitly falsy (and not just null)
+export function falsyParamValue(value) {
+  if (value == null) return false;
+  const normalized = value.trim().toLowerCase();
+  return normalized == "0" || normalized == "false" || normalized == "no";
+}
