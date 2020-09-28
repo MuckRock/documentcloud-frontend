@@ -6,6 +6,7 @@
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
   import { textAreaResize } from "@/util/textareaResize";
+  import { languages } from "@/api/languages";
   import { slugify, extractSlugId } from "@/util/string";
   import { onMount } from "svelte";
 
@@ -358,118 +359,11 @@
     } else if (alias(fieldPre) == "language") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
-        [
-          {
-            type: "field",
-            text: "Arabic",
-            feed: "ara"
-          },
-          {
-            type: "field",
-            text: "Chinese (Simplified)",
-            feed: "zho"
-          },
-          {
-            type: "field",
-            text: "Chinese (Traditional)",
-            feed: "tra"
-          },
-          {
-            type: "field",
-            text: "Croatian",
-            feed: "hrv"
-          },
-          {
-            type: "field",
-            text: "Danish",
-            feed: "dan"
-          },
-          {
-            type: "field",
-            text: "Dutch",
-            feed: "nld"
-          },
-          {
-            type: "field",
-            text: "English",
-            feed: "eng"
-          },
-          {
-            type: "field",
-            text: "French",
-            feed: "fra"
-          },
-          {
-            type: "field",
-            text: "German",
-            feed: "deu"
-          },
-          {
-            type: "field",
-            text: "Hebrew",
-            feed: "heb"
-          },
-          {
-            type: "field",
-            text: "Hungarian",
-            feed: "hun"
-          },
-          {
-            type: "field",
-            text: "Indonesian",
-            feed: "ind"
-          },
-          {
-            type: "field",
-            text: "Italian",
-            feed: "ita"
-          },
-          {
-            type: "field",
-            text: "Japanese",
-            feed: "jpn"
-          },
-          {
-            type: "field",
-            text: "Korean",
-            feed: "kor"
-          },
-          {
-            type: "field",
-            text: "Norwegian",
-            feed: "nor"
-          },
-          {
-            type: "field",
-            text: "Portuguese",
-            feed: "por"
-          },
-          {
-            type: "field",
-            text: "Romanian",
-            feed: "ron"
-          },
-          {
-            type: "field",
-            text: "Russian",
-            feed: "rus"
-          },
-          {
-            type: "field",
-            text: "Spanish",
-            feed: "spa"
-          },
-          {
-            type: "field",
-            text: "Swedish",
-            feed: "swe"
-          },
-          {
-            type: "field",
-            text: "Ukrainian",
-            feed: "ukr"
-          }
-        ],
+        languages.map(x => ({
+          type: "field",
+          text: x[1],
+          feed: x[0]
+        })),
         fieldPost
       );
     } else if (alias(fieldPre) == "sort") {

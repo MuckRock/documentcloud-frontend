@@ -30,7 +30,7 @@
     right: 0;
     left: 0;
     box-sizing: border-box;
-    overflow: scroll;
+    overflow: auto;
     z-index: $viewerBodyZ;
     touch-action: manipulation;
     background: $viewerBodyBg;
