@@ -217,6 +217,8 @@ export async function pollDocument(
  * Uploads the specified documents, providing callbacks for progress updates
  * @param {Array<Document>} docs The documents to upload
  * @param {string} access The access level of the uploaded docs ("private", "organization", or "public")
+ * @param {string} language The language code of the uploaded docs
+ * @param {boolean} forceOcr If true, OCRs regardless of embedded text
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} allCompleteFn A function to call when all docs upload
  * @param {Function} errorFn A function to call when an error occurs
@@ -224,6 +226,8 @@ export async function pollDocument(
 export async function uploadDocuments(
   docs,
   access,
+  language,
+  forceOcr,
   progressFn,
   allCompleteFn,
   errorFn
@@ -248,7 +252,7 @@ export async function uploadDocuments(
       async (subDocs) => {
         const { data } = await session.post(
           apiUrl("documents/"),
-          subDocs.map((doc) => ({ title: doc.name, access }))
+          subDocs.map((doc) => ({ title: doc.name, access, language }))
         );
         return data;
       }
@@ -294,7 +298,7 @@ export async function uploadDocuments(
       async (subIds) =>
         await session.post(
           apiUrl(`documents/process/`),
-          subIds.map((id) => ({ id }))
+          subIds.map((id) => ({ id, force_ocr: forceOcr }))
         )
     );
   } catch (e) {

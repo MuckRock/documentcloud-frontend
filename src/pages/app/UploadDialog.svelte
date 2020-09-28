@@ -4,9 +4,11 @@
   import Button from "@/common/Button";
   import DropZone from "@/common/DropZone";
   import FilePicker from "@/common/FilePicker";
+  import UploadOptions from "@/common/UploadOptions";
   import AccessToggle from "@/common/AccessToggle";
 
   // API
+  import { defaultLanguage } from "@/api/languages";
   import { uploadDocuments } from "@/api/document";
   import { search } from "@/search/search";
   import { projects } from "@/manager/projects";
@@ -41,6 +43,8 @@
   let errorMessage = null;
 
   let access = "private";
+  let language = defaultLanguage;
+  let forceOcr = false;
 
   const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
   const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
@@ -114,6 +118,8 @@
     uploadDocuments(
       files,
       access,
+      language,
+      forceOcr,
       (index, progress) => {
         // Progress handler
         uploadFiles[index].progress = progress;
@@ -178,6 +184,23 @@
       font-size: 13px;
     }
   }
+
+  details {
+    margin: -5px 0 8px 0;
+
+    summary {
+      @include buttonLike;
+
+      outline: none;
+      color: $primary;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
 </style>
 
 <div>
@@ -205,6 +228,12 @@
           {/if}
         {/if}
         <div class="actions">
+          <details>
+            <summary>More options</summary>
+            <p>
+              <UploadOptions bind:language bind:forceOcr />
+            </p>
+          </details>
           {#if files.length > 0}
             <span class="padright">
               <Button on:click={upload}>Begin upload</Button>
