@@ -54,6 +54,6 @@
     bind:this={picker}
     class="picker"
     type="file"
-    accept="application/pdf"
     on:change={handleFiles} />
 </span>
+<!-- TODO: accept="application/pdf" -->

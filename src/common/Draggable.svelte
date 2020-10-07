@@ -9,7 +9,8 @@
   export let disabled = false;
 
   function filterFiles(files) {
-    files = Array.from(files).filter(f => f.type == "application/pdf");
+    // TODO: broadcast selectable types
+    // files = Array.from(files).filter(f => f.type == "application/pdf");
     return files;
   }
 
