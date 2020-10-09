@@ -121,7 +121,7 @@
       <div class="text">
         <div class="number">
           {#if $search.results.onlyPage}
-            {$search.results.count}
+            {$search.results.rawResults.results.length}
           {:else}
             <span class="range">
               {$search.results.start + 1} - {$search.results.end}

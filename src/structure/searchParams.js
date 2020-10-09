@@ -186,7 +186,7 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        getMethod(query, page, oneUserSearch, oneOrgSearch, oneProjectSearch, oneAccessSearch, isAllSearch) {
+        getMethod(query, page, oneUserSearch, oneProjectSearch, oneAccessSearch) {
           if (query == null) return null;  // Wait for redirect
           // Use search method
           if (page == 0) {
@@ -195,17 +195,11 @@ export class SearchParams extends Svue {
             if (oneUserSearch != null) {
               return [cachedFn, doc => doc.userId == oneUserSearch];
             }
-            if (oneOrgSearch != null) {
-              return [cachedFn, doc => doc.orgId == oneOrgSearch];
-            }
             if (oneProjectSearch != null) {
               return [cachedFn, doc => doc.projectIds.includes(oneProjectSearch)];
             }
             if (oneAccessSearch != null) {
               return [cachedFn, doc => doc.access == oneAccessSearch];
-            }
-            if (isAllSearch) {
-              return [cachedFn, _ => true];
             }
           }
 
