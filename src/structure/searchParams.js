@@ -1,6 +1,9 @@
 import { Svue } from "svue";
 import { searchDocuments } from "@/api/document";
+import { cacheAsync } from '@/util/cache';
 import { highlight } from "@/search/parse";
+
+const searchDocumentsCached = cacheAsync(searchDocuments);
 
 const GET_DOCUMENT_FIELDS = {
   "project:": {
@@ -183,10 +186,30 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        getMethod(query, page) {
+        getMethod(query, page, oneUserSearch, oneOrgSearch, oneProjectSearch, oneAccessSearch, isAllSearch) {
           if (query == null) return null;  // Wait for redirect
           // Use search method
-          return () => searchDocuments(query, page);
+          if (page == 0) {
+            // Investigate whether it's a cacheable search
+            const cachedFn = () => searchDocumentsCached(query, page);
+            if (oneUserSearch != null) {
+              return [cachedFn, doc => doc.userId == oneUserSearch];
+            }
+            if (oneOrgSearch != null) {
+              return [cachedFn, doc => doc.orgId == oneOrgSearch];
+            }
+            if (oneProjectSearch != null) {
+              return [cachedFn, doc => doc.projectIds.includes(oneProjectSearch)];
+            }
+            if (oneAccessSearch != null) {
+              return [cachedFn, doc => doc.access == oneAccessSearch];
+            }
+            if (isAllSearch) {
+              return [cachedFn, _ => true];
+            }
+          }
+
+          return [() => searchDocuments(query, page), null];
         }
       }
     });

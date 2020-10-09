@@ -21,7 +21,9 @@ import { router } from "@/router/router";
 import { search, handleUpload, setDocuments } from "@/search/search";
 import { pushToast } from "./toast";
 import { handlePlural } from "@/util/string";
-import { removeFromArray } from "@/util/array";
+import { removeFromArray, addToArrayIfUnique } from "@/util/array";
+import { modifications } from './modifications';
+import { docEquals, copyDoc } from '@/structure/document';
 
 let lastSelected = null;
 
@@ -122,7 +124,18 @@ function documentsInclude(documents, id) {
   return false;
 }
 
-function removeFromCollection(document) {
+const collectionModifiers = {
+  addToCollection,
+  removeFromCollection,
+  updateInCollection,
+};
+
+function removeFromCollection(document, modify = true) {
+  if (modify) {
+    // Track the modifications
+    modifications.remove(collectionModifiers, copyDoc(document));
+  }
+
   const newDocuments = documents.documents.filter(
     (doc) => doc.id != document.id
   );
@@ -136,28 +149,62 @@ function removeFromCollection(document) {
   if (newDocuments.length == 0) window.location.reload();
 }
 
-export function updateInCollection(document, docFn) {
+export function updateInCollection(document, docFn, modify = true) {
+  const oldDoc = copyDoc(document);
+  const newDoc = copyDoc(document);
+  docFn(newDoc);
+
+  if (modify) {
+    // Track the modifications
+    if (!docEquals(oldDoc, newDoc)) {
+      // Only track modifications if an actual update occurs
+      modifications.modify(collectionModifiers, oldDoc, docFn);
+    }
+  }
+
+  let modified = false;
   const newDocuments = documents.documents.map((doc) => {
     if (doc.id == document.id) {
       docFn(doc);
+      modified = true;
     }
     return doc;
   });
   const newProcessingDocuments = documents.processingDocumentsRaw.map((doc) => {
     if (doc.id == document.id) {
       docFn(doc);
+      modified = true;
     }
     return doc;
   });
 
   documents.processingDocumentsRaw = newProcessingDocuments;
   setDocuments(newDocuments);
+  return [modified, newDoc];
 }
 
 function replaceInCollection(document) {
   updateInCollection(document, (doc) => {
     doc.doc = document.doc;
   });
+}
+
+function addToCollection(newDocs, modify = true) {
+  if (modify) {
+    // Track the modifications
+    modifications.add(collectionModifiers, newDocs.map(x => copyDoc(x)));
+  }
+
+  const remainingDocs = [];
+  newDocs.forEach((newDoc) => {
+    if (documentsInclude(documents.allDocuments, newDoc.id)) {
+      replaceInCollection(newDoc);
+    } else {
+      remainingDocs.push(newDoc);
+    }
+  });
+
+  handleUpload(remainingDocs);
 }
 
 export function getIndex(document) {
@@ -171,8 +218,7 @@ export function removeDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Confirm delete",
-    `Proceeding will permanently delete the ${
-    documents.length == 1
+    `Proceeding will permanently delete the ${documents.length == 1
       ? "selected document"
       : `${documents.length} selected documents`
     }. Do you wish to continue?`,
@@ -191,8 +237,7 @@ export function reprocessDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Confirm reprocess",
-    `Proceeding will force the ${
-    documents.length == 1
+    `Proceeding will force the ${documents.length == 1
       ? "selected document"
       : `${documents.length} selected documents`
     } to reprocess page and image text. Do you wish to continue?`,
@@ -286,15 +331,7 @@ export async function removeDocumentData(documents, key, value) {
 
 export async function handleNewDocuments(ids, project = null) {
   const newDocs = await getDocumentsWithIds(ids, true);
-  const remainingDocs = [];
-  newDocs.forEach((newDoc) => {
-    if (documentsInclude(documents.allDocuments, newDoc)) {
-      replaceInCollection(newDoc);
-    } else {
-      remainingDocs.push(newDoc);
-    }
-  });
-  handleUpload(remainingDocs);
+  addToCollection(newDocs);
 
   if (project != null) {
     // Add docs to project if relevant
@@ -348,7 +385,7 @@ export async function addDocsToProject(project, documents, showToast = true) {
     documents.forEach((doc) =>
       updateInCollection(
         doc,
-        (d) => (d.doc = { ...d.doc, projects: [...d.projectIds, project.id] })
+        (d) => (d.doc = { ...d.doc, projects: addToArrayIfUnique(d.projectIds, project.id) })
       )
     );
   });
