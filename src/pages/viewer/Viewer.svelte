@@ -8,6 +8,7 @@
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
   import Toasts from "@/common/Toasts";
+  import { embedUrl } from "@/api/embed";
 
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
@@ -22,7 +23,7 @@
     layout,
     setViewerInitializeAction,
     hideEmbedFlow,
-    hideEditSections
+    hideEditSections,
   } from "@/viewer/layout";
   import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
@@ -32,19 +33,19 @@
   const navHandlers = [
     [
       /^#document\/p([0-9]+)\/*$/,
-      match => {
+      (match) => {
         const pageNumber = parseInt(match[1]);
         doc.jumpToPage(pageNumber - 1);
-      }
+      },
     ],
     [
       /^#document\/p([0-9]+)\/a([0-9]+)\/*$/,
-      async match => {
+      async (match) => {
         const pageNumber = parseInt(match[1]);
         const annotationId = match[2];
 
         // Grab the appropriate annotation by id
-        const notes = viewer.notes.filter(x => x.id == annotationId);
+        const notes = viewer.notes.filter((x) => x.id == annotationId);
         if (notes.length == 1) {
           // Show and scroll the annotation into view
           // await tick();
@@ -53,8 +54,8 @@
           // Annotation wasn't found: fall back to page number
           await doc.jumpToPage(pageNumber - 1);
         }
-      }
-    ]
+      },
+    ],
   ];
 
   onMount(() => {
@@ -80,6 +81,11 @@
     <meta property="og:url" content={$viewer.document.canonicalUrl} />
     <meta property="og:url" content={$viewer.document.canonicalUrl} />
     <meta property="og:title" content={$viewer.document.title} />
+    <link
+      rel="alternate"
+      type="application/json+oembed"
+      href={embedUrl($viewer.document.canonicalUrl)}
+      title={$viewer.document.title} />
     {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
       <meta property="og:description" content={$viewer.document.description} />
     {/if}
