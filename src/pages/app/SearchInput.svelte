@@ -1,5 +1,4 @@
 <script>
-  import Button from "@/common/Button";
   import NoWhitespace from "@/common/NoWhitespace";
   import emitter from "@/emit";
   import { highlight } from "@/search/parse";
@@ -7,7 +6,12 @@
   import { projects } from "@/manager/projects";
   import { textAreaResize } from "@/util/textareaResize";
   import { languages } from "@/api/languages";
-  import { slugify, extractSlugId } from "@/util/string";
+  import {
+    autocompleteOrganizations,
+    autocompleteUsers,
+  } from "@/api/orgAndUser";
+  import { slugify, extractSlugId, isNumber } from "@/util/string";
+  import { timeoutify } from "@/util/closure";
   import { onMount } from "svelte";
 
   // SVG assets
@@ -18,7 +22,7 @@
     projects: "project",
     account: "user",
     group: "organization",
-    order: "sort"
+    order: "sort",
   };
 
   function alias(field) {
@@ -27,7 +31,7 @@
   }
 
   const emit = emitter({
-    search() {}
+    search() {},
   });
 
   export let value = "";
@@ -43,7 +47,7 @@
       input.dispatchEvent(
         new Event("input", {
           bubbles: true,
-          target: input
+          target: input,
         })
       );
     }
@@ -56,9 +60,69 @@
 
   let selectionStart = null;
   let selectionEnd = null;
-  let focused = false;
 
   let completions = [];
+
+  const COMPLETION_LATENCY = 100;
+
+  const completionCache = {};
+
+  const asyncComplete = timeoutify((type, fieldPost) => {
+    const key = `${type}-${fieldPost}`;
+    if (completionCache[key] != null) {
+      const results = completionCache[key];
+      completions = completionFilter(
+        results.map((org) => {
+          return {
+            type: "field",
+            text: org.name,
+            feed: slugify(org.name, org.id),
+          };
+        }),
+        fieldPost
+      );
+      return;
+    }
+
+    // Clear completions
+    completions = null;
+    if (type == "org") {
+      autocompleteOrganizations(fieldPost).then((results) => {
+        completionCache[key] = results;
+        completions = completionFilter(
+          results.map((org) => {
+            return {
+              type: "field",
+              text: org.name,
+              feed: slugify(org.name, org.id),
+            };
+          }),
+          fieldPost
+        );
+      });
+    } else if (type == "user") {
+      autocompleteUsers(fieldPost).then((results) => {
+        completionCache[key] = results;
+        const mappedUsers = [];
+        for (let i = 0; i < results.length; i++) {
+          const user = results[i];
+          const isMe = orgsAndUsers.me != null && user.id == orgsAndUsers.me.id;
+          const mappedUser = {
+            type: "field",
+            text: `${user.name}${isMe ? " (you)" : ""}`,
+            feed: slugify(user.name, user.id),
+          };
+          if (isMe) {
+            mappedUsers.unshift(mappedUser);
+          } else {
+            mappedUsers.push(mappedUser);
+          }
+        }
+
+        completions = completionFilter(mappedUsers, fieldPost);
+      });
+    }
+  }, COMPLETION_LATENCY);
 
   function processCompletions() {
     let count = 0;
@@ -73,24 +137,26 @@
     }
     return {
       completions,
-      count
+      count,
     };
   }
 
-  $: processedCompletions = processCompletions(completions);
+  $: processedCompletions =
+    completions == null ? null : processCompletions(completions);
 
   let completionIndex = null;
 
   $: selectedCompletion =
-    completionIndex == null || completions.length == 0
+    completionIndex == null || completions == null || completions.length == 0
       ? null
       : completions.filter(
-          completion => completion.index == completionIndex
+          (completion) => completion.index == completionIndex
         )[0];
 
   $: noCompletion =
     !selectionAtEnd ||
-    (selectedCompletion == null && completions.length == 0) ||
+    (selectedCompletion == null &&
+      (completions == null || completions.length == 0)) ||
     (fieldPost != null && fieldPost.length > 0);
   $: autocomplete = noCompletion
     ? ""
@@ -127,7 +193,6 @@
     selectionStart = input.selectionStart;
     selectionEnd = input.selectionEnd;
     if (selectionStart == null || selectionEnd == null) return;
-    focused = true;
   }
 
   // Selection properties
@@ -205,7 +270,7 @@
       const highlight = highlights[i];
       allChunks = allChunks.concat(
         highlight.type == "raw"
-          ? highlight.text.split(/( )/g).filter(x => x.length > 0)
+          ? highlight.text.split(/( )/g).filter((x) => x.length > 0)
           : [highlight.text]
       );
     }
@@ -250,50 +315,27 @@
     if (escPressed) {
       completions = [];
       escPressed = false;
-    } else if (alias(fieldPre) == "project") {
+    } else if (completions == null) {
+      // Skip this case (loading something async)
+    }
+    if (alias(fieldPre) == "project") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
-        $projects.projects.map(project => {
+        $projects.projects.map((project) => {
           return {
             type: "field",
             text: project.title,
-            feed: slugify(project.title, project.id)
+            feed: slugify(project.title, project.id),
           };
         }),
         fieldPost
       );
     } else if (alias(fieldPre) == "user") {
       setCompletionX(fieldPreIndex);
-
-      const mappedUsers = [];
-      for (let i = 0; i < $orgsAndUsers.allUsers.length; i++) {
-        const user = $orgsAndUsers.allUsers[i];
-        const isMe = orgsAndUsers.me != null && user.id == orgsAndUsers.me.id;
-        const mappedUser = {
-          type: "field",
-          text: `${user.name}${isMe ? " (you)" : ""}`,
-          feed: slugify(user.name, user.id)
-        };
-        if (isMe) {
-          mappedUsers.unshift(mappedUser);
-        } else {
-          mappedUsers.push(mappedUser);
-        }
-      }
-
-      completions = completionFilter(mappedUsers, fieldPost);
+      asyncComplete("user", fieldPost);
     } else if (alias(fieldPre) == "organization") {
       setCompletionX(fieldPreIndex);
-      completions = completionFilter(
-        $orgsAndUsers.organizations.map(org => {
-          return {
-            type: "field",
-            text: org.name,
-            feed: slugify(org.name, org.id)
-          };
-        }),
-        fieldPost
-      );
+      asyncComplete("org", fieldPost);
     } else if (alias(fieldPre) == "access") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
@@ -302,20 +344,20 @@
             type: "field",
             text: "public",
             info: "Publicly accessible documents",
-            feed: "public"
+            feed: "public",
           },
           {
             type: "field",
             text: "private",
             info: "Privately accessible documents",
-            feed: "private"
+            feed: "private",
           },
           {
             type: "field",
             text: "organization",
             info: "Accessible at the organization level",
-            feed: "organization"
-          }
+            feed: "organization",
+          },
         ],
         fieldPost
       );
@@ -327,42 +369,42 @@
             type: "field",
             text: "success",
             info: "Documents ready for viewing and publishing",
-            feed: "success"
+            feed: "success",
           },
           {
             type: "field",
             text: "readable",
             info: "Documents ready for reading but still processing text",
-            feed: "readable"
+            feed: "readable",
           },
           {
             type: "field",
             text: "pending",
             info: "Documents currently processing",
-            feed: "pending"
+            feed: "pending",
           },
           {
             type: "field",
             text: "error",
             info: "Documents with errors in preparation",
-            feed: "error"
+            feed: "error",
           },
           {
             type: "field",
             text: "nofile",
             info: "Documents that were not successfully uploaded",
-            feed: "nofile"
-          }
+            feed: "nofile",
+          },
         ],
         fieldPost
       );
     } else if (alias(fieldPre) == "language") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
-        languages.map(x => ({
+        languages.map((x) => ({
           type: "field",
           text: x[1],
-          feed: x[0]
+          feed: x[0],
         })),
         fieldPost
       );
@@ -374,56 +416,56 @@
             type: "field",
             text: "Created At (Descending)",
             info: "Most Recent First",
-            feed: "created_at"
+            feed: "created_at",
           },
           {
             type: "field",
             text: "Created At (Ascending)",
             info: "Oldest First",
-            feed: "-created_at"
+            feed: "-created_at",
           },
           {
             type: "field",
             text: "Title (Ascending)",
             info: "Document Title A-Z",
-            feed: "title"
+            feed: "title",
           },
           {
             type: "field",
             text: "Title (Descending)",
             info: "Document Title Z-A",
-            feed: "-title"
+            feed: "-title",
           },
           {
             type: "field",
             text: "Page Count (Descending)",
             info: "Most Pages First",
-            feed: "page_count"
+            feed: "page_count",
           },
           {
             type: "field",
             text: "Page Count (Ascending)",
             info: "Least Pages First",
-            feed: "-page_count"
+            feed: "-page_count",
           },
           {
             type: "field",
             text: "Source (Ascending)",
             info: "Document Source A-Z",
-            feed: "source"
+            feed: "source",
           },
           {
             type: "field",
             text: "Source (Descending)",
             info: "Document Source Z-A",
-            feed: "-source"
+            feed: "-source",
           },
           {
             type: "field",
             text: "Score",
             info: "Default Sort Option by Relevance",
-            feed: "score"
-          }
+            feed: "score",
+          },
         ],
         fieldPost
       );
@@ -431,7 +473,7 @@
       completions = [];
     }
 
-    if (completions.length > 0) {
+    if (completions != null && completions.length > 0) {
       completionIndex = 0;
     } else {
       completionIndex = null;
@@ -441,7 +483,6 @@
   function handleBlur() {
     handleCursor();
     completionIndex = null;
-    focused = false;
   }
 
   function handleKeyDown(e) {
@@ -464,7 +505,7 @@
     }
 
     if (e.key == "Escape") {
-      if (completions.length > 0) {
+      if (completions != null && completions.length > 0) {
         escPressed = true;
         e.preventDefault();
         return;
@@ -481,7 +522,7 @@
     handleCursor();
 
     // Prevent moving cursor to beginning/end
-    if (processedCompletions.count > 0)
+    if (processedCompletions != null)
       if (processedCompletions.count > 0) {
         if (e.key == "ArrowUp") {
           e.preventDefault();
@@ -528,23 +569,13 @@
     } else if (field == "user") {
       if (id == null) return { valid: false };
       if (example) return { valid: true, transform: `user:${id}` };
-      for (let i = 0; i < orgsAndUsers.allUsers.length; i++) {
-        const user = orgsAndUsers.allUsers[i];
-        if (user.id == id) {
-          return { valid: true, transform: `user:${id}` };
-        }
-      }
-      return { valid: false };
+      // IDs aren't checked for actual user, but will not return any useful results if not
+      return { valid: isNumber(id) };
     } else if (field == "organization") {
       if (id == null) return { valid: false };
       if (example) return { valid: true, transform: `organization:${id}` };
-      for (let i = 0; i < orgsAndUsers.organizations.length; i++) {
-        const org = orgsAndUsers.organizations[i];
-        if (org.id == id) {
-          return { valid: true, transform: `organization:${id}` };
-        }
-      }
-      return { valid: false };
+      // IDs aren't checked for actual org, but will not return any useful results if not
+      return { valid: isNumber(id) };
     } else {
       return { valid: true };
     }
@@ -563,7 +594,7 @@
   $: highlights = ensureValidity(highlight(value), $projects, $orgsAndUsers);
   export let transformedQuery;
   $: transformedQuery = highlights
-    .map(x => (x.transform != null ? x.transform : x.text))
+    .map((x) => (x.transform != null ? x.transform : x.text))
     .join("");
 
   onMount(() => {
@@ -811,31 +842,21 @@
         </span>
       {:else if highlight.type == 'quote'}
         <span class="quote">
-          <NoWhitespace>
-            <span>{highlight.text}</span>
-          </NoWhitespace>
+          <NoWhitespace><span>{highlight.text}</span></NoWhitespace>
         </span>
       {:else if highlight.type == 'operator'}
         <span class="operator">
-          <NoWhitespace>
-            <b>{highlight.text}</b>
-          </NoWhitespace>
+          <NoWhitespace><b>{highlight.text}</b></NoWhitespace>
         </span>
       {:else}
         {#each highlight.text.split(/( )/g) as rawText}
           <!-- Split raw text by space to avoid line-break issues -->
-          {#if rawText != ''}
-            <span>
-              <span>{rawText}</span>
-            </span>
-          {/if}
+          {#if rawText != ''}<span> <span>{rawText}</span> </span>{/if}
         {/each}
       {/if}
     {/each}
     {#if autocomplete.length > 0}
-      <span class="autocomplete">
-        <span>{autocomplete}</span>
-      </span>
+      <span class="autocomplete"> <span>{autocomplete}</span> </span>
     {/if}
   </div>
   {#if !example && value.length != 0}
@@ -845,36 +866,39 @@
   {/if}
   <div class="tagbank" style={completionX}>
     <div class="completions">
-      {#each processedCompletions.completions as completion}
-        <div
-          class="completion"
-          class:active={completionIndex != null && completionIndex == completion.index}
-          on:mouseover={() => {
-            if (completion.index != null) completionIndex = completion.index;
-          }}
-          on:mouseout={() => {
-            if (completion.index != null) completionIndex = null;
-          }}
-          on:mousedown|preventDefault={() => triggerCompletion(completion, fieldPost != null ? fieldPost.length : 0)}
-          class:groupstart={completion.type == 'groupstart'}>
+      {#if processedCompletions == null}
+        <!-- Completions are loading -->
+        <div class="completion loading">Loading...</div>
+      {:else}
+        {#each processedCompletions.completions as completion}
           <div
-            class:negative={completion.score != null && completion.score < 0}>
-            <div>
-              <!-- Highlight completion letters -->
-              {#each completion.text as letter, i}
-                {#if completion.highlightLetters != null && completion.highlightLetters.includes(i)}
-                  <b>{letter}</b>
-                {:else}
-                  <span>{letter}</span>
-                {/if}
-              {/each}
+            class="completion"
+            class:active={completionIndex != null && completionIndex == completion.index}
+            on:mouseover={() => {
+              if (completion.index != null) completionIndex = completion.index;
+            }}
+            on:mouseout={() => {
+              if (completion.index != null) completionIndex = null;
+            }}
+            on:mousedown|preventDefault={() => triggerCompletion(completion, fieldPost != null ? fieldPost.length : 0)}
+            class:groupstart={completion.type == 'groupstart'}>
+            <div
+              class:negative={completion.score != null && completion.score < 0}>
+              <div>
+                <!-- Highlight completion letters -->
+                {#each completion.text as letter, i}
+                  {#if completion.highlightLetters != null && completion.highlightLetters.includes(i)}
+                    <b>{letter}</b>
+                  {:else}<span>{letter}</span>{/if}
+                {/each}
+              </div>
             </div>
+            {#if completion.info != null}
+              <div class="info">{completion.info}</div>
+            {/if}
           </div>
-          {#if completion.info != null}
-            <div class="info">{completion.info}</div>
-          {/if}
-        </div>
-      {/each}
+        {/each}
+      {/if}
     </div>
   </div>
 </div>

@@ -19,8 +19,6 @@ export const orgsAndUsers = new Svue({
   data() {
     return {
       me: null,
-      allOrganizations: [],
-      organizationUsers: [],
       projects,
       router,
     };
@@ -41,27 +39,12 @@ export const orgsAndUsers = new Svue({
         }
       } else {
         this.me = null;
-        this.allOrganizations = [];
         this.users = [];
       }
       previousRouteName = route == null ? null : route.name;
     },
   },
   computed: {
-    allUsers(projects, organizationUsers) {
-      return uniquify([...projects.projectUsers, ...organizationUsers]);
-    },
-    organizations(allOrganizations) {
-      return allOrganizations.filter((org) => !org.individual);
-    },
-    orgsById(allOrganizations) {
-      const results = {};
-      for (let i = 0; i < allOrganizations.length; i++) {
-        const organization = allOrganizations[i];
-        results[organization.id] = organization;
-      }
-      return results;
-    },
     loggedIn(me) {
       return me != null;
     },
@@ -96,13 +79,7 @@ async function getSelfUser() {
 }
 
 async function initOrgsAndUsers() {
-  getSelfUser();
-
-  // Get non-individual organizations
-  orgsAndUsers.allOrganizations = await getOrganizations();
-
-  const orgIds = orgsAndUsers.organizations.map((proj) => proj.id);
-  orgsAndUsers.organizationUsers = await getUsers({ orgIds });
+  await getSelfUser();
 }
 
 export async function changeActive(org) {

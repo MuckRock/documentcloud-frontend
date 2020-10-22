@@ -61,29 +61,31 @@
         ) {
           newTitle = `Your ${access}Documents`;
         } else {
-          const users = $orgsAndUsers.allUsers.filter(
-            user => user.id == $search.params.oneUserSearch
-          );
-          if (users.length > 0) {
-            newTitle = `${users[0].name}’s ${access}Documents`;
-          }
+          // SEARCH CHECK
+          // const users = $orgsAndUsers.allUsers.filter(
+          //   (user) => user.id == $search.params.oneUserSearch
+          // );
+          // if (users.length > 0) {
+          //   newTitle = `${users[0].name}’s ${access}Documents`;
+          // }
         }
       } else if ($search.params.oneProjectSearch != null) {
         // Show title based on a single project search
         const projects = $projects.projects.filter(
-          project => project.id == $search.params.oneProjectSearch
+          (project) => project.id == $search.params.oneProjectSearch
         );
         if (projects.length > 0) {
           newTitle = projects[0].title;
         }
       } else if ($search.params.oneOrgSearch != null) {
         // Show title based on a single organization search
-        const organizations = $orgsAndUsers.organizations.filter(
-          org => org.id == $search.params.oneOrgSearch
-        );
-        if (organizations.length > 0) {
-          newTitle = `${organizations[0].name}’s ${access}Documents`;
-        }
+        // SEARCH CHECK
+        // const organizations = $orgsAndUsers.organizations.filter(
+        //   (org) => org.id == $search.params.oneOrgSearch
+        // );
+        // if (organizations.length > 0) {
+        //   newTitle = `${organizations[0].name}’s ${access}Documents`;
+        // }
       } else if ($search.params.isAllSearch) {
         newTitle = `All ${access}Documents`;
       }

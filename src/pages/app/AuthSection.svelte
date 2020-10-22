@@ -11,6 +11,7 @@
     const results = [];
     for (let i = 0; i < ids.length; i++) {
       const id = ids[i];
+      // SEARCH CHECK
       const org = orgsAndUsers.orgsById[id];
       if (org != null) results.push(org);
     }
@@ -32,8 +33,10 @@
   $: me = $orgsAndUsers.me;
   $: individual = me != null && me.organization.individual;
   $: currentOrg = me == null ? null : me.organization;
-  $: orgs = me == null ? [] : transformOrgIds(me.organizations);
-  $: individualOrg = pickOne(orgs.filter(org => org.individual));
+  $: console.log(me == null ? null : me.organizations);
+  $: orgs = [];
+  // $: orgs = me == null ? [] : transformOrgIds(me.organizations);
+  $: individualOrg = pickOne(orgs.filter((org) => org.individual));
 </script>
 
 <style lang="scss">
@@ -63,10 +66,7 @@
   <span class="dot">·</span>
   <Dropdown fixed={true}>
     <span class="action" slot="title">
-      <span class="nowrap title">
-        Help
-        <span class="dropper">▼</span>
-      </span>
+      <span class="nowrap title"> Help <span class="dropper">▼</span> </span>
     </span>
     <Menu>
       <Link toUrl="/help/search" color={true}>
@@ -109,16 +109,11 @@
           {#if individualOrg == null || org.id != individualOrg.id}
             <MenuItem on:click={() => change(org)}>
               {org.name}
-              {#if org.id == currentOrg.id}
-                <span class="scope">✓</span>
-              {/if}
+              {#if org.id == currentOrg.id}<span class="scope">✓</span>{/if}
             </MenuItem>
           {/if}
         {/each}
       </Menu>
-
     </Dropdown>
-  {:else}
-    <a href={SIGN_IN_URL}>Sign in</a>
-  {/if}
+  {:else}<a href={SIGN_IN_URL}>Sign in</a>{/if}
 </div>

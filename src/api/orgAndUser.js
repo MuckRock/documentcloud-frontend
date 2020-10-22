@@ -42,3 +42,13 @@ export async function getUsers({ projectIds, orgIds }, expand = USER_EXPAND) {
   const users = await grabAllPages(queryBuilder(apiUrl(`users/`), query));
   return users;
 }
+
+export async function autocompleteOrganizations(prefix = '', individual = false) {
+  const { data } = await session.get(queryBuilder(apiUrl('organizations/'), { name__istartswith: prefix, individual }));
+  return data.results;
+}
+
+export async function autocompleteUsers(prefix = '') {
+  const { data } = await session.get(queryBuilder(apiUrl('users/'), { name__istartswith: prefix }));
+  return data.results;
+}
