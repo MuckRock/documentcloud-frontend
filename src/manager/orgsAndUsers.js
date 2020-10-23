@@ -56,16 +56,19 @@ export const orgsAndUsers = new Svue({
 
 async function initOrgsAndUsers() {
   orgsAndUsers.me = await getMe();
-  orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
-  orgsAndUsers.selfOrgs = await getOrganizationsByIds(orgsAndUsers.me.organizations);
-  for (let i = 0; i < orgsAndUsers.selfOrgs.length; i++) {
-    const org = orgsAndUsers.selfOrgs[i];
-    await getOrganization(org.id);
-    orgsAndUsers.orgsById[org.id] = org;
+  if (orgsAndUsers.me != null) {
+    // Logged in
+    orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
+    orgsAndUsers.selfOrgs = await getOrganizationsByIds(orgsAndUsers.me.organizations);
+    for (let i = 0; i < orgsAndUsers.selfOrgs.length; i++) {
+      const org = orgsAndUsers.selfOrgs[i];
+      await getOrganization(org.id);
+      orgsAndUsers.orgsById[org.id] = org;
+    }
+    // Trigger update
+    orgsAndUsers.usersById = orgsAndUsers.usersById;
+    orgsAndUsers.orgsById = orgsAndUsers.orgsById;
   }
-  // Trigger update
-  orgsAndUsers.usersById = orgsAndUsers.usersById;
-  orgsAndUsers.orgsById = orgsAndUsers.orgsById;
 
   if (router.resolvedRoute.name == "app") {
     // Push self search route if no search params are set in app
