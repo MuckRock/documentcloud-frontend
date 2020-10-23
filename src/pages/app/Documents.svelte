@@ -19,7 +19,11 @@
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
   import { search } from "@/search/search";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import {
+    orgsAndUsers,
+    getUserById,
+    getOrgById,
+  } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
   import { titlecase } from "@/util/string";
 
@@ -61,31 +65,30 @@
         ) {
           newTitle = `Your ${access}Documents`;
         } else {
-          // SEARCH CHECK
-          // const users = $orgsAndUsers.allUsers.filter(
-          //   (user) => user.id == $search.params.oneUserSearch
-          // );
-          // if (users.length > 0) {
-          //   newTitle = `${users[0].name}’s ${access}Documents`;
-          // }
+          // Show title based on a single user search
+          const user = $orgsAndUsers.usersById[$search.params.oneUserSearch];
+          if (user != null) {
+            newTitle = `${user.name}’s ${access}Documents`;
+          } else {
+            getUserById($search.params.oneUserSearch);
+          }
         }
       } else if ($search.params.oneProjectSearch != null) {
         // Show title based on a single project search
-        const projects = $projects.projects.filter(
+        const projs = $projects.projects.filter(
           (project) => project.id == $search.params.oneProjectSearch
         );
-        if (projects.length > 0) {
-          newTitle = projects[0].title;
+        if (projs.length > 0) {
+          newTitle = projs[0].title;
         }
       } else if ($search.params.oneOrgSearch != null) {
-        // Show title based on a single organization search
-        // SEARCH CHECK
-        // const organizations = $orgsAndUsers.organizations.filter(
-        //   (org) => org.id == $search.params.oneOrgSearch
-        // );
-        // if (organizations.length > 0) {
-        //   newTitle = `${organizations[0].name}’s ${access}Documents`;
-        // }
+        // Show title based on a single user search
+        const org = $orgsAndUsers.orgsById[$search.params.oneOrgSearch];
+        if (org != null) {
+          newTitle = `${org.name}’s ${access}Documents`;
+        } else {
+          getOrgById($search.params.oneOrgSearch);
+        }
       } else if ($search.params.isAllSearch) {
         newTitle = `All ${access}Documents`;
       }

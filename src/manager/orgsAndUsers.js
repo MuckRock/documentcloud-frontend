@@ -1,13 +1,13 @@
 import { Svue } from "svue";
 import { router, pushUrl, nav } from "@/router/router";
 import {
-  getOrganizations,
-  getUsers,
   getMe,
   changeActiveOrg,
+  getOrganizationsByIds,
+  getUser,
+  getOrganization
 } from "@/api/orgAndUser";
 import { projects, initProjects } from "./projects";
-import { uniquify } from "@/util/array";
 import { userUrl, allDocumentsUrl } from "@/search/search";
 import { layout } from "@/manager/layout";
 import { wrapLoad } from "@/util/wrapLoad";
@@ -19,6 +19,9 @@ export const orgsAndUsers = new Svue({
   data() {
     return {
       me: null,
+      selfOrgs: null,
+      usersById: {},
+      orgsById: {},
       projects,
       router,
     };
@@ -51,8 +54,19 @@ export const orgsAndUsers = new Svue({
   },
 });
 
-async function getSelfUser() {
+async function initOrgsAndUsers() {
   orgsAndUsers.me = await getMe();
+  orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
+  orgsAndUsers.selfOrgs = await getOrganizationsByIds(orgsAndUsers.me.organizations);
+  for (let i = 0; i < orgsAndUsers.selfOrgs.length; i++) {
+    const org = orgsAndUsers.selfOrgs[i];
+    await getOrganization(org.id);
+    orgsAndUsers.orgsById[org.id] = org;
+  }
+  // Trigger update
+  orgsAndUsers.usersById = orgsAndUsers.usersById;
+  orgsAndUsers.orgsById = orgsAndUsers.orgsById;
+
   if (router.resolvedRoute.name == "app") {
     // Push self search route if no search params are set in app
     const routeProps = router.resolvedRoute.props;
@@ -78,8 +92,28 @@ async function getSelfUser() {
   }
 }
 
-async function initOrgsAndUsers() {
-  await getSelfUser();
+export async function getUserById(id) {
+  try {
+    const user = await getUser(id);
+    orgsAndUsers.usersById[user.id] = user;
+    // Trigger update
+    orgsAndUsers.usersById = orgsAndUsers.usersById;
+    return user;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function getOrgById(id) {
+  try {
+    const org = await getOrganization(id);
+    orgsAndUsers.orgsById[org.id] = org;
+    // Trigger update
+    orgsAndUsers.orgsById = orgsAndUsers.orgsById;
+    return org;
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function changeActive(org) {

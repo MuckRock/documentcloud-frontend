@@ -7,17 +7,6 @@
   import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
   import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
 
-  function transformOrgIds(ids) {
-    const results = [];
-    for (let i = 0; i < ids.length; i++) {
-      const id = ids[i];
-      // SEARCH CHECK
-      const org = orgsAndUsers.orgsById[id];
-      if (org != null) results.push(org);
-    }
-    return results;
-  }
-
   function pickOne(list) {
     if (list == null) return null;
     if (list.length != 1) return null;
@@ -33,9 +22,7 @@
   $: me = $orgsAndUsers.me;
   $: individual = me != null && me.organization.individual;
   $: currentOrg = me == null ? null : me.organization;
-  $: console.log(me == null ? null : me.organizations);
-  $: orgs = [];
-  // $: orgs = me == null ? [] : transformOrgIds(me.organizations);
+  $: orgs = $orgsAndUsers.selfOrgs == null ? [] : $orgsAndUsers.selfOrgs;
   $: individualOrg = pickOne(orgs.filter((org) => org.individual));
 </script>
 
