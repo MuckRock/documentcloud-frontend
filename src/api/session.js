@@ -3,10 +3,17 @@ import axios from "axios";
 const CSRF_COOKIE_NAME = "csrftoken";
 const CSRF_HEADER_NAME = "X-CSRFToken";
 
+export let cookiesEnabled = false;
+try {
+  document.cookie;
+  cookiesEnabled = true;
+} catch (e) {
+}
+
 const session = axios.create({
   xsrfCookieName: CSRF_COOKIE_NAME,
   xsrfHeaderName: CSRF_HEADER_NAME,
-  withCredentials: true,
+  withCredentials: cookiesEnabled,
   headers: {
     "X-Requested-With": "XMLHttpRequest"
   }
