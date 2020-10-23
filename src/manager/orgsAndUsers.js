@@ -38,7 +38,7 @@ export const orgsAndUsers = new Svue({
         (route.name == "home" || route.name == "default")
       ) {
         if (previousRouteName != "home" && previousRouteName != "default") {
-          getSelfUser();
+          initOrgsAndUsers();
         }
       } else {
         this.me = null;
