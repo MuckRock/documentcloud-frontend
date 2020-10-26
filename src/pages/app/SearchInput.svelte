@@ -141,29 +141,6 @@
     };
   }
 
-  $: processedCompletions =
-    completions == null ? null : processCompletions(completions);
-
-  let completionIndex = null;
-
-  $: selectedCompletion =
-    completionIndex == null || completions == null || completions.length == 0
-      ? null
-      : completions.filter(
-          (completion) => completion.index == completionIndex
-        )[0];
-
-  $: noCompletion =
-    !selectionAtEnd ||
-    (selectedCompletion == null &&
-      (completions == null || completions.length == 0)) ||
-    (fieldPost != null && fieldPost.length > 0);
-  $: autocomplete = noCompletion
-    ? ""
-    : selectedCompletion == null
-    ? completions[0].feed
-    : selectedCompletion.feed;
-
   function triggerCompletion(completion, deleteChars = 0) {
     if (
       completion.feed != null &&
@@ -317,8 +294,7 @@
       escPressed = false;
     } else if (completions == null) {
       // Skip this case (loading something async)
-    }
-    if (alias(fieldPre) == "project") {
+    } else if (alias(fieldPre) == "project") {
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $projects.projects.map((project) => {
@@ -481,8 +457,38 @@
   }
 
   $: {
-    setupCompletions(fieldPre, fieldPost);
+    setupCompletions(
+      fieldPre,
+      fieldPost,
+      fieldPreIndex,
+      searchPre,
+      searchPost,
+      escPressed
+    );
   }
+
+  let completionIndex = null;
+
+  $: selectedCompletion =
+    completionIndex == null || completions == null || completions.length == 0
+      ? null
+      : completions.filter(
+          (completion) => completion.index == completionIndex
+        )[0];
+
+  $: noCompletion =
+    !selectionAtEnd ||
+    (selectedCompletion == null &&
+      (completions == null || completions.length == 0)) ||
+    (fieldPost != null && fieldPost.length > 0);
+  $: autocomplete = noCompletion
+    ? ""
+    : selectedCompletion == null
+    ? completions[0].feed
+    : selectedCompletion.feed;
+
+  $: processedCompletions =
+    completions == null ? null : processCompletions(completions);
 
   function handleBlur() {
     handleCursor();
