@@ -311,7 +311,7 @@
 
   let escPressed = false;
 
-  $: {
+  function setupCompletions() {
     if (escPressed) {
       completions = [];
       escPressed = false;
@@ -478,6 +478,10 @@
     } else {
       completionIndex = null;
     }
+  }
+
+  $: {
+    setupCompletions(fieldPre, fieldPost);
   }
 
   function handleBlur() {
