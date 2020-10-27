@@ -20,8 +20,11 @@ class Modifications {
   applyModifications() {
     // Add documents in (according to filter)
     this.adds.forEach(([modifiers, adds]) => {
-      // Add documents in that were added
-      modifiers.addToCollection(adds, false);
+      // Add documents in that were added and not modified
+      const unmodified = adds.filter(doc => {
+        return this.modifies.filter(modifier => modifier[1].id == doc.id).length == 0
+      });
+      modifiers.addToCollection(unmodified, false);
     });
 
     // Modify documents

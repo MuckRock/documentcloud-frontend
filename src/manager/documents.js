@@ -26,14 +26,16 @@ import { modifications } from './modifications';
 import { docEquals, copyDoc } from '@/structure/document';
 
 let lastSelected = null;
+const PROCESSING_CHANGE_TIMEOUT = 500;
 
 export const documents = new Svue({
   data() {
     return {
-      processingDocumentsRaw: [],
       router,
       search,
       hasInited: false,
+      processingChangeTimeout: null,
+      doneProcessing: true,
     };
   },
   watch: {
@@ -47,40 +49,53 @@ export const documents = new Svue({
         }
       }
     },
+    rawDoneProcessing() {
+      if (this.processingChangeTimeout != null) {
+        clearTimeout(this.processingChangeTimeout);
+        this.processingChangeTimeout = null;
+      }
+      this.processingChangeTimeout = setTimeout(() => {
+        this.doneProcessing = this.rawDoneProcessing;
+        this.processingChangeTimeout = null;
+      }, PROCESSING_CHANGE_TIMEOUT);
+    },
   },
   computed: {
-    documents(search) {
+    allDocuments(search) {
       return search.documents;
     },
     error(search) {
       return search.error;
     },
-    allDocuments(documents, processingDocumentsRaw) {
-      const processingExclusive = processingDocumentsRaw.filter(
-        (doc) => !documentsInclude(documents, doc.id)
-      );
-      return [...documents, ...processingExclusive];
+    docsById(allDocuments) {
+      const results = {};
+      allDocuments.forEach(doc => results[doc.id] = doc);
+      return results;
     },
-    processingDocuments(processingDocumentsRaw, documents) {
+    documents(allDocuments) {
+      // Show all documents
+      return allDocuments;
+    },
+    processingDocuments(allDocuments) {
       return getDocumentsByCondition(
         (doc) => doc.pending,
-        processingDocumentsRaw,
-        documents
+        allDocuments
       );
     },
-    updatingDocuments(processingDocumentsRaw, documents) {
+    updatingDocuments(documents) {
       return getDocumentsByCondition(
         (doc) => doc.readable,
-        processingDocumentsRaw,
         documents
       );
     },
     numProcessing(processingDocuments) {
       return processingDocuments.length;
     },
-    doneProcessing(processingDocuments) {
+    rawDoneProcessing(processingDocuments) {
+      // Wait a second before modulating value
       return processingDocuments.length == 0;
     },
+
     processingProgress(processingDocuments) {
       if (processingDocuments.length == 0) return 1;
 
@@ -109,14 +124,8 @@ export const documents = new Svue({
   },
 });
 
-function getDocumentsByCondition(condition, processingDocumentsRaw, documents) {
-  const docsFromProcessing = processingDocumentsRaw.filter((doc) =>
-    condition(doc)
-  );
-  const docsFromPrimary = documents.filter(
-    (doc) => condition(doc) && !documentsInclude(docsFromProcessing, doc.id)
-  );
-  return [...docsFromProcessing, ...docsFromPrimary];
+function getDocumentsByCondition(condition, documents) {
+  return documents.filter(condition);
 }
 
 function documentsInclude(documents, id) {
@@ -138,25 +147,30 @@ function removeFromCollection(document, modify = true) {
     modifications.remove(collectionModifiers, copyDoc(document));
   }
 
-  const newDocuments = documents.documents.filter(
-    (doc) => doc.id != document.id
-  );
-  const newProcessingDocuments = documents.processingDocumentsRaw.filter(
+  const newDocuments = documents.allDocuments.filter(
     (doc) => doc.id != document.id
   );
   setDocuments(newDocuments);
-  documents.processingDocumentsRaw = newProcessingDocuments;
 
   // Refresh when you delete everything to pull new search
   if (newDocuments.length == 0) window.location.reload();
 }
 
 export function updateInCollection(document, docFn, modify = true) {
-  const oldDoc = copyDoc(document);
-  const newDoc = copyDoc(document);
-  docFn(newDoc);
+  let modified = false;
+  let oldDoc = null;
+  let newDoc = null;
+  const newDocuments = documents.allDocuments.map((doc) => {
+    if (doc.id == document.id) {
+      oldDoc = copyDoc(doc);
+      docFn(doc);
+      modified = true;
+      newDoc = copyDoc(doc);
+    }
+    return doc;
+  });
 
-  if (modify) {
+  if (modify && modified) {
     // Track the modifications
     if (!docEquals(oldDoc, newDoc)) {
       // Only track modifications if an actual update occurs
@@ -164,23 +178,6 @@ export function updateInCollection(document, docFn, modify = true) {
     }
   }
 
-  let modified = false;
-  const newDocuments = documents.documents.map((doc) => {
-    if (doc.id == document.id) {
-      docFn(doc);
-      modified = true;
-    }
-    return doc;
-  });
-  const newProcessingDocuments = documents.processingDocumentsRaw.map((doc) => {
-    if (doc.id == document.id) {
-      docFn(doc);
-      modified = true;
-    }
-    return doc;
-  });
-
-  documents.processingDocumentsRaw = newProcessingDocuments;
   setDocuments(newDocuments);
   return [modified, newDoc];
 }
@@ -373,7 +370,8 @@ export async function initDocuments() {
     search,
     () => getDocuments({ status: PENDING }) // disregard pagination of processing docs (only show first 25)
   );
-  documents.processingDocumentsRaw = results.results;
+  const exclusive = results.results.filter(doc => !documentsInclude(search.documents, doc.id));
+  setDocuments([...search.documents, ...exclusive]);
 }
 
 export async function addDocsToProject(project, documents, showToast = true) {

@@ -32,7 +32,7 @@ export const search = new Svue({
       return results.results;
     },
     hasResults(results) {
-      return results != null;
+      return results != null && results.results != null;
     }
   }
 });
@@ -60,11 +60,12 @@ function filterDocuments(filter) {
 }
 
 export function setDocuments(documents) {
-  search.results.rawResults = {
-    ...search.results.rawResults,
+  const results = search.results == null ? {} : search.results;
+  results.rawResults = {
+    ...(results.rawResults == null ? {} : results.rawResults),
     results: documents
   };
-  search.results = search.results;
+  search.results = results;
 }
 
 export function handleUpload(newDocs) {
