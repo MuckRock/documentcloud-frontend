@@ -8,7 +8,6 @@
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { changeAccess } from "@/api/document";
   import { enterSelectNoteMode } from "@/viewer/actions";
-  import emitter from "@/emit";
 
   // Stores
   import { viewer } from "@/viewer/viewer";
@@ -21,23 +20,18 @@
   import sharePageSvg from "@/assets/share_page.svg";
   import shareNoteSvg from "@/assets/share_note.svg";
 
-  const emit = emitter({
-    close() {}
-  });
-
   let loading = writable(false);
-  let firstStep = true;
   let skipPublic = false;
   let shareHover = null;
   let shareOption = null;
-  $: hasNotes = $layout.embedDocument.notes.length > 0;
+  $: hasNotes = $viewer.notes != null && $viewer.notes.length > 0;
 
   async function makePublic() {
     await wrapLoadSeparate(loading, layout, async () => {
       await changeAccess([layout.embedDocument.id], "public");
       layout.embedDocument.doc = {
         ...layout.embedDocument.doc,
-        status: "readable"
+        status: "readable",
       };
       layout.embedDocument = layout.embedDocument;
       if (layout.embedContext == "viewer") {
@@ -156,7 +150,10 @@
 
   .faded {
     pointer-events: none;
-    opacity: 0.2;
+
+    > :global(*) {
+      opacity: 0.2;
+    }
   }
 </style>
 

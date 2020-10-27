@@ -16,6 +16,10 @@
   }
 </style>
 
+<svelte:head>
+  <title>DocumentCloud</title>
+</svelte:head>
+
 <HomeTemplate showMast="true">
   <p>
     DocumentCloud is an all-in-one platform for documents: upload, organize,

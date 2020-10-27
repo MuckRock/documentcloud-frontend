@@ -6,7 +6,7 @@
   import {
     enterRedactMode,
     enterAnnotateMode,
-    enterSectionsMode
+    enterSectionsMode,
   } from "@/viewer/actions";
   import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
@@ -132,7 +132,6 @@
     on:mousedown={handleMouseDown}
     style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
     width: {$layout.sidebarWidth}px">
-
     {#if $viewer.loaded}
       <div class="title">
         {#if !$layout.embed && $viewer.document.readable}
@@ -203,8 +202,21 @@
       {/if}
       {#if !$layout.embed}
         <SpecialMessage />
+        {#if $viewer.document.editAccess && $viewer.document.id < process.env.LEGACY_CUT_OFF}
+          <div
+            style="background: #fff782; display: block; padding: 2px 8px; border-radius: 3px; font-size: 13px; box-sizing: border-box; color: #312f05;">
+            Since this document was originally uploaded in the legacy version of
+            DocumentCloud, if you’re deleting sensitive information after the
+            document was published it may not automatically be redacted in all
+            places. Please make your redactions and edits and then
+            <a
+              style="font-size: 13px; text-decoration: underline; color: #312f05"
+              href="mailto:info@documentcloud?subject=Editing Sensitive Legacy Document"
+              target="_blank">email us</a>
+            so we can confirm the information is fully removed.
+          </div>
+        {/if}
       {/if}
     {/if}
-
   </div>
 {/if}
