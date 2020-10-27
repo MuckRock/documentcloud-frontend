@@ -41,7 +41,9 @@ export function cacheAsync(fn, cacheSize = 20) {
   return async (...args) => {
     // Check for entry in cache
     const cacheResult = findFromCache(cache, args);
-    if (cacheResult[0]) return cacheResult[1];
+    if (cacheResult[0]) {
+      return cacheResult[1];
+    }
 
     // Not found, run the function
     const result = await fn(...args);

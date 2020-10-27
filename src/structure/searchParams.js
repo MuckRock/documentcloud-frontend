@@ -167,6 +167,11 @@ export class SearchParams extends Svue {
             getDocumentParams == null || getDocumentParams["status"] == null
           );
         },
+        noAccess(getDocumentParams) {
+          return (
+            getDocumentParams == null || getDocumentParams["access"] == null
+          );
+        },
         oneOrZeroAccesses(getDocumentParams) {
           return (
             getDocumentParams == null ||

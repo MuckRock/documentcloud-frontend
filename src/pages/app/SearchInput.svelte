@@ -70,17 +70,8 @@
   const asyncComplete = timeoutify((type, fieldPost) => {
     const key = `${type}-${fieldPost}`;
     if (completionCache[key] != null) {
-      const results = completionCache[key];
-      completions = completionFilter(
-        results.map((org) => {
-          return {
-            type: "field",
-            text: org.name,
-            feed: slugify(org.name, org.id),
-          };
-        }),
-        fieldPost
-      );
+      const [mapped, fieldPost] = completionCache[key];
+      completions = completionFilter(mapped, fieldPost);
       return;
     }
 
@@ -88,17 +79,15 @@
     completions = null;
     if (type == "org") {
       autocompleteOrganizations(fieldPost).then((results) => {
-        completionCache[key] = results;
-        completions = completionFilter(
-          results.map((org) => {
-            return {
-              type: "field",
-              text: org.name,
-              feed: slugify(org.name, org.id),
-            };
-          }),
-          fieldPost
-        );
+        const mappedOrgs = results.map((org) => {
+          return {
+            type: "field",
+            text: org.name,
+            feed: slugify(org.name, org.id),
+          };
+        });
+        completionCache[key] = [mappedOrgs, fieldPost];
+        completions = completionFilter(mappedOrgs, fieldPost);
       });
     } else if (type == "user") {
       autocompleteUsers(fieldPost).then((results) => {
@@ -119,6 +108,7 @@
           }
         }
 
+        completionCache[key] = [mappedUsers, fieldPost];
         completions = completionFilter(mappedUsers, fieldPost);
       });
     }
@@ -467,6 +457,9 @@
     );
   }
 
+  $: processedCompletions =
+    completions == null ? null : processCompletions(completions);
+
   let completionIndex = null;
 
   $: selectedCompletion =
@@ -486,9 +479,6 @@
     : selectedCompletion == null
     ? completions[0].feed
     : selectedCompletion.feed;
-
-  $: processedCompletions =
-    completions == null ? null : processCompletions(completions);
 
   function handleBlur() {
     handleCursor();
@@ -586,8 +576,19 @@
       if (example) return { valid: true, transform: `organization:${id}` };
       // IDs aren't checked for actual org, but will not return any useful results if not
       return { valid: isNumber(id) };
-    } else {
-      return { valid: true };
+    } else if (field == "access") {
+      return {
+        valid: id == "public" || id == "organization" || id == "private",
+      };
+    } else if (field == "status") {
+      return {
+        valid:
+          id == "success" ||
+          id == "readable" ||
+          id == "pending" ||
+          id == "error" ||
+          id == "nofile",
+      };
     }
   }
 

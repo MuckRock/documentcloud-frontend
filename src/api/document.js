@@ -41,8 +41,6 @@ export async function getDocuments(
 ) {
   // Return documents with the specified parameters
   const params = { ...extraParams, ordering, expand, page: page + 1 };
-  // Inject remaining if grabbing pending docs
-  if (status == PENDING) params["remaining"] = true;
   const url = apiUrl(queryBuilder("documents/", params));
   const { data } = await session.get(url);
   data.results = data.results.map((document) => new Document(document));

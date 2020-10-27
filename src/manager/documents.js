@@ -33,16 +33,18 @@ export const documents = new Svue({
       processingDocumentsRaw: [],
       router,
       search,
+      hasInited: false,
     };
   },
   watch: {
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       unselectAll();
-      if (route != null && route.name == "app" && route.props.q != null) {
-        initDocuments();
-      } else {
-        this.processingDocumentsRaw = [];
+      if (route != null && route.name == "app") {
+        if (!this.hasInited) {
+          initDocuments();
+          this.hasInited = true;
+        }
       }
     },
   },
