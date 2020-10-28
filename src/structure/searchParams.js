@@ -191,11 +191,13 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        getMethod(query, page, oneUserSearch, oneProjectSearch, oneAccessSearch) {
+        getMethod(query, page, oneUserSearch, oneProjectSearch, oneAccessSearch, noStatus, oneOrZeroAccesses) {
           if (query == null) return null;  // Wait for redirect
           // Use search method
-          if (page == 0) {
-            // Investigate whether it's a cacheable search
+          if (page == 0 && noStatus && oneOrZeroAccesses) {
+            // Investigate whether it's a cacheable search:
+            // A cacheable search is only a search for either a user or project with an optional access.
+            // These correspond to most sidebar quick searches.
             const cachedFn = () => searchDocumentsCached(query, page);
             const accessCondition = (doc) => (oneAccessSearch != null ? doc.access == oneAccessSearch : true);
             if (oneUserSearch != null) {
@@ -203,9 +205,6 @@ export class SearchParams extends Svue {
             }
             if (oneProjectSearch != null) {
               return [cachedFn, doc => accessCondition(doc) && doc.projectIds.includes(oneProjectSearch)];
-            }
-            if (oneAccessSearch != null) {
-              return [cachedFn, doc => doc.access == oneAccessSearch];
             }
           }
 
