@@ -1,13 +1,16 @@
 <script>
   import emitter from "@/emit";
+  import { filterFiles } from "./fileHandler";
 
   const emit = emitter({
-    files() {}
+    files() {},
   });
 
   export let multiselect = false;
 
-  let hover = false;
+  const documentTypes = process.env.DOCUMENT_TYPES.split(",")
+    .map((x) => `.${x.toLowerCase().trim()}`)
+    .join(",");
 
   // Bound to the file picker input
   let picker;
@@ -24,7 +27,7 @@
       for (let i = 0; i < fileList.length; i++) {
         files.push(fileList[i]);
       }
-      emit.files(files);
+      emit.files(filterFiles(files));
     }
     picker.value = null;
   }
@@ -54,6 +57,6 @@
     bind:this={picker}
     class="picker"
     type="file"
-    on:change={handleFiles} />
+    on:change={handleFiles}
+    accept={documentTypes} />
 </span>
-<!-- TODO: accept="application/pdf" -->

@@ -24,7 +24,7 @@
   import emitter from "@/emit";
 
   const emit = emitter({
-    setDismissable() {}
+    setDismissable() {},
   });
 
   export let initialFiles = [];
@@ -49,9 +49,11 @@
   const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
   const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
   const PDF_SIZE_LIMIT_READABLE = process.env.PDF_SIZE_LIMIT_READABLE;
+  const DOCUMENT_SIZE_LIMIT = parseInt(process.env.DOCUMENT_SIZE_LIMIT);
+  const DOCUMENT_SIZE_LIMIT_READABLE = process.env.DOCUMENT_SIZE_LIMIT_READABLE;
 
   let tooManyFiles = false;
-  let tooManyBigFiles = false;
+  let tooManyBigFiles = [false, false];
 
   $: displayFiles = uploadMode == false ? files : uploadFiles;
 
@@ -76,29 +78,39 @@
   });
 
   function handleFiles({ detail: newFiles }) {
-    let hasTooBig = false;
+    let hasTooBigPdf = false;
+    let hasTooBigDocument = false;
 
     for (let i = 0; i < newFiles.length; i++) {
       if (files.length < LIMIT) {
-        if (newFiles[i].size <= PDF_SIZE_LIMIT) {
+        const newFile = newFiles[i];
+        const isPdf = newFile.name.toLowerCase().trim().endsWith(".pdf");
+        if (
+          (isPdf && newFile.size <= PDF_SIZE_LIMIT) ||
+          newFile.size <= DOCUMENT_SIZE_LIMIT
+        ) {
           files.push({
             index: id++,
-            file: newFiles[i]
+            file: newFile,
           });
         } else {
-          hasTooBig = true;
+          if (isPdf) {
+            hasTooBigPdf = true;
+          } else {
+            hasTooBigDocument = true;
+          }
         }
         tooManyFiles = false;
       } else {
         tooManyFiles = true;
       }
     }
-    tooManyBigFiles = hasTooBig;
+    tooManyBigFiles = [hasTooBigPdf, hasTooBigDocument];
     files = files;
   }
 
   function removeFile(index) {
-    files = files.filter(file => file.index != index);
+    files = files.filter((file) => file.index != index);
     tooManyBigFiles = false;
     tooManyFiles = false;
   }
@@ -109,7 +121,7 @@
         file: file.file,
         progress: 0,
         done: false,
-        index: i
+        index: i,
       };
     });
     emit.setDismissable(false);
@@ -124,13 +136,13 @@
         // Progress handler
         uploadFiles[index].progress = progress;
       },
-      async ids => {
+      async (ids) => {
         // All complete handler
-        uploadFiles = uploadFiles.map(file => ({ ...file, done: true }));
+        uploadFiles = uploadFiles.map((file) => ({ ...file, done: true }));
         layout.uploading = false;
         await handleNewDocuments(ids, uploadProject);
       },
-      message => {
+      (message) => {
         layout.error = message;
         layout.uploading = false;
         emit.setDismissable(true);
@@ -213,12 +225,19 @@
         </h1>
         {#if files.length == 0}
           <p>
-            Select or drag a .pdf document to begin the document upload process.
-            You will then be able to edit document information.
+            Select or drag a document to begin the document upload process. You
+            will then be able to edit document information.
           </p>
-          {#if tooManyBigFiles}
+          {#if tooManyBigFiles[0]}
             <p class="danger">
-              You can only upload files under {PDF_SIZE_LIMIT_READABLE}.
+              You can only upload PDF files under
+              {PDF_SIZE_LIMIT_READABLE}.
+            </p>
+          {/if}
+          {#if tooManyBigFiles[1]}
+            <p class="danger">
+              You can only upload non-PDF document files under
+              {DOCUMENT_SIZE_LIMIT_READABLE}.
             </p>
           {/if}
         {:else}
@@ -272,7 +291,8 @@
         {:else}
           <h1>Error occurred while uploading</h1>
           <p class="error">
-            We failed to {errorMessage}. Please try again later.
+            We failed to
+            {errorMessage}. Please try again later.
           </p>
           <div>
             <Button secondary={true} on:click={emit.allUploaded}>
