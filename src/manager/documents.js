@@ -178,9 +178,9 @@ export function updateInCollection(document, docFn, modify = true) {
     }
   } else {
     // Modify to get the new doc, but don't set modified
-    oldDoc = copyDoc(doc);
-    docFn(doc);
-    newDoc = copyDoc(doc);
+    oldDoc = copyDoc(document);
+    docFn(document);
+    newDoc = copyDoc(document);
   }
 
   setDocuments(newDocuments);
