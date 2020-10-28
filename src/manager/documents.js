@@ -176,6 +176,11 @@ export function updateInCollection(document, docFn, modify = true) {
       // Only track modifications if an actual update occurs
       modifications.modify(collectionModifiers, oldDoc, docFn);
     }
+  } else {
+    // Modify to get the new doc, but don't set modified
+    oldDoc = copyDoc(doc);
+    docFn(doc);
+    newDoc = copyDoc(doc);
   }
 
   setDocuments(newDocuments);
