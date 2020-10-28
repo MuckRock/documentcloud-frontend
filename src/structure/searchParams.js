@@ -197,11 +197,12 @@ export class SearchParams extends Svue {
           if (page == 0) {
             // Investigate whether it's a cacheable search
             const cachedFn = () => searchDocumentsCached(query, page);
+            const accessCondition = (doc) => (oneAccessSearch != null ? doc.access == oneAccessSearch : true);
             if (oneUserSearch != null) {
-              return [cachedFn, doc => doc.userId == oneUserSearch];
+              return [cachedFn, doc => accessCondition(doc) && doc.userId == oneUserSearch];
             }
             if (oneProjectSearch != null) {
-              return [cachedFn, doc => doc.projectIds.includes(oneProjectSearch)];
+              return [cachedFn, doc => accessCondition(doc) && doc.projectIds.includes(oneProjectSearch)];
             }
             if (oneAccessSearch != null) {
               return [cachedFn, doc => doc.access == oneAccessSearch];

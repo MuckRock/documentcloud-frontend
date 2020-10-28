@@ -45,8 +45,8 @@ async function initSearch(params) {
     const results = await wrapSeparate(layout, search, search.params.getMethod[0]);
     search.results = results;
     const filter = search.params.getMethod[1];
-    modifications.applyModifications();
     if (filter != null) {
+      modifications.applyModifications();
       filterDocuments(filter);
     } else {
       // Force an update
