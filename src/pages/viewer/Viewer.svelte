@@ -81,12 +81,12 @@
     <meta property="og:url" content={$viewer.document.canonicalUrl} />
     <meta property="og:url" content={$viewer.document.canonicalUrl} />
     <meta property="og:title" content={$viewer.document.title} />
+    <title>{$viewer.document.title} - DocumentCloud</title>
     <link
       rel="alternate"
       type="application/json+oembed"
       href={embedUrl($viewer.document.canonicalUrl)}
       title={$viewer.document.title} />
-    <title>{$viewer.document.title} - DocumentCloud</title>
     {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
       <meta property="og:description" content={$viewer.document.description} />
     {/if}
