@@ -1,6 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from './viewer';
 import { tick } from 'svelte';
+import { router } from "@/router/router";
 import { layout, MOBILE_BREAKPOINT, annotationValid, startSearch, clearSearch, cancelActions } from './layout';
 
 const LAYOUT = {
@@ -37,6 +38,7 @@ class Doc extends Svue {
     super({
       data() {
         return {
+          router,
           layout: LAYOUT,
           allDefaultAspects: {
             image: DEFAULT_IMAGE_ASPECT,
@@ -69,6 +71,13 @@ class Doc extends Svue {
       watch: {
         viewer(viewer) {
           if (viewer.pageAspects != null) this.initAspects();
+        },
+        "router.resolvedRoute"() {
+          const route = router.resolvedRoute;
+          if (route != null && route.name != 'viewer') {
+            // Reset mode
+            this.mode = 'image';
+          }
         },
       },
       computed: {

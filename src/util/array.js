@@ -2,7 +2,6 @@ export function removeFromArray(array, elem) {
   const idx = array.indexOf(elem);
   if (idx != -1) {
     array.splice(idx, 1);
-    return array;
   }
   return array;
 }
@@ -31,6 +30,13 @@ export function includes(array, elem, eq = (a, b) => a == b) {
   return false;
 }
 
+export function index(array, elem, eq = (a, b) => a == b) {
+  for (let i = 0; i < array.length; i++) {
+    if (eq(array[i], elem)) return i;
+  }
+  return -1;
+}
+
 export function intersection(arrays, eq = (a, b) => a == b) {
   if (arrays.length == 0) return [];
   // Adapted from https://stackoverflow.com/a/59176460
@@ -43,4 +49,11 @@ export function arrayEq(x1, x2) {
     if (x1[i] != x2[i]) return false;
   }
   return true;
+}
+
+export function addToArrayIfUnique(array, newElem, eq = (a, b) => a == b) {
+  for (let i = 0; i < array.length; i++) {
+    if (eq(array[i], newElem)) return array;
+  }
+  return [...array, newElem];
 }

@@ -87,3 +87,7 @@ export function allIndices(text, query) {
     pos = idx + 1;
   }
 }
+
+export function isNumber(s) {
+  return Number.isFinite(parseFloat(s));
+}

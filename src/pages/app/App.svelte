@@ -12,6 +12,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>DocumentCloud</title>
+</svelte:head>
+
 <div>
   <Sidebar
     bind:this={sidebar}

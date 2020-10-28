@@ -4,6 +4,8 @@ import { uniquify } from "@/util/array";
 import { pageSizesFromSpec } from "@/api/pageSize";
 import { Note } from "@/structure/note";
 import { Section } from "@/structure/section";
+import deepEqual from 'fast-deep-equal';
+import deepCopy from "fast-copy";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
@@ -65,9 +67,15 @@ export class Document extends Svue {
         userName(doc) {
           return doc.user.name;
         },
+        userId(doc) {
+          return doc.user.id;
+        },
         rawOrganization(doc) {
           // Unprocessed organization object
           return doc.organization;
+        },
+        orgId(rawOrganization) {
+          return rawOrganization.id;
         },
         individualOrg(rawOrganization) {
           return rawOrganization.individual;
@@ -312,6 +320,14 @@ export class Document extends Svue {
       },
     });
   }
+}
+
+export function docEquals(doc1, doc2) {
+  return deepEqual(doc1.doc, doc2.doc);
+}
+
+export function copyDoc(doc) {
+  return new Document(deepCopy(doc.doc));
 }
 
 export function transformPassage(passage, highlightStart, highlightEnd) {

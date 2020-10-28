@@ -6,6 +6,7 @@ import { SearchParams } from "@/structure/searchParams";
 import { pushUrl } from "@/router/router";
 import { queryBuilder } from "@/util/url";
 import { slugify } from "@/util/string";
+import { modifications } from "@/manager/modifications";
 
 const TAG_KEY = process.env.TAG_KEY;
 
@@ -31,7 +32,7 @@ export const search = new Svue({
       return results.results;
     },
     hasResults(results) {
-      return results != null;
+      return results != null && results.results != null;
     }
   }
 });
@@ -41,17 +42,30 @@ async function initSearch(params) {
 
   // Get results
   if (search.params.getMethod != null) {
-    const results = await wrapSeparate(layout, search, search.params.getMethod);
+    const results = await wrapSeparate(layout, search, search.params.getMethod[0]);
     search.results = results;
+    const filter = search.params.getMethod[1];
+    modifications.applyModifications();
+    if (filter != null) {
+      filterDocuments(filter);
+    } else {
+      // Force an update
+      search.results = search.results;
+    }
   }
 }
 
+function filterDocuments(filter) {
+  setDocuments(search.documents.filter(filter));
+}
+
 export function setDocuments(documents) {
-  search.results.rawResults = {
-    ...search.results.rawResults,
+  const results = search.results == null ? {} : search.results;
+  results.rawResults = {
+    ...(results.rawResults == null ? {} : results.rawResults),
     results: documents
   };
-  search.results = search.results;
+  search.results = results;
 }
 
 export function handleUpload(newDocs) {

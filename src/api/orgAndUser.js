@@ -15,13 +15,32 @@ export async function getMe(expand = DEFAULT_EXPAND) {
   }
 }
 
+export async function getUser(id, expand = DEFAULT_EXPAND) {
+  const { data } = await session.get(
+    queryBuilder(apiUrl(`users/${id}/`), { expand })
+  );
+  return data;
+}
+
 export async function changeActiveOrg(orgId) {
   await session.patch(apiUrl(`users/me/`), { organization: orgId });
+}
+
+export async function getOrganization(id, expand = ORG_EXPAND) {
+  const { data } = await session.get(queryBuilder(apiUrl(`organizations/${id}`), { expand }))
+  return data;
 }
 
 export async function getOrganizations(individual = null, expand = ORG_EXPAND) {
   const orgs = await grabAllPages(
     queryBuilder(apiUrl(`organizations/`), { individual, expand })
+  );
+  return orgs;
+}
+
+export async function getOrganizationsByIds(ids, expand = ORG_EXPAND) {
+  const orgs = await grabAllPages(
+    queryBuilder(apiUrl(`organizations/`), { id__in: ids, expand })
   );
   return orgs;
 }
@@ -41,4 +60,14 @@ export async function getUsers({ projectIds, orgIds }, expand = USER_EXPAND) {
 
   const users = await grabAllPages(queryBuilder(apiUrl(`users/`), query));
   return users;
+}
+
+export async function autocompleteOrganizations(prefix = '', individual = false) {
+  const { data } = await session.get(queryBuilder(apiUrl('organizations/'), { name__istartswith: prefix, individual }));
+  return data.results;
+}
+
+export async function autocompleteUsers(prefix = '') {
+  const { data } = await session.get(queryBuilder(apiUrl('users/'), { name__istartswith: prefix }));
+  return data.results;
 }

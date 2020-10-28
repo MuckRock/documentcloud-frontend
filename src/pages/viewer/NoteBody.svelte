@@ -29,16 +29,18 @@
   class="doc">
 
   <div class="notes" bind:clientWidth={width}>
-    {#each $viewer.orderedNotes as note}
-      <Annotation
-        page={{ aspect: $viewer.pageAspects[note.page], pageNumber: note.page, document: $viewer.document }}
-        pageNote={true}
-        {width}
-        mode={$layout.annotateMode}
-        aspect={$viewer.pageAspects[note.page]}
-        showImageOnPageNote={!note.isPageNote}
-        annotation={note} />
-    {/each}
+    {#if $viewer.pageAspects != null}
+      {#each $viewer.orderedNotes as note}
+        <Annotation
+          page={{ aspect: $viewer.pageAspects[note.page], pageNumber: note.page, document: $viewer.document }}
+          pageNote={true}
+          {width}
+          mode={$layout.annotateMode}
+          aspect={$viewer.pageAspects[note.page]}
+          showImageOnPageNote={!note.isPageNote}
+          annotation={note} />
+      {/each}
+    {/if}
   </div>
 
 </div>

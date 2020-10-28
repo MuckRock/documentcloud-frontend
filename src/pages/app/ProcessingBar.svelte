@@ -1,8 +1,5 @@
 <script>
-  import { slide } from "svelte/transition";
   import { handlePlural } from "@/util/string";
-  import { zeroUntilEnd } from "@/util/easing";
-  import { slideHorizontal } from "@/util/transition";
 
   // Components
   import Progress from "@/common/Progress";
@@ -59,7 +56,8 @@
           </Button>
         </span>
       {:else}
-        Processing {handlePlural($documents.numProcessing, 'document', true)}
+        Processing
+        {handlePlural($documents.numProcessing, 'document', true)}
       {/if}
     </div>
     <Progress progress={$documents.processingProgress} />

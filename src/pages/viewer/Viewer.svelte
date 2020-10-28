@@ -86,6 +86,7 @@
       type="application/json+oembed"
       href={embedUrl($viewer.document.canonicalUrl)}
       title={$viewer.document.title} />
+    <title>{$viewer.document.title} - DocumentCloud</title>
     {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
       <meta property="og:description" content={$viewer.document.description} />
     {/if}

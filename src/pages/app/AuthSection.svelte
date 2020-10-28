@@ -7,16 +7,6 @@
   import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
   import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
 
-  function transformOrgIds(ids) {
-    const results = [];
-    for (let i = 0; i < ids.length; i++) {
-      const id = ids[i];
-      const org = orgsAndUsers.orgsById[id];
-      if (org != null) results.push(org);
-    }
-    return results;
-  }
-
   function pickOne(list) {
     if (list == null) return null;
     if (list.length != 1) return null;
@@ -32,8 +22,8 @@
   $: me = $orgsAndUsers.me;
   $: individual = me != null && me.organization.individual;
   $: currentOrg = me == null ? null : me.organization;
-  $: orgs = me == null ? [] : transformOrgIds(me.organizations);
-  $: individualOrg = pickOne(orgs.filter(org => org.individual));
+  $: orgs = $orgsAndUsers.selfOrgs == null ? [] : $orgsAndUsers.selfOrgs;
+  $: individualOrg = pickOne(orgs.filter((org) => org.individual));
 </script>
 
 <style lang="scss">
@@ -63,10 +53,7 @@
   <span class="dot">·</span>
   <Dropdown fixed={true}>
     <span class="action" slot="title">
-      <span class="nowrap title">
-        Help
-        <span class="dropper">▼</span>
-      </span>
+      <span class="nowrap title"> Help <span class="dropper">▼</span> </span>
     </span>
     <Menu>
       <Link toUrl="/help/search" color={true}>
@@ -109,16 +96,11 @@
           {#if individualOrg == null || org.id != individualOrg.id}
             <MenuItem on:click={() => change(org)}>
               {org.name}
-              {#if org.id == currentOrg.id}
-                <span class="scope">✓</span>
-              {/if}
+              {#if org.id == currentOrg.id}<span class="scope">✓</span>{/if}
             </MenuItem>
           {/if}
         {/each}
       </Menu>
-
     </Dropdown>
-  {:else}
-    <a href={SIGN_IN_URL}>Sign in</a>
-  {/if}
+  {:else}<a href={SIGN_IN_URL}>Sign in</a>{/if}
 </div>
