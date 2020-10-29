@@ -278,7 +278,7 @@ export async function uploadDocuments(
 
         return axios.put(url, file, {
           headers: {
-            "Content-Type": file.type || "application/pdf",
+            "Content-Type": file.type || "application/octet-stream",
           },
           onUploadProgress: (progressEvent) => {
             // Handle upload progress
