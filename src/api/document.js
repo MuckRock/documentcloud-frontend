@@ -243,6 +243,12 @@ export async function uploadDocuments(
   // Allocate documents with the appropriate titles.
   let newDocuments;
   try {
+    const getExtension = file => {
+      if (file.name == null) return '';
+      const parts = file.name.split('.');
+      if (parts.length <= 1) return '';
+      return parts[parts.length - 1];
+    };
     const data = await batchDelay(
       docs,
       UPLOAD_BATCH,
@@ -250,7 +256,7 @@ export async function uploadDocuments(
       async (subDocs) => {
         const { data } = await session.post(
           apiUrl("documents/"),
-          subDocs.map((doc) => ({ title: doc.name, access, language }))
+          subDocs.map((doc) => ({ title: doc.name, access, language, original_extension: getExtension(doc.file) }))
         );
         return data;
       }
@@ -270,7 +276,7 @@ export async function uploadDocuments(
 
         return axios.put(url, file, {
           headers: {
-            "Content-Type": "application/pdf",
+            "Content-Type": file.type || "application/octet-stream",
           },
           onUploadProgress: (progressEvent) => {
             // Handle upload progress

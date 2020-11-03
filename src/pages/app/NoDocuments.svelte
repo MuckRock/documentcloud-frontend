@@ -60,8 +60,8 @@
     </div>
     <div class="text">
       <p>
-        Upload a PDF file to get started using DocumentCloud. You can drag the
-        file into this window, or click on the blue “Upload” button above.
+        Upload a document file to get started using DocumentCloud. You can drag
+        the file into this window, or click on the blue “Upload” button above.
       </p>
       <p>
         Once you upload a file, DocumentCloud will process the document and

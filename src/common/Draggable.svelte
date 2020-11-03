@@ -1,17 +1,13 @@
 <script>
   import emitter from "@/emit";
+  import { filterFiles } from "./fileHandler";
 
   const emit = emitter({
-    files() {}
+    files() {},
   });
 
   let dragging = false;
   export let disabled = false;
-
-  function filterFiles(files) {
-    files = Array.from(files).filter(f => f.type == "application/pdf");
-    return files;
-  }
 
   function enter(e) {
     if (disabled) return;
@@ -31,8 +27,7 @@
   function handleFiles(files) {
     if (disabled) return;
     leave();
-    // Filter for just PDF files
-    files = filterFiles(files);
+    files = filterFiles(Array.from(files));
     if (files.length == 0) return;
     emit.files(files);
   }
