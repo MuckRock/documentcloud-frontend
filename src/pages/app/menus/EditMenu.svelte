@@ -4,14 +4,14 @@
 
   // Stores
   import { layout, selectionProcessing } from "@/manager/layout";
+  import { metaDialogs } from "@/common/dialog/metaDialogs";
   import {
     removeSelected,
-    renameSelected,
+    editMetaSelected,
     changeAccessSelected,
     editDataSelected,
-    reprocessSelected
+    reprocessSelected,
   } from "@/manager/manager";
-  import { onMount } from "svelte";
 
   let processing = false;
   export let visible = false;
@@ -24,9 +24,15 @@
 </script>
 
 <Menu>
-  <MenuItem disabled={$layout.numSelected != 1} on:click={renameSelected}>
-    Rename
-  </MenuItem>
+  <MenuItem disabled={true}>Edit Document Information</MenuItem>
+  {#each metaDialogs as meta}
+    <MenuItem
+      indent={true}
+      disabled={meta.disabled == null ? false : meta.disabled($layout.numSelected)}
+      on:click={() => editMetaSelected(meta)}>
+      {meta.menuTitle}
+    </MenuItem>
+  {/each}
   <MenuItem disabled={processing} on:click={changeAccessSelected}>
     Change Access
   </MenuItem>

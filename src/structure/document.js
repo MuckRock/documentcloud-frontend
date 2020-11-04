@@ -61,6 +61,18 @@ export class Document extends Svue {
         title(doc) {
           return doc.title;
         },
+        description(doc) {
+          return doc.description;
+        },
+        source(doc) {
+          return doc.source;
+        },
+        relatedArticleUrl(doc) {
+          return doc.related_article;
+        },
+        publishedUrl(doc) {
+          return doc.published_url;
+        },
         pageCount(doc) {
           return doc.page_count;
         },
@@ -231,6 +243,9 @@ export class Document extends Svue {
             return processingProgress;
           }
         },
+
+        // Metadata
+
 
         // Projects
         projectIds(doc) {

@@ -6,7 +6,7 @@
   import Modal from "@/common/Modal";
   import ErrorModal from "@/common/ErrorModal";
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
-  import RenameDialog from "@/common/dialog/RenameDialog";
+  import MetaDialog from "@/common/dialog/MetaDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
   import DataDialog from "@/common/dialog/DataDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
@@ -17,14 +17,13 @@
 
   import {
     layout,
-    hideRename,
+    hideMeta,
     hideAccess,
     hideData,
     hideProject,
     hideCollaborators,
-    projectCollaboratorAccessOpen,
     hideProjectCollaboratorAccess,
-    hideSearchTips
+    hideSearchTips,
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -35,7 +34,7 @@
   export let concealed = false;
 
   const emit = emitter({
-    expandSidebar() {}
+    expandSidebar() {},
   });
 
   function refresh() {
@@ -83,8 +82,8 @@
     <ErrorModal store={$layout} />
   {:else if $confirmDialog.open}
     <Modal component={ConfirmDialog} on:close={hideConfirm} />
-  {:else if $layout.renameOpen}
-    <Modal component={RenameDialog} on:close={hideRename} />
+  {:else if $layout.metaOpen != null}
+    <Modal component={MetaDialog} on:close={hideMeta} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.dataOpen}

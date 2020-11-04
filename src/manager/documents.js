@@ -5,7 +5,7 @@ import {
   deleteDocument,
   reprocessDocument,
   changeAccess,
-  renameDocument,
+  editMetadata,
   PENDING,
   addData,
   removeData,
@@ -275,15 +275,15 @@ export function removeDocument(document) {
   return removeDocuments([document]);
 }
 
-export async function renameSelectedDocuments(title) {
+export async function editSelectedDocumentInfo(info) {
   await wrapLoad(layout, async () => {
-    await renameDocument(
+    await editMetadata(
       layout.selected.map((doc) => doc.id),
-      title
+      info
     );
     // Show changes in UI
     layout.selected.forEach((doc) =>
-      updateInCollection(doc, (d) => (d.doc = { ...d.doc, title }))
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, ...info }))
     );
   });
   unselectAll();
