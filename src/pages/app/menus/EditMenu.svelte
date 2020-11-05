@@ -8,6 +8,7 @@
   import {
     removeSelected,
     editMetaSelected,
+    editDocumentInfoSelected,
     changeAccessSelected,
     editDataSelected,
     reprocessSelected,
@@ -24,7 +25,9 @@
 </script>
 
 <Menu>
-  <MenuItem disabled={true}>Edit Document Information</MenuItem>
+  <MenuItem on:click={() => editDocumentInfoSelected()}>
+    Edit Document Information
+  </MenuItem>
   {#each metaDialogs as meta}
     <MenuItem
       indent={true}

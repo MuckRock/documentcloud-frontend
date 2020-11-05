@@ -4,6 +4,7 @@
   import Tooltip from "@/common/Tooltip";
   import Image from "@/common/Image";
   import Progress from "@/common/Progress";
+  import HtmlField from "@/common/HtmlField";
   import Link from "@/router/Link";
   import DocumentThumbnail from "./DocumentThumbnail";
 
@@ -12,7 +13,7 @@
     layout,
     unselectDocument,
     openAccess,
-    editData
+    editData,
   } from "@/manager/layout";
   import { removeDocument, selectDocument } from "@/manager/documents";
   import { projects } from "@/manager/projects";
@@ -234,6 +235,10 @@
     vertical-align: middle;
     height: 10px;
   }
+
+  .description {
+    margin: 8px 0 -8px 0;
+  }
 </style>
 
 <div class="card">
@@ -269,6 +274,11 @@
         </span>
       </h2>
       <h3>{document.summary}</h3>
+      {#if document.description != null && document.description.trim().length > 0}
+        <div class="description">
+          <HtmlField content={document.description} />
+        </div>
+      {/if}
       <div class="actions">
         {#if document.viewable}
           <Link to="viewer" params={{ id: document.slugId }}>
@@ -338,8 +348,10 @@
 
           {#if moreToExpand}
             <span>
-              {highlights.length} of {document.highlights.length} pages matching
-              the query
+              {highlights.length}
+              of
+              {document.highlights.length}
+              pages matching the query
             </span>
             <span class="padleft">
               <Button action={true} on:click={() => (expandHighlights = true)}>
@@ -364,9 +376,7 @@
                   {#each passage as term}
                     {#if term.type == 'highlight'}
                       <span class="passage highlighted">{term.text}</span>
-                    {:else}
-                      <span class="passage">{term.text}</span>
-                    {/if}
+                    {:else}<span class="passage">{term.text}</span>{/if}
                   {/each}
                 </div>
               {/each}

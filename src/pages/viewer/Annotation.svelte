@@ -3,18 +3,17 @@
   import Button from "@/common/Button";
   import Loader from "@/common/Loader";
   import AccessToggle from "@/common/AccessToggle";
-  import { textAreaResize } from "@/util/textareaResize.js";
+  import HtmlEditor from "@/common/HtmlEditor";
+  import HtmlField from "@/common/HtmlField";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import { pageImageUrl } from "@/api/viewer";
-  import { viewer } from "@/viewer/viewer";
   import { doc } from "@/viewer/document";
   import {
     layout,
     cancelAnnotation,
     updatePageAnnotation,
     createPageAnnotation,
-    deletePageAnnotation
+    deletePageAnnotation,
   } from "@/viewer/layout";
   import { wrapSeparate } from "@/util/wrapLoad";
   import emitter from "@/emit";
@@ -25,13 +24,11 @@
   import pencilSvg from "@/assets/pencil.svg";
 
   // Asynchronously load dompurify
-  let DomPurify = null;
-  import("dompurify").then(module => {
-    DomPurify = module;
-  });
+  import { domPurify, loadDompurify } from "@/util/domPurify";
+  loadDompurify();
 
   const emit = emitter({
-    stateChange() {}
+    stateChange() {},
   });
 
   export let page;
@@ -405,8 +402,7 @@
       }
     }
 
-    input,
-    textarea {
+    input {
       font-size: 16px;
       width: 100%;
       padding: 2px 4px;
@@ -416,40 +412,6 @@
 
     input.padded {
       margin-bottom: $subpadding;
-    }
-
-    .sidebyside {
-      display: table;
-      table-layout: fixed;
-      width: 100%;
-
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
-
-    .preview {
-      margin: 4px 0;
-
-      .title {
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: 10px;
-        margin: 2px $subpadding;
-        color: $viewerGray;
-      }
-
-      .content {
-        margin: 4px $subpadding;
-        font: 13px/18px Georgia, Times, serif;
-        cursor: text;
-        color: #3c3c3c;
-      }
-
-      &.static .content {
-        margin: 0 0 $subpadding 0;
-      }
     }
 
     .link,
@@ -640,35 +602,14 @@
       </Loader>
     {/if}
 
-    <div class="sidebyside">
-      <!-- Description/Content -->
-      {#if editMode}
-        <textarea
-          placeholder="Annotation Description (optional)"
-          use:textAreaResize
-          bind:value={description} />
-        {#if DomPurify != null && description.trim().length > 0}
-          <div class="preview">
-            <div class="title">Preview:</div>
-            <!-- Show a preview if possible -->
-            <div class="content">
-              {@html DomPurify.sanitize(description)}
-            </div>
-          </div>
-        {/if}
-      {:else}
-        <div class="preview static">
-          <div class="content">
-            {#if DomPurify != null}
-              {@html DomPurify.sanitize(annotation.content)}
-            {:else}
-              <!-- Risk showing server-provided HTML without sanitization -->
-              {@html annotation.content}
-            {/if}
-          </div>
-        </div>
-      {/if}
-    </div>
+    <!-- Description/Content -->
+    {#if editMode}
+      <HtmlEditor
+        placeholder="Annotation Description (optional)"
+        bind:value={description} />
+    {:else}
+      <HtmlField content={annotation.content} />
+    {/if}
     <!-- Footer content -->
     {#if editMode}
       <AccessToggle
@@ -696,7 +637,8 @@
           {/if}
         </div>
         <div class="cell rightalign">
-          Annotated by {annotation.username}
+          Annotated by
+          {annotation.username}
           {#if annotation.organization != null}, {annotation.organization}{/if}
         </div>
       </div>

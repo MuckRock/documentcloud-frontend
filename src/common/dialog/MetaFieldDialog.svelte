@@ -1,6 +1,7 @@
 <script>
   import Button from "@/common/Button";
   import Tooltip from "@/common/Tooltip";
+  import HtmlEditor from "@/common/HtmlEditor";
   import { onMount } from "svelte";
   import { simplePlural, nameSingularNumberPlural } from "@/util/string";
   import { editSelectedDocumentInfo } from "@/manager/documents";
@@ -10,16 +11,11 @@
   import { layout } from "@/manager/layout";
 
   export let fieldAccessor;
-  export let fieldValid = (value, initial) =>
-    value != initial && value.trim().length > 0;
+  export let fieldValid = (value, initial) => value != initial;
   export let fieldName;
   export let apiField;
   export let fieldInvalidText = (value, initial) =>
-    value == initial
-      ? `The document already has this ${fieldName}`
-      : value.trim().length == 0
-      ? `Enter a valid ${fieldName}`
-      : "";
+    value == initial ? `The document already has this ${fieldName}` : "";
   export let headerText;
   export let explainerText;
   export let buttonText;
@@ -48,9 +44,11 @@
     }
   }
 
-  let input;
+  let input = null;
   onMount(() => {
-    input.focus();
+    if (input != null) {
+      input.focus();
+    }
   });
 </script>
 
@@ -68,7 +66,7 @@
     </p>
     <div class="inputpadded">
       {#if textArea}
-        <textarea bind:value bind:this={input} on:keypress={handleKey} />
+        <HtmlEditor bind:value />
       {:else}<input bind:value bind:this={input} on:keypress={handleKey} />{/if}
     </div>
     <div class="buttonpadded">

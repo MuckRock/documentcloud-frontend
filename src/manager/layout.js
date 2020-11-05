@@ -23,6 +23,7 @@ export const layout = new Svue({
 
       // Custom dialogs
       metaOpen: null,
+      documentInfoOpen: false,
       projectEdit: null,
       projectOpen: false,
       projectCollaboratorsOpen: false,
@@ -107,6 +108,10 @@ export function unselectDocument(document) {
 }
 
 // Dialogs
+export function hideDocumentInfo() {
+  layout.documentInfoOpen = false;
+}
+
 export function hideMeta() {
   layout.metaOpen = null;
 }

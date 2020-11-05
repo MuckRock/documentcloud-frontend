@@ -46,6 +46,11 @@ export function editMetaSelected(meta) {
   layout.metaOpen = meta;
 }
 
+export function editDocumentInfoSelected() {
+  if (layout.numSelected == 0) return;
+  layout.documentInfoOpen = true;
+}
+
 export function changeAccessSelected() {
   if (layout.numSelected == 0) return;
   layout.accessEditDocuments = layout.selected.slice();

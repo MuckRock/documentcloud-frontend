@@ -7,6 +7,14 @@ export const metaDialogs = [
     headerText: (docs) => `Rename ${docs}`,
     explainerText: (docs) => `Enter a name below for the ${docs}`,
     buttonText: 'Rename',
+    fieldValid: (value, initial) =>
+      value != initial && value.trim().length > 0,
+    fieldInvalidText: (value, initial) =>
+      value == initial
+        ? `The document already has this name`
+        : value.trim().length == 0
+          ? `Enter a valid name`
+          : "",
     disabled: (numSelected) => numSelected != 1
   },
   {
@@ -29,7 +37,7 @@ export const metaDialogs = [
     buttonText: 'Edit',
   },
   {
-    menuTitle: "Related article URL",
+    menuTitle: "Related Article URL",
     fieldAccessor: (x) => x.relatedArticleUrl,
     fieldName: 'related article URL',
     apiField: 'related_article',
@@ -44,7 +52,6 @@ export const metaDialogs = [
     apiField: 'published_url',
     headerText: (docs) => `Edit the published URL for ${docs}`,
     explainerText: (docs) => `Enter the published URL below for the ${docs}`,
-    isTextArea: true,
     buttonText: 'Edit',
   },
 ];

@@ -17,6 +17,7 @@
 
   import {
     layout,
+    hideDocumentInfo,
     hideMeta,
     hideAccess,
     hideData,
@@ -30,6 +31,7 @@
   import { nav } from "@/router/router";
 
   import emitter from "@/emit";
+  import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
 
   export let concealed = false;
 
@@ -82,6 +84,8 @@
     <ErrorModal store={$layout} />
   {:else if $confirmDialog.open}
     <Modal component={ConfirmDialog} on:close={hideConfirm} />
+  {:else if $layout.documentInfoOpen}
+    <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
   {:else if $layout.metaOpen != null}
     <Modal component={MetaDialog} on:close={hideMeta} />
   {:else if $layout.accessOpen}

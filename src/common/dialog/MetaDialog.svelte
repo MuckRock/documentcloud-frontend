@@ -14,5 +14,7 @@
     explainerText={meta.explainerText}
     buttonText={meta.buttonText}
     textArea={meta.isTextArea || false}
+    fieldValid={meta.fieldValid}
+    fieldInvalidText={meta.fieldInvalidText}
     on:dismiss />
 {/if}

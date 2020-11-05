@@ -2,6 +2,7 @@
   import TableOfContents from "./TableOfContents";
   import Progress from "@/common/Progress";
   import SpecialMessage from "@/common/SpecialMessage";
+  import HtmlField from "@/common/HtmlField";
 
   import {
     enterRedactMode,
@@ -122,6 +123,12 @@
       }
     }
   }
+
+  .inlineheader {
+    color: black;
+    display: inline-block;
+    vertical-align: middle;
+  }
 </style>
 
 {#if $layout.showSidebar}
@@ -141,12 +148,12 @@
           </div>
         {/if}
 
-        {#if $viewer.document.description != null}
+        {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
           <details class="dc" open>
             <summary>
-              <h2>{$viewer.document.title}</h2>
+              <h2 class="inlineheader">{$viewer.document.title}</h2>
             </summary>
-            <p>{$viewer.document.description}</p>
+            <HtmlField content={$viewer.document.description} />
           </details>
         {:else}
           <h2>{$viewer.document.title}</h2>

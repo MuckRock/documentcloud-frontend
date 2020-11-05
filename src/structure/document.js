@@ -327,8 +327,12 @@ export class Document extends Svue {
             year: "numeric",
           });
         },
-        summary(pageCountString, userOrgString, createdAtString) {
-          return [pageCountString, userOrgString, createdAtString]
+        sourceString(source) {
+          if (source == null || source.trim().length == 0) return '';
+          return `Source: ${source}`;
+        },
+        summary(pageCountString, sourceString, userOrgString, createdAtString) {
+          return [pageCountString, sourceString, userOrgString, createdAtString]
             .filter((x) => x.length > 0)
             .join(" - ");
         },
