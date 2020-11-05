@@ -61,6 +61,18 @@ export class Document extends Svue {
         title(doc) {
           return doc.title;
         },
+        description(doc) {
+          return doc.description;
+        },
+        source(doc) {
+          return doc.source;
+        },
+        relatedArticleUrl(doc) {
+          return doc.related_article;
+        },
+        publishedUrl(doc) {
+          return doc.published_url;
+        },
         pageCount(doc) {
           return doc.page_count;
         },
@@ -232,6 +244,9 @@ export class Document extends Svue {
           }
         },
 
+        // Metadata
+
+
         // Projects
         projectIds(doc) {
           return doc.projects == null ? [] : doc.projects;
@@ -312,8 +327,12 @@ export class Document extends Svue {
             year: "numeric",
           });
         },
-        summary(pageCountString, userOrgString, createdAtString) {
-          return [pageCountString, userOrgString, createdAtString]
+        sourceString(source) {
+          if (source == null || source.trim().length == 0) return '';
+          return `Source: ${source}`;
+        },
+        summary(pageCountString, sourceString, userOrgString, createdAtString) {
+          return [pageCountString, sourceString, userOrgString, createdAtString]
             .filter((x) => x.length > 0)
             .join(" - ");
         },

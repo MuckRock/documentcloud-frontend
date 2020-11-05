@@ -22,7 +22,8 @@ export const layout = new Svue({
       selectedMap: {},
 
       // Custom dialogs
-      renameOpen: false,
+      metaOpen: null,
+      documentInfoOpen: false,
       projectEdit: null,
       projectOpen: false,
       projectCollaboratorsOpen: false,
@@ -107,8 +108,12 @@ export function unselectDocument(document) {
 }
 
 // Dialogs
-export function hideRename() {
-  layout.renameOpen = false;
+export function hideDocumentInfo() {
+  layout.documentInfoOpen = false;
+}
+
+export function hideMeta() {
+  layout.metaOpen = null;
 }
 
 function canEdit(...documents) {

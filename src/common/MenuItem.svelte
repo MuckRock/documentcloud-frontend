@@ -3,6 +3,7 @@
   export let selectable = true;
   export let primary = false;
   export let disabled = false;
+  export let indent = false;
 </script>
 
 <style lang="scss">
@@ -15,14 +16,12 @@
       color: $caution;
     }
 
-    &.disabled {
-      color: $gray;
-      pointer-events: none;
-      cursor: default;
-    }
-
     &.primary {
       color: $primary;
+    }
+
+    &.indent {
+      padding-left: 39px;
     }
 
     &.selectable {
@@ -43,6 +42,11 @@
       font-size: 13px;
       color: $gray;
     }
+
+    &.disabled {
+      color: $gray;
+      pointer-events: none;
+    }
   }
 </style>
 
@@ -52,6 +56,7 @@
   class:danger
   class:primary
   class:disabled
+  class:indent
   on:click>
   <slot>Define an item</slot>
 </div>

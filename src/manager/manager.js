@@ -41,9 +41,14 @@ export function removeSelected() {
   removeDocuments(layout.selected);
 }
 
-export function renameSelected() {
+export function editMetaSelected(meta) {
   if (layout.numSelected == 0) return;
-  layout.renameOpen = true;
+  layout.metaOpen = meta;
+}
+
+export function editDocumentInfoSelected() {
+  if (layout.numSelected == 0) return;
+  layout.documentInfoOpen = true;
 }
 
 export function changeAccessSelected() {

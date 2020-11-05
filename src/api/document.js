@@ -122,11 +122,11 @@ export async function deleteDocument(ids) {
   );
 }
 
-export async function renameDocument(ids, title) {
-  // Rename the documents with the specified ids
+export async function editMetadata(ids, metadata) {
+  // Edit the published url of the documents with the specified ids
   await session.patch(
     apiUrl(`documents/`),
-    ids.map((id) => ({ id, title }))
+    ids.map((id) => ({ ...metadata, id }))
   );
 }
 
