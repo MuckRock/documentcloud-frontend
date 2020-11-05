@@ -247,7 +247,7 @@ export async function uploadDocuments(
       if (file.name == null) return '';
       const parts = file.name.split('.');
       if (parts.length <= 1) return '';
-      return parts[parts.length - 1];
+      return parts[parts.length - 1].toLowerCase();
     };
     const data = await batchDelay(
       docs,
