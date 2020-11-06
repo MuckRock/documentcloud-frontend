@@ -6,7 +6,7 @@
   import { wrapLoad } from "@/util/wrapLoad";
   import { changeAccess } from "@/api/document";
   import { changeAccessForDocuments } from "@/manager/documents";
-  import { handlePlural, nameSingularNumberPlural } from "@/util/string";
+  import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
 
   const emit = emitter({
@@ -18,6 +18,7 @@
 
   $: valid = access != $layout.sameAccess;
   $: isViewer = $viewer.document != null;
+  $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
 
   async function accessChange(access) {
     if (!valid) return;
@@ -70,11 +71,11 @@
   <div class="mcontent">
     <h1>
       Change access for
-      {handlePlural($layout.numAccessSelected, 'document', true)}
+      {nameSingularNumberPlural(numAccessSelected, 'document')}
     </h1>
     <p>
       Select an access level below for the
-      {nameSingularNumberPlural($layout.numAccessSelected, 'selected document')}:
+      {nameSingularNumberPlural(numAccessSelected, 'selected document')}:
     </p>
     <div class="inputpadded">
       <label>

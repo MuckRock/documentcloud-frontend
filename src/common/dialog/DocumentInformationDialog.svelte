@@ -3,7 +3,7 @@
   import Tooltip from "@/common/Tooltip";
   import HtmlEditor from "@/common/HtmlEditor";
   import { metaDialogs } from "./metaDialogs";
-  import { simplePlural } from "@/util/string";
+  import { nameSingularNumberPlural } from "@/util/string";
   import { titlecase } from "@/util/string";
   import { editSelectedDocumentInfo } from "@/manager/documents";
   import { viewer } from "@/viewer/viewer";
@@ -95,7 +95,10 @@
 
 <div>
   <div class="mcontent">
-    <h1>Edit information for {simplePlural(numSelected, 'document')}</h1>
+    <h1>
+      Edit information for
+      {nameSingularNumberPlural(numSelected, 'document')}
+    </h1>
     <table>
       {#each metaDialogs as meta, i}
         {#if meta.disabled == null || !meta.disabled(numSelected)}

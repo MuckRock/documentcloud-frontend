@@ -16,7 +16,7 @@
   } from "@/manager/documents";
   import { showConfirm } from "@/manager/confirmDialog";
   import { wrapMultipleSeparate } from "@/util/wrapLoad";
-  import { handlePlural } from "@/util/string";
+  import { nameSingularNumberPlural } from "@/util/string";
   import { intersection } from "@/util/array";
   import { writable } from "svelte/store";
 
@@ -240,7 +240,7 @@
     <div class="mcontent">
       <h1 class:faded={editMode}>
         Add Data for
-        {handlePlural(dataDocuments.length, 'Document', true)}
+        {nameSingularNumberPlural(dataDocuments.length, 'Document')}
       </h1>
       <div class="inputpadded" class:faded={editMode}>
         <div class="add">
