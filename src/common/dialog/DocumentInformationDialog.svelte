@@ -6,10 +6,12 @@
   import { simplePlural } from "@/util/string";
   import { titlecase } from "@/util/string";
   import { editSelectedDocumentInfo } from "@/manager/documents";
+  import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
 
   // Stores
   import { layout } from "@/manager/layout";
+  import { layout as viewerLayout } from "@/viewer/layout";
 
   const fieldValid = (value, initial) => value != initial;
   const fieldInvalidText = (value, initial, fieldName) =>
@@ -19,12 +21,21 @@
     dismiss() {},
   });
 
+  $: isViewer = $viewer.document != null;
+  $: numSelected = isViewer ? 1 : $layout.numSelected;
+  $: selected = isViewer ? [$viewer.document] : $layout.selected;
+
   const initial =
-    $layout.numSelected == 1
-      ? metaDialogs.map((x) => x.fieldAccessor($layout.selected[0]))
+    ($viewer.document != null ? 1 : $layout.numSelected) == 1
+      ? metaDialogs.map((x) =>
+          x.fieldAccessor(
+            ($viewer.document != null
+              ? [$viewer.document]
+              : $layout.selected)[0]
+          )
+        )
       : metaDialogs.map((_) => "");
   let values = initial != null ? initial.slice() : metaDialogs.map((_) => "");
-  $: console.log({ values, initial });
 
   $: valid = metaDialogs.some((x, i) =>
     (x.fieldValid || fieldValid)(values[i], initial[i])
@@ -49,7 +60,15 @@
         fields[meta.apiField] = values[i];
       }
     }
-    editSelectedDocumentInfo(fields);
+    editSelectedDocumentInfo(
+      fields,
+      isViewer ? viewerLayout : layout,
+      selected,
+      () => {
+        viewer.document.doc = { ...viewer.document.doc, ...fields };
+        viewer.document = viewer.document;
+      }
+    );
     emit.dismiss();
   }
 </script>
@@ -76,13 +95,10 @@
 
 <div>
   <div class="mcontent">
-    <h1>
-      Edit information for
-      {simplePlural($layout.numSelected, 'document')}
-    </h1>
+    <h1>Edit information for {simplePlural(numSelected, 'document')}</h1>
     <table>
       {#each metaDialogs as meta, i}
-        {#if meta.disabled == null || !meta.disabled($layout.numSelected)}
+        {#if meta.disabled == null || !meta.disabled(numSelected)}
           <tr>
             <td>{titlecase(meta.fieldName)}:</td>
             <td>

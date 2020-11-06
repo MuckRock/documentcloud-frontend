@@ -1,12 +1,15 @@
 <script>
   import TableOfContents from "./TableOfContents";
   import Progress from "@/common/Progress";
+  import AccessIcon from "@/common/AccessIcon";
   import SpecialMessage from "@/common/SpecialMessage";
   import HtmlField from "@/common/HtmlField";
 
   import {
     enterRedactMode,
     enterAnnotateMode,
+    enterInfoMode,
+    enterDataMode,
     enterSectionsMode,
   } from "@/viewer/actions";
   import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
@@ -162,12 +165,26 @@
         <TableOfContents />
 
         <hr />
-        <a target="_blank" href={$viewer.document.pdf}>
-          Original Document (PDF) »
-        </a>
+        <div>
+          <a target="_blank" href={$viewer.document.pdf}>
+            Original Document (PDF) »
+          </a>
+        </div>
+        {#if $viewer.document.relatedArticleUrl != null && $viewer.document.relatedArticleUrl.trim().length > 0}
+          <div>
+            <a target="_blank" href={$viewer.document.relatedArticleUrl}>
+              Related Article »
+            </a>
+          </div>
+        {/if}
         <small>
           <p>Contributed by {$viewer.document.userOrgString}</p>
         </small>
+        {#if $viewer.document.editAccess}
+          <div>
+            <AccessIcon document={$viewer.document} showText={true} />
+          </div>
+        {/if}
       </div>
 
       {#if $viewer.me != null}
@@ -194,8 +211,22 @@
               reprocess afterwards.
             </p>
           </div>
+          <div
+            class="action"
+            class:disabled={$viewer.document.readable}
+            on:click={enterInfoMode}>
+            <h3>Edit Document Info</h3>
+            <p>Modify document information like description and related URL.</p>
+          </div>
+          <div
+            class="action"
+            class:disabled={$viewer.document.readable}
+            on:click={enterDataMode}>
+            <h3>Edit Tags and Data</h3>
+            <p>Add tags and key/value pairs to categorize your document.</p>
+          </div>
           <div class="action" on:click={enterSectionsMode}>
-            <h3>Edit sections</h3>
+            <h3>Edit Sections</h3>
             <p>
               Add sections to organize your document with a table of contents.
             </p>
@@ -207,7 +238,7 @@
           </div>
         {/if}
       {/if}
-      {#if !$layout.embed}
+      {#if !$layout.embed && $viewer.document.editAccess}
         <SpecialMessage />
         {#if $viewer.document.editAccess && $viewer.document.id < process.env.LEGACY_CUT_OFF}
           <div

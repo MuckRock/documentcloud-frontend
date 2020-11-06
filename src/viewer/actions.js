@@ -20,6 +20,14 @@ export function enterSelectNoteMode() {
   layout.action = "selectnote";
 }
 
+export function enterInfoMode() {
+  layout.showInfo = true;
+}
+
+export function enterDataMode() {
+  layout.showData = true;
+}
+
 export function enterSectionsMode() {
   layout.showEditSections = true;
 }

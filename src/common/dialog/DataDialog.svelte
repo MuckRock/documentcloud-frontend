@@ -5,12 +5,14 @@
   import Menu from "@/common/Menu";
   import MenuItem from "@/common/MenuItem";
   import NoWhitespace from "@/common/NoWhitespace";
+  import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
-  import { layout, addData } from "@/manager/layout";
+  import { layout } from "@/manager/layout";
+  import { layout as viewerLayout } from "@/viewer/layout";
   import {
     addDocumentData,
     replaceDocumentData,
-    removeDocumentData
+    removeDocumentData,
   } from "@/manager/documents";
   import { showConfirm } from "@/manager/confirmDialog";
   import { wrapMultipleSeparate } from "@/util/wrapLoad";
@@ -22,7 +24,7 @@
   import pencilSvg from "@/assets/pencil.svg";
 
   const emit = emitter({
-    dismiss() {}
+    dismiss() {},
   });
 
   let key = "";
@@ -48,8 +50,14 @@
   $: keyValid = KEY_REGEX.test(keyTrimmed);
   $: inputValid = keyValid && valueTrimmed.length > 0 && keyTrimmed.length > 0;
 
+  $: isViewer = $viewer.document != null;
+  $: dataDocuments = isViewer ? [$viewer.document] : $layout.dataDocuments;
+  $: layoutLoader = isViewer ? viewerLayout : layout;
+
   $: mutualDataPoints = intersection(
-    $layout.dataDocuments.map(d => d.dataPoints),
+    ($viewer.document != null ? [$viewer.document] : $layout.dataDocuments).map(
+      (d) => d.dataPoints
+    ),
     (a, b) => a.key == b.key && a.value == b.value
   );
   $: emptyData = mutualDataPoints.length == 0;
@@ -97,13 +105,17 @@
     // TODO: replace with bulk method on backend
     await wrapMultipleSeparate(
       loading,
-      layout,
-      ...layout.dataDocuments.map(doc => async () =>
+      layoutLoader,
+      ...dataDocuments.map((doc) => async () =>
         addDocumentData([doc], keyTrimmed, valueTrimmed)
       )
     );
     // Trigger update
     layout.dataDocuments = layout.dataDocuments;
+    if (isViewer) {
+      // Trigger viewer update
+      viewer.document = viewer.document;
+    }
   }
 
   async function handleEdit() {
@@ -120,13 +132,17 @@
     // TODO: replace with bulk method on backend
     await wrapMultipleSeparate(
       loading,
-      layout,
-      ...layout.dataDocuments.map(doc => async () =>
+      layoutLoader,
+      ...dataDocuments.map((doc) => async () =>
         replaceDocumentData([doc], previousKey, previousValue, newKey, newValue)
       )
     );
     // Trigger update
     layout.dataDocuments = layout.dataDocuments;
+    if (isViewer) {
+      // Trigger viewer update
+      viewer.document = viewer.document;
+    }
   }
 
   async function handleRemove(key, value) {
@@ -140,13 +156,17 @@
         // TODO: replace with bulk method on backend
         await wrapMultipleSeparate(
           loading,
-          layout,
-          ...layout.dataDocuments.map(doc => async () =>
+          layoutLoader,
+          ...dataDocuments.map((doc) => async () =>
             removeDocumentData([doc], key, value)
           )
         );
         // Trigger update
         layout.dataDocuments = layout.dataDocuments;
+        if (isViewer) {
+          // Trigger viewer update
+          viewer.document = viewer.document;
+        }
       }
     );
   }
@@ -219,7 +239,8 @@
   <div>
     <div class="mcontent">
       <h1 class:faded={editMode}>
-        Add Data for {handlePlural($layout.dataDocuments.length, 'Document', true)}
+        Add Data for
+        {handlePlural(dataDocuments.length, 'Document', true)}
       </h1>
       <div class="inputpadded" class:faded={editMode}>
         <div class="add">
@@ -309,10 +330,7 @@
               class="row"
               class:faded={editMode && (editingKey != key || editingValue != value)}>
               {#if editingKey == key && editingValue == value}
-                {#if key != TAG_KEY}
-                  <input bind:value={editKey} />
-                  :
-                {/if}
+                {#if key != TAG_KEY}<input bind:value={editKey} /> :{/if}
                 <input bind:value={editValue} />
                 <span class="lpad">
                   <span style="margin-right: 3px;">
@@ -328,10 +346,7 @@
                   </Button>
                 </span>
               {:else}
-                {#if key != TAG_KEY}
-                  <input readonly bind:value={key} />
-                  :
-                {/if}
+                {#if key != TAG_KEY}<input readonly bind:value={key} /> :{/if}
                 <input readonly bind:value />
                 <span class="pencil" on:click={() => startEdit(key, value)}>
                   {@html pencilSvg}
