@@ -64,10 +64,12 @@
       fields,
       isViewer ? viewerLayout : layout,
       selected,
-      () => {
-        viewer.document.doc = { ...viewer.document.doc, ...fields };
-        viewer.document = viewer.document;
-      }
+      isViewer
+        ? () => {
+            viewer.document.doc = { ...viewer.document.doc, ...fields };
+            viewer.document = viewer.document;
+          }
+        : () => {}
     );
     emit.dismiss();
   }

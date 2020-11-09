@@ -275,7 +275,7 @@ export function removeDocument(document) {
   return removeDocuments([document]);
 }
 
-export async function editSelectedDocumentInfo(info, layout = layout, selected = layout.selected, viewerUpdate = () => { }) {
+export async function editSelectedDocumentInfo(info, layout, selected, viewerUpdate = () => { }) {
   await wrapLoad(layout, async () => {
     await editMetadata(
       selected.map((doc) => doc.id),
