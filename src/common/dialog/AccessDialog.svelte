@@ -1,22 +1,39 @@
 <script>
   import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
   import { layout } from "@/manager/layout";
+  import { layout as viewerLayout } from "@/viewer/layout";
+  import { viewer } from "@/viewer/viewer";
+  import { wrapLoad } from "@/util/wrapLoad";
+  import { changeAccess } from "@/api/document";
   import { changeAccessForDocuments } from "@/manager/documents";
-  import { handlePlural, nameSingularNumberPlural } from "@/util/string";
+  import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
 
   const emit = emitter({
-    dismiss() {}
+    dismiss() {},
   });
 
-  let access = $layout.defaultAccess;
+  let access =
+    $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
 
   $: valid = access != $layout.sameAccess;
+  $: isViewer = $viewer.document != null;
+  $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
 
-  function changeAccess(access) {
+  async function accessChange(access) {
     if (!valid) return;
-    changeAccessForDocuments(layout.accessEditDocuments, access);
+    if (isViewer) {
+      await wrapLoad(viewerLayout, async () => {
+        await changeAccess([viewer.document.id], access);
+        viewer.document.doc = {
+          ...viewer.document.doc,
+          status: "readable",
+        };
+        viewer.document = viewer.document;
+      });
+    } else {
+      changeAccessForDocuments(layout.accessEditDocuments, access);
+    }
     emit.dismiss();
   }
 </script>
@@ -53,10 +70,12 @@
 <div>
   <div class="mcontent">
     <h1>
-      Change access for {handlePlural($layout.numAccessSelected, 'document', true)}
+      Change access for
+      {nameSingularNumberPlural(numAccessSelected, 'document')}
     </h1>
     <p>
-      Select an access level below for the {nameSingularNumberPlural($layout.numAccessSelected, 'selected document')}:
+      Select an access level below for the
+      {nameSingularNumberPlural(numAccessSelected, 'selected document')}:
     </p>
     <div class="inputpadded">
       <label>
@@ -89,7 +108,7 @@
     <div class="buttonpadded">
       <Button
         disabledReason={valid ? null : `Access is already set to ${$layout.sameAccess}. Select a different access level.`}
-        on:click={() => changeAccess(access)}>
+        on:click={() => accessChange(access)}>
         Change access
       </Button>
       <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>

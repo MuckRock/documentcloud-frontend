@@ -258,7 +258,7 @@ export function reprocessDocuments(documents) {
   );
 }
 
-export async function changeAccessForDocuments(documents, access) {
+export async function changeAccessForDocuments(documents, access, layout = layout) {
   await wrapLoad(layout, async () => {
     await changeAccess(
       documents.map((doc) => doc.id),
@@ -275,16 +275,17 @@ export function removeDocument(document) {
   return removeDocuments([document]);
 }
 
-export async function editSelectedDocumentInfo(info) {
+export async function editSelectedDocumentInfo(info, layout, selected, viewerUpdate = () => { }) {
   await wrapLoad(layout, async () => {
     await editMetadata(
-      layout.selected.map((doc) => doc.id),
+      selected.map((doc) => doc.id),
       info
     );
     // Show changes in UI
-    layout.selected.forEach((doc) =>
+    selected.forEach((doc) =>
       updateInCollection(doc, (d) => (d.doc = { ...d.doc, ...info }))
     );
+    viewerUpdate();
   });
   unselectAll();
 }

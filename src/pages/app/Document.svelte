@@ -1,7 +1,7 @@
 <script>
   import Checkbox from "@/common/Checkbox";
   import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
+  import AccessIcon from "@/common/AccessIcon";
   import Image from "@/common/Image";
   import Progress from "@/common/Progress";
   import HtmlField from "@/common/HtmlField";
@@ -9,21 +9,12 @@
   import DocumentThumbnail from "./DocumentThumbnail";
 
   // Stores
-  import {
-    layout,
-    unselectDocument,
-    openAccess,
-    editData,
-  } from "@/manager/layout";
+  import { layout, unselectDocument, editData } from "@/manager/layout";
   import { removeDocument, selectDocument } from "@/manager/documents";
   import { projects } from "@/manager/projects";
   import { projectUrl, dataUrl } from "@/search/search";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
 
-  // SVG assets
-  import privateIconSvg from "@/assets/private_icon.svg";
-  import publicIconSvg from "@/assets/public_icon.svg";
-  import organizationIconSvg from "@/assets/organization_icon.svg";
   import closeSimpleSvg from "@/assets/close_inline.svg";
   import pencilSvg from "@/assets/pencil.svg";
 
@@ -50,12 +41,6 @@
       ? document.highlights
       : trimmedHighlights
     : null;
-
-  $: documentAccessString = document.organizationAccess
-    ? "Only members of your organization can view this document"
-    : document.publicAccess
-    ? "Anyone can search and view this document"
-    : "Only you can view this document";
 
   let shiftKey = false;
 
@@ -110,15 +95,6 @@
     padding-left: 30px;
   }
 
-  .access {
-    &.selectable {
-      @include buttonLike;
-    }
-
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
   .updating {
     color: $gray;
     margin-bottom: 26px;
@@ -127,6 +103,10 @@
   .valign {
     vertical-align: middle;
     display: inline-block;
+
+    &.marginleft {
+      margin-left: 8px;
+    }
   }
 
   .actions {
@@ -256,21 +236,8 @@
     <div class="info">
       <h2>
         <span class="valign">{document.title}</span>
-        <span class="valign">
-          <Tooltip caption={documentAccessString}>
-            <span
-              class="access"
-              class:selectable={document.editAccess}
-              on:click={openAccess([document])}>
-              {#if document.privateAccess}
-                {@html privateIconSvg}
-              {:else if document.publicAccess}
-                {@html publicIconSvg}
-              {:else if document.organizationAccess}
-                {@html organizationIconSvg}
-              {/if}
-            </span>
-          </Tooltip>
+        <span class="valign marginleft">
+          <AccessIcon {document} />
         </span>
       </h2>
       <h3>{document.summary}</h3>

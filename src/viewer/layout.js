@@ -55,6 +55,11 @@ export const layout = new Svue({
       defaultAnnotationAccess: "private",
       hoveredNote: null,
 
+      // Document information
+      showInfo: false,
+      showData: false,
+      showAccess: false,
+
       // Sections
       showEditSections: false,
 
@@ -445,4 +450,24 @@ export function showEmbedFlow(document) {
 
 export function hideEmbedFlow() {
   layout.embedDocument = null;
+}
+
+export function hideDocumentInfo() {
+  layout.showInfo = false;
+}
+
+export function hideDocumentData() {
+  layout.showData = false;
+}
+
+export function hideAccess() {
+  layout.showAccess = false;
+}
+
+export function openAccess(documents) {
+  const document = documents[0];
+  if (document == null || !document.editAccess || document.processing) {
+    return;
+  }
+  layout.showAccess = true;
 }

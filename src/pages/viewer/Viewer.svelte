@@ -3,7 +3,6 @@
   import Body from "./Body";
   import SimpleBody from "./SimpleBody";
   import NoteBody from "./NoteBody";
-  import TextBody from "./TextBody";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
@@ -14,6 +13,9 @@
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import EmbedDialog from "@/common/dialog/EmbedDialog";
+  import AccessDialog from "@/common/dialog/AccessDialog";
+  import DocumentInformationDialog from "@/common/dialog/DocumentInformationDialog";
+  import DataDialog from "@/common/dialog/DataDialog";
   import EditSectionsDialog from "@/common/dialog/EditSectionsDialog";
 
   import Modal from "@/common/Modal";
@@ -23,12 +25,15 @@
     layout,
     setViewerInitializeAction,
     hideEmbedFlow,
+    hideAccess,
+    hideDocumentInfo,
+    hideDocumentData,
     hideEditSections,
   } from "@/viewer/layout";
   import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
-  import { onMount, tick } from "svelte";
+  import { onMount } from "svelte";
 
   const navHandlers = [
     [
@@ -102,6 +107,12 @@
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
 {:else if $layout.showEmbedDialog}
   <Modal component={EmbedDialog} on:close={hideEmbedFlow} />
+{:else if $layout.showAccess}
+  <Modal component={AccessDialog} on:close={hideAccess} />
+{:else if $layout.showInfo}
+  <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
+{:else if $layout.showData}
+  <Modal component={DataDialog} on:close={hideDocumentData} />
 {:else if $layout.showEditSections}
   <Modal component={EditSectionsDialog} on:close={hideEditSections} />
 {/if}

@@ -3,29 +3,21 @@
   import SearchResults from "./SearchResults";
 
   import { layout, initializeViewer, cancelAnnotation } from "@/viewer/layout";
-  import { doc, showSidebar } from "@/viewer/document";
-  import { viewer } from "@/viewer/viewer";
+  import { doc } from "@/viewer/document";
   import ScrollZoom from "scrollzoom";
   import ActionPane from "./pane/ActionPane";
-  import { Note } from "@/structure/note";
   import { onMount, onDestroy, tick } from "svelte";
 
   import {
     enterRedactMode,
     enterAnnotateMode,
-    enterSectionsMode
+    enterSectionsMode,
   } from "@/viewer/actions";
-
-  let body;
-  let bodyWidth;
-  let bodyHeight;
 
   let docElem;
   let actionHeight;
   $: actionOffset =
     actionHeight == null || $layout.action == null ? 0 : actionHeight;
-
-  let scrollzoom = null;
 
   function destroyScrollzoom() {
     if (doc.scrollzoom != null) {
@@ -43,7 +35,7 @@
   }
 
   function setupScrollzoom() {
-    const components = doc.pages.map(page => {
+    const components = doc.pages.map((page) => {
       let renderedComponent = { component: null };
       const destroy = () => {
         if (renderedComponent.component != null) {
@@ -77,8 +69,8 @@
                 scale: doc.viewerScale,
                 resizeCallback(extraHeight, width) {
                   handleExtraHeight(page, extraHeight, width);
-                }
-              }
+                },
+              },
             });
             return div;
           },
@@ -96,21 +88,21 @@
                 y,
                 width,
                 height,
-                scale: doc.viewerScale
+                scale: doc.viewerScale,
               });
             }
           },
           destroy() {
             destroy();
             pageDestroyed(page.pageNumber);
-          }
+          },
         },
         x: page.position[0],
         y: page.position[1],
         width: page.position[2] - page.position[0],
         height: page.position[3] - page.position[1],
         page,
-        renderedComponent
+        renderedComponent,
       };
     });
 
@@ -120,14 +112,14 @@
       components,
       width: $doc.containerWidth,
       height: $doc.containerHeight,
-      changeCallback: function() {
+      changeCallback: function () {
         const renderedComponents = Object.values(this.renderedComponents);
         if (renderedComponents.length == 0) return;
         const components = renderedComponents.sort(
           (a, b) => a.page.pageNumber - b.page.pageNumber
         );
         doc.visiblePageNumber = components[0].page.pageNumber + 1;
-      }
+      },
     });
     doc.docElem = docElem;
   }
@@ -153,7 +145,8 @@
     const target = e.target;
     if (
       e.ctrlKey &&
-      (target != docElem && (!docElem.contains || !docElem.contains(target))) &&
+      target != docElem &&
+      (!docElem.contains || !docElem.contains(target)) &&
       !visualScaleCheck()
     ) {
       e.preventDefault();
@@ -164,14 +157,14 @@
     ["touchAction", "pan-x pan-y"],
     ["overscrollBehavior", "none"],
     ["position", "fixed"],
-    ["overflow", "hidden"]
+    ["overflow", "hidden"],
   ];
   const elements = [document.documentElement, document.body];
   const prevStyles = styles.map(() => "");
   onMount(() => {
     // Set document root styles
     for (let i = 0; i < styles.length; i++) {
-      elements.forEach(element => {
+      elements.forEach((element) => {
         prevStyles[i] = element.style;
         element.style[styles[i][0]] = styles[i][1];
       });
@@ -182,7 +175,7 @@
   onDestroy(() => {
     // Restore document root styles
     for (let i = 0; i < styles.length; i++) {
-      elements.forEach(element => {
+      elements.forEach((element) => {
         element.style[styles[i][0]] = prevStyles[i];
       });
     }
@@ -268,6 +261,7 @@
       !e.shiftKey &&
       !layout.disableControls &&
       !layout.searchExpanded &&
+      !layout.showInfo &&
       !layout.showEditSections &&
       !layout.showEmbedDialog
     ) {

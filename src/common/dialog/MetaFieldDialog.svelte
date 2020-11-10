@@ -34,7 +34,7 @@
 
   function applyAction() {
     if (!valid) return;
-    editSelectedDocumentInfo({ [apiField]: value });
+    editSelectedDocumentInfo({ [apiField]: value }, layout, layout.selected);
     emit.dismiss();
   }
 
