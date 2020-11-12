@@ -141,19 +141,19 @@ const collectionModifiers = {
   updateInCollection,
 };
 
-function removeFromCollection(document, modify = true) {
+export function removeFromCollection(docId, modify = true) {
   if (modify) {
     // Track the modifications
-    modifications.remove(collectionModifiers, copyDoc(document));
+    modifications.remove(collectionModifiers, docId);
   }
 
   const newDocuments = documents.allDocuments.filter(
-    (doc) => doc.id != document.id
+    (doc) => doc.id != docId
   );
   setDocuments(newDocuments);
 
   // Refresh when you delete everything to pull new search
-  if (newDocuments.length == 0) window.location.reload();
+  if (newDocuments.length == 0 && process.env.NODE_ENV != 'test') window.location.reload();
 }
 
 export function updateInCollection(document, docFn, modify = true) {
@@ -230,11 +230,16 @@ export function removeDocuments(documents) {
     async () => {
       await wrapLoad(layout, async () => {
         await deleteDocument(documents.map((doc) => doc.id));
-        documents.map((doc) => removeFromCollection(doc));
+        documents.map((doc) => removeFromCollection(doc.id));
       });
       unselectAll();
     }
   );
+}
+
+export async function markAsDirty(docIds) {
+  const dirtyDocs = await getDocumentsWithIds(docIds, true);
+  dirtyDocs.map((doc) => replaceInCollection(doc));
 }
 
 export function reprocessDocuments(documents) {
@@ -250,8 +255,7 @@ export function reprocessDocuments(documents) {
       await wrapLoad(layout, async () => {
         const ids = documents.map((doc) => doc.id);
         await reprocessDocument(ids);
-        const reprocessingDocs = await getDocumentsWithIds(ids, true);
-        reprocessingDocs.map((doc) => replaceInCollection(doc));
+        await markAsDirty(ids);
       });
       unselectAll();
     }

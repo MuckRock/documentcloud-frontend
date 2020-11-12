@@ -91,3 +91,10 @@ export function allIndices(text, query) {
 export function isNumber(s) {
   return Number.isFinite(parseFloat(s));
 }
+
+export function lpad(s, length, fill = '0') {
+  while (s.length < length) {
+    s = `${fill}${s}`;
+  }
+  return s;
+}

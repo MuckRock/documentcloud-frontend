@@ -1,5 +1,9 @@
 class Modifications {
   constructor() {
+    this.clearModifications();
+  }
+
+  clearModifications() {
     this.adds = [];
     this.modifies = [];
     this.removes = [];
@@ -13,8 +17,8 @@ class Modifications {
     this.modifies.push([modifiers, document, fn]);
   }
 
-  remove(modifiers, document) {
-    this.removes.push([modifiers, document.id]);
+  remove(modifiers, docId) {
+    this.removes.push([modifiers, docId]);
   }
 
   applyModifications() {
@@ -38,9 +42,9 @@ class Modifications {
     });
 
     // Remove documents
-    this.removes.forEach(([modifiers, doc]) => {
+    this.removes.forEach(([modifiers, docId]) => {
       // Remove documents that have been removed (no exceptions)
-      modifiers.removeFromCollection(doc, false);
+      modifiers.removeFromCollection(docId, false);
     });
   }
 }

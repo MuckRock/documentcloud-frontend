@@ -4,6 +4,7 @@ import { truthyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
 import { getDocument, redactDocument, searchDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
+import { markAsDirty } from '@/manager/documents';
 import { router, nav } from "@/router/router";
 import {
   createAnnotation,
@@ -324,6 +325,7 @@ export function redact() {
         layout,
         async () => await redactDocument(viewer.id, layout.pendingRedactions)
       );
+      await markAsDirty([viewer.id]);
       cancelActions();
       nav("app");
     }

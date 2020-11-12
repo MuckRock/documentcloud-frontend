@@ -7,6 +7,7 @@ import { pushUrl } from "@/router/router";
 import { queryBuilder } from "@/util/url";
 import { slugify } from "@/util/string";
 import { modifications } from "@/manager/modifications";
+import { Results } from '@/structure/results';
 
 const TAG_KEY = process.env.TAG_KEY;
 
@@ -60,7 +61,7 @@ function filterDocuments(filter) {
 }
 
 export function setDocuments(documents) {
-  const results = search.results == null ? {} : search.results;
+  const results = search.results == null ? new Results('', { count: 0, results: [] }) : search.results;
   results.rawResults = {
     ...(results.rawResults == null ? {} : results.rawResults),
     results: documents
