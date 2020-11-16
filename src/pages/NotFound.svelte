@@ -12,6 +12,11 @@
   let content = null;
 
   onMount(async () => {
+    if (router.resolvedRoute.name != null) {
+      // Don't try to fetch flat page if it should resolve to a route
+      notFound = true;
+      return;
+    }
     try {
       content = await getContent(router.currentUrl);
       if (content == null || content.trim().length == 0) {

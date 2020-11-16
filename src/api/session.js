@@ -27,7 +27,7 @@ session.interceptors.response.use(
   error => {
     // Do something with response error
     if (error.response && error.response.data) {
-      return Promise.reject({ errorData: error.response.data });
+      return Promise.reject({ errorData: error.response.data, status: error.response.status });
     }
     return Promise.reject(error);
   }

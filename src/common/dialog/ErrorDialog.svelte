@@ -4,6 +4,7 @@
   import { extractErrorData } from "@/manager/errorData";
 
   export let error;
+  export let refresh = false;
 
   $: unexpected = error.errorData == null;
 
@@ -11,7 +12,7 @@
     error.errorData != null ? extractErrorData(error.errorData) : null;
 
   const emit = emitter({
-    dismiss() {}
+    dismiss() {},
   });
 </script>
 
@@ -67,7 +68,7 @@
     {/if}
     <div class="buttonpadded">
       <Button on:click={emit.dismiss}>
-        {#if unexpected}Close{:else}Dismiss{/if}
+        {#if unexpected}Close{:else if refresh}Refresh{:else}Dismiss{/if}
       </Button>
     </div>
   </div>

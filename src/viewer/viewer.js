@@ -33,6 +33,7 @@ export const viewer = new Svue({
       loadedMe: false,
 
       // Set to true if document fails to load
+      error: null,
       show404: false,
       showPending: false,
     };
@@ -190,8 +191,12 @@ function initViewer(id) {
       viewer.notes = doc.notes;
       viewer.sections = doc.sections;
     })
-    .catch(() => {
-      viewer.show404 = true;
+    .catch((e) => {
+      if (e.status != null && `${e.status}` == '404') {
+        viewer.show404 = true;
+      } else {
+        viewer.error = e;
+      }
     });
 
   if (viewer.embed) {

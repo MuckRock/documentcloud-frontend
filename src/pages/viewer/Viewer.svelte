@@ -103,6 +103,8 @@
 
 {#if $layout.error}
   <ErrorModal store={$layout} />
+{:else if $viewer.error}
+  <ErrorModal store={$viewer} refresh={true} />
 {:else if $confirmDialog.open}
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
 {:else if $layout.showEmbedDialog}
