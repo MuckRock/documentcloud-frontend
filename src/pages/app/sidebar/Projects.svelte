@@ -14,8 +14,18 @@
   import emitter from "@/emit";
 
   const emit = emitter({
-    retractSidebar() {}
+    retractSidebar() {},
   });
+
+  function sort(projects) {
+    if (projects == null) return [];
+    try {
+      projects.sort((a, b) => a.title.localeCompare(b.title));
+    } catch (e) {}
+    return projects;
+  }
+
+  $: alphabetizedProjects = sort($projects.projects);
 </script>
 
 <style lang="scss">
@@ -100,8 +110,8 @@
   </div>
   {#if $orgsAndUsers.loggedIn}
     <div class="projectcontainer">
-      {#if $projects.projects.length > 0}
-        {#each $projects.projects as project}
+      {#if alphabetizedProjects.length > 0}
+        {#each alphabetizedProjects as project}
           <Project {project} />
         {/each}
       {:else}

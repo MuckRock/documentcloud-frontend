@@ -132,6 +132,7 @@
       access,
       language,
       forceOcr,
+      uploadProject == null ? [] : [uploadProject],
       (index, progress) => {
         // Progress handler
         uploadFiles[index].progress = progress;
@@ -140,7 +141,7 @@
         // All complete handler
         uploadFiles = uploadFiles.map((file) => ({ ...file, done: true }));
         layout.uploading = false;
-        await handleNewDocuments(ids, uploadProject);
+        await handleNewDocuments(ids);
       },
       (message) => {
         layout.error = message;

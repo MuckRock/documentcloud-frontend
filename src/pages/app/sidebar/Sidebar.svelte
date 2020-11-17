@@ -1,5 +1,4 @@
 <script>
-  import { layout } from "@/manager/layout";
   import emitter from "@/emit";
 
   // Components
@@ -8,7 +7,7 @@
   export let expanded;
 
   const emit = emitter({
-    retractSidebar() {}
+    retractSidebar() {},
   });
 </script>
 

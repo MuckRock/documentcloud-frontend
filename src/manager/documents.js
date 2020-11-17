@@ -262,7 +262,7 @@ export function reprocessDocuments(documents) {
   );
 }
 
-export async function changeAccessForDocuments(documents, access, layout = layout) {
+export async function changeAccessForDocuments(documents, access, layout) {
   await wrapLoad(layout, async () => {
     await changeAccess(
       documents.map((doc) => doc.id),
@@ -338,14 +338,9 @@ export async function removeDocumentData(documents, key, value) {
   }
 }
 
-export async function handleNewDocuments(ids, project = null) {
+export async function handleNewDocuments(ids) {
   const newDocs = await getDocumentsWithIds(ids, true);
   addToCollection(newDocs);
-
-  if (project != null) {
-    // Add docs to project if relevant
-    await addDocsToProject(project, newDocs, false);
-  }
 }
 
 export function selectDocument(document, shiftKey = true) {

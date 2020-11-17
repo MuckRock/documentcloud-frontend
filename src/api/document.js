@@ -216,6 +216,7 @@ export async function pollDocument(
  * @param {Array<Document>} docs The documents to upload
  * @param {string} access The access level of the uploaded docs ("private", "organization", or "public")
  * @param {string} language The language code of the uploaded docs
+ * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} allCompleteFn A function to call when all docs upload
@@ -226,6 +227,7 @@ export async function uploadDocuments(
   access,
   language,
   forceOcr,
+  projects,
   progressFn,
   allCompleteFn,
   errorFn
@@ -239,6 +241,8 @@ export async function uploadDocuments(
     });
     toComplete.push(i);
   }
+
+  const projectIds = projects.map(p => p.id);
 
   // Allocate documents with the appropriate titles.
   let newDocuments;
@@ -256,7 +260,7 @@ export async function uploadDocuments(
       async (subDocs) => {
         const { data } = await session.post(
           apiUrl("documents/"),
-          subDocs.map((doc) => ({ title: doc.name, access, language, original_extension: getExtension(doc.file) }))
+          subDocs.map((doc) => ({ title: doc.name, access, language, original_extension: getExtension(doc.file), projects: projectIds }))
         );
         return data;
       }

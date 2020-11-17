@@ -32,7 +32,7 @@
         viewer.document = viewer.document;
       });
     } else {
-      changeAccessForDocuments(layout.accessEditDocuments, access);
+      changeAccessForDocuments(layout.accessEditDocuments, access, layout);
     }
     emit.dismiss();
   }
