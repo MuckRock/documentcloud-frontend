@@ -1,6 +1,6 @@
 <script>
   import { layout } from "@/viewer/layout";
-  import { initiateSearch, exitSearch } from "@/viewer/document";
+  import { initiateSearch, exitSearch, doc } from "@/viewer/document";
   import { tick } from "svelte";
 
   // SVG assets
@@ -33,6 +33,23 @@
     if (invalidQuery) return;
 
     initiateSearch(query);
+  }
+
+  function handleKeyDown(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key == "f") {
+      if ($doc.mode == "image" || $doc.mode == "search") {
+        e.preventDefault();
+        // Show search bar
+        const prevQuery = query;
+        expandSearch();
+        query = prevQuery;
+        try {
+          searchElem.select();
+        } catch (e) {}
+      }
+    } else if (e.key == "Escape") {
+      if (layout.searchExpanded) retract();
+    }
   }
 </script>
 
@@ -116,7 +133,7 @@
       placeholder="Search"
       bind:value={query}
       disabled={$layout.searchPending}
-      on:keypress={e => {
+      on:keypress={(e) => {
         if (e.key == 'Enter') {
           search();
         }
@@ -135,3 +152,5 @@
 <div class="icon" class:hide={$layout.searchExpanded} on:click={expandSearch}>
   {@html viewerSearchIconSvg}
 </div>
+
+<svelte:window on:keydown={handleKeyDown} />

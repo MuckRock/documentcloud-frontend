@@ -1,10 +1,15 @@
 <script>
   import { layout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
-  import { doc } from "@/viewer/document";
+  import { doc, changeMode } from "@/viewer/document";
+
+  async function handleInput(e) {
+    const mode = e.target.value;
+    await changeMode(mode);
+  }
 </script>
 
-<select bind:value={$doc.mode}>
+<select on:input={handleInput} bind:value={$doc.mode}>
   <option value="image">Document</option>
   <option value="text">Plain Text</option>
   {#if $viewer.notes != null && $viewer.notes.length > 0}

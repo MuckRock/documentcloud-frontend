@@ -1,7 +1,6 @@
 <script>
   import { doc } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
-  import { tick } from "svelte";
 
   // SVG assets
   import leftPaginator from "@/assets/left_paginator.svg";
@@ -182,7 +181,7 @@
         }}
         on:blur={handleInput}
         on:input={() => (hadInput = true)}
-        on:keydown={e => {
+        on:keydown={(e) => {
           if (input != document.activeElement) return;
           if (e.key == 'Escape') {
             dismiss();
