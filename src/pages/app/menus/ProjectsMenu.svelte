@@ -3,8 +3,19 @@
   import MenuItem from "@/common/MenuItem";
   import ProjectMenuItem from "./ProjectMenuItem";
 
-  import { layout, newProject } from "@/manager/layout";
+  import { layout, newProject, embedProject } from "@/manager/layout";
+  import { search } from "@/search/search";
   import { projects } from "@/manager/projects";
+
+  function sort(projects) {
+    if (projects == null) return [];
+    try {
+      projects.sort((a, b) => a.title.localeCompare(b.title));
+    } catch (e) {}
+    return projects;
+  }
+
+  $: alphabetizedProjects = sort($projects.editableProjects);
 </script>
 
 <style lang="scss">
@@ -17,11 +28,14 @@
 
 <Menu>
   <MenuItem primary={true} on:click={newProject}>+ New Project</MenuItem>
+  <!-- {#if !$layout.hasSelection && $search.params.oneProjectSearch && $projects.projectsById[$search.params.oneProjectSearch] != null}
+    <MenuItem on:click={embedProject}>Share Project</MenuItem>
+  {/if} -->
   {#if $layout.hasSelection && $projects.editableProjects.length > 0}
     <MenuItem selectable={false}>
       <div class="small">Project Membership</div>
     </MenuItem>
-    {#each $projects.editableProjects as project}
+    {#each alphabetizedProjects as project}
       <ProjectMenuItem {project} />
     {/each}
   {:else}

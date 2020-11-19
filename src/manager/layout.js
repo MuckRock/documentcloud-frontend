@@ -26,9 +26,11 @@ export const layout = new Svue({
       documentInfoOpen: false,
       projectEdit: null,
       projectOpen: false,
+      projectEmbed: false,
       projectCollaboratorsOpen: false,
       projectEditUser: null,
       searchTipsOpen: false,
+      diagnosticsOpen: false,
 
       // Data
       dataDocuments: [],
@@ -99,7 +101,7 @@ export const layout = new Svue({
 });
 
 export function selectionProcessing() {
-  return isProcessing(...layout.selected);
+  return [someProcessing(...layout.selected), allProcessing(...layout.selected)];
 }
 
 export function unselectDocument(document) {
@@ -120,15 +122,19 @@ function canEdit(...documents) {
   return documents.filter((doc) => !doc.editAccess).length == 0;
 }
 
-function isProcessing(...documents) {
+function someProcessing(...documents) {
   return documents.filter((doc) => doc.processing).length > 0;
+}
+
+function allProcessing(...documents) {
+  return documents.filter((doc) => !doc.processing).length == 0;
 }
 
 export function openAccess(documents) {
   if (
     documents.length == 0 ||
     !canEdit(...documents) ||
-    isProcessing(...documents)
+    someProcessing(...documents)
   )
     return;
   layout.accessEditDocuments = documents;
@@ -152,6 +158,15 @@ export function hideData() {
 export function newProject() {
   layout.projectEdit = null;
   layout.projectOpen = true;
+}
+
+export function embedProject() {
+  hideProject();
+  layout.projectEmbed = true;
+}
+
+export function hideProjectEmbed() {
+  layout.projectEmbed = false;
 }
 
 export function editProject(project) {
@@ -191,4 +206,8 @@ export function showSearchTips() {
 
 export function hideSearchTips() {
   layout.searchTipsOpen = false;
+}
+
+export function hideDiagnostics() {
+  layout.diagnosticsOpen = false;
 }

@@ -9,10 +9,12 @@
   import MetaDialog from "@/common/dialog/MetaDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
   import DataDialog from "@/common/dialog/DataDialog";
+  // import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
   import SearchTipsDialog from "@/common/dialog/SearchTipsDialog";
+  import DiagnosticDialog from "@/common/dialog/DiagnosticDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -21,10 +23,12 @@
     hideMeta,
     hideAccess,
     hideData,
+    hideProjectEmbed,
     hideProject,
     hideCollaborators,
     hideProjectCollaboratorAccess,
     hideSearchTips,
+    hideDiagnostics,
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -92,6 +96,8 @@
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.dataOpen}
     <Modal component={DataDialog} on:close={hideData} />
+    <!-- {:else if $layout.projectEmbed}
+    <Modal component={ProjectEmbedDialog} on:close={hideProjectEmbed} /> -->
   {:else if $layout.projectCollaboratorAccessOpen}
     <Modal
       component={ProjectAccessDialog}
@@ -102,6 +108,8 @@
     <Modal component={ProjectDialog} on:close={hideProject} />
   {:else if $layout.searchTipsOpen}
     <Modal component={SearchTipsDialog} on:close={hideSearchTips} />
+  {:else if $layout.diagnosticsOpen}
+    <Modal component={DiagnosticDialog} on:close={hideDiagnostics} />
   {/if}
   <Hamburger on:toggle={emit.expandSidebar} />
   {#if !$documents.error}

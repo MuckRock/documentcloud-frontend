@@ -5,6 +5,7 @@
   // Stores
   import { layout, selectionProcessing } from "@/manager/layout";
   import { metaDialogs } from "@/common/dialog/metaDialogs";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import {
     removeSelected,
     editMetaSelected,
@@ -12,14 +13,17 @@
     changeAccessSelected,
     editDataSelected,
     reprocessSelected,
+    cancelProcessSelected,
+    showDiagnosticsSelected,
   } from "@/manager/manager";
 
   let processing = false;
+  let allProcessing = false;
   export let visible = false;
 
   $: {
     if (visible) {
-      processing = selectionProcessing();
+      [processing, allProcessing] = selectionProcessing();
     }
   }
 </script>
@@ -40,8 +44,17 @@
     Change Access
   </MenuItem>
   <MenuItem on:click={editDataSelected}>Edit Document Data</MenuItem>
-  <MenuItem disabled={processing} on:click={reprocessSelected}>
-    Force Reprocess
-  </MenuItem>
+  {#if allProcessing}
+    <MenuItem danger={true} on:click={cancelProcessSelected}>
+      Cancel Processing
+    </MenuItem>
+  {:else if !processing}
+    <MenuItem on:click={reprocessSelected}>Force Reprocess</MenuItem>
+  {/if}
   <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
+  {#if $orgsAndUsers.isStaff}
+    <MenuItem special={true} on:click={showDiagnosticsSelected}>
+      Diagnostic Info
+    </MenuItem>
+  {/if}
 </Menu>

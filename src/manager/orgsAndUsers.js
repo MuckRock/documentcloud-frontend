@@ -51,6 +51,10 @@ export const orgsAndUsers = new Svue({
     loggedIn(me) {
       return me != null;
     },
+    isStaff(me) {
+      if (me == null) return false;
+      return me.is_staff == true;
+    }
   },
 });
 
@@ -62,7 +66,6 @@ async function initOrgsAndUsers() {
     orgsAndUsers.selfOrgs = await getOrganizationsByIds(orgsAndUsers.me.organizations);
     for (let i = 0; i < orgsAndUsers.selfOrgs.length; i++) {
       const org = orgsAndUsers.selfOrgs[i];
-      await getOrganization(org.id);
       orgsAndUsers.orgsById[org.id] = org;
     }
     // Trigger update

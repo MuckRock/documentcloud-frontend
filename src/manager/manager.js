@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 
-import { documents, removeDocuments, reprocessDocuments } from "./documents";
+import { documents, removeDocuments, reprocessDocuments, cancelProcessDocuments } from "./documents";
 import { layout, editData } from "./layout";
 
 export const manager = new Svue({
@@ -60,6 +60,14 @@ export function reprocessSelected() {
   reprocessDocuments(layout.selected);
 }
 
+export function cancelProcessSelected() {
+  cancelProcessDocuments(layout.selected);
+}
+
 export function editDataSelected() {
   editData(layout.selected);
+}
+
+export function showDiagnosticsSelected() {
+  layout.diagnosticsOpen = true;
 }

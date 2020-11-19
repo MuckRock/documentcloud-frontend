@@ -27,7 +27,7 @@ export async function changeActiveOrg(orgId) {
 }
 
 export async function getOrganization(id, expand = ORG_EXPAND) {
-  const { data } = await session.get(queryBuilder(apiUrl(`organizations/${id}`), { expand }))
+  const { data } = await session.get(queryBuilder(apiUrl(`organizations/${id}/`), { expand }))
   return data;
 }
 

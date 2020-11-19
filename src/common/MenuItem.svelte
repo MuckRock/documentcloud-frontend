@@ -4,6 +4,7 @@
   export let primary = false;
   export let disabled = false;
   export let indent = false;
+  export let special = false;
 </script>
 
 <style lang="scss">
@@ -14,6 +15,10 @@
 
     &.danger {
       color: $caution;
+    }
+
+    &.special {
+      color: $searchSpecial;
     }
 
     &.primary {
@@ -57,6 +62,7 @@
   class:primary
   class:disabled
   class:indent
+  class:special
   on:click>
   <slot>Define an item</slot>
 </div>

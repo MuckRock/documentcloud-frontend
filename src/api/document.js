@@ -148,7 +148,7 @@ export async function reprocessDocument(ids) {
 
 export async function cancelProcessing(id) {
   // Cancel processing the document with the specified id
-  const { data } = await session.delete(apiUrl(`documents/${id}/process`));
+  const { data } = await session.delete(apiUrl(`documents/${id}/process/`));
   return data;
 }
 

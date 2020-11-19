@@ -4,6 +4,7 @@ import {
   getDocumentsWithIds,
   deleteDocument,
   reprocessDocument,
+  cancelProcessing,
   changeAccess,
   editMetadata,
   PENDING,
@@ -257,6 +258,30 @@ export function reprocessDocuments(documents) {
         await reprocessDocument(ids);
         await markAsDirty(ids);
       });
+      unselectAll();
+    }
+  );
+}
+
+export function cancelProcessDocuments(documents) {
+  if (documents.length == 0) return;
+  showConfirm(
+    "Cancel processing",
+    `Proceeding will force the ${documents.length == 1
+      ? "selected document"
+      : `${documents.length} selected documents`
+    } to stop processing. After processing has been stopped, an error will show after which you can “Force Reprocess” or delete the ${documents.length == 1
+      ? "document"
+      : `documents`} using the Edit menu. Do you wish to continue?`,
+    "Continue",
+    async () => {
+      await wrapLoad(layout, async () => {
+        for (let i = 0; i < documents.length; i++) {
+          const id = documents[i].id;
+          await cancelProcessing(id);
+        }
+      });
+      await markAsDirty(documents.map((doc) => doc.id));
       unselectAll();
     }
   );
