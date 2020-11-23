@@ -1,11 +1,8 @@
 <script>
   import Button from "@/common/Button";
   import Loader from "@/common/Loader";
-  import Dropdown from "@/common/Dropdown";
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
 
-  import { layout, showCollaborators } from "@/manager/layout";
+  import { layout, showCollaborators, embedProject } from "@/manager/layout";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import emitter from "@/emit";
@@ -14,12 +11,12 @@
   import {
     createNewProject,
     editProject,
-    removeProject
+    removeProject,
   } from "@/manager/projects";
   import { showConfirm } from "@/manager/confirmDialog";
 
   const emit = emitter({
-    dismiss() {}
+    dismiss() {},
   });
 
   let name = layout.projectEdit == null ? "" : layout.projectEdit.title;
@@ -32,8 +29,8 @@
   $: normalizedName = name.trim();
   $: changed =
     !editing ||
-    ($layout.projectEdit.title != name ||
-      $layout.projectEdit.description != description);
+    $layout.projectEdit.title != name ||
+    $layout.projectEdit.description != description;
   $: valid = changed && normalizedName.length > 0;
 
   async function createOrUpdate() {
@@ -82,6 +79,10 @@
 
   p {
     margin-bottom: 0;
+
+    .spanner {
+      margin-left: 5px;
+    }
   }
 </style>
 
@@ -104,6 +105,11 @@
             <Button nondescript={true} on:click={showCollaborators}>
               Manage Collaborators
             </Button>
+            <!-- <span class="spanner">
+              <Button nondescript={true} on:click={embedProject}>
+                Share Project
+              </Button>
+            </span> -->
           </p>
         {/if}
       </div>
