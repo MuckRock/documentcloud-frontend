@@ -9,7 +9,7 @@
   import MetaDialog from "@/common/dialog/MetaDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
   import DataDialog from "@/common/dialog/DataDialog";
-  // import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog";
+  import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
   import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
@@ -38,6 +38,7 @@
   import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
 
   export let concealed = false;
+  export let embed = false;
 
   const emit = emitter({
     expandSidebar() {},
@@ -57,6 +58,10 @@
     top: 0;
     bottom: 0;
     overflow: auto;
+
+    &.embed {
+      left: 0;
+    }
 
     @media only screen and (max-width: $mobileBreak) {
       left: 0;
@@ -81,7 +86,7 @@
   }
 </style>
 
-<div class="main" class:concealed>
+<div class="main" class:embed class:concealed>
   <Toasts />
 
   {#if $layout.error}
@@ -96,8 +101,8 @@
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.dataOpen}
     <Modal component={DataDialog} on:close={hideData} />
-    <!-- {:else if $layout.projectEmbed}
-    <Modal component={ProjectEmbedDialog} on:close={hideProjectEmbed} /> -->
+  {:else if $layout.projectEmbed}
+    <Modal component={ProjectEmbedDialog} on:close={hideProjectEmbed} />
   {:else if $layout.projectCollaboratorAccessOpen}
     <Modal
       component={ProjectAccessDialog}
@@ -111,10 +116,12 @@
   {:else if $layout.diagnosticsOpen}
     <Modal component={DiagnosticDialog} on:close={hideDiagnostics} />
   {/if}
-  <Hamburger on:toggle={emit.expandSidebar} />
+  {#if !embed}
+    <Hamburger on:toggle={emit.expandSidebar} />
+  {/if}
   {#if !$documents.error}
     <div class="container">
-      <Documents />
+      <Documents {embed} />
     </div>
   {:else}
     <div class="container error">

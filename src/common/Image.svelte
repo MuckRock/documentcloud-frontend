@@ -26,7 +26,7 @@
     // Dragging
     dragStart() {},
     dragMove() {},
-    dragEnd() {}
+    dragEnd() {},
   });
 
   let makeNull = false;
@@ -77,7 +77,7 @@
     y = ensureBounds(y, 0, img.offsetHeight);
     return {
       x: x / img.offsetWidth,
-      y: y / img.offsetHeight
+      y: y / img.offsetHeight,
     };
   }
 

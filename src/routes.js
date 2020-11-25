@@ -7,6 +7,7 @@ import Viewer from "@/pages/viewer/Viewer";
 // Embeds
 import Note from "@/pages/embed/note/Note";
 import Page from '@/pages/embed/page/Page';
+import Project from '@/pages/embed/project/Project';
 
 export const routes = [
   NotFound,
@@ -36,6 +37,10 @@ export const routes = [
     page: {
       path: "/documents/:id/pages/:page",
       component: Page,
+    },
+    project: {
+      path: "/projects/:projectEmbedId",
+      component: Project
     }
   }
 ];

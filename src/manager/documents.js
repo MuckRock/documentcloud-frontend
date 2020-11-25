@@ -43,7 +43,7 @@ export const documents = new Svue({
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
       unselectAll();
-      if (route != null && route.name == "app") {
+      if (route != null && (route.name == "app" || route.name == 'project')) {
         if (!this.hasInited) {
           initDocuments();
           this.hasInited = true;

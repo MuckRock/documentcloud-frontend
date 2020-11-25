@@ -152,6 +152,12 @@
       await deletePageAnnotation(annotation.id, page.document.id);
     });
   }
+
+  function handleKeyDown(e) {
+    if ((e.metaKey || e.ctrlKey) && (e.which == 13 || e.keyCode == 13)) {
+      createOrUpdateAnnotation();
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -645,3 +651,5 @@
     {/if}
   </footer>
 </div>
+
+<svelte:window on:keydown={handleKeyDown} />

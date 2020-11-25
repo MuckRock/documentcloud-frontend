@@ -60,7 +60,7 @@
 <div class="cell" {style}>
   {#if !$layout.embed}
     <div class="back">
-      <Link to="app" style="margin-top: {$layout.headerHeight - 20}px">
+      <Link back={true} style="margin-top: {$layout.headerHeight - 20}px">
         {@html backArrowSvg}
       </Link>
     </div>

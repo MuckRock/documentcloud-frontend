@@ -8,6 +8,7 @@
   import errorIconSvg from "@/assets/error_icon.svg";
 
   export let document;
+  export let embed = false;
 </script>
 
 <style lang="scss">
@@ -18,6 +19,10 @@
 
     @media only screen and (max-width: $mobileBreak) {
       padding: 10px 15px 20px 15px;
+    }
+
+    &.embed {
+      padding: 5px 15px 10px 15px;
     }
 
     :global(img),
@@ -57,10 +62,10 @@
   }
 </style>
 
-<div class="img">
+<div class="img" class:embed>
   <span class="imgwrap">
     {#if document.viewable}
-      <Link to="viewer" params={{ id: document.slugId }}>
+      <Link newPage={embed} to="viewer" params={{ id: document.slugId }}>
         <Image src={document.thumbnail} />
       </Link>
     {:else if document.pending}

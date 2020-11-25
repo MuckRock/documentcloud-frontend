@@ -5,9 +5,6 @@
   import { getEmbed } from "@/api/embed";
   import { queryBuilder } from "@/util/url";
 
-  let embedElem;
-  let linkElem;
-
   let embedded = true;
 
   let appearanceOptions = [
@@ -17,13 +14,13 @@
       values: [
         [
           "Responsive (default)",
-          "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden"
+          "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
         ],
         ["Hidden", "Hide the sidebar by default"],
-        ["Visible", "Show the sidebar by default"]
+        ["Visible", "Show the sidebar by default"],
       ],
-      selected: 0
-    }
+      selected: 0,
+    },
   ];
 
   $: sidebarBehavior =
@@ -36,17 +33,23 @@
   $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
     embed: embedded ? 1 : null,
     title: 1,
-    sidebar: sidebarBehavior
+    sidebar: sidebarBehavior,
   });
   $: linkUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
-    sidebar: sidebarBehavior
+    sidebar: sidebarBehavior,
   });
 
   let embedCode = null;
+  let errorOccurred = false;
 
   $: {
     if (embedUrl != null) {
-      getEmbed(embedUrl).then(({ html }) => (embedCode = html));
+      getEmbed(embedUrl)
+        .then(({ html }) => (embedCode = html))
+        .catch((e) => {
+          console.error(e);
+          errorOccurred = true;
+        });
     }
   }
 </script>
@@ -61,5 +64,6 @@
   embedDescription="Copy the HTML code to embed this document within an article
   or post:"
   {embedCode}
+  {errorOccurred}
   linkText={linkUrl}
   tweetText={`${$layout.embedDocument.title} ${linkUrl}`} />

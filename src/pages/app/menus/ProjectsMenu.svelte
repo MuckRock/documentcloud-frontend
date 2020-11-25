@@ -3,8 +3,7 @@
   import MenuItem from "@/common/MenuItem";
   import ProjectMenuItem from "./ProjectMenuItem";
 
-  import { layout, newProject, embedProject } from "@/manager/layout";
-  import { search } from "@/search/search";
+  import { layout, newProject } from "@/manager/layout";
   import { projects } from "@/manager/projects";
 
   function sort(projects) {
@@ -28,9 +27,6 @@
 
 <Menu>
   <MenuItem primary={true} on:click={newProject}>+ New Project</MenuItem>
-  <!-- {#if !$layout.hasSelection && $search.params.oneProjectSearch && $projects.projectsById[$search.params.oneProjectSearch] != null}
-    <MenuItem on:click={embedProject}>Share Project</MenuItem>
-  {/if} -->
   {#if $layout.hasSelection && $projects.editableProjects.length > 0}
     <MenuItem selectable={false}>
       <div class="small">Project Membership</div>

@@ -13,11 +13,17 @@
   export let embedDescription;
   export let embedCode = null;
   export let embedAction = null;
+  export let errorOccurred = false;
   export let linkText;
   export let tweetText;
 
   let embedElem;
   let linkElem;
+
+  const ERROR_TEXT = "An unexpected error occurred. Please try again later.";
+
+  $: embedText = errorOccurred ? ERROR_TEXT : embedCode;
+  $: linkDisplayText = errorOccurred ? ERROR_TEXT : linkText;
 
   $: {
     if (embedCode != null && embedAction != null) {
@@ -72,6 +78,12 @@
   .buttonpadded {
     margin-top: 12px !important;
   }
+
+  .error {
+    color: $caution;
+    margin-bottom: 12px;
+    pointer-events: none;
+  }
 </style>
 
 <div class="shareoptions">
@@ -93,42 +105,50 @@
     </div>
     <div class="name">Link</div>
   </div>
-  <a
-    target="_blank"
-    href="https://twitter.com/intent/tweet?text={encodeURIComponent(tweetText)}">
-    <div class="shareoption">
-      <div class="logo">
-        {@html twitterSvg}
+  {#if !errorOccurred}
+    <a
+      target="_blank"
+      href="https://twitter.com/intent/tweet?text={encodeURIComponent(tweetText)}">
+      <div class="shareoption">
+        <div class="logo">
+          {@html twitterSvg}
+        </div>
+        <div class="name">Twitter</div>
       </div>
-      <div class="name">Twitter</div>
-    </div>
-  </a>
+    </a>
+  {/if}
 </div>
 
 {#if shareOption == 'embed'}
   <p>{embedDescription}</p>
 
-  {#if embedCode != null}
-    <textarea bind:this={embedElem} value={embedCode} />
-  {:else}
-    <textarea disabled>Loading...</textarea>
+  {#if embedText != null}
+    <textarea
+      class:error={errorOccurred}
+      bind:this={embedElem}
+      value={embedText} />
+  {:else}<textarea disabled>Loading...</textarea>{/if}
+
+  {#if !errorOccurred}
+    <div class="buttonpadded">
+      <Button on:click={() => copy(embedElem)}>Copy code</Button>
+    </div>
   {/if}
 
-  <div class="buttonpadded">
-    <Button on:click={() => copy(embedElem)}>Copy code</Button>
-  </div>
-
   {#if embedCode != null}
-    <p>
-      <b>Preview:</b>
-    </p>
+    <p><b>Preview:</b></p>
     <div class="preview">
       {@html embedCode}
     </div>
   {/if}
 {:else if shareOption == 'link'}
-  <input bind:this={linkElem} value={linkText} />
-  <div class="buttonpadded">
-    <Button on:click={() => copy(linkElem)}>Copy URL</Button>
-  </div>
+  <input
+    class:error={errorOccurred}
+    bind:this={linkElem}
+    value={linkDisplayText} />
+  {#if !errorOccurred}
+    <div class="buttonpadded">
+      <Button on:click={() => copy(linkElem)}>Copy URL</Button>
+    </div>
+  {/if}
 {/if}

@@ -105,11 +105,11 @@
             <Button nondescript={true} on:click={showCollaborators}>
               Manage Collaborators
             </Button>
-            <!-- <span class="spanner">
+            <span class="spanner">
               <Button nondescript={true} on:click={embedProject}>
                 Share Project
               </Button>
-            </span> -->
+            </span>
           </p>
         {/if}
       </div>

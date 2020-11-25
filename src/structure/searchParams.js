@@ -1,5 +1,6 @@
 import { Svue } from "svue";
 import { searchDocuments } from "@/api/document";
+import { getProjectDocuments } from '@/api/project';
 import { cacheAsync } from '@/util/cache';
 import { highlight } from "@/search/parse";
 
@@ -42,6 +43,14 @@ const GET_DOCUMENT_FIELDS = {
   }
 };
 
+function extractId(slugId) {
+  const parts = slugId.split('-');
+  if (parts.length == 0) return null;
+  const lastPart = parts[parts.length - 1];
+  if (!/^[0-9]+$/.test(lastPart)) return null;
+  return parseInt(lastPart);
+}
+
 export class SearchParams extends Svue {
   constructor(rawParams, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
@@ -57,7 +66,13 @@ export class SearchParams extends Svue {
           const page = params.page == null ? 1 : parseInt(params.page);
           return page - 1;
         },
-        query(params) {
+        projectEmbedId(params) {
+          const projectEmbedId = params.projectEmbedId;
+          if (projectEmbedId == null || projectEmbedId.trim().length == 0) return null;
+          return extractId(projectEmbedId);
+        },
+        query(params, projectEmbedId) {
+          if (projectEmbedId != null) return null;
           const query = params.q == null ? null : params.q;
           return query;
         },
@@ -82,11 +97,7 @@ export class SearchParams extends Svue {
                 let normalizedValue = null;
                 if (getDocumentField.idType) {
                   // Ensure the value is an integer ID
-                  const parts = highlight.value.split('-');
-                  if (parts.length == 0) return null;
-                  const lastPart = parts[parts.length - 1];
-                  if (!/^[0-9]+$/.test(lastPart)) return null;
-                  normalizedValue = parseInt(lastPart);
+                  normalizedValue = extractId(highlight.value);
                 } else {
                   // Ensure the value matches the accepted values
                   if (!getDocumentField.accept.includes(highlight.value))
@@ -191,7 +202,11 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        getMethod(query, page, oneUserSearch, oneProjectSearch, oneAccessSearch, noStatus, oneOrZeroAccesses) {
+        getMethod(query, projectEmbedId, page, oneUserSearch, oneProjectSearch, oneAccessSearch, noStatus, oneOrZeroAccesses) {
+          if (projectEmbedId != null) {
+            // Use project api documents method
+            return [() => getProjectDocuments(projectEmbedId, page), null];
+          }
           if (query == null) return null;  // Wait for redirect
           // Use search method
           if (page == 0 && noStatus && oneOrZeroAccesses) {

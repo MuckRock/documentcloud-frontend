@@ -1,9 +1,10 @@
 <script>
-  import { routes, router, getPath, pushUrl } from "@/router/router";
+  import { router, getPath, pushUrl, goBack } from "@/router/router";
   import { urlsEqual } from "@/util/url";
   import { Svue } from "svue";
   export let to = null;
   export let toUrl = null;
+  export let back = false;
   export let params = null;
   export let newPage = false;
   export let forceClick = false;
@@ -18,6 +19,7 @@
       toPath(router) {
         if (toUrl != null) return toUrl;
         if (router.routes == null) return null;
+        if (back) return null;
         return getPath(to, params);
       },
       active(router) {
@@ -26,11 +28,15 @@
           return urlsEqual(router.currentUrl, toUrl);
         }
         return router.resolvedRoute.name == to;
-      }
-    }
+      },
+    },
   });
 
   function nav(e) {
+    if (back) {
+      goBack();
+    }
+
     if (link.toPath == null || forceClick) return;
 
     // Don't programmatically nav if any modifier key is pressed
@@ -51,27 +57,43 @@
     display: inline-block;
   }
 
-  a.color {
+  .color {
     color: $primary !important;
+  }
+
+  span {
+    cursor: pointer;
   }
 </style>
 
-{#if newPage}
-  <a
-    class:color
-    class:ib={inlineBlock}
-    class:active={$link.active}
-    href={$link.toPath}
-    target="_blank">
-    <slot />
-  </a>
+{#if !back}
+  {#if newPage}
+    <a
+      class:color
+      class:ib={inlineBlock}
+      class:active={$link.active}
+      href={$link.toPath}
+      target="_blank">
+      <slot />
+    </a>
+  {:else}
+    <a
+      class:color
+      class:ib={inlineBlock}
+      class:active={$link.active}
+      href={$link.toPath}
+      on:click={nav}>
+      <slot />
+    </a>
+  {/if}
 {:else}
-  <a
+  <!-- Go back on click -->
+  <span
     class:color
     class:ib={inlineBlock}
     class:active={$link.active}
     href={$link.toPath}
     on:click={nav}>
     <slot />
-  </a>
+  </span>
 {/if}

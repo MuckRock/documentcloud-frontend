@@ -37,7 +37,13 @@
 
   function handleKeyDown(e) {
     if ((e.ctrlKey || e.metaKey) && e.key == "f") {
-      if ($doc.mode == "image" || $doc.mode == "search") {
+      if (
+        !layout.disableControls &&
+        !layout.showInfo &&
+        !layout.showEditSections &&
+        !layout.showEmbedDialog &&
+        (doc.mode == "image" || doc.mode == "search")
+      ) {
         e.preventDefault();
         // Show search bar
         const prevQuery = query;

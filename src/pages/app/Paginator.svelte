@@ -5,8 +5,8 @@
   import { simplePlural } from "@/util/string";
 
   // SVG assets
-  import leftPaginatorSvg from "@/assets/left_paginator.svg";
-  import rightPaginatorSvg from "@/assets/right_paginator.svg";
+  import leftPaginatorSvg from "@/assets/page_arrow_left.svg";
+  import rightPaginatorSvg from "@/assets/page_arrow_right.svg";
 
   function gotoPrev() {
     if (search.results.hasPrev) {
@@ -56,46 +56,25 @@
     }
 
     button {
-      $depress: 2px;
-      $top: -1px;
-      $bottom: -4px;
-      outline: none;
-
       cursor: pointer;
-      background: #eaeaea !important;
-      border: solid 1px #989898;
-      border-radius: $radius;
+      background: none;
+      border: none;
+      outline: none;
       width: 24px;
       height: 21px;
       padding: 2px 0;
       position: relative;
+      text-align: center;
 
-      &:before {
-        content: "";
-        background: #c5c5c5;
-        border: solid 1px #a7a7a7;
-        border-radius: $radius;
-        position: absolute;
-        top: $top;
-        left: -1px;
-        right: -2.5px;
-        bottom: $bottom;
-        z-index: -1;
+      :global(svg) {
+        height: 8px;
       }
 
       &:hover {
-        margin-top: $depress;
-
-        &:before {
-          bottom: $bottom + ($depress / 2);
-        }
+        opacity: 0.8;
 
         &:disabled {
-          margin-top: 0;
-
-          &:before {
-            bottom: $bottom;
-          }
+          opacity: 0.2;
         }
       }
 
@@ -103,10 +82,6 @@
       &:disabled:before {
         opacity: 0.2;
         cursor: default;
-      }
-
-      :global(svg) {
-        height: 14px;
       }
     }
   }
@@ -124,9 +99,12 @@
             {$search.results.rawResults.results.length}
           {:else}
             <span class="range">
-              {$search.results.start + 1} - {$search.results.end}
+              {$search.results.start + 1}
+              -
+              {$search.results.end}
             </span>
-            of {$search.results.count}
+            of
+            {$search.results.count}
           {/if}
         </div>
         <div class="documents">

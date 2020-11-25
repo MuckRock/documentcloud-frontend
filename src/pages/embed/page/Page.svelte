@@ -26,14 +26,14 @@
           [0, 0, 1, active.y1], // top
           [0, active.y1, active.x1, active.y2], // left
           [active.x2, active.y1, 1, active.y2], // right
-          [0, active.y2, 1, 1] // bottom
+          [0, active.y2, 1, 1], // bottom
         ];
 
   onMount(async () => {
     doc = await getDocument(idPart);
     // TODO: get for specific page
     notes = (await getAnnotations(idPart, "")).filter(
-      note => !note.isPageNote && note.page == page - 1
+      (note) => !note.isPageNote && note.page == page - 1
     );
 
     // Render content
@@ -100,7 +100,9 @@
 <div class="dc-embed" bind:this={elem}>
   {#if doc != null}
     <div class="dc-page">
-      Page {page} of
+      Page
+      {page}
+      of
       <a
         class="DC-embed-resource"
         href={pageUrl}
@@ -113,6 +115,7 @@
       <ProgressiveImage
         width={600}
         {aspect}
+        relative={true}
         bordered={false}
         alt="Page {page} of {doc.title}"
         page={{ document: doc, pageNumber: page - 1 }} />
@@ -151,7 +154,9 @@
         font-weight:700;font-family:Gotham,inherit,sans-serif;color:inherit;text-decoration:none">
         DocumentCloud
       </a>
-      by {doc.userOrgString} &bull;
+      by
+      {doc.userOrgString}
+      &bull;
       <a
         style="color: #5a76a0; text-decoration: underline;"
         href={pageUrl}

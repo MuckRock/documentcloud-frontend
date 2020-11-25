@@ -6,8 +6,10 @@ import session from "./session";
 import { apiUrl } from "./base";
 import { Project } from "@/structure/project";
 import { grabAllPages } from "@/util/paginate";
-import { DEFAULT_EXPAND } from "./common";
+import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
 import { queryBuilder } from "@/util/url";
+import { Results } from "@/structure/results";
+import { Document } from "@/structure/document";
 
 export async function newProject(title, description) {
   // Create a project
@@ -64,6 +66,22 @@ export async function getProjectUsers(projectId, expand = DEFAULT_EXPAND) {
     apiUrl(queryBuilder(`projects/${projectId}/users/`, { expand }))
   );
   return users;
+}
+
+
+export async function getProjectDocuments(
+  projectId,
+  page = 0,
+  extraParams = {},
+  ordering = DEFAULT_ORDERING,
+  expand = DEFAULT_EXPAND + ',document'
+) {
+  // Return documents with the specified parameters
+  const params = { ...extraParams, ordering, expand, page: page + 1 };
+  const url = apiUrl(queryBuilder(`projects/${projectId}/documents/`, params));
+  const { data } = await session.get(url);
+  data.results = data.results.map((document) => new Document(document.document));
+  return new Results(url, data);
 }
 
 export async function addUserToProject(

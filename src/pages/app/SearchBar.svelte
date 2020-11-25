@@ -10,6 +10,7 @@
   export let search = "";
   export let example = false;
   export let compact = false;
+  export let embed = false;
   let transformedQuery;
 
   function submitSearch() {
@@ -20,7 +21,7 @@
   onMount(() => {
     if (!example) {
       unsubscribe = [
-        router.subscribe(router => {
+        router.subscribe((router) => {
           // Set query from URL if applicable
           const route = router.resolvedRoute;
           if (route != null && route.name == "app") {
@@ -31,13 +32,13 @@
               search = "";
             }
           }
-        })
+        }),
       ];
     }
   });
 
   onDestroy(() => {
-    unsubscribe.forEach(x => x());
+    unsubscribe.forEach((x) => x());
   });
 </script>
 
@@ -81,7 +82,7 @@
     {example}
     {compact}
     on:search={submitSearch} />
-  {#if !example}
+  {#if !embed && !example}
     <div class="info">
       <span>
         Search tips: add filters by typing

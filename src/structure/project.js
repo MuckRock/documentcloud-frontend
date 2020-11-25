@@ -1,6 +1,8 @@
 import { Svue } from "svue";
 import { uniquify } from "@/util/array";
 
+const APP_URL = process.env.APP_URL;
+
 export class Project extends Svue {
   constructor(rawProject, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
@@ -16,6 +18,13 @@ export class Project extends Svue {
         id(project) {
           return project.id;
         },
+        slug(project) {
+          return project.slug;
+        },
+        slugId(id, slug) {
+          // Opposite order from docs (for legacy reasons)
+          return [slug, id].join("-");
+        },
         title(project) {
           return project.title;
         },
@@ -25,7 +34,10 @@ export class Project extends Svue {
         editAccess(project) {
           if (project.edit_access == null) return false;
           return project.edit_access;
-        }
+        },
+        embedUrl(slugId) {
+          return `${APP_URL}projects/${slugId}/`;
+        },
       }
     });
   }

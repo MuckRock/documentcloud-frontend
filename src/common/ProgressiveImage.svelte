@@ -9,6 +9,7 @@
   export let bordered = true;
   export let grayed = false;
   export let crosshair = false;
+  export let relative = false;
   let elem;
   let destroyed = false;
   let imgs = [];
@@ -16,13 +17,12 @@
   let largestLoaded = -1;
 
   const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
-    .map(x => x.split(":"))
-    .map(x => [parseFloat(x[1]), x[0]])
+    .map((x) => x.split(":"))
+    .map((x) => [parseFloat(x[1]), x[0]])
     .sort((a, b) => a[0] - b[0]);
   const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
-    x => x[0][1] == "normal"
+    (x) => x[0][1] == "normal"
   )[0];
-  let srcs = [];
   let mounted = false;
 
   onMount(() => {
@@ -51,8 +51,8 @@
 
   function nixOlder(keepIndex) {
     imgs
-      .filter(x => x[1] < keepIndex)
-      .forEach(x => {
+      .filter((x) => x[1] < keepIndex)
+      .forEach((x) => {
         x[0].src = "";
         x[0].remove();
       });
@@ -106,7 +106,7 @@
 
   onDestroy(() => {
     destroyed = true;
-    imgs.forEach(img => (img[0].src = ""));
+    imgs.forEach((img) => (img[0].src = ""));
   });
 </script>
 
@@ -139,6 +139,12 @@
       }
     }
 
+    &.relative {
+      :global(img) {
+        position: relative !important;
+      }
+    }
+
     &.grayed {
       filter: brightness(0.8);
     }
@@ -154,4 +160,5 @@
   bind:this={elem}
   class:bordered
   class:grayed
-  class:crosshair />
+  class:crosshair
+  class:relative />

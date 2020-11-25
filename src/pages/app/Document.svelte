@@ -21,6 +21,7 @@
   import { pageImageUrl } from "@/api/viewer";
 
   export let document;
+  export let embed = false;
 
   $: highlightsActive =
     document.highlights != null && document.highlights.length > 0;
@@ -77,7 +78,7 @@
     display: table;
 
     @media only screen and (max-width: $mobileBreak) {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .row {
@@ -231,37 +232,52 @@
           checked={$layout.selectedMap[document.id] != null} />
       </div>
     {/if}
-    <DocumentThumbnail {document} />
+    <DocumentThumbnail {embed} {document} />
 
     <div class="info">
       <h2>
         <span class="valign">{document.title}</span>
-        <span class="valign marginleft">
-          <AccessIcon {document} />
-        </span>
+        {#if !embed}
+          <span class="valign marginleft">
+            <AccessIcon {document} />
+          </span>
+        {/if}
       </h2>
-      <h3>{document.summary}</h3>
+      {#if !embed}
+        <h3>{document.summary}</h3>
+      {/if}
       {#if document.description != null && document.description.trim().length > 0}
         <div class="description">
           <HtmlField content={document.description} />
         </div>
       {/if}
-      <div class="actions">
-        {#if document.viewable}
-          <Link to="viewer" params={{ id: document.slugId }}>
-            <Button action={true}>Open</Button>
-          </Link>
-          {#if document.readable}
-            <div class="updating">
-              Updating document...
-              <Progress initializing={true} progress={0} compact={true} />
-            </div>
-          {/if}
-        {:else if document.pending}
-          <span class="pending">Processing</span>
-        {:else if document.error}
-          <span class="error">
-            An error occurred trying to process your document
+      {#if !embed}
+        <div class="actions">
+          {#if document.viewable}
+            <Link to="viewer" params={{ id: document.slugId }}>
+              <Button action={true}>Open</Button>
+            </Link>
+            {#if document.readable}
+              <div class="updating">
+                Updating document...
+                <Progress initializing={true} progress={0} compact={true} />
+              </div>
+            {/if}
+          {:else if document.pending}
+            <span class="pending">Processing</span>
+          {:else if document.error}
+            <span class="error">
+              An error occurred trying to process your document
+              <br />
+              <Button
+                small={true}
+                secondary={true}
+                on:click={removeDocument(document)}>
+                Remove
+              </Button>
+            </span>
+          {:else if document.nofile}
+            <span class="error">Your document was uploaded improperly</span>
             <br />
             <Button
               small={true}
@@ -269,87 +285,80 @@
               on:click={removeDocument(document)}>
               Remove
             </Button>
-          </span>
-        {:else if document.nofile}
-          <span class="error">Your document was uploaded improperly</span>
-          <br />
-          <Button
-            small={true}
-            secondary={true}
-            on:click={removeDocument(document)}>
-            Remove
-          </Button>
-        {/if}
-        <!-- Show project and data tags -->
-        {#if document.projectIds != null}
-          {#each document.projectIds as id}
-            {#if $projects.projectsById[id] != null}
-              <Link toUrl={projectUrl($projects.projectsById[id])}>
+          {/if}
+          <!-- Show project and data tags -->
+          {#if document.projectIds != null}
+            {#each document.projectIds as id}
+              {#if $projects.projectsById[id] != null}
+                <Link toUrl={projectUrl($projects.projectsById[id])}>
+                  <Button plain={true}>
+                    <div class="smallinfo">Project</div>
+                    {$projects.projectsById[id].title}
+                  </Button>
+                </Link>
+              {/if}
+            {/each}
+            {#each document.dataPoints as { key, value }}
+              <Link toUrl={dataUrl(key, value)}>
                 <Button plain={true}>
-                  <div class="smallinfo">Project</div>
-                  {$projects.projectsById[id].title}
+                  {#if key != TAG_KEY}{key}:{/if}
+                  {value}
                 </Button>
               </Link>
+            {/each}
+            {#if document.dataPoints.length > 0 && document.editAccess}
+              <span class="pencil" on:click={() => editData([document])}>
+                {@html pencilSvg}
+              </span>
             {/if}
-          {/each}
-          {#each document.dataPoints as { key, value }}
-            <Link toUrl={dataUrl(key, value)}>
-              <Button plain={true}>
-                {#if key != TAG_KEY}{key}:{/if}
-                {value}
-              </Button>
-            </Link>
-          {/each}
-          {#if document.dataPoints.length > 0 && document.editAccess}
-            <span class="pencil" on:click={() => editData([document])}>
-              {@html pencilSvg}
-            </span>
           {/if}
-        {/if}
-      </div>
-      {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}
-        <div class="hinfo">
-          <span class="x" on:click={() => (closeHighlights = true)}>
-            {@html closeSimpleSvg}
-          </span>
+        </div>
+        {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}
+          <div class="hinfo">
+            <span class="x" on:click={() => (closeHighlights = true)}>
+              {@html closeSimpleSvg}
+            </span>
 
-          {#if moreToExpand}
-            <span>
-              {highlights.length}
-              of
-              {document.highlights.length}
-              pages matching the query
-            </span>
-            <span class="padleft">
-              <Button action={true} on:click={() => (expandHighlights = true)}>
-                Show all
-              </Button>
-            </span>
-          {:else}
-            <span>{document.highlights.length} pages matching the query</span>
-          {/if}
-        </div>
-        <div class="highlights">
-          {#each highlights as highlight}
-            <div class="row">
-              <div class="page">
-                <Image
-                  fade={false}
-                  src={pageImageUrl(document, highlight.page, 40)} />
-                <div class="number">p. {highlight.page + 1}</div>
-              </div>
-              {#each highlight.passages as passage}
-                <div class="highlight">
-                  {#each passage as term}
-                    {#if term.type == 'highlight'}
-                      <span class="passage highlighted">{term.text}</span>
-                    {:else}<span class="passage">{term.text}</span>{/if}
-                  {/each}
+            {#if moreToExpand}
+              <span>
+                {highlights.length}
+                of
+                {document.highlights.length}
+                pages matching the query
+              </span>
+              <span class="padleft">
+                <Button
+                  action={true}
+                  on:click={() => (expandHighlights = true)}>
+                  Show all
+                </Button>
+              </span>
+            {:else}
+              <span>{document.highlights.length} pages matching the query</span>
+            {/if}
+          </div>
+          <div class="highlights">
+            {#each highlights as highlight}
+              <div class="row">
+                <div class="page">
+                  <Image
+                    fade={false}
+                    src={pageImageUrl(document, highlight.page, 40)} />
+                  <div class="number">p. {highlight.page + 1}</div>
                 </div>
-              {/each}
-            </div>
-          {/each}
-        </div>
+                {#each highlight.passages as passage}
+                  <div class="highlight">
+                    {#each passage as term}
+                      {#if term.type == 'highlight'}
+                        <span class="passage highlighted">{term.text}</span>
+                      {:else}<span class="passage">{term.text}</span>{/if}
+                    {/each}
+                  </div>
+                {/each}
+              </div>
+            {/each}
+          </div>
+        {/if}
       {/if}
     </div>
   </div>

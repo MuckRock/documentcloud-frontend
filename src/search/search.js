@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { router } from "@/router/router";
+import { router, getPath } from "@/router/router";
 import { wrapSeparate } from "@/util/wrapLoad";
 import { layout } from "@/manager/layout";
 import { SearchParams } from "@/structure/searchParams";
@@ -22,7 +22,7 @@ export const search = new Svue({
   watch: {
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (route != null && route.name == "app") {
+      if (route != null && (route.name == "app" || route.name == 'project') && router.backNav != true) {
         initSearch(route.props);
       }
     }
@@ -45,6 +45,7 @@ async function initSearch(params) {
   if (search.params.getMethod != null) {
     const results = await wrapSeparate(layout, search, search.params.getMethod[0]);
     search.results = results;
+    console.log("SR", search.results);
     const filter = search.params.getMethod[1];
     if (filter != null) {
       modifications.applyModifications();
@@ -84,6 +85,12 @@ export function projectUrl(project) {
   );
 }
 
+export function projectIdUrl(projectId) {
+  return searchUrl(
+    `project:${projectId} `
+  );
+}
+
 export function userOrgUrl(obj, key, publicAccessOnly = false) {
   const access = publicAccessOnly ? "access:public " : "";
   return searchUrl(
@@ -111,7 +118,7 @@ export function orgUrl(organization) {
 }
 
 export function searchUrl(query) {
-  return queryBuilder(null, {
+  return queryBuilder(getPath('app'), {
     q: query,
     page: null
   });

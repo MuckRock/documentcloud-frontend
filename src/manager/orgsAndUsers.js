@@ -13,8 +13,6 @@ import { layout } from "@/manager/layout";
 import { wrapLoad } from "@/util/wrapLoad";
 import { pushToast } from "./toast";
 
-let previousRouteName = null;
-
 export const orgsAndUsers = new Svue({
   data() {
     return {
@@ -24,28 +22,34 @@ export const orgsAndUsers = new Svue({
       orgsById: {},
       projects,
       router,
+      hasInited: false,
+      hasInitedProjects: false,
     };
   },
   watch: {
-    // Don't re-request across searches within the app
+    // Don't re-request
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (route != null && route.name == "app") {
+      if (route != null && (route.name == "app" || route.name == "home" || route.name == "default")) {
         // Initiate orgs and users in the app
-        if (route.name != previousRouteName) initOrgsAndUsers();
-      } else if (
-        route != null &&
-        (route.name == "home" || route.name == "default")
-      ) {
-        if (previousRouteName != "home" && previousRouteName != "default") {
-          initOrgsAndUsers();
+        if (!this.hasInited) {
+          this.hasInited = true;
+          initOrgsAndUsers(() => reroute(route));
+        } else {
+          reroute(route);
         }
-      } else {
-        this.me = null;
-        this.users = [];
+
+        initProjectsIfNecessary(route);
+        if (route != null && route.name == 'app' && this.me != null && !this.hasInitedProjects) {
+          this.hasInitedProjects = true;
+          initProjects(this.me);
+        }
       }
-      previousRouteName = route == null ? null : route.name;
     },
+    me() {
+      const route = router.resolvedRoute;
+      initProjectsIfNecessary(route);
+    }
   },
   computed: {
     loggedIn(me) {
@@ -58,7 +62,36 @@ export const orgsAndUsers = new Svue({
   },
 });
 
-async function initOrgsAndUsers() {
+function reroute(route) {
+  if (route == null) return;
+  if (route.name == 'app' && route.props.q == null) {
+    // Redirect to proper route if no search params are set
+    if (orgsAndUsers.me != null) {
+      // Redirect to get self user route if no search params are set
+      pushUrl(userUrl(orgsAndUsers.me));
+    } else {
+      // Redirect to all documents if not logged in
+      pushUrl(allDocumentsUrl());
+    }
+  } else if (route.name == "default") {
+    // On the default page, nav to app or home based on current user
+    if (orgsAndUsers.me != null) {
+      pushUrl(userUrl(orgsAndUsers.me));
+    } else {
+      nav("home");
+    }
+  }
+}
+
+function initProjectsIfNecessary(route) {
+  if (route == null) return;
+  if (route.name == 'app' && orgsAndUsers.me != null && !orgsAndUsers.hasInitedProjects) {
+    orgsAndUsers.hasInitedProjects = true;
+    initProjects(orgsAndUsers.me);
+  }
+}
+
+async function initOrgsAndUsers(callback = null) {
   orgsAndUsers.me = await getMe();
   if (orgsAndUsers.me != null) {
     // Logged in
@@ -72,30 +105,7 @@ async function initOrgsAndUsers() {
     orgsAndUsers.usersById = orgsAndUsers.usersById;
     orgsAndUsers.orgsById = orgsAndUsers.orgsById;
   }
-
-  if (router.resolvedRoute.name == "app") {
-    // Push self search route if no search params are set in app
-    const routeProps = router.resolvedRoute.props;
-    if (routeProps.q == null) {
-      if (orgsAndUsers.me != null) {
-        // Redirect to get self user route if no search params are set
-        pushUrl(userUrl(orgsAndUsers.me));
-      } else {
-        // Redirect to all documents if not logged in
-        pushUrl(allDocumentsUrl());
-      }
-    }
-
-    // Populate projects
-    if (orgsAndUsers.me != null) initProjects(orgsAndUsers.me);
-  } else if (router.resolvedRoute.name == "default") {
-    // On the default page, nav to app or home based on current user
-    if (orgsAndUsers.me != null) {
-      nav("app");
-    } else {
-      nav("home");
-    }
-  }
+  if (callback != null) callback();
 }
 
 export async function getUserById(id) {

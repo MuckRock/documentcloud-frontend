@@ -1,6 +1,7 @@
 <script>
   // Components
   import SearchBar from "./SearchBar";
+  import SearchLink from "./SearchLink";
   import Modal from "@/common/Modal";
   import Button from "@/common/Button";
   import Title from "@/common/Title";
@@ -14,11 +15,12 @@
   import AuthSection from "@/pages/app/AuthSection";
   import SpecialMessage from "@/common/SpecialMessage";
   import Paginator from "./Paginator";
+  import EmbedFooter from "./EmbedFooter";
 
   // Store properties
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
-  import { search } from "@/search/search";
+  import { search, projectIdUrl } from "@/search/search";
   import {
     orgsAndUsers,
     getUserById,
@@ -29,6 +31,8 @@
 
   // Animation
   import { flip } from "svelte/animate";
+
+  export let embed = false;
 
   let preUploadFiles = [];
 
@@ -103,6 +107,19 @@
     margin-left: -25px;
     position: relative;
 
+    .inlinecard {
+      display: inline-block;
+      width: 300px;
+
+      @media only screen and (max-width: $mobileBreak) {
+        width: 240px;
+
+        @media only screen and (max-width: 550px) {
+          width: 200px;
+        }
+      }
+    }
+
     :global(.outer) {
       padding-bottom: 28px;
     }
@@ -133,6 +150,10 @@
 
     @media only screen and (max-width: $mobileBreak) {
       padding-top: 0;
+    }
+
+    &.embed {
+      padding-top: $mainDocContainerPadding;
     }
   }
 
@@ -178,34 +199,48 @@
 
 <Loader active={$layout.loading}>
   <div class="documents">
-    <div class="sticky">
-      {#if $layout.uploading && !$layout.error}
-        <Modal
-          on:close={() => ($layout.uploading = false)}
-          component={UploadDialog}
-          properties={{ initialFiles: preUploadFiles }} />
+    <div class="sticky" class:embed>
+      {#if !embed}
+        {#if $layout.uploading && !$layout.error}
+          <Modal
+            on:close={() => ($layout.uploading = false)}
+            component={UploadDialog}
+            properties={{ initialFiles: preUploadFiles }} />
+        {/if}
+
+        <SpecialMessage />
+        <AuthSection />
+      {/if}
+      {#if embed && $search.params != null && $search.params.projectEmbedId != null}
+        <!-- Use a search link -->
+        <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
+      {:else if !embed}
+        <!-- Don't show search bar in embed (for now) -->
+        <SearchBar {embed} />
       {/if}
 
-      <SpecialMessage />
-      <AuthSection />
-      <SearchBar />
-
       <div>
-        <Title>{title}</Title>
-        {#if $orgsAndUsers.loggedIn}
-          <Button on:click={showUploadModal}>+ Upload</Button>
+        {#if !embed}
+          <Title>{title}</Title>
+          {#if $orgsAndUsers.loggedIn}
+            <Button on:click={showUploadModal}>+ Upload</Button>
+          {/if}
         {/if}
       </div>
-      <ActionBar />
+      {#if !embed}
+        <ActionBar />
 
-      <ProcessingBar />
+        <ProcessingBar />
+      {/if}
     </div>
 
     <div class="docscontainer">
-      <Draggable on:files={showUploadModal} disabled={!$orgsAndUsers.loggedIn}>
+      <Draggable
+        on:files={showUploadModal}
+        disabled={embed || !$orgsAndUsers.loggedIn}>
         {#each $documents.documents as document (document.id)}
-          <div animate:flip={{ duration: 400 }}>
-            <Document {document} />
+          <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
+            <Document {embed} {document} />
           </div>
         {/each}
         {#if $documents.documents.length == 0 && !$layout.loading}
@@ -219,8 +254,12 @@
       </Draggable>
     </div>
 
-    <div class="narrowshow">
-      <Paginator />
-    </div>
+    {#if embed}
+      <EmbedFooter />
+    {:else}
+      <div class="narrowshow">
+        <Paginator />
+      </div>
+    {/if}
   </div>
 </Loader>
