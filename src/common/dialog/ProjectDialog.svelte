@@ -79,10 +79,6 @@
 
   p {
     margin-bottom: 0;
-
-    .spanner {
-      margin-left: 5px;
-    }
   }
 </style>
 
@@ -104,12 +100,10 @@
           <p>
             <Button nondescript={true} on:click={showCollaborators}>
               Manage Collaborators
+            </Button><br />
+            <Button nondescript={true} on:click={embedProject}>
+              Share Project
             </Button>
-            <span class="spanner">
-              <Button nondescript={true} on:click={embedProject}>
-                Share Project
-              </Button>
-            </span>
           </p>
         {/if}
       </div>

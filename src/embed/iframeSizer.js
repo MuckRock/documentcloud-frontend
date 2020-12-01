@@ -1,11 +1,11 @@
 import { timeoutify } from '@/util/closure';
 
-export function informSize(element) {
+export function informSize(element, useScrollDimension = true) {
   // Inform a parent window about an embed size
   const update = () => {
     window.parent.postMessage({
-      width: Math.max(element.scrollWidth, element.offsetWidth),
-      height: Math.max(element.scrollHeight, element.offsetHeight)
+      width: Math.max(useScrollDimension ? element.scrollWidth : 0, element.offsetWidth),
+      height: Math.max(useScrollDimension ? element.scrollHeight : 0, element.offsetHeight)
     }, "*");
   };
 

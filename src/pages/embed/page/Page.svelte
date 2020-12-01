@@ -6,7 +6,7 @@
   import { onMount, tick } from "svelte";
   import { getDocument } from "@/api/document";
   import { getAnnotations } from "@/api/annotation";
-  import { pageImageUrl, textUrl } from "@/api/viewer";
+  import { textUrl } from "@/api/viewer";
 
   export let id;
   export let page;
@@ -17,7 +17,7 @@
 
   $: idPart = id.split("-")[0];
   $: pageUrl = doc == null ? "" : doc.pageUrl(page);
-  $: aspect = doc == null ? 1 : doc.pageSizes[page];
+  $: aspect = doc == null ? 1 : doc.pageSizes[page - 1];
 
   $: shimPlacements =
     active == null
@@ -115,7 +115,7 @@
       <ProgressiveImage
         width={600}
         {aspect}
-        relative={true}
+        on:load={() => informSize(elem)}
         bordered={false}
         alt="Page {page} of {doc.title}"
         page={{ document: doc, pageNumber: page - 1 }} />

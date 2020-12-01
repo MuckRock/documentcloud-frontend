@@ -1,6 +1,11 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { pageImageUrl } from "@/api/viewer";
+  import emitter from "@/emit";
+
+  const emit = emitter({
+    load() {},
+  });
 
   export let alt;
   export let page;
@@ -9,7 +14,6 @@
   export let bordered = true;
   export let grayed = false;
   export let crosshair = false;
-  export let relative = false;
   let elem;
   let destroyed = false;
   let imgs = [];
@@ -74,6 +78,7 @@
       setTimeout(() => (img.className = "loaded"), 100);
     }
     largestLoaded = i;
+    setTimeout(() => emit.load(), 100);
   }
 
   function loadImg(i) {
@@ -139,12 +144,6 @@
       }
     }
 
-    &.relative {
-      :global(img) {
-        position: relative !important;
-      }
-    }
-
     &.grayed {
       filter: brightness(0.8);
     }
@@ -160,5 +159,4 @@
   bind:this={elem}
   class:bordered
   class:grayed
-  class:crosshair
-  class:relative />
+  class:crosshair />

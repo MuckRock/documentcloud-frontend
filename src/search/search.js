@@ -45,7 +45,6 @@ async function initSearch(params) {
   if (search.params.getMethod != null) {
     const results = await wrapSeparate(layout, search, search.params.getMethod[0]);
     search.results = results;
-    console.log("SR", search.results);
     const filter = search.params.getMethod[1];
     if (filter != null) {
       modifications.applyModifications();
