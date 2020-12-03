@@ -15,6 +15,8 @@
 
   import { writable } from "svelte/store";
 
+  const sectionTitleLimit = process.env.SECTION_TITLE_CHAR_LIMIT;
+
   let loading = writable(false);
 
   let pendingPage = "";
@@ -54,7 +56,7 @@
         viewer.sections[updatingIndex] = {
           id: viewer.sections[updatingIndex].id,
           page: pageAsNumber,
-          title: pendingTitle
+          title: pendingTitle,
         };
         viewer.sections = viewer.sections;
         alreadyAdded = true;
@@ -91,7 +93,7 @@
       }
       viewer.sections = [
         ...viewer.sections,
-        { page: pageAsNumber, title: pendingTitle, id }
+        { page: pageAsNumber, title: pendingTitle, id },
       ];
       viewer.sections.sort((a, b) => a.page - b.page);
       viewer.sections = viewer.sections;
@@ -106,8 +108,9 @@
     if (callApi) {
       showConfirm(
         "Confirm delete",
-        `Proceeding will remove the specified section (p. ${viewer.sections[idx]
-          .page + 1} ${viewer.sections[idx].title}). Do you wish to continue?`,
+        `Proceeding will remove the specified section (p. ${
+          viewer.sections[idx].page + 1
+        } ${viewer.sections[idx].title}). Do you wish to continue?`,
         "Delete",
         async () => {
           await wrapLoadSeparate(
@@ -146,7 +149,7 @@
   $: pageAsNumber = parseInt(pendingPage) - 1;
   $: pageCollided =
     pageAsNumber != null &&
-    $viewer.sections.map(section => section.page).includes(pageAsNumber);
+    $viewer.sections.map((section) => section.page).includes(pageAsNumber);
   $: pageSameAsEdit = update && updatePage == pageAsNumber;
   $: titleSameAsEdit = update && updateTitle == pendingTitle;
   $: pageValid =
@@ -289,6 +292,7 @@
             placeholder="#"
             bind:value={pendingPage} />
           <input
+            maxlength={sectionTitleLimit}
             class="titleinput"
             type="text"
             placeholder="Title"

@@ -109,8 +109,12 @@
             <td>
               <div class="inputpadded">
                 {#if meta.isTextArea}
-                  <HtmlEditor bind:value={values[i]} />
-                {:else}<input bind:value={values[i]} />{/if}
+                  <HtmlEditor
+                    maxlength={meta.charLimit}
+                    bind:value={values[i]} />
+                {:else}
+                  <input maxlength={meta.charLimit} bind:value={values[i]} />
+                {/if}
               </div>
             </td>
           </tr>

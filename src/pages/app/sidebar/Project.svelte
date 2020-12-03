@@ -51,9 +51,11 @@
     }
 
     .edit {
+      float: right;
       @include buttonLike;
 
       padding-right: 5px;
+      padding-top: 3px;
       width: 15px;
 
       &:hover {
@@ -70,6 +72,7 @@
 
 <Link toUrl={projectUrl(project)}>
   <div class="project">
+    <span class="title">{project.title}</span>
     {#if project.editAccess}
       <span
         class="edit"
@@ -77,6 +80,5 @@
         {@html pencilSvg}
       </span>
     {/if}
-    <span class="title">{project.title}</span>
   </div>
 </Link>

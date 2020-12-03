@@ -2,6 +2,7 @@
   import NoWhitespace from "@/common/NoWhitespace";
   import emitter from "@/emit";
   import { highlight } from "@/search/parse";
+  import { fieldValid, sortCompletions } from "@/search/searchFields";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { projects } from "@/manager/projects";
   import { textAreaResize } from "@/util/textareaResize";
@@ -10,7 +11,7 @@
     autocompleteOrganizations,
     autocompleteUsers,
   } from "@/api/orgAndUser";
-  import { slugify, extractSlugId, isNumber } from "@/util/string";
+  import { slugify } from "@/util/string";
   import { timeoutify } from "@/util/closure";
   import { onMount } from "svelte";
 
@@ -376,65 +377,7 @@
       );
     } else if (alias(fieldPre) == "sort") {
       setCompletionX(fieldPreIndex);
-      completions = completionFilter(
-        [
-          {
-            type: "field",
-            text: "Created At (Descending)",
-            info: "Most Recent First",
-            feed: "created_at",
-          },
-          {
-            type: "field",
-            text: "Created At (Ascending)",
-            info: "Oldest First",
-            feed: "-created_at",
-          },
-          {
-            type: "field",
-            text: "Title (Ascending)",
-            info: "Document Title A-Z",
-            feed: "title",
-          },
-          {
-            type: "field",
-            text: "Title (Descending)",
-            info: "Document Title Z-A",
-            feed: "-title",
-          },
-          {
-            type: "field",
-            text: "Page Count (Descending)",
-            info: "Most Pages First",
-            feed: "page_count",
-          },
-          {
-            type: "field",
-            text: "Page Count (Ascending)",
-            info: "Least Pages First",
-            feed: "-page_count",
-          },
-          {
-            type: "field",
-            text: "Source (Ascending)",
-            info: "Document Source A-Z",
-            feed: "source",
-          },
-          {
-            type: "field",
-            text: "Source (Descending)",
-            info: "Document Source Z-A",
-            feed: "-source",
-          },
-          {
-            type: "field",
-            text: "Score",
-            info: "Default Sort Option by Relevance",
-            feed: "score",
-          },
-        ],
-        fieldPost
-      );
+      completions = completionFilter(sortCompletions, fieldPost);
     } else {
       completions = [];
     }
@@ -550,53 +493,14 @@
     handleCursor();
   }
 
-  function fieldValid(text) {
-    const fieldMatch = text.match(/^[^a-z]*([a-zA-Z0-9_-]+):(.*)$/);
-    if (fieldMatch == null) return { valid: false };
-    const field = fieldMatch[1];
-    const value = fieldMatch[2];
-    const id = extractSlugId(value);
-    if (field == "project") {
-      if (id == null) return { valid: false };
-      if (example) return { valid: true, transform: `projects:${id}` };
-      for (let i = 0; i < projects.projects.length; i++) {
-        const project = projects.projects[i];
-        if (project.id == id) {
-          return { valid: true, transform: `projects:${id}` };
-        }
-      }
-      return { valid: false };
-    } else if (field == "user") {
-      if (id == null) return { valid: false };
-      if (example) return { valid: true, transform: `user:${id}` };
-      // IDs aren't checked for actual user, but will not return any useful results if not
-      return { valid: isNumber(id) };
-    } else if (field == "organization") {
-      if (id == null) return { valid: false };
-      if (example) return { valid: true, transform: `organization:${id}` };
-      // IDs aren't checked for actual org, but will not return any useful results if not
-      return { valid: isNumber(id) };
-    } else if (field == "access") {
-      return {
-        valid: id == "public" || id == "organization" || id == "private",
-      };
-    } else if (field == "status") {
-      return {
-        valid:
-          id == "success" ||
-          id == "readable" ||
-          id == "pending" ||
-          id == "error" ||
-          id == "nofile",
-      };
-    }
-  }
-
   function ensureValidity(highlights) {
     for (let i = 0; i < highlights.length; i++) {
       const highlight = highlights[i];
       if (highlight.type == "field") {
-        highlights[i] = { ...fieldValid(highlight.text), ...highlight };
+        highlights[i] = {
+          ...fieldValid(highlight.text, example),
+          ...highlight,
+        };
       }
     }
     return highlights;

@@ -1,6 +1,13 @@
+const docTitleLimit = process.env.DOCUMENT_TITLE_CHAR_LIMIT;
+const docSourceLimit = process.env.DOCUMENT_SOURCE_CHAR_LIMIT;
+const docDescriptionLimit = process.env.DOCUMENT_DESCRIPTION_CHAR_LIMIT;
+const relatedArticleLimit = process.env.RELATED_ARTICLE_URL_CHAR_LIMIT;
+const publishedUrlLimit = process.env.PUBLISHED_URL_CHAR_LIMIT;
+
 export const metaDialogs = [
   {
     menuTitle: "Title",
+    charLimit: docTitleLimit,
     fieldAccessor: (x) => x.title,
     fieldName: 'name',
     apiField: 'title',
@@ -19,6 +26,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "Source",
+    charLimit: docSourceLimit,
     fieldAccessor: (x) => x.source,
     fieldName: 'source',
     apiField: 'source',
@@ -28,6 +36,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "Description",
+    charLimit: docDescriptionLimit,
     fieldAccessor: (x) => x.description,
     fieldName: 'description',
     apiField: 'description',
@@ -38,6 +47,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "Related Article URL",
+    charLimit: relatedArticleLimit,
     fieldAccessor: (x) => x.relatedArticleUrl,
     fieldName: 'related article URL',
     apiField: 'related_article',
@@ -47,6 +57,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "Published URL",
+    charLimit: publishedUrlLimit,
     fieldAccessor: (x) => x.publishedUrl,
     fieldName: 'published URL',
     apiField: 'published_url',

@@ -8,6 +8,7 @@
 {#if meta != null}
   <MetaFieldDialog
     fieldAccessor={meta.fieldAccessor}
+    maxlength={meta.charLimit}
     fieldName={meta.fieldName}
     apiField={meta.apiField}
     headerText={meta.headerText}

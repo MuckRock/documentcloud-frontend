@@ -24,8 +24,11 @@
   import pencilSvg from "@/assets/pencil.svg";
 
   // Asynchronously load dompurify
-  import { domPurify, loadDompurify } from "@/util/domPurify";
+  import { loadDompurify } from "@/util/domPurify";
   loadDompurify();
+
+  const noteTitleLimit = process.env.NOTE_TITLE_CHAR_LIMIT;
+  const noteContentLimit = process.env.NOTE_CONTENT_CHAR_LIMIT;
 
   const emit = emitter({
     stateChange() {},
@@ -527,6 +530,7 @@
       <!-- Title -->
       {#if editMode}
         <input
+          maxlength={noteTitleLimit}
           bind:this={titleInput}
           placeholder="Annotation Title"
           bind:value={title} />
@@ -588,6 +592,7 @@
         <!-- Title -->
         {#if editMode}
           <input
+            maxlength={noteTitleLimit}
             bind:this={titleInput}
             placeholder="Annotation Title"
             bind:value={title}
@@ -611,6 +616,7 @@
     <!-- Description/Content -->
     {#if editMode}
       <HtmlEditor
+        maxlength={noteContentLimit}
         placeholder="Annotation Description (optional)"
         bind:value={description} />
     {:else}

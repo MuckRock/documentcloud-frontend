@@ -39,9 +39,7 @@
     if ((e.ctrlKey || e.metaKey) && e.key == "f") {
       if (
         !layout.disableControls &&
-        !layout.showInfo &&
-        !layout.showEditSections &&
-        !layout.showEmbedDialog &&
+        !layout.dialogShown &&
         (doc.mode == "image" || doc.mode == "search")
       ) {
         e.preventDefault();

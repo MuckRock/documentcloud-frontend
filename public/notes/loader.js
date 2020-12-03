@@ -100,12 +100,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_closure__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/util/closure */ "./src/util/closure.js");
 
 
-function informSize(element) {
+function informSize(element, useScrollDimension = true) {
   // Inform a parent window about an embed size
   const update = () => {
     window.parent.postMessage({
-      width: Math.max(element.scrollWidth, element.offsetWidth),
-      height: Math.max(element.scrollHeight, element.offsetHeight)
+      width: Math.max(useScrollDimension ? element.scrollWidth : 0, element.offsetWidth),
+      height: Math.max(useScrollDimension ? element.scrollHeight : 0, element.offsetHeight)
     }, "*");
   };
 

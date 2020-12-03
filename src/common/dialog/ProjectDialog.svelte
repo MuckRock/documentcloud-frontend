@@ -15,6 +15,9 @@
   } from "@/manager/projects";
   import { showConfirm } from "@/manager/confirmDialog";
 
+  const projectTitleLimit = process.env.PROJECT_TITLE_CHAR_LIMIT;
+  const projectDescriptionLimit = process.env.PROJECT_DESCRIPTION_CHAR_LIMIT;
+
   const emit = emitter({
     dismiss() {},
   });
@@ -89,9 +92,14 @@
         {#if editing}Edit Project{:else}Create New Project{/if}
       </h1>
       <div class="inputpadded">
-        <input placeholder="Title..." bind:value={name} bind:this={input} />
+        <input
+          maxlength={projectTitleLimit}
+          placeholder="Title..."
+          bind:value={name}
+          bind:this={input} />
         <p>
           <textarea
+            maxlength={projectDescriptionLimit}
             placeholder="Project Description (optional)"
             bind:value={description}
             use:textAreaResize />
@@ -102,7 +110,7 @@
               Manage Collaborators
             </Button><br />
             <Button nondescript={true} on:click={embedProject}>
-              Share Project
+              Share / Embed Project
             </Button>
           </p>
         {/if}

@@ -196,6 +196,10 @@ export const layout = new Svue({
     showEmbedDialog(embedDocument, selectNoteEmbed) {
       return embedDocument != null && !selectNoteEmbed;
     },
+
+    dialogShown(showInfo, showData, showAccess, showEditSections, showEmbedDialog) {
+      return showInfo || showData || showAccess || showEditSections || showEmbedDialog;
+    }
   },
 });
 

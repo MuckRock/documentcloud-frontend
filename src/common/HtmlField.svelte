@@ -16,6 +16,9 @@
       font: 13px/18px Georgia, Times, serif;
       cursor: text;
       color: #3c3c3c;
+      max-height: 300px;
+      word-wrap: break-word;
+      overflow-y: auto;
     }
 
     &.static .content {

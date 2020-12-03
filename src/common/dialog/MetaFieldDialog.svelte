@@ -11,6 +11,7 @@
   import { layout } from "@/manager/layout";
 
   export let fieldAccessor;
+  export let maxlength;
   export let fieldValid = (value, initial) => value != initial;
   export let fieldName;
   export let apiField;
@@ -66,8 +67,14 @@
     </p>
     <div class="inputpadded">
       {#if textArea}
-        <HtmlEditor bind:value />
-      {:else}<input bind:value bind:this={input} on:keypress={handleKey} />{/if}
+        <HtmlEditor {maxlength} bind:value />
+      {:else}
+        <input
+          {maxlength}
+          bind:value
+          bind:this={input}
+          on:keypress={handleKey} />
+      {/if}
     </div>
     <div class="buttonpadded">
       {#if valid}

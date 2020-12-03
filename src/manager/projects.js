@@ -41,18 +41,9 @@ function addUsers(...users) {
   projects.projectUsers = uniquify(allUsers);
 }
 
-async function addProjectUsers(...projects) {
-  const projectIds = projects.map(proj => proj.id);
-  const users = await getUsers({ projectIds });
-  addUsers(...users);
-}
-
 export async function initProjects(me) {
   const newProjects = await getProjects(me.id);
   projects.projects = newProjects;
-
-  // Grab all users of projects
-  await addProjectUsers(...newProjects);
 }
 
 export async function createNewProject(title, description) {

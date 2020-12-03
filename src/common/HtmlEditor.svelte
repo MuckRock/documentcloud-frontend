@@ -5,6 +5,7 @@
 
   export let placeholder = "";
   export let value = "";
+  export let maxlength = null;
 </script>
 
 <style lang="scss">
@@ -45,12 +46,15 @@
       font: 13px/18px Georgia, Times, serif;
       cursor: text;
       color: #3c3c3c;
+      overflow-wrap: break-word;
+      max-height: 139px;
+      overflow-y: auto;
     }
   }
 </style>
 
 <div class="sidebyside">
-  <textarea {placeholder} use:textAreaResize bind:value />
+  <textarea {placeholder} use:textAreaResize bind:value {maxlength} />
   {#if $domPurify.domPurify != null && value.trim().length > 0}
     <div class="preview">
       <div class="title">Preview:</div>

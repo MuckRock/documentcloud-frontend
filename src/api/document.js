@@ -57,17 +57,7 @@ export async function searchDocuments(
     queryBuilder("documents/search/", { q: query, expand, page: page + 1 })
   );
   const { data } = await session.get(url);
-
-  // Fill in document data with a subsequent API call
-  const docIds = data.results.map((document) => document.id);
-  const newDocuments = await getDocumentsWithIds(docIds);
-  for (let i = 0; i < newDocuments.length; i++) {
-    newDocuments[i].doc = {
-      ...newDocuments[i].doc,
-      highlights: data.results[i].highlights,
-    };
-    data.results[i] = newDocuments[i];
-  }
+  data.results = data.results.map(doc => new Document(doc));
 
   return new Results(url, data);
 }

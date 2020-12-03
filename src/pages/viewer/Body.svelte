@@ -261,9 +261,7 @@
       !e.shiftKey &&
       !layout.disableControls &&
       !layout.searchExpanded &&
-      !layout.showInfo &&
-      !layout.showEditSections &&
-      !layout.showEmbedDialog
+      !layout.dialogShown
     ) {
       if (e.key == "a") {
         enterAnnotateMode();

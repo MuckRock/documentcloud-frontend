@@ -112,6 +112,7 @@
 
   .actions {
     font-size: 14px;
+    padding-bottom: 10px;
 
     span {
       display: inline-block;
