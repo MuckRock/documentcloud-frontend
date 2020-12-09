@@ -142,6 +142,12 @@ export async function cancelProcessing(id) {
   return data;
 }
 
+export async function getPendingProgress() {
+  // Return all pending doc progress
+  const { data } = await session.get(apiUrl(`documents/pending/`));
+  return data;
+}
+
 export async function redactDocument(id, redactions) {
   // Redact the document with the specified id and redactions
   await session.post(

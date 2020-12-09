@@ -5,7 +5,10 @@
   import { viewer } from "@/viewer/viewer";
   import { wrapLoad } from "@/util/wrapLoad";
   import { changeAccess } from "@/api/document";
-  import { changeAccessForDocuments } from "@/manager/documents";
+  import {
+    changeAccessForDocuments,
+    updateInCollection,
+  } from "@/manager/documents";
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
 
@@ -30,6 +33,10 @@
           status: "readable",
         };
         viewer.document = viewer.document;
+        updateInCollection(
+          viewer.document,
+          (d) => (d.doc = { ...d.doc, status: "readable" })
+        );
       });
     } else {
       changeAccessForDocuments(layout.accessEditDocuments, access, layout);

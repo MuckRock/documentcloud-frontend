@@ -216,10 +216,6 @@ export class Document extends Svue {
           }
           return this.lastTextsProcessed;
         },
-        mightHaveThumbnail(success, imagesProcessed) {
-          // Returns if at least one page image has been processed
-          return success || imagesProcessed >= 1;
-        },
         imageProgress(hasRemaining, imagesProcessed, pageCount) {
           if (!hasRemaining) return null;
           if (pageCount == 0) return 0;

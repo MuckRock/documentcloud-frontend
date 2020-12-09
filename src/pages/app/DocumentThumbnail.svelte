@@ -3,12 +3,21 @@
   import Image from "@/common/Image";
   import Loader from "@/common/Loader";
   import Tooltip from "@/common/Tooltip";
+  import { documents } from "@/manager/documents";
 
   // SVG assets
   import errorIconSvg from "@/assets/error_icon.svg";
 
   export let document;
   export let embed = false;
+
+  $: realProgress =
+    document == null ? null : $documents.realProgressMap[document.id];
+  $: imagesProcessed =
+    document == null ? null : $documents.imagesProcessedMap[document.id];
+  $: textsProcessed =
+    document == null ? null : $documents.textsProcessedMap[document.id];
+  $: pageCount = document == null ? null : $documents.pageCountMap[document.id];
 </script>
 
 <style lang="scss">
@@ -71,11 +80,11 @@
     {:else if document.pending}
       <Tooltip>
         <div slot="caption" class="caption">
-          {#if document.realProgress != null}
-            <p>{Math.floor(document.realProgress * 100)}%</p>
-            {#if document.imagesProcessed != null && document.textsProcessed != null}
-              <p>{document.imagesProcessed} / {document.pageCount} images</p>
-              <p>{document.textsProcessed} / {document.pageCount} texts</p>
+          {#if realProgress != null}
+            <p>{Math.floor(realProgress * 100)}%</p>
+            {#if imagesProcessed != null && textsProcessed != null}
+              <p>{imagesProcessed} / {pageCount} images</p>
+              <p>{textsProcessed} / {pageCount} texts</p>
             {/if}
           {:else}Loading progress information...{/if}
         </div>

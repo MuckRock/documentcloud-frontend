@@ -1,13 +1,12 @@
 import { Svue } from "svue";
 import {
-  getDocuments,
   getDocumentsWithIds,
+  getPendingProgress,
   deleteDocument,
   reprocessDocument,
   cancelProcessing,
   changeAccess,
   editMetadata,
-  PENDING,
   addData,
   removeData,
 } from "@/api/document";
@@ -29,6 +28,17 @@ import { docEquals, copyDoc } from '@/structure/document';
 let lastSelected = null;
 const PROCESSING_CHANGE_TIMEOUT = 500;
 
+function mapReduce(l, id, fn) {
+  const results = {};
+  for (let i = 0; i < l.length; i++) {
+    const x = l[i];
+    results[x[id]] = fn(x);
+  }
+  return results;
+}
+
+const PENDING_DOC_ID = 'doc_id';
+
 export const documents = new Svue({
   data() {
     return {
@@ -37,6 +47,7 @@ export const documents = new Svue({
       hasInited: false,
       processingChangeTimeout: null,
       doneProcessing: true,
+      pending: [],
     };
   },
   watch: {
@@ -77,6 +88,35 @@ export const documents = new Svue({
       // Show all documents
       return allDocuments;
     },
+    pendingMap(pending) {
+      return mapReduce(pending, PENDING_DOC_ID, x => x);
+    },
+    imagesProcessedMap(pending) {
+      return mapReduce(pending, PENDING_DOC_ID, x => {
+        if (x.images == null || x.pages == null) return null;
+        return x.pages - x.images;
+      });
+    },
+    textsProcessedMap(pending) {
+      return mapReduce(pending, PENDING_DOC_ID, x => {
+        if (x.texts == null || x.pages == null) return null;
+        return x.pages - x.texts;
+      });
+    },
+    pageCountMap(pending) {
+      return mapReduce(pending, PENDING_DOC_ID, x => {
+        if (x.pages == null) return null;
+        return x.pages;
+      });
+    },
+    realProgressMap(pending) {
+      return mapReduce(pending, PENDING_DOC_ID, x => {
+        if (x.images == null || x.texts == null || x.pages == null) return null;
+        const images = x.pages - x.images;
+        const texts = x.pages - x.texts;
+        return ((images + texts) / 2) / x.pages;
+      });
+    },
     processingDocuments(allDocuments) {
       return getDocumentsByCondition(
         (doc) => doc.pending,
@@ -89,38 +129,49 @@ export const documents = new Svue({
         documents
       );
     },
-    numProcessing(processingDocuments) {
-      return processingDocuments.length;
+    numProcessing(pending) {
+      return pending.length;
     },
-    rawDoneProcessing(processingDocuments) {
+    rawDoneProcessing(numProcessing) {
       // Wait a second before modulating value
-      return processingDocuments.length == 0;
+      return numProcessing == 0;
     },
 
-    processingProgress(processingDocuments) {
-      if (processingDocuments.length == 0) return 1;
+    processingProgress(pending) {
+      if (pending.length == 0) return 1;
 
       // Operate on documents with non-null progresses
-      const pDocs = processingDocuments.filter((d) => d.realProgress != null);
-      if (pDocs.length == 0) return null;
-      let sum = 0;
-      pDocs.forEach((doc) => (sum += doc.realProgress));
-      return sum / pDocs.length;
+      let totalPages = 0;
+      let totalImagesProcessed = 0;
+      let totalTextsProcessed = 0;
+      for (let i = 0; i < pending.length; i++) {
+        const p = pending[i];
+        if (p.images != null && p.texts != null && p.pages != null) {
+          totalPages += p.pages;
+          totalImagesProcessed += p.pages - p.images;
+          totalTextsProcessed += p.pages - p.texts;
+        }
+      }
+      if (totalPages == 0) return null;
+      const totalPagesProcessed = (totalImagesProcessed + totalTextsProcessed) / 2;
+      return totalPagesProcessed / totalPages;
     },
     pollDocuments(processingDocuments, updatingDocuments) {
       return [...processingDocuments, ...updatingDocuments];
     },
-    pollEvents(pollDocuments) {
-      if (pollDocuments.length == 0) return [];
-      return [
+    pollEvents(pollDocuments, processingDocuments, numProcessing) {
+      const grabPending = (processingDocuments.length > 0 || numProcessing > 0) ? [
+        updatePending
+      ] : [];
+      const pollEvent = pollDocuments.length > 0 ? [
         async () => {
           const newDocs = await getDocumentsWithIds(
-            pollDocuments.map((doc) => doc.id),
-            true
+            pollDocuments.map((doc) => doc.id)
           );
           newDocs.forEach((doc) => replaceInCollection(doc));
         },
-      ];
+      ] : [];
+      return grabPending.concat(pollEvent);
     },
   },
 });
@@ -239,7 +290,7 @@ export function removeDocuments(documents) {
 }
 
 export async function markAsDirty(docIds) {
-  const dirtyDocs = await getDocumentsWithIds(docIds, true);
+  const dirtyDocs = await getDocumentsWithIds(docIds);
   dirtyDocs.map((doc) => replaceInCollection(doc));
 }
 
@@ -364,7 +415,7 @@ export async function removeDocumentData(documents, key, value) {
 }
 
 export async function handleNewDocuments(ids) {
-  const newDocs = await getDocumentsWithIds(ids, true);
+  const newDocs = await getDocumentsWithIds(ids);
   addToCollection(newDocs);
 }
 
@@ -394,14 +445,26 @@ export function unselectAll() {
   lastSelected = null;
 }
 
+async function updatePending() {
+  const pending = await wrapSeparate(null, layout, () => getPendingProgress());
+  for (let i = 0; i < pending.length; i++) {
+    const pendingDoc = pending[i];
+    const existingDoc = documents.pendingMap[pendingDoc.doc_id];
+    if (existingDoc != null) {
+      pendingDoc.images = pendingDoc.images == null ? existingDoc.images : pendingDoc.images;
+      pendingDoc.texts = pendingDoc.texts == null ? existingDoc.texts : pendingDoc.texts;
+      pendingDoc.pages = pendingDoc.pages == null ? existingDoc.pages : pendingDoc.pages;
+    }
+  }
+  documents.pending = pending;
+}
+
 export async function initDocuments() {
-  const results = await wrapSeparate(
-    null,
-    search,
-    () => getDocuments({ status: PENDING }) // disregard pagination of processing docs (only show first 25)
-  );
-  const exclusive = results.results.filter(doc => !documentsInclude(search.documents, doc.id));
-  setDocuments([...search.documents, ...exclusive]);
+  // Set documents to search documents
+  setDocuments([...search.documents]);
+
+  // Grab pending information
+  updatePending();
 }
 
 export async function addDocsToProject(project, documents, showToast = true) {
