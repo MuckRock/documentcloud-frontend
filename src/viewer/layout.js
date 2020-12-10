@@ -136,6 +136,9 @@ export const layout = new Svue({
     annotating(action) {
       return action == "annotate";
     },
+    modifying(action) {
+      return action == 'modify';
+    },
     searching(action) {
       return action == "search";
     },

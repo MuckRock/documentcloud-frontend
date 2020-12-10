@@ -3,6 +3,7 @@
   import Body from "./Body";
   import SimpleBody from "./SimpleBody";
   import NoteBody from "./NoteBody";
+  import ThumbnailBody from "./ThumbnailBody";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
@@ -145,6 +146,10 @@
       <SimpleBody />
     {:else if $doc.mode == 'notes'}
       <NoteBody />
+    {:else if $doc.mode == 'thumbnail'}
+      <ThumbnailBody />
+    {:else if $doc.mode == 'modify'}
+      <ThumbnailBody modify={true} />
     {/if}
     <Sidebar />
     <Footer />
