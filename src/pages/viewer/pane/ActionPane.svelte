@@ -1,9 +1,10 @@
 <script>
   import RedactPane from "./RedactPane";
   import AnnotatePane from "./AnnotatePane";
+  import ModifyPane from "./ModifyPane";
   import SearchPane from "./SearchPane";
   import SelectNotePane from "./SelectNotePane";
-  import { layout, cancelActions, cancelAnnotation } from "@/viewer/layout";
+  import { layout, cancelActions } from "@/viewer/layout";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
@@ -76,6 +77,8 @@
         <RedactPane />
       {:else if $layout.annotating}
         <AnnotatePane />
+      {:else if $layout.modifying}
+        <ModifyPane />
       {:else if $layout.searching}
         <SearchPane />
       {/if}

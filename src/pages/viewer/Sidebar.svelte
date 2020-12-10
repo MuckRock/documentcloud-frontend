@@ -8,6 +8,7 @@
   import {
     enterRedactMode,
     enterAnnotateMode,
+    enterModifyMode,
     enterInfoMode,
     enterDataMode,
     enterSectionsMode,
@@ -210,6 +211,13 @@
               Create redactions on the document to hide text. The document will
               reprocess afterwards.
             </p>
+          </div>
+          <div
+            class="action"
+            class:disabled={$viewer.document.readable}
+            on:click={enterModifyMode}>
+            <h3>Modify Pages</h3>
+            <p>Rearrange, rotate, delete, insert, and split pages.</p>
           </div>
           <div
             class="action"
