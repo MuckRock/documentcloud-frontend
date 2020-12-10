@@ -2,7 +2,7 @@ import { Svue } from "svue";
 import { viewer } from './viewer';
 import { tick } from 'svelte';
 import { router } from "@/router/router";
-import { layout, MOBILE_BREAKPOINT, annotationValid, startSearch, clearSearch, cancelActions } from './layout';
+import { layout, MOBILE_BREAKPOINT, annotationValid, startSearch, clearSearch, simpleCancelActions } from './layout';
 
 const LAYOUT = {
   docMargin: 40,  // margin from top to first page, bottom to last
@@ -324,6 +324,13 @@ export async function scrollVisibleAnnotationIntoView() {
     // Scroll a little above
     scrollOffset(-30);
   }
+}
+
+export function cancelActions() {
+  if (layout.modifying) {
+    changeMode('image');
+  }
+  simpleCancelActions();
 }
 
 export async function showAnnotation(annotation, scrollIntoView = false) {

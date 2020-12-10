@@ -6,10 +6,12 @@
   import { pageImageUrl } from "@/api/viewer";
   import { restorePosition, changeMode } from "@/viewer/document";
 
-  export let modify = false;
+  $: modify = $layout.modifying;
 
   // Layout
   let actionHeight = 0;
+  $: actionOffset =
+    actionHeight == null || $layout.action == null ? 0 : actionHeight;
   let containerWidth = null;
   let containerHeight = null;
   let container = null;
@@ -19,15 +21,11 @@
   $: itemsPerRow =
     containerWidth == null
       ? null
-      : Math.floor((containerWidth - 40) / itemWidth);
+      : Math.max(Math.floor((containerWidth - 60) / itemWidth), 1);
   $: paddingLeft =
     containerWidth == null || itemsPerRow == null
       ? 0
-      : (containerWidth - itemsPerRow * itemWidth) / 2 + (modify ? 0 : -15);
-  $: startPage =
-    itemsPerRow == null
-      ? null
-      : Math.floor(containerScrollTop / itemHeight) * itemsPerRow;
+      : (containerWidth - itemsPerRow * itemWidth) / 2 + (modify ? -5 : -15);
   $: paddingTop =
     startPage == null || itemsPerRow == null
       ? 0
@@ -36,6 +34,13 @@
   // Page objects
   $: pageCount =
     $viewer.document.pageCount == null ? 0 : $viewer.document.pageCount;
+  $: startPage =
+    itemsPerRow == null
+      ? null
+      : Math.min(
+          Math.floor(containerScrollTop / itemHeight) * itemsPerRow,
+          pageCount
+        );
   $: endPage =
     itemsPerRow == null || containerHeight == null
       ? null
@@ -51,35 +56,22 @@
   $: paddingBottom =
     overallHeight == null || endPage == null || itemsPerRow == null
       ? 0
-      : overallHeight - (Math.floor(endPage / itemsPerRow) + 1) * itemHeight;
+      : overallHeight - Math.ceil(endPage / itemsPerRow) * itemHeight;
   $: pages =
     startPage == null || endPage == null || itemsPerRow == null
       ? []
-      : [...Array(endPage - startPage)].map((_, i) => i + startPage);
+      : [...Array(Math.max(endPage - startPage, 0))].map(
+          (_, i) => i + startPage
+        );
 
-  // Selection
-  let selected = {};
-
-  function getTrueElems(d) {
-    const results = [];
-    for (let key in d) {
-      if (d.hasOwnProperty(key) && d[key] == true) {
-        results.push(key);
-      }
-    }
-    return results;
-  }
-
-  $: selectedPages = getTrueElems(selected);
-  $: hasSelection = selectedPages.length > 0;
-  $: showInserts = !hasSelection;
-  let lastSelected = null;
+  $: showInserts = !$layout.modifyHasSelection;
 
   function handleScroll() {
     if (container == null) return;
     containerScrollTop = container.scrollTop;
   }
 
+  let lastSelected = null;
   async function select(page, shift = false, selectState = null) {
     if (!modify) {
       // Jump to page
@@ -88,17 +80,30 @@
       return;
     }
 
-    selectState = selectState || !selected[page];
+    selectState = selectState || !$layout.modifySelectedMap[page];
     if (selectState) {
       if (shift && lastSelected != null) {
         // Shift selection
-        for (let i = lastSelected + 1; i < page; i++) {
-          selected[i] = true;
+        if (lastSelected < page) {
+          // Forwards selection
+          for (let i = lastSelected + 1; i < page; i++) {
+            $layout.modifySelectedMap[i] = true;
+          }
+        } else {
+          // Backwards selection
+          for (let i = lastSelected - 1; i > page; i--) {
+            $layout.modifySelectedMap[i] = true;
+          }
         }
       }
       lastSelected = page;
+    } else {
+      lastSelected = null;
     }
-    selected = { ...selected, [page]: selectState };
+    $layout.modifySelectedMap = {
+      ...$layout.modifySelectedMap,
+      [page]: selectState,
+    };
   }
 </script>
 
@@ -212,7 +217,7 @@
 <ActionPane bind:actionHeight />
 
 <div
-  style="top: {$layout.headerHeight + actionHeight}px; bottom: {$layout.footerHeight}px; right:
+  style="top: {$layout.headerHeight + actionOffset}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px;"
   class="doc"
   bind:this={container}
@@ -225,7 +230,7 @@
       <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
         <span
           class="imgwrap"
-          class:selected={selected[page]}
+          class:selected={$layout.modifySelectedMap[page]}
           on:click={(e) => select(page, e.shiftKey)}>
           <div class="pgnum" class:left={!modify}>p. {page + 1}</div>
           <Image src={pageImageUrl($viewer.document, page, 140)} delay={50} />
