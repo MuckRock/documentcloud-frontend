@@ -4,7 +4,8 @@
   import ModifyPane from "./ModifyPane";
   import SearchPane from "./SearchPane";
   import SelectNotePane from "./SelectNotePane";
-  import { layout, cancelActions } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout";
+  import { cancelActions } from "@/viewer/document";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";

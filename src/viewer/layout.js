@@ -56,6 +56,9 @@ export const layout = new Svue({
       defaultAnnotationAccess: "private",
       hoveredNote: null,
 
+      // Modifications
+      modifySelectedMap: {},
+
       // Document information
       showInfo: false,
       showData: false,
@@ -186,6 +189,23 @@ export const layout = new Svue({
       return consolidateDragObject(rawAnnotation);
     },
 
+    // Modifications
+    modifySelected(modifySelectedMap) {
+      const results = [];
+      for (let key in modifySelectedMap) {
+        if (modifySelectedMap.hasOwnProperty(key) && modifySelectedMap[key] == true) {
+          results.push(key);
+        }
+      }
+      return results;
+    },
+    modifyNumSelected(modifySelected) {
+      return modifySelected.length;
+    },
+    modifyHasSelection(modifyNumSelected) {
+      return modifyNumSelected > 0;
+    },
+
     // Search
     totalResults(searchHighlights, searchPages) {
       if (searchHighlights == null || searchPages == null) return 0;
@@ -248,7 +268,7 @@ export function annotationValid(annotation) {
 }
 
 export function enterEditAnnotateMode(annotation) {
-  cancelActions();
+  simpleCancelActions();
   if (!annotationValid(annotation)) return;
   layout.annotateMode = "edit";
   layout.displayedAnnotation = annotation;
@@ -333,7 +353,7 @@ export function redact() {
         async () => await redactDocument(viewer.id, layout.pendingRedactions)
       );
       await markAsDirty([viewer.id]);
-      cancelActions();
+      simpleCancelActions();
       nav("app");
     }
   );
@@ -348,7 +368,7 @@ export function undoRedaction() {
   }
 }
 
-export function cancelActions() {
+export function simpleCancelActions() {
   layout.action = null;
   layout.embedDocument = null;
   layout.embedNote = null;
@@ -357,11 +377,11 @@ export function cancelActions() {
 }
 
 export function cancelAnnotation() {
-  if (layout.displayAnnotate) cancelActions();
+  if (layout.displayAnnotate) simpleCancelActions();
 }
 
 export function hideEditSections() {
-  if (layout.showEditSections) cancelActions();
+  if (layout.showEditSections) simpleCancelActions();
 }
 
 export async function updatePageAnnotation(
@@ -420,10 +440,18 @@ export async function deletePageAnnotation(noteId, docId) {
     async () => {
       await deleteAnnotation(docId, noteId);
       removeNote({ id: noteId });
-      cancelActions();
+      simpleCancelActions();
     }
   );
 }
+
+// Modifications
+
+export function modifyUnselect() {
+  layout.modifySelectedMap = {};
+}
+
+// Search
 
 export async function startSearch(query) {
   layout.search = query;
@@ -449,7 +477,7 @@ export function clearSearch() {
 
 function reset() {
   clearSearch();
-  cancelActions();
+  simpleCancelActions();
 }
 
 export function showEmbedFlow(document) {
