@@ -13,6 +13,7 @@ import {
 } from "@/api/annotation";
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
+import { inIframe } from '@/util/iframe';
 
 // A little bigger than normal mobile break to hide sidebar in narrow viewports
 export const MOBILE_BREAKPOINT = 800;
@@ -83,7 +84,7 @@ export const layout = new Svue({
       if (route != null && route.name != "viewer") {
         reset();
       } else if (route != null && route.name == "viewer") {
-        this.embed = truthyParamValue(route.props.embed);
+        this.embed = inIframe() || truthyParamValue(route.props.embed);
         this.title = !this.embed || truthyParamValue(route.props.title);
         const sidebarValue = route.props.sidebar;
         if (sidebarValue != null) {
