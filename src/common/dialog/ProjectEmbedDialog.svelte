@@ -35,21 +35,21 @@
     }
   }
 
-  let appearanceOptions = [
-    {
-      type: "toggle",
-      title: "Sidebar behavior",
-      values: [
-        [
-          "Responsive (default)",
-          "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
-        ],
-        ["Hidden", "Hide the sidebar by default"],
-        ["Visible", "Show the sidebar by default"],
-      ],
-      selected: 0,
-    },
-  ];
+  // let appearanceOptions = [
+  //   {
+  //     type: "toggle",
+  //     title: "Sidebar behavior",
+  //     values: [
+  //       [
+  //         "Responsive (default)",
+  //         "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
+  //       ],
+  //       ["Hidden", "Hide the sidebar by default"],
+  //       ["Visible", "Show the sidebar by default"],
+  //     ],
+  //     selected: 0,
+  //   },
+  // ];
 </script>
 
 <style lang="scss">
@@ -60,9 +60,10 @@
     <div class="mcontent">
       <h1>Share “{project.title}”</h1>
 
-      <AppearanceCustomizer
+      <!-- TODO: appearance options -->
+      <!-- <AppearanceCustomizer
         options={appearanceOptions}
-        on:change={() => (appearanceOptions = appearanceOptions)} />
+        on:change={() => (appearanceOptions = appearanceOptions)} /> -->
 
       <ShareOptions
         embedDescription="Copy the HTML code to embed this document within an article
