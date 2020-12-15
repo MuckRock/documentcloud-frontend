@@ -3,12 +3,17 @@
   import { routes } from "@/routes";
   import { onMount } from "svelte";
   import { currentUrl } from "@/util/url";
+  import Empty from "./pages/home/Empty.svelte";
 
   // Patch poll events
   import "@/ticker/ticker";
 
   // Set up routes
   router.routes = new Router(...routes);
+
+  $: routeComponent =
+    ($router.resolvedRoute || { component: Empty }).component || Empty;
+  $: routeProps = ($router.resolvedRoute || { props: [] }).props || {};
 
   onMount(() => {
     router.currentUrl = currentUrl();
@@ -110,12 +115,30 @@
       background-position: right center;
     }
   }
+
+  :global(a) {
+    color: inherit;
+    text-decoration: inherit;
+
+    &.active {
+      font-weight: normal !important;
+
+      .project {
+        $activeBg: $primary-faded;
+
+        background: $activeBg;
+
+        &:hover {
+          background: $activeBg;
+          opacity: 1;
+        }
+      }
+    }
+  }
 </style>
 
 <svelte:window on:popstate={handleBackNav} />
 
 {#if $router.resolvedRoute != null}
-  <svelte:component
-    this={$router.resolvedRoute.component}
-    {...$router.resolvedRoute.props} />
+  <svelte:component this={routeComponent} {...routeProps} />
 {/if}

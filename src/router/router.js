@@ -1,27 +1,43 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
+import { lazyComponent } from '@/util/lazyComponent';
 
 const endings = ['.html', '.html'];
 
 const FALLBACK_URL = '/app';
 
-export class Router {
+export class Router extends Svue {
   constructor(notFound, routes) {
-    this.notFound = notFound;
-    this.routes = routes;
-    this.pastUrl = null;
-    this.backNav = false;
-
-    const mapping = {};
-    for (const name in routes) {
-      if (routes.hasOwnProperty(name)) {
-        const route = routes[name];
-        mapping[route.path] = props => {
-          return { name, props, component: route.component };
-        };
+    super({
+      data() {
+        return {
+          notFound,
+          routes,
+          pastUrl: null,
+          backNav: false,
+        }
+      },
+      computed: {
+        mapping(routes) {
+          const mapping = {};
+          for (const name in routes.writables) {
+            if (routes.hasOwnProperty(name)) {
+              const route = routes[name];
+              if (route.path != null) {
+                mapping[route.path] =
+                  props => {
+                    return { name, props, component: route.component, get: route.get };
+                  }
+              }
+            }
+          }
+          return mapping;
+        },
+        router(mapping, notFound) {
+          return rlite(() => ({ component: notFound }), mapping);
+        }
       }
-    }
-    this.router = rlite(() => ({ component: notFound }), mapping);
+    });
   }
 
   lookup(name) {
@@ -45,13 +61,18 @@ export const router = new Svue({
   data() {
     return {
       currentUrl: null,
-      routes: null
+      routes: null,
+      lazyComponent,
     };
   },
   computed: {
-    resolvedRoute(currentUrl, routes) {
-      if (currentUrl == null || routes == null) return null;
-      return routes.resolve(currentUrl);
+    resolvedRoute(currentUrl, routes, lazyComponent) {
+      if (currentUrl == null || routes == null || lazyComponent == null) return null;
+      const resolved = routes.resolve(currentUrl);
+      if (resolved.component == null && resolved.get != null) {
+        resolved.get();
+      }
+      return resolved;
     }
   }
 });
