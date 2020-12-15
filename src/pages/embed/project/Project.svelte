@@ -5,12 +5,6 @@
   import { layout } from "@/manager/layout";
 </script>
 
-<style>
-  div {
-    background: white;
-  }
-</style>
-
 <svelte:head>
   <title>DocumentCloud</title>
 </svelte:head>

@@ -340,22 +340,28 @@
           </div>
           <div class="highlights">
             {#each highlights as highlight}
-              <div class="row">
-                <div class="page">
-                  <Image
-                    fade={false}
-                    src={pageImageUrl(document, highlight.page, 40)} />
-                  <div class="number">p. {highlight.page + 1}</div>
-                </div>
-                {#each highlight.passages as passage}
-                  <div class="highlight">
-                    {#each passage as term}
-                      {#if term.type == 'highlight'}
-                        <span class="passage highlighted">{term.text}</span>
-                      {:else}<span class="passage">{term.text}</span>{/if}
+              <div>
+                <Link
+                  inlineBlock={true}
+                  toUrl={document.relativePageUrl(highlight.page + 1)}>
+                  <div class="row">
+                    <div class="page">
+                      <Image
+                        fade={false}
+                        src={pageImageUrl(document, highlight.page, 40)} />
+                      <div class="number">p. {highlight.page + 1}</div>
+                    </div>
+                    {#each highlight.passages as passage}
+                      <div class="highlight">
+                        {#each passage as term}
+                          {#if term.type == 'highlight'}
+                            <span class="passage highlighted">{term.text}</span>
+                          {:else}<span class="passage">{term.text}</span>{/if}
+                        {/each}
+                      </div>
                     {/each}
                   </div>
-                {/each}
+                </Link>
               </div>
             {/each}
           </div>

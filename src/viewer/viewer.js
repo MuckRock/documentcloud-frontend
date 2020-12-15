@@ -2,6 +2,7 @@ import { Svue } from "svue";
 import { getDocument, getMe } from "@/api/document";
 import { router } from "@/router/router";
 import { DEFAULT_EXPAND } from "../api/common";
+import { inIframe } from "@/util/iframe";
 
 function extractId(idSlug) {
   return parseInt(idSlug.split("-")[0]);
@@ -27,7 +28,7 @@ export const viewer = new Svue({
       notes: null,
       sections: null,
       document: null,
-      embed: false,
+      embed: inIframe(),
       id: null,
       me: null,
       loadedMe: false,
@@ -43,7 +44,11 @@ export const viewer = new Svue({
       const route = router.resolvedRoute;
       if (route != null && route.name == "viewer" && route.props != null) {
         this.id = extractId(route.props.id);
-        this.embed = route.props.embed == "1";
+        if (route.props.embed == "1") {
+          this.embed = true;
+        } else {
+          this.embed = inIframe();
+        }
         return initViewer(this.id);
       }
       if (route != null && route.name != 'viewer') {

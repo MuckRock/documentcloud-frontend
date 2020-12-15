@@ -30,6 +30,7 @@ export class Router {
 
   resolve(path) {
     // Remove common endings
+    path = path.split('#')[0];
     for (let i = 0; i < endings.length; i++) {
       const ending = endings[i];
       if (path.endsWith(ending)) {
