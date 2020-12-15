@@ -12,11 +12,10 @@
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
-  import EmbedDialog from "@/common/dialog/EmbedDialog";
-  import AccessDialog from "@/common/dialog/AccessDialog";
-  import DocumentInformationDialog from "@/common/dialog/DocumentInformationDialog";
-  import DataDialog from "@/common/dialog/DataDialog";
-  import EditSectionsDialog from "@/common/dialog/EditSectionsDialog";
+  import {
+    viewerEditDialogs,
+    loadViewerEditDialogs,
+  } from "./viewerEditDialogs";
 
   import Modal from "@/common/Modal";
   import ErrorModal from "@/common/ErrorModal";
@@ -108,15 +107,21 @@
 {:else if $confirmDialog.open}
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
 {:else if $layout.showEmbedDialog}
-  <Modal component={EmbedDialog} on:close={hideEmbedFlow} />
+  <Modal component={$viewerEditDialogs.embedDialog} on:close={hideEmbedFlow} />
 {:else if $layout.showAccess}
-  <Modal component={AccessDialog} on:close={hideAccess} />
+  <Modal component={$viewerEditDialogs.accessDialog} on:close={hideAccess} />
 {:else if $layout.showInfo}
-  <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
+  <Modal
+    component={$viewerEditDialogs.documentInformationDialog}
+    on:close={hideDocumentInfo} />
 {:else if $layout.showData}
-  <Modal component={DataDialog} on:close={hideDocumentData} />
+  <Modal
+    component={$viewerEditDialogs.dataDialog}
+    on:close={hideDocumentData} />
 {:else if $layout.showEditSections}
-  <Modal component={EditSectionsDialog} on:close={hideEditSections} />
+  <Modal
+    component={$viewerEditDialogs.editSectionsDialog}
+    on:close={hideEditSections} />
 {/if}
 
 {#if $viewer.show404}

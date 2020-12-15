@@ -1,5 +1,5 @@
 <script>
-  import { router, Router } from "@/router/router";
+  import { router } from "@/router/router";
   import { routes } from "@/routes";
   import { onMount } from "svelte";
   import { currentUrl } from "@/util/url";
@@ -9,7 +9,8 @@
   import "@/ticker/ticker";
 
   // Set up routes
-  router.routes = new Router(...routes);
+  router.notFound = routes[0];
+  router.routeFunc = routes[1];
 
   $: routeComponent =
     ($router.resolvedRoute || { component: Empty }).component || Empty;

@@ -2,6 +2,7 @@ import { Svue } from "svue";
 import { getDocument, getMe } from "@/api/document";
 import { router } from "@/router/router";
 import { DEFAULT_EXPAND } from "../api/common";
+import { loadViewerEditDialogs } from "@/pages/viewer/viewerEditDialogs";
 
 function extractId(idSlug) {
   return parseInt(idSlug.split("-")[0]);
@@ -50,6 +51,11 @@ export const viewer = new Svue({
         this.document = null;
       }
     },
+    document() {
+      if (this.document != null && this.document.editAccess) {
+        loadViewerEditDialogs();
+      }
+    }
   },
   computed: {
     orderedSections(sections) {

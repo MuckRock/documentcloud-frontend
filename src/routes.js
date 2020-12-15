@@ -4,64 +4,43 @@ import { lazyComponent, loadDefault, loadHome, loadApp, loadViewer, loadNote, lo
 
 export const routes = [
   NotFound,
-  new Svue({
-    data() {
-      return {
-        lazyComponent,
-      }
+  lazyComponent => ({
+    default: {
+      path: "/",
+      component: lazyComponent.default,
+      get: loadDefault,
     },
-    computed: {
-      default(lazyComponent) {
-        return {
-          path: "/",
-          component: lazyComponent.default,
-          get: loadDefault,
-        };
-      },
-      home(lazyComponent) {
-        return {
-          path: "/home",
-          component: lazyComponent.home,
-          get: loadHome,
-        }
-      },
-      app(lazyComponent) {
-        return {
-          path: "/app",
-          component: lazyComponent.app,
-          get: loadApp,
-        }
-      },
-      viewer(lazyComponent) {
-        return {
-          path: "/documents/:id",
-          component: lazyComponent.viewer,
-          get: loadViewer,
-        }
-      },
+    home: {
+      path: "/home",
+      component: lazyComponent.home,
+      get: loadHome,
+    },
+    app: {
+      path: "/app",
+      component: lazyComponent.app,
+      get: loadApp,
+    },
+    viewer: {
+      path: "/documents/:id",
+      component: lazyComponent.viewer,
+      get: loadViewer,
+    },
 
-      // Embeds
-      note(lazyComponent) {
-        return {
-          path: "/documents/:id/annotations/:noteId",
-          component: lazyComponent.note,
-          get: loadNote
-        }
-      },
-      page(lazyComponent) {
-        return {
-          path: "/documents/:id/pages/:page",
-          component: lazyComponent.page,
-          get: loadPage
-        }
-      },
-      project(lazyComponent) {
-        return {
-          path: "/projects/:projectEmbedId",
-          component: lazyComponent.project,
-          get: loadProject
-        }
-      }
+    // Embeds
+    note: {
+      path: "/documents/:id/annotations/:noteId",
+      component: lazyComponent.note,
+      get: loadNote
+    },
+    page: {
+      path: "/documents/:id/pages/:page",
+      component: lazyComponent.page,
+      get: loadPage
+    },
+    project: {
+      path: "/projects/:projectEmbedId",
+      component: lazyComponent.project,
+      get: loadProject
     }
   })
 ];
