@@ -24,9 +24,9 @@ export async function loadViewerEditDialogs() {
     import("@/common/dialog/DataDialog"),
     import("@/common/dialog/EditSectionsDialog"),
   ]);
-  viewerEditDialogs.embedDialog = dialogs[0];
-  viewerEditDialogs.accessDialog = dialogs[1];
-  viewerEditDialogs.documentInformationDialog = dialogs[2];
-  viewerEditDialogs.dataDialog = dialogs[3];
-  viewerEditDialogs.editSectionsDialog = dialogs[4];
+  viewerEditDialogs.embedDialog = dialogs[0].default;
+  viewerEditDialogs.accessDialog = dialogs[1].default;
+  viewerEditDialogs.documentInformationDialog = dialogs[2].default;
+  viewerEditDialogs.dataDialog = dialogs[3].default;
+  viewerEditDialogs.editSectionsDialog = dialogs[4].default;
 }
