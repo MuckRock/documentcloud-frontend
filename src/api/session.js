@@ -14,9 +14,6 @@ const session = axios.create({
   xsrfCookieName: CSRF_COOKIE_NAME,
   xsrfHeaderName: CSRF_HEADER_NAME,
   withCredentials: cookiesEnabled,
-  headers: {
-    "X-Requested-With": "XMLHttpRequest"
-  }
 });
 
 session.interceptors.response.use(

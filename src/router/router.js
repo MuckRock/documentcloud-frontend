@@ -1,27 +1,57 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
+import Empty from '@/pages/home/Empty';
+import { lazyComponent } from '@/util/lazyComponent';
 
 const endings = ['.html', '.html'];
 
 const FALLBACK_URL = '/app';
 
-export class Router {
-  constructor(notFound, routes) {
-    this.notFound = notFound;
-    this.routes = routes;
-    this.pastUrl = null;
-    this.backNav = false;
-
-    const mapping = {};
-    for (const name in routes) {
-      if (routes.hasOwnProperty(name)) {
-        const route = routes[name];
-        mapping[route.path] = props => {
-          return { name, props, component: route.component };
-        };
+export class Router extends Svue {
+  constructor(notFound) {
+    super({
+      data() {
+        return {
+          notFound,
+          routeFunc: () => { },
+          pastUrl: null,
+          backNav: false,
+          currentUrl: null,
+          lazyComponent,
+        }
+      },
+      computed: {
+        routes(routeFunc, lazyComponent) {
+          return routeFunc(lazyComponent);
+        },
+        mapping(routes) {
+          const mapping = {};
+          for (const name in routes) {
+            if (routes.hasOwnProperty(name)) {
+              const route = routes[name];
+              if (route.path != null) {
+                mapping[route.path] =
+                  props => {
+                    return { name, props, component: route.component, get: route.get };
+                  }
+              }
+            }
+          }
+          return mapping;
+        },
+        router(mapping, notFound) {
+          return rlite(() => ({ component: notFound }), mapping);
+        },
+        resolvedRoute(currentUrl, router, lazyComponent) {
+          if (currentUrl == null || router == null || lazyComponent == null) return null;
+          const resolved = this.resolve(currentUrl);
+          if (resolved.component == null && resolved.get != null) {
+            resolved.get();
+          }
+          return resolved;
+        }
       }
-    }
-    this.router = rlite(() => ({ component: notFound }), mapping);
+    });
   }
 
   lookup(name) {
@@ -42,24 +72,10 @@ export class Router {
   }
 }
 
-export const router = new Svue({
-  data() {
-    return {
-      currentUrl: null,
-      routes: null
-    };
-  },
-  computed: {
-    resolvedRoute(currentUrl, routes) {
-      if (currentUrl == null || routes == null) return null;
-      return routes.resolve(currentUrl);
-    }
-  }
-});
+export const router = new Router(Empty);
 
 export function getPath(to, params = null) {
-  const routes = router.routes;
-  let path = routes.lookup(to);
+  let path = router.lookup(to);
   if (params != null) {
     for (const param in params) {
       if (params.hasOwnProperty(param)) {

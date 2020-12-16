@@ -10,26 +10,6 @@
 </script>
 
 <style lang="scss">
-  :global(a) {
-    color: inherit;
-    text-decoration: inherit;
-
-    &.active {
-      font-weight: normal !important;
-
-      .project {
-        $activeBg: $primary-faded;
-
-        background: $activeBg;
-
-        &:hover {
-          background: $activeBg;
-          opacity: 1;
-        }
-      }
-    }
-  }
-
   .project {
     @include buttonLike;
     padding: 11px 25px;

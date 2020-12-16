@@ -1,46 +1,46 @@
 import NotFound from "@/pages/NotFound";
-import Empty from "@/pages/home/Empty";
-import Home from "@/pages/home/Home";
-import App from "@/pages/app/App";
-import Viewer from "@/pages/viewer/Viewer";
-
-// Embeds
-import Note from "@/pages/embed/note/Note";
-import Page from '@/pages/embed/page/Page';
-import Project from '@/pages/embed/project/Project';
+import { Svue } from 'svue';
+import { lazyComponent, loadDefault, loadHome, loadApp, loadViewer, loadNote, loadPage, loadProject } from '@/util/lazyComponent';
 
 export const routes = [
   NotFound,
-  {
+  lazyComponent => ({
     default: {
       path: "/",
-      component: Empty
+      component: lazyComponent.default,
+      get: loadDefault,
     },
     home: {
       path: "/home",
-      component: Home
+      component: lazyComponent.home,
+      get: loadHome,
     },
     app: {
       path: "/app",
-      component: App
+      component: lazyComponent.app,
+      get: loadApp,
     },
     viewer: {
       path: "/documents/:id",
-      component: Viewer
+      component: lazyComponent.viewer,
+      get: loadViewer,
     },
 
     // Embeds
     note: {
       path: "/documents/:id/annotations/:noteId",
-      component: Note,
+      component: lazyComponent.note,
+      get: loadNote
     },
     page: {
       path: "/documents/:id/pages/:page",
-      component: Page,
+      component: lazyComponent.page,
+      get: loadPage
     },
     project: {
       path: "/projects/:projectEmbedId",
-      component: Project
+      component: lazyComponent.project,
+      get: loadProject
     }
-  }
+  })
 ];

@@ -11,7 +11,7 @@ stats.json
 public_test/main.*
 
 # Webpack chunks
-public/[0-9]*.[0-9]*.*
+public/[0-9]*.*.*
 
 # Netlify
 .netlify
