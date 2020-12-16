@@ -5,6 +5,7 @@
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
   import { restorePosition, changeMode } from "@/viewer/document";
+  import { PageSpec, Range } from "@/viewer/modification/pageSpec";
 
   $: modify = $layout.modifying;
 
@@ -32,8 +33,16 @@
       : (startPage / itemsPerRow) * itemHeight;
 
   // Page objects
-  $: pageCount =
-    $viewer.document.pageCount == null ? 0 : $viewer.document.pageCount;
+  let pageSpec = null;
+  $: {
+    if (pageSpec == null && $viewer.document.pageCount != null) {
+      // Init page spec
+      pageSpec = new PageSpec([new Range(0, $viewer.document.pageCount - 1)]);
+      pageSpec = pageSpec.concat(pageSpec);
+    }
+  }
+  $: pageCount = pageSpec == null ? 0 : pageSpec.length();
+  $: pageSpecString = pageSpec == null ? "" : pageSpec.spec();
   $: startPage =
     itemsPerRow == null
       ? null
@@ -58,11 +67,15 @@
       ? 0
       : overallHeight - Math.ceil(endPage / itemsPerRow) * itemHeight;
   $: pages =
-    startPage == null || endPage == null || itemsPerRow == null
+    startPage == null ||
+    endPage == null ||
+    itemsPerRow == null ||
+    pageSpec == null
       ? []
-      : [...Array(Math.max(endPage - startPage, 0))].map(
-          (_, i) => i + startPage
-        );
+      : pageSpec
+          .slice(startPage, endPage - startPage + 1)
+          .toNumbers()
+          .map((pg, i) => ({ pg, index: i + startPage }));
 
   $: showInserts = !$layout.modifyHasSelection;
 
@@ -226,26 +239,28 @@
   on:scroll={handleScroll}>
   <div
     style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px; padding-left: {paddingLeft}px">
-    {#each pages as page (page)}
+    {#each pages as page (`${page.index}-${pageSpecString}`)}
       <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
         <span
           class="imgwrap"
-          class:selected={$layout.modifySelectedMap[page]}
-          on:click={(e) => select(page, e.shiftKey)}>
-          <div class="pgnum" class:left={!modify}>p. {page + 1}</div>
-          <Image src={pageImageUrl($viewer.document, page, 140)} delay={50} />
+          class:selected={$layout.modifySelectedMap[page.index]}
+          on:click={(e) => select(page.index, e.shiftKey)}>
+          <div class="pgnum" class:left={!modify}>p. {page.index + 1}</div>
+          <Image
+            src={pageImageUrl($viewer.document, page.pg, 140)}
+            delay={50} />
           {#if modify}
             <div class="selector" />
             {#if showInserts}
               <div class="insert before" />
-              {#if page == pageCount - 1}
+              {#if page.index == pageCount - 1}
                 <div class="insert after" />
               {/if}
             {/if}
           {/if}
         </span>
       </span>
-      {#if page % itemsPerRow == itemsPerRow - 1}<br />{/if}
+      {#if page.index % itemsPerRow == itemsPerRow - 1}<br />{/if}
     {/each}
   </div>
 </div>
