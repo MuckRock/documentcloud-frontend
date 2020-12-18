@@ -43,10 +43,10 @@ export function intersection(arrays, eq = (a, b) => a == b) {
   return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
 }
 
-export function arrayEq(x1, x2) {
+export function arrayEq(x1, x2, eq = (a, b) => a == b) {
   if (x1.length != x2.length) return false;
   for (let i = 0; i < x1.length; i++) {
-    if (x1[i] != x2[i]) return false;
+    if (!eq(x1[i], x2[i])) return false;
   }
   return true;
 }

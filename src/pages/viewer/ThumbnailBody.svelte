@@ -5,7 +5,9 @@
   import { viewer } from "@/viewer/viewer";
   import { pageImageUrl } from "@/api/viewer";
   import { restorePosition, changeMode } from "@/viewer/document";
-  import { PageSpec, Range } from "@/viewer/modification/pageSpec";
+  import { ModificationSpec } from "@/viewer/modification/modifySpec";
+  import { modification } from "@/viewer/modification/modification";
+  import Modification from "@/viewer/modification/Modification";
 
   $: modify = $layout.modifying;
 
@@ -33,22 +35,24 @@
       : (startPage / itemsPerRow) * itemHeight;
 
   // Page objects
-  let pageSpec = null;
   $: {
-    if (pageSpec == null && $viewer.document.pageCount != null) {
+    if (
+      $modification.modifySpec == null &&
+      $viewer.document != null &&
+      $viewer.document.pageCount != null
+    ) {
       // Init page spec
-      pageSpec = new PageSpec([new Range(0, $viewer.document.pageCount - 1)]);
-      pageSpec = pageSpec.concat(pageSpec);
+      $modification.modifySpec = ModificationSpec.getDocument(
+        $viewer.document.pageCount
+      );
     }
   }
-  $: pageCount = pageSpec == null ? 0 : pageSpec.length();
-  $: pageSpecString = pageSpec == null ? "" : pageSpec.spec();
   $: startPage =
     itemsPerRow == null
       ? null
       : Math.min(
           Math.floor(containerScrollTop / itemHeight) * itemsPerRow,
-          pageCount
+          $modification.pageCount
         );
   $: endPage =
     itemsPerRow == null || containerHeight == null
@@ -56,12 +60,12 @@
       : Math.min(
           Math.ceil((containerScrollTop + containerHeight) / itemHeight) *
             itemsPerRow,
-          pageCount
+          $modification.pageCount
         );
   $: overallHeight =
     itemsPerRow == null
       ? null
-      : Math.ceil(pageCount / itemsPerRow) * itemHeight;
+      : Math.ceil($modification.pageCount / itemsPerRow) * itemHeight;
   $: paddingBottom =
     overallHeight == null || endPage == null || itemsPerRow == null
       ? 0
@@ -70,14 +74,19 @@
     startPage == null ||
     endPage == null ||
     itemsPerRow == null ||
-    pageSpec == null
+    $modification.modifySpec == null
       ? []
-      : pageSpec
+      : $modification.modifySpec
           .slice(startPage, endPage - startPage + 1)
-          .toNumbers()
-          .map((pg, i) => ({ pg, index: i + startPage }));
+          .toDescriptors()
+          .map((descriptor, i) => ({
+            descriptor,
+            pg: descriptor.pageSpec.specs[0].pg,
+            index: i + startPage,
+          }));
 
-  $: showInserts = !$layout.modifyHasSelection;
+  $: showInserts = !$modification.modifyHasSelection;
+  $: insertOnly = $modification.hasCopyBuffer;
 
   function handleScroll() {
     if (container == null) return;
@@ -93,19 +102,19 @@
       return;
     }
 
-    selectState = selectState || !$layout.modifySelectedMap[page];
+    selectState = selectState || !$modification.modifySelectedMap[page];
     if (selectState) {
       if (shift && lastSelected != null) {
         // Shift selection
         if (lastSelected < page) {
           // Forwards selection
           for (let i = lastSelected + 1; i < page; i++) {
-            $layout.modifySelectedMap[i] = true;
+            $modification.modifySelectedMap[i] = true;
           }
         } else {
           // Backwards selection
           for (let i = lastSelected - 1; i > page; i--) {
-            $layout.modifySelectedMap[i] = true;
+            $modification.modifySelectedMap[i] = true;
           }
         }
       }
@@ -113,8 +122,8 @@
     } else {
       lastSelected = null;
     }
-    $layout.modifySelectedMap = {
-      ...$layout.modifySelectedMap,
+    $modification.modifySelectedMap = {
+      ...$modification.modifySelectedMap,
       [page]: selectState,
     };
   }
@@ -148,20 +157,10 @@
     }
 
     .imgwrap {
-      background: white;
-      outline: $normaloutline;
-      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
       margin: $thumbmargin;
       display: inline-block;
       position: relative;
       box-sizing: border-box;
-      border: solid 2px transparent;
-      cursor: pointer;
-
-      &:hover,
-      &.selected {
-        border: solid 2px $primary;
-      }
 
       .pgnum {
         position: absolute;
@@ -189,23 +188,54 @@
         border: 3px solid #5892e9;
         box-sizing: border-box;
         z-index: 1;
+        cursor: pointer;
       }
 
       &.selected {
-        &:after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba($primary, 0.5);
-        }
-
         .selector {
           background: $primary;
           border: 3px solid #bcd7ff;
         }
+      }
+
+      .img {
+        display: inline-block;
+        border: solid 2px transparent;
+        box-sizing: border-box;
+        background: white;
+        outline: $normaloutline;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
+        position: relative;
+        cursor: pointer;
+        &:hover {
+          border: solid 2px $primary;
+        }
+
+        &.disabled {
+          pointer-events: none;
+          opacity: 0.4;
+        }
+      }
+
+      &.selected {
+        .img {
+          border: solid 2px $primary;
+
+          &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba($primary, 0.5);
+            pointer-events: none;
+          }
+        }
+      }
+
+      .selector:hover ~ .img {
+        border: solid 2px $primary;
       }
 
       .insert {
@@ -214,6 +244,29 @@
         top: 0;
         bottom: 0;
         border: $width dashed rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+
+        &:after {
+          // Extra width for hover region
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -7px;
+          right: -7px;
+          bottom: 0;
+        }
+
+        &:hover {
+          border: $width dashed $primary;
+        }
+
+        &.emphasized {
+          border: $width dashed $primary;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
 
         &.before {
           left: -$thumbmargin - $width;
@@ -239,25 +292,40 @@
   on:scroll={handleScroll}>
   <div
     style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px; padding-left: {paddingLeft}px">
-    {#each pages as page (`${page.index}-${pageSpecString}`)}
+    {#each pages as page (`${page.index}-${JSON.stringify(page.descriptor.json())}`)}
       <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
         <span
           class="imgwrap"
-          class:selected={$layout.modifySelectedMap[page.index]}
-          on:click={(e) => select(page.index, e.shiftKey)}>
+          class:selected={$modification.modifySelectedMap[page.index]}>
           <div class="pgnum" class:left={!modify}>p. {page.index + 1}</div>
-          <Image
-            src={pageImageUrl($viewer.document, page.pg, 140)}
-            delay={50} />
           {#if modify}
-            <div class="selector" />
+            {#if !insertOnly}
+              <div
+                class="selector"
+                on:click={(e) => select(page.index, e.shiftKey)} />
+            {/if}
             {#if showInserts}
-              <div class="insert before" />
-              {#if page.index == pageCount - 1}
-                <div class="insert after" />
+              <div
+                on:click={() => modification.selectInsert(page.index)}
+                class="insert before"
+                class:emphasized={(insertOnly && !$modification.hasInsert) || $modification.insert == page.index} />
+              {#if page.index == $modification.pageCount - 1}
+                <div
+                  on:click={() => modification.selectInsert(page.index + 1)}
+                  class="insert after"
+                  class:emphasized={(insertOnly && !$modification.hasInsert) || $modification.insert == page.index + 1} />
               {/if}
             {/if}
           {/if}
+          <Modification descriptor={page.descriptor}>
+            <span
+              class="img"
+              class:disabled={insertOnly}
+              on:click={(e) => select(page.index, e.shiftKey)}>
+              <Image
+                src={pageImageUrl($viewer.document, parseInt(page.pg), 140)} />
+            </span>
+          </Modification>
         </span>
       </span>
       {#if page.index % itemsPerRow == itemsPerRow - 1}<br />{/if}

@@ -14,6 +14,7 @@ import {
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 import { inIframe } from '@/util/iframe';
+import { modification } from "./modification/modification";
 
 // A little bigger than normal mobile break to hide sidebar in narrow viewports
 export const MOBILE_BREAKPOINT = 800;
@@ -56,9 +57,6 @@ export const layout = new Svue({
       annotationPending: false,
       defaultAnnotationAccess: "private",
       hoveredNote: null,
-
-      // Modifications
-      modifySelectedMap: {},
 
       // Document information
       showInfo: false,
@@ -188,23 +186,6 @@ export const layout = new Svue({
     shownEditAnnotation(rawAnnotation, annotationPending) {
       if (!annotationPending) return null;
       return consolidateDragObject(rawAnnotation);
-    },
-
-    // Modifications
-    modifySelected(modifySelectedMap) {
-      const results = [];
-      for (let key in modifySelectedMap) {
-        if (modifySelectedMap.hasOwnProperty(key) && modifySelectedMap[key] == true) {
-          results.push(key);
-        }
-      }
-      return results;
-    },
-    modifyNumSelected(modifySelected) {
-      return modifySelected.length;
-    },
-    modifyHasSelection(modifyNumSelected) {
-      return modifyNumSelected > 0;
     },
 
     // Search
@@ -375,6 +356,7 @@ export function simpleCancelActions() {
   layout.embedNote = null;
   layout.displayedAnnotation = null;
   layout.showEditSections = false;
+  modification.clear();
 }
 
 export function cancelAnnotation() {
@@ -444,12 +426,6 @@ export async function deletePageAnnotation(noteId, docId) {
       simpleCancelActions();
     }
   );
-}
-
-// Modifications
-
-export function modifyUnselect() {
-  layout.modifySelectedMap = {};
 }
 
 // Search

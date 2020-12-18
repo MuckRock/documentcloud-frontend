@@ -20,6 +20,10 @@ function removeFromProject(doc, projectId) {
   doc.doc = { ...doc.doc, projects: removeFromArray(doc.projectIds, projectId) }
 }
 
+function updatePending() {
+  documents.pending = documents.processingDocuments;
+}
+
 function mockSearch([fn, filter]) {
   const results = fn();
   setDocuments(results);
@@ -178,10 +182,12 @@ test("stale delete processing doc", async () => {
   expect(documents.numProcessing).toBe(0);
   // Make doc go into reprocessing state
   updateInCollection(doc, d => d.doc = { ...d.doc, status: 'pending' });
+  updatePending();
   // Expect doc to be processing
   expect(documents.numProcessing).toBe(1);
   // Remove the doc while it's processing
   removeFromCollection(doc.id);
+  updatePending();
   // Should be no docs processing now
   expect(documents.numProcessing).toBe(0);
 

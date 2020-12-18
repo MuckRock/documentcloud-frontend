@@ -5,10 +5,7 @@
   import ProgressiveImage from "@/common/ProgressiveImage";
   import Annotation from "./Annotation";
 
-  import { pageImageUrl, textUrl } from "@/api/viewer";
   import { showIfFullyVisible } from "@/util/visibility";
-  import { arrayEq } from "@/util/array";
-  import { ignoreFirst } from "@/util/closure";
   import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
@@ -35,7 +32,7 @@
   const svgMap = {
     public: publicTagSvg,
     organization: organizationTagSvg,
-    private: privateTagSvg
+    private: privateTagSvg,
   };
 
   const border = 1;

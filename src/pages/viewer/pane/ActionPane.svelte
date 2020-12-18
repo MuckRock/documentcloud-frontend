@@ -21,7 +21,7 @@
   .actionpane {
     position: absolute;
     left: 0;
-    background: #fffdea;
+    background: $actionPane;
     z-index: $viewerActionPaneZ;
     padding: 20px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
