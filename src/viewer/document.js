@@ -327,10 +327,12 @@ export async function scrollVisibleAnnotationIntoView() {
 }
 
 export function cancelActions() {
-  if (layout.modifying) {
-    changeMode('image');
-  }
-  simpleCancelActions();
+  const fn = () => {
+    if (layout.modifying) {
+      changeMode('image');
+    }
+  };
+  simpleCancelActions(fn);
 }
 
 export async function showAnnotation(annotation, scrollIntoView = false) {

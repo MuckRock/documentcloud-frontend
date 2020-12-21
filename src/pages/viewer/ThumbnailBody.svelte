@@ -42,8 +42,8 @@
       $viewer.document.pageCount != null
     ) {
       // Init page spec
-      $modification.modifySpec = ModificationSpec.getDocument(
-        $viewer.document.pageCount
+      modification.initSpec(
+        ModificationSpec.getDocument($viewer.document.pageCount)
       );
     }
   }
@@ -323,7 +323,8 @@
               class:disabled={insertOnly}
               on:click={(e) => select(page.index, e.shiftKey)}>
               <Image
-                src={pageImageUrl($viewer.document, parseInt(page.pg), 140)} />
+                src={pageImageUrl($viewer.document, parseInt(page.pg), 140)}
+                delay={50} />
             </span>
           </Modification>
         </span>

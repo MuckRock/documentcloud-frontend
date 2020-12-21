@@ -350,13 +350,27 @@ export function undoRedaction() {
   }
 }
 
-export function simpleCancelActions() {
+export function simpleCancelActions(callback = null) {
+  // Clear modifications
+  if (modification.uncommittedChanges) {
+    showConfirm(
+      "Confirm close",
+      "You will lose all your unapplied modifications. Are you sure you want to proceed?",
+      "Continue",
+      () => {
+        modification.clear();
+        simpleCancelActions(callback);
+      }
+    );
+    return;
+  }
+  if (callback != null) callback();
+  modification.clear();
   layout.action = null;
   layout.embedDocument = null;
   layout.embedNote = null;
   layout.displayedAnnotation = null;
   layout.showEditSections = false;
-  modification.clear();
 }
 
 export function cancelAnnotation() {

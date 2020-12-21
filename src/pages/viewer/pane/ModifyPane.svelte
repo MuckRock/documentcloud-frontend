@@ -117,3 +117,26 @@
     deletion). Click in-between pages to insert.
   </p>
 {/if}
+
+{#if $modification.hasHistory && !$modification.hasInsert && !$modification.hasCopyBuffer && !$modification.modifyHasSelection}
+  <div class="buttonpadded">
+    {#if $modification.uncommittedChanges}
+      <Button>
+        Apply
+        {handlePlural($modification.historyPosition, 'Modification')}
+      </Button>
+    {/if}
+    <Button
+      disabled={!$modification.canUndo}
+      secondary={true}
+      on:click={() => modification.undo()}>
+      Undo
+    </Button>
+    <Button
+      disabled={!$modification.canRedo}
+      secondary={true}
+      on:click={() => modification.redo()}>
+      Redo
+    </Button>
+  </div>
+{/if}
