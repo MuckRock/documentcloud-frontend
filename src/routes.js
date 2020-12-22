@@ -1,6 +1,7 @@
 import NotFound from "@/pages/NotFound";
 import { Svue } from 'svue';
 import { lazyComponent, loadDefault, loadHome, loadApp, loadViewer, loadNote, loadPage, loadProject } from '@/util/lazyComponent';
+import Entities from '@/pages/entities/Entities';
 
 export const routes = [
   NotFound,
@@ -24,6 +25,10 @@ export const routes = [
       path: "/documents/:id",
       component: lazyComponent.viewer,
       get: loadViewer,
+    },
+    entity: {
+      path: "/entities/:id",
+      component: Entities,
     },
 
     // Embeds
