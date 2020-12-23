@@ -1,27 +1,20 @@
 <script>
-  import { getFlatpage } from "@/api/cms";
+  import { pageCache, grabTipOfDay } from "@/manager/pageCache";
 
   const version = process.env.SPECIAL_VERSION;
   const contact = process.env.SPECIAL_CONTACT;
 
   export let tipoftheday = false;
-  let grabbingTip = false;
-  let tipResponse = null;
 
   $: show =
     version != null &&
     version.trim().length > 0 &&
-    (!tipoftheday || (tipoftheday && tipResponse != null));
+    (!tipoftheday || (tipoftheday && $pageCache.tipResponse != null));
   $: showContact = contact != null && contact.trim().length > 0;
 
   $: {
-    if (tipoftheday && !grabbingTip) {
-      grabbingTip = true;
-      getFlatpage(process.env.TIP_OF_THE_DAY).then((data) => {
-        tipResponse = data;
-        // Trigger resize to fix menu position
-        window.dispatchEvent(new Event("resize"));
-      });
+    if (tipoftheday && !$pageCache.grabbingTip) {
+      grabTipOfDay();
     }
   }
 </script>
@@ -54,8 +47,8 @@
   <div class="container">
     <div class="special">
       {#if tipoftheday}
-        {#if tipResponse != null}
-          {@html tipResponse}
+        {#if $pageCache.tipResponse != null}
+          {@html $pageCache.tipResponse}
         {/if}
       {:else}
         {version}
