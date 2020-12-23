@@ -56,6 +56,9 @@
       <span class="nowrap title"> Help <span class="dropper">▼</span> </span>
     </span>
     <Menu>
+      <Link toUrl="/help/tips" color={true}>
+        <MenuItem>Tips and Tricks</MenuItem>
+      </Link>
       <Link toUrl="/help/search" color={true}>
         <MenuItem>Search Documentation</MenuItem>
       </Link>
