@@ -138,6 +138,7 @@
       individualSelection &&
       selectionStart != null
     ) {
+      preserveSpace = false;
       const insert = completion.feed + " ";
       const restoreSelectionPosition =
         selectionStart + insert.length - deleteChars;
@@ -157,6 +158,9 @@
     }
   }
 
+  let preserveSpace = false;
+  let preserveSpaceOnKeyPress = false;
+
   function handleCursor() {
     selectionStart = input.selectionStart;
     selectionEnd = input.selectionEnd;
@@ -175,11 +179,26 @@
   $: showCompletions = searchPost != null && /^(\s.*|)$/.test(searchPost);
   $: fieldRaw =
     searchPre != null && showCompletions
-      ? searchPre.match(/([a-z]+):([a-zA-Z0-9-]*)$/)
+      ? searchPre.match(
+          preserveSpace
+            ? /([a-z]+):([a-zA-Z0-9 -]*)$/
+            : /([a-z]+):([a-zA-Z0-9-]*)$/
+        )
       : null;
   $: fieldPreIndex = fieldRaw != null ? fieldRaw.index : null;
   $: fieldPre = fieldRaw != null ? fieldRaw[1] : null;
   $: fieldPost = fieldRaw != null ? fieldRaw[2] : null;
+
+  function setPreserveSpace(space) {
+    preserveSpace = space;
+  }
+
+  $: {
+    if (preserveSpace && !selectionAtEnd) {
+      // To hackily prevent cyclic dependency
+      setPreserveSpace(false);
+    }
+  }
 
   function completionScore(completion, filter) {
     // Calculate a score by how many characters match the filter
@@ -282,10 +301,14 @@
   function setupCompletions() {
     if (escPressed) {
       completions = [];
+      preserveSpace = false;
       escPressed = false;
     } else if (completions == null) {
       // Skip this case (loading something async)
     } else if (alias(fieldPre) == "project") {
+      if (!preserveSpace) {
+        preserveSpaceOnKeyPress = true;
+      }
       setCompletionX(fieldPreIndex);
       completions = completionFilter(
         $projects.projects.map((project) => {
@@ -298,9 +321,15 @@
         fieldPost
       );
     } else if (alias(fieldPre) == "user") {
+      if (!preserveSpace) {
+        preserveSpaceOnKeyPress = true;
+      }
       setCompletionX(fieldPreIndex);
       asyncComplete("user", fieldPost);
     } else if (alias(fieldPre) == "organization") {
+      if (!preserveSpace) {
+        preserveSpaceOnKeyPress = true;
+      }
       setCompletionX(fieldPreIndex);
       asyncComplete("org", fieldPost);
     } else if (alias(fieldPre) == "access") {
@@ -429,6 +458,14 @@
   }
 
   function handleKeyDown(e) {
+    if (preserveSpaceOnKeyPress) {
+      const char = String.fromCharCode(e.keyCode);
+      if (/[a-zA-Z0-9-_ ]/.test(char)) {
+        preserveSpace = true;
+      }
+      preserveSpaceOnKeyPress = false;
+    }
+
     // Tab or enter with completions
     if (e.key == "Tab" || e.which == 13 || e.keyCode == 13) {
       if (autocomplete != "") {
