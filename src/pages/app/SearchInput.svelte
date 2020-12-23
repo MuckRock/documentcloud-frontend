@@ -138,7 +138,7 @@
       individualSelection &&
       selectionStart != null
     ) {
-      preserveSpace = false;
+      setPreserveSpace(false);
       const insert = completion.feed + " ";
       const restoreSelectionPosition =
         selectionStart + insert.length - deleteChars;
@@ -160,6 +160,7 @@
 
   let preserveSpace = false;
   let preserveSpaceOnKeyPress = false;
+  let preserveSpaceIndex = null;
 
   function handleCursor() {
     selectionStart = input.selectionStart;
@@ -190,12 +191,22 @@
   $: fieldPost = fieldRaw != null ? fieldRaw[2] : null;
 
   function setPreserveSpace(space) {
+    if (space == true) {
+      preserveSpaceIndex = fieldPreIndex;
+    } else {
+      preserveSpaceIndex = null;
+    }
     preserveSpace = space;
   }
 
   $: {
     if (preserveSpace && !selectionAtEnd) {
-      // To hackily prevent cyclic dependency
+      setPreserveSpace(false);
+    }
+  }
+
+  $: {
+    if (preserveSpace && fieldPreIndex != preserveSpaceIndex) {
       setPreserveSpace(false);
     }
   }
@@ -301,7 +312,7 @@
   function setupCompletions() {
     if (escPressed) {
       completions = [];
-      preserveSpace = false;
+      setPreserveSpace(false);
       escPressed = false;
     } else if (completions == null) {
       // Skip this case (loading something async)
@@ -461,7 +472,7 @@
     if (preserveSpaceOnKeyPress) {
       const char = String.fromCharCode(e.keyCode);
       if (/[a-zA-Z0-9-_ ]/.test(char)) {
-        preserveSpace = true;
+        setPreserveSpace(true);
       }
       preserveSpaceOnKeyPress = false;
     }
