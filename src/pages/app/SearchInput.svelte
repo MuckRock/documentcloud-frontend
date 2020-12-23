@@ -306,7 +306,7 @@
     } else if (completions == null) {
       // Skip this case (loading something async)
     } else if (alias(fieldPre) == "project") {
-      if (!preserveSpace) {
+      if (!preserveSpace && fieldPost == "") {
         preserveSpaceOnKeyPress = true;
       }
       setCompletionX(fieldPreIndex);
@@ -321,13 +321,13 @@
         fieldPost
       );
     } else if (alias(fieldPre) == "user") {
-      if (!preserveSpace) {
+      if (!preserveSpace && fieldPost == "") {
         preserveSpaceOnKeyPress = true;
       }
       setCompletionX(fieldPreIndex);
       asyncComplete("user", fieldPost);
     } else if (alias(fieldPre) == "organization") {
-      if (!preserveSpace) {
+      if (!preserveSpace && fieldPost == "") {
         preserveSpaceOnKeyPress = true;
       }
       setCompletionX(fieldPreIndex);
