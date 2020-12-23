@@ -3,7 +3,7 @@ import { ModificationSpec } from './modifySpec';
 
 beforeEach(() => {
   modification.clear();
-  modification.modifySpec = ModificationSpec.getDocument(3);
+  modification.initSpec(ModificationSpec.getDocument(3));
 });
 
 test('insertion double hit clears', () => {
@@ -60,4 +60,24 @@ test('cut end to middle', () => {
   expect(modification.modifySpec.json()).toEqual([{
     page: "2,0-1"
   }]);
+});
+
+test('cut and cancel', () => {
+  modification.select([1]);
+  modification.cut();
+  modification.clearCopyBuffer();
+  expect(modification.modifySpec.json()).toEqual([{
+    page: "0-2"
+  }]);
+  expect(modification.historyLength).toBe(1);
+});
+
+test('cut and paste', () => {
+  modification.select([1]);
+  modification.cut();
+  modification.pasteAtEnd();
+  expect(modification.modifySpec.json()).toEqual([{
+    page: "0,2,1"
+  }]);
+  expect(modification.historyLength).toBe(2);
 });

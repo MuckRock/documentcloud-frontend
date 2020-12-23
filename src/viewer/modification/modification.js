@@ -8,7 +8,7 @@ class Modification extends Svue {
         return {
           copyBuffer: null,
           modifySelectedMap: {},
-          rewindSpec: null,
+          rewind: false,
           insert: null,
           history: [],
           historyPosition: 0,
@@ -108,7 +108,7 @@ class Modification extends Svue {
 
   cut() {
     if (!this.modifyHasSelection || this.modifyNumSelected == this.pageCount) return;
-    this.rewindSpec = this.modifySpec;
+    this.rewind = true;
     this.copyBuffer = this.modifySelectedSpec;
     this.remove();
   }
@@ -119,9 +119,10 @@ class Modification extends Svue {
   }
 
   clearCopyBuffer() {
-    if (this.rewindSpec != null) {
-      this.modifySpec = this.rewindSpec;
-      this.rewindSpec = null;
+    if (this.rewind) {
+      this.undo();
+      this.history = this.history.slice(0, this.history.length - 1);
+      this.rewind = false;
     }
     this.copyBuffer = null;
     this.clearInsertion();
@@ -139,13 +140,21 @@ class Modification extends Svue {
     }
   }
 
+  modifyTempOperation(modifySpec) {
+    if (this.rewind) {
+      this.undo();
+      this.history.pop();
+      this.rewind = false;
+    }
+    this.modify(modifySpec);
+  }
+
   pasteAtEnd() {
     if (this.modifySpec == null || this.copyBuffer == null) {
       this.clearCopyBuffer();
       return;
     }
-    this.modify(this.modifySpec.concat(this.copyBuffer));
-    this.rewindSpec = null;
+    this.modifyTempOperation(this.modifySpec.concat(this.copyBuffer));
     this.clearCopyBuffer();
   }
 
@@ -154,8 +163,7 @@ class Modification extends Svue {
       this.clearCopyBuffer();
       return;
     }
-    this.modify(this.modifySpec.slice(0, this.insert).concat(this.copyBuffer).concat(this.modifySpec.slice(this.insert, this.pageCount)));
-    this.rewindSpec = null;
+    this.modifyTempOperation(this.modifySpec.slice(0, this.insert).concat(this.copyBuffer).concat(this.modifySpec.slice(this.insert, this.pageCount)));
     this.clearCopyBuffer();
   }
 

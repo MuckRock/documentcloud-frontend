@@ -121,7 +121,7 @@
 {#if $modification.hasHistory && !$modification.hasInsert && !$modification.hasCopyBuffer && !$modification.modifyHasSelection}
   <div class="buttonpadded">
     {#if $modification.uncommittedChanges}
-      <Button>
+      <Button on:click={() => console.log(modification.modifySpec.json())}>
         Apply
         {handlePlural($modification.historyPosition, 'Modification')}
       </Button>
