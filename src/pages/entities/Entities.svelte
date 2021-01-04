@@ -17,6 +17,16 @@
 
   const SNIPPET_LENGTH = 100;
 
+  const cache = {};
+
+  async function getE(id, page = 1) {
+    const key = `${id},${page}`;
+    if (cache[key] != null) return cache[key];
+    const results = await getEntities(id, page);
+    cache[key] = results;
+    return results;
+  }
+
   async function extract() {
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     try {
@@ -52,7 +62,7 @@
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     const document = await getDocument(id);
     try {
-      entities = await getEntities(id);
+      entities = await getE(id);
       fullText = await session.getStatic(jsonUrl(document));
     } catch (e) {
       console.error(e);
@@ -65,7 +75,7 @@
     page = num;
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     selectedEntity = null;
-    entities = await getEntities(id, page);
+    entities = await getE(id, page);
   }
 
   async function prevPage() {
