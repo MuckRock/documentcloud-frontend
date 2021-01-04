@@ -51,8 +51,10 @@
   onMount(async () => {
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     const document = await getDocument(id);
-    entities = await getEntities(id);
-    fullText = await session.getStatic(jsonUrl(document));
+    try {
+      entities = await getEntities(id);
+      fullText = await session.getStatic(jsonUrl(document));
+    } catch (e) {}
     loading = false;
     console.log({ entities, fullText });
   });
