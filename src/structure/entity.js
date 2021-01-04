@@ -1,4 +1,5 @@
 import { Svue } from 'svue';
+import { Results } from './results';
 
 export class Entity extends Svue {
   constructor(rawEntity, structure = {}) {
@@ -41,29 +42,13 @@ export class Entity extends Svue {
 }
 
 
-export class Entities extends Svue {
-  constructor(rawEntities, structure = {}) {
-    const computed = structure.computed == null ? {} : structure.computed;
-    super({
-      data() {
-        const data = structure.data == null ? {} : structure.data();
-        data.rawEntities = rawEntities;
-        return data;
-      },
+export class Entities extends Results {
+  constructor(url, rawEntities) {
+    super(url, rawEntities, {
       computed: {
-        ...computed,
-        count(rawEntities) {
-          return rawEntities.count;
+        entities(results) {
+          return results.map(x => new Entity(x));
         },
-        next(rawEntities) {
-          return rawEntities.next;
-        },
-        hasNext(next) {
-          return next != null;
-        },
-        entities(rawEntities) {
-          return rawEntities.results.map(x => new Entity(x));
-        }
       }
     });
   }

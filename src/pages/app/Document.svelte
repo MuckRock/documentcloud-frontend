@@ -258,6 +258,12 @@
             <Link to="viewer" params={{ id: document.slugId }}>
               <Button action={true}>Open</Button>
             </Link>
+            <!-- TODO: remove -->
+            <span style="margin-left: 8px;">
+              <Link to="entity" params={{ id: document.slugId }}>
+                <Button action={true}>Entities</Button>
+              </Link>
+            </span>
             {#if document.readable}
               <div class="updating">
                 Updating document...
