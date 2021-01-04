@@ -168,7 +168,7 @@
 
 <div class="body">
   <p>
-    <Link back={true}>Back</Link>
+    <Link back={true} color={true}>Back</Link>
   </p>
   {#if !loading && entities != null && fullText != null && entities.count > 0}
     <p class="paginator">
