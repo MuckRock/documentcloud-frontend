@@ -6,6 +6,7 @@
   import { jsonUrl } from "@/api/viewer";
   import session from "@/api/session";
   import { handlePlural } from "@/util/string";
+  import Link from "@/router/Link";
 
   import closeSvg from "@/assets/close_inline.svg";
 
@@ -166,6 +167,9 @@
 </style>
 
 <div class="body">
+  <p>
+    <Link back={true}>Back</Link>
+  </p>
   {#if !loading && entities != null && fullText != null && entities.count > 0}
     <p class="paginator">
       <span>Page&nbsp;</span>
