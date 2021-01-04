@@ -162,7 +162,10 @@
       {#if entities.hasPrev}
         <span class="paginate" on:click={() => prevPage()}>←</span>
       {/if}
-      <span class="page">{entities.page + 1}</span>
+      <span class="page">{entities.page + 1}
+        of
+        {entities.numPages}
+        ({(handlePlural(entities.count), 'total result')})</span>
       {#if entities.hasNext}
         <span class="paginate" on:click={() => nextPage()}>→</span>
       {/if}
