@@ -156,7 +156,7 @@
 </style>
 
 <div class="body">
-  {#if !loading && entities != null && fullText != null}
+  {#if !loading && entities != null && fullText != null && entities.count > 0}
     <p class="paginator">
       <span>Page&nbsp;</span>
       {#if entities.hasPrev}
