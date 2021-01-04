@@ -54,7 +54,9 @@
     try {
       entities = await getEntities(id);
       fullText = await session.getStatic(jsonUrl(document));
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
     loading = false;
     console.log({ entities, fullText });
   });
