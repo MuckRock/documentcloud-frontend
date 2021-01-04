@@ -165,7 +165,7 @@
       <span class="page">{entities.page + 1}
         of
         {entities.numPages}
-        ({(handlePlural(entities.count), 'total result')})</span>
+        ({(handlePlural(entities.count), 'total entity result')})</span>
       {#if entities.hasNext}
         <span class="paginate" on:click={() => nextPage()}>→</span>
       {/if}
