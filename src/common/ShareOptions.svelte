@@ -1,6 +1,5 @@
 <script>
   import Button from "@/common/Button";
-  import { layout } from "@/viewer/layout";
   import { copy } from "@/util/copy";
   import { tick } from "svelte";
 
@@ -16,14 +15,17 @@
   export let errorOccurred = false;
   export let linkText;
   export let tweetText;
+  export let showWp = true;
 
   let embedElem;
+  let wpElem;
   let linkElem;
 
   const ERROR_TEXT = "An unexpected error occurred. Please try again later.";
 
   $: embedText = errorOccurred ? ERROR_TEXT : embedCode;
   $: linkDisplayText = errorOccurred ? ERROR_TEXT : linkText;
+  $: wpText = errorOccurred ? ERROR_TEXT : `[documentcloud url="${linkText}"]`;
 
   $: {
     if (embedCode != null && embedAction != null) {
@@ -84,6 +86,10 @@
     margin-bottom: 12px;
     pointer-events: none;
   }
+
+  a.link {
+    color: $primary;
+  }
 </style>
 
 <div class="shareoptions">
@@ -131,8 +137,23 @@
 
   {#if !errorOccurred}
     <div class="buttonpadded">
-      <Button on:click={() => copy(embedElem)}>Copy code</Button>
+      <Button on:click={() => copy(embedElem)}>Copy HTML code</Button>
     </div>
+    {#if showWp}
+      <p>
+        Add this shortcode to your WordPress content —
+        <a
+          class="link"
+          target="_blank"
+          href="https://wordpress.org/plugins/documentcloud/">
+          plugin required
+        </a>
+      </p>
+      <input class:error={errorOccurred} bind:this={wpElem} value={wpText} />
+      <div class="buttonpadded">
+        <Button on:click={() => copy(wpElem)}>Copy shortcode</Button>
+      </div>
+    {/if}
   {/if}
 
   {#if embedCode != null}

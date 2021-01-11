@@ -71,6 +71,7 @@
         {embedCode}
         {errorOccurred}
         linkText={linkUrl}
+        showWp={false}
         tweetText={`${project.title} ${linkUrl}`} />
     </div>
   </div>
