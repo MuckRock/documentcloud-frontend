@@ -12,10 +12,7 @@
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
-  import {
-    viewerEditDialogs,
-    loadViewerEditDialogs,
-  } from "./viewerEditDialogs";
+  import { viewerEditDialogs } from "./viewerEditDialogs";
 
   import Modal from "@/common/Modal";
   import ErrorModal from "@/common/ErrorModal";
