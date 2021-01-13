@@ -24,6 +24,10 @@ import { handlePlural } from "@/util/string";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array";
 import { modifications } from './modifications';
 import { docEquals, copyDoc } from '@/structure/document';
+import { batchDelay } from '@/util/batchDelay';
+
+const GET_BATCH = parseInt(process.env.GET_BATCH);
+const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
 
 let lastSelected = null;
 const PROCESSING_CHANGE_TIMEOUT = 500;
@@ -165,10 +169,12 @@ export const documents = new Svue({
       ] : [];
       const pollEvent = pollDocuments.length > 0 ? [
         async () => {
-          const newDocs = await getDocumentsWithIds(
-            pollDocuments.map((doc) => doc.id)
-          );
-          newDocs.forEach((doc) => replaceInCollection(doc));
+          await batchDelay(pollDocuments, GET_BATCH, GET_BATCH_DELAY, async (docs) => {
+            const newDocs = await getDocumentsWithIds(
+              docs.map((doc) => doc.id)
+            );
+            newDocs.forEach((doc) => replaceInCollection(doc));
+          });
         },
       ] : [];
       return grabPending.concat(pollEvent);
@@ -509,10 +515,10 @@ export async function removeDocsFromProject(
       updateInCollection(
         doc,
         (d) =>
-          (d.doc = {
-            ...d.doc,
-            projects: removeFromArray(d.projectIds, project.id),
-          })
+        (d.doc = {
+          ...d.doc,
+          projects: removeFromArray(d.projectIds, project.id),
+        })
       )
     );
   });
