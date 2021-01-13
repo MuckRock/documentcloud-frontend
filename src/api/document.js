@@ -222,6 +222,7 @@ export async function uploadDocuments(
   forceOcr,
   projects,
   progressFn,
+  processProgressFn,
   allCompleteFn,
   errorFn
 ) {
