@@ -22,6 +22,8 @@ function collectNotes(orderedNotes, predicate) {
   return index;
 }
 
+let viewerInitCache = {};
+
 export const viewer = new Svue({
   data() {
     return {
@@ -50,9 +52,15 @@ export const viewer = new Svue({
         } else {
           this.embed = inIframe();
         }
-        return initViewer(this.id);
+        if (viewerInitCache[this.id] == null) {
+          initViewer(this.id);
+          viewerInitCache[this.id] = true;
+        }
+        return;
       }
       if (route != null && route.name != 'viewer') {
+        // Reset cache and document
+        viewerInitCache = {};
         this.document = null;
       }
     },
