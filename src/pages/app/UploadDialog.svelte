@@ -58,6 +58,7 @@
   $: displayFiles = uploadMode == false ? files : uploadFiles;
 
   let numUploaded;
+  let processProgress = 0;
   $: {
     // Set numUploaded
     if (!uploadMode) {
@@ -70,6 +71,7 @@
       numUploaded = total;
     }
   }
+  $: processProgressPercent = `${Math.floor(processProgress * 100)}%`;
 
   $: error = errorMessage != null;
 
@@ -139,6 +141,9 @@
         if (progress >= 1) {
           uploadFiles[index].done = true;
         }
+      },
+      (progress) => {
+        processProgress = progress;
       },
       async (ids) => {
         // All complete handler
@@ -289,7 +294,7 @@
         {#if !error}
           <h1>
             {#if numUploaded == files.length}
-              Almost done... submitting uploaded files for processing
+              Almost done... submitting uploaded files for processing ({processProgressPercent}%)
             {:else}Uploading... ({numUploaded}/{files.length}){/if}
           </h1>
           <p>

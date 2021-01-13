@@ -211,6 +211,7 @@ export async function pollDocument(
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
  * @param {Function} progressFn A function to call with upload progress
+ * @param {Function} processProgressFn A function to call with process progress
  * @param {Function} allCompleteFn A function to call when all docs upload
  * @param {Function} errorFn A function to call when an error occurs
  */
@@ -302,16 +303,20 @@ export async function uploadDocuments(
 
   // Once all the files have uploaded, begin processing.
   const ids = newDocuments.map((doc) => doc.id).filter(x => !badDocs[x]);
+  let count = 0;
   try {
     await batchDelay(
       ids,
       UPLOAD_BATCH,
       UPLOAD_BATCH_DELAY,
-      async (subIds) =>
+      async (subIds) => {
         await session.post(
           apiUrl(`documents/process/`),
           subIds.map((id) => ({ id, force_ocr: forceOcr }))
-        )
+        );
+        count += subIds.length;
+        processProgressFn(count / ids.length);
+      }
     );
   } catch (e) {
     console.error(e);
