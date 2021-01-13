@@ -294,7 +294,7 @@
         {#if !error}
           <h1>
             {#if numUploaded == files.length}
-              Almost done... submitting uploaded files for processing ({processProgressPercent}%)
+              Almost done... submitting uploaded files for processing ({processProgressPercent})
             {:else}Uploading... ({numUploaded}/{files.length}){/if}
           </h1>
           <p>
