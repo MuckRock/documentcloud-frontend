@@ -136,6 +136,9 @@
       (index, progress) => {
         // Progress handler
         uploadFiles[index].progress = progress;
+        if (progress >= 1) {
+          uploadFiles[index].done = true;
+        }
       },
       async (ids) => {
         // All complete handler
@@ -284,7 +287,11 @@
     {#if uploadMode}
       <div>
         {#if !error}
-          <h1>Uploading... ({numUploaded}/{files.length})</h1>
+          <h1>
+            {#if numUploaded == files.length}
+              Almost done... submitting uploaded files for processing
+            {:else}Uploading... ({numUploaded}/{files.length}){/if}
+          </h1>
           <p>
             Please leave this page open while your documents upload. This dialog
             will automatically close when they have finished uploading.
