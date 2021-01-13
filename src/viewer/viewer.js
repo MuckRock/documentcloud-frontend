@@ -1,5 +1,6 @@
 import { Svue } from "svue";
-import { getDocument, getMe } from "@/api/document";
+import { getDocument } from "@/api/document";
+import { getMe } from '@/api/orgAndUser';
 import { router } from "@/router/router";
 import { DEFAULT_EXPAND } from "../api/common";
 import { inIframe } from "@/util/iframe";

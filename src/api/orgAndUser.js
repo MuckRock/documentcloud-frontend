@@ -1,10 +1,19 @@
-import session from "./session";
+import session, { cookiesEnabled } from "./session";
 import { USER_EXPAND, ORG_EXPAND, DEFAULT_EXPAND } from "./common";
 import { queryBuilder } from "@/util/url";
 import { grabAllPages } from "@/util/paginate";
 import { apiUrl } from "./base";
 
+const hasCsrfToken = /(^|;\s*)csrftoken=[a-zA-Z0-9]+/;
+
 export async function getMe(expand = DEFAULT_EXPAND) {
+  // Check that the user is logged in via cookies
+  if (cookiesEnabled) {
+    if (!hasCsrfToken.test(document.cookie)) {
+      return null;
+    }
+  }
+  // Check that the user is logged in via network request
   try {
     const { data } = await session.get(
       queryBuilder(apiUrl(`users/me/`), { expand })

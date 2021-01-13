@@ -25,14 +25,6 @@ const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
 // Statuses
 export const PENDING = "pending";
 
-export async function getMe(expand = DEFAULT_EXPAND) {
-  // Returns the currently logged in user
-  const { data } = await session.get(
-    queryBuilder(apiUrl("users/me/"), { expand })
-  );
-  return data;
-}
-
 export async function getDocuments(
   extraParams = {},
   ordering = DEFAULT_ORDERING,
