@@ -83,7 +83,7 @@ export async function getDocumentsWithIds(
     // Return documents with the specified ids
     const params = { expand, id__in: subIds };
     if (remaining) params["remaining"] = true;
-    const documents = await grabAllPages(
+    const documents = await session.get(
       apiUrl(queryBuilder("documents/", params))
     );
     const docs = documents.map((document) => new Document(document));

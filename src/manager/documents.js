@@ -184,16 +184,14 @@ export const documents = new Svue({
       ] : [];
       const pollEvent = pollDocuments.length > 0 ? [
         async () => {
-          await batchDelay(pollDocuments, GET_BATCH, GET_BATCH_DELAY, async (docs) => {
-            try {
-              const newDocs = await getDocumentsWithIds(
-                docs.map((doc) => doc.id)
-              );
-              newDocs.forEach((doc) => replaceInCollection(doc));
-            } catch (e) {
-              console.error("failed to get update info", docs);
-            }
-          });
+          try {
+            const newDocs = await getDocumentsWithIds(
+              pollDocuments.map((doc) => doc.id)
+            );
+            newDocs.forEach((doc) => replaceInCollection(doc));
+          } catch (e) {
+            console.error("failed to get update info", docs);
+          }
         },
       ] : [];
       return grabPending.concat(pollEvent);
