@@ -323,8 +323,12 @@ export function removeDocuments(documents) {
 }
 
 export async function markAsDirty(docIds) {
-  const dirtyDocs = await getDocumentsWithIds(docIds);
-  dirtyDocs.map((doc) => replaceInCollection(doc));
+  try {
+    const dirtyDocs = await getDocumentsWithIds(docIds);
+    dirtyDocs.map((doc) => replaceInCollection(doc));
+  } catch (e) {
+    console.error('unexpected error marking docs dirty', docIds);
+  }
 }
 
 export function reprocessDocuments(documents) {
