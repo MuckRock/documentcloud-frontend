@@ -142,23 +142,23 @@ export const documents = new Svue({
         documents
       );
     },
-    numProcessing(pendingExisting) {
-      return pendingExisting.length;
+    numProcessing(pending) {
+      return pending.length;
     },
     rawDoneProcessing(numProcessing) {
       // Wait a second before modulating value
       return numProcessing == 0;
     },
 
-    processingProgress(pendingExisting) {
-      if (pendingExisting.length == 0) return 1;
+    processingProgress(pending) {
+      if (pending.length == 0) return 1;
 
       // Operate on documents with non-null progresses
       let totalPages = 0;
       let totalImagesProcessed = 0;
       let totalTextsProcessed = 0;
-      for (let i = 0; i < pendingExisting.length; i++) {
-        const p = pendingExisting[i];
+      for (let i = 0; i < pending.length; i++) {
+        const p = pending[i];
         if (p.images != null && p.texts != null && p.pages != null) {
           totalPages += p.pages;
           totalImagesProcessed += p.pages - p.images;
@@ -228,6 +228,10 @@ export function removeFromCollection(docId, modify = true) {
     (doc) => doc.id != docId
   );
   setDocuments(newDocuments);
+  // Remove from pending if applicable
+  if (documents.pendingMap[docId] != null) {
+    documents.pending = documents.pending.filter(x => x.doc_id != docId);
+  }
 
   // Refresh when you delete everything to pull new search
   if (newDocuments.length == 0 && process.env.NODE_ENV != 'test') window.location.reload();
