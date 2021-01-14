@@ -312,8 +312,9 @@ export class Document extends Svue {
 
         // Text properties
         userOrgString(individualOrg, userName, organizationName) {
+          if (userName == null) return '';
           // Return user and organization formatted as a string
-          if (individualOrg) {
+          if (individualOrg || organizationName == null) {
             return userName;
           }
           return `${userName} (${organizationName})`;

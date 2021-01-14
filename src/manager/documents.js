@@ -171,15 +171,25 @@ export const documents = new Svue({
     },
     pollEvents(pollDocuments, processingDocuments, numProcessing) {
       const grabPending = (processingDocuments.length > 0 || numProcessing > 0) ? [
-        updatePending
+        async () => {
+          try {
+            await updatePending();
+          } catch (e) {
+            console.error("error fetching pending", e);
+          }
+        }
       ] : [];
       const pollEvent = pollDocuments.length > 0 ? [
         async () => {
           await batchDelay(pollDocuments, GET_BATCH, GET_BATCH_DELAY, async (docs) => {
-            const newDocs = await getDocumentsWithIds(
-              docs.map((doc) => doc.id)
-            );
-            newDocs.forEach((doc) => replaceInCollection(doc));
+            try {
+              const newDocs = await getDocumentsWithIds(
+                docs.map((doc) => doc.id)
+              );
+              newDocs.forEach((doc) => replaceInCollection(doc));
+            } catch (e) {
+              console.error("failed to get update info", docs);
+            }
           });
         },
       ] : [];
