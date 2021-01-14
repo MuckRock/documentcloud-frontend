@@ -29,6 +29,9 @@ import { batchDelay } from '@/util/batchDelay';
 const GET_BATCH = parseInt(process.env.GET_BATCH);
 const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
 
+// Only show up to this many documents, regardless of how many are uploaded
+const MAX_DISPLAY = 50;
+
 let lastSelected = null;
 const PROCESSING_CHANGE_TIMEOUT = 500;
 
@@ -268,6 +271,10 @@ function replaceInCollection(document) {
 }
 
 function addToCollection(newDocs, modify = true) {
+  // Make sure more than the max display docs aren't added
+  const docsToAdd = Math.max(MAX_DISPLAY - documents.allDocuments.length, 0);
+  newDocs = newDocs.slice(0, docsToAdd);
+
   if (modify) {
     // Track the modifications
     modifications.add(collectionModifiers, newDocs.map(x => copyDoc(x)));
