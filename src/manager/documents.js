@@ -92,6 +92,12 @@ export const documents = new Svue({
       // Show all documents
       return allDocuments;
     },
+    pendingExisting(docsById, pending) {
+      return pending.filter(x => {
+        const id = x.doc_id;
+        return docsById[id] != null;
+      });
+    },
     pendingMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, x => x);
     },
@@ -133,30 +139,30 @@ export const documents = new Svue({
         documents
       );
     },
-    numProcessing(pending) {
-      return pending.length;
+    numProcessing(pendingExisting) {
+      return pendingExisting.length;
     },
     rawDoneProcessing(numProcessing) {
       // Wait a second before modulating value
       return numProcessing == 0;
     },
 
-    processingProgress(pending) {
-      if (pending.length == 0) return 1;
+    processingProgress(pendingExisting) {
+      if (pendingExisting.length == 0) return 1;
 
       // Operate on documents with non-null progresses
       let totalPages = 0;
       let totalImagesProcessed = 0;
       let totalTextsProcessed = 0;
-      for (let i = 0; i < pending.length; i++) {
-        const p = pending[i];
+      for (let i = 0; i < pendingExisting.length; i++) {
+        const p = pendingExisting[i];
         if (p.images != null && p.texts != null && p.pages != null) {
           totalPages += p.pages;
           totalImagesProcessed += p.pages - p.images;
           totalTextsProcessed += p.pages - p.texts;
         }
       }
-      if (totalPages == 0) return null;
+      if (totalPages == 0) return 0;
       const totalPagesProcessed = (totalImagesProcessed + totalTextsProcessed) / 2;
       return totalPagesProcessed / totalPages;
     },
@@ -420,8 +426,27 @@ export async function removeDocumentData(documents, key, value) {
   }
 }
 
-export async function handleNewDocuments(ids) {
-  const newDocs = await getDocumentsWithIds(ids);
+export async function handleNewDocuments(newDocs) {
+  // Set status to pending to indicate progress
+  newDocs = newDocs.map(d => {
+    d.doc = { ...d.doc, status: 'pending' };
+    return d;
+  });
+  // Update pending to show 0 progress on everything
+  for (let i = 0; i < newDocs.length; i++) {
+    const doc = newDocs[i];
+    // Only all if not already set
+    if (documents.pendingMap[doc.id] == null) {
+      documents.pending.push({
+        doc_id: doc.id,
+        images: 0,
+        texts: 0,
+        pages: 0,
+      });
+    }
+  }
+  // Update pending
+  documents.pending = documents.pending;
   addToCollection(newDocs);
 }
 

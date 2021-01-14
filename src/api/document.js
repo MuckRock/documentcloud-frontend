@@ -210,6 +210,7 @@ export async function pollDocument(
  * @param {string} language The language code of the uploaded docs
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
+ * @param {Function} createProgressFn A function to call with process progress
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} processProgressFn A function to call with process progress
  * @param {Function} allCompleteFn A function to call when all docs upload
@@ -221,6 +222,7 @@ export async function uploadDocuments(
   language,
   forceOcr,
   projects,
+  createProgressFn,
   progressFn,
   processProgressFn,
   allCompleteFn,
@@ -247,6 +249,7 @@ export async function uploadDocuments(
       if (parts.length <= 1) return '';
       return parts[parts.length - 1].toLowerCase();
     };
+    let createCount = 0;
     const data = await batchDelay(
       docs,
       UPLOAD_BATCH,
@@ -256,6 +259,8 @@ export async function uploadDocuments(
           apiUrl("documents/"),
           subDocs.map((doc) => ({ title: doc.name, access, language, original_extension: getExtension(doc.file), projects: projectIds }))
         );
+        createCount += subDocs.length;
+        createProgressFn(createCount / docs.length);
         return data;
       }
     );
@@ -303,7 +308,8 @@ export async function uploadDocuments(
   }
 
   // Once all the files have uploaded, begin processing.
-  const ids = newDocuments.map((doc) => doc.id).filter(x => !badDocs[x]);
+  const goodDocuments = newDocuments.filter(doc => !badDocs[doc.id]);
+  const ids = goodDocuments.map((doc) => doc.id);
   let count = 0;
   try {
     await batchDelay(
@@ -325,5 +331,5 @@ export async function uploadDocuments(
   }
 
   // Handle document completion
-  allCompleteFn(ids);
+  allCompleteFn(goodDocuments.map(x => new Document(x)));
 }
