@@ -178,12 +178,7 @@ test("stale delete processing doc", async () => {
   expect(documents.numProcessing).toBe(0);
   // Make doc go into reprocessing state
   updateInCollection(doc, d => d.doc = { ...d.doc, status: 'pending' });
-  documents.pending = [...documents.pending, {
-    doc_id: doc.id,
-    images: 0,
-    texts: 0,
-    pages: 1,
-  }];
+  updatePending();
   // Expect doc to be processing
   expect(documents.numProcessing).toBe(1);
   // Remove the doc while it's processing
