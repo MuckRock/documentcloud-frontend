@@ -2,6 +2,7 @@ import { Svue } from "svue";
 
 import { documents } from "@/manager/documents";
 import { layout } from "@/viewer/layout";
+import { entities } from "@/entities/entities";
 import { batchDelay } from '@/util/batchDelay';
 
 const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL);
@@ -18,7 +19,7 @@ export const ticker = new Svue({
   computed: {
     events(documents, layout) {
       // Add events from all possible sources here
-      return [...documents.pollEvents, ...layout.pollEvents];
+      return [...documents.pollEvents, ...layout.pollEvents, ...entities.pollEvents];
     },
     shouldTrigger(events, triggered) {
       if (events.length > 0 && !triggered) {

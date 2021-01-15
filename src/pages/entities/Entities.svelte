@@ -2,38 +2,36 @@
   import { onMount } from "svelte";
   import { router } from "@/router/router";
   import { getDocument } from "@/api/document";
-  import { getEntities, extractEntities } from "@/api/entity";
+  import { extractEntities } from "@/api/entity";
   import { jsonUrl } from "@/api/viewer";
   import session from "@/api/session";
   import { handlePlural } from "@/util/string";
   import Link from "@/router/Link";
+  import { entities, getE } from "@/entities/entities";
+  import { updateInCollection } from "@/manager/documents";
+  import Progress from "@/common/Progress";
 
   import closeSvg from "@/assets/close_inline.svg";
 
+  const CONTACT = process.env.SPECIAL_CONTACT;
+
   let loading = true;
-  let entities = null;
   let fullText = null;
   let selectedEntity = null;
   let page = 1;
 
   const SNIPPET_LENGTH = 100;
 
-  const cache = {};
-
-  async function getE(id, page = 1) {
-    const key = `${id},${page}`;
-    if (cache[key] != null) return cache[key];
-    const results = await getEntities(id, page);
-    cache[key] = results;
-    return results;
-  }
-
   async function extract() {
-    const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
+    if (entities.document == null) return;
+    const id = entities.document.id;
     try {
       await extractEntities(id);
-      alert(
-        "Entities extracting! Refresh this page to see if entities have finished processing (which may take a few minutes). Do not hit extract entities again"
+      entities.document.doc.status = "readable";
+      entities.document = entities.document;
+      updateInCollection(
+        entities.document,
+        (d) => (d.doc = { ...d.doc, status: "readable" })
       );
     } catch (e) {
       console.error(e);
@@ -61,22 +59,22 @@
 
   onMount(async () => {
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
-    const document = await getDocument(id);
+    entities.document = await getDocument(id);
     try {
-      entities = await getE(id);
-      fullText = await session.getStatic(jsonUrl(document));
+      entities.entities = await getE(id);
+      fullText = await session.getStatic(jsonUrl(entities.document));
     } catch (e) {
       console.error(e);
     }
     loading = false;
-    console.log({ entities, fullText });
+    console.log({ entities: entities.entities, fullText });
   });
 
   async function pushPage(num) {
     page = num;
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     selectedEntity = null;
-    entities = await getE(id, page);
+    entities.entities = await getE(id, page);
   }
 
   async function prevPage() {
@@ -98,12 +96,105 @@
     return results;
   }
 
-  $: entitiesByCategory = categorizeEntities(entities);
+  $: entitiesByCategory = categorizeEntities(entities.entities);
   $: categories =
     entitiesByCategory == null ? [] : Object.keys(entitiesByCategory).sort();
 </script>
 
+<div class="body">
+  <p>
+    <Link back={true} color={true}>Back</Link>
+  </p>
+  {#if !loading && $entities.entities != null && fullText != null && $entities.entities.count > 0}
+    <p class="paginator">
+      <span>Page&nbsp;</span>
+      {#if $entities.entities.hasPrev}
+        <span class="paginate" on:click={() => prevPage()}>←</span>
+      {/if}
+      <span class="page"
+        >{$entities.entities.page + 1}
+        of
+        {$entities.entities.numPages}
+        ({handlePlural(entities.count, "total entity result")})</span
+      >
+      {#if $entities.entities.hasNext}
+        <span class="paginate" on:click={() => nextPage()}>→</span>
+      {/if}
+    </p>
+
+    {#if selectedEntity != null}
+      <div class="entity">
+        <h3>
+          {selectedEntity.name}
+          <span class="close" on:click={() => (selectedEntity = null)}
+            >{@html closeSvg}</span
+          >
+        </h3>
+        <details open>
+          <summary><b>{selectedEntity.kind}</b></summary>
+          <ul>
+            {#each selectedEntity.occurrences as occurrence}
+              <li>
+                pg.
+                {occurrence.page}:
+                <span>{getSnippet(occurrence)[0]}</span><span class="highlight"
+                  >{getSnippet(occurrence)[1]}</span
+                ><span>{getSnippet(occurrence)[2]}</span>
+              </li>
+            {/each}
+          </ul>
+        </details>
+      </div>
+    {/if}
+
+    <div class="categories">
+      {#each categories as category}
+        <div class="category">
+          <div class="categorytitle">{category}</div>
+          {#each entitiesByCategory[category] as entity}
+            <div class="entity" on:click={() => (selectedEntity = entity)}>
+              <div class="title">{entity.name}</div>
+              <div class="subtitle">
+                {handlePlural(entity.occurrences.length, "occurrence")}
+              </div>
+            </div>
+          {/each}
+        </div>
+      {/each}
+    </div>
+  {:else if loading == false && $entities.document != null}
+    <h2>Entity extraction for “{$entities.document.title}”</h2>
+    {#if $entities.document.readable}
+      <p>
+        Extracting entities...
+        <Progress initializing={true} progress={0} compact={true} />
+      </p>
+    {:else}
+      <p>
+        Welcome to entity extraction! This feature is very much in progress but
+        we want it in your hands early to welcome any <a
+          href={CONTACT}
+          target="_blank">feedback</a
+        > you might have.
+      </p>
+      <p>
+        Right now the process for extracting entities is manual. This document
+        has not had entities extracted yet, so click below to get started.
+      </p>
+      <p><button on:click={extract}>Extract entities</button></p>
+    {/if}
+  {:else}Loading...{/if}
+</div>
+
 <style lang="scss">
+  p {
+    max-width: 33em;
+  }
+
+  a {
+    color: $primary;
+  }
+
   .highlight {
     background: rgb(250, 244, 208);
   }
@@ -165,67 +256,3 @@
     margin-left: 5px;
   }
 </style>
-
-<div class="body">
-  <p>
-    <Link back={true} color={true}>Back</Link>
-  </p>
-  {#if !loading && entities != null && fullText != null && entities.count > 0}
-    <p class="paginator">
-      <span>Page&nbsp;</span>
-      {#if entities.hasPrev}
-        <span class="paginate" on:click={() => prevPage()}>←</span>
-      {/if}
-      <span class="page">{entities.page + 1}
-        of
-        {entities.numPages}
-        ({handlePlural(entities.count, 'total entity result')})</span>
-      {#if entities.hasNext}
-        <span class="paginate" on:click={() => nextPage()}>→</span>
-      {/if}
-    </p>
-
-    {#if selectedEntity != null}
-      <div class="entity">
-        <h3>
-          {selectedEntity.name}
-          <span
-            class="close"
-            on:click={() => (selectedEntity = null)}>{@html closeSvg}</span>
-        </h3>
-        <details open>
-          <summary><b>{selectedEntity.kind}</b></summary>
-          <ul>
-            {#each selectedEntity.occurrences as occurrence}
-              <li>
-                pg.
-                {occurrence.page}:
-                <span>{getSnippet(occurrence)[0]}</span><span
-                  class="highlight">{getSnippet(occurrence)[1]}</span><span>{getSnippet(occurrence)[2]}</span>
-              </li>
-            {/each}
-          </ul>
-        </details>
-      </div>
-    {/if}
-
-    <div class="categories">
-      {#each categories as category}
-        <div class="category">
-          <div class="categorytitle">{category}</div>
-          {#each entitiesByCategory[category] as entity}
-            <div class="entity" on:click={() => (selectedEntity = entity)}>
-              <div class="title">{entity.name}</div>
-              <div class="subtitle">
-                {handlePlural(entity.occurrences.length, 'occurrence')}
-              </div>
-            </div>
-          {/each}
-        </div>
-      {/each}
-    </div>
-  {:else if loading == false}
-    <p>No entities found</p>
-    <p><button on:click={extract}>Extract entities</button></p>
-  {:else}Loading...{/if}
-</div>
