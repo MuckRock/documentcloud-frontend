@@ -144,7 +144,9 @@
               <li>
                 <Link
                   inlineBlock={true}
-                  toUrl={document.relativePageUrl(occurrence.page + 1)}
+                  toUrl={$entities.document.relativePageUrl(
+                    occurrence.page + 1
+                  )}
                 >
                   pg.
                   {occurrence.page + 1}:</Link
