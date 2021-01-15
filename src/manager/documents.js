@@ -24,10 +24,6 @@ import { handlePlural } from "@/util/string";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array";
 import { modifications } from './modifications';
 import { docEquals, copyDoc } from '@/structure/document';
-import { batchDelay } from '@/util/batchDelay';
-
-const GET_BATCH = parseInt(process.env.GET_BATCH);
-const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
 
 // Only show up to this many documents, regardless of how many are uploaded
 const MAX_DISPLAY = 50;
@@ -455,21 +451,6 @@ export async function handleNewDocuments(newDocs) {
     d.doc = { ...d.doc, status: 'pending' };
     return d;
   });
-  // Update pending to show 0 progress on everything
-  for (let i = 0; i < newDocs.length; i++) {
-    const doc = newDocs[i];
-    // Only all if not already set
-    if (documents.pendingMap[doc.id] == null) {
-      documents.pending.push({
-        doc_id: doc.id,
-        images: 0,
-        texts: 0,
-        pages: 0,
-      });
-    }
-  }
-  // Update pending
-  documents.pending = documents.pending;
   addToCollection(newDocs);
 }
 

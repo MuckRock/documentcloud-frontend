@@ -7,7 +7,6 @@ import { apiUrl } from "./base";
 import { timeout } from "@/util/timeout";
 import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
-import { grabAllPages } from "@/util/paginate";
 import { Results } from "@/structure/results";
 import { batchDelay } from "@/util/batchDelay";
 import axios from "axios";
@@ -94,7 +93,7 @@ export async function getDocumentsWithIds(
       orderedDocs.push(matching[0]);
     }
     return orderedDocs;
-  });
+  }, (e) => console.error('error getting documents with ids', e));
 }
 
 export async function deleteDocument(ids) {
@@ -262,7 +261,8 @@ export async function uploadDocuments(
         createCount += subDocs.length;
         createProgressFn(createCount / docs.length);
         return data;
-      }
+      },
+      (e) => console.error('error creating some docs', e)
     );
     newDocuments = data;
   } catch (e) {
@@ -323,7 +323,8 @@ export async function uploadDocuments(
         );
         count += subIds.length;
         processProgressFn(count / ids.length);
-      }
+      },
+      (e) => console.error('error processing some docs', e)
     );
   } catch (e) {
     console.error(e);

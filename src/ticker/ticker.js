@@ -31,7 +31,7 @@ export const ticker = new Svue({
 
 export async function triggerTimer() {
   // Run all the events in parallel
-  await batchDelay(ticker.events, 1, GET_BATCH_DELAY, x => x[0]());
+  await batchDelay(ticker.events, 1, GET_BATCH_DELAY, x => x[0](), (e) => console.error('error updating some poll events', e));
 
   // Set the timer after events have processed
   setTimeout(triggerTimer, POLL_INTERVAL);
