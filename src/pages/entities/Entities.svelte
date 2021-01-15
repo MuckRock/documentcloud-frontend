@@ -93,15 +93,17 @@
   function categorizeEntities(entities) {
     if (entities == null) return {};
     const results = {};
-    for (let i = 0; i < entities.entities.length; i++) {
-      const entity = entities.entities[i];
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
       if (results[entity.kind] == null) results[entity.kind] = [];
       results[entity.kind].push(entity);
     }
     return results;
   }
 
-  $: entitiesByCategory = categorizeEntities($entities.entities);
+  $: entitiesByCategory = categorizeEntities(
+    ($entities.entities || {}).entities
+  );
   $: categories =
     entitiesByCategory == null ? [] : Object.keys(entitiesByCategory).sort();
 </script>
@@ -140,8 +142,13 @@
           <ul>
             {#each selectedEntity.occurrences as occurrence}
               <li>
-                pg.
-                {occurrence.page}:
+                <Link
+                  inlineBlock={true}
+                  toUrl={document.relativePageUrl(occurrence.page + 1)}
+                >
+                  pg.
+                  {occurrence.page + 1}:</Link
+                >
                 <span>{getSnippet(occurrence)[0]}</span><span class="highlight"
                   >{getSnippet(occurrence)[1]}</span
                 ><span>{getSnippet(occurrence)[2]}</span>
