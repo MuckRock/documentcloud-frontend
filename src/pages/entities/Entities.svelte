@@ -36,7 +36,7 @@
         entities.document,
         (d) => (d.doc = { ...d.doc, status: "readable" })
       );
-      extractionStage = 0;
+      extractionStage = 2;
     } catch (e) {
       extractionError = true;
       console.error(e);
@@ -188,8 +188,13 @@
       </p>
       {#if extractionError}
         An unexpected error occurred
-      {:else if extractionStage == 0}
+      {:else if extractionStage == 0 || extractionStage == 2}
         <p><button on:click={extract}>Extract entities</button></p>
+        {#if extractionStage == 2}<p>
+            Seeing this again? Entity extraction failed. We currently only
+            support English documents, but something else could have happened.
+            Feel free to try again.
+          </p>{/if}
       {:else if extractionStage == 1}
         <p><i>Starting extraction...</i></p>
       {/if}
