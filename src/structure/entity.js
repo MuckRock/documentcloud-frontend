@@ -34,7 +34,7 @@ export class Entity extends Svue {
           return wikiUrl.trim().length > 0;
         },
         occurrences(rawEntity) {
-          return rawEntity.occurences;
+          return rawEntity.occurrences;
         },
         numOccurrences(occurrences) {
           return occurrences.length;
