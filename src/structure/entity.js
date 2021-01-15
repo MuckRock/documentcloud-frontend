@@ -30,6 +30,9 @@ export class Entity extends Svue {
         wikiUrl(entity) {
           return entity.wikipedia_url;
         },
+        hasWikiUrl(wikiUrl) {
+          return wikiUrl.trim().length > 0;
+        },
         occurrences(rawEntity) {
           return rawEntity.occurences;
         },

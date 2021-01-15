@@ -162,6 +162,11 @@
               <div class="subtitle">
                 {handlePlural(entity.occurrences.length, "occurrence")}
               </div>
+              {#if entity.hasWikiUrl}
+                <div class="subtitle">
+                  <a href={entity.wikiUrl} target="_blank">Wikipedia</a>
+                </div>
+              {/if}
             </div>
           {/each}
         </div>
