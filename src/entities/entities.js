@@ -24,14 +24,13 @@ export const entities = new Svue({
       // Update document only if it is readable
       if (document == null || !document.readable) return [];
       return [
-        async () => {
-          const doc = await getDocument(document.id);
-          this.document = doc;
-        },
         callEveryAsync(async () => {
-          // Only update entities every 4 times (~20 seconds)
-          entities.entities = await getE(document.id);
-        }, 4)
+          // Call once every ~15 seconds
+          const doc = await getDocument(document.id);
+          const entities = await getE(document.id);
+          entities.entities = entities;
+          this.document = doc;
+        }, 3),
       ];
     },
   }

@@ -101,7 +101,7 @@
     return results;
   }
 
-  $: entitiesByCategory = categorizeEntities(entities.entities);
+  $: entitiesByCategory = categorizeEntities($entities.entities);
   $: categories =
     entitiesByCategory == null ? [] : Object.keys(entitiesByCategory).sort();
 </script>
@@ -120,7 +120,7 @@
         >{$entities.entities.page + 1}
         of
         {$entities.entities.numPages}
-        ({handlePlural(entities.count, "total entity result")})</span
+        ({handlePlural($entities.entities.count, "total entity result")})</span
       >
       {#if $entities.entities.hasNext}
         <span class="paginate" on:click={() => nextPage()}>→</span>
