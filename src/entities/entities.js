@@ -22,7 +22,7 @@ export const entities = new Svue({
   computed: {
     pollEvents(document) {
       // Update document only if it is readable
-      if (document == null || !document.readable) return [];
+      if (document == null || (!document.readable && this.entities != null && this.entities.length > 0)) return [];
       return [
         callEveryAsync(async () => {
           // Call once every ~15 seconds
