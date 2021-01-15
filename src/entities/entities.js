@@ -27,8 +27,8 @@ export const entities = new Svue({
         callEveryAsync(async () => {
           // Call once every ~15 seconds
           const doc = await getDocument(document.id);
-          const entities = await getE(document.id);
-          entities.entities = entities;
+          const newEntities = await getE(document.id);
+          entities.entities = newEntities;
           this.document = doc;
         }, 3),
       ];
