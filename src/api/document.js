@@ -82,10 +82,10 @@ export async function getDocumentsWithIds(
     // Return documents with the specified ids
     const params = { expand, id__in: subIds };
     if (remaining) params["remaining"] = true;
-    const documents = await session.get(
+    const { data } = await session.get(
       apiUrl(queryBuilder("documents/", params))
     );
-    const docs = documents.map((document) => new Document(document));
+    const docs = data.results.map((document) => new Document(document));
     const orderedDocs = [];
     for (let i = 0; i < subIds.length; i++) {
       const matching = docs.filter((doc) => doc.id == subIds[i]);
