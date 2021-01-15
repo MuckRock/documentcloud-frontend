@@ -19,6 +19,8 @@
   let fullText = null;
   let selectedEntity = null;
   let page = 1;
+  let extractionError = false;
+  let extractionStage = 0;
 
   const SNIPPET_LENGTH = 100;
 
@@ -26,14 +28,17 @@
     if (entities.document == null) return;
     const id = entities.document.id;
     try {
+      extractionStage = 1;
       await extractEntities(id);
-      entities.document.doc.status = "readable";
+      entities.document.doc = { ...entities.document.doc, status: "readable" };
       entities.document = entities.document;
       updateInCollection(
         entities.document,
         (d) => (d.doc = { ...d.doc, status: "readable" })
       );
+      extractionStage = 0;
     } catch (e) {
+      extractionError = true;
       console.error(e);
       alert(`An unexpected error occurred: ${JSON.stringify(e)}`);
     }
@@ -181,7 +186,13 @@
         Right now the process for extracting entities is manual. This document
         has not had entities extracted yet, so click below to get started.
       </p>
-      <p><button on:click={extract}>Extract entities</button></p>
+      {#if extractionError}
+        An unexpected error occurred
+      {:else if extractionStage == 0}
+        <p><button on:click={extract}>Extract entities</button></p>
+      {:else if extractionStage == 1}
+        <p><i>Starting extraction...</i></p>
+      {/if}
     {/if}
   {:else}Loading...{/if}
 </div>

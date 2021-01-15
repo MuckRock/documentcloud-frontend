@@ -3,8 +3,6 @@ import { apiUrl } from "./base";
 import { Entities } from '@/structure/entity';
 import { queryBuilder } from "@/util/url";
 
-import { page1, page2 } from './mockEntity';
-
 export async function extractEntities(id) {
   const url = apiUrl(`documents/${id}/entities/`);
   const { data } = await session.post(url);

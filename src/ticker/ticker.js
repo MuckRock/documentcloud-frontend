@@ -13,11 +13,12 @@ export const ticker = new Svue({
     return {
       documents,
       layout,
+      entities,
       triggered: false,
     };
   },
   computed: {
-    events(documents, layout) {
+    events(documents, layout, entities) {
       // Add events from all possible sources here
       return [...documents.pollEvents, ...layout.pollEvents, ...entities.pollEvents];
     },

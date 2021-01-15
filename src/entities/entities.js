@@ -1,7 +1,7 @@
 import { Svue } from 'svue';
 import { getEntities } from "@/api/entity";
+import { getDocument } from '@/api/document';
 import { callEveryAsync } from '@/util/callEvery';
-
 const cache = {};
 
 export async function getE(id, page = 1) {
