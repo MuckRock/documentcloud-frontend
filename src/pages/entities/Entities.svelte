@@ -240,7 +240,7 @@
     }
 
     .entity {
-      padding: 4px 10px;
+      padding: 6px 10px;
       cursor: pointer;
 
       .subtitle {
@@ -254,6 +254,14 @@
 
         .subtitle {
           color: $light-gray;
+
+          a {
+            color: white;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
         }
       }
     }
