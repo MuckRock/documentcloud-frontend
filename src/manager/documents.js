@@ -369,14 +369,14 @@ export function cancelProcessDocuments(documents) {
   );
 }
 
-export async function changeAccessForDocuments(documents, access, layout) {
+export async function changeAccessForDocuments(documents, access, publishAt, layout) {
   await wrapLoad(layout, async () => {
-    await changeAccess(
+    await editMetadata(
       documents.map((doc) => doc.id),
-      access
+      {access, publish_at: publishAt}
     );
     documents.forEach((doc) =>
-      updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable" }))
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }))
     );
   });
   hideAccess();

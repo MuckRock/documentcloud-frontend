@@ -80,19 +80,31 @@ export const layout = new Svue({
       // Return the most restricted access level
       return minAccess;
     },
-    sameAccess(accessEditDocuments) {
+    sameAccess(sameProp) {
       // Return the access level if all docs have the same access
       // Otherwise, return null
-      let access = null;
-      for (let i = 0; i < accessEditDocuments.length; i++) {
-        const doc = accessEditDocuments[i];
-        if (access == null) {
-          access = doc.access;
-        } else if (doc.access != access) {
-          return null;
+      return sameProp("access");
+    },
+    samePublishAt(sameProp) {
+      // Return the publish at date if all docs have the same publish at date
+      // Otherwise, return null
+      return sameProp("publishAt");
+    },
+    sameProp(accessEditDocuments) {
+      // Return the given property if all docs have the same value for that property
+      // Otherwise, return null
+      return function(prop) {
+        let value = null;
+        for (let i = 0; i < accessEditDocuments.length; i++) {
+          const doc = accessEditDocuments[i];
+          if (i == 0) {
+            value = doc[prop];
+          } else if (doc[prop] != value) {
+            return null;
+          }
         }
-      }
-      return access;
+        return value;
+      };
     },
     projectCollaboratorAccessOpen(projectEditUser) {
       return projectEditUser != null;
