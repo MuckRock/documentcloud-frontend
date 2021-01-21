@@ -21,6 +21,49 @@
   let page = 1;
   let extractionError = false;
   let extractionStage = 0;
+  let kindFilter = {
+    person: true,
+    organization: true,
+    location: true,
+    event: true,
+    work_of_art: true,
+    consumer_good: true,
+    address: true,
+    date: true,
+    number: true,
+    phone_number: true,
+    price: true,
+    unknown: true,
+    other: true,
+  };
+  let occurrenceFilter = {
+    proper: true,
+    common: true,
+    unknown: true,
+  };
+  let advancedFilter = {
+    relevance: 0,
+  };
+
+  function filterize(f) {
+    const results = [];
+    for (const k in f) {
+      if (f.hasOwnProperty(k)) {
+        if (f[k]) {
+          results.push(`${k}`);
+        }
+      }
+    }
+    return results.join(",");
+  }
+
+  $: filter = {
+    kind: filterize(kindFilter),
+    occurrences: filterize(occurrenceFilter),
+    relevance__gt: advancedFilter.relevance,
+    mid: advancedFilter.mid,
+    wikipedia_url: advancedFilter.wikipedia_url,
+  };
 
   const SNIPPET_LENGTH = 100;
 
@@ -66,7 +109,7 @@
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     entities.document = await getDocument(id);
     try {
-      entities.entities = await getE(id);
+      entities.entities = await getE(id, 1);
       fullText = await session.getStatic(jsonUrl(entities.document));
     } catch (e) {
       console.error(e);
@@ -75,11 +118,18 @@
     console.log({ entities: entities.entities, fullText });
   });
 
+  let pagePushed = false;
+
   async function pushPage(num) {
+    pagePushed = true;
     page = num;
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     selectedEntity = null;
-    entities.entities = await getE(id, page);
+    entities.entities = await getE(id, page, filter);
+  }
+
+  async function applyFilters() {
+    await pushPage(page);
   }
 
   async function prevPage() {
@@ -112,7 +162,7 @@
   <p>
     <Link back={true} color={true}>Back</Link>
   </p>
-  {#if !loading && $entities.entities != null && fullText != null && $entities.entities.count > 0}
+  {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.count > 0 || pagePushed)}
     <p class="paginator">
       <span>Page&nbsp;</span>
       {#if $entities.entities.hasPrev}
@@ -122,12 +172,189 @@
         >{$entities.entities.page + 1}
         of
         {$entities.entities.numPages}
-        ({handlePlural($entities.entities.count, "total entity result")})</span
+        ({handlePlural(
+          $entities.entities.count,
+          "total entity result",
+          true
+        )})</span
       >
       {#if $entities.entities.hasNext}
         <span class="paginate" on:click={() => nextPage()}>→</span>
       {/if}
     </p>
+
+    <details>
+      <!-- Todo: put in separate component -->
+      <summary>Filter</summary>
+      <div class="filters">
+        <div><button on:click={applyFilters}>Apply filters</button></div>
+        <div class="filtergroup">
+          <h3>Kind</h3>
+          <div class="action" on:click={() => (kindFilter = {})}>Clear</div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.person}
+              />Person</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.organization}
+              />Organization</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.location}
+              />Location</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.event}
+              />Event</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.work_of_art}
+              />Work of Art</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.consumer_good}
+              />Consumer Good</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.address}
+              />Address</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.date}
+              />Date</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.number}
+              />Number</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.phone_number}
+              />Phone Number</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.price}
+              />Price</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.unknown}
+              />Unknown</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={kindFilter.other}
+              />Other</label
+            >
+          </div>
+        </div>
+        <div class="filtergroup">
+          <h3>Occurrences</h3>
+          <div class="action" on:click={() => (occurrenceFilter = {})}>
+            Clear
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={occurrenceFilter.proper}
+              />Proper</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={occurrenceFilter.common}
+              />Common</label
+            >
+          </div>
+          <div>
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={occurrenceFilter.unknown}
+              />Unknown</label
+            >
+          </div>
+        </div>
+        <div class="filtergroup">
+          <h3>Advanced</h3>
+          <div>
+            Relevance threshold:
+            <select bind:value={advancedFilter.relevance}>
+              {#each Array(101) as _, i}
+                <option value={1 - i / 100}>{100 - i}%</option>
+              {/each}
+            </select>
+          </div>
+          <div>
+            Knowledge graph:
+            <select bind:value={advancedFilter.mid}>
+              <option value={null}>---</option>
+              <option value={true}>Has a knowledge graph ID</option>
+              <option value={false}>Does not have a knowledge graph ID</option>
+            </select>
+          </div>
+          <div>
+            Wikipedia URL:
+            <select bind:value={advancedFilter.wikipedia_url}>
+              <option value={null}>---</option>
+              <option value={true}>Has a Wikipedia URL</option>
+              <option value={false}>Does not have a Wikipedia URL</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </details>
 
     {#if selectedEntity != null}
       <div class="entity">
@@ -137,27 +364,22 @@
             >{@html closeSvg}</span
           >
         </h3>
-        <details open>
-          <summary><b>{selectedEntity.kind}</b></summary>
-          <ul>
-            {#each selectedEntity.occurrences as occurrence}
-              <li>
-                <Link
-                  inlineBlock={true}
-                  toUrl={$entities.document.relativePageUrl(
-                    occurrence.page + 1
-                  )}
-                >
-                  pg.
-                  {occurrence.page + 1}:</Link
-                >
-                <span>{getSnippet(occurrence)[0]}</span><span class="highlight"
-                  >{getSnippet(occurrence)[1]}</span
-                ><span>{getSnippet(occurrence)[2]}</span>
-              </li>
-            {/each}
-          </ul>
-        </details>
+        <ul>
+          {#each selectedEntity.occurrences as occurrence}
+            <li>
+              <Link
+                inlineBlock={true}
+                toUrl={$entities.document.relativePageUrl(occurrence.page + 1)}
+              >
+                pg.
+                {occurrence.page + 1}:</Link
+              >
+              <span>{getSnippet(occurrence)[0]}</span><span class="highlight"
+                >{getSnippet(occurrence)[1]}</span
+              ><span>{getSnippet(occurrence)[2]}</span>
+            </li>
+          {/each}
+        </ul>
       </div>
     {/if}
 
@@ -205,9 +427,9 @@
       {:else if extractionStage == 0 || extractionStage == 2}
         <p><button on:click={extract}>Extract entities</button></p>
         {#if extractionStage == 2}<p>
-            Seeing this again? Entity extraction failed. We currently only
-            support English documents, but something else could have happened.
-            Feel free to try again.
+            There are no entities. This could happen if the document doesn’t
+            have text, is non-English (only English is supported for now), or
+            some error occurred.
           </p>{/if}
       {:else if extractionStage == 1}
         <p><i>Starting extraction...</i></p>
@@ -292,5 +514,35 @@
     @include buttonLike;
     display: inline-block;
     margin-left: 5px;
+  }
+
+  summary {
+    @include buttonLike;
+    outline: none;
+    margin-left: 8px;
+  }
+
+  .filters {
+    margin-bottom: 20px;
+    display: inline-block;
+    border: solid 1px gainsboro;
+    padding: 20px 20px 20px 20px;
+  }
+
+  .filtergroup {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 30px;
+
+    h3 {
+      margin-bottom: 0.5em;
+    }
+
+    .action {
+      color: $primary;
+      font-size: 13px;
+      @include buttonLike;
+      margin: 0.5em 0;
+    }
   }
 </style>

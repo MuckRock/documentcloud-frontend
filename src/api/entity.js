@@ -9,9 +9,9 @@ export async function extractEntities(id) {
   return data;
 }
 
-export async function getEntities(id, page = 1) {
+export async function getEntities(id, page = 1, filters) {
   // Returns annotations for the specified document
-  const url = apiUrl(queryBuilder(`documents/${id}/entities/`, { page }));
+  const url = apiUrl(queryBuilder(`documents/${id}/entities/`, { page, ...filters }));
   const { data } = await session.get(
     url
   );
