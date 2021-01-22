@@ -234,10 +234,6 @@
         }
       }
 
-      .selector:hover ~ .img {
-        border: solid 2px $primary;
-      }
-
       .insert {
         $width: 2px;
         position: absolute;
@@ -283,15 +279,18 @@
 <ActionPane bind:actionHeight />
 
 <div
-  style="top: {$layout.headerHeight + actionOffset}px; bottom: {$layout.footerHeight}px; right:
+  style="top: {$layout.headerHeight +
+    actionOffset}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px;"
   class="doc"
   bind:this={container}
   bind:clientWidth={containerWidth}
   bind:clientHeight={containerHeight}
-  on:scroll={handleScroll}>
+  on:scroll={handleScroll}
+>
   <div
-    style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px; padding-left: {paddingLeft}px">
+    style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px; padding-left: {paddingLeft}px"
+  >
     {#each pages as page (`${page.index}-${JSON.stringify(page.descriptor.json())}`)}
       <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
         <span
@@ -302,18 +301,23 @@
             {#if !insertOnly}
               <div
                 class="selector"
-                on:click={(e) => select(page.index, e.shiftKey)} />
+                on:click={(e) => select(page.index, e.shiftKey)}
+              />
             {/if}
             {#if showInserts}
               <div
                 on:click={() => modification.selectInsert(page.index)}
                 class="insert before"
-                class:emphasized={(insertOnly && !$modification.hasInsert) || $modification.insert == page.index} />
+                class:emphasized={(insertOnly && !$modification.hasInsert) ||
+                  $modification.insert == page.index}
+              />
               {#if page.index == $modification.pageCount - 1}
                 <div
                   on:click={() => modification.selectInsert(page.index + 1)}
                   class="insert after"
-                  class:emphasized={(insertOnly && !$modification.hasInsert) || $modification.insert == page.index + 1} />
+                  class:emphasized={(insertOnly && !$modification.hasInsert) ||
+                    $modification.insert == page.index + 1}
+                />
               {/if}
             {/if}
           {/if}
@@ -324,7 +328,8 @@
               on:click={(e) => select(page.index, e.shiftKey)}>
               <Image
                 src={pageImageUrl($viewer.document, parseInt(page.pg), 140)}
-                delay={50} />
+                delay={50}
+              />
             </span>
           </Modification>
         </span>
