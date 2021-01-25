@@ -23,6 +23,16 @@
   let access =
     $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
 
+  function getTimezone() {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  const timezone = getTimezone();
+
   function dateFromPublishAt(d) {
     if (d == null) return null;
     return new Date(d);
@@ -115,7 +125,6 @@
     .scheduleaction {
       @include buttonLike;
       font-size: 14px;
-      color: $primary;
       font-weight: bold;
 
       input,
@@ -182,7 +191,9 @@
           </div>
           {#if showScheduler}
             <small
-              >This document will be made public at the given date and time.</small
+              >This document will be made public at the given date and time.
+              Publication time is local{#if timezone != null}
+                &nbsp({timezone}){/if}.</small
             >
             <Calendar bind:value={publishAt} />
           {/if}
