@@ -50,6 +50,7 @@
   $: {
     let newTitle = "Search Results";
     if (
+      $search.params != null &&
       !$search.params.isSearch &&
       $search.params.noStatus &&
       $search.params.oneOrZeroAccesses
@@ -206,7 +207,8 @@
           <Modal
             on:close={() => ($layout.uploading = false)}
             component={UploadDialog}
-            properties={{ initialFiles: preUploadFiles }} />
+            properties={{ initialFiles: preUploadFiles }}
+          />
         {/if}
 
         <SpecialMessage />
@@ -238,7 +240,8 @@
     <div class="docscontainer">
       <Draggable
         on:files={showUploadModal}
-        disabled={embed || !$orgsAndUsers.loggedIn}>
+        disabled={embed || !$orgsAndUsers.loggedIn}
+      >
         {#each $documents.documents as document (document.id)}
           <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
             <Document {embed} {document} />

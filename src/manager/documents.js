@@ -48,18 +48,15 @@ export const documents = new Svue({
       processingChangeTimeout: null,
       doneProcessing: true,
       pending: [],
+      inFilePickerDialog: false,
     };
   },
   watch: {
     "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      unselectAll();
-      if (route != null && (route.name == "app" || route.name == 'project')) {
-        if (!this.hasInited) {
-          initDocuments();
-          this.hasInited = true;
-        }
-      }
+      checkForInit();
+    },
+    inFilePickerDialog() {
+      checkForInit();
     },
     rawDoneProcessing() {
       if (this.processingChangeTimeout != null) {
@@ -175,6 +172,17 @@ export const documents = new Svue({
     },
   },
 });
+
+function checkForInit() {
+  const route = router.resolvedRoute;
+  unselectAll();
+  if (route != null && (documents.inFilePickerDialog || route.name == "app" || route.name == 'project')) {
+    if (!documents.hasInited) {
+      initDocuments();
+      documents.hasInited = true;
+    }
+  }
+}
 
 function getDocumentsByCondition(condition, documents) {
   return documents.filter(condition);
@@ -509,10 +517,10 @@ export async function removeDocsFromProject(
       updateInCollection(
         doc,
         (d) =>
-          (d.doc = {
-            ...d.doc,
-            projects: removeFromArray(d.projectIds, project.id),
-          })
+        (d.doc = {
+          ...d.doc,
+          projects: removeFromArray(d.projectIds, project.id),
+        })
       )
     );
   });

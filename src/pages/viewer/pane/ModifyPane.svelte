@@ -3,6 +3,7 @@
   import { handlePlural } from "@/util/string";
   import { modification } from "@/viewer/modification/modification";
   import { viewer } from "@/viewer/viewer";
+  import { showInsertDialog } from "@/viewer/layout";
   import Image from "@/common/Image";
   import { pageImageUrl } from "@/api/viewer";
   import Modification from "@/viewer/modification/Modification";
@@ -40,7 +41,7 @@
 </style>
 
 {#if $modification.modifyHasSelection}
-  <h3>{handlePlural($modification.modifyNumSelected, 'Page')} Selected</h3>
+  <h3>{handlePlural($modification.modifyNumSelected, "Page")} Selected</h3>
   <div class="buttonpadded">
     <Button on:click={() => modification.copy()}>Copy</Button>
     {#if $modification.modifyNumSelected < $modification.pageCount}
@@ -60,9 +61,9 @@
   <h3>
     {#if $modification.hasInsert}
       Insert
-      {handlePlural($modification.copyBufferLength, 'Page')}
+      {handlePlural($modification.copyBufferLength, "Page")}
     {:else}
-      {handlePlural($modification.copyBufferLength, 'Page')}
+      {handlePlural($modification.copyBufferLength, "Page")}
       Pending Insertion
     {/if}
     <div class="buffer">
@@ -72,9 +73,15 @@
         <Modification {descriptor}>
           <span
             class="img"
-            class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE && i == MAX_BUFFER_SIZE - 1}>
+            class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
+              i == MAX_BUFFER_SIZE - 1}>
             <Image
-              src={pageImageUrl($viewer.document, descriptor.pageSpec.specs[0].pg, 30)} />
+              src={pageImageUrl(
+                $viewer.document,
+                descriptor.pageSpec.specs[0].pg,
+                30
+              )}
+            />
           </span>
         </Modification>
       {/each}
@@ -84,7 +91,7 @@
   <p>
     {#if $modification.hasInsert}
       Insert
-      {handlePlural($modification.copyBufferLength, 'page')}
+      {handlePlural($modification.copyBufferLength, "page")}
       {#if $modification.insert == 0}
         at beginning.
       {:else if $modification.insert == $modification.pageCount}
@@ -97,7 +104,7 @@
       {/if}
     {:else}
       Click in-between pages below to mark where to paste
-      {handlePlural($modification.copyBufferLength, 'page')}.
+      {handlePlural($modification.copyBufferLength, "page")}.
     {/if}
   </p>
   <div class="buttonpadded">
@@ -107,6 +114,14 @@
       <Button on:click={() => modification.pasteAtEnd()}>Insert at end</Button>
     {/if}
     <Button secondary={true} on:click={() => modification.clearCopyBuffer()}>
+      Cancel
+    </Button>
+  </div>
+{:else if $modification.hasInsert}
+  <h3>Insert pages at position</h3>
+  <div class="buttonpadded">
+    <Button on:click={showInsertDialog}>Insert from other document</Button>
+    <Button secondary={true} on:click={() => modification.clearInsertion()}>
       Cancel
     </Button>
   </div>
@@ -123,20 +138,20 @@
     {#if $modification.uncommittedChanges}
       <Button on:click={() => console.log(modification.modifySpec.json())}>
         Apply
-        {handlePlural($modification.historyPosition, 'Modification')}
+        {handlePlural($modification.historyPosition, "Modification")}
       </Button>
     {/if}
     <Button
       disabled={!$modification.canUndo}
       secondary={true}
-      on:click={() => modification.undo()}>
-      Undo
-    </Button>
+      on:click={() => modification.undo()}
+    >Undo</Button
+    >
     <Button
       disabled={!$modification.canRedo}
       secondary={true}
-      on:click={() => modification.redo()}>
-      Redo
-    </Button>
+      on:click={() => modification.redo()}
+    >Redo</Button
+    >
   </div>
 {/if}

@@ -13,10 +13,7 @@
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
-  import {
-    viewerEditDialogs,
-    loadViewerEditDialogs,
-  } from "./viewerEditDialogs";
+  import { viewerEditDialogs } from "./viewerEditDialogs";
 
   import Modal from "@/common/Modal";
   import ErrorModal from "@/common/ErrorModal";
@@ -29,6 +26,7 @@
     hideDocumentInfo,
     hideDocumentData,
     hideEditSections,
+    hideInsertDialog,
   } from "@/viewer/layout";
   import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
@@ -91,13 +89,15 @@
       rel="alternate"
       type="application/json+oembed"
       href={embedUrl($viewer.document.canonicalUrl)}
-      title={$viewer.document.title} />
+      title={$viewer.document.title}
+    />
     {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
       <meta property="og:description" content={$viewer.document.description} />
     {/if}
     <meta
       property="og:image"
-      content={pageImageUrl($viewer.document, 0, 700, 1)} />
+      content={pageImageUrl($viewer.document, 0, 700, 1)}
+    />
   {/if}
 </svelte:head>
 
@@ -114,41 +114,51 @@
 {:else if $layout.showInfo}
   <Modal
     component={$viewerEditDialogs.documentInformationDialog}
-    on:close={hideDocumentInfo} />
+    on:close={hideDocumentInfo}
+  />
 {:else if $layout.showData}
   <Modal
     component={$viewerEditDialogs.dataDialog}
-    on:close={hideDocumentData} />
+    on:close={hideDocumentData}
+  />
 {:else if $layout.showEditSections}
   <Modal
     component={$viewerEditDialogs.editSectionsDialog}
-    on:close={hideEditSections} />
+    on:close={hideEditSections}
+  />
+{:else if $layout.showInsertDialog}
+  <Modal
+    component={$viewerEditDialogs.filePickerDialog}
+    on:close={hideInsertDialog}
+  />
 {/if}
 
 {#if $viewer.show404}
   <NotFound
     title="Document not found"
     message="The document you requested either does not exist or you lack
-    permission to access it" />
+    permission to access it"
+  />
 {:else if $viewer.showPending}
   <NotFound
     title="Document not accessible"
     message="The document you requested is still processing or you lack
-    permission to access to it" />
+    permission to access to it"
+  />
 {:else}
   <Toasts />
 
   <Loader active={$layout.loading}>
     <Header />
-    {#if $doc.mode == 'image'}
+    {#if $doc.mode == "image"}
       <Body mode={$doc.mode} />
-    {:else if $doc.mode == 'text' || $doc.mode == 'search'}
+    {:else if $doc.mode == "text" || $doc.mode == "search"}
       <SimpleBody />
-    {:else if $doc.mode == 'notes'}
+    {:else if $doc.mode == "notes"}
       <NoteBody />
-    {:else if $doc.mode == 'thumbnail'}
+    {:else if $doc.mode == "thumbnail"}
       <ThumbnailBody />
-    {:else if $doc.mode == 'modify'}
+    {:else if $doc.mode == "modify"}
       <ThumbnailBody modify={true} />
     {/if}
     <Sidebar />

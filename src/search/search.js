@@ -16,15 +16,16 @@ export const search = new Svue({
     return {
       router,
       params: null,
-      results: null
+      results: null,
+      filePickerUser: null,
     };
   },
   watch: {
     "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      if (route != null && (route.name == "app" || route.name == 'project') && router.backNav != true) {
-        initSearch(route.props);
-      }
+      checkForInit();
+    },
+    filePickerUser() {
+      checkForInit();
     }
   },
   computed: {
@@ -53,6 +54,13 @@ async function initSearch(params) {
       // Force an update
       search.results = search.results;
     }
+  }
+}
+
+function checkForInit() {
+  const route = router.resolvedRoute;
+  if (route != null && (((route.name == "app" || route.name == 'project') && router.backNav != true) || search.filePickerUser != null)) {
+    initSearch(search.filePickerUser != null ? { q: userUrl(search.filePickerUser) } : route.props);
   }
 }
 

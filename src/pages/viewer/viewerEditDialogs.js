@@ -9,6 +9,7 @@ export const viewerEditDialogs = new Svue({
       documentInformationDialog: Empty,
       dataDialog: Empty,
       editSectionsDialog: Empty,
+      filePickerDialog: Empty,
       loaded: false,
     }
   }
@@ -23,10 +24,12 @@ export async function loadViewerEditDialogs() {
     import("@/common/dialog/DocumentInformationDialog"),
     import("@/common/dialog/DataDialog"),
     import("@/common/dialog/EditSectionsDialog"),
+    import("@/common/dialog/FilePickerDialog"),
   ]);
   viewerEditDialogs.embedDialog = dialogs[0].default;
   viewerEditDialogs.accessDialog = dialogs[1].default;
   viewerEditDialogs.documentInformationDialog = dialogs[2].default;
   viewerEditDialogs.dataDialog = dialogs[3].default;
   viewerEditDialogs.editSectionsDialog = dialogs[4].default;
+  viewerEditDialogs.filePickerDialog = dialogs[5].default;
 }

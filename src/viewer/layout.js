@@ -3,8 +3,9 @@ import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { truthyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
 import { getDocument, redactDocument, searchDocument } from "@/api/document";
+import { search } from '@/search/search';
 import { showConfirm } from "@/manager/confirmDialog";
-import { markAsDirty } from '@/manager/documents';
+import { markAsDirty, documents } from '@/manager/documents';
 import { router, nav } from "@/router/router";
 import {
   createAnnotation,
@@ -77,6 +78,9 @@ export const layout = new Svue({
       embedDocument: null,
       embedNote: null,
       embedContext: "viewer",
+
+      // Modify
+      showInsertDialog: false,
     };
   },
   watch: {
@@ -498,4 +502,19 @@ export function openAccess(documents) {
     return;
   }
   layout.showAccess = true;
+}
+
+export function showInsertDialog() {
+  const me = viewer.me;
+  if (me != null) {
+    documents.inFilePickerDialog = true;
+    search.filePickerUser = me;
+    layout.showInsertDialog = true;
+  }
+}
+
+export function hideInsertDialog() {
+  layout.showInsertDialog = false;
+  search.filePickerUser = null;
+  documents.inFilePickerDialog = false;
 }
