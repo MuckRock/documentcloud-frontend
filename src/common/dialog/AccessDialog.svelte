@@ -11,8 +11,10 @@
   } from "@/manager/documents";
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
-  import Flatpickr from "svelte-flatpickr";
-  import "flatpickr/dist/flatpickr.css";
+  import Calendar from "@/common/Calendar";
+
+  // SVG assets
+  import CalendarSvg from "@/assets/calendar.svg";
 
   const emit = emitter({
     dismiss() {},
@@ -21,23 +23,30 @@
   let access =
     $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
 
+  function dateFromPublishAt(d) {
+    if (d == null) return null;
+    return new Date(d);
+  }
+
   let publishAt =
     $viewer.document != null
-      ? $viewer.document.publishAt
-      : $layout.samePublishAt;
-  let publishAtFormatted = publishAt;
+      ? dateFromPublishAt($viewer.document.publishAt)
+      : dateFromPublishAt($layout.samePublishAt);
+  $: console.log(publishAt);
+  let showScheduler = publishAt != null;
 
-  const flatpickrOptions = {
-    enableTime: true,
-    minDate: "today",
-    altInput: true,
-    dateFormat: "Z",
-  };
+  $: {
+    if (!showScheduler) publishAt = null;
+  }
 
   $: isViewer = $viewer.document != null;
-  $: valid = isViewer
-    ? access != viewer.document.access || publishAt != viewer.document.publishAt
-    : access != $layout.sameAccess || publishAt != $layout.samePublishAt;
+  $: validPublishAt = publishAt == null || publishAt > new Date();
+  $: valid =
+    validPublishAt &&
+    (isViewer
+      ? access != viewer.document.access ||
+        publishAt != viewer.document.publishAt
+      : access != $layout.sameAccess || publishAt != $layout.samePublishAt);
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
 
   async function accessChange(access, publishAt) {
@@ -57,7 +66,7 @@
         updateInCollection(
           viewer.document,
           (d) =>
-            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
+            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt })
         );
       });
     } else {
@@ -65,7 +74,7 @@
         layout.accessEditDocuments,
         access,
         publishAt,
-        layout,
+        layout
       );
     }
     emit.dismiss();
@@ -100,8 +109,29 @@
     margin: 5px 0;
   }
 
-  .publishat {
-    margin-top: 36px;
+  .scheduler {
+    margin-top: 24px;
+
+    .scheduleaction {
+      @include buttonLike;
+      font-size: 14px;
+      color: $primary;
+      font-weight: bold;
+
+      input,
+      label {
+        cursor: pointer;
+      }
+
+      .icon {
+        display: inline-block;
+        vertical-align: middle;
+
+        :global(svg) {
+          height: 21px;
+        }
+      }
+    }
   }
 </style>
 
@@ -143,21 +173,19 @@
         </div>
       </label>
       {#if access != "public"}
-        <div class="publishat">
-          <div class="accessoption">
-            <h3>Set a future date to publish at</h3>
+        <div class="scheduler">
+          <div class="scheduleaction">
+            <label
+              ><input type="checkbox" bind:checked={showScheduler} />
+              <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
+            >
+          </div>
+          {#if showScheduler}
             <small
               >This document will be made public at the given date and time.</small
             >
-            <div>
-              <Flatpickr
-                options={flatpickrOptions}
-                bind:formattedValue={publishAtFormatted}
-                bind:value={publishAt}
-                name="date"
-              />
-            </div>
-          </div>
+            <Calendar bind:value={publishAt} />
+          {/if}
         </div>
       {/if}
     </div>
@@ -165,11 +193,12 @@
       <Button
         disabledReason={valid
           ? null
-          : `Access is already set to ${$layout.sameAccess}. Select a different access level.`}
+          : validPublishAt
+          ? `Access is unchanged. Select a different access level.`
+          : "Must select a time in the future"}
         on:click={() => accessChange(access, publishAt)}
+      >Change access</Button
       >
-        Change access
-      </Button>
       <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
     </div>
   </div>

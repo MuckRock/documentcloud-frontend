@@ -91,7 +91,7 @@
   }
 </style>
 
-<span class="zoom" class:disabled={$doc.mode != 'image'}>
+<span class="zoom" class:disabled={$doc.mode != "image"}>
   <span class="icon" on:click={zoomIn}>
     {@html plusSvg}
   </span>
@@ -100,7 +100,7 @@
     {@html minusSvg}
   </span>
 
-  <select bind:this={select} on:change={handleChange}>
+  <select bind:this={select} on:blur={handleChange}>
     <option value="default">{($doc.viewerScale * 100).toFixed()}%</option>
     <option disabled>---</option>
     <option value="width">Fit width</option>
