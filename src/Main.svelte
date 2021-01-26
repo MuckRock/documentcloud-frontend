@@ -120,19 +120,19 @@
   :global(a) {
     color: inherit;
     text-decoration: inherit;
+  }
 
-    &.active {
-      font-weight: normal !important;
+  :global(a.active) {
+    font-weight: normal !important;
 
-      .project {
-        $activeBg: $primary-faded;
+    :global(.project) {
+      $activeBg: $primary-faded;
 
+      background: $activeBg;
+
+      &:hover {
         background: $activeBg;
-
-        &:hover {
-          background: $activeBg;
-          opacity: 1;
-        }
+        opacity: 1;
       }
     }
   }

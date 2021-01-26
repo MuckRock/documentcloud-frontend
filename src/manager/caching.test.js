@@ -20,6 +20,10 @@ function removeFromProject(doc, projectId) {
   doc.doc = { ...doc.doc, projects: removeFromArray(doc.projectIds, projectId) }
 }
 
+function updatePending() {
+  documents.pending = documents.processingDocuments.map(x => ({ doc_id: x.id }));
+}
+
 function mockSearch([fn, filter]) {
   const results = fn();
   setDocuments(results);

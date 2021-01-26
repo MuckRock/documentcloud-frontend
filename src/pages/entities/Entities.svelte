@@ -77,7 +77,7 @@
       entities.document = entities.document;
       updateInCollection(
         entities.document,
-        (d) => (d.doc = { ...d.doc, status: "readable" })
+        (d) => (d.doc = { ...d.doc, status: "readable" }),
       );
       extractionStage = 2;
     } catch (e) {
@@ -92,15 +92,15 @@
     return [
       pageText.substring(
         occurrence.page_offset - SNIPPET_LENGTH / 2,
-        occurrence.page_offset
+        occurrence.page_offset,
       ),
       pageText.substring(
         occurrence.page_offset,
-        occurrence.page_offset + occurrence.content.length
+        occurrence.page_offset + occurrence.content.length,
       ),
       pageText.substring(
         occurrence.page_offset + occurrence.content.length,
-        occurrence.page_offset + occurrence.content.length + SNIPPET_LENGTH / 2
+        occurrence.page_offset + occurrence.content.length + SNIPPET_LENGTH / 2,
       ),
     ];
   }
@@ -115,7 +115,6 @@
       console.error(e);
     }
     loading = false;
-    console.log({ entities: entities.entities, fullText });
   });
 
   let pagePushed = false;
@@ -152,11 +151,90 @@
   }
 
   $: entitiesByCategory = categorizeEntities(
-    ($entities.entities || {}).entities
+    ($entities.entities || {}).entities,
   );
   $: categories =
     entitiesByCategory == null ? [] : Object.keys(entitiesByCategory).sort();
 </script>
+
+<style lang="scss">
+  p {
+    max-width: 33em;
+  }
+
+  a {
+    color: $primary;
+  }
+
+  .highlight {
+    background: rgb(250, 244, 208);
+  }
+
+  .body {
+    margin: 20px;
+  }
+
+  .categories {
+    margin: 0 -10px;
+  }
+
+  .category {
+    border: solid 1px gainsboro;
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+
+    .categorytitle {
+      font-weight: bold;
+      padding: 6px 10px;
+    }
+
+    .entity {
+      padding: 6px 10px;
+      cursor: pointer;
+
+      .subtitle {
+        color: $gray;
+        font-weight: 12px;
+      }
+
+      &:hover {
+        background: $primary;
+        color: white;
+
+        .subtitle {
+          color: $light-gray;
+
+          a {
+            color: white;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .paginator {
+    .paginate {
+      color: $searchSpecial;
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .close {
+    @include buttonLike;
+    display: inline-block;
+    margin-left: 5px;
+  }
+</style>
 
 <div class="body">
   <p>

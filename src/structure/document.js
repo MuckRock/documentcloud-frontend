@@ -82,6 +82,9 @@ export class Document extends Svue {
         pageCount(doc) {
           return doc.page_count;
         },
+        publishAt(doc) {
+          return doc.publish_at;
+        },
         userName(doc) {
           return doc.user.name;
         },
