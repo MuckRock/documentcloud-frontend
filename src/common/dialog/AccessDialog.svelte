@@ -42,7 +42,6 @@
     $viewer.document != null
       ? dateFromPublishAt($viewer.document.publishAt)
       : dateFromPublishAt($layout.samePublishAt);
-  $: console.log(publishAt);
   let showScheduler = publishAt != null;
 
   $: {
@@ -76,7 +75,7 @@
         updateInCollection(
           viewer.document,
           (d) =>
-            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt })
+            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
         );
       });
     } else {
@@ -84,7 +83,7 @@
         layout.accessEditDocuments,
         access,
         publishAt,
-        layout
+        layout,
       );
     }
     emit.dismiss();

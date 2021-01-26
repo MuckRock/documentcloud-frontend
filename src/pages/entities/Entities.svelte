@@ -34,7 +34,7 @@
       entities.document = entities.document;
       updateInCollection(
         entities.document,
-        (d) => (d.doc = { ...d.doc, status: "readable" })
+        (d) => (d.doc = { ...d.doc, status: "readable" }),
       );
       extractionStage = 2;
     } catch (e) {
@@ -49,15 +49,15 @@
     return [
       pageText.substring(
         occurrence.page_offset - SNIPPET_LENGTH / 2,
-        occurrence.page_offset
+        occurrence.page_offset,
       ),
       pageText.substring(
         occurrence.page_offset,
-        occurrence.page_offset + occurrence.content.length
+        occurrence.page_offset + occurrence.content.length,
       ),
       pageText.substring(
         occurrence.page_offset + occurrence.content.length,
-        occurrence.page_offset + occurrence.content.length + SNIPPET_LENGTH / 2
+        occurrence.page_offset + occurrence.content.length + SNIPPET_LENGTH / 2,
       ),
     ];
   }
@@ -72,7 +72,6 @@
       console.error(e);
     }
     loading = false;
-    console.log({ entities: entities.entities, fullText });
   });
 
   async function pushPage(num) {
@@ -102,119 +101,11 @@
   }
 
   $: entitiesByCategory = categorizeEntities(
-    ($entities.entities || {}).entities
+    ($entities.entities || {}).entities,
   );
   $: categories =
     entitiesByCategory == null ? [] : Object.keys(entitiesByCategory).sort();
 </script>
-
-<div class="body">
-  <p>
-    <Link back={true} color={true}>Back</Link>
-  </p>
-  {#if !loading && $entities.entities != null && fullText != null && $entities.entities.count > 0}
-    <p class="paginator">
-      <span>Page&nbsp;</span>
-      {#if $entities.entities.hasPrev}
-        <span class="paginate" on:click={() => prevPage()}>←</span>
-      {/if}
-      <span class="page"
-        >{$entities.entities.page + 1}
-        of
-        {$entities.entities.numPages}
-        ({handlePlural($entities.entities.count, "total entity result")})</span
-      >
-      {#if $entities.entities.hasNext}
-        <span class="paginate" on:click={() => nextPage()}>→</span>
-      {/if}
-    </p>
-
-    {#if selectedEntity != null}
-      <div class="entity">
-        <h3>
-          {selectedEntity.name}
-          <span class="close" on:click={() => (selectedEntity = null)}
-            >{@html closeSvg}</span
-          >
-        </h3>
-        <details open>
-          <summary><b>{selectedEntity.kind}</b></summary>
-          <ul>
-            {#each selectedEntity.occurrences as occurrence}
-              <li>
-                <Link
-                  inlineBlock={true}
-                  toUrl={$entities.document.relativePageUrl(
-                    occurrence.page + 1
-                  )}
-                >
-                  pg.
-                  {occurrence.page + 1}:</Link
-                >
-                <span>{getSnippet(occurrence)[0]}</span><span class="highlight"
-                  >{getSnippet(occurrence)[1]}</span
-                ><span>{getSnippet(occurrence)[2]}</span>
-              </li>
-            {/each}
-          </ul>
-        </details>
-      </div>
-    {/if}
-
-    <div class="categories">
-      {#each categories as category}
-        <div class="category">
-          <div class="categorytitle">{category}</div>
-          {#each entitiesByCategory[category] as entity}
-            <div class="entity" on:click={() => (selectedEntity = entity)}>
-              <div class="title">{entity.name}</div>
-              <div class="subtitle">
-                {handlePlural(entity.occurrences.length, "occurrence")}
-              </div>
-              {#if entity.hasWikiUrl}
-                <div class="subtitle">
-                  <a href={entity.wikiUrl} target="_blank">Wikipedia</a>
-                </div>
-              {/if}
-            </div>
-          {/each}
-        </div>
-      {/each}
-    </div>
-  {:else if loading == false && $entities.document != null}
-    <h2>Entity extraction for “{$entities.document.title}”</h2>
-    {#if $entities.document.readable}
-      <p>
-        Extracting entities...
-        <Progress initializing={true} progress={0} compact={true} />
-      </p>
-    {:else}
-      <p>
-        Welcome to entity extraction! This feature is very much in progress but
-        we want it in your hands early to welcome any <a
-          href={CONTACT}
-          target="_blank">feedback</a
-        > you might have.
-      </p>
-      <p>
-        Right now the process for extracting entities is manual. This document
-        has not had entities extracted yet, so click below to get started.
-      </p>
-      {#if extractionError}
-        An unexpected error occurred
-      {:else if extractionStage == 0 || extractionStage == 2}
-        <p><button on:click={extract}>Extract entities</button></p>
-        {#if extractionStage == 2}<p>
-            Seeing this again? Entity extraction failed. We currently only
-            support English documents, but something else could have happened.
-            Feel free to try again.
-          </p>{/if}
-      {:else if extractionStage == 1}
-        <p><i>Starting extraction...</i></p>
-      {/if}
-    {/if}
-  {:else}Loading...{/if}
-</div>
 
 <style lang="scss">
   p {
@@ -294,3 +185,111 @@
     margin-left: 5px;
   }
 </style>
+
+<div class="body">
+  <p>
+    <Link back={true} color={true}>Back</Link>
+  </p>
+  {#if !loading && $entities.entities != null && fullText != null && $entities.entities.count > 0}
+    <p class="paginator">
+      <span>Page&nbsp;</span>
+      {#if $entities.entities.hasPrev}
+        <span class="paginate" on:click={() => prevPage()}>←</span>
+      {/if}
+      <span class="page"
+        >{$entities.entities.page + 1}
+        of
+        {$entities.entities.numPages}
+        ({handlePlural($entities.entities.count, "total entity result")})</span
+      >
+      {#if $entities.entities.hasNext}
+        <span class="paginate" on:click={() => nextPage()}>→</span>
+      {/if}
+    </p>
+
+    {#if selectedEntity != null}
+      <div class="entity">
+        <h3>
+          {selectedEntity.name}
+          <span class="close" on:click={() => (selectedEntity = null)}
+            >{@html closeSvg}</span
+          >
+        </h3>
+        <details open>
+          <summary><b>{selectedEntity.kind}</b></summary>
+          <ul>
+            {#each selectedEntity.occurrences as occurrence}
+              <li>
+                <Link
+                  inlineBlock={true}
+                  toUrl={$entities.document.relativePageUrl(
+                    occurrence.page + 1,
+                  )}
+                >
+                  pg.
+                  {occurrence.page + 1}:</Link
+                >
+                <span>{getSnippet(occurrence)[0]}</span><span class="highlight"
+                  >{getSnippet(occurrence)[1]}</span
+                ><span>{getSnippet(occurrence)[2]}</span>
+              </li>
+            {/each}
+          </ul>
+        </details>
+      </div>
+    {/if}
+
+    <div class="categories">
+      {#each categories as category}
+        <div class="category">
+          <div class="categorytitle">{category}</div>
+          {#each entitiesByCategory[category] as entity}
+            <div class="entity" on:click={() => (selectedEntity = entity)}>
+              <div class="title">{entity.name}</div>
+              <div class="subtitle">
+                {handlePlural(entity.occurrences.length, "occurrence")}
+              </div>
+              {#if entity.hasWikiUrl}
+                <div class="subtitle">
+                  <a href={entity.wikiUrl} target="_blank">Wikipedia</a>
+                </div>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      {/each}
+    </div>
+  {:else if loading == false && $entities.document != null}
+    <h2>Entity extraction for “{$entities.document.title}”</h2>
+    {#if $entities.document.readable}
+      <p>
+        Extracting entities...
+        <Progress initializing={true} progress={0} compact={true} />
+      </p>
+    {:else}
+      <p>
+        Welcome to entity extraction! This feature is very much in progress but
+        we want it in your hands early to welcome any <a
+          href={CONTACT}
+          target="_blank">feedback</a
+        > you might have.
+      </p>
+      <p>
+        Right now the process for extracting entities is manual. This document
+        has not had entities extracted yet, so click below to get started.
+      </p>
+      {#if extractionError}
+        An unexpected error occurred
+      {:else if extractionStage == 0 || extractionStage == 2}
+        <p><button on:click={extract}>Extract entities</button></p>
+        {#if extractionStage == 2}<p>
+            Seeing this again? Entity extraction failed. We currently only
+            support English documents, but something else could have happened.
+            Feel free to try again.
+          </p>{/if}
+      {:else if extractionStage == 1}
+        <p><i>Starting extraction...</i></p>
+      {/if}
+    {/if}
+  {:else}Loading...{/if}
+</div>

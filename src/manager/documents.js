@@ -5,7 +5,6 @@ import {
   deleteDocument,
   reprocessDocument,
   cancelProcessing,
-  changeAccess,
   editMetadata,
   addData,
   removeData,
@@ -373,7 +372,7 @@ export async function changeAccessForDocuments(documents, access, publishAt, lay
   await wrapLoad(layout, async () => {
     await editMetadata(
       documents.map((doc) => doc.id),
-      {access, publish_at: publishAt}
+      { access, publish_at: publishAt }
     );
     documents.forEach((doc) =>
       updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }))
