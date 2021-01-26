@@ -234,6 +234,36 @@
     display: inline-block;
     margin-left: 5px;
   }
+
+  summary {
+    @include buttonLike;
+    outline: none;
+    margin-left: 8px;
+  }
+
+  .filters {
+    margin-bottom: 20px;
+    display: inline-block;
+    border: solid 1px gainsboro;
+    padding: 20px 20px 20px 20px;
+  }
+
+  .filtergroup {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 30px;
+
+    h3 {
+      margin-bottom: 0.5em;
+    }
+
+    .action {
+      color: $primary;
+      font-size: 13px;
+      @include buttonLike;
+      margin: 0.5em 0;
+    }
+  }
 </style>
 
 <div class="body">
@@ -253,7 +283,7 @@
         ({handlePlural(
           $entities.entities.count,
           "total entity result",
-          true
+          true,
         )})</span
       >
       {#if $entities.entities.hasNext}
@@ -515,112 +545,3 @@
     {/if}
   {:else}Loading...{/if}
 </div>
-
-<style lang="scss">
-  p {
-    max-width: 33em;
-  }
-
-  a {
-    color: $primary;
-  }
-
-  .highlight {
-    background: rgb(250, 244, 208);
-  }
-
-  .body {
-    margin: 20px;
-  }
-
-  .categories {
-    margin: 0 -10px;
-  }
-
-  .category {
-    border: solid 1px gainsboro;
-    margin: 10px;
-    display: inline-block;
-    vertical-align: top;
-
-    .categorytitle {
-      font-weight: bold;
-      padding: 6px 10px;
-    }
-
-    .entity {
-      padding: 6px 10px;
-      cursor: pointer;
-
-      .subtitle {
-        color: $gray;
-        font-weight: 12px;
-      }
-
-      &:hover {
-        background: $primary;
-        color: white;
-
-        .subtitle {
-          color: $light-gray;
-
-          a {
-            color: white;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .paginator {
-    .paginate {
-      color: $searchSpecial;
-      cursor: pointer;
-      user-select: none;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-  }
-
-  .close {
-    @include buttonLike;
-    display: inline-block;
-    margin-left: 5px;
-  }
-
-  summary {
-    @include buttonLike;
-    outline: none;
-    margin-left: 8px;
-  }
-
-  .filters {
-    margin-bottom: 20px;
-    display: inline-block;
-    border: solid 1px gainsboro;
-    padding: 20px 20px 20px 20px;
-  }
-
-  .filtergroup {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 30px;
-
-    h3 {
-      margin-bottom: 0.5em;
-    }
-
-    .action {
-      color: $primary;
-      font-size: 13px;
-      @include buttonLike;
-      margin: 0.5em 0;
-    }
-  }
-</style>
