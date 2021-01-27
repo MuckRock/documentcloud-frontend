@@ -1,6 +1,8 @@
 <script>
   import Button from "@/common/Button";
+  import Tooltip from "@/common/Tooltip";
   import { layout } from "@/manager/layout";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { layout as viewerLayout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { wrapLoad } from "@/util/wrapLoad";
@@ -57,6 +59,7 @@
         publishAt != viewer.document.publishAt
       : access != $layout.sameAccess || publishAt != $layout.samePublishAt);
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
+  $: notVerified = !$orgsAndUsers.isVerified;
 
   async function accessChange(access, publishAt) {
     if (!valid) return;
@@ -154,15 +157,26 @@
       {nameSingularNumberPlural(numAccessSelected, "selected document")}:
     </p>
     <div class="inputpadded">
-      <label>
-        <input type="radio" bind:group={access} value={"public"} />
-        <div class="accessoption">
-          <h3>Public access</h3>
-          <small>
-            Anyone on the internet can search for and view the document.
-          </small>
-        </div>
-      </label>
+      <Tooltip
+        delay={500}
+        show={notVerified}
+        caption="You must be a verified journalist to publically publish a document"
+      >
+        <label>
+          <input
+            type="radio"
+            bind:group={access}
+            value={"public"}
+            disabled={notVerified}
+          />
+          <div class="accessoption">
+            <h3>Public access</h3>
+            <small>
+              Anyone on the internet can search for and view the document.
+            </small>
+          </div>
+        </label>
+      </Tooltip>
       <label>
         <input type="radio" bind:group={access} value={"private"} />
         <div class="accessoption">
@@ -181,22 +195,32 @@
         </div>
       </label>
       {#if access != "public"}
-        <div class="scheduler">
-          <div class="scheduleaction">
-            <label
-              ><input type="checkbox" bind:checked={showScheduler} />
-              <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
-            >
+        <Tooltip
+          delay={500}
+          show={notVerified}
+          caption="You must be a verified journalist to publically publish a document"
+        >
+          <div class="scheduler">
+            <div class="scheduleaction">
+              <label
+                ><input
+                  type="checkbox"
+                  bind:checked={showScheduler}
+                  disabled={notVerified}
+                />
+                <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
+              >
+            </div>
+            {#if showScheduler}
+              <small
+                >This document will be made public at the given date and time.
+                Publication time is local{#if timezone != null}
+                  &nbsp({timezone}){/if}.</small
+              >
+              <Calendar bind:value={publishAt} />
+            {/if}
           </div>
-          {#if showScheduler}
-            <small
-              >This document will be made public at the given date and time.
-              Publication time is local{#if timezone != null}
-                &nbsp({timezone}){/if}.</small
-            >
-            <Calendar bind:value={publishAt} />
-          {/if}
-        </div>
+        </Tooltip>
       {/if}
     </div>
     <div class="buttonpadded">
@@ -206,8 +230,7 @@
           : validPublishAt
           ? `Access is unchanged. Select a different access level.`
           : "Must select a time in the future"}
-        on:click={() => accessChange(access, publishAt)}
-      >Change access</Button
+        on:click={() => accessChange(access, publishAt)}>Change access</Button
       >
       <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
     </div>
