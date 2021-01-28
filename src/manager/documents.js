@@ -23,6 +23,7 @@ import { handlePlural } from "@/util/string";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array";
 import { modifications } from './modifications';
 import { docEquals, copyDoc } from '@/structure/document';
+import { truthyParamValue } from '@/util/url';
 
 // Only show up to this many documents, regardless of how many are uploaded
 const MAX_DISPLAY = 50;
@@ -75,6 +76,14 @@ export const documents = new Svue({
     },
   },
   computed: {
+    staticMode(router) {
+      // Applies when in embed or dialog
+      const route = router.resolvedRoute;
+      if (route == null) return true;
+      if (route.name == 'project') return true;  // project embeds are static
+      if (truthyParamValue(route.props.embed)) return true;
+      return false;
+    },
     allDocuments(search) {
       return search.documents;
     },
@@ -480,6 +489,8 @@ export function unselectAll() {
 }
 
 async function updatePending() {
+  if (documents.staticMode) return;
+
   const pending = await wrapSeparate(null, layout, () => getPendingProgress());
   for (let i = 0; i < pending.length; i++) {
     const pendingDoc = pending[i];
