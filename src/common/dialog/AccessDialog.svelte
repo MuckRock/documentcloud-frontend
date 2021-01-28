@@ -4,13 +4,17 @@
   import { layout as viewerLayout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { wrapLoad } from "@/util/wrapLoad";
-  import { changeAccess } from "@/api/document";
+  import { editMetadata } from "@/api/document";
   import {
     changeAccessForDocuments,
     updateInCollection,
   } from "@/manager/documents";
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
+  import Calendar from "@/common/Calendar";
+
+  // SVG assets
+  import CalendarSvg from "@/assets/calendar.svg";
 
   const emit = emitter({
     dismiss() {},
@@ -19,27 +23,68 @@
   let access =
     $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
 
-  $: valid = access != $layout.sameAccess;
+  function getTimezone() {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  const timezone = getTimezone();
+
+  function dateFromPublishAt(d) {
+    if (d == null) return null;
+    return new Date(d);
+  }
+
+  let publishAt =
+    $viewer.document != null
+      ? dateFromPublishAt($viewer.document.publishAt)
+      : dateFromPublishAt($layout.samePublishAt);
+  let showScheduler = publishAt != null;
+
+  $: {
+    if (!showScheduler) publishAt = null;
+  }
+
   $: isViewer = $viewer.document != null;
+  $: validPublishAt = publishAt == null || publishAt > new Date();
+  $: valid =
+    validPublishAt &&
+    (isViewer
+      ? access != viewer.document.access ||
+        publishAt != viewer.document.publishAt
+      : access != $layout.sameAccess || publishAt != $layout.samePublishAt);
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
 
-  async function accessChange(access) {
+  async function accessChange(access, publishAt) {
     if (!valid) return;
     if (isViewer) {
       await wrapLoad(viewerLayout, async () => {
-        await changeAccess([viewer.document.id], access);
+        await editMetadata([viewer.document.id], {
+          access,
+          publish_at: publishAt,
+        });
         viewer.document.doc = {
           ...viewer.document.doc,
           status: "readable",
+          publish_at: publishAt,
         };
         viewer.document = viewer.document;
         updateInCollection(
           viewer.document,
-          (d) => (d.doc = { ...d.doc, status: "readable" })
+          (d) =>
+            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
         );
       });
     } else {
-      changeAccessForDocuments(layout.accessEditDocuments, access, layout);
+      changeAccessForDocuments(
+        layout.accessEditDocuments,
+        access,
+        publishAt,
+        layout,
+      );
     }
     emit.dismiss();
   }
@@ -72,21 +117,45 @@
   small {
     margin: 5px 0;
   }
+
+  .scheduler {
+    margin-top: 24px;
+
+    .scheduleaction {
+      @include buttonLike;
+      font-size: 14px;
+      font-weight: bold;
+
+      input,
+      label {
+        cursor: pointer;
+      }
+
+      .icon {
+        display: inline-block;
+        vertical-align: middle;
+
+        :global(svg) {
+          height: 21px;
+        }
+      }
+    }
+  }
 </style>
 
 <div>
   <div class="mcontent">
     <h1>
       Change access for
-      {nameSingularNumberPlural(numAccessSelected, 'document')}
+      {nameSingularNumberPlural(numAccessSelected, "document")}
     </h1>
     <p>
       Select an access level below for the
-      {nameSingularNumberPlural(numAccessSelected, 'selected document')}:
+      {nameSingularNumberPlural(numAccessSelected, "selected document")}:
     </p>
     <div class="inputpadded">
       <label>
-        <input type="radio" bind:group={access} value={'public'} />
+        <input type="radio" bind:group={access} value={"public"} />
         <div class="accessoption">
           <h3>Public access</h3>
           <small>
@@ -95,7 +164,7 @@
         </div>
       </label>
       <label>
-        <input type="radio" bind:group={access} value={'private'} />
+        <input type="radio" bind:group={access} value={"private"} />
         <div class="accessoption">
           <h3>Private access</h3>
           <small>
@@ -105,19 +174,41 @@
         </div>
       </label>
       <label>
-        <input type="radio" bind:group={access} value={'organization'} />
+        <input type="radio" bind:group={access} value={"organization"} />
         <div class="accessoption">
           <h3>Private to your organization</h3>
           <small>Only the people in your organization have access.</small>
         </div>
       </label>
+      {#if access != "public"}
+        <div class="scheduler">
+          <div class="scheduleaction">
+            <label
+              ><input type="checkbox" bind:checked={showScheduler} />
+              <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
+            >
+          </div>
+          {#if showScheduler}
+            <small
+              >This document will be made public at the given date and time.
+              Publication time is local{#if timezone != null}
+                &nbsp({timezone}){/if}.</small
+            >
+            <Calendar bind:value={publishAt} />
+          {/if}
+        </div>
+      {/if}
     </div>
     <div class="buttonpadded">
       <Button
-        disabledReason={valid ? null : `Access is already set to ${$layout.sameAccess}. Select a different access level.`}
-        on:click={() => accessChange(access)}>
-        Change access
-      </Button>
+        disabledReason={valid
+          ? null
+          : validPublishAt
+          ? `Access is unchanged. Select a different access level.`
+          : "Must select a time in the future"}
+        on:click={() => accessChange(access, publishAt)}
+      >Change access</Button
+      >
       <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
     </div>
   </div>

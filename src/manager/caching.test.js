@@ -21,7 +21,7 @@ function removeFromProject(doc, projectId) {
 }
 
 function updatePending() {
-  documents.pending = documents.processingDocuments;
+  documents.pending = documents.processingDocuments.map(x => ({ doc_id: x.id }));
 }
 
 function mockSearch([fn, filter]) {

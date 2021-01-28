@@ -1,5 +1,6 @@
 import { Svue } from "svue";
-import { getDocument, getMe } from "@/api/document";
+import { getDocument } from "@/api/document";
+import { getMe } from '@/api/orgAndUser';
 import { router } from "@/router/router";
 import { DEFAULT_EXPAND } from "../api/common";
 import { inIframe } from "@/util/iframe";
@@ -21,6 +22,8 @@ function collectNotes(orderedNotes, predicate) {
   });
   return index;
 }
+
+let viewerInitCache = {};
 
 export const viewer = new Svue({
   data() {
@@ -50,9 +53,15 @@ export const viewer = new Svue({
         } else {
           this.embed = inIframe();
         }
-        return initViewer(this.id);
+        if (viewerInitCache[this.id] == null) {
+          initViewer(this.id);
+          viewerInitCache[this.id] = true;
+        }
+        return;
       }
       if (route != null && route.name != 'viewer') {
+        // Reset cache and document
+        viewerInitCache = {};
         this.document = null;
       }
     },

@@ -211,7 +211,9 @@
           />
         {/if}
 
-        <SpecialMessage />
+        {#if $orgsAndUsers.loggedIn}
+          <SpecialMessage tipoftheday={true} />
+        {/if}
         <AuthSection />
       {/if}
       {#if embed && $search.params != null && $search.params.projectEmbedId != null}

@@ -69,7 +69,6 @@ module.exports = wrap({
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,

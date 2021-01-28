@@ -16,6 +16,7 @@
     cancelProcessSelected,
     showDiagnosticsSelected,
   } from "@/manager/manager";
+  import { nav } from "@/router/router";
 
   let processing = false;
   let allProcessing = false;
@@ -26,6 +27,13 @@
       [processing, allProcessing] = selectionProcessing();
     }
   }
+
+  function showEntities() {
+    const docs = layout.selected;
+    if (docs.length != 1) return;
+    const doc = docs[0];
+    nav("entity", { id: doc.slugId });
+  }
 </script>
 
 <Menu>
@@ -35,8 +43,11 @@
   {#each metaDialogs as meta}
     <MenuItem
       indent={true}
-      disabled={meta.disabled == null ? false : meta.disabled($layout.numSelected)}
-      on:click={() => editMetaSelected(meta)}>
+      disabled={meta.disabled == null
+        ? false
+        : meta.disabled($layout.numSelected)}
+      on:click={() => editMetaSelected(meta)}
+    >
       {meta.menuTitle}
     </MenuItem>
   {/each}
@@ -51,6 +62,11 @@
   {:else if !processing}
     <MenuItem on:click={reprocessSelected}>Force Reprocess</MenuItem>
   {/if}
+  {#if $layout.numSelected == 1}
+    <MenuItem on:click={showEntities}
+      >Entities <span class="beta">BETA</span></MenuItem
+    >
+  {/if}
   <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
   {#if $orgsAndUsers.isStaff}
     <MenuItem special={true} on:click={showDiagnosticsSelected}>
@@ -58,3 +74,13 @@
     </MenuItem>
   {/if}
 </Menu>
+
+<style lang="scss">
+  .beta {
+    color: $gray;
+    font-size: 11px;
+    vertical-align: top;
+    letter-spacing: 0.4px;
+    margin-left: 1px;
+  }
+</style>

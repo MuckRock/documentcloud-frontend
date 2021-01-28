@@ -1,4 +1,4 @@
-import Empty from '@/pages/home/Empty';
+import Empty from '@/pages/home/Empty.svelte';  // explicit extension for tests
 import { Svue } from 'svue';
 
 export const viewerEditDialogs = new Svue({

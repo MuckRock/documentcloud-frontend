@@ -5,7 +5,6 @@ import {
   deleteDocument,
   reprocessDocument,
   cancelProcessing,
-  changeAccess,
   editMetadata,
   addData,
   removeData,
@@ -24,6 +23,10 @@ import { handlePlural } from "@/util/string";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array";
 import { modifications } from './modifications';
 import { docEquals, copyDoc } from '@/structure/document';
+import { truthyParamValue } from '@/util/url';
+
+// Only show up to this many documents, regardless of how many are uploaded
+const MAX_DISPLAY = 50;
 
 let lastSelected = null;
 const PROCESSING_CHANGE_TIMEOUT = 500;
@@ -70,6 +73,14 @@ export const documents = new Svue({
     },
   },
   computed: {
+    staticMode(router) {
+      // Applies when in embed or dialog
+      const route = router.resolvedRoute;
+      if (route == null) return true;
+      if (route.name == 'project') return true;  // project embeds are static
+      if (route.props != null && truthyParamValue(route.props.embed)) return true;
+      return false;
+    },
     allDocuments(search) {
       return search.documents;
     },
@@ -84,6 +95,12 @@ export const documents = new Svue({
     documents(allDocuments) {
       // Show all documents
       return allDocuments;
+    },
+    pendingExisting(docsById, pending) {
+      return pending.filter(x => {
+        const id = x.doc_id;
+        return docsById[id] != null;
+      });
     },
     pendingMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, x => x);
@@ -149,7 +166,7 @@ export const documents = new Svue({
           totalTextsProcessed += p.pages - p.texts;
         }
       }
-      if (totalPages == 0) return null;
+      if (totalPages == 0) return 0;
       const totalPagesProcessed = (totalImagesProcessed + totalTextsProcessed) / 2;
       return totalPagesProcessed / totalPages;
     },
@@ -158,14 +175,24 @@ export const documents = new Svue({
     },
     pollEvents(pollDocuments, processingDocuments, numProcessing) {
       const grabPending = (processingDocuments.length > 0 || numProcessing > 0) ? [
-        updatePending
+        async () => {
+          try {
+            await updatePending();
+          } catch (e) {
+            console.error("error fetching pending", e);
+          }
+        }
       ] : [];
       const pollEvent = pollDocuments.length > 0 ? [
         async () => {
-          const newDocs = await getDocumentsWithIds(
-            pollDocuments.map((doc) => doc.id)
-          );
-          newDocs.forEach((doc) => replaceInCollection(doc));
+          try {
+            const newDocs = await getDocumentsWithIds(
+              pollDocuments.map((doc) => doc.id)
+            );
+            newDocs.forEach((doc) => replaceInCollection(doc));
+          } catch (e) {
+            console.error("failed to get update info", docs);
+          }
         },
       ] : [];
       return grabPending.concat(pollEvent);
@@ -211,6 +238,10 @@ export function removeFromCollection(docId, modify = true) {
     (doc) => doc.id != docId
   );
   setDocuments(newDocuments);
+  // Remove from pending if applicable
+  if (documents.pendingMap[docId] != null) {
+    documents.pending = documents.pending.filter(x => x.doc_id != docId);
+  }
 
   // Refresh when you delete everything to pull new search
   if (newDocuments.length == 0 && process.env.NODE_ENV != 'test') window.location.reload();
@@ -254,6 +285,10 @@ function replaceInCollection(document) {
 }
 
 function addToCollection(newDocs, modify = true) {
+  // Make sure more than the max display docs aren't added
+  const docsToAdd = Math.max(MAX_DISPLAY - documents.allDocuments.length, 0);
+  newDocs = newDocs.slice(0, docsToAdd);
+
   if (modify) {
     // Track the modifications
     modifications.add(collectionModifiers, newDocs.map(x => copyDoc(x)));
@@ -298,8 +333,12 @@ export function removeDocuments(documents) {
 }
 
 export async function markAsDirty(docIds) {
-  const dirtyDocs = await getDocumentsWithIds(docIds);
-  dirtyDocs.map((doc) => replaceInCollection(doc));
+  try {
+    const dirtyDocs = await getDocumentsWithIds(docIds);
+    dirtyDocs.map((doc) => replaceInCollection(doc));
+  } catch (e) {
+    console.error('unexpected error marking docs dirty', docIds);
+  }
 }
 
 export function reprocessDocuments(documents) {
@@ -346,14 +385,14 @@ export function cancelProcessDocuments(documents) {
   );
 }
 
-export async function changeAccessForDocuments(documents, access, layout) {
+export async function changeAccessForDocuments(documents, access, publishAt, layout) {
   await wrapLoad(layout, async () => {
-    await changeAccess(
+    await editMetadata(
       documents.map((doc) => doc.id),
-      access
+      { access, publish_at: publishAt }
     );
     documents.forEach((doc) =>
-      updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable" }))
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }))
     );
   });
   hideAccess();
@@ -422,8 +461,12 @@ export async function removeDocumentData(documents, key, value) {
   }
 }
 
-export async function handleNewDocuments(ids) {
-  const newDocs = await getDocumentsWithIds(ids);
+export async function handleNewDocuments(newDocs) {
+  // Set status to pending to indicate progress
+  newDocs = newDocs.map(d => {
+    d.doc = { ...d.doc, status: 'pending' };
+    return d;
+  });
   addToCollection(newDocs);
 }
 
@@ -454,6 +497,8 @@ export function unselectAll() {
 }
 
 async function updatePending() {
+  if (documents.staticMode) return;
+
   const pending = await wrapSeparate(null, layout, () => getPendingProgress());
   for (let i = 0; i < pending.length; i++) {
     const pendingDoc = pending[i];

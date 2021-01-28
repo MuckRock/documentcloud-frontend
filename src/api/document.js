@@ -7,7 +7,6 @@ import { apiUrl } from "./base";
 import { timeout } from "@/util/timeout";
 import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
-import { grabAllPages } from "@/util/paginate";
 import { Results } from "@/structure/results";
 import { batchDelay } from "@/util/batchDelay";
 import axios from "axios";
@@ -16,6 +15,8 @@ import { Document, transformHighlights } from "@/structure/document";
 
 const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
 
+const GET_BATCH = parseInt(process.env.GET_BATCH);
+const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
 const UPLOAD_BATCH = parseInt(process.env.UPLOAD_BATCH);
 const UPLOAD_BATCH_DELAY = parseInt(process.env.UPLOAD_BATCH_DELAY);
 
@@ -24,14 +25,6 @@ const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
 
 // Statuses
 export const PENDING = "pending";
-
-export async function getMe(expand = DEFAULT_EXPAND) {
-  // Returns the currently logged in user
-  const { data } = await session.get(
-    queryBuilder(apiUrl("users/me/"), { expand })
-  );
-  return data;
-}
 
 export async function getDocuments(
   extraParams = {},
@@ -84,21 +77,23 @@ export async function getDocumentsWithIds(
   remaining = false,
   expand = DEFAULT_EXPAND
 ) {
-  if (ids.length == 0) return [];
-  // Return documents with the specified ids
-  const params = { expand, id__in: ids };
-  if (remaining) params["remaining"] = true;
-  const documents = await grabAllPages(
-    apiUrl(queryBuilder("documents/", params))
-  );
-  const docs = documents.map((document) => new Document(document));
-  const orderedDocs = [];
-  for (let i = 0; i < ids.length; i++) {
-    const matching = docs.filter((doc) => doc.id == ids[i]);
-    if (matching.length == 0) continue;
-    orderedDocs.push(matching[0]);
-  }
-  return orderedDocs;
+  return await batchDelay(ids, GET_BATCH, GET_BATCH_DELAY, async (subIds) => {
+    if (subIds.length == 0) return [];
+    // Return documents with the specified ids
+    const params = { expand, id__in: subIds };
+    if (remaining) params["remaining"] = true;
+    const { data } = await session.get(
+      apiUrl(queryBuilder("documents/", params))
+    );
+    const docs = data.results.map((document) => new Document(document));
+    const orderedDocs = [];
+    for (let i = 0; i < subIds.length; i++) {
+      const matching = docs.filter((doc) => doc.id == subIds[i]);
+      if (matching.length == 0) continue;
+      orderedDocs.push(matching[0]);
+    }
+    return orderedDocs;
+  }, (e) => console.error('error getting documents with ids', e));
 }
 
 export async function deleteDocument(ids) {
@@ -214,7 +209,9 @@ export async function pollDocument(
  * @param {string} language The language code of the uploaded docs
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
+ * @param {Function} createProgressFn A function to call with process progress
  * @param {Function} progressFn A function to call with upload progress
+ * @param {Function} processProgressFn A function to call with process progress
  * @param {Function} allCompleteFn A function to call when all docs upload
  * @param {Function} errorFn A function to call when an error occurs
  */
@@ -224,7 +221,9 @@ export async function uploadDocuments(
   language,
   forceOcr,
   projects,
+  createProgressFn,
   progressFn,
+  processProgressFn,
   allCompleteFn,
   errorFn
 ) {
@@ -249,6 +248,7 @@ export async function uploadDocuments(
       if (parts.length <= 1) return '';
       return parts[parts.length - 1].toLowerCase();
     };
+    let createCount = 0;
     const data = await batchDelay(
       docs,
       UPLOAD_BATCH,
@@ -258,8 +258,11 @@ export async function uploadDocuments(
           apiUrl("documents/"),
           subDocs.map((doc) => ({ title: doc.name, access, language, original_extension: getExtension(doc.file), projects: projectIds }))
         );
+        createCount += subDocs.length;
+        createProgressFn(createCount / docs.length);
         return data;
-      }
+      },
+      (e) => console.error('error creating some docs', e)
     );
     newDocuments = data;
   } catch (e) {
@@ -268,22 +271,34 @@ export async function uploadDocuments(
   }
 
   // Upload all the files
+  const badDocs = {};
   try {
     await Promise.all(
       docs.map((doc, i) => {
         const url = newDocuments[i].presigned_url;
+        const id = newDocuments[i].id;
         const file = doc.file;
 
-        return axios.put(url, file, {
-          headers: {
-            "Content-Type": file.type || "application/octet-stream",
-          },
-          onUploadProgress: (progressEvent) => {
-            // Handle upload progress
-            const progress = progressEvent.loaded / progressEvent.total;
-            progresses[i].progress = progress;
-            progressFn(i, progress);
-          },
+        return new Promise(resolve => {
+          axios.put(url, file, {
+            headers: {
+              "Content-Type": file.type || "application/octet-stream",
+            },
+            onUploadProgress: (progressEvent) => {
+              // Handle upload progress
+              const progress = progressEvent.loaded / progressEvent.total;
+              progresses[i].progress = progress;
+              progressFn(i, progress);
+            },
+          }).then(results => resolve(results)).catch((e) => {
+            // Handle error
+            console.error('doc upload failed', e);
+            // Update progress
+            progresses[i].progress = 1;
+            progressFn(i, 1);
+            badDocs[id] = true;
+            resolve();
+          })
         });
       })
     );
@@ -293,17 +308,23 @@ export async function uploadDocuments(
   }
 
   // Once all the files have uploaded, begin processing.
-  const ids = newDocuments.map((doc) => doc.id);
+  const goodDocuments = newDocuments.filter(doc => !badDocs[doc.id]);
+  const ids = goodDocuments.map((doc) => doc.id);
+  let count = 0;
   try {
     await batchDelay(
       ids,
       UPLOAD_BATCH,
       UPLOAD_BATCH_DELAY,
-      async (subIds) =>
+      async (subIds) => {
         await session.post(
           apiUrl(`documents/process/`),
           subIds.map((id) => ({ id, force_ocr: forceOcr }))
-        )
+        );
+        count += subIds.length;
+        processProgressFn(count / ids.length);
+      },
+      (e) => console.error('error processing some docs', e)
     );
   } catch (e) {
     console.error(e);
@@ -311,5 +332,5 @@ export async function uploadDocuments(
   }
 
   // Handle document completion
-  allCompleteFn(ids);
+  allCompleteFn(goodDocuments.map(x => new Document(x)));
 }

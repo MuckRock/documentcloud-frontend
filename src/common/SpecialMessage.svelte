@@ -1,9 +1,22 @@
 <script>
+  import { pageCache, grabTipOfDay } from "@/manager/pageCache";
+
   const version = process.env.SPECIAL_VERSION;
   const contact = process.env.SPECIAL_CONTACT;
 
-  $: show = version != null && version.trim().length > 0;
+  export let tipoftheday = false;
+
+  $: show =
+    version != null &&
+    version.trim().length > 0 &&
+    (!tipoftheday || (tipoftheday && $pageCache.tipResponse != null));
   $: showContact = contact != null && contact.trim().length > 0;
+
+  $: {
+    if (tipoftheday && !$pageCache.grabbingTip) {
+      grabTipOfDay();
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -20,6 +33,10 @@
     box-sizing: border-box;
     color: #043004;
 
+    :global(p:only-child) {
+      margin: 0;
+    }
+
     a {
       text-decoration: underline;
     }
@@ -29,10 +46,16 @@
 {#if show}
   <div class="container">
     <div class="special">
-      {version}
-      {#if showContact}
-        <a href={contact} target="_blank">Contact us</a>
-        with bug reports, questions, and suggestions.
+      {#if tipoftheday}
+        {#if $pageCache.tipResponse != null}
+          {@html $pageCache.tipResponse}
+        {/if}
+      {:else}
+        {version}
+        {#if showContact}
+          <a href={contact} target="_blank">Contact us</a>
+          with bug reports, questions, and suggestions.
+        {/if}
       {/if}
     </div>
   </div>

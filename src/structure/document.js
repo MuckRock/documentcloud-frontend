@@ -82,6 +82,9 @@ export class Document extends Svue {
         pageCount(doc) {
           return doc.page_count;
         },
+        publishAt(doc) {
+          return doc.publish_at;
+        },
         userName(doc) {
           return doc.user.name;
         },
@@ -312,8 +315,9 @@ export class Document extends Svue {
 
         // Text properties
         userOrgString(individualOrg, userName, organizationName) {
+          if (userName == null) return '';
           // Return user and organization formatted as a string
-          if (individualOrg) {
+          if (individualOrg || organizationName == null) {
             return userName;
           }
           return `${userName} (${organizationName})`;

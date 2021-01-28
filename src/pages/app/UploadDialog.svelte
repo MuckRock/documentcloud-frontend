@@ -58,6 +58,9 @@
   $: displayFiles = uploadMode == false ? files : uploadFiles;
 
   let numUploaded;
+  let createProgress = 0;
+  let processProgress = 0;
+  let uploadInProgress = false;
   $: {
     // Set numUploaded
     if (!uploadMode) {
@@ -70,6 +73,8 @@
       numUploaded = total;
     }
   }
+  $: createProgressPercent = `${Math.floor(createProgress * 100)}%`;
+  $: processProgressPercent = `${Math.floor(processProgress * 100)}%`;
 
   $: error = errorMessage != null;
 
@@ -133,15 +138,27 @@
       language,
       forceOcr,
       uploadProject == null ? [] : [uploadProject],
+      (progress) => {
+        // Create progress handler
+        createProgress = progress;
+      },
       (index, progress) => {
         // Progress handler
+        uploadInProgress = true;
         uploadFiles[index].progress = progress;
+        if (progress >= 1) {
+          uploadFiles[index].done = true;
+        }
       },
-      async (ids) => {
+      (progress) => {
+        // Process progress handler
+        processProgress = progress;
+      },
+      async (goodDocuments) => {
         // All complete handler
         uploadFiles = uploadFiles.map((file) => ({ ...file, done: true }));
         layout.uploading = false;
-        await handleNewDocuments(ids);
+        await handleNewDocuments(goodDocuments);
       },
       (message) => {
         layout.error = message;
@@ -151,6 +168,151 @@
     );
   }
 </script>
+
+<div>
+  <div class="mcontent">
+    {#if !uploadMode}
+      <div>
+        <h1>
+          Document Upload
+          {#if uploadProject != null}to {uploadProject.title}{/if}
+        </h1>
+        {#if files.length == 0}
+          <p>
+            Select or drag a document to begin the document upload process. You
+            will then be able to edit document information.
+          </p>
+          {#if tooManyBigFiles[0]}
+            <p class="danger">
+              You can only upload PDF files under
+              {PDF_SIZE_LIMIT_READABLE}.
+            </p>
+          {/if}
+          {#if tooManyBigFiles[1]}
+            <p class="danger">
+              You can only upload non-PDF document files under
+              {DOCUMENT_SIZE_LIMIT_READABLE}.
+            </p>
+          {/if}
+        {:else}
+          <p>{handlePlural(files.length, "file", true)} ready to upload</p>
+          {#if tooManyFiles}
+            <p class="danger">You can only upload {LIMIT} files at once.</p>
+          {/if}
+        {/if}
+        <div class="actions">
+          <details>
+            <summary>More options</summary>
+            <p>
+              <UploadOptions bind:language bind:forceOcr />
+            </p>
+          </details>
+          {#if files.length > 0}
+            <span class="padright">
+              <Button on:click={upload}>Begin upload</Button>
+            </span>
+          {:else}
+            <FilePicker multiselect={true} on:files={handleFiles}>
+              <Button>+ Select files</Button>
+            </FilePicker>
+          {/if}
+        </div>
+        {#if files.length == 0}
+          <div class="droparea">
+            <DropZone on:files={handleFiles}>
+              <span>Drag and drop files here</span>
+            </DropZone>
+          </div>
+        {/if}
+        <div class="bottompadded">
+          <AccessToggle
+            bind:access
+            publicMessage="Document will be publicly visible."
+            collaboratorMessage="Document will be visible to your organization."
+            privateMessage="Document will be visible to you alone."
+            collaboratorName="Organization"
+          />
+        </div>
+      </div>
+    {/if}
+    {#if uploadMode}
+      <div>
+        {#if !error}
+          <h1>
+            {#if numUploaded == files.length}
+              Almost done... submitting uploaded files for processing ({processProgressPercent})
+            {:else if uploadInProgress}Uploading... ({numUploaded}/{files.length}){:else}
+              Getting upload information ({createProgressPercent})
+            {/if}
+          </h1>
+          <p>
+            Please leave this page open while your documents upload. This dialog
+            will automatically close when they have finished uploading.
+          </p>
+        {:else}
+          <h1>Error occurred while uploading</h1>
+          <p class="error">
+            We failed to
+            {errorMessage}. Please try again later.
+          </p>
+          <div>
+            <Button secondary={true} on:click={emit.allUploaded}>
+              Dismiss
+            </Button>
+          </div>
+        {/if}
+      </div>
+    {/if}
+    {#if !uploadMode && files.length > 0}
+      <div>
+        <p class="subtitle">Edit document information:</p>
+      </div>
+    {/if}
+    {#if files.length > 0}
+      <div class="files" class:padder={uploadMode}>
+        {#each displayFiles as file (file.index)}
+          <File
+            class="file"
+            file={file.file}
+            data={file}
+            {uploadMode}
+            {error}
+            on:name={({ detail: newName }) => {
+              let name = newName.trim();
+              if (name.length == 0) name = "Untitled";
+              file.name = name;
+            }}
+            on:delete={() => removeFile(file.index)}
+          />
+        {/each}
+      </div>
+    {/if}
+    {#if !uploadMode}
+      <div>
+        {#if files.length > 0 && !uploadAdditional}
+          <div class="vpadded">
+            <Button
+              nondescript={true}
+              on:click={() => (uploadAdditional = true)}
+            >Upload additional files</Button
+            >
+          </div>
+        {/if}
+        {#if files.length > 0 && uploadAdditional}
+          <div>
+            <div class="sectionbreak" />
+            <FilePicker multiselect={true} on:files={handleFiles}>
+              <Button secondary={true} small={true}>+ Select more files</Button>
+            </FilePicker>
+            <DropZone class="dropper" secondary={true} on:files={handleFiles}>
+              <span>Drag and drop additional files here</span>
+            </DropZone>
+          </div>
+        {/if}
+      </div>
+    {/if}
+  </div>
+</div>
 
 <style lang="scss">
   .actions {
@@ -215,140 +377,3 @@
     }
   }
 </style>
-
-<div>
-  <div class="mcontent">
-    {#if !uploadMode}
-      <div>
-        <h1>
-          Document Upload
-          {#if uploadProject != null}to {uploadProject.title}{/if}
-        </h1>
-        {#if files.length == 0}
-          <p>
-            Select or drag a document to begin the document upload process. You
-            will then be able to edit document information.
-          </p>
-          {#if tooManyBigFiles[0]}
-            <p class="danger">
-              You can only upload PDF files under
-              {PDF_SIZE_LIMIT_READABLE}.
-            </p>
-          {/if}
-          {#if tooManyBigFiles[1]}
-            <p class="danger">
-              You can only upload non-PDF document files under
-              {DOCUMENT_SIZE_LIMIT_READABLE}.
-            </p>
-          {/if}
-        {:else}
-          <p>{handlePlural(files.length, 'file', true)} ready to upload</p>
-          {#if tooManyFiles}
-            <p class="danger">You can only upload {LIMIT} files at once.</p>
-          {/if}
-        {/if}
-        <div class="actions">
-          <details>
-            <summary>More options</summary>
-            <p>
-              <UploadOptions bind:language bind:forceOcr />
-            </p>
-          </details>
-          {#if files.length > 0}
-            <span class="padright">
-              <Button on:click={upload}>Begin upload</Button>
-            </span>
-          {:else}
-            <FilePicker multiselect={true} on:files={handleFiles}>
-              <Button>+ Select files</Button>
-            </FilePicker>
-          {/if}
-        </div>
-        {#if files.length == 0}
-          <div class="droparea">
-            <DropZone on:files={handleFiles}>
-              <span>Drag and drop files here</span>
-            </DropZone>
-          </div>
-        {/if}
-        <div class="bottompadded">
-          <AccessToggle
-            bind:access
-            publicMessage="Document will be publicly visible."
-            collaboratorMessage="Document will be visible to your organization."
-            privateMessage="Document will be visible to you alone."
-            collaboratorName="Organization" />
-        </div>
-      </div>
-    {/if}
-    {#if uploadMode}
-      <div>
-        {#if !error}
-          <h1>Uploading... ({numUploaded}/{files.length})</h1>
-          <p>
-            Please leave this page open while your documents upload. This dialog
-            will automatically close when they have finished uploading.
-          </p>
-        {:else}
-          <h1>Error occurred while uploading</h1>
-          <p class="error">
-            We failed to
-            {errorMessage}. Please try again later.
-          </p>
-          <div>
-            <Button secondary={true} on:click={emit.allUploaded}>
-              Dismiss
-            </Button>
-          </div>
-        {/if}
-      </div>
-    {/if}
-    {#if !uploadMode && files.length > 0}
-      <div>
-        <p class="subtitle">Edit document information:</p>
-      </div>
-    {/if}
-    {#if files.length > 0}
-      <div class="files" class:padder={uploadMode}>
-        {#each displayFiles as file (file.index)}
-          <File
-            class="file"
-            file={file.file}
-            data={file}
-            {uploadMode}
-            {error}
-            on:name={({ detail: newName }) => {
-              let name = newName.trim();
-              if (name.length == 0) name = 'Untitled';
-              file.name = name;
-            }}
-            on:delete={() => removeFile(file.index)} />
-        {/each}
-      </div>
-    {/if}
-    {#if !uploadMode}
-      <div>
-        {#if files.length > 0 && !uploadAdditional}
-          <div class="vpadded">
-            <Button
-              nondescript={true}
-              on:click={() => (uploadAdditional = true)}>
-              Upload additional files
-            </Button>
-          </div>
-        {/if}
-        {#if files.length > 0 && uploadAdditional}
-          <div>
-            <div class="sectionbreak" />
-            <FilePicker multiselect={true} on:files={handleFiles}>
-              <Button secondary={true} small={true}>+ Select more files</Button>
-            </FilePicker>
-            <DropZone class="dropper" secondary={true} on:files={handleFiles}>
-              <span>Drag and drop additional files here</span>
-            </DropZone>
-          </div>
-        {/if}
-      </div>
-    {/if}
-  </div>
-</div>

@@ -47,6 +47,7 @@
   .title {
     font-size: $normal;
     user-select: none;
+    word-break: break-word;
   }
 </style>
 

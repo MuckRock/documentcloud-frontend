@@ -37,14 +37,48 @@
         text-align: right;
         padding: 0 16px 0 0;
       }
+    }
+
+    &.center {
+      text-align: center;
+    }
+
+    &.floatleft {
+      @media only screen and (max-width: $earlyBreak) {
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: inherit;
+      }
+    }
+
+    &.floatright {
+      @media only screen and (max-width: $earlyBreak) {
+        position: absolute;
+        right: -15px;
+        top: 6px;
+        width: inherit;
+      }
+    }
+  }
+
+  .hide {
+    &.ib {
+      display: inline-block;
 
       @media only screen and (max-width: $mobileBreak) {
         display: none;
       }
     }
 
-    &.center {
-      text-align: center;
+    @media only screen and (max-width: $mobileBreak) {
+      display: none;
+    }
+
+    &.hideearly {
+      @media only screen and (max-width: $earlyBreak) {
+        display: none;
+      }
     }
   }
 </style>
@@ -55,14 +89,16 @@
   style="height: {$layout.footerHeight}px">
   <div class="vcontent">
     {#if !$layout.compact}
-      <div class="cell side" {style}>
+      <div class="cell side hide floatleft" {style}>
         <ViewDropdown />
       </div>
       <div class="cell center" {style}>
         <Paginator />
       </div>
-      <div class="cell side right" {style}>
-        <Zoom />
+      <div class="cell side right floatright" {style}>
+        <span class="hide ib" class:hideearly={$layout.embed}>
+          <Zoom />
+        </span>
         {#if $layout.embed}
           <FullScreen />
         {/if}

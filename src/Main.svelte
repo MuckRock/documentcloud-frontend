@@ -22,7 +22,7 @@
       window.history.replaceState(
         { path: currentUrl() },
         "",
-        window.location.href
+        window.location.href,
       );
     }
   });
@@ -124,15 +124,16 @@
 
   :global(a.active) {
     font-weight: normal !important;
-  }
 
-  :global(a.active .project) {
-    $activeBg: $primary-faded;
-    background: $activeBg;
+    :global(.project) {
+      $activeBg: $primary-faded;
 
-    &:hover {
       background: $activeBg;
-      opacity: 1;
+
+      &:hover {
+        background: $activeBg;
+        opacity: 1;
+      }
     }
   }
 </style>
