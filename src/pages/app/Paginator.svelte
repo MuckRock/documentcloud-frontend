@@ -1,5 +1,5 @@
 <script>
-  import { search } from "@/search/search";
+  import { search, initSearch } from "@/search/search";
   import { pushUrl } from "@/router/router";
   import { queryBuilder } from "@/util/url";
   import { simplePlural } from "@/util/string";
@@ -8,17 +8,30 @@
   import leftPaginatorSvg from "@/assets/page_arrow_left.svg";
   import rightPaginatorSvg from "@/assets/page_arrow_right.svg";
 
+  export let dialog = false;
+
   function gotoPrev() {
     if (search.results.hasPrev) {
       let page = search.results.prevPage + 1;
       if (page == 1) page = null; // no need to specify param for first page
-      pushUrl(queryBuilder(null, { page }));
+      if (dialog) {
+        initSearch({ ...search.params.params, page });
+      } else {
+        pushUrl(queryBuilder(null, { page }));
+      }
     }
   }
 
   function gotoNext() {
     if (search.results.hasNext) {
-      pushUrl(queryBuilder(null, { page: search.results.nextPage + 1 }));
+      if (dialog) {
+        initSearch({
+          ...search.params.params,
+          page: search.results.nextPage + 1,
+        });
+      } else {
+        pushUrl(queryBuilder(null, { page: search.results.nextPage + 1 }));
+      }
     }
   }
 </script>
@@ -108,7 +121,7 @@
           {/if}
         </div>
         <div class="documents">
-          {simplePlural($search.results.count, 'Document')}
+          {simplePlural($search.results.count, "Document")}
         </div>
       </div>
       <button disabled={!$search.results.hasNext} on:click={gotoNext}>

@@ -33,6 +33,7 @@
   import { flip } from "svelte/animate";
 
   export let embed = false;
+  export let dialog = false;
 
   let preUploadFiles = [];
 
@@ -81,7 +82,7 @@
       } else if ($search.params.oneProjectSearch != null) {
         // Show title based on a single project search
         const projs = $projects.projects.filter(
-          (project) => project.id == $search.params.oneProjectSearch
+          (project) => project.id == $search.params.oneProjectSearch,
         );
         if (projs.length > 0) {
           newTitle = projs[0].title;
@@ -216,12 +217,12 @@
         {/if}
         <AuthSection />
       {/if}
-      {#if embed && $search.params != null && $search.params.projectEmbedId != null}
+      {#if !dialog && embed && $search.params != null && $search.params.projectEmbedId != null}
         <!-- Use a search link -->
         <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
-      {:else if !embed}
+      {:else if !embed || dialog}
         <!-- Don't show search bar in embed (for now) -->
-        <SearchBar {embed} />
+        <SearchBar {embed} {dialog} />
       {/if}
 
       <div>
@@ -246,7 +247,7 @@
       >
         {#each $documents.documents as document (document.id)}
           <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
-            <Document {embed} {document} />
+            <Document {embed} {dialog} {document} on:pick />
           </div>
         {/each}
         {#if $documents.documents.length == 0 && !$layout.loading}
@@ -261,10 +262,10 @@
     </div>
 
     {#if embed}
-      <EmbedFooter />
+      <EmbedFooter {dialog} />
     {:else}
       <div class="narrowshow">
-        <Paginator />
+        <Paginator {dialog} />
       </div>
     {/if}
   </div>

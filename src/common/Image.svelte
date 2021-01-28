@@ -19,6 +19,7 @@
   export let delay = null;
   export let crosshair = false;
   export let showLoading = false;
+  export let clickable = false;
 
   const emit = emitter({
     aspect() {},
@@ -151,6 +152,10 @@
       cursor: crosshair;
     }
 
+    &.clickable {
+      cursor: pointer;
+    }
+
     &.nomove {
       touch-action: pinch-zoom;
     }
@@ -206,10 +211,13 @@
 <span
   class:aspect={aspect != null}
   class:crosshair
+  class:clickable
   class:nomove={$layout.nomove}
-  style={aspect != null ? `padding-top: ${100 * aspect}%` : ''}
+  style={aspect != null ? `padding-top: ${100 * aspect}%` : ""}
   on:mousedown={handleMouseDown}
-  on:touchstart={handleMouseDown}>
+  on:touchstart={handleMouseDown}
+  on:click
+>
   {#if delay == null || ready}
     <img
       on:load={handleLoad}
@@ -219,7 +227,8 @@
       bind:this={img}
       src={computedSrc}
       {alt}
-      draggable="false" />
+      draggable="false"
+    />
   {/if}
   {#if showLoading && (!show || makeNull)}
     <div class="loading">
@@ -234,4 +243,5 @@
   on:mouseup={handleMouseUp}
   on:touchend={handleMouseUp}
   on:mousemove={handleMouseMove}
-  on:touchmove={handleMouseMove} />
+  on:touchmove={handleMouseMove}
+/>
