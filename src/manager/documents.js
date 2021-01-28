@@ -81,7 +81,7 @@ export const documents = new Svue({
       const route = router.resolvedRoute;
       if (route == null) return true;
       if (route.name == 'project') return true;  // project embeds are static
-      if (truthyParamValue(route.props.embed)) return true;
+      if (route.props != null && truthyParamValue(route.props.embed)) return true;
       return false;
     },
     allDocuments(search) {
