@@ -43,7 +43,7 @@
     ) {
       // Init page spec
       modification.initSpec(
-        ModificationSpec.getDocument($viewer.document.pageCount)
+        ModificationSpec.getDocument($viewer.document.pageCount),
       );
     }
   }
@@ -52,7 +52,7 @@
       ? null
       : Math.min(
           Math.floor(containerScrollTop / itemHeight) * itemsPerRow,
-          $modification.pageCount
+          $modification.pageCount,
         );
   $: endPage =
     itemsPerRow == null || containerHeight == null
@@ -60,7 +60,7 @@
       : Math.min(
           Math.ceil((containerScrollTop + containerHeight) / itemHeight) *
             itemsPerRow,
-          $modification.pageCount
+          $modification.pageCount,
         );
   $: overallHeight =
     itemsPerRow == null
@@ -83,6 +83,7 @@
             descriptor,
             pg: descriptor.pageSpec.specs[0].pg,
             index: i + startPage,
+            document: descriptor.id || $viewer.document,
           }));
 
   $: showInserts = !$modification.modifyHasSelection;
@@ -295,7 +296,8 @@
       <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
         <span
           class="imgwrap"
-          class:selected={$modification.modifySelectedMap[page.index]}>
+          class:selected={$modification.modifySelectedMap[page.index]}
+        >
           <div class="pgnum" class:left={!modify}>p. {page.index + 1}</div>
           {#if modify}
             {#if !insertOnly}
@@ -325,9 +327,10 @@
             <span
               class="img"
               class:disabled={insertOnly}
-              on:click={(e) => select(page.index, e.shiftKey)}>
+              on:click={(e) => select(page.index, e.shiftKey)}
+            >
               <Image
-                src={pageImageUrl($viewer.document, parseInt(page.pg), 140)}
+                src={pageImageUrl(page.document, parseInt(page.pg), 140)}
                 delay={50}
               />
             </span>

@@ -1,5 +1,5 @@
 import { Svue } from 'svue';
-import { runify, Empty, Individual, ModificationSpec, CLOCKWISE } from './modifySpec';
+import { runify, Empty, Individual, Range, ModificationSpec, CLOCKWISE, ModificationDescriptor, PageSpec } from './modifySpec';
 
 class Modification extends Svue {
   constructor() {
@@ -12,6 +12,7 @@ class Modification extends Svue {
           insert: null,
           history: [],
           historyPosition: 0,
+          insertDocument: null,
         }
       },
       computed: {
@@ -130,6 +131,7 @@ class Modification extends Svue {
 
   clearInsertion() {
     this.insert = null;
+    this.insertDocument = null;
   }
 
   selectInsert(i) {
@@ -170,6 +172,7 @@ class Modification extends Svue {
   clear() {
     this.modifyUnselect();
     this.clearCopyBuffer();
+    this.insertDocument = null;
     this.historyPosition = 0;
     this.history = [];
   }
@@ -177,6 +180,15 @@ class Modification extends Svue {
   initSpec(modifySpec) {
     this.history = [modifySpec];
     this.historyPosition = 0;
+  }
+
+  insertDocumentAtPosition() {
+    if (this.insertDocument != null) {
+      // Create a document spec for the insertion document
+      const docSpec = ModificationSpec.getDocument(this.insertDocument.pageCount, this.insertDocument);
+      this.modify(this.modifySpec.slice(0, this.insert).concat(docSpec).concat(this.modifySpec.slice(this.insert, this.pageCount)));
+      this.clearInsertion();
+    }
   }
 
   undo() {

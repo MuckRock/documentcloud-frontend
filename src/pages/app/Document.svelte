@@ -226,7 +226,7 @@
 
 <div class="card">
   <div class="row">
-    {#if $orgsAndUsers.loggedIn}
+    {#if $orgsAndUsers.loggedIn && !embed && !dialog}
       <div class="check">
         <Checkbox
           on:check={() => selectDocument(document, shiftKey)}

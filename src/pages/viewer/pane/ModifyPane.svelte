@@ -74,12 +74,13 @@
           <span
             class="img"
             class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
-              i == MAX_BUFFER_SIZE - 1}>
+              i == MAX_BUFFER_SIZE - 1}
+          >
             <Image
               src={pageImageUrl(
                 $viewer.document,
                 descriptor.pageSpec.specs[0].pg,
-                30
+                30,
               )}
             />
           </span>
@@ -137,21 +138,18 @@
   <div class="buttonpadded">
     {#if $modification.uncommittedChanges}
       <Button on:click={() => console.log(modification.modifySpec.json())}>
-        Apply
-        {handlePlural($modification.historyPosition, "Modification")}
+        Apply Modifications
       </Button>
     {/if}
     <Button
       disabled={!$modification.canUndo}
       secondary={true}
-      on:click={() => modification.undo()}
-    >Undo</Button
+      on:click={() => modification.undo()}>Undo</Button
     >
     <Button
       disabled={!$modification.canRedo}
       secondary={true}
-      on:click={() => modification.redo()}
-    >Redo</Button
+      on:click={() => modification.redo()}>Redo</Button
     >
   </div>
 {/if}

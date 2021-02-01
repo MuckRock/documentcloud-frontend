@@ -51,14 +51,14 @@ export const documents = new Svue({
       processingChangeTimeout: null,
       doneProcessing: true,
       pending: [],
-      inFilePickerDialog: false,
+      inDocumentPickerDialog: false,
     };
   },
   watch: {
     "router.resolvedRoute"() {
       checkForInit();
     },
-    inFilePickerDialog() {
+    inDocumentPickerDialog() {
       checkForInit();
     },
     rawDoneProcessing() {
@@ -203,7 +203,7 @@ export const documents = new Svue({
 function checkForInit() {
   const route = router.resolvedRoute;
   unselectAll();
-  if (route != null && (documents.inFilePickerDialog || route.name == "app" || route.name == 'project')) {
+  if (route != null && (documents.inDocumentPickerDialog || route.name == "app" || route.name == 'project')) {
     if (!documents.hasInited) {
       initDocuments();
       documents.hasInited = true;

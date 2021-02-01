@@ -157,6 +157,7 @@
 
     &.embed {
       padding-top: $mainDocContainerPadding;
+      position: relative;
     }
   }
 

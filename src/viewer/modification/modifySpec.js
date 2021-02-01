@@ -428,8 +428,8 @@ export class ModificationSpec {
     return new ModificationSpec([]);
   }
 
-  static getDocument(pageCount) {
-    return new ModificationSpec([new ModificationDescriptor(new PageSpec([new Range(0, pageCount - 1)]), [], null)]);
+  static getDocument(pageCount, id = null) {
+    return new ModificationSpec([new ModificationDescriptor(new PageSpec([new Range(0, pageCount - 1)]), [], id)]);
   }
 
   static parse(json) {

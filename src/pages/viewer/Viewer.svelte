@@ -128,7 +128,7 @@
   />
 {:else if $layout.showInsertDialog}
   <Modal
-    component={$viewerEditDialogs.filePickerDialog}
+    component={$viewerEditDialogs.documentPickerDialog}
     on:close={hideInsertDialog}
   />
 {/if}

@@ -507,14 +507,15 @@ export function openAccess(documents) {
 export function showInsertDialog() {
   const me = viewer.me;
   if (me != null) {
-    documents.inFilePickerDialog = true;
+    documents.inDocumentPickerDialog = true;
     search.filePickerUser = me;
     layout.showInsertDialog = true;
   }
 }
 
 export function hideInsertDialog() {
+  modification.insertDocumentAtPosition();
   layout.showInsertDialog = false;
   search.filePickerUser = null;
-  documents.inFilePickerDialog = false;
+  documents.inDocumentPickerDialog = false;
 }
