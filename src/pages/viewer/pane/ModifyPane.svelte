@@ -6,6 +6,7 @@
   import { showInsertDialog } from "@/viewer/layout";
   import Image from "@/common/Image";
   import { pageImageUrl } from "@/api/viewer";
+  import { modifyDocument } from "@/api/document";
   import Modification from "@/viewer/modification/Modification";
 
   const MAX_BUFFER_SIZE = 5;
@@ -137,7 +138,15 @@
 {#if $modification.hasHistory && !$modification.hasInsert && !$modification.hasCopyBuffer && !$modification.modifyHasSelection}
   <div class="buttonpadded">
     {#if $modification.uncommittedChanges}
-      <Button on:click={() => console.log(modification.modifySpec.json())}>
+      <Button
+        on:click={() => {
+          const id = viewer.document.id;
+          if (id == null) return;
+          const json = modification.modifySpec.json();
+          console.log(json);
+          modifyDocument(id, json);
+        }}
+      >
         Apply Modifications
       </Button>
     {/if}

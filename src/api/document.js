@@ -151,6 +151,14 @@ export async function redactDocument(id, redactions) {
   );
 }
 
+export async function modifyDocument(id, modifications) {
+  // Apply the page modifications to the specified document id
+  await session.post(
+    apiUrl(`documents/${id}/modifications/`),
+    modifications
+  );
+}
+
 export async function addData(id, key, value) {
   // TODO: Url encode data key?
   await session.patch(apiUrl(`documents/${id}/data/${key}/`), {

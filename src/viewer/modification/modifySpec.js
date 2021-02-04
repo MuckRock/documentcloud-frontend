@@ -334,7 +334,7 @@ export class ModificationDescriptor {
   json() {
     const json = {};
     json.page = this.pageSpec.spec();
-    if (this.id != null) json.id = this.id;
+    if (this.id != null) json.id = this.id.id;
     if (this.modifications.length > 0) json.modifications = this.modifications;
     return json;
   }
@@ -429,7 +429,8 @@ export class ModificationSpec {
   }
 
   static getDocument(pageCount, id = null) {
-    return new ModificationSpec([new ModificationDescriptor(new PageSpec([new Range(0, pageCount - 1)]), [], id)]);
+    const spec = pageCount == 1 ? new Individual(0) : new Range(0, pageCount - 1);
+    return new ModificationSpec([new ModificationDescriptor(new PageSpec([spec]), [], id)]);
   }
 
   static parse(json) {
