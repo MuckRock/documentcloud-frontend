@@ -16,6 +16,7 @@
   import Calendar from "@/common/Calendar";
 
   // SVG assets
+  import InfoSvg from "@/assets/info.svg";
   import CalendarSvg from "@/assets/calendar.svg";
 
   const emit = emitter({
@@ -144,6 +145,44 @@
       }
     }
   }
+
+  .faded {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .callout {
+    border: solid 2px $primary;
+    background: $menuBg;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-size: 13px;
+    margin-left: 28px;
+    position: relative;
+    margin-bottom: 16px;
+
+    .i {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 6px 4px;
+
+      :global(svg) {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    a {
+      color: $primary;
+      font-weight: bold;
+    }
+
+    .content {
+      padding-left: 14px;
+      display: inline-block;
+    }
+  }
 </style>
 
 <div>
@@ -157,26 +196,33 @@
       {nameSingularNumberPlural(numAccessSelected, "selected document")}:
     </p>
     <div class="inputpadded">
-      <Tooltip
-        delay={500}
-        show={notVerified}
-        caption="You must be a verified journalist to publically publish a document"
-      >
-        <label>
-          <input
-            type="radio"
-            bind:group={access}
-            value={"public"}
-            disabled={notVerified}
-          />
-          <div class="accessoption">
-            <h3>Public access</h3>
-            <small>
-              Anyone on the internet can search for and view the document.
-            </small>
-          </div>
-        </label>
-      </Tooltip>
+      <label class:faded={notVerified}>
+        <input
+          type="radio"
+          bind:group={access}
+          value={"public"}
+          disabled={notVerified}
+        />
+        <div class="accessoption">
+          <h3>Public access</h3>
+          <small>
+            Anyone on the internet can search for and view the document.
+          </small>
+        </div>
+      </label>
+      {#if notVerified}
+        <div class="callout">
+          <span class="i">{@html InfoSvg}</span>
+          <span class="content">
+            Only verified users or members of verified organizations can make
+            uploaded documents public. If you're a journalist or otherwise work
+            in publishing vetted materials to inform the public, <a
+              href="https://www.muckrock.com/assignment/request-account-verification-377/form/"
+              target="_blank">learn more and request verification here.</a
+            >
+          </span>
+        </div>
+      {/if}
       <label>
         <input type="radio" bind:group={access} value={"private"} />
         <div class="accessoption">
@@ -194,33 +240,27 @@
           <small>Only the people in your organization have access.</small>
         </div>
       </label>
-      {#if access != "public"}
-        <Tooltip
-          delay={500}
-          show={notVerified}
-          caption="You must be a verified journalist to publically publish a document"
-        >
-          <div class="scheduler">
-            <div class="scheduleaction">
-              <label
-                ><input
-                  type="checkbox"
-                  bind:checked={showScheduler}
-                  disabled={notVerified}
-                />
-                <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
-              >
-            </div>
-            {#if showScheduler}
-              <small
-                >This document will be made public at the given date and time.
-                Publication time is local{#if timezone != null}
-                  &nbsp({timezone}){/if}.</small
-              >
-              <Calendar bind:value={publishAt} />
-            {/if}
+      {#if access != "public" && !notVerified}
+        <div class="scheduler">
+          <div class="scheduleaction">
+            <label
+              ><input
+                type="checkbox"
+                bind:checked={showScheduler}
+                disabled={notVerified}
+              />
+              <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
+            >
           </div>
-        </Tooltip>
+          {#if showScheduler}
+            <small
+              >This document will be made public at the given date and time.
+              Publication time is local{#if timezone != null}
+                &nbsp({timezone}){/if}.</small
+            >
+            <Calendar bind:value={publishAt} />
+          {/if}
+        </div>
       {/if}
     </div>
     <div class="buttonpadded">
