@@ -29,6 +29,13 @@ export const search = new Svue({
     }
   },
   computed: {
+    onlyShowSuccessfulStatuses(filePickerUser, router) {
+      // Applies when in embed or dialog
+      const route = router.resolvedRoute;
+      if (filePickerUser != null) return true;
+      if (route != null && route.name == 'project') return true;
+      return false;
+    },
     documents(hasResults, results) {
       if (!hasResults) return [];
       return results.results;
@@ -40,7 +47,7 @@ export const search = new Svue({
 });
 
 export async function initSearch(params) {
-  search.params = new SearchParams(params);
+  search.params = new SearchParams(params, search.onlyShowSuccessfulStatuses);
 
   // Get results
   if (search.params.getMethod != null) {
