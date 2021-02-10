@@ -80,7 +80,7 @@
       } else if ($search.params.oneProjectSearch != null) {
         // Show title based on a single project search
         const projs = $projects.projects.filter(
-          (project) => project.id == $search.params.oneProjectSearch
+          (project) => project.id == $search.params.oneProjectSearch,
         );
         if (projs.length > 0) {
           newTitle = projs[0].title;
@@ -206,7 +206,8 @@
           <Modal
             on:close={() => ($layout.uploading = false)}
             component={UploadDialog}
-            properties={{ initialFiles: preUploadFiles }} />
+            properties={{ initialFiles: preUploadFiles }}
+          />
         {/if}
 
         {#if $orgsAndUsers.loggedIn}
@@ -226,7 +227,13 @@
         {#if !embed}
           <Title>{title}</Title>
           {#if $orgsAndUsers.loggedIn}
-            <Button on:click={showUploadModal}>+ Upload</Button>
+            <Button
+              on:click={showUploadModal}
+              disabledReason={$orgsAndUsers.isVerified
+                ? null
+                : "You must be a verified journalist to upload documents"}
+              >+ Upload</Button
+            >
           {/if}
         {/if}
       </div>
@@ -240,7 +247,8 @@
     <div class="docscontainer">
       <Draggable
         on:files={showUploadModal}
-        disabled={embed || !$orgsAndUsers.loggedIn}>
+        disabled={embed || !$orgsAndUsers.loggedIn}
+      >
         {#each $documents.documents as document (document.id)}
           <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
             <Document {embed} {document} />
