@@ -390,6 +390,19 @@ export async function changeAccessForDocuments(documents, access, publishAt, lay
   hideAccess();
 }
 
+export async function changeOwnerForDocuments(documents, user, organization, layout) {
+  await wrapLoad(layout, async () => {
+    await editMetadata(
+      documents.map((doc) => doc.id),
+      { user, organization }
+    );
+    documents.forEach((doc) =>
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, user, organization }))
+    );
+  });
+  hideAccess();
+}
+
 export function removeDocument(document) {
   return removeDocuments([document]);
 }
