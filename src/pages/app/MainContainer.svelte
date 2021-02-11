@@ -8,6 +8,7 @@
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import MetaDialog from "@/common/dialog/MetaDialog";
   import AccessDialog from "@/common/dialog/AccessDialog";
+  import OwnerDialog from "@/common/dialog/OwnerDialog";
   import DataDialog from "@/common/dialog/DataDialog";
   import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog";
   import ProjectDialog from "@/common/dialog/ProjectDialog";
@@ -22,6 +23,7 @@
     hideDocumentInfo,
     hideMeta,
     hideAccess,
+    hideOwner,
     hideData,
     hideProjectEmbed,
     hideProject,
@@ -105,6 +107,8 @@
     <Modal component={MetaDialog} on:close={hideMeta} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
+  {:else if $layout.ownerOpen}
+    <Modal component={OwnerDialog} on:close={hideOwner} />
   {:else if $layout.dataOpen}
     <Modal component={DataDialog} on:close={hideData} />
   {:else if $layout.projectEmbed}

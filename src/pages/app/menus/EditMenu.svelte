@@ -11,6 +11,7 @@
     editMetaSelected,
     editDocumentInfoSelected,
     changeAccessSelected,
+    changeOwnerSelected,
     editDataSelected,
     reprocessSelected,
     cancelProcessSelected,
@@ -20,11 +21,19 @@
 
   let processing = false;
   let allProcessing = false;
+  let canChangeOwner = false;
   export let visible = false;
 
   $: {
     if (visible) {
       [processing, allProcessing] = selectionProcessing();
+    }
+  }
+
+  $: {
+    if (visible && $orgsAndUsers.me) {
+      canChangeOwner = layout.selected.filter(
+        (doc) => !(doc.userId == $orgsAndUsers.me.id && (!doc.publicAccess || $orgsAndUsers.me.organizations.indexOf(doc.orgId) >= 0))).length == 0
     }
   }
 
@@ -67,6 +76,9 @@
       >Entities <span class="beta">BETA</span></MenuItem
     >
   {/if}
+  <MenuItem disabled={!canChangeOwner} danger={true} on:click={changeOwnerSelected}>
+    Change Owner
+  </MenuItem>
   <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
   {#if $orgsAndUsers.isStaff}
     <MenuItem special={true} on:click={showDiagnosticsSelected}>

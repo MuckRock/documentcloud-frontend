@@ -56,6 +56,11 @@ export function changeAccessSelected() {
   layout.accessEditDocuments = layout.selected.slice();
 }
 
+export function changeOwnerSelected() {
+  if (layout.numSelected == 0) return;
+  layout.ownerEditDocuments = layout.selected.slice();
+}
+
 export function reprocessSelected() {
   reprocessDocuments(layout.selected);
 }
