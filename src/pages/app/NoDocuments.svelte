@@ -32,12 +32,21 @@
     max-width: 80ch;
     width: 30vw;
     margin: 0 2em 1em 2em;
+
+    a {
+      color: $primary;
+    }
+
+    li,
+    p {
+      font-size: 15px;
+      line-height: 22px;
+      margin: 5px 0;
+    }
   }
 
   p {
-    font-size: 15px;
-    line-height: 22px;
-    margin: 1 1em;
+    margin: 0 1em;
   }
 </style>
 
@@ -52,6 +61,42 @@
         Your search query returned no results. Try again with a broader search
         query.
       </p>
+    </div>
+  {:else if $orgsAndUsers.me != null && !$orgsAndUsers.isVerified}
+    <h2>Welcome to DocumentCloud!</h2>
+    <div class="img">
+      {@html documentSilhouetteSvg}
+    </div>
+    <div class="text">
+      <p>
+        Note that currently your account is <b>not verified to upload</b>. You
+        can search through the public repository, organize documents you're
+        interested in into projects, leave private notes, and collaborate on
+        editing and annotating documents other users invite you to.
+      </p>
+      <p>
+        If you’d like to upload or publish documents and you're a working
+        journalist or other organization interested in publishing primary source
+        materials in the public interest, you'll need to have your account
+        verified or added to a verified organization. This is a simple process:
+      </p>
+      <ul>
+        <li>
+          First, <a
+            target="_blank"
+            href="https://accounts.muckrock.com/organizations/"
+            >see if your organization already exists</a
+          > and, if you find it, click "Request to Join" on its page.
+        </li>
+        <li>
+          If your organization has not been verified yet, or if you're a
+          freelancer, <a
+            target="_blank"
+            href="https://www.muckrock.com/assignment/request-account-verification-377/form/"
+            >request verification here</a
+          >. Requests usually take two business days to process.
+        </li>
+      </ul>
     </div>
   {:else}
     <h2>Upload your first document</h2>
