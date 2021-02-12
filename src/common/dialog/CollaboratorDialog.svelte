@@ -9,12 +9,12 @@
   import {
     layout,
     editProjectCollaboratorAccess,
-    updateProjectEdit
+    updateProjectEdit,
   } from "@/manager/layout";
   import {
     getProjUsers,
     addUser,
-    removeUserFromProject
+    removeUserFromProject,
   } from "@/manager/projects";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { showConfirm } from "@/manager/confirmDialog";
@@ -28,7 +28,7 @@
   import pencilSvg from "@/assets/pencil.svg";
 
   const emit = emitter({
-    dismiss() {}
+    dismiss() {},
   });
 
   let access = "admin";
@@ -52,10 +52,10 @@
         await wrapLoadSeparate(
           loading,
           layout,
-          async () => await removeUserFromProject(layout.projectEdit, user)
+          async () => await removeUserFromProject(layout.projectEdit, user),
         );
         updateProjectEdit();
-      }
+      },
     );
   }
 
@@ -67,11 +67,15 @@
   });
 
   $: oneAdmin =
-    $layout.projectEdit.usersAndAccesses.filter(x => x.access == "admin")
+    $layout.projectEdit.usersAndAccesses.filter((x) => x.access == "admin")
       .length == 1;
 </script>
 
 <style lang="scss">
+  a {
+    color: $primary;
+  }
+
   .collaborator {
     display: table;
     width: 100%;
@@ -148,41 +152,51 @@
     <div class="mcontent">
       <div class="inputpadded">
         <h1>Add Collaborators</h1>
+        <p>
+          Put in the email of an existing DocumentCloud user below. If they
+          don't have an account, have them register <a
+            target="_blank"
+            href="https://accounts.muckrock.com/accounts/signup/?intent=documentcloud"
+            >here for free</a
+          >, and then ask them to log in to DocumentCloud at least once.
+        </p>
         <div class="collaborator">
           <div class="name">
             <input
               bind:value={email}
               placeholder="Email address"
-              type="email" />
+              type="email"
+            />
           </div>
           <span class="dropdown">
             <Dropdown
               table={true}
               bordered={true}
               horizPadding={15}
-              vertPadding={8}>
+              vertPadding={8}
+            >
               <span class="action" slot="title">
-                {#if access == 'admin'}
+                {#if access == "admin"}
                   Admin
-                {:else if access == 'edit'}
+                {:else if access == "edit"}
                   Edit
-                {:else if access == 'view'}View{/if}
+                {:else if access == "view"}View{/if}
                 <span class="dropper">▼</span>
               </span>
               <Menu>
-                <MenuItem on:click={() => (access = 'admin')}>
+                <MenuItem on:click={() => (access = "admin")}>
                   Admin
                   <div class="info">
                     Collaborators can edit this project and its documents
                   </div>
                 </MenuItem>
-                <MenuItem on:click={() => (access = 'edit')}>
+                <MenuItem on:click={() => (access = "edit")}>
                   Edit
                   <div class="info">
                     Collaborators can edit documents in this project
                   </div>
                 </MenuItem>
-                <MenuItem on:click={() => (access = 'view')}>
+                <MenuItem on:click={() => (access = "view")}>
                   View
                   <div class="info">
                     Collaborators can view documents in this project
@@ -222,11 +236,12 @@
                 {/if}
               </div>
               <div class="access">
-                {#if !oneAdmin || userAccess.access != 'admin'}
+                {#if !oneAdmin || userAccess.access != "admin"}
                   <!-- Can't edit access on sole admin -->
                   <span
                     class="pencil"
-                    on:click={() => editProjectCollaboratorAccess(userAccess)}>
+                    on:click={() => editProjectCollaboratorAccess(userAccess)}
+                  >
                     {@html pencilSvg}
                   </span>
                 {/if}
@@ -237,7 +252,8 @@
                   <Button
                     on:click={() => removeProjectUser(userAccess.user)}
                     nondescript={true}
-                    caution={true}>
+                    caution={true}
+                  >
                     Remove
                   </Button>
                 </div>
