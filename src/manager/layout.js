@@ -1,5 +1,6 @@
 import { Svue } from "svue";
 import { router } from "@/router/router";
+import { sameProp } from '@/util/array';
 
 // Used to calculate the most restricted level of access
 // in a group of documents
@@ -89,31 +90,20 @@ export const layout = new Svue({
       // Return the most restricted access level
       return minAccess;
     },
-    sameAccess(sameProp) {
+    sameAccess(sameAccessProp) {
       // Return the access level if all docs have the same access
       // Otherwise, return null
-      return sameProp("access");
+      return sameAccessProp("access");
     },
-    samePublishAt(sameProp) {
+    samePublishAt(sameAccessProp) {
       // Return the publish at date if all docs have the same publish at date
       // Otherwise, return null
-      return sameProp("publishAt");
+      return sameAccessProp("publishAt");
     },
-    sameProp(accessEditDocuments) {
+    sameAccessProp(accessEditDocuments) {
       // Return the given property if all docs have the same value for that property
       // Otherwise, return null
-      return function(prop) {
-        let value = null;
-        for (let i = 0; i < accessEditDocuments.length; i++) {
-          const doc = accessEditDocuments[i];
-          if (i == 0) {
-            value = doc[prop];
-          } else if (doc[prop] != value) {
-            return null;
-          }
-        }
-        return value;
-      };
+      return prop => sameProp(accessEditDocuments, x => x[prop]);
     },
     projectCollaboratorAccessOpen(projectEditUser) {
       return projectEditUser != null;

@@ -85,24 +85,27 @@ export class Document extends Svue {
         publishAt(doc) {
           return doc.publish_at;
         },
-        userName(doc) {
-          return doc.user.name;
+        user(doc) {
+          return doc.user;
         },
-        userId(doc) {
-          return doc.user.id;
+        userName(user) {
+          return user.name;
         },
-        rawOrganization(doc) {
+        userId(user) {
+          return user.id;
+        },
+        organization(doc) {
           // Unprocessed organization object
           return doc.organization;
         },
-        orgId(rawOrganization) {
-          return rawOrganization.id;
+        orgId(organization) {
+          return organization.id;
         },
-        individualOrg(rawOrganization) {
-          return rawOrganization.individual;
+        individualOrg(organization) {
+          return organization.individual;
         },
-        organizationName(rawOrganization) {
-          return rawOrganization.name;
+        organizationName(organization) {
+          return organization.name;
         },
         assetUrl(doc) {
           return doc.asset_url;

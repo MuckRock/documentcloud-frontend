@@ -57,3 +57,19 @@ export function addToArrayIfUnique(array, newElem, eq = (a, b) => a == b) {
   }
   return [...array, newElem];
 }
+
+// Returns 
+export function sameProp(l, propFn, eq = (x, y) => x == y) {
+  let value = null;
+  for (let i = 0; i < l.length; i++) {
+    const prop = propFn(l[i]);
+    if (prop != null) {
+      if (value != null) {
+        if (!eq(prop, value)) return null;
+      } else {
+        value = prop;
+      }
+    }
+  }
+  return value;
+}

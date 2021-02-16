@@ -32,8 +32,15 @@
 
   $: {
     if (visible && $orgsAndUsers.me) {
-      canChangeOwner = layout.selected.filter(
-        (doc) => !(doc.userId == $orgsAndUsers.me.id && (!doc.publicAccess || $orgsAndUsers.me.organizations.indexOf(doc.orgId) >= 0))).length == 0
+      canChangeOwner =
+        layout.selected.filter(
+          (doc) =>
+            !(
+              doc.userId == $orgsAndUsers.me.id &&
+              (!doc.publicAccess ||
+                $orgsAndUsers.me.organizations.indexOf(doc.orgId) >= 0)
+            ),
+        ).length == 0;
     }
   }
 
@@ -44,6 +51,16 @@
     nav("entity", { id: doc.slugId });
   }
 </script>
+
+<style lang="scss">
+  .beta {
+    color: $gray;
+    font-size: 11px;
+    vertical-align: top;
+    letter-spacing: 0.4px;
+    margin-left: 1px;
+  }
+</style>
 
 <Menu>
   <MenuItem on:click={() => editDocumentInfoSelected()}>
@@ -76,9 +93,11 @@
       >Entities <span class="beta">BETA</span></MenuItem
     >
   {/if}
-  <MenuItem disabled={!canChangeOwner} danger={true} on:click={changeOwnerSelected}>
-    Change Owner
-  </MenuItem>
+  {#if canChangeOwner}
+    <MenuItem danger={true} on:click={changeOwnerSelected}>
+      Change Owner
+    </MenuItem>
+  {/if}
   <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
   {#if $orgsAndUsers.isStaff}
     <MenuItem special={true} on:click={showDiagnosticsSelected}>
@@ -86,13 +105,3 @@
     </MenuItem>
   {/if}
 </Menu>
-
-<style lang="scss">
-  .beta {
-    color: $gray;
-    font-size: 11px;
-    vertical-align: top;
-    letter-spacing: 0.4px;
-    margin-left: 1px;
-  }
-</style>
