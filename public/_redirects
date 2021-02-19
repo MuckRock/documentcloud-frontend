@@ -1,2 +1,3 @@
 /api/oembed.json https://api.beta.documentcloud.org/api/oembed/
+/documents/:id/:path.pdf http://api.beta.documentcloud.org/files/documents/:id/:path.pdf
 /*    /index.html   200
