@@ -1,5 +1,5 @@
 import NotFound from "@/pages/NotFound";
-import { loadDefault, loadHome, loadApp, loadViewer, loadNote, loadPage, loadProject } from '@/util/lazyComponent';
+import { loadDefault, loadHome, loadApp, loadViewer, loadNote, loadPage, loadProject, loadLegacyRedirect } from '@/util/lazyComponent';
 import Entities from '@/pages/entities/Entities';
 
 export const routes = [
@@ -45,6 +45,13 @@ export const routes = [
       path: "/projects/:projectEmbedId",
       component: lazyComponent.project,
       get: loadProject
-    }
+    },
+
+    // Legacy
+    search: {
+      path: "/search/*query",
+      component: lazyComponent.legacyRedirect,
+      get: loadLegacyRedirect
+    },
   })
 ];

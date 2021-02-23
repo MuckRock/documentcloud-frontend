@@ -10,6 +10,7 @@ export const lazyComponent = new Svue({
       note: null,
       page: null,
       project: null,
+      legacyRedirect: null,
     }
   }
 });
@@ -60,5 +61,12 @@ export function loadProject() {
   if (lazyComponent.project != null) return;
   import("@/pages/embed/project/Project").then((module) => {
     lazyComponent.project = module.default;
+  });
+}
+
+export function loadLegacyRedirect() {
+  if (lazyComponent.legacyRedirect != null) return;
+  import("@/pages/legacy/Redirect").then((module) => {
+    lazyComponent.legacyRedirect = module.default;
   });
 }

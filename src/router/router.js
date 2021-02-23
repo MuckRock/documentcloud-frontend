@@ -80,6 +80,7 @@ export function getPath(to, params = null) {
     for (const param in params) {
       if (params.hasOwnProperty(param)) {
         path = path.replace(`:${param}`, params[param]);
+        path = path.replace(`*${param}`, params[param]);
       }
     }
   }
