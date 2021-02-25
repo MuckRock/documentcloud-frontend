@@ -3,6 +3,7 @@
 node_modules
 public/bundle.*
 public/docs
+public/test
 public/embed/enhance.js.map
 public/notes/loader.js.map
 package-lock.json
