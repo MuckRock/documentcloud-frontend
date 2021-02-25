@@ -36,12 +36,7 @@
     if (pageResourcePath != null) {
       const pageResourceUrl =
         process.env.DC_BASE + "/files" + window.location.pathname;
-      // Redirect (dependency-free method for embed compatibility and small package size)
-      if (history.pushState) {
-        history.pushState({}, null, pageResourceUrl);
-      } else {
-        window.location.href = pageResourceUrl;
-      }
+      window.location.href = pageResourceUrl;
     }
 
     doc = await getDocument(idPart);
