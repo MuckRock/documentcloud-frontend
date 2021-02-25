@@ -2,12 +2,34 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import { pushUrl } from "@/router/router";
-  import { projectUrl } from "@/search/search";
+  import { projectUrl, orgUrl, userUrl } from "@/search/search";
 
   export let query = null;
 
-  const isProjectQuery = /^Project: ?"(.*)" ?$/;
-  const isProjectIdQuery = /^projectid:([0-9]+)(.*) ?$/;
+  const redirects = [
+    {
+      regex: /^Project: ?"(.*)" ?$/,
+      type: "hash",
+      fn: process.env.PROJECT_REDIRECT_HASH_URL,
+      urlHandler: (id, projectName) => projectUrl({ title: projectName, id }),
+    },
+    {
+      regex: /^Group:(.*) ?$/,
+      type: "hash",
+      fn: process.env.ORG_REDIRECT_HASH_URL,
+      urlHandler: (id, orgSlug) => orgUrl({ name: orgSlug, id }),
+    },
+    {
+      regex: /^projectid:([0-9]+)(.*) ?$/,
+      type: "simple",
+      urlHandler: (id, projectName) => projectUrl({ title: projectName, id }),
+    },
+    {
+      regex: /^Account:([0-9]+)(.*) ?$/,
+      type: "simple",
+      urlHandler: (id, accountSlug) => userUrl({ name: accountSlug, id }),
+    },
+  ];
 
   function hash(d = 0, s) {
     // Adapted from https://github.com/sindresorhus/fnv1a
@@ -41,9 +63,9 @@
     pushUrl("/");
   }
 
-  async function getMph() {
+  async function getHash(hashFileName) {
     // Download and decode minimal perfect hash structure in binary format
-    const { data } = await axios.get(process.env.PROJECT_REDIRECT_HASH_URL, {
+    const { data } = await axios.get(hashFileName, {
       responseType: "arraybuffer",
     });
 
@@ -75,26 +97,42 @@
     try {
       // Try to reroute based on legacy project url's
       const queryDecoded = decodeURI(query);
-      const projectQuery = isProjectQuery.exec(queryDecoded);
-      if (projectQuery == null) {
-        // Check project id query
-        const projectIdQuery = isProjectIdQuery.exec(queryDecoded);
-        if (projectIdQuery != null) {
-          const id = projectIdQuery[1];
-          let slug = projectIdQuery[2];
+
+      for (let i = 0; i < redirects.length; i++) {
+        // Try redirects in order
+        const redirect = redirects[i];
+        const regexResult = redirect.regex.exec(queryDecoded);
+        if (regexResult == null) continue;
+
+        // Redirect based on handler type
+        let redirectUrl = null;
+        if (redirect.type == "simple") {
+          const id = regexResult[1];
+          let slug = regexResult[2];
+
+          // Handle id-slug and just id without slug
           if (slug.startsWith("-")) slug = slug.substr(1);
-          const redirectUrl = projectUrl({ title: slug, id });
-          return pushUrl(decodeURI(redirectUrl));
+
+          redirectUrl = redirect.urlHandler(id, slug);
+        } else if (redirect.type == "hash") {
+          const hash = await getHash(redirect.fn);
+          const key = regexResult[1];
+          const id = lookup(hash, key);
+
+          // Result not found? Redirect to homepage
+          if (id == null) redirectDefault();
+
+          redirectUrl = redirect.urlHandler(id, key);
         }
-        return redirectDefault();
-      } else {
-        const projectName = projectQuery[1];
-        const mph = await getMph();
-        const id = lookup(mph, projectName);
-        if (id == null) redirectDefault();
-        const redirectUrl = projectUrl({ title: projectName, id });
-        return pushUrl(decodeURI(redirectUrl));
+
+        if (redirectUrl != null) {
+          return pushUrl(decodeURI(redirectUrl));
+        } else {
+          return redirectDefault();
+        }
       }
+
+      redirectDefault();
     } catch (e) {
       // TODO: log
       console.error(e);
