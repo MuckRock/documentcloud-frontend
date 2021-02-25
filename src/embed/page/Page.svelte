@@ -17,12 +17,26 @@
           [0, 0, 1, active.y1], // top
           [0, active.y1, active.x1, active.y2], // left
           [active.x2, active.y1, 1, active.y2], // right
-          [0, active.y2, 1, 1] // bottom
+          [0, active.y2, 1, 1], // bottom
         ];
 
+  const isPageResourcePath = /\/documents\/[0-9]+\/pages\/.*\.(txt|gif)$/;
+
   onMount(async () => {
+    const pageResourcePath = isPageResourcePath.exec(window.location.pathname);
+    if (pageResourcePath != null) {
+      const pageResourceUrl =
+        process.env.DC_BASE + "/files" + window.location.pathname;
+      // Redirect (dependency-free method for embed compatibility and small package size)
+      if (history.pushState) {
+        history.pushState({}, null, pageResourceUrl);
+      } else {
+        window.location.href = pageResourceUrl;
+      }
+    }
+
     notes = (await getAnnotations(id, "")).filter(
-      note => !note.isPageNote && note.page == page - 1
+      (note) => !note.isPageNote && note.page == page - 1,
     );
   });
 
@@ -54,7 +68,9 @@
   <div
     class="dc-embed-shim"
     on:click={() => (active = null)}
-    style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) * 100}%;bottom:{(1 - s[3]) * 100}%" />
+    style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) *
+      100}%;bottom:{(1 - s[3]) * 100}%"
+  />
 {/each}
 
 {#if active != null}
