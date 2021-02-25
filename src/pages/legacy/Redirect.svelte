@@ -83,7 +83,6 @@
           const id = projectIdQuery[1];
           let slug = projectIdQuery[2];
           if (slug.startsWith("-")) slug = slug.substr(1);
-          debugger;
           const redirectUrl = projectUrl({ title: slug, id });
           return pushUrl(decodeURI(redirectUrl));
         }
