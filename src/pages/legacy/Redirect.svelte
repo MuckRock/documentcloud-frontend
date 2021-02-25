@@ -91,5 +91,3 @@
     }
   });
 </script>
-
-Redirect
