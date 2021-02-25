@@ -29,11 +29,25 @@
           [0, active.y2, 1, 1], // bottom
         ];
 
+  const isPageResourcePath = /\/documents\/[0-9]+\/pages\/.*\.(txt|gif)$/;
+
   onMount(async () => {
+    const pageResourcePath = isPageResourcePath.exec(window.location.pathname);
+    if (pageResourcePath != null) {
+      const pageResourceUrl =
+        process.env.DC_BASE + "/files" + window.location.pathname;
+      // Redirect (dependency-free method for embed compatibility and small package size)
+      if (history.pushState) {
+        history.pushState({}, null, pageResourceUrl);
+      } else {
+        window.location.href = pageResourceUrl;
+      }
+    }
+
     doc = await getDocument(idPart);
     // TODO: get for specific page
     notes = (await getAnnotations(idPart, "")).filter(
-      (note) => !note.isPageNote && note.page == page - 1
+      (note) => !note.isPageNote && note.page == page - 1,
     );
 
     // Render content
@@ -107,7 +121,8 @@
         class="DC-embed-resource"
         href={pageUrl}
         title="View entire {doc.title} on DocumentCloud in new window or tab"
-        target="_blank">
+        target="_blank"
+      >
         {doc.title}
       </a>
     </div>
@@ -118,7 +133,8 @@
         on:load={() => informSize(elem)}
         bordered={false}
         alt="Page {page} of {doc.title}"
-        page={{ document: doc, pageNumber: page - 1 }} />
+        page={{ document: doc, pageNumber: page - 1 }}
+      />
 
       <!-- Place notes on image -->
       {#each notes as note}
@@ -132,7 +148,9 @@
         <div
           class="dc-embed-shim"
           on:click={() => (active = null)}
-          style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) * 100}%;bottom:{(1 - s[3]) * 100}%" />
+          style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) *
+            100}%;bottom:{(1 - s[3]) * 100}%"
+        />
       {/each}
 
       <!-- Show annotation if note is active -->
@@ -141,7 +159,8 @@
         <Note
           active={true}
           on:click={() => handleClick(active)}
-          note={active} />
+          note={active}
+        />
       {/if}
     </div>
     <div style="font-size:14px;line-height:18px;text-align:center">
@@ -151,7 +170,8 @@
         title="Go to DocumentCloud in new window or tab"
         target="_blank"
         style="color: #5a76a0; text-decoration: underline;
-        font-weight:700;font-family:Gotham,inherit,sans-serif;color:inherit;text-decoration:none">
+        font-weight:700;font-family:Gotham,inherit,sans-serif;color:inherit;text-decoration:none"
+      >
         DocumentCloud
       </a>
       by
@@ -161,7 +181,8 @@
         style="color: #5a76a0; text-decoration: underline;"
         href={pageUrl}
         title="View entire {doc.title} on DocumentCloud in new window or tab"
-        target="_blank">
+        target="_blank"
+      >
         View document
       </a>
       or
@@ -170,7 +191,8 @@
         href={textUrl(doc, page - 1)}
         title="Read the text of page {page} of {doc.title} on DocumentCloud in
         new window or tab"
-        target="_blank">
+        target="_blank"
+      >
         read text
       </a>
     </div>
