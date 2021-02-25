@@ -53,5 +53,11 @@ export const routes = [
       component: lazyComponent.legacyRedirect,
       get: loadLegacyRedirect
     },
+
+    publicSearch: {
+      path: "/public/search/*query",
+      component: lazyComponent.legacyRedirect,
+      get: loadLegacyRedirect
+    },
   })
 ];

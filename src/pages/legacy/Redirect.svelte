@@ -6,7 +6,8 @@
 
   export let query = null;
 
-  const isProjectQuery = /^Project: "(.*)"$/;
+  const isProjectQuery = /^Project: ?"(.*)"$/;
+  const isProjectIdQuery = /^projectid:([0-9])+(.*)$/;
 
   function hash(d = 0, s) {
     // Adapted from https://github.com/sindresorhus/fnv1a
@@ -73,8 +74,18 @@
   onMount(async () => {
     try {
       // Try to reroute based on legacy project url's
-      const projectQuery = isProjectQuery.exec(decodeURI(query));
+      const queryDecoded = decodeURI(query);
+      const projectQuery = isProjectQuery.exec(queryDecoded);
       if (projectQuery == null) {
+        // Check project id query
+        const projectIdQuery = isProjectIdQuery.exec(queryDecoded);
+        if (projectIdQuery != null) {
+          const id = projectIdQuery[1];
+          let slug = projectIdQuery[2];
+          if (slug.startsWith("-")) slug = slug.substr(1);
+          const redirectUrl = projectUrl({ title: slug, id });
+          return pushUrl(decodeURI(redirectUrl));
+        }
         return redirectDefault();
       } else {
         const projectName = projectQuery[1];
@@ -82,12 +93,12 @@
         const id = lookup(mph, projectName);
         if (id == null) redirectDefault();
         const redirectUrl = projectUrl({ title: projectName, id });
-        pushUrl(decodeURI(redirectUrl));
+        return pushUrl(decodeURI(redirectUrl));
       }
     } catch (e) {
       // TODO: log
       console.error(e);
-      redirectDefault();
+      return redirectDefault();
     }
   });
 </script>
