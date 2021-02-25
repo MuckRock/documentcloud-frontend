@@ -37,6 +37,7 @@
       const pageResourceUrl =
         process.env.DC_BASE + "/files" + window.location.pathname;
       window.location.href = pageResourceUrl;
+      return;
     }
 
     doc = await getDocument(idPart);
