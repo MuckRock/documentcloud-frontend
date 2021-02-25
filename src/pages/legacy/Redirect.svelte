@@ -6,8 +6,8 @@
 
   export let query = null;
 
-  const isProjectQuery = /^Project: ?"(.*)"$/;
-  const isProjectIdQuery = /^projectid:([0-9])+(.*)$/;
+  const isProjectQuery = /^Project: ?"(.*)" ?$/;
+  const isProjectIdQuery = /^projectid:([0-9]+)(.*) ?$/;
 
   function hash(d = 0, s) {
     // Adapted from https://github.com/sindresorhus/fnv1a
@@ -83,6 +83,7 @@
           const id = projectIdQuery[1];
           let slug = projectIdQuery[2];
           if (slug.startsWith("-")) slug = slug.substr(1);
+          debugger;
           const redirectUrl = projectUrl({ title: slug, id });
           return pushUrl(decodeURI(redirectUrl));
         }
