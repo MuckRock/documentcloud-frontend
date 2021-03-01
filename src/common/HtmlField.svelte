@@ -19,6 +19,10 @@
       max-height: 300px;
       word-wrap: break-word;
       overflow-y: auto;
+
+      :global(a) {
+        color: $primary;
+      }
     }
 
     &.static .content {

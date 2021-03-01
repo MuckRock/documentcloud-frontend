@@ -49,6 +49,10 @@
       overflow-wrap: break-word;
       max-height: 139px;
       overflow-y: auto;
+
+      :global(a) {
+        color: $primary;
+      }
     }
   }
 </style>
