@@ -48,7 +48,6 @@
         position: absolute;
         left: 0;
         top: 6px;
-        width: inherit;
       }
     }
 
@@ -57,7 +56,6 @@
         position: absolute;
         right: -15px;
         top: 6px;
-        width: inherit;
       }
     }
   }
@@ -86,7 +84,8 @@
 <footer
   class="vheader"
   class:disabled={$layout.disableControls}
-  style="height: {$layout.footerHeight}px">
+  style="height: {$layout.footerHeight}px"
+>
   <div class="vcontent">
     {#if !$layout.compact}
       <div class="cell side hide floatleft" {style}>
