@@ -54,8 +54,15 @@
     &.floatright {
       @media only screen and (max-width: $earlyBreak) {
         position: absolute;
-        right: -8px;
-        top: 2px;
+        right: -14px;
+        top: 5px;
+      }
+    }
+
+    .adjustright {
+      @media only screen and (max-width: $earlyBreak) {
+        margin-top: -3px;
+        margin-right: 10px;
       }
     }
   }
@@ -95,7 +102,7 @@
         <Paginator />
       </div>
       <div class="cell side hide right floatright" {style}>
-        <span class="hide ib" class:hideearly={$layout.embed}>
+        <span class="hide ib adjustright" class:hideearly={$layout.embed}>
           <Zoom />
         </span>
         {#if $layout.embed}
