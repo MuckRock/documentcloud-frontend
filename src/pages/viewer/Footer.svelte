@@ -61,8 +61,8 @@
 
     .adjustright {
       @media only screen and (max-width: $earlyBreak) {
-        margin-top: -3px;
-        margin-right: 10px;
+        margin-top: -2px;
+        margin-right: 14px;
       }
     }
   }
