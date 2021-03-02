@@ -54,8 +54,8 @@
     &.floatright {
       @media only screen and (max-width: $earlyBreak) {
         position: absolute;
-        right: -15px;
-        top: 6px;
+        right: -8px;
+        top: 2px;
       }
     }
   }
@@ -94,7 +94,7 @@
       <div class="cell center" {style}>
         <Paginator />
       </div>
-      <div class="cell side right floatright" {style}>
+      <div class="cell side hide right floatright" {style}>
         <span class="hide ib" class:hideearly={$layout.embed}>
           <Zoom />
         </span>
