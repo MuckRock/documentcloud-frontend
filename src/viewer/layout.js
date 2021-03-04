@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
-import { truthyParamValue } from '@/util/url';
+import { truthyParamValue, falsyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
 import { getDocument, redactDocument, searchDocument } from "@/api/document";
 import { showConfirm } from "@/manager/confirmDialog";
@@ -36,6 +36,10 @@ export const layout = new Svue({
       embed: false,
       // Whether to display sidebar
       showSidebar: document.body.offsetWidth >= MOBILE_BREAKPOINT,
+      // Hide text option
+      hideTextOption: false,
+      // Hide PDF link
+      hidePdfLink: false,
 
       loading: false,
       error: null,
@@ -86,6 +90,8 @@ export const layout = new Svue({
       } else if (route != null && route.name == "viewer") {
         this.embed = inIframe() || truthyParamValue(route.props.embed);
         this.title = !this.embed || truthyParamValue(route.props.title);
+        this.hideTextOption = falsyParamValue(route.props.text);
+        this.hidePdfLink = falsyParamValue(route.props.pdf);
         const sidebarValue = route.props.sidebar;
         if (sidebarValue != null) {
           this.showSidebar = truthyParamValue(sidebarValue);

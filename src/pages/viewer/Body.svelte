@@ -110,13 +110,13 @@
     destroyScrollzoom();
     doc.scrollzoom = new ScrollZoom(docElem, {
       components,
-      width: $doc.containerWidth,
-      height: $doc.containerHeight,
+      width: doc.containerWidth,
+      height: doc.containerHeight,
       changeCallback: function () {
         const renderedComponents = Object.values(this.renderedComponents);
         if (renderedComponents.length == 0) return;
         const components = renderedComponents.sort(
-          (a, b) => a.page.pageNumber - b.page.pageNumber
+          (a, b) => a.page.pageNumber - b.page.pageNumber,
         );
         doc.visiblePageNumber = components[0].page.pageNumber + 1;
       },
@@ -224,7 +224,7 @@
           () =>
             (docElem.scrollTop +=
               newDelta * doc.scrollzoom.transform.matrix[0]),
-          0
+          0,
         );
       }
     }
@@ -281,6 +281,8 @@
     bottom: 0;
     right: 0;
     left: 0;
+    min-width: 1px;
+    min-height: 1px;
     box-sizing: border-box;
     overflow: auto;
     z-index: $viewerBodyZ;
@@ -300,13 +302,15 @@
 <ActionPane bind:actionHeight />
 
 <div
-  style="top: {$layout.headerHeight + actionOffset}px; bottom: {$layout.footerHeight}px;
+  style="top: {$layout.headerHeight +
+    actionOffset}px; bottom: {$layout.footerHeight}px;
   right: {$layout.sidebarWidth}px;"
   bind:this={docElem}
   class="doc"
   on:mousedown={handleMouseDown}
-  class:grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}>
-  {#if $doc.mode == 'search'}
+  class:grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
+>
+  {#if $doc.mode == "search"}
     <SearchResults />
   {/if}
 </div>
@@ -315,4 +319,5 @@
   on:gesturestart|preventDefault
   on:gesturechange|preventDefault
   on:gestureend|preventDefault
-  on:keypress={handleKeyPress} />
+  on:keypress={handleKeyPress}
+/>

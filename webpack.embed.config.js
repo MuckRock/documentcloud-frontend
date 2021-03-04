@@ -3,6 +3,8 @@ const baseConfig = require('./webpack.base.config');
 const targets = [
   ['./src/embed/enhance.js', '/public/embed', 'enhance.js'],
   ['./src/embed/noteLoader.js', '/public/notes', 'loader.js'],
+  ['./src/embed/documentLoader.js', '/public/viewer', 'loader.js'],
+  ['./src/embed/projectLoader.js', '/public/embed', 'loader.js'],
 ]
 
 module.exports = targets.map(([src, outputPath, outputFilename]) => ({

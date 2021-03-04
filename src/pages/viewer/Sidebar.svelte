@@ -141,7 +141,8 @@
     class:disabled={$layout.disableControls}
     on:mousedown={handleMouseDown}
     style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
-    width: {$layout.sidebarWidth}px">
+    width: {$layout.sidebarWidth}px"
+  >
     {#if $viewer.loaded}
       <div class="title">
         {#if !$layout.embed && $viewer.document.readable}
@@ -165,11 +166,13 @@
         <TableOfContents />
 
         <hr />
-        <div>
-          <a target="_blank" href={$viewer.document.pdf}>
-            Original Document (PDF) »
-          </a>
-        </div>
+        {#if !$layout.hidePdfLink}
+          <div>
+            <a target="_blank" href={$viewer.document.pdf}>
+              Original Document (PDF) »
+            </a>
+          </div>
+        {/if}
         {#if $viewer.document.relatedArticleUrl != null && $viewer.document.relatedArticleUrl.trim().length > 0}
           <div>
             <a target="_blank" href={$viewer.document.relatedArticleUrl}>
@@ -193,7 +196,8 @@
           <div
             class="action"
             class:disabled={$viewer.document.readable}
-            on:click={() => showEmbedFlow($viewer.document)}>
+            on:click={() => showEmbedFlow($viewer.document)}
+          >
             <h3>Share</h3>
             <p>Create an embed or share on social media.</p>
           </div>
@@ -204,7 +208,8 @@
           <div
             class="action"
             class:disabled={$viewer.document.readable}
-            on:click={enterRedactMode}>
+            on:click={enterRedactMode}
+          >
             <h3>Redact</h3>
             <p>
               Create redactions on the document to hide text. The document will
@@ -214,14 +219,16 @@
           <div
             class="action"
             class:disabled={$viewer.document.readable}
-            on:click={enterInfoMode}>
+            on:click={enterInfoMode}
+          >
             <h3>Edit Document Info</h3>
             <p>Modify document information like description and related URL.</p>
           </div>
           <div
             class="action"
             class:disabled={$viewer.document.readable}
-            on:click={enterDataMode}>
+            on:click={enterDataMode}
+          >
             <h3>Edit Tags and Data</h3>
             <p>Add tags and key/value pairs to categorize your document.</p>
           </div>
@@ -242,7 +249,8 @@
         <SpecialMessage />
         {#if $viewer.document.editAccess && $viewer.document.id < process.env.LEGACY_CUT_OFF}
           <div
-            style="background: #fff782; display: block; padding: 2px 8px; border-radius: 3px; font-size: 13px; box-sizing: border-box; color: #312f05;">
+            style="background: #fff782; display: block; padding: 2px 8px; border-radius: 3px; font-size: 13px; box-sizing: border-box; color: #312f05;"
+          >
             Since this document was originally uploaded in the legacy version of
             DocumentCloud, if you’re deleting sensitive information after the
             document was published it may not automatically be redacted in all
@@ -250,7 +258,8 @@
             <a
               style="font-size: 13px; text-decoration: underline; color: #312f05"
               href="mailto:info@documentcloud?subject=Editing Sensitive Legacy Document"
-              target="_blank">email us</a>
+              target="_blank">email us</a
+            >
             so we can confirm the information is fully removed.
           </div>
         {/if}

@@ -11,7 +11,7 @@
 
 <select on:input={handleInput} bind:value={$doc.mode}>
   <option value="image">Document</option>
-  <option value="text">Plain Text</option>
+  {#if !$layout.hideTextOption}<option value="text">Plain Text</option>{/if}
   {#if $viewer.notes != null && $viewer.notes.length > 0}
     <option value="notes">Notes</option>
   {/if}

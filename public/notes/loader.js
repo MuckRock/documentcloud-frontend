@@ -118,8 +118,12 @@ function setupResizeEvent(iframe) {
   window.addEventListener('message', (event) => {
     if (event.source == iframe.contentWindow) {
       const { width, height } = event.data;
-      iframe.width = width;
-      iframe.height = height;
+      if (width != null) {
+        iframe.width = width;
+      }
+      if (height != null) {
+        iframe.height = height;
+      }
     }
   });
 }
