@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import { ensureBounds } from '@/util/bounds';
 
 function getDefault(obj, defaultValue = "") {
   if (obj == null) return defaultValue;
@@ -35,16 +36,16 @@ export class Note extends Svue {
           return note.x1 == null;
         },
         x1(note) {
-          return note.x1;
+          return ensureBounds(Math.min(note.x1, note.x2));
         },
         x2(note) {
-          return note.x2;
+          return ensureBounds(Math.max(note.x1, note.x2));
         },
         y1(note) {
-          return note.y1;
+          return ensureBounds(Math.min(note.y1, note.y2));
         },
         y2(note) {
-          return note.y2;
+          return ensureBounds(Math.max(note.y2, note.y2));
         },
         width(x1, x2) {
           return x2 - x1;
