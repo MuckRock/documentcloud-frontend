@@ -14,6 +14,7 @@ const LAYOUT = {
 
 const DEFAULT_IMAGE_ASPECT = 11 / 8.5; // letter size paper
 const DEFAULT_TEXT_ASPECT = 11 / 8.5;
+const MAX_SCROLLBAR_WIDTH = 20; // used to account for initial zoom scale
 
 export const zoomBreakpoints = [
   20,
@@ -203,7 +204,7 @@ class Doc extends Svue {
     // Zoom to fit page width
     if (this.scrollzoom != null) {
       this.scale(
-        this.scrollzoom.bounds.width / this.scrollzoom.containerWidth
+        (this.scrollzoom.bounds.width - MAX_SCROLLBAR_WIDTH) / this.scrollzoom.containerWidth
       );
     }
   }

@@ -105,10 +105,10 @@ function injectIframe(url, options, container) {
   if (parts.length != 2) return;
   if (parts[0] != 'documents') return;
   const slugId = parts[1];
-  const slugIdParts = slugId.split('-');
-  if (slugIdParts.length != 2) return;
-  const id = slugIdParts[0];
-  const slugExtension = slugIdParts[1];
+  const slugHyphen = slugId.indexOf('-');
+  if (slugHyphen == -1) return;
+  const id = slugId.substring(0, slugHyphen);
+  const slugExtension = slugId.substring(slugHyphen + 1);
   const slugParts = slugExtension.split('.');
   if (slugParts.length < 1) return;
   const slug = slugParts[0];
@@ -127,18 +127,19 @@ function injectIframe(url, options, container) {
 
   const queryParams = {};
   let urlPostfix = '';
-  let widthOption = '100%';
+  let style = 'border:solid 1px #aaa;box-sizing:border-box;position:relative;max-width:100%;max-height:100%;';
 
   // Height option
   if (options.height != null) {
-    iframe.height = options.height;
+    style += `height:${options.height}px;`;
   } else {
-    iframe.height = '100%';
+    style += `height:100%;`;
   }
   // Width option
   if (options.width != null) {
-    iframe.width = options.width;
-    widthOption = `${options.width}px`;
+    style += `width:${options.width}px;`;
+  } else {
+    style += `width:100%;`;
   }
   // Sidebar, text, and pdf options
   if (options.sidebar != null) {
@@ -160,7 +161,7 @@ function injectIframe(url, options, container) {
     }
   }
 
-  iframe.style = `border: none; width: ${widthOption}; border: solid 1px #aaa`;
+  iframe.style = style;
   iframe.src = Object(_util_url__WEBPACK_IMPORTED_MODULE_1__["queryBuilder"])(`${"http://www.dev.documentcloud.org/"}documents/${id}-${slug}`, queryParams) + urlPostfix;
   Object(_iframeSizer__WEBPACK_IMPORTED_MODULE_0__["setupResizeEvent"])(iframe);
 
