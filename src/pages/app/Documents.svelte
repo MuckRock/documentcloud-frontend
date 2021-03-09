@@ -250,9 +250,11 @@
         disabled={embed || !$orgsAndUsers.loggedIn}
       >
         {#each $documents.documents as document (document.id)}
-          <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
-            <Document {embed} {document} />
-          </div>
+          {#if !document.deleted}
+            <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
+              <Document {embed} {document} />
+            </div>
+          {/if}
         {/each}
         {#if $documents.documents.length == 0 && !$layout.loading}
           <NoDocuments />
