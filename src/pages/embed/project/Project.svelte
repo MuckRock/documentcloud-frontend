@@ -13,5 +13,6 @@
     documents={$documents.documents}
     loading={$layout.loading}
     error={$layout.error}
-    embed={true} />
+    embed={true}
+  />
 </div>

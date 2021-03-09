@@ -1,10 +1,18 @@
 import { Svue } from "svue";
 import { searchDocuments } from "@/api/document";
+import { DEFAULT_ORDERING } from "@/api/common";
 import { getProjectDocuments } from '@/api/project';
 import { cacheAsync } from '@/util/cache';
 import { highlight } from "@/search/parse";
 
 const searchDocumentsCached = cacheAsync(searchDocuments);
+
+const PROJECT_EMBED_SORTS = {
+  title: 'title',
+  created_at: 'created_at',
+  source: 'source',
+  page_count: 'page_count'
+};
 
 const GET_DOCUMENT_FIELDS = {
   "project:": {
@@ -70,6 +78,12 @@ export class SearchParams extends Svue {
           const projectEmbedId = params.projectEmbedId;
           if (projectEmbedId == null || projectEmbedId.trim().length == 0) return null;
           return extractId(projectEmbedId);
+        },
+        perPage(params) {
+          return params.perpage || 12;
+        },
+        projectEmbedOrder(params) {
+          return params.order
         },
         query(params, projectEmbedId) {
           if (projectEmbedId != null) return null;
@@ -202,10 +216,20 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        getMethod(query, projectEmbedId, page, oneUserSearch, oneProjectSearch, oneAccessSearch, noStatus, oneOrZeroAccesses) {
+        getMethod(query, projectEmbedId, page, perPage, projectEmbedOrder, oneUserSearch, oneProjectSearch, oneAccessSearch, noStatus, oneOrZeroAccesses) {
           if (projectEmbedId != null) {
             // Use project api documents method
-            return [() => getProjectDocuments(projectEmbedId, page), null];
+            const extraProps = {};
+            let ordering = DEFAULT_ORDERING;
+            // Grab per page and ordering
+            if (perPage != null) extraProps.per_page = perPage;
+            if (projectEmbedOrder != null) {
+              const sort = PROJECT_EMBED_SORTS[projectEmbedOrder];
+              if (sort != null) {
+                ordering = sort;
+              }
+            }
+            return [() => getProjectDocuments(projectEmbedId, page, { per_page: perPage }, ordering), null];
           }
           if (query == null) return null;  // Wait for redirect
           // Use search method

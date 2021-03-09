@@ -1,5 +1,6 @@
 import { Svue } from "svue";
 import { router } from "@/router/router";
+import { truthyParamValue } from '@/util/url';
 
 // Used to calculate the most restricted level of access
 // in a group of documents
@@ -93,7 +94,7 @@ export const layout = new Svue({
     sameProp(accessEditDocuments) {
       // Return the given property if all docs have the same value for that property
       // Otherwise, return null
-      return function(prop) {
+      return function (prop) {
         let value = null;
         for (let i = 0; i < accessEditDocuments.length; i++) {
           const doc = accessEditDocuments[i];
@@ -108,6 +109,22 @@ export const layout = new Svue({
     },
     projectCollaboratorAccessOpen(projectEditUser) {
       return projectEditUser != null;
+    },
+
+    // Project embed settings
+    projectEmbedTitle(router) {
+      const route = router.resolvedRoute;
+      if (route == null) return null;
+      if (route.name != 'project') return null;
+      if (route.props == null) return null;
+      return route.props.title;
+    },
+    projectEmbedSearchBar(router) {
+      const route = router.resolvedRoute;
+      if (route == null) return true;
+      if (route.name != 'project') return true;
+      if (route.props == null) return true;
+      return truthyParamValue(route.props.searchbar);
     },
   },
 });

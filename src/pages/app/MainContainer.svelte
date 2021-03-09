@@ -48,6 +48,11 @@
     nav("app");
     window.location.reload();
   }
+
+  // Iframe resizing
+  let containerWidth = null;
+  let containerHeight = null;
+  let containerElem = null;
 </script>
 
 <style lang="scss">
@@ -107,7 +112,8 @@
   {:else if $layout.projectCollaboratorAccessOpen}
     <Modal
       component={ProjectAccessDialog}
-      on:close={hideProjectCollaboratorAccess} />
+      on:close={hideProjectCollaboratorAccess}
+    />
   {:else if $layout.projectCollaboratorsOpen}
     <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
   {:else if $layout.projectOpen}
@@ -121,8 +127,13 @@
     <Hamburger on:toggle={emit.expandSidebar} />
   {/if}
   {#if !$documents.error}
-    <div class="container">
-      <Documents {embed} />
+    <div
+      class="container"
+      bind:this={containerElem}
+      bind:offsetWidth={containerWidth}
+      bind:offsetHeight={containerHeight}
+    >
+      <Documents {embed} {containerElem} {containerWidth} {containerHeight} />
     </div>
   {:else}
     <div class="container error">

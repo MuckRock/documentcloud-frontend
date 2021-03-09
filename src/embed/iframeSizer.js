@@ -1,11 +1,12 @@
 import { timeoutify } from '@/util/closure';
 
-export function informSize(element, useScrollDimension = true) {
+export function informSize(element, useScrollDimension = true, updateStyleProps = false) {
   // Inform a parent window about an embed size
   const update = () => {
     window.parent.postMessage({
       width: Math.max(useScrollDimension ? element.scrollWidth : 0, element.offsetWidth),
-      height: Math.max(useScrollDimension ? element.scrollHeight : 0, element.offsetHeight)
+      height: Math.max(useScrollDimension ? element.scrollHeight : 0, element.offsetHeight),
+      updateStyleProps,
     }, "*");
   };
 
@@ -17,12 +18,23 @@ export function informSize(element, useScrollDimension = true) {
 export function setupResizeEvent(iframe) {
   window.addEventListener('message', (event) => {
     if (event.source == iframe.contentWindow) {
-      const { width, height } = event.data;
+      const { width, height, updateStyleProps } = event.data;
       if (width != null) {
         iframe.width = width;
       }
       if (height != null) {
         iframe.height = height;
+        if (updateStyleProps) {
+          // Set max height
+          const existingMaxHeight = parseFloat(iframe.dataset.cacheheight || iframe.style.maxHeight);
+          if (!isNaN(existingMaxHeight) && existingMaxHeight != null) {
+            // Cache original maxheight
+            iframe.dataset.cacheheight = existingMaxHeight;
+            iframe.style.maxHeight = '' + Math.min(existingMaxHeight, height) + 'px';
+          } else {
+            iframe.style.maxHeight = '' + height + 'px';
+          }
+        }
       }
     }
   });

@@ -1,6 +1,7 @@
 <script>
   import Link from "@/router/Link";
   import { onMount, onDestroy } from "svelte";
+  import { getQueryStringParams, falsyParamValue } from "@/util/url";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -15,7 +16,7 @@
       if (elem.scrollIntoView) {
         elem.scrollIntoView({
           block: "start",
-          behavior: smooth ? "smooth" : "auto"
+          behavior: smooth ? "smooth" : "auto",
         });
         return true;
       } else {
@@ -30,11 +31,11 @@
 
     const headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
     const contents = [];
-    headers.forEach(header => {
+    headers.forEach((header) => {
       contents.push({
         text: header.textContent.trim(),
         id: header.id,
-        level: parseInt(header.tagName.substr(1))
+        level: parseInt(header.tagName.substr(1)),
       });
       let id = header.id;
       if (id == null) return;
@@ -57,14 +58,14 @@
       if (level == 1) {
         tree.children.push({
           node,
-          children: []
+          children: [],
         });
         return;
       }
       if (tree.children.length == 0) {
         const newNode = {
           node: null,
-          children: []
+          children: [],
         };
         tree.children.push(newNode);
         return addNode(node, level - 1, newNode);
@@ -72,12 +73,12 @@
         return addNode(
           node,
           level - 1,
-          tree.children[tree.children.length - 1]
+          tree.children[tree.children.length - 1],
         );
       }
     };
 
-    headers.forEach(header => {
+    headers.forEach((header) => {
       addNode({ text: header.text, id: header.id }, header.level, root);
     });
 
@@ -89,7 +90,7 @@
     const generateToc = (tree, depth = 0, first = true) => {
       if (tree.children.length == 0 || depth >= 2) return null;
       const ul = document.createElement("ul");
-      tree.children.forEach(child => {
+      tree.children.forEach((child) => {
         const li = document.createElement("li");
         li.className = first ? "" : "deep";
         if (child.node != null) {
@@ -108,7 +109,18 @@
     sidebarElem.appendChild(generateToc(root));
   }
 
+  let hideToc = false;
+
   onMount(async () => {
+    const queryReplacements = getQueryStringParams(window.location.href);
+    for (const key in queryReplacements) {
+      if (queryReplacements.hasOwnProperty(key)) {
+        content = content.replace(`{{{${key}}}}`, queryReplacements[key]);
+      }
+    }
+
+    if (falsyParamValue(queryReplacements.toc)) hideToc = true;
+
     if (location.hash.startsWith("#")) {
       if (!navTo(location.hash)) {
         location.replace(location.hash);
@@ -117,7 +129,9 @@
     // Make scrolling to hashes smooth
     document.documentElement.style.scrollBehavior = "smooth";
     const headers = injectLinkReferences();
-    buildToc(headers);
+    if (!hideToc) {
+      buildToc(headers);
+    }
   });
 
   onDestroy(() => {
@@ -306,9 +320,11 @@
     </div>
   </header>
   <div class="content" bind:this={contentElem}>
-    <div class="toccontainer">
-      <div class="toc" bind:this={sidebarElem} />
-    </div>
+    {#if !hideToc}
+      <div class="toccontainer">
+        <div class="toc" bind:this={sidebarElem} />
+      </div>
+    {/if}
     {@html content}
   </div>
 </div>

@@ -32,7 +32,13 @@
   // Animation
   import { flip } from "svelte/animate";
 
+  // Embed sizing
+  import { informSize } from "@/embed/iframeSizer";
+
   export let embed = false;
+  export let containerElem = null;
+  export let containerWidth = null;
+  export let containerHeight = null;
 
   let preUploadFiles = [];
 
@@ -98,6 +104,19 @@
       }
     }
     title = newTitle;
+  }
+
+  // Once content is loaded in an embed, update parent iframe dimensions
+  $: {
+    if (
+      !$layout.loading &&
+      containerElem != null &&
+      containerWidth != null &&
+      containerHeight != null &&
+      embed
+    ) {
+      informSize(containerElem, false, true);
+    }
   }
 </script>
 
@@ -196,6 +215,12 @@
       display: block;
     }
   }
+
+  .projectembedtitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0.5em 0 1em -10px;
+  }
 </style>
 
 <Loader active={$layout.loading}>
@@ -215,7 +240,10 @@
         {/if}
         <AuthSection />
       {/if}
-      {#if embed && $search.params != null && $search.params.projectEmbedId != null}
+      {#if embed && $layout.projectEmbedTitle != null}
+        <div class="projectembedtitle">{$layout.projectEmbedTitle}</div>
+      {/if}
+      {#if embed && $search.params != null && $search.params.projectEmbedId != null && $layout.projectEmbedSearchBar}
         <!-- Use a search link -->
         <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
       {:else if !embed}
