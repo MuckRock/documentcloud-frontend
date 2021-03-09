@@ -85,7 +85,7 @@ export const documents = new Svue({
       return false;
     },
     allDocuments(search) {
-      return search.documents;
+      return search.documents.filter(doc => !doc.deleted);
     },
     error(search) {
       return search.error;
