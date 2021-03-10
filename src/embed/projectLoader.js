@@ -55,7 +55,7 @@ function injectIframe(options, container) {
   }
 
   // Set up style
-  let style = 'border:solid 1px #aaa;';
+  let style = 'border:solid 1px #aaa;box-sizing:content-box;';
   style += (options.width != null ? 'width:' + options.width + 'px;' : 'width:100%;');
   style += (options.height != null ? 'height:' + options.height + 'px;' : 'height:100%;max-height:' + (Math.max(window.innerHeight - 100, 500)) + 'px;min-height:235px;');
 
