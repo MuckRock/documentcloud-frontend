@@ -30,10 +30,6 @@
       padding: 10px 15px 20px 15px;
     }
 
-    &.embed {
-      padding: 5px 15px 10px 15px;
-    }
-
     :global(img),
     > *,
     .fullstatus {
@@ -45,6 +41,18 @@
       object-fit: contain;
 
       @media only screen and (max-width: $mobileBreak) {
+        width: 43px;
+        height: 54px;
+        font-size: 12px;
+      }
+    }
+
+    &.embed {
+      padding: 5px 15px 10px 15px;
+
+      :global(img),
+      > *,
+      .fullstatus {
         width: 43px;
         height: 54px;
         font-size: 12px;
