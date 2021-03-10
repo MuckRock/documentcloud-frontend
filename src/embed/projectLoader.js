@@ -10,7 +10,7 @@ function logInvalidQuery(options, container) {
   // Set up style
   let style = 'border:solid 1px #aaa;';
   style += (options.width != null ? 'width:' + options.width + 'px;' : 'width:100%;');
-  style += (options.height != null ? 'height:' + options.height + 'px;' : 'height:100%;max-height:' + (Math.max(window.innerHeight - 100, 500)) + 'px;min-height:400px');
+  style += (options.height != null ? 'height:' + options.height + 'px;' : 'height:100%;max-height:' + (Math.max(window.innerHeight - 100, 500)) + 'px;min-height:550px');
 
   iframe.style = style;
   iframe.title = options.title != null ? options.title + ' (Hosted by DocumentCloud)' : 'DocumentCloud Project Embed';
