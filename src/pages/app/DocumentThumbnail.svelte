@@ -74,9 +74,15 @@
 <div class="img" class:embed>
   <span class="imgwrap">
     {#if document.viewable}
-      <Link newPage={embed} to="viewer" params={{ id: document.slugId }}>
-        <Image src={document.thumbnail} />
-      </Link>
+      {#if embed && document.publishedUrl != null}
+        <a href={document.publishedUrl} rel="noreferrer" target="_blank"
+          ><Image src={document.thumbnail} /></a
+        >
+      {:else}
+        <Link newPage={embed} to="viewer" params={{ id: document.slugId }}>
+          <Image src={document.thumbnail} />
+        </Link>
+      {/if}
     {:else if document.pending}
       <Tooltip>
         <div slot="caption" class="caption">
