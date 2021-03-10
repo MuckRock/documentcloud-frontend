@@ -82,7 +82,7 @@
 <div class="img" class:embed>
   <span class="imgwrap">
     {#if document.viewable}
-      {#if embed && document.publishedUrl != null}
+      {#if embed && document.publishedUrl != null && document.publishedUrl.trim().length > 0}
         <a href={document.publishedUrl} rel="noreferrer" target="_blank"
           ><Image src={document.thumbnail} /></a
         >
