@@ -129,7 +129,7 @@
     .inlinecard {
       display: inline-block;
       vertical-align: top;
-      width: 300px;
+      width: 275px;
 
       @media only screen and (max-width: $mobileBreak) {
         width: 240px;
