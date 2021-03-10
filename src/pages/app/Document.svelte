@@ -225,7 +225,7 @@
       margin-bottom: 20px;
 
       :global(.content) {
-        max-height: 100px;
+        max-height: 135px;
       }
     }
   }
