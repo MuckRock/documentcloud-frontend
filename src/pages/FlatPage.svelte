@@ -2,6 +2,7 @@
   import Link from "@/router/Link";
   import { onMount, onDestroy } from "svelte";
   import { getQueryStringParams, falsyParamValue } from "@/util/url";
+  import { inIframe } from "@/util/iframe";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -314,9 +315,15 @@
 <div class="page">
   <header>
     <div class="logo">
-      <Link to="app">
-        {@html mastLogoSvg}
-      </Link>
+      {#if inIframe()}
+        <a href={process.env.APP_URL} target="_blank" rel="noreferrer"
+          >{@html mastLogoSvg}</a
+        >
+      {:else}
+        <Link to="app">
+          {@html mastLogoSvg}
+        </Link>
+      {/if}
     </div>
   </header>
   <div class="content" bind:this={contentElem}>

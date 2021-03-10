@@ -115,7 +115,7 @@
       containerHeight != null &&
       embed
     ) {
-      informSize(containerElem, false, true);
+      informSize(containerElem, true, true);
     }
   }
 </script>
@@ -245,7 +245,10 @@
       {/if}
       {#if embed && $search.params != null && $search.params.projectEmbedId != null && $layout.projectEmbedSearchBar}
         <!-- Use a search link -->
-        <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
+        <SearchLink
+          link={process.env.APP_URL +
+            projectIdUrl($search.params.projectEmbedId)}
+        />
       {:else if !embed}
         <!-- Don't show search bar in embed (for now) -->
         <SearchBar {embed} />

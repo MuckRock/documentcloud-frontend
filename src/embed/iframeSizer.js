@@ -26,13 +26,17 @@ export function setupResizeEvent(iframe) {
         iframe.height = height;
         if (updateStyleProps) {
           // Set max height
-          const existingMaxHeight = parseFloat(iframe.dataset.cacheheight || iframe.style.maxHeight);
-          if (!isNaN(existingMaxHeight) && existingMaxHeight != null) {
+          const existingMaxHeight = parseFloat(iframe.dataset.cachemaxheight || iframe.style.maxHeight);
+          const existingMinHeight = parseFloat(iframe.dataset.cacheminheight || iframe.style.minHeight);
+          if (!isNaN(existingMaxHeight) && existingMaxHeight != null && !isNaN(existingMinHeight) && existingMinHeight != null) {
             // Cache original maxheight
-            iframe.dataset.cacheheight = existingMaxHeight;
+            iframe.dataset.cachemaxheight = existingMaxHeight;
+            iframe.dataset.cacheminheight = existingMinHeight;
             iframe.style.maxHeight = '' + Math.min(existingMaxHeight, height) + 'px';
+            iframe.style.minHeight = '' + Math.max(existingMinHeight, height) + 'px';
           } else {
             iframe.style.maxHeight = '' + height + 'px';
+            iframe.style.minHeight = '' + height + 'px';
           }
         }
       }
