@@ -25,7 +25,7 @@
     DocumentCloud is an all-in-one platform for documents: upload, organize,
     analyze, annotate, search, and embed.
   </p>
-  <p class="note">
+  <!-- <p class="note">
     Please note that this is currently an invite-only beta. You can
     <a href="https://documentcloud.org">
       log in to the classic version of DocumentCloud here.
@@ -35,5 +35,5 @@
       href="https://documentcloud.us11.list-manage.com/subscribe?u=4e1ca6e52b3163639d641f360&id=20a793193a">
       subscribe to our newsletter.
     </a>
-  </p>
+  </p> -->
 </HomeTemplate>
