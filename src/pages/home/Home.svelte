@@ -1,5 +1,6 @@
 <script>
   import HomeTemplate from "./HomeTemplate";
+  import Link from "@/router/Link";
 </script>
 
 <style lang="scss">
@@ -23,6 +24,8 @@
 <HomeTemplate showMast="true">
   <p>
     DocumentCloud is an all-in-one platform for documents: upload, organize,
-    analyze, annotate, search, and embed.
+    analyze, annotate, search, and embed. <Link to="app"
+      >View public documents</Link
+    >
   </p>
 </HomeTemplate>
