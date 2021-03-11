@@ -4,7 +4,7 @@ The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
 
 ## Usage
 
-This project is a standard Node project but wrapped to run in Docker compose. In order to use this project, [Squarelet](https://github.com/muckrock/squarelet) and [DocumentCloud (Django)](https://github.com/muckrock/documentcloud) must already be running.
+This project is a standard Node project but wrapped to run in Docker compose. In order to use this project, [Squarelet](https://github.com/muckrock/squarelet) and [DocumentCloud (Django)](https://github.com/muckrock/documentcloud) must already be up and running, following the steps in their READMEs.
 
 In order to install, run:
 
@@ -18,11 +18,17 @@ Once the node modules have been installed, start the app with:
 make dev
 ```
 
-If your hosts are set up properly, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/).
+Set up your hosts:
+
+```bash
+sudo echo "127.0.0.1 www.dev.documentcloud.org" >> /etc/hosts
+```
+
+Once everything is up and running, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/).
 
 ## Building for production
 
-Run `make build` to build the production version of the app. The project will be output in the `public` directory. Webpack will also run a bundle analyzer on port 80, exposing the size of various components of your application. You can browse it at the same dev URL: [www.dev.documentcloud.org](http://www.dev.documentcloud.org/)
+Run `make build` to build the production version of the app. The project will be output in the `public` directory.
 
 ## Project structure
 
