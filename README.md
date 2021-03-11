@@ -1,10 +1,10 @@
 # DocumentCloud frontend
 
-The main frontend for DocumentCloud, written in Svelte 3.
+The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
 
 ## Usage
 
-This project is a standard Node project but wrapped to run in Docker compose. In order to use this project, Squarelet and DocumentCloud (Django) must already be running.
+This project is a standard Node project but wrapped to run in Docker compose. In order to use this project, [Squarelet](https://github.com/muckrock/squarelet) and [DocumentCloud (Django)](https://github.com/muckrock/documentcloud) must already be running.
 
 In order to install, run:
 
@@ -72,11 +72,23 @@ documentcloud-svelte
 |   | # Global stores and functions to represent the document manager state
 |   └───manager
 |   |
+|   | # Global stores and functions to represent the viewer state
+|   └───viewer
+|   |
+|   | # Supporting code for search functionality
+|   └───search
+|   |
 |   | # Classes to represent data like documents and projects
 |   └───structure
 |   |
 |   | # Common utility functions to handle simple, general purpose tasks
 |   └───util
+|   |
+|   | # Code to support the main event loop
+|   └───ticker
+|   |
+|   | # Legacy embed loader scripts
+|   └───embed
 |   |
 |   | # Router code and components
 |   └───router
@@ -92,7 +104,7 @@ documentcloud-svelte
 |   │   main.js
 |
 |   # Environment file for variables to be inlined into the app
-|   .env
+|   .env / .env.staging / .env.production
 |
 |   # The Docker-compose files to build and run the application
 |   local.builder.yml
