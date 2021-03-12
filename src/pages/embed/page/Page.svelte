@@ -7,6 +7,7 @@
   import { getDocument } from "@/api/document";
   import { getAnnotations } from "@/api/annotation";
   import { textUrl } from "@/api/viewer";
+  import { embedUrl } from "@/api/embed";
 
   export let id;
   export let page;

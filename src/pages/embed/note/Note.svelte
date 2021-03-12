@@ -6,6 +6,7 @@
   import { getAnnotation } from "@/api/annotation";
   import { getDocument } from "@/api/document";
   import { pageImageUrl } from "@/api/viewer";
+  import { embedUrl } from "@/api/embed";
 
   export let id;
   export let noteId;
