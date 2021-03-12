@@ -6,7 +6,7 @@
   import { onMount, tick } from "svelte";
   import { getDocument } from "@/api/document";
   import { getAnnotations } from "@/api/annotation";
-  import { textUrl } from "@/api/viewer";
+  import { textUrl, pageImageUrl } from "@/api/viewer";
   import { embedUrl } from "@/api/embed";
 
   export let id;
