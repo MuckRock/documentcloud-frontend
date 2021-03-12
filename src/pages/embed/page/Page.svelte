@@ -17,6 +17,8 @@
 
   $: idPart = id.split("-")[0];
   $: pageUrl = doc == null ? "" : doc.pageUrl(page);
+  $: canonicalPageUrl = doc == null ? "" : doc.canonicalPageUrl(page);
+  $: title = doc == null ? "" : `${doc.title} (p. ${page})`;
   $: aspect = doc == null ? 1 : doc.pageSizes[page - 1];
 
   $: shimPlacements =
@@ -106,6 +108,30 @@
     }
   }
 </style>
+
+<svelte:head>
+  {#if doc != null && canonicalPageUrl != "" && title != ""}
+    <!-- Insert canonical URL -->
+    <link rel="canonical" href={canonicalPageUrl} />
+
+    <!-- Social cards -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content={canonicalPageUrl} />
+    <meta property="og:url" content={canonicalPageUrl} />
+    <meta property="og:title" content={title} />
+    <title>{title} - DocumentCloud</title>
+    <link
+      rel="alternate"
+      type="application/json+oembed"
+      href={embedUrl(canonicalPageUrl)}
+      {title}
+    />
+    {#if doc.description != null && doc.description.trim().length > 0}
+      <meta property="og:description" content={doc.description} />
+    {/if}
+    <meta property="og:image" content={pageImageUrl(doc, page - 1, 700, 1)} />
+  {/if}
+</svelte:head>
 
 <div class="dc-embed" bind:this={elem}>
   {#if doc != null}

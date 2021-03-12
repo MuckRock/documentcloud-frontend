@@ -16,16 +16,20 @@
   let note = null;
   let elem;
 
+  $: canonicalNoteUrl = note == null ? "" : doc.canonicalNoteUrl(note);
+  $: title =
+    doc == null || note == null ? "" : `${note.title} (p. ${note.page + 1})`;
+
   $: aspect = doc == null || note == null ? 0 : doc.pageSizes[note.page];
   const docWidth = 700;
   $: maxWidth = note == null ? 0 : docWidth * note.width;
 
   const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
-    .map(x => x.split(":"))
-    .map(x => [parseFloat(x[1]), x[0]])
+    .map((x) => x.split(":"))
+    .map((x) => [parseFloat(x[1]), x[0]])
     .sort((a, b) => a[0] - b[0]);
   const LARGE_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
-    x => x[0][1] == "large"
+    (x) => x[0][1] == "large",
   )[0];
 
   onMount(async () => {
@@ -153,10 +157,37 @@
   }
 </style>
 
+<svelte:head>
+  {#if doc != null && note != null && canonicalNoteUrl != "" && title != ""}
+    <!-- Insert canonical URL -->
+    <link rel="canonical" href={canonicalNoteUrl} />
+
+    <!-- Social cards -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content={canonicalNoteUrl} />
+    <meta property="og:url" content={canonicalNoteUrl} />
+    <meta property="og:title" content={title} />
+    <title>{title} - DocumentCloud</title>
+    <link
+      rel="alternate"
+      type="application/json+oembed"
+      href={embedUrl(canonicalNoteUrl)}
+      {title}
+    />
+    {#if note.description != null && note.description.trim().length > 0}
+      <meta property="og:description" content={note.description} />
+    {/if}
+    <meta property="og:image" content={pageImageUrl(doc, note.page, 700, 1)} />
+  {/if}
+</svelte:head>
+
 <div
   class="DC-note"
   bind:this={elem}
-  style={note != null && doc != null ? `background-image: url(${pageImageUrl(doc, note.page, LARGE_WIDTH)})` : ''}>
+  style={note != null && doc != null
+    ? `background-image: url(${pageImageUrl(doc, note.page, LARGE_WIDTH)})`
+    : ""}
+>
   {#if note != null && doc != null}
     <div class="DC-note-header">
       <a
@@ -164,7 +195,8 @@
         class="DC-note-embed-resource"
         target="_blank"
         title="View the note ‘{note.title}’ in its original document context on
-        DocumentCloud in a new window or tab">
+        DocumentCloud in a new window or tab"
+      >
         <span class="DC-note-title">{note.title}</span>
         <span class="DC-note-page-number">(p. {note.page + 1})</span>
       </a>
@@ -172,24 +204,31 @@
 
     <div
       class="DC-note-image-max-bounds"
-      class:public={note.access == 'public'}
-      class:organization={note.access == 'organization'}
-      class:private={note.access == 'private'}
-      style="max-width: {maxWidth}px;">
+      class:public={note.access == "public"}
+      class:organization={note.access == "organization"}
+      class:private={note.access == "private"}
+      style="max-width: {maxWidth}px;"
+    >
       <div
         class="DC-note-image-aspect-ratio"
-        style="padding-bottom: {(note.height / note.width) * aspect * 100}%">
+        style="padding-bottom: {(note.height / note.width) * aspect * 100}%"
+      >
         <a
           href={doc.noteUrl(note)}
           target="_blank"
           class="DC-note-image-link"
-          style="left: -{(note.x1 * 100) / note.width}%; top: -{(note.y1 * 100) / note.height}%;
-          width: {100 / note.width}%; height: {100 / note.height}%">
+          style="left: -{(note.x1 * 100) / note.width}%; top: -{(note.y1 *
+            100) /
+            note.height}%;
+          width: {100 / note.width}%; height: {100 /
+            note.height}%"
+        >
           <ProgressiveImage
             alt="Page {note.page + 1} of {doc.title}"
             width={docWidth}
             {aspect}
-            page={{ document: doc, pageNumber: note.page }} />
+            page={{ document: doc, pageNumber: note.page }}
+          />
         </a>
       </div>
     </div>
@@ -203,7 +242,8 @@
         href={doc.noteUrl(note)}
         target="_blank"
         title="View the note ‘{note.title}’ in its original document context on
-        DocumentCloud in a new window or tab">
+        DocumentCloud in a new window or tab"
+      >
         View the entire document with
         <span class="DC-note-logotype-link">DocumentCloud</span>
       </a>

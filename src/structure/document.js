@@ -52,6 +52,9 @@ export class Document extends Svue {
         pageUrl(canonicalUrl, pageHashUrl) {
           return page => `${canonicalUrl}${pageHashUrl(page)}`;
         },
+        canonicalPageUrl(canonicalUrl) {
+          return page => `${canonicalUrl}/pages/${page}`
+        },
         relativeCanonicalUrl(slugId) {
           return `/documents/${slugId}`;
         },
@@ -63,6 +66,9 @@ export class Document extends Svue {
         },
         fakeNoteUrl(canonicalUrl) {
           return note => `${canonicalUrl}/annotations/${note.id}`;
+        },
+        canonicalNoteUrl(fakeNoteUrl) {
+          return fakeNoteUrl;
         },
         title(doc) {
           return doc.title;
