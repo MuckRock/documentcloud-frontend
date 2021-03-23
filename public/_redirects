@@ -1,6 +1,6 @@
 http://beta.documentcloud.org/* https://www.documentcloud.org/:splat 301!
 https://beta.documentcloud.org/* https://www.documentcloud.org/:splat 301!
 
-/api/oembed.json https://api.beta.documentcloud.org/api/oembed/
-/documents/:id/:path https://api.beta.documentcloud.org/files/documents/:id/:path
+/api/oembed.json https://api.www.documentcloud.org/api/oembed/
+/documents/:id/:path https://api.www.documentcloud.org/files/documents/:id/:path
 /*    /index.html   200
