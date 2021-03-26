@@ -35,7 +35,7 @@
   const svgMap = {
     public: publicTagSvg,
     organization: organizationTagSvg,
-    private: privateTagSvg
+    private: privateTagSvg,
   };
 
   const border = 1;
@@ -112,6 +112,10 @@
       pointer-events: none;
       visibility: hidden;
     }
+
+    &.disabled {
+      pointer-events: none;
+    }
   }
 
   .annotation {
@@ -174,7 +178,8 @@
   <div
     class="number"
     use:showIfFullyVisible
-    class:grayed={$layout.displayAnnotate}>
+    class:grayed={$layout.displayAnnotate}
+  >
     <a href="#document/p{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
   </div>
 </div>
@@ -183,7 +188,20 @@
     {page}
     {width}
     {resizeCallback}
-    mutators={[$viewer.pageNotesByPage[page.pageNumber], $doc.showPageNoteInserts, $doc.mode, $layout.displayAnnotate, $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && $layout.displayedAnnotation.isPageNote ? $layout.displayedAnnotation : null, annotationChanger, textPageUpdated]}>
+    mutators={[
+      $viewer.pageNotesByPage[page.pageNumber],
+      $doc.showPageNoteInserts,
+      $doc.mode,
+      $layout.displayAnnotate,
+      $layout.displayedAnnotation != null &&
+      $layout.displayedAnnotation.page == page.pageNumber &&
+      $layout.displayedAnnotation.isPageNote
+        ? $layout.displayedAnnotation
+        : null,
+      annotationChanger,
+      textPageUpdated,
+    ]}
+  >
     <div style="font-size: {scale * 100}%">
       <!-- Check for page notes -->
       {#if $layout.annotating}
@@ -195,7 +213,8 @@
           grayed={$layout.selectNoteEmbed}
           pageNote={true}
           annotation={$layout.displayedAnnotation}
-          mode={$layout.annotateMode} />
+          mode={$layout.annotateMode}
+        />
       {/if}
       {#if $viewer.pageNotesByPage[page.pageNumber] != null}
         {#each $viewer.pageNotesByPage[page.pageNumber] as note}
@@ -206,7 +225,8 @@
             {page}
             pageNote={true}
             annotation={note}
-            mode="view" />
+            mode="view"
+          />
         {/each}
       {/if}
     </div>
@@ -218,7 +238,8 @@
       width={effectiveWidth}
       aspect={page.aspect}
       grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
-      {page} />
+      {page}
+    />
 
     <!-- Markup -->
     {#if $viewer.notesByPage[page.pageNumber] != null}
@@ -229,23 +250,30 @@
             class="tag"
             class:hover={$layout.hoveredNote == note}
             class:grayed={$layout.displayAnnotate}
+            class:disabled={$layout.redacting}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
-            style="top: {note.y1 * 100}%">
+            style="top: {note.y1 * 100}%"
+          >
             {@html svgMap[note.access]}
           </div>
           <div
-            class="annotation selectable"
-            class:public={note.access == 'public'}
-            class:organization={note.access == 'organization'}
-            class:private={note.access == 'private'}
+            class="annotation"
+            class:public={note.access == "public"}
+            class:organization={note.access == "organization"}
+            class:private={note.access == "private"}
             class:grayed={$layout.displayAnnotate}
             class:amplified={$layout.selectNoteEmbed}
             class:hover={$layout.hoveredNote == note}
+            class:selectable={!$layout.redacting}
+            class:disabled={$layout.redacting}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
-            style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; width: {(note.x2 - note.x1) * 100}%;
-            height: {(note.y2 - note.y1) * 100}%" />
+            style="left: {note.x1 * 100}%; top: {note.y1 *
+              100}%; width: {(note.x2 - note.x1) *
+              100}%;
+            height: {(note.y2 - note.y1) * 100}%"
+          />
         {/if}
       {/each}
     {/if}
@@ -256,19 +284,27 @@
         {#if redaction.page == page.pageNumber}
           <div
             class="redaction"
-            style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
-            width: {redaction.width * 100}%; height: {redaction.height * 100}%" />
+            style="left: {redaction.x1 * 100}%; top: {redaction.y1 *
+              100}%;
+            width: {redaction.width *
+              100}%; height: {redaction.height * 100}%"
+          />
         {/if}
       {/each}
     {:else if $layout.annotating}
       {#if $layout.currentAnnotation != null && $layout.currentAnnotation.page == page.pageNumber && !$layout.currentAnnotation.isPageNote}
         <div
           class="annotation"
-          class:public={$layout.currentAnnotation.access == 'public'}
-          class:organization={$layout.currentAnnotation.access == 'organization'}
-          class:private={$layout.currentAnnotation.access == 'private'}
-          style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout.currentAnnotation.y1 * 100}%;
-          width: {$layout.currentAnnotation.width * 100}%; height: {$layout.currentAnnotation.height * 100}%" />
+          class:public={$layout.currentAnnotation.access == "public"}
+          class:organization={$layout.currentAnnotation.access ==
+            "organization"}
+          class:private={$layout.currentAnnotation.access == "private"}
+          style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout
+            .currentAnnotation.y1 * 100}%;
+          width: {$layout
+            .currentAnnotation.width * 100}%; height: {$layout.currentAnnotation
+            .height * 100}%"
+        />
       {/if}
     {:else if $layout.displayAnnotate}
       {#if $layout.displayedAnnotation != null && $layout.displayedAnnotation.page == page.pageNumber && !$layout.displayedAnnotation.isPageNote}
@@ -279,7 +315,8 @@
           width={effectiveWidth}
           annotation={$layout.displayedAnnotation}
           mode={$layout.annotateMode}
-          aspect={page.aspect} />
+          aspect={page.aspect}
+        />
       {/if}
     {/if}
   </div>

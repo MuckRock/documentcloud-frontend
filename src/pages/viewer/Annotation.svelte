@@ -121,7 +121,7 @@
           title,
           description,
           access,
-          annotation
+          annotation,
         );
       } else {
         await createPageAnnotation(
@@ -129,7 +129,7 @@
           title,
           description,
           access,
-          annotation
+          annotation,
         );
         layout.defaultAnnotationAccess = access;
       }
@@ -507,18 +507,22 @@
   class:grayed
   class:behind
   class:pagenote={pageNote}
-  class:up={shift == 'up'}
-  class:public={access == 'public'}
-  class:organization={access == 'organization'}
-  class:private={access == 'private'}
+  class:up={shift == "up"}
+  class:public={access == "public"}
+  class:organization={access == "organization"}
+  class:private={access == "private"}
   class:disabled={$loading}
   on:mousedown|stopPropagation
-  style={shift == 'up' || pageNote ? '' : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}>
+  style={shift == "up" || pageNote
+    ? ""
+    : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}
+>
   <header
     bind:this={annotationElem}
     bind:offsetHeight={headerHeight}
     class:showimage={showImageOnPageNote}
-    class:hidden={shift == 'down'}>
+    class:hidden={shift == "down"}
+  >
     {#if !pageNote}
       <div class="closeflag">
         <span class="closer" on:click={cancelAnnotation}>
@@ -533,7 +537,8 @@
           maxlength={noteTitleLimit}
           bind:this={titleInput}
           placeholder="Annotation Title"
-          bind:value={title} />
+          bind:value={title}
+        />
       {:else}
         <h1>
           {annotation.title}
@@ -549,30 +554,38 @@
       {/if}
     </Loader>
   </header>
-  {#if shift == 'down'}
+  {#if shift == "down"}
     <header />
   {/if}
   {#if !pageNote || showImageOnPageNote}
     <div class="excerpt">
       <div
         class="body"
-        style={showImageOnPageNote ? `height: 0; padding-top: ${annotation.height * aspect * 100}%` : ''}>
+        style={showImageOnPageNote
+          ? `height: 0; padding-top: ${annotation.height * aspect * 100}%`
+          : ""}
+      >
         <div
-          style="margin-top: {-annotation.y1 * aspect * 100 - (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%">
+          style="margin-top: {-annotation.y1 * aspect * 100 -
+            (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%"
+        >
           <ProgressiveImage
             alt="Page {page.pageNumber + 1} of {page.document.title}"
             {width}
             aspect={page.aspect}
-            {page} />
+            {page}
+          />
           <!-- Faded flanks -->
           <div
             class="faded left"
             class:nobottom={showImageOnPageNote}
-            style="left: 0; width: {annotation.x1 * 100}%" />
+            style="left: 0; width: {annotation.x1 * 100}%"
+          />
           <div
             class="faded right"
             class:nobottom={showImageOnPageNote}
-            style="left: {annotation.x2 * 100}%; right: 0" />
+            style="left: {annotation.x2 * 100}%; right: 0"
+          />
         </div>
       </div>
     </div>
@@ -581,8 +594,9 @@
     bind:offsetHeight={footerHeight}
     bind:offsetWidth={footerWidth}
     class:showimage={showImageOnPageNote}
-    class:capsize={pageNote && !editMode}>
-    {#if shift == 'down'}
+    class:capsize={pageNote && !editMode}
+  >
+    {#if shift == "down"}
       <div class="closeflag">
         <span class="closer" on:click={cancelAnnotation}>
           {@html closeInlineSvg}
@@ -596,7 +610,8 @@
             bind:this={titleInput}
             placeholder="Annotation Title"
             bind:value={title}
-            class="padded" />
+            class="padded"
+          />
         {:else}
           <h1>
             {annotation.title}
@@ -618,7 +633,8 @@
       <HtmlEditor
         maxlength={noteContentLimit}
         placeholder="Annotation Description (optional)"
-        bind:value={description} />
+        bind:value={description}
+      />
     {:else}
       <HtmlField content={annotation.content} />
     {/if}
@@ -627,11 +643,17 @@
       <AccessToggle
         stacked={footerWidth < 350}
         bind:access
-        editAccess={page.document.editAccess} />
+        editAccess={page.document.editAccess}
+      />
       <div class="buttonpadded">
         <Button
           on:click={createOrUpdateAnnotation}
-          disabledReason={titleValid ? (changeValid ? null : 'Note remains unchanged') : 'Enter a title for the annotation'}>
+          disabledReason={titleValid
+            ? changeValid
+              ? null
+              : "Note remains unchanged"
+            : "Enter a title for the annotation"}
+        >
           {#if editOverride}Update{:else}Save{/if}
         </Button>
         {#if editOverride}
@@ -642,9 +664,9 @@
     {:else}
       <div class="twopanel">
         <div class="cell leftalign">
-          {#if access == 'organization'}
+          {#if access == "organization"}
             This note is only visible to you and your organization
-          {:else if access == 'private'}
+          {:else if access == "private"}
             This private note is only visible to you
           {/if}
         </div>
