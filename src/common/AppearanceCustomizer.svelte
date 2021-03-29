@@ -48,7 +48,7 @@
     border: solid 1px gainsboro;
     border-radius: $radius;
     position: relative;
-    overflow: auto;
+    overflow: hidden;
     margin: 5px 0;
   }
 

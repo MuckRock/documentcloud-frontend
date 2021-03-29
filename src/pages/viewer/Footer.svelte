@@ -101,7 +101,7 @@
       <div class="cell center" {style}>
         <Paginator />
       </div>
-      <div class="cell side hide right floatright" {style}>
+      <div class="cell side right floatright" {style}>
         <span class="hide ib adjustright" class:hideearly={$layout.embed}>
           <Zoom />
         </span>
