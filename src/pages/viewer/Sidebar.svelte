@@ -181,7 +181,11 @@
           </div>
         {/if}
         <small>
-          <p>Contributed by {$viewer.document.userOrgString}</p>
+          <p>
+            Contributed by {$layout.showOrg
+              ? $viewer.document.orgString
+              : $viewer.document.userOrgString}
+          </p>
         </small>
         {#if $viewer.document.editAccess}
           <div>

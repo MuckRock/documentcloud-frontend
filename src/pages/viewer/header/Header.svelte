@@ -1,9 +1,8 @@
 <script>
   // Headers
-  import CompactHeader from "./CompactHeader";
   import TitleHeader from "./TitleHeader";
 
-  import { layout, initiateSearch } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout";
 </script>
 
 <style lang="scss">
@@ -23,12 +22,9 @@
 <header
   class="vheader"
   class:disabled={$layout.disableControls}
-  style="height: {$layout.headerHeight}px">
+  style="height: {$layout.headerHeight}px"
+>
   <div class="vcontent">
-    {#if $layout.compact}
-      <CompactHeader />
-    {:else}
-      <TitleHeader />
-    {/if}
+    <TitleHeader />
   </div>
 </header>

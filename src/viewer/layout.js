@@ -40,6 +40,10 @@ export const layout = new Svue({
       hideTextOption: false,
       // Hide PDF link
       hidePdfLink: false,
+      // Show only organization (not user)
+      showOrg: false,
+      // Show fullscreen button
+      showFullscreen: true,
 
       loading: false,
       error: null,
@@ -92,6 +96,8 @@ export const layout = new Svue({
         this.title = !this.embed || truthyParamValue(route.props.title);
         this.hideTextOption = falsyParamValue(route.props.text);
         this.hidePdfLink = falsyParamValue(route.props.pdf);
+        this.showOrg = truthyParamValue(route.props.onlyshoworg);
+        this.showFullscreen = !falsyParamValue(route.props.fullscreen);
         const sidebarValue = route.props.sidebar;
         if (sidebarValue != null) {
           this.showSidebar = truthyParamValue(sidebarValue);

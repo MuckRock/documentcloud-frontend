@@ -41,10 +41,10 @@
       font-size: 18px;
       margin: 0 5px;
       word-break: break-all;
+    }
 
-      &.padleft {
-        margin-left: 30px;
-      }
+    .padleft {
+      margin-left: 30px;
     }
 
     h2 {
@@ -72,8 +72,14 @@
       {#if !$layout.embed && $viewer.document.readable}
         <Loader active={true} pad={true} />
       {/if}
-      <h1 class:padleft={$layout.embed}>{$viewer.document.title}</h1>
-      <h2>Contributed by {$viewer.document.userOrgString}</h2>
+      {#if $layout.title}
+        <h1 class:padleft={$layout.embed}>{$viewer.document.title}</h1>
+        <h2>
+          Contributed by {$layout.showOrg
+            ? $viewer.document.orgString
+            : $viewer.document.userOrgString}
+        </h2>
+      {/if}
     </div>
   {/if}
 </div>

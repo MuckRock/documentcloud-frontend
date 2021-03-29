@@ -105,7 +105,7 @@
         <span class="hide ib adjustright" class:hideearly={$layout.embed}>
           <Zoom />
         </span>
-        {#if $layout.embed}
+        {#if $layout.embed && $layout.showFullscreen}
           <FullScreen />
         {/if}
       </div>

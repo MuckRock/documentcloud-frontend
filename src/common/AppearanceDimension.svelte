@@ -7,12 +7,20 @@
 
   export let option;
   export let help;
-  let selected = option.selected;
+  let value = option.selected;
+  let selected = option.selected == 0 ? 0 : 1;
+  let fixed = option.selected == 0 ? 500 : option.selected;
 
   $: {
-    if (selected != option.selected) {
-      selected = option.selected;
+    if (fixed < 0) fixed = 1;
+  }
+  $: newValue = selected == 0 ? 0 : fixed;
+
+  $: {
+    if (value != newValue) {
+      option.selected = newValue;
       emit.change();
+      value = newValue;
     }
   }
 </script>
@@ -58,6 +66,12 @@
           margin: 5px 0 5px 24px;
           color: $gray;
         }
+
+        .numinput {
+          width: 50px;
+          float: right;
+          margin-left: 8px;
+        }
       }
     }
   }
@@ -66,14 +80,22 @@
 <div class="toggle">
   <h1>{option.title}</h1>
   <div class="labels">
-    {#each option.values as value, i}
-      <label>
-        <input type="radio" value={i} bind:group={option.selected} />
-        <h2>{value[0]}</h2>
-        {#if help}
-          <p>{value[1]}</p>
-        {/if}
-      </label>
-    {/each}
+    <label>
+      <input type="radio" value={0} bind:group={selected} />
+      <h2>Responsive (default)</h2>
+      {#if help}
+        <p>Adapts to 100% of the container size</p>
+      {/if}
+    </label>
+    <label>
+      <input type="radio" value={1} bind:group={selected} />
+      <h2>Fixed (px)</h2>
+      {#if selected == 1}
+        <input class="numinput" type="number" min="1" bind:value={fixed} />
+      {/if}
+      {#if help}
+        <p>Dimension size in pixels</p>
+      {/if}
+    </label>
   </div>
 </div>

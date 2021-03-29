@@ -328,6 +328,12 @@ export class Document extends Svue {
           }
           return `${userName} (${organizationName})`;
         },
+        orgString(individualOrg, userName, organizationName) {
+          if (individualOrg || organizationName == null) {
+            return userName;
+          }
+          return organizationName;
+        },
         pageCountString(pageCount) {
           if (pageCount == 0) return "";
           return handlePlural(pageCount, "page", true);

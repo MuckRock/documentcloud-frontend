@@ -95,8 +95,9 @@
 <div class="shareoptions">
   <div
     class="shareoption"
-    class:selected={shareOption == 'embed'}
-    on:click={() => (shareOption = 'embed')}>
+    class:selected={shareOption == "embed"}
+    on:click={() => (shareOption = "embed")}
+  >
     <div class="logo">
       {@html embedSvg}
     </div>
@@ -104,8 +105,9 @@
   </div>
   <div
     class="shareoption"
-    class:selected={shareOption == 'link'}
-    on:click={() => (shareOption = 'link')}>
+    class:selected={shareOption == "link"}
+    on:click={() => (shareOption = "link")}
+  >
     <div class="logo">
       {@html linkSvg}
     </div>
@@ -114,7 +116,10 @@
   {#if !errorOccurred}
     <a
       target="_blank"
-      href="https://twitter.com/intent/tweet?text={encodeURIComponent(tweetText)}">
+      href="https://twitter.com/intent/tweet?text={encodeURIComponent(
+        tweetText,
+      )}"
+    >
       <div class="shareoption">
         <div class="logo">
           {@html twitterSvg}
@@ -125,14 +130,15 @@
   {/if}
 </div>
 
-{#if shareOption == 'embed'}
+{#if shareOption == "embed"}
   <p>{embedDescription}</p>
 
   {#if embedText != null}
     <textarea
       class:error={errorOccurred}
       bind:this={embedElem}
-      value={embedText} />
+      value={embedText}
+    />
   {:else}<textarea disabled>Loading...</textarea>{/if}
 
   {#if !errorOccurred}
@@ -145,7 +151,8 @@
         <a
           class="link"
           target="_blank"
-          href="https://wordpress.org/plugins/documentcloud/">
+          href="https://wordpress.org/plugins/documentcloud/"
+        >
           plugin required
         </a>
       </p>
@@ -156,17 +163,20 @@
     {/if}
   {/if}
 
+  <slot />
+
   {#if embedCode != null}
     <p><b>Preview:</b></p>
     <div class="preview">
       {@html embedCode}
     </div>
   {/if}
-{:else if shareOption == 'link'}
+{:else if shareOption == "link"}
   <input
     class:error={errorOccurred}
     bind:this={linkElem}
-    value={linkDisplayText} />
+    value={linkDisplayText}
+  />
   {#if !errorOccurred}
     <div class="buttonpadded">
       <Button on:click={() => copy(linkElem)}>Copy URL</Button>
