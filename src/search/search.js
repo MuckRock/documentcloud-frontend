@@ -80,20 +80,20 @@ export function allDocumentsUrl() {
 
 export function projectUrl(project) {
   return searchUrl(
-    `project:${slugify(project.title, project.id)} `
+    `+project:${slugify(project.title, project.id)} `
   );
 }
 
 export function projectIdUrl(projectId) {
   return searchUrl(
-    `project:${projectId} `
+    `+project:${projectId} `
   );
 }
 
 export function userOrgUrl(obj, key, publicAccessOnly = false) {
-  const access = publicAccessOnly ? "access:public " : "";
+  const access = publicAccessOnly ? "+access:public " : "";
   return searchUrl(
-    `${key}:${slugify(obj.name, obj.id)} ${access}`,
+    `+${key}:${slugify(obj.name, obj.id)} ${access}`,
   );
 }
 
