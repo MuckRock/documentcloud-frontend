@@ -139,6 +139,17 @@
     message="The document you requested either does not exist or you lack
     permission to access it"
   />
+{:else if $viewer.document != null && $viewer.document.pending}
+  <NotFound
+    title="Document is processing"
+    message="The document you requested is processing and will automatically refresh when it is ready"
+    showProgress={true}
+  />
+{:else if $viewer.document != null && $viewer.document.error}
+  <NotFound
+    title="Document has encountered an error"
+    message="A processing error has been encountered in the document you requested. If you have edit permissions, try force reprocessing the document through the edit menu in the document manager"
+  />
 {:else if $viewer.showPending}
   <NotFound
     title="Document not accessible"

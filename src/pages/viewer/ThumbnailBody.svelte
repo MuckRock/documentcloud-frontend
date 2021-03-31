@@ -150,6 +150,7 @@
     :global(img) {
       width: $thumbwidth;
       height: $thumbheight;
+      object-fit: contain;
     }
 
     .item {
@@ -206,6 +207,8 @@
         background: white;
         outline: $normaloutline;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
+        width: 100%;
+        height: 100%;
         position: relative;
         cursor: pointer;
         &:hover {

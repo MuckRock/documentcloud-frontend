@@ -2,11 +2,11 @@ import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { truthyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
-import { getDocument, redactDocument, searchDocument } from "@/api/document";
+import { getDocument, redactDocument, searchDocument, modifyDocument } from "@/api/document";
 import { search } from '@/search/search';
 import { showConfirm } from "@/manager/confirmDialog";
 import { markAsDirty, documents } from '@/manager/documents';
-import { router, nav } from "@/router/router";
+import { router } from "@/router/router";
 import {
   createAnnotation,
   updateAnnotation,
@@ -103,8 +103,8 @@ export const layout = new Svue({
   },
   computed: {
     pollEvents(viewer) {
-      // Update document only if it is readable
-      if (viewer.document == null || !viewer.document.readable) return [];
+      // Update document only if it is readable or pending (processing)
+      if (viewer.document == null || !viewer.document.processing) return [];
       return [
         async () => {
           const doc = await getDocument(viewer.document.id, [
@@ -331,16 +331,45 @@ function pushRedaction() {
 export function redact() {
   showConfirm(
     "Confirm redactions",
-    "Are you sure you wish to redact the current document? If you continue, the document viewer will close temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
+    "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
     "Continue",
     async () => {
       await wrapLoad(
         layout,
         async () => await redactDocument(viewer.id, layout.pendingRedactions)
       );
+      // Update document as pending
+      viewer.document.doc = {
+        ...viewer.document.doc,
+        status: "pending",
+      };
+      viewer.document = viewer.document;
       await markAsDirty([viewer.id]);
       simpleCancelActions();
-      nav("app");
+    }
+  );
+}
+
+export function modify(modification, callback) {
+  showConfirm(
+    "Apply modifications",
+    "Are you sure you wish to modify the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the modifications. This change is irreversible.",
+    "Continue",
+    async () => {
+      const json = modification.modifySpec.json();
+      await wrapLoad(
+        layout,
+        async () => await modifyDocument(viewer.id, json)
+      );
+      // Update document as pending
+      viewer.document.doc = {
+        ...viewer.document.doc,
+        status: "pending",
+      };
+      viewer.document = viewer.document;
+      await markAsDirty([viewer.id]);
+      modification.clear();
+      callback();
     }
   );
 }

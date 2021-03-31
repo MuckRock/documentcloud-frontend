@@ -134,10 +134,9 @@ export class Document extends Svue {
         pageSpec(doc) {
           return doc.page_spec;
         },
-        pageSizes(pageSpec) {
+        pageSizes(pageSpec, pageCount) {
           if (pageSpec == null) return null;
-
-          return pageSizesFromSpec(pageSpec);
+          return pageSizesFromSpec(pageSpec).slice(0, pageCount);
         },
 
         // Access properties

@@ -3,10 +3,10 @@
   import { handlePlural } from "@/util/string";
   import { modification } from "@/viewer/modification/modification";
   import { viewer } from "@/viewer/viewer";
-  import { showInsertDialog } from "@/viewer/layout";
+  import { cancelActions } from "@/viewer/document";
+  import { showInsertDialog, modify } from "@/viewer/layout";
   import Image from "@/common/Image";
   import { pageImageUrl } from "@/api/viewer";
-  import { modifyDocument } from "@/api/document";
   import Modification from "@/viewer/modification/Modification";
 
   const MAX_BUFFER_SIZE = 5;
@@ -20,8 +20,6 @@
 
     .img {
       display: inline-block;
-      width: 30px;
-      height: 39px;
       margin: 0 5px;
       border: solid 1.5px $primary;
       box-sizing: border-box;
@@ -34,8 +32,9 @@
       }
 
       :global(img) {
-        width: 100% !important;
-        height: 100% !important;
+        width: 30px !important;
+        height: 39px !important;
+        object-fit: contain !important;
       }
     }
   }
@@ -83,6 +82,7 @@
                 descriptor.pageSpec.specs[0].pg,
                 30,
               )}
+              delay={50}
             />
           </span>
         </Modification>
@@ -140,11 +140,7 @@
     {#if $modification.uncommittedChanges}
       <Button
         on:click={() => {
-          const id = viewer.document.id;
-          if (id == null) return;
-          const json = modification.modifySpec.json();
-          console.log(json);
-          modifyDocument(id, json);
+          modify(modification, cancelActions);
         }}
       >
         Apply Modifications
