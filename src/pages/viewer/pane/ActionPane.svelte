@@ -3,7 +3,7 @@
   import AnnotatePane from "./AnnotatePane";
   import SearchPane from "./SearchPane";
   import SelectNotePane from "./SelectNotePane";
-  import { layout, cancelActions, cancelAnnotation } from "@/viewer/layout";
+  import { layout, cancelActions } from "@/viewer/layout";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
@@ -63,7 +63,8 @@
   <div
     class="actionpane"
     style="top: {$layout.headerHeight}px; right: {$layout.sidebarWidth}px"
-    bind:clientHeight={actionHeight}>
+    bind:clientHeight={actionHeight}
+  >
     <div class="actionclose">
       <span on:click={cancelActions}>
         {@html closeSvg}

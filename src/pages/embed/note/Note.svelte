@@ -36,7 +36,7 @@
   onMount(async () => {
     // Get document/note
     doc = await getDocument(docId);
-    note = await getAnnotation(docId, noteId);
+    note = await getAnnotation(docId, noteId.split(".")[0]);
 
     // Render content
     await tick();
