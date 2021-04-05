@@ -10,8 +10,8 @@ export async function getEmbed(url, options = {}) {
   const { data } = await session.get(
     queryBuilder(apiUrl('oembed'), {
       url,
-      max_width: options.width,
-      max_height: options.height,
+      maxwidth: options.width,
+      maxheight: options.height,
     })
   );
   return data;
