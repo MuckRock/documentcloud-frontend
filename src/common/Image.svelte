@@ -20,6 +20,8 @@
   export let crosshair = false;
   export let showLoading = false;
   export let clickable = false;
+  export let width = null;
+  export let height = null;
 
   const emit = emitter({
     aspect() {},
@@ -213,7 +215,9 @@
   class:crosshair
   class:clickable
   class:nomove={$layout.nomove}
-  style={aspect != null ? `padding-top: ${100 * aspect}%` : ""}
+  style={(aspect != null ? `padding-top: ${100 * aspect}%;` : "") +
+    (width != null ? `width: ${width}px;` : "") +
+    (height != null ? `height: ${height}px;` : "")}
   on:mousedown={handleMouseDown}
   on:touchstart={handleMouseDown}
   on:click
@@ -223,6 +227,8 @@
       on:load={handleLoad}
       class:fade
       class:show
+      style={(width != null ? `width: ${width}px;` : "") +
+        (height != null ? `height: ${height}px;` : "")}
       on:error={handleError}
       bind:this={img}
       src={computedSrc}

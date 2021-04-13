@@ -318,13 +318,25 @@ export class ModificationDescriptor {
   toTransform() {
     const transforms = this.modifications.map(x => {
       if (x.type == ROTATE) {
-        if (x.angle == CLOCKWISE) return 'rotate(90deg)';
-        if (x.angle == HALFWAY) return 'rotate(180deg)';
-        if (x.angle == COUNTER_CLOCKWISE) return 'rotate(270deg)';
+        if (x.angle == CLOCKWISE) return 'rotate(90deg) translate(0, -100%)';
+        if (x.angle == HALFWAY) return 'rotate(180deg) translate(-100%, -100%)';
+        if (x.angle == COUNTER_CLOCKWISE) return 'rotate(270deg) translate(-100%)';
       }
       return '';
     });
     return transforms.join(' ');
+  }
+
+  toOrientation() {
+    let orientation = 0;
+    this.modifications.forEach(x => {
+      if (x.type == ROTATE) {
+        if (x.angle == CLOCKWISE) orientation++;
+        if (x.angle == HALFWAY) orientation += 2;
+        if (x.angle == COUNTER_CLOCKWISE) orientation += 3;
+      }
+    });
+    return orientation % 4;
   }
 
   toNumbers() {

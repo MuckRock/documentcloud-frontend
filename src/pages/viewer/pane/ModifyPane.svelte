@@ -10,6 +10,9 @@
   import Modification from "@/viewer/modification/Modification";
 
   const MAX_BUFFER_SIZE = 5;
+
+  const MAX_THUMB_WIDTH = 30;
+  const MAX_THUMB_HEIGHT = 39;
 </script>
 
 <style lang="scss">
@@ -18,24 +21,29 @@
     display: inline-block;
     vertical-align: bottom;
 
-    .img {
+    .item {
       display: inline-block;
-      margin: 0 5px;
-      border: solid 1.5px $primary;
-      box-sizing: border-box;
-      background: white;
-      overflow: hidden;
+      vertical-align: top;
+      width: 45px;
 
       &.faded {
         position: relative;
         mask-image: linear-gradient(to right, black, transparent 70%);
       }
 
+      .img {
+      display: inline-block;
+      margin: 0 5px;
+      border: solid 1.5px $primary;
+      box-sizing: border-box;
+      background: white;
+      overflow: hidden;
+      vertical-align: top;
+
       :global(img) {
-        width: 30px !important;
-        height: 39px !important;
         object-fit: contain !important;
       }
+    }
     }
   }
 </style>
@@ -70,11 +78,11 @@
       {#each $modification.copyBuffer
         .slice(0, MAX_BUFFER_SIZE)
         .toDescriptors() as descriptor, i (JSON.stringify(descriptor.json()))}
+        <span class="item" class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
+          i == MAX_BUFFER_SIZE - 1}>
         <Modification {descriptor}>
           <span
             class="img"
-            class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
-              i == MAX_BUFFER_SIZE - 1}
           >
             <Image
               src={pageImageUrl(
@@ -83,9 +91,12 @@
                 30,
               )}
               delay={50}
+              width={descriptor.toOrientation() % 2 == 0 ? MAX_THUMB_WIDTH : Math.min(MAX_THUMB_WIDTH / $viewer.pageAspects[descriptor.pageSpec.specs[0].pg], MAX_THUMB_HEIGHT)}
+              height={descriptor.toOrientation() % 2 == 0 ? Math.min(MAX_THUMB_WIDTH * $viewer.pageAspects[descriptor.pageSpec.specs[0].pg], MAX_THUMB_HEIGHT) : MAX_THUMB_WIDTH}
             />
           </span>
         </Modification>
+      </span>
       {/each}
     </div>
   </h3>

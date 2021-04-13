@@ -7,6 +7,7 @@
 <style lang="scss">
   .modification {
     display: inline-block;
+    transform-origin: top left;
   }
 </style>
 

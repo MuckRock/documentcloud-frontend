@@ -128,6 +128,9 @@
       [page]: selectState,
     };
   }
+
+  const MAX_THUMB_WIDTH = 84;
+  const MAX_THUMB_HEIGHT = 119;
 </script>
 
 <style lang="scss">
@@ -148,14 +151,13 @@
     $thumbmargin: 30px;
 
     :global(img) {
-      width: $thumbwidth;
-      height: $thumbheight;
       object-fit: contain;
     }
 
     .item {
       display: inline-block;
       overflow: visible;
+      vertical-align: top;
     }
 
     .imgwrap {
@@ -242,7 +244,7 @@
         $width: 2px;
         position: absolute;
         top: 0;
-        bottom: 0;
+        height: $thumbheight;
         border: $width dashed rgba(0, 0, 0, 0.1);
         cursor: pointer;
 
@@ -335,6 +337,8 @@
               <Image
                 src={pageImageUrl(page.document, parseInt(page.pg), 140)}
                 delay={50}
+                width={page.descriptor.toOrientation() % 2 == 0 ? MAX_THUMB_WIDTH : Math.min(MAX_THUMB_WIDTH / $viewer.pageAspects[page.pg], MAX_THUMB_HEIGHT)}
+                height={page.descriptor.toOrientation() % 2 == 0 ? Math.min(MAX_THUMB_WIDTH * $viewer.pageAspects[page.pg], MAX_THUMB_HEIGHT) : MAX_THUMB_WIDTH}
               />
             </span>
           </Modification>
