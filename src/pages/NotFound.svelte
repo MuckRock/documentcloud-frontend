@@ -4,11 +4,9 @@
   import { router } from "@/router/router";
   import { onMount } from "svelte";
   import { getContent } from "@/api/cms";
-  import Progress from "@/common/Progress";
 
   export let title = "Page not found";
   export let message = "Please try another URL";
-  export let showProgress = false;
 
   let notFound = false;
   let content = null;
@@ -53,9 +51,7 @@
 
     <div>{message}</div>
 
-    {#if showProgress}
-      <Progress initializing={true} progress={0} compact={true} />
-    {/if}
+    <slot />
   </div>
 {:else if content != null}
   <FlatPage {content} />

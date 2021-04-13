@@ -8,6 +8,8 @@
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
   import Toasts from "@/common/Toasts";
+  import Progress from "@/common/Progress";
+  import Button from "@/common/Button";
   import { embedUrl } from "@/api/embed";
 
   // Dialogs
@@ -27,6 +29,7 @@
     hideDocumentData,
     hideEditSections,
     hideInsertDialog,
+    forceReprocess,
   } from "@/viewer/layout";
   import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
@@ -143,13 +146,18 @@
   <NotFound
     title="Document is processing"
     message="The document you requested is processing and will automatically refresh when it is ready"
-    showProgress={true}
-  />
+  >
+    <Progress initializing={true} progress={0} compact={true} />
+  </NotFound>
 {:else if $viewer.document != null && $viewer.document.error}
   <NotFound
     title="Document has encountered an error"
-    message="A processing error has been encountered in the document you requested. If you have edit permissions, try force reprocessing the document through the edit menu in the document manager"
-  />
+    message="A processing error has been encountered in the document you requested"
+  >
+    {#if $viewer.document.editAccess}
+      <p><Button on:click={forceReprocess}>Reprocess</Button></p>
+    {/if}
+  </NotFound>
 {:else if $viewer.showPending}
   <NotFound
     title="Document not accessible"

@@ -2,7 +2,7 @@ import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { truthyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
-import { getDocument, redactDocument, searchDocument, modifyDocument } from "@/api/document";
+import { getDocument, redactDocument, searchDocument, modifyDocument, reprocessDocument } from "@/api/document";
 import { search } from '@/search/search';
 import { showConfirm } from "@/manager/confirmDialog";
 import { markAsDirty, documents } from '@/manager/documents';
@@ -547,4 +547,25 @@ export function hideInsertDialog() {
   layout.showInsertDialog = false;
   search.filePickerUser = null;
   documents.inDocumentPickerDialog = false;
+}
+
+export function forceReprocess() {
+  showConfirm(
+    "Confirm reprocess",
+    `Proceeding will force the document to reprocess page and image text. Do you wish to continue?`,
+    "Reprocess",
+    async () => {
+      await wrapLoad(layout, async () => {
+        await reprocessDocument([viewer.id]);
+      });
+      // Update document as pending
+      viewer.document.doc = {
+        ...viewer.document.doc,
+        status: "pending",
+      };
+      viewer.document = viewer.document;
+      await markAsDirty([viewer.id]);
+      simpleCancelActions();
+    }
+  );
 }

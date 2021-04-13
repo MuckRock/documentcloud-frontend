@@ -450,7 +450,7 @@ export class ModificationSpec {
   }
 
   json() {
-    return this.specs.map(x => x.json());
+    return this.specs.map(x => x.json()).filter(y => y.page != null && y.page.trim().length > 0);
   }
 
   toDescriptors() {

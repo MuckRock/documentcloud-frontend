@@ -77,7 +77,7 @@
   }
 </style>
 
-<div class="img" class:embed>
+<div class="img" data-id={document.id} class:embed>
   <span class="imgwrap">
     {#if document.viewable}
       {#if dialog}
