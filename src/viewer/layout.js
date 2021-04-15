@@ -115,6 +115,8 @@ export const layout = new Svue({
             "notes.user",
           ].join(","));
           viewer.document = doc;
+          viewer.notes = doc.notes;
+          viewer.sections = doc.sections;
           // Update embed document if possible
           if (
             this.embedDocument != null &&
