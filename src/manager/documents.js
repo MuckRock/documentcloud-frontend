@@ -51,18 +51,15 @@ export const documents = new Svue({
       processingChangeTimeout: null,
       doneProcessing: true,
       pending: [],
+      inDocumentPickerDialog: false,
     };
   },
   watch: {
     "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      unselectAll();
-      if (route != null && (route.name == "app" || route.name == 'project')) {
-        if (!this.hasInited) {
-          initDocuments();
-          this.hasInited = true;
-        }
-      }
+      checkForInit();
+    },
+    inDocumentPickerDialog() {
+      checkForInit();
     },
     rawDoneProcessing() {
       if (this.processingChangeTimeout != null) {
@@ -202,6 +199,17 @@ export const documents = new Svue({
     },
   },
 });
+
+function checkForInit() {
+  const route = router.resolvedRoute;
+  unselectAll();
+  if (route != null && (documents.inDocumentPickerDialog || route.name == "app" || route.name == 'project')) {
+    if (!documents.hasInited) {
+      initDocuments();
+      documents.hasInited = true;
+    }
+  }
+}
 
 function getDocumentsByCondition(condition, documents) {
   return documents.filter(condition);

@@ -1,6 +1,8 @@
 <script>
   import Paginator from "./Paginator";
   import Logo from "@/common/Logo";
+
+  export let dialog = false;
 </script>
 
 <style lang="scss">
@@ -8,6 +10,10 @@
     position: sticky;
     bottom: 0;
     padding: 10px 0;
+
+    &.dialog {
+      position: relative;
+    }
 
     .background {
       position: absolute;
@@ -41,12 +47,14 @@
   }
 </style>
 
-<div class="footer">
+<div class="footer" class:dialog>
   <div class="background" />
   <div class="paginator">
-    <Paginator />
+    <Paginator {dialog} />
   </div>
-  <div class="logo">
-    <Logo newPage={true} nopadding={true} homeLink={true} />
-  </div>
+  {#if !dialog}
+    <div class="logo">
+      <Logo newPage={true} nopadding={true} homeLink={true} />
+    </div>
+  {/if}
 </div>

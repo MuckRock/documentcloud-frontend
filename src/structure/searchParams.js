@@ -60,12 +60,13 @@ function extractId(slugId) {
 }
 
 export class SearchParams extends Svue {
-  constructor(rawParams, structure = {}) {
+  constructor(rawParams, onlyShowSuccess = false, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
     super({
       data() {
         const data = structure.data == null ? {} : structure.data();
         data.params = rawParams;
+        data.onlyShowSuccess = onlyShowSuccess;
         return data;
       },
       computed: {
@@ -85,9 +86,13 @@ export class SearchParams extends Svue {
         projectEmbedOrder(params) {
           return params.order
         },
-        query(params, projectEmbedId) {
+        query(params, projectEmbedId, onlyShowSuccess) {
           if (projectEmbedId != null) return null;
-          const query = params.q == null ? null : params.q;
+          let query = params.q == null ? null : params.q;
+          if (query != null && onlyShowSuccess) {
+            // Wrap to only show successful values
+            query = `status:success AND (${query})`;
+          }
           return query;
         },
         parsedQuery(query) {

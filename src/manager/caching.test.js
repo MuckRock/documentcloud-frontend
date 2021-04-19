@@ -187,6 +187,7 @@ test("stale delete processing doc", async () => {
   expect(documents.numProcessing).toBe(1);
   // Remove the doc while it's processing
   removeFromCollection(doc.id);
+  updatePending();
   // Should be no docs processing now
   expect(documents.numProcessing).toBe(0);
 

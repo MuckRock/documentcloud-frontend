@@ -22,7 +22,7 @@
       window.history.replaceState(
         { path: currentUrl() },
         "",
-        window.location.href
+        window.location.href,
       );
     }
   });

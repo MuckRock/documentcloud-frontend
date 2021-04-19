@@ -22,6 +22,7 @@
 
   export let document;
   export let embed = false;
+  export let dialog = false;
 
   $: highlightsActive =
     document.highlights != null && document.highlights.length > 0;
@@ -233,7 +234,7 @@
 
 <div class="card">
   <div class="row">
-    {#if $orgsAndUsers.loggedIn}
+    {#if $orgsAndUsers.loggedIn && !embed && !dialog}
       <div class="check">
         <Checkbox
           on:check={() => selectDocument(document, shiftKey)}
@@ -242,7 +243,7 @@
         />
       </div>
     {/if}
-    <DocumentThumbnail {embed} {document} />
+    <DocumentThumbnail {embed} {dialog} {document} on:pick />
 
     <div class="info">
       <h2>

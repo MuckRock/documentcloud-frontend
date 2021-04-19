@@ -1,9 +1,11 @@
 <script>
   import RedactPane from "./RedactPane";
   import AnnotatePane from "./AnnotatePane";
+  import ModifyPane from "./ModifyPane";
   import SearchPane from "./SearchPane";
   import SelectNotePane from "./SelectNotePane";
-  import { layout, cancelActions } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout";
+  import { cancelActions } from "@/viewer/document";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
@@ -19,7 +21,7 @@
   .actionpane {
     position: absolute;
     left: 0;
-    background: #fffdea;
+    background: $actionPane;
     z-index: $viewerActionPaneZ;
     padding: 20px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
@@ -77,6 +79,8 @@
         <RedactPane />
       {:else if $layout.annotating}
         <AnnotatePane />
+      {:else if $layout.modifying}
+        <ModifyPane />
       {:else if $layout.searching}
         <SearchPane />
       {/if}

@@ -43,10 +43,10 @@ export function intersection(arrays, eq = (a, b) => a == b) {
   return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
 }
 
-export function arrayEq(x1, x2) {
+export function arrayEq(x1, x2, eq = (a, b) => a == b) {
   if (x1.length != x2.length) return false;
   for (let i = 0; i < x1.length; i++) {
-    if (x1[i] != x2[i]) return false;
+    if (!eq(x1[i], x2[i])) return false;
   }
   return true;
 }
@@ -56,4 +56,12 @@ export function addToArrayIfUnique(array, newElem, eq = (a, b) => a == b) {
     if (eq(array[i], newElem)) return array;
   }
   return [...array, newElem];
+}
+
+export function chunk(array, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
 }

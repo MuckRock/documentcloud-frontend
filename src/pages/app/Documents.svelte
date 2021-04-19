@@ -39,6 +39,7 @@
   export let containerElem = null;
   export let containerWidth = null;
   export let containerHeight = null;
+  export let dialog = false;
 
   let preUploadFiles = [];
 
@@ -56,6 +57,7 @@
   $: {
     let newTitle = "Search Results";
     if (
+      $search.params != null &&
       !$search.params.isSearch &&
       $search.params.noStatus &&
       $search.params.oneOrZeroAccesses
@@ -174,6 +176,7 @@
 
     &.embed {
       padding-top: $mainDocContainerPadding;
+      position: relative;
     }
   }
 
@@ -243,15 +246,12 @@
       {#if embed && $layout.projectEmbedTitle != null}
         <div class="projectembedtitle">{$layout.projectEmbedTitle}</div>
       {/if}
-      {#if embed && $search.params != null && $search.params.projectEmbedId != null && $layout.projectEmbedSearchBar}
+      {#if !dialog && embed && $search.params != null && $search.params.projectEmbedId != null && $layout.projectEmbedSearchBar}
         <!-- Use a search link -->
-        <SearchLink
-          link={process.env.APP_URL +
-            projectIdUrl($search.params.projectEmbedId)}
-        />
-      {:else if !embed}
+        <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
+      {:else if !embed || dialog}
         <!-- Don't show search bar in embed (for now) -->
-        <SearchBar {embed} />
+        <SearchBar {embed} {dialog} />
       {/if}
 
       <div>
@@ -282,7 +282,7 @@
       >
         {#each $documents.documents as document (document.id)}
           <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
-            <Document {embed} {document} />
+            <Document {embed} {dialog} {document} on:pick />
           </div>
         {/each}
         {#if $documents.documents.length == 0 && !$layout.loading}
@@ -297,10 +297,10 @@
     </div>
 
     {#if embed}
-      <EmbedFooter />
+      <EmbedFooter {dialog} />
     {:else}
       <div class="narrowshow">
-        <Paginator />
+        <Paginator {dialog} />
       </div>
     {/if}
   </div>

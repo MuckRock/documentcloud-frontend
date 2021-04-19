@@ -2,10 +2,11 @@ import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
 import { truthyParamValue, falsyParamValue } from '@/util/url';
 import { wrapLoad } from "@/util/wrapLoad";
-import { getDocument, redactDocument, searchDocument } from "@/api/document";
+import { getDocument, redactDocument, searchDocument, modifyDocument, reprocessDocument } from "@/api/document";
+import { search } from '@/search/search';
 import { showConfirm } from "@/manager/confirmDialog";
-import { markAsDirty } from '@/manager/documents';
-import { router, nav } from "@/router/router";
+import { markAsDirty, documents } from '@/manager/documents';
+import { router } from "@/router/router";
 import {
   createAnnotation,
   updateAnnotation,
@@ -14,6 +15,7 @@ import {
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
 import { inIframe } from '@/util/iframe';
+import { modification } from "./modification/modification";
 
 // A little bigger than normal mobile break to hide sidebar in narrow viewports
 export const MOBILE_BREAKPOINT = 800;
@@ -84,6 +86,9 @@ export const layout = new Svue({
       embedDocument: null,
       embedNote: null,
       embedContext: "viewer",
+
+      // Modify
+      showInsertDialog: false,
     };
   },
   watch: {
@@ -110,8 +115,8 @@ export const layout = new Svue({
   },
   computed: {
     pollEvents(viewer) {
-      // Update document only if it is readable
-      if (viewer.document == null || !viewer.document.readable) return [];
+      // Update document only if it is readable or pending (processing)
+      if (viewer.document == null || !viewer.document.processing) return [];
       return [
         async () => {
           const doc = await getDocument(viewer.document.id, [
@@ -122,6 +127,8 @@ export const layout = new Svue({
             "notes.user",
           ].join(","));
           viewer.document = doc;
+          viewer.notes = doc.notes;
+          viewer.sections = doc.sections;
           // Update embed document if possible
           if (
             this.embedDocument != null &&
@@ -147,6 +154,9 @@ export const layout = new Svue({
     },
     annotating(action) {
       return action == "annotate";
+    },
+    modifying(action) {
+      return action == 'modify';
     },
     searching(action) {
       return action == "search";
@@ -258,7 +268,7 @@ export function annotationValid(annotation) {
 }
 
 export function enterEditAnnotateMode(annotation) {
-  cancelActions();
+  simpleCancelActions();
   if (!annotationValid(annotation)) return;
   layout.annotateMode = "edit";
   layout.displayedAnnotation = annotation;
@@ -335,16 +345,45 @@ function pushRedaction() {
 export function redact() {
   showConfirm(
     "Confirm redactions",
-    "Are you sure you wish to redact the current document? If you continue, the document viewer will close temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
+    "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
     "Continue",
     async () => {
       await wrapLoad(
         layout,
         async () => await redactDocument(viewer.id, layout.pendingRedactions)
       );
+      // Update document as pending
+      viewer.document.doc = {
+        ...viewer.document.doc,
+        status: "pending",
+      };
+      viewer.document = viewer.document;
       await markAsDirty([viewer.id]);
-      cancelActions();
-      nav("app");
+      simpleCancelActions();
+    }
+  );
+}
+
+export function modify(modification, callback) {
+  showConfirm(
+    "Apply modifications",
+    "Are you sure you wish to modify the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the modifications. This change is irreversible.",
+    "Continue",
+    async () => {
+      const json = modification.modifySpec.json();
+      await wrapLoad(
+        layout,
+        async () => await modifyDocument(viewer.id, json)
+      );
+      // Update document as pending
+      viewer.document.doc = {
+        ...viewer.document.doc,
+        status: "pending",
+      };
+      viewer.document = viewer.document;
+      await markAsDirty([viewer.id]);
+      modification.clear();
+      callback();
     }
   );
 }
@@ -358,7 +397,22 @@ export function undoRedaction() {
   }
 }
 
-export function cancelActions() {
+export function simpleCancelActions(callback = null) {
+  // Clear modifications
+  if (modification.uncommittedChanges) {
+    showConfirm(
+      "Confirm close",
+      "You will lose all your unapplied modifications. Are you sure you want to proceed?",
+      "Continue",
+      () => {
+        modification.clear();
+        simpleCancelActions(callback);
+      }
+    );
+    return;
+  }
+  if (callback != null) callback();
+  modification.clear();
   layout.action = null;
   layout.embedDocument = null;
   layout.embedNote = null;
@@ -367,11 +421,11 @@ export function cancelActions() {
 }
 
 export function cancelAnnotation() {
-  if (layout.displayAnnotate) cancelActions();
+  if (layout.displayAnnotate) simpleCancelActions();
 }
 
 export function hideEditSections() {
-  if (layout.showEditSections) cancelActions();
+  if (layout.showEditSections) simpleCancelActions();
 }
 
 export async function updatePageAnnotation(
@@ -430,10 +484,12 @@ export async function deletePageAnnotation(noteId, docId) {
     async () => {
       await deleteAnnotation(docId, noteId);
       removeNote({ id: noteId });
-      cancelActions();
+      simpleCancelActions();
     }
   );
 }
+
+// Search
 
 export async function startSearch(query) {
   layout.search = query;
@@ -459,7 +515,7 @@ export function clearSearch() {
 
 function reset() {
   clearSearch();
-  cancelActions();
+  simpleCancelActions();
 }
 
 export function showEmbedFlow(document) {
@@ -489,4 +545,41 @@ export function openAccess(documents) {
     return;
   }
   layout.showAccess = true;
+}
+
+export function showInsertDialog() {
+  const me = viewer.me;
+  if (me != null) {
+    documents.inDocumentPickerDialog = true;
+    search.filePickerUser = me;
+    layout.showInsertDialog = true;
+  }
+}
+
+export function hideInsertDialog() {
+  modification.insertDocumentAtPosition();
+  layout.showInsertDialog = false;
+  search.filePickerUser = null;
+  documents.inDocumentPickerDialog = false;
+}
+
+export function forceReprocess() {
+  showConfirm(
+    "Confirm reprocess",
+    `Proceeding will force the document to reprocess page and image text. Do you wish to continue?`,
+    "Reprocess",
+    async () => {
+      await wrapLoad(layout, async () => {
+        await reprocessDocument([viewer.id]);
+      });
+      // Update document as pending
+      viewer.document.doc = {
+        ...viewer.document.doc,
+        status: "pending",
+      };
+      viewer.document = viewer.document;
+      await markAsDirty([viewer.id]);
+      simpleCancelActions();
+    }
+  );
 }

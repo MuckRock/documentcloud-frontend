@@ -50,6 +50,8 @@
     <h1>{title}</h1>
 
     <div>{message}</div>
+
+    <slot />
   </div>
 {:else if content != null}
   <FlatPage {content} />

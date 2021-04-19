@@ -159,7 +159,7 @@
   }
 </style>
 
-{#if $viewer.loaded && $doc.mode != 'search' && $doc.mode != 'notes'}
+{#if $viewer.loaded && $doc.mode != 'search' && $doc.mode != 'notes' && $doc.mode != 'thumbnail'}
   <div class="paginator">
     <span class="paginate left" on:click={() => decrement(false)}>
       {@html leftPaginator}

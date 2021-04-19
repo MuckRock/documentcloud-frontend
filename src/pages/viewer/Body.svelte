@@ -11,6 +11,7 @@
   import {
     enterRedactMode,
     enterAnnotateMode,
+    enterModifyMode,
     enterSectionsMode,
   } from "@/viewer/actions";
 
@@ -267,6 +268,8 @@
         enterAnnotateMode();
       } else if (e.key == "r") {
         enterRedactMode();
+      } else if (e.key == "m") {
+        enterModifyMode();
       } else if (e.key == "s") {
         enterSectionsMode();
       }

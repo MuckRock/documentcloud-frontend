@@ -3,6 +3,7 @@
   import Image from "@/common/Image";
   import Loader from "@/common/Loader";
   import Tooltip from "@/common/Tooltip";
+  import emitter from "@/emit";
   import { documents } from "@/manager/documents";
 
   // SVG assets
@@ -10,6 +11,11 @@
 
   export let document;
   export let embed = false;
+  export let dialog = false;
+
+  const emit = emitter({
+    pick() {},
+  });
 
   $: realProgress =
     document == null ? null : $documents.realProgressMap[document.id];
@@ -79,10 +85,16 @@
   }
 </style>
 
-<div class="img" class:embed>
+<div class="img" data-id={document.id} class:embed>
   <span class="imgwrap">
     {#if document.viewable}
-      {#if embed && document.publishedUrl != null && document.publishedUrl.trim().length > 0}
+      {#if dialog}
+        <Image
+          clickable={true}
+          on:click={() => emit.pick(document)}
+          src={document.thumbnail}
+        />
+      {:else if embed && document.publishedUrl != null && document.publishedUrl.trim().length > 0}
         <a href={document.publishedUrl} rel="noreferrer" target="_blank"
           ><Image src={document.thumbnail} /></a
         >

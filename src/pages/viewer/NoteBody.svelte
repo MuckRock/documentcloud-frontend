@@ -1,7 +1,6 @@
 <script>
   import { layout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
-  import { doc } from "@/viewer/document";
   import Annotation from "./Annotation";
 
   let width = 0;
@@ -27,7 +26,6 @@
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px;"
   class="doc">
-
   <div class="notes" bind:clientWidth={width}>
     {#if $viewer.pageAspects != null}
       {#each $viewer.orderedNotes as note}
@@ -42,5 +40,4 @@
       {/each}
     {/if}
   </div>
-
 </div>

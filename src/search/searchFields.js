@@ -1,5 +1,4 @@
 import { extractSlugId, isNumber } from '@/util/string';
-import { projects } from "@/manager/projects";
 
 const languageOptions = process.env.LANGUAGE_CODES.split('|');
 
@@ -70,13 +69,8 @@ export function fieldValid(text, example = false) {
   if (field == "project") {
     if (id == null) return { valid: false };
     if (example) return { valid: true, transform: `projects:${id}` };
-    for (let i = 0; i < projects.projects.length; i++) {
-      const project = projects.projects[i];
-      if (project.id == id) {
-        return { valid: true, transform: `projects:${id}` };
-      }
-    }
-    return { valid: false };
+    // IDs aren't checked for actual project, but will not return any useful results if not
+    return { valid: isNumber(id) };
   } else if (field == "user") {
     if (id == null) return { valid: false };
     if (example) return { valid: true, transform: `user:${id}` };

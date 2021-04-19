@@ -16,18 +16,26 @@ export const search = new Svue({
     return {
       router,
       params: null,
-      results: null
+      results: null,
+      filePickerUser: null,
     };
   },
   watch: {
     "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      if (route != null && (route.name == "app" || route.name == 'project') && router.backNav != true) {
-        initSearch(route.props);
-      }
+      checkForInit();
+    },
+    filePickerUser() {
+      checkForInit();
     }
   },
   computed: {
+    onlyShowSuccessfulStatuses(filePickerUser, router) {
+      // Applies when in embed or dialog
+      const route = router.resolvedRoute;
+      if (filePickerUser != null) return true;
+      if (route != null && route.name == 'project') return true;
+      return false;
+    },
     documents(hasResults, results) {
       if (!hasResults) return [];
       return results.results;
@@ -38,8 +46,8 @@ export const search = new Svue({
   }
 });
 
-async function initSearch(params) {
-  search.params = new SearchParams(params);
+export async function initSearch(params) {
+  search.params = new SearchParams(params, search.onlyShowSuccessfulStatuses);
 
   // Get results
   if (search.params.getMethod != null) {
@@ -53,6 +61,13 @@ async function initSearch(params) {
       // Force an update
       search.results = search.results;
     }
+  }
+}
+
+function checkForInit() {
+  const route = router.resolvedRoute;
+  if (route != null && (((route.name == "app" || route.name == 'project') && router.backNav != true) || search.filePickerUser != null)) {
+    initSearch(search.filePickerUser != null ? { q: userSearchQuery(search.filePickerUser) } : route.props);
   }
 }
 
@@ -101,6 +116,10 @@ export function userUrl(user, publicAccessOnly = false) {
   return userOrgUrl(user, "user", publicAccessOnly);
 }
 
+export function userSearchQuery(user) {
+  return `user:${slugify(user.name, user.id)} `;
+}
+
 export function escapeValue(value) {
   // Properly escapes a value by placing it inside quotes and escaping quote characters
   return `"${value.replace('"', '\\"')}"`;
@@ -123,6 +142,13 @@ export function searchUrl(query) {
   });
 }
 
-export function handleSearch(query) {
-  pushUrl(searchUrl(query));
+export function handleSearch(query, urlPush = true) {
+  if (urlPush) {
+    // The default way to search: the URL is pushed and the search updates
+    // based on its value
+    pushUrl(searchUrl(query));
+  } else {
+    // Searching in dialogs and contexts where the URL should stay intact
+    initSearch({ q: query });
+  }
 }

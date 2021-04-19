@@ -3,10 +3,13 @@
   import Body from "./Body";
   import SimpleBody from "./SimpleBody";
   import NoteBody from "./NoteBody";
+  import ThumbnailBody from "./ThumbnailBody";
   import Sidebar from "./Sidebar";
   import Footer from "./Footer";
   import NotFound from "@/pages/NotFound";
   import Toasts from "@/common/Toasts";
+  import Progress from "@/common/Progress";
+  import Button from "@/common/Button";
   import { embedUrl } from "@/api/embed";
 
   // Dialogs
@@ -25,6 +28,8 @@
     hideDocumentInfo,
     hideDocumentData,
     hideEditSections,
+    hideInsertDialog,
+    forceReprocess,
   } from "@/viewer/layout";
   import { doc, showAnnotation } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
@@ -87,13 +92,15 @@
       rel="alternate"
       type="application/json+oembed"
       href={embedUrl($viewer.document.canonicalUrl)}
-      title={$viewer.document.title} />
+      title={$viewer.document.title}
+    />
     {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
       <meta property="og:description" content={$viewer.document.description} />
     {/if}
     <meta
       property="og:image"
-      content={pageImageUrl($viewer.document, 0, 700, 1)} />
+      content={pageImageUrl($viewer.document, 0, 700, 1)}
+    />
   {/if}
 </svelte:head>
 
@@ -110,38 +117,68 @@
 {:else if $layout.showInfo}
   <Modal
     component={$viewerEditDialogs.documentInformationDialog}
-    on:close={hideDocumentInfo} />
+    on:close={hideDocumentInfo}
+  />
 {:else if $layout.showData}
   <Modal
     component={$viewerEditDialogs.dataDialog}
-    on:close={hideDocumentData} />
+    on:close={hideDocumentData}
+  />
 {:else if $layout.showEditSections}
   <Modal
     component={$viewerEditDialogs.editSectionsDialog}
-    on:close={hideEditSections} />
+    on:close={hideEditSections}
+  />
+{:else if $layout.showInsertDialog}
+  <Modal
+    component={$viewerEditDialogs.documentPickerDialog}
+    on:close={hideInsertDialog}
+  />
 {/if}
 
 {#if $viewer.show404}
   <NotFound
     title="Document not found"
     message="The document you requested either does not exist or you lack
-    permission to access it" />
+    permission to access it"
+  />
+{:else if $viewer.document != null && $viewer.document.pending}
+  <NotFound
+    title="Document is processing"
+    message="The document you requested is processing and will automatically refresh when it is ready"
+  >
+    <Progress initializing={true} progress={0} compact={true} />
+  </NotFound>
+{:else if $viewer.document != null && $viewer.document.error}
+  <NotFound
+    title="Document has encountered an error"
+    message="A processing error has been encountered in the document you requested"
+  >
+    {#if $viewer.document.editAccess}
+      <p><Button on:click={forceReprocess}>Reprocess</Button></p>
+    {/if}
+  </NotFound>
 {:else if $viewer.showPending}
   <NotFound
     title="Document not accessible"
     message="The document you requested is still processing or you lack
-    permission to access to it" />
+    permission to access to it"
+  />
 {:else}
   <Toasts />
 
   <Loader active={$layout.loading}>
     <Header />
-    {#if $doc.mode == 'image'}
+    {#if $doc.mode == "image"}
       <Body mode={$doc.mode} />
-    {:else if $doc.mode == 'text' || $doc.mode == 'search'}
+    {:else if $doc.mode == "text" || $doc.mode == "search"}
       <SimpleBody />
-    {:else if $doc.mode == 'notes'}
+    {:else if $doc.mode == "notes"}
       <NoteBody />
+    {:else if $doc.mode == "thumbnail"}
+      <ThumbnailBody />
+    {:else if $doc.mode == "modify"}
+      <ThumbnailBody modify={true} />
     {/if}
     <Sidebar />
     <Footer />
