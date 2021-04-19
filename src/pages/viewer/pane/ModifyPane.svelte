@@ -32,18 +32,18 @@
       }
 
       .img {
-      display: inline-block;
-      margin: 0 5px;
-      border: solid 1.5px $primary;
-      box-sizing: border-box;
-      background: white;
-      overflow: hidden;
-      vertical-align: top;
+        display: inline-block;
+        margin: 0 5px;
+        border: solid 1.5px $primary;
+        box-sizing: border-box;
+        background: white;
+        overflow: hidden;
+        vertical-align: top;
 
-      :global(img) {
-        object-fit: contain !important;
+        :global(img) {
+          object-fit: contain !important;
+        }
       }
-    }
     }
   }
 </style>
@@ -78,25 +78,38 @@
       {#each $modification.copyBuffer
         .slice(0, MAX_BUFFER_SIZE)
         .toDescriptors() as descriptor, i (JSON.stringify(descriptor.json()))}
-        <span class="item" class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
-          i == MAX_BUFFER_SIZE - 1}>
-        <Modification {descriptor}>
-          <span
-            class="img"
-          >
-            <Image
-              src={pageImageUrl(
-                $viewer.document,
-                descriptor.pageSpec.specs[0].pg,
-                30,
-              )}
-              delay={50}
-              width={descriptor.toOrientation() % 2 == 0 ? MAX_THUMB_WIDTH : Math.min(MAX_THUMB_WIDTH / $viewer.pageAspects[descriptor.pageSpec.specs[0].pg], MAX_THUMB_HEIGHT)}
-              height={descriptor.toOrientation() % 2 == 0 ? Math.min(MAX_THUMB_WIDTH * $viewer.pageAspects[descriptor.pageSpec.specs[0].pg], MAX_THUMB_HEIGHT) : MAX_THUMB_WIDTH}
-            />
-          </span>
-        </Modification>
-      </span>
+        <span
+          class="item"
+          class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
+            i == MAX_BUFFER_SIZE - 1}
+        >
+          <Modification {descriptor}>
+            <span class="img">
+              <Image
+                src={pageImageUrl(
+                  $viewer.document,
+                  descriptor.pageSpec.specs[0].pg,
+                  30,
+                )}
+                delay={50}
+                width={descriptor.toOrientation() % 2 == 0
+                  ? MAX_THUMB_WIDTH
+                  : Math.min(
+                      MAX_THUMB_WIDTH /
+                        $viewer.pageAspects[descriptor.pageSpec.specs[0].pg],
+                      MAX_THUMB_HEIGHT,
+                    )}
+                height={descriptor.toOrientation() % 2 == 0
+                  ? Math.min(
+                      MAX_THUMB_WIDTH *
+                        $viewer.pageAspects[descriptor.pageSpec.specs[0].pg],
+                      MAX_THUMB_HEIGHT,
+                    )
+                  : MAX_THUMB_WIDTH}
+              />
+            </span>
+          </Modification>
+        </span>
       {/each}
     </div>
   </h3>

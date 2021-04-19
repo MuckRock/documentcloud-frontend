@@ -34,19 +34,16 @@ export function pageImageUrl(
   // Incorporate device's DPI into scaling to avoid blurring.
   const size = getDesiredSize(desiredWidth);
 
-  return `${document.assetUrl}documents/${document.id}/pages/${
-    document.slug
+  return `${document.assetUrl}documents/${document.id}/pages/${document.slug
     }-p${pageNumber + 1}-${size}.gif?ts=${document.updatedAtTimestamp}`;
 }
 
 export function textUrl(document, pageNumber) {
-  return `${document.assetUrl}documents/${document.id}/pages/${
-    document.slug
+  return `${document.assetUrl}documents/${document.id}/pages/${document.slug
     }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
 }
 
 export function jsonUrl(document) {
-  return `${document.assetUrl}documents/${document.id}/${
-    document.slug
+  return `${document.assetUrl}documents/${document.id}/${document.slug
     }.txt.json`;
 }
