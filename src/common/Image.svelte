@@ -22,6 +22,7 @@
   export let clickable = false;
   export let width = null;
   export let height = null;
+  export let blank = false;
 
   const emit = emitter({
     aspect() {},
@@ -38,9 +39,10 @@
   let foundDimensions = false;
   let ready = false;
 
-  $: computedSrc = makeNull
-    ? 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'
-    : src;
+  $: computedSrc =
+    makeNull || blank
+      ? 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"/>'
+      : src;
 
   function handleError() {
     if (makeNull) return;

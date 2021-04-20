@@ -1,9 +1,8 @@
 <script>
-  import Image from "@/common/Image";
+  import ModifyImage from "./ModifyImage";
   import ActionPane from "./pane/ActionPane";
-  import { layout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
-  import { pageImageUrl } from "@/api/viewer";
+  import { layout } from "@/viewer/layout";
   import { restorePosition, changeMode } from "@/viewer/document";
   import { ModificationSpec } from "@/viewer/modification/modifySpec";
   import { modification } from "@/viewer/modification/modification";
@@ -83,7 +82,7 @@
             descriptor,
             pg: descriptor.pageSpec.specs[0].pg,
             index: i + startPage,
-            document: descriptor.id || $viewer.document,
+            document: descriptor.id == null ? $viewer.document.id : descriptor.id,
           }));
 
   $: showInserts = !$modification.modifyHasSelection;
@@ -334,11 +333,12 @@
               class:disabled={insertOnly}
               on:click={(e) => select(page.index, e.shiftKey)}
             >
-              <Image
-                src={pageImageUrl(page.document, parseInt(page.pg), 140)}
-                delay={50}
-                width={page.descriptor.toOrientation() % 2 == 0 ? MAX_THUMB_WIDTH : Math.min(MAX_THUMB_WIDTH / $viewer.pageAspects[page.pg], MAX_THUMB_HEIGHT)}
-                height={page.descriptor.toOrientation() % 2 == 0 ? Math.min(MAX_THUMB_WIDTH * $viewer.pageAspects[page.pg], MAX_THUMB_HEIGHT) : MAX_THUMB_WIDTH}
+              <ModifyImage
+                id={page.document}
+                page={page.pg}
+                descriptor={page.descriptor}
+                size={140}
+                maxThumb={[MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT]}
               />
             </span>
           </Modification>

@@ -5,8 +5,7 @@
   import { viewer } from "@/viewer/viewer";
   import { cancelActions } from "@/viewer/document";
   import { showInsertDialog, modify } from "@/viewer/layout";
-  import Image from "@/common/Image";
-  import { pageImageUrl } from "@/api/viewer";
+  import ModifyImage from "../ModifyImage";
   import Modification from "@/viewer/modification/Modification";
 
   const MAX_BUFFER_SIZE = 5;
@@ -85,27 +84,12 @@
         >
           <Modification {descriptor}>
             <span class="img">
-              <Image
-                src={pageImageUrl(
-                  $viewer.document,
-                  descriptor.pageSpec.specs[0].pg,
-                  30,
-                )}
-                delay={50}
-                width={descriptor.toOrientation() % 2 == 0
-                  ? MAX_THUMB_WIDTH
-                  : Math.min(
-                      MAX_THUMB_WIDTH /
-                        $viewer.pageAspects[descriptor.pageSpec.specs[0].pg],
-                      MAX_THUMB_HEIGHT,
-                    )}
-                height={descriptor.toOrientation() % 2 == 0
-                  ? Math.min(
-                      MAX_THUMB_WIDTH *
-                        $viewer.pageAspects[descriptor.pageSpec.specs[0].pg],
-                      MAX_THUMB_HEIGHT,
-                    )
-                  : MAX_THUMB_WIDTH}
+              <ModifyImage
+                id={descriptor.id}
+                page={descriptor.pageSpec.specs[0].pg}
+                {descriptor}
+                size={30}
+                maxThumb={[MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT]}
               />
             </span>
           </Modification>

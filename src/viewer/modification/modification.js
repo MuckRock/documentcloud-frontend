@@ -1,5 +1,5 @@
 import { Svue } from 'svue';
-import { runify, Empty, Individual, Range, ModificationSpec, CLOCKWISE, ModificationDescriptor, PageSpec } from './modifySpec';
+import { runify, Empty, Individual, ModificationSpec, CLOCKWISE } from './modifySpec';
 
 class Modification extends Svue {
   constructor() {
@@ -13,6 +13,7 @@ class Modification extends Svue {
           history: [],
           historyPosition: 0,
           insertDocument: null,
+          documentCache: {},
         }
       },
       computed: {
@@ -185,7 +186,7 @@ class Modification extends Svue {
   insertDocumentAtPosition() {
     if (this.insertDocument != null) {
       // Create a document spec for the insertion document
-      const docSpec = ModificationSpec.getDocument(this.insertDocument.pageCount, this.insertDocument);
+      const docSpec = ModificationSpec.getDocument(this.insertDocument.pageCount, this.insertDocument.id);
       this.modify(this.modifySpec.slice(0, this.insert).concat(docSpec).concat(this.modifySpec.slice(this.insert, this.pageCount)));
       this.clearInsertion();
     }

@@ -346,7 +346,7 @@ export class ModificationDescriptor {
   json() {
     const json = {};
     json.page = this.pageSpec.spec();
-    if (this.id != null) json.id = this.id.id;
+    if (this.id != null) json.id = this.id;
     if (this.modifications.length > 0) json.modifications = this.modifications;
     return json;
   }
