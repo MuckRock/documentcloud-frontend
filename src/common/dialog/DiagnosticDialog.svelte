@@ -5,6 +5,7 @@
   import { nameSingularNumberPlural } from "@/util/string";
   import DocumentThumbnail from "@/pages/app/DocumentThumbnail";
   import { apiUrl } from "@/api/base";
+  import { _ } from 'svelte-i18n';
 
   const emit = emitter({
     dismiss() {},
@@ -42,17 +43,16 @@
 <div>
   <div class="mcontent">
     <h1>
-      Staff-only info for selected
-      {nameSingularNumberPlural(documents.length, 'document')}
+      {$_("dialogDiagnosticDialog.staffOnlyInfo", {values: {n: documents.length}})}
     </h1>
     <div class="inputpadded">
       <table>
         <tr>
           <th />
-          <th>ID</th>
-          <th>Title</th>
-          <th>Actions</th>
-          <th>Debug</th>
+          <th>{$_("dialogDiagnosticDialog.id")}</th>
+          <th>{$_("dialogDiagnosticDialog.title")}</th>
+          <th>{$_("dialogDiagnosticDialog.actions")}</th>
+          <th>{$_("dialogDiagnosticDialog.debug")}</th>
         </tr>
         {#each documents as document}
           <tr>
@@ -65,12 +65,12 @@
               <a
                 target="_blank"
                 href={apiUrl(`documents/${document.id}/errors/`)}>
-                <Button small={true}>View errors</Button>
+                <Button small={true}>{$_("dialogDiagnosticDialog.viewErrors")}</Button>
               </a>
               <a
                 target="_blank"
                 href={process.env.STAFF_ONLY_S3_URL.replace('$$ID$$', document.id)}>
-                <Button small={true}>View in S3</Button>
+                <Button small={true}>{$_("dialogDiagnosticDialog.viewS3")}</Button>
               </a>
             </td>
             <td>{JSON.stringify(document.doc)}</td>
@@ -79,7 +79,7 @@
       </table>
     </div>
     <div class="buttonpadded">
-      <Button on:click={emit.dismiss}>Done</Button>
+      <Button on:click={emit.dismiss}>{$_("dialog.done")}</Button>
     </div>
   </div>
 </div>

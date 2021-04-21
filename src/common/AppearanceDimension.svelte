@@ -1,5 +1,6 @@
 <script>
   import emitter from "@/emit";
+  import { _ } from 'svelte-i18n';
 
   const emit = emitter({
     change() {},
@@ -84,14 +85,14 @@
   <div class="labels">
     <label>
       <input type="radio" value={0} bind:group={selected} />
-      <h2>Automatic (default)</h2>
+      <h2>{$_("appearanceDimension.responsive")}</h2>
       {#if help}
         <p>{automaticText}</p>
       {/if}
     </label>
     <label>
       <input type="radio" value={1} bind:group={selected} />
-      <h2>Fixed</h2>
+      <h2>{$_("appearanceDimension.fixed")}</h2>
       {#if selected == 1}
         <input class="numinput" type="number" min="1" bind:value={fixed} />
       {/if}

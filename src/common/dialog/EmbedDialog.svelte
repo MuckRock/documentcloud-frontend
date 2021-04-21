@@ -8,6 +8,7 @@
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { changeAccess } from "@/api/document";
   import { enterSelectNoteMode } from "@/viewer/actions";
+  import { _ } from 'svelte-i18n';
 
   // Stores
   import { viewer } from "@/viewer/viewer";
@@ -165,10 +166,9 @@
         {#if $layout.embedDocument.readable}
           <div class="warning readable">
             <div class="message">
-              <h2>Updating document...</h2>
+              <h2>{$_("dialogEmbedDialog.updatingDocument")}</h2>
               <p>
-                The document is currently being made public. This may take a
-                minute or two.
+                {$_("dialogEmbedDialog.makingPublic")}
               </p>
               <div>
                 <Progress initializing={true} progress={0} compact={true} />
@@ -177,31 +177,28 @@
           </div>
         {:else if $layout.embedDocument.access != "public" && !skipPublic}
           <!-- Step 0. Make public if not already -->
-          <h1>Would you like to make this document public before sharing?</h1>
+          <h1>{$_("dialogEmbedDialog.wouldMakePublic")}</h1>
           <div class="warning">
             <div class="erroricon">
               {@html errorIconSvg}
             </div>
             <div class="message">
               <p>
-                The document is not currently public. If you embed or link it,
-                only you and collaborators will be able to view it until it is
-                made public. Click below when you’re ready to publish this
-                document to the public.
+                {$_("dialogEmbedDialog.notPublic")}
               </p>
             </div>
           </div>
           <div class="buttonpadded">
-            <Button on:click={makePublic}>Make document public</Button>
+            <Button on:click={makePublic}>{$_("dialogEmbedDialog.makePublic")}</Button>
             <Button secondary={true} on:click={() => (skipPublic = true)}>
-              Leave as is
+              {$_("dialogEmbedDialog.leave")}
             </Button>
           </div>
         {:else}
           <!-- Step 1: Choose embed type -->
-          <h1>Select share option</h1>
+          <h1>{$_("dialogEmbedDialog.selectShare")}</h1>
           <p>
-            Choose whether to share the entire document or just a page or note.
+            {$_("dialogEmbedDialog.selectShareHelp")}
           </p>
           <div class="shareoptions">
             <div class="shareicon">
@@ -243,10 +240,9 @@
                 on:mouseout={() => (shareHover = null)}
                 on:click={() => (layout.embedShareOption = "document")}
               >
-                <h2>Share entire document</h2>
+                <h2>{$_("dialogEmbedDialog.shareDoc")}</h2>
                 <p>
-                  Link or embed the entire document. (This is the most commonly
-                  used share option.)
+                  {$_("dialogEmbedDialog.shareDocHelp")}
                 </p>
               </div>
               <div
@@ -256,10 +252,9 @@
                 on:mouseout={() => (shareHover = null)}
                 on:click={() => (layout.embedShareOption = "page")}
               >
-                <h2>Share specific page</h2>
+                <h2>{$_("dialogEmbedDialog.sharePage")}</h2>
                 <p>
-                  Link or embed a single page of the document. Useful for
-                  highlighting a page excerpt.
+                  {$_("dialogEmbedDialog.sharePageHelp")}
                 </p>
               </div>
               <div
@@ -271,14 +266,12 @@
                 on:mouseout={() => (shareHover = null)}
                 on:click={selectNote}
               >
-                <h2 class:faded={!hasNotes}>Share specific note</h2>
+                <h2 class:faded={!hasNotes}>${_("dialogEmbedDialog.shareNote")}</h2>
                 <p>
                   {#if hasNotes}
-                    Link or embed a note within the document. Useful for
-                    highlighting a region of a page.
+                    {$_("dialogEmbedDialog.shareNoteHelpHasNote")}
                   {:else}
-                    Once you add notes to the document, use this feature to link
-                    or embed them.
+                    {$_("dialogEmbedDialog.shareNoteHelpNoNote")}
                   {/if}
                 </p>
               </div>

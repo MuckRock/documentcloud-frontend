@@ -6,6 +6,7 @@
   import { simplePlural, nameSingularNumberPlural } from "@/util/string";
   import { editSelectedDocumentInfo } from "@/manager/documents";
   import emitter from "@/emit";
+  import { _ } from 'svelte-i18n';
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -84,7 +85,7 @@
           <Button disabled={true}>{buttonText}</Button>
         </Tooltip>
       {/if}
-      <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+      <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
     </div>
   </div>
 </div>

@@ -4,6 +4,7 @@
   import AppearanceDimension from "./AppearanceDimension";
   import emitter from "@/emit";
   import { timeoutify } from "@/util/closure";
+  import { _ } from 'svelte-i18n';
 
   export let options;
   export let storageManager = null;
@@ -76,10 +77,14 @@
 </style>
 
 <details>
-  <summary>Customize Appearance</summary>
-  <Button on:click={() => (help = !help)} nondescript={true}
-    >{#if help}Hide{:else}Show{/if} help text</Button
-  >
+  <summary>{$_("appearanceCustomizer.customizeAppearance")}</summary>
+  <Button on:click={() => (help = !help)} nondescript={true}>
+    {#if help}
+      {$_("appearanceCustomizer.hide")}
+    {:else}
+      {$_("appearanceCustomizer.show")}
+    {/if}
+  </Button>
   <div class="optionscrollcontainer">
     <div class="optionscroll">
       {#each options as option}

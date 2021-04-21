@@ -23,6 +23,7 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import emitter from "@/emit";
+  import { _ } from 'svelte-i18n';
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -45,9 +46,10 @@
 
   async function removeProjectUser(user) {
     showConfirm(
-      "Confirm remove user",
-      `Proceeding will remove ${user.name} from ${layout.projectEdit.title}. Do you wish to continue?`,
-      "Remove",
+      $_("dialogCollaboratorDialog.confirm"),
+      $_("dialogCollaboratorDialog.confirmMsg",
+        {values: {name: user.name, title: layout.projectEdit.title}}),
+      $_("dialog.remove"),
       async () => {
         await wrapLoadSeparate(
           loading,
@@ -151,20 +153,15 @@
   <div>
     <div class="mcontent">
       <div class="inputpadded">
-        <h1>Add Collaborators</h1>
+        <h1>{$_("dialogCollaboratorDialog.addCollaborators")}</h1>
         <p>
-          Put in the email of an existing DocumentCloud user below. If they
-          don't have an account, have them register <a
-            target="_blank"
-            href="https://accounts.muckrock.com/accounts/signup/?intent=documentcloud"
-            >here for free</a
-          >, and then ask them to log in to DocumentCloud at least once.
+          {@html $_("dialogCollaboratorDialog.invite")}
         </p>
         <div class="collaborator">
           <div class="name">
             <input
               bind:value={email}
-              placeholder="Email address"
+              placeholder="{$_("common.emailAddress")}"
               type="email"
             />
           </div>
@@ -177,62 +174,60 @@
             >
               <span class="action" slot="title">
                 {#if access == "admin"}
-                  Admin
+                  {$_("dialogCollaboratorDialog.admin")}
                 {:else if access == "edit"}
-                  Edit
-                {:else if access == "view"}View{/if}
+                  {$_("dialog.edit")}
+                {:else if access == "view"}
+                  {$_("dialogCollaboratorDialog.view")}
+                {/if}
                 <span class="dropper">▼</span>
               </span>
               <Menu>
                 <MenuItem on:click={() => (access = "admin")}>
-                  Admin
+                  {$_("dialogCollaboratorDialog.admin")}
                   <div class="info">
-                    Collaborators can edit this project and its documents
+                    {$_("dialogCollaboratorDialog.adminHelp")}
                   </div>
                 </MenuItem>
                 <MenuItem on:click={() => (access = "edit")}>
-                  Edit
+                  {$_("dialog.edit")}
                   <div class="info">
-                    Collaborators can edit documents in this project
+                    {$_("dialogCollaboratorDialog.editHelp")}
                   </div>
                 </MenuItem>
                 <MenuItem on:click={() => (access = "view")}>
-                  View
+                  {$_("dialogCollaboratorDialog.view")}
                   <div class="info">
-                    Collaborators can view documents in this project
+                    {$_("dialogCollaboratorDialog.viewHelp")}
                   </div>
                 </MenuItem>
               </Menu>
             </Dropdown>
           </span>
           <div class="button">
-            <Button on:click={handleAdd}>+ Add</Button>
+            <Button on:click={handleAdd}>+ {$_("dialogCollaboratorDialog.add")}</Button>
           </div>
         </div>
       </div>
       {#if $layout.projectEdit.usersAndAccesses.length == 0}
         {#if !$loading}
           <p class="fyi">
-            You have not yet added any collaborators to this project. Invite
-            collaborators to grant other users access to the documents shared in
-            this project. You can control whether collaborators have access to
-            view/edit the project’s documents or be an admin with permissions to
-            invite other users and edit the project itself.
+            {$_("dialogCollaboratorDialog.empty")}
           </p>
         {/if}
       {:else}
-        <h1>Manage Collaborators</h1>
+        <h1>{$_("dialogCollaboratorDialog.manageCollaborators")}</h1>
         <div class="managetable">
           <div class="row header">
-            <div>Name</div>
-            <div>Access</div>
+            <div>{$_("dialogCollaboratorDialog.name")}</div>
+            <div>{$_("dialogCollaboratorDialog.access")}</div>
           </div>
           {#each $layout.projectEdit.usersAndAccesses as userAccess}
             <div class="row">
               <div class="name">
                 {userAccess.user.name}
                 {#if $orgsAndUsers.me != null && userAccess.user.id == $orgsAndUsers.me.id}
-                  <i>(you)</i>
+                  <i>{$_("dialogCollaboratorDialog.you")}</i>
                 {/if}
               </div>
               <div class="access">
@@ -254,7 +249,7 @@
                     nondescript={true}
                     caution={true}
                   >
-                    Remove
+                    {$_("dialog.remove")}
                   </Button>
                 </div>
               {/if}
@@ -263,7 +258,7 @@
         </div>
       {/if}
       <div class="buttonpadded">
-        <Button on:click={emit.dismiss}>Done</Button>
+        <Button on:click={emit.dismiss}>{$_("dialog.done")}</Button>
       </div>
     </div>
   </div>

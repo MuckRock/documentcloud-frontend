@@ -1,23 +1,24 @@
 <script>
   import { lpad } from "@/util/string";
+  import { _ } from 'svelte-i18n';
 
   // SVG assets
   import CalendarLeft from "@/assets/calendar_left.svg";
   import CalendarRight from "@/assets/calendar_right.svg";
 
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    $_("jan"),
+    $_("feb"),
+    $_("mar"),
+    $_("apr"),
+    $_("may"),
+    $_("jun"),
+    $_("jul"),
+    $_("aug"),
+    $_("sep"),
+    $_("oct"),
+    $_("nov"),
+    $_("dec"),
   ];
 
   function roundMinutes(date) {
@@ -257,8 +258,8 @@
       {/each}
     </select>
     <select bind:value={amPm}>
-      <option value={false}>AM</option>
-      <option value={true}>PM</option>
+      <option value={false}>{$_("am")}</option>
+      <option value={true}>{$_("pm")}</option>
     </select>
   </div>
 </div>

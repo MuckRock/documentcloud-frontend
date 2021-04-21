@@ -7,6 +7,7 @@
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { writable } from "svelte/store";
   import emitter from "@/emit";
+  import { _ } from 'svelte-i18n';
 
   const emit = emitter({
     dismiss() {}
@@ -64,50 +65,57 @@
 <Loader active={$loading}>
   <div>
     <div class="mcontent">
-      <h1>Change access for {$layout.projectEditUser.user.name}</h1>
+      <h1>
+        {$_(
+          "dialogProjectAccessDialog.changeAccessFor",
+          {values: {name: $layout.projectEditUser.user.name}}
+        )}
+      </h1>
       <p>
-        Select an access level below for {$layout.projectEditUser.user.name} in {$layout.projectEdit.title}
+        {$_(
+          "dialogProjectAccessDialog.selectAccess",
+          {values: {
+            name: $layout.projectEditUser.user.name,
+            title: $layout.projectEdit.title
+          }}
+        )}
       </p>
       <div class="inputpadded">
         <label>
           <input type="radio" bind:group={access} value={'admin'} />
           <div class="accessoption">
-            <h3>Admin Access</h3>
+            <h3>{$_("dialogProjectAccessDialog.adminAccess")}</h3>
             <small>
-              This collaborator can edit this project and its documents. The
-              collaborator can invite users, delete users, and remove the
-              project.
+              {$_("dialogProjectAccessDialog.adminHelp")}
             </small>
           </div>
         </label>
         <label>
           <input type="radio" bind:group={access} value={'edit'} />
           <div class="accessoption">
-            <h3>Edit Access</h3>
+            <h3>{$_("dialogProjectAccessDialog.editAccess")}</h3>
             <small>
-              This collaborator can edit documents in this project but cannot
-              edit the project itself.
+              {$_("dialogProjectAccessDialog.editHelp")}
             </small>
           </div>
         </label>
         <label>
           <input type="radio" bind:group={access} value={'view'} />
           <div class="accessoption">
-            <h3>View Access</h3>
+            <h3>{$_("dialogProjectAccessDialog.viewAccess")}</h3>
             <small>
-              This collaborator can view documents in this project but cannot
-              edit them or the project.
+              {$_("dialogProjectAccessDialog.viewHelp")}
             </small>
           </div>
         </label>
       </div>
       <div class="buttonpadded">
         <Button
-          disabledReason={valid ? null : `Access is already set to ${$layout.projectEditUser.access}. Select a different access level.`}
+          disabledReason={valid ? null : $_("dialogProjectAccessDialog.invalidAccess", {values: {access: $layout.projectEditUser.access}})}
           on:click={() => changeAccess(access)}>
-          Change access
+          {$_("dialogProjectAccessDialog.changeAccess")}
         </Button>
-        <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+        <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
       </div>
     </div>
   </div>

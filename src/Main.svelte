@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { currentUrl } from "@/util/url";
   import Empty from "./pages/home/Empty.svelte";
+  import "@/common/i18n.js";
 
   // Patch poll events
   import "@/ticker/ticker";

@@ -8,6 +8,7 @@
   import { editSelectedDocumentInfo } from "@/manager/documents";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
+  import { _ } from 'svelte-i18n';
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -98,8 +99,7 @@
 <div>
   <div class="mcontent">
     <h1>
-      Edit information for
-      {nameSingularNumberPlural(numSelected, 'document')}
+      {$_("dialogDocumentInformationDialog.editInformation", {values: {n: numSelected}})}
     </h1>
     <table>
       {#each metaDialogs as meta, i}
@@ -123,13 +123,13 @@
     </table>
     <div class="buttonpadded">
       {#if valid}
-        <Button on:click={applyAction}>Save</Button>
+        <Button on:click={applyAction}>{$_("dialog.save")}</Button>
       {:else}
         <Tooltip caption={invalidReason} delay={500}>
-          <Button disabled={true}>Save</Button>
+          <Button disabled={true}>{$_("dialog.save")}</Button>
         </Tooltip>
       {/if}
-      <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+      <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
     </div>
   </div>
 </div>

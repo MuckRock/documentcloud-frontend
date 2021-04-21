@@ -3,6 +3,7 @@
   import privateIconSvg from "@/assets/private_icon.svg";
   import publicIconSvg from "@/assets/public_icon.svg";
   import organizationIconSvg from "@/assets/organization_icon.svg";
+  import { _ } from 'svelte-i18n';
 
   export let access = "private";
   export let editAccess = true;
@@ -12,11 +13,9 @@
   export let collaboratorName = "Collaborator";
   export let privateName = "Private";
 
-  export let publicMessage =
-    "Note will be visible to anyone with access to the document.";
-  export let collaboratorMessage =
-    "Note will be visible to anyone who can edit this document.";
-  export let privateMessage = "Note will be visible to you alone.";
+  export let publicMessage = $_("accessToggle.public");
+  export let collaboratorMessage = $_("accessToggle.collaborator");
+  export let privateMessage = $_("accessToggle.private");
 </script>
 
 <style lang="scss">

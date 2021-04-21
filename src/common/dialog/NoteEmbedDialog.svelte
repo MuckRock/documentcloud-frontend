@@ -5,6 +5,7 @@
   import { getEmbed } from "@/api/embed";
   import { doc } from "@/viewer/document";
   import { pageImageUrl, textUrl } from "@/api/viewer";
+  import { _ } from 'svelte-i18n';
 
   const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
     .map((x) => x.split(":"))
@@ -35,10 +36,10 @@
   }
 </script>
 
-<h1>Embed a note of “{$layout.embedDocument.title}”</h1>
+<h1>{$_("dialogNoteEmbedDialog.embedNote", {values: {title: $layout.embedDocument.title}})}</h1>
 
 <ShareOptions
-  embedDescription={'Copy the HTML code to embed this note within an article or post:'}
+  embedDescription={$_("dialogNoteEmbedDialog.embedDesc")}}
   {embedCode}
   {errorOccurred}
   embedAction={() => {

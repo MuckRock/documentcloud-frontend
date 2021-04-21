@@ -13,6 +13,7 @@
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
   import Calendar from "@/common/Calendar";
+  import { _ } from 'svelte-i18n';
 
   // SVG assets
   import InfoSvg from "@/assets/info.svg";
@@ -188,12 +189,10 @@
 <div>
   <div class="mcontent">
     <h1>
-      Change access for
-      {nameSingularNumberPlural(numAccessSelected, "document")}
+      {$_("dialogAccessDialog.changeAccess", {values: {n: numAccessSelected}})}
     </h1>
     <p>
-      Select an access level below for the
-      {nameSingularNumberPlural(numAccessSelected, "selected document")}:
+    {$_("dialogAccessDialog.selectAccess", {values: {n: numAccessSelected}})}
     </p>
     <div class="inputpadded">
       <label class:faded={notVerified}>
@@ -204,40 +203,30 @@
           disabled={notVerified}
         />
         <div class="accessoption">
-          <h3>Public access</h3>
-          <small>
-            Anyone on the internet can search for and view the document.
-          </small>
+          <h3>{$_("dialogAccessDialog.public")}</h3>
+          <small>{$_("dialogAccessDialog.publicDesc")}</small>
         </div>
       </label>
       {#if notVerified}
         <div class="callout">
           <span class="i">{@html InfoSvg}</span>
           <span class="content">
-            Only verified users or members of verified organizations can make
-            uploaded documents public. If you're a journalist or otherwise work
-            in publishing vetted materials to inform the public, <a
-              href="https://www.muckrock.com/assignment/request-account-verification-377/form/"
-              target="_blank">learn more and request verification here.</a
-            >
+            {@html $_("dialogAccessDialog.verifiedHelp")}
           </span>
         </div>
       {/if}
       <label>
         <input type="radio" bind:group={access} value={"private"} />
         <div class="accessoption">
-          <h3>Private access</h3>
-          <small>
-            Only people with explicit permission (via collaboration) have
-            access.
-          </small>
+          <h3>{$_("dialogAccessDialog.private")}</h3>
+          <small>{$_("dialogAccessDialog.privateDesc")}</small>
         </div>
       </label>
       <label>
         <input type="radio" bind:group={access} value={"organization"} />
         <div class="accessoption">
-          <h3>Private to your organization</h3>
-          <small>Only the people in your organization have access.</small>
+          <h3>{$_("dialogAccessDialog.organization")}</h3>
+          <small>{$_("dialogAccessDialog.organizationDesc")}</small>
         </div>
       </label>
       {#if access != "public" && !notVerified}
@@ -249,15 +238,14 @@
                 bind:checked={showScheduler}
                 disabled={notVerified}
               />
-              <span class="icon">{@html CalendarSvg}</span> Schedule publication</label
+              <span class="icon">{@html CalendarSvg}</span> {$_("dialogAccessDialog.schedulePublication")}</label
             >
           </div>
           {#if showScheduler}
-            <small
-              >This document will be made public at the given date and time.
-              Publication time is local{#if timezone != null}
-                &nbsp({timezone}){/if}.</small
-            >
+            <small>
+              {$_("dialogAccessDialog.scheduleHelp",
+              {values: {timezone: timezone != null ? ` (${timezone})` : ""}})}
+            </small>
             <Calendar bind:value={publishAt} />
           {/if}
         </div>
@@ -268,11 +256,12 @@
         disabledReason={valid
           ? null
           : validPublishAt
-          ? `Access is unchanged. Select a different access level.`
-          : "Must select a time in the future"}
-        on:click={() => accessChange(access, publishAt)}>Change access</Button
-      >
-      <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+          ? $_("dialogAccessDialog.unchanged")
+          : $_("dialogAccessDialog.future")}
+        on:click={() => accessChange(access, publishAt)}>
+        {$_("dialogAccessDialog.change")}
+      </Button>
+      <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
     </div>
   </div>
 </div>

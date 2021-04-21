@@ -19,6 +19,7 @@
   import { nameSingularNumberPlural } from "@/util/string";
   import { intersection } from "@/util/array";
   import { writable } from "svelte/store";
+  import { _ } from 'svelte-i18n';
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -147,11 +148,10 @@
 
   async function handleRemove(key, value) {
     showConfirm(
-      "Confirm remove data point",
-      `Proceeding will remove the ${
-        key == TAG_KEY ? "" : `${key}:`
-      }${value} data point from the specified documents. Do you wish to continue?`,
-      "Remove",
+      $_("dialogDataDialog.confirm"),
+      $_("dialogDataDialog.removeMsg",
+        {values: {key: key == TAG_KEY ? "" : `${key}:`, value: value}}),
+      $_("dialog.remove"),
       async () => {
         // TODO: replace with bulk method on backend
         await wrapMultipleSeparate(
@@ -239,8 +239,7 @@
   <div>
     <div class="mcontent">
       <h1 class:faded={editMode}>
-        Add Data for
-        {nameSingularNumberPlural(dataDocuments.length, 'Document')}
+        {$_("dialogDataDialog.addData", {values: {n: dataDocuments.length}})}
       </h1>
       <div class="inputpadded" class:faded={editMode}>
         <div class="add">
@@ -251,7 +250,11 @@
               horizPadding={15}
               vertPadding={8}>
               <span class="action" slot="title">
-                {#if addTag}Tag{:else}Key / Value{/if}
+                {#if addTag}
+                  {$_("dialogDataDialog.tag")}
+                {:else}
+                  {$_("dialogDataDialog.keyValue")}
+                {/if}
                 <span class="dropper">▼</span>
                 {#if addTag}
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -261,33 +264,32 @@
                 <MenuItem on:click={() => (addTag = true)}>
                   Tag
                   <div class="info">
-                    Add custom tags to categorize your documents.
+                    {$_("dialogDataDialog.tagInfo")}
                     <p>
-                      e.g.
+                      {$_("dialogDataDialog.eg")}
                       <NoWhitespace>
-                        <em>report</em>
+                        <em>{$_("dialogDataDialog.exampleTagReport")}</em>
                         <span>,&nbsp;</span>
-                        <em>lawsuit</em>
+                        <em>{$_("dialogDataDialog.exampleTagLawsuit")}</em>
                         <span>,&nbsp;</span>
-                        <em>email</em>
+                        <em>{$_("dialogDataDialog.exampleTagEmail")}</em>
                         <span>.</span>
                       </NoWhitespace>
                     </p>
                   </div>
                 </MenuItem>
                 <MenuItem on:click={() => (addTag = false)}>
-                  Key / Value
+                  {$_("dialogDataDialog.keyValue")}
                   <div class="info">
-                    Add custom key / value pairs for precise categorization of
-                    your documents.
+                    {$_("dialogDataDialog.keyValueInfo")}
                     <p>
-                      e.g.
+                      {$_("dialogDataDialog.eg")}
                       <NoWhitespace>
-                        <em>state:&nbsp;California</em>
+                        <em>{@html $_("dialogDataDialog.exampleKVState")}</em>
                         <span>,&nbsp;</span>
-                        <em>year:&nbsp;2016</em>
+                        <em>{@html $_("dialogDataDialog.exampleKVYear")}</em>
                         <span>,&nbsp;</span>
-                        <em>type:&nbsp;memo</em>
+                        <em>{@html $_("dialogDataDialog.exampleKVType")}</em>
                         <span>.</span>
                       </NoWhitespace>
                     </p>
@@ -297,17 +299,17 @@
             </Dropdown>
           </span>
           {#if !addTag}
-            <input type="text" placeholder="Key" class="key" bind:value={key} />
+            <input type="text" placeholder={$_("dialogDataDialog.key")} class="key" bind:value={key} />
             :
           {/if}
           <input
             type="text"
-            placeholder={addTag ? 'Tag' : 'Value'}
+            placeholder={addTag ? $_("dialogDataDialog.tag") : $_("dialogDataDialog.value")}
             class="value"
             bind:value />
           <span class="lpad">
             <Button
-              disabledReason={inputValid ? null : keyValid ? (addTag ? 'Enter a tag' : 'Enter a key') : 'Keys can only contain letters, numbers, underscores (_), and dashes (-)'}
+              disabledReason={inputValid ? null : keyValid ? (addTag ? $_("dialogDataDialog.enterTag") : $_("dialogDataDialog.enterKey") ) : $_("dialogDataDialog.keyInvalid") }
               on:click={handleAdd}>
               + Add
             </Button>
@@ -317,14 +319,11 @@
 
       {#if emptyData}
         <p class="fyi">
-          You have not yet added any data to the specified documents. Add tags
-          and key/value pairs to categorize and organize your documents. You can
-          filter and search on document data to give you powerful control over
-          document management.
+          {$_("dialogDataDialog.emptyMsg")}
         </p>
       {:else}
         <div>
-          <h1>Manage Document Data</h1>
+          <h1>{$_("dialogDataDialog.manageDocumentData")}</h1>
           {#each mutualDataPoints as { key, value }}
             <div
               class="row"
@@ -336,13 +335,13 @@
                   <span style="margin-right: 3px;">
                     <Button
                       small={true}
-                      disabledReason={editKeyValid ? (editTrimValid ? (editValid ? null : 'Value remains unchanged') : 'Key/value cannot be empty') : 'Keys can only contain letters, numbers, underscores (_), and dashes (-)'}
+                      disabledReason={editKeyValid ? (editTrimValid ? (editValid ? null : $_("dialogDataDialog.valueUnchanged") ) : $_("dialogDataDialog.kvCannotBeEmpty") ) : $_("dialogDataDialog.keyInvalid") }
                       on:click={handleEdit}>
-                      Edit
+                      {$_("dialog.edit")}
                     </Button>
                   </span>
                   <Button small={true} secondary={true} on:click={cancelEdit}>
-                    Cancel
+                    {$_("dialog.cancel")}
                   </Button>
                 </span>
               {:else}
@@ -355,7 +354,7 @@
                   nondescript={true}
                   caution={true}
                   on:click={() => handleRemove(key, value)}>
-                  Remove
+                  {$_("dialog.remove")}
                 </Button>
               {/if}
             </div>
@@ -364,7 +363,7 @@
       {/if}
 
       <div class="buttonpadded" class:faded={editMode}>
-        <Button on:click={emit.dismiss}>Done</Button>
+        <Button on:click={emit.dismiss}>{$_("dialog.done")}</Button>
       </div>
     </div>
   </div>

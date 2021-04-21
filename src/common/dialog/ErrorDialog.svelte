@@ -2,6 +2,7 @@
   import Button from "@/common/Button";
   import emitter from "@/emit";
   import { extractErrorData } from "@/manager/errorData";
+  import { _ } from 'svelte-i18n';
 
   export let error;
   export let refresh = false;
@@ -46,12 +47,14 @@
 <div>
   <div class="mcontent">
     <h1>
-      An
-      {#if unexpected}unexpected{/if}
-      error occurred
+      {#if unexpected}unexpected
+        {$_("dialogErrorDialog.unexpectedErrorOccurred")}
+      {:else}
+        {$_("dialogErrorDialog.errorOccurred")}
+      {/if}
     </h1>
     {#if unexpected}
-      <p>Please try again later.</p>
+      <p>{$_("dialogErrorDialog.tryAgain")}</p>
     {:else}
       {#each errorData as { key, values }}
         <div class="errorcontainer">
@@ -68,7 +71,13 @@
     {/if}
     <div class="buttonpadded">
       <Button on:click={emit.dismiss}>
-        {#if unexpected}Close{:else if refresh}Refresh{:else}Dismiss{/if}
+        {#if unexpected}
+          {$_("dialogErrorDialog.close")}
+        {:else if refresh}
+          {$_("dialogErrorDialog.refresh")}
+        {:else}
+          {$_("dialogErrorDialog.dismiss")}
+        {/if}
       </Button>
     </div>
   </div>

@@ -4,6 +4,7 @@
   import { layout } from "@/viewer/layout";
   import { getEmbed } from "@/api/embed";
   import { doc } from "@/viewer/document";
+  import { _ } from 'svelte-i18n';
 
   let selectedPage = null;
 
@@ -37,20 +38,18 @@
   }
 </style>
 
-<h1>Embed a page of “{$layout.embedDocument.title}”</h1>
-Select the page to embed:
+<h1>{$_("dialogPageEmbedDialog.embedPage", {values: {title: $layout.embedDocument.title}})}</h1>
+{$_("dialogPageEmbedDialog")}
 <select bind:value={page}>
   <option value="visible">
-    Page
-    {doc.visiblePageNumber}
-    (currently visible)
+  {$_("dialogPageEmbedDialog.page", {values: {n: doc.visiblePageNumber}})}
   </option>
-  <option value="another">Other page</option>
+  <option value="another">{$_("dialogPageEmbedDialog.otherPage")}</option>
 </select>
 
 {#if page == "another"}
   <div class="another">
-    Enter the page number to embed:
+    {$_("dialogPageEmbedDialog.enterPageNumber")}
     <BoundedNumberInput
       min={1}
       max={$layout.embedDocument.pageCount}
@@ -60,7 +59,7 @@ Select the page to embed:
 {/if}
 
 <ShareOptions
-  embedDescription={"Copy the HTML code to embed this page within an article or post:"}
+  embedDescription={$_("dialogPageEmbedDialog.embedDesc")}
   {embedCode}
   {errorOccurred}
   embedAction={() => {

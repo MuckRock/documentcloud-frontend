@@ -4,6 +4,7 @@
   import Link from "@/router/Link";
   import { router } from "@/router/router";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { _ } from 'svelte-i18n';
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -176,22 +177,22 @@
             {#if $orgsAndUsers.me != null}
               <div class="signupcontainer">
                 <div class="supplemental">
-                  Signed in as {$orgsAndUsers.me.name}
+                  {$_("homeTemplate.signedIn", {values: {name: $orgsAndUsers.me.name}})}
                 </div>
                 <div class="signin">
-                  <a href={SIGN_OUT_URL}>Sign out</a>
+                  <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
                 </div>
                 <Link to="app">
-                  <Button>Go to app</Button>
+                  <Button>{$_("homeTemplate.goToApp")}</Button>
                 </Link>
               </div>
             {:else}
               <div class="signupcontainer">
                 <div class="signin">
-                  <a href={SIGN_IN_URL}>Sign in</a>
+                  <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
                 </div>
                 <a href={SIGN_UP_URL}>
-                  <Button>Sign up</Button>
+                  <Button>{$_("homeTemplate.signUp")}</Button>
                 </a>
               </div>
             {/if}
@@ -203,22 +204,22 @@
           {#if $orgsAndUsers.me != null}
             <div class="signupcontainer">
               <div class="supplemental">
-                Signed in as {$orgsAndUsers.me.name}
+                {$_("homeTemplate.signedIn", {values: {name: $orgsAndUsers.me.name}})}
               </div>
               <div class="signin">
-                <a href={SIGN_OUT_URL}>Sign out</a>
+                <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
               </div>
               <Link to="app">
-                <Button>Go to app</Button>
+                <Button>{$_("homeTemplate.goToApp")}</Button>
               </Link>
             </div>
           {:else}
             <div class="signupcontainer">
               <div class="signin">
-                <a href={SIGN_IN_URL}>Sign in</a>
+                <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
               </div>
               <a href={SIGN_UP_URL}>
-                <Button>Sign up</Button>
+                <Button>{$_("homeTemplate.signUp")}</Button>
               </a>
             </div>
           {/if}

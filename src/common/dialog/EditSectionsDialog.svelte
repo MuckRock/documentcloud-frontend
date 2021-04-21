@@ -8,6 +8,7 @@
   import { addSection, removeSection, replaceSection } from "@/api/section";
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { showConfirm } from "@/manager/confirmDialog";
+  import { _ } from 'svelte-i18n';
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -107,11 +108,12 @@
   async function handleSectionRemove(idx, callApi = true) {
     if (callApi) {
       showConfirm(
-        "Confirm delete",
-        `Proceeding will remove the specified section (p. ${
-          viewer.sections[idx].page + 1
-        } ${viewer.sections[idx].title}). Do you wish to continue?`,
-        "Delete",
+        $_("dialogEditSectionsDialog.confirmDelete"),
+        $_("dialogEditSectionsDialog.proceedingWillRemove",
+          {values:
+            {page: viewer.sections[idx].page + 1, title: viewer.sections[idx].title}
+          }),
+        $_("dialog.delete"),
         async () => {
           await wrapLoadSeparate(
             loading,
@@ -251,8 +253,8 @@
 <Loader center={true} active={$loading}>
   <div>
     <div class="mcontent">
-      <h1>Edit Sections</h1>
-      <p>Manage sections to organize your document with a table of contents.</p>
+      <h1>{$_("dialogEditSectionsDialog.editSections")}</h1>
+      <p>{$_("dialogEditSectionsDialog.manageSections")}</p>
 
       <!-- Existing TOC -->
       <div class="toc" class:disabled={update}>
@@ -267,23 +269,27 @@
                 on:click={async () => !update && (await handleSectionRemove(i))}>
                 {@html closeSimpleSvg}
               </span>
-              <span class="page">p. {section.page + 1}</span>
+              <span class="page">{$_("dialogEditSectionsDialog.pageAbbrevNo", {values: {n: section.page + 1}})}</span>
               <span class="title">{section.title}</span>
             </div>
           {/each}
         {:else}
           <!-- No sections -->
-          <div class="empty">You have not added any sections</div>
+          <div class="empty">{$_("dialogEditSectionsDialog.empty")}</div>
         {/if}
       </div>
 
       <!-- Add section input range -->
       <div class="pendingsection">
         <p>
-          {#if update}Edit the selected section{:else}Add a new section{/if}
+        {#if update}
+          {$_("dialogEditSectionsDialog.edit")}
+        {:else}
+          {$_("dialogEditSectionsDialog.add")}
+        {/if}
         </p>
         <div class="actions">
-          <span class="page">p.</span>
+          <span class="page">{$_("dialogEditSectionsDialog.pageAbbrev")}</span>
           <input
             class="pageinput"
             type="text"
@@ -295,23 +301,33 @@
             maxlength={sectionTitleLimit}
             class="titleinput"
             type="text"
-            placeholder="Title"
+            placeholder={$_("dialogEditSectionsDialog.title")}
             bind:value={pendingTitle} />
           <span class="add">
             <Button
-              disabledReason={pageValid ? (titleValid ? null : titleUpdateValid ? 'Please enter a title' : 'Enter a new title or page number') : pageCollided ? 'You must enter a unique page number' : 'Page number is invalid'}
+              disabledReason={
+              pageValid ? (
+                titleValid ?
+                  null :
+                  titleUpdateValid ?
+                    $_("dialogEditSectionsDialog.missingTitle")
+                    : $_("dialogEditSectionsDialog.updateTitle")
+                ) : pageCollided ?
+                  $_("dialogEditSectionsDialog.uniquePageNumber")
+                  : $_("dialogEditSectionsDialog.invalidPageNumber")
+              }
               on:click={handleSectionAdd}>
-              {#if update}+ Update{:else}+ Add{/if}
+              {#if update}+ {$_("dialogEditSectionsDialog.update")}{:else}+ {$_("dialogEditSectionsDialog.add")}{/if}
             </Button>
           </span>
           {#if update}
             <span class="cancel">
-              <Button secondary={true} on:click={cancelUpdate}>Cancel</Button>
+              <Button secondary={true} on:click={cancelUpdate}>{$_("dialog.cancel")}</Button>
             </span>
           {/if}
         </div>
         <div class="buttonpadded">
-          <Button primary={true} on:click={hideEditSections}>Done</Button>
+          <Button primary={true} on:click={hideEditSections}>{$_("dialog.done")}</Button>
         </div>
       </div>
     </div>

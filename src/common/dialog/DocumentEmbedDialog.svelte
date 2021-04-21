@@ -6,6 +6,7 @@
   import { queryBuilder } from "@/util/url";
   import { StorageManager } from "@/util/storageManager";
   import { index } from "@/util/array";
+  import { _ } from 'svelte-i18n';
 
   let embedded = true;
 
@@ -26,62 +27,67 @@
   let appearanceOptions = [
     {
       type: "toggle",
-      title: "Responsive",
+      title: $_("dialogDocumentEmbedDialog.responsive"),
       values: [
         [
-          "On (default)",
-          "Fill the width of the article container (usually works best)",
+          $_("dialogDocumentEmbedDialog.respOn"),
+          $_("dialogDocumentEmbedDialog.respOnHelp"),
         ],
-        ["Off", "The document will fit the sizes specified below"],
+        [
+          $_("dialogDocumentEmbedDialog.respOff"),
+          $_("dialogDocumentEmbedDialog.respOffHelp"),
+        ],
       ],
       option: RESPONSIVE_OPTION,
       selected: storageManager.get(RESPONSIVE_OPTION, 0),
     },
     {
       type: "dimension",
-      title: "Width",
-      automaticText:
-        "Will fill the available space if the document is set to responsive, otherwise defaults to 700px",
-      fixedText:
-        "Set a maximum width if the document is responsive, or set a fixed size if not responsive",
+      title: $_("dialogDocumentEmbedDialog.width"),
+      automaticText: $_("dialogDocumentEmbedDialog.widthAuto"),
+      fixedText: $_("dialogDocumentEmbedDialog.widthFixed"),
       option: WIDTH_OPTION,
       selected: storageManager.get(WIDTH_OPTION, 0),
     },
     {
       type: "dimension",
-      title: "Height",
-      automaticText:
-        "The height is based on the size of the document, with no maximum size. If responsive, will be set to the height of the browser window minus 100px",
-      fixedText:
-        "Set a maximum height if the document is responsive, or set a fixed size if not responsive",
+      title: $_("dialogDocumentEmbedDialog.height"),
+      automaticText: $_("dialogDocumentEmbedDialog.heightAuto"),
+      fixedText: $_("dialogDocumentEmbedDialog.heightFixed"),
       option: HEIGHT_OPTION,
       selected: storageManager.get(HEIGHT_OPTION, 0),
     },
     {
       type: "toggle",
-      title: "Sidebar behavior",
+      title: $_("dialogDocumentEmbedDialog.sidebarBehavior"),
       values: [
         [
-          "Responsive (default)",
-          "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
+          $_("dialogDocumentEmbedDialog.sbResponsive"),
+          $_("dialogDocumentEmbedDialog.sbResponsiveHelp"),
         ],
-        ["Hidden", "Hide the sidebar by default"],
-        ["Visible", "Show the sidebar by default"],
+        [
+          $_("dialogDocumentEmbedDialog.hidden"),
+          $_("dialogDocumentEmbedDialog.sbHiddenHelp"),
+        ],
+        [
+          $_("dialogDocumentEmbedDialog.visible"),
+          $_("dialogDocumentEmbedDialog.sbVisibleHelp"),
+        ],
       ],
       option: SIDEBAR_OPTION,
       selected: storageManager.get(SIDEBAR_OPTION, 0),
     },
     {
       type: "toggle",
-      title: "Title behavior",
+      title: $_("dialogDocumentEmbedDialog.titleBehavior"),
       values: [
         [
-          "Visible (default)",
-          "Display the title and attribution in the header of the viewer",
+          $_("dialogDocumentEmbedDialog.visibleDefault"),
+          $_("dialogDocumentEmbedDialog.tVisibleHelp"),
         ],
         [
-          "Hidden",
-          "Hide the title in the header of the viewer (still visible in the sidebar)",
+          $_("dialogDocumentEmbedDialog.hidden"),
+          $_("dialogDocumentEmbedDialog.tHiddenHelp"),
         ],
       ],
       option: TITLE_OPTION,
@@ -89,15 +95,15 @@
     },
     {
       type: "toggle",
-      title: "PDF link",
+      title: $_("dialogDocumentEmbedDialog.pdfLink"),
       values: [
         [
-          "Visible (default)",
-          "Show a link to the raw PDF document in the sidebar",
+          $_("dialogDocumentEmbedDialog.visibleDefault"),
+          $_("dialogDocumentEmbedDialog.plVisibleHelp"),
         ],
         [
-          "Hidden",
-          "Hide the sidebar PDF link (file is still accessible if the URL is known)",
+          $_("dialogDocumentEmbedDialog.hidden"),
+          $_("dialogDocumentEmbedDialog.plHiddenHelp"),
         ],
       ],
       option: PDF_OPTION,
@@ -105,39 +111,48 @@
     },
     {
       type: "toggle",
-      title: "Fullscreen option",
+      title: $_("dialogDocumentEmbedDialog.fullscreenOption"),
       values: [
         [
-          "Visible (default)",
-          "Show a fullscreen icon in the bottom-right corner",
+          $_("dialogDocumentEmbedDialog.visibleDefault"),
+          $_("dialogDocumentEmbedDialog.fsVisibleHelp"),
         ],
-        ["Hidden", "Hide the fullscreen option"],
+        [
+          $_("dialogDocumentEmbedDialog.hidden"),
+          $_("dialogDocumentEmbedDialog.fsHiddenHelp"),
+        ],
       ],
       option: FULLSCREEN_OPTION,
       selected: storageManager.get(FULLSCREEN_OPTION, 0),
     },
     {
       type: "toggle",
-      title: "Text mode",
+      title: $_("dialogDocumentEmbedDialog.textMode"),
       values: [
         [
-          "Visible (default)",
-          "Show an option to view the document’s text in the view dropdown",
+          $_("dialogDocumentEmbedDialog.visibleDefault"),
+          $_("dialogDocumentEmbedDialog.tmVisibleHelp"),
         ],
-        ["Hidden", "Hide text mode"],
+        [
+          $_("dialogDocumentEmbedDialog.hidden"),
+          $_("dialogDocumentEmbedDialog.tmHiddenHelp"),
+        ],
       ],
       option: TEXT_OPTION,
       selected: storageManager.get(TEXT_OPTION, 0),
     },
     {
       type: "toggle",
-      title: "Contributed by format",
+      title: $_("dialogDocumentEmbedDialog.contributedByFormat"),
       values: [
         [
-          "User and org (default)",
-          "Show a document’s attribution as the user name followed by the organization",
+          $_("dialogDocumentEmbedDialog.cbfUserAndOrg"),
+          $_("dialogDocumentEmbedDialog.cbfUserAndOrgHelp"),
         ],
-        ["Org only", "Attribute the document to just the organization"],
+        [
+          $_("dialogDocumentEmbedDialog.cbfOrgOnly"),
+          $_("dialogDocumentEmbedDialog.cbfOrgOnlyHelp"),
+        ],
       ],
       option: ORG_OPTION,
       selected: storageManager.get(ORG_OPTION, 0),
@@ -211,12 +226,11 @@
   }
 </script>
 
-<h1>Share “{$layout.embedDocument.title}”</h1>
+<h1>{$_("dialogDocumentEmbedDialog.share", {values: {title: $layout.embedDocument.title}})}</h1>
 
 <ShareOptions
   column={true}
-  embedDescription="Copy the HTML code to embed this document within an article
-  or post:"
+  embedDescription={$_("dialogDocumentEmbedDialog.embedDesc")}
   {embedCode}
   {errorOccurred}
   linkText={linkUrl}
