@@ -47,7 +47,7 @@ export async function searchDocuments(
 ) {
   // Return documents with the specified parameters
   const url = apiUrl(
-    queryBuilder("documents/search/", { q: query, expand, page: page + 1 })
+    queryBuilder("documents/search/", { q: query, expand, page: page + 1, hl: "true" })
   );
   const { data } = await session.get(url);
   data.results = data.results.map(doc => new Document(doc));
