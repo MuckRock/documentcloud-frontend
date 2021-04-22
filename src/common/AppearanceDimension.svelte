@@ -7,6 +7,8 @@
 
   export let option;
   export let help;
+  let automaticText = option.automaticText;
+  let fixedText = option.fixedText;
   let value = option.selected;
   let selected = option.selected == 0 ? 0 : 1;
   let fixed = option.selected == 0 ? 500 : option.selected;
@@ -82,19 +84,19 @@
   <div class="labels">
     <label>
       <input type="radio" value={0} bind:group={selected} />
-      <h2>Responsive (default)</h2>
+      <h2>Automatic (default)</h2>
       {#if help}
-        <p>Adapts to 100% of the container size</p>
+        <p>{automaticText}</p>
       {/if}
     </label>
     <label>
       <input type="radio" value={1} bind:group={selected} />
-      <h2>Fixed (px)</h2>
+      <h2>Fixed</h2>
       {#if selected == 1}
         <input class="numinput" type="number" min="1" bind:value={fixed} />
       {/if}
       {#if help}
-        <p>Dimension size in pixels</p>
+        <p>{fixedText}</p>
       {/if}
     </label>
   </div>

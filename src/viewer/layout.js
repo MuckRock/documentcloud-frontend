@@ -84,6 +84,7 @@ export const layout = new Svue({
 
       // Embed
       embedDocument: null,
+      embedShareOption: null,
       embedNote: null,
       embedContext: "viewer",
 
@@ -520,11 +521,13 @@ function reset() {
 
 export function showEmbedFlow(document) {
   layout.embedNote = null;
+  layout.embedShareOption = null;
   layout.embedDocument = document;
 }
 
 export function hideEmbedFlow() {
   layout.embedDocument = null;
+  layout.embedShareOption = null;
 }
 
 export function hideDocumentInfo() {

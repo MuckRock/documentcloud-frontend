@@ -26,7 +26,6 @@ export class StorageManager {
       localStorage.setItem(this.key(key), JSON.stringify(value));
     } catch (e) {
       // Local storage not available
-      return defaultValue;
     }
   }
 }

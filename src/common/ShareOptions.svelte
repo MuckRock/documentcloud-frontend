@@ -16,6 +16,8 @@
   export let linkText;
   export let tweetText;
   export let showWp = true;
+  export let width = null;
+  export let height = null;
 
   let embedElem;
   let wpElem;
@@ -25,7 +27,11 @@
 
   $: embedText = errorOccurred ? ERROR_TEXT : embedCode;
   $: linkDisplayText = errorOccurred ? ERROR_TEXT : linkText;
-  $: wpText = errorOccurred ? ERROR_TEXT : `[documentcloud url="${linkText}"]`;
+  $: wpText = errorOccurred
+    ? ERROR_TEXT
+    : `[documentcloud url="${linkText}"${
+        width != null ? ` width="${width}"` : ""
+      }${height != null ? ` height="${height}"` : ""}]`;
 
   $: {
     if (embedCode != null && embedAction != null) {
@@ -35,6 +41,40 @@
 </script>
 
 <style lang="scss">
+  $detailWidth: 600px;
+  $detailPadding: 40px;
+
+  .row {
+    display: table;
+    width: 100%;
+
+    .column {
+      display: table-cell;
+      vertical-align: top;
+
+      &.detail {
+        width: $detailWidth + $detailPadding;
+        padding-right: $detailPadding;
+      }
+
+      &.showcase {
+        width: calc(100% - #{$detailWidth});
+      }
+    }
+  }
+
+  @media only screen and (max-width: $largeScreenBreak) {
+    .row {
+      display: block;
+
+      .column {
+        display: block;
+        width: inherit !important;
+        padding-right: 0 !important;
+      }
+    }
+  }
+
   .shareoptions {
     margin: 19px 0;
 
@@ -131,46 +171,56 @@
 </div>
 
 {#if shareOption == "embed"}
-  <p>{embedDescription}</p>
+  <div class="row">
+    <div class="column detail">
+      <p>{embedDescription}</p>
 
-  {#if embedText != null}
-    <textarea
-      class:error={errorOccurred}
-      bind:this={embedElem}
-      value={embedText}
-    />
-  {:else}<textarea disabled>Loading...</textarea>{/if}
+      {#if embedText != null}
+        <textarea
+          class:error={errorOccurred}
+          bind:this={embedElem}
+          value={embedText}
+        />
+      {:else}<textarea disabled>Loading...</textarea>{/if}
 
-  {#if !errorOccurred}
-    <div class="buttonpadded">
-      <Button on:click={() => copy(embedElem)}>Copy HTML code</Button>
+      {#if !errorOccurred}
+        <div class="buttonpadded">
+          <Button on:click={() => copy(embedElem)}>Copy HTML code</Button>
+        </div>
+        {#if showWp}
+          <p>
+            Add this shortcode to your WordPress content —
+            <a
+              class="link"
+              target="_blank"
+              href="https://wordpress.org/plugins/documentcloud/"
+            >
+              plugin required
+            </a>
+          </p>
+          <input
+            class:error={errorOccurred}
+            bind:this={wpElem}
+            value={wpText}
+          />
+          <div class="buttonpadded">
+            <Button on:click={() => copy(wpElem)}>Copy shortcode</Button>
+          </div>
+        {/if}
+      {/if}
+
+      <slot />
     </div>
-    {#if showWp}
-      <p>
-        Add this shortcode to your WordPress content —
-        <a
-          class="link"
-          target="_blank"
-          href="https://wordpress.org/plugins/documentcloud/"
-        >
-          plugin required
-        </a>
-      </p>
-      <input class:error={errorOccurred} bind:this={wpElem} value={wpText} />
-      <div class="buttonpadded">
-        <Button on:click={() => copy(wpElem)}>Copy shortcode</Button>
+
+    {#if embedCode != null}
+      <div class="column showcase">
+        <p><b>Preview:</b></p>
+        <div class="preview">
+          {@html embedCode}
+        </div>
       </div>
     {/if}
-  {/if}
-
-  <slot />
-
-  {#if embedCode != null}
-    <p><b>Preview:</b></p>
-    <div class="preview">
-      {@html embedCode}
-    </div>
-  {/if}
+  </div>
 {:else if shareOption == "link"}
   <input
     class:error={errorOccurred}

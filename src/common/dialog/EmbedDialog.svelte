@@ -23,7 +23,6 @@
   let loading = writable(false);
   let skipPublic = false;
   let shareHover = null;
-  let shareOption = null;
   $: hasNotes = $viewer.notes != null && $viewer.notes.length > 0;
 
   async function makePublic() {
@@ -162,7 +161,7 @@
     <div class="mcontent">
       {#if $layout.embedNote != null}
         <NoteEmbedDialog />
-      {:else if shareOption == null}
+      {:else if $layout.embedShareOption == null}
         {#if $layout.embedDocument.readable}
           <div class="warning readable">
             <div class="message">
@@ -176,7 +175,7 @@
               </div>
             </div>
           </div>
-        {:else if $layout.embedDocument.access != 'public' && !skipPublic}
+        {:else if $layout.embedDocument.access != "public" && !skipPublic}
           <!-- Step 0. Make public if not already -->
           <h1>Would you like to make this document public before sharing?</h1>
           <div class="warning">
@@ -208,27 +207,30 @@
             <div class="shareicon">
               <div
                 class="sharecell"
-                class:hover={shareHover == 'document'}
-                on:mouseover={() => (shareHover = 'document')}
+                class:hover={shareHover == "document"}
+                on:mouseover={() => (shareHover = "document")}
                 on:mouseout={() => (shareHover = null)}
-                on:click={() => (shareOption = 'document')}>
+                on:click={() => (layout.embedShareOption = "document")}
+              >
                 {@html shareDocumentSvg}
               </div>
               <div
                 class="sharecell"
-                class:hover={shareHover == 'page'}
-                on:mouseover={() => (shareHover = 'page')}
+                class:hover={shareHover == "page"}
+                on:mouseover={() => (shareHover = "page")}
                 on:mouseout={() => (shareHover = null)}
-                on:click={() => (shareOption = 'page')}>
+                on:click={() => (layout.embedShareOption = "page")}
+              >
                 {@html sharePageSvg}
               </div>
               <div
                 class="sharecell"
                 class:faded={!hasNotes}
-                class:hover={shareHover == 'note'}
-                on:mouseover={() => (shareHover = 'note')}
+                class:hover={shareHover == "note"}
+                on:mouseover={() => (shareHover = "note")}
                 on:mouseout={() => (shareHover = null)}
-                on:click={selectNote}>
+                on:click={selectNote}
+              >
                 {@html shareNoteSvg}
               </div>
             </div>
@@ -236,10 +238,11 @@
             <div class="sharedescription">
               <div
                 class="sharecell"
-                class:hover={shareHover == 'document'}
-                on:mouseover={() => (shareHover = 'document')}
+                class:hover={shareHover == "document"}
+                on:mouseover={() => (shareHover = "document")}
                 on:mouseout={() => (shareHover = null)}
-                on:click={() => (shareOption = 'document')}>
+                on:click={() => (layout.embedShareOption = "document")}
+              >
                 <h2>Share entire document</h2>
                 <p>
                   Link or embed the entire document. (This is the most commonly
@@ -248,10 +251,11 @@
               </div>
               <div
                 class="sharecell"
-                class:hover={shareHover == 'page'}
-                on:mouseover={() => (shareHover = 'page')}
+                class:hover={shareHover == "page"}
+                on:mouseover={() => (shareHover = "page")}
                 on:mouseout={() => (shareHover = null)}
-                on:click={() => (shareOption = 'page')}>
+                on:click={() => (layout.embedShareOption = "page")}
+              >
                 <h2>Share specific page</h2>
                 <p>
                   Link or embed a single page of the document. Useful for
@@ -262,10 +266,11 @@
                 class="sharecell"
                 class:faded={!hasNotes}
                 style="opacity: 1"
-                class:hover={shareHover == 'note'}
-                on:mouseover={() => (shareHover = 'note')}
+                class:hover={shareHover == "note"}
+                on:mouseover={() => (shareHover = "note")}
                 on:mouseout={() => (shareHover = null)}
-                on:click={selectNote}>
+                on:click={selectNote}
+              >
                 <h2 class:faded={!hasNotes}>Share specific note</h2>
                 <p>
                   {#if hasNotes}
@@ -280,9 +285,9 @@
             </div>
           </div>
         {/if}
-      {:else if shareOption == 'document'}
+      {:else if $layout.embedShareOption == "document"}
         <DocumentEmbedDialog />
-      {:else if shareOption == 'page'}
+      {:else if $layout.embedShareOption == "page"}
         <PageEmbedDialog />
       {/if}
     </div>

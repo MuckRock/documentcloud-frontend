@@ -9,6 +9,8 @@ import { queryBuilder } from "@/util/url";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
 import { Results } from "@/structure/results";
 import { batchDelay } from "@/util/batchDelay";
+import { StorageManager } from "@/util/storageManager";
+import { includes } from '@/util/array';
 import axios from "axios";
 
 import { Document, transformHighlights } from "@/structure/document";
@@ -26,6 +28,19 @@ const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
 // Statuses
 export const PENDING = "pending";
 
+// Manage deleted docs
+const deletedManager = new StorageManager("deleted");
+
+function addDeletedDocs(ids) {
+  deletedManager.set('', deletedManager.get('', []).concat(ids));
+}
+
+function filterDeleted(docs) {
+  const deleted = deletedManager.get('', []);
+  return docs.filter(x => !includes(deleted, x.id));
+}
+
+
 export async function getDocuments(
   extraParams = {},
   ordering = DEFAULT_ORDERING,
@@ -36,7 +51,7 @@ export async function getDocuments(
   const params = { ...extraParams, ordering, expand, page: page + 1 };
   const url = apiUrl(queryBuilder("documents/", params));
   const { data } = await session.get(url);
-  data.results = data.results.map((document) => new Document(document));
+  data.results = filterDeleted(data.results.map((document) => new Document(document)));
   return new Results(url, data);
 }
 
@@ -50,7 +65,7 @@ export async function searchDocuments(
     queryBuilder("documents/search/", { q: query, expand, page: page + 1, hl: "true" })
   );
   const { data } = await session.get(url);
-  data.results = data.results.map(doc => new Document(doc));
+  data.results = filterDeleted(data.results.map(doc => new Document(doc)));
 
   return new Results(url, data);
 }
@@ -105,6 +120,7 @@ export async function deleteDocument(ids) {
       })
     )
   );
+  addDeletedDocs(ids);
 }
 
 export async function editMetadata(ids, metadata) {

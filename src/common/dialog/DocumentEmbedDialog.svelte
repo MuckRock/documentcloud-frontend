@@ -5,12 +5,17 @@
   import { getEmbed } from "@/api/embed";
   import { queryBuilder } from "@/util/url";
   import { StorageManager } from "@/util/storageManager";
+  import { index } from "@/util/array";
 
   let embedded = true;
 
-  const SIDEBAR_OPTION = 0;
+  // New options should have strictly incrementing numbers.
+  // Like protocol buffers, we want to maintain compatibility with
+  // users' previous preferences.
+  const RESPONSIVE_OPTION = 8; // out-of-order because added later
   const WIDTH_OPTION = 1;
   const HEIGHT_OPTION = 2;
+  const SIDEBAR_OPTION = 0;
   const TITLE_OPTION = 3;
   const PDF_OPTION = 4;
   const FULLSCREEN_OPTION = 5;
@@ -19,6 +24,39 @@
 
   const storageManager = new StorageManager("vieweroptions");
   let appearanceOptions = [
+    {
+      type: "toggle",
+      title: "Responsive",
+      values: [
+        [
+          "On (default)",
+          "Fill the width of the article container (usually works best)",
+        ],
+        ["Off", "The document will fit the sizes specified below"],
+      ],
+      option: RESPONSIVE_OPTION,
+      selected: storageManager.get(RESPONSIVE_OPTION, 0),
+    },
+    {
+      type: "dimension",
+      title: "Width",
+      automaticText:
+        "Will fill the available space if the document is set to responsive, otherwise defaults to 700px",
+      fixedText:
+        "Set a maximum width if the document is responsive, or set a fixed size if not responsive",
+      option: WIDTH_OPTION,
+      selected: storageManager.get(WIDTH_OPTION, 0),
+    },
+    {
+      type: "dimension",
+      title: "Height",
+      automaticText:
+        "The height is based on the size of the document, with no maximum size. If responsive, will be set to the height of the browser window minus 100px",
+      fixedText:
+        "Set a maximum height if the document is responsive, or set a fixed size if not responsive",
+      option: HEIGHT_OPTION,
+      selected: storageManager.get(HEIGHT_OPTION, 0),
+    },
     {
       type: "toggle",
       title: "Sidebar behavior",
@@ -30,17 +68,8 @@
         ["Hidden", "Hide the sidebar by default"],
         ["Visible", "Show the sidebar by default"],
       ],
+      option: SIDEBAR_OPTION,
       selected: storageManager.get(SIDEBAR_OPTION, 0),
-    },
-    {
-      type: "dimension",
-      title: "Max width",
-      selected: storageManager.get(WIDTH_OPTION, 0),
-    },
-    {
-      type: "dimension",
-      title: "Max height",
-      selected: storageManager.get(HEIGHT_OPTION, 0),
     },
     {
       type: "toggle",
@@ -55,6 +84,7 @@
           "Hide the title in the header of the viewer (still visible in the sidebar)",
         ],
       ],
+      option: TITLE_OPTION,
       selected: storageManager.get(TITLE_OPTION, 0),
     },
     {
@@ -70,6 +100,7 @@
           "Hide the sidebar PDF link (file is still accessible if the URL is known)",
         ],
       ],
+      option: PDF_OPTION,
       selected: storageManager.get(PDF_OPTION, 0),
     },
     {
@@ -82,6 +113,7 @@
         ],
         ["Hidden", "Hide the fullscreen option"],
       ],
+      option: FULLSCREEN_OPTION,
       selected: storageManager.get(FULLSCREEN_OPTION, 0),
     },
     {
@@ -94,6 +126,7 @@
         ],
         ["Hidden", "Hide text mode"],
       ],
+      option: TEXT_OPTION,
       selected: storageManager.get(TEXT_OPTION, 0),
     },
     {
@@ -106,41 +139,52 @@
         ],
         ["Org only", "Attribute the document to just the organization"],
       ],
+      option: ORG_OPTION,
       selected: storageManager.get(ORG_OPTION, 0),
     },
   ];
 
-  function toParam(bool) {
-    return bool == true ? 1 : 0;
+  function optionIndex(option) {
+    return index(
+      appearanceOptions.map((x) => x.option),
+      option,
+    );
   }
 
   $: sidebarBehavior =
-    appearanceOptions[SIDEBAR_OPTION].selected == 1
+    appearanceOptions[optionIndex(SIDEBAR_OPTION)].selected == 1
       ? 0
-      : appearanceOptions[SIDEBAR_OPTION].selected == 2
+      : appearanceOptions[optionIndex(SIDEBAR_OPTION)].selected == 2
       ? 1
       : null;
   $: width =
-    appearanceOptions[WIDTH_OPTION].selected == 0
+    appearanceOptions[optionIndex(WIDTH_OPTION)].selected == 0
       ? null
-      : Number.isFinite(appearanceOptions[WIDTH_OPTION].selected)
-      ? appearanceOptions[WIDTH_OPTION].selected
+      : Number.isFinite(appearanceOptions[optionIndex(WIDTH_OPTION)].selected)
+      ? appearanceOptions[optionIndex(WIDTH_OPTION)].selected
       : null;
   $: height =
-    appearanceOptions[HEIGHT_OPTION].selected == 0
+    appearanceOptions[optionIndex(HEIGHT_OPTION)].selected == 0
       ? null
-      : Number.isFinite(appearanceOptions[HEIGHT_OPTION].selected)
-      ? appearanceOptions[HEIGHT_OPTION].selected
+      : Number.isFinite(appearanceOptions[optionIndex(HEIGHT_OPTION)].selected)
+      ? appearanceOptions[optionIndex(HEIGHT_OPTION)].selected
       : null;
-  $: titleBehavior = appearanceOptions[TITLE_OPTION].selected == 1 ? 0 : 1;
-  $: pdfBehavior = appearanceOptions[PDF_OPTION].selected == 1 ? 0 : null;
+  $: responsive =
+    appearanceOptions[optionIndex(RESPONSIVE_OPTION)].selected == 1 ? 0 : 1;
+  $: titleBehavior =
+    appearanceOptions[optionIndex(TITLE_OPTION)].selected == 1 ? 0 : 1;
+  $: pdfBehavior =
+    appearanceOptions[optionIndex(PDF_OPTION)].selected == 1 ? 0 : null;
   $: fullscreenBehavior =
-    appearanceOptions[FULLSCREEN_OPTION].selected == 1 ? 0 : null;
-  $: textBehavior = appearanceOptions[TEXT_OPTION].selected == 1 ? 0 : null;
-  $: onlyOrgBehavior = appearanceOptions[ORG_OPTION].selected == 1 ? 1 : null;
+    appearanceOptions[optionIndex(FULLSCREEN_OPTION)].selected == 1 ? 0 : null;
+  $: textBehavior =
+    appearanceOptions[optionIndex(TEXT_OPTION)].selected == 1 ? 0 : null;
+  $: onlyOrgBehavior =
+    appearanceOptions[optionIndex(ORG_OPTION)].selected == 1 ? 1 : null;
 
   $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
     embed: embedded ? 1 : null,
+    responsive: responsive,
     sidebar: sidebarBehavior,
     title: titleBehavior,
     pdf: pdfBehavior,
@@ -148,8 +192,8 @@
     text: textBehavior,
     onlyshoworg: onlyOrgBehavior,
   });
-  $: linkUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
-    sidebar: sidebarBehavior,
+  $: linkUrl = queryBuilder(embedUrl, {
+    embed: null,
   });
 
   let embedCode = null;
@@ -176,6 +220,8 @@
   {errorOccurred}
   linkText={linkUrl}
   tweetText={`${$layout.embedDocument.title} ${linkUrl}`}
+  {width}
+  {height}
 >
   <AppearanceCustomizer
     options={appearanceOptions}

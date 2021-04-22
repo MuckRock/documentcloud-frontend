@@ -18,7 +18,7 @@
     if (storageManager != null) {
       // Remember preferences
       for (let i = 0; i < options.length; i++) {
-        storageManager.set(i, options[i].selected);
+        storageManager.set(options[i].option, options[i].selected);
       }
     }
 
@@ -29,6 +29,8 @@
 </script>
 
 <style lang="scss">
+  $appearanceHeight: 400px;
+
   details {
     position: relative;
   }
@@ -44,16 +46,17 @@
   }
 
   .optionscrollcontainer {
-    max-height: 250px;
+    max-height: $appearanceHeight;
     border: solid 1px gainsboro;
     border-radius: $radius;
     position: relative;
     overflow: hidden;
     margin: 5px 0;
+    max-width: 600px;
   }
 
   .optionscroll {
-    max-height: 250px;
+    max-height: $appearanceHeight;
     overflow: auto;
     padding: 5px 16px 0 16px;
   }
