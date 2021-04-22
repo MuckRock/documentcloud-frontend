@@ -259,7 +259,6 @@
         {/if}
       {/if}
       {#if !$layout.embed && $viewer.document.editAccess}
-        <SpecialMessage />
         {#if $viewer.document.editAccess && $viewer.document.id < process.env.LEGACY_CUT_OFF}
           <div
             style="background: #fff782; display: block; padding: 2px 8px; border-radius: 3px; font-size: 13px; box-sizing: border-box; color: #312f05;"
