@@ -7,6 +7,11 @@
   import { getDocument } from "@/api/document";
   import { pageImageUrl } from "@/api/viewer";
   import { embedUrl } from "@/api/embed";
+  import {
+    currentUrl,
+    truthyParamValue,
+    getQueryStringParams,
+  } from "@/util/url";
 
   export let id;
   export let noteId;
@@ -16,6 +21,10 @@
   let doc = null;
   let note = null;
   let elem;
+
+  const showStaticImage = truthyParamValue(
+    getQueryStringParams(currentUrl()).embed,
+  );
 
   $: canonicalNoteUrl = note == null ? "" : doc.canonicalNoteUrl(note);
   $: title =
@@ -41,8 +50,10 @@
     // Render content
     await tick();
 
-    // Inform iframe of size updates
-    informSize(elem);
+    if (!showStaticImage) {
+      // Inform iframe of size updates
+      informSize(elem);
+    }
   });
 </script>
 
@@ -182,74 +193,85 @@
   {/if}
 </svelte:head>
 
-<div
-  class="DC-note"
-  bind:this={elem}
-  style={note != null && doc != null
-    ? `background-image: url(${pageImageUrl(doc, note.page, LARGE_WIDTH)})`
-    : ""}
->
-  {#if note != null && doc != null}
-    <div class="DC-note-header">
-      <a
-        href={doc.noteUrl(note)}
-        class="DC-note-embed-resource"
-        target="_blank"
-        title="View the note ‘{note.title}’ in its original document context on
+{#if showStaticImage}
+  {#if doc != null && note != null}
+    <ProgressiveImage
+      alt="Page {note.page + 1} of {doc.title}"
+      width={docWidth}
+      {aspect}
+      page={{ document: doc, pageNumber: note.page }}
+    />
+  {/if}
+{:else}
+  <div
+    class="DC-note"
+    bind:this={elem}
+    style={note != null && doc != null
+      ? `background-image: url(${pageImageUrl(doc, note.page, LARGE_WIDTH)})`
+      : ""}
+  >
+    {#if note != null && doc != null}
+      <div class="DC-note-header">
+        <a
+          href={doc.noteUrl(note)}
+          class="DC-note-embed-resource"
+          target="_blank"
+          title="View the note ‘{note.title}’ in its original document context on
         DocumentCloud in a new window or tab"
-      >
-        <span class="DC-note-title">{note.title}</span>
-        <span class="DC-note-page-number">(p. {note.page + 1})</span>
-      </a>
-    </div>
+        >
+          <span class="DC-note-title">{note.title}</span>
+          <span class="DC-note-page-number">(p. {note.page + 1})</span>
+        </a>
+      </div>
 
-    <div
-      class="DC-note-image-max-bounds"
-      class:public={note.access == "public"}
-      class:organization={note.access == "organization"}
-      class:private={note.access == "private"}
-      style="max-width: {maxWidth}px;"
-    >
       <div
-        class="DC-note-image-aspect-ratio"
-        style="padding-bottom: {(note.height / note.width) * aspect * 100}%"
+        class="DC-note-image-max-bounds"
+        class:public={note.access == "public"}
+        class:organization={note.access == "organization"}
+        class:private={note.access == "private"}
+        style="max-width: {maxWidth}px;"
       >
+        <div
+          class="DC-note-image-aspect-ratio"
+          style="padding-bottom: {(note.height / note.width) * aspect * 100}%"
+        >
+          <a
+            href={doc.noteUrl(note)}
+            target="_blank"
+            class="DC-note-image-link"
+            style="left: -{(note.x1 * 100) / note.width}%; top: -{(note.y1 *
+              100) /
+              note.height}%;
+          width: {100 / note.width}%; height: {100 /
+              note.height}%"
+          >
+            <ProgressiveImage
+              alt="Page {note.page + 1} of {doc.title}"
+              width={docWidth}
+              {aspect}
+              page={{ document: doc, pageNumber: note.page }}
+            />
+          </a>
+        </div>
+      </div>
+
+      <div class="DC-note-body">
+        {@html DomPurify.sanitize(note.content)}
+      </div>
+
+      <div class="DC-note-credit">
         <a
           href={doc.noteUrl(note)}
           target="_blank"
-          class="DC-note-image-link"
-          style="left: -{(note.x1 * 100) / note.width}%; top: -{(note.y1 *
-            100) /
-            note.height}%;
-          width: {100 / note.width}%; height: {100 /
-            note.height}%"
+          title="View the note ‘{note.title}’ in its original document context on
+        DocumentCloud in a new window or tab"
         >
-          <ProgressiveImage
-            alt="Page {note.page + 1} of {doc.title}"
-            width={docWidth}
-            {aspect}
-            page={{ document: doc, pageNumber: note.page }}
-          />
+          View the entire document with
+          <span class="DC-note-logotype-link">DocumentCloud</span>
         </a>
       </div>
-    </div>
 
-    <div class="DC-note-body">
-      {@html DomPurify.sanitize(note.content)}
-    </div>
-
-    <div class="DC-note-credit">
-      <a
-        href={doc.noteUrl(note)}
-        target="_blank"
-        title="View the note ‘{note.title}’ in its original document context on
-        DocumentCloud in a new window or tab"
-      >
-        View the entire document with
-        <span class="DC-note-logotype-link">DocumentCloud</span>
-      </a>
-    </div>
-
-    <div class="DC-note-background-fader" />
-  {/if}
-</div>
+      <div class="DC-note-background-fader" />
+    {/if}
+  </div>
+{/if}

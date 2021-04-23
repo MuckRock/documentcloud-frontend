@@ -214,6 +214,7 @@
 <h1>Share “{$layout.embedDocument.title}”</h1>
 
 <ShareOptions
+  column={true}
   embedDescription="Copy the HTML code to embed this document within an article
   or post:"
   {embedCode}

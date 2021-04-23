@@ -18,6 +18,7 @@
   export let showWp = true;
   export let width = null;
   export let height = null;
+  export let column = false;
 
   let embedElem;
   let wpElem;
@@ -172,7 +173,7 @@
 
 {#if shareOption == "embed"}
   <div class="row">
-    <div class="column detail">
+    <div class="detail" class:column>
       <p>{embedDescription}</p>
 
       {#if embedText != null}
@@ -213,7 +214,7 @@
     </div>
 
     {#if embedCode != null}
-      <div class="column showcase">
+      <div class="showcase" class:column>
         <p><b>Preview:</b></p>
         <div class="preview">
           {@html embedCode}
