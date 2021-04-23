@@ -14,6 +14,7 @@
   export let bordered = true;
   export let grayed = false;
   export let crosshair = false;
+  export let transform = null;
   let elem;
   let destroyed = false;
   let imgs = [];
@@ -25,7 +26,7 @@
     .map((x) => [parseFloat(x[1]), x[0]])
     .sort((a, b) => a[0] - b[0]);
   const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
-    (x) => x[0][1] == "normal"
+    (x) => x[0][1] == "normal",
   )[0];
   let mounted = false;
 
@@ -90,7 +91,7 @@
     const src = pageImageUrl(
       page.document,
       page.pageNumber,
-      IMAGE_WIDTHS[i][0]
+      IMAGE_WIDTHS[i][0],
     );
     const img = new Image();
     // Adapted from comments on https://stackoverflow.com/a/12906840
@@ -106,6 +107,10 @@
     };
     img.alt = alt;
     img.src = src;
+    if (transform != null) {
+      img.style.transformOrigin = "left top";
+      img.style.transform = transform;
+    }
     return img;
   }
 
@@ -159,4 +164,5 @@
   bind:this={elem}
   class:bordered
   class:grayed
-  class:crosshair />
+  class:crosshair
+/>

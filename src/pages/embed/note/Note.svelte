@@ -195,12 +195,19 @@
 
 {#if showStaticImage}
   {#if doc != null && note != null}
-    <ProgressiveImage
-      alt="Page {note.page + 1} of {doc.title}"
-      width={docWidth}
-      {aspect}
-      page={{ document: doc, pageNumber: note.page }}
-    />
+    <a
+      href={doc.noteUrl(note)}
+      target="_blank"
+      class="DC-note-image-link"
+    >
+      <ProgressiveImage
+        transform={`scale(${1 / note.width}) translate(${-note.x1 * 100}%, ${-note.y1 * 100}%)`}
+        alt="Page {note.page + 1} of {doc.title}"
+        width={docWidth}
+        {aspect}
+        page={{ document: doc, pageNumber: note.page }}
+      />
+    </a>
   {/if}
 {:else}
   <div
