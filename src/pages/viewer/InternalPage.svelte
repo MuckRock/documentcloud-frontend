@@ -1,7 +1,6 @@
 <script>
   import ExtraPageContent from "./ExtraPageContent";
   import PageNoteInsert from "./PageNoteInsert";
-  import TextPage from "@/common/TextPage";
   import ProgressiveImage from "@/common/ProgressiveImage";
   import Annotation from "./Annotation";
 
@@ -12,6 +11,12 @@
   import { markup } from "@/util/markup";
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { onMount } from "svelte";
+
+  // Selectable text
+  import SelectableWord from "./SelectableWord";
+  import selectableText from "./selectable_text.json";
+  const selectableWidth = 612;
+  const selectableHeight = 792;
 
   export let page;
   export let width;
@@ -237,6 +242,22 @@
       grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
       {page}
     />
+
+    <!-- Selectable text -->
+    <div
+      style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden"
+    >
+      {#each selectableText as word}
+        <SelectableWord
+          word={word.text}
+          x0={word.x0 / selectableWidth}
+          x1={word.x1 / selectableWidth}
+          y0={word.top / selectableHeight}
+          y1={word.bottom / selectableHeight}
+          scale={scale}
+        />
+      {/each}
+    </div>
 
     <!-- Markup -->
     {#if $viewer.notesByPage[page.pageNumber] != null}
