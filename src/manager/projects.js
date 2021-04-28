@@ -30,8 +30,8 @@ export const projects = new Svue({
       }
       return results;
     },
-    editableProjects(projects) {
-      return projects.filter(project => project.editAccess);
+    addRemoveableProjects(projects) {
+      return projects.filter(project => project.addRemoveAccess);
     }
   }
 });

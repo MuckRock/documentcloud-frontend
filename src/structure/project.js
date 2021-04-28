@@ -35,6 +35,10 @@ export class Project extends Svue {
           if (project.edit_access == null) return false;
           return project.edit_access;
         },
+        addRemoveAccess(project, editAccess) {
+          if (project.add_remove_access == null) return editAccess;
+          return project.add_remove_access;
+        },
         embedUrl(slugId) {
           return `${APP_URL}projects/${slugId}/`;
         },

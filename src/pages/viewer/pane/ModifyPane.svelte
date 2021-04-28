@@ -50,6 +50,16 @@
 {#if $modification.modifyHasSelection}
   <h3>{handlePlural($modification.modifyNumSelected, "Page")} Selected</h3>
   <div class="buttonpadded">
+    {#if $modification.uncommittedChanges}
+      <Button
+        tertiary={true}
+        on:click={() => {
+          modify(modification, cancelActions);
+        }}
+      >
+        Apply Modifications
+      </Button>
+    {/if}
     <Button on:click={() => modification.copy()}>Duplicate</Button>
     {#if $modification.modifyNumSelected < $modification.pageCount}
       <Button on:click={() => modification.cut()}>Move</Button>
@@ -147,6 +157,7 @@
   <div class="buttonpadded">
     {#if $modification.uncommittedChanges}
       <Button
+        tertiary={true}
         on:click={() => {
           modify(modification, cancelActions);
         }}

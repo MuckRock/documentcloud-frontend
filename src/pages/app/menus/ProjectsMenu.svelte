@@ -14,7 +14,7 @@
     return projects;
   }
 
-  $: alphabetizedProjects = sort($projects.editableProjects);
+  $: alphabetizedProjects = sort($projects.addRemoveableProjects);
 </script>
 
 <style lang="scss">
@@ -27,7 +27,7 @@
 
 <Menu>
   <MenuItem primary={true} on:click={newProject}>+ New Project</MenuItem>
-  {#if $layout.hasSelection && $projects.editableProjects.length > 0}
+  {#if $layout.hasSelection && $projects.addRemoveableProjects.length > 0}
     <MenuItem selectable={false}>
       <div class="small">Project Membership</div>
     </MenuItem>
@@ -36,7 +36,7 @@
     {/each}
   {:else}
     <MenuItem selectable={false}>
-      {#if $projects.editableProjects.length > 0}
+      {#if $projects.addRemoveableProjects.length > 0}
         <div class="info">Select documents to place them in projects</div>
       {:else}
         <div class="info">Create a project to organize and share documents</div>

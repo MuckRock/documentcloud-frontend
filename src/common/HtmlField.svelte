@@ -1,8 +1,43 @@
 <script>
   import { domPurify, loadDompurify } from "@/util/domPurify";
+  import { router } from "@/router/router";
+  import { showAnnotation } from "@/viewer/document";
+  import { viewer } from "@/viewer/viewer";
   loadDompurify();
 
+  let elem = null;
   export let content = "";
+
+  $: {
+    // Add onclick listeners to navigate to each same-document note link
+    if (
+      elem != null &&
+      $domPurify.domPurify != null &&
+      $viewer.document != null &&
+      $viewer.notes != null &&
+      $viewer.notes.length > 0
+    ) {
+      const route = router.resolvedRoute;
+      if (route != null && route.name == "viewer") {
+        // Only inject on viewer routes
+        const links = elem.querySelectorAll("a");
+        for (let i = 0; i < links.length; i++) {
+          // Iterate all links
+          const link = links[i];
+          if (link.href != null) {
+            for (let j = 0; j < viewer.notes.length; j++) {
+              // Iterate all document notes
+              const note = viewer.notes[j];
+              if (link.href == viewer.document.noteUrl(note)) {
+                // If the note URL and href align, wire the event listener
+                link.onclick = () => showAnnotation(note, true);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 </script>
 
 <style lang="scss">
@@ -32,7 +67,7 @@
 </style>
 
 <div class="preview static">
-  <div class="content">
+  <div class="content" bind:this={elem}>
     {#if $domPurify.domPurify != null}
       {@html $domPurify.domPurify.sanitize(content)}
     {/if}
