@@ -188,6 +188,11 @@
               : $viewer.document.userOrgString}
           </p>
         </small>
+        {#if $viewer.document.source != null && $viewer.document.source.trim().length > 0}
+          <small>
+            <p>Source: {$viewer.document.source}</p>
+          </small>
+        {/if}
         {#if $viewer.document.editAccess}
           <div>
             <AccessIcon document={$viewer.document} showText={true} />
