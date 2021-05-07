@@ -14,16 +14,16 @@ export function urlParts(url) {
  */
 export function urlJoin(...parts) {
   return parts.reduce((a, b) => {
-    if (a.endsWith('/')) {
+    if (a.endsWith("/")) {
       a = a.substr(0, a.length - 1);
     }
-    if (b.startsWith('/')) {
+    if (b.startsWith("/")) {
       b = b.substr(1);
     }
-    if (a == '') return b;
-    if (b == '') return a;
-    return [a, b].join('/');
-  }, '');
+    if (a == "") return b;
+    if (b == "") return a;
+    return [a, b].join("/");
+  }, "");
 }
 
 // Adapted from: https://stackoverflow.com/a/3855394
@@ -45,7 +45,7 @@ export function getQueryStringParams(url) {
   return getQueryStringParamsFromQuery(query);
 }
 
-export function urlsEqual(url1, url2) {
+export function urlsEqual(url1, url2, plusReplace = false) {
   const [base1, query1] = urlParts(url1);
   const [base2, query2] = urlParts(url2);
 
@@ -67,7 +67,19 @@ export function urlsEqual(url1, url2) {
     const k1 = keys1[i];
     const k2 = keys2[i];
     if (k1 != k2) return false;
-    if (qp1[k1] != qp2[k2]) return false;
+    if (k1 == "q" && plusReplace) {
+      const replaceAtBeginning = (s, replace) => {
+        if (s.startsWith(replace)) return s.substr(replace.length);
+        return s;
+      };
+      if (
+        replaceAtBeginning(qp1[k1], "+") != replaceAtBeginning(qp2[k2], "+")
+      ) {
+        return false;
+      }
+    } else {
+      if (qp1[k1] != qp2[k2]) return false;
+    }
   }
   return true;
 }
