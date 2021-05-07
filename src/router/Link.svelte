@@ -10,6 +10,7 @@
   export let forceClick = false;
   export let inlineBlock = false;
   export let color = false;
+  export let plusReplace = false;
 
   const link = new Svue({
     data() {
@@ -25,7 +26,7 @@
       active(router) {
         if (router.routes == null) return false;
         if (toUrl != null) {
-          return urlsEqual(router.currentUrl, toUrl);
+          return urlsEqual(router.currentUrl, toUrl, plusReplace);
         }
         return router.resolvedRoute.name == to;
       },
@@ -73,7 +74,8 @@
       class:ib={inlineBlock}
       class:active={$link.active}
       href={$link.toPath}
-      target="_blank">
+      target="_blank"
+    >
       <slot />
     </a>
   {:else}
@@ -82,7 +84,8 @@
       class:ib={inlineBlock}
       class:active={$link.active}
       href={$link.toPath}
-      on:click={nav}>
+      on:click={nav}
+    >
       <slot />
     </a>
   {/if}
@@ -93,7 +96,8 @@
     class:ib={inlineBlock}
     class:active={$link.active}
     href={$link.toPath}
-    on:click={nav}>
+    on:click={nav}
+  >
     <slot />
   </span>
 {/if}

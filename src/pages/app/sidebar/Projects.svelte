@@ -82,18 +82,21 @@
     <Hamburger on:toggle={emit.retractSidebar} />
     <Logo />
     <div class="linksection">
-      <Link toUrl={allDocumentsUrl()}>
+      <Link plusReplace={true} toUrl={allDocumentsUrl()}>
         <div class="link">All Documents</div>
       </Link>
       {#if $orgsAndUsers.me != null}
-        <Link toUrl={userUrl($orgsAndUsers.me)}>
+        <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me)}>
           <div class="link">Your Documents</div>
         </Link>
-        <Link toUrl={userUrl($orgsAndUsers.me, true)}>
+        <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me, true)}>
           <div class="link">Your Public Documents</div>
         </Link>
         {#if $orgsAndUsers.me.organization != null && !$orgsAndUsers.me.organization.individual}
-          <Link toUrl={orgUrl($orgsAndUsers.me.organization)}>
+          <Link
+            plusReplace={true}
+            toUrl={orgUrl($orgsAndUsers.me.organization)}
+          >
             <div class="link">
               {$orgsAndUsers.me.organization.name}’s Documents
             </div>
