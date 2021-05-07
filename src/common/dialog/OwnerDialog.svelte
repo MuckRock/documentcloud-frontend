@@ -1,6 +1,7 @@
 <script>
   import Button from "@/common/Button";
   import Tooltip from "@/common/Tooltip";
+  import Autocomplete from "@/common/Autocomplete";
   import { layout } from "@/manager/layout";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { viewer } from "@/viewer/viewer";
@@ -47,7 +48,6 @@
 </script>
 
 <style lang="scss">
-  input,
   table {
     position: border-box;
     width: 100%;
@@ -64,6 +64,14 @@
     width: 100%;
     position: relative;
   }
+
+  .warning {
+    padding: 15px 30px;
+    background: $warning;
+    border-radius: $radius;
+    display: table;
+    max-width: 700px;
+  }
 </style>
 
 <div>
@@ -72,13 +80,18 @@
       Change owner for
       {nameSingularNumberPlural(numOwnerSelected, "document")}
     </h1>
-    <p>TK: Put scary warning here about losing access to your documents</p>
+    <p class="warning">
+      Warning: You may lose access to the specified {nameSingularNumberPlural(
+        numOwnerSelected,
+        "document",
+      )} as a result of changing the document owner
+    </p>
     <table>
       <tr>
         <td>User:</td>
         <td>
           <div>
-            <input bind:value={user} />
+            <Autocomplete bind:value={user} />
           </div>
         </td>
       </tr>
@@ -86,7 +99,7 @@
         <td>Organization:</td>
         <td>
           <div>
-            <input bind:value={organization} />
+            <Autocomplete bind:value={organization} />
           </div>
         </td>
       </tr>
