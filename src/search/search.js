@@ -7,7 +7,7 @@ import { pushUrl } from "@/router/router";
 import { queryBuilder } from "@/util/url";
 import { slugify } from "@/util/string";
 import { modifications } from "@/manager/modifications";
-import { Results } from '@/structure/results';
+import { Results } from "@/structure/results";
 
 const TAG_KEY = process.env.TAG_KEY;
 
@@ -16,16 +16,20 @@ export const search = new Svue({
     return {
       router,
       params: null,
-      results: null
+      results: null,
     };
   },
   watch: {
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (route != null && (route.name == "app" || route.name == 'project') && router.backNav != true) {
+      if (
+        route != null &&
+        (route.name == "app" || route.name == "project") &&
+        router.backNav != true
+      ) {
         initSearch(route.props);
       }
-    }
+    },
   },
   computed: {
     documents(hasResults, results) {
@@ -34,8 +38,8 @@ export const search = new Svue({
     },
     hasResults(results) {
       return results != null && results.results != null;
-    }
-  }
+    },
+  },
 });
 
 async function initSearch(params) {
@@ -43,7 +47,11 @@ async function initSearch(params) {
 
   // Get results
   if (search.params.getMethod != null) {
-    const results = await wrapSeparate(layout, search, search.params.getMethod[0]);
+    const results = await wrapSeparate(
+      layout,
+      search,
+      search.params.getMethod[0],
+    );
     search.results = results;
     const filter = search.params.getMethod[1];
     if (filter != null) {
@@ -61,10 +69,13 @@ function filterDocuments(filter) {
 }
 
 export function setDocuments(documents) {
-  const results = search.results == null ? new Results('', { count: 0, results: [] }) : search.results;
+  const results =
+    search.results == null
+      ? new Results("", { count: 0, results: [] })
+      : search.results;
   results.rawResults = {
     ...(results.rawResults == null ? {} : results.rawResults),
-    results: documents
+    results: documents,
   };
   search.results = results;
 }
@@ -79,22 +90,16 @@ export function allDocumentsUrl() {
 }
 
 export function projectUrl(project) {
-  return searchUrl(
-    `+project:${slugify(project.title, project.id)} `
-  );
+  return searchUrl(`+project:${slugify(project.title, project.id)} `);
 }
 
 export function projectIdUrl(projectId) {
-  return searchUrl(
-    `+project:${projectId} `
-  );
+  return searchUrl(`+project:${projectId} `);
 }
 
 export function userOrgUrl(obj, key, publicAccessOnly = false) {
   const access = publicAccessOnly ? "+access:public " : "";
-  return searchUrl(
-    `+${key}:${slugify(obj.name, obj.id)} ${access}`,
-  );
+  return searchUrl(`+${key}:${slugify(obj.name, obj.id)} ${access}`);
 }
 
 export function userUrl(user, publicAccessOnly = false) {
@@ -108,7 +113,9 @@ export function escapeValue(value) {
 
 export function dataUrl(key, value) {
   // TODO: ensure data query is escaped properly
-  const dataQuery = `${key == TAG_KEY ? 'tag' : `data_${key}`}:${escapeValue(value)}`;
+  const dataQuery = `+${key == TAG_KEY ? "tag" : `data_${key}`}:${escapeValue(
+    value,
+  )}`;
   return searchUrl(dataQuery);
 }
 
@@ -117,9 +124,9 @@ export function orgUrl(organization) {
 }
 
 export function searchUrl(query) {
-  return queryBuilder(getPath('app'), {
+  return queryBuilder(getPath("app"), {
     q: query,
-    page: null
+    page: null,
   });
 }
 
