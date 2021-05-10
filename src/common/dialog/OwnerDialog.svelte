@@ -1,16 +1,13 @@
 <script>
   import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
   import Autocomplete from "@/common/Autocomplete";
   import { layout } from "@/manager/layout";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { viewer } from "@/viewer/viewer";
-  import { wrapLoad } from "@/util/wrapLoad";
-  import { editMetadata } from "@/api/document";
   import {
-    changeOwnerForDocuments,
-    updateInCollection,
-  } from "@/manager/documents";
+    autocompleteOrganizations,
+    autocompleteUsers,
+  } from "@/api/orgAndUser";
+  import { changeOwnerForDocuments } from "@/manager/documents";
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
   import { sameProp } from "@/util/array";
@@ -27,22 +24,24 @@
     deepEqual,
   );
   let valid = true;
-  let invalidReason = "Not implemented yet";
+  $: invalidReason =
+    user == null
+      ? "User must be selected"
+      : organization == null
+      ? "Organization must be selected"
+      : null;
 
   $: isViewer = $viewer.document != null;
   $: numOwnerSelected = isViewer ? 1 : $layout.numOwnerSelected;
 
   async function ownerChange(user, organization) {
-    if (!valid) return;
-    if (isViewer) {
-    } else {
-      changeOwnerForDocuments(
-        layout.ownerEditDocuments,
-        user,
-        organization,
-        layout,
-      );
-    }
+    if (!valid || isViewer) return;
+    changeOwnerForDocuments(
+      layout.ownerEditDocuments,
+      user.id,
+      organization.id,
+      layout,
+    );
     emit.dismiss();
   }
 </script>
@@ -91,7 +90,11 @@
         <td>User:</td>
         <td>
           <div>
-            <Autocomplete bind:value={user} />
+            <Autocomplete
+              placeholder="Type to filter users..."
+              method={autocompleteUsers}
+              bind:value={user}
+            />
           </div>
         </td>
       </tr>
@@ -99,19 +102,20 @@
         <td>Organization:</td>
         <td>
           <div>
-            <Autocomplete bind:value={organization} />
+            <Autocomplete
+              placeholder="Type to filter organizations..."
+              method={autocompleteOrganizations}
+              bind:value={organization}
+            />
           </div>
         </td>
       </tr>
     </table>
     <div class="buttonpadded">
-      {#if valid}
-        <Button on:click={() => ownerChange(user, organization)}>Save</Button>
-      {:else}
-        <Tooltip caption={invalidReason} delay={500}>
-          <Button disabled={true}>Save</Button>
-        </Tooltip>
-      {/if}
+      <Button
+        disabledReason={invalidReason}
+        on:click={() => ownerChange(user, organization)}>Save</Button
+      >
       <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
     </div>
   </div>
