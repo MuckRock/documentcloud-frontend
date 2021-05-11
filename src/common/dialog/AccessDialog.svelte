@@ -1,6 +1,5 @@
 <script>
   import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
   import { layout } from "@/manager/layout";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { layout as viewerLayout } from "@/viewer/layout";
@@ -23,6 +22,7 @@
     dismiss() {},
   });
 
+  // Cannot use dynamic isViewer since reactive properties initialized after static ones
   let access =
     $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
 
@@ -60,7 +60,7 @@
         publishAt != viewer.document.publishAt
       : access != $layout.sameAccess || publishAt != $layout.samePublishAt);
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
-  $: notVerified = !$orgsAndUsers.isVerified;
+  $: notVerified = isViewer ? !$viewer.isVerified : !$orgsAndUsers.isVerified;
 
   async function accessChange(access, publishAt) {
     if (!valid) return;

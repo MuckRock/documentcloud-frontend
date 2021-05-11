@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { getDocument } from "@/api/document";
-import { getMe } from '@/api/orgAndUser';
+import { getMe } from "@/api/orgAndUser";
 import { router } from "@/router/router";
 import { DEFAULT_EXPAND } from "../api/common";
 import { inIframe } from "@/util/iframe";
@@ -15,9 +15,7 @@ function collectNotes(orderedNotes, predicate) {
   const index = {};
   orderedNotes.forEach((note) => {
     if (!predicate(note)) return;
-    const existing = index.hasOwnProperty(note.page)
-      ? index[note.page]
-      : [];
+    const existing = index.hasOwnProperty(note.page) ? index[note.page] : [];
     index[note.page] = [...existing, note];
   });
   return index;
@@ -59,7 +57,7 @@ export const viewer = new Svue({
         }
         return;
       }
-      if (route != null && route.name != 'viewer') {
+      if (route != null && route.name != "viewer") {
         // Reset cache and document
         viewerInitCache = {};
         this.document = null;
@@ -69,7 +67,7 @@ export const viewer = new Svue({
       if (this.document != null && this.document.editAccess) {
         loadViewerEditDialogs();
       }
-    }
+    },
   },
   computed: {
     orderedSections(sections) {
@@ -163,15 +161,19 @@ export const viewer = new Svue({
       return notes;
     },
     notesByPage(orderedNotes) {
-      return collectNotes(orderedNotes, note => !note.isPageNote);
+      return collectNotes(orderedNotes, (note) => !note.isPageNote);
     },
     pageNotesByPage(orderedNotes) {
-      return collectNotes(orderedNotes, note => note.isPageNote);
+      return collectNotes(orderedNotes, (note) => note.isPageNote);
     },
     pageAspects(document) {
       if (document == null) return null;
 
       return document.pageSizes;
+    },
+    isVerified(me) {
+      if (me == null) return false;
+      return me.verified_journalist;
     },
   },
 });
@@ -201,7 +203,7 @@ function initViewer(id) {
       "sections",
       "notes.organization",
       "notes.user",
-    ].join(",")
+    ].join(","),
   )
     .then((doc) => {
       if (!doc.viewable) {
@@ -212,7 +214,7 @@ function initViewer(id) {
       viewer.sections = doc.sections;
     })
     .catch((e) => {
-      if (e.status != null && `${e.status}` == '404') {
+      if (e.status != null && `${e.status}` == "404") {
         viewer.show404 = true;
       } else {
         viewer.error = e;
