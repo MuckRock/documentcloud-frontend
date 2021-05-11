@@ -71,6 +71,10 @@ export const orgsAndUsers = new Svue({
       if (me == null) return false;
       return me.verified_journalist;
     },
+    orgIdList(me) {
+      if (me == null) return [];
+      return me.organizations;
+    },
   },
 });
 

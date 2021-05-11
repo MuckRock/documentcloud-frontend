@@ -33,7 +33,7 @@
   $: {
     if (visible && $orgsAndUsers.me) {
       canChangeOwner =
-        layout.selected.filter(
+        $layout.selected.filter(
           (doc) =>
             !(
               doc.userId == $orgsAndUsers.me.id &&

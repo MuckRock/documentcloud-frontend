@@ -21,9 +21,9 @@ import { search, handleUpload, setDocuments } from "@/search/search";
 import { pushToast } from "./toast";
 import { handlePlural } from "@/util/string";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array";
-import { modifications } from './modifications';
-import { docEquals, copyDoc } from '@/structure/document';
-import { truthyParamValue } from '@/util/url';
+import { modifications } from "./modifications";
+import { docEquals, copyDoc } from "@/structure/document";
+import { truthyParamValue } from "@/util/url";
 
 // Only show up to this many documents, regardless of how many are uploaded
 const MAX_DISPLAY = 50;
@@ -40,7 +40,7 @@ function mapReduce(l, id, fn) {
   return results;
 }
 
-const PENDING_DOC_ID = 'doc_id';
+const PENDING_DOC_ID = "doc_id";
 
 export const documents = new Svue({
   data() {
@@ -77,19 +77,20 @@ export const documents = new Svue({
       // Applies when in embed or dialog
       const route = router.resolvedRoute;
       if (route == null) return true;
-      if (route.name == 'project') return true;  // project embeds are static
-      if (route.props != null && truthyParamValue(route.props.embed)) return true;
+      if (route.name == "project") return true; // project embeds are static
+      if (route.props != null && truthyParamValue(route.props.embed))
+        return true;
       return false;
     },
     allDocuments(search) {
-      return search.documents.filter(doc => !doc.deleted);
+      return search.documents.filter((doc) => !doc.deleted);
     },
     error(search) {
       return search.error;
     },
     docsById(allDocuments) {
       const results = {};
-      allDocuments.forEach(doc => results[doc.id] = doc);
+      allDocuments.forEach((doc) => (results[doc.id] = doc));
       return results;
     },
     documents(allDocuments) {
@@ -97,51 +98,45 @@ export const documents = new Svue({
       return allDocuments;
     },
     pendingExisting(docsById, pending) {
-      return pending.filter(x => {
+      return pending.filter((x) => {
         const id = x.doc_id;
         return docsById[id] != null;
       });
     },
     pendingMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, x => x);
+      return mapReduce(pending, PENDING_DOC_ID, (x) => x);
     },
     imagesProcessedMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, x => {
+      return mapReduce(pending, PENDING_DOC_ID, (x) => {
         if (x.images == null || x.pages == null) return null;
         return x.pages - x.images;
       });
     },
     textsProcessedMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, x => {
+      return mapReduce(pending, PENDING_DOC_ID, (x) => {
         if (x.texts == null || x.pages == null) return null;
         return x.pages - x.texts;
       });
     },
     pageCountMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, x => {
+      return mapReduce(pending, PENDING_DOC_ID, (x) => {
         if (x.pages == null) return null;
         return x.pages;
       });
     },
     realProgressMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, x => {
+      return mapReduce(pending, PENDING_DOC_ID, (x) => {
         if (x.images == null || x.texts == null || x.pages == null) return null;
         const images = x.pages - x.images;
         const texts = x.pages - x.texts;
-        return ((images + texts) / 2) / x.pages;
+        return (images + texts) / 2 / x.pages;
       });
     },
     processingDocuments(allDocuments) {
-      return getDocumentsByCondition(
-        (doc) => doc.pending,
-        allDocuments
-      );
+      return getDocumentsByCondition((doc) => doc.pending, allDocuments);
     },
     updatingDocuments(documents) {
-      return getDocumentsByCondition(
-        (doc) => doc.readable,
-        documents
-      );
+      return getDocumentsByCondition((doc) => doc.readable, documents);
     },
     numProcessing(pending) {
       return pending.length;
@@ -167,34 +162,41 @@ export const documents = new Svue({
         }
       }
       if (totalPages == 0) return 0;
-      const totalPagesProcessed = (totalImagesProcessed + totalTextsProcessed) / 2;
+      const totalPagesProcessed =
+        (totalImagesProcessed + totalTextsProcessed) / 2;
       return totalPagesProcessed / totalPages;
     },
     pollDocuments(processingDocuments, updatingDocuments) {
       return [...processingDocuments, ...updatingDocuments];
     },
     pollEvents(pollDocuments, processingDocuments, numProcessing) {
-      const grabPending = (processingDocuments.length > 0 || numProcessing > 0) ? [
-        async () => {
-          try {
-            await updatePending();
-          } catch (e) {
-            console.error("error fetching pending", e);
-          }
-        }
-      ] : [];
-      const pollEvent = pollDocuments.length > 0 ? [
-        async () => {
-          try {
-            const newDocs = await getDocumentsWithIds(
-              pollDocuments.map((doc) => doc.id)
-            );
-            newDocs.forEach((doc) => replaceInCollection(doc));
-          } catch (e) {
-            console.error("failed to get update info", docs);
-          }
-        },
-      ] : [];
+      const grabPending =
+        processingDocuments.length > 0 || numProcessing > 0
+          ? [
+              async () => {
+                try {
+                  await updatePending();
+                } catch (e) {
+                  console.error("error fetching pending", e);
+                }
+              },
+            ]
+          : [];
+      const pollEvent =
+        pollDocuments.length > 0
+          ? [
+              async () => {
+                try {
+                  const newDocs = await getDocumentsWithIds(
+                    pollDocuments.map((doc) => doc.id),
+                  );
+                  newDocs.forEach((doc) => replaceInCollection(doc));
+                } catch (e) {
+                  console.error("failed to get update info", docs);
+                }
+              },
+            ]
+          : [];
       return grabPending.concat(pollEvent);
     },
   },
@@ -203,7 +205,12 @@ export const documents = new Svue({
 function checkForInit() {
   const route = router.resolvedRoute;
   unselectAll();
-  if (route != null && (documents.inDocumentPickerDialog || route.name == "app" || route.name == 'project')) {
+  if (
+    route != null &&
+    (documents.inDocumentPickerDialog ||
+      route.name == "app" ||
+      route.name == "project")
+  ) {
     if (!documents.hasInited) {
       initDocuments();
       documents.hasInited = true;
@@ -234,17 +241,16 @@ export function removeFromCollection(docId, modify = true) {
     modifications.remove(collectionModifiers, docId);
   }
 
-  const newDocuments = documents.allDocuments.filter(
-    (doc) => doc.id != docId
-  );
+  const newDocuments = documents.allDocuments.filter((doc) => doc.id != docId);
   setDocuments(newDocuments);
   // Remove from pending if applicable
   if (documents.pendingMap[docId] != null) {
-    documents.pending = documents.pending.filter(x => x.doc_id != docId);
+    documents.pending = documents.pending.filter((x) => x.doc_id != docId);
   }
 
   // Refresh when you delete everything to pull new search
-  if (newDocuments.length == 0 && process.env.NODE_ENV != 'test') window.location.reload();
+  if (newDocuments.length == 0 && process.env.NODE_ENV != "test")
+    window.location.reload();
 }
 
 export function updateInCollection(document, docFn, modify = true) {
@@ -291,7 +297,10 @@ function addToCollection(newDocs, modify = true) {
 
   if (modify) {
     // Track the modifications
-    modifications.add(collectionModifiers, newDocs.map(x => copyDoc(x)));
+    modifications.add(
+      collectionModifiers,
+      newDocs.map((x) => copyDoc(x)),
+    );
   }
 
   const remainingDocs = [];
@@ -317,9 +326,10 @@ export function removeDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Confirm delete",
-    `Proceeding will permanently delete the ${documents.length == 1
-      ? "selected document"
-      : `${documents.length} selected documents`
+    `Proceeding will permanently delete the ${
+      documents.length == 1
+        ? "selected document"
+        : `${documents.length} selected documents`
     }. Do you wish to continue?`,
     "Delete",
     async () => {
@@ -328,7 +338,7 @@ export function removeDocuments(documents) {
         documents.map((doc) => removeFromCollection(doc.id));
       });
       unselectAll();
-    }
+    },
   );
 }
 
@@ -337,7 +347,7 @@ export async function markAsDirty(docIds) {
     const dirtyDocs = await getDocumentsWithIds(docIds);
     dirtyDocs.map((doc) => replaceInCollection(doc));
   } catch (e) {
-    console.error('unexpected error marking docs dirty', docIds);
+    console.error("unexpected error marking docs dirty", docIds);
   }
 }
 
@@ -345,9 +355,10 @@ export function reprocessDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Confirm reprocess",
-    `Proceeding will force the ${documents.length == 1
-      ? "selected document"
-      : `${documents.length} selected documents`
+    `Proceeding will force the ${
+      documents.length == 1
+        ? "selected document"
+        : `${documents.length} selected documents`
     } to reprocess page and image text. Do you wish to continue?`,
     "Reprocess",
     async () => {
@@ -357,7 +368,7 @@ export function reprocessDocuments(documents) {
         await markAsDirty(ids);
       });
       unselectAll();
-    }
+    },
   );
 }
 
@@ -365,12 +376,13 @@ export function cancelProcessDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
     "Cancel processing",
-    `Proceeding will force the ${documents.length == 1
-      ? "selected document"
-      : `${documents.length} selected documents`
-    } to stop processing. After processing has been stopped, an error will show after which you can “Force Reprocess” or delete the ${documents.length == 1
-      ? "document"
-      : `documents`} using the Edit menu. Do you wish to continue?`,
+    `Proceeding will force the ${
+      documents.length == 1
+        ? "selected document"
+        : `${documents.length} selected documents`
+    } to stop processing. After processing has been stopped, an error will show after which you can “Force Reprocess” or delete the ${
+      documents.length == 1 ? "document" : `documents`
+    } using the Edit menu. Do you wish to continue?`,
     "Continue",
     async () => {
       await wrapLoad(layout, async () => {
@@ -381,49 +393,70 @@ export function cancelProcessDocuments(documents) {
       });
       await markAsDirty(documents.map((doc) => doc.id));
       unselectAll();
-    }
+    },
   );
 }
 
-export async function changeAccessForDocuments(documents, access, publishAt, layout) {
+export async function changeAccessForDocuments(
+  documents,
+  access,
+  publishAt,
+  layout,
+) {
   await wrapLoad(layout, async () => {
     await editMetadata(
       documents.map((doc) => doc.id),
-      { access, publish_at: publishAt }
+      { access, publish_at: publishAt },
     );
     documents.forEach((doc) =>
-      updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }))
+      updateInCollection(
+        doc,
+        (d) =>
+          (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
+      ),
     );
   });
   hideAccess();
 }
 
-export async function changeOwnerForDocuments(documents, user, organization, layout) {
+export async function changeOwnerForDocuments(
+  documents,
+  user,
+  organization,
+  layout,
+) {
   await wrapLoad(layout, async () => {
     await editMetadata(
       documents.map((doc) => doc.id),
-      { user, organization }
+      { user: user.id, organization: organization.id },
     );
     documents.forEach((doc) =>
-      updateInCollection(doc, (d) => (d.doc = { ...d.doc, user, organization }))
+      updateInCollection(
+        doc,
+        (d) => (d.doc = { ...d.doc, user, organization }),
+      ),
     );
   });
-  hideAccess();
 }
 
 export function removeDocument(document) {
   return removeDocuments([document]);
 }
 
-export async function editSelectedDocumentInfo(info, layout, selected, viewerUpdate = () => { }) {
+export async function editSelectedDocumentInfo(
+  info,
+  layout,
+  selected,
+  viewerUpdate = () => {},
+) {
   await wrapLoad(layout, async () => {
     await editMetadata(
       selected.map((doc) => doc.id),
-      info
+      info,
     );
     // Show changes in UI
     selected.forEach((doc) =>
-      updateInCollection(doc, (d) => (d.doc = { ...d.doc, ...info }))
+      updateInCollection(doc, (d) => (d.doc = { ...d.doc, ...info })),
     );
     viewerUpdate();
   });
@@ -452,7 +485,7 @@ export async function replaceDocumentData(
   originalKey,
   originalValue,
   newKey,
-  newValue
+  newValue,
 ) {
   // TODO: potentially optimize with partial add-remove hybrid on matching keys
   await removeDocumentData(documents, originalKey, originalValue);
@@ -476,8 +509,8 @@ export async function removeDocumentData(documents, key, value) {
 
 export async function handleNewDocuments(newDocs) {
   // Set status to pending to indicate progress
-  newDocs = newDocs.map(d => {
-    d.doc = { ...d.doc, status: 'pending' };
+  newDocs = newDocs.map((d) => {
+    d.doc = { ...d.doc, status: "pending" };
     return d;
   });
   addToCollection(newDocs);
@@ -517,9 +550,12 @@ async function updatePending() {
     const pendingDoc = pending[i];
     const existingDoc = documents.pendingMap[pendingDoc.doc_id];
     if (existingDoc != null) {
-      pendingDoc.images = pendingDoc.images == null ? existingDoc.images : pendingDoc.images;
-      pendingDoc.texts = pendingDoc.texts == null ? existingDoc.texts : pendingDoc.texts;
-      pendingDoc.pages = pendingDoc.pages == null ? existingDoc.pages : pendingDoc.pages;
+      pendingDoc.images =
+        pendingDoc.images == null ? existingDoc.images : pendingDoc.images;
+      pendingDoc.texts =
+        pendingDoc.texts == null ? existingDoc.texts : pendingDoc.texts;
+      pendingDoc.pages =
+        pendingDoc.pages == null ? existingDoc.pages : pendingDoc.pages;
     }
   }
   documents.pending = pending;
@@ -539,13 +575,17 @@ export async function addDocsToProject(project, documents, showToast = true) {
   await wrapLoad(layout, async () => {
     await addDocumentsToProject(
       project.id,
-      documents.map((doc) => doc.id)
+      documents.map((doc) => doc.id),
     );
     documents.forEach((doc) =>
       updateInCollection(
         doc,
-        (d) => (d.doc = { ...d.doc, projects: addToArrayIfUnique(d.projectIds, project.id) })
-      )
+        (d) =>
+          (d.doc = {
+            ...d.doc,
+            projects: addToArrayIfUnique(d.projectIds, project.id),
+          }),
+      ),
     );
   });
   if (!layout.error && showToast) {
@@ -553,8 +593,8 @@ export async function addDocsToProject(project, documents, showToast = true) {
       `Successfully added ${handlePlural(
         documents.length,
         "document",
-        true
-      )} to ${project.title}.`
+        true,
+      )} to ${project.title}.`,
     );
   }
 }
@@ -562,24 +602,24 @@ export async function addDocsToProject(project, documents, showToast = true) {
 export async function removeDocsFromProject(
   project,
   documents,
-  showToast = true
+  showToast = true,
 ) {
   documents = documents.filter((doc) => doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
     await removeDocumentsFromProject(
       project.id,
-      documents.map((doc) => doc.id)
+      documents.map((doc) => doc.id),
     );
     documents.forEach((doc) =>
       updateInCollection(
         doc,
         (d) =>
-        (d.doc = {
-          ...d.doc,
-          projects: removeFromArray(d.projectIds, project.id),
-        })
-      )
+          (d.doc = {
+            ...d.doc,
+            projects: removeFromArray(d.projectIds, project.id),
+          }),
+      ),
     );
   });
   if (!layout.error && showToast) {
@@ -587,8 +627,8 @@ export async function removeDocsFromProject(
       `Successfully removed ${handlePlural(
         documents.length,
         "document",
-        true
-      )} from project (${project.title}).`
+        true,
+      )} from project (${project.title}).`,
     );
   }
 }
