@@ -6,7 +6,7 @@ export function removeFromArray(array, elem) {
   return array;
 }
 
-export function uniquify(array, fieldAccess = x => x.id) {
+export function uniquify(array, fieldAccess = (x) => x.id) {
   // Remove duplicates
   let unique = {};
   const results = [];
@@ -40,7 +40,7 @@ export function index(array, elem, eq = (a, b) => a == b) {
 export function intersection(arrays, eq = (a, b) => a == b) {
   if (arrays.length == 0) return [];
   // Adapted from https://stackoverflow.com/a/59176460
-  return arrays.reduce((a, b) => a.filter(elem => includes(b, elem, eq)));
+  return arrays.reduce((a, b) => a.filter((elem) => includes(b, elem, eq)));
 }
 
 export function arrayEq(x1, x2, eq = (a, b) => a == b) {
@@ -64,4 +64,19 @@ export function chunk(array, chunkSize) {
     chunks.push(array.slice(i, i + chunkSize));
   }
   return chunks;
+}
+
+export function sameProp(l, propFn, eq = (x, y) => x == y) {
+  let value = null;
+  for (let i = 0; i < l.length; i++) {
+    const prop = propFn(l[i]);
+    if (prop != null) {
+      if (value != null) {
+        if (!eq(prop, value)) return null;
+      } else {
+        value = prop;
+      }
+    }
+  }
+  return value;
 }

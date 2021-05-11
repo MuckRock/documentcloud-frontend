@@ -2,7 +2,6 @@
   import Button from "@/common/Button";
   import Tooltip from "@/common/Tooltip";
   import { layout } from "@/manager/layout";
-  import { layout as viewerLayout } from "@/viewer/layout";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { viewer } from "@/viewer/viewer";
   import { wrapLoad } from "@/util/wrapLoad";
@@ -13,13 +12,19 @@
   } from "@/manager/documents";
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
+  import { sameProp } from "@/util/array";
+  import deepEqual from "fast-deep-equal";
 
   const emit = emitter({
     dismiss() {},
   });
 
-  let user = orgsAndUsers.me.id;
-  let organization = orgsAndUsers.me.organization.id; // XXX get from selected docs
+  let user = sameProp(layout.ownerEditDocuments, (x) => x.user, deepEqual);
+  let organization = sameProp(
+    layout.ownerEditDocuments,
+    (x) => x.organization,
+    deepEqual,
+  );
   let valid = true;
   let invalidReason = "Not implemented yet";
 
@@ -39,8 +44,6 @@
     }
     emit.dismiss();
   }
-
-
 </script>
 
 <style lang="scss">
@@ -62,7 +65,6 @@
     position: relative;
   }
 </style>
-
 
 <div>
   <div class="mcontent">

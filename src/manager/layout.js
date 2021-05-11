@@ -1,6 +1,7 @@
 import { Svue } from "svue";
 import { router } from "@/router/router";
-import { truthyParamValue } from '@/util/url';
+import { truthyParamValue } from "@/util/url";
+import { sameProp } from "@/util/array";
 
 // Used to calculate the most restricted level of access
 // in a group of documents
@@ -90,31 +91,20 @@ export const layout = new Svue({
       // Return the most restricted access level
       return minAccess;
     },
-    sameAccess(sameProp) {
+    sameAccess(sameAccessProp) {
       // Return the access level if all docs have the same access
       // Otherwise, return null
-      return sameProp("access");
+      return sameAccessProp("access");
     },
-    samePublishAt(sameProp) {
+    samePublishAt(sameAccessProp) {
       // Return the publish at date if all docs have the same publish at date
       // Otherwise, return null
-      return sameProp("publishAt");
+      return sameAccessProp("publishAt");
     },
-    sameProp(accessEditDocuments) {
+    sameAccessProp(accessEditDocuments) {
       // Return the given property if all docs have the same value for that property
       // Otherwise, return null
-      return function (prop) {
-        let value = null;
-        for (let i = 0; i < accessEditDocuments.length; i++) {
-          const doc = accessEditDocuments[i];
-          if (i == 0) {
-            value = doc[prop];
-          } else if (doc[prop] != value) {
-            return null;
-          }
-        }
-        return value;
-      };
+      return (prop) => sameProp(accessEditDocuments, (x) => x[prop]);
     },
     projectCollaboratorAccessOpen(projectEditUser) {
       return projectEditUser != null;
@@ -124,14 +114,14 @@ export const layout = new Svue({
     projectEmbedTitle(router) {
       const route = router.resolvedRoute;
       if (route == null) return null;
-      if (route.name != 'project') return null;
+      if (route.name != "project") return null;
       if (route.props == null) return null;
       return route.props.title;
     },
     projectEmbedSearchBar(router) {
       const route = router.resolvedRoute;
       if (route == null) return true;
-      if (route.name != 'project') return true;
+      if (route.name != "project") return true;
       if (route.props == null) return true;
       return truthyParamValue(route.props.searchbar);
     },
@@ -139,7 +129,10 @@ export const layout = new Svue({
 });
 
 export function selectionProcessing() {
-  return [someProcessing(...layout.selected), allProcessing(...layout.selected)];
+  return [
+    someProcessing(...layout.selected),
+    allProcessing(...layout.selected),
+  ];
 }
 
 export function unselectDocument(document) {
