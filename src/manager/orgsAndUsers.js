@@ -5,7 +5,7 @@ import {
   changeActiveOrg,
   getOrganizationsByIds,
   getUser,
-  getOrganization
+  getOrganization,
 } from "@/api/orgAndUser";
 import { projects, initProjects } from "./projects";
 import { userUrl, allDocumentsUrl } from "@/search/search";
@@ -30,7 +30,10 @@ export const orgsAndUsers = new Svue({
     // Don't re-request
     "router.resolvedRoute"() {
       const route = router.resolvedRoute;
-      if (route != null && (route.name == "app" || route.name == "home" || route.name == "default")) {
+      if (
+        route != null &&
+        (route.name == "app" || route.name == "home" || route.name == "default")
+      ) {
         // Initiate orgs and users in the app
         if (!this.hasInited) {
           this.hasInited = true;
@@ -40,7 +43,12 @@ export const orgsAndUsers = new Svue({
         }
 
         initProjectsIfNecessary(route);
-        if (route != null && route.name == 'app' && this.me != null && !this.hasInitedProjects) {
+        if (
+          route != null &&
+          route.name == "app" &&
+          this.me != null &&
+          !this.hasInitedProjects
+        ) {
           this.hasInitedProjects = true;
           initProjects(this.me);
         }
@@ -49,7 +57,7 @@ export const orgsAndUsers = new Svue({
     me() {
       const route = router.resolvedRoute;
       initProjectsIfNecessary(route);
-    }
+    },
   },
   computed: {
     loggedIn(me) {
@@ -58,13 +66,17 @@ export const orgsAndUsers = new Svue({
     isStaff(me) {
       if (me == null) return false;
       return me.is_staff == true;
-    }
+    },
+    orgIdList(me) {
+      if (me == null) return [];
+      return me.organizations;
+    },
   },
 });
 
 function reroute(route) {
   if (route == null) return;
-  if (route.name == 'app' && route.props.q == null) {
+  if (route.name == "app" && route.props.q == null) {
     // Redirect to proper route if no search params are set
     if (orgsAndUsers.me != null) {
       // Redirect to get self user route if no search params are set
@@ -85,7 +97,11 @@ function reroute(route) {
 
 function initProjectsIfNecessary(route) {
   if (route == null) return;
-  if (route.name == 'app' && orgsAndUsers.me != null && !orgsAndUsers.hasInitedProjects) {
+  if (
+    route.name == "app" &&
+    orgsAndUsers.me != null &&
+    !orgsAndUsers.hasInitedProjects
+  ) {
     orgsAndUsers.hasInitedProjects = true;
     initProjects(orgsAndUsers.me);
   }
@@ -96,7 +112,9 @@ async function initOrgsAndUsers(callback = null) {
   if (orgsAndUsers.me != null) {
     // Logged in
     orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
-    orgsAndUsers.selfOrgs = await getOrganizationsByIds(orgsAndUsers.me.organizations);
+    orgsAndUsers.selfOrgs = await getOrganizationsByIds(
+      orgsAndUsers.me.organizations,
+    );
     for (let i = 0; i < orgsAndUsers.selfOrgs.length; i++) {
       const org = orgsAndUsers.selfOrgs[i];
       orgsAndUsers.orgsById[org.id] = org;

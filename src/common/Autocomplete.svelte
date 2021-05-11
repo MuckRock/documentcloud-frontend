@@ -1,22 +1,33 @@
 <script>
   export let value;
-  export let method;
+  export let method = null;
+  export let allData = null;
   export let placeholder = "";
   let inputValue = "";
   let inputId = 0;
 
   let completions = null;
+  const MAX_RESULTS = 10;
 
-  async function autocomplete() {
+  function filter(allData, inputValue) {
+    if (allData == null)
+      throw new Error("Must specify allData if method is null");
+    return allData.filter((x) =>
+      x.name.trim().toLowerCase().startsWith(inputValue.trim().toLowerCase()),
+    );
+  }
+
+  function autocomplete() {
     // Use an id to make sure to only report most recent result
     inputId++;
     const originalId = inputId;
     // Apply latency to reduce flow of requests during typing
     setTimeout(async () => {
       if (inputId != originalId) return;
-      const results = await method(inputValue);
+      const results =
+        method == null ? filter(allData, inputValue) : await method(inputValue);
       if (inputId == originalId) {
-        completions = results;
+        completions = results.slice(0, MAX_RESULTS);
       }
     }, 100);
   }

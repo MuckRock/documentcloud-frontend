@@ -1,12 +1,11 @@
 <script>
+  import Loader from "@/common/Loader";
   import Button from "@/common/Button";
   import Autocomplete from "@/common/Autocomplete";
   import { layout } from "@/manager/layout";
   import { viewer } from "@/viewer/viewer";
-  import {
-    autocompleteOrganizations,
-    autocompleteUsers,
-  } from "@/api/orgAndUser";
+  import { autocompleteUsers } from "@/api/orgAndUser";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { changeOwnerForDocuments } from "@/manager/documents";
   import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
@@ -38,8 +37,8 @@
     if (!valid || isViewer) return;
     changeOwnerForDocuments(
       layout.ownerEditDocuments,
-      user.id,
-      organization.id,
+      user,
+      organization,
       layout,
     );
     emit.dismiss();
@@ -73,50 +72,54 @@
   }
 </style>
 
-<div>
-  <div class="mcontent">
-    <h1>
-      Change owner for
-      {nameSingularNumberPlural(numOwnerSelected, "document")}
-    </h1>
-    <p class="warning">
-      Warning: You may lose access to the specified {nameSingularNumberPlural(
-        numOwnerSelected,
-        "document",
-      )} as a result of changing the document owner
-    </p>
-    <table>
-      <tr>
-        <td>User:</td>
-        <td>
-          <div>
-            <Autocomplete
-              placeholder="Type to filter users..."
-              method={autocompleteUsers}
-              bind:value={user}
-            />
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Organization:</td>
-        <td>
-          <div>
-            <Autocomplete
-              placeholder="Type to filter organizations..."
-              method={autocompleteOrganizations}
-              bind:value={organization}
-            />
-          </div>
-        </td>
-      </tr>
-    </table>
-    <div class="buttonpadded">
-      <Button
-        disabledReason={invalidReason}
-        on:click={() => ownerChange(user, organization)}>Save</Button
-      >
-      <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+<!-- Don't show until self orgs have populated -->
+<Loader active={$orgsAndUsers.selfOrgs == null}>
+  <div>
+    <div class="mcontent">
+      <h1>
+        Change owner for
+        {nameSingularNumberPlural(numOwnerSelected, "document")}
+      </h1>
+      <p class="warning">
+        Warning: You may lose access to the specified {nameSingularNumberPlural(
+          numOwnerSelected,
+          "document",
+        )} as a result of changing the document owner
+      </p>
+      <table>
+        <tr>
+          <td>User:</td>
+          <td>
+            <div>
+              <Autocomplete
+                placeholder="Type to filter users..."
+                method={(prefix) =>
+                  autocompleteUsers(prefix, $orgsAndUsers.orgIdList)}
+                bind:value={user}
+              />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Organization:</td>
+          <td>
+            <div>
+              <Autocomplete
+                placeholder="Type to filter organizations..."
+                allData={$orgsAndUsers.selfOrgs || []}
+                bind:value={organization}
+              />
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div class="buttonpadded">
+        <Button
+          disabledReason={invalidReason}
+          on:click={() => ownerChange(user, organization)}>Save</Button
+        >
+        <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+      </div>
     </div>
   </div>
-</div>
+</Loader>
