@@ -49,8 +49,8 @@
 <style lang="scss">
   .warning {
     padding: 15px 30px;
-    background: #ffeded;
-    border-radius: 3px;
+    background: $warning;
+    border-radius: $radius;
     display: table;
     max-width: 700px;
 
