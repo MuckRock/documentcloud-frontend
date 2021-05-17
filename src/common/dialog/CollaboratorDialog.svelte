@@ -23,7 +23,7 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import emitter from "@/emit";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -47,8 +47,9 @@
   async function removeProjectUser(user) {
     showConfirm(
       $_("dialogCollaboratorDialog.confirm"),
-      $_("dialogCollaboratorDialog.confirmMsg",
-        {values: {name: user.name, title: layout.projectEdit.title}}),
+      $_("dialogCollaboratorDialog.confirmMsg", {
+        values: { name: user.name, title: layout.projectEdit.title },
+      }),
       $_("dialog.remove"),
       async () => {
         await wrapLoadSeparate(
@@ -74,10 +75,6 @@
 </script>
 
 <style lang="scss">
-  a {
-    color: $primary;
-  }
-
   .collaborator {
     display: table;
     width: 100%;
@@ -161,7 +158,7 @@
           <div class="name">
             <input
               bind:value={email}
-              placeholder="{$_("common.emailAddress")}"
+              placeholder={$_("common.emailAddress")}
               type="email"
             />
           </div>
@@ -205,7 +202,9 @@
             </Dropdown>
           </span>
           <div class="button">
-            <Button on:click={handleAdd}>+ {$_("dialogCollaboratorDialog.add")}</Button>
+            <Button on:click={handleAdd}
+              >+ {$_("dialogCollaboratorDialog.add")}</Button
+            >
           </div>
         </div>
       </div>

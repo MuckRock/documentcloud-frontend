@@ -10,10 +10,9 @@
     changeAccessForDocuments,
     updateInCollection,
   } from "@/manager/documents";
-  import { nameSingularNumberPlural } from "@/util/string";
   import emitter from "@/emit";
   import Calendar from "@/common/Calendar";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import InfoSvg from "@/assets/info.svg";
@@ -174,11 +173,6 @@
       }
     }
 
-    a {
-      color: $primary;
-      font-weight: bold;
-    }
-
     .content {
       padding-left: 14px;
       display: inline-block;
@@ -189,10 +183,14 @@
 <div>
   <div class="mcontent">
     <h1>
-      {$_("dialogAccessDialog.changeAccess", {values: {n: numAccessSelected}})}
+      {$_("dialogAccessDialog.changeAccess", {
+        values: { n: numAccessSelected },
+      })}
     </h1>
     <p>
-    {$_("dialogAccessDialog.selectAccess", {values: {n: numAccessSelected}})}
+      {$_("dialogAccessDialog.selectAccess", {
+        values: { n: numAccessSelected },
+      })}
     </p>
     <div class="inputpadded">
       <label class:faded={notVerified}>
@@ -238,13 +236,15 @@
                 bind:checked={showScheduler}
                 disabled={notVerified}
               />
-              <span class="icon">{@html CalendarSvg}</span> {$_("dialogAccessDialog.schedulePublication")}</label
+              <span class="icon">{@html CalendarSvg}</span>
+              {$_("dialogAccessDialog.schedulePublication")}</label
             >
           </div>
           {#if showScheduler}
             <small>
-              {$_("dialogAccessDialog.scheduleHelp",
-              {values: {timezone: timezone != null ? ` (${timezone})` : ""}})}
+              {$_("dialogAccessDialog.scheduleHelp", {
+                values: { timezone: timezone != null ? ` (${timezone})` : "" },
+              })}
             </small>
             <Calendar bind:value={publishAt} />
           {/if}
@@ -258,10 +258,13 @@
           : validPublishAt
           ? $_("dialogAccessDialog.unchanged")
           : $_("dialogAccessDialog.future")}
-        on:click={() => accessChange(access, publishAt)}>
+        on:click={() => accessChange(access, publishAt)}
+      >
         {$_("dialogAccessDialog.change")}
       </Button>
-      <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
+      <Button secondary={true} on:click={emit.dismiss}
+        >{$_("dialog.cancel")}</Button
+      >
     </div>
   </div>
 </div>
