@@ -38,4 +38,5 @@
   {min}
   {max}
   bind:value={valueInternal}
-  on:blur={handleBlur} />
+  on:blur={handleBlur}
+/>

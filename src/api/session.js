@@ -1,9 +1,10 @@
 import axios from "axios";
-import axiosRetry from 'axios-retry';
+import axiosRetry from "axios-retry";
 
 // Hook in failed request interceptor
 axiosRetry(axios, {
-  retries: 3, retryDelay: axiosRetry.exponentialDelay
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
 });
 
 const CSRF_COOKIE_NAME = "csrftoken";
@@ -13,8 +14,7 @@ export let cookiesEnabled = false;
 try {
   document.cookie;
   cookiesEnabled = true;
-} catch (e) {
-}
+} catch (e) {}
 
 const session = axios.create({
   xsrfCookieName: CSRF_COOKIE_NAME,
@@ -23,17 +23,20 @@ const session = axios.create({
 });
 
 session.interceptors.response.use(
-  response => {
+  (response) => {
     // Keep response unchanged
     return response;
   },
-  error => {
+  (error) => {
     // Do something with response error
     if (error.response && error.response.data) {
-      return Promise.reject({ errorData: error.response.data, status: error.response.status });
+      return Promise.reject({
+        errorData: error.response.data,
+        status: error.response.status,
+      });
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 const CACHE_LIMIT = 50;

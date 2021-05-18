@@ -1,4 +1,4 @@
-import { ensureBounds } from './bounds';
+import { ensureBounds } from "./bounds";
 
 function sigmoidHelper(t, a) {
   return 1 / (1 + Math.exp(-a * t)) - 0.5;
@@ -15,13 +15,13 @@ export function zeroUntilEnd(t) {
 }
 
 export function scale(tweener, ratio, keepInBounds = true) {
-  return t => {
+  return (t) => {
     let value = tweener(t / ratio);
     if (keepInBounds) value = ensureBounds(value);
     return value;
-  }
+  };
 }
 
 export function interp(tweener, a, b) {
-  return t => tweener(t) * (b - a) + a;
+  return (t) => tweener(t) * (b - a) + a;
 }

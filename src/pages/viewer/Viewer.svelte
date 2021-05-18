@@ -113,7 +113,12 @@
 {:else if $confirmDialog.open}
   <Modal component={ConfirmDialog} on:close={hideConfirm} />
 {:else if $layout.showEmbedDialog}
-  <Modal fullscreen={$layout.embedShareOption == 'document'} component={$viewerEditDialogs.embedDialog} on:close={hideEmbedFlow} bind:shareOption />
+  <Modal
+    fullscreen={$layout.embedShareOption == "document"}
+    component={$viewerEditDialogs.embedDialog}
+    on:close={hideEmbedFlow}
+    bind:shareOption
+  />
 {:else if $layout.showAccess}
   <Modal component={$viewerEditDialogs.accessDialog} on:close={hideAccess} />
 {:else if $layout.showInfo}

@@ -18,22 +18,22 @@
       "Search by document title",
       "Type “title:” followed by the title of your document (surround multiple words with quotes or parentheses)",
       "title:mueller",
-      'title:"mueller report"'
+      'title:"mueller report"',
     ],
     [
       "Search by user",
       "Type “user:” followed by an autocompleted user name",
-      "user:example-user-123"
+      "user:example-user-123",
     ],
     [
       "Search by project",
       "Type “project:” followed by an autocompleted project name",
-      "project:example-project-123"
+      "project:example-project-123",
     ],
     [
       "Search by organization",
       "Type “organization:” followed by an autocompleted organization name",
-      "organization:example-org-123"
+      "organization:example-org-123",
     ],
 
     // Logic
@@ -41,17 +41,17 @@
     [
       "Require both terms to be present",
       "Type “AND” (capitalization important) in between the queries",
-      "hello AND goodbye"
+      "hello AND goodbye",
     ],
     [
       "Require one term or another (or both) to be present",
       "Type “OR” (capitalization important) in between the queries",
-      "hello OR goodbye"
+      "hello OR goodbye",
     ],
     [
       "Group queries together",
       "Use parentheses to group logical queries together. These can be nested for complex queries",
-      "(a OR b) AND (c OR d)"
+      "(a OR b) AND (c OR d)",
     ],
     [
       "Exclude a term or filter",
@@ -59,13 +59,13 @@
       "-report",
       "NOT report",
       '-title:"my doc"',
-      'NOT title:"my doc"'
+      'NOT title:"my doc"',
     ],
     [
       "Require a term or filter",
       "Type “+” followed by a word, quoted phrase, or filter (most filters are automatically required but this is a way to be explicit)",
       "+report",
-      '+title:"my doc"'
+      '+title:"my doc"',
     ],
 
     // More filters
@@ -73,22 +73,22 @@
     [
       "Search by access",
       "Type “access:” followed by an autocompleted access level (“private”, “public”, or “organization”)",
-      "access:public"
+      "access:public",
     ],
     [
       "Search by status",
       "Type “status:” followed by an autocompleted document status (“success”, “readable”, “pending”, “error”, or “nofile”)",
-      "status:success"
+      "status:success",
     ],
     [
       "Search by tag",
       "Type “tag:” followed by the tag you wish to be present (requires documents to be tagged ahead of time)",
-      "tag:report"
+      "tag:report",
     ],
     [
       "Search by key/value pair",
       "Type “data_&lt;key&gt;:” followed by the value you wish to be present (requires documents to be labeled ahead of time)",
-      "data_year:2020"
+      "data_year:2020",
     ],
     [
       "Search by page count",
@@ -96,12 +96,12 @@
       "pages:123",
       "pages:[100 TO *]",
       "pages:[* TO 20]",
-      "pages:[50 TO 80]"
+      "pages:[50 TO 80]",
     ],
     [
       "Search by language",
       "Type “language:” followed by an autocompleted language option",
-      "language:spa"
+      "language:spa",
     ],
 
     // Sorting
@@ -114,42 +114,42 @@
       "sort:title",
       "investigation sort:-page_count",
       // TODO: add source when the field is implemented
-      "sort:score"
+      "sort:score",
     ],
 
     ["Advanced"],
     [
       "Wildcard letter",
       "Add ? in a word to match a single letter, e.g. “s?ar” matches “soar”, “star”, “scar”, etc.",
-      "s?ar"
+      "s?ar",
     ],
     [
       "Wildcard run",
       "Add * in a word to match a run of zero or more letters, e.g. “s*ore” matches “sore”, “score”, “sophomore”, etc.",
       "s*ore",
       "report*",
-      "*ing"
+      "*ing",
     ],
     [
       "Fuzzy word search",
       "Add ‘~’ at the end of a word to search that word along with common misspellings (useful for OCR errors, too)",
-      "building~"
+      "building~",
     ],
     [
       "Phrase match with gap",
       "Surround two words with quotes and add ‘~’ followed by how many words can occur between the two words",
-      '"taxpayers money"~5'
+      '"taxpayers money"~5',
     ],
     [
       "Search for text on a specific page number",
       "Type “page_no_&lt;number&gt;:” followed by the search text, where “&lt;number&gt;” is the desired page number",
-      "page_no_23:findings"
+      "page_no_23:findings",
     ],
     [
       "Custom search weight",
       "After a search term add ‘^’ followed by a number to weight the importance of that term in the query",
-      '"findings revealed"^10 report^3'
-    ]
+      '"findings revealed"^10 report^3',
+    ],
   ];
 </script>
 
@@ -234,13 +234,13 @@
         display your documents, but you can do a lot more.
       </p>
       <SearchExample
-        content={`${userExample} "mueller report" project:test-345  -pages:448`} />
+        content={`${userExample} "mueller report" project:test-345  -pages:448`}
+      />
       <p>
         The above example, for instance, searches all documents within
         {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
-        for a specific project that contain the exact text “mueller report” and
-        don’t have a page count of 448 (thus excluding the actual Mueller
-        Report).
+        for a specific project that contain the exact text “mueller report” and don’t
+        have a page count of 448 (thus excluding the actual Mueller Report).
         <Link color={true} toUrl="/help/search">Additional documentation</Link>
       </p>
       <p>

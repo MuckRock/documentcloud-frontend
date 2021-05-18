@@ -1,11 +1,11 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
-import Empty from '@/pages/home/Empty.svelte';  // explicit extension for tests
-import { lazyComponent } from '@/util/lazyComponent';
+import Empty from "@/pages/home/Empty.svelte"; // explicit extension for tests
+import { lazyComponent } from "@/util/lazyComponent";
 
-const endings = ['.html', '.html'];
+const endings = [".html", ".html"];
 
-const FALLBACK_URL = '/app';
+const FALLBACK_URL = "/app";
 
 export class Router extends Svue {
   constructor(notFound) {
@@ -13,12 +13,12 @@ export class Router extends Svue {
       data() {
         return {
           notFound,
-          routeFunc: () => { },
+          routeFunc: () => {},
           pastUrl: null,
           backNav: false,
           currentUrl: null,
           lazyComponent,
-        }
+        };
       },
       computed: {
         routes(routeFunc, lazyComponent) {
@@ -30,10 +30,14 @@ export class Router extends Svue {
             if (routes.hasOwnProperty(name)) {
               const route = routes[name];
               if (route.path != null) {
-                mapping[route.path] =
-                  props => {
-                    return { name, props, component: route.component, get: route.get };
-                  }
+                mapping[route.path] = (props) => {
+                  return {
+                    name,
+                    props,
+                    component: route.component,
+                    get: route.get,
+                  };
+                };
               }
             }
           }
@@ -43,14 +47,15 @@ export class Router extends Svue {
           return rlite(() => ({ component: notFound }), mapping);
         },
         resolvedRoute(currentUrl, router, lazyComponent) {
-          if (currentUrl == null || router == null || lazyComponent == null) return null;
+          if (currentUrl == null || router == null || lazyComponent == null)
+            return null;
           const resolved = this.resolve(currentUrl);
           if (resolved.component == null && resolved.get != null) {
             resolved.get();
           }
           return resolved;
-        }
-      }
+        },
+      },
     });
   }
 
@@ -60,7 +65,7 @@ export class Router extends Svue {
 
   resolve(path) {
     // Remove common endings
-    path = path.split('#')[0];
+    path = path.split("#")[0];
     for (let i = 0; i < endings.length; i++) {
       const ending = endings[i];
       if (path.endsWith(ending)) {
@@ -93,7 +98,11 @@ export function pushUrl(url) {
   router.pastUrl = router.currentUrl;
   router.currentUrl = url;
   // push the path into web browser history API
-  window.history.pushState({ path: url, dc: true }, "", window.location.origin + url);
+  window.history.pushState(
+    { path: url, dc: true },
+    "",
+    window.location.origin + url,
+  );
 }
 
 export function goBack(fallback = FALLBACK_URL) {
@@ -101,7 +110,11 @@ export function goBack(fallback = FALLBACK_URL) {
     window.history.back();
   } else {
     router.currentUrl = fallback;
-    window.history.replaceState({ path: fallback }, "", window.location.origin + fallback)
+    window.history.replaceState(
+      { path: fallback },
+      "",
+      window.location.origin + fallback,
+    );
   }
 }
 
@@ -110,7 +123,7 @@ export function nav(to, params = null) {
   pushUrl(path);
 }
 
-window.addEventListener('popstate', (e) => {
+window.addEventListener("popstate", (e) => {
   const state = e.state || { dc: false };
   const isDc = state.dc;
   router.backNav = isDc == true;

@@ -2,7 +2,7 @@
   import Button from "@/common/Button";
   import emitter from "@/emit";
   import { extractErrorData } from "@/manager/errorData";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   export let error;
   export let refresh = false;

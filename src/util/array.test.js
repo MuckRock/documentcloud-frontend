@@ -1,7 +1,7 @@
 import { includes, intersection } from "./array";
 
 function makeKeyArray(array) {
-  return array.map(x => ({ key: x }));
+  return array.map((x) => ({ key: x }));
 }
 
 test("array includes", () => {
@@ -9,7 +9,7 @@ test("array includes", () => {
 
   // Need a comparator
   expect(
-    includes(makeKeyArray([1, 2, 3]), { key: 2 }, (a, b) => a.key == b.key)
+    includes(makeKeyArray([1, 2, 3]), { key: 2 }, (a, b) => a.key == b.key),
   ).toBeTruthy();
 });
 
@@ -17,15 +17,15 @@ test("array intersection", () => {
   expect(
     intersection(
       [makeKeyArray([1, 2, 3]), makeKeyArray([2, 3, 4])],
-      (a, b) => a.key == b.key
-    )
+      (a, b) => a.key == b.key,
+    ),
   ).toEqual(makeKeyArray([2, 3]));
 
   expect(
     intersection(
       [makeKeyArray([1, 2, 3]), makeKeyArray([2, 3, 4]), makeKeyArray([5])],
-      (a, b) => a.key == b.key
-    )
+      (a, b) => a.key == b.key,
+    ),
   ).toEqual(makeKeyArray([]));
 
   expect(
@@ -33,9 +33,9 @@ test("array intersection", () => {
       [
         makeKeyArray([1, 2, 3]),
         makeKeyArray([2, 3, 4]),
-        makeKeyArray([4, 2, 7])
+        makeKeyArray([4, 2, 7]),
       ],
-      (a, b) => a.key == b.key
-    )
+      (a, b) => a.key == b.key,
+    ),
   ).toEqual(makeKeyArray([2]));
 });

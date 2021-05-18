@@ -1,15 +1,22 @@
 import { Svue } from "svue";
-import { viewer } from './viewer';
-import { tick } from 'svelte';
+import { viewer } from "./viewer";
+import { tick } from "svelte";
 import { router } from "@/router/router";
-import { layout, MOBILE_BREAKPOINT, annotationValid, startSearch, clearSearch, simpleCancelActions } from './layout';
+import {
+  layout,
+  MOBILE_BREAKPOINT,
+  annotationValid,
+  startSearch,
+  clearSearch,
+  simpleCancelActions,
+} from "./layout";
 
 const LAYOUT = {
-  docMargin: 40,  // margin from top to first page, bottom to last
-  pageGap: 20,  // margin between pages
-  rail: 10,  // max space on left and right on pages
-  pageWidth: 700,  // the width of a page,
-  pageBoundsWhenZoomed: 5,  // amount of padding when zoomed in past a page's width
+  docMargin: 40, // margin from top to first page, bottom to last
+  pageGap: 20, // margin between pages
+  rail: 10, // max space on left and right on pages
+  pageWidth: 700, // the width of a page,
+  pageBoundsWhenZoomed: 5, // amount of padding when zoomed in past a page's width
 };
 
 const DEFAULT_IMAGE_ASPECT = 11 / 8.5; // letter size paper
@@ -31,7 +38,7 @@ export const zoomBreakpoints = [
   500,
   600,
   700,
-  800
+  800,
 ];
 
 class Doc extends Svue {
@@ -45,7 +52,7 @@ class Doc extends Svue {
             image: DEFAULT_IMAGE_ASPECT,
             text: DEFAULT_TEXT_ASPECT,
           },
-          allRawAspects: { image: [], text: [] },  // list of aspect ratios for each page
+          allRawAspects: { image: [], text: [] }, // list of aspect ratios for each page
           allExtraHeights: { image: [], text: [] },
           viewer,
           texts: [],
@@ -58,7 +65,7 @@ class Doc extends Svue {
           visiblePageNumber: 1,
           sidebarExpanded: false,
           textJump: null,
-          mode: 'image',
+          mode: "image",
           handledHash: false,
 
           // Page image callbacks
@@ -67,7 +74,7 @@ class Doc extends Svue {
 
           // Show page note insert regions
           showPageNoteInserts: false,
-        }
+        };
       },
       watch: {
         viewer(viewer) {
@@ -75,9 +82,9 @@ class Doc extends Svue {
         },
         "router.resolvedRoute"() {
           const route = router.resolvedRoute;
-          if (route != null && route.name != 'viewer') {
+          if (route != null && route.name != "viewer") {
             // Reset mode
-            this.mode = 'image';
+            this.mode = "image";
           }
         },
       },
@@ -109,7 +116,9 @@ class Doc extends Svue {
           return defaultAspect;
         },
         aspects(rawAspects, averageAspect) {
-          return rawAspects.map(aspect => aspect == null ? averageAspect : aspect);
+          return rawAspects.map((aspect) =>
+            aspect == null ? averageAspect : aspect,
+          );
         },
 
         // Positions / Sizes
@@ -125,7 +134,8 @@ class Doc extends Svue {
             pages.push({
               position: [x, y, x2, y + height],
               aspect,
-              document, pageNumber: i
+              document,
+              pageNumber: i,
             });
             y += height + layout.pageGap;
           }
@@ -143,8 +153,8 @@ class Doc extends Svue {
             if (i != aspects.length - 1) height += layout.pageGap;
           }
           return height;
-        }
-      }
+        },
+      },
     });
   }
 
@@ -163,12 +173,12 @@ class Doc extends Svue {
 
   setExtraHeight(pageNumber, extraHeight) {
     doc.allExtraHeights[doc.mode][pageNumber] = extraHeight;
-    doc.allExtraHeights = doc.allExtraHeights;  // trigger update
+    doc.allExtraHeights = doc.allExtraHeights; // trigger update
   }
 
   setPageAspect(pageNumber, aspect) {
     doc.allRawAspects[doc.mode][pageNumber] = aspect;
-    doc.allRawAspects = doc.allRawAspects;  // trigger update
+    doc.allRawAspects = doc.allRawAspects; // trigger update
   }
 
   callbackWhenRendered(pageNumber, callback) {
@@ -177,14 +187,16 @@ class Doc extends Svue {
       callback();
     } else {
       // Set callback
-      this.callbacks[pageNumber] = (this.callbacks[pageNumber] || []).concat([callback]);
+      this.callbacks[pageNumber] = (this.callbacks[pageNumber] || []).concat([
+        callback,
+      ]);
     }
   }
 
   pageRendered(pageNumber) {
     this.rendered[pageNumber] = true;
     if (this.callbacks[pageNumber] != null) {
-      this.callbacks[pageNumber].forEach(callback => callback());
+      this.callbacks[pageNumber].forEach((callback) => callback());
       delete this.callbacks[pageNumber];
     }
   }
@@ -204,7 +216,8 @@ class Doc extends Svue {
     // Zoom to fit page width
     if (this.scrollzoom != null) {
       this.scale(
-        (this.scrollzoom.bounds.width - MAX_SCROLLBAR_WIDTH) / this.scrollzoom.containerWidth
+        (this.scrollzoom.bounds.width - MAX_SCROLLBAR_WIDTH) /
+          this.scrollzoom.containerWidth,
       );
     }
   }
@@ -214,8 +227,7 @@ class Doc extends Svue {
     if (this.scrollzoom != null) {
       const page = this.visiblePageNumber - 1;
       this.scale(
-        this.scrollzoom.bounds.height /
-        this.scrollzoom.components[page].height
+        this.scrollzoom.bounds.height / this.scrollzoom.components[page].height,
       );
       // Jump to page to reset position after zooming
       setTimeout(() => this.jumpToPage(page), 0);
@@ -223,11 +235,13 @@ class Doc extends Svue {
   }
 
   jumpToPage(pageNumber) {
-    return new Promise(resolve => {
-      if (this.mode == 'image') {
+    return new Promise((resolve) => {
+      if (this.mode == "image") {
         if (this.scrollzoom == null) return resolve();
 
-        const scrollTop = (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) * this.scrollzoom.transform.matrix[0];
+        const scrollTop =
+          (this.scrollzoom.components[pageNumber].y - this.layout.pageGap / 4) *
+          this.scrollzoom.transform.matrix[0];
         if (this.scrollzoom.element != null) {
           this.scrollzoom.scrollTo(scrollTop);
           this.callbackWhenRendered(pageNumber, () => {
@@ -236,14 +250,14 @@ class Doc extends Svue {
         } else {
           resolve();
         }
-      } else if (this.mode == 'text') {
+      } else if (this.mode == "text") {
         if (doc.simpleDocElem != null) doc.simpleDocElem.scrollTop = 0;
         document.getElementById(`${pageNumber + 1}`).scrollIntoView();
         resolve();
       } else {
         resolve();
       }
-    })
+    });
   }
 
   jumpToTextJump() {
@@ -257,7 +271,7 @@ class Doc extends Svue {
     if (this.scrollzoom == null) return;
     this.scrollzoom.resizeContainer(
       this.scrollzoom.containerWidth,
-      this.containerHeight
+      this.containerHeight,
     );
     this.scrollzoom.domCallback();
   }
@@ -294,12 +308,12 @@ export async function changeMode(mode) {
   // Change the mode while preserving position.
   const position = doc.visiblePageNumber - 1;
 
-  if (mode == 'text' && doc.mode == 'image') {
+  if (mode == "text" && doc.mode == "image") {
     doc.textJump = position;
   }
   doc.mode = mode;
 
-  if (mode != 'text') {
+  if (mode != "text") {
     await tick();
     restorePosition(position);
   }
@@ -330,7 +344,7 @@ export async function scrollVisibleAnnotationIntoView() {
 export function cancelActions() {
   const fn = () => {
     if (layout.modifying) {
-      changeMode('image');
+      changeMode("image");
     }
   };
   simpleCancelActions(fn);
@@ -350,7 +364,7 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
 
   if (!annotationValid(annotation)) return;
 
-  await changeMode('image');
+  await changeMode("image");
 
   layout.annotateMode = "view";
   if (!annotation.isPageNote) {
@@ -365,7 +379,7 @@ export async function showAnnotation(annotation, scrollIntoView = false) {
   }
 }
 
-let modeBeforeSearch = 'image';
+let modeBeforeSearch = "image";
 
 export async function initiateSearch(query) {
   if (await startSearch(query)) {
@@ -376,9 +390,9 @@ export async function initiateSearch(query) {
 
 export async function exitSearch() {
   clearSearch();
-  if (modeBeforeSearch != null && modeBeforeSearch != 'search') {
+  if (modeBeforeSearch != null && modeBeforeSearch != "search") {
     await changeMode(modeBeforeSearch);
   } else {
-    await changeMode('image');
+    await changeMode("image");
   }
 }

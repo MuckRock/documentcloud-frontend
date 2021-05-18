@@ -1,5 +1,5 @@
-import { Svue } from 'svue';
-import { Results } from './results';
+import { Svue } from "svue";
+import { Results } from "./results";
 
 export class Entity extends Svue {
   constructor(rawEntity, structure = {}) {
@@ -38,21 +38,20 @@ export class Entity extends Svue {
         },
         numOccurrences(occurrences) {
           return occurrences.length;
-        }
-      }
+        },
+      },
     });
   }
 }
-
 
 export class Entities extends Results {
   constructor(url, rawEntities) {
     super(url, rawEntities, {
       computed: {
         entities(results) {
-          return results.map(x => new Entity(x));
+          return results.map((x) => new Entity(x));
         },
-      }
+      },
     });
   }
 }

@@ -7,7 +7,7 @@ import {
   getProjectUsers,
   addUserToProject,
   updateUserAccess,
-  removeUser
+  removeUser,
 } from "@/api/project";
 import { getUsers } from "@/api/orgAndUser";
 import { layout } from "./layout";
@@ -18,7 +18,7 @@ export const projects = new Svue({
   data() {
     return {
       projects: [],
-      projectUsers: []
+      projectUsers: [],
     };
   },
   computed: {
@@ -31,9 +31,9 @@ export const projects = new Svue({
       return results;
     },
     addRemoveableProjects(projects) {
-      return projects.filter(project => project.addRemoveAccess);
-    }
-  }
+      return projects.filter((project) => project.addRemoveAccess);
+    },
+  },
 });
 
 function addUsers(...users) {
@@ -53,7 +53,7 @@ export async function createNewProject(title, description) {
 
 export async function editProject(project, title, description) {
   const updatedProject = await updateProject(project.id, title, description);
-  projects.projects = projects.projects.map(oldProject => {
+  projects.projects = projects.projects.map((oldProject) => {
     if (project.id == oldProject.id) {
       return updatedProject;
     } else {
@@ -97,17 +97,17 @@ export function selectedDocsInProject(project) {
 export async function removeProject(project) {
   await deleteProject(project.id);
   projects.projects = projects.projects.filter(
-    oldProject => oldProject.id != project.id
+    (oldProject) => oldProject.id != project.id,
   );
 }
 
 export async function getProjUsers(project) {
   const userAccesses = await getProjectUsers(project.id);
-  userAccesses.forEach(userAccess =>
-    project.addUser(userAccess.user, userAccess.access)
+  userAccesses.forEach((userAccess) =>
+    project.addUser(userAccess.user, userAccess.access),
   );
   // Add to known list of all users
-  addUsers(...userAccesses.map(userAccess => userAccess.user));
+  addUsers(...userAccesses.map((userAccess) => userAccess.user));
   return userAccesses;
 }
 

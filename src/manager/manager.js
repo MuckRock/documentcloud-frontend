@@ -1,13 +1,18 @@
 import { Svue } from "svue";
 
-import { documents, removeDocuments, reprocessDocuments, cancelProcessDocuments } from "./documents";
+import {
+  documents,
+  removeDocuments,
+  reprocessDocuments,
+  cancelProcessDocuments,
+} from "./documents";
 import { layout, editData } from "./layout";
 
 export const manager = new Svue({
   data() {
     return {
       documents,
-      layout
+      layout,
     };
   },
   computed: {
@@ -17,7 +22,7 @@ export const manager = new Svue({
     allSelected(hasDocuments, documents, layout) {
       return (
         hasDocuments &&
-        documents.documents.every(doc => layout.selectedMap[doc.id] != null)
+        documents.documents.every((doc) => layout.selectedMap[doc.id] != null)
       );
     },
     someSelected(hasDocuments, layout, allSelected) {
@@ -25,13 +30,13 @@ export const manager = new Svue({
     },
     noneSelected(hasDocuments, layout) {
       return !hasDocuments || !layout.hasSelection;
-    }
-  }
+    },
+  },
 });
 
 export function selectAll() {
   const results = {};
-  documents.documents.forEach(doc => {
+  documents.documents.forEach((doc) => {
     results[doc.id] = doc;
   });
   layout.selectedMap = results;

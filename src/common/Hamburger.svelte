@@ -5,7 +5,7 @@
   import hamburgerSvg from "@/assets/hamburger.svg";
 
   const emit = emitter({
-    toggle() {}
+    toggle() {},
   });
 </script>
 

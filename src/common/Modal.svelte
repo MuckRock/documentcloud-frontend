@@ -8,7 +8,7 @@
   import closeSvg from "@/assets/close.svg";
 
   const emit = emitter({
-    close() {}
+    close() {},
   });
 
   let dismissable = true;
@@ -178,7 +178,8 @@
           this={component}
           {...properties}
           on:setDismissable={setDismissable}
-          on:dismiss={dismiss} />
+          on:dismiss={dismiss}
+        />
       </div>
     </div>
   </div>

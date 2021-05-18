@@ -32,6 +32,6 @@ export function hoveredNote(el, note) {
     destroy: () => {
       el.removeEventListener("mouseover", mouseover);
       el.removeEventListener("mouseout", mouseout);
-    }
+    },
   };
 }

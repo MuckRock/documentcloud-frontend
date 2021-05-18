@@ -7,7 +7,7 @@
 
   const emit = emitter({
     check() {},
-    uncheck() {}
+    uncheck() {},
   });
 
   export let checked = false;
@@ -117,7 +117,8 @@
     bind:this={checkbox}
     bind:checked
     {disabled}
-    on:change={handleChange} />
+    on:change={handleChange}
+  />
   <span>
     {#if checked}
       {#if indeterminate}

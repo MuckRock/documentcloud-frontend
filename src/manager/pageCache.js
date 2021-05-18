@@ -1,4 +1,4 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 import { getFlatpage } from "@/api/cms";
 
 export const pageCache = new Svue({
@@ -7,7 +7,7 @@ export const pageCache = new Svue({
       grabbingTip: false,
       tipResponse: null,
     };
-  }
+  },
 });
 
 export async function grabTipOfDay() {

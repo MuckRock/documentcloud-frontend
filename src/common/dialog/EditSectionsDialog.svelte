@@ -8,7 +8,7 @@
   import { addSection, removeSection, replaceSection } from "@/api/section";
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { showConfirm } from "@/manager/confirmDialog";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -51,8 +51,8 @@
               viewer.id,
               viewer.sections[updatingIndex].id,
               pageAsNumber,
-              pendingTitle
-            )
+              pendingTitle,
+            ),
         );
         viewer.sections[updatingIndex] = {
           id: viewer.sections[updatingIndex].id,
@@ -71,8 +71,8 @@
               viewer.id,
               viewer.sections[updatingIndex].id,
               pageAsNumber,
-              pendingTitle
-            )
+              pendingTitle,
+            ),
         );
         await handleSectionRemove(updatingIndex, false);
         handleSectionAdd(false, newSection.id);
@@ -86,7 +86,7 @@
         const section = await wrapLoadSeparate(
           loading,
           layout,
-          async () => await addSection(viewer.id, pageAsNumber, pendingTitle)
+          async () => await addSection(viewer.id, pageAsNumber, pendingTitle),
         );
         id = section.id;
       } else {
@@ -109,19 +109,21 @@
     if (callApi) {
       showConfirm(
         $_("dialogEditSectionsDialog.confirmDelete"),
-        $_("dialogEditSectionsDialog.proceedingWillRemove",
-          {values:
-            {page: viewer.sections[idx].page + 1, title: viewer.sections[idx].title}
-          }),
+        $_("dialogEditSectionsDialog.proceedingWillRemove", {
+          values: {
+            page: viewer.sections[idx].page + 1,
+            title: viewer.sections[idx].title,
+          },
+        }),
         $_("dialog.delete"),
         async () => {
           await wrapLoadSeparate(
             loading,
             layout,
-            async () => await removeSection(viewer.id, viewer.sections[idx].id)
+            async () => await removeSection(viewer.id, viewer.sections[idx].id),
           );
           handleSectionRemove(idx, false);
-        }
+        },
       );
     } else {
       const removed = viewer.sections.splice(idx, 1);
@@ -266,10 +268,15 @@
               </span>
               <span
                 class="remove"
-                on:click={async () => !update && (await handleSectionRemove(i))}>
+                on:click={async () => !update && (await handleSectionRemove(i))}
+              >
                 {@html closeSimpleSvg}
               </span>
-              <span class="page">{$_("dialogEditSectionsDialog.pageAbbrevNo", {values: {n: section.page + 1}})}</span>
+              <span class="page"
+                >{$_("dialogEditSectionsDialog.pageAbbrevNo", {
+                  values: { n: section.page + 1 },
+                })}</span
+              >
               <span class="title">{section.title}</span>
             </div>
           {/each}
@@ -282,11 +289,11 @@
       <!-- Add section input range -->
       <div class="pendingsection">
         <p>
-        {#if update}
-          {$_("dialogEditSectionsDialog.edit")}
-        {:else}
-          {$_("dialogEditSectionsDialog.add")}
-        {/if}
+          {#if update}
+            {$_("dialogEditSectionsDialog.edit")}
+          {:else}
+            {$_("dialogEditSectionsDialog.add")}
+          {/if}
         </p>
         <div class="actions">
           <span class="page">{$_("dialogEditSectionsDialog.pageAbbrev")}</span>
@@ -296,38 +303,45 @@
             inputmode="numeric"
             pattern="[0-9]*"
             placeholder="#"
-            bind:value={pendingPage} />
+            bind:value={pendingPage}
+          />
           <input
             maxlength={sectionTitleLimit}
             class="titleinput"
             type="text"
             placeholder={$_("dialogEditSectionsDialog.title")}
-            bind:value={pendingTitle} />
+            bind:value={pendingTitle}
+          />
           <span class="add">
             <Button
-              disabledReason={
-              pageValid ? (
-                titleValid ?
-                  null :
-                  titleUpdateValid ?
-                    $_("dialogEditSectionsDialog.missingTitle")
-                    : $_("dialogEditSectionsDialog.updateTitle")
-                ) : pageCollided ?
-                  $_("dialogEditSectionsDialog.uniquePageNumber")
-                  : $_("dialogEditSectionsDialog.invalidPageNumber")
-              }
-              on:click={handleSectionAdd}>
-              {#if update}+ {$_("dialogEditSectionsDialog.update")}{:else}+ {$_("dialogEditSectionsDialog.add")}{/if}
+              disabledReason={pageValid
+                ? titleValid
+                  ? null
+                  : titleUpdateValid
+                  ? $_("dialogEditSectionsDialog.missingTitle")
+                  : $_("dialogEditSectionsDialog.updateTitle")
+                : pageCollided
+                ? $_("dialogEditSectionsDialog.uniquePageNumber")
+                : $_("dialogEditSectionsDialog.invalidPageNumber")}
+              on:click={handleSectionAdd}
+            >
+              {#if update}+ {$_("dialogEditSectionsDialog.update")}{:else}+ {$_(
+                  "dialogEditSectionsDialog.add",
+                )}{/if}
             </Button>
           </span>
           {#if update}
             <span class="cancel">
-              <Button secondary={true} on:click={cancelUpdate}>{$_("dialog.cancel")}</Button>
+              <Button secondary={true} on:click={cancelUpdate}
+                >{$_("dialog.cancel")}</Button
+              >
             </span>
           {/if}
         </div>
         <div class="buttonpadded">
-          <Button primary={true} on:click={hideEditSections}>{$_("dialog.done")}</Button>
+          <Button primary={true} on:click={hideEditSections}
+            >{$_("dialog.done")}</Button
+          >
         </div>
       </div>
     </div>

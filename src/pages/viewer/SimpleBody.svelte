@@ -17,7 +17,7 @@
 
   function handleScroll() {
     scrollParams = {
-      scrollTop: docElem.scrollTop
+      scrollTop: docElem.scrollTop,
     };
   }
 </script>
@@ -51,10 +51,11 @@
   bind:this={docElem}
   on:scroll={handleScroll}
   class="doc"
-  class:grayed={$layout.displayAnnotate}>
-  {#if $doc.mode == 'text'}
+  class:grayed={$layout.displayAnnotate}
+>
+  {#if $doc.mode == "text"}
     <AllText {scrollParams} />
-  {:else if $doc.mode == 'search'}
+  {:else if $doc.mode == "search"}
     <SearchResults />
   {/if}
 </div>

@@ -5,9 +5,9 @@ let globalToastIdx = 0;
 export const toasts = new Svue({
   data() {
     return {
-      toasts: []
+      toasts: [],
     };
-  }
+  },
 });
 
 export function pushToast(content) {
@@ -15,8 +15,8 @@ export function pushToast(content) {
     ...toasts.toasts,
     {
       idx: globalToastIdx++,
-      content
-    }
+      content,
+    },
   ];
 }
 

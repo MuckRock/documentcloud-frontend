@@ -2,7 +2,7 @@
  * Utility wrappers to cache function results
  */
 
-import deepEqual from 'fast-deep-equal';
+import deepEqual from "fast-deep-equal";
 
 function findFromCache(cache, args) {
   for (let i = 0; i < cache.length; i++) {
@@ -32,7 +32,7 @@ export function cache(fn, cacheSize = 50) {
     }
 
     return result;
-  }
+  };
 }
 
 export function cacheAsync(fn, cacheSize = 20) {
@@ -55,5 +55,5 @@ export function cacheAsync(fn, cacheSize = 20) {
     }
 
     return result;
-  }
+  };
 }

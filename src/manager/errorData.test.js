@@ -4,14 +4,14 @@ test("extract basic data", () => {
   expect(
     extractErrorData({
       email: ["needed"],
-    })
+    }),
   ).toEqual([{ key: "email", values: ["needed"] }]);
 
   expect(
     extractErrorData({
       email: ["needed"],
       id: ["missing", "required"],
-    })
+    }),
   ).toEqual([
     { key: "email", values: ["needed"] },
     { key: "id", values: ["missing", "required"] },
@@ -38,7 +38,7 @@ test("extract advanced data", () => {
           "You may not update `access` while the document is processing",
         ],
       },
-    ])
+    ]),
   ).toEqual([
     {
       key: "access",

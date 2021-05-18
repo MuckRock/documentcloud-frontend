@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { ensureBounds } from '@/util/bounds';
+import { ensureBounds } from "@/util/bounds";
 
 function getDefault(obj, defaultValue = "") {
   if (obj == null) return defaultValue;
@@ -60,8 +60,8 @@ export class Note extends Svue {
           const org = getDefault(note.organization, {});
           if (org.individual) return null;
           return org.name;
-        }
-      }
+        },
+      },
     });
   }
 }

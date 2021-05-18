@@ -79,6 +79,7 @@
   on:dragenter|preventDefault={enter}
   on:dragover|preventDefault={enter}
   on:dragleave|preventDefault={leave}
-  on:drop|preventDefault={handleDrop}>
+  on:drop|preventDefault={handleDrop}
+>
   <slot />
 </div>

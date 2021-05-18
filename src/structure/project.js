@@ -42,25 +42,25 @@ export class Project extends Svue {
         embedUrl(slugId) {
           return `${APP_URL}projects/${slugId}/`;
         },
-      }
+      },
     });
   }
 
   addUser(user, access) {
     this.usersAndAccesses = uniquify(
       [...this.usersAndAccesses, { user, access }],
-      x => x.user.id
+      (x) => x.user.id,
     );
   }
 
   removeUser(user) {
     this.usersAndAccesses = this.usersAndAccesses.filter(
-      x => x.user.id != user.id
+      (x) => x.user.id != user.id,
     );
   }
 
   changeAccess(user, access) {
-    this.usersAndAccesses = this.usersAndAccesses.map(x => {
+    this.usersAndAccesses = this.usersAndAccesses.map((x) => {
       if (x.user.id == user.id) {
         x.access = access;
       }

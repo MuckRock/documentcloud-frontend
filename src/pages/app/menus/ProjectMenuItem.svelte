@@ -5,7 +5,7 @@
   import {
     selectedDocsInProject,
     addSelectedDocsToProject,
-    removeSelectedDocsFromProject
+    removeSelectedDocsFromProject,
   } from "@/manager/projects";
   import { handlePlural } from "@/util/string";
 
@@ -18,7 +18,7 @@
     scope == "fully"
       ? `Remove ${handlePlural(
           $layout.selected.length,
-          "document"
+          "document",
         )} from project`
       : `Add ${handlePlural($layout.selected.length, "document")} to project`;
 
@@ -43,7 +43,7 @@
   <Tooltip delay={500} {caption}>
     {project.title}
     <span class="scope">
-      {#if scope == 'fully'}✓{/if}
+      {#if scope == "fully"}✓{/if}
     </span>
   </Tooltip>
 </MenuItem>

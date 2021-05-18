@@ -1,4 +1,4 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
 export const lazyComponent = new Svue({
   data() {
@@ -11,8 +11,8 @@ export const lazyComponent = new Svue({
       page: null,
       project: null,
       legacyRedirect: null,
-    }
-  }
+    };
+  },
 });
 
 export function loadDefault() {

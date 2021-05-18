@@ -28,25 +28,29 @@
       ? DEFAULT_PAGE_SIZE
       : document.pageSizes == null
       ? DEFAULT_PAGE_SIZE
-      : document.pageSizes[page] == null ? DEFAULT_PAGE_SIZE : document.pageSizes[page];
+      : document.pageSizes[page] == null
+      ? DEFAULT_PAGE_SIZE
+      : document.pageSizes[page];
 
   $: {
     if ($viewer.document != null && id != $viewer.document.id) {
-    if ($modification.documentCache[id] == null) {
-      modification.documentCache[id] = {};
-      // Update the document cache
-      getDocument(id, null).then((doc) => {
-        modification.documentCache[doc.id] = doc;
-        modification.documentCache = modification.documentCache;
-      });
+      if ($modification.documentCache[id] == null) {
+        modification.documentCache[id] = {};
+        // Update the document cache
+        getDocument(id, null).then((doc) => {
+          modification.documentCache[doc.id] = doc;
+          modification.documentCache = modification.documentCache;
+        });
+      }
     }
   }
-}
 </script>
 
 <Image
   blank={document == null || document.id == null}
-  src={(document == null || document.id == null) ? null : pageImageUrl(document, parseInt(page), size)}
+  src={document == null || document.id == null
+    ? null
+    : pageImageUrl(document, parseInt(page), size)}
   delay={50}
   width={orientation % 2 == 0
     ? maxThumbWidth

@@ -14,14 +14,14 @@ export const auth = new Svue({
   data() {
     return {
       signingIn: false,
-      key: null
+      key: null,
     };
   },
   computed: {
     isAuthenticated(key) {
       return key != null;
-    }
-  }
+    },
+  },
 });
 
 export function login() {

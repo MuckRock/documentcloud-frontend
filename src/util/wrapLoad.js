@@ -27,11 +27,11 @@ export async function wrapLoad(store, fn) {
 }
 
 export async function wrapMultiple(store, ...fns) {
-  return await wrapLoad(store, () => Promise.all(fns.map(fn => fn())));
+  return await wrapLoad(store, () => Promise.all(fns.map((fn) => fn())));
 }
 
 export async function wrapMultipleSeparate(loadStore, errorStore, ...fns) {
   return await wrapSeparate(loadStore, errorStore, () =>
-    Promise.all(fns.map(fn => fn()))
+    Promise.all(fns.map((fn) => fn())),
   );
 }

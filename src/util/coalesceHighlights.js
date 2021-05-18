@@ -6,11 +6,11 @@ export function coalesceHighlights(text, highlights) {
   if (highlights == null) return [{ type: "normal", text }];
 
   // Get concatenated text for each highlighted passage.
-  const highlightTexts = highlights.map(x =>
-    x.reduce((a, b) => a + b.text, "")
+  const highlightTexts = highlights.map((x) =>
+    x.reduce((a, b) => a + b.text, ""),
   );
   // Get ranges of where highlighted regions begin within highlighted passages.
-  const relativeRanges = highlights.map(passages => {
+  const relativeRanges = highlights.map((passages) => {
     const ranges = [];
     let pos = 0;
     for (let i = 0; i < passages.length; i++) {
@@ -23,15 +23,15 @@ export function coalesceHighlights(text, highlights) {
     return ranges;
   });
   // Get indices at which concatenated highlighted regions occur in the text.
-  const indices = highlightTexts.map(query => allIndices(text, query));
+  const indices = highlightTexts.map((query) => allIndices(text, query));
   const absoluteRanges = [];
 
   indices.forEach((subIndices, i) =>
-    subIndices.forEach(idx =>
+    subIndices.forEach((idx) =>
       relativeRanges[i].forEach(([start, end]) =>
-        absoluteRanges.push([idx + start, idx + end])
-      )
-    )
+        absoluteRanges.push([idx + start, idx + end]),
+      ),
+    ),
   );
   absoluteRanges.sort((a, b) => a[0] - b[0]);
 

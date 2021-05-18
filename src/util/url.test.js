@@ -30,7 +30,7 @@ test("extract query params", () => {
   expect(getQueryStringParams("app/?hi=true")).toEqual({ hi: "true" });
   expect(getQueryStringParams("app/?page=2&hi=false")).toEqual({
     hi: "false",
-    page: "2"
+    page: "2",
   });
 });
 

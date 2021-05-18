@@ -4,7 +4,7 @@
   import { layout } from "@/viewer/layout";
   import { getEmbed } from "@/api/embed";
   import { doc } from "@/viewer/document";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   let selectedPage = null;
 
@@ -38,11 +38,15 @@
   }
 </style>
 
-<h1>{$_("dialogPageEmbedDialog.embedPage", {values: {title: $layout.embedDocument.title}})}</h1>
+<h1>
+  {$_("dialogPageEmbedDialog.embedPage", {
+    values: { title: $layout.embedDocument.title },
+  })}
+</h1>
 {$_("dialogPageEmbedDialog")}
 <select bind:value={page}>
   <option value="visible">
-  {$_("dialogPageEmbedDialog.page", {values: {n: doc.visiblePageNumber}})}
+    {$_("dialogPageEmbedDialog.page", { values: { n: doc.visiblePageNumber } })}
   </option>
   <option value="another">{$_("dialogPageEmbedDialog.otherPage")}</option>
 </select>

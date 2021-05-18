@@ -4,7 +4,7 @@
   import Link from "@/router/Link";
   import { router } from "@/router/router";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -17,7 +17,7 @@
     logout,
     SIGN_IN_URL,
     SIGN_UP_URL,
-    SIGN_OUT_URL
+    SIGN_OUT_URL,
   } from "@/api/auth";
 
   // Show the masthead
@@ -177,7 +177,9 @@
             {#if $orgsAndUsers.me != null}
               <div class="signupcontainer">
                 <div class="supplemental">
-                  {$_("homeTemplate.signedIn", {values: {name: $orgsAndUsers.me.name}})}
+                  {$_("homeTemplate.signedIn", {
+                    values: { name: $orgsAndUsers.me.name },
+                  })}
                 </div>
                 <div class="signin">
                   <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
@@ -204,7 +206,9 @@
           {#if $orgsAndUsers.me != null}
             <div class="signupcontainer">
               <div class="supplemental">
-                {$_("homeTemplate.signedIn", {values: {name: $orgsAndUsers.me.name}})}
+                {$_("homeTemplate.signedIn", {
+                  values: { name: $orgsAndUsers.me.name },
+                })}
               </div>
               <div class="signin">
                 <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>

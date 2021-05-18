@@ -6,7 +6,7 @@
   $: maxHits =
     $layout.searchPages == null
       ? null
-      : Math.max($layout.searchPages.map(page => page.count));
+      : Math.max($layout.searchPages.map((page) => page.count));
 </script>
 
 <style lang="scss">
@@ -20,7 +20,7 @@
     <b>
       Your query
       <em>{$layout.search}</em>
-      was found on {handlePlural($layout.searchPages.length, 'page')}
+      was found on {handlePlural($layout.searchPages.length, "page")}
     </b>
 
     <div class="hist">

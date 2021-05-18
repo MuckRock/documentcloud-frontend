@@ -61,7 +61,7 @@
           await removeProject(layout.projectEdit);
         });
         emit.dismiss();
-      }
+      },
     );
   }
 
@@ -96,13 +96,15 @@
           maxlength={projectTitleLimit}
           placeholder="Title..."
           bind:value={name}
-          bind:this={input} />
+          bind:this={input}
+        />
         <p>
           <textarea
             maxlength={projectDescriptionLimit}
             placeholder="Project Description (optional)"
             bind:value={description}
-            use:textAreaResize />
+            use:textAreaResize
+          />
         </p>
         {#if editing}
           <p>
@@ -117,8 +119,13 @@
       </div>
       <div class="buttonpadded">
         <Button
-          disabledReason={valid ? null : changed ? 'Enter a title' : 'Change the title or description'}
-          on:click={() => createOrUpdate()}>
+          disabledReason={valid
+            ? null
+            : changed
+            ? "Enter a title"
+            : "Change the title or description"}
+          on:click={() => createOrUpdate()}
+        >
           {#if editing}Update{:else}Create{/if}
         </Button>
         {#if editing}

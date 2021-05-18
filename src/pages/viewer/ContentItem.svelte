@@ -10,11 +10,11 @@
   import smallCircleSvg from "@/assets/small_circle.svg";
 
   $: doc = $viewer.document;
-  $: pageUrl = page => {
+  $: pageUrl = (page) => {
     if (doc == null) return "";
     return doc.pageHashUrl(page + 1);
   };
-  $: noteUrl = note => {
+  $: noteUrl = (note) => {
     if (doc == null) return "";
     return doc.noteHashUrl(note);
   };
@@ -94,7 +94,7 @@
   }
 </style>
 
-{#if sectionOrNote.type == 'section'}
+{#if sectionOrNote.type == "section"}
   <!-- Show section -->
   {#if sectionOrNote.children.length > 0}
     <details class="dc" open>
@@ -102,7 +102,8 @@
         <a
           href={pageUrl(sectionOrNote.section.page)}
           class="section"
-          on:click={() => restorePosition(sectionOrNote.section.page)}>
+          on:click={() => restorePosition(sectionOrNote.section.page)}
+        >
           <NoWhitespace>
             <span class="title">{sectionOrNote.section.title}</span>
             <span>&nbsp;</span>
@@ -127,7 +128,8 @@
   {:else}
     <a
       href={pageUrl(sectionOrNote.section.page)}
-      on:click={() => restorePosition(sectionOrNote.section.page)}>
+      on:click={() => restorePosition(sectionOrNote.section.page)}
+    >
       <div class="section">
         <NoWhitespace>
           <span class="title">{sectionOrNote.section.title}</span>
@@ -141,11 +143,13 @@
   <!-- Show note -->
   <a
     href={noteUrl(sectionOrNote.note)}
-    on:click={() => showAnnotation(sectionOrNote.note, true)}>
+    on:click={() => showAnnotation(sectionOrNote.note, true)}
+  >
     <div
       class="note"
       class:hover={sectionOrNote.note == $layout.hoveredNote}
-      use:hoveredNote={sectionOrNote.note}>
+      use:hoveredNote={sectionOrNote.note}
+    >
       <NoWhitespace>
         <span class="title">{sectionOrNote.note.title}</span>
         <span>&nbsp;</span>

@@ -1,10 +1,19 @@
 import NotFound from "@/pages/NotFound";
-import { loadDefault, loadHome, loadApp, loadViewer, loadNote, loadPage, loadProject, loadLegacyRedirect } from '@/util/lazyComponent';
-import Entities from '@/pages/entities/Entities';
+import {
+  loadDefault,
+  loadHome,
+  loadApp,
+  loadViewer,
+  loadNote,
+  loadPage,
+  loadProject,
+  loadLegacyRedirect,
+} from "@/util/lazyComponent";
+import Entities from "@/pages/entities/Entities";
 
 export const routes = [
   NotFound,
-  lazyComponent => ({
+  (lazyComponent) => ({
     default: {
       path: "/",
       component: lazyComponent.default,
@@ -34,30 +43,30 @@ export const routes = [
     note: {
       path: "/documents/:id/annotations/:noteId",
       component: lazyComponent.note,
-      get: loadNote
+      get: loadNote,
     },
     page: {
       path: "/documents/:id/pages/:page",
       component: lazyComponent.page,
-      get: loadPage
+      get: loadPage,
     },
     project: {
       path: "/projects/:projectEmbedId",
       component: lazyComponent.project,
-      get: loadProject
+      get: loadProject,
     },
 
     // Legacy
     search: {
       path: "/search/*query",
       component: lazyComponent.legacyRedirect,
-      get: loadLegacyRedirect
+      get: loadLegacyRedirect,
     },
 
     publicSearch: {
       path: "/public/search/*query",
       component: lazyComponent.legacyRedirect,
-      get: loadLegacyRedirect
+      get: loadLegacyRedirect,
     },
-  })
+  }),
 ];

@@ -7,7 +7,7 @@
   import whitePlusSvg from "@/assets/white_plus.svg";
 
   const emit = emitter({
-    expand() {}
+    expand() {},
   });
 
   export let scale;
@@ -98,22 +98,38 @@
 
 <div
   class="container"
-  style={expanded ? `margin-top: ${-EXPANDED_MARGIN * scale}px; height: ${EXPANDED_MARGIN * scale}px` : `margin-top: ${-UNEXPANDED_MARGIN * scale}px; height: ${(RETRACTED_HEIGHT + UNEXPANDED_MARGIN) * scale}px`}
+  style={expanded
+    ? `margin-top: ${-EXPANDED_MARGIN * scale}px; height: ${
+        EXPANDED_MARGIN * scale
+      }px`
+    : `margin-top: ${-UNEXPANDED_MARGIN * scale}px; height: ${
+        (RETRACTED_HEIGHT + UNEXPANDED_MARGIN) * scale
+      }px`}
   on:mouseover={expand}
   on:mouseleave={retract}
-  on:mousedown={() => startPageNote(pageNumber - 1)}>
+  on:mousedown={() => startPageNote(pageNumber - 1)}
+>
   <div
     class="padder"
-    style="padding-top: {(expanded ? -RETRACTED_HEIGHT + EXPANDED_MARGIN : -RETRACTED_HEIGHT + UNEXPANDED_MARGIN) * scale}px">
+    style="padding-top: {(expanded
+      ? -RETRACTED_HEIGHT + EXPANDED_MARGIN
+      : -RETRACTED_HEIGHT + UNEXPANDED_MARGIN) * scale}px"
+  >
     <div
       class="insert"
       class:expanded
-      style={expanded ? `height: ${EXPANDED_MARGIN * scale}px` : `height: ${RETRACTED_HEIGHT * scale}px`}>
+      style={expanded
+        ? `height: ${EXPANDED_MARGIN * scale}px`
+        : `height: ${RETRACTED_HEIGHT * scale}px`}
+    >
       <div
         class="plus"
         class:expanded={expanded && scale > 0.65}
-        style="height: {PLUS_SIZE * scale}px; line-height: {PLUS_SIZE * scale}px;
-        border-radius: {BORDER_SIZE * scale}px; margin-top: {(-PLUS_SIZE * scale) / 2}px">
+        style="height: {PLUS_SIZE * scale}px; line-height: {PLUS_SIZE *
+          scale}px;
+        border-radius: {BORDER_SIZE *
+          scale}px; margin-top: {(-PLUS_SIZE * scale) / 2}px"
+      >
         <div>Add page note (p. {pageNumber})</div>
       </div>
     </div>

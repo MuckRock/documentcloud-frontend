@@ -20,11 +20,13 @@
   <Sidebar
     bind:this={sidebar}
     on:retractSidebar={() => setSidebarExpanded(false)}
-    expanded={$layout.sidebarExpanded} />
+    expanded={$layout.sidebarExpanded}
+  />
   <MainContainer
     on:expandSidebar={() => setSidebarExpanded(true)}
     concealed={$layout.sidebarExpanded}
     documents={$documents.documents}
     loading={$layout.loading}
-    error={$layout.error} />
+    error={$layout.error}
+  />
 </div>

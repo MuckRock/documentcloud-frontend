@@ -1,5 +1,5 @@
-const scssAliases = aliases => {
-  return url => {
+const scssAliases = (aliases) => {
+  return (url) => {
     for (const [alias, aliasPath] of Object.entries(aliases)) {
       if (url.indexOf(alias) === 0) {
         return {
@@ -14,23 +14,18 @@ const scssAliases = aliases => {
 const preprocessOptions = {
   transformers: {
     scss: {
-      includePaths: [
-        'node_modules',
-        'src'
-      ],
+      includePaths: ["node_modules", "src"],
       importer: [
         scssAliases({
-          '@': process.cwd() + '/src',
+          "@": process.cwd() + "/src",
         }),
       ],
-      data: '@import "@/style/variables.scss";'
+      data: '@import "@/style/variables.scss";',
     },
     postcss: {
-      plugins: [
-        require('autoprefixer'),
-      ]
-    }
+      plugins: [require("autoprefixer")],
+    },
   },
-}
+};
 
 module.exports = { preprocessOptions };

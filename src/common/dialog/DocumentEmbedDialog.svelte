@@ -6,7 +6,7 @@
   import { queryBuilder } from "@/util/url";
   import { StorageManager } from "@/util/storageManager";
   import { index } from "@/util/array";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   let embedded = true;
 
@@ -226,7 +226,11 @@
   }
 </script>
 
-<h1>{$_("dialogDocumentEmbedDialog.share", {values: {title: $layout.embedDocument.title}})}</h1>
+<h1>
+  {$_("dialogDocumentEmbedDialog.share", {
+    values: { title: $layout.embedDocument.title },
+  })}
+</h1>
 
 <ShareOptions
   column={true}

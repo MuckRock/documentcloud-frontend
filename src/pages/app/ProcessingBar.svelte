@@ -57,7 +57,7 @@
         </span>
       {:else}
         Processing
-        {handlePlural($documents.numProcessing, 'document', true)}
+        {handlePlural($documents.numProcessing, "document", true)}
       {/if}
     </div>
     <Progress progress={$documents.processingProgress} />

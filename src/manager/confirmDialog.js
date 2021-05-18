@@ -1,15 +1,15 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
 export const confirmDialog = new Svue({
   data() {
     return {
       open: false,
-      title: '',
-      body: '',
-      buttonText: '',
+      title: "",
+      body: "",
+      buttonText: "",
       confirmFn: null,
     };
-  }
+  },
 });
 
 export function showConfirm(title, body, buttonText, confirmFn) {

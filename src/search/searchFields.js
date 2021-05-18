@@ -1,6 +1,6 @@
-import { extractSlugId, isNumber } from '@/util/string';
+import { extractSlugId, isNumber } from "@/util/string";
 
-const languageOptions = process.env.LANGUAGE_CODES.split('|');
+const languageOptions = process.env.LANGUAGE_CODES.split("|");
 
 export const sortCompletions = [
   {
@@ -98,21 +98,21 @@ export function fieldValid(text, example = false) {
     return {
       valid: validSorts.includes(value),
     };
-  } else if (field == 'tag') {
+  } else if (field == "tag") {
     return {
-      valid: value.trim().length > 0
-    }
-  } else if (field == 'language') {
+      valid: value.trim().length > 0,
+    };
+  } else if (field == "language") {
     return {
-      valid: id != null && languageOptions.includes(id)
-    }
-  } else if (field.startsWith('data_')) {
+      valid: id != null && languageOptions.includes(id),
+    };
+  } else if (field.startsWith("data_")) {
     return {
-      valid: field.length > 'data_'.length && value.trim().length > 0
-    }
+      valid: field.length > "data_".length && value.trim().length > 0,
+    };
   } else {
     return {
-      valid: false
+      valid: false,
     };
   }
 }

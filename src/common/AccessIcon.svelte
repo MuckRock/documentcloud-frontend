@@ -52,7 +52,8 @@
 {#if showText}
   <span
     class:selectable={document.editAccess}
-    on:click={openAccess([document])}>
+    on:click={openAccess([document])}
+  >
     <span class="access">
       {#if document.privateAccess}
         {@html privateIconSvg}
@@ -69,7 +70,8 @@
     <span
       class="access"
       class:selectable={document.editAccess}
-      on:click={openAccess([document])}>
+      on:click={openAccess([document])}
+    >
       {#if document.privateAccess}
         {@html privateIconSvg}
       {:else if document.publicAccess}

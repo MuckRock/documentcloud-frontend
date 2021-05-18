@@ -37,7 +37,7 @@
 
 <div class="text">
   {#each regions as region}
-    {#if region.type == 'normal'}
+    {#if region.type == "normal"}
       <span>{region.text}</span>
     {:else}
       <span class="highlight">{region.text}</span>

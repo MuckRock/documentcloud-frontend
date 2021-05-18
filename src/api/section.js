@@ -11,7 +11,7 @@ export async function addSection(docId, page_number, title) {
   // Create a section
   const { data } = await session.post(apiUrl(`documents/${docId}/sections/`), {
     page_number,
-    title
+    title,
   });
   return new Section(data);
 }
@@ -27,8 +27,8 @@ export async function replaceSection(docId, sectionId, page_number, title) {
     apiUrl(`documents/${docId}/sections/${sectionId}/`),
     {
       page_number,
-      title
-    }
+      title,
+    },
   );
   return new Section(data);
 }
@@ -36,5 +36,5 @@ export async function replaceSection(docId, sectionId, page_number, title) {
 export async function getSections(docId) {
   // Returns annotations for the specified document
   const sections = await grabAllPages(apiUrl(`documents/${docId}/sections/`));
-  return sections.map(section => new Section(section));
+  return sections.map((section) => new Section(section));
 }

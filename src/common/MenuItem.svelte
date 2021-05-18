@@ -63,6 +63,7 @@
   class:disabled
   class:indent
   class:special
-  on:click>
+  on:click
+>
   <slot>Define an item</slot>
 </div>

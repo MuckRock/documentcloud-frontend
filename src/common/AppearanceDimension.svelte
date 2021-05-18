@@ -1,6 +1,6 @@
 <script>
   import emitter from "@/emit";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   const emit = emitter({
     change() {},

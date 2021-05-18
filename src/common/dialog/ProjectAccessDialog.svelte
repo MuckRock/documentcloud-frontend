@@ -7,10 +7,10 @@
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { writable } from "svelte/store";
   import emitter from "@/emit";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   const emit = emitter({
-    dismiss() {}
+    dismiss() {},
   });
 
   let access = layout.projectEditUser.access;
@@ -25,7 +25,7 @@
       await changeUserAccess(
         layout.projectEdit,
         layout.projectEditUser.user,
-        access
+        access,
       );
       updateProjectEdit();
     });
@@ -66,23 +66,21 @@
   <div>
     <div class="mcontent">
       <h1>
-        {$_(
-          "dialogProjectAccessDialog.changeAccessFor",
-          {values: {name: $layout.projectEditUser.user.name}}
-        )}
+        {$_("dialogProjectAccessDialog.changeAccessFor", {
+          values: { name: $layout.projectEditUser.user.name },
+        })}
       </h1>
       <p>
-        {$_(
-          "dialogProjectAccessDialog.selectAccess",
-          {values: {
+        {$_("dialogProjectAccessDialog.selectAccess", {
+          values: {
             name: $layout.projectEditUser.user.name,
-            title: $layout.projectEdit.title
-          }}
-        )}
+            title: $layout.projectEdit.title,
+          },
+        })}
       </p>
       <div class="inputpadded">
         <label>
-          <input type="radio" bind:group={access} value={'admin'} />
+          <input type="radio" bind:group={access} value={"admin"} />
           <div class="accessoption">
             <h3>{$_("dialogProjectAccessDialog.adminAccess")}</h3>
             <small>
@@ -91,7 +89,7 @@
           </div>
         </label>
         <label>
-          <input type="radio" bind:group={access} value={'edit'} />
+          <input type="radio" bind:group={access} value={"edit"} />
           <div class="accessoption">
             <h3>{$_("dialogProjectAccessDialog.editAccess")}</h3>
             <small>
@@ -100,7 +98,7 @@
           </div>
         </label>
         <label>
-          <input type="radio" bind:group={access} value={'view'} />
+          <input type="radio" bind:group={access} value={"view"} />
           <div class="accessoption">
             <h3>{$_("dialogProjectAccessDialog.viewAccess")}</h3>
             <small>
@@ -111,11 +109,18 @@
       </div>
       <div class="buttonpadded">
         <Button
-          disabledReason={valid ? null : $_("dialogProjectAccessDialog.invalidAccess", {values: {access: $layout.projectEditUser.access}})}
-          on:click={() => changeAccess(access)}>
+          disabledReason={valid
+            ? null
+            : $_("dialogProjectAccessDialog.invalidAccess", {
+                values: { access: $layout.projectEditUser.access },
+              })}
+          on:click={() => changeAccess(access)}
+        >
           {$_("dialogProjectAccessDialog.changeAccess")}
         </Button>
-        <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
+        <Button secondary={true} on:click={emit.dismiss}
+          >{$_("dialog.cancel")}</Button
+        >
       </div>
     </div>
   </div>

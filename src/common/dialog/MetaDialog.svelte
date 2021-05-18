@@ -17,5 +17,6 @@
     textArea={meta.isTextArea || false}
     fieldValid={meta.fieldValid}
     fieldInvalidText={meta.fieldInvalidText}
-    on:dismiss />
+    on:dismiss
+  />
 {/if}

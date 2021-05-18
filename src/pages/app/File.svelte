@@ -9,7 +9,7 @@
 
   const emit = emitter({
     name() {},
-    delete() {}
+    delete() {},
   });
 
   export let file; // A File object
@@ -140,7 +140,8 @@
         placeholder="Untitled"
         readonly={uploadMode}
         bind:value={name}
-        class:error />
+        class:error
+      />
     </div>
     <div class="cell size">{size}</div>
     {#if !uploadMode}

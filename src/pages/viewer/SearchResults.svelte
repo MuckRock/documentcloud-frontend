@@ -76,7 +76,10 @@
   <div class="results">
     {#if $layout.totalResults > 0}
       <p>
-        {handlePlural($layout.totalResults, 'result')} across {handlePlural($layout.searchPages.length, 'page')}
+        {handlePlural($layout.totalResults, "result")} across {handlePlural(
+          $layout.searchPages.length,
+          "page",
+        )}
       </p>
     {:else}
       <p>No search results. Try again with a broader query.</p>
@@ -86,14 +89,14 @@
         <h2>
           p. {page + 1}
           <small>
-            {handlePlural($layout.searchHighlights[page].length, 'occurrence')}
+            {handlePlural($layout.searchHighlights[page].length, "occurrence")}
           </small>
         </h2>
         {#each $layout.searchHighlights[page] as highlight, offset}
           <div class="result">
             <NoWhitespace>
               {#each highlight as passage}
-                <span class:highlight={passage.type == 'highlight'}>
+                <span class:highlight={passage.type == "highlight"}>
                   {passage.text}
                 </span>
               {/each}

@@ -124,7 +124,8 @@
       class:action
       class:plain
       class:nomargin
-      disabled={disabled || disabledReason != null}>
+      disabled={disabled || disabledReason != null}
+    >
       <slot />
     </button>
   </Tooltip>

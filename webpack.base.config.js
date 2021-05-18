@@ -23,10 +23,10 @@ function wrap(spec) {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
-            mangle: false
-          }
-        })
-      ]
+            mangle: false,
+          },
+        }),
+      ],
     };
     return spec;
   }
@@ -37,10 +37,10 @@ module.exports = wrap({
   resolve: {
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
-      "@": path.resolve(__dirname, "src")
+      "@": path.resolve(__dirname, "src"),
     },
     extensions: ["*", ".mjs", ".js", ".svelte", ".css", ".scss"],
-    mainFields: ["svelte", "browser", "module", "main"]
+    mainFields: ["svelte", "browser", "module", "main"],
   },
   module: {
     rules: [
@@ -51,9 +51,9 @@ module.exports = wrap({
           options: {
             emitCss: prod,
             hotReload: !prod,
-            preprocess: autoPreprocess(preprocessOptions)
-          }
-        }
+            preprocess: autoPreprocess(preprocessOptions),
+          },
+        },
       },
       {
         test: /\.s[ac]ss$/,
@@ -61,40 +61,40 @@ module.exports = wrap({
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod }
+            options: { hmr: !prod },
           },
           "css-loader",
-          "sass-loader"
-        ]
+          "sass-loader",
+        ],
       },
       {
         test: /\.css$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod }
+            options: { hmr: !prod },
           },
-          "css-loader"
-        ]
+          "css-loader",
+        ],
       },
       {
         test: /\.svg$/,
         use: [
           {
             loader: "svg-inline-loader",
-            options: { removeSVGTagAttrs: false }
-          }
-        ]
-      }
-    ]
+            options: { removeSVGTagAttrs: false },
+          },
+        ],
+      },
+    ],
   },
   mode,
   performance: {
-    hints: prod ? "warning" : false
+    hints: prod ? "warning" : false,
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "bundle.css"
+      filename: "bundle.css",
     }),
     new DotenvFlow(),
     new CircularDependencyPlugin({
@@ -108,7 +108,7 @@ module.exports = wrap({
       // e.g. via import(/* webpackMode: "weak" */ './file.js')
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
-      cwd: process.cwd()
+      cwd: process.cwd(),
     }),
   ],
   devtool: prod ? false : "source-map",

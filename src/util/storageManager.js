@@ -3,7 +3,7 @@
  * used to remember keyed preferences/options
  */
 
-const KEY_PREFIX = '__documentcloud_';
+const KEY_PREFIX = "__documentcloud_";
 
 export class StorageManager {
   constructor(key) {

@@ -82,7 +82,8 @@
             descriptor,
             pg: descriptor.pageSpec.specs[0].pg,
             index: i + startPage,
-            document: descriptor.id == null ? $viewer.document.id : descriptor.id,
+            document:
+              descriptor.id == null ? $viewer.document.id : descriptor.id,
           }));
 
   $: showInserts = !$modification.modifyHasSelection;

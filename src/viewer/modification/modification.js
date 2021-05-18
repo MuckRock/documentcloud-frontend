@@ -1,5 +1,11 @@
-import { Svue } from 'svue';
-import { runify, Empty, Individual, ModificationSpec, CLOCKWISE } from './modifySpec';
+import { Svue } from "svue";
+import {
+  runify,
+  Empty,
+  Individual,
+  ModificationSpec,
+  CLOCKWISE,
+} from "./modifySpec";
 
 class Modification extends Svue {
   constructor() {
@@ -14,7 +20,7 @@ class Modification extends Svue {
           historyPosition: 0,
           insertDocument: null,
           documentCache: {},
-        }
+        };
       },
       computed: {
         historyLength(history) {
@@ -31,7 +37,10 @@ class Modification extends Svue {
         modifySelected(modifySelectedMap) {
           const results = [];
           for (let key in modifySelectedMap) {
-            if (modifySelectedMap.hasOwnProperty(key) && modifySelectedMap[key] == true) {
+            if (
+              modifySelectedMap.hasOwnProperty(key) &&
+              modifySelectedMap[key] == true
+            ) {
               results.push(key);
             }
           }
@@ -52,11 +61,16 @@ class Modification extends Svue {
         },
         modifySelectedSpec(modifySpec, modifySelectedPageSpec) {
           if (modifySpec == null) return null;
-          const selectedSpec = new ModificationSpec(modifySelectedPageSpec.specs.reduce((prev, spec) => {
-            if (spec instanceof Empty) return prev;
-            if (spec instanceof Individual) return prev.concat(modifySpec.slice(spec.pg, 1).specs);
-            return prev.concat(modifySpec.slice(spec.start, spec.length()).specs);
-          }, [])).compress();
+          const selectedSpec = new ModificationSpec(
+            modifySelectedPageSpec.specs.reduce((prev, spec) => {
+              if (spec instanceof Empty) return prev;
+              if (spec instanceof Individual)
+                return prev.concat(modifySpec.slice(spec.pg, 1).specs);
+              return prev.concat(
+                modifySpec.slice(spec.start, spec.length()).specs,
+              );
+            }, []),
+          ).compress();
           return selectedSpec;
         },
         hasInsert(insert) {
@@ -80,9 +94,9 @@ class Modification extends Svue {
         },
         uncommittedChanges(historyPosition) {
           return historyPosition > 0;
-        }
-      }
-    })
+        },
+      },
+    });
   }
 
   modifyUnselect() {
@@ -103,13 +117,15 @@ class Modification extends Svue {
   }
 
   remove() {
-    if (!this.modifyHasSelection || this.modifyNumSelected == this.pageCount) return;
+    if (!this.modifyHasSelection || this.modifyNumSelected == this.pageCount)
+      return;
     this.modify(this.modifySpec.remove(this.modifySelectedPageSpec));
     this.modifyUnselect();
   }
 
   cut() {
-    if (!this.modifyHasSelection || this.modifyNumSelected == this.pageCount) return;
+    if (!this.modifyHasSelection || this.modifyNumSelected == this.pageCount)
+      return;
     this.rewind = true;
     this.copyBuffer = this.modifySelectedSpec;
     this.remove();
@@ -117,7 +133,12 @@ class Modification extends Svue {
 
   rotateClockwise() {
     if (this.modifySpec == null || this.modifySelectedPageSpec == null) return;
-    this.modify(this.modifySpec.applyModification(x => x.rotate(CLOCKWISE), this.modifySelectedPageSpec));
+    this.modify(
+      this.modifySpec.applyModification(
+        (x) => x.rotate(CLOCKWISE),
+        this.modifySelectedPageSpec,
+      ),
+    );
   }
 
   clearCopyBuffer() {
@@ -162,11 +183,20 @@ class Modification extends Svue {
   }
 
   pasteAtInsert() {
-    if (this.modifySpec == null || this.copyBuffer == null || this.insert == null) {
+    if (
+      this.modifySpec == null ||
+      this.copyBuffer == null ||
+      this.insert == null
+    ) {
       this.clearCopyBuffer();
       return;
     }
-    this.modifyTempOperation(this.modifySpec.slice(0, this.insert).concat(this.copyBuffer).concat(this.modifySpec.slice(this.insert, this.pageCount)));
+    this.modifyTempOperation(
+      this.modifySpec
+        .slice(0, this.insert)
+        .concat(this.copyBuffer)
+        .concat(this.modifySpec.slice(this.insert, this.pageCount)),
+    );
     this.clearCopyBuffer();
   }
 
@@ -186,8 +216,16 @@ class Modification extends Svue {
   insertDocumentAtPosition() {
     if (this.insertDocument != null) {
       // Create a document spec for the insertion document
-      const docSpec = ModificationSpec.getDocument(this.insertDocument.pageCount, this.insertDocument.id);
-      this.modify(this.modifySpec.slice(0, this.insert).concat(docSpec).concat(this.modifySpec.slice(this.insert, this.pageCount)));
+      const docSpec = ModificationSpec.getDocument(
+        this.insertDocument.pageCount,
+        this.insertDocument.id,
+      );
+      this.modify(
+        this.modifySpec
+          .slice(0, this.insert)
+          .concat(docSpec)
+          .concat(this.modifySpec.slice(this.insert, this.pageCount)),
+      );
       this.clearInsertion();
     }
   }

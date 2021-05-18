@@ -19,7 +19,7 @@
   import { nameSingularNumberPlural } from "@/util/string";
   import { intersection } from "@/util/array";
   import { writable } from "svelte/store";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";
@@ -57,9 +57,9 @@
 
   $: mutualDataPoints = intersection(
     ($viewer.document != null ? [$viewer.document] : $layout.dataDocuments).map(
-      (d) => d.dataPoints
+      (d) => d.dataPoints,
     ),
-    (a, b) => a.key == b.key && a.value == b.value
+    (a, b) => a.key == b.key && a.value == b.value,
   );
   $: emptyData = mutualDataPoints.length == 0;
 
@@ -108,8 +108,8 @@
       loading,
       layoutLoader,
       ...dataDocuments.map((doc) => async () =>
-        addDocumentData([doc], keyTrimmed, valueTrimmed)
-      )
+        addDocumentData([doc], keyTrimmed, valueTrimmed),
+      ),
     );
     // Trigger update
     layout.dataDocuments = layout.dataDocuments;
@@ -135,8 +135,14 @@
       loading,
       layoutLoader,
       ...dataDocuments.map((doc) => async () =>
-        replaceDocumentData([doc], previousKey, previousValue, newKey, newValue)
-      )
+        replaceDocumentData(
+          [doc],
+          previousKey,
+          previousValue,
+          newKey,
+          newValue,
+        ),
+      ),
     );
     // Trigger update
     layout.dataDocuments = layout.dataDocuments;
@@ -149,8 +155,9 @@
   async function handleRemove(key, value) {
     showConfirm(
       $_("dialogDataDialog.confirm"),
-      $_("dialogDataDialog.removeMsg",
-        {values: {key: key == TAG_KEY ? "" : `${key}:`, value: value}}),
+      $_("dialogDataDialog.removeMsg", {
+        values: { key: key == TAG_KEY ? "" : `${key}:`, value: value },
+      }),
       $_("dialog.remove"),
       async () => {
         // TODO: replace with bulk method on backend
@@ -158,8 +165,8 @@
           loading,
           layoutLoader,
           ...dataDocuments.map((doc) => async () =>
-            removeDocumentData([doc], key, value)
-          )
+            removeDocumentData([doc], key, value),
+          ),
         );
         // Trigger update
         layout.dataDocuments = layout.dataDocuments;
@@ -167,7 +174,7 @@
           // Trigger viewer update
           viewer.document = viewer.document;
         }
-      }
+      },
     );
   }
 </script>
@@ -239,7 +246,9 @@
   <div>
     <div class="mcontent">
       <h1 class:faded={editMode}>
-        {$_("dialogDataDialog.addData", {values: {n: dataDocuments.length}})}
+        {$_("dialogDataDialog.addData", {
+          values: { n: dataDocuments.length },
+        })}
       </h1>
       <div class="inputpadded" class:faded={editMode}>
         <div class="add">
@@ -248,7 +257,8 @@
               table={true}
               bordered={true}
               horizPadding={15}
-              vertPadding={8}>
+              vertPadding={8}
+            >
               <span class="action" slot="title">
                 {#if addTag}
                   {$_("dialogDataDialog.tag")}
@@ -299,18 +309,33 @@
             </Dropdown>
           </span>
           {#if !addTag}
-            <input type="text" placeholder={$_("dialogDataDialog.key")} class="key" bind:value={key} />
+            <input
+              type="text"
+              placeholder={$_("dialogDataDialog.key")}
+              class="key"
+              bind:value={key}
+            />
             :
           {/if}
           <input
             type="text"
-            placeholder={addTag ? $_("dialogDataDialog.tag") : $_("dialogDataDialog.value")}
+            placeholder={addTag
+              ? $_("dialogDataDialog.tag")
+              : $_("dialogDataDialog.value")}
             class="value"
-            bind:value />
+            bind:value
+          />
           <span class="lpad">
             <Button
-              disabledReason={inputValid ? null : keyValid ? (addTag ? $_("dialogDataDialog.enterTag") : $_("dialogDataDialog.enterKey") ) : $_("dialogDataDialog.keyInvalid") }
-              on:click={handleAdd}>
+              disabledReason={inputValid
+                ? null
+                : keyValid
+                ? addTag
+                  ? $_("dialogDataDialog.enterTag")
+                  : $_("dialogDataDialog.enterKey")
+                : $_("dialogDataDialog.keyInvalid")}
+              on:click={handleAdd}
+            >
               + Add
             </Button>
           </span>
@@ -327,7 +352,9 @@
           {#each mutualDataPoints as { key, value }}
             <div
               class="row"
-              class:faded={editMode && (editingKey != key || editingValue != value)}>
+              class:faded={editMode &&
+                (editingKey != key || editingValue != value)}
+            >
               {#if editingKey == key && editingValue == value}
                 {#if key != TAG_KEY}<input bind:value={editKey} /> :{/if}
                 <input bind:value={editValue} />
@@ -335,8 +362,15 @@
                   <span style="margin-right: 3px;">
                     <Button
                       small={true}
-                      disabledReason={editKeyValid ? (editTrimValid ? (editValid ? null : $_("dialogDataDialog.valueUnchanged") ) : $_("dialogDataDialog.kvCannotBeEmpty") ) : $_("dialogDataDialog.keyInvalid") }
-                      on:click={handleEdit}>
+                      disabledReason={editKeyValid
+                        ? editTrimValid
+                          ? editValid
+                            ? null
+                            : $_("dialogDataDialog.valueUnchanged")
+                          : $_("dialogDataDialog.kvCannotBeEmpty")
+                        : $_("dialogDataDialog.keyInvalid")}
+                      on:click={handleEdit}
+                    >
                       {$_("dialog.edit")}
                     </Button>
                   </span>
@@ -353,7 +387,8 @@
                 <Button
                   nondescript={true}
                   caution={true}
-                  on:click={() => handleRemove(key, value)}>
+                  on:click={() => handleRemove(key, value)}
+                >
                   {$_("dialog.remove")}
                 </Button>
               {/if}

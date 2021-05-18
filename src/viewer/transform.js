@@ -1,8 +1,16 @@
-import { Svue } from 'svue';
-import { identity, compose, translate, scale, toCSS, applyToPoint, inverse } from 'transformation-matrix';
-import { closeEnough } from '@/util/epsilon';
-import { cubicInOut } from 'svelte/easing';
-import { doc } from './document';
+import { Svue } from "svue";
+import {
+  identity,
+  compose,
+  translate,
+  scale,
+  toCSS,
+  applyToPoint,
+  inverse,
+} from "transformation-matrix";
+import { closeEnough } from "@/util/epsilon";
+import { cubicInOut } from "svelte/easing";
+import { doc } from "./document";
 
 const DEFAULT_VIEWPORT = [500, 500];
 
@@ -20,7 +28,14 @@ const BOUNCE_LERP = 0.1;
 const SCROLL_DISCOUNT = 0.5;
 
 function copyMatrix(matrix) {
-  return { a: matrix.a, b: matrix.b, c: matrix.c, d: matrix.d, e: matrix.e, f: matrix.f };
+  return {
+    a: matrix.a,
+    b: matrix.b,
+    c: matrix.c,
+    d: matrix.d,
+    e: matrix.e,
+    f: matrix.f,
+  };
 }
 
 function lerp(t, a, b) {
@@ -28,12 +43,14 @@ function lerp(t, a, b) {
 }
 
 function matrixCloseEnough(a, b) {
-  return closeEnough(a.a, b.a) &&
+  return (
+    closeEnough(a.a, b.a) &&
     closeEnough(a.b, b.b) &&
     closeEnough(a.c, b.c) &&
     closeEnough(a.d, b.d) &&
     closeEnough(a.e, b.e) &&
-    closeEnough(a.f, b.f);
+    closeEnough(a.f, b.f)
+  );
 }
 
 function interpMatrix(t, a, b) {
@@ -44,7 +61,7 @@ function interpMatrix(t, a, b) {
     d: lerp(t, a.d, b.d),
     e: lerp(t, a.e, b.e),
     f: lerp(t, a.f, b.f),
-  }
+  };
 }
 
 export class Transform extends Svue {
@@ -60,11 +77,16 @@ export class Transform extends Svue {
           speed: { dx: 0, dx: 0 },
           viewportSize: DEFAULT_VIEWPORT,
           ...data,
-        }
+        };
       },
       computed: {
         xBounds(document) {
-          return [document.layout.rail - document.layout.pageBoundsWhenZoomed, document.layout.rail + document.layout.pageWidth + document.layout.pageBoundsWhenZoomed];
+          return [
+            document.layout.rail - document.layout.pageBoundsWhenZoomed,
+            document.layout.rail +
+              document.layout.pageWidth +
+              document.layout.pageBoundsWhenZoomed,
+          ];
         },
         yBounds(document) {
           return [0, document.containerHeight];
@@ -97,7 +119,7 @@ export class Transform extends Svue {
           return inverse(matrix);
         },
         visiblePages(matrix, document, viewportSize) {
-          return document.pages.filter(page => {
+          return document.pages.filter((page) => {
             const position = page.position;
             const [x1, y1] = applyToPoint(matrix, [position[0], position[1]]);
             const [x2, y2] = applyToPoint(matrix, [position[2], position[3]]);
@@ -108,7 +130,7 @@ export class Transform extends Svue {
           });
         },
         ...computed,
-      }
+      },
     });
 
     this.translate(this.viewportSize[0] / 2, this.viewportSize[1] / 2);
@@ -178,12 +200,16 @@ export class Transform extends Svue {
     if (this.bounceParams.desiredMatrix != null) {
       if (this.bounceParams.lastTimestamp == null) {
         this.bounceParams.lastTimestamp = ts;
-        return requestAnimationFrame(ts => this.bounce(ts));
+        return requestAnimationFrame((ts) => this.bounce(ts));
       }
       const deltaTime = ts - this.bounceParams.lastTimestamp;
 
       for (let i = 0; i < deltaTime / BOUNCE_STEP; i++) {
-        this.matrix = interpMatrix(BOUNCE_LERP, this.matrix, this.bounceParams.desiredMatrix);
+        this.matrix = interpMatrix(
+          BOUNCE_LERP,
+          this.matrix,
+          this.bounceParams.desiredMatrix,
+        );
       }
 
       if (matrixCloseEnough(this.matrix, this.bounceParams.desiredMatrix)) {
@@ -191,7 +217,7 @@ export class Transform extends Svue {
       }
 
       this.bounceParams.lastTimestamp = ts;
-      return requestAnimationFrame(ts => this.bounce(ts));
+      return requestAnimationFrame((ts) => this.bounce(ts));
     }
   }
 
@@ -223,7 +249,12 @@ export class Transform extends Svue {
     }
 
     const [dx, dy] = this.unproject([cx, cy]);
-    this.matrix = compose(this.matrix, translate(dx, dy), scale(factor, factor), translate(-dx, -dy));
+    this.matrix = compose(
+      this.matrix,
+      translate(dx, dy),
+      scale(factor, factor),
+      translate(-dx, -dy),
+    );
     this.ensureBounds();
   }
 
@@ -238,7 +269,13 @@ export class Transform extends Svue {
   }
 
   zoomToPage(scene) {
-    this.fly(this.fitTransform(scene.center, scene.width + ZOOM_TO_PADDING, scene.height + ZOOM_TO_PADDING));
+    this.fly(
+      this.fitTransform(
+        scene.center,
+        scene.width + ZOOM_TO_PADDING,
+        scene.height + ZOOM_TO_PADDING,
+      ),
+    );
   }
 
   simulateFly(ts) {
@@ -252,7 +289,11 @@ export class Transform extends Svue {
           done = true;
         }
         const t = FLY_FN(x);
-        this.matrix = interpMatrix(t, this.flyParams.prevMatrix, this.flyParams.desiredMatrix);
+        this.matrix = interpMatrix(
+          t,
+          this.flyParams.prevMatrix,
+          this.flyParams.desiredMatrix,
+        );
 
         if (done) return this.stopFly();
       } else {
@@ -260,7 +301,7 @@ export class Transform extends Svue {
       }
 
       // Request to move again
-      window.requestAnimationFrame(ts => this.simulateFly(ts));
+      window.requestAnimationFrame((ts) => this.simulateFly(ts));
     } else {
       return this.stopFly();
     }
@@ -269,7 +310,7 @@ export class Transform extends Svue {
   stopFly(includeMoratium = true) {
     this.flyParams = {
       transforming: false,
-      scrollMoratium: includeMoratium ? this.flyParams.scrollMoratium : null
+      scrollMoratium: includeMoratium ? this.flyParams.scrollMoratium : null,
     };
   }
 
@@ -284,7 +325,7 @@ export class Transform extends Svue {
     };
     if (!wasTransforming) {
       // Start flying unless animation is already running
-      requestAnimationFrame(ts => this.simulateFly(ts));
+      requestAnimationFrame((ts) => this.simulateFly(ts));
     }
   }
 
@@ -293,7 +334,12 @@ export class Transform extends Svue {
     const vw = this.viewportSize[0];
     const vh = this.viewportSize[1];
     const scaleFactor = Math.min(vw / width, vh / height);
-    return compose(identity(), translate(vw / 2, vh / 2), scale(scaleFactor), translate(-centerPoint[0], -centerPoint[1]));
+    return compose(
+      identity(),
+      translate(vw / 2, vh / 2),
+      scale(scaleFactor),
+      translate(-centerPoint[0], -centerPoint[1]),
+    );
   }
 
   project(point) {

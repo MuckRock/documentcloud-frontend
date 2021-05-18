@@ -1,20 +1,28 @@
 import { timeout } from "@/util/timeout";
 
-export async function batchDelay(collection, batchSize, delay, fn, errorFn = (e) => console.error('unexpected error', e)) {
+export async function batchDelay(
+  collection,
+  batchSize,
+  delay,
+  fn,
+  errorFn = (e) => console.error("unexpected error", e),
+) {
   // Launch all tasks in parallel with delay
   const results = {};
   const promises = [];
   for (let i = 0; i < collection.length; i += batchSize) {
     const subCollection = collection.slice(i, i + batchSize);
-    promises.push(new Promise(async (resolve) => {
-      try {
-        results[i] = await fn(subCollection);
-      } catch (e) {
-        // Collect errors
-        errorFn(e);
-      }
-      resolve();
-    }));
+    promises.push(
+      new Promise(async (resolve) => {
+        try {
+          results[i] = await fn(subCollection);
+        } catch (e) {
+          // Collect errors
+          errorFn(e);
+        }
+        resolve();
+      }),
+    );
     await timeout(delay);
   }
   await Promise.all(promises);
@@ -36,7 +44,6 @@ export async function batchDelay(collection, batchSize, delay, fn, errorFn = (e)
   }
   return allResults;
 }
-
 
 export async function batchDelaySerial(collection, batchSize, delay, fn) {
   let results = [];

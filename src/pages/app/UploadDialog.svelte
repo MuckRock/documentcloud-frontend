@@ -164,10 +164,74 @@
         layout.error = message;
         layout.uploading = false;
         emit.setDismissable(true);
-      }
+      },
     );
   }
 </script>
+
+<style lang="scss">
+  .actions {
+    margin: 1.5em 0;
+  }
+
+  .files {
+    display: table;
+    width: 100%;
+  }
+
+  .padright {
+    margin-right: 12px;
+  }
+
+  .droparea {
+    margin: 24px 0;
+  }
+
+  .sectionbreak {
+    border-bottom: solid 1px $gray;
+    margin: 2em 0 1.5em 0;
+  }
+
+  .padder {
+    margin: 1.5em 0 2.5em 0;
+  }
+
+  .vpadded {
+    margin: 2em 0 2.5em 0;
+  }
+
+  .bottompadded {
+    margin-bottom: 25px;
+  }
+
+  p {
+    &.subtitle {
+      color: $gray;
+    }
+
+    &.danger {
+      color: $caution;
+      font-size: 13px;
+    }
+  }
+
+  details {
+    margin: -5px 0 8px 0;
+
+    summary {
+      @include buttonLike;
+
+      outline: none;
+      color: $primary;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+</style>
 
 <div>
   <div class="mcontent">
@@ -294,7 +358,7 @@
             <Button
               nondescript={true}
               on:click={() => (uploadAdditional = true)}
-            >Upload additional files</Button
+              >Upload additional files</Button
             >
           </div>
         {/if}
@@ -313,67 +377,3 @@
     {/if}
   </div>
 </div>
-
-<style lang="scss">
-  .actions {
-    margin: 1.5em 0;
-  }
-
-  .files {
-    display: table;
-    width: 100%;
-  }
-
-  .padright {
-    margin-right: 12px;
-  }
-
-  .droparea {
-    margin: 24px 0;
-  }
-
-  .sectionbreak {
-    border-bottom: solid 1px $gray;
-    margin: 2em 0 1.5em 0;
-  }
-
-  .padder {
-    margin: 1.5em 0 2.5em 0;
-  }
-
-  .vpadded {
-    margin: 2em 0 2.5em 0;
-  }
-
-  .bottompadded {
-    margin-bottom: 25px;
-  }
-
-  p {
-    &.subtitle {
-      color: $gray;
-    }
-
-    &.danger {
-      color: $caution;
-      font-size: 13px;
-    }
-  }
-
-  details {
-    margin: -5px 0 8px 0;
-
-    summary {
-      @include buttonLike;
-
-      outline: none;
-      color: $primary;
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    p {
-      font-size: 14px;
-    }
-  }
-</style>

@@ -39,10 +39,12 @@
 
 <div
   class="dc-embed-note"
-  class:public={note.access == 'public'}
-  class:organization={note.access == 'organization'}
-  class:private={note.access == 'private'}
+  class:public={note.access == "public"}
+  class:organization={note.access == "organization"}
+  class:private={note.access == "private"}
   class:active
-  style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; right: {(1 - note.x2) * 100}%;
+  style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; right: {(1 - note.x2) *
+    100}%;
   bottom: {(1 - note.y2) * 100}%"
-  on:click />
+  on:click
+/>

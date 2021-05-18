@@ -24,7 +24,7 @@ export function pageSizesFromSpec(pageSpec) {
       const rangePart = rangeParts[j];
       if (rangePart.indexOf("-") != -1) {
         // Parse a range
-        const [start, end] = rangePart.split("-").map(x => parseInt(x, 10));
+        const [start, end] = rangePart.split("-").map((x) => parseInt(x, 10));
         for (let page = start; page <= end; page++) {
           sizes[page] = aspect;
         }

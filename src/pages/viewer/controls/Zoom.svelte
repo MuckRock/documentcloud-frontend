@@ -30,13 +30,13 @@
 
   function zoomIn() {
     scalePercent(
-      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, true)
+      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, true),
     );
   }
 
   function zoomOut() {
     scalePercent(
-      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, false)
+      roundBreakpoint(doc.scrollzoom.transform.matrix[0] * 100, false),
     );
   }
 

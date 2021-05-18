@@ -92,7 +92,10 @@
       </div>
       <TextPage
         text={page.contents}
-        highlights={$layout.searchHighlights != null ? $layout.searchHighlights[i] : null} />
+        highlights={$layout.searchHighlights != null
+          ? $layout.searchHighlights[i]
+          : null}
+      />
     </div>
   {/each}
 </div>

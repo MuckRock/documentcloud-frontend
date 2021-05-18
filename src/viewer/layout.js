@@ -1,11 +1,17 @@
 import { Svue } from "svue";
 import { viewer, updateNote, addNote, removeNote } from "./viewer";
-import { truthyParamValue, falsyParamValue } from '@/util/url';
+import { truthyParamValue, falsyParamValue } from "@/util/url";
 import { wrapLoad } from "@/util/wrapLoad";
-import { getDocument, redactDocument, searchDocument, modifyDocument, reprocessDocument } from "@/api/document";
-import { search } from '@/search/search';
+import {
+  getDocument,
+  redactDocument,
+  searchDocument,
+  modifyDocument,
+  reprocessDocument,
+} from "@/api/document";
+import { search } from "@/search/search";
 import { showConfirm } from "@/manager/confirmDialog";
-import { markAsDirty, documents } from '@/manager/documents';
+import { markAsDirty, documents } from "@/manager/documents";
 import { router } from "@/router/router";
 import {
   createAnnotation,
@@ -14,7 +20,7 @@ import {
 } from "@/api/annotation";
 import { Note } from "@/structure/note";
 import { DEFAULT_EXPAND } from "../api/common";
-import { inIframe } from '@/util/iframe';
+import { inIframe } from "@/util/iframe";
 import { modification } from "./modification/modification";
 
 // A little bigger than normal mobile break to hide sidebar in narrow viewports
@@ -120,13 +126,16 @@ export const layout = new Svue({
       if (viewer.document == null || !viewer.document.processing) return [];
       return [
         async () => {
-          const doc = await getDocument(viewer.document.id, [
-            DEFAULT_EXPAND,
-            "notes",
-            "sections",
-            "notes.organization",
-            "notes.user",
-          ].join(","));
+          const doc = await getDocument(
+            viewer.document.id,
+            [
+              DEFAULT_EXPAND,
+              "notes",
+              "sections",
+              "notes.organization",
+              "notes.user",
+            ].join(","),
+          );
           viewer.document = doc;
           viewer.notes = doc.notes;
           viewer.sections = doc.sections;
@@ -157,13 +166,13 @@ export const layout = new Svue({
       return action == "annotate";
     },
     modifying(action) {
-      return action == 'modify';
+      return action == "modify";
     },
     searching(action) {
       return action == "search";
     },
     selectNoteEmbed(action) {
-      return action == 'selectnote';
+      return action == "selectnote";
     },
     pageCrosshair(redacting, annotating) {
       return redacting || annotating;
@@ -221,9 +230,21 @@ export const layout = new Svue({
       return embedDocument != null && !selectNoteEmbed;
     },
 
-    dialogShown(showInfo, showData, showAccess, showEditSections, showEmbedDialog) {
-      return showInfo || showData || showAccess || showEditSections || showEmbedDialog;
-    }
+    dialogShown(
+      showInfo,
+      showData,
+      showAccess,
+      showEditSections,
+      showEmbedDialog,
+    ) {
+      return (
+        showInfo ||
+        showData ||
+        showAccess ||
+        showEditSections ||
+        showEmbedDialog
+      );
+    },
   },
 });
 
@@ -242,7 +263,8 @@ export function setViewerInitializeAction(action) {
 
 // Annotations/redactions
 function consolidateDragObject(dragObject) {
-  if (dragObject.start == null) return new Note({ page_number: dragObject.pageNumber });
+  if (dragObject.start == null)
+    return new Note({ page_number: dragObject.pageNumber });
   const start = {
     x: Math.min(dragObject.start.x, dragObject.end.x),
     y: Math.min(dragObject.start.y, dragObject.end.y),
@@ -329,7 +351,7 @@ export function pageDragEnd(pageNumber, { x, y }) {
 
 export function startPageNote(pageNumber) {
   layout.rawAnnotation = {
-    pageNumber
+    pageNumber,
   };
   layout.annotationPending = true;
   enterEditAnnotateMode(layout.shownEditAnnotation);
@@ -351,7 +373,7 @@ export function redact() {
     async () => {
       await wrapLoad(
         layout,
-        async () => await redactDocument(viewer.id, layout.pendingRedactions)
+        async () => await redactDocument(viewer.id, layout.pendingRedactions),
       );
       // Update document as pending
       viewer.document.doc = {
@@ -361,7 +383,7 @@ export function redact() {
       viewer.document = viewer.document;
       await markAsDirty([viewer.id]);
       simpleCancelActions();
-    }
+    },
   );
 }
 
@@ -372,10 +394,7 @@ export function modify(modification, callback) {
     "Continue",
     async () => {
       const json = modification.modifySpec.json();
-      await wrapLoad(
-        layout,
-        async () => await modifyDocument(viewer.id, json)
-      );
+      await wrapLoad(layout, async () => await modifyDocument(viewer.id, json));
       // Update document as pending
       viewer.document.doc = {
         ...viewer.document.doc,
@@ -385,7 +404,7 @@ export function modify(modification, callback) {
       await markAsDirty([viewer.id]);
       modification.clear();
       callback();
-    }
+    },
   );
 }
 
@@ -393,7 +412,7 @@ export function undoRedaction() {
   if (layout.rawPendingRedactions.length > 0) {
     layout.rawPendingRedactions = layout.rawPendingRedactions.slice(
       0,
-      layout.rawPendingRedactions.length - 1
+      layout.rawPendingRedactions.length - 1,
     );
   }
 }
@@ -408,7 +427,7 @@ export function simpleCancelActions(callback = null) {
       () => {
         modification.clear();
         simpleCancelActions(callback);
-      }
+      },
     );
     return;
   }
@@ -435,7 +454,7 @@ export async function updatePageAnnotation(
   title,
   description,
   access,
-  annotation
+  annotation,
 ) {
   const newNote = await updateAnnotation(
     noteId,
@@ -448,7 +467,7 @@ export async function updatePageAnnotation(
     annotation.x2,
     annotation.y1,
     annotation.y2,
-    viewer.me
+    viewer.me,
   );
   updateNote(newNote);
   return newNote;
@@ -459,7 +478,7 @@ export async function createPageAnnotation(
   title,
   description,
   access,
-  annotation
+  annotation,
 ) {
   const newNote = await createAnnotation(
     id,
@@ -471,7 +490,7 @@ export async function createPageAnnotation(
     annotation.x2,
     annotation.y1,
     annotation.y2,
-    viewer.me
+    viewer.me,
   );
   addNote(newNote);
   return newNote;
@@ -486,7 +505,7 @@ export async function deletePageAnnotation(noteId, docId) {
       await deleteAnnotation(docId, noteId);
       removeNote({ id: noteId });
       simpleCancelActions();
-    }
+    },
   );
 }
 
@@ -583,6 +602,6 @@ export function forceReprocess() {
       viewer.document = viewer.document;
       await markAsDirty([viewer.id]);
       simpleCancelActions();
-    }
+    },
   );
 }

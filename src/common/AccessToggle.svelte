@@ -3,7 +3,7 @@
   import privateIconSvg from "@/assets/private_icon.svg";
   import publicIconSvg from "@/assets/public_icon.svg";
   import organizationIconSvg from "@/assets/organization_icon.svg";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   export let access = "private";
   export let editAccess = true;
@@ -126,8 +126,9 @@
   {#if editAccess}
     <div
       class="container public"
-      class:selected={access == 'public'}
-      on:click={() => (access = 'public')}>
+      class:selected={access == "public"}
+      on:click={() => (access = "public")}
+    >
       <div class="item">
         <span class="icon">
           {@html publicIconSvg}
@@ -140,8 +141,9 @@
     </div>
     <div
       class="container organization"
-      class:selected={access == 'organization'}
-      on:click={() => (access = 'organization')}>
+      class:selected={access == "organization"}
+      on:click={() => (access = "organization")}
+    >
       <div class="item">
         <span class="icon">
           {@html organizationIconSvg}
@@ -155,8 +157,9 @@
   {/if}
   <div
     class="container private"
-    class:selected={access == 'private'}
-    on:click={() => (access = 'private')}>
+    class:selected={access == "private"}
+    on:click={() => (access = "private")}
+  >
     <div class="item">
       <span class="icon">
         {@html privateIconSvg}

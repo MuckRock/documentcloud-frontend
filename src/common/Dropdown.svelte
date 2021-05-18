@@ -4,7 +4,7 @@
   import emitter from "@/emit";
 
   const emit = emitter({
-    active() {}
+    active() {},
   });
 
   export let horizPadding = 5;
@@ -156,8 +156,11 @@
         hide();
       }
     }}
-    style="width: {titleWidth + horizPadding * 2}px; left: {-horizPadding}px;
-    top: {-vertPadding}px; bottom: {-vertPadding}px" />
+    style="width: {titleWidth +
+      horizPadding *
+        2}px; left: {-horizPadding}px;
+    top: {-vertPadding}px; bottom: {-vertPadding}px"
+  />
   <span class:table bind:this={title} on:click={revealOrHide}>
     <slot name="title" />
   </span>
@@ -169,7 +172,8 @@
   class:fixed
   on:click={hide}
   bind:this={menu}
-  style="left: {menuLeft}px; top: {menuTop - MENU_OFFSET}px">
+  style="left: {menuLeft}px; top: {menuTop - MENU_OFFSET}px"
+>
   <slot />
 </span>
 

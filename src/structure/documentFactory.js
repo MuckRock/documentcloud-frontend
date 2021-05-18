@@ -1,11 +1,11 @@
-import { Document } from './document';
+import { Document } from "./document";
 
 let id = 1;
 
 export function makeDocument(options = {}) {
   return new Document({
     access: options.access || "private",
-    asset_url: options.asset_url || (process.env.DC_BASE + '/files/'),
+    asset_url: options.asset_url || process.env.DC_BASE + "/files/",
     created_at: options.created_at || "2020-01-01T00:00:00.000Z",
     data: options.data || {},
     highlights: options.highlights || null,
@@ -33,6 +33,6 @@ export function makeDocument(options = {}) {
       username: options.username || "testuser",
       uuid: options.user_uuid || "00000000-0000-0000-0000-000000000000",
     },
-    projects: options.projects || []
-  })
+    projects: options.projects || [],
+  });
 }

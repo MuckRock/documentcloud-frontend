@@ -49,7 +49,7 @@
         new Event("input", {
           bubbles: true,
           target: input,
-        })
+        }),
       );
     }
   }
@@ -150,7 +150,7 @@
       if (input != null && input.setSelectionRange != null) {
         input.setSelectionRange(
           restoreSelectionPosition,
-          restoreSelectionPosition
+          restoreSelectionPosition,
         );
       }
       selectionStart = restoreSelectionPosition;
@@ -183,7 +183,7 @@
       ? searchPre.match(
           preserveSpace
             ? /([a-z]+):([a-zA-Z0-9 -]*)$/
-            : /([a-z]+):([a-zA-Z0-9-]*)$/
+            : /([a-z]+):([a-zA-Z0-9-]*)$/,
         )
       : null;
   $: fieldPreIndex = fieldRaw != null ? fieldRaw.index : null;
@@ -269,7 +269,7 @@
       allChunks = allChunks.concat(
         highlight.type == "raw"
           ? highlight.text.split(/( )/g).filter((x) => x.length > 0)
-          : [highlight.text]
+          : [highlight.text],
       );
     }
 
@@ -329,7 +329,7 @@
             feed: slugify(project.title, project.id),
           };
         }),
-        fieldPost
+        fieldPost,
       );
     } else if (alias(fieldPre) == "user") {
       if (!preserveSpace && fieldPost == "") {
@@ -366,7 +366,7 @@
             feed: "organization",
           },
         ],
-        fieldPost
+        fieldPost,
       );
     } else if (alias(fieldPre) == "status") {
       setCompletionX(fieldPreIndex);
@@ -403,7 +403,7 @@
             feed: "nofile",
           },
         ],
-        fieldPost
+        fieldPost,
       );
     } else if (alias(fieldPre) == "language") {
       setCompletionX(fieldPreIndex);
@@ -413,7 +413,7 @@
           text: x[1],
           feed: x[0],
         })),
-        fieldPost
+        fieldPost,
       );
     } else if (alias(fieldPre) == "sort") {
       setCompletionX(fieldPreIndex);
@@ -436,7 +436,7 @@
       fieldPreIndex,
       searchPre,
       searchPost,
-      escPressed
+      escPressed,
     );
   }
 
@@ -449,7 +449,7 @@
     completionIndex == null || completions == null || completions.length == 0
       ? null
       : completions.filter(
-          (completion) => completion.index == completionIndex
+          (completion) => completion.index == completionIndex,
         )[0];
 
   $: noCompletion =
@@ -488,7 +488,7 @@
       if (selectedCompletion != null) {
         triggerCompletion(
           selectedCompletion,
-          fieldPost != null ? fieldPost.length : 0
+          fieldPost != null ? fieldPost.length : 0,
         );
         e.preventDefault();
         return;
@@ -793,28 +793,29 @@
     on:click={handleCursor}
     on:touchend={handleCursor}
     on:focus={handleCursor}
-    on:blur={handleBlur} />
+    on:blur={handleBlur}
+  />
   <div class="mirror" bind:this={mirror} class:compact class:example>
     {#each highlights as highlight}
-      {#if highlight.type == 'field'}
+      {#if highlight.type == "field"}
         <span class:field={highlight.valid}>
           <NoWhitespace>
             <b>{highlight.field}</b>
             <span>{highlight.value}</span>
           </NoWhitespace>
         </span>
-      {:else if highlight.type == 'quote'}
+      {:else if highlight.type == "quote"}
         <span class="quote">
           <NoWhitespace><span>{highlight.text}</span></NoWhitespace>
         </span>
-      {:else if highlight.type == 'operator'}
+      {:else if highlight.type == "operator"}
         <span class="operator">
           <NoWhitespace><b>{highlight.text}</b></NoWhitespace>
         </span>
       {:else}
         {#each highlight.text.split(/( )/g) as rawText}
           <!-- Split raw text by space to avoid line-break issues -->
-          {#if rawText != ''}<span> <span>{rawText}</span> </span>{/if}
+          {#if rawText != ""}<span> <span>{rawText}</span> </span>{/if}
         {/each}
       {/if}
     {/each}
@@ -823,7 +824,7 @@
     {/if}
   </div>
   {#if !example && value.length != 0}
-    <div class="closeicon" on:click={() => (value = '')}>
+    <div class="closeicon" on:click={() => (value = "")}>
       {@html closeInlineSvg}
     </div>
   {/if}
@@ -836,17 +837,24 @@
         {#each processedCompletions.completions as completion}
           <div
             class="completion"
-            class:active={completionIndex != null && completionIndex == completion.index}
+            class:active={completionIndex != null &&
+              completionIndex == completion.index}
             on:mouseover={() => {
               if (completion.index != null) completionIndex = completion.index;
             }}
             on:mouseout={() => {
               if (completion.index != null) completionIndex = null;
             }}
-            on:mousedown|preventDefault={() => triggerCompletion(completion, fieldPost != null ? fieldPost.length : 0)}
-            class:groupstart={completion.type == 'groupstart'}>
+            on:mousedown|preventDefault={() =>
+              triggerCompletion(
+                completion,
+                fieldPost != null ? fieldPost.length : 0,
+              )}
+            class:groupstart={completion.type == "groupstart"}
+          >
             <div
-              class:negative={completion.score != null && completion.score < 0}>
+              class:negative={completion.score != null && completion.score < 0}
+            >
               <div>
                 <!-- Highlight completion letters -->
                 {#each completion.text as letter, i}

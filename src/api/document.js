@@ -10,7 +10,7 @@ import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
 import { Results } from "@/structure/results";
 import { batchDelay } from "@/util/batchDelay";
 import { StorageManager } from "@/util/storageManager";
-import { includes } from '@/util/array';
+import { includes } from "@/util/array";
 import axios from "axios";
 
 import { Document, transformHighlights } from "@/structure/document";
@@ -32,40 +32,46 @@ export const PENDING = "pending";
 const deletedManager = new StorageManager("deleted");
 
 function addDeletedDocs(ids) {
-  deletedManager.set('', deletedManager.get('', []).concat(ids));
+  deletedManager.set("", deletedManager.get("", []).concat(ids));
 }
 
 function filterDeleted(docs) {
-  const deleted = deletedManager.get('', []);
-  return docs.filter(x => !includes(deleted, x.id));
+  const deleted = deletedManager.get("", []);
+  return docs.filter((x) => !includes(deleted, x.id));
 }
-
 
 export async function getDocuments(
   extraParams = {},
   ordering = DEFAULT_ORDERING,
   page = 0,
-  expand = DEFAULT_EXPAND
+  expand = DEFAULT_EXPAND,
 ) {
   // Return documents with the specified parameters
   const params = { ...extraParams, ordering, expand, page: page + 1 };
   const url = apiUrl(queryBuilder("documents/", params));
   const { data } = await session.get(url);
-  data.results = filterDeleted(data.results.map((document) => new Document(document)));
+  data.results = filterDeleted(
+    data.results.map((document) => new Document(document)),
+  );
   return new Results(url, data);
 }
 
 export async function searchDocuments(
   query,
   page = 0,
-  expand = DEFAULT_EXPAND
+  expand = DEFAULT_EXPAND,
 ) {
   // Return documents with the specified parameters
   const url = apiUrl(
-    queryBuilder("documents/search/", { q: query, expand, page: page + 1, hl: "true" })
+    queryBuilder("documents/search/", {
+      q: query,
+      expand,
+      page: page + 1,
+      hl: "true",
+    }),
   );
   const { data } = await session.get(url);
-  data.results = filterDeleted(data.results.map(doc => new Document(doc)));
+  data.results = filterDeleted(data.results.map((doc) => new Document(doc)));
 
   return new Results(url, data);
 }
@@ -82,7 +88,7 @@ export async function searchDocument(query, docId) {
 export async function getDocument(id, expand = DEFAULT_EXPAND) {
   // Get a single document with the specified id
   const { data } = await session.get(
-    apiUrl(queryBuilder(`documents/${id}/`, { expand }))
+    apiUrl(queryBuilder(`documents/${id}/`, { expand })),
   );
   return new Document(data);
 }
@@ -90,25 +96,31 @@ export async function getDocument(id, expand = DEFAULT_EXPAND) {
 export async function getDocumentsWithIds(
   ids,
   remaining = false,
-  expand = DEFAULT_EXPAND
+  expand = DEFAULT_EXPAND,
 ) {
-  return await batchDelay(ids, GET_BATCH, GET_BATCH_DELAY, async (subIds) => {
-    if (subIds.length == 0) return [];
-    // Return documents with the specified ids
-    const params = { expand, id__in: subIds };
-    if (remaining) params["remaining"] = true;
-    const { data } = await session.get(
-      apiUrl(queryBuilder("documents/", params))
-    );
-    const docs = data.results.map((document) => new Document(document));
-    const orderedDocs = [];
-    for (let i = 0; i < subIds.length; i++) {
-      const matching = docs.filter((doc) => doc.id == subIds[i]);
-      if (matching.length == 0) continue;
-      orderedDocs.push(matching[0]);
-    }
-    return orderedDocs;
-  }, (e) => console.error('error getting documents with ids', e));
+  return await batchDelay(
+    ids,
+    GET_BATCH,
+    GET_BATCH_DELAY,
+    async (subIds) => {
+      if (subIds.length == 0) return [];
+      // Return documents with the specified ids
+      const params = { expand, id__in: subIds };
+      if (remaining) params["remaining"] = true;
+      const { data } = await session.get(
+        apiUrl(queryBuilder("documents/", params)),
+      );
+      const docs = data.results.map((document) => new Document(document));
+      const orderedDocs = [];
+      for (let i = 0; i < subIds.length; i++) {
+        const matching = docs.filter((doc) => doc.id == subIds[i]);
+        if (matching.length == 0) continue;
+        orderedDocs.push(matching[0]);
+      }
+      return orderedDocs;
+    },
+    (e) => console.error("error getting documents with ids", e),
+  );
 }
 
 export async function deleteDocument(ids) {
@@ -117,8 +129,8 @@ export async function deleteDocument(ids) {
     apiUrl(
       queryBuilder(`documents/`, {
         id__in: ids,
-      })
-    )
+      }),
+    ),
   );
   addDeletedDocs(ids);
 }
@@ -127,7 +139,7 @@ export async function editMetadata(ids, metadata) {
   // Edit the published url of the documents with the specified ids
   await session.patch(
     apiUrl(`documents/`),
-    ids.map((id) => ({ ...metadata, id }))
+    ids.map((id) => ({ ...metadata, id })),
   );
 }
 
@@ -135,7 +147,7 @@ export async function changeAccess(ids, access) {
   // Change access for the documents with the specified ids
   await session.patch(
     apiUrl(`documents/`),
-    ids.map((id) => ({ id, access }))
+    ids.map((id) => ({ id, access })),
   );
 }
 
@@ -143,7 +155,7 @@ export async function reprocessDocument(ids) {
   // Reprocess the documents with the specified ids
   await session.post(
     apiUrl(`documents/process/`),
-    ids.map((id) => ({ id }))
+    ids.map((id) => ({ id })),
   );
 }
 
@@ -163,16 +175,13 @@ export async function redactDocument(id, redactions) {
   // Redact the document with the specified id and redactions
   await session.post(
     apiUrl(`documents/${id}/redactions/`),
-    redactions.map((redaction) => redaction.note)
+    redactions.map((redaction) => redaction.note),
   );
 }
 
 export async function modifyDocument(id, modifications) {
   // Apply the page modifications to the specified document id
-  await session.post(
-    apiUrl(`documents/${id}/modifications/`),
-    modifications
-  );
+  await session.post(apiUrl(`documents/${id}/modifications/`), modifications);
 }
 
 export async function addData(id, key, value) {
@@ -201,7 +210,7 @@ export async function pollDocument(
   id,
   docFn,
   doneFn,
-  conditionFn = (doc) => doc.nonPending
+  conditionFn = (doc) => doc.nonPending,
 ) {
   let doc;
   try {
@@ -249,7 +258,7 @@ export async function uploadDocuments(
   progressFn,
   processProgressFn,
   allCompleteFn,
-  errorFn
+  errorFn,
 ) {
   // Set initial progresses
   const progresses = [];
@@ -261,15 +270,15 @@ export async function uploadDocuments(
     toComplete.push(i);
   }
 
-  const projectIds = projects.map(p => p.id);
+  const projectIds = projects.map((p) => p.id);
 
   // Allocate documents with the appropriate titles.
   let newDocuments;
   try {
-    const getExtension = file => {
-      if (file.name == null) return '';
-      const parts = file.name.split('.');
-      if (parts.length <= 1) return '';
+    const getExtension = (file) => {
+      if (file.name == null) return "";
+      const parts = file.name.split(".");
+      if (parts.length <= 1) return "";
       return parts[parts.length - 1].toLowerCase();
     };
     let createCount = 0;
@@ -280,13 +289,19 @@ export async function uploadDocuments(
       async (subDocs) => {
         const { data } = await session.post(
           apiUrl("documents/"),
-          subDocs.map((doc) => ({ title: doc.name, access, language, original_extension: getExtension(doc.file), projects: projectIds }))
+          subDocs.map((doc) => ({
+            title: doc.name,
+            access,
+            language,
+            original_extension: getExtension(doc.file),
+            projects: projectIds,
+          })),
         );
         createCount += subDocs.length;
         createProgressFn(createCount / docs.length);
         return data;
       },
-      (e) => console.error('error creating some docs', e)
+      (e) => console.error("error creating some docs", e),
     );
     newDocuments = data;
   } catch (e) {
@@ -303,28 +318,31 @@ export async function uploadDocuments(
         const id = newDocuments[i].id;
         const file = doc.file;
 
-        return new Promise(resolve => {
-          axios.put(url, file, {
-            headers: {
-              "Content-Type": file.type || "application/octet-stream",
-            },
-            onUploadProgress: (progressEvent) => {
-              // Handle upload progress
-              const progress = progressEvent.loaded / progressEvent.total;
-              progresses[i].progress = progress;
-              progressFn(i, progress);
-            },
-          }).then(results => resolve(results)).catch((e) => {
-            // Handle error
-            console.error('doc upload failed', e);
-            // Update progress
-            progresses[i].progress = 1;
-            progressFn(i, 1);
-            badDocs[id] = true;
-            resolve();
-          })
+        return new Promise((resolve) => {
+          axios
+            .put(url, file, {
+              headers: {
+                "Content-Type": file.type || "application/octet-stream",
+              },
+              onUploadProgress: (progressEvent) => {
+                // Handle upload progress
+                const progress = progressEvent.loaded / progressEvent.total;
+                progresses[i].progress = progress;
+                progressFn(i, progress);
+              },
+            })
+            .then((results) => resolve(results))
+            .catch((e) => {
+              // Handle error
+              console.error("doc upload failed", e);
+              // Update progress
+              progresses[i].progress = 1;
+              progressFn(i, 1);
+              badDocs[id] = true;
+              resolve();
+            });
         });
-      })
+      }),
     );
   } catch (e) {
     console.error(e);
@@ -332,7 +350,7 @@ export async function uploadDocuments(
   }
 
   // Once all the files have uploaded, begin processing.
-  const goodDocuments = newDocuments.filter(doc => !badDocs[doc.id]);
+  const goodDocuments = newDocuments.filter((doc) => !badDocs[doc.id]);
   const ids = goodDocuments.map((doc) => doc.id);
   let count = 0;
   try {
@@ -343,12 +361,12 @@ export async function uploadDocuments(
       async (subIds) => {
         await session.post(
           apiUrl(`documents/process/`),
-          subIds.map((id) => ({ id, force_ocr: forceOcr }))
+          subIds.map((id) => ({ id, force_ocr: forceOcr })),
         );
         count += subIds.length;
         processProgressFn(count / ids.length);
       },
-      (e) => console.error('error processing some docs', e)
+      (e) => console.error("error processing some docs", e),
     );
   } catch (e) {
     console.error(e);
@@ -356,5 +374,5 @@ export async function uploadDocuments(
   }
 
   // Handle document completion
-  allCompleteFn(goodDocuments.map(x => new Document(x)));
+  allCompleteFn(goodDocuments.map((x) => new Document(x)));
 }

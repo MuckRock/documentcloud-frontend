@@ -1,58 +1,58 @@
 import { Svue } from "svue";
 import { searchDocuments } from "@/api/document";
 import { DEFAULT_ORDERING } from "@/api/common";
-import { getProjectDocuments } from '@/api/project';
-import { cacheAsync } from '@/util/cache';
+import { getProjectDocuments } from "@/api/project";
+import { cacheAsync } from "@/util/cache";
 import { highlight } from "@/search/parse";
 
 const searchDocumentsCached = cacheAsync(searchDocuments);
 
 const PROJECT_EMBED_SORTS = {
-  title: 'title',
-  created_at: 'created_at',
-  source: 'source',
-  page_count: 'page_count'
+  title: "title",
+  created_at: "created_at",
+  source: "source",
+  page_count: "page_count",
 };
 
 const GET_DOCUMENT_FIELDS = {
   "project:": {
-    idType: true
+    idType: true,
   },
   "projects:": {
     transform: "project",
-    idType: true
+    idType: true,
   },
   "user:": {
-    idType: true
+    idType: true,
   },
   "account:": {
     transform: "user",
-    idType: true
+    idType: true,
   },
   "organization:": {
-    idType: true
+    idType: true,
   },
   "group:": {
     transform: "organization",
-    idType: true
+    idType: true,
   },
   "document:": {
-    idType: true
+    idType: true,
   },
   "id:": {
     transform: "document",
-    idType: true
+    idType: true,
   },
   "access:": {
-    accept: ["public", "organization", "private"]
+    accept: ["public", "organization", "private"],
   },
   "status:": {
-    accept: ["success", "readable", "pending", "error", "nofile"]
-  }
+    accept: ["success", "readable", "pending", "error", "nofile"],
+  },
 };
 
 function extractId(slugId) {
-  const parts = slugId.split('-');
+  const parts = slugId.split("-");
   if (parts.length == 0) return null;
   const lastPart = parts[parts.length - 1];
   if (!/^[0-9]+$/.test(lastPart)) return null;
@@ -77,14 +77,15 @@ export class SearchParams extends Svue {
         },
         projectEmbedId(params) {
           const projectEmbedId = params.projectEmbedId;
-          if (projectEmbedId == null || projectEmbedId.trim().length == 0) return null;
+          if (projectEmbedId == null || projectEmbedId.trim().length == 0)
+            return null;
           return extractId(projectEmbedId);
         },
         perPage(params) {
           return params.perpage || 12;
         },
         projectEmbedOrder(params) {
-          return params.order
+          return params.order;
         },
         query(params, projectEmbedId, onlyShowSuccess) {
           if (projectEmbedId != null) return null;
@@ -221,7 +222,18 @@ export class SearchParams extends Svue {
           return true;
         },
 
-        getMethod(query, projectEmbedId, page, perPage, projectEmbedOrder, oneUserSearch, oneProjectSearch, oneAccessSearch, noStatus, oneOrZeroAccesses) {
+        getMethod(
+          query,
+          projectEmbedId,
+          page,
+          perPage,
+          projectEmbedOrder,
+          oneUserSearch,
+          oneProjectSearch,
+          oneAccessSearch,
+          noStatus,
+          oneOrZeroAccesses,
+        ) {
           if (projectEmbedId != null) {
             // Use project api documents method
             const extraProps = {};
@@ -234,27 +246,45 @@ export class SearchParams extends Svue {
                 ordering = sort;
               }
             }
-            return [() => getProjectDocuments(projectEmbedId, page, { per_page: perPage }, ordering), null];
+            return [
+              () =>
+                getProjectDocuments(
+                  projectEmbedId,
+                  page,
+                  { per_page: perPage },
+                  ordering,
+                ),
+              null,
+            ];
           }
-          if (query == null) return null;  // Wait for redirect
+          if (query == null) return null; // Wait for redirect
           // Use search method
           if (page == 0 && noStatus && oneOrZeroAccesses) {
             // Investigate whether it's a cacheable search:
             // A cacheable search is only a search for either a user or project with an optional access.
             // These correspond to most sidebar quick searches.
             const cachedFn = () => searchDocumentsCached(query, page);
-            const accessCondition = (doc) => (oneAccessSearch != null ? doc.access == oneAccessSearch : true);
+            const accessCondition = (doc) =>
+              oneAccessSearch != null ? doc.access == oneAccessSearch : true;
             if (oneUserSearch != null) {
-              return [cachedFn, doc => accessCondition(doc) && doc.userId == oneUserSearch];
+              return [
+                cachedFn,
+                (doc) => accessCondition(doc) && doc.userId == oneUserSearch,
+              ];
             }
             if (oneProjectSearch != null) {
-              return [cachedFn, doc => accessCondition(doc) && doc.projectIds.includes(oneProjectSearch)];
+              return [
+                cachedFn,
+                (doc) =>
+                  accessCondition(doc) &&
+                  doc.projectIds.includes(oneProjectSearch),
+              ];
             }
           }
 
           return [() => searchDocuments(query, page), null];
-        }
-      }
+        },
+      },
     });
   }
 }

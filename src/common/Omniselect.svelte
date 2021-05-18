@@ -30,12 +30,12 @@
   let filter = "";
 
   function applyFilter(options, filter) {
-    const normalize = x =>
+    const normalize = (x) =>
       x
         .toLowerCase()
         .split(" ")
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
+        .map((x) => x.trim())
+        .filter((x) => x.length > 0);
     const filterParts = normalize(filter);
     if (filterParts.length == 0) return options;
 
@@ -58,7 +58,7 @@
         scores.push([options[i], score]);
       }
     }
-    return scores.sort((a, b) => b[1] - a[1]).map(x => x[0]);
+    return scores.sort((a, b) => b[1] - a[1]).map((x) => x[0]);
   }
 
   $: filteredLanguages = applyFilter(options, filter);
@@ -173,7 +173,8 @@
           bind:this={input}
           bind:value={filter}
           type="text"
-          placeholder="Type to filter language" />
+          placeholder="Type to filter language"
+        />
       </div>
       <div class="selected">
         {selectedName}
@@ -190,7 +191,8 @@
                 on:click={() => {
                   select(value);
                   unexpand();
-                }}>
+                }}
+              >
                 {name}
               </div>
             {/if}
@@ -198,10 +200,11 @@
         {:else}
           <div
             class="option noresults"
-            on:click={e => {
-              filter = '';
+            on:click={(e) => {
+              filter = "";
               e.stopPropagation();
-            }}>
+            }}
+          >
             No results. Click to clear filter.
           </div>
         {/if}
@@ -210,10 +213,11 @@
   {:else}
     <div
       class="unexpanded"
-      on:click={e => {
+      on:click={(e) => {
         expanded = true;
         e.stopPropagation();
-      }}>
+      }}
+    >
       {selectedName}
       <span class="dropper">▼</span>
     </div>

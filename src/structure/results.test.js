@@ -14,7 +14,7 @@ test("page count", () => {
     count: 5,
     next: "results/?page=2",
     previous: null,
-    results: makeResults(2)
+    results: makeResults(2),
   });
 
   expect(results.page).toBe(0);
@@ -36,7 +36,7 @@ test("with prev page", () => {
     count: 5,
     previous: "results/?page=1",
     next: "results/?page=3",
-    results: makeResults(2)
+    results: makeResults(2),
   });
 
   expect(results.page).toBe(1);
@@ -58,7 +58,7 @@ test("no next page", () => {
     count: 5,
     previous: "results/?param&page=2",
     next: null,
-    results: makeResults(1)
+    results: makeResults(1),
   });
 
   expect(results.page).toBe(2);
@@ -79,7 +79,7 @@ test("empty results", () => {
     count: 0,
     previous: null,
     next: null,
-    results: []
+    results: [],
   });
 
   expect(results.length).toBe(0);
@@ -90,7 +90,7 @@ test("page count complex", () => {
     count: 31,
     previous: "results/?page=1",
     next: null,
-    results: makeResults(6)
+    results: makeResults(6),
   });
 
   expect(results.page).toBe(1);

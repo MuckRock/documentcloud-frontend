@@ -6,7 +6,7 @@
   import { simplePlural, nameSingularNumberPlural } from "@/util/string";
   import { editSelectedDocumentInfo } from "@/manager/documents";
   import emitter from "@/emit";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -62,9 +62,11 @@
 
 <div>
   <div class="mcontent">
-    <h1>{headerText(simplePlural($layout.numSelected, 'document'))}</h1>
+    <h1>{headerText(simplePlural($layout.numSelected, "document"))}</h1>
     <p>
-      {explainerText(nameSingularNumberPlural($layout.numSelected, 'selected document'))}:
+      {explainerText(
+        nameSingularNumberPlural($layout.numSelected, "selected document"),
+      )}:
     </p>
     <div class="inputpadded">
       {#if textArea}
@@ -74,7 +76,8 @@
           {maxlength}
           bind:value
           bind:this={input}
-          on:keypress={handleKey} />
+          on:keypress={handleKey}
+        />
       {/if}
     </div>
     <div class="buttonpadded">
@@ -85,7 +88,9 @@
           <Button disabled={true}>{buttonText}</Button>
         </Tooltip>
       {/if}
-      <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
+      <Button secondary={true} on:click={emit.dismiss}
+        >{$_("dialog.cancel")}</Button
+      >
     </div>
   </div>
 </div>

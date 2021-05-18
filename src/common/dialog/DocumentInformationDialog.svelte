@@ -8,7 +8,7 @@
   import { editSelectedDocumentInfo } from "@/manager/documents";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -32,22 +32,22 @@
           x.fieldAccessor(
             ($viewer.document != null
               ? [$viewer.document]
-              : $layout.selected)[0]
-          )
+              : $layout.selected)[0],
+          ),
         )
       : metaDialogs.map((_) => "");
   let values = initial != null ? initial.slice() : metaDialogs.map((_) => "");
 
   $: valid = metaDialogs.some((x, i) =>
-    (x.fieldValid || fieldValid)(values[i], initial[i])
+    (x.fieldValid || fieldValid)(values[i], initial[i]),
   );
   $: invalidReason = metaDialogs
     .map((x, i) =>
       (x.fieldInvalidText || fieldInvalidText)(
         values[i],
         initial[i],
-        x.fieldName
-      )
+        x.fieldName,
+      ),
     )
     .join(", ");
 
@@ -70,7 +70,7 @@
             viewer.document.doc = { ...viewer.document.doc, ...fields };
             viewer.document = viewer.document;
           }
-        : () => {}
+        : () => {},
     );
     emit.dismiss();
   }
@@ -99,7 +99,9 @@
 <div>
   <div class="mcontent">
     <h1>
-      {$_("dialogDocumentInformationDialog.editInformation", {values: {n: numSelected}})}
+      {$_("dialogDocumentInformationDialog.editInformation", {
+        values: { n: numSelected },
+      })}
     </h1>
     <table>
       {#each metaDialogs as meta, i}
@@ -111,7 +113,8 @@
                 {#if meta.isTextArea}
                   <HtmlEditor
                     maxlength={meta.charLimit}
-                    bind:value={values[i]} />
+                    bind:value={values[i]}
+                  />
                 {:else}
                   <input maxlength={meta.charLimit} bind:value={values[i]} />
                 {/if}
@@ -129,7 +132,9 @@
           <Button disabled={true}>{$_("dialog.save")}</Button>
         </Tooltip>
       {/if}
-      <Button secondary={true} on:click={emit.dismiss}>{$_("dialog.cancel")}</Button>
+      <Button secondary={true} on:click={emit.dismiss}
+        >{$_("dialog.cancel")}</Button
+      >
     </div>
   </div>
 </div>

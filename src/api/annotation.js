@@ -20,7 +20,7 @@ export async function createAnnotation(
   x2,
   y1,
   y2,
-  me
+  me,
 ) {
   // Create an annotation
   const { data } = await session.post(apiUrl(`documents/${id}/notes/`), {
@@ -31,7 +31,7 @@ export async function createAnnotation(
     x2,
     y1,
     y2,
-    access
+    access,
   });
   return new Note(injectMe(data, me));
 }
@@ -47,7 +47,7 @@ export async function updateAnnotation(
   x2,
   y1,
   y2,
-  me
+  me,
 ) {
   // Update an annotation
   const { data } = await session.put(
@@ -60,8 +60,8 @@ export async function updateAnnotation(
       x2,
       y1,
       y2,
-      access
-    }
+      access,
+    },
   );
   return new Note(injectMe(data, me));
 }
@@ -69,22 +69,26 @@ export async function updateAnnotation(
 export async function getAnnotations(id, expand = DEFAULT_EXPAND) {
   // Returns annotations for the specified document
   const results = await grabAllPages(
-    apiUrl(queryBuilder(`documents/${id}/notes/`, { expand }))
+    apiUrl(queryBuilder(`documents/${id}/notes/`, { expand })),
   );
-  return results.map(result => new Note(result));
+  return results.map((result) => new Note(result));
 }
 
 export async function getAnnotationsPage(id, expand = DEFAULT_EXPAND, page) {
   // Returns annotations for the specified document at the specified page
   const results = await grabAllPages(
-    apiUrl(queryBuilder(`documents/${id}/notes/`, { expand, page_number: page }))
+    apiUrl(
+      queryBuilder(`documents/${id}/notes/`, { expand, page_number: page }),
+    ),
   );
-  return results.map(result => new Note(result));
+  return results.map((result) => new Note(result));
 }
 
 export async function getAnnotation(docId, noteId) {
   // Get the note with the specified id
-  const { data } = await session.get(apiUrl(`documents/${docId}/notes/${noteId}/`));
+  const { data } = await session.get(
+    apiUrl(`documents/${docId}/notes/${noteId}/`),
+  );
   return new Note(data);
 }
 

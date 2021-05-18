@@ -1,11 +1,11 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
 export const domPurify = new Svue({
   data() {
     return {
       domPurify: null,
-    }
-  }
+    };
+  },
 });
 
 export function loadDompurify() {

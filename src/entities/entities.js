@@ -1,7 +1,7 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 import { getEntities } from "@/api/entity";
-import { getDocument } from '@/api/document';
-import { callEveryAsync } from '@/util/callEvery';
+import { getDocument } from "@/api/document";
+import { callEveryAsync } from "@/util/callEvery";
 const cache = {};
 
 export async function getE(id, page = 1, filters = null, useCache = true) {
@@ -19,12 +19,16 @@ export const entities = new Svue({
     return {
       document: null,
       entities: null,
-    }
+    };
   },
   computed: {
     pollEvents(document) {
       // Update document only if it is readable
-      if (document == null || (!document.readable && this.entities != null && this.entities.count > 0)) return [];
+      if (
+        document == null ||
+        (!document.readable && this.entities != null && this.entities.count > 0)
+      )
+        return [];
       return [
         callEveryAsync(async () => {
           // Call once every ~15 seconds
@@ -35,5 +39,5 @@ export const entities = new Svue({
         }, 3),
       ];
     },
-  }
+  },
 });

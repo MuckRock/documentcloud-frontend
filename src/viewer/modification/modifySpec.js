@@ -1,21 +1,27 @@
-import { arrayEq } from '@/util/array';
+import { arrayEq } from "@/util/array";
 
 export class Empty {
-  constructor() { }
+  constructor() {}
 
   toNumbers() {
     return [];
   }
 
   spec() {
-    return '';
+    return "";
   }
 
-  index(_) { return null }
+  index(_) {
+    return null;
+  }
 
-  length() { return 0; }
+  length() {
+    return 0;
+  }
 
-  slice(_a, _b) { return new Empty(); }
+  slice(_a, _b) {
+    return new Empty();
+  }
 }
 
 export class Range {
@@ -89,15 +95,17 @@ export class PageSpec {
 
   static parse(spec) {
     if (spec.length == 0) return new PageSpec([]);
-    const specs = spec.split(',');
-    return new PageSpec(specs.map(x => {
-      const parts = x.split('-');
-      if (parts.length > 1) {
-        return new Range(parseInt(parts[0]), parseInt(parts[1]));
-      } else {
-        return new Individual(parseInt(parts[0]));
-      }
-    }));
+    const specs = spec.split(",");
+    return new PageSpec(
+      specs.map((x) => {
+        const parts = x.split("-");
+        if (parts.length > 1) {
+          return new Range(parseInt(parts[0]), parseInt(parts[1]));
+        } else {
+          return new Individual(parseInt(parts[0]));
+        }
+      }),
+    );
   }
 
   toNumbers() {
@@ -112,7 +120,7 @@ export class PageSpec {
   }
 
   spec() {
-    return this.specs.map(x => x.spec()).join(',');
+    return this.specs.map((x) => x.spec()).join(",");
   }
 
   index(i) {
@@ -168,7 +176,7 @@ export class PageSpec {
       } else {
         currentRun = [spec.start, spec.end];
       }
-    }
+    };
 
     for (let i = 0; i < this.specs.length; i++) {
       const spec = this.specs[i];
@@ -177,11 +185,11 @@ export class PageSpec {
       if (currentRun.length == 0) {
         startRun(spec);
       } else {
-        const start = (spec instanceof Individual) ? spec.pg : spec.start;
-        const end = (spec instanceof Individual) ? spec.pg : spec.end;
+        const start = spec instanceof Individual ? spec.pg : spec.start;
+        const end = spec instanceof Individual ? spec.pg : spec.end;
         if (start == currentRun[currentRun.length - 1] + 1) {
           if (currentRun.length == 1) {
-            currentRun.push(end)
+            currentRun.push(end);
           } else {
             currentRun[1] = end;
           }
@@ -203,7 +211,7 @@ export class PageSpec {
     // Remove from indices specified by other spec
     let page = 0;
     let newSpecs = [];
-    const pushUpTo = pg => {
+    const pushUpTo = (pg) => {
       if (pg > page) {
         newSpecs = newSpecs.concat(this.slice(page, pg - page).specs);
       }
@@ -247,7 +255,7 @@ export function runify(pageNumbers) {
     } else {
       if (pg == currentRun[currentRun.length - 1] + 1) {
         if (currentRun.length == 1) {
-          currentRun.push(pg)
+          currentRun.push(pg);
         } else {
           currentRun[1] = pg;
         }
@@ -261,27 +269,27 @@ export function runify(pageNumbers) {
   return new PageSpec(specs);
 }
 
-export const CLOCKWISE = 'cc';
-export const COUNTER_CLOCKWISE = 'ccw';
-export const HALFWAY = 'hw';
+export const CLOCKWISE = "cc";
+export const COUNTER_CLOCKWISE = "ccw";
+export const HALFWAY = "hw";
 const ROTATION_MATRIX = {
   [CLOCKWISE]: {
     [CLOCKWISE]: HALFWAY,
     [COUNTER_CLOCKWISE]: null,
-    [HALFWAY]: COUNTER_CLOCKWISE
+    [HALFWAY]: COUNTER_CLOCKWISE,
   },
   [COUNTER_CLOCKWISE]: {
     [CLOCKWISE]: null,
     [COUNTER_CLOCKWISE]: HALFWAY,
-    [HALFWAY]: CLOCKWISE
+    [HALFWAY]: CLOCKWISE,
   },
   [HALFWAY]: {
     [CLOCKWISE]: COUNTER_CLOCKWISE,
     [COUNTER_CLOCKWISE]: CLOCKWISE,
-    [HALFWAY]: null
+    [HALFWAY]: null,
   },
 };
-export const ROTATE = 'rotate';
+export const ROTATE = "rotate";
 export class Rotation {
   constructor(angle) {
     this.type = ROTATE;
@@ -291,8 +299,8 @@ export class Rotation {
   json() {
     return {
       type: this.type,
-      angle: this.angle
-    }
+      angle: this.angle,
+    };
   }
 
   eq(other) {
@@ -316,20 +324,21 @@ export class ModificationDescriptor {
   }
 
   toTransform() {
-    const transforms = this.modifications.map(x => {
+    const transforms = this.modifications.map((x) => {
       if (x.type == ROTATE) {
-        if (x.angle == CLOCKWISE) return 'rotate(90deg) translate(0, -100%)';
-        if (x.angle == HALFWAY) return 'rotate(180deg) translate(-100%, -100%)';
-        if (x.angle == COUNTER_CLOCKWISE) return 'rotate(270deg) translate(-100%)';
+        if (x.angle == CLOCKWISE) return "rotate(90deg) translate(0, -100%)";
+        if (x.angle == HALFWAY) return "rotate(180deg) translate(-100%, -100%)";
+        if (x.angle == COUNTER_CLOCKWISE)
+          return "rotate(270deg) translate(-100%)";
       }
-      return '';
+      return "";
     });
-    return transforms.join(' ');
+    return transforms.join(" ");
   }
 
   toOrientation() {
     let orientation = 0;
-    this.modifications.forEach(x => {
+    this.modifications.forEach((x) => {
       if (x.type == ROTATE) {
         if (x.angle == CLOCKWISE) orientation++;
         if (x.angle == HALFWAY) orientation += 2;
@@ -359,9 +368,13 @@ export class ModificationDescriptor {
   }
 
   static parse(json) {
-    const pageSpec = PageSpec.parse(json.page)
+    const pageSpec = PageSpec.parse(json.page);
     const id = json.id || null;
-    const modifications = json.modifications ? json.modifications.map(x => ModificationDescriptor.parseModification(x)) : [];
+    const modifications = json.modifications
+      ? json.modifications.map((x) =>
+          ModificationDescriptor.parseModification(x),
+        )
+      : [];
     return new ModificationDescriptor(pageSpec, modifications, id);
   }
 
@@ -390,7 +403,8 @@ export class ModificationDescriptor {
   eq(other) {
     if (other.id == null && this.id != null) return false;
     if (other.id != null && this.id == null) return false;
-    if (other.id != null && this.id != null && other.id != this.id) return false;
+    if (other.id != null && this.id != null && other.id != this.id)
+      return false;
     if (other.modifications != null && this.modifications == null) return false;
     if (other.modifications == null && this.modifications != null) return false;
     if (other.modifications == null && this.modifications == null) return true;
@@ -403,7 +417,7 @@ export class ModificationDescriptor {
   }
 
   index(i) {
-    return this.pageSpecOp(x => x.index(i));
+    return this.pageSpecOp((x) => x.index(i));
   }
 
   length() {
@@ -411,15 +425,15 @@ export class ModificationDescriptor {
   }
 
   slice(i, length) {
-    return this.pageSpecOp(x => x.slice(i, length));
+    return this.pageSpecOp((x) => x.slice(i, length));
   }
 
   compress() {
-    return this.pageSpecOp(x => x.compress());
+    return this.pageSpecOp((x) => x.compress());
   }
 
   concat(otherOfSameKind) {
-    return this.pageSpecOp(x => x.concat(otherOfSameKind.pageSpec));
+    return this.pageSpecOp((x) => x.concat(otherOfSameKind.pageSpec));
   }
 }
 
@@ -441,16 +455,23 @@ export class ModificationSpec {
   }
 
   static getDocument(pageCount, id = null) {
-    const spec = pageCount == 1 ? new Individual(0) : new Range(0, pageCount - 1);
-    return new ModificationSpec([new ModificationDescriptor(new PageSpec([spec]), [], id)]);
+    const spec =
+      pageCount == 1 ? new Individual(0) : new Range(0, pageCount - 1);
+    return new ModificationSpec([
+      new ModificationDescriptor(new PageSpec([spec]), [], id),
+    ]);
   }
 
   static parse(json) {
-    return new ModificationSpec(json.map(x => ModificationDescriptor.parse(x)));
+    return new ModificationSpec(
+      json.map((x) => ModificationDescriptor.parse(x)),
+    );
   }
 
   json() {
-    return this.specs.map(x => x.json()).filter(y => y.page != null && y.page.trim().length > 0);
+    return this.specs
+      .map((x) => x.json())
+      .filter((y) => y.page != null && y.page.trim().length > 0);
   }
 
   toDescriptors() {
@@ -534,7 +555,7 @@ export class ModificationSpec {
     // Apply modification to indices specified by page spec
     let page = 0;
     let newSpecs = [];
-    const pushUpTo = pg => {
+    const pushUpTo = (pg) => {
       if (pg > page) {
         newSpecs = newSpecs.concat(this.slice(page, pg - page).specs);
       }
@@ -567,7 +588,7 @@ export class ModificationSpec {
     // Remove from indices specified by page spec
     let page = 0;
     let newSpecs = [];
-    const pushUpTo = pg => {
+    const pushUpTo = (pg) => {
       if (pg > page) {
         newSpecs = newSpecs.concat(this.slice(page, pg - page).specs);
       }

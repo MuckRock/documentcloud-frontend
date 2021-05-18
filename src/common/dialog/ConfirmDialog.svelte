@@ -3,7 +3,7 @@
   import {
     confirmDialog,
     runConfirm,
-    hideConfirm
+    hideConfirm,
   } from "@/manager/confirmDialog";
 </script>
 

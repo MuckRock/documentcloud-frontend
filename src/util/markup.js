@@ -1,9 +1,5 @@
 import { ensureBounds } from "./bounds";
-import {
-  pageDragStart,
-  pageDragMove,
-  pageDragEnd,
-} from "@/viewer/layout";
+import { pageDragStart, pageDragMove, pageDragEnd } from "@/viewer/layout";
 
 export function markup(node, pageNumber) {
   const getXY = (e, client = false, changedTouches = false) => {
@@ -32,54 +28,66 @@ export function markup(node, pageNumber) {
     y = ensureBounds(y, 0, node.offsetHeight);
     return {
       x: x / node.offsetWidth,
-      y: y / node.offsetHeight
+      y: y / node.offsetHeight,
     };
   };
 
   let down = false;
 
   const events = [
-    [node, ['mousedown', 'touchstart'], e => {
-      const data = getXY(e);
-      if (data == null) return;
-      down = true;
-      if (pageDragStart(pageNumber, normalize(data))) {
-        e.preventDefault();
-      }
-    }],
-    [window, ['mousemove', 'touchmove'], e => {
-      if (!down) return;
-      const data = getXY(e, true);
-      if (data == null) return;
-      if (pageDragMove(pageNumber, normalize(data))) {
-        e.preventDefault();
-      }
-    }],
-    [window, ['mouseup', 'touchend'], e => {
-      if (!down) return;
-      down = false;
-      const data = getXY(e, true, true);
-      if (data == null) return;
-      if (pageDragEnd(pageNumber, normalize(data))) {
-        e.preventDefault();
-      }
-    }],
+    [
+      node,
+      ["mousedown", "touchstart"],
+      (e) => {
+        const data = getXY(e);
+        if (data == null) return;
+        down = true;
+        if (pageDragStart(pageNumber, normalize(data))) {
+          e.preventDefault();
+        }
+      },
+    ],
+    [
+      window,
+      ["mousemove", "touchmove"],
+      (e) => {
+        if (!down) return;
+        const data = getXY(e, true);
+        if (data == null) return;
+        if (pageDragMove(pageNumber, normalize(data))) {
+          e.preventDefault();
+        }
+      },
+    ],
+    [
+      window,
+      ["mouseup", "touchend"],
+      (e) => {
+        if (!down) return;
+        down = false;
+        const data = getXY(e, true, true);
+        if (data == null) return;
+        if (pageDragEnd(pageNumber, normalize(data))) {
+          e.preventDefault();
+        }
+      },
+    ],
   ];
 
   // Initialize and add events
-  events.forEach(event => {
-    event[1].forEach(eventType => {
+  events.forEach((event) => {
+    event[1].forEach((eventType) => {
       event[0].addEventListener(eventType, event[2], { passive: false });
-    })
+    });
   });
 
   return {
     destroy() {
-      events.forEach(event => {
-        event[1].forEach(eventType => {
+      events.forEach((event) => {
+        event[1].forEach((eventType) => {
           event[0].removeEventListener(eventType, event[2], { passive: false });
-        })
+        });
       });
-    }
-  }
+    },
+  };
 }

@@ -4,7 +4,7 @@ import { uniquify } from "@/util/array";
 import { pageSizesFromSpec } from "@/api/pageSize";
 import { Note } from "@/structure/note";
 import { Section } from "@/structure/section";
-import deepEqual from 'fast-deep-equal';
+import deepEqual from "fast-deep-equal";
 import deepCopy from "fast-copy";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
@@ -44,28 +44,28 @@ export class Document extends Svue {
           return `${APP_URL}documents/${slugId}`;
         },
         pageHashUrl() {
-          return page => `#document/p${page}`;
+          return (page) => `#document/p${page}`;
         },
         noteHashUrl(pageHashUrl) {
-          return note => `${pageHashUrl(note.page + 1)}/a${note.id}`;
+          return (note) => `${pageHashUrl(note.page + 1)}/a${note.id}`;
         },
         pageUrl(canonicalUrl, pageHashUrl) {
-          return page => `${canonicalUrl}${pageHashUrl(page)}`;
+          return (page) => `${canonicalUrl}${pageHashUrl(page)}`;
         },
         canonicalPageUrl(canonicalUrl) {
-          return page => `${canonicalUrl}/pages/${page}`
+          return (page) => `${canonicalUrl}/pages/${page}`;
         },
         relativeCanonicalUrl(slugId) {
           return `/documents/${slugId}`;
         },
         relativePageUrl(relativeCanonicalUrl, pageHashUrl) {
-          return page => `${relativeCanonicalUrl}${pageHashUrl(page)}`;
+          return (page) => `${relativeCanonicalUrl}${pageHashUrl(page)}`;
         },
         noteUrl(pageUrl) {
           return (note) => `${pageUrl(note.page + 1)}/a${note.id}`;
         },
         fakeNoteUrl(canonicalUrl) {
-          return note => `${canonicalUrl}/annotations/${note.id}`;
+          return (note) => `${canonicalUrl}/annotations/${note.id}`;
         },
         canonicalNoteUrl(fakeNoteUrl) {
           return fakeNoteUrl;
@@ -259,7 +259,6 @@ export class Document extends Svue {
 
         // Metadata
 
-
         // Projects
         projectIds(doc) {
           return doc.projects == null ? [] : doc.projects;
@@ -317,13 +316,13 @@ export class Document extends Svue {
           return transformHighlights(
             rawHighlights,
             highlightStart,
-            highlightEnd
+            highlightEnd,
           );
         },
 
         // Text properties
         userOrgString(individualOrg, userName, organizationName) {
-          if (userName == null) return '';
+          if (userName == null) return "";
           // Return user and organization formatted as a string
           if (individualOrg || organizationName == null) {
             return userName;
@@ -348,7 +347,7 @@ export class Document extends Svue {
           });
         },
         sourceString(source) {
-          if (source == null || source.trim().length == 0) return '';
+          if (source == null || source.trim().length == 0) return "";
           return `Source: ${source}`;
         },
         summary(pageCountString, sourceString, userOrgString, createdAtString) {
@@ -401,7 +400,7 @@ export function transformPassage(passage, highlightStart, highlightEnd) {
     if (idxStart != -1) {
       let idxEnd = passage.indexOf(
         highlightEnd,
-        idxStart + highlightStart.length
+        idxStart + highlightStart.length,
       );
       if (idxEnd != -1) {
         pushRaw(idxStart);
@@ -422,7 +421,7 @@ export function transformHighlights(
   rawHighlights,
   highlightStart,
   highlightEnd,
-  returnDict = false
+  returnDict = false,
 ) {
   const highlights = returnDict ? {} : [];
   const pages = [];
@@ -440,7 +439,7 @@ export function transformHighlights(
         const passage = passages[i];
         // Transform passage
         highlight.passages.push(
-          transformPassage(passage, highlightStart, highlightEnd)
+          transformPassage(passage, highlightStart, highlightEnd),
         );
       }
       // Handle response type

@@ -159,7 +159,7 @@
   }
 </style>
 
-{#if $viewer.loaded && $doc.mode != 'search' && $doc.mode != 'notes' && $doc.mode != 'thumbnail'}
+{#if $viewer.loaded && $doc.mode != "search" && $doc.mode != "notes" && $doc.mode != "thumbnail"}
   <div class="paginator">
     <span class="paginate left" on:click={() => decrement(false)}>
       {@html leftPaginator}
@@ -183,16 +183,17 @@
         on:input={() => (hadInput = true)}
         on:keydown={(e) => {
           if (input != document.activeElement) return;
-          if (e.key == 'Escape') {
+          if (e.key == "Escape") {
             dismiss();
-          } else if (e.key == 'Enter') {
+          } else if (e.key == "Enter") {
             handleInput();
-          } else if (e.key == 'ArrowUp') {
+          } else if (e.key == "ArrowUp") {
             increment(true);
-          } else if (e.key == 'ArrowDown') {
+          } else if (e.key == "ArrowDown") {
             decrement(true);
           }
-        }} />
+        }}
+      />
     </span>
     <span class="rest">of {$viewer.document.pageCount}</span>
     <span class="paginate right" on:click={() => increment(false)}>

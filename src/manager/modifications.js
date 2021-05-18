@@ -25,8 +25,11 @@ class Modifications {
     // Add documents in (according to filter)
     this.adds.forEach(([modifiers, adds]) => {
       // Add documents in that were added and not modified
-      const unmodified = adds.filter(doc => {
-        return this.modifies.filter(modifier => modifier[1].id == doc.id).length == 0
+      const unmodified = adds.filter((doc) => {
+        return (
+          this.modifies.filter((modifier) => modifier[1].id == doc.id).length ==
+          0
+        );
       });
       modifiers.addToCollection(unmodified, false);
     });
@@ -34,7 +37,11 @@ class Modifications {
     // Modify documents
     this.modifies.forEach(([modifiers, document, fn]) => {
       // If the document matches the filter, update it
-      const [modified, newDoc] = modifiers.updateInCollection(document, fn, false);
+      const [modified, newDoc] = modifiers.updateInCollection(
+        document,
+        fn,
+        false,
+      );
       if (!modified) {
         // If the document wasn't updated, it doesn't exist. Create it
         modifiers.addToCollection([newDoc], false);

@@ -1,6 +1,6 @@
 <script>
   import { lpad } from "@/util/string";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import CalendarLeft from "@/assets/calendar_left.svg";
@@ -28,7 +28,7 @@
 
   const _now = new Date();
   const now = roundMinutes(
-    new Date(new Date(_now).setHours(_now.getHours() + 1))
+    new Date(new Date(_now).setHours(_now.getHours() + 1)),
   ); // now is 1 hr from now to avoid issues
   export let value = now;
 
@@ -53,7 +53,7 @@
       month,
       dayOfMonth,
       (amPm ? 1 : 0) * 12 + hour,
-      minute
+      minute,
     );
   }
 
@@ -216,7 +216,9 @@
         class:hidden={viewedYear * 12 + viewedMonth <=
           startYear * 12 + startMonth}
         on:click={() => setMonth(-1)}
-      >{@html CalendarLeft}</div>
+      >
+        {@html CalendarLeft}
+      </div>
       <div class="month">{months[viewedMonth]} {viewedYear}</div>
       <div class="arrow" on:click={() => setMonth(1)}>
         {@html CalendarRight}

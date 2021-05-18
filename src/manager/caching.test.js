@@ -1,27 +1,39 @@
-import { documents, updateInCollection, removeFromCollection } from './documents';
-import { makeDocument } from '@/structure/documentFactory';
-import { setDocuments, search } from '@/search/search';
-import { addToArrayIfUnique, removeFromArray } from '@/util/array';
-import { modifications } from './modifications';
+import {
+  documents,
+  updateInCollection,
+  removeFromCollection,
+} from "./documents";
+import { makeDocument } from "@/structure/documentFactory";
+import { setDocuments, search } from "@/search/search";
+import { addToArrayIfUnique, removeFromArray } from "@/util/array";
+import { modifications } from "./modifications";
 
 beforeEach(() => {
   modifications.clearModifications();
 });
 
 function expectDocsEqual(docs1, docs2) {
-  expect(docs1.map(d => d.doc)).toEqual(docs2.map(d => d.doc));
+  expect(docs1.map((d) => d.doc)).toEqual(docs2.map((d) => d.doc));
 }
 
 function addToProject(doc, projectId) {
-  doc.doc = { ...doc.doc, projects: addToArrayIfUnique(doc.projectIds, projectId) };
+  doc.doc = {
+    ...doc.doc,
+    projects: addToArrayIfUnique(doc.projectIds, projectId),
+  };
 }
 
 function removeFromProject(doc, projectId) {
-  doc.doc = { ...doc.doc, projects: removeFromArray(doc.projectIds, projectId) }
+  doc.doc = {
+    ...doc.doc,
+    projects: removeFromArray(doc.projectIds, projectId),
+  };
 }
 
 function updatePending() {
-  documents.pending = documents.processingDocuments.map(x => ({ doc_id: x.id }));
+  documents.pending = documents.processingDocuments.map((x) => ({
+    doc_id: x.id,
+  }));
 }
 
 function mockSearch([fn, filter]) {
@@ -50,7 +62,7 @@ test("project cache add", async () => {
 
   // Search methods
   const yourDocuments = [() => [doc], null];
-  const projDocuments = [() => [], d => d.projectIds.includes(project)];
+  const projDocuments = [() => [], (d) => d.projectIds.includes(project)];
 
   // Expect 1 document in your documents
   mockSearch(yourDocuments);
@@ -63,7 +75,7 @@ test("project cache add", async () => {
   // Go back to your documents and add the doc to your project
   mockSearch(yourDocuments);
   expectDocsEqual(documents.allDocuments, [doc]);
-  updateInCollection(doc, d => addToProject(d, project));
+  updateInCollection(doc, (d) => addToProject(d, project));
   expectDocsEqual(documents.allDocuments, [doc]);
 
   // Expect the document to now be in your project
@@ -78,7 +90,7 @@ test("project cache remove", async () => {
 
   // Search methods
   const yourDocuments = [() => [doc], null];
-  const projDocuments = [() => [doc], d => d.projectIds.includes(project)];
+  const projDocuments = [() => [doc], (d) => d.projectIds.includes(project)];
 
   // Expect the document in your documents
   mockSearch(yourDocuments);
@@ -91,7 +103,7 @@ test("project cache remove", async () => {
   // Go back to your documents and remove the doc from your project
   mockSearch(yourDocuments);
   expectDocsEqual(documents.allDocuments, [doc]);
-  updateInCollection(doc, d => removeFromProject(d, project));
+  updateInCollection(doc, (d) => removeFromProject(d, project));
   expectDocsEqual(documents.allDocuments, [doc]);
 
   // Expect the document to now not be in your project
@@ -106,7 +118,7 @@ test("project cache remove and add", async () => {
 
   // Search methods
   const yourDocuments = [() => [doc], null];
-  const projDocuments = [() => [doc], d => d.projectIds.includes(project)];
+  const projDocuments = [() => [doc], (d) => d.projectIds.includes(project)];
 
   // Expect the document in your documents
   mockSearch(yourDocuments);
@@ -119,7 +131,7 @@ test("project cache remove and add", async () => {
   // Go back to your documents and remove the doc from your project
   mockSearch(yourDocuments);
   expectDocsEqual(documents.allDocuments, [doc]);
-  updateInCollection(doc, d => removeFromProject(d, project));
+  updateInCollection(doc, (d) => removeFromProject(d, project));
   expectDocsEqual(documents.allDocuments, [doc]);
 
   // Expect the document to now not be in your project
@@ -129,7 +141,7 @@ test("project cache remove and add", async () => {
   // Go back to your documents and add the doc to your project
   mockSearch(yourDocuments);
   expectDocsEqual(documents.allDocuments, [doc]);
-  updateInCollection(doc, d => addToProject(d, project));
+  updateInCollection(doc, (d) => addToProject(d, project));
   expectDocsEqual(documents.allDocuments, [doc]);
 
   // Expect the document to now be in your project
@@ -145,7 +157,7 @@ test("project cache add and remove", async () => {
 
   // Search methods
   const yourDocuments = [() => [doc], null];
-  const projDocuments = [() => [], d => d.projectIds.includes(project)];
+  const projDocuments = [() => [], (d) => d.projectIds.includes(project)];
 
   // Expect 1 document in your documents
   mockSearch(yourDocuments);
@@ -158,7 +170,7 @@ test("project cache add and remove", async () => {
   // Go back to your documents and add the doc to your project
   mockSearch(yourDocuments);
   expectDocsEqual(documents.allDocuments, [doc]);
-  updateInCollection(doc, d => addToProject(d, project));
+  updateInCollection(doc, (d) => addToProject(d, project));
   expectDocsEqual(documents.allDocuments, [doc]);
 
   // Expect the document to now be in your project
@@ -168,7 +180,7 @@ test("project cache add and remove", async () => {
   // Go back to your documents and remove the doc from your project
   mockSearch(yourDocuments);
   expectDocsEqual(documents.allDocuments, [doc]);
-  updateInCollection(doc, d => removeFromProject(d, project));
+  updateInCollection(doc, (d) => removeFromProject(d, project));
   expectDocsEqual(documents.allDocuments, [doc]);
 
   // Expect the document to now be out of your project again
@@ -181,7 +193,7 @@ test("stale delete processing doc", async () => {
   setDocuments([doc]);
   expect(documents.numProcessing).toBe(0);
   // Make doc go into reprocessing state
-  updateInCollection(doc, d => d.doc = { ...d.doc, status: 'pending' });
+  updateInCollection(doc, (d) => (d.doc = { ...d.doc, status: "pending" }));
   updatePending();
   // Expect doc to be processing
   expect(documents.numProcessing).toBe(1);

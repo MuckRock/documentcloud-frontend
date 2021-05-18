@@ -16,8 +16,8 @@ export function enterAnnotateMode() {
 }
 
 export function enterModifyMode() {
-  changeMode('thumbnail');
-  layout.action = 'modify';
+  changeMode("thumbnail");
+  layout.action = "modify";
 }
 
 export function enterSelectNoteMode() {

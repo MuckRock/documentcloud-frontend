@@ -85,7 +85,8 @@
               on:check={handleSelectAll}
               on:uncheck={unselectAll}
               indeterminate={$manager.someSelected}
-              checked={$layout.hasSelection} />
+              checked={$layout.hasSelection}
+            />
           {/if}
         </span>
 
@@ -93,7 +94,8 @@
           <Dropdown
             table={true}
             fixed={outerHeight > 600}
-            on:active={e => (editVisible = e.detail)}>
+            on:active={(e) => (editVisible = e.detail)}
+          >
             <span class="action" slot="title">
               <span class="nowrap">
                 Edit
@@ -105,7 +107,10 @@
         {:else}
           <span class="action disabled shortpad">
             <Tooltip
-              caption={$layout.selectionEditable ? 'Select some documents to reveal edit actions' : 'You do not have permission to edit all of the selected documents'}>
+              caption={$layout.selectionEditable
+                ? "Select some documents to reveal edit actions"
+                : "You do not have permission to edit all of the selected documents"}
+            >
               <span class="nowrap">
                 Edit
                 <span class="dropper">▼</span>

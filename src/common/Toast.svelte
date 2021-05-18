@@ -82,7 +82,8 @@
   class:fading
   on:click={() => dismiss(i)}
   on:mouseover={reset}
-  on:mousemove={reset}>
+  on:mousemove={reset}
+>
   <span class="x">×</span>
   <span class="content">{toast.content}</span>
 </div>

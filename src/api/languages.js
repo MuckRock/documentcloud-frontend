@@ -7,7 +7,7 @@ function makeLanguagePairs(codes, names) {
   for (let i = 0; i < codes.length; i++) {
     results.push([codes[i], names[i]]);
   }
-  results.sort((a, b) => a[1] > b[1] ? 1 : (a[1] < b[1] ? -1 : 0));
+  results.sort((a, b) => (a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0));
   return results;
 }
 

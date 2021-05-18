@@ -8,7 +8,7 @@
   import { wrapLoadSeparate } from "@/util/wrapLoad";
   import { changeAccess } from "@/api/document";
   import { enterSelectNoteMode } from "@/viewer/actions";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   // Stores
   import { viewer } from "@/viewer/viewer";
@@ -189,7 +189,9 @@
             </div>
           </div>
           <div class="buttonpadded">
-            <Button on:click={makePublic}>{$_("dialogEmbedDialog.makePublic")}</Button>
+            <Button on:click={makePublic}
+              >{$_("dialogEmbedDialog.makePublic")}</Button
+            >
             <Button secondary={true} on:click={() => (skipPublic = true)}>
               {$_("dialogEmbedDialog.leave")}
             </Button>
@@ -266,7 +268,9 @@
                 on:mouseout={() => (shareHover = null)}
                 on:click={selectNote}
               >
-                <h2 class:faded={!hasNotes}>${_("dialogEmbedDialog.shareNote")}</h2>
+                <h2 class:faded={!hasNotes}>
+                  {$_("dialogEmbedDialog.shareNote")}
+                </h2>
                 <p>
                   {#if hasNotes}
                     {$_("dialogEmbedDialog.shareNoteHelpHasNote")}

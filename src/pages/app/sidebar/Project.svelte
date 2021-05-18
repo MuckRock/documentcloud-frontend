@@ -57,7 +57,8 @@
     {#if project.editAccess}
       <span
         class="edit"
-        on:click|stopPropagation|preventDefault={() => editProject(project)}>
+        on:click|stopPropagation|preventDefault={() => editProject(project)}
+      >
         {@html pencilSvg}
       </span>
     {/if}

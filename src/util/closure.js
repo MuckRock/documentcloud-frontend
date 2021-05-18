@@ -1,7 +1,7 @@
 export function smoothify(fn) {
   let timer = null;
 
-  return ((...args) => {
+  return (...args) => {
     if (timer != null) {
       cancelAnimationFrame(timer);
       timer = null;
@@ -11,13 +11,13 @@ export function smoothify(fn) {
       timer = null;
       fn(...args);
     });
-  });
+  };
 }
 
 export function timeoutify(fn, timeout = 100) {
   let timer = null;
 
-  return ((...args) => {
+  return (...args) => {
     if (timer != null) {
       clearTimeout(timer);
       timer = null;
@@ -27,7 +27,7 @@ export function timeoutify(fn, timeout = 100) {
       timer = null;
       fn(...args);
     }, timeout);
-  });
+  };
 }
 
 export function ignoreFirst(closure) {
@@ -39,5 +39,5 @@ export function ignoreFirst(closure) {
     } else {
       closure(...args);
     }
-  }
+  };
 }

@@ -44,7 +44,9 @@
 </style>
 
 <div class="link">
-  <a href={link} target="_blank">{@html SearchIconSvg}
-    Search this document collection</a>
+  <a href={link} target="_blank"
+    >{@html SearchIconSvg}
+    Search this document collection</a
+  >
 </div>
 <div class="linkcontainer" />

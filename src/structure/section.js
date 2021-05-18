@@ -19,8 +19,8 @@ export class Section extends Svue {
         },
         title(section) {
           return section.title;
-        }
-      }
+        },
+      },
     });
   }
 }

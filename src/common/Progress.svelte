@@ -27,14 +27,14 @@
     duration: PROGRESS_DURATION,
     interpolate(a, b) {
       // Jump immediately to 0
-      if (b == 0) return t => 0;
+      if (b == 0) return (t) => 0;
 
       // If going backwards, don't tween
       if (b < a) {
         return interp(
           scale(sigmoid, PROGRESS_BACKWARDS_DURATION / PROGRESS_DURATION),
           a,
-          b
+          b,
         );
       }
 
@@ -43,13 +43,13 @@
         return interp(
           scale(sigmoid, PROGRESS_END_DURATION / PROGRESS_DURATION),
           a,
-          b
+          b,
         );
       }
 
       // Use standard sigmoid otherwise
-      return t => sigmoid(t) * (b - a) + a;
-    }
+      return (t) => sigmoid(t) * (b - a) + a;
+    },
   });
 
   $: isNull = realProgress == null;
@@ -58,7 +58,7 @@
 
   $: progressPercent = `${Math.max(
     Math.min(Math.floor($smoothProgress * 100), 100),
-    0
+    0,
   )}%`;
 </script>
 
@@ -148,7 +148,8 @@
       <div
         class="inner"
         class:complete
-        style="width: {$smoothProgress * 100}%" />
+        style="width: {$smoothProgress * 100}%"
+      />
     </div>
     {#if !compact}
       <div class="text">{progressPercent}</div>

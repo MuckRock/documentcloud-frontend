@@ -4,7 +4,7 @@
   import AppearanceDimension from "./AppearanceDimension";
   import emitter from "@/emit";
   import { timeoutify } from "@/util/closure";
-  import { _ } from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
 
   export let options;
   export let storageManager = null;

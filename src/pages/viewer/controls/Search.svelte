@@ -138,15 +138,17 @@
       bind:value={query}
       disabled={$layout.searchPending}
       on:keypress={(e) => {
-        if (e.key == 'Enter') {
+        if (e.key == "Enter") {
           search();
         }
-      }} />
+      }}
+    />
   </div>
   <div
     class="searchicon"
     class:disabled={invalidQuery || $layout.searchPending}
-    on:click={search}>
+    on:click={search}
+  >
     {@html searchIconSvg}
   </div>
   <div class="closeicon" on:click={retract}>

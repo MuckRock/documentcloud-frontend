@@ -2,35 +2,37 @@ import lucene from "lucene";
 
 const validFields = [
   /^id$/,
-  /^document$/,  // maps to id
+  /^document$/, // maps to id
   /^access$/,
   /^created_at$/,
   /^data_[a-zA-Z0-9_-]+$/,
-  /^tag$/,  // maps to data__tag
+  /^tag$/, // maps to data__tag
   /^description$/,
   /^language$/,
   /^organization$/,
-  /^group$/,  // maps to organization
+  /^group$/, // maps to organization
   /^page_count$/,
-  /^pages$/,  // maps to page count
+  /^pages$/, // maps to page count
   /^projects?$/,
-  /^project?$/,  // maps to projects
+  /^project?$/, // maps to projects
   /^slug$/,
   /^source$/,
   /^status$/,
   /^title$/,
   /^updated_at$/,
   /^user$/,
-  /^account$/,  // maps to user
+  /^account$/, // maps to user
   /^doctext$/,
-  /^text$/,  // maps to doctext
+  /^text$/, // maps to doctext
   /^page_no_[0-9]+$/,
   /^sort$/,
-  /^order$/,  // maps to order
+  /^order$/, // maps to order
 ];
 
-const OPERATORS = ['AND', 'OR', 'NOT'];
-const OPERATORS_RE = new RegExp(`${OPERATORS.map(x => `(${x})`).join('|')}|(.+?)`);
+const OPERATORS = ["AND", "OR", "NOT"];
+const OPERATORS_RE = new RegExp(
+  `${OPERATORS.map((x) => `(${x})`).join("|")}|(.+?)`,
+);
 
 const NORMALIZE_PREFIX = /^[-+]+/g;
 
@@ -74,20 +76,20 @@ export function parseHighlight(query, parsed) {
       if (parsed.fieldLocation != null) {
         reconcile(
           parsed.fieldLocation.start.offset,
-          parsed.fieldLocation.end.offset
+          parsed.fieldLocation.end.offset,
         );
       }
       if (parsed.termLocation != null) {
         reconcile(
           parsed.termLocation.start.offset,
-          parsed.termLocation.end.offset
+          parsed.termLocation.end.offset,
         );
       }
     }
     return [posMin, posMax];
   };
 
-  const getChunks = parsed => {
+  const getChunks = (parsed) => {
     // Grab all field and term locations recursively
     let chunks = [];
     if (
@@ -103,20 +105,27 @@ export function parseHighlight(query, parsed) {
       }
       chunks.push({
         type: "field",
-        position
+        position,
       });
-    } else if (parsed.fieldLocation != null && parsed.inclusive && validField(parsed.field)) {
+    } else if (
+      parsed.fieldLocation != null &&
+      parsed.inclusive &&
+      validField(parsed.field)
+    ) {
       const position = getSuperPosition(parsed);
       // Extend super position to grab end bracket or brace
       const endParenIndex = query.indexOf("]", position[1]);
       const endBraceIndex = query.indexOf("}", position[1]);
-      const endIndex = Math.min(endParenIndex == -1 ? Infinity : endParenIndex, endBraceIndex == -1 ? Infinity : endBraceIndex);
+      const endIndex = Math.min(
+        endParenIndex == -1 ? Infinity : endParenIndex,
+        endBraceIndex == -1 ? Infinity : endBraceIndex,
+      );
       if (endIndex != Infinity) {
         position[1] = endIndex + 1;
       }
       chunks.push({
         type: "field",
-        position
+        position,
       });
     } else {
       if (parsed.left != null) {
@@ -131,18 +140,20 @@ export function parseHighlight(query, parsed) {
             type: "field",
             position: [
               parsed.fieldLocation.start.offset,
-              parsed.termLocation.end.offset
-            ]
+              parsed.termLocation.end.offset,
+            ],
           });
         }
       } else if (parsed.quoted) {
-        const position = [parsed.termLocation.start.offset,
-        parsed.termLocation.end.offset];
+        const position = [
+          parsed.termLocation.start.offset,
+          parsed.termLocation.end.offset,
+        ];
         const text = query.substring(...position);
         if (text.startsWith('"') || text.endsWith('"')) {
           chunks.push({
             type: "quote",
-            position
+            position,
           });
         }
       }
@@ -157,33 +168,35 @@ export function parseHighlight(query, parsed) {
   let pos = 0;
   const highlights = [];
 
-  const advance = offset => {
+  const advance = (offset) => {
     const text = query.substr(0, offset);
     query = query.substr(offset);
     pos += offset;
     return text;
   };
 
-  const pushRaw = position => {
+  const pushRaw = (position) => {
     if (position == null) position = query.length;
     if (position == 0) return;
 
     // Match operators
     const text = advance(position);
-    const textGroups = text.split(OPERATORS_RE).filter(x => x != null && x.length >= 1);
+    const textGroups = text
+      .split(OPERATORS_RE)
+      .filter((x) => x != null && x.length >= 1);
 
-    let rawBuffer = '';
+    let rawBuffer = "";
     const clearBuffer = () => {
       if (rawBuffer.length > 0) {
-        highlights.push({ type: 'raw', text: rawBuffer });
+        highlights.push({ type: "raw", text: rawBuffer });
       }
-      rawBuffer = '';
+      rawBuffer = "";
     };
     for (let i = 0; i < textGroups.length; i++) {
       const group = textGroups[i];
       if (OPERATORS.includes(group)) {
         clearBuffer();
-        highlights.push({ type: 'operator', text: group });
+        highlights.push({ type: "operator", text: group });
       } else {
         rawBuffer += group;
       }
@@ -210,7 +223,7 @@ export function parseHighlight(query, parsed) {
       type,
       field,
       value,
-      text
+      text,
     });
   };
 
@@ -245,7 +258,7 @@ export function splitAndEscape(query) {
 }
 
 function transform(parsed, mapping) {
-  const transformOffset = offset => {
+  const transformOffset = (offset) => {
     for (let i = 0; i < mapping.length; i++) {
       const originalStart = mapping[i][0][0];
       const transformedStart = mapping[i][1][0];
@@ -260,7 +273,7 @@ function transform(parsed, mapping) {
     return offset;
   };
 
-  const transformLocation = location => {
+  const transformLocation = (location) => {
     location.start.offset = transformOffset(location.start.offset);
     location.end.offset = transformOffset(location.end.offset) - 1;
   };

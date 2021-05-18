@@ -83,7 +83,8 @@
 <div
   class="dc-embed-annotation"
   bind:this={annotationElem}
-  style="{leftRightStyle};{topDownStyle}">
+  style="{leftRightStyle};{topDownStyle}"
+>
   <h1>
     <a href={noteUrl} target="_blank">{note.title}</a>
   </h1>

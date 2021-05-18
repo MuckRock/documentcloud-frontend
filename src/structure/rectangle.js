@@ -1,4 +1,4 @@
-import { Svue } from 'svue';
+import { Svue } from "svue";
 
 export class Rectangle extends Svue {
   constructor(x1, y1, x2, y2) {
@@ -8,8 +8,8 @@ export class Rectangle extends Svue {
           x1,
           y1,
           x2,
-          y2
-        }
+          y2,
+        };
       },
       computed: {
         width(x2, x1) {
@@ -17,8 +17,8 @@ export class Rectangle extends Svue {
         },
         height(y2, y1) {
           return y2 - y1;
-        }
-      }
-    })
+        },
+      },
+    });
   }
 }

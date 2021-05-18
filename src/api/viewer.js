@@ -1,5 +1,5 @@
 function processImageWidths(widthSpec) {
-  let result = widthSpec.split(",").map(width => {
+  let result = widthSpec.split(",").map((width) => {
     const parts = width.split(":");
     return [parseFloat(parts[1]), parts[0]];
   });
@@ -26,24 +26,21 @@ function getDesiredSize(desiredWidth) {
   return imageWidths[imageWidths.length - 1][1];
 }
 
-export function pageImageUrl(
-  document,
-  pageNumber,
-  desiredWidth,
-) {
+export function pageImageUrl(document, pageNumber, desiredWidth) {
   // Incorporate device's DPI into scaling to avoid blurring.
   const size = getDesiredSize(desiredWidth);
 
-  return `${document.assetUrl}documents/${document.id}/pages/${document.slug
-    }-p${pageNumber + 1}-${size}.gif?ts=${document.updatedAtTimestamp}`;
+  return `${document.assetUrl}documents/${document.id}/pages/${
+    document.slug
+  }-p${pageNumber + 1}-${size}.gif?ts=${document.updatedAtTimestamp}`;
 }
 
 export function textUrl(document, pageNumber) {
-  return `${document.assetUrl}documents/${document.id}/pages/${document.slug
-    }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
+  return `${document.assetUrl}documents/${document.id}/pages/${
+    document.slug
+  }-p${pageNumber + 1}.txt?ts=${document.updatedAtTimestamp}`;
 }
 
 export function jsonUrl(document) {
-  return `${document.assetUrl}documents/${document.id}/${document.slug
-    }.txt.json`;
+  return `${document.assetUrl}documents/${document.id}/${document.slug}.txt.json`;
 }

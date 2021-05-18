@@ -1,5 +1,5 @@
-import Empty from '@/pages/home/Empty.svelte';  // explicit extension for tests
-import { Svue } from 'svue';
+import Empty from "@/pages/home/Empty.svelte"; // explicit extension for tests
+import { Svue } from "svue";
 
 export const viewerEditDialogs = new Svue({
   data() {
@@ -11,8 +11,8 @@ export const viewerEditDialogs = new Svue({
       editSectionsDialog: Empty,
       documentPickerDialog: Empty,
       loaded: false,
-    }
-  }
+    };
+  },
 });
 
 export async function loadViewerEditDialogs() {

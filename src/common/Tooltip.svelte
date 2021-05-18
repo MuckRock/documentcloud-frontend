@@ -98,7 +98,8 @@
       bind:this={tooltip}
       class="tooltip"
       class:show={mouseIn && delayShow}
-      style="left: {$coords.x}px; top: {$coords.y}px;">
+      style="left: {$coords.x}px; top: {$coords.y}px;"
+    >
       <slot name="caption">{caption}</slot>
     </div>
     <slot />
@@ -110,4 +111,5 @@
 <svelte:window
   on:mousemove={handleMouseMove}
   on:scroll={handleMouseOut}
-  on:resize={handleMouseOut} />
+  on:resize={handleMouseOut}
+/>

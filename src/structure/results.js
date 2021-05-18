@@ -88,8 +88,8 @@ export class Results extends Svue {
         },
         end(page, perPage, length) {
           return page * perPage + length;
-        }
-      }
+        },
+      },
     });
   }
 

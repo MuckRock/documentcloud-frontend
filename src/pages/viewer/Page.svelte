@@ -11,7 +11,6 @@
 </script>
 
 <style lang="scss">
-
 </style>
 
 <div>
@@ -23,6 +22,7 @@
       {y}
       {height}
       {resizeCallback}
-      {callback} />
+      {callback}
+    />
   {/if}
 </div>

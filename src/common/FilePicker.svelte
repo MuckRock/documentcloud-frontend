@@ -58,5 +58,6 @@
     class="picker"
     type="file"
     on:change={handleFiles}
-    accept={documentTypes} />
+    accept={documentTypes}
+  />
 </span>
