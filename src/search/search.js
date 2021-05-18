@@ -8,8 +8,10 @@ import { queryBuilder } from "@/util/url";
 import { slugify } from "@/util/string";
 import { modifications } from "@/manager/modifications";
 import { Results } from "@/structure/results";
+import deepEqual from "fast-deep-equal";
 
 const TAG_KEY = process.env.TAG_KEY;
+let lastSearch = null;
 
 export const search = new Svue({
   data() {
@@ -70,6 +72,16 @@ export async function initSearch(params) {
 
 function checkForInit() {
   const route = router.resolvedRoute;
+
+  // Prevent repeated searches
+  const searchCache = [
+    route != null && route.name,
+    route != null && search.filePickerUser,
+    route != null && route.props,
+  ];
+  if (lastSearch != null && deepEqual(searchCache, lastSearch)) return;
+  lastSearch = searchCache;
+
   if (
     route != null &&
     (((route.name == "app" || route.name == "project") &&
