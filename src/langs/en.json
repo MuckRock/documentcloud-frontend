@@ -45,7 +45,10 @@
     "done": "Done",
     "edit": "Edit",
     "remove": "Remove",
-    "save": "Save"
+    "save": "Save",
+    "create": "Create",
+    "ok": "Ok",
+    "update": "Update"
   },
   "dialogAccessDialog": {
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
@@ -172,8 +175,7 @@
     "missingTitle": "Please enter a title",
     "updateTitle": "Enter a new title or page number",
     "uniquePageNumber": "You must enter a unique page number",
-    "invalidPageNumber": "Page number is invalid",
-    "update": "Update"
+    "invalidPageNumber": "Page number is invalid"
   },
   "dialogEmbedDialog": {
     "updatingDocument": "Updating document...",
@@ -223,5 +225,42 @@
     "viewHelp": "This collaborator can view documents in this project but cannot edit them or the project.",
     "invalidAccess": "Access is already set to {access}. Select a different access level.",
     "changeAccess": "Change access"
+  },
+  "dialogOwnerDialog": {
+    "selectUser": "User must be selected",
+    "selectOrg": "Organization must be selected",
+    "changeOwner": "Change owner for {n, plural, one {document} other {# documents}}",
+    "accessWarning": "Warning: You may lost access to the specified {n, plural, one {document} other {# documents}} as a result of changing the document owner",
+    "user": "User:",
+    "filterUsers": "Type to filter users...",
+    "filterOrgs": "Type to filter organizations..."
+  },
+  "dialogProjectDialog": {
+    "confirmDelete": "Confirm delete",
+    "deleteProject": "Are you sure you want to delete this project ({project})?",
+    "editProject": "Edit Project",
+    "createProject": "Create New Project",
+    "title": "Title...",
+    "projectDesc": "Project Description (optional)",
+    "manageCollabs": "Manage Collaborators",
+    "share": "Share / Embed Project",
+    "enterTitle": "Enter a title",
+    "changeTitle": "Change the title or description"
+  },
+  "dialogProjectEmbedDialog": {
+    "share": "Share “{title}”",
+    "embedDesc": "Copy the HTML code to embed this document within an article or post:",
+    "invalid": "Invalid project",
+    "cannotEmbed": "Cannot embed this project, as it does not appear to exist."
+  },
+  "htmlEditor": {
+    "preview": "Preview:"
+  },
+  "image": {
+    "error": "An error occurred. Try refreshing the page",
+    "loading": "Loading..."
   }
+  "omniselect": {
+    "filter": "Type to filter language",
+    "noResults": "No results. Click to clear filter."
 }

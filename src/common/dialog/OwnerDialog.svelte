@@ -11,6 +11,7 @@
   import emitter from "@/emit";
   import { sameProp } from "@/util/array";
   import deepEqual from "fast-deep-equal";
+  import { _ } from "svelte-i18n";
 
   const emit = emitter({
     dismiss() {},
@@ -25,9 +26,9 @@
   let valid = true;
   $: invalidReason =
     user == null
-      ? "User must be selected"
+      ? $_("dialogOwnerDialog.selectUser")
       : organization == null
-      ? "Organization must be selected"
+      ? $_("dialogOwnerDialog.selectOrg")
       : null;
 
   $: isViewer = $viewer.document != null;
@@ -77,22 +78,22 @@
   <div>
     <div class="mcontent">
       <h1>
-        Change owner for
-        {nameSingularNumberPlural(numOwnerSelected, "document")}
+        {$_("dialogOwnerDialog.changeOwner", {
+          values: { n: numOwnerSelected },
+        })}
       </h1>
       <p class="warning">
-        Warning: You may lose access to the specified {nameSingularNumberPlural(
-          numOwnerSelected,
-          "document",
-        )} as a result of changing the document owner
+        {$_("dialogOwnerDialog.accessWarning", {
+          values: { n: numOwnerSelected },
+        })}
       </p>
       <table>
         <tr>
-          <td>User:</td>
+          <td>{$_("dialogOwnerDialog.user")}</td>
           <td>
             <div>
               <Autocomplete
-                placeholder="Type to filter users..."
+                placeholder={$_("dialogOwnerDialog.filterUsers")}
                 method={(prefix) =>
                   autocompleteUsers(prefix, $orgsAndUsers.orgIdList)}
                 bind:value={user}
@@ -105,7 +106,7 @@
           <td>
             <div>
               <Autocomplete
-                placeholder="Type to filter organizations..."
+                placeholder={$_("dialogOwnerDialog.filterOrgs")}
                 allData={$orgsAndUsers.selfOrgs || []}
                 bind:value={organization}
               />
@@ -116,9 +117,12 @@
       <div class="buttonpadded">
         <Button
           disabledReason={invalidReason}
-          on:click={() => ownerChange(user, organization)}>Save</Button
+          on:click={() => ownerChange(user, organization)}
+          >{$_("dialog.save")}</Button
         >
-        <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+        <Button secondary={true} on:click={emit.dismiss}
+          >{$_("dialog.cancel")}</Button
+        >
       </div>
     </div>
   </div>

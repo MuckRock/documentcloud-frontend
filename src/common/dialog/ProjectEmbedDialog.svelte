@@ -6,6 +6,7 @@
   import { getEmbed } from "@/api/embed";
   import { queryBuilder } from "@/util/url";
   import { layout } from "@/manager/layout";
+  import { _ } from "svelte-i18n";
 
   const emit = emitter({
     dismiss() {},
@@ -41,11 +42,14 @@
 {#if project != null}
   <div>
     <div class="mcontent">
-      <h1>Share “{project.title}”</h1>
+      <h1>
+        {$_("dialogPageEmbedDialog.share", {
+          values: { title: project.title },
+        })}
+      </h1>
 
       <ShareOptions
-        embedDescription="Copy the HTML code to embed this document within an article
-        or post:"
+        embedDescription={$_("dialogPageEmbedDialog.embedDesc")}
         {embedCode}
         {errorOccurred}
         linkText={linkUrl}
@@ -57,10 +61,12 @@
 {:else}
   <div>
     <div class="mcontent">
-      <h1>Invalid project</h1>
-      <p>Cannot embed this project, as it does not appear to exist.</p>
+      <h1>{$_("dialogPageEmbedDialog.invalid")}</h1>
+      <p>{$_("dialogPageEmbedDialog.cannotEmbed")}</p>
       <div class="buttonpadded">
-        <Button secondary={true} on:click={emit.dismiss}>Ok</Button>
+        <Button secondary={true} on:click={emit.dismiss}>
+          {$_("dialog.ok")}
+        </Button>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 <script>
   import { textAreaResize } from "@/util/textareaResize.js";
   import { domPurify, loadDompurify } from "@/util/domPurify";
+  import { _ } from "svelte-i18n";
   loadDompurify();
 
   export let placeholder = "";
@@ -61,7 +62,7 @@
   <textarea {placeholder} use:textAreaResize bind:value {maxlength} />
   {#if $domPurify.domPurify != null && value.trim().length > 0}
     <div class="preview">
-      <div class="title">Preview:</div>
+      <div class="title">{$_("htmlEditor.preview")}</div>
       <!-- Show a preview if possible -->
       <div class="content">
         {@html $domPurify.domPurify.sanitize(value)}

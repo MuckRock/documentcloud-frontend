@@ -8,6 +8,7 @@
   import { layout } from "@/viewer/layout";
   import { ensureBounds } from "@/util/bounds";
   import emitter from "@/emit";
+  import { _ } from "svelte-i18n";
 
   // The image source
   export let src;
@@ -241,8 +242,10 @@
   {#if showLoading && (!show || makeNull)}
     <div class="loading">
       {#if makeNull}
-        An error occurred. Try refreshing the page
-      {:else}Loading...{/if}
+        {$_("image.error")}
+      {:else}
+        {$_("image.loading")}
+      {/if}
     </div>
   {/if}
 </span>

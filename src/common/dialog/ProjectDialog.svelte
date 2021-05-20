@@ -14,6 +14,7 @@
     removeProject,
   } from "@/manager/projects";
   import { showConfirm } from "@/manager/confirmDialog";
+  import { _ } from "svelte-i18n";
 
   const projectTitleLimit = process.env.PROJECT_TITLE_CHAR_LIMIT;
   const projectDescriptionLimit = process.env.PROJECT_DESCRIPTION_CHAR_LIMIT;
@@ -53,9 +54,11 @@
 
   async function remove() {
     showConfirm(
-      "Confirm delete",
-      `Are you sure you want to delete this project (${layout.projectEdit.title})?`,
-      "Delete",
+      $_("dialogProjectDialog.confirmDelete"),
+      $_("dialogProjectDialog.deleteProject", {
+        values: { project: layout.projectEdit.title },
+      }),
+      $_("dialog.delete"),
       async () => {
         await wrapLoadSeparate(loading, layout, async () => {
           await removeProject(layout.projectEdit);
@@ -89,19 +92,23 @@
   <Loader active={$loading}>
     <div class="mcontent">
       <h1>
-        {#if editing}Edit Project{:else}Create New Project{/if}
+        {#if editing}
+          {$_("dialogProjectDialog.editProject")}
+        {:else}
+          {$_("dialogProjectDialog.createProject")}
+        {/if}
       </h1>
       <div class="inputpadded">
         <input
           maxlength={projectTitleLimit}
-          placeholder="Title..."
+          placeholder={$_("dialogProjectDialog.title")}
           bind:value={name}
           bind:this={input}
         />
         <p>
           <textarea
             maxlength={projectDescriptionLimit}
-            placeholder="Project Description (optional)"
+            placeholder={$_("dialogProjectDialog.projectDesc")}
             bind:value={description}
             use:textAreaResize
           />
@@ -109,10 +116,10 @@
         {#if editing}
           <p>
             <Button nondescript={true} on:click={showCollaborators}>
-              Manage Collaborators
+              {$_("dialogProjectDialog.manageCollabs")}
             </Button><br />
             <Button nondescript={true} on:click={embedProject}>
-              Share / Embed Project
+              {$_("dialogProjectDialog.share")}
             </Button>
           </p>
         {/if}
@@ -122,16 +129,24 @@
           disabledReason={valid
             ? null
             : changed
-            ? "Enter a title"
-            : "Change the title or description"}
+            ? $_("dialogProjectDialog.enterTitle")
+            : $_("dialogProjectDialog.changeTitle")}
           on:click={() => createOrUpdate()}
         >
-          {#if editing}Update{:else}Create{/if}
+          {#if editing}
+            {$_("dialog.update")}
+          {:else}
+            {$_("dialog.create")}
+          {/if}
         </Button>
         {#if editing}
-          <Button danger={true} on:click={() => remove()}>Delete</Button>
+          <Button danger={true} on:click={() => remove()}>
+            {$_("dialog.delete")}
+          </Button>
         {/if}
-        <Button secondary={true} on:click={emit.dismiss}>Cancel</Button>
+        <Button secondary={true} on:click={emit.dismiss}>
+          {$_("dialog.cancel")}
+        </Button>
       </div>
     </div>
   </Loader>

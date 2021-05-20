@@ -325,9 +325,11 @@
                 : $_("dialogEditSectionsDialog.invalidPageNumber")}
               on:click={handleSectionAdd}
             >
-              {#if update}+ {$_("dialogEditSectionsDialog.update")}{:else}+ {$_(
-                  "dialogEditSectionsDialog.add",
-                )}{/if}
+              {#if update}
+                + {$_("dialog.update")}
+              {:else}
+                + {$_("dialogEditSectionsDialog.add")}
+              {/if}
             </Button>
           </span>
           {#if update}

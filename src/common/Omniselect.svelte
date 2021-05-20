@@ -1,6 +1,7 @@
 <script>
   import { elementInside } from "@/util/dom";
   import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import checkmarkBlackSvg from "@/assets/checkmark_black.svg";
@@ -173,7 +174,7 @@
           bind:this={input}
           bind:value={filter}
           type="text"
-          placeholder="Type to filter language"
+          placeholder={$_("omniselect.filter")}
         />
       </div>
       <div class="selected">
@@ -205,7 +206,7 @@
               e.stopPropagation();
             }}
           >
-            No results. Click to clear filter.
+            {$_("omniselect.noResults")}
           </div>
         {/if}
       </div>
