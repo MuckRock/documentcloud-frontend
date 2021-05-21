@@ -59,6 +59,12 @@ function extractId(slugId) {
   return parseInt(lastPart);
 }
 
+function plusNormalize(s) {
+  // Remove plus sign at beginning if present
+  if (s.startsWith("+")) return s.substr(1);
+  return s;
+}
+
 export class SearchParams extends Svue {
   constructor(rawParams, onlyShowSuccess = false, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
@@ -111,7 +117,8 @@ export class SearchParams extends Svue {
               }
 
               if (highlight.type == "field") {
-                const getDocumentField = GET_DOCUMENT_FIELDS[highlight.field];
+                const getDocumentField =
+                  GET_DOCUMENT_FIELDS[plusNormalize(highlight.field)];
                 if (getDocumentField == null) return null;
 
                 let normalizedValue = null;
@@ -128,7 +135,9 @@ export class SearchParams extends Svue {
                 const normalizedField =
                   getDocumentField.transform != null
                     ? getDocumentField.transform
-                    : highlight.field.substr(0, highlight.field.length - 1);
+                    : plusNormalize(
+                        highlight.field.substr(0, highlight.field.length - 1),
+                      );
 
                 if (params[normalizedField] == null) {
                   // Create array for params if it does not already exist

@@ -214,7 +214,7 @@
   "dialogProjectAccessDialog": {
     "changeAccessFor": "Change access for {name}",
     "selectAccess": "Select an access level below for {name} in {title}",
-    "admiAccess": "Admin Access",
+    "adminAccess": "Admin Access",
     "editAccess": "Edit Access",
     "viewAccess": "View Access",
     "adminHelp": "This collaborator can edit this project and its documents. The collaborator can invite users, delete users, and remove the project.",
