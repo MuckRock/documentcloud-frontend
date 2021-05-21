@@ -2,22 +2,22 @@
   import { onMount } from "svelte";
 
   export let word;
-  export let x0;
   export let x1;
-  export let y0;
+  export let x2;
   export let y1;
+  export let y2;
   export let scale;
 
   let elem = null;
   let span = null;
   let sizer = null;
 
-  $: left = Math.min(x0, x1);
-  $: right = Math.max(x0, x1);
-  $: top = Math.min(y0, y1);
-  $: bottom = Math.max(y0, y1);
-  $: width = Math.abs(x1 - x0);
-  $: height = Math.abs(y1 - y0);
+  $: left = Math.min(x1, x2);
+  // $: right = Math.max(x1, x2);
+  $: top = Math.min(y1, y2);
+  // $: bottom = Math.max(y1, y2);
+  $: width = Math.abs(x2 - x1);
+  $: height = Math.abs(y2 - y1);
 
   let transform = "";
 

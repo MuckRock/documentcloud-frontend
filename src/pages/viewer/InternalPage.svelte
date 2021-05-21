@@ -10,13 +10,12 @@
   import { layout } from "@/viewer/layout";
   import { markup } from "@/util/markup";
   import { hoveredNote } from "@/viewer/hoveredNote";
+  import { selectableTextUrl } from "@/api/viewer";
+  import session from "@/api/session";
   import { onMount } from "svelte";
 
   // Selectable text
   import SelectableWord from "./SelectableWord";
-  import selectableText from "./selectable_text.json";
-  const selectableWidth = 612;
-  const selectableHeight = 792;
 
   export let page;
   export let width;
@@ -48,11 +47,21 @@
   $: effectiveWidth = width - border * 2;
   $: height = (width - border * 2) * page.aspect;
 
-  onMount(() => {
+  let selectableText = [];
+
+  onMount(async () => {
     if (callback != null) {
       callback();
       callback = null;
     }
+
+    // Get selectable text
+    selectableText = (
+      await session.getStatic(
+        selectableTextUrl(viewer.document, page.pageNumber),
+      )
+    ).map((x) => ({ ...x, text: x.text.replaceAll("(cid:0)", "") }));
+    console.log("GOT SELECTABLE", selectableText);
   });
 </script>
 
@@ -250,11 +259,11 @@
       {#each selectableText as word}
         <SelectableWord
           word={word.text}
-          x0={word.x0 / selectableWidth}
-          x1={word.x1 / selectableWidth}
-          y0={word.top / selectableHeight}
-          y1={word.bottom / selectableHeight}
-          scale={scale}
+          x1={word.x1}
+          x2={word.x2}
+          y1={word.y1}
+          y2={word.y2}
+          {scale}
         />
       {/each}
     </div>
