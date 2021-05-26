@@ -1,14 +1,24 @@
 <script>
   import { layout } from "@/viewer/layout";
-  import { doc, changeMode, restorePosition } from "@/viewer/document";
+  import { viewer } from "@/viewer/viewer";
+  import { doc, changeMode } from "@/viewer/document";
   import NoWhitespace from "@/common/NoWhitespace";
-  import { tick } from "svelte";
+  import { selectableTextUrl } from "@/api/viewer";
+  import session from "@/api/session";
 
   import { handlePlural } from "@/util/string";
 
   async function handlePage(page) {
-    doc.textJump = page;
-    await changeMode("text");
+    // Check if selectable text position page is available
+    try {
+      // TODO: cache selectable text pages
+      await session.getStatic(selectableTextUrl(viewer.document, page));
+      await changeMode("image");
+    } catch (e) {
+      // Go into text mode
+      doc.textJump = page;
+      await changeMode("text");
+    }
   }
 </script>
 

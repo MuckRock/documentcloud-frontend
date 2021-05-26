@@ -76,3 +76,59 @@ export function coalesceHighlights(text, highlights) {
   push(pos, text.length);
   return results;
 }
+
+export function coalesceSelectableHighlights(words, highlights) {
+  // Get highlights in block form
+  const highlightBlocks = highlights.map((highlight) =>
+    highlight.map((block) => ({
+      ...block,
+      text: block.text.split(/\s/).filter((x) => x.length > 0),
+    })),
+  );
+
+  // Go through each word, seeing if the current highlight aligns
+  const results = [];
+  let blockIndex = 0;
+  for (let i = 0; i < words.length; i++) {
+    let matched = false;
+    const newHighlights = [];
+    let seekI = i;
+    // Only try to match highlights if we haven't consumed them already
+    if (blockIndex < highlightBlocks.length) {
+      // Get desired highlight
+      matched = true;
+      const highlight = highlightBlocks[blockIndex];
+
+      // See if it maps word-for-word with current text position
+      for (let j = 0; j < highlight.length; j++) {
+        // Go through each collection of text blocks
+        const block = highlight[j].text;
+        for (let k = 0; k < block.length; k++) {
+          // Go through each text object
+          const text = block[k];
+          if (text != words[seekI].text) {
+            // Not a match: abort
+            matched = false;
+            break;
+          }
+          newHighlights.push(highlight[j].type);
+          seekI++;
+        }
+        // Abort early if not matched
+        if (!matched) break;
+      }
+    }
+
+    if (matched) {
+      // Handle match
+      blockIndex++;
+      for (let j = i; j < seekI; j++) {
+        results.push({ ...words[j], type: newHighlights[j - i] });
+      }
+    } else {
+      // No match, push normal word
+      results.push({ ...words[i], type: "normal" });
+    }
+  }
+  return results;
+}

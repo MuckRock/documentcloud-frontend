@@ -12,6 +12,7 @@
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { selectableTextUrl } from "@/api/viewer";
   import session from "@/api/session";
+  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights";
   import { onMount } from "svelte";
 
   // Selectable text
@@ -55,13 +56,21 @@
       callback = null;
     }
 
-    // Get selectable text
-    selectableText = (
-      await session.getStatic(
+    try {
+      // Get selectable text if available
+      selectableText = await session.getStatic(
         selectableTextUrl(viewer.document, page.pageNumber),
-      )
-    ).map((x) => ({ ...x, text: x.text.replaceAll("(cid:0)", "") }));
-    console.log("GOT SELECTABLE", selectableText);
+      );
+    } catch (e) {
+      // No selectable text, no worries
+    }
+    if ($layout.searchHighlights != null) {
+      // Merge highlights into selectable text
+      selectableText = coalesceSelectableHighlights(
+        selectableText,
+        $layout.searchHighlights[page.pageNumber],
+      );
+    }
   });
 </script>
 
@@ -254,9 +263,9 @@
 
     <!-- Selectable text -->
     <div
-      style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden"
+      style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; user-select: text; cursor: text;"
     >
-      {#each selectableText as word}
+      {#each selectableText as word, i}
         <SelectableWord
           word={word.text}
           x1={word.x1}
@@ -264,6 +273,8 @@
           y1={word.y1}
           y2={word.y2}
           {scale}
+          highlight={word.type == "highlight"}
+          appendSpace={i != selectableText.length - 1}
         />
       {/each}
     </div>

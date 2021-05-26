@@ -1,6 +1,4 @@
 <script>
-  import { onMount } from "svelte";
-  import { layout } from "@/viewer/layout";
   import { coalesceHighlights } from "@/util/coalesceHighlights";
 
   export let text = "";
