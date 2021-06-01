@@ -1,6 +1,8 @@
 {
   "common": {
-    "emailAddress": "Email address"
+    "emailAddress": "Email address",
+    "loading": "Loading...",
+    "documentCloud": "DocumentCloud"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -257,10 +259,74 @@
     "preview": "Preview:"
   },
   "image": {
-    "error": "An error occurred. Try refreshing the page",
-    "loading": "Loading..."
-  }
+    "error": "An error occurred. Try refreshing the page"
+  },
   "omniselect": {
     "filter": "Type to filter language",
     "noResults": "No results. Click to clear filter."
+  },
+  "shareOptions": {
+    "errorText": "An unexpected error occurred. Please try again later.",
+    "copyHtml": "Copy HTML code",
+    "addShortcode": "Add this shortcode to your WordPress content —",
+    "pluginRequired": "plugin required",
+    "copyShortcode": "Copy shortcode",
+    "copyUrl": "Copy URL"
+  },
+  "specialMessage": {
+    "contactUs": "<a href={contact} target=\"_blank\">Contact us</a> with bug reports, questions, and suggestions."
+  },
+  "uploadOptions": {
+    "documentLang": "Document language:",
+    "forceOcr": "Force OCR:"
+  },
+  "actionBar": {
+    "selectDocs": "Select some documents to reveal edit actions",
+    "noPerms": "You do not have permission to edit all of the selected documents"
+  },
+  "authSection": {
+    "home": "Home",
+    "help": "Help",
+    "tips": "Tips and Tricks",
+    "searchDocs": "Search Documentation",
+    "apiDocs": "API Documentation",
+    "acctSettings": "Account Settings",
+    "signOut": "Sign out",
+    "changeOrg": "Change organization",
+    "personalAcct": "Personal Account",
+    "signIn": "Sign in"
+  },
+  "documents": {
+    "yourDocuments": "Your Documents",
+    "searchResults": "Search Results",
+    "accessDocuments": "Your {access}Documents",
+    "nameDocuments": "{name}'s {access}Documents",
+    "allDocuments": "All {access}Documents",
+    "mustBeVerified": "You must be a verified journalist to upload documents",
+    "upload": "Upload",
+    "dropFile": "Drop file to upload"
+  },
+  "document": {
+    "open": "Open",
+    "updating": "Updating document...",
+    "processing": "Processing",
+    "processingError": "An error occurred trying to process your document",
+    "remove": "Remove",
+    "improper": "Your document was uploaded improperly",
+    "project": "Project",
+    "totalMatchingPages": "{n} of {m} pages matching the query",
+    "showAll": "Show all",
+    "matchingPages": "{n} pages matching the query",
+    "pageAbbrev": "p."
+  },
+  "documentThumbnail": {
+    "images": "images",
+    "texts": "texts",
+    "loading": "Loading process information..."
+  },
+  "mainContainer": {
+    "error": "Error",
+    "errorMsg": "We could not reach the DocumentCloud server. Please try refreshing the page later.",
+    "refresh": "Refresh"
+  }
 }

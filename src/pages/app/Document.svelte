@@ -266,33 +266,35 @@
         <div class="actions">
           {#if document.viewable}
             <Link to="viewer" params={{ id: document.slugId }}>
-              <Button action={true}>Open</Button>
+              <Button action={true}>{$_("document.open")}</Button>
             </Link>
             {#if document.readable}
               <div class="updating">
-                Updating document...
+                {$_("document.updating")}
                 <Progress initializing={true} progress={0} compact={true} />
               </div>
             {/if}
           {:else if document.pending}
-            <span class="pending">Processing</span>
+            <span class="pending">{$_("document.processing")}</span>
           {:else if document.error}
             <span class="error">
-              An error occurred trying to process your document
+              {$_("document.processingError")}
               <br />
               <Button
                 small={true}
                 secondary={true}
-                on:click={removeDocument(document)}>Remove</Button
+                on:click={removeDocument(document)}
+                >{$_("document.remove")}</Button
               >
             </span>
           {:else if document.nofile}
-            <span class="error">Your document was uploaded improperly</span>
+            <span class="error">{$_("document.improper")}</span>
             <br />
             <Button
               small={true}
               secondary={true}
-              on:click={removeDocument(document)}>Remove</Button
+              on:click={removeDocument(document)}
+              >{$_("document.remove")}</Button
             >
           {/if}
           <!-- Show project and data tags -->
@@ -301,7 +303,7 @@
               {#if $projects.projectsById[id] != null}
                 <Link toUrl={projectUrl($projects.projectsById[id])}>
                   <Button plain={true}>
-                    <div class="smallinfo">Project</div>
+                    <div class="smallinfo">{$_("document.project")}</div>
                     {$projects.projectsById[id].title}
                   </Button>
                 </Link>
@@ -330,18 +332,20 @@
 
             {#if moreToExpand}
               <span>
-                {highlights.length}
-                of
-                {document.highlights.length}
-                pages matching the query
+                {$_("document.totalMatchingPages", {
+                  values: {
+                    n: highlights.length,
+                    m: document.highlights.length,
+                  },
+                })}
               </span>
-              <span class="padleft">
-                <Button action={true} on:click={() => (expandHighlights = true)}
-                  >Show all</Button
-                >
-              </span>
+              <span class="padleft">{$_("document.showAll")}</span>
             {:else}
-              <span>{document.highlights.length} pages matching the query</span>
+              <span>
+                {$_("document.matchingPages", {
+                  values: { n: document.highlights.length },
+                })}
+              </span>
             {/if}
           </div>
           <div class="highlights">
@@ -357,7 +361,10 @@
                         fade={false}
                         src={pageImageUrl(document, highlight.page, 40)}
                       />
-                      <div class="number">p. {highlight.page + 1}</div>
+                      <div class="number">
+                        {$_("document.pageAbbrev")}
+                        {highlight.page + 1}
+                      </div>
                     </div>
                     {#each highlight.passages as passage}
                       <div class="highlight">

@@ -2,6 +2,7 @@
   import Omniselect from "./Omniselect";
   import Checkbox from "./Checkbox";
   import { defaultLanguage, languages } from "@/api/languages";
+  import { _ } from "svelte-i18n";
 
   export let language = defaultLanguage;
   export let forceOcr = false;
@@ -16,12 +17,12 @@
 </style>
 
 <div class="option">
-  <b>Document language:</b>
+  <b>{$_("uploadOptions.documentLang")}</b>
   <Omniselect options={languages} bind:selected={language} />
 </div>
 
 <div class="option">
-  <b>Force OCR:</b>
+  <b>{$_("uploadOptions.forceOcr")}</b>
   <div class="middle">
     <input type="checkbox" bind:checked={forceOcr} />
   </div>

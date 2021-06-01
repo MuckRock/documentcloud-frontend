@@ -3,6 +3,7 @@
   import Tooltip from "@/common/Tooltip";
   import Dropdown from "@/common/Dropdown";
   import Paginator from "./Paginator";
+  import { _ } from "svelte-i18n";
 
   // Menus
   import EditMenu from "./menus/EditMenu";
@@ -108,8 +109,8 @@
           <span class="action disabled shortpad">
             <Tooltip
               caption={$layout.selectionEditable
-                ? "Select some documents to reveal edit actions"
-                : "You do not have permission to edit all of the selected documents"}
+                ? $_("actionBar.selectDocs")
+                : $_("actionBar.noPerms")}
             >
               <span class="nowrap">
                 Edit

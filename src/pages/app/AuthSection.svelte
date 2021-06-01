@@ -49,21 +49,23 @@
 </style>
 
 <div class="auth">
-  <Link to="home">Home</Link>
+  <Link to="home">{$_("authSection.home")}</Link>
   <span class="dot">·</span>
   <Dropdown fixed={true}>
     <span class="action" slot="title">
-      <span class="nowrap title"> Help <span class="dropper">▼</span> </span>
+      <span class="nowrap title">
+        {$_("authSection.help")} <span class="dropper">▼</span>
+      </span>
     </span>
     <Menu>
       <Link toUrl="/help/tips" color={true}>
-        <MenuItem>Tips and Tricks</MenuItem>
+        <MenuItem>{$_("authSection.tips")}</MenuItem>
       </Link>
       <Link toUrl="/help/search" color={true}>
-        <MenuItem>Search Documentation</MenuItem>
+        <MenuItem>{$_("authSection.searchDocs")}</MenuItem>
       </Link>
       <Link toUrl="/help/api" color={true}>
-        <MenuItem>API Documentation</MenuItem>
+        <MenuItem>{$_("authSection.apiDocs")}</MenuItem>
       </Link>
       <Link toUrl="mailto:info@documentcloud.org" color={true}>
         <MenuItem>Email Us</MenuItem>
@@ -82,17 +84,17 @@
       </span>
       <Menu>
         <a href={SQUARELET_URL} target="_blank" style="color: inherit">
-          <MenuItem>Account Settings</MenuItem>
+          <MenuItem>{$_("authSection.acctSettings")}</MenuItem>
         </a>
         <a href={SIGN_OUT_URL} style="color: inherit">
-          <MenuItem>Sign out</MenuItem>
+          <MenuItem>{$_("authSection.signOut")}</MenuItem>
         </a>
         <MenuItem selectable={false}>
-          <div class="small">Change organization</div>
+          <div class="small">{$_("authSection.changeOrg")}</div>
         </MenuItem>
         {#if individualOrg != null}
           <MenuItem on:click={() => change(individualOrg)}>
-            Personal Account
+            {$_("authSection.personalAcct")}
             {#if individualOrg.id == currentOrg.id}
               <span class="scope">✓</span>
             {/if}
@@ -108,5 +110,5 @@
         {/each}
       </Menu>
     </Dropdown>
-  {:else}<a href={SIGN_IN_URL}>Sign in</a>{/if}
+  {:else}<a href={SIGN_IN_URL}>{$_("authSection.signIn")}</a>{/if}
 </div>

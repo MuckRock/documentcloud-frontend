@@ -35,6 +35,7 @@
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
   import { nav } from "@/router/router";
+  import { _ } from "svelte-i18n";
 
   import emitter from "@/emit";
   import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
@@ -141,13 +142,12 @@
     </div>
   {:else}
     <div class="container error">
-      <p class="status">Error</p>
-      <p>
-        We could not reach the DocumentCloud server. Please try refreshing the
-        page later.
-      </p>
+      <p class="status">{$_("mainContainer.error")}</p>
+      <p>{$_("mainContainer.errorMsg")}</p>
       <div>
-        <Button secondary={true} on:click={refresh}>Refresh</Button>
+        <Button secondary={true} on:click={refresh}>
+          {$_("mainContainer.refresh")}
+        </Button>
       </div>
     </div>
   {/if}

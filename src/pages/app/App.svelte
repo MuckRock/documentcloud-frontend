@@ -1,6 +1,7 @@
 <script>
   import Sidebar from "./sidebar/Sidebar";
   import MainContainer from "./MainContainer";
+  import { _ } from "svelte-i18n";
 
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
@@ -13,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>DocumentCloud</title>
+  <title>{$_("common.documentCloud")}</title>
 </svelte:head>
 
 <div>

@@ -244,7 +244,7 @@
       {#if makeNull}
         {$_("image.error")}
       {:else}
-        {$_("image.loading")}
+        {$_("common.loading")}
       {/if}
     </div>
   {/if}

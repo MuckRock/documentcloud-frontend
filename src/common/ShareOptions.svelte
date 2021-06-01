@@ -2,6 +2,7 @@
   import Button from "@/common/Button";
   import { copy } from "@/util/copy";
   import { tick } from "svelte";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import embedSvg from "@/assets/embed.svg";
@@ -24,7 +25,7 @@
   let wpElem;
   let linkElem;
 
-  const ERROR_TEXT = "An unexpected error occurred. Please try again later.";
+  const ERROR_TEXT = $_("shareOptions.errorText");
 
   $: embedText = errorOccurred ? ERROR_TEXT : embedCode;
   $: linkDisplayText = errorOccurred ? ERROR_TEXT : linkText;
@@ -182,21 +183,23 @@
           bind:this={embedElem}
           value={embedText}
         />
-      {:else}<textarea disabled>Loading...</textarea>{/if}
+      {:else}<textarea disabled>{$_("common.loading")}</textarea>{/if}
 
       {#if !errorOccurred}
         <div class="buttonpadded">
-          <Button on:click={() => copy(embedElem)}>Copy HTML code</Button>
+          <Button on:click={() => copy(embedElem)}>
+            {$_("shareOptions.copyHtml")}
+          </Button>
         </div>
         {#if showWp}
           <p>
-            Add this shortcode to your WordPress content —
+            {$_("shareOptions.addShortcode")}
             <a
               class="link"
               target="_blank"
               href="https://wordpress.org/plugins/documentcloud/"
             >
-              plugin required
+              {$_("shareOptions.pluginRequired")}
             </a>
           </p>
           <input
@@ -205,7 +208,9 @@
             value={wpText}
           />
           <div class="buttonpadded">
-            <Button on:click={() => copy(wpElem)}>Copy shortcode</Button>
+            <Button on:click={() => copy(wpElem)}>
+              {$_("shareOptions.copyShortcode")}
+            </Button>
           </div>
         {/if}
       {/if}
@@ -230,7 +235,9 @@
   />
   {#if !errorOccurred}
     <div class="buttonpadded">
-      <Button on:click={() => copy(linkElem)}>Copy URL</Button>
+      <Button on:click={() => copy(linkElem)}>
+        {$_("shareOptions.copyUrl")}
+      </Button>
     </div>
   {/if}
 {/if}

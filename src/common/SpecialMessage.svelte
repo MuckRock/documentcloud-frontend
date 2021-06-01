@@ -1,5 +1,6 @@
 <script>
   import { pageCache, grabTipOfDay } from "@/manager/pageCache";
+  import { _ } from "svelte-i18n";
 
   const version = process.env.SPECIAL_VERSION;
   const contact = process.env.SPECIAL_CONTACT;
@@ -53,8 +54,9 @@
       {:else}
         {version}
         {#if showContact}
-          <a href={contact} target="_blank">Contact us</a>
-          with bug reports, questions, and suggestions.
+          {@html $_("specialMessage.constactUs", {
+            values: { contact: contact },
+          })}
         {/if}
       {/if}
     </div>

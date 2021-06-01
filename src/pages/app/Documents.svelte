@@ -16,6 +16,7 @@
   import SpecialMessage from "@/common/SpecialMessage";
   import Paginator from "./Paginator";
   import EmbedFooter from "./EmbedFooter";
+  import { _ } from "svelte-i18n";
 
   // Store properties
   import { layout } from "@/manager/layout";
@@ -52,10 +53,10 @@
     $layout.uploading = true;
   }
 
-  let title = "Your Documents";
+  let title = $_("documents.yourDocuments");
 
   $: {
-    let newTitle = "Search Results";
+    let newTitle = $_("documents.searchResults");
     if (
       $search.params != null &&
       !$search.params.isSearch &&
@@ -75,12 +76,16 @@
           $orgsAndUsers.loggedIn &&
           $search.params.oneUserSearch == $orgsAndUsers.me.id
         ) {
-          newTitle = `Your ${access}Documents`;
+          newTitle = $_("documents.accessDocuments", {
+            values: { access: access },
+          });
         } else {
           // Show title based on a single user search
           const user = $orgsAndUsers.usersById[$search.params.oneUserSearch];
           if (user != null) {
-            newTitle = `${user.name}’s ${access}Documents`;
+            newTitle = $_("documents.nameDocuments", {
+              values: { name: user.name, access: access },
+            });
           } else {
             getUserById($search.params.oneUserSearch);
           }
@@ -97,12 +102,17 @@
         // Show title based on a single user search
         const org = $orgsAndUsers.orgsById[$search.params.oneOrgSearch];
         if (org != null) {
-          newTitle = `${org.name}’s ${access}Documents`;
+          newTitle = $_("documents.nameDocuments", {
+            values: { name: org.name, access: access },
+          });
         } else {
           getOrgById($search.params.oneOrgSearch);
         }
       } else if ($search.params.isAllSearch) {
         newTitle = `All ${access}Documents`;
+        newTitle = $_("documents.allDocuments", {
+          values: { access: access },
+        });
       }
     }
     title = newTitle;
@@ -262,8 +272,8 @@
               on:click={showUploadModal}
               disabledReason={$orgsAndUsers.isVerified
                 ? null
-                : "You must be a verified journalist to upload documents"}
-              >+ Upload</Button
+                : $_("documents.mustBeVerified")
+              >+ $_("documents.upload")</Button
             >
           {/if}
         {/if}
@@ -290,7 +300,7 @@
         {/if}
         {#if $orgsAndUsers.loggedIn}
           <div class="toastouter">
-            <div class="toast">Drop file to upload</div>
+            <div class="toast">{$_("documents.dropFile")}</div>
           </div>
         {/if}
       </Draggable>

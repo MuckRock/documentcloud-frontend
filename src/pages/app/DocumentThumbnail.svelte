@@ -5,6 +5,7 @@
   import Tooltip from "@/common/Tooltip";
   import emitter from "@/emit";
   import { documents } from "@/manager/documents";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import errorIconSvg from "@/assets/error_icon.svg";
@@ -107,9 +108,12 @@
           {#if realProgress != null}
             <p>{Math.floor(realProgress * 100)}%</p>
             {#if pagesProcessed != null}
-              <p>{pagesProcessed} / {pageCount} pages</p>
+              <p>
+                {pagesProcessed} / {pageCount}
+                {$_("documentThumbnail.pages")}
+              </p>
             {/if}
-          {:else}Loading progress information...{/if}
+          {:else}{$_("documentThumbnail.loading")}{/if}
         </div>
         <Loader active={true} center={true} big={true}>
           <span class="fullstatus">{document.status}</span>
