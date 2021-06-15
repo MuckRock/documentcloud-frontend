@@ -65,6 +65,9 @@
       <Link toUrl="/help/api" color={true}>
         <MenuItem>API Documentation</MenuItem>
       </Link>
+      <Link toUrl="mailto:info@documentcloud.org" color={true}>
+        <MenuItem>Email Us</MenuItem>
+      </Link>
     </Menu>
   </Dropdown>
   <span class="dot">·</span>
