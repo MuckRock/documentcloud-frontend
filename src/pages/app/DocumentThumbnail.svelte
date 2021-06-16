@@ -23,6 +23,8 @@
     document == null ? null : $documents.imagesProcessedMap[document.id];
   $: textsProcessed =
     document == null ? null : $documents.textsProcessedMap[document.id];
+  $: textPositionsProcessed =
+    document == null ? null : $documents.textPositionsProcessedMap[document.id];
   $: pageCount = document == null ? null : $documents.pageCountMap[document.id];
 </script>
 
@@ -111,7 +113,7 @@
             {#if imagesProcessed != null && textsProcessed != null}
               <p>{imagesProcessed} / {pageCount} images</p>
               <p>{textsProcessed} / {pageCount} texts</p>
-            {/if}
+              <p>{textPositionsProcessed} / {pageCount} text positions</p>{/if}
           {:else}Loading progress information...{/if}
         </div>
         <Loader active={true} center={true} big={true}>

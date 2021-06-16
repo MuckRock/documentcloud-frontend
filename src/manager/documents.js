@@ -118,6 +118,12 @@ export const documents = new Svue({
         return x.pages - x.texts;
       });
     },
+    textPositionsProcessedMap(pending) {
+      return mapReduce(pending, PENDING_DOC_ID, (x) => {
+        if (x.text_positions == null || x.pages == null) return null;
+        return x.pages - x.text_positions;
+      });
+    },
     pageCountMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => {
         if (x.pages == null) return null;
