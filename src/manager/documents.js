@@ -132,10 +132,17 @@ export const documents = new Svue({
     },
     realProgressMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.images == null || x.texts == null || x.pages == null) return null;
+        if (
+          x.images == null ||
+          x.texts == null ||
+          x.text_positions == null ||
+          x.pages == null
+        )
+          return null;
         const images = x.pages - x.images;
         const texts = x.pages - x.texts;
-        return (images + texts) / 2 / x.pages;
+        const textPositions = x.pages - x.text_positions;
+        return (images + texts + textPositions) / 3 / x.pages;
       });
     },
     processingDocuments(allDocuments) {
@@ -159,17 +166,22 @@ export const documents = new Svue({
       let totalPages = 0;
       let totalImagesProcessed = 0;
       let totalTextsProcessed = 0;
+      let totalTextPositionsProcessed = 0;
       for (let i = 0; i < pending.length; i++) {
         const p = pending[i];
         if (p.images != null && p.texts != null && p.pages != null) {
           totalPages += p.pages;
           totalImagesProcessed += p.pages - p.images;
           totalTextsProcessed += p.pages - p.texts;
+          totalTextPositionsProcessed += p.pages - p.text_positions;
         }
       }
       if (totalPages == 0) return 0;
       const totalPagesProcessed =
-        (totalImagesProcessed + totalTextsProcessed) / 2;
+        (totalImagesProcessed +
+          totalTextsProcessed +
+          totalTextPositionsProcessed) /
+        3;
       return totalPagesProcessed / totalPages;
     },
     pollDocuments(processingDocuments, updatingDocuments) {
