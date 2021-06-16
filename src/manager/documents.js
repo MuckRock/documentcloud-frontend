@@ -169,7 +169,12 @@ export const documents = new Svue({
       let totalTextPositionsProcessed = 0;
       for (let i = 0; i < pending.length; i++) {
         const p = pending[i];
-        if (p.images != null && p.texts != null && p.pages != null) {
+        if (
+          p.images != null &&
+          p.texts != null &&
+          p.text_positions != null &&
+          p.pages != null
+        ) {
           totalPages += p.pages;
           totalImagesProcessed += p.pages - p.images;
           totalTextsProcessed += p.pages - p.texts;
@@ -572,6 +577,10 @@ async function updatePending() {
         pendingDoc.images == null ? existingDoc.images : pendingDoc.images;
       pendingDoc.texts =
         pendingDoc.texts == null ? existingDoc.texts : pendingDoc.texts;
+      pendingDoc.text_positions =
+        pendingDoc.text_positions == null
+          ? existingDoc.text_positions
+          : pendingDoc.text_positions;
       pendingDoc.pages =
         pendingDoc.pages == null ? existingDoc.pages : pendingDoc.pages;
     }
