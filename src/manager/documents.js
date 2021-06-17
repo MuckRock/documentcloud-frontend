@@ -106,22 +106,20 @@ export const documents = new Svue({
     pendingMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => x);
     },
-    imagesProcessedMap(pending) {
+    pagesProcessedMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.images == null || x.pages == null) return null;
-        return x.pages - x.images;
-      });
-    },
-    textsProcessedMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.texts == null || x.pages == null) return null;
-        return x.pages - x.texts;
-      });
-    },
-    textPositionsProcessedMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.text_positions == null || x.pages == null) return null;
-        return x.pages - x.text_positions;
+        if (
+          x.images == null ||
+          x.texts == null ||
+          x.text_positions == null ||
+          x.pages == null
+        )
+          return null;
+        return Math.min(
+          x.pages - x.images,
+          x.pages - x.texts,
+          x.pages - x.text_positions,
+        );
       });
     },
     pageCountMap(pending) {
@@ -164,9 +162,7 @@ export const documents = new Svue({
 
       // Operate on documents with non-null progresses
       let totalPages = 0;
-      let totalImagesProcessed = 0;
-      let totalTextsProcessed = 0;
-      let totalTextPositionsProcessed = 0;
+      let totalPagesProcessed = 0;
       for (let i = 0; i < pending.length; i++) {
         const p = pending[i];
         if (
@@ -176,17 +172,15 @@ export const documents = new Svue({
           p.pages != null
         ) {
           totalPages += p.pages;
-          totalImagesProcessed += p.pages - p.images;
-          totalTextsProcessed += p.pages - p.texts;
-          totalTextPositionsProcessed += p.pages - p.text_positions;
+          totalPagesProcessed +=
+            (p.pages -
+              p.images +
+              (p.pages - p.texts) +
+              (p.pages - p.text_positions)) /
+            3;
         }
       }
       if (totalPages == 0) return 0;
-      const totalPagesProcessed =
-        (totalImagesProcessed +
-          totalTextsProcessed +
-          totalTextPositionsProcessed) /
-        3;
       return totalPagesProcessed / totalPages;
     },
     pollDocuments(processingDocuments, updatingDocuments) {
