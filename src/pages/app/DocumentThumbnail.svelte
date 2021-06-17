@@ -19,12 +19,8 @@
 
   $: realProgress =
     document == null ? null : $documents.realProgressMap[document.id];
-  $: imagesProcessed =
-    document == null ? null : $documents.imagesProcessedMap[document.id];
-  $: textsProcessed =
-    document == null ? null : $documents.textsProcessedMap[document.id];
-  $: textPositionsProcessed =
-    document == null ? null : $documents.textPositionsProcessedMap[document.id];
+  $: pagesProcessed =
+    document == null ? null : $documents.pagesProcessedMap[document.id];
   $: pageCount = document == null ? null : $documents.pageCountMap[document.id];
 </script>
 
@@ -110,10 +106,9 @@
         <div slot="caption" class="caption">
           {#if realProgress != null}
             <p>{Math.floor(realProgress * 100)}%</p>
-            {#if imagesProcessed != null && textsProcessed != null}
-              <p>{imagesProcessed} / {pageCount} images</p>
-              <p>{textsProcessed} / {pageCount} texts</p>
-              <p>{textPositionsProcessed} / {pageCount} text positions</p>{/if}
+            {#if pagesProcessed != null}
+              <p>{pagesProcessed} / {pageCount} pages</p>
+            {/if}
           {:else}Loading progress information...{/if}
         </div>
         <Loader active={true} center={true} big={true}>
