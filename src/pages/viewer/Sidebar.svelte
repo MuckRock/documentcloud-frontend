@@ -15,6 +15,7 @@
   } from "@/viewer/actions";
   import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
+  import { _ } from "svelte-i18n";
 
   function handleMouseDown() {
     if ($layout.displayAnnotate) {
@@ -148,7 +149,7 @@
       <div class="title">
         {#if !$layout.embed && $viewer.document.readable}
           <div class="updating">
-            Updating document...
+            {$_("sidebar.updating")}
             <Progress initializing={true} progress={0} compact={true} />
           </div>
         {/if}
@@ -170,27 +171,35 @@
         {#if !$layout.hidePdfLink}
           <div>
             <a target="_blank" href={$viewer.document.pdf}>
-              Original Document (PDF) »
+              {$_("sidebar.original")}
             </a>
           </div>
         {/if}
         {#if $viewer.document.relatedArticleUrl != null && $viewer.document.relatedArticleUrl.trim().length > 0}
           <div>
             <a target="_blank" href={$viewer.document.relatedArticleUrl}>
-              Related Article »
+              {$_("sidebar.related")}
             </a>
           </div>
         {/if}
         <small>
           <p>
-            Contributed by {$layout.showOrg
-              ? $viewer.document.orgString
-              : $viewer.document.userOrgString}
+            {$_("sidebar.contributed", {
+              values: {
+                name: $layout.showOrg
+                  ? $viewer.document.orgString
+                  : $viewer.document.userOrgString,
+              },
+            })}
           </p>
         </small>
         {#if $viewer.document.source != null && $viewer.document.source.trim().length > 0}
           <small>
-            <p>Source: {$viewer.document.source}</p>
+            <p>
+              {$_("sidebar.source", {
+                values: { source: $viewer.document.source },
+              })}
+            </p>
           </small>
         {/if}
         {#if $viewer.document.editAccess}
@@ -201,29 +210,30 @@
       </div>
 
       {#if $viewer.me != null}
-        <div class="actions">Document Actions</div>
+        <div class="actions">{$_("sidebar.actions")}</div>
         {#if $viewer.document.editAccess}
           <div
             class="action"
             class:disabled={$viewer.document.readable}
             on:click={() => showEmbedFlow($viewer.document)}
           >
-            <h3>Share</h3>
-            <p>Create an embed or share on social media.</p>
+            <h3>{$_("sidebar.share")}</h3>
+            <p>{$_("sidebar.shareDesc")}</p>
           </div>
           <div class="action" on:click={enterAnnotateMode}>
-            <h3>Annotate</h3>
-            <p>Make annotations to keep notes on the document.</p>
+            <h3>{$_("sidebar.annotate")}</h3>
+            <p>{$_("sidebar.annotateDesc")}</p>
           </div>
           <div
             class="action"
             class:disabled={$viewer.document.readable}
             on:click={enterRedactMode}
           >
-            <h3>Redact</h3>
+            <h3>{$_("sidebar.redact")}</h3>
             <p>
-              Create redactions on the document to hide text. The document will
-              reprocess afterwards.
+              {$_("sidebar.redactDesc")}
+              Create redactions on the document to hide text. The document will reprocess
+              afterwards.
             </p>
           </div>
           <div
@@ -231,53 +241,33 @@
             class:disabled={$viewer.document.readable}
             on:click={enterModifyMode}
           >
-            <h3>Modify Pages</h3>
-            <p>Rearrange, rotate, delete, insert, and split pages.</p>
+            <h3>{$_("sidebar.modify")}</h3>
+            <p>{$_("sidebar.modifyDesc")}</p>
           </div>
           <div
             class="action"
             class:disabled={$viewer.document.readable}
             on:click={enterInfoMode}
           >
-            <h3>Edit Document Info</h3>
-            <p>Modify document information like description and related URL.</p>
+            <h3>{$_("sidebar.info")}</h3>
+            <p>{$_("sidebar.infoDesc")}</p>
           </div>
           <div
             class="action"
             class:disabled={$viewer.document.readable}
             on:click={enterDataMode}
           >
-            <h3>Edit Tags and Data</h3>
-            <p>Add tags and key/value pairs to categorize your document.</p>
+            <h3>{$_("sidebar.data")}</h3>
+            <p>{$_("sidebar.dataDesc")}</p>
           </div>
           <div class="action" on:click={enterSectionsMode}>
-            <h3>Edit Sections</h3>
-            <p>
-              Add sections to organize your document with a table of contents.
-            </p>
+            <h3>{$_("sidebar.sections")}</h3>
+            <p>{$_("sidebar.sectionsDesc")}</p>
           </div>
         {:else}
           <div class="action" on:click={enterAnnotateMode}>
-            <h3>Add Private Note</h3>
-            <p>Make annotations to keep notes on the document.</p>
-          </div>
-        {/if}
-      {/if}
-      {#if !$layout.embed && $viewer.document.editAccess}
-        {#if $viewer.document.editAccess && $viewer.document.id < process.env.LEGACY_CUT_OFF}
-          <div
-            style="background: #fff782; display: block; padding: 2px 8px; border-radius: 3px; font-size: 13px; box-sizing: border-box; color: #312f05;"
-          >
-            Since this document was originally uploaded in the legacy version of
-            DocumentCloud, if you’re deleting sensitive information after the
-            document was published it may not automatically be redacted in all
-            places. Please make your redactions and edits and then
-            <a
-              style="font-size: 13px; text-decoration: underline; color: #312f05"
-              href="mailto:info@documentcloud?subject=Editing Sensitive Legacy Document"
-              target="_blank">email us</a
-            >
-            so we can confirm the information is fully removed.
+            <h3>{$_("sidebar.privateNote")}</h3>
+            <p>{$_("sidebar.privateNoteDesc")}</p>
           </div>
         {/if}
       {/if}

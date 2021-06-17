@@ -6,6 +6,7 @@
 
   import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
   import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
+  import { _ } from "svelte-i18n";
 
   function pickOne(list) {
     if (list == null) return null;
@@ -49,7 +50,7 @@
 </style>
 
 <div class="auth">
-  <Link to="home">{$_("authSection.home")}</Link>
+  <Link to="home">{$_("common.home")}</Link>
   <span class="dot">·</span>
   <Dropdown fixed={true}>
     <span class="action" slot="title">

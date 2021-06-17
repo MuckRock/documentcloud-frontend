@@ -7,6 +7,7 @@
   import { showInsertDialog, modify } from "@/viewer/layout";
   import ModifyImage from "../ModifyImage";
   import Modification from "@/viewer/modification/Modification";
+  import { _ } from "svelte-i18n";
 
   const MAX_BUFFER_SIZE = 5;
 
@@ -48,7 +49,11 @@
 </style>
 
 {#if $modification.modifyHasSelection}
-  <h3>{handlePlural($modification.modifyNumSelected, "Page")} Selected</h3>
+  <h3>
+    {$_("modifyPane.pagesSelected", {
+      values: { n: $modification.modifyNumSelected },
+    })}
+  </h3>
   <div class="buttonpadded">
     {#if $modification.uncommittedChanges}
       <Button
@@ -57,31 +62,39 @@
           modify(modification, cancelActions);
         }}
       >
-        Apply Modifications
+        {$_("modifyPane.applyModifications")}
       </Button>
     {/if}
-    <Button on:click={() => modification.copy()}>Duplicate</Button>
+    <Button on:click={() => modification.copy()}
+      >{$_("modifyPane.duplicate")}</Button
+    >
     {#if $modification.modifyNumSelected < $modification.pageCount}
-      <Button on:click={() => modification.cut()}>Move</Button>
+      <Button on:click={() => modification.cut()}
+        >{$_("modifyPane.move")}</Button
+      >
     {/if}
-    <Button on:click={() => modification.rotateClockwise()}>Rotate</Button>
+    <Button on:click={() => modification.rotateClockwise()}
+      >{$_("modifyPane.move")}</Button
+    >
     <Button secondary={true} on:click={() => modification.modifyUnselect()}>
-      Unselect
+      {$_("modifyPane.unselect")}
     </Button>
     {#if $modification.modifyNumSelected < $modification.pageCount}
       <Button danger={true} on:click={() => modification.remove()}>
-        Remove
+        {$_("modifyPane.remove")}
       </Button>
     {/if}
   </div>
 {:else if $modification.hasCopyBuffer && $viewer.document != null}
   <h3>
     {#if $modification.hasInsert}
-      Insert
-      {handlePlural($modification.copyBufferLength, "Page")}
+      {$_("modifyPane.insertPages", {
+        values: { n: $modification.copyBufferLength },
+      })}
     {:else}
-      {handlePlural($modification.copyBufferLength, "Page")}
-      Pending Insertion
+      {$_("modifyPane.pagesPending", {
+        values: { n: $modification.copyBufferLength },
+      })}
     {/if}
     <div class="buffer">
       {#each $modification.copyBuffer
@@ -110,46 +123,57 @@
 
   <p>
     {#if $modification.hasInsert}
-      Insert
-      {handlePlural($modification.copyBufferLength, "page")}
       {#if $modification.insert == 0}
-        at beginning.
+        {$_("modifyPane.insertBegin", {
+          values: { n: $modification.copyBufferLength },
+        })}
       {:else if $modification.insert == $modification.pageCount}
-        at end.
+        {$_("modifyPane.insertEnd", {
+          values: { n: $modification.copyBufferLength },
+        })}
       {:else}
-        in between page
-        {$modification.insert}
-        and
-        {$modification.insert + 1}.
+        {$_("modifyPane.insertBetween", {
+          values: {
+            n: $modification.copyBufferLength,
+            p0: $modification.insert,
+            p1: $modification.insert + 1,
+          },
+        })}
       {/if}
     {:else}
-      Click in-between pages below to mark where to paste
-      {handlePlural($modification.copyBufferLength, "page")}.
+      {$_("modifyPange.click", {
+        values: { n: $modification.copyBufferLength },
+      })}
     {/if}
   </p>
   <div class="buttonpadded">
     {#if $modification.hasInsert}
-      <Button on:click={() => modification.pasteAtInsert()}>Insert</Button>
+      <Button on:click={() => modification.pasteAtInsert()}
+        >{$_("modifyPane.insert")}</Button
+      >
     {:else}
-      <Button on:click={() => modification.pasteAtEnd()}>Insert at end</Button>
+      <Button on:click={() => modification.pasteAtEnd()}
+        >{$_("modifyPane.insertAtEnd")}</Button
+      >
     {/if}
     <Button secondary={true} on:click={() => modification.clearCopyBuffer()}>
-      Cancel
+      {$_("dialog.cancel")}
     </Button>
   </div>
 {:else if $modification.hasInsert}
-  <h3>Insert pages at position</h3>
+  <h3>{$_("modifyPane.insertPosition")}</h3>
   <div class="buttonpadded">
-    <Button on:click={showInsertDialog}>Insert from other document</Button>
+    <Button on:click={showInsertDialog}
+      >{$_("modifyPane.insertOtherDoc")}</Button
+    >
     <Button secondary={true} on:click={() => modification.clearInsertion()}>
-      Cancel
+      {$_("dialog.cancel")}
     </Button>
   </div>
 {:else}
-  <h3>Modify Pages</h3>
+  <h3>{$_("modifyPane.modifyPages")}</h3>
   <p>
-    Select pages below to apply modifications (page rotation, rearranging, and
-    deletion). Click in-between pages to insert.
+    {$_("modfyPane.select")}
   </p>
 {/if}
 
@@ -162,18 +186,18 @@
           modify(modification, cancelActions);
         }}
       >
-        Apply Modifications
+        {$_("modifyPane.applyModifications")}
       </Button>
     {/if}
     <Button
       disabled={!$modification.canUndo}
       secondary={true}
-      on:click={() => modification.undo()}>Undo</Button
+      on:click={() => modification.undo()}>{$_("modifyPane.undo")}</Button
     >
     <Button
       disabled={!$modification.canRedo}
       secondary={true}
-      on:click={() => modification.redo()}>Redo</Button
+      on:click={() => modification.redo()}>{$_("modifyPane.redo")}</Button
     >
   </div>
 {/if}

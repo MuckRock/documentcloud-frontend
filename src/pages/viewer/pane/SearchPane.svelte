@@ -2,6 +2,7 @@
   import Tooltip from "@/common/Tooltip";
   import { layout } from "@/viewer/layout";
   import { handlePlural } from "@/util/string";
+  import { _ } from "svelte-i18n";
 
   $: maxHits =
     $layout.searchPages == null
@@ -18,9 +19,9 @@
 {#if $layout.searchPages != null}
   <div>
     <b>
-      Your query
-      <em>{$layout.search}</em>
-      was found on {handlePlural($layout.searchPages.length, "page")}
+      {@html $_("searchPane.yourQuery", {
+        values: { search: $layout.search, n: $layout.searchPages.length },
+      })}
     </b>
 
     <div class="hist">

@@ -17,6 +17,7 @@
   } from "@/viewer/layout";
   import { wrapSeparate } from "@/util/wrapLoad";
   import emitter from "@/emit";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
@@ -536,7 +537,7 @@
         <input
           maxlength={noteTitleLimit}
           bind:this={titleInput}
-          placeholder="Annotation Title"
+          placeholder={$_("annotation.title")}
           bind:value={title}
         />
       {:else}
@@ -608,7 +609,7 @@
           <input
             maxlength={noteTitleLimit}
             bind:this={titleInput}
-            placeholder="Annotation Title"
+            placeholder={$_("annotation.title")}
             bind:value={title}
             class="padded"
           />
@@ -632,7 +633,7 @@
     {#if editMode}
       <HtmlEditor
         maxlength={noteContentLimit}
-        placeholder="Annotation Description (optional)"
+        placeholder={$_("annotation.description")}
         bind:value={description}
       />
     {:else}
@@ -651,29 +652,40 @@
           disabledReason={titleValid
             ? changeValid
               ? null
-              : "Note remains unchanged"
-            : "Enter a title for the annotation"}
+              : $_("annotation.unchanged")
+            : $_("annotation.noTitle")}
         >
-          {#if editOverride}Update{:else}Save{/if}
+          {#if editOverride}{$_("dialog.update")}{:else}{$_("dialog.save")}{/if}
         </Button>
         {#if editOverride}
-          <Button danger={true} on:click={handleDelete}>Delete</Button>
+          <Button danger={true} on:click={handleDelete}
+            >{$_("dialog.delete")}</Button
+          >
         {/if}
-        <Button secondary={true} on:click={handleCancel}>Cancel</Button>
+        <Button secondary={true} on:click={handleCancel}
+          >{$_("dialog.cancel")}</Button
+        >
       </div>
     {:else}
       <div class="twopanel">
         <div class="cell leftalign">
           {#if access == "organization"}
-            This note is only visible to you and your organization
+            {$_("annotation.org")}
           {:else if access == "private"}
-            This private note is only visible to you
+            {$_("annotation.private")}
           {/if}
         </div>
         <div class="cell rightalign">
-          Annotated by
-          {annotation.username}
-          {#if annotation.organization != null}, {annotation.organization}{/if}
+          {#if annotation.organization == null}
+            {$_("annotation.by", { values: { name: annotation.username } })}
+          {:else}
+            {$_("annotation.byOrg", {
+              values: {
+                name: annotation.username,
+                org: annotation.organization,
+              },
+            })}
+          {/if}
         </div>
       </div>
     {/if}

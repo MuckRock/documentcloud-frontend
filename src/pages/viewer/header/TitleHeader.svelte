@@ -7,6 +7,7 @@
   import Link from "@/router/Link";
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
+  import { _ } from "svelte-i18n";
 
   $: style = `height: ${$layout.headerHeight}px; line-height: ${$layout.headerHeight}px`;
 
@@ -75,9 +76,13 @@
       {#if $layout.title}
         <h1 class:padleft={$layout.embed}>{$viewer.document.title}</h1>
         <h2>
-          Contributed by {$layout.showOrg
-            ? $viewer.document.orgString
-            : $viewer.document.userOrgString}
+          {$_("titleHeader.contributedBy", {
+            values: {
+              name: $layout.showOrg
+                ? $viewer.document.orgString
+                : $viewer.document.userOrgString,
+            },
+          })}
         </h2>
       {/if}
     </div>

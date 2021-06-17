@@ -12,6 +12,7 @@
     truthyParamValue,
     getQueryStringParams,
   } from "@/util/url";
+  import { _ } from "svelte-i18n";
 
   export let id;
   export let noteId;
@@ -221,8 +222,7 @@
           href={doc.noteUrl(note)}
           class="DC-note-embed-resource"
           target="_blank"
-          title="View the note ‘{note.title}’ in its original document context on
-        DocumentCloud in a new window or tab"
+          title={$_("embedNote.viewTheNote", { value: { title: note.title } })}
         >
           <span class="DC-note-title">{note.title}</span>
           <span class="DC-note-page-number">(p. {note.page + 1})</span>
@@ -268,11 +268,9 @@
         <a
           href={doc.noteUrl(note)}
           target="_blank"
-          title="View the note ‘{note.title}’ in its original document context on
-        DocumentCloud in a new window or tab"
+          title={$_("embedNote.viewTheNote", { values: { title: note.title } })}
         >
-          View the entire document with
-          <span class="DC-note-logotype-link">DocumentCloud</span>
+          {@html $_("embedDoc")}
         </a>
       </div>
 

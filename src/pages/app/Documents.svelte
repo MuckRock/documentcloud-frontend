@@ -272,8 +272,8 @@
               on:click={showUploadModal}
               disabledReason={$orgsAndUsers.isVerified
                 ? null
-                : $_("documents.mustBeVerified")
-              >+ $_("documents.upload")</Button
+                : $_("documents.mustBeVerified")}
+              >+ {$_("documents.upload")}</Button
             >
           {/if}
         {/if}

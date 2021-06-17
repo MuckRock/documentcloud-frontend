@@ -11,6 +11,7 @@
   import Progress from "@/common/Progress";
   import Button from "@/common/Button";
   import { embedUrl } from "@/api/embed";
+  import { _ } from "svelte-i18n";
 
   // Dialogs
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
@@ -144,32 +145,24 @@
 {/if}
 
 {#if $viewer.show404}
-  <NotFound
-    title="Document not found"
-    message="The document you requested either does not exist or you lack
-    permission to access it"
-  />
+  <NotFound title={$_("viewer.notFound")} message={$_("viewer.notFoundDesc")} />
 {:else if $viewer.document != null && $viewer.document.pending}
   <NotFound
-    title="Document is processing"
-    message="The document you requested is processing and will automatically refresh when it is ready"
+    title={$_("viewer.processing")}
+    message={$_("viewer.processingDesc")}
   >
     <Progress initializing={true} progress={0} compact={true} />
   </NotFound>
 {:else if $viewer.document != null && $viewer.document.error}
-  <NotFound
-    title="Document has encountered an error"
-    message="A processing error has been encountered in the document you requested"
-  >
+  <NotFound title={$_("viewer.error")} message={$_("viewer.errorDesc")}>
     {#if $viewer.document.editAccess}
       <p><Button on:click={forceReprocess}>Reprocess</Button></p>
     {/if}
   </NotFound>
 {:else if $viewer.showPending}
   <NotFound
-    title="Document not accessible"
-    message="The document you requested is still processing or you lack
-    permission to access to it"
+    title={$_("viewer.accessible")}
+    message={$_("viewer.accessibleDesc")}
   />
 {:else}
   <Toasts />

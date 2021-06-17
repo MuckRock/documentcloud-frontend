@@ -7,6 +7,7 @@
   import session from "@/api/session";
 
   import { handlePlural } from "@/util/string";
+  import { _ } from "svelte-i18n";
 
   async function handlePage(page) {
     // Check if selectable text position page is available
@@ -86,20 +87,24 @@
   <div class="results">
     {#if $layout.totalResults > 0}
       <p>
-        {handlePlural($layout.totalResults, "result")} across {handlePlural(
-          $layout.searchPages.length,
-          "page",
-        )}
+        {$_("searchResults.resultPages", {
+          values: {
+            results: $layout.totalResults,
+            pages: $layout.searchPages.length,
+          },
+        })}
       </p>
     {:else}
-      <p>No search results. Try again with a broader query.</p>
+      <p>{$_("searchResults.noSearchResults")}</p>
     {/if}
     {#each $layout.searchPages as { page }}
       <div class="page" on:click={() => handlePage(page)}>
         <h2>
           p. {page + 1}
           <small>
-            {handlePlural($layout.searchHighlights[page].length, "occurrence")}
+            {$_("searchResults.occurres", {
+              values: { n: $layout.searchHighlights[page].length },
+            })}
           </small>
         </h2>
         {#each $layout.searchHighlights[page] as highlight, offset}

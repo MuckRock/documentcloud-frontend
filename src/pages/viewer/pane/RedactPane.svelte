@@ -1,17 +1,18 @@
 <script>
   import Button from "@/common/Button";
   import { layout, redact, undoRedaction } from "@/viewer/layout";
+  import { _ } from "svelte-i18n";
 </script>
 
-<h3>Redact Document</h3>
+<h3>{$_("redactPane.redactDoc")}</h3>
 <p>
-  Click and drag to draw a black rectangle over each portion of the document
-  you’d like to redact. Associated text will be removed when you save your
-  redactions.
+  {$_("redactPane.desc")}
 </p>
 <div class="buttonpadded">
   {#if $layout.redactionsUndoable}
-    <Button on:click={redact}>Confirm Redactions</Button>
-    <Button secondary={true} on:click={undoRedaction}>Undo</Button>
+    <Button on:click={redact}>{$_("redactPane.confirm")}</Button>
+    <Button secondary={true} on:click={undoRedaction}
+      >{$_("redactPane.undo")}</Button
+    >
   {/if}
 </div>

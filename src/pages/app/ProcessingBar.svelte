@@ -1,5 +1,6 @@
 <script>
   import { handlePlural } from "@/util/string";
+  import { _ } from "svelte-i18n";
 
   // Components
   import Progress from "@/common/Progress";
@@ -49,15 +50,16 @@
   <div class="processingbar">
     <div class="info">
       {#if $documents.doneProcessing}
-        <span class="valign">Done processing</span>
+        <span class="valign">{$_("processingBar.doneProcessing")}</span>
         <span class="dismiss">
           <Button small={true} on:click={() => (dismissed = true)}>
-            Dismiss
+            {$_("dialog.dismiss")}
           </Button>
         </span>
       {:else}
-        Processing
-        {handlePlural($documents.numProcessing, "document", true)}
+        {$_("processingBar.processingDocuments", {
+          values: { n: $documents.numProcessing },
+        })}
       {/if}
     </div>
     <Progress progress={$documents.processingProgress} />

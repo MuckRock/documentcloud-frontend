@@ -1,6 +1,7 @@
 <script>
   import { doc } from "@/viewer/document";
   import { viewer } from "@/viewer/viewer";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import leftPaginator from "@/assets/left_paginator.svg";
@@ -195,7 +196,7 @@
         }}
       />
     </span>
-    <span class="rest">of {$viewer.document.pageCount}</span>
+    <span class="rest">{$_("paginator.of")} {$viewer.document.pageCount}</span>
     <span class="paginate right" on:click={() => increment(false)}>
       {@html rightPaginator}
     </span>

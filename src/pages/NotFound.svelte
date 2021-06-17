@@ -4,6 +4,7 @@
   import { router } from "@/router/router";
   import { onMount } from "svelte";
   import { getContent } from "@/api/cms";
+  import { _ } from "svelte-i18n";
 
   export let title = "Page not found";
   export let message = "Please try another URL";
@@ -44,7 +45,7 @@
 {#if notFound}
   <div class="notfound">
     <p>
-      <Link to="default">Home</Link>
+      <Link to="default">{$_("common.home")}</Link>
     </p>
 
     <h1>{title}</h1>

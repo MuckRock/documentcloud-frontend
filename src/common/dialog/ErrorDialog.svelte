@@ -76,7 +76,7 @@
         {:else if refresh}
           {$_("dialogErrorDialog.refresh")}
         {:else}
-          {$_("dialogErrorDialog.dismiss")}
+          {$_("dialog.dismiss")}
         {/if}
       </Button>
     </div>

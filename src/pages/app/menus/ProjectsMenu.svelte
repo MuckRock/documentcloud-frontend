@@ -5,6 +5,7 @@
 
   import { layout, newProject } from "@/manager/layout";
   import { projects } from "@/manager/projects";
+  import { _ } from "svelte-i18n";
 
   function sort(projects) {
     if (projects == null) return [];
@@ -26,10 +27,12 @@
 </style>
 
 <Menu>
-  <MenuItem primary={true} on:click={newProject}>+ New Project</MenuItem>
+  <MenuItem primary={true} on:click={newProject}>
+    {$_("projectsMenu.newProject")}
+  </MenuItem>
   {#if $layout.hasSelection && $projects.addRemoveableProjects.length > 0}
     <MenuItem selectable={false}>
-      <div class="small">Project Membership</div>
+      <div class="small">{$_("projectsMenu.projMembership")}</div>
     </MenuItem>
     {#each alphabetizedProjects as project}
       <ProjectMenuItem {project} />
@@ -37,9 +40,9 @@
   {:else}
     <MenuItem selectable={false}>
       {#if $projects.addRemoveableProjects.length > 0}
-        <div class="info">Select documents to place them in projects</div>
+        <div class="info">{$_("projectsMenu.selectDocs")}</div>
       {:else}
-        <div class="info">Create a project to organize and share documents</div>
+        <div class="info">{$_("projectsMenu.createProj")}</div>
       {/if}
     </MenuItem>
   {/if}

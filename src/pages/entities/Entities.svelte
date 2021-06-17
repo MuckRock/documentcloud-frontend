@@ -10,6 +10,7 @@
   import { entities, getE } from "@/entities/entities";
   import { updateInCollection } from "@/manager/documents";
   import Progress from "@/common/Progress";
+  import { _ } from "svelte-i18n";
 
   import closeSvg from "@/assets/close_inline.svg";
 
@@ -268,24 +269,22 @@
 
 <div class="body">
   <p>
-    <Link back={true} color={true}>Back</Link>
+    <Link back={true} color={true}>{$_("entities.back")}</Link>
   </p>
   {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.count > 0 || pagePushed)}
     <p class="paginator">
-      <span>Page&nbsp;</span>
+      <span>{$_("entity.page")}&nbsp;</span>
       {#if $entities.entities.hasPrev}
         <span class="paginate" on:click={() => prevPage()}>←</span>
       {/if}
       <span class="page"
         >{$entities.entities.page + 1}
-        of
+        {$_("entity.of")}
         {$entities.entities.numPages}
-        ({handlePlural(
-          $entities.entities.count,
-          "total entity result",
-          true,
-        )})</span
-      >
+        ({$_("entity.totalEntityResult", {
+          values: { n: $entities.entities.count },
+        })})
+      </span>
       {#if $entities.entities.hasNext}
         <span class="paginate" on:click={() => nextPage()}>→</span>
       {/if}
@@ -293,18 +292,21 @@
 
     <details>
       <!-- Todo: put in separate component -->
-      <summary>Filter</summary>
+      <summary>{$_("entities.filter")}</summary>
       <div class="filters">
-        <div><button on:click={applyFilters}>Apply filters</button></div>
+        <div>
+          <button on:click={applyFilters}>{$_("entities.applyFilters")}</button>
+        </div>
         <div class="filtergroup">
-          <h3>Kind</h3>
-          <div class="action" on:click={() => (kindFilter = {})}>Clear</div>
+          <h3>{$_("entities.kind")}</h3>
+          <div class="action" on:click={() => (kindFilter = {})}>
+            {$_("entities.clear")}
+          </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.person}
-              />Person</label
+              ><input type="checkbox" bind:checked={kindFilter.person} />{$_(
+                "entities.person",
+              )}</label
             >
           </div>
           <div>
@@ -312,23 +314,21 @@
               ><input
                 type="checkbox"
                 bind:checked={kindFilter.organization}
-              />Organization</label
+              />{$_("entities.organization")}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.location}
-              />Location</label
+              ><input type="checkbox" bind:checked={kindFilter.location} />{$_(
+                "entities.location",
+              )}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.event}
-              />Event</label
+              ><input type="checkbox" bind:checked={kindFilter.event} />{$_(
+                "entities.event",
+              )}</label
             >
           </div>
           <div>
@@ -336,7 +336,7 @@
               ><input
                 type="checkbox"
                 bind:checked={kindFilter.work_of_art}
-              />Work of Art</label
+              />{$_("entities.workOfArt")}</label
             >
           </div>
           <div>
@@ -344,31 +344,28 @@
               ><input
                 type="checkbox"
                 bind:checked={kindFilter.consumer_good}
-              />Consumer Good</label
+              />{$_("entities.consumerGood")}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.address}
-              />Address</label
+              ><input type="checkbox" bind:checked={kindFilter.address} />{$_(
+                "entities.address",
+              )}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.date}
-              />Date</label
+              ><input type="checkbox" bind:checked={kindFilter.date} />{$_(
+                "entities.date",
+              )}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.number}
-              />Number</label
+              ><input type="checkbox" bind:checked={kindFilter.number} />{$_(
+                "entities.number",
+              )}</label
             >
           </div>
           <div>
@@ -376,45 +373,42 @@
               ><input
                 type="checkbox"
                 bind:checked={kindFilter.phone_number}
-              />Phone Number</label
+              />{$_("entities.phoneNumber")}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.price}
-              />Price</label
+              ><input type="checkbox" bind:checked={kindFilter.price} />{$_(
+                "entities.price",
+              )}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.unknown}
-              />Unknown</label
+              ><input type="checkbox" bind:checked={kindFilter.unknown} />{$_(
+                "entities.unknown",
+              )}</label
             >
           </div>
           <div>
             <label
-              ><input
-                type="checkbox"
-                bind:checked={kindFilter.other}
-              />Other</label
+              ><input type="checkbox" bind:checked={kindFilter.other} />{$_(
+                "entities.other",
+              )}</label
             >
           </div>
         </div>
         <div class="filtergroup">
-          <h3>Occurrences</h3>
+          <h3>{$_("entities.occurrences")}</h3>
           <div class="action" on:click={() => (occurrenceFilter = {})}>
-            Clear
+            {$_("entities.clear")}
           </div>
           <div>
             <label
               ><input
                 type="checkbox"
                 bind:checked={occurrenceFilter.proper}
-              />Proper</label
+              />{$_("entities.proper")}</label
             >
           </div>
           <div>
@@ -422,7 +416,7 @@
               ><input
                 type="checkbox"
                 bind:checked={occurrenceFilter.common}
-              />Common</label
+              />{$_("entities.common")}</label
             >
           </div>
           <div>
@@ -430,14 +424,14 @@
               ><input
                 type="checkbox"
                 bind:checked={occurrenceFilter.unknown}
-              />Unknown</label
+              />{$_("entities.unknown")}</label
             >
           </div>
         </div>
         <div class="filtergroup">
-          <h3>Advanced</h3>
+          <h3>{$_("entities.advanced")}</h3>
           <div>
-            Relevance threshold:
+            {$_("entities.relevanceThreshold")}
             <select bind:value={advancedFilter.relevance}>
               {#each Array(101) as _, i}
                 <option value={1 - i / 100}>{100 - i}%</option>
@@ -445,19 +439,19 @@
             </select>
           </div>
           <div>
-            Knowledge graph:
+            {$_("entities.knowledgeGraph")}
             <select bind:value={advancedFilter.mid}>
               <option value={null}>---</option>
-              <option value={true}>Has a knowledge graph ID</option>
-              <option value={false}>Does not have a knowledge graph ID</option>
+              <option value={true}>{$_("entities.hasKG")}</option>
+              <option value={false}>{$_("entities.noKG")}</option>
             </select>
           </div>
           <div>
-            Wikipedia URL:
+            {$_("entities.wikiUrl")}
             <select bind:value={advancedFilter.wikipedia_url}>
               <option value={null}>---</option>
-              <option value={true}>Has a Wikipedia URL</option>
-              <option value={false}>Does not have a Wikipedia URL</option>
+              <option value={true}>{$_("entities.hasWiki")}</option>
+              <option value={false}>{$_("entities.noWiki")}</option>
             </select>
           </div>
         </div>
@@ -499,11 +493,15 @@
             <div class="entity" on:click={() => (selectedEntity = entity)}>
               <div class="title">{entity.name}</div>
               <div class="subtitle">
-                {handlePlural(entity.occurrences.length, "occurrence")}
+                {$_("entities.occurence", {
+                  values: { n: entity.occurrences.length },
+                })}
               </div>
               {#if entity.hasWikiUrl}
                 <div class="subtitle">
-                  <a href={entity.wikiUrl} target="_blank">Wikipedia</a>
+                  <a href={entity.wikiUrl} target="_blank"
+                    >{$_("entities.wikipedia")}</a
+                  >
                 </div>
               {/if}
             </div>
@@ -512,36 +510,33 @@
       {/each}
     </div>
   {:else if loading == false && $entities.document != null}
-    <h2>Entity extraction for “{$entities.document.title}”</h2>
+    <h2>
+      {$_("entities.entityExtraction", {
+        values: { title: $entities.document.title },
+      })}
+    </h2>
     {#if $entities.document.readable}
       <p>
-        Extracting entities...
+        {$_("entities.extractingEntities")}
         <Progress initializing={true} progress={0} compact={true} />
       </p>
     {:else}
       <p>
-        Welcome to entity extraction! This feature is very much in progress but
-        we want it in your hands early to welcome any <a
-          href={CONTACT}
-          target="_blank">feedback</a
-        > you might have.
+        {@html $_("entities.welcome", { values: { contact: CONTACT } })}
       </p>
       <p>
-        Right now the process for extracting entities is manual. This document
-        has not had entities extracted yet, so click below to get started.
+        {$_("entities.manual")}
       </p>
       {#if extractionError}
-        An unexpected error occurred
+        {$_("entities.error")}
       {:else if extractionStage == 0 || extractionStage == 2}
-        <p><button on:click={extract}>Extract entities</button></p>
-        {#if extractionStage == 2}<p>
-            There are no entities. This could happen if the document doesn’t
-            have text, is non-English (only English is supported for now), or
-            some error occurred.
-          </p>{/if}
+        <p><button on:click={extract}>{$_("entities.extract")}</button></p>
+        {#if extractionStage == 2}
+          <p>{$_("entities.noEntities")}</p>
+        {/if}
       {:else if extractionStage == 1}
-        <p><i>Starting extraction...</i></p>
+        <p><i>{$_("entities.starting")}</i></p>
       {/if}
     {/if}
-  {:else}Loading...{/if}
+  {:else}{$_("common.loading")}{/if}
 </div>

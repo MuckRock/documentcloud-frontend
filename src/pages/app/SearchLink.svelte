@@ -1,4 +1,5 @@
 <script>
+  import { _ } from "svelte-i18n";
   // SVG assets
   import SearchIconSvg from "@/assets/search_icon.svg";
 
@@ -46,7 +47,7 @@
 <div class="link">
   <a href={link} target="_blank"
     >{@html SearchIconSvg}
-    Search this document collection</a
+    {$_("searchLink.search")}</a
   >
 </div>
 <div class="linkcontainer" />

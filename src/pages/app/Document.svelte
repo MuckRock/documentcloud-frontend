@@ -7,6 +7,7 @@
   import HtmlField from "@/common/HtmlField";
   import Link from "@/router/Link";
   import DocumentThumbnail from "./DocumentThumbnail";
+  import { _ } from "svelte-i18n";
 
   // Stores
   import { layout, unselectDocument, editData } from "@/manager/layout";

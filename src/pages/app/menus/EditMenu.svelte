@@ -1,6 +1,7 @@
 <script>
   import Menu from "@/common/Menu";
   import MenuItem from "@/common/MenuItem";
+  import { _ } from "svelte-i18n";
 
   // Stores
   import { layout, selectionProcessing } from "@/manager/layout";
@@ -64,7 +65,7 @@
 
 <Menu>
   <MenuItem on:click={() => editDocumentInfoSelected()}>
-    Edit Document Information
+    {$_("editMenu.editDocInfo")}
   </MenuItem>
   {#each metaDialogs as meta}
     <MenuItem
@@ -78,30 +79,34 @@
     </MenuItem>
   {/each}
   <MenuItem disabled={processing} on:click={changeAccessSelected}>
-    Change Access
+    {$_("editMenu.changeAccess")}
   </MenuItem>
-  <MenuItem on:click={editDataSelected}>Edit Document Data</MenuItem>
+  <MenuItem on:click={editDataSelected}>{$_("editMenu.editDocData")}</MenuItem>
   {#if allProcessing}
     <MenuItem danger={true} on:click={cancelProcessSelected}>
-      Cancel Processing
+      {$_("editMenu.cancelProcessing")}
     </MenuItem>
   {:else if !processing}
-    <MenuItem on:click={reprocessSelected}>Force Reprocess</MenuItem>
+    <MenuItem on:click={reprocessSelected}>
+      {$_("editMenu.forceReprocess")}
+    </MenuItem>
   {/if}
   {#if $layout.numSelected == 1}
-    <MenuItem on:click={showEntities}
-      >Entities <span class="beta">BETA</span></MenuItem
-    >
+    <MenuItem on:click={showEntities}>
+      {@html $_("editMenu.entities")}
+    </MenuItem>
   {/if}
   {#if canChangeOwner}
     <MenuItem danger={true} on:click={changeOwnerSelected}>
-      Change Owner
+      {$_("editMenu.changeOwner")}
     </MenuItem>
   {/if}
-  <MenuItem danger={true} on:click={removeSelected}>Delete</MenuItem>
+  <MenuItem danger={true} on:click={removeSelected}>
+    {$_("editMenu.delete")}
+  </MenuItem>
   {#if $orgsAndUsers.isStaff}
     <MenuItem special={true} on:click={showDiagnosticsSelected}>
-      Diagnostic Info
+      {$_("editMenu.diagnosticInfo")}
     </MenuItem>
   {/if}
 </Menu>

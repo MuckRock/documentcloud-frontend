@@ -1,5 +1,6 @@
 <script>
   import { doc, zoomBreakpoints } from "@/viewer/document";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import plusSvg from "@/assets/viewer_plus.svg";
@@ -103,8 +104,8 @@
   <select bind:this={select} on:blur={handleChange}>
     <option value="default">{($doc.viewerScale * 100).toFixed()}%</option>
     <option disabled>---</option>
-    <option value="width">Fit width</option>
-    <option value="height">Fit height</option>
+    <option value="width">{$_("zoom.fitWidth")}</option>
+    <option value="height">{$_("zoom.fitHeight")}</option>
     <option value="50">50%</option>
     <option value="100">100%</option>
     <option value="150">150%</option>

@@ -10,6 +10,7 @@
   import { newProject } from "@/manager/layout";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { allDocumentsUrl, userUrl, orgUrl } from "@/search/search";
+  import { _ } from "svelte-i18n";
 
   import emitter from "@/emit";
 
@@ -83,14 +84,14 @@
     <Logo />
     <div class="linksection">
       <Link plusReplace={true} toUrl={allDocumentsUrl()}>
-        <div class="link">All Documents</div>
+        <div class="link">{$_("projects.allDocuments")}</div>
       </Link>
       {#if $orgsAndUsers.me != null}
         <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me)}>
-          <div class="link">Your Documents</div>
+          <div class="link">{$_("projects.yourDocuments")}</div>
         </Link>
         <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me, true)}>
-          <div class="link">Your Public Documents</div>
+          <div class="link">{$_("projects.yourPubDocuments")}</div>
         </Link>
         {#if $orgsAndUsers.me.organization != null && !$orgsAndUsers.me.organization.individual}
           <Link
@@ -98,7 +99,9 @@
             toUrl={orgUrl($orgsAndUsers.me.organization)}
           >
             <div class="link">
-              {$orgsAndUsers.me.organization.name}’s Documents
+              {$_("projects.orgDocuments", {
+                values: { name: $orgsAndUsers.me.organization.name },
+              })}
             </div>
           </Link>
         {/if}
@@ -107,7 +110,9 @@
     {#if $orgsAndUsers.loggedIn}
       <div class="titlesection">
         <Title small={true}>Projects</Title>
-        <Button on:click={newProject} small={true}>+ New Project</Button>
+        <Button on:click={newProject} small={true}
+          >{$_("projects.newProject")}</Button
+        >
       </div>
     {/if}
   </div>
@@ -118,9 +123,7 @@
           <Project {project} />
         {/each}
       {:else}
-        <small>
-          Create your first project by clicking “New Project” above.
-        </small>
+        <small>{$_("projects.createProject")}</small>
       {/if}
     </div>
   {/if}

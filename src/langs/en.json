@@ -2,7 +2,8 @@
   "common": {
     "emailAddress": "Email address",
     "loading": "Loading...",
-    "documentCloud": "DocumentCloud"
+    "documentCloud": "DocumentCloud",
+    "home": "Home"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -50,7 +51,8 @@
     "save": "Save",
     "create": "Create",
     "ok": "Ok",
-    "update": "Update"
+    "update": "Update",
+    "dismiss": "Dismiss"
   },
   "dialogAccessDialog": {
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
@@ -201,8 +203,7 @@
     "unexpectedErrorOccurred": "An unexpected error occurred",
     "tryAgain": "Please try again later.",
     "close": "Close",
-    "refresh": "Refresh",
-    "dismiss": "Dismiss"
+    "refresh": "Refresh"
   },
   "dialogNoteEmbedDialog": {
     "embedNote": "Embed a note of “{title}”",
@@ -285,7 +286,6 @@
     "noPerms": "You do not have permission to edit all of the selected documents"
   },
   "authSection": {
-    "home": "Home",
     "help": "Help",
     "tips": "Tips and Tricks",
     "searchDocs": "Search Documentation",
@@ -328,5 +328,244 @@
     "error": "Error",
     "errorMsg": "We could not reach the DocumentCloud server. Please try refreshing the page later.",
     "refresh": "Refresh"
+  },
+  "editMenu": {
+    "editDocInfo": "Edit Document Information",
+    "changeAccess": "Change Access",
+    "editDocData": "Edit Document Data",
+    "cancelProcessing": "Cancel Processing",
+    "forceReprocess": "Force Reprocess",
+    "entites": "Entities <span class=\"beta\">BETA</span>",
+    "changeOwner": "Change Owner",
+    "delete": "Delete",
+    "diagnosticInfo": "Diagnostic Info"
+  },
+  "projectsMenu": {
+    "newProject": "+ New Project",
+    "projMembership": "Project Membership",
+    "selectDocs": "Select documents to place them in projects",
+    "createProj": "Create a project to organize and share documents"
+  },
+  "noDocuments": {
+    "noSearchResults": "No search results",
+    "queryNoResults": "Your search query returned no results. Try again with a broader search query.",
+    "welcome": "Welcome to DocumentCloud!",
+    "verify1": "Note that currently your account is <b>not verified to upload</b>. You can search through the public repository, organize documents you're interested in into projects, leave private notes, and collaborate on editing and annotating documents other users invite you to.",
+    "verify2": "If you’d like to upload or publish documents and you're a working journalist or other organization interested in publishing primary source materials in the public interest, you'll need to have your account verified or added to a verified organization. This is a simple process:",
+    "verify3": "First, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">see if your organization already exists</a> and, if you find it, click \"Request to Join\" on its page.",
+    "verify4": "If your organization has not been verified yet, or if you're a freelancer, <a target=\"_blank\" href=\"https://www.muckrock.com/assignment/request-account-verification-377/form/\">request verification here</a>. Requests usually take two business days to process.",
+    "uploadFirst": "Upload your first document",
+    "upload1": "Upload a document file to get started using DocumentCloud. You can drag the file into this window, or click on the blue “Upload” button above.",
+    "upload2": "Once you upload a file, DocumentCloud will process the document and extract its contents. It may take a few minutes for this to complete, but once it’s done your document will be optimized for analysis and sharing on the web."
+  },
+  "paginator": {
+    "of": "of",
+    "document": "{n, plural, one {Document} other {Documents}}"
+  },
+  "processingBar": {
+    "doneProcessing": "Done processing",
+    "processingDocuments": "Processing {n, plural, one {document} other {# documents}}"
+  },
+  "searchBar": {
+    "tips": "Search tips: add filters by typing <code>user:</code>, <code>project:</code>, or <code>organization:</code>, etc. Use <code>sort:</code> to order results.",
+    "learnMore": "Learn more"
+  },
+  "searchLink": {
+    "search": "Search this document collection"
+  },
+  "projects": {
+    "allDocuments": "All Documents",
+    "yourDocuments": "Your Documents",
+    "yourPubDocuments": "Your Public Documents",
+    "orgDocuments": "{name}’s Documents",
+    "newProject": "+ New Project",
+    "createProject": "Create your first project by clicking “New Project” above."
+  },
+  "uploadDialog": {
+    "docUpload": "Document Upload",
+    "docUploadProj": "Document Upload to {title}",
+    "beginUpload": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
+    "pdfSizeWarning": "You can only upload PDF files under {size}.",
+    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
+    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
+    "fileLimitWarning": "You can only upload {limit} files at once.",
+    "moreOptions": "More options",
+    "beginUpload": "Begin upload",
+    "selectFiles": "+ Select files",
+    "dragDrop": "Drag and drop files here",
+    "publicMsg": "Document will be publicly visible.",
+    "collabMsg": "Document will be visible to your organization.",
+    "privateMsg": "Document will be visible to you alone.",
+    "collabName": "Organization",
+    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
+    "uploading": "Uploading ... ({uploaded}/{length})",
+    "gettingInfo": "Getting upload information ({percent})",
+    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
+    "errorHeading": "Error occurred while uploading",
+    "errorMsg": "We failed to {errorMessage}. Please try again later.",
+    "editDocInfo": "Edit document information:",
+    "untitled": "Untitled",
+    "uploadFiles": "Upload additional files",
+    "selectMore": "+ Select more files",
+    "dragDropMore": "Drag and drop additional files here"
+  },
+  "embedNote": {
+    "viewTheNote": "View the note ‘{title}‘ in its original document context on DocumentCloud in a new window or tab",
+    "viewDoc": "View the entire document with <span class=\"DC-note-logotype-link\">DocumentCloud</span>"
+  },
+  "embedPage": {
+    "viewDoc": "View entire {title} on DocumentCloud in new window or tab",
+    "pageOf": "Page {page} of {title}",
+    "gotoDocCloud": "Go to DocumentCloud in new window or tab"
+  },
+  "entities": {
+    "back": "Back",
+    "page": "Page",
+    "of": "of",
+    "totalEntityResult": "{n, plural, one {# total entity result} other {# total entity results}} ",
+    "filter": "Filter",
+    "applyFilters": "applyFilters",
+    "kind": "Kind",
+    "clear": "Clear",
+    "person": "Person",
+    "org": "Organization",
+    "location": "Location",
+    "event": "Event",
+    "workOfArt": "Work of Art",
+    "consumerGood": "Consumer Good",
+    "address": "Address",
+    "date": "Date",
+    "number": "Number",
+    "phoneNumber": "Phone Number",
+    "price": "Price",
+    "unknown": "Unknown",
+    "other": "Other",
+    "occurrences": "Occurrences",
+    "proper": "Proper",
+    "common": "Common",
+    "advanced": "Advanced",
+    "relevanceThreshold": "Relevance threshold:",
+    "knowldgeGraph": "Knowledge graph:",
+    "hasKG": "Has a knowledge graph ID",
+    "noKG": "Does not have a knowledge graph ID",
+    "wikiUrl": "Wikipedia URL:",
+    "hasWiki": "Has a Wikipedia URL",
+    "noWiki": "Does not have a Wikipedia URL",
+    "occurence": "{n, plural, zero {} one {# occurence} other {# occurrences}}",
+    "wikipedia": "Wikipedia",
+    "entityExtraction": "Entity extraction for “{title}”",
+    "extractingEntities": "Extracting entities...",
+    "welcome": "Welcome to entity extraction! This feature is very much in progress but we want it in your hands early to welcome any <a href={contact} target=\"_blank\">feedback</a> you might have.",
+    "manual": "Right now the process for extracting entities is manual. This document has not had entities extracted yet, so click below to get started.",
+    "error": "An unexpected error occurred",
+    "extract": "Extract entities",
+    "noEntities": "There are no entities. This could happen if the document doesn’t have text, is non-English (only English is supported for now), or some error occurred.",
+    "starting": "Starting extaction..."
+  },
+  "home": {
+    "about": "DocumentCloud is an all-in-one platform for documents: upload, organize, analyze, annotate, search, and embed.",
+    "viewPublicDocs": "View public documents"
+  },
+  "annotation": {
+    "title": "Annotation Title",
+    "description": "Annotation Description (optional)",
+    "unchanged": "Note remains unchanged",
+    "noTitle": "Enter a title for the annotation",
+    "org": "This note is only visible to you and others with edit access to this document",
+    "private": "This private note is only visible to you",
+    "by": "Annotated by {name}",
+    "byOrg": "Annotated by {name}, {org}"
+  },
+  "viewDropdown": {
+    "document": "Document",
+    "plainText": "Plain Text",
+    "thumbnail": "Thumbnail",
+    "notes": "Notes",
+    "search": "Search Results"
+  },
+  "zoom": {
+    "fitWidth": "Fit width",
+    "fitHeight": "Fit height"
+  },
+  "titleHeader": {
+    "contributedBy": "Contributed by {name}"
+  },
+  "annotatePane": {
+    "annotateDocument": "Annotate Document",
+    "desc": "Highlight a portion of the page, or click between pages to create a note."
+  },
+  "modifyPane": {
+    "pagesSelected": "{n, plural, one {# Page} other {# Pages}} Selected",
+    "applyModifications": "Apply Modifications",
+    "duplicate": "Duplicate",
+    "move": "Move",
+    "unselect": "Unselect",
+    "remove": "Remove",
+    "insertPages": "Insert {n, plural, one {# Page} other {# Pages}}",
+    "pagesPending": "{n, plural, one {# Page} other {# Pages}} Pending Insertion",
+    "insertBegin": "Insert {n, plural, one {# page} other {# pages}} at beginning.",
+    "insertEnd": "Insert {n, plural, one {# page} other {# pages}} at end.",
+    "insertBetween": "Insert {n, plural, one {# page} other {# pages}} in between page {p0} and {p1}.",
+    "click": "Click in-between pages below to mark where to paste {n, plural, one {# page} other {# pages}}.",
+    "insert": "Insert",
+    "insertAtEnd": "Insert at end",
+    "insertPosition": "Insert pages at position",
+    "insertOtherDoc": "Insert from other document",
+    "modifyPages": "Modify Pages",
+    "select": "Select pages below to apply modifications (page rotation, rearranging, and deletion). Click in-between pages to insert.",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+  "redactPane": {
+    "redactDoc": "Redact Document",
+    "desc": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
+    "confirm": "Confirm Redactions",
+    "undo": "Undo"
+  },
+  "searchPane": {
+    "yourQuery": "Your query <em>{search}</em> was found on {n, plural, one {# page} other {# pages}}"
+  },
+  "selectNotePane": {
+    "selectNote": "Select a note",
+    "desc": "Select the annotation that you want to share."
+  },
+  "searchResults": {
+    "resultPages": "{results, plural, one {# result} other {# results}} across {pages, plural, one {# page} other {# pages}}",
+    "noSearchResults": "No search results. Try again with a broader query.",
+    "occurrences": "{n, plural, one {# occurence} other {# occurrences}}"
+  },
+  "sidebar": {
+    "updating": "Updating docucment...",
+    "original": "Original Document (PDF) »",
+    "related": "Related Article »",
+    "contributed": "Contributed by {name}",
+    "source": "Source: {source}",
+    "actions": "Document Actions",
+    "share": "Share",
+    "shareDesc": "Create an embed or share on social media.",
+    "annotate": "Annotate",
+    "annotateDesc": "Make annotations to keep notes on the document.",
+    "redact": "Redact",
+    "redactDesc": "Create redactions on the document to hide text. The document will reprocess afterwards.",
+    "modify": "Modify Pages",
+    "modifyDesc": "Rearrange, rotate, delete, insert, and split pages.",
+    "info": "Edit Document Info",
+    "infoDesc": "Modify document information like description and related URL.",
+    "data": "Edit Tags and Data",
+    "dataDesc": "Add tags and key/value pairs to categorize your document.",
+    "sections": "Edit Sections",
+    "sectionsDesc": "Add sections to organize your document with a table of contents.",
+    "privateNote": "Add Private Note",
+    "privateNoteDesc": "Make annotations to keep notes on the document."
+  },
+  "viewer": {
+    "notFound": "Document not found",
+    "notFoundDesc": "The document you requested either does not exist or you lack permission to access it",
+    "processing": "Document is processing",
+    "processingDesc": "The document you requested is processing and will automatically refresh when it is ready",
+    "error": "Document has encountered an error",
+    "errorDesc": "A processing error has been encountered in the document you requested",
+    "accessible": "Document not accessible",
+    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
   }
 }

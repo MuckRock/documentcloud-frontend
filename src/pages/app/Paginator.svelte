@@ -3,6 +3,7 @@
   import { pushUrl } from "@/router/router";
   import { queryBuilder } from "@/util/url";
   import { simplePlural } from "@/util/string";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import leftPaginatorSvg from "@/assets/page_arrow_left.svg";
@@ -116,12 +117,12 @@
               -
               {$search.results.end}
             </span>
-            of
+            {$_("paginator.of")}
             {$search.results.count}
           {/if}
         </div>
         <div class="documents">
-          {simplePlural($search.results.count, "Document")}
+          {$_("paginator.document", { values: { n: $search.results.count } })}
         </div>
       </div>
       <button disabled={!$search.results.hasNext} on:click={gotoNext}>

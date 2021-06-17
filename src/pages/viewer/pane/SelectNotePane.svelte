@@ -1,2 +1,6 @@
-<h3>Select a note</h3>
-<p>Select the annotation that you want to share.</p>
+<script>
+  import { _ } from "svelte-i18n";
+</script>
+
+<h3>{$_("selectNotePane.selectNote")}</h3>
+<p>{$_("selectNotePane.desc")}</p>

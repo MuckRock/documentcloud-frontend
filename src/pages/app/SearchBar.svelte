@@ -10,6 +10,7 @@
   } from "@/search/search";
   import { showSearchTips } from "@/manager/layout";
   import { router } from "@/router/router";
+  import { _ } from "svelte-i18n";
 
   export let search = "";
   export let example = false;
@@ -96,15 +97,7 @@
   {#if !embed && !example}
     <div class="info">
       <span>
-        Search tips: add filters by typing
-        <code>user:</code>
-        ,
-        <code>project:</code>
-        , or
-        <code>organization:</code>
-        , etc. Use
-        <code>sort:</code>
-        to order results.
+        {@html $_("searchBar.tips")}
       </span>
       <Button
         action={true}
@@ -112,7 +105,7 @@
         nomargin={true}
         on:click={showSearchTips}
       >
-        Learn more
+        {$_("searchBar.learnMore")}
       </Button>
     </div>
   {/if}

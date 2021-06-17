@@ -8,6 +8,7 @@
   import { getAnnotations } from "@/api/annotation";
   import { textUrl, pageImageUrl } from "@/api/viewer";
   import { embedUrl } from "@/api/embed";
+  import { _ } from "svelte-i18n";
 
   export let id;
   export let page;
@@ -143,7 +144,7 @@
       <a
         class="DC-embed-resource"
         href={pageUrl}
-        title="View entire {doc.title} on DocumentCloud in new window or tab"
+        title={$_("embedPage.viewDoc", { values: { title: doc.title } })}
         target="_blank"
       >
         {doc.title}
@@ -155,7 +156,9 @@
         {aspect}
         on:load={() => informSize(elem)}
         bordered={false}
-        alt="Page {page} of {doc.title}"
+        alt={$_("embedPage.pageOf", {
+          values: { page: page, title: doc.title },
+        })}
         page={{ document: doc, pageNumber: page - 1 }}
       />
 
@@ -190,7 +193,7 @@
       Contributed to
       <a
         href={process.env.APP_URL}
-        title="Go to DocumentCloud in new window or tab"
+        title={$_("embedPage.gotoDocCloud")}
         target="_blank"
         style="color: #5a76a0; text-decoration: underline;
         font-weight:700;font-family:Gotham,inherit,sans-serif;color:inherit;text-decoration:none"
@@ -203,7 +206,7 @@
       <a
         style="color: #5a76a0; text-decoration: underline;"
         href={pageUrl}
-        title="View entire {doc.title} on DocumentCloud in new window or tab"
+        title={$_("embedPage.viewDoc", { values: { title: doc.title } })}
         target="_blank"
       >
         View document
