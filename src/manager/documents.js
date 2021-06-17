@@ -106,16 +106,20 @@ export const documents = new Svue({
     pendingMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => x);
     },
-    imagesProcessedMap(pending) {
+    pagesProcessedMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.images == null || x.pages == null) return null;
-        return x.pages - x.images;
-      });
-    },
-    textsProcessedMap(pending) {
-      return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.texts == null || x.pages == null) return null;
-        return x.pages - x.texts;
+        if (
+          x.images == null ||
+          x.texts == null ||
+          x.text_positions == null ||
+          x.pages == null
+        )
+          return null;
+        return Math.min(
+          x.pages - x.images,
+          x.pages - x.texts,
+          x.pages - x.text_positions,
+        );
       });
     },
     pageCountMap(pending) {
@@ -126,10 +130,17 @@ export const documents = new Svue({
     },
     realProgressMap(pending) {
       return mapReduce(pending, PENDING_DOC_ID, (x) => {
-        if (x.images == null || x.texts == null || x.pages == null) return null;
+        if (
+          x.images == null ||
+          x.texts == null ||
+          x.text_positions == null ||
+          x.pages == null
+        )
+          return null;
         const images = x.pages - x.images;
         const texts = x.pages - x.texts;
-        return (images + texts) / 2 / x.pages;
+        const textPositions = x.pages - x.text_positions;
+        return (images + texts + textPositions) / 3 / x.pages;
       });
     },
     processingDocuments(allDocuments) {
@@ -151,19 +162,25 @@ export const documents = new Svue({
 
       // Operate on documents with non-null progresses
       let totalPages = 0;
-      let totalImagesProcessed = 0;
-      let totalTextsProcessed = 0;
+      let totalPagesProcessed = 0;
       for (let i = 0; i < pending.length; i++) {
         const p = pending[i];
-        if (p.images != null && p.texts != null && p.pages != null) {
+        if (
+          p.images != null &&
+          p.texts != null &&
+          p.text_positions != null &&
+          p.pages != null
+        ) {
           totalPages += p.pages;
-          totalImagesProcessed += p.pages - p.images;
-          totalTextsProcessed += p.pages - p.texts;
+          totalPagesProcessed +=
+            (p.pages -
+              p.images +
+              (p.pages - p.texts) +
+              (p.pages - p.text_positions)) /
+            3;
         }
       }
       if (totalPages == 0) return 0;
-      const totalPagesProcessed =
-        (totalImagesProcessed + totalTextsProcessed) / 2;
       return totalPagesProcessed / totalPages;
     },
     pollDocuments(processingDocuments, updatingDocuments) {
@@ -554,6 +571,10 @@ async function updatePending() {
         pendingDoc.images == null ? existingDoc.images : pendingDoc.images;
       pendingDoc.texts =
         pendingDoc.texts == null ? existingDoc.texts : pendingDoc.texts;
+      pendingDoc.text_positions =
+        pendingDoc.text_positions == null
+          ? existingDoc.text_positions
+          : pendingDoc.text_positions;
       pendingDoc.pages =
         pendingDoc.pages == null ? existingDoc.pages : pendingDoc.pages;
     }
