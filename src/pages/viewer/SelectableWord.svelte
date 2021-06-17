@@ -9,6 +9,9 @@
   export let scale;
   export let appendSpace = false;
   export let highlight = false;
+  export let direction = "left";
+  export let pageWidth;
+  export let pageHeight;
 
   let span = null;
   let sizer = null;
@@ -23,14 +26,15 @@
   let transform = "";
   let sizeNeeded = true;
 
-  const SPACE_PERCENT = 0.3;
+  let scaleX = 1;
+  let scaleY = 1;
 
   onMount(() => {
     sizer.textContent = word;
     const bbox = sizer.getBoundingClientRect();
     const spanBbox = span.getBoundingClientRect();
-    const scaleX = spanBbox.width / bbox.width;
-    const scaleY = spanBbox.height / bbox.height;
+    scaleX = spanBbox.width / bbox.width / scale;
+    scaleY = spanBbox.height / bbox.height / scale;
     transform = `scale(${scaleX},${scaleY})`;
     sizeNeeded = false;
   });
@@ -49,11 +53,6 @@
     &::selection {
       background: rgba(66, 147, 240, 0.3);
       mix-blend-mode: multiply;
-    }
-
-    &.padded {
-      padding-right: 100%;
-      padding-bottom: 100%;
     }
 
     &.highlight {
@@ -82,11 +81,10 @@
 {/if}
 <span
   bind:this={span}
-  class="selectabletext"
-  class:padded={!sizeNeeded}
+  class="selectabletext {direction}"
   class:highlight
   style="
-    font-size: {scale * 100}%;
+    font-size: {scale * 13}px;
     left:{left * 100}%;
     top:{top *
     100}%;
@@ -94,7 +92,19 @@
     ? `width: ${width * 100}%; height:
     ${height * 100}%;`
     : ''}
-    transform: {transform};"
+    transform: {transform}{!sizeNeeded && direction == 'right'
+    ? ` translate(${-pageWidth / scaleX}px,0)`
+    : ''};
+    {!sizeNeeded
+    ? `padding-bottom: ${pageHeight / scaleY}px;`
+    : ''}
+    {!sizeNeeded && direction == 'left'
+    ? `padding-right: ${pageWidth / scaleX}px;`
+    : ''}
+    {!sizeNeeded && direction == 'right'
+    ? `padding-left: ${pageWidth / scaleX}px;`
+    : ''}
+    "
   >{word}<span style="font-size: 0"
     >{!sizeNeeded && appendSpace ? " " : ""}</span
   ></span

@@ -13,7 +13,7 @@
   import { selectableTextUrl } from "@/api/viewer";
   import session from "@/api/session";
   import { coalesceSelectableHighlights } from "@/util/coalesceHighlights";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   // Selectable text
   import SelectableWord from "./SelectableWord";
@@ -49,6 +49,30 @@
   $: height = (width - border * 2) * page.aspect;
 
   let selectableText = [];
+  let hasSelectableText = false;
+  const SELECTABLE_TEXT_DELAY = 50; // small timeout to avoid spamming requests
+  let selectableTextTimeout = null;
+  let detectedDirection = "left";
+
+  function detectWritingDirection() {
+    let ltr = 0;
+    let rtl = 0;
+    for (let i = 1; i < selectableText.length; i++) {
+      const prev = selectableText[i - 1];
+      const current = selectableText[i];
+      if (current.x1 > prev.x2) {
+        // Left-to-right block
+        ltr++;
+      } else if (current.x2 < prev.x1) {
+        // Right-to-left block
+        rtl++;
+      }
+    }
+    if (rtl > ltr) {
+      return "right";
+    }
+    return "left";
+  }
 
   onMount(async () => {
     if (callback != null) {
@@ -56,21 +80,30 @@
       callback = null;
     }
 
-    try {
-      // Get selectable text if available
-      selectableText = await session.getStatic(
-        selectableTextUrl(viewer.document, page.pageNumber),
-      );
-    } catch (e) {
-      // No selectable text, no worries
-    }
-    if ($layout.searchHighlights != null) {
-      // Merge highlights into selectable text
-      selectableText = coalesceSelectableHighlights(
-        selectableText,
-        $layout.searchHighlights[page.pageNumber],
-      );
-    }
+    selectableTextTimeout = setTimeout(async () => {
+      selectableTextTimeout = null;
+      try {
+        // Get selectable text if available
+        selectableText = await session.getStatic(
+          selectableTextUrl(viewer.document, page.pageNumber),
+        );
+        detectedDirection = detectWritingDirection();
+        hasSelectableText = true;
+      } catch (e) {
+        // No selectable text, no worries
+      }
+      if ($layout.searchHighlights != null) {
+        // Merge highlights into selectable text
+        selectableText = coalesceSelectableHighlights(
+          selectableText,
+          $layout.searchHighlights[page.pageNumber],
+        );
+      }
+    }, SELECTABLE_TEXT_DELAY);
+  });
+
+  onDestroy(() => {
+    if (selectableTextTimeout != null) clearTimeout(selectableTextTimeout);
   });
 </script>
 
@@ -262,22 +295,27 @@
     />
 
     <!-- Selectable text -->
-    <div
-      style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; user-select: text; cursor: text;"
-    >
-      {#each selectableText as word, i}
-        <SelectableWord
-          word={word.text}
-          x1={word.x1}
-          x2={word.x2}
-          y1={word.y1}
-          y2={word.y2}
-          {scale}
-          highlight={word.type == "highlight"}
-          appendSpace={i != selectableText.length - 1}
-        />
-      {/each}
-    </div>
+    {#if hasSelectableText}
+      <div
+        style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; user-select: text; cursor: text;"
+      >
+        {#each selectableText as word, i}
+          <SelectableWord
+            word={word.text}
+            x1={word.x1}
+            x2={word.x2}
+            y1={word.y1}
+            y2={word.y2}
+            pageWidth={width}
+            pageHeight={height}
+            {scale}
+            direction={detectedDirection}
+            highlight={word.type == "highlight"}
+            appendSpace={i != selectableText.length - 1}
+          />
+        {/each}
+      </div>
+    {/if}
 
     <!-- Markup -->
     {#if $viewer.notesByPage[page.pageNumber] != null}
