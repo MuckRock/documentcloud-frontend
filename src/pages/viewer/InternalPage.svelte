@@ -105,6 +105,16 @@
   onDestroy(() => {
     if (selectableTextTimeout != null) clearTimeout(selectableTextTimeout);
   });
+
+  // Drag detection
+  let textMouseDown = false;
+  function handleMouseDown() {
+    textMouseDown = true;
+  }
+
+  function handleMouseUp() {
+    textMouseDown = false;
+  }
 </script>
 
 <style lang="scss">
@@ -297,7 +307,14 @@
     <!-- Selectable text -->
     {#if hasSelectableText}
       <div
-        style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; user-select: text; cursor: text;"
+        on:mousedown={handleMouseDown}
+        style="position: absolute; pointer-events: {$layout.redacting ||
+        $layout.annotating
+          ? 'none'
+          : 'all'}; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; user-select: text; cursor: text; direction: {detectedDirection ==
+        'left'
+          ? 'ltr'
+          : 'rtl'}"
       >
         {#each selectableText as word, i}
           <SelectableWord
@@ -326,7 +343,7 @@
             class="tag"
             class:hover={$layout.hoveredNote == note}
             class:grayed={$layout.displayAnnotate}
-            class:disabled={$layout.redacting}
+            class:disabled={$layout.redacting || textMouseDown}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
             style="top: {note.y1 * 100}%"
@@ -341,8 +358,7 @@
             class:grayed={$layout.displayAnnotate}
             class:amplified={$layout.selectNoteEmbed}
             class:hover={$layout.hoveredNote == note}
-            class:selectable={!$layout.redacting}
-            class:disabled={$layout.redacting}
+            class:selectable={!$layout.redacting && !textMouseDown}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
             style="left: {note.x1 * 100}%; top: {note.y1 *
@@ -397,3 +413,5 @@
     {/if}
   </div>
 </div>
+
+<svelte:window on:mouseup={handleMouseUp} />

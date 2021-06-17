@@ -13,13 +13,30 @@
   export let pageWidth;
   export let pageHeight;
 
+  let isResizing = false;
+  let resizeTimeout = null;
+  const RESIZE_DELAY = 50;
+
+  function setResizeTimer() {
+    isResizing = true;
+    if (resizeTimeout != null) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      resizeTimeout = null;
+      isResizing = false;
+    }, RESIZE_DELAY);
+  }
+
+  $: {
+    // Every time scale changes because page is transforming,
+    // hide text for a small amount of time
+    setResizeTimer(scale);
+  }
+
   let span = null;
   let sizer = null;
 
   $: left = Math.min(x1, x2);
-  // $: right = Math.max(x1, x2);
   $: top = Math.min(y1, y2);
-  // $: bottom = Math.max(y1, y2);
   $: width = Math.abs(x2 - x1);
   $: height = Math.abs(y2 - y1);
 
@@ -50,6 +67,10 @@
     white-space: pre;
     font-family: monospace;
 
+    &.resizing {
+      display: none;
+    }
+
     &::selection {
       background: rgba(66, 147, 240, 0.3);
       mix-blend-mode: multiply;
@@ -68,10 +89,6 @@
   }
 </style>
 
-<!-- <div
-  style="position: absolute; user-select: all; left: 0; top: 0; width:{right *
-    100}%; height:{bottom * 100}%;"
-> -->
 {#if sizeNeeded}
   <div
     bind:this={sizer}
@@ -82,6 +99,7 @@
 <span
   bind:this={span}
   class="selectabletext {direction}"
+  class:resizing={isResizing && !sizeNeeded}
   class:highlight
   style="
     font-size: {scale * 13}px;
