@@ -1,7 +1,6 @@
 <script>
   import ExtraPageContent from "./ExtraPageContent";
   import PageNoteInsert from "./PageNoteInsert";
-  import TextPage from "@/common/TextPage";
   import ProgressiveImage from "@/common/ProgressiveImage";
   import Annotation from "./Annotation";
 
@@ -11,7 +10,13 @@
   import { layout } from "@/viewer/layout";
   import { markup } from "@/util/markup";
   import { hoveredNote } from "@/viewer/hoveredNote";
-  import { onMount } from "svelte";
+  import { selectableTextUrl } from "@/api/viewer";
+  import session from "@/api/session";
+  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights";
+  import { onDestroy, onMount } from "svelte";
+
+  // Selectable text
+  import SelectableWord from "./SelectableWord";
 
   export let page;
   export let width;
@@ -43,12 +48,73 @@
   $: effectiveWidth = width - border * 2;
   $: height = (width - border * 2) * page.aspect;
 
-  onMount(() => {
+  let selectableText = [];
+  let hasSelectableText = false;
+  const SELECTABLE_TEXT_DELAY = 50; // small timeout to avoid spamming requests
+  let selectableTextTimeout = null;
+  let detectedDirection = "left";
+
+  function detectWritingDirection() {
+    let ltr = 0;
+    let rtl = 0;
+    for (let i = 1; i < selectableText.length; i++) {
+      const prev = selectableText[i - 1];
+      const current = selectableText[i];
+      if (current.x1 > prev.x2) {
+        // Left-to-right block
+        ltr++;
+      } else if (current.x2 < prev.x1) {
+        // Right-to-left block
+        rtl++;
+      }
+    }
+    if (rtl > ltr) {
+      return "right";
+    }
+    return "left";
+  }
+
+  onMount(async () => {
     if (callback != null) {
       callback();
       callback = null;
     }
+
+    selectableTextTimeout = setTimeout(async () => {
+      selectableTextTimeout = null;
+      try {
+        // Get selectable text if available
+        selectableText = await session.getStatic(
+          selectableTextUrl(viewer.document, page.pageNumber),
+        );
+        detectedDirection = detectWritingDirection();
+        hasSelectableText = true;
+      } catch (e) {
+        // No selectable text, no worries
+      }
+      if ($layout.searchHighlights != null) {
+        // Merge highlights into selectable text
+        selectableText = coalesceSelectableHighlights(
+          selectableText,
+          $layout.searchHighlights[page.pageNumber],
+        );
+      }
+    }, SELECTABLE_TEXT_DELAY);
   });
+
+  onDestroy(() => {
+    if (selectableTextTimeout != null) clearTimeout(selectableTextTimeout);
+  });
+
+  // Drag detection
+  let textMouseDown = false;
+  function handleMouseDown() {
+    textMouseDown = true;
+  }
+
+  function handleMouseUp() {
+    textMouseDown = false;
+  }
 </script>
 
 <style lang="scss">
@@ -238,6 +304,36 @@
       {page}
     />
 
+    <!-- Selectable text -->
+    {#if hasSelectableText}
+      <div
+        on:mousedown={handleMouseDown}
+        style="position: absolute; pointer-events: {$layout.redacting ||
+        $layout.annotating
+          ? 'none'
+          : 'all'}; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; user-select: text; cursor: text; direction: {detectedDirection ==
+        'left'
+          ? 'ltr'
+          : 'rtl'}"
+      >
+        {#each selectableText as word, i}
+          <SelectableWord
+            word={word.text}
+            x1={word.x1}
+            x2={word.x2}
+            y1={word.y1}
+            y2={word.y2}
+            pageWidth={width}
+            pageHeight={height}
+            {scale}
+            direction={detectedDirection}
+            highlight={word.type == "highlight"}
+            appendSpace={i != selectableText.length - 1}
+          />
+        {/each}
+      </div>
+    {/if}
+
     <!-- Markup -->
     {#if $viewer.notesByPage[page.pageNumber] != null}
       <!-- Existing annotations -->
@@ -247,7 +343,7 @@
             class="tag"
             class:hover={$layout.hoveredNote == note}
             class:grayed={$layout.displayAnnotate}
-            class:disabled={$layout.redacting}
+            class:disabled={$layout.redacting || textMouseDown}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
             style="top: {note.y1 * 100}%"
@@ -262,8 +358,7 @@
             class:grayed={$layout.displayAnnotate}
             class:amplified={$layout.selectNoteEmbed}
             class:hover={$layout.hoveredNote == note}
-            class:selectable={!$layout.redacting}
-            class:disabled={$layout.redacting}
+            class:selectable={!$layout.redacting && !textMouseDown}
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
             style="left: {note.x1 * 100}%; top: {note.y1 *
@@ -318,3 +413,5 @@
     {/if}
   </div>
 </div>
+
+<svelte:window on:mouseup={handleMouseUp} />
