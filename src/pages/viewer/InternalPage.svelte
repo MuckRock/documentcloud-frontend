@@ -102,7 +102,10 @@
       selectableText != null &&
       selectableText.length > 0
     ) {
-      if ($layout.searchHighlights != null) {
+      if (
+        $layout.searchHighlights != null &&
+        $layout.searchHighlights[page.pageNumber] != null
+      ) {
         // Merge highlights into selectable text
         selectableTextWithHighlights = coalesceSelectableHighlights(
           selectableText,
