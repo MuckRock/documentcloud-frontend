@@ -49,6 +49,7 @@
   $: height = (width - border * 2) * page.aspect;
 
   let selectableText = [];
+  let selectableTextWithHighlights = [];
   let hasSelectableText = false;
   const SELECTABLE_TEXT_DELAY = 50; // small timeout to avoid spamming requests
   let selectableTextTimeout = null;
@@ -92,15 +93,26 @@
       } catch (e) {
         // No selectable text, no worries
       }
+    }, SELECTABLE_TEXT_DELAY);
+  });
+
+  $: {
+    if (
+      hasSelectableText &&
+      selectableText != null &&
+      selectableText.length > 0
+    ) {
       if ($layout.searchHighlights != null) {
         // Merge highlights into selectable text
-        selectableText = coalesceSelectableHighlights(
+        selectableTextWithHighlights = coalesceSelectableHighlights(
           selectableText,
           $layout.searchHighlights[page.pageNumber],
         );
+      } else {
+        selectableTextWithHighlights = selectableText;
       }
-    }, SELECTABLE_TEXT_DELAY);
-  });
+    }
+  }
 
   onDestroy(() => {
     if (selectableTextTimeout != null) clearTimeout(selectableTextTimeout);
@@ -326,7 +338,7 @@
           ? 'ltr'
           : 'rtl'}"
       >
-        {#each selectableText as word, i}
+        {#each selectableTextWithHighlights as word, i}
           <SelectableWord
             word={word.text}
             x1={word.x1}

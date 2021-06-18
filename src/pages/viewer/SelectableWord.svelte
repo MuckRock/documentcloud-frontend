@@ -45,6 +45,11 @@
 
   let scaleX = 1;
   let scaleY = 1;
+  let exactWidth = null;
+  let exactHeight = null;
+
+  const highlightPaddingX = 2;
+  const highlightPaddingY = 1;
 
   onMount(() => {
     sizer.textContent = word;
@@ -52,6 +57,8 @@
     const spanBbox = span.getBoundingClientRect();
     scaleX = spanBbox.width / bbox.width / scale;
     scaleY = spanBbox.height / bbox.height / scale;
+    exactWidth = spanBbox.width / scale;
+    exactHeight = spanBbox.height / scale;
     transform = `scale(${scaleX},${scaleY})`;
     sizeNeeded = false;
   });
@@ -67,25 +74,27 @@
     white-space: pre;
     font-family: monospace;
 
-    &.resizing {
-      display: none;
-    }
-
     &::selection {
       background: rgba(66, 147, 240, 0.3);
       mix-blend-mode: multiply;
     }
+  }
 
-    &.highlight {
-      background: #f3e94d52;
-      background: linear-gradient(#f3e94d52, #f5dd0152);
-      border: 1px solid #f5e800;
-      padding: 1px;
-      border-radius: 3px;
-      box-shadow: 0 0 5px #666;
-      box-sizing: border-box;
-      mix-blend-mode: darken;
-    }
+  .highlight {
+    position: absolute;
+    pointer-events: none;
+    background: #f3e94d52;
+    background: linear-gradient(#f3e94d52, #f5dd0152);
+    border: 1px solid #f5e800;
+    padding: 1px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px #666;
+    box-sizing: border-box;
+    mix-blend-mode: darken;
+  }
+
+  .resizing {
+    display: none;
   }
 </style>
 
@@ -100,12 +109,9 @@
   bind:this={span}
   class="selectabletext {direction}"
   class:resizing={isResizing && !sizeNeeded}
-  class:highlight
   style="
-    font-size: {scale * 13}px;
     left:{left * 100}%;
-    top:{top *
-    100}%;
+    top:{top * 100}%;
     {sizeNeeded
     ? `width: ${width * 100}%; height:
     ${height * 100}%;`
@@ -127,3 +133,17 @@
     >{!sizeNeeded && appendSpace ? " " : ""}</span
   ></span
 >
+{#if highlight && exactWidth != null && exactHeight != null}
+  <span
+    class="highlight"
+    class:resizing={isResizing && !sizeNeeded}
+    style="
+    left:calc({left * 100}% - {highlightPaddingX *
+      scale}px);
+    top:calc({top * 100}% - {highlightPaddingY *
+      scale}px);
+    width:{(exactWidth + highlightPaddingX * 2) *
+      scale}px;height:{(exactHeight + highlightPaddingY * 2) * scale}px;
+    "
+  />
+{/if}
