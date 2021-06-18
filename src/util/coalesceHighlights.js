@@ -106,7 +106,7 @@ export function coalesceSelectableHighlights(words, highlights) {
         for (let k = 0; k < block.length; k++) {
           // Go through each text object
           const text = block[k];
-          if (text != words[seekI].text) {
+          if (text.toLowerCase() != words[seekI].text.toLowerCase()) {
             // Not a match: abort
             matched = false;
             break;
