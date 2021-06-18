@@ -82,7 +82,7 @@ export function coalesceSelectableHighlights(words, highlights) {
   const highlightBlocks = highlights.map((highlight) =>
     highlight.map((block) => ({
       ...block,
-      text: block.text.split(/\s/).filter((x) => x.length > 0),
+      text: block.text.replace(/\s/g, ""),
     })),
   );
 
@@ -102,15 +102,16 @@ export function coalesceSelectableHighlights(words, highlights) {
       // See if it maps word-for-word with current text position
       for (let j = 0; j < highlight.length; j++) {
         // Go through each collection of text blocks
-        const block = highlight[j].text;
-        for (let k = 0; k < block.length; k++) {
+        let textBlock = highlight[j].text.toLowerCase().replace(/\s/g, "");
+        while (textBlock.length > 0) {
           // Go through each text object
-          const text = block[k];
-          if (text.toLowerCase() != words[seekI].text.toLowerCase()) {
+          const text = words[seekI].text.toLowerCase().replace(/\s/g, "");
+          if (!textBlock.startsWith(text)) {
             // Not a match: abort
             matched = false;
             break;
           }
+          textBlock = textBlock.substr(text.length);
           newHighlights.push(highlight[j].type);
           seekI++;
         }
