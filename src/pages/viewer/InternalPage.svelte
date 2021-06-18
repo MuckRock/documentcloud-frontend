@@ -115,6 +115,15 @@
   function handleMouseUp() {
     textMouseDown = false;
   }
+
+  function handleCopy(e) {
+    // Standardize copy text to remove rich text formatting
+    const copyText = document.getSelection().toString();
+    const clipdata = e.clipboardData || window.clipboardData;
+    clipdata.setData("text/plain", copyText);
+    clipdata.setData("text/html", copyText);
+    e.preventDefault();
+  }
 </script>
 
 <style lang="scss">
@@ -308,6 +317,7 @@
     {#if hasSelectableText}
       <div
         on:mousedown={handleMouseDown}
+        on:copy={handleCopy}
         style="position: absolute; pointer-events: {$layout.redacting ||
         $layout.annotating
           ? 'none'
