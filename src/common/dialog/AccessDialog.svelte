@@ -62,6 +62,12 @@
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
   $: notVerified = isViewer ? !$viewer.isVerified : !$orgsAndUsers.isVerified;
 
+  $: accessDocs = isViewer ? [$viewer.document] : $layout.accessEditDocuments;
+  $: oneIndividual =
+    accessDocs.filter(
+      (x) => x.organization != null && x.organization.individual,
+    ).length > 0;
+
   async function accessChange(access, publishAt) {
     if (!valid) return;
     if (isViewer) {
@@ -161,6 +167,10 @@
     position: relative;
     margin-bottom: 16px;
 
+    :global(a) {
+      color: $primary;
+    }
+
     .i {
       position: absolute;
       top: 0;
@@ -220,13 +230,23 @@
           <small>{$_("dialogAccessDialog.privateDesc")}</small>
         </div>
       </label>
-      <label>
+      <label class:faded={oneIndividual}>
         <input type="radio" bind:group={access} value={"organization"} />
         <div class="accessoption">
           <h3>{$_("dialogAccessDialog.organization")}</h3>
           <small>{$_("dialogAccessDialog.organizationDesc")}</small>
         </div>
       </label>
+      {#if oneIndividual}
+        <div class="callout">
+          <span class="i">{@html InfoSvg}</span>
+          <span class="content">
+            {@html $_("dialogAccessDialog.privateToOrg", {
+              values: { n: accessDocs.length },
+            })}
+          </span>
+        </div>
+      {/if}
       {#if access != "public" && !notVerified}
         <div class="scheduler">
           <div class="scheduleaction">
