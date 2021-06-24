@@ -7,6 +7,7 @@
   import { ModificationSpec } from "@/viewer/modification/modifySpec";
   import { modification } from "@/viewer/modification/modification";
   import Modification from "@/viewer/modification/Modification";
+  import { _ } from "svelte-i18n";
 
   $: modify = $layout.modifying;
 
@@ -303,7 +304,10 @@
           class="imgwrap"
           class:selected={$modification.modifySelectedMap[page.index]}
         >
-          <div class="pgnum" class:left={!modify}>p. {page.index + 1}</div>
+          <div class="pgnum" class:left={!modify}>
+            {$_("document.pageAbbrev")}
+            {page.index + 1}
+          </div>
           {#if modify}
             {#if !insertOnly}
               <div

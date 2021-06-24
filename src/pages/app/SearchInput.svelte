@@ -14,6 +14,7 @@
   import { slugify } from "@/util/string";
   import { timeoutify } from "@/util/closure";
   import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";
@@ -784,7 +785,7 @@
     disabled={example}
     class:compact
     class:example
-    placeholder="Search"
+    placeholder={$_("searchBar.search")}
     use:textAreaResize={0}
     spellcheck="false"
     on:keydown={handleKeyDown}

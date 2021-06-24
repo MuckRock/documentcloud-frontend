@@ -6,7 +6,8 @@
 
   import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
   import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
-  import { _ } from "svelte-i18n";
+  import { _, locale } from "svelte-i18n";
+  import langs from "@/langs/langs.json";
 
   function pickOne(list) {
     if (list == null) return null;
@@ -14,10 +15,25 @@
     return list[0];
   }
 
+  function triggerWindowResize() {
+    window.dispatchEvent(new Event("resize"));
+  }
+
   async function change(org) {
     await changeActive(org);
     // Fix dropdown resizing
-    window.dispatchEvent(new Event("resize"));
+    triggerWindowResize();
+  }
+
+  function updateLanguage(code) {
+    // Update the locale
+    $locale = code;
+    try {
+      localStorage.setItem("dc-locale", code);
+    } catch (e) {}
+
+    // Fix dropdown resizing
+    triggerWindowResize();
   }
 
   $: me = $orgsAndUsers.me;
@@ -69,11 +85,31 @@
         <MenuItem>{$_("authSection.apiDocs")}</MenuItem>
       </Link>
       <Link toUrl="mailto:info@documentcloud.org" color={true}>
-        <MenuItem>Email Us</MenuItem>
+        <MenuItem>{$_("authSection.emailUs")}</MenuItem>
       </Link>
     </Menu>
   </Dropdown>
   <span class="dot">·</span>
+  {#if langs.length > 1}
+    <Dropdown fixed={true}>
+      <span class="action" slot="title">
+        <span class="nowrap title">
+          {$_("authSection.language")} <span class="dropper">▼</span>
+        </span>
+      </span>
+      <Menu>
+        {#each langs as [name, code]}
+          <MenuItem on:click={() => updateLanguage(code)}
+            >{name}
+            {#if code == $locale}
+              <span class="scope">✓</span>
+            {/if}</MenuItem
+          >
+        {/each}
+      </Menu>
+    </Dropdown>
+    <span class="dot">·</span>
+  {/if}
   {#if me != null}
     <Dropdown fixed={true}>
       <span class="action" slot="title">

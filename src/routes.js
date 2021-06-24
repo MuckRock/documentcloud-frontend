@@ -8,8 +8,8 @@ import {
   loadPage,
   loadProject,
   loadLegacyRedirect,
+  loadEntities,
 } from "@/util/lazyComponent";
-import Entities from "@/pages/entities/Entities";
 
 export const routes = [
   NotFound,
@@ -36,7 +36,8 @@ export const routes = [
     },
     entity: {
       path: "/entities/:id",
-      component: Entities,
+      component: lazyComponent.entities,
+      get: loadEntities,
     },
 
     // Embeds

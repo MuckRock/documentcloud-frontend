@@ -7,6 +7,7 @@
   import { layout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { showIfFullyVisible } from "@/util/visibility";
+  import { _ } from "svelte-i18n";
 
   let textDoc = null;
   let loading = false;
@@ -87,7 +88,7 @@
     <div class="page">
       <div class="numbercontainer">
         <div id={i + 1} class="number" use:showIfFullyVisible>
-          <a href={`#${i + 1}`}>p.&nbsp;{i + 1}</a>
+          <a href={`#${i + 1}`}>{$_("document.pageAbbrev")}&nbsp;{i + 1}</a>
         </div>
       </div>
       <TextPage

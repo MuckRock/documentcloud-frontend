@@ -10,6 +10,7 @@
     fieldAccessor={meta.fieldAccessor}
     maxlength={meta.charLimit}
     fieldName={meta.fieldName}
+    fieldNameUppercase={meta.fieldNameUppercase}
     apiField={meta.apiField}
     headerText={meta.headerText}
     explainerText={meta.explainerText}

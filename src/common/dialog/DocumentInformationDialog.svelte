@@ -43,10 +43,15 @@
   );
   $: invalidReason = metaDialogs
     .map((x, i) =>
-      (x.fieldInvalidText || fieldInvalidText)(
-        values[i],
-        initial[i],
-        x.fieldName,
+      $_(
+        (x.fieldInvalidText || fieldInvalidText)(
+          values[i],
+          initial[i],
+          x.fieldName,
+        ),
+        {
+          values: { fieldName: $_(x.fieldName) },
+        },
       ),
     )
     .join(", ");
@@ -107,7 +112,7 @@
       {#each metaDialogs as meta, i}
         {#if meta.disabled == null || !meta.disabled(numSelected)}
           <tr>
-            <td>{titlecase(meta.fieldName)}:</td>
+            <td>{$_(meta.fieldNameUppercase)}:</td>
             <td>
               <div class="inputpadded">
                 {#if meta.isTextArea}

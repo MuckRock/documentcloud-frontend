@@ -20,7 +20,8 @@
   $: idPart = id.split("-")[0];
   $: pageUrl = doc == null ? "" : doc.pageUrl(page);
   $: canonicalPageUrl = doc == null ? "" : doc.canonicalPageUrl(page);
-  $: title = doc == null ? "" : `${doc.title} (p. ${page})`;
+  $: title =
+    doc == null ? "" : `${doc.title} (${$_("document.pageAbbrev")} ${page})`;
   $: aspect = doc == null ? 1 : doc.pageSizes[page - 1];
 
   $: shimPlacements =

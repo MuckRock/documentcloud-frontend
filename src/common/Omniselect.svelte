@@ -1,6 +1,5 @@
 <script>
   import { elementInside } from "@/util/dom";
-  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   // SVG assets

@@ -54,7 +54,7 @@
 </script>
 
 <style lang="scss">
-  .beta {
+  :global(.beta) {
     color: $gray;
     font-size: 11px;
     vertical-align: top;
@@ -75,7 +75,7 @@
         : meta.disabled($layout.numSelected)}
       on:click={() => editMetaSelected(meta)}
     >
-      {meta.menuTitle}
+      {$_(meta.menuTitle)}
     </MenuItem>
   {/each}
   <MenuItem disabled={processing} on:click={changeAccessSelected}>

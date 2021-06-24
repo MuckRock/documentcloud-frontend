@@ -9,6 +9,7 @@ import { slugify } from "@/util/string";
 import { modifications } from "@/manager/modifications";
 import { Results } from "@/structure/results";
 import deepEqual from "fast-deep-equal";
+import { _ } from "@/langs/i18n";
 
 const TAG_KEY = process.env.TAG_KEY;
 let lastSearch = null;
@@ -20,6 +21,7 @@ export const search = new Svue({
       params: null,
       results: null,
       filePickerUser: null,
+      _,
     };
   },
   watch: {
@@ -28,6 +30,10 @@ export const search = new Svue({
     },
     filePickerUser() {
       checkForInit();
+    },
+    _() {
+      // Force results update
+      this.results = this.results;
     },
   },
   computed: {

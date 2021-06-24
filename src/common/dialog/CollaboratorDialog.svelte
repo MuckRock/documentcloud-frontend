@@ -46,11 +46,9 @@
 
   async function removeProjectUser(user) {
     showConfirm(
-      $_("dialogCollaboratorDialog.confirm"),
-      $_("dialogCollaboratorDialog.confirmMsg", {
-        values: { name: user.name, title: layout.projectEdit.title },
-      }),
-      $_("dialog.remove"),
+      "dialogCollaboratorDialog.confirm",
+      "dialogCollaboratorDialog.confirmMsg",
+      "dialog.remove",
       async () => {
         await wrapLoadSeparate(
           loading,
@@ -59,6 +57,7 @@
         );
         updateProjectEdit();
       },
+      { name: user.name, title: layout.projectEdit.title },
     );
   }
 

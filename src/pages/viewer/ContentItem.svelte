@@ -5,6 +5,7 @@
   import { hoveredNote } from "@/viewer/hoveredNote";
   import { layout } from "@/viewer/layout";
   import { restorePosition, showAnnotation } from "@/viewer/document";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import smallCircleSvg from "@/assets/small_circle.svg";
@@ -107,7 +108,10 @@
           <NoWhitespace>
             <span class="title">{sectionOrNote.section.title}</span>
             <span>&nbsp;</span>
-            <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+            <span class="page"
+              >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.section.page +
+                1}</span
+            >
           </NoWhitespace>
         </a>
       </summary>
@@ -134,7 +138,10 @@
         <NoWhitespace>
           <span class="title">{sectionOrNote.section.title}</span>
           <span>&nbsp;</span>
-          <span class="page">p.&nbsp;{sectionOrNote.section.page + 1}</span>
+          <span class="page"
+            >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.section.page +
+              1}</span
+          >
         </NoWhitespace>
       </div>
     </a>
@@ -153,7 +160,9 @@
       <NoWhitespace>
         <span class="title">{sectionOrNote.note.title}</span>
         <span>&nbsp;</span>
-        <span class="page">p.&nbsp;{sectionOrNote.note.page + 1}</span>
+        <span class="page"
+          >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.note.page + 1}</span
+        >
       </NoWhitespace>
     </div>
   </a>

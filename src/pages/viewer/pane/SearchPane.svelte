@@ -11,13 +11,15 @@
 </script>
 
 <style lang="scss">
-  em {
-    color: $searchSpecial;
+  .searchpane {
+    :global(em) {
+      color: $searchSpecial;
+    }
   }
 </style>
 
 {#if $layout.searchPages != null}
-  <div>
+  <div class="searchpane">
     <b>
       {@html $_("searchPane.yourQuery", {
         values: { search: $layout.search, n: $layout.searchPages.length },

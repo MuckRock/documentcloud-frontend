@@ -239,7 +239,6 @@
     {#if !uploadMode}
       <div>
         <h1>
-          Document Upload
           {#if uploadProject == null}
             {$_("uploadDialog.docUpload")}
           {:else}

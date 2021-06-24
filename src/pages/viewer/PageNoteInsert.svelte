@@ -2,9 +2,7 @@
   import { startPageNote } from "@/viewer/layout";
   import { onDestroy } from "svelte";
   import emitter from "@/emit";
-
-  // SVG assets
-  import whitePlusSvg from "@/assets/white_plus.svg";
+  import { _ } from "svelte-i18n";
 
   const emit = emitter({
     expand() {},
@@ -130,7 +128,10 @@
         border-radius: {BORDER_SIZE *
           scale}px; margin-top: {(-PLUS_SIZE * scale) / 2}px"
       >
-        <div>Add page note (p. {pageNumber})</div>
+        <div>
+          {$_("annotation.addPageNote")} ({$_("document.pageAbbrev")}
+          {pageNumber})
+        </div>
       </div>
     </div>
   </div>

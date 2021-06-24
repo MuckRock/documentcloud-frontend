@@ -1,25 +1,26 @@
 <script>
   import { lpad } from "@/util/string";
-  import { _ } from "svelte-i18n";
+  import { _, date, time } from "svelte-i18n";
 
   // SVG assets
   import CalendarLeft from "@/assets/calendar_left.svg";
   import CalendarRight from "@/assets/calendar_right.svg";
 
-  const months = [
-    $_("jan"),
-    $_("feb"),
-    $_("mar"),
-    $_("apr"),
-    $_("may"),
-    $_("jun"),
-    $_("jul"),
-    $_("aug"),
-    $_("sep"),
-    $_("oct"),
-    $_("nov"),
-    $_("dec"),
+  $: months = [
+    $_("calendar.jan"),
+    $_("calendar.feb"),
+    $_("calendar.mar"),
+    $_("calendar.apr"),
+    $_("calendar.may"),
+    $_("calendar.jun"),
+    $_("calendar.jul"),
+    $_("calendar.aug"),
+    $_("calendar.sep"),
+    $_("calendar.oct"),
+    $_("calendar.nov"),
+    $_("calendar.dec"),
   ];
+  $: console.log({ months });
 
   function roundMinutes(date) {
     date.setMinutes(Math.round(date.getMinutes() / 15) * 15);
@@ -43,21 +44,14 @@
   let viewedYear = year;
   let dayOfMonth = value.getDate();
 
-  let hour = value.getHours() % 12;
+  let hour = value.getHours();
   let minute = value.getMinutes();
-  let amPm = value.getHours() >= 12;
 
   function deriveValue() {
-    return new Date(
-      year,
-      month,
-      dayOfMonth,
-      (amPm ? 1 : 0) * 12 + hour,
-      minute,
-    );
+    return new Date(year, month, dayOfMonth, hour, minute);
   }
 
-  $: value = deriveValue(year, month, dayOfMonth, hour, minute, amPm);
+  $: value = deriveValue(year, month, dayOfMonth, hour, minute);
 
   function dateLessThan(day, now) {
     return (
@@ -200,14 +194,23 @@
 
   .timepicker {
     margin-top: 15px;
+  }
 
-    .currentdate {
-      margin: 5px 0;
-      font-weight: bold;
-    }
+  .currentdate {
+    margin: 5px 0;
+    font-weight: bold;
+  }
+
+  .signifier {
+    color: $gray;
+    font-size: 12px;
   }
 </style>
 
+<div class="currentdate">
+  {$date(value, { format: "medium" })}
+  {$time(value, { format: "short" })}
+</div>
 <div class="calendarcontainer">
   <div class="calendarheader">
     <div class="monthrow">
@@ -247,21 +250,18 @@
   </table>
 
   <div class="timepicker">
-    <div class="currentdate">{months[month]} {dayOfMonth}, {year}</div>
     <select bind:value={hour}>
-      {#each Array(12) as _, i}
-        <option value={i + 1}>{i + 1}</option>
+      {#each Array(24) as _, i}
+        <option value={i}>{lpad(`${i}`, 2)}</option>
       {/each}
     </select>
+    <span class="signifier">{$_("calendar.hourShortcode")}</span>
     :
     <select bind:value={minute}>
       {#each Array(60) as _, i}
         <option value={i}>{lpad(`${i}`, 2)}</option>
       {/each}
     </select>
-    <select bind:value={amPm}>
-      <option value={false}>{$_("am")}</option>
-      <option value={true}>{$_("pm")}</option>
-    </select>
+    <span class="signifier">{$_("calendar.minuteShortcode")}</span>
   </div>
 </div>

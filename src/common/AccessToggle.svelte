@@ -9,9 +9,9 @@
   export let editAccess = true;
   export let stacked = false;
 
-  export let publicName = "Public";
-  export let collaboratorName = "Collaborator";
-  export let privateName = "Private";
+  export let publicName = $_("accessToggle.publicName");
+  export let collaboratorName = $_("accessToggle.collaboratorName");
+  export let privateName = $_("accessToggle.privateName");
 
   export let publicMessage = $_("accessToggle.public");
   export let collaboratorMessage = $_("accessToggle.collaborator");

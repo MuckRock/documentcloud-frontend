@@ -34,7 +34,7 @@
     width: 30vw;
     margin: 0 2em 1em 2em;
 
-    a {
+    :global(a) {
       color: $primary;
     }
 

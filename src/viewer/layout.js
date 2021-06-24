@@ -367,9 +367,9 @@ function pushRedaction() {
 
 export function redact() {
   showConfirm(
-    "Confirm redactions",
-    "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
-    "Continue",
+    "dialogRedactDialog.title",
+    "dialogRedactDialog.description",
+    "dialog.continue",
     async () => {
       await wrapLoad(
         layout,
@@ -389,9 +389,9 @@ export function redact() {
 
 export function modify(modification, callback) {
   showConfirm(
-    "Apply modifications",
-    "Are you sure you wish to modify the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the modifications. This change is irreversible.",
-    "Continue",
+    "dialogModifyDialog.title",
+    "dialogModifyDialog.description",
+    "dialog.continue",
     async () => {
       const json = modification.modifySpec.json();
       await wrapLoad(layout, async () => await modifyDocument(viewer.id, json));
@@ -421,9 +421,9 @@ export function simpleCancelActions(callback = null) {
   // Clear modifications
   if (modification.uncommittedChanges) {
     showConfirm(
-      "Confirm close",
-      "You will lose all your unapplied modifications. Are you sure you want to proceed?",
-      "Continue",
+      "dialogModifyDialog.closeTitle",
+      "dialogModifyDialog.closeWarning",
+      "dialog.continue",
       () => {
         modification.clear();
         simpleCancelActions(callback);
@@ -498,9 +498,9 @@ export async function createPageAnnotation(
 
 export async function deletePageAnnotation(noteId, docId) {
   showConfirm(
-    "Confirm delete",
-    "Are you sure you wish to delete the current note?",
-    "Continue",
+    "dialogDeleteNoteDialog.title",
+    "dialogDeleteNoteDialog.description",
+    "dialog.continue",
     async () => {
       await deleteAnnotation(docId, noteId);
       removeNote({ id: noteId });
@@ -587,9 +587,9 @@ export function hideInsertDialog() {
 
 export function forceReprocess() {
   showConfirm(
-    "Confirm reprocess",
-    `Proceeding will force the document to reprocess page and image text. Do you wish to continue?`,
-    "Reprocess",
+    "dialogReprocessDialog.title",
+    "dialogReprocessDialog.reprocessSingleDoc",
+    "dialogReprocessDialog.confirm",
     async () => {
       await wrapLoad(layout, async () => {
         await reprocessDocument([viewer.id]);

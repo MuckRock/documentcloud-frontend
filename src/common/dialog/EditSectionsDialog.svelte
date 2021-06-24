@@ -108,14 +108,9 @@
   async function handleSectionRemove(idx, callApi = true) {
     if (callApi) {
       showConfirm(
-        $_("dialogEditSectionsDialog.confirmDelete"),
-        $_("dialogEditSectionsDialog.proceedingWillRemove", {
-          values: {
-            page: viewer.sections[idx].page + 1,
-            title: viewer.sections[idx].title,
-          },
-        }),
-        $_("dialog.delete"),
+        "dialogEditSectionsDialog.confirmDelete",
+        "dialogEditSectionsDialog.proceedingWillRemove",
+        "dialog.delete",
         async () => {
           await wrapLoadSeparate(
             loading,
@@ -123,6 +118,10 @@
             async () => await removeSection(viewer.id, viewer.sections[idx].id),
           );
           handleSectionRemove(idx, false);
+        },
+        {
+          page: viewer.sections[idx].page + 1,
+          title: viewer.sections[idx].title,
         },
       );
     } else {

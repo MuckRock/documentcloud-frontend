@@ -99,7 +99,7 @@
           >
             <span class="action" slot="title">
               <span class="nowrap">
-                Edit
+                {$_("actionBar.editMenu")}
                 <span class="dropper">▼</span>
               </span>
             </span>
@@ -113,7 +113,7 @@
                 : $_("actionBar.noPerms")}
             >
               <span class="nowrap">
-                Edit
+                {$_("actionBar.editMenu")}
                 <span class="dropper">▼</span>
               </span>
             </Tooltip>
@@ -122,7 +122,7 @@
         <Dropdown table={true} fixed={outerHeight > 600}>
           <span class="action" slot="title">
             <span class="nowrap">
-              Projects
+              {$_("actionBar.projectsMenu")}
               <span class="dropper">▼</span>
             </span>
           </span>

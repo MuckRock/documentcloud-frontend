@@ -154,11 +154,9 @@
 
   async function handleRemove(key, value) {
     showConfirm(
-      $_("dialogDataDialog.confirm"),
-      $_("dialogDataDialog.removeMsg", {
-        values: { key: key == TAG_KEY ? "" : `${key}:`, value: value },
-      }),
-      $_("dialog.remove"),
+      "dialogDataDialog.confirm",
+      "dialogDataDialog.removeMsg",
+      "dialog.remove",
       async () => {
         // TODO: replace with bulk method on backend
         await wrapMultipleSeparate(
@@ -174,6 +172,10 @@
           // Trigger viewer update
           viewer.document = viewer.document;
         }
+      },
+      {
+        key: key == TAG_KEY ? "" : `${key}:`,
+        value: value,
       },
     );
   }

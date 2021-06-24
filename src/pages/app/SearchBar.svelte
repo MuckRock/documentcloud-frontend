@@ -77,7 +77,7 @@
       }
     }
 
-    code {
+    :global(code) {
       color: #8a8a8a;
       border: solid 1px gainsboro;
       padding: 0 2px;

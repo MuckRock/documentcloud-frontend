@@ -273,15 +273,15 @@
   </p>
   {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.count > 0 || pagePushed)}
     <p class="paginator">
-      <span>{$_("entity.page")}&nbsp;</span>
+      <span>{$_("entities.page")}&nbsp;</span>
       {#if $entities.entities.hasPrev}
         <span class="paginate" on:click={() => prevPage()}>←</span>
       {/if}
       <span class="page"
         >{$entities.entities.page + 1}
-        {$_("entity.of")}
+        {$_("entities.of")}
         {$entities.entities.numPages}
-        ({$_("entity.totalEntityResult", {
+        ({$_("entities.totalEntityResult", {
           values: { n: $entities.entities.count },
         })})
       </span>
@@ -314,7 +314,7 @@
               ><input
                 type="checkbox"
                 bind:checked={kindFilter.organization}
-              />{$_("entities.organization")}</label
+              />{$_("entities.org")}</label
             >
           </div>
           <div>
@@ -493,7 +493,7 @@
             <div class="entity" on:click={() => (selectedEntity = entity)}>
               <div class="title">{entity.name}</div>
               <div class="subtitle">
-                {$_("entities.occurence", {
+                {$_("entities.occurrence", {
                   values: { n: entity.occurrences.length },
                 })}
               </div>

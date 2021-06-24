@@ -29,7 +29,9 @@
 
   $: canonicalNoteUrl = note == null ? "" : doc.canonicalNoteUrl(note);
   $: title =
-    doc == null || note == null ? "" : `${note.title} (p. ${note.page + 1})`;
+    doc == null || note == null
+      ? ""
+      : `${note.title} (${$_("document.pageAbbrev")} ${note.page + 1})`;
 
   $: aspect = doc == null || note == null ? 0 : doc.pageSizes[note.page];
   const docWidth = 700;
@@ -84,7 +86,7 @@
 
     .DC-note-header,
     .DC-note-body,
-    .DC-note-credit {
+    :global(.DC-note-credit) {
       margin: 10px auto;
       padding: 0 5px;
       max-width: 600px;
@@ -150,7 +152,7 @@
       font-size: 0.9em;
     }
 
-    .DC-note-logotype-link {
+    :global(.DC-note-logotype-link) {
       font-weight: 700;
       font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
         Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -225,7 +227,9 @@
           title={$_("embedNote.viewTheNote", { value: { title: note.title } })}
         >
           <span class="DC-note-title">{note.title}</span>
-          <span class="DC-note-page-number">(p. {note.page + 1})</span>
+          <span class="DC-note-page-number"
+            >({$_("document.pageAbbrev")} {note.page + 1})</span
+          >
         </a>
       </div>
 

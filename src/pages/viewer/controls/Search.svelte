@@ -2,6 +2,7 @@
   import { layout } from "@/viewer/layout";
   import { initiateSearch, exitSearch, doc } from "@/viewer/document";
   import { tick } from "svelte";
+  import { _ } from "svelte-i18n";
 
   // SVG assets
   import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg";
@@ -134,7 +135,7 @@
   <div class="container">
     <input
       bind:this={searchElem}
-      placeholder="Search"
+      placeholder={$_("searchBar.search")}
       bind:value={query}
       disabled={$layout.searchPending}
       on:keypress={(e) => {

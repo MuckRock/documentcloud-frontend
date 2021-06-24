@@ -14,6 +14,7 @@
   import session from "@/api/session";
   import { coalesceSelectableHighlights } from "@/util/coalesceHighlights";
   import { onDestroy, onMount } from "svelte";
+  import { _ } from "svelte-i18n";
 
   // Selectable text
   import SelectableWord from "./SelectableWord";
@@ -267,7 +268,9 @@
     use:showIfFullyVisible
     class:grayed={$layout.displayAnnotate}
   >
-    <a href="#document/p{page.pageNumber + 1}">p. {page.pageNumber + 1}</a>
+    <a href="#document/p{page.pageNumber + 1}"
+      >{$_("document.pageAbbrev")} {page.pageNumber + 1}</a
+    >
   </div>
 </div>
 <div class="page">

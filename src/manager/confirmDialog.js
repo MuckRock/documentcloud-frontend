@@ -8,16 +8,24 @@ export const confirmDialog = new Svue({
       body: "",
       buttonText: "",
       confirmFn: null,
+      translateValues: {},
     };
   },
 });
 
-export function showConfirm(title, body, buttonText, confirmFn) {
+export function showConfirm(
+  title,
+  body,
+  buttonText,
+  confirmFn,
+  translateValues = {},
+) {
   confirmDialog.title = title;
   confirmDialog.body = body;
   confirmDialog.buttonText = buttonText;
   confirmDialog.confirmFn = confirmFn;
   confirmDialog.open = true;
+  confirmDialog.translateValues = translateValues;
 }
 
 export function runConfirm() {

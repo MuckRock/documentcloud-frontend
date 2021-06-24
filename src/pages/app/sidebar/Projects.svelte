@@ -109,7 +109,7 @@
     </div>
     {#if $orgsAndUsers.loggedIn}
       <div class="titlesection">
-        <Title small={true}>Projects</Title>
+        <Title small={true}>{$_("projects.header")}</Title>
         <Button on:click={newProject} small={true}
           >{$_("projects.newProject")}</Button
         >

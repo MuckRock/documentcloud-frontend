@@ -11,6 +11,7 @@ export const lazyComponent = new Svue({
       page: null,
       project: null,
       legacyRedirect: null,
+      entities: null,
     };
   },
 });
@@ -61,6 +62,13 @@ export function loadProject() {
   if (lazyComponent.project != null) return;
   import("@/pages/embed/project/Project").then((module) => {
     lazyComponent.project = module.default;
+  });
+}
+
+export function loadEntities() {
+  if (lazyComponent.entities != null) return;
+  import("@/pages/entities/Entities").then((module) => {
+    lazyComponent.entities = module.default;
   });
 }
 

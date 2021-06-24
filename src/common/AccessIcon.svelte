@@ -1,5 +1,6 @@
 <script>
   import Tooltip from "@/common/Tooltip";
+  import { _ } from "svelte-i18n";
 
   // Stores
   import { openAccess as managerOpenAccess } from "@/manager/layout";
@@ -18,17 +19,17 @@
     $viewer.document != null ? viewerOpenAccess : managerOpenAccess;
 
   $: documentAccessString = document.organizationAccess
-    ? "Only members of your organization can view this document"
+    ? "accessIcon.organizationExplanation"
     : document.publicAccess
-    ? "Anyone can search and view this document"
-    : "Only you can view this document";
+    ? "accessIcon.publicExplanation"
+    : "accessIcon.privateExplanation";
 
   $: documentText = showText
     ? document.organizationAccess
-      ? `Private to Your Organization`
+      ? "accessIcon.organization"
       : document.publicAccess
-      ? "Public Access"
-      : "Private Access"
+      ? "accessIcon.public"
+      : "accessIcon.private"
     : "";
 </script>
 
@@ -63,10 +64,10 @@
         {@html organizationIconSvg}
       {/if}
     </span>
-    <span class="text">{documentText}</span>
+    <span class="text">{$_(documentText)}</span>
   </span>
 {:else}
-  <Tooltip caption={documentAccessString}>
+  <Tooltip caption={$_(documentAccessString)}>
     <span
       class="access"
       class:selectable={document.editAccess}

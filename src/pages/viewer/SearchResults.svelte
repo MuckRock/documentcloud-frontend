@@ -100,14 +100,15 @@
     {#each $layout.searchPages as { page }}
       <div class="page" on:click={() => handlePage(page)}>
         <h2>
-          p. {page + 1}
+          {$_("document.pageAbbrev")}
+          {page + 1}
           <small>
-            {$_("searchResults.occurres", {
+            {$_("searchResults.occurrences", {
               values: { n: $layout.searchHighlights[page].length },
             })}
           </small>
         </h2>
-        {#each $layout.searchHighlights[page] as highlight, offset}
+        {#each $layout.searchHighlights[page] as highlight}
           <div class="result">
             <NoWhitespace>
               {#each highlight as passage}

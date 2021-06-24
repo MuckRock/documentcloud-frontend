@@ -1,0 +1,659 @@
+{
+  "common": {
+    "emailAddress": "Email address",
+    "loading": "Loading...",
+    "documentCloud": "DocumentCloud",
+    "home": "Home"
+  },
+  "homeTemplate": {
+    "signedIn": "Signed in as {name}",
+    "signOut": "Sign out",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "goToApp": "Go to app"
+  },
+  "accessToggle": {
+    "public": "Note will be visible to anyone with access to the document.",
+    "collaborator": "Note will be visible to anyone who can edit this document.",
+    "private": "Note will be visible to you alone.",
+    "publicName": "Public",
+    "collaboratorName": "Collaborator",
+    "privateName": "Private"
+  },
+  "accessIcon": {
+    "private": "Private Access",
+    "organization": "Private to Your Organization",
+    "public": "Public Access",
+    "privateExplanation": "Only you can view this document",
+    "organizationExplanation": "Only members of your organization can view this document",
+    "publicExplanation": "Anyone can search and view this document"
+  },
+  "appearanceCustomizer": {
+    "customizeAppearance": "Customize Appearance",
+    "hide": "Hide help text",
+    "show": "Show help text"
+  },
+  "appearanceDimension": {
+    "responsive": "Automatic (default)",
+    "fixed": "Fixed"
+  },
+  "calendar": {
+    "jan": "January",
+    "feb": "February",
+    "mar": "March",
+    "apr": "April",
+    "may": "May",
+    "jun": "June",
+    "jul": "July",
+    "aug": "August",
+    "sep": "September",
+    "oct": "October",
+    "nov": "November",
+    "dec": "December",
+    "hourShortcode": "HH",
+    "minuteShortcode": "MM"
+  },
+  "dialog": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "done": "Done",
+    "edit": "Edit",
+    "remove": "Remove",
+    "save": "Save",
+    "create": "Create",
+    "ok": "Ok",
+    "update": "Update",
+    "dismiss": "Dismiss",
+    "continue": "Continue"
+  },
+  "dialogAccessDialog": {
+    "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
+    "selectAccess": "Select an access level for the {n, plural, one {selected document} other {# selected documents}}",
+    "public": "Public access",
+    "publicDesc": "Anyone on the internet can search for and view the document.",
+    "verifiedHelp": "Only verified users or members of verified organizations can make uploaded documents public. If you're a journalist or otherwise work in publishing vetted materials to inform the public, <a href=\"https://www.muckrock.com/assignment/request-account-verification-377/form/\" target=\"_blank\">learn more and request verification here.</a>",
+    "privateToOrg": "You can’t change the access level to “Private to your organization” because {n, plural, one {this document is} other {one or more documents are}} associated with your individual account, not an organization. To add {n, plural, one {it} other {them}} to an organization, select {n, plural, one {it} other {them}} from the management view and click “Change Owner.” <a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">You can join or create an organization on this page.</a>",
+    "private": "Private access",
+    "privateDesc": "Only people with explicit permission (via collaboration) have access.",
+    "organization": "Private to your organization",
+    "organizationDesc": "Only the people in your organization have access.",
+    "schedulePublication": "Schedule publication",
+    "scheduleHelp": "This document will be made public at the given date and time.  Publication time is local{timezone}.",
+    "unchanged": "Access is unchanged. Select a different access level.",
+    "future": "Must select a time in the future",
+    "change": "Change"
+  },
+  "dialogCollaboratorDialog": {
+    "confirm": "Confirm remove user",
+    "confirmMsg": "Proceeding will remove {name} from {title}. Do you wish to continue?",
+    "addCollaborators": "Add Collaborators",
+    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\" >here for free</a>, and then ask them to log in to DocumentCloud at least once.",
+    "admin": "Admin",
+    "view": "View",
+    "adminHelp": "Collaborators can edit this project and its documents",
+    "editHelp": "Collaborators can edit documents in this project",
+    "viewHelp": "Collaborators can view documents in this project",
+    "add": "Add",
+    "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
+    "manageCollaborators": "Manage Collaborators",
+    "name": "Name",
+    "access": "Access",
+    "you": "(you)"
+  },
+  "dialogDataDialog": {
+    "confirm": "Confirm remove data point",
+    "removeMsg": "Proceeding will remove the {key}{value} data point from the specified documents. Do you wish to continue?",
+    "addData": "Add Data for {n, plural, one {Document} other {# Documents}}",
+    "tag": "Tag",
+    "value": "Value",
+    "key": "Key",
+    "keyValue": "Key / Value",
+    "tagInfo": "Add custom tags to categorize your documents.",
+    "eg": "e.g.",
+    "exampleTagReport": "report",
+    "exampleTagLawsuit": "lawsuit",
+    "exampleTagEmail": "email",
+    "keyValueInfo": "Add custom key / value pairs for precise categorization of your documents.",
+    "exampleKVState": "state:&nbsp;California",
+    "exampleKVYear": "year:&nbsp;2016",
+    "exampleKVType": "type:&nbsp;memo",
+    "enterTag": "Enter a tag",
+    "enterKey": "Enter a key",
+    "keyInvalid": "Keys can only contain letters, numbers, underscores (_), and dashes (-)",
+    "emptyMsg": "You have not yet added any data to the specified documents. Add tags and key/value pairs to categorize and organize your documents. You can filter and search on document data to give you powerful control over document management.",
+    "manageDocumentData": "Manage Document Data",
+    "valueUnchanged": "Value remains unchanged",
+    "kvCannotBeEmpty": "Key/value cannot be empty"
+  },
+  "dialogReprocessDialog": {
+    "title": "Confirm reprocess",
+    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text. Do you wish to continue?",
+    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text. Do you wish to continue?",
+    "confirm": "Reprocess"
+  },
+  "dialogDeleteDialog": {
+    "title": "Confirm reprocess",
+    "deleteDocs": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}. Do you wish to continue?"
+  },
+  "dialogCancelProcessingDialog": {
+    "title": "Cancel processing",
+    "deleteDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to stop processing. After processing has been stopped, an error will show after which you can “Force Reprocess” or delete the {n, plural, one {document} other {documents}} using the Edit menu. Do you wish to continue?"
+  },
+  "dialogDiagnosticDialog": {
+    "staffOnlyInfo": "Staff-only info for selected {n, plural, one {document} other {# documents}}",
+    "id": "ID",
+    "title": "Title",
+    "actions": "Actions",
+    "debug": "Debug",
+    "viewErrors": "View errors",
+    "viewS3": "View in S3"
+  },
+  "dialogDocumentEmbedDialog": {
+    "responsive": "Responsive",
+    "respOn": "On (default)",
+    "respOnHelp": "Fill the width of the article container (usually works best)",
+    "respOff": "Off",
+    "respOffHelp": "The document will fit the sizes specified below",
+    "width": "Width",
+    "widthAuto": "Will fill the available space if the document is set to responsive, otherwise defaults to 700px",
+    "widthFixed": "Set a maximum width if the document is responsive, or set a fixed size if not responsive",
+    "height": "Height",
+    "heightAuto": "The height is based on the size of the document, with no maximum size. If responsive, will be set to the height of the browser window minus 100px",
+    "heightFixed": "Set a maximum height if the document is responsive, or set a fixed size if not responsive",
+    "sidebarBehavior": "Sidebar behavior",
+    "sbResponsive": "Responsive (default)",
+    "sbResponsiveHelp": "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
+    "hidden": "Hidden",
+    "visible": "Visible",
+    "visibleDefault": "Visible (default)",
+    "sbHiddenHelp": "Hide the sidebar by default",
+    "sbVisibleHelp": "Show the sidebar by default",
+    "titleBehavior": "Title behavior",
+    "tVisibleHelp": "Display the title and attribution in the header of the viewer",
+    "tHiddenHelp": "Hide the title in the header of the viewer (still visible in the sidebar)",
+    "pdfLink": "PDF link",
+    "plVisibleHelp": "Show a link to the raw PDF document in the sidebar",
+    "plHiddenHelp": "Hide the sidebar PDF link (file is still accessible if the URL is known)",
+    "fullscreenOption": "Fullscreen option",
+    "fsVisibleHelp": "Show a fullscreen icon in the bottom-right corner",
+    "fsHiddenHelp": "Hide the fullscreen option",
+    "textMode": "Text mode",
+    "tmVisibleHelp": "Show an option to view the document’s text in the view dropdown",
+    "tmHiddenHelp": "Hide text mode",
+    "contributedByFormat": "Contributed by format",
+    "cbfUserAndOrg": "User and org (default)",
+    "cbfUserAndOrgHelp": "Show a document’s attribution as the user name followed by the organization",
+    "cbfOrgOnly": "Org only",
+    "cbfOrgOnlyHelp": "Attribute the document to just the organization",
+    "share": "Share “{title}”",
+    "embedDesc": "Copy the HTML code to embed this document within an article"
+  },
+  "dialogDocumentInformationDialog": {
+    "editInformation": "Edit Information for {n, plural, one {document} other {# documents}}"
+  },
+  "dialogRedactDialog": {
+    "title": "Confirm redactions",
+    "description": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible."
+  },
+  "dialogModifyDialog": {
+    "title": "Apply modifications",
+    "description": "Are you sure you wish to modify the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the modifications. This change is irreversible.",
+    "closeTitle": "Confirm close",
+    "closeWarning": "You will lose all your unapplied modifications. Are you sure you want to proceed?"
+  },
+  "dialogDeleteNoteDialog": {
+    "title": "Confirm delete",
+    "description": "Are you sure you wish to delete the current note?"
+  },
+  "dialogEditSectionsDialog": {
+    "confirmDelete": "Confirm delete",
+    "proceedingWillRemove": "Proceeding will remove the specified section (p. {page} {title}). Do you wish to continue?",
+    "editSections": "Edit Sections",
+    "manageSections": "Manage sections to organize your document with a table of contents.",
+    "pageAbbrevNo": "p. {n}",
+    "pageAbbrev": "p.",
+    "empty": "You have not added any sections",
+    "edit": "Edit the selected section",
+    "add": "Add a new section",
+    "title": "Title",
+    "missingTitle": "Please enter a title",
+    "updateTitle": "Enter a new title or page number",
+    "uniquePageNumber": "You must enter a unique page number",
+    "invalidPageNumber": "Page number is invalid"
+  },
+  "dialogEmbedDialog": {
+    "updatingDocument": "Updating document...",
+    "makingPublic": "The document is currently being made public. This may take a minute or two.",
+    "wouldMakePublic": "Would you like to make this document public before sharing?",
+    "notPublic": "The document is not currently public. If you embed or link it, only you and collaborators will be able to view it until it is made public. Click below when you’re ready to publish this document to the public.",
+    "makePublic": "Make document public",
+    "leave": "Leave as is",
+    "selectShare": "Select share option",
+    "selectShareHelp": "Choose whether to share the entire document or just a page or note.",
+    "shareDoc": "Share entire document",
+    "shareDocHelp": "Link or embed the entire document. (This is the most commonly used share option.)",
+    "sharePage": "Share specific page",
+    "sharePageHelp": "Link or embed a single page of the document. Useful for highlighting a page excerpt.",
+    "shareNote": "Share specific note",
+    "shareNoteHelpHasNote": "Link or embed a note within the document. Useful for highlighting a region of a page.",
+    "shareNoteHelpNoNote": "Once you add notes to the document, use this feature to link or embed them."
+  },
+  "dialogErrorDialog": {
+    "errorOccurred": "An error occurred",
+    "unexpectedErrorOccurred": "An unexpected error occurred",
+    "tryAgain": "Please try again later.",
+    "close": "Close",
+    "refresh": "Refresh"
+  },
+  "dialogNoteEmbedDialog": {
+    "embedNote": "Embed a note of “{title}”",
+    "embedDesc": "Copy the HTML code to embed this note within an article or post:"
+  },
+  "dialogPageEmbedDialog": {
+    "embedPage": "Embed a page of “{title}”",
+    "embedDesc": "Copy the HTML code to embed this page within an article or post:",
+    "selectPage": "Select the page to embed:",
+    "page": "Page {n} (currently visible)",
+    "otherPage": "Other page",
+    "enterPageNumber": "Enter the page number to embed:"
+  },
+  "dialogProjectAccessDialog": {
+    "changeAccessFor": "Change access for {name}",
+    "selectAccess": "Select an access level below for {name} in {title}",
+    "adminAccess": "Admin Access",
+    "editAccess": "Edit Access",
+    "viewAccess": "View Access",
+    "adminHelp": "This collaborator can edit this project and its documents. The collaborator can invite users, delete users, and remove the project.",
+    "editHelp": "This collaborator can edit documents in this project but cannot edit the project itself.",
+    "viewHelp": "This collaborator can view documents in this project but cannot edit them or the project.",
+    "invalidAccess": "Access is already set to {access}. Select a different access level.",
+    "changeAccess": "Change access"
+  },
+  "dialogOwnerDialog": {
+    "selectUser": "User must be selected",
+    "selectOrg": "Organization must be selected",
+    "changeOwner": "Change owner for {n, plural, one {document} other {# documents}}",
+    "accessWarning": "Warning: You may lost access to the specified {n, plural, one {document} other {# documents}} as a result of changing the document owner",
+    "user": "User:",
+    "filterUsers": "Type to filter users...",
+    "filterOrgs": "Type to filter organizations..."
+  },
+  "dialogProjectDialog": {
+    "confirmDelete": "Confirm delete",
+    "deleteProject": "Are you sure you want to delete this project ({project})?",
+    "editProject": "Edit Project",
+    "createProject": "Create New Project",
+    "title": "Title...",
+    "projectDesc": "Project Description (optional)",
+    "manageCollabs": "Manage Collaborators",
+    "share": "Share / Embed Project",
+    "enterTitle": "Enter a title",
+    "changeTitle": "Change the title or description"
+  },
+  "dialogProjectEmbedDialog": {
+    "share": "Share “{title}”",
+    "embedDesc": "Copy the HTML code to embed this document within an article or post:",
+    "invalid": "Invalid project",
+    "cannotEmbed": "Cannot embed this project, as it does not appear to exist."
+  },
+  "htmlEditor": {
+    "preview": "Preview:"
+  },
+  "image": {
+    "error": "An error occurred. Try refreshing the page"
+  },
+  "omniselect": {
+    "filter": "Type to filter language",
+    "noResults": "No results. Click to clear filter."
+  },
+  "shareOptions": {
+    "errorText": "An unexpected error occurred. Please try again later.",
+    "copyHtml": "Copy HTML code",
+    "addShortcode": "Add this shortcode to your WordPress content —",
+    "pluginRequired": "plugin required",
+    "copyShortcode": "Copy shortcode",
+    "copyUrl": "Copy URL"
+  },
+  "specialMessage": {
+    "contactUs": "<a href={contact} target=\"_blank\">Contact us</a> with bug reports, questions, and suggestions."
+  },
+  "uploadOptions": {
+    "documentLang": "Document language:",
+    "forceOcr": "Force OCR:"
+  },
+  "actionBar": {
+    "selectDocs": "Select some documents to reveal edit actions",
+    "noPerms": "You do not have permission to edit all of the selected documents",
+    "editMenu": "Edit",
+    "projectsMenu": "Projects"
+  },
+  "authSection": {
+    "help": "Help",
+    "language": "Language",
+    "tips": "Tips and Tricks",
+    "searchDocs": "Search Documentation",
+    "apiDocs": "API Documentation",
+    "emailUs": "Email Us",
+    "acctSettings": "Account Settings",
+    "signOut": "Sign out",
+    "changeOrg": "Change organization",
+    "personalAcct": "Personal Account",
+    "signIn": "Sign in"
+  },
+  "documents": {
+    "yourDocuments": "Your Documents",
+    "searchResults": "Search Results",
+    "accessDocuments": "Your {access}Documents",
+    "nameDocuments": "{name}'s {access}Documents",
+    "allDocuments": "All {access}Documents",
+    "mustBeVerified": "You must be a verified journalist to upload documents",
+    "upload": "Upload",
+    "dropFile": "Drop file to upload"
+  },
+  "document": {
+    "open": "Open",
+    "updating": "Updating document...",
+    "processing": "Processing",
+    "processingError": "An error occurred trying to process your document",
+    "remove": "Remove",
+    "improper": "Your document was uploaded improperly",
+    "project": "Project",
+    "totalMatchingPages": "{n} of {m} pages matching the query",
+    "showAll": "Show all",
+    "matchingPages": "{n} pages matching the query",
+    "pageAbbrev": "p.",
+    "pageCount": "{n, plural, one {# page} other {# pages}}",
+    "source": "Source"
+  },
+  "documentThumbnail": {
+    "pages": "pages",
+    "loading": "Loading progress information..."
+  },
+  "mainContainer": {
+    "error": "Error",
+    "errorMsg": "We could not reach the DocumentCloud server. Please try refreshing the page later.",
+    "refresh": "Refresh"
+  },
+  "editMenu": {
+    "editDocInfo": "Edit Document Information",
+    "changeAccess": "Change Access",
+    "editDocData": "Edit Document Data",
+    "cancelProcessing": "Cancel Processing",
+    "forceReprocess": "Force Reprocess",
+    "entities": "Entities <span class=\"beta\">BETA</span>",
+    "changeOwner": "Change Owner",
+    "delete": "Delete",
+    "diagnosticInfo": "Diagnostic Info"
+  },
+  "metaFields": {
+    "defaultFieldInvalidText": "The document already has this {fieldName}",
+
+    "titleFieldTitle": "Title",
+    "titleFieldName": "name",
+    "titleFieldNameUppercase": "Name",
+    "titleFieldHeader": "Rename {n, plural, one {# document} other {# documents}}",
+    "titleFieldDescription": "Enter a name below for the {n, plural, one {selected document} other {# selected documents}}",
+    "titleFieldButton": "Rename",
+    "titleFieldInvalidSameName": "The document already has this name",
+    "titleFieldInvalidEmptyName": "Enter a valid name",
+
+    "sourceFieldTitle": "Source",
+    "sourceFieldName": "source",
+    "sourceFieldNameUppercase": "Source",
+    "sourceFieldHeader": "Edit source for {n, plural, one {# document} other {# documents}}",
+    "sourceFieldDescription": "Enter a source below for the {n, plural, one {selected document} other {# selected documents}}",
+    "sourceFieldButton": "Edit",
+
+    "descriptionFieldTitle": "Description",
+    "descriptionFieldName": "description",
+    "descriptionFieldNameUppercase": "Description",
+    "descriptionFieldHeader": "Edit description for {n, plural, one {# document} other {# documents}}",
+    "descriptionFieldDescription": "Enter the description below for the {n, plural, one {selected document} other {# selected documents}}",
+    "descriptionFieldButton": "Edit",
+
+    "relatedArticleFieldTitle": "Related Article URL",
+    "relatedArticleFieldName": "related article URL",
+    "relatedArticleFieldNameUppercase": "Related Article URL",
+    "relatedArticleFieldHeader": "Edit the related article URL for {n, plural, one {# document} other {# documents}}",
+    "relatedArticleFieldDescription": "Enter the related article URL below for the {n, plural, one {selected document} other {# selected documents}}",
+    "relatedArticleFieldButton": "Edit",
+
+    "publishedUrlFieldTitle": "Published URL",
+    "publishedUrlFieldName": "published URL",
+    "publishedUrlFieldNameUppercase": "Published URL",
+    "publishedUrlFieldHeader": "Edit the published URL for {n, plural, one {# document} other {# documents}}",
+    "publishedUrlFieldDescription": "Enter the published URL below for the {n, plural, one {selected document} other {# selected documents}}",
+    "publishedUrlFieldButton": "Edit"
+  },
+  "projectsMenu": {
+    "newProject": "+ New Project",
+    "projMembership": "Project Membership",
+    "selectDocs": "Select documents to place them in projects",
+    "createProj": "Create a project to organize and share documents"
+  },
+  "noDocuments": {
+    "noSearchResults": "No search results",
+    "queryNoResults": "Your search query returned no results. Try again with a broader search query.",
+    "welcome": "Welcome to DocumentCloud!",
+    "verify1": "Note that currently your account is <b>not verified to upload</b>. You can search through the public repository, organize documents you're interested in into projects, leave private notes, and collaborate on editing and annotating documents other users invite you to.",
+    "verify2": "If you’d like to upload or publish documents and you're a working journalist or other organization interested in publishing primary source materials in the public interest, you'll need to have your account verified or added to a verified organization. This is a simple process:",
+    "verify3": "First, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">see if your organization already exists</a> and, if you find it, click \"Request to Join\" on its page.",
+    "verify4": "If your organization has not been verified yet, or if you're a freelancer, <a target=\"_blank\" href=\"https://www.muckrock.com/assignment/request-account-verification-377/form/\">request verification here</a>. Requests usually take two business days to process.",
+    "uploadFirst": "Upload your first document",
+    "upload1": "Upload a document file to get started using DocumentCloud. You can drag the file into this window, or click on the blue “Upload” button above.",
+    "upload2": "Once you upload a file, DocumentCloud will process the document and extract its contents. It may take a few minutes for this to complete, but once it’s done your document will be optimized for analysis and sharing on the web."
+  },
+  "paginator": {
+    "of": "of",
+    "document": "{n, plural, one {Document} other {Documents}}"
+  },
+  "processingBar": {
+    "doneProcessing": "Done processing",
+    "processingDocuments": "Processing {n, plural, one {document} other {# documents}}"
+  },
+  "searchBar": {
+    "tips": "Search tips: add filters by typing <code>user:</code>, <code>project:</code>, or <code>organization:</code>, etc. Use <code>sort:</code> to order results.",
+    "learnMore": "Learn more",
+    "search": "Search"
+  },
+  "searchLink": {
+    "search": "Search this document collection"
+  },
+  "projects": {
+    "header": "Projects",
+    "allDocuments": "All Documents",
+    "yourDocuments": "Your Documents",
+    "yourPubDocuments": "Your Public Documents",
+    "orgDocuments": "{name}’s Documents",
+    "newProject": "+ New Project",
+    "createProject": "Create your first project by clicking “New Project” above."
+  },
+  "uploadDialog": {
+    "docUpload": "Document Upload",
+    "docUploadProj": "Document Upload to {title}",
+    "beginUpload": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
+    "pdfSizeWarning": "You can only upload PDF files under {size}.",
+    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
+    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
+    "fileLimitWarning": "You can only upload {limit} files at once.",
+    "moreOptions": "More options",
+    "beginUpload": "Begin upload",
+    "selectFiles": "+ Select files",
+    "dragDrop": "Drag and drop files here",
+    "publicMsg": "Document will be publicly visible.",
+    "collabMsg": "Document will be visible to your organization.",
+    "privateMsg": "Document will be visible to you alone.",
+    "collabName": "Organization",
+    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
+    "uploading": "Uploading ... ({uploaded}/{length})",
+    "gettingInfo": "Getting upload information ({percent})",
+    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
+    "errorHeading": "Error occurred while uploading",
+    "errorMsg": "We failed to {errorMessage}. Please try again later.",
+    "editDocInfo": "Edit document information:",
+    "untitled": "Untitled",
+    "uploadFiles": "Upload additional files",
+    "selectMore": "+ Select more files",
+    "dragDropMore": "Drag and drop additional files here"
+  },
+  "embedNote": {
+    "viewTheNote": "View the note ‘{title}‘ in its original document context on DocumentCloud in a new window or tab",
+    "viewDoc": "View the entire document with <span class=\"DC-note-logotype-link\">DocumentCloud</span>"
+  },
+  "embedPage": {
+    "viewDoc": "View entire {title} on DocumentCloud in new window or tab",
+    "pageOf": "Page {page} of {title}",
+    "gotoDocCloud": "Go to DocumentCloud in new window or tab"
+  },
+  "entities": {
+    "back": "Back",
+    "page": "Page",
+    "of": "of",
+    "totalEntityResult": "{n, plural, one {# total entity result} other {# total entity results}} ",
+    "filter": "Filter",
+    "applyFilters": "Apply filters",
+    "kind": "Kind",
+    "clear": "Clear",
+    "person": "Person",
+    "org": "Organization",
+    "location": "Location",
+    "event": "Event",
+    "workOfArt": "Work of Art",
+    "consumerGood": "Consumer Good",
+    "address": "Address",
+    "date": "Date",
+    "number": "Number",
+    "phoneNumber": "Phone Number",
+    "price": "Price",
+    "unknown": "Unknown",
+    "other": "Other",
+    "occurrences": "Occurrences",
+    "proper": "Proper",
+    "common": "Common",
+    "advanced": "Advanced",
+    "relevanceThreshold": "Relevance threshold:",
+    "knowledgeGraph": "Knowledge graph:",
+    "hasKG": "Has a knowledge graph ID",
+    "noKG": "Does not have a knowledge graph ID",
+    "wikiUrl": "Wikipedia URL:",
+    "hasWiki": "Has a Wikipedia URL",
+    "noWiki": "Does not have a Wikipedia URL",
+    "occurrence": "{n, plural, zero {} one {# occurrence} other {# occurrences}}",
+    "wikipedia": "Wikipedia",
+    "entityExtraction": "Entity extraction for “{title}”",
+    "extractingEntities": "Extracting entities...",
+    "welcome": "Welcome to entity extraction! This feature is very much in progress but we want it in your hands early to welcome any <a href={contact} target=\"_blank\">feedback</a> you might have.",
+    "manual": "Right now the process for extracting entities is manual. This document has not had entities extracted yet, so click below to get started.",
+    "error": "An unexpected error occurred",
+    "extract": "Extract entities",
+    "noEntities": "There are no entities. This could happen if the document doesn’t have text, is non-English (only English is supported for now), or some error occurred.",
+    "starting": "Starting extaction..."
+  },
+  "home": {
+    "about": "DocumentCloud is an all-in-one platform for documents: upload, organize, analyze, annotate, search, and embed.",
+    "viewPublicDocs": "View public documents"
+  },
+  "annotation": {
+    "title": "Annotation Title",
+    "description": "Annotation Description (optional)",
+    "unchanged": "Note remains unchanged",
+    "noTitle": "Enter a title for the annotation",
+    "org": "This note is only visible to you and others with edit access to this document",
+    "private": "This private note is only visible to you",
+    "by": "Annotated by {name}",
+    "byOrg": "Annotated by {name}, {org}",
+    "addPageNote": "Add page note"
+  },
+  "viewDropdown": {
+    "document": "Document",
+    "plainText": "Plain Text",
+    "thumbnail": "Thumbnail",
+    "notes": "Notes",
+    "search": "Search Results"
+  },
+  "zoom": {
+    "fitWidth": "Fit width",
+    "fitHeight": "Fit height"
+  },
+  "titleHeader": {
+    "contributedBy": "Contributed by {name}"
+  },
+  "annotatePane": {
+    "annotateDocument": "Annotate Document",
+    "desc": "Highlight a portion of the page, or click between pages to create a note."
+  },
+  "modifyPane": {
+    "pagesSelected": "{n, plural, one {# Page} other {# Pages}} Selected",
+    "applyModifications": "Apply Modifications",
+    "duplicate": "Duplicate",
+    "move": "Move",
+    "unselect": "Unselect",
+    "remove": "Remove",
+    "insertPages": "Insert {n, plural, one {# Page} other {# Pages}}",
+    "pagesPending": "{n, plural, one {# Page} other {# Pages}} Pending Insertion",
+    "insertBegin": "Insert {n, plural, one {# page} other {# pages}} at beginning.",
+    "insertEnd": "Insert {n, plural, one {# page} other {# pages}} at end.",
+    "insertBetween": "Insert {n, plural, one {# page} other {# pages}} in between page {p0} and {p1}.",
+    "click": "Click in-between pages below to mark where to paste {n, plural, one {# page} other {# pages}}.",
+    "insert": "Insert",
+    "insertAtEnd": "Insert at end",
+    "insertPosition": "Insert pages at position",
+    "insertOtherDoc": "Insert from other document",
+    "modifyPages": "Modify Pages",
+    "select": "Select pages below to apply modifications (page rotation, rearranging, and deletion). Click in-between pages to insert.",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+  "redactPane": {
+    "redactDoc": "Redact Document",
+    "desc": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
+    "confirm": "Confirm Redactions",
+    "undo": "Undo"
+  },
+  "searchPane": {
+    "yourQuery": "Your query <em>{search}</em> was found on {n, plural, one {# page} other {# pages}}"
+  },
+  "selectNotePane": {
+    "selectNote": "Select a note",
+    "desc": "Select the annotation that you want to share."
+  },
+  "searchResults": {
+    "resultPages": "{results, plural, one {# result} other {# results}} across {pages, plural, one {# page} other {# pages}}",
+    "noSearchResults": "No search results. Try again with a broader query.",
+    "occurrences": "{n, plural, one {# occurrence} other {# occurrences}}"
+  },
+  "sidebar": {
+    "updating": "Updating docucment...",
+    "original": "Original Document (PDF) »",
+    "related": "Related Article »",
+    "contributed": "Contributed by {name}",
+    "source": "Source: {source}",
+    "actions": "Document Actions",
+    "share": "Share",
+    "shareDesc": "Create an embed or share on social media.",
+    "annotate": "Annotate",
+    "annotateDesc": "Make annotations to keep notes on the document.",
+    "redact": "Redact",
+    "redactDesc": "Create redactions on the document to hide text. The document will reprocess afterwards.",
+    "modify": "Modify Pages",
+    "modifyDesc": "Rearrange, rotate, delete, insert, and split pages.",
+    "info": "Edit Document Info",
+    "infoDesc": "Modify document information like description and related URL.",
+    "data": "Edit Tags and Data",
+    "dataDesc": "Add tags and key/value pairs to categorize your document.",
+    "sections": "Edit Sections",
+    "sectionsDesc": "Add sections to organize your document with a table of contents.",
+    "privateNote": "Add Private Note",
+    "privateNoteDesc": "Make annotations to keep notes on the document."
+  },
+  "viewer": {
+    "notFound": "Document not found",
+    "notFoundDesc": "The document you requested either does not exist or you lack permission to access it",
+    "processing": "Document is processing",
+    "processingDesc": "The document you requested is processing and will automatically refresh when it is ready",
+    "error": "Document has encountered an error",
+    "errorDesc": "A processing error has been encountered in the document you requested",
+    "accessible": "Document not accessible",
+    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
+  }
+}

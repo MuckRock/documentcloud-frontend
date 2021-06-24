@@ -17,7 +17,7 @@
   export let fieldName;
   export let apiField;
   export let fieldInvalidText = (value, initial) =>
-    value == initial ? `The document already has this ${fieldName}` : "";
+    value == initial ? "metaFields.defaultFieldInvalidText" : "";
   export let headerText;
   export let explainerText;
   export let buttonText;
@@ -62,11 +62,15 @@
 
 <div>
   <div class="mcontent">
-    <h1>{headerText(simplePlural($layout.numSelected, "document"))}</h1>
+    <h1>
+      {$_(headerText, {
+        values: { n: $layout.numSelected },
+      })}
+    </h1>
     <p>
-      {explainerText(
-        nameSingularNumberPlural($layout.numSelected, "selected document"),
-      )}:
+      {$_(explainerText, {
+        values: { n: $layout.numSelected },
+      })}:
     </p>
     <div class="inputpadded">
       {#if textArea}
@@ -82,10 +86,15 @@
     </div>
     <div class="buttonpadded">
       {#if valid}
-        <Button on:click={applyAction}>{buttonText}</Button>
+        <Button on:click={applyAction}>{$_(buttonText)}</Button>
       {:else}
-        <Tooltip caption={invalidReason} delay={500}>
-          <Button disabled={true}>{buttonText}</Button>
+        <Tooltip
+          caption={$_(invalidReason, {
+            values: { fieldName: $_(fieldName) },
+          })}
+          delay={500}
+        >
+          <Button disabled={true}>{$_(buttonText)}</Button>
         </Tooltip>
       {/if}
       <Button secondary={true} on:click={emit.dismiss}

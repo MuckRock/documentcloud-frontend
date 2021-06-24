@@ -15,7 +15,18 @@
   "accessToggle": {
     "public": "oteNay illway ebay isiblevay otay nyoneaay ithway ccessaay otay hetay ocument.day",
     "collaborator": "oteNay illway ebay isiblevay otay nyoneaay howay ancay diteay histay ocument.day",
-    "private": "oteNay illway ebay isiblevay otay ouyay lone.aay"
+    "private": "oteNay illway ebay isiblevay otay ouyay lone.aay",
+    "publicName": "ublicPay",
+    "collaboratorName": "ollaboratorCay",
+    "privateName": "rivatePay"
+  },
+  "accessIcon": {
+    "private": "rivatePay ccessAay",
+    "organization": "rivatePay otay ourYay rganizationOay",
+    "public": "ublicPay ccessAay",
+    "privateExplanation": "nlyOay ouyay ancay iewvay histay ocumentday",
+    "organizationExplanation": "nlyOay embersmay foay ouryay rganizationoay ancay iewvay histay ocumentday",
+    "publicExplanation": "nyoneAay ancay earchsay ndaay iewvay histay ocumentday"
   },
   "appearanceCustomizer": {
     "customizeAppearance": "ustomizeCay ppearanceAay",
@@ -39,8 +50,8 @@
     "oct": "ctoberOay",
     "nov": "ovemberNay",
     "dec": "ecemberDay",
-    "am": "MAay",
-    "pm": "MPay"
+    "hourShortcode": "HHay",
+    "minuteShortcode": "MMay"
   },
   "dialog": {
     "cancel": "ancelCay",
@@ -52,7 +63,8 @@
     "create": "reateCay",
     "ok": "kOay",
     "update": "pdateUay",
-    "dismiss": "ismissDay"
+    "dismiss": "ismissDay",
+    "continue": "ontinueCay"
   },
   "dialogAccessDialog": {
     "changeAccess": "hangeCay ccessaay orfay {n, plural, one {ocumentday} other {#ay ocumentsday}}",
@@ -60,6 +72,7 @@
     "public": "ublicPay ccessaay",
     "publicDesc": "nyoneAay noay hetay nternetiay ancay earchsay orfay ndaay iewvay hetay ocument.day",
     "verifiedHelp": "nlyOay erifiedvay sersuay roay embersmay foay erifiedvay rganizationsoay ancay akemay ploadeduay ocumentsday ublic.pay fIay ou'reyay aay ournalistjay roay therwiseoay orkway niay ublishingpay ettedvay aterialsmay otay nformiay hetay ublic,pay <a href=\"https://www.muckrock.com/assignment/request-account-verification-377/form/\" target=\"_blank\">earnlay oremay ndaay equestray erificationvay ere.hay</a>",
+    "privateToOrg": "ouYay an\u2019tcay hangecay hetay ccessaay evellay otay Private\u201cay otay ouryay rganization\u201doay ecausebay {n, plural, one {histay ocumentday siay} other {neoay roay oremay ocumentsday reaay}} ssociatedaay ithway ouryay ndividualiay ccount,aay otnay naay rganization.oay oTay ddaay {n, plural, one {tiay} other {hemtay}} otay naay rganization,oay electsay {n, plural, one {tiay} other {hemtay}} romfay hetay anagementmay iewvay ndaay lickcay Change\u201cay wner.\u201dOay <a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">ouYay ancay oinjay roay reatecay naay rganizationoay noay histay age.pay</a>",
     "private": "rivatePay ccessaay",
     "privateDesc": "nlyOay eoplepay ithway xpliciteay ermissionpay via(ay ollaboration)cay avehay ccess.aay",
     "organization": "rivatePay otay ouryay rganizationoay",
@@ -112,6 +125,20 @@
     "valueUnchanged": "alueVay emainsray nchangeduay",
     "kvCannotBeEmpty": "ey/valueKay annotcay ebay mptyeay"
   },
+  "dialogReprocessDialog": {
+    "title": "onfirmCay eprocessray",
+    "reprocessDocs": "roceedingPay illway orcefay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}} otay eprocessray agepay ndaay mageiay ext.tay oDay ouyay ishway otay ontinue?cay",
+    "reprocessSingleDoc": "roceedingPay illway orcefay hetay ocumentday otay eprocessray agepay ndaay mageiay ext.tay oDay ouyay ishway otay ontinue?cay",
+    "confirm": "eprocessRay"
+  },
+  "dialogDeleteDialog": {
+    "title": "onfirmCay eprocessray",
+    "deleteDocs": "roceedingPay illway ermanentlypay eleteday hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}}.ay oDay ouyay ishway otay ontinue?cay"
+  },
+  "dialogCancelProcessingDialog": {
+    "title": "ancelCay rocessingpay",
+    "deleteDocs": "roceedingPay illway orcefay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}} otay topsay rocessing.pay fterAay rocessingpay ashay eenbay topped,say naay rroreay illway howsay fteraay hichway ouyay ancay Force\u201cay eprocess\u201dRay roay eleteday hetay {n, plural, one {ocumentday} other {ocumentsday}} singuay hetay ditEay enu.may oDay ouyay ishway otay ontinue?cay"
+  },
   "dialogDiagnosticDialog": {
     "staffOnlyInfo": "taff-onlySay nfoiay orfay electedsay {n, plural, one {ocumentday} other {#ay ocumentsday}}",
     "id": "DIay",
@@ -163,6 +190,20 @@
   },
   "dialogDocumentInformationDialog": {
     "editInformation": "ditEay nformationIay orfay {n, plural, one {ocumentday} other {#ay ocumentsday}}"
+  },
+  "dialogRedactDialog": {
+    "title": "onfirmCay edactionsray",
+    "description": "reAay ouyay uresay ouyay ishway otay edactray hetay urrentcay ocument?day fIay ouyay ontinue,cay hetay ocumentday iewervay illway ebay naccessibleiay emporarilytay hileway hetay ocumentday eprocessesray ithway hetay edactionsray niay lace.pay hisTay hangecay siay rreversible.iay"
+  },
+  "dialogModifyDialog": {
+    "title": "pplyAay odificationsmay",
+    "description": "reAay ouyay uresay ouyay ishway otay odifymay hetay urrentcay ocument?day fIay ouyay ontinue,cay hetay ocumentday iewervay illway ebay naccessibleiay emporarilytay hileway hetay ocumentday eprocessesray ithway hetay odifications.may hisTay hangecay siay rreversible.iay",
+    "closeTitle": "onfirmCay losecay",
+    "closeWarning": "ouYay illway oselay llaay ouryay napplieduay odifications.may reAay ouyay uresay ouyay antway otay roceed?pay"
+  },
+  "dialogDeleteNoteDialog": {
+    "title": "onfirmCay eleteday",
+    "description": "reAay ouyay uresay ouyay ishway otay eleteday hetay urrentcay ote?nay"
   },
   "dialogEditSectionsDialog": {
     "confirmDelete": "onfirmCay eleteday",
@@ -219,7 +260,7 @@
   "dialogProjectAccessDialog": {
     "changeAccessFor": "hangeCay ccessaay orfay {name}",
     "selectAccess": "electSay naay ccessaay evellay elowbay orfay {name} niay {title}",
-    "admiAccess": "dminAay ccessAay",
+    "adminAccess": "dminAay ccessAay",
     "editAccess": "ditEay ccessAay",
     "viewAccess": "iewVay ccessAay",
     "adminHelp": "hisTay ollaboratorcay ancay diteay histay rojectpay ndaay tsiay ocuments.day heTay ollaboratorcay ancay nviteiay sers,uay eleteday sers,uay ndaay emoveray hetay roject.pay",
@@ -282,13 +323,17 @@
   },
   "actionBar": {
     "selectDocs": "electSay omesay ocumentsday otay evealray diteay ctionsaay",
-    "noPerms": "ouYay oday otnay avehay ermissionpay otay diteay llaay foay hetay electedsay ocumentsday"
+    "noPerms": "ouYay oday otnay avehay ermissionpay otay diteay llaay foay hetay electedsay ocumentsday",
+    "editMenu": "ditEay",
+    "projectsMenu": "rojectsPay"
   },
   "authSection": {
     "help": "elpHay",
+    "language": "anguageLay",
     "tips": "ipsTay ndaay ricksTay",
     "searchDocs": "earchSay ocumentationDay",
     "apiDocs": "PIAay ocumentationDay",
+    "emailUs": "mailEay sUay",
     "acctSettings": "ccountAay ettingsSay",
     "signOut": "ignSay utoay",
     "changeOrg": "hangeCay rganizationoay",
@@ -316,12 +361,13 @@
     "totalMatchingPages": "{n} foay {m} agespay atchingmay hetay ueryqay",
     "showAll": "howSay llaay",
     "matchingPages": "{n} agespay atchingmay hetay ueryqay",
-    "pageAbbrev": ".pay"
+    "pageAbbrev": ".pay",
+    "pageCount": "{n, plural, one {#ay agepay} other {#ay agespay}}",
+    "source": "ourceSay"
   },
   "documentThumbnail": {
-    "images": "magesiay",
-    "texts": "extstay",
-    "loading": "oadingLay rocesspay nformation...iay"
+    "pages": "agespay",
+    "loading": "oadingLay rogresspay nformation...iay"
   },
   "mainContainer": {
     "error": "rrorEay",
@@ -334,10 +380,45 @@
     "editDocData": "ditEay ocumentDay ataDay",
     "cancelProcessing": "ancelCay rocessingPay",
     "forceReprocess": "orceFay eprocessRay",
-    "entites": "ntitiesEay <span class=\"beta\">ETABay</span>",
+    "entities": "ntitiesEay <span class=\"beta\">ETABay</span>",
     "changeOwner": "hangeCay wnerOay",
     "delete": "eleteDay",
     "diagnosticInfo": "iagnosticDay nfoIay"
+  },
+  "metaFields": {
+    "defaultFieldInvalidText": "heTay ocumentday lreadyaay ashay histay {fieldName}",
+    "titleFieldTitle": "itleTay",
+    "titleFieldName": "amenay",
+    "titleFieldNameUppercase": "ameNay",
+    "titleFieldHeader": "enameRay {n, plural, one {#ay ocumentday} other {#ay ocumentsday}}",
+    "titleFieldDescription": "nterEay aay amenay elowbay orfay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}}",
+    "titleFieldButton": "enameRay",
+    "titleFieldInvalidSameName": "heTay ocumentday lreadyaay ashay histay amenay",
+    "titleFieldInvalidEmptyName": "nterEay aay alidvay amenay",
+    "sourceFieldTitle": "ourceSay",
+    "sourceFieldName": "ourcesay",
+    "sourceFieldNameUppercase": "ourceSay",
+    "sourceFieldHeader": "ditEay ourcesay orfay {n, plural, one {#ay ocumentday} other {#ay ocumentsday}}",
+    "sourceFieldDescription": "nterEay aay ourcesay elowbay orfay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}}",
+    "sourceFieldButton": "ditEay",
+    "descriptionFieldTitle": "escriptionDay",
+    "descriptionFieldName": "escriptionday",
+    "descriptionFieldNameUppercase": "escriptionDay",
+    "descriptionFieldHeader": "ditEay escriptionday orfay {n, plural, one {#ay ocumentday} other {#ay ocumentsday}}",
+    "descriptionFieldDescription": "nterEay hetay escriptionday elowbay orfay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}}",
+    "descriptionFieldButton": "ditEay",
+    "relatedArticleFieldTitle": "elatedRay rticleAay RLUay",
+    "relatedArticleFieldName": "elatedray rticleaay RLUay",
+    "relatedArticleFieldNameUppercase": "elatedRay rticleAay RLUay",
+    "relatedArticleFieldHeader": "ditEay hetay elatedray rticleaay RLUay orfay {n, plural, one {#ay ocumentday} other {#ay ocumentsday}}",
+    "relatedArticleFieldDescription": "nterEay hetay elatedray rticleaay RLUay elowbay orfay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}}",
+    "relatedArticleFieldButton": "ditEay",
+    "publishedUrlFieldTitle": "ublishedPay RLUay",
+    "publishedUrlFieldName": "ublishedpay RLUay",
+    "publishedUrlFieldNameUppercase": "ublishedPay RLUay",
+    "publishedUrlFieldHeader": "ditEay hetay ublishedpay RLUay orfay {n, plural, one {#ay ocumentday} other {#ay ocumentsday}}",
+    "publishedUrlFieldDescription": "nterEay hetay ublishedpay RLUay elowbay orfay hetay {n, plural, one {electedsay ocumentday} other {#ay electedsay ocumentsday}}",
+    "publishedUrlFieldButton": "ditEay"
   },
   "projectsMenu": {
     "newProject": "+ay ewNay rojectPay",
@@ -367,12 +448,14 @@
   },
   "searchBar": {
     "tips": "earchSay ips:tay ddaay iltersfay ybay ypingtay <code>ser:uay</code>,ay <code>roject:pay</code>,ay roay <code>rganization:oay</code>,ay tc.eay seUay <code>ort:say</code> otay rderoay esults.ray",
-    "learnMore": "earnLay oremay"
+    "learnMore": "earnLay oremay",
+    "search": "earchSay"
   },
   "searchLink": {
     "search": "earchSay histay ocumentday ollectioncay"
   },
   "projects": {
+    "header": "rojectsPay",
     "allDocuments": "llAay ocumentsDay",
     "yourDocuments": "ourYay ocumentsDay",
     "yourPubDocuments": "ourYay ublicPay ocumentsDay",
@@ -422,7 +505,7 @@
     "of": "foay",
     "totalEntityResult": "{n, plural, one {#ay otaltay ntityeay esultray} other {#ay otaltay ntityeay esultsray}} ",
     "filter": "ilterFay",
-    "applyFilters": "pplyFiltersaay",
+    "applyFilters": "pplyAay iltersfay",
     "kind": "indKay",
     "clear": "learCay",
     "person": "ersonPay",
@@ -443,13 +526,13 @@
     "common": "ommonCay",
     "advanced": "dvancedAay",
     "relevanceThreshold": "elevanceRay hreshold:tay",
-    "knowldgeGraph": "nowledgeKay raph:gay",
+    "knowledgeGraph": "nowledgeKay raph:gay",
     "hasKG": "asHay aay nowledgekay raphgay DIay",
     "noKG": "oesDay otnay avehay aay nowledgekay raphgay DIay",
     "wikiUrl": "ikipediaWay RL:Uay",
     "hasWiki": "asHay aay ikipediaWay RLUay",
     "noWiki": "oesDay otnay avehay aay ikipediaWay RLUay",
-    "occurence": "{n, plural, zero {} one {#ay ccurenceoay} other {#ay ccurrencesoay}}",
+    "occurrence": "{n, plural, zero {} one {#ay ccurrenceoay} other {#ay ccurrencesoay}}",
     "wikipedia": "ikipediaWay",
     "entityExtraction": "ntityEay xtractioneay orfay \u201cay{title}\u201day",
     "extractingEntities": "xtractingEay ntities...eay",
@@ -472,7 +555,8 @@
     "org": "hisTay otenay siay nlyoay isiblevay otay ouyay ndaay thersoay ithway diteay ccessaay otay histay ocumentday",
     "private": "hisTay rivatepay otenay siay nlyoay isiblevay otay ouyay",
     "by": "nnotatedAay ybay {name}",
-    "byOrg": "nnotatedAay ybay {name},ay {org}"
+    "byOrg": "nnotatedAay ybay {name},ay {org}",
+    "addPageNote": "ddAay agepay otenay"
   },
   "viewDropdown": {
     "document": "ocumentDay",
@@ -530,7 +614,7 @@
   "searchResults": {
     "resultPages": "{results, plural, one {#ay esultray} other {#ay esultsray}} crossaay {pages, plural, one {#ay agepay} other {#ay agespay}}",
     "noSearchResults": "oNay earchsay esults.ray ryTay gainaay ithway aay roaderbay uery.qay",
-    "occurrences": "{n, plural, one {#ay ccurenceoay} other {#ay ccurrencesoay}}"
+    "occurrences": "{n, plural, one {#ay ccurrenceoay} other {#ay ccurrencesoay}}"
   },
   "sidebar": {
     "updating": "pdatingUay ocucment...day",

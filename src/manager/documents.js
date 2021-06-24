@@ -342,13 +342,9 @@ export function getIndex(document) {
 export function removeDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
-    "Confirm delete",
-    `Proceeding will permanently delete the ${
-      documents.length == 1
-        ? "selected document"
-        : `${documents.length} selected documents`
-    }. Do you wish to continue?`,
-    "Delete",
+    "dialogDeleteDialog.title",
+    "dialogDeleteDialog.deleteDocs",
+    "dialog.delete",
     async () => {
       await wrapLoad(layout, async () => {
         await deleteDocument(documents.map((doc) => doc.id));
@@ -356,6 +352,7 @@ export function removeDocuments(documents) {
       });
       unselectAll();
     },
+    { n: documents.length },
   );
 }
 
@@ -371,13 +368,9 @@ export async function markAsDirty(docIds) {
 export function reprocessDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
-    "Confirm reprocess",
-    `Proceeding will force the ${
-      documents.length == 1
-        ? "selected document"
-        : `${documents.length} selected documents`
-    } to reprocess page and image text. Do you wish to continue?`,
-    "Reprocess",
+    "dialogReprocessDialog.title",
+    "dialogReprocessDialog.reprocessDocs",
+    "dialogReprocessDialog.confirm",
     async () => {
       await wrapLoad(layout, async () => {
         const ids = documents.map((doc) => doc.id);
@@ -386,21 +379,16 @@ export function reprocessDocuments(documents) {
       });
       unselectAll();
     },
+    { n: documents.length },
   );
 }
 
 export function cancelProcessDocuments(documents) {
   if (documents.length == 0) return;
   showConfirm(
-    "Cancel processing",
-    `Proceeding will force the ${
-      documents.length == 1
-        ? "selected document"
-        : `${documents.length} selected documents`
-    } to stop processing. After processing has been stopped, an error will show after which you can “Force Reprocess” or delete the ${
-      documents.length == 1 ? "document" : `documents`
-    } using the Edit menu. Do you wish to continue?`,
-    "Continue",
+    "dialogCancelProcessingDialog.title",
+    "dialogCancelProcessingDialog.deleteDocs",
+    "dialog.continue",
     async () => {
       await wrapLoad(layout, async () => {
         for (let i = 0; i < documents.length; i++) {
@@ -410,6 +398,9 @@ export function cancelProcessDocuments(documents) {
       });
       await markAsDirty(documents.map((doc) => doc.id));
       unselectAll();
+    },
+    {
+      n: documents.length,
     },
   );
 }

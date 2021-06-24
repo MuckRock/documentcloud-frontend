@@ -54,17 +54,16 @@
 
   async function remove() {
     showConfirm(
-      $_("dialogProjectDialog.confirmDelete"),
-      $_("dialogProjectDialog.deleteProject", {
-        values: { project: layout.projectEdit.title },
-      }),
-      $_("dialog.delete"),
+      "dialogProjectDialog.confirmDelete",
+      "dialogProjectDialog.deleteProject",
+      "dialog.delete",
       async () => {
         await wrapLoadSeparate(loading, layout, async () => {
           await removeProject(layout.projectEdit);
         });
         emit.dismiss();
       },
+      { project: layout.projectEdit.title },
     );
   }
 

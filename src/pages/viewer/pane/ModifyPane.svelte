@@ -173,7 +173,7 @@
 {:else}
   <h3>{$_("modifyPane.modifyPages")}</h3>
   <p>
-    {$_("modfyPane.select")}
+    {$_("modifyPane.select")}
   </p>
 {/if}
 
