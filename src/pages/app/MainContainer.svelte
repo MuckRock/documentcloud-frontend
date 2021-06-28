@@ -2,8 +2,8 @@
   // Components
   import Documents from "./Documents";
   import Hamburger from "@/common/Hamburger";
-  import Button from "@/common/Button";
   import Modal from "@/common/Modal";
+  import ErrorData from "@/common/ErrorData";
   import ErrorModal from "@/common/ErrorModal";
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import MetaDialog from "@/common/dialog/MetaDialog";
@@ -34,7 +34,6 @@
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
-  import { nav } from "@/router/router";
   import { _ } from "svelte-i18n";
 
   import emitter from "@/emit";
@@ -46,11 +45,6 @@
   const emit = emitter({
     expandSidebar() {},
   });
-
-  function refresh() {
-    nav("app");
-    window.location.reload();
-  }
 
   // Iframe resizing
   let containerWidth = null;
@@ -86,11 +80,6 @@
 
     &.error {
       padding: 100px;
-
-      .status {
-        color: $caution;
-        font-weight: bold;
-      }
     }
   }
 </style>
@@ -142,13 +131,7 @@
     </div>
   {:else}
     <div class="container error">
-      <p class="status">{$_("mainContainer.error")}</p>
-      <p>{$_("mainContainer.errorMsg")}</p>
-      <div>
-        <Button secondary={true} on:click={refresh}>
-          {$_("mainContainer.refresh")}
-        </Button>
-      </div>
+      <ErrorData error={$documents.error} refresh={true} homepage={true} />
     </div>
   {/if}
 </div>

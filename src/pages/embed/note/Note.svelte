@@ -274,7 +274,7 @@
           target="_blank"
           title={$_("embedNote.viewTheNote", { values: { title: note.title } })}
         >
-          {@html $_("embedDoc")}
+          {@html $_("embedNote.viewDoc")}
         </a>
       </div>
 

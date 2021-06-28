@@ -43,7 +43,7 @@
   <div>
     <div class="mcontent">
       <h1>
-        {$_("dialogPageEmbedDialog.share", {
+        {$_("dialogProjectEmbedDialog.share", {
           values: { title: project.title },
         })}
       </h1>

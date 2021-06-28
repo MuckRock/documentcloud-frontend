@@ -43,7 +43,7 @@
     values: { title: $layout.embedDocument.title },
   })}
 </h1>
-{$_("dialogPageEmbedDialog")}
+{$_("dialogPageEmbedDialog.selectPage")}
 <select bind:value={page}>
   <option value="visible">
     {$_("dialogPageEmbedDialog.page", { values: { n: doc.visiblePageNumber } })}

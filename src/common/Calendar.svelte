@@ -20,7 +20,6 @@
     $_("calendar.nov"),
     $_("calendar.dec"),
   ];
-  $: console.log({ months });
 
   function roundMinutes(date) {
     date.setMinutes(Math.round(date.getMinutes() / 15) * 15);
