@@ -56,6 +56,7 @@
         position: absolute;
         right: -14px;
         top: 5px;
+        width: auto;
       }
     }
 
