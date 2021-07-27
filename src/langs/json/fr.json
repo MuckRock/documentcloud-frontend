@@ -1,0 +1,653 @@
+{
+  "common": {
+    "emailAddress": "Adresse e-mail",
+    "loading": "Chargement...",
+    "documentCloud": "DocumentCloud",
+    "home": "Page d'accueil"
+  },
+  "homeTemplate": {
+    "signedIn": "Connecté en tant que {name}",
+    "signOut": "Se déconnecter",
+    "signIn": "Se connecter",
+    "signUp": "S'enregistrer",
+    "goToApp": "Aller à l'application"
+  },
+  "accessToggle": {
+    "public": "La note sera visible pour toute personne ayant accès au document.",
+    "collaborator": "La note sera visible par toute personne pouvant modifier le document.",
+    "private": "La note ne sera visible que par vous.",
+    "publicName": "Public",
+    "collaboratorName": "Collaborateur",
+    "privateName": "Privé"
+  },
+  "accessIcon": {
+    "private": "Accès privé",
+    "organization": "Accès réservé à votre organisation",
+    "public": "Accès public",
+    "privateExplanation": "Seul vous pouvez voir ce document",
+    "organizationExplanation": "Seuls les membres de votre organisation peuvent voir ce document",
+    "publicExplanation": "Tout le monde peut chercher et voir ce document"
+  },
+  "appearanceCustomizer": {
+    "customizeAppearance": "Personnaliser l'apparence",
+    "hide": "Masquer le texte de l'aide",
+    "show": "Montrer le texte de l'aide"
+  },
+  "appearanceDimension": {
+    "responsive": "Automatique (par défaut)",
+    "fixed": "Fixée"
+  },
+  "calendar": {
+    "jan": "Janvier",
+    "feb": "Février",
+    "mar": "Mars",
+    "apr": "Avril",
+    "may": "Mai",
+    "jun": "Juin",
+    "jul": "Juillet",
+    "aug": "Août",
+    "sep": "Septembre",
+    "oct": "Octobre",
+    "nov": "Novembre",
+    "dec": "Décembre",
+    "hourShortcode": "HH",
+    "minuteShortcode": "MM"
+  },
+  "dialog": {
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "done": "Fait",
+    "edit": "Modifier",
+    "remove": "Enlever",
+    "save": "Sauvegarder",
+    "create": "Créer",
+    "ok": "Ok",
+    "update": "Mettre à jour",
+    "dismiss": "Annuler",
+    "continue": "Continuer"
+  },
+  "dialogAccessDialog": {
+    "changeAccess": "Changer l'accès pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "selectAccess": "Sélectionnez un niveau d'accès pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "public": "Accès public",
+    "publicDesc": "N'importe qui sur Internet peut rechercher et consulter le document.",
+    "verifiedHelp": "Seuls les utilisateurs vérifiés ou les membres d'organisations vérifiées peuvent rendre publics les documents téléchargés. Si vous êtes journaliste ou que vous travaillez par ailleurs à la publication de matériel révisé pour informer le public, <a href=\"https://www.muckrock.com/assignment/request-account-verification-377/form/\" target=\"_blank\">en savoir plus et demander la vérification ici.</a>",
+    "privateToOrg": "Vous ne pouvez pas changer le niveau d'accès à “Réservé à votre organisation” car {n, plural, one {ce document est} other {un ou plusieurs de ces documents sont}} associés à votre compte individuel et pas à une organisation. Pour ajouter {n, plural, one {ce document} other {ces documents}} à votre organisation, sélectionnez {n, plural, one {le} other {les}} depuis la liste de gestion et sélectionnez “Changer le propriétaire.” <a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">Vous pouvez rejoindre ou créer une organisation sur cette page.</a>",
+    "private": "Accès privé",
+    "privateDesc": "Seules les personnes ayant une autorisation explicite (par le biais de la collaboration) ont accès.",
+    "organization": "Accès réservé à votre organisation",
+    "organizationDesc": "Seules les personnes de votre organisation ont accès.",
+    "schedulePublication": "Planification de la publication",
+    "scheduleHelp": "Ce document sera rendu public à la date et heure indiquées. L'heure de publication est localisée à {timezone}.",
+    "unchanged": "L'accès n'a pas été modifié. Sélectionnez un niveau d'accès différent.",
+    "future": "Vous devez sélectionner une date dans le futur",
+    "change": "Modifier"
+  },
+  "dialogCollaboratorDialog": {
+    "confirm": "Confirmer la suppression de l'utilisateur",
+    "confirmMsg": "Continuer supprimera {name} de {title}. Voulez-vous continuer ?",
+    "addCollaborators": "Ajouter des collaborateurs",
+    "invite": "Entrer les adresses email d'utilisateurs DocumentCloud existants ci-dessous. S'ils n'ont pas de compte, faites-les s'inscrire <a target=\"_blank\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\" >gratuitement</a>, puis demandez-leur de se connecter à DocumentCloud au moins une fois.",
+    "admin": "Administration",
+    "view": "Vue",
+    "adminHelp": "Les collaborateurs peuvent modifier ce projet et ses documents",
+    "editHelp": "Les collaborateurs peuvent modifier les documents de ce projet",
+    "viewHelp": "Les collaborateurs peuvent voir les documents de ce projet",
+    "add": "Ajouter",
+    "empty": "Vous n'avez pas encore ajouté de collaborateur à ce projet. Invitez des collaborateurs afin d'accorder à d'autres utilisateurs l'accès aux documents partagés dans ce projet. Vous pouvez contrôler si les collaborateurs ont accès pour voir/modifier les documents du projet ou être des administrateurs avec les permissions d'inviter d'autres utilisateurs et de modifier le projet lui-même.",
+    "manageCollaborators": "Gérer les collaborateurs",
+    "name": "Nom",
+    "access": "Accès",
+    "you": "(vous)"
+  },
+  "dialogDataDialog": {
+    "confirm": "Confirmer la suppression du point de données",
+    "removeMsg": "Continuer supprimera la paire {key} / {value} des documents spécifiés. Voulez-vous continuer ?",
+    "addData": "Ajouter des données pour {n, plural, one {le document} other {# les documents}}",
+    "tag": "Étiquette",
+    "value": "Valeur",
+    "key": "Clé",
+    "keyValue": "Clé / Valeur",
+    "tagInfo": "Ajoutez des étiquettes personnalisées pour catégoriser vos documents.",
+    "eg": "p. ex.",
+    "exampleTagReport": "signaler",
+    "exampleTagLawsuit": "litige",
+    "exampleTagEmail": "courriel",
+    "keyValueInfo": "Ajoutez des paires clé / valeur personnalisées pour une catégorisation précise de vos documents.",
+    "exampleKVState": "État :&nbsp;Californie",
+    "exampleKVYear": "Année :&nbsp;2016",
+    "exampleKVType": "type:&nbsp;mémo",
+    "enterTag": "Entrez une étiquette",
+    "enterKey": "Entrez une clé",
+    "keyInvalid": "Les clés ne peuvent contenir que des lettres, des chiffres, des tirets bas (_) et des tirets (-)",
+    "emptyMsg": "Vous n'avez pas encore ajouté de données au(x) document(s) spécifié(s). Ajoutez des paires clés / valeurs pour catégoriser et organiser vos documents. Vous pouvez filtrer et rechercher dans les données des documents pour un meilleur contrôle sur votre gestion documentaire.",
+    "manageDocumentData": "Gérer les données du document",
+    "valueUnchanged": "Les valeurs restent inchangées",
+    "kvCannotBeEmpty": "La paire clé / valeur ne peut être vide"
+  },
+  "dialogReprocessDialog": {
+    "title": "Confirmez le retraitement",
+    "reprocessDocs": "Continuer forcera {n, plural, one {le document sélectionné} other {# les documents sélectionnés}} à retraiter le texte de la page et de l'image. Voulez-vous continuer ?",
+    "reprocessSingleDoc": "Continuer obligera le document à retraiter le texte de la page et de l'image. Voulez-vous continuer ?",
+    "confirm": "Retraiter"
+  },
+  "dialogDeleteDialog": {
+    "title": "Confirmez le retraitement",
+    "deleteDocs": "Continuer supprimera définitivement {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}. Voulez-vous continuer ?"
+  },
+  "dialogCancelProcessingDialog": {
+    "title": "Annuler le retraitement",
+    "deleteDocs": "Continuer forcera {n, plural, one {le document sélectionné} other {# les documents sélectionnés}} à annuler le traitement. Une fois le traitement stoppé, une erreur va s'afficher, vous pourrez alors “Forcer le retraitement” et supprimer {n, plural, one {le document} other {les documents}} en utilisant le menu Modifier. Voulez-vous continuer ?"
+  },
+  "dialogDiagnosticDialog": {
+    "staffOnlyInfo": "Infos réservées aux membres de l'équipe pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "id": "ID",
+    "title": "Titre",
+    "actions": "Actions",
+    "debug": "Débug",
+    "viewErrors": "Voir les erreurs",
+    "viewS3": "Voir en S3"
+  },
+  "dialogDocumentEmbedDialog": {
+    "responsive": "Responsive",
+    "respOn": "Activé (Par défaut)",
+    "respOnHelp": "Remplir avec la même largeur que l'article (fonctionne généralement le mieux)",
+    "respOff": "Désactivée",
+    "respOffHelp": "Le document va correspondre aux tailles spécifiées ci-dessous",
+    "width": "Largeur",
+    "widthAuto": "Remplira l'espace disponible si le document est réglé sur \"responsive\", sinon par défaut à 700 pixels",
+    "widthFixed": "Définissez une largeur maximale si le document est \"responsive\", ou définissez une taille fixe s'il n'est pas \"responsive\"",
+    "height": "Hauteur",
+    "heightAuto": "La hauteur est basée sur la taille du document, sans maximum. Si le document est \"responsive\", elle sera réglée sur la hauteur de la fenêtre du navigateur moins 100 pixels",
+    "heightFixed": "Définissez une largeur maximale si le document est \"responsive\", ou définissez une taille fixe s'il n'est pas \"responsive\"",
+    "sidebarBehavior": "Comportement de la barre latérale",
+    "sbResponsive": "Responsive (par défaut)",
+    "sbResponsiveHelp": "Afficher automatiquement la barre latérale sur les grands écrans et masquer sur les appareils mobiles. En mode intégré, la barre latérale sera masquée.",
+    "hidden": "Masqué",
+    "visible": "Visible",
+    "visibleDefault": "Visible (par défaut)",
+    "sbHiddenHelp": "Masquer la barre latérale par défaut",
+    "sbVisibleHelp": "Afficher la barre latérale par défaut",
+    "titleBehavior": "Comportement du titre",
+    "tVisibleHelp": "Afficher le titre et l'attribution dans l'en-tête de la visionneuse",
+    "tHiddenHelp": "Cacher le titre dans l'en-tête de la visionneuse (toujours visible dans la barre latérale)",
+    "pdfLink": "Lien du PDF",
+    "plVisibleHelp": "Afficher un lien vers le document en PDF dans la barre latérale",
+    "plHiddenHelp": "Masquer le lien vers le PDF de la barre latérale (le fichier est toujours accessible si l'URL est connue)",
+    "fullscreenOption": "Option plein écran",
+    "fsVisibleHelp": "Afficher l'icône pour le plein écran dans le coin inférieur droit",
+    "fsHiddenHelp": "Masquer l'option plein écran",
+    "textMode": "Mode Texte",
+    "tmVisibleHelp": "Afficher une option pour afficher le texte du document dans la liste déroulante",
+    "tmHiddenHelp": "Masquer le mode texte",
+    "contributedByFormat": "Contribué par format",
+    "cbfUserAndOrg": "Utilisateur et organisation (par défaut)",
+    "cbfUserAndOrgHelp": "Afficher l'attribution d'un document avec le nom d'utilisateur suivi par celui de l'organisation",
+    "cbfOrgOnly": "Organisation uniquement",
+    "cbfOrgOnlyHelp": "Attribuer le document seulement à l'organisation",
+    "share": "Partager « {title} »",
+    "embedDesc": "Copiez le code HTML pour intégrer ce document dans un article :"
+  },
+  "dialogDocumentInformationDialog": {
+    "editInformation": "Modifier la description pour {n, plural, one {# le document} other {# les documents}}"
+  },
+  "dialogRedactDialog": {
+    "title": "Confirmer les masquages",
+    "description": "Êtes-vous sûr de vouloir appliquer les masques au document en cours ? Si vous continuez, la visionneuse de document sera inaccessible temporairement pendant que le document se retraitera afin d'appliquer les masques. Ce changement est irréversible."
+  },
+  "dialogModifyDialog": {
+    "title": "Application des modifications",
+    "description": "Êtes-vous sûr de vouloir modifier le document en cours ? Si vous continuez, la visionneuse de document sera inaccessible temporairement pendant que le document se retraitera afin d'appliquer les modifications. Ce changement est irréversible.",
+    "closeTitle": "Confirmer la fermeture",
+    "closeWarning": "Vous perdrez toutes les modifications non enregistrées. Êtes-vous sûr de vouloir continuer ?"
+  },
+  "dialogDeleteNoteDialog": {
+    "title": "Confirmer la suppression",
+    "description": "Êtes-vous sûr de vouloir supprimer cette note ?"
+  },
+  "dialogEditSectionsDialog": {
+    "confirmDelete": "Confirmer la suppression",
+    "proceedingWillRemove": "Continuer supprimera la section spécifiée (p. {page} {title}). Voulez-vous continuer ?",
+    "editSections": "Modifier les sections",
+    "manageSections": "Ajoutez des sections pour organiser votre document avec une table des matières.",
+    "pageAbbrevNo": "p. {n}",
+    "pageAbbrev": "p. ",
+    "empty": "Vous n'avez ajouté aucune section.",
+    "edit": "Modifier la section sélectionnée",
+    "add": "Ajouter une nouvelle section",
+    "title": "Titre",
+    "missingTitle": "Veuillez saisir un titre",
+    "updateTitle": "Entrez un nouveau titre ou un numéro de page",
+    "uniquePageNumber": "Vous devez entrer un numéro de page unique",
+    "invalidPageNumber": "Le numéro de page est invalide"
+  },
+  "dialogEmbedDialog": {
+    "updatingDocument": "Mise à jour du document...",
+    "makingPublic": "Le document est en cours de publication. Cela peut prendre une ou deux minutes.",
+    "wouldMakePublic": "Voulez-vous rendre ce document public avant de le partager ?",
+    "notPublic": "Le document n'est pas public pour le moment. Si vous l'intégrez ou le liez, vous et vos collaborateurs serez seuls en mesure de le voir jusqu'à ce qu'il soit rendu public. Cliquez ci-dessous lorsque vous êtes prêt à rendre ce document public.",
+    "makePublic": "Rendre le document public",
+    "leave": "Laisser tel quel",
+    "selectShare": "Sélectionnez une option de partage",
+    "selectShareHelp": "Choisissez si vous voulez partager le document entier ou seulement une page ou bien une note.",
+    "shareDoc": "Partager le document entier",
+    "shareDocHelp": "Lier ou intégrer le document entier (c'est l'option de partage la plus couramment utilisée)",
+    "sharePage": "Partager une page spécifique",
+    "sharePageHelp": "Lier ou intégrer une seule page du document. Utile pour mettre en évidence un extrait de page.",
+    "shareNote": "Partager une note spécifique",
+    "shareNoteHelpHasNote": "Lier ou intégrer une seule page du document. Utile pour mettre en évidence un extrait d'une page.",
+    "shareNoteHelpNoNote": "Une fois que vous ajoutez des notes au document, utilisez cette fonctionnalité pour les lier ou les intégrer."
+  },
+  "dialogErrorDialog": {
+    "errorOccurred": "Un erreur est survenue",
+    "unexpectedErrorOccurred": "Une erreur inattendue est survenue",
+    "tryAgain": "Veuillez réessayer ultérieurement.",
+    "close": "Fermer",
+    "refresh": "Actualiser"
+  },
+  "dialogNoteEmbedDialog": {
+    "embedNote": "Intégrer une note de « {title} »",
+    "embedDesc": "Copiez le code HTML pour intégrer cette note dans un article :"
+  },
+  "dialogPageEmbedDialog": {
+    "embedPage": "Intégrer une page de « {title} »",
+    "embedDesc": "Copiez le code HTML pour intégrer cette note dans un article :",
+    "selectPage": "Sélectionnez la page à intégrer :",
+    "page": "Page {n} (actuellement à l'écran)",
+    "otherPage": "Autre page",
+    "enterPageNumber": "Entrez le numéro de page à intégrer :"
+  },
+  "dialogProjectAccessDialog": {
+    "changeAccessFor": "Modifier l'accès pour {name}",
+    "selectAccess": "Sélectionnez un niveau d'accès ci-dessous pour {name} dans {title}",
+    "adminAccess": "Accès Administrateur",
+    "editAccess": "Modifier les accès",
+    "viewAccess": "Voir les accès",
+    "adminHelp": "Ce collaborateur peut modifier ce projet et ses documents. Le collaborateur peut inviter des utilisateurs, supprimer des utilisateurs et supprimer le projet.",
+    "editHelp": "Ce collaborateur peut modifier les documents de ce projet mais ne peut pas modifier le projet lui-même.",
+    "viewHelp": "Ce collaborateur peut voir les documents de ce projet mais ne peut pas les modifier ni modifier le projet.",
+    "invalidAccess": "L'accès est déjà réglé sur {access}. Sélectionnez un niveau d'accès différent.",
+    "changeAccess": "Modifier le niveau d'accès"
+  },
+  "dialogOwnerDialog": {
+    "selectUser": "Un utilisateur doit être sélectionné",
+    "selectOrg": "Une organisation doit être sélectionnée",
+    "changeOwner": "Changer le propriétaire pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "accessWarning": "Avertissement : Vous pouvez perdre l'accès {n, plural, one {au document} other {# aux documents}} en raison de la modification du propriétaire.",
+    "user": "Utilisateur :",
+    "filterUsers": "Tapez du texte pour filtrer les utilisateurs...",
+    "filterOrgs": "Tapez du texte pour filtrer les organisations..."
+  },
+  "dialogProjectDialog": {
+    "confirmDelete": "Confirmer la suppression",
+    "deleteProject": "Êtes-vous certain de vouloir supprimer ce projet ({project}) ?",
+    "editProject": "Modifier le projet",
+    "createProject": "Créer un nouveau projet",
+    "title": "Titre...",
+    "projectDesc": "Description du projet (optionnel)",
+    "manageCollabs": "Gérer les collaborateurs",
+    "share": "Partager / Intégrer le projet",
+    "enterTitle": "Saisir un titre",
+    "changeTitle": "Modifier le titre ou la description"
+  },
+  "dialogProjectEmbedDialog": {
+    "share": "Partager « {title} »",
+    "embedDesc": "Copiez le code HTML pour intégrer ce document dans un article :",
+    "invalid": "Projet invalide",
+    "cannotEmbed": "Impossible d'intégrer ce projet, car il ne semble pas exister."
+  },
+  "htmlEditor": {
+    "preview": "Prévisualisation :"
+  },
+  "image": {
+    "error": "Une erreur est survenue. Essayez de rafraîchir la page."
+  },
+  "omniselect": {
+    "filter": "Tapez pour filtrer la langue",
+    "noResults": "Aucun résultat. Cliquez pour effacer le filtre."
+  },
+  "shareOptions": {
+    "errorText": "Une erreur inattendue est survenue. Veuillez réessayer ultérieurement.",
+    "copyHtml": "Copier le code HTML",
+    "addShortcode": "Ajoutez ce code court à votre contenu WordPress —",
+    "pluginRequired": "Extension requise",
+    "copyShortcode": "Copier le code court",
+    "copyUrl": "Copier l'URL"
+  },
+  "specialMessage": {
+    "contactUs": "<a href={contact} target=\"_blank\">Contactez-nous</a> avec des rapports de bugs, des questions et des suggestions."
+  },
+  "uploadOptions": {
+    "documentLang": "Langue du document :",
+    "forceOcr": "Forcer l’OCR:"
+  },
+  "actionBar": {
+    "selectDocs": "Sélectionnez des documents pour accéder à des options d'édition",
+    "noPerms": "Vous n'avez pas la permission de modifier tous les documents sélectionnés",
+    "editMenu": "Modifier",
+    "projectsMenu": "Projets"
+  },
+  "authSection": {
+    "help": "Aide",
+    "language": "Langue",
+    "tips": "Trucs et astuces",
+    "searchDocs": "Rechercher dans la documentation",
+    "apiDocs": "Documentation pour l'API",
+    "emailUs": "Écrivez-nous par mail",
+    "acctSettings": "Réglages du compte",
+    "signOut": "Se déconnecter",
+    "changeOrg": "Changer l'organisation",
+    "personalAcct": "Compte personnel",
+    "signIn": "Se connecter"
+  },
+  "documents": {
+    "yourDocuments": "Vos Documents",
+    "searchResults": "Résultats de la recherche",
+    "accessDocuments": "Vos documents {access}",
+    "nameDocuments": "Les documents {access} pour {name}",
+    "allDocuments": "Tous les documents {access}",
+    "mustBeVerified": "Vous devez être un journaliste vérifié pour envoyer des documents",
+    "upload": "Envoyer",
+    "dropFile": "Déposer un fichier à envoyer "
+  },
+  "document": {
+    "open": "Ouvrir",
+    "updating": "Mise à jour du document...",
+    "processing": "Traitement",
+    "processingError": "Une erreur est survenue lors du traitement de votre document",
+    "remove": "Supprimer",
+    "improper": "Votre document n'a pas été envoyé correctement",
+    "project": "Projet",
+    "totalMatchingPages": "{n} sur {m} pages correspondent à la requête",
+    "showAll": "Afficher tout",
+    "matchingPages": "{n} pages correspondent à la requête",
+    "pageAbbrev": "p. ",
+    "pageCount": "{n, plural, one {# page} other {# pages}}",
+    "source": "Source"
+  },
+  "documentThumbnail": {
+    "pages": "pages",
+    "loading": "Chargement des informations d'avancement..."
+  },
+  "mainContainer": {
+    "error": "Erreur",
+    "errorMsg": "Impossible d'accéder au serveur DocumentCloud. Veuillez actualiser la page plus tard.",
+    "refresh": "Actualiser"
+  },
+  "editMenu": {
+    "editDocInfo": "Modifier les informations du document",
+    "changeAccess": "Modifier le niveau d'accès",
+    "editDocData": "Modifier les données du document",
+    "cancelProcessing": "Annuler le retraitement",
+    "forceReprocess": "Forcer le retraitement",
+    "entities": "Entités <span class=\"beta\">BETA</span>",
+    "changeOwner": "Changer le propriétaire",
+    "delete": "Supprimer",
+    "diagnosticInfo": "Informations de diagnostic"
+  },
+  "metaFields": {
+    "defaultFieldInvalidText": "Le document a déjà ce {fieldName}",
+    "titleFieldTitle": "Titre",
+    "titleFieldName": "nom",
+    "titleFieldNameUppercase": "Nom",
+    "titleFieldHeader": "Renommer {n, plural, one {le document} other {# les documents}}",
+    "titleFieldDescription": "Entrez un nom ci-dessous pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "titleFieldButton": "Renommer",
+    "titleFieldInvalidSameName": "Le document a déjà ce nom",
+    "titleFieldInvalidEmptyName": "Entrez un nom valide",
+    "sourceFieldTitle": "Source",
+    "sourceFieldName": "source",
+    "sourceFieldNameUppercase": "Source",
+    "sourceFieldHeader": "Modifier la source pour {n, plural, one {# le document} other {# les documents}}",
+    "sourceFieldDescription": "Entrez une source ci-dessous pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "sourceFieldButton": "Modifier",
+    "descriptionFieldTitle": "Description",
+    "descriptionFieldName": "description",
+    "descriptionFieldNameUppercase": "Description",
+    "descriptionFieldHeader": "Modifier la description pour {n, plural, one {# le document} other {# les documents}}",
+    "descriptionFieldDescription": "Entrez une description ci-dessous pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "descriptionFieldButton": "Modifier",
+    "relatedArticleFieldTitle": "Adresse (url) de l'article apparenté",
+    "relatedArticleFieldName": "adresse (url) de l'article apparenté",
+    "relatedArticleFieldNameUppercase": "Adresse (url) de l'article apparenté",
+    "relatedArticleFieldHeader": "Modifier l'adresse (URL) de l'article apparenté pour {n, plural, one {# le document} other {# les documents}}",
+    "relatedArticleFieldDescription": "Entrez l'adresse (URL) de l'article apparenté ci-dessous pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "relatedArticleFieldButton": "Modifier",
+    "publishedUrlFieldTitle": "Adresse (URL) publiée",
+    "publishedUrlFieldName": "adresse (URL) publiée",
+    "publishedUrlFieldNameUppercase": "Adresse (URL) publiée",
+    "publishedUrlFieldHeader": "Modifier l'adresse (URL) pour {n, plural, one {# le document} other {# les documents}}",
+    "publishedUrlFieldDescription": "Entrez l'adresse (URL) ci-dessous pour {n, plural, one {le document sélectionné} other {# les documents sélectionnés}}",
+    "publishedUrlFieldButton": "Modifier"
+  },
+  "projectsMenu": {
+    "newProject": "+ Nouveau Projet",
+    "projMembership": "Adhésion au projet",
+    "selectDocs": "Sélectionnez les documents pour les ajouter à des projets",
+    "createProj": "Créer un projet pour organiser et partager des documents"
+  },
+  "noDocuments": {
+    "noSearchResults": "Aucun résultat pour cette recherche",
+    "queryNoResults": "Votre recherche n'a donné aucun résultat. Réessayez avec une requête de recherche plus large.",
+    "welcome": "Bienvenue sur DocumentCloud !",
+    "verify1": "Notez que votre compte n'est pas actuellement <b>vérifié pour envoyer</b> des documents. Vous pouvez rechercher dans la base publique, organiser les documents qui vous intéressent dans des projets, laisser des notes privées, et collaborer à l'édition et à l'annotation de documents pour lesquels d'autres utilisateurs vous ont invité.",
+    "verify2": "Si vous souhaitez envoyer ou publier des documents et que vous êtes un journaliste en activité ou membre d'une organisation intéressée par la publication de documents d'intérêt public, vous devrez faire vérifier votre compte ou l'ajouter à une organisation vérifiée. Ce processus est simple :",
+    "verify3": "Tout d'abord, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">vérifiez si votre organisation existe déjà</a> et, si vous la trouvez, cliquez sur \"Demander à rejoindre\" sur sa page.",
+    "verify4": "Si votre organisation n'a pas encore été vérifiée, ou si vous êtes un indépendant, <a target=\"_blank\" href=\"https://www.muckrock.com/assignment/request-account-verification-377/form/\">demandez la vérification ici</a>. Les demandes de vérification prennent généralement deux jours ouvrables pour être traitées.",
+    "uploadFirst": "Téléchargez votre premier document",
+    "upload1": "Envoyez un document pour commencer à utiliser DocumentCloud. Vous pouvez faire glisser le fichier dans cette fenêtre, ou cliquez sur le bouton bleu “Envoyer” ci-dessus.",
+    "upload2": "Une fois que vous avez envoyé un fichier, DocumentCloud traitera le document et traitera son contenu. Cela peut prendre quelques minutes, mais une fois que cela sera fait, votre document sera optimisé pour l'analyse et le partage sur le Web."
+  },
+  "paginator": {
+    "of": "de",
+    "document": "{n, plural, one {Document} other {Documents}}"
+  },
+  "processingBar": {
+    "doneProcessing": "Traitement terminé",
+    "processingDocuments": "Traitement {n, plural, one {d'un document} other {# de plusieurs documents}}"
+  },
+  "searchBar": {
+    "tips": "Conseils de recherche : ajoutez des filtres en tapant <code>user:</code>, <code>project:</code>, ou <code>organization:</code>, etc. Utilisez <code>sort:</code> pour trier les résultats.",
+    "learnMore": "En savoir plus",
+    "search": "Rechercher"
+  },
+  "searchLink": {
+    "search": "Rechercher dans cette collection de documents"
+  },
+  "projects": {
+    "header": "Projets",
+    "allDocuments": "Tous les documents",
+    "yourDocuments": "Vos documents",
+    "yourPubDocuments": "Vos documents publics",
+    "orgDocuments": "Les documents de {name}",
+    "newProject": "+ Nouveau Projet",
+    "createProject": "Créez votre premier projet en cliquant sur « Nouveau projet » ci-dessus."
+  },
+  "uploadDialog": {
+    "docUpload": "Envoi du document",
+    "docUploadProj": "Envoyer le document vers {title}",
+    "beginUpload": "Commencer le chargement",
+    "pdfSizeWarning": "Vous ne pouvez télécharger des fichiers PDF de moins de {size}.",
+    "nonPdfSizeWarning": "Vous ne pouvez charger des documents non-PDF de moins de {size}.",
+    "fileReady": "{n, plural, one {fichier prêt} other {fichiers prêts}} pour le chargement",
+    "fileLimitWarning": "Vous ne pouvez télécharger que {limit} fichiers à la fois.",
+    "moreOptions": "Plus d'options",
+    "selectFiles": "+ Sélectionner les fichiers",
+    "dragDrop": "Glisser et déposer les fichiers ici",
+    "publicMsg": "Le document sera publiquement visible.",
+    "collabMsg": "Le document sera visible par votre organisation.",
+    "privateMsg": "Le document ne sera visible que de vous seul.",
+    "collabName": "Organisation",
+    "submitting": "Presque terminé... les fichiers envoyés sont soumis au traitement ({percent})",
+    "uploading": "Envoi en cours... ({uploaded}/{length})",
+    "gettingInfo": "Récupération des informations de chargement ({percent})",
+    "pleaseLeaveOpen": "Veuillez laisser cette page ouverte pendant le chargement de vos documents. Cette boîte de dialogue se fermera automatiquement une fois les envois terminés.",
+    "errorHeading": "Une erreur s'est produite lors du chargement",
+    "errorMsg": "Nous n'avons pas pu {errorMessage}. Veuillez réessayer plus tard.",
+    "editDocInfo": "Modifier les informations du document :",
+    "untitled": "Sans titre",
+    "uploadFiles": "Envoyer des documents supplémentaires",
+    "selectMore": "+ Sélectionner plus de fichiers",
+    "dragDropMore": "Glisser et déposer les fichiers supplémentaires ici"
+  },
+  "embedNote": {
+    "viewTheNote": "Voir la note \"{title}\" dans son contexte sur DocumentCloud dans un nouvel onglet",
+    "viewDoc": "Voir le document entier avec <span class=\"DC-note-logotype-link\">DocumentCloud</span>"
+  },
+  "embedPage": {
+    "viewDoc": "Afficher l'intégralité de {title} sur DocumentCloud dans un nouvel onglet",
+    "pageOf": "Page {page} de {title}",
+    "gotoDocCloud": "Aller à DocumentCloud dans un nouvel onglet"
+  },
+  "entities": {
+    "back": "Retour",
+    "page": "Page",
+    "of": "de",
+    "totalEntityResult": "{n, plural, one {# résultat total de l'entité} other {# résultats totaux de l'entité}} ",
+    "filter": "Filtre",
+    "applyFilters": "Appliquer les filtres",
+    "kind": "Type",
+    "clear": "Effacer",
+    "person": "Personne",
+    "org": "Organisation",
+    "location": "Emplacement",
+    "event": "Événement",
+    "workOfArt": "Oeuvre d'art",
+    "consumerGood": "Produits de consommation",
+    "address": "Adresse",
+    "date": "Date",
+    "number": "Numéro",
+    "phoneNumber": "Numéro de téléphone",
+    "price": "Prix",
+    "unknown": "Inconnu",
+    "other": "Autre",
+    "occurrences": "Occurrences",
+    "proper": "Correct",
+    "common": "Commun",
+    "advanced": "Avancé",
+    "relevanceThreshold": "Seuil de pertinence :",
+    "knowledgeGraph": "Graphique de connaissance :",
+    "hasKG": "A un ID de graphique de connaissance",
+    "noKG": "N'a pas d'ID de graphique de connaissance",
+    "wikiUrl": "URL Wikipédia :",
+    "hasWiki": "A une URL Wikipédia",
+    "noWiki": "N'a pas d'URL Wikipedia",
+    "occurrence": "{n, plural, zero {} one {# occurrence} other {# occurrences}}",
+    "wikipedia": "Wikipédia",
+    "entityExtraction": "Extraction de l'entité pour « {title} »",
+    "extractingEntities": "Extraction des entités...",
+    "welcome": "Bienvenue dans l'extraction d'entité ! Cette fonctionnalité est en cours de développement, mais nous voulons qu'elle soit disponible en avance pour recueillir les <a href={contact} target=\"_blank\">avis</a> que vous pourriez avoir.",
+    "manual": "Pour l'instant, le processus d'extraction des entités est manuel. Ce document n'a pas encore vu ses entités extraites, alors cliquez ci-dessous pour commencer.",
+    "error": "Une erreur inconnue s'est produite",
+    "extract": "Extraction des entités",
+    "noEntities": "Il n'y a pas d'entités. Cela peut se produire lorsque le document n'a pas de texte, n'est pas rédigé en anglais (seul l'anglais est reconnu pour l'instant), ou une erreur est survenue.",
+    "starting": "Démarrage de l'extraction..."
+  },
+  "home": {
+    "about": "DocumentCloud est une plateforme tout-en-un pour les documents : envoyer, organiser, analyser, annoter, rechercher et intégrer.",
+    "viewPublicDocs": "Voir les documents publics"
+  },
+  "annotation": {
+    "title": "Titre de l'annotation",
+    "description": "Description de l'annotation (facultatif)",
+    "unchanged": "La note reste inchangée",
+    "noTitle": "Saisissez un titre pour l'annotation",
+    "org": "Cette note n'est visible que pour vous et tous ceux qui peuvent modifier ce document",
+    "private": "Cette note privée n'est visible que par vous",
+    "by": "Annoté par {name}",
+    "byOrg": "Annoté par {name}, {org}",
+    "addPageNote": "Ajouter une note de page"
+  },
+  "viewDropdown": {
+    "document": "Document",
+    "plainText": "Texte brut",
+    "thumbnail": "Vignette",
+    "notes": "Notes",
+    "search": "Résultats de la recherche"
+  },
+  "zoom": {
+    "fitWidth": "Ajuster la largeur",
+    "fitHeight": "Ajuster la hauteur"
+  },
+  "titleHeader": {
+    "contributedBy": "Apporté par {name}"
+  },
+  "annotatePane": {
+    "annotateDocument": "Annoter le document",
+    "desc": "Mettez en surbrillance une partie de la page, ou cliquez entre les pages pour créer une note."
+  },
+  "modifyPane": {
+    "pagesSelected": "{n, plural, one {# page sélectionnée} other {# pages sélectionnées}}",
+    "applyModifications": "Appliquer les modifications",
+    "duplicate": "Dupliquer",
+    "move": "Déplacer",
+    "unselect": "Désélectionner",
+    "remove": "Supprimer",
+    "insertPages": "Insérer {n, plural, one {# page} other {# pages}}",
+    "pagesPending": "{n, plural, one {# page attend} other {# pages attendent}} d'être insérées",
+    "insertBegin": "Insérer {n, plural, one {# page} other {# pages}}.",
+    "insertEnd": "Insérer {n, plural, one {# page} other {# pages}} à la fin.",
+    "insertBetween": "Insérez {n, plural, one {# page} other {# pages}} entre les pages {p0} et {p1}.",
+    "click": "Cliquez entre les pages ci-dessous pour indiquer où coller {n, plural, one {# la page} other {# les pages}}.",
+    "insert": "Insérer",
+    "insertAtEnd": "Insérer à la fin",
+    "insertPosition": "Insérer les pages à cet endroit",
+    "insertOtherDoc": "Insérer depuis un autre document",
+    "modifyPages": "Modifier les pages",
+    "select": "Sélectionnez les pages ci-dessous pour appliquer les modifications (rotation de page, réorganisation et suppression). Cliquez entre les pages pour en insérer.",
+    "undo": "Annuler",
+    "redo": "Refaire"
+  },
+  "redactPane": {
+    "redactDoc": "Masquer des portions du document",
+    "desc": "Cliquez et faites glisser pour dessiner un rectangle noir sur chaque portion du document que vous souhaitez masquer. Le texte associé sera supprimé lorsque vous enregistrez vos masquages.",
+    "confirm": "Confirmer les masquages",
+    "undo": "Annuler"
+  },
+  "searchPane": {
+    "yourQuery": "Votre requête <em>{search}</em> a été trouvée sur {n, plural, one {# page} other {# pages}}"
+  },
+  "selectNotePane": {
+    "selectNote": "Sélectionner une note",
+    "desc": "Sélectionnez l'annotation que vous voulez partager."
+  },
+  "searchResults": {
+    "resultPages": "{results, plural, one {# résultat} other {# résultats}} à travers {pages, plural, one {# page} other {# pages}}",
+    "noSearchResults": "Aucun résultat de recherche. Réessayez avec une requête plus large.",
+    "occurrences": "{n, plural, one {# occurrence} other {# occurrences}}"
+  },
+  "sidebar": {
+    "updating": "Mise à jour du document...",
+    "original": "Document original (PDF) »",
+    "related": "Adresse (url) de l'article apparenté »",
+    "contributed": "Apporté par {name}",
+    "source": "Source : {source}",
+    "actions": "Actions sur le document",
+    "share": "Partager",
+    "shareDesc": "Créez une intégration ou un partage sur les réseaux sociaux.",
+    "annotate": "Annoter",
+    "annotateDesc": "Faites des annotations pour garder des notes sur le document.",
+    "redact": "Masquer",
+    "redactDesc": "Créez des blocs noirs sur le document pour masquer le texte. Le document sera retraité par la suite.",
+    "modify": "Modifier les pages",
+    "modifyDesc": "Réorganiser, tourner, supprimer, insérer et diviser des pages.",
+    "info": "Modifier les données du document",
+    "infoDesc": "Modifier les informations du document comme la description et l'URL associée.",
+    "data": "Modifier les étiquettes et les données",
+    "dataDesc": "Ajoutez des étiquettes et des paires clé / valeur pour catégoriser votre document.",
+    "sections": "Modifier les sections",
+    "sectionsDesc": "Ajoutez des sections pour organiser votre document avec une table des matières.",
+    "privateNote": "Ajoutez une note personnelle",
+    "privateNoteDesc": "Faites des annotations pour garder des notes sur le document."
+  },
+  "viewer": {
+    "notFound": "Document introuvable",
+    "notFoundDesc": "Le document que vous avez demandé n'existe pas ou vous n'avez pas la permission d'y accéder",
+    "processing": "Traitement du document",
+    "processingDesc": "Le document que vous avez demandé est en cours de traitement et la page sera automatiquement actualisée lorsqu'il sera prêt",
+    "error": "Le document a rencontré une erreur",
+    "errorDesc": "Une erreur de traitement a été rencontrée dans le document que vous avez demandé",
+    "accessible": "Document non accessible",
+    "accessibleDesc": "Le document que vous avez demandé n'existe pas ou vous n'avez pas la permission d'y accéder"
+  }
+}
