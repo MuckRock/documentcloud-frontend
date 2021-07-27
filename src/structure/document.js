@@ -5,7 +5,6 @@ import { Note } from "@/structure/note";
 import { Section } from "@/structure/section";
 import deepEqual from "fast-deep-equal";
 import deepCopy from "fast-copy";
-import { _, date } from "@/langs/i18n";
 
 const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
 const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
@@ -26,8 +25,6 @@ export class Document extends Svue {
         data.lastTextsProcessed = null;
         data.highlightStart = HIGHLIGHT_START;
         data.highlightEnd = HIGHLIGHT_END;
-        data._ = _;
-        data.date = date;
         return data;
       },
       computed: {
@@ -336,24 +333,6 @@ export class Document extends Svue {
             return userName;
           }
           return organizationName;
-        },
-        pageCountString(pageCount, _) {
-          if (pageCount == 0) return "";
-          return _("document.pageCount", {
-            values: { n: pageCount },
-          });
-        },
-        createdAtString(createdAt, date) {
-          return date(createdAt, { format: "medium" });
-        },
-        sourceString(source, _) {
-          if (source == null || source.trim().length == 0) return "";
-          return `${_("document.source")}: ${source}`;
-        },
-        summary(pageCountString, sourceString, userOrgString, createdAtString) {
-          return [pageCountString, sourceString, userOrgString, createdAtString]
-            .filter((x) => x.length > 0)
-            .join(" - ");
         },
       },
     });

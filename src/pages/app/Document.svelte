@@ -7,7 +7,7 @@
   import HtmlField from "@/common/HtmlField";
   import Link from "@/router/Link";
   import DocumentThumbnail from "./DocumentThumbnail";
-  import { _ } from "svelte-i18n";
+  import { _, date } from "svelte-i18n";
 
   // Stores
   import { layout, unselectDocument, editData } from "@/manager/layout";
@@ -256,7 +256,18 @@
         {/if}
       </h2>
       {#if !embed}
-        <h3>{document.summary}</h3>
+        <h3>
+          {#if document.pageCount > 0}
+            {$_("document.pageCount", { values: { n: document.pageCount } })} -
+          {/if}
+          {#if document.source != null && document.source.trim().length > 0}
+            {$_("document.source")}: {document.source} -
+          {/if}
+          {#if document.userName !== null}
+            {document.userOrgString} -
+          {/if}
+          {$date(document.createdAt, { format: "medium" })}
+        </h3>
       {/if}
       {#if document.description != null && document.description.trim().length > 0}
         <div class="description" class:embeddescription={embed}>
