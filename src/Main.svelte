@@ -5,6 +5,7 @@
   import { currentUrl } from "@/util/url";
   import Empty from "./pages/home/Empty.svelte";
   import "@/langs/i18n.js";
+  import { isLoading } from "svelte-i18n";
 
   // Patch poll events
   import "@/ticker/ticker";
@@ -142,5 +143,9 @@
 <svelte:window on:popstate={handleBackNav} />
 
 {#if $router.resolvedRoute != null}
-  <svelte:component this={routeComponent} {...routeProps} />
+  {#if $isLoading}
+    Please wait...
+  {:else}
+    <svelte:component this={routeComponent} {...routeProps} />
+  {/if}
 {/if}
