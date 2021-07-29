@@ -33,9 +33,7 @@ module.exports = {
     host: "0.0.0.0",
     public: "0.0.0.0:80",
     port: 80,
-    historyApiFallback: {
-      index: "index.html",
-    },
+    historyApiFallback: true,
     watchContentBase: true,
   },
 };
