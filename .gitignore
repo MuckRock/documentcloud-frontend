@@ -2,6 +2,7 @@
 ._*
 node_modules
 public/bundle.*
+public/index.html
 public/docs
 public/test
 package-lock.json

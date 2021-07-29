@@ -6,6 +6,7 @@ const DotenvFlow = require("dotenv-flow-webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // Speed measurer
 const smp = new SpeedMeasurePlugin();
@@ -109,6 +110,10 @@ module.exports = wrap({
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
       cwd: process.cwd(),
+    }),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: path.resolve("src", "main.html"),
     }),
   ],
   devtool: prod ? false : "source-map",
