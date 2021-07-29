@@ -94,7 +94,7 @@ module.exports = wrap({
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "bundle.css",
+      filename: "[name].[contenthash].css",
     }),
     new DotenvFlow(),
     new CircularDependencyPlugin({
