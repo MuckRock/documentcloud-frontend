@@ -62,6 +62,10 @@
     .scope {
       color: gray;
     }
+
+    .color {
+      color: $primary;
+    }
   }
 </style>
 
@@ -84,9 +88,9 @@
       <Link toUrl="/help/api" color={true}>
         <MenuItem>{$_("authSection.apiDocs")}</MenuItem>
       </Link>
-      <Link toUrl="mailto:info@documentcloud.org" color={true}>
+      <a href="mailto:info@documentcloud.org" class="color" target="_blank">
         <MenuItem>{$_("authSection.emailUs")}</MenuItem>
-      </Link>
+      </a>
     </Menu>
   </Dropdown>
   <span class="dot">·</span>
