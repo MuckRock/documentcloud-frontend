@@ -273,7 +273,7 @@
     "selectUser": "User must be selected",
     "selectOrg": "Organization must be selected",
     "changeOwner": "Change owner for {n, plural, one {document} other {# documents}}",
-    "accessWarning": "Warning: You may lost access to the specified {n, plural, one {document} other {# documents}} as a result of changing the document owner",
+    "accessWarning": "Warning: You may lose access to the specified {n, plural, one {document} other {# documents}} as a result of changing the document owner",
     "user": "User:",
     "filterUsers": "Type to filter users...",
     "filterOrgs": "Type to filter organizations..."
