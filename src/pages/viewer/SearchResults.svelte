@@ -1,7 +1,7 @@
 <script>
   import { layout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
-  import { doc, changeMode } from "@/viewer/document";
+  import { doc, changeMode, restorePosition } from "@/viewer/document";
   import NoWhitespace from "@/common/NoWhitespace";
   import { selectableTextUrl } from "@/api/viewer";
   import session from "@/api/session";
@@ -15,6 +15,7 @@
       // TODO: cache selectable text pages
       await session.getStatic(selectableTextUrl(viewer.document, page));
       await changeMode("image");
+      await restorePosition(page);
     } catch (e) {
       // Go into text mode
       doc.textJump = page;
