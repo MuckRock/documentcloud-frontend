@@ -1,0 +1,21 @@
+
+# generated css and js files all have hashes in their names, so can be
+# cached forever
+
+/*.css
+  Cache-Control: public, max-age=604800, immutable
+
+/*.js
+  Cache-Control: public, max-age=604800, immutable
+
+
+# favicon.png and global.css are checked into the repo and change infrequently
+# will set them to cache forever on cloudflare, and manually purge if necessary
+# will set to cache for one day in the browser
+
+/favicon.png
+  Cache-Control: public, max-age=86400, s-maxage=604800, immutable
+
+/global.css
+  Cache-Control: public, max-age=86400, s-maxage=604800, immutable
+
