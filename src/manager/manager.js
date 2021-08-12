@@ -3,7 +3,6 @@ import { Svue } from "svue";
 import {
   documents,
   removeDocuments,
-  reprocessDocuments,
   cancelProcessDocuments,
 } from "./documents";
 import { layout, editData } from "./layout";
@@ -67,7 +66,8 @@ export function changeOwnerSelected() {
 }
 
 export function reprocessSelected() {
-  reprocessDocuments(layout.selected);
+  if (layout.numSelected == 0) return;
+  layout.reprocessDocuments = layout.selected.slice();
 }
 
 export function cancelProcessSelected() {

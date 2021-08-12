@@ -16,6 +16,7 @@
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
   import SearchTipsDialog from "@/common/dialog/SearchTipsDialog";
   import DiagnosticDialog from "@/common/dialog/DiagnosticDialog";
+  import ReprocessDialog from "@/common/dialog/ReprocessDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -27,6 +28,7 @@
     hideData,
     hideProjectEmbed,
     hideProject,
+    hideReprocess,
     hideCollaborators,
     hideProjectCollaboratorAccess,
     hideSearchTips,
@@ -112,6 +114,8 @@
     <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
   {:else if $layout.projectOpen}
     <Modal component={ProjectDialog} on:close={hideProject} />
+  {:else if $layout.reprocessOpen}
+    <Modal component={ReprocessDialog} on:close={hideReprocess} />
   {:else if $layout.searchTipsOpen}
     <Modal component={SearchTipsDialog} on:close={hideSearchTips} />
   {:else if $layout.diagnosticsOpen}

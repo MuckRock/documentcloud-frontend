@@ -41,6 +41,9 @@ export const layout = new Svue({
       // Which documents the access is being edited for
       accessEditDocuments: [],
 
+      // Which documents are being reprocessed
+      reprocessDocuments: [],
+
       // Which documents the owner is being edited for
       ownerEditDocuments: [],
     };
@@ -66,11 +69,20 @@ export const layout = new Svue({
     accessOpen(accessEditDocuments) {
       return accessEditDocuments.length > 0;
     },
+    reprocessOpen(reprocessDocuments) {
+      return reprocessDocuments.length > 0;
+    },
     ownerOpen(ownerEditDocuments) {
       return ownerEditDocuments.length > 0;
     },
     numAccessSelected(accessEditDocuments) {
       return accessEditDocuments.length;
+    },
+    numReprocessSelected(reprocessDocuments) {
+      return reprocessDocuments.length;
+    },
+    sameLanguage(reprocessDocuments) {
+      return sameProp(reprocessDocuments, (x) => x["language"]);
     },
     numOwnerSelected(ownerEditDocuments) {
       return ownerEditDocuments.length;
@@ -173,6 +185,10 @@ export function openAccess(documents) {
 
 export function hideAccess() {
   layout.accessEditDocuments = [];
+}
+
+export function hideReprocess() {
+  layout.reprocessDocuments = [];
 }
 
 export function hideOwner() {

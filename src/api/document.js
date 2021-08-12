@@ -151,11 +151,11 @@ export async function changeAccess(ids, access) {
   );
 }
 
-export async function reprocessDocument(ids) {
+export async function reprocessDocument(ids, forceOcr) {
   // Reprocess the documents with the specified ids
   await session.post(
     apiUrl(`documents/process/`),
-    ids.map((id) => ({ id })),
+    ids.map((id) => ({ id: id, force_ocr: forceOcr })),
   );
 }
 

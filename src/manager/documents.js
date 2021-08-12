@@ -365,22 +365,16 @@ export async function markAsDirty(docIds) {
   }
 }
 
-export function reprocessDocuments(documents) {
-  if (documents.length == 0) return;
-  showConfirm(
-    "dialogReprocessDialog.title",
-    "dialogReprocessDialog.reprocessDocs",
-    "dialogReprocessDialog.confirm",
-    async () => {
-      await wrapLoad(layout, async () => {
-        const ids = documents.map((doc) => doc.id);
-        await reprocessDocument(ids);
-        await markAsDirty(ids);
-      });
-      unselectAll();
-    },
-    { n: documents.length },
-  );
+export async function reprocessDocuments(documents, forceOcr, language) {
+  await wrapLoad(layout, async () => {
+    const ids = documents.map((doc) => doc.id);
+    await editMetadata(
+      documents.map((doc) => doc.id),
+      { language },
+    );
+    await reprocessDocument(ids, forceOcr);
+    await markAsDirty(ids);
+  });
 }
 
 export function cancelProcessDocuments(documents) {

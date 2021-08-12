@@ -115,6 +115,9 @@ export class Document extends Svue {
         assetUrl(doc) {
           return doc.asset_url;
         },
+        language(doc) {
+          return doc.language;
+        },
         pdf(assetUrl, id, slug) {
           return `${assetUrl}documents/${id}/${slug}.pdf`;
         },
