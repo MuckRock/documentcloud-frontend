@@ -69,7 +69,7 @@
   let editValue = null;
 
   $: editKeyTrimmed = editKey == null ? null : editKey.trim();
-  $: editValueTrimmed = editValue == null ? null : editValue.trim();
+  $: editValueTrimmed = editValue == null ? null : editValue.toString().trim();
 
   $: editKeyValid = KEY_REGEX.test(editKeyTrimmed);
   $: editTrimValid =
