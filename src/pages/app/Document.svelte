@@ -269,6 +269,11 @@
           {$date(document.createdAt, { format: "medium" })}
         </h3>
       {/if}
+      {#if document.notes.length > 0}
+        <h3>
+          {$_("document.noteCount", { values: { n: document.notes.length } })}
+        </h3>
+      {/if}
       {#if document.description != null && document.description.trim().length > 0}
         <div class="description" class:embeddescription={embed}>
           <HtmlField content={document.description} />

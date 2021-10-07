@@ -368,7 +368,8 @@
     "matchingPages": "{n} pages matching the query",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
-    "source": "Source"
+    "source": "Source",
+    "noteCount": "{n, plural, one {# note} other {# notes}}"
   },
   "documentThumbnail": {
     "pages": "pages",
