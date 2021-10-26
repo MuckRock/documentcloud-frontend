@@ -53,6 +53,10 @@
     .error {
       color: $caution;
       font-size: 14px;
+      :global(a) {
+        color: revert;
+        text-decoration: revert;
+      }
     }
   }
 </style>
@@ -76,7 +80,7 @@
           {/if}
           <ul>
             {#each values as value}
-              <li class="error">{value}</li>
+              <li class="error">{@html value}</li>
             {/each}
           </ul>
         </div>
