@@ -5,8 +5,8 @@
   import { layout } from "@/viewer/layout";
   import { restorePosition, changeMode } from "@/viewer/document";
   import { ModificationSpec } from "@/viewer/modification/modifySpec";
-  import { modification } from "@/viewer/modification/modification";
-  import Modification from "@/viewer/modification/Modification";
+  import { modification } from "@/viewer/modification/modification.js";
+  import Modification from "@/viewer/modification/Modification.svelte";
   import { _ } from "svelte-i18n";
 
   $: modify = $layout.modifying;

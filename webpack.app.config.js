@@ -1,10 +1,4 @@
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
 const baseConfig = require("./webpack.base.config.js");
-
-const environment =
-  process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
-const useAnalyzer = environment.endsWith("analyze");
 
 module.exports = {
   ...baseConfig,
@@ -18,15 +12,6 @@ module.exports = {
   },
   plugins: [
     ...baseConfig.plugins,
-    ...(useAnalyzer
-      ? [
-          new BundleAnalyzerPlugin({
-            analyzerPort: 80,
-            analyzerHost: "0.0.0.0",
-            openAnalyzer: false,
-          }),
-        ]
-      : []),
   ],
   devServer: {
     disableHostCheck: true,

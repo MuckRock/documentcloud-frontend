@@ -7,12 +7,18 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 // Speed measurer
 const smp = new SpeedMeasurePlugin();
 
 const environment =
   process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
+
+const useAnalyzer = environment.endsWith("analyze");
+
 const prod =
   environment.startsWith("production") || environment.startsWith("staging");
 const mode = prod ? "production" : "development";
@@ -94,6 +100,7 @@ module.exports = wrap({
     hints: prod ? "warning" : false,
   },
   plugins: [
+    new CaseSensitivePaths(),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
@@ -115,6 +122,15 @@ module.exports = wrap({
       filename: "index.html",
       template: path.resolve("src", "main.html"),
     }),
+    ...(useAnalyzer
+      ? [
+        new BundleAnalyzerPlugin({
+          analyzerPort: 80,
+          analyzerHost: "0.0.0.0",
+          openAnalyzer: false,
+        }),
+      ]
+      : [])
   ],
   devtool: prod ? false : "source-map",
 });
