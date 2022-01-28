@@ -587,6 +587,7 @@
     "applyModifications": "Apply Modifications",
     "duplicate": "Duplicate",
     "move": "Move",
+    "rotate": "Rotate",
     "unselect": "Unselect",
     "remove": "Remove",
     "insertPages": "Insert {n, plural, one {# Page} other {# Pages}}",

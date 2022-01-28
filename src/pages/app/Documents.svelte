@@ -288,7 +288,7 @@
     <div class="docscontainer">
       <Draggable
         on:files={showUploadModal}
-        disabled={embed || !$orgsAndUsers.loggedIn}
+        disabled={embed || !$orgsAndUsers.loggedIn || !$orgsAndUsers.isVerified}
       >
         {#each $documents.documents as document (document.id)}
           <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>

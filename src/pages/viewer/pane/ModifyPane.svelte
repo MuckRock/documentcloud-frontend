@@ -1,12 +1,12 @@
 <script>
   import Button from "@/common/Button";
   import { handlePlural } from "@/util/string";
-  import { modification } from "@/viewer/modification/modification";
+  import { modification } from "@/viewer/modification/modification.js";
   import { viewer } from "@/viewer/viewer";
   import { cancelActions } from "@/viewer/document";
   import { showInsertDialog, modify } from "@/viewer/layout";
   import ModifyImage from "../ModifyImage";
-  import Modification from "@/viewer/modification/Modification";
+  import Modification from "@/viewer/modification/Modification.svelte";
   import { _ } from "svelte-i18n";
 
   const MAX_BUFFER_SIZE = 5;
@@ -74,7 +74,7 @@
       >
     {/if}
     <Button on:click={() => modification.rotateClockwise()}
-      >{$_("modifyPane.move")}</Button
+      >{$_("modifyPane.rotate")}</Button
     >
     <Button secondary={true} on:click={() => modification.modifyUnselect()}>
       {$_("modifyPane.unselect")}
