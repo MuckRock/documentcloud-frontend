@@ -7,7 +7,6 @@
   import ErrorModal from "@/common/ErrorModal";
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import MetaDialog from "@/common/dialog/MetaDialog";
-  import AddonFieldsDialog from "@/common/dialog/AddonFieldsDialog.svelte";
   import AccessDialog from "@/common/dialog/AccessDialog";
   import OwnerDialog from "@/common/dialog/OwnerDialog";
   import DataDialog from "@/common/dialog/DataDialog";
@@ -104,8 +103,6 @@
     hideAddonDispatch
   {:else if $layout.addonDispatchOpen}
     <Modal component={AddonDispatchDialog} on:close={hideAddonDispatch} />
-  {:else if $layout.addonFieldsOpen != null}
-    <Modal component={AddonFieldsDialog} on:close={hideAddonFields} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.ownerOpen}
