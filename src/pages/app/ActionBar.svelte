@@ -8,6 +8,7 @@
   // Menus
   import EditMenu from "./menus/EditMenu";
   import ProjectsMenu from "./menus/ProjectsMenu";
+  import AddonsMenu from "./menus/AddonsMenu"
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -127,6 +128,15 @@
             </span>
           </span>
           <ProjectsMenu />
+        </Dropdown>
+        <Dropdown table={true} fixed={outerHeight > 600}>
+          <span class="action" slot="title">
+            <span class="nowrap">
+              {$_("actionBar.addOnsMenu")}
+              <span class="dropper">▼</span>
+            </span>
+          </span>
+          <AddonsMenu />
         </Dropdown>
       {/if}
 

@@ -24,6 +24,8 @@ export const layout = new Svue({
       selectedMap: {},
 
       // Custom dialogs
+      addonFieldsOpen: null, /* is like metaOpen */
+      addonDispatchOpen: false,
       metaOpen: null,
       documentInfoOpen: false,
       projectEdit: null,
@@ -33,6 +35,7 @@ export const layout = new Svue({
       projectEditUser: null,
       searchTipsOpen: false,
       diagnosticsOpen: false,
+      
 
       // Data
       dataDocuments: [],
@@ -153,6 +156,13 @@ export function unselectDocument(document) {
 }
 
 // Dialogs
+export function openDispatchAddon() {
+  layout.addonDispatchOpen = true;
+}
+export function hideAddonDispatch() {
+  layout.addonDispatchOpen = false;
+}
+
 export function hideDocumentInfo() {
   layout.documentInfoOpen = false;
 }

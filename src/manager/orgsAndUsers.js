@@ -8,6 +8,7 @@ import {
   getOrganization,
 } from "@/api/orgAndUser";
 import { projects, initProjects } from "./projects";
+import { initAddons } from "./addons";
 import { userUrl, allDocumentsUrl } from "@/search/search";
 import { layout } from "@/manager/layout";
 import { wrapLoad } from "@/util/wrapLoad";
@@ -24,6 +25,7 @@ export const orgsAndUsers = new Svue({
       router,
       hasInited: false,
       hasInitedProjects: false,
+      hasInitedAddons: false,
     };
   },
   watch: {
@@ -52,11 +54,22 @@ export const orgsAndUsers = new Svue({
           this.hasInitedProjects = true;
           initProjects(this.me);
         }
+        initAddonsIfNecessary(route);
+        if (
+          route != null &&
+          route.name == "app" &&
+          this.me != null &&
+          !this.hasInitedAddons
+        ) {
+          this.hasInitedAddons = true;
+          initAddons();
+        }
       }
     },
     me() {
       const route = router.resolvedRoute;
       initProjectsIfNecessary(route);
+      initAddonsIfNecessary(route);
     },
   },
   computed: {
@@ -108,6 +121,17 @@ function initProjectsIfNecessary(route) {
   ) {
     orgsAndUsers.hasInitedProjects = true;
     initProjects(orgsAndUsers.me);
+  }
+}
+function initAddonsIfNecessary(route) {
+  if (route == null) return;
+  if (
+    route.name == "app" &&
+    orgsAndUsers.me != null &&
+    !orgsAndUsers.hasInitedAddons
+  ) {
+    orgsAndUsers.hasInitedAddons = true;
+    initAddons();
   }
 }
 
