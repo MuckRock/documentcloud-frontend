@@ -23,12 +23,7 @@
       : `Add ${handlePlural($layout.selected.length, "document")} to next addon dispatch`;
 
   function handleClick() {
-    openDispatchAddon()
-  //   if (scope == "fully") {
-  //     removeSelectedDocsFromProject(project);
-  //   } else {
-  //     addSelectedDocsToProject(project);
-  //   }
+    openDispatchAddon(addon)
   }
 </script>
 

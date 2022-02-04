@@ -68,9 +68,8 @@ import ActionBar from "../../pages/app/ActionBar.svelte";
         fields[addonField.apiField] = values[i];
       }
     }
-    console.log("MAKE SURE TO CHANGE THIS FROM 1")
     dispatchAddon(
-      1,
+      parseInt(layout.addonDispatchOpen.id,10),
       fields,
       isViewer ? viewerLayout : layout,
       selected,
@@ -81,17 +80,6 @@ import ActionBar from "../../pages/app/ActionBar.svelte";
           }
         : () => {}
     );
-    // editSelectedDocumentInfo(
-    //   fields,
-    //   isViewer ? viewerLayout : layout,
-    //   selected,
-    //   isViewer
-    //     ? () => {
-    //         viewer.document.doc = { ...viewer.document.doc, ...fields };
-    //         viewer.document = viewer.document;
-    //       }
-    //     : () => {},
-    // );
     emit.dismiss();
   }
 </script>
