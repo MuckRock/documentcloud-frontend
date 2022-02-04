@@ -193,7 +193,7 @@
     "editInformation": "Edit Information for {n, plural, one {document} other {# documents}}"
   },
   "dialogAddonDispatchDialog": {
-    "setAddonParameters": "Set the parameters for your chosen addon for {n, plural, one {document} other {# documents}}"
+    "setAddonParameters": "Set the parameters for your chosen addon to run on {n, plural, one {document} other {# documents}}"
   },
   "dialogRedactDialog": {
     "title": "Confirm redactions",
