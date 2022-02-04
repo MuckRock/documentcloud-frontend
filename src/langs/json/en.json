@@ -192,6 +192,9 @@
   "dialogDocumentInformationDialog": {
     "editInformation": "Edit Information for {n, plural, one {document} other {# documents}}"
   },
+  "dialogAddonDispatchDialog": {
+    "setAddonParameters": "Set the parameters for your chosen addon"
+  },
   "dialogRedactDialog": {
     "title": "Confirm redactions",
     "description": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible."

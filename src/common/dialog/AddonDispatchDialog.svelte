@@ -119,7 +119,7 @@ import ActionBar from "../../pages/app/ActionBar.svelte";
 <div>
   <div class="mcontent">
     <h1>
-      {$_("dialogDocumentInformationDialog.editInformation", {
+      {$_("dialogAddonDispatchDialog.setAddonParameters", {
         values: { n: numSelected },
       })}
     </h1>
