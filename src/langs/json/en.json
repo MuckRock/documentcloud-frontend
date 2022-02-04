@@ -64,7 +64,8 @@
     "ok": "Ok",
     "update": "Update",
     "dismiss": "Dismiss",
-    "continue": "Continue"
+    "continue": "Continue",
+    "dispatch": "Dispatch"
   },
   "dialogAccessDialog": {
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
@@ -325,7 +326,8 @@
     "selectDocs": "Select some documents to reveal edit actions",
     "noPerms": "You do not have permission to edit all of the selected documents",
     "editMenu": "Edit",
-    "projectsMenu": "Projects"
+    "projectsMenu": "Projects",
+    "addOnsMenu": "Add Ons"
   },
   "authSection": {
     "help": "Help",
@@ -430,6 +432,13 @@
     "projMembership": "Project Membership",
     "selectDocs": "Select documents to place them in projects",
     "createProj": "Create a project to organize and share documents"
+  },
+  "addonsMenu": {
+    "newAddon": "Request new Addon from Staff",
+    "selectDocs": "Select documents to dispatch them in addons",
+    "addonsList": "List of Addons",
+    "createAddon": "Request new addons to dispatch documents in addons"
+
   },
   "noDocuments": {
     "noSearchResults": "No search results",

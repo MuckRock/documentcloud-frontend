@@ -7,6 +7,7 @@
   import ErrorModal from "@/common/ErrorModal";
   import ConfirmDialog from "@/common/dialog/ConfirmDialog";
   import MetaDialog from "@/common/dialog/MetaDialog";
+  import AddonFieldsDialog from "@/common/dialog/AddonFieldsDialog.svelte";
   import AccessDialog from "@/common/dialog/AccessDialog";
   import OwnerDialog from "@/common/dialog/OwnerDialog";
   import DataDialog from "@/common/dialog/DataDialog";
@@ -23,6 +24,7 @@
     layout,
     hideDocumentInfo,
     hideMeta,
+    hideAddonDispatch,
     hideAccess,
     hideOwner,
     hideData,
@@ -40,6 +42,8 @@
 
   import emitter from "@/emit";
   import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
+  import AddonDispatchDialog from "../../common/dialog/AddonDispatchDialog.svelte";
+
 
   export let concealed = false;
   export let embed = false;
@@ -97,6 +101,11 @@
     <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
   {:else if $layout.metaOpen != null}
     <Modal component={MetaDialog} on:close={hideMeta} />
+    hideAddonDispatch
+  {:else if $layout.addonDispatchOpen}
+    <Modal component={AddonDispatchDialog} on:close={hideAddonDispatch} />
+  {:else if $layout.addonFieldsOpen != null}
+    <Modal component={AddonFieldsDialog} on:close={hideAddonFields} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.ownerOpen}

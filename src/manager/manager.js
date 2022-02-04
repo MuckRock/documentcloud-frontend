@@ -45,6 +45,11 @@ export function removeSelected() {
   removeDocuments(layout.selected);
 }
 
+export function dispatchAddonSelected() {
+  if (layout.numSelected == 0) return;
+  layout.addonDispatchOpen = true;
+}
+
 export function editMetaSelected(meta) {
   if (layout.numSelected == 0) return;
   layout.metaOpen = meta;
