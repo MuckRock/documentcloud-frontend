@@ -3,10 +3,7 @@
   import Tooltip from "@/common/Tooltip";
   import HtmlEditor from "@/common/HtmlEditor";
   import { addonDialogs } from "./addonDialogs";
-  import { nameSingularNumberPlural } from "@/util/string";
-  import { titlecase } from "@/util/string";
   import {dispatchAddon} from "@/manager/addons"
-  // import { editSelectedDocumentInfo } from "@/manager/documents";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
@@ -14,7 +11,6 @@
   // Stores
   import { layout } from "@/manager/layout";
   import { layout as viewerLayout } from "@/viewer/layout";
-import ActionBar from "../../pages/app/ActionBar.svelte";
 
   const fieldValid = (value, initial) => value != initial;
   const fieldInvalidText = (value, initial, fieldName) =>

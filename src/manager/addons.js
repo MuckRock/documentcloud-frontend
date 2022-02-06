@@ -1,13 +1,9 @@
 import { Svue } from "svue";
 import {
-  getAddon,
+  // getAddon,
   getAddons,
   postAddonDispatch,
 } from "@/api/addon";
-// import { getUsers } from "@/api/orgAndUser";
-// import { layout } from "./layout";
-// import { addDocsToProject, removeDocsFromProject } from "@/manager/documents";
-// import { uniquify } from "@/util/array";
 
 export const addons = new Svue({
   data() {
@@ -32,7 +28,6 @@ export async function initAddons(me) {
   const newAddons = await getAddons();
 
   addons.addons = newAddons;
-  // console.log(addons.addons)
 }
 
 export async function dispatchAddon(addonId, info,
@@ -71,16 +66,3 @@ export async function createNewProject(title, description) {
   // const project = await newAddon(title, description);
   // addons.addons = [...addons.addons, addon];
 }
-
-// export async function editProject(project, title, description) {
-//   const updatedProject = await updateProject(project.id, title, description);
-//   addons.projects = projects.projects.map((oldProject) => {
-//     if (project.id == oldProject.id) {
-//       return updatedProject;
-//     } else {
-//       return oldProject;
-//     }
-//   });
-// }
-
-
