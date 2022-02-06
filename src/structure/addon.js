@@ -1,6 +1,5 @@
 import { Svue } from "svue";
 
-// return getDefault(addon.user, "private");
 function getDefault(obj, defaultValue = "") {
   if (obj == null) return defaultValue;
   return obj;
