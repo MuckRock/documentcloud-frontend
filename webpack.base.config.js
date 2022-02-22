@@ -1,15 +1,18 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 const autoPreprocess = require("svelte-preprocess");
 const { preprocessOptions } = require("./preprocess.config.js");
 // import SvelteCheckPlugin from 'svelte-check-plugin';
 
-const DotenvFlow = require("dotenv-flow-webpack");
 const DotenvWebpack = require('dotenv-webpack');
 const dotenv = require('dotenv');
+
+/*known conflict SMR + MiniCSS: https://github.com/stephencookdev/speed-measure-webpack-plugin/issues/149#issuecomment-833464523 */
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require('webpack');
 // const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
@@ -53,14 +56,7 @@ function wrap(spec) {
 console.warn("DocumentCloud: DUMPING ALL ENVIRONMENT VARS INTO FRONTEND")
 dotenv.config();
 
-module.exports = {
-  optimization: {
-    mangleExports: false,
-    minimize: false,
-    mergeDuplicateChunks: false,
-    removeEmptyChunks: false,
-    concatenateModules: false,
-  },
+module.exports = wrap({
   resolve: { /* https://webpack.js.org/configuration/resolve/#resolvefallback */
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
@@ -77,7 +73,39 @@ module.exports = {
           loader: "svelte-loader",
           options: {
             emitCss: prod,
-            hotReload: prod,
+            hotReload: false, /* Turned off for newer versions */
+            hotOptions: { /* 
+              TK none of these alternated, non-default settings seem fix the
+               underlying problem with Svue 
+              https://github.com/sveltejs/svelte-hmr 
+              https://github.com/sveltejs/svelte-hmr/blob/809c7016803c8f90819a6ff3fa2a217c13ea87e9/lib/make-hot.js
+              */
+              // Prevent preserving local component state
+              preserveLocalState: true,
+
+              // If this string appears anywhere in your component's code, then local
+              // state won't be preserved, even when noPreserveState is false
+              noPreserveStateKey: '@hmr:reset',
+              preserveAllLocalStateKey: '@hmr:keep-all',
+
+              // Prevent doing a full reload on next HMR update after fatal error
+              noReload: true,
+
+              // Try to recover after runtime errors in component init
+              optimistic: false,
+
+              // --- Advanced ---
+
+              // Prevent adding an HMR accept handler to components with
+              // accessors option to true, or to components with named exports
+              // (from <script context="module">). This have the effect of
+              // recreating the consumer of those components, instead of the
+              // component themselves, on HMR updates. This might be needed to
+              // reflect changes to accessors / named exports in the parents,
+              // depending on how you use them.
+              acceptAccessors: false,
+              acceptNamedExports: false,
+            },
             preprocess: autoPreprocess(preprocessOptions),
           },
         },
@@ -88,7 +116,7 @@ module.exports = {
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: prod },
+            options: { hmr: !prod },
           },
           "css-loader",
           "sass-loader",
@@ -99,7 +127,7 @@ module.exports = {
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: prod },
+            options: { hmr: !prod },
           },
           "css-loader",
         ],
@@ -132,7 +160,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: 'process/browser',
     }),
-    new DotenvFlow(),
+    // new DotenvFlow(),
     new webpack.DefinePlugin({
       "process.env": JSON.stringify(process.env)
   }),
@@ -180,5 +208,5 @@ module.exports = {
       ]
       : [])
   ],
-  devtool: prod ? false : "source-map",
-};
+  devtool: prod ? false : "inline-source-map",
+});

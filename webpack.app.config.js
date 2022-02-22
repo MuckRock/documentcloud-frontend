@@ -24,7 +24,7 @@ module.exports = {
     port: 80,
     historyApiFallback: true,
     client: {
-      logging: "info",
+      // logging: "warnings",
       // Can be used only for `errors`/`warnings`
       //
       // overlay: {
@@ -32,7 +32,7 @@ module.exports = {
       //   warnings: true,
       // }
       overlay: true,
-      progress: true,
+      // progress: true,
     },
     static: {
       directory: path.join(__dirname, 'public'),

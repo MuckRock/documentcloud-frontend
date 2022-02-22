@@ -21,7 +21,7 @@ services:
   npmlist:
     extends:
       service: base
-    command: npm list --depth=0
+    command: npm list --depth=2
 
   test:
     extends:
