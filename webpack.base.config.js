@@ -131,7 +131,7 @@ module.exports = wrap({
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
+            options: { },
           },
           "css-loader",
           "sass-loader",
@@ -142,7 +142,7 @@ module.exports = wrap({
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
+            options: {  },
           },
           "css-loader",
         ],
