@@ -75,12 +75,12 @@
     }
 
     &.center {
-      top: calc(50% - #{$smallSpinsize / 2 + $smallBordersize});
-      left: calc(50% - #{$smallSpinsize / 2 + $smallBordersize});
+      top: calc(50% - #{$smallSpinsize * 0.5 + $smallBordersize});
+      left: calc(50% - #{$smallSpinsize * 0.5 + $smallBordersize});
 
       &.big {
-        top: calc(50% - #{$bigSpinsize / 2 + $bigBordersize});
-        left: calc(50% - #{$bigSpinsize / 2 + $bigBordersize});
+        top: calc(50% - #{$bigSpinsize * 0.5 + $bigBordersize});
+        left: calc(50% - #{$bigSpinsize * 0.5 + $bigBordersize});
       }
     }
   }

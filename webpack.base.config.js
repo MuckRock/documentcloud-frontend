@@ -2,12 +2,17 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 const autoPreprocess = require("svelte-preprocess");
 const { preprocessOptions } = require("./preprocess.config.js");
+// import SvelteCheckPlugin from 'svelte-check-plugin';
+
 const DotenvFlow = require("dotenv-flow-webpack");
+const DotenvWebpack = require('dotenv-webpack');
+const dotenv = require('dotenv');
 const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
+const webpack = require('webpack');
+// const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
@@ -36,12 +41,19 @@ function wrap(spec) {
       ],
     };
     return spec;
+  } else {
+    spec.optimization = {
+      minimize: false
+    }
   }
   return smp.wrap(spec);
 }
 
+console.warn("DocumentCloud: DUMPING ALL ENVIRONMENT VARS INTO FRONTEND")
+dotenv.config();
+
 module.exports = wrap({
-  resolve: {
+  resolve: { /* https://webpack.js.org/configuration/resolve/#resolvefallback */
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
@@ -51,11 +63,6 @@ module.exports = wrap({
   },
   module: {
     rules: [
-      // {
-      //   test: /\.ts$/,
-      //   loader: 'ts-loader',
-      //   exclude: /node_modules/
-      // },
       {
         test: /\.svelte$/,
         use: {
@@ -98,6 +105,11 @@ module.exports = wrap({
           },
         ],
       },
+      // { /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
+      //   test: /\.ts$/,
+      //   loader: 'ts-loader',
+      //   exclude: /node_modules/
+      // },
     ],
   },
   mode,
@@ -105,11 +117,22 @@ module.exports = wrap({
     hints: prod ? "warning" : false,
   },
   plugins: [
-    new CaseSensitivePaths(),
+    // new CaseSensitivePaths(),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     new DotenvFlow(),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(process.env)
+  }),
+    // new DotenvWebpack({
+    //         path: '/app/.env',
+    //         systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+    //         prefix: 'process.env.'
+    //       }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
       exclude: /node_modules/,
@@ -126,6 +149,18 @@ module.exports = wrap({
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: path.resolve("src", "main.html"),
+      // templateParameters(compilation, assets, options) {
+      //   return {
+      //     compilation,
+      //     webpack: compilation.getStats().toJson(),
+      //     webpackConfig: compilation.options,
+      //     htmlWebpackPlugin: {
+      //       files: assets,
+      //       options,
+      //     },
+      //     process,
+      //   }
+      // },
     }),
     ...(useAnalyzer
       ? [

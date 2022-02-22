@@ -131,8 +131,8 @@
           background: rgba($primary, 0.18);
           left: 50%;
           top: 50%;
-          margin-left: -$circleSize / 2;
-          margin-top: -$circleSize / 2;
+          margin-left: -$circleSize * 0.5;
+          margin-top: -$circleSize * 0.5;
           z-index: -1;
         }
 

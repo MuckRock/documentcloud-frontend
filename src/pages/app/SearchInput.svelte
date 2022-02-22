@@ -851,6 +851,9 @@
                 completion,
                 fieldPost != null ? fieldPost.length : 0,
               )}
+            on:blur={() => console.warn("check")}
+            on:focus={() => console.warn("check")}
+
             class:groupstart={completion.type == "groupstart"}
           >
             <div

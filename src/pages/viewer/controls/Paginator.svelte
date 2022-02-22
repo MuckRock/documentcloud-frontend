@@ -146,7 +146,7 @@
 
       display: inline-block;
       font-size: 0;
-      padding: (($inputHeight - $arrowHeight) / 2) 0;
+      padding: (($inputHeight - $arrowHeight) * 0.5) 0;
       vertical-align: middle;
 
       &.left {

@@ -83,6 +83,7 @@
   on:click={() => dismiss(i)}
   on:mouseover={reset}
   on:mousemove={reset}
+  on:focus={() => null}
 >
   <span class="x">×</span>
   <span class="content">{toast.content}</span>
