@@ -13,6 +13,16 @@ services:
       service: base
     command: npm i
 
+  install-ci:
+    extends:
+      service: base
+    command: npm ci
+
+  npmlist:
+    extends:
+      service: base
+    command: npm list --depth=0
+
   test:
     extends:
       service: base
