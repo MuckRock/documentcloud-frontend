@@ -1,7 +1,8 @@
+/* TODO: switch to imports instead of require https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
 const path = require("path");
 const autoPreprocess = require("svelte-preprocess");
 const { preprocessOptions } = require("./preprocess.config.js");
-// import SvelteCheckPlugin from 'svelte-check-plugin';
+const SvelteCheckPlugin = require('svelte-check-plugin');
 
 const DotenvWebpack = require('dotenv-webpack');
 const dotenv = require('dotenv');
@@ -22,8 +23,22 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 // Speed measurer
 const smp = new SpeedMeasurePlugin();
 
+
 const environment =
   process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
+
+/**
+ * Change this to `true` to run svelte-check during hot reloads. This will impact build speeds but will show more
+ * thorough errors and warnings.
+ */
+ const svelteCheckInDevelopment = false;
+
+ /**
+ * Change this to `false` to disable svelte-check during production builds. Build speeds will be faster, but error
+ * and warning checks will be less thorough.
+ */
+const svelteCheckInProduction = true;
+
 
 const useAnalyzer = environment.endsWith("analyze");
 
@@ -198,6 +213,8 @@ module.exports = wrap({
       //   }
       // },
     }),
+    ...(svelteCheckInDevelopment || prod && svelteCheckInProduction ? [new SvelteCheckPlugin()] : [])
+    ,
     ...(useAnalyzer
       ? [
         new BundleAnalyzerPlugin({

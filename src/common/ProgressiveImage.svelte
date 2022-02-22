@@ -138,7 +138,7 @@
       top: 0;
       left: 0;
 
-      user-drag: none;
+      -webkit-user-drag: none; /* only on webkit */
       user-select: none;
 
       transition: opacity 0.2s linear;
