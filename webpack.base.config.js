@@ -43,6 +43,7 @@ function wrap(spec) {
     return spec;
   } else {
     spec.optimization = {
+      mangleExports: false,
       minimize: false
     }
   }
@@ -52,7 +53,14 @@ function wrap(spec) {
 console.warn("DocumentCloud: DUMPING ALL ENVIRONMENT VARS INTO FRONTEND")
 dotenv.config();
 
-module.exports = wrap({
+module.exports = {
+  optimization: {
+    mangleExports: false,
+    minimize: false,
+    mergeDuplicateChunks: false,
+    removeEmptyChunks: false,
+    concatenateModules: false,
+  },
   resolve: { /* https://webpack.js.org/configuration/resolve/#resolvefallback */
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
@@ -69,7 +77,7 @@ module.exports = wrap({
           loader: "svelte-loader",
           options: {
             emitCss: prod,
-            hotReload: !prod,
+            hotReload: prod,
             preprocess: autoPreprocess(preprocessOptions),
           },
         },
@@ -80,7 +88,7 @@ module.exports = wrap({
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
+            options: { hmr: prod },
           },
           "css-loader",
           "sass-loader",
@@ -91,7 +99,7 @@ module.exports = wrap({
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
+            options: { hmr: prod },
           },
           "css-loader",
         ],
@@ -173,4 +181,4 @@ module.exports = wrap({
       : [])
   ],
   devtool: prod ? false : "source-map",
-});
+};
