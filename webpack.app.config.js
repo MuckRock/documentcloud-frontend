@@ -19,6 +19,7 @@ module.exports = {
     Dylan had this on v3
     https://github.com/webpack/webpack-dev-server/blob/master/migration-v4.md
     */
+    hot: true,
     allowedHosts: 'all',
     host: "0.0.0.0",
     port: 80,
