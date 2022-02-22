@@ -250,7 +250,10 @@
         }
       }
 
-      :global(h5, h6) {
+      :global(h5) {
+        font-weight: bold;
+      }
+      :global(h6) {
         font-weight: bold;
       }
 
@@ -298,12 +301,17 @@
         border-collapse: collapse;
       }
 
-      :global(td, th) {
+      :global(td) {
         border: solid 1px #d1d6dc;
         padding: 6px 12px;
         vertical-align: middle;
       }
 
+      :global(th) {
+        border: solid 1px #d1d6dc;
+        padding: 6px 12px;
+        vertical-align: middle;
+      }
       :global(summary) {
         outline: none;
         cursor: pointer;

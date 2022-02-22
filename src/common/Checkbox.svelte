@@ -59,16 +59,16 @@
         position: absolute;
         width: $checksize;
         height: $checksize;
-        left: ($checkboxSize - $checksize) / 2 + $xOff;
-        top: ($checkboxSize - $checksize) / 2;
+        left: ($checkboxSize - $checksize) * 0.5 + $xOff;
+        top: ($checkboxSize - $checksize) * 0.5;
       }
 
       :global(.checkline) {
         position: absolute;
         width: $checklinesize;
         height: $checklinesize;
-        left: ($checkboxSize - $checklinesize) / 2 + $xOff;
-        top: ($checkboxSize - $checklinesize) / 2;
+        left: ($checkboxSize - $checklinesize) * 0.5 + $xOff;
+        top: ($checkboxSize - $checklinesize) * 0.5;
       }
     }
 

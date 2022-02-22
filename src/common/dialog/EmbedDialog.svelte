@@ -210,6 +210,8 @@
                 on:mouseover={() => (shareHover = "document")}
                 on:mouseout={() => (shareHover = null)}
                 on:click={() => (layout.embedShareOption = "document")}
+                on:blur={() => null}
+                on:focus={() => null}
               >
                 {@html shareDocumentSvg}
               </div>
@@ -219,6 +221,8 @@
                 on:mouseover={() => (shareHover = "page")}
                 on:mouseout={() => (shareHover = null)}
                 on:click={() => (layout.embedShareOption = "page")}
+                on:blur={() => null}
+                on:focus={() => null}
               >
                 {@html sharePageSvg}
               </div>
@@ -229,6 +233,8 @@
                 on:mouseover={() => (shareHover = "note")}
                 on:mouseout={() => (shareHover = null)}
                 on:click={selectNote}
+                on:blur={() => null}
+                on:focus={() => null}
               >
                 {@html shareNoteSvg}
               </div>
@@ -241,6 +247,8 @@
                 on:mouseover={() => (shareHover = "document")}
                 on:mouseout={() => (shareHover = null)}
                 on:click={() => (layout.embedShareOption = "document")}
+                on:blur={() => null}
+                on:focus={() => null}
               >
                 <h2>{$_("dialogEmbedDialog.shareDoc")}</h2>
                 <p>
@@ -253,6 +261,8 @@
                 on:mouseover={() => (shareHover = "page")}
                 on:mouseout={() => (shareHover = null)}
                 on:click={() => (layout.embedShareOption = "page")}
+                on:blur={() => null}
+                on:focus={() => null}
               >
                 <h2>{$_("dialogEmbedDialog.sharePage")}</h2>
                 <p>
@@ -267,6 +277,8 @@
                 on:mouseover={() => (shareHover = "note")}
                 on:mouseout={() => (shareHover = null)}
                 on:click={selectNote}
+                on:blur={() => null}
+                on:focus={() => null}
               >
                 <h2 class:faded={!hasNotes}>
                   {$_("dialogEmbedDialog.shareNote")}

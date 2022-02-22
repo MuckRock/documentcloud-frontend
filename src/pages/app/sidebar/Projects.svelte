@@ -71,9 +71,9 @@
         padding: 5px 24px 5px (24px + $sidebarAdd);
       }
 
-      &.active {
-        background: $primary-faded;
-      }
+      // &.active {
+      //   background: $primary-faded;
+      // }
     }
   }
 </style>

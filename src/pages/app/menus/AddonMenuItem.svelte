@@ -22,11 +22,6 @@
 </script>
 
 <style lang="scss">
-  .scope {
-    color: gray;
-    float: right;
-    margin-left: 7px;
-  }
 </style>
 
 <MenuItem on:click={handleClick}>

@@ -397,8 +397,8 @@
       left: -$flagWidth - $annotationBorderWidth;
       width: $flagWidth;
       height: $flagHeight;
-      border-top-left-radius: ($flagHeight / 2);
-      border-bottom-left-radius: ($flagHeight / 2);
+      border-top-left-radius: ($flagHeight * 0.5);
+      border-bottom-left-radius: ($flagHeight * 0.5);
 
       .closer {
         @include buttonLike;
@@ -407,7 +407,7 @@
         :global(svg) {
           width: $closeHeight;
           height: $closeHeight;
-          margin: ($flagHeight - $closeHeight) / 2;
+          margin: ($flagHeight - $closeHeight) * 0.5;
         }
       }
     }

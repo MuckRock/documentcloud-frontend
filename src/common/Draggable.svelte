@@ -34,6 +34,8 @@
 </script>
 
 <style lang="scss">
+
+  // svelte-ignore css-unused-selector
   .outer {
     display: table;
     width: 100%;
@@ -55,21 +57,21 @@
       border-radius: 6px;
     }
 
-    :global(input[type="file"]) {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      top: 0;
-      bottom: 0;
-      opacity: 0;
-      cursor: pointer;
+    // :global(input[type="file"]) {
+    //   position: absolute;
+    //   left: 0;
+    //   width: 100%;
+    //   top: 0;
+    //   bottom: 0;
+    //   opacity: 0;
+    //   cursor: pointer;
 
-      &:hover + :global(.upload),
-      &.dragging + :global(.upload) {
-        background: #fc4762;
-        color: white;
-      }
-    }
+    //   &:hover + :global(.upload),
+    //   &.dragging + :global(.upload) {
+    //     background: #fc4762;
+    //     color: white;
+    //   }
+    // }
   }
 </style>
 

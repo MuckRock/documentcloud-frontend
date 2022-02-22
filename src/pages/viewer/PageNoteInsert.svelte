@@ -104,6 +104,7 @@
         (RETRACTED_HEIGHT + UNEXPANDED_MARGIN) * scale
       }px`}
   on:mouseover={expand}
+  on:focus={expand}
   on:mouseleave={retract}
   on:mousedown={() => startPageNote(pageNumber - 1)}
 >

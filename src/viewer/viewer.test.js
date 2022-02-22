@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { viewer } from "./viewer";
 
 test("ordered sections/notes", () => {

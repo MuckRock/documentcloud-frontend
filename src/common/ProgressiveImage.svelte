@@ -144,9 +144,10 @@
       transition: opacity 0.2s linear;
       opacity: 0;
 
-      &.loaded {
-        opacity: 1;
-      }
+      // &.loaded {
+
+      //   opacity: 1;
+      // }
     }
 
     &.grayed {
