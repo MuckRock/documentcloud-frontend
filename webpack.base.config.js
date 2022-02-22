@@ -208,5 +208,5 @@ module.exports = wrap({
       ]
       : [])
   ],
-  devtool: prod ? false : "inline-source-map",
+  devtool: prod ? false : "inline-source-map", /* try pathinfo https://stackoverflow.com/questions/32296967/webpack-dev-server-doesnt-generate-source-maps or https://webpack.js.org/plugins/source-map-dev-tool-plugin/ w publicPath + Exclude Vendor Maps node_modules */
 });
