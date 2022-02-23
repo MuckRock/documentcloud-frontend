@@ -3,12 +3,16 @@ import {
   // getAddon,
   getAddons,
   postAddonDispatch,
+  getAddonRuns,
 } from "@/api/addon";
+import { AddonRun } from "@/structure/addon";
 
 export const addons = new Svue({
   data() {
     return {
+      hasInited: false,
       addons: [],
+      runs: [],
     };
   },
   computed: {
@@ -19,50 +23,33 @@ export const addons = new Svue({
         results[addon.id] = addon;
       }
       return results;
-    }
+    },
+    pollEvents(runs) {
+      if (runs.length === 0) return [];
+      return [updateRuns];
+    },
   },
 });
 
-
 export async function initAddons(me) {
   const newAddons = await getAddons();
-
   addons.addons = newAddons;
+
+  updateRuns();
 }
 
-export async function dispatchAddon(addonId, info,
-  layout,
-  selected,
-  viewerUpdate = () => { }) {
-  const response = await postAddonDispatch(addonId, info, selected)
+async function updateRuns() {
+  const newRuns = await getAddonRuns();
+  addons.runs = newRuns;
+}
+
+export async function dispatchAddon(addonId, info, selected) {
+  const addon = addons.addonsById[addonId];
+  const response = await postAddonDispatch(addon, info, selected);
+  addons.runs = [response, ...addons.runs];
   return response;
 }
 
-export function selectedDocsInProject(project) {
-  // Abort early if project or docs are empty
-  if (project == null) return "none";
-  const docs = layout.selected;
-  if (docs.length == 0) return "none";
-
-  let atLeastOneDocInProject = false;
-  let atLeastOneDocOutsideProject = false;
-  for (let i = 0; i < docs.length; i++) {
-    const doc = docs[i];
-    if (doc.projectIds.includes(project.id)) {
-      atLeastOneDocInProject = true; // can only be partial or full
-      if (atLeastOneDocOutsideProject) return "partially";
-    } else {
-      atLeastOneDocOutsideProject = true; // can only be partial or none
-      if (atLeastOneDocInProject) return "partially";
-    }
-  }
-
-  if (!atLeastOneDocOutsideProject) return "fully";
-  if (!atLeastOneDocInProject) return "none";
-  return "partially";
-}
-
-export async function createNewProject(title, description) {
-  // const project = await newAddon(title, description);
-  // addons.addons = [...addons.addons, addon];
+export function removeRun(uuid) {
+  addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
 }

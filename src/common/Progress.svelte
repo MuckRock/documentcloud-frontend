@@ -7,6 +7,7 @@
   export let progress;
   export let initializing = false;
   export let compact = false;
+  export let failure = false;
 
   const PROGRESS_DURATION = parseInt(process.env.POLL_INTERVAL);
   const PROGRESS_END_DURATION = 400; // how quickly to jump at end
@@ -122,6 +123,9 @@
           background: $primary;
         }
       }
+      &.failure .inner {
+        background: $caution;
+      }
     }
     .text {
       @include processingText;
@@ -129,6 +133,9 @@
       display: table-cell;
       vertical-align: middle;
       padding-left: 20px;
+      &.failure {
+        color: $caution;
+      }
     }
   }
 
@@ -144,7 +151,7 @@
 
 <div class="container">
   {#if !isNull}
-    <div class="bar" class:initializing class:compact>
+    <div class="bar" class:initializing class:compact class:failure>
       <div
         class="inner"
         class:complete
@@ -152,7 +159,7 @@
       />
     </div>
     {#if !compact}
-      <div class="text">{progressPercent}</div>
+      <div class="text" class:failure>{progressPercent}</div>
     {/if}
   {/if}
 </div>

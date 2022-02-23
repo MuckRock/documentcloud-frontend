@@ -65,16 +65,9 @@
       }
     }
     dispatchAddon(
-      parseInt(layout.addonDispatchOpen.id,10),
+      parseInt(layout.addonDispatchOpen.id, 10),
       fields,
-      isViewer ? viewerLayout : layout,
       selected,
-      isViewer
-        ? () => {
-            viewer.document.doc = { ...viewer.document.doc, ...fields };
-            viewer.document = viewer.document;
-          }
-        : () => {}
     );
     emit.dismiss();
   }
