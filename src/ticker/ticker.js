@@ -1,6 +1,7 @@
 import { Svue } from "svue";
 
 import { documents } from "@/manager/documents";
+import { addons } from "@/manager/addons";
 import { layout } from "@/viewer/layout";
 import { entities } from "@/entities/entities";
 import { batchDelay } from "@/util/batchDelay";
@@ -14,16 +15,18 @@ export const ticker = new Svue({
       documents,
       layout,
       entities,
+      addons,
       triggered: false,
     };
   },
   computed: {
-    events(documents, layout, entities) {
+    events(documents, layout, entities, addons) {
       // Add events from all possible sources here
       return [
         ...documents.pollEvents,
         ...layout.pollEvents,
         ...entities.pollEvents,
+        ...addons.pollEvents,
       ];
     },
     shouldTrigger(events, triggered) {

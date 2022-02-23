@@ -10,6 +10,7 @@
   import UploadDialog from "./UploadDialog";
   import ActionBar from "./ActionBar";
   import ProcessingBar from "./ProcessingBar";
+  import AddonStatus from "./AddonStatus";
   import Document from "./Document";
   import NoDocuments from "./NoDocuments";
   import AuthSection from "@/pages/app/AuthSection";
@@ -282,6 +283,8 @@
         <ActionBar />
 
         <ProcessingBar />
+
+        <AddonStatus />
       {/if}
     </div>
 
