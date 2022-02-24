@@ -3,6 +3,6 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true
       },
-    "include": ["src/**/*", "src/node_modules"],
-    "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
+    "include": ["src/**/*", "src/node_modules","node_modules/@pyoner/"],
+    "exclude": ["__sapper__/*", "public/*"],
   }

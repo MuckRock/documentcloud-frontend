@@ -41,7 +41,7 @@
 
   import emitter from "@/emit";
   import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
-  import AddonDispatchDialog from "../../common/dialog/AddonDispatchDialog.svelte";
+  import AddonDispatchDialog from "../../common/dialog/AddonDispatchTsDialog.svelte";
 
 
   export let concealed = false;

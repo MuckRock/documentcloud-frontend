@@ -77,7 +77,7 @@ module.exports = wrap({
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
     },
-    extensions: ["*", ".mjs", ".js", /*".ts",*/ ".svelte", ".css", ".scss"],
+    extensions: ["*", ".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
     mainFields: ["svelte", "browser", "module", "main"],
   },
   module: {
@@ -122,6 +122,13 @@ module.exports = wrap({
               acceptNamedExports: false,
             },
             preprocess: autoPreprocess(preprocessOptions),
+            onwarn: (warning, handler) => {
+              const { code, frame } = warning;
+              if (code === "css-unused-selector")
+                  return;
+          
+              handler(warning);
+          }
           },
         },
       },
@@ -156,11 +163,10 @@ module.exports = wrap({
           },
         ],
       },
-      // { /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
-      //   test: /\.ts$/,
-      //   loader: 'ts-loader',
-      //   exclude: /node_modules/
-      // },
+      { /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
+        test: /\.ts$/,
+        loader: 'ts-loader',
+      },
     ],
   },
   mode,

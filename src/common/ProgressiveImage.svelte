@@ -144,10 +144,11 @@
       transition: opacity 0.2s linear;
       opacity: 0;
 
-      // &.loaded {
+      //svelte-ignore css-unused-selector
+      &.loaded {
 
-      //   opacity: 1;
-      // }
+        opacity: 1;
+      }
     }
 
     &.grayed {
