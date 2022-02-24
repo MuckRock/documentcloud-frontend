@@ -115,7 +115,11 @@
           <div class="info message">
             {#if run.message}{run.message}{/if}
             {#if run.message && run.fileUrl} - {/if}
-            {#if run.fileUrl}<a href={run.fileUrl}>Download File</a>{/if}
+            {#if run.fileUrl}
+              <a href="{run.fileUrl}" target="_blank">
+                Download File
+              </a>
+            {/if}
           </div>
         {/if}
       </div>
