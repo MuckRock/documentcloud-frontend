@@ -4,9 +4,9 @@ export const schema = {
   title: "A registration form",
   description: "A simple form example.",
   type: "object",
-  required: ["firstName", "lastName"],
+  required: ["name", "lastName"],
   properties: {
-    firstName: {
+    name: {
       type: "string",
       title: "First name",
       default: "Chuck",
@@ -62,6 +62,6 @@ export const schema = {
 export const value = {
   lastName: "Norris",
   age: 75,
-  bio: "Roundhouse kicking asses since 1940",
+  bio: "Roundhouses since 1940",
   password: "noneed",
 };
