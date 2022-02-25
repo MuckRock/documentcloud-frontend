@@ -4,7 +4,7 @@
   import HtmlEditor from "@/common/HtmlEditor";
   import { addonDialogs } from "./addonDialogs";
   import { addons, dispatchAddon } from "@/manager/addons";
-  import { viewer } from "@/viewer/viewer";
+  import { viewer } from "@/viewer/viewer.js";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
 
@@ -15,6 +15,7 @@
   import Ajv from "ajv";
   import { Form, components } from "@pyoner/svelte-form";
   import { createAjvValidator } from "@pyoner/svelte-form-ajv";
+
 
   import * as simple from "./samples/simple";
   import * as single from "./samples/single";
