@@ -37,7 +37,7 @@ const environment =
  * Change this to `false` to disable svelte-check during production builds. Build speeds will be faster, but error
  * and warning checks will be less thorough.
  */
-const svelteCheckInProduction = true;
+const svelteCheckInProduction = false;
 
 
 const useAnalyzer = environment.endsWith("analyze");
