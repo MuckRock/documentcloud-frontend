@@ -299,7 +299,7 @@
         {/if}
       {/each}
     </table> -->
-    Other form options:
+    <h5>Other form options:</h5>
     <ul>
       {#each samples as [name, module] (name)}
         <li>
