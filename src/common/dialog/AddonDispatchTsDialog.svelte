@@ -297,10 +297,9 @@
         <Form {schema} {components} {value} {validator}
           on:submit={(e) => {
             console.log("submits", e);
-            data = JSON.stringify(e.detail);
             dispatchAddon(
               parseInt(layout.addonDispatchOpen.id, 10),
-              data,
+              e.detail,
               selected,
             );
             emit.dismiss();
