@@ -7,7 +7,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
+// const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
@@ -46,7 +46,7 @@ module.exports = wrap({
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
     },
-    extensions: ["*", ".mjs", ".js", ".svelte", ".css", ".scss"],
+    extensions: ["*", ".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
     mainFields: ["svelte", "browser", "module", "main"],
   },
   module: {
@@ -93,6 +93,10 @@ module.exports = wrap({
           },
         ],
       },
+      { /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
+        test: /\.ts$/,
+        loader: 'ts-loader',
+      },
     ],
   },
   mode,
@@ -100,7 +104,7 @@ module.exports = wrap({
     hints: prod ? "warning" : false,
   },
   plugins: [
-    new CaseSensitivePaths(),
+    // new CaseSensitivePaths(), /* crashes embed with speed measure*/
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),

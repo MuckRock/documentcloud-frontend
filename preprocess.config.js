@@ -11,20 +11,19 @@ const scssAliases = (aliases) => {
   };
 };
 
+/* https://github.com/sveltejs/svelte-preprocess/blob/main/docs/migration-guide.md */
 const preprocessOptions = {
-  transformers: {
-    scss: {
-      includePaths: ["node_modules", "src"],
-      importer: [
-        scssAliases({
-          "@": process.cwd() + "/src",
-        }),
-      ],
-      data: '@import "@/style/variables.scss";',
-    },
-    postcss: {
-      plugins: [require("autoprefixer")],
-    },
+  scss: {
+    includePaths: ["node_modules", "src"],
+    importer: [
+      scssAliases({
+        "@": process.cwd() + "/src",
+      }),
+    ],
+    prependData: '@import "@/style/variables.scss";',
+  },
+  postcss: {
+    plugins: [require("autoprefixer")],
   },
 };
 
