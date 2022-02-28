@@ -291,7 +291,6 @@
           {/if}
         {/each}
       </table> -->
-      <h5>Other form options:</h5>
   
       {#if schema}
         <h1>Form</h1>
