@@ -1,0 +1,28 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json", /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "lib": ["es2020", "DOM"],
+    "allowJs": true,
+    // "checkJs": true, /* 600+ errors */
+    "baseUrl": "/app",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "svelte": [
+        "node_modules/svelte"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "src/node_modules",
+    "node_modules/@pyoner/"
+  ],
+  "exclude": [
+    "__sapper__/*",
+    "public/*"
+  ],
+}
