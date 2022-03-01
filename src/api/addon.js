@@ -20,12 +20,13 @@ export async function getAddon(addonId) {
   return new Addon(data);
 }
 
-export async function postAddonDispatch(addon, addonParameters, ids) {
+export async function postAddonDispatch(addon, addonParameters, userActiveQuery, ids) {
   // Dispatch the addon for the specified document ids with the parameters fulfilled by
   // the user
   const { data } = await session.post(apiUrl(`addon_runs/`), {
     addon: addon.id,
     parameters: addonParameters,
+    query: userActiveQuery,
     documents: ids.map((id) => parseInt(id.id, 10)),
   });
   data.addon = addon;
