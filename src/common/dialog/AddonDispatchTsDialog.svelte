@@ -1,7 +1,5 @@
 <script lang="ts">
     import Button from "@/common/Button";
-    // import Tooltip from "@/common/Tooltip";
-    // import HtmlEditor from "@/common/HtmlEditor";
     import { addons, dispatchAddon } from "@/manager/addons";
     import { search, initSearch } from "@/search/search";
     import { viewer } from "@/viewer/viewer";
@@ -10,18 +8,11 @@
   
     // Stores
     import { layout } from "@/manager/layout";
-    import { layout as viewerLayout } from "@/viewer/layout";
+    // import { layout as viewerLayout } from "@/viewer/layout";
 
-    
-  
     import Ajv from "ajv";
     import { Form, components } from "@pyoner/svelte-form";
     import { createAjvValidator } from "@pyoner/svelte-form-ajv";
-  
-    import jsonSchemaDraft7 from "ajv/lib/refs/json-schema-draft-07.json";
-import { queryBuilder } from "../../util/url";
-import AccessDialog from "./AccessDialog.svelte";
-import { SearchParams } from "../../structure/searchParams";
   
     const ajv = new Ajv({
       schemaId: "auto",
@@ -29,12 +20,10 @@ import { SearchParams } from "../../structure/searchParams";
       allErrors: true,
       coerceTypes: true,
     });
-    // ajv.addMetaSchema(jsonSchemaDraft7);
   
     const validator = createAjvValidator(ajv);
   
     let schema, value;
-    console.log("viewrs", viewerLayout, viewer, search)
   
     schema = layout.addonDispatchOpen.parameters;
     
@@ -110,7 +99,8 @@ import { SearchParams } from "../../structure/searchParams";
           }}
           >
           <div class="buttonpadded">
-            <Button type="reset">Reset</Button>
+              <!-- disable button when invalid, maybe -->
+            <Button secondary={true} type="reset">Reset</Button>
             <Button type="submit">{$_("dialog.dispatch")}</Button>
             <Button secondary={true} on:click={emit.dismiss}
               >{$_("dialog.cancel")}</Button
