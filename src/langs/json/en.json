@@ -330,7 +330,7 @@
     "noPerms": "You do not have permission to edit all of the selected documents",
     "editMenu": "Edit",
     "projectsMenu": "Projects",
-    "addOnsMenu": "Add Ons"
+    "addOnsMenu": "Add-ons"
   },
   "authSection": {
     "help": "Help",
@@ -437,10 +437,11 @@
     "createProj": "Create a project to organize and share documents"
   },
   "addonsMenu": {
-    "newAddon": "Request new Addon from Staff",
-    "selectDocs": "Select documents to dispatch them in addons",
-    "addonsList": "List of Addons",
-    "createAddon": "Request new addons to dispatch documents in addons"
+    "newAddon": "Request new Add-on from Staff",
+    "selectDocs": "Select documents to dispatch them in add-ons",
+    "addonsList": "List of Add-ons",
+    "createAddon": "Choose more documents to use add-ons",
+    "addon": "Add-on"
 
   },
   "noDocuments": {
