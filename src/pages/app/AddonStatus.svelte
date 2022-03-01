@@ -6,7 +6,7 @@
   import Button from "@/common/Button";
 
   // Store properties
-  import { addons, removeRun } from "@/manager/addons";
+  import { addons, removeRun, done } from "@/manager/addons";
 
   import { dismissAddonRun } from "@/api/addon";
 
@@ -15,10 +15,6 @@
       .split("_")
       .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
       .join(" ");
-  }
-
-  function done(run) {
-    return run.status != "queued" && run.status != "in_progress";
   }
 
   function dismiss(uuid) {
