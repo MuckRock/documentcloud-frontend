@@ -27,23 +27,30 @@
 </style>
 
 <Menu>
-  <MenuItem primary={true} on:click={newProject}>
+  <!-- <MenuItem primary={true} on:click={newProject}>
     {$_("addonsMenu.newAddon")}
-  </MenuItem>
-  {#if $layout.hasSelection}
+  </MenuItem> -->
+  <!-- {#if $layout.hasSelection} -->
+
     <MenuItem selectable={false}>
       <div class="small">{$_("addonsMenu.addonsList")}</div>
     </MenuItem>
     {#each alphabetizedAddons as addon}
       <AddonMenuItem {addon} />
     {/each}
-  {:else}
+    {#if !$layout.hasSelection}
+    <MenuItem selectable={false}>
+    <div class="info">{$_("addonsMenu.selectDocs")}</div>
+    </MenuItem>
+    {/if}
+
+  <!-- {:else}
     <MenuItem selectable={false}>
       {#if $addons.addons.length > 0}
         <div class="info">{$_("addonsMenu.selectDocs")}</div>
       {:else}
         <div class="info">{$_("addonsMenu.createAddon")}</div>
       {/if}
-    </MenuItem>
-  {/if}
+    </MenuItem> -->
+  <!-- {/if} -->
 </Menu>

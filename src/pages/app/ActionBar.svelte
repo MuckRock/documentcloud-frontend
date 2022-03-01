@@ -15,6 +15,8 @@
   import { manager, selectAll } from "@/manager/manager";
   import { documents, unselectAll } from "@/manager/documents";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { addons } from "@/manager/addons";
+
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();
@@ -129,15 +131,17 @@
           </span>
           <ProjectsMenu />
         </Dropdown>
-        <Dropdown table={true} fixed={outerHeight > 600}>
-          <span class="action" slot="title">
-            <span class="nowrap">
-              {$_("actionBar.addOnsMenu")}
-              <span class="dropper">▼</span>
+        {#if $addons.addons.length > 0}
+          <Dropdown table={true} fixed={outerHeight > 600}>
+            <span class="action" slot="title">
+              <span class="nowrap">
+                {$_("actionBar.addOnsMenu")}
+                <span class="dropper">▼</span>
+              </span>
             </span>
-          </span>
-          <AddonsMenu />
-        </Dropdown>
+            <AddonsMenu />
+          </Dropdown>
+        {/if}
       {/if}
 
       <span class="narrowhide">

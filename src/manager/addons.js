@@ -48,6 +48,7 @@ async function updateRuns() {
 }
 
 export async function dispatchAddon(addonId, info, selected) {
+  console.log(info)
   const addon = addons.addonsById[addonId];
   const response = await postAddonDispatch(addon, info, selected);
   addons.runs = [response, ...addons.runs];
