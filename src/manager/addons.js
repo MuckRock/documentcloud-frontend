@@ -7,6 +7,10 @@ import {
 } from "@/api/addon";
 import { AddonRun } from "@/structure/addon";
 
+export function done(run) {
+  return run.status != "queued" && run.status != "in_progress";
+}
+
 export const addons = new Svue({
   data() {
     return {
@@ -25,7 +29,7 @@ export const addons = new Svue({
       return results;
     },
     pollEvents(runs) {
-      if (runs.length === 0) return [];
+      if (runs.filter(x => !done(x)).length === 0) return [];
       return [updateRuns];
     },
   },
