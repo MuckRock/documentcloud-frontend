@@ -28,7 +28,8 @@
   }
 
   fieldset {
-    border: #eee 1px groove;
+    border: #eee 0.9px groove;
+    border-top: #eee 1px groove;
   }
 </style>
 

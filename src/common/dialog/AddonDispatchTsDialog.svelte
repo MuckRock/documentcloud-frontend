@@ -54,6 +54,15 @@
 </script>
 
 <style lang="scss">
+
+  #repository-detail {
+      font-size: normal;
+      font-weight: normal;
+
+      a {
+        text-decoration: underline;
+      }
+  }
   input,
   table {
     position: border-box;
@@ -767,14 +776,14 @@
 
 <div>
   <div class="mcontent">
-    <h1>
+    <!-- <h1>
       {$_("dialogAddonDispatchDialog.setAddonParameters", {
         values: { n: numSelected },
       })}
-    </h1>
+    </h1> -->
 
     {#if schema}
-      <h1>{$_("addonsMenu.addon")}</h1>
+      <h1>{$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name} <span id="repository-detail">by MuckRock <a target="_new" href="https://www.github.com/{layout.addonDispatchOpen.repository}">(View Source)</a></span></h1>
       <Form
         {schema}
         {components}
@@ -800,8 +809,9 @@
       >
       <div class="form-group"></div>
         <div class="buttonpadded">
+          <!-- <Button secondary={true} type="reset">Reset</Button> -->
+
           <!-- disable button when invalid, maybe -->
-          <Button secondary={true} type="reset">Reset</Button>
           <Button type="submit">{$_("dialog.dispatch")}</Button>
           <Button secondary={true} on:click={emit.dismiss}
             >{$_("dialog.cancel")}</Button
