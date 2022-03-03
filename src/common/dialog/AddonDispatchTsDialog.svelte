@@ -56,7 +56,7 @@
 <style lang="scss">
 
   #repository-detail {
-      font-size: normal;
+      font-size: 16px;
       font-weight: normal;
 
       a {
