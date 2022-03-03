@@ -37,7 +37,6 @@
 
 {#if schema}
   {#if schema.type == "object" || schema.type == "array"}
-    <legend>{schema.title}</legend>
     {#if schema.description}
       <div class="inputpadded">
         <div class="description">{schema.description}</div>
