@@ -43,6 +43,10 @@
     <div class="info">{$_("addonsMenu.selectDocs")}</div>
     </MenuItem>
     {/if}
+    <MenuItem selectable={true}>
+      <div class="info"><a target="_new" href="https://www.documentcloud.org/help/add-ons/">{$_("addonsMenu.learnMore")}</a></div>
+      </MenuItem>
+
 
   <!-- {:else}
     <MenuItem selectable={false}>

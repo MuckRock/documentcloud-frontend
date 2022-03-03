@@ -441,8 +441,8 @@
     "selectDocs": "Select documents to dispatch them in add-ons",
     "addonsList": "List of Add-ons",
     "createAddon": "Choose more documents to use add-ons",
-    "addon": "Add-on"
-
+    "addon": "Add-on",
+    "learnMore":"Learn more about Add-Ons"
   },
   "noDocuments": {
     "noSearchResults": "No search results",
