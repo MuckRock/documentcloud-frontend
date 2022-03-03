@@ -19,8 +19,8 @@
       ? `Remove ${handlePlural(
           $layout.selected.length,
           "document",
-        )} from next addon dispatch`
-      : `Add ${handlePlural($layout.selected.length, "document")} to next addon dispatch`;
+        )} from next add-on dispatch`
+      : `Add ${handlePlural($layout.selected.length, "document")} to next add-on dispatch`;
 
   function handleClick() {
     openDispatchAddon(addon)
