@@ -1,18 +1,12 @@
 <script>
   import MenuItem from "@/common/MenuItem";
   import Tooltip from "@/common/Tooltip";
-  import { layout, dispatchAddonSelected,openDispatchAddon } from "@/manager/layout";
-  import {
-    selectedDocsInProject,
-  //   addSelectedDocsToProject,
-  //   removeSelectedDocsFromProject,
-  } from "@/manager/addons";
+  import { layout, openDispatchAddon } from "@/manager/layout";
   import { handlePlural } from "@/util/string";
 
   export let addon;
 
-  $: scope = "none"
-  //   $layout.selected.length > 0 ? selectedDocsInProject(addon) : "none";
+  $: scope = "none";
 
   $: caption =
     scope == "fully"
@@ -23,7 +17,7 @@
       : `Add ${handlePlural($layout.selected.length, "document")} to next add-on dispatch`;
 
   function handleClick() {
-    openDispatchAddon(addon)
+    openDispatchAddon(addon);s
   }
 </script>
 
@@ -39,7 +33,6 @@
   <Tooltip delay={500} {caption}>
     {addon.name}
     <span class="scope">
-      <!-- {#if scope == "fully"}✓{/if} -->
     </span>
   </Tooltip>
 </MenuItem>
