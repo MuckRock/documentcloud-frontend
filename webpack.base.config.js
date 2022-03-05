@@ -58,6 +58,7 @@ module.exports = wrap({
           options: {
             emitCss: prod,
             hotReload: !prod,
+            dev: !prod,
             preprocess: autoPreprocess(preprocessOptions),
           },
         },
