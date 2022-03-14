@@ -27,10 +27,6 @@
 </style>
 
 <Menu>
-  <!-- <MenuItem primary={true} on:click={newProject}>
-    {$_("addonsMenu.newAddon")}
-  </MenuItem> -->
-  <!-- {#if $layout.hasSelection} -->
 
     <MenuItem selectable={false}>
       <div class="small">{$_("addonsMenu.addonsList")}</div>
@@ -44,17 +40,11 @@
     </MenuItem>
     {/if}
     <MenuItem selectable={true}>
-      <div class="info"><a target="_new" href="https://www.documentcloud.org/help/add-ons/">{$_("addonsMenu.learnMore")}</a></div>
-      </MenuItem>
+      <div class="info">
+        <a target="_blank" href="https://www.documentcloud.org/help/add-ons/">
+          {$_("addonsMenu.learnMore")}
+        </a>
+      </div>
+    </MenuItem>
 
-
-  <!-- {:else}
-    <MenuItem selectable={false}>
-      {#if $addons.addons.length > 0}
-        <div class="info">{$_("addonsMenu.selectDocs")}</div>
-      {:else}
-        <div class="info">{$_("addonsMenu.createAddon")}</div>
-      {/if}
-    </MenuItem> -->
-  <!-- {/if} -->
 </Menu>
