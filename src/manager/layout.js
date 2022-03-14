@@ -34,7 +34,6 @@ export const layout = new Svue({
       projectEditUser: null,
       searchTipsOpen: false,
       diagnosticsOpen: false,
-      
 
       // Data
       dataDocuments: [],

@@ -1,9 +1,5 @@
 import { Svue } from "svue";
-import {
-  getAddons,
-  postAddonDispatch,
-  getAddonRuns,
-} from "@/api/addon";
+import { getAddons, postAddonDispatch, getAddonRuns } from "@/api/addon";
 import { AddonRun } from "@/structure/addon";
 
 export function done(run) {
@@ -28,7 +24,7 @@ export const addons = new Svue({
       return results;
     },
     pollEvents(runs) {
-      if (runs.filter(x => !done(x)).length === 0) return [];
+      if (runs.filter((x) => !done(x)).length === 0) return [];
       return [updateRuns];
     },
   },
@@ -46,9 +42,19 @@ async function updateRuns() {
   addons.runs = newRuns;
 }
 
-export async function dispatchAddon(addonId, userParameters, userActiveQuery, userSelected) {
+export async function dispatchAddon(
+  addonId,
+  userParameters,
+  userActiveQuery,
+  userSelected,
+) {
   const addon = addons.addonsById[addonId];
-  const response = await postAddonDispatch(addon, userParameters, userActiveQuery , userSelected);
+  const response = await postAddonDispatch(
+    addon,
+    userParameters,
+    userActiveQuery,
+    userSelected,
+  );
   addons.runs = [response, ...addons.runs];
   return response;
 }

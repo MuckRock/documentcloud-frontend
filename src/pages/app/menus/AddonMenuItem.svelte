@@ -14,10 +14,14 @@
           $layout.selected.length,
           "document",
         )} from next add-on dispatch`
-      : `Add ${handlePlural($layout.selected.length, "document")} to next add-on dispatch`;
+      : `Add ${handlePlural(
+          $layout.selected.length,
+          "document",
+        )} to next add-on dispatch`;
 
   function handleClick() {
-    openDispatchAddon(addon);s
+    openDispatchAddon(addon);
+    s;
   }
 </script>
 
@@ -32,7 +36,6 @@
 <MenuItem on:click={handleClick}>
   <Tooltip delay={500} {caption}>
     {addon.name}
-    <span class="scope">
-    </span>
+    <span class="scope" />
   </Tooltip>
 </MenuItem>
