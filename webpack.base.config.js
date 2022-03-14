@@ -7,7 +7,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-// const CaseSensitivePaths = require('case-sensitive-paths-webpack-plugin');
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
@@ -105,7 +104,6 @@ module.exports = wrap({
     hints: prod ? "warning" : false,
   },
   plugins: [
-    // new CaseSensitivePaths(), /* crashes embed with speed measure*/
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),

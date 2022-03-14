@@ -28,22 +28,6 @@
 
   schema = layout.addonDispatchOpen.parameters;
 
-  /* TODO: internationalize errors as before:
-    const fieldValid = (value, initial) => value != initial;
-    const fieldInvalidText = (value, initial, fieldName) =>
-      value == initial ? `The document already has this ${fieldName}` : "";
-  $_(
-        (x.fieldInvalidText || fieldInvalidText)(
-          values[i],
-          initial[i],
-          x.fieldName,
-        ),
-        {
-          values: { fieldName: $_(x.fieldName) },
-        },
-      ), 
-  */
-
   const emit = emitter({
     dismiss() {},
   });
@@ -67,14 +51,20 @@
 
 <div>
   <div class="mcontent">
-    <!-- <h1>
-      {$_("dialogAddonDispatchDialog.setAddonParameters", {
-        values: { n: numSelected },
-      })}
-    </h1> -->
 
     {#if schema}
-      <h1>{$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name} <span id="repository-detail">by MuckRock <a target="_new" href="https://www.github.com/{layout.addonDispatchOpen.repository}">(View Source)</a></span></h1>
+      <h1>
+        {$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name}
+        <span id="repository-detail">
+          by MuckRock
+          <a
+            target="_blank"
+            href="https://www.github.com/{layout.addonDispatchOpen.repository}"
+          >
+            (View Source)
+          </a>
+        </span>
+      </h1>
       <Form
         {schema}
         {components}
@@ -100,7 +90,6 @@
       >
       <div class="form-group"></div>
         <div class="buttonpadded">
-          <!-- <Button secondary={true} type="reset">Reset</Button> -->
 
           <!-- disable button when invalid, maybe -->
           <Button type="submit">{$_("dialog.dispatch")}</Button>
@@ -110,17 +99,5 @@
         </div>
       </Form>
     {/if}
-    <!-- <div class="buttonpadded">
-        {#if valid}
-          <Button on:click={applyAction}>{$_("dialog.dispatch")}</Button>
-        {:else}
-          <Tooltip caption={invalidReason} delay={500}>
-            <Button disabled={true}>{$_("dialog.dispatch")}</Button>
-          </Tooltip>
-        {/if}
-        <Button secondary={true} on:click={emit.dismiss}
-          >{$_("dialog.cancel")}</Button
-        >
-      </div> -->
   </div>
 </div>

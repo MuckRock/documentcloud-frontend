@@ -58,7 +58,7 @@
     <tr class="field">
       {#if schema.title}
         <!-- TODO: add for="" from name of wrapped input-->
-        <td><label class="label">{schema.title}:</label></td>
+        <td><label for="{schema.name}" class="label">{schema.title}:</label></td>
       {/if}
 
       <td>

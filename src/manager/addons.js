@@ -1,6 +1,5 @@
 import { Svue } from "svue";
 import {
-  // getAddon,
   getAddons,
   postAddonDispatch,
   getAddonRuns,
