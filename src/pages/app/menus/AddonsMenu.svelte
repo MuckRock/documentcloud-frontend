@@ -27,24 +27,22 @@
 </style>
 
 <Menu>
-
+  <MenuItem selectable={false}>
+    <div class="small">{$_("addonsMenu.addonsList")}</div>
+  </MenuItem>
+  {#each alphabetizedAddons as addon}
+    <AddonMenuItem {addon} />
+  {/each}
+  {#if !$layout.hasSelection}
     <MenuItem selectable={false}>
-      <div class="small">{$_("addonsMenu.addonsList")}</div>
+      <div class="info">{$_("addonsMenu.selectDocs")}</div>
     </MenuItem>
-    {#each alphabetizedAddons as addon}
-      <AddonMenuItem {addon} />
-    {/each}
-    {#if !$layout.hasSelection}
-    <MenuItem selectable={false}>
-    <div class="info">{$_("addonsMenu.selectDocs")}</div>
-    </MenuItem>
-    {/if}
-    <MenuItem selectable={true}>
-      <div class="info">
-        <a target="_blank" href="https://www.documentcloud.org/help/add-ons/">
-          {$_("addonsMenu.learnMore")}
-        </a>
-      </div>
-    </MenuItem>
-
+  {/if}
+  <MenuItem selectable={true}>
+    <div class="info">
+      <a target="_blank" href="https://www.documentcloud.org/help/add-ons/">
+        {$_("addonsMenu.learnMore")}
+      </a>
+    </div>
+  </MenuItem>
 </Menu>

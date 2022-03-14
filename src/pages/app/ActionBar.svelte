@@ -8,7 +8,7 @@
   // Menus
   import EditMenu from "./menus/EditMenu";
   import ProjectsMenu from "./menus/ProjectsMenu";
-  import AddonsMenu from "./menus/AddonsMenu"
+  import AddonsMenu from "./menus/AddonsMenu";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -16,7 +16,6 @@
   import { documents, unselectAll } from "@/manager/documents";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { addons } from "@/manager/addons";
-
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();

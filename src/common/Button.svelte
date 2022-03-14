@@ -11,7 +11,7 @@
   export let disabled = false;
   export let plain = false;
   export let nomargin = false;
-  export let type = 'submit';
+  export let type = "submit";
 
   export let disabledReason = null;
 </script>
@@ -126,7 +126,7 @@
       class:plain
       class:nomargin
       disabled={disabled || disabledReason != null}
-      type={type}
+      {type}
     >
       <slot />
     </button>

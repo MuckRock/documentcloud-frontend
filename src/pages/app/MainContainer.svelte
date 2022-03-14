@@ -43,7 +43,6 @@
   import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
   import AddonDispatchDialog from "../../common/dialog/AddonDispatchTsDialog.svelte";
 
-
   export let concealed = false;
   export let embed = false;
 

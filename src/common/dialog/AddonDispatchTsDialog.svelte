@@ -8,11 +8,10 @@
 
   // Stores
   import { layout } from "@/manager/layout";
-  // import { layout as viewerLayout } from "@/viewer/layout";
 
   import Ajv from "ajv";
-  import {components} from "./DCDefaultFormComponents"
-   import { Form /*, components*/  } from "@pyoner/svelte-form";
+  import { components } from "./DCDefaultFormComponents";
+  import { Form } from "@pyoner/svelte-form";
   import { createAjvValidator } from "@pyoner/svelte-form-ajv";
 
   const ajv = new Ajv({
@@ -38,20 +37,18 @@
 </script>
 
 <style lang="scss">
-
   #repository-detail {
-      font-size: 16px;
-      font-weight: normal;
+    font-size: 16px;
+    font-weight: normal;
 
-      a {
-        text-decoration: underline;
-      }
+    a {
+      text-decoration: underline;
+    }
   }
 </style>
 
 <div>
   <div class="mcontent">
-
     {#if schema}
       <h1>
         {$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name}
@@ -88,9 +85,8 @@
           console.log("reset", e);
         }}
       >
-      <div class="form-group"></div>
+        <div class="form-group" />
         <div class="buttonpadded">
-
           <!-- disable button when invalid, maybe -->
           <Button type="submit">{$_("dialog.dispatch")}</Button>
           <Button secondary={true} on:click={emit.dismiss}

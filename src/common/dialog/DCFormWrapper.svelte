@@ -32,7 +32,6 @@
     width: 100%;
     position: relative;
   }
-
 </style>
 
 {#if schema}
@@ -44,7 +43,6 @@
     {/if}
     <table>
       <tbody>
-
         <slot>A field is not implemented</slot>
 
         {#if errors && errors.length}
@@ -58,7 +56,7 @@
     <tr class="field">
       {#if schema.title}
         <!-- TODO: add for="" from name of wrapped input-->
-        <td><label for="{schema.name}" class="label">{schema.title}:</label></td>
+        <td><label for={schema.name} class="label">{schema.title}:</label></td>
       {/if}
 
       <td>

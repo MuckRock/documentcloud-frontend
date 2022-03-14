@@ -1,4 +1,8 @@
-import { components as originalComponents, helpers, extra} from "@pyoner/svelte-form";
+import {
+  components as originalComponents,
+  helpers,
+  extra,
+} from "@pyoner/svelte-form";
 import type { FormComponents } from "@pyoner/svelte-form/src/types";
 
 import Wrapper from "./DCFormWrapper.svelte";
@@ -15,4 +19,4 @@ export const defaultFormComponents: FormComponents = {
 
 const Form = originalComponents.form;
 
-export { Form, defaultFormComponents as components, helpers, extra }
+export { Form, defaultFormComponents as components, helpers, extra };
