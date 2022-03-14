@@ -278,12 +278,14 @@
             >
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
-          <a href="https://www.muckrock.com/assignment/request-account-verification-377/form/" target="_new">
-            <Button>{$_("noDocuments.requestVerificationAction")}</Button>
-          </a>
+            <a
+              href="https://www.muckrock.com/assignment/request-account-verification-377/form/"
+              target="_new"
+            >
+              <Button>{$_("noDocuments.requestVerificationAction")}</Button>
+            </a>
           {/if}
         {/if}
-        
       </div>
       {#if !embed}
         <ActionBar />
