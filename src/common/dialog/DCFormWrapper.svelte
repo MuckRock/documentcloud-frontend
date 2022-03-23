@@ -44,11 +44,6 @@
 
 {#if schema}
   {#if schema.type == "object" || schema.type == "array"}
-    {#if schema.description}
-      <div class="inputpadded">
-        <div class="description">{schema.description}</div>
-      </div>
-    {/if}
     <table>
       <tbody>
         <slot>A field is not implemented</slot>
@@ -71,17 +66,17 @@
         <div class="inputpadded">
           <slot>A field is not implemented</slot>
         </div>
+
+        {#if errors && errors.length}
+          {#each errors as error}
+            <div class="error">{error.message}</div>
+          {/each}
+        {/if}
+
+        {#if schema.description}
+          <div class="description">{schema.description}</div>
+        {/if}
       </td>
-
-      {#if errors && errors.length}
-        {#each errors as error}
-          <div class="error">{error.message}</div>
-        {/each}
-      {/if}
-
-      {#if schema.description}
-        <div class="description">{schema.description}</div>
-      {/if}
     </tr>
   {/if}
 {/if}
