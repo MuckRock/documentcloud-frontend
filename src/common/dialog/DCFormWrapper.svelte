@@ -32,6 +32,14 @@
     width: 100%;
     position: relative;
   }
+
+  table global(input[type=checkbox]) {
+    width: auto;
+  }
+
+  .description {
+    white-space: pre-line;
+  }
 </style>
 
 {#if schema}
