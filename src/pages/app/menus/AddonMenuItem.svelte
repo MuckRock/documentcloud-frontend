@@ -21,7 +21,6 @@
 
   function handleClick() {
     openDispatchAddon(addon);
-    s;
   }
 </script>
 
