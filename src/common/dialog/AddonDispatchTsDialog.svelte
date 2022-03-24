@@ -104,9 +104,6 @@
     position: relative;
   }
 
-  input.readonly {
-    border: 0;
-  }
 </style>
 
 <div>
@@ -132,7 +129,7 @@
       {#if showQuery || showDocuments}
         <table>
           {#if warning}
-            <thead><tr><td colspan="3">{warning}</td></tr></thead>
+            <thead><tr><td colspan="3"><em>{warning}</em></td></tr></thead>
           {/if}
           <tbody>
             {#if showDocuments}
@@ -198,12 +195,6 @@
         {value}
         {validator}
         on:submit={(e) => {
-          console.log("submits", e);
-          console.log("docType", docType);
-          console.log("showQuery", showQuery);
-          console.log("showDocuments", showDocuments);
-          console.log("includeQuery", includeQuery);
-          console.log("includeDocuments", includeDocuments);
           /* for search query, look at paginator for an example*/
           dispatchAddon(
             parseInt(layout.addonDispatchOpen.id, 10),
@@ -212,9 +203,6 @@
             includeDocuments ? selected : [],
           );
           emit.dismiss();
-        }}
-        on:reset={(e) => {
-          console.log("reset", e);
         }}
       >
         <div class="buttonpadded">
