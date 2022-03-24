@@ -104,6 +104,10 @@
     position: relative;
   }
 
+  .description {
+    white-space: pre-line;
+  }
+
 </style>
 
 <div>
