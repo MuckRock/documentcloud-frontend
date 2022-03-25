@@ -37,23 +37,36 @@
     dismiss() {},
   });
 
-  $: isViewer = $viewer.document != null;
-  $: numSelected = isViewer ? 1 : $layout.numSelected;
-  $: selected = isViewer ? [$viewer.document] : $layout.selected;
+  let isViewer = $viewer.document != null;
+  let numSelected = isViewer ? 1 : $layout.numSelected;
+  let selected = isViewer ? [$viewer.document] : $layout.selected;
 
-  console.log(schema);
   let hasQueryProp =
     Array.isArray(schema.documents) && schema.documents.includes("query");
   let hasDocumentsProp =
     Array.isArray(schema.documents) && schema.documents.includes("selected");
-  let hasSelectedDocs = $layout.selected.length > 0;
+  let hasSelectedDocs = numSelected > 0;
+
   let showQuery = hasQueryProp;
   let showDocuments = hasDocumentsProp && (!hasQueryProp || hasSelectedDocs);
-  let warning =
-    !hasQueryProp && hasDocumentsProp && !hasSelectedDocs
-      ? "You must select some documents to run this add-on"
+
+  let notice =
+    hasQueryProp && hasDocumentsProp && hasSelectedDocs
+      ? $_("addonDispatchDialog.select")
       : hasQueryProp && hasDocumentsProp && !hasSelectedDocs
-      ? "You may select some documents to use for this add-on instead of submitting the query"
+      ? $_("addonDispatchDialog.queryNoSelected", {
+          values: { n: search.results.count },
+        })
+      : !hasQueryProp && hasDocumentsProp && !hasSelectedDocs
+      ? $_("addonDispatchDialog.noSelected")
+      : !hasQueryProp && hasDocumentsProp && hasSelectedDocs
+      ? $_("addonDispatchDialog.runSelected", {
+          values: { n: numSelected },
+        })
+      : hasQueryProp && !hasDocumentsProp
+      ? $_("addonDispatchDialog.runQuery", {
+          values: { n: search.results.count },
+        })
       : "";
 
   let docType = "documents";
@@ -76,10 +89,11 @@
   }
 
   table {
-    position: border-box;
     width: 100%;
     font-size: 16px;
     font-family: inherit;
+    table-layout: fixed;
+    word-wrap: break-word;
   }
 
   table :global(input) {
@@ -93,10 +107,13 @@
     width: auto;
   }
 
-  td:first-child,
-  td:nth-child(2) {
+  td:first-child {
     white-space: nowrap;
     padding-right: 5px;
+  }
+
+  td.radio {
+    width: 1rem;
   }
 
   td:last-child {
@@ -107,7 +124,6 @@
   .description {
     white-space: pre-line;
   }
-
 </style>
 
 <div>
@@ -130,69 +146,6 @@
         <div class="description">{schema.description}</div>
       </div>
 
-      {#if showQuery || showDocuments}
-        <table>
-          {#if warning}
-            <thead><tr><td colspan="3"><em>{warning}</em></td></tr></thead>
-          {/if}
-          <tbody>
-            {#if showDocuments}
-              <tr class="field">
-                <td><label for="documents" class="label">Documents:</label></td>
-                {#if showQuery}
-                  <td>
-                    <div class="inputpadded">
-                      <input
-                        type="radio"
-                        class="radio"
-                        name="documents"
-                        id="documents"
-                        bind:group={docType}
-                        value="documents"
-                        checked
-                      />
-                    </div>
-                  </td>
-                {/if}
-                <td>
-                  <div class="inputpadded">
-                    <label for="documents">
-                      Include {selected.length} selected documents
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            {/if}
-            {#if showQuery}
-              <tr class="field">
-                <td><label for="query" class="label">Query:</label></td>
-                {#if showDocuments}
-                  <td>
-                    <div class="inputpadded">
-                      <input
-                        type="radio"
-                        class="radio"
-                        name="documents"
-                        id="query"
-                        bind:group={docType}
-                        value="query"
-                      />
-                    </div>
-                  </td>
-                {/if}
-                <td>
-                  <div class="inputpadded">
-                    <label for="query">
-                      {query}
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            {/if}
-          </tbody>
-        </table>
-      {/if}
-
       <Form
         {schema}
         {components}
@@ -209,6 +162,65 @@
           emit.dismiss();
         }}
       >
+        {#if notice}
+          <div class="notice">{notice}</div>
+        {/if}
+        {#if showQuery && showDocuments}
+          <table class="documents">
+            <tbody>
+              <tr class="field">
+                <td class="radio">
+                  <div class="inputpadded">
+                    <div>
+                      <input
+                        type="radio"
+                        class="radio"
+                        name="documents"
+                        id="documents"
+                        bind:group={docType}
+                        value="documents"
+                        checked
+                      />
+                    </div>
+                  </div></td
+                >
+                <td>
+                  <div class="inputpadded">
+                    <label for="documents">
+                      {$_("addonDispatchDialog.labelSelected", {
+                        values: { n: numSelected },
+                      })}
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr class="field">
+                <td class="radio">
+                  <div class="inputpadded">
+                    <input
+                      type="radio"
+                      class="radio"
+                      name="documents"
+                      id="query"
+                      bind:group={docType}
+                      value="query"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div class="inputpadded">
+                    <label for="query">
+                      {$_("addonDispatchDialog.labelQuery", {
+                        values: { n: search.results.count },
+                      })}
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        {/if}
+
         <div class="buttonpadded">
           <!-- disable button when invalid, maybe -->
           <Button type="submit">{$_("dialog.dispatch")}</Button>
