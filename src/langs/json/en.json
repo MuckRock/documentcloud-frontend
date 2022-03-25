@@ -670,5 +670,14 @@
     "errorDesc": "A processing error has been encountered in the document you requested",
     "accessible": "Document not accessible",
     "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
+  },
+  "addonDispatchDialog": {
+    "select": "Select which documents you’d like to run this Add-On against:",
+    "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again. Learn more.",
+    "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.  Learn more.",
+    "runSelected": "This Add-On will try to run against the {n, plural, one {# currently selected document} other {# currently selected documents}}. Learn more.",
+    "runQuery": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. Learn more.",
+    "labelSelected": "The {n, plural, one {# currently selected document} other {# currently selected documents}}",
+    "labelQuery": "The {n, plural, one {# document} other {# documents}} from the current search results"
   }
 }
