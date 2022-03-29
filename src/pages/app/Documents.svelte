@@ -279,7 +279,7 @@
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
             <a
-              href="https://www.muckrock.com/assignment/request-account-verification-377/form/"
+              href="https://airtable.com/app93Yt5cwdVWTnqn/tblTVcfv2TfUvsSxl/viwdOVhHrpq3FezUy?blocks=hide"
               target="_new"
             >
               <Button>{$_("noDocuments.requestVerificationAction")}</Button>
