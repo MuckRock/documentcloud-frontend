@@ -33,7 +33,7 @@
     position: relative;
   }
 
-  table :global(input[type=checkbox]) {
+  table :global(input[type="checkbox"]) {
     width: auto;
   }
 
