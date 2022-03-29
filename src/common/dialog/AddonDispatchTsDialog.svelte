@@ -5,6 +5,7 @@
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
+  import SvelteMarkdown from 'svelte-markdown'
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -129,10 +130,6 @@
     position: relative;
   }
 
-  .description {
-    white-space: pre-line;
-  }
-
   .notice :global(a) {
     text-decoration: underline;
     color: $primary;
@@ -156,8 +153,8 @@
         </span>
       </h1>
 
-      <div class="inputpadded">
-        <div class="description">{schema.description}</div>
+      <div>
+        <SvelteMarkdown source={schema.description} renderers={{html: null}} />
       </div>
 
       <Form
