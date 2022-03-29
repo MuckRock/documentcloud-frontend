@@ -279,7 +279,7 @@
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
             <a
-              href="https://airtable.com/app93Yt5cwdVWTnqn/tblTVcfv2TfUvsSxl/viwdOVhHrpq3FezUy?blocks=hide"
+              href="https://airtable.com/shrZrgdmuOwW0ZLPM"
               target="_new"
             >
               <Button>{$_("noDocuments.requestVerificationAction")}</Button>

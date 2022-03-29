@@ -71,7 +71,7 @@
     "selectAccess": "tceleS na ssecca level rof eht {n, plural, one {detceles tnemucod} other {# detceles stnemucod}}",
     "public": "cilbuP ssecca",
     "publicDesc": "enoynA no eht tenretni nac hcraes rof dna weiv eht .tnemucod",
-    "verifiedHelp": "ylnO deifirev sresu ro srebmem fo deifirev snoitazinagro nac ekam dedaolpu stnemucod .cilbup fI er'uoy a tsilanruoj ro esiwrehto krow ni gnihsilbup dettev slairetam ot mrofni eht ,cilbup <a href=\"https://airtable.com/app93Yt5cwdVWTnqn/tblTVcfv2TfUvsSxl/viwdOVhHrpq3FezUy?blocks=hide\" target=\"_blank\">nrael erom dna tseuqer noitacifirev .ereh</a>",
+    "verifiedHelp": "ylnO deifirev sresu ro srebmem fo deifirev snoitazinagro nac ekam dedaolpu stnemucod .cilbup fI er'uoy a tsilanruoj ro esiwrehto krow ni gnihsilbup dettev slairetam ot mrofni eht ,cilbup <a href=\"https://airtable.com/shrZrgdmuOwW0ZLPM\" target=\"_blank\">nrael erom dna tseuqer noitacifirev .ereh</a>",
     "privateToOrg": "uoY t\u2019nac egnahc eht ssecca level ot etavirP\u201c ot ruoy \u201dnoitazinagro esuaceb {n, plural, one {siht tnemucod si} other {eno ro erom stnemucod era}} detaicossa htiw ruoy laudividni ,tnuocca ton na .noitazinagro oT dda {n, plural, one {ti} other {meht}} ot na ,noitazinagro tceles {n, plural, one {ti} other {meht}} morf eht tnemeganam weiv dna kcilc egnahC\u201c \u201d.renwO <a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">uoY nac nioj ro etaerc na noitazinagro no siht .egap</a>",
     "private": "etavirP ssecca",
     "privateDesc": "ylnO elpoep htiw ticilpxe noissimrep aiv( )noitaroballoc evah .ssecca",
@@ -433,7 +433,7 @@
     "verify1": "etoN taht yltnerruc ruoy tnuocca si <b>ton deifirev ot daolpu</b>. uoY nac hcraes hguorht eht cilbup ,yrotisoper ezinagro stnemucod er'uoy detseretni ni otni ,stcejorp evael etavirp ,seton dna etaroballoc no gnitide dna gnitatonna stnemucod rehto sresu etivni uoy .ot",
     "verify2": "fI d\u2019uoy ekil ot daolpu ro hsilbup stnemucod dna er'uoy a gnikrow tsilanruoj ro rehto noitazinagro detseretni ni gnihsilbup yramirp ecruos slairetam ni eht cilbup ,tseretni ll'uoy deen ot evah ruoy tnuocca deifirev ro dedda ot a deifirev .noitazinagro sihT si a elpmis :ssecorp",
     "verify3": ",tsriF <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">ees fi ruoy noitazinagro ydaerla stsixe</a> ,dna fi uoy dnif ,ti kcilc tseuqeR\" ot \"nioJ no sti .egap",
-    "verify4": "fI ruoy noitazinagro sah ton neeb deifirev ,tey ro fi er'uoy a ,recnaleerf <a target=\"_blank\" href=\"https://airtable.com/app93Yt5cwdVWTnqn/tblTVcfv2TfUvsSxl/viwdOVhHrpq3FezUy?blocks=hide\">tseuqer noitacifirev ereh</a>. stseuqeR yllausu ekat owt ssenisub syad ot .ssecorp",
+    "verify4": "fI ruoy noitazinagro sah ton neeb deifirev ,tey ro fi er'uoy a ,recnaleerf <a target=\"_blank\" href=\"https://airtable.com/shrZrgdmuOwW0ZLPM\">tseuqer noitacifirev ereh</a>. stseuqeR yllausu ekat owt ssenisub syad ot .ssecorp",
     "uploadFirst": "daolpU ruoy tsrif tnemucod",
     "upload1": "daolpU a tnemucod elif ot teg detrats gnisu .duolCtnemucoD uoY nac gard eht elif otni siht ,wodniw ro kcilc no eht eulb \u201ddaolpU\u201c nottub .evoba",
     "upload2": "ecnO uoy daolpu a ,elif duolCtnemucoD lliw ssecorp eht tnemucod dna tcartxe sti .stnetnoc tI yam ekat a wef setunim rof siht ot ,etelpmoc tub ecno s\u2019ti enod ruoy tnemucod lliw eb dezimitpo rof sisylana dna gnirahs no eht .bew"
