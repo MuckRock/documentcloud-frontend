@@ -56,17 +56,25 @@
       : hasQueryProp && hasDocumentsProp && !hasSelectedDocs
       ? $_("addonDispatchDialog.queryNoSelected", {
           values: { n: search.results.count },
-        })
+        }) +
+        " " +
+        $_("addonDispatchDialog.learnMore")
       : !hasQueryProp && hasDocumentsProp && !hasSelectedDocs
-      ? $_("addonDispatchDialog.noSelected")
+      ? $_("addonDispatchDialog.noSelected") +
+        " " +
+        $_("addonDispatchDialog.learnMore")
       : !hasQueryProp && hasDocumentsProp && hasSelectedDocs
       ? $_("addonDispatchDialog.runSelected", {
           values: { n: numSelected },
-        })
+        }) +
+        " " +
+        $_("addonDispatchDialog.learnMore")
       : hasQueryProp && !hasDocumentsProp
       ? $_("addonDispatchDialog.runQuery", {
           values: { n: search.results.count },
-        })
+        }) +
+        " " +
+        $_("addonDispatchDialog.learnMore")
       : "";
 
   let docType = "documents";
@@ -124,6 +132,12 @@
   .description {
     white-space: pre-line;
   }
+
+  .notice :global(a) {
+    text-decoration: underline;
+    color: $primary;
+  }
+
 </style>
 
 <div>
@@ -163,14 +177,14 @@
         }}
       >
         {#if notice}
-          <div class="notice">{notice}</div>
+          <div class="notice">{@html notice}</div>
         {/if}
         {#if showQuery && showDocuments}
           <table class="documents">
             <tbody>
               <tr class="field">
                 <td class="radio">
-                  <div class="inputpadded">
+                  <div>
                     <div>
                       <input
                         type="radio"
@@ -185,7 +199,7 @@
                   </div></td
                 >
                 <td>
-                  <div class="inputpadded">
+                  <div>
                     <label for="documents">
                       {$_("addonDispatchDialog.labelSelected", {
                         values: { n: numSelected },
@@ -196,7 +210,7 @@
               </tr>
               <tr class="field">
                 <td class="radio">
-                  <div class="inputpadded">
+                  <div>
                     <input
                       type="radio"
                       class="radio"
@@ -208,7 +222,7 @@
                   </div>
                 </td>
                 <td>
-                  <div class="inputpadded">
+                  <div>
                     <label for="query">
                       {$_("addonDispatchDialog.labelQuery", {
                         values: { n: search.results.count },
