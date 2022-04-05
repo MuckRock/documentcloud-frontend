@@ -1,6 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { pageImageUrl } from "@/api/viewer";
+  import { timeout } from '@/util/timeout';
   import emitter from "@/emit";
 
   const emit = emitter({
@@ -15,6 +16,7 @@
   export let grayed = false;
   export let crosshair = false;
   export let transform = null;
+  export let delay = 0;
   let elem;
   let destroyed = false;
   let imgs = [];
@@ -30,9 +32,14 @@
   )[0];
   let mounted = false;
 
-  onMount(() => {
-    loadImg(0);
-    mounted = true;
+  onMount(async () => {
+    if (delay != 0) {
+      await timeout(delay);
+    }
+    if (!destroyed) {
+      loadImg(0);
+      mounted = true;
+    }
   });
 
   $: {
@@ -84,6 +91,7 @@
 
   function loadImg(i) {
     // If image is already being loaded, abort
+    if (destroyed) return;
     if (i < largestLoaded) return;
     if (loading[i]) return;
     loading[i] = true;
