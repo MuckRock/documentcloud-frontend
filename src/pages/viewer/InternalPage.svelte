@@ -328,6 +328,7 @@
       width={effectiveWidth}
       aspect={page.aspect}
       grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
+      delay=200
       {page}
     />
 
