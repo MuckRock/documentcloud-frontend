@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from "svelte";
   import { pageImageUrl } from "@/api/viewer";
-  import { timeout } from '@/util/timeout';
+  import { timeout } from "@/util/timeout";
   import emitter from "@/emit";
 
   const emit = emitter({
@@ -42,16 +42,24 @@
     }
   });
 
+  // not all browsers support navigator connection
+  const slowConn = navigator.connection
+    ? navigator.connection.downlink < 10
+    : false;
+
   $: {
     if (mounted) {
       const effectiveWidth = width * (window.devicePixelRatio || 1);
-      if (effectiveWidth > NORMAL_WIDTH[0][0]) {
+      if (effectiveWidth > NORMAL_WIDTH[0][0] && !slowConn) {
         loadImg(NORMAL_WIDTH[1]);
       }
 
       let loaded = false;
       for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
-        if (effectiveWidth < IMAGE_WIDTHS[i][0]) {
+        if (
+          effectiveWidth < IMAGE_WIDTHS[i][0] ||
+          (slowConn && IMAGE_WIDTHS[i][0] == NORMAL_WIDTH[0][0])
+        ) {
           loadImg(i);
           loaded = true;
           break;
