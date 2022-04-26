@@ -130,7 +130,7 @@
           </span>
           <ProjectsMenu />
         </Dropdown>
-        {#if $addons.addons.length > 0}
+        {#if $addons.activeAddons.length > 0}
           <Dropdown table={true} fixed={outerHeight > 600}>
             <span class="action" slot="title">
               <span class="nowrap">

@@ -10,12 +10,12 @@
   function sort(addons) {
     if (addons == null) return [];
     try {
-      addons.sort((a, b) => a.name.localeCompare(b.title));
+      addons.sort((a, b) => a.name.localeCompare(b.name));
     } catch (e) {}
     return addons;
   }
 
-  $: alphabetizedAddons = sort($addons.addons);
+  $: alphabetizedAddons = sort($addons.activeAddons);
 </script>
 
 <style lang="scss">

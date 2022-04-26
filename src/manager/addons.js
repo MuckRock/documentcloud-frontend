@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { getAddons, postAddonDispatch, getAddonRuns } from "@/api/addon";
+import { getActiveAddons, postAddonDispatch, getAddonRuns } from "@/api/addon";
 import { AddonRun } from "@/structure/addon";
 
 export function done(run) {
@@ -10,15 +10,15 @@ export const addons = new Svue({
   data() {
     return {
       hasInited: false,
-      addons: [],
+      activeAddons: [],
       runs: [],
     };
   },
   computed: {
-    addonsById(addons) {
+    addonsById(activeAddons) {
       const results = {};
-      for (let i = 0; i < addons.length; i++) {
-        const addon = addons[i];
+      for (let i = 0; i < activeAddons.length; i++) {
+        const addon = activeAddons[i];
         results[addon.id] = addon;
       }
       return results;
@@ -31,8 +31,8 @@ export const addons = new Svue({
 });
 
 export async function initAddons(me) {
-  const newAddons = await getAddons();
-  addons.addons = newAddons;
+  const newAddons = await getActiveAddons();
+  addons.activeAddons = newAddons;
 
   updateRuns();
 }

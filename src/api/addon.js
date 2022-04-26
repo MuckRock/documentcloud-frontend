@@ -8,9 +8,14 @@ import { apiUrl } from "./base";
 import { queryBuilder } from "@/util/url";
 import { grabAllPages } from "@/util/paginate";
 
-export async function getAddons() {
-  // Returns all add-ons
-  const results = await grabAllPages(apiUrl(queryBuilder(`addons/`)));
+export async function getActiveAddons() {
+  // Returns all active add-ons
+  const results = await grabAllPages(apiUrl(queryBuilder(`addons/`, { active: true })));
+  return results.map((result) => new Addon(result));
+}
+
+export async function getAddons(query = "") {
+  const results = await apiUrl(queryBuilder(`addons/`, { query }));
   return results.map((result) => new Addon(result));
 }
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from "@/common/Button";
-  import { addons, dispatchAddon } from "@/manager/addons";
+  import { dispatchAddon } from "@/manager/addons";
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
