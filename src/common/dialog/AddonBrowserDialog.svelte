@@ -1,9 +1,10 @@
 <script>
   import Button from "@/common/Button";
-  import { getAddons, getAddonsPage, activateAddon } from "@/api/addon";
+  import { activateAddon } from "@/api/addon";
   import {
     addons,
     toggleActiveAddon,
+    getBrowserAddons,
   } from "@/manager/addons";
   import SvelteMarkdown from "svelte-markdown";
   import { _ } from "svelte-i18n";
@@ -56,6 +57,20 @@
       </Button>
       <hr />
     {/each}
+    <div>
+      <Button
+        disabled={!$addons.browserPrev}
+        on:click={() => getBrowserAddons($addons.browserPrev)}
+      >
+        Previous
+      </Button>
+      <Button
+        disabled={!$addons.browserNext}
+        on:click={() => getBrowserAddons($addons.browserNext)}
+      >
+        Next
+      </Button>
+    </div>
   </div>
   <div class="buttonpadded">
     <!-- disable button when invalid, maybe -->

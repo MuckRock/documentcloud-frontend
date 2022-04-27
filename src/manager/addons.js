@@ -19,6 +19,8 @@ export const addons = new Svue({
       hasInited: false,
       activeAddons: [],
       browserAddons: [],
+      browserNext: null,
+      browserPrev: null,
       runs: [],
     };
   },
@@ -71,9 +73,9 @@ export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
 }
 
-export async function getBrowserAddons() {
-  const newAddons = await getAddons();
-  addons.browserAddons = newAddons;
+export async function getBrowserAddons(url = null) {
+  const newAddons = await getAddons("", url);
+  [addons.browserAddons, addons.browserNext, addons.browserPrev] = newAddons;
 }
 
 export async function toggleActiveAddon(addon) {
