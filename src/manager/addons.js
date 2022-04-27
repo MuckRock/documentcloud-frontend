@@ -73,8 +73,8 @@ export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
 }
 
-export async function getBrowserAddons(url = null) {
-  const newAddons = await getAddons("", url);
+export async function getBrowserAddons(query = "", url = null) {
+  const newAddons = await getAddons(query, url);
   [addons.browserAddons, addons.browserNext, addons.browserPrev] = newAddons;
 }
 
