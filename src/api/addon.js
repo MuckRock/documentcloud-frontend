@@ -10,19 +10,20 @@ import { grabAllPages } from "@/util/paginate";
 
 export async function getActiveAddons() {
   // Returns all active add-ons
-  const results = await grabAllPages(apiUrl(queryBuilder(`addons/`, { active: true })));
+  const results = await grabAllPages(
+    apiUrl(queryBuilder(`addons/`, { active: true })),
+  );
   return results.map((result) => new Addon(result));
 }
 
-export async function getAddons(query = "") {
-  const { data } = await session.get(apiUrl(queryBuilder(`addons/`, { query })));
-  return data.results.map((result) => new Addon(result));
-}
-
-export async function getAddonsPage(url) {
+export async function getAddons(query = "", url = null) {
   // Use the URL from the next or previous url in the response
+  if (!url) {
+    url = apiUrl(queryBuilder(`addons/`, { query, per_page: 5 }));
+  }
   const { data } = await session.get(url);
-  return data.results.map((result) => new Addon(result));
+  const results = data.results.map((result) => new Addon(result));
+  return [results, data.next, data.previous];
 }
 
 export async function getAddon(addonId) {
@@ -32,8 +33,9 @@ export async function getAddon(addonId) {
 }
 
 export async function activateAddon(addonId, active) {
-  // XXX error check result?
-  const { data } = await session.patch(apiUrl(`addons/${addonId}/`), { active });
+  const { data } = await session.patch(apiUrl(`addons/${addonId}/`), {
+    active,
+  });
   return new Addon(data);
 }
 
