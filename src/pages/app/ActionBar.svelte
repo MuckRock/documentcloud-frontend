@@ -130,17 +130,15 @@
           </span>
           <ProjectsMenu />
         </Dropdown>
-        {#if $addons.activeAddons.length > 0}
-          <Dropdown table={true} fixed={outerHeight > 600}>
-            <span class="action" slot="title">
-              <span class="nowrap">
-                {$_("actionBar.addOnsMenu")}
-                <span class="dropper">▼</span>
-              </span>
+        <Dropdown table={true} fixed={outerHeight > 600}>
+          <span class="action" slot="title">
+            <span class="nowrap">
+              {$_("actionBar.addOnsMenu")}
+              <span class="dropper">▼</span>
             </span>
-            <AddonsMenu />
-          </Dropdown>
-        {/if}
+          </span>
+          <AddonsMenu />
+        </Dropdown>
       {/if}
 
       <span class="narrowhide">

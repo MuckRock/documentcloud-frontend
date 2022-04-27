@@ -24,6 +24,7 @@
     hideDocumentInfo,
     hideMeta,
     hideAddonDispatch,
+    hideAddonBrowser,
     hideAccess,
     hideOwner,
     hideData,
@@ -42,6 +43,7 @@
   import emitter from "@/emit";
   import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
   import AddonDispatchDialog from "../../common/dialog/AddonDispatchTsDialog.svelte";
+  import AddonBrowserDialog from "../../common/dialog/AddonBrowserDialog.svelte";
 
   export let concealed = false;
   export let embed = false;
@@ -99,9 +101,10 @@
     <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
   {:else if $layout.metaOpen != null}
     <Modal component={MetaDialog} on:close={hideMeta} />
-    hideAddonDispatch
   {:else if $layout.addonDispatchOpen}
     <Modal component={AddonDispatchDialog} on:close={hideAddonDispatch} />
+  {:else if $layout.addonBrowserOpen}
+    <Modal component={AddonBrowserDialog} on:close={hideAddonBrowser} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.ownerOpen}

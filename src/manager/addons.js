@@ -1,6 +1,13 @@
 import { Svue } from "svue";
-import { getActiveAddons, postAddonDispatch, getAddonRuns } from "@/api/addon";
+import {
+  getAddons,
+  getActiveAddons,
+  postAddonDispatch,
+  getAddonRuns,
+  activateAddon,
+} from "@/api/addon";
 import { AddonRun } from "@/structure/addon";
+import { layout } from "@/manager/layout";
 
 export function done(run) {
   return run.status != "queued" && run.status != "in_progress";
@@ -11,6 +18,7 @@ export const addons = new Svue({
     return {
       hasInited: false,
       activeAddons: [],
+      browserAddons: [],
       runs: [],
     };
   },
@@ -61,4 +69,22 @@ export async function dispatchAddon(
 
 export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
+}
+
+export async function getBrowserAddons() {
+  const newAddons = await getAddons();
+  addons.browserAddons = newAddons;
+}
+
+export async function toggleActiveAddon(addon) {
+  // first call API to toggle the add-ons active state
+  const newAddon = await activateAddon(addon.id, !addon.active);
+  // then add or remove from the list of active add-ons
+  if (newAddon.active) {
+    addons.activeAddons = [...addons.activeAddons, newAddon];
+  } else {
+    addons.activeAddons = addons.activeAddons.filter((a) => a.id != addon.id);
+  }
+  // then update the state in the browser list
+  addons.browserAddons = addons.browserAddons.map((a) => (a == addon) ? newAddon : a);
 }

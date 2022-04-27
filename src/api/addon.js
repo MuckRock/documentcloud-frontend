@@ -15,13 +15,25 @@ export async function getActiveAddons() {
 }
 
 export async function getAddons(query = "") {
-  const results = await apiUrl(queryBuilder(`addons/`, { query }));
-  return results.map((result) => new Addon(result));
+  const { data } = await session.get(apiUrl(queryBuilder(`addons/`, { query })));
+  return data.results.map((result) => new Addon(result));
+}
+
+export async function getAddonsPage(url) {
+  // Use the URL from the next or previous url in the response
+  const { data } = await session.get(url);
+  return data.results.map((result) => new Addon(result));
 }
 
 export async function getAddon(addonId) {
   // Get the note with the specified id
   const { data } = await session.get(apiUrl(`addons/${addonId}/`));
+  return new Addon(data);
+}
+
+export async function activateAddon(addonId, active) {
+  // XXX error check result?
+  const { data } = await session.patch(apiUrl(`addons/${addonId}/`), { active });
   return new Addon(data);
 }
 

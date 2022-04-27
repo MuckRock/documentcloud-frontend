@@ -3,8 +3,8 @@
   import MenuItem from "@/common/MenuItem";
   import AddonMenuItem from "./AddonMenuItem";
 
-  import { layout, newProject } from "@/manager/layout";
-  import { addons } from "@/manager/addons";
+  import { layout, openAddonBrowser } from "@/manager/layout";
+  import { addons, getBrowserAddons } from "@/manager/addons";
   import { _ } from "svelte-i18n";
 
   function sort(addons) {
@@ -16,6 +16,11 @@
   }
 
   $: alphabetizedAddons = sort($addons.activeAddons);
+
+  async function openBrowser() {
+    await getBrowserAddons();
+    openAddonBrowser();
+  }
 </script>
 
 <style lang="scss">
@@ -27,17 +32,12 @@
 </style>
 
 <Menu>
-  <MenuItem selectable={false}>
-    <div class="small">{$_("addonsMenu.addonsList")}</div>
+  <MenuItem on:click={openBrowser}>
+    <div class="small">Browse All Add-Ons</div>
   </MenuItem>
   {#each alphabetizedAddons as addon}
     <AddonMenuItem {addon} />
   {/each}
-  {#if !$layout.hasSelection}
-    <MenuItem selectable={false}>
-      <div class="info">{$_("addonsMenu.selectDocs")}</div>
-    </MenuItem>
-  {/if}
   <MenuItem selectable={true}>
     <div class="info">
       <a target="_blank" href="https://www.documentcloud.org/help/add-ons/">
