@@ -11,10 +11,10 @@ services:
     networks:
       default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
       squarelet_default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_app:
     image: node:12
@@ -26,10 +26,10 @@ services:
     networks:
       default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
       squarelet_default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_embed:
     image: node:12
@@ -41,10 +41,10 @@ services:
     networks:
       default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
       squarelet_default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_build:
     image: node:12
@@ -56,10 +56,10 @@ services:
     networks:
       default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
       squarelet_default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_analyze:
     image: node:12
@@ -71,10 +71,10 @@ services:
     networks:
       default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
       squarelet_default:
         aliases:
-          - www.dev.documentcloud.org
+          - internal.www.dev.documentcloud.org
 
 volumes:
   nodemodules:

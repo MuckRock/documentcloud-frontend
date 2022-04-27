@@ -31,6 +31,9 @@ export class Addon extends Svue {
         user(addon) {
           return addon.user;
         },
+        active(addon) {
+          return addon.active;
+        },
         organization(addon) {
           const org = getDefault(addon.organization, {});
           if (org.individual) return null;

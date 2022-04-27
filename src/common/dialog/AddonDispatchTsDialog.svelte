@@ -1,11 +1,11 @@
 <script lang="ts">
   import Button from "@/common/Button";
-  import { addons, dispatchAddon } from "@/manager/addons";
+  import { dispatchAddon } from "@/manager/addons";
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
-  import SvelteMarkdown from 'svelte-markdown'
+  import SvelteMarkdown from 'svelte-markdown';
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -143,7 +143,7 @@
       <h1>
         {$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name}
         <span id="repository-detail">
-          by MuckRock
+          by {layout.addonDispatchOpen.repository.split("/")[0]}
           <a
             target="_blank"
             href="https://www.github.com/{layout.addonDispatchOpen.repository}"

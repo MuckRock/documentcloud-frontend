@@ -8,15 +8,32 @@ import { apiUrl } from "./base";
 import { queryBuilder } from "@/util/url";
 import { grabAllPages } from "@/util/paginate";
 
-export async function getAddons() {
-  // Returns all add-ons
-  const results = await grabAllPages(apiUrl(queryBuilder(`addons/`)));
+export async function getActiveAddons() {
+  // Returns all active add-ons
+  const results = await grabAllPages(apiUrl(queryBuilder(`addons/`, { active: true })));
   return results.map((result) => new Addon(result));
+}
+
+export async function getAddons(query = "") {
+  const { data } = await session.get(apiUrl(queryBuilder(`addons/`, { query })));
+  return data.results.map((result) => new Addon(result));
+}
+
+export async function getAddonsPage(url) {
+  // Use the URL from the next or previous url in the response
+  const { data } = await session.get(url);
+  return data.results.map((result) => new Addon(result));
 }
 
 export async function getAddon(addonId) {
   // Get the note with the specified id
   const { data } = await session.get(apiUrl(`addons/${addonId}/`));
+  return new Addon(data);
+}
+
+export async function activateAddon(addonId, active) {
+  // XXX error check result?
+  const { data } = await session.patch(apiUrl(`addons/${addonId}/`), { active });
   return new Addon(data);
 }
 

@@ -25,6 +25,7 @@ export const layout = new Svue({
 
       // Custom dialogs
       addonDispatchOpen: false,
+      addonBrowserOpen: false,
       metaOpen: null,
       documentInfoOpen: false,
       projectEdit: null,
@@ -159,6 +160,13 @@ export function openDispatchAddon(addonId) {
 }
 export function hideAddonDispatch() {
   layout.addonDispatchOpen = false;
+}
+
+export function openAddonBrowser() {
+  layout.addonBrowserOpen = true;
+}
+export function hideAddonBrowser() {
+  layout.addonBrowserOpen = false;
 }
 
 export function hideDocumentInfo() {

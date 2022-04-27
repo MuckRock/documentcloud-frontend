@@ -1,6 +1,13 @@
 import { Svue } from "svue";
-import { getAddons, postAddonDispatch, getAddonRuns } from "@/api/addon";
+import {
+  getAddons,
+  getActiveAddons,
+  postAddonDispatch,
+  getAddonRuns,
+  activateAddon,
+} from "@/api/addon";
 import { AddonRun } from "@/structure/addon";
+import { layout } from "@/manager/layout";
 
 export function done(run) {
   return run.status != "queued" && run.status != "in_progress";
@@ -10,15 +17,16 @@ export const addons = new Svue({
   data() {
     return {
       hasInited: false,
-      addons: [],
+      activeAddons: [],
+      browserAddons: [],
       runs: [],
     };
   },
   computed: {
-    addonsById(addons) {
+    addonsById(activeAddons) {
       const results = {};
-      for (let i = 0; i < addons.length; i++) {
-        const addon = addons[i];
+      for (let i = 0; i < activeAddons.length; i++) {
+        const addon = activeAddons[i];
         results[addon.id] = addon;
       }
       return results;
@@ -31,8 +39,8 @@ export const addons = new Svue({
 });
 
 export async function initAddons(me) {
-  const newAddons = await getAddons();
-  addons.addons = newAddons;
+  const newAddons = await getActiveAddons();
+  addons.activeAddons = newAddons;
 
   updateRuns();
 }
@@ -61,4 +69,22 @@ export async function dispatchAddon(
 
 export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
+}
+
+export async function getBrowserAddons() {
+  const newAddons = await getAddons();
+  addons.browserAddons = newAddons;
+}
+
+export async function toggleActiveAddon(addon) {
+  // first call API to toggle the add-ons active state
+  const newAddon = await activateAddon(addon.id, !addon.active);
+  // then add or remove from the list of active add-ons
+  if (newAddon.active) {
+    addons.activeAddons = [...addons.activeAddons, newAddon];
+  } else {
+    addons.activeAddons = addons.activeAddons.filter((a) => a.id != addon.id);
+  }
+  // then update the state in the browser list
+  addons.browserAddons = addons.browserAddons.map((a) => (a == addon) ? newAddon : a);
 }
