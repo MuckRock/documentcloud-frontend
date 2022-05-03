@@ -33,7 +33,7 @@
 
 <Menu>
   <MenuItem on:click={openBrowser}>
-    <div class="small">Browse All Add-Ons</div>
+    <div class="small">{$_("addonsMenu.browseAll")}</div>
   </MenuItem>
   {#each alphabetizedAddons as addon}
     <AddonMenuItem {addon} />

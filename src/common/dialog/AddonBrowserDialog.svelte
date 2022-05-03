@@ -37,7 +37,7 @@
   <div>
     <input
       type="text"
-      placeholder="Search..."
+      placeholder={$_("addonBrowserDialog.searchPlaceholder")}
       on:input={handleInput}
     />
   </div>
@@ -61,9 +61,9 @@
       </div>
       <Button secondary={!addon.active} on:click={() => toggleActiveAddon(addon)}>
         {#if addon.active}
-          Active
+          {$_("addonBrowserDialog.active")}
         {:else}
-          Inactive
+          {$_("addonBrowserDialog.inactive")}
         {/if}
       </Button>
       <hr />
@@ -73,13 +73,13 @@
         disabled={!$addons.browserPrev}
         on:click={() => getBrowserAddons("", $addons.browserPrev)}
       >
-        Previous
+        {$_("addonBrowserDialog.previous")}
       </Button>
       <Button
         disabled={!$addons.browserNext}
         on:click={() => getBrowserAddons("", $addons.browserNext)}
       >
-        Next
+        {$_("addonBrowserDialog.next")}
       </Button>
     </div>
   </div>
