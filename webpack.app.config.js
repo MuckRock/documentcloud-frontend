@@ -16,7 +16,7 @@ module.exports = {
   devServer: {
     disableHostCheck: true,
     host: "0.0.0.0",
-    public: "0.0.0.0:80",
+    public: "0.0.0.0:443",
     port: 80,
     historyApiFallback: true,
     watchContentBase: true,
