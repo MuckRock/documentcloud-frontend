@@ -130,7 +130,7 @@
     position: relative;
   }
 
-  .notice :global(a) {
+  .notice :global(a), .markdown :global(a) {
     text-decoration: underline;
     color: $primary;
   }
@@ -153,7 +153,7 @@
         </span>
       </h1>
 
-      <div>
+      <div class="markdown">
         <SvelteMarkdown source={schema.description} renderers={{html: null}} />
       </div>
 
