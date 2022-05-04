@@ -330,7 +330,7 @@
     "noPerms": "You do not have permission to edit all of the selected documents",
     "editMenu": "Edit",
     "projectsMenu": "Projects",
-    "addOnsMenu": "Add-ons"
+    "addOnsMenu": "Add-Ons"
   },
   "authSection": {
     "help": "Help",
@@ -439,7 +439,7 @@
   "addonsMenu": {
     "newAddon": "Request new Add-on from Staff",
     "selectDocs": "Select documents to dispatch them in add-ons",
-    "addonsList": "List of Add-ons",
+    "addonsList": "List of Add-Ons",
     "createAddon": "Choose more documents to use add-ons",
     "addon": "Add-on",
     "learnMore": "Learn more about Add-Ons",
