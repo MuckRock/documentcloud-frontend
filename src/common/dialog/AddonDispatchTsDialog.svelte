@@ -1,11 +1,12 @@
 <script lang="ts">
   import Button from "@/common/Button";
   import { dispatchAddon } from "@/manager/addons";
+  import { createAddOnEvent } from "@/api/addon";
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
-  import SvelteMarkdown from 'svelte-markdown';
+  import SvelteMarkdown from "svelte-markdown";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -31,6 +32,7 @@
   const validator = createAjvValidator(ajv);
 
   let value;
+  let event = "0";
 
   let schema = layout.addonDispatchOpen.parameters;
 
@@ -130,11 +132,18 @@
     position: relative;
   }
 
-  .notice :global(a), .markdown :global(a) {
+  .notice :global(a),
+  .markdown :global(a) {
     text-decoration: underline;
     color: $primary;
   }
 
+  .eventSelect {
+    label {
+      font-size: 16px;
+      padding-right: 5px;
+    }
+  }
 </style>
 
 <div>
@@ -154,7 +163,10 @@
       </h1>
 
       <div class="markdown">
-        <SvelteMarkdown source={schema.description} renderers={{html: null}} />
+        <SvelteMarkdown
+          source={schema.description}
+          renderers={{ html: null }}
+        />
       </div>
 
       <Form
@@ -163,13 +175,21 @@
         {value}
         {validator}
         on:submit={(e) => {
-          /* for search query, look at paginator for an example*/
-          dispatchAddon(
-            parseInt(layout.addonDispatchOpen.id, 10),
-            e.detail,
-            includeQuery ? query : "",
-            includeDocuments ? selected : [],
-          );
+          if (event === "0") {
+            // no event, dispatch immediately
+            dispatchAddon(
+              parseInt(layout.addonDispatchOpen.id, 10),
+              e.detail,
+              includeQuery ? query : "",
+              includeDocuments ? selected : [],
+            );
+          } else {
+            createAddOnEvent(
+              parseInt(layout.addonDispatchOpen.id, 10),
+              e.detail,
+              event,
+            );
+          }
           emit.dismiss();
         }}
       >
@@ -182,19 +202,17 @@
               <tr class="field">
                 <td class="radio">
                   <div>
-                    <div>
-                      <input
-                        type="radio"
-                        class="radio"
-                        name="documents"
-                        id="documents"
-                        bind:group={docType}
-                        value="documents"
-                        checked
-                      />
-                    </div>
-                  </div></td
-                >
+                    <input
+                      type="radio"
+                      class="radio"
+                      name="documents"
+                      id="documents"
+                      bind:group={docType}
+                      value="documents"
+                      checked
+                    />
+                  </div>
+                </td>
                 <td>
                   <div>
                     <label for="documents">
@@ -232,9 +250,25 @@
           </table>
         {/if}
 
+        {#if !hasQueryProp && !hasDocumentsProp}
+          <div class="eventSelect">
+            <label class="label">Run on a schedule:</label>
+            <span class="inputpadded">
+              <select bind:value={event}>
+                <option value="0">---</option>
+                <option value="1">Hourly</option>
+                <option value="2">Daily</option>
+                <option value="3">Weekly</option>
+              </select>
+            </span>
+          </div>
+        {/if}
+
         <div class="buttonpadded">
           <!-- disable button when invalid, maybe -->
-          <Button type="submit">{$_("dialog.dispatch")}</Button>
+          <Button type="submit">
+            {event === "0" ? $_("dialog.dispatch") : $_("dialog.save")}
+          </Button>
           <Button secondary={true} on:click={emit.dismiss}
             >{$_("dialog.cancel")}</Button
           >

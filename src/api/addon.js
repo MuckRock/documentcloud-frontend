@@ -68,3 +68,11 @@ export async function getAddonRuns(dismissed = false, expand = "addon") {
 export async function dismissAddonRun(runUuid) {
   await session.patch(apiUrl(`addon_runs/${runUuid}/`), { dismissed: true });
 }
+
+export async function createAddOnEvent(addon, parameters, event) {
+  const { data } = await session.post(apiUrl(`addon_events/`), {
+    addon,
+    parameters,
+    event,
+  });
+}
