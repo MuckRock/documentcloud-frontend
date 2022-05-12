@@ -1,7 +1,11 @@
 <script lang="ts">
   import Button from "@/common/Button";
   import { dispatchAddon } from "@/manager/addons";
-  import { createAddOnEvent } from "@/api/addon";
+  import {
+    createAddonEvent,
+    getAddonEvents,
+    updateAddonEvent,
+  } from "@/api/addon";
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
@@ -22,6 +26,37 @@
     }
   }
 
+  let eventSelect = "0";
+  let events = [];
+  let activeEvent = null;
+  let schema = structuredClone(layout.addonDispatchOpen.parameters);
+
+  async function showEvents(e) {
+    e.preventDefault();
+    events = await getAddonEvents(layout.addonDispatchOpen.id);
+  }
+
+  async function hideEvents(e) {
+    e.preventDefault();
+    events = [];
+    activeEvent = null;
+    eventSelect = "0";
+    schema = structuredClone(layout.addonDispatchOpen.parameters);
+    document.getElementById("form").closest("form").reset();
+  }
+
+  function loadEvent(event) {
+    // set the active event
+    activeEvent = event;
+    // update the defaults to set the values in the form
+    for (const param in event.parameters) {
+      schema.properties[param].default = event.parameters[param];
+    }
+    document.getElementById("form").closest("form").reset();
+    // set the event select widget
+    eventSelect = event.event.toString();
+  }
+
   const ajv = new Ajv({
     schemaId: "auto",
     jsonPointers: true,
@@ -32,9 +67,6 @@
   const validator = createAjvValidator(ajv);
 
   let value;
-  let event = "0";
-
-  let schema = layout.addonDispatchOpen.parameters;
 
   const emit = emitter({
     dismiss() {},
@@ -162,6 +194,10 @@
         </span>
       </h1>
 
+      {#if activeEvent}
+        <h2>Edit Event #{activeEvent.id}</h2>
+      {/if}
+
       <div class="markdown">
         <SvelteMarkdown
           source={schema.description}
@@ -175,7 +211,9 @@
         {value}
         {validator}
         on:submit={(e) => {
-          if (event === "0") {
+          if (activeEvent) {
+            updateAddonEvent(activeEvent.id, e.detail, eventSelect);
+          } else if (eventSelect === "0") {
             // no event, dispatch immediately
             dispatchAddon(
               parseInt(layout.addonDispatchOpen.id, 10),
@@ -184,15 +222,16 @@
               includeDocuments ? selected : [],
             );
           } else {
-            createAddOnEvent(
+            createAddonEvent(
               parseInt(layout.addonDispatchOpen.id, 10),
               e.detail,
-              event,
+              eventSelect,
             );
           }
           emit.dismiss();
         }}
       >
+        <a id="form" />
         {#if notice}
           <div class="notice">{@html notice}</div>
         {/if}
@@ -254,8 +293,10 @@
           <div class="eventSelect">
             <label class="label">Run on a schedule:</label>
             <span class="inputpadded">
-              <select bind:value={event}>
-                <option value="0">---</option>
+              <select bind:value={eventSelect}>
+                <option value="0"
+                  >{#if activeEvent}Disable{:else}---{/if}</option
+                >
                 <option value="1">Hourly</option>
                 <option value="2">Daily</option>
                 <option value="3">Weekly</option>
@@ -264,14 +305,33 @@
           </div>
         {/if}
 
+        {#if events.length > 0}
+          <div class="events">
+            <ul>
+              {#each events as event}
+                <li>
+                  <a href="#" on:click={() => loadEvent(event)}>
+                    Event #{event.id}
+                  </a>
+                </li>
+              {/each}
+            </ul>
+          </div>
+          <Button nondescript={true} on:click={hideEvents}>Hide Events</Button>
+        {:else}
+          <Button nondescript={true} on:click={showEvents}>Show Events</Button>
+        {/if}
+
         <div class="buttonpadded">
           <!-- disable button when invalid, maybe -->
           <Button type="submit">
-            {event === "0" ? $_("dialog.dispatch") : $_("dialog.save")}
+            {eventSelect === "0" && !activeEvent
+              ? $_("dialog.dispatch")
+              : $_("dialog.save")}
           </Button>
-          <Button secondary={true} on:click={emit.dismiss}
-            >{$_("dialog.cancel")}</Button
-          >
+          <Button secondary={true} on:click={emit.dismiss}>
+            {$_("dialog.cancel")}
+          </Button>
         </div>
       </Form>
     {/if}

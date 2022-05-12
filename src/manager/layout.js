@@ -155,8 +155,8 @@ export function unselectDocument(document) {
 }
 
 // Dialogs
-export function openDispatchAddon(addonId) {
-  layout.addonDispatchOpen = addonId;
+export function openDispatchAddon(addon) {
+  layout.addonDispatchOpen = addon;
 }
 export function hideAddonDispatch() {
   layout.addonDispatchOpen = false;

@@ -3,7 +3,7 @@
  */
 
 import session from "./session";
-import { Addon, AddonRun } from "@/structure/addon";
+import { Addon, AddonRun, AddonEvent } from "@/structure/addon";
 import { apiUrl } from "./base";
 import { queryBuilder } from "@/util/url";
 import { grabAllPages } from "@/util/paginate";
@@ -69,10 +69,26 @@ export async function dismissAddonRun(runUuid) {
   await session.patch(apiUrl(`addon_runs/${runUuid}/`), { dismissed: true });
 }
 
-export async function createAddOnEvent(addon, parameters, event) {
+export async function createAddonEvent(addon, parameters, event) {
   const { data } = await session.post(apiUrl(`addon_events/`), {
     addon,
     parameters,
     event,
   });
+  return new AddonEvent(data);
+}
+
+export async function getAddonEvents(addon) {
+  const results = await grabAllPages(
+    apiUrl(queryBuilder(`addon_events/`, { addon })),
+  );
+  return results.map((result) => new AddonEvent(result));
+}
+
+export async function updateAddonEvent(eventId, parameters, event) {
+  const { data } = await session.patch(apiUrl(`addon_events/${eventId}/`), {
+    parameters,
+    event,
+  });
+  return new AddonEvent(data);
 }

@@ -26,7 +26,7 @@ export class Addon extends Svue {
           return getDefault(addon.repository);
         },
         parameters(addon) {
-          return getDefault(addon.parameters);
+          return getDefault(addon.parameters, {});
         },
         user(addon) {
           return addon.user;
@@ -97,3 +97,33 @@ export class AddonRun extends Svue {
     });
   }
 }
+
+
+export class AddonEvent extends Svue {
+  constructor(rawAddonEvent, structure = {}) {
+    const computed = structure.computed == null ? {} : structure.computed;
+    super({
+      data() {
+        const data = structure.data == null ? {} : structure.data();
+        data.addonEvent = rawAddonEvent;
+        return data;
+      },
+      computed: {
+        ...computed,
+        id(addonEvent) {
+          return addonEvent.id;
+        },
+        user(addonEvent) {
+          return addonEvent.user;
+        },
+        parameters(addonEvent) {
+          return getDefault(addonEvent.parameters, {});
+        },
+        event(addonEvent) {
+          return addonEvent.event;
+        },
+      },
+    });
+  }
+}
+
