@@ -1,11 +1,19 @@
 <script lang="ts">
   import Button from "@/common/Button";
+  import AddonRun from "@/common/AddonRun";
+  import SvelteMarkdown from "svelte-markdown";
+
   import { dispatchAddon } from "@/manager/addons";
+  import {
+    createAddonEvent,
+    getAddonEvents,
+    getAddonRuns,
+    updateAddonEvent,
+  } from "@/api/addon";
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
-  import SvelteMarkdown from 'svelte-markdown';
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -15,10 +23,62 @@
   import { Form } from "@pyoner/svelte-form";
   import { createAjvValidator } from "@pyoner/svelte-form-ajv";
 
+  function getStatus(status) {
+    return status
+      .split("_")
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join(" ");
+  }
+
   function findType(schema, type) {
     for (const [key, value] of Object.entries(schema)) {
       if (value.type === type) return true;
     }
+  }
+
+  let eventSelect = "0";
+  let events = [];
+  let activeEvent = null;
+  let runs = [];
+  let schema = structuredClone(layout.addonDispatchOpen.parameters);
+
+  async function showRuns(e) {
+    e.preventDefault();
+    runs = await getAddonRuns(activeEvent.id, null, null);
+  }
+
+  async function hideRuns(e) {
+    e.preventDefault;
+    runs = [];
+  }
+
+  async function showEvents(e) {
+    e.preventDefault();
+    events = await getAddonEvents(layout.addonDispatchOpen.id);
+  }
+
+  async function hideEvents(e) {
+    e.preventDefault();
+    events = [];
+    runs = [];
+    activeEvent = null;
+    eventSelect = "0";
+    schema = structuredClone(layout.addonDispatchOpen.parameters);
+    document.getElementById("form").closest("form").reset();
+  }
+
+  function loadEvent(event) {
+    // set the active event
+    activeEvent = event;
+    // update the defaults to set the values in the form
+    for (const param in event.parameters) {
+      schema.properties[param].default = event.parameters[param];
+    }
+    document.getElementById("form").closest("form").reset();
+    // set the event select widget
+    eventSelect = event.event.toString();
+    // reset runs
+    runs = [];
   }
 
   const ajv = new Ajv({
@@ -31,8 +91,6 @@
   const validator = createAjvValidator(ajv);
 
   let value;
-
-  let schema = layout.addonDispatchOpen.parameters;
 
   const emit = emitter({
     dismiss() {},
@@ -130,11 +188,33 @@
     position: relative;
   }
 
-  .notice :global(a) {
+  .notice :global(a),
+  .markdown :global(a) {
     text-decoration: underline;
     color: $primary;
   }
 
+  .eventSelect {
+    label {
+      font-size: 16px;
+      padding-right: 5px;
+    }
+  }
+
+  .runs {
+    background: #eff7ff;
+    border-radius: $radius;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  .events a {
+    text-decoration: underline;
+    color: #5a76a0;
+    &:hover {
+      filter: brightness(85%);
+    }
+  }
 </style>
 
 <div>
@@ -153,8 +233,15 @@
         </span>
       </h1>
 
-      <div>
-        <SvelteMarkdown source={schema.description} renderers={{html: null}} />
+      {#if activeEvent}
+        <h2>Edit Event #{activeEvent.id}</h2>
+      {/if}
+
+      <div class="markdown">
+        <SvelteMarkdown
+          source={schema.description}
+          renderers={{ html: null }}
+        />
       </div>
 
       <Form
@@ -163,16 +250,27 @@
         {value}
         {validator}
         on:submit={(e) => {
-          /* for search query, look at paginator for an example*/
-          dispatchAddon(
-            parseInt(layout.addonDispatchOpen.id, 10),
-            e.detail,
-            includeQuery ? query : "",
-            includeDocuments ? selected : [],
-          );
+          if (activeEvent) {
+            updateAddonEvent(activeEvent.id, e.detail, eventSelect);
+          } else if (eventSelect === "0") {
+            // no event, dispatch immediately
+            dispatchAddon(
+              parseInt(layout.addonDispatchOpen.id, 10),
+              e.detail,
+              includeQuery ? query : "",
+              includeDocuments ? selected : [],
+            );
+          } else {
+            createAddonEvent(
+              parseInt(layout.addonDispatchOpen.id, 10),
+              e.detail,
+              eventSelect,
+            );
+          }
           emit.dismiss();
         }}
       >
+        <a id="form" />
         {#if notice}
           <div class="notice">{@html notice}</div>
         {/if}
@@ -182,19 +280,17 @@
               <tr class="field">
                 <td class="radio">
                   <div>
-                    <div>
-                      <input
-                        type="radio"
-                        class="radio"
-                        name="documents"
-                        id="documents"
-                        bind:group={docType}
-                        value="documents"
-                        checked
-                      />
-                    </div>
-                  </div></td
-                >
+                    <input
+                      type="radio"
+                      class="radio"
+                      name="documents"
+                      id="documents"
+                      bind:group={docType}
+                      value="documents"
+                      checked
+                    />
+                  </div>
+                </td>
                 <td>
                   <div>
                     <label for="documents">
@@ -232,12 +328,65 @@
           </table>
         {/if}
 
+        {#if !hasQueryProp && !hasDocumentsProp}
+          <div class="eventSelect">
+            <label class="label">Run on a schedule:</label>
+            <span class="inputpadded">
+              <select bind:value={eventSelect}>
+                <option value="0"
+                  >{#if activeEvent}Disable{:else}---{/if}</option
+                >
+                <option value="1">Hourly</option>
+                <option value="2">Daily</option>
+                <option value="3">Weekly</option>
+              </select>
+            </span>
+          </div>
+        {/if}
+
+        {#if events.length > 0}
+          <div class="events">
+            <ul>
+              {#each events as event}
+                <li>
+                  <a href="#" on:click={() => loadEvent(event)}>
+                    Event #{event.id}
+                  </a>
+                </li>
+              {/each}
+            </ul>
+          </div>
+
+          {#if runs.length > 0}
+            <div class="runs">
+              {#each runs as run (run.uuid)}
+                <AddonRun {run} compact={true} />
+              {/each}
+            </div>
+          {/if}
+
+          {#if activeEvent && runs.length === 0}
+            <Button nondescript={true} on:click={showRuns}>Show Runs</Button>
+            <br>
+          {:else if activeEvent && runs.length > 0}
+            <Button nondescript={true} on:click={hideRuns}>Hide Runs</Button>
+            <br>
+          {/if}
+          <Button nondescript={true} on:click={hideEvents}>Hide Events</Button>
+        {:else}
+          <Button nondescript={true} on:click={showEvents}>Show Events</Button>
+        {/if}
+
         <div class="buttonpadded">
           <!-- disable button when invalid, maybe -->
-          <Button type="submit">{$_("dialog.dispatch")}</Button>
-          <Button secondary={true} on:click={emit.dismiss}
-            >{$_("dialog.cancel")}</Button
-          >
+          <Button type="submit">
+            {eventSelect === "0" && !activeEvent
+              ? $_("dialog.dispatch")
+              : $_("dialog.save")}
+          </Button>
+          <Button secondary={true} on:click={emit.dismiss}>
+            {$_("dialog.cancel")}
+          </Button>
         </div>
       </Form>
     {/if}

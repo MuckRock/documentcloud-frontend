@@ -330,7 +330,7 @@
     "noPerms": "You do not have permission to edit all of the selected documents",
     "editMenu": "Edit",
     "projectsMenu": "Projects",
-    "addOnsMenu": "Add-ons"
+    "addOnsMenu": "Add-Ons"
   },
   "authSection": {
     "help": "Help",
@@ -439,10 +439,11 @@
   "addonsMenu": {
     "newAddon": "Request new Add-on from Staff",
     "selectDocs": "Select documents to dispatch them in add-ons",
-    "addonsList": "List of Add-ons",
+    "addonsList": "List of Add-Ons",
     "createAddon": "Choose more documents to use add-ons",
     "addon": "Add-on",
-    "learnMore": "Learn more about Add-Ons"
+    "learnMore": "Learn more about Add-Ons",
+    "browseAll": "Browse All Add-Ons"
   },
   "noDocuments": {
     "noSearchResults": "No search results",
@@ -680,5 +681,12 @@
     "labelSelected": "The {n, plural, one {# currently selected document} other {# currently selected documents}}",
     "labelQuery": "The {n, plural, one {# document} other {# documents}} from the current search results",
     "learnMore": "<a href=\"/help/add-ons/#document-selection\">Learn more.</a>"
+  },
+  "addonBrowserDialog": {
+    "searchPlaceholder": "Search...",
+    "active": "Active",
+    "inactive": "Inactive",
+    "next": "Next",
+    "previous": "Previous"
   }
 }

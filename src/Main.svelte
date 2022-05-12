@@ -36,13 +36,17 @@
 </script>
 
 <style lang="scss">
-  :global(input) {
+  :global(input), :global(select) {
     padding: 4px 10px;
     font-family: inherit;
     font-size: 16px;
     border-radius: 3px;
     border: solid 1px #d0d0d0;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+  }
+
+  :global(select) {
+    background: white;
   }
 
   :global(textarea) {

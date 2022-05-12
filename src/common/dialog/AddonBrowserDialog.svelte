@@ -19,6 +19,12 @@
 
   const handleInput = debounce(e => { getBrowserAddons(e.target.value); }, 300);
 
+  function changePage(url) {
+    getBrowserAddons("", url);
+    // scroll to top of modal
+    document.getElementsByClassName("modal")[0].scroll({top: 0});
+  }
+
 </script>
 
 <style lang="scss">
@@ -37,7 +43,7 @@
   <div>
     <input
       type="text"
-      placeholder="Search..."
+      placeholder={$_("addonBrowserDialog.searchPlaceholder")}
       on:input={handleInput}
     />
   </div>
@@ -61,9 +67,9 @@
       </div>
       <Button secondary={!addon.active} on:click={() => toggleActiveAddon(addon)}>
         {#if addon.active}
-          Active
+          {$_("addonBrowserDialog.active")}
         {:else}
-          Inactive
+          {$_("addonBrowserDialog.inactive")}
         {/if}
       </Button>
       <hr />
@@ -71,15 +77,15 @@
     <div>
       <Button
         disabled={!$addons.browserPrev}
-        on:click={() => getBrowserAddons("", $addons.browserPrev)}
+        on:click={() => changePage($addons.browserPrev)}
       >
-        Previous
+        {$_("addonBrowserDialog.previous")}
       </Button>
       <Button
         disabled={!$addons.browserNext}
-        on:click={() => getBrowserAddons("", $addons.browserNext)}
+        on:click={() => changePage($addons.browserNext)}
       >
-        Next
+        {$_("addonBrowserDialog.next")}
       </Button>
     </div>
   </div>
