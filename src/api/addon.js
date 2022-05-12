@@ -57,10 +57,10 @@ export async function postAddonDispatch(
   return new AddonRun(data);
 }
 
-export async function getAddonRuns(dismissed = false, expand = "addon") {
+export async function getAddonRuns(event = null, dismissed = false, expand = "addon") {
   // Returns all add-on runs
   const results = await grabAllPages(
-    apiUrl(queryBuilder(`addon_runs/`, { expand, dismissed })),
+    apiUrl(queryBuilder(`addon_runs/`, { expand, dismissed, event })),
   );
   return results.map((result) => new AddonRun(result));
 }

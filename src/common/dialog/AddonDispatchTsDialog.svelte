@@ -1,16 +1,19 @@
 <script lang="ts">
   import Button from "@/common/Button";
+  import AddonRun from "@/common/AddonRun";
+  import SvelteMarkdown from "svelte-markdown";
+
   import { dispatchAddon } from "@/manager/addons";
   import {
     createAddonEvent,
     getAddonEvents,
+    getAddonRuns,
     updateAddonEvent,
   } from "@/api/addon";
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
   import { _ } from "svelte-i18n";
-  import SvelteMarkdown from "svelte-markdown";
 
   // Stores
   import { layout } from "@/manager/layout";
@@ -19,6 +22,13 @@
   import { components } from "./DCDefaultFormComponents";
   import { Form } from "@pyoner/svelte-form";
   import { createAjvValidator } from "@pyoner/svelte-form-ajv";
+
+  function getStatus(status) {
+    return status
+      .split("_")
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join(" ");
+  }
 
   function findType(schema, type) {
     for (const [key, value] of Object.entries(schema)) {
@@ -29,7 +39,18 @@
   let eventSelect = "0";
   let events = [];
   let activeEvent = null;
+  let runs = [];
   let schema = structuredClone(layout.addonDispatchOpen.parameters);
+
+  async function showRuns(e) {
+    e.preventDefault();
+    runs = await getAddonRuns(activeEvent.id, null, null);
+  }
+
+  async function hideRuns(e) {
+    e.preventDefault;
+    runs = [];
+  }
 
   async function showEvents(e) {
     e.preventDefault();
@@ -39,6 +60,7 @@
   async function hideEvents(e) {
     e.preventDefault();
     events = [];
+    runs = [];
     activeEvent = null;
     eventSelect = "0";
     schema = structuredClone(layout.addonDispatchOpen.parameters);
@@ -55,6 +77,8 @@
     document.getElementById("form").closest("form").reset();
     // set the event select widget
     eventSelect = event.event.toString();
+    // reset runs
+    runs = [];
   }
 
   const ajv = new Ajv({
@@ -174,6 +198,21 @@
     label {
       font-size: 16px;
       padding-right: 5px;
+    }
+  }
+
+  .runs {
+    background: #eff7ff;
+    border-radius: $radius;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  .events a {
+    text-decoration: underline;
+    color: #5a76a0;
+    &:hover {
+      filter: brightness(85%);
     }
   }
 </style>
@@ -317,6 +356,22 @@
               {/each}
             </ul>
           </div>
+
+          {#if runs.length > 0}
+            <div class="runs">
+              {#each runs as run (run.uuid)}
+                <AddonRun {run} compact={true} />
+              {/each}
+            </div>
+          {/if}
+
+          {#if activeEvent && runs.length === 0}
+            <Button nondescript={true} on:click={showRuns}>Show Runs</Button>
+            <br>
+          {:else if activeEvent && runs.length > 0}
+            <Button nondescript={true} on:click={hideRuns}>Hide Runs</Button>
+            <br>
+          {/if}
           <Button nondescript={true} on:click={hideEvents}>Hide Events</Button>
         {:else}
           <Button nondescript={true} on:click={showEvents}>Show Events</Button>
