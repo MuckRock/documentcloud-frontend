@@ -13,6 +13,7 @@
   import { search, initSearch } from "@/search/search";
   import { viewer } from "@/viewer/viewer";
   import emitter from "@/emit";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   // Stores
@@ -36,11 +37,38 @@
     }
   }
 
-  let eventSelect = "0";
-  let events = [];
-  let activeEvent = null;
-  let runs = [];
   let schema = structuredClone(layout.addonDispatchOpen.parameters);
+
+  // The bind value for the event select drop down
+  let eventSelect = "0";
+  // The existing events for this add-on for this user
+  let events = [];
+  // whether or not events are currently displayed
+  let showExistingEvents = false;
+  // The event actively selected for editing
+  let activeEvent = null;
+  // The runs for the active event
+  let runs = [];
+  // which field to use as the name for an event
+  let eventNameField = schema.eventOptions && schema.eventOptions.name;
+  // The available options for event select drop down
+  const availableOptions = [
+    [1, "Hourly"],
+    [2, "Daily"],
+    [3, "Weekly"],
+  ];
+  let eventSelectOptions = [];
+  if (schema.eventOptions && schema.eventOptions.events) {
+    eventSelectOptions = availableOptions.filter(
+      ([value, label]) =>
+        schema.eventOptions.events.indexOf(label.toLowerCase()) > -1,
+    );
+  }
+  let showEventInfo = eventSelectOptions.length > 0;
+
+  onMount(async () => {
+    events = await getAddonEvents(layout.addonDispatchOpen.id);
+  });
 
   async function showRuns(e) {
     e.preventDefault();
@@ -54,12 +82,12 @@
 
   async function showEvents(e) {
     e.preventDefault();
-    events = await getAddonEvents(layout.addonDispatchOpen.id);
+    showExistingEvents = true;
   }
 
   async function hideEvents(e) {
     e.preventDefault();
-    events = [];
+    showExistingEvents = false;
     runs = [];
     activeEvent = null;
     eventSelect = "0";
@@ -234,7 +262,52 @@
       </h1>
 
       {#if activeEvent}
-        <h2>Edit Event #{activeEvent.id}</h2>
+        <h2>
+          Edit
+          {eventNameField
+            ? activeEvent.parameters[eventNameField]
+            : `Event #{activeEvent.id}`}
+        </h2>
+      {/if}
+
+      {#if showEventInfo}
+        {#if showExistingEvents}
+          <Button nondescript={true} on:click={hideEvents}>
+            Hide Scheduled Add-Ons
+          </Button>
+
+          <div class="events">
+            <ul>
+              {#each events as event}
+                <li>
+                  <a href="#" on:click={() => loadEvent(event)}>
+                    {eventNameField
+                      ? event.parameters[eventNameField]
+                      : `Event #{event.id}`}
+                  </a>
+                </li>
+              {/each}
+            </ul>
+          </div>
+
+          {#if activeEvent && runs.length === 0}
+            <Button nondescript={true} on:click={showRuns}>Show Runs</Button>
+          {:else if activeEvent && runs.length > 0}
+            <Button nondescript={true} on:click={hideRuns}>Hide Runs</Button>
+          {/if}
+
+          {#if runs.length > 0}
+            <div class="runs">
+              {#each runs as run (run.uuid)}
+                <AddonRun {run} compact={true} />
+              {/each}
+            </div>
+          {/if}
+        {:else if events.length > 0}
+          <Button nondescript={true} on:click={showEvents}>
+            Show Scheduled Add-Ons ({events.length})
+          </Button>
+        {/if}
       {/if}
 
       <div class="markdown">
@@ -328,7 +401,7 @@
           </table>
         {/if}
 
-        {#if !hasQueryProp && !hasDocumentsProp}
+        {#if showEventInfo}
           <div class="eventSelect">
             <label class="label">Run on a schedule:</label>
             <span class="inputpadded">
@@ -336,45 +409,12 @@
                 <option value="0"
                   >{#if activeEvent}Disable{:else}---{/if}</option
                 >
-                <option value="1">Hourly</option>
-                <option value="2">Daily</option>
-                <option value="3">Weekly</option>
+                {#each eventSelectOptions as [value, label]}
+                  <option {value}>{label}</option>
+                {/each}
               </select>
             </span>
           </div>
-        {/if}
-
-        {#if events.length > 0}
-          <div class="events">
-            <ul>
-              {#each events as event}
-                <li>
-                  <a href="#" on:click={() => loadEvent(event)}>
-                    Event #{event.id}
-                  </a>
-                </li>
-              {/each}
-            </ul>
-          </div>
-
-          {#if runs.length > 0}
-            <div class="runs">
-              {#each runs as run (run.uuid)}
-                <AddonRun {run} compact={true} />
-              {/each}
-            </div>
-          {/if}
-
-          {#if activeEvent && runs.length === 0}
-            <Button nondescript={true} on:click={showRuns}>Show Runs</Button>
-            <br>
-          {:else if activeEvent && runs.length > 0}
-            <Button nondescript={true} on:click={hideRuns}>Hide Runs</Button>
-            <br>
-          {/if}
-          <Button nondescript={true} on:click={hideEvents}>Hide Events</Button>
-        {:else}
-          <Button nondescript={true} on:click={showEvents}>Show Events</Button>
         {/if}
 
         <div class="buttonpadded">
