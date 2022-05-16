@@ -40,7 +40,7 @@
   let schema = structuredClone(layout.addonDispatchOpen.parameters);
 
   // The bind value for the event select drop down
-  let eventSelect = "0";
+  let eventSelect = 0;
   // The existing events for this add-on for this user
   let events = [];
   // whether or not events are currently displayed
@@ -90,7 +90,7 @@
     showExistingEvents = false;
     runs = [];
     activeEvent = null;
-    eventSelect = "0";
+    eventSelect = 0;
     schema = structuredClone(layout.addonDispatchOpen.parameters);
     document.getElementById("form").closest("form").reset();
   }
@@ -104,7 +104,7 @@
     }
     document.getElementById("form").closest("form").reset();
     // set the event select widget
-    eventSelect = event.event.toString();
+    eventSelect = event.event;
     // reset runs
     runs = [];
   }
@@ -325,7 +325,7 @@
         on:submit={(e) => {
           if (activeEvent) {
             updateAddonEvent(activeEvent.id, e.detail, eventSelect);
-          } else if (eventSelect === "0") {
+          } else if (eventSelect == 0) {
             // no event, dispatch immediately
             dispatchAddon(
               parseInt(layout.addonDispatchOpen.id, 10),
@@ -406,7 +406,7 @@
             <label class="label">Run on a schedule:</label>
             <span class="inputpadded">
               <select bind:value={eventSelect}>
-                <option value="0"
+                <option value=0
                   >{#if activeEvent}Disable{:else}---{/if}</option
                 >
                 {#each eventSelectOptions as [value, label]}
@@ -420,7 +420,7 @@
         <div class="buttonpadded">
           <!-- disable button when invalid, maybe -->
           <Button type="submit">
-            {eventSelect === "0" && !activeEvent
+            {eventSelect == 0 && !activeEvent
               ? $_("dialog.dispatch")
               : $_("dialog.save")}
           </Button>
