@@ -263,7 +263,7 @@
 
       {#if activeEvent}
         <h2>
-          Edit
+          {$_("dialog.edit")}
           {eventNameField
             ? activeEvent.parameters[eventNameField]
             : `Event #{activeEvent.id}`}
@@ -273,7 +273,7 @@
       {#if showEventInfo}
         {#if showExistingEvents}
           <Button nondescript={true} on:click={hideEvents}>
-            Hide Scheduled Add-Ons
+            {$_("addonDispatchDialog.hideAddons")}
           </Button>
 
           <div class="events">
@@ -291,9 +291,13 @@
           </div>
 
           {#if activeEvent && runs.length === 0}
-            <Button nondescript={true} on:click={showRuns}>Show Runs</Button>
+            <Button nondescript={true} on:click={showRuns}>
+              {$_("addonDispatchDialog.showRuns")}
+            </Button>
           {:else if activeEvent && runs.length > 0}
-            <Button nondescript={true} on:click={hideRuns}>Hide Runs</Button>
+            <Button nondescript={true} on:click={hideRuns}>
+              {$_("addonDispatchDialog.hideRuns")}
+            </Button>
           {/if}
 
           {#if runs.length > 0}
@@ -305,7 +309,7 @@
           {/if}
         {:else if events.length > 0}
           <Button nondescript={true} on:click={showEvents}>
-            Show Scheduled Add-Ons ({events.length})
+            {$_("addonDispatchDialog.showAddons", {values: { n: events.length }})}
           </Button>
         {/if}
       {/if}
@@ -403,12 +407,12 @@
 
         {#if showEventInfo}
           <div class="eventSelect">
-            <label class="label">Run on a schedule:</label>
+            <label class="label">{$_("addonDispatchDialog.runSchedule")}</label>
             <span class="inputpadded">
               <select bind:value={eventSelect}>
-                <option value=0
-                  >{#if activeEvent}Disable{:else}---{/if}</option
-                >
+                <option value=0>
+                  {#if activeEvent}{$_("addonDispatchDialog.disable")}{:else}---{/if}
+                </option>
                 {#each eventSelectOptions as [value, label]}
                   <option {value}>{label}</option>
                 {/each}
