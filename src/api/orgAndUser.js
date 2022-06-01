@@ -95,3 +95,12 @@ export async function autocompleteUsers(prefix = "", orgIds = null) {
   );
   return data.results;
 }
+
+export async function createMailkey() {
+  const { data } = await session.post(apiUrl("users/mailkey/"));
+  return data.mailkey;
+}
+
+export async function destroyMailkey() {
+  await session.delete(apiUrl("users/mailkey/"));
+}
