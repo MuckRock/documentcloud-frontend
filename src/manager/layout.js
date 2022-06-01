@@ -35,6 +35,7 @@ export const layout = new Svue({
       projectEditUser: null,
       searchTipsOpen: false,
       diagnosticsOpen: false,
+      mailkeyOpen: false,
 
       // Data
       dataDocuments: [],
@@ -277,4 +278,8 @@ export function hideSearchTips() {
 
 export function hideDiagnostics() {
   layout.diagnosticsOpen = false;
+}
+
+export function hideMailkey() {
+  layout.mailkeyOpen = false;
 }

@@ -17,6 +17,7 @@
   import SearchTipsDialog from "@/common/dialog/SearchTipsDialog";
   import DiagnosticDialog from "@/common/dialog/DiagnosticDialog";
   import ReprocessDialog from "@/common/dialog/ReprocessDialog";
+  import UploadEmailDialog from "@/common/dialog/UploadEmailDialog";
   import Toasts from "@/common/Toasts";
 
   import {
@@ -35,6 +36,7 @@
     hideProjectCollaboratorAccess,
     hideSearchTips,
     hideDiagnostics,
+    hideMailkey,
   } from "@/manager/layout";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
   import { documents } from "@/manager/documents";
@@ -128,6 +130,8 @@
     <Modal component={SearchTipsDialog} on:close={hideSearchTips} />
   {:else if $layout.diagnosticsOpen}
     <Modal component={DiagnosticDialog} on:close={hideDiagnostics} />
+  {:else if $layout.mailkeyOpen}
+    <Modal component={UploadEmailDialog} on:close={hideMailkey} />
   {/if}
   {#if !embed}
     <Hamburger on:toggle={emit.expandSidebar} />
