@@ -7,6 +7,7 @@
   import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
   import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
   import { _, locale } from "svelte-i18n";
+  import { showMailkeySelected } from "@/manager/manager";
   import langs from "@/langs/langs.json";
 
   function pickOne(list) {
@@ -127,6 +128,9 @@
         <a href={SQUARELET_URL} target="_blank" style="color: inherit">
           <MenuItem>{$_("authSection.acctSettings")}</MenuItem>
         </a>
+        <MenuItem on:click={showMailkeySelected}>
+          {$_("authSection.uploadEmail")}
+        </MenuItem>
         <a href={SIGN_OUT_URL} style="color: inherit">
           <MenuItem>{$_("authSection.signOut")}</MenuItem>
         </a>

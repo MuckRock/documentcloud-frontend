@@ -81,3 +81,7 @@ export function editDataSelected() {
 export function showDiagnosticsSelected() {
   layout.diagnosticsOpen = true;
 }
+
+export function showMailkeySelected() {
+  layout.mailkeyOpen = true;
+}
