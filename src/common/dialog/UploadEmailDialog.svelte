@@ -24,7 +24,7 @@
 </script>
 
 <style lang="scss">
-  .message :global(a) {
+  p :global(a) {
     text-decoration: underline;
     color: #5a76a0;
     &:hover {
@@ -36,9 +36,9 @@
 <div>
   <div class="mcontent">
     <h1>{$_("uploadEmailDialog.uploadEmailAddress")}</h1>
-    <p>{$_("uploadEmailDialog.bodyText")}</p>
+    <p>{@html $_("uploadEmailDialog.bodyText")}</p>
     {#if message}
-      <p class="message">
+      <p>
         {@html message }
       </p>
     {/if}
@@ -47,7 +47,7 @@
         {$_("dialog.create")}
       </Button>
       <Button danger={true} on:click={destroy}>
-        {$_("dialog.delete")}
+        {$_("uploadEmailDialog.disable")}
       </Button>
       <Button secondary={true} on:click={emit.dismiss}>
         {$_("dialog.cancel")}
