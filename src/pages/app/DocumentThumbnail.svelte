@@ -102,8 +102,8 @@
 
     .tag {
       position: absolute;
-      left: 19px;
       top: 13px;
+      left: 19px;
       opacity: 0.5;
       z-index: $viewerTagZ;
       width: inherit;
@@ -115,6 +115,7 @@
 
       :global(svg) {
         height: 12px;
+        display: block;
       }
     }
   }
@@ -168,9 +169,11 @@
     <div class="tag">
       {#if publicNote}
         {@html publicTagSvg}
-      {:else if orgNote}
+      {/if}
+      {#if orgNote}
         {@html organizationTagSvg}
-      {:else if privateNote}
+      {/if}
+      {#if privateNote}
         {@html privateTagSvg}
       {/if}
     </div>
