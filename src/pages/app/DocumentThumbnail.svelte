@@ -103,6 +103,7 @@
     .tag {
       position: absolute;
       left: 19px;
+      top: 13px;
       opacity: 0.5;
       z-index: $viewerTagZ;
       width: inherit;
@@ -164,7 +165,7 @@
     <span class="note-count">
       {$_("document.noteCount", { values: { n: noteCount } })}
     </span>
-    <div class="tag" style="top: 10%">
+    <div class="tag">
       {#if publicNote}
         {@html publicTagSvg}
       {:else if orgNote}
