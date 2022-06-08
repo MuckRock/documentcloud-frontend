@@ -244,7 +244,12 @@
         />
       </div>
     {/if}
-    <DocumentThumbnail {embed} {dialog} {document} on:pick />
+    <DocumentThumbnail {embed} {dialog} {document} on:pick
+      noteCount={document.notes.length}
+      publicNote={document.notes.some(x => x.access == "public")}
+      orgNote={document.notes.some(x => x.access == "organization")}
+      privateNote={document.notes.some(x => x.access == "private")}
+      />
 
     <div class="info">
       <h2>
@@ -267,11 +272,6 @@
             {document.userOrgString} -
           {/if}
           {$date(document.createdAt, { format: "medium" })}
-        </h3>
-      {/if}
-      {#if document.notes.length > 0}
-        <h3>
-          {$_("document.noteCount", { values: { n: document.notes.length } })}
         </h3>
       {/if}
       {#if document.description != null && document.description.trim().length > 0}
