@@ -339,12 +339,12 @@
     "searchDocs": "Search Documentation",
     "apiDocs": "API Documentation",
     "emailUs": "Email Us",
-    "acctSettings": "Account Settings",
+    "acctSettings": "Account settings",
     "signOut": "Sign out",
     "changeOrg": "Change organization",
     "personalAcct": "Personal Account",
     "signIn": "Sign in",
-    "uploadEmail": "Upload Email"
+    "uploadEmail": "Upload via email"
   },
   "documents": {
     "yourDocuments": "Your Documents",
@@ -698,9 +698,10 @@
     "previous": "Previous"
   },
   "uploadEmailDialog": {
-    "uploadEmailAddress": "Upload Email Address",
-    "bodyText": "Creating an upload email address will allow you to upload documents directly to your account by emailing them to the special address.  Please keep the address secret, as anyone with access to it will be able to upload documents to your account.  Once created, you will not be able to retrieve it again.  If you forget it, you may create a new one which will replace any existing address you had.  You may also delete the address in order to disable this feature.",
+    "uploadEmailAddress": "Upload via email",
+    "bodyText": "You can upload documents to your account by sending them to to a special email address as attachments.  For security reasons, this email is only shown to you once. Please copy it to a secure location: It will accept attachments from any email account. You can generate a new upload address at any time (which will disable the old one) or turn off this feature entirely. Documents are uploaded as private.<br><br>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.",
     "createMsg": "<strong>Upload email address succesfully created</strong>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",
-    "destroyMsg": "<strong>Any upload email address has been removed from your account.</strong>"
+    "destroyMsg": "<strong>Any upload email address has been removed from your account.</strong>",
+    "disable": "Disable upload via email"
   }
 }
