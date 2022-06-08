@@ -571,14 +571,14 @@
     "viewPublicDocs": "View public documents"
   },
   "annotation": {
-    "title": "Annotation Title",
-    "description": "Annotation Description (optional)",
+    "title": "Note Title",
+    "description": "Note Description (optional)",
     "unchanged": "Note remains unchanged",
-    "noTitle": "Enter a title for the annotation",
+    "noTitle": "Enter a title for the note",
     "org": "This note is only visible to you and others with edit access to this document",
     "private": "This private note is only visible to you",
-    "by": "Annotated by {name}",
-    "byOrg": "Annotated by {name}, {org}",
+    "by": "Note by {name}",
+    "byOrg": "Note by {name}, {org}",
     "addPageNote": "Add page note"
   },
   "viewDropdown": {
@@ -596,7 +596,7 @@
     "contributedBy": "Contributed by {name}"
   },
   "annotatePane": {
-    "annotateDocument": "Annotate Document",
+    "annotateDocument": "Add Note",
     "desc": "Highlight a portion of the page, or click between pages to create a note."
   },
   "modifyPane": {
@@ -633,7 +633,7 @@
   },
   "selectNotePane": {
     "selectNote": "Select a note",
-    "desc": "Select the annotation that you want to share."
+    "desc": "Select the note that you want to share."
   },
   "searchResults": {
     "resultPages": "{results, plural, one {# result} other {# results}} across {pages, plural, one {# page} other {# pages}}",
@@ -649,8 +649,8 @@
     "actions": "Document Actions",
     "share": "Share",
     "shareDesc": "Create an embed or share on social media.",
-    "annotate": "Annotate",
-    "annotateDesc": "Make annotations to keep notes on the document.",
+    "annotate": "Add Note",
+    "annotateDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "redact": "Redact",
     "redactDesc": "Create redactions on the document to hide text. The document will reprocess afterwards.",
     "modify": "Modify Pages",
@@ -662,7 +662,7 @@
     "sections": "Edit Sections",
     "sectionsDesc": "Add sections to organize your document with a table of contents.",
     "privateNote": "Add Private Note",
-    "privateNoteDesc": "Make annotations to keep notes on the document."
+    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article."
   },
   "viewer": {
     "notFound": "Document not found",
