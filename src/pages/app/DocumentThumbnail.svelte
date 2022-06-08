@@ -9,10 +9,17 @@
 
   // SVG assets
   import errorIconSvg from "@/assets/error_icon.svg";
+  import publicTagSvg from "@/assets/public_tag.svg";
+  import organizationTagSvg from "@/assets/organization_tag.svg";
+  import privateTagSvg from "@/assets/private_tag.svg";
 
   export let document;
   export let embed = false;
   export let dialog = false;
+  export let noteCount = 0;
+  export let publicNote = false;
+  export let orgNote = false;
+  export let privateNote = false;
 
   const emit = emitter({
     pick() {},
@@ -30,6 +37,7 @@
     padding: 0 35px 20px 35px;
     display: table-cell;
     vertical-align: top;
+    position: relative;
 
     @media only screen and (max-width: $mobileBreak) {
       padding: 10px 15px 20px 15px;
@@ -81,6 +89,33 @@
         margin: 5px 0;
       }
     }
+
+    .note-count {
+      display: inline-block;
+      font-size: $small;
+      font-weight: normal;
+      color: $gray;
+      margin: 2px 0;
+      padding: 0;
+      height: inherit;
+    }
+
+    .tag {
+      position: absolute;
+      left: 19px;
+      opacity: 0.5;
+      z-index: $viewerTagZ;
+      width: inherit;
+      height: inherit;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      :global(svg) {
+        height: 12px;
+      }
+    }
   }
 </style>
 
@@ -125,4 +160,18 @@
       </span>
     {/if}
   </span>
+  {#if noteCount > 0 }
+    <span class="note-count">
+      {$_("document.noteCount", { values: { n: noteCount } })}
+    </span>
+    <div class="tag" style="top: 10%">
+      {#if publicNote}
+        {@html publicTagSvg}
+      {:else if orgNote}
+        {@html organizationTagSvg}
+      {:else if privateNote}
+        {@html privateTagSvg}
+      {/if}
+    </div>
+  {/if}
 </div>
