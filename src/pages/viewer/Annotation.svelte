@@ -50,8 +50,6 @@
   export let titlePassages = null;
   export let hlContent = null;
 
-  console.log("ANNOTATION", annotation.id, titlePassages, hlContent);
-
   let editOverride = false;
   let loading = writable(false);
 
