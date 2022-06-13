@@ -7,6 +7,7 @@
   import HtmlField from "@/common/HtmlField";
   import Link from "@/router/Link";
   import DocumentThumbnail from "./DocumentThumbnail";
+  import Annotation from "@/pages/viewer/Annotation";
   import { _, date } from "svelte-i18n";
 
   // Stores
@@ -33,6 +34,7 @@
 
   let expandHighlights = false;
   let closeHighlights = false;
+  let closeNoteHighlights = false;
 
   $: moreToExpand = highlightsActive
     ? !expandHighlights &&
@@ -44,6 +46,8 @@
       ? document.highlights
       : trimmedHighlights
     : null;
+
+  let noteHighlights = document.noteHighlights;
 
   let shiftKey = false;
 
@@ -78,6 +82,7 @@
 
   .card {
     display: table;
+    width: 70%;
 
     @media only screen and (max-width: $mobileBreak) {
       margin-bottom: 15px;
@@ -90,12 +95,16 @@
         display: table-cell;
         vertical-align: top;
       }
+      :global(.img) {
+        width: 0;
+      }
     }
   }
 
   .check {
     padding-top: 30px;
     padding-left: 30px;
+    width: 0;
   }
 
   .updating {
@@ -204,6 +213,10 @@
         }
       }
     }
+  }
+
+  .note-highlights {
+    position: relative;
   }
 
   .smallinfo {
@@ -365,6 +378,7 @@
               </span>
             {/if}
           </div>
+
           <div class="highlights">
             {#each highlights as highlight}
               <div>
@@ -388,7 +402,9 @@
                         {#each passage as term}
                           {#if term.type == "highlight"}
                             <span class="passage highlighted">{term.text}</span>
-                          {:else}<span class="passage">{term.text}</span>{/if}
+                          {:else}
+                            <span class="passage">{term.text}</span>
+                          {/if}
                         {/each}
                       </div>
                     {/each}
@@ -397,6 +413,42 @@
               </div>
             {/each}
           </div>
+        {/if}
+
+        {#if document.noteHighlights != null && document.noteHighlights.length > 0 && !closeNoteHighlights}
+          <div class="hinfo">
+            <span class="x" on:click={() => (closeNoteHighlights = true)}>
+              {@html closeSimpleSvg}
+            </span>
+
+            <span>Notes matching the query</span>
+          </div>
+
+          <div class="highlights note-highlights">
+            {#each noteHighlights as highlight}
+              <div>
+                <Link toUrl={document.relativeNoteUrl(highlight.note)}>
+                <!-- to get correct aspect ratio we would need to store the page spec
+                  in solr
+                  --->
+                <Annotation
+                  page={{
+                    aspect: 11 / 8.5,
+                    pageNumber: highlight.note.page,
+                    document: document,
+                  }}
+                  pageNote={true}
+                  mode="view"
+                  aspect={11 / 8.5}
+                  showImageOnPageNote={!highlight.note.isPageNote}
+                  annotation={highlight.note}
+                  compact={true}
+                />
+                </Link>
+              </div>
+            {/each}
+          </div>
+
         {/if}
       {/if}
     </div>

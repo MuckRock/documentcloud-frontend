@@ -33,22 +33,22 @@ export class Note extends Svue {
           return note.page_number;
         },
         isPageNote(note) {
-          return note.x1 === null;
+          return note.x1 == null;
         },
         x1(note) {
-          if (note.x1 === null) return null;
+          if (note.x1 == null) return null;
           return ensureBounds(Math.min(note.x1, note.x2));
         },
         x2(note) {
-          if (note.x2 === null) return null;
+          if (note.x2 == null) return null;
           return ensureBounds(Math.max(note.x1, note.x2));
         },
         y1(note) {
-          if (note.y1 === null) return null;
+          if (note.y1 == null) return null;
           return ensureBounds(Math.min(note.y1, note.y2));
         },
         y2(note) {
-          if (note.y2 === null) return null;
+          if (note.y2 == null) return null;
           return ensureBounds(Math.max(note.y2, note.y2));
         },
         width(x1, x2) {

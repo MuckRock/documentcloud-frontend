@@ -63,6 +63,9 @@ export class Document extends Svue {
         noteUrl(pageUrl) {
           return (note) => `${pageUrl(note.page + 1)}/a${note.id}`;
         },
+        relativeNoteUrl(relativePageUrl) {
+          return (note) => `${relativePageUrl(note.page + 1)}/a${note.id}`;
+        },
         fakeNoteUrl(canonicalUrl) {
           return (note) => `${canonicalUrl}/annotations/${note.id}`;
         },
@@ -272,6 +275,11 @@ export class Document extends Svue {
             ? []
             : doc.notes.map((note) => new Note(note));
         },
+        notesDict(notes) {
+          const dict = {};
+          notes.forEach((note) => (dict[note.id] = note));
+          return dict;
+        },
         sections(doc) {
           return doc.sections == null
             ? []
@@ -315,11 +323,32 @@ export class Document extends Svue {
         },
         highlights(rawHighlights, highlightStart, highlightEnd) {
           if (rawHighlights == null) return null;
-          return transformHighlights(
+          const a = transformHighlights(
             rawHighlights,
             highlightStart,
             highlightEnd,
           );
+          console.log(a);
+          return a;
+        },
+        rawNoteHighlights(doc) {
+          return doc.note_highlights;
+        },
+        noteHighlights(
+          rawNoteHighlights,
+          notesDict,
+          highlightStart,
+          highlightEnd,
+        ) {
+          if (rawNoteHighlights == null) return null;
+          const a = transformNoteHighlights(
+            rawNoteHighlights,
+            notesDict,
+            highlightStart,
+            highlightEnd,
+          );
+          console.log(a);
+          return a;
         },
 
         // Text properties
@@ -444,4 +473,72 @@ export function transformHighlights(
     pages.sort((a, b) => a.page - b.page);
     return { highlights, pages };
   }
+}
+
+export function transformNoteHighlights(
+  rawNoteHighlights,
+  notesDict,
+  highlightStart,
+  highlightEnd,
+  returnDict = false,
+) {
+  const highlights = returnDict ? {} : [];
+  const pages = [];
+  for (const noteKey in rawNoteHighlights) {
+    if (rawNoteHighlights.hasOwnProperty(noteKey)) {
+      // Populate highlight object
+      const highlight = { note: notesDict[noteKey], titlePassages: [], contentPassages: [] };
+      const titlePassages = rawNoteHighlights[noteKey].title;
+      const contentPassages = rawNoteHighlights[noteKey].content;
+      if (titlePassages) {
+        for (let i = 0; i < titlePassages.length; i++) {
+          const passage = titlePassages[i];
+          // Transform passage
+          highlight.titlePassages.push(
+            transformPassage(passage, highlightStart, highlightEnd),
+          );
+        }
+      } else {
+        highlight.titlePassages.push([
+          { type: "normal", text: notesDict[noteKey].title },
+        ]);
+      }
+      if (contentPassages) {
+        for (let i = 0; i < contentPassages.length; i++) {
+          const passage = contentPassages[i];
+          // Transform passage
+          highlight.contentPassages.push(
+            transformPassage(passage, highlightStart, highlightEnd),
+          );
+        }
+      } else {
+        highlight.contentPassages.push([
+          { type: "normal", text: notesDict[noteKey].content.slice(0, 100) },
+        ]);
+      }
+
+      // Handle response type
+      if (returnDict) {
+        if (highlights[noteKey] == null) {
+          pages.push({ noteKey, count: 0 /*XXX*/ });
+        }
+        highlights[noteKey] = highlight.passages;
+      } else {
+        highlights.push(highlight);
+      }
+    }
+  }
+
+  // Sort results by page number
+  // XXX
+  /*
+  if (!returnDict) {
+    highlights.sort((a, b) => a.page - b.page);
+    return highlights;
+  } else {
+    pages.sort((a, b) => a.page - b.page);
+    return { highlights, pages };
+  }
+  */
+  return highlights;
 }
