@@ -46,6 +46,9 @@
   export let height;
   export let grayed = false;
   export let behind = false;
+  export let compact = false;
+
+  console.log("ANNOTATION", annotation.isPageNote, annotation.id, annotation.height, annotation.x1);
 
   let editOverride = false;
   let loading = writable(false);
@@ -543,13 +546,15 @@
       {:else}
         <h1>
           {annotation.title}
-          <a class="link" href={noteUrl}>
-            {@html simpleLinkSvg}
-          </a>
-          {#if page.document.editAccess}
-            <span class="pencil" on:click={() => (editOverride = true)}>
-              {@html pencilSvg}
-            </span>
+          {#if !compact}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <span class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </span>
+            {/if}
           {/if}
         </h1>
       {/if}
@@ -666,7 +671,7 @@
           >{$_("dialog.cancel")}</Button
         >
       </div>
-    {:else}
+    {:else if !compact}
       <div class="twopanel">
         <div class="cell leftalign">
           {#if access == "organization"}
