@@ -487,9 +487,13 @@ export function transformNoteHighlights(
   for (const noteKey in rawNoteHighlights) {
     if (rawNoteHighlights.hasOwnProperty(noteKey)) {
       // Populate highlight object
-      const highlight = { note: notesDict[noteKey], titlePassages: [], contentPassages: [] };
+      const highlight = {
+        note: notesDict[noteKey],
+        titlePassages: [],
+        hlContent: notesDict[noteKey].content,
+      };
       const titlePassages = rawNoteHighlights[noteKey].title;
-      const contentPassages = rawNoteHighlights[noteKey].content;
+      const hlContent = rawNoteHighlights[noteKey].description;
       if (titlePassages) {
         for (let i = 0; i < titlePassages.length; i++) {
           const passage = titlePassages[i];
@@ -503,18 +507,8 @@ export function transformNoteHighlights(
           { type: "normal", text: notesDict[noteKey].title },
         ]);
       }
-      if (contentPassages) {
-        for (let i = 0; i < contentPassages.length; i++) {
-          const passage = contentPassages[i];
-          // Transform passage
-          highlight.contentPassages.push(
-            transformPassage(passage, highlightStart, highlightEnd),
-          );
-        }
-      } else {
-        highlight.contentPassages.push([
-          { type: "normal", text: notesDict[noteKey].content.slice(0, 100) },
-        ]);
+      if (hlContent) {
+        highlight.hlContent = hlContent;
       }
 
       // Handle response type
@@ -522,6 +516,7 @@ export function transformNoteHighlights(
         if (highlights[noteKey] == null) {
           pages.push({ noteKey, count: 0 /*XXX*/ });
         }
+        /* XXX */
         highlights[noteKey] = highlight.passages;
       } else {
         highlights.push(highlight);

@@ -47,7 +47,7 @@
       : trimmedHighlights
     : null;
 
-  let noteHighlights = document.noteHighlights;
+  $: noteHighlights = document.noteHighlights;
 
   let shiftKey = false;
 
@@ -443,6 +443,8 @@
                   showImageOnPageNote={!highlight.note.isPageNote}
                   annotation={highlight.note}
                   compact={true}
+                  titlePassages={highlight.titlePassages}
+                  hlContent={highlight.hlContent}
                 />
                 </Link>
               </div>
