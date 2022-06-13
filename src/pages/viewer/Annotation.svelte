@@ -46,6 +46,9 @@
   export let height;
   export let grayed = false;
   export let behind = false;
+  export let compact = false;
+  export let titlePassages = null;
+  export let hlContent = null;
 
   let editOverride = false;
   let loading = writable(false);
@@ -501,6 +504,20 @@
   .hidden {
     visibility: hidden;
   }
+
+  .highlight {
+    .passage {
+      &.highlighted {
+        background: $annotationBorder;
+      }
+    }
+
+    :global(em) {
+      font-style: normal;
+      background: $annotationBorder;
+    }
+  }
+
 </style>
 
 <div
@@ -542,14 +559,30 @@
         />
       {:else}
         <h1>
-          {annotation.title}
-          <a class="link" href={noteUrl}>
-            {@html simpleLinkSvg}
-          </a>
-          {#if page.document.editAccess}
-            <span class="pencil" on:click={() => (editOverride = true)}>
-              {@html pencilSvg}
-            </span>
+          {#if titlePassages}
+            {#each titlePassages as passage}
+              <h1 class="highlight">
+                {#each passage as term}
+                  {#if term.type == "highlight"}
+                    <span class="passage highlighted">{term.text}</span>
+                  {:else}
+                    <span class="passage">{term.text}</span>
+                  {/if}
+                {/each}
+              </h1>
+            {/each}
+          {:else}
+            {annotation.title}
+          {/if}
+          {#if !compact}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <span class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </span>
+            {/if}
           {/if}
         </h1>
       {/if}
@@ -636,6 +669,10 @@
         placeholder={$_("annotation.description")}
         bind:value={description}
       />
+    {:else if hlContent}
+      <span class="highlight">
+        <HtmlField content={hlContent} />
+      </span>
     {:else}
       <HtmlField content={annotation.content} />
     {/if}
@@ -666,7 +703,7 @@
           >{$_("dialog.cancel")}</Button
         >
       </div>
-    {:else}
+    {:else if !compact}
       <div class="twopanel">
         <div class="cell leftalign">
           {#if access == "organization"}

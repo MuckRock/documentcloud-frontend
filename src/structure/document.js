@@ -63,6 +63,9 @@ export class Document extends Svue {
         noteUrl(pageUrl) {
           return (note) => `${pageUrl(note.page + 1)}/a${note.id}`;
         },
+        relativeNoteUrl(relativePageUrl) {
+          return (note) => `${relativePageUrl(note.page + 1)}/a${note.id}`;
+        },
         fakeNoteUrl(canonicalUrl) {
           return (note) => `${canonicalUrl}/annotations/${note.id}`;
         },
@@ -272,6 +275,11 @@ export class Document extends Svue {
             ? []
             : doc.notes.map((note) => new Note(note));
         },
+        notesDict(notes) {
+          const dict = {};
+          notes.forEach((note) => (dict[note.id] = note));
+          return dict;
+        },
         sections(doc) {
           return doc.sections == null
             ? []
@@ -317,6 +325,23 @@ export class Document extends Svue {
           if (rawHighlights == null) return null;
           return transformHighlights(
             rawHighlights,
+            highlightStart,
+            highlightEnd,
+          );
+        },
+        rawNoteHighlights(doc) {
+          return doc.note_highlights;
+        },
+        noteHighlights(
+          rawNoteHighlights,
+          notesDict,
+          highlightStart,
+          highlightEnd,
+        ) {
+          if (rawNoteHighlights == null) return null;
+          return transformNoteHighlights(
+            rawNoteHighlights,
+            notesDict,
             highlightStart,
             highlightEnd,
           );
@@ -444,4 +469,46 @@ export function transformHighlights(
     pages.sort((a, b) => a.page - b.page);
     return { highlights, pages };
   }
+}
+
+export function transformNoteHighlights(
+  rawNoteHighlights,
+  notesDict,
+  highlightStart,
+  highlightEnd,
+) {
+  const highlights = [];
+  const pages = [];
+  for (const noteKey in rawNoteHighlights) {
+    if (rawNoteHighlights.hasOwnProperty(noteKey)) {
+      // Populate highlight object
+      const highlight = {
+        note: notesDict[noteKey],
+        titlePassages: [],
+        hlContent: notesDict[noteKey].content,
+      };
+      const titlePassages = rawNoteHighlights[noteKey].title;
+      const hlContent = rawNoteHighlights[noteKey].description;
+      if (titlePassages) {
+        for (let i = 0; i < titlePassages.length; i++) {
+          const passage = titlePassages[i];
+          // Transform passage
+          highlight.titlePassages.push(
+            transformPassage(passage, highlightStart, highlightEnd),
+          );
+        }
+      } else {
+        highlight.titlePassages.push([
+          { type: "normal", text: notesDict[noteKey].title },
+        ]);
+      }
+      if (hlContent) {
+        highlight.hlContent = hlContent;
+      }
+
+      highlights.push(highlight);
+    }
+  }
+
+  return highlights;
 }
