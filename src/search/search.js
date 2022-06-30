@@ -8,6 +8,7 @@ import { queryBuilder } from "@/util/url";
 import { slugify } from "@/util/string";
 import { modifications } from "@/manager/modifications";
 import { Results } from "@/structure/results";
+import { apiSearchUrl, searchDocumentsUrl } from "@/api/document";
 import deepEqual from "fast-deep-equal";
 import { _ } from "@/langs/i18n";
 
@@ -21,6 +22,8 @@ export const search = new Svue({
       params: null,
       results: null,
       filePickerUser: null,
+      prevUrls: [],
+      currentUrl: null,
       _,
     };
   },
@@ -51,11 +54,28 @@ export const search = new Svue({
     hasResults(results) {
       return results != null && results.results != null;
     },
+    hasNext(results, params) {
+      if (results == null) return false;
+      return results.hasNext && results.length == params.perPage;
+    },
+    hasPrev(prevUrls) {
+      return prevUrls.length > 0;
+    },
+    start(prevUrls, results, params) {
+      if (results == null) return 0;
+      return (prevUrls.length * params.perPage) + 1;
+    },
+    end(start, results) {
+      if (results == null) return 0;
+      return start + results.length - 1;
+    }
   },
 });
 
 export async function initSearch(params) {
   search.params = new SearchParams(params, search.onlyShowSuccessfulStatuses);
+  search.prevUrls = [];
+  search.currentUrl = apiSearchUrl(search.params.query);
 
   // Get results
   if (search.params.getMethod != null) {
@@ -74,6 +94,36 @@ export async function initSearch(params) {
       search.results = search.results;
     }
   }
+}
+
+export async function searchNext() {
+  // Initialize the search for the next page
+  search.prevUrls.push(search.currentUrl);
+  search.prevUrls = search.prevUrls;
+  search.currentUrl = search.results.nextUrl;
+  search.results = await wrapSeparate(
+    layout,
+    search,
+    () => searchDocumentsUrl(search.currentUrl),
+  );
+  console.log(search.prevUrls);
+}
+
+export async function searchPrev() {
+  // Initialize the search for the previous page
+  search.currentUrl = search.prevUrls.pop();
+  search.prevUrls = search.prevUrls;
+  if (search.results.hasPrev) {
+    // If using the project API for project embeds, we will have a previous URL
+    // We use it, as otherwise the first URL will incorrectly be a search URL
+    // instead of a project URL
+    search.currentUrl = search.results.prevUrl;
+  }
+  search.results = await wrapSeparate(
+    layout,
+    search,
+    () => searchDocumentsUrl(search.currentUrl),
+  );
 }
 
 function checkForInit() {
@@ -168,7 +218,7 @@ export function orgUrl(organization) {
 export function searchUrl(query) {
   return queryBuilder(getPath("app"), {
     q: query,
-    page: null,
+    cursor: null,
   });
 }
 
