@@ -82,7 +82,6 @@
 
   .card {
     display: table;
-    width: 70%;
 
     @media only screen and (max-width: $mobileBreak) {
       margin-bottom: 15px;
@@ -95,16 +94,12 @@
         display: table-cell;
         vertical-align: top;
       }
-      :global(.img) {
-        width: 0;
-      }
     }
   }
 
   .check {
     padding-top: 30px;
     padding-left: 30px;
-    width: 0;
   }
 
   .updating {
