@@ -70,13 +70,12 @@ export async function getProjectUsers(projectId, expand = DEFAULT_EXPAND) {
 
 export async function getProjectDocuments(
   projectId,
-  page = 0,
   extraParams = {},
   ordering = DEFAULT_ORDERING,
   expand = DEFAULT_EXPAND + ",document",
 ) {
   // Return documents with the specified parameters
-  const params = { ...extraParams, ordering, expand, page: page + 1 };
+  const params = { ...extraParams, ordering, expand, version: "2.0" };
   const url = apiUrl(queryBuilder(`projects/${projectId}/documents/`, params));
   const { data } = await session.get(url);
   data.results = data.results.map(

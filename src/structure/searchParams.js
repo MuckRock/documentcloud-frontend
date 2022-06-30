@@ -87,19 +87,15 @@ export class SearchParams extends Svue {
             return null;
           return extractId(projectEmbedId);
         },
-        perPage(params) {
-          return params.perpage || 12;
+        perPage(projectEmbedId) {
+          return projectEmbedId ? 12 : 25;
         },
         projectEmbedOrder(params) {
           return params.order;
         },
-        query(params, projectEmbedId, onlyShowSuccess) {
+        query(params, projectEmbedId) {
           if (projectEmbedId != null) return null;
           let query = params.q == null ? null : params.q;
-          if (query != null && onlyShowSuccess) {
-            // Wrap to only show successful values
-            query = `status:success AND (${query})`;
-          }
           return query;
         },
         parsedQuery(query) {
@@ -234,7 +230,6 @@ export class SearchParams extends Svue {
         getMethod(
           query,
           projectEmbedId,
-          page,
           perPage,
           projectEmbedOrder,
           oneUserSearch,
@@ -259,7 +254,6 @@ export class SearchParams extends Svue {
               () =>
                 getProjectDocuments(
                   projectEmbedId,
-                  page,
                   { per_page: perPage },
                   ordering,
                 ),
@@ -268,11 +262,11 @@ export class SearchParams extends Svue {
           }
           if (query == null) return null; // Wait for redirect
           // Use search method
-          if (page == 0 && noStatus && oneOrZeroAccesses) {
+          if (noStatus && oneOrZeroAccesses) {
             // Investigate whether it's a cacheable search:
             // A cacheable search is only a search for either a user or project with an optional access.
             // These correspond to most sidebar quick searches.
-            const cachedFn = () => searchDocumentsCached(query, page);
+            const cachedFn = () => searchDocumentsCached(query, onlyShowSuccess);
             const accessCondition = (doc) =>
               oneAccessSearch != null ? doc.access == oneAccessSearch : true;
             if (oneUserSearch != null) {
@@ -291,7 +285,7 @@ export class SearchParams extends Svue {
             }
           }
 
-          return [() => searchDocuments(query, page), null];
+          return [() => searchDocuments(query, onlyShowSuccess), null];
         },
       },
     });
