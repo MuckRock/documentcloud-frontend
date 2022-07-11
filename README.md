@@ -21,7 +21,7 @@ make dev
 Set up your hosts:
 
 ```bash
-sudo echo "127.0.0.1 www.dev.documentcloud.org" >> /etc/hosts
+echo "127.0.0.1 www.dev.documentcloud.org" | sudo tee -a /etc/hosts
 ```
 
 Once everything is up and running, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/).
