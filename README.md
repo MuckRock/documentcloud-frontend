@@ -1,4 +1,5 @@
 # DocumentCloud frontend
+**DocumentCloud Frontend** &middot; [Squarelet][squarelet] &middot; [MuckRock][muckrock] &middot; [DocumentCloud][documentcloud]
 
 The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
 
@@ -41,3 +42,7 @@ See the [Wiki](https://github.com/MuckRock/documentcloud-frontend/wiki) for info
 ## Installing new packages
 
 Run the relevant `npm install ...` command and then get the change mirrored on the Docker image by running `make install`.
+
+[muckrock]: https://github.com/MuckRock/muckrock
+[documentcloud]: https://github.com/MuckRock/documentcloud
+[squarelet]: https://github.com/muckrock/squarelet
