@@ -25,9 +25,9 @@ Set up your hosts:
 echo "127.0.0.1 www.dev.documentcloud.org" | sudo tee -a /etc/hosts
 ```
 
-Once everything is up and running, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/).
+Once everything is up and running, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/). Note the frontend is not yet functional.
 
-If you are just making frontend changes you are all set! Otherwise, to utilize the frontend with its necessary authentication system and backend, [Squarelet](https://github.com/muckrock/squarelet) and [DocumentCloud (Django)](https://github.com/muckrock/documentcloud) are a requirement. Follow the steps in their READMEs.
+To utilize the frontend with its necessary authentication system and backend, [Squarelet](https://github.com/muckrock/squarelet) and [DocumentCloud (Django)](https://github.com/muckrock/documentcloud) are a requirement. Follow the steps in their READMEs.
 
 ## Building for production
 
