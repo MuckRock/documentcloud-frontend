@@ -40,38 +40,43 @@ function filterDeleted(docs) {
   return docs.filter((x) => !includes(deleted, x.id));
 }
 
-export async function getDocuments(
-  extraParams = {},
-  ordering = DEFAULT_ORDERING,
-  page = 0,
-  expand = DEFAULT_EXPAND,
-) {
-  // Return documents with the specified parameters
-  const params = { ...extraParams, ordering, expand, page: page + 1 };
-  const url = apiUrl(queryBuilder("documents/", params));
-  const { data } = await session.get(url);
-  data.results = filterDeleted(
-    data.results.map((document) => new Document(document)),
-  );
-  return new Results(url, data);
-}
-
 export async function searchDocuments(
   query,
-  page = 0,
+  onlyShowSuccess,
   expand = DEFAULT_EXPAND,
 ) {
   // Return documents with the specified parameters
-  const url = apiUrl(
-    queryBuilder("documents/search/", {
+  const url = apiSearchUrl(query, onlyShowSuccess, expand);
+  return searchDocumentsHelper(url);
+}
+
+export function apiSearchUrl(query, onlyShowSuccess = false, expand = DEFAULT_EXPAND) {
+  let params = {
       q: query,
       expand,
-      page: page + 1,
+      version: "2.0",
       hl: "true",
-    }),
+    }
+  if (onlyShowSuccess) {
+    params.status = "success";
+  }
+  return apiUrl(
+    queryBuilder("documents/search/", params),
   );
+}
+
+export async function searchDocumentsUrl(url) {
+  return searchDocumentsHelper(url);
+}
+
+async function searchDocumentsHelper(url) {
   const { data } = await session.get(url);
-  data.results = filterDeleted(data.results.map((doc) => new Document(doc)));
+  if (data.results.length > 0 && data.results[0].hasOwnProperty("document")) {
+    // if we are using the project API, the document is one level down
+    data.results = filterDeleted(data.results.map((doc) => new Document(doc.document)));
+  } else {
+    data.results = filterDeleted(data.results.map((doc) => new Document(doc)));
+  }
 
   return new Results(url, data);
 }

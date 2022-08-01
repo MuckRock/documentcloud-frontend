@@ -158,6 +158,7 @@
     }
 
     .padleft {
+      @include buttonLike;
       padding-left: 5px;
     }
   }
@@ -364,7 +365,9 @@
                   },
                 })}
               </span>
-              <span class="padleft">{$_("document.showAll")}</span>
+              <span class="padleft" on:click={() => (expandHighlights = true)}>
+                {$_("document.showAll")}
+              </span>
             {:else}
               <span>
                 {$_("document.matchingPages", {

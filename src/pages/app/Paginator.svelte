@@ -1,5 +1,5 @@
 <script>
-  import { search, initSearch } from "@/search/search";
+  import { search, initSearch, searchNext, searchPrev } from "@/search/search";
   import { pushUrl } from "@/router/router";
   import { queryBuilder } from "@/util/url";
   import { simplePlural } from "@/util/string";
@@ -11,30 +11,6 @@
 
   export let dialog = false;
 
-  function gotoPrev() {
-    if (search.results.hasPrev) {
-      let page = search.results.prevPage + 1;
-      if (page == 1) page = null; // no need to specify param for first page
-      if (dialog) {
-        initSearch({ ...search.params.params, page });
-      } else {
-        pushUrl(queryBuilder(null, { page }));
-      }
-    }
-  }
-
-  function gotoNext() {
-    if (search.results.hasNext) {
-      if (dialog) {
-        initSearch({
-          ...search.params.params,
-          page: search.results.nextPage + 1,
-        });
-      } else {
-        pushUrl(queryBuilder(null, { page: search.results.nextPage + 1 }));
-      }
-    }
-  }
 </script>
 
 <style lang="scss">
@@ -103,31 +79,31 @@
 
 <div class="paginator">
   {#if $search.hasResults}
-    {#if $search.results.count > 0}
-      <button disabled={!$search.results.hasPrev} on:click={gotoPrev}>
-        {@html leftPaginatorSvg}
-      </button>
-      <div class="text">
-        <div class="number">
-          {#if $search.results.onlyPage}
-            {$search.results.rawResults.results.length}
-          {:else}
-            <span class="range">
-              {$search.results.start + 1}
-              -
-              {$search.results.end}
-            </span>
+    <button disabled={!$search.hasPrev} on:click={searchPrev}>
+      {@html leftPaginatorSvg}
+    </button>
+    <div class="text">
+      <div class="number">
+        {#if $search.results.onlyPage}
+          {$search.results.rawResults.results.length}
+        {:else}
+          <span class="range">
+            {$search.start}
+            -
+            {$search.end}
+          </span>
+          {#if $search.results.count}
             {$_("paginator.of")}
             {$search.results.count}
           {/if}
-        </div>
-        <div class="documents">
-          {$_("paginator.document", { values: { n: $search.results.count } })}
-        </div>
+        {/if}
       </div>
-      <button disabled={!$search.results.hasNext} on:click={gotoNext}>
-        {@html rightPaginatorSvg}
-      </button>
-    {/if}
+      <div class="documents">
+        {$_("paginator.document", { values: { n: $search.results.count } })}
+      </div>
+    </div>
+    <button disabled={!$search.hasNext} on:click={searchNext}>
+      {@html rightPaginatorSvg}
+    </button>
   {/if}
 </div>
