@@ -81,6 +81,7 @@ export async function autocompleteOrganizations(
     queryBuilder(apiUrl("organizations/"), {
       name__istartswith: prefix,
       individual,
+      version: "2.0",
     }),
   );
   return data.results;
@@ -91,6 +92,7 @@ export async function autocompleteUsers(prefix = "", orgIds = null) {
     queryBuilder(apiUrl("users/"), {
       name__istartswith: prefix,
       organization: orgIds == null ? null : orgIds.map((x) => `${x}`).join(","),
+      version: "2.0",
     }),
   );
   return data.results;
