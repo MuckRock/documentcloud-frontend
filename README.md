@@ -19,6 +19,8 @@ Once the node modules have been installed, start the app with:
 make dev
 ```
 
+**Warning:** Don't just run `docker compose up` like you would with some of the other repos. The containers listed in `local.yml` aren't intended to be run simultaneously.
+
 Set up your hosts:
 
 ```bash
