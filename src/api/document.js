@@ -156,11 +156,11 @@ export async function changeAccess(ids, access) {
   );
 }
 
-export async function reprocessDocument(ids, forceOcr) {
+export async function reprocessDocument(ids, forceOcr, ocrEngine) {
   // Reprocess the documents with the specified ids
   await session.post(
     apiUrl(`documents/process/`),
-    ids.map((id) => ({ id: id, force_ocr: forceOcr })),
+    ids.map((id) => ({ id: id, force_ocr: forceOcr, ocr_engine: ocrEngine })),
   );
 }
 
@@ -247,6 +247,7 @@ export async function pollDocument(
  * @param {string} language The language code of the uploaded docs
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
+ * @param {string} ocrEngine Select OCR engine
  * @param {Function} createProgressFn A function to call with process progress
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} processProgressFn A function to call with process progress
@@ -258,6 +259,7 @@ export async function uploadDocuments(
   access,
   language,
   forceOcr,
+  ocrEngine,
   projects,
   createProgressFn,
   progressFn,
@@ -366,7 +368,7 @@ export async function uploadDocuments(
       async (subIds) => {
         await session.post(
           apiUrl(`documents/process/`),
-          subIds.map((id) => ({ id, force_ocr: forceOcr })),
+          subIds.map((id) => ({ id, force_ocr: forceOcr, ocr_engine: ocrEngine })),
         );
         count += subIds.length;
         processProgressFn(count / ids.length);

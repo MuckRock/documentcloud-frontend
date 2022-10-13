@@ -6,6 +6,9 @@
 
   export let language = defaultLanguage;
   export let forceOcr = false;
+  export let ocrEngine = "tess4";
+
+  const ocrEngines = [["tess4", "Tesseract"], ["textract", "Textract"]];
 </script>
 
 <style lang="scss">
@@ -27,3 +30,9 @@
     <input type="checkbox" bind:checked={forceOcr} />
   </div>
 </div>
+
+<div class="option">
+  <b>{$_("uploadOptions.ocrEngine")}</b>
+  <Omniselect options={ocrEngines} bind:selected={ocrEngine} />
+</div>
+

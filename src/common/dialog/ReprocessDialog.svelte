@@ -14,9 +14,10 @@
   });
 
   let forceOcr = false;
+  let ocrEngine = "tess4";
   let language = layout.sameLanguage;
 
-  async function reprocess(forceOcr, language) {
+  async function reprocess(forceOcr, ocrEngine, language) {
     reprocessDocuments(layout.reprocessDocuments, forceOcr, language);
     emit.dismiss();
   }
@@ -39,11 +40,11 @@
       </p>
 
       <p>
-        <UploadOptions bind:language bind:forceOcr />
+        <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
       </p>
 
       <div class="buttonpadded">
-        <Button on:click={() => reprocess(forceOcr, language)}
+        <Button on:click={() => reprocess(forceOcr, ocrEngine, language)}
           >{$_("dialogReprocessDialog.confirm")}</Button
         >
         <Button secondary={true} on:click={emit.dismiss}

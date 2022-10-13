@@ -46,6 +46,7 @@
   let access = "private";
   let language = defaultLanguage;
   let forceOcr = false;
+  let ocrEngine = "tess4";
 
   const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
   const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
@@ -138,6 +139,7 @@
       access,
       language,
       forceOcr,
+      ocrEngine,
       uploadProject == null ? [] : [uploadProject],
       (progress) => {
         // Create progress handler
@@ -279,7 +281,7 @@
           <details>
             <summary>{$_("uploadDialog.moreOptions")}</summary>
             <p>
-              <UploadOptions bind:language bind:forceOcr />
+              <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
             </p>
           </details>
           {#if files.length > 0}
