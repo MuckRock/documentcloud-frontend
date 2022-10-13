@@ -18,7 +18,8 @@
   let language = layout.sameLanguage;
 
   async function reprocess(forceOcr, ocrEngine, language) {
-    reprocessDocuments(layout.reprocessDocuments, forceOcr, language);
+    console.log(language);
+    reprocessDocuments(layout.reprocessDocuments, forceOcr, ocrEngine, language);
     emit.dismiss();
   }
 </script>
