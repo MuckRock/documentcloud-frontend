@@ -167,8 +167,8 @@ export class Document extends Svue {
           if (doc.edit_access == null) return false;
           return doc.edit_access;
         },
-        hideFromGoogle(doc) {
-          return doc.hide_from_google;
+        noindex(doc) {
+          return doc.noindex;
         },
 
         // Status and processing-related properties

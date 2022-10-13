@@ -41,7 +41,8 @@ export const layout = new Svue({
       dataDocuments: [],
       dataOpen: false,
 
-      // Which documents the access is being edited for
+      // Which documents the access is being edited for.
+      // Also used for editing hiding from indexing.
       accessEditDocuments: [],
 
       // Which documents are being reprocessed
@@ -105,6 +106,9 @@ export const layout = new Svue({
 
       // Return the most restricted access level
       return minAccess;
+    },
+    defaultNoindex(accessEditDocuments) {
+      return accessEditDocuments.some((doc) => doc.noindex);
     },
     sameAccess(sameAccessProp) {
       // Return the access level if all docs have the same access

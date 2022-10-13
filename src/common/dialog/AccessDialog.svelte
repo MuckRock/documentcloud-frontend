@@ -25,6 +25,8 @@
   // Cannot use dynamic isViewer since reactive properties initialized after static ones
   let access =
     $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
+  let noindex =
+    $viewer.document != null ? $viewer.document.noindex : $layout.defaultNoindex;
 
   function getTimezone() {
     try {
@@ -247,6 +249,7 @@
           </span>
         </div>
       {/if}
+
       {#if access != "public" && !notVerified}
         <div class="scheduler">
           <div class="scheduleaction">
@@ -270,6 +273,12 @@
           {/if}
         </div>
       {/if}
+    </div>
+    <div>
+      <label>
+        Hide from search engines and DocumentCloud search?
+        <input type="checkbox" bind:checked={noindex} />
+      </label>
     </div>
     <div class="buttonpadded">
       <Button
