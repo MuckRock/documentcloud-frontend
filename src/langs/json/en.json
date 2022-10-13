@@ -307,7 +307,7 @@
     "error": "An error occurred. Try refreshing the page"
   },
   "omniselect": {
-    "filter": "Type to filter language",
+    "filter": "Type to filter",
     "noResults": "No results. Click to clear filter."
   },
   "shareOptions": {
@@ -323,7 +323,8 @@
   },
   "uploadOptions": {
     "documentLang": "Document language:",
-    "forceOcr": "Force OCR:"
+    "forceOcr": "Force OCR:",
+    "ocrEngine": "OCR Engine:"
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",

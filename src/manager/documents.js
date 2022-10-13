@@ -365,14 +365,14 @@ export async function markAsDirty(docIds) {
   }
 }
 
-export async function reprocessDocuments(documents, forceOcr, language) {
+export async function reprocessDocuments(documents, forceOcr, ocrEngine, language) {
   await wrapLoad(layout, async () => {
     const ids = documents.map((doc) => doc.id);
     await editMetadata(
       documents.map((doc) => doc.id),
       { language },
     );
-    await reprocessDocument(ids, forceOcr);
+    await reprocessDocument(ids, forceOcr, ocrEngine);
     await markAsDirty(ids);
   });
 }
