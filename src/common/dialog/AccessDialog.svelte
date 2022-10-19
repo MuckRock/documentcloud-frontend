@@ -58,9 +58,12 @@
   $: valid =
     validPublishAt &&
     (isViewer
-      ? access != viewer.document.access ||
-        publishAt != viewer.document.publishAt
-      : access != $layout.sameAccess || publishAt != $layout.samePublishAt);
+      ? access !== viewer.document.access ||
+        publishAt !== viewer.document.publishAt ||
+        noindex !== viewer.document.noindex
+      : access !== $layout.sameAccess ||
+      publishAt !== $layout.samePublishAt
+      );
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
   $: notVerified = isViewer ? !$viewer.isVerified : !$orgsAndUsers.isVerified;
 
