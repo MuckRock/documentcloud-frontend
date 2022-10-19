@@ -112,6 +112,11 @@
     margin: 12px 0;
   }
 
+  .normal-label {
+    display: initial;
+    margin-left: 8px;
+  }
+
   input {
     display: table-cell;
   }
@@ -279,9 +284,9 @@
       {/if}
     </div>
     <div>
-      <label>
+      <input type="checkbox" bind:checked={noindex} />
+      <label class="normal-label">
         Hide from search engines and DocumentCloud search?
-        <input type="checkbox" bind:checked={noindex} />
       </label>
     </div>
     <div class="buttonpadded">
