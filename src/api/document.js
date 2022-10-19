@@ -140,6 +140,7 @@ export async function deleteDocument(ids) {
   addDeletedDocs(ids);
 }
 
+// "metadata" here includes access level, publish date, and noindex.
 export async function editMetadata(ids, metadata) {
   // Edit the published url of the documents with the specified ids
   await session.patch(

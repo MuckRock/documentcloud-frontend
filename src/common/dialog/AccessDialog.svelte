@@ -77,6 +77,7 @@
         await editMetadata([viewer.document.id], {
           access,
           publish_at: publishAt,
+          noindex
         });
         viewer.document.doc = {
           ...viewer.document.doc,
