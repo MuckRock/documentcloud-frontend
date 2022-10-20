@@ -14,6 +14,9 @@
   export let compact = false;
 
   function getStatus(status) {
+    if (status === "cancelled") {
+      return "Timed Out"
+    }
     return status
       .split("_")
       .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
@@ -62,7 +65,7 @@
     border-top: 1px solid rgba(128, 128, 128, 0.15);
   }
 
-  .failure {
+  .failure, .cancelled {
     background: $errorbg;
     .info {
       color: $caution;
@@ -91,13 +94,13 @@
       progress={done(run) ? 1 : run.progress / 100}
       initializing={run.progress == 0 && !done(run)}
       compact={run.progress == 0 && !done(run)}
-      failure={run.status == "failure"}
+      failure={run.failure}
     />
     <span class="dismiss">
       <Button
         small={true}
         on:click={() => dismiss(run.uuid)}
-        danger={run.status == "failure"}
+        danger={run.failure}
       >
         {$_("dialog.dismiss")}
       </Button>

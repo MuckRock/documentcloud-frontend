@@ -67,6 +67,9 @@ export class AddonRun extends Svue {
         status(addonRun) {
           return addonRun.status;
         },
+        failure(status) {
+          return (status === "failure" || status === "cancelled");
+        },
         progress(addonRun) {
           return addonRun.progress;
         },
