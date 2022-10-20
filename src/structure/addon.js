@@ -96,6 +96,12 @@ export class AddonRun extends Svue {
         updatedAt(updatedAtTimestamp) {
           return new Date(updatedAtTimestamp);
         },
+        rating(addonRun) {
+          return addonRun.rating;
+        },
+        comment(addonRun) {
+          return addonRun.comment;
+        },
       },
     });
   }

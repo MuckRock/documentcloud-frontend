@@ -6,12 +6,13 @@
   import Button from "@/common/Button";
 
   // Store properties
-  import { removeRun, done } from "@/manager/addons";
+  import { removeRun, done, editAddonRun } from "@/manager/addons";
 
   import { dismissAddonRun } from "@/api/addon";
 
   export let run;
   export let compact = false;
+  let comment = "";
 
   function getStatus(status) {
     if (status === "cancelled") {
@@ -27,6 +28,24 @@
     removeRun(uuid);
     dismissAddonRun(uuid);
   }
+
+  function thumbsUp() {
+    rate(1);
+  }
+
+  function thumbsDown() {
+    rate(-1);
+  }
+
+  function rate(val) {
+    const newVal = run.rating === val ? 0 : val;
+    editAddonRun(run, {rating: newVal});
+  }
+
+  function submitFeedback() {
+    editAddonRun(run, {comment});
+  }
+
 </script>
 
 <style lang="scss">
@@ -72,6 +91,11 @@
     }
   }
 
+  .rate {
+    display: inline-block;
+    vertical-align: top;
+  }
+
   a {
     text-decoration: underline;
     &:hover {
@@ -105,6 +129,39 @@
         {$_("dialog.dismiss")}
       </Button>
     </span>
+    {#if done(run)}
+      <span class="rate">
+        <Button
+          small={true}
+          on:click={thumbsUp}
+          secondary={run.rating !== 1}
+          >
+          &#x1F44D;
+        </Button>
+        <Button
+          small={true}
+          on:click={thumbsDown}
+          secondary={run.rating !== -1}
+          >&#x1F44E;
+        </Button>
+
+        {#if run.rating !== 0}
+          <span class="info message comment" class:compact>
+            {#if run.comment === ""}
+              <input
+                placeholder="Feedback on this AddOn Run"
+                maxlength="255"
+                bind:value={comment}
+                >
+              <Button small={true} on:click={submitFeedback}>Submit</Button>
+            {:else}
+              <span>Thanks for the feedback!</span>
+            {/if}
+          </span>
+        {/if}
+
+      </span>
+    {/if}
   {/if}
   {#if run.message || run.fileUrl}
     <div class="info message" class:compact>

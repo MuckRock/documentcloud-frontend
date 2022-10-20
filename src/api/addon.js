@@ -92,3 +92,10 @@ export async function updateAddonEvent(eventId, parameters, event) {
   });
   return new AddonEvent(data);
 }
+
+export async function updateAddonRun(run, parameters) {
+  const { data } = await session.patch(apiUrl(`addon_runs/${run.uuid}/`), parameters);
+  // Cannot expand addon in patch call, use previous expanded addon info
+  data.addon = run.addonRun.addon;
+  return new AddonRun(data);
+}
