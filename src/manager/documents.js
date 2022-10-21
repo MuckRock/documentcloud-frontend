@@ -398,7 +398,6 @@ export function cancelProcessDocuments(documents) {
     },
   );
 }
-// TODO: Update callers.
 export async function changeAccessForDocuments(
   documents,
   access,
