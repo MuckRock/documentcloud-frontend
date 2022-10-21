@@ -398,23 +398,29 @@ export function cancelProcessDocuments(documents) {
     },
   );
 }
-
+// TODO: Update callers.
 export async function changeAccessForDocuments(
   documents,
   access,
   publishAt,
   layout,
+  noindex,
 ) {
   await wrapLoad(layout, async () => {
     await editMetadata(
       documents.map((doc) => doc.id),
-      { access, publish_at: publishAt },
+      { access, publish_at: publishAt, noindex },
     );
     documents.forEach((doc) =>
       updateInCollection(
         doc,
         (d) =>
-          (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
+          (d.doc = {
+            ...d.doc,
+            status: "readable",
+            publish_at: publishAt,
+            noindex,
+          }),
       ),
     );
   });

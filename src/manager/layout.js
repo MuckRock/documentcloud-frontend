@@ -108,7 +108,7 @@ export const layout = new Svue({
       return minAccess;
     },
     defaultNoindex(accessEditDocuments) {
-      return accessEditDocuments.some((doc) => doc.noindex);
+      return accessEditDocuments.every((doc) => doc.noindex);
     },
     sameAccess(sameAccessProp) {
       // Return the access level if all docs have the same access
@@ -119,6 +119,11 @@ export const layout = new Svue({
       // Return the publish at date if all docs have the same publish at date
       // Otherwise, return null
       return sameAccessProp("publishAt");
+    },
+    sameNoindex(sameAccessProp) {
+      // Return the given property if all docs have the same value for that property
+      // Otherwise, return null
+      return sameAccessProp("noindex");
     },
     sameAccessProp(accessEditDocuments) {
       // Return the given property if all docs have the same value for that property

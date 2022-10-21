@@ -62,7 +62,8 @@
         publishAt !== viewer.document.publishAt ||
         noindex !== viewer.document.noindex
       : access !== $layout.sameAccess ||
-      publishAt !== $layout.samePublishAt
+      publishAt !== $layout.samePublishAt ||
+      noindex !== $layout.sameNoindex
       );
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
   $: notVerified = isViewer ? !$viewer.isVerified : !$orgsAndUsers.isVerified;
@@ -73,7 +74,7 @@
       (x) => x.organization != null && x.organization.individual,
     ).length > 0;
 
-  async function accessChange(access, publishAt) {
+  async function accessChange(access, publishAt, noindex) {
     if (!valid) return;
     if (isViewer) {
       await wrapLoad(viewerLayout, async () => {
@@ -91,7 +92,7 @@
         updateInCollection(
           viewer.document,
           (d) =>
-            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
+            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt, noindex }),
         );
       });
     } else {
@@ -100,6 +101,7 @@
         access,
         publishAt,
         layout,
+        noindex
       );
     }
     emit.dismiss();
@@ -296,7 +298,7 @@
           : validPublishAt
           ? $_("dialogAccessDialog.unchanged")
           : $_("dialogAccessDialog.future")}
-        on:click={() => accessChange(access, publishAt)}
+        on:click={() => accessChange(access, publishAt, noindex)}
       >
         {$_("dialogAccessDialog.change")}
       </Button>
