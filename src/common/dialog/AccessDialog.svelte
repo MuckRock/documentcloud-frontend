@@ -25,6 +25,8 @@
   // Cannot use dynamic isViewer since reactive properties initialized after static ones
   let access =
     $viewer.document != null ? $viewer.document.access : $layout.defaultAccess;
+  let noindex =
+    $viewer.document != null ? $viewer.document.noindex : $layout.defaultNoindex;
 
   function getTimezone() {
     try {
@@ -56,9 +58,13 @@
   $: valid =
     validPublishAt &&
     (isViewer
-      ? access != viewer.document.access ||
-        publishAt != viewer.document.publishAt
-      : access != $layout.sameAccess || publishAt != $layout.samePublishAt);
+      ? access !== viewer.document.access ||
+        publishAt !== viewer.document.publishAt ||
+        noindex !== viewer.document.noindex
+      : access !== $layout.sameAccess ||
+      publishAt !== $layout.samePublishAt ||
+      noindex !== $layout.sameNoindex
+      );
   $: numAccessSelected = isViewer ? 1 : $layout.numAccessSelected;
   $: notVerified = isViewer ? !$viewer.isVerified : !$orgsAndUsers.isVerified;
 
@@ -68,13 +74,14 @@
       (x) => x.organization != null && x.organization.individual,
     ).length > 0;
 
-  async function accessChange(access, publishAt) {
+  async function accessChange(access, publishAt, noindex) {
     if (!valid) return;
     if (isViewer) {
       await wrapLoad(viewerLayout, async () => {
         await editMetadata([viewer.document.id], {
           access,
           publish_at: publishAt,
+          noindex
         });
         viewer.document.doc = {
           ...viewer.document.doc,
@@ -85,7 +92,7 @@
         updateInCollection(
           viewer.document,
           (d) =>
-            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt }),
+            (d.doc = { ...d.doc, status: "readable", publish_at: publishAt, noindex }),
         );
       });
     } else {
@@ -94,6 +101,7 @@
         access,
         publishAt,
         layout,
+        noindex
       );
     }
     emit.dismiss();
@@ -104,6 +112,11 @@
   label {
     display: table;
     margin: 12px 0;
+  }
+
+  .normal-label {
+    display: initial;
+    margin-left: 8px;
   }
 
   input {
@@ -247,6 +260,7 @@
           </span>
         </div>
       {/if}
+
       {#if access != "public" && !notVerified}
         <div class="scheduler">
           <div class="scheduleaction">
@@ -271,6 +285,12 @@
         </div>
       {/if}
     </div>
+    <div>
+      <input type="checkbox" bind:checked={noindex} />
+      <label class="normal-label">
+        Hide from search engines and DocumentCloud search?
+      </label>
+    </div>
     <div class="buttonpadded">
       <Button
         disabledReason={valid
@@ -278,7 +298,7 @@
           : validPublishAt
           ? $_("dialogAccessDialog.unchanged")
           : $_("dialogAccessDialog.future")}
-        on:click={() => accessChange(access, publishAt)}
+        on:click={() => accessChange(access, publishAt, noindex)}
       >
         {$_("dialogAccessDialog.change")}
       </Button>

@@ -82,7 +82,8 @@
     "scheduleHelp": "This document will be made public at the given date and time.  Publication time is local{timezone}.",
     "unchanged": "Access is unchanged. Select a different access level.",
     "future": "Must select a time in the future",
-    "change": "Change"
+    "change": "Change",
+    "changeNoindex": "Change visibility to search engines and DocumentCloud search for {n, plural, one {document} other {# documents}}"
   },
   "dialogCollaboratorDialog": {
     "confirm": "Confirm remove user",

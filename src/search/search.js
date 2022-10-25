@@ -63,12 +63,16 @@ export const search = new Svue({
     },
     start(prevUrls, results, params) {
       if (results == null) return 0;
-      return (prevUrls.length * params.perPage) + 1;
+      var startIndex = 1;
+      if (Array.isArray(prevUrls) && params && !isNaN(params.perPage)) {
+        startIndex += prevUrls.length * params.perPage;
+      }
+      return startIndex;
     },
     end(start, results) {
       if (results == null) return 0;
       return start + results.length - 1;
-    }
+    },
   },
 });
 
