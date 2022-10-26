@@ -135,7 +135,7 @@ function initAddonsIfNecessary(route) {
   }
 }
 
-async function initOrgsAndUsers(callback = null) {
+export async function initOrgsAndUsers(callback = null) {
   orgsAndUsers.me = await getMe();
   if (orgsAndUsers.me != null) {
     // Logged in

@@ -325,7 +325,8 @@
   "uploadOptions": {
     "documentLang": "Document language:",
     "forceOcr": "Force OCR:",
-    "ocrEngine": "OCR Engine:"
+    "ocrEngine": "OCR Engine:",
+    "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left."
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",
