@@ -36,7 +36,13 @@ test-watch:
 	docker compose -f local.builder.yml run --rm test-watch
 
 prettier-check:
-	prettier --check --plugin-search-dir=. src	
+	prettier --check --plugin-search-dir=. src
 
 prettier:
-	prettier --write --plugin-search-dir=. src	
+	prettier --write --plugin-search-dir=. src
+
+browser-tests:
+	node test/functional/noindex.js
+
+browser-tests-debug:
+	DEBUG=yes node test/functional/noindex.js
