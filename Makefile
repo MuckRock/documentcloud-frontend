@@ -41,8 +41,8 @@ prettier-check:
 prettier:
 	prettier --write --plugin-search-dir=. src
 
-browser-tests:
-	node test/functional/noindex.js
+browser-tests-local:
+	node tests/functional/noindex.js
 
 browser-tests-debug:
-	DEBUG=yes node test/functional/noindex.js
+	DEBUG=yes node tests/functional/noindex.js

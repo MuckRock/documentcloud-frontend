@@ -1,8 +1,8 @@
-version: "2"
+version: "3"
 
 services:
   base:
-    image: node:12
+    image: node:14
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
