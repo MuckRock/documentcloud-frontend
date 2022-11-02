@@ -62,6 +62,20 @@ services:
       service: base
     command: npm run create-bundles
 
+  # TODO: Specify that base must be running first.
+  browser-test:
+    build:
+      dockerfile: browser-test.Dockerfile
+    networks:
+      default:
+        aliases:
+          - www.dev.documentcloud.org
+      squarelet_default:
+        aliases:
+          - www.dev.documentcloud.org
+    command:
+      node tests/functional/noindex.js
+
 volumes:
   nodemodules:
     external: true

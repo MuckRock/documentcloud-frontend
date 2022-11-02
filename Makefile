@@ -41,8 +41,11 @@ prettier-check:
 prettier:
 	prettier --write --plugin-search-dir=. src
 
-browser-tests-local:
+browser-test:
+	docker compose -f local.builder.yml run browser-test
+
+browser-test-local:
 	node tests/functional/noindex.js
 
-browser-tests-debug:
+browser-test-debug:
 	DEBUG=yes node tests/functional/noindex.js
