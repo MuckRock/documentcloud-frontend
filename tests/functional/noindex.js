@@ -3,6 +3,8 @@
 var test = require("tape");
 var Harness = require("./harness");
 var path = require("path");
+// In Docker, .env.test won't be there, but the actual environment variables
+// will have been set by local.builder.yml.
 require("dotenv").config({ path: path.join(__dirname, "../../.env.test") });
 
 var browserTypes = ["firefox", "chromium", "webkit"];
@@ -51,13 +53,16 @@ function runTest({ name, testBody, harness, browser, page }) {
   }
 }
 
-async function signInTest({ page, t }) {
+async function signInTest({ page, browser, t }) {
   try {
     await page.getByText("Sign in").click({ strict: false });
     await page.locator("#id_login").fill(process.env.TEST_USER);
     await page.locator("#id_password").fill(process.env.TEST_PASS);
-    await page.getByText("Log in").click({ strict: false });
-
+    console.log("browser.contexts", browser.contexts().length);
+    var form = await page.locator("#login_form");
+    var logInButton = await form.getByText("Log in");
+    console.log("logInButton count", await logInButton.count());
+    await logInButton.click();
     t.pass("Signed in");
   } catch (error) {
     t.fail(`Error while signing in: ${error.message}\n${error.stack}\n`);
