@@ -7,7 +7,8 @@ var path = require("path");
 // will have been set by local.builder.yml.
 require("dotenv").config({ path: path.join(__dirname, "../../.env.test") });
 
-var browserTypes = ["firefox", "chromium", "webkit"];
+//var browserTypes = [/*"firefox",*/ "chromium", "webkit"];
+var browserTypes = ["webkit"];
 
 (async () => {
   try {
@@ -29,6 +30,12 @@ var browserTypes = ["firefox", "chromium", "webkit"];
       harness,
       browser,
       page,
+    });
+    await runTest({
+      name: "Upload test",
+      testBody: uploadTest,
+      harness,
+      browser,
     });
     await harness.tearDown(browser);
   }
@@ -63,9 +70,31 @@ async function signInTest({ page, browser, t }) {
     var logInButton = await form.getByText("Log in");
     console.log("logInButton count", await logInButton.count());
     await logInButton.click();
+    //await Promise.all([
+    //logInButton.click(),
+    //page.waitForURL(/https:\/\/www\.dev\.documentcloud\.org\/app.*/),
+    //]);
     t.pass("Signed in");
   } catch (error) {
     t.fail(`Error while signing in: ${error.message}\n${error.stack}\n`);
+    process.exit(1);
+  }
+}
+
+async function uploadTest({ browser, t }) {
+  try {
+    // TODO: Harness should do this.
+    var pages = await (await browser.contexts())[0].pages();
+    console.log(pages.map((page) => page.url()));
+    var page = pages[0];
+    console.log("uploadTest url", page.url());
+    var buttons = await page.locator("button");
+    console.log("buttons count", await buttons.count());
+    var uploadButton = await buttons.filter({ hasText: /Upload/ });
+    await uploadButton.click();
+    await new Promise((resolve) => setTimeout(resolve, 60000));
+  } catch (error) {
+    t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
     process.exit(1);
   }
 }
