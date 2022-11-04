@@ -7,7 +7,7 @@ var path = require("path");
 // will have been set by local.builder.yml.
 require("dotenv").config({ path: path.join(__dirname, "../../.env.test") });
 
-//var browserTypes = [/*"firefox",*/ "chromium", "webkit"];
+//var browserTypes = ["firefox", "chromium", "webkit"];
 var browserTypes = ["webkit"];
 
 (async () => {
@@ -88,10 +88,11 @@ async function uploadTest({ harness, browser, t }) {
       return;
     }
 
-    //console.log("uploadTest url", page.url());
+    console.log("uploadTest url", page.url());
     var buttons = await page.locator("button");
     var uploadButton = await buttons.filter({ hasText: /Upload/ });
     await uploadButton.click();
+    console.log("uploading");
 
     var selectFilesButton = await buttons.filter({ hasText: /Select files/ });
 
@@ -109,7 +110,7 @@ async function uploadTest({ harness, browser, t }) {
     );
     await publicButton.click();
 
-    await harness.stall(60000);
+    //await harness.stall(60000);
   } catch (error) {
     t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
     process.exit(1);

@@ -14,6 +14,9 @@ build:
 build-staging:
 	docker compose -f local.builder.yml run --rm build_staging
 
+build-browser-test:
+	docker compose -f local.builder.yml build browser-test
+
 dev:
 	docker compose -f local.yml up documentcloud_frontend
 
@@ -42,7 +45,7 @@ prettier:
 	prettier --write --plugin-search-dir=. src
 
 browser-test:
-	docker compose -f local.builder.yml run browser-test
+	docker compose -f local.builder.yml run --rm browser-test
 
 browser-test-local:
 	node tests/functional/noindex.js
