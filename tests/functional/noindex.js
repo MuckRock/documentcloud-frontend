@@ -81,18 +81,35 @@ async function signInTest({ page, browser, t }) {
   }
 }
 
-async function uploadTest({ browser, t }) {
+async function uploadTest({ harness, browser, t }) {
   try {
-    // TODO: Harness should do this.
-    var pages = await (await browser.contexts())[0].pages();
-    console.log(pages.map((page) => page.url()));
-    var page = pages[0];
-    console.log("uploadTest url", page.url());
+    var page = await harness.getOnlyPage({ browser, t });
+    if (!page) {
+      return;
+    }
+
+    //console.log("uploadTest url", page.url());
     var buttons = await page.locator("button");
-    console.log("buttons count", await buttons.count());
     var uploadButton = await buttons.filter({ hasText: /Upload/ });
     await uploadButton.click();
-    await new Promise((resolve) => setTimeout(resolve, 60000));
+
+    var selectFilesButton = await buttons.filter({ hasText: /Select files/ });
+
+    const [fileChooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      selectFilesButton.click(),
+    ]);
+
+    await fileChooser.setFiles(
+      "tests/functional/fixtures/the-nature-of-the-firm-CPEC11.pdf",
+    );
+
+    var publicButton = await page.getByText(
+      "Document will be publicly visible.",
+    );
+    await publicButton.click();
+
+    await harness.stall(60000);
   } catch (error) {
     t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
     process.exit(1);

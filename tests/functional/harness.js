@@ -10,9 +10,9 @@ function Harness({ startURL, browserType = "webkit" }) {
     tearDown,
     checkFillField,
     stall,
-    navClick,
     loadClick,
     waitAssertClick,
+    getOnlyPage,
   };
 
   async function setUp() {
@@ -62,16 +62,6 @@ function Harness({ startURL, browserType = "webkit" }) {
     }
   }
 
-  function navClick(page, el) {
-    if (!page || !el) {
-      return null;
-    }
-    return Promise.all([
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-      el.click(),
-    ]);
-  }
-
   function loadClick(page, clickable) {
     return Promise.all([
       page.waitForNavigation({ waitUntil: "domcontentloaded" }),
@@ -83,6 +73,26 @@ function Harness({ startURL, browserType = "webkit" }) {
     var el = await page.waitFor(selector);
     t.ok(el, `${selector} exists.`);
     return el.click();
+  }
+
+  async function getOnlyPage({ browser, t }) {
+    var contexts = await browser.contexts();
+    if (contexts.length !== 1) {
+      t.fail(
+        `There is only one context. (Actual number of contexts: ${contexts.length})`,
+      );
+      return;
+    }
+
+    var pages = await contexts[0].pages();
+    if (pages.length !== 1) {
+      t.fail(
+        `There is only one page. (Actual number of pages: ${pages.length})`,
+      );
+      return;
+    }
+
+    return pages[0];
   }
 }
 
