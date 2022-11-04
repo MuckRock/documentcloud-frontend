@@ -60,20 +60,14 @@ function runTest({ name, testBody, harness, browser, page }) {
   }
 }
 
-async function signInTest({ page, browser, t }) {
+async function signInTest({ page, t }) {
   try {
     await page.getByText("Sign in").click({ strict: false });
     await page.locator("#id_login").fill(process.env.TEST_USER);
     await page.locator("#id_password").fill(process.env.TEST_PASS);
-    console.log("browser.contexts", browser.contexts().length);
     var form = await page.locator("#login_form");
     var logInButton = await form.getByText("Log in");
-    console.log("logInButton count", await logInButton.count());
     await logInButton.click();
-    //await Promise.all([
-    //logInButton.click(),
-    //page.waitForURL(/https:\/\/www\.dev\.documentcloud\.org\/app.*/),
-    //]);
     t.pass("Signed in");
   } catch (error) {
     t.fail(`Error while signing in: ${error.message}\n${error.stack}\n`);
@@ -88,11 +82,9 @@ async function uploadTest({ harness, browser, t }) {
       return;
     }
 
-    console.log("uploadTest url", page.url());
     var buttons = await page.locator("button");
     var uploadButton = await buttons.filter({ hasText: /Upload/ });
     await uploadButton.click();
-    console.log("uploading");
 
     var selectFilesButton = await buttons.filter({ hasText: /Select files/ });
 
@@ -110,7 +102,10 @@ async function uploadTest({ harness, browser, t }) {
     );
     await publicButton.click();
 
-    //await harness.stall(60000);
+    var beginButton = await page.getByText("Begin upload");
+    await beginButton.click();
+
+    await harness.stall(60000);
   } catch (error) {
     t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
     process.exit(1);
