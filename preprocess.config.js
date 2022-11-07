@@ -20,7 +20,7 @@ const preprocessOptions = {
         "@": process.cwd() + "/src",
       }),
     ],
-    prependData: '@import "@/style/variables.scss";',
+    prependData: '@import "@/style/variables.scss"; @import "@/style/fonts.scss";',
   },
   postcss: {
     plugins: [require("autoprefixer")],
