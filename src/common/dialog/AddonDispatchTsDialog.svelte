@@ -56,6 +56,7 @@
     [1, "Hourly"],
     [2, "Daily"],
     [3, "Weekly"],
+    [4, "Upload"],
   ];
   let eventSelectOptions = [];
   if (schema.eventOptions && schema.eventOptions.events) {
