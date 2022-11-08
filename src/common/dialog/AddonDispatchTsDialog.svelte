@@ -91,7 +91,7 @@
     showExistingEvents = false;
     runs = [];
     activeEvent = null;
-    eventSelect = 0;
+    eventSelect = "0";
     schema = structuredClone(layout.addonDispatchOpen.parameters);
     document.getElementById("form").closest("form").reset();
   }
