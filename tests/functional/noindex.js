@@ -39,6 +39,12 @@ const uploadedDocName = "the-nature-of-the-firm-CPEC11";
       harness,
       browser,
     });
+    await runTest({
+      name: "Open doc test",
+      testBody: openDocTest,
+      harness,
+      browser,
+    });
     await harness.tearDown(browser);
   }
 })();
@@ -76,7 +82,6 @@ async function signInTest({ page, t }) {
     process.exit(1);
   }
 }
-
 async function uploadTest({ harness, browser, t }) {
   try {
     var page = await harness.getOnlyPage({ browser, t });
@@ -107,52 +112,54 @@ async function uploadTest({ harness, browser, t }) {
     var beginButton = await page.getByText("Begin upload");
     await beginButton.click();
 
-    var docCard = await page.locator(".docscontainer .card", {
-      hasText: uploadedDocName,
+    // TODO: Name file uniquely each time? Otherwise, this
+    // can be tripped up by another doc with the same name
+    // in the manager view.
+    var openDocButton = await getOpenButtonForDoc({
+      managerPage: page,
+      docName: uploadedDocName,
     });
-    await docCard.waitFor();
-    console.log("docCard.count", await docCard.count());
-
-    //var locatorWithUploadedDoc = await cards.filter();
-    //t.equal(
-    //await locatorWithUploadedDoc.count(),
-    //1,
-    //"Uploaded doc appears in the manager view.",
-    //);
-    //
-    //var openDocButton = await locatorWithUploadedDoc.locator("Open");
-    //
-    //console.log("openDocButton.count", await openDocButton.count());
-    //var currentLocator = locatorWithUploadedDoc;
-    //
-    //const parentSearchTries = 5;
-    //for (let i = 0; i < parentSearchTries; ++i) {
-    //currentLocator = await currentLocator.locator("..");
-    //if (!currentLocator) {
-    //t.fail("Card containing the uploaded doc was found.");
-    //break;
-    //}
-    //console.log("currentLocator count", await currentLocator.count());
-    //
-    //if (await currentLocator.filter({ has: ".card" })) {
-    //cardWithUploadedDoc = currentLocator;
-    //break;
-    //}
-    //}
-    //
-    //t.ok(
-    //cardWithUploadedDoc && (await cardWithUploadedDoc.count()) === 1,
-    //"Card containing the uploaded doc was found.",
-    //);
-
-    //var openButton = await cardWithUploadedDoc.getByText("Open");
-    //t.ok(
-    //openButton && (await openButton.count()) === 1,
-    //"Open button appears for uploaded doc.",
-    //);
-    await harness.stall(60000);
+    t.ok(
+      openDocButton && (await openDocButton.count()) === 1,
+      "Open button appears for uploaded doc.",
+    );
+    t.pass("Document uploaded.");
+    // TODO: Clean-up/deletion test.
   } catch (error) {
     t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
     process.exit(1);
   }
+}
+
+async function openDocTest({ harness, browser, t }) {
+  try {
+    var page = await harness.getOnlyPage({ browser, t });
+    if (!page) {
+      return;
+    }
+    var openDocButton = await getOpenButtonForDoc({
+      managerPage: page,
+      docName: uploadedDocName,
+    });
+    await openDocButton.click();
+    t.ok(
+      page.url().endsWith(uploadedDocName),
+      "Navigated to the document's page.",
+    );
+    await harness.stall(60000);
+  } catch (error) {
+    t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
+    process.exit(1);
+  }
+}
+
+async function getOpenButtonForDoc({ managerPage, docName }) {
+  var docCard = await managerPage.locator(".docscontainer .card", {
+    hasText: docName,
+  });
+  await docCard.waitFor();
+
+  var button = docCard.locator("button", { hasText: "Open" });
+  await button.waitFor({ timeout: 180000 });
+  return button;
 }
