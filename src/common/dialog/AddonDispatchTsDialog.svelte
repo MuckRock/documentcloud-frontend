@@ -169,6 +169,7 @@
   $: includeQuery = showQuery && (!showDocuments || docType === "query");
   $: includeDocuments =
     showDocuments && (!showQuery || docType === "documents");
+  $: eventActive = eventSelect != 0 || activeEvent;
 
   let query =
     search && search.params && search.params.params && search.params.params.q;
@@ -349,61 +350,63 @@
         }}
       >
         <a id="form" />
-        {#if notice}
-          <div class="notice">{@html notice}</div>
-        {/if}
-        {#if showQuery && showDocuments}
-          <table class="documents">
-            <tbody>
-              <tr class="field">
-                <td class="radio">
-                  <div>
-                    <input
-                      type="radio"
-                      class="radio"
-                      name="documents"
-                      id="documents"
-                      bind:group={docType}
-                      value="documents"
-                      checked
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label for="documents">
-                      {$_("addonDispatchDialog.labelSelected", {
-                        values: { n: numSelected },
-                      })}
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr class="field">
-                <td class="radio">
-                  <div>
-                    <input
-                      type="radio"
-                      class="radio"
-                      name="documents"
-                      id="query"
-                      bind:group={docType}
-                      value="query"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <label for="query">
-                      {$_("addonDispatchDialog.labelQuery", {
-                        values: { n: search.results.count },
-                      })}
-                    </label>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        {#if !eventActive}
+          {#if notice}
+            <div class="notice">{@html notice}</div>
+          {/if}
+          {#if showQuery && showDocuments}
+            <table class="documents">
+              <tbody>
+                <tr class="field">
+                  <td class="radio">
+                    <div>
+                      <input
+                        type="radio"
+                        class="radio"
+                        name="documents"
+                        id="documents"
+                        bind:group={docType}
+                        value="documents"
+                        checked
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <label for="documents">
+                        {$_("addonDispatchDialog.labelSelected", {
+                          values: { n: numSelected },
+                        })}
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="field">
+                  <td class="radio">
+                    <div>
+                      <input
+                        type="radio"
+                        class="radio"
+                        name="documents"
+                        id="query"
+                        bind:group={docType}
+                        value="query"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <label for="query">
+                        {$_("addonDispatchDialog.labelQuery", {
+                          values: { n: search.results.count },
+                        })}
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {/if}
         {/if}
 
         {#if showEventInfo}
@@ -425,9 +428,9 @@
         <div class="buttonpadded">
           <!-- disable button when invalid, maybe -->
           <Button type="submit">
-            {eventSelect == 0 && !activeEvent
-              ? $_("dialog.dispatch")
-              : $_("dialog.save")}
+            {eventActive
+              ? $_("dialog.save")
+              : $_("dialog.dispatch")}
           </Button>
           <Button secondary={true} on:click={emit.dismiss}>
             {$_("dialog.cancel")}
