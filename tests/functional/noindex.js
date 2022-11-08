@@ -10,6 +10,8 @@ require("dotenv").config({ path: path.join(__dirname, "../../.env.test") });
 //var browserTypes = ["firefox", "chromium", "webkit"];
 var browserTypes = ["webkit"];
 
+const uploadedDocName = "the-nature-of-the-firm-CPEC11";
+
 (async () => {
   try {
     browserTypes.forEach(runSuiteWithBrowserType);
@@ -105,6 +107,49 @@ async function uploadTest({ harness, browser, t }) {
     var beginButton = await page.getByText("Begin upload");
     await beginButton.click();
 
+    var docCard = await page.locator(".docscontainer .card", {
+      hasText: uploadedDocName,
+    });
+    await docCard.waitFor();
+    console.log("docCard.count", await docCard.count());
+
+    //var locatorWithUploadedDoc = await cards.filter();
+    //t.equal(
+    //await locatorWithUploadedDoc.count(),
+    //1,
+    //"Uploaded doc appears in the manager view.",
+    //);
+    //
+    //var openDocButton = await locatorWithUploadedDoc.locator("Open");
+    //
+    //console.log("openDocButton.count", await openDocButton.count());
+    //var currentLocator = locatorWithUploadedDoc;
+    //
+    //const parentSearchTries = 5;
+    //for (let i = 0; i < parentSearchTries; ++i) {
+    //currentLocator = await currentLocator.locator("..");
+    //if (!currentLocator) {
+    //t.fail("Card containing the uploaded doc was found.");
+    //break;
+    //}
+    //console.log("currentLocator count", await currentLocator.count());
+    //
+    //if (await currentLocator.filter({ has: ".card" })) {
+    //cardWithUploadedDoc = currentLocator;
+    //break;
+    //}
+    //}
+    //
+    //t.ok(
+    //cardWithUploadedDoc && (await cardWithUploadedDoc.count()) === 1,
+    //"Card containing the uploaded doc was found.",
+    //);
+
+    //var openButton = await cardWithUploadedDoc.getByText("Open");
+    //t.ok(
+    //openButton && (await openButton.count()) === 1,
+    //"Open button appears for uploaded doc.",
+    //);
     await harness.stall(60000);
   } catch (error) {
     t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
