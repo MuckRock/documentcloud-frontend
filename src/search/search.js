@@ -106,7 +106,6 @@ export async function searchNext() {
     search,
     () => searchDocumentsUrl(search.currentUrl),
   );
-  console.log(search.prevUrls);
 }
 
 export async function searchPrev() {

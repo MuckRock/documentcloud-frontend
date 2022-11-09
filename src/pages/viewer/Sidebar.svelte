@@ -4,6 +4,8 @@
   import AccessIcon from "@/common/AccessIcon";
   import SpecialMessage from "@/common/SpecialMessage";
   import HtmlField from "@/common/HtmlField";
+  import session from "@/api/session";
+  import { jsonUrl } from "@/api/viewer";
 
   import {
     enterRedactMode,
@@ -16,12 +18,34 @@
   import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
 
   function handleMouseDown() {
     if ($layout.displayAnnotate) {
       cancelAnnotation();
     }
   }
+
+  let textDoc = null;
+  let ocrEngine = null;
+  let loading = false;
+  let engineMap = {tess4: "Tesseract", textract: "Textract"}
+
+  $: {
+    if ($viewer.document != null && textDoc == null && !loading) {
+      loading = true;
+      (async () => {
+        textDoc = await session.getStatic(jsonUrl(viewer.document));
+        // strip _force if it exists
+        ocrEngine = textDoc.pages[0].ocr.split("_")[0];
+        // map to human readable
+        ocrEngine = engineMap[ocrEngine];
+        loading = false;
+      })();
+    }
+  }
+
+
 </script>
 
 <style lang="scss">
@@ -206,6 +230,9 @@
           <div>
             <AccessIcon document={$viewer.document} showText={true} />
           </div>
+        {/if}
+        {#if ocrEngine}
+          <small><p>OCR: {ocrEngine}</p></small>
         {/if}
       </div>
 
