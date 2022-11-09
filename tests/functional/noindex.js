@@ -10,7 +10,10 @@ require("dotenv").config({ path: path.join(__dirname, "../../.env.test") });
 //var browserTypes = ["firefox", "chromium", "webkit"];
 var browserTypes = ["webkit"];
 
-const uploadedDocName = "the-nature-of-the-firm-CPEC11";
+const testDocName = "Small pdf";
+const uploadedDocName = testDocName.replace(/ /g, "-");
+const baseURL = "https://www.dev.documentcloud.org/";
+const appURL = baseURL + "app";
 
 (async () => {
   try {
@@ -22,7 +25,7 @@ const uploadedDocName = "the-nature-of-the-firm-CPEC11";
   async function runSuiteWithBrowserType(browserType) {
     var harness = Harness({
       // TODO: Grab from env.
-      startURL: "https://www.dev.documentcloud.org/",
+      startURL: baseURL,
       browserType,
     });
     var { browser, page } = await harness.setUp();
@@ -42,6 +45,18 @@ const uploadedDocName = "the-nature-of-the-firm-CPEC11";
     await runTest({
       name: "Open doc test",
       testBody: openDocTest,
+      harness,
+      browser,
+    });
+    await runTest({
+      name: "Open access dialog from viewer",
+      testBody: openAccessDialogFromViewerTest,
+      harness,
+      browser,
+    });
+    await runTest({
+      name: "Delete uploaded documents",
+      testBody: deleteDocTest,
       harness,
       browser,
     });
@@ -100,9 +115,7 @@ async function uploadTest({ harness, browser, t }) {
       selectFilesButton.click(),
     ]);
 
-    await fileChooser.setFiles(
-      "tests/functional/fixtures/the-nature-of-the-firm-CPEC11.pdf",
-    );
+    await fileChooser.setFiles(`tests/functional/fixtures/${testDocName}.pdf`);
 
     var publicButton = await page.getByText(
       "Document will be publicly visible.",
@@ -117,16 +130,39 @@ async function uploadTest({ harness, browser, t }) {
     // in the manager view.
     var openDocButton = await getOpenButtonForDoc({
       managerPage: page,
-      docName: uploadedDocName,
+      docName: testDocName,
     });
     t.ok(
       openDocButton && (await openDocButton.count()) === 1,
       "Open button appears for uploaded doc.",
     );
     t.pass("Document uploaded.");
-    // TODO: Clean-up/deletion test.
   } catch (error) {
     t.fail(`Error uploading: ${error.message}\n${error.stack}\n`);
+    process.exit(1);
+  }
+}
+
+async function deleteDocTest({ harness, browser, t }) {
+  try {
+    var page = await harness.getOnlyPage({ browser, t });
+    if (!page) {
+      return;
+    }
+    await page.goto(appURL);
+    await page.waitForURL((url) => url.href.startsWith(appURL));
+
+    var openDocButton = await getOpenButtonForDoc({
+      managerPage: page,
+      docName: uploadedDocName,
+    });
+    // Playwright does not expose parentElement or parentNode.
+    var openDocLink = await openDocButton.locator("../..");
+    await openDocLink.waitFor();
+    var docURL = await openDocLink.getAttribute("href");
+    console.log("docURL", docURL);
+  } catch (error) {
+    t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
     process.exit(1);
   }
 }
@@ -139,16 +175,32 @@ async function openDocTest({ harness, browser, t }) {
     }
     var openDocButton = await getOpenButtonForDoc({
       managerPage: page,
-      docName: uploadedDocName,
+      docName: testDocName,
     });
-    await openDocButton.click();
+    await harness.loadClick(page, openDocButton);
     t.ok(
-      page.url().endsWith(uploadedDocName),
+      page.url().endsWith(uploadedDocName.toLowerCase()),
       "Navigated to the document's page.",
     );
-    await harness.stall(60000);
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
+    process.exit(1);
+  }
+}
+
+async function openAccessDialogFromViewerTest({ harness, browser, t }) {
+  try {
+    var page = await harness.getOnlyPage({ browser, t });
+    if (!page) {
+      return;
+    }
+    var accessLink = await page.getByText("Public access");
+    await accessLink.click();
+    //await harness.stall(60000);
+  } catch (error) {
+    t.fail(
+      `Error opening access dialog from viewer: ${error.message}\n${error.stack}\n`,
+    );
     process.exit(1);
   }
 }
