@@ -13,7 +13,6 @@
     "css-loader": "^2.1.1",
     "dotenv-flow-webpack": "^1.0.0",
     "html-webpack-plugin": "4.5.2",
-    "hugo-extended": "0.72.0",
     "jest": "^24.9.0",
     "mini-css-extract-plugin": "^0.6.0",
     "node-sass": "^4.13.0",
@@ -54,7 +53,7 @@
     "test-watch": "jest --watchAll"
   },
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.27.2",
     "axios-retry": "^3.1.9",
     "body-scroll-lock": "^2.6.4",
     "dompurify": "^2.0.8",
