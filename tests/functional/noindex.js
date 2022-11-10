@@ -154,13 +154,40 @@ async function deleteDocTest({ harness, browser, t }) {
 
     var openDocButton = await getOpenButtonForDoc({
       managerPage: page,
-      docName: uploadedDocName,
+      docName: testDocName,
     });
     // Playwright does not expose parentElement or parentNode.
     var openDocLink = await openDocButton.locator("../..");
     await openDocLink.waitFor();
     var docURL = await openDocLink.getAttribute("href");
     console.log("docURL", docURL);
+
+    var docRows = await page.locator(".card .row");
+    var docRowWithURL;
+    const rowCount = await docRows.count();
+    for (let i = 0; i < rowCount; ++i) {
+      let docRow = docRows.nth(i);
+      let link = await docRow.locator(`a[href="${docURL}"]`);
+      const hitCount = await link.count();
+      console.log("hitCount", hitCount);
+      // As of 2022-11-10, there will be at least two matches if this is the
+      // correct row: One for the text link and one for the image link.
+      if (hitCount > 0) {
+        docRowWithURL = docRow;
+        break;
+      }
+    }
+
+    if (!docRowWithURL) {
+      t.fail("Found row with target document URL.");
+      return;
+    }
+
+    //var docCheckBox = await docRowWithURL.getByRole("check");
+    var docCheckBox = await docRowWithURL.locator('input[type="checkbox"]');
+    // TODO: We have a trick checkbox. The actual input is hidden, so we actually
+    // need to click the span to trigger the check.
+    await docCheckBox.check();
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
     process.exit(1);
