@@ -184,10 +184,14 @@ async function deleteDocTest({ harness, browser, t }) {
     }
 
     //var docCheckBox = await docRowWithURL.getByRole("check");
-    var docCheckBox = await docRowWithURL.locator('input[type="checkbox"]');
-    // TODO: We have a trick checkbox. The actual input is hidden, so we actually
-    // need to click the span to trigger the check.
-    await docCheckBox.check();
+    var docCheckBoxSpan = await docRowWithURL.locator(
+      'input[type="checkbox"] ~ span',
+    );
+    console.log("checkboxes", await docCheckBoxSpan.count());
+    // We have a trick checkbox. The actual input is hidden (opacity 0, under a span,
+    // so we actually need to click the span (which intercepts pointer events)
+    // to trigger the check.
+    await docCheckBoxSpan.click();
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
     process.exit(1);
