@@ -23,44 +23,49 @@ const appURL = baseURL + "app";
   }
 
   async function runSuiteWithBrowserType(browserType) {
-    var harness = Harness({
-      // TODO: Grab from env.
-      startURL: baseURL,
-      browserType,
-    });
-    var { browser, page } = await harness.setUp();
-    await runTest({
-      name: "Sign-in test",
-      testBody: signInTest,
-      harness,
-      browser,
-      page,
-    });
-    await runTest({
-      name: "Upload test",
-      testBody: uploadTest,
-      harness,
-      browser,
-    });
-    await runTest({
-      name: "Open doc test",
-      testBody: openDocTest,
-      harness,
-      browser,
-    });
-    await runTest({
-      name: "Open access dialog from viewer",
-      testBody: openAccessDialogFromViewerTest,
-      harness,
-      browser,
-    });
-    await runTest({
-      name: "Delete uploaded documents",
-      testBody: deleteDocTest,
-      harness,
-      browser,
-    });
-    await harness.tearDown(browser);
+    try {
+      var harness = Harness({
+        // TODO: Grab from env.
+        startURL: baseURL,
+        browserType,
+      });
+      var { browser, page } = await harness.setUp();
+      await runTest({
+        name: "Sign-in test",
+        testBody: signInTest,
+        harness,
+        browser,
+        page,
+      });
+      await runTest({
+        name: "Upload test",
+        testBody: uploadTest,
+        harness,
+        browser,
+      });
+      await runTest({
+        name: "Open doc test",
+        testBody: openDocTest,
+        harness,
+        browser,
+      });
+      await runTest({
+        name: "Open access dialog from viewer",
+        testBody: openAccessDialogFromViewerTest,
+        harness,
+        browser,
+      });
+    } finally {
+      // Test deleting document regardless of what happens
+      // so the next run is clean.
+      await runTest({
+        name: "Delete uploaded documents",
+        testBody: deleteDocTest,
+        harness,
+        browser,
+      });
+      await harness.tearDown(browser);
+    }
   }
 })();
 
@@ -192,6 +197,22 @@ async function deleteDocTest({ harness, browser, t }) {
     // so we actually need to click the span (which intercepts pointer events)
     // to trigger the check.
     await docCheckBoxSpan.click();
+
+    var editSpan = await page
+      .locator(".barcontainer .action")
+      .getByText("Edit");
+    await editSpan.click();
+    var deleteDiv = await page
+      .locator(".barcontainer .menu")
+      .getByText("Delete");
+    console.log("delete", await deleteDiv.count());
+    await deleteDiv.click();
+    var deleteButton = await page
+      .locator(".modalcontainer button[type='submit']")
+      .filter({ hasText: "Delete" });
+    await deleteButton.click();
+    t.pass("Document deleted without errors.");
+    // TODO: Make sure the document is actually gone?
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
     process.exit(1);
