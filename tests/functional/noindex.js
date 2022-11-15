@@ -16,11 +16,7 @@ const baseURL = "https://www.dev.documentcloud.org/";
 const appURL = baseURL + "app";
 
 (async () => {
-  try {
-    browserTypes.forEach(runSuiteWithBrowserType);
-  } catch (error) {
-    console.error(error, error.stack);
-  }
+  browserTypes.forEach(runSuiteWithBrowserType);
 
   async function runSuiteWithBrowserType(browserType) {
     try {
@@ -55,6 +51,8 @@ const appURL = baseURL + "app";
         harness,
         browser,
       });
+    } catch (error) {
+      console.error(error, error.stack);
     } finally {
       // Test deleting document regardless of what happens
       // so the next run is clean.
@@ -165,7 +163,6 @@ async function deleteDocTest({ harness, browser, t }) {
     var openDocLink = await openDocButton.locator("../..");
     await openDocLink.waitFor();
     var docURL = await openDocLink.getAttribute("href");
-    console.log("docURL", docURL);
 
     var docRows = await page.locator(".card .row");
     var docRowWithURL;
@@ -174,7 +171,6 @@ async function deleteDocTest({ harness, browser, t }) {
       let docRow = docRows.nth(i);
       let link = await docRow.locator(`a[href="${docURL}"]`);
       const hitCount = await link.count();
-      console.log("hitCount", hitCount);
       // As of 2022-11-10, there will be at least two matches if this is the
       // correct row: One for the text link and one for the image link.
       if (hitCount > 0) {
@@ -192,7 +188,6 @@ async function deleteDocTest({ harness, browser, t }) {
     var docCheckBoxSpan = await docRowWithURL.locator(
       'input[type="checkbox"] ~ span',
     );
-    console.log("checkboxes", await docCheckBoxSpan.count());
     // We have a trick checkbox. The actual input is hidden (opacity 0, under a span,
     // so we actually need to click the span (which intercepts pointer events)
     // to trigger the check.
@@ -205,7 +200,6 @@ async function deleteDocTest({ harness, browser, t }) {
     var deleteDiv = await page
       .locator(".barcontainer .menu")
       .getByText("Delete");
-    console.log("delete", await deleteDiv.count());
     await deleteDiv.click();
     var deleteButton = await page
       .locator(".modalcontainer button[type='submit']")
