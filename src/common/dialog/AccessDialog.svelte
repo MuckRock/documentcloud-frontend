@@ -286,7 +286,7 @@
       {/if}
     </div>
     <div>
-      <input type="checkbox" bind:checked={noindex} />
+      <input class="hide-from-search-checkbox" type="checkbox" bind:checked={noindex} />
       <label class="normal-label">
         Hide from search engines and DocumentCloud search?
       </label>

@@ -51,6 +51,12 @@ const appURL = baseURL + "app";
         harness,
         browser,
       });
+      await runTest({
+        name: "Make document hidden in access dialog",
+        testBody: setHiddenPropInAccessDialogTest,
+        harness,
+        browser,
+      });
     } catch (error) {
       console.error(error, error.stack);
     } finally {
@@ -207,6 +213,31 @@ async function deleteDocTest({ harness, browser, t }) {
     await deleteButton.click();
     t.pass("Document deleted without errors.");
     // TODO: Make sure the document is actually gone?
+  } catch (error) {
+    t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
+    process.exit(1);
+  }
+}
+
+async function setHiddenPropInAccessDialogTest({
+  harness,
+  browser,
+  t,
+  shouldHide = true,
+}) {
+  try {
+    var page = await harness.getOnlyPage({ browser, t });
+    if (!page) {
+      return;
+    }
+    var hideCheck = await page.locator(".hide-from-search-checkbox");
+    await hideCheck[shouldHide ? "check" : "uncheck"]();
+
+    var changeButton = await page
+      .locator(".modalcontainer button[type='submit']")
+      .filter({ hasText: "Change" });
+    await changeButton.click();
+    t.pass("Document hide property set without errors.");
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
     process.exit(1);
