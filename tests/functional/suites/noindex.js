@@ -57,6 +57,17 @@ const appURL = baseURL + "app";
         name: "Make document hidden in access dialog",
         testBody: setHiddenPropInAccessDialogTest,
       });
+      await runTest({
+        ...base,
+        name: "Open access dialog from viewer again",
+        testBody: openAccessDialogFromViewerTest,
+      });
+      await runTest({
+        ...base,
+        name: "Make document NOT hidden in access dialog",
+        testBody: setHiddenPropInAccessDialogTest,
+        shouldHide: false,
+      });
     } catch (error) {
       console.error(error, error.stack);
     } finally {

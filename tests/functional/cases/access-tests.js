@@ -33,12 +33,12 @@ async function setHiddenPropInAccessDialogTest({
     await page.screenshot({ path: "reopeneddoc.png", fullPage: true });
 
     var robotsMetaTag = await page.locator("meta[name='robots']");
-    // This waitFor is necessary. I think it's because for page.locator() may default
-    // to waiting until the element is visible, but meta tags never are.
-    await robotsMetaTag.waitFor({ state: "attached" });
-    const tagCount = await robotsMetaTag.count();
 
     if (shouldHide) {
+      // This waitFor is necessary. I think it's because for page.locator() may default
+      // to waiting until the element is visible, but meta tags never are.
+      await robotsMetaTag.waitFor({ state: "attached" });
+      const tagCount = await robotsMetaTag.count();
       t.equal(tagCount, 1, "Document has a meta tag for robots");
       t.equal(
         await robotsMetaTag.getAttribute("content"),
@@ -46,7 +46,20 @@ async function setHiddenPropInAccessDialogTest({
         'meta tag content is set to "noindex"',
       );
     } else {
-      t.equal(tagCount, 0, "Document has no meta tag for robots");
+      try {
+        await robotsMetaTag.waitFor({ state: "attached", timeout: 5000 });
+      } catch (e) {
+        // TODO: Find out if there is a less strange way to test for the absence
+        // of a DOM element.
+        if (/locator\.waitFor: Timeout \d+ms exceeded/.test(e.message)) {
+          t.pass("Document has no meta tag for robots");
+        } else {
+          t.fail("Unexpected exception while confirming lack of robots tag.");
+          console.log(
+            `Unexpected exception while confirming lack of robots tag: ${e.message}, ${e.stack}`,
+          );
+        }
+      }
     }
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
