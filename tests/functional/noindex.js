@@ -134,9 +134,6 @@ async function uploadTest({ harness, browser, t }) {
     var beginButton = await page.getByText("Begin upload");
     await beginButton.click();
 
-    // TODO: Name file uniquely each time? Otherwise, this
-    // can be tripped up by another doc with the same name
-    // in the manager view.
     var openDocButton = await getOpenButtonForDoc({
       managerPage: page,
       docName: testDocName,
@@ -161,14 +158,7 @@ async function deleteDocTest({ harness, browser, t }) {
     await page.goto(appURL);
     await page.waitForURL((url) => url.href.startsWith(appURL));
 
-    var openDocButton = await getOpenButtonForDoc({
-      managerPage: page,
-      docName: testDocName,
-    });
-    // Playwright does not expose parentElement or parentNode.
-    var openDocLink = await openDocButton.locator("../..");
-    await openDocLink.waitFor();
-    var docURL = await openDocLink.getAttribute("href");
+    const docURL = await getURLForDocByName({ docName: testDocName, page });
 
     var docRows = await page.locator(".card .row");
     var docRowWithURL;
@@ -291,4 +281,15 @@ async function getOpenButtonForDoc({ managerPage, docName }) {
   var button = docCard.locator("button", { hasText: "Open" });
   await button.waitFor({ timeout: 180000 });
   return button;
+}
+
+async function getURLForDocByName({ page, docName }) {
+  await page.goto(appURL);
+  await page.waitForURL((url) => url.href.startsWith(appURL));
+
+  var openDocButton = await getOpenButtonForDoc({ managerPage: page, docName });
+  // Playwright does not expose parentElement or parentNode.
+  var openDocLink = await openDocButton.locator("../..");
+  await openDocLink.waitFor();
+  return openDocLink.getAttribute("href");
 }
