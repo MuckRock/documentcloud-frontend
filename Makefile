@@ -48,7 +48,7 @@ browser-test:
 	docker compose -f local.builder.yml run --rm browser-test
 
 browser-test-local:
-	node tests/functional/noindex.js
+	node tests/functional/suites/noindex.js
 
 browser-test-debug:
-	DEBUG=yes node tests/functional/noindex.js
+	DEBUG=yes node tests/functional/suites/noindex.js

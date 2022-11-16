@@ -8,10 +8,9 @@ function Harness({ startURL, browserType = "webkit" }) {
   return {
     setUp,
     tearDown,
-    checkFillField,
+    goWaitForURL,
     stall,
     loadClick,
-    waitAssertClick,
     getOnlyPage,
   };
 
@@ -29,29 +28,9 @@ function Harness({ startURL, browserType = "webkit" }) {
     await browser.close();
   }
 
-  async function checkFillField(
-    page,
-    test,
-    { selector, name, text, texts, hitEnterAfterEachPiece },
-  ) {
-    var field = await page.$(selector);
-    test.ok(field, `${name} field exists.`);
-    // Clear existing text in field.
-    await page.$eval(selector, (el) => (el.value = ""));
-    if (texts) {
-      for (let i = 0; i < texts.length; ++i) {
-        await field.type(texts[i]);
-        if (hitEnterAfterEachPiece) {
-          await field.press("Enter");
-        }
-      }
-    } else {
-      await field.type(text);
-      if (hitEnterAfterEachPiece) {
-        await field.press("Enter");
-      }
-    }
-    return field;
+  async function goWaitForURL({ page, url }) {
+    page.goto(url);
+    return page.waitForURL((currentURL) => currentURL.href.startsWith(url));
   }
 
   function stall(time) {
@@ -67,12 +46,6 @@ function Harness({ startURL, browserType = "webkit" }) {
       page.waitForNavigation({ waitUntil: "domcontentloaded" }),
       clickable.click(),
     ]);
-  }
-
-  async function waitAssertClick({ page, t, selector }) {
-    var el = await page.waitFor(selector);
-    t.ok(el, `${selector} exists.`);
-    return el.click();
   }
 
   async function getOnlyPage({ browser, t }) {

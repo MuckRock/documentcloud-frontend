@@ -76,7 +76,7 @@ services:
     env_file:
       - .env.test
     command:
-      node tests/functional/noindex.js
+      node tests/functional/suites/noindex.js
 
 volumes:
   nodemodules:
