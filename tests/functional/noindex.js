@@ -220,14 +220,40 @@ async function setHiddenPropInAccessDialogTest({
     if (!page) {
       return;
     }
+
     var hideCheck = await page.locator(".hide-from-search-checkbox");
     await hideCheck[shouldHide ? "check" : "uncheck"]();
+    //await page.screenshot({ path: "after-checking.png", fullPage: true });
 
+    var accessDialog = await page.locator(".modalcontainer .modal");
     var changeButton = await page
       .locator(".modalcontainer button[type='submit']")
       .filter({ hasText: "Change" });
-    await changeButton.click();
-    t.pass("Document hide property set without errors.");
+    await Promise.all([
+      changeButton.click(),
+      accessDialog.waitFor({ state: "detached" }),
+    ]);
+    //await page.screenshot({ path: "after-change-button.png", fullPage: true });
+
+    await openDoc({ page, harness, docName: testDocName });
+    await page.screenshot({ path: "reopeneddoc.png", fullPage: true });
+
+    var robotsMetaTag = await page.locator("meta[name='robots']");
+    // This waitFor is necessary. I think it's because for page.locator() may default
+    // to waiting until the element is visible, but meta tags never are.
+    await robotsMetaTag.waitFor({ state: "attached" });
+    const tagCount = await robotsMetaTag.count();
+
+    if (shouldHide) {
+      t.equal(tagCount, 1, "Document has a meta tag for robots");
+      t.equal(
+        await robotsMetaTag.getAttribute("content"),
+        "noindex",
+        'meta tag content is set to "noindex"',
+      );
+    } else {
+      t.equal(tagCount, 0, "Document has no meta tag for robots");
+    }
   } catch (error) {
     t.fail(`Error opening doc: ${error.message}\n${error.stack}\n`);
     process.exit(1);
@@ -240,11 +266,7 @@ async function openDocTest({ harness, browser, t }) {
     if (!page) {
       return;
     }
-    var openDocButton = await getOpenButtonForDoc({
-      managerPage: page,
-      docName: testDocName,
-    });
-    await harness.loadClick(page, openDocButton);
+    await openDoc({ page, harness, docName: testDocName });
     t.ok(
       page.url().endsWith(uploadedDocName.toLowerCase()),
       "Navigated to the document's page.",
@@ -283,13 +305,22 @@ async function getOpenButtonForDoc({ managerPage, docName }) {
   return button;
 }
 
-async function getURLForDocByName({ page, docName }) {
-  await page.goto(appURL);
-  await page.waitForURL((url) => url.href.startsWith(appURL));
+async function openDoc({ harness, page, docName }) {
+  await goToManagerPage({ page });
+  var openDocButton = await getOpenButtonForDoc({ managerPage: page, docName });
+  await harness.loadClick(page, openDocButton);
+}
 
+async function getURLForDocByName({ page, docName }) {
+  await goToManagerPage({ page });
   var openDocButton = await getOpenButtonForDoc({ managerPage: page, docName });
   // Playwright does not expose parentElement or parentNode.
   var openDocLink = await openDocButton.locator("../..");
   await openDocLink.waitFor();
   return openDocLink.getAttribute("href");
+}
+
+async function goToManagerPage({ page }) {
+  page.goto(appURL);
+  return page.waitForURL((url) => url.href.startsWith(appURL));
 }
