@@ -78,6 +78,21 @@ services:
     command:
       ./browser-test-all.sh
 
+  browser-test-staging:
+    build:
+      dockerfile: browser-test.Dockerfile
+    networks:
+      default:
+        aliases:
+          - www.dev.documentcloud.org
+      squarelet_default:
+        aliases:
+          - www.dev.documentcloud.org
+    env_file:
+      - .env.staging
+    command:
+      ./browser-test-all.sh
+
 volumes:
   nodemodules:
     external: true

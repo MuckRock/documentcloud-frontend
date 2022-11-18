@@ -75,6 +75,15 @@ The above commands run the browsers headlessly. If you want to see what's going 
 
 If you want to step through the tests with the debugger, use `make browser-test-debug`.
 
+### Running against staging
+
+Add the following for a verified-to-upload user an staging to `.env.staging`:
+
+  TEST_USER=<the test user>
+  TEST_PASS=<the password>
+
+Then, run `make browser-test-staging`. To run it headfully, use `make browser-test-headful-staging`.
+
 ### Development
 
 The functional tests are organized like this:

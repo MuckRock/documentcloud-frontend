@@ -29,7 +29,7 @@ async function setHiddenPropInAccessDialogTest({
     //await page.screenshot({ path: "after-change-button.png", fullPage: true });
 
     await openDoc({ page, harness, docName: testDocName, appURL });
-    await page.screenshot({ path: "reopeneddoc.png", fullPage: true });
+    //await page.screenshot({ path: "reopeneddoc.png", fullPage: true });
 
     var robotsMetaTag = await page.locator("meta[name='robots']");
 

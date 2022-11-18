@@ -30,6 +30,7 @@ const testDocName = "Small pdf";
 const baseURL = process.env.APP_URL;
 const appURL = baseURL + "app";
 
+// TODO when another suite is added: Abstract the harness setup and teardown and the env setup.
 (async () => {
   try {
     var harness = Harness({

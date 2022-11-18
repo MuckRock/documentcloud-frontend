@@ -47,6 +47,9 @@ prettier:
 browser-test:
 	docker compose -f local.builder.yml run --rm browser-test
 
+browser-test-staging:
+	docker compose -f local.builder.yml run --rm browser-test-staging
+
 browser-test-direct:
 	node tests/functional/suites/noindex.js
 
@@ -58,6 +61,9 @@ browser-test-direct-all:
 # Set BROWSER to change the browser. e.g. BROWSER=chromium make browser-test-headful
 browser-test-headful:
 	DEBUG=yes node tests/functional/suites/noindex.js
+
+browser-test-headful-staging:
+	DEBUG=yes node tests/functional/suites/noindex.js --envfile .env.staging
 
 browser-test-debug:
 	DEBUG=yes node debug tests/functional/suites/noindex.js
