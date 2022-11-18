@@ -7,6 +7,7 @@ async function signInTest({ page, t }) {
     );
   }
   try {
+    debugger;
     await page.getByText("Sign in").click({ strict: false });
     await page.locator("#id_login").fill(process.env.TEST_USER);
     await page.locator("#id_password").fill(process.env.TEST_PASS);

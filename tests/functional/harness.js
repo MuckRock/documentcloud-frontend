@@ -5,6 +5,8 @@
 var playwright = require("playwright");
 
 function Harness({ startURL, browserType = "webkit" }) {
+  var browser;
+
   return {
     setUp,
     tearDown,
@@ -18,14 +20,15 @@ function Harness({ startURL, browserType = "webkit" }) {
     var config = {
       headless: !process.env.DEBUG,
     };
-    var browser = await playwright[browserType].launch(config);
+    browser = await playwright[browserType].launch(config);
     var page = await browser.newPage({ ignoreHTTPSErrors: true });
     await page.goto(startURL);
     return { browser, page };
   }
 
-  async function tearDown(browser) {
-    await browser.close();
+  async function tearDown() {
+    await Promise.all(browser.contexts().map((context) => context.close()));
+    return browser.close();
   }
 
   async function goWaitForURL({ page, url }) {
@@ -48,21 +51,19 @@ function Harness({ startURL, browserType = "webkit" }) {
     ]);
   }
 
-  async function getOnlyPage({ browser, t }) {
+  async function getOnlyPage() {
     var contexts = await browser.contexts();
     if (contexts.length !== 1) {
-      t.fail(
-        `There is only one context. (Actual number of contexts: ${contexts.length})`,
+      throw new Error(
+        `There is more than one context. (Actual number of contexts: ${contexts.length})`,
       );
-      return;
     }
 
     var pages = await contexts[0].pages();
     if (pages.length !== 1) {
-      t.fail(
-        `There is only one page. (Actual number of pages: ${pages.length})`,
+      throw new Error(
+        `There is more than one page. (Actual number of pages: ${pages.length})`,
       );
-      return;
     }
 
     return pages[0];

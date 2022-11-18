@@ -50,5 +50,14 @@ browser-test:
 browser-test-local:
 	node tests/functional/suites/noindex.js
 
-browser-test-debug:
+browser-test-local-all:
+	BROWSER=firefox node tests/functional/suites/noindex.js
+	BROWSER=chromium node tests/functional/suites/noindex.js
+	BROWSER=webkit node tests/functional/suites/noindex.js
+
+# Set BROWSER to change the browser. e.g. BROWSER=chromium make browser-test-headful
+browser-test-headful:
 	DEBUG=yes node tests/functional/suites/noindex.js
+
+browser-test-debug:
+	DEBUG=yes node debug tests/functional/suites/noindex.js

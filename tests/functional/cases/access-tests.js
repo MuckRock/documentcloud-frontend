@@ -3,14 +3,13 @@ var { openDoc } = require("../test-utils");
 
 async function setHiddenPropInAccessDialogTest({
   harness,
-  browser,
   t,
   shouldHide = true,
   testDocName,
   appURL,
 }) {
   try {
-    var page = await harness.getOnlyPage({ browser, t });
+    var page = await harness.getOnlyPage();
     if (!page) {
       return;
     }

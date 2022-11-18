@@ -25,61 +25,55 @@ var {
   setHiddenPropInAccessDialogTest,
 } = require("../cases/access-tests.js");
 
-//var browserTypes = ["firefox", "chromium", "webkit"];
-var browserTypes = ["webkit"];
-
+const browserType = process.env.BROWSER || "webkit";
 const testDocName = "Small pdf";
 const baseURL = process.env.APP_URL;
 const appURL = baseURL + "app";
 
 (async () => {
-  browserTypes.forEach(runSuiteWithBrowserType);
-
-  async function runSuiteWithBrowserType(browserType) {
-    try {
-      var harness = Harness({
-        // TODO: Grab from env.
-        startURL: baseURL,
-        browserType,
-      });
-      var { browser, page } = await harness.setUp();
-      var base = { harness, browser, page, appURL, testDocName };
-      await runTest({ ...base, name: "Sign-in test", testBody: signInTest });
-      await runTest({ ...base, name: "Upload test", testBody: uploadTest });
-      await runTest({ ...base, name: "Open doc test", testBody: openDocTest });
-      await runTest({
-        ...base,
-        name: "Open access dialog from viewer",
-        testBody: openAccessDialogFromViewerTest,
-      });
-      await runTest({
-        ...base,
-        name: "Make document hidden in access dialog",
-        testBody: setHiddenPropInAccessDialogTest,
-      });
-      await runTest({
-        ...base,
-        name: "Open access dialog from viewer again",
-        testBody: openAccessDialogFromViewerTest,
-      });
-      await runTest({
-        ...base,
-        name: "Make document NOT hidden in access dialog",
-        testBody: setHiddenPropInAccessDialogTest,
-        shouldHide: false,
-      });
-    } catch (error) {
-      console.error(error, error.stack);
-    } finally {
-      // Test deleting document regardless of what happens
-      // so the next run is clean.
-      await runTest({
-        ...base,
-        name: "Delete uploaded documents",
-        testBody: deleteDocTest,
-      });
-      await harness.tearDown(browser);
-    }
+  try {
+    var harness = Harness({
+      // TODO: Grab from env.
+      startURL: baseURL,
+      browserType,
+    });
+    var { browser, page } = await harness.setUp();
+    var base = { harness, browser, page, appURL, testDocName };
+    await runTest({ ...base, name: "Sign-in test", testBody: signInTest });
+    await runTest({ ...base, name: "Upload test", testBody: uploadTest });
+    await runTest({ ...base, name: "Open doc test", testBody: openDocTest });
+    await runTest({
+      ...base,
+      name: "Open access dialog from viewer",
+      testBody: openAccessDialogFromViewerTest,
+    });
+    await runTest({
+      ...base,
+      name: "Make document hidden in access dialog",
+      testBody: setHiddenPropInAccessDialogTest,
+    });
+    await runTest({
+      ...base,
+      name: "Open access dialog from viewer again",
+      testBody: openAccessDialogFromViewerTest,
+    });
+    await runTest({
+      ...base,
+      name: "Make document NOT hidden in access dialog",
+      testBody: setHiddenPropInAccessDialogTest,
+      shouldHide: false,
+    });
+  } catch (error) {
+    console.error(error, error.stack);
+  } finally {
+    // Test deleting document regardless of what happens
+    // so the next run is clean.
+    await runTest({
+      ...base,
+      name: "Delete uploaded documents",
+      testBody: deleteDocTest,
+    });
+    await harness.tearDown(browser);
   }
 })();
 

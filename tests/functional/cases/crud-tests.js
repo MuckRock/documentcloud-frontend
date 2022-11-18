@@ -6,9 +6,9 @@ var {
   openDoc,
 } = require("../test-utils");
 
-async function uploadTest({ harness, browser, t, testDocName }) {
+async function uploadTest({ harness, t, testDocName }) {
   try {
-    var page = await harness.getOnlyPage({ browser, t });
+    var page = await harness.getOnlyPage();
     if (!page) {
       return;
     }
@@ -114,9 +114,9 @@ async function deleteDocTest({ harness, browser, t, appURL, testDocName }) {
   }
 }
 
-async function openDocTest({ harness, browser, t, testDocName, appURL }) {
+async function openDocTest({ harness, t, testDocName, appURL }) {
   try {
-    var page = await harness.getOnlyPage({ browser, t });
+    var page = await harness.getOnlyPage();
     if (!page) {
       return;
     }
