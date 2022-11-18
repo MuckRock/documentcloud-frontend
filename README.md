@@ -48,3 +48,38 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 [muckrock]: https://github.com/MuckRock/muckrock
 [documentcloud]: https://github.com/MuckRock/documentcloud
 [squarelet]: https://github.com/muckrock/squarelet
+
+## Unit tests
+
+Run unit tests with `make test`. This will run the tests via the builder Docker image.
+
+## Functional tests
+
+All of the functional test commands depend on the front end running, so start the app with `make dev-app` and start the backend and Squarelet as well.
+
+### Running tests locally
+
+Run `make browser-test` in another terminal. This will run the `browser-test` Docker image against the running front-end app using all of the browsers, except Chromium for now.
+
+You will need to create a user that is verified for uploading as described in the [backend documentation](muckrock/documentcloud). Then, you need to put that users credentials in a `.env.test` file in the project root that looks like this:
+
+  TEST_USER=<the test user>
+  TEST_PASS=<the password>
+  APP_URL=https://www.dev.documentcloud.org/
+
+To run the functional tests without the Docker image, run `make browser-test-direct`. This will run the test suite files via your computer's Node. It will use the webkit browser only (but you can change this in the Makefile if you like).
+
+`make browser-test-direct` will do the same thing, except it will use all of the browsers.
+
+The above commands run the browsers headlessly. If you want to see what's going on, you can use `make browser-test-headful`.
+
+If you want to step through the tests with the debugger, use `make browser-test-debug`.
+
+### Development
+
+The functional tests are organized like this:
+
+`tests/functional`: Common utilities for the test go here.
+`tests/functional/cases`: The bodies of individual test cases.
+`tests/functional/suites`: These files are the test runner entry points ([`tape`](https://github.com/ljharb/tape/) is the test runner). They use the utilties to start up and shut down the browsers via Playwright and load and run individual test cases. It may make sense to repeat some test cases across suites, like signing in, uploading a document, and deleting an uploaded document, for example.
+`tests/functional/fixtures`: Artifacts and data needed by the tests go here.

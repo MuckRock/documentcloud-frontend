@@ -47,10 +47,10 @@ prettier:
 browser-test:
 	docker compose -f local.builder.yml run --rm browser-test
 
-browser-test-local:
+browser-test-direct:
 	node tests/functional/suites/noindex.js
 
-browser-test-local-all:
+browser-test-direct-all:
 	BROWSER=firefox node tests/functional/suites/noindex.js
 	#BROWSER=chromium node tests/functional/suites/noindex.js
 	BROWSER=webkit node tests/functional/suites/noindex.js
