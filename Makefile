@@ -52,7 +52,7 @@ browser-test-local:
 
 browser-test-local-all:
 	BROWSER=firefox node tests/functional/suites/noindex.js
-	BROWSER=chromium node tests/functional/suites/noindex.js
+	#BROWSER=chromium node tests/functional/suites/noindex.js
 	BROWSER=webkit node tests/functional/suites/noindex.js
 
 # Set BROWSER to change the browser. e.g. BROWSER=chromium make browser-test-headful

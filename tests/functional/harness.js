@@ -19,6 +19,15 @@ function Harness({ startURL, browserType = "webkit" }) {
   async function setUp() {
     var config = {
       headless: !process.env.DEBUG,
+      //args: [
+      //"--webview-enable-modern-cookie-same-site",
+      //"--ignore-certificate-errors",
+      //"--ignore-certificate-errors-skip-list",
+      //"--allow-cross-origin-auth-prompt",
+      //"--allow-external-pages",
+      //"--allow-failed-policy-fetch-for-test",
+      //"--allow-running-insecure-content",
+      //],
     };
     browser = await playwright[browserType].launch(config);
     var page = await browser.newPage({ ignoreHTTPSErrors: true });
