@@ -170,6 +170,9 @@ export class Document extends Svue {
           if (doc.edit_access == null) return false;
           return doc.edit_access;
         },
+        noindex(doc) {
+          return doc.noindex;
+        },
 
         // Status and processing-related properties
         status(doc) {

@@ -63,12 +63,16 @@ export const search = new Svue({
     },
     start(prevUrls, results, params) {
       if (results == null) return 0;
-      return (prevUrls.length * params.perPage) + 1;
+      var startIndex = 1;
+      if (Array.isArray(prevUrls) && params && !isNaN(params.perPage)) {
+        startIndex += prevUrls.length * params.perPage;
+      }
+      return startIndex;
     },
     end(start, results) {
       if (results == null) return 0;
       return start + results.length - 1;
-    }
+    },
   },
 });
 
@@ -101,10 +105,8 @@ export async function searchNext() {
   search.prevUrls.push(search.currentUrl);
   search.prevUrls = search.prevUrls;
   search.currentUrl = search.results.nextUrl;
-  search.results = await wrapSeparate(
-    layout,
-    search,
-    () => searchDocumentsUrl(search.currentUrl),
+  search.results = await wrapSeparate(layout, search, () =>
+    searchDocumentsUrl(search.currentUrl),
   );
 }
 
@@ -118,10 +120,8 @@ export async function searchPrev() {
     // instead of a project URL
     search.currentUrl = search.results.prevUrl;
   }
-  search.results = await wrapSeparate(
-    layout,
-    search,
-    () => searchDocumentsUrl(search.currentUrl),
+  search.results = await wrapSeparate(layout, search, () =>
+    searchDocumentsUrl(search.currentUrl),
   );
 }
 

@@ -41,7 +41,8 @@ export const layout = new Svue({
       dataDocuments: [],
       dataOpen: false,
 
-      // Which documents the access is being edited for
+      // Which documents the access is being edited for.
+      // Also used for editing hiding from indexing.
       accessEditDocuments: [],
 
       // Which documents are being reprocessed
@@ -106,6 +107,9 @@ export const layout = new Svue({
       // Return the most restricted access level
       return minAccess;
     },
+    defaultNoindex(accessEditDocuments) {
+      return accessEditDocuments.every((doc) => doc.noindex);
+    },
     sameAccess(sameAccessProp) {
       // Return the access level if all docs have the same access
       // Otherwise, return null
@@ -115,6 +119,11 @@ export const layout = new Svue({
       // Return the publish at date if all docs have the same publish at date
       // Otherwise, return null
       return sameAccessProp("publishAt");
+    },
+    sameNoindex(sameAccessProp) {
+      // Return the given property if all docs have the same value for that property
+      // Otherwise, return null
+      return sameAccessProp("noindex");
     },
     sameAccessProp(accessEditDocuments) {
       // Return the given property if all docs have the same value for that property

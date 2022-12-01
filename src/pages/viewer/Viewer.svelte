@@ -85,6 +85,9 @@
     <!-- Insert canonical URL -->
     <link rel="canonical" href={$viewer.document.canonicalUrl} />
 
+    {#if $viewer.document && $viewer.document.noindex}
+      <meta name="robots" content="noindex">
+    {/if}
     <!-- Social cards -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="og:url" content={$viewer.document.canonicalUrl} />
