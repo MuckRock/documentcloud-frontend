@@ -9,11 +9,16 @@ export async function extractEntities(id) {
   return data;
 }
 
-export async function getEntities(id, page = 1, filters) {
+export async function getEntities(id, nextUrl, filters) {
   // Returns annotations for the specified document
-  const url = apiUrl(
-    queryBuilder(`documents/${id}/entities/`, { page, ...filters }),
-  );
+  var url; 
+  if (nextUrl === null) {
+    url = apiUrl(
+      queryBuilder(`documents/${id}/entities/`, filters),
+    );
+  } else {
+    url = nextUrl;
+  }
   const { data } = await session.get(url);
   return new Entities(url, data);
 }
