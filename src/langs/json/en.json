@@ -71,7 +71,7 @@
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
     "selectAccess": "Select an access level for the {n, plural, one {selected document} other {# selected documents}}",
     "public": "Public access",
-    "publicDesc": "Anyone on the internet can search for and view the document.",
+    "publicDesc": "Anyone on the internet can view the document.",
     "verifiedHelp": "Only verified users or members of verified organizations can make uploaded documents public. If you're a journalist or otherwise work in publishing vetted materials to inform the public, <a href=\"https://airtable.com/shrZrgdmuOwW0ZLPM\" target=\"_blank\">learn more and request verification here.</a>",
     "privateToOrg": "You can’t change the access level to “Private to your organization” because {n, plural, one {this document is} other {one or more documents are}} associated with your individual account, not an organization. To add {n, plural, one {it} other {them}} to an organization, select {n, plural, one {it} other {them}} from the management view and click “Change Owner.” <a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">You can join or create an organization on this page.</a>",
     "private": "Private access",
