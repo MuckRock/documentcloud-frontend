@@ -106,10 +106,8 @@ export async function searchNext() {
   search.prevUrls.push(search.currentUrl);
   search.prevUrls = search.prevUrls;
   search.currentUrl = search.results.nextUrl;
-  search.results = await wrapSeparate(
-    layout,
-    search,
-    () => searchDocumentsUrl(search.currentUrl),
+  search.results = await wrapSeparate(layout, search, () =>
+    searchDocumentsUrl(search.currentUrl),
   );
 }
 
@@ -123,10 +121,8 @@ export async function searchPrev() {
     // instead of a project URL
     search.currentUrl = search.results.prevUrl;
   }
-  search.results = await wrapSeparate(
-    layout,
-    search,
-    () => searchDocumentsUrl(search.currentUrl),
+  search.results = await wrapSeparate(layout, search, () =>
+    searchDocumentsUrl(search.currentUrl),
   );
 }
 

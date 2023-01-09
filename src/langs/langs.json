@@ -1,5 +1,7 @@
 [
   ["English", "en"],
   ["Español", "es"],
-  ["Français", "fr"]
+  ["Français", "fr"],
+  ["українська", "ua"],
+  ["русский", "ru"]
 ]

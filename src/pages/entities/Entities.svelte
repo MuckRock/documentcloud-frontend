@@ -110,7 +110,7 @@
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     entities.document = await getDocument(id);
     try {
-      entities.entities = await getE(id, 1);
+      entities.entities = await getE(id);
       fullText = await session.getStatic(jsonUrl(entities.document));
     } catch (e) {
       console.error(e);
@@ -120,24 +120,23 @@
 
   let pagePushed = false;
 
-  async function pushPage(num) {
+  async function pushPage(url) {
     pagePushed = true;
-    page = num;
     const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
     selectedEntity = null;
-    entities.entities = await getE(id, page, filter);
+    entities.entities = await getE(id, url, filter);
   }
 
   async function applyFilters() {
-    await pushPage(page);
+    await pushPage();
   }
 
   async function prevPage() {
-    pushPage(page - 1);
+    pushPage(entities.entities.prevUrl);
   }
 
   async function nextPage() {
-    pushPage(page + 1);
+    pushPage(entities.entities.nextUrl);
   }
 
   function categorizeEntities(entities) {
@@ -271,20 +270,12 @@
   <p>
     <Link back={true} color={true}>{$_("entities.back")}</Link>
   </p>
-  {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.count > 0 || pagePushed)}
+  {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.entities.length > 0 || pagePushed)}
     <p class="paginator">
       <span>{$_("entities.page")}&nbsp;</span>
       {#if $entities.entities.hasPrev}
         <span class="paginate" on:click={() => prevPage()}>←</span>
       {/if}
-      <span class="page"
-        >{$entities.entities.page + 1}
-        {$_("entities.of")}
-        {$entities.entities.numPages}
-        ({$_("entities.totalEntityResult", {
-          values: { n: $entities.entities.count },
-        })})
-      </span>
       {#if $entities.entities.hasNext}
         <span class="paginate" on:click={() => nextPage()}>→</span>
       {/if}

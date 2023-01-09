@@ -268,7 +268,7 @@
           {$_("dialog.edit")}
           {eventNameField
             ? activeEvent.parameters[eventNameField]
-            : `Event #{activeEvent.id}`}
+            : `Event #${activeEvent.id}`}
         </h2>
       {/if}
 
@@ -285,7 +285,7 @@
                   <a href="#" on:click={() => loadEvent(event)}>
                     {eventNameField
                       ? event.parameters[eventNameField]
-                      : `Event #{event.id}`}
+                      : `Event #${event.id}`}
                   </a>
                 </li>
               {/each}

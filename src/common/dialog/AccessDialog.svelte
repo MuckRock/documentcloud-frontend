@@ -201,6 +201,11 @@
       display: inline-block;
     }
   }
+
+  .noindex-block h3 {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
 </style>
 
 <div>
@@ -285,11 +290,16 @@
         </div>
       {/if}
     </div>
-    <div>
-      <input type="checkbox" bind:checked={noindex} />
+    <div class="noindex-block">
+      <input class="hide-from-search-checkbox" type="checkbox" bind:checked={noindex} />
       <label class="normal-label">
-        Hide from search engines and DocumentCloud search?
+        <h3>{$_("dialogAccessDialog.noindexTitle")}</h3>
       </label>
+      <div class="callout">
+        <span class="i">{@html InfoSvg}</span>
+        <span class="content">
+        {$_("dialogAccessDialog.noindexHelp")}
+      </div>
     </div>
     <div class="buttonpadded">
       <Button

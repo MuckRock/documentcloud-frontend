@@ -20,3 +20,6 @@ public/viewer/*
 
 # Netlify
 .netlify
+
+# Local test env file
+.env.test
