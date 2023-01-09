@@ -55,6 +55,7 @@
   },
   "dialog": {
     "cancel": "Cancel",
+    "cancelling": "Cancelling...",
     "delete": "Delete",
     "done": "Done",
     "edit": "Edit",
