@@ -13,6 +13,7 @@
   export let run;
   export let compact = false;
   let comment = "";
+  let cancelled = [];
 
   function getStatus(status) {
     if (status === "cancelled") {
@@ -27,6 +28,11 @@
   function dismiss(uuid) {
     removeRun(uuid);
     dismissAddonRun(uuid);
+  }
+
+  function cancel(uuid) {
+    cancelAddonRun(uuid);
+    cancelled.push(uuid);
   }
 
   function thumbsUp() {
@@ -159,7 +165,26 @@
             {/if}
           </span>
         {/if}
-
+      </span>
+    {:else} 
+      <span class="cancel">
+        {#if cancelled.includes(run.uuid)}
+          <Button
+            small={true}
+            danger={true}
+            disabled={true}
+            >
+            {$_("dialog.cancelling")}
+          </Button>
+        {:else}
+          <Button
+            small={true}
+            on:click={() => cancel(run.uuid)}
+            danger={true}
+            >
+            {$_("dialog.cancel")}
+          </Button>
+        {/if}
       </span>
     {/if}
   {/if}
