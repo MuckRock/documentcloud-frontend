@@ -8,7 +8,7 @@
   // Store properties
   import { removeRun, done, editAddonRun } from "@/manager/addons";
 
-  import { dismissAddonRun } from "@/api/addon";
+  import { dismissAddonRun, cancelAddonRun } from "@/api/addon";
 
   export let run;
   export let compact = false;
