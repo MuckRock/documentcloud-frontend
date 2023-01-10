@@ -32,7 +32,7 @@
 
   function cancel(uuid) {
     cancelAddonRun(uuid);
-    cancelled.push(uuid);
+    cancelled = [...cancelled, uuid];
   }
 
   function thumbsUp() {
