@@ -36,6 +36,12 @@
       text-decoration: underline;
     }
   }
+
+  .markdown :global(a) {
+    text-decoration: underline;
+    color: $primary;
+  }
+
 </style>
 
 <div class="mcontent">
@@ -59,7 +65,7 @@
           </a>
         </span>
       </h2>
-      <div>
+      <div class="markdown">
         <SvelteMarkdown
           source={addon.parameters.description}
           renderers={{ html: null }}
