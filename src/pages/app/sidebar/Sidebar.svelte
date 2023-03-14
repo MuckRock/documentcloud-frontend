@@ -3,6 +3,7 @@
 
   // Components
   import Projects from "./Projects";
+  import OrgUsers from "./OrgUsers.svelte";
 
   export let expanded;
 
@@ -56,5 +57,9 @@
 
 <div class="sidebar" class:expanded>
   <Projects on:retractSidebar={emit.retractSidebar} />
+
+  <OrgUsers on:retractSidebar={emit.retractSidebar} />
+
+  <!-- todo get rid of this -->
   <div class="sidebarbg" />
 </div>

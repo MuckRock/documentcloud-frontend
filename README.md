@@ -13,6 +13,8 @@ In order to install, run:
 make install
 ```
 
+If this process fails because it can't find `.env.test`, run `cp .env .env.test` to create the test environment file.
+
 Once the node modules have been installed, start the app with:
 
 ```bash

@@ -5,6 +5,7 @@ import {
   changeActiveOrg,
   getOrganizationsByIds,
   getUser,
+  getUsers,
   getOrganization,
 } from "@/api/orgAndUser";
 import { projects, initProjects } from "./projects";
@@ -26,6 +27,7 @@ export const orgsAndUsers = new Svue({
       hasInited: false,
       hasInitedProjects: false,
       hasInitedAddons: false,
+      sameOrgUsers: [],
     };
   },
   watch: {
@@ -137,7 +139,7 @@ function initAddonsIfNecessary(route) {
 
 export async function initOrgsAndUsers(callback = null) {
   orgsAndUsers.me = await getMe();
-  if (orgsAndUsers.me != null) {
+  if (orgsAndUsers.me !== null) {
     // Logged in
     orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
     orgsAndUsers.selfOrgs = await getOrganizationsByIds(
@@ -147,6 +149,15 @@ export async function initOrgsAndUsers(callback = null) {
       const org = orgsAndUsers.selfOrgs[i];
       orgsAndUsers.orgsById[org.id] = org;
     }
+
+    // switch to optional chaining when available
+    // this might be a number if org is not expanded
+    if (orgsAndUsers.me.organization.id) {
+      orgsAndUsers.sameOrgUsers = await usersInOrg(
+        orgsAndUsers.me.organization.id,
+      );
+    }
+
     // Trigger update
     orgsAndUsers.usersById = orgsAndUsers.usersById;
     orgsAndUsers.orgsById = orgsAndUsers.orgsById;
@@ -189,4 +200,8 @@ export async function changeActive(org) {
     orgsAndUsers.me = orgsAndUsers.me;
     pushToast("Successfully changed active organization");
   });
+}
+
+export async function usersInOrg(orgId) {
+  return getUsers({ orgIds: [orgId] });
 }
