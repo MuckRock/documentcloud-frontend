@@ -2,7 +2,11 @@
   import emitter from "@/emit";
 
   // Components
-  import Projects from "./Projects";
+  import Hamburger from "@/common/Hamburger";
+  import Logo from "@/common/Logo";
+
+  import ProjectFilters from "./ProjectFilters.svelte";
+  import Projects from "./Projects.svelte";
   import OrgUsers from "./OrgUsers.svelte";
 
   export let expanded;
@@ -35,6 +39,10 @@
     box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.12);
   }
 
+  .sidebar header {
+    padding: 20px 0;
+  }
+
   @media only screen and (max-width: $mobileBreak) {
     .sidebar {
       display: none;
@@ -55,11 +63,16 @@
   }
 </style>
 
-<div class="sidebar" class:expanded>
-  <Projects on:retractSidebar={emit.retractSidebar} />
+<aside class="sidebar" class:expanded>
+  <header>
+    <Hamburger on:toggle={emit.retractSidebar} />
+    <Logo />
+  </header>
 
-  <OrgUsers on:retractSidebar={emit.retractSidebar} />
+  <ProjectFilters />
+  <OrgUsers />
+  <Projects on:retractSidebar={emit.retractSidebar} />
 
   <!-- todo get rid of this -->
   <div class="sidebarbg" />
-</div>
+</aside>

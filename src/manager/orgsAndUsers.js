@@ -150,13 +150,10 @@ export async function initOrgsAndUsers(callback = null) {
       orgsAndUsers.orgsById[org.id] = org;
     }
 
-    // switch to optional chaining when available
-    // this might be a number if org is not expanded
-    if (orgsAndUsers.me.organization.id) {
-      orgsAndUsers.sameOrgUsers = await usersInOrg(
-        orgsAndUsers.me.organization.id,
-      );
-    }
+    orgsAndUsers.sameOrgUsers = await inMyOrg(
+      orgsAndUsers.me.organization,
+      orgsAndUsers.me,
+    );
 
     // Trigger update
     orgsAndUsers.usersById = orgsAndUsers.usersById;
@@ -204,4 +201,12 @@ export async function changeActive(org) {
 
 export async function usersInOrg(orgId) {
   return getUsers({ orgIds: [orgId] });
+}
+
+// same as above, but exclude me
+export async function inMyOrg(organization, me) {
+  if (!organization.id) return [];
+  const users = await getUsers({ orgIds: [organization.id] });
+
+  return users.filter((u) => u.id !== me.id);
 }

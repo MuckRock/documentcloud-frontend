@@ -491,6 +491,9 @@
     "newProject": "+ New Project",
     "createProject": "Create your first project by clicking “New Project” above."
   },
+  "organizations": {
+    "sameOrgUsers": "Users in organization"
+  },
   "uploadDialog": {
     "docUpload": "Document Upload",
     "docUploadProj": "Document Upload to {title}",
