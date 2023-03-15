@@ -208,5 +208,9 @@ export async function inMyOrg(organization, me) {
   if (!organization.id) return [];
   const users = await getUsers({ orgIds: [organization.id] });
 
+  users.sort((a, b) =>
+    String(a.name || a.username).localeCompare(String(b.name || b.username)),
+  );
+
   return users.filter((u) => u.id !== me.id);
 }

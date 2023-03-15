@@ -43,7 +43,7 @@
 
 <div class="org-users">
   {#if $orgsAndUsers.me !== null && !$orgsAndUsers.me.organization.individual}
-    <details open>
+    <details>
       <summary>
         <Title small inline>
           {$_("organizations.sameOrgUsers")}: <Link
