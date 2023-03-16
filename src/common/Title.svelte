@@ -1,6 +1,7 @@
 <script>
   // Whether the title should be a little smaller
   export let small = false;
+  export let inline = false;
 </script>
 
 <style scoped>
@@ -16,8 +17,13 @@
     font-size: 16px;
     padding-right: 33px;
   }
+
+  .inline {
+    display: inline;
+  }
 </style>
 
-<div class="primary" class:small>
+<!-- todo use a proper H tag -->
+<div class="primary" class:small class:inline>
   <slot />
 </div>
