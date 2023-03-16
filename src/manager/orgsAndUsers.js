@@ -195,6 +195,10 @@ export async function changeActive(org) {
 
     orgsAndUsers.me.organization = org;
     orgsAndUsers.me = orgsAndUsers.me;
+    orgsAndUsers.sameOrgUsers = await inMyOrg(
+      orgsAndUsers.me.organization,
+      orgsAndUsers.me,
+    );
     pushToast("Successfully changed active organization");
   });
 }

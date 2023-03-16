@@ -14,6 +14,7 @@
   }
 
   .org-users summary {
+    cursor: pointer;
     padding: 0 25px;
   }
 
@@ -39,19 +40,24 @@
     /* $primary-faded */
     background: rgba(66, 148, 240, 0.13);
   }
+
+  .org-users h3 {
+    display: inline;
+    font-size: 16px;
+  }
 </style>
 
 <div class="org-users">
   {#if $orgsAndUsers.me !== null && !$orgsAndUsers.me.organization.individual}
     <details>
       <summary>
-        <Title small inline>
+        <h3>
           {$_("organizations.sameOrgUsers")}: <Link
             plusReplace={true}
             toUrl={orgUrl($orgsAndUsers.me.organization)}
             >{$orgsAndUsers.me.organization.name}</Link
           >
-        </Title>
+        </h3>
       </summary>
 
       <ul class="users">
