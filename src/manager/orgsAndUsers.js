@@ -210,7 +210,10 @@ export async function usersInOrg(orgId) {
 // same as above, but exclude me
 export async function inMyOrg(organization, me) {
   if (!organization.id) return [];
-  const users = await getUsers({ orgIds: [organization.id] }).catch((e) => []);
+  const users = await getUsers({ orgIds: [organization.id] }).catch((e) => {
+    console.error(e);
+    return [];
+  });
 
   users.sort((a, b) =>
     String(a.name || a.username).localeCompare(String(b.name || b.username)),
