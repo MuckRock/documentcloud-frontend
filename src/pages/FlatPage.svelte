@@ -250,7 +250,8 @@
         }
       }
 
-      :global(h5, h6) {
+      :global(h5),
+      :global(h6) {
         font-weight: bold;
       }
 
@@ -298,7 +299,8 @@
         border-collapse: collapse;
       }
 
-      :global(td, th) {
+      :global(td),
+      :global(th) {
         border: solid 1px #d1d6dc;
         padding: 6px 12px;
         vertical-align: middle;
