@@ -37,9 +37,12 @@
       (async () => {
         textDoc = await session.getStatic(jsonUrl(viewer.document));
         // strip _force if it exists
-        ocrEngine = textDoc.pages[0].ocr.split("_")[0];
-        // map to human readable
-        ocrEngine = engineMap[ocrEngine];
+        ocrEngine = textDoc.pages[0].ocr;
+        if (ocrEngine) {
+          ocrEngine = ocrEngine.split("_")[0];
+          // map to human readable
+          ocrEngine = engineMap[ocrEngine];
+        }
         loading = false;
       })();
     }
