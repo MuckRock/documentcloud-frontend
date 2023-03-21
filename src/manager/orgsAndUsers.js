@@ -5,6 +5,7 @@ import {
   changeActiveOrg,
   getOrganizationsByIds,
   getUser,
+  getUsers,
   getOrganization,
 } from "@/api/orgAndUser";
 import { projects, initProjects } from "./projects";
@@ -26,6 +27,7 @@ export const orgsAndUsers = new Svue({
       hasInited: false,
       hasInitedProjects: false,
       hasInitedAddons: false,
+      sameOrgUsers: [],
     };
   },
   watch: {
@@ -137,7 +139,7 @@ function initAddonsIfNecessary(route) {
 
 export async function initOrgsAndUsers(callback = null) {
   orgsAndUsers.me = await getMe();
-  if (orgsAndUsers.me != null) {
+  if (orgsAndUsers.me !== null) {
     // Logged in
     orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
     orgsAndUsers.selfOrgs = await getOrganizationsByIds(
@@ -147,6 +149,12 @@ export async function initOrgsAndUsers(callback = null) {
       const org = orgsAndUsers.selfOrgs[i];
       orgsAndUsers.orgsById[org.id] = org;
     }
+
+    orgsAndUsers.sameOrgUsers = await inMyOrg(
+      orgsAndUsers.me.organization,
+      orgsAndUsers.me,
+    );
+
     // Trigger update
     orgsAndUsers.usersById = orgsAndUsers.usersById;
     orgsAndUsers.orgsById = orgsAndUsers.orgsById;
@@ -187,6 +195,29 @@ export async function changeActive(org) {
 
     orgsAndUsers.me.organization = org;
     orgsAndUsers.me = orgsAndUsers.me;
+    orgsAndUsers.sameOrgUsers = await inMyOrg(
+      orgsAndUsers.me.organization,
+      orgsAndUsers.me,
+    );
     pushToast("Successfully changed active organization");
   });
+}
+
+export async function usersInOrg(orgId) {
+  return getUsers({ orgIds: [orgId] });
+}
+
+// same as above, but exclude me
+export async function inMyOrg(organization, me) {
+  if (!organization.id) return [];
+  const users = await getUsers({ orgIds: [organization.id] }).catch((e) => {
+    console.error(e);
+    return [];
+  });
+
+  users.sort((a, b) =>
+    String(a.name || a.username).localeCompare(String(b.name || b.username)),
+  );
+
+  return users.filter((u) => u.id !== me.id);
 }
