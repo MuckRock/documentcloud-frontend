@@ -20,7 +20,7 @@
     "html-webpack-plugin": "4.5.2",
     "jest": "^24.9.0",
     "mini-css-extract-plugin": "^0.6.0",
-    "node-sass": "^8.0.0",
+    "node-sass": "^4.13.0",
     "playwright": "^1.27.1",
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^2.1.1",
