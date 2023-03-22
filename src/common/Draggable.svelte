@@ -39,37 +39,35 @@
     width: 100%;
     height: 100%;
     position: relative;
+  }
+  .outer :global(.upload) {
+    height: 150px;
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-weight: bold;
+    background: #fffafb;
+    color: black;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+  }
 
-    :global(.upload) {
-      height: 150px;
-      width: 100%;
-      display: table-cell;
-      vertical-align: middle;
-      padding: 20px;
-      box-sizing: border-box;
-      text-align: center;
-      font-weight: bold;
-      background: #fffafb;
-      color: black;
-      transition: all 0.2s ease;
-      border-radius: 6px;
-    }
-
-    :global(input[type="file"]) {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      top: 0;
-      bottom: 0;
-      opacity: 0;
-      cursor: pointer;
-
-      &:hover + :global(.upload),
-      &.dragging + :global(.upload) {
-        background: #fc4762;
-        color: white;
-      }
-    }
+  .outer :global(input[type="file"]) {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .outer :global(input[type="file"]):hover + :global(.upload),
+  .outer :global(input[type="file"].dragging) + :global(.upload) {
+    background: #fc4762;
+    color: white;
   }
 </style>
 
