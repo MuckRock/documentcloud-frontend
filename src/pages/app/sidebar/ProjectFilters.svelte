@@ -17,7 +17,7 @@
     color: rgba(0, 0, 0, 0.8);
   }
 
-  .linksection :global(a).active {
+  .linksection :global(a.active) {
     /* $primary-faded */
     background: rgba(66, 148, 240, 0.13);
   }

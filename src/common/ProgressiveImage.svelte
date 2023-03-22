@@ -142,36 +142,35 @@
     width: 100%;
     background: white;
     box-sizing: border-box;
+  }
+  div.bordered {
+    border: solid 1px gainsboro;
+  }
 
-    &.bordered {
-      border: solid 1px gainsboro;
-    }
+  div :global(img) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
 
-    :global(img) {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
+    user-drag: none;
+    user-select: none;
 
-      user-drag: none;
-      user-select: none;
+    transition: opacity 0.2s linear;
+    opacity: 0;
+  }
 
-      transition: opacity 0.2s linear;
-      opacity: 0;
+  div :global(img.loaded) {
+    opacity: 1;
+  }
 
-      &.loaded {
-        opacity: 1;
-      }
-    }
+  div :global(img.loaded.grayed) {
+    filter: brightness(0.8);
+  }
 
-    &.grayed {
-      filter: brightness(0.8);
-    }
-
-    &.crosshair {
-      cursor: crosshair;
-    }
+  div :global(img.loaded.crosshair) {
+    cursor: crosshair;
   }
 </style>
 
