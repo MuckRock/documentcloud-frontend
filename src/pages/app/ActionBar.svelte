@@ -15,7 +15,6 @@
   import { manager, selectAll } from "@/manager/manager";
   import { documents, unselectAll } from "@/manager/documents";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { addons } from "@/manager/addons";
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();
