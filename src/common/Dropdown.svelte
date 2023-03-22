@@ -14,6 +14,7 @@
   export let table;
   export let bordered;
   export let fixed = false;
+  export let badge = "";
 
   let active = false;
 
@@ -174,6 +175,9 @@
   bind:this={menu}
   style="left: {menuLeft}px; top: {menuTop - MENU_OFFSET}px"
 >
+  {#if badge}
+    <span class="badge">{badge}</span>
+  {/if}
   <slot />
 </span>
 

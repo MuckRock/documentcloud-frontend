@@ -70,6 +70,16 @@
     }
   }
 
+  .badge {
+    background-color: $primary;
+    color: $menuBg;
+    font-size: 12px;
+    padding: 0.25em 0.5em;
+    border-radius: 50%;
+    box-sizing: border-box;
+    margin-right: 0.25em;
+  }
+
   @media only screen and (max-width: $mobileBreak) {
     .narrowhide {
       display: none;
@@ -132,6 +142,7 @@
         <Dropdown table={true} fixed={outerHeight > 600}>
           <span class="action" slot="title">
             <span class="nowrap">
+              <span class="badge"> {$_("common.new")}! </span>
               {$_("actionBar.addOnsMenu")}
               <span class="dropper">▼</span>
             </span>
