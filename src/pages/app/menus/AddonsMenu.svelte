@@ -3,7 +3,7 @@
   import MenuItem from "@/common/MenuItem";
   import AddonMenuItem from "./AddonMenuItem";
 
-  import { layout, openAddonBrowser } from "@/manager/layout";
+  import { openAddonBrowser } from "@/manager/layout";
   import { addons, getBrowserAddons } from "@/manager/addons";
   import { _ } from "svelte-i18n";
 
@@ -24,10 +24,10 @@
 </script>
 
 <style lang="scss">
-  .info {
-    color: $gray;
+  .promo {
+    color: $darkgray;
     font-style: italic;
-    font-size: $small;
+    font-size: $normal;
   }
 </style>
 
@@ -39,7 +39,7 @@
     <AddonMenuItem {addon} />
   {/each}
   <MenuItem selectable={true}>
-    <div class="info">
+    <div class="promo">
       <a target="_blank" href="https://www.documentcloud.org/help/add-ons/">
         {$_("addonsMenu.learnMore")}
       </a>

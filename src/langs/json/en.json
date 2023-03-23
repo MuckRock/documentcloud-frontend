@@ -3,7 +3,8 @@
     "emailAddress": "Email address",
     "loading": "Loading...",
     "documentCloud": "DocumentCloud",
-    "home": "Home"
+    "home": "Home",
+    "new": "New"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
