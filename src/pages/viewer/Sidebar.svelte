@@ -2,7 +2,6 @@
   import TableOfContents from "./TableOfContents";
   import Progress from "@/common/Progress";
   import AccessIcon from "@/common/AccessIcon";
-  import SpecialMessage from "@/common/SpecialMessage";
   import HtmlField from "@/common/HtmlField";
   import session from "@/api/session";
   import { jsonUrl } from "@/api/viewer";
@@ -18,7 +17,6 @@
   import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { _ } from "svelte-i18n";
-  import { onMount } from "svelte";
 
   function handleMouseDown() {
     if ($layout.displayAnnotate) {

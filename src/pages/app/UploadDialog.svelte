@@ -251,7 +251,7 @@
         </h1>
         {#if files.length == 0}
           <p>
-            {$_("uploadDialog.beginUpload")}
+            {$_("uploadDialog.selectDocument")}
           </p>
           {#if tooManyBigFiles[0]}
             <p class="danger">
