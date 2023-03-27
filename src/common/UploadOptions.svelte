@@ -96,7 +96,7 @@
   <div class="small">
     {#if !hasTextract}
       <p>
-        {$_("uploadOptions.textractPremium")}
+        {@html $_("uploadOptions.textractPremium")}
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -104,14 +104,15 @@
           >{$_("homeTemplate.signUp")} &rarr;</a
         >
       </p>
+    {:else}
+      <p>
+        {$_("uploadOptions.creditHelpText", {
+          values: {
+            organization: $orgsAndUsers.me.organization.name,
+            n: $orgsAndUsers.me.organization.monthly_ai_credits,
+          },
+        })}
+      </p>
     {/if}
-    <p>
-      {$_("uploadOptions.creditHelpText", {
-        values: {
-          organization: $orgsAndUsers.me.organization.name,
-          n: $orgsAndUsers.me.organization.monthly_ai_credits,
-        },
-      })}
-    </p>
   </div>
 </div>
