@@ -1,12 +1,10 @@
 <script>
-  import Omniselect from "./Omniselect";
-  import Checkbox from "./Checkbox";
   import {
     defaultLanguage,
     languages,
     textractLanguages,
-  } from "@/api/languages";
-  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers";
+  } from "@/api/languages.js";
+  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -14,13 +12,24 @@
   export let forceOcr = false;
   export let ocrEngine = "tess4";
 
-  const showOcrEngine = $orgsAndUsers.me.feature_level > 0;
+  const hasTextract = $orgsAndUsers.me.feature_level > 0;
 
-  $: selectLanguages = ocrEngine == "textract" ? textractLanguages : languages;
+  // is this brittle if there isn't a default language?
+  let languageName = languages.find(
+    ([code, name]) => code === defaultLanguage,
+  )[1];
 
+  $: selectLanguages = ocrEngine === "textract" ? textractLanguages : languages;
+  $: languageIndex = (selectLanguages || []).reduce((m, [value, name]) => {
+    m.set(name, value);
+    return m;
+  }, new Map());
+  $: language = languageIndex.get(languageName);
+
+  // value, name, disabled
   const ocrEngines = [
-    ["tess4", "Tesseract"],
-    ["textract", "Textract"],
+    ["tess4", "Tesseract", false],
+    ["textract", "Textract", !hasTextract],
   ];
 
   onMount(async () => {
@@ -28,37 +37,80 @@
   });
 </script>
 
-<style lang="scss">
-  b,
+<style>
   .middle {
     display: inline-block;
     vertical-align: middle;
   }
+
+  label {
+    font-weight: bold;
+  }
+
+  p a {
+    font-weight: bold;
+  }
+
+  p a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <div class="option">
-  <b>{$_("uploadOptions.documentLang")}</b>
-  <Omniselect options={selectLanguages} bind:selected={language} />
+  <label
+    >{$_("uploadOptions.documentLang")}
+    <input
+      type="search"
+      name="document-language"
+      list="document-language"
+      bind:value={languageName}
+    />
+  </label>
+  <datalist id="document-language">
+    {#each selectLanguages as [value, name]}
+      <option>{name}</option>
+    {/each}
+  </datalist>
 </div>
 
 <div class="option">
-  <b>{$_("uploadOptions.forceOcr")}</b>
   <div class="middle">
-    <input type="checkbox" bind:checked={forceOcr} />
+    <label
+      >{$_("uploadOptions.forceOcr")}
+      <input type="checkbox" bind:checked={forceOcr} /></label
+    >
   </div>
 </div>
 
-{#if showOcrEngine}
-  <div class="option">
-    <b>{$_("uploadOptions.ocrEngine")}</b>
-    <Omniselect options={ocrEngines} bind:selected={ocrEngine} />
-    <div class="small">
+<div class="option">
+  <label>
+    {$_("uploadOptions.ocrEngine")}
+    <select name="ocr-engine" bind:value={ocrEngine}>
+      {#each ocrEngines as [value, name, disabled]}
+        <option {value} {disabled}>{name}</option>
+      {/each}
+    </select>
+  </label>
+
+  <div class="small">
+    {#if !hasTextract}
+      <p>
+        {$_("uploadOptions.textractPremium")}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://accounts.muckrock.com/accounts/signup/?intent=documentcloud"
+          >{$_("homeTemplate.signUp")} &rarr;</a
+        >
+      </p>
+    {/if}
+    <p>
       {$_("uploadOptions.creditHelpText", {
         values: {
           organization: $orgsAndUsers.me.organization.name,
           n: $orgsAndUsers.me.organization.monthly_ai_credits,
         },
       })}
-    </div>
+    </p>
   </div>
-{/if}
+</div>

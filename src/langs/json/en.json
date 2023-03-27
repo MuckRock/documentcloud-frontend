@@ -93,7 +93,7 @@
     "confirm": "Confirm remove user",
     "confirmMsg": "Proceeding will remove {name} from {title}. Do you wish to continue?",
     "addCollaborators": "Add Collaborators",
-    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\" >here for free</a>, and then ask them to log in to DocumentCloud at least once.",
+    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
     "admin": "Admin",
     "view": "View",
     "adminHelp": "Collaborators can edit this project and its documents",
@@ -330,6 +330,7 @@
     "documentLang": "Document language:",
     "forceOcr": "Force OCR:",
     "ocrEngine": "OCR Engine:",
+    "textractPremium": "Textract is a premium feature.",
     "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left."
   },
   "actionBar": {
@@ -498,7 +499,7 @@
   "uploadDialog": {
     "docUpload": "Document Upload",
     "docUploadProj": "Document Upload to {title}",
-    "beginUpload": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
+    "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
     "pdfSizeWarning": "You can only upload PDF files under {size}.",
     "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
     "fileReady": "{n, plural, one {file} other {files}} ready to upload",
