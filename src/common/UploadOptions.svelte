@@ -15,9 +15,10 @@
   const hasTextract = $orgsAndUsers.me.feature_level > 0;
 
   // is this brittle if there isn't a default language?
-  let languageName = languages.find(
-    ([code, name]) => code === defaultLanguage,
-  )[1];
+  // let languageName = languages.find(
+  //   ([code, name]) => code === defaultLanguage,
+  // )[1];
+  let languageName;
 
   $: selectLanguages = ocrEngine === "textract" ? textractLanguages : languages;
   $: languageIndex = (selectLanguages || []).reduce((m, [value, name]) => {
