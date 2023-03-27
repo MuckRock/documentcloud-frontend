@@ -29,7 +29,7 @@
   let textDoc = null;
   let ocrEngine = null;
   let loading = false;
-  let engineMap = {tess4: "Tesseract", textract: "Textract"}
+  let engineMap = { tess4: "Tesseract", textract: "Textract" };
 
   $: {
     if ($viewer.document != null && textDoc == null && !loading) {
@@ -47,8 +47,6 @@
       })();
     }
   }
-
-
 </script>
 
 <style lang="scss">
@@ -262,8 +260,6 @@
             <h3>{$_("sidebar.redact")}</h3>
             <p>
               {$_("sidebar.redactDesc")}
-              Create redactions on the document to hide text. The document will reprocess
-              afterwards.
             </p>
           </div>
           <div
