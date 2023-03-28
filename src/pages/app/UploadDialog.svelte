@@ -18,7 +18,6 @@
   import { handleNewDocuments } from "@/manager/documents";
 
   // Utils
-  import { handlePlural } from "@/util/string";
   import { _ } from "svelte-i18n";
 
   import { onMount } from "svelte";
@@ -240,7 +239,7 @@
   <div class="mcontent">
     {#if !uploadMode}
       <div>
-        <h1>
+        <h2>
           {#if uploadProject == null}
             {$_("uploadDialog.docUpload")}
           {:else}
@@ -248,7 +247,7 @@
               values: { title: uploadProject.title },
             })}
           {/if}
-        </h1>
+        </h2>
         {#if files.length == 0}
           <p>
             {$_("uploadDialog.selectDocument")}
@@ -278,12 +277,10 @@
           {/if}
         {/if}
         <div class="actions">
-          <details>
-            <summary>{$_("uploadDialog.moreOptions")}</summary>
-            <p>
-              <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
-            </p>
-          </details>
+          <h3>{$_("uploadDialog.moreOptions")}</h3>
+          <p>
+            <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
+          </p>
           {#if files.length > 0}
             <span class="padright">
               <Button on:click={upload}>{$_("uploadDialog.beginUpload")}</Button
@@ -316,7 +313,7 @@
     {#if uploadMode}
       <div>
         {#if !error}
-          <h1>
+          <h2>
             {#if numUploaded == files.length}
               {$_("uploadDialog.submitting", {
                 values: { percent: processProgressPercent },
@@ -330,12 +327,12 @@
                 values: { percent: createProgressPercent },
               })}
             {/if}
-          </h1>
+          </h2>
           <p>
             {$_("uploadDialog.pleaseLeaveOpen")}
           </p>
         {:else}
-          <h1>{$_("uploadDialog.errorHeading")}</h1>
+          <h2>{$_("uploadDialog.errorHeading")}</h2>
           <p class="error">
             {$_("uploadDialog.errorMsg", {
               values: { errorMessage: errorMessage },
