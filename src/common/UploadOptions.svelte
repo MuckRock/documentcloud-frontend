@@ -48,11 +48,11 @@
     font-weight: bold;
   }
 
-  p a {
+  p :global(a) {
     font-weight: bold;
   }
 
-  p a:hover {
+  p :global(a:hover) {
     text-decoration: underline;
   }
 </style>
