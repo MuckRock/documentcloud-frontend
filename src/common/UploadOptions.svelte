@@ -21,11 +21,12 @@
   let languageName;
 
   $: selectLanguages = ocrEngine === "textract" ? textractLanguages : languages;
-  $: languageIndex = (selectLanguages || []).reduce((m, [value, name]) => {
+  $: codeToName = new Map([...selectLanguages]);
+  $: nameToCode = (selectLanguages || []).reduce((m, [value, name]) => {
     m.set(name, value);
     return m;
   }, new Map());
-  $: language = languageIndex.get(languageName);
+  $: language = nameToCode.get(languageName);
 
   // value, name, disabled
   const ocrEngines = [
@@ -39,6 +40,9 @@
 </script>
 
 <style>
+  .small {
+    font-size: smaller;
+  }
   .middle {
     display: inline-block;
     vertical-align: middle;
@@ -68,6 +72,9 @@
     />
   </label>
   <datalist id="document-language">
+    <optgroup>
+      <option>{codeToName.get(defaultLanguage)}</option>
+    </optgroup>
     {#each selectLanguages as [value, name]}
       <option>{name}</option>
     {/each}
@@ -94,6 +101,7 @@
   </label>
 
   <div class="small">
+    <p>{@html $_("uploadOptions.tesseract")}</p>
     {#if !hasTextract}
       <p>
         {@html $_("uploadOptions.textractPremium")}
