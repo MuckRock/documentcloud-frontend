@@ -58,12 +58,19 @@
   p :global(a:hover) {
     text-decoration: underline;
   }
+
+  select {
+    border: none;
+    border-bottom: solid 1px #333;
+    border-radius: 0;
+  }
 </style>
 
 <div class="option">
   <Select
     name="document-language"
     label={$_("uploadOptions.documentLang")}
+    placeholder={$_("omniselect.filter")}
     options={selectLanguages}
     bind:selected={languageName}
     bind:value={language}

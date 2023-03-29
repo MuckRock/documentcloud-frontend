@@ -1,6 +1,7 @@
 <script>
   export let name;
   export let label;
+  export let placeholder = "";
   export let options = []; // [value, name, disabled]
   export let selected;
   export let value = null;
@@ -29,11 +30,26 @@
   }
 </script>
 
+<style>
+  label {
+    font-weight: bold;
+  }
+
+  input,
+  input:focus,
+  input:focus-visible {
+    border: none;
+    border-bottom: solid 1px #333;
+    border-radius: 0;
+  }
+</style>
+
 <label>
   {label}
   <input
     type="search"
     {name}
+    {placeholder}
     list={name}
     bind:this={input}
     bind:value={selected}
