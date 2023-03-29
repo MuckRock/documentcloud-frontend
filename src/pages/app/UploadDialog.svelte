@@ -56,7 +56,7 @@
   let tooManyFiles = false;
   let tooManyBigFiles = [false, false];
 
-  $: displayFiles = uploadMode == false ? files : uploadFiles;
+  $: displayFiles = uploadMode === false ? files : uploadFiles;
 
   let numUploaded;
   let createProgress = 0;
@@ -77,7 +77,7 @@
   $: createProgressPercent = `${Math.floor(createProgress * 100)}%`;
   $: processProgressPercent = `${Math.floor(processProgress * 100)}%`;
 
-  $: error = errorMessage != null;
+  $: error = errorMessage !== null;
 
   onMount(() => {
     handleFiles({ detail: initialFiles });
@@ -181,10 +181,6 @@
     width: 100%;
   }
 
-  .padright {
-    margin-right: 12px;
-  }
-
   .droparea {
     margin: 24px 0;
   }
@@ -214,23 +210,6 @@
     &.danger {
       color: $caution;
       font-size: 13px;
-    }
-  }
-
-  details {
-    margin: -5px 0 8px 0;
-
-    summary {
-      @include buttonLike;
-
-      outline: none;
-      color: $primary;
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    p {
-      font-size: 14px;
     }
   }
 </style>
@@ -278,14 +257,11 @@
         {/if}
         <div class="actions">
           <h3>{$_("uploadDialog.moreOptions")}</h3>
-          <p>
-            <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
-          </p>
+
+          <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
+
           {#if files.length > 0}
-            <span class="padright">
-              <Button on:click={upload}>{$_("uploadDialog.beginUpload")}</Button
-              >
-            </span>
+            <Button on:click={upload}>{$_("uploadDialog.beginUpload")}</Button>
           {:else}
             <FilePicker multiselect={true} on:files={handleFiles}>
               <Button>{$_("uploadDialog.selectFiles")}</Button>

@@ -7,6 +7,7 @@
   import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
+  import Select from "./Select.svelte";
 
   export let language = defaultLanguage;
   export let forceOcr = false;
@@ -14,19 +15,9 @@
 
   const hasTextract = $orgsAndUsers.me.feature_level > 0;
 
-  // is this brittle if there isn't a default language?
-  // let languageName = languages.find(
-  //   ([code, name]) => code === defaultLanguage,
-  // )[1];
-  let languageName;
+  let languageName = defaultLanguageName(languages);
 
   $: selectLanguages = ocrEngine === "textract" ? textractLanguages : languages;
-  $: codeToName = new Map([...selectLanguages]);
-  $: nameToCode = (selectLanguages || []).reduce((m, [value, name]) => {
-    m.set(name, value);
-    return m;
-  }, new Map());
-  $: language = nameToCode.get(languageName);
 
   // value, name, disabled
   const ocrEngines = [
@@ -37,6 +28,14 @@
   onMount(async () => {
     await initOrgsAndUsers();
   });
+
+  function defaultLanguageName(languages) {
+    const [code, name] = languages.find(
+      ([code, name]) => code === defaultLanguage,
+    );
+
+    return name;
+  }
 </script>
 
 <style>
@@ -59,26 +58,24 @@
   p :global(a:hover) {
     text-decoration: underline;
   }
+
+  select {
+    border: none;
+    border-bottom: solid 1px #333;
+    border-radius: 0;
+  }
 </style>
 
 <div class="option">
-  <label
-    >{$_("uploadOptions.documentLang")}
-    <input
-      type="search"
-      name="document-language"
-      list="document-language"
-      bind:value={languageName}
-    />
-  </label>
-  <datalist id="document-language">
-    <optgroup>
-      <option>{codeToName.get(defaultLanguage)}</option>
-    </optgroup>
-    {#each selectLanguages as [value, name]}
-      <option>{name}</option>
-    {/each}
-  </datalist>
+  <Select
+    name="document-language"
+    label={$_("uploadOptions.documentLang")}
+    placeholder={$_("omniselect.filter")}
+    options={selectLanguages}
+    bind:selected={languageName}
+    bind:value={language}
+  />
+
 </div>
 
 <div class="option">
@@ -105,12 +102,6 @@
     {#if !hasTextract}
       <p>
         {@html $_("uploadOptions.textractPremium")}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://accounts.muckrock.com/accounts/signup/?intent=documentcloud"
-          >{$_("homeTemplate.signUp")} &rarr;</a
-        >
       </p>
     {:else}
       <p>
