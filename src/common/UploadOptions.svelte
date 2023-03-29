@@ -101,12 +101,6 @@
     {#if !hasTextract}
       <p>
         {@html $_("uploadOptions.textractPremium")}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://accounts.muckrock.com/accounts/signup/?intent=documentcloud"
-          >{$_("homeTemplate.signUp")} &rarr;</a
-        >
       </p>
     {:else}
       <p>

@@ -181,10 +181,6 @@
     width: 100%;
   }
 
-  .padright {
-    margin-right: 12px;
-  }
-
   .droparea {
     margin: 24px 0;
   }
