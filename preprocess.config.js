@@ -26,6 +26,11 @@ const preprocessOptions = {
   postcss: {
     plugins: [require("autoprefixer")],
   },
+  typescript: {
+    compilerOptions: {
+      target: 'es2018',
+    },
+  },
 };
 
 module.exports = { preprocessOptions };

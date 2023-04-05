@@ -45,6 +45,7 @@ module.exports = wrap({
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
     },
+    conditionNames: ["svelte"],
     extensions: ["*", ".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
     mainFields: ["svelte", "browser", "module", "main"],
   },

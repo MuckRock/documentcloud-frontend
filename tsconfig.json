@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json", /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "lib": ["es2020", "DOM"],
