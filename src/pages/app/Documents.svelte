@@ -278,10 +278,7 @@
             >
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
-            <a
-              href="https://airtable.com/shrZrgdmuOwW0ZLPM"
-              target="_new"
-            >
+            <a href="https://airtable.com/shrZrgdmuOwW0ZLPM" target="_new">
               <Button>{$_("noDocuments.requestVerificationAction")}</Button>
             </a>
           {/if}
@@ -321,7 +318,7 @@
       <EmbedFooter {dialog} />
     {:else}
       <div class="narrowshow">
-        <Paginator {dialog} />
+        <Paginator />
       </div>
     {/if}
   </div>

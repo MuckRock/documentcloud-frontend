@@ -2,7 +2,6 @@
   import Loader from "@/common/Loader";
   import Button from "@/common/Button";
   import Link from "@/router/Link";
-  import { router } from "@/router/router";
   import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { _ } from "svelte-i18n";
 

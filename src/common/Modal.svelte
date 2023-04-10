@@ -28,7 +28,7 @@
   }
 
   function handleKeyDown(e) {
-    if (e.key == "Escape") dismiss();
+    if (e.key === "Escape") dismiss();
   }
 
   onMount(() => {
@@ -157,6 +157,12 @@
     margin-left: $closePadding;
     margin-top: $closePadding;
   }
+
+  button.dismiss {
+    background: none;
+    padding: none;
+    border: none;
+  }
 </style>
 
 <svelte:window on:keydown={handleKeyDown} />
@@ -168,9 +174,9 @@
       <div bind:this={modal} class="modal">
         <div class="header">
           {#if dismissable}
-            <span on:click={dismiss}>
+            <button class="dismiss" on:click={dismiss}>
               {@html closeSvg}
-            </span>
+            </button>
           {/if}
         </div>
 

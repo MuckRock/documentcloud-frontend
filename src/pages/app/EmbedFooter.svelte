@@ -50,7 +50,7 @@
 <div class="footer" class:dialog>
   <div class="background" />
   <div class="paginator">
-    <Paginator {dialog} />
+    <Paginator />
   </div>
   {#if !dialog}
     <div class="logo">

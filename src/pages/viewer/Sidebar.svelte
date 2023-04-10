@@ -2,7 +2,6 @@
   import TableOfContents from "./TableOfContents";
   import Progress from "@/common/Progress";
   import AccessIcon from "@/common/AccessIcon";
-  import SpecialMessage from "@/common/SpecialMessage";
   import HtmlField from "@/common/HtmlField";
   import session from "@/api/session";
   import { jsonUrl } from "@/api/viewer";
@@ -18,7 +17,6 @@
   import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { _ } from "svelte-i18n";
-  import { onMount } from "svelte";
 
   function handleMouseDown() {
     if ($layout.displayAnnotate) {
@@ -29,7 +27,7 @@
   let textDoc = null;
   let ocrEngine = null;
   let loading = false;
-  let engineMap = {tess4: "Tesseract", textract: "Textract"}
+  let engineMap = { tess4: "Tesseract", textract: "Textract" };
 
   $: {
     if ($viewer.document != null && textDoc == null && !loading) {
@@ -47,8 +45,6 @@
       })();
     }
   }
-
-
 </script>
 
 <style lang="scss">
@@ -262,8 +258,6 @@
             <h3>{$_("sidebar.redact")}</h3>
             <p>
               {$_("sidebar.redactDesc")}
-              Create redactions on the document to hide text. The document will reprocess
-              afterwards.
             </p>
           </div>
           <div
