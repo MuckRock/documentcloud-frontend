@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
-import Button from './Button.svelte';
+import Button from '../common/Button.svelte';
 
 // More on how to set up stories at: https://storybook.js.org/docs/7.0/svelte/writing-stories/introduction
 const meta: Meta<Button> = {
-  title: 'Example/Button',
+  title: 'Common/Button',
   component: Button,
   tags: ['autodocs'],
   argTypes: {
-    backgroundColor: { control: 'color' },
-    size: {
+    disabledReason: { control: 'text' },
+    type: {
       control: { type: 'select' },
-      options: ['small', 'medium', 'large'],
+      options: ['button', 'submit', 'reset'],
     },
   },
 };
@@ -20,29 +20,78 @@ export default meta;
 type Story = StoryObj<Button>;
 
 // More on writing stories with args: https://storybook.js.org/docs/7.0/svelte/writing-stories/args
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    primary: true,
     label: 'Button',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    label: 'Button',
+    ...Default.args,
+    secondary: true
   },
 };
 
-export const Large: Story = {
+export const Tertiary: Story = {
   args: {
-    size: 'large',
-    label: 'Button',
+    ...Default.args,
+    tertiary: true
   },
 };
 
-export const Small: Story = {
+export const Nondescript: Story = {
   args: {
-    size: 'small',
-    label: 'Button',
+    ...Default.args,
+    nondescript: true
   },
 };
+
+export const Action: Story = {
+  args: {
+    ...Default.args,
+    action: true
+  },
+};
+
+export const Caution: Story = {
+  args: {
+    ...Default.args,
+    caution: true
+  },
+};
+
+export const Danger: Story = {
+  args: {
+    ...Default.args,
+    danger: true,
+  },
+};
+
+export const Diabled: Story = {
+  args: {
+    ...Default.args,
+    disabled: true
+  }
+}
+
+export const DiabledReason: Story = {
+  args: {
+    ...Default.args,
+    disabledReason: "This button is disabled"
+  }
+}
+
+export const Plain: Story = {
+  args: {
+    ...Default.args,
+    plain: true
+  }
+}
+
+export const NoMargin: Story = {
+  args: {
+    ...Default.args,
+    nomargin: true,
+  }
+}

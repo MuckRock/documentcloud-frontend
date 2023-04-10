@@ -12,6 +12,7 @@
   export let plain = false;
   export let nomargin = false;
   export let type = "submit";
+  export let label = "Submit";
 
   export let disabledReason = null;
 </script>
@@ -128,7 +129,7 @@
       disabled={disabled || disabledReason != null}
       {type}
     >
-      <slot />
+      <slot>{label}</slot>
     </button>
   </Tooltip>
 </span>

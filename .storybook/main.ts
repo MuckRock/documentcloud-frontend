@@ -1,5 +1,5 @@
 import autoPreprocess from 'svelte-preprocess';
-import preprocessConfig from '../preprocess.config';
+import {preprocessOptions} from '../preprocess.config';
 
 import type { StorybookConfig } from "@storybook/svelte-webpack5";
 const config: StorybookConfig = {
@@ -12,11 +12,12 @@ const config: StorybookConfig = {
   framework: {
     name: "@storybook/svelte-webpack5",
     options: {
-      preprocess: autoPreprocess(preprocessConfig),
+      preprocess: autoPreprocess(preprocessOptions),
     },
   },
   docs: {
     autodocs: "tag",
   },
+  staticDirs: ['../public']
 };
 export default config;
