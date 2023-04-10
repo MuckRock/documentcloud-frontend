@@ -165,7 +165,7 @@
   }
 </style>
 
-<svelte:window on:keyup={handleKeyDown} />
+<svelte:window on:keydown={handleKeyDown} />
 
 <div class:fullscreen>
   <div class="shim" on:click={dismiss} />
