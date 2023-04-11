@@ -53,9 +53,6 @@
 
   p :global(a) {
     font-weight: bold;
-  }
-
-  p :global(a:hover) {
     text-decoration: underline;
   }
 
@@ -70,7 +67,7 @@
   <Select
     name="document-language"
     label={$_("uploadOptions.documentLang")}
-    placeholder={$_("omniselect.filter")}
+    placeholder={$_("uploadOptions.documentLanguagePlaceholder")}
     options={selectLanguages}
     bind:selected={languageName}
     bind:value={language}
