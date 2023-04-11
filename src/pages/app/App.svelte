@@ -5,6 +5,7 @@
 
   import { layout } from "@/manager/layout";
   import { documents } from "@/manager/documents";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
 
   let sidebar = null;
 
@@ -15,6 +16,11 @@
 
 <svelte:head>
   <title>{$_("common.documentCloud")}</title>
+
+  {#if $orgsAndUsers.me !== null}<script
+      defer
+      data-domain="documentcloud.org"
+      src="https://plausible.io/js/script.js"></script>{/if}
 </svelte:head>
 
 <div>

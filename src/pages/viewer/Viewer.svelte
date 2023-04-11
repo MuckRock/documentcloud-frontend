@@ -11,6 +11,7 @@
   import Progress from "@/common/Progress";
   import Button from "@/common/Button";
   import { embedUrl } from "@/api/embed";
+  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { _ } from "svelte-i18n";
 
   // Dialogs
@@ -77,6 +78,8 @@
         return;
       }
     }
+
+    initOrgsAndUsers();
   });
 </script>
 
@@ -86,7 +89,7 @@
     <link rel="canonical" href={$viewer.document.canonicalUrl} />
 
     {#if $viewer.document && $viewer.document.noindex}
-      <meta name="robots" content="noindex">
+      <meta name="robots" content="noindex" />
     {/if}
     <!-- Social cards -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -108,6 +111,11 @@
       content={pageImageUrl($viewer.document, 0, 700, 1)}
     />
   {/if}
+
+  {#if !$viewer.embed && $orgsAndUsers.me !== null}<script
+      defer
+      data-domain="documentcloud.org"
+      src="https://plausible.io/js/script.js"></script>{/if}
 </svelte:head>
 
 {#if $layout.error}
