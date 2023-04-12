@@ -79,7 +79,9 @@
       }
     }
 
-    initOrgsAndUsers();
+    if (!$viewer.embed) {
+      initOrgsAndUsers().then(console.log);
+    }
   });
 </script>
 
