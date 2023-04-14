@@ -193,14 +193,24 @@
         <hr />
         {#if !$layout.hidePdfLink}
           <div>
-            <a target="_blank" href={$viewer.document.pdf}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="plausible-event-name=viewer-original-document"
+              href={$viewer.document.pdf}
+            >
               {$_("sidebar.original")}
             </a>
           </div>
         {/if}
         {#if $viewer.document.relatedArticleUrl != null && $viewer.document.relatedArticleUrl.trim().length > 0}
           <div>
-            <a target="_blank" href={$viewer.document.relatedArticleUrl}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="plausible-event-name=viewer-related-url"
+              href={$viewer.document.relatedArticleUrl}
+            >
               {$_("sidebar.related")}
             </a>
           </div>
@@ -216,7 +226,7 @@
             })}
           </p>
         </small>
-        {#if $viewer.document.source != null && $viewer.document.source.trim().length > 0}
+        {#if $viewer.document.source !== null && $viewer.document.source.trim().length > 0}
           <small>
             <p>
               {$_("sidebar.source", {
@@ -235,11 +245,11 @@
         {/if}
       </div>
 
-      {#if $viewer.me != null}
+      {#if $viewer.me !== null}
         <div class="actions">{$_("sidebar.actions")}</div>
         {#if $viewer.document.editAccess}
           <div
-            class="action"
+            class="action plausible-event-name=sidebar-share"
             class:disabled={$viewer.document.readable}
             on:click={() => showEmbedFlow($viewer.document)}
           >

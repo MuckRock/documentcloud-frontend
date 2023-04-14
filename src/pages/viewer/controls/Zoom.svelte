@@ -1,12 +1,21 @@
 <script>
-  import { doc, zoomBreakpoints } from "@/viewer/document";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
+  import { doc, zoomBreakpoints } from "@/viewer/document";
 
   // SVG assets
   import plusSvg from "@/assets/viewer_plus.svg";
   import minusSvg from "@/assets/viewer_minus.svg";
 
   let select;
+
+  onMount(() => {
+    window.plausible =
+      window.plausible ||
+      function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+  });
 
   function roundBreakpoint(percent, zoomIn) {
     for (
@@ -56,6 +65,10 @@
     }
 
     select.value = "default";
+
+    if (typeof window !== "undefined" && window.plausible) {
+      plausible("viewer-zoom", { props: { zoom } });
+    }
   }
 </script>
 
@@ -69,11 +82,6 @@
     :global(svg) {
       display: inline-block !important;
       vertical-align: middle;
-    }
-
-    .icon {
-      @include buttonLike;
-      padding: 10px 6px;
     }
 
     .separator {
@@ -90,16 +98,28 @@
       visibility: hidden;
     }
   }
+
+  button.icon {
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
 </style>
 
-<span class="zoom" class:disabled={$doc.mode != "image"}>
-  <span class="icon" on:click={zoomIn}>
+<span class="zoom" class:disabled={$doc.mode !== "image"}>
+  <button
+    class="icon plausible-event-name=viewer-zoom plausible-event-zoom=zoom-in"
+    on:click={zoomIn}
+  >
     {@html plusSvg}
-  </span>
+  </button>
   <div class="separator" />
-  <span class="icon" on:click={zoomOut}>
+  <button
+    class="icon plausible-event-name=viewer-zoom plausible-event-zoom=zoom-out"
+    on:click={zoomOut}
+  >
     {@html minusSvg}
-  </span>
+  </button>
 
   <select bind:this={select} on:blur={handleChange}>
     <option value="default">{($doc.viewerScale * 100).toFixed()}%</option>

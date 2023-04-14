@@ -1,12 +1,26 @@
 <script>
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
+
   import { layout } from "@/viewer/layout";
   import { viewer } from "@/viewer/viewer";
   import { doc, changeMode } from "@/viewer/document";
-  import { _ } from "svelte-i18n";
+
+  onMount(() => {
+    window.plausible =
+      window.plausible ||
+      function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+  });
 
   async function handleInput(e) {
     const mode = e.target.value;
     await changeMode(mode);
+
+    if (typeof window !== "undefined" && window.plausible) {
+      plausible("viewer-view-switch", { props: { mode } });
+    }
   }
 </script>
 
