@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import Sidebar from "./sidebar/Sidebar";
   import MainContainer from "./MainContainer";
   import { _ } from "svelte-i18n";
@@ -11,7 +12,19 @@
 
   function setSidebarExpanded(expanded) {
     layout.sidebarExpanded = expanded;
+
+    if (typeof window !== "undefined" && window.plausible) {
+      plausible("app-sidebar-expand", { props: { expanded } });
+    }
   }
+
+  onMount(() => {
+    window.plausible =
+      window.plausible ||
+      function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+  });
 </script>
 
 <svelte:head>
@@ -20,7 +33,7 @@
   {#if $orgsAndUsers.me !== null}<script
       defer
       data-domain="documentcloud.org"
-      src="https://plausible.io/js/script.js"></script>{/if}
+      src="https://plausible.io/js/script.tagged-events.js"></script>{/if}
 </svelte:head>
 
 <div>

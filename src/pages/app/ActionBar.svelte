@@ -104,48 +104,41 @@
 
         {#if $layout.hasSelection && $layout.selectionEditable}
           <Dropdown
+            name="edit-menu"
             table={true}
             fixed={outerHeight > 600}
             on:active={(e) => (editVisible = e.detail)}
           >
-            <span class="action" slot="title">
-              <span class="nowrap">
-                {$_("actionBar.editMenu")}
-                <span class="dropper">▼</span>
-              </span>
+            <span class="action nowrap" slot="title">
+              {$_("actionBar.editMenu")}
+              <span class="dropper">▼</span>
             </span>
             <EditMenu visible={editVisible} />
           </Dropdown>
         {:else}
-          <span class="action disabled shortpad">
+          <span class="action disabled shortpad nowrap">
             <Tooltip
               caption={$layout.selectionEditable
                 ? $_("actionBar.selectDocs")
                 : $_("actionBar.noPerms")}
             >
-              <span class="nowrap">
-                {$_("actionBar.editMenu")}
-                <span class="dropper">▼</span>
-              </span>
+              {$_("actionBar.editMenu")}
+              <span class="dropper">▼</span>
             </Tooltip>
           </span>
         {/if}
-        <Dropdown table={true} fixed={outerHeight > 600}>
-          <span class="action" slot="title">
-            <span class="nowrap">
-              {$_("actionBar.projectsMenu")}
-              <span class="dropper">▼</span>
-            </span>
+        <Dropdown name="projects-menu" table={true} fixed={outerHeight > 600}>
+          <span class="action nowrap" slot="title">
+            {$_("actionBar.projectsMenu")}
+            <span class="dropper">▼</span>
           </span>
           <ProjectsMenu />
         </Dropdown>
-        <Dropdown table={true} fixed={outerHeight > 600}>
-          <span class="action" slot="title">
-            <span class="nowrap">
-              <span class="badge"> {$_("common.new")}! </span>
-              {$_("actionBar.addOnsMenu")}
-              <span class="dropper">▼</span>
-            </span>
+        <Dropdown name="addons-menu" table={true} fixed={outerHeight > 600}>
+          <span class="action nowrap" slot="title">
+            <span class="badge"> {$_("common.new")}! </span>
+            {$_("actionBar.addOnsMenu")}
+            <span class="dropper">▼</span>
           </span>
           <AddonsMenu />
         </Dropdown>

@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import Menu from "@/common/Menu";
   import MenuItem from "@/common/MenuItem";
   import AddonMenuItem from "./AddonMenuItem";
@@ -20,7 +21,17 @@
   async function openBrowser() {
     await getBrowserAddons();
     openAddonBrowser();
+
+    plausible("app-add-ons", { props: { target: "browser" } });
   }
+
+  onMount(() => {
+    window.plausible =
+      window.plausible ||
+      function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+  });
 </script>
 
 <style lang="scss">
@@ -33,14 +44,20 @@
 
 <Menu>
   <MenuItem on:click={openBrowser}>
-    <div class="small">{$_("addonsMenu.browseAll")}</div>
+    <div class="small">
+      {$_("addonsMenu.browseAll")}
+    </div>
   </MenuItem>
   {#each alphabetizedAddons as addon}
     <AddonMenuItem {addon} />
   {/each}
   <MenuItem selectable={true}>
     <div class="promo">
-      <a target="_blank" href="https://www.documentcloud.org/help/add-ons/">
+      <a
+        class="plausible-event-name=app-add-ons plausible-event-target=help"
+        target="_blank"
+        href="https://www.documentcloud.org/help/add-ons/"
+      >
         {$_("addonsMenu.learnMore")}
       </a>
     </div>

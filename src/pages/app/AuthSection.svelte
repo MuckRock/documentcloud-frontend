@@ -73,7 +73,7 @@
 <div class="auth">
   <Link to="home">{$_("common.home")}</Link>
   <span class="dot">·</span>
-  <Dropdown fixed={true}>
+  <Dropdown name="help" fixed={true}>
     <span class="action" slot="title">
       <span class="nowrap title">
         {$_("authSection.help")} <span class="dropper">▼</span>
@@ -96,7 +96,7 @@
   </Dropdown>
   <span class="dot">·</span>
   {#if langs.length > 1}
-    <Dropdown fixed={true}>
+    <Dropdown name="language" fixed={true}>
       <span class="action" slot="title">
         <span class="nowrap title">
           {$_("authSection.language")} <span class="dropper">▼</span>
@@ -116,7 +116,7 @@
     <span class="dot">·</span>
   {/if}
   {#if me != null}
-    <Dropdown fixed={true}>
+    <Dropdown name="organization" fixed={true}>
       <span class="action" slot="title">
         <span class="nowrap title">
           {me.name}

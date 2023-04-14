@@ -80,7 +80,7 @@
     }
 
     if (!$viewer.embed) {
-      initOrgsAndUsers().then(console.log);
+      initOrgsAndUsers();
     }
   });
 </script>
@@ -117,7 +117,7 @@
   {#if !$viewer.embed && $orgsAndUsers.me !== null}<script
       defer
       data-domain="documentcloud.org"
-      src="https://plausible.io/js/script.js"></script>{/if}
+      src="https://plausible.io/js/script.tagged-events.js"></script>{/if}
 </svelte:head>
 
 {#if $layout.error}
