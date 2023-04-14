@@ -1,5 +1,5 @@
 <script>
-  import { onMount, tick } from "svelte";
+  import { onMount, tick, afterUpdate } from "svelte";
   import { router } from "@/router/router";
   import emitter from "@/emit";
 
@@ -11,6 +11,7 @@
   export let vertPadding = 10;
   const MENU_OFFSET = 1; // vert offset for menu
 
+  export let name = undefined; // for analytics
   export let table;
   export let bordered;
   export let fixed = false;
@@ -68,6 +69,18 @@
     router.writables.resolvedRoute.subscribe(async () => {
       await computeSizes();
     });
+
+    window.plausible =
+      window.plausible ||
+      function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+  });
+
+  afterUpdate(() => {
+    if (active && name) {
+      plausible("dropdown", { props: { name } });
+    }
   });
 </script>
 

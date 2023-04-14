@@ -48,7 +48,7 @@
 
 <div class="org-users">
   {#if $orgsAndUsers.me !== null && !$orgsAndUsers.me.organization.individual}
-    <details>
+    <details class="plausible-event-name=app-org-users">
       <summary>
         <h3>
           {$_("organizations.sameOrgUsers")}: <Link
