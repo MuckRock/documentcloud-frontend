@@ -68,7 +68,7 @@
     ],
   ];
 
-  onMount(() => {
+  onMount(async () => {
     const hash = window.location.hash;
     for (let i = 0; i < navHandlers.length; i++) {
       const [regex, handler] = navHandlers[i];
@@ -80,9 +80,27 @@
     }
 
     if (!$viewer.embed) {
-      initOrgsAndUsers();
+      await initOrgsAndUsers();
+
+      plausible("pageview", { u: obscureURL() });
     }
   });
+
+  // create a URL that won't leak the document slug
+  function obscureURL() {
+    const u = new URL(window.location);
+    const path_re = /documents\/(\d+)-(.+)/;
+
+    // if we're somehow not on a normal doc URL
+    if (!path_re.test(u.pathname)) {
+      return u.href;
+    }
+
+    const [p, id, slug] = path_re.exec(u.pathname);
+    u.pathname = u.pathname.replace(slug, "obscure");
+
+    return u.toString();
+  }
 </script>
 
 <svelte:head>
@@ -117,7 +135,7 @@
   {#if !$viewer.embed && $orgsAndUsers.me !== null}<script
       defer
       data-domain="documentcloud.org"
-      src="https://plausible.io/js/script.tagged-events.js"></script>{/if}
+      src="https://plausible.io/js/script.manual.tagged-events.js"></script>{/if}
 </svelte:head>
 
 {#if $layout.error}
