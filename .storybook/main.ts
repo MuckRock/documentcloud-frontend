@@ -1,7 +1,9 @@
+import path from 'path';
 import autoPreprocess from 'svelte-preprocess';
 import {preprocessOptions} from '../preprocess.config';
 
 import type { StorybookConfig } from "@storybook/svelte-webpack5";
+
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx|svelte)"],
   addons: [
@@ -18,6 +20,15 @@ const config: StorybookConfig = {
   docs: {
     autodocs: "tag",
   },
-  staticDirs: ['../public']
+  staticDirs: ['../public'],
+  webpackFinal: async (config) => {
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, "../src"),
+      };
+    }
+    return config;
+  },
 };
 export default config;
