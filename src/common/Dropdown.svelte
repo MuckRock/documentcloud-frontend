@@ -12,8 +12,8 @@
   const MENU_OFFSET = 1; // vert offset for menu
 
   export let name = undefined; // for analytics
-  export let table;
-  export let bordered;
+  export let table = false;
+  export let bordered = false;
   export let fixed = false;
 
   let active = false;

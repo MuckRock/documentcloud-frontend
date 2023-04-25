@@ -1,7 +1,7 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
 import Empty from "@/pages/home/Empty.svelte"; // explicit extension for tests
-import { lazyComponent } from "@/util/lazyComponent";
+import { lazyComponent } from "@/util/lazyComponent.js";
 
 const endings = [".html", ".html"];
 
