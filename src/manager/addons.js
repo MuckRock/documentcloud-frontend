@@ -6,9 +6,7 @@ import {
   getAddonRuns,
   activateAddon,
   updateAddonRun,
-} from "@/api/addon";
-import { AddonRun } from "@/structure/addon";
-import { layout } from "@/manager/layout";
+} from "@/api/addon.js";
 
 export function done(run) {
   return run.status != "queued" && run.status != "in_progress";
@@ -89,10 +87,12 @@ export async function toggleActiveAddon(addon) {
     addons.activeAddons = addons.activeAddons.filter((a) => a.id != addon.id);
   }
   // then update the state in the browser list
-  addons.browserAddons = addons.browserAddons.map((a) => (a == addon) ? newAddon : a);
+  addons.browserAddons = addons.browserAddons.map((a) =>
+    a == addon ? newAddon : a,
+  );
 }
 
 export async function editAddonRun(run, data) {
   const newRun = await updateAddonRun(run, data);
-  addons.runs = addons.runs.map((r) => r.uuid === newRun.uuid ? newRun : r);
+  addons.runs = addons.runs.map((r) => (r.uuid === newRun.uuid ? newRun : r));
 }

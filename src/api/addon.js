@@ -57,7 +57,11 @@ export async function postAddonDispatch(
   return new AddonRun(data);
 }
 
-export async function getAddonRuns(event = null, dismissed = false, expand = "addon") {
+export async function getAddonRuns(
+  event = null,
+  dismissed = false,
+  expand = "addon",
+) {
   // Returns all add-on runs
   const results = await grabAllPages(
     apiUrl(queryBuilder(`addon_runs/`, { expand, dismissed, event })),
@@ -98,7 +102,10 @@ export async function updateAddonEvent(eventId, parameters, event) {
 }
 
 export async function updateAddonRun(run, parameters) {
-  const { data } = await session.patch(apiUrl(`addon_runs/${run.uuid}/`), parameters);
+  const { data } = await session.patch(
+    apiUrl(`addon_runs/${run.uuid}/`),
+    parameters,
+  );
   // Cannot expand addon in patch call, use previous expanded addon info
   data.addon = run.addonRun.addon;
   return new AddonRun(data);

@@ -705,11 +705,13 @@
     "disable": "Disable"
   },
   "addonBrowserDialog": {
+    "browseAll": "Browse All Add-Ons",
     "searchPlaceholder": "Search...",
     "active": "Active",
     "inactive": "Inactive",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "viewsource": "View Source"
   },
   "uploadEmailDialog": {
     "uploadEmailAddress": "Upload via email",

@@ -1,22 +1,22 @@
 <script>
-  import AddonRun from "@/common/AddonRun";
-  import { addons } from "@/manager/addons";
+  import AddonRun from "@/common/AddonRun.svelte";
+  import { addons } from "@/manager/addons.js";
 </script>
 
-<style lang="scss">
+<style>
   .addonStatus {
     background: #eff7ff;
-    border-radius: $radius;
+    border-radius: var(--radius, 3px);
     padding: 0;
     margin: 20px 0;
+  }
 
-    .title {
-      font-weight: bold;
-      display: inline-block;
-      vertical-align: middle;
-      font-size: 18px;
-      padding: 8px 20px;
-    }
+  .addonStatus .title {
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+    padding: 8px 20px;
   }
 </style>
 
