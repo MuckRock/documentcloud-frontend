@@ -49,14 +49,13 @@
     [
       /^#add-ons\/(?<org>[-\w]+)\/(?<name>[-\w]+)\/(?<id>\d+)$/,
       async (match) => {
-        console.log(match);
         await getBrowserAddons();
 
         const [org, name, id] = match.slice(1, 4);
         const addon = addons.addonsByRepo[`${org}/${name}`];
         if (addon) {
           layout.addonDispatchOpen = addon;
-          layout.addOnEvent = id;
+          layout.addOnEvent = +id;
         } else {
           console.error("Add-on not found: %s", `${org}/${name}`);
         }

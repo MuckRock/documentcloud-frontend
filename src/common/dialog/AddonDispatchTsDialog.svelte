@@ -54,13 +54,12 @@
   }
   let showEventInfo = eventSelectOptions.length > 0;
 
-  // debug
-  $: console.log(events);
-
   onMount(async () => {
     events = await getAddonEvents(layout.addonDispatchOpen.id);
     if (layout.addOnEvent) {
       eventSelect = layout.addOnEvent;
+      activeEvent = events.find((e) => e.id === layout.addOnEvent);
+      loadEvent(activeEvent);
     }
   });
 
@@ -105,7 +104,6 @@
 
   // generate a hash URL for each addon event
   function eventUrl(event) {
-    console.log(event);
     const id = event.addonEvent.addon;
     const addon = addons.addonsById[id];
 
