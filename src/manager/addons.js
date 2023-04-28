@@ -32,6 +32,12 @@ export const addons = new Svue({
       }
       return results;
     },
+    addonsByRepo(browserAddons) {
+      return browserAddons.reduce((m, addon) => {
+        m[addon.repository] = addon;
+        return m;
+      }, {});
+    },
     pollEvents(runs) {
       if (runs.filter((x) => !done(x)).length === 0) return [];
       return [updateRuns];

@@ -1,41 +1,28 @@
-<script lang="ts">
-  import Button from "@/common/Button";
-  import AddonRun from "@/common/AddonRun";
+<script>
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
   import SvelteMarkdown from "svelte-markdown";
+  import Ajv from "ajv";
+  import { Form } from "@pyoner/svelte-form";
+  import { createAjvValidator } from "@pyoner/svelte-form-ajv";
 
-  import { dispatchAddon } from "@/manager/addons";
+  import Button from "@/common/Button.svelte";
+  import AddonRun from "@/common/AddonRun.svelte";
+
+  import { addons, dispatchAddon } from "@/manager/addons.js";
   import {
     createAddonEvent,
     getAddonEvents,
     getAddonRuns,
     updateAddonEvent,
-  } from "@/api/addon";
-  import { search, initSearch } from "@/search/search";
-  import { viewer } from "@/viewer/viewer";
-  import emitter from "@/emit";
-  import { onMount } from "svelte";
-  import { _ } from "svelte-i18n";
+  } from "@/api/addon.js";
+  import { search } from "@/search/search.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import emitter from "@/emit.js";
 
   // Stores
-  import { layout } from "@/manager/layout";
-
-  import Ajv from "ajv";
-  import { components } from "./DCDefaultFormComponents";
-  import { Form } from "@pyoner/svelte-form";
-  import { createAjvValidator } from "@pyoner/svelte-form-ajv";
-
-  function getStatus(status) {
-    return status
-      .split("_")
-      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-      .join(" ");
-  }
-
-  function findType(schema, type) {
-    for (const [key, value] of Object.entries(schema)) {
-      if (value.type === type) return true;
-    }
-  }
+  import { layout } from "@/manager/layout.js";
+  import { components } from "./DCDefaultFormComponents.ts";
 
   let schema = structuredClone(layout.addonDispatchOpen.parameters);
 
@@ -67,8 +54,14 @@
   }
   let showEventInfo = eventSelectOptions.length > 0;
 
+  // debug
+  $: console.log(events);
+
   onMount(async () => {
     events = await getAddonEvents(layout.addonDispatchOpen.id);
+    if (layout.addOnEvent) {
+      eventSelect = layout.addOnEvent;
+    }
   });
 
   async function showRuns(e) {
@@ -108,6 +101,15 @@
     eventSelect = event.event;
     // reset runs
     runs = [];
+  }
+
+  // generate a hash URL for each addon event
+  function eventUrl(event) {
+    console.log(event);
+    const id = event.addonEvent.addon;
+    const addon = addons.addonsById[id];
+
+    return `#add-ons/${addon.repository}/${id}`;
   }
 
   const ajv = new Ajv({
@@ -247,196 +249,194 @@
   }
 </style>
 
-<div>
-  <div class="mcontent">
-    {#if schema}
-      <h1>
-        {$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name}
-        <span id="repository-detail">
-          by {layout.addonDispatchOpen.repository.split("/")[0]}
-          <a
-            target="_blank"
-            href="https://www.github.com/{layout.addonDispatchOpen.repository}"
-          >
-            (View Source)
-          </a>
-        </span>
-      </h1>
+<div class="mcontent">
+  {#if schema}
+    <h2>
+      {$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name}
+      <span id="repository-detail">
+        by {layout.addonDispatchOpen.repository.split("/")[0]}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/{layout.addonDispatchOpen.repository}"
+        >
+          (View Source)
+        </a>
+      </span>
+    </h2>
 
-      {#if activeEvent}
-        <h2>
-          {$_("dialog.edit")}
-          {eventNameField
-            ? activeEvent.parameters[eventNameField]
-            : `Event #${activeEvent.id}`}
-        </h2>
+    {#if activeEvent}
+      <h3>
+        {$_("dialog.edit")}
+        {eventNameField
+          ? activeEvent.parameters[eventNameField]
+          : `Event #${activeEvent.id}`}
+      </h3>
+    {/if}
+
+    {#if showEventInfo}
+      {#if showExistingEvents}
+        <Button nondescript={true} on:click={hideEvents}>
+          {$_("addonDispatchDialog.hideAddons")}
+        </Button>
+
+        <div class="events">
+          <ul>
+            {#each events as event}
+              <li>
+                <a href={eventUrl(event)} on:click={() => loadEvent(event)}>
+                  {eventNameField
+                    ? event.parameters[eventNameField]
+                    : `Event #${event.id}`}
+                </a>
+              </li>
+            {/each}
+          </ul>
+        </div>
+
+        {#if activeEvent && runs.length === 0}
+          <Button nondescript={true} on:click={showRuns}>
+            {$_("addonDispatchDialog.showRuns")}
+          </Button>
+        {:else if activeEvent && runs.length > 0}
+          <Button nondescript={true} on:click={hideRuns}>
+            {$_("addonDispatchDialog.hideRuns")}
+          </Button>
+        {/if}
+
+        {#if runs.length > 0}
+          <div class="runs">
+            {#each runs as run (run.uuid)}
+              <AddonRun {run} compact={true} />
+            {/each}
+          </div>
+        {/if}
+      {:else if events.length > 0}
+        <Button nondescript={true} on:click={showEvents}>
+          {$_("addonDispatchDialog.showAddons", {
+            values: { n: events.length },
+          })}
+        </Button>
+      {/if}
+    {/if}
+
+    <div class="markdown">
+      <SvelteMarkdown source={schema.description} renderers={{ html: null }} />
+    </div>
+
+    <Form
+      {schema}
+      {components}
+      {value}
+      {validator}
+      on:submit={(e) => {
+        if (activeEvent) {
+          updateAddonEvent(activeEvent.id, e.detail, eventSelect);
+        } else if (eventSelect == 0) {
+          // no event, dispatch immediately
+          dispatchAddon(
+            parseInt(layout.addonDispatchOpen.id, 10),
+            e.detail,
+            includeQuery ? query : "",
+            includeDocuments ? selected : [],
+          );
+        } else {
+          createAddonEvent(
+            parseInt(layout.addonDispatchOpen.id, 10),
+            e.detail,
+            eventSelect,
+          );
+        }
+        emit.dismiss();
+      }}
+    >
+      <a id="form" />
+      {#if !eventActive}
+        {#if notice}
+          <div class="notice">{@html notice}</div>
+        {/if}
+        {#if showQuery && showDocuments}
+          <table class="documents">
+            <tbody>
+              <tr class="field">
+                <td class="radio">
+                  <div>
+                    <input
+                      type="radio"
+                      class="radio"
+                      name="documents"
+                      id="documents"
+                      bind:group={docType}
+                      value="documents"
+                      checked
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <label for="documents">
+                      {$_("addonDispatchDialog.labelSelected", {
+                        values: { n: numSelected },
+                      })}
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr class="field">
+                <td class="radio">
+                  <div>
+                    <input
+                      type="radio"
+                      class="radio"
+                      name="documents"
+                      id="query"
+                      bind:group={docType}
+                      value="query"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <label for="query">
+                      {$_("addonDispatchDialog.labelQuery", {
+                        values: { n: search.results.count },
+                      })}
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        {/if}
       {/if}
 
       {#if showEventInfo}
-        {#if showExistingEvents}
-          <Button nondescript={true} on:click={hideEvents}>
-            {$_("addonDispatchDialog.hideAddons")}
-          </Button>
-
-          <div class="events">
-            <ul>
-              {#each events as event}
-                <li>
-                  <a href="#" on:click={() => loadEvent(event)}>
-                    {eventNameField
-                      ? event.parameters[eventNameField]
-                      : `Event #${event.id}`}
-                  </a>
-                </li>
+        <div class="eventSelect">
+          <label class="label">{$_("addonDispatchDialog.runSchedule")}</label>
+          <span class="inputpadded">
+            <select bind:value={eventSelect}>
+              <option value="0">
+                {#if activeEvent}{$_(
+                    "addonDispatchDialog.disable",
+                  )}{:else}---{/if}
+              </option>
+              {#each eventSelectOptions as [value, label]}
+                <option {value}>{label}</option>
               {/each}
-            </ul>
-          </div>
-
-          {#if activeEvent && runs.length === 0}
-            <Button nondescript={true} on:click={showRuns}>
-              {$_("addonDispatchDialog.showRuns")}
-            </Button>
-          {:else if activeEvent && runs.length > 0}
-            <Button nondescript={true} on:click={hideRuns}>
-              {$_("addonDispatchDialog.hideRuns")}
-            </Button>
-          {/if}
-
-          {#if runs.length > 0}
-            <div class="runs">
-              {#each runs as run (run.uuid)}
-                <AddonRun {run} compact={true} />
-              {/each}
-            </div>
-          {/if}
-        {:else if events.length > 0}
-          <Button nondescript={true} on:click={showEvents}>
-            {$_("addonDispatchDialog.showAddons", {values: { n: events.length }})}
-          </Button>
-        {/if}
+            </select>
+          </span>
+        </div>
       {/if}
 
-      <div class="markdown">
-        <SvelteMarkdown
-          source={schema.description}
-          renderers={{ html: null }}
-        />
+      <div class="buttonpadded">
+        <!-- disable button when invalid, maybe -->
+        <Button type="submit">
+          {eventActive ? $_("dialog.save") : $_("dialog.dispatch")}
+        </Button>
+        <Button secondary={true} on:click={emit.dismiss}>
+          {$_("dialog.cancel")}
+        </Button>
       </div>
-
-      <Form
-        {schema}
-        {components}
-        {value}
-        {validator}
-        on:submit={(e) => {
-          if (activeEvent) {
-            updateAddonEvent(activeEvent.id, e.detail, eventSelect);
-          } else if (eventSelect == 0) {
-            // no event, dispatch immediately
-            dispatchAddon(
-              parseInt(layout.addonDispatchOpen.id, 10),
-              e.detail,
-              includeQuery ? query : "",
-              includeDocuments ? selected : [],
-            );
-          } else {
-            createAddonEvent(
-              parseInt(layout.addonDispatchOpen.id, 10),
-              e.detail,
-              eventSelect,
-            );
-          }
-          emit.dismiss();
-        }}
-      >
-        <a id="form" />
-        {#if !eventActive}
-          {#if notice}
-            <div class="notice">{@html notice}</div>
-          {/if}
-          {#if showQuery && showDocuments}
-            <table class="documents">
-              <tbody>
-                <tr class="field">
-                  <td class="radio">
-                    <div>
-                      <input
-                        type="radio"
-                        class="radio"
-                        name="documents"
-                        id="documents"
-                        bind:group={docType}
-                        value="documents"
-                        checked
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <label for="documents">
-                        {$_("addonDispatchDialog.labelSelected", {
-                          values: { n: numSelected },
-                        })}
-                      </label>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="field">
-                  <td class="radio">
-                    <div>
-                      <input
-                        type="radio"
-                        class="radio"
-                        name="documents"
-                        id="query"
-                        bind:group={docType}
-                        value="query"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <label for="query">
-                        {$_("addonDispatchDialog.labelQuery", {
-                          values: { n: search.results.count },
-                        })}
-                      </label>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          {/if}
-        {/if}
-
-        {#if showEventInfo}
-          <div class="eventSelect">
-            <label class="label">{$_("addonDispatchDialog.runSchedule")}</label>
-            <span class="inputpadded">
-              <select bind:value={eventSelect}>
-                <option value=0>
-                  {#if activeEvent}{$_("addonDispatchDialog.disable")}{:else}---{/if}
-                </option>
-                {#each eventSelectOptions as [value, label]}
-                  <option {value}>{label}</option>
-                {/each}
-              </select>
-            </span>
-          </div>
-        {/if}
-
-        <div class="buttonpadded">
-          <!-- disable button when invalid, maybe -->
-          <Button type="submit">
-            {eventActive
-              ? $_("dialog.save")
-              : $_("dialog.dispatch")}
-          </Button>
-          <Button secondary={true} on:click={emit.dismiss}>
-            {$_("dialog.cancel")}
-          </Button>
-        </div>
-      </Form>
-    {/if}
-  </div>
+    </Form>
+  {/if}
 </div>

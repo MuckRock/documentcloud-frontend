@@ -1,7 +1,7 @@
 import { Svue } from "svue";
-import { router } from "@/router/router";
-import { truthyParamValue } from "@/util/url";
-import { sameProp } from "@/util/array";
+import { router, setHash } from "@/router/router.js";
+import { truthyParamValue } from "@/util/url.js";
+import { sameProp } from "@/util/array.js";
 
 // Used to calculate the most restricted level of access
 // in a group of documents
@@ -24,7 +24,8 @@ export const layout = new Svue({
       selectedMap: {},
 
       // Custom dialogs
-      addonDispatchOpen: false,
+      addonDispatchOpen: null,
+      addOnEvent: null,
       addonBrowserOpen: false,
       metaOpen: null,
       documentInfoOpen: false,
@@ -166,16 +167,29 @@ export function unselectDocument(document) {
 
 // Dialogs
 export function openDispatchAddon(addon) {
+  const { repository } = addon.addon;
+  setHash(`add-ons/${repository}`);
   layout.addonDispatchOpen = addon;
 }
+
+export function showAddonEvent(addon, eventId) {
+  const { repository } = addon.addon;
+  setHash(`add-ons/${repository}/${eventId}`);
+  layout.addonDispatchOpen = addon;
+  layout.addOnEvent = eventId;
+}
+
 export function hideAddonDispatch() {
-  layout.addonDispatchOpen = false;
+  setHash("");
+  layout.addonDispatchOpen = null;
 }
 
 export function openAddonBrowser() {
+  setHash("add-ons");
   layout.addonBrowserOpen = true;
 }
 export function hideAddonBrowser() {
+  setHash("");
   layout.addonBrowserOpen = false;
 }
 

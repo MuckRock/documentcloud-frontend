@@ -1,4 +1,8 @@
 <script>
+  import SvelteMarkdown from "svelte-markdown";
+  import { _ } from "svelte-i18n";
+  import debounce from "lodash/debounce";
+
   import Button from "@/common/Button.svelte";
   import {
     addons,
@@ -6,10 +10,6 @@
     getBrowserAddons,
   } from "@/manager/addons.js";
   import emitter from "@/emit.js";
-
-  import SvelteMarkdown from "svelte-markdown";
-  import { _ } from "svelte-i18n";
-  import debounce from "lodash/debounce";
 
   const emit = emitter({
     dismiss() {},

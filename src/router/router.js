@@ -105,6 +105,13 @@ export function pushUrl(url) {
   );
 }
 
+// for hash routing in App.svelte and Viewer.svelte
+export function setHash(hash) {
+  const url = new URL(router.currentUrl, window.location.href);
+  url.hash = hash;
+  pushUrl(url.pathname + url.search + url.hash);
+}
+
 export function goBack(fallback = FALLBACK_URL) {
   if (router.pastUrl != null) {
     window.history.back();
