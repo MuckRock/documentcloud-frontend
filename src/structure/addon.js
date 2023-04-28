@@ -68,7 +68,7 @@ export class AddonRun extends Svue {
           return addonRun.status;
         },
         failure(status) {
-          return (status === "failure" || status === "cancelled");
+          return status === "failure" || status === "cancelled";
         },
         progress(addonRun) {
           return addonRun.progress;
@@ -107,7 +107,6 @@ export class AddonRun extends Svue {
   }
 }
 
-
 export class AddonEvent extends Svue {
   constructor(rawAddonEvent, structure = {}) {
     const computed = structure.computed == null ? {} : structure.computed;
@@ -135,4 +134,3 @@ export class AddonEvent extends Svue {
     });
   }
 }
-

@@ -1,12 +1,67 @@
 <script>
   import { onMount } from "svelte";
-  import Sidebar from "./sidebar/Sidebar";
-  import MainContainer from "./MainContainer";
   import { _ } from "svelte-i18n";
 
-  import { layout } from "@/manager/layout";
-  import { documents } from "@/manager/documents";
+  import Sidebar from "./sidebar/Sidebar.svelte";
+  import MainContainer from "./MainContainer.svelte";
+
+  import { layout } from "@/manager/layout.js";
+  import { addons, getBrowserAddons } from "@/manager/addons.js";
+  import { documents } from "@/manager/documents.js";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+
+  // hash routing, like in Viewer.svelte
+  // [regexp, callback]
+  const navHandlers = [
+    [
+      /^#$/,
+      (match) => {
+        layout.addonBrowserOpen = false;
+      },
+    ],
+
+    // list add-ons
+    [
+      /^#add-ons$/,
+      async (match) => {
+        await getBrowserAddons();
+        layout.addonBrowserOpen = true;
+      },
+    ],
+
+    // initial add-on view
+    [
+      /^#add-ons\/([-\w]+)\/([-\w]+)$/,
+      async (match) => {
+        await getBrowserAddons();
+
+        const [org, name] = match.slice(1, 3);
+        const addon = addons.addonsByRepo[`${org}/${name}`];
+        if (addon) {
+          layout.addonDispatchOpen = addon;
+        } else {
+          console.error("Add-on not found: %s", `${org}/${name}`);
+        }
+      },
+    ],
+
+    // configured add-on
+    [
+      /^#add-ons\/(?<org>[-\w]+)\/(?<name>[-\w]+)\/(?<id>\d+)$/,
+      async (match) => {
+        await getBrowserAddons();
+
+        const [org, name, id] = match.slice(1, 4);
+        const addon = addons.addonsByRepo[`${org}/${name}`];
+        if (addon) {
+          layout.addonDispatchOpen = addon;
+          layout.addOnEvent = +id;
+        } else {
+          console.error("Add-on not found: %s", `${org}/${name}`);
+        }
+      },
+    ],
+  ];
 
   let sidebar = null;
 
@@ -18,6 +73,22 @@
     }
   }
 
+  function hashRoute() {
+    const hash = window.location.hash;
+    if (hash === "") {
+      const callback = navHandlers[0][1];
+      return callback();
+    }
+
+    navHandlers.find(([route, callback]) => {
+      const match = route.exec(hash);
+      if (match) {
+        callback(match);
+        return true; // stop the loop
+      }
+    });
+  }
+
   onMount(() => {
     window.plausible =
       window.plausible ||
@@ -26,8 +97,15 @@
       };
 
     plausible("pageview");
+    hashRoute();
+
+    // debug
+    window.layout = layout;
+    window.addons = addons;
   });
 </script>
+
+<svelte:window on:hashchange={hashRoute} />
 
 <svelte:head>
   <title>{$_("common.documentCloud")}</title>

@@ -1,4 +1,4 @@
-import NotFound from "@/pages/NotFound";
+import NotFound from "@/pages/NotFound.svelte";
 import {
   loadDefault,
   loadHome,
@@ -9,7 +9,7 @@ import {
   loadProject,
   loadLegacyRedirect,
   loadEntities,
-} from "@/util/lazyComponent";
+} from "@/util/lazyComponent.js";
 
 export const routes = [
   NotFound,
@@ -29,6 +29,23 @@ export const routes = [
       component: lazyComponent.app,
       get: loadApp,
     },
+
+    addonList: {
+      path: "/app/add-ons",
+      component: lazyComponent.app,
+      get: loadApp,
+    },
+    addonDetail: {
+      path: "/app/add-ons/:org/:name",
+      component: lazyComponent.app,
+      get: loadApp,
+    },
+    addonEvent: {
+      path: "/app/add-ons/:org/:name/:id",
+      component: lazyComponent.app,
+      get: loadApp,
+    },
+
     viewer: {
       path: "/documents/:id",
       component: lazyComponent.viewer,
