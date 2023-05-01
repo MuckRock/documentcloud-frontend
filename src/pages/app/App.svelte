@@ -39,6 +39,7 @@
         const addon = addons.addonsByRepo[`${org}/${name}`];
         if (addon) {
           layout.addonDispatchOpen = addon;
+          layout.params.addOnEvent = null;
         } else {
           console.error("Add-on not found: %s", `${org}/${name}`);
         }
@@ -55,7 +56,7 @@
         const addon = addons.addonsByRepo[`${org}/${name}`];
         if (addon) {
           layout.addonDispatchOpen = addon;
-          layout.addOnEvent = +id;
+          layout.params.addOnEvent = +id;
         } else {
           console.error("Add-on not found: %s", `${org}/${name}`);
         }
