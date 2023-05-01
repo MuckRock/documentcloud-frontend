@@ -25,7 +25,7 @@
   import { layout } from "@/manager/layout.js";
   import { components } from "./DCDefaultFormComponents.ts";
 
-  let form;
+  let container;
   let schema = structuredClone(layout.addonDispatchOpen.parameters);
 
   // The bind value for the event select drop down
@@ -83,12 +83,9 @@
     eventSelect = "0";
     schema = structuredClone(layout.addonDispatchOpen.parameters);
 
-    const marker = document.getElementById("form");
-    const form = marker && marker.closest("form");
+    const form = container && container.querySelector("form");
     if (form) {
       form.reset();
-    } else {
-      console.error("form not found");
     }
 
     layout.params.addOnEvent = null;
@@ -105,7 +102,8 @@
     for (const param in event.parameters) {
       schema.properties[param].default = event.parameters[param];
     }
-    document.getElementById("form").closest("form").reset();
+    const form = container && container.querySelector("form");
+    if (form) form.reset();
     // set the event select widget
     eventSelect = event.event;
     // reset runs
@@ -194,14 +192,14 @@
   }
 </script>
 
-<style lang="scss">
+<style>
   #repository-detail {
     font-size: 16px;
     font-weight: normal;
+  }
 
-    a {
-      text-decoration: underline;
-    }
+  a {
+    text-decoration: underline;
   }
 
   table {
@@ -240,19 +238,17 @@
   .notice :global(a),
   .markdown :global(a) {
     text-decoration: underline;
-    color: $primary;
+    color: var(--primary, #4294f0);
   }
 
-  .eventSelect {
-    label {
-      font-size: 16px;
-      padding-right: 5px;
-    }
+  .eventSelect label {
+    font-size: 16px;
+    padding-right: 5px;
   }
 
   .runs {
     background: #eff7ff;
-    border-radius: $radius;
+    border-radius: var(--radius, 3px);
     padding: 0;
     margin: 20px 0;
   }
@@ -260,13 +256,14 @@
   .events a {
     text-decoration: underline;
     color: #5a76a0;
-    &:hover {
-      filter: brightness(85%);
-    }
+  }
+
+  .events a:hover {
+    filter: brightness(85%);
   }
 </style>
 
-<div class="mcontent">
+<div class="mcontent" bind:this={container}>
   {#if schema}
     <h2>
       {$_("addonsMenu.addon")}: {layout.addonDispatchOpen.name}
@@ -344,7 +341,6 @@
       {components}
       {value}
       {validator}
-      bind:this={form}
       on:submit={(e) => {
         if (activeEvent) {
           updateAddonEvent(activeEvent.id, e.detail, eventSelect);
@@ -366,7 +362,6 @@
         emit.dismiss();
       }}
     >
-      <a id="form" />
       {#if !eventActive}
         {#if notice}
           <div class="notice">{@html notice}</div>
