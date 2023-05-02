@@ -10,13 +10,15 @@
   import AddonRun from "@/common/AddonRun.svelte";
 
   import { setHash } from "@/router/router.js";
-  import { addons, dispatchAddon, getBrowserAddons } from "@/manager/addons.js";
+  import { dispatchAddon } from "@/manager/addons.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
   import {
     createAddonEvent,
     getAddonEvents,
     getAddonRuns,
     updateAddonEvent,
   } from "@/api/addon.js";
+  import { SIGN_IN_URL } from "@/api/auth.js";
   import { search } from "@/search/search.js";
   import { viewer } from "@/viewer/viewer.js";
   import emitter from "@/emit.js";
@@ -456,12 +458,16 @@
 
       <div class="buttonpadded">
         <!-- disable button when invalid, maybe -->
-        <Button type="submit">
-          {eventActive ? $_("dialog.save") : $_("dialog.dispatch")}
-        </Button>
-        <Button secondary={true} on:click={emit.dismiss}>
-          {$_("dialog.cancel")}
-        </Button>
+        {#if $orgsAndUsers.me}
+          <Button type="submit">
+            {eventActive ? $_("dialog.save") : $_("dialog.dispatch")}
+          </Button>
+          <Button secondary={true} on:click={emit.dismiss}>
+            {$_("dialog.cancel")}
+          </Button>
+        {:else}
+          <p><a href={SIGN_IN_URL}>{$_("addonDispatchDialog.signIn")}</a></p>
+        {/if}
       </div>
     </Form>
   {/if}
