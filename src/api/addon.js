@@ -16,10 +16,15 @@ export async function getActiveAddons() {
   return results.map((result) => new Addon(result));
 }
 
-export async function getAddons(query = "", url = null) {
+export async function getAddons(
+  query = "",
+  filters = {},
+  per_page = 5,
+  url = null,
+) {
   // Use the URL from the next or previous url in the response
   if (!url) {
-    url = apiUrl(queryBuilder(`addons/`, { query, per_page: 5 }));
+    url = apiUrl(queryBuilder("addons/", { ...filters, query, per_page }));
   }
   const { data } = await session.get(url);
   const results = data.results.map((result) => new Addon(result));

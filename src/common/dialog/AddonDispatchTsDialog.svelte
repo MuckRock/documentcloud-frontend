@@ -10,7 +10,7 @@
   import AddonRun from "@/common/AddonRun.svelte";
 
   import { setHash } from "@/router/router.js";
-  import { addons, dispatchAddon } from "@/manager/addons.js";
+  import { addons, dispatchAddon, getBrowserAddons } from "@/manager/addons.js";
   import {
     createAddonEvent,
     getAddonEvents,
@@ -124,7 +124,7 @@
   // generate a hash URL for each addon event
   function eventUrl(event) {
     const id = event.addonEvent.addon;
-    const addon = addons.addonsById[id];
+    const addon = layout.addonDispatchOpen;
 
     return `#add-ons/${addon.repository}/${id}`;
   }

@@ -6,7 +6,11 @@
   import MainContainer from "./MainContainer.svelte";
 
   import { layout } from "@/manager/layout.js";
-  import { addons, getBrowserAddons } from "@/manager/addons.js";
+  import {
+    addons,
+    getBrowserAddons,
+    getAddonByRepository,
+  } from "@/manager/addons.js";
   import { documents } from "@/manager/documents.js";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
 
@@ -33,15 +37,14 @@
     [
       /^#add-ons\/([-\w]+)\/([-\w]+)$/,
       async (match) => {
-        await getBrowserAddons();
-
         const [org, name] = match.slice(1, 3);
-        const addon = addons.addonsByRepo[`${org}/${name}`];
+        const repo = `${org}/${name}`;
+        const addon = await getAddonByRepository(repo);
         if (addon) {
           layout.addonDispatchOpen = addon;
           layout.params.addOnEvent = null;
         } else {
-          console.error("Add-on not found: %s", `${org}/${name}`);
+          console.error("Add-on not found: %s", repo);
         }
       },
     ],
@@ -50,15 +53,14 @@
     [
       /^#add-ons\/(?<org>[-\w]+)\/(?<name>[-\w]+)\/(?<id>\d+)$/,
       async (match) => {
-        await getBrowserAddons();
-
         const [org, name, id] = match.slice(1, 4);
-        const addon = addons.addonsByRepo[`${org}/${name}`];
+        const repo = `${org}/${name}`;
+        const addon = await getAddonByRepository(repo);
         if (addon) {
           layout.addonDispatchOpen = addon;
           layout.params.addOnEvent = +id;
         } else {
-          console.error("Add-on not found: %s", `${org}/${name}`);
+          console.error("Add-on not found: %s", repo);
         }
       },
     ],

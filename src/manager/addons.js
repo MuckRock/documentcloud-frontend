@@ -24,13 +24,11 @@ export const addons = new Svue({
     };
   },
   computed: {
-    addonsById(activeAddons) {
-      const results = {};
-      for (let i = 0; i < activeAddons.length; i++) {
-        const addon = activeAddons[i];
-        results[addon.id] = addon;
-      }
-      return results;
+    addonsById(browserAddons) {
+      return browserAddons.reduce((m, addon) => {
+        m[addon.id] = addon;
+        return m;
+      }, {});
     },
     addonsByRepo(browserAddons) {
       return browserAddons.reduce((m, addon) => {
@@ -78,9 +76,26 @@ export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
 }
 
-export async function getBrowserAddons(query = "", url = null) {
-  const newAddons = await getAddons(query, url);
+export async function getBrowserAddons(
+  query = "",
+  filters = {},
+  per_page = 5,
+  url = null,
+) {
+  const newAddons = await getAddons(query, filters, per_page, url);
   [addons.browserAddons, addons.browserNext, addons.browserPrev] = newAddons;
+}
+
+/**
+ * Fetch a single Add-On based on repository name, like Muckrock/Klaxon
+ *
+ * @export
+ * @param {string} [repo=""]
+ * @returns import('../structure/addon').Addon
+ */
+export async function getAddonByRepository(repository = "") {
+  const [addons, next, previous] = await getAddons("", { repository }, 1);
+  return addons[0] || null; // there should be only one, or nothing
 }
 
 export async function toggleActiveAddon(addon) {
