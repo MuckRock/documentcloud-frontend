@@ -702,7 +702,8 @@
     "hideRuns": "Hide Runs",
     "showAddons": "Show Scheduled Add-Ons ({n})",
     "runSchedule": "Run on a schedule:",
-    "disable": "Disable"
+    "disable": "Disable",
+    "signIn": "Sign in to use Add-Ons"
   },
   "addonBrowserDialog": {
     "browseAll": "Browse All Add-Ons",
