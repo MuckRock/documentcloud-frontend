@@ -25,7 +25,6 @@ export const layout = new Svue({
 
       // Custom dialogs
       addonDispatchOpen: null,
-      addOnEvent: null,
       addonBrowserOpen: false,
       metaOpen: null,
       documentInfoOpen: false,
@@ -37,6 +36,11 @@ export const layout = new Svue({
       searchTipsOpen: false,
       diagnosticsOpen: false,
       mailkeyOpen: false,
+
+      // nest any captured URL params here
+      params: {
+        addOnEvent: null,
+      },
 
       // Data
       dataDocuments: [],
