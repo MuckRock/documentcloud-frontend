@@ -49,16 +49,27 @@
   ];
   let eventSelectOptions = [];
   if (schema.eventOptions && schema.eventOptions.events) {
-    eventSelectOptions = availableOptions.filter(
-      ([value, label]) =>
-        schema.eventOptions.events.indexOf(label.toLowerCase()) > -1,
+    eventSelectOptions = availableOptions.filter(([value, label]) =>
+      schema.eventOptions.events.includes(label.toLowerCase()),
     );
   }
   let showEventInfo = eventSelectOptions.length > 0;
 
   onMount(async () => {
     events = await getAddonEvents(layout.addonDispatchOpen.id);
+
+    // load initial value from querystring
+    value = valuesFromQS();
   });
+
+  // extract initial form values from querystring
+  function valuesFromQS() {
+    let qs = new URLSearchParams(window.location.search);
+
+    // only accept values in properties
+    qs = Array.from(qs).filter(([k, v]) => schema.properties.hasOwnProperty(k));
+    return Object.fromEntries(qs);
+  }
 
   async function showRuns(e) {
     e.preventDefault();
@@ -128,6 +139,7 @@
   const validator = createAjvValidator(ajv);
 
   let value;
+  let addonForm;
 
   const emit = emitter({
     dismiss() {},
@@ -339,8 +351,9 @@
     <Form
       {schema}
       {components}
-      {value}
       {validator}
+      {value}
+      bind:this={addonForm}
       on:submit={(e) => {
         if (activeEvent) {
           updateAddonEvent(activeEvent.id, e.detail, eventSelect);
