@@ -194,7 +194,6 @@ export function openAddonBrowser() {
   layout.addonBrowserOpen = true;
 }
 export function hideAddonBrowser() {
-  console.log("hide addon browser");
   setHash("");
   setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonBrowserOpen = false;
