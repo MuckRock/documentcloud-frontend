@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { router, setHash } from "@/router/router.js";
+import { router, setHash, setQS } from "@/router/router.js";
 import { truthyParamValue } from "@/util/url.js";
 import { sameProp } from "@/util/array.js";
 
@@ -185,6 +185,7 @@ export function showAddonEvent(addon, eventId) {
 
 export function hideAddonDispatch() {
   setHash("");
+  setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonDispatchOpen = null;
 }
 
@@ -194,6 +195,7 @@ export function openAddonBrowser() {
 }
 export function hideAddonBrowser() {
   setHash("");
+  setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonBrowserOpen = false;
 }
 
