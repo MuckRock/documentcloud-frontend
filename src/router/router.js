@@ -1,7 +1,7 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
 import Empty from "@/pages/home/Empty.svelte"; // explicit extension for tests
-import { lazyComponent } from "@/util/lazyComponent";
+import { lazyComponent } from "@/util/lazyComponent.js";
 
 const endings = [".html", ".html"];
 
@@ -103,6 +103,33 @@ export function pushUrl(url) {
     "",
     window.location.origin + url,
   );
+}
+
+// for hash routing in App.svelte and Viewer.svelte
+export function setHash(hash) {
+  const url = new URL(router.currentUrl, window.location.href);
+  url.hash = hash;
+  pushUrl(url.pathname + url.search + url.hash);
+}
+/**
+ * Set (and overwrite) the URL search
+ *
+ * @export
+ * @param {URLSearchParams} qs Query args to set
+ * @param {Array<String>} keep Keys to preserve
+ */
+export function setQS(qs, keep = []) {
+  const url = new URL(router.currentUrl, window.location.href);
+  const keys = Array.from(url.searchParams).filter(([k, v]) =>
+    keep.includes(k),
+  );
+
+  url.search = "";
+  [...keys, ...qs].forEach(([k, v]) => {
+    url.searchParams.set(k, String(v).trim());
+  });
+
+  pushUrl(url.pathname + url.search + url.hash);
 }
 
 export function goBack(fallback = FALLBACK_URL) {

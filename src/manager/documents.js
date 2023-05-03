@@ -365,7 +365,12 @@ export async function markAsDirty(docIds) {
   }
 }
 
-export async function reprocessDocuments(documents, forceOcr, ocrEngine, language) {
+export async function reprocessDocuments(
+  documents,
+  forceOcr,
+  ocrEngine,
+  language,
+) {
   await wrapLoad(layout, async () => {
     const ids = documents.map((doc) => doc.id);
     await editMetadata(

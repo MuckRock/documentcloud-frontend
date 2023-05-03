@@ -2,7 +2,6 @@
   import Button from "@/common/Button";
   import emitter from "@/emit";
   import { layout } from "@/manager/layout";
-  import { nameSingularNumberPlural } from "@/util/string";
   import DocumentThumbnail from "@/pages/app/DocumentThumbnail";
   import { apiUrl } from "@/api/base";
   import { _ } from "svelte-i18n";

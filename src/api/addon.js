@@ -16,10 +16,15 @@ export async function getActiveAddons() {
   return results.map((result) => new Addon(result));
 }
 
-export async function getAddons(query = "", url = null) {
+export async function getAddons(
+  query = "",
+  filters = {},
+  per_page = 5,
+  url = null,
+) {
   // Use the URL from the next or previous url in the response
   if (!url) {
-    url = apiUrl(queryBuilder(`addons/`, { query, per_page: 5 }));
+    url = apiUrl(queryBuilder("addons/", { ...filters, query, per_page }));
   }
   const { data } = await session.get(url);
   const results = data.results.map((result) => new Addon(result));
@@ -57,7 +62,11 @@ export async function postAddonDispatch(
   return new AddonRun(data);
 }
 
-export async function getAddonRuns(event = null, dismissed = false, expand = "addon") {
+export async function getAddonRuns(
+  event = null,
+  dismissed = false,
+  expand = "addon",
+) {
   // Returns all add-on runs
   const results = await grabAllPages(
     apiUrl(queryBuilder(`addon_runs/`, { expand, dismissed, event })),
@@ -98,7 +107,10 @@ export async function updateAddonEvent(eventId, parameters, event) {
 }
 
 export async function updateAddonRun(run, parameters) {
-  const { data } = await session.patch(apiUrl(`addon_runs/${run.uuid}/`), parameters);
+  const { data } = await session.patch(
+    apiUrl(`addon_runs/${run.uuid}/`),
+    parameters,
+  );
   // Cannot expand addon in patch call, use previous expanded addon info
   data.addon = run.addonRun.addon;
   return new AddonRun(data);

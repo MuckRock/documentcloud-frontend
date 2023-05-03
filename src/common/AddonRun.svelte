@@ -17,7 +17,7 @@
 
   function getStatus(status) {
     if (status === "cancelled") {
-      return "Timed Out"
+      return "Timed Out";
     }
     return status
       .split("_")
@@ -45,13 +45,12 @@
 
   function rate(val) {
     const newVal = run.rating === val ? 0 : val;
-    editAddonRun(run, {rating: newVal});
+    editAddonRun(run, { rating: newVal });
   }
 
   function submitFeedback() {
-    editAddonRun(run, {comment});
+    editAddonRun(run, { comment });
   }
-
 </script>
 
 <style lang="scss">
@@ -90,7 +89,8 @@
     border-top: 1px solid rgba(128, 128, 128, 0.15);
   }
 
-  .failure, .cancelled {
+  .failure,
+  .cancelled {
     background: $errorbg;
     .info {
       color: $caution;
@@ -137,17 +137,10 @@
     </span>
     {#if done(run)}
       <span class="rate">
-        <Button
-          small={true}
-          on:click={thumbsUp}
-          secondary={run.rating !== 1}
-          >
+        <Button small={true} on:click={thumbsUp} secondary={run.rating !== 1}>
           &#x1F44D;
         </Button>
-        <Button
-          small={true}
-          on:click={thumbsDown}
-          secondary={run.rating !== -1}
+        <Button small={true} on:click={thumbsDown} secondary={run.rating !== -1}
           >&#x1F44E;
         </Button>
 
@@ -158,7 +151,7 @@
                 placeholder="Feedback on this AddOn Run"
                 maxlength="255"
                 bind:value={comment}
-                >
+              />
               <Button small={true} on:click={submitFeedback}>Submit</Button>
             {:else}
               <span>Thanks for the feedback!</span>
@@ -166,22 +159,14 @@
           </span>
         {/if}
       </span>
-    {:else} 
+    {:else}
       <span class="cancel">
         {#if cancelled.includes(run.uuid)}
-          <Button
-            small={true}
-            danger={true}
-            disabled={true}
-            >
+          <Button small={true} danger={true} disabled={true}>
             {$_("dialog.cancelling")}
           </Button>
         {:else}
-          <Button
-            small={true}
-            on:click={() => cancel(run.uuid)}
-            danger={true}
-            >
+          <Button small={true} on:click={() => cancel(run.uuid)} danger={true}>
             {$_("dialog.cancel")}
           </Button>
         {/if}
