@@ -126,7 +126,7 @@ export function setQS(qs, keep = []) {
 
   url.search = "";
   [...keys, ...qs].forEach(([k, v]) => {
-    url.searchParams.set(k, v);
+    url.searchParams.set(k, String(v).trim());
   });
 
   pushUrl(url.pathname + url.search + url.hash);
