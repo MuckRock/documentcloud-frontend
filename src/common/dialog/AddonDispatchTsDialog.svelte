@@ -28,7 +28,7 @@
   import { components } from "./DCDefaultFormComponents.ts";
 
   let container;
-  let schema = structuredClone(layout.addonDispatchOpen.parameters);
+  let schema = deepcopy(layout.addonDispatchOpen.parameters);
 
   // The bind value for the event select drop down
   let eventSelect = 0;
@@ -94,7 +94,7 @@
     runs = [];
     activeEvent = null;
     eventSelect = "0";
-    schema = structuredClone(layout.addonDispatchOpen.parameters);
+    schema = deepcopy(layout.addonDispatchOpen.parameters);
 
     const form = container && container.querySelector("form");
     if (form) {
@@ -129,6 +129,10 @@
     const addon = layout.addonDispatchOpen;
 
     return `#add-ons/${addon.repository}/${id}`;
+  }
+
+  function deepcopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
   }
 
   const ajv = new Ajv({
