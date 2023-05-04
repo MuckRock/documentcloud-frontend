@@ -27,6 +27,9 @@
         window.location.href,
       );
     }
+
+    // debug
+    window.router = router;
   });
 
   function handleBackNav(e) {
@@ -36,7 +39,8 @@
 </script>
 
 <style lang="scss">
-  :global(input), :global(select) {
+  :global(input),
+  :global(select) {
     padding: 4px 10px;
     font-family: inherit;
     font-size: 16px;

@@ -1,16 +1,10 @@
 <script>
-  import { search, initSearch, searchNext, searchPrev } from "@/search/search";
-  import { pushUrl } from "@/router/router";
-  import { queryBuilder } from "@/util/url";
-  import { simplePlural } from "@/util/string";
+  import { search, searchNext, searchPrev } from "@/search/search";
   import { _ } from "svelte-i18n";
 
   // SVG assets
   import leftPaginatorSvg from "@/assets/page_arrow_left.svg";
   import rightPaginatorSvg from "@/assets/page_arrow_right.svg";
-
-  export let dialog = false;
-
 </script>
 
 <style lang="scss">

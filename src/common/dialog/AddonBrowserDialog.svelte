@@ -1,51 +1,49 @@
 <script>
-  import Button from "@/common/Button";
-  import { activateAddon } from "@/api/addon";
+  import SvelteMarkdown from "svelte-markdown";
+  import { _ } from "svelte-i18n";
+  import debounce from "lodash/debounce";
+
+  import Button from "@/common/Button.svelte";
   import {
     addons,
     toggleActiveAddon,
     getBrowserAddons,
-  } from "@/manager/addons";
-  import SvelteMarkdown from "svelte-markdown";
-  import { _ } from "svelte-i18n";
-  import emitter from "@/emit";
-  import { layout } from "@/manager/layout";
-
-  import debounce from 'lodash/debounce';
+  } from "@/manager/addons.js";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     dismiss() {},
   });
 
-  const handleInput = debounce(e => { getBrowserAddons(e.target.value); }, 300);
+  const handleInput = debounce((e) => {
+    getBrowserAddons(e.target.value);
+  }, 300);
 
   function changePage(url) {
     getBrowserAddons("", url);
     // scroll to top of modal
-    document.getElementsByClassName("modal")[0].scroll({top: 0});
+    document.getElementsByClassName("modal")[0].scroll({ top: 0 });
   }
-
 </script>
 
-<style lang="scss">
+<style>
   .repository-detail {
     font-size: 16px;
     font-weight: normal;
+  }
 
-    a {
-      text-decoration: underline;
-    }
+  .repository-detail a {
+    text-decoration: underline;
   }
 
   .markdown :global(a) {
     text-decoration: underline;
-    color: $primary;
+    color: var(--primary, #4294f0);
   }
-
 </style>
 
 <div class="mcontent">
-  <h1>Browse Add Ons</h1>
+  <h2>{$_("addonBrowserDialog.browseAll")}</h2>
   <div>
     <input
       type="text"
@@ -56,22 +54,29 @@
   <div class="addons">
     <hr />
     {#each $addons.browserAddons as addon}
-      <h2>
+      <h3>
         {addon.name}
         <span class="repository-detail">
           by {addon.repository.split("/")[0]}
-          <a target="_blank" href="https://www.github.com/{addon.repository}">
-            (View Source)
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.github.com/{addon.repository}"
+          >
+            ({$_("addonBrowserDialog.viewsource")})
           </a>
         </span>
-      </h2>
+      </h3>
       <div class="markdown">
         <SvelteMarkdown
           source={addon.parameters.description}
           renderers={{ html: null }}
         />
       </div>
-      <Button secondary={!addon.active} on:click={() => toggleActiveAddon(addon)}>
+      <Button
+        secondary={!addon.active}
+        on:click={() => toggleActiveAddon(addon)}
+      >
         {#if addon.active}
           {$_("addonBrowserDialog.active")}
         {:else}

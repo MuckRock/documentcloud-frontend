@@ -11,6 +11,7 @@
   import Progress from "@/common/Progress";
   import Button from "@/common/Button";
   import { embedUrl } from "@/api/embed";
+  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { _ } from "svelte-i18n";
 
   // Dialogs
@@ -67,7 +68,7 @@
     ],
   ];
 
-  onMount(() => {
+  onMount(async () => {
     const hash = window.location.hash;
     for (let i = 0; i < navHandlers.length; i++) {
       const [regex, handler] = navHandlers[i];
@@ -77,7 +78,29 @@
         return;
       }
     }
+
+    if (!$viewer.embed) {
+      await initOrgsAndUsers();
+
+      plausible("pageview", { u: obscureURL() });
+    }
   });
+
+  // create a URL that won't leak the document slug
+  function obscureURL() {
+    const u = new URL(window.location);
+    const path_re = /documents\/(\d+)-(.+)/;
+
+    // if we're somehow not on a normal doc URL
+    if (!path_re.test(u.pathname)) {
+      return u.href;
+    }
+
+    const [p, id, slug] = path_re.exec(u.pathname);
+    u.pathname = u.pathname.replace(slug, "obscure");
+
+    return u.toString();
+  }
 </script>
 
 <svelte:head>
@@ -86,7 +109,7 @@
     <link rel="canonical" href={$viewer.document.canonicalUrl} />
 
     {#if $viewer.document && $viewer.document.noindex}
-      <meta name="robots" content="noindex">
+      <meta name="robots" content="noindex" />
     {/if}
     <!-- Social cards -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -108,6 +131,11 @@
       content={pageImageUrl($viewer.document, 0, 700, 1)}
     />
   {/if}
+
+  {#if !$viewer.embed && $orgsAndUsers.me !== null}<script
+      defer
+      data-domain="documentcloud.org"
+      src="https://plausible.io/js/script.manual.tagged-events.js"></script>{/if}
 </svelte:head>
 
 {#if $layout.error}

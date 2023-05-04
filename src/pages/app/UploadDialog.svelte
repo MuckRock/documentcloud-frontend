@@ -18,7 +18,6 @@
   import { handleNewDocuments } from "@/manager/documents";
 
   // Utils
-  import { handlePlural } from "@/util/string";
   import { _ } from "svelte-i18n";
 
   import { onMount } from "svelte";
@@ -57,7 +56,7 @@
   let tooManyFiles = false;
   let tooManyBigFiles = [false, false];
 
-  $: displayFiles = uploadMode == false ? files : uploadFiles;
+  $: displayFiles = uploadMode ? uploadFiles : files;
 
   let numUploaded;
   let createProgress = 0;
@@ -78,7 +77,7 @@
   $: createProgressPercent = `${Math.floor(createProgress * 100)}%`;
   $: processProgressPercent = `${Math.floor(processProgress * 100)}%`;
 
-  $: error = errorMessage != null;
+  $: error = errorMessage !== null;
 
   onMount(() => {
     handleFiles({ detail: initialFiles });
@@ -182,10 +181,6 @@
     width: 100%;
   }
 
-  .padright {
-    margin-right: 12px;
-  }
-
   .droparea {
     margin: 24px 0;
   }
@@ -217,187 +212,159 @@
       font-size: 13px;
     }
   }
-
-  details {
-    margin: -5px 0 8px 0;
-
-    summary {
-      @include buttonLike;
-
-      outline: none;
-      color: $primary;
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    p {
-      font-size: 14px;
-    }
-  }
 </style>
 
-<div>
-  <div class="mcontent">
-    {#if !uploadMode}
-      <div>
-        <h1>
-          {#if uploadProject == null}
-            {$_("uploadDialog.docUpload")}
-          {:else}
-            {$_("uploadDialog.docUploadProj", {
-              values: { title: uploadProject.title },
-            })}
-          {/if}
-        </h1>
-        {#if files.length == 0}
-          <p>
-            {$_("uploadDialog.beginUpload")}
-          </p>
-          {#if tooManyBigFiles[0]}
-            <p class="danger">
-              {$_("uploadDialog.pdfSizeWarning", {
-                values: { size: PDF_SIZE_LIMIT_READABLE },
-              })}
-            </p>
-          {/if}
-          {#if tooManyBigFiles[1]}
-            <p class="danger">
-              {$_("uploadDialog.pdfSizeWarning", {
-                values: { size: DOCUMENT_SIZE_LIMIT_READABLE },
-              })}
-            </p>
-          {/if}
+<div class="mcontent">
+  {#if !uploadMode}
+    <div>
+      <h2>
+        {#if uploadProject == null}
+          {$_("uploadDialog.docUpload")}
         {:else}
-          <p>{$_("uploadDialog.fileReady", { values: { n: files.length } })}</p>
-          {#if tooManyFiles}
-            <p class="danger">
-              {$_("uploadDialog.fileLimitWarning", {
-                values: { limit: LIMIT },
-              })}
-            </p>
-          {/if}
+          {$_("uploadDialog.docUploadProj", {
+            values: { title: uploadProject.title },
+          })}
         {/if}
-        <div class="actions">
-          <details>
-            <summary>{$_("uploadDialog.moreOptions")}</summary>
-            <p>
-              <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
-            </p>
-          </details>
-          {#if files.length > 0}
-            <span class="padright">
-              <Button on:click={upload}>{$_("uploadDialog.beginUpload")}</Button
-              >
-            </span>
-          {:else}
-            <FilePicker multiselect={true} on:files={handleFiles}>
-              <Button>{$_("uploadDialog.selectFiles")}</Button>
-            </FilePicker>
-          {/if}
-        </div>
-        {#if files.length == 0}
-          <div class="droparea">
-            <DropZone on:files={handleFiles}>
-              <span>{$_("uploadDialog.dragDrop")}</span>
-            </DropZone>
-          </div>
+      </h2>
+      {#if files.length === 0}
+        <p>
+          {$_("uploadDialog.selectDocument")}
+        </p>
+        {#if tooManyBigFiles[0]}
+          <p class="danger">
+            {$_("uploadDialog.pdfSizeWarning", {
+              values: { size: PDF_SIZE_LIMIT_READABLE },
+            })}
+          </p>
         {/if}
-        <div class="bottompadded">
-          <AccessToggle
-            bind:access
-            publicMessage={$_("uploadDialog.publicMsg")}
-            collaboratorMessage={$_("uploadDialog.collabMsg")}
-            privateMessage={$_("uploadDialog.privateMsg")}
-            collaboratorName={$_("uploadDialog.collabName")}
-          />
-        </div>
+        {#if tooManyBigFiles[1]}
+          <p class="danger">
+            {$_("uploadDialog.pdfSizeWarning", {
+              values: { size: DOCUMENT_SIZE_LIMIT_READABLE },
+            })}
+          </p>
+        {/if}
+      {:else}
+        <p>{$_("uploadDialog.fileReady", { values: { n: files.length } })}</p>
+        {#if tooManyFiles}
+          <p class="danger">
+            {$_("uploadDialog.fileLimitWarning", {
+              values: { limit: LIMIT },
+            })}
+          </p>
+        {/if}
+      {/if}
+      <div class="actions">
+        <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
+
+        {#if files.length > 0}
+          <Button on:click={upload}>{$_("uploadDialog.beginUpload")}</Button>
+        {:else}
+          <FilePicker multiselect={true} on:files={handleFiles}>
+            <Button>{$_("uploadDialog.selectFiles")}</Button>
+          </FilePicker>
+        {/if}
       </div>
-    {/if}
-    {#if uploadMode}
-      <div>
-        {#if !error}
-          <h1>
-            {#if numUploaded == files.length}
-              {$_("uploadDialog.submitting", {
-                values: { percent: processProgressPercent },
-              })}
-            {:else if uploadInProgress}
-              {$_("uploadDialog.uploading", {
-                values: { uploaded: numUploaded, length: files.length },
-              })}
-            {:else}
-              {$_("uploadDialog.gettingInfo", {
-                values: { percent: createProgressPercent },
-              })}
-            {/if}
-          </h1>
-          <p>
-            {$_("uploadDialog.pleaseLeaveOpen")}
-          </p>
-        {:else}
-          <h1>{$_("uploadDialog.errorHeading")}</h1>
-          <p class="error">
-            {$_("uploadDialog.errorMsg", {
-              values: { errorMessage: errorMessage },
+      {#if files.length == 0}
+        <div class="droparea">
+          <DropZone on:files={handleFiles}>
+            <span>{$_("uploadDialog.dragDrop")}</span>
+          </DropZone>
+        </div>
+      {/if}
+      <div class="bottompadded">
+        <AccessToggle
+          bind:access
+          publicMessage={$_("uploadDialog.publicMsg")}
+          collaboratorMessage={$_("uploadDialog.collabMsg")}
+          privateMessage={$_("uploadDialog.privateMsg")}
+          collaboratorName={$_("uploadDialog.collabName")}
+        />
+      </div>
+    </div>
+  {/if}
+  {#if uploadMode}
+    <div>
+      {#if !error}
+        <h2>
+          {#if numUploaded == files.length}
+            {$_("uploadDialog.submitting", {
+              values: { percent: processProgressPercent },
             })}
-          </p>
-          <div>
-            <Button secondary={true} on:click={emit.allUploaded}>
-              {$_("dialog.dismiss")}
+          {:else if uploadInProgress}
+            {$_("uploadDialog.uploading", {
+              values: { uploaded: numUploaded, length: files.length },
+            })}
+          {:else}
+            {$_("uploadDialog.gettingInfo", {
+              values: { percent: createProgressPercent },
+            })}
+          {/if}
+        </h2>
+        <p>
+          {$_("uploadDialog.pleaseLeaveOpen")}
+        </p>
+      {:else}
+        <h2>{$_("uploadDialog.errorHeading")}</h2>
+        <p class="error">
+          {$_("uploadDialog.errorMsg", {
+            values: { errorMessage: errorMessage },
+          })}
+        </p>
+        <div>
+          <Button secondary={true} on:click={emit.allUploaded}>
+            {$_("dialog.dismiss")}
+          </Button>
+        </div>
+      {/if}
+    </div>
+  {/if}
+  {#if !uploadMode && files.length > 0}
+    <div>
+      <p class="subtitle">{$_("uploadDialog.editDocInfo")}</p>
+    </div>
+  {/if}
+  {#if files.length > 0}
+    <div class="files" class:padder={uploadMode}>
+      {#each displayFiles as file (file.index)}
+        <File
+          class="file"
+          file={file.file}
+          data={file}
+          {uploadMode}
+          {error}
+          on:name={({ detail: newName }) => {
+            let name = newName.trim();
+            if (name.length == 0) name = $_("uploadDialog.untitled");
+            file.name = name;
+          }}
+          on:delete={() => removeFile(file.index)}
+        />
+      {/each}
+    </div>
+  {/if}
+  {#if !uploadMode}
+    <div>
+      {#if files.length > 0 && !uploadAdditional}
+        <div class="vpadded">
+          <Button nondescript={true} on:click={() => (uploadAdditional = true)}
+            >{$_("uploadDialog.uploadFiles")}</Button
+          >
+        </div>
+      {/if}
+      {#if files.length > 0 && uploadAdditional}
+        <div>
+          <div class="sectionbreak" />
+          <FilePicker multiselect={true} on:files={handleFiles}>
+            <Button secondary={true} small={true}>
+              {$_("uploadDialog.selectMore")}
             </Button>
-          </div>
-        {/if}
-      </div>
-    {/if}
-    {#if !uploadMode && files.length > 0}
-      <div>
-        <p class="subtitle">{$_("uploadDialog.editDocInfo")}</p>
-      </div>
-    {/if}
-    {#if files.length > 0}
-      <div class="files" class:padder={uploadMode}>
-        {#each displayFiles as file (file.index)}
-          <File
-            class="file"
-            file={file.file}
-            data={file}
-            {uploadMode}
-            {error}
-            on:name={({ detail: newName }) => {
-              let name = newName.trim();
-              if (name.length == 0) name = $_("uploadDialog.untitled");
-              file.name = name;
-            }}
-            on:delete={() => removeFile(file.index)}
-          />
-        {/each}
-      </div>
-    {/if}
-    {#if !uploadMode}
-      <div>
-        {#if files.length > 0 && !uploadAdditional}
-          <div class="vpadded">
-            <Button
-              nondescript={true}
-              on:click={() => (uploadAdditional = true)}
-              >{$_("uploadDialog.uploadFiles")}</Button
-            >
-          </div>
-        {/if}
-        {#if files.length > 0 && uploadAdditional}
-          <div>
-            <div class="sectionbreak" />
-            <FilePicker multiselect={true} on:files={handleFiles}>
-              <Button secondary={true} small={true}>
-                {$_("uploadDialog.selectMore")}
-              </Button>
-            </FilePicker>
-            <DropZone class="dropper" secondary={true} on:files={handleFiles}>
-              <span>{$_("uploadDialog.dragDropMore")}</span>
-            </DropZone>
-          </div>
-        {/if}
-      </div>
-    {/if}
-  </div>
+          </FilePicker>
+          <DropZone class="dropper" secondary={true} on:files={handleFiles}>
+            <span>{$_("uploadDialog.dragDropMore")}</span>
+          </DropZone>
+        </div>
+      {/if}
+    </div>
+  {/if}
 </div>
