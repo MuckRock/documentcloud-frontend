@@ -24,14 +24,14 @@ export const addons = new Svue({
     };
   },
   computed: {
-    addonsById(browserAddons) {
-      return browserAddons.reduce((m, addon) => {
+    addonsById(browserAddons, activeAddons) {
+      return [...browserAddons, ...activeAddons].reduce((m, addon) => {
         m[addon.id] = addon;
         return m;
       }, {});
     },
-    addonsByRepo(browserAddons) {
-      return browserAddons.reduce((m, addon) => {
+    addonsByRepo(browserAddons, activeAddons) {
+      return [...browserAddons, ...activeAddons].reduce((m, addon) => {
         m[addon.repository] = addon;
         return m;
       }, {});
