@@ -1,23 +1,25 @@
 <script>
-  import ProgressiveImage from "@/common/ProgressiveImage";
-  import Button from "@/common/Button";
-  import Loader from "@/common/Loader";
-  import AccessToggle from "@/common/AccessToggle";
-  import HtmlEditor from "@/common/HtmlEditor";
-  import HtmlField from "@/common/HtmlField";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import { doc } from "@/viewer/document";
+  import { _ } from "svelte-i18n";
+
+  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+  import Button from "@/common/Button.svelte";
+  import Loader from "@/common/Loader.svelte";
+  import AccessToggle from "@/common/AccessToggle.svelte";
+  import HtmlEditor from "@/common/HtmlEditor.svelte";
+  import HtmlField from "@/common/HtmlField.svelte";
+
+  import { doc } from "@/viewer/document.js";
   import {
     layout,
     cancelAnnotation,
     updatePageAnnotation,
     createPageAnnotation,
     deletePageAnnotation,
-  } from "@/viewer/layout";
-  import { wrapSeparate } from "@/util/wrapLoad";
-  import emitter from "@/emit";
-  import { _ } from "svelte-i18n";
+  } from "@/viewer/layout.js";
+  import { wrapSeparate } from "@/util/wrapLoad.js";
+  import emitter from "@/emit.js";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg";
@@ -25,7 +27,7 @@
   import pencilSvg from "@/assets/pencil.svg";
 
   // Asynchronously load dompurify
-  import { loadDompurify } from "@/util/domPurify";
+  import { loadDompurify } from "@/util/domPurify.js";
   loadDompurify();
 
   const noteTitleLimit = process.env.NOTE_TITLE_CHAR_LIMIT;
@@ -358,7 +360,8 @@
       border-top-left-radius: $radius;
       border-top-right-radius: $radius;
 
-      h1 {
+      h3,
+      h4 {
         font-weight: bold;
         font-size: 14px;
         margin: 0;
@@ -429,10 +432,16 @@
 
     .link,
     .pencil {
-      @include buttonLike;
-
+      background: none;
+      border: none;
+      cursor: pointer;
       vertical-align: middle;
       margin-left: 3px;
+    }
+
+    .link:hover,
+    .pencil:hover {
+      opacity: var(--hover-opacity, 0.8);
     }
 
     .twopanel {
@@ -517,7 +526,6 @@
       background: $annotationBorder;
     }
   }
-
 </style>
 
 <div
@@ -543,9 +551,9 @@
   >
     {#if !pageNote}
       <div class="closeflag">
-        <span class="closer" on:click={cancelAnnotation}>
+        <button class="closer" on:click={cancelAnnotation}>
           {@html closeInlineSvg}
-        </span>
+        </button>
       </div>
     {/if}
     <Loader active={$loading} transparent={true}>
@@ -558,10 +566,10 @@
           bind:value={title}
         />
       {:else}
-        <h1>
+        <h3>
           {#if titlePassages}
             {#each titlePassages as passage}
-              <h1 class="highlight">
+              <h4 class="highlight">
                 {#each passage as term}
                   {#if term.type == "highlight"}
                     <span class="passage highlighted">{term.text}</span>
@@ -569,7 +577,7 @@
                     <span class="passage">{term.text}</span>
                   {/if}
                 {/each}
-              </h1>
+              </h4>
             {/each}
           {:else}
             {annotation.title}
@@ -579,12 +587,12 @@
               {@html simpleLinkSvg}
             </a>
             {#if page.document.editAccess}
-              <span class="pencil" on:click={() => (editOverride = true)}>
+              <button class="pencil" on:click={() => (editOverride = true)}>
                 {@html pencilSvg}
-              </span>
+              </button>
             {/if}
           {/if}
-        </h1>
+        </h3>
       {/if}
     </Loader>
   </header>
@@ -632,9 +640,9 @@
   >
     {#if shift == "down"}
       <div class="closeflag">
-        <span class="closer" on:click={cancelAnnotation}>
+        <button class="closer" on:click={cancelAnnotation}>
           {@html closeInlineSvg}
-        </span>
+        </button>
       </div>
       <Loader active={$loading} transparent={true}>
         <!-- Title -->
@@ -647,17 +655,17 @@
             class="padded"
           />
         {:else}
-          <h1>
+          <h3>
             {annotation.title}
             <a class="link" href={noteUrl}>
               {@html simpleLinkSvg}
             </a>
             {#if page.document.editAccess}
-              <span class="pencil" on:click={() => (editOverride = true)}>
+              <button class="pencil" on:click={() => (editOverride = true)}>
                 {@html pencilSvg}
-              </span>
+              </button>
             {/if}
-          </h1>
+          </h3>
         {/if}
       </Loader>
     {/if}
