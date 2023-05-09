@@ -170,12 +170,12 @@
 </script>
 
 <style lang="scss">
-  $annotationBg: white;
-  $padding: 10px;
-  $subpadding: 8px;
-  $insetMargin: 1px;
-
   .annotation {
+    --annotationBg: white;
+    --padding: 10px;
+    --subpadding: 8px;
+    --insetMargin: 1px;
+
     &.disabled {
       header *,
       footer *,
@@ -194,11 +194,12 @@
     }
 
     &.behind {
-      z-index: ($viewerAnnotationZ - 1);
+      z-index: calc(var(--viewerAnnotationZ) - 1);
     }
 
     &.public {
-      $border: solid $annotationBorderWidth $annotationBorder;
+      $border: solid var(--annotationBorderWidth, 3px)
+        var(--annotationBorder, #ffe325);
       .excerpt::before {
         border-left: $border;
         border-right: $border;
@@ -217,12 +218,12 @@
       }
 
       .closeflag {
-        background: $annotationBorder;
+        background: var(--annotationBorder);
       }
     }
 
     &.organization {
-      $border: solid $annotationBorderWidth $organizationAnnotation;
+      $border: solid var(--annotationBorderWidth) var(--organizationAnnotation);
       .excerpt::before {
         border-left: $border;
         border-right: $border;
@@ -241,12 +242,12 @@
       }
 
       .closeflag {
-        background: $organizationAnnotation;
+        background: var(--organizationAnnotation);
       }
     }
 
     &.private {
-      $border: solid $annotationBorderWidth $privateAnnotation;
+      $border: solid var(--annotationBorderWidth) var(--privateAnnotation);
       .excerpt::before {
         border-left: $border;
         border-right: $border;
@@ -265,7 +266,7 @@
       }
 
       .closeflag {
-        background: $privateAnnotation;
+        background: var(--privateAnnotation);
       }
     }
 
@@ -273,26 +274,34 @@
     background: gainsboro;
     left: 0;
     right: 0;
-    z-index: $viewerAnnotationZ;
+    z-index: var(--viewerAnnotationZ, 6);
 
     .excerpt {
       overflow: hidden;
       height: 100%;
-      margin: (-$padding - $insetMargin)
-        (-$padding - $annotationBorderWidth - $insetMargin);
-      border-left: solid ($padding + $annotationBorderWidth) $annotationBg;
-      border-right: solid ($padding + $annotationBorderWidth) $annotationBg;
-      border-top: solid $padding $annotationBg;
-      border-bottom: solid $padding $annotationBg;
-      background: $annotationBg;
+      margin: calc(-1 * var(--padding) - var(--insetMargin))
+        calc(
+          -1 * var(--padding) - var(--annotationBorderWidth) - var(--insetMargin)
+        );
+      border-left: solid calc(var(--padding) + var(--annotationBorderWidth))
+        var(--annotationBg);
+      border-right: solid calc(var(--padding) + var(--annotationBorderWidth))
+        var(--annotationBg);
+      border-top: solid var(--padding, 10px) var(--annotationBg, white);
+      border-bottom: solid var(--padding, 10px) var(--annotationBg, white);
+      background: var(--annotationBg, white);
 
       &::before {
         content: "";
         position: absolute;
-        top: -$padding - $insetMargin;
-        left: -$padding - $insetMargin - $annotationBorderWidth;
-        right: -$padding - $insetMargin - $annotationBorderWidth;
-        bottom: -$padding + $insetMargin;
+        top: calc(-1 * var(--padding) - var(--insetMargin));
+        left: calc(
+          -1 * var(--padding) - var(--insetMargin) - var(--annotationBorderWidth)
+        );
+        right: calc(
+          -1 * var(--padding) - var(--insetMargin) - var(--annotationBorderWidth)
+        );
+        bottom: calc(-1 * var(--padding) + var(--insetMargin));
         box-sizing: border-box;
       }
 
@@ -302,13 +311,13 @@
         top: 0;
         left: 0;
         right: 0;
-        bottom: $insetMargin * 2;
+        bottom: calc(var(--insetMargin) * 2);
       }
 
       .body {
         overflow: hidden;
         height: 100%;
-        border: $insetMargin solid #d0d0d0;
+        border: var(--insetMargin, 1px) solid #d0d0d0;
         box-sizing: border-box;
         border-radius: 2px;
 
@@ -316,7 +325,7 @@
           position: absolute;
           top: 0;
           left: 0;
-          bottom: $insetMargin * 2;
+          bottom: calc(var(--insetMargin, 1px) * 2);
           background: rgba(white, 0.8);
           box-shadow: inset 0 0 5px #000;
           box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
@@ -343,18 +352,22 @@
       position: absolute;
       font-size: 12px;
       text-align: left;
-      padding: 0 $padding;
-      left: -$padding - $insetMargin - $annotationBorderWidth;
-      right: -$padding - $insetMargin - $annotationBorderWidth;
-      background: $annotationBg;
+      padding: 0 var(--padding);
+      left: calc(
+        -1 * var(--padding) - var(--insetMargin) - var(--annotationBorderWidth)
+      );
+      right: calc(
+        -1 * var(--padding) - var(--insetMargin) - var(--annotationBorderWidth)
+      );
+      background: var(--annotationBg);
       box-sizing: border-box;
     }
 
     header {
       bottom: 100%;
-      margin-top: -$padding;
-      margin-bottom: $padding;
-      padding-top: $padding;
+      margin-top: calc(-1 * var(--padding, 10px));
+      margin-bottom: var(--padding, 10px);
+      padding-top: var(--padding, 10px);
 
       // Borders
       border-top-left-radius: $radius;
@@ -370,9 +383,9 @@
 
     footer {
       top: 100%;
-      margin-top: $padding - $insetMargin;
-      margin-bottom: -$padding;
-      padding-bottom: $padding;
+      margin-top: calc(var(--padding, 10px) - var(--insetMargin, 1px));
+      margin-bottom: calc(-1 * var(--padding, 10px));
+      padding-bottom: var(--padding, 10px);
 
       // Borders
       border-bottom-left-radius: $radius;
@@ -394,26 +407,26 @@
     }
 
     .closeflag {
-      $flagHeight: 25px;
-      $flagWidth: 29px;
-      $closeHeight: 14px;
+      --flagHeight: 25px;
+      --flagWidth: 29px;
+      --closeHeight: 14px;
 
       position: absolute;
       top: 20px;
-      left: -$flagWidth - $annotationBorderWidth;
-      width: $flagWidth;
-      height: $flagHeight;
-      border-top-left-radius: ($flagHeight / 2);
-      border-bottom-left-radius: ($flagHeight / 2);
+      left: calc(-1 * var(--flagWidth) - var(--annotationBorderWidth));
+      width: var(--flagWidth);
+      height: var(--flagHeight);
+      border-top-left-radius: calc(var(--flagHeight) / 2);
+      border-bottom-left-radius: calc(var(--flagHeight) / 2);
 
       .closer {
-        @include buttonLike;
         display: inline-block;
+        background: none;
 
         :global(svg) {
-          width: $closeHeight;
-          height: $closeHeight;
-          margin: ($flagHeight - $closeHeight) / 2;
+          width: var(--closeHeight);
+          height: var(--closeHeight);
+          margin: calc((var(--flagHeight) - var(--closeHeight)) / 2);
         }
       }
     }
@@ -427,7 +440,7 @@
     }
 
     input.padded {
-      margin-bottom: $subpadding;
+      margin-bottom: var(--subpadding, 8px);
     }
 
     .link,
@@ -465,12 +478,14 @@
 
     &.up,
     &.pagenote {
-      bottom: $padding;
+      bottom: var(--padding, 10px);
 
       footer,
       header {
         position: relative;
-        margin-right: -$padding * 2 - $subpadding;
+        margin-right: calc(
+          -1 * var(--padding, 10px) * 2 - var(--subpadding, 8px)
+        );
       }
 
       .excerpt {
@@ -551,7 +566,7 @@
   >
     {#if !pageNote}
       <div class="closeflag">
-        <button class="closer" on:click={cancelAnnotation}>
+        <button class="closer buttonLike" on:click={cancelAnnotation}>
           {@html closeInlineSvg}
         </button>
       </div>

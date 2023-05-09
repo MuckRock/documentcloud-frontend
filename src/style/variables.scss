@@ -1,3 +1,9 @@
+/* 
+variables.css is a version of the definitions below, using native CSS custom properties.
+It's imported here as a bridge solution, as we phase out Sass variables in favor of CSS variables.
+*/
+@use 'variables.css';
+
 /* Colors */
 $primary: #4294f0;
 $primary-faded: rgba(66, 148, 240, 0.13);
