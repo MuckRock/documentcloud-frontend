@@ -25,14 +25,14 @@
 </script>
 
 <style lang="scss">
-  $checksize: 15px;
-  $checklinesize: 11px;
-  $xOff: 0;
-
   label {
+    --checksize: 15px;
+    --checklinesize: 11px;
+    --xOff: 0;
+
     display: inline-block;
-    height: $checkboxSize;
-    width: $checkboxSize;
+    height: var(--checkboxSize, 22px);
+    width: var(--checkboxSize, 22px);
 
     input {
       opacity: 0;
@@ -41,8 +41,8 @@
     }
 
     span {
-      height: $checkboxSize;
-      width: $checkboxSize;
+      height: var(--checkboxSize, 22px);
+      width: var(--checkboxSize, 22px);
       border: solid 1px #bbbbbb;
       display: inline-block;
       border-radius: 2px;
@@ -57,18 +57,24 @@
 
       :global(.checkmark) {
         position: absolute;
-        width: $checksize;
-        height: $checksize;
-        left: ($checkboxSize - $checksize) / 2 + $xOff;
-        top: ($checkboxSize - $checksize) / 2;
+        width: var(--checksize, 15px);
+        height: var(--checksize, 15px);
+        left: calc(
+          (var(--checkboxSize, 22px) - var(--checksize, 15px)) / 2 +
+            var(--xOff, 0)
+        );
+        top: calc((var(--checkboxSize, 22px) - var(--checksize, 15px)) / 2);
       }
 
       :global(.checkline) {
         position: absolute;
-        width: $checklinesize;
-        height: $checklinesize;
-        left: ($checkboxSize - $checklinesize) / 2 + $xOff;
-        top: ($checkboxSize - $checklinesize) / 2;
+        width: var(--checklinesize, 11px);
+        height: var(--checklinesize, 11px);
+        left: calc(
+          (var(--checkboxSize, 22px) - var(--checklinesize, 11px)) / 2 +
+            var(--xOff, 0)
+        );
+        top: calc((var(--checkboxSize, 22px) - var(--checklinesize, 11px)) / 2);
       }
     }
 
@@ -101,7 +107,7 @@
 
       :global(.checkline),
       :global(.checkmark) {
-        filter: #{"invert(0.5)"};
+        filter: invert(0.5);
       }
 
       &:hover {

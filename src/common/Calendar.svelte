@@ -1,6 +1,6 @@
 <script>
-  import { lpad } from "@/util/string";
   import { _, date, time } from "svelte-i18n";
+  import { lpad } from "@/util/string.js";
 
   // SVG assets
   import CalendarLeft from "@/assets/calendar_left.svg";
@@ -131,8 +131,8 @@
           background: rgba($primary, 0.18);
           left: 50%;
           top: 50%;
-          margin-left: -$circleSize / 2;
-          margin-top: -$circleSize / 2;
+          margin-left: calc(-1 * $circleSize / 2);
+          margin-top: calc(-1 * $circleSize / 2);
           z-index: -1;
         }
 

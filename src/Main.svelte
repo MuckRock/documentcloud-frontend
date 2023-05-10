@@ -146,6 +146,35 @@
       }
     }
   }
+
+  /* Mixins */
+  :global(.document-cell) {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  :global(.menu) {
+    background: var(--menuBg);
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.12);
+    border-radius: var(--menuRadius);
+  }
+
+  :global(.processingText) {
+    color: var(--primary);
+    font-size: 16px;
+  }
+
+  :global(.buttonLike) {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  :global(.buttonLike:hover) {
+    opacity: var(--hover-opacity);
+  }
 </style>
 
 <svelte:window on:popstate={handleBackNav} />
