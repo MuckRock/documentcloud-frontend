@@ -66,11 +66,12 @@
 
   // extract initial form values from querystring
   function valuesFromQS() {
+    let initial = { ...value };
     let qs = new URLSearchParams(window.location.search);
 
     // only accept values in properties
     qs = Array.from(qs).filter(([k, v]) => schema.properties.hasOwnProperty(k));
-    return Object.fromEntries(qs);
+    return { ...initial, ...Object.fromEntries(qs) };
   }
 
   async function showRuns(e) {
@@ -144,7 +145,7 @@
 
   const validator = createAjvValidator(ajv);
 
-  let value;
+  let value = {};
   let addonForm;
 
   const emit = emitter({
@@ -202,9 +203,8 @@
 
   // deal with hash routing
   $: if ($layout.params.addOnEvent) {
-    eventSelect = $layout.params.addOnEvent;
-    activeEvent = events.find((e) => e.id === $layout.params.addOnEvent);
-    loadEvent(activeEvent);
+    let event = events.find((e) => +e.id === +$layout.params.addOnEvent);
+    loadEvent(event);
   } else {
     hideEvents();
   }
