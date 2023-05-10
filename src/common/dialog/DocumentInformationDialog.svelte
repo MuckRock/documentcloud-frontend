@@ -1,18 +1,18 @@
 <script>
-  import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
-  import HtmlEditor from "@/common/HtmlEditor";
-  import { metaDialogs } from "./metaDialogs";
-  import { nameSingularNumberPlural } from "@/util/string";
-  import { titlecase } from "@/util/string";
-  import { editSelectedDocumentInfo } from "@/manager/documents";
-  import { viewer } from "@/viewer/viewer";
-  import emitter from "@/emit";
   import { _ } from "svelte-i18n";
 
+  import Button from "@/common/Button.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
+  import HtmlEditor from "@/common/HtmlEditor.svelte";
+
+  import { metaDialogs } from "./metaDialogs.js";
+  import { editSelectedDocumentInfo } from "@/manager/documents.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import emitter from "@/emit.js";
+
   // Stores
-  import { layout } from "@/manager/layout";
-  import { layout as viewerLayout } from "@/viewer/layout";
+  import { layout } from "@/manager/layout.js";
+  import { layout as viewerLayout } from "@/viewer/layout.js";
 
   const fieldValid = (value, initial) => value != initial;
   const fieldInvalidText = (value, initial, fieldName) =>
@@ -81,7 +81,7 @@
   }
 </script>
 
-<style lang="scss">
+<style>
   input,
   table {
     position: border-box;
@@ -101,45 +101,40 @@
   }
 </style>
 
-<div>
-  <div class="mcontent">
-    <h1>
-      {$_("dialogDocumentInformationDialog.editInformation", {
-        values: { n: numSelected },
-      })}
-    </h1>
-    <table>
-      {#each metaDialogs as meta, i}
-        {#if meta.disabled == null || !meta.disabled(numSelected)}
-          <tr>
-            <td>{$_(meta.fieldNameUppercase)}:</td>
-            <td>
-              <div class="inputpadded">
-                {#if meta.isTextArea}
-                  <HtmlEditor
-                    maxlength={meta.charLimit}
-                    bind:value={values[i]}
-                  />
-                {:else}
-                  <input maxlength={meta.charLimit} bind:value={values[i]} />
-                {/if}
-              </div>
-            </td>
-          </tr>
-        {/if}
-      {/each}
-    </table>
-    <div class="buttonpadded">
-      {#if valid}
-        <Button on:click={applyAction}>{$_("dialog.save")}</Button>
-      {:else}
-        <Tooltip caption={invalidReason} delay={500}>
-          <Button disabled={true}>{$_("dialog.save")}</Button>
-        </Tooltip>
+<div class="mcontent">
+  <h2>
+    {$_("dialogDocumentInformationDialog.editInformation", {
+      values: { n: numSelected },
+    })}
+  </h2>
+  <table>
+    {#each metaDialogs as meta, i}
+      {#if meta.disabled == null || !meta.disabled(numSelected)}
+        <tr>
+          <td>{$_(meta.fieldNameUppercase)}:</td>
+          <td>
+            <div class="inputpadded">
+              {#if meta.isTextArea}
+                <HtmlEditor maxlength={meta.charLimit} bind:value={values[i]} />
+              {:else}
+                <input maxlength={meta.charLimit} bind:value={values[i]} />
+              {/if}
+            </div>
+          </td>
+        </tr>
       {/if}
-      <Button secondary={true} on:click={emit.dismiss}
-        >{$_("dialog.cancel")}</Button
-      >
-    </div>
+    {/each}
+  </table>
+  <div class="buttonpadded">
+    {#if valid}
+      <Button on:click={applyAction}>{$_("dialog.save")}</Button>
+    {:else}
+      <Tooltip caption={invalidReason} delay={500}>
+        <Button disabled={true}>{$_("dialog.save")}</Button>
+      </Tooltip>
+    {/if}
+    <Button secondary={true} on:click={emit.dismiss}
+      >{$_("dialog.cancel")}</Button
+    >
   </div>
 </div>

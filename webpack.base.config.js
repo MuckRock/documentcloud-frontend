@@ -93,9 +93,10 @@ module.exports = wrap({
           },
         ],
       },
-      { /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
+      {
+        /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
         test: /\.ts$/,
-        loader: 'ts-loader',
+        loader: "ts-loader",
       },
     ],
   },
@@ -127,13 +128,13 @@ module.exports = wrap({
     }),
     ...(useAnalyzer
       ? [
-        new BundleAnalyzerPlugin({
-          analyzerPort: 80,
-          analyzerHost: "0.0.0.0",
-          openAnalyzer: false,
-        }),
-      ]
-      : [])
+          new BundleAnalyzerPlugin({
+            analyzerPort: 80,
+            analyzerHost: "0.0.0.0",
+            openAnalyzer: false,
+          }),
+        ]
+      : []),
   ],
   devtool: prod ? false : "source-map",
 });

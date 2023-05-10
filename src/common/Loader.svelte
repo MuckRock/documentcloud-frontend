@@ -7,7 +7,14 @@
   export let pad = false;
 </script>
 
-<style lang="scss">
+<style>
+  div {
+    --smallBordersize: 4px;
+    --smallSpinsize: 10px;
+    --bigBordersize: 7px;
+    --bigSpinsize: 17px;
+  }
+
   .inline {
     display: inline-block;
   }
@@ -25,64 +32,66 @@
     pointer-events: none;
     position: relative;
     user-select: none;
-    .contents.transparent {
-      opacity: 0.1;
-      transition: opacity 1s ease;
-    }
-
-    .shim {
-      display: block;
-      pointer-events: inherit;
-    }
-
-    &.pad {
-      display: inline-block;
-      width: 30px;
-      height: 36px;
-      vertical-align: middle;
-    }
   }
 
-  $smallBordersize: 4px;
-  $smallSpinsize: 10px;
-  $bigBordersize: 7px;
-  $bigSpinsize: 17px;
+  .loader .contents.transparent {
+    opacity: 0.1;
+    transition: opacity 1s ease;
+  }
+
+  .loader .shim {
+    display: block;
+    pointer-events: inherit;
+  }
+
+  .loader.pad {
+    display: inline-block;
+    width: 30px;
+    height: 36px;
+    vertical-align: middle;
+  }
 
   .spinner {
     position: absolute;
     left: 8px;
     top: 8px;
-    border: $smallBordersize solid transparent;
-    border-top: $smallBordersize solid $gray;
-    border-bottom: $smallBordersize solid $gray;
+    border: var(--smallBordersize, 4px) solid transparent;
+    border-top: var(--smallBordersize, 4px) solid
+      var(--gray, rgba(0, 0, 0, 0.53));
+    border-bottom: var(--smallBordersize, 4px) solid
+      var(--gray, rgba(0, 0, 0, 0.53));
     border-radius: 50%;
     box-sizing: border-radius;
-    width: $smallSpinsize;
-    height: $smallSpinsize;
+    width: var(--smallSpinsize, 10px);
+    height: var(--smallSpinsize, 10px);
     animation: spin 1.5s cubic-bezier(0.65, 0.175, 0.355, 0.835) infinite,
       opaquify 1s ease;
-    z-index: $spinnerZ;
+    z-index: var(--spinnerZ, 8);
     opacity: 0;
+  }
+  .spinner.big {
+    border: var(--bigBordersize, 7px) solid transparent;
+    border-top: var(--bigBordersize, 7px) solid var(--gray, rgba(0, 0, 0, 0.53));
+    border-bottom: var(--bigBordersize, 7px) solid
+      var(--gray, rgba(0, 0, 0, 0.53));
+    width: var(--bigSpinsize, 17px);
+    height: var(--bigSpinsize, 17px);
+    animation: spin 1.5s cubic-bezier(0.25, 0.175, 0.355, 0.57) infinite,
+      opaquify 1s ease;
+  }
 
-    &.big {
-      border: $bigBordersize solid transparent;
-      border-top: $bigBordersize solid $gray;
-      border-bottom: $bigBordersize solid $gray;
-      width: $bigSpinsize;
-      height: $bigSpinsize;
-      animation: spin 1.5s cubic-bezier(0.25, 0.175, 0.355, 0.57) infinite,
-        opaquify 1s ease;
-    }
+  .spinner.center {
+    top: calc(
+      50% - var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px)
+    );
+    left: calc(
+      50% - var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px)
+    );
+  }
 
-    &.center {
-      top: calc(50% - #{$smallSpinsize / 2 + $smallBordersize});
-      left: calc(50% - #{$smallSpinsize / 2 + $smallBordersize});
-
-      &.big {
-        top: calc(50% - #{$bigSpinsize / 2 + $bigBordersize});
-        left: calc(50% - #{$bigSpinsize / 2 + $bigBordersize});
-      }
-    }
+  .spinner.center.big {
+    top: calc(50% - var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px));
+    left: calc(50% - var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px));
   }
 
   .loader .spinner {
