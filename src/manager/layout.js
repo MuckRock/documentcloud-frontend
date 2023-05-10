@@ -180,13 +180,14 @@ export function showAddonEvent(addon, eventId) {
   const { repository } = addon.addon;
   setHash(`add-ons/${repository}/${eventId}`);
   layout.addonDispatchOpen = addon;
-  layout.addOnEvent = eventId;
+  layout.params.addOnEvent = eventId;
 }
 
 export function hideAddonDispatch() {
   setHash("");
   setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonDispatchOpen = null;
+  layout.params.addOnEvent = null;
 }
 
 export function openAddonBrowser() {
@@ -197,6 +198,7 @@ export function hideAddonBrowser() {
   setHash("");
   setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonBrowserOpen = false;
+  layout.params.addOnEvent = null;
 }
 
 export function hideDocumentInfo() {
