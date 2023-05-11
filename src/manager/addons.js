@@ -76,13 +76,13 @@ export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
 }
 
-export async function getBrowserAddons(
+export async function getBrowserAddons({
   query = "",
   filters = {},
   per_page = 5,
   url = null,
-) {
-  const newAddons = await getAddons(query, filters, per_page, url);
+} = {}) {
+  const newAddons = await getAddons({ query, filters, per_page, url });
   [addons.browserAddons, addons.browserNext, addons.browserPrev] = newAddons;
 }
 
@@ -94,7 +94,10 @@ export async function getBrowserAddons(
  * @returns import('../structure/addon').Addon
  */
 export async function getAddonByRepository(repository = "") {
-  const [addons, next, previous] = await getAddons("", { repository }, 1);
+  const [addons, next, previous] = await getAddons({
+    filters: { repository },
+    per_page: 1,
+  });
   return addons[0] || null; // there should be only one, or nothing
 }
 
