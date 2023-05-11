@@ -16,11 +16,11 @@
   });
 
   const handleInput = debounce((e) => {
-    getBrowserAddons(e.target.value);
+    getBrowserAddons({ query: e.target.value });
   }, 300);
 
   function changePage(url) {
-    getBrowserAddons("", url);
+    getBrowserAddons({ url });
     // scroll to top of modal
     document.getElementsByClassName("modal")[0].scroll({ top: 0 });
   }
