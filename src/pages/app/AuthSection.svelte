@@ -92,7 +92,7 @@
       <Link toUrl="/help/add-ons" color={true}>
         <MenuItem>{$_("authSection.addOns")}</MenuItem>
       </Link>
-      Link toUrl="/help/premium" color={true}>
+      <Link toUrl="/help/premium" color={true}>
         <MenuItem>{$_("authSection.premium")}</MenuItem>
       </Link>
       <a href="mailto:info@documentcloud.org" class="color" target="_blank">
