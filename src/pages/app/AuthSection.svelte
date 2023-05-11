@@ -80,8 +80,8 @@
       </span>
     </span>
     <Menu>
-      <Link toUrl="/help/tips" color={true}>
-        <MenuItem>{$_("authSection.tips")}</MenuItem>
+      <Link toUrl="/help/faq" color={true}>
+        <MenuItem>{$_("authSection.faq")}</MenuItem>
       </Link>
       <Link toUrl="/help/search" color={true}>
         <MenuItem>{$_("authSection.searchDocs")}</MenuItem>
