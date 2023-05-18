@@ -67,5 +67,6 @@
     "svelte-i18n": "^3.3.9",
     "svelte-markdown": "^0.2.2"
   },
-  "engine": 14
+  "engine": 14,
+  "browserslist": "> 0.25%, not dead"
 }
