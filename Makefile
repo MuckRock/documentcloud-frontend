@@ -1,8 +1,10 @@
 install:
-	docker volume create nodemodules && docker compose -f local.builder.yml run --rm install
+	docker volume create nodemodules
+	docker compose -f local.builder.yml run --rm install
 
 install-ci:
-	docker volume create nodemodules && docker compose -f local.builder.yml run --rm install-ci
+	docker volume create nodemodules
+	docker compose -f local.builder.yml run --rm install-ci
 
 npmlist:
 	docker compose -f local.builder.yml run --rm npmlist
@@ -66,3 +68,7 @@ browser-test-headful-staging:
 
 browser-test-debug:
 	DEBUG=yes node debug tests/functional/suites/noindex.js
+
+# remove built files from public
+clean:
+	rm public/[0-9]*.*.* public/bundle.*
