@@ -3,11 +3,11 @@ import {
   helpers,
   extra,
 } from "@pyoner/svelte-form";
-import type { FormComponents } from "@pyoner/svelte-form/src/types";
 
 import Wrapper from "./DCFormWrapper.svelte";
 
-export const defaultFormComponents: FormComponents = {
+/** @type {import('@pyoner/svelte-form/src/types').FormComponents} */
+export const defaultFormComponents = {
   layout: originalComponents.layout,
   wrapper: Wrapper,
   form: originalComponents.form,

@@ -5,16 +5,12 @@ const { preprocessOptions } = require("./preprocess.config.js");
 const DotenvFlow = require("dotenv-flow-webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
-
-// Speed measurer
-const smp = new SpeedMeasurePlugin();
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const environment =
-  process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
+  process.env.NODE_ENV === null ? "development" : process.env.NODE_ENV;
 
 const useAnalyzer = environment.endsWith("analyze");
 
@@ -23,7 +19,7 @@ const prod =
 const mode = prod ? "production" : "development";
 
 function wrap(spec) {
-  if (mode == "production") {
+  if (mode === "production") {
     spec.optimization = {
       minimize: true,
       minimizer: [
@@ -36,7 +32,7 @@ function wrap(spec) {
     };
     return spec;
   }
-  return smp.wrap(spec);
+  return spec;
 }
 
 module.exports = wrap({
@@ -94,7 +90,7 @@ module.exports = wrap({
         ],
       },
       {
-        /* reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts */
+        // reference https://github.com/baileyherbert/svelte-webpack-starter/blob/main/webpack.config.ts
         test: /\.ts$/,
         loader: "ts-loader",
       },

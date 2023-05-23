@@ -1,7 +1,6 @@
 .DS_Store
 ._*
 node_modules
-public/bundle.*
 public/index.html
 public/docs
 public/test
@@ -12,6 +11,7 @@ public_test/main.*
 
 # Webpack chunks
 public/[0-9]*.*.*
+public/bundle.*
 
 # Embed bundles
 public/embed/*
