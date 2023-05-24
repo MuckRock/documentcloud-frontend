@@ -10,7 +10,9 @@ module.exports = {
     filename: "[name].[chunkhash].js",
     publicPath: "/",
   },
-  plugins: [...baseConfig.plugins],
+  plugins: [
+    ...baseConfig.plugins,
+  ],
   devServer: {
     disableHostCheck: true,
     host: "0.0.0.0",
