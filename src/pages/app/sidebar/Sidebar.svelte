@@ -1,9 +1,9 @@
 <script>
-  import emitter from "@/emit";
+  import emitter from "@/emit.js";
 
   // Components
-  import Hamburger from "@/common/Hamburger";
-  import Logo from "@/common/Logo";
+  import Hamburger from "@/common/Hamburger.svelte";
+  import Logo from "@/common/Logo.svelte";
 
   import ProjectFilters from "./ProjectFilters.svelte";
   import Projects from "./Projects.svelte";

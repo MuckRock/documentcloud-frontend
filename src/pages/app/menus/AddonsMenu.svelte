@@ -1,12 +1,14 @@
 <script>
   import { onMount } from "svelte";
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
-  import AddonMenuItem from "./AddonMenuItem";
-
-  import { openAddonBrowser } from "@/manager/layout";
-  import { addons, getBrowserAddons } from "@/manager/addons";
   import { _ } from "svelte-i18n";
+
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import AddonMenuItem from "./AddonMenuItem.svelte";
+
+  import { openAddonBrowser } from "@/manager/layout.js";
+  import { addons, getBrowserAddons } from "@/manager/addons.js";
+  import { setHash } from "@/router/router.js";
 
   function sort(addons) {
     if (addons == null) return [];
@@ -21,7 +23,7 @@
   async function openBrowser() {
     await getBrowserAddons();
     openAddonBrowser();
-
+    setHash("add-ons");
     plausible("app-add-ons", { props: { target: "browser" } });
   }
 
@@ -34,11 +36,11 @@
   });
 </script>
 
-<style lang="scss">
+<style>
   .promo {
-    color: $darkgray;
+    color: var(--darkgray, rgba(0, 0, 0, 0.8));
     font-style: italic;
-    font-size: $normal;
+    font-size: var(--normal, 16px);
   }
 </style>
 

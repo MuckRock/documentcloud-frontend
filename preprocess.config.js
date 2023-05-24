@@ -1,4 +1,4 @@
-const scssAliases = (aliases) => {
+function scssAliases(aliases) {
   return (url) => {
     for (const [alias, aliasPath] of Object.entries(aliases)) {
       if (url.indexOf(alias) === 0) {
@@ -9,7 +9,7 @@ const scssAliases = (aliases) => {
     }
     return url;
   };
-};
+}
 
 /* https://github.com/sveltejs/svelte-preprocess/blob/main/docs/migration-guide.md */
 const preprocessOptions = {

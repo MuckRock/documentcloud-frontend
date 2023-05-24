@@ -6,9 +6,7 @@ import {
   getAddonRuns,
   activateAddon,
   updateAddonRun,
-} from "@/api/addon";
-import { AddonRun } from "@/structure/addon";
-import { layout } from "@/manager/layout";
+} from "@/api/addon.js";
 
 export function done(run) {
   return run.status != "queued" && run.status != "in_progress";
@@ -26,13 +24,17 @@ export const addons = new Svue({
     };
   },
   computed: {
-    addonsById(activeAddons) {
-      const results = {};
-      for (let i = 0; i < activeAddons.length; i++) {
-        const addon = activeAddons[i];
-        results[addon.id] = addon;
-      }
-      return results;
+    addonsById(browserAddons, activeAddons) {
+      return [...browserAddons, ...activeAddons].reduce((m, addon) => {
+        m[addon.id] = addon;
+        return m;
+      }, {});
+    },
+    addonsByRepo(browserAddons, activeAddons) {
+      return [...browserAddons, ...activeAddons].reduce((m, addon) => {
+        m[addon.repository] = addon;
+        return m;
+      }, {});
     },
     pollEvents(runs) {
       if (runs.filter((x) => !done(x)).length === 0) return [];
@@ -74,9 +76,29 @@ export function removeRun(uuid) {
   addons.runs = addons.runs.filter((addon) => addon.uuid != uuid);
 }
 
-export async function getBrowserAddons(query = "", url = null) {
-  const newAddons = await getAddons(query, url);
+export async function getBrowserAddons({
+  query = "",
+  filters = {},
+  per_page = 5,
+  url = null,
+} = {}) {
+  const newAddons = await getAddons({ query, filters, per_page, url });
   [addons.browserAddons, addons.browserNext, addons.browserPrev] = newAddons;
+}
+
+/**
+ * Fetch a single Add-On based on repository name, like Muckrock/Klaxon
+ *
+ * @export
+ * @param {string} [repo=""]
+ * @returns import('../structure/addon').Addon
+ */
+export async function getAddonByRepository(repository = "") {
+  const [addons, next, previous] = await getAddons({
+    filters: { repository },
+    per_page: 1,
+  });
+  return addons[0] || null; // there should be only one, or nothing
 }
 
 export async function toggleActiveAddon(addon) {
@@ -89,10 +111,12 @@ export async function toggleActiveAddon(addon) {
     addons.activeAddons = addons.activeAddons.filter((a) => a.id != addon.id);
   }
   // then update the state in the browser list
-  addons.browserAddons = addons.browserAddons.map((a) => (a == addon) ? newAddon : a);
+  addons.browserAddons = addons.browserAddons.map((a) =>
+    a == addon ? newAddon : a,
+  );
 }
 
 export async function editAddonRun(run, data) {
   const newRun = await updateAddonRun(run, data);
-  addons.runs = addons.runs.map((r) => r.uuid === newRun.uuid ? newRun : r);
+  addons.runs = addons.runs.map((r) => (r.uuid === newRun.uuid ? newRun : r));
 }

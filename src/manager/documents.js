@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+
 import {
   getDocumentsWithIds,
   getPendingProgress,
@@ -8,22 +9,22 @@ import {
   editMetadata,
   addData,
   removeData,
-} from "@/api/document";
+} from "@/api/document.js";
 import {
   addDocumentsToProject,
   removeDocumentsFromProject,
-} from "@/api/project";
-import { layout, hideAccess } from "./layout";
-import { wrapLoad, wrapSeparate } from "@/util/wrapLoad";
-import { showConfirm } from "./confirmDialog";
-import { router } from "@/router/router";
-import { search, handleUpload, setDocuments } from "@/search/search";
-import { pushToast } from "./toast";
-import { handlePlural } from "@/util/string";
-import { removeFromArray, addToArrayIfUnique } from "@/util/array";
-import { modifications } from "./modifications";
-import { docEquals, copyDoc } from "@/structure/document";
-import { truthyParamValue } from "@/util/url";
+} from "@/api/project.js";
+import { layout, hideAccess } from "./layout.js";
+import { wrapLoad, wrapSeparate } from "@/util/wrapLoad.js";
+import { showConfirm } from "./confirmDialog.js";
+import { router } from "@/router/router.js";
+import { search, handleUpload, setDocuments } from "@/search/search.js";
+import { pushToast } from "./toast.js";
+import { handlePlural } from "@/util/string.js";
+import { removeFromArray, addToArrayIfUnique } from "@/util/array.js";
+import { modifications } from "./modifications.js";
+import { docEquals, copyDoc } from "@/structure/document.js";
+import { truthyParamValue } from "@/util/url.js";
 
 // Only show up to this many documents, regardless of how many are uploaded
 const MAX_DISPLAY = 50;
@@ -221,7 +222,6 @@ export const documents = new Svue({
 
 function checkForInit() {
   const route = router.resolvedRoute;
-  unselectAll();
   if (
     route != null &&
     (documents.inDocumentPickerDialog ||
@@ -365,7 +365,12 @@ export async function markAsDirty(docIds) {
   }
 }
 
-export async function reprocessDocuments(documents, forceOcr, ocrEngine, language) {
+export async function reprocessDocuments(
+  documents,
+  forceOcr,
+  ocrEngine,
+  language,
+) {
   await wrapLoad(layout, async () => {
     const ids = documents.map((doc) => doc.id);
     await editMetadata(

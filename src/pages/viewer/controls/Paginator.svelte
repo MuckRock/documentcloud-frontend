@@ -1,7 +1,8 @@
 <script>
-  import { doc } from "@/viewer/document";
-  import { viewer } from "@/viewer/viewer";
   import { _ } from "svelte-i18n";
+
+  import { doc } from "@/viewer/document.js";
+  import { viewer } from "@/viewer/viewer.js";
 
   // SVG assets
   import leftPaginator from "@/assets/left_paginator.svg";
@@ -85,11 +86,11 @@
 </script>
 
 <style lang="scss">
-  $inputHeight: 23px;
-  $arrowHeight: 18px;
-  $arrowPadding: 13px;
-
   .paginator {
+    --inputHeight: 23px;
+    --arrowHeight: 18px;
+    --arrowPadding: 13px;
+
     user-select: none;
     color: $viewerDarkGray;
 
@@ -102,8 +103,8 @@
       box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
       border-radius: $radius;
       display: inline-block;
-      height: $inputHeight;
-      line-height: $inputHeight;
+      height: var(--inputHeight, 23px);
+      line-height: var(--inputHeight, 23px);
       vertical-align: middle;
 
       .absolute,
@@ -136,35 +137,33 @@
 
     .rest {
       display: inline-block;
-      line-height: $inputHeight;
+      line-height: var(--inputHeight, 23px);
       vertical-align: middle;
       padding-left: 8px;
     }
 
     .paginate {
-      @include buttonLike;
-
       display: inline-block;
       font-size: 0;
-      padding: (($inputHeight - $arrowHeight) / 2) 0;
+      padding: calc((var(--inputHeight, 23px) - var(--arrowHeight, 18px)) / 2) 0;
       vertical-align: middle;
 
       &.left {
-        padding-right: $arrowPadding;
+        padding-right: var(--arrowPadding, 13px);
       }
 
       &.right {
-        padding-left: $arrowPadding;
+        padding-left: var(--arrowPadding, 13px);
       }
     }
   }
 </style>
 
-{#if $viewer.loaded && $doc.mode != "search" && $doc.mode != "notes" && $doc.mode != "thumbnail"}
+{#if $viewer.loaded && $doc.mode !== "search" && $doc.mode !== "notes" && $doc.mode !== "thumbnail"}
   <div class="paginator">
-    <span class="paginate left" on:click={() => decrement(false)}>
+    <button class="paginate left buttonLike" on:click={() => decrement(false)}>
       {@html leftPaginator}
-    </span>
+    </button>
     <span class="page">
       <span class="hidden">{$viewer.document.pageCount}</span>
       <span class="absolute">{$doc.visiblePageNumber}</span>
@@ -197,8 +196,8 @@
       />
     </span>
     <span class="rest">{$_("paginator.of")} {$viewer.document.pageCount}</span>
-    <span class="paginate right" on:click={() => increment(false)}>
+    <button class="paginate right buttonLike" on:click={() => increment(false)}>
       {@html rightPaginator}
-    </span>
+    </button>
   </div>
 {/if}

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   base:
-    image: node:12
+    image: node:14
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
@@ -11,7 +11,7 @@ services:
   install:
     extends:
       service: base
-    command: npm i
+    command: npm i && npm audit fix
 
   install-ci:
     extends:
@@ -75,8 +75,7 @@ services:
           - www.dev.documentcloud.org
     env_file:
       - .env.test
-    command:
-      ./browser-test-all.sh
+    command: ./browser-test-all.sh
 
   browser-test-staging:
     build:
@@ -90,8 +89,7 @@ services:
           - www.dev.documentcloud.org
     env_file:
       - .env.staging
-    command:
-      ./browser-test-all.sh
+    command: ./browser-test-all.sh
 
 volumes:
   nodemodules:

@@ -1,4 +1,5 @@
 # DocumentCloud frontend
+
 **DocumentCloud Frontend** &middot; [Squarelet][squarelet] &middot; [MuckRock][muckrock] &middot; [DocumentCloud][documentcloud]
 
 The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
@@ -41,7 +42,11 @@ Run `make build` to build the production version of the app. The project will be
 
 See the [Wiki](https://github.com/MuckRock/documentcloud-frontend/wiki) for information on the DocumentCloud architecture.
 
-# Developing
+## Browser support
+
+DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome, FireFox, Safari and Microsoft Edge. Older versions of those browsers will likely work, too, but we can't guarantee a bug-free experience on versions from more than a year ago, or on browsers that no longer receive updates, such as Internet Explorer.
+
+## Developing
 
 ## Installing new packages
 
@@ -65,9 +70,9 @@ Run `make browser-test` in another terminal. This will run the `browser-test` Do
 
 You will need to create a user that is verified for uploading as described in the [backend documentation](muckrock/documentcloud). Then, you need to put that users credentials in a `.env.test` file in the project root that looks like this:
 
-  TEST_USER=<the test user>
-  TEST_PASS=<the password>
-  APP_URL=https://www.dev.documentcloud.org/
+TEST_USER=<the test user>
+TEST_PASS=<the password>
+APP_URL=https://www.dev.documentcloud.org/
 
 To run the functional tests without the Docker image, run `make browser-test-direct`. This will run the test suite files via your computer's Node. It will use the webkit browser only (but you can change this in the Makefile if you like).
 
@@ -81,8 +86,8 @@ If you want to step through the tests with the debugger, use `make browser-test-
 
 Add the following for a verified-to-upload user an staging to `.env.staging`:
 
-  TEST_USER=<the test user>
-  TEST_PASS=<the password>
+TEST_USER=<the test user>
+TEST_PASS=<the password>
 
 Then, run `make browser-test-staging`. To run it headfully, use `make browser-test-headful-staging`.
 
