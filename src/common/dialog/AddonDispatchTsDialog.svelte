@@ -25,7 +25,7 @@
 
   // Stores
   import { layout } from "@/manager/layout.js";
-  import { components } from "./DCDefaultFormComponents.js";
+  import { components } from "./DCDefaultFormComponents.ts";
 
   let container;
   let schema = deepcopy(layout.addonDispatchOpen.parameters);
