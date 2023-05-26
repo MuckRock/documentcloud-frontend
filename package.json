@@ -73,7 +73,7 @@
     "dev": "concurrently \"npm:dev-app\" \"npm:dev-embed\"",
     "dev-app": "cross-env NODE_ENV=development webpack serve --config webpack.app.config.js --content-base public",
     "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
-    "test": "node tests/functional/noindex.js && jest",
+    "test": "jest",
     "test-watch": "jest --watchAll",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
