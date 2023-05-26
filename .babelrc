@@ -3,9 +3,7 @@
     [
       "@babel/preset-env",
       {
-        "targets": {
-          "chrome": "100"
-        }
+        "targets": "> 0.25%, not dead"
       }
     ],
     "@babel/preset-typescript"

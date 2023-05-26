@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json", /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */
+  "extends": "@tsconfig/svelte/tsconfig.json" /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */,
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "allowSyntheticDefaultImports": true,
@@ -9,21 +9,10 @@
     // "checkJs": true, /* 600+ errors */
     "baseUrl": "/app",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "svelte": [
-        "node_modules/svelte"
-      ]
+      "@/*": ["src/*"],
+      "svelte": ["node_modules/svelte"]
     }
   },
-  "include": [
-    "src/**/*",
-    "src/node_modules",
-    "node_modules/@pyoner/"
-  ],
-  "exclude": [
-    "__sapper__/*",
-    "public/*"
-  ],
+  "include": ["src/**/*.ts", "src/node_modules"],
+  "exclude": ["public/*"]
 }

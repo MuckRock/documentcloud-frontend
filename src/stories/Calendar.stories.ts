@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from "@storybook/svelte";
 
 import "@/langs/i18n.js";
-import Calendar from '../common/Calendar.svelte';
+import Calendar from "../common/Calendar.svelte";
 
 // More on how to set up stories at: https://storybook.js.org/docs/7.0/svelte/writing-stories/introduction
 const meta: Meta<Calendar> = {
-  title: 'Common/Calendar',
+  title: "Common/Calendar",
   component: Calendar,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    value: { control: {type: 'date'}},
+    value: { control: { type: "date" } },
   },
 };
 
