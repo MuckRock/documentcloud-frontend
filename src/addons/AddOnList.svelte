@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import type { AddOnListItem } from './AddOnListItem.svelte';
+  import type { AddOnListItem } from "./AddOnListItem.svelte";
 
   export interface AddOnList {
     data?: AddOnListItem[];
@@ -9,8 +9,8 @@
 </script>
 
 <script lang="ts">
-  import ListItem from './AddOnListItem.svelte';
-  
+  import ListItem from "./AddOnListItem.svelte";
+
   export let data: AddOnListItem[] = [];
   export let loading: boolean = false;
   export let error: string | null = null;
@@ -30,11 +30,11 @@
 
 <div class="list">
   {#if data && data.length > 0}
-  <ul>
-    {#each data as addOn (addOn.id)}
-      <li><ListItem {...addOn} /></li>
-    {/each}
-  </ul>
+    <ul>
+      {#each data as addOn (addOn.id)}
+        <li><ListItem {...addOn} /></li>
+      {/each}
+    </ul>
   {:else if loading}
     <!-- Loading state -->
     <p class="loading">Loading…</p>

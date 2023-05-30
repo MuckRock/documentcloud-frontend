@@ -17,21 +17,21 @@
   import Pin from "../common/Pin.svelte";
   import Title from "../common/Title.svelte";
   import AddOnPopularity from "./AddOnPopularity.svelte";
-  
+
   export let id: string = undefined;
   export let pinned = false;
   export let title: string = undefined;
   export let description: string = undefined;
   export let author: Author = {
     name: undefined,
-    avatar: undefined
+    avatar: undefined,
   };
   export let usage: number = undefined;
 
   $: handlePinClick = () => {
     pinned = !pinned;
-    console.log(`${pinned ? 'Pinning' : 'Unpinning'} ${id}…`);
-  }
+    console.log(`${pinned ? "Pinning" : "Unpinning"} ${id}…`);
+  };
 </script>
 
 <style>
@@ -43,8 +43,8 @@
   .top-row {
     display: flex;
     align-items: flex-end;
-    gap: .5rem;
-    margin: .5rem;
+    gap: 0.5rem;
+    margin: 0.5rem;
   }
 
   .metadata {
@@ -54,9 +54,9 @@
   }
 
   .description {
-    margin: .5rem;
-    opacity: .6z;
-    font-size: .875em;
+    margin: 0.5rem;
+    opacity: 0.6z;
+    font-size: 0.875em;
     line-height: 1.4;
   }
 
@@ -73,13 +73,15 @@
   }
 </style>
 
-<div class="container" id={id}>
+<div class="container" {id}>
   <div class="top-row">
-    <div class="center-self"><Pin active={pinned} on:click={handlePinClick} /></div>
+    <div class="center-self">
+      <Pin active={pinned} on:click={handlePinClick} />
+    </div>
     <div class="stretch"><Title>{title}</Title></div>
     <div class="metadata">
       {#if author}
-      <p>{author.name}</p>
+        <p>{author.name}</p>
       {/if}
       {#if usage}
         <AddOnPopularity useCount={usage} />
@@ -87,6 +89,6 @@
     </div>
   </div>
   {#if description}
-  <p class="description">{description}</p>
+    <p class="description">{description}</p>
   {/if}
 </div>
