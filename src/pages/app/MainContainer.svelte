@@ -3,27 +3,27 @@
 
   // Components
   import Documents from "./Documents.svelte";
-  import Hamburger from "@/common/Hamburger.svelte";
-  import Modal from "@/common/Modal.svelte";
+
+  import AccessDialog from "@/common/dialog/AccessDialog.svelte";
+  import CollaboratorDialog from "@/common/dialog/CollaboratorDialog.svelte";
+  import ConfirmDialog from "@/common/dialog/ConfirmDialog.svelte";
+  import DataDialog from "@/common/dialog/DataDialog.svelte";
+  import DiagnosticDialog from "@/common/dialog/DiagnosticDialog.svelte";
+  import DocumentInformationDialog from "@/common/dialog/DocumentInformationDialog.svelte";
+  import MetaDialog from "@/common/dialog/MetaDialog.svelte";
+  import OwnerDialog from "@/common/dialog/OwnerDialog.svelte";
+  import ProjectDialog from "@/common/dialog/ProjectDialog.svelte";
+  import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog.svelte";
+  import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog.svelte";
+  import ReprocessDialog from "@/common/dialog/ReprocessDialog.svelte";
+  import SearchTipsDialog from "@/common/dialog/SearchTipsDialog.svelte";
+  import UploadEmailDialog from "@/common/dialog/UploadEmailDialog.svelte";
+
   import ErrorData from "@/common/ErrorData.svelte";
   import ErrorModal from "@/common/ErrorModal.svelte";
-  import ConfirmDialog from "@/common/dialog/ConfirmDialog.svelte";
-  import MetaDialog from "@/common/dialog/MetaDialog.svelte";
-  import AccessDialog from "@/common/dialog/AccessDialog.svelte";
-  import OwnerDialog from "@/common/dialog/OwnerDialog.svelte";
-  import DataDialog from "@/common/dialog/DataDialog.svelte";
-  import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog.svelte";
-  import ProjectDialog from "@/common/dialog/ProjectDialog.svelte";
-  import CollaboratorDialog from "@/common/dialog/CollaboratorDialog.svelte";
-  import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog.svelte";
-  import SearchTipsDialog from "@/common/dialog/SearchTipsDialog.svelte";
-  import DiagnosticDialog from "@/common/dialog/DiagnosticDialog.svelte";
-  import ReprocessDialog from "@/common/dialog/ReprocessDialog.svelte";
-  import UploadEmailDialog from "@/common/dialog/UploadEmailDialog.svelte";
+  import Hamburger from "@/common/Hamburger.svelte";
+  import Modal from "@/common/Modal.svelte";
   import Toasts from "@/common/Toasts.svelte";
-  import DocumentInformationDialog from "@/common/dialog/DocumentInformationDialog.svelte";
-  // import AddonDispatchDialog from "@/common/dialog/AddonDispatchTsDialog.svelte";
-  // import AddonBrowserDialog from "@/common/dialog/AddonBrowserDialog.svelte";
 
   // stores
   import {

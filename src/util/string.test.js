@@ -19,7 +19,7 @@ test("nFormatter", () => {
     { num: 299792458, digits: 1, result: "299.8M" },
     { num: 759878, digits: 0, result: "760K" },
   ];
-  tests.forEach(function(test) {
+  tests.forEach(function (test) {
     expect(nFormatter(test.num, test.digits)).toEqual(test.result);
   });
-})
+});
