@@ -1,11 +1,19 @@
 <script lang="ts">
-  const REM = 16;
   export let size: number = 1;
   export let active: boolean = false;
   export let disabled: boolean = false;
 
-  $: title = disabled ? "Pinning is disabled" : active ? "Click to Unpin" : "Click to Pin";
-  $: cssVarStyles = `--padding:${size * .25}em; --border-radius:${size * 4}px;`;
+  const REM = 16;
+
+  $: title = disabled
+    ? "Pinning is disabled"
+    : active
+    ? "Click to Unpin"
+    : "Click to Pin";
+
+  $: cssVarStyles = `--padding:${size * 0.25}em; --border-radius:${
+    size * 4
+  }px;`;
 </script>
 
 <style>
@@ -14,27 +22,32 @@
     background-color: transparent;
     border: none;
     border-radius: var(--border-radius, 4px);
-    padding: var(--padding, .25em);
+    padding: var(--padding, 0.25em);
     display: flex;
     align-items: center;
     justify-content: center;
     fill: #ccc;
     cursor: pointer;
-    transition: background-color .1s linear, fill .1s linear;
+    transition: background-color 0.1s linear, fill 0.1s linear;
   }
+
   .pin:hover {
     background: #eee;
   }
+
   .pin.active {
-    fill: #FF785C;
+    fill: #ff785c;
   }
+
   .pin.disabled {
-    opacity: .5;
+    opacity: 0.5;
     cursor: default;
   }
+
   .pin.disabled:hover {
     background: transparent;
   }
+
   .pin svg {
     display: block;
     transform: rotate(-45deg);
@@ -44,6 +57,9 @@
 <button class="pin" class:active class:disabled on:click style={cssVarStyles}>
   <svg width={`${size * REM}px`} height={`${size * REM}px`} viewBox="0 0 16 16">
     <title>{title}</title>
-    <path d="M3.00220543,1 C3.00220543,0.446875 3.44891524,0 4.00183577,0 L11.9988785,0 C12.551799,0 12.9985088,0.446875 12.9985088,1 C12.9985088,1.553125 12.551799,2 11.9988785,2 L11.0773442,2 L11.4334625,6.63125 C12.5799136,7.253125 13.4858286,8.29375 13.9169192,9.590625 L13.9481576,9.684375 C14.0512445,9.990625 13.9981391,10.325 13.8107084,10.584375 C13.6232777,10.84375 13.3202648,11 12.9985088,11 L3.00220543,11 C2.68044942,11 2.38056032,10.846875 2.19000578,10.584375 C1.99945125,10.321875 1.94946973,9.9875 2.05255661,9.684375 L2.08379506,9.590625 C2.51488564,8.29375 3.42080063,7.253125 4.56725167,6.63125 L4.92336998,2 L4.00183577,2 C3.44891524,2 3.00220543,1.553125 3.00220543,1 Z M7.00072677,12 L8.99998744,12 L8.99998744,15 C8.99998744,15.553125 8.55327764,16 8.00035711,16 C7.44743658,16 7.00072677,15.553125 7.00072677,15 L7.00072677,12 Z" fill-rule="nonzero"></path>
+    <path
+      d="M3.00220543,1 C3.00220543,0.446875 3.44891524,0 4.00183577,0 L11.9988785,0 C12.551799,0 12.9985088,0.446875 12.9985088,1 C12.9985088,1.553125 12.551799,2 11.9988785,2 L11.0773442,2 L11.4334625,6.63125 C12.5799136,7.253125 13.4858286,8.29375 13.9169192,9.590625 L13.9481576,9.684375 C14.0512445,9.990625 13.9981391,10.325 13.8107084,10.584375 C13.6232777,10.84375 13.3202648,11 12.9985088,11 L3.00220543,11 C2.68044942,11 2.38056032,10.846875 2.19000578,10.584375 C1.99945125,10.321875 1.94946973,9.9875 2.05255661,9.684375 L2.08379506,9.590625 C2.51488564,8.29375 3.42080063,7.253125 4.56725167,6.63125 L4.92336998,2 L4.00183577,2 C3.44891524,2 3.00220543,1.553125 3.00220543,1 Z M7.00072677,12 L8.99998744,12 L8.99998744,15 C8.99998744,15.553125 8.55327764,16 8.00035711,16 C7.44743658,16 7.00072677,15.553125 7.00072677,15 L7.00072677,12 Z"
+      fill-rule="nonzero"
+    />
   </svg>
 </button>
