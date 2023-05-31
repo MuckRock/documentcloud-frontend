@@ -1,4 +1,4 @@
-:global(:root) {
+:root {
   /* Colors */
   --primary: #4294f0;
   --primary-faded: rgba(66, 148, 240, 0.13);

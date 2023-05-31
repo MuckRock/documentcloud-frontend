@@ -1,4 +1,6 @@
 <script>
+  import "./style/variables.css";
+
   import { router } from "@/router/router";
   import { routes } from "@/routes";
   import { onMount } from "svelte";
@@ -38,7 +40,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" global>
   :global(input),
   :global(select) {
     padding: 4px 10px;
