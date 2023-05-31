@@ -5,8 +5,8 @@
   import AddOnListItem from "@/addons/AddOnListItem.svelte";
 
   const args = {
-    pinned: false,
-    title: "Scraper",
+    active: false,
+    name: "Scraper",
     description:
       "This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud. It can also alert you of given keywords appearing in those documents.",
     author: {
@@ -14,6 +14,7 @@
       avatar: null,
     },
     usage: 225000,
+    parameters: {},
   };
 
   const onClick = action("Click");

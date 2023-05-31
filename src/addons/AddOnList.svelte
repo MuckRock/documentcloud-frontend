@@ -2,7 +2,7 @@
   import type { AddOnListItem } from "./AddOnListItem.svelte";
 
   export interface AddOnList {
-    data?: AddOnListItem[];
+    items?: AddOnListItem[];
     loading: boolean;
     error?: string | null;
   }
@@ -11,7 +11,7 @@
 <script lang="ts">
   import ListItem from "./AddOnListItem.svelte";
 
-  export let data: AddOnListItem[] = [];
+  export let items: AddOnListItem[] = [];
   export let loading: boolean = false;
   export let error: string | null = null;
 </script>
@@ -29,9 +29,9 @@
 </style>
 
 <div class="list">
-  {#if data && data.length > 0}
+  {#if items && items.length > 0}
     <ul>
-      {#each data as addOn (addOn.id)}
+      {#each items as addOn (addOn.id)}
         <li><ListItem {...addOn} /></li>
       {/each}
     </ul>

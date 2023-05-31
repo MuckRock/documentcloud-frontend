@@ -3,10 +3,14 @@
     name?: string;
     avatar?: string;
   }
+
+  // API endpoint https://api.www.documentcloud.org/api/addons/
   export interface AddOnListItem {
-    pinned: boolean;
-    id: string;
-    title: string;
+    active: boolean;
+    id: number;
+    name: string;
+    repository: string;
+    parameters: object;
     description?: string;
     author?: Author;
     usage?: number;
@@ -18,9 +22,12 @@
   import Title from "../common/Title.svelte";
   import AddOnPopularity from "./AddOnPopularity.svelte";
 
-  export let id: string = undefined;
-  export let pinned = false;
-  export let title: string = undefined;
+  export let id: number = undefined;
+  export let active = false;
+  export let name: string = undefined;
+  export let repository: string = undefined;
+  export let parameters: any = {};
+
   export let description: string = undefined;
   export let author: Author = {
     name: undefined,
@@ -28,10 +35,15 @@
   };
   export let usage: number = undefined;
 
-  $: handlePinClick = () => {
-    pinned = !pinned;
-    console.log(`${pinned ? "Pinning" : "Unpinning"} ${id}…`);
-  };
+  $: description = parameters?.description;
+  $: if (!author.name) {
+    author.name = repository.split("/")[0];
+  }
+
+  function onClick(e) {
+    active = !active;
+    console.log(`${active ? "Pinning" : "Unpinning"} ${id}...`);
+  }
 </script>
 
 <style>
@@ -73,15 +85,22 @@
   }
 </style>
 
-<div class="container" {id}>
+<div class="container" id={repository}>
   <div class="top-row">
     <div class="center-self">
-      <Pin active={pinned} on:click={handlePinClick} />
+      <Pin {active} on:click={onClick} />
     </div>
-    <div class="stretch"><Title>{title}</Title></div>
+    <div class="stretch"><Title>{name}</Title></div>
     <div class="metadata">
-      {#if author}
-        <p>{author.name}</p>
+      {#if author && author.name}
+        <p>
+          <a
+            href="http://github.com/{repository}"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="view source">{author.name}</a
+          >
+        </p>
       {/if}
       {#if usage}
         <AddOnPopularity useCount={usage} />
