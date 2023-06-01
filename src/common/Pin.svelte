@@ -36,7 +36,7 @@
   }
 
   .pin.active {
-    fill: #ff785c;
+    fill: var(--highlight, #ff785c);
   }
 
   .pin.disabled {

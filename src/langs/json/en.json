@@ -708,6 +708,7 @@
     "signIn": "Sign in to use Add-Ons"
   },
   "addonBrowserDialog": {
+    "categories": "Categories",
     "browseAll": "Browse All Add-Ons",
     "searchPlaceholder": "Search...",
     "active": "Active",
