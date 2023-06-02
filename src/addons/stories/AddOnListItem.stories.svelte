@@ -7,14 +7,12 @@
   const args = {
     active: false,
     name: "Scraper",
-    description:
-      "This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud. It can also alert you of given keywords appearing in those documents.",
-    author: {
-      name: "MuckRock",
-      avatar: null,
-    },
+    repository: "MuckRock/documentcloud-scraper-addon",
     usage: 225000,
-    parameters: {},
+    parameters: {
+      description:
+        "This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud. It can also alert you of given keywords appearing in those documents.",
+    },
   };
 
   const onClick = action("Click");
@@ -40,4 +38,4 @@
 </Template>
 
 <Story name="Default" {args} />
-<Story name="Pinned" args={{ ...args, pinned: true }} />
+<Story name="Pinned" args={{ ...args, active: true }} />

@@ -1,6 +1,5 @@
 <script context="module">
   import { writable } from "svelte/store";
-  import { _ } from "svelte-i18n";
 
   export const CATEGORIES = [
     "Import",
@@ -16,6 +15,7 @@
 </script>
 
 <script lang="ts">
+  import { _ } from "svelte-i18n";
 </script>
 
 <style>
@@ -26,7 +26,8 @@
   }
 
   ul li {
-    margin: 0.25em;
+    margin-bottom: 0.25em;
+    padding: 0.25em;
   }
 
   ul li label {
@@ -37,8 +38,10 @@
     content: "# ";
   }
 
-  :checked + span {
-    background-color: var(--highlight, #ff785c);
+  .selected {
+    background-color: var(--highlight-orange, #ff785c);
+    border: 1px solid var(--gray);
+    border-radius: var(--radius, 4px);
   }
 </style>
 
@@ -47,7 +50,7 @@
 
   <ul>
     {#each CATEGORIES as category}
-      <li>
+      <li class:selected={$selected.includes(category)}>
         <label>
           <input type="checkbox" value={category} bind:group={$selected} />
           <span>{category}</span>
