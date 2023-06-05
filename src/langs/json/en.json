@@ -475,7 +475,9 @@
   },
   "paginator": {
     "of": "of",
-    "document": "{n, plural, one {Document} other {Documents}}"
+    "document": "{n, plural, one {Document} other {Documents}}",
+    "next": "Next",
+    "previous": "Previous"
   },
   "processingBar": {
     "doneProcessing": "Done processing",

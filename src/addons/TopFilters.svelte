@@ -26,7 +26,7 @@
   }
 
   ul li.active::before {
-    content: "# ";
+    content: "✓ "; /* todo: use pin svg */
   }
 
   ul li.featured::before {
