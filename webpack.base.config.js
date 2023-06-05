@@ -1,16 +1,17 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
+
 const autoPreprocess = require("svelte-preprocess");
-const { preprocessOptions } = require("./preprocess.config.js");
-const DotenvFlow = require("dotenv-flow-webpack");
-const TerserPlugin = require("terser-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
+const DotenvFlow = require("dotenv-flow-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const BundleAnalyzerPlugin =
-  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
+const { preprocessOptions } = require("./preprocess.config.js");
 
 const environment =
-  process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
+  process.env.NODE_ENV === null ? "development" : process.env.NODE_ENV;
 
 const useAnalyzer = environment.endsWith("analyze");
 

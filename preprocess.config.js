@@ -20,15 +20,14 @@ const preprocessOptions = {
         "@": process.cwd() + "/src",
       }),
     ],
-    prependData:
-      '@import "@/style/variables.scss"; @import "@/style/fonts.scss";',
+    prependData: '@import "@/style/variables.scss";',
   },
   postcss: {
     plugins: [require("autoprefixer")],
   },
   typescript: {
     compilerOptions: {
-      target: 'es2018',
+      target: "es2018",
     },
   },
 };
