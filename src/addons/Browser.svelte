@@ -49,6 +49,15 @@
     next_url = next;
     previous_url = previous;
     items = results;
+    loading = false;
+  }
+
+  function loadNext(e) {
+    return load({ url: next_url });
+  }
+
+  function loadPrevious(e) {
+    return load({ url: previous_url });
   }
 
   onMount(async () => {
@@ -77,7 +86,12 @@
     </div>
     <div class="list">
       <AddOnList {loading} {error} {items} />
-      <Paginator />
+      <Paginator
+        has_next={Boolean(next_url)}
+        has_previous={Boolean(previous_url)}
+        on:next={loadNext}
+        on:previous={loadPrevious}
+      />
     </div>
   </div>
 </Modal>
