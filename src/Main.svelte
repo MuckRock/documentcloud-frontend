@@ -1,6 +1,5 @@
 <script>
   import "./style/variables.css";
-  // import "./style/fonts.scss";
   import "./style/global.css";
 
   import { onMount } from "svelte";

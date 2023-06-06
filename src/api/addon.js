@@ -2,11 +2,11 @@
  * Methods related to the DocumentCloud note API
  */
 
-import session from "./session";
-import { Addon, AddonRun, AddonEvent } from "@/structure/addon";
-import { apiUrl } from "./base";
-import { queryBuilder } from "@/util/url";
-import { grabAllPages } from "@/util/paginate";
+import session from "./session.js";
+import { Addon, AddonRun, AddonEvent } from "@/structure/addon.js";
+import { apiUrl } from "./base.js";
+import { queryBuilder } from "@/util/url.js";
+import { grabAllPages } from "@/util/paginate.js";
 
 export async function getActiveAddons() {
   // Returns all active add-ons

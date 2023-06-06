@@ -1,40 +1,18 @@
-<script context="module">
-  import { writable } from "svelte/store";
-
-  export const current_page = writable(1);
-</script>
-
 <script lang="ts">
-  import { beforeUpdate, createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
-  export let total: number = 0;
-  export let per_page: number = 5;
+  export let has_next = false;
+  export let has_previous = false;
 
   const dispatch = createEventDispatcher();
 
-  $: pages = total > 0 ? total / per_page : 0;
-
-  beforeUpdate(() => {
-    if ($current_page > pages) {
-      $current_page = pages;
-    } else if ($current_page < 1) {
-      $current_page = 1;
-    }
-  });
-
   export function previous() {
-    $current_page -= 1;
-    dispatch("previous", { page: $current_page });
+    dispatch("previous");
   }
 
   export function next() {
-    $current_page += 1;
-    dispatch("next", { page: $current_page });
-  }
-
-  export function goto(n: number) {
-    $current_page = n;
+    dispatch("next");
   }
 </script>
 
@@ -48,15 +26,11 @@
 </style>
 
 <div class="paginator">
-  <button class="previous" disabled={$current_page <= 0} on:click={previous}>
+  <button class="previous" disabled={!has_previous} on:click={previous}>
     {$_("paginator.previous")}
   </button>
 
-  <span class="text">
-    Page {$current_page} of {pages}
-  </span>
-
-  <button class="next" disabled={$current_page >= total} on:click={next}>
+  <button class="next" disabled={!has_next} on:click={next}>
     {$_("paginator.next")}
   </button>
 </div>

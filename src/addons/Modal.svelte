@@ -55,7 +55,7 @@
   <div class="modal" class:visible tabindex="-1" role="dialog">
     <div bind:this={dialog} class="modal-dialog {anchor}" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <header class="modal-header">
           <slot name="close-button">
             <button
               type="button"
@@ -67,13 +67,13 @@
             </button>
           </slot>
           <slot name="header" />
-        </div>
+        </header>
         <div class="modal-body">
           <slot name="content" />
         </div>
-        <div class="modal-footer">
+        <footer class="modal-footer">
           <slot name="footer" />
-        </div>
+        </footer>
       </div>
     </div>
   </div>

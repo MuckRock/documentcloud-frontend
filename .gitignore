@@ -23,3 +23,5 @@ public/viewer/*
 
 # Local test env file
 .env.test
+
+.vscode

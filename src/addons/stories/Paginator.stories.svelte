@@ -5,8 +5,8 @@
   import Paginator from "../Paginator.svelte";
 
   const args = {
-    total: 100,
-    per_page: 5,
+    has_next: true,
+    has_previous: true,
   };
 </script>
 
