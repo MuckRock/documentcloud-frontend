@@ -215,9 +215,18 @@ export async function inMyOrg(organization, me) {
     return [];
   });
 
-  users.sort((a, b) =>
-    String(a.name || a.username).localeCompare(String(b.name || b.username)),
-  );
+  users.sort((a, b) => {
+    // Sort by admin status, then username
+    const aAdmin = a.admin_organizations.includes(organization.id);
+    const bAdmin = b.admin_organizations.includes(organization.id);
+    if (aAdmin == bAdmin) {
+      return String(a.name || a.username).localeCompare(
+        String(b.name || b.username),
+      );
+    } else {
+      return aAdmin < bAdmin;
+    }
+  });
 
   return users.filter((u) => u.id !== me.id);
 }
