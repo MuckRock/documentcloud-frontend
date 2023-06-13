@@ -1,17 +1,18 @@
 <script context="module">
   import { writable } from "svelte/store";
 
+  // todo put these somewhere easier to find
   export const CATEGORIES = [
-    "Import",
-    "Export",
-    "AI",
-    "OCR",
-    "Analysis",
-    "Editing",
-    "Visualization",
+    ["export", "Export"],
+    ["ai", "AI"],
+    ["bulk", "Bulk"],
+    ["extraction", "Extraction"],
+    ["file", "File"],
+    ["monitor", "Monitor"],
+    ["statistical", "Statistical"],
   ];
 
-  export const selected = writable([]);
+  export const categories = writable([]);
 </script>
 
 <script lang="ts">
@@ -49,11 +50,11 @@
   <h3>{$_("addonBrowserDialog.categories")}</h3>
 
   <ul>
-    {#each CATEGORIES as category}
-      <li class:selected={$selected.includes(category)}>
+    {#each CATEGORIES as [category, name]}
+      <li class:selected={$categories.includes(category)}>
         <label>
-          <input type="checkbox" value={category} bind:group={$selected} />
-          <span>{category}</span>
+          <input type="checkbox" value={category} bind:group={$categories} />
+          <span>{name}</span>
         </label>
       </li>
     {/each}

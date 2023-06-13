@@ -17,6 +17,11 @@
 </script>
 
 <style>
+  .list {
+    background-color: white;
+    padding: 0.5em 0;
+  }
+
   ul {
     margin: 0;
     padding: 0;

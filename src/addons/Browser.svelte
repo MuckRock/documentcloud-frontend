@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import { baseApiUrl } from "../api/base.js";
   import AddOnList from "./AddOnList.svelte";
-  import CategoryFilter from "./CategoryFilter.svelte";
+  import CategoryFilter, { categories } from "./CategoryFilter.svelte";
   import Modal from "./Modal.svelte";
   import Paginator from "./Paginator.svelte";
-  import SearchInput from "./SearchInput.svelte";
-  import TopFilters from "./TopFilters.svelte";
+  import SearchInput, { query } from "./SearchInput.svelte";
+  import TopFilters, { filters } from "./TopFilters.svelte";
 
   export let visible = false;
+  export let per_page = 5;
 
   let modal: Modal;
   let items = [];
@@ -17,6 +16,19 @@
   let error = null;
   let next_url = "";
   let previous_url = "";
+
+  $: loadParams = buildParams({
+    per_page,
+    query: $query,
+    filters: $filters,
+    categories: $categories,
+  });
+
+  $: if (visible) {
+    load(loadParams);
+  }
+
+  $: console.log(loadParams);
 
   export async function load({
     query = "",
@@ -60,9 +72,25 @@
     return load({ url: previous_url });
   }
 
-  onMount(async () => {
-    await load();
-  });
+  function buildParams({
+    query = "",
+    filters = [],
+    categories = [],
+    per_page = 5,
+  }) {
+    const params = { per_page, query, filters: {} };
+
+    params.filters = filters.reduce((m, f) => {
+      m[f] = true;
+      return m;
+    }, {});
+
+    if (categories.length) {
+      params.filters["category"] = categories.join(",");
+    }
+
+    return params;
+  }
 </script>
 
 <style>

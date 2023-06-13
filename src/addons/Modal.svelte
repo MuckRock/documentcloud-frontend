@@ -30,7 +30,7 @@
     border: 1px solid var(--darkgray);
     border-radius: var(--radius, 3px);
     background-color: var(--faint-gray);
-    max-width: 50vw;
+    max-width: 67vw;
     margin: 1em auto;
     padding: 0.5em;
     position: relative;
