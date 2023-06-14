@@ -1,0 +1,50 @@
+{
+  "id": 533,
+  "addon": {
+    "id": 436,
+    "user": 102112,
+    "organization": 125,
+    "access": "public",
+    "name": "Klaxon Site Monitor",
+    "repository": "MuckRock/Klaxon",
+    "parameters": {
+      "type": "object",
+      "title": "Klaxon Site Monitor",
+      "required": ["site", "selector"],
+      "categories": ["monitor"],
+      "properties": {
+        "site": {
+          "type": "string",
+          "title": "Site",
+          "format": "uri"
+        },
+        "selector": {
+          "type": "string",
+          "title": "Selector",
+          "description": "CSS Selector on the page you would like to monitor."
+        }
+      },
+      "description": "Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes.  Get email notifications when something changes. Provide an optional CSS selector to only monitor  portions of a page you are interested in. To get started, copy the bookmarklet [Add to Klaxon](javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();) to your bookmarks,  visit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. ",
+      "eventOptions": {
+        "name": "site",
+        "events": ["hourly", "daily", "weekly"]
+      }
+    },
+    "created_at": "2023-04-17T16:35:17.845041Z",
+    "updated_at": "2023-06-14T15:15:38.528322Z",
+    "active": true,
+    "default": false,
+    "featured": false
+  },
+  "user": 1020,
+  "parameters": {
+    "site": "https://github.com/muckrock/klaxon",
+    "selector": "readme-toc"
+  },
+  "event": 3,
+  "scratch": {
+    "timestamp": "20230521013040"
+  },
+  "created_at": "2023-04-19T18:20:39.025963Z",
+  "updated_at": "2023-05-21T01:30:50.312638Z"
+}
