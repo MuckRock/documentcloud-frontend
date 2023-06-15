@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { baseApiUrl } from "../api/base.js";
+  import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
   import CategoryFilter, { categories } from "./CategoryFilter.svelte";
-  import Modal from "./Modal.svelte";
-  import Paginator from "./Paginator.svelte";
+  import Modal from "../Modal.svelte";
+  import Paginator from "../Paginator.svelte";
   import SearchInput, { query } from "./SearchInput.svelte";
   import TopFilters, { filters } from "./TopFilters.svelte";
 

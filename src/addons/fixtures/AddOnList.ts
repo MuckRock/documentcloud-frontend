@@ -1,4 +1,4 @@
-import type { AddOnListItem } from "../AddOnListItem.svelte";
+import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
 
 export const loadedData: AddOnListItem[] = [
   {

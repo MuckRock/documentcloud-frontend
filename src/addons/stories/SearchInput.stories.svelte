@@ -1,7 +1,7 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import SearchInput, { query } from "../SearchInput.svelte";
+  import SearchInput, { query } from "../browser/SearchInput.svelte";
 
   const args = {};
 </script>

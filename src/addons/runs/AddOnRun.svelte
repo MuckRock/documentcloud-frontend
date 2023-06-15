@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
-  import type { AddOnListItem } from "./AddOnListItem.svelte";
+  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   // https://api.www.documentcloud.org/api/addon_runs/?expand=addon
-  export interface AddOnRun {
+  export interface Run {
     uuid: string;
     addon: AddOnListItem;
     user: number;
@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-  export let run: AddOnRun;
+  export let run: Run;
 </script>
 
 <style></style>

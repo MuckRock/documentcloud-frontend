@@ -18,9 +18,9 @@
 </script>
 
 <script lang="ts">
-  import Pin from "../common/Pin.svelte";
-  import Title from "../common/Title.svelte";
-  import AddOnPopularity from "./AddOnPopularity.svelte";
+  import Pin from "../../common/Pin.svelte";
+  import Title from "../../common/Title.svelte";
+  import AddOnPopularity from "../Popularity.svelte";
 
   export let id: number = undefined;
   export let active = false;

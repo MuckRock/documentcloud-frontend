@@ -1,9 +1,9 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import { loadedData } from "@/addons/fixtures/AddOnList.ts";
+  import { loadedData } from "../fixtures/AddOnList.ts";
   import defaultAddons from "../fixtures/addons.json";
-  import AddOnList from "@/addons/AddOnList.svelte";
+  import AddOnList from "../browser/AddOnList.svelte";
 
   const args = {
     items: loadedData,

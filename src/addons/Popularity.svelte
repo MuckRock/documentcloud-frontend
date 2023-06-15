@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { nFormatter } from "../util/string";
+  import { nFormatter } from "../util/string.js";
 
   export let useCount: number;
 </script>

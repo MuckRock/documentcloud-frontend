@@ -1,6 +1,6 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import AddOnPopularity from "@/addons/AddOnPopularity.svelte";
+  import Popularity from "../Popularity.svelte";
 
   const args = {
     useCount: 100,
@@ -10,12 +10,12 @@
 <Meta
   title="Add-Ons / Popularity"
   tags={["autodocs"]}
-  component={AddOnPopularity}
+  component={Popularity}
   parameters={{ layout: "centered" }}
 />
 
 <Template let:args>
-  <AddOnPopularity {...args} />
+  <Popularity {...args} />
 </Template>
 
 <Story name="Tens" args={{ useCount: 84 }} />

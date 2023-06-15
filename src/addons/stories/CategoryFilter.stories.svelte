@@ -1,8 +1,7 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import { action } from "@storybook/addon-actions";
 
-  import CategoryFilter from "../CategoryFilter.svelte";
+  import CategoryFilter from "../browser/CategoryFilter.svelte";
 
   const args = {};
 </script>

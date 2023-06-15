@@ -1,7 +1,7 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Browser from "../Browser.svelte";
+  import Browser from "../browser/Browser.svelte";
 
   const args = { visible: true };
 </script>

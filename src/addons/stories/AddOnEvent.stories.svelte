@@ -1,7 +1,7 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import AddOnEvent from "../AddOnEvent.svelte";
+  import AddOnEvent from "../runs/AddOnEvent.svelte";
   import event from "../fixtures/event.json";
 
   const args = { event };
