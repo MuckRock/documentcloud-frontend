@@ -1,44 +1,53 @@
+<script context="module" lang="ts">
+  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  // https://api.www.documentcloud.org/api/addon_runs/?expand=addon
+  export interface Run {
+    uuid: string;
+    addon: AddOnListItem;
+    user: number;
+    status: "success" | "failure";
+    progress: number;
+    message: string;
+    file_url?: string | null;
+    dismissed: boolean;
+    rating: number;
+    comment: string;
+    created_at: string;
+    updated_at: string;
+  }
+</script>
+
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Event } from "./AddOnEvent.svelte";
-  import type { Run } from "./AddOnRun.svelte";
+  import Paginator from "../Paginator.svelte";
 
-  import AddOnEvent from "./AddOnEvent.svelte";
-  import AddOnRun from "./AddOnRun.svelte";
-  import Modal from "../Modal.svelte";
-
-  export let per_page = 10;
-  export let visible = false;
-
-  export let events: Event[] = [];
   export let runs: Run[] = [];
+  export let per_page = 10;
 
-  let modal: Modal;
+  let previous_url: string;
+  let next_url: string;
+
+  export async function load({ per_page = 10, url = "" }) {}
 </script>
 
-<style>
-  [slot="content"] {
-    width: 50vw;
-  }
-</style>
+<style></style>
 
-<Modal bind:this={modal} {visible} anchor="right">
-  <div slot="content">
-    <div class="events">
-      <h2>Scheduled Add-Ons</h2>
+<div class="run-list">
+  <h2>{$_("addonRuns.previous")}</h2>
 
-      {#each events as event}
-        <AddOnEvent {event} />
-      {/each}
+  {#each runs as run}
+    <div class="addon-run" id="run-{run.uuid}">
+      <h3>
+        {run.addon.name}
+      </h3>
+      <p class="info">
+        {run.status} &bullet; {run.created_at}
+      </p>
     </div>
+  {/each}
 
-    <div class="runs">
-      <h2>Previous runs</h2>
-
-      {#each runs as run}
-        <AddOnRun {run} />
-      {/each}
-    </div>
-  </div>
-</Modal>
+  {#if previous_url || next_url}
+    <Paginator />
+  {/if}
+</div>

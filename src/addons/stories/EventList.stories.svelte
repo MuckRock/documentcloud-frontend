@@ -1,23 +1,23 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import AddOnRun from "../runs/AddOnRun.svelte";
-  import run from "../fixtures/run.json";
+  import EventList from "../runs/EventList.svelte";
+  import { results as events } from "../fixtures/event-list.json";
 
-  const args = { run };
+  const args = { events };
 </script>
 
 <style></style>
 
 <Meta
-  title="Add-Ons / Run"
-  component={AddOnRun}
+  title="Add-Ons / Events"
+  component={EventList}
   parameters={{ layout: "centered" }}
 />
 
 <Template let:args>
   <div class="container">
-    <AddOnRun {...args} />
+    <EventList {...args} />
   </div>
 </Template>
 
