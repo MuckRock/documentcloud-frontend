@@ -1,0 +1,35 @@
+<script>
+  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+
+  import Form from "../dispatch/Form.svelte";
+  import * as addons from "../fixtures/addons.json";
+</script>
+
+<Meta
+  title="Add-Ons / Form"
+  component={Form}
+  parameters={{ layout: "centered" }}
+/>
+
+<Template let:args={addon}>
+  <h2>{addon.name}</h2>
+
+  <Form
+    properties={addon.parameters.properties}
+    required={addon.parameters.required}
+    eventOptions={addon.parameters.eventOptions}
+    debug
+  />
+</Template>
+
+<Story name="PDF Exporter" args={addons[0]} />
+
+<Story name="Scraper" args={addons[1]} />
+
+<Story name="Tabula Spreadsheet Extraction" args={addons[2]} />
+
+<Story name="Transcribe Audio, powered by Whisper" args={addons[3]} />
+
+<Story name="Import Documents" args={addons[4]} />
+
+<Story name="Bad Redactions" args={addons[5]} />
