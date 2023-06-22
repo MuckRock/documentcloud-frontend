@@ -1,15 +1,15 @@
 <script lang="ts">
-  export let label: string;
-  export let path: string;
+  export let title: string;
+  export let name: string;
   export let value: number;
   export let required: boolean = false;
 </script>
 
 <label>
-  {label}
+  {title}
   <input
     type="number"
-    name={path}
+    {name}
     {required}
     bind:value
     on:change

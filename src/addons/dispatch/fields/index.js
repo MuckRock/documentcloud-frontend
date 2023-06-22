@@ -1,6 +1,7 @@
-import Text from "./Text.svelte";
-import Number from "./Number.svelte";
+import Array from "./Array.svelte";
 import Checkbox from "./Checkbox.svelte";
+import Number from "./Number.svelte";
+import Text from "./Text.svelte";
 
 // https://json-schema.org/understanding-json-schema/reference/type.html
 const fields = {
@@ -11,7 +12,7 @@ const fields = {
   null: null,
 
   // compound fields, tbd
-  array: null,
+  array: Array,
   object: null,
 };
 
