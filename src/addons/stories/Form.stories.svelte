@@ -18,7 +18,6 @@
     properties={addon.parameters.properties}
     required={addon.parameters.required}
     eventOptions={addon.parameters.eventOptions}
-    debug
   />
 </Template>
 
@@ -33,3 +32,5 @@
 <Story name="Import Documents" args={addons[4]} />
 
 <Story name="Bad Redactions" args={addons[5]} />
+
+<Story name="Site Snapshot" args={addons[6]} />

@@ -20,10 +20,6 @@
 
   export let values: any = {};
 
-  export function onSubmit(e) {
-    values = new FormData(e.target);
-  }
-
   const ajv = new Ajv();
   addFormats(ajv);
 
@@ -33,6 +29,18 @@
   $: validate = ajv.compile({ type: "object", properties, required });
 
   $: console.log(eventOptions);
+
+  function onSubmit(e) {
+    values = new FormData(e.target);
+  }
+
+  function objectify(params) {
+    if (typeof params === "string") {
+      params = { type: params };
+    }
+
+    return params;
+  }
 </script>
 
 <style>
@@ -58,8 +66,20 @@
   </pre>
   {/if}
 
+  {#each Object.entries(properties) as [name, p]}
+    {@const params = objectify(p)}
+    <fieldset>
+      <svelte:component
+        this={fields.get(params)}
+        {...params}
+        {name}
+        required={required.includes(name)}
+      />
+    </fieldset>
+  {/each}
+
   {#if eventOptions?.events?.length}
-    <div class="events">
+    <fieldset class="events">
       <label>
         {$_("addonDispatchDialog.runSchedule")}
         <select name="events">
@@ -69,7 +89,7 @@
           {/each}
         </select>
       </label>
-    </div>
+    </fieldset>
   {/if}
 
   <div class="controls">

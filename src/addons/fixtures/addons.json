@@ -196,5 +196,46 @@
     "active": false,
     "default": true,
     "featured": false
+  },
+  {
+    "id": 435,
+    "user": 102112,
+    "organization": 125,
+    "access": "public",
+    "name": "Site Snapshot",
+    "repository": "MuckRock/Site-Snapshot",
+    "parameters": {
+      "type": "object",
+      "title": "Site Snapshot",
+      "required": ["sites"],
+      "documents": [],
+      "categories": ["monitor"],
+      "properties": {
+        "sites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "URL",
+            "format": "uri"
+          },
+          "default": [""]
+        },
+        "project_id": {
+          "type": "integer",
+          "title": "Project ID"
+        },
+        "access_level": {
+          "type": "string",
+          "title": "Access level (public, private, organization)",
+          "default": "private"
+        }
+      },
+      "description": "This Add-On will create a PDF snapshot of a site and upload the document to your DocumentCloud account."
+    },
+    "created_at": "2023-04-17T16:35:17.838211Z",
+    "updated_at": "2023-06-15T17:51:36.152215Z",
+    "active": false,
+    "default": false,
+    "featured": false
   }
 ]

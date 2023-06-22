@@ -1,20 +1,11 @@
 <script lang="ts">
   export let title: string;
   export let name: string;
-  export let value: string;
+  export let value: boolean;
   export let required: boolean = false;
 </script>
 
 <label>
   {title}
-  <input
-    type="text"
-    {name}
-    {required}
-    bind:value
-    on:change
-    on:input
-    on:focus
-    on:blur
-  />
+  <input type="checkbox" {name} bind:checked={value} {required} />
 </label>
