@@ -10,10 +10,13 @@
     id: number;
     name: string;
     repository: string;
-    parameters: object;
+    parameters: any;
     description?: string;
     author?: Author;
     usage?: number;
+    categories: string[];
+    featured: boolean;
+    default: boolean;
   }
 </script>
 

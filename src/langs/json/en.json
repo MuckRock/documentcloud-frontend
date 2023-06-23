@@ -693,6 +693,7 @@
     "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
   },
   "addonDispatchDialog": {
+    "addons": "Add-Ons",
     "select": "Select which documents you’d like to run this Add-On against:",
     "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again.",
     "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.",
@@ -707,7 +708,10 @@
     "showAddons": "Show Scheduled Add-Ons ({n})",
     "runSchedule": "Run on a schedule:",
     "disable": "Disable",
-    "signIn": "Sign in to use Add-Ons"
+    "signIn": "Sign in to use Add-Ons",
+    "createdBy": "Created by",
+    "categories": "Categories",
+    "viewsource": "View Source"
   },
   "addonBrowserDialog": {
     "categories": "Categories",
