@@ -7,7 +7,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Top filter"
+  title="Add-Ons / Browser / Filters / Top"
   tags={["autodocs"]}
   parameters={{ layout: "centered" }}
   component={TopFilters}
@@ -17,4 +17,4 @@
   <TopFilters {...args} />
 </Template>
 
-<Story name="Default" {args} />
+<Story name="Top" {args} />

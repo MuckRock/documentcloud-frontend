@@ -1,5 +1,6 @@
 <script context="module">
   import { writable } from "svelte/store";
+  import Filter from "./Filter.svelte";
 
   // todo put these somewhere easier to find
   export const CATEGORIES = [
@@ -28,34 +29,22 @@
 
   ul li {
     margin-bottom: 0.25em;
-    padding: 0.25em;
   }
 
-  ul li label {
-    cursor: pointer;
-  }
-
-  ul li::before {
-    content: "# ";
-  }
-
-  .selected {
-    background-color: var(--highlight-orange, #ff785c);
-    border: 1px solid var(--gray);
-    border-radius: var(--radius, 4px);
+  h3 {
+    margin: 0.5em;
   }
 </style>
 
 <div class="categories">
   <h3>{$_("addonBrowserDialog.categories")}</h3>
-
   <ul>
     {#each CATEGORIES as [category, name]}
-      <li class:selected={$categories.includes(category)}>
-        <label>
-          <input type="checkbox" value={category} bind:group={$categories} />
-          <span>{name}</span>
-        </label>
+      <li>
+        <Filter name={name} selected={$categories.includes(category)}>
+          <input slot="checkbox" type="checkbox" value={category} bind:group={$categories} />
+          <span slot="icon">#</span>
+        </Filter>
       </li>
     {/each}
   </ul>
