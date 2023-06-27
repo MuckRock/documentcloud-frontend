@@ -6,7 +6,7 @@
 </script>
 
 <style>
-  .checkbox {
+  .input {
     display: none;
   }
   .filter {
@@ -41,7 +41,7 @@
 </style>
 
 <label class:selected class="filter">
-  <span class="checkbox"><slot name="checkbox" /></span>
+  <span class="input"><slot name="input" /></span>
   <span class="icon"><slot name="icon" /></span>
   <span class="name">{name}</span>
 </label>

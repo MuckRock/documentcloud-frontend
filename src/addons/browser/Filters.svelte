@@ -2,7 +2,13 @@
   import { writable } from "svelte/store";
   import Filter from "./Filter.svelte";
 
-  // todo put these somewhere easier to find
+  // TODO declare hardcoded values in a centralized place
+
+  export const FILTERS = [
+    ["Pinned", "active", "✓"],
+    ["Featured", "featured", "*"],
+  ];
+  
   export const CATEGORIES = [
     ["export", "Export"],
     ["ai", "AI"],
@@ -13,6 +19,7 @@
     ["statistical", "Statistical"],
   ];
 
+  export const filters = writable([]);
   export const categories = writable([]);
 </script>
 
@@ -36,16 +43,27 @@
   }
 </style>
 
+<ul>
+  {#each FILTERS as [name, value, icon]}
+    <li>
+      <Filter name={name} selected={$filters.includes(value)}>
+        <input slot="input" type="checkbox" {value} bind:group={$filters} />
+        <span slot="icon">{icon}</span>
+      </Filter>
+    </li>
+  {/each}
+</ul>
 <div class="categories">
   <h3>{$_("addonBrowserDialog.categories")}</h3>
   <ul>
     {#each CATEGORIES as [category, name]}
       <li>
         <Filter name={name} selected={$categories.includes(category)}>
-          <input slot="checkbox" type="checkbox" value={category} bind:group={$categories} />
+          <input slot="input" type="checkbox" value={category} bind:group={$categories} />
           <span slot="icon">#</span>
         </Filter>
       </li>
     {/each}
   </ul>
 </div>
+

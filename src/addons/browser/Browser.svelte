@@ -1,11 +1,10 @@
 <script lang="ts">
   import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
-  import CategoryFilter, { categories } from "./CategoryFilter.svelte";
   import Drawer from "../Drawer.svelte";
   import Paginator from "../Paginator.svelte";
-  import SearchInput, { query } from "./SearchInput.svelte";
-  import TopFilters, { filters } from "./TopFilters.svelte";
+  import Search, { query } from "./SearchInput.svelte";
+  import Filters, { filters, categories } from "./Filters.svelte";
 
   export let visible = false;
   export let per_page = 5;
@@ -107,11 +106,12 @@
     margin: 0;
   }
   .sidebar {
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
   }
   .results {
-    flex: 1 1 auto;
+    flex: 1 1 24em;
     min-width: 20em;
     min-height: 100%;
     display: flex;
@@ -138,9 +138,8 @@
       <h2>Add-Ons</h2>
     </header>
     <aside class="sidebar">
-      <SearchInput />
-      <TopFilters />
-      <CategoryFilter />
+      <Search />
+      <Filters />
     </aside>
     <main class="results">
       <div class="list"><AddOnList {loading} {error} {items} /></div>

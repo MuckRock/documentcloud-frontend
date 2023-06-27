@@ -1,20 +1,20 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import TopFilters from "../browser/TopFilters.svelte";
+  import Filters from "../browser/Filters.svelte";
 
   const args = {};
 </script>
 
 <Meta
-  title="Add-Ons / Browser / Filters / Top"
+  title="Add-Ons / Browser / Filters"
   tags={["autodocs"]}
   parameters={{ layout: "centered" }}
-  component={TopFilters}
+  component={Filters}
 />
 
 <Template let:args>
-  <TopFilters {...args} />
+  <Filters {...args} />
 </Template>
 
-<Story name="Top" {args} />
+<Story name="Filters" {args} />
