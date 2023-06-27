@@ -17,13 +17,13 @@ const fields = {
 };
 
 /**
- * Get a form field component, using the properties of a JSON schema object
+ * Automatically get a form field component based on the property type of a JSON schema object
  *
  * @export
  * @param {object} params
  * @returns {import("svelte").ComponentType}
  */
-export function get(params, fallback = Text) {
+export function autofield(params, fallback = Text) {
   const type = String(params.type).toLowerCase();
 
   if (!fields[type]) {
