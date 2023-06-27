@@ -4,6 +4,7 @@
   import Text from "./Text.svelte";
 
   export let title: string = "";
+  export let description: string = "";
   export let items: any = {
     type: "string",
     title: "",
@@ -55,3 +56,7 @@
 <div class="array-controls">
   <button class="add" on:click|preventDefault={push}>+</button>
 </div>
+
+{#if description}
+  <p class="help">{description}</p>
+{/if}

@@ -12,8 +12,6 @@
 
   import * as fields from "./fields/index.js";
 
-  export let debug = false;
-
   export let properties: any = {};
   export let required = [];
   export let eventOptions: eventOptions;
@@ -27,8 +25,6 @@
   let validate: Function;
 
   $: validate = ajv.compile({ type: "object", properties, required });
-
-  $: console.log(eventOptions);
 
   function onSubmit(e) {
     values = new FormData(e.target);
@@ -54,17 +50,7 @@
   on:submit={onSubmit}
   on:reset
 >
-  {#if debug}
-    <pre>
-    <code>
-{JSON.stringify(
-          { type: "object", properties, required, eventOptions },
-          null,
-          2,
-        )}
-    </code>
-  </pre>
-  {/if}
+  <slot name="before" />
 
   {#each Object.entries(properties) as [name, p]}
     {@const params = objectify(p)}
@@ -91,6 +77,8 @@
       </label>
     </fieldset>
   {/if}
+
+  <slot name="after" />
 
   <div class="controls">
     <input type="submit" />

@@ -3,6 +3,7 @@
   export let name: string;
   export let value: number;
   export let required: boolean = false;
+  export let description: string = "";
 </script>
 
 <label>
@@ -18,3 +19,7 @@
     on:blur
   />
 </label>
+
+{#if description}
+  <p class="help">{description}</p>
+{/if}

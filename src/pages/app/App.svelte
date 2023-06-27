@@ -116,7 +116,8 @@
   {#if $orgsAndUsers.me !== null}<script
       defer
       data-domain="documentcloud.org"
-      src="https://plausible.io/js/script.manual.tagged-events.js"></script>{/if}
+      src="https://plausible.io/js/script.manual.tagged-events.js"
+    ></script>{/if}
 </svelte:head>
 
 <div>
@@ -128,8 +129,5 @@
   <MainContainer
     on:expandSidebar={() => setSidebarExpanded(true)}
     concealed={$layout.sidebarExpanded}
-    documents={$documents.documents}
-    loading={$layout.loading}
-    error={$layout.error}
   />
 </div>

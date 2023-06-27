@@ -15,6 +15,7 @@
     author?: Author;
     usage?: number;
     categories: string[];
+    documents: string[];
     featured: boolean;
     default: boolean;
   }
