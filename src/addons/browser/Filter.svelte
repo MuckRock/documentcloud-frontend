@@ -29,6 +29,9 @@
     border: 1px solid rgba(0, 0, 0, .125);
     background-color: var(--highlight-orange, #ff785c);
   }
+  .filter.selected .icon {
+    fill: var(--darkgray) !important;
+  }
   .icon {
     width: 1em;
     display: flex;

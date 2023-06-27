@@ -2,7 +2,7 @@
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
   import Filter from "../browser/Filter.svelte";
-  import Pin from "../../common/Pin.svelte";
+  import Star from "../../common/icons/Star.svelte";
 
   let args = { selected: false, name: "Pinned"};
 </script>
@@ -17,7 +17,7 @@
 
 <Template let:args>
   <Filter {...args}>
-    <Pin slot="icon" />
+    <Star slot="icon" />
   </Filter>
 </Template>
 
