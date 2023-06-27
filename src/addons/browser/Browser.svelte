@@ -2,7 +2,7 @@
   import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
   import CategoryFilter, { categories } from "./CategoryFilter.svelte";
-  import Modal from "../Modal.svelte";
+  import Drawer from "../Drawer.svelte";
   import Paginator from "../Paginator.svelte";
   import SearchInput, { query } from "./SearchInput.svelte";
   import TopFilters, { filters } from "./TopFilters.svelte";
@@ -10,7 +10,7 @@
   export let visible = false;
   export let per_page = 5;
 
-  let modal: Modal;
+  let drawer: Drawer;
   let items = [];
   let loading = false;
   let error = null;
@@ -94,32 +94,64 @@
 </script>
 
 <style>
-  [slot="content"] {
+  .browser {
     display: flex;
+    flex-wrap: wrap;
     gap: 1em;
     padding: 1em;
   }
+  .header {
+    flex: 1 1 100%;
+  }
+  .header h2 {
+    margin: 0;
+  }
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+  .results {
+    flex: 1 1 auto;
+    min-width: 20em;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+  .results .list {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 3px;
+  }
+  .results .pagination {
+    flex: 0 0 auto;
+  }
 </style>
 
-<Modal bind:this={modal} bind:visible anchor="right">
-  <div slot="header">
-    <h2>Add-Ons</h2>
-  </div>
-
-  <div slot="content">
-    <div class="rail">
+<Drawer bind:this={drawer} bind:visible anchor="right">
+  <div slot="content" class="browser">
+    <header class="header">
+      <h2>Add-Ons</h2>
+    </header>
+    <aside class="sidebar">
       <SearchInput />
       <TopFilters />
       <CategoryFilter />
-    </div>
-    <div class="list">
-      <AddOnList {loading} {error} {items} />
-      <Paginator
-        has_next={Boolean(next_url)}
-        has_previous={Boolean(previous_url)}
-        on:next={loadNext}
-        on:previous={loadPrevious}
-      />
-    </div>
+    </aside>
+    <main class="results">
+      <div class="list"><AddOnList {loading} {error} {items} /></div>
+      <div class="pagination">
+        <Paginator
+          has_next={Boolean(next_url)}
+          has_previous={Boolean(previous_url)}
+          on:next={loadNext}
+          on:previous={loadPrevious}
+        />
+      </div>
+    </main>
   </div>
-</Modal>
+</Drawer>

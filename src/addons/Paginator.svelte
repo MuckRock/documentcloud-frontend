@@ -20,7 +20,7 @@
 <style>
   .paginator {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     position: relative;
     width: 100%;
   }
