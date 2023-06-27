@@ -17,4 +17,4 @@
   <Browser {...args} />
 </Template>
 
-<Story name="Default" {args} />
+<Story name="Browser" {args} />
