@@ -36,3 +36,6 @@
 </Template>
 
 <Story name="Default" {args} />
+<Story name="Only Page" args={{has_next: false, has_previous: false}} />
+<Story name="First Page" args={{has_next: true, has_previous: false}} />
+<Story name="Last Page" args={{has_next: false, has_previous: true}} />

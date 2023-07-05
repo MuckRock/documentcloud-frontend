@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
+  import Button from "../common/Button.svelte";
 
   export let has_next = false;
   export let has_previous = false;
@@ -19,18 +20,18 @@
 <style>
   .paginator {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     position: relative;
     width: 100%;
   }
 </style>
 
 <div class="paginator">
-  <button class="previous" disabled={!has_previous} on:click={previous}>
+  <Button disabled={!has_previous} on:click={previous}>
     {$_("paginator.previous")}
-  </button>
+  </Button>
 
-  <button class="next" disabled={!has_next} on:click={next}>
+  <Button disabled={!has_next} on:click={next}>
     {$_("paginator.next")}
-  </button>
+  </Button>
 </div>

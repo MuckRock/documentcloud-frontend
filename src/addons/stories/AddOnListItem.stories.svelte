@@ -26,7 +26,7 @@
 </style>
 
 <Meta
-  title="Add-Ons / List Item"
+  title="Add-Ons / Browser / List / Item"
   component={AddOnListItem}
   parameters={{ layout: "centered" }}
 />

@@ -1,16 +1,15 @@
 <script lang="ts">
   import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
-  import CategoryFilter, { categories } from "./CategoryFilter.svelte";
-  import Modal from "../Modal.svelte";
+  import Drawer from "../Drawer.svelte";
   import Paginator from "../Paginator.svelte";
-  import SearchInput, { query } from "./SearchInput.svelte";
-  import TopFilters, { filters } from "./TopFilters.svelte";
+  import Search, { query } from "./SearchInput.svelte";
+  import Filters, { filters, categories } from "./Filters.svelte";
 
   export let visible = false;
   export let per_page = 5;
 
-  let modal: Modal;
+  let drawer: Drawer;
   let items = [];
   let loading = false;
   let error = null;
@@ -94,32 +93,80 @@
 </script>
 
 <style>
-  [slot="content"] {
+  .browser {
     display: flex;
+    flex-wrap: wrap;
     gap: 1em;
     padding: 1em;
+    max-width: 44em;
+  }
+  .header {
+    flex: 1 1 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 1em;
+  }
+  .header h2 {
+    flex: 0 1 auto;
+    margin: 0;
+  }
+  .header p {
+    flex: 1 1 16em;
+    margin: 0;
+    font-weight: 600;
+    color: gray;
+  }
+  .sidebar {
+    flex: 1 1 12em;
+    display: flex;
+    flex-direction: column;
+  }
+  .search {
+    margin-bottom: 1em;
+  }
+  .results {
+    flex: 4 1 24em;
+    min-width: 20em;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+  .results .list {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 3px;
+  }
+  .results .pagination {
+    flex: 0 0 auto;
   }
 </style>
 
-<Modal bind:this={modal} bind:visible anchor="right">
-  <div slot="header">
-    <h2>Add-Ons</h2>
+<Drawer bind:this={drawer} bind:visible anchor="right">
+  <div slot="content" class="browser">
+    <header class="header">
+      <h2>Add-Ons</h2>
+      <p>Free automations, shortcuts, and power-ups from the DocumentCloud community</p>
+    </header>
+    <aside class="sidebar">
+      <div class="search"><Search /></div>
+      <div class="filters"><Filters /></div>
+    </aside>
+    <main class="results">
+      <div class="list"><AddOnList {loading} {error} {items} /></div>
+      <div class="pagination">
+        <Paginator
+          has_next={Boolean(next_url)}
+          has_previous={Boolean(previous_url)}
+          on:next={loadNext}
+          on:previous={loadPrevious}
+        />
+      </div>
+    </main>
   </div>
-
-  <div slot="content">
-    <div class="rail">
-      <SearchInput />
-      <TopFilters />
-      <CategoryFilter />
-    </div>
-    <div class="list">
-      <AddOnList {loading} {error} {items} />
-      <Paginator
-        has_next={Boolean(next_url)}
-        has_previous={Boolean(previous_url)}
-        on:next={loadNext}
-        on:previous={loadPrevious}
-      />
-    </div>
-  </div>
-</Modal>
+</Drawer>

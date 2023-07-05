@@ -7,7 +7,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / SearchInput"
+  title="Add-Ons / Browser / Search"
   tags={["autodocs"]}
   parameters={{ layout: "centered" }}
   component={SearchInput}
@@ -19,4 +19,4 @@
   <p>Query: {$query}</p>
 </Template>
 
-<Story name="Default" {args} />
+<Story name="Search" {args} />

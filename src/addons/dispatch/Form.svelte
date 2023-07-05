@@ -10,7 +10,7 @@
   import addFormats from "ajv-formats";
   import { _ } from "svelte-i18n";
 
-  import * as fields from "./fields/index.js";
+  import {autofield} from "./fields";
 
   export let properties: any = {};
   export let required = [];
@@ -56,7 +56,7 @@
     {@const params = objectify(p)}
     <fieldset>
       <svelte:component
-        this={fields.get(params)}
+        this={autofield(params)}
         {...params}
         {name}
         required={required.includes(name)}
