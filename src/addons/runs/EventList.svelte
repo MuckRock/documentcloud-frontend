@@ -17,15 +17,41 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import Paginator from "../Paginator.svelte";
+  import { baseApiUrl } from "../../api/base.js";
 
   export let events: Event[] = [];
   export let per_page = 5;
 
   const schedules = ["Disabled", "hourly", "daily", "weekly", "on upload"];
-  let next_url: string;
-  let previous_url: string;
+  const endpoint = new URL("/api/addon_events/", baseApiUrl);
+  const options: RequestInit = {
+    credentials: "include",
+  };
 
-  export async function load({ per_page = 5, url = "" }) {}
+  let next_url: URL | null;
+  let previous_url: URL | null;
+
+  export async function load(url?: string | URL) {
+    if (!url) {
+      url = endpoint;
+    }
+
+    if (!(url instanceof URL)) {
+      url = new URL(url);
+    }
+
+    url.searchParams.set("per_page", String(per_page));
+
+    const resp = await fetch(url, options);
+
+    if (resp.ok) {
+      const { next, previous, results } = await resp.json();
+
+      next_url = next ? new URL(next) : null;
+      previous_url = previous ? new URL(previous) : null;
+      events = results;
+    }
+  }
 
   function url(event: Event) {
     return `#add-ons/${event.addon.repository}/${event.id}`;
