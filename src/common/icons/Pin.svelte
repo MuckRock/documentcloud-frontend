@@ -1,7 +1,7 @@
 <script lang="ts">
   const REM = 16;
   export let size = 1;
-  export let title = 'Pin';
+  export let title = "Pin";
 </script>
 
 <style>

@@ -10,7 +10,7 @@
   import addFormats from "ajv-formats";
   import { _ } from "svelte-i18n";
 
-  import {autofield} from "./fields";
+  import { autofield } from "./fields";
 
   export let properties: any = {};
   export let required = [];

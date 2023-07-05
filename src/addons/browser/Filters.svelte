@@ -18,7 +18,7 @@
     ["Pinned", "active"],
     ["Featured", "featured"],
   ];
-  
+
   export const CATEGORIES = [
     ["export", "Export"],
     ["ai", "AI"],
@@ -59,15 +59,25 @@
 </style>
 
 <ul class="filters">
-  <li id="pinned" class:selected={$filters.includes('active')}>
-    <Filter name="Pinned" selected={$filters.includes('active')}>
-      <input slot="input" type="checkbox" value="active" bind:group={$filters} />
+  <li id="pinned" class:selected={$filters.includes("active")}>
+    <Filter name="Pinned" selected={$filters.includes("active")}>
+      <input
+        slot="input"
+        type="checkbox"
+        value="active"
+        bind:group={$filters}
+      />
       <span slot="icon"><Pin /></span>
     </Filter>
   </li>
-  <li id="featured" class:selected={$filters.includes('featured')}>
-    <Filter name="Featured" selected={$filters.includes('featured')}>
-      <input slot="input" type="checkbox" value="featured" bind:group={$filters} />
+  <li id="featured" class:selected={$filters.includes("featured")}>
+    <Filter name="Featured" selected={$filters.includes("featured")}>
+      <input
+        slot="input"
+        type="checkbox"
+        value="featured"
+        bind:group={$filters}
+      />
       <span slot="icon"><Star /></span>
     </Filter>
   </li>
@@ -77,12 +87,16 @@
   <ul>
     {#each CATEGORIES as [category, name]}
       <li>
-        <Filter name={name} selected={$categories.includes(category)}>
-          <input slot="input" type="checkbox" value={category} bind:group={$categories} />
+        <Filter {name} selected={$categories.includes(category)}>
+          <input
+            slot="input"
+            type="checkbox"
+            value={category}
+            bind:group={$categories}
+          />
           <span slot="icon"><Hashtag /></span>
         </Filter>
       </li>
     {/each}
   </ul>
 </div>
-

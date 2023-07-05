@@ -151,7 +151,10 @@
   <div slot="content" class="browser">
     <header class="header">
       <h2>Add-Ons</h2>
-      <p>Free automations, shortcuts, and power-ups from the DocumentCloud community</p>
+      <p>
+        Free automations, shortcuts, and power-ups from the DocumentCloud
+        community
+      </p>
     </header>
     <aside class="sidebar">
       <div class="search"><Search /></div>
