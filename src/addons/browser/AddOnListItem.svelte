@@ -6,7 +6,6 @@
 
   // API endpoint https://api.www.documentcloud.org/api/addons/
   export interface AddOnListItem {
-    active: boolean;
     id: number;
     name: string;
     repository: string;
@@ -16,12 +15,15 @@
     usage?: number;
     categories: string[];
     documents: string[];
+    active: boolean;
     featured: boolean;
     default: boolean;
   }
 </script>
 
 <script lang="ts">
+  import { baseApiUrl } from "../../api/base.js";
+
   import Pin from "../../common/Pin.svelte";
   import Title from "../../common/Title.svelte";
   import AddOnPopularity from "../Popularity.svelte";
@@ -39,14 +41,38 @@
   };
   export let usage: number = undefined;
 
+  const options: RequestInit = {
+    credentials: "include",
+    method: "PATCH", // this component can only update whether an addon is active or not
+  };
+
+  $: endpoint = new URL(`/api/addon_events/${id}/`, baseApiUrl);
   $: description = parameters?.description;
   $: if (!author.name) {
     author.name = repository.split("/")[0];
   }
 
-  function onClick(e) {
+  async function toggle(e) {
+    // optimistic update
     active = !active;
     console.log(`${active ? "Pinning" : "Unpinning"} ${id}...`);
+
+    const resp = await fetch(endpoint, {
+      ...options,
+      body: JSON.stringify({ active }),
+    }).catch((e) => {
+      active = !active;
+      return {
+        ok: false,
+        statusText: String(e),
+      };
+    });
+
+    if (!resp.ok) {
+      // reset active state
+      active = !active;
+      console.error(`Problem updating add-on: ${resp.statusText}`);
+    }
   }
 </script>
 
@@ -92,7 +118,7 @@
 <div class="container" id={repository}>
   <div class="top-row">
     <div class="center-self">
-      <Pin {active} on:click={onClick} />
+      <Pin {active} on:click={toggle} />
     </div>
     <div class="stretch"><Title>{name}</Title></div>
     <div class="metadata">

@@ -13,8 +13,12 @@
   let items = [];
   let loading = false;
   let error = null;
-  let next_url = "";
-  let previous_url = "";
+  let next_url: URL | null;
+  let previous_url: URL | null;
+
+  const options: RequestInit = {
+    credentials: "include",
+  };
 
   $: loadParams = buildParams({
     per_page,
@@ -27,13 +31,11 @@
     load(loadParams);
   }
 
-  $: console.log(loadParams);
-
   export async function load({
     query = "",
     filters = {},
     per_page = 5,
-    url = "",
+    url = null,
   } = {}) {
     if (!url) {
       const u = new URL("addons/", baseApiUrl);
@@ -49,7 +51,7 @@
 
     loading = true;
 
-    const { next, previous, results } = await fetch(url)
+    const { next, previous, results } = await fetch(url, options)
       .then((r) => r.json())
       .catch((err) => {
         error = err;
@@ -57,8 +59,8 @@
         return {};
       });
 
-    next_url = next;
-    previous_url = previous;
+    next_url = next ? new URL(next) : null;
+    previous_url = previous ? new URL(previous) : null;
     items = results;
     loading = false;
   }

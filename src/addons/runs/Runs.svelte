@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import Modal from "../Modal.svelte";
   import EventList from "./EventList.svelte";
   import RunList from "./RunList.svelte";
@@ -16,13 +14,6 @@
     console.log("Loading runs");
     loading = Promise.all([runs.load(), events.load()]);
   }
-
-  $: console.log({ events });
-  $: console.log({ runs });
-
-  onMount(async () => {
-    await Promise.all([runs.load(), events.load()]);
-  });
 </script>
 
 <style>

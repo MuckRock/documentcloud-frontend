@@ -41,7 +41,6 @@
     }
 
     url.searchParams.set("per_page", String(per_page));
-
     const resp = await fetch(url, options);
 
     if (resp.ok) {
