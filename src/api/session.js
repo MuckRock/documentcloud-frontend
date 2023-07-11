@@ -1,11 +1,4 @@
 import axios from "axios";
-import axiosRetry from "axios-retry";
-
-// Hook in failed request interceptor
-axiosRetry(axios, {
-  retries: 3,
-  retryDelay: axiosRetry.exponentialDelay,
-});
 
 const CSRF_COOKIE_NAME = "csrftoken";
 const CSRF_HEADER_NAME = "X-CSRFToken";

@@ -5,8 +5,14 @@
   import { viewer } from "@/viewer/viewer";
   loadDompurify();
 
+  import { onMount } from "svelte";
+
   let elem = null;
   export let content = "";
+
+  onMount(() => {
+    window.domPurify = $domPurify;
+  });
 
   $: {
     // Add onclick listeners to navigate to each same-document note link
@@ -68,7 +74,7 @@
 
 <div class="preview static">
   <div class="content" bind:this={elem}>
-    {#if $domPurify.domPurify != null}
+    {#if $domPurify.domPurify !== null && typeof $domPurify.domPurify.sanitize === "function"}
       {@html $domPurify.domPurify.sanitize(content)}
     {/if}
   </div>

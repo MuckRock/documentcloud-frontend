@@ -31,7 +31,7 @@
   </div>
 
   <div class="description">
-    <p>{addon.parameters?.description}</p>
+    <p>{addon.parameters.description}</p>
   </div>
 
   <div class="buttons">

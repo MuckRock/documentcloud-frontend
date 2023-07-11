@@ -2,6 +2,7 @@
   import { textAreaResize } from "@/util/textareaResize.js";
   import { domPurify, loadDompurify } from "@/util/domPurify";
   import { _ } from "svelte-i18n";
+
   loadDompurify();
 
   export let placeholder = "";
@@ -60,7 +61,7 @@
 
 <div class="sidebyside">
   <textarea {placeholder} use:textAreaResize bind:value {maxlength} />
-  {#if $domPurify.domPurify != null && value.trim().length > 0}
+  {#if $domPurify.domPurify !== null && typeof $domPurify.domPurify.sanitize === "function" && value.trim().length > 0}
     <div class="preview">
       <div class="title">{$_("htmlEditor.preview")}</div>
       <!-- Show a preview if possible -->

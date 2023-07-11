@@ -3,7 +3,7 @@ const path = require("path");
 const autoPreprocess = require("svelte-preprocess");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const DotenvFlow = require("dotenv-flow-webpack");
+const DotEnv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -20,7 +20,7 @@ const prod =
 const mode = prod ? "production" : "development";
 
 function wrap(spec) {
-  if (mode == "production") {
+  if (mode === "production") {
     spec.optimization = {
       minimize: true,
       minimizer: [
@@ -42,8 +42,8 @@ module.exports = wrap({
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
     },
-    // conditionNames: ["svelte"], webpack 5
-    extensions: ["*", ".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
+    conditionNames: ["svelte", "browser"],
+    extensions: [".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
     mainFields: ["svelte", "browser", "module", "main"],
   },
   module: {
@@ -54,7 +54,7 @@ module.exports = wrap({
           loader: "svelte-loader",
           options: {
             emitCss: prod,
-            hotReload: !prod,
+            // hotReload: !prod,
             dev: !prod,
             preprocess: autoPreprocess(preprocessOptions),
           },
@@ -63,24 +63,11 @@ module.exports = wrap({
       {
         test: /\.s[ac]ss$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
-          },
-          "css-loader",
-          "sass-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
-          },
-          "css-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.svg$/,
@@ -106,7 +93,7 @@ module.exports = wrap({
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
-    new DotenvFlow(),
+    new DotEnv(),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
       exclude: /node_modules/,

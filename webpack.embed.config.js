@@ -41,5 +41,5 @@ module.exports = targets.map(([src, outputPath, outputFilename]) => ({
       ...baseConfig.module.rules.slice(1),
     ],
   },
-  watch: baseConfig.mode != "production",
+  watch: baseConfig.mode !== "production",
 }));
