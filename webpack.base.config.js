@@ -41,6 +41,10 @@ module.exports = wrap({
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
+      "axios-retry": path.resolve(
+        __dirname,
+        "node_modules/axios-retry/es/index.mjs",
+      ),
     },
     conditionNames: ["svelte", "browser"],
     extensions: [".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
