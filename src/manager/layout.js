@@ -26,6 +26,7 @@ export const layout = new Svue({
       // Custom dialogs
       addonDispatchOpen: null,
       addonBrowserOpen: false,
+      addonRunsOpen: false,
       metaOpen: null,
       documentInfoOpen: false,
       projectEdit: null,

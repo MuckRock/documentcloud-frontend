@@ -25,3 +25,5 @@ public/viewer/*
 .env.test
 
 .vscode
+
+scratch/

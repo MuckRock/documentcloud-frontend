@@ -27,7 +27,7 @@ const preprocessOptions = {
   },
   typescript: {
     compilerOptions: {
-      target: "es2018",
+      target: "es2020",
     },
   },
 };

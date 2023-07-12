@@ -5,14 +5,14 @@
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
 
-  import { layout } from "@/manager/layout.js";
-  import {
-    addons,
-    getBrowserAddons,
-    getAddonByRepository,
-  } from "@/manager/addons.js";
-  import { documents } from "@/manager/documents.js";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { layout } from "../../manager/layout.js";
+  import { getAddonByRepository } from "../../manager/addons.js";
+  import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
+
+  // new add-ons ui
+  import Browser from "../../addons/browser/Browser.svelte";
+  import Runs from "../../addons/runs/Runs.svelte";
+  import Dispatch from "../../addons/dispatch/Dispatch.svelte";
 
   // hash routing, like in Viewer.svelte
   // [regexp, callback]
@@ -28,8 +28,17 @@
     [
       /^#add-ons$/,
       async (match) => {
-        await getBrowserAddons();
+        // await getBrowserAddons();
         layout.addonBrowserOpen = true;
+      },
+    ],
+
+    // add-on runs
+    [
+      /^#add-ons\/runs$/,
+      async (match) => {
+        // await getBrowserAddons();
+        layout.addonRunsOpen = true;
       },
     ],
 
@@ -67,6 +76,13 @@
   ];
 
   let sidebar = null;
+
+  // add-on ui
+  let addons = {
+    browser: undefined,
+    dispatch: undefined,
+    runs: undefined,
+  };
 
   function setSidebarExpanded(expanded) {
     layout.sidebarExpanded = expanded;
@@ -131,3 +147,9 @@
     concealed={$layout.sidebarExpanded}
   />
 </div>
+
+<Browser visible={layout.addonBrowserOpen} bind:this={addons.browser} />
+
+<Dispatch visible={layout.addonDispatchOpen} bind:this={addons.dispatch} />
+
+<Runs visible={layout.addonRunsOpen} bind:this={addons.runs} />

@@ -25,6 +25,7 @@
   let validate: Function;
 
   $: validate = ajv.compile({ type: "object", properties, required });
+  $: hasEvents = eventOptions && eventOptions.events.length > 0;
 
   function onSubmit(e) {
     values = new FormData(e.target);
@@ -64,7 +65,7 @@
     </fieldset>
   {/each}
 
-  {#if eventOptions?.events?.length}
+  {#if hasEvents}
     <fieldset class="events">
       <label>
         {$_("addonDispatchDialog.runSchedule")}

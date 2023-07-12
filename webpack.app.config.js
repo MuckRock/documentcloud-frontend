@@ -12,11 +12,19 @@ module.exports = {
   },
   plugins: [...baseConfig.plugins],
   devServer: {
-    disableHostCheck: true,
     host: "0.0.0.0",
-    public: "0.0.0.0:443",
+    port: 443,
+    allowedHosts: "all",
     port: 80,
     historyApiFallback: true,
-    watchContentBase: true,
+    hot: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: true,
+      },
+      webSocketURL: "wss://www.dev.documentcloud.org:443/ws",
+    },
   },
 };
