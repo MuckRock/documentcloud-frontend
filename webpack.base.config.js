@@ -58,7 +58,7 @@ module.exports = wrap({
             dev: !prod,
             preprocess: autoPreprocess(preprocessOptions),
             onwarn(warning, handler) {
-              if (process.env.SUPRESS_WARNINGS) return;
+              if (process.env.SUPPRESS_WARNINGS) return;
 
               handler(warning);
             },
