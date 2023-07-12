@@ -57,6 +57,11 @@ module.exports = wrap({
             // hotReload: !prod,
             dev: !prod,
             preprocess: autoPreprocess(preprocessOptions),
+            onwarn(warning, handler) {
+              if (process.env.SUPRESS_WARNINGS) return;
+
+              handler(warning);
+            },
           },
         },
       },
