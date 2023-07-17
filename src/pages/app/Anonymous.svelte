@@ -2,7 +2,6 @@
   import Button from "@/common/Button";
   import { search } from "@/search/search";
   import { _ } from "svelte-i18n";
-  import axios from "axios";
   import { fade } from "svelte/transition";
 
   // SVG assets
