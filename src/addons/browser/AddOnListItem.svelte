@@ -52,6 +52,8 @@
     author.name = repository.split("/")[0];
   }
 
+  $: url = `#add-ons/${repository}`;
+
   async function toggle(e) {
     // optimistic update
     active = !active;
@@ -120,7 +122,7 @@
     <div class="center-self">
       <Pin {active} on:click={toggle} />
     </div>
-    <div class="stretch"><Title>{name}</Title></div>
+    <div class="stretch"><h3><a href={url}>{name}</a></h3></div>
     <div class="metadata">
       {#if author && author.name}
         <p>

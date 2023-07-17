@@ -1,3 +1,5 @@
+<svelte:options accessors={true} />
+
 <script lang="ts">
   import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
@@ -149,7 +151,7 @@
   }
 </style>
 
-<Drawer bind:this={drawer} bind:visible anchor="right">
+<Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
   <div slot="content" class="browser">
     <header class="header">
       <h2>Add-Ons</h2>

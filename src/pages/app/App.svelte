@@ -5,6 +5,7 @@
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
 
+  import { setHash } from "../../router/router.js";
   import { layout } from "../../manager/layout.js";
   import { getAddonByRepository } from "../../manager/addons.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
@@ -20,7 +21,8 @@
     [
       /^#$/,
       (match) => {
-        layout.addonBrowserOpen = false;
+        $layout.addonBrowserOpen = false;
+        $layout.addonRunsOpen = false;
       },
     ],
 
@@ -28,8 +30,9 @@
     [
       /^#add-ons$/,
       async (match) => {
-        // await getBrowserAddons();
-        layout.addonBrowserOpen = true;
+        console.log("Opening add-on browser");
+        $layout.addonBrowserOpen = true;
+        $layout.addonRunsOpen = false;
       },
     ],
 
@@ -37,8 +40,8 @@
     [
       /^#add-ons\/runs$/,
       async (match) => {
-        // await getBrowserAddons();
-        layout.addonRunsOpen = true;
+        $layout.addonBrowserOpen = false;
+        $layout.addonRunsOpen = true;
       },
     ],
 
@@ -46,6 +49,9 @@
     [
       /^#add-ons\/([-\w]+)\/([-\w]+)$/,
       async (match) => {
+        $layout.addonBrowserOpen = false;
+        $layout.addonRunsOpen = false;
+
         const [org, name] = match.slice(1, 3);
         const repo = `${org}/${name}`;
         const addon = await getAddonByRepository(repo);
@@ -62,6 +68,9 @@
     [
       /^#add-ons\/(?<org>[-\w]+)\/(?<name>[-\w]+)\/(?<id>\d+)$/,
       async (match) => {
+        $layout.addonBrowserOpen = false;
+        $layout.addonRunsOpen = false;
+
         const [org, name, id] = match.slice(1, 4);
         const repo = `${org}/${name}`;
         const addon = await getAddonByRepository(repo);
@@ -78,11 +87,13 @@
   let sidebar = null;
 
   // add-on ui
-  let addons = {
-    browser: undefined,
-    dispatch: undefined,
-    runs: undefined,
-  };
+  let browser;
+  let dispatch;
+  let runs;
+
+  function closeDrawer(e) {
+    setHash("");
+  }
 
   function setSidebarExpanded(expanded) {
     layout.sidebarExpanded = expanded;
@@ -120,7 +131,11 @@
 
     // debug
     window.layout = layout;
-    window.addons = addons;
+    window.addons = {
+      browser,
+      dispatch,
+      runs,
+    };
   });
 </script>
 
@@ -136,20 +151,30 @@
     ></script>{/if}
 </svelte:head>
 
-<div>
-  <Sidebar
-    bind:this={sidebar}
-    on:retractSidebar={() => setSidebarExpanded(false)}
-    expanded={$layout.sidebarExpanded}
-  />
-  <MainContainer
-    on:expandSidebar={() => setSidebarExpanded(true)}
-    concealed={$layout.sidebarExpanded}
-  />
-</div>
+<Sidebar
+  bind:this={sidebar}
+  on:retractSidebar={() => setSidebarExpanded(false)}
+  expanded={$layout.sidebarExpanded}
+/>
+<MainContainer
+  on:expandSidebar={() => setSidebarExpanded(true)}
+  concealed={$layout.sidebarExpanded}
+/>
 
-<Browser visible={layout.addonBrowserOpen} bind:this={addons.browser} />
+<Browser
+  bind:visible={$layout.addonBrowserOpen}
+  bind:this={browser}
+  on:close={closeDrawer}
+/>
 
-<Dispatch visible={layout.addonDispatchOpen} bind:this={addons.dispatch} />
+<Dispatch
+  bind:visible={$layout.addonDispatchOpen}
+  bind:this={dispatch}
+  on:close={closeDrawer}
+/>
 
-<Runs visible={layout.addonRunsOpen} bind:this={addons.runs} />
+<Runs
+  bind:visible={$layout.addonRunsOpen}
+  bind:this={runs}
+  on:close={closeDrawer}
+/>

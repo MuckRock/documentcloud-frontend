@@ -1,38 +1,52 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   export let anchor: string = "center";
   export let visible: boolean = false;
+
+  const dispatch = createEventDispatcher();
 
   let dialog: HTMLElement;
 
   export function open() {
     visible = true;
+    dispatch("open");
   }
 
   export function close() {
     visible = false;
+    dispatch("close");
   }
 
   export function toggle() {
     visible = !visible;
+    dispatch(visible ? "open" : "close");
+  }
+
+  function onKeyPress(e: KeyboardEvent) {
+    if (visible && e.key === "Escape") {
+      close();
+    }
   }
 </script>
 
 <style>
-
   .drawer {
+    background-color: var(--menubg, white);
+    border: 1px solid #ccc;
+    border-radius: calc(var(--radius, 3px) * 3);
+    bottom: 1px;
+    box-shadow: -1px 0px 4px 2px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    height: calc(100% + 2px);
+    overflow-y: scroll;
     position: fixed;
     top: -1px;
-    bottom: 1px;
-    height: calc(100% + 2px); 
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    border-radius: calc(var(--radius, 3px) * 3);
-    background-color: var(--menubg);
-    box-shadow: -1px 0px 4px 2px rgba(0, 0, 0, .05);
+    z-index: 10;
   }
 
   button.close {
-    top: .75em;
+    top: 0.75em;
     position: absolute;
     border-radius: 9999px;
     border: transparent;
@@ -41,8 +55,9 @@
     width: 24px;
     font-size: 1em;
     cursor: pointer;
-    opacity: .7;
+    opacity: 0.7;
   }
+
   button.close:hover {
     opacity: 1;
   }
@@ -53,7 +68,7 @@
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
   }
-  
+
   .drawer.right button.close {
     left: -2em;
   }
@@ -68,9 +83,9 @@
   .drawer.left button.close {
     right: -2em;
   }
-
-
 </style>
+
+<svelte:window on:keydown={onKeyPress} />
 
 {#if visible}
   <div class="drawer {anchor}" class:visible tabindex="-1" role="dialog">

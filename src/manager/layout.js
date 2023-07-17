@@ -195,11 +195,22 @@ export function openAddonBrowser() {
   setHash("add-ons");
   layout.addonBrowserOpen = true;
 }
+
 export function hideAddonBrowser() {
   setHash("");
   setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonBrowserOpen = false;
   layout.params.addOnEvent = null;
+}
+
+export function showAddonRuns() {
+  setHash("add-ons/runs");
+  layout.addonRunsOpen = true;
+}
+
+export function hideAddonRuns() {
+  setHash("");
+  layout.addonRunsOpen = false;
 }
 
 export function hideDocumentInfo() {

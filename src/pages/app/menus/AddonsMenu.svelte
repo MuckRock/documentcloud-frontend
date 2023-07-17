@@ -6,9 +6,8 @@
   import MenuItem from "@/common/MenuItem.svelte";
   import AddonMenuItem from "./AddonMenuItem.svelte";
 
-  import { openAddonBrowser } from "@/manager/layout.js";
-  import { addons, getBrowserAddons } from "@/manager/addons.js";
-  import { setHash } from "@/router/router.js";
+  import { openAddonBrowser, showAddonRuns } from "@/manager/layout.js";
+  import { addons } from "@/manager/addons.js";
 
   function sort(addons) {
     if (addons == null) return [];
@@ -20,11 +19,14 @@
 
   $: alphabetizedAddons = sort($addons.activeAddons);
 
-  async function openBrowser() {
-    await getBrowserAddons();
+  function openBrowser() {
     openAddonBrowser();
-    setHash("add-ons");
     plausible("app-add-ons", { props: { target: "browser" } });
+  }
+
+  function showRuns() {
+    showAddonRuns();
+    plausible("app-add-ons", { props: { target: "runs" } });
   }
 
   onMount(() => {
@@ -48,6 +50,11 @@
   <MenuItem on:click={openBrowser}>
     <div class="small">
       {$_("addonsMenu.browseAll")}
+    </div>
+  </MenuItem>
+  <MenuItem on:click={showRuns}>
+    <div class="small">
+      {$_("addonsMenu.addonRuns")}
     </div>
   </MenuItem>
   {#each alphabetizedAddons as addon}

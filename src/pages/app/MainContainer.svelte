@@ -106,10 +106,6 @@
     <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
   {:else if $layout.metaOpen != null}
     <Modal component={MetaDialog} on:close={hideMeta} />
-  {:else if $layout.addonDispatchOpen}
-    <Modal component={null} on:close={hideAddonDispatch} />
-  {:else if $layout.addonBrowserOpen}
-    <Modal component={null} on:close={hideAddonBrowser} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.ownerOpen}

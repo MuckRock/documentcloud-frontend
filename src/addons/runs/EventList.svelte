@@ -23,7 +23,7 @@
   export let per_page = 5;
 
   const schedules = ["Disabled", "hourly", "daily", "weekly", "on upload"];
-  const endpoint = new URL("/api/addon_events/", baseApiUrl);
+  const endpoint = new URL("/api/addon_events/?expand=addon", baseApiUrl);
   const options: RequestInit = {
     credentials: "include",
   };
@@ -52,6 +52,14 @@
     }
   }
 
+  function loadNext(e) {
+    return load(next_url);
+  }
+
+  function loadPrevious(e) {
+    return load(previous_url);
+  }
+
   function url(event: Event) {
     return `#add-ons/${event.addon.repository}/${event.id}`;
   }
@@ -77,6 +85,6 @@
   {/each}
 
   {#if previous_url || next_url}
-    <Paginator />
+    <Paginator on:next={loadNext} on:previous={loadPrevious} />
   {/if}
 </div>

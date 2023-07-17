@@ -29,7 +29,7 @@
   let previous_url: URL | null;
   let next_url: URL | null;
 
-  const endpoint = new URL("/api/addon_runs/", baseApiUrl);
+  const endpoint = new URL("/api/addon_runs/?expand=addon", baseApiUrl);
   const options: RequestInit = {
     credentials: "include",
   };
@@ -63,6 +63,11 @@
   function loadPrevious(e) {
     return load(previous_url);
   }
+
+  function format(datestring: string) {
+    const d = new Date(datestring);
+    return d.toString();
+  }
 </script>
 
 <style></style>
@@ -76,7 +81,7 @@
         {run.addon.name}
       </h3>
       <p class="info">
-        {run.status} &bullet; {run.created_at}
+        {run.status} &bullet; {format(run.created_at)}
       </p>
     </div>
   {/each}

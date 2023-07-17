@@ -1,11 +1,13 @@
+<svelte:options accessors={true} />
+
 <script lang="ts">
-  import Modal from "../Modal.svelte";
+  import Drawer from "../Drawer.svelte";
   import EventList from "./EventList.svelte";
   import RunList from "./RunList.svelte";
 
   export let visible = false;
 
-  let modal: Modal;
+  let drawer: Drawer;
   let runs: RunList;
   let events: EventList;
   let loading: Promise<any>;
@@ -14,6 +16,8 @@
     console.log("Loading runs");
     loading = Promise.all([runs.load(), events.load()]);
   }
+
+  $: console.log(`Runs: ${visible}`);
 </script>
 
 <style>
@@ -22,10 +26,10 @@
   }
 </style>
 
-<Modal bind:this={modal} {visible} anchor="right">
+<Drawer bind:this={drawer} {visible} anchor="right" on:open on:close>
   <div slot="content">
     <EventList bind:this={events} />
 
     <RunList bind:this={runs} />
   </div>
-</Modal>
+</Drawer>

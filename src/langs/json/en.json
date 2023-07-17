@@ -458,7 +458,8 @@
     "createAddon": "Choose more documents to use add-ons",
     "addon": "Add-on",
     "learnMore": "Learn more about Add-Ons",
-    "browseAll": "Browse All Add-Ons"
+    "browseAll": "Browse All Add-Ons",
+    "addonRuns": "See all Add-On runs"
   },
   "noDocuments": {
     "noSearchResults": "No search results",
