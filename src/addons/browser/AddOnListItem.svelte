@@ -140,6 +140,6 @@
     </div>
   </div>
   {#if description}
-    <p class="description">{description}</p>
+    <div class="description">{@html description}</div>
   {/if}
 </div>

@@ -5,6 +5,9 @@ import { preprocessOptions } from "../preprocess.config.js";
 import type { StorybookConfig } from "@storybook/svelte-webpack5";
 
 const config: StorybookConfig = {
+  core: {
+    disableTelemetry: true, // 👈 Disables telemetry
+  },
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx|svelte)"],
   addons: [
     "@storybook/addon-links",

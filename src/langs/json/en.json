@@ -459,7 +459,7 @@
     "addon": "Add-on",
     "learnMore": "Learn more about Add-Ons",
     "browseAll": "Browse All Add-Ons",
-    "addonRuns": "See all Add-On runs"
+    "addonRuns": "See scheduled Add-On runs"
   },
   "noDocuments": {
     "noSearchResults": "No search results",

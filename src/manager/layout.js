@@ -158,6 +158,10 @@ export const layout = new Svue({
   },
 });
 
+/*
+ * TODO: Rethink the way layout works and all the exported functions here
+ */
+
 export function selectionProcessing() {
   return [
     someProcessing(...layout.selected),
@@ -174,7 +178,8 @@ export function unselectDocument(document) {
 export function openDispatchAddon(addon) {
   const { repository } = addon.addon;
   setHash(`add-ons/${repository}`);
-  layout.addonDispatchOpen = addon;
+  // layout.addonDispatchOpen = addon;
+  layout.addonDispatchOpen = true;
 }
 
 export function showAddonEvent(addon, eventId) {

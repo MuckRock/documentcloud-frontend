@@ -33,6 +33,7 @@
         console.log("Opening add-on browser");
         $layout.addonBrowserOpen = true;
         $layout.addonRunsOpen = false;
+        $layout.addonDispatchOpen = false;
       },
     ],
 
@@ -42,6 +43,7 @@
       async (match) => {
         $layout.addonBrowserOpen = false;
         $layout.addonRunsOpen = true;
+        $layout.addonDispatchOpen = false;
       },
     ],
 
@@ -54,13 +56,10 @@
 
         const [org, name] = match.slice(1, 3);
         const repo = `${org}/${name}`;
-        const addon = await getAddonByRepository(repo);
-        if (addon) {
-          layout.addonDispatchOpen = addon;
-          layout.params.addOnEvent = null;
-        } else {
-          console.error("Add-on not found: %s", repo);
-        }
+
+        await dispatch
+          .open(repo)
+          .then(() => console.log(`Loaded Dispatch: ${repo}`));
       },
     ],
 
@@ -73,13 +72,10 @@
 
         const [org, name, id] = match.slice(1, 4);
         const repo = `${org}/${name}`;
-        const addon = await getAddonByRepository(repo);
-        if (addon) {
-          layout.addonDispatchOpen = addon;
-          layout.params.addOnEvent = +id;
-        } else {
-          console.error("Add-on not found: %s", repo);
-        }
+
+        await dispatch
+          .open(repo)
+          .then(() => console.log(`Loaded Dispatch: ${repo}`));
       },
     ],
   ];

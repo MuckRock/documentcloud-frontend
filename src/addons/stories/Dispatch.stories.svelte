@@ -3,13 +3,17 @@
 
   import Dispatch from "../dispatch/Dispatch.svelte";
   import * as addons from "../fixtures/addons.json";
+  import * as eventFixture from "../fixtures/event.json";
 
   import { layout } from "../../manager/layout.js";
   import { search } from "../../search/search.js";
 
+  const { addon: klaxon, ...event } = eventFixture;
+
   let args = {
     visible: true,
     addon: null,
+    event: null,
   };
 </script>
 
@@ -22,6 +26,8 @@
 <Template let:args>
   <Dispatch visible={args.visible} addon={args.addon} />
 </Template>
+
+<Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />
 
 <Story name="PDF Exporter" args={{ ...args, addon: addons[0] }} />
 
