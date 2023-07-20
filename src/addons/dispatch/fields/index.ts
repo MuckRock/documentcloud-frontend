@@ -1,4 +1,4 @@
-import Array from "./Array.svelte";
+import ArrayField from "./ArrayField.svelte";
 import Checkbox from "./Checkbox.svelte";
 import Number from "./Number.svelte";
 import Text from "./Text.svelte";
@@ -12,7 +12,7 @@ const fields = {
   null: null,
 
   // compound fields, tbd
-  array: Array,
+  array: ArrayField,
   object: null,
 };
 

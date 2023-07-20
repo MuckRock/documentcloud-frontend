@@ -8,6 +8,7 @@
 <script lang="ts">
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
+  import { set } from "lodash";
   import { _ } from "svelte-i18n";
 
   import { autofield } from "./fields";
@@ -28,10 +29,28 @@
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
 
   function onSubmit(e) {
+    e.preventDefault();
     values = new FormData(e.target);
   }
 
-  function objectify(params) {
+  function onChange(e) {
+    const f = new FormData(form);
+    let update: any = {};
+
+    for (const [k, v] of f) {
+      // basic update
+      set(update, k, v);
+
+      // special cases
+      if (k === "event") {
+        update[k] = +v;
+      }
+    }
+
+    values = update;
+  }
+
+  function objectify(params: any) {
     if (typeof params === "string") {
       params = { type: params };
     }
@@ -46,7 +65,8 @@
 <form
   method="post"
   bind:this={form}
-  on:change
+  on:input={onChange}
+  on:change={onChange}
   on:submit
   on:submit={onSubmit}
   on:reset
@@ -69,10 +89,10 @@
     <fieldset class="events">
       <label>
         {$_("addonDispatchDialog.runSchedule")}
-        <select name="events">
-          <option value="" />
-          {#each eventOptions.events as event}
-            <option value={event}>{event}</option>
+        <select name="event">
+          <option value="">---</option>
+          {#each eventOptions.events as event, i}
+            <option value={i}>{event}</option>
           {/each}
         </select>
       </label>

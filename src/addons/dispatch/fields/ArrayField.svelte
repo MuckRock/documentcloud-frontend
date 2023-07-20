@@ -3,6 +3,7 @@
   import Number from "./Number.svelte";
   import Text from "./Text.svelte";
 
+  export let name: string = "";
   export let title: string = "";
   export let description: string = "";
   export let items: any = {
@@ -43,6 +44,7 @@
       this={types[items.type]}
       bind:value={values[i]}
       {...items}
+      name="{name}.{i}"
     />
 
     {#if i !== 0}

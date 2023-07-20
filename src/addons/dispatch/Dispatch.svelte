@@ -86,6 +86,7 @@
         properties={addon.parameters.properties}
         required={addon.parameters.required}
         eventOptions={addon.parameters.eventOptions}
+        values={event?.parameters}
       >
         <Selection slot="after" />
       </Form>

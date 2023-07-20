@@ -7,7 +7,11 @@
   $: author = addon.author || addon.repository.split("/")[0];
 </script>
 
-<style></style>
+<style>
+  .description :global(a) {
+    text-decoration: underline;
+  }
+</style>
 
 <header>
   <a href="#add-ons" class="browser"
@@ -31,7 +35,7 @@
   </div>
 
   <div class="description">
-    <p>{addon.parameters.description}</p>
+    {@html addon.parameters.description}
   </div>
 
   <div class="buttons">
