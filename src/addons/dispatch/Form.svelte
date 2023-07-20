@@ -1,4 +1,8 @@
 <script context="module" lang="ts">
+  import { writable } from "svelte/store";
+
+  export const values = writable({});
+
   export interface eventOptions {
     name: string;
     events: string[];
@@ -8,16 +12,15 @@
 <script lang="ts">
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
-  import { set } from "lodash";
+  import set from "lodash/set";
   import { _ } from "svelte-i18n";
 
+  // todo: figure out how to use a real path
   import { autofield } from "./fields";
 
   export let properties: any = {};
   export let required = [];
   export let eventOptions: eventOptions;
-
-  export let values: any = {};
 
   const ajv = new Ajv();
   addFormats(ajv);
@@ -28,10 +31,12 @@
   $: validate = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
 
-  function onSubmit(e) {
-    e.preventDefault();
-    values = new FormData(e.target);
-  }
+  const eventValues = {
+    disabled: 0,
+    hourly: 1,
+    daily: 2,
+    weekly: 3,
+  };
 
   function onChange(e) {
     const f = new FormData(form);
@@ -43,11 +48,11 @@
 
       // special cases
       if (k === "event") {
-        update[k] = +v;
+        update[k] = eventValues[String(v)];
       }
     }
 
-    values = update;
+    $values = update;
   }
 
   function objectify(params: any) {
@@ -62,15 +67,7 @@
 <style>
 </style>
 
-<form
-  method="post"
-  bind:this={form}
-  on:input={onChange}
-  on:change={onChange}
-  on:submit
-  on:submit={onSubmit}
-  on:reset
->
+<form method="post" bind:this={form} on:input on:change on:submit on:reset>
   <slot name="before" />
 
   {#each Object.entries(properties) as [name, p]}
@@ -81,6 +78,7 @@
         {...params}
         {name}
         required={required.includes(name)}
+        bind:value={$values[name]}
       />
     </fieldset>
   {/each}
@@ -89,10 +87,10 @@
     <fieldset class="events">
       <label>
         {$_("addonDispatchDialog.runSchedule")}
-        <select name="event">
-          <option value="">---</option>
-          {#each eventOptions.events as event, i}
-            <option value={i}>{event}</option>
+        <select name="event" bind:value={$values["event"]}>
+          <option value="disabled">---</option>
+          {#each eventOptions.events as event}
+            <option value={event}>{event}</option>
           {/each}
         </select>
       </label>

@@ -1,11 +1,10 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Form from "../dispatch/Form.svelte";
+  import Form, { values } from "../dispatch/Form.svelte";
   import * as addons from "../fixtures/addons.json";
 
   let form;
-  let values;
 </script>
 
 <Meta
@@ -22,13 +21,12 @@
     properties={addon.parameters.properties}
     required={addon.parameters.required}
     eventOptions={addon.parameters.eventOptions}
-    bind:values
   />
 
   <div class="values">
     <h2>Data</h2>
     <code>
-      {JSON.stringify(values, null, 2)}
+      {JSON.stringify($values, null, 2)}
     </code>
   </div>
 </Template>

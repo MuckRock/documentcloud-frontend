@@ -36,6 +36,9 @@ const config: StorybookConfig = {
         "@": path.resolve(__dirname, "../src"),
       };
     }
+
+    config.devtool = "source-map";
+
     return config;
   },
 };

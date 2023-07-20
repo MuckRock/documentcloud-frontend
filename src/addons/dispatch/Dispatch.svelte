@@ -4,7 +4,7 @@
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import Drawer from "../Drawer.svelte";
   import Header from "./Header.svelte";
-  import Form from "./Form.svelte";
+  import Form, { values } from "./Form.svelte";
   import Selection from "./Selection.svelte";
 
   import { baseApiUrl } from "../../api/base";
@@ -56,6 +56,11 @@
 
     addon = a;
     event = e;
+
+    $values = {
+      ...event.parameters,
+      event: event.event,
+    };
   }
 
   export async function open(repo: string, id: number | null) {
@@ -86,7 +91,6 @@
         properties={addon.parameters.properties}
         required={addon.parameters.required}
         eventOptions={addon.parameters.eventOptions}
-        values={event?.parameters}
       >
         <Selection slot="after" />
       </Form>

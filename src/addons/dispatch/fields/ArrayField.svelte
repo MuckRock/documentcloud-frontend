@@ -13,7 +13,7 @@
 
   export let count: number = 1;
 
-  export let values = Array(count).fill(null);
+  export let value = Array(count).fill(null);
 
   // only one level of nesting allowed
   const types = {
@@ -24,12 +24,12 @@
   };
 
   function push() {
-    values = [...values, null];
+    value = [...value, null];
   }
 
   function remove(n: number) {
-    values.splice(n, 1);
-    values = values;
+    value.splice(n, 1);
+    value = value;
   }
 </script>
 
@@ -38,11 +38,11 @@
 {#if title}
   <legend>{title}</legend>
 {/if}
-{#each values as value, i}
+{#each value as v, i}
   <div class="item item-{i}">
     <svelte:component
       this={types[items.type]}
-      bind:value={values[i]}
+      bind:value={value[i]}
       {...items}
       name="{name}.{i}"
     />

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getContext } from "svelte";
+
   export let title: string;
   export let name: string;
   export let value: string;
