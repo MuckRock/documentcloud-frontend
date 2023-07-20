@@ -98,6 +98,7 @@
     display: flex;
     align-items: flex-end;
     gap: 1rem;
+    color: var(--darkgray);
   }
 
   .description {
@@ -105,6 +106,12 @@
     opacity: 0.6z;
     font-size: 0.875em;
     line-height: 1.4;
+    color: var(--darkgray);
+  }
+
+  .addon-name {
+    margin: 0;
+    font-weight: 600;
   }
 
   .center-self {
@@ -125,10 +132,12 @@
     <div class="center-self">
       <Pin {active} on:click={toggle} />
     </div>
-    <div class="stretch"><h3><a href={url}>{name}</a></h3></div>
+    <div class="stretch">
+      <h3 class="addon-name"><a href={url}>{name}</a></h3>
+    </div>
     <div class="metadata">
       {#if author && author.name}
-        <p>
+        <p class="author">
           <a
             href="http://github.com/{repository}"
             target="_blank"
