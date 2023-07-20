@@ -1,0 +1,68 @@
+<svg
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  width="100%"
+  height="auto"
+  viewBox="0 0 148 145"
+  ><rect
+    x="41.1"
+    y="6.9"
+    width="105"
+    height="136.5"
+    rx="7"
+    fill="#ACC8E8"
+  /><rect
+    x="41.1"
+    y="6.9"
+    width="105"
+    height="136.5"
+    rx="7"
+    stroke="#1368C7"
+    stroke-width="2"
+  /><rect
+    x="41.1"
+    y="6.9"
+    width="105"
+    height="136.5"
+    rx="7"
+    stroke="#1368C7"
+    stroke-width="2"
+  /><rect
+    x="35.9"
+    y="1.3"
+    width="107"
+    height="138.5"
+    rx="8"
+    fill="#E0EFFF"
+  /><path
+    d="M36 15V9c0-4 3-8 8-8h91c4 0 8 4 8 8v123c0 4-4 8-8 8H44c-5 0-8-4-8-8V88"
+    stroke="#1368C7"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  /><path
+    d="M55 17h67M60 38h64M60 59h64M68 80h56M55 101h69M55 122h69"
+    stroke="#AAC9F6"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  /><path
+    d="M26 72l8 5-22 32a5 5 0 01-8-6l22-31z"
+    fill="#AAC9F6"
+    stroke="#1368C7"
+    stroke-width="2"
+  /><circle
+    cx="45.9"
+    cy="51.1"
+    r="27.4"
+    fill="#fff"
+    fill-opacity=".8"
+    stroke="#1368C7"
+    stroke-width="3"
+  /><path
+    d="M38 43l16 16m0-16L38 59"
+    stroke="#1368C7"
+    stroke-width="3"
+    stroke-linecap="round"
+  /></svg
+>
