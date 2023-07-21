@@ -1,9 +1,24 @@
 <script>
+  import { rest } from "msw";
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
   import Browser from "../browser/Browser.svelte";
+  import { baseApiUrl } from "../../api/base";
+  import listFixture from "../fixtures/addon-list.json";
 
   const args = { visible: true };
+  const mockUrl = new URL(`addons/`, baseApiUrl).toString();
+  /* Mock Request Handlers */
+  const data = rest.get(mockUrl, (req, res, ctx) => res(ctx.json(listFixture)));
+  const loading = rest.get(mockUrl, (req, res, ctx) =>
+    res(ctx.delay("infinite")),
+  );
+  const error = rest.get(mockUrl, (req, res, ctx) =>
+    res(
+      ctx.status(400, "Ambiguous Error"),
+      ctx.json("Something went horribly wrong."),
+    ),
+  );
 </script>
 
 <Meta
@@ -17,4 +32,6 @@
   <Browser {...args} />
 </Template>
 
-<Story name="Browser" {args} />
+<Story name="With Data" {args} parameters={{ msw: { handlers: [data] } }} />
+<Story name="Loading" {args} parameters={{ msw: { handlers: [loading] } }} />
+<Story name="Error" {args} parameters={{ msw: { handlers: [error] } }} />

@@ -36,6 +36,8 @@
     "jest": "^24.9.0",
     "lucene": "^2.1.1",
     "mini-css-extract-plugin": "^2.7.6",
+    "msw": "^1.2.3",
+    "msw-storybook-addon": "^1.8.0",
     "playwright": "^1.27.1",
     "postcss": "^8.4.25",
     "prettier": "^2.2.1",
@@ -79,5 +81,8 @@
     "build-storybook": "storybook build"
   },
   "engine": 16,
-  "browserslist": "> 0.25%, not dead"
+  "browserslist": "> 0.25%, not dead",
+  "msw": {
+    "workerDirectory": "public"
+  }
 }
