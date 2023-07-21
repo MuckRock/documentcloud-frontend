@@ -7,14 +7,25 @@ axiosRetry(axios, {
   retryDelay: axiosRetry.exponentialDelay,
 });
 
-const CSRF_COOKIE_NAME = "csrftoken";
-const CSRF_HEADER_NAME = "X-CSRFToken";
+export const CSRF_COOKIE_NAME = "csrftoken";
+export const CSRF_HEADER_NAME = "X-CSRFToken";
 
 export let cookiesEnabled = false;
 try {
   document.cookie;
   cookiesEnabled = true;
 } catch (e) {}
+
+export function getCsrfToken() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const [key, token] = document.cookie
+    .split(";")
+    .map((c) => c.split("="))
+    .find(([k, v]) => k === CSRF_COOKIE_NAME);
+
+  return token;
+}
 
 const session = axios.create({
   xsrfCookieName: CSRF_COOKIE_NAME,

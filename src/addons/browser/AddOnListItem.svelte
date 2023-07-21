@@ -23,9 +23,9 @@
 
 <script lang="ts">
   import { baseApiUrl } from "../../api/base.js";
+  import { getCsrfToken } from "../../api/session.js";
 
   import Pin from "../../common/Pin.svelte";
-  import Title from "../../common/Title.svelte";
   import AddOnPopularity from "../Popularity.svelte";
 
   export let id: number = undefined;
@@ -41,12 +41,7 @@
   };
   export let usage: number = undefined;
 
-  const options: RequestInit = {
-    credentials: "include",
-    method: "PATCH", // this component can only update whether an addon is active or not
-  };
-
-  $: endpoint = new URL(`/api/addon_events/${id}/`, baseApiUrl);
+  $: endpoint = new URL(`/api/addons/${id}/`, baseApiUrl);
   $: description = parameters?.description;
   $: if (!author.name) {
     author.name = repository.split("/")[0];
@@ -55,6 +50,14 @@
   $: url = `#add-ons/${repository}`;
 
   async function toggle(e) {
+    const csrftoken = getCsrfToken();
+
+    const options: RequestInit = {
+      credentials: "include",
+      method: "PATCH", // this component can only update whether an addon is active or not
+      headers: { "X-CSRFToken": csrftoken, "Content-type": "application/json" },
+    };
+
     // optimistic update
     active = !active;
     console.log(`${active ? "Pinning" : "Unpinning"} ${id}...`);
