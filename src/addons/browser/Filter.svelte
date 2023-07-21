@@ -20,15 +20,15 @@
   }
   .filter:hover {
     border: 1px solid rgba(0, 0, 0, 0.125);
-    background-color: rgba(0, 0, 0, 0.125);
+    background-color: rgba(0, 0, 0, 0.05);
   }
   .filter.selected {
     fill: var(--darkgray);
     border: 1px solid rgba(0, 0, 0, 0.125);
-    background-color: var(--highlight-orange, #ff785c);
+    background-color: var(--barFaded, #cae4ff);
   }
   .filter.selected .icon {
-    fill: var(--darkgray) !important;
+    fill: var(--gray) !important;
   }
   .icon {
     width: 1em;

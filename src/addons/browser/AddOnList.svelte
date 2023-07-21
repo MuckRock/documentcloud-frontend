@@ -13,19 +13,20 @@
   import Error from "../../common/icons/Error.svelte";
   import ListItem from "./AddOnListItem.svelte";
   import EmptyResults from "../../common/icons/EmptyResults.svelte";
+  import Button from "../../common/Button.svelte";
 
-  export let items: AddOnListItem[] = [];
-  export let loading: boolean = false;
-  export let error: string | null = null;
-  const empty = !(items && items.length > 0);
+  export let items: AddOnListItem[];
+  export let loading: boolean;
+  export let error: string | undefined;
+  export let reload: () => void | undefined;
+  $: empty = !(items && items.length > 0);
 </script>
 
 <style>
   .list {
     background-color: white;
-    padding: 0.5em 0;
     min-width: 24em;
-    min-height: 12em;
+    min-height: 100%;
   }
 
   .list,
@@ -35,6 +36,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
   }
 
   .empty,
@@ -58,10 +60,6 @@
     padding: 0;
     list-style-type: none;
   }
-
-  li {
-    margin: 1.5rem;
-  }
 </style>
 
 <div class="list">
@@ -82,6 +80,7 @@
     <div class="error">
       <div class="icon"><Error /></div>
       <p>{error}</p>
+      {#if reload}<Button action on:click={reload}>Retry</Button>{/if}
     </div>
   {:else}
     <!-- Empty state -->

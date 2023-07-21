@@ -63,7 +63,6 @@
     box-shadow: -1px 0px 4px 2px rgba(0, 0, 0, 0.05);
     box-sizing: border-box;
     height: calc(100% + 2px);
-    overflow-y: scroll;
     position: fixed;
     top: -1px;
     z-index: 10;
@@ -107,6 +106,11 @@
   .drawer.left button.close {
     right: -2em;
   }
+
+  .container {
+    height: 100%;
+    overflow-y: scroll;
+  }
 </style>
 
 <svelte:window on:keydown={onKeyPress} />
@@ -124,7 +128,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </slot>
-    <div bind:this={dialog} role="document">
+    <div bind:this={dialog} role="document" class="container">
       <slot name="content" />
     </div>
   </div>

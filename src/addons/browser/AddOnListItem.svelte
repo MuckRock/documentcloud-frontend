@@ -49,9 +49,10 @@
 
   $: url = `#add-ons/${repository}`;
 
-  async function toggle(e) {
-    const csrftoken = getCsrfToken();
+  async function toggle(event) {
+    event.preventDefault();
 
+    const csrftoken = getCsrfToken();
     const options: RequestInit = {
       credentials: "include",
       method: "PATCH", // this component can only update whether an addon is active or not
@@ -65,11 +66,11 @@
     const resp = await fetch(endpoint, {
       ...options,
       body: JSON.stringify({ active }),
-    }).catch((e) => {
+    }).catch((err) => {
       active = !active;
       return {
         ok: false,
-        statusText: String(e),
+        statusText: String(err),
       };
     });
 
@@ -82,9 +83,14 @@
 </script>
 
 <style>
+  .addon-link:hover .container {
+    background-color: var(--menuBg);
+  }
   .container {
     display: block;
     min-width: 12rem;
+    padding: 0.5rem;
+    text-align: left;
   }
 
   .top-row {
@@ -107,6 +113,10 @@
     font-size: 0.875em;
     line-height: 1.4;
     color: var(--darkgray);
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
   }
 
   .addon-name {
@@ -122,36 +132,42 @@
     flex: 1 1 auto;
   }
 
+  .author a:hover {
+    opacity: 0.7;
+  }
+
   p {
     margin: 0;
   }
 </style>
 
-<div class="container" id={repository}>
-  <div class="top-row">
-    <div class="center-self">
-      <Pin {active} on:click={toggle} />
+<a class="addon-link" href={url}>
+  <div class="container" id={repository}>
+    <div class="top-row">
+      <div class="center-self">
+        <Pin {active} on:click={toggle} />
+      </div>
+      <div class="stretch">
+        <h3 class="addon-name">{name}</h3>
+      </div>
+      <div class="metadata">
+        {#if author && author.name}
+          <p class="author">
+            <a
+              href="http://github.com/{repository}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View Source">{author.name}</a
+            >
+          </p>
+        {/if}
+        {#if usage}
+          <AddOnPopularity useCount={usage} />
+        {/if}
+      </div>
     </div>
-    <div class="stretch">
-      <h3 class="addon-name"><a href={url}>{name}</a></h3>
-    </div>
-    <div class="metadata">
-      {#if author && author.name}
-        <p class="author">
-          <a
-            href="http://github.com/{repository}"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="view source">{author.name}</a
-          >
-        </p>
-      {/if}
-      {#if usage}
-        <AddOnPopularity useCount={usage} />
-      {/if}
-    </div>
+    {#if description}
+      <div class="description">{@html description}</div>
+    {/if}
   </div>
-  {#if description}
-    <div class="description">{@html description}</div>
-  {/if}
-</div>
+</a>

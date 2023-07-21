@@ -3,7 +3,6 @@
   xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 64 56"
   width="100%"
-  height="auto"
   ><g filter="url(#filter0_d)"
     ><path
       d="M57.7 52.3H6.5a2.2 2.2 0 01-2-3.3L30.3 5.3c.8-1.4 3-1.4 3.8 0L59.6 49c.8 1.5-.2 3.3-2 3.3z"

@@ -19,6 +19,9 @@
       ctx.json("Something went horribly wrong."),
     ),
   );
+  const empty = rest.get(mockUrl, (req, res, ctx) =>
+    res(ctx.json({ next: null, previous: null, results: [] })),
+  );
 </script>
 
 <Meta
@@ -32,6 +35,7 @@
   <Browser {...args} />
 </Template>
 
-<Story name="With Data" {args} parameters={{ msw: { handlers: [data] } }} />
+<Story name="Success" {args} parameters={{ msw: { handlers: [data] } }} />
 <Story name="Loading" {args} parameters={{ msw: { handlers: [loading] } }} />
 <Story name="Error" {args} parameters={{ msw: { handlers: [error] } }} />
+<Story name="Empty" {args} parameters={{ msw: { handlers: [empty] } }} />
