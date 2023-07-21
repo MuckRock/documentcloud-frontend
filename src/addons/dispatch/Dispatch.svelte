@@ -1,20 +1,42 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { Event } from "../runs/EventList.svelte";
+
   import Drawer from "../Drawer.svelte";
   import Header from "./Header.svelte";
   import Form, { values } from "./Form.svelte";
   import Selection from "./Selection.svelte";
+  import { schedules } from "../runs/EventList.svelte";
 
-  import { baseApiUrl } from "../../api/base";
+  import { baseApiUrl } from "../../api/base.js";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
-  export let event;
+  export let event: Event;
+
+  const eventValues = {
+    disabled: 0,
+    hourly: 1,
+    daily: 2,
+    weekly: 3,
+  };
 
   let error: Error | null;
   let drawer: Drawer;
+  let form: Form;
+
+  onMount(() => {
+    if (event) {
+      $values = {
+        ...event.parameters,
+        event: schedules[event.event],
+      };
+    }
+  });
 
   async function load_addon(repo: string) {
     const options: RequestInit = {
@@ -43,6 +65,7 @@
   }
 
   async function load_event(id: number) {
+    console.log(`Loading event: ${id}`);
     const options: RequestInit = {
       credentials: "include",
     };
@@ -88,6 +111,7 @@
     {#if addon}
       <Header {addon} />
       <Form
+        bind:this={form}
         properties={addon.parameters.properties}
         required={addon.parameters.required}
         eventOptions={addon.parameters.eventOptions}

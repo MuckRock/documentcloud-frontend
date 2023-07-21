@@ -1,26 +1,50 @@
+<script context="module" lang="ts">
+  interface closer {
+    close: Function;
+  }
+
+  const drawers = new Set();
+</script>
+
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   export let anchor: string = "center";
   export let visible: boolean = false;
 
   const dispatch = createEventDispatcher();
+  const instance = { close };
 
   let dialog: HTMLElement;
 
-  export function open() {
+  onMount(() => {
+    drawers.add(instance);
+
+    return () => {
+      drawers.delete(instance);
+    };
+  });
+
+  function closeOthers() {
+    drawers.forEach((d: closer) => {
+      d.close(true);
+    });
+  }
+
+  export function open(quiet = false) {
     visible = true;
-    dispatch("open");
+    closeOthers();
+    if (!quiet) dispatch("open");
   }
 
-  export function close() {
+  export function close(quiet = false) {
     visible = false;
-    dispatch("close");
+    if (!quiet) dispatch("close");
   }
 
-  export function toggle() {
+  export function toggle(quiet = false) {
     visible = !visible;
-    dispatch(visible ? "open" : "close");
+    if (!quiet) dispatch(visible ? "open" : "close");
   }
 
   function onKeyPress(e: KeyboardEvent) {
@@ -95,7 +119,7 @@
         class="close"
         title="Close Drawer"
         aria-label="Close Drawer"
-        on:click={close}
+        on:click={() => close()}
       >
         <span aria-hidden="true">&times;</span>
       </button>

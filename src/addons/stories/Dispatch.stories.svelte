@@ -24,7 +24,7 @@
 />
 
 <Template let:args>
-  <Dispatch visible={args.visible} addon={args.addon} />
+  <Dispatch visible={args.visible} addon={args.addon} event={args.event} />
 </Template>
 
 <Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />

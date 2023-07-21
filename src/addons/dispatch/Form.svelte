@@ -12,7 +12,6 @@
 <script lang="ts">
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
-  import set from "lodash/set";
   import { _ } from "svelte-i18n";
 
   // todo: figure out how to use a real path
@@ -30,30 +29,6 @@
 
   $: validate = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
-
-  const eventValues = {
-    disabled: 0,
-    hourly: 1,
-    daily: 2,
-    weekly: 3,
-  };
-
-  function onChange(e) {
-    const f = new FormData(form);
-    let update: any = {};
-
-    for (const [k, v] of f) {
-      // basic update
-      set(update, k, v);
-
-      // special cases
-      if (k === "event") {
-        update[k] = eventValues[String(v)];
-      }
-    }
-
-    $values = update;
-  }
 
   function objectify(params: any) {
     if (typeof params === "string") {

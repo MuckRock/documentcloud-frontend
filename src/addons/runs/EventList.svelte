@@ -12,6 +12,14 @@
     created_at: string;
     updated_at: string;
   }
+
+  export const schedules = [
+    "Disabled",
+    "hourly",
+    "daily",
+    "weekly",
+    "on upload",
+  ];
 </script>
 
 <script lang="ts">
@@ -22,7 +30,6 @@
   export let events: Event[] = [];
   export let per_page = 5;
 
-  const schedules = ["Disabled", "hourly", "daily", "weekly", "on upload"];
   const endpoint = new URL("/api/addon_events/?expand=addon", baseApiUrl);
   const options: RequestInit = {
     credentials: "include",
