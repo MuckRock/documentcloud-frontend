@@ -7,7 +7,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Browser / Search"
+  title="Add-Ons / Browser / Components / Search"
   tags={["autodocs"]}
   parameters={{ layout: "centered" }}
   component={SearchInput}

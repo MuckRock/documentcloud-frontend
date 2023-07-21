@@ -11,23 +11,14 @@
   };
 </script>
 
-<style>
-  .container {
-    max-width: 32rem;
-    border: 1px solid #eee;
-  }
-</style>
-
 <Meta
-  title="Add-Ons / Browser / List"
+  title="Add-Ons / Browser / Components / List"
   component={AddOnList}
   parameters={{ layout: "centered" }}
 />
 
 <Template let:args>
-  <div class="container">
-    <AddOnList {...args} />
-  </div>
+  <AddOnList {...args} />
 </Template>
 
 <Story name="With Data" {args} />
@@ -37,5 +28,3 @@
   name="Error"
   args={{ ...args, items: [], error: "An error occurred!" }}
 />
-
-<Story name="Default Add-Ons" args={{ ...args, items: defaultAddons }} />

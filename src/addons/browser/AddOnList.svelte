@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+  import Loader from "../../common/Loader.svelte";
   import type { AddOnListItem } from "./AddOnListItem.svelte";
 
   export interface AddOnList {
@@ -9,17 +10,49 @@
 </script>
 
 <script lang="ts">
+  import Error from "../../common/icons/Error.svelte";
   import ListItem from "./AddOnListItem.svelte";
+  import EmptyResults from "../../common/icons/EmptyResults.svelte";
+  import Button from "../../common/Button.svelte";
 
-  export let items: AddOnListItem[] = [];
-  export let loading: boolean = false;
-  export let error: string | null = null;
+  export let items: AddOnListItem[];
+  export let loading: boolean;
+  export let error: string | undefined;
+  export let reload: () => void | undefined;
+  $: empty = !(items && items.length > 0);
 </script>
 
 <style>
   .list {
     background-color: white;
-    padding: 0.5em 0;
+    min-width: 24em;
+    min-height: 100%;
+  }
+
+  .list,
+  .empty,
+  .error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .empty,
+  .loading {
+    position: relative;
+    color: var(--gray);
+  }
+
+  .error {
+    color: var(--caution);
+  }
+
+  .empty .icon,
+  .error .icon {
+    width: 3em;
+    height: auto;
   }
 
   ul {
@@ -27,14 +60,10 @@
     padding: 0;
     list-style-type: none;
   }
-
-  li {
-    margin: 1.5rem;
-  }
 </style>
 
 <div class="list">
-  {#if items && items.length > 0}
+  {#if !empty}
     <ul>
       {#each items as addOn (addOn.id)}
         <li><ListItem {...addOn} /></li>
@@ -42,12 +71,22 @@
     </ul>
   {:else if loading}
     <!-- Loading state -->
-    <p class="loading">Loading…</p>
+    <div class="loading">
+      <Loader active center big pad />
+      <p class="loading">Loading…</p>
+    </div>
   {:else if error}
     <!-- Error state -->
-    <p class="error">{error}</p>
+    <div class="error">
+      <div class="icon"><Error /></div>
+      <p>{error}</p>
+      {#if reload}<Button action on:click={reload}>Retry</Button>{/if}
+    </div>
   {:else}
     <!-- Empty state -->
-    <p class="empty">No results</p>
+    <div class="empty">
+      <div class="icon"><EmptyResults /></div>
+      <p class="empty">No add-ons found</p>
+    </div>
   {/if}
 </div>

@@ -7,7 +7,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Browser / Filters"
+  title="Add-Ons / Browser / Components / Filters"
   tags={["autodocs"]}
   parameters={{ layout: "centered" }}
   component={Filters}
@@ -17,4 +17,4 @@
   <Filters {...args} />
 </Template>
 
-<Story name="Filters" {args} />
+<Story id="addonFilters" name="Filters" {args} />

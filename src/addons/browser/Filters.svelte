@@ -53,8 +53,8 @@
     fill: orange;
   }
 
-  .categories [slot="icon"] {
-    fill: lightgray;
+  .category:not(.selected) [slot="icon"] {
+    fill: var(--gray);
   }
 </style>
 
@@ -86,7 +86,7 @@
   <h3>{$_("addonBrowserDialog.categories")}</h3>
   <ul>
     {#each CATEGORIES as [category, name]}
-      <li>
+      <li class="category" class:selected={$categories.includes(category)}>
         <Filter {name} selected={$categories.includes(category)}>
           <input
             slot="input"

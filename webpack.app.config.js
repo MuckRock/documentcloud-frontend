@@ -15,7 +15,6 @@ module.exports = {
     host: "0.0.0.0",
     port: 443,
     allowedHosts: "all",
-    port: 80,
     historyApiFallback: true,
     hot: true,
     client: {

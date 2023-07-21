@@ -8,7 +8,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Browser / List / Item / Popularity"
+  title="Add-Ons / Browser / Components / List Item / Popularity"
   tags={["autodocs"]}
   component={Popularity}
   parameters={{ layout: "centered" }}
