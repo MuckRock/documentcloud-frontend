@@ -7,7 +7,6 @@
 
   import { setHash } from "../../router/router.js";
   import { layout } from "../../manager/layout.js";
-  import { getAddonByRepository } from "../../manager/addons.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
   // new add-ons ui
@@ -22,6 +21,7 @@
       /^#$/,
       (match) => {
         $layout.addonBrowserOpen = false;
+        $layout.addonDispatchOpen = false;
         $layout.addonRunsOpen = false;
       },
     ],
@@ -31,9 +31,9 @@
       /^#add-ons$/,
       async (match) => {
         console.log("Opening add-on browser");
-        $layout.addonBrowserOpen = true;
         $layout.addonRunsOpen = false;
         $layout.addonDispatchOpen = false;
+        $layout.addonBrowserOpen = true;
       },
     ],
 
@@ -41,9 +41,10 @@
     [
       /^#add-ons\/runs$/,
       async (match) => {
+        console.log("Showing runs");
         $layout.addonBrowserOpen = false;
-        $layout.addonRunsOpen = true;
         $layout.addonDispatchOpen = false;
+        $layout.addonRunsOpen = true;
       },
     ],
 
@@ -74,8 +75,8 @@
         const repo = `${org}/${name}`;
 
         await dispatch
-          .open(repo)
-          .then(() => console.log(`Loaded Dispatch: ${repo}`));
+          .open(repo, id)
+          .then(() => console.log(`Loaded Dispatch with event: ${repo}/${id}`));
       },
     ],
   ];
@@ -109,6 +110,7 @@
     navHandlers.find(([route, callback]) => {
       const match = route.exec(hash);
       if (match) {
+        console.log(match);
         callback(match);
         return true; // stop the loop
       }
@@ -131,11 +133,16 @@
       browser,
       dispatch,
       runs,
+      check() {
+        console.log(`Browser: ${browser.visible}`);
+        console.log(`Dispatch: ${dispatch.visible}`);
+        console.log(`Runs: ${runs.visible}`);
+      },
     };
   });
 </script>
 
-<svelte:window on:hashchange={hashRoute} />
+<svelte:window on:hashchange={hashRoute} on:pushstate={hashRoute} />
 
 <svelte:head>
   <title>{$_("common.documentCloud")}</title>

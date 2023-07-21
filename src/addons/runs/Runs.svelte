@@ -13,11 +13,8 @@
   let loading: Promise<any>;
 
   $: if (visible && events && runs) {
-    console.log("Loading runs");
     loading = Promise.all([runs.load(), events.load()]);
   }
-
-  $: console.log(`Runs: ${visible}`);
 </script>
 
 <style>

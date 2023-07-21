@@ -70,7 +70,10 @@
       credentials: "include",
     };
 
-    const endpoint = new URL(`api/addon_events/${id}/?expand=addon`);
+    const endpoint = new URL(
+      `/api/addon_events/${id}/?expand=addon`,
+      baseApiUrl,
+    );
 
     // give temp names so we can re-assign
     const { addon: a, ...e } = await fetch(endpoint, options).then((r) =>
@@ -82,7 +85,7 @@
 
     $values = {
       ...event.parameters,
-      event: event.event,
+      event: schedules[event.event],
     };
   }
 
