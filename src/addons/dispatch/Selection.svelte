@@ -1,3 +1,5 @@
+<svelte:options accessors />
+
 <script>
   import { _ } from "svelte-i18n";
 
@@ -7,36 +9,57 @@
 
   export let documents = new Set();
   export let value = "";
+
+  let choice;
+
+  $: switch (choice) {
+    case "query":
+      value = { query: $search.params.params.q };
+      break;
+    case "selected":
+      value = { documents: $layout.selected.map((d) => d.id) };
+      break;
+
+    default:
+      value = null;
+  }
 </script>
 
-{#if documents.size > 0}
-  <div class="selection">
-    {#if documents.has("documents")}
-      <label>
-        {$_("addonDispatchDialog.labelQuery", {
-          values: { n: search.results.count },
-        })}
-        <input
-          type="radio"
-          name="selection"
-          value="documents"
-          bind:group={value}
-        />
-      </label>
-    {/if}
+<style>
+  label {
+    display: block;
+  }
+</style>
 
+{#if documents.size > 0}
+  <fieldset class="selection">
+    <legend>{$_("addonDispatchDialog.select")}</legend>
     {#if documents.has("query")}
       <label>
-        {$_("addonDispatchDialog.labelSelected", {
-          values: { n: $layout.selected.length },
-        })}
         <input
           type="radio"
           name="selection"
           value="query"
-          bind:group={value}
-        /></label
-      >
+          bind:group={choice}
+        />
+        {$_("addonDispatchDialog.labelQuery", {
+          values: { n: $search.results.count },
+        })}
+      </label>
     {/if}
-  </div>
+
+    {#if documents.has("selected")}
+      <label>
+        <input
+          type="radio"
+          name="selection"
+          value="selected"
+          bind:group={choice}
+        />
+        {$_("addonDispatchDialog.labelSelected", {
+          values: { n: $layout.selected.length },
+        })}
+      </label>
+    {/if}
+  </fieldset>
 {/if}

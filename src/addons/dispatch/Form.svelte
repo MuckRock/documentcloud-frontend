@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import { writable } from "svelte/store";
 
-  export const values = writable({});
+  export const values = writable({ event: "", selection: null });
 
   export interface eventOptions {
     name: string;
@@ -25,9 +25,8 @@
   addFormats(ajv);
 
   let form: HTMLFormElement;
-  let validate: Function;
 
-  $: validate = ajv.compile({ type: "object", properties, required });
+  $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
 
   function objectify(params: any) {
@@ -36,6 +35,12 @@
     }
 
     return params;
+  }
+
+  export function validate() {
+    const valid = validator($values);
+
+    return { valid, errors: validator.errors };
   }
 </script>
 

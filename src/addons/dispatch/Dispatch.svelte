@@ -27,7 +27,8 @@
 
   let error: Error | null;
   let drawer: Drawer;
-  let form: Form;
+  export let form: Form;
+  export let selection: Selection;
 
   onMount(() => {
     if (event) {
@@ -89,6 +90,26 @@
     };
   }
 
+  function onSubmit(e) {
+    e.preventDefault();
+    const { valid, errors } = form.validate();
+
+    if (valid) {
+      send();
+    }
+  }
+
+  async function send() {
+    const { event, selection, ...parameters } = $values;
+    const payload = {
+      event: eventValues[event],
+      parameters,
+      ...selection,
+    };
+
+    console.log(payload);
+  }
+
   export async function open(repo: string, id: number | null) {
     if (id) {
       await load_event(id);
@@ -115,11 +136,17 @@
       <Header {addon} />
       <Form
         bind:this={form}
+        on:submit={onSubmit}
         properties={addon.parameters.properties}
         required={addon.parameters.required}
         eventOptions={addon.parameters.eventOptions}
       >
-        <Selection slot="after" />
+        <Selection
+          bind:this={selection}
+          bind:value={$values["selection"]}
+          slot="after"
+          documents={new Set(addon.parameters.documents)}
+        />
       </Form>
     {/if}
   </div>
