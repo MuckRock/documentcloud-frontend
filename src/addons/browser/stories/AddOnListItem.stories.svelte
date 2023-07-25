@@ -2,7 +2,7 @@
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
-  import AddOnListItem from "../browser/AddOnListItem.svelte";
+  import AddOnListItem from "../AddOnListItem.svelte";
 
   const args = {
     active: false,

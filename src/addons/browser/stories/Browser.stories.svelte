@@ -2,9 +2,9 @@
   import { rest } from "msw";
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Browser from "../browser/Browser.svelte";
-  import { baseApiUrl } from "../../api/base";
-  import listFixture from "../fixtures/addon-list.json";
+  import Browser from "../Browser.svelte";
+  import listFixture from "../../fixtures/addon-list.json";
+  import { baseApiUrl } from "../../../api/base";
 
   const args = { visible: true };
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();

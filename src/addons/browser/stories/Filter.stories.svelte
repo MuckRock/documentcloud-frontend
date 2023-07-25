@@ -1,8 +1,8 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Filter from "../browser/Filter.svelte";
-  import Star from "../../common/icons/Star.svelte";
+  import Filter from "../Filter.svelte";
+  import Star from "../../../common/icons/Star.svelte";
 
   let args = { selected: false, name: "Pinned" };
 </script>
