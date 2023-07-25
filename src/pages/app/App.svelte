@@ -5,7 +5,7 @@
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
 
-  import { setHash } from "../../router/router.js";
+  import { setHash, router } from "../../router/router.js";
   import { layout } from "../../manager/layout.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
@@ -54,10 +54,12 @@
       async (match) => {
         $layout.addonBrowserOpen = false;
         $layout.addonRunsOpen = false;
-        $layout.addonDispatchOpen = false; // close first, open below
+        //$layout.addonDispatchOpen = false; // close first, open below
 
         const [org, name] = match.slice(1, 3);
         const repo = `${org}/${name}`;
+
+        console.log(`Loading Dispatch: ${repo}`);
 
         await dispatch
           .open(repo)
@@ -71,7 +73,7 @@
       async (match) => {
         $layout.addonBrowserOpen = false;
         $layout.addonRunsOpen = false;
-        $layout.addonDispatchOpen = false; // close first, open below
+        // $layout.addonDispatchOpen = false; // close first, open below
 
         const [org, name, id] = match.slice(1, 4);
         const repo = `${org}/${name}`;
@@ -90,6 +92,8 @@
   let dispatch;
   let runs;
 
+  $: console.log($router.currentUrl);
+
   function closeDrawer(e) {
     setHash("");
   }
@@ -102,16 +106,19 @@
     }
   }
 
-  function hashRoute() {
+  async function hashRoute() {
+    console.log("Routing ...");
     const hash = window.location.hash;
     if (hash === "") {
       const callback = navHandlers[0][1];
       return callback();
     }
 
+    console.log(hash);
     navHandlers.find(([route, callback]) => {
       const match = route.exec(hash);
       if (match) {
+        console.log(match);
         callback(match);
         return true; // stop the loop
       }
@@ -128,6 +135,11 @@
     plausible("pageview");
     hashRoute();
 
+    window.addEventListener("popstate", (e) => {
+      console.log(e);
+      hashRoute();
+    });
+
     // debug
     window.layout = layout;
     window.addons = {
@@ -143,7 +155,7 @@
   });
 </script>
 
-<svelte:window on:hashchange={hashRoute} on:pushstate={hashRoute} />
+<svelte:window on:hashchange={hashRoute} />
 
 <svelte:head>
   <title>{$_("common.documentCloud")}</title>

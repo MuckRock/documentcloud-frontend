@@ -177,9 +177,10 @@ export function unselectDocument(document) {
 // Dialogs
 export function openDispatchAddon(addon) {
   const { repository } = addon.addon;
+  console.log(`Opening add-on: ${repository}`);
   setHash(`add-ons/${repository}`);
   // layout.addonDispatchOpen = addon;
-  layout.addonDispatchOpen = true;
+  // layout.addonDispatchOpen = true;
 }
 
 export function showAddonEvent(addon, eventId) {

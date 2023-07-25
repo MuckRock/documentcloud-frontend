@@ -30,22 +30,6 @@ export const routes = [
       get: loadApp,
     },
 
-    addonList: {
-      path: "/app/add-ons",
-      component: lazyComponent.app,
-      get: loadApp,
-    },
-    addonDetail: {
-      path: "/app/add-ons/:org/:name",
-      component: lazyComponent.app,
-      get: loadApp,
-    },
-    addonEvent: {
-      path: "/app/add-ons/:org/:name/:id",
-      component: lazyComponent.app,
-      get: loadApp,
-    },
-
     viewer: {
       path: "/documents/:id",
       component: lazyComponent.viewer,

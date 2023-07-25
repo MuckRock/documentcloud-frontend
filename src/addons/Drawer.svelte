@@ -8,6 +8,7 @@
 
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
+  import { slide } from "svelte/transition";
 
   export let anchor: string = "center";
   export let visible: boolean = false;
@@ -116,7 +117,13 @@
 <svelte:window on:keydown={onKeyPress} />
 
 {#if visible}
-  <div class="drawer {anchor}" class:visible tabindex="-1" role="dialog">
+  <div
+    transition:slide={{ axis: "x" }}
+    class="drawer {anchor}"
+    class:visible
+    tabindex="-1"
+    role="dialog"
+  >
     <slot name="close-button">
       <button
         type="button"

@@ -28,8 +28,10 @@
 
   let error: Error | null;
   let drawer: Drawer;
-  export let form: Form;
-  export let selection: Selection;
+  let form: Form;
+  let selection: Selection;
+
+  $: loading = !addon;
 
   onMount(() => {
     if (event) {
@@ -161,6 +163,11 @@
     gap: 1em;
     padding: 1em;
     max-width: 60ch;
+    transition: opacity 0.25s ease;
+  }
+
+  [slot="content"].loading {
+    opacity: 0;
   }
 </style>
 
@@ -172,7 +179,7 @@
   on:close
   on:close={reset}
 >
-  <div slot="content">
+  <div slot="content" class:loading>
     {#if addon}
       <Header {addon} />
       <Form

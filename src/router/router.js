@@ -109,7 +109,8 @@ export function pushUrl(url) {
 export function setHash(hash) {
   const url = new URL(router.currentUrl, window.location.href);
   url.hash = hash;
-  pushUrl(url.pathname + url.search + url.hash);
+  console.log(`Set hash: ${hash}`);
+  window.location.hash = hash;
 }
 /**
  * Set (and overwrite) the URL search

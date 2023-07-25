@@ -10,6 +10,7 @@
   export let documents = new Set();
   export let value = "";
 
+  // default to the first option, for convenience
   let choice = [...documents][0];
 
   $: switch (choice) {
