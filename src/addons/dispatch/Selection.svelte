@@ -10,7 +10,7 @@
   export let documents = new Set();
   export let value = "";
 
-  let choice;
+  let choice = [...documents][0];
 
   $: switch (choice) {
     case "query":

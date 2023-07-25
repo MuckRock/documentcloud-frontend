@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
 
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import type { Event } from "../runs/EventList.svelte";
@@ -13,6 +13,7 @@
   import { schedules } from "../runs/EventList.svelte";
 
   import { baseApiUrl } from "../../api/base.js";
+  import { getCsrfToken } from "../../api/session.js";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -90,27 +91,60 @@
     };
   }
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
     const { valid, errors } = form.validate();
 
     if (valid) {
-      send();
+      await send();
     }
   }
 
   async function send() {
     const { event, selection, ...parameters } = $values;
     const payload = {
-      event: eventValues[event],
       parameters,
       ...selection,
+      addon: addon.id,
     };
 
+    if (event) {
+      payload.event = eventValues[event];
+    }
+
     console.log(payload);
+
+    const csrftoken = getCsrfToken();
+    const options: RequestInit = {
+      credentials: "include",
+      method: "POST",
+      headers: { "X-CSRFToken": csrftoken, "Content-type": "application/json" },
+      body: JSON.stringify(payload),
+    };
+
+    const endpoint = new URL("/api/addon_runs/", baseApiUrl);
+
+    const resp = await fetch(endpoint, options);
+
+    if (!resp.ok) {
+      error = new Error(resp.statusText);
+      return;
+    }
+
+    const data = resp.json();
+
+    console.log(data);
+
+    // drawer.close();
+  }
+
+  function reset() {
+    $values = { event: "", selection: null };
   }
 
   export async function open(repo: string, id: number | null) {
+    addon = null;
+    await tick();
     if (id) {
       await load_event(id);
     } else {
@@ -130,7 +164,14 @@
   }
 </style>
 
-<Drawer anchor="right" bind:this={drawer} bind:visible on:open on:close>
+<Drawer
+  anchor="right"
+  bind:this={drawer}
+  bind:visible
+  on:open
+  on:close
+  on:close={reset}
+>
   <div slot="content">
     {#if addon}
       <Header {addon} />

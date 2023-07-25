@@ -54,6 +54,7 @@
       async (match) => {
         $layout.addonBrowserOpen = false;
         $layout.addonRunsOpen = false;
+        $layout.addonDispatchOpen = false; // close first, open below
 
         const [org, name] = match.slice(1, 3);
         const repo = `${org}/${name}`;
@@ -70,6 +71,7 @@
       async (match) => {
         $layout.addonBrowserOpen = false;
         $layout.addonRunsOpen = false;
+        $layout.addonDispatchOpen = false; // close first, open below
 
         const [org, name, id] = match.slice(1, 4);
         const repo = `${org}/${name}`;
@@ -110,7 +112,6 @@
     navHandlers.find(([route, callback]) => {
       const match = route.exec(hash);
       if (match) {
-        console.log(match);
         callback(match);
         return true; // stop the loop
       }
