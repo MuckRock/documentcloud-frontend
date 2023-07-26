@@ -58,7 +58,7 @@
     margin: 0 0 1em 0;
     padding: 1em;
     border-radius: var(--radius);
-    border-color: rgba(0, 0, 0, .25);
+    border-color: rgba(0, 0, 0, .1);
     border-width: 1px;
   }
 
