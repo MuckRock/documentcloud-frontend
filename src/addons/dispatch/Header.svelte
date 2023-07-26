@@ -6,23 +6,22 @@
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import { _ } from "svelte-i18n";
   import Hashtag from "../../common/icons/Hashtag.svelte";
+  import { pushToast } from "../../manager/toast";
 
   export let addon: AddOnListItem;
 
   $: author = addon.author || addon.repository.split("/")[0];
 
   async function onShare() {
-    // TODO Provide user feedback upon sharing success or error.
-    // Right now using alert() which is okay but not ideal.
     try {
       if (navigator.share) {
         await navigator.share({ url: window.location.href, title: document.title });
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(window.location.href);
-        alert($_("addonDispatchDialog.shareClipboardSuccess"));
+        pushToast($_("addonDispatchDialog.shareClipboardSuccess"), "success");
       }
     } catch (error) {
-      alert(error.message);
+      pushToast(error.message, "error");
     }
   }
 </script>
