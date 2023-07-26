@@ -22,6 +22,7 @@
 </script>
 
 <script lang="ts">
+  import { _ } from "svelte-i18n";
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
 
@@ -157,7 +158,7 @@
               href="http://github.com/{repository}"
               target="_blank"
               rel="noopener noreferrer"
-              title="View Source">{author.name}</a
+              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
             >
           </p>
         {/if}

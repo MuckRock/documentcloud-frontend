@@ -1,5 +1,4 @@
 <script lang="ts" context="module">
-  import Loader from "../../common/Loader.svelte";
   import type { AddOnListItem } from "./AddOnListItem.svelte";
 
   export interface AddOnList {
@@ -10,6 +9,8 @@
 </script>
 
 <script lang="ts">
+  import { _ } from "svelte-i18n";
+  import Loader from "../../common/Loader.svelte";
   import Error from "../../common/icons/Error.svelte";
   import ListItem from "./AddOnListItem.svelte";
   import EmptyResults from "../../common/icons/EmptyResults.svelte";
@@ -73,20 +74,20 @@
     <!-- Loading state -->
     <div class="loading">
       <Loader active center big pad />
-      <p class="loading">Loading…</p>
+      <p class="loading">{$_("addonBrowserDialog.loading")}</p>
     </div>
   {:else if error}
     <!-- Error state -->
     <div class="error">
       <div class="icon"><Error /></div>
       <p>{error}</p>
-      {#if reload}<Button action on:click={reload}>Retry</Button>{/if}
+      {#if reload}<Button action on:click={reload}>{$_("addonBrowserDialog.retry")}</Button>{/if}
     </div>
   {:else}
     <!-- Empty state -->
     <div class="empty">
       <div class="icon"><EmptyResults /></div>
-      <p class="empty">No add-ons found</p>
+      <p class="empty">{$_("addonBrowserDialog.empty")}</p>
     </div>
   {/if}
 </div>

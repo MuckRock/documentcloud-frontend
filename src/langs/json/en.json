@@ -714,17 +714,25 @@
     "signIn": "Sign in to use Add-Ons",
     "createdBy": "Created by",
     "categories": "Categories",
-    "viewsource": "View Source"
+    "viewsource": "View Source",
+    "share": "Share",
+    "shareClipboardSuccess": "Copied add-on URL to your clipboard"
   },
   "addonBrowserDialog": {
+    "title": "Add-Ons",
+    "subtitle": "Free automations, shortcuts, and power-ups from the DocumentCloud community",
     "categories": "Categories",
     "browseAll": "Browse All Add-Ons",
-    "searchPlaceholder": "Search...",
+    "searchPlaceholder": "Search…",
+    "loading": "Loading…",
+    "empty": "No add-ons found",
+    "retry": "Retry",
     "active": "Active",
     "inactive": "Inactive",
     "next": "Next",
     "previous": "Previous",
-    "viewsource": "View Source"
+    "viewsource": "View Source",
+    "usage": "Usage"
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",

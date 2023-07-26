@@ -19,7 +19,7 @@
         await navigator.share({ url: window.location.href, title: document.title });
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(window.location.href);
-        alert('Copied add-on URL to your clipboard');
+        alert($_("addonDispatchDialog.shareClipboardSuccess"));
       }
     } catch (error) {
       alert(error.message);
@@ -124,7 +124,7 @@
   </dl>
 
   <div class="actions">
-    <Button action on:click={onShare}><ShareIcon fill="#4294f0" /> Share</Button>
+    <Button action on:click={onShare}><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button>
     <Button action href="https://github.com/{addon.repository}"><GitHubIcon fill="#4294f0" /> {$_("addonDispatchDialog.viewsource")}</Button>
   </div>
 
