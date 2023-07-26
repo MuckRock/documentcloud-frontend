@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Field from "./Field.svelte";
+
   export let title: string;
   export let name: string;
   export let value: boolean;
@@ -6,11 +8,13 @@
   export let description: string = "";
 </script>
 
-<label>
-  {title}
-  <input type="checkbox" {name} bind:checked={value} {required} />
-</label>
+<style>
+  input {
+    order: -1;
+    margin: 0;
+  }
+</style>
 
-{#if description}
-  <p class="help">{description}</p>
-{/if}
+<Field {title} {description} {required} inline>
+  <input type="checkbox" {name} bind:checked={value} {required} />
+</Field>

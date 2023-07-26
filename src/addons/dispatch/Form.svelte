@@ -17,6 +17,7 @@
 
   // todo: figure out how to use a real path
   import { autofield } from "./fields";
+  import Button from "../../common/Button.svelte";
 
   export let properties: any = {};
   export let required = [];
@@ -47,23 +48,41 @@
 </script>
 
 <style>
+  form {
+    width: 100%;
+  }
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 0 0 1em 0;
+    padding: 1em;
+    border-radius: var(--radius);
+    border-color: rgba(0, 0, 0, .25);
+    border-width: 1px;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
 
 <form method="post" bind:this={form} on:input on:change on:submit on:reset>
   <slot name="before" />
 
+  <fieldset>
   {#each Object.entries(properties) as [name, p]}
     {@const params = objectify(p)}
-    <fieldset>
-      <svelte:component
-        this={autofield(params)}
-        {...params}
-        {name}
-        required={required.includes(name)}
-        bind:value={$values[name]}
-      />
-    </fieldset>
+    <svelte:component
+      this={autofield(params)}
+      {...params}
+      {name}
+      required={required.includes(name)}
+      bind:value={$values[name]}
+    />
   {/each}
+  </fieldset>
 
   {#if hasEvents}
     <fieldset class="events">
@@ -86,7 +105,9 @@
   <slot name="after" />
 
   <slot name="controls">
-    <input type="submit" />
-    <input type="reset" />
+    <div class="controls">
+      <Button type="submit" label="Submit" />
+      <Button secondary type="reset" label="Reset" />
+    </div>
   </slot>
 </form>

@@ -1,12 +1,9 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Dispatch from "../dispatch/Dispatch.svelte";
-  import * as addons from "../fixtures/addons.json";
-  import * as eventFixture from "../fixtures/event.json";
-
-  import { layout } from "../../manager/layout.js";
-  import { search } from "../../search/search.js";
+  import Dispatch from "../Dispatch.svelte";
+  import * as addons from "../../fixtures/addons.json";
+  import * as eventFixture from "../../fixtures/event.json";
 
   const { addon: klaxon, ...event } = eventFixture;
 
@@ -24,7 +21,7 @@
 />
 
 <Template let:args>
-  <Dispatch visible={args.visible} addon={args.addon} event={args.event} />
+  <Dispatch {...args} />
 </Template>
 
 <Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />
