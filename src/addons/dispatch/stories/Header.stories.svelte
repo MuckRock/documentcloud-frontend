@@ -1,33 +1,26 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Form, { values } from "../dispatch/Form.svelte";
-  import * as addons from "../fixtures/addons.json";
-
-  let form;
+  import Header from "../Header.svelte";
+  import * as addons from "../../fixtures/addons.json";
 </script>
 
+<style>
+  .container {
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+</style>
+
 <Meta
-  title="Add-Ons / Form"
-  component={Form}
+  title="Add-Ons / Dispatch / Header"
+  component={Header}
   parameters={{ layout: "centered" }}
 />
 
 <Template let:args={addon}>
-  <h2>{addon.name}</h2>
-
-  <Form
-    bind:this={form}
-    properties={addon.parameters.properties}
-    required={addon.parameters.required}
-    eventOptions={addon.parameters.eventOptions}
-  />
-
-  <div class="values">
-    <h2>Data</h2>
-    <code>
-      {JSON.stringify($values, null, 2)}
-    </code>
+  <div class="container">
+    <Header {addon} />
   </div>
 </Template>
 

@@ -1,8 +1,8 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import defaultAddons from "../fixtures/addons.json";
-  import AddOnList from "../browser/AddOnList.svelte";
+  import defaultAddons from "../../fixtures/addons.json";
+  import AddOnList from "../AddOnList.svelte";
 
   const args = {
     items: defaultAddons,

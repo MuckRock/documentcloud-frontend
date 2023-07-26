@@ -16,6 +16,7 @@
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
   import { setHash } from "../../router/router.js";
+  import Button from "../../common/Button.svelte";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -233,9 +234,9 @@
     opacity: 0;
   }
 
-  input[type="button"],
-  input[type="submit"] {
-    cursor: pointer;
+  .controls {
+    display: flex;
+    justify-content: space-between;
   }
 </style>
 
@@ -265,12 +266,17 @@
         />
 
         <div slot="controls" class="controls">
-          {#if event}
-            <input type="submit" value={$_("dialog.save")} />
-          {:else}
-            <input type="submit" value={$_("dialog.dispatch")} />
-          {/if}
-          <input type="button" on:click={close} value={$_("dialog.cancel")} />
+          <div class="primary">
+            {#if event}
+              <Button type="submit" label={$_("dialog.save")} />
+            {:else}
+              <Button type="submit" label={$_("dialog.dispatch")} />
+            {/if}
+          </div>
+          <div class="secondary">
+            <Button secondary type="button" on:click={reset} label={$_("dialog.reset")} />
+            <Button secondary type="button" on:click={close} label={$_("dialog.cancel")} />
+          </div>
         </div>
       </Form>
     {/if}

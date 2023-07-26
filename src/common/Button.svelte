@@ -1,5 +1,7 @@
-<script>
-  import Tooltip from "./Tooltip";
+<script lang="ts">
+  import Tooltip from "./Tooltip.svelte";
+
+  export let href: string | null = null;
 
   export let small = false;
   export let secondary = false;
@@ -11,14 +13,17 @@
   export let disabled = false;
   export let plain = false;
   export let nomargin = false;
-  export let type = "submit";
+  export let type: "submit" | "reset" | "button" = "submit";
   export let label = "Submit";
 
   export let disabledReason = null;
 </script>
 
 <style lang="scss">
-  button {
+  button, a {
+    display: inline-flex;
+    gap: .25em;
+    align-items: center;
     padding: 6px 15px;
     margin: 6px 0;
     border-radius: $radius;
@@ -83,9 +88,11 @@
 
     &.action {
       color: $primary;
+      fill: $primary;
 
       &.secondary {
         color: $gray;
+        fill: $gray;
       }
 
       &.small {
@@ -115,21 +122,42 @@
 
 <span class="inlineblock">
   <Tooltip delay={500} show={disabledReason != null} caption={disabledReason}>
-    <button
-      on:click
-      class:secondary
-      class:tertiary
-      class:danger
-      class:small
-      class:caution
-      class:nondescript
-      class:action
-      class:plain
-      class:nomargin
-      disabled={disabled || disabledReason != null}
-      {type}
-    >
-      <slot>{label}</slot>
-    </button>
+    {#if href}
+      <a
+        {href}
+        on:click
+        class:secondary
+        class:tertiary
+        class:danger
+        class:small
+        class:caution
+        class:nondescript
+        class:action
+        class:plain
+        class:nomargin
+        class:disabled={disabled || disabledReason != null}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <slot>{label}</slot>
+      </a>
+    {:else}
+      <button
+        on:click
+        class:secondary
+        class:tertiary
+        class:danger
+        class:small
+        class:caution
+        class:nondescript
+        class:action
+        class:plain
+        class:nomargin
+        disabled={disabled || disabledReason != null}
+        {type}
+      >
+        <slot>{label}</slot>
+      </button>
+    {/if}
   </Tooltip>
 </span>

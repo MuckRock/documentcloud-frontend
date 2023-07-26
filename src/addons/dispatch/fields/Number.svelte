@@ -1,13 +1,23 @@
 <script lang="ts">
+  import Field from "./Field.svelte";
+
   export let title: string;
   export let name: string;
   export let value: number;
   export let required: boolean = false;
   export let description: string = "";
+  export let min: string | undefined = undefined;
+  export let max: string | undefined = undefined;
+  export let inline = false;
 </script>
 
-<label>
-  {title}
+<style>
+  input {
+    flex: 1 1 auto;
+  }
+</style>
+
+<Field {title} {description} {inline} {required}>
   <input
     type="number"
     {name}
@@ -17,9 +27,7 @@
     on:input
     on:focus
     on:blur
+    {min}
+    {max}
   />
-</label>
-
-{#if description}
-  <p class="help">{description}</p>
-{/if}
+</Field>

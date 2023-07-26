@@ -65,6 +65,7 @@
     "save": "Save",
     "create": "Create",
     "ok": "Ok",
+    "reset": "Reset",
     "update": "Update",
     "dismiss": "Dismiss",
     "continue": "Continue",
@@ -611,6 +612,9 @@
     "fitWidth": "Fit width",
     "fitHeight": "Fit height"
   },
+  "drawer": {
+    "close": "Close Drawer"
+  },
   "titleHeader": {
     "contributedBy": "Contributed by {name}"
   },
@@ -695,6 +699,7 @@
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",
+    "backButton": "Browse Add-Ons",
     "select": "Select which documents you’d like to run this Add-On against:",
     "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again.",
     "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.",
@@ -713,17 +718,25 @@
     "signIn": "Sign in to use Add-Ons",
     "createdBy": "Created by",
     "categories": "Categories",
-    "viewsource": "View Source"
+    "viewsource": "View Source",
+    "share": "Share",
+    "shareClipboardSuccess": "Copied add-on URL to your clipboard"
   },
   "addonBrowserDialog": {
+    "title": "Add-Ons",
+    "subtitle": "Free automations, shortcuts, and power-ups from the DocumentCloud community",
     "categories": "Categories",
     "browseAll": "Browse All Add-Ons",
-    "searchPlaceholder": "Search...",
+    "searchPlaceholder": "Search…",
+    "loading": "Loading…",
+    "empty": "No add-ons found",
+    "retry": "Retry",
     "active": "Active",
     "inactive": "Inactive",
     "next": "Next",
     "previous": "Previous",
-    "viewsource": "View Source"
+    "viewsource": "View Source",
+    "usage": "Usage"
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",

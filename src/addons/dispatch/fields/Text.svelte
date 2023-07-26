@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import Field from "./Field.svelte";
 
   export let title: string;
   export let name: string;
@@ -7,10 +7,17 @@
   export let required: boolean = false;
   export let placeholder: string = "";
   export let description: string = "";
+  export let inline = false;
 </script>
 
-<label>
-  {title}
+<style>
+  input {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+</style>
+
+<Field {title} {description} {inline} {required}>
   <input
     type="text"
     {name}
@@ -22,8 +29,4 @@
     on:focus
     on:blur
   />
-</label>
-
-{#if description}
-  <p class="help">{description}</p>
-{/if}
+</Field>

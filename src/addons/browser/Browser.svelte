@@ -1,6 +1,7 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
+  import { _ } from "svelte-i18n";
   import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
   import type { AddOnListItem } from "./AddOnListItem.svelte";
@@ -157,11 +158,8 @@
 <Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
   <div slot="content" class="browser">
     <header class="header">
-      <h2>Add-Ons</h2>
-      <p>
-        Free automations, shortcuts, and power-ups from the DocumentCloud
-        community
-      </p>
+      <h2>{$_("addonBrowserDialog.title")}</h2>
+      <p>{$_("addonBrowserDialog.subtitle")}</p>
     </header>
     <aside class="sidebar">
       <div class="search"><Search /></div>
