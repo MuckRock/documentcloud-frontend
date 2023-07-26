@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { onMount, tick } from "svelte";
+  import { _ } from "svelte-i18n";
 
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import type { Event } from "../runs/EventList.svelte";
@@ -61,9 +62,11 @@
     if (resp.results.length > 0) {
       // should only ever be one result
       addon = resp.results[0];
+      event = null;
       error = null;
     } else {
       addon = null;
+      event = null;
       error = new Error("Not found");
     }
   }
@@ -97,9 +100,9 @@
     e.preventDefault();
     const { valid, errors } = form.validate();
 
-    if (valid) {
-      await send();
-    }
+    if (!valid) return;
+
+    await send();
   }
 
   async function send() {
@@ -113,8 +116,6 @@
     if (event) {
       payload.event = eventValues[event];
     }
-
-    console.log(payload);
 
     const csrftoken = getCsrfToken();
     const options: RequestInit = {
@@ -133,15 +134,19 @@
       return;
     }
 
-    const data = resp.json();
+    console.log(await resp.json());
 
-    console.log(data);
-
-    // drawer.close();
+    close();
   }
+
+  function schedule() {}
 
   function reset() {
     $values = { event: "", selection: null };
+  }
+
+  function close() {
+    drawer.close();
   }
 
   export async function open(repo: string, id: number | null) {
@@ -169,6 +174,11 @@
   [slot="content"].loading {
     opacity: 0;
   }
+
+  input[type="button"],
+  input[type="submit"] {
+    cursor: pointer;
+  }
 </style>
 
 <Drawer
@@ -195,6 +205,15 @@
           slot="after"
           documents={new Set(addon.parameters.documents)}
         />
+
+        <div slot="controls" class="controls">
+          {#if event}
+            <input type="submit" value={$_("dialog.save")} />
+          {:else}
+            <input type="submit" value={$_("dialog.dispatch")} />
+          {/if}
+          <input type="button" on:click={close} value={$_("dialog.cancel")} />
+        </div>
       </Form>
     {/if}
   </div>

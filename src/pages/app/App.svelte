@@ -135,11 +135,6 @@
     plausible("pageview");
     hashRoute();
 
-    window.addEventListener("popstate", (e) => {
-      console.log(e);
-      hashRoute();
-    });
-
     // debug
     window.layout = layout;
     window.addons = {

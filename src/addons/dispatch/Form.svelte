@@ -79,8 +79,8 @@
 
   <slot name="after" />
 
-  <div class="controls">
+  <slot name="controls">
     <input type="submit" />
     <input type="reset" />
-  </div>
+  </slot>
 </form>

@@ -111,6 +111,9 @@ export function setHash(hash) {
   url.hash = hash;
   console.log(`Set hash: ${hash}`);
   window.location.hash = hash;
+
+  // tell that router that we've navigated
+  pushUrl(url.pathname + url.search + url.hash);
 }
 /**
  * Set (and overwrite) the URL search
