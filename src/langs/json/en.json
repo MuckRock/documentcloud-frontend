@@ -611,6 +611,9 @@
     "fitWidth": "Fit width",
     "fitHeight": "Fit height"
   },
+  "drawer": {
+    "close": "Close Drawer"
+  },
   "titleHeader": {
     "contributedBy": "Contributed by {name}"
   },

@@ -7,6 +7,7 @@
 </script>
 
 <script lang="ts">
+  import { _ } from "svelte-i18n";
   import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
 
@@ -70,7 +71,7 @@
   }
 
   button.close {
-    top: 0.75em;
+    top: 1.25em;
     position: absolute;
     border-radius: 9999px;
     border: transparent;
@@ -94,7 +95,7 @@
   }
 
   .drawer.right button.close {
-    left: -2em;
+    left: -2.5em;
   }
 
   .drawer.left {
@@ -105,7 +106,7 @@
   }
 
   .drawer.left button.close {
-    right: -2em;
+    right: -2.5em;
   }
 
   .container {
@@ -128,8 +129,8 @@
       <button
         type="button"
         class="close"
-        title="Close Drawer"
-        aria-label="Close Drawer"
+        title={$_("drawer.close")}
+        aria-label={$_("drawer.close")}
         on:click={() => close()}
       >
         <span aria-hidden="true">&times;</span>
