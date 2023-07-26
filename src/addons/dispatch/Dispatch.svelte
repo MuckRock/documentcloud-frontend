@@ -15,6 +15,7 @@
 
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
+  import { setHash } from "../../router/router.js";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -100,22 +101,33 @@
     e.preventDefault();
     const { valid, errors } = form.validate();
 
-    if (!valid) return;
+    if (!valid) {
+      console.error(errors);
+      return;
+    }
 
-    await send();
+    let promises = [];
+
+    if ($values.event) {
+      promises.push(schedule());
+    }
+    promises.push(send());
+
+    await Promise.all(promises);
+
+    setHash("add-ons/runs");
   }
 
+  /*
+   * Dispatch a single add-on run
+   */
   async function send() {
-    const { event, selection, ...parameters } = $values;
+    const { selection, ...parameters } = $values;
     const payload = {
       parameters,
       ...selection,
       addon: addon.id,
     };
-
-    if (event) {
-      payload.event = eventValues[event];
-    }
 
     const csrftoken = getCsrfToken();
     const options: RequestInit = {
@@ -135,18 +147,57 @@
     }
 
     console.log(await resp.json());
-
-    close();
   }
 
-  function schedule() {}
+  /*
+   * Create an add-on event to schedule future runs
+   */
+  async function schedule() {
+    if (!$values.event) {
+      throw new Error(`Missing event data: ${JSON.stringify($values)}`);
+    }
+
+    const { event: evt, selection, ...parameters } = $values;
+
+    const payload = {
+      parameters,
+      ...selection,
+      addon: addon.id,
+      event: eventValues[evt],
+    };
+
+    const path = event
+      ? `/api/addon_events/${event.id}/`
+      : "/api/addon_events/";
+
+    const endpoint = new URL(path, baseApiUrl);
+
+    const csrftoken = getCsrfToken();
+    const options: RequestInit = {
+      credentials: "include",
+      method: event ? "PUT" : "POST", // update or create?
+      headers: { "X-CSRFToken": csrftoken, "Content-type": "application/json" },
+      body: JSON.stringify(payload),
+    };
+
+    const resp = await fetch(endpoint, options);
+
+    if (!resp.ok) {
+      error = new Error(resp.statusText);
+      return;
+    }
+
+    console.log(await resp.json());
+  }
 
   function reset() {
+    console.log("Clearing form data ...");
     $values = { event: "", selection: null };
   }
 
   function close() {
     drawer.close();
+    reset();
   }
 
   export async function open(repo: string, id: number | null) {
