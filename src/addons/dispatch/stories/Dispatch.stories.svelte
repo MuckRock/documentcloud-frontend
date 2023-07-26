@@ -1,12 +1,36 @@
 <script>
+  import {rest} from "msw";
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
   import Dispatch from "../Dispatch.svelte";
   import * as addons from "../../fixtures/addons.json";
   import * as eventFixture from "../../fixtures/event.json";
+  import { baseApiUrl } from "../../../api/base";
 
   const { addon: klaxon, ...event } = eventFixture;
 
+  const mockScheduleUrl = new URL('/api/addon_events/:event', baseApiUrl).toString();
+  const scheduleSuccess = rest.all(mockScheduleUrl, (req, res, ctx) => res(ctx.json({})));
+  const scheduleLoading = rest.all(mockScheduleUrl, (req, res, ctx) =>
+    res(ctx.delay("infinite")),
+  );
+  const scheduleError = rest.all(mockScheduleUrl, (req, res, ctx) =>
+    res(
+      ctx.status(400, "Something went wrong"),
+    )
+  );
+
+  const mockSendUrl = new URL('/api/addon_runs/', baseApiUrl).toString();
+  const sendSuccess = rest.all(mockSendUrl, (req, res, ctx) => res(ctx.json({})));
+  const sendLoading = rest.all(mockSendUrl, (req, res, ctx) =>
+    res(ctx.delay("infinite")),
+  );
+  const sendError = rest.all(mockSendUrl, (req, res, ctx) =>
+    res(
+      ctx.status(400, "Something went wrong"),
+    )
+  );
+  
   let args = {
     visible: true,
     addon: null,
@@ -23,6 +47,10 @@
 <Template let:args>
   <Dispatch {...args} />
 </Template>
+
+<Story name="Success" args={{ visible: true, addon: klaxon, event }} parameters={{ msw: { handlers: [scheduleSuccess, sendSuccess] } }} />
+<Story name="Error" args={{ visible: true, addon: klaxon, event }} parameters={{ msw: { handlers: [scheduleError, sendError] } }} />
+<Story name="Loading" args={{ visible: true, addon: klaxon, event }} parameters={{ msw: { handlers: [scheduleLoading, sendLoading] } }} />
 
 <Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />
 

@@ -266,12 +266,17 @@
         />
 
         <div slot="controls" class="controls">
-          {#if event}
-            <Button type="submit" label={$_("dialog.save")} />
-          {:else}
-            <Button type="submit" label={$_("dialog.dispatch")} />
-          {/if}
-          <Button secondary type="button" on:click={close} label={$_("dialog.cancel")} />
+          <div class="primary">
+            {#if event}
+              <Button type="submit" label={$_("dialog.save")} />
+            {:else}
+              <Button type="submit" label={$_("dialog.dispatch")} />
+            {/if}
+          </div>
+          <div class="secondary">
+            <Button secondary type="button" on:click={reset} label={$_("dialog.reset")} />
+            <Button secondary type="button" on:click={close} label={$_("dialog.cancel")} />
+          </div>
         </div>
       </Form>
     {/if}
