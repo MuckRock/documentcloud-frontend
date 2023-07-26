@@ -8,7 +8,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Form"
+  title="Add-Ons / Dispatch / Form"
   component={Form}
   parameters={{ layout: "centered" }}
 />

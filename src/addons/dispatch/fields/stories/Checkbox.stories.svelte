@@ -13,7 +13,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Form / Fields / Checkbox"
+  title="Add-Ons / Dispatch / Form / Fields / Checkbox"
   component={Checkbox}
   parameters={{ layout: "centered" }}
 />

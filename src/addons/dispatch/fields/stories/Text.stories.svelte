@@ -13,7 +13,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Form / Fields / Text"
+  title="Add-Ons / Dispatch / Form / Fields / Text"
   component={Number}
   parameters={{ layout: "centered" }}
 />

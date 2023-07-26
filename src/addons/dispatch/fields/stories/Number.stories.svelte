@@ -15,7 +15,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Form / Fields / Number"
+  title="Add-Ons / Dispatch / Form / Fields / Number"
   component={Number}
   parameters={{ layout: "centered" }}
 />

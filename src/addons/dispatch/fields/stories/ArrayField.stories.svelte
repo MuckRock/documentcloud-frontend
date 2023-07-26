@@ -11,7 +11,7 @@
 </script>
 
 <Meta
-  title="Add-Ons / Form / Fields / Array Field"
+  title="Add-Ons / Dispatch / Form / Fields / Array Field"
   component={ArrayField}
   parameters={{ layout: "centered" }}
 />
