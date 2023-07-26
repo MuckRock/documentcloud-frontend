@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import type { Event } from "../runs/EventList.svelte";
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "", selection: null });
@@ -20,6 +21,7 @@
   export let properties: any = {};
   export let required = [];
   export let eventOptions: eventOptions;
+  export let event: Event = null;
 
   const ajv = new Ajv();
   addFormats(ajv);
@@ -68,7 +70,11 @@
       <label>
         {$_("addonDispatchDialog.runSchedule")}
         <select name="event" bind:value={$values["event"]}>
-          <option value="disabled">---</option>
+          <option value="disabled"
+            >{event
+              ? $_("addonDispatchDialog.disable")
+              : $_("addonDispatchDialog.runOnce")}</option
+          >
           {#each eventOptions.events as event}
             <option value={event}>{event}</option>
           {/each}

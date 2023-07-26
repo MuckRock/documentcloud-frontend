@@ -108,10 +108,17 @@
 
     let promises = [];
 
+    // event is scheduling, so schedule
+    // this creates or updates an event
     if ($values.event) {
       promises.push(schedule());
     }
-    promises.push(send());
+
+    // dispatch when we first create an event
+    // or if there's no scheduling
+    if (!event) {
+      promises.push(send());
+    }
 
     await Promise.all(promises);
 
