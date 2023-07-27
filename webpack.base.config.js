@@ -134,4 +134,7 @@ module.exports = wrap({
       : []),
   ],
   devtool: prod ? false : "source-map",
+  stats: {
+    orphanModules: true,
+  },
 });

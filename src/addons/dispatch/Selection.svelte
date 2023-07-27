@@ -44,7 +44,7 @@
           bind:group={choice}
         />
         {$_("addonDispatchDialog.labelQuery", {
-          values: { n: $search.results.count },
+          values: { n: $search?.results?.count ?? 0 },
         })}
       </label>
     {/if}
