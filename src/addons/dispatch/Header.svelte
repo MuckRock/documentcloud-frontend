@@ -1,12 +1,14 @@
 <script lang="ts">
-  import Button from "../../common/Button.svelte";
-  import BackArrow from "../../common/icons/BackArrow.svelte";
-  import ShareIcon from 'svelte-octicons/lib/Share16.svelte';
-  import GitHubIcon from "svelte-octicons/lib/MarkGithub16.svelte";
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import { _ } from "svelte-i18n";
+
+  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import BackArrow from "../../common/icons/BackArrow.svelte";
+  import Button from "../../common/Button.svelte";
   import Hashtag from "../../common/icons/Hashtag.svelte";
-  import { pushToast } from "../../manager/toast";
+  import GitHubIcon from "svelte-octicons/lib/MarkGithub16.svelte";
+  import ShareIcon from "svelte-octicons/lib/Share16.svelte";
+
+  import { pushToast } from "../../manager/toast.js";
 
   export let addon: AddOnListItem;
 
@@ -15,7 +17,10 @@
   async function onShare() {
     try {
       if (navigator.share) {
-        await navigator.share({ url: window.location.href, title: document.title });
+        await navigator.share({
+          url: window.location.href,
+          title: document.title,
+        });
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(window.location.href);
         pushToast($_("addonDispatchDialog.shareClipboardSuccess"), "success");
@@ -66,7 +71,7 @@
     margin-right: 1em;
   }
   .metadata dd {
-    margin-left: .5em;
+    margin-left: 0.5em;
     display: inline-block;
     font-weight: 600;
   }
@@ -76,27 +81,28 @@
     gap: 1em;
   }
   .author dd {
-    padding: .1em 0;
+    padding: 0.1em 0;
   }
   .category {
     display: inline-flex;
     align-items: center;
-    gap: .125em;
+    gap: 0.125em;
     color: var(--darkgray);
     fill: var(--gray);
     font-weight: 600;
-    padding: .1em .2em;
+    padding: 0.1em 0.2em;
     border-radius: var(--radius);
-    transform: translateX(-.2em);
+    transform: translateX(-0.2em);
   }
   .category:hover {
-    background: rgba(0, 0, 0, .1);
+    background: rgba(0, 0, 0, 0.1);
   }
 </style>
 
 <header>
   <Button action href="#add-ons">
-    <BackArrow size={.8} /> {$_("addonDispatchDialog.backButton")}
+    <BackArrow size={0.8} />
+    {$_("addonDispatchDialog.backButton")}
   </Button>
 
   <h2 class="name">{addon.name}</h2>
@@ -111,20 +117,25 @@
       {#if addon.categories}
         <dt>{$_("addonDispatchDialog.categories")}</dt>
         {#each addon.categories as category}
-        <dd>
-          <a class="category" href={`#add-ons?categories=${category}`}>
-            <Hashtag size={0.8} />
-            <slot>{category}</slot>
-          </a>
-        </dd>
+          <dd>
+            <a class="category" href={`#add-ons?categories=${category}`}>
+              <Hashtag size={0.8} />
+              <slot>{category}</slot>
+            </a>
+          </dd>
         {/each}
       {/if}
     </div>
   </dl>
 
   <div class="actions">
-    <Button action on:click={onShare}><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button>
-    <Button action href="https://github.com/{addon.repository}"><GitHubIcon fill="#4294f0" /> {$_("addonDispatchDialog.viewsource")}</Button>
+    <Button action on:click={onShare}
+      ><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button
+    >
+    <Button action href="https://github.com/{addon.repository}"
+      ><GitHubIcon fill="#4294f0" />
+      {$_("addonDispatchDialog.viewsource")}</Button
+    >
   </div>
 
   <div class="description">

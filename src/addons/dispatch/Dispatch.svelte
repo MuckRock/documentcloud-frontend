@@ -7,17 +7,17 @@
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import type { Event } from "../runs/EventList.svelte";
 
+  import Button from "../../common/Button.svelte";
   import Drawer from "../Drawer.svelte";
-  import Header from "./Header.svelte";
   import Form, { values } from "./Form.svelte";
+  import Header from "./Header.svelte";
   import Selection from "./Selection.svelte";
   import { schedules } from "../runs/EventList.svelte";
 
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
   import { setHash } from "../../router/router.js";
-  import Button from "../../common/Button.svelte";
-  import { pushToast } from "../../manager/toast";
+  import { pushToast } from "../../manager/toast.js";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -280,8 +280,18 @@
             {/if}
           </div>
           <div class="secondary">
-            <Button secondary type="button" on:click={reset} label={$_("dialog.reset")} />
-            <Button secondary type="button" on:click={close} label={$_("dialog.cancel")} />
+            <Button
+              secondary
+              type="button"
+              on:click={reset}
+              label={$_("dialog.reset")}
+            />
+            <Button
+              secondary
+              type="button"
+              on:click={close}
+              label={$_("dialog.cancel")}
+            />
           </div>
         </div>
       </Form>
