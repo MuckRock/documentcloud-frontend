@@ -1,8 +1,8 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import EventList from "../runs/EventList.svelte";
-  import { results as events } from "../fixtures/event-list.json";
+  import EventList from "../EventList.svelte";
+  import { results as events } from "../../fixtures/event-list.json";
 
   const args = { events };
 </script>
