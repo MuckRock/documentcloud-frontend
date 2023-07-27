@@ -15,6 +15,7 @@ public/[0-9]*.*.*
 public/*.map
 public/src_*
 public/vendors-*
+public/node_modules_*
 
 # Embed bundles
 public/embed/*

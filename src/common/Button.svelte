@@ -2,6 +2,7 @@
   import Tooltip from "./Tooltip.svelte";
 
   export let href: string | null = null;
+  export let external = false;
 
   export let small = false;
   export let secondary = false;
@@ -20,103 +21,104 @@
 </script>
 
 <style lang="scss">
-  button, a {
+  button,
+  a {
     display: inline-flex;
-    gap: .25em;
+    gap: 0.25em;
     align-items: center;
     padding: 6px 15px;
     margin: 6px 0;
-    border-radius: $radius;
+    border-radius: var(--radius, 3px);
     outline: none;
     border: none;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     vertical-align: middle;
-    background: $primary;
+    background: var(--primary, #4294f0);
     color: white;
     font-family: inherit;
+  }
+  .nomargin {
+    margin: 0;
+  }
 
-    &.nomargin {
-      margin: 0;
-    }
-
-    &:disabled {
-      opacity: 0.7;
-      background: $gray;
-      cursor: initial;
-
-      &:hover {
-        opacity: 0.7;
-      }
-    }
+  a:disabled,
+  button:disabled {
+    opacity: 0.7;
+    background: var(--gray, rgba(0, 0, 0, 0.53));
+    cursor: initial;
 
     &:hover {
-      opacity: $hover-opacity;
+      opacity: 0.7;
     }
+  }
 
-    &.secondary {
-      background: $secondary;
-    }
+  a:hover,
+  button:hover {
+    opacity: var(--hover-opacity, 0.8);
+  }
 
-    &.tertiary {
-      background: $tertiary;
-    }
+  .secondary {
+    background: var(--secondary, #626262);
+  }
 
-    &.danger {
-      background: $caution;
-    }
+  .tertiary {
+    background: var(--tertiary, #0c8a01);
+  }
 
-    &.small {
-      padding: 4px 17px;
-      font-size: 12px;
-    }
+  .danger {
+    background: var(--caution, #f04c42);
+  }
 
-    &.nondescript,
-    &.action {
-      background: none;
-      border-radius: none;
-      font-size: 14px;
-      padding: 0;
-      font-weight: normal;
-    }
+  .small {
+    padding: 4px 17px;
+    font-size: 12px;
+  }
 
-    &.nondescript {
-      border-bottom: dashed 1px $gray;
-      color: black;
-    }
+  .nondescript,
+  .action {
+    background: none;
+    border-radius: none;
+    font-size: 14px;
+    padding: 0;
+    font-weight: normal;
+  }
 
-    &.action {
-      color: $primary;
-      fill: $primary;
+  .nondescript {
+    border-bottom: dashed 1px var(--gray, rgba(0, 0, 0, 0.53));
+    color: black;
+  }
 
-      &.secondary {
-        color: $gray;
-        fill: $gray;
-      }
+  .action {
+    color: var(--primary, #4294f0);
+    fill: var(--primary, #4294f0);
+  }
+  .action.secondary {
+    color: var(--gray, rgba(0, 0, 0, 0.53));
+    fill: var(--gray, rgba(0, 0, 0, 0.53));
+  }
 
-      &.small {
-        font-size: 12px;
-      }
-    }
+  .action.small {
+    font-size: 12px;
+  }
 
-    &.caution {
-      color: $caution;
+  .caution {
+    color: var(--caution, #f04c42);
+  }
 
-      &.nondescript {
-        border-bottom: dashed 1px rgba($caution, 0.5);
-      }
-    }
+  .caution.nondescript {
+    border-bottom: dashed 1px rgba(var(--caution, #f04c42), 0.5);
+  }
 
-    &.plain {
-      background: rgb(242, 242, 242);
-      font-size: 12px;
-      border: solid 1px gainsboro;
-      padding: 2px 7px;
-      color: black;
-      font-weight: normal;
-      margin: 0 5px;
-    }
+  .plain {
+    background: rgb(242, 242, 242);
+    font-size: 12px;
+    border: solid 1px gainsboro;
+    padding: 2px 7px;
+    color: black;
+    font-weight: normal;
+    margin: 0 5px;
   }
 </style>
 
@@ -136,8 +138,8 @@
         class:plain
         class:nomargin
         class:disabled={disabled || disabledReason != null}
-        rel="noopener noreferrer"
-        target="_blank"
+        rel={external ? "noopener noreferrer" : null}
+        target={external ? "_blank" : null}
       >
         <slot>{label}</slot>
       </a>
