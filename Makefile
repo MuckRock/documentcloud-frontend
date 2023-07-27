@@ -25,6 +25,9 @@ dev-app:
 dev-embed:
 	docker compose -f local.yml up documentcloud_frontend_embed
 
+down:
+	docker compose -f local.yml down
+
 build-serve:
 	docker compose -f local.yml up documentcloud_frontend_build
 
@@ -66,3 +69,7 @@ browser-test-headful-staging:
 
 browser-test-debug:
 	DEBUG=yes node debug tests/functional/suites/noindex.js
+
+clean:
+	# delete Webpack chunks
+	rm -f public/[0-9]*.*.* public/bundle.*.js public/bundle.*.css public/bundle.*.txt

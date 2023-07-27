@@ -5,14 +5,14 @@
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
 
-  import { layout } from "@/manager/layout.js";
-  import {
-    addons,
-    getBrowserAddons,
-    getAddonByRepository,
-  } from "@/manager/addons.js";
-  import { documents } from "@/manager/documents.js";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { setHash, router } from "../../router/router.js";
+  import { layout } from "../../manager/layout.js";
+  import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
+
+  // new add-ons ui
+  import Browser from "../../addons/browser/Browser.svelte";
+  import Runs from "../../addons/runs/Runs.svelte";
+  import Dispatch from "../../addons/dispatch/Dispatch.svelte";
 
   // hash routing, like in Viewer.svelte
   // [regexp, callback]
@@ -20,7 +20,9 @@
     [
       /^#$/,
       (match) => {
-        layout.addonBrowserOpen = false;
+        $layout.addonBrowserOpen = false;
+        $layout.addonDispatchOpen = false;
+        $layout.addonRunsOpen = false;
       },
     ],
 
@@ -28,8 +30,21 @@
     [
       /^#add-ons$/,
       async (match) => {
-        await getBrowserAddons();
-        layout.addonBrowserOpen = true;
+        console.log("Opening add-on browser");
+        $layout.addonRunsOpen = false;
+        $layout.addonDispatchOpen = false;
+        $layout.addonBrowserOpen = true;
+      },
+    ],
+
+    // add-on runs
+    [
+      /^#add-ons\/runs$/,
+      async (match) => {
+        console.log("Showing runs");
+        $layout.addonBrowserOpen = false;
+        $layout.addonDispatchOpen = false;
+        $layout.addonRunsOpen = true;
       },
     ],
 
@@ -37,15 +52,18 @@
     [
       /^#add-ons\/([-\w]+)\/([-\w]+)$/,
       async (match) => {
+        $layout.addonBrowserOpen = false;
+        $layout.addonRunsOpen = false;
+        //$layout.addonDispatchOpen = false; // close first, open below
+
         const [org, name] = match.slice(1, 3);
         const repo = `${org}/${name}`;
-        const addon = await getAddonByRepository(repo);
-        if (addon) {
-          layout.addonDispatchOpen = addon;
-          layout.params.addOnEvent = null;
-        } else {
-          console.error("Add-on not found: %s", repo);
-        }
+
+        console.log(`Loading Dispatch: ${repo}`);
+
+        await dispatch
+          .open(repo)
+          .then(() => console.log(`Loaded Dispatch: ${repo}`));
       },
     ],
 
@@ -53,20 +71,32 @@
     [
       /^#add-ons\/(?<org>[-\w]+)\/(?<name>[-\w]+)\/(?<id>\d+)$/,
       async (match) => {
+        $layout.addonBrowserOpen = false;
+        $layout.addonRunsOpen = false;
+        // $layout.addonDispatchOpen = false; // close first, open below
+
         const [org, name, id] = match.slice(1, 4);
         const repo = `${org}/${name}`;
-        const addon = await getAddonByRepository(repo);
-        if (addon) {
-          layout.addonDispatchOpen = addon;
-          layout.params.addOnEvent = +id;
-        } else {
-          console.error("Add-on not found: %s", repo);
-        }
+
+        await dispatch
+          .open(repo, id)
+          .then(() => console.log(`Loaded Dispatch with event: ${repo}/${id}`));
       },
     ],
   ];
 
   let sidebar = null;
+
+  // add-on ui
+  let browser;
+  let dispatch;
+  let runs;
+
+  $: console.log($router.currentUrl);
+
+  function closeDrawer(e) {
+    setHash("");
+  }
 
   function setSidebarExpanded(expanded) {
     layout.sidebarExpanded = expanded;
@@ -76,16 +106,19 @@
     }
   }
 
-  function hashRoute() {
+  async function hashRoute() {
+    console.log("Routing ...");
     const hash = window.location.hash;
     if (hash === "") {
       const callback = navHandlers[0][1];
       return callback();
     }
 
+    console.log(hash);
     navHandlers.find(([route, callback]) => {
       const match = route.exec(hash);
       if (match) {
+        console.log(match);
         callback(match);
         return true; // stop the loop
       }
@@ -104,7 +137,16 @@
 
     // debug
     window.layout = layout;
-    window.addons = addons;
+    window.addons = {
+      browser,
+      dispatch,
+      runs,
+      check() {
+        console.log(`Browser: ${browser.visible}`);
+        console.log(`Dispatch: ${dispatch.visible}`);
+        console.log(`Runs: ${runs.visible}`);
+      },
+    };
   });
 </script>
 
@@ -116,20 +158,34 @@
   {#if $orgsAndUsers.me !== null}<script
       defer
       data-domain="documentcloud.org"
-      src="https://plausible.io/js/script.manual.tagged-events.js"></script>{/if}
+      src="https://plausible.io/js/script.manual.tagged-events.js"
+    ></script>{/if}
 </svelte:head>
 
-<div>
-  <Sidebar
-    bind:this={sidebar}
-    on:retractSidebar={() => setSidebarExpanded(false)}
-    expanded={$layout.sidebarExpanded}
-  />
-  <MainContainer
-    on:expandSidebar={() => setSidebarExpanded(true)}
-    concealed={$layout.sidebarExpanded}
-    documents={$documents.documents}
-    loading={$layout.loading}
-    error={$layout.error}
-  />
-</div>
+<Sidebar
+  bind:this={sidebar}
+  on:retractSidebar={() => setSidebarExpanded(false)}
+  expanded={$layout.sidebarExpanded}
+/>
+<MainContainer
+  on:expandSidebar={() => setSidebarExpanded(true)}
+  concealed={$layout.sidebarExpanded}
+/>
+
+<Browser
+  bind:visible={$layout.addonBrowserOpen}
+  bind:this={browser}
+  on:close={closeDrawer}
+/>
+
+<Dispatch
+  bind:visible={$layout.addonDispatchOpen}
+  bind:this={dispatch}
+  on:close={closeDrawer}
+/>
+
+<Runs
+  bind:visible={$layout.addonRunsOpen}
+  bind:this={runs}
+  on:close={closeDrawer}
+/>

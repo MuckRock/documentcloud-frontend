@@ -99,3 +99,25 @@ The functional tests are organized like this:
 `tests/functional/cases`: The bodies of individual test cases.
 `tests/functional/suites`: These files are the test runner entry points ([`tape`](https://github.com/ljharb/tape/) is the test runner). They use the utilties to start up and shut down the browsers via Playwright and load and run individual test cases. It may make sense to repeat some test cases across suites, like signing in, uploading a document, and deleting an uploaded document, for example.
 `tests/functional/fixtures`: Artifacts and data needed by the tests go here.
+
+## Storybooks
+
+Storybooks are used to create isolated environments for developing, testing, and demonstrating the Svelte components that compose the user interface.
+
+For now, Storybooks run locally to your machine, not in the Docker container.
+They also require Node v16 or later to run (the frontend containers currently run on v12).
+
+To run the Storybook dev server with Node 16 enabled:
+
+```sh
+npm run storybook
+```
+
+To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh/nvm):
+
+```sh
+node -v
+nvm install 16
+# or
+nvm install --lts
+```

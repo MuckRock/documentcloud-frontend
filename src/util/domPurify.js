@@ -8,9 +8,9 @@ export const domPurify = new Svue({
   },
 });
 
-export function loadDompurify() {
-  if (domPurify.domPurify != null) return;
-  import("dompurify").then((module) => {
-    domPurify.domPurify = module;
+export async function loadDompurify() {
+  if (domPurify.domPurify !== null) return;
+  return import("dompurify").then((module) => {
+    domPurify.domPurify = module.default ? module.default : module;
   });
 }

@@ -65,6 +65,7 @@
     "save": "Save",
     "create": "Create",
     "ok": "Ok",
+    "reset": "Reset",
     "update": "Update",
     "dismiss": "Dismiss",
     "continue": "Continue",
@@ -458,7 +459,8 @@
     "createAddon": "Choose more documents to use add-ons",
     "addon": "Add-on",
     "learnMore": "Learn more about Add-Ons",
-    "browseAll": "Browse All Add-Ons"
+    "browseAll": "Browse All Add-Ons",
+    "addonRuns": "See scheduled Add-On runs"
   },
   "noDocuments": {
     "noSearchResults": "No search results",
@@ -475,7 +477,9 @@
   },
   "paginator": {
     "of": "of",
-    "document": "{n, plural, one {Document} other {Documents}}"
+    "document": "{n, plural, one {Document} other {Documents}}",
+    "next": "Next",
+    "previous": "Previous"
   },
   "processingBar": {
     "doneProcessing": "Done processing",
@@ -608,6 +612,9 @@
     "fitWidth": "Fit width",
     "fitHeight": "Fit height"
   },
+  "drawer": {
+    "close": "Close Drawer"
+  },
   "titleHeader": {
     "contributedBy": "Contributed by {name}"
   },
@@ -691,6 +698,8 @@
     "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
   },
   "addonDispatchDialog": {
+    "addons": "Add-Ons",
+    "backButton": "Browse Add-Ons",
     "select": "Select which documents you’d like to run this Add-On against:",
     "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again.",
     "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.",
@@ -704,17 +713,36 @@
     "hideRuns": "Hide Runs",
     "showAddons": "Show Scheduled Add-Ons ({n})",
     "runSchedule": "Run on a schedule:",
+    "runOnce": "Run once",
     "disable": "Disable",
-    "signIn": "Sign in to use Add-Ons"
+    "signIn": "Sign in to use Add-Ons",
+    "createdBy": "Created by",
+    "categories": "Categories",
+    "viewsource": "View Source",
+    "share": "Share",
+    "shareClipboardSuccess": "Copied add-on URL to your clipboard",
+    "scheduleSuccess": "Add-on is now scheduled",
+    "runSuccess": "Add-on is now running"
   },
   "addonBrowserDialog": {
+    "title": "Add-Ons",
+    "subtitle": "Free automations, shortcuts, and power-ups from the DocumentCloud community",
+    "categories": "Categories",
     "browseAll": "Browse All Add-Ons",
-    "searchPlaceholder": "Search...",
+    "searchPlaceholder": "Search…",
+    "loading": "Loading…",
+    "empty": "No add-ons found",
+    "retry": "Retry",
     "active": "Active",
     "inactive": "Inactive",
     "next": "Next",
     "previous": "Previous",
-    "viewsource": "View Source"
+    "viewsource": "View Source",
+    "usage": "Usage"
+  },
+  "addonRuns": {
+    "scheduled": "Scheduled Add-Ons",
+    "previous": "Previous runs"
   },
   "uploadEmailDialog": {
     "uploadEmailAddress": "Upload via email",
