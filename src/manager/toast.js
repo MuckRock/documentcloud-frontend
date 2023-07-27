@@ -10,12 +10,13 @@ export const toasts = new Svue({
   },
 });
 
-export function pushToast(content) {
+export function pushToast(content, status="info") {
   toasts.toasts = [
     ...toasts.toasts,
     {
       idx: globalToastIdx++,
       content,
+      status
     },
   ];
 }

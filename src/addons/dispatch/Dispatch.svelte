@@ -17,6 +17,7 @@
   import { getCsrfToken } from "../../api/session.js";
   import { setHash } from "../../router/router.js";
   import Button from "../../common/Button.svelte";
+  import { pushToast } from "../../manager/toast";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -35,6 +36,9 @@
   let selection: Selection;
 
   $: loading = !addon;
+  $: if (error) {
+    pushToast(error.message, "error");
+  }
 
   onMount(() => {
     if (event) {
@@ -155,6 +159,7 @@
     }
 
     console.log(await resp.json());
+    pushToast($_("addonDispatchDialog.runSuccess"), "success");
   }
 
   /*
@@ -196,6 +201,7 @@
     }
 
     console.log(await resp.json());
+    pushToast($_("addonDispatchDialog.scheduleSuccess"), "success");
   }
 
   function reset() {
