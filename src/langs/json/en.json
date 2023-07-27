@@ -720,7 +720,9 @@
     "categories": "Categories",
     "viewsource": "View Source",
     "share": "Share",
-    "shareClipboardSuccess": "Copied add-on URL to your clipboard"
+    "shareClipboardSuccess": "Copied add-on URL to your clipboard",
+    "scheduleSuccess": "Add-on is now scheduled",
+    "runSuccess": "Add-on is now running"
   },
   "addonBrowserDialog": {
     "title": "Add-Ons",
