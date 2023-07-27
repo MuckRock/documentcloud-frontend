@@ -102,7 +102,10 @@ module.exports = wrap({
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
-    new DotEnv(),
+    new DotEnv({
+      path: prod ? `.env.${environment}` : ".env",
+      defaults: ".env",
+    }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
       exclude: /node_modules/,

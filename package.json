@@ -77,7 +77,9 @@
     "dev-app": "cross-env NODE_ENV=development SUPPRESS_WARNINGS=1 webpack serve --config webpack.app.config.js",
     "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
     "test": "jest",
-    "watch": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js",
+    "serve": "serve public -l 80 --single",
+    "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js",
+    "watch": "concurrently npm:dev-embed npm:watch-app npm:serve",
     "test-watch": "jest --watchAll",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
