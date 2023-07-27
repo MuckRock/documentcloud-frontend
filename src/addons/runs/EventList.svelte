@@ -1,97 +1,125 @@
-<script context="module" lang="ts">
-  // https://api.www.documentcloud.org/api/addon_events/?expand=addon
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
-
-  export interface Event {
-    id: number;
-    addon: AddOnListItem;
-    user: number;
-    parameters: any;
-    event: number;
-    scratch: any;
-    created_at: string;
-    updated_at: string;
-  }
-
-  export const schedules = [
-    "Disabled",
-    "hourly",
-    "daily",
-    "weekly",
-    "on upload",
-  ];
-</script>
-
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { _ } from "svelte-i18n";
-  import Paginator from "../Paginator.svelte";
   import { baseApiUrl } from "../../api/base.js";
+  import Paginator from "../Paginator.svelte";
+  import EventItem, {type Event} from './Event.svelte';
+  import Loader from '../../common/Loader.svelte';
+  import Button from '../../common/Button.svelte';
+  import Error from '../../common/icons/Error.svelte';
+  import Clock24 from 'svelte-octicons/lib/Clock24.svelte';
 
-  export let events: Event[] = [];
   export let per_page = 5;
 
+  // https://api.www.documentcloud.org/api/addon_events/?expand=addon
   const endpoint = new URL("/api/addon_events/?expand=addon", baseApiUrl);
   const options: RequestInit = {
     credentials: "include",
   };
+  let res: {
+    next?: string | null;
+    previous?: string | null;
+    results?: Event[];
+  } = {};
+  let loading = false;
+  let error;
 
-  let next_url: URL | null;
-  let previous_url: URL | null;
+  $: next_url = res.next ? new URL(res.next) : null;
+  $: prev_url = res.previous ? new URL(res.previous) : null;
+  $: events = res.results ?? [];
+  $: empty = !loading && res.results?.length === 0;
 
   export async function load(url?: string | URL) {
-    if (!url) {
-      url = endpoint;
+    try {
+      if (!url) {
+        url = endpoint;
+      }
+
+      if (!(url instanceof URL)) {
+        url = new URL(url);
+      }
+
+      url.searchParams.set("per_page", String(per_page));
+      loading = true;
+      const resp = await fetch(url, options);
+
+      if (resp.ok) {
+        res = await resp.json();
+      } else {
+        error = resp.statusText;
+      }
+      loading = false;
+    } catch (error) {
+      error = error.message;
+      loading = false;
     }
-
-    if (!(url instanceof URL)) {
-      url = new URL(url);
-    }
-
-    url.searchParams.set("per_page", String(per_page));
-    const resp = await fetch(url, options);
-
-    if (resp.ok) {
-      const { next, previous, results } = await resp.json();
-
-      next_url = next ? new URL(next) : null;
-      previous_url = previous ? new URL(previous) : null;
-      events = results;
-    }
   }
 
-  function loadNext(e) {
-    return load(next_url);
-  }
+  $: loadNext = () => load(next_url);
+  $: loadPrev = () => load(prev_url);
 
-  function loadPrevious(e) {
-    return load(previous_url);
-  }
-
-  function url(event: Event) {
-    return `#add-ons/${event.addon.repository}/${event.id}`;
-  }
+  onMount(load);
 </script>
 
-<style></style>
+<style>
+  .event-list ul {
+    list-style-type: none;
+  }
+  .event-list li {
+    padding: 0;
+  }
+  .empty, .loading {
+    color: var(--darkgray);
+    fill: var(--gray);
+  }
+  .error {
+    color: var(--caution);
+  }
+  .empty .icon {
+    transform: scale(2);
+  }
+  .error .icon {
+    height: 3em;
+    width: 3em;
+  }
+  .empty, .error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+</style>
 
 <div class="event-list">
-  <h2>{$_("addonRuns.scheduled")}</h2>
-  {#each events as event}
-    <div class="addon-event" id="event-{event.id}">
-      <h3>{event.addon.name}</h3>
-      <p class="info">
-        {#if event.event === 0}
-          {schedules[event.event]}
-        {:else}
-          Runs {schedules[event.event]}
-        {/if}
-      </p>
-
-      <a href={url(event)}>Edit</a>
+  {#if empty}
+    <div class="empty">
+      <div class="icon"><Clock24 /></div>
+      <p class="empty">{$_("addonRuns.eventList.empty")}</p>
     </div>
-  {/each}
-
-  {#if previous_url || next_url}
-    <Paginator on:next={loadNext} on:previous={loadPrevious} />
+  {:else if loading}
+    <div class="loading">
+      <Loader active center big pad />
+      <p class="loading">{$_("addonRuns.eventList.loading")}</p>
+    </div>
+  {:else if error}
+    <div class="error">
+      <div class="icon"><Error /></div>
+      <p>{error}</p>
+      <Button action on:click={() => load()}>{$_("addonRuns.eventList.retry")}</Button>
+    </div>
+  {:else}
+    <ul>
+      {#each events as event}
+        <li><EventItem {event} /></li>
+      {/each}
+    </ul>
+  {/if}
+  {#if prev_url || next_url}
+  <Paginator
+    has_next={Boolean(next_url)}
+    has_previous={Boolean(prev_url)}
+    on:next={loadNext}
+    on:previous={loadPrev}
+  />
   {/if}
 </div>

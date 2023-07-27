@@ -742,7 +742,12 @@
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
-    "previous": "Previous runs"
+    "previous": "Previous runs",
+    "eventList": {
+      "empty": "Scheduled add-ons will appear here.",
+      "loading": "Loading…",
+      "retry": "Retry"
+    }
   },
   "uploadEmailDialog": {
     "uploadEmailAddress": "Upload via email",
