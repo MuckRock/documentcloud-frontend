@@ -3,6 +3,7 @@
 
   export let href: string | null = null;
   export let external = false;
+  export let title = "";
 
   export let small = false;
   export let secondary = false;
@@ -38,9 +39,9 @@
     background: var(--primary, #4294f0);
     color: white;
     font-family: inherit;
-  }
-  .nomargin {
-    margin: 0;
+    &.nomargin {
+      margin: 0;
+    }
   }
 
   a:disabled,
@@ -48,6 +49,7 @@
     opacity: 0.7;
     background: var(--gray, rgba(0, 0, 0, 0.53));
     cursor: initial;
+    pointer-events: none;
 
     &:hover {
       opacity: 0.7;
@@ -94,7 +96,8 @@
     color: var(--primary, #4294f0);
     fill: var(--primary, #4294f0);
   }
-  .action.secondary {
+
+  .action.secondary, .action.disabled, .action:disabled {
     color: var(--gray, rgba(0, 0, 0, 0.53));
     fill: var(--gray, rgba(0, 0, 0, 0.53));
   }
@@ -127,6 +130,7 @@
     {#if href}
       <a
         {href}
+        {title}
         on:click
         class:secondary
         class:tertiary
@@ -145,6 +149,7 @@
       </a>
     {:else}
       <button
+        {title}
         on:click
         class:secondary
         class:tertiary

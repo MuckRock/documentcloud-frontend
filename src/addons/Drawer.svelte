@@ -68,10 +68,11 @@
     position: fixed;
     top: -1px;
     z-index: 10;
+    overflow: hidden;
   }
 
   button.close {
-    top: 1.25em;
+    top: 1em;
     position: absolute;
     border-radius: 9999px;
     border: transparent;
@@ -95,7 +96,7 @@
   }
 
   .drawer.right button.close {
-    left: -2.5em;
+    right: 1em;
   }
 
   .drawer.left {
@@ -106,7 +107,7 @@
   }
 
   .drawer.left button.close {
-    right: -2.5em;
+    left: 1em;
   }
 
   .container {
