@@ -5,14 +5,14 @@
   import { _ } from "svelte-i18n";
 
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
-  import type { Event } from "../runs/EventList.svelte";
+  import type { Event } from "../runs/ScheduledEvent.svelte";
 
   import Button from "../../common/Button.svelte";
   import Drawer from "../Drawer.svelte";
   import Form, { values } from "./Form.svelte";
   import Header from "./Header.svelte";
   import Selection from "./Selection.svelte";
-  import { schedules } from "../runs/EventList.svelte";
+  import { schedules } from "../runs/ScheduledEvent.svelte";
 
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";

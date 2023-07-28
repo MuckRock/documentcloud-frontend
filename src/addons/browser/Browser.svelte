@@ -111,16 +111,16 @@
   .header {
     grid-column: span 2;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: baseline;
-    gap: 1em;
+    gap: 0.5em;
+    margin-right: 2em;
   }
   .header h2 {
     flex: 0 1 auto;
     margin: 0;
   }
   .header p {
-    flex: 1 1 16em;
     margin: 0;
     font-weight: 600;
     color: gray;

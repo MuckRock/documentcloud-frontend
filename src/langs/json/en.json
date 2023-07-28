@@ -725,7 +725,7 @@
     "runSuccess": "Add-on is now running"
   },
   "addonBrowserDialog": {
-    "title": "Add-Ons",
+    "title": "Browse Add-Ons",
     "subtitle": "Free automations, shortcuts, and power-ups from the DocumentCloud community",
     "categories": "Categories",
     "browseAll": "Browse All Add-Ons",
@@ -742,7 +742,17 @@
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
-    "previous": "Previous runs"
+    "previous": "Previous Runs",
+    "upcoming": {
+      "empty": "Scheduled add-ons will appear here",
+      "loading": "Loading…",
+      "retry": "Retry"
+    },
+    "history": {
+      "empty": "Previous add-on runs will appear here",
+      "loading": "Loading…",
+      "retry": "Retry"
+    }
   },
   "uploadEmailDialog": {
     "uploadEmailAddress": "Upload via email",
