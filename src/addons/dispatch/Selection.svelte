@@ -8,7 +8,7 @@
   import { search } from "../../search/search.js";
 
   export let documents = new Set();
-  export let value = "";
+  export let value = null;
 
   // default to the first option, for convenience
   let choice = [...documents][0];
@@ -27,8 +27,30 @@
 </script>
 
 <style>
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin: 0 0 1em 0;
+    padding: 1em;
+    border-radius: var(--radius);
+    border-color: rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+  }
+
+  legend {
+    color: var(--darkgray);
+    font-weight: 600;
+  }
+
   label {
     display: block;
+    line-height: 1.4;
+    color: var(--darkgray);
+  }
+
+  input[type="radio"] {
+    vertical-align: text-top;
   }
 </style>
 
