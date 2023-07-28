@@ -58,7 +58,7 @@
 
 <style>
   .drawer {
-    background-color: var(--menubg, white);
+    background-color: var(--menuBg, white);
     border: 1px solid #ccc;
     border-radius: calc(var(--radius, 3px) * 3);
     bottom: 1px;

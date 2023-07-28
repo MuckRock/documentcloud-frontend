@@ -25,16 +25,15 @@
 
 <style>
   .list {
-    background-color: white;
     min-width: 24em;
     min-height: 100%;
-  }
-
-  .list,
-  .empty,
-  .error {
     display: flex;
     flex-direction: column;
+  }
+
+  .empty,
+  .error,
+  .loading {
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -63,7 +62,7 @@
   }
 </style>
 
-<div class="list">
+<div class="list" class:empty class:loading class:error>
   {#if !empty}
     <ul>
       {#each items as addOn (addOn.id)}
@@ -72,24 +71,18 @@
     </ul>
   {:else if loading}
     <!-- Loading state -->
-    <div class="loading">
-      <Loader active center big pad />
-      <p class="loading">{$_("addonBrowserDialog.loading")}</p>
-    </div>
+    <Loader active center big pad />
+    <p>{$_("addonBrowserDialog.loading")}</p>
   {:else if error}
     <!-- Error state -->
-    <div class="error">
-      <div class="icon"><Error /></div>
-      <p>{error}</p>
-      {#if reload}<Button action on:click={reload}
-          >{$_("addonBrowserDialog.retry")}</Button
-        >{/if}
-    </div>
+    <div class="icon"><Error /></div>
+    <p>{error}</p>
+    {#if reload}<Button action on:click={reload}
+        >{$_("addonBrowserDialog.retry")}</Button
+      >{/if}
   {:else}
     <!-- Empty state -->
-    <div class="empty">
-      <div class="icon"><EmptyResults /></div>
-      <p class="empty">{$_("addonBrowserDialog.empty")}</p>
-    </div>
+    <div class="icon"><EmptyResults /></div>
+    <p>{$_("addonBrowserDialog.empty")}</p>
   {/if}
 </div>
