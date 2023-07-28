@@ -13,16 +13,9 @@
       "parameters": {
         "type": "object",
         "title": "Empty Page Deleter",
-        "required": [
-          "project_id"
-        ],
-        "documents": [
-          "selected",
-          "query"
-        ],
-        "categories": [
-          "file"
-        ],
+        "required": ["project_id"],
+        "documents": ["selected", "query"],
+        "categories": ["file"],
         "properties": {
           "project_id": {
             "type": "integer",
@@ -47,12 +40,8 @@
       "parameters": {
         "type": "object",
         "title": "Entity Export HTML",
-        "documents": [
-          "selected"
-        ],
-        "categories": [
-          "ai"
-        ],
+        "documents": ["selected"],
+        "categories": ["ai"],
         "properties": {},
         "description": "<p>Export an HTML view of your entities</p>"
       },
@@ -72,13 +61,8 @@
       "parameters": {
         "type": "object",
         "title": "Entity Export",
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "ai"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["ai"],
         "properties": {},
         "description": "<p>Export a CSV of the entities in your documents</p>"
       },
@@ -98,12 +82,8 @@
       "parameters": {
         "type": "object",
         "title": "Google Cloud Entity Extractor",
-        "documents": [
-          "selected"
-        ],
-        "categories": [
-          "ai"
-        ],
+        "documents": ["selected"],
+        "categories": ["ai"],
         "properties": {},
         "description": "<p>Extract entities using Google Cloud&rsquo;s natural language API</p>"
       },
@@ -123,19 +103,9 @@
       "parameters": {
         "type": "object",
         "title": "Translate Documents",
-        "required": [
-          "access_level",
-          "output_lang",
-          "input_lang"
-        ],
-        "documents": [
-          "selected"
-        ],
-        "categories": [
-          "ai",
-          "premium",
-          "file"
-        ],
+        "required": ["access_level", "output_lang", "input_lang"],
+        "documents": ["selected"],
+        "categories": ["ai", "premium", "file"],
         "properties": {
           "dry_run": {
             "type": "boolean",
@@ -430,11 +400,7 @@
             "default": "es"
           },
           "access_level": {
-            "enum": [
-              "public",
-              "private",
-              "organization"
-            ],
+            "enum": ["public", "private", "organization"],
             "type": "string",
             "title": "Access level (public, private, organization) of translations",
             "default": "public"
@@ -458,13 +424,8 @@
       "parameters": {
         "type": "object",
         "title": "Bulk Reprocess",
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["bulk"],
         "properties": {
           "sure": {
             "type": "boolean",
@@ -522,13 +483,8 @@
       "parameters": {
         "type": "object",
         "title": "Bad Redactions",
-        "documents": [
-          "selected",
-          "query"
-        ],
-        "categories": [
-          "extraction"
-        ],
+        "documents": ["selected", "query"],
+        "categories": ["extraction"],
         "properties": {
           "fix": {
             "type": "boolean",
@@ -554,16 +510,9 @@
         "type": "object",
         "title": "Change Note Visibility",
         "version": 2,
-        "required": [
-          "access_level"
-        ],
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "required": ["access_level"],
+        "documents": ["query", "selected"],
+        "categories": ["bulk"],
         "properties": {
           "access_level": {
             "type": "string",
@@ -591,12 +540,8 @@
         "type": "object",
         "title": "Bulk Delete Documents",
         "version": 2,
-        "documents": [
-          "query"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "documents": ["query"],
+        "categories": ["bulk"],
         "properties": {
           "confirm": {
             "type": "boolean",
@@ -622,15 +567,9 @@
         "type": "object",
         "title": "Bulk Add to Project",
         "version": 2,
-        "required": [
-          "project_id"
-        ],
-        "documents": [
-          "query"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "required": ["project_id"],
+        "documents": ["query"],
+        "categories": ["bulk"],
         "properties": {
           "project_id": {
             "type": "integer",
@@ -656,15 +595,9 @@
         "type": "object",
         "title": "Change Visibility",
         "version": 2,
-        "required": [
-          "access"
-        ],
-        "documents": [
-          "query"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "required": ["access"],
+        "documents": ["query"],
+        "categories": ["bulk"],
         "properties": {
           "access": {
             "type": "string",
@@ -691,13 +624,8 @@
         "type": "object",
         "title": "Bulk Delete Annotations",
         "version": 2,
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["bulk"],
         "properties": {},
         "description": "<p>This AddOn runs through all documents either selected or queried and deletes the annotations for documents.</p>"
       },
@@ -718,12 +646,8 @@
         "type": "object",
         "title": "Clear Failed Uploads",
         "version": 2,
-        "documents": [
-          "query"
-        ],
-        "categories": [
-          "bulk"
-        ],
+        "documents": ["query"],
+        "categories": ["bulk"],
         "properties": {},
         "description": "<p>Runs through a query of documents and deletes the documents if their status is error or nofile.</p>"
       },
@@ -744,18 +668,9 @@
         "type": "object",
         "title": "Extract & Tag Add-On",
         "version": 2,
-        "required": [
-          "start",
-          "end",
-          "key_name"
-        ],
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "extraction"
-        ],
+        "required": ["start", "end", "key_name"],
+        "documents": ["query", "selected"],
+        "categories": ["extraction"],
         "properties": {
           "end": {
             "type": "string",
@@ -788,13 +703,9 @@
       "parameters": {
         "type": "object",
         "title": "Email Conversion Add-On",
-        "required": [
-          "url"
-        ],
+        "required": ["url"],
         "documents": [],
-        "categories": [
-          "file"
-        ],
+        "categories": ["file"],
         "properties": {
           "url": {
             "type": "string",
@@ -834,13 +745,9 @@
       "parameters": {
         "type": "object",
         "title": "PDF Compression Add-On",
-        "required": [
-          "url"
-        ],
+        "required": ["url"],
         "documents": [],
-        "categories": [
-          "file"
-        ],
+        "categories": ["file"],
         "properties": {
           "url": {
             "type": "string",
@@ -867,13 +774,8 @@
       "parameters": {
         "type": "object",
         "title": "Klaxon Site Monitor",
-        "required": [
-          "site",
-          "selector"
-        ],
-        "categories": [
-          "monitor"
-        ],
+        "required": ["site", "selector"],
+        "categories": ["monitor"],
         "properties": {
           "site": {
             "type": "string",
@@ -895,11 +797,7 @@
         "description": "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
         "eventOptions": {
           "name": "site",
-          "events": [
-            "hourly",
-            "daily",
-            "weekly"
-          ]
+          "events": ["hourly", "daily", "weekly"]
         }
       },
       "created_at": "2023-07-19T19:59:18.068046Z",
@@ -918,13 +816,9 @@
       "parameters": {
         "type": "object",
         "title": "Site Snapshot",
-        "required": [
-          "sites"
-        ],
+        "required": ["sites"],
         "documents": [],
-        "categories": [
-          "monitor"
-        ],
+        "categories": ["monitor"],
         "properties": {
           "sites": {
             "type": "array",
@@ -933,9 +827,7 @@
               "title": "URL",
               "format": "uri"
             },
-            "default": [
-              ""
-            ]
+            "default": [""]
           },
           "project_id": {
             "type": "integer",
@@ -966,13 +858,8 @@
         "type": "object",
         "title": "Document Hasher",
         "version": 2,
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "extraction"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["extraction"],
         "properties": {},
         "description": "<p>This Add-On allows you to calculate the SHA-1 hash of a document and add it to the document as a key value pair to establish authenticity of primary source material.</p>"
       },
@@ -992,15 +879,9 @@
       "parameters": {
         "type": "object",
         "title": "Document Splitter",
-        "required": [
-          "page"
-        ],
-        "documents": [
-          "selected"
-        ],
-        "categories": [
-          "file"
-        ],
+        "required": ["page"],
+        "documents": ["selected"],
+        "categories": ["file"],
         "properties": {
           "page": {
             "type": "integer",
@@ -1025,14 +906,8 @@
       "parameters": {
         "type": "object",
         "title": "PII Detector",
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "extraction",
-          "monitor"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["extraction", "monitor"],
         "properties": {
           "ssn": {
             "type": "boolean",
@@ -1074,9 +949,7 @@
         },
         "description": "<p>This add-on will detect PII in a document, annotate where, and automatically e-mail you when sensitive PII is detected if you choose that option.</p>",
         "eventOptions": {
-          "events": [
-            "upload"
-          ]
+          "events": ["upload"]
         }
       },
       "created_at": "2023-07-19T19:59:18.062382Z",
@@ -1095,9 +968,7 @@
       "parameters": {
         "type": "object",
         "title": "PDF Reflow",
-        "documents": [
-          "selected"
-        ],
+        "documents": ["selected"],
         "properties": {
           "dpi": {
             "type": "integer",
@@ -1142,14 +1013,8 @@
       "parameters": {
         "type": "object",
         "title": "Diakopoulos GPT-3 Example: Brainstorming Ideas Example",
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "ai",
-          "premium"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["ai", "premium"],
         "properties": {},
         "description": "<p>An implementation of the example <a href=\"https://colab.research.google.com/drive/1rr0dxKpwK5zjch1V4eKjwwyVW-AzuDTw#scrollTo=zI4zN4RMg8yq\">brainstorming GPT-3 application described by Nick Diakopoulos</a>. Use with care as it may introduce factual errors, hallucinations, and other artifacts in summaries.</p>\n<p>Note that this plugin uses <em>14 credits per document analyzed</em>, rounded up. Give this a full prompt that you would pass into GPT-3 and it will run it against your selected documents, one at a time. The Add-On only looks at the 12,000 characters of a document.  The prompt refers to the user input as the &ldquo;Assignment,&rdquo; the document&rsquo;s text as &ldquo;Document Text&rdquo;, and GPT-3&rsquo;s generated response as the &ldquo;Answer,&rdquo; which can be helpful when defining your prompt.</p>\n<p>We&rsquo;d love your feedback and ideas — drop a note to info at documentcloud dot org or join us in the News Nerdery Slack in the #proj-documentcloud channel.</p>"
       },
@@ -1169,14 +1034,8 @@
       "parameters": {
         "type": "object",
         "title": "Diakopoulos GPT-3 Example: Classifying Comments Based on Subject",
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "ai",
-          "premium"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["ai", "premium"],
         "properties": {
           "value": {
             "type": "string",
@@ -1205,14 +1064,8 @@
       "parameters": {
         "type": "object",
         "title": "Diakopoulos GPT-3 Example: Summarizing Legislative Bills",
-        "documents": [
-          "query",
-          "selected"
-        ],
-        "categories": [
-          "ai",
-          "premium"
-        ],
+        "documents": ["query", "selected"],
+        "categories": ["ai", "premium"],
         "properties": {},
         "description": "<p>An implementation of the example <a href=\"https://colab.research.google.com/drive/1rr0dxKpwK5zjch1V4eKjwwyVW-AzuDTw#scrollTo=zI4zN4RMg8yq\">using GPT-3 to summarize proposed legislation, described by Nick Diakopoulos</a>. Use with care as it may introduce factual errors, hallucinations, and other artifacts in summaries.</p>\n<p>Note that this plugin uses <em>14 credit per document analyzed</em>, rounded up. Give this a full prompt that you would pass into GPT-3 and it will run it against your selected documents, one at a time. The Add-On only looks at the 12,000 characters of a document.  The prompt refers to the user input as the &ldquo;Assignment,&rdquo; the document&rsquo;s text as &ldquo;Document Text&rdquo;, and GPT-3&rsquo;s generated response as the &ldquo;Answer,&rdquo; which can be helpful when defining your prompt.</p>\n<p>We&rsquo;d love your feedback and ideas — drop a note to info at documentcloud dot org or join us in the News Nerdery Slack in the #proj-documentcloud channel.</p>"
       },

@@ -11,7 +11,7 @@
   export let description: string = "";
   export let items: any = {
     type: "string",
-    title: ""
+    title: "",
   };
 
   export let count: number = 1;
@@ -42,57 +42,57 @@
 <style>
   fieldset {
     padding: 0.5em;
-    border: 1px solid rgba(0, 0, 0, .1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: var(--radius);
   }
   legend {
     font-weight: 600;
-    padding: 0 .5em;
+    padding: 0 0.5em;
   }
   .array-controls {
-    padding: 0 .5em;
+    padding: 0 0.5em;
   }
   .item {
     min-height: 1.75em;
-    padding: .5em;
+    padding: 0.5em;
     display: flex;
-    gap: .5em;
+    gap: 0.5em;
     align-items: center;
     justify-content: space-between;
     border-radius: var(--radius);
   }
   .boolean .item {
-    padding: 0 .5em;
+    padding: 0 0.5em;
   }
   .item:hover {
-    background: rgba(0, 0, 0, .025);
+    background: rgba(0, 0, 0, 0.025);
   }
   .help {
-    margin: .5em 1rem;
-    font-size: .8em;
+    margin: 0.5em 1rem;
+    font-size: 0.8em;
     color: var(--gray);
   }
 </style>
 
 <fieldset class={items.type}>
-{#if title}
-  <legend>{title}</legend>
-{/if}
-{#each value as v, i}
-  <div class="item item-{i}">
-    <svelte:component
-      this={types[items.type]}
-      bind:value={value[i]}
-      {...items}
-      inline
-      name="{name}.{i}"
-    />
+  {#if title}
+    <legend>{title}</legend>
+  {/if}
+  {#each value as v, i}
+    <div class="item item-{i}">
+      <svelte:component
+        this={types[items.type]}
+        bind:value={value[i]}
+        {...items}
+        inline
+        name="{name}.{i}"
+      />
 
-    {#if numItems > 1}
-      <Button action on:click={e => remove(e, i)}><X16 /></Button>
-    {/if}
-  </div>
-{/each}
+      {#if numItems > 1}
+        <Button action on:click={(e) => remove(e, i)}><X16 /></Button>
+      {/if}
+    </div>
+  {/each}
 
   <div class="array-controls">
     <Button on:click={push}><Plus16 fill="white" /></Button>

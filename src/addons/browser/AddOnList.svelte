@@ -81,7 +81,9 @@
     <div class="error">
       <div class="icon"><Error /></div>
       <p>{error}</p>
-      {#if reload}<Button action on:click={reload}>{$_("addonBrowserDialog.retry")}</Button>{/if}
+      {#if reload}<Button action on:click={reload}
+          >{$_("addonBrowserDialog.retry")}</Button
+        >{/if}
     </div>
   {:else}
     <!-- Empty state -->
