@@ -8,7 +8,7 @@
   import Drawer from "../Drawer.svelte";
   import Paginator from "../Paginator.svelte";
   import Search, { query } from "./SearchInput.svelte";
-  import Filters, { filters, categories } from "./Filters.svelte";
+  import Filters, { filter, FILTERS, CATEGORIES } from "./Filters.svelte";
 
   export let visible = false;
   export let per_page = 5;
@@ -29,8 +29,7 @@
   $: urlParams = buildParams({
     per_page,
     query: $query,
-    filters: $filters,
-    categories: $categories,
+    filter: $filter
   });
 
   $: url = buildUrl(urlParams);
@@ -77,12 +76,12 @@
 
   function buildParams({
     query = "",
-    filters = [],
-    categories = [],
     per_page = 5,
+    filter = []
   }) {
     const params = { per_page, query, filters: {} };
-
+    const filters = FILTERS.map(([n]) => n).filter(n => filter.includes(n));
+    const categories = CATEGORIES.map(([n]) => n).filter(n => filter.includes(n));
     params.filters = filters.reduce((m, f) => {
       m[f] = true;
       return m;
