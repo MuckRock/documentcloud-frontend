@@ -1,21 +1,10 @@
 <script context="module">
   import { writable } from "svelte/store";
-  export const filters = writable([]);
-  export const categories = writable([]);
-</script>
-
-<script lang="ts">
-  import { _ } from "svelte-i18n";
-
-  import Filter from "./Filter.svelte";
-  import Hashtag from "../../common/icons/Hashtag.svelte";
-  import Pin from "../../common/icons/Pin.svelte";
-  import Star from "../../common/icons/Star.svelte";
-
+  export const filter = writable([]);
   // TODO declare hardcoded values in a centralized place
   export const FILTERS = [
-    ["Pinned", "active"],
-    ["Featured", "featured"],
+    ["active", "Pinned"],
+    ["featured", "Featured"],
   ];
 
   export const CATEGORIES = [
@@ -27,6 +16,15 @@
     ["monitor", "Monitor"],
     ["statistical", "Statistical"],
   ];
+</script>
+
+<script lang="ts">
+  import { _ } from "svelte-i18n";
+
+  import Filter from "./Filter.svelte";
+  import Hashtag from "../../common/icons/Hashtag.svelte";
+  import Pin from "../../common/icons/Pin.svelte";
+  import Star from "../../common/icons/Star.svelte";
 </script>
 
 <style>
@@ -58,25 +56,15 @@
 </style>
 
 <ul class="filters">
-  <li id="pinned" class:selected={$filters.includes("active")}>
-    <Filter name="Pinned" selected={$filters.includes("active")}>
-      <input
-        slot="input"
-        type="checkbox"
-        value="active"
-        bind:group={$filters}
-      />
+  <li id="pinned" class:selected={$filter.includes("active")}>
+    <Filter name="Pinned" selected={$filter.includes("active")}>
+      <input slot="input" type="radio" value="active" bind:group={$filter} />
       <span slot="icon"><Pin /></span>
     </Filter>
   </li>
-  <li id="featured" class:selected={$filters.includes("featured")}>
-    <Filter name="Featured" selected={$filters.includes("featured")}>
-      <input
-        slot="input"
-        type="checkbox"
-        value="featured"
-        bind:group={$filters}
-      />
+  <li id="featured" class:selected={$filter.includes("featured")}>
+    <Filter name="Featured" selected={$filter.includes("featured")}>
+      <input slot="input" type="radio" value="featured" bind:group={$filter} />
       <span slot="icon"><Star /></span>
     </Filter>
   </li>
@@ -85,13 +73,13 @@
   <h3>{$_("addonBrowserDialog.categories")}</h3>
   <ul>
     {#each CATEGORIES as [category, name]}
-      <li class="category" class:selected={$categories.includes(category)}>
-        <Filter {name} selected={$categories.includes(category)}>
+      <li class="category" class:selected={$filter.includes(category)}>
+        <Filter {name} selected={$filter.includes(category)}>
           <input
             slot="input"
-            type="checkbox"
+            type="radio"
             value={category}
-            bind:group={$categories}
+            bind:group={$filter}
           />
           <span slot="icon"><Hashtag /></span>
         </Filter>

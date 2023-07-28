@@ -58,6 +58,7 @@
     gap: 1em;
     margin: 0 0 1em 0;
     padding: 1em;
+    background: var(--light-gray);
     border-radius: var(--radius);
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 1px;

@@ -15,6 +15,7 @@
     align-items: center;
     border-radius: calc(2 * var(--radius));
     border: 1px solid rgba(0, 0, 0, 0.25);
+    background: var(--inputBg);
     /* box-shadow: inset 0 0 2px var(--darkgray); */
     padding: 0 0.5em;
   }
