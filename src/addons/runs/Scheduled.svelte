@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { baseApiUrl } from "../../api/base.js";
+
+  import Button from "../../common/Button.svelte";
+  import Clock24 from "svelte-octicons/lib/Clock24.svelte";
+  import Error from "../../common/icons/Error.svelte";
+  import Loader from "../../common/Loader.svelte";
   import Paginator from "../Paginator.svelte";
-  import ScheduledEvent, {type Event} from './ScheduledEvent.svelte';
-  import Loader from '../../common/Loader.svelte';
-  import Button from '../../common/Button.svelte';
-  import Error from '../../common/icons/Error.svelte';
-  import Clock24 from 'svelte-octicons/lib/Clock24.svelte';
+  import ScheduledEvent, { type Event } from "./ScheduledEvent.svelte";
+
+  import { baseApiUrl } from "../../api/base.js";
 
   export let per_page = 5;
 
@@ -70,7 +72,9 @@
   .scheduled-list li {
     padding: 0;
   }
-  .empty, .loading, .error {
+  .empty,
+  .loading,
+  .error {
     margin: 2em 1em;
     color: var(--darkgray);
     fill: var(--gray);
@@ -80,18 +84,19 @@
   }
   .empty .icon {
     transform: scale(2);
-    opacity: .4;
+    opacity: 0.4;
   }
   .error .icon {
     height: 3em;
     width: 3em;
   }
-  .empty, .error, .loading {
+  .empty,
+  .error,
+  .loading {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  
 </style>
 
 <div class="scheduled-list">
@@ -109,7 +114,9 @@
     <div class="error">
       <div class="icon"><Error /></div>
       <p>{error}</p>
-      <Button action on:click={() => load()}>{$_("addonRuns.upcoming.retry")}</Button>
+      <Button action on:click={() => load()}
+        >{$_("addonRuns.upcoming.retry")}</Button
+      >
     </div>
   {:else}
     <ul>
@@ -119,11 +126,11 @@
     </ul>
   {/if}
   {#if prev_url || next_url}
-  <Paginator
-    has_next={Boolean(next_url)}
-    has_previous={Boolean(prev_url)}
-    on:next={loadNext}
-    on:previous={loadPrev}
-  />
+    <Paginator
+      has_next={Boolean(next_url)}
+      has_previous={Boolean(prev_url)}
+      on:next={loadNext}
+      on:previous={loadPrev}
+    />
   {/if}
 </div>

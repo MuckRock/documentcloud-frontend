@@ -5,7 +5,9 @@
 
   const mockUrl = new URL(`/api/addon_runs/*`, baseApiUrl).toString();
   /* Mock Request Handlers */
-  const data = rest.get(mockUrl, (req, res, ctx) => res(ctx.json(runListFixture)));
+  const data = rest.get(mockUrl, (req, res, ctx) =>
+    res(ctx.json(runListFixture)),
+  );
   const loading = rest.get(mockUrl, (req, res, ctx) =>
     res(ctx.delay("infinite")),
   );
@@ -18,7 +20,7 @@
   const empty = rest.get(mockUrl, (req, res, ctx) =>
     res(ctx.json({ next: null, previous: null, results: [] })),
   );
-  export const handlers = {data, loading, error, empty};
+  export const handlers = { data, loading, error, empty };
 </script>
 
 <script>

@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
+
   import Drawer from "../Drawer.svelte";
   import Scheduled from "./Scheduled.svelte";
   import History from "./History.svelte";
@@ -18,8 +19,8 @@
   h2 {
     font-size: 1.25em;
     margin: 1rem 0 0 1rem;
-    padding: 0 0 .5rem 0;
-    border-bottom: 2px solid rgba(0, 0, 0, .1);
+    padding: 0 0 0.5rem 0;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 </style>
 

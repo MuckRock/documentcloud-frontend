@@ -113,7 +113,7 @@
     display: flex;
     flex-direction: column;
     align-items: baseline;
-    gap: .5em;
+    gap: 0.5em;
     margin-right: 2em;
   }
   .header h2 {

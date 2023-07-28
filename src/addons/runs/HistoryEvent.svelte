@@ -28,14 +28,14 @@
 
 <style>
   .addon-run {
-    margin: .5em;
+    margin: 0.5em;
     display: flex;
     align-items: flex-start;
-    gap: .5em;
+    gap: 0.5em;
   }
   .status {
     flex: 0 1 auto;
-    margin: .25em;
+    margin: 0.25em;
   }
   .success.icon {
     fill: var(--tertiary);
@@ -54,7 +54,7 @@
     flex: 1 1 auto;
     display: flex;
     align-items: center;
-    gap: .5em;
+    gap: 0.5em;
   }
   .name {
     margin: 0;
@@ -62,13 +62,13 @@
   }
   .date {
     flex: 0 1 auto;
-    font-size: .8em;  
+    font-size: 0.8em;
     color: var(--gray);
   }
   .message {
     flex: 1 1 100%;
-    margin: .5em 0 0;
-    font-size: .8em;  
+    margin: 0.5em 0 0;
+    font-size: 0.8em;
     font-style: italic;
   }
 </style>
@@ -76,17 +76,23 @@
 <div class="addon-run" id="run-{run.uuid}">
   <div class="status">
     {#if run.status === "success"}
-    <span class="success icon" title="Success"><CheckCircle24 /></span>
+      <span class="success icon" title="Success"><CheckCircle24 /></span>
     {:else}
-    <span class="failure icon" title="Failure"><XCircle24 /></span>
+      <span class="failure icon" title="Failure"><XCircle24 /></span>
     {/if}
   </div>
   <div class="info">
     <div class="primary-info">
       <p class="name">{run.addon.name}</p>
-      {#if run.file_url}<Button action href={run.file_url}><Paperclip16 />Download File</Button>{/if}
+      {#if run.file_url}<Button action href={run.file_url}
+          ><Paperclip16 />Download File</Button
+        >{/if}
     </div>
-    <time class="date" datetime={ranAt.toISOString()} title={ranAt.toISOString()}>{ranAt.toLocaleString()}</time>
+    <time
+      class="date"
+      datetime={ranAt.toISOString()}
+      title={ranAt.toISOString()}>{ranAt.toLocaleString()}</time
+    >
     {#if run.message}<p class="message">{run.message}</p>{/if}
   </div>
 </div>

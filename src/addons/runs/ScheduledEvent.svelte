@@ -23,12 +23,14 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
+
   import Button from "../../common/Button.svelte";
   import { Pencil16 } from "svelte-octicons";
-  
+
   export let event: Event;
+
   $: disabled = event.event === 0;
-  
+
   function url(event: Event) {
     return `#add-ons/${event.addon.repository}/${event.id}`;
   }
@@ -39,8 +41,8 @@
     display: flex;
     align-items: center;
     gap: 1em;
-    margin: .5em 0;
-    padding: .5em 1em;
+    margin: 0.5em 0;
+    padding: 0.5em 1em;
   }
   .addon-event:hover {
     background: var(--primary-faded);
@@ -49,7 +51,7 @@
     visibility: visible;
   }
   .disabled .info {
-    opacity: .65;
+    opacity: 0.65;
   }
   .info {
     flex: 1 1 auto;
@@ -70,7 +72,13 @@
   }
 </style>
 
-<a href={url(event)} title={$_("dialog.edit")} class="addon-event" id="event-{event.id}" class:disabled>
+<a
+  href={url(event)}
+  title={$_("dialog.edit")}
+  class="addon-event"
+  id="event-{event.id}"
+  class:disabled
+>
   <div class="info">
     <p class="name">{event.addon.name}</p>
     {#if disabled}

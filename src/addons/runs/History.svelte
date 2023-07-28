@@ -2,13 +2,13 @@
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
+  import Button from "../../common/Button.svelte";
+  import Error from "../../common/icons/Error.svelte";
+  import HistoryEvent, { type Run } from "./HistoryEvent.svelte";
+  import History24 from "svelte-octicons/lib/History24.svelte";
+  import Loader from "../../common/Loader.svelte";
   import Paginator from "../Paginator.svelte";
   import { baseApiUrl } from "../../api/base.js";
-  import HistoryEvent, {type Run} from './HistoryEvent.svelte';
-  import Button from "../../common/Button.svelte";
-  import Loader from "../../common/Loader.svelte";
-  import History24 from "svelte-octicons/lib/History24.svelte";
-  import Error from '../../common/icons/Error.svelte';
 
   let res: {
     next?: string | null;
@@ -58,7 +58,7 @@
   $: loadPrev = () => load(prev_url);
   $: runs = res.results ?? [];
   $: empty = !loading && !error && runs.length === 0;
-  
+
   onMount(load);
 </script>
 
@@ -70,13 +70,15 @@
     overflow: hidden;
   }
   .history-list li {
-    padding: .5em 0;
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    padding: 0.5em 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     &:last-child {
       border-bottom: none;
     }
   }
-  .empty, .loading, .error {
+  .empty,
+  .loading,
+  .error {
     margin: 2em 1em;
     color: var(--darkgray);
     fill: var(--gray);
@@ -86,13 +88,15 @@
   }
   .empty .icon {
     transform: scale(2);
-    opacity: .4;
+    opacity: 0.4;
   }
   .error .icon {
     height: 3em;
     width: 3em;
   }
-  .empty, .error, .loading {
+  .empty,
+  .error,
+  .loading {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -100,8 +104,8 @@
   .pagination-controls {
     position: sticky;
     bottom: 0;
-    border-top: 1px solid rgba(0, 0, 0, .1);
-    padding: .5em 1em;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.5em 1em;
     background: var(--menubg, white);
   }
 </style>
@@ -121,7 +125,9 @@
     <div class="error">
       <div class="icon"><Error /></div>
       <p>{error}</p>
-      <Button action on:click={() => load()}>{$_("addonRuns.history.retry")}</Button>
+      <Button action on:click={() => load()}
+        >{$_("addonRuns.history.retry")}</Button
+      >
     </div>
   {:else}
     <ul>
@@ -132,7 +138,12 @@
   {/if}
   {#if prev_url || next_url}
     <div class="pagination-controls">
-      <Paginator has_next={Boolean(next_url)} has_previous={Boolean(prev_url)} on:next={loadNext} on:previous={loadPrev} />
+      <Paginator
+        has_next={Boolean(next_url)}
+        has_previous={Boolean(prev_url)}
+        on:next={loadNext}
+        on:previous={loadPrev}
+      />
     </div>
   {/if}
 </div>

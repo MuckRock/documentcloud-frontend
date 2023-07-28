@@ -15,13 +15,8 @@
         "parameters": {
           "type": "object",
           "title": "Scraper",
-          "required": [
-            "site",
-            "project"
-          ],
-          "categories": [
-            "monitor"
-          ],
+          "required": ["site", "project"],
+          "categories": ["monitor"],
           "properties": {
             "site": {
               "type": "string",
@@ -72,11 +67,7 @@
           "description": "<p>This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.</p>",
           "eventOptions": {
             "name": "site",
-            "events": [
-              "hourly",
-              "daily",
-              "weekly"
-            ]
+            "events": ["hourly", "daily", "weekly"]
           }
         },
         "created_at": "2023-07-19T19:59:18.027007Z",
@@ -109,13 +100,8 @@
         "parameters": {
           "type": "object",
           "title": "Klaxon Site Monitor",
-          "required": [
-            "site",
-            "selector"
-          ],
-          "categories": [
-            "monitor"
-          ],
+          "required": ["site", "selector"],
+          "categories": ["monitor"],
           "properties": {
             "site": {
               "type": "string",
@@ -137,11 +123,7 @@
           "description": "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
           "eventOptions": {
             "name": "site",
-            "events": [
-              "hourly",
-              "daily",
-              "weekly"
-            ]
+            "events": ["hourly", "daily", "weekly"]
           }
         },
         "created_at": "2023-07-19T19:59:18.068046Z",
@@ -172,13 +154,8 @@
         "parameters": {
           "type": "object",
           "title": "Klaxon Site Monitor",
-          "required": [
-            "site",
-            "selector"
-          ],
-          "categories": [
-            "monitor"
-          ],
+          "required": ["site", "selector"],
+          "categories": ["monitor"],
           "properties": {
             "site": {
               "type": "string",
@@ -200,11 +177,7 @@
           "description": "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
           "eventOptions": {
             "name": "site",
-            "events": [
-              "hourly",
-              "daily",
-              "weekly"
-            ]
+            "events": ["hourly", "daily", "weekly"]
           }
         },
         "created_at": "2023-07-19T19:59:18.068046Z",
