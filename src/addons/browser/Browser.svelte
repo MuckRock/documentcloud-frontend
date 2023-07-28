@@ -146,6 +146,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.25);
     border-radius: calc(2 * var(--radius));
     overflow-y: scroll;

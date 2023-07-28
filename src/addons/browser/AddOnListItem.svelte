@@ -109,7 +109,7 @@
   }
 
   .description {
-    margin: 0.5rem;
+    margin: 0 .5em;
     opacity: 0.6z;
     font-size: 0.875em;
     line-height: 1.4;
@@ -118,6 +118,9 @@
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    & > * {
+      margin-top: 0;
+    }
   }
 
   .addon-name {
