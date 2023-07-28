@@ -11,7 +11,7 @@
   import Filters, { filter, FILTERS, CATEGORIES } from "./Filters.svelte";
 
   export let visible = false;
-  export let per_page = 5;
+  export let per_page = 10;
 
   let drawer: Drawer;
   let loading = false;
