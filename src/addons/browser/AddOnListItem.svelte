@@ -109,7 +109,7 @@
   }
 
   .description {
-    margin: 0 .5em;
+    margin: 0 0.5em;
     opacity: 0.6z;
     font-size: 0.875em;
     line-height: 1.4;

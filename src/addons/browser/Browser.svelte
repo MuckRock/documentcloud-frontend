@@ -29,7 +29,7 @@
   $: urlParams = buildParams({
     per_page,
     query: $query,
-    filter: $filter
+    filter: $filter,
   });
 
   $: url = buildUrl(urlParams);
@@ -74,14 +74,12 @@
     return u.toString();
   }
 
-  function buildParams({
-    query = "",
-    per_page = 5,
-    filter = []
-  }) {
+  function buildParams({ query = "", per_page = 5, filter = [] }) {
     const params = { per_page, query, filters: {} };
-    const filters = FILTERS.map(([n]) => n).filter(n => filter.includes(n));
-    const categories = CATEGORIES.map(([n]) => n).filter(n => filter.includes(n));
+    const filters = FILTERS.map(([n]) => n).filter((n) => filter.includes(n));
+    const categories = CATEGORIES.map(([n]) => n).filter((n) =>
+      filter.includes(n),
+    );
     params.filters = filters.reduce((m, f) => {
       m[f] = true;
       return m;

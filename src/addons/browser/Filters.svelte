@@ -58,23 +58,13 @@
 <ul class="filters">
   <li id="pinned" class:selected={$filter.includes("active")}>
     <Filter name="Pinned" selected={$filter.includes("active")}>
-      <input
-        slot="input"
-        type="radio"
-        value="active"
-        bind:group={$filter}
-      />
+      <input slot="input" type="radio" value="active" bind:group={$filter} />
       <span slot="icon"><Pin /></span>
     </Filter>
   </li>
   <li id="featured" class:selected={$filter.includes("featured")}>
     <Filter name="Featured" selected={$filter.includes("featured")}>
-      <input
-        slot="input"
-        type="radio"
-        value="featured"
-        bind:group={$filter}
-      />
+      <input slot="input" type="radio" value="featured" bind:group={$filter} />
       <span slot="icon"><Star /></span>
     </Filter>
   </li>
