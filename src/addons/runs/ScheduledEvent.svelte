@@ -40,7 +40,7 @@
     align-items: center;
     gap: 1em;
     margin: .5em 0;
-    padding: .25em .5em;
+    padding: .5em 1em;
   }
   .addon-event:hover {
     background: var(--primary-faded);

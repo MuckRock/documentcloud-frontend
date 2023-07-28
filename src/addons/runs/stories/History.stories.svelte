@@ -1,16 +1,11 @@
-<script>
+<script context="module">
   import { rest } from "msw";
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-
-  import EventList from "../EventList.svelte";
-  import eventsListFixture from "../../fixtures/event-list.json";
+  import runListFixture from "../../fixtures/run-list.json";
   import { baseApiUrl } from "../../../api/base";
 
-  const args = {};
-
-  const mockUrl = new URL(`/api/addon_events/*`, baseApiUrl).toString();
+  const mockUrl = new URL(`/api/addon_runs/*`, baseApiUrl).toString();
   /* Mock Request Handlers */
-  const data = rest.get(mockUrl, (req, res, ctx) => res(ctx.json(eventsListFixture)));
+  const data = rest.get(mockUrl, (req, res, ctx) => res(ctx.json(runListFixture)));
   const loading = rest.get(mockUrl, (req, res, ctx) =>
     res(ctx.delay("infinite")),
   );
@@ -23,18 +18,24 @@
   const empty = rest.get(mockUrl, (req, res, ctx) =>
     res(ctx.json({ next: null, previous: null, results: [] })),
   );
+  export const handlers = {data, loading, error, empty};
 </script>
 
-<style></style>
+<script>
+  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import History from "../History.svelte";
+
+  const args = {};
+</script>
 
 <Meta
-  title="Add-Ons / Runs / Events"
-  component={EventList}
+  title="Add-Ons / Runs / History"
+  component={History}
   parameters={{ layout: "centered" }}
 />
 
 <Template let:args>
-  <EventList {...args} />
+  <History {...args} />
 </Template>
 
 <Story name="Success" {args} parameters={{ msw: { handlers: [data] } }} />

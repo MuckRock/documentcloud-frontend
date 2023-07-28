@@ -1,15 +1,15 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-
   import Runs from "../Runs.svelte";
-  import { results as events } from "../../fixtures/event-list.json";
-  import { results as runs } from "../../fixtures/run-list.json";
+  
+  import {handlers as historyHandlers} from './History.stories.svelte';
+  import {handlers as scheduledHandlers} from './Scheduled.stories.svelte';
 
-  const args = { visible: true, events, runs };
+  const args = { visible: true };
 </script>
 
 <Meta
-  title="Add-Ons / Run list"
+  title="Add-Ons / Runs"
   tags={["autodocs"]}
   parameters={{ layout: "fullscreen" }}
   component={Runs}
@@ -19,4 +19,7 @@
   <Runs {...args} />
 </Template>
 
-<Story name="Default" {args} />
+<Story name="Success" {args} parameters={{ msw: { handlers: [historyHandlers.data, scheduledHandlers.data] } }} />
+<Story name="Loading" {args} parameters={{ msw: { handlers: [historyHandlers.loading, scheduledHandlers.loading] } }} />
+<Story name="Error" {args} parameters={{ msw: { handlers: [historyHandlers.error, scheduledHandlers.error] } }} />
+<Story name="Empty" {args} parameters={{ msw: { handlers: [historyHandlers.empty, scheduledHandlers.empty] } }} />

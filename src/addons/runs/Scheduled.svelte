@@ -3,7 +3,7 @@
   import { _ } from "svelte-i18n";
   import { baseApiUrl } from "../../api/base.js";
   import Paginator from "../Paginator.svelte";
-  import EventItem, {type Event} from './Event.svelte';
+  import ScheduledEvent, {type Event} from './ScheduledEvent.svelte';
   import Loader from '../../common/Loader.svelte';
   import Button from '../../common/Button.svelte';
   import Error from '../../common/icons/Error.svelte';
@@ -62,13 +62,16 @@
 </script>
 
 <style>
-  .event-list ul {
+  .scheduled-list ul {
+    margin: 0;
+    padding: 0;
     list-style-type: none;
   }
-  .event-list li {
+  .scheduled-list li {
     padding: 0;
   }
-  .empty, .loading {
+  .empty, .loading, .error {
+    margin: 2em 1em;
     color: var(--darkgray);
     fill: var(--gray);
   }
@@ -77,12 +80,13 @@
   }
   .empty .icon {
     transform: scale(2);
+    opacity: .4;
   }
   .error .icon {
     height: 3em;
     width: 3em;
   }
-  .empty, .error {
+  .empty, .error, .loading {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -90,27 +94,27 @@
   
 </style>
 
-<div class="event-list">
+<div class="scheduled-list">
   {#if empty}
     <div class="empty">
       <div class="icon"><Clock24 /></div>
-      <p class="empty">{$_("addonRuns.eventList.empty")}</p>
+      <p>{$_("addonRuns.upcoming.empty")}</p>
     </div>
   {:else if loading}
     <div class="loading">
       <Loader active center big pad />
-      <p class="loading">{$_("addonRuns.eventList.loading")}</p>
+      <p>{$_("addonRuns.upcoming.loading")}</p>
     </div>
   {:else if error}
     <div class="error">
       <div class="icon"><Error /></div>
       <p>{error}</p>
-      <Button action on:click={() => load()}>{$_("addonRuns.eventList.retry")}</Button>
+      <Button action on:click={() => load()}>{$_("addonRuns.upcoming.retry")}</Button>
     </div>
   {:else}
     <ul>
       {#each events as event}
-        <li><EventItem {event} /></li>
+        <li><ScheduledEvent {event} /></li>
       {/each}
     </ul>
   {/if}
