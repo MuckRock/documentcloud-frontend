@@ -8,7 +8,7 @@
     title: "Checkbox",
     description: "An array of items",
     required: false,
-    value: true
+    value: true,
   };
 </script>
 
@@ -23,5 +23,5 @@
 </Template>
 
 <Story name="Checked" {args} />
-<Story name="Unchecked" args={{...args, value: false}} />
-<Story name="Required" args={{...args, required: true}} />
+<Story name="Unchecked" args={{ ...args, value: false }} />
+<Story name="Required" args={{ ...args, required: true }} />

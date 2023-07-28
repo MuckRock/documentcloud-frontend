@@ -8,12 +8,11 @@
   import { _ } from "svelte-i18n";
 
   import Filter from "./Filter.svelte";
+  import Hashtag from "../../common/icons/Hashtag.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
-  import Hashtag from "../../common/icons/Hashtag.svelte";
 
   // TODO declare hardcoded values in a centralized place
-
   export const FILTERS = [
     ["Pinned", "active"],
     ["Featured", "featured"],

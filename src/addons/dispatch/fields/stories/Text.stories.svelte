@@ -8,7 +8,7 @@
     title: "Text Input",
     description: "Just some text",
     required: false,
-    value: "Lorem ipsum dolor sit amet"
+    value: "Lorem ipsum dolor sit amet",
   };
 </script>
 
@@ -23,5 +23,5 @@
 </Template>
 
 <Story name="Optional" {args} />
-<Story name="Required" args={{...args, required: true}} />
-<Story name="Inline" args={{...args, inline: true}} />
+<Story name="Required" args={{ ...args, required: true }} />
+<Story name="Inline" args={{ ...args, inline: true }} />

@@ -10,7 +10,7 @@
     display: inline-block;
   }
   .field label {
-    gap: .5em;
+    gap: 0.5em;
     display: flex;
     flex-direction: column;
   }
@@ -19,8 +19,8 @@
     font-weight: 600;
   }
   .help {
-    margin: .5em 0;
-    font-size: .8em;
+    margin: 0.5em 0;
+    font-size: 0.8em;
     color: var(--gray);
   }
   .inline.field {

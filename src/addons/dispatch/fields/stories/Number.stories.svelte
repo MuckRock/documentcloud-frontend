@@ -6,11 +6,12 @@
   let args = {
     name: "crawlDepth",
     title: "Crawl Depth",
-    description: "Recursively scrape same-domain links found on the page (Must be between 0 and 2)",
+    description:
+      "Recursively scrape same-domain links found on the page (Must be between 0 and 2)",
     required: false,
     value: 1,
     min: "0",
-    max: "2"
+    max: "2",
   };
 </script>
 
@@ -25,5 +26,5 @@
 </Template>
 
 <Story name="Optional" {args} />
-<Story name="Required" args={{...args, required: true}} />
-<Story name="Inline" args={{...args, inline: true}} />
+<Story name="Required" args={{ ...args, required: true }} />
+<Story name="Inline" args={{ ...args, inline: true }} />

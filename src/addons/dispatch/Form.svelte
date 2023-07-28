@@ -31,6 +31,7 @@
 
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
+  $: hasFields = Object.keys(properties).length > 0;
 
   function objectify(params: any) {
     if (typeof params === "string") {
@@ -58,7 +59,7 @@
     margin: 0 0 1em 0;
     padding: 1em;
     border-radius: var(--radius);
-    border-color: rgba(0, 0, 0, .1);
+    border-color: rgba(0, 0, 0, 0.1);
     border-width: 1px;
   }
 
@@ -71,18 +72,20 @@
 <form method="post" bind:this={form} on:input on:change on:submit on:reset>
   <slot name="before" />
 
-  <fieldset>
-  {#each Object.entries(properties) as [name, p]}
-    {@const params = objectify(p)}
-    <svelte:component
-      this={autofield(params)}
-      {...params}
-      {name}
-      required={required.includes(name)}
-      bind:value={$values[name]}
-    />
-  {/each}
-  </fieldset>
+  {#if hasFields}
+    <fieldset>
+      {#each Object.entries(properties) as [name, p]}
+        {@const params = objectify(p)}
+        <svelte:component
+          this={autofield(params)}
+          {...params}
+          {name}
+          required={required.includes(name)}
+          bind:value={$values[name]}
+        />
+      {/each}
+    </fieldset>
+  {/if}
 
   {#if hasEvents}
     <fieldset class="events">

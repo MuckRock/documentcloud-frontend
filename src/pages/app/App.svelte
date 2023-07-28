@@ -2,17 +2,18 @@
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
+  // main app
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
+
+  // new add-ons ui
+  import Browser from "../../addons/browser/Browser.svelte";
+  import Dispatch from "../../addons/dispatch/Dispatch.svelte";
+  import Runs from "../../addons/runs/Runs.svelte";
 
   import { setHash, router } from "../../router/router.js";
   import { layout } from "../../manager/layout.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
-
-  // new add-ons ui
-  import Browser from "../../addons/browser/Browser.svelte";
-  import Runs from "../../addons/runs/Runs.svelte";
-  import Dispatch from "../../addons/dispatch/Dispatch.svelte";
 
   // hash routing, like in Viewer.svelte
   // [regexp, callback]

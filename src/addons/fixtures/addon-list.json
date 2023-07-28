@@ -1,512 +1,791 @@
 {
-  "next": "https://api.www.documentcloud.org/api/addons/?cursor=cD0zNTE%3D",
+  "count": 53,
+  "next": "https://api.dev.documentcloud.org/api/addons/?page=2",
   "previous": null,
   "results": [
     {
-      "id": 7,
-      "user": 20080,
-      "organization": 125,
+      "id": 480,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "SideKick",
-      "repository": "MuckRock/documentcloud-sidekick-addon",
+      "name": "Empty Page Deleter",
+      "repository": "duckduckgrayduck/Empty-Page-Deletion",
       "parameters": {
         "type": "object",
-        "title": "SideKick",
-        "required": ["tag_name"],
-        "documents": ["query"],
-        "categories": ["ai"],
+        "title": "Empty Page Deleter",
+        "required": ["project_id"],
+        "documents": ["selected", "query"],
+        "categories": ["file"],
         "properties": {
-          "tag_name": {
-            "type": "string",
-            "title": "Value to Train"
-          },
-          "initialize": {
-            "type": "boolean",
-            "title": "Force Initialize"
+          "project_id": {
+            "type": "integer",
+            "title": "Project ID of the project you would like the documents uploaded to (required)"
           }
         },
-        "description": "SideKick is machine learning tool designed to help you quickly test ways to categorize large documents sets, apply machine learning to try to sort documents into one set or another, and get feedback on how well the model works. We're working on launching an improved, real-time graphical categorization tool, but in the meantime, this Add-On will let you get started.\n\n# Step 1:\nSelect a project on the left-hand sidebar before running this Add-On. If you need to, click *Cancel*, select a project, and start SideKick again.\n\n# Step 2:\nUse DocumentCloud's *Edit->Edit Document Data* feature to add a key value pair with the category you want, with about five examples of documents that match a category and five that don't. For example, you might add a key of *Email* with five documents set to *True* and five set to *False*. Since *Email* is the value you're training on, set it as the *Value to Train* below. SideKick is a binary classifier — it will try to rank all documents on a spectrum from -1 to 1 based on how likely it believe the document is to be that value."
+        "description": "<p>This Add-On detects pages with no text in a document, deletes the pages, and re-uploads the document with those pages removed.</p>"
       },
-      "created_at": "2022-04-20T13:44:49.019225Z",
-      "updated_at": "2023-07-12T03:45:10.223366Z",
+      "created_at": "2023-07-19T19:59:18.092909Z",
+      "updated_at": "2023-07-27T14:06:16.815280Z",
+      "active": false,
+      "default": false,
+      "featured": true
+    },
+    {
+      "id": 463,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Entity Export HTML",
+      "repository": "MuckRock/documentcloud-entity-export-html-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Entity Export HTML",
+        "documents": ["selected"],
+        "categories": ["ai"],
+        "properties": {},
+        "description": "<p>Export an HTML view of your entities</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.091680Z",
+      "updated_at": "2023-07-27T14:05:57.952968Z",
       "active": false,
       "default": false,
       "featured": false
     },
     {
-      "id": 8,
-      "user": 20080,
-      "organization": 125,
+      "id": 462,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "Bulk Edit",
-      "repository": "MuckRock/documentcloud-bulk-edit-addon",
+      "name": "Entity Export",
+      "repository": "MuckRock/documentcloud-entity-export-addon",
       "parameters": {
         "type": "object",
-        "title": "Bulk Edit",
-        "version": 2,
-        "documents": ["query"],
+        "title": "Entity Export",
+        "documents": ["query", "selected"],
+        "categories": ["ai"],
+        "properties": {},
+        "description": "<p>Export a CSV of the entities in your documents</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.090336Z",
+      "updated_at": "2023-07-19T19:59:18.091379Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 461,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Google Cloud Entity Extractor",
+      "repository": "MuckRock/documentcloud-google-entity-extractor-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Google Cloud Entity Extractor",
+        "documents": ["selected"],
+        "categories": ["ai"],
+        "properties": {},
+        "description": "<p>Extract entities using Google Cloud&rsquo;s natural language API</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.089005Z",
+      "updated_at": "2023-07-21T15:38:06.493007Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 455,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Translate Documents",
+      "repository": "MuckRock/google-translate-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Translate Documents",
+        "required": ["access_level", "output_lang", "input_lang"],
+        "documents": ["selected"],
+        "categories": ["ai", "premium", "file"],
+        "properties": {
+          "dry_run": {
+            "type": "boolean",
+            "title": "Dry Run",
+            "description": "Select this to calculate the cost of running this translation, it won't translate the text if selected."
+          },
+          "input_lang": {
+            "enum": [
+              "af",
+              "sq",
+              "am",
+              "ar",
+              "hy",
+              "as",
+              "ay",
+              "az",
+              "bm",
+              "eu",
+              "be",
+              "bn",
+              "bho",
+              "bs",
+              "bg",
+              "ca",
+              "ceb",
+              "zh-CN",
+              "zh-TW",
+              "co",
+              "hr",
+              "cs",
+              "da",
+              "dv",
+              "doi",
+              "nl",
+              "en",
+              "eo",
+              "et",
+              "ee",
+              "fil",
+              "fi",
+              "fr",
+              "fy",
+              "gl",
+              "ka",
+              "de",
+              "el",
+              "gn",
+              "gu",
+              "ht",
+              "ha",
+              "haw",
+              "he",
+              "hi",
+              "hmn",
+              "hu",
+              "is",
+              "ig",
+              "ilo",
+              "id",
+              "ga",
+              "it",
+              "ja",
+              "jv",
+              "kn",
+              "kk",
+              "km",
+              "rw",
+              "gom",
+              "ko",
+              "kri",
+              "ku",
+              "ckb",
+              "ky",
+              "lo",
+              "la",
+              "lv",
+              "ln",
+              "lt",
+              "lg",
+              "lb",
+              "mk",
+              "mai",
+              "mg",
+              "ms",
+              "ml",
+              "mt",
+              "mi",
+              "mr",
+              "mni-Mtei",
+              "lus",
+              "mn",
+              "my",
+              "ne",
+              false,
+              "ny",
+              "or",
+              "om",
+              "ps",
+              "fa",
+              "pl",
+              "pt",
+              "pa",
+              "qu",
+              "ro",
+              "ru",
+              "sm",
+              "sa",
+              "gd",
+              "nso",
+              "sr",
+              "st",
+              "sn",
+              "sd",
+              "si",
+              "sk",
+              "sl",
+              "so",
+              "es",
+              "su",
+              "sw",
+              "sv",
+              "tl",
+              "tg",
+              "ta",
+              "tt",
+              "te",
+              "th",
+              "ti",
+              "ts",
+              "tr",
+              "tk",
+              "ak",
+              "uk",
+              "ur",
+              "ug",
+              "uz",
+              "vi",
+              "cy",
+              "xh",
+              "yi",
+              "yo",
+              "zu"
+            ],
+            "type": "string",
+            "title": "Input language code",
+            "default": "en"
+          },
+          "project_id": {
+            "type": "integer",
+            "title": "Project ID",
+            "description": "(Optional) Project ID of project you want to upload the translations to."
+          },
+          "output_lang": {
+            "enum": [
+              "af",
+              "sq",
+              "am",
+              "ar",
+              "hy",
+              "as",
+              "ay",
+              "az",
+              "bm",
+              "eu",
+              "be",
+              "bn",
+              "bho",
+              "bs",
+              "bg",
+              "ca",
+              "ceb",
+              "zh-CN",
+              "zh-TW",
+              "co",
+              "hr",
+              "cs",
+              "da",
+              "dv",
+              "doi",
+              "nl",
+              "en",
+              "eo",
+              "et",
+              "ee",
+              "fil",
+              "fi",
+              "fr",
+              "fy",
+              "gl",
+              "ka",
+              "de",
+              "el",
+              "gn",
+              "gu",
+              "ht",
+              "ha",
+              "haw",
+              "he",
+              "hi",
+              "hmn",
+              "hu",
+              "is",
+              "ig",
+              "ilo",
+              "id",
+              "ga",
+              "it",
+              "ja",
+              "jv",
+              "kn",
+              "kk",
+              "km",
+              "rw",
+              "gom",
+              "ko",
+              "kri",
+              "ku",
+              "ckb",
+              "ky",
+              "lo",
+              "la",
+              "lv",
+              "ln",
+              "lt",
+              "lg",
+              "lb",
+              "mk",
+              "mai",
+              "mg",
+              "ms",
+              "ml",
+              "mt",
+              "mi",
+              "mr",
+              "mni-Mtei",
+              "lus",
+              "mn",
+              "my",
+              "ne",
+              false,
+              "ny",
+              "or",
+              "om",
+              "ps",
+              "fa",
+              "pl",
+              "pt",
+              "pa",
+              "qu",
+              "ro",
+              "ru",
+              "sm",
+              "sa",
+              "gd",
+              "nso",
+              "sr",
+              "st",
+              "sn",
+              "sd",
+              "si",
+              "sk",
+              "sl",
+              "so",
+              "es",
+              "su",
+              "sw",
+              "sv",
+              "tl",
+              "tg",
+              "ta",
+              "tt",
+              "te",
+              "th",
+              "ti",
+              "ts",
+              "tr",
+              "tk",
+              "ak",
+              "uk",
+              "ur",
+              "ug",
+              "uz",
+              "vi",
+              "cy",
+              "xh",
+              "yi",
+              "yo",
+              "zu"
+            ],
+            "type": "string",
+            "title": "Output language code",
+            "default": "es"
+          },
+          "access_level": {
+            "enum": ["public", "private", "organization"],
+            "type": "string",
+            "title": "Access level (public, private, organization) of translations",
+            "default": "public"
+          }
+        },
+        "description": "<p>This Add-On allows you to translate documents using the Google Translate service.  Supply a two character ISO 639-1 code for the input and output languages  and you will receive your translation in a download as well as it will be uploaded to DocumentCloud.  See https://cloud.google.com/translate/docs/languages for supported languages.</p>\n<p>Note that this Add-On uses 1 AI credit for every 75 characters translated.  You can do a dry-run of this Add-On which will tell you the cost of translating the document set. </p>"
+      },
+      "created_at": "2023-07-19T19:59:18.086713Z",
+      "updated_at": "2023-07-19T19:59:18.088614Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 454,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Bulk Reprocess",
+      "repository": "MuckRock/bulk-reprocress-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Bulk Reprocess",
+        "documents": ["query", "selected"],
         "categories": ["bulk"],
         "properties": {
-          "source": {
-            "type": "string",
-            "title": "Source"
+          "sure": {
+            "type": "boolean",
+            "title": "Are you sure you want to reprocess these documents?"
           },
-          "description": {
+          "language": {
+            "enum": [
+              "ara",
+              "zho",
+              "tra",
+              "hrv",
+              "dan",
+              "nld",
+              "eng",
+              "fra",
+              "deu",
+              "heb",
+              "hun",
+              "ind",
+              "ita",
+              "jpn",
+              "kor",
+              "nor",
+              "por",
+              "ron",
+              "rus",
+              "spa",
+              "swe",
+              "ukr"
+            ],
             "type": "string",
-            "title": "Description"
+            "title": "OCR Language.",
+            "default": "eng"
           },
-          "published_url": {
-            "type": "string",
-            "title": "Published URL",
-            "format": "uri"
-          },
-          "related_article": {
-            "type": "string",
-            "title": "Related Article URL",
-            "format": "uri"
+          "force_ocr": {
+            "type": "boolean",
+            "title": "Force OCR?"
           }
         },
-        "description": "This will update document information for all documents in your current search.  Please be sure you have edit access to these documents before running this add-on."
+        "description": "<p>This addon allows you to bulk reprocess documents that have failed to upload.  If they still fail to upload, use the Clear Failed Uploads Add-On to clear the failed documents and try re-uploading. If it is a large document set, use the <a href=\"https://www.muckrock.com/news/archives/2023/jan/27/introducing-documentclouds-bulk-upload-script/\">batch upload script</a>. A <a href=\"https://www.documentcloud.org/help/api#languages\">full list</a> of languages supported by DocumentCloud is available for reference.</p>"
       },
-      "created_at": "2022-04-20T13:44:49.028548Z",
-      "updated_at": "2023-07-12T03:45:11.565935Z",
+      "created_at": "2023-07-19T19:59:18.084752Z",
+      "updated_at": "2023-07-19T19:59:18.086404Z",
       "active": false,
       "default": false,
       "featured": false
     },
     {
-      "id": 9,
-      "user": 20080,
-      "organization": 125,
+      "id": 451,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "Regex Extractor",
-      "repository": "MuckRock/documentcloud-regex-addon",
+      "name": "Bad Redactions",
+      "repository": "MuckRock/documentcloud-bad-redactions-addon",
       "parameters": {
         "type": "object",
-        "title": "Regex Extractor",
-        "required": ["regex"],
-        "documents": ["selected"],
+        "title": "Bad Redactions",
+        "documents": ["selected", "query"],
         "categories": ["extraction"],
         "properties": {
-          "regex": {
-            "type": "string",
-            "title": "Regex",
-            "format": "regex"
+          "fix": {
+            "type": "boolean",
+            "title": "Redact bad redactions found?"
           }
         },
-        "description": "This will return a JSON file of all strings the given regex matches in the selected files"
+        "description": "<p>This Add-on allows you to select multiple documents, uses x-ray library to identify bad redactions, creates annotations where bad redactions exist, and exports document_ids, page numbers, bounding boxes and the text in a csv file. By checking the box, this will redact bad redactions and delete any existing bad redaction annotations.</p>\n<p><strong>Warning</strong>: Once you check this box and run this Add-On, you cannot undo redactions. <a href=\"https://free.law/projects/x-ray\">Learn more about X-Ray Library</a>.</p>"
       },
-      "created_at": "2022-04-20T13:44:49.038381Z",
-      "updated_at": "2023-07-12T03:45:12.661661Z",
-      "active": true,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 10,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "PDF Exporter",
-      "repository": "MuckRock/documentcloud-pdf-export-addon",
-      "parameters": {
-        "type": "object",
-        "title": "PDF Exporter",
-        "documents": ["selected", "query"],
-        "categories": ["export"],
-        "properties": {},
-        "description": "Export the selected PDFs in a zip file. \n\n**Note:** If you run this Add-On on a large set of documents and the zip file grows larger than 5GB, you will get a failure. Retry on a smaller set of documents or break up the larger set into smaller subsets. "
-      },
-      "created_at": "2022-04-20T13:44:49.047172Z",
-      "updated_at": "2023-07-20T06:20:27.448628Z",
-      "active": true,
+      "created_at": "2023-07-19T19:59:18.082735Z",
+      "updated_at": "2023-07-19T19:59:18.084443Z",
+      "active": false,
       "default": true,
       "featured": false
     },
     {
-      "id": 11,
-      "user": 20080,
-      "organization": 125,
+      "id": 450,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "Note Exporter",
-      "repository": "MuckRock/documentcloud-note-export-addon",
+      "name": "Change Note Visibility",
+      "repository": "MuckRock/change-note-visibility",
       "parameters": {
         "type": "object",
-        "title": "Note Exporter",
-        "documents": ["selected"],
-        "categories": ["export"],
-        "properties": {},
-        "description": "Export notes from the selected documents as text files in a zip file"
-      },
-      "created_at": "2022-04-20T13:44:49.055986Z",
-      "updated_at": "2023-07-12T03:45:16.153776Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 12,
-      "user": 105435,
-      "organization": null,
-      "access": "public",
-      "name": "Page Stats",
-      "repository": "sooryu22/documentcloud-page-stats-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Page Stats",
-        "documents": ["selected"],
-        "properties": {},
-        "description": "This will return a csv file containing total pages, average number of pages, and link the largest and small document with their number of pages for a given selection of documents."
-      },
-      "created_at": "2022-04-21T21:40:36.364507Z",
-      "updated_at": "2023-07-12T03:45:23.602797Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 35,
-      "user": 105485,
-      "organization": null,
-      "access": "public",
-      "name": "Metadata Grabber",
-      "repository": "cam-garrison/documentcloud-metadata-grabber",
-      "parameters": {
-        "type": "object",
-        "title": "Metadata Grabber",
-        "documents": ["query", "selected"],
-        "categories": ["export"],
-        "properties": {},
-        "description": "Takes metadata from a batch of documents and puts them in one csv file."
-      },
-      "created_at": "2022-04-26T21:26:17.969555Z",
-      "updated_at": "2023-07-12T03:45:22.580576Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 37,
-      "user": 105485,
-      "organization": null,
-      "access": "public",
-      "name": "User Upload Frequency Graph",
-      "repository": "cam-garrison/doccloud-uploads-graph",
-      "parameters": {
-        "type": "object",
-        "title": "User Upload Frequency Graph",
-        "documents": [],
-        "categories": ["statistical"],
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Username"
-          }
-        },
-        "description": "This add-on will generate a graph of user upload frequency."
-      },
-      "created_at": "2022-04-26T21:26:17.990779Z",
-      "updated_at": "2023-07-12T03:45:21.969970Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 40,
-      "user": 105485,
-      "organization": null,
-      "access": "public",
-      "name": "N-Gram Graphs",
-      "repository": "cam-garrison/doccloud-n-gram-addon",
-      "parameters": {
-        "type": "object",
-        "title": "N-Gram Graphs",
-        "documents": ["query", "selected"],
-        "categories": ["statistical"],
-        "properties": {
-          "string1": {
-            "type": "string",
-            "title": "Word 1"
-          },
-          "string2": {
-            "type": "string",
-            "title": "Word 2"
-          }
-        },
-        "description": "This add-on will create word frequency graphs over time."
-      },
-      "created_at": "2022-04-27T00:29:56.336957Z",
-      "updated_at": "2023-07-12T03:45:20.365754Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 42,
-      "user": 105568,
-      "organization": null,
-      "access": "public",
-      "name": "Custom Metadata Scraper",
-      "repository": "DaveG77/documentcloud-custom-metadata-scraper-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Custom Metadata Scraper",
-        "documents": ["selected"],
-        "categories": ["export"],
-        "properties": {
-          "ID": {
-            "type": "boolean",
-            "title": "ID"
-          },
-          "TAGS": {
-            "type": "boolean",
-            "title": "Tags"
-          },
-          "TITLE": {
-            "type": "boolean",
-            "title": "Title"
-          },
-          "PDFURL": {
-            "type": "boolean",
-            "title": "Pdf-Url"
-          },
-          "ASSETURL": {
-            "type": "boolean",
-            "title": "Asset-Url"
-          },
-          "PAGECOUNT": {
-            "type": "boolean",
-            "title": "Page Count"
-          },
-          "CONTRIBUTOR": {
-            "type": "boolean",
-            "title": "Contributor"
-          },
-          "DESCRIPTION": {
-            "type": "boolean",
-            "title": "Description"
-          },
-          "FULLTEXTURL": {
-            "type": "boolean",
-            "title": "Full Text Url"
-          },
-          "PRIVACYLEVEL": {
-            "type": "boolean",
-            "title": "Privacy Level"
-          },
-          "CREATEDATDATE": {
-            "type": "boolean",
-            "title": "Created at Date"
-          },
-          "KEYVALUEPAIRS": {
-            "type": "boolean",
-            "title": "Key Value Pairs"
-          }
-        },
-        "description": "Select the document data you would like to retrieve"
-      },
-      "created_at": "2022-04-27T21:57:42.781459Z",
-      "updated_at": "2023-07-12T03:45:19.788956Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 43,
-      "user": 105568,
-      "organization": null,
-      "access": "public",
-      "name": "Redact Bottom Inch",
-      "repository": "DaveG77/documentcloud-redact-bottom-inch-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Redact Bottom Inch",
-        "documents": ["selected"],
-        "properties": {},
-        "description": "Redacts the bottom inch of all selected documents"
-      },
-      "created_at": "2022-04-27T21:57:42.790040Z",
-      "updated_at": "2023-07-12T03:45:26.729343Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 98,
-      "user": 105563,
-      "organization": null,
-      "access": "public",
-      "name": "Multiple Regex Extractor",
-      "repository": "JamesKunstle/documentcloud-multiple-regex-pattern-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Multiple Regex Extractor",
-        "required": ["regex"],
-        "documents": ["selected"],
-        "properties": {
-          "regex": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "title": "Regex",
-              "format": "regex"
-            },
-            "default": [""]
-          }
-        },
-        "description": "This will return a CSV file of all strings the given regex matches in the selected files for all of the patterns passed as parameters."
-      },
-      "created_at": "2022-04-28T17:10:55.357611Z",
-      "updated_at": "2023-07-12T03:45:27.528832Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 99,
-      "user": 105563,
-      "organization": null,
-      "access": "public",
-      "name": "Multiple Regex Extractor with Defaults",
-      "repository": "JamesKunstle/documentcloud-multi-regex-pattern-with-defaults-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Multiple Regex Extractor with Defaults",
-        "required": ["regex"],
-        "documents": ["selected"],
-        "properties": {
-          "regex": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "title": "Regex",
-              "format": "regex"
-            },
-            "default": [""]
-          }
-        },
-        "description": "This will return a CSV file of all strings the given regex matches in the selected files for all of the patterns passed as parameters, including those that are run by default in the 'patterns.csv' file."
-      },
-      "created_at": "2022-04-28T17:10:55.365144Z",
-      "updated_at": "2023-07-12T03:45:28.845233Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 100,
-      "user": 105563,
-      "organization": null,
-      "access": "public",
-      "name": "Legal Citations",
-      "repository": "JamesKunstle/documentcloud-legal-citation-identifcation-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Legal Citations",
-        "documents": ["query", "selected"],
-        "properties": {},
-        "description": "This add-on identifies any legal citations in the documents. [Learn more about eyecite](https://pypi.org/project/eyecite/)"
-      },
-      "created_at": "2022-04-28T17:10:55.372345Z",
-      "updated_at": "2023-07-12T03:45:30.142851Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 102,
-      "user": 105563,
-      "organization": null,
-      "access": "public",
-      "name": "Sentiment Analysis",
-      "repository": "JamesKunstle/documentcloud-sentiment-analysis-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Sentiment Analysis",
-        "documents": ["query", "selected"],
-        "categories": ["ai"],
-        "properties": {},
-        "description": "This will return a CSV of the sentiment analysis run on each sentence of the input documents.\n[Learn more about HuggingFace](https://huggingface.co/) and [HappyTransformer](https://happytransformer.com/)"
-      },
-      "created_at": "2022-04-28T17:10:55.390886Z",
-      "updated_at": "2023-07-17T19:44:27.293341Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 104,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "Push to IPFS/Filecoin",
-      "repository": "MuckRock/documentcloud-filecoin-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Push to IPFS/Filecoin",
+        "title": "Change Note Visibility",
         "version": 2,
-        "documents": ["selected", "query"],
-        "categories": ["export"],
-        "properties": {},
-        "description": "This Add-On pushes the selected documents to IPFS and the Filecoin network via Estuary. Once the run is complete, you’ll be given a working IPFS address for the document, which will make it more resilient from outages and removals.\n\n**Warning**: Once you run this Add-On, you cannot remove the document from the IPFS and Filecoin networks! This action cannot be undone. [Learn more about Estuary](https://docs.estuary.tech/what-is-estuary) and [IPFS](https://docs.ipfs.io/concepts/what-is-ipfs/)."
+        "required": ["access_level"],
+        "documents": ["query", "selected"],
+        "categories": ["bulk"],
+        "properties": {
+          "access_level": {
+            "type": "string",
+            "title": "Access level",
+            "default": "public",
+            "description": "Public, private, or organization."
+          }
+        },
+        "description": "<p>This Add-On will allow you to change the visibility of all notes on documents in the query/selection. Only works on documents you own.</p>"
       },
-      "created_at": "2022-05-02T19:37:12.736404Z",
-      "updated_at": "2023-07-12T03:45:34.045023Z",
+      "created_at": "2023-07-19T19:59:18.081386Z",
+      "updated_at": "2023-07-19T19:59:18.082439Z",
       "active": false,
       "default": false,
       "featured": false
     },
     {
-      "id": 105,
-      "user": 20080,
-      "organization": 125,
+      "id": 445,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "Scraper",
-      "repository": "MuckRock/documentcloud-scraper-addon",
+      "name": "Bulk Delete Documents",
+      "repository": "MuckRock/bulk-delete-documents",
       "parameters": {
         "type": "object",
-        "title": "Scraper",
-        "required": ["site", "project"],
+        "title": "Bulk Delete Documents",
+        "version": 2,
+        "documents": ["query"],
+        "categories": ["bulk"],
+        "properties": {
+          "confirm": {
+            "type": "boolean",
+            "title": "Please select this box to confirm you want to irreversibly delete these documents"
+          }
+        },
+        "description": "<p>This is an Add-On that deletes large batches of documents. Use with great caution as it is irreversible.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.080064Z",
+      "updated_at": "2023-07-19T19:59:18.081083Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 443,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Bulk Add to Project",
+      "repository": "MuckRock/bulk-add-to-project-add-on",
+      "parameters": {
+        "type": "object",
+        "title": "Bulk Add to Project",
+        "version": 2,
+        "required": ["project_id"],
+        "documents": ["query"],
+        "categories": ["bulk"],
+        "properties": {
+          "project_id": {
+            "type": "integer",
+            "title": "Project ID"
+          }
+        },
+        "description": "<p>This DocumentCloud Add-On allows you to add a query of documents to a project.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.078706Z",
+      "updated_at": "2023-07-19T19:59:18.079767Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 442,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Change Visibility",
+      "repository": "MuckRock/change-visibility",
+      "parameters": {
+        "type": "object",
+        "title": "Change Visibility",
+        "version": 2,
+        "required": ["access"],
+        "documents": ["query"],
+        "categories": ["bulk"],
+        "properties": {
+          "access": {
+            "type": "string",
+            "title": "Access level of the annotations (public, private, organization)",
+            "default": "private"
+          }
+        },
+        "description": "<p>This Add-On changes the access level of all documents (public, private, organization) in the current query.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.077439Z",
+      "updated_at": "2023-07-19T19:59:18.078412Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 441,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Bulk Delete Annotations",
+      "repository": "MuckRock/bulk-delete-annotations",
+      "parameters": {
+        "type": "object",
+        "title": "Bulk Delete Annotations",
+        "version": 2,
+        "documents": ["query", "selected"],
+        "categories": ["bulk"],
+        "properties": {},
+        "description": "<p>This AddOn runs through all documents either selected or queried and deletes the annotations for documents.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.076043Z",
+      "updated_at": "2023-07-19T19:59:18.077144Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 440,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Clear Failed Uploads",
+      "repository": "MuckRock/clear-failed-uploads",
+      "parameters": {
+        "type": "object",
+        "title": "Clear Failed Uploads",
+        "version": 2,
+        "documents": ["query"],
+        "categories": ["bulk"],
+        "properties": {},
+        "description": "<p>Runs through a query of documents and deletes the documents if their status is error or nofile.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.074483Z",
+      "updated_at": "2023-07-19T19:59:18.075484Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 439,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Extract & Tag Add-On",
+      "repository": "MuckRock/Extract-Tag-AddOn",
+      "parameters": {
+        "type": "object",
+        "title": "Extract & Tag Add-On",
+        "version": 2,
+        "required": ["start", "end", "key_name"],
+        "documents": ["query", "selected"],
+        "categories": ["extraction"],
+        "properties": {
+          "end": {
+            "type": "string",
+            "title": "End String"
+          },
+          "start": {
+            "type": "string",
+            "title": "Start String"
+          },
+          "key_name": {
+            "type": "string",
+            "title": "Key Name"
+          }
+        },
+        "description": "<p>When provided a selection or query of DocumentCloud documents, this Add-On extracts the text from a document starting from a given start string to a given end string, basically automating a copy-paste procedure. It also allows you to pick a key name for it if you want to add it as a key/value pair on DocumentCloud.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.072960Z",
+      "updated_at": "2023-07-19T19:59:18.074111Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 438,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Email Conversion Add-On",
+      "repository": "MuckRock/convert-email-add-on",
+      "parameters": {
+        "type": "object",
+        "title": "Email Conversion Add-On",
+        "required": ["url"],
+        "documents": [],
+        "categories": ["file"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "URL",
+            "format": "uri",
+            "description": "A publicly accessible Google Drive or Dropbox folder or file."
+          },
+          "project_id": {
+            "type": "integer",
+            "title": "Project ID of the project you would like the documents uploaded to (optional)"
+          },
+          "attachments": {
+            "type": "boolean",
+            "title": "Attempt Attachment Extraction"
+          },
+          "access_level": {
+            "type": "string",
+            "title": "Access level for uploaded documents (public, private(default), organization)",
+            "default": "private"
+          }
+        },
+        "description": "<p>When provided a public Google Drive or Dropbox link, it will download the EML/MSG files in the link, convert them to PDF, and upload them to DocumentCloud. Email attachments will be presented for download as a zip file.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.071465Z",
+      "updated_at": "2023-07-19T19:59:18.072659Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 437,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "PDF Compression Add-On",
+      "repository": "MuckRock/compress-pdf-add-on",
+      "parameters": {
+        "type": "object",
+        "title": "PDF Compression Add-On",
+        "required": ["url"],
+        "documents": [],
+        "categories": ["file"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "URL",
+            "format": "uri",
+            "description": "A publicly accessible Google Drive or Dropbox folder or file."
+          }
+        },
+        "description": "<p>Give this Add-On a public link to a Google Drive or Dropbox file or folder, it will try to download and compress each PDF before uploading to DocumentCloud.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.070114Z",
+      "updated_at": "2023-07-19T19:59:18.071172Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 436,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Klaxon Site Monitor",
+      "repository": "MuckRock/Klaxon",
+      "parameters": {
+        "type": "object",
+        "title": "Klaxon Site Monitor",
+        "required": ["site", "selector"],
         "categories": ["monitor"],
         "properties": {
           "site": {
             "type": "string",
             "title": "Site",
-            "format": "uri",
-            "description": "The URL of the site to start scraping"
+            "format": "uri"
           },
-          "project": {
+          "selector": {
             "type": "string",
-            "title": "Project",
-            "description": "The DocumentCloud project title or ID of the project the documents should be uploaded to.  If the project title does not exist, it will be created."
-          },
-          "filecoin": {
-            "type": "boolean",
-            "title": "Push to IPFS/Filecoin",
-            "description": "WARNING: This will push all scraped files to IPFS and Filecoin.   There is no way to remove files from these storage systems."
-          },
-          "keywords": {
-            "type": "string",
-            "title": "Keywords",
-            "description": "Keywords to search and notify on (comma separated)"
-          },
-          "notify_all": {
-            "type": "boolean",
-            "title": "Notify on all new documents"
-          },
-          "crawl_depth": {
-            "type": "integer",
-            "title": "Crawl Depth",
-            "default": 0,
-            "maximum": 2,
-            "minimum": 0,
-            "description": "Recursively scrape same-domain links found on the page (Must be between 0 and 2)"
-          },
-          "access_level": {
-            "type": "string",
-            "title": "Access Level",
-            "default": "public",
-            "description": "Access level (public, private, or organization) of documents scraped."
+            "title": "Selector",
+            "description": "CSS Selector on the page you would like to monitor."
           },
           "slack_webhook": {
             "type": "string",
@@ -515,241 +794,283 @@
             "description": "Enter a slack webhook to enable Slack notifications"
           }
         },
-        "description": "This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.",
+        "description": "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
         "eventOptions": {
           "name": "site",
           "events": ["hourly", "daily", "weekly"]
         }
       },
-      "created_at": "2022-05-17T13:49:53.635344Z",
-      "updated_at": "2023-07-12T03:45:34.950560Z",
-      "active": true,
-      "default": true,
-      "featured": false
-    },
-    {
-      "id": 106,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "Move Account",
-      "repository": "MuckRock/documentcloud-move-account-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Move Account",
-        "required": ["new_user_id", "user"],
-        "documents": ["query"],
-        "categories": ["bulk"],
-        "properties": {
-          "user": {
-            "type": "string",
-            "title": "Confirm current username",
-            "description": "Please type the username of the current user to confirm the operation (i.e. peterparker)"
-          },
-          "new_org_id": {
-            "type": "integer",
-            "title": "New Organization ID",
-            "description": "The organization ID for the organization to transfer the documents to (optional, this is a number). If this is omitted, the documents will not change organization, even if the new owner is not in their current organization. Both the old and new user must be a member of this organization.\n"
-          },
-          "new_user_id": {
-            "type": "integer",
-            "title": "Account ID to move documents",
-            "description": "The user ID for the account to transfer the documents to (this is a number)"
-          }
-        },
-        "description": "This will change the account owner for all documents in your current search. To transfer documents, both users must be a member of at least one shared organization. DocumentCloud has a group membership dropdown on the left sidebar.  Click on the dropdown  to expand the membership list of the organization.  Click on the user you would like to transfer documents to,  and copy the digits after their name that appear in the search bar.  The organization ID can be found by clicking on the  documents for the organization on the left sidebar and copying the  digits that follow the name of the organization on the search bar.  Your current username can be found at https://account.muckrock.com/ under your name.  # WARNING\nThis is a destructive action.  You may lose access to all documents affected by this Add-On.  This is Add-On is primarily meant for users who have ended up with mutliple accounts and would like to consolidate them.  Please be very sure you know what you are doing before running this Add-On and [read the full instructions and tips here](https://github.com/MuckRock/documentcloud-move-account-addon#readme)."
-      },
-      "created_at": "2022-06-08T16:02:50.673154Z",
-      "updated_at": "2023-07-12T03:45:36.626987Z",
+      "created_at": "2023-07-19T19:59:18.068046Z",
+      "updated_at": "2023-07-27T14:06:29.899202Z",
       "active": false,
       "default": false,
-      "featured": false
+      "featured": true
     },
     {
-      "id": 110,
-      "user": 20080,
-      "organization": 125,
+      "id": 435,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "Tabula Spreadsheet Extraction",
-      "repository": "MuckRock/documentcloud-tabula-addon",
+      "name": "Site Snapshot",
+      "repository": "MuckRock/Site-Snapshot",
       "parameters": {
         "type": "object",
-        "title": "Tabula Spreadsheet Extraction",
-        "documents": ["selected", "query"],
-        "categories": ["extraction"],
-        "properties": {
-          "url": {
-            "type": "string",
-            "title": "URL of tabula template",
-            "format": "uri"
-          }
-        },
-        "description": "Have a PDF with embedded tables? This Add-On runs the open source [Tabula library](https://tabula.technology) against a selected PDF and tries to identify and extract any tables. You can provide a Google Drive or Dropbox URL to a Tabula template you have generated already to run against the documents. If no template is provided, tabula will try to guess the boundaries of the tables within the document."
-      },
-      "created_at": "2022-06-23T14:24:36.074620Z",
-      "updated_at": "2023-07-12T03:45:37.343450Z",
-      "active": true,
-      "default": true,
-      "featured": false
-    },
-    {
-      "id": 112,
-      "user": 658,
-      "organization": null,
-      "access": "public",
-      "name": "The Fuzz",
-      "repository": "morisy/documentcloud-thefuzz",
-      "parameters": {
-        "type": "object",
-        "title": "The Fuzz",
-        "documents": ["query", "selected"],
-        "properties": {
-          "reference_doc": {
-            "type": "number",
-            "title": "Reference Doc (Paste Doc ID)"
-          }
-        },
-        "description": "This Add-On runs [The Fuzz](https://github.com/seatgeek/thefuzz) against a set of documents (either the current search query or the documents you have selected)."
-      },
-      "created_at": "2022-07-18T23:25:43.495600Z",
-      "updated_at": "2023-07-17T19:44:22.237967Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 156,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "Summarize",
-      "repository": "MuckRock/documentcloud-summarize-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Summarize",
-        "documents": ["selected"],
-        "categories": ["ai"],
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Report name"
-          }
-        },
-        "description": "This add-on will provide a short summary of each document you run it on in a text report."
-      },
-      "created_at": "2022-08-16T19:25:28.251305Z",
-      "updated_at": "2023-06-14T14:10:06.279543Z",
-      "active": false,
-      "default": false,
-      "featured": false
-    },
-    {
-      "id": 169,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "Transcribe Audio, powered by Whisper",
-      "repository": "MuckRock/documentcloud-whisper-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Transcribe Audio, powered by Whisper",
-        "required": ["url"],
+        "title": "Site Snapshot",
+        "required": ["sites"],
         "documents": [],
-        "categories": ["ai", "file"],
+        "categories": ["monitor"],
         "properties": {
-          "url": {
-            "type": "string",
-            "title": "URL",
-            "format": "uri",
-            "description": "A publically accessible audio file or a supported cloud storage share link"
-          }
-        },
-        "description": "Transcribe audio files using [OpenAI's Whisper](https://github.com/openai/whisper), an open source machine learning model.\nYou may upload audio files from any publically accessible URL.  You may also use share links from Google Drive, Dropbox, Mediafire, Wetransfer, or YouTube.  If you use a share link for a folder, it will process all audio files in that folder."
-      },
-      "created_at": "2022-09-30T20:55:56.155751Z",
-      "updated_at": "2023-06-14T19:03:43.780297Z",
-      "active": true,
-      "default": true,
-      "featured": false
-    },
-    {
-      "id": 170,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "Import Documents",
-      "repository": "MuckRock/cloud-upload-addon",
-      "parameters": {
-        "type": "object",
-        "title": "Import Documents",
-        "required": ["url", "project_id"],
-        "properties": {
-          "url": {
-            "type": "string",
-            "title": "URL"
+          "sites": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "title": "URL",
+              "format": "uri"
+            },
+            "default": [""]
           },
           "project_id": {
             "type": "integer",
-            "title": "Type the ID of the project you would like to upload the files to."
+            "title": "Project ID"
           },
           "access_level": {
             "type": "string",
-            "title": "Access level (public, private, or organization) of the documents you would like to upload.",
-            "default": "public"
+            "title": "Access level (public, private, organization)",
+            "default": "private"
           }
         },
-        "description": "This add on allows you to submit a public Dropbox, Google Drive, WeTransfer, or MediaFire link and automatically upload it to DocumentCloud. Note that for now mostly only PDFs are functioning. In the future all 70 file extension types will be supported."
+        "description": "<p>This Add-On will create a PDF snapshot of a site and upload the document to your DocumentCloud account.</p>"
       },
-      "created_at": "2022-10-04T14:51:05.634679Z",
-      "updated_at": "2023-07-15T18:04:31.212583Z",
-      "active": true,
-      "default": true,
-      "featured": false
-    },
-    {
-      "id": 171,
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "name": "Internet Archive Export Tool",
-      "repository": "MuckRock/Internet-Archive-Export-Add-On",
-      "parameters": {
-        "type": "object",
-        "title": "Internet Archive Export Tool",
-        "required": ["item_name"],
-        "documents": ["query", "selected"],
-        "categories": ["export"],
-        "properties": {
-          "item_name": {
-            "type": "string",
-            "title": "Name of Internet Archive item"
-          }
-        },
-        "description": "This add-on allows you to select documents from DocumentCloud and upload all the documents to the Internet Archive for archiving."
-      },
-      "created_at": "2022-10-04T15:51:43.317096Z",
-      "updated_at": "2023-07-19T13:40:39.737047Z",
+      "created_at": "2023-07-19T19:59:18.066752Z",
+      "updated_at": "2023-07-19T19:59:18.067743Z",
       "active": false,
       "default": false,
       "featured": false
     },
     {
-      "id": 351,
-      "user": 20080,
-      "organization": 125,
+      "id": 434,
+      "user": 100000,
+      "organization": 10001,
       "access": "public",
-      "name": "OCRSpace",
-      "repository": "MuckRock/documentcloud-ocrspace-addon",
+      "name": "Document Hasher",
+      "repository": "MuckRock/document-hash-add-on",
       "parameters": {
         "type": "object",
-        "title": "OCRSpace",
-        "documents": ["selected"],
+        "title": "Document Hasher",
+        "version": 2,
+        "documents": ["query", "selected"],
         "categories": ["extraction"],
         "properties": {},
-        "description": "OCR your documents using OCRSpace\n\n<https://ocr.space>"
+        "description": "<p>This Add-On allows you to calculate the SHA-1 hash of a document and add it to the document as a key value pair to establish authenticity of primary source material.</p>"
       },
-      "created_at": "2023-01-27T21:06:46.197402Z",
-      "updated_at": "2023-06-14T15:05:09.190476Z",
+      "created_at": "2023-07-19T19:59:18.065295Z",
+      "updated_at": "2023-07-19T19:59:18.066453Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 433,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Document Splitter",
+      "repository": "MuckRock/pdf-splitter-add-on",
+      "parameters": {
+        "type": "object",
+        "title": "Document Splitter",
+        "required": ["page"],
+        "documents": ["selected"],
+        "categories": ["file"],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "title": "Page number to split on."
+          }
+        },
+        "description": "<p>This Add-On splits a document along a designated page into two documents. If your document is 5 pages and you split on page 3 the resulting documents will be page 1 to 3 and 4 to 5.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.063866Z",
+      "updated_at": "2023-07-19T19:59:18.064981Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 372,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "PII Detector",
+      "repository": "MuckRock/PII-Detector",
+      "parameters": {
+        "type": "object",
+        "title": "PII Detector",
+        "documents": ["query", "selected"],
+        "categories": ["extraction", "monitor"],
+        "properties": {
+          "ssn": {
+            "type": "boolean",
+            "title": "Detect SSNs"
+          },
+          "zip": {
+            "type": "boolean",
+            "title": "Detect zipcodes"
+          },
+          "alert": {
+            "type": "boolean",
+            "title": "Notify by email when PII is detected in a document"
+          },
+          "email": {
+            "type": "boolean",
+            "title": "Detect emails"
+          },
+          "phone": {
+            "type": "boolean",
+            "title": "Detect phone numbers"
+          },
+          "access": {
+            "type": "string",
+            "title": "Access level of the annotations (public, private, organization)",
+            "default": "private"
+          },
+          "address": {
+            "type": "boolean",
+            "title": "Detect addresses"
+          },
+          "project_id": {
+            "type": "integer",
+            "title": "If you'd like to add documents where PII is detected to a project, provide the Project ID Here."
+          },
+          "credit_card": {
+            "type": "boolean",
+            "title": "Detect credit cards"
+          }
+        },
+        "description": "<p>This add-on will detect PII in a document, annotate where, and automatically e-mail you when sensitive PII is detected if you choose that option.</p>",
+        "eventOptions": {
+          "events": ["upload"]
+        }
+      },
+      "created_at": "2023-07-19T19:59:18.062382Z",
+      "updated_at": "2023-07-19T19:59:18.063506Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 371,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "PDF Reflow",
+      "repository": "MuckRock/Reflow-Add-On",
+      "parameters": {
+        "type": "object",
+        "title": "PDF Reflow",
+        "documents": ["selected"],
+        "properties": {
+          "dpi": {
+            "type": "integer",
+            "title": "E-reader display pixels per inch. Default is 167",
+            "default": 167
+          },
+          "width": {
+            "type": "integer",
+            "title": "E-reader display pixel width. Default is 560",
+            "default": 560
+          },
+          "height": {
+            "type": "integer",
+            "title": "E-reader display pixel height. Default is 745",
+            "default": 745
+          },
+          "project_id": {
+            "type": "integer",
+            "title": "Project ID of the project you would like the documents uploaded to (optional)"
+          },
+          "access_level": {
+            "type": "string",
+            "title": "Access level for uploaded documents (public, private(default), organization)",
+            "default": "private"
+          }
+        },
+        "description": "<p>A DocumentCloud Add-On that uses K2pdfopt to optimize documents for reading on mobile eReaders and smartphones</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.060816Z",
+      "updated_at": "2023-07-19T19:59:18.061991Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 361,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Diakopoulos GPT-3 Example: Brainstorming Ideas Example",
+      "repository": "MuckRock/gpt3-brainstorm-example",
+      "parameters": {
+        "type": "object",
+        "title": "Diakopoulos GPT-3 Example: Brainstorming Ideas Example",
+        "documents": ["query", "selected"],
+        "categories": ["ai", "premium"],
+        "properties": {},
+        "description": "<p>An implementation of the example <a href=\"https://colab.research.google.com/drive/1rr0dxKpwK5zjch1V4eKjwwyVW-AzuDTw#scrollTo=zI4zN4RMg8yq\">brainstorming GPT-3 application described by Nick Diakopoulos</a>. Use with care as it may introduce factual errors, hallucinations, and other artifacts in summaries.</p>\n<p>Note that this plugin uses <em>14 credits per document analyzed</em>, rounded up. Give this a full prompt that you would pass into GPT-3 and it will run it against your selected documents, one at a time. The Add-On only looks at the 12,000 characters of a document.  The prompt refers to the user input as the &ldquo;Assignment,&rdquo; the document&rsquo;s text as &ldquo;Document Text&rdquo;, and GPT-3&rsquo;s generated response as the &ldquo;Answer,&rdquo; which can be helpful when defining your prompt.</p>\n<p>We&rsquo;d love your feedback and ideas — drop a note to info at documentcloud dot org or join us in the News Nerdery Slack in the #proj-documentcloud channel.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.057785Z",
+      "updated_at": "2023-07-19T19:59:18.060279Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 360,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Diakopoulos GPT-3 Example: Classifying Comments Based on Subject",
+      "repository": "MuckRock/gpt3-classification",
+      "parameters": {
+        "type": "object",
+        "title": "Diakopoulos GPT-3 Example: Classifying Comments Based on Subject",
+        "documents": ["query", "selected"],
+        "categories": ["ai", "premium"],
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value Label"
+          },
+          "category": {
+            "type": "string",
+            "title": "Describe the category that of records you want labeled as \"True\""
+          }
+        },
+        "description": "<p>A modified implementation of the example <a href=\"https://colab.research.google.com/drive/1rr0dxKpwK5zjch1V4eKjwwyVW-AzuDTw#scrollTo=zI4zN4RMg8yq\">using GPT-3 to classify documents, described by Nick Diakopoulos</a>. For simplicity&rsquo;s sake, it only implements the first half of the classification task described, but allows the user to customize the subject matter. Use with care as it may introduce factual errors, hallucinations, and other artifacts in summaries.</p>\n<p>Note that this plugin uses <em>14 credits per document analyzed</em>, rounded up. Give this a full prompt that you would pass into GPT-3 and it will run it against your selected documents, one at a time. The Add-On only looks at the 12,000 characters of a document.  The prompt refers to the user input as the &ldquo;Assignment,&rdquo; the document&rsquo;s text as &ldquo;Document Text&rdquo;, and GPT-3&rsquo;s generated response as the &ldquo;Answer,&rdquo; which can be helpful when defining your prompt.</p>\n<p>We&rsquo;d love your feedback and ideas — drop a note to info at documentcloud dot org or join us in the News Nerdery Slack in the #proj-documentcloud channel.  </p>"
+      },
+      "created_at": "2023-07-19T19:59:18.054811Z",
+      "updated_at": "2023-07-19T19:59:18.057428Z",
+      "active": false,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 359,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Diakopoulos GPT-3 Example: Summarizing Legislative Bills",
+      "repository": "MuckRock/gpt3-summarization-example",
+      "parameters": {
+        "type": "object",
+        "title": "Diakopoulos GPT-3 Example: Summarizing Legislative Bills",
+        "documents": ["query", "selected"],
+        "categories": ["ai", "premium"],
+        "properties": {},
+        "description": "<p>An implementation of the example <a href=\"https://colab.research.google.com/drive/1rr0dxKpwK5zjch1V4eKjwwyVW-AzuDTw#scrollTo=zI4zN4RMg8yq\">using GPT-3 to summarize proposed legislation, described by Nick Diakopoulos</a>. Use with care as it may introduce factual errors, hallucinations, and other artifacts in summaries.</p>\n<p>Note that this plugin uses <em>14 credit per document analyzed</em>, rounded up. Give this a full prompt that you would pass into GPT-3 and it will run it against your selected documents, one at a time. The Add-On only looks at the 12,000 characters of a document.  The prompt refers to the user input as the &ldquo;Assignment,&rdquo; the document&rsquo;s text as &ldquo;Document Text&rdquo;, and GPT-3&rsquo;s generated response as the &ldquo;Answer,&rdquo; which can be helpful when defining your prompt.</p>\n<p>We&rsquo;d love your feedback and ideas — drop a note to info at documentcloud dot org or join us in the News Nerdery Slack in the #proj-documentcloud channel.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.052110Z",
+      "updated_at": "2023-07-19T19:59:18.054478Z",
       "active": false,
       "default": false,
       "featured": false

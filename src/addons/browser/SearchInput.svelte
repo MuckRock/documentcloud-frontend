@@ -1,9 +1,12 @@
 <script context="module">
   import { _ } from "svelte-i18n";
   import { writable } from "svelte/store";
-  import Search from "../../common/icons/Search.svelte";
 
   export const query = writable("");
+</script>
+
+<script>
+  import Search from "../../common/icons/Search.svelte";
 </script>
 
 <style>
