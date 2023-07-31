@@ -263,6 +263,7 @@
         properties={addon.parameters.properties}
         required={addon.parameters.required}
         eventOptions={addon.parameters.eventOptions}
+        {event}
       >
         <Selection
           bind:this={selection}

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Event } from "../runs/EventList.svelte";
+  import type { Event } from "../runs/ScheduledEvent.svelte";
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "", selection: null });
@@ -39,6 +39,10 @@
     }
 
     return params;
+  }
+
+  function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   export function validate() {
@@ -99,7 +103,7 @@
               : $_("addonDispatchDialog.runOnce")}</option
           >
           {#each eventOptions.events as event}
-            <option value={event}>{event}</option>
+            <option value={event}>{capitalize(event)}</option>
           {/each}
         </select>
       </label>

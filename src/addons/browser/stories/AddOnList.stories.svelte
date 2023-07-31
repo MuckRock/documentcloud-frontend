@@ -23,8 +23,5 @@
 
 <Story name="With Data" {args} />
 <Story name="Empty" args={{ ...args, items: [] }} />
-<Story name="Loading" args={{ ...args, items: [], loading: true }} />
-<Story
-  name="Error"
-  args={{ ...args, items: [], error: "An error occurred!" }}
-/>
+<Story name="Loading" args={{ ...args, loading: true }} />
+<Story name="Error" args={{ ...args, error: "An error occurred!" }} />

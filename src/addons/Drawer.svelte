@@ -72,6 +72,7 @@
   }
 
   button.close {
+    margin: 0;
     top: 1em;
     position: absolute;
     border-radius: 9999px;
