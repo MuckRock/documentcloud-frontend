@@ -1,8 +1,9 @@
 <script context="module">
   import { writable } from "svelte/store";
-  export const filter = writable([]);
+  export const filter = writable(["all"]);
   // TODO declare hardcoded values in a centralized place
   export const FILTERS = [
+    ["all", "All"],
     ["active", "Pinned"],
     ["featured", "Featured"],
   ];
@@ -25,6 +26,7 @@
   import Hashtag from "../../common/icons/Hashtag.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
+  import Infinity from "svelte-octicons/lib/Infinity16.svelte";
 </script>
 
 <style>
@@ -42,6 +44,15 @@
     margin: 0.5em;
   }
 
+  #all [slot="icon"] {
+    display: flex;
+    align-items: center;
+  }
+
+  #all:not(.selected) [slot="icon"] {
+    fill: var(--primary);
+  }
+
   #pinned:not(.selected) [slot="icon"] {
     fill: palevioletred;
   }
@@ -56,16 +67,22 @@
 </style>
 
 <ul class="filters">
-  <li id="pinned" class:selected={$filter.includes("active")}>
-    <Filter name="Pinned" selected={$filter.includes("active")}>
-      <input slot="input" type="radio" value="active" bind:group={$filter} />
-      <span slot="icon"><Pin /></span>
+  <li id="all" class:selected={$filter.includes("all")}>
+    <Filter name="All" selected={$filter.includes("all")}>
+      <input slot="input" type="radio" value="all" bind:group={$filter} />
+      <span slot="icon"><Infinity /></span>
     </Filter>
   </li>
   <li id="featured" class:selected={$filter.includes("featured")}>
     <Filter name="Featured" selected={$filter.includes("featured")}>
       <input slot="input" type="radio" value="featured" bind:group={$filter} />
       <span slot="icon"><Star /></span>
+    </Filter>
+  </li>
+  <li id="pinned" class:selected={$filter.includes("active")}>
+    <Filter name="Pinned" selected={$filter.includes("active")}>
+      <input slot="input" type="radio" value="active" bind:group={$filter} />
+      <span slot="icon"><Pin /></span>
     </Filter>
   </li>
 </ul>
