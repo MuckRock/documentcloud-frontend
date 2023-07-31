@@ -24,7 +24,7 @@
     results?: Event[];
   } = {};
   let loading = false;
-  let error;
+  let error: string;
 
   $: next_url = res.next ? new URL(res.next) : null;
   $: prev_url = res.previous ? new URL(res.previous) : null;

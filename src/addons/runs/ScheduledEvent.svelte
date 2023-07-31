@@ -30,6 +30,8 @@
   export let event: Event;
 
   $: disabled = event.event === 0;
+  $: key = event.addon.parameters.eventOptions.name;
+  $: target = event.parameters[key];
 
   function url(event: Event) {
     return `#add-ons/${event.addon.repository}/${event.id}`;
@@ -70,6 +72,9 @@
     color: var(--darkgray);
     font-style: italic;
   }
+  .target {
+    color: var(--darkgray);
+  }
 </style>
 
 <a
@@ -80,7 +85,12 @@
   class:disabled
 >
   <div class="info">
-    <p class="name">{event.addon.name}</p>
+    <p class="name">
+      {event.addon.name}
+    </p>
+    {#if target}
+      <p class="target">{target}</p>
+    {/if}
     {#if disabled}
       <p class="routine">{schedules[event.event]}</p>
     {:else}
