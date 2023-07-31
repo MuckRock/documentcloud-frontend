@@ -13,11 +13,11 @@
   }
 
   export const schedules = [
-    "Disabled",
-    "Hourly",
-    "Daily",
-    "Weekly",
-    "On Upload",
+    "disabled",
+    "hourly",
+    "daily",
+    "weekly",
+    "on upload",
   ];
 </script>
 
@@ -84,7 +84,11 @@
     {#if disabled}
       <p class="routine">{schedules[event.event]}</p>
     {:else}
-      <p class="routine">Runs {schedules[event.event]}</p>
+      <p class="routine">
+        {$_("addonRuns.runsOn", {
+          values: { schedule: schedules[event.event] },
+        })}
+      </p>
     {/if}
   </div>
   <div class="actions">

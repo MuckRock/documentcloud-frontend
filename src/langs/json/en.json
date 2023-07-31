@@ -460,7 +460,7 @@
     "addon": "Add-on",
     "learnMore": "Learn more about Add-Ons",
     "browseAll": "Browse All Add-Ons",
-    "addonRuns": "See scheduled Add-On runs"
+    "addonRuns": "See past and future Add-On runs"
   },
   "noDocuments": {
     "noSearchResults": "No search results",
@@ -743,6 +743,7 @@
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
     "previous": "Previous Runs",
+    "runsOn": "Runs {schedule}",
     "upcoming": {
       "empty": "Scheduled add-ons will appear here",
       "loading": "Loading…",
