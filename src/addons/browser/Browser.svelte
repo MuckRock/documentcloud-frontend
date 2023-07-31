@@ -81,7 +81,9 @@
       filter.includes(n),
     );
     params.filters = filters.reduce((m, f) => {
-      m[f] = true;
+      if (f !== "all") {
+        m[f] = true;
+      }
       return m;
     }, {});
 

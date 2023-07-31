@@ -63,13 +63,7 @@
 </style>
 
 <div class="list" class:empty class:loading class:error>
-  {#if !empty}
-    <ul>
-      {#each items as addOn (addOn.id)}
-        <li><ListItem {...addOn} /></li>
-      {/each}
-    </ul>
-  {:else if loading}
+  {#if loading}
     <!-- Loading state -->
     <Loader active center big pad />
     <p>{$_("addonBrowserDialog.loading")}</p>
@@ -80,9 +74,15 @@
     {#if reload}<Button action on:click={reload}
         >{$_("addonBrowserDialog.retry")}</Button
       >{/if}
-  {:else}
+  {:else if empty}
     <!-- Empty state -->
     <div class="icon"><EmptyResults /></div>
     <p>{$_("addonBrowserDialog.empty")}</p>
+  {:else}
+    <ul>
+      {#each items as addOn (addOn.id)}
+        <li><ListItem {...addOn} /></li>
+      {/each}
+    </ul>
   {/if}
 </div>
