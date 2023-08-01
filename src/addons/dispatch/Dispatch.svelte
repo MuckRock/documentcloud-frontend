@@ -12,6 +12,7 @@
   import Form, { values } from "./Form.svelte";
   import Header from "./Header.svelte";
   import Selection from "./Selection.svelte";
+  import ScheduledInset from "./ScheduledInset.svelte";
   import { schedules } from "../runs/ScheduledEvent.svelte";
 
   import { baseApiUrl } from "../../api/base.js";
@@ -31,8 +32,10 @@
   };
 
   let error: Error | null;
+
   let drawer: Drawer;
   let form: Form;
+  let scheduled: ScheduledInset;
   let selection: Selection;
 
   $: loading = !addon;
@@ -222,6 +225,7 @@
     } else {
       await load_addon(repo);
     }
+
     visible = true;
   }
 </script>
@@ -257,6 +261,9 @@
   <div slot="content" class:loading>
     {#if addon}
       <Header {addon} />
+
+      <ScheduledInset bind:this={scheduled} {addon} />
+
       <Form
         bind:this={form}
         on:submit={onSubmit}
