@@ -31,7 +31,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin: 0 0 1em 0;
+    margin: 0;
     padding: 1em;
     border-radius: var(--radius);
     border-color: rgba(0, 0, 0, 0.1);
@@ -51,6 +51,18 @@
 
   input[type="radio"] {
     vertical-align: text-top;
+  }
+
+  .help {
+    margin: 0.5em 1rem 1rem;
+    font-size: 0.8em;
+    color: var(--gray);
+    & a {
+      display: block;
+      margin: 0.5em 0;
+      color: var(--primary);
+      text-decoration: underline;
+    }
   }
 </style>
 
@@ -85,4 +97,8 @@
       </label>
     {/if}
   </fieldset>
+  <p class="help">
+    {$_("addonDispatchDialog.selectionHelp")}
+    <a href="/help/add-ons">{$_("addonDispatchDialog.selectionLearnMore")}</a>
+  </p>
 {/if}
