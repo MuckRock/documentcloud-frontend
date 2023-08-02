@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
+  import Menu from "../../../common/Menu.svelte";
+  import MenuItem from "../../../common/MenuItem.svelte";
   import AddonMenuItem from "./AddonMenuItem.svelte";
 
   import { openAddonBrowser, showAddonRuns } from "@/manager/layout.js";
@@ -44,31 +44,32 @@
     font-style: italic;
     font-size: var(--normal, 16px);
   }
+
+  hr {
+    margin: 0.5em 21px;
+  }
 </style>
 
 <Menu>
-  <MenuItem on:click={openBrowser}>
-    <div class="small">
-      {$_("addonsMenu.browseAll")}
-    </div>
-  </MenuItem>
-  <MenuItem on:click={showRuns}>
-    <div class="small">
-      {$_("addonsMenu.addonRuns")}
-    </div>
-  </MenuItem>
   {#each alphabetizedAddons as addon}
     <AddonMenuItem {addon} />
   {/each}
-  <MenuItem selectable={true}>
-    <div class="promo">
-      <a
-        class="plausible-event-name=app-add-ons plausible-event-target=help"
-        target="_blank"
-        href="https://www.documentcloud.org/help/add-ons/"
-      >
-        {$_("addonsMenu.learnMore")}
-      </a>
-    </div>
+
+  <hr />
+  <MenuItem on:click={openBrowser}>
+    <span class="promo">{$_("addonsMenu.browseAll")}</span>
+  </MenuItem>
+  <MenuItem on:click={showRuns}>
+    <span class="promo">{$_("addonsMenu.addonRuns")}</span>
+  </MenuItem>
+
+  <MenuItem>
+    <a
+      class="promo plausible-event-name=app-add-ons plausible-event-target=help"
+      target="_blank"
+      href="https://www.documentcloud.org/help/add-ons/"
+    >
+      {$_("addonsMenu.learnMore")}
+    </a>
   </MenuItem>
 </Menu>
