@@ -4,7 +4,6 @@
   import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
   import BackArrow from "../../common/icons/BackArrow.svelte";
   import Button from "../../common/Button.svelte";
-  import Hashtag from "../../common/icons/Hashtag.svelte";
   import GitHubIcon from "svelte-octicons/lib/MarkGithub16.svelte";
   import ShareIcon from "svelte-octicons/lib/Share16.svelte";
 
@@ -119,7 +118,6 @@
         {#each addon.categories as category}
           <dd>
             <a class="category" href={`#add-ons?categories=${category}`}>
-              <Hashtag size={0.8} />
               <slot>{category}</slot>
             </a>
           </dd>

@@ -60,10 +60,6 @@
   #featured:not(.selected) [slot="icon"] {
     fill: orange;
   }
-
-  .category:not(.selected) [slot="icon"] {
-    fill: var(--gray);
-  }
 </style>
 
 <ul class="filters">
@@ -98,7 +94,6 @@
             value={category}
             bind:group={$filter}
           />
-          <span slot="icon"><Hashtag /></span>
         </Filter>
       </li>
     {/each}
