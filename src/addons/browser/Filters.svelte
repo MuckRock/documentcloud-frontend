@@ -1,6 +1,6 @@
 <script context="module">
   import { writable } from "svelte/store";
-  export const filter = writable(["all"]);
+  export const filter = writable("all");
   // TODO declare hardcoded values in a centralized place
   export const FILTERS = [
     ["all", "All"],
@@ -23,7 +23,6 @@
   import { _ } from "svelte-i18n";
 
   import Filter from "./Filter.svelte";
-  import Hashtag from "../../common/icons/Hashtag.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
   import Infinity from "svelte-octicons/lib/Infinity16.svelte";
