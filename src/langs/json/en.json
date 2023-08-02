@@ -738,7 +738,9 @@
     "next": "Next",
     "previous": "Previous",
     "viewsource": "View Source",
-    "usage": "Usage"
+    "usage": "Usage",
+    "pinnedTip": "Quickly access your favorite Add-Ons by clicking the “Pin” icon next to its name. They’ll then be available to run from the Add-Ons dropdown menu.",
+    "featuredTip": "Here’s some of the DocumentCloud team’s favorite Add-Ons, including both new additions as well as classics we think every user should try."
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",

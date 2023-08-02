@@ -9,6 +9,8 @@
   import Paginator from "../Paginator.svelte";
   import Search, { query } from "./SearchInput.svelte";
   import Filters, { filter, FILTERS, CATEGORIES } from "./Filters.svelte";
+  import Pin from "../../common/icons/Pin.svelte";
+  import Star from "../../common/icons/Star.svelte";
 
   export let visible = false;
   export let per_page = 10;
@@ -36,6 +38,7 @@
   $: next_url = res.next ? new URL(res.next).toString() : null;
   $: previous_url = res.previous ? new URL(res.previous).toString() : null;
   $: items = res.results;
+  $: section = $filter;
 
   export async function load(url) {
     loading = true;
@@ -74,7 +77,18 @@
     return u.toString();
   }
 
-  function buildParams({ query = "", per_page = 5, filter = [] }) {
+  function buildParams({
+    query = "",
+    per_page = 5,
+    filter = [],
+  }: {
+    query: string;
+    per_page: number;
+    filter: string | string[];
+  }) {
+    if (!Array.isArray(filter)) {
+      filter = [filter];
+    }
     const params = { per_page, query, filters: {} };
     const filters = FILTERS.map(([n]) => n).filter((n) => filter.includes(n));
     const categories = CATEGORIES.map(([n]) => n).filter((n) =>
@@ -143,8 +157,8 @@
   .results .list {
     flex: 1 1 24em;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.25);
     border-radius: calc(2 * var(--radius));
@@ -152,6 +166,41 @@
   }
   .results .pagination {
     flex: 0 0 auto;
+  }
+
+  .tip {
+    font-size: 0.9em;
+    margin: 0.5rem;
+    padding: 1rem;
+    background-color: var(--primary-faded);
+    border-color: var(--primary);
+    fill: var(--primary);
+    border: 1px solid;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    & .icon {
+      fill: var(--primary);
+    }
+    & .message {
+      margin: 0;
+    }
+  }
+  .pinned.tip {
+    background-color: hsl(341, 35%, 91%);
+    border-color: palevioletred;
+    & .icon {
+      fill: palevioletred;
+    }
+  }
+  .featured.tip {
+    background-color: hsl(39, 100%, 91%);
+    border-color: orange;
+    & .icon {
+      fill: orange;
+    }
   }
 </style>
 
@@ -167,6 +216,17 @@
     </aside>
     <main class="results">
       <div class="list">
+        {#if section === "active"}
+          <aside class="pinned tip">
+            <div class="icon"><Pin size={1.75} /></div>
+            <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
+          </aside>
+        {:else if section === "featured"}
+          <aside class="featured tip">
+            <div class="icon"><Star size={1.75} /></div>
+            <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
+          </aside>
+        {/if}
         <AddOnList {loading} {error} {items} bind:reload />
       </div>
       <div class="pagination">
