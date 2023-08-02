@@ -30,7 +30,7 @@
   export let event: Event;
 
   $: disabled = event.event === 0;
-  $: key = event.addon.parameters.eventOptions.name;
+  $: key = event.addon.parameters?.eventOptions?.name;
   $: target = event.parameters[key];
 
   function url(event: Event) {
