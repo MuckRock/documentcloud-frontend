@@ -700,7 +700,7 @@
   "addonDispatchDialog": {
     "addons": "Add-Ons",
     "backButton": "Browse Add-Ons",
-    "select": "Select which documents you’d like to run this Add-On against:",
+    "select": "Documents to run this Add-On against:",
     "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again.",
     "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.",
     "runSelected": "This Add-On will try to run against the {n, plural, one {# currently selected document} other {# currently selected documents}}.",
@@ -722,7 +722,9 @@
     "share": "Share",
     "shareClipboardSuccess": "Copied add-on URL to your clipboard",
     "scheduleSuccess": "Add-on is now scheduled",
-    "runSuccess": "Add-on is now running"
+    "runSuccess": "Add-on is now running",
+    "selectionHelp": "From the main list, select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
+    "selectionLearnMore": "Learn more about how Add-Ons work"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
