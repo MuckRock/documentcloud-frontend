@@ -9,15 +9,15 @@ const meta: Meta<Toast> = {
   tags: ["autodocs"],
   argTypes: {
     onClose: {
-      action: 'Close'
+      action: "Close",
     },
     onReset: {
-      action: 'Reset'
+      action: "Reset",
     },
     onCancel: {
-      action: 'Cancel'
-    }
-  }
+      action: "Cancel",
+    },
+  },
 };
 
 export default meta;
@@ -28,11 +28,11 @@ export const Info: Story = {
     toast: {
       idx: 1,
       content: "This is an info message",
-      status: "info"
+      status: "info",
     },
     i: 1,
-    fade: false
-  }
+    fade: false,
+  },
 };
 
 export const Success: Story = {
@@ -40,11 +40,11 @@ export const Success: Story = {
     toast: {
       idx: 1,
       content: "This is a success message",
-      status: "success"
+      status: "success",
     },
     i: 1,
-    fade: false
-  }
+    fade: false,
+  },
 };
 
 export const Warning: Story = {
@@ -52,11 +52,11 @@ export const Warning: Story = {
     toast: {
       idx: 1,
       content: "This is a warning message",
-      status: "warning"
+      status: "warning",
     },
     i: 1,
-    fade: false
-  }
+    fade: false,
+  },
 };
 
 export const Error: Story = {
@@ -64,11 +64,11 @@ export const Error: Story = {
     toast: {
       idx: 1,
       content: "This is an error message",
-      status: "error"
+      status: "error",
     },
     i: 1,
-    fade: false
-  }
+    fade: false,
+  },
 };
 
 export const WithFade: Story = {
@@ -76,21 +76,22 @@ export const WithFade: Story = {
     toast: {
       idx: 1,
       content: "This message will automatically disappear",
-      status: "info"
+      status: "info",
     },
     i: 1,
-    fade: true
-  }
+    fade: true,
+  },
 };
 
 export const WithLongContent: Story = {
   args: {
     toast: {
       idx: 1,
-      content: "This message is very, very long. It's a super long message. You rarely see a message this long nowadays. Kids these days have no attention span. Back in my day we used to read three books a day, uphill both ways!",
-      status: "info"
+      content:
+        "This message is very, very long. It's a super long message. You rarely see a message this long nowadays. Kids these days have no attention span. Back in my day we used to read three books a day, uphill both ways!",
+      status: "info",
     },
     i: 1,
-    fade: false
-  }
+    fade: false,
+  },
 };

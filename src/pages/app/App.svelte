@@ -31,7 +31,6 @@
     [
       /^#add-ons$/,
       async (match) => {
-        console.log("Opening add-on browser");
         $layout.addonRunsOpen = false;
         $layout.addonDispatchOpen = false;
         $layout.addonBrowserOpen = true;
@@ -42,7 +41,6 @@
     [
       /^#add-ons\/runs$/,
       async (match) => {
-        console.log("Showing runs");
         $layout.addonBrowserOpen = false;
         $layout.addonDispatchOpen = false;
         $layout.addonRunsOpen = true;
@@ -60,11 +58,7 @@
         const [org, name] = match.slice(1, 3);
         const repo = `${org}/${name}`;
 
-        console.log(`Loading Dispatch: ${repo}`);
-
-        await dispatch
-          .open(repo)
-          .then(() => console.log(`Loaded Dispatch: ${repo}`));
+        await dispatch.open(repo);
       },
     ],
 
@@ -79,9 +73,7 @@
         const [org, name, id] = match.slice(1, 4);
         const repo = `${org}/${name}`;
 
-        await dispatch
-          .open(repo, id)
-          .then(() => console.log(`Loaded Dispatch with event: ${repo}/${id}`));
+        await dispatch.open(repo, id);
       },
     ],
   ];
@@ -92,8 +84,6 @@
   let browser;
   let dispatch;
   let runs;
-
-  $: console.log($router.currentUrl);
 
   function closeDrawer(e) {
     setHash("");
@@ -108,18 +98,15 @@
   }
 
   async function hashRoute() {
-    console.log("Routing ...");
     const hash = window.location.hash;
     if (hash === "") {
       const callback = navHandlers[0][1];
       return callback();
     }
 
-    console.log(hash);
     navHandlers.find(([route, callback]) => {
       const match = route.exec(hash);
       if (match) {
-        console.log(match);
         callback(match);
         return true; // stop the loop
       }

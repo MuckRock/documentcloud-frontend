@@ -81,7 +81,6 @@
   }
 
   async function load_event(id: number) {
-    console.log(`Loading event: ${id}`);
     const options: RequestInit = {
       credentials: "include",
     };
@@ -161,7 +160,6 @@
       return;
     }
 
-    console.log(await resp.json());
     pushToast($_("addonDispatchDialog.runSuccess"), "success");
   }
 
@@ -203,12 +201,10 @@
       return;
     }
 
-    console.log(await resp.json());
     pushToast($_("addonDispatchDialog.scheduleSuccess"), "success");
   }
 
   function reset() {
-    console.log("Clearing form data ...");
     $values = { event: "", selection: null };
   }
 

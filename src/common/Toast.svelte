@@ -68,15 +68,16 @@
     box-shadow: 0 0 2px #0000003d;
     display: inline-flex;
     align-items: flex-start;
-    gap: .5em;
+    gap: 0.5em;
     max-width: 50ch;
     text-align: left;
     pointer-events: all;
     opacity: 1;
     transition: opacity 0.8s ease;
-    &.fading {
-      opacity: 0;
-    }
+  }
+
+  .toast.fading {
+    opacity: 0;
   }
 
   .info {
@@ -84,9 +85,10 @@
     background: mix($primary, white, 10%);
     color: mix($primary, black, 30%);
     fill: mix($primary, black, 30%);
-    &:hover {
-      background: rgba(mix($primary, white, 30%), 0.95);
-    }
+  }
+
+  .info:hover {
+    background: rgba(mix($primary, white, 30%), 0.95);
   }
 
   .success {
@@ -94,9 +96,10 @@
     background: mix($tertiary, white, 10%);
     color: mix($tertiary, black, 30%);
     fill: mix($tertiary, black, 30%);
-    &:hover {
-      background: rgba(mix($tertiary, white, 30%), 0.95);
-    }
+  }
+
+  .success:hover {
+    background: rgba(mix($tertiary, white, 30%), 0.95);
   }
 
   .warning {
@@ -104,9 +107,10 @@
     background: mix($annotationBorder, white, 30%);
     color: mix($annotationBorder, black, 30%);
     fill: mix($annotationBorder, black, 30%);
-    &:hover {
-      background: rgba(mix($annotationBorder, white, 30%), 0.95);
-    }
+  }
+
+  .warning:hover {
+    background: rgba(mix($annotationBorder, white, 30%), 0.95);
   }
 
   .error {
@@ -114,24 +118,28 @@
     background: mix($caution, white, 10%);
     color: mix($caution, black, 30%);
     fill: mix($caution, black, 30%);
-    &:hover {
-      background: rgba(mix($caution, white, 30%), 0.95);
-    }
+  }
+
+  .error:hover {
+    background: rgba(mix($caution, white, 30%), 0.95);
   }
 
   .close {
-      height: 1.25em;
-      width: 1.25em;
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-radius: 9999px;
-      &:hover {
-        background: rgba(0, 0, 0, .1);
-      }
-    }
+    align-items: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    flex: 0 0 auto;
+    height: 1.25em;
+    justify-content: center;
+    padding: 0;
+    width: 1.25em;
+  }
+
+  .close:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
 
   .content {
     flex: 1 1 auto;
@@ -146,6 +154,6 @@
   on:mouseenter={cancel}
   on:mouseleave={reset}
 >
-  <div class="close" on:click={beginClose}><CloseIcon /></div>
+  <button class="close" on:click={beginClose}><CloseIcon /></button>
   <p class="content">{toast.content}</p>
 </div>

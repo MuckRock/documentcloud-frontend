@@ -726,7 +726,7 @@
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
-    "subtitle": "Free automations, shortcuts, and power-ups from the DocumentCloud community",
+    "subtitle": "Free automations, shortcuts and power-ups from the DocumentCloud community",
     "categories": "Categories",
     "browseAll": "Browse All Add-Ons",
     "searchPlaceholder": "Search…",
