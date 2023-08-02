@@ -38,7 +38,6 @@
   $: next_url = res.next ? new URL(res.next).toString() : null;
   $: previous_url = res.previous ? new URL(res.previous).toString() : null;
   $: items = res.results;
-  $: section = $filter;
 
   export async function load(url) {
     loading = true;
@@ -216,12 +215,12 @@
     </aside>
     <main class="results">
       <div class="list">
-        {#if section === "active"}
+        {#if $filter === "active"}
           <aside class="pinned tip">
             <div class="icon"><Pin size={1.75} /></div>
             <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
           </aside>
-        {:else if section === "featured"}
+        {:else if $filter === "featured"}
           <aside class="featured tip">
             <div class="icon"><Star size={1.75} /></div>
             <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
