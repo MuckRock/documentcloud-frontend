@@ -1,25 +1,21 @@
-<script>
-  import Toast from "./Toast";
-  import { toasts } from "@/manager/toast";
-  import { flip } from "svelte/animate";
+<script lang="ts">
+  import Toast, { toasts } from "./Toast.svelte";
 </script>
 
-<style lang="scss">
+<style>
   .toastcontainer {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     text-align: center;
-    z-index: $mainToastZ;
+    z-index: var(--mainToastZ, 23);
     pointer-events: none;
   }
 </style>
 
 <div class="toastcontainer">
-  {#each $toasts.toasts as toast, i (toast.idx)}
-    <div animate:flip={{ duration: 400 }}>
-      <Toast {toast} {i} />
-    </div>
+  {#each $toasts as toast, i (toast.idx)}
+    <Toast {toast} {i} />
   {/each}
 </div>

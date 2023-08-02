@@ -8,12 +8,12 @@ import {
   getUsers,
   getOrganization,
 } from "@/api/orgAndUser";
-import { projects, initProjects } from "./projects";
-import { initAddons } from "./addons";
-import { userUrl, allDocumentsUrl } from "@/search/search";
-import { layout } from "@/manager/layout";
-import { wrapLoad } from "@/util/wrapLoad";
-import { pushToast } from "./toast";
+import { projects, initProjects } from "./projects.js";
+import { initAddons } from "./addons.js";
+import { userUrl, allDocumentsUrl } from "@/search/search.js";
+import { layout } from "@/manager/layout.js";
+import { wrapLoad } from "@/util/wrapLoad.js";
+import { pushToast } from "../common/Toast.svelte";
 
 export const orgsAndUsers = new Svue({
   data() {

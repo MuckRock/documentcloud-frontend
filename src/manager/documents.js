@@ -19,7 +19,7 @@ import { wrapLoad, wrapSeparate } from "@/util/wrapLoad.js";
 import { showConfirm } from "./confirmDialog.js";
 import { router } from "@/router/router.js";
 import { search, handleUpload, setDocuments } from "@/search/search.js";
-import { pushToast } from "./toast.js";
+import { pushToast } from "../common/Toast.svelte";
 import { handlePlural } from "@/util/string.js";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array.js";
 import { modifications } from "./modifications.js";
