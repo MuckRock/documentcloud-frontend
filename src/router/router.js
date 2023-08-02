@@ -109,7 +109,6 @@ export function pushUrl(url) {
 export function setHash(hash) {
   const url = new URL(router.currentUrl, window.location.href);
   url.hash = hash;
-  console.log(`Set hash: ${hash}`);
   window.location.hash = hash;
 
   // tell that router that we've navigated

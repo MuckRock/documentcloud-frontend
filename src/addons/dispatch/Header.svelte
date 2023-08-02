@@ -8,7 +8,7 @@
   import GitHubIcon from "svelte-octicons/lib/MarkGithub16.svelte";
   import ShareIcon from "svelte-octicons/lib/Share16.svelte";
 
-  import { pushToast } from "../../manager/toast.js";
+  import { pushToast } from "../../common/Toast.svelte";
 
   export let addon: AddOnListItem;
 

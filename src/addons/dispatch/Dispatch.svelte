@@ -18,7 +18,7 @@
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
   import { setHash } from "../../router/router.js";
-  import { pushToast } from "../../manager/toast.js";
+  import { pushToast } from "../../common/Toast.svelte";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;

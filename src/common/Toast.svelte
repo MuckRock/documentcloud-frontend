@@ -1,14 +1,38 @@
 <script lang="ts" context="module">
+  import { writable } from "svelte/store";
+
+  let nextId = 0;
+
   export interface Toast {
     idx: number;
     content: string;
     status?: "info" | "success" | "warning" | "error";
   }
+
+  export const toasts = writable([]);
+
+  export function dismiss(i: number) {
+    toasts.update((t) => {
+      t.splice(i);
+      return t;
+    });
+  }
+
+  export function pushToast(content, status = "info") {
+    toasts.update((t) => {
+      t.push({
+        idx: nextId++,
+        content,
+        status,
+      });
+
+      return t;
+    });
+  }
 </script>
 
 <script lang="ts">
   import { onMount } from "svelte";
-  import { dismiss } from "../manager/toast.js";
 
   import CloseIcon from "svelte-octicons/lib/X16.svelte";
 
@@ -154,6 +178,6 @@
   on:mouseenter={cancel}
   on:mouseleave={reset}
 >
-  <button class="close" on:click={beginClose}><CloseIcon /></button>
+  <button class="close" on:click={close}><CloseIcon /></button>
   <p class="content">{toast.content}</p>
 </div>
