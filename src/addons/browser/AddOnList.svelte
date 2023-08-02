@@ -25,8 +25,8 @@
 
 <style>
   .list {
+    flex: 1 1 auto;
     min-width: 24em;
-    min-height: 100%;
     display: flex;
     flex-direction: column;
   }

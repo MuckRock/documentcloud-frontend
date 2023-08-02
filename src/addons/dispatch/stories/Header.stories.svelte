@@ -16,6 +16,7 @@
   title="Add-Ons / Dispatch / Header"
   component={Header}
   parameters={{ layout: "centered" }}
+  argTypes={{ categories: { control: "object" } }}
 />
 
 <Template let:args={addon}>

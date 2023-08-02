@@ -21,7 +21,7 @@
   export let disabledReason = null;
 </script>
 
-<style lang="scss">
+<style>
   button,
   a {
     display: inline-flex;
@@ -39,9 +39,10 @@
     background: var(--primary, #4294f0);
     color: white;
     font-family: inherit;
-    &.nomargin {
-      margin: 0;
-    }
+  }
+
+  button.nomargin {
+    margin: 0;
   }
 
   a:disabled,
@@ -50,10 +51,11 @@
     background: var(--gray, rgba(0, 0, 0, 0.53));
     cursor: initial;
     pointer-events: none;
+  }
 
-    &:hover {
-      opacity: 0.7;
-    }
+  a:disabled:hover,
+  button:disabled:hover {
+    opacity: 0.7;
   }
 
   a:hover,
@@ -97,7 +99,9 @@
     fill: var(--primary, #4294f0);
   }
 
-  .action.secondary, .action.disabled, .action:disabled {
+  .action.secondary,
+  .action.disabled,
+  .action:disabled {
     color: var(--gray, rgba(0, 0, 0, 0.53));
     fill: var(--gray, rgba(0, 0, 0, 0.53));
   }

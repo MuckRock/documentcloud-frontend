@@ -155,10 +155,12 @@
     border: none;
     display: flex;
     flex: 0 0 auto;
-    height: 1.25em;
+    height: 1.5em;
+    width: 1.5em;
     justify-content: center;
     padding: 0;
-    width: 1.25em;
+    margin: 0;
+    border-radius: 1.5em;
   }
 
   .close:hover {

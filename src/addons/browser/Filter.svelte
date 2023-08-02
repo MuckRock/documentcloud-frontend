@@ -42,7 +42,7 @@
 </style>
 
 <label class:selected class="filter">
-  <span class="input"><slot name="input" /></span>
-  <span class="icon"><slot name="icon" /></span>
+  {#if $$slots.input}<span class="input"><slot name="input" /></span>{/if}
+  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
   <span class="name">{name}</span>
 </label>
