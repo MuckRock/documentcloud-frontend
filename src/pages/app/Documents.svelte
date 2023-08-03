@@ -44,6 +44,7 @@
   export let dialog = false;
 
   let preUploadFiles = [];
+  let anonymousClosed = false;
 
   function showUploadModal({ detail: files }) {
     if (files != null) {
@@ -298,11 +299,15 @@
         on:files={showUploadModal}
         disabled={embed || !$orgsAndUsers.loggedIn || !$orgsAndUsers.isVerified}
       >
-        {#each $documents.documents as document (document.id)}
-          <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
-            <Document {embed} {dialog} {document} on:pick />
-          </div>
-        {/each}
+        {#if !$orgsAndUsers.loggedIn && $search.params.query === "" && !anonymousClosed}
+          <Anonymous bind:closed={anonymousClosed} />
+        {:else}
+          {#each $documents.documents as document (document.id)}
+            <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
+              <Document {embed} {dialog} {document} on:pick />
+            </div>
+          {/each}
+        {/if}
         {#if $documents.documents.length == 0 && !$layout.loading}
           <NoDocuments />
         {/if}

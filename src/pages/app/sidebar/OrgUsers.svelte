@@ -62,7 +62,12 @@
       <ul class="users">
         {#each $orgsAndUsers.sameOrgUsers as user}
           <li>
-            <Link plusReplace={true} toUrl={userUrl(user)}>{user.name}</Link>
+            <Link plusReplace={true} toUrl={userUrl(user)}>
+              {user.name}
+              {#if user.admin_organizations.includes($orgsAndUsers.me.organization.id)}
+                (Admin)
+              {/if}
+            </Link>
           </li>
         {/each}
       </ul>

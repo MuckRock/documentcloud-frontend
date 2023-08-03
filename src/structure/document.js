@@ -173,6 +173,9 @@ export class Document extends Svue {
         noindex(doc) {
           return doc.noindex;
         },
+        adminNoindex(doc) {
+          return doc.admin_noindex;
+        },
 
         // Status and processing-related properties
         status(doc) {
