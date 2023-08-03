@@ -2,7 +2,7 @@
   import type { Event } from "../runs/ScheduledEvent.svelte";
   import { writable } from "svelte/store";
 
-  export const values = writable({ event: "", selection: null });
+  export const values = writable({ event: "disabled", selection: null });
 
   export interface eventOptions {
     name: string;

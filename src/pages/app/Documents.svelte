@@ -1,41 +1,41 @@
 <script>
-  // Components
-  import SearchBar from "./SearchBar";
-  import SearchLink from "./SearchLink";
-  import Modal from "@/common/Modal";
-  import Button from "@/common/Button";
-  import Title from "@/common/Title";
-  import Loader from "@/common/Loader";
-  import Draggable from "@/common/Draggable";
-  import UploadDialog from "./UploadDialog";
-  import ActionBar from "./ActionBar";
-  import ProcessingBar from "./ProcessingBar";
-  import AddonStatus from "./AddonStatus";
-  import Document from "./Document";
-  import NoDocuments from "./NoDocuments";
-  import AuthSection from "@/pages/app/AuthSection";
-  import SpecialMessage from "@/common/SpecialMessage";
-  import Paginator from "./Paginator";
-  import EmbedFooter from "./EmbedFooter";
   import { _ } from "svelte-i18n";
+  // Animation
+  import { flip } from "svelte/animate";
+
+  // Components
+  import AddonStatus from "../../addons/progress/AddonStatus.svelte";
+  import ActionBar from "./ActionBar.svelte";
+  import AuthSection from "@/pages/app/AuthSection";
+  import Button from "@/common/Button.svelte";
+  import Draggable from "@/common/Draggable.svelte";
+  import Document from "./Document.svelte";
+  import EmbedFooter from "./EmbedFooter.svelte";
+  import Loader from "@/common/Loader.svelte";
+  import Modal from "@/common/Modal.svelte";
+  import NoDocuments from "./NoDocuments";
+  import Paginator from "./Paginator.svelte";
+  import ProcessingBar from "./ProcessingBar";
+  import SearchBar from "./SearchBar.svelte";
+  import SearchLink from "./SearchLink.svelte";
+  import SpecialMessage from "@/common/SpecialMessage.svelte";
+  import Title from "@/common/Title.svelte";
+  import UploadDialog from "./UploadDialog.svelte";
 
   // Store properties
-  import { layout } from "@/manager/layout";
-  import { documents } from "@/manager/documents";
-  import { search, projectIdUrl } from "@/search/search";
+  import { layout } from "@/manager/layout.js";
+  import { documents } from "@/manager/documents.js";
+  import { search, projectIdUrl } from "@/search/search.js";
   import {
     orgsAndUsers,
     getUserById,
     getOrgById,
-  } from "@/manager/orgsAndUsers";
-  import { projects } from "@/manager/projects";
-  import { titlecase } from "@/util/string";
-
-  // Animation
-  import { flip } from "svelte/animate";
+  } from "@/manager/orgsAndUsers.js";
+  import { projects } from "@/manager/projects.js";
+  import { titlecase } from "@/util/string.js";
 
   // Embed sizing
-  import { informSize } from "@/embed/iframeSizer";
+  import { informSize } from "@/embed/iframeSizer.js";
 
   export let embed = false;
   export let containerElem = null;
