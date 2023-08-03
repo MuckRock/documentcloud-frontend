@@ -19,6 +19,7 @@
   import { getCsrfToken } from "../../api/session.js";
   import { setHash } from "../../router/router.js";
   import { pushToast } from "../../common/Toast.svelte";
+  import { runs } from "../progress/AddonRun.svelte";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -29,6 +30,7 @@
     hourly: 1,
     daily: 2,
     weekly: 3,
+    upload: 4,
   };
 
   let error: Error | null;
@@ -129,7 +131,7 @@
 
     await Promise.all(promises);
 
-    setHash("add-ons/runs");
+    close();
   }
 
   /*
@@ -151,7 +153,7 @@
       body: JSON.stringify(payload),
     };
 
-    const endpoint = new URL("/api/addon_runs/", baseApiUrl);
+    const endpoint = new URL("/api/addon_runs/?expand=addon", baseApiUrl);
 
     const resp = await fetch(endpoint, options);
 
@@ -159,6 +161,9 @@
       error = new Error(resp.statusText);
       return;
     }
+
+    const run = await resp.json();
+    $runs = [run, ...$runs];
 
     pushToast($_("addonDispatchDialog.runSuccess"), "success");
   }
@@ -205,7 +210,7 @@
   }
 
   function reset() {
-    $values = { event: "", selection: null };
+    $values = { event: "disabled", selection: null };
   }
 
   function close() {
@@ -268,6 +273,8 @@
         eventOptions={addon.parameters.eventOptions}
         {event}
       >
+        <!-- todo: decide if this should render for scheduled add-ons -->
+        <!-- this only applies to add-ons running against existing documents -->
         <Selection
           bind:this={selection}
           bind:value={$values["selection"]}

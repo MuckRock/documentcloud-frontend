@@ -1,8 +1,6 @@
 <script>
   import { tweened } from "svelte/motion";
-  import { fade } from "svelte/transition";
-  import { writable } from "svelte/store";
-  import { sigmoid, interp, scale, zeroUntilEnd } from "@/util/easing";
+  import { sigmoid, interp, scale } from "@/util/easing.js";
 
   export let progress;
   export let initializing = false;

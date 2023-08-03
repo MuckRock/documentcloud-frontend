@@ -6,7 +6,7 @@
     uuid: string;
     addon: AddOnListItem;
     user: number;
-    status: "success" | "failure";
+    status: "success" | "failure" | "queued" | "in_progress";
     progress: number;
     message: string;
     file_url?: string | null;

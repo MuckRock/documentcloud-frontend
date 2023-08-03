@@ -12,13 +12,7 @@
     updated_at: string;
   }
 
-  export const schedules = [
-    "disabled",
-    "hourly",
-    "daily",
-    "weekly",
-    "on upload",
-  ];
+  export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];
 </script>
 
 <script lang="ts">
