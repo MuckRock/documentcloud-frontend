@@ -108,7 +108,7 @@
     <!-- Insert canonical URL -->
     <link rel="canonical" href={$viewer.document.canonicalUrl} />
 
-    {#if $viewer.document && $viewer.document.noindex}
+    {#if $viewer.document && ($viewer.document.noindex || $viewer.document.adminNoindex)}
       <meta name="robots" content="noindex" />
     {/if}
     <!-- Social cards -->
