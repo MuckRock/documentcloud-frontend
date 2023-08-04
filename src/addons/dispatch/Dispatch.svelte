@@ -117,9 +117,8 @@
 
     let promises = [];
 
-    // event is scheduling, so schedule
-    // this creates or updates an event
-    if ($values.event) {
+    // if we're editing an event, any save should update the schedule
+    if (event || $values["event"] !== "disabled") {
       promises.push(schedule());
     }
 
