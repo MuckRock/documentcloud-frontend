@@ -19,7 +19,14 @@
 </script>
 
 <script lang="ts">
-  import { CheckCircle24, Paperclip16, XCircle24 } from "svelte-octicons";
+  import {
+    CheckCircle24,
+    Paperclip16,
+    Hourglass24,
+    Alert24,
+    Question24,
+    Sync24,
+  } from "svelte-octicons";
 
   export let run;
 
@@ -27,21 +34,45 @@
 </script>
 
 <style>
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
   .addon-run {
     margin: 0.5em;
     display: flex;
     align-items: flex-start;
-    gap: 0.5em;
+    gap: 1em;
   }
   .status {
     flex: 0 1 auto;
-    margin: 0.25em;
+    margin: 0;
   }
   .success.icon {
     fill: var(--tertiary);
   }
   .failure.icon {
     fill: var(--caution);
+  }
+  .queued.icon {
+    fill: var(--gray);
+  }
+  .in-progress.icon {
+    display: block;
+    fill: var(--primary);
+    transform-origin: center center;
+    animation: spin 2s linear infinite reverse;
+    animation-play-state: running;
+    & svg {
+      display: block;
+    }
+  }
+  .unknown-status.icon {
+    fill: var(--gray);
   }
   .info {
     flex: 1 1 auto;
@@ -77,8 +108,16 @@
   <div class="status">
     {#if run.status === "success"}
       <span class="success icon" title="Success"><CheckCircle24 /></span>
+    {:else if run.status === "failure"}
+      <span class="failure icon" title="Failure"><Alert24 /></span>
+    {:else if run.status === "queued"}
+      <span class="queued icon" title="Queued"><Hourglass24 /></span>
+    {:else if run.status === "in_progress"}
+      <span class="in-progress icon" title="In Progress"><Sync24 /></span>
     {:else}
-      <span class="failure icon" title="Failure"><XCircle24 /></span>
+      <span class="unknown-status icon" title="Unknown Status"
+        ><Question24 /></span
+      >
     {/if}
   </div>
   <div class="info">
