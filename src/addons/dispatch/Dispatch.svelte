@@ -261,7 +261,7 @@
 >
   <div slot="content" class:loading>
     {#if addon}
-      <Header {addon} />
+      <Header {addon} onBack={reset} />
 
       <ScheduledInset bind:this={scheduled} {addon} />
 
