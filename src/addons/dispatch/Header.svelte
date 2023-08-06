@@ -10,7 +10,6 @@
   import { pushToast } from "../../common/Toast.svelte";
 
   export let addon: AddOnListItem;
-  export let onBack: () => void = undefined;
 
   $: author = addon.author || addon.repository.split("/")[0];
 
@@ -100,7 +99,7 @@
 </style>
 
 <header>
-  <Button action href="#add-ons" on:click={onBack}>
+  <Button action href="#add-ons">
     <BackArrow size={0.8} />
     {$_("addonDispatchDialog.backButton")}
   </Button>

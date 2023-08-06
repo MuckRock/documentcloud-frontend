@@ -17,10 +17,6 @@
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
 
-  // Store properties
-  //import { removeRun, editAddonRun } from "@/manager/addons.js";
-  //import { dismissAddonRun, cancelAddonRun } from "@/api/addon.js";
-
   export let run: Run;
   export let compact = false;
 

@@ -1,5 +1,5 @@
-import { batchDelay } from "./batchDelay";
-import { timeout } from "@/util/timeout";
+import { batchDelay } from "./batchDelay.js";
+import { timeout } from "./timeout.js";
 
 const timeShrink = 5;
 

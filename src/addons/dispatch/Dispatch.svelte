@@ -17,7 +17,6 @@
 
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
-  import { setHash } from "../../router/router.js";
   import { pushToast } from "../../common/Toast.svelte";
   import { runs } from "../progress/AddonRun.svelte";
 
@@ -43,6 +42,10 @@
   $: loading = !addon;
   $: if (error) {
     pushToast(error.message, "error");
+  }
+
+  $: if (!visible) {
+    reset();
   }
 
   onMount(() => {
@@ -260,7 +263,7 @@
 >
   <div slot="content" class:loading>
     {#if addon}
-      <Header {addon} onBack={reset} />
+      <Header {addon} />
 
       <ScheduledInset bind:this={scheduled} {addon} />
 
