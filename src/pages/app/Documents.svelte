@@ -6,6 +6,7 @@
   // Components
   import AddonStatus from "../../addons/progress/AddonStatus.svelte";
   import ActionBar from "./ActionBar.svelte";
+  import Anonymous from "./Anonymous.svelte";
   import AuthSection from "@/pages/app/AuthSection";
   import Button from "@/common/Button.svelte";
   import Draggable from "@/common/Draggable.svelte";
