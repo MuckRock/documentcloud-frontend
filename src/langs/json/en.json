@@ -759,6 +759,11 @@
       "retry": "Retry"
     }
   },
+  "addonProgress": {
+    "timedOut": "Timed Out",
+    "feedback": "Feedback on this Add-On Run",
+    "progress": "Add-Ons in progress"
+  },
   "uploadEmailDialog": {
     "uploadEmailAddress": "Upload via email",
     "bodyText": "You can upload documents to your account by sending them to to a special email address as attachments.  For security reasons, this email is only shown to you once. Please copy it to a secure location: It will accept attachments from any email account. You can generate a new upload address at any time (which will disable the old one) or turn off this feature entirely. Documents are uploaded as private.<br><br>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.",
