@@ -194,9 +194,11 @@
                 maxlength="255"
                 bind:value={comment}
               />
-              <Button small on:click={submitFeedback}>Submit</Button>
+              <Button small on:click={submitFeedback}
+                >{$_("dialog.submit")}</Button
+              >
             {:else}
-              <span>Thanks for the feedback!</span>
+              <span>{$_("addonProgress.thanks")}</span>
             {/if}
           </span>
         {/if}
@@ -219,7 +221,8 @@
     <div class="info message processingText" class:compact>
       {#if run.message}{run.message}{/if}
       {#if run.message && run.file_url} - {/if}
-      {#if run.file_url}<a href={run.file_url}>Download File</a>{/if}
+      {#if run.file_url}<a href={run.file_url}>{$_("addonProgress.download")}</a
+        >{/if}
     </div>
   {/if}
 </div>

@@ -69,7 +69,8 @@
     "update": "Update",
     "dismiss": "Dismiss",
     "continue": "Continue",
-    "dispatch": "Dispatch"
+    "dispatch": "Dispatch",
+    "submit": "Submit"
   },
   "dialogAccessDialog": {
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
@@ -760,9 +761,11 @@
     }
   },
   "addonProgress": {
-    "timedOut": "Timed Out",
-    "feedback": "Feedback on this Add-On Run",
-    "progress": "Add-Ons in progress"
+    "timedOut": "Timed out",
+    "feedback": "Feedback on this Add-On run",
+    "progress": "Add-Ons in progress",
+    "thanks": "Thanks for the feedback!",
+    "download": "Download file"
   },
   "uploadEmailDialog": {
     "uploadEmailAddress": "Upload via email",
