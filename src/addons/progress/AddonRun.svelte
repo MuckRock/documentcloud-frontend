@@ -27,7 +27,7 @@
 
   function getStatus(status) {
     if (status === "cancelled") {
-      return "Timed Out";
+      return $_("addonProgress.timedOut");
     }
     return status
       .split("_")
@@ -66,13 +66,12 @@
     }
   }
 
-  async function dismiss() {
+  export async function dismiss() {
     run = await update({ dismissed: true });
     $runs = $runs.filter((r) => r.uuid !== run.uuid);
   }
 
-  async function cancel() {
-    //cancelAddonRun(uuid);
+  export async function cancel() {
     $cancelled = [...$cancelled, run.uuid];
     await update({}, "DELETE");
   }
@@ -88,7 +87,6 @@
   async function rate(val) {
     const newVal = run.rating === val ? 0 : val;
     run = await update({ rating: newVal });
-    //editAddonRun(run, { rating: newVal });
   }
 
   async function submitFeedback() {
@@ -192,13 +190,15 @@
           <span class="info processingText message comment" class:compact>
             {#if run.comment === ""}
               <input
-                placeholder="Feedback on this Add-On Run"
+                placeholder={$_("addonProgres.feedback")}
                 maxlength="255"
                 bind:value={comment}
               />
-              <Button small on:click={submitFeedback}>Submit</Button>
+              <Button small on:click={submitFeedback}
+                >{$_("dialog.submit")}</Button
+              >
             {:else}
-              <span>Thanks for the feedback!</span>
+              <span>{$_("addonProgress.thanks")}</span>
             {/if}
           </span>
         {/if}
@@ -221,7 +221,8 @@
     <div class="info message processingText" class:compact>
       {#if run.message}{run.message}{/if}
       {#if run.message && run.file_url} - {/if}
-      {#if run.file_url}<a href={run.file_url}>Download File</a>{/if}
+      {#if run.file_url}<a href={run.file_url}>{$_("addonProgress.download")}</a
+        >{/if}
     </div>
   {/if}
 </div>

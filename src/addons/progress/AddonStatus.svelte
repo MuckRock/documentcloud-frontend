@@ -59,7 +59,7 @@
 
 {#if $runs.length > 0}
   <div class="addonStatus">
-    <div class="title">Add-Ons Progress</div>
+    <h3 class="title">{$_("addonProgress.progress")}</h3>
     {#each $runs as run (run.uuid)}
       <AddonRun {run} />
     {/each}
