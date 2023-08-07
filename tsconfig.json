@@ -1,28 +1,20 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json", /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */
+  // "extends": "@tsconfig/svelte/tsconfig.json" /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */,
   "compilerOptions": {
+    // "ignoreDeprecations": "5.0",
+    // "verbatimModuleSyntax": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "lib": ["es2020", "DOM"],
+    "lib": ["es2020", "DOM", "dom.iterable"],
     "allowJs": true,
     // "checkJs": true, /* 600+ errors */
     "baseUrl": "/app",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "svelte": [
-        "node_modules/svelte"
-      ]
-    }
+      "@/*": ["src/*"],
+      "svelte": ["node_modules/svelte"]
+    },
+    "downlevelIteration": true
   },
-  "include": [
-    "src/**/*",
-    "src/node_modules",
-    "node_modules/@pyoner/"
-  ],
-  "exclude": [
-    "__sapper__/*",
-    "public/*"
-  ],
+  "include": ["src/**/*.ts"],
+  "exclude": ["public/*"]
 }

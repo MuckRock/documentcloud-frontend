@@ -1,4 +1,4 @@
-:global(:root) {
+:root {
   /* Colors */
   --primary: #4294f0;
   --primary-faded: rgba(66, 148, 240, 0.13);
@@ -21,6 +21,8 @@
   --searchSpecial: #5a00ff;
   --homeBlack: #222222;
   --actionPane: #fffdea;
+  --highlight-orange: #ff785c;
+  --inputBg: #ffffff;
 
   /* Viewer */
   --viewerPaneColor: #f3f3f3;

@@ -1,0 +1,241 @@
+[
+  {
+    "id": 10,
+    "user": 20080,
+    "organization": 125,
+    "access": "public",
+    "name": "PDF Exporter",
+    "repository": "MuckRock/documentcloud-pdf-export-addon",
+    "parameters": {
+      "type": "object",
+      "title": "PDF Exporter",
+      "documents": ["selected", "query"],
+      "properties": {},
+      "description": "<p>Export the selected PDFs in a zip file. </p>\n<p><strong>Note:</strong> If you run this Add-On on a large set of documents and the zip file grows larger than 5GB, you will get a failure. Retry on a smaller set of documents or break up the larger set into smaller subsets. </p>"
+    },
+    "created_at": "2022-04-20T13:44:49.047172Z",
+    "updated_at": "2023-05-24T00:22:51.656687Z",
+    "active": false,
+    "default": true,
+    "featured": false
+  },
+  {
+    "id": 105,
+    "user": 20080,
+    "organization": 125,
+    "access": "public",
+    "name": "Scraper",
+    "repository": "MuckRock/documentcloud-scraper-addon",
+    "parameters": {
+      "type": "object",
+      "title": "Scraper",
+      "required": ["site", "project"],
+      "properties": {
+        "site": {
+          "type": "string",
+          "title": "Site",
+          "format": "uri",
+          "description": "The URL of the site to start scraping"
+        },
+        "project": {
+          "type": "string",
+          "title": "Project",
+          "description": "The DocumentCloud project title or ID of the project the documents should be uploaded to.  If the project title does not exist, it will be created."
+        },
+        "filecoin": {
+          "type": "boolean",
+          "title": "Push to IPFS/Filecoin",
+          "description": "WARNING: This will push all scraped files to IPFS and Filecoin.   There is no way to remove files from these storage systems."
+        },
+        "keywords": {
+          "type": "string",
+          "title": "Keywords",
+          "description": "Keywords to search and notify on (comma separated)"
+        },
+        "notify_all": {
+          "type": "boolean",
+          "title": "Notify on all new documents"
+        },
+        "crawl_depth": {
+          "type": "integer",
+          "title": "Crawl Depth",
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "description": "Recursively scrape same-domain links found on the page (Must be between 0 and 2)"
+        },
+        "access_level": {
+          "type": "string",
+          "title": "Access Level",
+          "default": "public",
+          "description": "Access level (public, private, or organization) of documents scraped."
+        },
+        "slack_webhook": {
+          "type": "string",
+          "title": "Slack Webhook",
+          "format": "uri",
+          "description": "Enter a slack webhook to enable Slack notifications"
+        }
+      },
+      "description": "<p>This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.</p>",
+      "eventOptions": {
+        "name": "site",
+        "events": ["hourly", "daily", "weekly"]
+      }
+    },
+    "created_at": "2022-05-17T13:49:53.635344Z",
+    "updated_at": "2023-05-12T16:48:05.637062Z",
+    "active": false,
+    "default": true,
+    "featured": false
+  },
+  {
+    "id": 110,
+    "user": 20080,
+    "organization": 125,
+    "access": "public",
+    "name": "Tabula Spreadsheet Extraction",
+    "repository": "MuckRock/documentcloud-tabula-addon",
+    "parameters": {
+      "type": "object",
+      "title": "Tabula Spreadsheet Extraction",
+      "documents": ["selected", "query"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "URL of tabula template",
+          "format": "uri"
+        }
+      },
+      "description": "<p>Have a PDF with embedded tables? This Add-On runs the open source <a href=\"https://tabula.technology\">Tabula library</a> against a selected PDF and tries to identify and extract any tables. You can provide a Google Drive or Dropbox URL to a Tabula template you have generated already to run against the documents. If no template is provided, tabula will try to guess the boundaries of the tables within the document.</p>"
+    },
+    "created_at": "2022-06-23T14:24:36.074620Z",
+    "updated_at": "2023-05-23T23:52:09.310566Z",
+    "active": false,
+    "default": true,
+    "featured": false
+  },
+  {
+    "id": 169,
+    "user": 20080,
+    "organization": 125,
+    "access": "public",
+    "name": "Transcribe Audio, powered by Whisper",
+    "repository": "MuckRock/documentcloud-whisper-addon",
+    "parameters": {
+      "type": "object",
+      "title": "Transcribe Audio, powered by Whisper",
+      "required": ["url"],
+      "documents": [],
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "URL",
+          "format": "uri",
+          "description": "A publically accessible audio file or a supported cloud storage share link"
+        }
+      },
+      "description": "<p>Transcribe audio files using <a href=\"https://github.com/openai/whisper\">OpenAI&rsquo;s Whisper</a>, an open source machine learning model.\nYou may upload audio files from any publically accessible URL.  You may also use share links from Google Drive, Dropbox, Mediafire, Wetransfer, or YouTube.  If you use a share link for a folder, it will process all audio files in that folder.</p>"
+    },
+    "created_at": "2022-09-30T20:55:56.155751Z",
+    "updated_at": "2023-05-19T03:21:12.660408Z",
+    "active": false,
+    "default": true,
+    "featured": false
+  },
+  {
+    "id": 170,
+    "user": 20080,
+    "organization": 125,
+    "access": "public",
+    "name": "Import Documents",
+    "repository": "MuckRock/cloud-upload-addon",
+    "parameters": {
+      "type": "object",
+      "title": "Import Documents",
+      "required": ["url", "project_name"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "URL"
+        },
+        "project_name": {
+          "type": "string",
+          "title": "Type the title of the project you would like to upload the files to."
+        }
+      },
+      "description": "<p>This add on allows you to submit a public Dropbox, Google Drive, WeTransfer, or MediaFire link and automatically upload it to DocumentCloud. Note that for now mostly only PDFs are functioning. In the future all 70 file extension types will be supported.</p>"
+    },
+    "created_at": "2022-10-04T14:51:05.634679Z",
+    "updated_at": "2023-05-12T16:48:22.960459Z",
+    "active": false,
+    "default": true,
+    "featured": false
+  },
+  {
+    "id": 451,
+    "user": 102112,
+    "organization": 125,
+    "access": "public",
+    "name": "Bad Redactions",
+    "repository": "MuckRock/documentcloud-bad-redactions-addon",
+    "parameters": {
+      "type": "object",
+      "title": "Bad Redactions",
+      "documents": ["selected", "query"],
+      "properties": {
+        "fix": {
+          "type": "boolean",
+          "title": "Redact bad redactions found?"
+        }
+      },
+      "description": "<p>This Add-on allows you to select multiple documents, uses x-ray library to identify bad redactions, creates annotations where bad redactions exist, and exports document_ids, page numbers, bounding boxes and the text in a csv file. By checking the box, this will redact bad redactions and delete any existing bad redaction annotations.</p>\n<p><strong>Warning</strong>: Once you check this box and run this Add-On, you cannot undo redactions. <a href=\"https://free.law/projects/x-ray\">Learn more about X-Ray Library</a>.</p>"
+    },
+    "created_at": "2023-04-21T17:05:39.101385Z",
+    "updated_at": "2023-05-31T16:21:30.035274Z",
+    "active": false,
+    "default": true,
+    "featured": false
+  },
+  {
+    "id": 435,
+    "user": 102112,
+    "organization": 125,
+    "access": "public",
+    "name": "Site Snapshot",
+    "repository": "MuckRock/Site-Snapshot",
+    "parameters": {
+      "type": "object",
+      "title": "Site Snapshot",
+      "required": ["sites"],
+      "documents": [],
+      "categories": ["monitor"],
+      "properties": {
+        "sites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "title": "URL",
+            "format": "uri"
+          },
+          "default": [""]
+        },
+        "project_id": {
+          "type": "integer",
+          "title": "Project ID"
+        },
+        "access_level": {
+          "type": "string",
+          "title": "Access level (public, private, organization)",
+          "default": "private"
+        }
+      },
+      "description": "<p>This Add-On will create a PDF snapshot of a site and upload the document to your DocumentCloud account.</p>"
+    },
+    "created_at": "2023-04-17T16:35:17.838211Z",
+    "updated_at": "2023-06-15T17:51:36.152215Z",
+    "active": false,
+    "default": false,
+    "featured": false
+  }
+]

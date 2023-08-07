@@ -1,4 +1,4 @@
-import { timeout } from "@/util/timeout";
+import { timeout } from "./timeout.js";
 
 export async function batchDelay(
   collection,

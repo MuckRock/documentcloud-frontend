@@ -1,25 +1,31 @@
 <script>
-  // Components
-  import Documents from "./Documents";
-  import Hamburger from "@/common/Hamburger";
-  import Modal from "@/common/Modal";
-  import ErrorData from "@/common/ErrorData";
-  import ErrorModal from "@/common/ErrorModal";
-  import ConfirmDialog from "@/common/dialog/ConfirmDialog";
-  import MetaDialog from "@/common/dialog/MetaDialog";
-  import AccessDialog from "@/common/dialog/AccessDialog";
-  import OwnerDialog from "@/common/dialog/OwnerDialog";
-  import DataDialog from "@/common/dialog/DataDialog";
-  import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog";
-  import ProjectDialog from "@/common/dialog/ProjectDialog";
-  import CollaboratorDialog from "@/common/dialog/CollaboratorDialog";
-  import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog";
-  import SearchTipsDialog from "@/common/dialog/SearchTipsDialog";
-  import DiagnosticDialog from "@/common/dialog/DiagnosticDialog";
-  import ReprocessDialog from "@/common/dialog/ReprocessDialog";
-  import UploadEmailDialog from "@/common/dialog/UploadEmailDialog";
-  import Toasts from "@/common/Toasts";
+  import { _ } from "svelte-i18n";
 
+  // Components
+  import Documents from "./Documents.svelte";
+
+  import AccessDialog from "@/common/dialog/AccessDialog.svelte";
+  import CollaboratorDialog from "@/common/dialog/CollaboratorDialog.svelte";
+  import ConfirmDialog from "@/common/dialog/ConfirmDialog.svelte";
+  import DataDialog from "@/common/dialog/DataDialog.svelte";
+  import DiagnosticDialog from "@/common/dialog/DiagnosticDialog.svelte";
+  import DocumentInformationDialog from "@/common/dialog/DocumentInformationDialog.svelte";
+  import MetaDialog from "@/common/dialog/MetaDialog.svelte";
+  import OwnerDialog from "@/common/dialog/OwnerDialog.svelte";
+  import ProjectDialog from "@/common/dialog/ProjectDialog.svelte";
+  import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog.svelte";
+  import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog.svelte";
+  import ReprocessDialog from "@/common/dialog/ReprocessDialog.svelte";
+  import SearchTipsDialog from "@/common/dialog/SearchTipsDialog.svelte";
+  import UploadEmailDialog from "@/common/dialog/UploadEmailDialog.svelte";
+
+  import ErrorData from "@/common/ErrorData.svelte";
+  import ErrorModal from "@/common/ErrorModal.svelte";
+  import Hamburger from "@/common/Hamburger.svelte";
+  import Modal from "@/common/Modal.svelte";
+  import Toasts from "@/common/Toasts.svelte";
+
+  // stores
   import {
     layout,
     hideDocumentInfo,
@@ -37,15 +43,11 @@
     hideSearchTips,
     hideDiagnostics,
     hideMailkey,
-  } from "@/manager/layout";
-  import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
-  import { documents } from "@/manager/documents";
-  import { _ } from "svelte-i18n";
+  } from "@/manager/layout.js";
+  import { confirmDialog, hideConfirm } from "@/manager/confirmDialog.js";
+  import { documents } from "@/manager/documents.js";
 
-  import emitter from "@/emit";
-  import DocumentInformationDialog from "../../common/dialog/DocumentInformationDialog.svelte";
-  import AddonDispatchDialog from "../../common/dialog/AddonDispatchTsDialog.svelte";
-  import AddonBrowserDialog from "../../common/dialog/AddonBrowserDialog.svelte";
+  import emitter from "@/emit.js";
 
   export let concealed = false;
   export let embed = false;
@@ -60,35 +62,36 @@
   let containerElem = null;
 </script>
 
-<style lang="scss">
+<style>
   .main {
     position: absolute;
-    left: $sidebar-width;
+    left: var(--sidebar-width, 272px);
     right: 0;
     top: 0;
     bottom: 0;
     background: white;
     overflow: auto;
+  }
 
-    &.embed {
+  .main.embed {
+    left: 0;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .main {
       left: 0;
     }
-
-    @media only screen and (max-width: $mobileBreak) {
-      left: 0;
-
-      &.concealed {
-        display: none;
-      }
+    .main.concealed {
+      display: none;
     }
   }
 
   .container {
-    padding: 0 48px $mainDocContainerPadding 48px;
+    padding: 0 48px var(--mainDocContainerPadding, 12px) 48px;
+  }
 
-    &.error {
-      padding: 100px;
-    }
+  .container.error {
+    padding: 100px;
   }
 </style>
 
@@ -103,10 +106,6 @@
     <Modal component={DocumentInformationDialog} on:close={hideDocumentInfo} />
   {:else if $layout.metaOpen != null}
     <Modal component={MetaDialog} on:close={hideMeta} />
-  {:else if $layout.addonDispatchOpen}
-    <Modal component={AddonDispatchDialog} on:close={hideAddonDispatch} />
-  {:else if $layout.addonBrowserOpen}
-    <Modal component={AddonBrowserDialog} on:close={hideAddonBrowser} />
   {:else if $layout.accessOpen}
     <Modal component={AccessDialog} on:close={hideAccess} />
   {:else if $layout.ownerOpen}

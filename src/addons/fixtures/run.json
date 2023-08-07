@@ -1,0 +1,84 @@
+{
+  "uuid": "b92c27a1-fb05-4a74-9158-861f328d69fb",
+  "addon": {
+    "id": 105,
+    "user": 20080,
+    "organization": 125,
+    "access": "public",
+    "name": "Scraper",
+    "repository": "MuckRock/documentcloud-scraper-addon",
+    "parameters": {
+      "type": "object",
+      "title": "Scraper",
+      "required": ["site", "project"],
+      "categories": ["monitor"],
+      "properties": {
+        "site": {
+          "type": "string",
+          "title": "Site",
+          "format": "uri",
+          "description": "The URL of the site to start scraping"
+        },
+        "project": {
+          "type": "string",
+          "title": "Project",
+          "description": "The DocumentCloud project title or ID of the project the documents should be uploaded to.  If the project title does not exist, it will be created."
+        },
+        "filecoin": {
+          "type": "boolean",
+          "title": "Push to IPFS/Filecoin",
+          "description": "WARNING: This will push all scraped files to IPFS and Filecoin.   There is no way to remove files from these storage systems."
+        },
+        "keywords": {
+          "type": "string",
+          "title": "Keywords",
+          "description": "Keywords to search and notify on (comma separated)"
+        },
+        "notify_all": {
+          "type": "boolean",
+          "title": "Notify on all new documents"
+        },
+        "crawl_depth": {
+          "type": "integer",
+          "title": "Crawl Depth",
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "description": "Recursively scrape same-domain links found on the page (Must be between 0 and 2)"
+        },
+        "access_level": {
+          "type": "string",
+          "title": "Access Level",
+          "default": "public",
+          "description": "Access level (public, private, or organization) of documents scraped."
+        },
+        "slack_webhook": {
+          "type": "string",
+          "title": "Slack Webhook",
+          "format": "uri",
+          "description": "Enter a slack webhook to enable Slack notifications"
+        }
+      },
+      "description": "This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.",
+      "eventOptions": {
+        "name": "site",
+        "events": ["hourly", "daily", "weekly"]
+      }
+    },
+    "created_at": "2022-05-17T13:49:53.635344Z",
+    "updated_at": "2023-06-14T14:36:48.129015Z",
+    "active": true,
+    "default": true,
+    "featured": false
+  },
+  "user": 1020,
+  "status": "success",
+  "progress": 0,
+  "message": "Scraping complete!",
+  "file_url": null,
+  "dismissed": true,
+  "rating": 0,
+  "comment": "",
+  "created_at": "2023-03-10T17:02:02.123686Z",
+  "updated_at": "2023-03-10T17:05:21.854551Z"
+}

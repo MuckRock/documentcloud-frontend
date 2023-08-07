@@ -1,10 +1,9 @@
 import { Svue } from "svue";
 
-import { documents } from "@/manager/documents";
-import { addons } from "@/manager/addons";
-import { layout } from "@/viewer/layout";
-import { entities } from "@/entities/entities";
-import { batchDelay } from "@/util/batchDelay";
+import { documents } from "../manager/documents.js";
+import { layout } from "../viewer/layout.js";
+import { entities } from "../entities/entities.js";
+import { batchDelay } from "../util/batchDelay.js";
 
 const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL);
 const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
@@ -15,18 +14,16 @@ export const ticker = new Svue({
       documents,
       layout,
       entities,
-      addons,
       triggered: false,
     };
   },
   computed: {
-    events(documents, layout, entities, addons) {
+    events(documents, layout, entities) {
       // Add events from all possible sources here
       return [
         ...documents.pollEvents,
         ...layout.pollEvents,
         ...entities.pollEvents,
-        ...addons.pollEvents,
       ];
     },
     shouldTrigger(events, triggered) {

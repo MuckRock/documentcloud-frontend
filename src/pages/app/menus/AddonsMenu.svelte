@@ -2,13 +2,12 @@
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
+  import Menu from "../../../common/Menu.svelte";
+  import MenuItem from "../../../common/MenuItem.svelte";
   import AddonMenuItem from "./AddonMenuItem.svelte";
 
-  import { openAddonBrowser } from "@/manager/layout.js";
-  import { addons, getBrowserAddons } from "@/manager/addons.js";
-  import { setHash } from "@/router/router.js";
+  import { openAddonBrowser, showAddonRuns } from "@/manager/layout.js";
+  import { addons } from "@/manager/addons.js";
 
   function sort(addons) {
     if (addons == null) return [];
@@ -20,11 +19,14 @@
 
   $: alphabetizedAddons = sort($addons.activeAddons);
 
-  async function openBrowser() {
-    await getBrowserAddons();
+  function openBrowser() {
     openAddonBrowser();
-    setHash("add-ons");
     plausible("app-add-ons", { props: { target: "browser" } });
+  }
+
+  function showRuns() {
+    showAddonRuns();
+    plausible("app-add-ons", { props: { target: "runs" } });
   }
 
   onMount(() => {
@@ -42,26 +44,32 @@
     font-style: italic;
     font-size: var(--normal, 16px);
   }
+
+  hr {
+    margin: 0.5em 21px;
+  }
 </style>
 
 <Menu>
-  <MenuItem on:click={openBrowser}>
-    <div class="small">
-      {$_("addonsMenu.browseAll")}
-    </div>
-  </MenuItem>
   {#each alphabetizedAddons as addon}
     <AddonMenuItem {addon} />
   {/each}
-  <MenuItem selectable={true}>
-    <div class="promo">
-      <a
-        class="plausible-event-name=app-add-ons plausible-event-target=help"
-        target="_blank"
-        href="https://www.documentcloud.org/help/add-ons/"
-      >
-        {$_("addonsMenu.learnMore")}
-      </a>
-    </div>
+
+  <hr />
+  <MenuItem on:click={openBrowser}>
+    <span class="promo">{$_("addonsMenu.browseAll")}</span>
+  </MenuItem>
+  <MenuItem on:click={showRuns}>
+    <span class="promo">{$_("addonsMenu.addonRuns")}</span>
+  </MenuItem>
+
+  <MenuItem>
+    <a
+      class="promo plausible-event-name=app-add-ons plausible-event-target=help"
+      target="_blank"
+      href="https://www.documentcloud.org/help/add-ons/"
+    >
+      {$_("addonsMenu.learnMore")}
+    </a>
   </MenuItem>
 </Menu>

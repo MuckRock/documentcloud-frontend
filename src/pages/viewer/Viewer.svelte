@@ -135,7 +135,8 @@
   {#if !$viewer.embed && $orgsAndUsers.me !== null}<script
       defer
       data-domain="documentcloud.org"
-      src="https://plausible.io/js/script.manual.tagged-events.js"></script>{/if}
+      src="https://plausible.io/js/script.manual.tagged-events.js"
+    ></script>{/if}
 </svelte:head>
 
 {#if $layout.error}

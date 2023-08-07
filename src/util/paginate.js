@@ -1,5 +1,5 @@
-import session from "@/api/session";
-import { queryBuilder } from "./url";
+import session from "@/api/session.js";
+import { queryBuilder } from "./url.js";
 
 export const MAX_PER_PAGE = parseInt(process.env.MAX_PER_PAGE);
 
@@ -10,10 +10,10 @@ export const MAX_PER_PAGE = parseInt(process.env.MAX_PER_PAGE);
  * @param {number?} perPage If present, the per page to request
  */
 export async function grabAllPages(url, perPage = MAX_PER_PAGE) {
-  if (perPage != null) url = queryBuilder(url, { per_page: perPage });
+  if (perPage !== null) url = queryBuilder(url, { per_page: perPage });
   const { data } = await session.get(url);
   const results = data.results;
-  if (data.next != null) {
+  if (data.next !== null) {
     // Grab the next page
     const next = await grabAllPages(data.next);
     return results.concat(next);

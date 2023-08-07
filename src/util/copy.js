@@ -1,4 +1,4 @@
-import { pushToast } from "@/manager/toast";
+import { pushToast } from "../common/Toast.svelte";
 
 export function copy(elem) {
   // Copy text within an element

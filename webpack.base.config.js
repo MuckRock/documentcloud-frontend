@@ -1,20 +1,17 @@
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-const autoPreprocess = require("svelte-preprocess");
-const { preprocessOptions } = require("./preprocess.config.js");
-const DotenvFlow = require("dotenv-flow-webpack");
-const TerserPlugin = require("terser-webpack-plugin");
-const CircularDependencyPlugin = require("circular-dependency-plugin");
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
 
-// Speed measurer
-const smp = new SpeedMeasurePlugin();
+const autoPreprocess = require("svelte-preprocess");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
+const DotEnv = require("dotenv-webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
+const { preprocessOptions } = require("./preprocess.config.js");
 
 const environment =
-  process.env.NODE_ENV == null ? "development" : process.env.NODE_ENV;
+  process.env.NODE_ENV === null ? "development" : process.env.NODE_ENV;
 
 const useAnalyzer = environment.endsWith("analyze");
 
@@ -23,7 +20,7 @@ const prod =
 const mode = prod ? "production" : "development";
 
 function wrap(spec) {
-  if (mode == "production") {
+  if (mode === "production") {
     spec.optimization = {
       minimize: true,
       minimizer: [
@@ -36,7 +33,7 @@ function wrap(spec) {
     };
     return spec;
   }
-  return smp.wrap(spec);
+  return spec;
 }
 
 module.exports = wrap({
@@ -44,8 +41,13 @@ module.exports = wrap({
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
+      "axios-retry": path.resolve(
+        __dirname,
+        "node_modules/axios-retry/es/index.mjs",
+      ),
     },
-    extensions: ["*", ".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
+    conditionNames: ["svelte", "browser"],
+    extensions: [".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
     mainFields: ["svelte", "browser", "module", "main"],
   },
   module: {
@@ -56,33 +58,25 @@ module.exports = wrap({
           loader: "svelte-loader",
           options: {
             emitCss: prod,
-            hotReload: !prod,
+            // hotReload: !prod,
             dev: !prod,
             preprocess: autoPreprocess(preprocessOptions),
+            onwarn(warning, handler) {
+              if (process.env.SUPPRESS_WARNINGS) return;
+
+              handler(warning);
+            },
           },
         },
       },
       {
         test: /\.s[ac]ss$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
-          },
-          "css-loader",
-          "sass-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: { hmr: !prod },
-          },
-          "css-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.svg$/,
@@ -108,7 +102,10 @@ module.exports = wrap({
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
     }),
-    new DotenvFlow(),
+    new DotEnv({
+      path: prod ? `.env.${environment}` : ".env",
+      defaults: ".env",
+    }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
       exclude: /node_modules/,
@@ -137,4 +134,7 @@ module.exports = wrap({
       : []),
   ],
   devtool: prod ? false : "source-map",
+  stats: {
+    orphanModules: true,
+  },
 });

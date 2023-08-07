@@ -26,6 +26,7 @@ export const layout = new Svue({
       // Custom dialogs
       addonDispatchOpen: null,
       addonBrowserOpen: false,
+      addonRunsOpen: false,
       metaOpen: null,
       documentInfoOpen: false,
       projectEdit: null,
@@ -157,6 +158,10 @@ export const layout = new Svue({
   },
 });
 
+/*
+ * TODO: Rethink the way layout works and all the exported functions here
+ */
+
 export function selectionProcessing() {
   return [
     someProcessing(...layout.selected),
@@ -173,7 +178,6 @@ export function unselectDocument(document) {
 export function openDispatchAddon(addon) {
   const { repository } = addon.addon;
   setHash(`add-ons/${repository}`);
-  layout.addonDispatchOpen = addon;
 }
 
 export function showAddonEvent(addon, eventId) {
@@ -194,11 +198,22 @@ export function openAddonBrowser() {
   setHash("add-ons");
   layout.addonBrowserOpen = true;
 }
+
 export function hideAddonBrowser() {
   setHash("");
   setQS(new URLSearchParams(), ["q"]); // clear query params
   layout.addonBrowserOpen = false;
   layout.params.addOnEvent = null;
+}
+
+export function showAddonRuns() {
+  setHash("add-ons/runs");
+  layout.addonRunsOpen = true;
+}
+
+export function hideAddonRuns() {
+  setHash("");
+  layout.addonRunsOpen = false;
 }
 
 export function hideDocumentInfo() {

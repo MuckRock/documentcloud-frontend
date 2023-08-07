@@ -1,8 +1,9 @@
 <script>
   import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
   import { onMount, onDestroy } from "svelte";
-  import { layout } from "@/manager/layout";
-  import emitter from "@/emit";
+
+  import { layout } from "@/manager/layout.js";
+  import emitter from "@/emit.js";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";
