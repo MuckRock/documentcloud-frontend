@@ -17,7 +17,6 @@
 
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
-  import { setHash } from "../../router/router.js";
   import { pushToast } from "../../common/Toast.svelte";
   import { runs } from "../progress/AddonRun.svelte";
 
@@ -43,6 +42,10 @@
   $: loading = !addon;
   $: if (error) {
     pushToast(error.message, "error");
+  }
+
+  $: if (!visible) {
+    reset();
   }
 
   onMount(() => {
@@ -117,9 +120,8 @@
 
     let promises = [];
 
-    // event is scheduling, so schedule
-    // this creates or updates an event
-    if ($values.event) {
+    // if we're editing an event, any save should update the schedule
+    if (event || $values["event"] !== "disabled") {
       promises.push(schedule());
     }
 
