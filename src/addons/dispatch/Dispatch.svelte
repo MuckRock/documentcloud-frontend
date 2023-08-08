@@ -57,6 +57,23 @@
     }
   });
 
+  // extract initial form values from querystring
+  function valuesFromQS(initial: any) {
+    let qs = new URLSearchParams(window.location.search);
+
+    // only accept values in properties
+    const { properties } = addon.parameters;
+    const values = Object.fromEntries(
+      Array.from(qs).filter(([k, v]) => properties.hasOwnProperty(k)),
+    );
+
+    if (qs.has("event")) {
+      values["event"] = qs.get("event");
+    }
+
+    return { ...initial, ...values };
+  }
+
   async function load_addon(repo: string) {
     const options: RequestInit = {
       credentials: "include",
@@ -228,6 +245,8 @@
     } else {
       await load_addon(repo);
     }
+
+    $values = valuesFromQS($values);
 
     visible = true;
   }
