@@ -3,7 +3,8 @@
 
   export let title: string;
   export let name: string;
-  export let value: string;
+  export let defaultValue: string = "";
+  export let value: string = defaultValue;
   export let required: boolean = false;
   export let placeholder: string = "";
   export let description: string = "";

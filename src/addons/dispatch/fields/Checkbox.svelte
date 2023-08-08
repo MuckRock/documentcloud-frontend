@@ -3,7 +3,8 @@
 
   export let title: string;
   export let name: string;
-  export let value: boolean;
+  export let defaultValue: boolean = undefined;
+  export let value: boolean = defaultValue;
   export let required: boolean = false;
   export let description: string = "";
 </script>
