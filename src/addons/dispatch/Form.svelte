@@ -56,6 +56,7 @@
   form {
     width: 100%;
   }
+
   fieldset {
     display: flex;
     flex-direction: column;
@@ -87,6 +88,7 @@
           {name}
           required={required.includes(name)}
           bind:value={$values[name]}
+          defaultValue={params.default}
         />
       {/each}
     </fieldset>
