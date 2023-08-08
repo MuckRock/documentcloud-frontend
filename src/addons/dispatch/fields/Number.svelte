@@ -3,7 +3,8 @@
 
   export let title: string;
   export let name: string;
-  export let value: number;
+  export let defaultValue: number = undefined;
+  export let value: number = defaultValue;
   export let required: boolean = false;
   export let description: string = "";
   export let min: string | undefined = undefined;
