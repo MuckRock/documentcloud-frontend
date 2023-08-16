@@ -13,6 +13,7 @@
 <script lang="ts">
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
+  import { beforeUpdate } from "svelte";
   import { _ } from "svelte-i18n";
 
   // todo: figure out how to use a real path
@@ -46,9 +47,22 @@
   }
 
   export function validate() {
+    $values = noNulls($values);
     const valid = validator($values);
 
     return { valid, errors: validator.errors };
+  }
+
+  function noNulls(values) {
+    return Object.entries(values).reduce(
+      (m, [k, v]) => {
+        if (v !== null) {
+          m[k] = v;
+        }
+        return m;
+      },
+      { event: "disabled", selection: null },
+    );
   }
 </script>
 
