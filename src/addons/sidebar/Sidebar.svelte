@@ -3,13 +3,13 @@
   import { _ } from "svelte-i18n";
   import { ClockFill16 } from "svelte-octicons";
 
-  import { pinned } from "../browser/AddOnListItem.svelte";
+  import { pinned, type AddOnListItem } from "../browser/AddOnListItem.svelte";
   import ListItem from "./ListItem.svelte";
   import { baseApiUrl } from "../../api/base.js";
 
   $: console.log($pinned);
 
-  const endpoint = new URL("/api/addons/?active=true", baseApiUrl);
+  const endpoint = new URL("/api/addons/?active=true&per_page=100", baseApiUrl);
   const options: RequestInit = {
     credentials: "include",
   };
@@ -24,6 +24,10 @@
       });
 
     $pinned = res.results;
+  }
+
+  function sort(addons: AddOnListItem[]) {
+    return addons.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   onMount(async () => {
@@ -48,7 +52,7 @@
 </style>
 
 <div class="addon-sidebar">
-  <h3>{$_("addonSidebar.title")}</h3>
+  <h3><a href="#add-ons">{$_("addonSidebar.title")}</a></h3>
   <h4>
     <a href="#add-ons/runs">
       <ClockFill16 />
@@ -56,7 +60,7 @@
     </a>
   </h4>
 
-  {#each $pinned as addon (addon.id)}
+  {#each sort($pinned) as addon (addon.id)}
     <ListItem {addon} />
   {/each}
 </div>

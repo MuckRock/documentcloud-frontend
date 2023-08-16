@@ -72,6 +72,11 @@
       addon.active = !addon.active;
       console.error(`Problem updating add-on: ${resp.statusText}`);
     }
+
+    // now that we've updated, set $pinned
+    $pinned = addon.active
+      ? [...$pinned, addon]
+      : $pinned.filter((a) => a.id !== addon.id);
   }
 </script>
 
