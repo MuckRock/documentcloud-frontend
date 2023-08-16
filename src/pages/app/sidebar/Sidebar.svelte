@@ -9,6 +9,8 @@
   import Projects from "./Projects.svelte";
   import OrgUsers from "./OrgUsers.svelte";
 
+  import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
+
   export let expanded;
 
   const emit = emitter({
@@ -71,6 +73,8 @@
   <ProjectFilters />
   <OrgUsers />
   <Projects on:retractSidebar={emit.retractSidebar} />
+
+  <AddonSidebar />
 
   <!-- todo get rid of this -->
   <div class="sidebarbg" />

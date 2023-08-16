@@ -1,0 +1,251 @@
+{
+  "count": 6,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 480,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Empty Page Deleter",
+      "repository": "duckduckgrayduck/Empty-Page-Deletion",
+      "parameters": {
+        "type": "object",
+        "title": "Empty Page Deleter",
+        "required": ["project_id"],
+        "documents": ["selected", "query"],
+        "categories": ["file"],
+        "properties": {
+          "project_id": {
+            "type": "integer",
+            "title": "Project ID of the project you would like the documents uploaded to (required)"
+          }
+        },
+        "description": "<p>This Add-On detects pages with no text in a document, deletes the pages, and re-uploads the document with those pages removed.</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.092909Z",
+      "updated_at": "2023-07-27T14:06:16.815280Z",
+      "active": true,
+      "default": false,
+      "featured": true
+    },
+    {
+      "id": 462,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Entity Export",
+      "repository": "MuckRock/documentcloud-entity-export-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Entity Export",
+        "documents": ["query", "selected"],
+        "categories": ["ai"],
+        "properties": {},
+        "description": "<p>Export a CSV of the entities in your documents</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.090336Z",
+      "updated_at": "2023-08-16T00:33:33.432959Z",
+      "active": true,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 461,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Google Cloud Entity Extractor",
+      "repository": "MuckRock/documentcloud-google-entity-extractor-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Google Cloud Entity Extractor",
+        "documents": ["selected"],
+        "categories": ["ai"],
+        "properties": {},
+        "description": "<p>Extract entities using Google Cloud&rsquo;s natural language API</p>"
+      },
+      "created_at": "2023-07-19T19:59:18.089005Z",
+      "updated_at": "2023-07-21T15:38:06.493007Z",
+      "active": true,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 436,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Klaxon Site Monitor",
+      "repository": "MuckRock/Klaxon",
+      "parameters": {
+        "type": "object",
+        "title": "Klaxon Site Monitor",
+        "required": ["site", "selector"],
+        "categories": ["monitor"],
+        "properties": {
+          "site": {
+            "type": "string",
+            "title": "Site",
+            "format": "uri"
+          },
+          "selector": {
+            "type": "string",
+            "title": "Selector",
+            "description": "CSS Selector on the page you would like to monitor."
+          },
+          "slack_webhook": {
+            "type": "string",
+            "title": "Slack Webhook",
+            "format": "uri",
+            "description": "Enter a slack webhook to enable Slack notifications"
+          }
+        },
+        "description": "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
+        "eventOptions": {
+          "name": "site",
+          "events": ["hourly", "daily", "weekly"]
+        }
+      },
+      "created_at": "2023-07-19T19:59:18.068046Z",
+      "updated_at": "2023-07-27T14:06:29.899202Z",
+      "active": true,
+      "default": false,
+      "featured": true
+    },
+    {
+      "id": 372,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "PII Detector",
+      "repository": "MuckRock/PII-Detector",
+      "parameters": {
+        "type": "object",
+        "title": "PII Detector",
+        "documents": ["query", "selected"],
+        "categories": ["extraction", "monitor"],
+        "properties": {
+          "ssn": {
+            "type": "boolean",
+            "title": "Detect SSNs"
+          },
+          "zip": {
+            "type": "boolean",
+            "title": "Detect zipcodes"
+          },
+          "alert": {
+            "type": "boolean",
+            "title": "Notify by email when PII is detected in a document"
+          },
+          "email": {
+            "type": "boolean",
+            "title": "Detect emails"
+          },
+          "phone": {
+            "type": "boolean",
+            "title": "Detect phone numbers"
+          },
+          "access": {
+            "type": "string",
+            "title": "Access level of the annotations (public, private, organization)",
+            "default": "private"
+          },
+          "address": {
+            "type": "boolean",
+            "title": "Detect addresses"
+          },
+          "project_id": {
+            "type": "integer",
+            "title": "If you'd like to add documents where PII is detected to a project, provide the Project ID Here."
+          },
+          "credit_card": {
+            "type": "boolean",
+            "title": "Detect credit cards"
+          }
+        },
+        "description": "<p>This add-on will detect PII in a document, annotate where, and automatically e-mail you when sensitive PII is detected if you choose that option.</p>",
+        "eventOptions": {
+          "events": ["upload"]
+        }
+      },
+      "created_at": "2023-07-19T19:59:18.062382Z",
+      "updated_at": "2023-08-03T14:47:38.148954Z",
+      "active": true,
+      "default": false,
+      "featured": false
+    },
+    {
+      "id": 105,
+      "user": 100000,
+      "organization": 10001,
+      "access": "public",
+      "name": "Scraper",
+      "repository": "MuckRock/documentcloud-scraper-addon",
+      "parameters": {
+        "type": "object",
+        "title": "Scraper",
+        "required": ["site", "project"],
+        "categories": ["monitor"],
+        "properties": {
+          "site": {
+            "type": "string",
+            "title": "Site",
+            "format": "uri",
+            "description": "The URL of the site to start scraping"
+          },
+          "project": {
+            "type": "string",
+            "title": "Project",
+            "description": "The DocumentCloud project title or ID of the project the documents should be uploaded to.  If the project title does not exist, it will be created."
+          },
+          "filecoin": {
+            "type": "boolean",
+            "title": "Push to IPFS/Filecoin",
+            "description": "WARNING: This will push all scraped files to IPFS and Filecoin.   There is no way to remove files from these storage systems."
+          },
+          "keywords": {
+            "type": "string",
+            "title": "Keywords",
+            "description": "Keywords to search and notify on (comma separated)"
+          },
+          "notify_all": {
+            "type": "boolean",
+            "title": "Notify on all new documents"
+          },
+          "crawl_depth": {
+            "type": "integer",
+            "title": "Crawl Depth",
+            "default": 0,
+            "maximum": 2,
+            "minimum": 0,
+            "description": "Recursively scrape same-domain links found on the page (Must be between 0 and 2)"
+          },
+          "access_level": {
+            "type": "string",
+            "title": "Access Level",
+            "default": "public",
+            "description": "Access level (public, private, or organization) of documents scraped."
+          },
+          "slack_webhook": {
+            "type": "string",
+            "title": "Slack Webhook",
+            "format": "uri",
+            "description": "Enter a slack webhook to enable Slack notifications"
+          }
+        },
+        "description": "<p>This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.</p>",
+        "eventOptions": {
+          "name": "site",
+          "events": ["hourly", "daily", "weekly"]
+        }
+      },
+      "created_at": "2023-07-19T19:59:18.027007Z",
+      "updated_at": "2023-07-24T20:28:25.669788Z",
+      "active": true,
+      "default": true,
+      "featured": false
+    }
+  ]
+}

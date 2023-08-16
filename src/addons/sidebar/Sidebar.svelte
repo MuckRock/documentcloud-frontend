@@ -1,0 +1,62 @@
+<script lang="ts">
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
+  import { ClockFill16 } from "svelte-octicons";
+
+  import { pinned } from "../browser/AddOnListItem.svelte";
+  import ListItem from "./ListItem.svelte";
+  import { baseApiUrl } from "../../api/base.js";
+
+  $: console.log($pinned);
+
+  const endpoint = new URL("/api/addons/?active=true", baseApiUrl);
+  const options: RequestInit = {
+    credentials: "include",
+  };
+
+  async function load() {
+    console.log("Loading pinned add-ons");
+    const res = await fetch(endpoint, options)
+      .then((r) => r.json())
+      .catch((err) => {
+        console.error(err);
+        return { results: [] };
+      });
+
+    $pinned = res.results;
+  }
+
+  onMount(async () => {
+    await load();
+  });
+</script>
+
+<style>
+  .addon-sidebar {
+    padding: 0 24px;
+  }
+
+  h4 a {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  h4 a span {
+    margin: 0em 0.5em;
+  }
+</style>
+
+<div class="addon-sidebar">
+  <h3>{$_("addonSidebar.title")}</h3>
+  <h4>
+    <a href="#add-ons/runs">
+      <ClockFill16 />
+      <span>{$_("addonSidebar.runs")}</span>
+    </a>
+  </h4>
+
+  {#each $pinned as addon (addon.id)}
+    <ListItem {addon} />
+  {/each}
+</div>
