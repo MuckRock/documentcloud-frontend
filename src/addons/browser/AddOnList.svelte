@@ -20,6 +20,7 @@
   export let loading: boolean;
   export let error: string | undefined;
   export let reload: () => void | undefined;
+
   $: empty = !(items && items.length > 0);
 </script>
 
@@ -80,8 +81,8 @@
     <p>{$_("addonBrowserDialog.empty")}</p>
   {:else}
     <ul>
-      {#each items as addOn (addOn.id)}
-        <li><ListItem {...addOn} /></li>
+      {#each items as addon (addon.id)}
+        <li><ListItem {addon} /></li>
       {/each}
     </ul>
   {/if}
