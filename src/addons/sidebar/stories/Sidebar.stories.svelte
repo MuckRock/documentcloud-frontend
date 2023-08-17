@@ -2,10 +2,9 @@
   import { rest } from "msw";
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import { baseApiUrl } from "../../api/base.js";
-  import activeAddons from "../fixtures/addons-active.json";
-
-  import Sidebar from "../sidebar/Sidebar.svelte";
+  import { baseApiUrl } from "../../../api/base.js";
+  import activeAddons from "../../fixtures/addons-active.json";
+  import Sidebar from "../Sidebar.svelte";
 
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();
 
@@ -17,6 +16,7 @@
 
 <style>
   .sidebar {
+    padding: 1.5rem 0;
     width: var(--sidebar-width);
     background-color: var(--sidebar);
   }
@@ -25,7 +25,7 @@
 <Meta
   title="Add-Ons / Sidebar"
   tags={["autodocs"]}
-  parameters={{ layout: "fullscreen" }}
+  parameters={{ layout: "centered" }}
   component={Sidebar}
 />
 

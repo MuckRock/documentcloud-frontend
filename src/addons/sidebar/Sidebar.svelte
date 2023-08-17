@@ -5,6 +5,7 @@
 
   import { pinned, type AddOnListItem } from "../browser/AddOnListItem.svelte";
   import ListItem from "./ListItem.svelte";
+  import AddonListItem from "./AddonListItem.svelte";
   import { baseApiUrl } from "../../api/base.js";
 
   $: console.log($pinned);
@@ -40,24 +41,48 @@
     padding: 0 1.5rem;
   }
 
-  h4 a {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 0.5em;
+  .section-title {
+    margin: 0 0 0.5rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .section-title a {
+    display: block;
+    padding: 0.25em 0.5em;
+  }
+
+  .section-title a:hover {
+    background-color: var(--menuBg);
+  }
+
+  .runs-icon {
+    fill: var(--gray);
+  }
+
+  ul {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  li {
+    margin: 0.25em 0;
   }
 </style>
 
 <div class="addon-sidebar">
-  <h3><a href="#add-ons">{$_("addonSidebar.title")}</a></h3>
-  <h4>
-    <a href="#add-ons/runs">
-      <ClockFill16 />
-      <span>{$_("addonSidebar.runs")}</span>
-    </a>
-  </h4>
-
-  {#each sort($pinned) as addon (addon.id)}
-    <ListItem {addon} />
-  {/each}
+  <h3 class="section-title">
+    <a href="#add-ons">{$_("addonSidebar.title")}</a>
+  </h3>
+  <ListItem href="#add-ons/runs" label={$_("addonSidebar.runs")}>
+    <span slot="icon" class="runs-icon"><ClockFill16 /></span>
+  </ListItem>
+  {#if $pinned.length}
+    <ul class="addons">
+      {#each sort($pinned) as addon (addon.id)}
+        <li><AddonListItem {addon} /></li>
+      {/each}
+    </ul>
+  {/if}
 </div>

@@ -1,34 +1,33 @@
 <script lang="ts">
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
-  import Pin from "../../common/icons/Pin.svelte";
-
-  export let addon: AddOnListItem;
-
-  $: url = `#add-ons/${addon.repository}`;
+  export let href: string;
+  export let label: string;
 </script>
 
 <style>
-  .addon {
+  .list-item {
     display: flex;
-    align-items: flex-start;
     justify-content: flex-start;
+    gap: 0.5em;
+    padding: 0.25em 0.5em;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .list-item:hover {
+    background-color: var(--menuBg);
+  }
+
+  .icon {
+    margin-top: 0.15em;
   }
 
   h4 {
-    margin: 0em auto 1em 0.5em;
-  }
-
-  .addon a {
-    fill: var(--highlight-orange);
+    margin: 0;
+    font-weight: 600;
   }
 </style>
 
-<div class="addon">
-  <a href={url}>
-    <Pin title={addon.name} />
-  </a>
-
-  <h4>
-    <a href={url}> {addon.name}</a>
-  </h4>
-</div>
+<a class="list-item" {href}>
+  {#if $$slots.icon}<div class="icon"><slot name="icon" /></div>{/if}
+  <h4>{label}</h4>
+</a>
