@@ -37,7 +37,7 @@
 
 <style>
   .addon-sidebar {
-    padding: 0 24px;
+    padding: 0 1.5rem;
   }
 
   h4 a {
