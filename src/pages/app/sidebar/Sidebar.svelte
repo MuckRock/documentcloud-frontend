@@ -9,6 +9,8 @@
   import Projects from "./Projects.svelte";
   import OrgUsers from "./OrgUsers.svelte";
 
+  import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
+
   export let expanded;
 
   const emit = emitter({
@@ -16,15 +18,14 @@
   });
 </script>
 
-<style lang="scss" scoped>
+<style>
   .sidebar {
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     overflow: auto;
-    width: $sidebar-width;
-    // z-index: $sidebarZ;
+    width: var(--sidebar-width, 272px);
     -webkit-overflow-scrolling: touch;
   }
 
@@ -33,9 +34,9 @@
     top: 0;
     left: 0;
     bottom: 0;
-    z-index: $sidebarBg;
-    width: $sidebar-width;
-    background: $sidebar;
+    z-index: var(--sidebarBg);
+    width: var(--sidebar-width, 272px);
+    background: var(--sidebar, #edeeef);
     box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.12);
   }
 
@@ -43,7 +44,7 @@
     padding: 20px 0;
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  @media only screen and (max-width: 720px) {
     .sidebar {
       display: none;
       width: 100vw;
@@ -72,6 +73,8 @@
   <ProjectFilters />
   <OrgUsers />
   <Projects on:retractSidebar={emit.retractSidebar} />
+
+  <AddonSidebar />
 
   <!-- todo get rid of this -->
   <div class="sidebarbg" />
