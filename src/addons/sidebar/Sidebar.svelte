@@ -44,10 +44,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-  }
-
-  h4 a span {
-    margin: 0em 0.5em;
+    gap: 0.5em;
   }
 </style>
 
