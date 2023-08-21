@@ -8,8 +8,6 @@
   import AddonListItem from "./AddonListItem.svelte";
   import { baseApiUrl } from "../../api/base.js";
 
-  $: console.log($pinned);
-
   const endpoint = new URL("/api/addons/?active=true&per_page=100", baseApiUrl);
   const options: RequestInit = {
     credentials: "include",
