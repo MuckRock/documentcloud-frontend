@@ -1,14 +1,8 @@
 <script>
-  // SVG assets
-  import checkmarkSvg from "@/assets/checkmark.svg";
-  import checklineSvg from "@/assets/checkline.svg";
+  import { createEventDispatcher } from "svelte";
+  import { Check16, Dash16 } from "svelte-octicons";
 
-  import emitter from "@/emit";
-
-  const emit = emitter({
-    check() {},
-    uncheck() {},
-  });
+  const dispatch = createEventDispatcher();
 
   export let checked = false;
   export let indeterminate = false;
@@ -17,103 +11,79 @@
 
   function handleChange() {
     if (checked) {
-      emit.check({ indeterminate });
+      dispatch("check", { indeterminate });
     } else {
-      emit.uncheck();
+      dispatch("uncheck");
     }
   }
 </script>
 
-<style lang="scss">
+<style>
   label {
-    --checksize: 15px;
-    --checklinesize: 11px;
-    --xOff: 0;
-
     display: inline-block;
     height: var(--checkboxSize, 22px);
     width: var(--checkboxSize, 22px);
+  }
 
-    input {
-      opacity: 0;
-      position: fixed;
-      z-index: $checkboxZ;
-    }
+  input {
+    opacity: 0;
+    position: fixed;
+    z-index: var(--checkboxZ, -9);
+  }
 
-    span {
-      height: var(--checkboxSize, 22px);
-      width: var(--checkboxSize, 22px);
-      border: solid 1px #bbbbbb;
-      display: inline-block;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: box-shadow 0.2s ease, border 0.2s ease;
-      user-select: none;
-      position: relative;
+  span {
+    border: solid 1px #bbbbbb;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+    height: var(--checkboxSize, 22px);
+    position: relative;
+    transition: box-shadow 0.2s ease, border 0.2s ease;
+    user-select: none;
+    width: var(--checkboxSize, 22px);
+  }
 
-      &:hover {
-        border: solid 1px $primary;
-      }
+  span:hover {
+    border: solid 1px var(--primary, #4294f0);
+  }
 
-      :global(.checkmark) {
-        position: absolute;
-        width: var(--checksize, 15px);
-        height: var(--checksize, 15px);
-        left: calc(
-          (var(--checkboxSize, 22px) - var(--checksize, 15px)) / 2 +
-            var(--xOff, 0)
-        );
-        top: calc((var(--checkboxSize, 22px) - var(--checksize, 15px)) / 2);
-      }
+  /* make the svg the same size as its container */
+  span :global(svg) {
+    fill: white;
+    height: var(--checkboxSize, 22px);
+    width: var(--checkboxSize, 22px);
+  }
 
-      :global(.checkline) {
-        position: absolute;
-        width: var(--checklinesize, 11px);
-        height: var(--checklinesize, 11px);
-        left: calc(
-          (var(--checkboxSize, 22px) - var(--checklinesize, 11px)) / 2 +
-            var(--xOff, 0)
-        );
-        top: calc((var(--checkboxSize, 22px) - var(--checklinesize, 11px)) / 2);
-      }
-    }
+  input:focus + span {
+    border: solid 1px var(--primary, #4294f0);
+  }
 
-    input:focus + span {
-      border: solid 1px $primary;
-    }
+  input:checked + span {
+    background: var(--primary, #4294f0);
+    border: solid 1px var(--primary, #4294f0);
+  }
 
-    input:checked + span {
-      background: $primary;
-      border: solid 1px $primary;
-    }
+  input:checked:focus + span {
+    box-shadow: 0 0 0 2px var(--primary-faded, rgba(66, 148, 240, 0.13));
+    border: solid 1px var(--primary, #4294f0);
+  }
 
-    input:checked:focus + span {
-      box-shadow: 0 0 0 2px $primary-faded;
-      border: solid 1px $primary;
-    }
+  input:disabled + span {
+    background: rgba(0, 0, 0, 0.05);
+    cursor: default;
+  }
 
-    input:disabled + span {
-      background: rgba(0, 0, 0, 0.05);
-      cursor: default;
+  input:disabled + span:hover {
+    border: solid 1px #bbbbbb;
+  }
 
-      &:hover {
-        border: solid 1px #bbbbbb;
-      }
-    }
+  input:checked:disabled + span {
+    background: rgba(0, 0, 0, 0.05);
+    border: solid 1px #bbbbbb;
+  }
 
-    input:checked:disabled + span {
-      background: rgba(0, 0, 0, 0.05);
-      border: solid 1px #bbbbbb;
-
-      :global(.checkline),
-      :global(.checkmark) {
-        filter: invert(0.5);
-      }
-
-      &:hover {
-        border: solid 1px #bbbbbb;
-      }
-    }
+  input:checked:disabled + span:hover {
+    border: solid 1px #bbbbbb;
   }
 </style>
 
@@ -128,9 +98,9 @@
   <span>
     {#if checked}
       {#if indeterminate}
-        {@html checklineSvg}
+        <Dash16 />
       {:else}
-        {@html checkmarkSvg}
+        <Check16 />
       {/if}
     {/if}
   </span>
