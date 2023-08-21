@@ -1,15 +1,16 @@
 <script>
-  import Button from "@/common/Button";
-  import Title from "@/common/Title";
-  import Project from "./Project";
-
-  import { projects } from "@/manager/projects";
-  import { newProject } from "@/manager/layout";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { _ } from "svelte-i18n";
 
+  import Button from "@/common/Button.svelte";
+  import Title from "@/common/Title.svelte";
+  import Project from "./Project.svelte";
+
+  import { projects } from "@/manager/projects.js";
+  import { newProject } from "@/manager/layout.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+
   function sort(projects) {
-    if (projects == null) return [];
+    if (projects === null) return [];
     try {
       projects.sort((a, b) => a.title.localeCompare(b.title));
     } catch (e) {}
@@ -19,39 +20,40 @@
   $: alphabetizedProjects = sort($projects.projects);
 </script>
 
-<style lang="scss">
+<style>
   .projects {
-    padding: 20px 0;
+    padding: 20px 25px;
+  }
 
+  .titlesection {
+    display: inline-block;
+  }
+
+  @media only screen and (max-width: 720px) {
     .titlesection {
-      padding: 0 25px;
-
-      @media screen and (max-width: $mobileBreak) {
-        padding: 0 25px 0 (25px + $sidebarAdd);
-      }
-    }
-
-    .projectcontainer {
-      padding: 16px 0;
+      padding: 0 25px 0 0;
     }
   }
 
+  .projects .projectcontainer {
+    padding: 16px 0;
+  }
+
   .sticky {
-    background: $sidebar;
-    z-index: $sidebarStickyZ;
+    background: var(--sidebar);
+    z-index: var(--sidebarStickyZ);
   }
 
   small {
     font-size: 13px;
-    color: $gray;
+    color: var(--gray);
     margin: 0 24px;
     display: block;
   }
-
 </style>
 
-<div class="projects">
-  <div class="sticky">
+<details class="projects">
+  <summary class="sticky">
     {#if $orgsAndUsers.loggedIn}
       <div class="titlesection">
         <Title small={true}>{$_("projects.header")}</Title>
@@ -60,7 +62,7 @@
         >
       </div>
     {/if}
-  </div>
+  </summary>
   {#if $orgsAndUsers.loggedIn}
     <div class="projectcontainer">
       {#if alphabetizedProjects.length > 0}
@@ -72,4 +74,4 @@
       {/if}
     </div>
   {/if}
-</div>
+</details>

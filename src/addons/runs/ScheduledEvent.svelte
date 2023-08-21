@@ -12,7 +12,15 @@
     updated_at: string;
   }
 
+  // schedules and eventValues are the inverse of each other, so store them together
   export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];
+  export const eventValues = {
+    disabled: 0,
+    hourly: 1,
+    daily: 2,
+    weekly: 3,
+    upload: 4,
+  };
 </script>
 
 <script lang="ts">

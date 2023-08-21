@@ -9,43 +9,40 @@
   export let project;
 </script>
 
-<style lang="scss">
+<style>
   .project {
-    @include buttonLike;
-    padding: 11px 25px;
+    padding: 11px 25px 11px 0;
     display: table;
     width: 100%;
     box-sizing: border-box;
+  }
 
-    @media screen and (max-width: $mobileBreak) {
-      padding: 11px 25px 11px (25px + $sidebarAdd);
-    }
+  .project:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
 
-    &:hover {
-      background: rgba(0, 0, 0, 0.03);
-    }
+  .project > * {
+    display: table-cell;
+    vertical-align: top;
+  }
 
-    > * {
-      display: table-cell;
-      vertical-align: top;
-    }
+  .project .edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    float: right;
 
-    .edit {
-      float: right;
-      @include buttonLike;
+    padding-right: 5px;
+    padding-top: 3px;
+    width: 15px;
+  }
 
-      padding-right: 5px;
-      padding-top: 3px;
-      width: 15px;
-
-      &:hover {
-        filter: brightness(0.3);
-      }
-    }
+  .project .edit:hover {
+    filter: brightness(0.3);
   }
 
   .title {
-    font-size: $normal;
+    font-size: var(--normal);
     user-select: none;
     word-break: break-word;
   }
@@ -55,12 +52,12 @@
   <div class="project">
     <span class="title">{project.title}</span>
     {#if project.editAccess}
-      <span
+      <button
         class="edit"
         on:click|stopPropagation|preventDefault={() => editProject(project)}
       >
         {@html pencilSvg}
-      </span>
+      </button>
     {/if}
   </div>
 </Link>

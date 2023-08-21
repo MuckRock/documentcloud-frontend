@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+  import { writable, type Writable } from "svelte/store";
+
   interface Author {
     name?: string;
     avatar?: string;
@@ -19,6 +21,8 @@
     featured: boolean;
     default: boolean;
   }
+
+  export const pinned: Writable<AddOnListItem[]> = writable([]);
 </script>
 
 <script lang="ts">
@@ -29,26 +33,15 @@
   import Pin from "../../common/Pin.svelte";
   import AddOnPopularity from "../Popularity.svelte";
 
-  export let id: number = undefined;
-  export let active = false;
-  export let name: string = undefined;
-  export let repository: string = undefined;
-  export let parameters: any = {};
+  export let addon: AddOnListItem;
 
-  export let description: string = undefined;
-  export let author: Author = {
-    name: undefined,
-    avatar: undefined,
-  };
-  export let usage: number = undefined;
-
-  $: endpoint = new URL(`/api/addons/${id}/`, baseApiUrl);
-  $: description = parameters?.description;
-  $: if (!author.name) {
-    author.name = repository.split("/")[0];
+  $: endpoint = new URL(`/api/addons/${addon.id}/`, baseApiUrl);
+  $: description = addon.parameters?.description;
+  $: if (!addon?.author) {
+    addon.author = { name: addon?.repository?.split("/")[0] };
   }
 
-  $: url = `#add-ons/${repository}`;
+  $: url = `#add-ons/${addon.repository}`;
 
   async function toggle(event) {
     event.preventDefault();
@@ -61,14 +54,13 @@
     };
 
     // optimistic update
-    active = !active;
-    console.log(`${active ? "Pinning" : "Unpinning"} ${id}...`);
+    addon.active = !addon.active;
 
     const resp = await fetch(endpoint, {
       ...options,
-      body: JSON.stringify({ active }),
+      body: JSON.stringify({ active: addon.active }),
     }).catch((err) => {
-      active = !active;
+      addon.active = !addon.active;
       return {
         ok: false,
         statusText: String(err),
@@ -77,9 +69,14 @@
 
     if (!resp.ok) {
       // reset active state
-      active = !active;
+      addon.active = !addon.active;
       console.error(`Problem updating add-on: ${resp.statusText}`);
     }
+
+    // now that we've updated, set $pinned
+    $pinned = addon.active
+      ? [...$pinned, addon]
+      : $pinned.filter((a) => a.id !== addon.id);
   }
 </script>
 
@@ -146,27 +143,27 @@
 </style>
 
 <a class="addon-link" href={url}>
-  <div class="container" id={repository}>
+  <div class="container" id={addon.repository}>
     <div class="top-row">
       <div class="center-self">
-        <Pin {active} on:click={toggle} />
+        <Pin active={addon.active} on:click={toggle} />
       </div>
       <div class="stretch">
-        <h3 class="addon-name">{name}</h3>
+        <h3 class="addon-name">{addon.name}</h3>
       </div>
       <div class="metadata">
-        {#if author && author.name}
+        {#if addon?.author?.name}
           <p class="author">
             <a
-              href="http://github.com/{repository}"
+              href="http://github.com/{addon.repository}"
               target="_blank"
               rel="noopener noreferrer"
-              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
+              title={$_("addonBrowserDialog.viewsource")}>{addon.author.name}</a
             >
           </p>
         {/if}
-        {#if usage}
-          <AddOnPopularity useCount={usage} />
+        {#if addon.usage}
+          <AddOnPopularity useCount={addon.usage} />
         {/if}
       </div>
     </div>

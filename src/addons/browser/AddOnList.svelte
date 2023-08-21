@@ -10,16 +10,18 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import Loader from "../../common/Loader.svelte";
-  import Error from "../../common/icons/Error.svelte";
-  import ListItem from "./AddOnListItem.svelte";
-  import EmptyResults from "../../common/icons/EmptyResults.svelte";
   import Button from "../../common/Button.svelte";
+  import EmptyResults from "../../common/icons/EmptyResults.svelte";
+  import Error from "../../common/icons/Error.svelte";
+  import Loader from "../../common/Loader.svelte";
+
+  import ListItem from "./AddOnListItem.svelte";
 
   export let items: AddOnListItem[];
   export let loading: boolean;
   export let error: string | undefined;
   export let reload: () => void | undefined;
+
   $: empty = !(items && items.length > 0);
 </script>
 
@@ -80,8 +82,8 @@
     <p>{$_("addonBrowserDialog.empty")}</p>
   {:else}
     <ul>
-      {#each items as addOn (addOn.id)}
-        <li><ListItem {...addOn} /></li>
+      {#each items as addon (addon.id)}
+        <li><ListItem {addon} /></li>
       {/each}
     </ul>
   {/if}

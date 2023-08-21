@@ -4,7 +4,7 @@
 
   import Browser from "../Browser.svelte";
   import listFixture from "../../fixtures/addon-list.json";
-  import { baseApiUrl } from "../../../api/base";
+  import { baseApiUrl } from "../../../api/base.js";
 
   const args = { visible: true };
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();
