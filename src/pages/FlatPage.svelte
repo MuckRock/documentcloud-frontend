@@ -1,8 +1,10 @@
 <script>
-  import Link from "@/router/Link";
   import { onMount, onDestroy } from "svelte";
-  import { getQueryStringParams, falsyParamValue } from "@/util/url";
-  import { inIframe } from "@/util/iframe";
+
+  import Link from "../router/Link.svelte";
+
+  import { getQueryStringParams, falsyParamValue } from "../util/url.js";
+  import { inIframe } from "../util/iframe.js";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -143,30 +145,30 @@
 
 <style lang="scss">
   .page {
-    $contentWidth: 720px;
-    $tocWidth: 200px;
-    $tocPaddingRight: 10px;
-    $tocPaddingLeft: 30px;
-    $tocFinalWidth: $tocWidth + $tocPaddingLeft + $tocPaddingRight;
+    --contentWidth: 720px;
+    --tocWidth: 200px;
+    --tocPaddingRight: 10px;
+    --tocPaddingLeft: 30px;
+    --tocFinalWidth: calc(--tocWidth + --tocPaddingLeft + --tocPaddingRight);
 
-    max-width: $contentWidth + $tocFinalWidth;
+    max-width: calc(var(--contentWidth) + var(--tocFinalWidth));
     margin: 0 auto;
     box-sizing: border-box;
     padding: 40px 20px;
 
     :global(a) {
-      color: $primary;
+      color: var(--primary, #4294f0);
     }
 
     .toccontainer {
       position: absolute;
       left: 100%;
-      width: $tocWidth;
-      padding: 40px $tocPaddingRight 40px $tocPaddingLeft;
+      width: var(--tocWidth);
+      padding: 40px var(--tocPaddingRight) 40px var(--tocPaddingLeft);
       top: 0;
       bottom: 0;
 
-      @media only screen and (max-width: $mobileBreak) {
+      @media only screen and (max-width: 720px) {
         position: relative;
         left: inherit;
         width: inherit;
@@ -181,14 +183,14 @@
         overflow: auto;
         height: calc(100vh - 40px);
 
-        @media only screen and (max-width: $mobileBreak) {
+        @media only screen and (max-width: 720px) {
           position: relative;
           height: inherit;
           top: 0;
           overflow: none;
 
-          background: rgba($primary, 0.05);
-          border: solid 1px $primary;
+          background: rgba(var(--primary, #4294f0), 0.05);
+          border: solid 1px var(--primary, #4294f0);
           padding: 0px 14px;
           box-sizing: border-box;
           border-radius: 3px;
@@ -205,7 +207,7 @@
         }
 
         :global(li) {
-          @media only screen and (max-width: $mobileBreak) {
+          @media only screen and (max-width: 720px) {
             :global(.deep) {
               display: none;
             }
@@ -218,14 +220,14 @@
     }
 
     .content {
-      max-width: calc(100% - #{$tocFinalWidth});
+      max-width: calc(100% - var(--tocFinalWidth));
       padding: 20px 0;
       margin: 20px 0;
       border-top: solid 1px gainsboro;
       font-size: 16px;
       position: relative;
 
-      @media only screen and (max-width: $mobileBreak) {
+      @media only screen and (max-width: 720px) {
         max-width: 100%;
       }
 
@@ -279,7 +281,7 @@
       }
 
       :global(a) {
-        color: $primary;
+        color: var(--primary, #4294f0);
       }
 
       :global(pre) {

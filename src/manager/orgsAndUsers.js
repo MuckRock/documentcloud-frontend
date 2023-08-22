@@ -1,5 +1,8 @@
 import { Svue } from "svue";
-import { router, pushUrl, nav } from "@/router/router";
+
+import { pushToast } from "../common/Toast.svelte";
+
+import { router, pushUrl, nav } from "../router/router.js";
 import {
   getMe,
   changeActiveOrg,
@@ -7,13 +10,11 @@ import {
   getUser,
   getUsers,
   getOrganization,
-} from "@/api/orgAndUser";
+} from "../api/orgAndUser.js";
 import { projects, initProjects } from "./projects.js";
-import { initAddons } from "./addons.js";
-import { userUrl, allDocumentsUrl } from "@/search/search.js";
-import { layout } from "@/manager/layout.js";
-import { wrapLoad } from "@/util/wrapLoad.js";
-import { pushToast } from "../common/Toast.svelte";
+import { userUrl, allDocumentsUrl } from "../search/search.js";
+import { layout } from "./layout.js";
+import { wrapLoad } from "../util/wrapLoad.js";
 
 export const orgsAndUsers = new Svue({
   data() {
@@ -26,7 +27,6 @@ export const orgsAndUsers = new Svue({
       router,
       hasInited: false,
       hasInitedProjects: false,
-      hasInitedAddons: false,
       sameOrgUsers: [],
     };
   },
@@ -56,22 +56,11 @@ export const orgsAndUsers = new Svue({
           this.hasInitedProjects = true;
           initProjects(this.me);
         }
-        initAddonsIfNecessary(route);
-        if (
-          route != null &&
-          route.name == "app" &&
-          this.me != null &&
-          !this.hasInitedAddons
-        ) {
-          this.hasInitedAddons = true;
-          initAddons();
-        }
       }
     },
     me() {
       const route = router.resolvedRoute;
       initProjectsIfNecessary(route);
-      initAddonsIfNecessary(route);
     },
   },
   computed: {
@@ -123,17 +112,6 @@ function initProjectsIfNecessary(route) {
   ) {
     orgsAndUsers.hasInitedProjects = true;
     initProjects(orgsAndUsers.me);
-  }
-}
-function initAddonsIfNecessary(route) {
-  if (route == null) return;
-  if (
-    route.name == "app" &&
-    orgsAndUsers.me != null &&
-    !orgsAndUsers.hasInitedAddons
-  ) {
-    orgsAndUsers.hasInitedAddons = true;
-    initAddons();
   }
 }
 

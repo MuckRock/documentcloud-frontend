@@ -1,9 +1,10 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import Link from "@/router/Link";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
   import { _ } from "svelte-i18n";
+
+  import Loader from "../../common/Loader.svelte";
+  import Button from "../../common/Button.svelte";
+  import Link from "../../router/Link.svelte";
+  import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
@@ -13,11 +14,10 @@
   // Authentication
   import {
     auth,
-    logout,
     SIGN_IN_URL,
     SIGN_UP_URL,
     SIGN_OUT_URL,
-  } from "@/api/auth";
+  } from "../../api/auth.js";
 
   // Show the masthead
   export let showMast = false;
@@ -26,7 +26,7 @@
   export let showLogin = true;
 </script>
 
-<style lang="scss">
+<style>
   :global(.masthead) {
     width: 100%;
     max-width: 1200px;
@@ -69,25 +69,24 @@
 
   .signin {
     display: inline-block;
+  }
+  .signin a {
+    text-decoration: inherit;
+    color: var(--homeBlack, #222222);
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 1.5em;
+    cursor: pointer;
+  }
 
-    a {
-      text-decoration: inherit;
-      color: $homeBlack;
-      font-weight: bold;
-      font-size: 16px;
-      margin-right: 1.5em;
-      cursor: pointer;
-    }
-
-    &:hover {
-      opacity: $hover-opacity;
-    }
+  .signin:hover {
+    opacity: var(--hover-opacity, 0.8);
   }
 
   .content {
     margin: 2em 0;
     max-width: 80ch;
-    color: $homeBlack;
+    color: var(--homeBlack, #222222);
     font-size: 16px;
     line-height: 24px;
   }
@@ -105,7 +104,7 @@
     }
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  @media only screen and (max-width: 720px) {
     :global(.masthead) {
       display: none;
     }
@@ -122,27 +121,27 @@
   .supplemental {
     text-align: right;
     font-size: 13px;
-    color: $gray;
+    color: var(--gray), rgba(0, 0, 0, 0.53);
     margin: -10px 0 4px 0;
   }
 
   .narrowshow {
-    $bordersize: 16px;
+    --bordersize: 16px;
 
     display: none;
-    margin: 10px $bordersize 0 $bordersize;
+    margin: 10px var(--bordersize) 0 var(--bordersize);
     padding-top: 20px;
     border-top: solid 1px gainsboro;
+  }
 
-    .signupcontainer {
-      display: block;
-      margin: 0 (-$bordersize);
-    }
+  .narrowshow .signupcontainer {
+    display: block;
+    margin: 0 calc(-1 * var(--bordersize));
+  }
 
-    .signupcontainer,
-    .supplemental {
-      text-align: left;
-    }
+  .narrowshow .signupcontainer,
+  .narrowshow .supplemental {
+    text-align: left;
   }
 
   .narrowhide {
@@ -151,7 +150,7 @@
     text-align: right;
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  @media only screen and (max-width: 720px) {
     .narrowhide {
       display: none;
     }

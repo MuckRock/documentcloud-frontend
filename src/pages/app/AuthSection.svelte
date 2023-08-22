@@ -1,14 +1,15 @@
 <script>
-  import Link from "@/router/Link";
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
-  import Dropdown from "@/common/Dropdown";
-
-  import { orgsAndUsers, changeActive } from "@/manager/orgsAndUsers";
-  import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth";
   import { _, locale } from "svelte-i18n";
-  import { showMailkeySelected } from "@/manager/manager";
-  import langs from "@/langs/langs.json";
+
+  import Link from "../../router/Link.svelte";
+  import Menu from "../../common/Menu.svelte";
+  import MenuItem from "../../common/MenuItem.svelte";
+  import Dropdown from "../../common/Dropdown.svelte";
+
+  import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "../../api/auth.js";
+  import langs from "../../langs/langs.json";
+  import { showMailkeySelected } from "../../manager/manager.js";
+  import { orgsAndUsers, changeActive } from "../../manager/orgsAndUsers.js";
 
   function pickOne(list) {
     if (list == null) return null;
@@ -38,35 +39,34 @@
   }
 
   $: me = $orgsAndUsers.me;
-  $: individual = me != null && me.organization.individual;
-  $: currentOrg = me == null ? null : me.organization;
-  $: orgs = $orgsAndUsers.selfOrgs == null ? [] : $orgsAndUsers.selfOrgs;
+  $: individual = me !== null && me.organization.individual;
+  $: currentOrg = me === null ? null : me.organization;
+  $: orgs = $orgsAndUsers.selfOrgs === null ? [] : $orgsAndUsers.selfOrgs;
   $: individualOrg = pickOne(orgs.filter((org) => org.individual));
 </script>
 
-<style lang="scss">
+<style>
   .auth {
     user-select: none;
     margin: 0 0 20px 0;
+  }
+  .auth :global(a),
+  .auth .title,
+  .auth .dot {
+    color: var(--gray), rgba(0, 0, 0, 0.53);
+    font-size: 13px;
+  }
 
-    :global(a),
-    .title,
-    .dot {
-      color: $gray;
-      font-size: 13px;
-    }
+  .auth .dot {
+    margin: 0 3px;
+  }
 
-    .dot {
-      margin: 0 3px;
-    }
+  .auth .scope {
+    color: gray;
+  }
 
-    .scope {
-      color: gray;
-    }
-
-    .color {
-      color: $primary;
-    }
+  .auth .color {
+    color: var(--primary, #4294f0);
   }
 </style>
 
@@ -143,7 +143,7 @@
         <MenuItem selectable={false}>
           <div class="small">{$_("authSection.changeOrg")}</div>
         </MenuItem>
-        {#if individualOrg != null}
+        {#if individualOrg !== null}
           <MenuItem on:click={() => change(individualOrg)}>
             {$_("authSection.personalAcct")}
             {#if individualOrg.id == currentOrg.id}
