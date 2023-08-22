@@ -1,9 +1,9 @@
 <script>
-  import emitter from "@/emit.js";
+  import { createEventDispatcher } from "svelte";
 
   // Components
-  import Hamburger from "@/common/Hamburger.svelte";
-  import Logo from "@/common/Logo.svelte";
+  import Hamburger from "../../../common/Hamburger.svelte";
+  import Logo from "../../../common/Logo.svelte";
 
   import ProjectFilters from "./ProjectFilters.svelte";
   import Projects from "./Projects.svelte";
@@ -11,11 +11,11 @@
 
   import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
 
-  export let expanded;
+  import { orgsAndUsers } from "../../../manager/orgsAndUsers.js";
 
-  const emit = emitter({
-    retractSidebar() {},
-  });
+  const dispatch = createEventDispatcher();
+
+  export let expanded;
 </script>
 
 <style>
@@ -66,15 +66,17 @@
 
 <aside class="sidebar" class:expanded>
   <header>
-    <Hamburger on:toggle={emit.retractSidebar} />
+    <Hamburger on:toggle={(e) => dispatch("retractSidebar")} />
     <Logo />
   </header>
 
   <ProjectFilters />
-  <OrgUsers />
-  <Projects on:retractSidebar={emit.retractSidebar} />
 
-  <AddonSidebar />
+  {#if $orgsAndUsers.me !== null}
+    <OrgUsers />
+    <Projects on:retractSidebar />
+    <AddonSidebar />
+  {/if}
 
   <!-- todo get rid of this -->
   <div class="sidebarbg" />
