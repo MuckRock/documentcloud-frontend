@@ -14,7 +14,6 @@
   };
 
   async function load() {
-    console.log("Loading pinned add-ons");
     const res = await fetch(endpoint, options)
       .then((r) => r.json())
       .catch((err) => {

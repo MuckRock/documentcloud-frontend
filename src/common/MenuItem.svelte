@@ -5,58 +5,77 @@
   export let disabled = false;
   export let indent = false;
   export let special = false;
+  export let href = null;
+  export let target = null;
+
+  let className = "";
+  export { className as class };
+
+  $: tag = href ? "a" : "button";
 </script>
 
-<style lang="scss">
+<style>
+  button,
+  a {
+    background: none;
+    border: none;
+    display: block;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+  }
+
   .item {
     padding: 6px 21px;
     font-size: 16px;
     user-select: none;
+  }
+  .item.danger {
+    color: var(--caution, #f04c42);
+  }
 
-    &.danger {
-      color: $caution;
-    }
+  .item.special {
+    color: var(--searchSpecial, #5a00ff);
+  }
 
-    &.special {
-      color: $searchSpecial;
-    }
+  .item.primary {
+    color: var(--primary, #4294f0);
+  }
 
-    &.primary {
-      color: $primary;
-    }
+  .item.indent {
+    padding-left: 39px;
+  }
 
-    &.indent {
-      padding-left: 39px;
-    }
+  .item.selectable {
+    cursor: pointer;
+  }
 
-    &.selectable {
-      cursor: pointer;
+  .item.selectable:hover {
+    background: var(--primary, #4294f0);
+    color: white;
+  }
 
-      &:hover {
-        background: $primary;
-        color: white;
+  .item.selectable:hover :global(.info),
+  .item.selectable:hover :global(.scope) {
+    color: white;
+  }
 
-        :global(.info),
-        :global(.scope) {
-          color: white;
-        }
-      }
-    }
+  .item.disabled {
+    color: var(--gray), rgba(0, 0, 0, 0.53);
+    pointer-events: none;
+  }
 
-    :global(.info) {
-      font-size: 13px;
-      color: $gray;
-    }
-
-    &.disabled {
-      color: $gray;
-      pointer-events: none;
-    }
+  .item :global(.info) {
+    font-size: 13px;
+    color: var(--gray), rgba(0, 0, 0, 0.53);
   }
 </style>
 
-<div
-  class="item"
+<svelte:element
+  this={tag}
+  {target}
+  {href}
+  class="item {className}"
   class:selectable
   class:danger
   class:primary
@@ -66,4 +85,4 @@
   on:click
 >
   <slot>Define an item</slot>
-</div>
+</svelte:element>
