@@ -4,7 +4,6 @@
 
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
-  import AddonMenuItem from "./AddonMenuItem.svelte";
   import { pinned } from "../../../addons/browser/AddOnListItem.svelte";
 
   $: alphabetizedAddons = $pinned.sort((a, b) => a.name.localeCompare(b.name));
@@ -16,6 +15,10 @@
         (window.plausible.q = window.plausible.q || []).push(arguments);
       };
   });
+
+  function addonURL(addon) {
+    return `#add-ons/${addon.repository}`;
+  }
 </script>
 
 <style>
@@ -32,7 +35,9 @@
 
 <Menu>
   {#each alphabetizedAddons as addon}
-    <AddonMenuItem {addon} />
+    <MenuItem href={addonURL(addon)}>
+      {addon.name}
+    </MenuItem>
   {/each}
 
   <hr />
