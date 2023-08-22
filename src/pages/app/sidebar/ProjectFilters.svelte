@@ -35,7 +35,7 @@
   <Link plusReplace={true} toUrl={allDocumentsUrl()}>
     <div class="link">{$_("projects.allDocuments")}</div>
   </Link>
-  {#if $orgsAndUsers.me != null}
+  {#if $orgsAndUsers.me !== null}
     <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me)}>
       <div class="link">{$_("projects.yourDocuments")}</div>
     </Link>

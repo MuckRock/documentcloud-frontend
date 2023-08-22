@@ -54,24 +54,20 @@
 
 <details class="projects">
   <summary class="sticky">
-    {#if $orgsAndUsers.loggedIn}
-      <div class="titlesection">
-        <Title small={true}>{$_("projects.header")}</Title>
-        <Button on:click={newProject} small={true}
-          >{$_("projects.newProject")}</Button
-        >
-      </div>
-    {/if}
-  </summary>
-  {#if $orgsAndUsers.loggedIn}
-    <div class="projectcontainer">
-      {#if alphabetizedProjects.length > 0}
-        {#each alphabetizedProjects as project}
-          <Project {project} />
-        {/each}
-      {:else}
-        <small>{$_("projects.createProject")}</small>
-      {/if}
+    <div class="titlesection">
+      <Title small={true}>{$_("projects.header")}</Title>
+      <Button on:click={newProject} small={true}
+        >{$_("projects.newProject")}</Button
+      >
     </div>
-  {/if}
+  </summary>
+  <div class="projectcontainer">
+    {#if alphabetizedProjects.length > 0}
+      {#each alphabetizedProjects as project}
+        <Project {project} />
+      {/each}
+    {:else}
+      <small>{$_("projects.createProject")}</small>
+    {/if}
+  </div>
 </details>
