@@ -1,7 +1,7 @@
 <script>
-  import HomeTemplate from "./HomeTemplate";
-  import Link from "@/router/Link";
   import { _ } from "svelte-i18n";
+  import HomeTemplate from "./HomeTemplate.svelte";
+  import Link from "../../router/Link.svelte";
 </script>
 
 <svelte:head>

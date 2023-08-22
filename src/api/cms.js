@@ -2,8 +2,8 @@
  * Methods related to the DocumentCloud CMS
  */
 
-import session from "./session";
-import { urlJoin } from "@/util/url";
+import session from "./session.js";
+import { urlJoin } from "../util/url.js";
 
 export async function getContent(url) {
   const { data } = await session.get(

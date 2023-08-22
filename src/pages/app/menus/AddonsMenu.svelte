@@ -4,30 +4,9 @@
 
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
-  import AddonMenuItem from "./AddonMenuItem.svelte";
+  import { pinned } from "../../../addons/browser/AddOnListItem.svelte";
 
-  import { openAddonBrowser, showAddonRuns } from "@/manager/layout.js";
-  import { addons } from "@/manager/addons.js";
-
-  function sort(addons) {
-    if (addons == null) return [];
-    try {
-      addons.sort((a, b) => a.name.localeCompare(b.name));
-    } catch (e) {}
-    return addons;
-  }
-
-  $: alphabetizedAddons = sort($addons.activeAddons);
-
-  function openBrowser() {
-    openAddonBrowser();
-    plausible("app-add-ons", { props: { target: "browser" } });
-  }
-
-  function showRuns() {
-    showAddonRuns();
-    plausible("app-add-ons", { props: { target: "runs" } });
-  }
+  $: alphabetizedAddons = $pinned.sort((a, b) => a.name.localeCompare(b.name));
 
   onMount(() => {
     window.plausible =
@@ -36,10 +15,14 @@
         (window.plausible.q = window.plausible.q || []).push(arguments);
       };
   });
+
+  function addonURL(addon) {
+    return `#add-ons/${addon.repository}`;
+  }
 </script>
 
 <style>
-  .promo {
+  :global(a.promo) {
     color: var(--darkgray, rgba(0, 0, 0, 0.8));
     font-style: italic;
     font-size: var(--normal, 16px);
@@ -52,24 +35,29 @@
 
 <Menu>
   {#each alphabetizedAddons as addon}
-    <AddonMenuItem {addon} />
+    <MenuItem href={addonURL(addon)}>
+      {addon.name}
+    </MenuItem>
   {/each}
 
   <hr />
-  <MenuItem on:click={openBrowser}>
-    <span class="promo">{$_("addonsMenu.browseAll")}</span>
+
+  <MenuItem
+    class="promo plausible-event-name=app-add-ons plausible-event-target=browser"
+    href="#add-ons"
+    >{$_("addonsMenu.browseAll")}
   </MenuItem>
-  <MenuItem on:click={showRuns}>
-    <span class="promo">{$_("addonsMenu.addonRuns")}</span>
+  <MenuItem
+    class="promo plausible-event-name=app-add-ons plausible-event-target=runs"
+    href="#add-ons/runs"
+    >{$_("addonsMenu.addonRuns")}
   </MenuItem>
 
-  <MenuItem>
-    <a
-      class="promo plausible-event-name=app-add-ons plausible-event-target=help"
-      target="_blank"
-      href="https://www.documentcloud.org/help/add-ons/"
-    >
-      {$_("addonsMenu.learnMore")}
-    </a>
+  <MenuItem
+    class="promo plausible-event-name=app-add-ons plausible-event-target=help"
+    target="_blank"
+    href="https://www.documentcloud.org/help/add-ons/"
+  >
+    {$_("addonsMenu.learnMore")}
   </MenuItem>
 </Menu>
