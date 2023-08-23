@@ -22,7 +22,6 @@
     background: rgba(66, 148, 240, 0.13);
   }
 
-  /* $mobileBreak */
   @media screen and (max-width: 720px) {
     .linksection :global(a) {
       /* (24px + $sidebarAdd) */

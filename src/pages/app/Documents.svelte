@@ -146,7 +146,7 @@
       vertical-align: top;
       width: 275px;
 
-      @media only screen and (max-width: $mobileBreak) {
+      @media only screen and (max-width: 720px) {
         width: 240px;
 
         @media only screen and (max-width: 550px) {
@@ -183,7 +183,7 @@
     background: white;
     z-index: $appStickyZ;
 
-    @media only screen and (max-width: $mobileBreak) {
+    @media only screen and (max-width: 720px) {
       padding-top: 0;
     }
 
@@ -226,7 +226,7 @@
     }
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  @media only screen and (max-width: 720px) {
     .narrowshow {
       display: block;
     }

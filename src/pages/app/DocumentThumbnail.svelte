@@ -39,7 +39,7 @@
     vertical-align: top;
     position: relative;
 
-    @media only screen and (max-width: $mobileBreak) {
+    @media only screen and (max-width: 720px) {
       padding: 10px 15px 20px 15px;
     }
 
@@ -53,7 +53,7 @@
       vertical-align: middle;
       object-fit: contain;
 
-      @media only screen and (max-width: $mobileBreak) {
+      @media only screen and (max-width: 720px) {
         width: 43px;
         height: 54px;
         font-size: 12px;
@@ -162,7 +162,7 @@
       </span>
     {/if}
   </span>
-  {#if noteCount > 0 }
+  {#if noteCount > 0}
     <span class="note-count">
       {$_("document.noteCount", { values: { n: noteCount } })}
     </span>

@@ -80,7 +80,7 @@
     margin-right: 0.25em;
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  @media only screen and (max-width: 720px) {
     .narrowhide {
       display: none;
     }

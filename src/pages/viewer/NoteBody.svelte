@@ -15,7 +15,7 @@
     padding: 2em 0;
 
     .notes {
-      max-width: $mobileBreak;
+      max-width: 720px;
       width: 90%;
       margin: 0 auto;
     }

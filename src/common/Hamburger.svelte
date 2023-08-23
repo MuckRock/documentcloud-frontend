@@ -27,7 +27,7 @@
     }
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  @media only screen and (max-width: 720px) {
     .hamburger {
       display: block;
     }

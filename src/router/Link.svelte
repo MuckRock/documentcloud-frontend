@@ -1,7 +1,8 @@
 <script>
-  import { router, getPath, pushUrl, goBack } from "@/router/router";
-  import { urlsEqual } from "@/util/url";
   import { Svue } from "svue";
+  import { router, getPath, pushUrl, goBack } from "./router.js";
+  import { urlsEqual } from "../util/url.js";
+
   export let to = null;
   export let toUrl = null;
   export let back = false;
@@ -49,7 +50,7 @@
   }
 </script>
 
-<style lang="scss">
+<style>
   .active {
     font-weight: bold;
   }
@@ -59,10 +60,10 @@
   }
 
   .color {
-    color: $primary !important;
+    color: var(--primary) !important;
   }
 
-  span {
+  a {
     cursor: pointer;
   }
 </style>
@@ -91,7 +92,7 @@
   {/if}
 {:else}
   <!-- Go back on click -->
-  <span
+  <a
     class:color
     class:ib={inlineBlock}
     class:active={$link.active}
@@ -99,5 +100,5 @@
     on:click={nav}
   >
     <slot />
-  </span>
+  </a>
 {/if}
