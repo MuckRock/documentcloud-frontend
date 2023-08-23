@@ -1,21 +1,20 @@
 <script>
-  // Controls
-  import Loader from "@/common/Loader";
-  import Search from "../controls/Search";
-  import Hamburger from "../controls/Hamburger";
-
-  import Link from "@/router/Link";
-  import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
   import { _ } from "svelte-i18n";
 
-  $: style = `height: ${$layout.headerHeight}px; line-height: ${$layout.headerHeight}px`;
+  // Controls
+  import Loader from "@/common/Loader.svelte";
+  import Search from "../controls/Search.svelte";
+  import Hamburger from "../controls/Hamburger.svelte";
+
+  import Link from "@/router/Link.svelte";
+  import { viewer } from "@/viewer/viewer.js";
+  import { layout } from "@/viewer/layout.js";
 
   // SVG assets
   import backArrowSvg from "@/assets/back_arrow.svg";
 </script>
 
-<style lang="scss">
+<style>
   .expand {
     width: 100%;
   }
@@ -30,35 +29,34 @@
   }
 
   .title {
-    color: $viewerFg;
+    color: var(--viewerFg, rgba(0, 0, 0, 0.8));
     user-select: none;
+  }
+  .title > * {
+    display: inline-block;
+    margin: 0;
+  }
 
-    > * {
-      display: inline-block;
-      margin: 0;
-    }
+  .title h1 {
+    font-size: 18px;
+    margin: 0 5px;
+    word-break: break-all;
+  }
 
-    h1 {
-      font-size: 18px;
-      margin: 0 5px;
-      word-break: break-all;
-    }
+  .title .padleft {
+    margin-left: 30px;
+  }
 
-    .padleft {
-      margin-left: 30px;
-    }
-
-    h2 {
-      color: $viewerSecondary;
-      font-size: 14px;
-      font-weight: normal;
-      margin: 0 5px;
-    }
+  .title h2 {
+    color: var(--viewerSecondary, rgba(0, 0, 0, 0.78));
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 5px;
   }
 </style>
 
 <!-- Expanding cell to hold title and optional back -->
-<div class="cell" {style}>
+<div class="cell">
   {#if !$layout.embed}
     <div class="back">
       <Link back={true} style="margin-top: {$layout.headerHeight - 20}px">
@@ -67,9 +65,9 @@
     </div>
   {/if}
 </div>
-<div class="cell expand" {style}>
+<div class="cell expand">
   {#if $viewer.loaded}
-    <div class="title" {style}>
+    <div class="title">
       {#if !$layout.embed && $viewer.document.readable}
         <Loader active={true} pad={true} />
       {/if}
@@ -88,9 +86,9 @@
     </div>
   {/if}
 </div>
-<div class="cell" {style}>
+<div class="cell">
   <Search />
 </div>
-<div class="cell" {style}>
+<div class="cell">
   <Hamburger />
 </div>

@@ -1,13 +1,14 @@
 <script>
-  import ModifyImage from "./ModifyImage";
+  import { _ } from "svelte-i18n";
+
   import ActionPane from "./pane/ActionPane";
+  import ModifyImage from "./ModifyImage";
+  import Modification from "@/viewer/modification/Modification.svelte";
   import { viewer } from "@/viewer/viewer";
   import { layout } from "@/viewer/layout";
   import { restorePosition, changeMode } from "@/viewer/document";
   import { ModificationSpec } from "@/viewer/modification/modifySpec";
   import { modification } from "@/viewer/modification/modification.js";
-  import Modification from "@/viewer/modification/Modification.svelte";
-  import { _ } from "svelte-i18n";
 
   $: modify = $layout.modifying;
 
@@ -137,7 +138,7 @@
 <style lang="scss">
   .doc {
     left: 0;
-    background: $viewerBodyBg;
+    background: var(--viewerBodyBg, #e2e2e2);
     position: absolute;
     overflow: auto;
     padding: 2em 0;
@@ -198,7 +199,7 @@
 
       &.selected {
         .selector {
-          background: $primary;
+          background: var(--primary, #4294f0);
           border: 3px solid #bcd7ff;
         }
       }
@@ -208,14 +209,14 @@
         border: solid 2px transparent;
         box-sizing: border-box;
         background: white;
-        outline: $normaloutline;
+        outline: var(--normaloutline);
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
         width: 100%;
         height: 100%;
         position: relative;
         cursor: pointer;
         &:hover {
-          border: solid 2px $primary;
+          border: solid 2px var(--primary, #4294f0);
         }
 
         &.disabled {
@@ -226,7 +227,7 @@
 
       &.selected {
         .img {
-          border: solid 2px $primary;
+          border: solid 2px var(--primary, #4294f0);
 
           &:after {
             content: "";
@@ -235,7 +236,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba($primary, 0.5);
+            background: rgba(var(--primary, #4294f0), 0.5);
             pointer-events: none;
           }
         }
@@ -260,11 +261,11 @@
         }
 
         &:hover {
-          border: $width dashed $primary;
+          border: $width dashed var(--primary, #4294f0);
         }
 
         &.emphasized {
-          border: $width dashed $primary;
+          border: $width dashed var(--primary, #4294f0);
 
           &:hover {
             opacity: 0.8;

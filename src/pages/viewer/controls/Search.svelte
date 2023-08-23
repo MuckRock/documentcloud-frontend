@@ -58,15 +58,13 @@
   }
 </script>
 
-<style lang="scss">
+<style>
   .icon {
-    @include buttonLike;
-
     margin: 0 12px;
+  }
 
-    &.hide {
-      display: none;
-    }
+  .icon.hide {
+    display: none;
   }
 
   .input {
@@ -79,64 +77,63 @@
     bottom: 0;
     transition: width 0.5s ease;
     background: white;
+  }
 
-    .container {
-      position: absolute;
-      left: 30px;
-      top: 0;
-      bottom: 0;
-      right: 30px;
+  .container {
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    right: 30px;
+  }
 
-      input {
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        outline: none;
-        border: none;
-        box-shadow: none;
-      }
-    }
+  .container input {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    box-shadow: none;
+  }
 
-    .searchicon {
-      @include buttonLike;
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      margin-top: -10.5px;
+  .searchicon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    margin-top: -10.5px;
+  }
 
-      &.disabled {
-        pointer-events: none;
-      }
-    }
+  .searchicon.disabled {
+    pointer-events: none;
+  }
 
-    .closeicon {
-      @include buttonLike;
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      margin-top: -7.5px;
-    }
+  .closeicon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    margin-top: -7.5px;
+  }
 
-    > * {
-      display: none;
-    }
+  .input > * {
+    display: none;
+  }
 
-    &.expand {
-      width: 100%;
+  .input.expand {
+    width: 100%;
+  }
 
-      > * {
-        display: inherit;
-      }
-    }
+  .input.expand > * {
+    display: inherit;
   }
 </style>
 
 <div class="input" class:expand={$layout.searchExpanded}>
   <div class="container">
     <input
+      type="search"
       bind:this={searchElem}
-      placeholder={$_("searchBar.search")}
       bind:value={query}
+      placeholder={$_("searchBar.search")}
       disabled={$layout.searchPending}
       on:keypress={(e) => {
         if (e.key == "Enter") {
@@ -145,19 +142,23 @@
       }}
     />
   </div>
-  <div
-    class="searchicon"
+  <button
+    class="searchicon buttonLike"
     class:disabled={invalidQuery || $layout.searchPending}
     on:click={search}
   >
     {@html searchIconSvg}
-  </div>
-  <div class="closeicon" on:click={retract}>
+  </button>
+  <button class="closeicon buttonLike" on:click={retract}>
     {@html closeInlineSvg}
-  </div>
+  </button>
 </div>
-<div class="icon" class:hide={$layout.searchExpanded} on:click={expandSearch}>
+<button
+  class="icon buttonLike"
+  class:hide={$layout.searchExpanded}
+  on:click={expandSearch}
+>
   {@html viewerSearchIconSvg}
-</div>
+</button>
 
 <svelte:window on:keydown={handleKeyDown} />

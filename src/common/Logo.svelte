@@ -18,22 +18,22 @@
     : getPath("app");
 </script>
 
-<style lang="scss">
+<style>
   :global(.dclogo) {
     width: 166px;
     height: 29px;
     padding: 5px 25px 12px 25px;
     user-select: none;
+  }
 
-    @media screen and (max-width: 720px) {
-      padding-left: 25px + $sidebarAdd !important;
+  @media screen and (max-width: 720px) {
+    :global(.dclogo) {
+      padding-left: calc(25px + var(--sidebarAdd)) !important;
     }
   }
 
-  .nopadding {
-    :global(.dclogo) {
-      padding: 0 !important;
-    }
+  .nopadding :global(.dclogo) {
+    padding: 0 !important;
   }
 
   @media only screen and (max-width: 720px) {
@@ -43,7 +43,7 @@
   }
 </style>
 
-{#if $orgsAndUsers.me != null}
+{#if $orgsAndUsers.me !== null}
   <!-- TODO: some bug that requires this redundant if block -->
   <Link {newPage} inlineBlock={true} {toUrl}>
     <span class:nopadding>{@html dcLogo}</span>
