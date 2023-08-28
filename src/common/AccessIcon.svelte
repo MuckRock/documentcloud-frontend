@@ -1,11 +1,11 @@
 <script>
-  import Tooltip from "@/common/Tooltip";
   import { _ } from "svelte-i18n";
+  import Tooltip from "./Tooltip.svelte";
 
   // Stores
-  import { openAccess as managerOpenAccess } from "@/manager/layout";
-  import { openAccess as viewerOpenAccess } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
+  import { openAccess as managerOpenAccess } from "@/manager/layout.js";
+  import { openAccess as viewerOpenAccess } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
 
   // SVG assets
   import privateIconSvg from "@/assets/private_icon.svg";
@@ -33,25 +33,22 @@
     : "";
 </script>
 
-<style lang="scss">
-  .selectable {
-    @include buttonLike;
-  }
-
+<style>
   .access {
     vertical-align: middle;
   }
 
   .text {
     font-size: 12px;
-    color: $viewerLink;
+    color: var(--viewerLink, #004276);
     vertical-align: middle;
     margin-left: 2px;
   }
 </style>
 
 {#if showText}
-  <span
+  <button
+    class="buttonLike"
     class:selectable={document.editAccess}
     on:click={openAccess([document])}
   >
@@ -65,11 +62,11 @@
       {/if}
     </span>
     <span class="text">{$_(documentText)}</span>
-  </span>
+  </button>
 {:else}
   <Tooltip caption={$_(documentAccessString)}>
-    <span
-      class="access"
+    <button
+      class="access buttonLike"
       class:selectable={document.editAccess}
       on:click={openAccess([document])}
     >
@@ -80,6 +77,6 @@
       {:else if document.organizationAccess}
         {@html organizationIconSvg}
       {/if}
-    </span>
+    </button>
   </Tooltip>
 {/if}

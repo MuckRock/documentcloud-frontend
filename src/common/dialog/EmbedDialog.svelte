@@ -79,7 +79,7 @@
     border-collapse: separate;
     border-spacing: 10px 0;
 
-    @media only screen and (max-width: $mobileBreak) {
+    @media only screen and (max-width: 720px) {
       margin-left: -5px;
       border-spacing: 5px 0;
     }
@@ -105,7 +105,7 @@
         }
       }
 
-      @media only screen and (max-width: $mobileBreak) {
+      @media only screen and (max-width: 720px) {
         padding: 0 7px;
         text-align: left;
 

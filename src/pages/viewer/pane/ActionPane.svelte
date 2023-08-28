@@ -17,60 +17,59 @@
   }
 </script>
 
-<style lang="scss">
+<style>
   .actionpane {
     position: absolute;
     left: 0;
-    background: $actionPane;
-    z-index: $viewerActionPaneZ;
+    background: var(--actionPane, #fffdea);
+    z-index: var(--viewerActionPaneZ, 5);
     padding: 20px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
     display: table;
     box-sizing: border-box;
+  }
+  .actionpane > * {
+    display: table-cell;
+    vertical-align: top;
+  }
 
-    > * {
-      display: table-cell;
-      vertical-align: top;
-    }
+  .actioncontent {
+    padding: 0 25px;
+    width: 100%;
+  }
 
-    .actioncontent {
-      padding: 0 25px;
-      width: 100%;
+  .actioncontent :global(h3) {
+    font-size: 16px;
+    margin: 0;
+    margin: 12px 0;
+    color: var(--viewerDarkGray, #171717);
+  }
 
-      :global(h3) {
-        font-size: 16px;
-        margin: 0;
-        margin: 12px 0;
-        color: $viewerDarkGray;
-      }
+  .actioncontent :global(p) {
+    font-size: 14px;
+    color: var(--viewerDarkGray, #171717);
+  }
 
-      :global(p) {
-        font-size: 14px;
-        color: $viewerDarkGray;
-      }
+  .actioncontent :global(.buttonpadded) {
+    margin: 0 -4px;
+  }
 
-      :global(.buttonpadded) {
-        margin: 0 -4px;
-
-        :global(button) {
-          margin: 0 4px;
-        }
-      }
-    }
+  .actioncontent :global(.buttonpadded) :global(button) {
+    margin: 0 4px;
   }
 </style>
 
 <!-- Action pane -->
-{#if $layout.action != null}
+{#if $layout.action !== null}
   <div
     class="actionpane"
     style="top: {$layout.headerHeight}px; right: {$layout.sidebarWidth}px"
     bind:clientHeight={actionHeight}
   >
     <div class="actionclose">
-      <span on:click={cancelActions}>
+      <button class="buttonLike" on:click={cancelActions}>
         {@html closeSvg}
-      </span>
+      </button>
     </div>
     <div class="actioncontent">
       {#if $layout.selectNoteEmbed}
