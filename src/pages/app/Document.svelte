@@ -83,7 +83,7 @@
   .card {
     display: table;
 
-    @media only screen and (max-width: $mobileBreak) {
+    @media only screen and (max-width: 720px) {
       margin-bottom: 15px;
     }
 
@@ -253,12 +253,16 @@
         />
       </div>
     {/if}
-    <DocumentThumbnail {embed} {dialog} {document} on:pick
+    <DocumentThumbnail
+      {embed}
+      {dialog}
+      {document}
+      on:pick
       noteCount={document.notes.length}
-      publicNote={document.notes.some(x => x.access == "public")}
-      orgNote={document.notes.some(x => x.access == "organization")}
-      privateNote={document.notes.some(x => x.access == "private")}
-      />
+      publicNote={document.notes.some((x) => x.access == "public")}
+      orgNote={document.notes.some((x) => x.access == "organization")}
+      privateNote={document.notes.some((x) => x.access == "private")}
+    />
 
     <div class="info">
       <h2>
@@ -426,29 +430,28 @@
             {#each noteHighlights as highlight}
               <div>
                 <Link toUrl={document.relativeNoteUrl(highlight.note)}>
-                <!-- to get correct aspect ratio we would need to store the page spec
+                  <!-- to get correct aspect ratio we would need to store the page spec
                   in solr
                   --->
-                <Annotation
-                  page={{
-                    aspect: 11 / 8.5,
-                    pageNumber: highlight.note.page,
-                    document: document,
-                  }}
-                  pageNote={true}
-                  mode="view"
-                  aspect={11 / 8.5}
-                  showImageOnPageNote={!highlight.note.isPageNote}
-                  annotation={highlight.note}
-                  compact={true}
-                  titlePassages={highlight.titlePassages}
-                  hlContent={highlight.hlContent}
-                />
+                  <Annotation
+                    page={{
+                      aspect: 11 / 8.5,
+                      pageNumber: highlight.note.page,
+                      document: document,
+                    }}
+                    pageNote={true}
+                    mode="view"
+                    aspect={11 / 8.5}
+                    showImageOnPageNote={!highlight.note.isPageNote}
+                    annotation={highlight.note}
+                    compact={true}
+                    titlePassages={highlight.titlePassages}
+                    hlContent={highlight.hlContent}
+                  />
                 </Link>
               </div>
             {/each}
           </div>
-
         {/if}
       {/if}
     </div>

@@ -72,12 +72,12 @@
     &.ib {
       display: inline-block;
 
-      @media only screen and (max-width: $mobileBreak) {
+      @media only screen and (max-width: 720px) {
         display: none;
       }
     }
 
-    @media only screen and (max-width: $mobileBreak) {
+    @media only screen and (max-width: 720px) {
       display: none;
     }
 

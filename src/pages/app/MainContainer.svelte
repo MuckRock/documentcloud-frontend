@@ -30,8 +30,6 @@
     layout,
     hideDocumentInfo,
     hideMeta,
-    hideAddonDispatch,
-    hideAddonBrowser,
     hideAccess,
     hideOwner,
     hideData,

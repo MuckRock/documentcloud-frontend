@@ -1,24 +1,15 @@
 <script>
-  import Tooltip from "@/common/Tooltip";
-  import { layout } from "@/viewer/layout";
-  import { handlePlural } from "@/util/string";
   import { _ } from "svelte-i18n";
-
-  $: maxHits =
-    $layout.searchPages == null
-      ? null
-      : Math.max($layout.searchPages.map((page) => page.count));
+  import { layout } from "@/viewer/layout.js";
 </script>
 
-<style lang="scss">
-  .searchpane {
-    :global(em) {
-      color: $searchSpecial;
-    }
+<style>
+  .searchpane :global(em) {
+    color: var(--searchSpecial, #5a00ff);
   }
 </style>
 
-{#if $layout.searchPages != null}
+{#if $layout.searchPages !== null}
   <div class="searchpane">
     <b>
       {@html $_("searchPane.yourQuery", {

@@ -1,33 +1,29 @@
 <script>
-  import emitter from "@/emit";
+  import { createEventDispatcher } from "svelte";
+  import { ThreeBars16 } from "svelte-octicons";
 
-  // SVG assets
-  import hamburgerSvg from "@/assets/hamburger.svg";
-
-  const emit = emitter({
-    toggle() {},
-  });
+  const dispatch = createEventDispatcher();
 </script>
 
-<style lang="scss">
+<style>
   .hamburger {
     user-select: none;
     position: fixed;
     top: 0;
     padding: 14px;
-    z-index: $hamburgerZ;
+    z-index: var(--hamburgerZ, 8);
     display: none;
-
-    .svg {
-      cursor: pointer;
-    }
-
-    .svg:hover {
-      opacity: $hover-opacity;
-    }
+  }
+  .hamburger .svg {
+    cursor: pointer;
+    fill: var(--gray, rgba(0, 0, 0, 0.53));
   }
 
-  @media only screen and (max-width: $mobileBreak) {
+  .hamburger .svg:hover {
+    opacity: var(--hover-opacity, 0.8);
+  }
+
+  @media only screen and (max-width: 720px) {
     .hamburger {
       display: block;
     }
@@ -35,7 +31,7 @@
 </style>
 
 <div class="hamburger">
-  <span class="svg" on:click={emit.toggle}>
-    {@html hamburgerSvg}
-  </span>
+  <button class="svg buttonLike" on:click={(e) => dispatch("toggle")}>
+    <ThreeBars16 />
+  </button>
 </div>
