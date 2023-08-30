@@ -14,6 +14,10 @@
     "signUp": "Sign up",
     "goToApp": "Go to app"
   },
+  "notfound": {
+    "title": "Page not found",
+    "content": "Please try another URL"
+  },
   "accessToggle": {
     "public": "Note will be visible to anyone with access to the document.",
     "collaborator": "Note will be visible to anyone who can edit this document.",
