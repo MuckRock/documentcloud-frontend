@@ -1,4 +1,7 @@
 <script>
+  import { sanitize } from "dompurify";
+  import { marked } from "marked";
+  import { gfmHeadingId } from "marked-gfm-heading-id";
   import { onMount, onDestroy } from "svelte";
 
   import Link from "../router/Link.svelte";
@@ -9,13 +12,22 @@
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg";
 
-  export let content;
+  export let content = "";
+  export let title = "";
+
   let contentElem = null;
+  let hideToc = false;
   let sidebarElem = null;
+
+  marked.use(gfmHeadingId());
+
+  function render(content) {
+    return sanitize(marked.parse(content));
+  }
 
   function navTo(hash, smooth = false) {
     const elem = document.querySelector(hash);
-    if (elem != null) {
+    if (elem) {
       if (elem.scrollIntoView) {
         elem.scrollIntoView({
           block: "start",
@@ -30,26 +42,31 @@
   }
 
   function injectLinkReferences() {
-    if (!contentElem) return;
+    if (!contentElem) {
+      console.log("No content element");
+      return;
+    }
 
-    const headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    const headers = contentElem.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
     const contents = [];
-    headers.forEach((header) => {
+    headers.forEach((header, i) => {
       contents.push({
         text: header.textContent.trim(),
         id: header.id,
-        level: parseInt(header.tagName.substr(1)),
+        level: parseInt(header.tagName.substring(1)),
       });
       let id = header.id;
-      if (id == null) return;
       id = id.trim();
-      if (id == "") return;
+      if (!id) return;
+
       const anchor = document.createElement("a");
       anchor.href = `#${id}`;
       anchor.textContent = " #";
       anchor.className = "hiddenanchor";
       header.appendChild(anchor);
     });
+
     return contents;
   }
 
@@ -58,14 +75,14 @@
     let root = { children: [] };
 
     const addNode = (node, level, tree) => {
-      if (level == 1) {
+      if (level === 1) {
         tree.children.push({
           node,
           children: [],
         });
         return;
       }
-      if (tree.children.length == 0) {
+      if (tree.children.length === 0) {
         const newNode = {
           node: null,
           children: [],
@@ -86,12 +103,12 @@
     });
 
     // Strip single TOC root items
-    while (root.children.length == 1) {
+    while (root.children.length === 1) {
       root = root.children[0];
     }
 
-    const generateToc = (tree, depth = 0, first = true) => {
-      if (tree.children.length == 0 || depth >= 2) return null;
+    function generateToc(tree, depth = 0, first = true) {
+      if (tree.children.length === 0 || depth >= 2) return null;
       const ul = document.createElement("ul");
       tree.children.forEach((child) => {
         const li = document.createElement("li");
@@ -107,12 +124,14 @@
         ul.appendChild(li);
       });
       return ul;
-    };
+    }
 
-    sidebarElem.appendChild(generateToc(root));
+    const toc = generateToc(root);
+
+    if (toc !== null) {
+      sidebarElem.appendChild(toc);
+    }
   }
-
-  let hideToc = false;
 
   onMount(async () => {
     const queryReplacements = getQueryStringParams(window.location.href);
@@ -316,6 +335,10 @@
   }
 </style>
 
+<svelte:head>
+  <title>{title} | DocumentCloud</title>
+</svelte:head>
+
 <div class="page">
   <header>
     <div class="logo">
@@ -336,6 +359,7 @@
         <div class="toc" bind:this={sidebarElem} />
       </div>
     {/if}
-    {@html content}
+
+    {@html render(content)}
   </div>
 </div>
