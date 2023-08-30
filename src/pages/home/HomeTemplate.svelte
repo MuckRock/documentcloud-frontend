@@ -91,6 +91,10 @@
     line-height: 24px;
   }
 
+  .content :global(a) {
+    color: var(--primary);
+  }
+
   @media only screen and (max-width: 1240px) {
     .logo,
     .content {
@@ -158,6 +162,12 @@
     .narrowshow {
       display: block;
     }
+  }
+
+  footer {
+    background: var(--gray, gray);
+    height: 2em;
+    width: 100%;
   }
 </style>
 
@@ -237,5 +247,7 @@
     <div class="content">
       <slot />
     </div>
+
+    <footer />
   </div>
 </Loader>
