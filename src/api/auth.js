@@ -19,7 +19,7 @@ export const auth = new Svue({
   },
   computed: {
     isAuthenticated(key) {
-      return key != null;
+      return key !== null;
     },
   },
 });
@@ -38,11 +38,11 @@ export function logout() {
 function initialize() {
   try {
     const storedData = localStorage.getItem(DOCUMENTCLOUD_TOKEN_STORAGE_KEY);
-    if (storedData == null) {
+    if (storedData === null) {
       // Logged in
       return;
     }
-    if (storedData != null) {
+    if (storedData !== null) {
       const key = JSON.parse(storedData);
       setToken(key);
       return;

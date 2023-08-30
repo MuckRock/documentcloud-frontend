@@ -45,6 +45,10 @@ module.exports = wrap({
         __dirname,
         "node_modules/axios-retry/es/index.mjs",
       ),
+      "marked-gfm-heading-id": path.resolve(
+        __dirname,
+        "node_modules/marked-gfm-heading-id/src/index.js",
+      ),
     },
     conditionNames: ["svelte", "browser"],
     extensions: [".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
