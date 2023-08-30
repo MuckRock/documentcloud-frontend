@@ -1,16 +1,61 @@
-<script>
+<script context="module" lang="ts">
+  // todo move this to FlatPage.svelte
+  interface FlatPage {
+    title: string;
+    content: string;
+  }
+</script>
+
+<script lang="ts">
+  import { sanitize } from "dompurify";
+  import { marked } from "marked";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
+
   import HomeTemplate from "./HomeTemplate.svelte";
   import Link from "../../router/Link.svelte";
+
+  import { baseApiUrl } from "../../api/base.js";
+
+  const endpoint = new URL("/api/flatpages/home/", baseApiUrl);
+
+  // setting the initial state to rejected lets us show the fallback content first
+  let loading: Promise<FlatPage> = Promise.reject();
+
+  function render(content) {
+    return sanitize(marked(content));
+  }
+
+  async function load() {
+    const resp = await fetch(endpoint);
+
+    if (!resp.ok) {
+      throw new Error(resp.statusText);
+    }
+
+    return resp.json();
+  }
+
+  onMount(() => {
+    loading = load();
+  });
 </script>
 
 <svelte:head>
-  <title>DocumentCloud</title>
+  {#await loading then page}
+    <title>{page.title} | DocumentCloud</title>
+  {:catch}
+    <title>DocumentCloud</title>
+  {/await}
 </svelte:head>
 
-<HomeTemplate showMast="true">
-  <p>
-    {$_("home.about")}
-    <Link color={true} to="app">{$_("home.viewPublicDocs")}</Link>
-  </p>
+<HomeTemplate showMast>
+  {#await loading then page}
+    {@html render(page.content)}
+  {:catch}
+    <p>
+      {$_("home.about")}
+      <Link color to="app">{$_("home.viewPublicDocs")}</Link>
+    </p>
+  {/await}
 </HomeTemplate>
