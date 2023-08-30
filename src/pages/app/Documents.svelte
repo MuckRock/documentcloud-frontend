@@ -252,7 +252,7 @@
         {/if}
 
         {#if $orgsAndUsers.loggedIn}
-          <SpecialMessage tipoftheday={true} />
+          <SpecialMessage />
         {/if}
         <AuthSection />
       {/if}
