@@ -1,26 +1,35 @@
 <script>
-  import { pageCache, grabTipOfDay } from "@/manager/pageCache";
   import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
+  import { baseApiUrl } from "../api/base.js";
 
   const version = process.env.SPECIAL_VERSION;
   const contact = process.env.SPECIAL_CONTACT;
+  const endpoint = new URL("/api/flatpages/tipofday/", baseApiUrl);
 
-  export let tipoftheday = false;
+  let loading;
 
-  $: show =
-    version != null &&
-    version.trim().length > 0 &&
-    (!tipoftheday || (tipoftheday && $pageCache.tipResponse != null));
-  $: showContact = contact != null && contact.trim().length > 0;
+  async function load() {
+    const resp = await fetch(endpoint);
 
-  $: {
-    if (tipoftheday && !$pageCache.grabbingTip) {
-      grabTipOfDay();
+    if (!resp.ok) {
+      return "";
     }
+
+    const { content } = await resp.json();
+
+    return content;
   }
+
+  onMount(() => {
+    loading = load();
+  });
+
+  $: show = version != null && version.trim().length > 0;
+  $: showContact = contact != null && contact.trim().length > 0;
 </script>
 
-<style lang="scss">
+<style>
   .container {
     padding: 10px 0;
   }
@@ -33,32 +42,30 @@
     font-size: 13px;
     box-sizing: border-box;
     color: #043004;
+  }
 
-    :global(p:only-child) {
-      margin: 0;
-    }
+  .special :global(p:only-child) {
+    margin: 0;
+  }
 
-    :global(a) {
-      text-decoration: underline;
-    }
+  .special :global(a) {
+    text-decoration: underline;
   }
 </style>
 
 {#if show}
   <div class="container">
     <div class="special">
-      {#if tipoftheday}
-        {#if $pageCache.tipResponse != null}
-          {@html $pageCache.tipResponse}
-        {/if}
-      {:else}
+      {#await loading then content}
+        {@html content}
+      {:catch}
         {version}
         {#if showContact}
           {@html $_("specialMessage.constactUs", {
             values: { contact: contact },
           })}
         {/if}
-      {/if}
+      {/await}
     </div>
   </div>
 {/if}
