@@ -27,6 +27,7 @@ public/viewer/*
 
 # Local test env file
 .env.test
+.env.sentry-build-plugin
 
 .vscode
 
