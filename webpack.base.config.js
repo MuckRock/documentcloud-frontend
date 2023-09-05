@@ -119,6 +119,7 @@ module.exports = wrap({
     new DotEnv({
       path: prod ? `.env.${environment}` : ".env",
       defaults: ".env",
+      systemvars: true,
     }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
@@ -141,6 +142,7 @@ module.exports = wrap({
       authToken: process.env.SENTRY_AUTH_TOKEN,
       org: "muckrock",
       project: SENTRY_PROJECT,
+      telemetry: false,
     }),
     ...(useAnalyzer
       ? [
