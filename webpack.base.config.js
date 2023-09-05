@@ -6,6 +6,7 @@ const CircularDependencyPlugin = require("circular-dependency-plugin");
 const DotEnv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const { preprocessOptions } = require("./preprocess.config.js");
@@ -18,6 +19,9 @@ const useAnalyzer = environment.endsWith("analyze");
 const prod =
   environment.startsWith("production") || environment.startsWith("staging");
 const mode = prod ? "production" : "development";
+
+const SENTRY_PROJECT =
+  process.env.SENTRY_PROJECT || "documentcloud-frontend-staging";
 
 function wrap(spec) {
   if (mode === "production") {
@@ -41,6 +45,8 @@ module.exports = wrap({
     alias: {
       svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
+
+      // these packages don't export correctly, so we use an alias to fix imports
       "axios-retry": path.resolve(
         __dirname,
         "node_modules/axios-retry/es/index.mjs",
@@ -48,6 +54,10 @@ module.exports = wrap({
       "marked-gfm-heading-id": path.resolve(
         __dirname,
         "node_modules/marked-gfm-heading-id/src/index.js",
+      ),
+      "magic-string": path.resolve(
+        __dirname,
+        "node_modules/magic-string/dist/magic-string.es.mjs",
       ),
     },
     conditionNames: ["svelte", "browser"],
@@ -109,6 +119,7 @@ module.exports = wrap({
     new DotEnv({
       path: prod ? `.env.${environment}` : ".env",
       defaults: ".env",
+      systemvars: true,
     }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
@@ -127,6 +138,12 @@ module.exports = wrap({
       filename: "index.html",
       template: path.resolve("src", "main.html"),
     }),
+    sentryWebpackPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: "muckrock",
+      project: SENTRY_PROJECT,
+      telemetry: false,
+    }),
     ...(useAnalyzer
       ? [
           new BundleAnalyzerPlugin({
@@ -137,7 +154,7 @@ module.exports = wrap({
         ]
       : []),
   ],
-  devtool: prod ? false : "source-map",
+  devtool: "source-map",
   stats: {
     orphanModules: true,
   },
