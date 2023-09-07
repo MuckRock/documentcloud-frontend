@@ -1,4 +1,3 @@
-// import * as Sentry from "@sentry/svelte";
 import Main from "./Main.svelte";
 
 const SENTRY_DSN = process.env.SENTRY_DSN;
