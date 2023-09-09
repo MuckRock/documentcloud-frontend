@@ -27,7 +27,7 @@
   let textDoc = null;
   let ocrEngine = null;
   let loading = false;
-  let engineMap = { tess4: "Tesseract", textract: "Textract" };
+  let engineMap = { tess4: "Tesseract", textract: "Textract", googlecv: "Google Cloud Vision", ocrspace1:"OCRSpace" };
 
   $: {
     if ($viewer.document != null && textDoc == null && !loading) {
