@@ -12,7 +12,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const { preprocessOptions } = require("./preprocess.config.js");
 
 const environment =
-  process.env.NODE_ENV === null ? "development" : process.env.NODE_ENV;
+  process.env.NODE_ENV || "development";
 
 const useAnalyzer = environment.endsWith("analyze");
 
