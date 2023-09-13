@@ -117,7 +117,7 @@ function initProjectsIfNecessary(route) {
 
 export async function initOrgsAndUsers(callback = null) {
   orgsAndUsers.me = await getMe();
-  if (orgsAndUsers.me !== null) {
+  if (orgsAndUsers.me) {
     // Logged in
     orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
     orgsAndUsers.selfOrgs = await getOrganizationsByIds(
