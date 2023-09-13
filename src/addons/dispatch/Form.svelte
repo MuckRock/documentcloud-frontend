@@ -13,11 +13,9 @@
 <script lang="ts">
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
-  import { beforeUpdate } from "svelte";
   import { _ } from "svelte-i18n";
 
-  // todo: figure out how to use a real path
-  import { autofield } from "./fields";
+  import { autofield } from "./fields/index.js";
   import Button from "../../common/Button.svelte";
 
   export let properties: any = {};
