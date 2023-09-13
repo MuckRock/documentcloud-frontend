@@ -116,6 +116,8 @@ function initProjectsIfNecessary(route) {
 }
 
 export async function initOrgsAndUsers(callback = null) {
+  console.group("initOrgsAndUsers");
+  console.log("Initializing orgs and users ...");
   orgsAndUsers.me = await getMe();
   if (orgsAndUsers.me) {
     // Logged in
@@ -137,6 +139,8 @@ export async function initOrgsAndUsers(callback = null) {
     orgsAndUsers.usersById = orgsAndUsers.usersById;
     orgsAndUsers.orgsById = orgsAndUsers.orgsById;
   }
+  console.log("Done.");
+  console.groupEnd("initOrgsAndUsers");
   if (callback != null) callback();
 }
 
