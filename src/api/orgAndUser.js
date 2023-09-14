@@ -7,9 +7,11 @@ import { apiUrl } from "./base";
 const hasCsrfToken = /(^|;\s*)csrftoken=[a-zA-Z0-9]+/;
 
 export async function getMe(expand = DEFAULT_EXPAND) {
+  console.group("getMe");
   // Check that the user is logged in via cookies
   if (cookiesEnabled) {
     if (!hasCsrfToken.test(document.cookie)) {
+      console.log("No CSRF token");
       return null;
     }
   }
@@ -18,8 +20,11 @@ export async function getMe(expand = DEFAULT_EXPAND) {
     const { data } = await session.get(
       queryBuilder(apiUrl(`users/me/`), { expand }),
     );
+    console.log(data);
+    console.groupEnd("getMe");
     return data;
   } catch (e) {
+    console.groupEnd("getMe");
     return null;
   }
 }
