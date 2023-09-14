@@ -37,10 +37,13 @@ if (!IS_EMBED && SENTRY_DSN) {
 }
 
 // Imports to get persistent app functionality working
-import "./manager/orgsAndUsers.js";
+import { orgsAndUsers } from "./manager/orgsAndUsers.js";
 
 const app = new Main({
   target: document.body,
 });
 
 window.app = app;
+
+// debug
+window.orgsAndUsers = orgsAndUsers;

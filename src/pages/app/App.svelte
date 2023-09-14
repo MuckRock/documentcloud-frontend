@@ -125,7 +125,6 @@
 
     // debug
     window.layout = layout;
-    window.orgsAndUsers = orgsAndUsers;
     window.addons = {
       browser,
       dispatch,
