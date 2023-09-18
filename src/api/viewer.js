@@ -42,7 +42,7 @@ export function textUrl(document, pageNumber) {
 }
 
 export function jsonUrl(document) {
-  return `${document.assetUrl}documents/${document.id}/${document.slug}.txt.json`;
+  return `${document.assetUrl}documents/${document.id}/${document.slug}.txt.json?ts=${document.updatedAtTimestamp}`;
 }
 
 export function selectableTextUrl(document, pageNumber) {

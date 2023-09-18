@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import autoPreprocess from "svelte-preprocess";
 import { preprocessOptions } from "../preprocess.config.js";
 
