@@ -1,6 +1,6 @@
 <script>
-  import { search } from "@/search/search";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { search } from "@/search/search.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { _ } from "svelte-i18n";
 
   // SVG assets

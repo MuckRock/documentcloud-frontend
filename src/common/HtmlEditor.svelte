@@ -1,6 +1,6 @@
 <script>
   import { textAreaResize } from "@/util/textareaResize.js";
-  import { domPurify, loadDompurify } from "@/util/domPurify";
+  import { domPurify, loadDompurify } from "@/util/domPurify.js";
   import { _ } from "svelte-i18n";
 
   loadDompurify();

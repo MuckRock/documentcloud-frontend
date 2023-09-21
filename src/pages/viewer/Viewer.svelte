@@ -1,27 +1,30 @@
 <script>
-  import Header from "./header/Header";
-  import Body from "./Body";
-  import SimpleBody from "./SimpleBody";
-  import NoteBody from "./NoteBody";
-  import ThumbnailBody from "./ThumbnailBody";
-  import Sidebar from "./Sidebar";
-  import Footer from "./Footer";
-  import NotFound from "@/pages/NotFound";
-  import Toasts from "@/common/Toasts";
-  import Progress from "@/common/Progress";
-  import Button from "@/common/Button";
-  import { embedUrl } from "@/api/embed";
-  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
+
+  import Header from "./header/Header.svelte";
+  import Body from "./Body.svelte";
+  import SimpleBody from "./SimpleBody.svelte";
+  import NoteBody from "./NoteBody.svelte";
+  import ThumbnailBody from "./ThumbnailBody.svelte";
+  import Sidebar from "./Sidebar.svelte";
+  import Footer from "./Footer.svelte";
+  import NotFound from "@/pages/NotFound.svelte";
+  import Toasts from "@/common/Toasts.svelte";
+  import Progress from "@/common/Progress.svelte";
+  import Button from "@/common/Button.svelte";
+
+  import { embedUrl } from "@/api/embed.js";
+  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
 
   // Dialogs
-  import ConfirmDialog from "@/common/dialog/ConfirmDialog";
-  import { confirmDialog, hideConfirm } from "@/manager/confirmDialog";
-  import { viewerEditDialogs } from "./viewerEditDialogs";
+  import ConfirmDialog from "@/common/dialog/ConfirmDialog.svelte";
+  import { confirmDialog, hideConfirm } from "@/manager/confirmDialog.js";
+  import { viewerEditDialogs } from "./viewerEditDialogs.js";
 
-  import Modal from "@/common/Modal";
-  import ErrorModal from "@/common/ErrorModal";
-  import Loader from "@/common/Loader";
+  import Modal from "@/common/Modal.svelte";
+  import ErrorModal from "@/common/ErrorModal.svelte";
+  import Loader from "@/common/Loader.svelte";
   import {
     layout,
     setViewerInitializeAction,
@@ -32,11 +35,10 @@
     hideEditSections,
     hideInsertDialog,
     forceReprocess,
-  } from "@/viewer/layout";
-  import { doc, showAnnotation } from "@/viewer/document";
-  import { viewer } from "@/viewer/viewer";
-  import { pageImageUrl } from "@/api/viewer";
-  import { onMount } from "svelte";
+  } from "@/viewer/layout.js";
+  import { doc, showAnnotation } from "@/viewer/document.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { pageImageUrl } from "@/api/viewer.js";
 
   let shareOption = null;
 

@@ -1,13 +1,13 @@
 <script>
-  import MenuItem from "@/common/MenuItem";
-  import Tooltip from "@/common/Tooltip";
-  import { layout } from "@/manager/layout";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
+  import { layout } from "@/manager/layout.js";
   import {
     selectedDocsInProject,
     addSelectedDocsToProject,
     removeSelectedDocsFromProject,
-  } from "@/manager/projects";
-  import { handlePlural } from "@/util/string";
+  } from "@/manager/projects.js";
+  import { handlePlural } from "@/util/string.js";
 
   export let project;
 

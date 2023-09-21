@@ -1,17 +1,18 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import Autocomplete from "@/common/Autocomplete";
-  import { layout } from "@/manager/layout";
-  import { viewer } from "@/viewer/viewer";
-  import { autocompleteUsers } from "@/api/orgAndUser";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { changeOwnerForDocuments } from "@/manager/documents";
-  import { nameSingularNumberPlural } from "@/util/string";
-  import emitter from "@/emit";
-  import { sameProp } from "@/util/array";
   import deepEqual from "fast-deep-equal";
   import { _ } from "svelte-i18n";
+
+  import Autocomplete from "@/common/Autocomplete.svelte";
+  import Button from "@/common/Button.svelte";
+  import Loader from "@/common/Loader.svelte";
+
+  import { layout } from "@/manager/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { autocompleteUsers } from "@/api/orgAndUser.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { changeOwnerForDocuments } from "@/manager/documents.js";
+  import { sameProp } from "@/util/array.js";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     dismiss() {},

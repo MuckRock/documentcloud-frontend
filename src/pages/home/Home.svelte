@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-  import { sanitize } from "dompurify";
+  import DOMPurify from "dompurify";
   import { marked } from "marked";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -23,7 +23,7 @@
   let loading: Promise<FlatPage> = Promise.reject();
 
   function render(content) {
-    return sanitize(marked(content));
+    return DOMPurify.sanitize(marked(content));
   }
 
   async function load() {

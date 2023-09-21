@@ -1,11 +1,11 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import Dropdown from "@/common/Dropdown";
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
+  import Loader from "@/common/Loader.svelte";
+  import Button from "@/common/Button.svelte";
+  import Dropdown from "@/common/Dropdown.svelte";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
 
-  import { wrapLoadSeparate } from "@/util/wrapLoad";
+  import { wrapLoadSeparate } from "@/util/wrapLoad.js";
   import {
     layout,
     editProjectCollaboratorAccess,
@@ -16,13 +16,13 @@
     addUser,
     removeUserFromProject,
   } from "@/manager/projects";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { showConfirm } from "@/manager/confirmDialog";
-  import { titlecase } from "@/util/string";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { showConfirm } from "@/manager/confirmDialog.js";
+  import { titlecase } from "@/util/string.js";
 
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import emitter from "@/emit";
+  import emitter from "@/emit.js";
   import { _ } from "svelte-i18n";
 
   // SVG assets

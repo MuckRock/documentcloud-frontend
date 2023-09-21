@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { doc, zoomBreakpoints } from "@/viewer/document";
+  import { doc, zoomBreakpoints } from "@/viewer/document.js";
 
   // SVG assets
   import plusSvg from "@/assets/viewer_plus.svg";

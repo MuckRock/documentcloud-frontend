@@ -19,12 +19,12 @@ export async function loadViewerEditDialogs() {
   if (viewerEditDialogs.loaded) return;
   viewerEditDialogs.loaded = true;
   const dialogs = await Promise.all([
-    import("@/common/dialog/EmbedDialog"),
-    import("@/common/dialog/AccessDialog"),
-    import("@/common/dialog/DocumentInformationDialog"),
-    import("@/common/dialog/DataDialog"),
-    import("@/common/dialog/EditSectionsDialog"),
-    import("@/common/dialog/DocumentPickerDialog"),
+    import("@/common/dialog/EmbedDialog.svelte"),
+    import("@/common/dialog/AccessDialog.svelte"),
+    import("@/common/dialog/DocumentInformationDialog.svelte"),
+    import("@/common/dialog/DataDialog.svelte"),
+    import("@/common/dialog/EditSectionsDialog.svelte"),
+    import("@/common/dialog/DocumentPickerDialog.svelte"),
   ]);
   viewerEditDialogs.embedDialog = dialogs[0].default;
   viewerEditDialogs.accessDialog = dialogs[1].default;

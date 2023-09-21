@@ -1,4 +1,4 @@
-import { coalesceHighlights } from "./coalesceHighlights";
+import { coalesceHighlights } from "./coalesceHighlights.js";
 
 test("simple coalesce", () => {
   expect(

@@ -1,6 +1,6 @@
 <script>
   import MetaFieldDialog from "./MetaFieldDialog.svelte";
-  import { layout } from "@/manager/layout";
+  import { layout } from "@/manager/layout.js";
 
   $: meta = $layout.metaOpen;
 </script>

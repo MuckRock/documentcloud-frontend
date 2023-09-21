@@ -8,11 +8,14 @@ import {
   addUserToProject,
   updateUserAccess,
   removeUser,
-} from "@/api/project";
-import { getUsers } from "@/api/orgAndUser";
-import { layout } from "./layout";
-import { addDocsToProject, removeDocsFromProject } from "@/manager/documents";
-import { uniquify } from "@/util/array";
+} from "@/api/project.js";
+
+import { layout } from "./layout.js";
+import {
+  addDocsToProject,
+  removeDocsFromProject,
+} from "@/manager/documents.js";
+import { uniquify } from "@/util/array.js";
 
 export const projects = new Svue({
   data() {

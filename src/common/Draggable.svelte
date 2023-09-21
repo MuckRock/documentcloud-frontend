@@ -1,6 +1,6 @@
 <script>
-  import emitter from "@/emit";
-  import { filterFiles } from "./fileHandler";
+  import emitter from "@/emit.js";
+  import { filterFiles } from "./fileHandler.js";
 
   const emit = emitter({
     files() {},

@@ -1,5 +1,5 @@
-import { setupResizeEvent } from "./iframeSizer";
-import { queryBuilder } from "@/util/url";
+import { setupResizeEvent } from "./iframeSizer.js";
+import { queryBuilder } from "@/util/url.js";
 
 function injectIframe(url, options, container) {
   const parts = url.split("/").slice(-2);

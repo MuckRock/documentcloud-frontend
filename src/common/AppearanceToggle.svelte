@@ -1,5 +1,5 @@
 <script>
-  import emitter from "@/emit";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     change() {},

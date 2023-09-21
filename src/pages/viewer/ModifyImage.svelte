@@ -1,10 +1,9 @@
 <script>
-  import Image from "@/common/Image";
-  import { viewer } from "@/viewer/viewer";
-  import { pageImageUrl } from "@/api/viewer";
-  import { modification } from "@/viewer/modification/modification";
-  import { onMount } from "svelte";
-  import { getDocument } from "@/api/document";
+  import Image from "@/common/Image.svelte";
+  import { viewer } from "@/viewer/viewer.js";
+  import { pageImageUrl } from "@/api/viewer.js";
+  import { modification } from "@/viewer/modification/modification.js";
+  import { getDocument } from "@/api/document.js";
 
   export let id;
   export let page;

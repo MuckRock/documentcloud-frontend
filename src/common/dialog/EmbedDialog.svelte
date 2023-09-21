@@ -1,18 +1,18 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import Progress from "@/common/Progress";
-  import DocumentEmbedDialog from "./DocumentEmbedDialog";
-  import PageEmbedDialog from "./PageEmbedDialog";
-  import NoteEmbedDialog from "./NoteEmbedDialog";
-  import { wrapLoadSeparate } from "@/util/wrapLoad";
-  import { changeAccess } from "@/api/document";
-  import { enterSelectNoteMode } from "@/viewer/actions";
+  import Loader from "@/common/Loader.svelte";
+  import Button from "@/common/Button.svelte";
+  import Progress from "@/common/Progress.svelte";
+  import DocumentEmbedDialog from "./DocumentEmbedDialog.svelte";
+  import PageEmbedDialog from "./PageEmbedDialog.svelte";
+  import NoteEmbedDialog from "./NoteEmbedDialog.svelte";
+  import { wrapLoadSeparate } from "@/util/wrapLoad.js";
+  import { changeAccess } from "@/api/document.js";
+  import { enterSelectNoteMode } from "@/viewer/actions.js";
   import { _ } from "svelte-i18n";
 
   // Stores
-  import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
+  import { viewer } from "@/viewer/viewer.js";
+  import { layout } from "@/viewer/layout.js";
   import { writable } from "svelte/store";
 
   // SVG assets

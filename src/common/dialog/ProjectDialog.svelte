@@ -1,19 +1,19 @@
 <script>
-  import Button from "@/common/Button";
-  import Loader from "@/common/Loader";
+  import Button from "@/common/Button.svelte";
+  import Loader from "@/common/Loader.svelte";
 
-  import { layout, showCollaborators, embedProject } from "@/manager/layout";
+  import { layout, showCollaborators, embedProject } from "@/manager/layout.js";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import emitter from "@/emit";
-  import { textAreaResize } from "@/util/textareaResize";
-  import { wrapLoadSeparate } from "@/util/wrapLoad";
+  import emitter from "@/emit.js";
+  import { textAreaResize } from "@/util/textareaResize.js";
+  import { wrapLoadSeparate } from "@/util/wrapLoad.js";
   import {
     createNewProject,
     editProject,
     removeProject,
   } from "@/manager/projects";
-  import { showConfirm } from "@/manager/confirmDialog";
+  import { showConfirm } from "@/manager/confirmDialog.js";
   import { _ } from "svelte-i18n";
 
   const projectTitleLimit = process.env.PROJECT_TITLE_CHAR_LIMIT;

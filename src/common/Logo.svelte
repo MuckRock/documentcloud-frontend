@@ -1,8 +1,8 @@
 <script>
-  import Link from "@/router/Link";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { userUrl } from "@/search/search";
-  import { getPath } from "@/router/router";
+  import Link from "@/router/Link.svelte";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { userUrl } from "@/search/search.js";
+  import { getPath } from "@/router/router.js";
 
   // Svg assets
   import dcLogo from "@/assets/dc_logo.svg";

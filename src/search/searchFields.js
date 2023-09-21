@@ -1,4 +1,4 @@
-import { extractSlugId, isNumber } from "@/util/string";
+import { extractSlugId, isNumber } from "@/util/string.js";
 
 const languageOptions = process.env.LANGUAGE_CODES.split("|");
 

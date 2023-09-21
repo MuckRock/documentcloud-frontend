@@ -1,5 +1,5 @@
 <script>
-  import Button from "@/common/Button";
+  import Button from "@/common/Button.svelte";
   import {
     confirmDialog,
     runConfirm,

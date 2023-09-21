@@ -5,9 +5,9 @@
    */
 
   import { onMount, onDestroy } from "svelte";
-  import { layout } from "@/viewer/layout";
-  import { ensureBounds } from "@/util/bounds";
-  import emitter from "@/emit";
+  import { layout } from "@/viewer/layout.js";
+  import { ensureBounds } from "@/util/bounds.js";
+  import emitter from "@/emit.js";
   import { _ } from "svelte-i18n";
 
   // The image source

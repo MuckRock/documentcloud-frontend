@@ -1,5 +1,5 @@
 <script>
-  import { sanitize } from "dompurify";
+  import DOMPurify from "dompurify";
   import { marked } from "marked";
   import { gfmHeadingId } from "marked-gfm-heading-id";
   import { onMount, onDestroy } from "svelte";
@@ -22,7 +22,7 @@
   marked.use(gfmHeadingId());
 
   function render(content) {
-    return sanitize(marked.parse(content));
+    return DOMPurify.sanitize(marked.parse(content));
   }
 
   function navTo(hash, smooth = false) {

@@ -1,8 +1,8 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { pageImageUrl } from "@/api/viewer";
-  import { timeout } from "@/util/timeout";
-  import emitter from "@/emit";
+  import { pageImageUrl } from "@/api/viewer.js";
+  import { timeout } from "@/util/timeout.js";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     load() {},

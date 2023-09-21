@@ -1,5 +1,5 @@
 <script>
-  import emitter from "@/emit";
+  import emitter from "@/emit.js";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({

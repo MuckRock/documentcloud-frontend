@@ -1,6 +1,6 @@
 <script>
-  import SearchInput from "./SearchInput";
-  import Button from "@/common/Button";
+  import SearchInput from "./SearchInput.svelte";
+  import Button from "@/common/Button.svelte";
   import { onMount, onDestroy } from "svelte";
 
   import {
@@ -8,8 +8,8 @@
     search as searchData,
     userSearchQuery,
   } from "@/search/search";
-  import { showSearchTips } from "@/manager/layout";
-  import { router } from "@/router/router";
+  import { showSearchTips } from "@/manager/layout.js";
+  import { router } from "@/router/router.js";
   import { _ } from "svelte-i18n";
 
   export let search = "";

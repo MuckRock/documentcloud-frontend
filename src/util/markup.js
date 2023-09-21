@@ -1,5 +1,5 @@
-import { ensureBounds } from "./bounds";
-import { pageDragStart, pageDragMove, pageDragEnd } from "@/viewer/layout";
+import { ensureBounds } from "./bounds.js";
+import { pageDragStart, pageDragMove, pageDragEnd } from "@/viewer/layout.js";
 
 export function markup(node, pageNumber) {
   const getXY = (e, client = false, changedTouches = false) => {

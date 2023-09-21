@@ -1,10 +1,10 @@
 import { Svue } from "svue";
-import { getDocument } from "@/api/document";
-import { getMe } from "@/api/orgAndUser";
-import { router } from "@/router/router";
-import { DEFAULT_EXPAND } from "../api/common";
-import { inIframe } from "@/util/iframe";
-import { loadViewerEditDialogs } from "@/pages/viewer/viewerEditDialogs";
+import { getDocument } from "@/api/document.js";
+import { getMe } from "@/api/orgAndUser.js";
+import { router } from "@/router/router.js";
+import { DEFAULT_EXPAND } from "../api/common.js";
+import { inIframe } from "@/util/iframe.js";
+import { loadViewerEditDialogs } from "@/pages/viewer/viewerEditDialogs.js";
 
 function extractId(idSlug) {
   return parseInt(idSlug.split("-")[0]);

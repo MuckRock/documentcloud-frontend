@@ -1,11 +1,11 @@
 <script>
-  import RedactPane from "./RedactPane";
-  import AnnotatePane from "./AnnotatePane";
-  import ModifyPane from "./ModifyPane";
-  import SearchPane from "./SearchPane";
-  import SelectNotePane from "./SelectNotePane";
-  import { layout } from "@/viewer/layout";
-  import { cancelActions } from "@/viewer/document";
+  import RedactPane from "./RedactPane.svelte";
+  import AnnotatePane from "./AnnotatePane.svelte";
+  import ModifyPane from "./ModifyPane.svelte";
+  import SearchPane from "./SearchPane.svelte";
+  import SelectNotePane from "./SelectNotePane.svelte";
+  import { layout } from "@/viewer/layout.js";
+  import { cancelActions } from "@/viewer/document.js";
 
   // SVG assets
   import closeSvg from "@/assets/close.svg";

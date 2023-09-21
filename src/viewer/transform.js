@@ -8,9 +8,9 @@ import {
   applyToPoint,
   inverse,
 } from "transformation-matrix";
-import { closeEnough } from "@/util/epsilon";
+import { closeEnough } from "@/util/epsilon.js";
 import { cubicInOut } from "svelte/easing";
-import { doc } from "./document";
+import { doc } from "./document.js";
 
 const DEFAULT_VIEWPORT = [500, 500];
 

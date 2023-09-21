@@ -1,5 +1,5 @@
-import { layout } from "./layout";
-import { changeMode } from "./document";
+import { layout } from "./layout.js";
+import { changeMode } from "./document.js";
 
 export function enterRedactMode() {
   changeMode("image");

@@ -1,11 +1,15 @@
 <script>
-  import Page from "./Page";
-  import SearchResults from "./SearchResults";
+  import Page from "./Page.svelte";
+  import SearchResults from "./SearchResults.svelte";
 
-  import { layout, initializeViewer, cancelAnnotation } from "@/viewer/layout";
-  import { doc } from "@/viewer/document";
+  import {
+    layout,
+    initializeViewer,
+    cancelAnnotation,
+  } from "@/viewer/layout.js";
+  import { doc } from "@/viewer/document.js";
   import ScrollZoom from "scrollzoom";
-  import ActionPane from "./pane/ActionPane";
+  import ActionPane from "./pane/ActionPane.svelte";
   import { onMount, onDestroy, tick } from "svelte";
 
   import {

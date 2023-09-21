@@ -2,13 +2,13 @@
  * Methods related to the DocumentCloud note API
  */
 
-import session from "./session";
-import { Note } from "@/structure/note";
-import { apiUrl } from "./base";
-import { injectMe } from "@/util/data";
-import { queryBuilder } from "@/util/url";
-import { grabAllPages } from "@/util/paginate";
-import { DEFAULT_EXPAND } from "./common";
+import session from "./session.js";
+import { Note } from "@/structure/note.js";
+import { apiUrl } from "./base.js";
+import { injectMe } from "@/util/data.js";
+import { queryBuilder } from "@/util/url.js";
+import { grabAllPages } from "@/util/paginate.js";
+import { DEFAULT_EXPAND } from "./common.js";
 
 export async function createAnnotation(
   id,

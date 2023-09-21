@@ -1,13 +1,14 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import UploadOptions from "@/common/UploadOptions";
-  import { layout } from "@/manager/layout";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { reprocessDocuments } from "@/manager/documents";
-  import emitter from "@/emit";
-  import { sameProp } from "@/util/array";
   import { _ } from "svelte-i18n";
+
+  import Button from "@/common/Button.svelte";
+  import Loader from "@/common/Loader.svelte";
+  import UploadOptions from "@/common/UploadOptions.svelte";
+
+  import { layout } from "@/manager/layout.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { reprocessDocuments } from "@/manager/documents.js";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     dismiss() {},
@@ -18,7 +19,12 @@
   let language = layout.sameLanguage;
 
   async function reprocess(forceOcr, ocrEngine, language) {
-    reprocessDocuments(layout.reprocessDocuments, forceOcr, ocrEngine, language);
+    reprocessDocuments(
+      layout.reprocessDocuments,
+      forceOcr,
+      ocrEngine,
+      language,
+    );
     emit.dismiss();
   }
 </script>

@@ -1,13 +1,13 @@
 <script>
   import { _ } from "svelte-i18n";
 
-  import ActionPane from "./pane/ActionPane";
-  import ModifyImage from "./ModifyImage";
+  import ActionPane from "./pane/ActionPane.svelte";
+  import ModifyImage from "./ModifyImage.svelte";
   import Modification from "@/viewer/modification/Modification.svelte";
-  import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
-  import { restorePosition, changeMode } from "@/viewer/document";
-  import { ModificationSpec } from "@/viewer/modification/modifySpec";
+  import { viewer } from "@/viewer/viewer.js";
+  import { layout } from "@/viewer/layout.js";
+  import { restorePosition, changeMode } from "@/viewer/document.js";
+  import { ModificationSpec } from "@/viewer/modification/modifySpec.js";
   import { modification } from "@/viewer/modification/modification.js";
 
   $: modify = $layout.modifying;

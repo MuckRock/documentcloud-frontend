@@ -1,4 +1,4 @@
-import { fieldValid as fv } from "./searchFields";
+import { fieldValid as fv } from "./searchFields.js";
 
 function fieldValid(text) {
   // use example mode for tests

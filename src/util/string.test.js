@@ -1,4 +1,4 @@
-import { allIndices, nFormatter } from "./string";
+import { allIndices, nFormatter } from "./string.js";
 
 test("string all indices", () => {
   expect(allIndices("the cat and the hat", "the")).toEqual([0, 12]);

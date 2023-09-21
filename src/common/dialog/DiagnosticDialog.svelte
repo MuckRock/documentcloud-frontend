@@ -1,9 +1,9 @@
 <script>
-  import Button from "@/common/Button";
-  import emitter from "@/emit";
-  import { layout } from "@/manager/layout";
-  import DocumentThumbnail from "@/pages/app/DocumentThumbnail";
-  import { apiUrl } from "@/api/base";
+  import Button from "@/common/Button.svelte";
+  import emitter from "@/emit.js";
+  import { layout } from "@/manager/layout.js";
+  import DocumentThumbnail from "@/pages/app/DocumentThumbnail.svelte";
+  import { apiUrl } from "@/api/base.js";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({

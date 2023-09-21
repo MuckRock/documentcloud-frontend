@@ -1,4 +1,4 @@
-import { allIndices } from "./string";
+import { allIndices } from "./string.js";
 
 export function coalesceHighlights(text, highlights) {
   // Highlight text based on Solr search highlights.

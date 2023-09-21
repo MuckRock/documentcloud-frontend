@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-  import { ensureBounds } from "@/util/bounds";
 
   export let value;
   export let min;

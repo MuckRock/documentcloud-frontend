@@ -1,6 +1,6 @@
 <script>
-  import Paginator from "./Paginator";
-  import Logo from "@/common/Logo";
+  import Paginator from "./Paginator.svelte";
+  import Logo from "@/common/Logo.svelte";
 
   export let dialog = false;
 </script>

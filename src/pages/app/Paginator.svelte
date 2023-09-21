@@ -1,5 +1,5 @@
 <script>
-  import { search, searchNext, searchPrev } from "@/search/search";
+  import { search, searchNext, searchPrev } from "@/search/search.js";
   import { _ } from "svelte-i18n";
 
   // SVG assets

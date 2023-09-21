@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { Results } from "./results";
+import { Results } from "./results.js";
 
 export class Entity extends Svue {
   constructor(rawEntity, structure = {}) {

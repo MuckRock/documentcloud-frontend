@@ -1,18 +1,20 @@
 <script>
-  import ProgressiveImage from "@/common/ProgressiveImage";
   import DomPurify from "dompurify";
-  import { informSize } from "@/embed/iframeSizer";
+  import { _ } from "svelte-i18n";
+
+  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+
+  import { informSize } from "@/embed/iframeSizer.js";
   import { onMount, tick } from "svelte";
-  import { getAnnotation } from "@/api/annotation";
-  import { getDocument } from "@/api/document";
-  import { pageImageUrl } from "@/api/viewer";
-  import { embedUrl } from "@/api/embed";
+  import { getAnnotation } from "@/api/annotation.js";
+  import { getDocument } from "@/api/document.js";
+  import { pageImageUrl } from "@/api/viewer.js";
+  import { embedUrl } from "@/api/embed.js";
   import {
     currentUrl,
     truthyParamValue,
     getQueryStringParams,
-  } from "@/util/url";
-  import { _ } from "svelte-i18n";
+  } from "@/util/url.js";
 
   export let id;
   export let noteId;
@@ -251,8 +253,7 @@
             style="left: -{(note.x1 * 100) / note.width}%; top: -{(note.y1 *
               100) /
               note.height}%;
-          width: {100 / note.width}%; height: {100 /
-              note.height}%"
+          width: {100 / note.width}%; height: {100 / note.height}%"
           >
             <ProgressiveImage
               alt="Page {note.page + 1} of {doc.title}"

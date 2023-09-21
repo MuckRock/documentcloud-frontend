@@ -1,23 +1,22 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import Dropdown from "@/common/Dropdown";
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
-  import NoWhitespace from "@/common/NoWhitespace";
-  import { viewer } from "@/viewer/viewer";
-  import emitter from "@/emit";
-  import { layout } from "@/manager/layout";
-  import { layout as viewerLayout } from "@/viewer/layout";
+  import Loader from "@/common/Loader.svelte";
+  import Button from "@/common/Button.svelte";
+  import Dropdown from "@/common/Dropdown.svelte";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import NoWhitespace from "@/common/NoWhitespace.svelte";
+  import { viewer } from "@/viewer/viewer.js";
+  import emitter from "@/emit.js";
+  import { layout } from "@/manager/layout.js";
+  import { layout as viewerLayout } from "@/viewer/layout.js";
   import {
     addDocumentData,
     replaceDocumentData,
     removeDocumentData,
   } from "@/manager/documents";
-  import { showConfirm } from "@/manager/confirmDialog";
-  import { wrapMultipleSeparate } from "@/util/wrapLoad";
-  import { nameSingularNumberPlural } from "@/util/string";
-  import { intersection } from "@/util/array";
+  import { showConfirm } from "@/manager/confirmDialog.js";
+  import { wrapMultipleSeparate } from "@/util/wrapLoad.js";
+  import { intersection } from "@/util/array.js";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -107,8 +106,8 @@
     await wrapMultipleSeparate(
       loading,
       layoutLoader,
-      ...dataDocuments.map((doc) => async () =>
-        addDocumentData([doc], keyTrimmed, valueTrimmed),
+      ...dataDocuments.map(
+        (doc) => async () => addDocumentData([doc], keyTrimmed, valueTrimmed),
       ),
     );
     // Trigger update
@@ -134,14 +133,15 @@
     await wrapMultipleSeparate(
       loading,
       layoutLoader,
-      ...dataDocuments.map((doc) => async () =>
-        replaceDocumentData(
-          [doc],
-          previousKey,
-          previousValue,
-          newKey,
-          newValue,
-        ),
+      ...dataDocuments.map(
+        (doc) => async () =>
+          replaceDocumentData(
+            [doc],
+            previousKey,
+            previousValue,
+            newKey,
+            newValue,
+          ),
       ),
     );
     // Trigger update
@@ -162,8 +162,8 @@
         await wrapMultipleSeparate(
           loading,
           layoutLoader,
-          ...dataDocuments.map((doc) => async () =>
-            removeDocumentData([doc], key, value),
+          ...dataDocuments.map(
+            (doc) => async () => removeDocumentData([doc], key, value),
           ),
         );
         // Trigger update

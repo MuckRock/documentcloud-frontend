@@ -85,7 +85,7 @@
     "test": "jest",
     "serve": "serve public -l 80 --single",
     "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js",
-    "watch": "concurrently npm:dev-embed npm:watch-app npm:serve",
+    "watch": "concurrently npm:serve npm:dev-embed npm:watch-app",
     "test-watch": "jest --watchAll",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

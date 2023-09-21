@@ -1,6 +1,6 @@
 <script>
-  import Button from "@/common/Button";
-  import { layout, redact, undoRedaction } from "@/viewer/layout";
+  import Button from "@/common/Button.svelte";
+  import { layout, redact, undoRedaction } from "@/viewer/layout.js";
   import { _ } from "svelte-i18n";
 </script>
 

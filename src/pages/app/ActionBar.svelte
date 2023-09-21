@@ -1,20 +1,20 @@
 <script>
-  import Checkbox from "@/common/Checkbox";
-  import Tooltip from "@/common/Tooltip";
-  import Dropdown from "@/common/Dropdown";
-  import Paginator from "./Paginator";
+  import Checkbox from "@/common/Checkbox.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
+  import Dropdown from "@/common/Dropdown.svelte";
+  import Paginator from "./Paginator.svelte";
   import { _ } from "svelte-i18n";
 
   // Menus
-  import EditMenu from "./menus/EditMenu";
-  import ProjectsMenu from "./menus/ProjectsMenu";
-  import AddonsMenu from "./menus/AddonsMenu";
+  import EditMenu from "./menus/EditMenu.svelte";
+  import ProjectsMenu from "./menus/ProjectsMenu.svelte";
+  import AddonsMenu from "./menus/AddonsMenu.svelte";
 
   // Stores
-  import { layout } from "@/manager/layout";
-  import { manager, selectAll } from "@/manager/manager";
-  import { documents, unselectAll } from "@/manager/documents";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { layout } from "@/manager/layout.js";
+  import { manager, selectAll } from "@/manager/manager.js";
+  import { documents, unselectAll } from "@/manager/documents.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
 
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selectAll();

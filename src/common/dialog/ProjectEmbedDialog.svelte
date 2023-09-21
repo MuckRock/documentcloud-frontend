@@ -1,11 +1,11 @@
 <script>
-  import Button from "@/common/Button";
-  import ShareOptions from "@/common/ShareOptions";
+  import Button from "@/common/Button.svelte";
+  import ShareOptions from "@/common/ShareOptions.svelte";
 
-  import emitter from "@/emit";
-  import { getEmbed } from "@/api/embed";
-  import { queryBuilder } from "@/util/url";
-  import { layout } from "@/manager/layout";
+  import emitter from "@/emit.js";
+  import { getEmbed } from "@/api/embed.js";
+  import { queryBuilder } from "@/util/url.js";
+  import { layout } from "@/manager/layout.js";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({

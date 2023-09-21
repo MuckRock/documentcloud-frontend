@@ -1,27 +1,27 @@
 <script>
   // Components
-  import File from "./File";
-  import Button from "@/common/Button";
-  import DropZone from "@/common/DropZone";
-  import FilePicker from "@/common/FilePicker";
-  import UploadOptions from "@/common/UploadOptions";
-  import AccessToggle from "@/common/AccessToggle";
+  import File from "./File.svelte";
+  import Button from "@/common/Button.svelte";
+  import DropZone from "@/common/DropZone.svelte";
+  import FilePicker from "@/common/FilePicker.svelte";
+  import UploadOptions from "@/common/UploadOptions.svelte";
+  import AccessToggle from "@/common/AccessToggle.svelte";
 
   // API
-  import { defaultLanguage } from "@/api/languages";
-  import { uploadDocuments } from "@/api/document";
-  import { search } from "@/search/search";
-  import { projects } from "@/manager/projects";
+  import { defaultLanguage } from "@/api/languages.js";
+  import { uploadDocuments } from "@/api/document.js";
+  import { search } from "@/search/search.js";
+  import { projects } from "@/manager/projects.js";
 
   // Stores
-  import { layout } from "@/manager/layout";
-  import { handleNewDocuments } from "@/manager/documents";
+  import { layout } from "@/manager/layout.js";
+  import { handleNewDocuments } from "@/manager/documents.js";
 
   // Utils
   import { _ } from "svelte-i18n";
 
   import { onMount } from "svelte";
-  import emitter from "@/emit";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     setDismissable() {},
