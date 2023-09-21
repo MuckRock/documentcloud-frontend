@@ -1,26 +1,26 @@
 <script>
-  import Checkbox from "@/common/Checkbox";
-  import Button from "@/common/Button";
-  import AccessIcon from "@/common/AccessIcon";
-  import Image from "@/common/Image";
-  import Progress from "@/common/Progress";
-  import HtmlField from "@/common/HtmlField";
-  import Link from "@/router/Link";
-  import DocumentThumbnail from "./DocumentThumbnail";
-  import Annotation from "@/pages/viewer/Annotation";
+  import Checkbox from "@/common/Checkbox.svelte";
+  import Button from "@/common/Button.svelte";
+  import AccessIcon from "@/common/AccessIcon.svelte";
+  import Image from "@/common/Image.svelte";
+  import Progress from "@/common/Progress.svelte";
+  import HtmlField from "@/common/HtmlField.svelte";
+  import Link from "@/router/Link.svelte";
+  import DocumentThumbnail from "./DocumentThumbnail.svelte";
+  import Annotation from "@/pages/viewer/Annotation.svelte";
   import { _, date } from "svelte-i18n";
 
   // Stores
-  import { layout, unselectDocument, editData } from "@/manager/layout";
-  import { removeDocument, selectDocument } from "@/manager/documents";
-  import { projects } from "@/manager/projects";
-  import { projectUrl, dataUrl } from "@/search/search";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { layout, unselectDocument, editData } from "@/manager/layout.js";
+  import { removeDocument, selectDocument } from "@/manager/documents.js";
+  import { projects } from "@/manager/projects.js";
+  import { projectUrl, dataUrl } from "@/search/search.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
 
   import closeSimpleSvg from "@/assets/close_inline.svg";
   import pencilSvg from "@/assets/pencil.svg";
 
-  import { pageImageUrl } from "@/api/viewer";
+  import { pageImageUrl } from "@/api/viewer.js";
 
   export let document;
   export let embed = false;

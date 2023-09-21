@@ -1,10 +1,10 @@
 <script>
-  import TableOfContents from "./TableOfContents";
-  import Progress from "@/common/Progress";
-  import AccessIcon from "@/common/AccessIcon";
-  import HtmlField from "@/common/HtmlField";
-  import session from "@/api/session";
-  import { jsonUrl } from "@/api/viewer";
+  import TableOfContents from "./TableOfContents.svelte";
+  import Progress from "@/common/Progress.svelte";
+  import AccessIcon from "@/common/AccessIcon.svelte";
+  import HtmlField from "@/common/HtmlField.svelte";
+  import session from "@/api/session.js";
+  import { jsonUrl } from "@/api/viewer.js";
 
   import {
     enterRedactMode,
@@ -14,8 +14,8 @@
     enterDataMode,
     enterSectionsMode,
   } from "@/viewer/actions";
-  import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
+  import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
   import { _ } from "svelte-i18n";
 
   function handleMouseDown() {
@@ -27,7 +27,14 @@
   let textDoc = null;
   let ocrEngine = null;
   let loading = false;
-  let engineMap = { tess4: "Tesseract", textract: "Textract", googlecv: "Google Cloud Vision", ocrspace1: "OCRSpace", azuredi: "Azure Document Intelligence", doctr: "docTR" };
+  let engineMap = {
+    tess4: "Tesseract",
+    textract: "Textract",
+    googlecv: "Google Cloud Vision",
+    ocrspace1: "OCRSpace",
+    azuredi: "Azure Document Intelligence",
+    doctr: "docTR",
+  };
 
   $: {
     if ($viewer.document != null && textDoc == null && !loading) {

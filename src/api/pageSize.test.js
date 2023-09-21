@@ -1,4 +1,4 @@
-import { pageSizesFromSpec } from "./pageSize";
+import { pageSizesFromSpec } from "./pageSize.js";
 
 test("page sizes empty", () => {
   expect(pageSizesFromSpec("")).toEqual([]);

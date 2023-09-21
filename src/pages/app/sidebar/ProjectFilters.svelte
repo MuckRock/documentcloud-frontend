@@ -1,7 +1,7 @@
 <script>
-  import Link from "@/router/Link";
-  import { allDocumentsUrl, userUrl, orgUrl } from "@/search/search";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import Link from "@/router/Link.svelte";
+  import { allDocumentsUrl, userUrl, orgUrl } from "@/search/search.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { _ } from "svelte-i18n";
 </script>
 

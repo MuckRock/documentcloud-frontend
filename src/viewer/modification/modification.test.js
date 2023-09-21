@@ -1,5 +1,5 @@
-import { modification } from "./modification";
-import { ModificationSpec } from "./modifySpec";
+import { modification } from "./modification.js";
+import { ModificationSpec } from "./modifySpec.js";
 
 beforeEach(() => {
   modification.clear();

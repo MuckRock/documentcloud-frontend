@@ -1,5 +1,5 @@
 <script>
-  import SearchBar from "@/pages/app/SearchBar";
+  import SearchBar from "@/pages/app/SearchBar.svelte";
 
   export let content;
   export let compact = false;

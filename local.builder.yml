@@ -14,6 +14,8 @@ services:
     extends:
       service: base
     command: npm i && npm audit fix
+    environment:
+      - NODE_ENV=development
 
   install-ci:
     extends:

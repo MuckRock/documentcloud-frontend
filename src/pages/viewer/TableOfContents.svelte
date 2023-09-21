@@ -1,10 +1,10 @@
 <script>
-  import ContentItem from "./ContentItem";
+  import ContentItem from "./ContentItem.svelte";
 
-  import { viewer } from "@/viewer/viewer";
+  import { viewer } from "@/viewer/viewer.js";
 </script>
 
-<style lang="scss">
+<style>
   .toc {
     padding: 8px 0;
   }

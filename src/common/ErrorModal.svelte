@@ -1,6 +1,6 @@
 <script>
-  import Modal from "./Modal";
-  import ErrorDialog from "./dialog/ErrorDialog";
+  import Modal from "./Modal.svelte";
+  import ErrorDialog from "./dialog/ErrorDialog.svelte";
 
   export let store;
   export let refresh = false;

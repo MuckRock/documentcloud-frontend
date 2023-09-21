@@ -1,5 +1,5 @@
 <script>
-  import InternalPage from "./InternalPage";
+  import InternalPage from "./InternalPage.svelte";
 
   export let page;
   export let width;

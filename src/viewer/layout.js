@@ -1,27 +1,27 @@
 import { Svue } from "svue";
-import { viewer, updateNote, addNote, removeNote } from "./viewer";
-import { truthyParamValue, falsyParamValue } from "@/util/url";
-import { wrapLoad } from "@/util/wrapLoad";
+import { viewer, updateNote, addNote, removeNote } from "./viewer.js";
+import { truthyParamValue, falsyParamValue } from "@/util/url.js";
+import { wrapLoad } from "@/util/wrapLoad.js";
 import {
   getDocument,
   redactDocument,
   searchDocument,
   modifyDocument,
   reprocessDocument,
-} from "@/api/document";
-import { search } from "@/search/search";
-import { showConfirm } from "@/manager/confirmDialog";
-import { markAsDirty, documents } from "@/manager/documents";
-import { router } from "@/router/router";
+} from "@/api/document.js";
+import { search } from "@/search/search.js";
+import { showConfirm } from "@/manager/confirmDialog.js";
+import { markAsDirty, documents } from "@/manager/documents.js";
+import { router } from "@/router/router.js";
 import {
   createAnnotation,
   updateAnnotation,
   deleteAnnotation,
-} from "@/api/annotation";
-import { Note } from "@/structure/note";
-import { DEFAULT_EXPAND } from "../api/common";
-import { inIframe } from "@/util/iframe";
-import { modification } from "./modification/modification";
+} from "@/api/annotation.js";
+import { Note } from "@/structure/note.js";
+import { DEFAULT_EXPAND } from "../api/common.js";
+import { inIframe } from "@/util/iframe.js";
+import { modification } from "./modification/modification.js";
 
 // A little bigger than normal mobile break to hide sidebar in narrow viewports
 export const MOBILE_BREAKPOINT = 800;

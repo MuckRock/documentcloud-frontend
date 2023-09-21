@@ -1,8 +1,8 @@
 <script>
-  import { domPurify, loadDompurify } from "@/util/domPurify";
-  import { router } from "@/router/router";
-  import { showAnnotation } from "@/viewer/document";
-  import { viewer } from "@/viewer/viewer";
+  import { domPurify, loadDompurify } from "@/util/domPurify.js";
+  import { router } from "@/router/router.js";
+  import { showAnnotation } from "@/viewer/document.js";
+  import { viewer } from "@/viewer/viewer.js";
   loadDompurify();
 
   import { onMount } from "svelte";

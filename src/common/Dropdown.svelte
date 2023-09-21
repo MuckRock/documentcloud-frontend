@@ -1,7 +1,7 @@
 <script>
   import { onMount, tick, afterUpdate } from "svelte";
-  import { router } from "@/router/router";
-  import emitter from "@/emit";
+  import { router } from "@/router/router.js";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     active() {},
@@ -169,9 +169,7 @@
         hide();
       }
     }}
-    style="width: {titleWidth +
-      horizPadding *
-        2}px; left: {-horizPadding}px;
+    style="width: {titleWidth + horizPadding * 2}px; left: {-horizPadding}px;
     top: {-vertPadding}px; bottom: {-vertPadding}px"
   />
   <span class:table bind:this={title} on:click={revealOrHide}>

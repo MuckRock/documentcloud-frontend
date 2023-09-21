@@ -1,8 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import axios from "axios";
-  import { pushUrl } from "@/router/router";
-  import { projectUrl, orgUrl, userUrl } from "@/search/search";
+  import { pushUrl } from "@/router/router.js";
+  import { projectUrl, orgUrl, userUrl } from "@/search/search.js";
 
   export let query = null;
 

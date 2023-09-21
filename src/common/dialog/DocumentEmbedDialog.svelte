@@ -1,11 +1,11 @@
 <script>
-  import AppearanceCustomizer from "@/common/AppearanceCustomizer";
-  import ShareOptions from "@/common/ShareOptions";
-  import { layout } from "@/viewer/layout";
-  import { getEmbed } from "@/api/embed";
-  import { queryBuilder } from "@/util/url";
-  import { StorageManager } from "@/util/storageManager";
-  import { index } from "@/util/array";
+  import AppearanceCustomizer from "@/common/AppearanceCustomizer.svelte";
+  import ShareOptions from "@/common/ShareOptions.svelte";
+  import { layout } from "@/viewer/layout.js";
+  import { getEmbed } from "@/api/embed.js";
+  import { queryBuilder } from "@/util/url.js";
+  import { StorageManager } from "@/util/storageManager.js";
+  import { index } from "@/util/array.js";
   import { _ } from "svelte-i18n";
 
   let embedded = true;

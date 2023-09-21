@@ -1,4 +1,4 @@
-import { parse, highlight, splitAndEscape } from "./parse";
+import { parse, highlight, splitAndEscape } from "./parse.js";
 
 const IMPLICIT = "<implicit>";
 

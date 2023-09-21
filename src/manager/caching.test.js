@@ -3,10 +3,10 @@ import {
   updateInCollection,
   removeFromCollection,
 } from "./documents";
-import { makeDocument } from "@/structure/documentFactory";
-import { setDocuments, search } from "@/search/search";
-import { addToArrayIfUnique, removeFromArray } from "@/util/array";
-import { modifications } from "./modifications";
+import { makeDocument } from "@/structure/documentFactory.js";
+import { setDocuments, search } from "@/search/search.js";
+import { addToArrayIfUnique, removeFromArray } from "@/util/array.js";
+import { modifications } from "./modifications.js";
 
 beforeEach(() => {
   modifications.clearModifications();

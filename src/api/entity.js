@@ -1,7 +1,7 @@
-import session from "./session";
-import { apiUrl } from "./base";
-import { Entities } from "@/structure/entity";
-import { queryBuilder } from "@/util/url";
+import session from "./session.js";
+import { apiUrl } from "./base.js";
+import { Entities } from "@/structure/entity.js";
+import { queryBuilder } from "@/util/url.js";
 
 export async function extractEntities(id) {
   const url = apiUrl(`documents/${id}/legacy_entities_2/`);
@@ -11,11 +11,9 @@ export async function extractEntities(id) {
 
 export async function getEntities(id, nextUrl, filters) {
   // Returns annotations for the specified document
-  var url; 
+  var url;
   if (nextUrl === null) {
-    url = apiUrl(
-      queryBuilder(`documents/${id}/legacy_entities_2/`, filters),
-    );
+    url = apiUrl(queryBuilder(`documents/${id}/legacy_entities_2/`, filters));
   } else {
     url = nextUrl;
   }

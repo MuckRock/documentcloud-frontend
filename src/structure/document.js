@@ -1,8 +1,8 @@
 import { Svue } from "svue";
-import { uniquify } from "@/util/array";
-import { pageSizesFromSpec } from "@/api/pageSize";
-import { Note } from "@/structure/note";
-import { Section } from "@/structure/section";
+import { uniquify } from "@/util/array.js";
+import { pageSizesFromSpec } from "@/api/pageSize.js";
+import { Note } from "@/structure/note.js";
+import { Section } from "@/structure/section.js";
 import deepEqual from "fast-deep-equal";
 import deepCopy from "fast-copy";
 

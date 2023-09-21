@@ -1,9 +1,9 @@
 import { Svue } from "svue";
-import { searchDocuments } from "@/api/document";
-import { DEFAULT_ORDERING } from "@/api/common";
-import { getProjectDocuments } from "@/api/project";
-import { cacheAsync } from "@/util/cache";
-import { highlight } from "@/search/parse";
+import { searchDocuments } from "@/api/document.js";
+import { DEFAULT_ORDERING } from "@/api/common.js";
+import { getProjectDocuments } from "@/api/project.js";
+import { cacheAsync } from "@/util/cache.js";
+import { highlight } from "@/search/parse.js";
 
 const searchDocumentsCached = cacheAsync(searchDocuments);
 
@@ -266,7 +266,8 @@ export class SearchParams extends Svue {
             // Investigate whether it's a cacheable search:
             // A cacheable search is only a search for either a user or project with an optional access.
             // These correspond to most sidebar quick searches.
-            const cachedFn = () => searchDocumentsCached(query, onlyShowSuccess);
+            const cachedFn = () =>
+              searchDocumentsCached(query, onlyShowSuccess);
             const accessCondition = (doc) =>
               oneAccessSearch != null ? doc.access == oneAccessSearch : true;
             if (oneUserSearch != null) {

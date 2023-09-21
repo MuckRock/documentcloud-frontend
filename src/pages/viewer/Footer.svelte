@@ -1,11 +1,11 @@
 <script>
   // Controls
-  import ViewDropdown from "./controls/ViewDropdown";
-  import Paginator from "./controls/Paginator";
-  import Zoom from "./controls/Zoom";
-  import FullScreen from "./controls/FullScreen";
+  import ViewDropdown from "./controls/ViewDropdown.svelte";
+  import Paginator from "./controls/Paginator.svelte";
+  import Zoom from "./controls/Zoom.svelte";
+  import FullScreen from "./controls/FullScreen.svelte";
 
-  import { layout } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout.js";
 
   $: style = `height: ${$layout.footerHeight}px;`;
 </script>

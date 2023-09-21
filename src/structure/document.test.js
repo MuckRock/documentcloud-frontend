@@ -1,4 +1,4 @@
-import { transformHighlights, transformPassage } from "./document";
+import { transformHighlights, transformPassage } from "./document.js";
 
 const START = "<em>";
 const END = "</em>";

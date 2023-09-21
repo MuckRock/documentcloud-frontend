@@ -2,14 +2,14 @@
  * Methods related to the DocumentCloud project API
  */
 
-import session from "./session";
-import { apiUrl } from "./base";
-import { Project } from "@/structure/project";
-import { grabAllPages } from "@/util/paginate";
-import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
-import { queryBuilder } from "@/util/url";
-import { Results } from "@/structure/results";
-import { Document } from "@/structure/document";
+import session from "./session.js";
+import { apiUrl } from "./base.js";
+import { Project } from "@/structure/project.js";
+import { grabAllPages } from "@/util/paginate.js";
+import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common.js";
+import { queryBuilder } from "@/util/url.js";
+import { Results } from "@/structure/results.js";
+import { Document } from "@/structure/document.js";
 
 export async function newProject(title, description) {
   // Create a project

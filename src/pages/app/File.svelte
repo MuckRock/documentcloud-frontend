@@ -1,6 +1,6 @@
 <script>
-  import { formatBytes, stripExtension } from "@/util/string";
-  import emitter from "@/emit";
+  import { formatBytes, stripExtension } from "@/util/string.js";
+  import emitter from "@/emit.js";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 

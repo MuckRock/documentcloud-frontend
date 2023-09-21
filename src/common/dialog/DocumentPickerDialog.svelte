@@ -1,7 +1,7 @@
 <script>
-  import { modification } from "@/viewer/modification/modification";
-  import Documents from "@/pages/app/Documents";
-  import emitter from "@/emit";
+  import { modification } from "@/viewer/modification/modification.js";
+  import Documents from "@/pages/app/Documents.svelte";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     dismiss() {},

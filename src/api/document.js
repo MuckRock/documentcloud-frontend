@@ -2,18 +2,18 @@
  * Methods related to the DocumentCloud document API
  */
 
-import session from "./session";
-import { apiUrl } from "./base";
-import { timeout } from "@/util/timeout";
-import { queryBuilder } from "@/util/url";
-import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common";
-import { Results } from "@/structure/results";
-import { batchDelay } from "@/util/batchDelay";
-import { StorageManager } from "@/util/storageManager";
-import { includes } from "@/util/array";
+import session from "./session.js";
+import { apiUrl } from "./base.js";
+import { timeout } from "@/util/timeout.js";
+import { queryBuilder } from "@/util/url.js";
+import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common.js";
+import { Results } from "@/structure/results.js";
+import { batchDelay } from "@/util/batchDelay.js";
+import { StorageManager } from "@/util/storageManager.js";
+import { includes } from "@/util/array.js";
 import axios from "axios";
 
-import { Document, transformHighlights } from "@/structure/document";
+import { Document, transformHighlights } from "@/structure/document.js";
 
 const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
 
@@ -50,19 +50,21 @@ export async function searchDocuments(
   return searchDocumentsHelper(url);
 }
 
-export function apiSearchUrl(query, onlyShowSuccess = false, expand = DEFAULT_EXPAND) {
+export function apiSearchUrl(
+  query,
+  onlyShowSuccess = false,
+  expand = DEFAULT_EXPAND,
+) {
   let params = {
-      q: query,
-      expand,
-      version: "2.0",
-      hl: "true",
-    }
+    q: query,
+    expand,
+    version: "2.0",
+    hl: "true",
+  };
   if (onlyShowSuccess) {
     params.status = "success";
   }
-  return apiUrl(
-    queryBuilder("documents/search/", params),
-  );
+  return apiUrl(queryBuilder("documents/search/", params));
 }
 
 export async function searchDocumentsUrl(url) {
@@ -73,7 +75,9 @@ async function searchDocumentsHelper(url) {
   const { data } = await session.get(url);
   if (data.results.length > 0 && data.results[0].hasOwnProperty("document")) {
     // if we are using the project API, the document is one level down
-    data.results = filterDeleted(data.results.map((doc) => new Document(doc.document)));
+    data.results = filterDeleted(
+      data.results.map((doc) => new Document(doc.document)),
+    );
   } else {
     data.results = filterDeleted(data.results.map((doc) => new Document(doc)));
   }
@@ -369,7 +373,11 @@ export async function uploadDocuments(
       async (subIds) => {
         await session.post(
           apiUrl(`documents/process/`),
-          subIds.map((id) => ({ id, force_ocr: forceOcr, ocr_engine: ocrEngine })),
+          subIds.map((id) => ({
+            id,
+            force_ocr: forceOcr,
+            ocr_engine: ocrEngine,
+          })),
         );
         count += subIds.length;
         processProgressFn(count / ids.length);

@@ -1,13 +1,12 @@
 <script>
-  import { handlePlural } from "@/util/string";
   import { _ } from "svelte-i18n";
 
   // Components
-  import Progress from "@/common/Progress";
-  import Button from "@/common/Button";
+  import Progress from "@/common/Progress.svelte";
+  import Button from "@/common/Button.svelte";
 
   // Store properties
-  import { documents } from "@/manager/documents";
+  import { documents } from "@/manager/documents.js";
 
   let dismissed = true;
 

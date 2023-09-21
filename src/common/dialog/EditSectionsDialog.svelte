@@ -1,13 +1,13 @@
 <script>
-  import Button from "@/common/Button";
-  import Loader from "@/common/Loader";
-  import { hideEditSections } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
+  import Button from "@/common/Button.svelte";
+  import Loader from "@/common/Loader.svelte";
+  import { hideEditSections } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { layout } from "@/viewer/layout.js";
 
-  import { addSection, removeSection, replaceSection } from "@/api/section";
-  import { wrapLoadSeparate } from "@/util/wrapLoad";
-  import { showConfirm } from "@/manager/confirmDialog";
+  import { addSection, removeSection, replaceSection } from "@/api/section.js";
+  import { wrapLoadSeparate } from "@/util/wrapLoad.js";
+  import { showConfirm } from "@/manager/confirmDialog.js";
   import { _ } from "svelte-i18n";
 
   // SVG assets

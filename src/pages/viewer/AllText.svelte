@@ -1,12 +1,12 @@
 <script>
-  import TextPage from "@/common/TextPage";
-  import session from "@/api/session";
+  import TextPage from "@/common/TextPage.svelte";
+  import session from "@/api/session.js";
   import { tick } from "svelte";
-  import { jsonUrl } from "@/api/viewer";
-  import { doc } from "@/viewer/document";
-  import { layout } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
-  import { showIfFullyVisible } from "@/util/visibility";
+  import { jsonUrl } from "@/api/viewer.js";
+  import { doc } from "@/viewer/document.js";
+  import { layout } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { showIfFullyVisible } from "@/util/visibility.js";
   import { _ } from "svelte-i18n";
 
   let textDoc = null;

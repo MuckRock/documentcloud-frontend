@@ -1,4 +1,4 @@
-import { extractErrorData } from "./errorData";
+import { extractErrorData } from "./errorData.js";
 
 test("extract basic data", () => {
   expect(

@@ -1,8 +1,8 @@
 <script>
   // Headers
-  import TitleHeader from "./TitleHeader";
+  import TitleHeader from "./TitleHeader.svelte";
 
-  import { layout } from "@/viewer/layout";
+  import { layout } from "@/viewer/layout.js";
 </script>
 
 <style lang="scss">

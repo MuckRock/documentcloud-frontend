@@ -1,6 +1,6 @@
 <script>
-  import { layout } from "@/viewer/layout";
-  import { initiateSearch, exitSearch, doc } from "@/viewer/document";
+  import { layout } from "@/viewer/layout.js";
+  import { initiateSearch, exitSearch, doc } from "@/viewer/document.js";
   import { tick } from "svelte";
   import { _ } from "svelte-i18n";
 

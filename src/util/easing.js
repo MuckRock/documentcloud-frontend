@@ -1,4 +1,4 @@
-import { ensureBounds } from "./bounds";
+import { ensureBounds } from "./bounds.js";
 
 function sigmoidHelper(t, a) {
   return 1 / (1 + Math.exp(-a * t)) - 0.5;

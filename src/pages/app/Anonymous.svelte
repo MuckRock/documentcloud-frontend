@@ -1,6 +1,6 @@
 <script>
-  import Button from "@/common/Button";
-  import { search } from "@/search/search";
+  import Button from "@/common/Button.svelte";
+  import { search } from "@/search/search.js";
   import { _ } from "svelte-i18n";
   import { fade } from "svelte/transition";
 

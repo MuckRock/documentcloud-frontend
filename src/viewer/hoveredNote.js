@@ -1,4 +1,4 @@
-import { layout } from "./layout";
+import { layout } from "./layout.js";
 
 export function hoveredNote(el, note) {
   let mouseover = () => {

@@ -1,8 +1,8 @@
 <script>
-  import MainContainer from "@/pages/app/MainContainer";
+  import MainContainer from "@/pages/app/MainContainer.svelte";
 
-  import { documents } from "@/manager/documents";
-  import { layout } from "@/manager/layout";
+  import { documents } from "@/manager/documents.js";
+  import { layout } from "@/manager/layout.js";
 </script>
 
 <svelte:head>

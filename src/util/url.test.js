@@ -1,4 +1,9 @@
-import { queryBuilder, urlParts, getQueryStringParams, urlsEqual } from "./url";
+import {
+  queryBuilder,
+  urlParts,
+  getQueryStringParams,
+  urlsEqual,
+} from "./url.js";
 
 test("query builder simple", () => {
   expect(queryBuilder("app/", { hi: true })).toBe("app/?hi=true");

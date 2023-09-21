@@ -2,9 +2,9 @@
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import { layout } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
-  import { doc, changeMode } from "@/viewer/document";
+  import { layout } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { doc, changeMode } from "@/viewer/document.js";
 
   onMount(() => {
     window.plausible =
