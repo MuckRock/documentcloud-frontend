@@ -1,8 +1,8 @@
 import session, { cookiesEnabled } from "./session";
-import { USER_EXPAND, ORG_EXPAND, DEFAULT_EXPAND } from "./common";
-import { queryBuilder } from "@/util/url";
-import { grabAllPages } from "@/util/paginate";
-import { apiUrl } from "./base";
+import { USER_EXPAND, ORG_EXPAND, DEFAULT_EXPAND } from "./common.js";
+import { queryBuilder } from "@/util/url.js";
+import { grabAllPages } from "@/util/paginate.js";
+import { apiUrl } from "./base.js";
 
 const hasCsrfToken = /(^|;\s*)csrftoken=[a-zA-Z0-9]+/;
 

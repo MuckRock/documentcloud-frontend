@@ -1,4 +1,4 @@
-import { arrayEq } from "@/util/array";
+import { arrayEq } from "@/util/array.js";
 
 export class Empty {
   constructor() {}

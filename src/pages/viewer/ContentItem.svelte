@@ -1,14 +1,17 @@
 <script>
-  import NoWhitespace from "@/common/NoWhitespace";
-  export let sectionOrNote;
-  import { viewer } from "@/viewer/viewer";
-  import { hoveredNote } from "@/viewer/hoveredNote";
-  import { layout } from "@/viewer/layout";
-  import { restorePosition, showAnnotation } from "@/viewer/document";
   import { _ } from "svelte-i18n";
+
+  import NoWhitespace from "@/common/NoWhitespace.svelte";
+
+  import { viewer } from "@/viewer/viewer.js";
+  import { hoveredNote } from "@/viewer/hoveredNote.js";
+  import { layout } from "@/viewer/layout.js";
+  import { restorePosition, showAnnotation } from "@/viewer/document.js";
 
   // SVG assets
   import smallCircleSvg from "@/assets/small_circle.svg";
+
+  export let sectionOrNote;
 
   $: doc = $viewer.document;
   $: pageUrl = (page) => {

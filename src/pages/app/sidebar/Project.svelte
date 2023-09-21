@@ -1,7 +1,7 @@
 <script>
-  import Link from "@/router/Link";
-  import { editProject } from "@/manager/layout";
-  import { projectUrl } from "@/search/search";
+  import Link from "@/router/Link.svelte";
+  import { editProject } from "@/manager/layout.js";
+  import { projectUrl } from "@/search/search.js";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg";

@@ -1,7 +1,7 @@
 <script>
-  import { layout } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
-  import Annotation from "./Annotation";
+  import { layout } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import Annotation from "./Annotation.svelte";
 
   let width = 0;
 </script>

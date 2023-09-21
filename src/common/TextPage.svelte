@@ -1,5 +1,5 @@
 <script>
-  import { coalesceHighlights } from "@/util/coalesceHighlights";
+  import { coalesceHighlights } from "@/util/coalesceHighlights.js";
 
   export let text = "";
   export let highlights = null;

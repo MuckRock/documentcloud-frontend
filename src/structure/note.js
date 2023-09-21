@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { ensureBounds } from "@/util/bounds";
+import { ensureBounds } from "@/util/bounds.js";
 
 function getDefault(obj, defaultValue = "") {
   if (obj == null) return defaultValue;

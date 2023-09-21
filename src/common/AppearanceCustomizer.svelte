@@ -1,9 +1,9 @@
 <script>
-  import Button from "@/common/Button";
-  import AppearanceToggle from "./AppearanceToggle";
-  import AppearanceDimension from "./AppearanceDimension";
-  import emitter from "@/emit";
-  import { timeoutify } from "@/util/closure";
+  import Button from "@/common/Button.svelte";
+  import AppearanceToggle from "./AppearanceToggle.svelte";
+  import AppearanceDimension from "./AppearanceDimension.svelte";
+  import emitter from "@/emit.js";
+  import { timeoutify } from "@/util/closure.js";
   import { _ } from "svelte-i18n";
 
   export let options;

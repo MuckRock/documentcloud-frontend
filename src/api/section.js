@@ -2,10 +2,10 @@
  * Methods related to the DocumentCloud section API
  */
 
-import session from "./session";
-import { apiUrl } from "./base";
-import { Section } from "@/structure/section";
-import { grabAllPages } from "@/util/paginate";
+import session from "./session.js";
+import { apiUrl } from "./base.js";
+import { Section } from "@/structure/section.js";
+import { grabAllPages } from "@/util/paginate.js";
 
 export async function addSection(docId, page_number, title) {
   // Create a section

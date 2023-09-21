@@ -1,16 +1,17 @@
 <script>
-  import { onMount } from "svelte";
-  import { router } from "@/router/router";
-  import { getDocument } from "@/api/document";
-  import { extractEntities } from "@/api/entity";
-  import { jsonUrl } from "@/api/viewer";
-  import session from "@/api/session";
-  import { handlePlural } from "@/util/string";
-  import Link from "@/router/Link";
-  import { entities, getE } from "@/entities/entities";
-  import { updateInCollection } from "@/manager/documents";
-  import Progress from "@/common/Progress";
   import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
+
+  import Link from "@/router/Link.svelte";
+  import Progress from "@/common/Progress.svelte";
+
+  import { router } from "@/router/router.js";
+  import { getDocument } from "@/api/document.js";
+  import { extractEntities } from "@/api/entity.js";
+  import { jsonUrl } from "@/api/viewer.js";
+  import session from "@/api/session.js";
+  import { entities, getE } from "@/entities/entities.js";
+  import { updateInCollection } from "@/manager/documents.js";
 
   import closeSvg from "@/assets/close_inline.svg";
 

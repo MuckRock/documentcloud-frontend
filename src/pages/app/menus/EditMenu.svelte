@@ -1,12 +1,12 @@
 <script>
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
   import { _ } from "svelte-i18n";
 
   // Stores
-  import { layout, selectionProcessing } from "@/manager/layout";
-  import { metaDialogs } from "@/common/dialog/metaDialogs";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
+  import { layout, selectionProcessing } from "@/manager/layout.js";
+  import { metaDialogs } from "@/common/dialog/metaDialogs.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
   import {
     removeSelected,
     editMetaSelected,
@@ -17,8 +17,8 @@
     reprocessSelected,
     cancelProcessSelected,
     showDiagnosticsSelected,
-  } from "@/manager/manager";
-  import { nav } from "@/router/router";
+  } from "@/manager/manager.js";
+  import { nav } from "@/router/router.js";
 
   let processing = false;
   let allProcessing = false;

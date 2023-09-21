@@ -1,10 +1,15 @@
 import { Svue } from "svue";
-import { getEntities } from "@/api/entity";
-import { getDocument } from "@/api/document";
-import { callEveryAsync } from "@/util/callEvery";
+import { getEntities } from "@/api/entity.js";
+import { getDocument } from "@/api/document.js";
+import { callEveryAsync } from "@/util/callEvery.js";
 const cache = {};
 
-export async function getE(id, nextUrl = null, filters = null, useCache = true) {
+export async function getE(
+  id,
+  nextUrl = null,
+  filters = null,
+  useCache = true,
+) {
   // const key = `${id},${JSON.stringify(filters)},${page}`;
   // if (useCache) {
   //   if (cache[key] != null) return cache[key];
@@ -26,7 +31,9 @@ export const entities = new Svue({
       // Update document only if it is readable
       if (
         document == null ||
-        (!document.readable && this.entities != null && this.entities.entities.length > 0)
+        (!document.readable &&
+          this.entities != null &&
+          this.entities.entities.length > 0)
       )
         return [];
       return [

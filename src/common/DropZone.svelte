@@ -1,5 +1,5 @@
 <script>
-  import Draggable from "@/common/Draggable";
+  import Draggable from "@/common/Draggable.svelte";
 
   export let secondary = false;
 </script>

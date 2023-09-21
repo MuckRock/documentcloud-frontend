@@ -1,16 +1,16 @@
 import { Svue } from "svue";
-import { router, getPath } from "@/router/router";
-import { wrapSeparate } from "@/util/wrapLoad";
-import { layout } from "@/manager/layout";
-import { SearchParams } from "@/structure/searchParams";
-import { pushUrl } from "@/router/router";
-import { queryBuilder } from "@/util/url";
-import { slugify } from "@/util/string";
-import { modifications } from "@/manager/modifications";
-import { Results } from "@/structure/results";
-import { apiSearchUrl, searchDocumentsUrl } from "@/api/document";
+import { router, getPath } from "@/router/router.js";
+import { wrapSeparate } from "@/util/wrapLoad.js";
+import { layout } from "@/manager/layout.js";
+import { SearchParams } from "@/structure/searchParams.js";
+import { pushUrl } from "@/router/router.js";
+import { queryBuilder } from "@/util/url.js";
+import { slugify } from "@/util/string.js";
+import { modifications } from "@/manager/modifications.js";
+import { Results } from "@/structure/results.js";
+import { apiSearchUrl, searchDocumentsUrl } from "@/api/document.js";
 import deepEqual from "fast-deep-equal";
-import { _ } from "@/langs/i18n";
+import { _ } from "@/langs/i18n.js";
 
 const TAG_KEY = process.env.TAG_KEY;
 let lastSearch = null;

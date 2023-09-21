@@ -1,11 +1,10 @@
 <script>
-  import BoundedNumberInput from "@/common/BoundedNumberInput";
-  import ShareOptions from "@/common/ShareOptions";
-  import { layout } from "@/viewer/layout";
-  import { getEmbed } from "@/api/embed";
-  import { doc } from "@/viewer/document";
-  import { pageImageUrl, textUrl } from "@/api/viewer";
   import { _ } from "svelte-i18n";
+
+  import ShareOptions from "@/common/ShareOptions.svelte";
+
+  import { layout } from "@/viewer/layout.js";
+  import { getEmbed } from "@/api/embed.js";
 
   const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
     .map((x) => x.split(":"))

@@ -1,20 +1,22 @@
 <script>
-  import NoWhitespace from "@/common/NoWhitespace";
-  import emitter from "@/emit";
-  import { highlight } from "@/search/parse";
-  import { fieldValid, sortCompletions } from "@/search/searchFields";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { projects } from "@/manager/projects";
-  import { textAreaResize } from "@/util/textareaResize";
-  import { languages } from "@/api/languages";
+  import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
+
+  import NoWhitespace from "@/common/NoWhitespace.svelte";
+
+  import emitter from "@/emit.js";
+  import { highlight } from "@/search/parse.js";
+  import { fieldValid, sortCompletions } from "@/search/searchFields.js";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { projects } from "@/manager/projects.js";
+  import { textAreaResize } from "@/util/textareaResize.js";
+  import { languages } from "@/api/languages.js";
   import {
     autocompleteOrganizations,
     autocompleteUsers,
-  } from "@/api/orgAndUser";
-  import { slugify } from "@/util/string";
-  import { timeoutify } from "@/util/closure";
-  import { onMount } from "svelte";
-  import { _ } from "svelte-i18n";
+  } from "@/api/orgAndUser.js";
+  import { slugify } from "@/util/string.js";
+  import { timeoutify } from "@/util/closure.js";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg";

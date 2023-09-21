@@ -1,9 +1,9 @@
 <script>
-  import BoundedNumberInput from "@/common/BoundedNumberInput";
-  import ShareOptions from "@/common/ShareOptions";
-  import { layout } from "@/viewer/layout";
-  import { getEmbed } from "@/api/embed";
-  import { doc } from "@/viewer/document";
+  import BoundedNumberInput from "@/common/BoundedNumberInput.svelte";
+  import ShareOptions from "@/common/ShareOptions.svelte";
+  import { layout } from "@/viewer/layout.js";
+  import { getEmbed } from "@/api/embed.js";
+  import { doc } from "@/viewer/document.js";
   import { _ } from "svelte-i18n";
 
   let selectedPage = null;

@@ -1,8 +1,8 @@
 <script>
-  import Button from "@/common/Button";
-  import emitter from "@/emit";
-  import { extractErrorData } from "@/manager/errorData";
-  import { nav } from "@/router/router";
+  import Button from "@/common/Button.svelte";
+  import emitter from "@/emit.js";
+  import { extractErrorData } from "@/manager/errorData.js";
+  import { nav } from "@/router/router.js";
   import { _ } from "svelte-i18n";
 
   export let error;

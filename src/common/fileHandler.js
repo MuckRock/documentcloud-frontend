@@ -1,4 +1,4 @@
-import { includes } from "@/util/array";
+import { includes } from "@/util/array.js";
 
 const documentTypes = process.env.DOCUMENT_TYPES.split(",").map(
   (x) => `.${x.toLowerCase().trim()}`,

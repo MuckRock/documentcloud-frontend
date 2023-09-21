@@ -1,7 +1,7 @@
 <script>
-  import { startPageNote } from "@/viewer/layout";
+  import { startPageNote } from "@/viewer/layout.js";
   import { onDestroy } from "svelte";
-  import emitter from "@/emit";
+  import emitter from "@/emit.js";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({
@@ -125,8 +125,9 @@
         class:expanded={expanded && scale > 0.65}
         style="height: {PLUS_SIZE * scale}px; line-height: {PLUS_SIZE *
           scale}px;
-        border-radius: {BORDER_SIZE *
-          scale}px; margin-top: {(-PLUS_SIZE * scale) / 2}px"
+        border-radius: {BORDER_SIZE * scale}px; margin-top: {(-PLUS_SIZE *
+          scale) /
+          2}px"
       >
         <div>
           {$_("annotation.addPageNote")} ({$_("document.pageAbbrev")}

@@ -1,13 +1,14 @@
 <script>
-  import Button from "@/common/Button";
-  import { handlePlural } from "@/util/string";
-  import { modification } from "@/viewer/modification/modification.js";
-  import { viewer } from "@/viewer/viewer";
-  import { cancelActions } from "@/viewer/document";
-  import { showInsertDialog, modify } from "@/viewer/layout";
-  import ModifyImage from "../ModifyImage";
-  import Modification from "@/viewer/modification/Modification.svelte";
   import { _ } from "svelte-i18n";
+
+  import Button from "@/common/Button.svelte";
+  import Modification from "@/viewer/modification/Modification.svelte";
+  import ModifyImage from "../ModifyImage.svelte";
+
+  import { modification } from "@/viewer/modification/modification.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { cancelActions } from "@/viewer/document.js";
+  import { showInsertDialog, modify } from "@/viewer/layout.js";
 
   const MAX_BUFFER_SIZE = 5;
 

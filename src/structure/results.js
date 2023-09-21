@@ -1,5 +1,4 @@
 import { Svue } from "svue";
-import { queryBuilder } from "@/util/url";
 
 export class Results extends Svue {
   constructor(url, rawResults, structure = {}) {

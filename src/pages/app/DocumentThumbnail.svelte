@@ -1,10 +1,10 @@
 <script>
-  import Link from "@/router/Link";
-  import Image from "@/common/Image";
-  import Loader from "@/common/Loader";
-  import Tooltip from "@/common/Tooltip";
-  import emitter from "@/emit";
-  import { documents } from "@/manager/documents";
+  import Link from "@/router/Link.svelte";
+  import Image from "@/common/Image.svelte";
+  import Loader from "@/common/Loader.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
+  import emitter from "@/emit.js";
+  import { documents } from "@/manager/documents.js";
   import { _ } from "svelte-i18n";
 
   // SVG assets

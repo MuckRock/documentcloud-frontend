@@ -1,15 +1,15 @@
 <script>
-  import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
-  import HtmlEditor from "@/common/HtmlEditor";
-  import { onMount } from "svelte";
-  import { simplePlural, nameSingularNumberPlural } from "@/util/string";
-  import { editSelectedDocumentInfo } from "@/manager/documents";
-  import emitter from "@/emit";
   import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
+
+  import Button from "@/common/Button.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
+  import HtmlEditor from "@/common/HtmlEditor.svelte";
+  import { editSelectedDocumentInfo } from "@/manager/documents.js";
+  import emitter from "@/emit.js";
 
   // Stores
-  import { layout } from "@/manager/layout";
+  import { layout } from "@/manager/layout.js";
 
   export let fieldAccessor;
   export let maxlength;

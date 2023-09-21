@@ -1,7 +1,7 @@
 import { Svue } from "svue";
-import { viewer } from "./viewer";
+import { viewer } from "./viewer.js";
 import { tick } from "svelte";
-import { router } from "@/router/router";
+import { router } from "@/router/router.js";
 import {
   layout,
   MOBILE_BREAKPOINT,
@@ -24,21 +24,7 @@ const DEFAULT_TEXT_ASPECT = 11 / 8.5;
 const MAX_SCROLLBAR_WIDTH = 20; // used to account for initial zoom scale
 
 export const zoomBreakpoints = [
-  20,
-  50,
-  75,
-  100,
-  125,
-  150,
-  200,
-  250,
-  300,
-  350,
-  400,
-  500,
-  600,
-  700,
-  800,
+  20, 50, 75, 100, 125, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800,
 ];
 
 class Doc extends Svue {

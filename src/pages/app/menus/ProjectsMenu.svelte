@@ -1,10 +1,10 @@
 <script>
-  import Menu from "@/common/Menu";
-  import MenuItem from "@/common/MenuItem";
-  import ProjectMenuItem from "./ProjectMenuItem";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import ProjectMenuItem from "./ProjectMenuItem.svelte";
 
-  import { layout, newProject } from "@/manager/layout";
-  import { projects } from "@/manager/projects";
+  import { layout, newProject } from "@/manager/layout.js";
+  import { projects } from "@/manager/projects.js";
   import { _ } from "svelte-i18n";
 
   function sort(projects) {

@@ -5,7 +5,7 @@ import {
   removeDocuments,
   cancelProcessDocuments,
 } from "./documents";
-import { layout, editData } from "./layout";
+import { layout, editData } from "./layout.js";
 
 export const manager = new Svue({
   data() {

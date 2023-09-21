@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { uniquify } from "@/util/array";
+import { uniquify } from "@/util/array.js";
 
 const APP_URL = process.env.APP_URL;
 

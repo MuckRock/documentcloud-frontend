@@ -1,9 +1,9 @@
 <script>
-  import SearchExample from "@/common/SearchExample";
-  import Link from "@/router/Link";
+  import SearchExample from "@/common/SearchExample.svelte";
+  import Link from "@/router/Link.svelte";
 
-  import { orgsAndUsers } from "@/manager/orgsAndUsers";
-  import { slugify } from "@/util/string";
+  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+  import { slugify } from "@/util/string.js";
 
   $: userExample =
     $orgsAndUsers.me != null

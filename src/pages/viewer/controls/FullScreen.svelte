@@ -1,5 +1,5 @@
 <script>
-  import { viewer } from "@/viewer/viewer";
+  import { viewer } from "@/viewer/viewer.js";
 
   // SVG assets
   import fullScreenSvg from "@/assets/fullscreen.svg";

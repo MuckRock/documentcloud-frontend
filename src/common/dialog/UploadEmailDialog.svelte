@@ -1,7 +1,7 @@
 <script>
-  import Button from "@/common/Button";
-  import emitter from "@/emit";
-  import { createMailkey, destroyMailkey } from "@/api/orgAndUser";
+  import Button from "@/common/Button.svelte";
+  import emitter from "@/emit.js";
+  import { createMailkey, destroyMailkey } from "@/api/orgAndUser.js";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({
@@ -12,15 +12,15 @@
 
   async function create() {
     const mailkey = await createMailkey();
-    message = $_("uploadEmailDialog.createMsg", {values: { mailkey: mailkey }});
+    message = $_("uploadEmailDialog.createMsg", {
+      values: { mailkey: mailkey },
+    });
   }
 
   async function destroy() {
     await destroyMailkey();
     message = $_("uploadEmailDialog.destroyMsg");
   }
-
-
 </script>
 
 <style lang="scss">
@@ -39,7 +39,7 @@
     <p>{@html $_("uploadEmailDialog.bodyText")}</p>
     {#if message}
       <p>
-        {@html message }
+        {@html message}
       </p>
     {/if}
     <div class="buttonpadded">

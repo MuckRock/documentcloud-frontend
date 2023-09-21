@@ -1,4 +1,4 @@
-import { SearchParams } from "./searchParams";
+import { SearchParams } from "./searchParams.js";
 
 function params(query) {
   return new SearchParams({ q: query });

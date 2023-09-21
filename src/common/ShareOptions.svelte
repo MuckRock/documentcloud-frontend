@@ -1,6 +1,6 @@
 <script>
-  import Button from "@/common/Button";
-  import { copy } from "@/util/copy";
+  import Button from "@/common/Button.svelte";
+  import { copy } from "@/util/copy.js";
   import { tick } from "svelte";
   import { _ } from "svelte-i18n";
 

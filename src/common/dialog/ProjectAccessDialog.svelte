@@ -1,13 +1,14 @@
 <script>
-  import Loader from "@/common/Loader";
-  import Button from "@/common/Button";
-  import Tooltip from "@/common/Tooltip";
-  import { layout, updateProjectEdit } from "@/manager/layout";
-  import { changeUserAccess } from "@/manager/projects";
-  import { wrapLoadSeparate } from "@/util/wrapLoad";
-  import { writable } from "svelte/store";
-  import emitter from "@/emit";
   import { _ } from "svelte-i18n";
+  import { writable } from "svelte/store";
+
+  import Button from "@/common/Button.svelte";
+  import Loader from "@/common/Loader.svelte";
+
+  import { layout, updateProjectEdit } from "@/manager/layout.js";
+  import { changeUserAccess } from "@/manager/projects.js";
+  import { wrapLoadSeparate } from "@/util/wrapLoad.js";
+  import emitter from "@/emit.js";
 
   const emit = emitter({
     dismiss() {},

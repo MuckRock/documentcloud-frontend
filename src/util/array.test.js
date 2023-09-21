@@ -1,4 +1,4 @@
-import { includes, intersection } from "./array";
+import { includes, intersection } from "./array.js";
 
 function makeKeyArray(array) {
   return array.map((x) => ({ key: x }));

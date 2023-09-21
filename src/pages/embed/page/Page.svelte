@@ -1,13 +1,13 @@
 <script>
-  import Note from "./Note";
-  import Annotation from "./Annotation";
-  import ProgressiveImage from "@/common/ProgressiveImage";
-  import { informSize } from "@/embed/iframeSizer";
+  import Note from "./Note.svelte";
+  import Annotation from "./Annotation.svelte";
+  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+  import { informSize } from "@/embed/iframeSizer.js";
   import { onMount, tick } from "svelte";
-  import { getDocument } from "@/api/document";
-  import { getAnnotations } from "@/api/annotation";
-  import { textUrl, pageImageUrl } from "@/api/viewer";
-  import { embedUrl } from "@/api/embed";
+  import { getDocument } from "@/api/document.js";
+  import { getAnnotations } from "@/api/annotation.js";
+  import { textUrl, pageImageUrl } from "@/api/viewer.js";
+  import { embedUrl } from "@/api/embed.js";
   import { _ } from "svelte-i18n";
 
   export let id;

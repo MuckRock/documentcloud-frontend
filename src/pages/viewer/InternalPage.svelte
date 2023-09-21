@@ -1,23 +1,23 @@
 <script>
-  import ExtraPageContent from "./ExtraPageContent";
-  import PageNoteInsert from "./PageNoteInsert";
-  import ProgressiveImage from "@/common/ProgressiveImage";
-  import Annotation from "./Annotation";
+  import ExtraPageContent from "./ExtraPageContent.svelte";
+  import PageNoteInsert from "./PageNoteInsert.svelte";
+  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+  import Annotation from "./Annotation.svelte";
 
-  import { showIfFullyVisible } from "@/util/visibility";
-  import { doc, showAnnotation } from "@/viewer/document";
-  import { viewer } from "@/viewer/viewer";
-  import { layout } from "@/viewer/layout";
-  import { markup } from "@/util/markup";
-  import { hoveredNote } from "@/viewer/hoveredNote";
-  import { selectableTextUrl } from "@/api/viewer";
-  import session from "@/api/session";
-  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights";
+  import { showIfFullyVisible } from "@/util/visibility.js";
+  import { doc, showAnnotation } from "@/viewer/document.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { layout } from "@/viewer/layout.js";
+  import { markup } from "@/util/markup.js";
+  import { hoveredNote } from "@/viewer/hoveredNote.js";
+  import { selectableTextUrl } from "@/api/viewer.js";
+  import session from "@/api/session.js";
+  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights.js";
   import { onDestroy, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   // Selectable text
-  import SelectableWord from "./SelectableWord";
+  import SelectableWord from "./SelectableWord.svelte";
 
   export let page;
   export let width;
@@ -92,7 +92,7 @@
         detectedDirection = detectWritingDirection();
         hasSelectableText = true;
       } catch (e) {
-        // No selectable text, no worries
+        // No selectable text, no worries
       }
     }, SELECTABLE_TEXT_DELAY);
   });
@@ -328,7 +328,7 @@
       width={effectiveWidth}
       aspect={page.aspect}
       grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
-      delay=200
+      delay="200"
       {page}
     />
 
@@ -391,8 +391,7 @@
             use:hoveredNote={note}
             on:click={() => showAnnotation(note)}
             style="left: {note.x1 * 100}%; top: {note.y1 *
-              100}%; width: {(note.x2 - note.x1) *
-              100}%;
+              100}%; width: {(note.x2 - note.x1) * 100}%;
             height: {(note.y2 - note.y1) * 100}%"
           />
         {/if}
@@ -405,10 +404,8 @@
         {#if redaction.page == page.pageNumber}
           <div
             class="redaction"
-            style="left: {redaction.x1 * 100}%; top: {redaction.y1 *
-              100}%;
-            width: {redaction.width *
-              100}%; height: {redaction.height * 100}%"
+            style="left: {redaction.x1 * 100}%; top: {redaction.y1 * 100}%;
+            width: {redaction.width * 100}%; height: {redaction.height * 100}%"
           />
         {/if}
       {/each}
@@ -422,9 +419,8 @@
           class:private={$layout.currentAnnotation.access == "private"}
           style="left: {$layout.currentAnnotation.x1 * 100}%; top: {$layout
             .currentAnnotation.y1 * 100}%;
-          width: {$layout
-            .currentAnnotation.width * 100}%; height: {$layout.currentAnnotation
-            .height * 100}%"
+          width: {$layout.currentAnnotation.width * 100}%; height: {$layout
+            .currentAnnotation.height * 100}%"
         />
       {/if}
     {:else if $layout.displayAnnotate}

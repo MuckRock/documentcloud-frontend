@@ -1,4 +1,4 @@
-import { timeoutify } from "@/util/closure";
+import { timeoutify } from "@/util/closure.js";
 
 export function informSize(
   element,

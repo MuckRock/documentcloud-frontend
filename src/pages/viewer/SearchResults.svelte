@@ -1,13 +1,13 @@
 <script>
-  import { layout } from "@/viewer/layout";
-  import { viewer } from "@/viewer/viewer";
-  import { doc, changeMode, restorePosition } from "@/viewer/document";
-  import NoWhitespace from "@/common/NoWhitespace";
-  import { selectableTextUrl } from "@/api/viewer";
-  import session from "@/api/session";
-
-  import { handlePlural } from "@/util/string";
   import { _ } from "svelte-i18n";
+
+  import NoWhitespace from "@/common/NoWhitespace.svelte";
+
+  import { layout } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { doc, changeMode, restorePosition } from "@/viewer/document.js";
+  import { selectableTextUrl } from "@/api/viewer.js";
+  import session from "@/api/session.js";
 
   async function handlePage(page) {
     // Check if selectable text position page is available

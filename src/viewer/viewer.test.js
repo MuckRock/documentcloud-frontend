@@ -1,4 +1,4 @@
-import { viewer } from "./viewer";
+import { viewer } from "./viewer.js";
 
 test("ordered sections/notes", () => {
   viewer.sections = [
