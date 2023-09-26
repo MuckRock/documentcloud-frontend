@@ -21,7 +21,7 @@ if (!IS_EMBED && SENTRY_DSN) {
       // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
       tracePropagationTargets: [
         "http://www.dev.documentcloud.org",
-        "https://www.staging.documentcloud.org",
+        "https://*.muckcloud.com",
         "https://www.documentcloud.org",
       ],
 
