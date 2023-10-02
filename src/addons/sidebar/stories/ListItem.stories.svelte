@@ -1,18 +1,8 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
   import ListItem from "../ListItem.svelte";
-  import Pin from "../../../common/icons/Pin.svelte";
+  import ListItemDemo from "./ListItem.demo.svelte";
 </script>
-
-<style>
-  .sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--sidebar);
-  }
-  .icon {
-    fill: var(--highlight-orange);
-  }
-</style>
 
 <Meta
   title="Add-Ons / Sidebar / List Item"
@@ -22,11 +12,7 @@
 />
 
 <Template let:args>
-  <div class="sidebar">
-    <ListItem {...args}>
-      <span slot="icon" class="icon"><Pin /></span>
-    </ListItem>
-  </div>
+  <ListItemDemo {args} />
 </Template>
 
 <Story

@@ -3,20 +3,13 @@
   import { action } from "@storybook/addon-actions";
 
   import Paginator from "../Paginator.svelte";
+  import PaginatorDemo from "./Paginator.demo.svelte";
 
   const args = {
     has_next: true,
     has_previous: true,
   };
 </script>
-
-<style>
-  .container {
-    border: 1px solid gray;
-    padding: 1em;
-    width: 50vw;
-  }
-</style>
 
 <Meta
   title="Add-Ons / Paginator"
@@ -26,13 +19,7 @@
 />
 
 <Template let:args>
-  <div class="container">
-    <Paginator
-      {...args}
-      on:next={action("Next")}
-      on:previous={action("Previous")}
-    />
-  </div>
+  <PaginatorDemo {args} />
 </Template>
 
 <Story name="Default" {args} />

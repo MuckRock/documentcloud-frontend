@@ -5,6 +5,7 @@
   import { baseApiUrl } from "../../../api/base.js";
   import activeAddons from "../../fixtures/addons-active.json";
   import Sidebar from "../Sidebar.svelte";
+  import SidebarDemo from "./Sidebar.demo.svelte";
 
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();
 
@@ -14,14 +15,6 @@
   );
 </script>
 
-<style>
-  .sidebar {
-    padding: 1.5rem 0;
-    width: var(--sidebar-width);
-    background-color: var(--sidebar);
-  }
-</style>
-
 <Meta
   title="Add-Ons / Sidebar"
   tags={["autodocs"]}
@@ -29,10 +22,6 @@
   component={Sidebar}
 />
 
-<Template>
-  <div class="sidebar">
-    <Sidebar />
-  </div>
-</Template>
-
-<Story name="Sidebar" parameters={{ msw: { handlers: [data] } }} />
+<Story name="Sidebar" parameters={{ msw: { handlers: [data] } }}>
+  <SidebarDemo />
+</Story>

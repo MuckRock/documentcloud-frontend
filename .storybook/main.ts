@@ -8,7 +8,7 @@ const config: StorybookConfig = {
   core: {
     disableTelemetry: true, // 👈 Disables telemetry
   },
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx|svelte)"],
+  stories: ["../src/**/*.stories.@(js|jsx|ts|tsx|svelte)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",

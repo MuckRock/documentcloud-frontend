@@ -1,9 +1,8 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
-  import SearchInput, { query } from "../SearchInput.svelte";
-
-  const args = {};
+  import SearchInput from "../SearchInput.svelte";
+  import SearchInputDemo from "./SearchInput.demo.svelte";
 </script>
 
 <Meta
@@ -13,10 +12,6 @@
   component={SearchInput}
 />
 
-<Template let:args>
-  <SearchInput {...args} />
-
-  <p>Query: {$query}</p>
-</Template>
-
-<Story name="Search" {args} />
+<Story name="Search">
+  <SearchInputDemo />
+</Story>
