@@ -13,9 +13,7 @@
 />
 
 <Template let:args>
-  <div class="container">
-    <ScheduledInset addon={args.addon} events={args.events} open />
-  </div>
+  <ScheduledInset addon={args.addon} events={args.events} open />
 </Template>
 
 <Story name="Default" args={{ addon, events: klaxon.results }} />

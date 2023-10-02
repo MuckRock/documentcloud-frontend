@@ -1,8 +1,8 @@
 <script>
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import { action } from "@storybook/addon-actions";
 
   import AddOnListItem from "../AddOnListItem.svelte";
+  import AddOnListItemDemo from "./AddOnListItem.demo.svelte";
 
   const addon = {
     active: false,
@@ -16,16 +16,7 @@
   };
 
   const args = { addon };
-
-  const onClick = action("Click");
 </script>
-
-<style>
-  .container {
-    max-width: 32rem;
-    border: 1px solid #eee;
-  }
-</style>
 
 <Meta
   title="Add-Ons / Browser / Components / List Item"
@@ -34,9 +25,7 @@
 />
 
 <Template let:args>
-  <div class="container">
-    <AddOnListItem {...args} on:click={onClick} />
-  </div>
+  <AddOnListItemDemo {args} />
 </Template>
 
 <Story name="Default" {args} />

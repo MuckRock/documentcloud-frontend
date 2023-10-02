@@ -2,15 +2,10 @@
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
 
   import Header from "../Header.svelte";
+  import HeaderDemo from "./Header.demo.svelte";
+
   import * as addons from "../../fixtures/addons.json";
 </script>
-
-<style>
-  .container {
-    max-width: 32rem;
-    margin: 0 auto;
-  }
-</style>
 
 <Meta
   title="Add-Ons / Dispatch / Header"
@@ -20,9 +15,7 @@
 />
 
 <Template let:args={addon}>
-  <div class="container">
-    <Header {addon} />
-  </div>
+  <HeaderDemo {addon} />
 </Template>
 
 <Story name="PDF Exporter" args={addons[0]} />
