@@ -89,12 +89,7 @@
   <li id="premium" class:selected={$filter.includes("premium")}>
     <Filter name="Premium" selected={$filter.includes("premium")}>
       <input slot="input" type="radio" value="premium" bind:group={$filter} />
-      <span slot="icon"
-        ><Credit
-          badge
-          color={$filter.includes("premium") ? "var(--gray)" : "var(--premium)"}
-        /></span
-      >
+      <span slot="icon"><Credit badge /></span>
     </Filter>
   </li>
 </ul>

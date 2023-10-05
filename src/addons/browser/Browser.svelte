@@ -205,6 +205,9 @@
   .premium.tip {
     background-color: hsl(161, 69%, 91%);
     border-color: var(--premium, #24cc99);
+    & .icon {
+      fill: var(--premium, #24cc99);
+    }
   }
 </style>
 
