@@ -8,6 +8,7 @@
   export let small = false;
   export let secondary = false;
   export let tertiary = false;
+  export let premium = false;
   export let nondescript = false;
   export let action = false;
   export let caution = false;
@@ -69,6 +70,10 @@
 
   .tertiary {
     background: var(--tertiary, #0c8a01);
+  }
+
+  .premium {
+    background: var(--premium, #24cc99);
   }
 
   .danger {
@@ -138,6 +143,7 @@
         on:click
         class:secondary
         class:tertiary
+        class:premium
         class:danger
         class:small
         class:caution
@@ -157,6 +163,7 @@
         on:click
         class:secondary
         class:tertiary
+        class:premium
         class:danger
         class:small
         class:caution
