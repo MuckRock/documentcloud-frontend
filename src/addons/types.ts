@@ -16,5 +16,6 @@ export interface AddOnListItem {
   documents: string[];
   active: boolean;
   featured: boolean;
+  premium?: boolean;
   default: boolean;
 }

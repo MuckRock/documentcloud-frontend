@@ -4,6 +4,8 @@
   import AddOnPin from "../AddOnPin.svelte";
   import AddOnPopularity from "../Popularity.svelte";
   import type { AddOnListItem } from "../types.js";
+  import Credit from "../../common/icons/Credit.svelte";
+  import Badge from "../../common/Badge.svelte";
 
   export let addon: AddOnListItem;
 
@@ -26,11 +28,16 @@
     text-align: left;
   }
 
-  .top-row {
+  .row {
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
     margin: 0.5rem;
+  }
+
+  .badge {
+    margin-bottom: -0.25em;
+    font-size: 0.8em;
   }
 
   .metadata {
@@ -79,7 +86,7 @@
 
 <a class="addon-link" href={url}>
   <div class="container" id={addon.repository}>
-    <div class="top-row">
+    <div class="row">
       <div class="center-self">
         <AddOnPin {addon} />
       </div>
@@ -99,6 +106,17 @@
         {/if}
         {#if addon.usage}
           <AddOnPopularity useCount={addon.usage} />
+        {/if}
+        {#if addon.premium}
+          <span class="badge"
+            ><Badge
+              label="Premium"
+              badgeColor="var(--premium)"
+              labelColor="var(--darkgray)"
+            >
+              <Credit badge slot="icon" />
+            </Badge></span
+          >
         {/if}
       </div>
     </div>

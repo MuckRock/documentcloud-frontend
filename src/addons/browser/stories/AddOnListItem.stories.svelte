@@ -43,3 +43,4 @@
     },
   }}
 />
+<Story name="Premium" args={{ addon: { ...addon, premium: true } }} />
