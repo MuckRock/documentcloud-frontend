@@ -4,8 +4,8 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import documentSilhouetteSvg from "@/assets/document_silhouette.svg";
-  import emptyResultsSvg from "@/assets/empty_results.svg";
+  import documentSilhouetteSvg from "@/assets/document_silhouette.svg?raw";
+  import emptyResultsSvg from "@/assets/empty_results.svg?raw";
 </script>
 
 <style lang="scss">

@@ -5,8 +5,8 @@
   import { viewer } from "@/viewer/viewer.js";
 
   // SVG assets
-  import leftPaginator from "@/assets/left_paginator.svg";
-  import rightPaginator from "@/assets/right_paginator.svg";
+  import leftPaginator from "@/assets/left_paginator.svg?raw";
+  import rightPaginator from "@/assets/right_paginator.svg?raw";
 
   let input;
   let customPage = "1";

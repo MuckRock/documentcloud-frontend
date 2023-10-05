@@ -5,8 +5,8 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import documentIconSvg from "@/assets/document_icon.svg";
-  import closeInlineSvg from "@/assets/close_inline.svg";
+  import documentIconSvg from "@/assets/document_icon.svg?raw";
+  import closeInlineSvg from "@/assets/close_inline.svg?raw";
 
   const emit = emitter({
     name() {},

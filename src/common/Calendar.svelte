@@ -3,8 +3,8 @@
   import { lpad } from "@/util/string.js";
 
   // SVG assets
-  import CalendarLeft from "@/assets/calendar_left.svg";
-  import CalendarRight from "@/assets/calendar_right.svg";
+  import CalendarLeft from "@/assets/calendar_left.svg?raw";
+  import CalendarRight from "@/assets/calendar_right.svg?raw";
 
   $: months = [
     $_("calendar.jan"),

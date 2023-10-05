@@ -6,7 +6,7 @@
   import emitter from "@/emit.js";
 
   // SVG assets
-  import closeSvg from "@/assets/close.svg";
+  import { XCircle24 } from "svelte-octicons";
 
   const emit = emitter({
     close() {},
@@ -46,7 +46,7 @@
 <style lang="scss">
   .shim {
     background: #051d38b5;
-    z-index: $modalShimZ;
+    z-index: var(--modalShimZ, 20);
     position: fixed;
     left: 0;
     right: 0;
@@ -55,7 +55,7 @@
   }
 
   .modalcontainer {
-    z-index: $modalContainerZ;
+    z-index: var(--modalContainerZ, 21);
     position: fixed;
     top: 10vh;
     left: 20vw;
@@ -90,10 +90,10 @@
     box-sizing: border-box;
     overflow-y: auto;
     background: white;
-    border-radius: $radius;
+    border-radius: var(--radius, 3px);
     color: black;
     padding: 0;
-    box-shadow: $overlay-shadow;
+    box-shadow: var(--overlay-shadow, 2px 2px 4px rgba(0, 0, 0, 0.25));
     position: relative;
     max-height: 80vh;
     max-width: 766px;
@@ -113,7 +113,7 @@
     }
 
     :global(.mcontent) {
-      padding: 0 $modal-horiz-padding;
+      padding: 0 var(--modal-horiz-padding, 42px);
     }
 
     :global(.buttonpadded) {
@@ -146,23 +146,22 @@
     position: sticky;
     position: -webkit-sticky;
     top: 0;
-    height: $modal-vert-padding;
+    height: var(--modal-vert-padding, 44px);
     margin-bottom: 2px;
-    z-index: $modalHeaderZ;
+    z-index: var(--modalHeaderZ, 22);
   }
 
-  :global(.close) {
-    @include buttonLike;
-
+  .dismiss :global(svg) {
     user-select: none;
-    margin-left: $closePadding;
-    margin-top: $closePadding;
+    margin-left: var(--closePadding, 12px);
+    margin-top: var(--closePadding, 12px);
   }
 
   button.dismiss {
     background: none;
-    padding: none;
+    padding: 0;
     border: none;
+    cursor: pointer;
   }
 </style>
 
@@ -175,8 +174,8 @@
       <div bind:this={modal} class="modal">
         <div class="header">
           {#if dismissable}
-            <button class="dismiss" on:click={dismiss}>
-              {@html closeSvg}
+            <button class="dismiss buttonLike" on:click={dismiss}>
+              <XCircle24 />
             </button>
           {/if}
         </div>

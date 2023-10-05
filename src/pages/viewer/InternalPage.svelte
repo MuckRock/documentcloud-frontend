@@ -31,9 +31,9 @@
   let annotationChanger = 0;
 
   // SVG assets
-  import publicTagSvg from "@/assets/public_tag.svg";
-  import organizationTagSvg from "@/assets/organization_tag.svg";
-  import privateTagSvg from "@/assets/private_tag.svg";
+  import publicTagSvg from "@/assets/public_tag.svg?raw";
+  import organizationTagSvg from "@/assets/organization_tag.svg?raw";
+  import privateTagSvg from "@/assets/private_tag.svg?raw";
 
   const svgMap = {
     public: publicTagSvg,

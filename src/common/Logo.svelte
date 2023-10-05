@@ -5,7 +5,7 @@
   import { getPath } from "@/router/router.js";
 
   // Svg assets
-  import dcLogo from "@/assets/dc_logo.svg";
+  import dcLogo from "@/assets/dc_logo.svg?raw";
 
   export let newPage = false;
   export let nopadding = false;

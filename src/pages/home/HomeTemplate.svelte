@@ -7,9 +7,9 @@
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
   // SVG assets
-  import mastLogoSvg from "@/assets/mastlogo.svg";
-  import mastheadSvg from "@/assets/masthead.svg";
-  import mastheadResponsiveSvg from "@/assets/masthead_responsive.svg";
+  import mastLogoSvg from "@/assets/mastlogo.svg?raw";
+  import mastheadSvg from "@/assets/masthead.svg?raw";
+  import mastheadResponsiveSvg from "@/assets/masthead_responsive.svg?raw";
 
   // Authentication
   import {

@@ -22,9 +22,9 @@
   import emitter from "@/emit.js";
 
   // SVG assets
-  import closeInlineSvg from "@/assets/close_inline.svg";
-  import simpleLinkSvg from "@/assets/simplelink.svg";
-  import pencilSvg from "@/assets/pencil.svg";
+  import closeInlineSvg from "@/assets/close_inline.svg?raw";
+  import simpleLinkSvg from "@/assets/simplelink.svg?raw";
+  import pencilSvg from "@/assets/pencil.svg?raw";
 
   // Asynchronously load dompurify
   import { loadDompurify } from "@/util/domPurify.js";

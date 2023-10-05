@@ -11,7 +11,7 @@
   import { layout } from "@/viewer/layout.js";
 
   // SVG assets
-  import backArrowSvg from "@/assets/back_arrow.svg";
+  import backArrowSvg from "@/assets/back_arrow.svg?raw";
 </script>
 
 <style>

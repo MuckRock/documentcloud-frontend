@@ -21,7 +21,7 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import pencilSvg from "@/assets/pencil.svg";
+  import pencilSvg from "@/assets/pencil.svg?raw";
 
   const emit = emitter({
     dismiss() {},

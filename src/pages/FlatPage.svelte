@@ -10,7 +10,7 @@
   import { inIframe } from "../util/iframe.js";
 
   // SVG assets
-  import mastLogoSvg from "@/assets/mastlogo.svg";
+  import mastLogoSvg from "@/assets/mastlogo.svg?raw";
 
   export let content = "";
   export let title = "";

@@ -5,8 +5,8 @@
   import { fade } from "svelte/transition";
 
   // SVG assets
-  import documentSilhouetteSvg from "@/assets/document_silhouette.svg";
-  import closeSvg from "@/assets/close.svg";
+  import { XCircle24 } from "svelte-octicons";
+  import documentSilhouetteSvg from "@/assets/document_silhouette.svg?raw";
 
   export let closed = false;
 
@@ -18,7 +18,7 @@
 <style lang="scss">
   .container {
     margin: 1em 1.5em;
-    background: $fyi;
+    background: var(--fyi);
     padding: 1em;
     border-radius: 10px;
   }
@@ -42,10 +42,9 @@
     margin: 0 2em 1em 2em;
 
     :global(a) {
-      color: $primary;
+      color: var(--primary);
     }
 
-    li,
     p {
       font-size: 15px;
       line-height: 22px;
@@ -58,22 +57,22 @@
   }
 
   :global(.close) {
-    @include buttonLike;
-
     user-select: none;
-    margin-left: $closePadding;
-    margin-top: $closePadding;
+    margin-left: var(--closePadding);
+    margin-top: var(--closePadding);
   }
+
   button.dismiss {
     background: none;
     padding: none;
     border: none;
+    cursor: pointer;
   }
 </style>
 
 <div class="container" out:fade>
   <button class="dismiss" on:click={dismiss}>
-    {@html closeSvg}
+    <XCircle24 />
   </button>
   <h2>{$_("anonymous.title")}</h2>
   <div class="img">
