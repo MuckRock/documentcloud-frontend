@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
+
   import Pin from "../../common/icons/Pin.svelte";
   import ListItem from "./ListItem.svelte";
 

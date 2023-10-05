@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
 
   export interface Event {
     id: number;

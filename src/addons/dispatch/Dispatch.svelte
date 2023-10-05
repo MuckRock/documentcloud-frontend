@@ -4,7 +4,7 @@
   import { onMount, tick } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
   import type { Event } from "../runs/ScheduledEvent.svelte";
 
   import Button from "../../common/Button.svelte";

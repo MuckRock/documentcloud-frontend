@@ -4,7 +4,7 @@
   import { _ } from "svelte-i18n";
   import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
-  import type { AddOnListItem } from "./AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
   import Drawer from "../Drawer.svelte";
   import Paginator from "../Paginator.svelte";
   import Search, { query } from "./SearchInput.svelte";

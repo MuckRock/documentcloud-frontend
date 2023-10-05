@@ -4,7 +4,7 @@
 
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
-  import { pinned } from "../../../addons/browser/AddOnListItem.svelte";
+  import { pinned } from "../../../addons/AddOnPin.svelte";
 
   $: alphabetizedAddons = $pinned.sort((a, b) => a.name.localeCompare(b.name));
 
