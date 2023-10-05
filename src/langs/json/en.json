@@ -751,7 +751,8 @@
     "viewsource": "View Source",
     "usage": "Usage",
     "pinnedTip": "Quickly access your favorite Add-Ons by clicking the “Pin” icon next to its name. They’ll then be available to run from the Add-Ons dropdown menu.",
-    "featuredTip": "Here’s some of the DocumentCloud team’s favorite Add-Ons, including both new additions as well as classics we think every user should try."
+    "featuredTip": "Here’s some of the DocumentCloud team’s favorite Add-Ons, including both new additions as well as classics we think every user should try.",
+    "premiumTip": "Premium add-ons have powerful functionality backed by AI and cloud services. They have an additional cost to run and are only available to Professional and Organizational users."
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",

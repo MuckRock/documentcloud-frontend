@@ -3,6 +3,7 @@
   export let size = 1;
   export let title = "Credit";
   export let badge = false;
+  export let color = "#24CC99";
 </script>
 
 <style>
@@ -10,10 +11,10 @@
     display: block;
   }
   .icon path {
-    fill: var(--premium);
+    fill: var(--credit-color, --premium);
   }
   .badge {
-    background: var(--premium);
+    background: var(--credit-color, --premium);
     border-radius: 50%;
   }
   .badge path {
@@ -26,6 +27,7 @@
   height={`${size * REM}px`}
   viewBox="0 0 16 16"
   class={badge ? "badge" : "icon"}
+  style="--credit-color: {color}"
 >
   <title>{title}</title>
   <path
