@@ -97,3 +97,5 @@
 <Story name="Bad Redactions" args={{ ...args, addon: addons[5] }} />
 
 <Story name="Site Snapshot" args={{ ...args, addon: addons[6] }} />
+
+<Story name="Translate Documents" args={{ ...args, addon: addons[7] }} />
