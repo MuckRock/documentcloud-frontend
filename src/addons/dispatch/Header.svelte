@@ -9,6 +9,8 @@
 
   import { pushToast } from "../../common/Toast.svelte";
   import AddOnPin from "../AddOnPin.svelte";
+  import Badge from "../../common/Badge.svelte";
+  import Credit from "../../common/icons/Credit.svelte";
 
   export let addon: AddOnListItem;
 
@@ -54,14 +56,15 @@
   .name {
     flex: 1 1 100%;
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    gap: 1em;
   }
   .pin {
     flex: 0 1 auto;
   }
   .name h2 {
     margin: 0;
+    flex: 1 1 auto;
   }
   .metadata {
     display: flex;
@@ -116,6 +119,14 @@
   <div class="name">
     <span class="pin"><AddOnPin {addon} size={1.25} /></span>
     <h2>{addon.name}</h2>
+    {#if addon.premium}
+      <Badge
+        label="Premium"
+        badgeColor="var(--premium)"
+        labelColor="var(--darkgray)"
+        ><Credit slot="icon" color="var(--darkgray)" badge /></Badge
+      >
+    {/if}
   </div>
 
   <dl class="metadata">

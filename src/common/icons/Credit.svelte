@@ -9,8 +9,6 @@
 <style>
   svg {
     display: block;
-  }
-  .icon path {
     fill: var(--credit-color, --premium);
   }
 </style>
