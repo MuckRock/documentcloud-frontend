@@ -124,7 +124,9 @@
     </fieldset>
   {/if}
 
-  <slot name="after" />
+  <slot name="selection" />
+
+  <slot name="premium" />
 
   <slot name="controls">
     <div class="controls">

@@ -16,6 +16,10 @@ export interface AddOnListItem {
   documents: string[];
   active: boolean;
   featured: boolean;
-  premium?: boolean;
   default: boolean;
+  premium?: boolean;
+  premium_cost?: {
+    amount: number;
+    unit: string;
+  };
 }

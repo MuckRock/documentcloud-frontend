@@ -560,7 +560,42 @@
     "featured": false,
     "premium": true,
     "premium_cost": {
-      "amount": 75,
+      "amount": 150,
+      "unit": "character"
+    }
+  },
+  {
+    "id": 360,
+    "user": 100000,
+    "organization": 10001,
+    "access": "public",
+    "name": "Diakopoulos GPT-3 Example: Classifying Comments Based on Subject",
+    "repository": "MuckRock/gpt3-classification",
+    "parameters": {
+      "type": "object",
+      "title": "Diakopoulos GPT-3 Example: Classifying Comments Based on Subject",
+      "documents": ["query", "selected"],
+      "categories": ["ai", "premium"],
+      "properties": {
+        "value": {
+          "type": "string",
+          "title": "Value Label"
+        },
+        "category": {
+          "type": "string",
+          "title": "Describe the category that of records you want labeled as \"True\""
+        }
+      },
+      "description": "<p>A modified implementation of the example <a href=\"https://colab.research.google.com/drive/1rr0dxKpwK5zjch1V4eKjwwyVW-AzuDTw#scrollTo=zI4zN4RMg8yq\">using GPT-3 to classify documents, described by Nick Diakopoulos</a>. For simplicity&rsquo;s sake, it only implements the first half of the classification task described, but allows the user to customize the subject matter. Use with care as it may introduce factual errors, hallucinations, and other artifacts in summaries.</p>\n<p>Note that this plugin uses <em>14 credits per document analyzed</em>, rounded up. Give this a full prompt that you would pass into GPT-3 and it will run it against your selected documents, one at a time. The Add-On only looks at the 12,000 characters of a document.  The prompt refers to the user input as the &ldquo;Assignment,&rdquo; the document&rsquo;s text as &ldquo;Document Text&rdquo;, and GPT-3&rsquo;s generated response as the &ldquo;Answer,&rdquo; which can be helpful when defining your prompt.</p>\n<p>We&rsquo;d love your feedback and ideas — drop a note to info at documentcloud dot org or join us in the News Nerdery Slack in the #proj-documentcloud channel.  </p>"
+    },
+    "created_at": "2023-07-19T19:59:18.054811Z",
+    "updated_at": "2023-07-19T19:59:18.057428Z",
+    "active": false,
+    "default": false,
+    "featured": false,
+    "premium": true,
+    "premium_cost": {
+      "amount": 150,
       "unit": "character"
     }
   }

@@ -19,6 +19,7 @@
   import { getCsrfToken } from "../../api/session.js";
   import { pushToast } from "../../common/Toast.svelte";
   import { runs } from "../progress/AddonRun.svelte";
+  import Premium from "./Premium.svelte";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -289,11 +290,13 @@
         <!-- todo: decide if this should render for scheduled add-ons -->
         <!-- this only applies to add-ons running against existing documents -->
         <Selection
+          slot="selection"
           bind:this={selection}
           bind:value={$values["selection"]}
-          slot="after"
           documents={new Set(addon.parameters.documents)}
         />
+
+        <Premium slot="premium" {addon} />
 
         <div slot="controls" class="controls">
           <div class="primary">

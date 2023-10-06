@@ -16,6 +16,7 @@
   export let disabled = false;
   export let plain = false;
   export let nomargin = false;
+  export let fullWidth = false;
   export let type: "submit" | "reset" | "button" = "submit";
   export let label = "Submit";
 
@@ -132,6 +133,12 @@
     font-weight: normal;
     margin: 0 5px;
   }
+
+  .fullWidth {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
 </style>
 
 <span class="inlineblock">
@@ -151,6 +158,7 @@
         class:action
         class:plain
         class:nomargin
+        class:fullWidth
         class:disabled={disabled || disabledReason != null}
         rel={external ? "noopener noreferrer" : null}
         target={external ? "_blank" : null}
@@ -171,6 +179,7 @@
         class:action
         class:plain
         class:nomargin
+        class:fullWidth
         disabled={disabled || disabledReason != null}
         {type}
       >
