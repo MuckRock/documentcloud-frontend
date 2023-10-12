@@ -8,7 +8,7 @@
   import { cancelActions } from "@/viewer/document.js";
 
   // SVG assets
-  import closeSvg from "@/assets/close.svg";
+  import { XCircle24 } from "svelte-octicons";
 
   export let actionHeight;
 
@@ -68,7 +68,7 @@
   >
     <div class="actionclose">
       <button class="buttonLike" on:click={cancelActions}>
-        {@html closeSvg}
+        <XCircle24 />
       </button>
     </div>
     <div class="actioncontent">

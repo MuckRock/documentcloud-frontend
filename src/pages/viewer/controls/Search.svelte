@@ -5,9 +5,9 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg";
-  import searchIconSvg from "@/assets/search_icon.svg";
-  import closeInlineSvg from "@/assets/close_inline.svg";
+  import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg?raw";
+  import searchIconSvg from "@/assets/search_icon.svg?raw";
+  import closeInlineSvg from "@/assets/close_inline.svg?raw";
 
   let query = "";
   let searchElem = null;

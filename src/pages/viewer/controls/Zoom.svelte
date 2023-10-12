@@ -4,8 +4,8 @@
   import { doc, zoomBreakpoints } from "@/viewer/document.js";
 
   // SVG assets
-  import plusSvg from "@/assets/viewer_plus.svg";
-  import minusSvg from "@/assets/viewer_minus.svg";
+  import plusSvg from "@/assets/viewer_plus.svg?raw";
+  import minusSvg from "@/assets/viewer_minus.svg?raw";
 
   let select;
 

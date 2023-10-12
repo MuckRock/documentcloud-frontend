@@ -2,7 +2,7 @@
   import { toggleSidebar } from "@/viewer/document.js";
 
   // SVG assets
-  import viewerHamburgerSvg from "@/assets/viewer_hamburger.svg";
+  import viewerHamburgerSvg from "@/assets/viewer_hamburger.svg?raw";
 </script>
 
 <style lang="scss">

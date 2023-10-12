@@ -16,10 +16,10 @@
   import { writable } from "svelte/store";
 
   // SVG assets
-  import errorIconSvg from "@/assets/error_icon.svg";
-  import shareDocumentSvg from "@/assets/share_document.svg";
-  import sharePageSvg from "@/assets/share_page.svg";
-  import shareNoteSvg from "@/assets/share_note.svg";
+  import errorIconSvg from "@/assets/error_icon.svg?raw";
+  import shareDocumentSvg from "@/assets/share_document.svg?raw";
+  import sharePageSvg from "@/assets/share_page.svg?raw";
+  import shareNoteSvg from "@/assets/share_note.svg?raw";
 
   let loading = writable(false);
   let skipPublic = false;

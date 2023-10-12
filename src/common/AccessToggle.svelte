@@ -1,8 +1,8 @@
 <script>
   // SVG assets
-  import privateIconSvg from "@/assets/private_icon.svg";
-  import publicIconSvg from "@/assets/public_icon.svg";
-  import organizationIconSvg from "@/assets/organization_icon.svg";
+  import privateIconSvg from "@/assets/private_icon.svg?raw";
+  import publicIconSvg from "@/assets/public_icon.svg?raw";
+  import organizationIconSvg from "@/assets/organization_icon.svg?raw";
   import { _ } from "svelte-i18n";
 
   export let access = "private";

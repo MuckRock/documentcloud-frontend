@@ -3,8 +3,8 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import leftPaginatorSvg from "@/assets/page_arrow_left.svg";
-  import rightPaginatorSvg from "@/assets/page_arrow_right.svg";
+  import leftPaginatorSvg from "@/assets/page_arrow_left.svg?raw";
+  import rightPaginatorSvg from "@/assets/page_arrow_right.svg?raw";
 </script>
 
 <style lang="scss">

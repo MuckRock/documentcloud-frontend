@@ -8,10 +8,10 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import errorIconSvg from "@/assets/error_icon.svg";
-  import publicTagSvg from "@/assets/public_tag.svg";
-  import organizationTagSvg from "@/assets/organization_tag.svg";
-  import privateTagSvg from "@/assets/private_tag.svg";
+  import errorIconSvg from "@/assets/error_icon.svg?raw";
+  import publicTagSvg from "@/assets/public_tag.svg?raw";
+  import organizationTagSvg from "@/assets/organization_tag.svg?raw";
+  import privateTagSvg from "@/assets/private_tag.svg?raw";
 
   export let document;
   export let embed = false;

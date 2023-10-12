@@ -5,9 +5,9 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import embedSvg from "@/assets/embed.svg";
-  import linkSvg from "@/assets/link.svg";
-  import twitterSvg from "@/assets/twitter.svg";
+  import embedSvg from "@/assets/embed.svg?raw";
+  import linkSvg from "@/assets/link.svg?raw";
+  import twitterSvg from "@/assets/twitter.svg?raw";
 
   export let shareOption = "embed";
   export let embedDescription;

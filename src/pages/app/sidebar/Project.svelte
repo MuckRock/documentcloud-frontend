@@ -4,7 +4,7 @@
   import { projectUrl } from "@/search/search.js";
 
   // SVG assets
-  import pencilSvg from "@/assets/pencil.svg";
+  import pencilSvg from "@/assets/pencil.svg?raw";
 
   export let project;
 </script>

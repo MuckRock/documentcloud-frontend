@@ -11,8 +11,8 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import pencilSvg from "@/assets/pencil.svg";
-  import closeSimpleSvg from "@/assets/close_simple.svg";
+  import pencilSvg from "@/assets/pencil.svg?raw";
+  import closeSimpleSvg from "@/assets/close_simple.svg?raw";
 
   import { writable } from "svelte/store";
 

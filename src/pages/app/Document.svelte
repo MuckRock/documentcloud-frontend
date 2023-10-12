@@ -17,8 +17,8 @@
   import { projectUrl, dataUrl } from "@/search/search.js";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
 
-  import closeSimpleSvg from "@/assets/close_inline.svg";
-  import pencilSvg from "@/assets/pencil.svg";
+  import closeSimpleSvg from "@/assets/close_inline.svg?raw";
+  import pencilSvg from "@/assets/pencil.svg?raw";
 
   import { pageImageUrl } from "@/api/viewer.js";
 

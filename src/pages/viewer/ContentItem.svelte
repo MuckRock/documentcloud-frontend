@@ -9,7 +9,7 @@
   import { restorePosition, showAnnotation } from "@/viewer/document.js";
 
   // SVG assets
-  import smallCircleSvg from "@/assets/small_circle.svg";
+  import smallCircleSvg from "@/assets/small_circle.svg?raw";
 
   export let sectionOrNote;
 

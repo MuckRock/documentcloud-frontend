@@ -13,7 +13,7 @@
   import { entities, getE } from "@/entities/entities.js";
   import { updateInCollection } from "@/manager/documents.js";
 
-  import closeSvg from "@/assets/close_inline.svg";
+  import closeSvg from "@/assets/close_inline.svg?raw";
 
   const CONTACT = process.env.SPECIAL_CONTACT;
 

@@ -15,8 +15,8 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import InfoSvg from "@/assets/info.svg";
-  import CalendarSvg from "@/assets/calendar.svg";
+  import InfoSvg from "@/assets/info.svg?raw";
+  import CalendarSvg from "@/assets/calendar.svg?raw";
 
   const emit = emitter({
     dismiss() {},

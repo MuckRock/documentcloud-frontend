@@ -190,7 +190,7 @@
           <span class="info processingText message comment" class:compact>
             {#if run.comment === ""}
               <input
-                placeholder={$_("addonProgres.feedback")}
+                placeholder={$_("addonProgress.feedback")}
                 maxlength="255"
                 bind:value={comment}
               />

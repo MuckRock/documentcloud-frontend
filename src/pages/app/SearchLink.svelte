@@ -1,7 +1,7 @@
 <script>
   import { _ } from "svelte-i18n";
   // SVG assets
-  import SearchIconSvg from "@/assets/search_icon.svg";
+  import SearchIconSvg from "@/assets/search_icon.svg?raw";
 
   export let link = "";
 </script>

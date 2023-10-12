@@ -19,8 +19,8 @@
   import { timeoutify } from "@/util/closure.js";
 
   // SVG assets
-  import searchIconSvg from "@/assets/search_icon.svg";
-  import closeInlineSvg from "@/assets/close_inline.svg";
+  import searchIconSvg from "@/assets/search_icon.svg?raw";
+  import closeInlineSvg from "@/assets/close_inline.svg?raw";
 
   const fieldAliases = {
     projects: "project",

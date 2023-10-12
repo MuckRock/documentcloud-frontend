@@ -6,7 +6,7 @@ import session from "./session.js";
 import { apiUrl } from "./base.js";
 import { timeout } from "@/util/timeout.js";
 import { queryBuilder } from "@/util/url.js";
-import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common.js";
+import { DEFAULT_EXPAND } from "./common.js";
 import { Results } from "@/structure/results.js";
 import { batchDelay } from "@/util/batchDelay.js";
 import { StorageManager } from "@/util/storageManager.js";
@@ -97,7 +97,7 @@ export async function searchDocument(query, docId) {
 export async function getDocument(id, expand = DEFAULT_EXPAND) {
   // Get a single document with the specified id
   const { data } = await session.get(
-    apiUrl(queryBuilder(`documents/${id}/`, { expand })),
+    apiUrl(queryBuilder(`documents/${id}.json`, { expand })),
   );
   return new Document(data);
 }

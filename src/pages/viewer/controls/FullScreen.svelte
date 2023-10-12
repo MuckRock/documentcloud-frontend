@@ -2,7 +2,7 @@
   import { viewer } from "@/viewer/viewer.js";
 
   // SVG assets
-  import fullScreenSvg from "@/assets/fullscreen.svg";
+  import fullScreenSvg from "@/assets/fullscreen.svg?raw";
 </script>
 
 <style lang="scss">
