@@ -61,7 +61,7 @@
     background: #f0f0f0;
     box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.12);
     overflow: auto;
-    z-index: $viewerSidebarZ;
+    z-index: var(--viewerSidebarZ, 7);
     max-width: 100%;
     -webkit-overflow-scrolling: touch;
 
@@ -79,7 +79,7 @@
     }
 
     .updating {
-      color: $gray;
+      color: var(--gray, rgba(0, 0, 0, 0.53));
       font-size: 12px;
       margin: 10px 0;
     }
@@ -117,14 +117,14 @@
       h3 {
         font-weight: bold;
         font-size: 14px;
-        color: $viewerDarkGray;
+        color: var(--viewerDarkGray, #171717);
         margin: 8px 0;
       }
 
       p {
         font-size: 14px;
         line-height: 18px;
-        color: $viewerGray;
+        color: var(--viewerGray, #525252);
         margin: 8px 0;
       }
     }
@@ -147,7 +147,7 @@
 
     a {
       font-size: $small;
-      color: $viewerLink;
+      color: var(--viewerLink, #004276);
     }
 
     small {
