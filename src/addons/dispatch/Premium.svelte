@@ -5,11 +5,14 @@
   import Button from "../../common/Button.svelte";
   import Credit from "../../common/icons/Credit.svelte";
   import Price from "../../premium-credits/Price.svelte";
+  import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
 
   export let addon: AddOnListItem;
 
+  // TODO: Load premium user status; if not premium, show upgrade tout
+  export let isPremiumUser: boolean = true;
   // TODO: Load credit balance from connected pro/org account
-  const creditBalance = 7000;
+  export let creditBalance: number = 7000;
 
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
@@ -42,8 +45,14 @@
     spendingLimit = numVal;
   }
 
+  function triggerPremiumUpgradeFlow() {
+    // TODO: Trigger the premium account upgrade flow
+    alert("Upgrade to premium?");
+  }
+
   function triggerCreditPurchaseFlow() {
     // TODO: Trigger the credit purchase flow
+    alert("Purchase credits?");
   }
 </script>
 
@@ -136,49 +145,57 @@
 </style>
 
 {#if addon.premium}
-  <fieldset class="premium">
-    <legend>{$_("addonDispatchDialog.premium")}</legend>
-    <div class="row">
-      <div class="column">
-        <h3 class="prettyCost">{prettyCost} per credit</h3>
-        <label class="spendingLimit">
-          <input
-            type="checkbox"
-            name="setLimit"
-            class="toggle"
-            on:change={toggleSpendingLimit}
-          />
-          <span class="label"
-            >{$_("addonDispatchDialog.premiumSpendLimit")}</span
-          >
-          <div class="amount">
-            <span class="creditIcon"><Credit size={1.5} /></span>
+  {#if isPremiumUser}
+    <fieldset class="premium">
+      <legend>{$_("addonDispatchDialog.premium")}</legend>
+      <div class="row">
+        <div class="column">
+          <h3 class="prettyCost">{prettyCost} per credit</h3>
+          <label class="spendingLimit">
             <input
-              type="number"
-              name="limitAmount"
-              class="limitInput"
-              min={0}
-              max={creditBalance}
-              bind:value={spendingLimit}
-              on:change={setSpendingLimit}
-              disabled={!spendingLimitEnabled}
+              type="checkbox"
+              name="setLimit"
+              class="toggle"
+              on:change={toggleSpendingLimit}
             />
-          </div>
-        </label>
+            <span class="label"
+              >{$_("addonDispatchDialog.premiumSpendLimit")}</span
+            >
+            <div class="amount">
+              <span class="creditIcon"><Credit size={1.5} /></span>
+              <input
+                type="number"
+                name="limitAmount"
+                class="limitInput"
+                min={0}
+                max={creditBalance}
+                bind:value={spendingLimit}
+                on:change={setSpendingLimit}
+                disabled={!spendingLimitEnabled}
+              />
+            </div>
+          </label>
+        </div>
+        <div class="column">
+          <dl class="creditBalance">
+            <dt>Your credit balance</dt>
+            <dd><Price value={creditBalance} /></dd>
+          </dl>
+          <Button
+            premium
+            fullWidth
+            nomargin
+            label="Purchase Credits"
+            on:click={triggerCreditPurchaseFlow}
+          />
+        </div>
       </div>
-      <div class="column">
-        <dl class="creditBalance">
-          <dt>Your credit balance</dt>
-          <dd><Price value={creditBalance} /></dd>
-        </dl>
-        <Button
-          premium
-          fullWidth
-          nomargin
-          label="Purchase Credits"
-          on:click={triggerCreditPurchaseFlow}
-        />
-      </div>
-    </div>
-  </fieldset>
+    </fieldset>
+  {:else}
+    <UpgradePrompt
+      message={$_("addonDispatchDialog.premiumUpgrade.message")}
+      callToAction={$_("addonDispatchDialog.premiumUpgrade.callToAction")}
+      on:click={triggerPremiumUpgradeFlow}
+    />
+  {/if}
 {/if}

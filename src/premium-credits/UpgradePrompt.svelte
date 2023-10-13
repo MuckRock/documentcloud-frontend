@@ -44,6 +44,6 @@
     <p>{message}</p>
   </div>
   <div class="action">
-    <Button premium label={callToAction} />
+    <Button premium label={callToAction} on:click />
   </div>
 </div>
