@@ -17,8 +17,8 @@
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
 
-  const { amount, unit } = addon.premium_cost;
-  $: prettyCost = handlePlural(amount, unit);
+  const { amount, unit } = addon.premium_cost ?? {};
+  $: prettyCost = amount && unit ? handlePlural(amount, unit) : null;
 
   function toggleSpendingLimit(
     event: Event & { currentTarget: HTMLInputElement },
@@ -150,7 +150,11 @@
       <legend>{$_("addonDispatchDialog.premium")}</legend>
       <div class="row">
         <div class="column">
-          <h3 class="prettyCost">{prettyCost} per credit</h3>
+          {#if prettyCost}
+            <h3 class="prettyCost">
+              {prettyCost} per credit
+            </h3>
+          {/if}
           <label class="spendingLimit">
             <input
               type="checkbox"
