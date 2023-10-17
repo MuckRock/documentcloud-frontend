@@ -86,16 +86,9 @@ const sessionCache = new SessionCache();
 session.getStatic = async function getStatic(url) {
   if (sessionCache.has(url)) return sessionCache.lookup(url);
 
-  if (url.startsWith(process.env.DC_BASE)) {
-    const redirectUrl = (await session.get(url)).data.location;
-    const result = (await axios.get(redirectUrl)).data;
-    sessionCache.cache(url, result);
-    return result;
-  } else {
-    const result = (await axios.get(url)).data;
-    sessionCache.cache(url, result);
-    return result;
-  }
+  const result = (await axios.get(url)).data;
+  sessionCache.cache(url, result);
+  return result;
 };
 
 export default session;
