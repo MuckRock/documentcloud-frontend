@@ -24,7 +24,7 @@
   <Dropdown name="language" fixed={true}>
     <MenuTitle
       slot="title"
-      label={currentLang[0] ?? $_("authSection.language")}
+      label={currentLang[0] ?? $_("authSection.language.title")}
     >
       <LanguageIcon size={1.5} slot="icon" />
     </MenuTitle>

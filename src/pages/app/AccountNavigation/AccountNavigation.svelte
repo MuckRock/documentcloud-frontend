@@ -5,7 +5,7 @@
   import HelpMenu from "./HelpMenu.svelte";
   import UserMenu from "./UserMenu.svelte";
   import OrgMenu from "./OrgMenu.svelte";
-  import PremiumUpgradeMenu from "./PremiumUpgradeMenu.svelte";
+  import PremiumMenu from "./PremiumMenu.svelte";
 
   $: user = $orgsAndUsers.me;
   $: orgs = $orgsAndUsers.selfOrgs?.filter((org) => !org?.individual) ?? [];
@@ -36,10 +36,10 @@
 
 <nav class="account-navigation">
   <section class="primary">
-    {#if isPremium}
+    {#if currentOrg && !currentOrg.individual}
       <OrgMenu activeOrg={currentOrg} userOrgs={orgs} changeOrg={change} />
-    {:else if user}
-      <PremiumUpgradeMenu />
+    {:else}
+      <PremiumMenu {isPremium} />
     {/if}
     <UserMenu {user} />
   </section>

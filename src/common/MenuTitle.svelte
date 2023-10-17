@@ -18,7 +18,7 @@
   }
   .dropper {
     margin-bottom: -0.25em;
-    color: rgba(0, 0, 0, 0.5);
+    opacity: 0.5;
   }
 </style>
 

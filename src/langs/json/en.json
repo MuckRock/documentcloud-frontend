@@ -350,20 +350,36 @@
     "addOnsMenu": "Add-Ons"
   },
   "authSection": {
-    "help": "Help",
-    "language": "Language",
-    "faq": "FAQ",
-    "searchDocs": "Search Documentation",
-    "apiDocs": "API Documentation",
-    "addOns": "Add-Ons",
-    "premium": "DocumentCloud Premium",
-    "emailUs": "Email Us",
-    "acctSettings": "Account settings",
-    "signOut": "Sign out",
-    "changeOrg": "Change organization",
-    "personalAcct": "Personal Account",
-    "signIn": "Sign in",
-    "uploadEmail": "Upload via email"
+    "help": {
+      "title": "Help",
+      "faq": "FAQ",
+      "searchDocs": "Search Documentation",
+      "apiDocs": "API Documentation",
+      "addOns": "Add-Ons",
+      "premium": "DocumentCloud Premium",
+      "emailUs": "Email Us"
+    },
+    "language": {
+      "title": "Language"
+    },
+    "user": {
+      "uploadEmail": "Upload via email",
+      "acctSettings": "Account settings",
+      "signOut": "Sign out",
+      "signIn": "Sign in"
+    },
+    "premiumUpgrade": {
+      "title": "Premium",
+      "heading": "Go Pro with DocumentCloud’s premium tools",
+      "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
+      "docs": "Learn more about DocumentCloud Premium",
+      "addons": "Explore premium add-ons",
+      "orgs": "Join or start an organization"
+    },
+    "org": {
+      "changeOrg": "Change organization",
+      "personalAcct": "Personal Account"
+    }
   },
   "documents": {
     "yourDocuments": "Your Documents",

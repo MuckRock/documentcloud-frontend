@@ -141,50 +141,48 @@
   }
 </style>
 
-<span class="inlineblock">
-  <Tooltip delay={500} show={disabledReason != null} caption={disabledReason}>
-    {#if href}
-      <a
-        {href}
-        {title}
-        on:click
-        class:secondary
-        class:tertiary
-        class:premium
-        class:danger
-        class:small
-        class:caution
-        class:nondescript
-        class:action
-        class:plain
-        class:nomargin
-        class:fullWidth
-        class:disabled={disabled || disabledReason != null}
-        rel={external ? "noopener noreferrer" : null}
-        target={external ? "_blank" : null}
-      >
-        <slot>{label}</slot>
-      </a>
-    {:else}
-      <button
-        {title}
-        on:click
-        class:secondary
-        class:tertiary
-        class:premium
-        class:danger
-        class:small
-        class:caution
-        class:nondescript
-        class:action
-        class:plain
-        class:nomargin
-        class:fullWidth
-        disabled={disabled || disabledReason != null}
-        {type}
-      >
-        <slot>{label}</slot>
-      </button>
-    {/if}
-  </Tooltip>
-</span>
+<Tooltip delay={500} show={disabledReason != null} caption={disabledReason}>
+  {#if href}
+    <a
+      {href}
+      {title}
+      on:click
+      class:secondary
+      class:tertiary
+      class:premium
+      class:danger
+      class:small
+      class:caution
+      class:nondescript
+      class:action
+      class:plain
+      class:nomargin
+      class:fullWidth
+      class:disabled={disabled || disabledReason != null}
+      rel={external ? "noopener noreferrer" : null}
+      target={external ? "_blank" : null}
+    >
+      <slot>{label}</slot>
+    </a>
+  {:else}
+    <button
+      {title}
+      on:click
+      class:secondary
+      class:tertiary
+      class:premium
+      class:danger
+      class:small
+      class:caution
+      class:nondescript
+      class:action
+      class:plain
+      class:nomargin
+      class:fullWidth
+      disabled={disabled || disabledReason != null}
+      {type}
+    >
+      <slot>{label}</slot>
+    </button>
+  {/if}
+</Tooltip>

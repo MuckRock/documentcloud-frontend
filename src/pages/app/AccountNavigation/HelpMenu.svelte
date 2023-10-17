@@ -21,44 +21,44 @@
 
 <!-- Help Menu -->
 <Dropdown name="help" fixed={true}>
-  <MenuTitle slot="title" label={$_("authSection.help")}>
+  <MenuTitle slot="title" label={$_("authSection.help.title")}>
     <Help size={1.5} slot="icon" />
   </MenuTitle>
   <Menu>
     <Link toUrl="/help/faq" color={true}>
       <MenuItem>
         <CommentDiscussion16 slot="icon" />
-        {$_("authSection.faq")}
+        {$_("authSection.help.faq")}
       </MenuItem>
     </Link>
     <Link toUrl="/help/search" color={true}>
       <MenuItem>
         <Search16 slot="icon" />
-        {$_("authSection.searchDocs")}
+        {$_("authSection.help.searchDocs")}
       </MenuItem>
     </Link>
     <Link toUrl="/help/api" color={true}>
       <MenuItem>
         <Code16 slot="icon" />
-        {$_("authSection.apiDocs")}
+        {$_("authSection.help.apiDocs")}
       </MenuItem>
     </Link>
     <Link toUrl="/help/add-ons" color={true}>
       <MenuItem>
         <Plug16 slot="icon" />
-        {$_("authSection.addOns")}
+        {$_("authSection.help.addOns")}
       </MenuItem>
     </Link>
     <Link toUrl="/help/premium" color={true}>
       <MenuItem>
         <Zap16 slot="icon" />
-        {$_("authSection.premium")}
+        {$_("authSection.help.premium")}
       </MenuItem>
     </Link>
     <a href="mailto:info@documentcloud.org" class="color" target="_blank">
       <MenuItem>
         <Mail16 slot="icon" />
-        {$_("authSection.emailUs")}
+        {$_("authSection.help.emailUs")}
       </MenuItem>
     </a>
   </Menu>

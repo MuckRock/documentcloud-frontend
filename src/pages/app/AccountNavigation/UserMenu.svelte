@@ -62,18 +62,18 @@
     <Menu>
       <MenuItem href={SQUARELET_URL} target="_blank">
         <Gear16 slot="icon" />
-        {$_("authSection.acctSettings")}
+        {$_("authSection.user.acctSettings")}
       </MenuItem>
       <MenuItem on:click={showMailkeySelected}>
         <Paperclip16 slot="icon" />
-        {$_("authSection.uploadEmail")}
+        {$_("authSection.user.uploadEmail")}
       </MenuItem>
       <MenuItem href={SIGN_OUT_URL}>
         <SignOut16 slot="icon" />
-        {$_("authSection.signOut")}
+        {$_("authSection.user.signOut")}
       </MenuItem>
     </Menu>
   </Dropdown>
 {:else}
-  <a href={SIGN_IN_URL}>{$_("authSection.signIn")}</a>
+  <a href={SIGN_IN_URL}>{$_("authSection.user.signIn")}</a>
 {/if}
