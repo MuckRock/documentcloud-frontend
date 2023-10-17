@@ -29,12 +29,13 @@
       <LanguageIcon size={1.5} slot="icon" />
     </MenuTitle>
     <Menu>
-      {#each langs as [name, code]}
+      {#each langs as [name, code, flag]}
         <MenuItem
           on:click={() => updateLanguage(code)}
           selected={code === $locale}
         >
           {name}
+          <span slot="icon">{flag}</span>
         </MenuItem>
       {/each}
     </Menu>
