@@ -1,10 +1,11 @@
 <script lang="ts" context="module">
-  export interface User {
-    name: string;
-    avatar_url: string;
-  }
+  type Maybe<T> = T | undefined | null;
 
-  type Maybe<T> = T | undefined;
+  export interface User {
+    name: Maybe<string>;
+    avatar_url: Maybe<string>;
+    username: string;
+  }
 </script>
 
 <script lang="ts">
@@ -14,6 +15,13 @@
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
+
+  import {
+    Paperclip16,
+    Gear16,
+    SignOut16,
+    PersonFill16,
+  } from "svelte-octicons";
 
   import {
     SQUARELET_URL,
@@ -26,28 +34,44 @@
 </script>
 
 <style>
-  .userIcon {
+  .userAvatar {
     height: 1.5rem;
     width: 1.5rem;
     display: block;
+  }
+  .userIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
 {#if user}
   <Dropdown name="user" fixed={true}>
-    <MenuTitle slot="title" label={user.name}>
-      <img src={user.avatar_url} class="userIcon" alt="" slot="icon" />
+    <MenuTitle slot="title" label={user.name ?? user.username}>
+      <span slot="icon">
+        {#if user.avatar_url}
+          <img src={user.avatar_url} class="userAvatar" alt="" />
+        {:else}
+          <div class="userIcon"><PersonFill16 /></div>
+        {/if}
+      </span>
     </MenuTitle>
     <Menu>
-      <a href={SQUARELET_URL} target="_blank" style="color: inherit">
-        <MenuItem>{$_("authSection.acctSettings")}</MenuItem>
-      </a>
+      <MenuItem href={SQUARELET_URL} target="_blank">
+        <Gear16 slot="icon" />
+        {$_("authSection.acctSettings")}
+      </MenuItem>
       <MenuItem on:click={showMailkeySelected}>
+        <Paperclip16 slot="icon" />
         {$_("authSection.uploadEmail")}
       </MenuItem>
-      <a href={SIGN_OUT_URL} style="color: inherit">
-        <MenuItem>{$_("authSection.signOut")}</MenuItem>
-      </a>
+      <MenuItem href={SIGN_OUT_URL}>
+        <SignOut16 slot="icon" />
+        {$_("authSection.signOut")}
+      </MenuItem>
     </Menu>
   </Dropdown>
 {:else}
