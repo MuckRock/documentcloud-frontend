@@ -28,7 +28,8 @@
 
   .item {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
+    align-items: center;
     justify-content: center;
     padding: 6px 21px;
     font-size: 16px;
@@ -42,14 +43,17 @@
 
   .item.danger {
     color: var(--caution, #f04c42);
+    fill: var(--caution, #f04c42);
   }
 
   .item.special {
     color: var(--searchSpecial, #5a00ff);
+    fill: var(--searchSpecial, #5a00ff);
   }
 
   .item.primary {
     color: var(--primary, #4294f0);
+    fill: var(--primary, #4294f0);
   }
 
   .item.indent {
@@ -60,29 +64,29 @@
     cursor: pointer;
   }
 
-  .item.selectable:hover {
-    background: var(--primary, #4294f0);
-    color: white;
-  }
-
-  .item.selectable:hover :global(.info),
-  .item.selectable:hover :global(.scope) {
-    color: white;
-  }
-
   .item.disabled {
     color: var(--gray), rgba(0, 0, 0, 0.53);
+    fill: var(--gray), rgba(0, 0, 0, 0.53);
     pointer-events: none;
   }
 
   .item :global(.info) {
     font-size: 13px;
     color: var(--gray), rgba(0, 0, 0, 0.53);
+    fill: var(--gray), rgba(0, 0, 0, 0.53);
   }
 
+  .item.selectable:hover,
   .item.selected {
     background: var(--primary, #4294f0);
     color: var(--white, white);
+    fill: var(--white, white);
+  }
+
+  .item.selectable:hover :global(.info),
+  .item.selectable:hover :global(.scope) {
+    color: white;
+    fill: white;
   }
 </style>
 
@@ -100,7 +104,7 @@
   class:special
   on:click
 >
-  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
+  <slot name="icon" />
   <span class="label"><slot>Define an item</slot></span>
   {#if selected}<span class="scope">✓</span>{/if}
 </svelte:element>
