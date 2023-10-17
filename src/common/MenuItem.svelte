@@ -7,6 +7,7 @@
   export let special = false;
   export let href = null;
   export let target = null;
+  export let selected = false;
 
   let className = "";
   export { className as class };
@@ -26,10 +27,19 @@
   }
 
   .item {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
     padding: 6px 21px;
     font-size: 16px;
+    font-family: "Source Sans Pro", sans-serif;
     user-select: none;
   }
+
+  .item .label {
+    flex: 1 1 auto;
+  }
+
   .item.danger {
     color: var(--caution, #f04c42);
   }
@@ -69,6 +79,11 @@
     font-size: 13px;
     color: var(--gray), rgba(0, 0, 0, 0.53);
   }
+
+  .item.selected {
+    background: var(--primary, #4294f0);
+    color: var(--white, white);
+  }
 </style>
 
 <svelte:element
@@ -77,6 +92,7 @@
   {href}
   class="item {className}"
   class:selectable
+  class:selected
   class:danger
   class:primary
   class:disabled
@@ -84,5 +100,7 @@
   class:special
   on:click
 >
-  <slot>Define an item</slot>
+  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
+  <span class="label"><slot>Define an item</slot></span>
+  {#if selected}<span class="scope">✓</span>{/if}
 </svelte:element>

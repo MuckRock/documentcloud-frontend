@@ -13,7 +13,8 @@
   .icon {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 50%;
-    margin-right: 0.25em;
+    margin-right: 0.4em;
+    overflow: hidden;
   }
   .dropper {
     margin-bottom: -0.25em;
