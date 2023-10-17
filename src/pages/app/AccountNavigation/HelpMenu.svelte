@@ -8,6 +8,15 @@
   import MenuTitle from "../../../common/MenuTitle.svelte";
 
   import Help from "../../../common/icons/Help.svelte";
+
+  import {
+    CommentDiscussion16,
+    Search16,
+    Code16,
+    Plug16,
+    Zap16,
+    Mail16,
+  } from "svelte-octicons";
 </script>
 
 <!-- Help Menu -->
@@ -17,22 +26,40 @@
   </MenuTitle>
   <Menu>
     <Link toUrl="/help/faq" color={true}>
-      <MenuItem>{$_("authSection.faq")}</MenuItem>
+      <MenuItem>
+        <CommentDiscussion16 slot="icon" />
+        {$_("authSection.faq")}
+      </MenuItem>
     </Link>
     <Link toUrl="/help/search" color={true}>
-      <MenuItem>{$_("authSection.searchDocs")}</MenuItem>
+      <MenuItem>
+        <Search16 slot="icon" />
+        {$_("authSection.searchDocs")}
+      </MenuItem>
     </Link>
     <Link toUrl="/help/api" color={true}>
-      <MenuItem>{$_("authSection.apiDocs")}</MenuItem>
+      <MenuItem>
+        <Code16 slot="icon" />
+        {$_("authSection.apiDocs")}
+      </MenuItem>
     </Link>
     <Link toUrl="/help/add-ons" color={true}>
-      <MenuItem>{$_("authSection.addOns")}</MenuItem>
+      <MenuItem>
+        <Plug16 slot="icon" />
+        {$_("authSection.addOns")}
+      </MenuItem>
     </Link>
     <Link toUrl="/help/premium" color={true}>
-      <MenuItem>{$_("authSection.premium")}</MenuItem>
+      <MenuItem>
+        <Zap16 slot="icon" />
+        {$_("authSection.premium")}
+      </MenuItem>
     </Link>
     <a href="mailto:info@documentcloud.org" class="color" target="_blank">
-      <MenuItem>{$_("authSection.emailUs")}</MenuItem>
+      <MenuItem>
+        <Mail16 slot="icon" />
+        {$_("authSection.emailUs")}
+      </MenuItem>
     </a>
   </Menu>
 </Dropdown>
