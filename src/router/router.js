@@ -60,7 +60,7 @@ export class Router extends Svue {
   }
 
   lookup(name) {
-    return this.routes[name].path;
+    return this.routes?.[name]?.path;
   }
 
   resolve(path) {
