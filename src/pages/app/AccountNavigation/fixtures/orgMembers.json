@@ -1,0 +1,42 @@
+{
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 1,
+      "avatar_url": "https://cdn.muckrock.com/media/avatars/Michael_Headshot.jpeg",
+      "name": "Michael Morisy",
+      "organization": 1,
+      "organizations": [1, 2],
+      "admin_organizations": [1, 2],
+      "username": "morisy"
+    },
+    {
+      "id": 2,
+      "avatar_url": "https://cdn.muckrock.com/media/avatars/20140211-0O1A7147-2.jpg",
+      "name": "Chris Amico",
+      "organization": 1,
+      "organizations": [1, 3],
+      "admin_organizations": [3],
+      "username": "chrisamico"
+    },
+    {
+      "id": 3,
+      "avatar_url": "https://cdn.muckrock.com/media/account_images/22_MuckRock_2018_PRELIMANRY_EDITS_DSC_5387_2018_Derek_Kouyoumjian_preview_SfuGGnJ.jpg",
+      "name": "Mitchell Kotler",
+      "organization": 1,
+      "organizations": [1, 4],
+      "admin_organizations": [1, 4],
+      "username": "mitch"
+    },
+    {
+      "id": 4,
+      "avatar_url": "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
+      "name": "Allan Lasser",
+      "organization": 1,
+      "organizations": [1, 5],
+      "admin_organizations": [5],
+      "username": "lasser.allan"
+    }
+  ]
+}
