@@ -2,9 +2,12 @@
   type Maybe<T> = T | undefined | null;
 
   export interface User {
+    id: string;
     name: Maybe<string>;
     avatar_url: Maybe<string>;
     username: string;
+    organizations: string[];
+    admin_organizations: string[];
   }
 </script>
 
@@ -16,12 +19,7 @@
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
 
-  import {
-    Paperclip16,
-    Gear16,
-    SignOut16,
-    PersonFill16,
-  } from "svelte-octicons";
+  import { Paperclip16, Gear16, SignOut16, Person16 } from "svelte-octicons";
 
   import {
     SQUARELET_URL,
@@ -55,7 +53,7 @@
         {#if user.avatar_url}
           <img src={user.avatar_url} class="userAvatar" alt="" />
         {:else}
-          <div class="userIcon"><PersonFill16 /></div>
+          <div class="userIcon"><Person16 /></div>
         {/if}
       </span>
     </MenuTitle>
