@@ -1,16 +1,3 @@
-<script lang="ts" context="module">
-  type Maybe<T> = T | undefined | null;
-
-  export interface User {
-    id: string;
-    name: Maybe<string>;
-    avatar_url: Maybe<string>;
-    username: string;
-    organizations: string[];
-    admin_organizations: string[];
-  }
-</script>
-
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
@@ -27,6 +14,7 @@
     SIGN_OUT_URL,
   } from "../../../api/auth.js";
   import { showMailkeySelected } from "../../../manager/manager.js";
+  import { Maybe, User } from "./types";
 
   export let user: Maybe<User>;
 </script>

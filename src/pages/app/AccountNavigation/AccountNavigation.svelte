@@ -6,16 +6,13 @@
   import UserMenu from "./UserMenu.svelte";
   import OrgMenu from "./OrgMenu.svelte";
   import PremiumMenu from "./PremiumMenu.svelte";
+  import { User, Org } from "./types";
 
-  $: user = $orgsAndUsers.me;
-  $: orgs = $orgsAndUsers.selfOrgs?.filter((org) => !org?.individual) ?? [];
-  $: currentOrg = user?.organization;
+  $: user = $orgsAndUsers.me as User;
+  $: activeOrg = user.organization as Org;
   // TODO: include user plan information in payload
-  $: isPremium = orgs.length > 0 || user?.plan === "Professional";
-
-  async function change(org) {
-    await changeActive(org);
-  }
+  // @ts-expect-error unimplemented "plan" property
+  $: isPremium = user.organizations.length > 0 || user?.plan === "Professional";
 </script>
 
 <style>
@@ -36,8 +33,8 @@
 
 <nav class="account-navigation">
   <section class="primary">
-    {#if currentOrg && !currentOrg.individual}
-      <OrgMenu activeOrg={currentOrg} userOrgs={orgs} changeOrg={change} />
+    {#if activeOrg && !activeOrg.individual}
+      <OrgMenu {user} {activeOrg} />
     {:else}
       <PremiumMenu {isPremium} />
     {/if}
