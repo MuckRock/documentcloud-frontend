@@ -13,11 +13,16 @@
   export let orgId;
   export let myId;
 
-  export async function loadUsers() {
-    return inMyOrg(orgId, myId);
+  async function loadUsers(oId) {
+    return inMyOrg(oId, myId);
   }
 
-  let promise = loadUsers();
+  let promise = loadUsers(orgId);
+
+  // Refetch the user list upon org change
+  $: {
+    promise = loadUsers(orgId);
+  }
 </script>
 
 <style>
