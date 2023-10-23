@@ -9,10 +9,11 @@
   import { User, Org } from "./types";
 
   $: user = $orgsAndUsers.me as User;
-  $: activeOrg = user.organization as Org;
+  $: activeOrg = user?.organization as Org;
   // TODO: include user plan information in payload
   // @ts-expect-error unimplemented "plan" property
-  $: isPremium = user.organizations.length > 0 || user?.plan === "Professional";
+  $: isPremium =
+    user?.organizations.length > 0 || user?.plan === "Professional";
 </script>
 
 <style>
@@ -28,6 +29,7 @@
   .account-navigation section {
     display: flex;
     gap: 1rem;
+    align-items: center;
   }
 </style>
 

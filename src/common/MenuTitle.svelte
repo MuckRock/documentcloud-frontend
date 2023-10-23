@@ -8,12 +8,13 @@
     align-items: center;
   }
   .label {
+    flex: 1 1 auto;
     pointer-events: none;
   }
   .icon {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-    margin-right: 0.4em;
+    margin-right: 0.2em;
     overflow: hidden;
   }
   .dropper {

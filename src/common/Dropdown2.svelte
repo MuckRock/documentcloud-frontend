@@ -33,6 +33,8 @@
   export let id: string;
   export let position = "bottom left";
   export let overlay = true;
+  export let border = false;
+  export let titleColor = "primary";
 
   // State
   let dropdown;
@@ -103,17 +105,31 @@
     padding: 0.5rem;
     border-radius: var(--radius);
   }
+  .title.border {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
   .title:hover {
     background: var(--light-primary);
   }
   .title.open {
     background: var(--primary);
     color: var(--white);
+    fill: var(--white);
+  }
+  .title.premium {
+    color: var(--premium);
+    fill: var(--premium);
+  }
+  .title.premium.open {
+    background: var(--premium);
+    color: var(--white);
+    fill: var(--white);
   }
   .dropdown {
     display: none;
     margin: 0;
     width: auto;
+    min-width: 100%;
   }
   .dropdown.open {
     display: block;
@@ -155,8 +171,9 @@
 <div class="dropdownContainer" class:open={isOpen} {id}>
   <div
     bind:this={title}
-    class="title"
+    class={`title ${titleColor}`}
     class:open={isOpen}
+    class:border
     on:click={toggleOnTitleEvent}
     on:keydown={toggleOnTitleEvent}
   >

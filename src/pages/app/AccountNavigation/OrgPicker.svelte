@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Dropdown from "../../../common/Dropdown.svelte";
+  import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
@@ -43,7 +43,7 @@
 <div class="container">
   <p class="orgSelectLabel">Switch organization</p>
   <div class="picker">
-    <Dropdown name="orgSelect">
+    <Dropdown id="orgSelect" border={true}>
       <MenuTitle slot="title" label={activeOrg.name}>
         <span slot="icon">
           {#if activeOrg.avatar_url}
@@ -59,7 +59,10 @@
         {:else}
           {#each orgOptions as org}
             <MenuItem
-              on:click={() => handleChange?.(org.id)}
+              on:click={() => {
+                closeDropdown("orgSelect");
+                handleChange?.(org.id);
+              }}
               selected={org.id === activeOrg.id}
             >
               {org.name}

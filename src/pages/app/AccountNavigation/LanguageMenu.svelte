@@ -1,13 +1,13 @@
 <script lang="ts">
   import { _, locale } from "svelte-i18n";
+  import Globe16 from "svelte-octicons/lib/Globe16.svelte";
 
-  import Dropdown from "../../../common/Dropdown.svelte";
+  import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
 
   import langs from "../../../langs/langs.json";
-  import LanguageIcon from "../../../common/icons/Language.svelte";
 
   $: currentLang = langs.find(([_, code]) => code == $locale);
 
@@ -19,19 +19,32 @@
   }
 </script>
 
+<style>
+  .icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
 {#if langs.length > 1}
   <!-- Language Menu -->
-  <Dropdown name="language" fixed={true}>
+  <Dropdown id="language" position="right">
     <MenuTitle
       slot="title"
       label={currentLang[0] ?? $_("authSection.language.title")}
     >
-      <LanguageIcon size={1.5} slot="icon" />
+      <div class="icon" slot="icon"><Globe16 /></div>
     </MenuTitle>
     <Menu>
       {#each langs as [name, code, flag]}
         <MenuItem
-          on:click={() => updateLanguage(code)}
+          on:click={() => {
+            updateLanguage(code);
+            closeDropdown("language");
+          }}
           selected={code === $locale}
         >
           {name}

@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { _, locale } from "svelte-i18n";
+  import { _ } from "svelte-i18n";
 
   import Link from "../../../router/Link.svelte";
-  import Dropdown from "../../../common/Dropdown.svelte";
+  import Dropdown from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
-
-  import Help from "../../../common/icons/Help.svelte";
 
   import {
     CommentDiscussion16,
@@ -16,13 +14,24 @@
     Plug16,
     Zap16,
     Mail16,
+    Question16,
   } from "svelte-octicons";
 </script>
 
+<style>
+  .icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
 <!-- Help Menu -->
-<Dropdown name="help" fixed={true}>
+<Dropdown id="help" position="right">
   <MenuTitle slot="title" label={$_("authSection.help.title")}>
-    <Help size={1.5} slot="icon" />
+    <div class="icon" slot="icon"><Question16 /></div>
   </MenuTitle>
   <Menu>
     <Link toUrl="/help/faq" color={true}>

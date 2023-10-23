@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Dropdown from "../../../common/Dropdown.svelte";
+  import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
@@ -18,14 +18,23 @@
   function triggerPremiumUpgradeFlow() {
     alert("Upgrade to Premium!");
   }
+
+  const dropdownId = "premiumUpgrade";
+  function close() {
+    closeDropdown(dropdownId);
+  }
 </script>
 
 <style>
   .premium {
-    color: var(--premium);
     font-weight: 600;
   }
   .whiteBg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5rem;
+    width: 1.5rem;
     background: var(--white, #ffffff);
   }
   .learnMore {
@@ -53,10 +62,10 @@
   }
 </style>
 
-<Dropdown name="premiumUpgrade" fixed={true}>
+<Dropdown id={dropdownId} titleColor="premium">
   <span class="premium" slot="title">
     <MenuTitle label={$_("authSection.premiumUpgrade.title")}>
-      <div class="whiteBg" slot="icon"><Credit badge /></div>
+      <div class="whiteBg" slot="icon"><Credit size={1.5} /></div>
     </MenuTitle>
   </span>
   <Menu>
@@ -75,21 +84,27 @@
           on:click={triggerPremiumUpgradeFlow}
         />
         <div class="learnMore">
-          <Link toUrl="/help/premium" color={true}>
+          <Link toUrl="/help/premium" color={true} on:click={close}>
             {$_("authSection.premiumUpgrade.docs")}
           </Link>
         </div>
       </div>
     {/if}
     <Link toUrl="#add-ons" color={true}>
-      <MenuItem>
+      <MenuItem on:click={close}>
         <Plug16 slot="icon" />
         {$_("authSection.premiumUpgrade.addons")}
       </MenuItem>
     </Link>
-    <MenuItem href={`${SQUARELET_URL}/organizations`} target="_blank">
-      <Organization16 slot="icon" />
-      {$_("authSection.premiumUpgrade.orgs")}
-    </MenuItem>
+    <span>
+      <MenuItem
+        href={`${SQUARELET_URL}/organizations`}
+        target="_blank"
+        on:click={close}
+      >
+        <Organization16 slot="icon" />
+        {$_("authSection.premiumUpgrade.orgs")}
+      </MenuItem>
+    </span>
   </Menu>
 </Dropdown>

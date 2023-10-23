@@ -5,7 +5,7 @@
   import { _ } from "svelte-i18n";
   import Organization16 from "svelte-octicons/lib/Organization16.svelte";
 
-  import Dropdown from "../../../common/Dropdown.svelte";
+  import Dropdown from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
@@ -57,7 +57,7 @@
 </style>
 
 {#await activeOrgPromise}
-  <Dropdown name="organization" fixed={true}>
+  <Dropdown id="organization">
     <MenuTitle slot="title" label="Loading…">
       <Loader active center slot="icon" />
     </MenuTitle>
@@ -66,7 +66,7 @@
     </Menu>
   </Dropdown>
 {:then activeOrg}
-  <Dropdown name="organization" fixed={true}>
+  <Dropdown id="organization">
     <MenuTitle slot="title" label={activeOrg.name}>
       <span slot="icon">
         {#if activeOrg.avatar_url}

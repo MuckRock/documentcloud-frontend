@@ -42,6 +42,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875em;
+    white-space: nowrap;
   }
   .userListItem:hover {
     background: var(--light-primary);

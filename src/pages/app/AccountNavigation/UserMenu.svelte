@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Dropdown from "../../../common/Dropdown.svelte";
+  import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
@@ -17,6 +17,11 @@
   import { Maybe, User } from "./types";
 
   export let user: Maybe<User>;
+
+  const dropdownId = "user";
+  function close() {
+    closeDropdown(dropdownId);
+  }
 </script>
 
 <style>
@@ -35,7 +40,7 @@
 </style>
 
 {#if user}
-  <Dropdown name="user" fixed={true}>
+  <Dropdown id={dropdownId}>
     <MenuTitle slot="title" label={user.name ?? user.username}>
       <span slot="icon">
         {#if user.avatar_url}
@@ -46,15 +51,15 @@
       </span>
     </MenuTitle>
     <Menu>
-      <MenuItem href={SQUARELET_URL} target="_blank">
+      <MenuItem href={SQUARELET_URL} target="_blank" on:click={close}>
         <Gear16 slot="icon" />
         {$_("authSection.user.acctSettings")}
       </MenuItem>
-      <MenuItem on:click={showMailkeySelected}>
+      <MenuItem on:click={showMailkeySelected} on:click={close}>
         <Paperclip16 slot="icon" />
         {$_("authSection.user.uploadEmail")}
       </MenuItem>
-      <MenuItem href={SIGN_OUT_URL}>
+      <MenuItem href={SIGN_OUT_URL} on:click={close}>
         <SignOut16 slot="icon" />
         {$_("authSection.user.signOut")}
       </MenuItem>
