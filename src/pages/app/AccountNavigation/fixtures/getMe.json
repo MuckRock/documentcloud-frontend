@@ -1,0 +1,19 @@
+{
+  "id": 4,
+  "avatar_url": "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
+  "feature_level": 2,
+  "name": "Allan Lasser",
+  "organization": {
+    "id": 1,
+    "avatar_url": "https://cdn.muckrock.com/media/org_avatars/logo.png",
+    "individual": false,
+    "monthly_ai_credits": 10000,
+    "number_ai_credits": 0,
+    "name": "MuckRock",
+    "slug": "muckrock"
+  },
+  "organizations": [1, 4],
+  "admin_organizations": [40742],
+  "username": "lasser.allan",
+  "verified_journalist": true
+}
