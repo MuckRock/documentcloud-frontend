@@ -84,9 +84,20 @@ export class SessionCache {
 const sessionCache = new SessionCache();
 
 session.getStatic = async function getStatic(url) {
-  if (sessionCache.has(url)) return sessionCache.lookup(url);
+  if (sessionCache.has(url)) {
+    return sessionCache.lookup(url);
+  }
 
-  const result = (await axios.get(url)).data;
+  let result = await session.get(url).then((r) => r.data);
+  let redirect = result.location;
+
+  // text requests return a 200 but have a location header
+  // this lets us send a second request to S3 without credentials
+  if (redirect) {
+    // note that this uses plain axios, not the session
+    result = await axios.get(redirect).then((r) => r.data);
+  }
+
   sessionCache.cache(url, result);
   return result;
 };
