@@ -14,14 +14,10 @@ export async function getMe(expand = DEFAULT_EXPAND) {
     }
   }
   // Check that the user is logged in via network request
-  try {
-    const { data } = await session.get(
-      queryBuilder(apiUrl(`users/me/`), { expand }),
-    );
-    return data;
-  } catch (e) {
-    return null;
-  }
+  const { data } = await session.get(
+    queryBuilder(apiUrl(`users/me/`), { expand }),
+  );
+  return data;
 }
 
 export async function getUser(id, expand = DEFAULT_EXPAND) {
