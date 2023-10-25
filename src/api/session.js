@@ -91,7 +91,7 @@ session.getStatic = async function getStatic(url) {
   let result = await session.get(url).then((r) => r.data);
   let redirect = result.location;
 
-  // text requests return a 200 but have a location header
+  // text requests return a 200 but have a location property in the JSON result
   // this lets us send a second request to S3 without credentials
   if (redirect) {
     // note that this uses plain axios, not the session
