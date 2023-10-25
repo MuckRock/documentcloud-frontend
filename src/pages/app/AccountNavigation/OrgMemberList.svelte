@@ -27,21 +27,22 @@
 
 <style>
   .userCount {
-    font-size: 0.6875em;
+    font-size: 0.875em;
     color: var(--gray);
-    padding: 0 0.5rem;
+    margin: 0.25rem 0.5rem;
   }
   .userList {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    max-height: 19rem;
+    overflow-y: auto;
   }
   .userListItem {
     padding: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.875em;
     white-space: nowrap;
   }
   .userListItem:hover {
@@ -56,6 +57,9 @@
     /* border: 1px solid rgba(0, 0, 0, 0.05); */
     border-radius: 50%;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .name {
     flex: 1 1 auto;

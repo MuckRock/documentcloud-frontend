@@ -1,19 +1,30 @@
 <script lang="ts">
-  import { orgsAndUsers, changeActive } from "../../../manager/orgsAndUsers.js";
+  import { getMe, getOrganization } from "../../../api/orgAndUser.js";
 
   import LanguageMenu from "./LanguageMenu.svelte";
   import HelpMenu from "./HelpMenu.svelte";
   import UserMenu from "./UserMenu.svelte";
   import OrgMenu from "./OrgMenu.svelte";
-  import PremiumMenu from "./PremiumMenu.svelte";
   import { User, Org } from "./types";
 
-  $: user = $orgsAndUsers.me as User;
-  $: activeOrg = user?.organization as Org;
-  // TODO: include user plan information in payload
-  // @ts-expect-error unimplemented "plan" property
-  $: isPremium =
-    user?.organizations.length > 0 || user?.plan === "Professional";
+  let user: User | null = null;
+  let org: Org | null = null;
+
+  async function getUser() {
+    try {
+      user = await getMe();
+      const activeOrg = user?.organization;
+      if (typeof activeOrg === "string") {
+        org = await getOrganization(activeOrg);
+      } else {
+        org = activeOrg;
+      }
+    } catch (e) {
+      user = null;
+    }
+  }
+
+  const getUserPromise = getUser();
 </script>
 
 <style>
@@ -35,12 +46,12 @@
 
 <nav class="account-navigation">
   <section class="primary">
-    {#if activeOrg && !activeOrg.individual}
-      <OrgMenu {user} {activeOrg} />
-    {:else}
-      <PremiumMenu {isPremium} />
-    {/if}
-    <UserMenu {user} />
+    {#await getUserPromise then}
+      <UserMenu {user} />
+      {#if user}
+        <OrgMenu {user} {org} />
+      {/if}
+    {/await}
   </section>
   <section class="secondary">
     <LanguageMenu />

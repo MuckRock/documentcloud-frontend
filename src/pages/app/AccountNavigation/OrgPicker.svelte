@@ -1,11 +1,14 @@
 <script lang="ts">
+  import { Organization16 } from "svelte-octicons";
+
   import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
-  import { Org } from "./types";
-  import { Organization16 } from "svelte-octicons";
   import Loader from "../../../common/Loader.svelte";
+
+  import { Org } from "./types";
+
   export let activeOrg: Org;
   export let loading = false;
   export let orgOptions: Org[] = [];
@@ -14,8 +17,6 @@
 
 <style>
   .container {
-    position: sticky;
-    bottom: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
   .orgAvatar {
@@ -31,7 +32,7 @@
     justify-content: center;
   }
   .orgSelectLabel {
-    font-size: 0.6875em;
+    font-size: 0.875em;
     color: var(--gray);
     padding: 0 0.5rem;
   }

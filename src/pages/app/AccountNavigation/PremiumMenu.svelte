@@ -19,7 +19,7 @@
     alert("Upgrade to Premium!");
   }
 
-  const dropdownId = "premiumUpgrade";
+  const dropdownId = "organization";
   function close() {
     closeDropdown(dropdownId);
   }
@@ -106,5 +106,6 @@
         {$_("authSection.premiumUpgrade.orgs")}
       </MenuItem>
     </span>
+    <slot />
   </Menu>
 </Dropdown>
