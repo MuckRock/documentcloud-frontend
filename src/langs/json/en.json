@@ -374,7 +374,8 @@
       "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
       "docs": "Learn more about DocumentCloud Premium",
       "addons": "Explore premium add-ons",
-      "orgs": "Join or start an organization"
+      "orgs": "Join or start an organization",
+      "startTrial": "Start Free Trial"
     },
     "org": {
       "changeOrg": "Change organization",
@@ -382,6 +383,15 @@
       "adminRole": "Admin",
       "memberListError": "An error occurred while loading the member list.",
       "memberListEmpty": "This organization has no other members."
+    },
+    "credits": {
+      "monthlyOrg": "Monthly Org Allowance",
+      "monthlyPro": "Monthly Pro Allowance",
+      "refreshOn": "Credit allowance will reset on {date}",
+      "purchased": "Purchased Credits",
+      "purchasedHelpText": "Purchased credits never expire and will only be used after you run out of monthly credits.",
+      "purchaseCreditsButton": "Purchase Credits",
+      "purchaseCreditsAdminOnly": "Only org admins may purchase additional credits."
     }
   },
   "documents": {

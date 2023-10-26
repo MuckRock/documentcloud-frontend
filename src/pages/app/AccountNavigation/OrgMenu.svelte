@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
+  import { _, locale } from "svelte-i18n";
   import Organization16 from "svelte-octicons/lib/Organization16.svelte";
 
   import Dropdown from "../../../common/Dropdown2.svelte";
@@ -16,7 +16,9 @@
   import OrgPicker from "./OrgPicker.svelte";
   import PremiumMenu from "./PremiumMenu.svelte";
   import MenuInsert from "../../../common/MenuInsert.svelte";
-  import CreditMeter from "../../../premium-credits/CreditMeter.svelte";
+  import CreditMeter, {
+    formatResetDate,
+  } from "../../../premium-credits/CreditMeter.svelte";
   import Button from "../../../common/Button.svelte";
 
   export let user: User;
@@ -101,27 +103,34 @@
         <MenuInsert>
           <CreditMeter
             id="org-credits"
-            label="Org Allowance"
-            helpText="Credits will reset in 2 weeks"
+            label={$_("authSection.credits.monthlyOrg")}
+            helpText={$_("authSection.credits.refreshOn", {
+              values: {
+                date: formatResetDate(
+                  activeOrg.monthly_credits.reset_date,
+                  $locale,
+                ),
+              },
+            })}
             value={activeOrg.monthly_credits.remaining}
             max={activeOrg.monthly_credits.allowance}
           />
           <CreditMeter
             id="purchased-credits"
-            label="Purchased Credits"
-            helpText="Purchased credits never expire and will only be used after you run out of monthly credits."
+            label={$_("authSection.credits.purchased")}
+            helpText={$_("authSection.credits.purchasedHelpText")}
             value={activeOrg.purchased_credits}
           />
           {#if user.admin_organizations.includes(activeOrg.id)}
             <Button
               premium={true}
               fullWidth={true}
-              label="Purchase Credits"
+              label={$_("authSection.credits.purchaseCreditsButton")}
               on:click={triggerCreditPurchaseFlow}
             />
           {:else}
             <p class="helpText">
-              Only org admins may purchase additional credits.
+              {$_("authSection.credits.purchaseCreditsAdminOnly")}
             </p>
           {/if}
         </MenuInsert>

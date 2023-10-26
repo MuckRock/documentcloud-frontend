@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
+  import { _, locale } from "svelte-i18n";
 
   import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
@@ -7,7 +7,9 @@
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Button from "../../../common/Button.svelte";
   import Credit from "../../../common/icons/Credit.svelte";
-  import CreditMeter from "../../../premium-credits/CreditMeter.svelte";
+  import CreditMeter, {
+    formatResetDate,
+  } from "../../../premium-credits/CreditMeter.svelte";
   import Link from "../../../router/Link.svelte";
 
   import { Plug16, Organization16 } from "svelte-octicons";
@@ -76,21 +78,25 @@
       <MenuInsert>
         <CreditMeter
           id="pro-credits"
-          label="Pro Allowance"
-          helpText="Credits will reset in 2 weeks"
+          label={$_("authSection.credits.monthlyPro")}
+          helpText={$_("authSection.credits.refreshOn", {
+            values: {
+              date: formatResetDate(monthly_credits.reset_date, $locale),
+            },
+          })}
           value={monthly_credits.remaining}
           max={monthly_credits.allowance}
         />
         <CreditMeter
           id="purchased-credits"
-          label="Purchased Credits"
-          helpText="Purchased credits never expire and will only be used after you run out of monthly credits."
+          label={$_("authSection.credits.purchased")}
+          helpText={$_("authSection.credits.purchasedHelpText")}
           value={purchased_credits}
         />
         <Button
           premium={true}
           fullWidth={true}
-          label="Purchase Credits"
+          label={$_("authSection.credits.purchaseCreditsButton")}
           on:click={triggerCreditPurchaseFlow}
         />
       </MenuInsert>
@@ -101,7 +107,7 @@
           {$_("authSection.premiumUpgrade.description")}
         </p>
         <Button
-          label="Start Free Trial"
+          label={$_("authSection.premiumUpgrade.startTrial")}
           fullWidth={true}
           premium={true}
           on:click={triggerPremiumUpgradeFlow}
