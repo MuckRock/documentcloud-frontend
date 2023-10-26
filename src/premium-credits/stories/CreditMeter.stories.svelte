@@ -30,6 +30,11 @@
 />
 
 <Story
+  name="Low Credits"
+  args={{ ...args, label: "Pro Allowance", max: 5000, value: 1000 }}
+/>
+
+<Story
   name="Purchased Credits"
   args={{
     ...args,

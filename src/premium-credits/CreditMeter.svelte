@@ -1,3 +1,15 @@
+<script context="module" lang="ts">
+  export function formatResetDate(dateStr: string, locale: string): string {
+    const date = new Date(dateStr);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "numeric",
+    };
+    const intl = new Intl.DateTimeFormat(locale, options);
+    return intl.format(date);
+  }
+</script>
+
 <script lang="ts">
   import Price from "./Price.svelte";
 
@@ -16,7 +28,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    min-width: 16rem;
+    min-width: 18rem;
   }
   .text,
   .number {
@@ -48,6 +60,11 @@
   }
   meter::-webkit-meter-optimum-value {
     background: var(--premium);
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  meter::-webkit-meter-suboptimum-value {
+    background: var(--highlight-orange);
     border-radius: 9999px;
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
