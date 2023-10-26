@@ -3,7 +3,7 @@
   import { baseApiUrl } from "../../../../api/base.js";
   import { mockInMyOrg } from "./OrgMemberList.stories.svelte";
   import orgListFixture from "../fixtures/orgList.json";
-  import getMeFixture from "../fixtures/orgList.json";
+  import getMeFixture from "../fixtures/getMe.json";
 
   /* Mock Request Handlers */
   const mockGetOrgsUrl = new URL(`organizations/`, baseApiUrl).toString();
@@ -25,18 +25,7 @@
         ctx.json({
           next: null,
           previous: null,
-          results: [
-            {
-              id: 4,
-              avatar_url:
-                "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
-              individual: true,
-              monthly_ai_credits: 2000,
-              number_ai_credits: 0,
-              name: "lasser.allan",
-              slug: "lasserallan",
-            },
-          ],
+          results: [orgListFixture.results[1]],
         }),
       ),
     ),
@@ -65,6 +54,9 @@
     empty: rest.get(mockGetOrgUrl, (req, res, ctx) =>
       res(ctx.json({ next: null, previous: null, results: [] })),
     ),
+    free: rest.get(mockGetOrgUrl, (req, res, ctx) =>
+      res(ctx.json({ ...orgListFixture.results[1], plan: "Free" })),
+    ),
   };
 
   const mockChangeOrgUrl = new URL(`users/me/`, baseApiUrl).toString();
@@ -79,18 +71,8 @@
   import OrgMenu from "../OrgMenu.svelte";
 
   const args = {
-    user: {
-      id: 4,
-    },
-    org: {
-      id: 1,
-      avatar_url: "https://cdn.muckrock.com/media/org_avatars/logo.png",
-      individual: false,
-      monthly_ai_credits: 10000,
-      number_ai_credits: 0,
-      name: "MuckRock",
-      slug: "muckrock",
-    },
+    user: getMeFixture,
+    org: orgListFixture.results[0],
   };
 </script>
 

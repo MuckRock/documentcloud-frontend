@@ -6,23 +6,37 @@
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Button from "../../../common/Button.svelte";
-  import Link from "../../../router/Link.svelte";
   import Credit from "../../../common/icons/Credit.svelte";
+  import CreditMeter from "../../../premium-credits/CreditMeter.svelte";
+  import Link from "../../../router/Link.svelte";
 
   import { Plug16, Organization16 } from "svelte-octicons";
   import { SQUARELET_URL } from "../../../api/auth";
+  import { Org } from "./types";
+  import MenuInsert from "../../../common/MenuInsert.svelte";
 
-  export let isPremium: boolean;
+  export let org: Org;
 
   // TODO: Handle flow to upgrade user to Pro account
-  function triggerPremiumUpgradeFlow() {
+  async function triggerPremiumUpgradeFlow() {
     alert("Upgrade to Premium!");
+  }
+
+  // TODO: Handle flow for purchasing premium credits
+  async function triggerCreditPurchaseFlow() {
+    alert("Purchase Credits!");
   }
 
   const dropdownId = "organization";
   function close() {
     closeDropdown(dropdownId);
   }
+
+  // TODO: include user plan information in payload
+  // @ts-expect-error unimplemented "plan" property
+  $: isPremium = org.plan === "Professional";
+  // TODO: revise credit data provided by organization
+  $: ({ monthly_credits, purchased_credits } = org);
 </script>
 
 <style>
@@ -44,17 +58,6 @@
   .learnMore:hover {
     opacity: 0.7;
   }
-  .menuInsert {
-    max-width: 16rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0.5rem;
-    padding: 1rem;
-    gap: 0.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius);
-  }
   .heading,
   .description {
     margin: 0;
@@ -70,9 +73,29 @@
   </span>
   <Menu>
     {#if isPremium}
-      <div class="menuInsert" />
+      <MenuInsert>
+        <CreditMeter
+          id="pro-credits"
+          label="Pro Allowance"
+          helpText="Credits will reset in 2 weeks"
+          value={monthly_credits.remaining}
+          max={monthly_credits.allowance}
+        />
+        <CreditMeter
+          id="purchased-credits"
+          label="Purchased Credits"
+          helpText="Purchased credits never expire and will only be used after you run out of monthly credits."
+          value={purchased_credits}
+        />
+        <Button
+          premium={true}
+          fullWidth={true}
+          label="Purchase Credits"
+          on:click={triggerCreditPurchaseFlow}
+        />
+      </MenuInsert>
     {:else}
-      <div class="menuInsert">
+      <MenuInsert>
         <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
         <p class="description">
           {$_("authSection.premiumUpgrade.description")}
@@ -88,7 +111,7 @@
             {$_("authSection.premiumUpgrade.docs")}
           </Link>
         </div>
-      </div>
+      </MenuInsert>
     {/if}
     <Link toUrl="#add-ons" color={true}>
       <MenuItem on:click={close}>

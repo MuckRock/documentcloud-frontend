@@ -35,7 +35,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    max-height: 19rem;
+    max-height: 14rem;
     overflow-y: auto;
   }
   .userListItem {

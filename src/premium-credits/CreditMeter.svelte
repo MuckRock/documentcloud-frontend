@@ -2,7 +2,7 @@
   import Price from "./Price.svelte";
 
   export let id: string;
-  export let max: number | undefined;
+  export let max: number | undefined = undefined;
   export let value: number;
   export let label: string;
   export let helpText: string;
@@ -16,6 +16,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
+    min-width: 16rem;
   }
   .text,
   .number {
@@ -33,7 +34,7 @@
     color: var(--gray);
   }
   .helpText {
-    margin: 0.5rem 0;
+    margin: 0.25rem 0 0;
     flex: 1 1 100%;
     font-size: 0.875em;
     color: var(--gray);

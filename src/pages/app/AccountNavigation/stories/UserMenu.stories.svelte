@@ -28,11 +28,10 @@
         avatar_url:
           "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
         individual: true,
-        monthly_ai_credits: 2000,
         name: "lasser.allan",
-        number_ai_credits: 0,
         slug: "lasserallan",
-        uuid: "9ae6ba3f-d5d4-456c-a7b7-0e83512dfd98",
+        monthly_ai_credits: 2000,
+        number_ai_credits: 0,
       },
       organizations: [40742, 125],
       admin_organizations: [40742],

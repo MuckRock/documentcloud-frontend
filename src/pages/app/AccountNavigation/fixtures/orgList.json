@@ -8,15 +8,24 @@
       "individual": false,
       "name": "MuckRock",
       "slug": "muckrock",
-      "monthly_ai_credits": 10000,
-      "number_ai_credits": 0
+      "monthly_credits": {
+        "allowance": 10000,
+        "remaining": 7500,
+        "reset_date": "11/06/2023"
+      },
+      "purchased_credits": 2500
     },
     {
       "id": 4,
       "avatar_url": "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
       "individual": true,
-      "monthly_ai_credits": 2000,
-      "number_ai_credits": 0,
+      "plan": "Professional",
+      "monthly_credits": {
+        "allowance": 2000,
+        "remaining": 2000,
+        "reset_date": "11/06/2023"
+      },
+      "purchased_credits": 0,
       "name": "lasser.allan",
       "slug": "lasserallan"
     }

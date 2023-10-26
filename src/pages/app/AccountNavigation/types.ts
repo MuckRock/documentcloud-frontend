@@ -5,6 +5,16 @@ export interface Org {
   name: string;
   avatar_url: string;
   individual: boolean;
+  monthly_credits: {
+    allowance: number;
+    remaining: number;
+    reset_date: string;
+  };
+  purchased_credits: number;
+}
+
+export interface IndividualOrg extends Org {
+  individual: true;
 }
 
 export interface User {

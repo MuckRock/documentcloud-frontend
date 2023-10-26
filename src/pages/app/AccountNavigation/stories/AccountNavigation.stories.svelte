@@ -16,6 +16,14 @@
     noOrgs: rest.get(mockUrl, (req, res, ctx) =>
       res(ctx.json({ ...getMeFixture, organization: "4" })),
     ),
+    orgAdmin: rest.get(mockUrl, (req, res, ctx) =>
+      res(
+        ctx.json({
+          ...getMeFixture,
+          admin_organizations: [...getMeFixture.admin_organizations, 1],
+        }),
+      ),
+    ),
     loading: rest.get(mockUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
     error: rest.get(mockUrl, (req, res, ctx) =>
       res(ctx.status(404, "Not Found"), ctx.json({ detail: "Not found." })),
@@ -40,7 +48,22 @@
 </Template>
 
 <Story
-  name="Success"
+  name="Pro User, Org Admin"
+  parameters={{
+    msw: {
+      handlers: [
+        mockGetMe.orgAdmin,
+        mockGetOrg.data,
+        mockInMyOrg.data,
+        mockGetOrgsList.data,
+        mockChangeOrg,
+      ],
+    },
+  }}
+/>
+
+<Story
+  name="Pro User, Org Member"
   parameters={{
     msw: {
       handlers: [
@@ -53,6 +76,30 @@
     },
   }}
 />
+
+<Story
+  name="Pro User, No Orgs"
+  parameters={{
+    msw: {
+      handlers: [mockGetMe.noOrgs, mockGetOrg.data, mockGetOrgsList.empty],
+    },
+  }}
+/>
+
+<Story
+  name="Free User, No Orgs"
+  parameters={{
+    msw: {
+      handlers: [mockGetMe.noOrgs, mockGetOrg.free, mockGetOrgsList.empty],
+    },
+  }}
+/>
+
+<Story
+  name="Signed Out"
+  parameters={{ msw: { handlers: [mockGetMe.error] } }}
+/>
+
 <Story
   name="Loading"
   parameters={{
@@ -62,18 +109,6 @@
         mockGetOrgsList.loading,
         mockInMyOrg.loading,
       ],
-    },
-  }}
-/>
-<Story
-  name="Signed Out"
-  parameters={{ msw: { handlers: [mockGetMe.error] } }}
-/>
-<Story
-  name="No Orgs"
-  parameters={{
-    msw: {
-      handlers: [mockGetMe.noOrgs, mockGetOrg.data, mockGetOrgsList.empty],
     },
   }}
 />
