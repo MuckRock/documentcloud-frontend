@@ -114,7 +114,7 @@
               badgeColor="var(--premium)"
               labelColor="var(--darkgray)"
             >
-              <Credit badge slot="icon" />
+              <Credit badge slot="icon" color="var(--darkgray)" />
             </Badge></span
           >
         {/if}
