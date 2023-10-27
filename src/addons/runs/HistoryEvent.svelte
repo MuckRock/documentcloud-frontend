@@ -15,6 +15,7 @@
     comment: string;
     created_at: string;
     updated_at: string;
+    // TODO: Add credits_spent to run payload
     credits_spent?: number;
   }
 </script>

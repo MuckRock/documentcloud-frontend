@@ -218,3 +218,25 @@ export async function inMyOrg(orgId, myId) {
   // Remove me from the user list
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
 }
+
+// TODO: Provide plan information on org
+export function isPremiumOrg(org) {
+  if (!org) return null;
+  return !org.individual || org.plan === "Professional";
+}
+
+// TODO: Provide more detailed credits information on org
+export function getCreditBalance(org) {
+  if (!org) return null;
+  return org.monthly_credits.remaining + org.purchased_credits;
+}
+
+// TODO: Handle flow to upgrade user to Pro account
+export async function triggerPremiumUpgradeFlow() {
+  alert("Upgrade to Premium!");
+}
+
+// TODO: Handle flow for purchasing premium credits
+export async function triggerCreditPurchaseFlow() {
+  alert("Purchase Credits!");
+}

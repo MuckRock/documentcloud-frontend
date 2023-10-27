@@ -17,6 +17,7 @@ export interface AddOnListItem {
   active: boolean;
   featured: boolean;
   default: boolean;
+  // TODO: Add `premium` flag and `premium_cost` to add-on data
   premium?: boolean;
   premium_cost?: {
     amount: number;

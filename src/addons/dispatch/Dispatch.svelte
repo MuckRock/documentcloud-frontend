@@ -14,12 +14,17 @@
   import Selection from "./Selection.svelte";
   import ScheduledInset from "./ScheduledInset.svelte";
   import { eventValues, schedules } from "../runs/ScheduledEvent.svelte";
-
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
   import { pushToast } from "../../common/Toast.svelte";
   import { runs } from "../progress/AddonRun.svelte";
   import Premium from "./Premium.svelte";
+
+  import {
+    orgsAndUsers,
+    isPremiumOrg,
+    getCreditBalance,
+  } from "../../manager/orgsAndUsers";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -40,6 +45,10 @@
   $: if (!visible) {
     reset();
   }
+
+  $: isPremiumUser = isPremiumOrg($orgsAndUsers?.me?.organization);
+  $: creditBalance = getCreditBalance($orgsAndUsers?.me?.organization);
+  $: disablePremium = addon.premium && (!isPremiumUser || creditBalance === 0);
 
   onMount(() => {
     if (event) {
@@ -296,14 +305,22 @@
           documents={new Set(addon.parameters.documents)}
         />
 
-        <Premium slot="premium" {addon} />
+        <Premium slot="premium" {addon} {isPremiumUser} {creditBalance} />
 
         <div slot="controls" class="controls">
           <div class="primary">
             {#if event}
-              <Button type="submit" label={$_("dialog.save")} />
+              <Button
+                type="submit"
+                label={$_("dialog.save")}
+                disabled={disablePremium}
+              />
             {:else}
-              <Button type="submit" label={$_("dialog.dispatch")} />
+              <Button
+                type="submit"
+                label={$_("dialog.dispatch")}
+                disabled={disablePremium}
+              />
             {/if}
           </div>
           <div class="secondary">

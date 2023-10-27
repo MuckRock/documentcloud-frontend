@@ -16,28 +16,21 @@
   import { SQUARELET_URL } from "../../../api/auth";
   import { Org } from "./types";
   import MenuInsert from "../../../common/MenuInsert.svelte";
+  import {
+    isPremiumOrg,
+    triggerCreditPurchaseFlow,
+    triggerPremiumUpgradeFlow,
+  } from "../../../manager/orgsAndUsers";
 
   export let org: Org;
-
-  // TODO: Handle flow to upgrade user to Pro account
-  async function triggerPremiumUpgradeFlow() {
-    alert("Upgrade to Premium!");
-  }
-
-  // TODO: Handle flow for purchasing premium credits
-  async function triggerCreditPurchaseFlow() {
-    alert("Purchase Credits!");
-  }
 
   const dropdownId = "organization";
   function close() {
     closeDropdown(dropdownId);
   }
 
-  // TODO: include user plan information in payload
-  // @ts-expect-error unimplemented "plan" property
-  $: isPremium = org.plan === "Professional";
-  // TODO: revise credit data provided by organization
+  $: isPremium = isPremiumOrg(org);
+  // TODO: revisit credit data structure provided by organization (in template below)
   $: ({ monthly_credits, purchased_credits } = org);
 </script>
 

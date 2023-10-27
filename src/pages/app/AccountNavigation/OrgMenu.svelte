@@ -8,9 +8,9 @@
   import Loader from "../../../common/Loader.svelte";
   import { User, Org } from "./types";
   import OrgMemberList from "./OrgMemberList.svelte";
+  import { changeActive } from "../../../manager/orgsAndUsers";
   import {
     getOrganizationsByIds,
-    changeActiveOrg,
     getOrganization,
   } from "../../../api/orgAndUser";
   import OrgPicker from "./OrgPicker.svelte";
@@ -20,6 +20,7 @@
     formatResetDate,
   } from "../../../premium-credits/CreditMeter.svelte";
   import Button from "../../../common/Button.svelte";
+  import { triggerCreditPurchaseFlow } from "../../../manager/orgsAndUsers";
 
   export let user: User;
   export let org: Org;
@@ -36,17 +37,14 @@
   }
 
   async function changeOrg(id) {
-    changeActiveOrg(id);
+    changeActive(id);
     getOrgPromise = getOrg(id);
-  }
-
-  // TODO: Handle flow for purchasing premium credits
-  async function triggerCreditPurchaseFlow() {
-    alert("Purchase Credits!");
   }
 
   let getOrgPromise = getOrg(org.id);
   let listOrgsPromise = listUserOrgs(user);
+
+  // TODO: revisit credit data structure provided by organization (in template below)
 </script>
 
 <style>

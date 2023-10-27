@@ -6,13 +6,15 @@
   import Credit from "../../common/icons/Credit.svelte";
   import Price from "../../premium-credits/Price.svelte";
   import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
+  import {
+    triggerCreditPurchaseFlow,
+    triggerPremiumUpgradeFlow,
+  } from "../../manager/orgsAndUsers";
 
   export let addon: AddOnListItem;
 
-  // TODO: Load premium user status; if not premium, show upgrade tout
-  export let isPremiumUser: boolean = true;
-  // TODO: Load credit balance from connected pro/org account
-  export let creditBalance: number = 7000;
+  export let isPremiumUser: boolean;
+  export let creditBalance: number;
 
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
@@ -43,16 +45,6 @@
       numVal = creditBalance;
     }
     spendingLimit = numVal;
-  }
-
-  function triggerPremiumUpgradeFlow() {
-    // TODO: Trigger the premium account upgrade flow
-    alert("Upgrade to premium?");
-  }
-
-  function triggerCreditPurchaseFlow() {
-    // TODO: Trigger the credit purchase flow
-    alert("Purchase credits?");
   }
 </script>
 

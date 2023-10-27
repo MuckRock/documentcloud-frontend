@@ -16,8 +16,14 @@
   <Premium {...args} />
 </Template>
 
-<Story name="With Premium User" args={{ addon: addons[7] }} />
-<Story name="Without Credits" args={{ addon: addons[7], creditBalance: 0 }} />
+<Story
+  name="With Premium User"
+  args={{ addon: addons[7], isPremiumUser: true, creditBalance: 7000 }}
+/>
+<Story
+  name="Without Credits"
+  args={{ addon: addons[7], isPremiumUser: true, creditBalance: 0 }}
+/>
 <Story
   name="With Free User"
   args={{ addon: addons[7], isPremiumUser: false }}
