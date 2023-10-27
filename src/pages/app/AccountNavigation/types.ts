@@ -15,6 +15,7 @@ export interface Org {
 
 export interface IndividualOrg extends Org {
   individual: true;
+  plan: "Free" | "Professional";
 }
 
 export interface User {
