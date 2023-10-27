@@ -31,11 +31,12 @@
     gap: 1rem;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 1rem 0.5rem 0.75rem;
     font-size: 1rem;
     font-family: "Source Sans Pro", sans-serif;
     user-select: none;
     white-space: nowrap;
+    box-sizing: border-box;
   }
 
   .item .label {
