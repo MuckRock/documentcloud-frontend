@@ -3,7 +3,8 @@
   import { _ } from "svelte-i18n";
   import { ClockFill16 } from "svelte-octicons";
 
-  import { pinned, type AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import { pinned } from "../AddOnPin.svelte";
+  import type { AddOnListItem } from "../types.ts";
   import ListItem from "./ListItem.svelte";
   import AddonListItem from "./AddonListItem.svelte";
   import { baseApiUrl } from "../../api/base.js";

@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import { onMount } from "svelte";
 
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
   import ScheduledEvent, { type Event } from "../runs/ScheduledEvent.svelte";
 
   import { baseApiUrl } from "../../api/base.js";

@@ -1,13 +1,14 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
   import BackArrow from "../../common/icons/BackArrow.svelte";
   import Button from "../../common/Button.svelte";
   import GitHubIcon from "svelte-octicons/lib/MarkGithub16.svelte";
   import ShareIcon from "svelte-octicons/lib/Share16.svelte";
 
   import { pushToast } from "../../common/Toast.svelte";
+  import AddOnPin from "../AddOnPin.svelte";
 
   export let addon: AddOnListItem;
 
@@ -52,6 +53,14 @@
   }
   .name {
     flex: 1 1 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .pin {
+    flex: 0 1 auto;
+  }
+  .name h2 {
     margin: 0;
   }
   .metadata {
@@ -104,7 +113,10 @@
     {$_("addonDispatchDialog.backButton")}
   </Button>
 
-  <h2 class="name">{addon.name}</h2>
+  <div class="name">
+    <span class="pin"><AddOnPin {addon} size={1.25} /></span>
+    <h2>{addon.name}</h2>
+  </div>
 
   <dl class="metadata">
     <div class="author">

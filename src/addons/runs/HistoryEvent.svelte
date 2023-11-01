@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import Button from "../../common/Button.svelte";
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types.ts";
   // https://api.www.documentcloud.org/api/addon_runs/?expand=addon
   export interface Run {
     uuid: string;

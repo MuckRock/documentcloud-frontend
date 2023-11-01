@@ -34,6 +34,15 @@
     res(ctx.status(400, "Something went wrong")),
   );
 
+  const mockPinUrl = new URL("/api/addons/:id", baseApiUrl).toString();
+  const pinSuccess = rest.all(mockPinUrl, (req, res, ctx) => res(ctx.json({})));
+  const pinLoading = rest.all(mockPinUrl, (req, res, ctx) =>
+    res(ctx.delay("infinite")),
+  );
+  const pinError = rest.all(mockPinUrl, (req, res, ctx) =>
+    res(ctx.status(400, "Something went wrong")),
+  );
+
   let args = {
     visible: true,
     addon: null,
@@ -54,17 +63,17 @@
 <Story
   name="Success"
   args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [scheduleSuccess, sendSuccess] } }}
+  parameters={{ msw: { handlers: [scheduleSuccess, sendSuccess, pinSuccess] } }}
 />
 <Story
   name="Error"
   args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [scheduleError, sendError] } }}
+  parameters={{ msw: { handlers: [scheduleError, sendError, pinError] } }}
 />
 <Story
   name="Loading"
   args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [scheduleLoading, sendLoading] } }}
+  parameters={{ msw: { handlers: [scheduleLoading, sendLoading, pinLoading] } }}
 />
 
 <Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />
