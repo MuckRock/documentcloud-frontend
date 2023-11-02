@@ -7,8 +7,8 @@
   export let value: number = defaultValue;
   export let required: boolean = false;
   export let description: string = "";
-  export let min: string | undefined = undefined;
-  export let max: string | undefined = undefined;
+  export let minimum: string | undefined = undefined;
+  export let maximum: string | undefined = undefined;
   export let inline = false;
 </script>
 
@@ -28,7 +28,7 @@
     on:input
     on:focus
     on:blur
-    {min}
-    {max}
+    min={minimum}
+    max={maximum}
   />
 </Field>
