@@ -1,6 +1,6 @@
 <script context="module">
   import { writable } from "svelte/store";
-  export const filter = writable("all");
+  export const filter = writable("featured");
   // TODO declare hardcoded values in a centralized place
   export const FILTERS = [
     ["all", "All"],
