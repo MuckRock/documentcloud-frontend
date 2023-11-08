@@ -9,7 +9,7 @@ import {
   startSearch,
   clearSearch,
   simpleCancelActions,
-} from "./layout";
+} from "./layout.js";
 
 const LAYOUT = {
   docMargin: 40, // margin from top to first page, bottom to last

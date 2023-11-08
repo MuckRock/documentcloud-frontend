@@ -1,4 +1,10 @@
-const baseConfig = require("./webpack.base.config");
+import path from "node:path";
+import url from "node:url";
+
+import baseConfig from "./webpack.base.config.js";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const targets = [
   ["./src/embed/enhance.js", "/public/embed", "enhance.js"] /* page embeds */,
@@ -15,7 +21,7 @@ const targets = [
   ] /* was search embed, but now only project embeds */,
 ];
 
-module.exports = targets.map(([src, outputPath, outputFilename]) => ({
+const configs = targets.map(([src, outputPath, outputFilename]) => ({
   ...baseConfig,
   entry: {
     bundle: [src],
@@ -43,3 +49,5 @@ module.exports = targets.map(([src, outputPath, outputFilename]) => ({
   },
   watch: baseConfig.mode !== "production",
 }));
+
+export default configs;
