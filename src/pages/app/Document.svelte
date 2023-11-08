@@ -89,7 +89,10 @@
         <span class="valign">{document.title}</span>
         {#if !embed}
           <span class="valign marginleft">
-            <AccessIcon {document} />
+            <AccessIcon
+              access={document.access}
+              editable={document.editAccess}
+            />
           </span>
         {/if}
       </h2>

@@ -200,7 +200,11 @@
         {/if}
         {#if document?.editAccess}
           <div>
-            <AccessIcon {document} showText={true} />
+            <AccessIcon
+              access={document.access}
+              editable={document.editAccess}
+              showText={true}
+            />
           </div>
         {/if}
         {#if ocrEngine}
