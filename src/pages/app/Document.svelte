@@ -26,6 +26,7 @@
   import pencilSvg from "@/assets/pencil.svg?raw";
 
   import { pageImageUrl } from "@/api/viewer.js";
+  import RevisionIcon from "../../common/RevisionIcon.svelte";
 
   export let document;
   export let embed = false;
@@ -90,31 +91,34 @@
     />
 
     <div class="info">
-      <h2>
-        <span class="valign">{document.title}</span>
+      <div class="document-title-row">
+        <h2>{document.title}</h2>
         {#if !embed}
-          <span class="valign marginleft">
+          <div class="document-title-row-actions">
             <AccessIcon
               access={document.access}
               editable={document.editAccess}
               on:click={() => openAccess([document])}
             />
-          </span>
+            <RevisionIcon revisions={document.revisions} />
+          </div>
         {/if}
-      </h2>
+      </div>
       {#if !embed}
-        <h3>
-          {#if document.pageCount > 0}
-            {$_("document.pageCount", { values: { n: document.pageCount } })} -
-          {/if}
-          {#if document.source != null && document.source.trim().length > 0}
-            {$_("document.source")}: {document.source} -
-          {/if}
-          {#if document.userName !== null}
-            {document.userOrgString} -
-          {/if}
-          {$date(document.createdAt, { format: "medium" })}
-        </h3>
+        <div class="document-meta-row">
+          <h3>
+            {#if document.pageCount > 0}
+              {$_("document.pageCount", { values: { n: document.pageCount } })} -
+            {/if}
+            {#if document.source != null && document.source.trim().length > 0}
+              {$_("document.source")}: {document.source} -
+            {/if}
+            {#if document.userName !== null}
+              {document.userOrgString} -
+            {/if}
+            {$date(document.createdAt, { format: "medium" })}
+          </h3>
+        </div>
       {/if}
       {#if document.description != null && document.description.trim().length > 0}
         <div class="description" class:embeddescription={embed}>
@@ -477,6 +481,28 @@
       :global(.content) {
         max-height: 135px;
       }
+    }
+  }
+
+  .document-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1em;
+  }
+
+  .document-title-row h2 {
+    flex: 1 1 auto;
+  }
+
+  .document-title-row-actions {
+    display: flex;
+    gap: 0.5em 0;
+    flex-direction: row;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .document-title-row-actions {
+      flex-direction: column;
     }
   }
 </style>
