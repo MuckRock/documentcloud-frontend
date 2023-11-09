@@ -33,6 +33,8 @@ const session = axios.create({
   withCredentials: cookiesEnabled,
 });
 
+session.cookiesEnabled = cookiesEnabled;
+
 session.interceptors.response.use(
   (response) => {
     // Keep response unchanged
@@ -108,11 +110,14 @@ session.getStatic = async function getStatic(url) {
       result = await axios.get(redirect).then((r) => r.data);
     }
   } else {
-      result = await axios.get(url).then((r) => r.data);
+    result = await axios.get(url).then((r) => r.data);
   }
 
   sessionCache.cache(url, result);
   return result;
 };
+
+// debug
+window.session = session;
 
 export default session;
