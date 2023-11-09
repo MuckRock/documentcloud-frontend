@@ -106,18 +106,25 @@
       </div>
       {#if !embed}
         <div class="document-meta-row">
-          <h3>
-            {#if document.pageCount > 0}
-              {$_("document.pageCount", { values: { n: document.pageCount } })} -
-            {/if}
-            {#if document.source != null && document.source.trim().length > 0}
-              {$_("document.source")}: {document.source} -
-            {/if}
-            {#if document.userName !== null}
-              {document.userOrgString} -
-            {/if}
-            {$date(document.createdAt, { format: "medium" })}
-          </h3>
+          {#if document.pageCount > 0}
+            <p class="document-meta pageCount">
+              {$_("document.pageCount", { values: { n: document.pageCount } })}
+            </p>
+          {/if}
+          {#if document.source != null && document.source.trim().length > 0}
+            <p class="document-meta source">
+              {$_("document.source")}: {document.source}
+            </p>
+          {/if}
+          {#if document.userName !== null}
+            <p class="document-meta userName">{document.userOrgString}</p>
+          {/if}
+          <time
+            class="document-meta createdAt"
+            datetime={document.createdAt.toISOString()}
+            title={document.createdAt.toISOString()}
+            >{$date(document.createdAt, { format: "medium" })}</time
+          >
         </div>
       {/if}
       {#if document.description != null && document.description.trim().length > 0}
@@ -307,18 +314,11 @@
 
 <style lang="scss">
   h2 {
-    font-size: $normal;
+    font-size: var(--normal);
+    font-weight: 600;
     padding-top: 10px;
     padding-bottom: 6px;
     word-break: break-word;
-    margin: 2px 0;
-    padding: 0;
-  }
-
-  h3 {
-    font-size: $small;
-    font-weight: normal;
-    color: $gray;
     margin: 2px 0;
     padding: 0;
   }
@@ -472,18 +472,6 @@
     height: 10px;
   }
 
-  .description {
-    margin: 8px 0 -8px 0;
-
-    &.embeddescription {
-      margin-bottom: 20px;
-
-      :global(.content) {
-        max-height: 135px;
-      }
-    }
-  }
-
   .document-title-row {
     display: flex;
     gap: 1em;
@@ -501,11 +489,38 @@
     height: 1.5em;
   }
 
+  .document-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1em;
+  }
+
+  .document-meta {
+    color: var(--gray);
+    font-size: var(--small);
+    line-height: 1.5;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+  }
+
   @media only screen and (max-width: 720px) {
     .document-title-row-actions {
       flex-direction: column;
       height: auto;
       padding: 0.25em 0;
+    }
+  }
+
+  .description {
+    margin: 8px 0 -8px 0;
+
+    &.embeddescription {
+      margin-bottom: 20px;
+
+      :global(.content) {
+        max-height: 135px;
+      }
     }
   }
 </style>
