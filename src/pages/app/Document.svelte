@@ -100,7 +100,7 @@
               editable={document.editAccess}
               on:click={() => openAccess([document])}
             />
-            <RevisionIcon revisions={document.revisions} />
+            <RevisionIcon revisions={document.revisions} showCount />
           </div>
         {/if}
       </div>
@@ -486,7 +486,6 @@
 
   .document-title-row {
     display: flex;
-    align-items: flex-start;
     gap: 1em;
   }
 
@@ -498,11 +497,15 @@
     display: flex;
     gap: 0.5em 0;
     flex-direction: row;
+    align-items: center;
+    height: 1.5em;
   }
 
   @media only screen and (max-width: 720px) {
     .document-title-row-actions {
       flex-direction: column;
+      height: auto;
+      padding: 0.25em 0;
     }
   }
 </style>

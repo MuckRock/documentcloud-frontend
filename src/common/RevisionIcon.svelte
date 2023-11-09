@@ -37,6 +37,7 @@
 
   .count {
     font-size: 12px;
+    font-weight: 600;
     color: var(--viewerLink, #004276);
     vertical-align: middle;
     margin-left: 2px;
