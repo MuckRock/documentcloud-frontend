@@ -33,8 +33,6 @@ const session = axios.create({
   withCredentials: cookiesEnabled,
 });
 
-session.cookiesEnabled = cookiesEnabled;
-
 session.interceptors.response.use(
   (response) => {
     // Keep response unchanged
@@ -116,8 +114,5 @@ session.getStatic = async function getStatic(url) {
   sessionCache.cache(url, result);
   return result;
 };
-
-// debug
-window.session = session;
 
 export default session;
