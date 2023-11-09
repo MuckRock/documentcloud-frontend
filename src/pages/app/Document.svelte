@@ -16,7 +16,8 @@
     unselectDocument,
     editData,
     openAccess,
-  } from "@/manager/layout.js";
+    openRevisions,
+  } from "../../manager/layout.js";
   import { removeDocument, selectDocument } from "@/manager/documents.js";
   import { projects } from "@/manager/projects.js";
   import { projectUrl, dataUrl } from "@/search/search.js";
@@ -100,7 +101,11 @@
               editable={document.editAccess}
               on:click={() => openAccess([document])}
             />
-            <RevisionIcon revisions={document.revisions} showCount />
+            <RevisionIcon
+              revisions={document.revisions}
+              showCount
+              on:click={() => openRevisions([document])}
+            />
           </div>
         {/if}
       </div>

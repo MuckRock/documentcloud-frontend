@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  interface Revision {
+  export interface Revision {
     version: number;
     user: number;
     created_at: string;

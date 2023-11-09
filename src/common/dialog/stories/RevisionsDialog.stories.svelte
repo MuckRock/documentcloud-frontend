@@ -2,28 +2,25 @@
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
-  import RevisionIcon from "../RevisionIcon.svelte";
+  import RevisionsDialog from "../RevisionsDialog.svelte";
 
-  import documentFixture from "../../pages/app/test/fixtures/document.json";
+  import documentFixture from "../../../pages/app/test/fixtures/document.json";
 
   const args = {
     revisions: documentFixture.revisions,
-    showCount: true,
   };
-
-  const handleClick = action("click");
 </script>
 
 <Meta
-  title="Common / Revision Icon"
-  component={RevisionIcon}
+  title="Dialogs / Revisions"
+  component={RevisionsDialog}
   parameters={{
     layout: "centered",
   }}
 />
 
 <Template let:args>
-  <RevisionIcon {...args} on:click={handleClick} />
+  <RevisionsDialog {...args} />
 </Template>
 
 <Story name="With Revisions" {args} />

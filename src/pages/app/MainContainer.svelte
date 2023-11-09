@@ -16,6 +16,7 @@
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog.svelte";
   import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog.svelte";
   import ReprocessDialog from "@/common/dialog/ReprocessDialog.svelte";
+  import RevisionsDialog from "../../common/dialog/RevisionsDialog.svelte";
   import SearchTipsDialog from "@/common/dialog/SearchTipsDialog.svelte";
   import UploadEmailDialog from "@/common/dialog/UploadEmailDialog.svelte";
 
@@ -40,7 +41,8 @@
     hideSearchTips,
     hideDiagnostics,
     hideMailkey,
-  } from "@/manager/layout.js";
+    hideRevisions,
+  } from "../../manager/layout.js";
   import { confirmDialog, hideConfirm } from "@/manager/confirmDialog.js";
   import { documents } from "@/manager/documents.js";
 
@@ -64,6 +66,8 @@
   <Modal component={MetaDialog} on:close={hideMeta} />
 {:else if $layout.accessOpen}
   <Modal component={AccessDialog} on:close={hideAccess} />
+{:else if $layout.viewDocumentRevisions}
+  <Modal component={RevisionsDialog} on:close={hideRevisions} />
 {:else if $layout.ownerOpen}
   <Modal component={OwnerDialog} on:close={hideOwner} />
 {:else if $layout.dataOpen}
