@@ -1,9 +1,16 @@
-module.exports = {
+/** @type {import('jest').Config} */
+export default {
+  extensionsToTreatAsEsm: [".svelte"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   moduleFileExtensions: ["js", "svelte"],
   modulePaths: ["src"],
-  transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
   setupFiles: ["dotenv/config"],
+  testEnvironment: "jsdom",
+  transform: {
+    "^.+\\.svelte$": "svelte-jester",
+  },
+
+  transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
 };
