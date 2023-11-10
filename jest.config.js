@@ -9,7 +9,7 @@ export default {
   setupFiles: ["dotenv/config"],
   testEnvironment: "jsdom",
   transform: {
-    "^.+\\.svelte$": "svelte-jester",
+    "^.+\\.svelte$": ["svelte-jester", { preprocess: true }],
   },
 
   transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
