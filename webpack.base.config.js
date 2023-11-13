@@ -62,6 +62,7 @@ export default wrap({
         __dirname,
         "node_modules/magic-string/dist/magic-string.es.mjs",
       ),
+      svue: path.resolve(__dirname, "node_modules/svue/dist/svue.js"),
     },
     conditionNames: ["svelte", "browser"],
     extensions: [".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
