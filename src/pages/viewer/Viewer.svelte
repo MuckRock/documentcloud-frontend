@@ -84,7 +84,7 @@
     if (!$viewer.embed) {
       await initOrgsAndUsers();
 
-      plausible("pageview", { u: obscureURL() });
+      window.plausible && plausible("pageview", { u: obscureURL() });
     }
   });
 
