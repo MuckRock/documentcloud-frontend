@@ -12,8 +12,9 @@ const config = {
     bundle: ["./src/main.js"],
   },
   output: {
-    path: __dirname + "/public",
-    filename: "[name].[chunkhash].js",
+    path: path.join(__dirname, "public"),
+    filename: "assets/[name].[chunkhash].js",
+    chunkFilename: "assets/[name].[chunkhash].js",
     publicPath: "/",
   },
   plugins: [...baseConfig.plugins],

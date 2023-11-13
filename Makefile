@@ -72,4 +72,5 @@ browser-test-debug:
 
 clean:
 	# delete Webpack chunks
-	rm -f public/[0-9]*.*.* public/bundle.*.js public/bundle.*.css public/bundle.*.txt
+	rm -f public/index.html public/[0-9]*.*.* public/bundle.*.js public/bundle.*.css public/bundle.*.txt public/*.map public/*.*.js
+	rm -rf public/assets public/notes public/viewer public/embed
