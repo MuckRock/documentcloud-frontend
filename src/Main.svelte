@@ -45,8 +45,10 @@
 
 <svelte:window on:popstate={handleBackNav} />
 
-{#if $isLoading}
-  Please wait...
-{:else if $router.resolvedRoute != null}
-  <svelte:component this={routeComponent} {...routeProps} />
-{/if}
+<div>
+  {#if $isLoading}
+    Please wait...
+  {:else if $router.resolvedRoute != null}
+    <svelte:component this={routeComponent} {...routeProps} />
+  {/if}
+</div>
