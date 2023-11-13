@@ -1,4 +1,4 @@
-import session, { cookiesEnabled } from "./session";
+import session, { cookiesEnabled } from "./session.js";
 import { USER_EXPAND, ORG_EXPAND, DEFAULT_EXPAND } from "./common.js";
 import { queryBuilder } from "@/util/url.js";
 import { grabAllPages } from "@/util/paginate.js";

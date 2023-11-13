@@ -108,7 +108,7 @@ session.getStatic = async function getStatic(url) {
       result = await axios.get(redirect).then((r) => r.data);
     }
   } else {
-      result = await axios.get(url).then((r) => r.data);
+    result = await axios.get(url).then((r) => r.data);
   }
 
   sessionCache.cache(url, result);
