@@ -29,6 +29,7 @@ public/assets/
 # Local test env file
 .env.test
 .env.sentry-build-plugin
+playwright-report
 
 .vscode
 

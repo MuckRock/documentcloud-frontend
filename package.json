@@ -55,6 +55,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.39.0",
     "@storybook/addon-essentials": "^7.4.5",
     "@storybook/addon-interactions": "^7.4.5",
     "@storybook/addon-links": "^7.4.5",
@@ -83,16 +84,17 @@
     "build-staging": "cross-env NODE_ENV=staging webpack",
     "build-serve": "cross-env NODE_ENV=production webpack && serve public -l 80 --single",
     "build-analyze": "cross-env NODE_ENV=production-analyze webpack",
+    "build-storybook": "storybook build",
     "dev": "concurrently \"npm:dev-app\" \"npm:dev-embed\"",
     "dev-app": "cross-env NODE_ENV=development SUPPRESS_WARNINGS=1 webpack serve --config webpack.app.config.js",
     "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "serve": "serve public -l 80 --single",
-    "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js",
-    "watch": "concurrently npm:serve npm:dev-embed npm:watch-app",
-    "test-watch": "jest --watchAll",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test-watch": "jest --watchAll",
+    "test:browser": "playwright test",
+    "watch": "concurrently npm:serve npm:dev-embed npm:watch-app",
+    "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js"
   },
   "engine": 18,
   "browserslist": "> 0.25%, not dead",
