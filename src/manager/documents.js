@@ -151,7 +151,7 @@ export const documents = new Svue({
       return getDocumentsByCondition((doc) => doc.readable, documents);
     },
     numProcessing(pending) {
-      return pending && pending.length;
+      return (pending && pending.length) || 0;
     },
     rawDoneProcessing(numProcessing) {
       // Wait a second before modulating value
