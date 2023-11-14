@@ -151,7 +151,7 @@ export const documents = new Svue({
       return getDocumentsByCondition((doc) => doc.readable, documents);
     },
     numProcessing(pending) {
-      return pending.length;
+      return pending && pending.length;
     },
     rawDoneProcessing(numProcessing) {
       // Wait a second before modulating value
@@ -159,7 +159,7 @@ export const documents = new Svue({
     },
 
     processingProgress(pending) {
-      if (pending.length == 0) return 1;
+      if (!pending || pending.length == 0) return 1;
 
       // Operate on documents with non-null progresses
       let totalPages = 0;
@@ -558,7 +558,7 @@ async function updatePending() {
   if (documents.staticMode) return;
 
   const pending = await wrapSeparate(null, layout, () => getPendingProgress());
-  for (let i = 0; i < pending.length; i++) {
+  for (let i = 0; i < (pending || []).length; i++) {
     const pendingDoc = pending[i];
     const existingDoc = documents.pendingMap[pendingDoc.doc_id];
     if (existingDoc != null) {
