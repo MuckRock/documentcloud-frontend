@@ -16,6 +16,8 @@ export default defineConfig({
   // Reporter to use
   reporter: "html",
 
+  workers: process.env.CI ? 1 : undefined,
+
   use: {
     // Base URL to use in actions like `await page.goto('/')`.
     baseURL: process.env.URL || "https://www.dev.documentcloud.org",
