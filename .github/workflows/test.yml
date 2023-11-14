@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [master]
 
-env:
-  NODE_ENV: production
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,4 +21,6 @@ jobs:
           node-version: "18.x"
       - run: npm ci
       - run: npm run build --if-present
+        env:
+          NODE_ENV: production
       - run: npm test
