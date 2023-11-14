@@ -118,7 +118,7 @@ export default wrap({
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].[contenthash].css",
+      filename: "assets/[name].[contenthash].css",
     }),
     new DotEnv({
       path: prod ? `.env.${environment}` : ".env",

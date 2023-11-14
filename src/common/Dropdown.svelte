@@ -79,7 +79,7 @@
 
   afterUpdate(() => {
     if (active && name) {
-      plausible("dropdown", { props: { name } });
+      window.plausible && plausible("dropdown", { props: { name } });
     }
   });
 </script>

@@ -21,6 +21,7 @@ public/node_modules_*
 public/embed/*
 public/notes/*
 public/viewer/*
+public/assets/
 
 # Netlify
 .netlify

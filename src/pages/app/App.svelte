@@ -120,7 +120,7 @@
         (window.plausible.q = window.plausible.q || []).push(arguments);
       };
 
-    plausible("pageview");
+    window.plausible && plausible("pageview");
     hashRoute();
 
     // debug
