@@ -300,7 +300,7 @@
         on:files={showUploadModal}
         disabled={embed || !$orgsAndUsers.loggedIn || !$orgsAndUsers.isVerified}
       >
-        {#if !$orgsAndUsers.loggedIn && $search.params.query === "" && !anonymousClosed}
+        {#if !$orgsAndUsers.loggedIn && $search.params?.query === "" && !anonymousClosed}
           <Anonymous bind:closed={anonymousClosed} />
         {:else}
           {#each $documents.documents as document (document.id)}
