@@ -69,6 +69,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "msw": "^1.2.3",
     "msw-storybook-addon": "^1.8.0",
+    "netlify-plugin-playwright-cache": "^0.0.1",
     "playwright": "^1.39.0",
     "prettier": "^3.0.2",
     "prettier-plugin-svelte": "^3.0.3",

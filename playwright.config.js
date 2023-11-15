@@ -27,12 +27,12 @@ export default defineConfig({
   },
 
   // Options specific to each project.
+  /*
   projects: [
     {
       name: "chromium",
       use: devices["Desktop Chrome"],
     },
-    /*
     {
       name: "firefox",
       use: devices["Desktop Firefox"],
@@ -49,6 +49,6 @@ export default defineConfig({
       name: "Mobile Safari",
       use: devices["iPhone 12"],
     },
-    */
   ],
+  */
 });
