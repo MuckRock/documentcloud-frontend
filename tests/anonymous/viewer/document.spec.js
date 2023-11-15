@@ -3,6 +3,7 @@
 import { test, expect } from "@playwright/test";
 
 test("test", async ({ page }) => {
+  console.log(page.url());
   // this is on staging; don't delete this document
   const title = "FINALSeasonal_allergies_pollen_and_mold_2023__EN_";
   const url =
