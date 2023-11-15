@@ -2,10 +2,16 @@
 
 export async function onSuccess({ utils }) {
   console.log("Installing Playwright dependencies");
-  await utils.run("playwright", ["install"]);
+  await utils.run("playwright", ["install"]).catch((err) => {
+    utils.build.failBuild(err);
+  });
 
   console.log("Running Playwright tests");
-  await utils.run("playwright", ["test"]);
+  result = await utils.run("playwright", ["test"]).catch((err) => {
+    utils.build.failBuild(err);
+  });
 
-  console.log("Done.");
+  utils.status.show({
+    title: "Playwright tests completed.",
+  });
 }

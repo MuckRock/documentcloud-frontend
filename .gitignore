@@ -30,6 +30,7 @@ public/assets/
 .env.test
 .env.sentry-build-plugin
 playwright-report
+test-results
 
 .vscode
 

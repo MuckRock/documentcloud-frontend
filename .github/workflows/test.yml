@@ -10,7 +10,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: "18.x"
       - run: npm ci
-      - run: npm run build --if-present
+      - run: npm run build
         env:
           NODE_ENV: production
       - run: npm test
