@@ -8,7 +8,7 @@ export async function onSuccess({ utils }) {
 
   console.log("Running Playwright tests");
   result = await utils.run("playwright", ["test"]).catch((err) => {
-    utils.build.failBuild(err);
+    utils.build.failPlugin(err);
   });
 
   utils.status.show({
