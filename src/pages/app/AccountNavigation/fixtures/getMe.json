@@ -5,16 +5,15 @@
   "name": "Allan Lasser",
   "organization": {
     "id": 1,
-    "avatar_url": "https://cdn.muckrock.com/media/org_avatars/logo.png",
+    "avatar_url": "https://squarelet-staging.s3.amazonaws.com/media/org_avatars/logo_uEHCMva.png",
     "individual": false,
     "name": "MuckRock",
     "slug": "muckrock",
-    "monthly_credits": {
-      "allowance": 10000,
-      "remaining": 7500,
-      "reset_date": "11/06/2023"
-    },
-    "purchased_credits": 2500
+    "monthly_credits": 5000,
+    "purchased_credits": 0,
+    "credit_reset_date": "2023-11-28",
+    "monthly_credit_allowance": 5000,
+    "plan": "Organization"
   },
   "organizations": [1, 4],
   "admin_organizations": [40742],

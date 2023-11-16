@@ -219,16 +219,14 @@ export async function inMyOrg(orgId, myId) {
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
 }
 
-// TODO: Provide plan information on org
 export function isPremiumOrg(org) {
   if (!org) return null;
   return !org.individual || org.plan === "Professional";
 }
 
-// TODO: Provide more detailed credits information on org
 export function getCreditBalance(org) {
   if (!org) return null;
-  return org.monthly_credits.remaining + org.purchased_credits;
+  return org.monthly_credits + org.purchased_credits;
 }
 
 // TODO: Handle flow to upgrade user to Pro account

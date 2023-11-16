@@ -14,7 +14,8 @@
 
   export let addon: AddOnListItem;
 
-  $: author = addon.author || addon.repository.split("/")[0];
+  $: author = addon.repository.split("/")[0];
+  $: isPremium = addon.parameters.categories?.includes("premium");
 
   async function onShare() {
     try {
@@ -119,7 +120,7 @@
   <div class="name">
     <span class="pin"><AddOnPin {addon} size={1.25} /></span>
     <h2>{addon.name}</h2>
-    {#if addon.premium}
+    {#if isPremium}
       <Badge
         label="Premium"
         badgeColor="var(--premium)"
@@ -136,9 +137,9 @@
     </div>
 
     <div class="categories">
-      {#if addon.categories}
+      {#if addon.parameters.categories}
         <dt>{$_("addonDispatchDialog.categories")}</dt>
-        {#each addon.categories as category}
+        {#each addon.parameters.categories as category}
           <dd>
             <a class="category" href={`#add-ons?categories=${category}`}>
               <slot>{category}</slot>

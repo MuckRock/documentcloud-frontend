@@ -10,11 +10,9 @@
   export let addon: AddOnListItem;
 
   $: description = addon.parameters?.description;
-  $: if (!addon?.author) {
-    addon.author = { name: addon?.repository?.split("/")[0] };
-  }
-
+  $: author = { name: addon?.repository?.split("/")[0] };
   $: url = `#add-ons/${addon.repository}`;
+  $: isPremium = addon.parameters.categories?.includes("premium");
 </script>
 
 <style>
@@ -94,20 +92,20 @@
         <h3 class="addon-name">{addon.name}</h3>
       </div>
       <div class="metadata">
-        {#if addon?.author?.name}
+        {#if author?.name}
           <p class="author">
             <a
               href="http://github.com/{addon.repository}"
               target="_blank"
               rel="noopener noreferrer"
-              title={$_("addonBrowserDialog.viewsource")}>{addon.author.name}</a
+              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
             >
           </p>
         {/if}
         {#if addon.usage}
           <AddOnPopularity useCount={addon.usage} />
         {/if}
-        {#if addon.premium}
+        {#if isPremium}
           <span class="badge"
             ><Badge
               label="Premium"

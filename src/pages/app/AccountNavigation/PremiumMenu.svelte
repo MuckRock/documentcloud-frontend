@@ -30,8 +30,12 @@
   }
 
   $: isPremium = isPremiumOrg(org);
-  // TODO: revisit credit data structure provided by organization (in template below)
-  $: ({ monthly_credits, purchased_credits } = org);
+  $: ({
+    monthly_credits,
+    monthly_credit_allowance,
+    purchased_credits,
+    credit_reset_date,
+  } = org);
 </script>
 
 <style>
@@ -74,11 +78,11 @@
           label={$_("authSection.credits.monthlyPro")}
           helpText={$_("authSection.credits.refreshOn", {
             values: {
-              date: formatResetDate(monthly_credits.reset_date, $locale),
+              date: formatResetDate(credit_reset_date, $locale),
             },
           })}
-          value={monthly_credits.remaining}
-          max={monthly_credits.allowance}
+          value={monthly_credits}
+          max={monthly_credit_allowance}
         />
         <CreditMeter
           id="purchased-credits"

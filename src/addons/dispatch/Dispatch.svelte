@@ -47,8 +47,9 @@
   }
 
   $: isPremiumUser = isPremiumOrg($orgsAndUsers?.me?.organization);
-  $: creditBalance = getCreditBalance($orgsAndUsers?.me?.organization);
-  $: disablePremium = addon.premium && (!isPremiumUser || creditBalance === 0);
+  $: creditBalance = getCreditBalance($orgsAndUsers?.me?.organization) ?? 0;
+  $: isPremiumAddon = addon.parameters.categories?.includes("premium");
+  $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
 
   onMount(() => {
     if (event) {

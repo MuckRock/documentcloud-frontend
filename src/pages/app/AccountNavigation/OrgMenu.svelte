@@ -43,8 +43,6 @@
 
   let getOrgPromise = getOrg(org.id);
   let listOrgsPromise = listUserOrgs(user);
-
-  // TODO: revisit credit data structure provided by organization (in template below)
 </script>
 
 <style>
@@ -104,14 +102,11 @@
             label={$_("authSection.credits.monthlyOrg")}
             helpText={$_("authSection.credits.refreshOn", {
               values: {
-                date: formatResetDate(
-                  activeOrg.monthly_credits.reset_date,
-                  $locale,
-                ),
+                date: formatResetDate(activeOrg.credit_reset_date, $locale),
               },
             })}
-            value={activeOrg.monthly_credits.remaining}
-            max={activeOrg.monthly_credits.allowance}
+            value={activeOrg.monthly_credits}
+            max={activeOrg.monthly_credit_allowance}
           />
           <CreditMeter
             id="purchased-credits"
@@ -121,7 +116,7 @@
           />
           {#if user.admin_organizations.includes(activeOrg.id)}
             <Button
-              premium={true}
+              premium
               fullWidth={true}
               label={$_("authSection.credits.purchaseCreditsButton")}
               on:click={triggerCreditPurchaseFlow}

@@ -106,6 +106,10 @@
         "required": ["access_level", "output_lang", "input_lang"],
         "documents": ["selected"],
         "categories": ["ai", "premium", "file"],
+        "cost": {
+          "unit": "character",
+          "amount": 75
+        },
         "properties": {
           "dry_run": {
             "type": "boolean",

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { handlePlural } from "../../util/string";
-  import type { AddOnListItem } from "../browser/AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types";
   import Button from "../../common/Button.svelte";
   import Credit from "../../common/icons/Credit.svelte";
   import Price from "../../premium-credits/Price.svelte";
@@ -19,7 +19,8 @@
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
 
-  const { amount, unit } = addon.premium_cost ?? {};
+  $: isPremium = addon.parameters.categories?.includes("premium");
+  const { amount, unit } = addon.parameters.cost ?? {};
   $: prettyCost = amount && unit ? handlePlural(amount, unit) : null;
 
   function toggleSpendingLimit(
@@ -136,7 +137,7 @@
   }
 </style>
 
-{#if addon.premium}
+{#if isPremium}
   {#if isPremiumUser}
     <fieldset class="premium">
       <legend>{$_("addonDispatchDialog.premium")}</legend>

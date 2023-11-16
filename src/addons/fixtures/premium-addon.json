@@ -1,0 +1,26 @@
+{
+  "id": 46,
+  "user": null,
+  "organization": null,
+  "access": "public",
+  "name": "Azure Document Intelligence OCR",
+  "repository": "MuckRock/documentcloud-azure-document-intelligence-ocr-addon",
+  "parameters": {
+    "cost": {
+      "unit": "page",
+      "amount": 1
+    },
+    "type": "object",
+    "title": "Azure Document Intelligence OCR",
+    "documents": ["selected"],
+    "categories": ["extraction", "premium"],
+    "properties": {},
+    "description": "<p>This Add-On uses Azure&rsquo;s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.</p>",
+    "instructions": ""
+  },
+  "created_at": "2023-09-18T17:09:58.097621Z",
+  "updated_at": "2023-11-15T16:04:34.442286Z",
+  "active": false,
+  "default": false,
+  "featured": false
+}

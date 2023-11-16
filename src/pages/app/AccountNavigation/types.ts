@@ -1,16 +1,23 @@
 export type Maybe<T> = T | undefined | null;
 
-export interface Org {
+interface PremiumOrgFields {
+  purchased_credits: number;
+  monthly_credits: number;
+  monthly_credit_allowance: number;
+  credit_reset_date: string;
+}
+
+export interface Org extends Partial<PremiumOrgFields> {
   id: string;
   name: string;
   avatar_url: string;
   individual: boolean;
-  monthly_credits: {
-    allowance: number;
-    remaining: number;
-    reset_date: string;
-  };
-  purchased_credits: number;
+  plan: "Free" | "Professional" | "Organization";
+}
+
+export interface GroupOrg extends Org {
+  individual: false;
+  plan: "Free" | "Organization";
 }
 
 export interface IndividualOrg extends Org {
