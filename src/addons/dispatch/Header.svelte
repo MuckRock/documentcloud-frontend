@@ -15,7 +15,7 @@
   export let addon: AddOnListItem;
 
   $: author = addon.repository.split("/")[0];
-  $: isPremium = addon.parameters.categories?.includes("premium");
+  $: isPremium = addon?.parameters.categories?.includes("premium") ?? false;
 
   async function onShare() {
     try {
@@ -137,7 +137,7 @@
     </div>
 
     <div class="categories">
-      {#if addon.parameters.categories}
+      {#if addon?.parameters?.categories}
         <dt>{$_("addonDispatchDialog.categories")}</dt>
         {#each addon.parameters.categories as category}
           <dd>
@@ -161,6 +161,6 @@
   </div>
 
   <div class="description">
-    {@html addon.parameters.description}
+    {@html addon?.parameters?.description}
   </div>
 </header>

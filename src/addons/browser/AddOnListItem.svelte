@@ -9,10 +9,10 @@
 
   export let addon: AddOnListItem;
 
-  $: description = addon.parameters?.description;
+  $: description = addon?.parameters?.description;
   $: author = { name: addon?.repository?.split("/")[0] };
-  $: url = `#add-ons/${addon.repository}`;
-  $: isPremium = addon.parameters.categories?.includes("premium");
+  $: url = `#add-ons/${addon?.repository}`;
+  $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
 </script>
 
 <style>

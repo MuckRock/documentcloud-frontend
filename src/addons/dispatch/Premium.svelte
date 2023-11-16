@@ -19,8 +19,8 @@
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
 
-  $: isPremium = addon.parameters.categories?.includes("premium");
-  const { amount, unit } = addon.parameters.cost ?? {};
+  $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
+  const { amount, unit } = addon?.parameters?.cost ?? {};
   $: prettyCost = amount && unit ? handlePlural(amount, unit) : null;
 
   function toggleSpendingLimit(

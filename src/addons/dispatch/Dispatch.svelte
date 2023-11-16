@@ -48,7 +48,8 @@
 
   $: isPremiumUser = isPremiumOrg($orgsAndUsers?.me?.organization);
   $: creditBalance = getCreditBalance($orgsAndUsers?.me?.organization) ?? 0;
-  $: isPremiumAddon = addon.parameters.categories?.includes("premium");
+  $: isPremiumAddon =
+    addon?.parameters.categories?.includes("premium") ?? false;
   $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
 
   onMount(() => {
@@ -65,7 +66,7 @@
     let qs = new URLSearchParams(window.location.search);
 
     // only accept values in properties
-    const { properties } = addon.parameters;
+    const { properties } = addon?.parameters ?? {};
     const values = Object.fromEntries(
       Array.from(qs).filter(([k, v]) => properties.hasOwnProperty(k)),
     );
