@@ -1,5 +1,0 @@
-[[context.deploy-preview.plugins]]
-  package = "netlify-plugin-playwright-cache"
-
-[[context.deploy-preview.plugins]]
-  package = "/plugins/test"
