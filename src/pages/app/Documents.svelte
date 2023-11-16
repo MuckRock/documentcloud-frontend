@@ -7,7 +7,7 @@
   import AddonStatus from "../../addons/progress/AddonStatus.svelte";
   import ActionBar from "./ActionBar.svelte";
   import Anonymous from "./Anonymous.svelte";
-  import AuthSection from "@/pages/app/AuthSection.svelte";
+  import AccountNavigation from "./AccountNavigation/AccountNavigation.svelte";
   import Button from "@/common/Button.svelte";
   import Draggable from "@/common/Draggable.svelte";
   import Document from "./Document.svelte";
@@ -254,7 +254,7 @@
         {#if $orgsAndUsers.loggedIn}
           <SpecialMessage />
         {/if}
-        <AuthSection />
+        <AccountNavigation />
       {/if}
       {#if embed && $layout.projectEmbedTitle != null}
         <div class="projectembedtitle">{$layout.projectEmbedTitle}</div>
