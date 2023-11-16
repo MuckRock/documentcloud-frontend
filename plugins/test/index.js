@@ -10,11 +10,13 @@ export async function onSuccess({ utils }) {
   result = await utils.run("playwright", ["test"]).catch((err) => {
     utils.status.show({
       title: "Playwright test failed",
+      summary: err.toString(),
     });
     utils.build.failPlugin(err);
   });
 
   utils.status.show({
     title: "Playwright tests completed.",
+    summary: "",
   });
 }
