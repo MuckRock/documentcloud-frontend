@@ -9,9 +9,9 @@ test("test", async ({ page }) => {
     "/documents/20000007-finalseasonal_allergies_pollen_and_mold_2023__en";
   await page.goto(url);
 
-  expect(new URL(page.url()).pathname).toBe(url);
+  console.log(page.url());
 
-  await expect(page.locator(".sidebar").getByRole("heading")).toHaveText(title);
+  expect(new URL(page.url()).pathname).toBe(url);
 
   await page.getByRole("link", { name: "Original Document (PDF) »" }).click();
 
@@ -33,4 +33,6 @@ test("test", async ({ page }) => {
   // switch to thumbnail view, click the first image
   await page.getByRole("combobox").selectOption("thumbnail");
   await page.locator("img").first().click();
+
+  await expect(page.locator(".sidebar").getByRole("heading")).toHaveText(title);
 });
