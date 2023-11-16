@@ -34,7 +34,7 @@
     font-size: 0.875em;
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   .account-navigation section {
