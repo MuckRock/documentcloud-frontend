@@ -93,7 +93,7 @@
     gap: 0.5em;
   }
   .name {
-    margin: 0;
+    margin: 0 1rem 0 0;
     font-weight: 600;
   }
   .date {
