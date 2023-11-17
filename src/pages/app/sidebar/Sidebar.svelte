@@ -7,7 +7,6 @@
 
   import ProjectFilters from "./ProjectFilters.svelte";
   import Projects from "./Projects.svelte";
-  import OrgUsers from "./OrgUsers.svelte";
 
   import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
 
@@ -73,7 +72,6 @@
   <ProjectFilters />
 
   {#if $orgsAndUsers.me !== null}
-    <OrgUsers />
     <Projects on:retractSidebar />
     <AddonSidebar />
   {/if}
