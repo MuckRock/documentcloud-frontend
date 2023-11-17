@@ -104,7 +104,7 @@
           {$_("authSection.premiumUpgrade.description")}
         </p>
         <Button
-          label={$_("authSection.premiumUpgrade.startTrial")}
+          label={$_("authSection.premiumUpgrade.cta")}
           fullWidth={true}
           premium={true}
           on:click={triggerPremiumUpgradeFlow}

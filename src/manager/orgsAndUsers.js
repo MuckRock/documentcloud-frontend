@@ -11,6 +11,7 @@ import {
   getUsers,
   getOrganization,
 } from "../api/orgAndUser.js";
+import { SQUARELET_URL } from "../api/auth.js";
 import { projects, initProjects } from "./projects.js";
 import { userUrl, allDocumentsUrl } from "../search/search.js";
 import { layout } from "./layout.js";
@@ -229,9 +230,10 @@ export function getCreditBalance(org) {
   return org.monthly_credits + org.purchased_credits;
 }
 
-// TODO: Handle flow to upgrade user to Pro account
 export async function triggerPremiumUpgradeFlow() {
-  alert("Upgrade to Premium!");
+  // Redirect the user to their Squarelet account settings
+  const url = SQUARELET_URL + `/users/~payment/`;
+  window?.open(url);
 }
 
 // TODO: Handle flow for purchasing premium credits

@@ -375,7 +375,7 @@
       "docs": "Learn more about DocumentCloud Premium",
       "addons": "Explore premium add-ons",
       "orgs": "Join or start an organization",
-      "startTrial": "Start Free Trial"
+      "cta": "Upgrade Plan"
     },
     "org": {
       "changeOrg": "Change organization",
@@ -763,7 +763,7 @@
     "selectionLearnMore": "Learn more about how Add-Ons work",
     "premiumUpgrade": {
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a Professional account to utilize this and other powerful Add-Ons.",
-      "callToAction": "Start Free Trial"
+      "callToAction": "Upgrade Plan"
     }
   },
   "addonBrowserDialog": {
