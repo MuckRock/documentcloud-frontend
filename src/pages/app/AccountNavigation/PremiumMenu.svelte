@@ -84,6 +84,7 @@
           value={monthly_credits}
           max={monthly_credit_allowance}
         />
+        <!-- TODO: Support credit purchases (#342)
         <CreditMeter
           id="purchased-credits"
           label={$_("authSection.credits.purchased")}
@@ -96,6 +97,7 @@
           label={$_("authSection.credits.purchaseCreditsButton")}
           on:click={triggerCreditPurchaseFlow}
         />
+        -->
       </MenuInsert>
     {:else}
       <MenuInsert>

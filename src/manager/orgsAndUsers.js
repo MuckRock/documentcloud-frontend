@@ -236,7 +236,7 @@ export async function triggerPremiumUpgradeFlow() {
   window?.open(url);
 }
 
-// TODO: Handle flow for purchasing premium credits
+// TODO: Handle flow for purchasing premium credits (#342)
 export async function triggerCreditPurchaseFlow() {
   alert("Purchase Credits!");
 }

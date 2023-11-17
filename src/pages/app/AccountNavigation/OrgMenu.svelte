@@ -108,6 +108,7 @@
             value={activeOrg.monthly_credits}
             max={activeOrg.monthly_credit_allowance}
           />
+          <!-- TODO: Support credit purchases (#342)
           <CreditMeter
             id="purchased-credits"
             label={$_("authSection.credits.purchased")}
@@ -125,7 +126,7 @@
             <p class="helpText">
               {$_("authSection.credits.purchaseCreditsAdminOnly")}
             </p>
-          {/if}
+          {/if} -->
         </MenuInsert>
         <OrgMemberList orgId={activeOrg.id} myId={user.id} />
         {#await listOrgsPromise then orgOptions}

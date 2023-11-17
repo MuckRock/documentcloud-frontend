@@ -148,6 +148,7 @@
               {prettyCost} per credit
             </h3>
           {/if}
+          <!-- TODO: Support spend limit (#343)
           <label class="spendingLimit">
             <input
               type="checkbox"
@@ -172,12 +173,14 @@
               />
             </div>
           </label>
+          -->
         </div>
         <div class="column">
           <dl class="creditBalance">
             <dt>Your credit balance</dt>
             <dd><Price value={creditBalance} /></dd>
           </dl>
+          <!-- TODO: Support credit purchases (#342)
           <Button
             premium
             fullWidth
@@ -185,6 +188,7 @@
             label="Purchase Credits"
             on:click={triggerCreditPurchaseFlow}
           />
+          -->
         </div>
       </div>
     </fieldset>
