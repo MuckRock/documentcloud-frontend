@@ -2,37 +2,64 @@
 
 import { test, expect } from "@playwright/test";
 
-test("basic document test", async ({ page }) => {
-  // this is on staging; don't delete this document
-  const title = "FINALSeasonal_allergies_pollen_and_mold_2023__EN_";
-  const url =
-    "/documents/20005908-finalseasonal_allergies_pollen_and_mold_2023__en";
-  await page.goto(url);
+const DC_BASE = process.env.DC_BASE;
 
-  console.log(page.url());
+let document, text;
 
-  await expect(page.locator(".sidebar").getByRole("heading")).toHaveText(title);
+test.describe("document tests", () => {
+  // fetch the first available public document as a test case
+  test.beforeAll(async () => {
+    const endpoint = new URL(
+      "api/documents.json?access=public&per_page=1",
+      DC_BASE,
+    );
 
-  expect(new URL(page.url()).pathname).toBe(url);
+    const { results } = await fetch(endpoint)
+      .then((r) => r.json())
+      .catch(console.error);
 
-  await page.getByRole("link", { name: "Original Document (PDF) »" }).click();
+    document = results[0];
 
-  await expect(page.locator("h1")).toHaveText(title);
+    console.log(`Using test document: ${document.title}`);
 
-  await page.getByRole("link", { name: "p. 1" }).click();
+    const textEndpoint = new URL(
+      `documents/${document.id}/${document.slug}.txt.json`,
+      document.asset_url,
+    );
 
-  expect(new URL(page.url()).hash).toEqual("#document/p1");
+    text = await fetch(textEndpoint).then((r) => r.json());
+  });
 
-  await page
-    .locator("div")
-    .filter({ hasText: /^DocumentPlain TextThumbnailSearch Results$/ })
-    .getByRole("combobox")
-    .selectOption("text");
+  test("basic document test", async ({ page }) => {
+    await page.goto(document.canonical_url);
 
-  // check that text view loaded
-  await expect(page.locator(".text").first()).toHaveText(/^MARCH 2023/);
+    expect(page.url()).toBe(document.canonical_url);
 
-  // switch to thumbnail view, click the first image
-  await page.getByRole("combobox").selectOption("thumbnail");
-  await page.locator("img").first().click();
+    await expect(page.locator(".sidebar").getByRole("heading")).toHaveText(
+      document.title,
+    );
+
+    await page.getByRole("link", { name: "Original Document (PDF) »" }).click();
+
+    await expect(page.locator("h1")).toHaveText(document.title);
+
+    await page.getByRole("link", { name: "p. 1" }).click();
+
+    expect(new URL(page.url()).hash).toEqual("#document/p1");
+
+    await page
+      .locator("div")
+      .filter({ hasText: /^DocumentPlain TextThumbnailSearch Results$/ })
+      .getByRole("combobox")
+      .selectOption("text");
+
+    // check that text view loaded
+    await expect(page.locator(".text").first()).toHaveText(
+      text.pages[0].contents,
+    );
+
+    // switch to thumbnail view, click the first image
+    await page.getByRole("combobox").selectOption("thumbnail");
+    await page.locator("img").first().click();
+  });
 });

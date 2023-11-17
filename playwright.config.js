@@ -1,4 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+
+const environment = process.env.NODE_ENV || "development";
+
+dotenv.config({
+  path: environment === "development" ? ".env" : `.env.${environment}`,
+});
+
+if (environment === "development") {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
 
 export default defineConfig({
   // Look for test files in the "tests" directory, relative to this configuration file.
@@ -27,7 +38,6 @@ export default defineConfig({
   },
 
   // Options specific to each project.
-  /*
   projects: [
     {
       name: "chromium",
@@ -41,6 +51,7 @@ export default defineConfig({
       name: "webkit",
       use: devices["Desktop Safari"],
     },
+    /* todo configure tests for mobile
     {
       name: "Mobile Chrome",
       use: devices["Pixel 5"],
@@ -49,6 +60,6 @@ export default defineConfig({
       name: "Mobile Safari",
       use: devices["iPhone 12"],
     },
+    */
   ],
-  */
 });
