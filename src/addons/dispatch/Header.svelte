@@ -57,19 +57,22 @@
   .name {
     flex: 1 1 100%;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 1em;
   }
   .pin {
     flex: 0 1 auto;
+    transform: translateY(0.15rem);
   }
   .name h2 {
     margin: 0;
     flex: 1 1 auto;
   }
   .metadata {
+    flex: 1 1 auto;
     display: flex;
     gap: 1em;
+    align-items: flex-end;
     margin: 0;
   }
   .metadata dt {
@@ -87,10 +90,25 @@
     display: inline-block;
     font-weight: 600;
   }
+  .categories {
+    flex: 1 1 auto;
+  }
+  .premium {
+    flex: 0 1 auto;
+    justify-self: flex-end;
+  }
   .actions {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    flex-wrap: wrap;
+    gap: 0 1em;
+  }
+  .actions.jB {
+    flex: 1 1 auto;
+    justify-content: space-between;
+  }
+  .actions.padRight {
+    margin-right: 3rem;
   }
   .author dd {
     padding: 0.1em 0;
@@ -105,6 +123,7 @@
     padding: 0.1em 0.2em;
     border-radius: var(--radius);
     transform: translateX(-0.2em);
+    text-transform: capitalize;
   }
   .category:hover {
     background: rgba(0, 0, 0, 0.1);
@@ -112,22 +131,25 @@
 </style>
 
 <header>
-  <Button action href="#add-ons">
-    <BackArrow size={0.8} />
-    {$_("addonDispatchDialog.backButton")}
-  </Button>
+  <div class="actions jB">
+    <Button action href="#add-ons">
+      <BackArrow size={0.8} />
+      {$_("addonDispatchDialog.backButton")}
+    </Button>
+    <div class="actions padRight">
+      <Button action on:click={onShare}
+        ><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button
+      >
+      <Button action href="https://github.com/{addon.repository}"
+        ><GitHubIcon fill="#4294f0" />
+        {$_("addonDispatchDialog.viewsource")}</Button
+      >
+    </div>
+  </div>
 
   <div class="name">
     <span class="pin"><AddOnPin {addon} size={1.25} /></span>
     <h2>{addon.name}</h2>
-    {#if isPremium}
-      <Badge
-        label="Premium"
-        badgeColor="var(--premium)"
-        labelColor="var(--darkgray)"
-        ><Credit slot="icon" color="var(--darkgray)" badge /></Badge
-      >
-    {/if}
   </div>
 
   <dl class="metadata">
@@ -140,25 +162,27 @@
       {#if addon?.parameters?.categories}
         <dt>{$_("addonDispatchDialog.categories")}</dt>
         {#each addon.parameters.categories as category}
-          <dd>
-            <a class="category" href={`#add-ons?categories=${category}`}>
-              <slot>{category}</slot>
-            </a>
-          </dd>
+          {#if category !== "premium"}
+            <dd>
+              <a class="category" href={`#add-ons?categories=${category}`}>
+                <slot>{category}</slot>
+              </a>
+            </dd>
+          {/if}
         {/each}
       {/if}
     </div>
+    {#if isPremium}
+      <a href="#add-ons?premium=true" class="premium"
+        ><Badge
+          label="Premium"
+          badgeColor="var(--premium)"
+          labelColor="var(--darkgray)"
+          ><Credit slot="icon" color="var(--darkgray)" badge /></Badge
+        ></a
+      >
+    {/if}
   </dl>
-
-  <div class="actions">
-    <Button action on:click={onShare}
-      ><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button
-    >
-    <Button action href="https://github.com/{addon.repository}"
-      ><GitHubIcon fill="#4294f0" />
-      {$_("addonDispatchDialog.viewsource")}</Button
-    >
-  </div>
 
   <div class="description">
     {@html addon?.parameters?.description}

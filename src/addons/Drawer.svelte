@@ -73,7 +73,7 @@
 
   button.close {
     margin: 0;
-    top: 1em;
+    top: 1.25em;
     position: absolute;
     border-radius: 9999px;
     border: transparent;
