@@ -27,7 +27,12 @@ test.describe("document tests", () => {
       document.asset_url,
     );
 
-    text = await fetch(textEndpoint).then((r) => r.json());
+    text = await fetch(textEndpoint)
+      .then((r) => r.json())
+      .catch((e) => {
+        console.error(e);
+        console.error(textEndpoint);
+      });
   });
 
   test("basic document test", async ({ page }) => {
