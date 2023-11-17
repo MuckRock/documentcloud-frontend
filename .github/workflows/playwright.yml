@@ -9,6 +9,7 @@ on:
 env:
   URL: "https://deploy-preview-${{ github.event.number }}.muckcloud.com"
   PLAYWRIGHT_TEST_BASE_URL: "https://deploy-preview-${{ github.event.number }}.muckcloud.com"
+  NODE_ENV: staging
 
 jobs:
   wait:
