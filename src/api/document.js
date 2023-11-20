@@ -73,7 +73,7 @@ export async function searchDocumentsUrl(url) {
 
 async function searchDocumentsHelper(url) {
   const { data } = await session.get(url);
-  if (data.results.length > 0 && data.results[0].hasOwnProperty("document")) {
+  if (data.results?.length > 0 && data.results[0].hasOwnProperty("document")) {
     // if we are using the project API, the document is one level down
     data.results = filterDeleted(
       data.results.map((doc) => new Document(doc.document)),
@@ -112,7 +112,7 @@ export async function getDocumentsWithIds(
     GET_BATCH,
     GET_BATCH_DELAY,
     async (subIds) => {
-      if (subIds.length == 0) return [];
+      if (subIds?.length == 0) return [];
       // Return documents with the specified ids
       const params = { expand, id__in: subIds };
       if (remaining) params["remaining"] = true;

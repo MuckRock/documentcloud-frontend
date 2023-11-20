@@ -92,7 +92,7 @@
           bind:group={choice}
         />
         {$_("addonDispatchDialog.labelSelected", {
-          values: { n: $layout.selected.length },
+          values: { n: $layout.selected?.length },
         })}
       </label>
     {/if}

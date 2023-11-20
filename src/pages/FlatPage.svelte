@@ -26,7 +26,13 @@
   }
 
   function navTo(hash, smooth = false) {
-    const elem = document.querySelector(hash);
+    let elem;
+    try {
+      elem = document.querySelector(hash);
+    } catch (error) {
+      elem = null;
+    }
+
     if (elem) {
       if (elem.scrollIntoView) {
         elem.scrollIntoView({
