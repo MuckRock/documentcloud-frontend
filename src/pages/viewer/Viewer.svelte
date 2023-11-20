@@ -221,7 +221,18 @@
     {:else if $doc.mode == "modify"}
       <ThumbnailBody modify={true} />
     {/if}
-    <Sidebar />
+    {#if $layout.showSidebar}
+      <Sidebar
+        document={$viewer.document}
+        signedIn={$viewer.me !== null}
+        loaded={$viewer.loaded}
+        embed={$layout.embed}
+        hidePdfLink={$layout.hidePdfLink}
+        showOrg={$layout.showOrg}
+        displayAnnotate={$layout.displayAnnotate}
+        disableControls={$layout.disableControls}
+      />
+    {/if}
     <Footer
       disableControls={$layout.disableControls}
       compact={$layout.compact}
