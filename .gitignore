@@ -32,6 +32,9 @@ public/assets/
 playwright-report
 test-results
 
+# local fixtures, everyone should generate their own
+tests/fixtures/development.json
+
 .vscode
 
 scratch/
