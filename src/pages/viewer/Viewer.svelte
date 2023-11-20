@@ -215,6 +215,11 @@
       <ThumbnailBody modify={true} />
     {/if}
     <Sidebar />
-    <Footer />
+    <Footer
+      disableControls={$layout.disableControls}
+      compact={$layout.compact}
+      embed={$layout.embed}
+      showFullscreen={$layout.showFullscreen}
+    />
   </Loader>
 {/if}
