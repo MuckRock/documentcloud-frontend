@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import { onMount } from "svelte";
 
-  import Header from "./header/Header.svelte";
+  import Header from "./Header.svelte";
   import Body from "./Body.svelte";
   import SimpleBody from "./SimpleBody.svelte";
   import NoteBody from "./NoteBody.svelte";
@@ -202,7 +202,14 @@
   <Toasts />
 
   <Loader active={$layout.loading}>
-    <Header />
+    <Header
+      document={$viewer.document}
+      loaded={$viewer.loaded}
+      title={$layout.title}
+      showOrg={$layout.title}
+      disableControls={$layout.disableControls}
+      embed={$viewer.embed}
+    />
     {#if $doc.mode == "image"}
       <Body mode={$doc.mode} />
     {:else if $doc.mode == "text" || $doc.mode == "search"}
