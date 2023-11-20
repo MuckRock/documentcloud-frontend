@@ -2,10 +2,10 @@
 export default {
   extensionsToTreatAsEsm: [".svelte"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@/(.*)$": "<rootDir>/$1",
   },
   moduleFileExtensions: ["js", "svelte"],
-  modulePaths: ["src"],
+  rootDir: "src",
   setupFiles: ["dotenv/config"],
   testEnvironment: "jsdom",
   transform: {

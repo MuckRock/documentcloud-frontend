@@ -80,7 +80,7 @@
   </div>
   <div class="text">
     <p>
-      {$_("anonymous.p1", { values: { n: $search.results.count } })}
+      {$_("anonymous.p1", { values: { n: $search?.results?.count ?? 0 } })}
     </p>
     <p>
       {@html $_("anonymous.p2")}

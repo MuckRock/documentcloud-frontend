@@ -29,6 +29,11 @@ public/assets/
 # Local test env file
 .env.test
 .env.sentry-build-plugin
+playwright-report
+test-results
+
+# local fixtures, everyone should generate their own
+tests/fixtures/development.json
 
 .vscode
 
