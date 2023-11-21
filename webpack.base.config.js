@@ -46,7 +46,6 @@ function wrap(spec) {
 export default wrap({
   resolve: {
     alias: {
-      svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
 
       // these packages don't export correctly, so we use an alias to fix imports
