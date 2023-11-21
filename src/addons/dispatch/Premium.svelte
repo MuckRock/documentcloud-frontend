@@ -17,14 +17,16 @@
 
   export let addon: AddOnListItem;
 
-  export let user: User;
+  export let user: User | null;
 
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
 
-  $: creditBalance = getCreditBalance(user.organization);
+  $: creditBalance = user?.organization
+    ? getCreditBalance(user.organization)
+    : 0;
   $: isIndividualOrg =
-    typeof user.organization !== "string" && user.organization.individual;
+    typeof user?.organization !== "string" && user?.organization?.individual;
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
   const { amount, unit } = addon?.parameters?.cost ?? {};
   $: prettyCost = amount && unit ? handlePlural(amount, unit) : null;
@@ -144,7 +146,7 @@
 </style>
 
 {#if isPremium}
-  {#if isPremiumOrg(user.organization)}
+  {#if isPremiumOrg(user?.organization)}
     <fieldset class="premium">
       <legend>{$_("addonDispatchDialog.premium")}</legend>
       <div class="row">
@@ -206,7 +208,7 @@
         },
       })}
       callToAction={$_("addonDispatchDialog.premiumUpgrade.callToAction")}
-      on:click={() => triggerPremiumUpgradeFlow(user.organization)}
+      on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
     />
   {:else}
     <UpgradePrompt

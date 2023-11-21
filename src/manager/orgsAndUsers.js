@@ -221,6 +221,7 @@ export async function inMyOrg(orgId, myId) {
 }
 
 export function isOrgAdmin(user) {
+  if (!user) return false;
   const id =
     typeof user.organization === "string"
       ? user.organization
