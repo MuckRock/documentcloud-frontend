@@ -15,8 +15,8 @@
   };
 
   export let count: number = 1;
-
   export let value = Array(count).fill(null);
+
   $: numItems = value.length;
 
   // only one level of nesting allowed

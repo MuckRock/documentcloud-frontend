@@ -49,11 +49,7 @@ test.describe("document tests", () => {
       .selectOption("text");
 
     // check that text view loaded
-    /*
-      await expect(page.locator(".text").first()).toHaveText(
-        text.pages[0].contents,
-      );
-      */
+    await expect(page.locator(".text").first()).toBeVisible();
 
     // switch to thumbnail view, click the first image
     await page.getByRole("combobox").selectOption("thumbnail");

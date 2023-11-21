@@ -6,4 +6,4 @@ This directory includes [Playwright](https://playwright.dev) tests that run in a
 URL=https://www.dev.documentcloud.org npx playwright test
 ```
 
-Netlify will automatically run this against any pull request using a deploy preview, and it will set the `URL` environment variable to the correct target.
+Github will automatically run this against any pull request using a deploy preview, and it will set the `URL` environment variable to the correct target.
