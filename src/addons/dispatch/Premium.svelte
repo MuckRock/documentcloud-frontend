@@ -7,18 +7,24 @@
   import Price from "../../premium-credits/Price.svelte";
   import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
   import {
+    isPremiumOrg,
+    getCreditBalance,
     triggerCreditPurchaseFlow,
     triggerPremiumUpgradeFlow,
+    isOrgAdmin,
   } from "../../manager/orgsAndUsers";
+  import { User } from "../../pages/app/AccountNavigation/types";
 
   export let addon: AddOnListItem;
 
-  export let isPremiumUser: boolean;
-  export let creditBalance: number;
+  export let user: User;
 
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
 
+  $: creditBalance = getCreditBalance(user.organization);
+  $: isIndividualOrg =
+    typeof user.organization !== "string" && user.organization.individual;
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
   const { amount, unit } = addon?.parameters?.cost ?? {};
   $: prettyCost = amount && unit ? handlePlural(amount, unit) : null;
@@ -138,7 +144,7 @@
 </style>
 
 {#if isPremium}
-  {#if isPremiumUser}
+  {#if isPremiumOrg(user.organization)}
     <fieldset class="premium">
       <legend>{$_("addonDispatchDialog.premium")}</legend>
       <div class="row">
@@ -192,11 +198,19 @@
         </div>
       </div>
     </fieldset>
+  {:else if isOrgAdmin(user)}
+    <UpgradePrompt
+      message={$_("addonDispatchDialog.premiumUpgrade.message", {
+        values: {
+          plan: isIndividualOrg ? "Professional" : "Organization",
+        },
+      })}
+      callToAction={$_("addonDispatchDialog.premiumUpgrade.callToAction")}
+      on:click={() => triggerPremiumUpgradeFlow(user.organization)}
+    />
   {:else}
     <UpgradePrompt
-      message={$_("addonDispatchDialog.premiumUpgrade.message")}
-      callToAction={$_("addonDispatchDialog.premiumUpgrade.callToAction")}
-      on:click={triggerPremiumUpgradeFlow}
+      message={$_("addonDispatchDialog.premiumUpgrade.memberMessage")}
     />
   {/if}
 {/if}

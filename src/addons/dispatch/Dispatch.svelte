@@ -307,7 +307,7 @@
           documents={new Set(addon.parameters.documents)}
         />
 
-        <Premium slot="premium" {addon} {isPremiumUser} {creditBalance} />
+        <Premium slot="premium" {addon} user={$orgsAndUsers?.me} />
 
         <div slot="controls" class="controls">
           <div class="primary">

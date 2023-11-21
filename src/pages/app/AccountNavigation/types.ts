@@ -10,6 +10,7 @@ interface PremiumOrgFields {
 export interface Org extends Partial<PremiumOrgFields> {
   id: string;
   name: string;
+  slug: string;
   avatar_url: string;
   individual: boolean;
   plan: "Free" | "Professional" | "Organization";

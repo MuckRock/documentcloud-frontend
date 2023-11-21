@@ -4,7 +4,7 @@
   import Button from "../common/Button.svelte";
 
   export let message: string;
-  export let callToAction: string;
+  export let callToAction: string | null = null;
 </script>
 
 <style>
@@ -43,7 +43,9 @@
     <span class="badge"><Credit badge size={2} /></span>
     <p>{message}</p>
   </div>
-  <div class="action">
-    <Button premium label={callToAction} on:click />
-  </div>
+  {#if callToAction}
+    <div class="action">
+      <Button premium label={callToAction} on:click />
+    </div>
+  {/if}
 </div>

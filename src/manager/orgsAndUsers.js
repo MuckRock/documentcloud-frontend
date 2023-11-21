@@ -220,9 +220,17 @@ export async function inMyOrg(orgId, myId) {
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
 }
 
+export function isOrgAdmin(user) {
+  const id =
+    typeof user.organization === "string"
+      ? user.organization
+      : user.organization.id;
+  return user.admin_organizations.includes(id);
+}
+
 export function isPremiumOrg(org) {
-  if (!org) return null;
-  return !org.individual || org.plan === "Professional";
+  if (!org || !org.plan) return null;
+  return ["Professional", "Organization"].includes(org.plan);
 }
 
 export function getCreditBalance(org) {
@@ -230,9 +238,15 @@ export function getCreditBalance(org) {
   return org.monthly_credits + org.purchased_credits;
 }
 
-export async function triggerPremiumUpgradeFlow() {
-  // Redirect the user to their Squarelet account settings
-  const url = SQUARELET_URL + `/users/~payment/`;
+export async function triggerPremiumUpgradeFlow(org) {
+  let url;
+  if (org.individual) {
+    // Redirect the user to their Squarelet account settings
+    url = SQUARELET_URL + `/users/~payment/`;
+  } else {
+    // Redirect the user to the Squarelet organization settings
+    url = SQUARELET_URL + `/organizations/${org.slug}/payment/`;
+  }
   window?.open(url);
 }
 

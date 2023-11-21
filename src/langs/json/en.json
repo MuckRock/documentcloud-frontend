@@ -762,8 +762,9 @@
     "selectionHelp": "From the main list, select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
     "premiumUpgrade": {
-      "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a Professional account to utilize this and other powerful Add-Ons.",
-      "callToAction": "Upgrade Plan"
+      "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
+      "callToAction": "Upgrade Plan",
+      "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
     }
   },
   "addonBrowserDialog": {
