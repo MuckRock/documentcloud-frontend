@@ -109,7 +109,7 @@
           label={$_("authSection.premiumUpgrade.cta")}
           fullWidth={true}
           premium={true}
-          on:click={triggerPremiumUpgradeFlow}
+          on:click={() => triggerPremiumUpgradeFlow(org)}
         />
         <div class="learnMore">
           <Link toUrl="/help/premium" color={true} on:click={close}>

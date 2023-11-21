@@ -371,7 +371,9 @@
     "premiumUpgrade": {
       "title": "Premium",
       "heading": "Go Pro with DocumentCloud’s premium tools",
+      "orgHeading": "Power your team with DocumentCloud’s premium tools",
       "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
+      "orgDescription": "Upgrade to an Organization plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
       "docs": "Learn more about DocumentCloud Premium",
       "addons": "Explore premium add-ons",
       "orgs": "Join or start an organization",

@@ -55,7 +55,14 @@
       res(ctx.json({ next: null, previous: null, results: [] })),
     ),
     free: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-      res(ctx.json({ ...orgListFixture.results[1], plan: "Free" })),
+      res(
+        ctx.json({
+          ...orgListFixture.results.find(
+            ({ id }) => id.toString() === req.params.id,
+          ),
+          plan: "Free",
+        }),
+      ),
     ),
   };
 
@@ -117,6 +124,41 @@
 <Story
   name="Without Avatar"
   args={{ ...args, org: { ...args.org, avatar_url: "" } }}
+  parameters={{
+    msw: {
+      handlers: [
+        mockInMyOrg.data,
+        mockGetOrgsList.data,
+        mockGetOrg.data,
+        mockChangeOrg,
+      ],
+    },
+  }}
+/>
+<Story
+  name="Free Org Member"
+  args={{ ...args, org: { ...args.org, plan: "Free" } }}
+  parameters={{
+    msw: {
+      handlers: [
+        mockInMyOrg.data,
+        mockGetOrgsList.data,
+        mockGetOrg.data,
+        mockChangeOrg,
+      ],
+    },
+  }}
+/>
+<Story
+  name="Free Org Admin"
+  args={{
+    ...args,
+    user: {
+      ...args.user,
+      admin_organizations: [...args.user.admin_organizations, args.org.id],
+    },
+    org: { ...args.org, plan: "Free" },
+  }}
   parameters={{
     msw: {
       handlers: [

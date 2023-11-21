@@ -8,7 +8,12 @@
   import Loader from "../../../common/Loader.svelte";
   import { User, Org } from "./types";
   import OrgMemberList from "./OrgMemberList.svelte";
-  import { changeActive } from "../../../manager/orgsAndUsers";
+  import {
+    changeActive,
+    isOrgAdmin,
+    isPremiumOrg,
+    triggerPremiumUpgradeFlow,
+  } from "../../../manager/orgsAndUsers";
   import {
     getOrganizationsByIds,
     getOrganization,
@@ -21,6 +26,7 @@
   } from "../../../premium-credits/CreditMeter.svelte";
   import Button from "../../../common/Button.svelte";
   import { triggerCreditPurchaseFlow } from "../../../manager/orgsAndUsers";
+  import Link from "../../../router/Link.svelte";
 
   export let user: User;
   export let org: Org;
@@ -96,19 +102,20 @@
         </span>
       </MenuTitle>
       <Menu>
-        <MenuInsert>
-          <CreditMeter
-            id="org-credits"
-            label={$_("authSection.credits.monthlyOrg")}
-            helpText={$_("authSection.credits.refreshOn", {
-              values: {
-                date: formatResetDate(activeOrg.credit_reset_date, $locale),
-              },
-            })}
-            value={activeOrg.monthly_credits}
-            max={activeOrg.monthly_credit_allowance}
-          />
-          <!-- TODO: Support credit purchases (#342)
+        {#if isPremiumOrg(activeOrg)}
+          <MenuInsert>
+            <CreditMeter
+              id="org-credits"
+              label={$_("authSection.credits.monthlyOrg")}
+              helpText={$_("authSection.credits.refreshOn", {
+                values: {
+                  date: formatResetDate(activeOrg.credit_reset_date, $locale),
+                },
+              })}
+              value={activeOrg.monthly_credits}
+              max={activeOrg.monthly_credit_allowance}
+            />
+            <!-- TODO: Support credit purchases (#342)
           <CreditMeter
             id="purchased-credits"
             label={$_("authSection.credits.purchased")}
@@ -127,7 +134,30 @@
               {$_("authSection.credits.purchaseCreditsAdminOnly")}
             </p>
           {/if} -->
-        </MenuInsert>
+          </MenuInsert>
+        {:else if isOrgAdmin(user)}
+          <MenuInsert>
+            <div class="freeOrg">
+              <h3 class="heading">
+                {$_("authSection.premiumUpgrade.orgHeading")}
+              </h3>
+              <p class="description">
+                {$_("authSection.premiumUpgrade.orgDescription")}
+              </p>
+              <Button
+                label={$_("authSection.premiumUpgrade.cta")}
+                fullWidth={true}
+                premium={true}
+                on:click={() => triggerPremiumUpgradeFlow(activeOrg)}
+              />
+              <div class="learnMore">
+                <Link toUrl="/help/premium" color={true} on:click={close}>
+                  {$_("authSection.premiumUpgrade.docs")}
+                </Link>
+              </div>
+            </div>
+          </MenuInsert>
+        {/if}
         <OrgMemberList orgId={activeOrg.id} myId={user.id} />
         {#await listOrgsPromise then orgOptions}
           {#if orgOptions.length > 1}
