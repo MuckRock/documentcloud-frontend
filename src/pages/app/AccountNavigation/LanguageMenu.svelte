@@ -32,10 +32,7 @@
 {#if langs.length > 1}
   <!-- Language Menu -->
   <Dropdown id="language" position="right">
-    <MenuTitle
-      slot="title"
-      label={currentLang[0] ?? $_("authSection.language.title")}
-    >
+    <MenuTitle slot="title" label={$_("authSection.language.title")}>
       <div class="icon" slot="icon"><Globe16 /></div>
     </MenuTitle>
     <Menu>

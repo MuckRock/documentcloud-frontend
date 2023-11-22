@@ -29,16 +29,16 @@ test.describe("manager tests", () => {
     await page.goto("/app");
 
     // help
-    await page.getByText("Help ▼").click();
+    await page.getByText("Help", { exact: true }).dispatchEvent("click");
     await expect(page.getByRole("button", { name: "FAQ" })).toBeVisible();
 
     // close the menu
-    await page.locator(".shim").click();
+    await page.locator(".overlay").click();
 
     // language
-    await page.getByText("Language ▼").click();
-    await expect(page.getByRole("button", { name: "English ✓" })).toBeVisible();
+    await page.getByText("Language", { exact: true }).dispatchEvent("click");
+    await expect(page.getByRole("button", { name: "Español" })).toBeVisible();
 
-    await page.locator(".shim").click();
+    await page.locator(".overlay").click();
   });
 });
