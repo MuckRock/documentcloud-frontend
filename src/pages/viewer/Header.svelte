@@ -78,7 +78,7 @@
     <!-- Expanding cell to hold title and optional back -->
     <div class="cell">
       {#if !embed}
-        <div class="back" style="margin-top: {HEADER_HEIGHT - 20}px">
+        <div class="back">
           <Link back={true}>
             {@html backArrowSvg}
           </Link>
