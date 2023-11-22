@@ -62,7 +62,7 @@
       action: () => showEmbedFlow(document),
       header: $_("sidebar.share"),
       description: $_("sidebar.shareDesc"),
-      disabled: document.readable,
+      disabled: document?.readable,
     },
     {
       id: "annotate",
@@ -75,28 +75,28 @@
       action: enterRedactMode,
       header: $_("sidebar.redact"),
       description: $_("sidebar.redactDesc"),
-      disabled: document.readable,
+      disabled: document?.readable,
     },
     {
       id: "modify",
       action: enterModifyMode,
       header: $_("sidebar.modify"),
       description: $_("sidebar.modifyDesc"),
-      disabled: document.readable,
+      disabled: document?.readable,
     },
     {
       id: "info",
       action: enterInfoMode,
       header: $_("sidebar.info"),
       description: $_("sidebar.infoDesc"),
-      disabled: document.readable,
+      disabled: document?.readable,
     },
     {
       id: "data",
       action: enterDataMode,
       header: $_("sidebar.data"),
       description: $_("sidebar.dataDesc"),
-      disabled: document.readable,
+      disabled: document?.readable,
     },
     {
       id: "sections",
@@ -213,22 +213,22 @@
 >
   {#if loaded}
     <div class="title">
-      {#if !embed && document.readable}
+      {#if !embed && document?.readable}
         <div class="updating">
           {$_("sidebar.updating")}
           <Progress initializing={true} progress={0} compact={true} />
         </div>
       {/if}
 
-      {#if document.description != null && document.description.trim().length > 0}
+      {#if document?.description != null && document?.description.trim().length > 0}
         <details class="dc" open>
           <summary>
-            <h2 class="inlineheader">{document.title}</h2>
+            <h2 class="inlineheader">{document?.title}</h2>
           </summary>
-          <HtmlField content={document.description} />
+          <HtmlField content={document?.description} />
         </details>
       {:else}
-        <h2>{document.title}</h2>
+        <h2>{document?.title}</h2>
       {/if}
 
       <TableOfContents />
@@ -240,19 +240,19 @@
             target="_blank"
             rel="noopener noreferrer"
             class="plausible-event-name=viewer-original-document"
-            href={document.pdf}
+            href={document?.pdf}
           >
             {$_("sidebar.original")}
           </a>
         </div>
       {/if}
-      {#if document.relatedArticleUrl != null && document.relatedArticleUrl.trim().length > 0}
+      {#if document?.relatedArticleUrl != null && document?.relatedArticleUrl.trim().length > 0}
         <div>
           <a
             target="_blank"
             rel="noopener noreferrer"
             class="plausible-event-name=viewer-related-url"
-            href={document.relatedArticleUrl}
+            href={document?.relatedArticleUrl}
           >
             {$_("sidebar.related")}
           </a>
@@ -262,21 +262,21 @@
         <p>
           {$_("sidebar.contributed", {
             values: {
-              name: showOrg ? document.orgString : document.userOrgString,
+              name: showOrg ? document?.orgString : document?.userOrgString,
             },
           })}
         </p>
       </small>
-      {#if document.source !== null && document.source.trim().length > 0}
+      {#if document?.source !== null && document?.source.trim().length > 0}
         <small>
           <p>
             {$_("sidebar.source", {
-              values: { source: document.source },
+              values: { source: document?.source },
             })}
           </p>
         </small>
       {/if}
-      {#if document.editAccess}
+      {#if document?.editAccess}
         <div>
           <AccessIcon {document} showText={true} />
         </div>
@@ -288,7 +288,7 @@
 
     {#if signedIn}
       <div class="actions">{$_("sidebar.actions")}</div>
-      {#if document.editAccess}
+      {#if document?.editAccess}
         {#each actions as { id, action, header, description, disabled }}
           <SidebarAction
             class={`plausible-event-name=sidebar-${id}`}
