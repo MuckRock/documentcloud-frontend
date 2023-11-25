@@ -39,7 +39,7 @@
   const docWidth = 700;
   $: maxWidth = note == null ? 0 : docWidth * note.width;
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
+  const IMAGE_WIDTHS = import.meta.env.DC_IMAGE_WIDTHS.split(",")
     .map((x) => x.split(":"))
     .map((x) => [parseFloat(x[1]), x[0]])
     .sort((a, b) => a[0] - b[0]);
@@ -68,8 +68,15 @@
     padding: 0 0.5em;
     border: 1px solid #ebebeb;
     box-shadow: inset 0 0 40px #505050;
-    font: 400 10pt/14pt -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-      Roboto, "Helvetica Neue", Arial, sans-serif;
+    font:
+      400 10pt/14pt -apple-system,
+      system-ui,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
     color: black;
     background-color: white;
     background-size: 100% auto;

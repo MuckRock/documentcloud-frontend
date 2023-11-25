@@ -37,8 +37,8 @@
   import CloseIcon from "svelte-octicons/lib/X16.svelte";
 
   // Constants
-  const toastLength = parseInt(process.env.TOAST_LENGTH);
-  const toastFade = parseInt(process.env.TOAST_FADE);
+  const toastLength = parseInt(import.meta.env.DC_TOAST_LENGTH);
+  const toastFade = parseInt(import.meta.env.DC_TOAST_FADE);
 
   export let toast: Toast;
   export let i: number;

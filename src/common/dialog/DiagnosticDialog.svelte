@@ -73,7 +73,7 @@
               </a>
               <a
                 target="_blank"
-                href={process.env.STAFF_ONLY_S3_URL.replace(
+                href={import.meta.env.DC_STAFF_ONLY_S3_URL.replace(
                   "$$ID$$",
                   document.id,
                 )}

@@ -40,7 +40,7 @@
     const pageResourcePath = isPageResourcePath.exec(window.location.pathname);
     if (pageResourcePath != null) {
       const pageResourceUrl =
-        process.env.DC_BASE + "/files" + window.location.pathname;
+        import.meta.env.DC_BASE + "/files" + window.location.pathname;
       window.location.href = pageResourceUrl;
       return;
     }
@@ -193,7 +193,7 @@
     <div style="font-size:14px;line-height:18px;text-align:center">
       Contributed to
       <a
-        href={process.env.APP_URL}
+        href={import.meta.env.DC_APP_URL}
         title={$_("embedPage.gotoDocCloud")}
         target="_blank"
         style="color: #5a76a0; text-decoration: underline;

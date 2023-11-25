@@ -16,7 +16,7 @@
 
   import { writable } from "svelte/store";
 
-  const sectionTitleLimit = process.env.SECTION_TITLE_CHAR_LIMIT;
+  const sectionTitleLimit = import.meta.env.DC_SECTION_TITLE_CHAR_LIMIT;
 
   let loading = writable(false);
 

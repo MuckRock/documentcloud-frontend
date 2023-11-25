@@ -7,7 +7,7 @@ function processImageWidths(widthSpec) {
   return result;
 }
 
-export const imageWidths = processImageWidths(process.env.IMAGE_WIDTHS);
+export const imageWidths = processImageWidths(import.meta.env.DC_IMAGE_WIDTHS);
 
 export function documentDimensionUrl(document) {
   return `${document.assetUrl}documents/${document.id}/${document.slug}.pagesize`;

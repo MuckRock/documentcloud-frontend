@@ -15,15 +15,15 @@ import axios from "axios";
 
 import { Document, transformHighlights } from "@/structure/document.js";
 
-const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
+const POLL_TIMEOUT = import.meta.env.DC_POLL_TIMEOUT;
 
-const GET_BATCH = parseInt(process.env.GET_BATCH);
-const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
-const UPLOAD_BATCH = parseInt(process.env.UPLOAD_BATCH);
-const UPLOAD_BATCH_DELAY = parseInt(process.env.UPLOAD_BATCH_DELAY);
+const GET_BATCH = parseInt(import.meta.env.DC_GET_BATCH);
+const GET_BATCH_DELAY = parseInt(import.meta.env.DC_GET_BATCH_DELAY);
+const UPLOAD_BATCH = parseInt(import.meta.env.DC_UPLOAD_BATCH);
+const UPLOAD_BATCH_DELAY = parseInt(import.meta.env.DC_UPLOAD_BATCH_DELAY);
 
-const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
-const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
+const HIGHLIGHT_START = import.meta.env.DC_HIGHLIGHT_START;
+const HIGHLIGHT_END = import.meta.env.DC_HIGHLIGHT_END;
 
 // Statuses
 export const PENDING = "pending";

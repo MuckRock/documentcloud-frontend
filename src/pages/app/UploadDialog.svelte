@@ -47,11 +47,12 @@
   let forceOcr = false;
   let ocrEngine = "tess4";
 
-  const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
-  const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
-  const PDF_SIZE_LIMIT_READABLE = process.env.PDF_SIZE_LIMIT_READABLE;
-  const DOCUMENT_SIZE_LIMIT = parseInt(process.env.DOCUMENT_SIZE_LIMIT);
-  const DOCUMENT_SIZE_LIMIT_READABLE = process.env.DOCUMENT_SIZE_LIMIT_READABLE;
+  const LIMIT = parseInt(import.meta.env.DC_UPLOAD_LIMIT);
+  const PDF_SIZE_LIMIT = parseInt(import.meta.env.DC_PDF_SIZE_LIMIT);
+  const PDF_SIZE_LIMIT_READABLE = import.meta.env.DC_PDF_SIZE_LIMIT_READABLE;
+  const DOCUMENT_SIZE_LIMIT = parseInt(import.meta.env.DC_DOCUMENT_SIZE_LIMIT);
+  const DOCUMENT_SIZE_LIMIT_READABLE = import.meta.env
+    .DC_DOCUMENT_SIZE_LIMIT_READABLE;
 
   let tooManyFiles = false;
   let tooManyBigFiles = [false, false];

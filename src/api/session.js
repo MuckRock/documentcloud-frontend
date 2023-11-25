@@ -97,7 +97,7 @@ session.getStatic = async function getStatic(url) {
   // On the second request, we do not sent the session cookie
   // If we are fetching a public asset, the first request is directly to S3.  In
   // that case we must not send the session cookie on the first request.
-  if (url.startsWith(process.env.DC_BASE)) {
+  if (url.startsWith(import.meta.env.DC_BASE)) {
     result = await session.get(url).then((r) => r.data);
     let redirect = result.location;
 

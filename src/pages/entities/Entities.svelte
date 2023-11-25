@@ -15,7 +15,7 @@
 
   import closeSvg from "@/assets/close_inline.svg?raw";
 
-  const CONTACT = process.env.SPECIAL_CONTACT;
+  const CONTACT = import.meta.env.DC_SPECIAL_CONTACT;
 
   let loading = true;
   let fullText = null;

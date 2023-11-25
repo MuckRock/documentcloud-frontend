@@ -10,13 +10,13 @@
     {
       regex: /^Project: ?"(.*)" ?$/,
       type: "hash",
-      fn: process.env.PROJECT_REDIRECT_HASH_URL,
+      fn: import.meta.env.DC_PROJECT_REDIRECT_HASH_URL,
       urlHandler: (id, projectName) => projectUrl({ title: projectName, id }),
     },
     {
       regex: /^Group:(.*) ?$/,
       type: "hash",
-      fn: process.env.ORG_REDIRECT_HASH_URL,
+      fn: import.meta.env.DC_ORG_REDIRECT_HASH_URL,
       urlHandler: (id, orgSlug) => orgUrl({ name: orgSlug, id }),
     },
     {

@@ -30,8 +30,8 @@
   import { loadDompurify } from "@/util/domPurify.js";
   loadDompurify();
 
-  const noteTitleLimit = process.env.NOTE_TITLE_CHAR_LIMIT;
-  const noteContentLimit = process.env.NOTE_CONTENT_CHAR_LIMIT;
+  const noteTitleLimit = import.meta.env.DC_NOTE_TITLE_CHAR_LIMIT;
+  const noteContentLimit = import.meta.env.DC_NOTE_CONTENT_CHAR_LIMIT;
 
   const emit = emitter({
     stateChange() {},

@@ -1,6 +1,6 @@
 import { includes } from "@/util/array.js";
 
-const documentTypes = process.env.DOCUMENT_TYPES.split(",").map(
+const documentTypes = import.meta.env.DC_DOCUMENT_TYPES.split(",").map(
   (x) => `.${x.toLowerCase().trim()}`,
 );
 

@@ -59,7 +59,7 @@
     if (e.key == "Shift") shiftKey = false;
   }
 
-  const TAG_KEY = process.env.TAG_KEY;
+  const TAG_KEY = import.meta.env.DC_TAG_KEY;
 </script>
 
 <style lang="scss">

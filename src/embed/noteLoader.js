@@ -21,7 +21,9 @@ function loadNote(src) {
     // Create the iframe
     const iframe = document.createElement("iframe");
     iframe.style = "border: none; width: 100%;";
-    iframe.src = `${process.env.APP_URL}documents/${id}/annotations/${noteId}`;
+    iframe.src = `${
+      import.meta.env.DC_APP_URL
+    }documents/${id}/annotations/${noteId}`;
     setupResizeEvent(iframe);
 
     noteElem.appendChild(iframe);

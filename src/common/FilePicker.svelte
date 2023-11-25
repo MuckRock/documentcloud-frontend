@@ -8,7 +8,7 @@
 
   export let multiselect = false;
 
-  const documentTypes = process.env.DOCUMENT_TYPES.split(",")
+  const documentTypes = import.meta.env.DC_DOCUMENT_TYPES.split(",")
     .map((x) => `.${x.toLowerCase().trim()}`)
     .join(",");
 

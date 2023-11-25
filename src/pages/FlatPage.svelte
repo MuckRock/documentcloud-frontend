@@ -351,7 +351,7 @@
   <header>
     <div class="logo">
       {#if inIframe()}
-        <a href={process.env.APP_URL} target="_blank" rel="noreferrer"
+        <a href={import.meta.env.DC_APP_URL} target="_blank" rel="noreferrer"
           >{@html mastLogoSvg}</a
         >
       {:else}

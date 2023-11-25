@@ -15,7 +15,7 @@
     page == "visible" ? doc.visiblePageNumber - 1 : anotherNumber - 1;
   $: visiblePage = selectedPage + 1;
   $: pageUrl = $layout.embedDocument.pageUrl(visiblePage);
-  $: enhanceSrc = `${process.env.APP_URL}embed/enhance.js`;
+  $: enhanceSrc = `${import.meta.env.DC_APP_URL}embed/enhance.js`;
 
   let embedCode = null;
   let errorOccurred = false;

@@ -6,7 +6,7 @@
   import { layout } from "@/viewer/layout.js";
   import { getEmbed } from "@/api/embed.js";
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
+  const IMAGE_WIDTHS = import.meta.env.DC_IMAGE_WIDTHS.split(",")
     .map((x) => x.split(":"))
     .map((x) => [parseFloat(x[1]), x[0]])
     .sort((a, b) => a[0] - b[0]);
@@ -15,7 +15,7 @@
   )[0];
 
   $: noteUrl = $layout.embedDocument.noteUrl($layout.embedNote);
-  $: loaderSrc = `${process.env.APP_URL}notes/loader.js`;
+  $: loaderSrc = `${import.meta.env.DC_APP_URL}notes/loader.js`;
   $: annotationSrc = `${$layout.embedDocument.fakeNoteUrl(
     $layout.embedNote,
   )}.js`;
@@ -42,7 +42,7 @@
 </h1>
 
 <ShareOptions
-  embedDescription="{$_('dialogNoteEmbedDialog.embedDesc')}}"
+  embedDescription={$_("dialogNoteEmbedDialog.embedDesc")}
   {embedCode}
   {errorOccurred}
   embedAction={() => {

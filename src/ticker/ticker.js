@@ -5,8 +5,8 @@ import { layout } from "../viewer/layout.js";
 import { entities } from "../entities/entities.js";
 import { batchDelay } from "../util/batchDelay.js";
 
-const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL);
-const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
+const POLL_INTERVAL = parseInt(import.meta.env.DC_POLL_INTERVAL);
+const GET_BATCH_DELAY = parseInt(import.meta.env.DC_GET_BATCH_DELAY);
 
 export const ticker = new Svue({
   data() {

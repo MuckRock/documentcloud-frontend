@@ -1,8 +1,8 @@
-const docTitleLimit = process.env.DOCUMENT_TITLE_CHAR_LIMIT;
-const docSourceLimit = process.env.DOCUMENT_SOURCE_CHAR_LIMIT;
-const docDescriptionLimit = process.env.DOCUMENT_DESCRIPTION_CHAR_LIMIT;
-const relatedArticleLimit = process.env.RELATED_ARTICLE_URL_CHAR_LIMIT;
-const publishedUrlLimit = process.env.PUBLISHED_URL_CHAR_LIMIT;
+const docTitleLimit = import.meta.env.DC_DOCUMENT_TITLE_CHAR_LIMIT;
+const docSourceLimit = import.meta.env.DC_DOCUMENT_SOURCE_CHAR_LIMIT;
+const docDescriptionLimit = import.meta.env.DC_DOCUMENT_DESCRIPTION_CHAR_LIMIT;
+const relatedArticleLimit = import.meta.env.DC_RELATED_ARTICLE_URL_CHAR_LIMIT;
+const publishedUrlLimit = import.meta.env.DC_PUBLISHED_URL_CHAR_LIMIT;
 
 export const metaDialogs = [
   {

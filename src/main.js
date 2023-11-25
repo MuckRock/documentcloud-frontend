@@ -1,6 +1,6 @@
 import Main from "./Main.svelte";
 
-const SENTRY_DSN = process.env.SENTRY_DSN;
+const SENTRY_DSN = import.meta.env.SENTRY_DSN;
 const IS_EMBED =
   typeof window !== "undefined" &&
   (window.location.hostname === "embed.documentcloud.org" ||

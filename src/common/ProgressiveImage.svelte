@@ -23,7 +23,7 @@
   let loading = {};
   let largestLoaded = -1;
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
+  const IMAGE_WIDTHS = import.meta.env.DC_IMAGE_WIDTHS.split(",")
     .map((x) => x.split(":"))
     .map((x) => [parseFloat(x[1]), x[0]])
     .sort((a, b) => a[0] - b[0]);

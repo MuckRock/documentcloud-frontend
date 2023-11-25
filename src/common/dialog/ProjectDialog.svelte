@@ -16,8 +16,9 @@
   import { showConfirm } from "@/manager/confirmDialog.js";
   import { _ } from "svelte-i18n";
 
-  const projectTitleLimit = process.env.PROJECT_TITLE_CHAR_LIMIT;
-  const projectDescriptionLimit = process.env.PROJECT_DESCRIPTION_CHAR_LIMIT;
+  const projectTitleLimit = import.meta.env.DC_PROJECT_TITLE_CHAR_LIMIT;
+  const projectDescriptionLimit = import.meta.env
+    .DC_PROJECT_DESCRIPTION_CHAR_LIMIT;
 
   const emit = emitter({
     dismiss() {},

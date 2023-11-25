@@ -1,6 +1,6 @@
 import { extractSlugId, isNumber } from "@/util/string.js";
 
-const languageOptions = process.env.LANGUAGE_CODES.split("|");
+const languageOptions = import.meta.env.DC_LANGUAGE_CODES.split("|");
 
 export const sortCompletions = [
   {

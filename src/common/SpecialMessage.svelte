@@ -3,8 +3,8 @@
   import { onMount } from "svelte";
   import { baseApiUrl } from "../api/base.js";
 
-  const version = process.env.SPECIAL_VERSION;
-  const contact = process.env.SPECIAL_CONTACT;
+  const version = import.meta.env.DC_SPECIAL_VERSION;
+  const contact = import.meta.env.DC_SPECIAL_CONTACT;
   const endpoint = new URL("/api/flatpages/tipofday/", baseApiUrl);
 
   let loading;

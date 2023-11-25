@@ -5,7 +5,7 @@ function logInvalidQuery(options, container) {
   const q = options.q;
   console.error(`Query ${q} is not supported`);
   const iframe = document.createElement("iframe");
-  iframe.src = queryBuilder(`${process.env.EMBED_URL}project404`, {
+  iframe.src = queryBuilder(`${import.meta.env.DC_EMBED_URL}project404`, {
     projectQuery: q,
     toc: 0,
   });
@@ -81,7 +81,7 @@ function injectIframe(options, container) {
   // Set up iframe
   const iframe = document.createElement("iframe");
   iframe.src = queryBuilder(
-    `${process.env.EMBED_URL}projects/${slugId}`,
+    `${import.meta.env.DC_EMBED_URL}projects/${slugId}`,
     queryParams,
   );
   iframe.style = style;

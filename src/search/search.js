@@ -12,7 +12,7 @@ import { apiSearchUrl, searchDocumentsUrl } from "@/api/document.js";
 import deepEqual from "fast-deep-equal";
 import { _ } from "@/langs/i18n.js";
 
-const TAG_KEY = process.env.TAG_KEY;
+const TAG_KEY = import.meta.env.DC_TAG_KEY;
 let lastSearch = null;
 
 export const search = new Svue({

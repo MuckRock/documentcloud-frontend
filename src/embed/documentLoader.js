@@ -66,8 +66,10 @@ function injectIframe(url, options, container) {
 
   iframe.style = style;
   iframe.src =
-    queryBuilder(`${process.env.APP_URL}documents/${id}-${slug}`, queryParams) +
-    urlPostfix;
+    queryBuilder(
+      `${import.meta.env.DC_APP_URL}documents/${id}-${slug}`,
+      queryParams,
+    ) + urlPostfix;
   setupResizeEvent(iframe);
 
   container.appendChild(iframe);
