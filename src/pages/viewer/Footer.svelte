@@ -5,7 +5,7 @@
   import Zoom from "./controls/Zoom.svelte";
   import FullScreen from "./controls/FullScreen.svelte";
 
-  import { FOOTER_HEIGHT } from "./constants";
+  import { FOOTER_HEIGHT } from "./constants.js";
 
   export let disableControls = false;
   export let compact = false;
