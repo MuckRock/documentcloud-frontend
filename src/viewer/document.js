@@ -4,12 +4,13 @@ import { tick } from "svelte";
 import { router } from "@/router/router.js";
 import {
   layout,
-  MOBILE_BREAKPOINT,
   annotationValid,
   startSearch,
   clearSearch,
   simpleCancelActions,
 } from "./layout.js";
+
+import { MOBILE_BREAKPOINT } from "../pages/viewer/constants.js";
 
 const LAYOUT = {
   docMargin: 40, // margin from top to first page, bottom to last

@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import { onMount } from "svelte";
 
-  import Header from "./header/Header.svelte";
+  import Header from "./Header.svelte";
   import Body from "./Body.svelte";
   import SimpleBody from "./SimpleBody.svelte";
   import NoteBody from "./NoteBody.svelte";
@@ -202,7 +202,14 @@
   <Toasts />
 
   <Loader active={$layout.loading}>
-    <Header />
+    <Header
+      document={$viewer.document}
+      loaded={$viewer.loaded}
+      title={$layout.title}
+      showOrg={$layout.title}
+      disableControls={$layout.disableControls}
+      embed={$viewer.embed}
+    />
     {#if $doc.mode == "image"}
       <Body mode={$doc.mode} />
     {:else if $doc.mode == "text" || $doc.mode == "search"}
@@ -214,7 +221,23 @@
     {:else if $doc.mode == "modify"}
       <ThumbnailBody modify={true} />
     {/if}
-    <Sidebar />
-    <Footer />
+    {#if $layout.showSidebar}
+      <Sidebar
+        document={$viewer.document}
+        signedIn={$viewer.me !== null}
+        loaded={$viewer.loaded}
+        embed={$layout.embed}
+        hidePdfLink={$layout.hidePdfLink}
+        showOrg={$layout.showOrg}
+        displayAnnotate={$layout.displayAnnotate}
+        disableControls={$layout.disableControls}
+      />
+    {/if}
+    <Footer
+      disableControls={$layout.disableControls}
+      compact={$layout.compact}
+      embed={$layout.embed}
+      showFullscreen={$layout.showFullscreen}
+    />
   </Loader>
 {/if}
