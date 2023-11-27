@@ -70,7 +70,7 @@
   }
 </style>
 
-<div class="container" out:fade>
+<div class="container" out:fade|global>
   <button class="dismiss" on:click={dismiss}>
     <XCircle24 />
   </button>

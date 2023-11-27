@@ -121,7 +121,7 @@
 
 {#if visible}
   <div
-    transition:slide={{ axis: "x" }}
+    transition:slide|global={{ axis: "x" }}
     class="drawer {anchor}"
     class:visible
     tabindex="-1"
