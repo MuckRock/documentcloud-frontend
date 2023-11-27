@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
   import TableOfContents from "./TableOfContents.svelte";
-  import Progress from "@/common/Progress.svelte";
-  import AccessIcon from "@/common/AccessIcon.svelte";
-  import HtmlField from "@/common/HtmlField.svelte";
-  import session from "@/api/session.js";
-  import { jsonUrl } from "@/api/viewer.js";
+  import Progress from "../../common/Progress.svelte";
+  import AccessIcon from "../../common/AccessIcon.svelte";
+  import HtmlField from "../../common/HtmlField.svelte";
+  import session from "../../api/session.js";
+  import { jsonUrl } from "../../api/viewer.js";
 
   import {
     enterRedactMode,
@@ -13,13 +13,25 @@
     enterInfoMode,
     enterDataMode,
     enterSectionsMode,
-  } from "@/viewer/actions";
-  import { layout, showEmbedFlow, cancelAnnotation } from "@/viewer/layout.js";
-  import { viewer } from "@/viewer/viewer.js";
+  } from "../../viewer/actions";
+  import { showEmbedFlow, cancelAnnotation } from "../../viewer/layout.js";
   import { _ } from "svelte-i18n";
+  import { FOOTER_HEIGHT, HEADER_HEIGHT, SIDEBAR_WIDTH } from "./constants";
+  import SidebarAction from "./SidebarAction.svelte";
+
+  export let document: any;
+  export let signedIn: Boolean;
+  export let loaded = false;
+  export let embed = false;
+  export let hidePdfLink = false;
+  export let showOrg = false;
+  export let displayAnnotate = false;
+  export let disableControls = false;
+
+  const style = `top: ${HEADER_HEIGHT}px; bottom: ${FOOTER_HEIGHT}px; width: ${SIDEBAR_WIDTH}px;`;
 
   function handleMouseDown() {
-    if ($layout.displayAnnotate) {
+    if (displayAnnotate) {
       cancelAnnotation();
     }
   }
@@ -36,11 +48,69 @@
     doctr: "docTR",
   };
 
+  interface Action {
+    id: string;
+    action: () => void;
+    header: string;
+    description: string;
+    disabled?: boolean;
+  }
+
+  let actions: Action[] = [
+    {
+      id: "share",
+      action: () => showEmbedFlow(document),
+      header: $_("sidebar.share"),
+      description: $_("sidebar.shareDesc"),
+      disabled: document?.readable,
+    },
+    {
+      id: "annotate",
+      action: enterAnnotateMode,
+      header: $_("sidebar.annotate"),
+      description: $_("sidebar.annotateDesc"),
+    },
+    {
+      id: "redact",
+      action: enterRedactMode,
+      header: $_("sidebar.redact"),
+      description: $_("sidebar.redactDesc"),
+      disabled: document?.readable,
+    },
+    {
+      id: "modify",
+      action: enterModifyMode,
+      header: $_("sidebar.modify"),
+      description: $_("sidebar.modifyDesc"),
+      disabled: document?.readable,
+    },
+    {
+      id: "info",
+      action: enterInfoMode,
+      header: $_("sidebar.info"),
+      description: $_("sidebar.infoDesc"),
+      disabled: document?.readable,
+    },
+    {
+      id: "data",
+      action: enterDataMode,
+      header: $_("sidebar.data"),
+      description: $_("sidebar.dataDesc"),
+      disabled: document?.readable,
+    },
+    {
+      id: "sections",
+      action: enterSectionsMode,
+      header: $_("sidebar.sections"),
+      description: $_("sidebar.sectionsDesc"),
+    },
+  ];
+
   $: {
-    if ($viewer.document != null && textDoc == null && !loading) {
+    if (document != null && textDoc == null && !loading) {
       loading = true;
       (async () => {
-        textDoc = await session.getStatic(jsonUrl(viewer.document));
+        textDoc = await session.getStatic(jsonUrl(document));
         // strip _force if it exists
         ocrEngine = textDoc.pages[0].ocr;
         if (ocrEngine) {
@@ -97,38 +167,6 @@
       text-shadow: 0 1px 0 #ffffff5c;
     }
 
-    .action {
-      cursor: pointer;
-      background: #ffffff;
-      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-      padding: 8px 20px;
-
-      &.disabled {
-        background: #e8e8e8;
-        opacity: 0.5;
-        cursor: default;
-        pointer-events: none;
-      }
-
-      &:hover {
-        background: rgba(black, 0.02);
-      }
-
-      h3 {
-        font-weight: bold;
-        font-size: 14px;
-        color: var(--viewerDarkGray, #171717);
-        margin: 8px 0;
-      }
-
-      p {
-        font-size: 14px;
-        line-height: 18px;
-        color: var(--viewerGray, #525252);
-        margin: 8px 0;
-      }
-    }
-
     .title {
       padding: 16px 20px 16px 20px;
       background: white;
@@ -166,152 +204,108 @@
   }
 </style>
 
-{#if $layout.showSidebar}
-  <div
-    class="sidebar"
-    class:white={$viewer.me == null}
-    class:disabled={$layout.disableControls}
-    on:mousedown={handleMouseDown}
-    style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px;
-    width: {$layout.sidebarWidth}px"
-  >
-    {#if $viewer.loaded}
-      <div class="title">
-        {#if !$layout.embed && $viewer.document.readable}
-          <div class="updating">
-            {$_("sidebar.updating")}
-            <Progress initializing={true} progress={0} compact={true} />
-          </div>
-        {/if}
+<div
+  class="sidebar"
+  class:white={!signedIn}
+  class:disabled={disableControls}
+  on:mousedown={handleMouseDown}
+  {style}
+>
+  {#if loaded}
+    <div class="title">
+      {#if !embed && document?.readable}
+        <div class="updating">
+          {$_("sidebar.updating")}
+          <Progress initializing={true} progress={0} compact={true} />
+        </div>
+      {/if}
 
-        {#if $viewer.document.description != null && $viewer.document.description.trim().length > 0}
-          <details class="dc" open>
-            <summary>
-              <h2 class="inlineheader">{$viewer.document.title}</h2>
-            </summary>
-            <HtmlField content={$viewer.document.description} />
-          </details>
-        {:else}
-          <h2>{$viewer.document.title}</h2>
-        {/if}
+      {#if document?.description != null && document?.description.trim().length > 0}
+        <details class="dc" open>
+          <summary>
+            <h2 class="inlineheader">{document?.title}</h2>
+          </summary>
+          <HtmlField content={document?.description} />
+        </details>
+      {:else}
+        <h2>{document?.title}</h2>
+      {/if}
 
-        <TableOfContents />
+      <TableOfContents />
 
-        <hr />
-        {#if !$layout.hidePdfLink}
-          <div>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              class="plausible-event-name=viewer-original-document"
-              href={$viewer.document.pdf}
-            >
-              {$_("sidebar.original")}
-            </a>
-          </div>
-        {/if}
-        {#if $viewer.document.relatedArticleUrl != null && $viewer.document.relatedArticleUrl.trim().length > 0}
-          <div>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              class="plausible-event-name=viewer-related-url"
-              href={$viewer.document.relatedArticleUrl}
-            >
-              {$_("sidebar.related")}
-            </a>
-          </div>
-        {/if}
+      <hr />
+      {#if !hidePdfLink}
+        <div>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            class="plausible-event-name=viewer-original-document"
+            href={document?.pdf}
+          >
+            {$_("sidebar.original")}
+          </a>
+        </div>
+      {/if}
+      {#if document?.relatedArticleUrl != null && document?.relatedArticleUrl.trim().length > 0}
+        <div>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            class="plausible-event-name=viewer-related-url"
+            href={document?.relatedArticleUrl}
+          >
+            {$_("sidebar.related")}
+          </a>
+        </div>
+      {/if}
+      <small>
+        <p>
+          {$_("sidebar.contributed", {
+            values: {
+              name: showOrg ? document?.orgString : document?.userOrgString,
+            },
+          })}
+        </p>
+      </small>
+      {#if document?.source !== null && document?.source.trim().length > 0}
         <small>
           <p>
-            {$_("sidebar.contributed", {
-              values: {
-                name: $layout.showOrg
-                  ? $viewer.document.orgString
-                  : $viewer.document.userOrgString,
-              },
+            {$_("sidebar.source", {
+              values: { source: document?.source },
             })}
           </p>
         </small>
-        {#if $viewer.document.source !== null && $viewer.document.source.trim().length > 0}
-          <small>
-            <p>
-              {$_("sidebar.source", {
-                values: { source: $viewer.document.source },
-              })}
-            </p>
-          </small>
-        {/if}
-        {#if $viewer.document.editAccess}
-          <div>
-            <AccessIcon document={$viewer.document} showText={true} />
-          </div>
-        {/if}
-        {#if ocrEngine}
-          <small><p>OCR: {ocrEngine}</p></small>
-        {/if}
-      </div>
+      {/if}
+      {#if document?.editAccess}
+        <div>
+          <AccessIcon {document} showText={true} />
+        </div>
+      {/if}
+      {#if ocrEngine}
+        <small><p>OCR: {ocrEngine}</p></small>
+      {/if}
+    </div>
 
-      {#if $viewer.me !== null}
-        <div class="actions">{$_("sidebar.actions")}</div>
-        {#if $viewer.document.editAccess}
-          <div
-            class="action plausible-event-name=sidebar-share"
-            class:disabled={$viewer.document.readable}
-            on:click={() => showEmbedFlow($viewer.document)}
-          >
-            <h3>{$_("sidebar.share")}</h3>
-            <p>{$_("sidebar.shareDesc")}</p>
-          </div>
-          <div class="action" on:click={enterAnnotateMode}>
-            <h3>{$_("sidebar.annotate")}</h3>
-            <p>{$_("sidebar.annotateDesc")}</p>
-          </div>
-          <div
-            class="action"
-            class:disabled={$viewer.document.readable}
-            on:click={enterRedactMode}
-          >
-            <h3>{$_("sidebar.redact")}</h3>
-            <p>
-              {$_("sidebar.redactDesc")}
-            </p>
-          </div>
-          <div
-            class="action"
-            class:disabled={$viewer.document.readable}
-            on:click={enterModifyMode}
-          >
-            <h3>{$_("sidebar.modify")}</h3>
-            <p>{$_("sidebar.modifyDesc")}</p>
-          </div>
-          <div
-            class="action"
-            class:disabled={$viewer.document.readable}
-            on:click={enterInfoMode}
-          >
-            <h3>{$_("sidebar.info")}</h3>
-            <p>{$_("sidebar.infoDesc")}</p>
-          </div>
-          <div
-            class="action"
-            class:disabled={$viewer.document.readable}
-            on:click={enterDataMode}
-          >
-            <h3>{$_("sidebar.data")}</h3>
-            <p>{$_("sidebar.dataDesc")}</p>
-          </div>
-          <div class="action" on:click={enterSectionsMode}>
-            <h3>{$_("sidebar.sections")}</h3>
-            <p>{$_("sidebar.sectionsDesc")}</p>
-          </div>
-        {:else}
-          <div class="action" on:click={enterAnnotateMode}>
-            <h3>{$_("sidebar.privateNote")}</h3>
-            <p>{$_("sidebar.privateNoteDesc")}</p>
-          </div>
-        {/if}
+    {#if signedIn}
+      <div class="actions">{$_("sidebar.actions")}</div>
+      {#if document?.editAccess}
+        {#each actions as { id, action, header, description, disabled }}
+          <SidebarAction
+            class={`plausible-event-name=sidebar-${id}`}
+            {disabled}
+            {action}
+            {header}
+            {description}
+          />
+        {/each}
+      {:else}
+        <SidebarAction
+          class="plausible-event-name=sidebar-private-note"
+          action={enterAnnotateMode}
+          header={$_("sidebar.privateNote")}
+          description={$_("sidebar.privateNoteDesc")}
+        />
       {/if}
     {/if}
-  </div>
-{/if}
+  {/if}
+</div>
