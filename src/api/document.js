@@ -161,6 +161,16 @@ export async function changeAccess(ids, access) {
   );
 }
 
+export async function changeRevisionControl(ids, revision_control) {
+  // Enable or disable revision control on specified documents
+  await session.patch(
+    apiUrl(`documents/`),
+    ids.map((id) => {
+      id, revision_control;
+    }),
+  );
+}
+
 export async function reprocessDocument(ids, forceOcr, ocrEngine) {
   // Reprocess the documents with the specified ids
   await session.post(
