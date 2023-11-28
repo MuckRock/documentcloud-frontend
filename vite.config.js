@@ -11,15 +11,13 @@ const __dirname = path.dirname(__filename);
 dns.setDefaultResultOrder("verbatim");
 
 export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
-  // serve local at 0.0.0.0:443
+  // serve local at 0.0.0.0:443 if running in docker
   // this runs on the Squarelet nginx network
-
   /** @type {import('vite').UserConfig.server} */
   const server = process.env.DOCKER
     ? {
         host: "0.0.0.0",
-        port: 443,
-        https: true,
+        port: 80,
         origin: "https://www.dev.documentcloud.org",
         strictPort: true,
       }
@@ -30,7 +28,9 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, "index.html"),
-          embed: path.resolve(__dirname, "src/embed/index.html"),
+
+          // todo: embed entries
+          // embed: path.resolve(__dirname, "src/embed/index.html"),
         },
       },
 
@@ -45,7 +45,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
     envPrefix: "DC_",
 
     // plugin options are in svelte.config.js
-    plugins: [svelte({})],
+    plugins: [svelte()],
 
     resolve: {
       alias: {
