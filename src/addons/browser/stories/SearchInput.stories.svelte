@@ -1,17 +1,20 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import SearchInput from "../SearchInput.svelte";
-  import SearchInputDemo from "./SearchInput.demo.svelte";
+
+  const args = {};
+
+  export const meta = {
+    title: "Add-Ons / Browser / Components / Search",
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
+    component: SearchInput,
+  };
 </script>
 
-<Meta
-  title="Add-Ons / Browser / Components / Search"
-  tags={["autodocs"]}
-  parameters={{ layout: "centered" }}
-  component={SearchInput}
-/>
+<Template let:args>
+  <SearchInput {...args} />
+</Template>
 
-<Story name="Search">
-  <SearchInputDemo />
-</Story>
+<Story name="Search" {args} />

@@ -1,4 +1,4 @@
-<script context="module">
+<script lang="ts" context="module">
   import { _ } from "svelte-i18n";
   import { writable } from "svelte/store";
 

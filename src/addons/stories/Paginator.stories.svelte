@@ -1,25 +1,40 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
   import Paginator from "../Paginator.svelte";
-  import PaginatorDemo from "./Paginator.demo.svelte";
 
   const args = {
     has_next: true,
     has_previous: true,
   };
+
+  export const meta = {
+    component: Paginator,
+    title: "Add-Ons / Paginator",
+    tags: ["autodocs"],
+    parameters: {
+      layout: "centered",
+    },
+  };
 </script>
 
-<Meta
-  title="Add-Ons / Paginator"
-  tags={["autodocs"]}
-  parameters={{ layout: "centered" }}
-  component={Paginator}
-/>
+<style>
+  .container {
+    border: 1px solid gray;
+    padding: 1em;
+    width: 50vw;
+  }
+</style>
 
 <Template let:args>
-  <PaginatorDemo {args} />
+  <div class="container">
+    <Paginator
+      {...args}
+      on:next={action("Next")}
+      on:previous={action("Previous")}
+    />
+  </div>
 </Template>
 
 <Story name="Default" {args} />

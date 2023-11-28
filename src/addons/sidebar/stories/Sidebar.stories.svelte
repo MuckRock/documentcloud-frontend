@@ -1,11 +1,10 @@
-<script>
+<script lang="ts" context="module">
   import { rest } from "msw";
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story } from "@storybook/addon-svelte-csf";
 
   import { baseApiUrl } from "../../../api/base.js";
   import activeAddons from "../../fixtures/addons-active.json";
   import Sidebar from "../Sidebar.svelte";
-  import SidebarDemo from "./Sidebar.demo.svelte";
 
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();
 
@@ -13,15 +12,25 @@
   const data = rest.get(mockUrl, (req, res, ctx) =>
     res(ctx.json(activeAddons)),
   );
+
+  export const meta = {
+    title: "Add-Ons / Sidebar",
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
+    component: Sidebar,
+  };
 </script>
 
-<Meta
-  title="Add-Ons / Sidebar"
-  tags={["autodocs"]}
-  parameters={{ layout: "centered" }}
-  component={Sidebar}
-/>
+<style>
+  .sidebar {
+    padding: 1.5rem 0;
+    width: var(--sidebar-width);
+    background-color: var(--sidebar);
+  }
+</style>
 
-<Story name="Sidebar" parameters={{ msw: { handlers: [data] } }}>
-  <SidebarDemo />
+<Story name="Default" parameters={{ msw: { handlers: [data] } }}>
+  <div class="sidebar">
+    <Sidebar />
+  </div>
 </Story>
