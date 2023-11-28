@@ -1,28 +1,53 @@
-<script lang="ts">
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import { action } from "@storybook/addon-actions";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import RevisionsDialog from "../RevisionsDialog.svelte";
 
   import documentFixture from "../../../pages/app/test/fixtures/document.json";
 
+  const today = new Date().getDate();
+  const manyRevisions = Array(100)
+    .fill(1)
+    .map((n, i) => n + i)
+    .map((version) => ({
+      version,
+      // Create a range of dates for each revision—this goes back multiple years
+      created_at: new Date().setDate(today - (1001 - version * 10)),
+      comment: `Revision ${version}`,
+      user: 1,
+      url: "test",
+    }));
+
   const args = {
+    enabled: true,
+    documentId: "1",
     revisions: documentFixture.revisions,
   };
-</script>
 
-<Meta
-  title="Dialogs / Revisions"
-  component={RevisionsDialog}
-  parameters={{
-    layout: "centered",
-  }}
-/>
+  export const meta = {
+    title: "Dialogs / Revision",
+    component: RevisionsDialog,
+    parameters: {
+      layout: "centered",
+    },
+    argTypes: {
+      enabled: {
+        control: {
+          type: "boolean",
+        },
+      },
+    },
+  };
+</script>
 
 <Template let:args>
   <RevisionsDialog {...args} />
 </Template>
 
 <Story name="With Revisions" {args} />
-<Story name="Without Revisions" args={{ ...args, revisions: [] }} />
-<Story name="Hide Count" args={{ ...args, showCount: false }} />
+<Story name="With Zero Revisions" args={{ ...args, revisions: [] }} />
+<Story
+  name="With Many Revisions"
+  args={{ ...args, revisions: manyRevisions }}
+/>
+<Story name="Disabled Revision Control" args={{ ...args, enabled: false }} />

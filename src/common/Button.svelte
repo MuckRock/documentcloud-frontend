@@ -90,7 +90,8 @@
     font-family: inherit;
   }
 
-  button.nomargin {
+  button.nomargin,
+  a.nomargin {
     margin: 0;
   }
 
