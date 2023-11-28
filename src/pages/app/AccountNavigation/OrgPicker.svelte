@@ -12,7 +12,7 @@
   export let activeOrg: Org;
   export let loading = false;
   export let orgOptions: Org[] = [];
-  export let handleChange: (id: string) => void = () => {};
+  export let handleChange: (org: Org) => void = () => {};
 </script>
 
 <style>
@@ -62,7 +62,7 @@
             <MenuItem
               on:click={() => {
                 closeDropdown("orgSelect");
-                handleChange?.(org.id);
+                handleChange?.(org);
               }}
               selected={org.id === activeOrg.id}
             >
