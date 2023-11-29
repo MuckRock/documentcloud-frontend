@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import {
   runify,
   PageSpec,
@@ -60,18 +61,7 @@ test("page spec to numbers", () => {
   expect(runify([1, 2, 3]).toNumbers()).toEqual([1, 2, 3]);
   expect(runify([1, 3]).toNumbers()).toEqual([1, 3]);
   expect(runify([1, 3, 4, 7, 8, 9, 1, 2, 3, 4, 5, 1]).toNumbers()).toEqual([
-    1,
-    3,
-    4,
-    7,
-    8,
-    9,
-    1,
-    2,
-    3,
-    4,
-    5,
-    1,
+    1, 3, 4, 7, 8, 9, 1, 2, 3, 4, 5, 1,
   ]);
 });
 
@@ -81,18 +71,7 @@ test("parse page spec", () => {
   expect(getNumbers("1-3")).toEqual([1, 2, 3]);
   expect(getNumbers("1,3")).toEqual([1, 3]);
   expect(getNumbers("1,3-4,7-9,1-5,1")).toEqual([
-    1,
-    3,
-    4,
-    7,
-    8,
-    9,
-    1,
-    2,
-    3,
-    4,
-    5,
-    1,
+    1, 3, 4, 7, 8, 9, 1, 2, 3, 4, 5, 1,
   ]);
 });
 

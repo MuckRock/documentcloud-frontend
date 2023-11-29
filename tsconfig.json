@@ -8,7 +8,7 @@
     "lib": ["es2020", "DOM", "dom.iterable"],
     "allowJs": true,
     // "checkJs": true, /* 600+ errors */
-    "baseUrl": "/app",
+    "baseUrl": "/",
     "paths": {
       "@/*": ["src/*"],
       "svelte": ["node_modules/svelte"]

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { coalesceHighlights } from "./coalesceHighlights.js";
 
 test("simple coalesce", () => {

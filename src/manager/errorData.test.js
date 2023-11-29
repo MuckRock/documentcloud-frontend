@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { extractErrorData } from "./errorData.js";
 
 test("extract basic data", () => {

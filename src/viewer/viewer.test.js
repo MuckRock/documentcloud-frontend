@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { viewer } from "./viewer.js";
 
 test("ordered sections/notes", () => {

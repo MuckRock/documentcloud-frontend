@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { allIndices, nFormatter } from "./string.js";
 
 test("string all indices", () => {

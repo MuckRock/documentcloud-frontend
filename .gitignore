@@ -23,6 +23,9 @@ public/notes/*
 public/viewer/*
 public/assets/
 
+# vite output
+dist/
+
 # Netlify
 .netlify
 
