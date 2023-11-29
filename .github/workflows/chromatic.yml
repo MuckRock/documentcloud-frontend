@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch_depth: 0 # Required to retrieve git history
+          fetch-depth: 0 # Required to retrieve git history
       - name: Use Node v18
         uses: actions/setup-node@v3
         with:
