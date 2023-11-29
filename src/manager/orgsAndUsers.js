@@ -231,7 +231,7 @@ export function isOrgAdmin(user) {
 
 export function isPremiumOrg(org) {
   if (!org || !org.plan) return null;
-  return ["Professional", "Organization"].includes(org.plan);
+  return org.plan !== "Free";
 }
 
 export function getCreditBalance(org) {
