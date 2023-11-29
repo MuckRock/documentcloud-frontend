@@ -3,6 +3,7 @@
   --primary: #4294f0;
   --primary-faded: rgba(66, 148, 240, 0.13);
   --sidebar: #edeeef;
+  --white: #ffffff;
   --black: #000000;
   --gray: rgba(0, 0, 0, 0.53);
   --darkgray: rgba(0, 0, 0, 0.8);
@@ -23,6 +24,7 @@
   --actionPane: #fffdea;
   --highlight-orange: #ff785c;
   --inputBg: #ffffff;
+  --premium: #24CC99;
 
   /* Viewer */
   --viewerPaneColor: #f3f3f3;

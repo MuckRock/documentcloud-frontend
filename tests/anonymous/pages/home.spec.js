@@ -11,7 +11,7 @@ test("basic homepage test", async ({ page }) => {
   await page.getByRole("banner").getByRole("link").first().click();
 
   // and back
-  await page.getByRole("link", { name: "Home" }).click();
+  await page.goBack();
 
   await expect(page).toHaveTitle("Home | DocumentCloud");
 });

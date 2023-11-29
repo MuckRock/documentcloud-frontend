@@ -15,6 +15,7 @@
     comment: string;
     created_at: string;
     updated_at: string;
+    credits_spent?: number;
   }
 </script>
 
@@ -27,6 +28,7 @@
     Question24,
     Sync24,
   } from "svelte-octicons";
+  import Price from "../../premium-credits/Price.svelte";
 
   export let run;
 
@@ -74,11 +76,14 @@
   .unknown-status.icon {
     fill: var(--gray);
   }
+  .row {
+    display: flex;
+  }
   .info {
     flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+  }
+  .info .row {
+    align-items: baseline;
     justify-content: space-between;
   }
   .primary-info {
@@ -88,7 +93,7 @@
     gap: 0.5em;
   }
   .name {
-    margin: 0;
+    margin: 0 1rem 0 0;
     font-weight: 600;
   }
   .date {
@@ -101,6 +106,11 @@
     margin: 0.5em 0 0;
     font-size: 0.8em;
     font-style: italic;
+  }
+  .price {
+    margin: 0.5em 0 0;
+    font-size: 0.8em;
+    align-self: flex-end;
   }
 </style>
 
@@ -121,17 +131,28 @@
     {/if}
   </div>
   <div class="info">
-    <div class="primary-info">
-      <p class="name">{run.addon.name}</p>
-      {#if run.file_url}<Button action href={run.file_url}
-          ><Paperclip16 />Download File</Button
-        >{/if}
+    <div class="row">
+      <div class="primary-info">
+        <p class="name">{run.addon.name}</p>
+        {#if run.file_url}<Button action href={run.file_url}
+            ><Paperclip16 />Download File</Button
+          >{/if}
+      </div>
+      <time
+        class="date"
+        datetime={ranAt.toISOString()}
+        title={ranAt.toISOString()}>{ranAt.toLocaleString()}</time
+      >
     </div>
-    <time
-      class="date"
-      datetime={ranAt.toISOString()}
-      title={ranAt.toISOString()}>{ranAt.toLocaleString()}</time
-    >
-    {#if run.message}<p class="message">{run.message}</p>{/if}
+    <div class="row">
+      {#if run.message}
+        <p class="message">{run.message}</p>
+      {/if}
+      {#if run.credits_spent}
+        <p class="price">
+          <Price value={run.credits_spent} />
+        </p>
+      {/if}
+    </div>
   </div>
 </div>

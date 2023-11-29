@@ -21,3 +21,7 @@
 <Story name="Queued" args={{ run: { ...run, status: "queued" } }} />
 <Story name="In Progress" args={{ run: { ...run, status: "in_progress" } }} />
 <Story name="Unknown" args={{ run: { ...run, status: "unexpectedStatus" } }} />
+<Story
+  name="Premium Run"
+  args={{ run: { ...run, status: "success", credits_spent: 700 } }}
+/>

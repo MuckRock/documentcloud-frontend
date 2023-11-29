@@ -6,6 +6,7 @@
     ["all", "All"],
     ["active", "Pinned"],
     ["featured", "Featured"],
+    ["premium", "Premium"],
   ];
 
   export const CATEGORIES = [
@@ -26,6 +27,7 @@
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
   import Infinity from "svelte-octicons/lib/Infinity16.svelte";
+  import Credit from "../../common/icons/Credit.svelte";
 </script>
 
 <style>
@@ -59,6 +61,10 @@
   #featured:not(.selected) [slot="icon"] {
     fill: orange;
   }
+
+  #premium:not(.selected) [slot="icon"] {
+    fill: var(--premium);
+  }
 </style>
 
 <ul class="filters">
@@ -78,6 +84,12 @@
     <Filter name="Pinned" selected={$filter.includes("active")}>
       <input slot="input" type="radio" value="active" bind:group={$filter} />
       <span slot="icon"><Pin /></span>
+    </Filter>
+  </li>
+  <li id="premium" class:selected={$filter.includes("premium")}>
+    <Filter name="Premium" selected={$filter.includes("premium")}>
+      <input slot="input" type="radio" value="premium" bind:group={$filter} />
+      <span slot="icon"><Credit badge /></span>
     </Filter>
   </li>
 </ul>

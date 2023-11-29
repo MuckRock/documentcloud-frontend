@@ -11,6 +11,7 @@
   import Filters, { filter, FILTERS, CATEGORIES } from "./Filters.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
+  import Credit from "../../common/icons/Credit.svelte";
 
   export let visible = false;
   export let per_page = 10;
@@ -201,6 +202,13 @@
       fill: orange;
     }
   }
+  .premium.tip {
+    background-color: hsl(161, 69%, 91%);
+    border-color: var(--premium, #24cc99);
+    & .icon {
+      fill: var(--premium, #24cc99);
+    }
+  }
 </style>
 
 <Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
@@ -224,6 +232,11 @@
           <aside class="featured tip">
             <div class="icon"><Star size={1.75} /></div>
             <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
+          </aside>
+        {:else if $filter === "premium"}
+          <aside class="premium tip">
+            <div class="icon"><Credit badge size={1.75} /></div>
+            <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
           </aside>
         {/if}
         <AddOnList {loading} {error} {items} bind:reload />

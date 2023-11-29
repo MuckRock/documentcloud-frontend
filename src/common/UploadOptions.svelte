@@ -104,7 +104,7 @@
         {$_("uploadOptions.creditHelpText", {
           values: {
             organization: $orgsAndUsers.me.organization.name,
-            n: $orgsAndUsers.me.organization.monthly_ai_credits,
+            n: $orgsAndUsers.me.organization.monthly_credits,
           },
         })}
       </p>

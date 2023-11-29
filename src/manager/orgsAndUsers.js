@@ -11,6 +11,7 @@ import {
   getUsers,
   getOrganization,
 } from "../api/orgAndUser.js";
+import { SQUARELET_URL } from "../api/auth.js";
 import { projects, initProjects } from "./projects.js";
 import { userUrl, allDocumentsUrl } from "../search/search.js";
 import { layout } from "./layout.js";
@@ -116,7 +117,11 @@ function initProjectsIfNecessary(route) {
 }
 
 export async function initOrgsAndUsers(callback = null) {
-  orgsAndUsers.me = await getMe();
+  try {
+    orgsAndUsers.me = await getMe();
+  } catch (e) {
+    orgsAndUsers.me = null;
+  }
   if (orgsAndUsers.me !== null) {
     // Logged in
     orgsAndUsers.usersById[orgsAndUsers.me.id] = orgsAndUsers.me;
@@ -127,11 +132,15 @@ export async function initOrgsAndUsers(callback = null) {
       const org = orgsAndUsers.selfOrgs[i];
       orgsAndUsers.orgsById[org.id] = org;
     }
-
-    orgsAndUsers.sameOrgUsers = await inMyOrg(
-      orgsAndUsers.me.organization,
-      orgsAndUsers.me,
-    );
+    try {
+      orgsAndUsers.sameOrgUsers = await inMyOrg(
+        orgsAndUsers.me.organization.id,
+        orgsAndUsers.me.id,
+      );
+    } catch (err) {
+      console.error(err);
+      orgsAndUsers.sameOrgUsers = [];
+    }
 
     // Trigger update
     orgsAndUsers.usersById = orgsAndUsers.usersById;
@@ -173,10 +182,15 @@ export async function changeActive(org) {
 
     orgsAndUsers.me.organization = org;
     orgsAndUsers.me = orgsAndUsers.me;
-    orgsAndUsers.sameOrgUsers = await inMyOrg(
-      orgsAndUsers.me.organization,
-      orgsAndUsers.me,
-    );
+    try {
+      orgsAndUsers.sameOrgUsers = await inMyOrg(
+        orgsAndUsers.me.organization.id,
+        orgsAndUsers.me.id,
+      );
+    } catch (err) {
+      console.error(err);
+      orgsAndUsers.sameOrgUsers = [];
+    }
     pushToast("Successfully changed active organization");
   });
 }
@@ -185,26 +199,59 @@ export async function usersInOrg(orgId) {
   return getUsers({ orgIds: [orgId] });
 }
 
+function alphabetizeUsers(userA, userB) {
+  const aName = String(userA.name || userA.username);
+  const bName = String(userB.name || userB.username);
+  return aName.localeCompare(bName);
+}
+
 // same as above, but exclude me
-export async function inMyOrg(organization, me) {
-  if (!organization.id) return [];
-  const users = await getUsers({ orgIds: [organization.id] }).catch((e) => {
-    console.error(e);
-    return [];
-  });
+export async function inMyOrg(orgId, myId) {
+  if (!orgId) return [];
+  const users = await getUsers({ orgIds: [orgId] });
+  // Sort by admin status, then username
+  const adminUsers = users
+    .filter((u) => u.admin_organizations.includes(orgId))
+    .sort(alphabetizeUsers);
+  const regularUsers = users
+    .filter((u) => !adminUsers.includes(u))
+    .sort(alphabetizeUsers);
+  // Remove me from the user list
+  return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
+}
 
-  users.sort((a, b) => {
-    // Sort by admin status, then username
-    const aAdmin = a.admin_organizations.includes(organization.id);
-    const bAdmin = b.admin_organizations.includes(organization.id);
-    if (aAdmin == bAdmin) {
-      return String(a.name || a.username).localeCompare(
-        String(b.name || b.username),
-      );
-    } else {
-      return aAdmin < bAdmin;
-    }
-  });
+export function isOrgAdmin(user) {
+  if (!user) return false;
+  const id =
+    typeof user.organization === "string"
+      ? user.organization
+      : user.organization.id;
+  return user.admin_organizations.includes(id);
+}
 
-  return users.filter((u) => u.id !== me.id);
+export function isPremiumOrg(org) {
+  if (!org || !org.plan) return null;
+  return org.plan !== "Free";
+}
+
+export function getCreditBalance(org) {
+  if (!org) return null;
+  return org.monthly_credits + org.purchased_credits;
+}
+
+export async function triggerPremiumUpgradeFlow(org) {
+  let url;
+  if (org.individual) {
+    // Redirect the user to their Squarelet account settings
+    url = SQUARELET_URL + `/users/~payment/`;
+  } else {
+    // Redirect the user to the Squarelet organization settings
+    url = SQUARELET_URL + `/organizations/${org.slug}/payment/`;
+  }
+  window?.open(url);
+}
+
+// TODO: Handle flow for purchasing premium credits (#342)
+export async function triggerCreditPurchaseFlow() {
+  alert("Purchase Credits!");
 }

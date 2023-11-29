@@ -43,3 +43,12 @@
     },
   }}
 />
+<Story
+  name="Premium"
+  args={{
+    addon: {
+      ...addon,
+      parameters: { ...addon.parameters, categories: ["premium"] },
+    },
+  }}
+/>

@@ -14,11 +14,17 @@
   import Selection from "./Selection.svelte";
   import ScheduledInset from "./ScheduledInset.svelte";
   import { eventValues, schedules } from "../runs/ScheduledEvent.svelte";
-
   import { baseApiUrl } from "../../api/base.js";
   import { getCsrfToken } from "../../api/session.js";
   import { pushToast } from "../../common/Toast.svelte";
   import { runs } from "../progress/AddonRun.svelte";
+  import Premium from "./Premium.svelte";
+
+  import {
+    orgsAndUsers,
+    isPremiumOrg,
+    getCreditBalance,
+  } from "../../manager/orgsAndUsers";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
@@ -40,6 +46,12 @@
     reset();
   }
 
+  $: isPremiumUser = isPremiumOrg($orgsAndUsers?.me?.organization);
+  $: creditBalance = getCreditBalance($orgsAndUsers?.me?.organization) ?? 0;
+  $: isPremiumAddon =
+    addon?.parameters.categories?.includes("premium") ?? false;
+  $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
+
   onMount(() => {
     if (event) {
       $values = {
@@ -54,7 +66,7 @@
     let qs = new URLSearchParams(window.location.search);
 
     // only accept values in properties
-    const { properties } = addon.parameters;
+    const { properties } = addon?.parameters ?? {};
     const values = Object.fromEntries(
       Array.from(qs).filter(([k, v]) => properties.hasOwnProperty(k)),
     );
@@ -289,18 +301,28 @@
         <!-- todo: decide if this should render for scheduled add-ons -->
         <!-- this only applies to add-ons running against existing documents -->
         <Selection
+          slot="selection"
           bind:this={selection}
           bind:value={$values["selection"]}
-          slot="after"
           documents={new Set(addon.parameters.documents)}
         />
+
+        <Premium slot="premium" {addon} user={$orgsAndUsers?.me} />
 
         <div slot="controls" class="controls">
           <div class="primary">
             {#if event}
-              <Button type="submit" label={$_("dialog.save")} />
+              <Button
+                type="submit"
+                label={$_("dialog.save")}
+                disabled={disablePremium}
+              />
             {:else}
-              <Button type="submit" label={$_("dialog.dispatch")} />
+              <Button
+                type="submit"
+                label={$_("dialog.dispatch")}
+                disabled={disablePremium}
+              />
             {/if}
           </div>
           <div class="secondary">
