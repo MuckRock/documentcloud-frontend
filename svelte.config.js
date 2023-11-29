@@ -24,6 +24,13 @@ export default {
   compilerOptions: {
     accessors: true,
   },
+
+  onwarn(warning, handler) {
+    if (process.env.SUPPRESS_WARNINGS) return;
+
+    handler(warning);
+  },
+
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
   // for more information about preprocessors
   preprocess: sveltePreprocess({

@@ -37,13 +37,26 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 
   return {
     build: {
-      /*
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, "index.html"),
+        },
+      },
 
-          // todo: embed entries
-          // embed: path.resolve(__dirname, "src/embed/index.html"),
+      /*
+      lib: {
+        entry: {
+          // embeds
+          enhance: path.resolve(__dirname, "./src/embed/enhance.js"),
+          notes: path.resolve(__dirname, "./src/embed/noteLoader.js"),
+          documentLoader: path.resolve(
+            __dirname,
+            "./src/embed/documentLoader.js",
+          ),
+          projectLoader: path.resolve(
+            __dirname,
+            "./src/embed/projectLoader.js",
+          ),
         },
       },
       */
