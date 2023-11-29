@@ -1,0 +1,10 @@
+[build]
+publish = "dist/"
+
+[context.deploy-preview.environment]
+publish = "dist/"
+NODE_ENV = "staging"
+
+[context.branch-deploy]
+publish = "dist/"
+NODE_ENV = "staging"
