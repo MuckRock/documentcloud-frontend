@@ -28,7 +28,7 @@
   $: isIndividualOrg =
     typeof user?.organization !== "string" && user?.organization?.individual;
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
-  const { amount, unit, cost } = addon?.parameters?.cost ?? {};
+  const { amount, unit, price } = addon?.parameters?.cost ?? {};
 
   function toggleSpendingLimit(
     event: Event & { currentTarget: HTMLInputElement },
@@ -153,7 +153,7 @@
           {#if amount}
             <h3 class="prettyCost">
               {$_("addonDispatchDialog.cost", {
-                values: { amount: amount, unit: unit, cost: cost || 1},
+                values: { amount: amount, unit: unit, price: price || 1},
               })}
             </h3>
           {/if}

@@ -603,7 +603,7 @@
       "cost": {
         "unit": "document",
         "amount": 1,
-        "cost": 14
+        "price": 14
       },
       "categories": ["ai", "premium"],
       "properties": {
