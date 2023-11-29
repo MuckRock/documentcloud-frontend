@@ -763,6 +763,7 @@
     "runSuccess": "Add-on is now running",
     "selectionHelp": "From the main list, select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
+    "cost": "{amount} {unit} per {cost, plural, one {credit} other {# credits}}",
     "premiumUpgrade": {
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
       "callToAction": "Upgrade Plan",
@@ -828,5 +829,6 @@
     "p3": "Want more fascinating documents, open data and original reporting to your inbox? Subscribe to MuckRock's newsletter:",
     "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>.",
     "subscribe": "Subscribe"
-  }
+  },
+  "premium": {}
 }

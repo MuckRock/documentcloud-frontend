@@ -28,8 +28,7 @@
   $: isIndividualOrg =
     typeof user?.organization !== "string" && user?.organization?.individual;
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
-  const { amount, unit } = addon?.parameters?.cost ?? {};
-  $: prettyCost = amount && unit ? handlePlural(amount, unit) : null;
+  const { amount, unit, cost } = addon?.parameters?.cost ?? {};
 
   function toggleSpendingLimit(
     event: Event & { currentTarget: HTMLInputElement },
@@ -151,9 +150,11 @@
       <legend>{$_("addonDispatchDialog.premium")}</legend>
       <div class="row">
         <div class="column">
-          {#if prettyCost}
+          {#if amount}
             <h3 class="prettyCost">
-              {prettyCost} per credit
+              {$_("addonDispatchDialog.cost", {
+                values: { amount: amount, unit: unit, cost: cost || 1},
+              })}
             </h3>
           {/if}
           <!-- TODO: Support spend limit (#343)

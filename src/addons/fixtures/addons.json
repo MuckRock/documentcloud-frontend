@@ -252,7 +252,7 @@
       "documents": ["selected"],
       "cost": {
         "amount": 150,
-        "unit": "character"
+        "unit": "characters"
       },
       "categories": ["ai", "premium", "file"],
       "properties": {
@@ -601,8 +601,9 @@
       "title": "Diakopoulos GPT-3 Example: Classifying Comments Based on Subject",
       "documents": ["query", "selected"],
       "cost": {
-        "unit": "token",
-        "amount": 150
+        "unit": "document",
+        "amount": 1,
+        "cost": 14
       },
       "categories": ["ai", "premium"],
       "properties": {

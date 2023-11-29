@@ -107,3 +107,11 @@
     user: { ...user, organization: { ...groupOrg, monthly_credits: 0 } },
   }}
 />
+<Story
+  name="Azure"
+  args={{ addon: addons[8], user: { ...user, organization: individualOrg } }}
+/>
+<Story
+  name="GPT"
+  args={{ addon: addons[9], user: { ...user, organization: individualOrg } }}
+/>
