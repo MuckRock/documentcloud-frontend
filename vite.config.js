@@ -3,6 +3,7 @@ import url from "node:url";
 
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +38,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 
   return {
     build: {
+      minify: false,
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, "index.html"),
@@ -72,11 +74,36 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
     envPrefix: "DC_",
 
     // plugin options are in svelte.config.js
-    plugins: [svelte()],
+    plugins: [
+      svelte(),
+
+      // Put the Sentry vite plugin after all other plugins
+      sentryVitePlugin({
+        org: "muckrock",
+        project: process.env.SENTRY_PROJECT,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        telemetry: false,
+      }),
+    ],
 
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),
+
+        // these packages don't export correctly, so we use an alias to fix imports
+        "axios-retry": path.resolve(
+          __dirname,
+          "node_modules/axios-retry/es/index.mjs",
+        ),
+        "marked-gfm-heading-id": path.resolve(
+          __dirname,
+          "node_modules/marked-gfm-heading-id/src/index.js",
+        ),
+        "magic-string": path.resolve(
+          __dirname,
+          "node_modules/magic-string/dist/magic-string.es.mjs",
+        ),
+        svue: path.resolve(__dirname, "node_modules/svue/dist/svue.js"),
       },
     },
 

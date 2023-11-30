@@ -7,6 +7,7 @@
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-typescript": "^7.21.4",
     "@sentry/svelte": "^7.66.0",
+    "@sentry/vite-plugin": "^2.10.2",
     "@tsconfig/svelte": "^2.0.1",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
@@ -32,7 +33,6 @@
     "svelte-octicons": "^18.4.0",
     "svelte-preprocess": "^5.0.3",
     "svelte-preprocess-sass": "^2.0.0",
-    "svue": "github:MuckRock/svue",
     "ts-node": "^9.1.1",
     "typescript": "^5.0.3",
     "vite": "^4.0.0"
@@ -67,6 +67,7 @@
     "dev": "vite --host 0.0.0.0",
     "dev-app": "cross-env NODE_ENV=development SUPPRESS_WARNINGS=1 webpack serve --config webpack.app.config.js",
     "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
+    "preview": "vite preview",
     "serve": "serve public -l 80 --single",
     "storybook": "storybook dev -p 6006",
     "test": "vitest run",
