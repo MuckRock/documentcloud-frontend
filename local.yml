@@ -17,6 +17,7 @@ services:
           - internal.www.dev.documentcloud.org
     environment:
       DOCKER: true
+      SUPPRESS_WARNINGS: true
 
   documentcloud_frontend_app:
     image: node:18

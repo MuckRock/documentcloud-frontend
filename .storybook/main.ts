@@ -1,8 +1,4 @@
-import path from "node:path";
-import autoPreprocess from "svelte-preprocess";
-import { preprocessOptions } from "../preprocess.config.js";
-
-import type { StorybookConfig } from "@storybook/svelte-webpack5";
+import type { StorybookConfig } from "@storybook/svelte-vite";
 
 const config: StorybookConfig = {
   core: {
@@ -16,31 +12,11 @@ const config: StorybookConfig = {
     "@storybook/addon-svelte-csf",
   ],
   framework: {
-    name: "@storybook/svelte-webpack5",
-    options: {
-      preprocess: autoPreprocess(preprocessOptions),
-    },
+    name: "@storybook/svelte-vite",
+    options: {},
   },
   docs: {
     autodocs: "tag",
   },
-  staticDirs: ["../public"],
-  typescript: {
-    check: false,
-    checkOptions: {},
-  },
-  webpackFinal: async (config) => {
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "@": path.resolve(__dirname, "../src"),
-      };
-    }
-
-    config.devtool = "source-map";
-
-    return config;
-  },
 };
-
 export default config;
