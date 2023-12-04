@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import Empty from "../pages/home/Empty.svelte";
 
 export const lazyComponent = new Svue({
   data() {
@@ -18,9 +19,7 @@ export const lazyComponent = new Svue({
 
 export function loadDefault() {
   if (lazyComponent.default !== null) return;
-  import("@/pages/home/Empty.svelte").then((module) => {
-    lazyComponent.default = module.default;
-  });
+  lazyComponent.default = Empty;
 }
 
 export function loadHome() {
