@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { beforeUpdate } from "svelte";
   import Plus16 from "svelte-octicons/lib/Plus16.svelte";
+
   import Checkbox from "./Checkbox.svelte";
   import X16 from "svelte-octicons/lib/X16.svelte";
   import Number from "./Number.svelte";
@@ -15,9 +17,16 @@
   };
 
   export let count: number = 1;
-  export let value = Array(count).fill(null);
+  export let value: [any] = Array(count).fill(null);
 
-  $: numItems = value.length;
+  $: numItems = value?.length ?? 0;
+
+  beforeUpdate(() => {
+    // value should always be an array
+    if (!Array.isArray(value)) {
+      value = [];
+    }
+  });
 
   // only one level of nesting allowed
   const types = {
