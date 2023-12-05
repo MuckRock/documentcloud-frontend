@@ -2,7 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Badge from "../Badge.svelte";
-  import BadgeDemo from "./Badge.demo.svelte";
+  import Star from "../icons/Star.svelte";
 
   export const meta = {
     title: "Common / Badge",
@@ -14,7 +14,9 @@
 </script>
 
 <Template let:args>
-  <BadgeDemo {...args} />
+  <Badge {...args}>
+    <Star slot="icon" />
+  </Badge>
 </Template>
 
 <Story name="Light Color" args={{ label: "Featured", badgeColor: "yellow" }} />
