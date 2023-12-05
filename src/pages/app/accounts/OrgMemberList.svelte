@@ -1,14 +1,14 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
+  import { People24, Person16 } from "svelte-octicons";
 
   import Loader from "../../../common/Loader.svelte";
   import Error from "../../../common/icons/Error.svelte";
-  import { inMyOrg } from "../../../manager/orgsAndUsers.js";
   import Link from "../../../router/Link.svelte";
-  import { userUrl } from "../../../search/search";
-  import { People24, Person16 } from "svelte-octicons";
-  import { handlePlural } from "../../../util/string";
   import Button from "../../../common/Button.svelte";
+
+  import { userUrl } from "../../../search/search.js";
+  import { inMyOrg } from "../../../manager/orgsAndUsers.js";
 
   export let orgId;
   export let myId;
@@ -106,7 +106,9 @@
   <Loader active center pad />
 {:then users}
   {#if users.length > 0}
-    <p class="userCount">{handlePlural(users.length, "organization member")}</p>
+    <p class="userCount">
+      {$_("authSection.org.userCount", { values: { n: users.length } })}
+    </p>
     <ul class="userList">
       {#each users as user}
         <li>

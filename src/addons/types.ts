@@ -26,6 +26,7 @@ interface AddOnParameters {
   properties: Record<string, AddOnProperty>;
   cost: {
     amount: number;
+    price: number;
     unit: string;
   };
   eventOptions: {

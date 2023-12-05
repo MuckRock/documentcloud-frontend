@@ -1,34 +1,4 @@
 /**
- * Appropriately pluralizes a word based on the quantity.
- * @param {number} value The number of items
- * @param {string} str The base string name of a singular item
- * @param {boolean} allowZero If false, return an empty string on zero items
- */
-export function handlePlural(value, str, allowZero = false) {
-  if (!allowZero && value == 0) return "";
-  return `${value} ${simplePlural(value, str)}`;
-}
-
-/**
- * Returns a word with an "s" after it if appropriate
- * @param {number} value The number of items
- * @param {string} string The base string name of a single item
- */
-export function simplePlural(value, string) {
-  return string + (value != 1 ? "s" : "");
-}
-
-/**
- * Pluralizes a word and puts the number before it only if non-singular,
- * e.g. for the "selected document" vs. for the "3 selected documents"
- * @param {number} value The number of items
- * @param {string} string The base string name of a single item
- */
-export function nameSingularNumberPlural(value, string) {
-  return `${value == 1 ? "" : `${value} `}${simplePlural(value, string)}`;
-}
-
-/**
  * Formats a size to a human-readable format
  * @param {number} bytes The number of bytes
  * @param {number} decimals Number of decimal places
