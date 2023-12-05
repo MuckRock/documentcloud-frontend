@@ -30,7 +30,7 @@
     const resp = await fetch(endpoint);
 
     if (!resp.ok) {
-      throw new Error(resp.statusText);
+      throw new Error(`Error fetching flat page: ${resp.statusText}`);
     }
 
     return resp.json();

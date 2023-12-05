@@ -99,6 +99,7 @@ export const documents = new Svue({
       return allDocuments;
     },
     pendingExisting(docsById, pending) {
+      if (!pending) return [];
       return pending.filter((x) => {
         const id = x.doc_id;
         return docsById[id] != null;
