@@ -57,7 +57,7 @@
     const resp = await fetch(endpoint, options);
 
     if (!resp.ok) {
-      throw new Error(resp.statusText);
+      throw new Error(`Error updating add-on run: ${resp.statusText}`);
     }
 
     // delete returns an empty response
@@ -220,7 +220,9 @@
   {#if run.message || run.file_url}
     <div class="info message processingText" class:compact>
       {#if run.message}{run.message}{/if}
-      {#if run.message && run.file_url} - {/if}
+      {#if run.message && run.file_url}
+        -
+      {/if}
       {#if run.file_url}<a href={run.file_url}>{$_("addonProgress.download")}</a
         >{/if}
     </div>
