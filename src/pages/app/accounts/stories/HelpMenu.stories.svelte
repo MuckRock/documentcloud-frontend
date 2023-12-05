@@ -1,14 +1,14 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import HelpMenu from "../HelpMenu.svelte";
-</script>
 
-<Meta
-  title="Account Navigation / Menus / Help"
-  component={HelpMenu}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Account Navigation / Menus / Help",
+    component: HelpMenu,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <HelpMenu {...args} />

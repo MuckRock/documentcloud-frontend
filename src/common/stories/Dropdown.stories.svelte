@@ -1,17 +1,17 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Dropdown from "./Dropdown.demo.svelte";
 
   const args = {};
-</script>
 
-<Meta
-  title="Common / Dropdown"
-  tags={["autodocs"]}
-  component={Dropdown}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Common / Dropdown",
+    tags: ["autodocs"],
+    component: Dropdown,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <Dropdown {...args} />

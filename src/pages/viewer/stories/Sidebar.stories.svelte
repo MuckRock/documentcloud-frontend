@@ -1,5 +1,5 @@
-<script lang="ts">
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Sidebar from "../Sidebar.svelte";
   import documentFixture from "../fixtures/document.json";
@@ -11,9 +11,12 @@
     signedIn: true,
     disableControls: false,
   };
-</script>
 
-<Meta title="Viewer / Sidebar" component={Sidebar} />
+  export const meta = {
+    title: "Viewer / Sidebar",
+    component: Sidebar,
+  };
+</script>
 
 <Template let:args>
   <Sidebar {...args} />

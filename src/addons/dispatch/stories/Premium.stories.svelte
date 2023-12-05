@@ -1,9 +1,9 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Premium from "../Premium.svelte";
 
-  import * as addons from "../../fixtures/addons.json";
+  import addons from "../../fixtures/addons.json";
 
   const individualOrg = {
     id: 4,
@@ -44,13 +44,13 @@
     username: "lasser.allan",
     verified_journalist: true,
   };
-</script>
 
-<Meta
-  title="Add-Ons / Dispatch / Premium"
-  component={Premium}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Add-Ons / Dispatch / Premium",
+    component: Premium,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <Premium {...args} />

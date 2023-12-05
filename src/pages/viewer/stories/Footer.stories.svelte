@@ -1,5 +1,5 @@
-<script lang="ts">
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Footer from "../Footer.svelte";
 
@@ -9,9 +9,12 @@
     embed: false,
     showFullscreen: false,
   };
-</script>
 
-<Meta title="Viewer / Footer" component={Footer} />
+  export const meta = {
+    title: "Viewer / Footer",
+    component: Footer,
+  };
+</script>
 
 <Template let:args>
   <Footer {...args} />
