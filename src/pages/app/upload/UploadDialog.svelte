@@ -1,6 +1,6 @@
 <script>
   // Components
-  import File from "./File.svelte";
+  import File from "../File.svelte";
   import Button from "@/common/Button.svelte";
   import DropZone from "@/common/DropZone.svelte";
   import FilePicker from "@/common/FilePicker.svelte";

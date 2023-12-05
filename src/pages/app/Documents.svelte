@@ -21,7 +21,7 @@
   import SearchLink from "./SearchLink.svelte";
   import SpecialMessage from "@/common/SpecialMessage.svelte";
   import Title from "@/common/Title.svelte";
-  import UploadDialog from "./UploadDialog.svelte";
+  import UploadDialog from "./upload/UploadDialog.svelte";
 
   // Store properties
   import { layout } from "@/manager/layout.js";
