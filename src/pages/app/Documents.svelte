@@ -7,7 +7,7 @@
   import AddonStatus from "../../addons/progress/AddonStatus.svelte";
   import ActionBar from "./ActionBar.svelte";
   import Anonymous from "./Anonymous.svelte";
-  import AccountNavigation from "./AccountNavigation/AccountNavigation.svelte";
+  import AccountNavigation from "./accounts/AccountNavigation.svelte";
   import Button from "@/common/Button.svelte";
   import Draggable from "@/common/Draggable.svelte";
   import Document from "./Document.svelte";
