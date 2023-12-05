@@ -1,19 +1,20 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import { handlePlural } from "../../util/string";
-  import type { AddOnListItem } from "../types";
-  import Button from "../../common/Button.svelte";
-  import Credit from "../../common/icons/Credit.svelte";
+  // import Button from "../../common/Button.svelte";
+  // import Credit from "../../common/icons/Credit.svelte";
   import Price from "../../premium-credits/Price.svelte";
   import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
+
   import {
     isPremiumOrg,
     getCreditBalance,
-    triggerCreditPurchaseFlow,
+    // triggerCreditPurchaseFlow,
     triggerPremiumUpgradeFlow,
     isOrgAdmin,
-  } from "../../manager/orgsAndUsers";
-  import { User } from "../../pages/app/AccountNavigation/types";
+  } from "../../manager/orgsAndUsers.js";
+
+  import type { AddOnListItem } from "../types";
+  import type { User } from "../../pages/app/accounts/types";
 
   export let addon: AddOnListItem;
 
@@ -88,6 +89,7 @@
     font-weight: 600;
     margin: 0;
   }
+  /*
   .spendingLimit {
     display: flex;
     gap: 0.5rem;
@@ -127,6 +129,7 @@
   .spendingLimit .limitInput::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
+  */
   .creditBalance {
     margin: 0;
     font-weight: 600;
@@ -153,7 +156,7 @@
           {#if amount}
             <h3 class="prettyCost">
               {$_("addonDispatchDialog.cost", {
-                values: { amount: amount, unit: unit, price: price || 1},
+                values: { amount: amount, unit: unit, price: price || 1 },
               })}
             </h3>
           {/if}

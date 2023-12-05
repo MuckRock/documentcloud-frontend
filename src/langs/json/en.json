@@ -384,7 +384,8 @@
       "personalAcct": "Personal Account",
       "adminRole": "Admin",
       "memberListError": "An error occurred while loading the member list.",
-      "memberListEmpty": "This organization has no other members."
+      "memberListEmpty": "This organization has no other members.",
+      "userCount":"{n, plural, one {# organization member} other {# organization members}}"
     },
     "credits": {
       "monthlyOrg": "Monthly Org Allowance",
@@ -442,6 +443,10 @@
     "delete": "Delete",
     "diagnosticInfo": "Diagnostic Info"
   },
+  "manager.documents": {
+    "added": "Successfully added {n, plural, one {# document} other {# documents}} to {project}",
+    "removed": "Successfully removed {n, plural, one {# document} other {# documents}} from {project}"
+  },
   "metaFields": {
     "defaultFieldInvalidText": "The document already has this {fieldName}",
 
@@ -486,7 +491,9 @@
     "newProject": "+ New Project",
     "projMembership": "Project Membership",
     "selectDocs": "Select documents to place them in projects",
-    "createProj": "Create a project to organize and share documents"
+    "createProj": "Create a project to organize and share documents",
+    "remove": "Remove {n, plural, one {document} other {# documents}} from project",
+    "add": "Add {n, plural, one {document} other {# documents}} to project"
   },
   "addonsMenu": {
     "newAddon": "Request new Add-on from Staff",

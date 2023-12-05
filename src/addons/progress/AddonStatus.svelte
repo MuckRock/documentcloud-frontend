@@ -22,7 +22,10 @@
     const resp = await fetch(endpoint, options);
 
     if (!resp.ok) {
-      throw new Error(resp.statusText);
+      // just bail on errors and try again next cycle
+      return console.error(
+        `Failed to load add-on run status: ${resp.statusText}`,
+      );
     }
 
     const { results } = await resp.json();
