@@ -1,33 +1,48 @@
-<script>
+<script lang="ts">
   import {
     defaultLanguage,
     languages,
     textractLanguages,
-  } from "@/api/languages.js";
-  import { orgsAndUsers, initOrgsAndUsers } from "@/manager/orgsAndUsers.js";
-  import { onMount } from "svelte";
+  } from "../api/languages.js";
   import { _ } from "svelte-i18n";
   import Select from "./Select.svelte";
+  import type { Org, User } from "../pages/app/accounts/types.js";
+  import { getMe, getOrganization } from "../api/orgAndUser.js";
+  import { onMount } from "svelte";
 
   export let language = defaultLanguage;
   export let forceOcr = false;
   export let ocrEngine = "tess4";
-
-  const hasTextract = $orgsAndUsers.me.feature_level > 0;
+  export let revisionControl = false;
 
   let languageName = defaultLanguageName(languages);
 
+  let user: User | null = null;
+  let org: Org | null = null;
+
+  async function getUser() {
+    try {
+      user = await getMe();
+      const activeOrg = user?.organization;
+      if (typeof activeOrg === "string") {
+        org = await getOrganization(activeOrg);
+      } else {
+        org = activeOrg;
+      }
+    } catch (e) {
+      user = null;
+    }
+  }
+
+  $: hasTextract = user?.feature_level > 0;
   $: selectLanguages = ocrEngine === "textract" ? textractLanguages : languages;
 
   // value, name, disabled
-  const ocrEngines = [
+  type OCREngine = [string, string, boolean];
+  const ocrEngines: OCREngine[] = [
     ["tess4", "Tesseract", false],
     ["textract", "Textract", !hasTextract],
   ];
-
-  onMount(async () => {
-    await initOrgsAndUsers();
-  });
 
   function defaultLanguageName(languages) {
     const [code, name] = languages.find(
@@ -36,6 +51,12 @@
 
     return name;
   }
+
+  const getUserPromise = getUser();
+
+  onMount(async () => {
+    await getUser();
+  });
 </script>
 
 <div class="option">
@@ -50,50 +71,83 @@
 </div>
 
 <div class="option">
-  <div class="middle">
-    <label
-      >{$_("uploadOptions.forceOcr")}
-      <input type="checkbox" bind:checked={forceOcr} /></label
-    >
+  <div class="flex alignCenter">
+    <label>
+      {$_("uploadOptions.ocrEngine")}
+      <select name="ocr-engine" bind:value={ocrEngine}>
+        {#each ocrEngines as [value, name, disabled]}
+          <option {value} {disabled}>{name}</option>
+        {/each}
+      </select>
+    </label>
+    <label>
+      {$_("uploadOptions.forceOcr")}
+      <input type="checkbox" bind:checked={forceOcr} />
+    </label>
   </div>
-</div>
 
-<div class="option">
-  <label>
-    {$_("uploadOptions.ocrEngine")}
-    <select name="ocr-engine" bind:value={ocrEngine}>
-      {#each ocrEngines as [value, name, disabled]}
-        <option {value} {disabled}>{name}</option>
-      {/each}
-    </select>
-  </label>
-
-  <div class="small">
+  <div class="small gray margin">
     <p>{@html $_("uploadOptions.tesseract")}</p>
     {#if !hasTextract}
-      <p>
-        {@html $_("uploadOptions.textractPremium")}
+      <p class="nomargin">
+        {@html $_("uploadOptions.textract")}
       </p>
+      <p class="nomargin">{@html $_("uploadOptions.premiumTout")}</p>
     {:else}
-      <p>
-        {$_("uploadOptions.creditHelpText", {
-          values: {
-            organization: $orgsAndUsers.me.organization.name,
-            n: $orgsAndUsers.me.organization.monthly_credits,
-          },
-        })}
-      </p>
+      {#await getUserPromise then}
+        <p>
+          {$_("uploadOptions.creditHelpText", {
+            values: {
+              organization: org.name,
+              n: org.monthly_credits,
+            },
+          })}
+        </p>
+      {/await}
     {/if}
   </div>
 </div>
 
+<div class="option">
+  <div class="middle">
+    <label>
+      {$_("uploadOptions.revisionControl")}
+      <input type="checkbox" bind:checked={revisionControl} />
+    </label>
+    <p class="small gray nomargin">{$_("uploadOptions.revisionControlHelp")}</p>
+    <p class="small gray nomargin">{@html $_("uploadOptions.premiumTout")}</p>
+  </div>
+</div>
+
 <style>
+  .margin {
+    margin: 1rem 0;
+  }
+  .nomargin {
+    margin: 0;
+  }
   .small {
     font-size: smaller;
+  }
+  .gray {
+    color: var(--darkgray);
   }
   .middle {
     display: inline-block;
     vertical-align: middle;
+  }
+  .option {
+    margin-bottom: 1rem;
+  }
+
+  .flex {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .alignCenter {
+    align-items: center;
   }
 
   label {

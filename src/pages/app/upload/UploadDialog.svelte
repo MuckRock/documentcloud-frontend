@@ -46,6 +46,7 @@
   let language = defaultLanguage;
   let forceOcr = false;
   let ocrEngine = "tess4";
+  let revisionControl = false;
 
   const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
   const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
@@ -212,7 +213,12 @@
         {/if}
       {/if}
       <div class="actions">
-        <UploadOptions bind:language bind:forceOcr bind:ocrEngine />
+        <UploadOptions
+          bind:language
+          bind:forceOcr
+          bind:ocrEngine
+          bind:revisionControl
+        />
 
         {#if files.length > 0}
           <Button on:click={upload}>{$_("uploadDialog.beginUpload")}</Button>
