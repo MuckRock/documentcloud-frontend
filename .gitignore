@@ -41,3 +41,4 @@ tests/fixtures/development.json
 .vscode
 
 scratch/
+dist/

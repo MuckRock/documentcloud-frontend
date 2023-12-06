@@ -49,7 +49,7 @@
 
   function injectLinkReferences() {
     if (!contentElem) {
-      console.log("No content element");
+      console.warn("No content element");
       return;
     }
 

@@ -27,8 +27,9 @@
   }
 
   async function load() {
-    console.log(`Loading page content: ${endpoint}`);
-    const resp = await fetch(endpoint);
+    const resp = await fetch(endpoint, {
+      credentials: "include",
+    });
 
     if (!resp.ok) {
       notFound = true;
