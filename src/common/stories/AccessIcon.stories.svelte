@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import { action } from "@storybook/addon-actions";
 
   import AccessIcon from "../AccessIcon.svelte";
 
@@ -8,6 +9,8 @@
     editable: true,
     showText: true,
   };
+
+  const handleClick = action("click");
 </script>
 
 <Meta
@@ -25,7 +28,7 @@
 />
 
 <Template let:args>
-  <AccessIcon {...args} />
+  <AccessIcon {...args} on:click={handleClick} />
 </Template>
 
 <Story name="Private" {args} />

@@ -14,7 +14,11 @@
     enterDataMode,
     enterSectionsMode,
   } from "../../viewer/actions";
-  import { showEmbedFlow, cancelAnnotation } from "../../viewer/layout.js";
+  import {
+    showEmbedFlow,
+    cancelAnnotation,
+    openAccess,
+  } from "../../viewer/layout.js";
   import { _ } from "svelte-i18n";
   import { FOOTER_HEIGHT, HEADER_HEIGHT, SIDEBAR_WIDTH } from "./constants";
   import SidebarAction from "./SidebarAction.svelte";
@@ -204,6 +208,7 @@
               access={document.access}
               editable={document.editAccess}
               showText={true}
+              on:click={() => openAccess([document])}
             />
           </div>
         {/if}

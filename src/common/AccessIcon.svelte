@@ -1,23 +1,25 @@
+<script lang="ts" context="module">
+  import type { SvgComponent } from "svelte-octicons";
+
+  export type AccessType = "private" | "organization" | "public";
+
+  interface AccessUI {
+    icon: typeof SvgComponent;
+    tooltip: string;
+    visible: string;
+  }
+</script>
+
 <script lang="ts">
   import { _ } from "svelte-i18n";
+  import { Globe16, Organization16, Lock16 } from "svelte-octicons";
   import Tooltip from "./Tooltip.svelte";
 
-  // Stores
-  import { openAccess as managerOpenAccess } from "../manager/layout.js";
-  import { openAccess as viewerOpenAccess } from "../viewer/layout.js";
-  import { viewer } from "../viewer/viewer.js";
-
-  // SVG assets
-  import { Globe16, Organization16, Lock16 } from "svelte-octicons";
-
-  export let access; // "private" | "organization" | "public"
+  export let access: AccessType;
   export let editable = false;
   export let showText = false;
 
-  $: openAccess =
-    $viewer.document != null ? viewerOpenAccess : managerOpenAccess;
-
-  const uiText = {
+  const uiText: Record<AccessType, AccessUI> = {
     public: {
       icon: Globe16,
       tooltip: "accessIcon.publicExplanation",
@@ -43,7 +45,7 @@
     class="access buttonLike"
     class:editable
     disabled={!editable}
-    on:click={() => openAccess([document])}
+    on:click
   >
     <svelte:component this={uiText[access].icon} />
     {#if showText}<span class="text">{$_(uiText[access].visible)}</span>{/if}

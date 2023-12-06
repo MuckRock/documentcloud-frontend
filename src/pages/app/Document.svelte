@@ -11,7 +11,12 @@
   import { _, date } from "svelte-i18n";
 
   // Stores
-  import { layout, unselectDocument, editData } from "@/manager/layout.js";
+  import {
+    layout,
+    unselectDocument,
+    editData,
+    openAccess,
+  } from "@/manager/layout.js";
   import { removeDocument, selectDocument } from "@/manager/documents.js";
   import { projects } from "@/manager/projects.js";
   import { projectUrl, dataUrl } from "@/search/search.js";
@@ -92,6 +97,7 @@
             <AccessIcon
               access={document.access}
               editable={document.editAccess}
+              on:click={() => openAccess([document])}
             />
           </span>
         {/if}
