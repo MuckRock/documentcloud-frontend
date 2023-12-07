@@ -4,6 +4,7 @@
   import RevisionsDialog from "../RevisionsDialog.svelte";
 
   import documentFixture from "../../../pages/app/test/fixtures/document.json";
+  import { revisionControl } from "./mockData";
 
   const today = new Date().getDate();
   const manyRevisions = Array(100)
@@ -29,6 +30,9 @@
     component: RevisionsDialog,
     parameters: {
       layout: "centered",
+      msw: {
+        handlers: [revisionControl.success],
+      },
     },
     argTypes: {
       enabled: {
@@ -51,3 +55,13 @@
   args={{ ...args, revisions: manyRevisions }}
 />
 <Story name="Disabled Revision Control" args={{ ...args, enabled: false }} />
+<Story
+  name="With Change Loading"
+  {args}
+  parameters={{ msw: { handlers: [revisionControl.loading] } }}
+/>
+<Story
+  name="With Change Error"
+  {args}
+  parameters={{ msw: { handlers: [revisionControl.error] } }}
+/>

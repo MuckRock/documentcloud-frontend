@@ -5,6 +5,11 @@
 
   let args = {};
 
+  import {
+    mockGetMe,
+    mockGetOrg,
+  } from "../../pages/app/accounts/stories/mockData";
+
   export const meta = {
     title: "Common / Upload Options",
     component: UploadOptions,
@@ -16,4 +21,8 @@
   <UploadOptions {...args} />
 </Template>
 
-<Story name="Default" {args} />
+<Story
+  name="Default"
+  {args}
+  parameters={{ msw: { handlers: [mockGetMe.data, mockGetOrg.data] } }}
+/>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { locale } from "svelte-i18n";
   import { changeRevisionControl } from "../../api/document.js";
   import Button from "../../common/Button.svelte";
   import type { Revision } from "../RevisionIcon.svelte";
@@ -12,8 +11,6 @@
   $: sortedRevisions = revisions.sort((a, b) => {
     return b.version - a.version;
   });
-
-  // TODO: Refactor into reusable relative
 
   async function handleRevisionControlChange(event: Event) {
     const checkbox = event.currentTarget as HTMLInputElement;
