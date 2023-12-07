@@ -17,7 +17,7 @@ import {
 import { layout, hideAccess } from "./layout.js";
 import { wrapLoad, wrapSeparate } from "@/util/wrapLoad.js";
 import { showConfirm } from "./confirmDialog.js";
-import { router } from "@/router/router.js";
+import { resolvedRoute } from "@/router/router.js";
 import { search, handleUpload, setDocuments } from "@/search/search.js";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array.js";
 import { modifications } from "./modifications.js";
@@ -44,7 +44,7 @@ const PENDING_DOC_ID = "doc_id";
 export const documents = new Svue({
   data() {
     return {
-      router,
+      resolvedRoute,
       search,
       hasInited: false,
       processingChangeTimeout: null,
@@ -54,9 +54,6 @@ export const documents = new Svue({
     };
   },
   watch: {
-    "router.resolvedRoute"() {
-      checkForInit();
-    },
     inDocumentPickerDialog() {
       checkForInit();
     },
@@ -72,9 +69,9 @@ export const documents = new Svue({
     },
   },
   computed: {
-    staticMode(router) {
+    staticMode(resolvedRoute) {
       // Applies when in embed or dialog
-      const route = router.resolvedRoute;
+      const route = resolvedRoute;
       if (route == null) return true;
       if (route.name == "project") return true; // project embeds are static
       if (route.props != null && truthyParamValue(route.props.embed))
@@ -219,8 +216,7 @@ export const documents = new Svue({
   },
 });
 
-function checkForInit() {
-  const route = router.resolvedRoute;
+function checkForInit(route) {
   if (
     route != null &&
     (documents.inDocumentPickerDialog ||
@@ -233,6 +229,9 @@ function checkForInit() {
     }
   }
 }
+
+// side-effect
+resolvedRoute.subscribe(checkForInit);
 
 function getDocumentsByCondition(condition, documents) {
   return documents.filter(condition);

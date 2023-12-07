@@ -5,7 +5,7 @@
   import Link from "../router/Link.svelte";
   import FlatPage from "./FlatPage.svelte";
 
-  import { router } from "../router/router.js";
+  import { currentUrl, resolvedRoute } from "../router/router.js";
   import { baseApiUrl } from "../api/base.js";
 
   export let title = "";
@@ -14,7 +14,7 @@
   let notFound = false;
   let loading;
 
-  $: endpoint = getEndpoint($router.currentUrl);
+  $: endpoint = getEndpoint($currentUrl);
 
   function getEndpoint(currentUrl) {
     const url = new URL("/api/flatpages" + currentUrl, baseApiUrl);
@@ -43,7 +43,7 @@
   }
 
   onMount(async () => {
-    if (router.resolvedRoute.name) {
+    if ($resolvedRoute.name) {
       // Don't try to fetch flat page if it should resolve to a route
       notFound = true;
       return;

@@ -1,6 +1,6 @@
 <script>
   import { domPurify, loadDompurify } from "@/util/domPurify.js";
-  import { router } from "@/router/router.js";
+  import { resolvedRoute } from "@/router/router.js";
   import { showAnnotation } from "@/viewer/document.js";
   import { viewer } from "@/viewer/viewer.js";
   loadDompurify();
@@ -23,7 +23,7 @@
       $viewer.notes != null &&
       $viewer.notes.length > 0
     ) {
-      const route = router.resolvedRoute;
+      const route = $resolvedRoute;
       if (route != null && route.name == "viewer") {
         // Only inject on viewer routes
         const links = elem.querySelectorAll("a");
@@ -54,7 +54,10 @@
 
     .content {
       margin: 4px $subpadding;
-      font: 13px/18px Georgia, Times, serif;
+      font:
+        13px/18px Georgia,
+        Times,
+        serif;
       cursor: text;
       color: #3c3c3c;
       max-height: 300px;

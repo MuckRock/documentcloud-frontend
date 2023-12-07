@@ -1,8 +1,8 @@
 import { Svue } from "svue";
-
+import { get } from "svelte/store";
 import { pushToast } from "../common/Toast.svelte";
 
-import { router, pushUrl, nav } from "../router/router.js";
+import { resolvedRoute, pushUrl, nav } from "../router/router.js";
 import {
   getMe,
   changeActiveOrg,
@@ -25,7 +25,7 @@ export const orgsAndUsers = new Svue({
       usersById: {},
       orgsById: {},
       projects,
-      router,
+      resolvedRoute,
       hasInited: false,
       hasInitedProjects: false,
       sameOrgUsers: [],
@@ -33,34 +33,8 @@ export const orgsAndUsers = new Svue({
   },
   watch: {
     // Don't re-request
-    "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      if (
-        route != null &&
-        (route.name == "app" || route.name == "home" || route.name == "default")
-      ) {
-        // Initiate orgs and users in the app
-        if (!this.hasInited) {
-          this.hasInited = true;
-          initOrgsAndUsers(() => reroute(route));
-        } else {
-          reroute(route);
-        }
-
-        initProjectsIfNecessary(route);
-        if (
-          route != null &&
-          route.name == "app" &&
-          this.me != null &&
-          !this.hasInitedProjects
-        ) {
-          this.hasInitedProjects = true;
-          initProjects(this.me);
-        }
-      }
-    },
     me() {
-      const route = router.resolvedRoute;
+      const route = get(resolvedRoute);
       initProjectsIfNecessary(route);
     },
   },
@@ -81,6 +55,32 @@ export const orgsAndUsers = new Svue({
       return me.organizations;
     },
   },
+});
+
+resolvedRoute.subscribe((route) => {
+  if (
+    route != null &&
+    (route.name == "app" || route.name == "home" || route.name == "default")
+  ) {
+    // Initiate orgs and users in the app
+    if (!layout.hasInited) {
+      layout.hasInited = true;
+      initOrgsAndUsers(() => reroute(route));
+    } else {
+      reroute(route);
+    }
+
+    initProjectsIfNecessary(route);
+    if (
+      route != null &&
+      route.name == "app" &&
+      layout.me != null &&
+      !layout.hasInitedProjects
+    ) {
+      layout.hasInitedProjects = true;
+      initProjects(layout.me);
+    }
+  }
 });
 
 function reroute(route) {

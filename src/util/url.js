@@ -46,6 +46,7 @@ export function getQueryStringParams(url) {
 }
 
 export function urlsEqual(url1, url2, plusReplace = false) {
+  if (!url1 || !url2) return false;
   const [base1, query1] = urlParts(url1);
   const [base2, query2] = urlParts(url2);
 
@@ -84,7 +85,7 @@ export function urlsEqual(url1, url2, plusReplace = false) {
   return true;
 }
 
-export function currentUrl() {
+export function getCurrentUrl() {
   return window.location.pathname + window.location.search;
 }
 
@@ -95,7 +96,7 @@ export function currentUrl() {
  * @param {boolean} cleanSlate If true, wipes existing query parameters
  */
 export function queryBuilder(baseUrl, params, cleanSlate = false) {
-  if (baseUrl == null) baseUrl = currentUrl();
+  if (baseUrl == null) baseUrl = getCurrentUrl();
   const [url, query] = urlParts(baseUrl);
   const oldParams = cleanSlate ? {} : getQueryStringParamsFromQuery(query);
 

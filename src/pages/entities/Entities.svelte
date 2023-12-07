@@ -5,7 +5,7 @@
   import Link from "@/router/Link.svelte";
   import Progress from "@/common/Progress.svelte";
 
-  import { router } from "@/router/router.js";
+  import { resolvedRoute } from "@/router/router.js";
   import { getDocument } from "@/api/document.js";
   import { extractEntities } from "@/api/entity.js";
   import { jsonUrl } from "@/api/viewer.js";
@@ -108,7 +108,7 @@
   }
 
   onMount(async () => {
-    const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
+    const id = parseInt($resolvedRoute.props.id.split("-")[0]);
     entities.document = await getDocument(id);
     try {
       entities.entities = await getE(id);
@@ -123,7 +123,7 @@
 
   async function pushPage(url) {
     pagePushed = true;
-    const id = parseInt(router.resolvedRoute.props.id.split("-")[0]);
+    const id = parseInt($resolvedRoute.props.id.split("-")[0]);
     selectedEntity = null;
     entities.entities = await getE(id, url, filter);
   }

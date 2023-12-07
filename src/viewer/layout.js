@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import { get } from "svelte/store";
 import { viewer, updateNote, addNote, removeNote } from "./viewer.js";
 import { truthyParamValue, falsyParamValue } from "@/util/url.js";
 import { wrapLoad } from "@/util/wrapLoad.js";
@@ -12,7 +13,7 @@ import {
 import { search } from "@/search/search.js";
 import { showConfirm } from "@/manager/confirmDialog.js";
 import { markAsDirty, documents } from "@/manager/documents.js";
-import { router } from "@/router/router.js";
+import { resolvedRoute } from "@/router/router.js";
 import {
   createAnnotation,
   updateAnnotation,
@@ -33,7 +34,7 @@ import {
 export const layout = new Svue({
   data() {
     return {
-      router,
+      resolvedRoute,
       viewer,
 
       // Height of header row
@@ -102,28 +103,7 @@ export const layout = new Svue({
       showInsertDialog: false,
     };
   },
-  watch: {
-    "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
-      if (route != null && route.name != "viewer") {
-        reset();
-      } else if (route != null && route.name == "viewer") {
-        this.embed = inIframe() || truthyParamValue(route.props.embed);
-        this.title = !this.embed || truthyParamValue(route.props.title);
-        this.hideTextOption = falsyParamValue(route.props.text);
-        this.hidePdfLink = falsyParamValue(route.props.pdf);
-        this.showOrg = truthyParamValue(route.props.onlyshoworg);
-        this.showFullscreen = !falsyParamValue(route.props.fullscreen);
-        const sidebarValue = route.props.sidebar;
-        if (sidebarValue != null) {
-          this.showSidebar = truthyParamValue(sidebarValue);
-        } else if (this.embed) {
-          // Hide sidebar in embed mode by default unless explicitly set
-          this.showSidebar = false;
-        }
-      }
-    },
-  },
+  watch: {},
   computed: {
     pollEvents(viewer) {
       // Update document only if it is readable or pending (processing)
@@ -250,6 +230,26 @@ export const layout = new Svue({
       );
     },
   },
+});
+
+resolvedRoute.subscribe((route) => {
+  if (route != null && route.name != "viewer") {
+    reset();
+  } else if (route != null && route.name == "viewer") {
+    layout.embed = inIframe() || truthyParamValue(route.props.embed);
+    layout.title = !this.embed || truthyParamValue(route.props.title);
+    layout.hideTextOption = falsyParamValue(route.props.text);
+    layout.hidePdfLink = falsyParamValue(route.props.pdf);
+    layout.showOrg = truthyParamValue(route.props.onlyshoworg);
+    layout.showFullscreen = !falsyParamValue(route.props.fullscreen);
+    const sidebarValue = route.props.sidebar;
+    if (sidebarValue != null) {
+      layout.showSidebar = truthyParamValue(sidebarValue);
+    } else if (layout.embed) {
+      // Hide sidebar in embed mode by default unless explicitly set
+      layout.showSidebar = false;
+    }
+  }
 });
 
 // Loading

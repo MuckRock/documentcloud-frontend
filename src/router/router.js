@@ -1,13 +1,71 @@
 import rlite from "rlite-router";
+import { writable, derived, get } from "svelte/store";
 import { Svue } from "svue";
-import Empty from "@/pages/home/Empty.svelte"; // explicit extension for tests
-import { lazyComponent } from "@/util/lazyComponent.js";
+
+import NotFound from "../pages/NotFound.svelte";
+import { lazyComponent } from "./lazyComponent.js";
+import route from "./routes.js";
 
 const endings = [".html", ".html"];
 
 const FALLBACK_URL = "/app";
 
-export class Router extends Svue {
+// updated in Main.svelte
+// export const notFound = writable(NotFound);
+
+// only referenced in Link component
+export const routes = route(lazyComponent);
+
+// internal
+const mapping = Object.entries(routes).reduce((map, [name, route]) => {
+  if (route.path != null) {
+    map[route.path] = (props) => {
+      return {
+        name,
+        props,
+        component: route.component,
+        get: route.get,
+      };
+    };
+  }
+  return map;
+}, {});
+
+// internal
+const router = rlite(() => ({ component: NotFound }), mapping);
+
+export const currentUrl = writable("");
+export const backNav = writable(false);
+
+const pastUrl = writable("");
+
+export const resolvedRoute = derived(currentUrl, async ($currentUrl, set) => {
+  // if ($currentUrl == null) return null;
+  const resolved = resolve($currentUrl);
+  if (resolved.component == null && resolved.get != null) {
+    await Promise.resolve(resolved.get());
+  }
+  set(resolved);
+});
+
+function lookup(name) {
+  return routes?.[name]?.path;
+}
+
+function resolve(path) {
+  // Remove common endings
+  path = path.split("#")[0];
+  for (let i = 0; i < endings.length; i++) {
+    const ending = endings[i];
+    if (path.endsWith(ending)) {
+      path = path.substr(0, path.length - ending.length);
+      break;
+    }
+  }
+  return router(path);
+}
+
+class Router extends Svue {
   constructor(notFound) {
     super({
       data() {
@@ -77,10 +135,8 @@ export class Router extends Svue {
   }
 }
 
-export const router = new Router(Empty);
-
 export function getPath(to, params = null) {
-  let path = router.lookup(to);
+  let path = lookup(to);
   if (params != null) {
     for (const param in params) {
       if (params.hasOwnProperty(param)) {
@@ -94,9 +150,9 @@ export function getPath(to, params = null) {
 
 export function pushUrl(url) {
   // change current router path
-  router.backNav = false;
-  router.pastUrl = router.currentUrl;
-  router.currentUrl = url;
+  backNav.set(false);
+  pastUrl.set(get(currentUrl));
+  currentUrl.set(url);
   // push the path into web browser history API
   window.history.pushState(
     { path: url, dc: true },
@@ -107,7 +163,7 @@ export function pushUrl(url) {
 
 // for hash routing in App.svelte and Viewer.svelte
 export function setHash(hash) {
-  const url = new URL(router.currentUrl, window.location.href);
+  const url = new URL(get(currentUrl), window.location.href);
   url.hash = hash;
   window.location.hash = hash;
 
@@ -122,7 +178,7 @@ export function setHash(hash) {
  * @param {Array<String>} keep Keys to preserve
  */
 export function setQS(qs, keep = []) {
-  const url = new URL(router.currentUrl, window.location.href);
+  const url = new URL(get(currentUrl), window.location.href);
   const keys = Array.from(url.searchParams).filter(([k, v]) =>
     keep.includes(k),
   );
@@ -136,10 +192,10 @@ export function setQS(qs, keep = []) {
 }
 
 export function goBack(fallback = FALLBACK_URL) {
-  if (router.pastUrl != null) {
+  if (get(pastUrl) != null) {
     window.history.back();
   } else {
-    router.currentUrl = fallback;
+    currentUrl.set(fallback);
     window.history.replaceState(
       { path: fallback },
       "",
@@ -156,5 +212,5 @@ export function nav(to, params = null) {
 window.addEventListener("popstate", (e) => {
   const state = e.state || { dc: false };
   const isDc = state.dc;
-  router.backNav = isDc == true;
+  backNav.set(isDc == true);
 });

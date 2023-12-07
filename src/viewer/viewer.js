@@ -1,7 +1,8 @@
 import { Svue } from "svue";
+import { get } from "svelte/store";
 import { getDocument } from "@/api/document.js";
 import { getMe } from "@/api/orgAndUser.js";
-import { router } from "@/router/router.js";
+import { resolvedRoute } from "@/router/router.js";
 import { DEFAULT_EXPAND } from "../api/common.js";
 import { inIframe } from "@/util/iframe.js";
 import { loadViewerEditDialogs } from "@/pages/viewer/viewerEditDialogs.js";
@@ -26,7 +27,7 @@ let viewerInitCache = {};
 export const viewer = new Svue({
   data() {
     return {
-      router,
+      resolvedRoute,
       notes: null,
       sections: null,
       document: null,
@@ -42,8 +43,8 @@ export const viewer = new Svue({
     };
   },
   watch: {
-    "router.resolvedRoute"() {
-      const route = router.resolvedRoute;
+    resolvedRoute() {
+      const route = get(resolvedRoute);
       if (route != null && route.name == "viewer" && route.props != null) {
         this.id = extractId(route.props.id);
         if (route.props.embed == "1") {

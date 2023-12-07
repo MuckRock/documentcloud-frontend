@@ -1,5 +1,5 @@
 import { Svue } from "svue";
-import { router, setHash, setQS } from "@/router/router.js";
+import { resolvedRoute, setHash, setQS } from "@/router/router.js";
 import { truthyParamValue } from "@/util/url.js";
 import { sameProp } from "@/util/array.js";
 
@@ -14,7 +14,7 @@ const ACCESS_LEVELS = {
 export const layout = new Svue({
   data() {
     return {
-      router,
+      resolvedRoute,
       sidebarExpanded: false,
       loading: true,
       error: false,
@@ -57,11 +57,6 @@ export const layout = new Svue({
       // Which documents the owner is being edited for
       ownerEditDocuments: [],
     };
-  },
-  watch: {
-    "router.resolvedRoute"() {
-      this.sidebarExpanded = false;
-    },
   },
   computed: {
     selected(selectedMap) {
@@ -141,21 +136,25 @@ export const layout = new Svue({
     },
 
     // Project embed settings
-    projectEmbedTitle(router) {
-      const route = router.resolvedRoute;
+    projectEmbedTitle(resolvedRoute) {
+      const route = resolvedRoute;
       if (route == null) return null;
       if (route.name != "project") return null;
       if (route.props == null) return null;
       return route.props.title;
     },
-    projectEmbedSearchBar(router) {
-      const route = router.resolvedRoute;
+    projectEmbedSearchBar(resolvedRoute) {
+      const route = resolvedRoute;
       if (route == null) return true;
       if (route.name != "project") return true;
       if (route.props == null) return true;
       return truthyParamValue(route.props.searchbar);
     },
   },
+});
+
+resolvedRoute.subscribe(() => {
+  layout.sidebarExpanded = false;
 });
 
 /*

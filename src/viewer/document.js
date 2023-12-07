@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { viewer } from "./viewer.js";
 import { tick } from "svelte";
-import { router } from "@/router/router.js";
+import { resolvedRoute } from "@/router/router.js";
 import {
   layout,
   annotationValid,
@@ -33,7 +33,7 @@ class Doc extends Svue {
     super({
       data() {
         return {
-          router,
+          resolvedRoute,
           layout: LAYOUT,
           allDefaultAspects: {
             image: DEFAULT_IMAGE_ASPECT,
@@ -67,8 +67,8 @@ class Doc extends Svue {
         viewer(viewer) {
           if (viewer.pageAspects != null) this.initAspects();
         },
-        "router.resolvedRoute"() {
-          const route = router.resolvedRoute;
+        resolvedRoute() {
+          const route = resolvedRoute;
           if (route != null && route.name != "viewer") {
             // Reset mode
             this.mode = "image";

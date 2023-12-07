@@ -1,9 +1,9 @@
 import { Svue } from "svue";
-import { router, getPath } from "@/router/router.js";
+import { get } from "svelte/store";
+import { resolvedRoute, getPath, backNav, pushUrl } from "@/router/router.js";
 import { wrapSeparate } from "@/util/wrapLoad.js";
 import { layout } from "@/manager/layout.js";
 import { SearchParams } from "@/structure/searchParams.js";
-import { pushUrl } from "@/router/router.js";
 import { queryBuilder } from "@/util/url.js";
 import { slugify } from "@/util/string.js";
 import { modifications } from "@/manager/modifications.js";
@@ -18,7 +18,7 @@ let lastSearch = null;
 export const search = new Svue({
   data() {
     return {
-      router,
+      resolvedRoute,
       params: null,
       results: null,
       filePickerUser: null,
@@ -28,9 +28,6 @@ export const search = new Svue({
     };
   },
   watch: {
-    "router.resolvedRoute"() {
-      checkForInit();
-    },
     filePickerUser() {
       checkForInit();
     },
@@ -40,9 +37,9 @@ export const search = new Svue({
     },
   },
   computed: {
-    onlyShowSuccessfulStatuses(filePickerUser, router) {
+    onlyShowSuccessfulStatuses(filePickerUser, resolvedRoute) {
       // Applies when in embed or dialog
-      const route = router.resolvedRoute;
+      const route = resolvedRoute;
       if (filePickerUser != null) return true;
       if (route != null && route.name == "project") return true;
       return false;
@@ -125,9 +122,9 @@ export async function searchPrev() {
   );
 }
 
-function checkForInit() {
-  const route = router.resolvedRoute;
+resolvedRoute.subscribe(checkForInit);
 
+function checkForInit(route) {
   // Prevent repeated searches
   const searchCache = [
     route != null && route.name,
@@ -140,7 +137,7 @@ function checkForInit() {
   if (
     route != null &&
     (((route.name == "app" || route.name == "project") &&
-      router.backNav != true) ||
+      get(backNav) != true) ||
       search.filePickerUser != null)
   ) {
     initSearch(

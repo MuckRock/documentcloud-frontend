@@ -9,7 +9,7 @@
     userSearchQuery,
   } from "@/search/search";
   import { showSearchTips } from "@/manager/layout.js";
-  import { router } from "@/router/router.js";
+  import { resolvedRoute } from "@/router/router.js";
   import { _ } from "svelte-i18n";
 
   export let search = "";
@@ -31,9 +31,8 @@
         search = userSearchQuery(searchData.filePickerUser);
       } else {
         unsubscribe = [
-          router.subscribe((router) => {
+          resolvedRoute.subscribe((route) => {
             // Set query from URL if applicable
-            const route = router.resolvedRoute;
             if (route != null && route.name == "app") {
               // Try to fill in regular query if not present
               if (route.props.q != null && route.props.q.length > 0) {

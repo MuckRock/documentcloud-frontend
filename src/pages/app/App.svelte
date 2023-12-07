@@ -11,7 +11,7 @@
   import Dispatch from "../../addons/dispatch/Dispatch.svelte";
   import Runs from "../../addons/runs/Runs.svelte";
 
-  import { setHash, router } from "../../router/router.js";
+  import { setHash } from "../../router/router.js";
   import { layout } from "../../manager/layout.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 

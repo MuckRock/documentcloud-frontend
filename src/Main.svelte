@@ -6,40 +6,35 @@
   import { isLoading } from "svelte-i18n";
 
   import Empty from "./pages/home/Empty.svelte";
+  import NotFound from "./pages/NotFound.svelte";
 
-  import { router } from "./router/router.js";
-  import { routes } from "./routes.js";
-  import { currentUrl } from "./util/url.js";
+  import { currentUrl, resolvedRoute } from "./router/router.js";
+  import { getCurrentUrl } from "./util/url.js";
   import "./langs/i18n.js";
 
   // Patch poll events
   import "./ticker/ticker.js";
 
-  // Set up routes
-  router.notFound = routes[0];
-  router.routeFunc = routes[1];
-
   $: routeComponent =
-    ($router.resolvedRoute || { component: Empty }).component || Empty;
-  $: routeProps = ($router.resolvedRoute || { props: [] }).props || {};
+    ($resolvedRoute || { component: Empty }).component || Empty;
+  $: routeProps = ($resolvedRoute || { props: [] }).props || {};
+
+  $: console.log($resolvedRoute);
 
   onMount(() => {
-    router.currentUrl = currentUrl();
+    $currentUrl = getCurrentUrl();
     if (!history.state) {
       window.history.replaceState(
-        { path: currentUrl() },
+        { path: getCurrentUrl() },
         "",
         window.location.href,
       );
     }
-
-    // debug
-    window.router = router;
   });
 
   function handleBackNav(e) {
     if (e.state == null) return;
-    router.currentUrl = e.state.path;
+    $currentUrl = e.state.path;
   }
 </script>
 
@@ -48,7 +43,7 @@
 <div>
   {#if $isLoading}
     Please wait...
-  {:else if $router.resolvedRoute != null}
+  {:else if $resolvedRoute != null}
     <svelte:component this={routeComponent} {...routeProps} />
   {/if}
 </div>

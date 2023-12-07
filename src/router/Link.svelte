@@ -1,6 +1,6 @@
 <script>
-  import { Svue } from "svue";
-  import { router, getPath, pushUrl, goBack } from "./router.js";
+  // import { Svue } from "svue";
+  import { currentUrl, getPath, pushUrl, goBack } from "./router.js";
   import { urlsEqual } from "../util/url.js";
 
   export let to = null;
@@ -13,40 +13,22 @@
   export let color = false;
   export let plusReplace = false;
 
-  const link = new Svue({
-    data() {
-      return { router };
-    },
-    computed: {
-      toPath(router) {
-        if (toUrl != null) return toUrl;
-        if (router.routes == null) return null;
-        if (back) return null;
-        return getPath(to, params);
-      },
-      active(router) {
-        if (router.routes == null) return false;
-        if (toUrl != null) {
-          return urlsEqual(router.currentUrl, toUrl, plusReplace);
-        }
-        return router.resolvedRoute.name == to;
-      },
-    },
-  });
+  $: href = back ? null : getPath(to, params);
+  $: active = $currentUrl && urlsEqual($currentUrl, toUrl, plusReplace);
 
   function nav(e) {
     if (back) {
       goBack();
     }
 
-    if (link.toPath == null || forceClick) return;
+    if (href == null || forceClick) return;
 
     // Don't programmatically nav if any modifier key is pressed
     if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return;
 
     e.preventDefault();
 
-    pushUrl(link.toPath);
+    pushUrl(href);
   }
 </script>
 
@@ -70,35 +52,17 @@
 
 {#if !back}
   {#if newPage}
-    <a
-      class:color
-      class:ib={inlineBlock}
-      class:active={$link.active}
-      href={$link.toPath}
-      target="_blank"
-    >
+    <a class:color class:ib={inlineBlock} class:active {href} target="_blank">
       <slot />
     </a>
   {:else}
-    <a
-      class:color
-      class:ib={inlineBlock}
-      class:active={$link.active}
-      href={$link.toPath}
-      on:click={nav}
-    >
+    <a class:color class:ib={inlineBlock} class:active {href} on:click={nav}>
       <slot />
     </a>
   {/if}
 {:else}
   <!-- Go back on click -->
-  <a
-    class:color
-    class:ib={inlineBlock}
-    class:active={$link.active}
-    href={$link.toPath}
-    on:click={nav}
-  >
+  <a class:color class:ib={inlineBlock} class:active {href} on:click={nav}>
     <slot />
   </a>
 {/if}

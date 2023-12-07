@@ -1,6 +1,6 @@
 <script>
   import { onMount, tick, afterUpdate } from "svelte";
-  import { router } from "@/router/router.js";
+  import { resolvedRoute } from "@/router/router.js";
   import emitter from "@/emit.js";
 
   const emit = emitter({
@@ -66,7 +66,7 @@
 
   onMount(async () => {
     await computeSizes();
-    router.writables.resolvedRoute.subscribe(async () => {
+    $resolvedRoute.subscribe(async () => {
       await computeSizes();
     });
 

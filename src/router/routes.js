@@ -1,4 +1,3 @@
-import NotFound from "./pages/NotFound.svelte";
 import {
   loadDefault,
   loadHome,
@@ -9,11 +8,10 @@ import {
   loadProject,
   loadLegacyRedirect,
   loadEntities,
-} from "./util/lazyComponent.js";
+} from "./lazyComponent.js";
 
-export const routes = [
-  NotFound,
-  (lazyComponent) => ({
+export default function route(lazyComponent) {
+  return {
     default: {
       path: "/",
       component: lazyComponent.default,
@@ -70,5 +68,5 @@ export const routes = [
       component: lazyComponent.legacyRedirect,
       get: loadLegacyRedirect,
     },
-  }),
-];
+  };
+}
