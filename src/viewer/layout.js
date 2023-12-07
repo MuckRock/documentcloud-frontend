@@ -233,11 +233,12 @@ export const layout = new Svue({
 });
 
 resolvedRoute.subscribe((route) => {
+  if (!layout) return;
   if (route != null && route.name != "viewer") {
     reset();
   } else if (route != null && route.name == "viewer") {
-    layout.embed = inIframe() || truthyParamValue(route.props.embed);
-    layout.title = !this.embed || truthyParamValue(route.props.title);
+    layout.embed = inIframe() || truthyParamValue(route?.props?.embed);
+    layout.title = !layout.embed || truthyParamValue(route.props.title);
     layout.hideTextOption = falsyParamValue(route.props.text);
     layout.hidePdfLink = falsyParamValue(route.props.pdf);
     layout.showOrg = truthyParamValue(route.props.onlyshoworg);

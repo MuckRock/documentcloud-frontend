@@ -6,7 +6,6 @@
   import { isLoading } from "svelte-i18n";
 
   import Empty from "./pages/home/Empty.svelte";
-  import NotFound from "./pages/NotFound.svelte";
 
   import { currentUrl, resolvedRoute } from "./router/router.js";
   import { getCurrentUrl } from "./util/url.js";
@@ -19,6 +18,7 @@
     ($resolvedRoute || { component: Empty }).component || Empty;
   $: routeProps = ($resolvedRoute || { props: [] }).props || {};
 
+  $: console.log($currentUrl);
   $: console.log($resolvedRoute);
 
   onMount(() => {

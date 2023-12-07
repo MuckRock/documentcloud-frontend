@@ -43,27 +43,6 @@ export const viewer = new Svue({
     };
   },
   watch: {
-    resolvedRoute() {
-      const route = get(resolvedRoute);
-      if (route != null && route.name == "viewer" && route.props != null) {
-        this.id = extractId(route.props.id);
-        if (route.props.embed == "1") {
-          this.embed = true;
-        } else {
-          this.embed = inIframe();
-        }
-        if (viewerInitCache[this.id] == null) {
-          initViewer(this.id);
-          viewerInitCache[this.id] = true;
-        }
-        return;
-      }
-      if (route != null && route.name != "viewer") {
-        // Reset cache and document
-        viewerInitCache = {};
-        this.document = null;
-      }
-    },
     document() {
       if (this.document != null && this.document.editAccess) {
         loadViewerEditDialogs();
@@ -177,6 +156,27 @@ export const viewer = new Svue({
       return me.verified_journalist;
     },
   },
+});
+
+resolvedRoute.subscribe((route) => {
+  if (route != null && route.name == "viewer" && route.props != null) {
+    viewer.id = extractId(route.props.id);
+    if (route.props.embed == "1") {
+      viewer.embed = true;
+    } else {
+      viewer.embed = inIframe();
+    }
+    if (viewerInitCache[viewer.id] == null) {
+      initViewer(viewer.id);
+      viewerInitCache[viewer.id] = true;
+    }
+    return;
+  }
+  if (route != null && route.name != "viewer") {
+    // Reset cache and document
+    viewerInitCache = {};
+    viewer.document = null;
+  }
 });
 
 export function updateNote(note) {

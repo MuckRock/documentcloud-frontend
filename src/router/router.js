@@ -34,6 +34,9 @@ const mapping = Object.entries(routes).reduce((map, [name, route]) => {
 // internal
 const router = rlite(() => ({ component: NotFound }), mapping);
 
+// debug
+window.router = router;
+
 export const currentUrl = writable("");
 export const backNav = writable(false);
 
@@ -42,9 +45,11 @@ const pastUrl = writable("");
 export const resolvedRoute = derived(currentUrl, async ($currentUrl, set) => {
   // if ($currentUrl == null) return null;
   const resolved = resolve($currentUrl);
-  if (resolved.component == null && resolved.get != null) {
-    await Promise.resolve(resolved.get());
+
+  if (!resolved.component) {
+    resolved.component = await resolved.get();
   }
+
   set(resolved);
 });
 

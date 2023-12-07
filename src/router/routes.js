@@ -1,72 +1,89 @@
-import {
-  loadDefault,
-  loadHome,
-  loadApp,
-  loadViewer,
-  loadNote,
-  loadPage,
-  loadProject,
-  loadLegacyRedirect,
-  loadEntities,
-} from "./lazyComponent.js";
+import Empty from "../pages/home/Empty.svelte";
 
 export default function route(lazyComponent) {
   return {
     default: {
       path: "/",
-      component: lazyComponent.default,
-      get: loadDefault,
+      component: Empty,
     },
     home: {
       path: "/home",
-      component: lazyComponent.home,
-      get: loadHome,
+      get() {
+        return import("../pages/home/Home.svelte").then(
+          (module) => module.default,
+        );
+      },
+      component: null, // set by get
     },
     app: {
       path: "/app",
-      component: lazyComponent.app,
-      get: loadApp,
+      get() {
+        return import("../pages/app/App.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
 
     viewer: {
       path: "/documents/:id",
-      component: lazyComponent.viewer,
-      get: loadViewer,
+      get() {
+        return import("../pages/viewer/Viewer.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
     entity: {
       path: "/entities/:id",
-      component: lazyComponent.entities,
-      get: loadEntities,
+      get() {
+        return import("../pages/entities/Entities.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
 
     // Embeds
     note: {
       path: "/documents/:id/annotations/:noteId",
-      component: lazyComponent.note,
-      get: loadNote,
+      get() {
+        return import("../pages/embed/note/Note.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
     page: {
       path: "/documents/:id/pages/:page",
-      component: lazyComponent.page,
-      get: loadPage,
+      get() {
+        return import("../pages/embed/page/Page.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
     project: {
       path: "/projects/:projectEmbedId",
-      component: lazyComponent.project,
-      get: loadProject,
+      get() {
+        return import("../pages/embed/project/Project.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
 
     // Legacy
     search: {
       path: "/search/*query",
-      component: lazyComponent.legacyRedirect,
-      get: loadLegacyRedirect,
+      get() {
+        return import("@/pages/legacy/Redirect.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
 
     publicSearch: {
       path: "/public/search/*query",
-      component: lazyComponent.legacyRedirect,
-      get: loadLegacyRedirect,
+      get() {
+        return import("@/pages/legacy/Redirect.svelte").then(
+          (module) => module.default,
+        );
+      },
     },
   };
 }

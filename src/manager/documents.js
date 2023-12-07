@@ -1,4 +1,5 @@
 import { Svue } from "svue";
+import { get } from "svelte/store";
 
 import {
   getDocumentsWithIds,
@@ -71,7 +72,7 @@ export const documents = new Svue({
   computed: {
     staticMode(resolvedRoute) {
       // Applies when in embed or dialog
-      const route = resolvedRoute;
+      const route = get(resolvedRoute);
       if (route == null) return true;
       if (route.name == "project") return true; // project embeds are static
       if (route.props != null && truthyParamValue(route.props.embed))
