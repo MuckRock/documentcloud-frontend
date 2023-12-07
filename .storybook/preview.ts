@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/svelte";
 import { initialize, mswLoader } from "msw-storybook-addon";
+import { mockDateDecorator } from "storybook-mock-date-decorator";
 
 import "../src/langs/i18n.js";
 import "../src/style/variables.css";
@@ -23,5 +24,7 @@ const preview: Preview = {
   // Provide the MSW addon loader globally
   loaders: [mswLoader],
 };
+
+export let decorators = [mockDateDecorator];
 
 export default preview;
