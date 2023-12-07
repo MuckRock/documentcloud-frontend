@@ -1,21 +1,29 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Header from "../Header.svelte";
-  import HeaderDemo from "./Header.demo.svelte";
 
   import * as addons from "../../fixtures/addons.json";
+
+  export const meta = {
+    title: "Add-Ons / Dispatch / Header",
+    component: Header,
+    parameters: { layout: "centered" },
+    argTypes: { categories: { control: "object" } },
+  };
 </script>
 
-<Meta
-  title="Add-Ons / Dispatch / Header"
-  component={Header}
-  parameters={{ layout: "centered" }}
-  argTypes={{ categories: { control: "object" } }}
-/>
+<style>
+  .container {
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+</style>
 
 <Template let:args={addon}>
-  <HeaderDemo {addon} />
+  <div class="container">
+    <Header {addon} />
+  </div>
 </Template>
 
 <Story name="PDF Exporter" args={addons[0]} />

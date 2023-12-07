@@ -1,20 +1,22 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Badge from "../Badge.svelte";
-  import BadgeDemo from "./Badge.demo.svelte";
+  import Star from "../icons/Star.svelte";
+
+  export const meta = {
+    title: "Common / Badge",
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
+    component: Badge,
+    argTypes: { selected: { control: "boolean" } },
+  };
 </script>
 
-<Meta
-  title="Common / Badge"
-  tags={["autodocs"]}
-  parameters={{ layout: "centered" }}
-  component={Badge}
-  argTypes={{ selected: { control: "boolean" } }}
-/>
-
 <Template let:args>
-  <BadgeDemo {...args} />
+  <Badge {...args}>
+    <Star slot="icon" />
+  </Badge>
 </Template>
 
 <Story name="Light Color" args={{ label: "Featured", badgeColor: "yellow" }} />

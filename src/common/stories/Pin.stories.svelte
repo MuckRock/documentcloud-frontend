@@ -1,8 +1,8 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
-  import Pin from "@/common/Pin.svelte";
+  import Pin from "../../common/Pin.svelte";
 
   const args = {
     active: false,
@@ -10,14 +10,14 @@
   };
 
   const onClick = action("Click");
-</script>
 
-<Meta
-  title="Common / Pin"
-  tags={["autodocs"]}
-  component={Pin}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Common / Pin",
+    tags: ["autodocs"],
+    component: Pin,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <Pin {...args} on:click={onClick} />

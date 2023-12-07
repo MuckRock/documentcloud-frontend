@@ -1,16 +1,14 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import event from "../../fixtures/event.json";
   import Event from "../ScheduledEvent.svelte";
 
-  const args = { event };
+  export const meta = {
+    title: "Add-Ons / Runs / Scheduled / Event",
+    component: Event,
+    parameters: { layout: "centered" },
+  };
 </script>
-
-<Meta
-  title="Add-Ons / Runs / Scheduled / Event"
-  component={Event}
-  parameters={{ layout: "centered" }}
-/>
 
 <Template let:args>
   <Event {...args} />

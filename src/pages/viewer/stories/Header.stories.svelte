@@ -1,5 +1,5 @@
-<script lang="ts">
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Header from "../Header.svelte";
 
@@ -14,9 +14,12 @@
     embed: false,
     disableControls: false,
   };
-</script>
 
-<Meta title="Viewer / Header" component={Header} />
+  export const meta = {
+    title: "Viewer / Header",
+    component: Header,
+  };
+</script>
 
 <Template let:args>
   <Header {...args} />

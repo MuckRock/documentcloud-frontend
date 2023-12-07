@@ -1,5 +1,5 @@
-<script lang="ts">
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
   import SidebarAction from "../SidebarAction.svelte";
@@ -11,9 +11,12 @@
       "Leave a public, private or shared note, which can be embedded within an article.",
     disabled: false,
   };
-</script>
 
-<Meta title="Viewer / Sidebar / Action" component={SidebarAction} />
+  export const meta = {
+    title: "Viewer / Sidebar / Action",
+    component: SidebarAction,
+  };
+</script>
 
 <Template let:args>
   <SidebarAction {...args} />

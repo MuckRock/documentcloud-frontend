@@ -1,5 +1,5 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import defaultAddons from "../../fixtures/addons.json";
   import AddOnList from "../AddOnList.svelte";
@@ -9,13 +9,13 @@
     loading: false,
     error: null,
   };
-</script>
 
-<Meta
-  title="Add-Ons / Browser / Components / List"
-  component={AddOnList}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Add-Ons / Browser / Components / List",
+    component: AddOnList,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <AddOnList {...args} />

@@ -1,9 +1,9 @@
-<script>
+<script lang="ts" context="module">
   import { rest } from "msw";
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Dispatch from "../Dispatch.svelte";
-  import * as addons from "../../fixtures/addons.json";
+  import addons from "../../fixtures/addons.json";
   import * as eventFixture from "../../fixtures/event.json";
   import { baseApiUrl } from "../../../api/base";
 
@@ -48,13 +48,13 @@
     addon: null,
     event: null,
   };
-</script>
 
-<Meta
-  title="Add-Ons / Dispatch"
-  component={Dispatch}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Add-Ons / Dispatch",
+    component: Dispatch,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <Dispatch {...args} />

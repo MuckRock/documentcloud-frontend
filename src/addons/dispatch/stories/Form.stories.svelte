@@ -1,20 +1,34 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Form from "../Form.svelte";
-  import FormDemo from "./Form.demo.svelte";
+  import Form, { values } from "../Form.svelte";
 
   import * as addons from "../../fixtures/addons.json";
+
+  export const meta = {
+    title: "Add-Ons / Dispatch / Form",
+    component: Form,
+    parameters: { layout: "centered" },
+  };
 </script>
 
-<Meta
-  title="Add-Ons / Dispatch / Form"
-  component={Form}
-  parameters={{ layout: "centered" }}
-/>
-
 <Template let:args={addon}>
-  <FormDemo {addon} />
+  <h2>{addon.name}</h2>
+  <Form
+    on:input
+    on:change
+    on:submit
+    on:reset
+    properties={addon.parameters.properties}
+    required={addon.parameters.required}
+    eventOptions={addon.parameters.eventOptions}
+  />
+  <div class="values">
+    <h2>Data</h2>
+    <code>
+      {JSON.stringify($values, null, 2)}
+    </code>
+  </div>
 </Template>
 
 <Story name="PDF Exporter" args={addons[0]} />

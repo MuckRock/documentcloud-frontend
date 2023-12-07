@@ -1,17 +1,17 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Filters from "../Filters.svelte";
 
   const args = {};
-</script>
 
-<Meta
-  title="Add-Ons / Browser / Components / Filters"
-  tags={["autodocs"]}
-  parameters={{ layout: "centered" }}
-  component={Filters}
-/>
+  export const meta = {
+    title: "Add-Ons / Browser / Components / Filters",
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
+    component: Filters,
+  };
+</script>
 
 <Template let:args>
   <Filters {...args} />

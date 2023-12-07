@@ -1,6 +1,6 @@
-<script>
+<script lang="ts" context="module">
   import { _ } from "svelte-i18n";
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import UpgradePrompt from "../UpgradePrompt.svelte";
 
   const args = {
@@ -8,14 +8,14 @@
       "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a Professional account to utilize this and other powerful Add-Ons.",
     callToAction: "Start Free Trial",
   };
-</script>
 
-<Meta
-  title="Premium Credits / Upgrade Prompt"
-  tags={["autodocs"]}
-  parameters={{ layout: "centered" }}
-  component={UpgradePrompt}
-/>
+  export const meta = {
+    title: "Premium Credits / Upgrade Prompt",
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
+    component: UpgradePrompt,
+  };
+</script>
 
 <Template let:args>
   <UpgradePrompt {...args} />

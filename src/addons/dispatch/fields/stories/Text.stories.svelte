@@ -1,5 +1,5 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Text from "../Text.svelte";
 
@@ -10,13 +10,13 @@
     required: false,
     value: "Lorem ipsum dolor sit amet",
   };
-</script>
 
-<Meta
-  title="Add-Ons / Dispatch / Form / Fields / Text"
-  component={Number}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Add-Ons / Dispatch / Form / Fields / Text",
+    component: Number,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <Text {...args} />

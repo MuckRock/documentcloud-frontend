@@ -1,16 +1,16 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import PremiumMenu from "../PremiumMenu.svelte";
 
   import orgListFixture from "../fixtures/orgList.json";
-</script>
 
-<Meta
-  title="Account Navigation / Menus / Premium"
-  component={PremiumMenu}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Account Navigation / Menus / Premium",
+    component: PremiumMenu,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <PremiumMenu {...args} />

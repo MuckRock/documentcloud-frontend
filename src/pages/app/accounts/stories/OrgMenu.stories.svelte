@@ -1,93 +1,27 @@
 <script context="module" lang="ts">
-  import { rest } from "msw";
-  import { baseApiUrl } from "../../../../api/base.js";
-  import { mockInMyOrg } from "./OrgMemberList.stories.svelte";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import orgListFixture from "../fixtures/orgList.json";
   import getMeFixture from "../fixtures/getMe.json";
 
-  /* Mock Request Handlers */
-  const mockGetOrgsUrl = new URL(`organizations/`, baseApiUrl).toString();
-  export const mockGetOrgsList = {
-    data: rest.get(mockGetOrgsUrl, (req, res, ctx) =>
-      res(ctx.json(orgListFixture)),
-    ),
-    loading: rest.get(mockGetOrgsUrl, (req, res, ctx) =>
-      res(ctx.delay("infinite")),
-    ),
-    error: rest.get(mockGetOrgsUrl, (req, res, ctx) =>
-      res(
-        ctx.status(400, "Ambiguous Error"),
-        ctx.json("Something went horribly wrong."),
-      ),
-    ),
-    empty: rest.get(mockGetOrgsUrl, (req, res, ctx) =>
-      res(
-        ctx.json({
-          next: null,
-          previous: null,
-          results: [orgListFixture.results[1]],
-        }),
-      ),
-    ),
-  };
-
-  const mockGetOrgUrl = new URL(`organizations/:id/*`, baseApiUrl).toString();
-  export const mockGetOrg = {
-    data: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-      res(
-        ctx.json(
-          orgListFixture.results.find(
-            ({ id }) => id.toString() === req.params.id,
-          ),
-        ),
-      ),
-    ),
-    loading: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-      res(ctx.delay("infinite")),
-    ),
-    error: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-      res(
-        ctx.status(400, "Ambiguous Error"),
-        ctx.json("Something went horribly wrong."),
-      ),
-    ),
-    empty: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-      res(ctx.json({ next: null, previous: null, results: [] })),
-    ),
-    free: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-      res(
-        ctx.json({
-          ...orgListFixture.results.find(
-            ({ id }) => id.toString() === req.params.id,
-          ),
-          plan: "Free",
-        }),
-      ),
-    ),
-  };
-
-  const mockChangeOrgUrl = new URL(`users/me/`, baseApiUrl).toString();
-  export const mockChangeOrg = rest.patch(mockChangeOrgUrl, (req, res, ctx) =>
-    res(ctx.json(getMeFixture)),
-  );
-</script>
-
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-
   import OrgMenu from "../OrgMenu.svelte";
+  import {
+    mockChangeOrg,
+    mockGetOrg,
+    mockGetOrgsList,
+    mockInMyOrg,
+  } from "./mockData";
 
   const args = {
     user: getMeFixture,
     org: orgListFixture.results[0],
   };
-</script>
 
-<Meta
-  title="Account Navigation / Menus / Org"
-  component={OrgMenu}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Account Navigation / Menus / Org",
+    component: OrgMenu,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <OrgMenu {...args} />
