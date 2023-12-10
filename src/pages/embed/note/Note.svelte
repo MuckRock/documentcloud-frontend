@@ -11,7 +11,7 @@
   import { pageImageUrl } from "@/api/viewer.js";
   import { embedUrl } from "@/api/embed.js";
   import {
-    currentUrl,
+    getCurrentUrl,
     truthyParamValue,
     getQueryStringParams,
   } from "@/util/url.js";
@@ -26,7 +26,7 @@
   let elem;
 
   const showStaticImage = truthyParamValue(
-    getQueryStringParams(currentUrl()).embed,
+    getQueryStringParams(getCurrentUrl()).embed,
   );
 
   $: canonicalNoteUrl = note == null ? "" : doc.canonicalNoteUrl(note);
