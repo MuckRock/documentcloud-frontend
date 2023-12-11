@@ -263,6 +263,7 @@ export async function pollDocument(
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
  * @param {string} ocrEngine Select OCR engine
+ * @param {boolean} revision_control Toggles revision history on document
  * @param {Function} createProgressFn A function to call with process progress
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} processProgressFn A function to call with process progress
@@ -275,6 +276,7 @@ export async function uploadDocuments(
   language,
   forceOcr,
   ocrEngine,
+  revision_control,
   projects,
   createProgressFn,
   progressFn,
@@ -317,6 +319,7 @@ export async function uploadDocuments(
             language,
             original_extension: getExtension(doc.file),
             projects: projectIds,
+            revision_control,
           })),
         );
         createCount += subDocs.length;

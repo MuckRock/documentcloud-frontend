@@ -140,6 +140,7 @@
       language,
       forceOcr,
       ocrEngine,
+      revisionControl,
       uploadProject == null ? [] : [uploadProject],
       (progress) => {
         // Create progress handler
