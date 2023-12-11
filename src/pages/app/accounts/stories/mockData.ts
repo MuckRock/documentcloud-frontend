@@ -21,6 +21,20 @@ export const mockGetMe = {
       }),
     ),
   ),
+  freeOrgMember: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({ ...me, organization: { ...me.organization, plan: "Free" } }),
+    ),
+  ),
+  freeOrgAdmin: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({
+        ...me,
+        organization: { ...me.organization, plan: "Free" },
+        admin_organizations: [...me.admin_organizations, 1],
+      }),
+    ),
+  ),
   loading: rest.get(mockMeUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
   error: rest.get(mockMeUrl, (req, res, ctx) =>
     res(ctx.status(404, "Not Found"), ctx.json({ detail: "Not found." })),

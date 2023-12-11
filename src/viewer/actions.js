@@ -33,6 +33,10 @@ export function enterDataMode() {
   layout.showData = true;
 }
 
+export function enterRevisionsMode() {
+  layout.showRevisions = true;
+}
+
 export function enterSectionsMode() {
   layout.showEditSections = true;
 }

@@ -24,3 +24,4 @@
 
 <Story name="Action" id="sidebarAction" {args} />
 <Story name="Disabled" args={{ ...args, disabled: true }} />
+<Story name="Premium" args={{ ...args, premium: true }} />

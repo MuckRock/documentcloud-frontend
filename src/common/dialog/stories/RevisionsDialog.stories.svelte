@@ -6,6 +6,8 @@
   import documentFixture from "../../../pages/app/test/fixtures/document.json";
   import { revisionControl } from "./mockData";
 
+  import { mockGetMe } from "../../../pages/app/accounts/stories/mockData";
+
   const today = new Date().getDate();
   const manyRevisions = Array(100)
     .fill(1)
@@ -31,7 +33,7 @@
     parameters: {
       layout: "centered",
       msw: {
-        handlers: [revisionControl.success],
+        handlers: [revisionControl.success, mockGetMe.data],
       },
     },
     argTypes: {
@@ -58,10 +60,24 @@
 <Story
   name="With Change Loading"
   {args}
-  parameters={{ msw: { handlers: [revisionControl.loading] } }}
+  parameters={{ msw: { handlers: [revisionControl.loading, mockGetMe.data] } }}
 />
 <Story
   name="With Change Error"
   {args}
-  parameters={{ msw: { handlers: [revisionControl.error] } }}
+  parameters={{ msw: { handlers: [revisionControl.error, mockGetMe.data] } }}
+/>
+<Story
+  name="As Free Org Admin"
+  {args}
+  parameters={{
+    msw: { handlers: [revisionControl.error, mockGetMe.freeOrgAdmin] },
+  }}
+/>
+<Story
+  name="As Free Org Member"
+  {args}
+  parameters={{
+    msw: { handlers: [revisionControl.error, mockGetMe.freeOrgMember] },
+  }}
 />

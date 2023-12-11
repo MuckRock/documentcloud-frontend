@@ -81,6 +81,7 @@ export const layout = new Svue({
       showInfo: false,
       showData: false,
       showAccess: false,
+      showRevisions: false,
 
       // Sections
       showEditSections: false,

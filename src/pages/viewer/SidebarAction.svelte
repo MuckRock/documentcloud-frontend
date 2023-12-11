@@ -1,14 +1,34 @@
 <script lang="ts">
+  import Badge from "../../common/Badge.svelte";
+  import Credit from "../../common/icons/Credit.svelte";
+
   export let action: () => void;
   export let header: string;
   export let description: string;
   export let disabled = false;
+  export let premium = false;
   let className = "";
   export { className as class };
 </script>
 
-<button class={`action ${className}`} class:disabled on:click={action}>
-  <h3>{header}</h3>
+<button
+  class={`action ${className}`}
+  class:disabled
+  class:premium
+  on:click={action}
+>
+  <header>
+    <h3>{header}</h3>
+    {#if premium}
+      <Badge
+        label="Premium"
+        badgeColor="var(--premium)"
+        labelColor="var(--darkgray)"
+      >
+        <Credit badge slot="icon" color="var(--darkgray)" />
+      </Badge>
+    {/if}
+  </header>
   <p>{description}</p>
 </button>
 
@@ -36,6 +56,13 @@
   .action:hover,
   .action:focus {
     background: rgba(0, 0, 0, 0.02);
+  }
+
+  .action header {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .action h3 {

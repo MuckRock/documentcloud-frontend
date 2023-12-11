@@ -13,6 +13,7 @@
     enterInfoMode,
     enterDataMode,
     enterSectionsMode,
+    enterRevisionsMode,
   } from "../../viewer/actions";
   import {
     showEmbedFlow,
@@ -59,6 +60,7 @@
     header: string;
     description: string;
     disabled?: boolean;
+    premium?: boolean;
   }
 
   let actions: Action[] = [
@@ -102,6 +104,14 @@
       header: $_("sidebar.data"),
       description: $_("sidebar.dataDesc"),
       disabled: document?.readable,
+    },
+    {
+      id: "revisions",
+      action: enterRevisionsMode,
+      header: $_("sidebar.revisions"),
+      description: $_("sidebar.revisionsDesc"),
+      disabled: document?.readable,
+      premium: true,
     },
     {
       id: "sections",
@@ -220,13 +230,14 @@
       {#if signedIn}
         <div class="actions">{$_("sidebar.actions")}</div>
         {#if document?.editAccess}
-          {#each actions as { id, action, header, description, disabled }}
+          {#each actions as { id, action, header, description, disabled, premium }}
             <SidebarAction
               class={`plausible-event-name=sidebar-${id}`}
               {disabled}
               {action}
               {header}
               {description}
+              {premium}
             />
           {/each}
         {:else}

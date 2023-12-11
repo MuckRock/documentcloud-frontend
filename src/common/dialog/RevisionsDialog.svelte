@@ -17,9 +17,26 @@
     const value = checkbox.checked;
     changeRevisionControl([documentId], value);
   }
+
+  import { getMe } from "../../api/orgAndUser.js";
+  import {
+    isOrgAdmin,
+    isPremiumOrg,
+    triggerPremiumUpgradeFlow,
+  } from "../../manager/orgsAndUsers.js";
+  import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
+  import Error from "../../common/icons/Error.svelte";
+  import Credit from "../icons/Credit.svelte";
+  import Badge from "../Badge.svelte";
 </script>
 
 <style>
+  header {
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+    align-items: center;
+  }
   .revision-control-input {
     display: flex;
     align-items: center;
@@ -78,40 +95,87 @@
     text-transform: uppercase;
     font-weight: 600;
   }
+  .error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.875em;
+    color: var(--caution);
+  }
+
+  .errorIcon {
+    text-align: center;
+    height: 3em;
+    width: 3em;
+  }
 </style>
 
-<h3>Revision History</h3>
-<form>
-  <label class="revision-control-input">
-    <input
-      type="checkbox"
-      name="revision_control"
-      checked={enabled}
-      on:change={handleRevisionControlChange}
+<header>
+  <h3>Revision History</h3>
+  <Badge
+    label="Premium"
+    badgeColor="var(--premium)"
+    labelColor="var(--darkgray)"
+  >
+    <Credit badge slot="icon" color="var(--darkgray)" />
+  </Badge>
+</header>
+{#await getMe() then user}
+  {#if isPremiumOrg(user.organization)}
+    <form>
+      <label class="revision-control-input">
+        <input
+          type="checkbox"
+          name="revision_control"
+          checked={enabled}
+          on:change={handleRevisionControlChange}
+        />
+        Revision Control
+      </label>
+    </form>
+    {#if enabled}
+      <div class="overflow-scroll">
+        <table class="revisions">
+          {#each sortedRevisions as revision}
+            <tr class="revision">
+              <td class="revision-version count">{revision.version}</td>
+              <td class="revision-details">
+                <p class="revision-comment">{revision.comment}</p>
+                <span class="revision-time"
+                  ><RelativeTime date={new Date(revision.created_at)} /></span
+                >
+              </td>
+              <td class="revision-download"
+                ><Button href={revision.url} download nomargin>Download</Button
+                ></td
+              >
+            </tr>
+          {:else}
+            <tr class="empty"><td>No revisions found</td></tr>
+          {/each}
+        </table>
+      </div>
+      {#if revisions.length > 0}<p class="count">
+          {revisions.length} total
+        </p>{/if}
+    {/if}
+  {:else if isOrgAdmin(user)}
+    <UpgradePrompt
+      message="Pro and Organization users can record and access the entire version history of their documents. Upgrade today!"
+      callToAction="Upgrade"
+      on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
     />
-    Revision Control
-  </label>
-</form>
-{#if enabled}
-  <div class="overflow-scroll">
-    <table class="revisions">
-      {#each sortedRevisions as revision}
-        <tr class="revision">
-          <td class="revision-version count">{revision.version}</td>
-          <td class="revision-details">
-            <p class="revision-comment">{revision.comment}</p>
-            <span class="revision-time"
-              ><RelativeTime date={new Date(revision.created_at)} /></span
-            >
-          </td>
-          <td class="revision-download"
-            ><Button href={revision.url} download nomargin>Download</Button></td
-          >
-        </tr>
-      {:else}
-        <tr class="empty"><td>No revisions found</td></tr>
-      {/each}
-    </table>
+  {:else}
+    <UpgradePrompt
+      message="Pro and Organization users can record and access the entire version history of their documents. Contact your organization administrator about upgrading your account."
+    />
+  {/if}
+{:catch}
+  <!-- Error state -->
+  <div class="error">
+    <div class="errorIcon"><Error /></div>
+    <p>An error occurred</p>
   </div>
-  {#if revisions.length > 0}<p class="count">{revisions.length} total</p>{/if}
-{/if}
+{/await}
