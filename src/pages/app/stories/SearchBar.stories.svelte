@@ -1,6 +1,7 @@
 <script context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import SearchBar from "../SearchBar.svelte";
+  import * as mock from "./mock.js";
 
   export const meta = {
     title: "App / Search / Search Bar",
@@ -15,16 +16,34 @@
   </div>
 </Template>
 
-<Story name="default" args={{ search: "project:example-project-123" }} />
+<Story
+  name="default"
+  args={{ search: "project:example-project-123" }}
+  parameters={{
+    msw: {
+      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+    },
+  }}
+/>
 
 <Story
   name="compact"
   args={{ compact: true, search: "project:example-project-123" }}
+  parameters={{
+    msw: {
+      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+    },
+  }}
 />
 
 <Story
   name="example"
   args={{ example: true, search: "project:example-project-123" }}
+  parameters={{
+    msw: {
+      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+    },
+  }}
 />
 
 <Story
