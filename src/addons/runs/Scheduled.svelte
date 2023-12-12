@@ -63,42 +63,6 @@
   onMount(load);
 </script>
 
-<style>
-  .scheduled-list ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-  .scheduled-list li {
-    padding: 0;
-  }
-  .empty,
-  .loading,
-  .error {
-    margin: 2em 1em;
-    color: var(--darkgray);
-    fill: var(--gray);
-  }
-  .error {
-    color: var(--caution);
-  }
-  .empty .icon {
-    transform: scale(2);
-    opacity: 0.4;
-  }
-  .error .icon {
-    height: 3em;
-    width: 3em;
-  }
-  .empty,
-  .error,
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-</style>
-
 <div class="scheduled-list">
   {#if empty}
     <div class="empty">
@@ -134,3 +98,39 @@
     />
   {/if}
 </div>
+
+<style>
+  .scheduled-list ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  .scheduled-list li {
+    padding: 0;
+  }
+  .empty,
+  .loading,
+  .error {
+    margin: 2em 1em;
+    color: var(--darkgray);
+    fill: var(--gray);
+  }
+  .error {
+    color: var(--caution);
+  }
+  .empty .icon {
+    transform: scale(2);
+    opacity: 0.4;
+  }
+  .error .icon {
+    height: 3em;
+    width: 3em;
+  }
+  .empty,
+  .error,
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

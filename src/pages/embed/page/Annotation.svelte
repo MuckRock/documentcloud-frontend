@@ -47,6 +47,19 @@
     : `top:${note.y2 * 100}%`;
 </script>
 
+<div
+  class="dc-embed-annotation"
+  bind:this={annotationElem}
+  style="{leftRightStyle};{topDownStyle}"
+>
+  <h1>
+    <a href={noteUrl} target="_blank">{note.title}</a>
+  </h1>
+  <div class="content">
+    {@html DomPurify.sanitize(note.content)}
+  </div>
+</div>
+
 <style lang="scss">
   .dc-embed-annotation {
     max-height: 156px;
@@ -79,16 +92,3 @@
     }
   }
 </style>
-
-<div
-  class="dc-embed-annotation"
-  bind:this={annotationElem}
-  style="{leftRightStyle};{topDownStyle}"
->
-  <h1>
-    <a href={noteUrl} target="_blank">{note.title}</a>
-  </h1>
-  <div class="content">
-    {@html DomPurify.sanitize(note.content)}
-  </div>
-</div>

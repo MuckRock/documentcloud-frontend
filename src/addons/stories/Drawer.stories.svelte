@@ -13,14 +13,6 @@
   };
 </script>
 
-<style>
-  .content {
-    padding: 0 1em;
-    min-width: 24em;
-    margin: 0 auto;
-  }
-</style>
-
 <Template let:args>
   <Drawer {...args}>
     <div slot="content" class="content">
@@ -32,3 +24,11 @@
 
 <Story name="Righthand" {args} />
 <Story name="Lefthand" args={{ ...args, anchor: "left" }} />
+
+<style>
+  .content {
+    padding: 0 1em;
+    min-width: 24em;
+    margin: 0 auto;
+  }
+</style>

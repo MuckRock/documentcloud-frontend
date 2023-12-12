@@ -12,12 +12,6 @@
   export let inline = false;
 </script>
 
-<style>
-  input {
-    flex: 1 1 auto;
-  }
-</style>
-
 <Field {title} {description} {inline} {required}>
   <input
     type="number"
@@ -32,3 +26,9 @@
     max={maximum}
   />
 </Field>
+
+<style>
+  input {
+    flex: 1 1 auto;
+  }
+</style>

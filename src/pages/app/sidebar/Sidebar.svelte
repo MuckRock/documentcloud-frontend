@@ -17,6 +17,23 @@
   export let expanded;
 </script>
 
+<aside class="sidebar" class:expanded>
+  <header>
+    <Hamburger on:toggle={(e) => dispatch("retractSidebar")} />
+    <Logo />
+  </header>
+
+  <ProjectFilters />
+
+  {#if $orgsAndUsers.me !== null}
+    <Projects on:retractSidebar />
+    <AddonSidebar />
+  {/if}
+
+  <!-- todo get rid of this -->
+  <div class="sidebarbg" />
+</aside>
+
 <style>
   .sidebar {
     position: absolute;
@@ -62,20 +79,3 @@
     }
   }
 </style>
-
-<aside class="sidebar" class:expanded>
-  <header>
-    <Hamburger on:toggle={(e) => dispatch("retractSidebar")} />
-    <Logo />
-  </header>
-
-  <ProjectFilters />
-
-  {#if $orgsAndUsers.me !== null}
-    <Projects on:retractSidebar />
-    <AddonSidebar />
-  {/if}
-
-  <!-- todo get rid of this -->
-  <div class="sidebarbg" />
-</aside>

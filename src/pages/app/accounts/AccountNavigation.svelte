@@ -27,6 +27,21 @@
   const getUserPromise = getUser();
 </script>
 
+<nav class="account-navigation">
+  <section class="primary">
+    {#await getUserPromise then}
+      <UserMenu {user} />
+      {#if user}
+        <OrgMenu {user} {org} />
+      {/if}
+    {/await}
+  </section>
+  <section class="secondary">
+    <LanguageMenu />
+    <HelpMenu />
+  </section>
+</nav>
+
 <style>
   .account-navigation {
     box-sizing: border-box;
@@ -43,18 +58,3 @@
     align-items: center;
   }
 </style>
-
-<nav class="account-navigation">
-  <section class="primary">
-    {#await getUserPromise then}
-      <UserMenu {user} />
-      {#if user}
-        <OrgMenu {user} {org} />
-      {/if}
-    {/await}
-  </section>
-  <section class="secondary">
-    <LanguageMenu />
-    <HelpMenu />
-  </section>
-</nav>

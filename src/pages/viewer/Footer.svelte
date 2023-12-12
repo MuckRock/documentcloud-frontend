@@ -15,6 +15,27 @@
   $: style = `height: ${FOOTER_HEIGHT}px;`;
 </script>
 
+<footer class="vheader" class:disabled={disableControls} {style}>
+  <div class="vcontent">
+    {#if !compact}
+      <div class="cell side hide floatleft" {style}>
+        <ViewDropdown />
+      </div>
+      <div class="cell center" {style}>
+        <Paginator />
+      </div>
+      <div class="cell side right floatright" {style}>
+        <span class="hide ib adjustright" class:hideearly={embed}>
+          <Zoom />
+        </span>
+        {#if embed && showFullscreen}
+          <FullScreen />
+        {/if}
+      </div>
+    {/if}
+  </div>
+</footer>
+
 <style>
   footer {
     position: absolute;
@@ -85,24 +106,3 @@
     }
   }
 </style>
-
-<footer class="vheader" class:disabled={disableControls} {style}>
-  <div class="vcontent">
-    {#if !compact}
-      <div class="cell side hide floatleft" {style}>
-        <ViewDropdown />
-      </div>
-      <div class="cell center" {style}>
-        <Paginator />
-      </div>
-      <div class="cell side right floatright" {style}>
-        <span class="hide ib adjustright" class:hideearly={embed}>
-          <Zoom />
-        </span>
-        {#if embed && showFullscreen}
-          <FullScreen />
-        {/if}
-      </div>
-    {/if}
-  </div>
-</footer>

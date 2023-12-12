@@ -114,106 +114,6 @@
   }
 </script>
 
-<style lang="scss">
-  label {
-    display: table;
-    margin: 12px 0;
-  }
-
-  .normal-label {
-    display: initial;
-    margin-left: 8px;
-  }
-
-  input {
-    display: table-cell;
-  }
-
-  p {
-    margin: 0 0 10px 0;
-  }
-
-  .accessoption {
-    display: table-cell;
-    padding-left: 10px;
-  }
-
-  h3 {
-    font-size: 16px;
-    margin: 0;
-  }
-
-  small {
-    margin: 5px 0;
-  }
-
-  .scheduler {
-    margin-top: 24px;
-
-    .scheduleaction {
-      @include buttonLike;
-      font-size: 14px;
-      font-weight: bold;
-
-      input,
-      label {
-        cursor: pointer;
-      }
-
-      .icon {
-        display: inline-block;
-        vertical-align: middle;
-
-        :global(svg) {
-          height: 21px;
-        }
-      }
-    }
-  }
-
-  .faded {
-    opacity: 0.3;
-    pointer-events: none;
-  }
-
-  .callout {
-    border: solid 2px $primary;
-    background: $menuBg;
-    border-radius: 5px;
-    padding: 4px 8px;
-    font-size: 13px;
-    margin-left: 28px;
-    position: relative;
-    margin-bottom: 16px;
-
-    :global(a) {
-      color: $primary;
-    }
-
-    .i {
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: 6px 4px;
-
-      :global(svg) {
-        width: 15px;
-        height: 15px;
-      }
-    }
-
-    .content {
-      padding-left: 14px;
-      display: inline-block;
-    }
-  }
-
-  .noindex-block h3 {
-    display: inline-block;
-    margin-bottom: 10px;
-  }
-</style>
-
 <div>
   <div class="mcontent">
     <h1>
@@ -317,8 +217,8 @@
         disabledReason={valid
           ? null
           : validPublishAt
-          ? $_("dialogAccessDialog.unchanged")
-          : $_("dialogAccessDialog.future")}
+            ? $_("dialogAccessDialog.unchanged")
+            : $_("dialogAccessDialog.future")}
         on:click={() => accessChange(access, publishAt, noindex)}
       >
         {$_("dialogAccessDialog.change")}
@@ -329,3 +229,103 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  label {
+    display: table;
+    margin: 12px 0;
+  }
+
+  .normal-label {
+    display: initial;
+    margin-left: 8px;
+  }
+
+  input {
+    display: table-cell;
+  }
+
+  p {
+    margin: 0 0 10px 0;
+  }
+
+  .accessoption {
+    display: table-cell;
+    padding-left: 10px;
+  }
+
+  h3 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  small {
+    margin: 5px 0;
+  }
+
+  .scheduler {
+    margin-top: 24px;
+
+    .scheduleaction {
+      @include buttonLike;
+      font-size: 14px;
+      font-weight: bold;
+
+      input,
+      label {
+        cursor: pointer;
+      }
+
+      .icon {
+        display: inline-block;
+        vertical-align: middle;
+
+        :global(svg) {
+          height: 21px;
+        }
+      }
+    }
+  }
+
+  .faded {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  .callout {
+    border: solid 2px $primary;
+    background: $menuBg;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-size: 13px;
+    margin-left: 28px;
+    position: relative;
+    margin-bottom: 16px;
+
+    :global(a) {
+      color: $primary;
+    }
+
+    .i {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 6px 4px;
+
+      :global(svg) {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    .content {
+      padding-left: 14px;
+      display: inline-block;
+    }
+  }
+
+  .noindex-block h3 {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+</style>

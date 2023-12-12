@@ -64,29 +64,6 @@
   }
 </script>
 
-<style>
-  form {
-    width: 100%;
-  }
-
-  fieldset {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    margin: 0 0 1em 0;
-    padding: 1em;
-    background: var(--light-gray);
-    border-radius: var(--radius);
-    border-color: rgba(0, 0, 0, 0.1);
-    border-width: 1px;
-  }
-
-  .controls {
-    display: flex;
-    justify-content: space-between;
-  }
-</style>
-
 <form method="post" bind:this={form} on:input on:change on:submit on:reset>
   <slot name="before" />
 
@@ -135,3 +112,26 @@
     </div>
   </slot>
 </form>
+
+<style>
+  form {
+    width: 100%;
+  }
+
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 0 0 1em 0;
+    padding: 1em;
+    background: var(--light-gray);
+    border-radius: var(--radius);
+    border-color: rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>

@@ -5,6 +5,12 @@
   const dispatch = createEventDispatcher();
 </script>
 
+<div class="hamburger">
+  <button class="svg buttonLike" on:click={(e) => dispatch("toggle")}>
+    <ThreeBars16 />
+  </button>
+</div>
+
 <style>
   .hamburger {
     user-select: none;
@@ -29,9 +35,3 @@
     }
   }
 </style>
-
-<div class="hamburger">
-  <button class="svg buttonLike" on:click={(e) => dispatch("toggle")}>
-    <ThreeBars16 />
-  </button>
-</div>

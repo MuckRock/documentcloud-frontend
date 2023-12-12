@@ -22,6 +22,21 @@
   }
 </script>
 
+<div
+  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
+  {$layout.sidebarWidth}px;"
+  bind:this={docElem}
+  on:scroll={handleScroll}
+  class="doc"
+  class:grayed={$layout.displayAnnotate}
+>
+  {#if $doc.mode == "text"}
+    <AllText {scrollParams} />
+  {:else if $doc.mode == "search"}
+    <SearchResults />
+  {/if}
+</div>
+
 <style lang="scss">
   .doc {
     position: absolute;
@@ -44,18 +59,3 @@
     }
   }
 </style>
-
-<div
-  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
-  {$layout.sidebarWidth}px;"
-  bind:this={docElem}
-  on:scroll={handleScroll}
-  class="doc"
-  class:grayed={$layout.displayAnnotate}
->
-  {#if $doc.mode == "text"}
-    <AllText {scrollParams} />
-  {:else if $doc.mode == "search"}
-    <SearchResults />
-  {/if}
-</div>

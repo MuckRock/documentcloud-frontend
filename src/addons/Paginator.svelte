@@ -17,15 +17,6 @@
   }
 </script>
 
-<style>
-  .paginator {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    width: 100%;
-  }
-</style>
-
 <div class="paginator">
   <Button disabled={!has_previous} on:click={previous}>
     {$_("paginator.previous")}
@@ -35,3 +26,12 @@
     {$_("paginator.next")}
   </Button>
 </div>
+
+<style>
+  .paginator {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+  }
+</style>

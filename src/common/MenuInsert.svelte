@@ -1,3 +1,7 @@
+<div class="menuInsert">
+  <slot />
+</div>
+
 <style>
   .menuInsert {
     display: flex;
@@ -10,7 +14,3 @@
     border-radius: var(--radius);
   }
 </style>
-
-<div class="menuInsert">
-  <slot />
-</div>

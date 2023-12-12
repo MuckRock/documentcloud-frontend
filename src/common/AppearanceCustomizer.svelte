@@ -29,6 +29,30 @@
   const change = timeoutify(change_, 250);
 </script>
 
+<details>
+  <summary>{$_("appearanceCustomizer.customizeAppearance")}</summary>
+  <Button on:click={() => (help = !help)} nondescript={true}>
+    {#if help}
+      {$_("appearanceCustomizer.hide")}
+    {:else}
+      {$_("appearanceCustomizer.show")}
+    {/if}
+  </Button>
+  <div class="optionscrollcontainer">
+    <div class="optionscroll">
+      {#each options as option}
+        {#if option.type == "toggle"}
+          <AppearanceToggle {help} on:change={change} {option} />
+        {:else if option.type == "dimension"}
+          <AppearanceDimension {help} on:change={change} {option} />
+        {/if}
+      {/each}
+      <div class="optionspacer" />
+    </div>
+    <div class="scrollfade" />
+  </div>
+</details>
+
 <style lang="scss">
   $appearanceHeight: 400px;
 
@@ -75,27 +99,3 @@
     pointer-events: none;
   }
 </style>
-
-<details>
-  <summary>{$_("appearanceCustomizer.customizeAppearance")}</summary>
-  <Button on:click={() => (help = !help)} nondescript={true}>
-    {#if help}
-      {$_("appearanceCustomizer.hide")}
-    {:else}
-      {$_("appearanceCustomizer.show")}
-    {/if}
-  </Button>
-  <div class="optionscrollcontainer">
-    <div class="optionscroll">
-      {#each options as option}
-        {#if option.type == "toggle"}
-          <AppearanceToggle {help} on:change={change} {option} />
-        {:else if option.type == "dimension"}
-          <AppearanceDimension {help} on:change={change} {option} />
-        {/if}
-      {/each}
-      <div class="optionspacer" />
-    </div>
-    <div class="scrollfade" />
-  </div>
-</details>

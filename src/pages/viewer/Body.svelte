@@ -281,6 +281,29 @@
   }
 </script>
 
+<ActionPane bind:actionHeight />
+
+<div
+  style="top: {$layout.headerHeight +
+    actionOffset}px; bottom: {$layout.footerHeight}px;
+  right: {$layout.sidebarWidth}px;"
+  bind:this={docElem}
+  class="doc"
+  on:mousedown={handleMouseDown}
+  class:grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
+>
+  {#if $doc.mode == "search"}
+    <SearchResults />
+  {/if}
+</div>
+
+<svelte:window
+  on:gesturestart|preventDefault
+  on:gesturechange|preventDefault
+  on:gestureend|preventDefault
+  on:keypress={handleKeyPress}
+/>
+
 <style lang="scss">
   .doc {
     position: absolute;
@@ -305,26 +328,3 @@
     }
   }
 </style>
-
-<ActionPane bind:actionHeight />
-
-<div
-  style="top: {$layout.headerHeight +
-    actionOffset}px; bottom: {$layout.footerHeight}px;
-  right: {$layout.sidebarWidth}px;"
-  bind:this={docElem}
-  class="doc"
-  on:mousedown={handleMouseDown}
-  class:grayed={$layout.displayAnnotate || $layout.selectNoteEmbed}
->
-  {#if $doc.mode == "search"}
-    <SearchResults />
-  {/if}
-</div>
-
-<svelte:window
-  on:gesturestart|preventDefault
-  on:gesturechange|preventDefault
-  on:gestureend|preventDefault
-  on:keypress={handleKeyPress}
-/>

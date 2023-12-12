@@ -8,6 +8,16 @@
   $: regions = coalesceHighlights(text, highlights);
 </script>
 
+<div class="text">
+  {#each regions as region}
+    {#if region.type == "normal"}
+      <span>{region.text}</span>
+    {:else}
+      <span class="highlight">{region.text}</span>
+    {/if}
+  {/each}
+</div>
+
 <style lang="scss">
   .text {
     display: block;
@@ -32,13 +42,3 @@
     }
   }
 </style>
-
-<div class="text">
-  {#each regions as region}
-    {#if region.type == "normal"}
-      <span>{region.text}</span>
-    {:else}
-      <span class="highlight">{region.text}</span>
-    {/if}
-  {/each}
-</div>

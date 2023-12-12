@@ -23,16 +23,6 @@
   }
 </script>
 
-<style lang="scss">
-  p :global(a) {
-    text-decoration: underline;
-    color: #5a76a0;
-    &:hover {
-      filter: brightness(85%);
-    }
-  }
-</style>
-
 <div>
   <div class="mcontent">
     <h1>{$_("uploadEmailDialog.uploadEmailAddress")}</h1>
@@ -55,3 +45,13 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  p :global(a) {
+    text-decoration: underline;
+    color: #5a76a0;
+    &:hover {
+      filter: brightness(85%);
+    }
+  }
+</style>

@@ -3,6 +3,11 @@
   export let label: string;
 </script>
 
+<a class="list-item" {href}>
+  {#if $$slots.icon}<div class="icon"><slot name="icon" /></div>{/if}
+  <h4>{label}</h4>
+</a>
+
 <style>
   .list-item {
     display: flex;
@@ -26,8 +31,3 @@
     font-weight: 600;
   }
 </style>
-
-<a class="list-item" {href}>
-  {#if $$slots.icon}<div class="icon"><slot name="icon" /></div>{/if}
-  <h4>{label}</h4>
-</a>

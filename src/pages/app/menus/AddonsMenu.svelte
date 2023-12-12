@@ -21,18 +21,6 @@
   }
 </script>
 
-<style>
-  :global(a.promo) {
-    color: var(--darkgray, rgba(0, 0, 0, 0.8));
-    font-style: italic;
-    font-size: var(--normal, 16px);
-  }
-
-  hr {
-    margin: 0.5em 21px;
-  }
-</style>
-
 <Menu>
   {#each alphabetizedAddons as addon}
     <MenuItem href={addonURL(addon)}>
@@ -61,3 +49,15 @@
     {$_("addonsMenu.learnMore")}
   </MenuItem>
 </Menu>
+
+<style>
+  :global(a.promo) {
+    color: var(--darkgray, rgba(0, 0, 0, 0.8));
+    font-style: italic;
+    font-size: var(--normal, 16px);
+  }
+
+  hr {
+    margin: 0.5em 21px;
+  }
+</style>

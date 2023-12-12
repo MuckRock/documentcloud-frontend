@@ -45,6 +45,24 @@
   }
 </script>
 
+<div class="doc" bind:this={docElem}>
+  {#each pages as page, i}
+    <div class="page">
+      <div class="numbercontainer">
+        <div id={i + 1} class="number" use:showIfFullyVisible>
+          <a href={`#${i + 1}`}>{$_("document.pageAbbrev")}&nbsp;{i + 1}</a>
+        </div>
+      </div>
+      <TextPage
+        text={page.contents}
+        highlights={$layout.searchHighlights != null
+          ? $layout.searchHighlights[i]
+          : null}
+      />
+    </div>
+  {/each}
+</div>
+
 <style lang="scss">
   .doc {
     margin-bottom: 30px;
@@ -82,21 +100,3 @@
     }
   }
 </style>
-
-<div class="doc" bind:this={docElem}>
-  {#each pages as page, i}
-    <div class="page">
-      <div class="numbercontainer">
-        <div id={i + 1} class="number" use:showIfFullyVisible>
-          <a href={`#${i + 1}`}>{$_("document.pageAbbrev")}&nbsp;{i + 1}</a>
-        </div>
-      </div>
-      <TextPage
-        text={page.contents}
-        highlights={$layout.searchHighlights != null
-          ? $layout.searchHighlights[i]
-          : null}
-      />
-    </div>
-  {/each}
-</div>

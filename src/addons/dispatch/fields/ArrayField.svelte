@@ -48,6 +48,35 @@
   }
 </script>
 
+<fieldset class={items.type}>
+  {#if title}
+    <legend>{title}</legend>
+  {/if}
+  {#each value as v, i}
+    <div class="item item-{i}">
+      <svelte:component
+        this={types[items.type]}
+        bind:value={value[i]}
+        {...items}
+        inline
+        name="{name}.{i}"
+      />
+
+      {#if numItems > 1}
+        <Button action on:click={(e) => remove(e, i)}><X16 /></Button>
+      {/if}
+    </div>
+  {/each}
+
+  <div class="array-controls">
+    <Button on:click={push}><Plus16 fill="white" /></Button>
+  </div>
+</fieldset>
+
+{#if description}
+  <p class="help">{description}</p>
+{/if}
+
 <style>
   fieldset {
     padding: 0.5em;
@@ -82,32 +111,3 @@
     color: var(--gray);
   }
 </style>
-
-<fieldset class={items.type}>
-  {#if title}
-    <legend>{title}</legend>
-  {/if}
-  {#each value as v, i}
-    <div class="item item-{i}">
-      <svelte:component
-        this={types[items.type]}
-        bind:value={value[i]}
-        {...items}
-        inline
-        name="{name}.{i}"
-      />
-
-      {#if numItems > 1}
-        <Button action on:click={(e) => remove(e, i)}><X16 /></Button>
-      {/if}
-    </div>
-  {/each}
-
-  <div class="array-controls">
-    <Button on:click={push}><Plus16 fill="white" /></Button>
-  </div>
-</fieldset>
-
-{#if description}
-  <p class="help">{description}</p>
-{/if}

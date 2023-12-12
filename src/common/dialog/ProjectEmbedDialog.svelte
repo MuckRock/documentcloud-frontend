@@ -36,9 +36,6 @@
   }
 </script>
 
-<style lang="scss">
-</style>
-
 {#if project != null}
   <div>
     <div class="mcontent">
@@ -71,3 +68,6 @@
     </div>
   </div>
 {/if}
+
+<style lang="scss">
+</style>

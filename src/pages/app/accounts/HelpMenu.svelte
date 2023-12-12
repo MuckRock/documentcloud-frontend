@@ -18,16 +18,6 @@
   } from "svelte-octicons";
 </script>
 
-<style>
-  .icon {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
-
 <!-- Help Menu -->
 <Dropdown id="help" position="right">
   <MenuTitle slot="title" label={$_("authSection.help.title")}>
@@ -72,3 +62,13 @@
     </a>
   </Menu>
 </Dropdown>
+
+<style>
+  .icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

@@ -153,6 +153,65 @@
   ];
 </script>
 
+<div>
+  <div class="mcontent">
+    <h1>Search Tips</h1>
+    <div class="padded">
+      <p>
+        The search bar is a flexible and powerful tool for searching your
+        documents, your organization’s documents, and public documents. The
+        default search view, “Your Documents,” includes a user filter to only
+        display your documents, but you can do a lot more.
+      </p>
+      <SearchExample
+        content={`${userExample} "mueller report" project:test-345  -pages:448`}
+      />
+      <p>
+        The above example, for instance, searches all documents within
+        {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
+        for a specific project that contain the exact text “mueller report” and don’t
+        have a page count of 448 (thus excluding the actual Mueller Report).
+        <Link color={true} toUrl="/help/search">Additional documentation</Link>
+      </p>
+      <p>
+        <b>Reference table:</b>
+      </p>
+
+      <table cellspacing="0">
+        {#each table as row}
+          {#if row.length == 1}
+            <tr>
+              <th colspan="2" class="header">
+                <div>{row[0]}</div>
+              </th>
+            </tr>
+            <tr>
+              <th>Description</th>
+              <th>Example Query</th>
+            </tr>
+          {:else}
+            <tr>
+              <td class="name">
+                <h4>
+                  {@html row[0]}
+                </h4>
+                <p>
+                  {@html row[1]}
+                </p>
+              </td>
+              <td class="filter">
+                {#each row.slice(2) as example}
+                  <SearchExample compact={true} content={example} />
+                {/each}
+              </td>
+            </tr>
+          {/if}
+        {/each}
+      </table>
+    </div>
+  </div>
+</div>
+
 <style lang="scss">
   .padded {
     margin-bottom: 35px;
@@ -222,62 +281,3 @@
     }
   }
 </style>
-
-<div>
-  <div class="mcontent">
-    <h1>Search Tips</h1>
-    <div class="padded">
-      <p>
-        The search bar is a flexible and powerful tool for searching your
-        documents, your organization’s documents, and public documents. The
-        default search view, “Your Documents,” includes a user filter to only
-        display your documents, but you can do a lot more.
-      </p>
-      <SearchExample
-        content={`${userExample} "mueller report" project:test-345  -pages:448`}
-      />
-      <p>
-        The above example, for instance, searches all documents within
-        {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
-        for a specific project that contain the exact text “mueller report” and don’t
-        have a page count of 448 (thus excluding the actual Mueller Report).
-        <Link color={true} toUrl="/help/search">Additional documentation</Link>
-      </p>
-      <p>
-        <b>Reference table:</b>
-      </p>
-
-      <table cellspacing="0">
-        {#each table as row}
-          {#if row.length == 1}
-            <tr>
-              <th colspan="2" class="header">
-                <div>{row[0]}</div>
-              </th>
-            </tr>
-            <tr>
-              <th>Description</th>
-              <th>Example Query</th>
-            </tr>
-          {:else}
-            <tr>
-              <td class="name">
-                <h4>
-                  {@html row[0]}
-                </h4>
-                <p>
-                  {@html row[1]}
-                </p>
-              </td>
-              <td class="filter">
-                {#each row.slice(2) as example}
-                  <SearchExample compact={true} content={example} />
-                {/each}
-              </td>
-            </tr>
-          {/if}
-        {/each}
-      </table>
-    </div>
-  </div>
-</div>

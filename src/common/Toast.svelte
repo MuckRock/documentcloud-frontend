@@ -84,6 +84,16 @@
   });
 </script>
 
+<div
+  class={["toast", toast.status ?? "info"].join(" ")}
+  class:fading
+  on:mouseenter={cancel}
+  on:mouseleave={reset}
+>
+  <button class="close" on:click={close}><CloseIcon /></button>
+  <p class="content">{toast.content}</p>
+</div>
+
 <style lang="scss">
   .toast {
     padding: 5px 10px;
@@ -173,13 +183,3 @@
     user-select: none;
   }
 </style>
-
-<div
-  class={["toast", toast.status ?? "info"].join(" ")}
-  class:fading
-  on:mouseenter={cancel}
-  on:mouseleave={reset}
->
-  <button class="close" on:click={close}><CloseIcon /></button>
-  <p class="content">{toast.content}</p>
-</div>

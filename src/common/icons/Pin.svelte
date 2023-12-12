@@ -4,13 +4,6 @@
   export let title = "Pin";
 </script>
 
-<style>
-  svg {
-    display: block;
-    transform: rotate(-45deg);
-  }
-</style>
-
 <svg width={`${size * REM}px`} height={`${size * REM}px`} viewBox="0 0 16 16">
   <title>{title}</title>
   <path
@@ -18,3 +11,10 @@
     fill-rule="nonzero"
   />
 </svg>
+
+<style>
+  svg {
+    display: block;
+    transform: rotate(-45deg);
+  }
+</style>

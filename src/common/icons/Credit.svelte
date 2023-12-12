@@ -6,13 +6,6 @@
   export let color = "#24CC99";
 </script>
 
-<style>
-  svg {
-    display: block;
-    fill: var(--credit-color, --premium);
-  }
-</style>
-
 <svg
   width={`${size * REM}px`}
   height={`${size * REM}px`}
@@ -35,3 +28,10 @@
     />
   {/if}
 </svg>
+
+<style>
+  svg {
+    display: block;
+    fill: var(--credit-color, --premium);
+  }
+</style>

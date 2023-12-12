@@ -7,6 +7,37 @@
   import rightPaginatorSvg from "@/assets/page_arrow_right.svg?raw";
 </script>
 
+<div class="paginator">
+  {#if $search.hasResults}
+    <button disabled={!$search.hasPrev} on:click={searchPrev}>
+      {@html leftPaginatorSvg}
+    </button>
+    <div class="text">
+      <div class="number">
+        {#if $search.results.onlyPage}
+          {$search.results.rawResults.results.length}
+        {:else}
+          <span class="range">
+            {$search.start}
+            -
+            {$search.end}
+          </span>
+          {#if $search.results.count}
+            {$_("paginator.of")}
+            {$search.results.count}
+          {/if}
+        {/if}
+      </div>
+      <div class="documents">
+        {$_("paginator.document", { values: { n: $search.results.count } })}
+      </div>
+    </div>
+    <button disabled={!$search.hasNext} on:click={searchNext}>
+      {@html rightPaginatorSvg}
+    </button>
+  {/if}
+</div>
+
 <style lang="scss">
   .paginator {
     display: table-cell;
@@ -70,34 +101,3 @@
     }
   }
 </style>
-
-<div class="paginator">
-  {#if $search.hasResults}
-    <button disabled={!$search.hasPrev} on:click={searchPrev}>
-      {@html leftPaginatorSvg}
-    </button>
-    <div class="text">
-      <div class="number">
-        {#if $search.results.onlyPage}
-          {$search.results.rawResults.results.length}
-        {:else}
-          <span class="range">
-            {$search.start}
-            -
-            {$search.end}
-          </span>
-          {#if $search.results.count}
-            {$_("paginator.of")}
-            {$search.results.count}
-          {/if}
-        {/if}
-      </div>
-      <div class="documents">
-        {$_("paginator.document", { values: { n: $search.results.count } })}
-      </div>
-    </div>
-    <button disabled={!$search.hasNext} on:click={searchNext}>
-      {@html rightPaginatorSvg}
-    </button>
-  {/if}
-</div>

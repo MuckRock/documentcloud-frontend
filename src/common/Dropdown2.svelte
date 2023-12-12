@@ -92,6 +92,37 @@
   });
 </script>
 
+<!-- Optional window overlay -->
+{#if overlay && isOpen}
+  <div class="overlay" />
+{/if}
+<!-- Element to Trigger Dropdown -->
+<div class="dropdownContainer" class:open={isOpen} {id}>
+  <div
+    bind:this={title}
+    class={`title ${titleColor}`}
+    class:open={isOpen}
+    class:border
+    on:click={toggleOnTitleEvent}
+    on:keydown={toggleOnTitleEvent}
+  >
+    <slot name="title" />
+  </div>
+  <!-- Dropdown with contents -->
+  <div
+    bind:this={dropdown}
+    class="dropdown"
+    class:open={isOpen}
+    class:top={position.includes("top")}
+    class:bottom={position.includes("bottom")}
+    class:left={position.includes("left")}
+    class:right={position.includes("right")}
+    class:center={position.includes("center")}
+  >
+    <slot />
+  </div>
+</div>
+
 <style>
   .dropdownContainer {
     position: relative;
@@ -162,34 +193,3 @@
     background: rgba(0, 0, 0, 0.1);
   }
 </style>
-
-<!-- Optional window overlay -->
-{#if overlay && isOpen}
-  <div class="overlay" />
-{/if}
-<!-- Element to Trigger Dropdown -->
-<div class="dropdownContainer" class:open={isOpen} {id}>
-  <div
-    bind:this={title}
-    class={`title ${titleColor}`}
-    class:open={isOpen}
-    class:border
-    on:click={toggleOnTitleEvent}
-    on:keydown={toggleOnTitleEvent}
-  >
-    <slot name="title" />
-  </div>
-  <!-- Dropdown with contents -->
-  <div
-    bind:this={dropdown}
-    class="dropdown"
-    class:open={isOpen}
-    class:top={position.includes("top")}
-    class:bottom={position.includes("bottom")}
-    class:left={position.includes("left")}
-    class:right={position.includes("right")}
-    class:center={position.includes("center")}
-  >
-    <slot />
-  </div>
-</div>

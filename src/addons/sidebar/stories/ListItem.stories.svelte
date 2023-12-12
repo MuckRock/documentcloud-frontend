@@ -12,16 +12,6 @@
   };
 </script>
 
-<style>
-  .sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--sidebar);
-  }
-  .icon {
-    fill: var(--highlight-orange);
-  }
-</style>
-
 <Template let:args>
   <div class="sidebar">
     <ListItem {...args}>
@@ -37,3 +27,13 @@
     label: "Empty Page Deleter",
   }}
 />
+
+<style>
+  .sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar);
+  }
+  .icon {
+    fill: var(--highlight-orange);
+  }
+</style>

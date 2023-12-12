@@ -29,9 +29,6 @@
   }
 </script>
 
-<style lang="scss">
-</style>
-
 <!-- Don't show until self orgs have populated -->
 <Loader active={$orgsAndUsers.selfOrgs == null}>
   <div>
@@ -60,3 +57,6 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+</style>

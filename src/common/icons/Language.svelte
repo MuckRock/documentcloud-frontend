@@ -4,14 +4,6 @@
   export let title = "Language";
 </script>
 
-<style>
-  svg {
-    display: block;
-    stroke: var(--darkgray);
-    fill: none;
-  }
-</style>
-
 <svg width={`${size * REM}px`} height={`${size * REM}px`} viewBox="0 0 16 16">
   <title>{title}</title>
   <path
@@ -22,3 +14,11 @@
     stroke-linejoin="round"
   />
 </svg>
+
+<style>
+  svg {
+    display: block;
+    stroke: var(--darkgray);
+    fill: none;
+  }
+</style>

@@ -1,3 +1,7 @@
+<div class="menu">
+  <slot>Define some menu items</slot>
+</div>
+
 <style lang="scss">
   .menu {
     @include menu;
@@ -13,7 +17,3 @@
     }
   }
 </style>
-
-<div class="menu">
-  <slot>Define some menu items</slot>
-</div>

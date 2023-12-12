@@ -15,6 +15,48 @@
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
 </script>
 
+<a class="addon-link" href={url}>
+  <div class="container" id={addon.repository}>
+    <div class="row">
+      <div class="center-self">
+        <AddOnPin {addon} />
+      </div>
+      <div class="stretch">
+        <h3 class="addon-name">{addon.name}</h3>
+      </div>
+      <div class="metadata">
+        {#if author?.name}
+          <p class="author">
+            <a
+              href="http://github.com/{addon.repository}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
+            >
+          </p>
+        {/if}
+        {#if addon.usage}
+          <AddOnPopularity useCount={addon.usage} />
+        {/if}
+        {#if isPremium}
+          <span class="badge"
+            ><Badge
+              label="Premium"
+              badgeColor="var(--premium)"
+              labelColor="var(--darkgray)"
+            >
+              <Credit badge slot="icon" color="var(--darkgray)" />
+            </Badge></span
+          >
+        {/if}
+      </div>
+    </div>
+    {#if description}
+      <div class="description">{@html description}</div>
+    {/if}
+  </div>
+</a>
+
 <style>
   .addon-link:hover .container {
     background-color: var(--menuBg);
@@ -81,45 +123,3 @@
     margin: 0;
   }
 </style>
-
-<a class="addon-link" href={url}>
-  <div class="container" id={addon.repository}>
-    <div class="row">
-      <div class="center-self">
-        <AddOnPin {addon} />
-      </div>
-      <div class="stretch">
-        <h3 class="addon-name">{addon.name}</h3>
-      </div>
-      <div class="metadata">
-        {#if author?.name}
-          <p class="author">
-            <a
-              href="http://github.com/{addon.repository}"
-              target="_blank"
-              rel="noopener noreferrer"
-              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
-            >
-          </p>
-        {/if}
-        {#if addon.usage}
-          <AddOnPopularity useCount={addon.usage} />
-        {/if}
-        {#if isPremium}
-          <span class="badge"
-            ><Badge
-              label="Premium"
-              badgeColor="var(--premium)"
-              labelColor="var(--darkgray)"
-            >
-              <Credit badge slot="icon" color="var(--darkgray)" />
-            </Badge></span
-          >
-        {/if}
-      </div>
-    </div>
-    {#if description}
-      <div class="description">{@html description}</div>
-    {/if}
-  </div>
-</a>

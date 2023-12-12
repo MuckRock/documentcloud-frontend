@@ -19,16 +19,6 @@
   }
 </script>
 
-<style>
-  .icon {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
-
 {#if langs.length > 1}
   <!-- Language Menu -->
   <Dropdown id="language" position="right">
@@ -51,3 +41,13 @@
     </Menu>
   </Dropdown>
 {/if}
+
+<style>
+  .icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

@@ -10,9 +10,6 @@
   export let resizeCallback = () => {};
 </script>
 
-<style lang="scss">
-</style>
-
 <div>
   {#if page.document != null}
     <InternalPage
@@ -26,3 +23,6 @@
     />
   {/if}
 </div>
+
+<style lang="scss">
+</style>

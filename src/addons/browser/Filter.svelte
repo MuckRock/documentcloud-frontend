@@ -3,6 +3,12 @@
   export let selected: boolean;
 </script>
 
+<label class:selected class="filter">
+  {#if $$slots.input}<span class="input"><slot name="input" /></span>{/if}
+  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
+  <span class="name">{name}</span>
+</label>
+
 <style>
   .input {
     display: none;
@@ -40,9 +46,3 @@
     flex: 1 1 auto;
   }
 </style>
-
-<label class:selected class="filter">
-  {#if $$slots.input}<span class="input"><slot name="input" /></span>{/if}
-  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
-  <span class="name">{name}</span>
-</label>

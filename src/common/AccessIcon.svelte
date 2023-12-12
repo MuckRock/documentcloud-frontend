@@ -21,30 +21,17 @@
   $: documentAccessString = document.organizationAccess
     ? "accessIcon.organizationExplanation"
     : document.publicAccess
-    ? "accessIcon.publicExplanation"
-    : "accessIcon.privateExplanation";
+      ? "accessIcon.publicExplanation"
+      : "accessIcon.privateExplanation";
 
   $: documentText = showText
     ? document.organizationAccess
       ? "accessIcon.organization"
       : document.publicAccess
-      ? "accessIcon.public"
-      : "accessIcon.private"
+        ? "accessIcon.public"
+        : "accessIcon.private"
     : "";
 </script>
-
-<style>
-  .access {
-    vertical-align: middle;
-  }
-
-  .text {
-    font-size: 12px;
-    color: var(--viewerLink, #004276);
-    vertical-align: middle;
-    margin-left: 2px;
-  }
-</style>
 
 {#if showText}
   <button
@@ -80,3 +67,16 @@
     </button>
   </Tooltip>
 {/if}
+
+<style>
+  .access {
+    vertical-align: middle;
+  }
+
+  .text {
+    font-size: 12px;
+    color: var(--viewerLink, #004276);
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+</style>

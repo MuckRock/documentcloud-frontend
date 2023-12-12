@@ -32,12 +32,6 @@
   }
 </script>
 
-<style lang="scss">
-  .another {
-    margin: 5px 0;
-  }
-</style>
-
 <h1>
   {$_("dialogPageEmbedDialog.embedPage", {
     values: { title: $layout.embedDocument.title },
@@ -74,3 +68,9 @@
   linkText={pageUrl}
   tweetText={`Page ${visiblePage} of ${$layout.embedDocument.title} ${pageUrl}`}
 />
+
+<style lang="scss">
+  .another {
+    margin: 5px 0;
+  }
+</style>

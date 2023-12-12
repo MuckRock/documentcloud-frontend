@@ -13,32 +13,6 @@
   $: documents = $layout.selected;
 </script>
 
-<style lang="scss">
-  $border: solid 1px gainsboro;
-  table {
-    border-spacing: 0;
-
-    td,
-    th {
-      border: none;
-      border-right: $border;
-      border-bottom: $border;
-      padding: 5px;
-
-      &:first-child {
-        border-left: $border;
-      }
-    }
-
-    tr:first-child {
-      td,
-      th {
-        border-top: $border;
-      }
-    }
-  }
-</style>
-
 <div>
   <div class="mcontent">
     <h1>
@@ -93,3 +67,29 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  $border: solid 1px gainsboro;
+  table {
+    border-spacing: 0;
+
+    td,
+    th {
+      border: none;
+      border-right: $border;
+      border-bottom: $border;
+      padding: 5px;
+
+      &:first-child {
+        border-left: $border;
+      }
+    }
+
+    tr:first-child {
+      td,
+      th {
+        border-top: $border;
+      }
+    }
+  }
+</style>

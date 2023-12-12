@@ -34,6 +34,22 @@
   });
 </script>
 
+<div class="addon-sidebar">
+  <h3 class="section-title">
+    <a href="#add-ons">{$_("addonSidebar.title")}</a>
+  </h3>
+  <ListItem href="#add-ons/runs" label={$_("addonSidebar.runs")}>
+    <span slot="icon" class="runs-icon"><ClockFill16 /></span>
+  </ListItem>
+  {#if $pinned.length}
+    <ul class="addons">
+      {#each sort($pinned) as addon (addon.id)}
+        <li><AddonListItem {addon} /></li>
+      {/each}
+    </ul>
+  {/if}
+</div>
+
 <style>
   .addon-sidebar {
     padding: 0 1.5rem;
@@ -68,19 +84,3 @@
     margin: 0.25em 0;
   }
 </style>
-
-<div class="addon-sidebar">
-  <h3 class="section-title">
-    <a href="#add-ons">{$_("addonSidebar.title")}</a>
-  </h3>
-  <ListItem href="#add-ons/runs" label={$_("addonSidebar.runs")}>
-    <span slot="icon" class="runs-icon"><ClockFill16 /></span>
-  </ListItem>
-  {#if $pinned.length}
-    <ul class="addons">
-      {#each sort($pinned) as addon (addon.id)}
-        <li><AddonListItem {addon} /></li>
-      {/each}
-    </ul>
-  {/if}
-</div>

@@ -22,6 +22,26 @@
   const low = max ? max / 4 : undefined;
 </script>
 
+<label for={id} class="creditMeter">
+  <span class="text">
+    {label}
+  </span>
+  <span class="number">
+    <Price {value} iconSize={1.25} />
+    {#if max}
+      <span class="denominator">
+        /{max.toLocaleString()}
+      </span>
+    {/if}
+  </span>
+  {#if helpText}
+    <p class="helpText">{helpText}</p>
+  {/if}
+  {#if max}
+    <meter {id} {value} {max} {low} class="meter" />
+  {/if}
+</label>
+
 <style>
   .creditMeter {
     display: flex;
@@ -69,23 +89,3 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
 </style>
-
-<label for={id} class="creditMeter">
-  <span class="text">
-    {label}
-  </span>
-  <span class="number">
-    <Price {value} iconSize={1.25} />
-    {#if max}
-      <span class="denominator">
-        /{max.toLocaleString()}
-      </span>
-    {/if}
-  </span>
-  {#if helpText}
-    <p class="helpText">{helpText}</p>
-  {/if}
-  {#if max}
-    <meter {id} {value} {max} {low} class="meter" />
-  {/if}
-</label>

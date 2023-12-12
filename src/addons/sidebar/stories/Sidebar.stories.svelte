@@ -21,6 +21,12 @@
   };
 </script>
 
+<Story name="Default" parameters={{ msw: { handlers: [data] } }}>
+  <div class="sidebar">
+    <Sidebar />
+  </div>
+</Story>
+
 <style>
   .sidebar {
     padding: 1.5rem 0;
@@ -28,9 +34,3 @@
     background-color: var(--sidebar);
   }
 </style>
-
-<Story name="Default" parameters={{ msw: { handlers: [data] } }}>
-  <div class="sidebar">
-    <Sidebar />
-  </div>
-</Story>

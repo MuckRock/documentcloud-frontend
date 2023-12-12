@@ -52,6 +52,22 @@
   });
 </script>
 
+{#if events.length > 0}
+  <details class="scheduled-list" bind:open>
+    <summary>
+      {$_("addonDispatchDialog.showAddons", {
+        values: { n: events.length },
+      })}
+    </summary>
+
+    <ul>
+      {#each events as event}
+        <li><ScheduledEvent {event} /></li>
+      {/each}
+    </ul>
+  </details>
+{/if}
+
 <style>
   .scheduled-list {
     width: 100%;
@@ -71,19 +87,3 @@
     padding: 0;
   }
 </style>
-
-{#if events.length > 0}
-  <details class="scheduled-list" bind:open>
-    <summary>
-      {$_("addonDispatchDialog.showAddons", {
-        values: { n: events.length },
-      })}
-    </summary>
-
-    <ul>
-      {#each events as event}
-        <li><ScheduledEvent {event} /></li>
-      {/each}
-    </ul>
-  </details>
-{/if}

@@ -30,20 +30,6 @@
   }
 </script>
 
-<style>
-  label {
-    font-weight: bold;
-  }
-
-  input,
-  input:focus,
-  input:focus-visible {
-    border: none;
-    border-bottom: solid 1px #333;
-    border-radius: 0;
-  }
-</style>
-
 <label>
   {label}
   <input
@@ -68,3 +54,17 @@
     {/each}
   </datalist>
 </label>
+
+<style>
+  label {
+    font-weight: bold;
+  }
+
+  input,
+  input:focus,
+  input:focus-visible {
+    border: none;
+    border-bottom: solid 1px #333;
+    border-radius: 0;
+  }
+</style>

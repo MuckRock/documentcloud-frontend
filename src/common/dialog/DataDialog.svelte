@@ -181,69 +181,6 @@
   }
 </script>
 
-<style lang="scss">
-  .lpad {
-    margin-left: 5px;
-  }
-
-  .add {
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .dropdown {
-      padding: 0 0 0 15px;
-      width: 122px;
-
-      .info {
-        p {
-          margin: 6px 7px 1px 7px;
-        }
-        em {
-          background: rgba(0, 0, 0, 0.04);
-          border-radius: $radius;
-          padding: 2px 5px;
-          box-shadow: 0 0 2px rgba(0, 0, 0, 0.22);
-        }
-      }
-    }
-  }
-
-  input:read-only {
-    background: rgba(0, 0, 0, 0.05);
-    pointer-events: none;
-  }
-
-  .fyi {
-    background: $fyi;
-    padding: 1em;
-    border-radius: 10px;
-    color: $modal;
-    line-height: 1.3;
-    font-size: 14px;
-  }
-
-  .row {
-    margin: 6px 0;
-
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .pencil {
-      @include buttonLike;
-      margin: 0 12px 0 5px;
-    }
-  }
-
-  .faded {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-</style>
-
 <Loader center={true} active={$loading}>
   <div>
     <div class="mcontent">
@@ -332,10 +269,10 @@
               disabledReason={inputValid
                 ? null
                 : keyValid
-                ? addTag
-                  ? $_("dialogDataDialog.enterTag")
-                  : $_("dialogDataDialog.enterKey")
-                : $_("dialogDataDialog.keyInvalid")}
+                  ? addTag
+                    ? $_("dialogDataDialog.enterTag")
+                    : $_("dialogDataDialog.enterKey")
+                  : $_("dialogDataDialog.keyInvalid")}
               on:click={handleAdd}
             >
               + Add
@@ -405,3 +342,66 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+  .lpad {
+    margin-left: 5px;
+  }
+
+  .add {
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .dropdown {
+      padding: 0 0 0 15px;
+      width: 122px;
+
+      .info {
+        p {
+          margin: 6px 7px 1px 7px;
+        }
+        em {
+          background: rgba(0, 0, 0, 0.04);
+          border-radius: $radius;
+          padding: 2px 5px;
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.22);
+        }
+      }
+    }
+  }
+
+  input:read-only {
+    background: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+  }
+
+  .fyi {
+    background: $fyi;
+    padding: 1em;
+    border-radius: 10px;
+    color: $modal;
+    line-height: 1.3;
+    font-size: 14px;
+  }
+
+  .row {
+    margin: 6px 0;
+
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .pencil {
+      @include buttonLike;
+      margin: 0 12px 0 5px;
+    }
+  }
+
+  .faded {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+</style>

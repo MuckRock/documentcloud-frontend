@@ -53,15 +53,6 @@
   });
 </script>
 
-<style>
-  .notfound {
-    padding: 2em;
-  }
-  .notfound :global(a) {
-    color: var(--primary, #4294f0);
-  }
-</style>
-
 {#await loading then done}
   {#if notFound}
     <div class="notfound">
@@ -81,3 +72,12 @@
     <FlatPage {title} {content} />
   {/if}
 {/await}
+
+<style>
+  .notfound {
+    padding: 2em;
+  }
+  .notfound :global(a) {
+    color: var(--primary, #4294f0);
+  }
+</style>

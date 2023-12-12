@@ -385,7 +385,7 @@
       "adminRole": "Admin",
       "memberListError": "An error occurred while loading the member list.",
       "memberListEmpty": "This organization has no other members.",
-      "userCount":"{n, plural, one {# organization member} other {# organization members}}"
+      "userCount": "{n, plural, one {# organization member} other {# organization members}}"
     },
     "credits": {
       "monthlyOrg": "Monthly Org Allowance",

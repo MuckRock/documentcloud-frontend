@@ -20,8 +20,8 @@ export const metaDialogs = [
       value == initial
         ? "metaFields.titleFieldInvalidSameName"
         : value.trim().length == 0
-        ? "metaFields.titleFieldInvalidEmptyName"
-        : "",
+          ? "metaFields.titleFieldInvalidEmptyName"
+          : "",
     disabled: (numSelected) => numSelected != 1,
   },
   {

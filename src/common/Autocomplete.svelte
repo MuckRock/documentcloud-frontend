@@ -37,6 +37,36 @@
   }
 </script>
 
+<span class="autocomplete">
+  {#if value != null}
+    <span class="tag"
+      >{value.name}
+      <span
+        class="close"
+        on:click={() => {
+          value = null;
+          completions = null;
+          inputValue = "";
+          autocomplete();
+        }}>×</span
+      ></span
+    >
+  {:else}
+    <input {placeholder} bind:value={inputValue} />
+    {#if completions == null}
+      <span class="message">Loading completions...</span>
+    {:else if completions.length > 0}
+      {#each completions as completion}
+        <span class="tag clickable" on:click={() => (value = completion)}
+          >{completion.name}</span
+        >
+      {/each}
+    {:else}
+      <span class="message">No results found</span>
+    {/if}
+  {/if}
+</span>
+
 <style lang="scss">
   .autocomplete {
     display: inline-block;
@@ -78,33 +108,3 @@
     }
   }
 </style>
-
-<span class="autocomplete">
-  {#if value != null}
-    <span class="tag"
-      >{value.name}
-      <span
-        class="close"
-        on:click={() => {
-          value = null;
-          completions = null;
-          inputValue = "";
-          autocomplete();
-        }}>×</span
-      ></span
-    >
-  {:else}
-    <input {placeholder} bind:value={inputValue} />
-    {#if completions == null}
-      <span class="message">Loading completions...</span>
-    {:else if completions.length > 0}
-      {#each completions as completion}
-        <span class="tag clickable" on:click={() => (value = completion)}
-          >{completion.name}</span
-        >
-      {/each}
-    {:else}
-      <span class="message">No results found</span>
-    {/if}
-  {/if}
-</span>

@@ -56,6 +56,33 @@
   }
 </script>
 
+<svelte:window on:keydown={onKeyPress} />
+
+{#if visible}
+  <div
+    transition:slide|global={{ axis: "x" }}
+    class="drawer {anchor}"
+    class:visible
+    tabindex="-1"
+    role="dialog"
+  >
+    <slot name="close-button">
+      <button
+        type="button"
+        class="close"
+        title={$_("drawer.close")}
+        aria-label={$_("drawer.close")}
+        on:click={() => close()}
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </slot>
+    <div bind:this={dialog} role="document" class="container">
+      <slot name="content" />
+    </div>
+  </div>
+{/if}
+
 <style>
   .drawer {
     background-color: var(--menuBg, white);
@@ -116,30 +143,3 @@
     overflow-y: scroll;
   }
 </style>
-
-<svelte:window on:keydown={onKeyPress} />
-
-{#if visible}
-  <div
-    transition:slide|global={{ axis: "x" }}
-    class="drawer {anchor}"
-    class:visible
-    tabindex="-1"
-    role="dialog"
-  >
-    <slot name="close-button">
-      <button
-        type="button"
-        class="close"
-        title={$_("drawer.close")}
-        aria-label={$_("drawer.close")}
-        on:click={() => close()}
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </slot>
-    <div bind:this={dialog} role="document" class="container">
-      <slot name="content" />
-    </div>
-  </div>
-{/if}

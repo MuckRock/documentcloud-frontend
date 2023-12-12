@@ -24,21 +24,6 @@
   }
 </script>
 
-<style>
-  .userAvatar {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: block;
-  }
-  .userIcon {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
-
 {#if user}
   <Dropdown id={dropdownId}>
     <MenuTitle slot="title" label={user.name ?? user.username}>
@@ -68,3 +53,18 @@
 {:else}
   <a href={SIGN_IN_URL}>{$_("authSection.user.signIn")}</a>
 {/if}
+
+<style>
+  .userAvatar {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: block;
+  }
+  .userIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

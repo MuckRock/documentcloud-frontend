@@ -98,64 +98,6 @@
   }
 </script>
 
-<style>
-  .dismiss {
-    margin: 0 1px 0 14px;
-  }
-
-  .valign,
-  .dismiss {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .info {
-    font-weight: bold;
-    display: inline-block;
-    vertical-align: middle;
-    padding-right: 20px;
-    width: 20%;
-  }
-
-  .info.compact {
-    width: 100%;
-    padding-right: 0;
-  }
-
-  .message {
-    display: block;
-    width: 100%;
-  }
-
-  .addonRun {
-    padding: 8px 20px;
-    border-top: 1px solid rgba(128, 128, 128, 0.15);
-  }
-
-  .failure,
-  .cancelled {
-    background: var(--errorbg);
-  }
-
-  .failure .info,
-  .cancelled .info {
-    color: var(--caution);
-  }
-
-  .rate {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-
-  a:hover {
-    filter: brightness(85%);
-  }
-</style>
-
 <div class="addonRun {run.status}">
   <div class="info processingText" class:compact>
     {#if compact}
@@ -228,3 +170,61 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .dismiss {
+    margin: 0 1px 0 14px;
+  }
+
+  .valign,
+  .dismiss {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .info {
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 20px;
+    width: 20%;
+  }
+
+  .info.compact {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .message {
+    display: block;
+    width: 100%;
+  }
+
+  .addonRun {
+    padding: 8px 20px;
+    border-top: 1px solid rgba(128, 128, 128, 0.15);
+  }
+
+  .failure,
+  .cancelled {
+    background: var(--errorbg);
+  }
+
+  .failure .info,
+  .cancelled .info {
+    color: var(--caution);
+  }
+
+  .rate {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover {
+    filter: brightness(85%);
+  }
+</style>

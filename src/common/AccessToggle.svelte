@@ -18,6 +18,56 @@
   export let privateMessage = $_("accessToggle.private");
 </script>
 
+<div class="access" class:stacked>
+  {#if editAccess}
+    <div
+      class="container public"
+      class:selected={access == "public"}
+      on:click={() => (access = "public")}
+    >
+      <div class="item">
+        <span class="icon">
+          {@html publicIconSvg}
+        </span>
+        <div class="contents">
+          <h3>{publicName}</h3>
+          <p>{publicMessage}</p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="container organization"
+      class:selected={access == "organization"}
+      on:click={() => (access = "organization")}
+    >
+      <div class="item">
+        <span class="icon">
+          {@html organizationIconSvg}
+        </span>
+        <div class="contents">
+          <h3>{collaboratorName}</h3>
+          <p>{collaboratorMessage}</p>
+        </div>
+      </div>
+    </div>
+  {/if}
+  <div
+    class="container private"
+    class:selected={access == "private"}
+    on:click={() => (access = "private")}
+  >
+    <div class="item">
+      <span class="icon">
+        {@html privateIconSvg}
+      </span>
+      <div class="contents">
+        <h3>{privateName}</h3>
+        <p>{privateMessage}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style lang="scss">
   .access {
     $spacing: 10px;
@@ -121,53 +171,3 @@
     }
   }
 </style>
-
-<div class="access" class:stacked>
-  {#if editAccess}
-    <div
-      class="container public"
-      class:selected={access == "public"}
-      on:click={() => (access = "public")}
-    >
-      <div class="item">
-        <span class="icon">
-          {@html publicIconSvg}
-        </span>
-        <div class="contents">
-          <h3>{publicName}</h3>
-          <p>{publicMessage}</p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="container organization"
-      class:selected={access == "organization"}
-      on:click={() => (access = "organization")}
-    >
-      <div class="item">
-        <span class="icon">
-          {@html organizationIconSvg}
-        </span>
-        <div class="contents">
-          <h3>{collaboratorName}</h3>
-          <p>{collaboratorMessage}</p>
-        </div>
-      </div>
-    </div>
-  {/if}
-  <div
-    class="container private"
-    class:selected={access == "private"}
-    on:click={() => (access = "private")}
-  >
-    <div class="item">
-      <span class="icon">
-        {@html privateIconSvg}
-      </span>
-      <div class="contents">
-        <h3>{privateName}</h3>
-        <p>{privateMessage}</p>
-      </div>
-    </div>
-  </div>
-</div>

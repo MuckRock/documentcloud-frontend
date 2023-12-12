@@ -73,78 +73,6 @@
       .length == 1;
 </script>
 
-<style lang="scss">
-  .collaborator {
-    display: table;
-    width: 100%;
-
-    > * {
-      display: table-cell;
-      vertical-align: middle;
-      height: 50px;
-    }
-
-    .name {
-      input {
-        width: 100%;
-        box-sizing: border-box;
-      }
-    }
-
-    .dropdown {
-      padding: 0 15px 0 33px;
-      width: 80px;
-    }
-
-    .button {
-      width: 75px;
-      text-align: center;
-    }
-  }
-
-  .buttonpadded {
-    margin-top: 50px;
-  }
-
-  .fyi {
-    background: $fyi;
-    padding: 1em;
-    border-radius: 10px;
-    color: $modal;
-    line-height: 1.3;
-    font-size: 14px;
-  }
-
-  .managetable {
-    display: table;
-    width: 100%;
-
-    .row {
-      display: table-row;
-
-      > * {
-        display: table-cell;
-        vertical-align: middle;
-
-        .pencil {
-          @include buttonLike;
-          vertical-align: middle;
-        }
-      }
-
-      &.header {
-        > * {
-          font-weight: bold;
-          font-size: 12px;
-          text-transform: uppercase;
-          color: $gray;
-          padding: 3px 0 6px 0;
-        }
-      }
-    }
-  }
-</style>
-
 <Loader active={$loading}>
   <div>
     <div class="mcontent">
@@ -261,3 +189,75 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+  .collaborator {
+    display: table;
+    width: 100%;
+
+    > * {
+      display: table-cell;
+      vertical-align: middle;
+      height: 50px;
+    }
+
+    .name {
+      input {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    .dropdown {
+      padding: 0 15px 0 33px;
+      width: 80px;
+    }
+
+    .button {
+      width: 75px;
+      text-align: center;
+    }
+  }
+
+  .buttonpadded {
+    margin-top: 50px;
+  }
+
+  .fyi {
+    background: $fyi;
+    padding: 1em;
+    border-radius: 10px;
+    color: $modal;
+    line-height: 1.3;
+    font-size: 14px;
+  }
+
+  .managetable {
+    display: table;
+    width: 100%;
+
+    .row {
+      display: table-row;
+
+      > * {
+        display: table-cell;
+        vertical-align: middle;
+
+        .pencil {
+          @include buttonLike;
+          vertical-align: middle;
+        }
+      }
+
+      &.header {
+        > * {
+          font-weight: bold;
+          font-size: 12px;
+          text-transform: uppercase;
+          color: $gray;
+          padding: 3px 0 6px 0;
+        }
+      }
+    }
+  }
+</style>
