@@ -33,6 +33,7 @@
     hideDocumentInfo,
     hideDocumentData,
     hideEditSections,
+    hideRevisions,
     hideInsertDialog,
     forceReprocess,
   } from "@/viewer/layout.js";
@@ -165,6 +166,11 @@
   <Modal
     component={$viewerEditDialogs.dataDialog}
     on:close={hideDocumentData}
+  />
+{:else if $layout.showRevisions}
+  <Modal
+    component={$viewerEditDialogs.revisionsDialog}
+    on:close={hideRevisions}
   />
 {:else if $layout.showEditSections}
   <Modal
