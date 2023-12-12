@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Badge from "../../common/Badge.svelte";
-  import Credit from "../../common/icons/Credit.svelte";
+  import PremiumBadge from "../../premium-credits/PremiumBadge.svelte";
 
   export let action: () => void;
   export let header: string;
@@ -19,15 +18,7 @@
 >
   <header>
     <h3>{header}</h3>
-    {#if premium}
-      <Badge
-        label="Premium"
-        badgeColor="var(--premium)"
-        labelColor="var(--darkgray)"
-      >
-        <Credit badge slot="icon" color="var(--darkgray)" />
-      </Badge>
-    {/if}
+    {#if premium}<PremiumBadge />{/if}
   </header>
   <p>{description}</p>
 </button>

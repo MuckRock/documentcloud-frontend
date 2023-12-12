@@ -23,6 +23,15 @@
   });
 </script>
 
+{#if revisions !== null}
+  <Tooltip caption={tooltipText}>
+    <button class="revisions buttonLike" on:click={() => {}}>
+      <History16 />
+      {#if showCount}<span class="count">{revisions.length}</span>{/if}
+    </button>
+  </Tooltip>
+{/if}
+
 <style>
   .revisions {
     display: flex;
@@ -43,12 +52,3 @@
     margin-left: 2px;
   }
 </style>
-
-{#if revisions !== null}
-  <Tooltip caption={tooltipText}>
-    <button class="revisions buttonLike" on:click={() => {}}>
-      <History16 />
-      {#if showCount}<span class="count">{revisions.length}</span>{/if}
-    </button>
-  </Tooltip>
-{/if}
