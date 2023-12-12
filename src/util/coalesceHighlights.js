@@ -107,7 +107,8 @@ export function coalesceSelectableHighlights(words, highlights) {
         while (textBlock.length > 0) {
           // Go through each text object
           const text =
-            leftoverText + words[seekI].text.toLowerCase().replace(/\s/g, "");
+            leftoverText +
+              words[seekI]?.text?.toLowerCase().replace(/\s/g, "") ?? "";
           if (!textBlock.startsWith(text) && !text.startsWith(textBlock)) {
             // Not a match: abort
             matched = false;
