@@ -13,13 +13,6 @@
   };
 </script>
 
-<style>
-  .container {
-    max-width: 32rem;
-    margin: 0 auto;
-  }
-</style>
-
 <Template let:args={addon}>
   <div class="container">
     <Header {addon} />
@@ -39,3 +32,10 @@
 <Story name="Bad Redactions" args={addons[5]} />
 
 <Story name="Site Snapshot" args={addons[6]} />
+
+<style>
+  .container {
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+</style>

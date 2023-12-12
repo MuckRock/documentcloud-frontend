@@ -19,14 +19,6 @@
   };
 </script>
 
-<style>
-  .container {
-    border: 1px solid gray;
-    padding: 1em;
-    width: 50vw;
-  }
-</style>
-
 <Template let:args>
   <div class="container">
     <Paginator
@@ -41,3 +33,11 @@
 <Story name="Only Page" args={{ has_next: false, has_previous: false }} />
 <Story name="First Page" args={{ has_next: true, has_previous: false }} />
 <Story name="Last Page" args={{ has_next: false, has_previous: true }} />
+
+<style>
+  .container {
+    border: 1px solid gray;
+    padding: 1em;
+    width: 50vw;
+  }
+</style>

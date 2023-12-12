@@ -18,18 +18,18 @@
     id == null
       ? $viewer.document
       : $viewer.document != null && id == $viewer.document.id
-      ? $viewer.document
-      : $modification.documentCache[id];
+        ? $viewer.document
+        : $modification.documentCache[id];
 
   const DEFAULT_PAGE_SIZE = 1;
   $: pageSize =
     document == null
       ? DEFAULT_PAGE_SIZE
       : document.pageSizes == null
-      ? DEFAULT_PAGE_SIZE
-      : document.pageSizes[page] == null
-      ? DEFAULT_PAGE_SIZE
-      : document.pageSizes[page];
+        ? DEFAULT_PAGE_SIZE
+        : document.pageSizes[page] == null
+          ? DEFAULT_PAGE_SIZE
+          : document.pageSizes[page];
 
   $: {
     if ($viewer.document != null && id != $viewer.document.id) {

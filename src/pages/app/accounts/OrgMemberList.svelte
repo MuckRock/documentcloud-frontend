@@ -25,6 +25,47 @@
   }
 </script>
 
+{#await promise}
+  <Loader active center pad />
+{:then users}
+  {#if users.length > 0}
+    <p class="userCount">
+      {$_("authSection.org.userCount", { values: { n: users.length } })}
+    </p>
+    <ul class="userList">
+      {#each users as user}
+        <li>
+          <Link plusReplace={true} toUrl={userUrl(user)}>
+            <div class="userListItem">
+              {#if user.avatar_url}
+                <img src={user.avatar_url} class="avatar" alt="" />
+              {:else}
+                <span class="icon"><Person16 /></span>
+              {/if}
+              <span class="name">{user.name}</span>
+              {#if user.admin_organizations.includes(orgId)}
+                <span class="badge">{$_("authSection.org.adminRole")}</span>
+              {/if}
+            </div>
+          </Link>
+        </li>
+      {/each}
+    </ul>
+  {:else}
+    <div class="empty">
+      <div class="emptyIcon"><People24 /></div>
+      <p>{$_("authSection.org.memberListEmpty")}</p>
+    </div>
+  {/if}
+{:catch}
+  <!-- Error state -->
+  <div class="error">
+    <div class="errorIcon"><Error /></div>
+    <p>{$_("authSection.org.memberListError")}</p>
+    <Button action on:click={loadUsers}>Retry</Button>
+  </div>
+{/await}
+
 <style>
   .userCount {
     font-size: 0.875em;
@@ -101,44 +142,3 @@
     width: 3em;
   }
 </style>
-
-{#await promise}
-  <Loader active center pad />
-{:then users}
-  {#if users.length > 0}
-    <p class="userCount">
-      {$_("authSection.org.userCount", { values: { n: users.length } })}
-    </p>
-    <ul class="userList">
-      {#each users as user}
-        <li>
-          <Link plusReplace={true} toUrl={userUrl(user)}>
-            <div class="userListItem">
-              {#if user.avatar_url}
-                <img src={user.avatar_url} class="avatar" alt="" />
-              {:else}
-                <span class="icon"><Person16 /></span>
-              {/if}
-              <span class="name">{user.name}</span>
-              {#if user.admin_organizations.includes(orgId)}
-                <span class="badge">{$_("authSection.org.adminRole")}</span>
-              {/if}
-            </div>
-          </Link>
-        </li>
-      {/each}
-    </ul>
-  {:else}
-    <div class="empty">
-      <div class="emptyIcon"><People24 /></div>
-      <p>{$_("authSection.org.memberListEmpty")}</p>
-    </div>
-  {/if}
-{:catch}
-  <!-- Error state -->
-  <div class="error">
-    <div class="errorIcon"><Error /></div>
-    <p>{$_("authSection.org.memberListError")}</p>
-    <Button action on:click={loadUsers}>Retry</Button>
-  </div>
-{/await}

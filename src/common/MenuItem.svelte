@@ -15,6 +15,25 @@
   $: tag = href ? "a" : "button";
 </script>
 
+<svelte:element
+  this={tag}
+  {target}
+  {href}
+  class="item {className}"
+  class:selectable
+  class:selected
+  class:danger
+  class:primary
+  class:disabled
+  class:indent
+  class:special
+  on:click
+>
+  <slot name="icon" />
+  <span class="label"><slot>Define an item</slot></span>
+  {#if selected}<span class="scope">✓</span>{/if}
+</svelte:element>
+
 <style>
   button,
   a {
@@ -91,22 +110,3 @@
     fill: white;
   }
 </style>
-
-<svelte:element
-  this={tag}
-  {target}
-  {href}
-  class="item {className}"
-  class:selectable
-  class:selected
-  class:danger
-  class:primary
-  class:disabled
-  class:indent
-  class:special
-  on:click
->
-  <slot name="icon" />
-  <span class="label"><slot>Define an item</slot></span>
-  {#if selected}<span class="scope">✓</span>{/if}
-</svelte:element>

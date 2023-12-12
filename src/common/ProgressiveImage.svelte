@@ -136,6 +136,14 @@
   });
 </script>
 
+<div
+  style="padding-top: {aspect * 100}%"
+  bind:this={elem}
+  class:bordered
+  class:grayed
+  class:crosshair
+/>
+
 <style lang="scss">
   div {
     position: relative;
@@ -173,11 +181,3 @@
     cursor: crosshair;
   }
 </style>
-
-<div
-  style="padding-top: {aspect * 100}%"
-  bind:this={elem}
-  class:bordered
-  class:grayed
-  class:crosshair
-/>

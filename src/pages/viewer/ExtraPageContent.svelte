@@ -29,13 +29,13 @@
   }
 </script>
 
+<div class="extrapagecontent" bind:this={elem}>
+  <slot />
+</div>
+
 <style lang="scss">
   div {
     position: relative;
     overflow-wrap: break-word;
   }
 </style>
-
-<div class="extrapagecontent" bind:this={elem}>
-  <slot />
-</div>

@@ -33,6 +33,37 @@
   }
 </script>
 
+{#if !uploadMode || !data.done}
+  <div class="row">
+    <div class="cell doc">
+      {@html documentIconSvg}
+    </div>
+    <div class="cell name" class:readonly={uploadMode}>
+      <div class="progresscontainer">
+        {#if uploadMode}
+          <div class="progress" style="width: {data.progress * 100}%">
+            <div class="progressinner">{name}</div>
+          </div>
+        {/if}
+      </div>
+      <input
+        placeholder={$_("uploadDialog.untitled")}
+        readonly={uploadMode}
+        bind:value={name}
+        class:error
+      />
+    </div>
+    <div class="cell size">{size}</div>
+    {#if !uploadMode}
+      <div class="cell close">
+        <div on:click={emit.delete}>
+          {@html closeInlineSvg}
+        </div>
+      </div>
+    {/if}
+  </div>
+{/if}
+
 <style lang="scss">
   .row {
     display: table-row;
@@ -123,34 +154,3 @@
     white-space: pre;
   }
 </style>
-
-{#if !uploadMode || !data.done}
-  <div class="row">
-    <div class="cell doc">
-      {@html documentIconSvg}
-    </div>
-    <div class="cell name" class:readonly={uploadMode}>
-      <div class="progresscontainer">
-        {#if uploadMode}
-          <div class="progress" style="width: {data.progress * 100}%">
-            <div class="progressinner">{name}</div>
-          </div>
-        {/if}
-      </div>
-      <input
-        placeholder={$_("uploadDialog.untitled")}
-        readonly={uploadMode}
-        bind:value={name}
-        class:error
-      />
-    </div>
-    <div class="cell size">{size}</div>
-    {#if !uploadMode}
-      <div class="cell close">
-        <div on:click={emit.delete}>
-          {@html closeInlineSvg}
-        </div>
-      </div>
-    {/if}
-  </div>
-{/if}

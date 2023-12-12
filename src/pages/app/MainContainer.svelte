@@ -60,39 +60,6 @@
   let containerElem = null;
 </script>
 
-<style>
-  .main {
-    position: absolute;
-    left: var(--sidebar-width, 272px);
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: white;
-    overflow: auto;
-  }
-
-  .main.embed {
-    left: 0;
-  }
-
-  @media only screen and (max-width: 720px) {
-    .main {
-      left: 0;
-    }
-    .main.concealed {
-      display: none;
-    }
-  }
-
-  .container {
-    padding: 0 48px var(--mainDocContainerPadding, 12px) 48px;
-  }
-
-  .container.error {
-    padding: 100px;
-  }
-</style>
-
 <div class="main" class:embed class:concealed>
   <Toasts />
 
@@ -148,3 +115,36 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .main {
+    position: absolute;
+    left: var(--sidebar-width, 272px);
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: white;
+    overflow: auto;
+  }
+
+  .main.embed {
+    left: 0;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .main {
+      left: 0;
+    }
+    .main.concealed {
+      display: none;
+    }
+  }
+
+  .container {
+    padding: 0 48px var(--mainDocContainerPadding, 12px) 48px;
+  }
+
+  .container.error {
+    padding: 100px;
+  }
+</style>

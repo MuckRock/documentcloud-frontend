@@ -71,22 +71,6 @@
   onMount(() => input.focus());
 </script>
 
-<style lang="scss">
-  input {
-    outline: none;
-    width: 100%;
-    padding: 4px 7px;
-  }
-
-  textarea {
-    padding: 5px 7px;
-  }
-
-  p {
-    margin-bottom: 0;
-  }
-</style>
-
 <div>
   <Loader active={$loading}>
     <div class="mcontent">
@@ -128,8 +112,8 @@
           disabledReason={valid
             ? null
             : changed
-            ? $_("dialogProjectDialog.enterTitle")
-            : $_("dialogProjectDialog.changeTitle")}
+              ? $_("dialogProjectDialog.enterTitle")
+              : $_("dialogProjectDialog.changeTitle")}
           on:click={() => createOrUpdate()}
         >
           {#if editing}
@@ -150,3 +134,19 @@
     </div>
   </Loader>
 </div>
+
+<style lang="scss">
+  input {
+    outline: none;
+    width: 100%;
+    padding: 4px 7px;
+  }
+
+  textarea {
+    padding: 5px 7px;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+</style>

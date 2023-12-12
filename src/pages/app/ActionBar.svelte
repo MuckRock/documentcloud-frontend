@@ -24,69 +24,6 @@
   let editVisible = false;
 </script>
 
-<style lang="scss">
-  .barcontainer {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-    padding: 14px 0;
-
-    .nowrap {
-      white-space: nowrap;
-    }
-
-    .bar {
-      display: table-row;
-
-      .action {
-        font-size: 16px;
-        color: $primary;
-        padding: 0 25px;
-        user-select: none;
-        cursor: pointer;
-        display: table-cell;
-        vertical-align: middle;
-
-        &.check {
-          padding-right: 35px;
-          cursor: inherit;
-          transform: translateY(2px);
-        }
-
-        &.disabled {
-          color: $gray;
-          cursor: inherit;
-        }
-
-        &:first-child,
-        &.shortpad {
-          padding-left: 8px;
-        }
-
-        &.scaledown {
-          > :global(*) {
-            zoom: 0.8;
-          }
-        }
-      }
-    }
-  }
-
-  .badge {
-    background-color: $primary;
-    color: $menuBg;
-    font-size: 12px;
-    padding: 0.25em 0.5em;
-    border-radius: 50%;
-    box-sizing: border-box;
-    margin-right: 0.25em;
-  }
-
-  @media only screen and (max-width: 720px) {
-    .narrowhide {
-      display: none;
-    }
-  }
-</style>
-
 <div class="barcontainer">
   {#if !$layout.loading}
     <div class="bar">
@@ -152,3 +89,66 @@
 </div>
 
 <svelte:window bind:outerHeight />
+
+<style lang="scss">
+  .barcontainer {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    padding: 14px 0;
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .bar {
+      display: table-row;
+
+      .action {
+        font-size: 16px;
+        color: $primary;
+        padding: 0 25px;
+        user-select: none;
+        cursor: pointer;
+        display: table-cell;
+        vertical-align: middle;
+
+        &.check {
+          padding-right: 35px;
+          cursor: inherit;
+          transform: translateY(2px);
+        }
+
+        &.disabled {
+          color: $gray;
+          cursor: inherit;
+        }
+
+        &:first-child,
+        &.shortpad {
+          padding-left: 8px;
+        }
+
+        &.scaledown {
+          > :global(*) {
+            zoom: 0.8;
+          }
+        }
+      }
+    }
+  }
+
+  .badge {
+    background-color: $primary;
+    color: $menuBg;
+    font-size: 12px;
+    padding: 0.25em 0.5em;
+    border-radius: 50%;
+    box-sizing: border-box;
+    margin-right: 0.25em;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .narrowhide {
+      display: none;
+    }
+  }
+</style>

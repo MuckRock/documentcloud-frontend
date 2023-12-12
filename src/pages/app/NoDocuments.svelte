@@ -8,49 +8,6 @@
   import emptyResultsSvg from "@/assets/empty_results.svg?raw";
 </script>
 
-<style lang="scss">
-  .container {
-    margin: 1em 1.5em;
-    background: $fyi;
-    padding: 1em;
-    border-radius: 10px;
-  }
-
-  h2 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 1.5em 0;
-    padding-left: 18px;
-  }
-
-  .img,
-  .text {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  .text {
-    max-width: 80ch;
-    width: 30vw;
-    margin: 0 2em 1em 2em;
-
-    :global(a) {
-      color: $primary;
-    }
-
-    li,
-    p {
-      font-size: 15px;
-      line-height: 22px;
-      margin: 5px 0;
-    }
-  }
-
-  p {
-    margin: 0 1em;
-  }
-</style>
-
 <div class="container">
   {#if $orgsAndUsers.me == null || $search.params.oneUserSearch != $orgsAndUsers.me.id || !$search.params.noStatus || !$search.params.noAccess}
     <h2>{$_("noDocuments.noSearchResults")}</h2>
@@ -98,3 +55,46 @@
     </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .container {
+    margin: 1em 1.5em;
+    background: $fyi;
+    padding: 1em;
+    border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 1.5em 0;
+    padding-left: 18px;
+  }
+
+  .img,
+  .text {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .text {
+    max-width: 80ch;
+    width: 30vw;
+    margin: 0 2em 1em 2em;
+
+    :global(a) {
+      color: $primary;
+    }
+
+    li,
+    p {
+      font-size: 15px;
+      line-height: 22px;
+      margin: 5px 0;
+    }
+  }
+
+  p {
+    margin: 0 1em;
+  }
+</style>

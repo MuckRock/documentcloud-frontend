@@ -26,6 +26,87 @@
   export let showLogin = true;
 </script>
 
+<Loader active={$auth.signingIn}>
+  <div class="container">
+    <header>
+      <div class="headercontents">
+        <div class="logo">
+          <Link to="app">
+            {@html mastLogoSvg}
+          </Link>
+        </div>
+        {#if showLogin}
+          <div class="narrowhide">
+            {#if $orgsAndUsers.me != null}
+              <div class="signupcontainer">
+                <div class="supplemental">
+                  {$_("homeTemplate.signedIn", {
+                    values: { name: $orgsAndUsers.me.name },
+                  })}
+                </div>
+                <div class="signin">
+                  <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
+                </div>
+                <Link to="app">
+                  <Button>{$_("homeTemplate.goToApp")}</Button>
+                </Link>
+              </div>
+            {:else}
+              <div class="signupcontainer">
+                <div class="signin">
+                  <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
+                </div>
+                <a href={SIGN_UP_URL}>
+                  <Button>{$_("homeTemplate.signUp")}</Button>
+                </a>
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </div>
+      {#if showLogin}
+        <div class="narrowshow">
+          {#if $orgsAndUsers.me != null}
+            <div class="signupcontainer">
+              <div class="supplemental">
+                {$_("homeTemplate.signedIn", {
+                  values: { name: $orgsAndUsers.me.name },
+                })}
+              </div>
+              <div class="signin">
+                <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
+              </div>
+              <Link to="app">
+                <Button>{$_("homeTemplate.goToApp")}</Button>
+              </Link>
+            </div>
+          {:else}
+            <div class="signupcontainer">
+              <div class="signin">
+                <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
+              </div>
+              <a href={SIGN_UP_URL}>
+                <Button>{$_("homeTemplate.signUp")}</Button>
+              </a>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    </header>
+    {#if showMast}
+      <div class="mastcontainer">
+        {@html mastheadSvg}
+        {@html mastheadResponsiveSvg}
+      </div>
+    {/if}
+    <div class="content">
+      <slot />
+    </div>
+
+    <footer />
+  </div>
+</Loader>
+
 <style>
   :global(.masthead) {
     width: 100%;
@@ -170,84 +251,3 @@
     width: 100%;
   }
 </style>
-
-<Loader active={$auth.signingIn}>
-  <div class="container">
-    <header>
-      <div class="headercontents">
-        <div class="logo">
-          <Link to="app">
-            {@html mastLogoSvg}
-          </Link>
-        </div>
-        {#if showLogin}
-          <div class="narrowhide">
-            {#if $orgsAndUsers.me != null}
-              <div class="signupcontainer">
-                <div class="supplemental">
-                  {$_("homeTemplate.signedIn", {
-                    values: { name: $orgsAndUsers.me.name },
-                  })}
-                </div>
-                <div class="signin">
-                  <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
-                </div>
-                <Link to="app">
-                  <Button>{$_("homeTemplate.goToApp")}</Button>
-                </Link>
-              </div>
-            {:else}
-              <div class="signupcontainer">
-                <div class="signin">
-                  <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
-                </div>
-                <a href={SIGN_UP_URL}>
-                  <Button>{$_("homeTemplate.signUp")}</Button>
-                </a>
-              </div>
-            {/if}
-          </div>
-        {/if}
-      </div>
-      {#if showLogin}
-        <div class="narrowshow">
-          {#if $orgsAndUsers.me != null}
-            <div class="signupcontainer">
-              <div class="supplemental">
-                {$_("homeTemplate.signedIn", {
-                  values: { name: $orgsAndUsers.me.name },
-                })}
-              </div>
-              <div class="signin">
-                <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
-              </div>
-              <Link to="app">
-                <Button>{$_("homeTemplate.goToApp")}</Button>
-              </Link>
-            </div>
-          {:else}
-            <div class="signupcontainer">
-              <div class="signin">
-                <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
-              </div>
-              <a href={SIGN_UP_URL}>
-                <Button>{$_("homeTemplate.signUp")}</Button>
-              </a>
-            </div>
-          {/if}
-        </div>
-      {/if}
-    </header>
-    {#if showMast}
-      <div class="mastcontainer">
-        {@html mastheadSvg}
-        {@html mastheadResponsiveSvg}
-      </div>
-    {/if}
-    <div class="content">
-      <slot />
-    </div>
-
-    <footer />
-  </div>
-</Loader>

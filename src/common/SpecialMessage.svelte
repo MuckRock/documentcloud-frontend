@@ -29,6 +29,23 @@
   $: showContact = contact != null && contact.trim().length > 0;
 </script>
 
+{#if show}
+  <div class="container">
+    <div class="special">
+      {#await loading then content}
+        {@html content}
+      {:catch}
+        {version}
+        {#if showContact}
+          {@html $_("specialMessage.constactUs", {
+            values: { contact: contact },
+          })}
+        {/if}
+      {/await}
+    </div>
+  </div>
+{/if}
+
 <style>
   .container {
     padding: 10px 0;
@@ -52,20 +69,3 @@
     text-decoration: underline;
   }
 </style>
-
-{#if show}
-  <div class="container">
-    <div class="special">
-      {#await loading then content}
-        {@html content}
-      {:catch}
-        {version}
-        {#if showContact}
-          {@html $_("specialMessage.constactUs", {
-            values: { contact: contact },
-          })}
-        {/if}
-      {/await}
-    </div>
-  </div>
-{/if}

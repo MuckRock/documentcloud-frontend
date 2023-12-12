@@ -81,26 +81,6 @@
   }
 </script>
 
-<style>
-  input,
-  table {
-    position: border-box;
-    width: 100%;
-    font-size: 16px;
-    font-family: inherit;
-  }
-
-  td:first-child {
-    white-space: nowrap;
-    padding-right: 5px;
-  }
-
-  td:last-child {
-    width: 100%;
-    position: relative;
-  }
-</style>
-
 <div class="mcontent">
   <h2>
     {$_("dialogDocumentInformationDialog.editInformation", {
@@ -138,3 +118,23 @@
     >
   </div>
 </div>
+
+<style>
+  input,
+  table {
+    position: border-box;
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+  }
+
+  td:first-child {
+    white-space: nowrap;
+    padding-right: 5px;
+  }
+
+  td:last-child {
+    width: 100%;
+    position: relative;
+  }
+</style>

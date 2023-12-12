@@ -18,14 +18,6 @@
   $: alphabetizedProjects = sort($projects.addRemoveableProjects);
 </script>
 
-<style lang="scss">
-  .info {
-    color: $gray;
-    font-style: italic;
-    font-size: $small;
-  }
-</style>
-
 <Menu>
   <MenuItem primary={true} on:click={newProject}>
     {$_("projectsMenu.newProject")}
@@ -47,3 +39,11 @@
     </MenuItem>
   {/if}
 </Menu>
+
+<style lang="scss">
+  .info {
+    color: $gray;
+    font-style: italic;
+    font-size: $small;
+  }
+</style>

@@ -4,6 +4,11 @@
   export let inline = false;
 </script>
 
+<!-- todo use a proper H tag -->
+<div class="primary" class:small class:inline>
+  <slot />
+</div>
+
 <style scoped>
   .primary {
     font-weight: 600;
@@ -22,8 +27,3 @@
     display: inline;
   }
 </style>
-
-<!-- todo use a proper H tag -->
-<div class="primary" class:small class:inline>
-  <slot />
-</div>

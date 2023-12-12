@@ -10,12 +10,12 @@
   $: label = addon.name;
 </script>
 
+<ListItem {href} {label}>
+  <div slot="icon" class="icon"><Pin title={label} /></div>
+</ListItem>
+
 <style>
   .icon {
     fill: var(--highlight-orange);
   }
 </style>
-
-<ListItem {href} {label}>
-  <div slot="icon" class="icon"><Pin title={label} /></div>
-</ListItem>

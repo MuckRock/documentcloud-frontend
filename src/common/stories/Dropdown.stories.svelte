@@ -37,16 +37,6 @@
   let subOptions = ["Suboption A", "Suboption B", "Suboption C"];
 </script>
 
-<style>
-  .content {
-    border-radius: 3px;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    padding: 0.5rem;
-  }
-</style>
-
 <Template let:args>
   <Dropdown {...args} id="dropdown-1">
     <MenuTitle label="Options" slot="title" />
@@ -97,3 +87,13 @@
 
 <Story name="Default" {args} />
 <Story name="Without Overlay" args={{ ...args, overlay: false }} />
+
+<style>
+  .content {
+    border-radius: 3px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    padding: 0.5rem;
+  }
+</style>

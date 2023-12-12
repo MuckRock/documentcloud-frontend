@@ -9,6 +9,16 @@
   import Search from "../../common/icons/Search.svelte";
 </script>
 
+<label class="search">
+  <Search size={0.8} />
+  <input
+    type="search"
+    bind:value={$query}
+    aria-label="Search Add-Ons"
+    placeholder={$_("addonBrowserDialog.searchPlaceholder")}
+  />
+</label>
+
 <style>
   .search {
     display: flex;
@@ -33,13 +43,3 @@
     outline: none;
   }
 </style>
-
-<label class="search">
-  <Search size={0.8} />
-  <input
-    type="search"
-    bind:value={$query}
-    aria-label="Search Add-Ons"
-    placeholder={$_("addonBrowserDialog.searchPlaceholder")}
-  />
-</label>

@@ -7,6 +7,18 @@
   export let callToAction: string | null = null;
 </script>
 
+<div class="container">
+  <div class="message">
+    <span class="badge"><Credit badge size={2} /></span>
+    <p>{message}</p>
+  </div>
+  {#if callToAction}
+    <div class="action">
+      <Button premium label={callToAction} on:click />
+    </div>
+  {/if}
+</div>
+
 <style>
   .container {
     display: flex;
@@ -37,15 +49,3 @@
     flex: 1 1 100%;
   }
 </style>
-
-<div class="container">
-  <div class="message">
-    <span class="badge"><Credit badge size={2} /></span>
-    <p>{message}</p>
-  </div>
-  {#if callToAction}
-    <div class="action">
-      <Button premium label={callToAction} on:click />
-    </div>
-  {/if}
-</div>

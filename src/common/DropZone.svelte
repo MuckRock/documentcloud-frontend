@@ -4,6 +4,14 @@
   export let secondary = false;
 </script>
 
+<div class:secondary class="dropzone">
+  <Draggable on:files>
+    <div class="content">
+      <slot />
+    </div>
+  </Draggable>
+</div>
+
 <style lang="scss">
   .dropzone {
     width: 100%;
@@ -45,11 +53,3 @@
     font-size: 15px;
   }
 </style>
-
-<div class:secondary class="dropzone">
-  <Draggable on:files>
-    <div class="content">
-      <slot />
-    </div>
-  </Draggable>
-</div>

@@ -24,6 +24,47 @@
   }
 </script>
 
+{#if $layout.searchPages != null}
+  <div class="results">
+    {#if $layout.totalResults > 0}
+      <p>
+        {$_("searchResults.resultPages", {
+          values: {
+            results: $layout.totalResults,
+            pages: $layout.searchPages.length,
+          },
+        })}
+      </p>
+    {:else}
+      <p>{$_("searchResults.noSearchResults")}</p>
+    {/if}
+    {#each $layout.searchPages as { page }}
+      <div class="page" on:click={() => handlePage(page)}>
+        <h2>
+          {$_("document.pageAbbrev")}
+          {page + 1}
+          <small>
+            {$_("searchResults.occurrences", {
+              values: { n: $layout.searchHighlights[page].length },
+            })}
+          </small>
+        </h2>
+        {#each $layout.searchHighlights[page] as highlight}
+          <div class="result">
+            <NoWhitespace>
+              {#each highlight as passage}
+                <span class:highlight={passage.type == "highlight"}>
+                  {passage.text}
+                </span>
+              {/each}
+            </NoWhitespace>
+          </div>
+        {/each}
+      </div>
+    {/each}
+  </div>
+{/if}
+
 <style lang="scss">
   .results {
     max-width: 700px;
@@ -83,44 +124,3 @@
     }
   }
 </style>
-
-{#if $layout.searchPages != null}
-  <div class="results">
-    {#if $layout.totalResults > 0}
-      <p>
-        {$_("searchResults.resultPages", {
-          values: {
-            results: $layout.totalResults,
-            pages: $layout.searchPages.length,
-          },
-        })}
-      </p>
-    {:else}
-      <p>{$_("searchResults.noSearchResults")}</p>
-    {/if}
-    {#each $layout.searchPages as { page }}
-      <div class="page" on:click={() => handlePage(page)}>
-        <h2>
-          {$_("document.pageAbbrev")}
-          {page + 1}
-          <small>
-            {$_("searchResults.occurrences", {
-              values: { n: $layout.searchHighlights[page].length },
-            })}
-          </small>
-        </h2>
-        {#each $layout.searchHighlights[page] as highlight}
-          <div class="result">
-            <NoWhitespace>
-              {#each highlight as passage}
-                <span class:highlight={passage.type == "highlight"}>
-                  {passage.text}
-                </span>
-              {/each}
-            </NoWhitespace>
-          </div>
-        {/each}
-      </div>
-    {/each}
-  </div>
-{/if}

@@ -17,6 +17,21 @@
   }
 </script>
 
+<div class="toggle">
+  <h1>{option.title}</h1>
+  <div class="labels">
+    {#each option.values as value, i}
+      <label>
+        <input type="radio" value={i} bind:group={option.selected} />
+        <h2>{value[0]}</h2>
+        {#if help}
+          <p>{value[1]}</p>
+        {/if}
+      </label>
+    {/each}
+  </div>
+</div>
+
 <style lang="scss">
   .toggle {
     box-sizing: border-box;
@@ -62,18 +77,3 @@
     }
   }
 </style>
-
-<div class="toggle">
-  <h1>{option.title}</h1>
-  <div class="labels">
-    {#each option.values as value, i}
-      <label>
-        <input type="radio" value={i} bind:group={option.selected} />
-        <h2>{value[0]}</h2>
-        {#if help}
-          <p>{value[1]}</p>
-        {/if}
-      </label>
-    {/each}
-  </div>
-</div>

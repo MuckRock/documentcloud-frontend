@@ -168,6 +168,35 @@
   });
 </script>
 
+<svelte:head>
+  <title>{title} | DocumentCloud</title>
+</svelte:head>
+
+<div class="page">
+  <header>
+    <div class="logo">
+      {#if inIframe()}
+        <a href={process.env.APP_URL} target="_blank" rel="noreferrer"
+          >{@html mastLogoSvg}</a
+        >
+      {:else}
+        <Link to="app">
+          {@html mastLogoSvg}
+        </Link>
+      {/if}
+    </div>
+  </header>
+  <div class="content" bind:this={contentElem}>
+    {#if !hideToc}
+      <div class="toccontainer">
+        <div class="toc" bind:this={sidebarElem} />
+      </div>
+    {/if}
+
+    {@html render(content)}
+  </div>
+</div>
+
 <style lang="scss">
   .page {
     --contentWidth: 720px;
@@ -342,32 +371,3 @@
     }
   }
 </style>
-
-<svelte:head>
-  <title>{title} | DocumentCloud</title>
-</svelte:head>
-
-<div class="page">
-  <header>
-    <div class="logo">
-      {#if inIframe()}
-        <a href={process.env.APP_URL} target="_blank" rel="noreferrer"
-          >{@html mastLogoSvg}</a
-        >
-      {:else}
-        <Link to="app">
-          {@html mastLogoSvg}
-        </Link>
-      {/if}
-    </div>
-  </header>
-  <div class="content" bind:this={contentElem}>
-    {#if !hideToc}
-      <div class="toccontainer">
-        <div class="toc" bind:this={sidebarElem} />
-      </div>
-    {/if}
-
-    {@html render(content)}
-  </div>
-</div>

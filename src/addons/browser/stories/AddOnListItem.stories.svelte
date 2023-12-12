@@ -23,13 +23,6 @@
   };
 </script>
 
-<style>
-  .container {
-    max-width: 32rem;
-    border: 1px solid #eee;
-  }
-</style>
-
 <Template let:args>
   <div class="container">
     <AddOnListItem {...args} />
@@ -60,3 +53,10 @@
     },
   }}
 />
+
+<style>
+  .container {
+    max-width: 32rem;
+    border: 1px solid #eee;
+  }
+</style>

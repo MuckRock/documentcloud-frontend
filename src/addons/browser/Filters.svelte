@@ -30,43 +30,6 @@
   import Credit from "../../common/icons/Credit.svelte";
 </script>
 
-<style>
-  ul {
-    list-style: none;
-    margin-block-start: 0;
-    padding-inline-start: 0;
-  }
-
-  ul li {
-    margin-bottom: 0.25em;
-  }
-
-  h3 {
-    margin: 0.5em;
-  }
-
-  #all [slot="icon"] {
-    display: flex;
-    align-items: center;
-  }
-
-  #all:not(.selected) [slot="icon"] {
-    fill: var(--primary);
-  }
-
-  #pinned:not(.selected) [slot="icon"] {
-    fill: palevioletred;
-  }
-
-  #featured:not(.selected) [slot="icon"] {
-    fill: orange;
-  }
-
-  #premium:not(.selected) [slot="icon"] {
-    fill: var(--premium);
-  }
-</style>
-
 <ul class="filters">
   <li id="all" class:selected={$filter.includes("all")}>
     <Filter name="All" selected={$filter.includes("all")}>
@@ -110,3 +73,40 @@
     {/each}
   </ul>
 </div>
+
+<style>
+  ul {
+    list-style: none;
+    margin-block-start: 0;
+    padding-inline-start: 0;
+  }
+
+  ul li {
+    margin-bottom: 0.25em;
+  }
+
+  h3 {
+    margin: 0.5em;
+  }
+
+  #all [slot="icon"] {
+    display: flex;
+    align-items: center;
+  }
+
+  #all:not(.selected) [slot="icon"] {
+    fill: var(--primary);
+  }
+
+  #pinned:not(.selected) [slot="icon"] {
+    fill: palevioletred;
+  }
+
+  #featured:not(.selected) [slot="icon"] {
+    fill: orange;
+  }
+
+  #premium:not(.selected) [slot="icon"] {
+    fill: var(--premium);
+  }
+</style>

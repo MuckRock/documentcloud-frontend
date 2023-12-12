@@ -7,6 +7,11 @@
   export { className as class };
 </script>
 
+<button class={`action ${className}`} class:disabled on:click={action}>
+  <h3>{header}</h3>
+  <p>{description}</p>
+</button>
+
 <style>
   .action {
     appearance: none;
@@ -47,8 +52,3 @@
     margin: 8px 0;
   }
 </style>
-
-<button class={`action ${className}`} class:disabled on:click={action}>
-  <h3>{header}</h3>
-  <p>{description}</p>
-</button>

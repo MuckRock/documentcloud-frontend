@@ -10,6 +10,19 @@
   export let maxlength = null;
 </script>
 
+<div class="sidebyside">
+  <textarea {placeholder} use:textAreaResize bind:value {maxlength} />
+  {#if $domPurify.domPurify !== null && typeof $domPurify.domPurify.sanitize === "function" && value.trim().length > 0}
+    <div class="preview">
+      <div class="title">{$_("htmlEditor.preview")}</div>
+      <!-- Show a preview if possible -->
+      <div class="content">
+        {@html $domPurify.domPurify.sanitize(value)}
+      </div>
+    </div>
+  {/if}
+</div>
+
 <style lang="scss">
   $subpadding: 8px;
 
@@ -45,7 +58,10 @@
 
     .content {
       margin: 4px $subpadding;
-      font: 13px/18px Georgia, Times, serif;
+      font:
+        13px/18px Georgia,
+        Times,
+        serif;
       cursor: text;
       color: #3c3c3c;
       overflow-wrap: break-word;
@@ -58,16 +74,3 @@
     }
   }
 </style>
-
-<div class="sidebyside">
-  <textarea {placeholder} use:textAreaResize bind:value {maxlength} />
-  {#if $domPurify.domPurify !== null && typeof $domPurify.domPurify.sanitize === "function" && value.trim().length > 0}
-    <div class="preview">
-      <div class="title">{$_("htmlEditor.preview")}</div>
-      <!-- Show a preview if possible -->
-      <div class="content">
-        {@html $domPurify.domPurify.sanitize(value)}
-      </div>
-    </div>
-  {/if}
-</div>

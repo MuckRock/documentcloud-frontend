@@ -53,6 +53,31 @@
   });
 </script>
 
+<div class="searchcontainer" class:example>
+  <SearchInput
+    bind:value={search}
+    bind:transformedQuery
+    {example}
+    {compact}
+    on:search={submitSearch}
+  />
+  {#if !embed && !example}
+    <div class="info">
+      <span>
+        {@html $_("searchBar.tips")}
+      </span>
+      <Button
+        action={true}
+        small={true}
+        nomargin={true}
+        on:click={showSearchTips}
+      >
+        {$_("searchBar.learnMore")}
+      </Button>
+    </div>
+  {/if}
+</div>
+
 <style lang="scss">
   .searchcontainer {
     margin: 0 0 20px 0;
@@ -85,28 +110,3 @@
     }
   }
 </style>
-
-<div class="searchcontainer" class:example>
-  <SearchInput
-    bind:value={search}
-    bind:transformedQuery
-    {example}
-    {compact}
-    on:search={submitSearch}
-  />
-  {#if !embed && !example}
-    <div class="info">
-      <span>
-        {@html $_("searchBar.tips")}
-      </span>
-      <Button
-        action={true}
-        small={true}
-        nomargin={true}
-        on:click={showSearchTips}
-      >
-        {$_("searchBar.learnMore")}
-      </Button>
-    </div>
-  {/if}
-</div>

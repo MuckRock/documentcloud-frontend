@@ -28,6 +28,29 @@
   }
 </script>
 
+<div class="toggle">
+  <h1>{option.title}</h1>
+  <div class="labels">
+    <label>
+      <input type="radio" value={0} bind:group={selected} />
+      <h2>{$_("appearanceDimension.responsive")}</h2>
+      {#if help}
+        <p>{automaticText}</p>
+      {/if}
+    </label>
+    <label>
+      <input type="radio" value={1} bind:group={selected} />
+      <h2>{$_("appearanceDimension.fixed")}</h2>
+      {#if selected == 1}
+        <input class="numinput" type="number" min="1" bind:value={fixed} />
+      {/if}
+      {#if help}
+        <p>{fixedText}</p>
+      {/if}
+    </label>
+  </div>
+</div>
+
 <style lang="scss">
   .toggle {
     box-sizing: border-box;
@@ -79,26 +102,3 @@
     }
   }
 </style>
-
-<div class="toggle">
-  <h1>{option.title}</h1>
-  <div class="labels">
-    <label>
-      <input type="radio" value={0} bind:group={selected} />
-      <h2>{$_("appearanceDimension.responsive")}</h2>
-      {#if help}
-        <p>{automaticText}</p>
-      {/if}
-    </label>
-    <label>
-      <input type="radio" value={1} bind:group={selected} />
-      <h2>{$_("appearanceDimension.fixed")}</h2>
-      {#if selected == 1}
-        <input class="numinput" type="number" min="1" bind:value={fixed} />
-      {/if}
-      {#if help}
-        <p>{fixedText}</p>
-      {/if}
-    </label>
-  </div>
-</div>

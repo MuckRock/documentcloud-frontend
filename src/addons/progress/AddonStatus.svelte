@@ -43,6 +43,15 @@
   });
 </script>
 
+{#if $runs.length > 0}
+  <div class="addonStatus">
+    <h3 class="title">{$_("addonProgress.progress")}</h3>
+    {#each $runs as run (run.uuid)}
+      <AddonRun {run} />
+    {/each}
+  </div>
+{/if}
+
 <style>
   .addonStatus {
     background: #eff7ff;
@@ -59,12 +68,3 @@
     padding: 8px 20px;
   }
 </style>
-
-{#if $runs.length > 0}
-  <div class="addonStatus">
-    <h3 class="title">{$_("addonProgress.progress")}</h3>
-    {#each $runs as run (run.uuid)}
-      <AddonRun {run} />
-    {/each}
-  </div>
-{/if}

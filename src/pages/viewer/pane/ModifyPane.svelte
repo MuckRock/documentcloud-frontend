@@ -16,39 +16,6 @@
   const MAX_THUMB_HEIGHT = 39;
 </script>
 
-<style lang="scss">
-  .buffer {
-    position: relative;
-    display: inline-block;
-    vertical-align: bottom;
-
-    .item {
-      display: inline-block;
-      vertical-align: top;
-      width: 45px;
-
-      &.faded {
-        position: relative;
-        mask-image: linear-gradient(to right, black, transparent 70%);
-      }
-
-      .img {
-        display: inline-block;
-        margin: 0 5px;
-        border: solid 1.5px $primary;
-        box-sizing: border-box;
-        background: white;
-        overflow: hidden;
-        vertical-align: top;
-
-        :global(img) {
-          object-fit: contain !important;
-        }
-      }
-    }
-  }
-</style>
-
 {#if $modification.modifyHasSelection}
   <h3>
     {$_("modifyPane.pagesSelected", {
@@ -202,3 +169,36 @@
     >
   </div>
 {/if}
+
+<style lang="scss">
+  .buffer {
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
+
+    .item {
+      display: inline-block;
+      vertical-align: top;
+      width: 45px;
+
+      &.faded {
+        position: relative;
+        mask-image: linear-gradient(to right, black, transparent 70%);
+      }
+
+      .img {
+        display: inline-block;
+        margin: 0 5px;
+        border: solid 1.5px $primary;
+        box-sizing: border-box;
+        background: white;
+        overflow: hidden;
+        vertical-align: top;
+
+        :global(img) {
+          object-fit: contain !important;
+        }
+      }
+    }
+  }
+</style>

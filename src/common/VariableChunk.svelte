@@ -24,13 +24,13 @@
   });
 </script>
 
+<div bind:this={elem}>
+  <slot {update} />
+</div>
+
 <style lang="scss">
   div {
     font-size: 12px;
     position: relative;
   }
 </style>
-
-<div bind:this={elem}>
-  <slot {update} />
-</div>

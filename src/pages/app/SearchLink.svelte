@@ -6,6 +6,14 @@
   export let link = "";
 </script>
 
+<div class="link">
+  <a href={link} target="_blank"
+    >{@html SearchIconSvg}
+    {$_("searchLink.search")}</a
+  >
+</div>
+<div class="linkcontainer" />
+
 <style lang="scss">
   .linkcontainer {
     background: white;
@@ -43,11 +51,3 @@
     }
   }
 </style>
-
-<div class="link">
-  <a href={link} target="_blank"
-    >{@html SearchIconSvg}
-    {$_("searchLink.search")}</a
-  >
-</div>
-<div class="linkcontainer" />

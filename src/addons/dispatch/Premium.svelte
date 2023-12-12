@@ -57,6 +57,80 @@
   }
 </script>
 
+{#if isPremium}
+  {#if isPremiumOrg(user?.organization)}
+    <fieldset class="premium">
+      <legend>{$_("addonDispatchDialog.premium")}</legend>
+      <div class="row">
+        <div class="column">
+          {#if amount}
+            <h3 class="prettyCost">
+              {$_("addonDispatchDialog.cost", {
+                values: { amount: amount, unit: unit, price: price || 1 },
+              })}
+            </h3>
+          {/if}
+          <!-- TODO: Support spend limit (#343)
+          <label class="spendingLimit">
+            <input
+              type="checkbox"
+              name="setLimit"
+              class="toggle"
+              on:change={toggleSpendingLimit}
+            />
+            <span class="label"
+              >{$_("addonDispatchDialog.premiumSpendLimit")}</span
+            >
+            <div class="amount">
+              <span class="creditIcon"><Credit size={1.5} /></span>
+              <input
+                type="number"
+                name="limitAmount"
+                class="limitInput"
+                min={0}
+                max={creditBalance}
+                bind:value={spendingLimit}
+                on:change={setSpendingLimit}
+                disabled={!spendingLimitEnabled}
+              />
+            </div>
+          </label>
+          -->
+        </div>
+        <div class="column">
+          <dl class="creditBalance">
+            <dt>Your credit balance</dt>
+            <dd><Price value={creditBalance} /></dd>
+          </dl>
+          <!-- TODO: Support credit purchases (#342)
+          <Button
+            premium
+            fullWidth
+            nomargin
+            label="Purchase Credits"
+            on:click={triggerCreditPurchaseFlow}
+          />
+          -->
+        </div>
+      </div>
+    </fieldset>
+  {:else if isOrgAdmin(user)}
+    <UpgradePrompt
+      message={$_("addonDispatchDialog.premiumUpgrade.message", {
+        values: {
+          plan: isIndividualOrg ? "Professional" : "Organization",
+        },
+      })}
+      callToAction={$_("addonDispatchDialog.premiumUpgrade.callToAction")}
+      on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
+    />
+  {:else}
+    <UpgradePrompt
+      message={$_("addonDispatchDialog.premiumUpgrade.memberMessage")}
+    />
+  {/if}
+{/if}
+
 <style>
   fieldset {
     display: flex;
@@ -146,77 +220,3 @@
     margin: 0;
   }
 </style>
-
-{#if isPremium}
-  {#if isPremiumOrg(user?.organization)}
-    <fieldset class="premium">
-      <legend>{$_("addonDispatchDialog.premium")}</legend>
-      <div class="row">
-        <div class="column">
-          {#if amount}
-            <h3 class="prettyCost">
-              {$_("addonDispatchDialog.cost", {
-                values: { amount: amount, unit: unit, price: price || 1 },
-              })}
-            </h3>
-          {/if}
-          <!-- TODO: Support spend limit (#343)
-          <label class="spendingLimit">
-            <input
-              type="checkbox"
-              name="setLimit"
-              class="toggle"
-              on:change={toggleSpendingLimit}
-            />
-            <span class="label"
-              >{$_("addonDispatchDialog.premiumSpendLimit")}</span
-            >
-            <div class="amount">
-              <span class="creditIcon"><Credit size={1.5} /></span>
-              <input
-                type="number"
-                name="limitAmount"
-                class="limitInput"
-                min={0}
-                max={creditBalance}
-                bind:value={spendingLimit}
-                on:change={setSpendingLimit}
-                disabled={!spendingLimitEnabled}
-              />
-            </div>
-          </label>
-          -->
-        </div>
-        <div class="column">
-          <dl class="creditBalance">
-            <dt>Your credit balance</dt>
-            <dd><Price value={creditBalance} /></dd>
-          </dl>
-          <!-- TODO: Support credit purchases (#342)
-          <Button
-            premium
-            fullWidth
-            nomargin
-            label="Purchase Credits"
-            on:click={triggerCreditPurchaseFlow}
-          />
-          -->
-        </div>
-      </div>
-    </fieldset>
-  {:else if isOrgAdmin(user)}
-    <UpgradePrompt
-      message={$_("addonDispatchDialog.premiumUpgrade.message", {
-        values: {
-          plan: isIndividualOrg ? "Professional" : "Organization",
-        },
-      })}
-      callToAction={$_("addonDispatchDialog.premiumUpgrade.callToAction")}
-      on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
-    />
-  {:else}
-    <UpgradePrompt
-      message={$_("addonDispatchDialog.premiumUpgrade.memberMessage")}
-    />
-  {/if}
-{/if}

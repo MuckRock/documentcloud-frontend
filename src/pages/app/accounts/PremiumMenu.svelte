@@ -38,32 +38,6 @@
   } = org);
 </script>
 
-<style>
-  .premium {
-    font-weight: 600;
-  }
-  .whiteBg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 1.5rem;
-    width: 1.5rem;
-    background: var(--white, #ffffff);
-  }
-  .learnMore {
-    font-size: 0.8em;
-    color: var(--gray);
-  }
-  .learnMore:hover {
-    opacity: 0.7;
-  }
-  .heading,
-  .description {
-    margin: 0;
-    opacity: 0.8;
-  }
-</style>
-
 <Dropdown id={dropdownId} titleColor="premium">
   <span class="premium" slot="title">
     <MenuTitle label={$_("authSection.premiumUpgrade.title")}>
@@ -137,3 +111,29 @@
     <slot />
   </Menu>
 </Dropdown>
+
+<style>
+  .premium {
+    font-weight: 600;
+  }
+  .whiteBg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5rem;
+    width: 1.5rem;
+    background: var(--white, #ffffff);
+  }
+  .learnMore {
+    font-size: 0.8em;
+    color: var(--gray);
+  }
+  .learnMore:hover {
+    opacity: 0.7;
+  }
+  .heading,
+  .description {
+    margin: 0;
+    opacity: 0.8;
+  }
+</style>

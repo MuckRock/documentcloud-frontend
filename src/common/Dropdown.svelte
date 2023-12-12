@@ -84,6 +84,43 @@
   });
 </script>
 
+{#if active}
+  <span class="shim" on:click={hide} />
+{/if}
+<span class="wrapper" class:table class:active>
+  <span
+    class="titlebg"
+    class:active
+    class:bordered={bordered && !active}
+    bind:this={titleBg}
+    on:click={() => {
+      if (bordered) {
+        revealOrHide();
+      } else {
+        hide();
+      }
+    }}
+    style="width: {titleWidth + horizPadding * 2}px; left: {-horizPadding}px;
+    top: {-vertPadding}px; bottom: {-vertPadding}px"
+  />
+  <span class:table bind:this={title} on:click={revealOrHide}>
+    <slot name="title" />
+  </span>
+</span>
+
+<span
+  class="menubg"
+  class:active
+  class:fixed
+  on:click={hide}
+  bind:this={menu}
+  style="left: {menuLeft}px; top: {menuTop - MENU_OFFSET}px"
+>
+  <slot />
+</span>
+
+<svelte:window on:resize={handleResize} />
+
 <style lang="scss">
   span {
     display: inline-block;
@@ -152,40 +189,3 @@
     }
   }
 </style>
-
-{#if active}
-  <span class="shim" on:click={hide} />
-{/if}
-<span class="wrapper" class:table class:active>
-  <span
-    class="titlebg"
-    class:active
-    class:bordered={bordered && !active}
-    bind:this={titleBg}
-    on:click={() => {
-      if (bordered) {
-        revealOrHide();
-      } else {
-        hide();
-      }
-    }}
-    style="width: {titleWidth + horizPadding * 2}px; left: {-horizPadding}px;
-    top: {-vertPadding}px; bottom: {-vertPadding}px"
-  />
-  <span class:table bind:this={title} on:click={revealOrHide}>
-    <slot name="title" />
-  </span>
-</span>
-
-<span
-  class="menubg"
-  class:active
-  class:fixed
-  on:click={hide}
-  bind:this={menu}
-  style="left: {menuLeft}px; top: {menuTop - MENU_OFFSET}px"
->
-  <slot />
-</span>
-
-<svelte:window on:resize={handleResize} />

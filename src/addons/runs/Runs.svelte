@@ -12,6 +12,15 @@
   let drawer: Drawer;
 </script>
 
+<Drawer bind:this={drawer} {visible} anchor="right" on:open on:close>
+  <div slot="content">
+    <h2>{$_("addonRuns.scheduled")}</h2>
+    <Scheduled />
+    <h2>{$_("addonRuns.previous")}</h2>
+    <History />
+  </div>
+</Drawer>
+
 <style>
   [slot="content"] {
     width: 60ch;
@@ -23,12 +32,3 @@
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 </style>
-
-<Drawer bind:this={drawer} {visible} anchor="right" on:open on:close>
-  <div slot="content">
-    <h2>{$_("addonRuns.scheduled")}</h2>
-    <Scheduled />
-    <h2>{$_("addonRuns.previous")}</h2>
-    <History />
-  </div>
-</Drawer>

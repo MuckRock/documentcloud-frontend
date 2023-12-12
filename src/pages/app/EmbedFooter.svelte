@@ -5,6 +5,18 @@
   export let dialog = false;
 </script>
 
+<div class="footer" class:dialog>
+  <div class="background" />
+  <div class="paginator">
+    <Paginator />
+  </div>
+  {#if !dialog}
+    <div class="logo">
+      <Logo newPage={true} nopadding={true} homeLink={true} />
+    </div>
+  {/if}
+</div>
+
 <style lang="scss">
   .footer {
     position: sticky;
@@ -46,15 +58,3 @@
     }
   }
 </style>
-
-<div class="footer" class:dialog>
-  <div class="background" />
-  <div class="paginator">
-    <Paginator />
-  </div>
-  {#if !dialog}
-    <div class="logo">
-      <Logo newPage={true} nopadding={true} homeLink={true} />
-    </div>
-  {/if}
-</div>

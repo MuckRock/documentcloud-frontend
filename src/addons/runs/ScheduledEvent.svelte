@@ -40,6 +40,35 @@
   }
 </script>
 
+<a
+  href={url(event)}
+  title={$_("dialog.edit")}
+  class="addon-event"
+  id="event-{event.id}"
+  class:disabled
+>
+  <div class="info">
+    <p class="name">
+      {event.addon.name}
+    </p>
+    {#if target}
+      <p class="target">{target}</p>
+    {/if}
+    {#if disabled}
+      <p class="routine">{schedules[event.event]}</p>
+    {:else}
+      <p class="routine">
+        {$_("addonRuns.runsOn", {
+          values: { schedule: schedules[event.event] },
+        })}
+      </p>
+    {/if}
+  </div>
+  <div class="actions">
+    <Button action href={url(event)}><Pencil16 /></Button>
+  </div>
+</a>
+
 <style>
   .addon-event {
     display: flex;
@@ -78,32 +107,3 @@
     color: var(--darkgray);
   }
 </style>
-
-<a
-  href={url(event)}
-  title={$_("dialog.edit")}
-  class="addon-event"
-  id="event-{event.id}"
-  class:disabled
->
-  <div class="info">
-    <p class="name">
-      {event.addon.name}
-    </p>
-    {#if target}
-      <p class="target">{target}</p>
-    {/if}
-    {#if disabled}
-      <p class="routine">{schedules[event.event]}</p>
-    {:else}
-      <p class="routine">
-        {$_("addonRuns.runsOn", {
-          values: { schedule: schedules[event.event] },
-        })}
-      </p>
-    {/if}
-  </div>
-  <div class="actions">
-    <Button action href={url(event)}><Pencil16 /></Button>
-  </div>
-</a>

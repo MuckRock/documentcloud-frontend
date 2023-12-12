@@ -20,6 +20,26 @@
   $: alphabetizedProjects = sort($projects.projects);
 </script>
 
+<details class="projects">
+  <summary class="sticky">
+    <div class="titlesection">
+      <Title small={true}>{$_("projects.header")}</Title>
+      <Button on:click={newProject} small={true}
+        >{$_("projects.newProject")}</Button
+      >
+    </div>
+  </summary>
+  <div class="projectcontainer">
+    {#if alphabetizedProjects.length > 0}
+      {#each alphabetizedProjects as project}
+        <Project {project} />
+      {/each}
+    {:else}
+      <small>{$_("projects.createProject")}</small>
+    {/if}
+  </div>
+</details>
+
 <style>
   .projects {
     padding: 20px 25px;
@@ -51,23 +71,3 @@
     display: block;
   }
 </style>
-
-<details class="projects">
-  <summary class="sticky">
-    <div class="titlesection">
-      <Title small={true}>{$_("projects.header")}</Title>
-      <Button on:click={newProject} small={true}
-        >{$_("projects.newProject")}</Button
-      >
-    </div>
-  </summary>
-  <div class="projectcontainer">
-    {#if alphabetizedProjects.length > 0}
-      {#each alphabetizedProjects as project}
-        <Project {project} />
-      {/each}
-    {:else}
-      <small>{$_("projects.createProject")}</small>
-    {/if}
-  </div>
-</details>

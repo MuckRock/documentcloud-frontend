@@ -15,6 +15,55 @@
   }
 </script>
 
+<div class="container" out:fade|global>
+  <button class="dismiss" on:click={dismiss}>
+    <XCircle24 />
+  </button>
+  <h2>{$_("anonymous.title")}</h2>
+  <div class="img">
+    {@html documentSilhouetteSvg}
+  </div>
+  <div class="text">
+    <p>
+      {$_("anonymous.p1", { values: { n: $search?.results?.count ?? 0 } })}
+    </p>
+    <p>
+      {@html $_("anonymous.p2")}
+    </p>
+    <p>
+      {$_("anonymous.p3")}
+    </p>
+    <form
+      action="https://muckrock.us2.list-manage.com/subscribe/post?u=74862d74361490eca930f4384&amp;id=20aa4a931d&amp;f_id=00f4c0e1f0"
+      method="post"
+      id="mc-embedded-subscribe-form"
+      name="mc-embedded-subscribe-form"
+      class="validate"
+      target="_blank"
+      novalidate=""
+    >
+      <input
+        type="email"
+        name="EMAIL"
+        class="required email"
+        id="mce-EMAIL"
+        required=""
+        value=""
+        placeholder={$_("common.emailAddress")}
+      />
+      <input
+        type="hidden"
+        name="b_74862d74361490eca930f4384_20aa4a931d"
+        value=""
+      />
+      <Button>Subscribe</Button>
+    </form>
+    <p>
+      {@html $_("anonymous.p4")}
+    </p>
+  </div>
+</div>
+
 <style lang="scss">
   .container {
     margin: 1em 1.5em;
@@ -69,52 +118,3 @@
     cursor: pointer;
   }
 </style>
-
-<div class="container" out:fade|global>
-  <button class="dismiss" on:click={dismiss}>
-    <XCircle24 />
-  </button>
-  <h2>{$_("anonymous.title")}</h2>
-  <div class="img">
-    {@html documentSilhouetteSvg}
-  </div>
-  <div class="text">
-    <p>
-      {$_("anonymous.p1", { values: { n: $search?.results?.count ?? 0 } })}
-    </p>
-    <p>
-      {@html $_("anonymous.p2")}
-    </p>
-    <p>
-      {$_("anonymous.p3")}
-    </p>
-    <form
-      action="https://muckrock.us2.list-manage.com/subscribe/post?u=74862d74361490eca930f4384&amp;id=20aa4a931d&amp;f_id=00f4c0e1f0"
-      method="post"
-      id="mc-embedded-subscribe-form"
-      name="mc-embedded-subscribe-form"
-      class="validate"
-      target="_blank"
-      novalidate=""
-    >
-      <input
-        type="email"
-        name="EMAIL"
-        class="required email"
-        id="mce-EMAIL"
-        required=""
-        value=""
-        placeholder={$_("common.emailAddress")}
-      />
-      <input
-        type="hidden"
-        name="b_74862d74361490eca930f4384_20aa4a931d"
-        value=""
-      />
-      <Button>Subscribe</Button>
-    </form>
-    <p>
-      {@html $_("anonymous.p4")}
-    </p>
-  </div>
-</div>

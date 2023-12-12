@@ -33,6 +33,20 @@
   }
 </script>
 
+<span class="container">
+  <span class="content" on:click={trigger}>
+    <slot />
+  </span>
+  <input
+    multiple={multiselect}
+    bind:this={picker}
+    class="picker"
+    type="file"
+    on:change={handleFiles}
+    accept={documentTypes}
+  />
+</span>
+
 <style lang="scss">
   .container {
     display: inline-block;
@@ -47,17 +61,3 @@
     display: inline-block;
   }
 </style>
-
-<span class="container">
-  <span class="content" on:click={trigger}>
-    <slot />
-  </span>
-  <input
-    multiple={multiselect}
-    bind:this={picker}
-    class="picker"
-    type="file"
-    on:change={handleFiles}
-    accept={documentTypes}
-  />
-</span>

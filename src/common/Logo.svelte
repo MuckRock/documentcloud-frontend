@@ -14,9 +14,20 @@
   $: toUrl = homeLink
     ? getPath("default")
     : $orgsAndUsers.me != null
-    ? userUrl($orgsAndUsers.me)
-    : getPath("app");
+      ? userUrl($orgsAndUsers.me)
+      : getPath("app");
 </script>
+
+{#if $orgsAndUsers.me !== null}
+  <!-- TODO: some bug that requires this redundant if block -->
+  <Link {newPage} inlineBlock={true} {toUrl}>
+    <span class:nopadding>{@html dcLogo}</span>
+  </Link>
+{:else}
+  <Link {newPage} inlineBlock={true} {toUrl}>
+    <span class:nopadding>{@html dcLogo}</span>
+  </Link>
+{/if}
 
 <style>
   :global(.dclogo) {
@@ -42,14 +53,3 @@
     }
   }
 </style>
-
-{#if $orgsAndUsers.me !== null}
-  <!-- TODO: some bug that requires this redundant if block -->
-  <Link {newPage} inlineBlock={true} {toUrl}>
-    <span class:nopadding>{@html dcLogo}</span>
-  </Link>
-{:else}
-  <Link {newPage} inlineBlock={true} {toUrl}>
-    <span class:nopadding>{@html dcLogo}</span>
-  </Link>
-{/if}

@@ -50,24 +50,6 @@
   }
 </script>
 
-<style>
-  .active {
-    font-weight: bold;
-  }
-
-  .ib {
-    display: inline-block;
-  }
-
-  .color {
-    color: var(--primary) !important;
-  }
-
-  a {
-    cursor: pointer;
-  }
-</style>
-
 {#if !back}
   {#if newPage}
     <a
@@ -102,3 +84,21 @@
     <slot />
   </a>
 {/if}
+
+<style>
+  .active {
+    font-weight: bold;
+  }
+
+  .ib {
+    display: inline-block;
+  }
+
+  .color {
+    color: var(--primary) !important;
+  }
+
+  a {
+    cursor: pointer;
+  }
+</style>

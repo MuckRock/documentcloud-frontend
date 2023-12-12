@@ -4,12 +4,6 @@
   export let title = "Hashtag";
 </script>
 
-<style>
-  svg {
-    display: block;
-  }
-</style>
-
 <svg width={`${size * REM}px`} height={`${size * REM}px`} viewBox="0 0 16 16">
   <title>{title}</title>
   <path
@@ -17,3 +11,9 @@
     fill-rule="nonzero"
   />
 </svg>
+
+<style>
+  svg {
+    display: block;
+  }
+</style>

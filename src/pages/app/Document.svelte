@@ -62,186 +62,6 @@
   const TAG_KEY = process.env.TAG_KEY;
 </script>
 
-<style lang="scss">
-  h2 {
-    font-size: $normal;
-    padding-top: 10px;
-    padding-bottom: 6px;
-    word-break: break-word;
-    margin: 2px 0;
-    padding: 0;
-  }
-
-  h3 {
-    font-size: $small;
-    font-weight: normal;
-    color: $gray;
-    margin: 2px 0;
-    padding: 0;
-  }
-
-  .card {
-    display: table;
-
-    @media only screen and (max-width: 720px) {
-      margin-bottom: 15px;
-    }
-
-    .row {
-      display: table-row;
-
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
-  }
-
-  .check {
-    padding-top: 30px;
-    padding-left: 30px;
-  }
-
-  .updating {
-    color: $gray;
-    margin-bottom: 26px;
-  }
-
-  .valign {
-    vertical-align: middle;
-    display: inline-block;
-
-    &.marginleft {
-      margin-left: 8px;
-    }
-  }
-
-  .actions {
-    font-size: 14px;
-    padding-bottom: 10px;
-
-    span {
-      display: inline-block;
-      margin: 6px 0;
-
-      &.pending {
-        color: $gray;
-        font-style: italic;
-      }
-
-      &.error {
-        color: $caution;
-      }
-    }
-  }
-
-  .hinfo {
-    font-size: 13px;
-    font-weight: bold;
-    margin: 15px 0;
-
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .x {
-      @include buttonLike;
-
-      padding-right: 5px;
-      height: 14px;
-
-      :global(svg) {
-        height: 12px;
-        opacity: 0.7;
-      }
-    }
-
-    .padleft {
-      @include buttonLike;
-      padding-left: 5px;
-    }
-  }
-
-  .highlights {
-    color: #333;
-    font-size: 14px;
-    line-height: 18px;
-    display: table;
-    width: 100%;
-    padding-bottom: 27px;
-
-    .row {
-      display: table-row;
-
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
-
-    .page {
-      text-align: center;
-
-      :global(img) {
-        width: 40px;
-        height: 52px;
-        box-sizing: border-box;
-        border: solid 1px gainsboro;
-      }
-
-      .number {
-        font-weight: bold;
-        font-size: 11px;
-        padding-bottom: 15px;
-      }
-    }
-
-    .highlight {
-      width: 100%;
-      padding-top: 8px;
-      padding-left: 15px;
-      padding-bottom: 15px;
-
-      .passage {
-        &.highlighted {
-          background: $annotationBorder;
-        }
-      }
-    }
-  }
-
-  .note-highlights {
-    position: relative;
-  }
-
-  .smallinfo {
-    font-size: 12px;
-    color: $gray;
-    display: inline-block;
-    margin-right: 2px;
-    font-style: italic;
-  }
-
-  .pencil {
-    @include buttonLike;
-    vertical-align: middle;
-    height: 10px;
-  }
-
-  .description {
-    margin: 8px 0 -8px 0;
-
-    &.embeddescription {
-      margin-bottom: 20px;
-
-      :global(.content) {
-        max-height: 135px;
-      }
-    }
-  }
-</style>
-
 <div class="card">
   <div class="row">
     {#if $orgsAndUsers.loggedIn && !embed && !dialog}
@@ -459,3 +279,183 @@
 </div>
 
 <svelte:window on:keydown={handleKeydown} on:keyup={handleKeyup} />
+
+<style lang="scss">
+  h2 {
+    font-size: $normal;
+    padding-top: 10px;
+    padding-bottom: 6px;
+    word-break: break-word;
+    margin: 2px 0;
+    padding: 0;
+  }
+
+  h3 {
+    font-size: $small;
+    font-weight: normal;
+    color: $gray;
+    margin: 2px 0;
+    padding: 0;
+  }
+
+  .card {
+    display: table;
+
+    @media only screen and (max-width: 720px) {
+      margin-bottom: 15px;
+    }
+
+    .row {
+      display: table-row;
+
+      > * {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+  }
+
+  .check {
+    padding-top: 30px;
+    padding-left: 30px;
+  }
+
+  .updating {
+    color: $gray;
+    margin-bottom: 26px;
+  }
+
+  .valign {
+    vertical-align: middle;
+    display: inline-block;
+
+    &.marginleft {
+      margin-left: 8px;
+    }
+  }
+
+  .actions {
+    font-size: 14px;
+    padding-bottom: 10px;
+
+    span {
+      display: inline-block;
+      margin: 6px 0;
+
+      &.pending {
+        color: $gray;
+        font-style: italic;
+      }
+
+      &.error {
+        color: $caution;
+      }
+    }
+  }
+
+  .hinfo {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 15px 0;
+
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .x {
+      @include buttonLike;
+
+      padding-right: 5px;
+      height: 14px;
+
+      :global(svg) {
+        height: 12px;
+        opacity: 0.7;
+      }
+    }
+
+    .padleft {
+      @include buttonLike;
+      padding-left: 5px;
+    }
+  }
+
+  .highlights {
+    color: #333;
+    font-size: 14px;
+    line-height: 18px;
+    display: table;
+    width: 100%;
+    padding-bottom: 27px;
+
+    .row {
+      display: table-row;
+
+      > * {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+
+    .page {
+      text-align: center;
+
+      :global(img) {
+        width: 40px;
+        height: 52px;
+        box-sizing: border-box;
+        border: solid 1px gainsboro;
+      }
+
+      .number {
+        font-weight: bold;
+        font-size: 11px;
+        padding-bottom: 15px;
+      }
+    }
+
+    .highlight {
+      width: 100%;
+      padding-top: 8px;
+      padding-left: 15px;
+      padding-bottom: 15px;
+
+      .passage {
+        &.highlighted {
+          background: $annotationBorder;
+        }
+      }
+    }
+  }
+
+  .note-highlights {
+    position: relative;
+  }
+
+  .smallinfo {
+    font-size: 12px;
+    color: $gray;
+    display: inline-block;
+    margin-right: 2px;
+    font-style: italic;
+  }
+
+  .pencil {
+    @include buttonLike;
+    vertical-align: middle;
+    height: 10px;
+  }
+
+  .description {
+    margin: 8px 0 -8px 0;
+
+    &.embeddescription {
+      margin-bottom: 20px;
+
+      :global(.content) {
+        max-height: 135px;
+      }
+    }
+  }
+</style>

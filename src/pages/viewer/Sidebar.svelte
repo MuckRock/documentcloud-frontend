@@ -124,86 +124,6 @@
   }
 </script>
 
-<style lang="scss">
-  .sidebar {
-    position: absolute;
-    right: 0;
-    background: #f0f0f0;
-    box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.12);
-    overflow: auto;
-    z-index: var(--viewerSidebarZ, 7);
-    max-width: 100%;
-    -webkit-overflow-scrolling: touch;
-
-    &.white {
-      background: white;
-    }
-
-    &.disabled {
-      filter: brightness(90%);
-      user-select: none;
-
-      * {
-        pointer-events: none;
-      }
-    }
-
-    .updating {
-      color: var(--gray, rgba(0, 0, 0, 0.53));
-      font-size: 12px;
-      margin: 10px 0;
-    }
-
-    .actions {
-      font-size: 12px;
-      text-transform: uppercase;
-      font-weight: bold;
-      padding: 6px 20px;
-      background: #dadada;
-      background: linear-gradient(#ececec, #dadada);
-      border-top: solid 1px #ccc;
-      border-bottom: solid 1px #ccc;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.12);
-      text-shadow: 0 1px 0 #ffffff5c;
-    }
-
-    .title {
-      padding: 16px 20px 16px 20px;
-      background: white;
-
-      h2 {
-        font-size: 16px;
-      }
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid #ccc;
-    }
-
-    $small: 12px;
-
-    a {
-      font-size: $small;
-      color: var(--viewerLink, #004276);
-    }
-
-    small {
-      font-size: $small;
-
-      p {
-        margin: 10px 0;
-      }
-    }
-  }
-
-  .inlineheader {
-    color: black;
-    display: inline-block;
-    vertical-align: middle;
-  }
-</style>
-
 <div
   class="sidebar"
   class:white={!signedIn}
@@ -309,3 +229,83 @@
     {/if}
   {/if}
 </div>
+
+<style lang="scss">
+  .sidebar {
+    position: absolute;
+    right: 0;
+    background: #f0f0f0;
+    box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.12);
+    overflow: auto;
+    z-index: var(--viewerSidebarZ, 7);
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+
+    &.white {
+      background: white;
+    }
+
+    &.disabled {
+      filter: brightness(90%);
+      user-select: none;
+
+      * {
+        pointer-events: none;
+      }
+    }
+
+    .updating {
+      color: var(--gray, rgba(0, 0, 0, 0.53));
+      font-size: 12px;
+      margin: 10px 0;
+    }
+
+    .actions {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: bold;
+      padding: 6px 20px;
+      background: #dadada;
+      background: linear-gradient(#ececec, #dadada);
+      border-top: solid 1px #ccc;
+      border-bottom: solid 1px #ccc;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.12);
+      text-shadow: 0 1px 0 #ffffff5c;
+    }
+
+    .title {
+      padding: 16px 20px 16px 20px;
+      background: white;
+
+      h2 {
+        font-size: 16px;
+      }
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    $small: 12px;
+
+    a {
+      font-size: $small;
+      color: var(--viewerLink, #004276);
+    }
+
+    small {
+      font-size: $small;
+
+      p {
+        margin: 10px 0;
+      }
+    }
+  }
+
+  .inlineheader {
+    color: black;
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>

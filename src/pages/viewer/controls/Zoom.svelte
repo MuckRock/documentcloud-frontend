@@ -72,6 +72,34 @@
   }
 </script>
 
+<span class="zoom" class:disabled={$doc.mode !== "image"}>
+  <button
+    class="icon plausible-event-name=viewer-zoom plausible-event-zoom=zoom-in"
+    on:click={zoomIn}
+  >
+    {@html plusSvg}
+  </button>
+  <div class="separator" />
+  <button
+    class="icon plausible-event-name=viewer-zoom plausible-event-zoom=zoom-out"
+    on:click={zoomOut}
+  >
+    {@html minusSvg}
+  </button>
+
+  <select bind:this={select} on:blur={handleChange}>
+    <option value="default">{($doc.viewerScale * 100).toFixed()}%</option>
+    <option disabled>---</option>
+    <option value="width">{$_("zoom.fitWidth")}</option>
+    <option value="height">{$_("zoom.fitHeight")}</option>
+    <option value="50">50%</option>
+    <option value="100">100%</option>
+    <option value="150">150%</option>
+    <option value="200">200%</option>
+    <option value="400">400%</option>
+  </select>
+</span>
+
 <style lang="scss">
   .zoom {
     vertical-align: middle;
@@ -105,31 +133,3 @@
     border: none;
   }
 </style>
-
-<span class="zoom" class:disabled={$doc.mode !== "image"}>
-  <button
-    class="icon plausible-event-name=viewer-zoom plausible-event-zoom=zoom-in"
-    on:click={zoomIn}
-  >
-    {@html plusSvg}
-  </button>
-  <div class="separator" />
-  <button
-    class="icon plausible-event-name=viewer-zoom plausible-event-zoom=zoom-out"
-    on:click={zoomOut}
-  >
-    {@html minusSvg}
-  </button>
-
-  <select bind:this={select} on:blur={handleChange}>
-    <option value="default">{($doc.viewerScale * 100).toFixed()}%</option>
-    <option disabled>---</option>
-    <option value="width">{$_("zoom.fitWidth")}</option>
-    <option value="height">{$_("zoom.fitHeight")}</option>
-    <option value="50">50%</option>
-    <option value="100">100%</option>
-    <option value="150">150%</option>
-    <option value="200">200%</option>
-    <option value="400">400%</option>
-  </select>
-</span>

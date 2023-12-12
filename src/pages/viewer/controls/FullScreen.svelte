@@ -5,6 +5,18 @@
   import fullScreenSvg from "@/assets/fullscreen.svg?raw";
 </script>
 
+{#if $viewer.loaded}
+  <a target="_blank" href={$viewer.document.canonicalUrl}>
+    <span class="fullscreen">
+      {@html fullScreenSvg}
+    </span>
+  </a>
+{:else}
+  <span class="fullscreen">
+    {@html fullScreenSvg}
+  </span>
+{/if}
+
 <style lang="scss">
   .fullscreen {
     @include buttonLike;
@@ -19,15 +31,3 @@
     }
   }
 </style>
-
-{#if $viewer.loaded}
-  <a target="_blank" href={$viewer.document.canonicalUrl}>
-    <span class="fullscreen">
-      {@html fullScreenSvg}
-    </span>
-  </a>
-{:else}
-  <span class="fullscreen">
-    {@html fullScreenSvg}
-  </span>
-{/if}

@@ -15,32 +15,6 @@
   export let handleChange: (org: Org) => void = () => {};
 </script>
 
-<style>
-  .container {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  .orgAvatar {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: block;
-  }
-  .orgIcon {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .orgSelectLabel {
-    font-size: 0.875em;
-    color: var(--gray);
-    padding: 0 0.5rem;
-  }
-  .picker {
-    padding: 0 0.5rem;
-  }
-</style>
-
 <div class="container">
   <p class="orgSelectLabel">Switch organization</p>
   <div class="picker">
@@ -74,3 +48,29 @@
     </Dropdown>
   </div>
 </div>
+
+<style>
+  .container {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .orgAvatar {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: block;
+  }
+  .orgIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .orgSelectLabel {
+    font-size: 0.875em;
+    color: var(--gray);
+    padding: 0 0.5rem;
+  }
+  .picker {
+    padding: 0 0.5rem;
+  }
+</style>

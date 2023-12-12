@@ -2,6 +2,12 @@
   export let label: string;
 </script>
 
+<span class="title">
+  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
+  <span class="label">{label}</span>
+  <span class="dropper">▼</span>
+</span>
+
 <style>
   .title {
     display: flex;
@@ -23,9 +29,3 @@
     opacity: 0.5;
   }
 </style>
-
-<span class="title">
-  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
-  <span class="label">{label}</span>
-  <span class="dropper">▼</span>
-</span>

@@ -5,20 +5,6 @@
   export let useCount: number;
 </script>
 
-<style>
-  .container {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-  .icon {
-    fill: var(--primary, #4294f0);
-  }
-  .icon svg {
-    display: block;
-  }
-</style>
-
 <div class="container" title={useCount.toString()}>
   <span class="icon">
     <svg width="18px" height="16px" viewBox="0 0 18 16">
@@ -33,3 +19,17 @@
     {nFormatter(useCount, 1)}
   </span>
 </div>
+
+<style>
+  .container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .icon {
+    fill: var(--primary, #4294f0);
+  }
+  .icon svg {
+    display: block;
+  }
+</style>

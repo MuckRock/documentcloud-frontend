@@ -4,6 +4,14 @@
   export let label: string;
 </script>
 
+<div
+  class="badge"
+  style="--badge-color: {badgeColor}; --label-color: {labelColor};"
+>
+  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
+  <span class="label">{label}</span>
+</div>
+
 <style>
   .badge {
     display: inline-flex;
@@ -25,11 +33,3 @@
     opacity: 0.9;
   }
 </style>
-
-<div
-  class="badge"
-  style="--badge-color: {badgeColor}; --label-color: {labelColor};"
->
-  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
-  <span class="label">{label}</span>
-</div>

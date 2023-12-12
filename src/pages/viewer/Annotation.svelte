@@ -97,10 +97,10 @@
     y1 == null || y2 == null
       ? "none"
       : y1 < ANNOTATION_PADDING
-      ? "down"
-      : y2 > $doc.docHeight - ANNOTATION_PADDING
-      ? "up"
-      : "none";
+        ? "down"
+        : y2 > $doc.docHeight - ANNOTATION_PADDING
+          ? "up"
+          : "none";
 
   $: noteUrl = page.document.noteHashUrl(annotation);
 
@@ -168,6 +168,217 @@
     }
   }
 </script>
+
+<div
+  class="annotation"
+  class:grayed
+  class:behind
+  class:pagenote={pageNote}
+  class:up={shift == "up"}
+  class:public={access == "public"}
+  class:organization={access == "organization"}
+  class:private={access == "private"}
+  class:disabled={$loading}
+  on:mousedown|stopPropagation
+  style={shift == "up" || pageNote
+    ? ""
+    : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}
+>
+  <header
+    bind:this={annotationElem}
+    bind:offsetHeight={headerHeight}
+    class:showimage={showImageOnPageNote}
+    class:hidden={shift == "down"}
+  >
+    {#if !pageNote}
+      <div class="closeflag">
+        <button class="closer buttonLike" on:click={cancelAnnotation}>
+          {@html closeInlineSvg}
+        </button>
+      </div>
+    {/if}
+    <Loader active={$loading} transparent={true}>
+      <!-- Title -->
+      {#if editMode}
+        <input
+          maxlength={noteTitleLimit}
+          bind:this={titleInput}
+          placeholder={$_("annotation.title")}
+          bind:value={title}
+        />
+      {:else}
+        <h3>
+          {#if titlePassages}
+            {#each titlePassages as passage}
+              <h4 class="highlight">
+                {#each passage as term}
+                  {#if term.type == "highlight"}
+                    <span class="passage highlighted">{term.text}</span>
+                  {:else}
+                    <span class="passage">{term.text}</span>
+                  {/if}
+                {/each}
+              </h4>
+            {/each}
+          {:else}
+            {annotation.title}
+          {/if}
+          {#if !compact}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <button class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </button>
+            {/if}
+          {/if}
+        </h3>
+      {/if}
+    </Loader>
+  </header>
+  {#if shift == "down"}
+    <header />
+  {/if}
+  {#if !pageNote || showImageOnPageNote}
+    <div class="excerpt">
+      <div
+        class="body"
+        style={showImageOnPageNote
+          ? `height: 0; padding-top: ${annotation.height * aspect * 100}%`
+          : ""}
+      >
+        <div
+          style="margin-top: {-annotation.y1 * aspect * 100 -
+            (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%"
+        >
+          <ProgressiveImage
+            alt="Page {page.pageNumber + 1} of {page.document.title}"
+            {width}
+            aspect={page.aspect}
+            {page}
+          />
+          <!-- Faded flanks -->
+          <div
+            class="faded left"
+            class:nobottom={showImageOnPageNote}
+            style="left: 0; width: {annotation.x1 * 100}%"
+          />
+          <div
+            class="faded right"
+            class:nobottom={showImageOnPageNote}
+            style="left: {annotation.x2 * 100}%; right: 0"
+          />
+        </div>
+      </div>
+    </div>
+  {/if}
+  <footer
+    bind:offsetHeight={footerHeight}
+    bind:offsetWidth={footerWidth}
+    class:showimage={showImageOnPageNote}
+    class:capsize={pageNote && !editMode}
+  >
+    {#if shift == "down"}
+      <div class="closeflag">
+        <button class="closer" on:click={cancelAnnotation}>
+          {@html closeInlineSvg}
+        </button>
+      </div>
+      <Loader active={$loading} transparent={true}>
+        <!-- Title -->
+        {#if editMode}
+          <input
+            maxlength={noteTitleLimit}
+            bind:this={titleInput}
+            placeholder={$_("annotation.title")}
+            bind:value={title}
+            class="padded"
+          />
+        {:else}
+          <h3>
+            {annotation.title}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <button class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </button>
+            {/if}
+          </h3>
+        {/if}
+      </Loader>
+    {/if}
+
+    <!-- Description/Content -->
+    {#if editMode}
+      <HtmlEditor
+        maxlength={noteContentLimit}
+        placeholder={$_("annotation.description")}
+        bind:value={description}
+      />
+    {:else if hlContent}
+      <span class="highlight">
+        <HtmlField content={hlContent} />
+      </span>
+    {:else}
+      <HtmlField content={annotation.content} />
+    {/if}
+    <!-- Footer content -->
+    {#if editMode}
+      <AccessToggle
+        stacked={footerWidth < 350}
+        bind:access
+        editAccess={page.document.editAccess}
+      />
+      <div class="buttonpadded">
+        <Button
+          on:click={createOrUpdateAnnotation}
+          disabledReason={titleValid
+            ? changeValid
+              ? null
+              : $_("annotation.unchanged")
+            : $_("annotation.noTitle")}
+        >
+          {#if editOverride}{$_("dialog.update")}{:else}{$_("dialog.save")}{/if}
+        </Button>
+        {#if editOverride}
+          <Button danger={true} on:click={handleDelete}
+            >{$_("dialog.delete")}</Button
+          >
+        {/if}
+        <Button secondary={true} on:click={handleCancel}
+          >{$_("dialog.cancel")}</Button
+        >
+      </div>
+    {:else if !compact}
+      <div class="twopanel">
+        <div class="cell leftalign">
+          {#if access == "organization"}
+            {$_("annotation.org")}
+          {:else if access == "private"}
+            {$_("annotation.private")}
+          {/if}
+        </div>
+        <div class="cell rightalign">
+          {#if annotation.organization == null}
+            {$_("annotation.by", { values: { name: annotation.username } })}
+          {:else}
+            {$_("annotation.byOrg", {
+              values: {
+                name: annotation.username,
+                org: annotation.organization,
+              },
+            })}
+          {/if}
+        </div>
+      </div>
+    {/if}
+  </footer>
+</div>
+
+<svelte:window on:keydown={handleKeyDown} />
 
 <style lang="scss">
   .annotation {
@@ -542,214 +753,3 @@
     }
   }
 </style>
-
-<div
-  class="annotation"
-  class:grayed
-  class:behind
-  class:pagenote={pageNote}
-  class:up={shift == "up"}
-  class:public={access == "public"}
-  class:organization={access == "organization"}
-  class:private={access == "private"}
-  class:disabled={$loading}
-  on:mousedown|stopPropagation
-  style={shift == "up" || pageNote
-    ? ""
-    : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}
->
-  <header
-    bind:this={annotationElem}
-    bind:offsetHeight={headerHeight}
-    class:showimage={showImageOnPageNote}
-    class:hidden={shift == "down"}
-  >
-    {#if !pageNote}
-      <div class="closeflag">
-        <button class="closer buttonLike" on:click={cancelAnnotation}>
-          {@html closeInlineSvg}
-        </button>
-      </div>
-    {/if}
-    <Loader active={$loading} transparent={true}>
-      <!-- Title -->
-      {#if editMode}
-        <input
-          maxlength={noteTitleLimit}
-          bind:this={titleInput}
-          placeholder={$_("annotation.title")}
-          bind:value={title}
-        />
-      {:else}
-        <h3>
-          {#if titlePassages}
-            {#each titlePassages as passage}
-              <h4 class="highlight">
-                {#each passage as term}
-                  {#if term.type == "highlight"}
-                    <span class="passage highlighted">{term.text}</span>
-                  {:else}
-                    <span class="passage">{term.text}</span>
-                  {/if}
-                {/each}
-              </h4>
-            {/each}
-          {:else}
-            {annotation.title}
-          {/if}
-          {#if !compact}
-            <a class="link" href={noteUrl}>
-              {@html simpleLinkSvg}
-            </a>
-            {#if page.document.editAccess}
-              <button class="pencil" on:click={() => (editOverride = true)}>
-                {@html pencilSvg}
-              </button>
-            {/if}
-          {/if}
-        </h3>
-      {/if}
-    </Loader>
-  </header>
-  {#if shift == "down"}
-    <header />
-  {/if}
-  {#if !pageNote || showImageOnPageNote}
-    <div class="excerpt">
-      <div
-        class="body"
-        style={showImageOnPageNote
-          ? `height: 0; padding-top: ${annotation.height * aspect * 100}%`
-          : ""}
-      >
-        <div
-          style="margin-top: {-annotation.y1 * aspect * 100 -
-            (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%"
-        >
-          <ProgressiveImage
-            alt="Page {page.pageNumber + 1} of {page.document.title}"
-            {width}
-            aspect={page.aspect}
-            {page}
-          />
-          <!-- Faded flanks -->
-          <div
-            class="faded left"
-            class:nobottom={showImageOnPageNote}
-            style="left: 0; width: {annotation.x1 * 100}%"
-          />
-          <div
-            class="faded right"
-            class:nobottom={showImageOnPageNote}
-            style="left: {annotation.x2 * 100}%; right: 0"
-          />
-        </div>
-      </div>
-    </div>
-  {/if}
-  <footer
-    bind:offsetHeight={footerHeight}
-    bind:offsetWidth={footerWidth}
-    class:showimage={showImageOnPageNote}
-    class:capsize={pageNote && !editMode}
-  >
-    {#if shift == "down"}
-      <div class="closeflag">
-        <button class="closer" on:click={cancelAnnotation}>
-          {@html closeInlineSvg}
-        </button>
-      </div>
-      <Loader active={$loading} transparent={true}>
-        <!-- Title -->
-        {#if editMode}
-          <input
-            maxlength={noteTitleLimit}
-            bind:this={titleInput}
-            placeholder={$_("annotation.title")}
-            bind:value={title}
-            class="padded"
-          />
-        {:else}
-          <h3>
-            {annotation.title}
-            <a class="link" href={noteUrl}>
-              {@html simpleLinkSvg}
-            </a>
-            {#if page.document.editAccess}
-              <button class="pencil" on:click={() => (editOverride = true)}>
-                {@html pencilSvg}
-              </button>
-            {/if}
-          </h3>
-        {/if}
-      </Loader>
-    {/if}
-
-    <!-- Description/Content -->
-    {#if editMode}
-      <HtmlEditor
-        maxlength={noteContentLimit}
-        placeholder={$_("annotation.description")}
-        bind:value={description}
-      />
-    {:else if hlContent}
-      <span class="highlight">
-        <HtmlField content={hlContent} />
-      </span>
-    {:else}
-      <HtmlField content={annotation.content} />
-    {/if}
-    <!-- Footer content -->
-    {#if editMode}
-      <AccessToggle
-        stacked={footerWidth < 350}
-        bind:access
-        editAccess={page.document.editAccess}
-      />
-      <div class="buttonpadded">
-        <Button
-          on:click={createOrUpdateAnnotation}
-          disabledReason={titleValid
-            ? changeValid
-              ? null
-              : $_("annotation.unchanged")
-            : $_("annotation.noTitle")}
-        >
-          {#if editOverride}{$_("dialog.update")}{:else}{$_("dialog.save")}{/if}
-        </Button>
-        {#if editOverride}
-          <Button danger={true} on:click={handleDelete}
-            >{$_("dialog.delete")}</Button
-          >
-        {/if}
-        <Button secondary={true} on:click={handleCancel}
-          >{$_("dialog.cancel")}</Button
-        >
-      </div>
-    {:else if !compact}
-      <div class="twopanel">
-        <div class="cell leftalign">
-          {#if access == "organization"}
-            {$_("annotation.org")}
-          {:else if access == "private"}
-            {$_("annotation.private")}
-          {/if}
-        </div>
-        <div class="cell rightalign">
-          {#if annotation.organization == null}
-            {$_("annotation.by", { values: { name: annotation.username } })}
-          {:else}
-            {$_("annotation.byOrg", {
-              values: {
-                name: annotation.username,
-                org: annotation.organization,
-              },
-            })}
-          {/if}
-        </div>
-      </div>
-    {/if}
-  </footer>
-</div>
-
-<svelte:window on:keydown={handleKeyDown} />

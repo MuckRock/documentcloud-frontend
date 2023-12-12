@@ -24,6 +24,79 @@
   };
 </script>
 
+{#if sectionOrNote.type == "section"}
+  <!-- Show section -->
+  {#if sectionOrNote.children.length > 0}
+    <details class="dc" open>
+      <summary>
+        <a
+          href={pageUrl(sectionOrNote.section.page)}
+          class="section"
+          on:click={() => restorePosition(sectionOrNote.section.page)}
+        >
+          <NoWhitespace>
+            <span class="title">{sectionOrNote.section.title}</span>
+            <span>&nbsp;</span>
+            <span class="page"
+              >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.section.page +
+                1}</span
+            >
+          </NoWhitespace>
+        </a>
+      </summary>
+      <ul class="children">
+        {#each sectionOrNote.children as child}
+          <li>
+            <NoWhitespace>
+              <span class="circle">
+                {@html smallCircleSvg}
+              </span>
+              <span>&nbsp;</span>
+              <svelte:self sectionOrNote={child} />
+            </NoWhitespace>
+          </li>
+        {/each}
+      </ul>
+    </details>
+  {:else}
+    <a
+      href={pageUrl(sectionOrNote.section.page)}
+      on:click={() => restorePosition(sectionOrNote.section.page)}
+    >
+      <div class="section">
+        <NoWhitespace>
+          <span class="title">{sectionOrNote.section.title}</span>
+          <span>&nbsp;</span>
+          <span class="page"
+            >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.section.page +
+              1}</span
+          >
+        </NoWhitespace>
+      </div>
+    </a>
+  {/if}
+{:else}
+  <!-- Show note -->
+  <a
+    href={noteUrl(sectionOrNote.note)}
+    on:click={() => showAnnotation(sectionOrNote.note, true)}
+  >
+    <div
+      class="note"
+      class:hover={sectionOrNote.note == $layout.hoveredNote}
+      use:hoveredNote={sectionOrNote.note}
+    >
+      <NoWhitespace>
+        <span class="title">{sectionOrNote.note.title}</span>
+        <span>&nbsp;</span>
+        <span class="page"
+          >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.note.page + 1}</span
+        >
+      </NoWhitespace>
+    </div>
+  </a>
+{/if}
+
 <style lang="scss">
   .page {
     color: #666;
@@ -97,76 +170,3 @@
     }
   }
 </style>
-
-{#if sectionOrNote.type == "section"}
-  <!-- Show section -->
-  {#if sectionOrNote.children.length > 0}
-    <details class="dc" open>
-      <summary>
-        <a
-          href={pageUrl(sectionOrNote.section.page)}
-          class="section"
-          on:click={() => restorePosition(sectionOrNote.section.page)}
-        >
-          <NoWhitespace>
-            <span class="title">{sectionOrNote.section.title}</span>
-            <span>&nbsp;</span>
-            <span class="page"
-              >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.section.page +
-                1}</span
-            >
-          </NoWhitespace>
-        </a>
-      </summary>
-      <ul class="children">
-        {#each sectionOrNote.children as child}
-          <li>
-            <NoWhitespace>
-              <span class="circle">
-                {@html smallCircleSvg}
-              </span>
-              <span>&nbsp;</span>
-              <svelte:self sectionOrNote={child} />
-            </NoWhitespace>
-          </li>
-        {/each}
-      </ul>
-    </details>
-  {:else}
-    <a
-      href={pageUrl(sectionOrNote.section.page)}
-      on:click={() => restorePosition(sectionOrNote.section.page)}
-    >
-      <div class="section">
-        <NoWhitespace>
-          <span class="title">{sectionOrNote.section.title}</span>
-          <span>&nbsp;</span>
-          <span class="page"
-            >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.section.page +
-              1}</span
-          >
-        </NoWhitespace>
-      </div>
-    </a>
-  {/if}
-{:else}
-  <!-- Show note -->
-  <a
-    href={noteUrl(sectionOrNote.note)}
-    on:click={() => showAnnotation(sectionOrNote.note, true)}
-  >
-    <div
-      class="note"
-      class:hover={sectionOrNote.note == $layout.hoveredNote}
-      use:hoveredNote={sectionOrNote.note}
-    >
-      <NoWhitespace>
-        <span class="title">{sectionOrNote.note.title}</span>
-        <span>&nbsp;</span>
-        <span class="page"
-          >{$_("document.pageAbbrev")}&nbsp;{sectionOrNote.note.page + 1}</span
-        >
-      </NoWhitespace>
-    </div>
-  </a>
-{/if}

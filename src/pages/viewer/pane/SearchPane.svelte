@@ -3,12 +3,6 @@
   import { layout } from "@/viewer/layout.js";
 </script>
 
-<style>
-  .searchpane :global(em) {
-    color: var(--searchSpecial, #5a00ff);
-  }
-</style>
-
 {#if $layout.searchPages !== null}
   <div class="searchpane">
     <b>
@@ -24,3 +18,9 @@
     </div>
   </div>
 {/if}
+
+<style>
+  .searchpane :global(em) {
+    color: var(--searchSpecial, #5a00ff);
+  }
+</style>

@@ -35,6 +35,49 @@
   $: ranAt = new Date(run.created_at);
 </script>
 
+<div class="addon-run" id="run-{run.uuid}">
+  <div class="status">
+    {#if run.status === "success"}
+      <span class="success icon" title="Success"><CheckCircle24 /></span>
+    {:else if run.status === "failure"}
+      <span class="failure icon" title="Failure"><Alert24 /></span>
+    {:else if run.status === "queued"}
+      <span class="queued icon" title="Queued"><Hourglass24 /></span>
+    {:else if run.status === "in_progress"}
+      <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+    {:else}
+      <span class="unknown-status icon" title="Unknown Status"
+        ><Question24 /></span
+      >
+    {/if}
+  </div>
+  <div class="info">
+    <div class="row">
+      <div class="primary-info">
+        <p class="name">{run.addon.name}</p>
+        {#if run.file_url}<Button action href={run.file_url}
+            ><Paperclip16 />Download File</Button
+          >{/if}
+      </div>
+      <time
+        class="date"
+        datetime={ranAt.toISOString()}
+        title={ranAt.toISOString()}>{ranAt.toLocaleString()}</time
+      >
+    </div>
+    <div class="row">
+      {#if run.message}
+        <p class="message">{run.message}</p>
+      {/if}
+      {#if run.credits_spent}
+        <p class="price">
+          <Price value={run.credits_spent} />
+        </p>
+      {/if}
+    </div>
+  </div>
+</div>
+
 <style>
   @keyframes spin {
     0% {
@@ -113,46 +156,3 @@
     align-self: flex-end;
   }
 </style>
-
-<div class="addon-run" id="run-{run.uuid}">
-  <div class="status">
-    {#if run.status === "success"}
-      <span class="success icon" title="Success"><CheckCircle24 /></span>
-    {:else if run.status === "failure"}
-      <span class="failure icon" title="Failure"><Alert24 /></span>
-    {:else if run.status === "queued"}
-      <span class="queued icon" title="Queued"><Hourglass24 /></span>
-    {:else if run.status === "in_progress"}
-      <span class="in-progress icon" title="In Progress"><Sync24 /></span>
-    {:else}
-      <span class="unknown-status icon" title="Unknown Status"
-        ><Question24 /></span
-      >
-    {/if}
-  </div>
-  <div class="info">
-    <div class="row">
-      <div class="primary-info">
-        <p class="name">{run.addon.name}</p>
-        {#if run.file_url}<Button action href={run.file_url}
-            ><Paperclip16 />Download File</Button
-          >{/if}
-      </div>
-      <time
-        class="date"
-        datetime={ranAt.toISOString()}
-        title={ranAt.toISOString()}>{ranAt.toLocaleString()}</time
-      >
-    </div>
-    <div class="row">
-      {#if run.message}
-        <p class="message">{run.message}</p>
-      {/if}
-      {#if run.credits_spent}
-        <p class="price">
-          <Price value={run.credits_spent} />
-        </p>
-      {/if}
-    </div>
-  </div>
-</div>

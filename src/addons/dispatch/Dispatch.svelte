@@ -256,26 +256,6 @@
   }
 </script>
 
-<style>
-  [slot="content"] {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    padding: 1em;
-    max-width: 60ch;
-    transition: opacity 0.25s ease;
-  }
-
-  [slot="content"].loading {
-    opacity: 0;
-  }
-
-  .controls {
-    display: flex;
-    justify-content: space-between;
-  }
-</style>
-
 <Drawer
   anchor="right"
   bind:this={drawer}
@@ -344,3 +324,23 @@
     {/if}
   </div>
 </Drawer>
+
+<style>
+  [slot="content"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 1em;
+    max-width: 60ch;
+    transition: opacity 0.25s ease;
+  }
+
+  [slot="content"].loading {
+    opacity: 0;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>

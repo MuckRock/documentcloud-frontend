@@ -68,50 +68,6 @@
   }
 </script>
 
-<style lang="scss">
-  .dc-embed {
-    font-size: 10pt;
-    max-width: 600px;
-    background: rgb(244, 244, 244);
-    padding: 18px 20px;
-    box-sizing: border-box;
-    border: solid 1px gainsboro;
-    border-radius: $radius;
-
-    a {
-      color: #5a76a0;
-      text-decoration: underline;
-    }
-
-    :global(img) {
-      max-width: 100%;
-      height: auto;
-      margin: 0;
-      border: 1px solid #ccc;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      clear: both;
-    }
-
-    .dc-page {
-      font-size: 14px;
-      line-height: 18px;
-    }
-
-    .dc-embed-container {
-      position: relative;
-      line-height: 0;
-      margin: 10px 0;
-    }
-
-    .dc-embed-shim {
-      position: absolute;
-      background: rgba(0, 0, 0, 0.4);
-      cursor: pointer;
-    }
-  }
-</style>
-
 <svelte:head>
   {#if doc != null && canonicalPageUrl != "" && title != ""}
     <!-- Insert canonical URL -->
@@ -225,3 +181,47 @@
     </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .dc-embed {
+    font-size: 10pt;
+    max-width: 600px;
+    background: rgb(244, 244, 244);
+    padding: 18px 20px;
+    box-sizing: border-box;
+    border: solid 1px gainsboro;
+    border-radius: $radius;
+
+    a {
+      color: #5a76a0;
+      text-decoration: underline;
+    }
+
+    :global(img) {
+      max-width: 100%;
+      height: auto;
+      margin: 0;
+      border: 1px solid #ccc;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      clear: both;
+    }
+
+    .dc-page {
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .dc-embed-container {
+      position: relative;
+      line-height: 0;
+      margin: 10px 0;
+    }
+
+    .dc-embed-shim {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+  }
+</style>

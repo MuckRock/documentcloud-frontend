@@ -14,6 +14,6 @@ function makeLanguagePairs(codes, names) {
 export const languages = makeLanguagePairs(languageCodes, languageNames);
 
 const textractLanguageCodes = ["eng", "spa", "ita", "por", "fra", "deu"];
-export const textractLanguages = languages.filter((l) =>
-  textractLanguageCodes.indexOf(l[0]) != -1
+export const textractLanguages = languages.filter(
+  (l) => textractLanguageCodes.indexOf(l[0]) != -1,
 );

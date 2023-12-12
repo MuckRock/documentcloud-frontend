@@ -170,20 +170,20 @@
     appearanceOptions[optionIndex(SIDEBAR_OPTION)].selected == 1
       ? 0
       : appearanceOptions[optionIndex(SIDEBAR_OPTION)].selected == 2
-      ? 1
-      : null;
+        ? 1
+        : null;
   $: width =
     appearanceOptions[optionIndex(WIDTH_OPTION)].selected == 0
       ? null
       : Number.isFinite(appearanceOptions[optionIndex(WIDTH_OPTION)].selected)
-      ? appearanceOptions[optionIndex(WIDTH_OPTION)].selected
-      : null;
+        ? appearanceOptions[optionIndex(WIDTH_OPTION)].selected
+        : null;
   $: height =
     appearanceOptions[optionIndex(HEIGHT_OPTION)].selected == 0
       ? null
       : Number.isFinite(appearanceOptions[optionIndex(HEIGHT_OPTION)].selected)
-      ? appearanceOptions[optionIndex(HEIGHT_OPTION)].selected
-      : null;
+        ? appearanceOptions[optionIndex(HEIGHT_OPTION)].selected
+        : null;
   $: responsive =
     appearanceOptions[optionIndex(RESPONSIVE_OPTION)].selected == 1 ? 0 : 1;
   $: titleBehavior =

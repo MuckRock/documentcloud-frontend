@@ -58,6 +58,42 @@
   }
 </script>
 
+<div class="input" class:expand={$layout.searchExpanded}>
+  <div class="container">
+    <input
+      type="search"
+      bind:this={searchElem}
+      bind:value={query}
+      placeholder={$_("searchBar.search")}
+      disabled={$layout.searchPending}
+      on:keypress={(e) => {
+        if (e.key == "Enter") {
+          search();
+        }
+      }}
+    />
+  </div>
+  <button
+    class="searchicon buttonLike"
+    class:disabled={invalidQuery || $layout.searchPending}
+    on:click={search}
+  >
+    {@html searchIconSvg}
+  </button>
+  <button class="closeicon buttonLike" on:click={retract}>
+    {@html closeInlineSvg}
+  </button>
+</div>
+<button
+  class="icon buttonLike"
+  class:hide={$layout.searchExpanded}
+  on:click={expandSearch}
+>
+  {@html viewerSearchIconSvg}
+</button>
+
+<svelte:window on:keydown={handleKeyDown} />
+
 <style>
   .icon {
     margin: 0 12px;
@@ -126,39 +162,3 @@
     display: inherit;
   }
 </style>
-
-<div class="input" class:expand={$layout.searchExpanded}>
-  <div class="container">
-    <input
-      type="search"
-      bind:this={searchElem}
-      bind:value={query}
-      placeholder={$_("searchBar.search")}
-      disabled={$layout.searchPending}
-      on:keypress={(e) => {
-        if (e.key == "Enter") {
-          search();
-        }
-      }}
-    />
-  </div>
-  <button
-    class="searchicon buttonLike"
-    class:disabled={invalidQuery || $layout.searchPending}
-    on:click={search}
-  >
-    {@html searchIconSvg}
-  </button>
-  <button class="closeicon buttonLike" on:click={retract}>
-    {@html closeInlineSvg}
-  </button>
-</div>
-<button
-  class="icon buttonLike"
-  class:hide={$layout.searchExpanded}
-  on:click={expandSearch}
->
-  {@html viewerSearchIconSvg}
-</button>
-
-<svelte:window on:keydown={handleKeyDown} />

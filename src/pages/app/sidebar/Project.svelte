@@ -9,6 +9,20 @@
   export let project;
 </script>
 
+<Link toUrl={projectUrl(project)}>
+  <div class="project">
+    <span class="title">{project.title}</span>
+    {#if project.editAccess}
+      <button
+        class="edit"
+        on:click|stopPropagation|preventDefault={() => editProject(project)}
+      >
+        {@html pencilSvg}
+      </button>
+    {/if}
+  </div>
+</Link>
+
 <style>
   .project {
     padding: 11px 25px 11px 0;
@@ -47,17 +61,3 @@
     word-break: break-word;
   }
 </style>
-
-<Link toUrl={projectUrl(project)}>
-  <div class="project">
-    <span class="title">{project.title}</span>
-    {#if project.editAccess}
-      <button
-        class="edit"
-        on:click|stopPropagation|preventDefault={() => editProject(project)}
-      >
-        {@html pencilSvg}
-      </button>
-    {/if}
-  </div>
-</Link>

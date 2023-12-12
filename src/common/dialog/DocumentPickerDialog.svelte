@@ -13,12 +13,6 @@
   }
 </script>
 
-<style lang="scss">
-  .documents {
-    padding: 0 10px;
-  }
-</style>
-
 <div>
   <div class="mcontent">
     <div class="documents">
@@ -26,3 +20,9 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  .documents {
+    padding: 0 10px;
+  }
+</style>

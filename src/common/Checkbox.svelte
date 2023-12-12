@@ -18,6 +18,25 @@
   }
 </script>
 
+<label>
+  <input
+    type="checkbox"
+    bind:this={checkbox}
+    bind:checked
+    {disabled}
+    on:change={handleChange}
+  />
+  <span>
+    {#if checked}
+      {#if indeterminate}
+        <Dash16 />
+      {:else}
+        <Check16 />
+      {/if}
+    {/if}
+  </span>
+</label>
+
 <style>
   label {
     display: inline-block;
@@ -38,7 +57,9 @@
     display: inline-block;
     height: var(--checkboxSize, 22px);
     position: relative;
-    transition: box-shadow 0.2s ease, border 0.2s ease;
+    transition:
+      box-shadow 0.2s ease,
+      border 0.2s ease;
     user-select: none;
     width: var(--checkboxSize, 22px);
   }
@@ -86,22 +107,3 @@
     border: solid 1px #bbbbbb;
   }
 </style>
-
-<label>
-  <input
-    type="checkbox"
-    bind:this={checkbox}
-    bind:checked
-    {disabled}
-    on:change={handleChange}
-  />
-  <span>
-    {#if checked}
-      {#if indeterminate}
-        <Dash16 />
-      {:else}
-        <Check16 />
-      {/if}
-    {/if}
-  </span>
-</label>

@@ -171,49 +171,6 @@
   }
 </script>
 
-<style lang="scss">
-  .actions {
-    margin: 1.5em 0;
-  }
-
-  .files {
-    display: table;
-    width: 100%;
-  }
-
-  .droparea {
-    margin: 24px 0;
-  }
-
-  .sectionbreak {
-    border-bottom: solid 1px $gray;
-    margin: 2em 0 1.5em 0;
-  }
-
-  .padder {
-    margin: 1.5em 0 2.5em 0;
-  }
-
-  .vpadded {
-    margin: 2em 0 2.5em 0;
-  }
-
-  .bottompadded {
-    margin-bottom: 25px;
-  }
-
-  p {
-    &.subtitle {
-      color: $gray;
-    }
-
-    &.danger {
-      color: $caution;
-      font-size: 13px;
-    }
-  }
-</style>
-
 <div class="mcontent">
   {#if !uploadMode}
     <div>
@@ -368,3 +325,46 @@
     </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .actions {
+    margin: 1.5em 0;
+  }
+
+  .files {
+    display: table;
+    width: 100%;
+  }
+
+  .droparea {
+    margin: 24px 0;
+  }
+
+  .sectionbreak {
+    border-bottom: solid 1px $gray;
+    margin: 2em 0 1.5em 0;
+  }
+
+  .padder {
+    margin: 1.5em 0 2.5em 0;
+  }
+
+  .vpadded {
+    margin: 2em 0 2.5em 0;
+  }
+
+  .bottompadded {
+    margin-bottom: 25px;
+  }
+
+  p {
+    &.subtitle {
+      color: $gray;
+    }
+
+    &.danger {
+      color: $caution;
+      font-size: 13px;
+    }
+  }
+</style>

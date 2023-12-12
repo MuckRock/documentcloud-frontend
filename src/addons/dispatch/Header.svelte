@@ -34,6 +34,71 @@
   }
 </script>
 
+<header>
+  <div class="actions jB">
+    <Button action href="#add-ons">
+      <BackArrow size={0.8} />
+      {$_("addonDispatchDialog.backButton")}
+    </Button>
+    <div class="actions padRight">
+      <Button action on:click={onShare}
+        ><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button
+      >
+      <Button action href="https://github.com/{addon.repository}"
+        ><GitHubIcon fill="#4294f0" />
+        {$_("addonDispatchDialog.viewsource")}</Button
+      >
+    </div>
+  </div>
+
+  <div class="name">
+    <span class="pin"><AddOnPin {addon} size={1.25} /></span>
+    <h2>{addon.name}</h2>
+  </div>
+
+  <dl class="metadata">
+    <div class="author">
+      <dt>{$_("addonDispatchDialog.createdBy")}</dt>
+      <dd>{author}</dd>
+    </div>
+
+    <div class="categories">
+      {#if addon?.parameters?.categories}
+        <dt>{$_("addonDispatchDialog.categories")}</dt>
+        {#each addon.parameters.categories as category}
+          {#if category !== "premium"}
+            <dd>
+              <a class="category" href={`#add-ons?categories=${category}`}>
+                <slot>{category}</slot>
+              </a>
+            </dd>
+          {/if}
+        {/each}
+      {/if}
+    </div>
+    {#if isPremium}
+      <a href="#add-ons?premium=true" class="premium"
+        ><Badge
+          label="Premium"
+          badgeColor="var(--premium)"
+          labelColor="var(--darkgray)"
+          ><Credit slot="icon" color="var(--darkgray)" badge /></Badge
+        ></a
+      >
+    {/if}
+  </dl>
+
+  <div class="description">
+    {@html addon?.parameters?.description}
+  </div>
+
+  {#if addon.parameters.instructions}
+    <div class="instructions">
+      {@html addon.parameters.instructions}
+    </div>
+  {/if}
+</header>
+
 <style>
   header {
     display: flex;
@@ -129,68 +194,3 @@
     background: rgba(0, 0, 0, 0.1);
   }
 </style>
-
-<header>
-  <div class="actions jB">
-    <Button action href="#add-ons">
-      <BackArrow size={0.8} />
-      {$_("addonDispatchDialog.backButton")}
-    </Button>
-    <div class="actions padRight">
-      <Button action on:click={onShare}
-        ><ShareIcon fill="#4294f0" /> {$_("addonDispatchDialog.share")}</Button
-      >
-      <Button action href="https://github.com/{addon.repository}"
-        ><GitHubIcon fill="#4294f0" />
-        {$_("addonDispatchDialog.viewsource")}</Button
-      >
-    </div>
-  </div>
-
-  <div class="name">
-    <span class="pin"><AddOnPin {addon} size={1.25} /></span>
-    <h2>{addon.name}</h2>
-  </div>
-
-  <dl class="metadata">
-    <div class="author">
-      <dt>{$_("addonDispatchDialog.createdBy")}</dt>
-      <dd>{author}</dd>
-    </div>
-
-    <div class="categories">
-      {#if addon?.parameters?.categories}
-        <dt>{$_("addonDispatchDialog.categories")}</dt>
-        {#each addon.parameters.categories as category}
-          {#if category !== "premium"}
-            <dd>
-              <a class="category" href={`#add-ons?categories=${category}`}>
-                <slot>{category}</slot>
-              </a>
-            </dd>
-          {/if}
-        {/each}
-      {/if}
-    </div>
-    {#if isPremium}
-      <a href="#add-ons?premium=true" class="premium"
-        ><Badge
-          label="Premium"
-          badgeColor="var(--premium)"
-          labelColor="var(--darkgray)"
-          ><Credit slot="icon" color="var(--darkgray)" badge /></Badge
-        ></a
-      >
-    {/if}
-  </dl>
-
-  <div class="description">
-    {@html addon?.parameters?.description}
-  </div>
-
-  {#if addon.parameters.instructions}
-    <div class="instructions">
-      {@html addon.parameters.instructions}
-    </div>
-  {/if}
-</header>

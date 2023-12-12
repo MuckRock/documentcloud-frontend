@@ -38,31 +38,6 @@
   }
 </script>
 
-<style>
-  .small {
-    font-size: smaller;
-  }
-  .middle {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  p :global(a) {
-    font-weight: bold;
-    text-decoration: underline;
-  }
-
-  select {
-    border: none;
-    border-bottom: solid 1px #333;
-    border-radius: 0;
-  }
-</style>
-
 <div class="option">
   <Select
     name="document-language"
@@ -111,3 +86,28 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .small {
+    font-size: smaller;
+  }
+  .middle {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  p :global(a) {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  select {
+    border: none;
+    border-bottom: solid 1px #333;
+    border-radius: 0;
+  }
+</style>

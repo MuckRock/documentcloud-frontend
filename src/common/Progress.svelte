@@ -61,6 +61,21 @@
   )}%`;
 </script>
 
+<div class="container">
+  {#if !isNull}
+    <div class="bar" class:initializing class:compact class:failure>
+      <div
+        class="inner"
+        class:complete
+        style="width: {$smoothProgress * 100}%"
+      />
+    </div>
+    {#if !compact}
+      <div class="text" class:failure>{progressPercent}</div>
+    {/if}
+  {/if}
+</div>
+
 <style lang="scss">
   .container {
     width: 100%;
@@ -146,18 +161,3 @@
     }
   }
 </style>
-
-<div class="container">
-  {#if !isNull}
-    <div class="bar" class:initializing class:compact class:failure>
-      <div
-        class="inner"
-        class:complete
-        style="width: {$smoothProgress * 100}%"
-      />
-    </div>
-    {#if !compact}
-      <div class="text" class:failure>{progressPercent}</div>
-    {/if}
-  {/if}
-</div>

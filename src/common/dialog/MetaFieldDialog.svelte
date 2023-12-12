@@ -54,12 +54,6 @@
   });
 </script>
 
-<style lang="scss">
-  input {
-    width: 100%;
-  }
-</style>
-
 <div>
   <div class="mcontent">
     <h1>
@@ -103,3 +97,9 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  input {
+    width: 100%;
+  }
+</style>

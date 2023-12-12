@@ -51,30 +51,6 @@
   let listOrgsPromise = listUserOrgs(user);
 </script>
 
-<style>
-  .orgAvatar {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: block;
-  }
-  .orgIcon {
-    height: 1.5rem;
-    width: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .helpText {
-    width: 100%;
-    font-size: 0.875em;
-    color: var(--gray);
-    margin: 0;
-  }
-  .medium-width {
-    min-width: 20rem;
-  }
-</style>
-
 {#await getOrgPromise}
   <Dropdown id="organization">
     <MenuTitle slot="title" label="Loading…">
@@ -173,3 +149,27 @@
     </Dropdown>
   {/if}
 {/await}
+
+<style>
+  .orgAvatar {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: block;
+  }
+  .orgIcon {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .helpText {
+    width: 100%;
+    font-size: 0.875em;
+    color: var(--gray);
+    margin: 0;
+  }
+  .medium-width {
+    min-width: 20rem;
+  }
+</style>

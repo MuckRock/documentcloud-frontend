@@ -64,6 +64,52 @@
   });
 </script>
 
+{#if sizeNeeded}
+  <div
+    bind:this={sizer}
+    class="selectabletext"
+    style="user-select: none; overflow:visible; pointer-events: none;"
+  />
+{/if}
+<span
+  bind:this={span}
+  class="selectabletext {direction}"
+  class:resizing={isResizing && !sizeNeeded}
+  style="
+    left:{left * 100}%;
+    top:{top * 100}%;
+    {sizeNeeded
+    ? `width: ${width * 100}%; height:
+    ${height * 100}%;`
+    : ''}
+    transform: {transform}{!sizeNeeded && direction == 'right'
+    ? ` translate(${-pageWidth / scaleX}px,0)`
+    : ''};
+    {!sizeNeeded ? `padding-bottom: ${pageHeight / scaleY}px;` : ''}
+    {!sizeNeeded && direction == 'left'
+    ? `padding-right: ${pageWidth / scaleX}px;`
+    : ''}
+    {!sizeNeeded && direction == 'right'
+    ? `padding-left: ${pageWidth / scaleX}px;`
+    : ''}
+    "
+  >{word}<span style="font-size: 0"
+    >{!sizeNeeded && appendSpace ? " " : ""}</span
+  ></span
+>
+{#if highlight && exactWidth != null && exactHeight != null}
+  <span
+    class="highlight"
+    class:resizing={isResizing && !sizeNeeded}
+    style="
+    left:calc({left * 100}% - {highlightPaddingX * scale}px);
+    top:calc({top * 100}% - {highlightPaddingY * scale}px);
+    width:{(exactWidth + highlightPaddingX * 2) *
+      scale}px;height:{(exactHeight + highlightPaddingY * 2) * scale}px;
+    "
+  />
+{/if}
+
 <style lang="scss">
   .selectabletext {
     position: absolute;
@@ -97,53 +143,3 @@
     display: none;
   }
 </style>
-
-{#if sizeNeeded}
-  <div
-    bind:this={sizer}
-    class="selectabletext"
-    style="user-select: none; overflow:visible; pointer-events: none;"
-  />
-{/if}
-<span
-  bind:this={span}
-  class="selectabletext {direction}"
-  class:resizing={isResizing && !sizeNeeded}
-  style="
-    left:{left * 100}%;
-    top:{top * 100}%;
-    {sizeNeeded
-    ? `width: ${width * 100}%; height:
-    ${height * 100}%;`
-    : ''}
-    transform: {transform}{!sizeNeeded && direction == 'right'
-    ? ` translate(${-pageWidth / scaleX}px,0)`
-    : ''};
-    {!sizeNeeded
-    ? `padding-bottom: ${pageHeight / scaleY}px;`
-    : ''}
-    {!sizeNeeded && direction == 'left'
-    ? `padding-right: ${pageWidth / scaleX}px;`
-    : ''}
-    {!sizeNeeded && direction == 'right'
-    ? `padding-left: ${pageWidth / scaleX}px;`
-    : ''}
-    "
-  >{word}<span style="font-size: 0"
-    >{!sizeNeeded && appendSpace ? " " : ""}</span
-  ></span
->
-{#if highlight && exactWidth != null && exactHeight != null}
-  <span
-    class="highlight"
-    class:resizing={isResizing && !sizeNeeded}
-    style="
-    left:calc({left * 100}% - {highlightPaddingX *
-      scale}px);
-    top:calc({top * 100}% - {highlightPaddingY *
-      scale}px);
-    width:{(exactWidth + highlightPaddingX * 2) *
-      scale}px;height:{(exactHeight + highlightPaddingY * 2) * scale}px;
-    "
-  />
-{/if}

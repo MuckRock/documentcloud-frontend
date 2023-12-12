@@ -42,98 +42,6 @@
   }
 </script>
 
-<style lang="scss">
-  $detailWidth: 600px;
-  $detailPadding: 40px;
-
-  .row {
-    display: table;
-    width: 100%;
-
-    .column {
-      display: table-cell;
-      vertical-align: top;
-
-      &.detail {
-        width: $detailWidth + $detailPadding;
-        padding-right: $detailPadding;
-      }
-
-      &.showcase {
-        width: calc(100% - #{$detailWidth});
-      }
-    }
-  }
-
-  @media only screen and (max-width: $largeScreenBreak) {
-    .row {
-      display: block;
-
-      .column {
-        display: block;
-        width: inherit !important;
-        padding-right: 0 !important;
-      }
-    }
-  }
-
-  .shareoptions {
-    margin: 19px 0;
-
-    .shareoption {
-      @include buttonLike;
-
-      display: inline-block;
-      padding: 14px 14px;
-      border-radius: 3px;
-      text-align: center;
-      user-select: none;
-
-      &.selected {
-        background: #e1e1e1;
-        cursor: default;
-      }
-
-      &:hover {
-        background: #f4f4f4;
-
-        &.selected {
-          background: #e1e1e1;
-          opacity: 1;
-        }
-      }
-    }
-  }
-
-  textarea {
-    height: 120px;
-    max-width: 600px;
-  }
-
-  input {
-    width: 100%;
-    max-width: 600px;
-  }
-
-  .preview {
-    margin-bottom: 25px;
-  }
-
-  .buttonpadded {
-    margin-top: 12px !important;
-  }
-
-  .error {
-    color: $caution;
-    margin-bottom: 12px;
-    pointer-events: none;
-  }
-
-  a.link {
-    color: $primary;
-  }
-</style>
-
 <div class="shareoptions">
   <div
     class="shareoption"
@@ -241,3 +149,95 @@
     </div>
   {/if}
 {/if}
+
+<style lang="scss">
+  $detailWidth: 600px;
+  $detailPadding: 40px;
+
+  .row {
+    display: table;
+    width: 100%;
+
+    .column {
+      display: table-cell;
+      vertical-align: top;
+
+      &.detail {
+        width: $detailWidth + $detailPadding;
+        padding-right: $detailPadding;
+      }
+
+      &.showcase {
+        width: calc(100% - #{$detailWidth});
+      }
+    }
+  }
+
+  @media only screen and (max-width: $largeScreenBreak) {
+    .row {
+      display: block;
+
+      .column {
+        display: block;
+        width: inherit !important;
+        padding-right: 0 !important;
+      }
+    }
+  }
+
+  .shareoptions {
+    margin: 19px 0;
+
+    .shareoption {
+      @include buttonLike;
+
+      display: inline-block;
+      padding: 14px 14px;
+      border-radius: 3px;
+      text-align: center;
+      user-select: none;
+
+      &.selected {
+        background: #e1e1e1;
+        cursor: default;
+      }
+
+      &:hover {
+        background: #f4f4f4;
+
+        &.selected {
+          background: #e1e1e1;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  textarea {
+    height: 120px;
+    max-width: 600px;
+  }
+
+  input {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .preview {
+    margin-bottom: 25px;
+  }
+
+  .buttonpadded {
+    margin-top: 12px !important;
+  }
+
+  .error {
+    color: $caution;
+    margin-bottom: 12px;
+    pointer-events: none;
+  }
+
+  a.link {
+    color: $primary;
+  }
+</style>

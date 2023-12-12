@@ -18,6 +18,50 @@
   export let embed = false;
 </script>
 
+<header
+  class="vheader"
+  class:disabled={disableControls}
+  style="height: {HEADER_HEIGHT}px"
+>
+  <div class="vcontent">
+    <!-- Expanding cell to hold title and optional back -->
+    <div class="cell">
+      {#if !embed}
+        <div class="back">
+          <Link back={true}>
+            {@html backArrowSvg}
+          </Link>
+        </div>
+      {/if}
+    </div>
+    <div class="cell expand">
+      {#if loaded}
+        <div class="title">
+          {#if !embed && document.readable}
+            <Loader active={true} pad={true} />
+          {/if}
+          {#if title}
+            <h1 class:padleft={embed}>{document.title}</h1>
+            <h2>
+              {$_("titleHeader.contributedBy", {
+                values: {
+                  name: showOrg ? document.orgString : document.userOrgString,
+                },
+              })}
+            </h2>
+          {/if}
+        </div>
+      {/if}
+    </div>
+    <div class="cell">
+      <Search />
+    </div>
+    <div class="cell">
+      <Hamburger />
+    </div>
+  </div>
+</header>
+
 <style>
   header {
     z-index: var(--viewerHeaderZ);
@@ -68,47 +112,3 @@
     margin: 0 5px;
   }
 </style>
-
-<header
-  class="vheader"
-  class:disabled={disableControls}
-  style="height: {HEADER_HEIGHT}px"
->
-  <div class="vcontent">
-    <!-- Expanding cell to hold title and optional back -->
-    <div class="cell">
-      {#if !embed}
-        <div class="back">
-          <Link back={true}>
-            {@html backArrowSvg}
-          </Link>
-        </div>
-      {/if}
-    </div>
-    <div class="cell expand">
-      {#if loaded}
-        <div class="title">
-          {#if !embed && document.readable}
-            <Loader active={true} pad={true} />
-          {/if}
-          {#if title}
-            <h1 class:padleft={embed}>{document.title}</h1>
-            <h2>
-              {$_("titleHeader.contributedBy", {
-                values: {
-                  name: showOrg ? document.orgString : document.userOrgString,
-                },
-              })}
-            </h2>
-          {/if}
-        </div>
-      {/if}
-    </div>
-    <div class="cell">
-      <Search />
-    </div>
-    <div class="cell">
-      <Hamburger />
-    </div>
-  </div>
-</header>

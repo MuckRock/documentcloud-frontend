@@ -5,6 +5,13 @@
   import viewerHamburgerSvg from "@/assets/viewer_hamburger.svg?raw";
 </script>
 
+<button
+  class="hamburger plausible-event-name=viewer-hamburger"
+  on:click={toggleSidebar}
+>
+  {@html viewerHamburgerSvg}
+</button>
+
 <style lang="scss">
   .hamburger {
     background: none;
@@ -13,10 +20,3 @@
     margin: 0.5em;
   }
 </style>
-
-<button
-  class="hamburger plausible-event-name=viewer-hamburger"
-  on:click={toggleSidebar}
->
-  {@html viewerHamburgerSvg}
-</button>
