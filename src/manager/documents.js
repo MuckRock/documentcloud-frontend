@@ -32,6 +32,9 @@ const PROCESSING_CHANGE_TIMEOUT = 500;
 
 function mapReduce(l, id, fn) {
   const results = {};
+  if (!l || l.length === 0) {
+    return results;
+  }
   for (let i = 0; i < l.length; i++) {
     const x = l[i];
     results[x[id]] = fn(x);
@@ -98,7 +101,7 @@ export const documents = new Svue({
     },
     pendingExisting(docsById, pending) {
       if (!pending) return [];
-      return pending.filter((x) => {
+      return pending?.filter((x) => {
         const id = x.doc_id;
         return docsById[id] != null;
       });
