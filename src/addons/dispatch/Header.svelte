@@ -187,4 +187,10 @@
   <div class="description">
     {@html addon?.parameters?.description}
   </div>
+
+  {#if addon.parameters.instructions}
+    <div class="instructions">
+      {@html addon.parameters.instructions}
+    </div>
+  {/if}
 </header>
