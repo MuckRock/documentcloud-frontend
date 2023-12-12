@@ -736,7 +736,9 @@
     "sections": "Edit Sections",
     "sectionsDesc": "Add sections to organize your document with a table of contents.",
     "privateNote": "Add Private Note",
-    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article."
+    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
+    "revisions": "Revision History",
+    "revisionsDesc": "Toggle revision history and view previous versions of yoru document."
   },
   "viewer": {
     "notFound": "Document not found",
