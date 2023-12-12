@@ -1,20 +1,19 @@
 <script>
   import { _ } from "svelte-i18n";
-  // SVG assets
-  import SearchIconSvg from "@/assets/search_icon.svg?raw";
+  import { Search16 } from "svelte-octicons";
 
   export let link = "";
 </script>
 
 <div class="link">
-  <a href={link} target="_blank"
-    >{@html SearchIconSvg}
+  <a href={link} target="_blank">
+    <Search16 />
     {$_("searchLink.search")}</a
   >
 </div>
 <div class="linkcontainer" />
 
-<style lang="scss">
+<style>
   .linkcontainer {
     background: white;
     position: absolute;
@@ -26,28 +25,27 @@
   }
 
   .link {
-    background: $faint-gray;
+    background: var(--faint-gray);
     display: inline-block;
     padding: 4px 19px 4px 11px;
-    border-radius: $radius;
+    border-radius: var(--radius);
     border: solid 1px gainsboro;
     margin: 0 -12px;
-    color: $secondary;
-
+    color: var(--secondary);
     margin-bottom: 6px;
+  }
 
-    :global(*) {
-      display: inline-block;
-      vertical-align: middle;
-    }
+  .link :global(*) {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-    :global(svg) {
-      padding-right: 5px;
-      padding-bottom: 1px;
-    }
+  .link :global(svg) {
+    padding-right: 5px;
+    padding-bottom: 1px;
+  }
 
-    &:hover {
-      text-decoration: underline;
-    }
+  .link:hover {
+    text-decoration: underline;
   }
 </style>

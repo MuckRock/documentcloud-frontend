@@ -1,10 +1,9 @@
 <script>
   import { _ } from "svelte-i18n";
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
 
   import NoWhitespace from "@/common/NoWhitespace.svelte";
 
-  import emitter from "@/emit.js";
   import { highlight } from "@/search/parse.js";
   import { fieldValid, sortCompletions } from "@/search/searchFields.js";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
@@ -22,6 +21,8 @@
   import searchIconSvg from "@/assets/search_icon.svg?raw";
   import closeInlineSvg from "@/assets/close_inline.svg?raw";
 
+  const dispatch = createEventDispatcher();
+
   const fieldAliases = {
     projects: "project",
     account: "user",
@@ -33,10 +34,6 @@
     if (fieldAliases[field] != null) return fieldAliases[field];
     return field;
   }
-
-  const emit = emitter({
-    search() {},
-  });
 
   export let value = "";
   export let example = false;
@@ -508,7 +505,7 @@
 
     if (e.which == 13 || e.keyCode == 13) {
       // Search on enter
-      emit.search();
+      dispatch("search");
       e.preventDefault();
       return;
     }
