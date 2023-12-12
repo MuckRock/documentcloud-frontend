@@ -315,6 +315,19 @@
     "invalid": "Invalid project",
     "cannotEmbed": "Cannot embed this project, as it does not appear to exist."
   },
+  "dialogRevisionsDialog": {
+    "heading": "Revision History",
+    "controlLabel": "Revision Control",
+    "total": "{n} total",
+    "download": "Download",
+    "empty": "No revisions found",
+    "error": "Error loading revision data. Please contact support for assistance.",
+    "upgrade": {
+      "message": "Pro and Organization users can record and access the entire version history of their documents.",
+      "nonAdminCta": "Contact your organization administrator about upgrading your account.",
+      "adminCta": "Upgrade"
+    }
+  },
   "htmlEditor": {
     "preview": "Preview:"
   },

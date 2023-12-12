@@ -1,8 +1,19 @@
 <script lang="ts">
+  import { _ } from "svelte-i18n";
+  import { getMe } from "../../api/orgAndUser.js";
   import { changeRevisionControl } from "../../api/document.js";
-  import Button from "../../common/Button.svelte";
+  import {
+    isOrgAdmin,
+    isPremiumOrg,
+    triggerPremiumUpgradeFlow,
+  } from "../../manager/orgsAndUsers.js";
+  import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
+  import PremiumBadge from "../../premium-credits/PremiumBadge.svelte";
+  import Button from "../Button.svelte";
+  import ErrorMessage from "../ErrorMessage.svelte";
   import type { Revision } from "../RevisionIcon.svelte";
   import RelativeTime from "../RelativeTime.svelte";
+  import { Sync16 } from "svelte-octicons";
 
   export let enabled: boolean;
   export let documentId: string;
@@ -18,22 +29,17 @@
     changeRevisionControl([documentId], value);
   }
 
-  import { getMe } from "../../api/orgAndUser.js";
-  import {
-    isOrgAdmin,
-    isPremiumOrg,
-    triggerPremiumUpgradeFlow,
-  } from "../../manager/orgsAndUsers.js";
-  import UpgradePrompt from "../../premium-credits/UpgradePrompt.svelte";
-  import Error from "../../common/icons/Error.svelte";
-  import PremiumBadge from "../../premium-credits/PremiumBadge.svelte";
+  let getMePromise = getMe();
+  function retryGetMe() {
+    getMePromise = getMe();
+  }
 </script>
 
 <header>
-  <h3>Revision History</h3>
+  <h3>{$_("dialogRevisionsDialog.heading")}</h3>
   <PremiumBadge />
 </header>
-{#await getMe() then user}
+{#await getMePromise then user}
   {#if isPremiumOrg(user.organization)}
     <form>
       <label class="revision-control-input">
@@ -43,7 +49,7 @@
           checked={enabled}
           on:change={handleRevisionControlChange}
         />
-        Revision Control
+        {$_("dialogRevisionsDialog.controlLabel")}
       </label>
     </form>
     {#if enabled}
@@ -59,36 +65,37 @@
                 >
               </td>
               <td class="revision-download"
-                ><Button href={revision.url} download nomargin>Download</Button
+                ><Button href={revision.url} download nomargin
+                  >{$_("dialogRevisionsDialog.download")}</Button
                 ></td
               >
             </tr>
           {:else}
-            <tr class="empty"><td>No revisions found</td></tr>
+            <tr class="empty"><td>{$_("dialogRevisionsDialog.empty")}</td></tr>
           {/each}
         </table>
       </div>
       {#if revisions.length > 0}<p class="count">
-          {revisions.length} total
+          {$_("dialogRevisionsDialog.total", {
+            values: { n: revisions.length },
+          })}
         </p>{/if}
     {/if}
   {:else if isOrgAdmin(user)}
     <UpgradePrompt
-      message="Pro and Organization users can record and access the entire version history of their documents. Upgrade today!"
-      callToAction="Upgrade"
+      message={$_("dialogRevisionsDialog.upgrade.message")}
+      callToAction={$_("dialogRevisionsDialog.upgrade.adminCta")}
       on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
     />
   {:else}
     <UpgradePrompt
-      message="Pro and Organization users can record and access the entire version history of their documents. Contact your organization administrator about upgrading your account."
+      message={$_("dialogRevisionsDialog.upgrade.message") +
+        " " +
+        $_("dialogRevisionsDialog.upgrade.nonAdminCta")}
     />
   {/if}
 {:catch}
-  <!-- Error state -->
-  <div class="error">
-    <div class="errorIcon"><Error /></div>
-    <p>An error occurred</p>
-  </div>
+  <ErrorMessage message={$_("dialogRevisionsDialog.error")} />
 {/await}
 
 <style>
@@ -155,20 +162,5 @@
     opacity: 0.5;
     text-transform: uppercase;
     font-weight: 600;
-  }
-  .error {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.875em;
-    color: var(--caution);
-  }
-
-  .errorIcon {
-    text-align: center;
-    height: 3em;
-    width: 3em;
   }
 </style>

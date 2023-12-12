@@ -81,3 +81,8 @@
     msw: { handlers: [revisionControl.error, mockGetMe.freeOrgMember] },
   }}
 />
+<Story
+  name="With GetMe Error"
+  {args}
+  parameters={{ msw: { handlers: [revisionControl.success, mockGetMe.error] } }}
+/>
