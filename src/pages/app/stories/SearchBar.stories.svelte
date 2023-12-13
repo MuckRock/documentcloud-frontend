@@ -48,7 +48,12 @@
 
 <Story
   name="dialog"
-  args={{ dialog: true, search: "project:example-project-123" }}
+  args={{ dialog: true, search: "user:example-user-123" }}
+  parameters={{
+    msw: {
+      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+    },
+  }}
 />
 
 <style>
