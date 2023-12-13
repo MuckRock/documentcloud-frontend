@@ -4,15 +4,19 @@ import { baseApiUrl } from "../../../api/base.js";
 import usersFixture from "../fixtures/users.json";
 import orgFixtures from "../fixtures/organizations.json";
 import projectFixtures from "../fixtures/projects.json";
+import meFixture from "../fixtures/me.json";
 
 const urls = {
   users: new URL("users/", baseApiUrl).toString(),
+  me: new URL("users/me/", baseApiUrl).toString(),
   organizations: new URL("organizations", baseApiUrl).toString(),
   projects: new URL("projects/", baseApiUrl).toString(),
 };
 
 export const users = {
   data: rest.get(urls.users, (req, res, ctx) => res(ctx.json(usersFixture))),
+
+  me: rest.get(urls.me, (req, res, ctx) => res(ctx.json(meFixture))),
 
   loading: rest.get(urls.users, (req, res, ctx) => ctx.delay("infinite")),
 
