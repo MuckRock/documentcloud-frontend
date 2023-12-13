@@ -19,7 +19,7 @@
   export let showCount: boolean = false;
 
   const tooltipText = $_("revisionIcon.tooltip", {
-    values: { count: revisions.length },
+    values: { count: revisions?.length },
   });
 </script>
 
