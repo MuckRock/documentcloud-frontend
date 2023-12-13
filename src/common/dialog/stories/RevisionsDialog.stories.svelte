@@ -87,3 +87,10 @@
   {args}
   parameters={{ msw: { handlers: [revisionControl.success, mockGetMe.error] } }}
 />
+<Story
+  name="With Loading"
+  {args}
+  parameters={{
+    msw: { handlers: [revisionControl.loading, mockGetMe.loading] },
+  }}
+/>

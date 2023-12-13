@@ -14,6 +14,7 @@
   import type { Revision } from "../RevisionIcon.svelte";
   import RelativeTime from "../RelativeTime.svelte";
   import { Sync16 } from "svelte-octicons";
+  import Loader from "../Loader.svelte";
 
   export let enabled: boolean;
   export let documentId: string;
@@ -35,70 +36,82 @@
   }
 </script>
 
-<header>
-  <h3>{$_("dialogRevisionsDialog.heading")}</h3>
-  <PremiumBadge />
-</header>
-{#await getMePromise then user}
-  {#if isPremiumOrg(user.organization)}
-    <form>
-      <label class="revision-control-input">
-        <input
-          type="checkbox"
-          name="revision_control"
-          checked={enabled}
-          on:change={handleRevisionControlChange}
-        />
-        {$_("dialogRevisionsDialog.controlLabel")}
-      </label>
-    </form>
-    {#if enabled}
-      <div class="overflow-scroll">
-        <table class="revisions">
-          {#each sortedRevisions as revision}
-            <tr class="revision">
-              <td class="revision-version count">{revision.version}</td>
-              <td class="revision-details">
-                <p class="revision-comment">{revision.comment}</p>
-                <span class="revision-time"
-                  ><RelativeTime date={new Date(revision.created_at)} /></span
+{#await getMePromise}
+  <Loader active />
+{:then user}
+  <Loader active={false}>
+    <header>
+      <h3>{$_("dialogRevisionsDialog.heading")}</h3>
+      <PremiumBadge />
+    </header>
+
+    {#if isPremiumOrg(user.organization)}
+      <form>
+        <label class="revision-control-input">
+          <input
+            type="checkbox"
+            name="revision_control"
+            checked={enabled}
+            on:change={handleRevisionControlChange}
+          />
+          {$_("dialogRevisionsDialog.controlLabel")}
+        </label>
+      </form>
+      {#if enabled}
+        <div class="overflow-scroll">
+          <table class="revisions">
+            {#each sortedRevisions as revision}
+              <tr class="revision">
+                <td class="revision-version count">{revision.version}</td>
+                <td class="revision-details">
+                  <p class="revision-comment">{revision.comment}</p>
+                  <span class="revision-time"
+                    ><RelativeTime date={new Date(revision.created_at)} /></span
+                  >
+                </td>
+                <td class="revision-download"
+                  ><Button href={revision.url} download nomargin
+                    >{$_("dialogRevisionsDialog.download")}</Button
+                  ></td
                 >
-              </td>
-              <td class="revision-download"
-                ><Button href={revision.url} download nomargin
-                  >{$_("dialogRevisionsDialog.download")}</Button
-                ></td
+              </tr>
+            {:else}
+              <tr class="empty"><td>{$_("dialogRevisionsDialog.empty")}</td></tr
               >
-            </tr>
-          {:else}
-            <tr class="empty"><td>{$_("dialogRevisionsDialog.empty")}</td></tr>
-          {/each}
-        </table>
-      </div>
-      {#if revisions.length > 0}<p class="count">
-          {$_("dialogRevisionsDialog.total", {
-            values: { n: revisions.length },
-          })}
-        </p>{/if}
+            {/each}
+          </table>
+        </div>
+        {#if revisions.length > 0}<p class="count">
+            {$_("dialogRevisionsDialog.total", {
+              values: { n: revisions.length },
+            })}
+          </p>{/if}
+      {/if}
+    {:else if isOrgAdmin(user)}
+      <UpgradePrompt
+        message={$_("dialogRevisionsDialog.upgrade.message")}
+        callToAction={$_("dialogRevisionsDialog.upgrade.adminCta")}
+        on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
+      />
+    {:else}
+      <UpgradePrompt
+        message={$_("dialogRevisionsDialog.upgrade.message") +
+          " " +
+          $_("dialogRevisionsDialog.upgrade.nonAdminCta")}
+      />
     {/if}
-  {:else if isOrgAdmin(user)}
-    <UpgradePrompt
-      message={$_("dialogRevisionsDialog.upgrade.message")}
-      callToAction={$_("dialogRevisionsDialog.upgrade.adminCta")}
-      on:click={() => triggerPremiumUpgradeFlow(user?.organization)}
-    />
-  {:else}
-    <UpgradePrompt
-      message={$_("dialogRevisionsDialog.upgrade.message") +
-        " " +
-        $_("dialogRevisionsDialog.upgrade.nonAdminCta")}
-    />
-  {/if}
+  </Loader>
 {:catch}
-  <ErrorMessage message={$_("dialogRevisionsDialog.error")} />
+  <Loader active={false}>
+    <ErrorMessage message={$_("dialogRevisionsDialog.error")}
+      ><Button caution action on:click={retryGetMe}>Retry</Button></ErrorMessage
+    >
+  </Loader>
 {/await}
 
 <style>
+  .container {
+  }
   header {
     display: flex;
     gap: 1em;
