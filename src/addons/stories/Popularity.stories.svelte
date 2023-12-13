@@ -2,10 +2,6 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import Popularity from "../Popularity.svelte";
 
-  const args = {
-    useCount: 100,
-  };
-
   export const meta = {
     title: "Add-Ons / Popularity",
     tags: ["autodocs"],
