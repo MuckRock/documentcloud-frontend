@@ -1,8 +1,10 @@
 import { rest } from "msw";
 import { baseApiUrl } from "../../../../api/base.js";
 import {
+  freeOrg,
   me,
   organizations,
+  proOrg,
   users,
 } from "../../../../api/fixtures/orgAndUser.fixtures.js";
 
@@ -10,6 +12,24 @@ import {
 const mockMeUrl = new URL(`users/me/`, baseApiUrl).toString();
 export const mockGetMe = {
   data: rest.get(mockMeUrl, (req, res, ctx) => res(ctx.json(me))),
+  freeUser: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({
+        ...me,
+        organization: freeOrg,
+        admin_organizations: [...me.admin_organizations, freeOrg.id],
+      }),
+    ),
+  ),
+  proUser: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({
+        ...me,
+        organization: proOrg,
+        admin_organizations: [...me.admin_organizations, proOrg.id],
+      }),
+    ),
+  ),
   noOrgs: rest.get(mockMeUrl, (req, res, ctx) =>
     res(ctx.json({ ...me, organization: "4" })),
   ),

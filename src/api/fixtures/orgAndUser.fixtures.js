@@ -205,3 +205,31 @@ export const organization = {
   monthly_credit_allowance: 5000,
   plan: "Organization",
 };
+
+export const proOrg = {
+  id: 4,
+  avatar_url:
+    "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
+  individual: true,
+  name: "lasser.allan",
+  slug: "lasserallan",
+  monthly_credits: 2500,
+  purchased_credits: 3000,
+  credit_reset_date: "2023-11-28",
+  monthly_credit_allowance: 2500,
+  plan: "Professional",
+};
+
+export const freeOrg = {
+  id: 4,
+  avatar_url:
+    "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
+  individual: true,
+  name: "lasser.allan",
+  slug: "lasserallan",
+  monthly_credits: 0,
+  purchased_credits: 0,
+  credit_reset_date: "2023-11-28",
+  monthly_credit_allowance: 0,
+  plan: "Free",
+};
