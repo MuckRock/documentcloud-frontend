@@ -7,7 +7,6 @@
 
   import { projects } from "@/manager/projects.js";
   import { newProject } from "@/manager/layout.js";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
 
   function sort(projects) {
     if (projects === null) return [];
