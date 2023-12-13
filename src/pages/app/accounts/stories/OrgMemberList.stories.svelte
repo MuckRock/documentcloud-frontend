@@ -9,7 +9,10 @@
   export const meta = {
     title: "App / Accounts / Menus / Org / Member List",
     component: OrgMemberList,
-    parameters: { layout: "centered" },
+    parameters: {
+      layout: "centered",
+      chromatic: { delay: 300 },
+    },
   };
 </script>
 

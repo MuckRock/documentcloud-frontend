@@ -32,6 +32,7 @@
     component: RevisionsDialog,
     parameters: {
       layout: "centered",
+      chromatic: { delay: 300 },
       msw: {
         handlers: [revisionControl.success, mockGetMe.data],
       },
