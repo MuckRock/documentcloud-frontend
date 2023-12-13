@@ -369,6 +369,10 @@ export class Document extends Svue {
           return organizationName;
         },
 
+        revisionControl(doc) {
+          return Boolean(doc.revision_control);
+        },
+
         // Revision Properties
         revisions(doc) {
           if (!doc.revision_control) return null;

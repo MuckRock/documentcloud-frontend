@@ -165,9 +165,10 @@ export async function changeRevisionControl(ids, revision_control) {
   // Enable or disable revision control on specified documents
   await session.patch(
     apiUrl(`documents/`),
-    ids.map((id) => {
-      id, revision_control;
-    }),
+    ids.map((id) => ({
+      id,
+      revision_control,
+    })),
   );
 }
 

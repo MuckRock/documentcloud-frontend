@@ -15,7 +15,7 @@
   // SVG assets
   import History16 from "svelte-octicons/lib/History16.svelte";
 
-  export let revisions: Revision[] | null;
+  export let revisions: Revision[] | null | undefined;
   export let showCount: boolean = false;
 
   const tooltipText = $_("revisionIcon.tooltip", {
@@ -23,11 +23,11 @@
   });
 </script>
 
-{#if revisions !== null}
+{#if revisions}
   <Tooltip caption={tooltipText}>
     <button class="revisions buttonLike" on:click={() => {}}>
       <History16 />
-      {#if showCount}<span class="count">{revisions.length}</span>{/if}
+      {#if showCount}<span class="count">{revisions?.length}</span>{/if}
     </button>
   </Tooltip>
 {/if}

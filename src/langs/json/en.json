@@ -752,7 +752,7 @@
     "privateNote": "Add Private Note",
     "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "revisions": "Revision History",
-    "revisionsDesc": "Toggle revision history and view previous versions of yoru document."
+    "revisionsDesc": "Toggle revision history and view previous versions of your document."
   },
   "viewer": {
     "notFound": "Document not found",

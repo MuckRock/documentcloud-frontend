@@ -26,7 +26,7 @@ export async function loadViewerEditDialogs() {
     import("@/common/dialog/DataDialog.svelte"),
     import("@/common/dialog/EditSectionsDialog.svelte"),
     import("@/common/dialog/DocumentPickerDialog.svelte"),
-    import("@/common/dialog/RevisionsDialog.svelte"),
+    import("@/common/dialog/RevisionsDialogContainer.svelte"),
   ]);
   viewerEditDialogs.embedDialog = dialogs[0].default;
   viewerEditDialogs.accessDialog = dialogs[1].default;
