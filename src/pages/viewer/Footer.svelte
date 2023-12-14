@@ -29,7 +29,7 @@
         <span class="hide ib adjustright" class:hideearly={embed}>
           <Zoom />
         </span>
-        {#if embed && showFullscreen}
+        {#if document && embed && showFullscreen}
           <FullScreen url={document.canonicalUrl} />
         {/if}
       </div>
