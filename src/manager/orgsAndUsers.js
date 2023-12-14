@@ -249,7 +249,9 @@ export function getUpgradeURL(org) {
 }
 
 export async function triggerPremiumUpgradeFlow(org) {
-  window?.open(getUpgradeUrl(org));
+  if (org) {
+    window?.open(getUpgradeUrl(org));
+  }
 }
 
 // TODO: Handle flow for purchasing premium credits (#342)

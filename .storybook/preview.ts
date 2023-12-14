@@ -21,9 +21,10 @@ const preview: Preview = {
       },
     },
   },
-  // Provide the MSW addon loader globally
-  loaders: [mswLoader],
 };
+
+// Provide the MSW addon loader globally
+export const loaders = [mswLoader];
 
 export let decorators = [mockDateDecorator];
 

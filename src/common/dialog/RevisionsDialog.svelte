@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { getMe } from "../../api/orgAndUser.js";
   import {
@@ -25,23 +26,31 @@
       return b.version - a.version;
     }) ?? null;
 
-  let getMePromise = getMe();
-  function retryGetMe() {
-    getMePromise = getMe();
+  let user;
+  let loading = false;
+  let error;
+
+  async function load() {
+    loading = true;
+    try {
+      user = await getMe();
+    } catch {
+      error = true;
+    }
+    loading = false;
   }
+
+  onMount(load);
 </script>
 
-{#await getMePromise}
-  <Loader active>
+<Loader active={loading}>
+  {#if error}
     <div class="mcontent">
-      <header>
-        <h3>{$_("dialogRevisionsDialog.heading")}</h3>
-        <PremiumBadge />
-      </header>
+      <ErrorMessage message={$_("dialogRevisionsDialog.error")}
+        ><Button caution action on:click={load}>Retry</Button></ErrorMessage
+      >
     </div>
-  </Loader>
-{:then user}
-  <Loader active={false}>
+  {:else}
     <div class="mcontent">
       <header>
         <h3>{$_("dialogRevisionsDialog.heading")}</h3>
@@ -115,17 +124,8 @@
         />
       {/if}
     </div>
-  </Loader>
-{:catch}
-  <Loader active={false}>
-    <div class="mcontent">
-      <ErrorMessage message={$_("dialogRevisionsDialog.error")}
-        ><Button caution action on:click={retryGetMe}>Retry</Button
-        ></ErrorMessage
-      >
-    </div>
-  </Loader>
-{/await}
+  {/if}
+</Loader>
 
 <style>
   .mcontent {

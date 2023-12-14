@@ -37,10 +37,7 @@
     component: RevisionsDialog,
     parameters: {
       layout: "centered",
-      chromatic: { delay: 300 },
-      msw: {
-        handlers: [revisionControl.success, mockGetMe.data],
-      },
+      chromatic: { delay: 1000 },
     },
     argTypes: {
       enabled: {
@@ -75,13 +72,39 @@
       await expect(downloadButtons[0]).toHaveAttribute("target", "download");
     });
   }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
 />
-<Story name="With Zero Revisions" args={{ ...args, revisions: [] }} />
+<Story
+  name="With Zero Revisions"
+  args={{ ...args, revisions: [] }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
+/>
 <Story
   name="With Many Revisions"
   args={{ ...args, revisions: manyRevisions }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
 />
-<Story name="Disabled Revision Control" args={{ ...args, enabled: false }} />
+<Story
+  name="Disabled Revision Control"
+  args={{ ...args, enabled: false }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
+/>
 <Story
   name="With Change Loading"
   {args}
