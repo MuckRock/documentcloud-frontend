@@ -1,5 +1,5 @@
 <script>
-  import { layout, cancelAnnotation } from "@/viewer/layout.js";
+  import { layout } from "@/viewer/layout.js";
   import { doc } from "@/viewer/document.js";
 
   import AllText from "./AllText.svelte";

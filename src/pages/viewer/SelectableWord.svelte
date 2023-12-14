@@ -110,7 +110,7 @@
   />
 {/if}
 
-<style lang="scss">
+<style>
   .selectabletext {
     position: absolute;
     color: transparent;
@@ -119,11 +119,11 @@
     transform-origin: left top;
     white-space: pre;
     font-family: monospace;
+  }
 
-    &::selection {
-      background: rgba(66, 147, 240, 0.3);
-      mix-blend-mode: multiply;
-    }
+  .selectabletext::selection {
+    background: rgba(66, 147, 240, 0.3);
+    mix-blend-mode: multiply;
   }
 
   .highlight {

@@ -11,6 +11,7 @@
   export let compact = false;
   export let embed = false;
   export let showFullscreen = false;
+  export let document;
 
   $: style = `height: ${FOOTER_HEIGHT}px;`;
 </script>
@@ -29,7 +30,7 @@
           <Zoom />
         </span>
         {#if embed && showFullscreen}
-          <FullScreen />
+          <FullScreen url={document.canonicalUrl} />
         {/if}
       </div>
     {/if}

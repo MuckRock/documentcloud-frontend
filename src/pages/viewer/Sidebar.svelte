@@ -27,6 +27,7 @@
   export let showOrg = false;
   export let displayAnnotate = false;
   export let disableControls = false;
+  export let show = true;
 
   const style = `top: ${HEADER_HEIGHT}px; bottom: ${FOOTER_HEIGHT}px; width: ${SIDEBAR_WIDTH}px;`;
 
@@ -124,111 +125,113 @@
   }
 </script>
 
-<div
-  class="sidebar"
-  class:white={!signedIn}
-  class:disabled={disableControls}
-  on:mousedown={handleMouseDown}
-  {style}
->
-  {#if loaded}
-    <div class="title">
-      {#if !embed && document?.readable}
-        <div class="updating">
-          {$_("sidebar.updating")}
-          <Progress initializing={true} progress={0} compact={true} />
-        </div>
-      {/if}
+{#if show}
+  <div
+    class="sidebar"
+    class:white={!signedIn}
+    class:disabled={disableControls}
+    on:mousedown={handleMouseDown}
+    {style}
+  >
+    {#if loaded}
+      <div class="title">
+        {#if !embed && document?.readable}
+          <div class="updating">
+            {$_("sidebar.updating")}
+            <Progress initializing={true} progress={0} compact={true} />
+          </div>
+        {/if}
 
-      {#if document?.description != null && document?.description.trim().length > 0}
-        <details class="dc" open>
-          <summary>
-            <h2 class="inlineheader">{document?.title}</h2>
-          </summary>
-          <HtmlField content={document?.description} />
-        </details>
-      {:else}
-        <h2>{document?.title}</h2>
-      {/if}
+        {#if document?.description != null && document?.description.trim().length > 0}
+          <details class="dc" open>
+            <summary>
+              <h2 class="inlineheader">{document?.title}</h2>
+            </summary>
+            <HtmlField content={document?.description} />
+          </details>
+        {:else}
+          <h2>{document?.title}</h2>
+        {/if}
 
-      <TableOfContents />
+        <TableOfContents />
 
-      <hr />
-      {#if !hidePdfLink}
-        <div>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            class="plausible-event-name=viewer-original-document"
-            href={document?.pdf}
-          >
-            {$_("sidebar.original")}
-          </a>
-        </div>
-      {/if}
-      {#if document?.relatedArticleUrl != null && document?.relatedArticleUrl.trim().length > 0}
-        <div>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            class="plausible-event-name=viewer-related-url"
-            href={document?.relatedArticleUrl}
-          >
-            {$_("sidebar.related")}
-          </a>
-        </div>
-      {/if}
-      <small>
-        <p>
-          {$_("sidebar.contributed", {
-            values: {
-              name: showOrg ? document?.orgString : document?.userOrgString,
-            },
-          })}
-        </p>
-      </small>
-      {#if document?.source !== null && document?.source.trim().length > 0}
+        <hr />
+        {#if !hidePdfLink}
+          <div>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="plausible-event-name=viewer-original-document"
+              href={document?.pdf}
+            >
+              {$_("sidebar.original")}
+            </a>
+          </div>
+        {/if}
+        {#if document?.relatedArticleUrl != null && document?.relatedArticleUrl.trim().length > 0}
+          <div>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="plausible-event-name=viewer-related-url"
+              href={document?.relatedArticleUrl}
+            >
+              {$_("sidebar.related")}
+            </a>
+          </div>
+        {/if}
         <small>
           <p>
-            {$_("sidebar.source", {
-              values: { source: document?.source },
+            {$_("sidebar.contributed", {
+              values: {
+                name: showOrg ? document?.orgString : document?.userOrgString,
+              },
             })}
           </p>
         </small>
-      {/if}
-      {#if document?.editAccess}
-        <div>
-          <AccessIcon {document} showText={true} />
-        </div>
-      {/if}
-      {#if ocrEngine}
-        <small><p>OCR: {ocrEngine}</p></small>
-      {/if}
-    </div>
+        {#if document?.source !== null && document?.source.trim().length > 0}
+          <small>
+            <p>
+              {$_("sidebar.source", {
+                values: { source: document?.source },
+              })}
+            </p>
+          </small>
+        {/if}
+        {#if document?.editAccess}
+          <div>
+            <AccessIcon {document} showText={true} />
+          </div>
+        {/if}
+        {#if ocrEngine}
+          <small><p>OCR: {ocrEngine}</p></small>
+        {/if}
+      </div>
 
-    {#if signedIn}
-      <div class="actions">{$_("sidebar.actions")}</div>
-      {#if document?.editAccess}
-        {#each actions as { id, action, header, description, disabled }}
+      {#if signedIn}
+        <div class="actions">{$_("sidebar.actions")}</div>
+        {#if document?.editAccess}
+          {#each actions as { id, action, header, description, disabled }}
+            <SidebarAction
+              class={`plausible-event-name=sidebar-${id}`}
+              {disabled}
+              {action}
+              {header}
+              {description}
+            />
+          {/each}
+        {:else}
           <SidebarAction
-            class={`plausible-event-name=sidebar-${id}`}
-            {disabled}
-            {action}
-            {header}
-            {description}
+            class="plausible-event-name=sidebar-private-note"
+            action={enterAnnotateMode}
+            header={$_("sidebar.privateNote")}
+            description={$_("sidebar.privateNoteDesc")}
           />
-        {/each}
-      {:else}
-        <SidebarAction
-          class="plausible-event-name=sidebar-private-note"
-          action={enterAnnotateMode}
-          header={$_("sidebar.privateNote")}
-          description={$_("sidebar.privateNoteDesc")}
-        />
+        {/if}
       {/if}
     {/if}
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style lang="scss">
   .sidebar {
