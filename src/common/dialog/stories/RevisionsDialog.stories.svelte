@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { userEvent, within } from "@storybook/testing-library";
+  import { expect } from "@storybook/jest";
 
   import RevisionsDialog from "../RevisionsDialog.svelte";
 
@@ -54,7 +56,26 @@
   <RevisionsDialog {...args} />
 </Template>
 
-<Story name="With Revisions" {args} />
+<Story
+  name="With Revisions"
+  {args}
+  play={async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("Display document revisions", async () => {
+      await canvas.findByText("3 total");
+    });
+    await step("Toggle revisions", async () => {
+      await canvas.findByText("Revision Control");
+      const checkbox = await canvas.getByRole("checkbox");
+      await userEvent.click(checkbox);
+      await expect(checkbox).not.toBeChecked();
+    });
+    await step("Download revisions", async () => {
+      const downloadButtons = await canvas.getAllByText("Download");
+      await expect(downloadButtons[0]).toHaveAttribute("target", "download");
+    });
+  }}
+/>
 <Story name="With Zero Revisions" args={{ ...args, revisions: [] }} />
 <Story
   name="With Many Revisions"
