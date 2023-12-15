@@ -1,14 +1,15 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
+  import { ChevronLeft24 } from "svelte-octicons";
+  import { createEventDispatcher } from "svelte";
 
   import Loader from "../../common/Loader.svelte";
   import Link from "../../router/Link.svelte";
-  import backArrowSvg from "../../assets/back_arrow.svg?raw";
 
   import Search from "./controls/Search.svelte";
   import Hamburger from "./controls/Hamburger.svelte";
 
-  import { HEADER_HEIGHT } from "./constants";
+  import { HEADER_HEIGHT } from "./constants.js";
 
   export let document: any;
   export let loaded: boolean;
@@ -16,6 +17,8 @@
   export let showOrg = true;
   export let disableControls = false;
   export let embed = false;
+
+  const dispatch = createEventDispatcher();
 </script>
 
 <header
@@ -29,7 +32,7 @@
       {#if !embed}
         <div class="back">
           <Link back={true}>
-            {@html backArrowSvg}
+            <ChevronLeft24 />
           </Link>
         </div>
       {/if}
@@ -57,7 +60,7 @@
       <Search />
     </div>
     <div class="cell">
-      <Hamburger />
+      <Hamburger on:click={(e) => dispatch("toggle.sidebar")} />
     </div>
   </div>
 </header>

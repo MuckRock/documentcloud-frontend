@@ -209,6 +209,7 @@
       showOrg={$layout.title}
       disableControls={$layout.disableControls}
       embed={$viewer.embed}
+      on:toggle.sidebar={($layout.showSidebar = !$layout.showSidebar)}
     />
     {#if $doc.mode == "image"}
       <Body mode={$doc.mode} />
@@ -221,23 +222,25 @@
     {:else if $doc.mode == "modify"}
       <ThumbnailBody modify={true} />
     {/if}
-    {#if $layout.showSidebar}
-      <Sidebar
-        document={$viewer.document}
-        signedIn={$viewer.me !== null}
-        loaded={$viewer.loaded}
-        embed={$layout.embed}
-        hidePdfLink={$layout.hidePdfLink}
-        showOrg={$layout.showOrg}
-        displayAnnotate={$layout.displayAnnotate}
-        disableControls={$layout.disableControls}
-      />
-    {/if}
+
+    <Sidebar
+      document={$viewer.document}
+      signedIn={$viewer.me !== null}
+      loaded={$viewer.loaded}
+      embed={$layout.embed}
+      hidePdfLink={$layout.hidePdfLink}
+      showOrg={$layout.showOrg}
+      displayAnnotate={$layout.displayAnnotate}
+      disableControls={$layout.disableControls}
+      show={$layout.showSidebar}
+    />
+
     <Footer
       disableControls={$layout.disableControls}
       compact={$layout.compact}
       embed={$layout.embed}
       showFullscreen={$layout.showFullscreen}
+      document={$viewer.document}
     />
   </Loader>
 {/if}

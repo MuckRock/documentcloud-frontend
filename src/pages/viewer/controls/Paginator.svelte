@@ -128,76 +128,75 @@
   </div>
 {/if}
 
-<style lang="scss">
+<style>
   .paginator {
     --inputHeight: 23px;
     --arrowHeight: 18px;
     --arrowPadding: 13px;
 
     user-select: none;
-    color: $viewerDarkGray;
+    color: var(--viewerDarkGray);
+  }
 
-    .page {
-      position: relative;
-      font-weight: normal;
-      font-size: 15px;
-      padding: 0 18px;
-      background: #ffffff;
-      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
-      border-radius: $radius;
-      display: inline-block;
-      height: var(--inputHeight, 23px);
-      line-height: var(--inputHeight, 23px);
-      vertical-align: middle;
+  .paginator .page {
+    position: relative;
+    font-weight: normal;
+    font-size: 15px;
+    padding: 0 18px;
+    background: #ffffff;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+    border-radius: var(--radius);
+    display: inline-block;
+    height: var(--inputHeight, 23px);
+    line-height: var(--inputHeight, 23px);
+    vertical-align: middle;
+  }
 
-      .absolute,
-      input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
+  .paginator .page .absolute,
+  .paginator .page input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-      .hidden {
-        opacity: 0;
-      }
+  .paginator .page .hidden {
+    opacity: 0;
+  }
 
-      input {
-        opacity: 0;
-        box-sizing: border-box;
-        text-align: center;
-        font-weight: inherit;
-        font-family: inherit;
-        font-size: inherit;
-        color: inherit;
+  .paginator .page input {
+    opacity: 0;
+    box-sizing: border-box;
+    text-align: center;
+    font-weight: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+  }
+  .paginator .page :focus {
+    opacity: 1;
+  }
 
-        &:focus {
-          opacity: 1;
-        }
-      }
-    }
+  .paginator .rest {
+    display: inline-block;
+    line-height: var(--inputHeight, 23px);
+    vertical-align: middle;
+    padding-left: 8px;
+  }
 
-    .rest {
-      display: inline-block;
-      line-height: var(--inputHeight, 23px);
-      vertical-align: middle;
-      padding-left: 8px;
-    }
+  .paginator .paginate {
+    display: inline-block;
+    font-size: 0;
+    padding: calc((var(--inputHeight, 23px) - var(--arrowHeight, 18px)) / 2) 0;
+    vertical-align: middle;
+  }
 
-    .paginate {
-      display: inline-block;
-      font-size: 0;
-      padding: calc((var(--inputHeight, 23px) - var(--arrowHeight, 18px)) / 2) 0;
-      vertical-align: middle;
+  .paginator .paginate.left {
+    padding-right: var(--arrowPadding, 13px);
+  }
 
-      &.left {
-        padding-right: var(--arrowPadding, 13px);
-      }
-
-      &.right {
-        padding-left: var(--arrowPadding, 13px);
-      }
-    }
+  .paginator .paginate.right {
+    padding-left: var(--arrowPadding, 13px);
   }
 </style>

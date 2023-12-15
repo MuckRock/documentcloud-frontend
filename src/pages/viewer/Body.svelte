@@ -17,7 +17,7 @@
     enterAnnotateMode,
     enterModifyMode,
     enterSectionsMode,
-  } from "@/viewer/actions";
+  } from "@/viewer/actions.js";
 
   let docElem;
   let actionHeight;

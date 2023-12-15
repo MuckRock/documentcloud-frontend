@@ -1,18 +1,13 @@
 <script>
-  import { toggleSidebar } from "@/viewer/document.js";
-
   // SVG assets
-  import viewerHamburgerSvg from "@/assets/viewer_hamburger.svg?raw";
+  import { ThreeBars16 } from "svelte-octicons";
 </script>
 
-<button
-  class="hamburger plausible-event-name=viewer-hamburger"
-  on:click={toggleSidebar}
->
-  {@html viewerHamburgerSvg}
+<button class="hamburger plausible-event-name=viewer-hamburger" on:click>
+  <ThreeBars16 />
 </button>
 
-<style lang="scss">
+<style>
   .hamburger {
     background: none;
     border: none;
