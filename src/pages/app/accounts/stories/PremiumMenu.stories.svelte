@@ -6,7 +6,7 @@
   import orgListFixture from "../fixtures/orgList.json";
 
   export const meta = {
-    title: "Account Navigation / Menus / Premium",
+    title: "App / Accounts / Menus / Premium",
     component: PremiumMenu,
     parameters: { layout: "centered" },
   };

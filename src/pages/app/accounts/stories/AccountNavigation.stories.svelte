@@ -11,7 +11,7 @@
   import AccountNavigation from "../AccountNavigation.svelte";
 
   export const meta = {
-    title: "Account Navigation",
+    title: "App / Accounts",
     component: AccountNavigation,
     parameters: { layout: "fullscreen" },
   };

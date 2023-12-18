@@ -4,7 +4,7 @@
   import HelpMenu from "../HelpMenu.svelte";
 
   export const meta = {
-    title: "Account Navigation / Menus / Help",
+    title: "App / Accounts / Menus / Help",
     component: HelpMenu,
     parameters: { layout: "centered" },
   };
