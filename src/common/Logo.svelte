@@ -31,25 +31,8 @@
 
 <style>
   :global(.dclogo) {
-    width: 166px;
-    height: 29px;
-    padding: 5px 25px 12px 25px;
+    width: auto;
+    height: auto;
     user-select: none;
-  }
-
-  @media screen and (max-width: 720px) {
-    :global(.dclogo) {
-      padding-left: calc(25px + var(--sidebarAdd)) !important;
-    }
-  }
-
-  .nopadding :global(.dclogo) {
-    padding: 0 !important;
-  }
-
-  @media only screen and (max-width: 720px) {
-    :global(.dclogo) {
-      padding: 10px 25px 40px 25px;
-    }
   }
 </style>
