@@ -1,14 +1,6 @@
 <script>
   import SearchExample from "@/common/SearchExample.svelte";
 
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
-  import { slugify } from "@/util/string.js";
-
-  $: userExample =
-    $orgsAndUsers.me != null
-      ? `user:${slugify($orgsAndUsers.me.name, $orgsAndUsers.me.id)}`
-      : "user:example-123";
-
   const table = [
     // Basic usage
     ["Basic usage"],
@@ -154,7 +146,7 @@
 
 <div>
   <div class="mcontent">
-    <h1>Search Tips</h1>
+    <h2>Search Tips</h2>
     <div class="padded">
       <p>
         The search bar is a flexible and powerful tool for searching your
@@ -163,18 +155,16 @@
         display your documents, but you can do a lot more.
       </p>
       <SearchExample
-        content={`${userExample} "mueller report" project:test-345  -pages:448`}
+        content={`"user:example-123" "mueller report" project:test-345  -pages:448`}
       />
       <p>
-        The above example, for instance, searches all documents within
-        {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
-        for a specific project that contain the exact text “mueller report” and don’t
-        have a page count of 448 (thus excluding the actual Mueller Report).
-        <a href="/help/search">Additional documentation</a>
+        The above example, for instance, searches all documents within a user’s
+        account for a specific project that contain the exact text “mueller
+        report” and don’t have a page count of 448 (thus excluding the actual
+        Mueller Report).
+        <a target="_blank" href="/help/search">Additional documentation</a>
       </p>
-      <p>
-        <b>Reference table:</b>
-      </p>
+      <h3>Reference table:</h3>
 
       <table cellspacing="0">
         {#each table as row}
