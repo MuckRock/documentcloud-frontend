@@ -1,10 +1,7 @@
 <script>
-  import { createEventDispatcher } from "svelte";
   import { modification } from "@/viewer/modification/modification.js";
   import Documents from "@/pages/app/Documents.svelte";
   import emitter from "@/emit.js";
-
-  const dispatch = createEventDispatcher();
 
   const emit = emitter({
     dismiss() {},
@@ -13,7 +10,6 @@
   function handlePick(event) {
     modification.insertDocument = event.detail;
     emit.dismiss(document);
-    // dispatch('dismiss', {})
   }
 </script>
 
