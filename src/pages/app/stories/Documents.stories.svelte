@@ -2,7 +2,6 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import Documents from "../Documents.svelte";
 
-  import * as structure from "../../../structure/document.js";
   import { layout } from "../../../manager/layout.js";
   import * as mock from "./mock.js";
 
