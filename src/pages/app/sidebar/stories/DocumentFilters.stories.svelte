@@ -1,18 +1,18 @@
 <script context="module">
   import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectFilters from "../ProjectFilters.svelte";
+  import DocumentFiltersComponent from "../DocumentFilters.svelte";
 
   import * as mock from "../../stories/mock.js";
 
   export const meta = {
-    title: "App / Sidebar / Project Filters",
-    component: ProjectFilters,
-    parameters: { layout: "fullscreen" },
+    title: "App / Sidebar / Document Filters",
+    component: DocumentFiltersComponent,
+    parameters: { layout: "centered" },
   };
 </script>
 
 <Story
-  name="default"
+  name="Document Filters"
   parameters={{
     msw: {
       handlers: [
@@ -24,5 +24,5 @@
     },
   }}
 >
-  <ProjectFilters />
+  <DocumentFiltersComponent />
 </Story>

@@ -5,7 +5,7 @@
   import Hamburger from "../../../common/Hamburger.svelte";
   import Logo from "../../../common/Logo.svelte";
 
-  import ProjectFilters from "./ProjectFilters.svelte";
+  import DocumentFilters from "./DocumentFilters.svelte";
   import Projects from "./Projects.svelte";
 
   import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
@@ -23,7 +23,7 @@
     <Logo />
   </header>
 
-  <ProjectFilters />
+  <DocumentFilters />
 
   {#if $orgsAndUsers.me !== null}
     <Projects on:retractSidebar />
