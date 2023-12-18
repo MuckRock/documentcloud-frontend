@@ -1,14 +1,5 @@
 <script>
   import SearchExample from "@/common/SearchExample.svelte";
-  import Link from "@/router/Link.svelte";
-
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
-  import { slugify } from "@/util/string.js";
-
-  $: userExample =
-    $orgsAndUsers.me != null
-      ? `user:${slugify($orgsAndUsers.me.name, $orgsAndUsers.me.id)}`
-      : "user:example-123";
 
   const table = [
     // Basic usage
@@ -155,7 +146,7 @@
 
 <div>
   <div class="mcontent">
-    <h1>Search Tips</h1>
+    <h2>Search Tips</h2>
     <div class="padded">
       <p>
         The search bar is a flexible and powerful tool for searching your
@@ -164,18 +155,16 @@
         display your documents, but you can do a lot more.
       </p>
       <SearchExample
-        content={`${userExample} "mueller report" project:test-345  -pages:448`}
+        content={`"user:example-123" "mueller report" project:test-345  -pages:448`}
       />
       <p>
-        The above example, for instance, searches all documents within
-        {#if $orgsAndUsers.loggedIn}your account{:else}a user’s account{/if}
-        for a specific project that contain the exact text “mueller report” and don’t
-        have a page count of 448 (thus excluding the actual Mueller Report).
-        <Link color={true} toUrl="/help/search">Additional documentation</Link>
+        The above example, for instance, searches all documents within a user’s
+        account for a specific project that contain the exact text “mueller
+        report” and don’t have a page count of 448 (thus excluding the actual
+        Mueller Report).
+        <a target="_blank" href="/help/search">Additional documentation</a>
       </p>
-      <p>
-        <b>Reference table:</b>
-      </p>
+      <h3>Reference table:</h3>
 
       <table cellspacing="0">
         {#each table as row}
@@ -212,72 +201,75 @@
   </div>
 </div>
 
-<style lang="scss">
+<style>
+  a {
+    color: var(--primary);
+  }
+
   .padded {
     margin-bottom: 35px;
   }
 
   table {
-    $border: solid 1px gainsboro;
+    --border: solid 1px gainsboro;
     margin-top: -10px;
+  }
 
-    td,
-    th {
-      border-right: $border;
-      border-bottom: $border;
-      vertical-align: middle;
-      padding: 4px 8px;
+  table td,
+  table th {
+    border-right: var(--border);
+    border-bottom: var(--border);
+    vertical-align: middle;
+    padding: 4px 8px;
+  }
 
-      &:first-child {
-        border-left: $border;
-      }
-    }
+  table td:first-child,
+  table th:first-child {
+    border-left: var(--border);
+  }
 
-    .name {
-      padding: 8px;
+  table .name {
+    padding: 8px;
+  }
 
-      h4 {
-        font-size: 15px;
-        margin: 0 0 3px 0;
-      }
+  table .name h4 {
+    font-size: 15px;
+    margin: 0 0 3px 0;
+  }
 
-      p {
-        font-size: 13px;
-        margin: 0;
-      }
-    }
+  table .name p {
+    font-size: 13px;
+    margin: 0;
+  }
 
-    .filter {
-      padding-bottom: 0;
-      width: 50%;
-      max-width: 270px;
-      min-width: 200px;
-    }
+  table .filter {
+    padding-bottom: 0;
+    width: 50%;
+    max-width: 270px;
+    min-width: 200px;
+  }
 
-    tr:first-child {
-      td,
-      th {
-        border-top: $border;
-      }
-    }
+  table tr:first-child th,
+  table tr:first-child td {
+    border-top: var(--border);
+  }
 
-    th {
-      background: rgb(244, 244, 244);
-      font-size: 14px;
+  table th {
+    background: rgb(244, 244, 244);
+    font-size: 14px;
+  }
 
-      &.header {
-        background: white !important;
-        border: none !important;
-        padding: 0 !important;
+  table th.header {
+    background: white !important;
+    border: none !important;
+    padding: 0 !important;
+  }
 
-        > div {
-          background: $primary;
-          color: white;
-          padding: 6px 8px;
-          margin-top: 14px;
-          border-bottom: $border;
-        }
-      }
-    }
+  table th.header > div {
+    background: var(--primary);
+    color: white;
+    padding: 6px 8px;
+    margin-top: 14px;
+    border-bottom: var(--border);
   }
 </style>
