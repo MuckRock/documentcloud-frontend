@@ -5,6 +5,8 @@
   export const meta = {
     title: "Common / Logo",
     component: Logo,
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
   };
 
   const args = {

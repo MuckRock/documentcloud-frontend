@@ -6,7 +6,8 @@
   export const meta = {
     title: "App / Search / Search Bar",
     component: SearchBar,
-    parameters: { layout: "fullscreen" },
+    tags: ["autodocs"],
+    parameters: { layout: "centered" },
   };
 </script>
 
