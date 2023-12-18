@@ -1,24 +1,25 @@
 <script context="module">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
-  import Projects from "../Projects.svelte";
+  import ProjectList from "../ProjectList.svelte";
 
   import projectFixtures from "../../fixtures/projects.json";
 
   export const meta = {
-    title: "App / Sidebar / Projects",
-    component: Projects,
+    title: "App / Sidebar / Project List",
+    component: ProjectList,
     parameters: { layout: "fullscreen" },
   };
 
   const args = {
     projects: projectFixtures.results,
     newProject: action("New Project"),
+    editProject: action("Edit Project"),
   };
 </script>
 
 <Template let:args>
-  <Projects {...args} />
+  <ProjectList {...args} />
 </Template>
 
 <Story name="With Projects" {args} />

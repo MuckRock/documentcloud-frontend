@@ -1,12 +1,15 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
+  import { projectUrl } from "../../../search/search.js";
+  import Link from "../../../router/Link.svelte";
   import Button from "../../../common/Button.svelte";
   import Title from "../../../common/Title.svelte";
   import Project from "./Project.svelte";
 
   export let projects;
   export let newProject;
+  export let editProject;
 
   function sort(projects) {
     if (projects === null) return [];
@@ -31,7 +34,14 @@
   <div class="projectcontainer">
     {#if alphabetizedProjects.length > 0}
       {#each alphabetizedProjects as project}
-        <Project {project} />
+        <Link toUrl={projectUrl(project)}>
+          <Project
+            title={project.title}
+            onEditClick={project.editAccess
+              ? () => editProject(project)
+              : undefined}
+          />
+        </Link>
       {/each}
     {:else}
       <small>{$_("projects.createProject")}</small>

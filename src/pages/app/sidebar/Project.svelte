@@ -1,33 +1,26 @@
-<script>
-  import Link from "@/router/Link.svelte";
-  import { editProject } from "@/manager/layout.js";
-  import { projectUrl } from "@/search/search.js";
+<script lang="ts">
+  import Pencil16 from "svelte-octicons/lib/Pencil16.svelte";
 
-  // SVG assets
-  import pencilSvg from "@/assets/pencil.svg?raw";
-
-  export let project;
+  export let title;
+  export let onEditClick;
 </script>
 
-<Link toUrl={projectUrl(project)}>
-  <div class="project">
-    <span class="title">{project.title}</span>
-    {#if project.editAccess}
-      <button
-        class="edit"
-        on:click|stopPropagation|preventDefault={() => editProject(project)}
-      >
-        {@html pencilSvg}
-      </button>
-    {/if}
-  </div>
-</Link>
+<div class="project">
+  <span class="title">{title}</span>
+  {#if onEditClick}
+    <button class="edit" on:click|stopPropagation|preventDefault={onEditClick}>
+      <Pencil16 />
+    </button>
+  {/if}
+</div>
 
 <style>
   .project {
-    padding: 11px 25px 11px 0;
-    display: table;
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.25rem 0.75rem;
     box-sizing: border-box;
   }
 
@@ -35,29 +28,37 @@
     background: rgba(0, 0, 0, 0.03);
   }
 
-  .project > * {
-    display: table-cell;
-    vertical-align: top;
-  }
-
-  .project .edit {
-    background: none;
-    border: none;
-    cursor: pointer;
-    float: right;
-
-    padding-right: 5px;
-    padding-top: 3px;
-    width: 15px;
-  }
-
-  .project .edit:hover {
-    filter: brightness(0.3);
-  }
-
   .title {
+    line-height: 2rem;
+    flex: 1 1 auto;
+    max-width: 100%;
     font-size: var(--normal);
+    font-weight: 600;
     user-select: none;
     word-break: break-word;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .edit {
+    flex: 0 0 2rem;
+    padding: 0.125rem;
+    height: 2rem;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    fill: var(--primary);
+    background: transparent;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+  }
+
+  .edit:hover {
+    fill: var(--white);
+    background: var(--primary);
   }
 </style>

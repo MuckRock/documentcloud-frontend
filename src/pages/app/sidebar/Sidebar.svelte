@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
 
   // Components
@@ -6,12 +6,13 @@
   import Logo from "../../../common/Logo.svelte";
 
   import DocumentFilters from "./DocumentFilters.svelte";
-  import Projects from "./Projects.svelte";
+  import ProjectList from "./ProjectList.container.svelte";
 
   import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
 
   import { orgsAndUsers } from "../../../manager/orgsAndUsers.js";
 
+  // TODO: Make sidebar state internal
   const dispatch = createEventDispatcher();
 
   export let expanded;
@@ -26,7 +27,7 @@
   <DocumentFilters />
 
   {#if $orgsAndUsers.me !== null}
-    <Projects on:retractSidebar />
+    <ProjectList on:retractSidebar />
     <AddonSidebar />
   {/if}
 

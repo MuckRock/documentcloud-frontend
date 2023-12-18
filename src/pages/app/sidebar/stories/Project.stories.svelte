@@ -1,16 +1,39 @@
 <script context="module">
-  import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectComponent from "../Project.svelte";
-
-  import projects from "../../fixtures/projects.json";
+  import { Template, Story } from "@storybook/addon-svelte-csf";
+  import { action } from "@storybook/addon-actions";
+  import Project from "../Project.svelte";
 
   export const meta = {
     title: "App / Sidebar / Project",
-    component: ProjectComponent,
+    component: Project,
     parameters: { layout: "centered" },
+  };
+
+  const args = {
+    title: "My Project",
+    onEditClick: undefined,
   };
 </script>
 
-<Story name="Project">
-  <ProjectComponent project={projects.results[0]} />
-</Story>
+<Template let:args>
+  <div class="container">
+    <Project {...args} />
+  </div>
+</Template>
+
+<Story name="Default" {args} />
+<Story name="Editable" args={{ ...args, onEditClick: action("Edit") }} />
+<Story
+  name="Long Title"
+  args={{
+    ...args,
+    title:
+      "Super Really Long Title That Should Probably Be Truncated So It Doesn't Overflow",
+  }}
+/>
+
+<style>
+  .container {
+    max-width: 16rem;
+  }
+</style>
