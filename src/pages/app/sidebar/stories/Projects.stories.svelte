@@ -1,28 +1,25 @@
 <script context="module">
-  import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectsComponent from "../Projects.svelte";
+  import { Template, Story } from "@storybook/addon-svelte-csf";
+  import { action } from "@storybook/addon-actions";
+  import Projects from "../Projects.svelte";
 
-  import * as mock from "../../stories/mock.js";
+  import projectFixtures from "../../fixtures/projects.json";
 
   export const meta = {
     title: "App / Sidebar / Projects",
-    component: ProjectsComponent,
+    component: Projects,
     parameters: { layout: "fullscreen" },
+  };
+
+  const args = {
+    projects: projectFixtures.results,
+    newProject: action("New Project"),
   };
 </script>
 
-<Story
-  name="Projects"
-  parameters={{
-    msw: {
-      handlers: [
-        mock.users.data,
-        mock.users.me,
-        mock.organizations.data,
-        mock.projects.data,
-      ],
-    },
-  }}
->
-  <ProjectsComponent />
-</Story>
+<Template let:args>
+  <Projects {...args} />
+</Template>
+
+<Story name="With Projects" {args} />
+<Story name="Empty" args={{ ...args, projects: [] }} />

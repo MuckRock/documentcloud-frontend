@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Button from "@/common/Button.svelte";
-  import Title from "@/common/Title.svelte";
+  import Button from "../../../common/Button.svelte";
+  import Title from "../../../common/Title.svelte";
   import Project from "./Project.svelte";
 
-  import { projects } from "@/manager/projects.js";
-  import { newProject } from "@/manager/layout.js";
+  export let projects;
+  export let newProject;
 
   function sort(projects) {
     if (projects === null) return [];
@@ -16,7 +16,7 @@
     return projects;
   }
 
-  $: alphabetizedProjects = sort($projects.projects);
+  $: alphabetizedProjects = sort(projects);
 </script>
 
 <details class="projects">
@@ -59,7 +59,6 @@
   }
 
   .sticky {
-    background: var(--sidebar);
     z-index: var(--sidebarStickyZ);
   }
 
