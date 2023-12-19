@@ -1,26 +1,28 @@
-<script>
-  import Link from "@/router/Link.svelte";
-  import { allDocumentsUrl, userUrl, orgUrl } from "@/search/search.js";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
+<script lang="ts">
   import { _ } from "svelte-i18n";
+  import Link from "../../../router/Link.svelte";
+  import { allDocumentsUrl, userUrl, orgUrl } from "../../../search/search.js";
+  import { User } from "../accounts/types";
+
+  export let user: User | null;
 </script>
 
 <div class="linksection">
   <Link plusReplace={true} toUrl={allDocumentsUrl()}>
     <div class="link">{$_("projects.allDocuments")}</div>
   </Link>
-  {#if $orgsAndUsers.me !== null}
-    <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me)}>
+  {#if user !== null}
+    <Link plusReplace={true} toUrl={userUrl(user)}>
       <div class="link">{$_("projects.yourDocuments")}</div>
     </Link>
-    <Link plusReplace={true} toUrl={userUrl($orgsAndUsers.me, true)}>
+    <Link plusReplace={true} toUrl={userUrl(user, true)}>
       <div class="link">{$_("projects.yourPubDocuments")}</div>
     </Link>
-    {#if $orgsAndUsers.me.organization != null && !$orgsAndUsers.me.organization.individual}
-      <Link plusReplace={true} toUrl={orgUrl($orgsAndUsers.me.organization)}>
+    {#if user.organization != null && typeof user.organization !== "string" && !user.organization.individual}
+      <Link plusReplace={true} toUrl={orgUrl(user.organization)}>
         <div class="link">
           {$_("projects.orgDocuments", {
-            values: { name: $orgsAndUsers.me.organization.name },
+            values: { name: user.organization.name },
           })}
         </div>
       </Link>

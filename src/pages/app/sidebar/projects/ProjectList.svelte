@@ -1,10 +1,10 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import { projectUrl } from "../../../search/search.js";
-  import Link from "../../../router/Link.svelte";
-  import Button from "../../../common/Button.svelte";
-  import Title from "../../../common/Title.svelte";
+  import { projectUrl } from "../../../../search/search.js";
+  import Link from "../../../../router/Link.svelte";
+  import Button from "../../../../common/Button.svelte";
+  import Title from "../../../../common/Title.svelte";
   import Project from "./Project.svelte";
 
   export let projects;

@@ -1,9 +1,9 @@
-<script context="module">
+<script lang="ts" context="module">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import ProjectList from "../ProjectList.svelte";
 
-  import projectFixtures from "../../fixtures/projects.json";
+  import projectFixtures from "../../../fixtures/projects.json";
 
   export const meta = {
     title: "App / Sidebar / Project List",

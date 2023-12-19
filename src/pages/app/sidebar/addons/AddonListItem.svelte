@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { AddOnListItem } from "../types.ts";
+  import type { AddOnListItem } from "../../../../addons/types.ts";
 
-  import Pin from "../../common/icons/Pin.svelte";
+  import Pin from "../../../../common/icons/Pin.svelte";
   import ListItem from "./ListItem.svelte";
 
   export let addon: AddOnListItem;

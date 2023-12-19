@@ -2,8 +2,8 @@
   import { rest } from "msw";
   import { Story } from "@storybook/addon-svelte-csf";
 
-  import { baseApiUrl } from "../../../api/base.js";
-  import activeAddons from "../../fixtures/addons-active.json";
+  import { baseApiUrl } from "../../../../../api/base.js";
+  import activeAddons from "../../../../../addons/fixtures/addons-active.json";
   import Sidebar from "../Sidebar.svelte";
 
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();
@@ -14,7 +14,7 @@
   );
 
   export const meta = {
-    title: "Add-Ons / Sidebar",
+    title: "App / Sidebar / Add-Ons",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: Sidebar,

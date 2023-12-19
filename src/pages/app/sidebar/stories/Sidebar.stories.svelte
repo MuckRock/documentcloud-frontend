@@ -1,4 +1,4 @@
-<script context="module">
+<script lang="ts" context="module">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import SidebarComponent from "../Sidebar.svelte";
 

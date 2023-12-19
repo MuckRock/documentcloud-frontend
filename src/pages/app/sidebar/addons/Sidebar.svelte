@@ -3,11 +3,11 @@
   import { _ } from "svelte-i18n";
   import { ClockFill16 } from "svelte-octicons";
 
-  import { pinned } from "../AddOnPin.svelte";
-  import type { AddOnListItem } from "../types.ts";
+  import { pinned } from "../../../../addons/AddOnPin.svelte";
+  import type { AddOnListItem } from "../../../../addons/types.ts";
   import ListItem from "./ListItem.svelte";
   import AddonListItem from "./AddonListItem.svelte";
-  import { baseApiUrl } from "../../api/base.js";
+  import { baseApiUrl } from "../../../../api/base.js";
 
   const endpoint = new URL("/api/addons/?active=true&per_page=100", baseApiUrl);
   const options: RequestInit = {

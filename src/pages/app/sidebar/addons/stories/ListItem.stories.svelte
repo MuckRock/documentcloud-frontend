@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import ListItem from "../ListItem.svelte";
-  import Pin from "../../../common/icons/Pin.svelte";
+  import Pin from "../../../../../common/icons/Pin.svelte";
 
   let args = {};
 
   export const meta = {
-    title: "Add-Ons / Sidebar / List Item",
+    title: "App / Sidebar / Add-Ons / List Item",
     parameters: { layout: "centered" },
     component: ListItem,
   };

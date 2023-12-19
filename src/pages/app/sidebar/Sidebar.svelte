@@ -6,9 +6,9 @@
   import Logo from "../../../common/Logo.svelte";
 
   import DocumentFilters from "./DocumentFilters.svelte";
-  import ProjectList from "./ProjectList.container.svelte";
-
-  import AddonSidebar from "../../../addons/sidebar/Sidebar.svelte";
+  
+  import AddonSidebar from "./addons/Sidebar.svelte";
+  import ProjectList from "./projects/ProjectList.container.svelte";
 
   import { orgsAndUsers } from "../../../manager/orgsAndUsers.js";
 
