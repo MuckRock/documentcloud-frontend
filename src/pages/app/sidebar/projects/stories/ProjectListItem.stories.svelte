@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
-  import Project from "../Project.svelte";
+  import ProjectListItem from "../ProjectListItem.svelte";
 
   export const meta = {
-    title: "App / Sidebar / Project",
-    component: Project,
+    title: "App / Sidebar / Project List / Item",
+    component: ProjectListItem,
     parameters: { layout: "centered" },
   };
 
@@ -17,7 +17,7 @@
 
 <Template let:args>
   <div class="container">
-    <Project {...args} />
+    <ProjectListItem {...args} />
   </div>
 </Template>
 

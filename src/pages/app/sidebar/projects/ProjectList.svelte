@@ -6,7 +6,7 @@
   import { projectUrl } from "../../../../search/search.js";
   import Link from "../../../../router/Link.svelte";
   import Button from "../../../../common/Button.svelte";
-  import ProjectListItem from "./Project.svelte";
+  import ProjectListItem from "./ProjectListItem.svelte";
   import ListHeader from "../ListHeader.svelte";
 
   export let user: User;

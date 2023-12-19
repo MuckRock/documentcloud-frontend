@@ -10,6 +10,7 @@
     component: ProjectList,
     parameters: {
       layout: "centered",
+      chromatic: { delay: 300 },
       msw: {
         handlers: [projects.data],
       },
