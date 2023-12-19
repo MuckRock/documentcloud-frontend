@@ -2,7 +2,7 @@
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import SidebarComponent from "../Sidebar.svelte";
 
-  import * as mock from "../../stories/mock.js";
+  import * as mock from "../../stories/mock";
 
   export const meta = {
     title: "App / Sidebar",

@@ -1,7 +1,7 @@
 <script context="module">
   import { Story } from "@storybook/addon-svelte-csf";
   import SearchLink from "../SearchLink.svelte";
-  import * as mock from "./mock.js";
+  import * as mock from "./mock";
 
   export const meta = {
     title: "App / Search / Search Link",

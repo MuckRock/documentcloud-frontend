@@ -1,7 +1,7 @@
 <script context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import SearchBar from "../SearchBar.svelte";
-  import * as mock from "./mock.js";
+  import * as mock from "./mock";
 
   export const meta = {
     title: "App / Search / Search Bar",

@@ -3,7 +3,7 @@
   import { action } from "@storybook/addon-actions";
   import ProjectList from "../ProjectList.svelte";
 
-  import projectFixtures from "../../../fixtures/projects.json";
+  import { projectList } from "../../../../../api/fixtures/project";
 
   export const meta = {
     title: "App / Sidebar / Project List",
@@ -12,7 +12,7 @@
   };
 
   const args = {
-    projects: projectFixtures.results,
+    projects: projectList.results,
     newProject: action("New Project"),
     editProject: action("Edit Project"),
   };
