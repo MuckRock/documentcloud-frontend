@@ -12,13 +12,25 @@
 
   import { newProject, editProject } from "../../../manager/layout.js";
   import { getMe } from "../../../api/orgAndUser";
+  import { User } from "../../../api/types/orgAndUser";
 
   // TODO: Make sidebar state internal
   const dispatch = createEventDispatcher();
 
   export let expanded;
 
-  const userPromise = getMe();
+  let user: User | null = null;
+
+  async function getMeHandler() {
+    try {
+      user = await getMe();
+    } catch {
+      user = null;
+    }
+    return user;
+  }
+
+  getMeHandler();
 </script>
 
 <aside class="sidebar" class:expanded>
@@ -27,15 +39,11 @@
     <Logo />
   </header>
 
-  {#await userPromise}
-    <DocumentFilters user={null} />
-  {:then user}
-    <DocumentFilters {user} />
+  <DocumentFilters {user} />
+  {#if user}
     <AddonList />
     <ProjectList {user} {newProject} {editProject} />
-  {:catch}
-    <DocumentFilters user={null} />
-  {/await}
+  {/if}
 
   <!-- todo get rid of this -->
   <div class="sidebarbg" />
