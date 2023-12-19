@@ -3,16 +3,21 @@
   import { action } from "@storybook/addon-actions";
   import ProjectList from "../ProjectList.svelte";
 
-  import { projectList } from "../../../../../api/fixtures/project";
+  import { projects } from "../../../stories/mock";
 
   export const meta = {
     title: "App / Sidebar / Project List",
     component: ProjectList,
-    parameters: { layout: "centered" },
+    parameters: {
+      layout: "centered",
+      msw: {
+        handlers: [projects.data],
+      },
+    },
   };
 
   const args = {
-    projects: projectList.results,
+    user: { id: 1 },
     newProject: action("New Project"),
     editProject: action("Edit Project"),
   };
@@ -22,8 +27,22 @@
   <div class="sidebar"><ProjectList {...args} /></div>
 </Template>
 
-<Story name="With Projects" {args} />
-<Story name="Empty" args={{ ...args, projects: [] }} />
+<Story name="Data" {args} parameters={{ msw: { handlers: [projects.data] } }} />
+<Story
+  name="Empty"
+  args={{ ...args }}
+  parameters={{ msw: { handlers: [projects.empty] } }}
+/>
+<Story
+  name="Loading"
+  args={{ ...args }}
+  parameters={{ msw: { handlers: [projects.loading] } }}
+/>
+<Story
+  name="Error"
+  args={{ ...args }}
+  parameters={{ msw: { handlers: [projects.error] } }}
+/>
 
 <style>
   .sidebar {

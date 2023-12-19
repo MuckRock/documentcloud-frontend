@@ -7,10 +7,11 @@
 
   import DocumentFilters from "./DocumentFilters.svelte";
 
-  import AddonSidebar from "./addons/AddonList.svelte";
-  import ProjectList from "./projects/ProjectList.container.svelte";
+  import AddonList from "./addons/AddonList.svelte";
+  import ProjectList from "./projects/ProjectList.svelte";
 
   import { orgsAndUsers } from "../../../manager/orgsAndUsers.js";
+  import { newProject, editProject } from "../../../manager/layout.js";
 
   // TODO: Make sidebar state internal
   const dispatch = createEventDispatcher();
@@ -27,8 +28,8 @@
   <DocumentFilters user={$orgsAndUsers.me} />
 
   {#if $orgsAndUsers.me !== null}
-    <ProjectList on:retractSidebar />
-    <AddonSidebar />
+    <AddonList />
+    <ProjectList user={$orgsAndUsers.me} {newProject} {editProject} />
   {/if}
 
   <!-- todo get rid of this -->

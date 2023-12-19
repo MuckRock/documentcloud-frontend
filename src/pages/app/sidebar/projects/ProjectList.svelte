@@ -1,14 +1,15 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
+  import { User } from "../../../../api/types/orgAndUser";
+  import { getProjects } from "../../../../api/project.js";
   import { projectUrl } from "../../../../search/search.js";
   import Link from "../../../../router/Link.svelte";
   import Button from "../../../../common/Button.svelte";
-  import Title from "../../../../common/Title.svelte";
-  import Project from "./Project.svelte";
+  import ProjectListItem from "./Project.svelte";
   import ListHeader from "../ListHeader.svelte";
 
-  export let projects;
+  export let user: User;
   export let newProject;
   export let editProject;
 
@@ -20,7 +21,11 @@
     return projects;
   }
 
-  $: alphabetizedProjects = sort(projects);
+  async function getProjectList() {
+    return sort(await getProjects(user.id));
+  }
+
+  const promise = getProjectList();
 </script>
 
 <ListHeader>
@@ -29,22 +34,28 @@
     >{$_("projects.newProject")}</Button
   >
 </ListHeader>
-<div class="projectcontainer">
-  {#if alphabetizedProjects.length > 0}
-    {#each alphabetizedProjects as project}
-      <Link toUrl={projectUrl(project)}>
-        <Project
-          title={project.title}
-          onEditClick={project.editAccess
-            ? () => editProject(project)
-            : undefined}
-        />
-      </Link>
-    {/each}
-  {:else}
-    <small>{$_("projects.createProject")}</small>
-  {/if}
-</div>
+{#await promise}
+  <p>Loading…</p>
+{:then projects}
+  <div class="projectcontainer">
+    {#if projects.length > 0}
+      {#each projects as project}
+        <Link toUrl={projectUrl(project)}>
+          <ProjectListItem
+            title={project.title}
+            onEditClick={project.editAccess
+              ? () => editProject(project)
+              : undefined}
+          />
+        </Link>
+      {/each}
+    {:else}
+      <small>{$_("projects.createProject")}</small>
+    {/if}
+  </div>
+{:catch}
+  <p>Error!</p>
+{/await}
 
 <style>
   .projects {
