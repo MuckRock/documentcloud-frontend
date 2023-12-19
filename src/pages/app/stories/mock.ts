@@ -3,6 +3,7 @@ import { baseApiUrl } from "../../../api/base.js";
 
 import usersFixture from "../fixtures/users.json";
 import orgFixtures from "../fixtures/organizations.json";
+import listFixture from "../../../addons/fixtures/addon-list.json";
 import { projectList } from "../../../api/test/fixtures/project";
 import { emptyList } from "../../../api/test/fixtures/empty";
 import meFixture from "../fixtures/me.json";
@@ -24,14 +25,29 @@ const urls = {
   organizations: createApiUrl("organizations"),
   projects: createApiUrl("projects/"),
   runs: createApiUrl("addon_runs/"),
+  addons: createApiUrl("addons/"),
+};
+
+export const addons = {
+  data: rest.get(urls.addons, dataHandler(listFixture)),
+  loading: rest.get(urls.addons, loadingHandler),
+  error: rest.get(urls.addons, errorHandler),
+  empty: rest.get(urls.addons, emptyHandler),
 };
 
 export const users = {
   data: rest.get(urls.users, dataHandler(usersFixture)),
   empty: rest.get(urls.users, emptyHandler),
-  me: rest.get(urls.me, dataHandler(meFixture)),
   loading: rest.get(urls.users, loadingHandler),
   error: rest.get(urls.users, errorHandler),
+  me: rest.get(urls.me, dataHandler(meFixture)),
+};
+
+export const me = {
+  data: rest.get(urls.me, dataHandler(meFixture)),
+  empty: rest.get(urls.me, emptyHandler),
+  loading: rest.get(urls.me, loadingHandler),
+  error: rest.get(urls.me, errorHandler),
 };
 
 export const organizations = {

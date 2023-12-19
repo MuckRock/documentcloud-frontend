@@ -10,13 +10,15 @@
   import AddonList from "./addons/AddonList.svelte";
   import ProjectList from "./projects/ProjectList.svelte";
 
-  import { orgsAndUsers } from "../../../manager/orgsAndUsers.js";
   import { newProject, editProject } from "../../../manager/layout.js";
+  import { getMe } from "../../../api/orgAndUser";
 
   // TODO: Make sidebar state internal
   const dispatch = createEventDispatcher();
 
   export let expanded;
+
+  const userPromise = getMe();
 </script>
 
 <aside class="sidebar" class:expanded>
@@ -25,12 +27,15 @@
     <Logo />
   </header>
 
-  <DocumentFilters user={$orgsAndUsers.me} />
-
-  {#if $orgsAndUsers.me !== null}
+  {#await userPromise}
+    <DocumentFilters user={null} />
+  {:then user}
+    <DocumentFilters {user} />
     <AddonList />
-    <ProjectList user={$orgsAndUsers.me} {newProject} {editProject} />
-  {/if}
+    <ProjectList {user} {newProject} {editProject} />
+  {:catch}
+    <DocumentFilters user={null} />
+  {/await}
 
   <!-- todo get rid of this -->
   <div class="sidebarbg" />

@@ -10,12 +10,7 @@
     parameters: {
       layout: "fullscreen",
       msw: {
-        handlers: [
-          mock.users.data,
-          mock.users.me,
-          mock.organizations.data,
-          mock.projects.data,
-        ],
+        handlers: [mock.me.data, mock.projects.data, mock.addons.data],
       },
     },
     argTypes: {
@@ -34,4 +29,9 @@
   <SidebarComponent {...args} />
 </Template>
 
-<Story name="Sidebar" {args} />
+<Story name="Logged In" {args} />
+<Story
+  name="Logged Out"
+  {args}
+  parameters={{ msw: { handlers: [mock.me.error] } }}
+/>
