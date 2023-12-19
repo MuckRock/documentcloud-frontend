@@ -8,7 +8,7 @@
   export const meta = {
     title: "App / Sidebar / Project List",
     component: ProjectList,
-    parameters: { layout: "fullscreen" },
+    parameters: { layout: "centered" },
   };
 
   const args = {
@@ -19,8 +19,16 @@
 </script>
 
 <Template let:args>
-  <ProjectList {...args} />
+  <div class="sidebar"><ProjectList {...args} /></div>
 </Template>
 
 <Story name="With Projects" {args} />
 <Story name="Empty" args={{ ...args, projects: [] }} />
+
+<style>
+  .sidebar {
+    padding: 1.5rem 0;
+    width: var(--sidebar-width);
+    background-color: var(--sidebar);
+  }
+</style>

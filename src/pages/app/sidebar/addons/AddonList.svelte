@@ -4,10 +4,12 @@
   import { ClockFill16 } from "svelte-octicons";
 
   import { pinned } from "../../../../addons/AddOnPin.svelte";
-  import type { AddOnListItem } from "../../../../addons/types.ts";
-  import ListItem from "./ListItem.svelte";
+  import type { AddOnListItem } from "../../../../addons/types";
+  import ListItem from "../ListItem.svelte";
   import AddonListItem from "./AddonListItem.svelte";
   import { baseApiUrl } from "../../../../api/base.js";
+  import ListHeader from "../ListHeader.svelte";
+  import Button from "../../../../common/Button.svelte";
 
   const endpoint = new URL("/api/addons/?active=true&per_page=100", baseApiUrl);
   const options: RequestInit = {
@@ -34,42 +36,22 @@
   });
 </script>
 
-<div class="addon-sidebar">
-  <h3 class="section-title">
-    <a href="#add-ons">{$_("addonSidebar.title")}</a>
-  </h3>
-  <ListItem href="#add-ons/runs" label={$_("addonSidebar.runs")}>
-    <span slot="icon" class="runs-icon"><ClockFill16 /></span>
-  </ListItem>
-  {#if $pinned.length}
-    <ul class="addons">
-      {#each sort($pinned) as addon (addon.id)}
-        <li><AddonListItem {addon} /></li>
-      {/each}
-    </ul>
-  {/if}
-</div>
+<ListHeader>
+  {$_("addonSidebar.title")}
+  <Button href="#add-ons" small={true} slot="action">Browse</Button>
+</ListHeader>
+<ListItem href="#add-ons/runs" label={$_("addonSidebar.runs")}>
+  <span slot="icon" class="runs-icon"><ClockFill16 /></span>
+</ListItem>
+{#if $pinned.length}
+  <ul class="addons">
+    {#each sort($pinned) as addon (addon.id)}
+      <li><AddonListItem {addon} /></li>
+    {/each}
+  </ul>
+{/if}
 
 <style>
-  .addon-sidebar {
-    padding: 0 1.5rem;
-  }
-
-  .section-title {
-    margin: 0 0 0.5rem;
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .section-title a {
-    display: block;
-    padding: 0.25em 0.5em;
-  }
-
-  .section-title a:hover {
-    background-color: var(--menuBg);
-  }
-
   .runs-icon {
     fill: var(--gray);
   }

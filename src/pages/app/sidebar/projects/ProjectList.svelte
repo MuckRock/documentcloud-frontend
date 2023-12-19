@@ -6,6 +6,7 @@
   import Button from "../../../../common/Button.svelte";
   import Title from "../../../../common/Title.svelte";
   import Project from "./Project.svelte";
+  import ListHeader from "../ListHeader.svelte";
 
   export let projects;
   export let newProject;
@@ -22,32 +23,28 @@
   $: alphabetizedProjects = sort(projects);
 </script>
 
-<details class="projects">
-  <summary class="sticky">
-    <div class="titlesection">
-      <Title small={true}>{$_("projects.header")}</Title>
-      <Button on:click={newProject} small={true}
-        >{$_("projects.newProject")}</Button
-      >
-    </div>
-  </summary>
-  <div class="projectcontainer">
-    {#if alphabetizedProjects.length > 0}
-      {#each alphabetizedProjects as project}
-        <Link toUrl={projectUrl(project)}>
-          <Project
-            title={project.title}
-            onEditClick={project.editAccess
-              ? () => editProject(project)
-              : undefined}
-          />
-        </Link>
-      {/each}
-    {:else}
-      <small>{$_("projects.createProject")}</small>
-    {/if}
-  </div>
-</details>
+<ListHeader>
+  {$_("projects.header")}
+  <Button on:click={newProject} small={true} slot="action"
+    >{$_("projects.newProject")}</Button
+  >
+</ListHeader>
+<div class="projectcontainer">
+  {#if alphabetizedProjects.length > 0}
+    {#each alphabetizedProjects as project}
+      <Link toUrl={projectUrl(project)}>
+        <Project
+          title={project.title}
+          onEditClick={project.editAccess
+            ? () => editProject(project)
+            : undefined}
+        />
+      </Link>
+    {/each}
+  {:else}
+    <small>{$_("projects.createProject")}</small>
+  {/if}
+</div>
 
 <style>
   .projects {

@@ -6,8 +6,8 @@
   import Logo from "../../../common/Logo.svelte";
 
   import DocumentFilters from "./DocumentFilters.svelte";
-  
-  import AddonSidebar from "./addons/Sidebar.svelte";
+
+  import AddonSidebar from "./addons/AddonList.svelte";
   import ProjectList from "./projects/ProjectList.container.svelte";
 
   import { orgsAndUsers } from "../../../manager/orgsAndUsers.js";
@@ -24,7 +24,7 @@
     <Logo />
   </header>
 
-  <DocumentFilters />
+  <DocumentFilters user={$orgsAndUsers.me} />
 
   {#if $orgsAndUsers.me !== null}
     <ProjectList on:retractSidebar />

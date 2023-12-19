@@ -6,6 +6,7 @@
 <a class="list-item" {href}>
   {#if $$slots.icon}<div class="icon"><slot name="icon" /></div>{/if}
   <h4>{label}</h4>
+  {#if $$slots.action}<div class="action"><slot name="action" /></div>{/if}
 </a>
 
 <style>
@@ -26,7 +27,12 @@
     margin-top: 0.15em;
   }
 
+  .action {
+    flex: 0 0 auto;
+  }
+
   h4 {
+    flex: 1 1 auto;
     margin: 0;
     font-weight: 600;
   }
