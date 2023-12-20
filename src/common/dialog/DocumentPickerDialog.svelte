@@ -13,15 +13,13 @@
   }
 </script>
 
-<div>
-  <div class="mcontent">
-    <div class="documents">
-      <Documents dialog={true} embed={true} on:pick={handlePick} />
-    </div>
+<div class="mcontent">
+  <div class="documents">
+    <Documents dialog={true} embed={true} on:pick={handlePick} />
   </div>
 </div>
 
-<style lang="scss">
+<style>
   .documents {
     padding: 0 10px;
   }

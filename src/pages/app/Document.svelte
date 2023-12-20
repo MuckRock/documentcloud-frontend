@@ -168,17 +168,23 @@
               </Link>
             {/each}
             {#if document.dataPoints.length > 0 && document.editAccess}
-              <span class="pencil" on:click={() => editData([document])}>
+              <button
+                class="pencil buttonLike"
+                on:click={() => editData([document])}
+              >
                 {@html pencilSvg}
-              </span>
+              </button>
             {/if}
           {/if}
         </div>
         {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}
           <div class="hinfo">
-            <span class="x" on:click={() => (closeHighlights = true)}>
+            <button
+              class="x buttonLike"
+              on:click={() => (closeHighlights = true)}
+            >
               {@html closeSimpleSvg}
-            </span>
+            </button>
 
             {#if moreToExpand}
               <span>
@@ -189,9 +195,12 @@
                   },
                 })}
               </span>
-              <span class="padleft" on:click={() => (expandHighlights = true)}>
+              <button
+                class="padleft buttonLike"
+                on:click={() => (expandHighlights = true)}
+              >
                 {$_("document.showAll")}
-              </span>
+              </button>
             {:else}
               <span>
                 {$_("document.matchingPages", {
@@ -239,9 +248,12 @@
 
         {#if document.noteHighlights != null && document.noteHighlights.length > 0 && !closeNoteHighlights}
           <div class="hinfo">
-            <span class="x" on:click={() => (closeNoteHighlights = true)}>
+            <button
+              class="x buttonLike"
+              on:click={() => (closeNoteHighlights = true)}
+            >
               {@html closeSimpleSvg}
-            </span>
+            </button>
 
             <span>Notes matching the query</span>
           </div>

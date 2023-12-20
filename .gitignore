@@ -39,3 +39,4 @@ tests/fixtures/development.json
 
 scratch/
 dist/
+storybook-static/
