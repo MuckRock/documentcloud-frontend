@@ -4,10 +4,7 @@
   import { tick } from "svelte";
   import { _ } from "svelte-i18n";
 
-  // SVG assets
-  import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg?raw";
-  import searchIconSvg from "@/assets/search_icon.svg?raw";
-  import closeInlineSvg from "@/assets/close_inline.svg?raw";
+  import { Search16, Search24, XCircle16 } from "svelte-octicons";
 
   let query = "";
   let searchElem = null;
@@ -78,10 +75,10 @@
     class:disabled={invalidQuery || $layout.searchPending}
     on:click={search}
   >
-    {@html searchIconSvg}
+    <Search16 />
   </button>
   <button class="closeicon buttonLike" on:click={retract}>
-    {@html closeInlineSvg}
+    <XCircle16 />
   </button>
 </div>
 <button
@@ -89,16 +86,12 @@
   class:hide={$layout.searchExpanded}
   on:click={expandSearch}
 >
-  {@html viewerSearchIconSvg}
+  <Search24 />
 </button>
 
 <svelte:window on:keydown={handleKeyDown} />
 
 <style>
-  .icon {
-    margin: 0 12px;
-  }
-
   .icon.hide {
     display: none;
   }
