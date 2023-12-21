@@ -1,7 +1,6 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { getMe } from "../../api/orgAndUser.js";
-  import { changeRevisionControl } from "../../api/document.js";
   import {
     isOrgAdmin,
     isPremiumOrg,
@@ -16,19 +15,15 @@
   import Loader from "../Loader.svelte";
 
   export let documentId: string;
-  export let enabled: boolean | null;
+  export let enabled: boolean = false;
   export let revisions: Revision[] | null = [];
+  export let onSave: (enabled: boolean) => void;
+  export let onCancel: () => {};
 
   $: sortedRevisions =
     revisions?.sort((a, b) => {
       return b.version - a.version;
     }) ?? [];
-
-  async function handleRevisionControlChange(event: Event) {
-    const checkbox = event.currentTarget as HTMLInputElement;
-    const value = checkbox.checked;
-    changeRevisionControl([documentId], value);
-  }
 
   let getMePromise = getMe();
   function retryGetMe() {
@@ -46,51 +41,55 @@
         <PremiumBadge />
       </header>
 
-      {#if isPremiumOrg(user.organization)}
+      {#if enabled}
+        <div class="overflow-scroll">
+          <table class="revisions">
+            {#each sortedRevisions as revision}
+              <tr class="revision">
+                <td class="revision-version count">{revision.version}</td>
+                <td class="revision-details">
+                  <p class="revision-comment">{revision.comment}</p>
+                  <span class="revision-time"
+                    ><RelativeTime date={new Date(revision.created_at)} /></span
+                  >
+                </td>
+                <td class="revision-download"
+                  ><Button href={revision.url} download nomargin
+                    >{$_("dialogRevisionsDialog.download")}</Button
+                  ></td
+                >
+              </tr>
+            {:else}
+              <tr class="empty"><td>{$_("dialogRevisionsDialog.empty")}</td></tr
+              >
+            {/each}
+          </table>
+        </div>
+        {#if revisions.length > 0}<p class="count">
+            {$_("dialogRevisionsDialog.total", {
+              values: { n: revisions.length },
+            })}
+          </p>{/if}
+      {/if}
+
+      {#if isPremiumOrg(user?.organization)}
         <form>
           <label class="revision-control-input">
             <input
               type="checkbox"
               name="revision_control"
-              checked={enabled ?? false}
-              on:change={handleRevisionControlChange}
+              bind:checked={enabled}
             />
             {$_("dialogRevisionsDialog.controlLabel")}
           </label>
-        </form>
-        {#if enabled}
-          <div class="overflow-scroll">
-            <table class="revisions">
-              {#each sortedRevisions as revision}
-                <tr class="revision">
-                  <td class="revision-version count">{revision.version}</td>
-                  <td class="revision-details">
-                    <p class="revision-comment">{revision.comment}</p>
-                    <span class="revision-time"
-                      ><RelativeTime
-                        date={new Date(revision.created_at)}
-                      /></span
-                    >
-                  </td>
-                  <td class="revision-download"
-                    ><Button href={revision.url} download nomargin
-                      >{$_("dialogRevisionsDialog.download")}</Button
-                    ></td
-                  >
-                </tr>
-              {:else}
-                <tr class="empty"
-                  ><td>{$_("dialogRevisionsDialog.empty")}</td></tr
-                >
-              {/each}
-            </table>
+          <div class="buttons">
+            <Button on:click={() => onSave(enabled)}>{$_("dialog.save")}</Button
+            >
+            <Button secondary={true} on:click={onCancel}>
+              {$_("dialog.cancel")}
+            </Button>
           </div>
-          {#if revisions.length > 0}<p class="count">
-              {$_("dialogRevisionsDialog.total", {
-                values: { n: revisions.length },
-              })}
-            </p>{/if}
-        {/if}
+        </form>
       {:else if isOrgAdmin(user)}
         <UpgradePrompt
           message={$_("dialogRevisionsDialog.upgrade.message")}
@@ -184,5 +183,9 @@
     opacity: 0.5;
     text-transform: uppercase;
     font-weight: 600;
+  }
+  .buttons {
+    display: flex;
+    gap: 1rem;
   }
 </style>

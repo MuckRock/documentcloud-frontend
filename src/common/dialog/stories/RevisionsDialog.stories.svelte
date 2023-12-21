@@ -7,6 +7,7 @@
   import { revisionControl } from "./mockData";
 
   import { mockGetMe } from "../../../pages/app/accounts/stories/mockData";
+  import { Action } from "../../stories/Button.stories";
 
   const today = new Date().getDate();
   const manyRevisions = Array(100)
@@ -25,6 +26,8 @@
     enabled: true,
     documentId: "1",
     revisions: documentFixture.revisions,
+    onSave: action("Save"),
+    onCancel: action("Cancel"),
   };
 
   export const meta = {
