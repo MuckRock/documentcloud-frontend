@@ -134,21 +134,19 @@
 
   <div class="option">
     <div class="middle">
-      <div class="flex spaceBetween">
-        <div>
-          <label class:fade={!isPremiumOrg(org)}>
-            {$_("uploadOptions.revisionControl")}
-            <input
-              type="checkbox"
-              bind:checked={revisionControl}
-              disabled={!isPremiumOrg(org)}
-            />
-          </label>
-          <p class="small gray nomargin" class:fade={!isPremiumOrg(org)}>
-            {$_("uploadOptions.revisionControlHelp")}
-          </p>
-        </div>
-        <PremiumBadge />
+      <div>
+        <label class:fade={!isPremiumOrg(org)}>
+          {$_("uploadOptions.revisionControl")}
+          <input
+            type="checkbox"
+            bind:checked={revisionControl}
+            disabled={!isPremiumOrg(org)}
+          />
+          <PremiumBadge />
+        </label>
+        <p class="small gray nomargin" class:fade={!isPremiumOrg(org)}>
+          {$_("uploadOptions.revisionControlHelp")}
+        </p>
       </div>
       {#if !isPremiumOrg(org)}
         <p class="small gray nomargin">
