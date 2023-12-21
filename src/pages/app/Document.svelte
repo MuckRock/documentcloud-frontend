@@ -479,14 +479,15 @@
 
   .document-title-row {
     display: flex;
-    gap: 1em;
+    gap: 0.5rem;
   }
 
   .document-title-row h2 {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
   }
 
   .document-title-row-actions {
+    flex: 0 1 auto;
     display: flex;
     gap: 0.5em 0;
     flex-direction: row;
@@ -497,7 +498,6 @@
   .document-meta-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 1em;
   }
 
   .document-meta {
@@ -509,12 +509,9 @@
     padding: 0;
   }
 
-  @media only screen and (max-width: 720px) {
-    .document-title-row-actions {
-      flex-direction: column;
-      height: auto;
-      padding: 0.25em 0;
-    }
+  .document-meta:not(:last-child)::after {
+    content: "–";
+    margin: 0 0.25rem;
   }
 
   .description {
