@@ -7,7 +7,7 @@
   import Link from "../../router/Link.svelte";
 
   import Search from "./controls/Search.svelte";
-  import Hamburger from "./controls/Hamburger.svelte";
+  import Hamburger from "../../common/Hamburger.svelte";
 
   import { HEADER_HEIGHT } from "./constants.js";
 
@@ -60,7 +60,10 @@
       <Search />
     </div>
     <div class="cell">
-      <Hamburger on:click={(e) => dispatch("toggle.sidebar")} />
+      <Hamburger
+        class="plausible-event-name=viewer-hamburger"
+        on:click={(e) => dispatch("toggle.sidebar")}
+      />
     </div>
   </div>
 </header>

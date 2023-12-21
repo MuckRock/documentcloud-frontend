@@ -35,7 +35,10 @@
 
 <aside class="sidebar" class:expanded>
   <header>
-    <Hamburger on:toggle={(e) => dispatch("retractSidebar")} />
+    <Hamburger
+      class="plausible-event-name=sidebar-retract"
+      on:click={(e) => dispatch("retractSidebar")}
+    />
     <Logo />
   </header>
 

@@ -98,7 +98,10 @@
     <Modal component={UploadEmailDialog} on:close={hideMailkey} />
   {/if}
   {#if !embed}
-    <Hamburger on:toggle={emit.expandSidebar} />
+    <Hamburger
+      class="plausible-event-name=sidebar-expand"
+      on:click={emit.expandSidebar}
+    />
   {/if}
   {#if !$documents.error}
     <div
