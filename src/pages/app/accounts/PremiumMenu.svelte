@@ -6,7 +6,7 @@
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Button from "../../../common/Button.svelte";
-  import Credit from "../../../common/icons/Credit.svelte";
+  import Premium from "../../../common/icons/Premium.svelte";
   import CreditMeter, {
     formatResetDate,
   } from "../../../premium-credits/CreditMeter.svelte";
@@ -41,7 +41,7 @@
 <Dropdown id={dropdownId} titleColor="premium">
   <span class="premium" slot="title">
     <MenuTitle label={$_("authSection.premiumUpgrade.title")}>
-      <div class="whiteBg" slot="icon"><Credit size={1.5} /></div>
+      <div class="whiteBg" slot="icon"><Premium size={1.5} /></div>
     </MenuTitle>
   </span>
   <Menu>
@@ -122,7 +122,7 @@
     justify-content: center;
     height: 1.5rem;
     width: 1.5rem;
-    background: var(--white, #ffffff);
+    background: transparent;
   }
   .learnMore {
     font-size: 0.8em;

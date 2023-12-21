@@ -19,7 +19,7 @@
   }
   .icon {
     flex: 0 0 auto;
-    background-color: rgba(255, 255, 255, 0.1);
+    /* background-color: rgba(255, 255, 255, 0.1); */
     border-radius: 50%;
     margin-right: 0.325em;
     overflow: hidden;
