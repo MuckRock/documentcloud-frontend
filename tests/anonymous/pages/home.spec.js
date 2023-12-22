@@ -13,5 +13,5 @@ test("basic homepage test", async ({ page }) => {
   // and back
   await page.goBack();
 
-  await expect(page).toHaveTitle("Home | DocumentCloud");
+  await expect(page).toHaveTitle("DocumentCloud");
 });
