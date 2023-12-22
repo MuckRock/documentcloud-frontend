@@ -1,6 +1,10 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import { ChevronLeft24, SidebarExpand24 } from "svelte-octicons";
+  import {
+    ChevronLeft24,
+    SidebarCollapse24,
+    SidebarExpand24,
+  } from "svelte-octicons";
   import { createEventDispatcher } from "svelte";
 
   import Loader from "../../common/Loader.svelte";
@@ -17,6 +21,7 @@
   export let showOrg = true;
   export let disableControls = false;
   export let embed = false;
+  export let sidebarOpen: boolean;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -58,7 +63,10 @@
       class="plausible-event-name=viewer-hamburger"
       on:click={(e) => dispatch("toggle.sidebar")}
     >
-      <SidebarExpand24 slot="icon" />
+      <span slot="icon"
+        >{#if sidebarOpen}<SidebarCollapse24 />{:else}<SidebarExpand24
+          />{/if}</span
+      >
     </Hamburger>
   </div>
 </header>
