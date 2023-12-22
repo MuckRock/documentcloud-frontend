@@ -10,9 +10,11 @@
   $: label = addon.name;
 </script>
 
-<ListItem {href} {label}>
-  <div slot="icon" class="icon"><Pin title={label} /></div>
-</ListItem>
+<a {href}>
+  <ListItem {label}>
+    <div slot="icon" class="icon"><Pin title={label} /></div>
+  </ListItem>
+</a>
 
 <style>
   .icon {

@@ -1,18 +1,20 @@
 <script lang="ts">
   import Pencil16 from "svelte-octicons/lib/Pencil16.svelte";
+  import ListItem from "../ListItem.svelte";
+  import { FileDirectoryFill16 } from "svelte-octicons";
 
   export let title;
   export let onEditClick;
 </script>
 
-<div class="project">
-  <span class="title">{title}</span>
+<ListItem label={title}>
+  <span slot="icon" class="folder"><FileDirectoryFill16 slot="icon" /></span>
   {#if onEditClick}
     <button class="edit" on:click|stopPropagation|preventDefault={onEditClick}>
       <Pencil16 />
     </button>
   {/if}
-</div>
+</ListItem>
 
 <style>
   .project {
@@ -26,6 +28,10 @@
 
   .project:hover {
     background: rgba(0, 0, 0, 0.03);
+  }
+
+  .folder {
+    fill: var(--primary);
   }
 
   .title {

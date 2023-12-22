@@ -9,7 +9,7 @@
   .listHeader {
     display: flex;
     align-items: center;
-    margin: 0 0.5em 0.5rem;
+    margin: 0 1.5rem 0.5rem;
     border-radius: var(--radius);
     overflow: hidden;
   }
