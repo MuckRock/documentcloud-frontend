@@ -166,7 +166,7 @@
 <style>
   .app-layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
   }
 
   .app-layout main {
