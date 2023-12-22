@@ -90,7 +90,7 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem 1.5rem;
-    min-width: 14.375rem;
+    min-width: 13.375rem;
   }
 
   header .logo {
