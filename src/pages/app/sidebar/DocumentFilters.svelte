@@ -15,12 +15,12 @@
   >
 </Link>
 {#if user !== null}
-  <Link plusReplace={true} toUrl={userUrl(user, true)}>
+  <Link plusReplace={true} toUrl={userUrl(user, { access: "public" })}>
     <ListItem label={$_("projects.yourPubDocuments")}>
       <Globe16 slot="icon" />
     </ListItem>
   </Link>
-  <Link plusReplace={true} toUrl={userUrl(user)}>
+  <Link plusReplace={true} toUrl={userUrl(user, { access: "private" })}>
     <ListItem label={$_("projects.yourDocuments")}>
       <Lock16 slot="icon" />
     </ListItem>
