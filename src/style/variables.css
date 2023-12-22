@@ -95,12 +95,12 @@
 
   --spinnerZ: 8;
 
-  --hamburgerZ: 8;
   --sidebarStickyZ: 9;
   --appStickyZ: 10;
-
+  
   --toastOuterZ: 11;
   --sidebarZ: 12;
+  --hamburgerZ: 13;
   --menuShim: 14;
   --menuTitleActive: 15;
   --menuActive: 16;

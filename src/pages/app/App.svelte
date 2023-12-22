@@ -78,8 +78,6 @@
     ],
   ];
 
-  let sidebar = null;
-
   // add-on ui
   let browser;
   let dispatch;
@@ -87,14 +85,6 @@
 
   function closeDrawer(e) {
     setHash("");
-  }
-
-  function setSidebarExpanded(expanded) {
-    layout.sidebarExpanded = expanded;
-
-    if (typeof window !== "undefined" && window.plausible) {
-      plausible("app-sidebar-expand", { props: { expanded } });
-    }
   }
 
   async function hashRoute() {
@@ -150,15 +140,10 @@
     ></script>{/if}
 </svelte:head>
 
-<Sidebar
-  bind:this={sidebar}
-  on:retractSidebar={() => setSidebarExpanded(false)}
-  expanded={$layout.sidebarExpanded}
-/>
-<MainContainer
-  on:expandSidebar={() => setSidebarExpanded(true)}
-  concealed={$layout.sidebarExpanded}
-/>
+<div class="app-layout">
+  <Sidebar />
+  <main><MainContainer /></main>
+</div>
 
 <Browser
   bind:visible={$layout.addonBrowserOpen}
@@ -177,3 +162,16 @@
   bind:this={runs}
   on:close={closeDrawer}
 />
+
+<style>
+  .app-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .app-layout main {
+    flex: 1 1 auto;
+    background: var(--white);
+    overflow: auto;
+  }
+</style>

@@ -26,7 +26,7 @@
 </script>
 
 <Template let:args>
-  <SidebarComponent {...args} />
+  <div class="container"><SidebarComponent {...args} /></div>
 </Template>
 
 <Story name="Logged In" {args} />
