@@ -32,7 +32,14 @@
 </script>
 
 {#await getMePromise}
-  <Loader active />
+  <Loader active>
+    <div class="mcontent">
+      <header>
+        <h3>{$_("dialogRevisionsDialog.heading")}</h3>
+        <PremiumBadge />
+      </header>
+    </div>
+  </Loader>
 {:then user}
   <Loader active={false}>
     <div class="mcontent">
