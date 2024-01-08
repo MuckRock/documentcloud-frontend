@@ -7,7 +7,7 @@
   import { revisionControl } from "./mockData";
 
   import { mockGetMe } from "../../../pages/app/accounts/stories/mockData";
-  import { Action } from "../../stories/Button.stories";
+  import { action } from "@storybook/addon-actions";
 
   const today = new Date().getDate();
   const manyRevisions = Array(100)
