@@ -78,6 +78,7 @@
           required={required.includes(name)}
           bind:value={$values[name]}
           defaultValue={params.default}
+          choices={params.enum}
         />
       {/each}
     </fieldset>
