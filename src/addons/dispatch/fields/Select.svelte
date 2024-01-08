@@ -12,7 +12,7 @@
 </script>
 
 <Field {title} {description} {inline} {required}>
-  <select {name} {value}>
+  <select {name} bind:value on:input on:focus on:change on:blur>
     {#if !required}
       <option value="">---</option>
     {/if}

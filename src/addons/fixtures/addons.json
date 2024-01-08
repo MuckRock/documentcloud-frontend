@@ -30,6 +30,7 @@
       "type": "object",
       "title": "Scraper",
       "required": ["site", "project"],
+      "categories": ["monitor"],
       "properties": {
         "site": {
           "type": "string",
@@ -65,10 +66,11 @@
           "description": "Recursively scrape same-domain links found on the page (Must be between 0 and 2)"
         },
         "access_level": {
+          "enum": ["public", "organization", "private"],
           "type": "string",
           "title": "Access Level",
           "default": "public",
-          "description": "Access level (public, private, or organization) of documents scraped."
+          "description": "Access level of documents scraped."
         },
         "slack_webhook": {
           "type": "string",
@@ -77,18 +79,20 @@
           "description": "Enter a slack webhook to enable Slack notifications"
         }
       },
-      "description": "<p>This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.</p>",
+      "description": "<p>Scrape and optionally crawl a given site for documents to upload to DocumentCloud.</p>",
       "eventOptions": {
         "name": "site",
         "events": ["hourly", "daily", "weekly"]
-      }
+      },
+      "instructions": "<p>You may specify a project to scrape the documents into as well as an access level. \nScraper can alert you by email or Slack notification when given keywords appear in\ndocuments if you specify keywords to monitor. For Slack notifications, you must provide a webhook. </p>\n<p>The crawl depth is a parameter that tells the Scraper how many clicks deep away from the\nsite you specify in order to continue looking for documents. \nIf the PDFs are directly linked on the site you provide \n(1 click to get to the PDF), 0 is the crawl depth you should use. \nIf the site you provide a link to contains multiple links to other pages that have PDFs linked to those pages, \nyour crawl depth would be 1. A crawl depth of 2 is the maximum supported. </p>\n<p>The Scraper Add-On now supports Google Drive links. \nIt will upload the first 30 Google Drive documents it sees per run. \nScraper will upload the first 100 regular documents it sees per run. \nThe Scraper keeps track of which documents it has seen and already uploaded.</p>"
     },
     "created_at": "2022-05-17T13:49:53.635344Z",
-    "updated_at": "2023-05-12T16:48:05.637062Z",
+    "updated_at": "2024-01-08T19:55:22.662655Z",
     "active": false,
     "default": true,
-    "featured": false
+    "featured": true
   },
+
   {
     "id": 110,
     "user": 20080,
