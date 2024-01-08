@@ -49,10 +49,13 @@
     }
 
     .logo {
-      float: right;
-      margin-top: 5px;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      padding: 0.5rem;
 
       :global(svg) {
+        box-sizing: border-box;
         height: 20px;
       }
     }

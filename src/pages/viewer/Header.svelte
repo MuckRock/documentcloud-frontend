@@ -1,13 +1,17 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import { ChevronLeft24 } from "svelte-octicons";
+  import {
+    ChevronLeft24,
+    SidebarCollapse24,
+    SidebarExpand24,
+  } from "svelte-octicons";
   import { createEventDispatcher } from "svelte";
 
   import Loader from "../../common/Loader.svelte";
   import Link from "../../router/Link.svelte";
 
   import Search from "./controls/Search.svelte";
-  import Hamburger from "./controls/Hamburger.svelte";
+  import Hamburger from "../../common/Hamburger.svelte";
 
   import { HEADER_HEIGHT } from "./constants.js";
 
@@ -17,6 +21,7 @@
   export let showOrg = true;
   export let disableControls = false;
   export let embed = false;
+  export let sidebarOpen: boolean;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -26,42 +31,43 @@
   class:disabled={disableControls}
   style="height: {HEADER_HEIGHT}px"
 >
-  <div class="vcontent">
-    <!-- Expanding cell to hold title and optional back -->
-    <div class="cell">
-      {#if !embed}
-        <div class="back">
-          <Link back={true}>
-            <ChevronLeft24 />
-          </Link>
-        </div>
+  {#if !embed}
+    <div class="action back">
+      <Link back={true}>
+        <ChevronLeft24 />
+      </Link>
+    </div>
+  {/if}
+  <div class="title">
+    {#if loaded}
+      {#if !embed && document.readable}
+        <Loader active={true} pad={true} />
       {/if}
-    </div>
-    <div class="cell expand">
-      {#if loaded}
-        <div class="title">
-          {#if !embed && document.readable}
-            <Loader active={true} pad={true} />
-          {/if}
-          {#if title}
-            <h1 class:padleft={embed}>{document.title}</h1>
-            <h2>
-              {$_("titleHeader.contributedBy", {
-                values: {
-                  name: showOrg ? document.orgString : document.userOrgString,
-                },
-              })}
-            </h2>
-          {/if}
-        </div>
+      {#if title}
+        <h1 title={document.title} class:padleft={embed}>{document.title}</h1>
+        <h2>
+          {$_("titleHeader.contributedBy", {
+            values: {
+              name: showOrg ? document.orgString : document.userOrgString,
+            },
+          })}
+        </h2>
       {/if}
-    </div>
-    <div class="cell">
-      <Search />
-    </div>
-    <div class="cell">
-      <Hamburger on:click={(e) => dispatch("toggle.sidebar")} />
-    </div>
+    {/if}
+  </div>
+  <div class="action search">
+    <Search />
+  </div>
+  <div class="action sidebar">
+    <Hamburger
+      class="plausible-event-name=viewer-hamburger"
+      on:click={(e) => dispatch("toggle.sidebar")}
+    >
+      <span slot="icon"
+        >{#if sidebarOpen}<SidebarCollapse24 />{:else}<SidebarExpand24
+          />{/if}</span
+      >
+    </Hamburger>
   </div>
 </header>
 
@@ -71,47 +77,42 @@
     position: relative;
     border-bottom: var(--viewerHeaderBorder);
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.25rem;
   }
+
   header.disabled {
     pointer-events: none;
     filter: brightness(90%);
   }
-  .expand {
-    width: 100%;
-  }
 
-  .cell {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .back {
-    margin: 0 16px 0 16px;
+  .action {
+    flex: 0 0 auto;
   }
 
   .title {
+    flex: 1 1 auto;
     color: var(--viewerFg, rgba(0, 0, 0, 0.8));
     user-select: none;
+    overflow: hidden;
   }
+
   .title > * {
-    display: inline-block;
     margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .title h1 {
-    font-size: 18px;
-    margin: 0 5px;
-    word-break: break-all;
-  }
-
-  .title .padleft {
-    margin-left: 30px;
+    font-size: 14px;
   }
 
   .title h2 {
     color: var(--viewerSecondary, rgba(0, 0, 0, 0.78));
-    font-size: 14px;
+    font-size: 11px;
     font-weight: normal;
-    margin: 0 5px;
   }
 </style>

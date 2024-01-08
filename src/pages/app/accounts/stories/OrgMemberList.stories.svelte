@@ -7,7 +7,7 @@
   const args = { orgId: 1, myId: 4 };
 
   export const meta = {
-    title: "Account Navigation / Menus / Org / Member List",
+    title: "App / Accounts / Menus / Org / Member List",
     component: OrgMemberList,
     parameters: { layout: "centered" },
   };

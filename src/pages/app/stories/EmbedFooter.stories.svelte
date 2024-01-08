@@ -1,15 +1,20 @@
-<script context="module">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Template, Story } from "@storybook/addon-svelte-csf";
   import EmbedFooter from "../EmbedFooter.svelte";
 
   export const meta = {
-    title: "App / Documents / Embed Footer",
+    title: "App / Embed / Footer",
     component: EmbedFooter,
-    tags: ["autodocs"],
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
+  };
+
+  const args = {
+    dialog: false,
   };
 </script>
 
-<Story name="default">
-  <EmbedFooter />
-</Story>
+<Template let:args>
+  <EmbedFooter {...args} />
+</Template>
+
+<Story name="Footer" {args} />

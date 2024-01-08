@@ -488,7 +488,7 @@
     "publishedUrlFieldButton": "Edit"
   },
   "projectsMenu": {
-    "newProject": "+ New Project",
+    "newProject": "New Project",
     "projMembership": "Project Membership",
     "selectDocs": "Select documents to place them in projects",
     "createProj": "Create a project to organize and share documents",
@@ -539,10 +539,10 @@
   "projects": {
     "header": "Projects",
     "allDocuments": "All Documents",
-    "yourDocuments": "Your Documents",
+    "yourDocuments": "Your Private Documents",
     "yourPubDocuments": "Your Public Documents",
     "orgDocuments": "{name}’s Documents",
-    "newProject": "+ New Project",
+    "newProject": "New Project",
     "createProject": "Create your first project by clicking “New Project” above."
   },
   "organizations": {
@@ -707,6 +707,8 @@
     "occurrences": "{n, plural, one {# occurrence} other {# occurrences}}"
   },
   "sidebar": {
+    "toggleOpen": "Open Sidebar",
+    "toggleClose": "Close Sidebar",
     "updating": "Updating docucment...",
     "original": "Original Document (PDF) »",
     "related": "Related Article »",

@@ -17,7 +17,7 @@
   };
 
   export const meta = {
-    title: "Account Navigation / Menus / Org",
+    title: "App / Accounts / Menus / Org",
     component: OrgMenu,
     parameters: { layout: "centered" },
   };

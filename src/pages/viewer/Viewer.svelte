@@ -209,6 +209,7 @@
       showOrg={$layout.title}
       disableControls={$layout.disableControls}
       embed={$viewer.embed}
+      sidebarOpen={$layout.showSidebar}
       on:toggle.sidebar={($layout.showSidebar = !$layout.showSidebar)}
     />
     {#if $doc.mode == "image"}

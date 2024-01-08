@@ -2,9 +2,9 @@
   import { rest } from "msw";
   import { Story } from "@storybook/addon-svelte-csf";
 
-  import { baseApiUrl } from "../../../api/base.js";
-  import activeAddons from "../../fixtures/addons-active.json";
-  import Sidebar from "../Sidebar.svelte";
+  import { baseApiUrl } from "../../../../../api/base.js";
+  import activeAddons from "../../../../../addons/fixtures/addons-active.json";
+  import AddonListComponent from "../AddonList.svelte";
 
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();
 
@@ -14,16 +14,16 @@
   );
 
   export const meta = {
-    title: "Add-Ons / Sidebar",
+    title: "App / Sidebar / Add-On List",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-    component: Sidebar,
+    component: AddonListComponent,
   };
 </script>
 
-<Story name="Default" parameters={{ msw: { handlers: [data] } }}>
+<Story name="Add-On List" parameters={{ msw: { handlers: [data] } }}>
   <div class="sidebar">
-    <Sidebar />
+    <AddonListComponent />
   </div>
 </Story>
 

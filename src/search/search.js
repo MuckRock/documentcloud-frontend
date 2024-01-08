@@ -184,13 +184,13 @@ export function projectIdUrl(projectId) {
   return searchUrl(`+project:${projectId} `);
 }
 
-export function userOrgUrl(obj, key, publicAccessOnly = false) {
-  const access = publicAccessOnly ? "+access:public " : "";
+export function userOrgUrl(obj, key, options = {}) {
+  const access = options?.access ? `+access:${options.access} ` : "";
   return searchUrl(`+${key}:${slugify(obj.name, obj.id)} ${access}`);
 }
 
-export function userUrl(user, publicAccessOnly = false) {
-  return userOrgUrl(user, "user", publicAccessOnly);
+export function userUrl(user, options) {
+  return userOrgUrl(user, "user", options);
 }
 
 export function userSearchQuery(user) {

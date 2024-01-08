@@ -3,7 +3,7 @@
   import Documents from "../Documents.svelte";
 
   import { layout } from "../../../manager/layout.js";
-  import * as mock from "./mock.js";
+  import * as mock from "./mock";
 
   export const meta = {
     title: "App / Documents / Documents",

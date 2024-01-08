@@ -1,28 +1,19 @@
-<script>
-  import { createEventDispatcher } from "svelte";
+<script lang="ts">
   import { ThreeBars16 } from "svelte-octicons";
 
-  const dispatch = createEventDispatcher();
+  let className: string = "";
+  export { className as class };
 </script>
 
 <div class="hamburger">
-  <button class="svg buttonLike" on:click={(e) => dispatch("toggle")}>
-    <ThreeBars16 />
+  <button class={`svg buttonLike ${className}`} on:click>
+    <slot name="icon"><ThreeBars16 /></slot>
   </button>
 </div>
 
 <style>
-  .hamburger {
-    user-select: none;
-    position: fixed;
-    top: 0;
-    padding: 14px;
-    z-index: var(--hamburgerZ, 8);
-    display: none;
-  }
   .hamburger .svg {
     cursor: pointer;
-    fill: var(--gray, rgba(0, 0, 0, 0.53));
   }
 
   .hamburger .svg:hover {
