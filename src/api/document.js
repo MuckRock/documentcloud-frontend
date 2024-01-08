@@ -163,13 +163,18 @@ export async function changeAccess(ids, access) {
 
 export async function changeRevisionControl(ids, revision_control) {
   // Enable or disable revision control on specified documents
-  await session.patch(
-    apiUrl(`documents/`),
+  const { data } = await session.patch(
+    apiUrl(
+      queryBuilder(`documents/`, {
+        expand: [DEFAULT_EXPAND, "revisions"].join(","),
+      }),
+    ),
     ids.map((id) => ({
       id,
       revision_control,
     })),
   );
+  return data;
 }
 
 export async function reprocessDocument(ids, forceOcr, ocrEngine) {

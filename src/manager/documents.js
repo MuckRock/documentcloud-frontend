@@ -9,12 +9,13 @@ import {
   editMetadata,
   addData,
   removeData,
-} from "@/api/document.js";
+  changeRevisionControl,
+} from "../api/document.js";
 import {
   addDocumentsToProject,
   removeDocumentsFromProject,
-} from "@/api/project.js";
-import { layout, hideAccess } from "./layout.js";
+} from "../api/project.js";
+import { layout, hideAccess, hideRevisions } from "./layout.js";
 import { wrapLoad, wrapSeparate } from "@/util/wrapLoad.js";
 import { showConfirm } from "./confirmDialog.js";
 import { router } from "@/router/router.js";
@@ -431,6 +432,27 @@ export async function changeAccessForDocuments(
     );
   });
   hideAccess();
+}
+
+export async function changeRevisionControlForDocuments(
+  documents,
+  revision_control,
+) {
+  await wrapLoad(layout, async () => {
+    await changeRevisionControl(
+      documents.map((doc) => doc.id),
+      revision_control,
+    );
+    documents.forEach((doc) => {
+      updateInCollection(doc, (d) => {
+        d.doc = {
+          ...d.doc,
+          revision_control,
+        };
+      });
+    });
+  });
+  hideRevisions();
 }
 
 export async function changeOwnerForDocuments(

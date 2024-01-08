@@ -18,12 +18,12 @@
   export let enabled: boolean = false;
   export let revisions: Revision[] | null = [];
   export let onSave: (enabled: boolean) => void;
-  export let onCancel: () => {};
+  export let onCancel: () => void;
 
   $: sortedRevisions =
     revisions?.sort((a, b) => {
       return b.version - a.version;
-    }) ?? [];
+    }) ?? null;
 
   let getMePromise = getMe();
   function retryGetMe() {
@@ -41,7 +41,7 @@
         <PremiumBadge />
       </header>
 
-      {#if enabled}
+      {#if enabled && Array.isArray(revisions)}
         <div class="overflow-scroll">
           <table class="revisions">
             {#each sortedRevisions as revision}
@@ -73,7 +73,11 @@
       {/if}
 
       {#if isPremiumOrg(user?.organization)}
-        <form>
+        <form
+          on:submit={(event) => {
+            event.preventDefault();
+          }}
+        >
           <label class="revision-control-input">
             <input
               type="checkbox"
