@@ -107,15 +107,18 @@
     justify-content: space-between;
     gap: 1em;
   }
-  .description {
+  .description,
+  .instructions {
     flex: 1 1 100%;
     line-height: 1.4;
     color: var(--darkgray);
   }
-  .description :global(a) {
+  .description :global(a),
+  .instructions :global(a) {
     color: var(--primary);
     text-decoration: underline;
   }
+  .description :global(*):first-child,
   .description :global(*):first-child {
     margin-top: 0;
   }
