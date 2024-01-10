@@ -317,7 +317,7 @@
   },
   "dialogRevisionsDialog": {
     "heading": "Revision History",
-    "controlLabel": "Revision Control",
+    "controlLabel": "Save document revision history",
     "total": "{n} total",
     "download": "Download",
     "empty": "No revisions found",
