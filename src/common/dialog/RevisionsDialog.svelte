@@ -48,7 +48,7 @@
         <PremiumBadge />
       </header>
 
-      {#if enabled && Array.isArray(revisions)}
+      {#if Array.isArray(revisions)}
         <div class="overflow-scroll">
           <table class="revisions">
             {#each sortedRevisions as revision}
