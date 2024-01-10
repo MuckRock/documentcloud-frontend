@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { changeRevisionControlForDocuments } from "../../manager/documents";
+  import { changeRevisionControlForDocument } from "../../manager/documents";
   import { viewer } from "../../viewer/viewer.js";
   import RevisionsDialog from "./RevisionsDialog.svelte";
   import emitter from "../../emit.js";
@@ -13,7 +13,7 @@
   const revisions = document?.revisions;
   const enabled = document?.revisionControl;
   const onSave = async (enabled: boolean) => {
-    await changeRevisionControlForDocuments([document], enabled);
+    await changeRevisionControlForDocument(document, enabled);
     emit.dismiss();
   };
   const onCancel = () => {

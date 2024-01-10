@@ -434,22 +434,20 @@ export async function changeAccessForDocuments(
   hideAccess();
 }
 
-export async function changeRevisionControlForDocuments(
-  documents,
+export async function changeRevisionControlForDocument(
+  document,
   revision_control,
 ) {
   await wrapLoad(layout, async () => {
     await changeRevisionControl(
-      documents.map((doc) => doc.id),
+      document.id,
       revision_control,
     );
-    documents.forEach((doc) => {
-      updateInCollection(doc, (d) => {
-        d.doc = {
-          ...d.doc,
-          revision_control,
-        };
-      });
+    updateInCollection(document, (d) => {
+      d.doc = {
+        ...d.doc,
+        revision_control,
+      };
     });
   });
   hideRevisions();

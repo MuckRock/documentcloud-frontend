@@ -161,18 +161,15 @@ export async function changeAccess(ids, access) {
   );
 }
 
-export async function changeRevisionControl(ids, revision_control) {
-  // Enable or disable revision control on specified documents
+export async function changeRevisionControl(id, revision_control) {
+  // Enable or disable revision control on specified document
   const { data } = await session.patch(
     apiUrl(
-      queryBuilder(`documents/`, {
+      queryBuilder(`documents/${id}/`, {
         expand: [DEFAULT_EXPAND, "revisions"].join(","),
       }),
     ),
-    ids.map((id) => ({
-      id,
-      revision_control,
-    })),
+    {revision_control}
   );
   return data;
 }
