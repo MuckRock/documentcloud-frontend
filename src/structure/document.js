@@ -375,7 +375,6 @@ export class Document extends Svue {
 
         // Revision Properties
         revisions(doc) {
-          if (!doc.revision_control) return null;
           return doc.revisions;
         },
       },
