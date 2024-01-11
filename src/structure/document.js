@@ -368,6 +368,15 @@ export class Document extends Svue {
           }
           return organizationName;
         },
+
+        revisionControl(doc) {
+          return Boolean(doc.revision_control);
+        },
+
+        // Revision Properties
+        revisions(doc) {
+          return doc.revisions;
+        },
       },
     });
   }

@@ -161,6 +161,19 @@ export async function changeAccess(ids, access) {
   );
 }
 
+export async function changeRevisionControl(id, revision_control) {
+  // Enable or disable revision control on specified document
+  const { data } = await session.patch(
+    apiUrl(
+      queryBuilder(`documents/${id}/`, {
+        expand: [DEFAULT_EXPAND, "revisions"].join(","),
+      }),
+    ),
+    {revision_control}
+  );
+  return data;
+}
+
 export async function reprocessDocument(ids, forceOcr, ocrEngine) {
   // Reprocess the documents with the specified ids
   await session.post(
@@ -253,6 +266,7 @@ export async function pollDocument(
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
  * @param {string} ocrEngine Select OCR engine
+ * @param {boolean} revision_control Toggles revision history on document
  * @param {Function} createProgressFn A function to call with process progress
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} processProgressFn A function to call with process progress
@@ -265,6 +279,7 @@ export async function uploadDocuments(
   language,
   forceOcr,
   ocrEngine,
+  revision_control,
   projects,
   createProgressFn,
   progressFn,
@@ -307,6 +322,7 @@ export async function uploadDocuments(
             language,
             original_extension: getExtension(doc.file),
             projects: projectIds,
+            revision_control,
           })),
         );
         createCount += subDocs.length;

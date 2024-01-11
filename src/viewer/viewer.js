@@ -203,6 +203,7 @@ function initViewer(id) {
       "sections",
       "notes.organization",
       "notes.user",
+      "revisions",
     ].join(","),
   )
     .then((doc) => {

@@ -81,6 +81,7 @@ export const layout = new Svue({
       showInfo: false,
       showData: false,
       showAccess: false,
+      showRevisions: false,
 
       // Sections
       showEditSections: false,
@@ -240,13 +241,15 @@ export const layout = new Svue({
       showAccess,
       showEditSections,
       showEmbedDialog,
+      showRevisions,
     ) {
       return (
         showInfo ||
         showData ||
         showAccess ||
         showEditSections ||
-        showEmbedDialog
+        showEmbedDialog ||
+        showRevisions
       );
     },
   },
@@ -559,6 +562,10 @@ export function hideDocumentInfo() {
 
 export function hideDocumentData() {
   layout.showData = false;
+}
+
+export function hideRevisions() {
+  layout.showRevisions = false;
 }
 
 export function hideAccess() {

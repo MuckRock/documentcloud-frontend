@@ -34,6 +34,9 @@
     "organizationExplanation": "Only members of your organization can view this document",
     "publicExplanation": "Anyone can search and view this document"
   },
+  "revisionIcon": {
+    "tooltip": "Revision control is enabled on this document. It has {count, plural, one {revision} other {# revisions}}"
+  },
   "appearanceCustomizer": {
     "customizeAppearance": "Customize Appearance",
     "hide": "Hide help text",
@@ -312,6 +315,19 @@
     "invalid": "Invalid project",
     "cannotEmbed": "Cannot embed this project, as it does not appear to exist."
   },
+  "dialogRevisionsDialog": {
+    "heading": "Revision History",
+    "controlLabel": "Save document revision history",
+    "total": "{n} total",
+    "download": "Download",
+    "empty": "No revisions found",
+    "error": "Error loading revision data. Please contact support for assistance.",
+    "upgrade": {
+      "message": "Pro and Organization users can record and access the entire version history of their documents.",
+      "nonAdminCta": "Contact your organization administrator about upgrading your account.",
+      "adminCta": "Upgrade"
+    }
+  },
   "htmlEditor": {
     "preview": "Preview:"
   },
@@ -338,9 +354,13 @@
     "forceOcr": "Force OCR:",
     "ocrEngine": "OCR Engine:",
     "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
-    "textractPremium": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans. It is a premium feature available on <strong>Professional</strong> and <strong>Organization</strong> plans. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.documentcloud.org/premium/\">Learn more</a> or <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">sign up</a>.",
+    "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
+    "premiumToutAdmin": "This premium feature is available on <strong>Professional</strong> and <strong>Organization</strong> plans. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{upgradeUrl}\">Upgrade today!</a>",
+    "premiumToutMember": "Contact your organization's admin about upgrading to an <strong>Organization</strong> plan.",
     "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left.",
-    "documentLanguagePlaceholder": "Begin typing to see options"
+    "documentLanguagePlaceholder": "Begin typing to see options",
+    "revisionControl": "Revision Control:",
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download."
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",
@@ -730,7 +750,9 @@
     "sections": "Edit Sections",
     "sectionsDesc": "Add sections to organize your document with a table of contents.",
     "privateNote": "Add Private Note",
-    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article."
+    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
+    "revisions": "Revision History",
+    "revisionsDesc": "Toggle revision history and view previous versions of your document."
   },
   "viewer": {
     "notFound": "Document not found",
@@ -839,5 +861,7 @@
     "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>.",
     "subscribe": "Subscribe"
   },
-  "premium": {}
+  "premium": {
+    "badge": "Premium"
+  }
 }

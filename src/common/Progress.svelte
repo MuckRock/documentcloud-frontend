@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
   import { tweened } from "svelte/motion";
-  import { sigmoid, interp, scale } from "@/util/easing.js";
+  import { sigmoid, interp, scale } from "../util/easing";
 
-  export let progress;
+  export let progress: null | number;
   export let initializing = false;
   export let compact = false;
   export let failure = false;
@@ -85,12 +85,12 @@
 
     .bar {
       height: 18px;
-      border-radius: $radius;
+      border-radius: var(--radius);
       display: table-cell;
       vertical-align: middle;
       width: 100%;
       max-width: 300px;
-      background: $barFaded;
+      background: var(--barFaded);
       position: relative;
       margin-top: 1em;
       margin-right: 18px;
@@ -129,15 +129,15 @@
         );
         background-size: 48px 48px;
         animation: slide 1s infinite linear forwards;
-        border-radius: $radius;
+        border-radius: var(--radius);
 
         &.complete {
           animation: none;
-          background: $primary;
+          background: var(--primary);
         }
       }
       &.failure .inner {
-        background: $caution;
+        background: var(--caution);
       }
     }
     .text {
@@ -147,7 +147,7 @@
       vertical-align: middle;
       padding-left: 20px;
       &.failure {
-        color: $caution;
+        color: var(--caution);
       }
     }
   }

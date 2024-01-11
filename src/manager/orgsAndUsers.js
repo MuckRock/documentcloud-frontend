@@ -239,16 +239,17 @@ export function getCreditBalance(org) {
   return org.monthly_credits + org.purchased_credits;
 }
 
-export async function triggerPremiumUpgradeFlow(org) {
-  let url;
+export function getUpgradeURL(org) {
   if (org.individual) {
     // Redirect the user to their Squarelet account settings
-    url = SQUARELET_URL + `/users/~payment/`;
-  } else {
-    // Redirect the user to the Squarelet organization settings
-    url = SQUARELET_URL + `/organizations/${org.slug}/payment/`;
+    return SQUARELET_URL + `/users/~payment/`;
   }
-  window?.open(url);
+  // Redirect the user to the Squarelet organization settings
+  return SQUARELET_URL + `/organizations/${org.slug}/payment/`;
+}
+
+export async function triggerPremiumUpgradeFlow(org) {
+  window?.open(getUpgradeUrl(org));
 }
 
 // TODO: Handle flow for purchasing premium credits (#342)

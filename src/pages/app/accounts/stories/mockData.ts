@@ -1,21 +1,57 @@
 import { rest } from "msw";
 import { baseApiUrl } from "../../../../api/base.js";
-import orgListFixture from "../fixtures/orgList.json";
-import getMeFixture from "../fixtures/getMe.json";
-import orgMembersFixture from "../fixtures/orgMembers.json";
+import {
+  freeOrg,
+  me,
+  organizations,
+  proOrg,
+  users,
+} from "../../../../api/fixtures/orgAndUser.fixtures.js";
 
 /* Mock Request Handlers */
 const mockMeUrl = new URL(`users/me/`, baseApiUrl).toString();
 export const mockGetMe = {
-  data: rest.get(mockMeUrl, (req, res, ctx) => res(ctx.json(getMeFixture))),
+  data: rest.get(mockMeUrl, (req, res, ctx) => res(ctx.json(me))),
+  freeUser: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({
+        ...me,
+        organization: freeOrg,
+        admin_organizations: [...me.admin_organizations, freeOrg.id],
+      }),
+    ),
+  ),
+  proUser: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({
+        ...me,
+        organization: proOrg,
+        admin_organizations: [...me.admin_organizations, proOrg.id],
+      }),
+    ),
+  ),
   noOrgs: rest.get(mockMeUrl, (req, res, ctx) =>
-    res(ctx.json({ ...getMeFixture, organization: "4" })),
+    res(ctx.json({ ...me, organization: "4" })),
   ),
   orgAdmin: rest.get(mockMeUrl, (req, res, ctx) =>
     res(
       ctx.json({
-        ...getMeFixture,
-        admin_organizations: [...getMeFixture.admin_organizations, 1],
+        ...me,
+        admin_organizations: [...me.admin_organizations, 1],
+      }),
+    ),
+  ),
+  freeOrgMember: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({ ...me, organization: { ...me.organization, plan: "Free" } }),
+    ),
+  ),
+  freeOrgAdmin: rest.get(mockMeUrl, (req, res, ctx) =>
+    res(
+      ctx.json({
+        ...me,
+        organization: { ...me.organization, plan: "Free" },
+        admin_organizations: [...me.admin_organizations, 1],
       }),
     ),
   ),
@@ -28,9 +64,7 @@ export const mockGetMe = {
 /* Mock Request Handlers */
 const mockUsersUrl = new URL(`users/`, baseApiUrl).toString();
 export const mockInMyOrg = {
-  data: rest.get(mockUsersUrl, (req, res, ctx) =>
-    res(ctx.json(orgMembersFixture)),
-  ),
+  data: rest.get(mockUsersUrl, (req, res, ctx) => res(ctx.json(users))),
   loading: rest.get(mockUsersUrl, (req, res, ctx) =>
     res(ctx.delay("infinite")),
   ),
@@ -49,7 +83,7 @@ export const mockInMyOrg = {
 const mockGetOrgsUrl = new URL(`organizations/`, baseApiUrl).toString();
 export const mockGetOrgsList = {
   data: rest.get(mockGetOrgsUrl, (req, res, ctx) =>
-    res(ctx.json(orgListFixture)),
+    res(ctx.json(organizations)),
   ),
   loading: rest.get(mockGetOrgsUrl, (req, res, ctx) =>
     res(ctx.delay("infinite")),
@@ -65,7 +99,7 @@ export const mockGetOrgsList = {
       ctx.json({
         next: null,
         previous: null,
-        results: [orgListFixture.results[1]],
+        results: [organizations.results[1]],
       }),
     ),
   ),
@@ -76,9 +110,7 @@ export const mockGetOrg = {
   data: rest.get(mockGetOrgUrl, (req, res, ctx) =>
     res(
       ctx.json(
-        orgListFixture.results.find(
-          ({ id }) => id.toString() === req.params.id,
-        ),
+        organizations.results.find(({ id }) => id.toString() === req.params.id),
       ),
     ),
   ),
@@ -97,7 +129,7 @@ export const mockGetOrg = {
   free: rest.get(mockGetOrgUrl, (req, res, ctx) =>
     res(
       ctx.json({
-        ...orgListFixture.results.find(
+        ...organizations.results.find(
           ({ id }) => id.toString() === req.params.id,
         ),
         plan: "Free",
@@ -108,5 +140,5 @@ export const mockGetOrg = {
 
 const mockChangeOrgUrl = new URL(`users/me/`, baseApiUrl).toString();
 export const mockChangeOrg = rest.patch(mockChangeOrgUrl, (req, res, ctx) =>
-  res(ctx.json(getMeFixture)),
+  res(ctx.json(me)),
 );

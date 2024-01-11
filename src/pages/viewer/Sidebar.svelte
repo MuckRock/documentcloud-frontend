@@ -13,8 +13,13 @@
     enterInfoMode,
     enterDataMode,
     enterSectionsMode,
+    enterRevisionsMode,
   } from "../../viewer/actions";
-  import { showEmbedFlow, cancelAnnotation } from "../../viewer/layout.js";
+  import {
+    showEmbedFlow,
+    cancelAnnotation,
+    openAccess,
+  } from "../../viewer/layout.js";
   import { _ } from "svelte-i18n";
   import { FOOTER_HEIGHT, HEADER_HEIGHT, SIDEBAR_WIDTH } from "./constants";
   import SidebarAction from "./SidebarAction.svelte";
@@ -55,6 +60,7 @@
     header: string;
     description: string;
     disabled?: boolean;
+    premium?: boolean;
   }
 
   let actions: Action[] = [
@@ -98,6 +104,14 @@
       header: $_("sidebar.data"),
       description: $_("sidebar.dataDesc"),
       disabled: document?.readable,
+    },
+    {
+      id: "revisions",
+      action: enterRevisionsMode,
+      header: $_("sidebar.revisions"),
+      description: $_("sidebar.revisionsDesc"),
+      disabled: document?.readable,
+      premium: true,
     },
     {
       id: "sections",
@@ -200,7 +214,12 @@
         {/if}
         {#if document?.editAccess}
           <div>
-            <AccessIcon {document} showText={true} />
+            <AccessIcon
+              access={document.access}
+              editable={document.editAccess}
+              showText={true}
+              on:click={() => openAccess([document])}
+            />
           </div>
         {/if}
         {#if ocrEngine}
@@ -211,13 +230,14 @@
       {#if signedIn}
         <div class="actions">{$_("sidebar.actions")}</div>
         {#if document?.editAccess}
-          {#each actions as { id, action, header, description, disabled }}
+          {#each actions as { id, action, header, description, disabled, premium }}
             <SidebarAction
               class={`plausible-event-name=sidebar-${id}`}
               {disabled}
               {action}
               {header}
               {description}
+              {premium}
             />
           {/each}
         {:else}

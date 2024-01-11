@@ -11,7 +11,13 @@
   import { _, date } from "svelte-i18n";
 
   // Stores
-  import { layout, unselectDocument, editData } from "@/manager/layout.js";
+  import {
+    layout,
+    unselectDocument,
+    editData,
+    openAccess,
+    openRevisions,
+  } from "../../manager/layout.js";
   import { removeDocument, selectDocument } from "@/manager/documents.js";
   import { projects } from "@/manager/projects.js";
   import { projectUrl, dataUrl } from "@/search/search.js";
@@ -21,6 +27,7 @@
   import pencilSvg from "@/assets/pencil.svg?raw";
 
   import { pageImageUrl } from "@/api/viewer.js";
+  import RevisionIcon from "../../common/RevisionIcon.svelte";
 
   export let document;
   export let embed = false;
@@ -85,27 +92,45 @@
     />
 
     <div class="info">
-      <h2>
-        <span class="valign">{document.title}</span>
+      <div class="document-title-row">
+        <h2>{document.title}</h2>
         {#if !embed}
-          <span class="valign marginleft">
-            <AccessIcon {document} />
-          </span>
+          <div class="document-title-row-actions">
+            <AccessIcon
+              access={document.access}
+              editable={document.editAccess}
+              on:click={() => openAccess([document])}
+            />
+            <RevisionIcon
+              revisions={document.revisions}
+              showCount
+              on:click={() => openRevisions([document])}
+            />
+          </div>
         {/if}
-      </h2>
+      </div>
       {#if !embed}
-        <h3>
+        <div class="document-meta-row">
           {#if document.pageCount > 0}
-            {$_("document.pageCount", { values: { n: document.pageCount } })} -
+            <p class="document-meta pageCount">
+              {$_("document.pageCount", { values: { n: document.pageCount } })}
+            </p>
           {/if}
           {#if document.source != null && document.source.trim().length > 0}
-            {$_("document.source")}: {document.source} -
+            <p class="document-meta source">
+              {$_("document.source")}: {document.source}
+            </p>
           {/if}
           {#if document.userName !== null}
-            {document.userOrgString} -
+            <p class="document-meta userName">{document.userOrgString}</p>
           {/if}
-          {$date(document.createdAt, { format: "medium" })}
-        </h3>
+          <time
+            class="document-meta createdAt"
+            datetime={document.createdAt.toISOString()}
+            title={document.createdAt.toISOString()}
+            >{$date(document.createdAt, { format: "medium" })}</time
+          >
+        </div>
       {/if}
       {#if document.description != null && document.description.trim().length > 0}
         <div class="description" class:embeddescription={embed}>
@@ -294,18 +319,11 @@
 
 <style lang="scss">
   h2 {
-    font-size: $normal;
+    font-size: var(--normal);
+    font-weight: 600;
     padding-top: 10px;
     padding-bottom: 6px;
     word-break: break-word;
-    margin: 2px 0;
-    padding: 0;
-  }
-
-  h3 {
-    font-size: $small;
-    font-weight: normal;
-    color: $gray;
     margin: 2px 0;
     padding: 0;
   }
@@ -457,6 +475,43 @@
     @include buttonLike;
     vertical-align: middle;
     height: 10px;
+  }
+
+  .document-title-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .document-title-row h2 {
+    flex: 0 1 auto;
+  }
+
+  .document-title-row-actions {
+    flex: 0 1 auto;
+    display: flex;
+    gap: 0.5em 0;
+    flex-direction: row;
+    align-items: center;
+    height: 1.5em;
+  }
+
+  .document-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .document-meta {
+    color: var(--gray);
+    font-size: var(--small);
+    line-height: 1.5;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+  }
+
+  .document-meta:not(:last-child)::after {
+    content: "–";
+    margin: 0 0.25rem;
   }
 
   .description {

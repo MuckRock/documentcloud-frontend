@@ -3,6 +3,7 @@
 
   export let href: string | null = null;
   export let external = false;
+  export let download = false;
   export let title = "";
 
   export let small = false;
@@ -42,7 +43,7 @@
       class:fullWidth
       class:disabled={disabled || disabledReason != null}
       rel={external ? "noopener noreferrer" : null}
-      target={external ? "_blank" : null}
+      target={external ? "_blank" : download ? "download" : null}
     >
       <slot>{label}</slot>
     </a>
@@ -89,7 +90,8 @@
     font-family: inherit;
   }
 
-  button.nomargin {
+  button.nomargin,
+  a.nomargin {
     margin: 0;
   }
 

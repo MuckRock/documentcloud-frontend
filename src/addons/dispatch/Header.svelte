@@ -9,8 +9,7 @@
 
   import { pushToast } from "../../common/Toast.svelte";
   import AddOnPin from "../AddOnPin.svelte";
-  import Badge from "../../common/Badge.svelte";
-  import Credit from "../../common/icons/Credit.svelte";
+  import PremiumBadge from "../../premium-credits/PremiumBadge.svelte";
 
   export let addon: AddOnListItem;
 
@@ -77,14 +76,7 @@
       {/if}
     </div>
     {#if isPremium}
-      <a href="#add-ons?premium=true" class="premium"
-        ><Badge
-          label="Premium"
-          badgeColor="var(--premium)"
-          labelColor="var(--darkgray)"
-          ><Credit slot="icon" color="var(--darkgray)" badge /></Badge
-        ></a
-      >
+      <a href="#add-ons?premium=true" class="premium"><PremiumBadge /></a>
     {/if}
   </dl>
 

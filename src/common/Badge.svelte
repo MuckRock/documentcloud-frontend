@@ -2,10 +2,12 @@
   export let badgeColor = "var(--light-gray)";
   export let labelColor = "var(--darkgray)";
   export let label: string;
+  export let small = false;
 </script>
 
 <div
   class="badge"
+  class:small
   style="--badge-color: {badgeColor}; --label-color: {labelColor};"
 >
   {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
@@ -17,13 +19,15 @@
     display: inline-flex;
     padding: 0.25rem 0.5rem;
     align-items: center;
-    gap: 0.625rem;
-    font-weight: 500;
+    gap: 0.25rem;
+    font-weight: 600;
     border-radius: 0.375rem;
-    border: 1px solid rgba(0, 0, 0, 0.25);
     background: var(--badge-color, var(--light-gray));
     color: var(--label-color, var(--darkgray));
     fill: var(--label-color, var(--darkgray));
+  }
+  .small {
+    font-size: 0.875em;
   }
   .icon {
     flex: 0 0 auto;

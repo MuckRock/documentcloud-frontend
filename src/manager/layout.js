@@ -37,6 +37,7 @@ export const layout = new Svue({
       searchTipsOpen: false,
       diagnosticsOpen: false,
       mailkeyOpen: false,
+      viewDocumentRevisions: null,
 
       // nest any captured URL params here
       params: {
@@ -248,6 +249,14 @@ export function openAccess(documents) {
 
 export function hideAccess() {
   layout.accessEditDocuments = [];
+}
+
+export function openRevisions(document) {
+  layout.viewDocumentRevisions = document;
+}
+
+export function hideRevisions() {
+  layout.viewDocumentRevisions = null;
 }
 
 export function hideReprocess() {

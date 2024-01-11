@@ -99,7 +99,7 @@
     position: relative;
 
     @media only screen and (max-width: 720px) {
-      padding: 10px 15px 20px 15px;
+      padding: 0 15px 20px 15px;
     }
 
     :global(img),
