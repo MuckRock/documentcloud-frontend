@@ -66,7 +66,7 @@
       await expect(downloadButtons[0]).toHaveAttribute("target", "download");
     });
     await step("Toggle revisions", async () => {
-      await canvas.findByText("Revision Control");
+      await canvas.findByText("Save document revision history");
       const checkbox = await canvas.getByRole("checkbox");
       await userEvent.click(checkbox);
       await expect(checkbox).not.toBeChecked();
