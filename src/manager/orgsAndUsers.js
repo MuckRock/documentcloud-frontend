@@ -211,7 +211,7 @@ export async function inMyOrg(orgId, myId) {
   const users = await getUsers({ orgIds: [orgId] });
   // Sort by admin status, then username
   const adminUsers = users
-    .filter((u) => u.admin_organizations.includes(orgId))
+    .filter((u) => u.admin_organizations?.includes(orgId))
     .sort(alphabetizeUsers);
   const regularUsers = users
     .filter((u) => !adminUsers.includes(u))
