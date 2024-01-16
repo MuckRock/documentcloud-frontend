@@ -61,15 +61,17 @@
     await step("Display document revisions", async () => {
       await canvas.findByText("3 total");
     });
+    await step("Download revisions", async () => {
+      const downloadButtons = await canvas.getAllByText("Download");
+      await expect(downloadButtons[0]).toHaveAttribute("target", "download");
+    });
     await step("Toggle revisions", async () => {
       await canvas.findByText("Revision Control");
       const checkbox = await canvas.getByRole("checkbox");
       await userEvent.click(checkbox);
       await expect(checkbox).not.toBeChecked();
-    });
-    await step("Download revisions", async () => {
-      const downloadButtons = await canvas.getAllByText("Download");
-      await expect(downloadButtons[0]).toHaveAttribute("target", "download");
+      await userEvent.click(checkbox);
+      await expect(checkbox).toBeChecked();
     });
   }}
   parameters={{

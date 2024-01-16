@@ -1,22 +1,14 @@
-import session, { cookiesEnabled } from "./session.js";
+import session from "./session.js";
 import { USER_EXPAND, ORG_EXPAND, DEFAULT_EXPAND } from "./common.js";
 import { queryBuilder } from "@/util/url.js";
 import { grabAllPages } from "@/util/paginate.js";
 import { apiUrl } from "./base.js";
 
-const hasCsrfToken = /(^|;\s*)csrftoken=[a-zA-Z0-9]+/;
-
 export async function getMe(expand = DEFAULT_EXPAND) {
-  // Check that the user is logged in via cookies
-  if (cookiesEnabled) {
-    if (!hasCsrfToken.test(document.cookie)) {
-      return null;
-    }
-  }
-  // Check that the user is logged in via network request
-  const { data } = await session.get(
+  const { status, data } = await session.get(
     queryBuilder(apiUrl(`users/me/`), { expand }),
   );
+  if (status !== 200) return null;
   return data;
 }
 
