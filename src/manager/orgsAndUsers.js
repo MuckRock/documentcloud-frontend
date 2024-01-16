@@ -239,7 +239,7 @@ export function getCreditBalance(org) {
   return org.monthly_credits + org.purchased_credits;
 }
 
-export function getUpgradeURL(org) {
+export function getUpgradeUrl(org) {
   if (org.individual) {
     // Redirect the user to their Squarelet account settings
     return SQUARELET_URL + `/users/~payment/`;

@@ -10,7 +10,7 @@
   import { getMe, getOrganization } from "../api/orgAndUser.js";
   import { onMount } from "svelte";
   import {
-    getUpgradeURL,
+    getUpgradeUrl,
     isOrgAdmin,
     isPremiumOrg,
   } from "../manager/orgsAndUsers.js";
@@ -109,7 +109,7 @@
           {#if isOrgAdmin(user)}
             <span
               >{@html $_("uploadOptions.premiumToutAdmin", {
-                values: { upgradeUrl: getUpgradeURL(org) },
+                values: { upgradeUrl: getUpgradeUrl(org) },
               })}</span
             >
           {:else}
@@ -153,7 +153,7 @@
           {#if isOrgAdmin(user)}
             <span
               >{@html $_("uploadOptions.premiumToutAdmin", {
-                values: { upgradeUrl: getUpgradeURL(org) },
+                values: { upgradeUrl: getUpgradeUrl(org) },
               })}</span
             >
           {:else}
