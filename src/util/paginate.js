@@ -10,14 +10,13 @@ export const MAX_PER_PAGE = parseInt(process.env.MAX_PER_PAGE);
  * @param {number?} perPage If present, the per page to request
  */
 export async function grabAllPages(url, perPage = MAX_PER_PAGE) {
-  if (perPage !== null) url = queryBuilder(url, { per_page: perPage });
+  if (perPage) url = queryBuilder(url, { per_page: perPage });
   const { data } = await session.get(url);
-  const results = data.results;
-  if (data.next !== null) {
+  if (data.next) {
     // Grab the next page
     const next = await grabAllPages(data.next);
-    return results.concat(next);
+    return data.results.concat(next);
   } else {
-    return results;
+    return data.results;
   }
 }

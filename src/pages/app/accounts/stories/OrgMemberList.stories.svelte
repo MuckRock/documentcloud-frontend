@@ -11,7 +11,6 @@
     component: OrgMemberList,
     parameters: {
       layout: "centered",
-      chromatic: { delay: 300 },
     },
   };
 </script>

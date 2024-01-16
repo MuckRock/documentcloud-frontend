@@ -211,7 +211,7 @@ export async function inMyOrg(orgId, myId) {
   const users = await getUsers({ orgIds: [orgId] });
   // Sort by admin status, then username
   const adminUsers = users
-    .filter((u) => u.admin_organizations.includes(orgId))
+    .filter((u) => u.admin_organizations?.includes(orgId))
     .sort(alphabetizeUsers);
   const regularUsers = users
     .filter((u) => !adminUsers.includes(u))
@@ -239,7 +239,7 @@ export function getCreditBalance(org) {
   return org.monthly_credits + org.purchased_credits;
 }
 
-export function getUpgradeURL(org) {
+export function getUpgradeUrl(org) {
   if (org.individual) {
     // Redirect the user to their Squarelet account settings
     return SQUARELET_URL + `/users/~payment/`;
@@ -249,7 +249,9 @@ export function getUpgradeURL(org) {
 }
 
 export async function triggerPremiumUpgradeFlow(org) {
-  window?.open(getUpgradeUrl(org));
+  if (org) {
+    window?.open(getUpgradeUrl(org));
+  }
 }
 
 // TODO: Handle flow for purchasing premium credits (#342)

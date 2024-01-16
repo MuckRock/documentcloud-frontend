@@ -1,5 +1,7 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { userEvent, within } from "@storybook/testing-library";
+  import { expect } from "@storybook/jest";
 
   import RevisionsDialog from "../RevisionsDialog.svelte";
 
@@ -35,10 +37,7 @@
     component: RevisionsDialog,
     parameters: {
       layout: "centered",
-      chromatic: { delay: 300 },
-      msw: {
-        handlers: [revisionControl.success, mockGetMe.data],
-      },
+      chromatic: { delay: 1000 },
     },
     argTypes: {
       enabled: {
@@ -54,13 +53,60 @@
   <RevisionsDialog {...args} />
 </Template>
 
-<Story name="With Revisions" {args} />
-<Story name="With Zero Revisions" args={{ ...args, revisions: [] }} />
+<Story
+  name="With Revisions"
+  {args}
+  play={async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("Display document revisions", async () => {
+      await canvas.findByText("3 total");
+    });
+    await step("Download revisions", async () => {
+      const downloadButtons = await canvas.getAllByText("Download");
+      await expect(downloadButtons[0]).toHaveAttribute("target", "download");
+    });
+    await step("Toggle revisions", async () => {
+      await canvas.findByText("Save document revision history");
+      const checkbox = await canvas.getByRole("checkbox");
+      await userEvent.click(checkbox);
+      await expect(checkbox).not.toBeChecked();
+      await userEvent.click(checkbox);
+      await expect(checkbox).toBeChecked();
+    });
+  }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
+/>
+<Story
+  name="With Zero Revisions"
+  args={{ ...args, revisions: [] }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
+/>
 <Story
   name="With Many Revisions"
   args={{ ...args, revisions: manyRevisions }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
 />
-<Story name="Disabled Revision Control" args={{ ...args, enabled: false }} />
+<Story
+  name="Disabled Revision Control"
+  args={{ ...args, enabled: false }}
+  parameters={{
+    msw: {
+      handlers: [revisionControl.success, mockGetMe.data],
+    },
+  }}
+/>
 <Story
   name="With Change Loading"
   {args}
