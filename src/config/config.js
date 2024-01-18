@@ -33,13 +33,19 @@ export const DC_LOGOUT = "/accounts/logout/";
 export const SQUARELET_SIGNUP = "/accounts/signup/?intent=documentcloud&next=";
 
 export const POLL_INTERVAL = 5000;
-export const IMAGE_WIDTHS = [
+
+export const IMAGE_WIDTHS_ENTRIES = [
   ["xlarge", 2000],
   ["large", 1000],
   ["normal", 700],
   ["small", 180],
   ["thumbnail", 60],
 ];
+
+export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.map(([name, width]) => [
+  width,
+  name,
+]);
 
 export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS);
 

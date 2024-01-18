@@ -23,7 +23,7 @@
   let largestLoaded = -1;
 
   const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
-    (x) => x[1][0] == "normal",
+    (x) => x[0][1] == "normal",
   )[0];
 
   let mounted = false;
