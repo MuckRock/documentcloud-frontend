@@ -16,7 +16,7 @@ import axios from "axios";
 import { Document, transformHighlights } from "@/structure/document.js";
 
 import {
-  POLL_TIMEOUT,
+  POLL_INTERVAL,
   GET_BATCH,
   GET_BATCH_DELAY,
   UPLOAD_BATCH,
@@ -254,7 +254,7 @@ export async function pollDocument(
   }
 
   // Retrigger after timeout
-  await timeout(POLL_TIMEOUT);
+  await timeout(POLL_INTERVAL);
   pollDocument(id, docFn, doneFn, conditionFn);
 }
 

@@ -120,8 +120,7 @@ export default wrap({
       filename: "assets/[name].[contenthash].css",
     }),
     new DotEnv({
-      path: prod ? `.env.${environment}` : ".env",
-      defaults: ".env",
+      path: ".env",
       systemvars: true,
     }),
     new CircularDependencyPlugin({
