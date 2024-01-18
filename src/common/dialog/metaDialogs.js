@@ -1,13 +1,15 @@
-const docTitleLimit = process.env.DOCUMENT_TITLE_CHAR_LIMIT;
-const docSourceLimit = process.env.DOCUMENT_SOURCE_CHAR_LIMIT;
-const docDescriptionLimit = process.env.DOCUMENT_DESCRIPTION_CHAR_LIMIT;
-const relatedArticleLimit = process.env.RELATED_ARTICLE_URL_CHAR_LIMIT;
-const publishedUrlLimit = process.env.PUBLISHED_URL_CHAR_LIMIT;
+import {
+  DOCUMENT_TITLE_CHAR_LIMIT,
+  DOCUMENT_SOURCE_CHAR_LIMIT,
+  DOCUMENT_DESCRIPTION_CHAR_LIMIT,
+  RELATED_ARTICLE_URL_CHAR_LIMIT,
+  PUBLISHED_URL_CHAR_LIMIT,
+} from "../../config/config.js";
 
 export const metaDialogs = [
   {
     menuTitle: "metaFields.titleFieldTitle",
-    charLimit: docTitleLimit,
+    charLimit: DOCUMENT_TITLE_CHAR_LIMIT,
     fieldAccessor: (x) => x.title,
     fieldName: "metaFields.titleFieldName",
     fieldNameUppercase: "metaFields.titleFieldNameUppercase",
@@ -26,7 +28,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "metaFields.sourceFieldTitle",
-    charLimit: docSourceLimit,
+    charLimit: DOCUMENT_SOURCE_CHAR_LIMIT,
     fieldAccessor: (x) => x.source,
     fieldName: "metaFields.sourceFieldName",
     fieldNameUppercase: "metaFields.sourceFieldNameUppercase",
@@ -37,7 +39,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "metaFields.descriptionFieldTitle",
-    charLimit: docDescriptionLimit,
+    charLimit: DOCUMENT_DESCRIPTION_CHAR_LIMIT,
     fieldAccessor: (x) => x.description,
     fieldName: "metaFields.descriptionFieldName",
     fieldNameUppercase: "metaFields.descriptionFieldNameUppercase",
@@ -49,7 +51,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "metaFields.relatedArticleFieldTitle",
-    charLimit: relatedArticleLimit,
+    charLimit: RELATED_ARTICLE_URL_CHAR_LIMIT,
     fieldAccessor: (x) => x.relatedArticleUrl,
     fieldName: "rmetaFields.relatedArticleFieldName",
     fieldNameUppercase: "metaFields.relatedArticleFieldNameUppercase",
@@ -60,7 +62,7 @@ export const metaDialogs = [
   },
   {
     menuTitle: "metaFields.publishedUrlFieldTitle",
-    charLimit: publishedUrlLimit,
+    charLimit: PUBLISHED_URL_CHAR_LIMIT,
     fieldAccessor: (x) => x.publishedUrl,
     fieldName: "metaFields.publishedUrlFieldName",
     fieldNameUppercase: "metaFields.publishedUrlFieldNameUppercase",

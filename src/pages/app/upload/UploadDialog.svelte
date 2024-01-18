@@ -1,4 +1,7 @@
 <script>
+  import { _ } from "svelte-i18n";
+  import { onMount } from "svelte";
+
   // Components
   import File from "../File.svelte";
   import Button from "@/common/Button.svelte";
@@ -17,11 +20,15 @@
   import { layout } from "@/manager/layout.js";
   import { handleNewDocuments } from "@/manager/documents.js";
 
-  // Utils
-  import { _ } from "svelte-i18n";
-
-  import { onMount } from "svelte";
   import emitter from "@/emit.js";
+
+  import {
+    UPLOAD_LIMIT,
+    PDF_SIZE_LIMIT,
+    PDF_SIZE_LIMIT_READABLE,
+    DOCUMENT_SIZE_LIMIT,
+    DOCUMENT_SIZE_LIMIT_READABLE,
+  } from "../../../config/config.js";
 
   const emit = emitter({
     setDismissable() {},
@@ -47,12 +54,6 @@
   let forceOcr = false;
   let ocrEngine = "tess4";
   let revisionControl = false;
-
-  const LIMIT = parseInt(process.env.UPLOAD_LIMIT);
-  const PDF_SIZE_LIMIT = parseInt(process.env.PDF_SIZE_LIMIT);
-  const PDF_SIZE_LIMIT_READABLE = process.env.PDF_SIZE_LIMIT_READABLE;
-  const DOCUMENT_SIZE_LIMIT = parseInt(process.env.DOCUMENT_SIZE_LIMIT);
-  const DOCUMENT_SIZE_LIMIT_READABLE = process.env.DOCUMENT_SIZE_LIMIT_READABLE;
 
   let tooManyFiles = false;
   let tooManyBigFiles = [false, false];
@@ -89,7 +90,7 @@
     let hasTooBigDocument = false;
 
     for (let i = 0; i < newFiles.length; i++) {
-      if (files.length < LIMIT) {
+      if (files.length < UPLOAD_LIMIT) {
         const newFile = newFiles[i];
         const isPdf = newFile.name.toLowerCase().trim().endsWith(".pdf");
         if (
@@ -208,7 +209,7 @@
         {#if tooManyFiles}
           <p class="danger">
             {$_("uploadDialog.fileLimitWarning", {
-              values: { limit: LIMIT },
+              values: { limit: UPLOAD_LIMIT },
             })}
           </p>
         {/if}

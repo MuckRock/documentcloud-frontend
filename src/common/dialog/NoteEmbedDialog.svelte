@@ -6,16 +6,10 @@
   import { layout } from "@/viewer/layout.js";
   import { getEmbed } from "@/api/embed.js";
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
-    .map((x) => x.split(":"))
-    .map((x) => [parseFloat(x[1]), x[0]])
-    .sort((a, b) => a[0] - b[0]);
-  const LARGE_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
-    (x) => x[0][1] == "large",
-  )[0];
+  import { APP_URL } from "../../config/config.js";
 
   $: noteUrl = $layout.embedDocument.noteUrl($layout.embedNote);
-  $: loaderSrc = `${process.env.APP_URL}notes/loader.js`;
+  $: loaderSrc = `${APP_URL}notes/loader.js`;
   $: annotationSrc = `${$layout.embedDocument.fakeNoteUrl(
     $layout.embedNote,
   )}.js`;

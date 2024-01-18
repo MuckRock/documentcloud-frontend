@@ -1,8 +1,9 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import emitter from "@/emit.js";
+  import { IMAGE_WIDTHS } from "../config/config.js";
   import { pageImageUrl } from "@/api/viewer.js";
   import { timeout } from "@/util/timeout.js";
-  import emitter from "@/emit.js";
 
   const emit = emitter({
     load() {},
@@ -23,13 +24,10 @@
   let loading = {};
   let largestLoaded = -1;
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
-    .map((x) => x.split(":"))
-    .map((x) => [parseFloat(x[1]), x[0]])
-    .sort((a, b) => a[0] - b[0]);
   const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
     (x) => x[0][1] == "normal",
   )[0];
+
   let mounted = false;
 
   onMount(async () => {
@@ -144,7 +142,7 @@
   class:crosshair
 />
 
-<style lang="scss">
+<style>
   div {
     position: relative;
     width: 100%;

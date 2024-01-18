@@ -1,13 +1,4 @@
-function processImageWidths(widthSpec) {
-  let result = widthSpec.split(",").map((width) => {
-    const parts = width.split(":");
-    return [parseFloat(parts[1]), parts[0]];
-  });
-  result = result.sort((a, b) => a[0] - b[0]);
-  return result;
-}
-
-export const imageWidths = processImageWidths(process.env.IMAGE_WIDTHS);
+import { IMAGE_WIDTHS } from "../config/config.js";
 
 export function documentDimensionUrl(document) {
   return `${document.assetUrl}documents/${document.id}/${document.slug}.pagesize`;
@@ -19,11 +10,11 @@ export function documentDimensionUrl(document) {
  * @param {number} desiredWidth The desired width of the page image.
  */
 function getDesiredSize(desiredWidth) {
-  for (let i = 0; i < imageWidths.length; i++) {
-    const [width, name] = imageWidths[i];
+  for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
+    const [width, name] = IMAGE_WIDTHS[i];
     if (desiredWidth <= width) return name;
   }
-  return imageWidths[imageWidths.length - 1][1];
+  return IMAGE_WIDTHS[IMAGE_WIDTHS.length - 1][1];
 }
 
 export function pageImageUrl(document, pageNumber, desiredWidth) {

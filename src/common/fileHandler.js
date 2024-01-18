@@ -1,13 +1,10 @@
 import { includes } from "@/util/array.js";
-
-const documentTypes = process.env.DOCUMENT_TYPES.split(",").map(
-  (x) => `.${x.toLowerCase().trim()}`,
-);
+import { DOCUMENT_TYPES } from "../config/config.js";
 
 export function filterFiles(files) {
   // Filter for just valid files
   return files.filter((file) => {
-    return includes(documentTypes, file.name.toLowerCase().trim(), (a, b) =>
+    return includes(DOCUMENT_TYPES, file.name.toLowerCase().trim(), (a, b) =>
       b.endsWith(a),
     );
   });

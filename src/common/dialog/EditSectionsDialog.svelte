@@ -1,6 +1,10 @@
 <script>
+  import { writable } from "svelte/store";
+  import { _ } from "svelte-i18n";
+
   import Button from "@/common/Button.svelte";
   import Loader from "@/common/Loader.svelte";
+
   import { hideEditSections } from "@/viewer/layout.js";
   import { viewer } from "@/viewer/viewer.js";
   import { layout } from "@/viewer/layout.js";
@@ -8,15 +12,12 @@
   import { addSection, removeSection, replaceSection } from "@/api/section.js";
   import { wrapLoadSeparate } from "@/util/wrapLoad.js";
   import { showConfirm } from "@/manager/confirmDialog.js";
-  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg?raw";
   import closeSimpleSvg from "@/assets/close_simple.svg?raw";
 
-  import { writable } from "svelte/store";
-
-  const sectionTitleLimit = process.env.SECTION_TITLE_CHAR_LIMIT;
+  import { SECTION_TITLE_CHAR_LIMIT } from "../../config/config.js";
 
   let loading = writable(false);
 
@@ -177,15 +178,18 @@
         {#if $viewer.sections.length > 0}
           {#each $viewer.sections as section, i}
             <div class="section" class:special={update && updatingIndex == i}>
-              <span class="edit" on:click={() => !update && editSection(i)}>
+              <button
+                class="buttonLike edit"
+                on:click={() => !update && editSection(i)}
+              >
                 {@html pencilSvg}
-              </span>
-              <span
-                class="remove"
+              </button>
+              <button
+                class="remove buttonLike"
                 on:click={async () => !update && (await handleSectionRemove(i))}
               >
                 {@html closeSimpleSvg}
-              </span>
+              </button>
               <span class="page"
                 >{$_("dialogEditSectionsDialog.pageAbbrevNo", {
                   values: { n: section.page + 1 },
@@ -220,7 +224,7 @@
             bind:value={pendingPage}
           />
           <input
-            maxlength={sectionTitleLimit}
+            maxlength={SECTION_TITLE_CHAR_LIMIT}
             class="titleinput"
             type="text"
             placeholder={$_("dialogEditSectionsDialog.title")}

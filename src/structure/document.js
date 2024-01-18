@@ -6,12 +6,14 @@ import { Section } from "@/structure/section.js";
 import deepEqual from "fast-deep-equal";
 import deepCopy from "fast-copy";
 
-const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
-const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
-const PAGE_NO_RE = /^page_no_(\d+)$/;
+import {
+  HIGHLIGHT_START,
+  HIGHLIGHT_END,
+  TAG_KEY,
+  APP_URL,
+} from "../config/config.js";
 
-const TAG_KEY = process.env.TAG_KEY;
-const APP_URL = process.env.APP_URL;
+const PAGE_NO_RE = /^page_no_(\d+)$/;
 
 export class Document extends Svue {
   constructor(rawDocument, structure = {}) {

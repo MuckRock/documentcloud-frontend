@@ -2,7 +2,7 @@
   import DomPurify from "dompurify";
   import { onMount } from "svelte";
 
-  const APP_URL = process.env.APP_URL;
+  import { APP_URL } from "../../../config/config.js";
 
   export let note;
   export let slugId;

@@ -16,6 +16,8 @@
     getQueryStringParams,
   } from "@/util/url.js";
 
+  import { IMAGE_WIDTHS } from "../../../config/config.js";
+
   export let id;
   export let noteId;
 
@@ -39,10 +41,6 @@
   const docWidth = 700;
   $: maxWidth = note == null ? 0 : docWidth * note.width;
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
-    .map((x) => x.split(":"))
-    .map((x) => [parseFloat(x[1]), x[0]])
-    .sort((a, b) => a[0] - b[0]);
   const LARGE_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
     (x) => x[0][1] == "large",
   )[0];

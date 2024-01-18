@@ -1,13 +1,13 @@
 <script lang="ts">
   import { tweened } from "svelte/motion";
-  import { sigmoid, interp, scale } from "../util/easing";
+  import { POLL_INTERVAL } from "../config/config.js";
+  import { sigmoid, interp, scale } from "../util/easing.js";
 
   export let progress: null | number;
   export let initializing = false;
   export let compact = false;
   export let failure = false;
 
-  const PROGRESS_DURATION = parseInt(process.env.POLL_INTERVAL);
   const PROGRESS_END_DURATION = 400; // how quickly to jump at end
   const PROGRESS_BACKWARDS_DURATION = 400; // how quickly to jump backwards
 
@@ -23,7 +23,7 @@
   }
 
   const smoothProgress = tweened(realProgress, {
-    duration: PROGRESS_DURATION,
+    duration: POLL_INTERVAL,
     interpolate(a, b) {
       // Jump immediately to 0
       if (b == 0) return (t) => 0;
@@ -31,7 +31,7 @@
       // If going backwards, don't tween
       if (b < a) {
         return interp(
-          scale(sigmoid, PROGRESS_BACKWARDS_DURATION / PROGRESS_DURATION),
+          scale(sigmoid, PROGRESS_BACKWARDS_DURATION / POLL_INTERVAL),
           a,
           b,
         );
@@ -40,7 +40,7 @@
       // If reaching end of progress, tween with a faster rate
       if (b == 1) {
         return interp(
-          scale(sigmoid, PROGRESS_END_DURATION / PROGRESS_DURATION),
+          scale(sigmoid, PROGRESS_END_DURATION / POLL_INTERVAL),
           a,
           b,
         );

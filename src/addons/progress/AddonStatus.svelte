@@ -4,8 +4,7 @@
 
   import AddonRun, { runs } from "./AddonRun.svelte";
   import { baseApiUrl } from "../../api/base.js";
-
-  const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL, 10);
+  import { POLL_INTERVAL } from "../../config/config.js";
 
   const endpoint = new URL(
     "/api/addon_runs/?expand=addon&dismissed=false&per_page=20",
