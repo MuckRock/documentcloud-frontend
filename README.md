@@ -58,7 +58,7 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 
 ## Unit tests
 
-Run unit tests with `make test`. This will run the tests via the builder Docker image.
+Run unit tests with `npm test`.
 
 ## Functional tests
 

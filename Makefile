@@ -34,12 +34,6 @@ build-serve:
 build-analyze:
 	docker compose -f local.yml up documentcloud_frontend_analyze
 
-test:
-	docker compose -f local.builder.yml run --rm test
-
-test-watch:
-	docker compose -f local.builder.yml run --rm test-watch
-
 prettier-check:
 	prettier --check --plugin-search-dir=. src
 

@@ -41,6 +41,8 @@ export const IMAGE_WIDTHS = [
   ["thumbnail", 60],
 ];
 
+export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS);
+
 export const MAX_PER_PAGE = 100;
 
 export const PDF_SIZE_LIMIT = 525336576;
