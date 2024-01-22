@@ -15,7 +15,7 @@
 
   import closeSvg from "@/assets/close_inline.svg?raw";
 
-  const CONTACT = process.env.SPECIAL_CONTACT;
+  import { SPECIAL_CONTACT } from "../../config/config.js";
 
   let loading = true;
   let fullText = null;
@@ -405,7 +405,7 @@
       </p>
     {:else}
       <p>
-        {@html $_("entities.welcome", { values: { contact: CONTACT } })}
+        {@html $_("entities.welcome", { values: { contact: SPECIAL_CONTACT } })}
       </p>
       <p>
         {$_("entities.manual")}

@@ -1,10 +1,13 @@
 <script>
+  import { _ } from "svelte-i18n";
+
   import BoundedNumberInput from "@/common/BoundedNumberInput.svelte";
   import ShareOptions from "@/common/ShareOptions.svelte";
   import { layout } from "@/viewer/layout.js";
   import { getEmbed } from "@/api/embed.js";
   import { doc } from "@/viewer/document.js";
-  import { _ } from "svelte-i18n";
+
+  import { APP_URL } from "../../config/config.js";
 
   let selectedPage = null;
 
@@ -15,7 +18,7 @@
     page == "visible" ? doc.visiblePageNumber - 1 : anotherNumber - 1;
   $: visiblePage = selectedPage + 1;
   $: pageUrl = $layout.embedDocument.pageUrl(visiblePage);
-  $: enhanceSrc = `${process.env.APP_URL}embed/enhance.js`;
+  $: enhanceSrc = `${APP_URL}embed/enhance.js`;
 
   let embedCode = null;
   let errorOccurred = false;

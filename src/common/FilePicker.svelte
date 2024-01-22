@@ -1,4 +1,5 @@
 <script>
+  import { DOCUMENT_TYPES } from "../config/config.js";
   import emitter from "@/emit.js";
   import { filterFiles } from "./fileHandler.js";
 
@@ -7,10 +8,6 @@
   });
 
   export let multiselect = false;
-
-  const documentTypes = process.env.DOCUMENT_TYPES.split(",")
-    .map((x) => `.${x.toLowerCase().trim()}`)
-    .join(",");
 
   // Bound to the file picker input
   let picker;
@@ -34,20 +31,20 @@
 </script>
 
 <span class="container">
-  <span class="content" on:click={trigger}>
+  <button class="content buttonLike" on:click={trigger}>
     <slot />
-  </span>
+  </button>
   <input
     multiple={multiselect}
     bind:this={picker}
     class="picker"
     type="file"
     on:change={handleFiles}
-    accept={documentTypes}
+    accept={DOCUMENT_TYPES.join(",")}
   />
 </span>
 
-<style lang="scss">
+<style>
   .container {
     display: inline-block;
     position: relative;

@@ -27,9 +27,8 @@ public/assets/
 .netlify
 
 # Local test env file
-.env.secret
-.env.test
-.env.sentry-build-plugin
+.env
+.env.*
 playwright-report
 test-results
 

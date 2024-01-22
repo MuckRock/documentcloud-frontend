@@ -1,12 +1,10 @@
 <script>
-  import { onMount, onDestroy } from "svelte";
+  import { onMount, onDestroy, createEventDispatcher } from "svelte";
+  import { IMAGE_WIDTHS, IMAGE_WIDTHS_MAP } from "../config/config.js";
   import { pageImageUrl } from "@/api/viewer.js";
   import { timeout } from "@/util/timeout.js";
-  import emitter from "@/emit.js";
 
-  const emit = emitter({
-    load() {},
-  });
+  const dispatch = createEventDispatcher();
 
   export let alt;
   export let page;
@@ -17,19 +15,17 @@
   export let crosshair = false;
   export let transform = null;
   export let delay = 0;
+
   let elem;
   let destroyed = false;
   let imgs = [];
   let loading = {};
   let largestLoaded = -1;
 
-  const IMAGE_WIDTHS = process.env.IMAGE_WIDTHS.split(",")
-    .map((x) => x.split(":"))
-    .map((x) => [parseFloat(x[1]), x[0]])
-    .sort((a, b) => a[0] - b[0]);
   const NORMAL_WIDTH = IMAGE_WIDTHS.map((x, i) => [x, i]).filter(
     (x) => x[0][1] == "normal",
   )[0];
+
   let mounted = false;
 
   onMount(async () => {
@@ -94,7 +90,7 @@
       setTimeout(() => (img.className = "loaded"), 100);
     }
     largestLoaded = i;
-    setTimeout(() => emit.load(), 100);
+    setTimeout(() => dispatch("load"), 100);
   }
 
   function loadImg(i) {
@@ -144,7 +140,7 @@
   class:crosshair
 />
 
-<style lang="scss">
+<style>
   div {
     position: relative;
     width: 100%;
@@ -162,7 +158,6 @@
     top: 0;
     left: 0;
 
-    user-drag: none;
     user-select: none;
 
     transition: opacity 0.2s linear;

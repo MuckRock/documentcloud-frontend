@@ -2,10 +2,7 @@
 import fs from "node:fs/promises";
 import { test as base, expect } from "@playwright/test";
 
-const {
-  DC_BASE = "https://api.dev.documentcloud.org",
-  NODE_ENV = "development",
-} = process.env;
+const { NODE_ENV = "development" } = process.env;
 
 const test = base.extend({
   document: async ({ page }, use) => {

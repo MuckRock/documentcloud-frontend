@@ -19,7 +19,7 @@ test.describe("manager tests", () => {
     ).toBeVisible();
 
     // close the overlay
-    await page.getByRole("button").nth(3).click();
+    await page.locator("button.dismiss").click();
 
     // can we see documents?
     await expect(page.locator(".outer > div").first()).toBeVisible();

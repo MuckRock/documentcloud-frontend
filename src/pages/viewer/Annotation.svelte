@@ -26,12 +26,14 @@
   import simpleLinkSvg from "@/assets/simplelink.svg?raw";
   import pencilSvg from "@/assets/pencil.svg?raw";
 
+  import {
+    NOTE_TITLE_CHAR_LIMIT,
+    NOTE_CONTENT_CHAR_LIMIT,
+  } from "../../config/config.js";
+
   // Asynchronously load dompurify
   import { loadDompurify } from "@/util/domPurify.js";
   loadDompurify();
-
-  const noteTitleLimit = process.env.NOTE_TITLE_CHAR_LIMIT;
-  const noteContentLimit = process.env.NOTE_CONTENT_CHAR_LIMIT;
 
   const emit = emitter({
     stateChange() {},
@@ -201,7 +203,7 @@
       <!-- Title -->
       {#if editMode}
         <input
-          maxlength={noteTitleLimit}
+          maxlength={NOTE_TITLE_CHAR_LIMIT}
           bind:this={titleInput}
           placeholder={$_("annotation.title")}
           bind:value={title}
@@ -289,7 +291,7 @@
         <!-- Title -->
         {#if editMode}
           <input
-            maxlength={noteTitleLimit}
+            maxlength={NOTE_TITLE_CHAR_LIMIT}
             bind:this={titleInput}
             placeholder={$_("annotation.title")}
             bind:value={title}
@@ -314,7 +316,7 @@
     <!-- Description/Content -->
     {#if editMode}
       <HtmlEditor
-        maxlength={noteContentLimit}
+        maxlength={NOTE_CONTENT_CHAR_LIMIT}
         placeholder={$_("annotation.description")}
         bind:value={description}
       />

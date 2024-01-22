@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { uniquify } from "@/util/array.js";
 
-const APP_URL = process.env.APP_URL;
+import { APP_URL } from "../config/config.js";
 
 export class Project extends Svue {
   constructor(rawProject, structure = {}) {

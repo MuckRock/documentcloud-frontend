@@ -1,5 +1,6 @@
 import { setupResizeEvent } from "./iframeSizer.js";
 import { queryBuilder } from "@/util/url.js";
+import { APP_URL } from "../config/config.js";
 
 function injectIframe(url, options, container) {
   const parts = url.split("/").slice(-2);
@@ -66,8 +67,7 @@ function injectIframe(url, options, container) {
 
   iframe.style = style;
   iframe.src =
-    queryBuilder(`${process.env.APP_URL}documents/${id}-${slug}`, queryParams) +
-    urlPostfix;
+    queryBuilder(`${APP_URL}documents/${id}-${slug}`, queryParams) + urlPostfix;
   setupResizeEvent(iframe);
 
   container.appendChild(iframe);

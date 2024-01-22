@@ -1,4 +1,6 @@
 <script>
+  import { _ } from "svelte-i18n";
+
   import Button from "@/common/Button.svelte";
   import Loader from "@/common/Loader.svelte";
 
@@ -14,10 +16,11 @@
     removeProject,
   } from "@/manager/projects";
   import { showConfirm } from "@/manager/confirmDialog.js";
-  import { _ } from "svelte-i18n";
 
-  const projectTitleLimit = process.env.PROJECT_TITLE_CHAR_LIMIT;
-  const projectDescriptionLimit = process.env.PROJECT_DESCRIPTION_CHAR_LIMIT;
+  import {
+    PROJECT_TITLE_CHAR_LIMIT,
+    PROJECT_DESCRIPTION_CHAR_LIMIT,
+  } from "../../config/config.js";
 
   const emit = emitter({
     dismiss() {},
@@ -83,14 +86,14 @@
       </h1>
       <div class="inputpadded">
         <input
-          maxlength={projectTitleLimit}
+          maxlength={PROJECT_TITLE_CHAR_LIMIT}
           placeholder={$_("dialogProjectDialog.title")}
           bind:value={name}
           bind:this={input}
         />
         <p>
           <textarea
-            maxlength={projectDescriptionLimit}
+            maxlength={PROJECT_DESCRIPTION_CHAR_LIMIT}
             placeholder={$_("dialogProjectDialog.projectDesc")}
             bind:value={description}
             use:textAreaResize

@@ -15,15 +15,15 @@ import axios from "axios";
 
 import { Document, transformHighlights } from "@/structure/document.js";
 
-const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
-
-const GET_BATCH = parseInt(process.env.GET_BATCH);
-const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
-const UPLOAD_BATCH = parseInt(process.env.UPLOAD_BATCH);
-const UPLOAD_BATCH_DELAY = parseInt(process.env.UPLOAD_BATCH_DELAY);
-
-const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
-const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
+import {
+  POLL_INTERVAL,
+  GET_BATCH,
+  GET_BATCH_DELAY,
+  UPLOAD_BATCH,
+  UPLOAD_BATCH_DELAY,
+  HIGHLIGHT_START,
+  HIGHLIGHT_END,
+} from "../config/config.js";
 
 // Statuses
 export const PENDING = "pending";
@@ -169,7 +169,7 @@ export async function changeRevisionControl(id, revision_control) {
         expand: [DEFAULT_EXPAND, "revisions"].join(","),
       }),
     ),
-    {revision_control}
+    { revision_control },
   );
   return data;
 }
@@ -254,7 +254,7 @@ export async function pollDocument(
   }
 
   // Retrigger after timeout
-  await timeout(POLL_TIMEOUT);
+  await timeout(POLL_INTERVAL);
   pollDocument(id, docFn, doneFn, conditionFn);
 }
 

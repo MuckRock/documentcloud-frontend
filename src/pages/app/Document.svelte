@@ -1,4 +1,6 @@
 <script>
+  import { _, date } from "svelte-i18n";
+
   import Checkbox from "@/common/Checkbox.svelte";
   import Button from "@/common/Button.svelte";
   import AccessIcon from "@/common/AccessIcon.svelte";
@@ -8,7 +10,8 @@
   import Link from "@/router/Link.svelte";
   import DocumentThumbnail from "./DocumentThumbnail.svelte";
   import Annotation from "@/pages/viewer/Annotation.svelte";
-  import { _, date } from "svelte-i18n";
+
+  import { TAG_KEY } from "../../config/config.js";
 
   // Stores
   import {
@@ -65,8 +68,6 @@
   function handleKeyup(e) {
     if (e.key == "Shift") shiftKey = false;
   }
-
-  const TAG_KEY = process.env.TAG_KEY;
 </script>
 
 <div class="card">

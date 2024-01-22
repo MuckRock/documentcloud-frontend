@@ -269,7 +269,7 @@ export function removeFromCollection(docId, modify = true) {
   }
 
   // Refresh when you delete everything to pull new search
-  if (newDocuments.length == 0 && process.env.NODE_ENV != "test")
+  if (newDocuments.length == 0 && process.env.NODE_ENV !== "test")
     window.location.reload();
 }
 
@@ -439,10 +439,7 @@ export async function changeRevisionControlForDocument(
   revision_control,
 ) {
   await wrapLoad(layout, async () => {
-    await changeRevisionControl(
-      document.id,
-      revision_control,
-    );
+    await changeRevisionControl(document.id, revision_control);
     updateInCollection(document, (d) => {
       d.doc = {
         ...d.doc,

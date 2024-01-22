@@ -1,11 +1,12 @@
 import { Document } from "./document.js";
+import { DC_BASE } from "../config/config.js";
 
 let id = 1;
 
 export function makeDocument(options = {}) {
   return new Document({
     access: options.access || "private",
-    asset_url: options.asset_url || process.env.DC_BASE + "/files/",
+    asset_url: options.asset_url || DC_BASE + "/files/",
     created_at: options.created_at || "2020-01-01T00:00:00.000Z",
     data: options.data || {},
     highlights: options.highlights || null,

@@ -9,6 +9,8 @@
   import { getQueryStringParams, falsyParamValue } from "../util/url.js";
   import { inIframe } from "../util/iframe.js";
 
+  import { APP_URL } from "../config/config.js";
+
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg?raw";
 
@@ -176,7 +178,7 @@
   <header>
     <div class="logo">
       {#if inIframe()}
-        <a href={process.env.APP_URL} target="_blank" rel="noreferrer"
+        <a href={APP_URL} target="_blank" rel="noreferrer noopener"
           >{@html mastLogoSvg}</a
         >
       {:else}

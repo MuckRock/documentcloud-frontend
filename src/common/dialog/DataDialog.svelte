@@ -1,10 +1,15 @@
 <script>
+  import { writable } from "svelte/store";
+  import { _ } from "svelte-i18n";
+
   import Loader from "@/common/Loader.svelte";
   import Button from "@/common/Button.svelte";
   import Dropdown from "@/common/Dropdown.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import NoWhitespace from "@/common/NoWhitespace.svelte";
+
+  import { TAG_KEY } from "../../config/config.js";
   import { viewer } from "@/viewer/viewer.js";
   import emitter from "@/emit.js";
   import { layout } from "@/manager/layout.js";
@@ -17,8 +22,6 @@
   import { showConfirm } from "@/manager/confirmDialog.js";
   import { wrapMultipleSeparate } from "@/util/wrapLoad.js";
   import { intersection } from "@/util/array.js";
-  import { writable } from "svelte/store";
-  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg?raw";
@@ -35,8 +38,6 @@
   }
 
   let loading = writable(false);
-
-  const TAG_KEY = process.env.TAG_KEY;
 
   // Technically needs to pass one or more of these characters,
   // but keyTrimmed captures that and gives a more descriptive message
@@ -320,9 +321,12 @@
               {:else}
                 {#if key != TAG_KEY}<input readonly bind:value={key} /> :{/if}
                 <input readonly bind:value />
-                <span class="pencil" on:click={() => startEdit(key, value)}>
+                <button
+                  class="buttonLike pencil"
+                  on:click={() => startEdit(key, value)}
+                >
                   {@html pencilSvg}
-                </span>
+                </button>
                 <Button
                   nondescript={true}
                   caution={true}
