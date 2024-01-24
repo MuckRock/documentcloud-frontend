@@ -1,6 +1,7 @@
 import path from "node:path";
 import url from "node:url";
 
+import adapter from "@sveltejs/adapter-netlify";
 import sveltePreprocess from "svelte-preprocess";
 import autoprefixer from "autoprefixer";
 
@@ -20,10 +21,16 @@ function scssAliases(aliases) {
   };
 }
 
+/** @type {import('@sveltejs/kit').Config} */
 export default {
   compilerOptions: {
     accessors: true,
   },
+
+  kit: {
+    adapter: adapter({}),
+  },
+
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
   // for more information about preprocessors
   preprocess: sveltePreprocess({

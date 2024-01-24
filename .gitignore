@@ -36,6 +36,13 @@ test-results
 tests/fixtures/development.json
 
 .vscode
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# sveltekit
+/build
+/.svelte-kit
+/package
 
 scratch/
 dist/
