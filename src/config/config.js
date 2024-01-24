@@ -32,6 +32,15 @@ export const DC_LOGIN = "/accounts/login/squarelet";
 export const DC_LOGOUT = "/accounts/logout/";
 export const SQUARELET_SIGNUP = "/accounts/signup/?intent=documentcloud&next=";
 
+export const LANGUAGES = [
+  ["US English", "en", "🇺🇸"],
+  ["Español", "es", "🇪🇸"],
+  ["Français", "fr", "🇫🇷"],
+  ["Deutsche", "de", "🇩🇪"],
+  ["українська", "uk", "🇺🇦"],
+  ["русский", "ru", "🇷🇺"],
+];
+
 export const POLL_INTERVAL = 5000;
 
 export const IMAGE_WIDTHS_ENTRIES = [

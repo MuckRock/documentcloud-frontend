@@ -1,5 +1,11 @@
+import path from "node:path";
+import url from "node:url";
+
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vitest/config";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   build: {
@@ -15,7 +21,9 @@ export default defineConfig({
   plugins: [sveltekit()],
 
   resolve: {
-    alias: {},
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
 
   test: {
