@@ -11,6 +11,7 @@ export default {
   transform: {
     "^.+\\.svelte$": ["svelte-jester", { preprocess: true }],
   },
-
   transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
+  collectCoverageFrom: ["./**/*.{js,svelte}"],
+  coverageReporters: ["html", "text-summary"],
 };
