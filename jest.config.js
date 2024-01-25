@@ -13,6 +13,6 @@ export default {
     "^.+\\.ts$": ["ts-jest", { useESM: true }],
   },
   transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
-  collectCoverageFrom: ["./**/*.{js,svelte}"],
+  collectCoverageFrom: ["./**/*.{js,ts,svelte}"],
   coverageReporters: ["html", "text-summary"],
 };
