@@ -97,7 +97,8 @@
     "serve": "serve public -l 80 --single",
     "storybook": "storybook dev -p 6006",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test-watch": "jest --watchAll",
+    "test-watch": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
+    "test-coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:browser": "playwright test",
     "watch": "concurrently npm:serve npm:dev-embed npm:watch-app",
     "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js"
