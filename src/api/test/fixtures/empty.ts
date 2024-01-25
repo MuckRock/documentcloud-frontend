@@ -1,4 +1,4 @@
-import { Page } from "../types/common";
+import type { Page } from "../../types/common";
 
 export const emptyList: Page<never> = {
   count: 0,
