@@ -5,6 +5,7 @@ import { LANGUAGES } from "@/config/config.js";
 const defaultLocale = "en";
 
 LANGUAGES.forEach(([name, code, flag]) => {
+  // todo: move or alias language files
   register(code, () => import(`../../langs/json/${code}.json`));
 });
 
