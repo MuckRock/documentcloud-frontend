@@ -31,6 +31,7 @@ public/assets/
 .env.*
 playwright-report
 test-results
+coverage
 
 # local fixtures, everyone should generate their own
 tests/fixtures/development.json

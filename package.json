@@ -65,6 +65,7 @@
     "@storybook/svelte": "^7.6.10",
     "@storybook/svelte-webpack5": "^7.6.10",
     "@storybook/testing-library": "^0.2.2",
+    "@types/lucene": "^2.1.7",
     "chromatic": "^9.1.0",
     "eslint": "^7.32.0",
     "jest": "^29.6.3",
@@ -81,7 +82,8 @@
     "storybook": "7.6.10",
     "storybook-mock-date-decorator": "^1.0.1",
     "svelte-jester": "^3.0.0",
-    "tape": "^5.7.2"
+    "tape": "^5.7.2",
+    "ts-jest": "^29.1.2"
   },
   "scripts": {
     "build": "webpack",
@@ -97,7 +99,8 @@
     "serve": "serve public -l 80 --single",
     "storybook": "storybook dev -p 6006",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test-watch": "jest --watchAll",
+    "test-watch": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
+    "test-coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:browser": "playwright test",
     "watch": "concurrently npm:serve npm:dev-embed npm:watch-app",
     "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js"
