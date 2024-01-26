@@ -20,6 +20,10 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    cookie: {
+      csrftoken: "mockToken",
+    },
+    cookiePreserve: true,
   },
 };
 
