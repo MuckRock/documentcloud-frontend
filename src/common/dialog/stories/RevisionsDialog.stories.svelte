@@ -38,10 +38,6 @@
     parameters: {
       layout: "centered",
       chromatic: { delay: 1000 },
-      cookie: {
-        csrftoken: "mockToken",
-      },
-      cookiePreserve: true,
     },
     argTypes: {
       enabled: {
