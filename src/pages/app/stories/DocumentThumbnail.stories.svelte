@@ -20,6 +20,10 @@
     publicNote: false,
     orgNote: false,
     privateNote: false,
+    pending: false,
+    progress: null,
+    processed: null,
+    pageCount: null,
   };
 </script>
 
@@ -41,5 +45,15 @@
     publicNote: true,
     privateNote: true,
     orgNote: true,
+  }}
+/>
+
+<Story
+  name="pending"
+  args={{
+    ...args,
+    document: new Document({ ...document, status: "pending" }),
+    pending: true,
+    progress: 0.5,
   }}
 />
