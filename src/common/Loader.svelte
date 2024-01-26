@@ -94,10 +94,6 @@
       opaquify 1s ease;
   }
 
-  /*
-  top: calc(50% - #{$smallSpinsize / 2 + $smallBordersize});
-  left: calc(50% - #{$smallSpinsize / 2 + $smallBordersize});
-  */
   .spinner.center {
     top: calc(
       50% - (var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px))
