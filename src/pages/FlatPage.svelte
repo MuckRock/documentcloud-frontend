@@ -182,9 +182,9 @@
           >{@html mastLogoSvg}</a
         >
       {:else}
-        <Link to="app">
+        <a href={APP_URL}>
           {@html mastLogoSvg}
-        </Link>
+        </a>
       {/if}
     </div>
   </header>
