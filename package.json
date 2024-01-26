@@ -80,6 +80,7 @@
     "react-dom": "^18.2.0",
     "serve": "^14.2.0",
     "storybook": "7.6.10",
+    "storybook-addon-cookie": "^3.2.0",
     "storybook-mock-date-decorator": "^1.0.1",
     "svelte-jester": "^3.0.0",
     "tape": "^5.7.2",
