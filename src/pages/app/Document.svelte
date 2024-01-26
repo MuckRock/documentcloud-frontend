@@ -12,6 +12,7 @@
   import Annotation from "@/pages/viewer/Annotation.svelte";
 
   import { TAG_KEY } from "../../config/config.js";
+  import { documents } from "@/manager/documents.js";
 
   // Stores
   import {
@@ -85,11 +86,14 @@
       {embed}
       {dialog}
       {document}
-      on:pick
+      progress={$documents.realProgressMap[document.id]}
+      processed={$documents.pagesProcessedMap[document.id]}
+      pageCount={$documents.pageCountMap[document.id]}
       noteCount={document.notes.length}
-      publicNote={document.notes.some((x) => x.access == "public")}
-      orgNote={document.notes.some((x) => x.access == "organization")}
-      privateNote={document.notes.some((x) => x.access == "private")}
+      publicNote={document.notes.some((x) => x.access === "public")}
+      orgNote={document.notes.some((x) => x.access === "organization")}
+      privateNote={document.notes.some((x) => x.access === "private")}
+      on:pick
     />
 
     <div class="info">
@@ -318,7 +322,7 @@
 
 <svelte:window on:keydown={handleKeydown} on:keyup={handleKeyup} />
 
-<style lang="scss">
+<style>
   h2 {
     font-size: var(--normal);
     font-weight: 600;
@@ -331,19 +335,20 @@
 
   .card {
     display: table;
-
-    @media only screen and (max-width: 720px) {
+  }
+  @media only screen and (max-width: 720px) {
+    .card {
       margin-bottom: 15px;
     }
+  }
 
-    .row {
-      display: table-row;
+  .card .row {
+    display: table-row;
+  }
 
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
+  .card .row > * {
+    display: table-cell;
+    vertical-align: top;
   }
 
   .check {
@@ -352,64 +357,51 @@
   }
 
   .updating {
-    color: $gray;
+    color: var(--gray);
     margin-bottom: 26px;
-  }
-
-  .valign {
-    vertical-align: middle;
-    display: inline-block;
-
-    &.marginleft {
-      margin-left: 8px;
-    }
   }
 
   .actions {
     font-size: 14px;
     padding-bottom: 10px;
+  }
+  .actions span {
+    display: inline-block;
+    margin: 6px 0;
+  }
 
-    span {
-      display: inline-block;
-      margin: 6px 0;
+  .actions span.pending {
+    color: var(--gray);
+    font-style: italic;
+  }
 
-      &.pending {
-        color: $gray;
-        font-style: italic;
-      }
-
-      &.error {
-        color: $caution;
-      }
-    }
+  .actions span.error {
+    color: var(--caution);
   }
 
   .hinfo {
     font-size: 13px;
     font-weight: bold;
     margin: 15px 0;
+  }
 
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
+  .hinfo > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-    .x {
-      @include buttonLike;
+  .hinfo .x {
+    padding-right: 5px;
+    height: 14px;
+  }
 
-      padding-right: 5px;
-      height: 14px;
+  .hinfo .x :global(svg) {
+    height: 12px;
+    opacity: 0.7;
+  }
 
-      :global(svg) {
-        height: 12px;
-        opacity: 0.7;
-      }
-    }
-
-    .padleft {
-      @include buttonLike;
-      padding-left: 5px;
-    }
+  .hinfo .padleft {
+    padding-left: 5px;
   }
 
   .highlights {
@@ -419,45 +411,42 @@
     display: table;
     width: 100%;
     padding-bottom: 27px;
+  }
 
-    .row {
-      display: table-row;
+  .highlights .row {
+    display: table-row;
+  }
 
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
+  .highlights .row > * {
+    display: table-cell;
+    vertical-align: top;
+  }
 
-    .page {
-      text-align: center;
+  .highlights .page {
+    text-align: center;
+  }
 
-      :global(img) {
-        width: 40px;
-        height: 52px;
-        box-sizing: border-box;
-        border: solid 1px gainsboro;
-      }
+  .page :global(img) {
+    width: 40px;
+    height: 52px;
+    box-sizing: border-box;
+    border: solid 1px gainsboro;
+  }
 
-      .number {
-        font-weight: bold;
-        font-size: 11px;
-        padding-bottom: 15px;
-      }
-    }
+  .highlights .page .number {
+    font-weight: bold;
+    font-size: 11px;
+    padding-bottom: 15px;
+  }
 
-    .highlight {
-      width: 100%;
-      padding-top: 8px;
-      padding-left: 15px;
-      padding-bottom: 15px;
-
-      .passage {
-        &.highlighted {
-          background: $annotationBorder;
-        }
-      }
-    }
+  .highlights .highlight {
+    width: 100%;
+    padding-top: 8px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
+  .highlights .highlight .passage.highlighted {
+    background: var(--annotationBorder);
   }
 
   .note-highlights {
@@ -466,14 +455,13 @@
 
   .smallinfo {
     font-size: 12px;
-    color: $gray;
+    color: var(--gray);
     display: inline-block;
     margin-right: 2px;
     font-style: italic;
   }
 
   .pencil {
-    @include buttonLike;
     vertical-align: middle;
     height: 10px;
   }
@@ -517,13 +505,12 @@
 
   .description {
     margin: 8px 0 -8px 0;
+  }
+  .description.embeddescription {
+    margin-bottom: 20px;
+  }
 
-    &.embeddescription {
-      margin-bottom: 20px;
-
-      :global(.content) {
-        max-height: 135px;
-      }
-    }
+  .description.embeddescription :global(.content) {
+    max-height: 135px;
   }
 </style>

@@ -81,6 +81,7 @@
     z-index: var(--spinnerZ, 8);
     opacity: 0;
   }
+
   .spinner.big {
     border: var(--bigBordersize, 7px) solid transparent;
     border-top: var(--bigBordersize, 7px) solid var(--gray, rgba(0, 0, 0, 0.53));
@@ -95,16 +96,18 @@
 
   .spinner.center {
     top: calc(
-      50% - var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px)
+      50% - (var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px))
     );
     left: calc(
-      50% - var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px)
+      50% - (var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px))
     );
   }
 
   .spinner.center.big {
-    top: calc(50% - var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px));
-    left: calc(50% - var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px));
+    top: calc(50% - (var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px)));
+    left: calc(
+      50% - (var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px))
+    );
   }
 
   .loader .spinner {

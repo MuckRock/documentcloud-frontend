@@ -1,5 +1,5 @@
-import { Page } from "../types/common";
-import { Project } from "../types/project";
+import type { Page } from "../../types/common";
+import type { Project } from "../../types/project";
 
 export const project: Project = {
   id: 200006,
