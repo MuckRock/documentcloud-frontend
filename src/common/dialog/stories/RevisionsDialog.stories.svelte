@@ -143,3 +143,14 @@
     msw: { handlers: [revisionControl.loading, mockGetMe.loading] },
   }}
 />
+<Story
+  name="Without CSRF Token"
+  {args}
+  parameters={{
+    msw: { handlers: [revisionControl.success, mockGetMe.data] },
+    cookie: {
+      csrftoken: "",
+    },
+    cookiePreserve: false,
+  }}
+/>
