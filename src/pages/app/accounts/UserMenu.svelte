@@ -14,7 +14,7 @@
     SIGN_OUT_URL,
   } from "../../../api/auth.js";
   import { showMailkeySelected } from "../../../manager/manager.js";
-  import { Maybe, User } from "./types";
+  import type { Maybe, User } from "./types";
 
   export let user: Maybe<User>;
 
