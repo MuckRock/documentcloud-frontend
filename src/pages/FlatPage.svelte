@@ -4,8 +4,6 @@
   import { gfmHeadingId } from "marked-gfm-heading-id";
   import { onMount, onDestroy } from "svelte";
 
-  import Link from "../router/Link.svelte";
-
   import { getQueryStringParams, falsyParamValue } from "../util/url.js";
   import { inIframe } from "../util/iframe.js";
 

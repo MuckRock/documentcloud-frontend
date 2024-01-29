@@ -28,6 +28,8 @@ if (process.env.NODE_ENV === "production") {
 export { DC_BASE, APP_URL, EMBED_URL, SQUARELET_BASE, STAFF_ONLY_S3_URL };
 
 // these never change
+export const API = "/api/";
+export const BASE_API_URL = DC_BASE + API;
 export const DC_LOGIN = "/accounts/login/squarelet";
 export const DC_LOGOUT = "/accounts/logout/";
 export const SQUARELET_SIGNUP = "/accounts/signup/?intent=documentcloud&next=";
@@ -73,8 +75,6 @@ export const LEGACY_CUT_OFF = 20000000;
 
 export const HIGHLIGHT_START = "<em>";
 export const HIGHLIGHT_END = "</em>";
-
-export const API = "/api/";
 
 export const UPLOAD_LIMIT = 1000;
 export const UPLOAD_BATCH = 25;
