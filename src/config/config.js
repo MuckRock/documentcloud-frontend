@@ -45,7 +45,7 @@ export const IMAGE_WIDTHS_ENTRIES = [
 export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.map(([name, width]) => [
   width,
   name,
-]);
+]).sort((a, b) => a[0] - b[0]);
 
 export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS);
 
