@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import Link from "../../../router/Link.svelte";
   import { allDocumentsUrl, userUrl, orgUrl } from "../../../search/search.js";
-  import { User } from "../accounts/types";
+  import type { User } from "../accounts/types";
   import { Globe16, Infinity16, Lock16, Organization16 } from "svelte-octicons";
   import ListItem from "./ListItem.svelte";
 

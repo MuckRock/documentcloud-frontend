@@ -12,8 +12,8 @@
   import ProjectList from "./projects/ProjectList.svelte";
 
   import { newProject, editProject } from "../../../manager/layout.js";
-  import { getMe } from "../../../api/orgAndUser";
-  import { User } from "../../../api/types/orgAndUser";
+  import { getMe } from "../../../api/orgAndUser.js";
+  import type { User } from "../../../api/types/orgAndUser";
 
   export let expanded;
 

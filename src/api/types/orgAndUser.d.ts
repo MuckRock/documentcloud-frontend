@@ -34,4 +34,5 @@ export interface User {
   organization: string | Org;
   organizations: string[];
   admin_organizations: string[];
+  feature_level: number;
 }

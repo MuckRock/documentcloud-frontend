@@ -1,6 +1,5 @@
 // load data for flatpages
 import { error, redirect } from "@sveltejs/kit";
-import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 
@@ -11,7 +10,7 @@ marked.use(gfmHeadingId());
 const ROOT = new URL("flatpages/", BASE_API_URL);
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ params }) {
+export async function load({ fetch, params }) {
   const endpoint = new URL(params.path, ROOT);
 
   const resp = await fetch(endpoint, { credentials: "include" });
@@ -27,7 +26,15 @@ export async function load({ params }) {
 
   const page = await resp.json();
 
-  page.content = DOMPurify.sanitize(marked.parse(page.content));
+  return {
+    title: page.title,
+    url: page.url,
+    content: render(page.content),
+  };
+}
 
-  return page;
+function render(content) {
+  // TODO sanitize content
+  console.warn("FlatPage content is not sanitized");
+  return marked.parse(content);
 }

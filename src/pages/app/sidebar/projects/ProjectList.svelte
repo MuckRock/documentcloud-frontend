@@ -2,7 +2,7 @@
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
-  import { User } from "../../../../api/types/orgAndUser";
+  import type { User } from "../../../../api/types/orgAndUser";
   import { getProjects } from "../../../../api/project.js";
   import { projectUrl } from "../../../../search/search.js";
   import Link from "../../../../router/Link.svelte";
