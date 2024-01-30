@@ -1,9 +1,8 @@
 <script>
   import { _ } from "svelte-i18n";
+  import { page } from "$app/stores";
 
-  import Loader from "../../common/Loader.svelte";
   import Button from "../../common/Button.svelte";
-  import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg?raw";
@@ -11,63 +10,34 @@
   import mastheadResponsiveSvg from "@/assets/masthead_responsive.svg?raw";
 
   // Authentication
-  import {
-    auth,
-    SIGN_IN_URL,
-    SIGN_UP_URL,
-    SIGN_OUT_URL,
-  } from "../../api/auth.js";
-
-  // Show the masthead
-  export let showMast = false;
+  import { SIGN_IN_URL, SIGN_UP_URL, SIGN_OUT_URL } from "@/config/config.js";
 
   // Show the login controls
-  export let showLogin = true;
+  const showLogin = true;
+
+  export let data;
+
+  // placeholder
+  let me = null;
 </script>
 
-<Loader active={$auth.signingIn}>
-  <div class="container">
-    <header>
-      <div class="headercontents">
-        <div class="logo">
-          <a href="/app">{@html mastLogoSvg}</a>
-        </div>
-        {#if showLogin}
-          <div class="narrowhide">
-            {#if $orgsAndUsers.me != null}
-              <div class="signupcontainer">
-                <div class="supplemental">
-                  {$_("homeTemplate.signedIn", {
-                    values: { name: $orgsAndUsers.me.name },
-                  })}
-                </div>
-                <div class="signin">
-                  <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
-                </div>
-                <a href="/app">
-                  <Button>{$_("homeTemplate.goToApp")}</Button>
-                </a>
-              </div>
-            {:else}
-              <div class="signupcontainer">
-                <div class="signin">
-                  <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
-                </div>
-                <a href={SIGN_UP_URL}>
-                  <Button>{$_("homeTemplate.signUp")}</Button>
-                </a>
-              </div>
-            {/if}
-          </div>
-        {/if}
+<svelte:head>
+  <title>{data.title} | DocumentCloud</title>
+</svelte:head>
+
+<div class="container">
+  <header>
+    <div class="headercontents">
+      <div class="logo">
+        <a href="/app">{@html mastLogoSvg}</a>
       </div>
       {#if showLogin}
-        <div class="narrowshow">
-          {#if $orgsAndUsers.me != null}
+        <div class="narrowhide">
+          {#if me != null}
             <div class="signupcontainer">
               <div class="supplemental">
                 {$_("homeTemplate.signedIn", {
-                  values: { name: $orgsAndUsers.me.name },
+                  values: { name: me.name },
                 })}
               </div>
               <div class="signin">
@@ -82,27 +52,53 @@
               <div class="signin">
                 <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
               </div>
-              <a href={SIGN_UP_URL}>
+              <a href={SIGN_UP_URL + $page.url}>
                 <Button>{$_("homeTemplate.signUp")}</Button>
               </a>
             </div>
           {/if}
         </div>
       {/if}
-    </header>
-    {#if showMast}
-      <div class="mastcontainer">
-        {@html mastheadSvg}
-        {@html mastheadResponsiveSvg}
+    </div>
+    {#if showLogin}
+      <div class="narrowshow">
+        {#if me != null}
+          <div class="signupcontainer">
+            <div class="supplemental">
+              {$_("homeTemplate.signedIn", {
+                values: { name: me.name },
+              })}
+            </div>
+            <div class="signin">
+              <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
+            </div>
+            <a href="/app">
+              <Button>{$_("homeTemplate.goToApp")}</Button>
+            </a>
+          </div>
+        {:else}
+          <div class="signupcontainer">
+            <div class="signin">
+              <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
+            </div>
+            <a href={SIGN_UP_URL}>
+              <Button>{$_("homeTemplate.signUp")}</Button>
+            </a>
+          </div>
+        {/if}
       </div>
     {/if}
-    <div class="content">
-      <slot />
-    </div>
-
-    <footer />
+  </header>
+  <div class="mastcontainer">
+    {@html mastheadSvg}
+    {@html mastheadResponsiveSvg}
   </div>
-</Loader>
+  <div class="content">
+    {@html data.content}
+  </div>
+
+  <footer />
+</div>
 
 <style>
   :global(.masthead) {

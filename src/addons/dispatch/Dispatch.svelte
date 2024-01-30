@@ -24,7 +24,7 @@
     orgsAndUsers,
     isPremiumOrg,
     getCreditBalance,
-  } from "../../manager/orgsAndUsers";
+  } from "../../manager/orgsAndUsers.js";
 
   export let visible: boolean = false;
   export let addon: AddOnListItem;
