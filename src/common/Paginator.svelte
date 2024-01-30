@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import Button from "../common/Button.svelte";
+  import Button from "./Button.svelte";
 
   export let has_next = false;
   export let has_previous = false;

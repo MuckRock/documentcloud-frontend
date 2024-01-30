@@ -3,7 +3,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Drawer from "../Drawer.svelte";
+  import Drawer from "../../common/Drawer.svelte";
   import Scheduled from "./Scheduled.svelte";
   import History from "./History.svelte";
 

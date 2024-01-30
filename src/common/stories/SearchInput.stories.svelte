@@ -6,7 +6,7 @@
   const args = {};
 
   export const meta = {
-    title: "Add-Ons / Browser / Components / Search",
+    title: "Common / Search",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: SearchInput,

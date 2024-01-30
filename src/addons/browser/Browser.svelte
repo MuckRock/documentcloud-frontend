@@ -2,13 +2,14 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
   import type { AddOnListItem } from "../types.ts";
-  import Drawer from "../Drawer.svelte";
-  import Paginator from "../Paginator.svelte";
-  import Search, { query } from "./SearchInput.svelte";
-  import Filters, { filter, FILTERS, CATEGORIES } from "./Filters.svelte";
+  import Filters from "./Filters.svelte";
+  import Categories from "./Categories.svelte";
+  import { buildParams, buildUrl, filter } from "./browser";
+  import Drawer from "../../common/Drawer.svelte";
+  import Paginator from "../../common/Paginator.svelte";
+  import Search, { query } from "../../common/SearchInput.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
   import Credit from "../../common/icons/Credit.svelte";
@@ -17,6 +18,18 @@
   export let per_page = 10;
 
   let drawer: Drawer;
+
+  $: urlParams = buildParams({
+    per_page,
+    query: $query,
+    filter: $filter,
+  });
+  $: url = buildUrl(urlParams);
+  $: next_url = res.next ? new URL(res.next).toString() : null;
+  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
+  $: items = res.results;
+
+  /** Network logic */
   let loading = false;
   let error = null;
   let res: {
@@ -24,21 +37,9 @@
     previous?: string | null;
     results?: AddOnListItem[];
   } = {};
-
   const options: RequestInit = {
     credentials: "include",
   };
-
-  $: urlParams = buildParams({
-    per_page,
-    query: $query,
-    filter: $filter,
-  });
-
-  $: url = buildUrl(urlParams);
-  $: next_url = res.next ? new URL(res.next).toString() : null;
-  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
-  $: items = res.results;
 
   export async function load(url) {
     loading = true;
@@ -64,49 +65,6 @@
   $: loadNext = () => load(next_url);
   $: loadPrev = () => load(previous_url);
   $: reload = () => load(url);
-
-  function buildUrl({ query = "", filters = {}, per_page = 5 }) {
-    const u = new URL("addons/", baseApiUrl);
-
-    u.search = new URLSearchParams({
-      query,
-      per_page: String(per_page),
-      ...filters,
-    }).toString();
-
-    return u.toString();
-  }
-
-  function buildParams({
-    query = "",
-    per_page = 5,
-    filter = [],
-  }: {
-    query: string;
-    per_page: number;
-    filter: string | string[];
-  }) {
-    if (!Array.isArray(filter)) {
-      filter = [filter];
-    }
-    const params = { per_page, query, filters: {} };
-    const filters = FILTERS.map(([n]) => n).filter((n) => filter.includes(n));
-    const categories = CATEGORIES.map(([n]) => n).filter((n) =>
-      filter.includes(n),
-    );
-    params.filters = filters.reduce((m, f) => {
-      if (f !== "all") {
-        m[f] = true;
-      }
-      return m;
-    }, {});
-
-    if (categories.length) {
-      params.filters["category"] = categories.join(",");
-    }
-
-    return params;
-  }
 </script>
 
 <Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
@@ -117,7 +75,10 @@
     </header>
     <aside class="sidebar">
       <div class="search"><Search /></div>
-      <div class="filters"><Filters /></div>
+      <div class="filters">
+        <Filters />
+        <Categories />
+      </div>
     </aside>
     <main class="results">
       <div class="list">
