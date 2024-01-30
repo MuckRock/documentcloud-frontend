@@ -103,6 +103,7 @@
     "test-watch": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
     "test-coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:browser": "playwright test",
+    "typecheck": "tsc --noEmit",
     "watch": "concurrently npm:serve npm:dev-embed npm:watch-app",
     "watch-app": "cross-env NODE_ENV=development webpack watch --config webpack.app.config.js"
   },
