@@ -8,7 +8,7 @@ interface PremiumOrgFields {
 }
 
 export interface Org extends Partial<PremiumOrgFields> {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   avatar_url: string;
@@ -27,11 +27,15 @@ export interface IndividualOrg extends Org {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: Maybe<string>;
   avatar_url: Maybe<string>;
   username: string;
-  organization: string | Org;
-  organizations: string[];
-  admin_organizations: string[];
+  organization: number | Org;
+  organizations: number[];
+  admin_organizations: number[];
+}
+
+export function isOrg(org?: number | Org): org is Org {
+  return org !== undefined && typeof org !== "number";
 }

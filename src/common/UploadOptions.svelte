@@ -6,7 +6,7 @@
   } from "../api/languages.js";
   import { _ } from "svelte-i18n";
   import Select from "./Select.svelte";
-  import type { Org, User } from "../pages/app/accounts/types.js";
+  import { isOrg, type Org, type User } from "../api/types/orgAndUser";
   import { getMe, getOrganization } from "../api/orgAndUser.js";
   import { onMount } from "svelte";
   import {
@@ -35,7 +35,7 @@
     }
     try {
       let activeOrg = user?.organization;
-      if (typeof activeOrg === "string") {
+      if (!isOrg(activeOrg)) {
         org = (await getOrganization(activeOrg)) as Org;
       } else {
         org = activeOrg;

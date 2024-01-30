@@ -9,4 +9,6 @@ export interface Project {
   private: boolean;
   updated_at: string;
   edit_access: boolean;
+  // TODO: Add 'pinned' field on the server
+  pinned?: boolean;
 }
