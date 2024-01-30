@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { searchDocuments } from "@/api/document.js";
 import { DEFAULT_ORDERING } from "@/api/common.js";
-import { getProjectDocuments } from "@/api/project.js";
+import { getProjectDocuments } from "@/api/project";
 import { cacheAsync } from "@/util/cache.js";
 import { highlight } from "@/search/parse.js";
 
@@ -251,12 +251,19 @@ export class SearchParams extends Svue {
               }
             }
             return [
-              () =>
-                getProjectDocuments(
+              async () => {
+                const [url, data] = await getProjectDocuments(
                   projectEmbedId,
                   { per_page: perPage },
                   ordering,
-                ),
+                );
+                return new Results(url, {
+                  ...data,
+                  results: data.results.map(
+                    (document) => new Document(document),
+                  ),
+                });
+              },
               null,
             ];
           }

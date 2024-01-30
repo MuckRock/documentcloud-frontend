@@ -8,7 +8,8 @@ import {
   addUserToProject,
   updateUserAccess,
   removeUser,
-} from "@/api/project.js";
+} from "@/api/project";
+import { Project } from "../structure/project.js";
 
 import { layout } from "./layout.js";
 import {
@@ -46,19 +47,19 @@ function addUsers(...users) {
 
 export async function initProjects(me) {
   const newProjects = await getProjects(me.id);
-  projects.projects = newProjects;
+  projects.projects = newProjects.map((project) => new Project(project));
 }
 
 export async function createNewProject(title, description) {
   const project = await newProject(title, description);
-  projects.projects = [...projects.projects, project];
+  projects.projects = [...projects.projects, new Project(project)];
 }
 
 export async function editProject(project, title, description) {
   const updatedProject = await updateProject(project.id, title, description);
   projects.projects = projects.projects.map((oldProject) => {
     if (project.id == oldProject.id) {
-      return updatedProject;
+      return new Project(updatedProject);
     } else {
       return oldProject;
     }

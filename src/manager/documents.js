@@ -14,7 +14,7 @@ import {
 import {
   addDocumentsToProject,
   removeDocumentsFromProject,
-} from "../api/project.js";
+} from "../api/project";
 import { layout, hideAccess, hideRevisions } from "./layout.js";
 import { wrapLoad, wrapSeparate } from "@/util/wrapLoad.js";
 import { showConfirm } from "./confirmDialog.js";
