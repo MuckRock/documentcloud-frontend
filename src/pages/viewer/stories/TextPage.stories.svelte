@@ -13,6 +13,19 @@
 Boston Residents Age 16+, Dec. 15, 2020 - May 4, 2021 * The Boston Total population count (581,209 
 residents) includes residents ages 16+, the population 
 for which a COVID-19 vaccine is currently approved. 
+1
+ At Least 1 Dose refers to individuals who have 
+received one or more doses of the Moderna or Pfizer 
+vaccine, or a single dose of the Johnson & Johnson 
+vaccine. 2
+ Partially Vaccinated refers to individuals who 
+have received only a first dose of the Moderna or Pfizer 
+vaccine. 3
+ Fully Vaccinated refers to individuals who 
+have received both first and second doses of the 
+Moderna or Pfizer vaccine, or a single dose of the 
+Johnson & Johnson vaccine. 
+Data Sources: 
 `;
 
   const highlights = [
