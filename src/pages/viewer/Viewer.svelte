@@ -89,6 +89,8 @@
 
       // debug
       window.layout = layout;
+      window.doc = doc;
+      window.viewer = viewer;
     }
   });
 
