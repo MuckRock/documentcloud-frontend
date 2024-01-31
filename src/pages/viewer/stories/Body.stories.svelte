@@ -4,7 +4,6 @@
   import { Document } from "../../../structure/document.js";
   import document from "../fixtures/document.json";
 
-  // not clear this does anything useful
   import { doc } from "@/viewer/document.js";
   import { viewer } from "../../../viewer/viewer.js";
 
@@ -14,6 +13,7 @@
     parameters: { layout: "centered" },
   };
 
+  // not clear this does anything useful
   viewer.doc = new Document(document);
   doc.viewer = viewer;
 </script>
