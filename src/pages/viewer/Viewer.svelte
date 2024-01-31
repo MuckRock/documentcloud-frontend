@@ -86,6 +86,9 @@
       await initOrgsAndUsers();
 
       window.plausible && plausible("pageview", { u: obscureURL() });
+
+      // debug
+      window.layout = layout;
     }
   });
 
