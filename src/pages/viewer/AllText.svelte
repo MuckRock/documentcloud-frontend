@@ -65,40 +65,36 @@
   {/each}
 </div>
 
-<style lang="scss">
+<style>
   .doc {
     margin-bottom: 30px;
+  }
+  .doc .page {
+    max-width: 1200px;
+    width: 100%;
+    margin: 20px auto;
+    position: relative;
+  }
+  .doc .page .numbercontainer {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    height: 100%;
+    user-select: none;
+  }
 
-    .page {
-      max-width: 1200px;
-      width: 100%;
-      margin: 20px auto;
-      position: relative;
+  .doc .page .numbercontainer .number {
+    position: sticky;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 12px 20px 12px 0;
+    font-weight: bold;
+    font-size: 12px;
+    white-space: pre;
+    top: 20px;
+  }
 
-      .numbercontainer {
-        position: absolute;
-        top: 0;
-        right: 100%;
-        height: 100%;
-        user-select: none;
-
-        .number {
-          position: sticky;
-          text-align: right;
-          box-sizing: border-box;
-          padding: 12px 20px 12px 0;
-          font-weight: bold;
-          font-size: 12px;
-          white-space: pre;
-          top: 20px;
-
-          a {
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-    }
+  .doc .page .numbercontainer .number a:hover {
+    text-decoration: underline;
   }
 </style>
