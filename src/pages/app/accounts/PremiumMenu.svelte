@@ -14,7 +14,7 @@
 
   import { Plug16, Organization16 } from "svelte-octicons";
   import { SQUARELET_URL } from "../../../api/auth";
-  import { Org } from "./types";
+  import { Org } from "../../../api/types";
   import MenuInsert from "../../../common/MenuInsert.svelte";
   import {
     isPremiumOrg,
