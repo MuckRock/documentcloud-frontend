@@ -10,7 +10,7 @@ import {
   getUser,
   getUsers,
   getOrganization,
-} from "../api/orgAndUser";
+} from "../api/orgAndUser.ts";
 import { SQUARELET_URL } from "../api/auth.js";
 import { projects, initProjects } from "./projects.js";
 import { userUrl, allDocumentsUrl } from "../search/search.js";

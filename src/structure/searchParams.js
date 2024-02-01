@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { searchDocuments } from "@/api/document.js";
 import { DEFAULT_ORDERING } from "@/api/common.js";
-import { getProjectDocuments } from "@/api/project";
+import { getProjectDocuments } from "@/api/project.ts";
 import { cacheAsync } from "@/util/cache.js";
 import { highlight } from "@/search/parse.js";
 

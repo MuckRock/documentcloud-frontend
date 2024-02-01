@@ -1,7 +1,7 @@
 <script>
   import Button from "@/common/Button.svelte";
   import emitter from "@/emit.js";
-  import { createMailkey, destroyMailkey } from "@/api/orgAndUser";
+  import { createMailkey, destroyMailkey } from "@/api/orgAndUser.ts";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({

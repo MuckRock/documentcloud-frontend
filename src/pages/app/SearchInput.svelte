@@ -13,7 +13,7 @@
   import {
     autocompleteOrganizations,
     autocompleteUsers,
-  } from "@/api/orgAndUser";
+  } from "@/api/orgAndUser.ts";
   import { slugify } from "@/util/string.js";
   import { timeoutify } from "@/util/closure.js";
 

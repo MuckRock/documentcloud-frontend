@@ -8,7 +8,7 @@ import {
   addUserToProject,
   updateUserAccess,
   removeUser,
-} from "@/api/project";
+} from "@/api/project.ts";
 import { Project } from "../structure/project.js";
 
 import { layout } from "./layout.js";
