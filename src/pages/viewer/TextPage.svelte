@@ -18,7 +18,7 @@
   {/each}
 </div>
 
-<style lang="scss">
+<style>
   .text {
     display: block;
     background: white;
@@ -30,15 +30,15 @@
     line-height: 1.4;
     user-select: text;
     padding: 16px 20px;
+  }
 
-    .highlight {
-      background: #f3e94d;
-      background: linear-gradient(#f3e94d, #f5dd01);
-      border: 1px solid #f5e800;
-      padding: 1px;
-      color: #000;
-      border-radius: $radius;
-      box-shadow: 0 0 5px #666;
-    }
+  .text .highlight {
+    background: #f3e94d;
+    background: linear-gradient(#f3e94d, #f5dd01);
+    border: 1px solid #f5e800;
+    padding: 1px;
+    color: #000;
+    border-radius: var(--radius);
+    box-shadow: 0 0 5px #666;
   }
 </style>

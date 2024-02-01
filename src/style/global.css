@@ -102,6 +102,7 @@ details.dc summary {
 
 a {
   color: inherit;
+  cursor: pointer;
   text-decoration: inherit;
 }
 
@@ -116,6 +117,10 @@ a.active .project {
 a.active .project:hover {
   background: var(--primary-faded, rgba(66, 148, 240, 0.13));
   opacity: 1;
+}
+
+a.ib {
+  display: inline-block;
 }
 
 /* Mixins */

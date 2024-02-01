@@ -39,5 +39,7 @@ tests/fixtures/development.json
 .vscode
 
 scratch/
+build/
 dist/
 storybook-static/
+.svelte-kit/

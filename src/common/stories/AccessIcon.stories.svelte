@@ -1,5 +1,5 @@
-<script lang="ts">
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script context="module" lang="ts">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
   import AccessIcon from "../AccessIcon.svelte";
@@ -11,21 +11,20 @@
   };
 
   const handleClick = action("click");
-</script>
 
-<Meta
-  title="Common / Access Icon"
-  component={AccessIcon}
-  parameters={{
-    layout: "centered",
-  }}
-  argTypes={{
-    access: {
-      control: "select",
-      options: ["public", "private", "organization"],
+  export const meta = {
+    title: "Common / Access Icon",
+    component: AccessIcon,
+    parameters: { layout: "centered" },
+    tags: ["autodocs"],
+    argTypes: {
+      access: {
+        control: "select",
+        options: ["public", "private", "organization"],
+      },
     },
-  }}
-/>
+  };
+</script>
 
 <Template let:args>
   <AccessIcon {...args} on:click={handleClick} />

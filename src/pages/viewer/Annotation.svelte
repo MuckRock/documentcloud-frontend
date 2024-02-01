@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -19,7 +19,6 @@
     deletePageAnnotation,
   } from "@/viewer/layout.js";
   import { wrapSeparate } from "@/util/wrapLoad.js";
-  import emitter from "@/emit.js";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg?raw";
@@ -35,9 +34,7 @@
   import { loadDompurify } from "@/util/domPurify.js";
   loadDompurify();
 
-  const emit = emitter({
-    stateChange() {},
-  });
+  const dispatch = createEventDispatcher();
 
   export let page;
   export let pageNote = false;
@@ -53,23 +50,23 @@
   export let compact = false;
   export let titlePassages = null;
   export let hlContent = null;
+  export let access = annotation?.access;
 
   let editOverride = false;
   let loading = writable(false);
 
-  let title = annotation.title;
-  let description = annotation.content;
-  export let access = annotation.access;
+  let title = annotation?.title;
+  let description = annotation?.content;
 
   $: editMode = mode == "edit" || editOverride;
   $: {
     editMode;
     description;
     // Emit state changes to capture mutations
-    emit.stateChange();
+    dispatch("stateChange");
   }
 
-  $: titleValid = title.trim().length > 0;
+  $: titleValid = title?.trim().length > 0;
   $: accessValid =
     (page.document.editAccess && access == "public") ||
     access == "organization" ||
@@ -77,9 +74,9 @@
     access == "private";
 
   $: changed =
-    title != annotation.title ||
-    description != annotation.content ||
-    access != annotation.access;
+    title != annotation?.title ||
+    description != annotation?.content ||
+    access != annotation?.access;
   $: changeValid = (mode == "view" && changed) || mode == "edit";
 
   $: valid = titleValid && accessValid && changeValid;
@@ -91,9 +88,9 @@
 
   const ANNOTATION_PADDING = 20;
   $: y1 =
-    headerHeight == null ? null : y + annotation.y1 * height - headerHeight;
+    headerHeight == null ? null : y + annotation?.y1 * height - headerHeight;
   $: y2 =
-    footerHeight == null ? null : y + annotation.y2 * height + footerHeight;
+    footerHeight == null ? null : y + annotation?.y2 * height + footerHeight;
 
   $: shift =
     y1 == null || y2 == null
@@ -109,6 +106,7 @@
   // Focus on title on mount
   let titleInput;
   let annotationElem;
+
   onMount(async () => {
     if (titleInput != null) titleInput.focus();
 
@@ -124,7 +122,7 @@
       if (editOverride) {
         // Update annotation
         annotation = await updatePageAnnotation(
-          annotation.id,
+          annotation?.id,
           page.document.id,
           title,
           description,
@@ -149,9 +147,9 @@
   function handleCancel() {
     if (editOverride) {
       // Restore fields
-      title = annotation.title;
-      description = annotation.content;
-      access = annotation.access;
+      title = annotation?.title;
+      description = annotation?.content;
+      access = annotation?.access;
       editOverride = false;
     } else {
       cancelAnnotation();
@@ -160,7 +158,7 @@
 
   async function handleDelete() {
     await wrapSeparate(loading, layout, async () => {
-      await deletePageAnnotation(annotation.id, page.document.id);
+      await deletePageAnnotation(annotation?.id, page.document.id);
     });
   }
 
@@ -184,7 +182,7 @@
   on:mousedown|stopPropagation
   style={shift == "up" || pageNote
     ? ""
-    : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}
+    : `top: ${annotation?.y1 * 100}%; height: ${annotation?.height * 100}%`}
 >
   <header
     bind:this={annotationElem}
@@ -223,7 +221,7 @@
               </h4>
             {/each}
           {:else}
-            {annotation.title}
+            {annotation?.title}
           {/if}
           {#if !compact}
             <a class="link" href={noteUrl}>
@@ -247,12 +245,12 @@
       <div
         class="body"
         style={showImageOnPageNote
-          ? `height: 0; padding-top: ${annotation.height * aspect * 100}%`
+          ? `height: 0; padding-top: ${annotation?.height * aspect * 100}%`
           : ""}
       >
         <div
-          style="margin-top: {-annotation.y1 * aspect * 100 -
-            (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%"
+          style="margin-top: {-annotation?.y1 * aspect * 100 -
+            (showImageOnPageNote ? annotation?.height * aspect * 100 : 0)}%"
         >
           <ProgressiveImage
             alt="Page {page.pageNumber + 1} of {page.document.title}"
@@ -264,12 +262,12 @@
           <div
             class="faded left"
             class:nobottom={showImageOnPageNote}
-            style="left: 0; width: {annotation.x1 * 100}%"
+            style="left: 0; width: {annotation?.x1 * 100}%"
           />
           <div
             class="faded right"
             class:nobottom={showImageOnPageNote}
-            style="left: {annotation.x2 * 100}%; right: 0"
+            style="left: {annotation?.x2 * 100}%; right: 0"
           />
         </div>
       </div>
@@ -299,7 +297,7 @@
           />
         {:else}
           <h3>
-            {annotation.title}
+            {annotation?.title}
             <a class="link" href={noteUrl}>
               {@html simpleLinkSvg}
             </a>
@@ -325,7 +323,7 @@
         <HtmlField content={hlContent} />
       </span>
     {:else}
-      <HtmlField content={annotation.content} />
+      <HtmlField content={annotation?.content} />
     {/if}
     <!-- Footer content -->
     {#if editMode}
@@ -364,13 +362,13 @@
           {/if}
         </div>
         <div class="cell rightalign">
-          {#if annotation.organization == null}
-            {$_("annotation.by", { values: { name: annotation.username } })}
+          {#if annotation?.organization == null}
+            {$_("annotation.by", { values: { name: annotation?.username } })}
           {:else}
             {$_("annotation.byOrg", {
               values: {
-                name: annotation.username,
-                org: annotation.organization,
+                name: annotation?.username,
+                org: annotation?.organization,
               },
             })}
           {/if}
@@ -411,23 +409,23 @@
     }
 
     &.public {
-      $border: solid var(--annotationBorderWidth, 3px)
+      border: solid var(--annotationBorderWidth, 3px)
         var(--annotationBorder, #ffe325);
       .excerpt::before {
-        border-left: $border;
-        border-right: $border;
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       header {
-        border-top: $border;
-        border-left: $border;
-        border-right: $border;
+        border-top: var(--border);
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       footer {
-        border-left: $border;
-        border-right: $border;
-        border-bottom: $border;
+        border-left: var(--border);
+        border-right: var(--border);
+        border-bottom: var(--border);
       }
 
       .closeflag {
@@ -436,22 +434,22 @@
     }
 
     &.organization {
-      $border: solid var(--annotationBorderWidth) var(--organizationAnnotation);
+      border: solid var(--annotationBorderWidth) var(--organizationAnnotation);
       .excerpt::before {
-        border-left: $border;
-        border-right: $border;
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       header {
-        border-top: $border;
-        border-left: $border;
-        border-right: $border;
+        border-top: var(--border);
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       footer {
-        border-left: $border;
-        border-right: $border;
-        border-bottom: $border;
+        border-left: var(--border);
+        border-right: var(--border);
+        border-bottom: var(--border);
       }
 
       .closeflag {
@@ -460,22 +458,22 @@
     }
 
     &.private {
-      $border: solid var(--annotationBorderWidth) var(--privateAnnotation);
+      border: solid var(--annotationBorderWidth) var(--privateAnnotation);
       .excerpt::before {
-        border-left: $border;
-        border-right: $border;
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       header {
-        border-top: $border;
-        border-left: $border;
-        border-right: $border;
+        border-top: var(--border);
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       footer {
-        border-left: $border;
-        border-right: $border;
-        border-bottom: $border;
+        border-left: var(--border);
+        border-right: var(--border);
+        border-bottom: var(--border);
       }
 
       .closeflag {
@@ -583,8 +581,8 @@
       padding-top: var(--padding, 10px);
 
       // Borders
-      border-top-left-radius: $radius;
-      border-top-right-radius: $radius;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
 
       h3,
       h4 {
@@ -601,8 +599,8 @@
       padding-bottom: var(--padding, 10px);
 
       // Borders
-      border-bottom-left-radius: $radius;
-      border-bottom-right-radius: $radius;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
       box-sizing: border-box;
 
       &.capsize {
@@ -673,7 +671,7 @@
     .twopanel {
       display: table;
       width: 100%;
-      color: $viewerGray;
+      color: var(--viewerGray);
       font-size: 11px;
 
       .cell {
@@ -745,13 +743,13 @@
   .highlight {
     .passage {
       &.highlighted {
-        background: $annotationBorder;
+        background: var(--annotationBorder);
       }
     }
 
     :global(em) {
       font-style: normal;
-      background: $annotationBorder;
+      background: var(--annotationBorder);
     }
   }
 </style>

@@ -1,23 +1,24 @@
 <script>
-  import ExtraPageContent from "./ExtraPageContent.svelte";
-  import PageNoteInsert from "./PageNoteInsert.svelte";
-  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
-  import Annotation from "./Annotation.svelte";
-
-  import { showIfFullyVisible } from "@/util/visibility.js";
-  import { doc, showAnnotation } from "@/viewer/document.js";
-  import { viewer } from "@/viewer/viewer.js";
-  import { layout } from "@/viewer/layout.js";
-  import { markup } from "@/util/markup.js";
-  import { hoveredNote } from "@/viewer/hoveredNote.js";
-  import { selectableTextUrl } from "@/api/viewer.js";
-  import session from "@/api/session.js";
-  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights.js";
   import { onDestroy, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  // Selectable text
+  import Annotation from "./Annotation.svelte";
+  import ExtraPageContent from "./ExtraPageContent.svelte";
+  import PageNoteInsert from "./PageNoteInsert.svelte";
   import SelectableWord from "./SelectableWord.svelte";
+  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+
+  import session from "@/api/session.js";
+  import { selectableTextUrl } from "@/api/viewer.js";
+
+  import { doc, showAnnotation } from "@/viewer/document.js";
+  import { layout } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { hoveredNote } from "@/viewer/hoveredNote.js";
+
+  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights.js";
+  import { markup } from "@/util/markup.js";
+  import { showIfFullyVisible } from "@/util/visibility.js";
 
   export let page;
   export let width;

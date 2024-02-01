@@ -1,4 +1,7 @@
 <script>
+  import ScrollZoom from "scrollzoom";
+  import { onMount, onDestroy, tick } from "svelte";
+
   import Page from "./Page.svelte";
   import SearchResults from "./SearchResults.svelte";
 
@@ -8,9 +11,7 @@
     cancelAnnotation,
   } from "@/viewer/layout.js";
   import { doc } from "@/viewer/document.js";
-  import ScrollZoom from "scrollzoom";
   import ActionPane from "./pane/ActionPane.svelte";
-  import { onMount, onDestroy, tick } from "svelte";
 
   import {
     enterRedactMode,
@@ -166,6 +167,7 @@
   ];
   const elements = [document.documentElement, document.body];
   const prevStyles = styles.map(() => "");
+
   onMount(() => {
     // Set document root styles
     for (let i = 0; i < styles.length; i++) {
@@ -304,7 +306,7 @@
   on:keypress={handleKeyPress}
 />
 
-<style lang="scss">
+<style>
   .doc {
     position: absolute;
     top: 0;
@@ -315,16 +317,16 @@
     min-height: 1px;
     box-sizing: border-box;
     overflow: auto;
-    z-index: $viewerBodyZ;
+    z-index: var(--viewerBodyZ);
     touch-action: manipulation;
-    background: $viewerBodyBg;
+    background: var(--viewerBodyBg);
+  }
 
-    :global(img) {
-      background: white;
-    }
+  .doc :global(img) {
+    background: white;
+  }
 
-    &.grayed {
-      background: $viewerBodyBgDarker;
-    }
+  .doc.grayed {
+    background: var(--viewerBodyBgDarker);
   }
 </style>
