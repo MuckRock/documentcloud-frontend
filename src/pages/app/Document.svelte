@@ -7,7 +7,6 @@
   import Image from "@/common/Image.svelte";
   import Progress from "@/common/Progress.svelte";
   import HtmlField from "@/common/HtmlField.svelte";
-  import Link from "@/router/Link.svelte";
   import DocumentThumbnail from "./DocumentThumbnail.svelte";
   import Annotation from "@/pages/viewer/Annotation.svelte";
 
@@ -145,13 +144,13 @@
       {#if !embed}
         <div class="actions">
           {#if document.viewable}
-            <Link to="viewer" params={{ id: document.slugId }}>
-              <Button action={true}>{$_("document.open")}</Button>
-            </Link>
+            <a href={document.canonicalUrl}>
+              <Button action>{$_("document.open")}</Button>
+            </a>
             {#if document.readable}
               <div class="updating">
                 {$_("document.updating")}
-                <Progress initializing={true} progress={0} compact={true} />
+                <Progress initializing compact progress={0} />
               </div>
             {/if}
           {:else if document.pending}
@@ -181,21 +180,21 @@
           {#if document.projectIds != null}
             {#each document.projectIds as id}
               {#if $projects.projectsById[id] != null}
-                <Link toUrl={projectUrl($projects.projectsById[id])}>
+                <a href={projectUrl($projects.projectsById[id])}>
                   <Button plain={true}>
                     <div class="smallinfo">{$_("document.project")}</div>
                     {$projects.projectsById[id].title}
                   </Button>
-                </Link>
+                </a>
               {/if}
             {/each}
             {#each document.dataPoints as { key, value }}
-              <Link toUrl={dataUrl(key, value)}>
+              <a href={dataUrl(key, value)}>
                 <Button plain={true}>
                   {#if key != TAG_KEY}{key}:{/if}
                   {value}
                 </Button>
-              </Link>
+              </a>
             {/each}
             {#if document.dataPoints.length > 0 && document.editAccess}
               <button
@@ -243,9 +242,9 @@
           <div class="highlights">
             {#each highlights as highlight}
               <div>
-                <Link
-                  inlineBlock={true}
-                  toUrl={document.relativePageUrl(highlight.page + 1)}
+                <a
+                  class="ib"
+                  href={document.relativePageUrl(highlight.page + 1)}
                 >
                   <div class="row">
                     <div class="page">
@@ -270,7 +269,7 @@
                       </div>
                     {/each}
                   </div>
-                </Link>
+                </a>
               </div>
             {/each}
           </div>
@@ -291,7 +290,7 @@
           <div class="highlights note-highlights">
             {#each noteHighlights as highlight}
               <div>
-                <Link toUrl={document.relativeNoteUrl(highlight.note)}>
+                <a href={document.relativeNoteUrl(highlight.note)}>
                   <!-- to get correct aspect ratio we would need to store the page spec
                   in solr
                   --->
@@ -310,7 +309,7 @@
                     titlePassages={highlight.titlePassages}
                     hlContent={highlight.hlContent}
                   />
-                </Link>
+                </a>
               </div>
             {/each}
           </div>
