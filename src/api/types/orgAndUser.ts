@@ -36,6 +36,6 @@ export interface User {
   admin_organizations: number[];
 }
 
-export function isOrg(org?: number | Org): org is Org {
-  return org !== undefined && typeof org !== "number";
+export function isOrg(org?: null | number | Org): org is Org {
+  return org !== undefined && org !== null && typeof org !== "number";
 }

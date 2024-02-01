@@ -25,7 +25,7 @@
       <Lock16 slot="icon" />
     </ListItem>
   </Link>
-  {#if isOrg(user.organization) && !user.organization.individual}
+  {#if isOrg(user.organization) && !user.organization?.individual}
     <Link plusReplace={true} toUrl={orgUrl(user.organization)}>
       <ListItem
         label={$_("projects.orgDocuments", {
