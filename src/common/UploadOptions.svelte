@@ -7,7 +7,7 @@
   import { _ } from "svelte-i18n";
   import Select from "./Select.svelte";
   import { isOrg, type Org, type User } from "../api/types/orgAndUser";
-  import { getMe, getOrganization } from "../api/orgAndUser.js";
+  import { getMe, getOrganization } from "../api/orgAndUser";
   import { onMount } from "svelte";
   import {
     getUpgradeUrl,

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { getMe } from "../../api/orgAndUser.js";
+  import { getMe } from "../../api/orgAndUser";
   import {
     isOrgAdmin,
     isPremiumOrg,

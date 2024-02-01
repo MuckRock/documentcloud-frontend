@@ -1,6 +1,6 @@
 import { Svue } from "svue";
 import { getDocument } from "@/api/document.js";
-import { getMe } from "@/api/orgAndUser.js";
+import { getMe } from "@/api/orgAndUser";
 import { router } from "@/router/router.js";
 import { DEFAULT_EXPAND } from "../api/common.js";
 import { inIframe } from "@/util/iframe.js";
