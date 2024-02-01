@@ -93,7 +93,7 @@
     "build-serve": "cross-env NODE_ENV=production webpack && serve public -l 80 --single",
     "build-analyze": "cross-env NODE_ENV=production-analyze webpack",
     "build-storybook": "storybook build",
-    "check": "svelte-check",
+    "check": "svelte-check --threshold error",
     "dev": "concurrently \"npm:dev-app\" \"npm:dev-embed\"",
     "dev-app": "cross-env NODE_ENV=development SUPPRESS_WARNINGS=1 webpack serve --config webpack.app.config.js",
     "dev-embed": "cross-env NODE_ENV=development webpack --config webpack.embed.config.js",
