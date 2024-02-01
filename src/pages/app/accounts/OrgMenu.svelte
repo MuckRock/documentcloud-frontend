@@ -6,7 +6,7 @@
   import Menu from "../../../common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Loader from "../../../common/Loader.svelte";
-  import { User, Org } from "../../../api/types";
+  import { User, Org } from "../../../api/types/orgAndUser";
   import OrgMemberList from "./OrgMemberList.svelte";
   import {
     changeActive,
