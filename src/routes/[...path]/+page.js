@@ -1,4 +1,5 @@
 // load data for flatpages
+import { browser } from "$app/environment";
 import { error, redirect } from "@sveltejs/kit";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";

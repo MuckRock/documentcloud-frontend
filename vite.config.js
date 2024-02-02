@@ -26,6 +26,12 @@ export default defineConfig({
     },
   },
 
+  server: {
+    host: "0.0.0.0",
+    port: process.env.DOCKER ? 80 : 5173,
+    origin: "https://www.dev.documentcloud.org",
+  },
+
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
   },

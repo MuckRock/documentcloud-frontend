@@ -7,7 +7,7 @@ services:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run watch
+    command: npm run dev
     networks:
       default:
         aliases:
@@ -15,6 +15,9 @@ services:
       squarelet_default:
         aliases:
           - internal.www.dev.documentcloud.org
+    environment:
+      DOCKER: true
+      NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
 
   documentcloud_frontend_app:
     image: node:18
@@ -22,7 +25,7 @@ services:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run dev-app
+    command: npm run dev
     networks:
       default:
         aliases:
@@ -37,7 +40,7 @@ services:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run dev-embed
+    command: npm run dev
     networks:
       default:
         aliases:
