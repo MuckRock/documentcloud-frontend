@@ -6,6 +6,8 @@
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
 
+  // projects ui
+
   // new add-ons ui
   import Browser from "../../addons/browser/Browser.svelte";
   import Dispatch from "../../addons/dispatch/Dispatch.svelte";

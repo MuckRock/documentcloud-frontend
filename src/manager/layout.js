@@ -278,6 +278,14 @@ export function hideData() {
   layout.dataOpen = false;
 }
 
+export function browseProjects() {
+  layout.projectBrowser = true;
+}
+
+export function hideProjectBrowser() {
+  layout.projectBrowser = false;
+}
+
 export function newProject() {
   layout.projectEdit = null;
   layout.projectOpen = true;
