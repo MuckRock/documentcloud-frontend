@@ -7,7 +7,7 @@
   import MenuItem from "../../../common/MenuItem.svelte";
   import Loader from "../../../common/Loader.svelte";
 
-  import { Org } from "./types";
+  import { Org } from "../../../api/types/orgAndUser";
 
   export let activeOrg: Org;
   export let loading = false;

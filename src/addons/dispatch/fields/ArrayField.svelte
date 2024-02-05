@@ -17,7 +17,7 @@
   };
 
   export let count: number = 1;
-  export let value: [any] = Array(count).fill(null);
+  export let value: any[] = Array(count).fill(null);
 
   $: numItems = value?.length ?? 0;
 

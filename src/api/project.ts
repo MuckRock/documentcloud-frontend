@@ -4,37 +4,42 @@
 
 import session from "./session.js";
 import { apiUrl } from "./base.js";
-import { Project } from "@/structure/project.js";
-import { grabAllPages } from "@/util/paginate.js";
+import { grabAllPages } from "../util/paginate.js";
 import { DEFAULT_ORDERING, DEFAULT_EXPAND } from "./common.js";
-import { queryBuilder } from "@/util/url.js";
-import { Results } from "@/structure/results.js";
-import { Document } from "@/structure/document.js";
+import { queryBuilder } from "../util/url.js";
+import type { Page, Project, User, Document, DocumentAccess } from "./types";
 
-export async function newProject(title, description) {
-  // Create a project
+// Create a project
+export async function newProject(title, description): Promise<Project> {
   const { data } = await session.post(apiUrl("projects/"), {
     title,
     description,
   });
-  return new Project(data);
+  return data;
 }
 
-export async function deleteProject(projectId) {
+export async function deleteProject(projectId: number): Promise<void> {
   // Delete the project with the specified id
   await session.delete(apiUrl(`projects/${projectId}/`));
 }
 
-export async function updateProject(projectId, title, description) {
-  // Update a project
+// Update a project
+export async function updateProject(
+  projectId: number,
+  title: string,
+  description: string,
+): Promise<Project> {
   const { data } = await session.patch(apiUrl(`projects/${projectId}/`), {
     title,
     description,
   });
-  return new Project(data);
+  return data;
 }
 
-export async function addDocumentsToProject(projectId, docIds) {
+export async function addDocumentsToProject(
+  projectId: number,
+  docIds: number[],
+): Promise<void> {
   await session.post(
     apiUrl(`projects/${projectId}/documents/`),
     docIds.map((id) => ({
@@ -43,25 +48,34 @@ export async function addDocumentsToProject(projectId, docIds) {
   );
 }
 
-export async function removeDocumentsFromProject(projectId, docIds) {
+export async function removeDocumentsFromProject(
+  projectId: number,
+  docIds: number[],
+): Promise<void> {
   await session.delete(
     apiUrl(
       `projects/${projectId}/documents/?document_id__in=${docIds
-        .map((x) => `${x}`)
+        .map(String)
         .join(",")}`,
     ),
   );
 }
 
-export async function getProjects(userId, expand = DEFAULT_EXPAND) {
+export async function getProjects(
+  userId: number,
+  expand: string = DEFAULT_EXPAND,
+): Promise<Project[]> {
   // Returns all projects
   const projects = await grabAllPages(
     queryBuilder(apiUrl("projects/"), { user: userId, expand }),
   );
-  return projects.map((project) => new Project(project));
+  return projects;
 }
 
-export async function getProjectUsers(projectId, expand = DEFAULT_EXPAND) {
+export async function getProjectUsers(
+  projectId: number,
+  expand: string = DEFAULT_EXPAND,
+): Promise<User[]> {
   const users = await grabAllPages(
     apiUrl(queryBuilder(`projects/${projectId}/users/`, { expand })),
   );
@@ -69,27 +83,24 @@ export async function getProjectUsers(projectId, expand = DEFAULT_EXPAND) {
 }
 
 export async function getProjectDocuments(
-  projectId,
-  extraParams = {},
-  ordering = DEFAULT_ORDERING,
-  expand = DEFAULT_EXPAND + ",document",
-) {
+  projectId: number,
+  extraParams: Record<string, unknown> = {},
+  ordering: string = DEFAULT_ORDERING,
+  expand: string = DEFAULT_EXPAND + ",document",
+): Promise<[string, Page<Document>]> {
   // Return documents with the specified parameters
   const params = { ...extraParams, ordering, expand, version: "2.0" };
   const url = apiUrl(queryBuilder(`projects/${projectId}/documents/`, params));
   const { data } = await session.get(url);
-  data.results = data.results.map(
-    (document) => new Document(document.document),
-  );
-  return new Results(url, data);
+  return [url, data];
 }
 
 export async function addUserToProject(
-  projectId,
-  email,
-  access,
-  expand = DEFAULT_EXPAND,
-) {
+  projectId: number,
+  email: string,
+  access: DocumentAccess,
+  expand: string = DEFAULT_EXPAND,
+): Promise<Page<User>> {
   const { data: user } = await session.post(
     apiUrl(`projects/${projectId}/users/`),
     {
@@ -106,12 +117,19 @@ export async function addUserToProject(
   return data;
 }
 
-export async function updateUserAccess(projectId, userId, access) {
+export async function updateUserAccess(
+  projectId: number,
+  userId: string,
+  access: DocumentAccess,
+): Promise<void> {
   await session.patch(apiUrl(`projects/${projectId}/users/${userId}/`), {
     access,
   });
 }
 
-export async function removeUser(projectId, userId) {
+export async function removeUser(
+  projectId: number,
+  userId: string,
+): Promise<void> {
   await session.delete(apiUrl(`projects/${projectId}/users/${userId}/`));
 }

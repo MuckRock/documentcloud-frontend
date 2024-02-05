@@ -125,6 +125,8 @@
     if (document != null && textDoc == null && !loading) {
       loading = true;
       (async () => {
+        // @ts-expect-error session is not typed,
+        // but it does have a getStatic method added to its prototype
         textDoc = await session.getStatic(jsonUrl(document));
         // strip _force if it exists
         ocrEngine = textDoc.pages[0].ocr;
