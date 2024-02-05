@@ -55,7 +55,7 @@
   name="Pro User, No Orgs"
   parameters={{
     msw: {
-      handlers: [mockGetMe.noOrgs, mockGetOrg.data, mockGetOrgsList.empty],
+      handlers: [mockGetMe.noOrgs, mockGetOrg.pro, mockGetOrgsList.empty],
     },
   }}
 />

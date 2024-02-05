@@ -31,7 +31,7 @@ export const mockGetMe = {
     ),
   ),
   noOrgs: rest.get(mockMeUrl, (req, res, ctx) =>
-    res(ctx.json({ ...me, organization: "4" })),
+    res(ctx.json({ ...me, organization: 4 })),
   ),
   orgAdmin: rest.get(mockMeUrl, (req, res, ctx) =>
     res(
@@ -126,16 +126,8 @@ export const mockGetOrg = {
   empty: rest.get(mockGetOrgUrl, (req, res, ctx) =>
     res(ctx.json({ next: null, previous: null, results: [] })),
   ),
-  free: rest.get(mockGetOrgUrl, (req, res, ctx) =>
-    res(
-      ctx.json({
-        ...organizations.results.find(
-          ({ id }) => id.toString() === req.params.id,
-        ),
-        plan: "Free",
-      }),
-    ),
-  ),
+  pro: rest.get(mockGetOrgUrl, (req, res, ctx) => res(ctx.json(proOrg))),
+  free: rest.get(mockGetOrgUrl, (req, res, ctx) => res(ctx.json(freeOrg))),
 };
 
 const mockChangeOrgUrl = new URL(`users/me/`, baseApiUrl).toString();
