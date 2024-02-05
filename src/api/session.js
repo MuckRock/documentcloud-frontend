@@ -24,7 +24,8 @@ export function getCsrfToken() {
     document.cookie
       ?.split(";")
       ?.map((c) => c.split("="))
-      ?.find(([k, v]) => k === CSRF_COOKIE_NAME) ?? [];
+      // in case there's spaces in the cookie string, trim the key
+      ?.find(([k, v]) => k.trim() === CSRF_COOKIE_NAME) ?? [];
 
   return token;
 }
