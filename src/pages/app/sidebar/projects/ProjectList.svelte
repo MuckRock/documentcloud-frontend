@@ -12,8 +12,8 @@
   import { ChevronRight16, ChevronDown16 } from "svelte-octicons";
 
   export let user: User;
-  export let newProject;
   export let editProject;
+  export let browseProjects;
 
   const expanded = writable(true);
   function toggleExpanded() {
@@ -44,8 +44,8 @@
     {/if}
   </Button>
   {$_("projects.header")}
-  <Button on:click={newProject} small={true} slot="action"
-    >{$_("projects.newProject")}</Button
+  <Button on:click={browseProjects} small={true}
+    >{$_("projectsMenu.browseProjects")}</Button
   >
 </ListHeader>
 {#if $expanded}

@@ -508,7 +508,8 @@
     "publishedUrlFieldButton": "Edit"
   },
   "projectsMenu": {
-    "newProject": "New Project",
+    "browseProjects": "Browse",
+    "newProject": "New",
     "projMembership": "Project Membership",
     "selectDocs": "Select documents to place them in projects",
     "createProj": "Create a project to organize and share documents",
