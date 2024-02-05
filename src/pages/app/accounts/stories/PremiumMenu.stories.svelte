@@ -3,7 +3,7 @@
 
   import PremiumMenu from "../PremiumMenu.svelte";
 
-  import { organizations } from "../../../../api/fixtures/orgAndUser.fixtures.js";
+  import { organizations } from "../../../../api/fixtures/orgAndUser.fixtures";
 
   export const meta = {
     title: "App / Accounts / Menus / Premium",

@@ -1,4 +1,7 @@
-export const me = {
+import { Org, Page, User } from "../types";
+import { GroupOrg, IndividualOrg } from "../types/orgAndUser";
+
+export const me: User = {
   id: 4,
   avatar_url:
     "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
@@ -23,9 +26,10 @@ export const me = {
   verified_journalist: true,
 };
 
-export const users = {
+export const users: Page<User> = {
   next: null,
   previous: null,
+  count: 12,
   results: [
     {
       id: 1,
@@ -156,9 +160,10 @@ export const users = {
   ],
 };
 
-export const organizations = {
+export const organizations: Page<Org> = {
   next: null,
   previous: null,
+  count: 2,
   results: [
     {
       id: 1,
@@ -189,7 +194,7 @@ export const organizations = {
   ],
 };
 
-export const organization = {
+export const organization: GroupOrg = {
   id: 1,
   avatar_url:
     "https://squarelet-staging.s3.amazonaws.com/media/org_avatars/logo_uEHCMva.png",
@@ -203,7 +208,7 @@ export const organization = {
   plan: "Organization",
 };
 
-export const proOrg = {
+export const proOrg: IndividualOrg = {
   id: 4,
   avatar_url:
     "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
@@ -217,7 +222,7 @@ export const proOrg = {
   plan: "Professional",
 };
 
-export const freeOrg = {
+export const freeOrg: IndividualOrg = {
   id: 4,
   avatar_url:
     "https://cdn.muckrock.com/media/account_images/allan-headshot-2016.jpg",
