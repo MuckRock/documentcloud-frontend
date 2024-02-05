@@ -41,4 +41,22 @@ test.describe("manager tests", () => {
 
     await page.locator(".overlay").click();
   });
+
+  test("documents", async ({ page }) => {
+    await page.goto("/app");
+
+    // close the overlay
+    await page.locator("button.dismiss").click();
+
+    await page.getByRole("button", { name: "Open" }).first().click();
+
+    await expect(page.locator("h1")).toBeVisible();
+    await page.goBack();
+
+    // close the overlay again
+    await page.locator("button.dismiss").click();
+
+    await page.getByRole("main").getByRole("link").nth(1).click();
+    await page.getByRole("banner").getByRole("link").click();
+  });
 });

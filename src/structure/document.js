@@ -42,7 +42,7 @@ export class Document extends Svue {
           return [id, slug].join("-");
         },
         canonicalUrl(slugId) {
-          return `${APP_URL}documents/${slugId}`;
+          return new URL(`documents/${slugId}`, APP_URL).toString();
         },
         pageHashUrl() {
           return (page) => `#document/p${page}`;

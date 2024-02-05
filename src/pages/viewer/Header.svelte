@@ -8,7 +8,6 @@
   import { createEventDispatcher } from "svelte";
 
   import Loader from "../../common/Loader.svelte";
-  import Link from "../../router/Link.svelte";
 
   import Search from "./controls/Search.svelte";
   import Hamburger from "../../common/Hamburger.svelte";
@@ -24,6 +23,10 @@
   export let sidebarOpen: boolean;
 
   const dispatch = createEventDispatcher();
+
+  function goBack(e) {
+    window.history.back();
+  }
 </script>
 
 <header
@@ -33,9 +36,9 @@
 >
   {#if !embed}
     <div class="action back">
-      <Link back={true}>
+      <a class="back" href="/app" on:click|preventDefault={goBack}>
         <ChevronLeft24 />
-      </Link>
+      </a>
     </div>
   {/if}
   <div class="title">
