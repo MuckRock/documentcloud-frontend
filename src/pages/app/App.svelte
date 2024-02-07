@@ -7,6 +7,7 @@
   import MainContainer from "./MainContainer.svelte";
 
   // projects ui
+  import ProjectBrowser from "../../projects/Browser.svelte";
 
   // new add-ons ui
   import Browser from "../../addons/browser/Browser.svelte";
@@ -14,7 +15,7 @@
   import Runs from "../../addons/runs/Runs.svelte";
 
   import { setHash, router } from "../../router/router.js";
-  import { layout } from "../../manager/layout.js";
+  import { hideProjectBrowser, layout } from "../../manager/layout.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
   // hash routing, like in Viewer.svelte
@@ -146,6 +147,11 @@
   <Sidebar />
   <main><MainContainer /></main>
 </div>
+
+<ProjectBrowser
+  bind:visible={$layout.projectBrowser}
+  on:close={hideProjectBrowser}
+/>
 
 <Browser
   bind:visible={$layout.addonBrowserOpen}
