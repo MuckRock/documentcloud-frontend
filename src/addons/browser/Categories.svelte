@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { filter, CATEGORIES } from "./browser";
-  import Filter from "./Filter.svelte";
+  import Filter from "../../common/Filter.svelte";
 </script>
 
 <div class="categories">
