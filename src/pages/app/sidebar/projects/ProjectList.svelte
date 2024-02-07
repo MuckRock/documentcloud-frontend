@@ -28,11 +28,14 @@
     return projects;
   }
 
-  async function getProjectList() {
-    return sort(await getProjects(user.id));
+  async function getPinnedList() {
+    const pinned = (await getProjects(user.id)).filter(
+      (project) => project.pinned,
+    );
+    return sort(pinned);
   }
 
-  const promise = getProjectList();
+  const promise = getPinnedList();
 </script>
 
 <ListHeader>
@@ -44,7 +47,7 @@
     {/if}
   </Button>
   {$_("projects.header")}
-  <Button on:click={browseProjects} small={true}
+  <Button slot="action" on:click={browseProjects} small={true}
     >{$_("projectsMenu.browseProjects")}</Button
   >
 </ListHeader>
@@ -65,7 +68,7 @@
           </Link>
         {/each}
       {:else}
-        <small>{$_("projects.createProject")}</small>
+        <small>{$_("projects.pinsEmpty")}</small>
       {/if}
     </div>
   {:catch}

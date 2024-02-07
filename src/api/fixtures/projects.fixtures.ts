@@ -42,6 +42,7 @@ export let projects: Page<Project> = {
       title: "Defense Dept FOIA",
       updated_at: "2020-10-27T16:48:08.168482Z",
       user: 4,
+      pinned: true,
     },
     {
       id: 5,

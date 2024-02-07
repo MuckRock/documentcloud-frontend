@@ -1,6 +1,6 @@
 <script lang="ts">
   import ListItem from "../ListItem.svelte";
-  import { FileDirectoryFill16 } from "svelte-octicons";
+  import Pin from "../../../../common/icons/Pin.svelte";
   import EditButton from "../../../../common/EditButton.svelte";
 
   export let title;
@@ -8,7 +8,7 @@
 </script>
 
 <ListItem label={title}>
-  <span slot="icon" class="folder"><FileDirectoryFill16 /></span>
+  <span slot="icon" class="pin"><Pin /></span>
   <span slot="action">
     {#if onEditClick}
       <EditButton small title={`Edit ${title}`} on:click={onEditClick} />
@@ -30,8 +30,8 @@
     background: rgba(0, 0, 0, 0.03);
   }
 
-  .folder {
-    fill: var(--primary);
+  .pin {
+    fill: var(--highlight-orange);
   }
 
   .title {

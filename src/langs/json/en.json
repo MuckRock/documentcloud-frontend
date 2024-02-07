@@ -572,7 +572,8 @@
     "yourPubDocuments": "Your Public Documents",
     "orgDocuments": "{name}’s Documents",
     "newProject": "New Project",
-    "createProject": "Create your first project by clicking “New Project” above."
+    "createProject": "Create your first project by clicking “New Project” above.",
+    "pinsEmpty": "Pinned projects will appear here for quick access"
   },
   "organizations": {
     "sameOrgUsers": "Users in organization"
