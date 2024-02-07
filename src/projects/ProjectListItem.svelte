@@ -3,8 +3,14 @@
 
   import ProjectPin from "./ProjectPin.svelte";
   import type { Project } from "../api/types/project";
+  import EditButton from "../common/EditButton.svelte";
 
   export let project: Project;
+  export let editProject: (project: Project) => void;
+
+  const onEditClick = () => editProject(project);
+
+  console.log("edit_access", project.edit_access);
 </script>
 
 <a class="project-link" href={`/projects/${project.slug}`}>
@@ -16,6 +22,11 @@
       <div class="stretch">
         <h3 class="project-title">{project.title}</h3>
       </div>
+      {#if project.edit_access}
+        <div class="center-self">
+          <EditButton title={`Edit ${project.title}`} on:click={onEditClick} />
+        </div>
+      {/if}
     </div>
     {#if project.description}
       <div class="description">{@html project.description}</div>
@@ -55,7 +66,7 @@
 
   .description {
     margin: 0 0.5em;
-    opacity: 0.6z;
+    opacity: 0.6;
     font-size: 0.875em;
     line-height: 1.4;
     color: var(--darkgray);
@@ -68,7 +79,7 @@
     }
   }
 
-  .project-name {
+  .project-title {
     margin: 0;
     font-weight: 600;
   }

@@ -5,6 +5,7 @@
   import EmptyResults from "../common/icons/EmptyResults.svelte";
   import Error from "../common/icons/Error.svelte";
   import Loader from "../common/Loader.svelte";
+  import { editProject } from "../manager/layout.js";
 
   import ListItem from "./ProjectListItem.svelte";
 
@@ -35,7 +36,7 @@
   {:else}
     <ul>
       {#each items as project (project.id)}
-        <li><ListItem {project} /></li>
+        <li><ListItem {project} {editProject} /></li>
       {/each}
     </ul>
   {/if}

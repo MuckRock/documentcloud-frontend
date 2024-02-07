@@ -7,7 +7,7 @@
   import { projectHandlers } from "./mockData";
 
   export const meta = {
-    title: "Projects / Browser",
+    title: "App / Projects / Browser",
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
     component: Browser,

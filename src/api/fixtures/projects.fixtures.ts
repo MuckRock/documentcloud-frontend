@@ -13,6 +13,19 @@ export let project: Project = {
   user: 1,
 };
 
+export let editableProject: Project = {
+  id: 29,
+  created_at: "2020-10-23T15:59:33.779478Z",
+  description: "",
+  edit_access: true,
+  add_remove_access: null,
+  private: false,
+  slug: "miltary-contractors",
+  title: "Miltary Contractors",
+  updated_at: "2020-10-23T15:59:33.896698Z",
+  user: 1,
+};
+
 export let projects: Page<Project> = {
   next: null,
   previous: null,
