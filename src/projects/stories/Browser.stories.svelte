@@ -5,6 +5,7 @@
 
   const args = { visible: true };
   import { projectHandlers } from "./mockData";
+  import { mockGetMe } from "../../pages/app/accounts/stories/mockData";
 
   export const meta = {
     title: "App / Projects / Browser",
@@ -21,20 +22,20 @@
 <Story
   name="Success"
   {args}
-  parameters={{ msw: { handlers: [projectHandlers.data] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.data] } }}
 />
 <Story
   name="Loading"
   {args}
-  parameters={{ msw: { handlers: [projectHandlers.loading] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.loading] } }}
 />
 <Story
   name="Error"
   {args}
-  parameters={{ msw: { handlers: [projectHandlers.error] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.error] } }}
 />
 <Story
   name="Empty"
   {args}
-  parameters={{ msw: { handlers: [projectHandlers.empty] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.empty] } }}
 />

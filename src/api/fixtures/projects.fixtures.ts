@@ -37,7 +37,7 @@ export let projects: Page<Project> = {
       description: "A sample set. ",
       edit_access: null,
       add_remove_access: null,
-      private: false,
+      private: true,
       slug: "defense-dept-foia",
       title: "Defense Dept FOIA",
       updated_at: "2020-10-27T16:48:08.168482Z",

@@ -61,13 +61,31 @@ export async function removeDocumentsFromProject(
   );
 }
 
+export async function getPublicProjects(
+  cursor?: string,
+  query?: string,
+  expand: string = DEFAULT_EXPAND,
+): Promise<Page<Project>> {
+  // Returns all public projects
+  const { data } = await session.get(
+    queryBuilder(apiUrl("projects/"), {
+      private: false,
+      cursor,
+      query,
+      expand,
+    }),
+  );
+  return data;
+}
+
 export async function getProjects(
   userId: number,
+  query?: string,
   expand: string = DEFAULT_EXPAND,
 ): Promise<Project[]> {
   // Returns all projects
   const projects = await grabAllPages(
-    queryBuilder(apiUrl("projects/"), { user: userId, expand }),
+    queryBuilder(apiUrl("projects/"), { user: userId, query, expand }),
   );
   return projects;
 }

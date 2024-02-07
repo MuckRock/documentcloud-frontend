@@ -6,84 +6,91 @@
   import Flex from "../common/Flex.svelte";
   import Paginator from "../common/Paginator.svelte";
   import ProjectList from "./ProjectList.svelte";
+  import { newProject } from "../manager/layout";
+  import Button from "../common/Button.svelte";
+  import { getProjects, getPublicProjects } from "../api/project";
+  import { User } from "../api/types";
+  import { getMe } from "../api/orgAndUser";
+  import Filters, { FilterKey, filter } from "./Filters.svelte";
 
   let drawer: Drawer;
 
   export let visible: boolean = false;
 
-  function buildUrl(route: string, { query = "", filters = {}, per_page = 5 }) {
-    const u = new URL(route, baseApiUrl);
-
-    u.search = new URLSearchParams({
-      query,
-      per_page: String(per_page),
-      ...filters,
-    }).toString();
-
-    return u.toString();
-  }
-
-  $: url = buildUrl("projects/", { query: $query });
-  $: next_url = res.next ? new URL(res.next).toString() : null;
-  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
-  $: items = res.results;
-
   /** Network logic */
+  let user: User;
+  let projects: Project[] | null;
   let loading = false;
   let error = null;
+
   let res: {
     next?: string | null;
     previous?: string | null;
     results?: Project[];
   } = {};
-  const options: RequestInit = {
-    credentials: "include",
-  };
+  $: next_cursor = res.next
+    ? new URL(res.next).searchParams.get("cursor")
+    : null;
+  $: previous_cursor = res.previous
+    ? new URL(res.previous).searchParams.get("cursor")
+    : null;
+  $: items = res.results;
 
-  export async function load(url) {
+  export async function load(filter: FilterKey, cursor?: string) {
     loading = true;
-
-    res = await fetch(url, options)
-      .then(async (r) => {
-        const data = await r.json();
-        if (!r.ok) throw data;
-        return data;
-      })
-      .catch((err) => {
-        error = err;
-        loading = false;
-        return {};
-      });
-
+    try {
+      user = await getMe();
+      if (filter === "public") {
+        res = await getPublicProjects($query, cursor);
+      } else {
+        res.results = await getProjects(user.id, $query);
+        if (filter === "user") {
+          res.results = res.results.filter(
+            (project) => project.user === user.id,
+          );
+        } else {
+          res.results = res.results.filter(
+            (project) => project.user !== user.id,
+          );
+        }
+      }
+    } catch (err) {
+      error = err;
+      projects = null;
+    }
     loading = false;
   }
 
   $: if (visible) {
-    load(url);
+    load($filter);
   }
-  $: loadNext = () => load(next_url);
-  $: loadPrev = () => load(previous_url);
-  $: reload = () => load(url);
+  $: loadNext = () => load($filter, next_cursor);
+  $: loadPrev = () => load($filter, previous_cursor);
+  $: reload = () => load($filter);
 </script>
 
 <Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
   <div slot="content" class="browser">
     <header class="header">
       <h2>Projects</h2>
+      <Button on:click={newProject}>New Project</Button>
     </header>
     <aside class="sidebar">
       <div class="search"><Search /></div>
+      <Filters />
     </aside>
     <Flex as="main" direction="column" class="results">
       <Flex direction="column" class="list">
         <ProjectList {loading} {error} {items} bind:reload />
       </Flex>
-      <Paginator
-        has_next={Boolean(next_url)}
-        has_previous={Boolean(previous_url)}
-        on:next={loadNext}
-        on:previous={loadPrev}
-      />
+      {#if $filter === "public"}
+        <Paginator
+          has_next={Boolean(next_cursor)}
+          has_previous={Boolean(previous_cursor)}
+          on:next={loadNext}
+          on:previous={loadPrev}
+        />
+      {/if}
     </Flex>
   </div>
 </Drawer>
@@ -94,7 +101,7 @@
     grid-template-columns: 1fr 3fr;
     grid-template-rows: auto 1fr;
     gap: 1em;
-    padding: 1em 1em 0;
+    padding: 1em 1em 0.5em;
     height: 100%;
     width: 100%;
     max-width: 44em;
@@ -103,9 +110,8 @@
   .header {
     grid-column: span 2;
     display: flex;
-    flex-direction: column;
     align-items: baseline;
-    gap: 0.5em;
+    gap: 2em;
     margin-right: 2em;
   }
   .header h2 {
