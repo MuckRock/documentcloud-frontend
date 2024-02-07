@@ -4,6 +4,8 @@
   import ProjectPin from "./ProjectPin.svelte";
   import type { Project } from "../api/types/project";
   import EditButton from "../common/EditButton.svelte";
+  import { Lock16 } from "svelte-octicons";
+  import { projectUrl } from "../search/search.js";
 
   export let project: Project;
   export let editProject: (project: Project) => void;
@@ -13,14 +15,18 @@
   console.log("edit_access", project.edit_access);
 </script>
 
-<a class="project-link" href={`/projects/${project.slug}`}>
+<a class="project-link" href={projectUrl(project)}>
   <div class="container" id={`#project-${project.id}`}>
-    <div class="row">
+    <div class="row margin">
       <div class="center-self">
         <ProjectPin {project} />
       </div>
-      <div class="stretch">
+      <div class="stretch row">
         <h3 class="project-title">{project.title}</h3>
+        {#if project.private}<span
+            class="center center-self"
+            title="Private Project"><Lock16 /></span
+          >{/if}
       </div>
       {#if project.edit_access}
         <div class="center-self">
@@ -49,19 +55,10 @@
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
+  }
+
+  .margin {
     margin: 0.5rem;
-  }
-
-  .badge {
-    margin-bottom: -0.25em;
-    font-size: 0.8em;
-  }
-
-  .metadata {
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-    color: var(--darkgray);
   }
 
   .description {
@@ -88,15 +85,12 @@
     align-self: center;
   }
 
+  .center {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .stretch {
     flex: 1 1 auto;
-  }
-
-  .author a:hover {
-    opacity: 0.7;
-  }
-
-  p {
-    margin: 0;
   }
 </style>
