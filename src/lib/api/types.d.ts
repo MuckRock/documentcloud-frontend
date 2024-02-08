@@ -9,10 +9,14 @@ import type { User, Org } from "../../api/types/orgAndUser";
 import type { Project } from "../../api/types/project";
 import type { Page } from "../../api/types/common";
 
+type access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
+
+type status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
   id: number;
-  access: "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
+  access: access;
   admin_noindex: boolean;
   asset_url: string | URL;
   canonical_url: string | URL;
@@ -34,10 +38,37 @@ export interface Document {
   revision_control: boolean;
   slug: string;
   source: string;
-  status: "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+  status: status;
   title: string;
   updated_at: string | Date;
   user: number | User;
 }
 
 export type DocumentResults = Page<Document>;
+
+export interface Note {
+  id: number;
+  user: number | User;
+  organization: number | Org;
+  page_number: number;
+  access: access;
+  edit_access: boolean;
+  title: string;
+  content: string;
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  created_at: string | Date;
+  updated_at: string | Date;
+}
+
+export type NoteResults = Page<Note>;
+
+export interface Section {
+  id: number;
+  page_number: number;
+  title: string;
+}
+
+export type SectionResults = Page<Section>;

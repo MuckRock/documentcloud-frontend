@@ -2,6 +2,12 @@
   export let data;
 
   $: searchResults = data.searchResults;
+
+  function path(url: URL | string) {
+    url = new URL(url);
+
+    return url.pathname;
+  }
 </script>
 
 <svelte:head>
@@ -17,6 +23,7 @@
     {#each results?.results as document}
       <div class="document">
         <h2>{document.title}</h2>
+        <p><a href={path(document.canonical_url)}>Open</a></p>
       </div>
     {:else}
       <p>No results.</p>
