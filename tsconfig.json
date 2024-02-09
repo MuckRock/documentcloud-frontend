@@ -2,7 +2,11 @@
   "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@": ["./src"],
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["public/*"]

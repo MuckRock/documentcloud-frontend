@@ -60,7 +60,7 @@ export async function get(id, fetch) {
 
 /**
  * Load notes from a single document from the API
- * Example: https://api.www.documentcloud.org/api/documents/1/notes/
+ * Example: https://api.www.documentcloud.org/api/documents/2622/notes/
  *
  * @async
  * @export
@@ -84,7 +84,7 @@ export async function notes(doc_id, fetch) {
 
 /**
  * Load a single note from a single document from the API
- * Example: https://api.www.documentcloud.org/api/documents/1/notes/1/
+ * Example: https://api.www.documentcloud.org/api/documents/2622/notes/549/
  *
  * @async
  * @export
@@ -111,7 +111,7 @@ export async function note(doc_id, note_id, fetch) {
 
 /**
  * Load sections from a single document from the API
- * Example: https://api.www.documentcloud.org/api/documents/1/sections/
+ * Example: https://api.www.documentcloud.org/api/documents/24028981/sections/
  *
  * @async
  * @export
@@ -135,7 +135,7 @@ export async function sections(doc_id, fetch) {
 
 /**
  * Load a single section from a single document from the API
- * Example: https://api.www.documentcloud.org/api/documents/1/notes/1/
+ * Example: https://api.www.documentcloud.org/api/documents/24028981/sections/33933/
  *
  * @async
  * @export
