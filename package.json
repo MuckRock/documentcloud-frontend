@@ -78,7 +78,7 @@
     "test:unit": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check src",
-    "storybook:build": "storybook build",
+    "build-storybook": "storybook build",
     "storybook": "storybook dev -p 6006"
   },
   "engine": 18,
