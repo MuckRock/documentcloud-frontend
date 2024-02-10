@@ -46,8 +46,8 @@ export async function search(
  */
 export async function get(id, fetch) {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
-
-  endpoint.searchParams.set("expand", DEFAULT_EXPAND);
+  const expand = ["user", "organization", "projects", "revisions"];
+  endpoint.searchParams.set("expand", expand);
 
   const resp = await fetch(endpoint, { credentials: "include" });
 
