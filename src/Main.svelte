@@ -8,7 +8,7 @@
   import Empty from "./pages/home/Empty.svelte";
 
   import { router } from "./router/router.js";
-  import { routes } from "./routes.js";
+  import { routes } from "./router/routes.js";
   import { currentUrl } from "./util/url.js";
   import "./langs/i18n.js";
 
