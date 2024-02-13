@@ -37,7 +37,7 @@
       </div>
       {#if showLogin}
         <div class="narrowhide">
-          {#if $me != null}
+          {#if $me !== null}
             <div class="signupcontainer">
               <div class="supplemental">
                 {$_("homeTemplate.signedIn", {
@@ -66,7 +66,7 @@
     </div>
     {#if showLogin}
       <div class="narrowshow">
-        {#if me != null}
+        {#if $me !== null}
           <div class="signupcontainer">
             <div class="supplemental">
               {$_("homeTemplate.signedIn", {
