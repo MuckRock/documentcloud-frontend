@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { Project } from "../api/types/project";
+  import type { Project } from "../api/types/project";
   import Drawer from "../common/Drawer.svelte";
-  import { baseApiUrl } from "../api/base";
   import Search, { query } from "../common/SearchInput.svelte";
   import Flex from "../common/Flex.svelte";
   import Paginator from "../common/Paginator.svelte";
@@ -9,7 +8,7 @@
   import { newProject } from "../manager/layout";
   import Button from "../common/Button.svelte";
   import { getProjects, getPublicProjects } from "../api/project";
-  import { User } from "../api/types";
+  import type { User } from "../api/types";
   import { getMe } from "../api/orgAndUser";
   import Filters, { FilterKey, filter } from "./Filters.svelte";
 
