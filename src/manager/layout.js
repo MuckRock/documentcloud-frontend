@@ -24,6 +24,7 @@ export const layout = new Svue({
       selectedMap: {},
 
       // Custom dialogs
+      projectBrowser: false,
       addonDispatchOpen: null,
       addonBrowserOpen: false,
       addonRunsOpen: false,
