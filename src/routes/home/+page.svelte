@@ -1,8 +1,13 @@
-<script>
+<script lang="ts">
+  // types
+  import type { Writable } from "svelte/store";
+  import type { User } from "@/api/types/orgAndUser.d.ts";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
 
-  import Button from "../../common/Button.svelte";
+  import Button from "@/common/Button.svelte";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg?raw";
@@ -17,8 +22,7 @@
 
   export let data;
 
-  // placeholder
-  let me = null;
+  const me: Writable<User> = getContext("me");
 </script>
 
 <svelte:head>
@@ -33,11 +37,11 @@
       </div>
       {#if showLogin}
         <div class="narrowhide">
-          {#if me != null}
+          {#if $me != null}
             <div class="signupcontainer">
               <div class="supplemental">
                 {$_("homeTemplate.signedIn", {
-                  values: { name: me.name },
+                  values: { name: $me.name },
                 })}
               </div>
               <div class="signin">
@@ -66,7 +70,7 @@
           <div class="signupcontainer">
             <div class="supplemental">
               {$_("homeTemplate.signedIn", {
-                values: { name: me.name },
+                values: { name: $me.name },
               })}
             </div>
             <div class="signin">
