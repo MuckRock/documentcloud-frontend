@@ -1,4 +1,4 @@
-import { Maybe } from "./common";
+import type { Maybe } from "./common";
 
 interface PremiumOrgFields {
   purchased_credits: number;
@@ -8,7 +8,7 @@ interface PremiumOrgFields {
 }
 
 export interface Org extends Partial<PremiumOrgFields> {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   avatar_url: string;
@@ -27,12 +27,16 @@ export interface IndividualOrg extends Org {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: Maybe<string>;
   avatar_url: Maybe<string>;
   username: string;
-  organization: string | Org;
+  organization: number | Org;
   organizations: string[];
   admin_organizations: string[];
   feature_level: number;
+}
+
+export function isOrg(org?: null | number | Org): org is Org {
+  return org !== undefined && org !== null && typeof org !== "number";
 }

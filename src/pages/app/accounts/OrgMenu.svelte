@@ -6,14 +6,14 @@
   import Menu from "../../../common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Loader from "../../../common/Loader.svelte";
-  import type { User, Org } from "./types";
+  import type { User, Org } from "../../../api/types/orgAndUser";
   import OrgMemberList from "./OrgMemberList.svelte";
   import {
     changeActive,
     isOrgAdmin,
     isPremiumOrg,
     triggerPremiumUpgradeFlow,
-  } from "../../../manager/orgsAndUsers";
+  } from "../../../manager/orgsAndUsers.js";
   import {
     getOrganizationsByIds,
     getOrganization,
@@ -25,7 +25,7 @@
     formatResetDate,
   } from "../../../premium-credits/CreditMeter.svelte";
   import Button from "../../../common/Button.svelte";
-  import { triggerCreditPurchaseFlow } from "../../../manager/orgsAndUsers";
+  // import { triggerCreditPurchaseFlow } from "../../../manager/orgsAndUsers";
   import Link from "../../../router/Link.svelte";
 
   export let user: User;

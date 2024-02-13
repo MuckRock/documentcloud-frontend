@@ -5,7 +5,7 @@
   import HelpMenu from "./HelpMenu.svelte";
   import UserMenu from "./UserMenu.svelte";
   import OrgMenu from "./OrgMenu.svelte";
-  import type { User, Org } from "./types";
+  import { type User, type Org, isOrg } from "../../../api/types/orgAndUser";
 
   let user: User | null = null;
   let org: Org | null = null;
@@ -14,7 +14,7 @@
     try {
       user = await getMe();
       const activeOrg = user?.organization;
-      if (typeof activeOrg === "string") {
+      if (!isOrg(activeOrg)) {
         org = await getOrganization(activeOrg);
       } else {
         org = activeOrg;

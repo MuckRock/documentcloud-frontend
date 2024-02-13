@@ -14,7 +14,7 @@
   } from "../../manager/orgsAndUsers.js";
 
   import type { AddOnListItem } from "../types";
-  import type { User } from "../../pages/app/accounts/types";
+  import { type User, isOrg } from "../../api/types/orgAndUser";
 
   export let addon: AddOnListItem;
 
@@ -23,11 +23,11 @@
   let spendingLimitEnabled = false;
   let spendingLimit = 0;
 
-  $: creditBalance = user?.organization
+  $: creditBalance = isOrg(user?.organization)
     ? getCreditBalance(user.organization)
     : 0;
   $: isIndividualOrg =
-    typeof user?.organization !== "string" && user?.organization?.individual;
+    isOrg(user?.organization) && user?.organization?.individual;
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
   const { amount, unit, price } = addon?.parameters?.cost ?? {};
 

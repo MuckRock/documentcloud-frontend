@@ -3,7 +3,7 @@
   import { _ } from "svelte-i18n";
 
   import type { User } from "../../../../api/types/orgAndUser";
-  import { getProjects } from "../../../../api/project.js";
+  import { getProjects } from "../../../../api/project";
   import { projectUrl } from "../../../../search/search.js";
   import Link from "../../../../router/Link.svelte";
   import Button from "../../../../common/Button.svelte";

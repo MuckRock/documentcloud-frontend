@@ -8,7 +8,7 @@
 
   import { layout } from "@/manager/layout.js";
   import { viewer } from "@/viewer/viewer.js";
-  import { autocompleteUsers } from "@/api/orgAndUser.js";
+  import { autocompleteUsers } from "@/api/orgAndUser.ts";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { changeOwnerForDocuments } from "@/manager/documents.js";
   import { sameProp } from "@/util/array.js";

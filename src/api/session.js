@@ -20,11 +20,12 @@ try {
 
 export function getCsrfToken() {
   if (typeof window === "undefined" || typeof document === "undefined") return;
-
-  const [key, token] = document.cookie
-    .split(";")
-    .map((c) => c.split("="))
-    .find(([k, v]) => k === CSRF_COOKIE_NAME);
+  const [key, token] =
+    document.cookie
+      ?.split(";")
+      ?.map((c) => c.split("="))
+      // in case there's spaces in the cookie string, trim the key
+      ?.find(([k, v]) => k.trim() === CSRF_COOKIE_NAME) ?? [];
 
   return token;
 }
