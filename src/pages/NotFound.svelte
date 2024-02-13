@@ -10,6 +10,7 @@
 
   export let title = "";
   export let content = "";
+  export let message = "";
 
   let notFound = false;
   let loading;
@@ -60,10 +61,10 @@
         <Link to="default">{$_("common.home")}</Link>
       </p>
 
-      <h1>{$_("notfound.title")}</h1>
+      <h1>{title || $_("notfound.title")}</h1>
 
       <div>
-        <p>{$_("notfound.content")}</p>
+        <p>{message || $_("notfound.content")}</p>
       </div>
 
       <slot />
