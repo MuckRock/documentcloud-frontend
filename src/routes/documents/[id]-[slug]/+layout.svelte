@@ -28,7 +28,9 @@
   {#if data.document?.description?.trim().length > 0}
     <meta property="og:description" content={data.document.description} />
   {/if}
-  <meta property="og:image" content={pageImageUrl(data.document, 0, 700, 1)} />
+  <meta property="og:image" content={pageImageUrl(data.document, 0, 700)} />
 </svelte:head>
 
 <h1>{data.document.title}</h1>
+
+<slot />
