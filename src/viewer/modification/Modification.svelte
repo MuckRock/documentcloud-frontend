@@ -8,7 +8,7 @@
   <slot />
 </span>
 
-<style lang="scss">
+<style>
   .modification {
     display: inline-block;
     transform-origin: top left;
