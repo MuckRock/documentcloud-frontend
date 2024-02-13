@@ -1,3 +1,9 @@
+<script lang="ts" context="module">
+  import { writable } from "svelte/store";
+
+  export let lastUpdated = writable(new Date());
+</script>
+
 <script lang="ts">
   import type { Project } from "../api/types/project";
   import Drawer from "../common/Drawer.svelte";
@@ -63,6 +69,7 @@
   $: if (visible) {
     load($filter);
   }
+  $: $lastUpdated, load($filter);
   $: loadNext = () => load($filter, next_cursor);
   $: loadPrev = () => load($filter, previous_cursor);
   $: reload = () => load($filter);

@@ -10,6 +10,7 @@
   import emitter from "@/emit.js";
   import { textAreaResize } from "@/util/textareaResize.js";
   import { wrapLoadSeparate } from "@/util/wrapLoad.js";
+  import { lastUpdated } from "../../projects/Browser.svelte";
   import {
     createNewProject,
     editProject,
@@ -52,6 +53,7 @@
         await createNewProject(normalizedName, description);
       });
     }
+    $lastUpdated = new Date();
     emit.dismiss();
   }
 
