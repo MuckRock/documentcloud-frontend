@@ -12,6 +12,7 @@
   import ListHeader from "../ListHeader.svelte";
   import { pinned as pinStore } from "../../../../projects/ProjectPin.svelte";
   import { ChevronRight16, ChevronDown16 } from "svelte-octicons";
+  import type { Project } from "../../../../api/types";
 
   export let user: User;
   export let editProject;
@@ -22,7 +23,7 @@
     expanded.update((val) => !val);
   }
 
-  function sort(projects) {
+  function sort(projects: Project[]): Project[] {
     if (projects === null) return [];
     try {
       projects.sort((a, b) => a.title.localeCompare(b.title));
@@ -69,7 +70,7 @@
           <Link toUrl={projectUrl(project)}>
             <ProjectListItem
               title={project.title}
-              onEditClick={project.editAccess
+              onEditClick={project.edit_access
                 ? () => editProject(project)
                 : undefined}
             />

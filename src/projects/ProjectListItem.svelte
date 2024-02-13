@@ -7,13 +7,10 @@
   import { Lock16 } from "svelte-octicons";
   import { projectUrl } from "../search/search.js";
   import Link from "../router/Link.svelte";
+  import { Project as ProjectStructure } from "../structure/project";
 
   export let project: Project;
-  export let editProject: (project: Project) => void;
-
-  const onEditClick = () => editProject(project);
-
-  console.log("edit_access", project.edit_access);
+  export let editProject;
 </script>
 
 <div class="project-link">
@@ -35,7 +32,7 @@
           <div class="center-self">
             <EditButton
               title={`Edit ${project.title}`}
-              on:click={onEditClick}
+              on:click={() => editProject(new ProjectStructure(project))}
             />
           </div>
         {/if}
