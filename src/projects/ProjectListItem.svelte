@@ -6,6 +6,7 @@
   import EditButton from "../common/EditButton.svelte";
   import { Lock16 } from "svelte-octicons";
   import { projectUrl } from "../search/search.js";
+  import Link from "../router/Link.svelte";
 
   export let project: Project;
   export let editProject: (project: Project) => void;
@@ -15,33 +16,39 @@
   console.log("edit_access", project.edit_access);
 </script>
 
-<a class="project-link" href={projectUrl(project)}>
-  <div class="container" id={`#project-${project.id}`}>
-    <div class="row margin">
-      <div class="center-self">
-        <ProjectPin {project} />
-      </div>
-      <div class="stretch row">
-        <h3 class="project-title">{project.title}</h3>
-        {#if project.private}<span
-            class="center center-self"
-            title="Private Project"><Lock16 /></span
-          >{/if}
-      </div>
-      {#if project.edit_access}
+<div class="project-link">
+  <!-- TODO: Replace `Link` with `a` in `sveltekit` branch -->
+  <Link toUrl={projectUrl(project)}>
+    <div class="container" id={`#project-${project.id}`}>
+      <div class="row margin">
         <div class="center-self">
-          <EditButton title={`Edit ${project.title}`} on:click={onEditClick} />
+          <ProjectPin {project} />
         </div>
+        <div class="stretch row">
+          <h3 class="project-title">{project.title}</h3>
+          {#if project.private}<span
+              class="center center-self"
+              title="Private Project"><Lock16 /></span
+            >{/if}
+        </div>
+        {#if project.edit_access}
+          <div class="center-self">
+            <EditButton
+              title={`Edit ${project.title}`}
+              on:click={onEditClick}
+            />
+          </div>
+        {/if}
+      </div>
+      {#if project.description}
+        <div class="description">{@html project.description}</div>
       {/if}
     </div>
-    {#if project.description}
-      <div class="description">{@html project.description}</div>
-    {/if}
-  </div>
-</a>
+  </Link>
+</div>
 
 <style>
-  .project-link:hover .container {
+  :global(.project-link a:hover) .container {
     background-color: var(--menuBg);
   }
   .container {
