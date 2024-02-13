@@ -1,6 +1,7 @@
 <script lang="ts">
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
+  import equal from "fast-deep-equal";
 
   import { User } from "../../../../api/types/orgAndUser";
   import { getProjects } from "../../../../api/project";
@@ -9,6 +10,7 @@
   import Button from "../../../../common/Button.svelte";
   import ProjectListItem from "./ProjectListItem.svelte";
   import ListHeader from "../ListHeader.svelte";
+  import { pinned as pinStore } from "../../../../projects/ProjectPin.svelte";
   import { ChevronRight16, ChevronDown16 } from "svelte-octicons";
 
   export let user: User;
@@ -32,10 +34,16 @@
     const pinned = (await getProjects(user.id)).filter(
       (project) => project.pinned,
     );
+    // if they're equivalent, don't update the store value
+    // this prevents an endless update loop
+    if (!equal($pinStore, pinned)) $pinStore = sort(pinned);
     return sort(pinned);
   }
 
-  const promise = getPinnedList();
+  let promise = getPinnedList();
+
+  // when the pinstore changes, refetch the list
+  $: $pinStore, (promise = getPinnedList());
 </script>
 
 <ListHeader>
@@ -47,9 +55,9 @@
     {/if}
   </Button>
   {$_("projects.header")}
-  <Button slot="action" on:click={browseProjects} small={true}
-    >{$_("projectsMenu.browseProjects")}</Button
-  >
+  <Button slot="action" on:click={browseProjects} small={true}>
+    {$_("projectsMenu.browseProjects")}
+  </Button>
 </ListHeader>
 {#if $expanded}
   {#await promise}
