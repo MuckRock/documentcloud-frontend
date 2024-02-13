@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { includes, intersection } from "./array.js";
 
 function makeKeyArray(array) {

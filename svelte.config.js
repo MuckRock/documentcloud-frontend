@@ -29,13 +29,17 @@ export default {
 
   kit: {
     adapter: adapter({}),
+    alias: {
+      "@": "./src",
+      "@/*": "./src/*",
+    },
   },
 
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
   // for more information about preprocessors
   preprocess: sveltePreprocess({
     scss: {
-      includePaths: ["documentcloud-frontend/src"],
+      includePaths: ["./src"],
       importer: [
         scssAliases({
           "@": path.resolve(__dirname, "src"),
