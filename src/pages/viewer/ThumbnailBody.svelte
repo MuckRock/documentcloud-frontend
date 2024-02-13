@@ -20,16 +20,23 @@
   let containerHeight = null;
   let container = null;
   let containerScrollTop = 0;
+
   const itemWidth = 144;
   const itemHeight = 179;
+
+  const MAX_THUMB_WIDTH = 84;
+  const MAX_THUMB_HEIGHT = 119;
+
   $: itemsPerRow =
     containerWidth == null
       ? null
       : Math.max(Math.floor((containerWidth - 60) / itemWidth), 1);
+
   $: paddingLeft =
     containerWidth == null || itemsPerRow == null
       ? 0
       : (containerWidth - itemsPerRow * itemWidth) / 2 + (modify ? -5 : -15);
+
   $: paddingTop =
     startPage == null || itemsPerRow == null
       ? 0
@@ -48,6 +55,7 @@
       );
     }
   }
+
   $: startPage =
     itemsPerRow == null
       ? null
@@ -55,6 +63,7 @@
           Math.floor(containerScrollTop / itemHeight) * itemsPerRow,
           $modification.pageCount,
         );
+
   $: endPage =
     itemsPerRow == null || containerHeight == null
       ? null
@@ -63,14 +72,17 @@
             itemsPerRow,
           $modification.pageCount,
         );
+
   $: overallHeight =
     itemsPerRow == null
       ? null
       : Math.ceil($modification.pageCount / itemsPerRow) * itemHeight;
+
   $: paddingBottom =
     overallHeight == null || endPage == null || itemsPerRow == null
       ? 0
       : overallHeight - Math.ceil(endPage / itemsPerRow) * itemHeight;
+
   $: pages =
     startPage == null ||
     endPage == null ||
@@ -130,9 +142,6 @@
       [page]: selectState,
     };
   }
-
-  const MAX_THUMB_WIDTH = 84;
-  const MAX_THUMB_HEIGHT = 119;
 </script>
 
 <ActionPane bind:actionHeight />

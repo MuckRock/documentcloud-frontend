@@ -7,7 +7,7 @@ import {
   CLOCKWISE,
   COUNTER_CLOCKWISE,
   HALFWAY,
-} from "./modifySpec";
+} from "./modifySpec.js";
 
 function runspec(pgNumbers) {
   return runify(pgNumbers).spec();
