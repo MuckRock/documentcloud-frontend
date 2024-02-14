@@ -20,4 +20,4 @@ jobs:
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           annotations: none
-          test-script: npm run test-coverage
+          test-script: npm run test:coverage

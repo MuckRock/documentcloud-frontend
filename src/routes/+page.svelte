@@ -12,3 +12,11 @@
 {#if me}
   <p>The current logged-in user is {me.name}</p>
 {/if}
+
+<ul>
+  <li>
+    <a href="/home/">Home</a>
+  </li>
+  <li><a href="/help/">Help</a></li>
+  <li><a href="/app/">Browse documents</a></li>
+</ul>

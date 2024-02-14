@@ -82,8 +82,6 @@ details.dc summary {
 }
 
 .vheader select {
-  @include buttonLike;
-
   background: rgba(white, 0.7);
   border-radius: 3px;
   font-family: inherit;
@@ -101,7 +99,7 @@ details.dc summary {
 }
 
 a {
-  color: inherit;
+  color: var(--primary, #4294f0);
   cursor: pointer;
   text-decoration: inherit;
 }
