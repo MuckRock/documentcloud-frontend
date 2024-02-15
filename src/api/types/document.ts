@@ -1,5 +1,5 @@
-import { Nullable } from "./common";
-import { Project } from "./project";
+import type { Nullable } from "./common";
+import type { Project } from "./project";
 
 export type DocumentAccess = "public" | "organization" | "private";
 

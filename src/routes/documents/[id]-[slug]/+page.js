@@ -1,14 +1,12 @@
 /** Load notes and sections for viewing a single document */
-import * as documents from "$lib/api/documents.js";
+import * as notes from "$lib/api/notes.js";
+import * as sections from "$lib/api/sections.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {
   // stream these, because we can wait on them
-  const notes = documents.notes(params.id, fetch);
-  const sections = documents.sections(params.id, fetch);
-
   return {
-    notes,
-    sections,
+    notes: notes.list(params.id, fetch),
+    sections: sections.list(params.id, fetch),
   };
 }

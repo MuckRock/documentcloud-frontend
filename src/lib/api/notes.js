@@ -1,3 +1,7 @@
+import { error } from "@sveltejs/kit";
+import { BASE_API_URL } from "@/config/config.js";
+import { DEFAULT_EXPAND } from "@/api/common.js";
+
 /**
  * Load notes from a single document from the API
  * Example: https://api.www.documentcloud.org/api/documents/2622/notes/
