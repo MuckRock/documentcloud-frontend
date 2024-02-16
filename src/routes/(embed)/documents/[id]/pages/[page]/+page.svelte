@@ -1,7 +1,11 @@
 <script>
   import { _ } from "svelte-i18n";
 
+  import Annotation from "./Annotation.svelte";
+  import Note from "./Note.svelte";
+
   import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { isOrg } from "@/api/types/orgAndUser";
   import { APP_URL, IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { informSize } from "@/embed/iframeSizer.js";
   import {
@@ -15,14 +19,18 @@
   export let data;
 
   let elem;
+  let active;
 
   $: doc = data.document;
-  $: page = data.page;
+  $: slugId = `${doc.id}-${doc.slug}`;
+  $: notes = data.notes;
+  $: page = +data.page;
   $: title = `${doc.title} (${$_("document.pageAbbrev")} ${data.page})`;
-  $: url = canonicalPageUrl(doc, data.page);
-  $: userOrgString = doc.organization
-    ? `${doc.user.name} (${doc.organization.name})`
-    : doc.user.name;
+  $: url = canonicalPageUrl(doc, page).toString();
+  $: userOrgString =
+    isOrg(doc.organization) && typeof doc.user === "object"
+      ? `${doc.user.name} (${doc.organization.name})`
+      : doc.user.name;
   $: sizes = pageSizesFromSpec(doc.page_spec);
   $: aspect = sizes[page - 1];
   $: width = IMAGE_WIDTHS_MAP.get("large");
@@ -42,13 +50,16 @@
   <link
     rel="alternate"
     type="application/json+oembed"
-    href={embedUrl(url)}
+    href={embedUrl(url).toString()}
     {title}
   />
   {#if doc.description}
     <meta property="og:description" content={doc.description} />
   {/if}
-  <meta property="og:image" content={pageImageUrl(doc, page, "normal")} />
+  <meta
+    property="og:image"
+    content={pageImageUrl(doc, page, "normal").toString()}
+  />
 </svelte:head>
 
 <div class="dc-embed">
@@ -58,7 +69,7 @@
     of
     <a
       class="DC-embed-resource"
-      href={pageUrl(doc, page)}
+      href={pageUrl(doc, page).toString()}
       title={$_("embedPage.viewDoc", { values: { title: doc.title } })}
       target="_blank"
     >
@@ -68,7 +79,7 @@
 
   <div class="dc-embed-container">
     <img
-      src={pageImageUrl(doc, page, "large")}
+      src={pageImageUrl(doc, page, "large").toString()}
       alt={$_("embedPage.pageOf", {
         values: { page: page, title: doc.title },
       })}
@@ -76,6 +87,19 @@
       height="{height}px"
       on:load={(e) => informSize(elem)}
     />
+
+    <!-- Place notes on image -->
+    {#each notes as note}
+      {#if active != note}
+        <Note on:click={() => (active = note)} {note} />
+      {/if}
+    {/each}
+
+    <!-- Show annotation if note is active -->
+    {#if active}
+      <Annotation note={active} slugId {page} />
+      <Note active={true} note={active} />
+    {/if}
   </div>
 
   <div style="font-size:14px;line-height:18px;text-align:center">
@@ -94,7 +118,7 @@
     &bull;
     <a
       style="color: #5a76a0; text-decoration: underline;"
-      href={pageUrl(doc, page)}
+      href={pageUrl(doc, page).toString()}
       title={$_("embedPage.viewDoc", { values: { title: doc.title } })}
       target="_blank"
     >
@@ -103,7 +127,7 @@
     or
     <a
       style="color: #5a76a0; text-decoration: underline;"
-      href={textUrl(doc, page - 1)}
+      href={textUrl(doc, page - 1).toString()}
       title="Read the text of page {page} of {doc.title} on DocumentCloud in
       new window or tab"
       target="_blank"

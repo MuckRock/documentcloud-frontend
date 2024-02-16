@@ -19,5 +19,17 @@ const config: StorybookConfig = {
   docs: {
     autodocs: "tag",
   },
+
+  viteFinal(config) {
+    config.resolve = {
+      alias: {
+        "@": new URL("../src", import.meta.url).toString(),
+        "@/*": new URL("../src/*", import.meta.url).toString(),
+      },
+    };
+
+    return config;
+  },
 };
+
 export default config;
