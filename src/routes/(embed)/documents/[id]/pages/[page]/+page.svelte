@@ -26,7 +26,7 @@
   $: sizes = pageSizesFromSpec(doc.page_spec);
   $: aspect = sizes[page - 1];
   $: width = IMAGE_WIDTHS_MAP.get("large");
-  $: height = width / aspect;
+  $: height = width * aspect;
 </script>
 
 <svelte:head>
@@ -48,7 +48,7 @@
   {#if doc.description}
     <meta property="og:description" content={doc.description} />
   {/if}
-  <meta property="og:image" content={pageImageUrl(doc, page - 1, "normal")} />
+  <meta property="og:image" content={pageImageUrl(doc, page, "normal")} />
 </svelte:head>
 
 <div class="dc-embed">
@@ -68,7 +68,7 @@
 
   <div class="dc-embed-container">
     <img
-      src={pageImageUrl(doc, page - 1, "large")}
+      src={pageImageUrl(doc, page, "large")}
       alt={$_("embedPage.pageOf", {
         values: { page: page, title: doc.title },
       })}

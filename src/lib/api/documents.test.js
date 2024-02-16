@@ -3,11 +3,18 @@ import { describe, test, expect } from "vitest";
 import * as documents from "./documents.js";
 
 describe("document fetching", () => {
-  test("get a single document", async () => {
-    const doc = await documents.get(2622);
-  });
+  test.todo("get a single document");
 
-  test("search documents", async () => {
-    const docs = await documents.search("", true);
-  });
+  test.todo("search documents");
+});
+
+describe("document helper methods", () => {
+  test.todo("canonicalUrl");
+  test.todo("canonicalPageUrl");
+  test.todo("pageHashUrl");
+  test.todo("pageUrl");
+  test.todo("pageImageUrl");
+  test.todo("textUrl");
+  test.todo("jsonUrl");
+  test.todo("selectableTextUrl");
 });

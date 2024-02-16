@@ -2,7 +2,7 @@
  * Lots of duplicated code here that should get consolidated at some point.
  */
 import { error } from "@sveltejs/kit";
-import { BASE_API_URL } from "@/config/config.js";
+import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 
 /**
@@ -68,7 +68,11 @@ export async function get(id, fetch) {
  * @param {import('./types').Document} document
  * @returns {URL}
  */
-export function canonicalUrl(document) {}
+export function canonicalUrl(document) {
+  const path = new URL(document.canonical_url).pathname;
+  return new URL(path, APP_URL);
+}
+
 /**
  * Canonical URL for a single page embed, relative to the current server
  * This will be correct in all environments, including deploy previews
@@ -78,7 +82,20 @@ export function canonicalUrl(document) {}
  * @param {number} page
  * @returns {URL}
  */
-export function canonicalPageUrl(document, page) {}
+export function canonicalPageUrl(document, page) {
+  return new URL(`/documents/${document.id}/pages/${page}/`, APP_URL);
+}
+
+/**
+ * Generate the hash for a path, without the host or path
+ *
+ * @export
+ * @param {number} page
+ * @returns {URL}
+ */
+export function pageHashUrl(page) {
+  return `#document/p${page}`;
+}
 
 /**
  * Hash URL for a single page within the document viewer
@@ -88,7 +105,9 @@ export function canonicalPageUrl(document, page) {}
  * @param {number} page
  * @returns {URL}
  */
-export function pageUrl(document, page) {}
+export function pageUrl(document, page) {
+  return new URL(pageHashUrl(page), canonicalUrl(document));
+}
 
 /**
  * Static URL for a page image
@@ -99,7 +118,12 @@ export function pageUrl(document, page) {}
  * @param {import('./types').sizes} size
  * @returns {URL}
  */
-export function pageImageUrl(document, page, size) {}
+export function pageImageUrl(document, page, size) {
+  return new URL(
+    `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,
+    document.asset_url,
+  );
+}
 
 /**
  * Asset URL for page text
@@ -109,4 +133,38 @@ export function pageImageUrl(document, page, size) {}
  * @param {number} page
  * @returns {URL}
  */
-export function textUrl(document, page) {}
+export function textUrl(document, page) {
+  return new URL(
+    `documents/${document.id}/pages/${document.slug}-p${page}.txt`,
+    document.asset_url,
+  );
+}
+
+/**
+ * Asset URL for JSON text
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @returns {URL}
+ */
+export function jsonUrl(document) {
+  return new URL(
+    `documents/${document.id}/${document.slug}.txt.json`,
+    document.asset_url,
+  );
+}
+
+/**
+ * Asset URL for text positions
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {number} page
+ * @returns {URL}
+ */
+export function selectableTextUrl(document, page) {
+  return new URL(
+    `documents/${document.id}/pages/${document.slug}-p${page}.position.json`,
+    document.asset_url,
+  );
+}
