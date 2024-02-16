@@ -8,9 +8,13 @@
   export let slugId;
   export let page;
 
-  $: noteUrl = `${APP_URL}documents/${slugId}#document/p${page}/a${note.id}`;
-
-  let annotationElem;
+  $: noteUrl = `${APP_URL}documents/${slugId}/#document/p${page}/a${note.id}`;
+  $: leftRightStyle = rightMount
+    ? `right:${(1 - note.x2) * 100}%`
+    : `left:${note.x1 * 100}%`;
+  $: topDownStyle = bottomMount
+    ? `bottom:${(1 - note.y1) * 100}%`
+    : `top:${note.y2 * 100}%`;
 
   function nearestParent(elem, className) {
     if (elem.className.indexOf(className) != -1) return elem;
@@ -19,6 +23,7 @@
 
   const PADDING = 10;
 
+  let annotationElem;
   let rightMount = false;
   let bottomMount = false;
 
@@ -38,13 +43,6 @@
       bottomMount = true;
     }
   });
-
-  $: leftRightStyle = rightMount
-    ? `right:${(1 - note.x2) * 100}%`
-    : `left:${note.x1 * 100}%`;
-  $: topDownStyle = bottomMount
-    ? `bottom:${(1 - note.y1) * 100}%`
-    : `top:${note.y2 * 100}%`;
 </script>
 
 <div

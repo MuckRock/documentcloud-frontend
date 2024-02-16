@@ -19,7 +19,7 @@
   export let data;
 
   let elem;
-  let active;
+  let active = null;
 
   $: doc = data.document;
   $: slugId = `${doc.id}-${doc.slug}`;
@@ -35,6 +35,21 @@
   $: aspect = sizes[page - 1];
   $: width = IMAGE_WIDTHS_MAP.get("large");
   $: height = width * aspect;
+  $: shimPlacements =
+    active === null
+      ? []
+      : [
+          [0, 0, 1, active.y1], // top
+          [0, active.y1, active.x1, active.y2], // left
+          [active.x2, active.y1, 1, active.y2], // right
+          [0, active.y2, 1, 1], // bottom
+        ];
+
+  function onKeyup(e) {
+    if (e.key === "Escape") {
+      dispatch("close");
+    }
+  }
 </script>
 
 <svelte:head>
@@ -62,6 +77,8 @@
   />
 </svelte:head>
 
+<svelte:window on:keydown={onKeyup} />
+
 <div class="dc-embed">
   <div class="dc-page">
     Page
@@ -77,7 +94,7 @@
     </a>
   </div>
 
-  <div class="dc-embed-container">
+  <div class="dc-embed-container" class:active={Boolean(active)}>
     <img
       src={pageImageUrl(doc, page, "large").toString()}
       alt={$_("embedPage.pageOf", {
@@ -95,9 +112,28 @@
       {/if}
     {/each}
 
+    <!-- Place shims while note is active -->
+    {#each shimPlacements as s}
+      <div
+        class="dc-embed-shim"
+        on:click={() => (active = null)}
+        style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) *
+          100}%;bottom:{(1 - s[3]) * 100}%"
+        tabindex="-1"
+        role="dialog"
+        aria-modal="true"
+        on:keydown={onKeyup}
+      />
+    {/each}
+
     <!-- Show annotation if note is active -->
     {#if active}
-      <Annotation note={active} slugId {page} />
+      <Annotation
+        note={active}
+        {slugId}
+        {page}
+        on:close={(e) => (active = null)}
+      />
       <Note active={true} note={active} />
     {/if}
   </div>
@@ -172,5 +208,11 @@
     position: relative;
     line-height: 0;
     margin: 10px 0;
+  }
+
+  .dc-embed-shim {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
   }
 </style>
