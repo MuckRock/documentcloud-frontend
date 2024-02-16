@@ -7,5 +7,6 @@ export async function load({ url, fetch }) {
 
   return {
     searchResults,
+    query,
   };
 }

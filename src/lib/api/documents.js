@@ -47,7 +47,7 @@ export async function search(
 export async function get(id, fetch) {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
   const expand = ["user", "organization", "projects", "revisions"];
-  endpoint.searchParams.set("expand", expand);
+  endpoint.searchParams.set("expand", expand.join(","));
 
   const resp = await fetch(endpoint, { credentials: "include" });
 
@@ -57,3 +57,56 @@ export async function get(id, fetch) {
 
   return resp.json();
 }
+
+// utility functions
+
+/**
+ * Canonical URL for a document, relative to the current server
+ * This will be correct in all environments, including deploy previews
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @returns {URL}
+ */
+export function canonicalUrl(document) {}
+/**
+ * Canonical URL for a single page embed, relative to the current server
+ * This will be correct in all environments, including deploy previews
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {number} page
+ * @returns {URL}
+ */
+export function canonicalPageUrl(document, page) {}
+
+/**
+ * Hash URL for a single page within the document viewer
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {number} page
+ * @returns {URL}
+ */
+export function pageUrl(document, page) {}
+
+/**
+ * Static URL for a page image
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {number} page
+ * @param {import('./types').sizes} size
+ * @returns {URL}
+ */
+export function pageImageUrl(document, page, size) {}
+
+/**
+ * Asset URL for page text
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {number} page
+ * @returns {URL}
+ */
+export function textUrl(document, page) {}

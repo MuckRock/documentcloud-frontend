@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
-  import { IMAGE_WIDTHS, IMAGE_WIDTHS_MAP } from "../config/config.js";
+  import { IMAGE_WIDTHS } from "../config/config.js";
   import { pageImageUrl } from "@/api/viewer.js";
   import { timeout } from "@/util/timeout.js";
 
@@ -28,6 +28,9 @@
 
   let mounted = false;
 
+  // not all browsers support navigator connection
+  let slowConn;
+
   onMount(async () => {
     if (delay != 0) {
       await timeout(delay);
@@ -36,12 +39,11 @@
       loadImg(0);
       mounted = true;
     }
-  });
 
-  // not all browsers support navigator connection
-  const slowConn = navigator.connection
-    ? navigator.connection.downlink < 10
-    : false;
+    slowConn = navigator.connection
+      ? navigator.connection.downlink < 10
+      : false;
+  });
 
   $: {
     if (mounted) {

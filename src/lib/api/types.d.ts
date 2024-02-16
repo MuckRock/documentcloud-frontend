@@ -9,9 +9,11 @@ import type { User, Org } from "../../api/types/orgAndUser";
 import type { Project } from "../../api/types/project";
 import type { Page } from "../../api/types/common";
 
-type access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
+export type access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
-type status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+export type status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+
+export type sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
@@ -72,3 +74,15 @@ export interface Section {
 }
 
 export type SectionResults = Page<Section>;
+
+export interface OEmbed {
+  version: "1.0";
+  provider_name: "DocumentCloud";
+  provider_url: string | URL;
+  cache_age: number;
+  title: string;
+  width: number;
+  heigh: number;
+  html: string;
+  type: "rich";
+}

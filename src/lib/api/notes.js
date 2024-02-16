@@ -52,3 +52,14 @@ export async function get(doc_id, note_id, fetch) {
 
   return resp.json();
 }
+
+/**
+ * Canonical URL for a note, relative to the current server
+ * This will be correct in all environments, including deploy previews
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {number} note_id
+ * @returns {URL}
+ */
+export function canonicalNoteUrl(document, note_id) {}
