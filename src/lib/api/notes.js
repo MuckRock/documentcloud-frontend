@@ -1,6 +1,7 @@
 import { error } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
+import { canonicalUrl, pageUrl } from "./documents.js";
 
 /**
  * Load notes from a single document from the API
@@ -56,10 +57,51 @@ export async function get(doc_id, note_id, fetch) {
 /**
  * Canonical URL for a note, relative to the current server
  * This will be correct in all environments, including deploy previews
+ * https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/annotations/557
  *
  * @export
  * @param {import('./types').Document} document
- * @param {number} note_id
+ * @param {import('./types').Note} note
  * @returns {URL}
  */
-export function canonicalNoteUrl(document, note_id) {}
+export function canonicalNoteUrl(document, note) {
+  return new URL(`annotations/${note.id}/`, canonicalUrl(document));
+}
+
+/**
+ * Hash URL for a note within the document viewer
+ * https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/#document/p3/a557
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @param {import('./types').Note} note
+ * @returns {URL}
+ */
+export function noteUrl(document, note) {
+  return new URL(
+    `document/p${note.page_number + 1}/a${note.id}`,
+    pageUrl(document, note.page_number + 1),
+  );
+}
+
+/**
+ * Width of a note, relative to the document
+ *
+ * @export
+ * @param {import('./types').Note} note
+ * @returns {number}
+ */
+export function width(note) {
+  return note.x2 - note.x1;
+}
+
+/**
+ * Height of a note, relative to the document
+ *
+ * @export
+ * @param {import('./types').Note} note
+ * @returns {number}
+ */
+export function height(note) {
+  return note.y2 - note.y1;
+}

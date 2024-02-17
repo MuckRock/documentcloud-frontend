@@ -1,0 +1,257 @@
+<script>
+  import DomPurify from "dompurify";
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
+
+  import { informSize } from "@/embed/iframeSizer.js";
+  import { pageImageUrl } from "$lib/api/documents.js";
+  import * as notes from "$lib/api/notes.js";
+  import { embedUrl } from "$lib/api/embed.js";
+  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes.js";
+  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+
+  export let data;
+
+  const docWidth = 700;
+
+  let elem;
+
+  $: doc = data.document;
+  $: note = data.note;
+  $: alt = `Page ${note.page_number + 1} of ${doc.title}`;
+  $: src = pageImageUrl(doc, note.page_number + 1, "large").toString();
+  $: sizes = pageSizesFromSpec(doc.page_spec);
+  $: aspect = sizes[note.page_number];
+  $: url = canonicalNoteUrl(doc, note).toString();
+  $: title = `${note.title} (${$_("document.pageAbbrev")} ${
+    note.page_number + 1
+  })`;
+  $: maxWidth = docWidth * notes.width(note);
+  $: height = IMAGE_WIDTHS_MAP.get("large") * aspect;
+  $: showStaticImage = data.showStaticImage;
+
+  $: transform = `scale(${1 / notes.width(note)}) translate(${
+    -note.x1 * 100
+  }%, ${-note.y1 * 100}%)`;
+
+  onMount(async () => {
+    if (!showStaticImage) {
+      // Inform iframe of size updates
+      informSize(elem);
+    }
+  });
+</script>
+
+<svelte:head>
+  <!-- Insert canonical URL -->
+  <link rel="canonical" href={url} />
+
+  <!-- Social cards -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content={url} />
+  <meta property="og:url" content={url} />
+  <meta property="og:title" content={title} />
+  <title>{title} - DocumentCloud</title>
+  <link
+    rel="alternate"
+    type="application/json+oembed"
+    href={embedUrl(url)}
+    {title}
+  />
+  {#if note.description}
+    <meta property="og:description" content={note.description} />
+  {/if}
+  <meta property="og:image" content={src} />
+</svelte:head>
+
+{#if showStaticImage}
+  <a href={noteUrl(doc, note)} target="_blank" class="DC-note-image-link">
+    <img {src} {alt} style:transform style:padding-top="{aspect * 100}%" />
+  </a>
+{:else}
+  <div class="DC-note" bind:this={elem} style={`background-image: url(${src})`}>
+    <div class="DC-note-header">
+      <a
+        href={noteUrl(doc, note)}
+        class="DC-note-embed-resource"
+        target="_blank"
+        title={$_("embedNote.viewTheNote", { value: { title: note.title } })}
+      >
+        <span class="DC-note-title">{note.title}</span>
+        <span class="DC-note-page-number"
+          >({$_("document.pageAbbrev")} {note.page_number + 1})</span
+        >
+      </a>
+    </div>
+
+    <div
+      class="DC-note-image-max-bounds"
+      class:public={note.access === "public"}
+      class:organization={note.access === "organization"}
+      class:private={note.access === "private"}
+      style="max-width: {maxWidth}px;"
+    >
+      <div
+        class="DC-note-image-aspect-ratio"
+        style="padding-bottom: {(notes.height(note) / notes.width(note)) *
+          aspect *
+          100}%"
+      >
+        <a
+          href={noteUrl(doc, note)}
+          target="_blank"
+          class="DC-note-image-link"
+          style="left: -{(note.x1 * 100) / note.width}%; top: -{(note.y1 *
+            100) /
+            note.height}%;
+        width: {100 / note.width}%; height: {100 / note.height}%"
+        >
+          <img
+            {src}
+            {alt}
+            style:padding-top="{aspect * 100}%"
+            width="{IMAGE_WIDTHS_MAP.get('large')}px"
+            height="{height}px"
+          />
+        </a>
+      </div>
+    </div>
+
+    <div class="DC-note-body">
+      {@html DomPurify.sanitize(note.content)}
+    </div>
+
+    <div class="DC-note-credit">
+      <a
+        href={noteUrl(doc, note)}
+        target="_blank"
+        title={$_("embedNote.viewTheNote", { values: { title: note.title } })}
+      >
+        {@html $_("embedNote.viewDoc")}
+      </a>
+    </div>
+
+    <div class="DC-note-background-fader" />
+  </div>
+{/if}
+
+<style lang="scss">
+  .DC-note {
+    position: relative;
+    padding: 0 0.5em;
+    border: 1px solid #ebebeb;
+    box-shadow: inset 0 0 40px #505050;
+    font:
+      400 10pt/14pt -apple-system,
+      system-ui,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+    color: black;
+    background-color: white;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    a {
+      color: #5a76a0;
+      text-decoration: underline;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .DC-note-header,
+    .DC-note-body,
+    :global(.DC-note-credit) {
+      margin: 10px auto;
+      padding: 0 5px;
+      max-width: 600px;
+    }
+
+    .DC-note-title {
+      font-weight: bold;
+    }
+
+    .DC-note-image-max-bounds {
+      box-sizing: border-box;
+      border-radius: $radius;
+      box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+      position: relative;
+      font-size: 0;
+      overflow: hidden;
+      margin: 10px auto;
+
+      &.public {
+        border: $annotationBorderWidth solid $annotationBorder;
+      }
+
+      &.organization {
+        border: $annotationBorderWidth solid $organizationAnnotation;
+      }
+
+      &.private {
+        border: $annotationBorderWidth solid $privateAnnotation;
+      }
+
+      .DC-note-image-aspect-ratio {
+        position: relative;
+        overflow: hidden;
+        height: 0;
+        max-width: 100%;
+
+        .DC-note-image-link {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          overflow: hidden;
+          display: block;
+
+          img {
+            margin: 0 !important;
+            border: 0 !important;
+            outline: 0 !important;
+            max-width: none !important;
+            max-height: none !important;
+            display: block !important;
+            position: absolute;
+            height: auto;
+            transform-origin: top left;
+          }
+        }
+      }
+    }
+
+    .DC-note-credit {
+      font-size: 0.9em;
+    }
+
+    :global(.DC-note-logotype-link) {
+      font-weight: 700;
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .DC-note-background-fader {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      background-color: rgba(255, 255, 255, 0.93);
+    }
+  }
+</style>

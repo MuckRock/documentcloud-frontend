@@ -1,0 +1,33 @@
+{
+  "id": 557,
+  "user": {
+    "id": 126,
+    "avatar_url": "",
+    "name": "Chris Amico",
+    "organization": 14187,
+    "organizations": [14187],
+    "admin_organizations": [14187],
+    "username": "ChrisAmico_lSozDZNW",
+    "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+    "verified_journalist": true
+  },
+  "organization": {
+    "id": 60,
+    "avatar_url": "",
+    "individual": false,
+    "name": "NewsHour",
+    "slug": "newshour",
+    "uuid": "23f98aa7-92d4-4edb-bf18-ccf362b29bdf"
+  },
+  "page_number": 2,
+  "access": "public",
+  "edit_access": false,
+  "title": "Setting a Date for the Next Election",
+  "content": "Now we're getting to the heart of the document, and this is the most revolutionary proposal it contains.  For the Liberal Democrats, nothing matters more than the need to reform the country's political system.  Introducing fixed-term Parliaments, and even setting the date of the country's next election today, will end the age-old era in which the Prime Minister of the day could call an election on the most politically-advantageous date of his choosing.   Parliament will still be able to pass a motion of \"no-confidence\" in the government, and - if 55% of lawmakers agree - the legislature would be dissolved prompting an early election.  But Nick Clegg hopes this proposal is just the start of the seismic changes he wants to make to Britain's \"unwritten\" Constitution.",
+  "x1": 0.09428571428571429,
+  "x2": 0.6928571428571428,
+  "y1": 0.5915676959619952,
+  "y2": 0.6107482185273159,
+  "created_at": "2010-05-12T16:54:26.655839Z",
+  "updated_at": "2020-09-25T13:59:36.229576Z"
+}

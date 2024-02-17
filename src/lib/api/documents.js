@@ -114,7 +114,7 @@ export function pageUrl(document, page) {
  *
  * @export
  * @param {import('./types').Document} document
- * @param {number} page
+ * @param {number} page number, 1-indexed
  * @param {import('./types').sizes} size
  * @returns {URL}
  */
