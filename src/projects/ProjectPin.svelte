@@ -3,6 +3,14 @@
   import type { Project } from "../api/types/project";
 
   export const pinned: Writable<Project[]> = writable([]);
+
+  export function sortPins(projects: Project[]): Project[] {
+    if (projects === null) return [];
+    try {
+      projects.sort((a, b) => a.title.localeCompare(b.title));
+    } catch (e) {}
+    return projects;
+  }
 </script>
 
 <script lang="ts">
@@ -47,7 +55,7 @@
 
     // now that we've updated, set $pinned
     $pinned = project.pinned
-      ? [...$pinned, project]
+      ? sortPins([...$pinned, project])
       : $pinned.filter((a) => a.id !== project.id);
   }
 </script>

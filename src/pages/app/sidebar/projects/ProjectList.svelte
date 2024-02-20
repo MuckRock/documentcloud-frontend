@@ -11,8 +11,12 @@
   import Button from "../../../../common/Button.svelte";
   import ProjectListItem from "./ProjectListItem.svelte";
   import ListHeader from "../ListHeader.svelte";
-  import { pinned as pinStore } from "../../../../projects/ProjectPin.svelte";
+  import {
+    pinned as pinStore,
+    sortPins,
+  } from "../../../../projects/ProjectPin.svelte";
   import { ChevronRight16, ChevronDown16 } from "svelte-octicons";
+  import { onMount } from "svelte";
 
   export let user: User;
   export let editProject;
@@ -23,28 +27,22 @@
     expanded.update((val) => !val);
   }
 
-  function sort(projects: Project[]): Project[] {
-    if (projects === null) return [];
-    try {
-      projects.sort((a, b) => a.title.localeCompare(b.title));
-    } catch (e) {}
-    return projects;
-  }
-
   async function getPinnedList() {
     const pinned = (await getProjects(user.id)).filter(
       (project) => project.pinned,
     );
     // if they're equivalent, don't update the store value
     // this prevents an endless update loop
-    if (!equal($pinStore, pinned)) $pinStore = sort(pinned);
-    return sort(pinned);
+    if (!equal($pinStore, pinned)) $pinStore = sortPins(pinned);
   }
 
-  let promise = getPinnedList();
-
   // when the pinstore changes, refetch the list
-  $: $pinStore, (promise = getPinnedList());
+  $: $pinStore, getPinnedList();
+
+  // fetch the list on mount
+  onMount(async () => {
+    await getPinnedList();
+  });
 </script>
 
 <ListHeader>
@@ -61,28 +59,22 @@
   </Button>
 </ListHeader>
 {#if $expanded}
-  {#await promise}
-    <p>Loading…</p>
-  {:then projects}
-    <div class="projectcontainer">
-      {#if projects.length > 0}
-        {#each projects as project}
-          <Link toUrl={projectUrl(project)}>
-            <ProjectListItem
-              title={project.title}
-              onEditClick={project.edit_access
-                ? () => editProject(new ProjectStructure(project))
-                : undefined}
-            />
-          </Link>
-        {/each}
-      {:else}
-        <small>{$_("projects.pinsEmpty")}</small>
-      {/if}
-    </div>
-  {:catch}
-    <p>Error!</p>
-  {/await}
+  <div class="projectcontainer">
+    {#if $pinStore.length > 0}
+      {#each $pinStore as project}
+        <Link toUrl={projectUrl(project)}>
+          <ProjectListItem
+            title={project.title}
+            onEditClick={project.edit_access
+              ? () => editProject(new ProjectStructure(project))
+              : undefined}
+          />
+        </Link>
+      {/each}
+    {:else}
+      <small>{$_("projects.pinsEmpty")}</small>
+    {/if}
+  </div>
 {/if}
 
 <style>
@@ -108,9 +100,11 @@
     z-index: var(--sidebarStickyZ);
   }
 
-  small {
+  small,
+  .loading {
     font-size: 13px;
     color: var(--gray);
+    text-align: center;
     margin: 0 24px;
     display: block;
   }
