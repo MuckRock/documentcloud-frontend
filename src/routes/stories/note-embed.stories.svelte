@@ -18,7 +18,3 @@
 <Story name="default">
   <NoteEmbed {data} />
 </Story>
-
-<Story name="static-image">
-  <NoteEmbed data={{ ...data, showStaticImage: true }} />
-</Story>

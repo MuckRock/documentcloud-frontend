@@ -12,6 +12,5 @@ export async function load({ params, url, fetch }) {
   return {
     document,
     note,
-    showStaticImage: url.searchParams.get("embed"),
   };
 }

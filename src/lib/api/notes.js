@@ -1,7 +1,7 @@
 import { error } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
-import { canonicalUrl, pageUrl } from "./documents.js";
+import { canonicalUrl } from "./documents.js";
 
 /**
  * Load notes from a single document from the API
@@ -79,8 +79,8 @@ export function canonicalNoteUrl(document, note) {
  */
 export function noteUrl(document, note) {
   return new URL(
-    `document/p${note.page_number + 1}/a${note.id}`,
-    pageUrl(document, note.page_number + 1),
+    `#document/p${note.page_number + 1}/a${note.id}`,
+    canonicalUrl(document, note.page_number + 1),
   );
 }
 
