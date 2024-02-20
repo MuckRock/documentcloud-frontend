@@ -3,16 +3,16 @@
   import { _ } from "svelte-i18n";
   import equal from "fast-deep-equal";
 
-  import { User } from "../../../../api/types/orgAndUser";
+  import type { Project, User } from "../../../../api/types";
   import { getProjects } from "../../../../api/project";
   import { projectUrl } from "../../../../search/search.js";
+  import { Project as ProjectStructure } from "../../../../structure/project.js";
   import Link from "../../../../router/Link.svelte";
   import Button from "../../../../common/Button.svelte";
   import ProjectListItem from "./ProjectListItem.svelte";
   import ListHeader from "../ListHeader.svelte";
   import { pinned as pinStore } from "../../../../projects/ProjectPin.svelte";
   import { ChevronRight16, ChevronDown16 } from "svelte-octicons";
-  import type { Project } from "../../../../api/types";
 
   export let user: User;
   export let editProject;
@@ -71,7 +71,7 @@
             <ProjectListItem
               title={project.title}
               onEditClick={project.edit_access
-                ? () => editProject(project)
+                ? () => editProject(new ProjectStructure(project))
                 : undefined}
             />
           </Link>
