@@ -4,6 +4,7 @@
 
   import document from "$lib/api/fixtures/documents/document-expanded.json";
   import note from "$lib/api/fixtures/notes/note-expanded.json";
+  import notes from "$lib/api/fixtures/notes/notes-expanded.json";
 
   export const meta = {
     title: "Embed / Note",
@@ -17,4 +18,8 @@
 
 <Story name="default">
   <NoteEmbed {data} />
+</Story>
+
+<Story name="bigger note">
+  <NoteEmbed data={{ document, note: notes.results[1] }} />
 </Story>
