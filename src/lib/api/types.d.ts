@@ -86,3 +86,15 @@ export interface OEmbed {
   html: string;
   type: "rich";
 }
+
+// re-export for consistency
+export type { Project };
+
+export type ProjectResults = Page<Project>;
+
+export interface ProjectMembershipItem {
+  document: number | Document;
+  edit_access: boolean;
+}
+
+export type ProjectMembershipList = Page<ProjectMembershipItem>;

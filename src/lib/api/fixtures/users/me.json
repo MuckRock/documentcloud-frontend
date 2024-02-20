@@ -17,15 +17,8 @@
     "monthly_credit_allowance": 10000,
     "plan": "Admin"
   },
-  "organizations": [
-    19198,
-    170,
-    125
-  ],
-  "admin_organizations": [
-    19198,
-    170
-  ],
+  "organizations": [19198, 170, 125],
+  "admin_organizations": [19198, 170],
   "username": "chrisamico",
   "uuid": "800bbb85-ea7a-46e9-8f56-16f862e66e52",
   "verified_journalist": true
