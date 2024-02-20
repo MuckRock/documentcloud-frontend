@@ -65,7 +65,7 @@
   $: if (visible) {
     load($filter);
   }
-  $: $lastUpdated, load($filter);
+  $: $lastUpdated, $query, load($filter);
   $: loadNext = () => load($filter, next_cursor);
   $: loadPrev = () => load($filter, previous_cursor);
   $: reload = () => load($filter);
