@@ -9,11 +9,11 @@
   const FILTERS = {
     user: "Your Projects",
     shared: "Shared with you",
-    public: "Public Projects",
+    // public: "Public Projects",
   };
 
   const filterIcons: Record<FilterKey, typeof SvgComponent> = {
-    public: Globe16,
+    // public: Globe16,
     user: Person16,
     shared: People16,
   };

@@ -45,20 +45,16 @@
     loading = true;
     try {
       user = await getMe();
-      if (filter === "public") {
-        res = await getPublicProjects($query, cursor);
+      // if (filter === "public") {
+      //   res = await getPublicProjects($query, cursor);
+      // } else {
+      res.results = await getProjects(user.id, $query);
+      if (filter === "user") {
+        res.results = res.results.filter((project) => project.user === user.id);
       } else {
-        res.results = await getProjects(user.id, $query);
-        if (filter === "user") {
-          res.results = res.results.filter(
-            (project) => project.user === user.id,
-          );
-        } else {
-          res.results = res.results.filter(
-            (project) => project.user !== user.id,
-          );
-        }
+        res.results = res.results.filter((project) => project.user !== user.id);
       }
+      // }
     } catch (err) {
       error = err;
       projects = null;
@@ -89,14 +85,14 @@
       <Flex direction="column" class="list">
         <ProjectList {loading} {error} {items} bind:reload />
       </Flex>
-      {#if $filter === "public"}
+      <!-- {#if $filter === "public"}
         <Paginator
           has_next={Boolean(next_cursor)}
           has_previous={Boolean(previous_cursor)}
           on:next={loadNext}
           on:previous={loadPrev}
         />
-      {/if}
+      {/if} -->
     </Flex>
   </div>
 </Drawer>
