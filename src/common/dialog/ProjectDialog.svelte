@@ -30,6 +30,8 @@
   let name = layout.projectEdit == null ? "" : layout.projectEdit.title;
   let description =
     layout.projectEdit == null ? "" : layout.projectEdit.description;
+  let isPrivate =
+    layout.projectEdit == null ? false : layout.projectEdit.private;
   let loading = writable(false);
 
   $: editing = $layout.projectEdit != null;
@@ -46,11 +48,16 @@
 
     if (editing) {
       await wrapLoadSeparate(loading, layout, async () => {
-        await editProject(layout.projectEdit, normalizedName, description);
+        await editProject(
+          layout.projectEdit,
+          normalizedName,
+          description,
+          isPrivate,
+        );
       });
     } else {
       await wrapLoadSeparate(loading, layout, async () => {
-        await createNewProject(normalizedName, description);
+        await createNewProject(normalizedName, description, isPrivate);
       });
     }
     $lastUpdated = new Date();
@@ -101,6 +108,10 @@
             use:textAreaResize
           />
         </p>
+        <label class="checkbox">
+          <input type="checkbox" bind:checked={isPrivate} />
+          Private
+        </label>
         {#if editing}
           <p>
             <Button nondescript={true} on:click={showCollaborators}>
@@ -153,5 +164,10 @@
 
   p {
     margin-bottom: 0;
+  }
+
+  .checkbox {
+    display: flex;
+    gap: 0.5rem;
   }
 </style>

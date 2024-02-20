@@ -10,10 +10,15 @@ import { queryBuilder } from "../util/url.js";
 import type { Page, Project, User, Document, DocumentAccess } from "./types";
 
 // Create a project
-export async function newProject(title, description): Promise<Project> {
+export async function newProject(
+  title: string,
+  description: string,
+  isPrivate: boolean,
+): Promise<Project> {
   const { data } = await session.post(apiUrl("projects/"), {
     title,
     description,
+    private: isPrivate,
   });
   return data;
 }
@@ -28,10 +33,12 @@ export async function updateProject(
   projectId: number,
   title: string,
   description: string,
+  isPrivate: boolean,
 ): Promise<Project> {
   const { data } = await session.patch(apiUrl(`projects/${projectId}/`), {
     title,
     description,
+    private: isPrivate,
   });
   return data;
 }

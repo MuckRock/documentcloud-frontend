@@ -50,13 +50,18 @@ export async function initProjects(me) {
   projects.projects = newProjects.map((project) => new Project(project));
 }
 
-export async function createNewProject(title, description) {
-  const project = await newProject(title, description);
+export async function createNewProject(title, description, isPrivate) {
+  const project = await newProject(title, description, isPrivate);
   projects.projects = [...projects.projects, new Project(project)];
 }
 
-export async function editProject(project, title, description) {
-  const updatedProject = await updateProject(project.id, title, description);
+export async function editProject(project, title, description, isPrivate) {
+  const updatedProject = await updateProject(
+    project.id,
+    title,
+    description,
+    isPrivate,
+  );
   projects.projects = projects.projects.map((oldProject) => {
     if (project.id == oldProject.id) {
       return new Project(updatedProject);
