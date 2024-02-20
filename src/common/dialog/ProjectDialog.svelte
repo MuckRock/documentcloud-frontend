@@ -1,136 +1,99 @@
-<script>
-  import { _ } from "svelte-i18n";
+<script lang="ts" context="module">
+  export interface FormData {
+    name: string;
+    description: string;
+    private: boolean;
+  }
+</script>
 
-  import Button from "@/common/Button.svelte";
-  import Loader from "@/common/Loader.svelte";
-
-  import { layout, showCollaborators, embedProject } from "@/manager/layout.js";
+<script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
-  import emitter from "@/emit.js";
-  import { textAreaResize } from "@/util/textareaResize.js";
-  import { wrapLoadSeparate } from "@/util/wrapLoad.js";
-  import { lastUpdated } from "../../projects/Browser.svelte";
-  import {
-    createNewProject,
-    editProject,
-    removeProject,
-  } from "@/manager/projects";
-  import { showConfirm } from "@/manager/confirmDialog.js";
-
+  import { _ } from "svelte-i18n";
+  import Button from "../../common/Button.svelte";
+  import Loader from "../../common/Loader.svelte";
   import {
     PROJECT_TITLE_CHAR_LIMIT,
     PROJECT_DESCRIPTION_CHAR_LIMIT,
   } from "../../config/config.js";
+  import { textAreaResize } from "../../util/textareaResize.js";
+  import equal from "fast-deep-equal";
 
-  const emit = emitter({
-    dismiss() {},
-  });
+  export let loading: boolean;
+  export let editing: boolean;
+  export let initialData: FormData;
+  export let onSave: (data: FormData, isValid: boolean) => void;
+  export let onDelete;
+  export let onCancel;
+  export let showCollaborators;
+  export let embedProject;
 
-  let name = layout.projectEdit == null ? "" : layout.projectEdit.title;
-  let description =
-    layout.projectEdit == null ? "" : layout.projectEdit.description;
-  let isPrivate =
-    layout.projectEdit == null ? false : layout.projectEdit.private;
-  let loading = writable(false);
-
-  $: editing = $layout.projectEdit != null;
+  // Copy the data out of initialData for change comparisons
+  let {
+    name,
+    description,
+    private: isPrivate,
+  } = Object.assign({}, initialData);
 
   $: normalizedName = name.trim();
   $: changed =
-    !editing ||
-    $layout.projectEdit.title != name ||
-    $layout.projectEdit.description != description;
+    !editing || !equal({ name, description, private: isPrivate }, initialData);
   $: valid = changed && normalizedName.length > 0;
-
-  async function createOrUpdate() {
-    if (!valid) return;
-
-    if (editing) {
-      await wrapLoadSeparate(loading, layout, async () => {
-        await editProject(
-          layout.projectEdit,
-          normalizedName,
-          description,
-          isPrivate,
-        );
-      });
-    } else {
-      await wrapLoadSeparate(loading, layout, async () => {
-        await createNewProject(normalizedName, description, isPrivate);
-      });
-    }
-    $lastUpdated = new Date();
-    emit.dismiss();
-  }
-
-  async function remove() {
-    showConfirm(
-      "dialogProjectDialog.confirmDelete",
-      "dialogProjectDialog.deleteProject",
-      "dialog.delete",
-      async () => {
-        await wrapLoadSeparate(loading, layout, async () => {
-          await removeProject(layout.projectEdit);
-        });
-        emit.dismiss();
-      },
-      { project: layout.projectEdit.title },
-    );
-  }
 
   let input;
   onMount(() => input.focus());
 </script>
 
 <div>
-  <Loader active={$loading}>
-    <div class="mcontent">
-      <h1>
+  <Loader active={loading}>
+    <div class="mcontent vstack">
+      <h1 class="dialogTitle">
         {#if editing}
           {$_("dialogProjectDialog.editProject")}
         {:else}
           {$_("dialogProjectDialog.createProject")}
         {/if}
       </h1>
-      <div class="inputpadded">
-        <input
-          maxlength={PROJECT_TITLE_CHAR_LIMIT}
-          placeholder={$_("dialogProjectDialog.title")}
-          bind:value={name}
-          bind:this={input}
-        />
-        <p>
+      <div class="inputpadded flex">
+        <label class="name">
+          <input
+            maxlength={PROJECT_TITLE_CHAR_LIMIT}
+            placeholder={$_("dialogProjectDialog.title")}
+            bind:value={name}
+            bind:this={input}
+          /></label
+        >
+        <label class="checkbox">
+          <input type="checkbox" bind:checked={isPrivate} />
+          Private
+        </label>
+        <label class="description">
           <textarea
             maxlength={PROJECT_DESCRIPTION_CHAR_LIMIT}
             placeholder={$_("dialogProjectDialog.projectDesc")}
             bind:value={description}
             use:textAreaResize
           />
-        </p>
-        <label class="checkbox">
-          <input type="checkbox" bind:checked={isPrivate} />
-          Private
         </label>
-        {#if editing}
-          <p>
-            <Button nondescript={true} on:click={showCollaborators}>
-              {$_("dialogProjectDialog.manageCollabs")}
-            </Button><br />
-            <Button nondescript={true} on:click={embedProject}>
-              {$_("dialogProjectDialog.share")}
-            </Button>
-          </p>
-        {/if}
       </div>
-      <div class="buttonpadded">
+      {#if editing}
+        <div class="flex">
+          <Button nondescript={true} on:click={showCollaborators}>
+            {$_("dialogProjectDialog.manageCollabs")}
+          </Button>
+          <Button nondescript={true} on:click={embedProject}>
+            {$_("dialogProjectDialog.share")}
+          </Button>
+        </div>
+      {/if}
+      <div class="flex buttonpadded">
         <Button
           disabledReason={valid
             ? null
             : changed
               ? $_("dialogProjectDialog.enterTitle")
               : $_("dialogProjectDialog.changeTitle")}
-          on:click={() => createOrUpdate()}
+          on:click={() =>
+            onSave({ name, description, private: isPrivate }, valid)}
         >
           {#if editing}
             {$_("dialog.update")}
@@ -139,11 +102,11 @@
           {/if}
         </Button>
         {#if editing}
-          <Button danger={true} on:click={() => remove()}>
+          <Button danger={true} on:click={() => onDelete()}>
             {$_("dialog.delete")}
           </Button>
         {/if}
-        <Button secondary={true} on:click={emit.dismiss}>
+        <Button secondary={true} on:click={() => onCancel()}>
           {$_("dialog.cancel")}
         </Button>
       </div>
@@ -152,22 +115,37 @@
 </div>
 
 <style lang="scss">
-  input {
-    outline: none;
+  .dialogTitle {
+    margin: 0;
+  }
+
+  .name {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+
+  .description {
+    flex: 1 1 auto;
     width: 100%;
-    padding: 4px 7px;
-  }
-
-  textarea {
-    padding: 5px 7px;
-  }
-
-  p {
-    margin-bottom: 0;
   }
 
   .checkbox {
+    flex: 0 1 auto;
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+  }
+
+  .flex {
     display: flex;
-    gap: 0.5rem;
+    flex-flow: row wrap;
+    gap: 0.75rem;
+  }
+
+  .vstack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 </style>
