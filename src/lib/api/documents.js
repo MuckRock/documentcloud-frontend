@@ -69,7 +69,7 @@ export async function get(id, fetch) {
  * @returns {URL}
  */
 export function canonicalUrl(document) {
-  const path = new URL(document.canonical_url).pathname;
+  const path = `/documents/${document.id}-${document.slug}/`;
   return new URL(path, APP_URL);
 }
 

@@ -10,7 +10,7 @@ import { BASE_API_URL } from "@/config/config.js";
  * @returns {URL}
  */
 export function embedUrl(url) {
-  return new URL(`oembed/?url=${encodeURIComponent(url)}`, BASE_API_URL);
+  return new URL(`oembed/?url=${url.toString()}`, BASE_API_URL);
 }
 
 /**

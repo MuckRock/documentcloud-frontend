@@ -80,7 +80,7 @@ export function canonicalNoteUrl(document, note) {
 export function noteUrl(document, note) {
   return new URL(
     `#document/p${note.page_number + 1}/a${note.id}`,
-    canonicalUrl(document, note.page_number + 1),
+    canonicalUrl(document),
   );
 }
 
