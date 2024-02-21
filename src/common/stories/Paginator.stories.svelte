@@ -35,9 +35,10 @@
 <Story name="First Page" args={{ has_next: true, has_previous: false }} />
 <Story name="Last Page" args={{ has_next: false, has_previous: true }} />
 <Story name="With Page" args={{ ...args, page: 1 }} />
+<Story name="With Page and Count" args={{ ...args, page: 2, totalPages: 12 }} />
 <Story
-  name="With Page and Total Pages"
-  args={{ ...args, page: 2, totalPages: 12 }}
+  name="With Go To Page"
+  args={{ ...args, page: 1, totalPages: 12, goToNav: true }}
 />
 
 <style>

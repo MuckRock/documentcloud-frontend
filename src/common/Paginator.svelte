@@ -9,10 +9,11 @@
     MoveToStart16,
   } from "svelte-octicons";
 
-  export let page: number;
-  export let totalPages: number;
+  export let page: number | undefined = undefined;
+  export let totalPages: number | undefined = undefined;
   export let has_next = false;
   export let has_previous = false;
+  export let goToNav = false;
 
   const dispatch = createEventDispatcher();
   let input: HTMLInputElement;
@@ -70,7 +71,7 @@
 </script>
 
 <div class="paginator">
-  {#if page && totalPages}
+  {#if page && totalPages && goToNav}
     <Button
       square
       ghost
@@ -93,20 +94,24 @@
   {#if page}
     <div class="current">
       <span class="page">{$_("paginator.page")}</span>
-      <input
-        class="pageNumber"
-        class:error={invalidValue}
-        type="number"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        min="1"
-        max={totalPages}
-        bind:this={input}
-        bind:value={inputValue}
-        on:change={handleChange}
-        on:keyup={handleKeyup}
-        style={`width: ${inputWidth}ch`}
-      />
+      {#if goToNav}
+        <input
+          class="pageNumber"
+          class:error={invalidValue}
+          type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          min="1"
+          max={totalPages}
+          bind:this={input}
+          bind:value={inputValue}
+          on:change={handleChange}
+          on:keyup={handleKeyup}
+          style={`width: ${inputWidth}ch`}
+        />
+      {:else}
+        <span class="pageNumber">{page}</span>
+      {/if}
       {#if totalPages}<span class="rest">{$_("paginator.of")} {totalPages}</span
         >{/if}
     </div>
@@ -120,7 +125,7 @@
   >
     <ArrowRight16 />
   </Button>
-  {#if page && totalPages}
+  {#if page && totalPages && goToNav}
     <Button
       square
       ghost
@@ -148,7 +153,7 @@
     margin: 0 1rem;
   }
 
-  .pageNumber {
+  input.pageNumber {
     flex: 0 1 auto;
     padding: 0.125rem;
     text-align: center;
@@ -156,21 +161,21 @@
     box-shadow: none;
   }
 
-  .pageNumber:hover,
-  .pageNumber:focus {
+  input.pageNumber:hover,
+  input.pageNumber:focus {
     border-color: rgba(0, 0, 0, 0.25);
   }
 
   /* Hide arrows from number input */
   /* Chrome, Safari, Edge, Opera */
-  .pageNumber::-webkit-outer-spin-button,
-  .pageNumber::-webkit-inner-spin-button {
+  input.pageNumber::-webkit-outer-spin-button,
+  input.pageNumber::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
   /* Firefox */
-  .pageNumber[type="number"] {
+  input.pageNumber[type="number"] {
     appearance: textfield;
     -moz-appearance: textfield;
   }
