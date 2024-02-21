@@ -23,15 +23,6 @@
         </div>
         <div class="stretch row gap-lg">
           <h3 class="project-title">{project.title}</h3>
-          {#if project.private}
-            <span class="small center center-self" title="Private Project"
-              ><Lock16 /></span
-            >
-          {:else}
-            <span class="small center center-self" title="Public Project"
-              ><Globe16 /></span
-            >
-          {/if}
         </div>
         {#if project.edit_access}
           <div class="center-self">
@@ -40,6 +31,15 @@
               on:click={() => editProject(new ProjectStructure(project))}
             />
           </div>
+        {/if}
+        {#if project.private}
+          <span class="small center center-self" title="Private Project"
+            ><Lock16 /></span
+          >
+        {:else}
+          <span class="small center center-self" title="Public Project"
+            ><Globe16 /></span
+          >
         {/if}
       </div>
       {#if project.description}
@@ -64,10 +64,6 @@
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
-  }
-
-  .gap-lg {
-    /* gap: 1rem; */
   }
 
   .margin {
@@ -105,7 +101,7 @@
 
   .center {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
   }
 
   .stretch {

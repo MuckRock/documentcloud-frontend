@@ -22,6 +22,26 @@
 </Template>
 
 <Story name="With Data" {args} />
+<Story
+  name="With Own Data"
+  args={{
+    ...args,
+    items: projects.results.map((project) => ({
+      ...project,
+      edit_access: true,
+    })),
+  }}
+/>
+<Story
+  name="With Shared Data"
+  args={{
+    ...args,
+    items: projects.results.map((project) => ({
+      ...project,
+      edit_access: project.user === 4,
+    })),
+  }}
+/>
 <Story name="Empty" args={{ ...args, items: [] }} />
 <Story name="Loading" args={{ ...args, loading: true }} />
 <Story name="Error" args={{ ...args, error: "An error occurred!" }} />
