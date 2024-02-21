@@ -16,6 +16,8 @@
   export let danger = false;
   export let disabled = false;
   export let plain = false;
+  export let ghost = false;
+  export let square = false;
   export let nomargin = false;
   export let fullWidth = false;
   export let type: "submit" | "reset" | "button" = "submit";
@@ -39,6 +41,8 @@
       class:nondescript
       class:action
       class:plain
+      class:ghost
+      class:square
       class:nomargin
       class:fullWidth
       class:disabled={disabled || disabledReason != null}
@@ -60,6 +64,8 @@
       class:nondescript
       class:action
       class:plain
+      class:ghost
+      class:square
       class:nomargin
       class:fullWidth
       disabled={disabled || disabledReason != null}
@@ -180,6 +186,23 @@
     color: black;
     font-weight: normal;
     margin: 0 5px;
+  }
+
+  .ghost,
+  .ghost:disabled {
+    background: transparent;
+    color: var(--black);
+  }
+  .ghost:disabled {
+    opacity: 0.5;
+  }
+  .ghost:hover,
+  .ghost:focus {
+    background: var(--primary-faded);
+  }
+
+  .square {
+    padding: 0.5rem;
   }
 
   .fullWidth {

@@ -23,6 +23,7 @@
   <div class="container">
     <Paginator
       {...args}
+      on:goTo={action("Go To")}
       on:next={action("Next")}
       on:previous={action("Previous")}
     />
@@ -33,11 +34,15 @@
 <Story name="Only Page" args={{ has_next: false, has_previous: false }} />
 <Story name="First Page" args={{ has_next: true, has_previous: false }} />
 <Story name="Last Page" args={{ has_next: false, has_previous: true }} />
+<Story name="With Page" args={{ ...args, page: 1 }} />
+<Story
+  name="With Page and Total Pages"
+  args={{ ...args, page: 2, totalPages: 12 }}
+/>
 
 <style>
   .container {
     border: 1px solid gray;
     padding: 1em;
-    width: 50vw;
   }
 </style>
