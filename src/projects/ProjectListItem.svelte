@@ -4,7 +4,7 @@
   import ProjectPin from "./ProjectPin.svelte";
   import type { Project } from "../api/types/project";
   import EditButton from "../common/EditButton.svelte";
-  import { Lock16 } from "svelte-octicons";
+  import { Globe16, Lock16 } from "svelte-octicons";
   import { projectUrl } from "../search/search.js";
   import Link from "../router/Link.svelte";
   import { Project as ProjectStructure } from "../structure/project";
@@ -21,12 +21,17 @@
         <div class="center-self">
           <ProjectPin {project} />
         </div>
-        <div class="stretch row">
+        <div class="stretch row gap-lg">
           <h3 class="project-title">{project.title}</h3>
-          {#if project.private}<span
-              class="center center-self"
-              title="Private Project"><Lock16 /></span
-            >{/if}
+          {#if project.private}
+            <span class="small center center-self" title="Private Project"
+              ><Lock16 /></span
+            >
+          {:else}
+            <span class="small center center-self" title="Public Project"
+              ><Globe16 /></span
+            >
+          {/if}
         </div>
         {#if project.edit_access}
           <div class="center-self">
@@ -61,6 +66,10 @@
     gap: 0.5rem;
   }
 
+  .gap-lg {
+    /* gap: 1rem; */
+  }
+
   .margin {
     margin: 0.5rem;
   }
@@ -85,13 +94,18 @@
     font-weight: 600;
   }
 
+  .small {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+
   .center-self {
     align-self: center;
   }
 
   .center {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
   }
 
   .stretch {
