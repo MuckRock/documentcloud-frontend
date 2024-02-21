@@ -2,7 +2,7 @@
   import Checkbox from "@/common/Checkbox.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
   import Dropdown from "@/common/Dropdown.svelte";
-  import Paginator from "./Paginator.svelte";
+  import Paginator from "../../common/Paginator.svelte";
   import { _ } from "svelte-i18n";
 
   // Menus
@@ -11,6 +11,7 @@
   import AddonsMenu from "./menus/AddonsMenu.svelte";
 
   // Stores
+  import { search, searchNext, searchPrev } from "@/search/search.js";
   import { layout } from "@/manager/layout.js";
   import { manager, selectAll } from "@/manager/manager.js";
   import { documents, unselectAll } from "@/manager/documents.js";
@@ -82,7 +83,14 @@
       {/if}
 
       <span class="narrowhide">
-        <Paginator />
+        <Paginator
+          page={$search.page}
+          totalPages={$search.results.numPages}
+          on:next={searchNext}
+          on:previous={searchPrev}
+          has_next={$search.hasNext}
+          has_previous={$search.hasPrev}
+        />
       </span>
     </div>
   {/if}
