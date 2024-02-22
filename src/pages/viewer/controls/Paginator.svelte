@@ -3,26 +3,22 @@
   import { viewer } from "@/viewer/viewer.js";
   import Paginator from "../../../common/Paginator.svelte";
 
-  function gotoPage(readablePageNumber) {
+  function goToPage(readablePageNumber) {
     doc.jumpToPage(readablePageNumber - 1);
   }
 
-  function increment() {
-    gotoPage(Math.min(doc.visiblePageNumber + 1, viewer.document.pageCount));
-  }
-
-  function decrement() {
-    gotoPage(Math.max(doc.visiblePageNumber - 1, 1));
+  $: {
+    console.log(doc.visiblePageNumber, $doc.visiblePageNumber);
   }
 </script>
 
 {#if $viewer.loaded && $doc.mode !== "search" && $doc.mode !== "notes" && $doc.mode !== "thumbnail"}
   <Paginator
-    page={$doc.visiblePageNumber}
+    bind:page={$doc.visiblePageNumber}
     totalPages={$viewer.document.pageCount}
-    on:previous={decrement}
-    on:next={increment}
-    on:goTo={gotoPage}
+    on:previous={goToPage}
+    on:next={goToPage}
+    on:goTo={goToPage}
     goToNav
     has_next={$doc.visiblePageNumber < $viewer.document.pageCount}
     has_prev={$doc.visiblePageNumber > 1}

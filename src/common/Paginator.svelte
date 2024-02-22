@@ -20,15 +20,15 @@
   $: inputWidth = String(page ?? 0).length;
   $: invalidValue = page > totalPages || !page;
 
-  export function previous() {
-    dispatch("previous");
+  function previous() {
+    dispatch("previous", page - 1);
   }
 
-  export function next() {
-    dispatch("next");
+  function next() {
+    dispatch("next", page + 1);
   }
 
-  export function goTo(page: number) {
+  function goTo(page: number) {
     dispatch("goTo", page);
   }
 
