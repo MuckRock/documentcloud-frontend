@@ -21,6 +21,9 @@
   let inputValue = page;
   $: inputWidth = String(inputValue ?? 0).length;
   $: invalidValue = inputValue > totalPages || !inputValue;
+  $: {
+    inputValue = page;
+  }
 
   function previous() {
     dispatch("previous", page - 1);
