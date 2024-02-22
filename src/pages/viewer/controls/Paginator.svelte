@@ -10,10 +10,13 @@
   $: totalPages = viewer.document.pageCount;
   $: has_next = page < totalPages;
   $: has_previous = page > 1;
+  $: {
+    console.debug({ page, totalPages, has_next, has_previous });
+  }
 
   function goToPage(event: CustomEvent) {
     const page = event.detail;
-    console.log("Go to page ", page);
+    console.debug("Go to page ", page);
     doc.jumpToPage(page - 1);
   }
 </script>
