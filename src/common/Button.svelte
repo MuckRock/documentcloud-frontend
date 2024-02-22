@@ -188,13 +188,16 @@
     margin: 0 5px;
   }
 
-  .ghost,
-  .ghost:disabled {
+  .ghost {
     background: transparent;
-    color: var(--black);
+    color: var(--primary);
+    fill: var(--primary);
   }
   .ghost:disabled {
     opacity: 0.5;
+    background: transparent;
+    color: var(--gray);
+    fill: var(--gray);
   }
   .ghost:hover,
   .ghost:focus {
