@@ -17,12 +17,8 @@
 
   const dispatch = createEventDispatcher();
   let input: HTMLInputElement;
-  let inputValue: number = page;
-  $: inputWidth = String(inputValue ?? 0).length;
-  $: invalidValue = inputValue > totalPages || !inputValue;
-  $: {
-    inputValue = page;
-  }
+  $: inputWidth = String(page ?? 0).length;
+  $: invalidValue = page > totalPages || !page;
 
   export function previous() {
     dispatch("previous");
@@ -36,13 +32,11 @@
     dispatch("goTo", page);
   }
 
-  function handleChange() {
-    if (invalidValue || inputValue === page) {
-      inputValue = page;
-      return;
-    }
-    console.log(inputValue);
-    goTo(inputValue);
+  function handleChange(event: Event) {
+    if (invalidValue) return;
+    console.debug("Paginator: Page changed to ", page);
+    const { value } = event.target as HTMLInputElement;
+    goTo(parseInt(value));
   }
 
   function handleKeyup({ key }: KeyboardEvent) {
@@ -53,10 +47,7 @@
         input.blur();
         break;
       // case "Enter":
-      //   if (invalidValue) {
-      //     inputValue = page;
-      //   } else if (inputValue !== page) {
-      //     goTo(inputValue);
+      //     goTo(page);
       //   }
       //   input.blur();
       //   break;
@@ -104,7 +95,7 @@
           min="1"
           max={totalPages}
           bind:this={input}
-          bind:value={inputValue}
+          bind:value={page}
           on:change={handleChange}
           on:keyup={handleKeyup}
           style={`width: ${inputWidth}ch`}

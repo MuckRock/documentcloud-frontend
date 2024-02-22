@@ -19,7 +19,7 @@
 {#if $viewer.loaded && $doc.mode !== "search" && $doc.mode !== "notes" && $doc.mode !== "thumbnail"}
   <Paginator
     page={$doc.visiblePageNumber}
-    pageTotal={$viewer.document.pageCount}
+    totalPages={$viewer.document.pageCount}
     on:previous={decrement}
     on:next={increment}
     on:goTo={gotoPage}
