@@ -11,7 +11,8 @@
   $: has_next = page < totalPages;
   $: has_previous = page > 1;
 
-  function goToPage(page) {
+  function goToPage(event: CustomEvent) {
+    const page = event.detail;
     console.log("Go to page ", page);
     doc.jumpToPage(page - 1);
   }
