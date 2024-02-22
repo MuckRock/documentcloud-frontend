@@ -1,26 +1,31 @@
-<script>
-  import { doc } from "@/viewer/document.js";
-  import { viewer } from "@/viewer/viewer.js";
+<script lang="ts">
+  import { doc } from "../../../viewer/document.js";
+  import { viewer } from "../../../viewer/viewer.js";
   import Paginator from "../../../common/Paginator.svelte";
 
-  function goToPage(readablePageNumber) {
-    doc.jumpToPage(readablePageNumber - 1);
-  }
+  // @ts-expect-error
+  $: mode = doc.mode;
 
-  $: {
-    console.log(doc.visiblePageNumber, $doc.visiblePageNumber);
+  $: page = doc.visiblePageNumber;
+  $: totalPages = viewer.document.pageCount;
+  $: has_next = page < totalPages;
+  $: has_previous = page > 1;
+
+  function goToPage(page) {
+    console.log("Go to page ", page);
+    doc.jumpToPage(page - 1);
   }
 </script>
 
-{#if $viewer.loaded && $doc.mode !== "search" && $doc.mode !== "notes" && $doc.mode !== "thumbnail"}
+{#if $viewer.loaded && mode !== "search" && mode !== "notes" && mode !== "thumbnail"}
   <Paginator
-    bind:page={$doc.visiblePageNumber}
-    totalPages={$viewer.document.pageCount}
+    {page}
+    {totalPages}
+    {has_next}
+    {has_previous}
     on:previous={goToPage}
     on:next={goToPage}
     on:goTo={goToPage}
     goToNav
-    has_next={$doc.visiblePageNumber < $viewer.document.pageCount}
-    has_prev={$doc.visiblePageNumber > 1}
   />
 {/if}
