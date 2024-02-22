@@ -7,7 +7,7 @@
   $: mode = doc.mode;
 
   $: page = doc.visiblePageNumber;
-  $: totalPages = viewer.document.pageCount;
+  $: totalPages = viewer.document?.pageCount;
   $: has_next = page < totalPages;
   $: has_previous = page > 1;
   $: {
