@@ -15,6 +15,8 @@ export type status = "success" | "readable" | "pending" | "error" | "nofile"; //
 
 export type sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
+export type Highlight = Record<string, string[]>;
+
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
   id: number;
@@ -33,7 +35,6 @@ export interface Document {
   original_extension: string;
   page_count: number;
   page_spec: string;
-  projects: number[] | Project[];
   publish_at: string | null;
   published_url: string | URL;
   related_article: string | URL;
@@ -44,6 +45,15 @@ export interface Document {
   title: string;
   updated_at: string | Date;
   user: number | User;
+
+  // expandable relationship fields
+  projects?: number[] | Project[];
+  notes?: Note[];
+  sections?: Section[];
+
+  // present in search results when query includes hl=true
+  highlight?: Highlight[];
+  note_highlights?: Record<string, Highlight[]>;
 }
 
 export type DocumentResults = Page<Document>;
