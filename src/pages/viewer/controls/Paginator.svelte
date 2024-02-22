@@ -3,7 +3,6 @@
   import { viewer } from "../../../viewer/viewer.js";
   import Paginator from "../../../common/Paginator.svelte";
 
-  // @ts-expect-error
   $: mode = $doc.mode;
 
   $: page = $doc.visiblePageNumber;

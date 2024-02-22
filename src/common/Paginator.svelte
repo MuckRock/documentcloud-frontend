@@ -17,8 +17,10 @@
 
   const dispatch = createEventDispatcher();
   let input: HTMLInputElement;
-  $: inputWidth = String(page ?? 0).length;
-  $: invalidValue = page > totalPages || !page;
+  // proxy the page value so we can reset it if needed
+  let inputValue = page;
+  $: inputWidth = String(inputValue ?? 0).length;
+  $: invalidValue = inputValue > totalPages || !inputValue;
 
   function previous() {
     dispatch("previous", page - 1);
@@ -33,7 +35,10 @@
   }
 
   function handleChange(event: Event) {
-    if (invalidValue) return;
+    if (invalidValue || inputValue === page) {
+      inputValue = page;
+      return;
+    }
     console.debug("Paginator: Page changed to ", page);
     const { value } = event.target as HTMLInputElement;
     goTo(parseInt(value));
@@ -46,17 +51,6 @@
       case "Enter":
         input.blur();
         break;
-      // case "Enter":
-      //     goTo(page);
-      //   }
-      //   input.blur();
-      //   break;
-      // case "ArrowUp":
-      //   next();
-      //   break;
-      // case "ArrowDown":
-      //   previous();
-      //   break;
     }
   }
 </script>
@@ -95,7 +89,7 @@
           min="1"
           max={totalPages}
           bind:this={input}
-          bind:value={page}
+          bind:value={inputValue}
           on:change={handleChange}
           on:keyup={handleKeyup}
           style={`width: ${inputWidth}ch`}
