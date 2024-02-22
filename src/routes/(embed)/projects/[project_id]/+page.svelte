@@ -1,6 +1,6 @@
 <script>
   import DocumentListItem from "$lib/components/documents/DocumentListItem.svelte";
-  import Paginator from "$lib/components/documents/Paginator.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
 
   export let data;
 

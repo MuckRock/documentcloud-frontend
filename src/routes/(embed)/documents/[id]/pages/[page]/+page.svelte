@@ -5,7 +5,6 @@
   import Note from "./Note.svelte";
 
   import { pageSizesFromSpec } from "@/api/pageSize.js";
-  import { isOrg } from "@/api/types/orgAndUser";
   import { APP_URL, IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { informSize } from "@/embed/iframeSizer.js";
   import {
@@ -13,6 +12,7 @@
     pageImageUrl,
     pageUrl,
     textUrl,
+    userOrgString,
   } from "$lib/api/documents.js";
   import { embedUrl } from "$lib/api/embed.js";
 
@@ -27,10 +27,6 @@
   $: page = +data.page;
   $: title = `${doc.title} (${$_("document.pageAbbrev")} ${data.page})`;
   $: url = canonicalPageUrl(doc, page).toString();
-  $: userOrgString =
-    isOrg(doc.organization) && typeof doc.user === "object"
-      ? `${doc.user.name} (${doc.organization.name})`
-      : doc.user.name;
   $: sizes = pageSizesFromSpec(doc.page_spec);
   $: aspect = sizes[page - 1];
   $: width = IMAGE_WIDTHS_MAP.get("large");
@@ -150,7 +146,7 @@
       DocumentCloud
     </a>
     by
-    {userOrgString}
+    {userOrgString(doc)}
     &bull;
     <a
       style="color: #5a76a0; text-decoration: underline;"

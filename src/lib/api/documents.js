@@ -4,6 +4,7 @@
 import { error } from "@sveltejs/kit";
 import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
+import { isOrg } from "@/api/types/orgAndUser";
 
 /**
  * Search documents
@@ -167,4 +168,26 @@ export function selectableTextUrl(document, page) {
     `documents/${document.id}/pages/${document.slug}-p${page}.position.json`,
     document.asset_url,
   );
+}
+
+/**
+ * Generate a user (organization) string
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @returns {string}
+ */
+export function userOrgString(document) {
+  // we have an org and user
+  if (isOrg(document.organization) && typeof document.user === "object") {
+    return `${document.user.name} (${document.organization.name})`;
+  }
+
+  // just a user
+  if (typeof document.user === "object") {
+    return document.user;
+  }
+
+  // nothing, so return nothing
+  return "";
 }

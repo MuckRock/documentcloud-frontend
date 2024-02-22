@@ -1,9 +1,17 @@
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import DOMPurify from "isomorphic-dompurify";
+  import { _ } from "svelte-i18n";
+  import type { Document, Project } from "$lib/api/types";
+
+  import KV from "../common/KV.svelte";
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
-  import { pageImageUrl, canonicalUrl } from "$lib/api/documents.js";
-  import { pageSizesFromSpec } from "@/api/pageSize";
+  import {
+    pageImageUrl,
+    canonicalUrl,
+    userOrgString,
+  } from "$lib/api/documents.js";
+  import { pageSizesFromSpec } from "@/api/pageSize.js";
 
   export let document: Document;
 
@@ -12,6 +20,14 @@
   $: sizes = pageSizesFromSpec(document.page_spec);
   $: aspect = sizes[0];
   $: height = width * aspect;
+  $: date = new Date(document.created_at).toDateString();
+  $: projects = document.projects.every((p) => typeof p === "object")
+    ? (document.projects as Project[])
+    : []; // only show projects if we've loaded them
+
+  function clean(html: string) {
+    return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
+  }
 </script>
 
 <!--
@@ -32,19 +48,33 @@ It's deliberately minimal and can be wrapped in other components to add addition
   </div>
   <div class="info">
     <h4>{document.title}</h4>
+    <p class="meta">
+      {$_("document.pageCount", { values: { n: document.page_count } })} -
+      {#if userOrgString(document)}{userOrgString(document)} -
+      {/if}
+      {date}
+    </p>
     {#if document.description}
       <p class="description">
-        {document.description}
+        {clean(document.description)}
       </p>
     {/if}
-    <a href={canonicalUrl(document).toString()} class="open">Open</a>
+    <div class="actions">
+      <a href={canonicalUrl(document).toString()} class="open"
+        >{$_("document.open")}</a
+      >
+
+      {#each projects as project}
+        <KV key="Project" value={project.title} />
+      {/each}
+    </div>
   </div>
 </div>
 
 <style>
   .document-list-item {
     display: flex;
-    width: 23.9375rem;
+    max-width: 100%;
     padding: 0rem 1.25rem;
     align-items: center;
     gap: 0.625rem;
@@ -76,15 +106,33 @@ It's deliberately minimal and can be wrapped in other components to add addition
     line-height: normal;
   }
 
-  .description {
-    overflow: hidden;
-    color: #000;
-    text-overflow: ellipsis;
+  .meta {
+    color: rgba(0, 0, 0, 0.6);
     font-family: "Source Sans Pro";
     font-size: 0.75rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+  }
+
+  .description {
+    color: #000;
+    font-family: "Source Sans Pro";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100ch;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    align-self: stretch;
   }
 
   .open {
