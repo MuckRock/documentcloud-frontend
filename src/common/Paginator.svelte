@@ -15,12 +15,17 @@
   export let has_previous = false;
   export let goToNav = false;
 
+  var isInt = /^[0-9]+$/;
+
   const dispatch = createEventDispatcher();
   let input: HTMLInputElement;
   // proxy the page value so we can reset it if needed
   let inputValue = page;
   $: inputWidth = String(inputValue ?? 0).length;
-  $: invalidValue = inputValue > totalPages || !inputValue;
+  $: invalidValue =
+    inputValue > totalPages ||
+    !inputValue ||
+    !isInt.test(inputValue.toString());
   $: {
     inputValue = page;
   }

@@ -205,6 +205,7 @@
   }
 
   .square {
+    margin: 0;
     padding: 0.5rem;
   }
 
