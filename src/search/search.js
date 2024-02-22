@@ -63,7 +63,7 @@ export const search = new Svue({
       return prevUrls.length > 0;
     },
     page(prevUrls) {
-      return prevUrls.length;
+      return prevUrls.length + 1;
     },
     start(prevUrls, results, params) {
       if (results == null) return 0;
