@@ -11,7 +11,7 @@ export default {
   testEnvironment: "jsdom",
   transform: {
     "^.+\\.svelte$": ["svelte-jester", { preprocess: true }],
-    "^.+\\.ts$": ["ts-jest", { useESM: true }],
+    "^.+\\.ts$": ["ts-jest", { useESM: true, tsconfig: "tsconfig.test.json" }],
   },
   transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
   collectCoverageFrom: ["./**/*.{js,ts,svelte}"],
