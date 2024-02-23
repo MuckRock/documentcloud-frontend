@@ -7,8 +7,8 @@
   import { viewer } from "@/viewer/viewer.js";
   import { layout } from "@/viewer/layout.js";
   import { restorePosition, changeMode } from "@/viewer/document.js";
-  import { ModificationSpec } from "@/viewer/modification/modifySpec.js";
-  import { modification } from "@/viewer/modification/modification.js";
+  import { ModificationSpec } from "@/viewer/modification/modifySpec";
+  import { modification } from "@/viewer/modification/modification";
 
   $: modify = $layout.modifying;
 

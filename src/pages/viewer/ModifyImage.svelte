@@ -2,7 +2,7 @@
   import Image from "@/common/Image.svelte";
   import { viewer } from "@/viewer/viewer.js";
   import { pageImageUrl } from "@/api/viewer.js";
-  import { modification } from "@/viewer/modification/modification.js";
+  import { modification } from "@/viewer/modification/modification";
   import { getDocument } from "@/api/document.js";
 
   export let id;

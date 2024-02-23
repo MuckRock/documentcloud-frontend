@@ -5,7 +5,7 @@
   import Modification from "@/viewer/modification/Modification.svelte";
   import ModifyImage from "../ModifyImage.svelte";
 
-  import { modification } from "@/viewer/modification/modification.js";
+  import { modification } from "@/viewer/modification/modification";
   import { viewer } from "@/viewer/viewer.js";
   import { cancelActions } from "@/viewer/document.js";
   import { showInsertDialog, modify } from "@/viewer/layout.js";
