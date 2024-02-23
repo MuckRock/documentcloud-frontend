@@ -1,3 +1,4 @@
+<!-- TODO Add TS lang to script. Right now, `doc` has conflicts that fail checks. -->
 <script>
   import { doc } from "../../../viewer/document.js";
   import { viewer } from "../../../viewer/viewer.js";
