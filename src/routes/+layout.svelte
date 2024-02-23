@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "@/style/kit.css";
-
   import type { LayoutData } from "./$types";
   import type { User } from "@/api/types/orgAndUser.d.ts";
 

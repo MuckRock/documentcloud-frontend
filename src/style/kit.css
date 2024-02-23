@@ -5,33 +5,107 @@ Updated variables and styles for new SvelteKit routes
 :root {
   /* fonts */
   --font-sans: "Source Sans Pro";
-  --font-size-tiny: 0.625rem;
-  --font-size-small: 0.75rem;
-  --font-size-normal: 1rem;
-  --font-size-large: 1.25rem;
-  --font-size-largest: 1.5rem;
+  --font-xs: 0.75rem;
+  --font-s: 0.875rem;
+  --font-m: 1rem;
+  --font-l: 1.25rem;
+  --font-xl: 1.5rem;
+
+  /* Font Weights */
+  --font-regular: 400;
+  --font-semibold: 600;
 
   /* colors */
-  --color-black: #000;
-  --color-white: #fff;
+  --white: #ffffff;
+  --black: #0c1e27;
 
-  --color-gray-light: #eef3f9;
-  --color-gray: #555555;
-  --color-gray-dark: #153359;
+  --gray-1: #f5f6f7;
+  --gray-2: #d8dee2;
+  --gray-3: #99a8b3;
+  --gray-4: #5c717c;
+  --gray-5: #233944;
 
-  --color-yellow: #ffe325;
-  --color-green: #93e48f;
-  --color-green-shiny: #24cc99;
-  --color-blue: #4294f0;
-  --color-blue-light: #ff785c;
-  --color-blue-dark: #1e508c;
-  --color-blue-gray: #b5ceed;
-  --color-purple: #5c1e8c;
+  --red: #e1275f;
+  --red-dark: #5d275f;
+  --red-light: #e9a1bb;
+
+  --orange: #ec7b6b;
+  --orange-dark: #69515c;
+  --orange-light: #ffc2ba;
+
+  --yellow: #eccb6b;
+  --yellow-bright: #ffe325;
+  --yellow-light: #ffe5ba;
+  --yellow-dark: #69755c;
+
+  --green: #27c6a2;
+  --green-dark: #117383;
+  --green-light: #9de3d3;
+  --green-shiny: #24cc99;
+
+  --blue-1: #eef3f9;
+  --blue-2: #b5ceed;
+  --blue-3: #4294f0;
+  --blue-4: #1367d0;
+  --blue-5: #053775;
+
+  --purple: #744af0;
+  --purple-light: #dfd5fa;
+  --purple-dark: #343ba6;
 
   /* semantic aliases */
-  --color-primary: var(--color-blue);
-  --color-premium: var(--color-green-shiny);
-  --color-note-public: var(--color-yellow);
-  --color-note-private: var(--color-blue-light);
-  --color-note-org: var(--color-green);
+  --primary: var(--blue-3);
+  --premium: var(--green-shiny);
+  --note-public: var(--color-yellow);
+  --note-private: var(--color-blue-light);
+  --note-org: var(--color-green);
+
+  /* Text-size styles */
+  --action: 12px;
+
+  /* Effect styles */
+  --border: #d9d9d9;
+  --glare: inset 8px 8px 16px rgba(255, 255, 255, 0.25);
+  --shadow: 0px 2px 4px rgba(128, 128, 128, 0.15);
+}
+
+html,
+body {
+  font-family: var(--font-sans), sans-serif;
+  line-height: 1.25;
+}
+
+/* reset */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--font-xl);
+}
+
+h2 {
+  font-size: var(--font-l);
+}
+
+h3 {
+  font-size: var(--font-m);
+}
+
+h4 {
+  font-size: var(--font-s);
+}
+
+h5 {
+  font-size: var(--font-xs);
+}
+
+p {
+  font-size: var(--font-m);
 }

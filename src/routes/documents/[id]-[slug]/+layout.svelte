@@ -1,4 +1,6 @@
 <script lang="ts">
+  import "@/style/kit.css";
+
   import type { PageData } from "./$types";
   import { embedUrl } from "@/api/embed.js";
   import { pageImageUrl } from "@/api/viewer.js";

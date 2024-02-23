@@ -27,21 +27,21 @@
     gap: 0.625rem;
 
     border-radius: 0.25rem;
-    border: 1px solid var(--color-blue-gray, #b5ceed);
-    background: var(--color-gray-light, #eef3f9);
+    border: 1px solid var(--blue-2, #b5ceed);
+    background: var(--blue-1, #eef3f9);
   }
 
   .key,
   .value {
-    color: var(--color-blue-dark, rgba(21, 51, 89, 0.6));
-    font-size: var(--font-size-tiny, 0.625rem);
+    color: var(--gray-4, #5c717c);
+    font-size: var(--font-xs, 0.75rem);
     font-style: italic;
-    font-weight: 400;
+    font-weight: var(--font-regular, 400);
     line-height: normal;
   }
 
   .value {
-    color: var(--color-blue-dark, #153359);
+    color: var(--blue-5, #153359);
     font-style: normal;
   }
 </style>

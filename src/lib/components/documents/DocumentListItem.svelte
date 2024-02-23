@@ -98,26 +98,26 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   h4 {
-    color: var(--color-black, #000);
-    font-size: 1rem;
+    color: var(--gray-5, #233944);
+    font-size: var(--font-m, 1rem);
     font-style: normal;
-    font-weight: 600;
+    font-weight: var(--font-semibold, 600);
     line-height: normal;
   }
 
   .meta {
-    color: var(--color-gray, rgba(0, 0, 0, 0.6));
+    color: var(--gray-4, #5c717c);
     font-size: 0.75rem;
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--font-regular, 400);
     line-height: normal;
   }
 
   .description {
-    color: var(--color-black, #000);
+    color: var(--gray-5, #233944);
     font-size: 0.75rem;
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--font-regular, 400);
     line-height: normal;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -133,12 +133,11 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   .open {
-    overflow: hidden;
-    color: var(--color-primary, #4294f0);
-    text-overflow: ellipsis;
-    font-size: var(--font-size-small, 0.75rem);
+    color: var(--primary, #4294f0);
+    font-size: var(--font-xs, 0.75rem);
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    text-transform: uppercase;
   }
 </style>
