@@ -88,6 +88,7 @@
       <span class="page">{$_("paginator.page")}</span>
       {#if goToNav}
         <input
+          name="page"
           class="pageNumber"
           class:error={invalidValue}
           type="number"
