@@ -47,7 +47,6 @@
       inputValue = page;
       return;
     }
-    console.debug("Paginator: Page changed to ", page);
     const { value } = event.target as HTMLInputElement;
     goTo(parseInt(value));
   }

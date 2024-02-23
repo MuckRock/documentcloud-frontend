@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { doc } from "../../../viewer/document.js";
   import { viewer } from "../../../viewer/viewer.js";
   import Paginator from "../../../common/Paginator.svelte";
@@ -9,13 +9,9 @@
   $: totalPages = $viewer.document?.pageCount;
   $: has_next = page < totalPages;
   $: has_previous = page > 1;
-  $: {
-    console.debug({ page, totalPages, has_next, has_previous });
-  }
 
-  function goToPage(event: CustomEvent) {
+  function goToPage(event) {
     const page = event.detail;
-    console.debug("Go to page ", page);
     doc.jumpToPage(page - 1);
   }
 </script>

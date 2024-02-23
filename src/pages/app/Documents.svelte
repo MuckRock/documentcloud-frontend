@@ -227,7 +227,7 @@
       <div class="narrowshow">
         <Paginator
           page={$search.page}
-          totalPages={$search.results.numPages}
+          totalPages={$search.results?.numPages}
           on:next={searchNext}
           on:previous={searchPrev}
           has_next={$search.hasNext}
