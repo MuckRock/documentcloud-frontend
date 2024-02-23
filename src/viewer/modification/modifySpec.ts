@@ -1,4 +1,4 @@
-import { arrayEq } from "@/util/array.js";
+import { arrayEq } from "../../util/array.js";
 
 export class Empty {
   constructor() {}
@@ -11,7 +11,7 @@ export class Empty {
     return "";
   }
 
-  index(_) {
+  index(_: unknown) {
     return null;
   }
 
@@ -19,13 +19,16 @@ export class Empty {
     return 0;
   }
 
-  slice(_a, _b) {
+  slice(_a: unknown, _b: unknown) {
     return new Empty();
   }
 }
 
 export class Range {
-  constructor(startInclusive, endInclusive) {
+  start: number;
+  end: number;
+
+  constructor(startInclusive: number, endInclusive: number) {
     this.start = startInclusive;
     this.end = endInclusive;
   }
@@ -42,7 +45,7 @@ export class Range {
     return `${this.start}-${this.end}`;
   }
 
-  index(i) {
+  index(i: number) {
     return this.start + i;
   }
 
@@ -50,7 +53,7 @@ export class Range {
     return this.end - this.start + 1;
   }
 
-  slice(i, l) {
+  slice(i: number, l: number) {
     const start = this.start + i;
     const end = this.start + i + l - 1;
     if (start == end) return new Individual(start);
@@ -60,7 +63,9 @@ export class Range {
 }
 
 export class Individual {
-  constructor(pg) {
+  pg: number;
+
+  constructor(pg: number) {
     this.pg = pg;
   }
 
@@ -80,7 +85,7 @@ export class Individual {
     return 1;
   }
 
-  slice(i, l) {
+  slice(i: number, l: number) {
     if (i != 0 || l < 1) {
       return new Empty();
     }
@@ -89,6 +94,7 @@ export class Individual {
 }
 
 export class PageSpec {
+  specs: (Individual | Range)[];
   constructor(specs) {
     this.specs = specs;
   }
@@ -289,9 +295,13 @@ const ROTATION_MATRIX = {
     [HALFWAY]: null,
   },
 };
+
 export const ROTATE = "rotate";
+
 export class Rotation {
-  constructor(angle) {
+  type: typeof ROTATE;
+  angle: typeof CLOCKWISE | typeof COUNTER_CLOCKWISE | typeof HALFWAY;
+  constructor(angle: "cc" | "ccw" | "hw") {
     this.type = ROTATE;
     this.angle = angle;
   }
@@ -303,12 +313,17 @@ export class Rotation {
     };
   }
 
-  eq(other) {
+  eq(other: Rotation) {
     return other.type == ROTATE && other.angle == this.angle;
   }
 }
 
+type Modification = Rotation;
+
 export class ModificationDescriptor {
+  pageSpec: PageSpec;
+  modifications: Modification[];
+  id: string | null;
   constructor(pageSpec, modifications = [], id = null) {
     this.pageSpec = pageSpec;
     this.modifications = modifications;
@@ -353,7 +368,11 @@ export class ModificationDescriptor {
   }
 
   json() {
-    const json = {};
+    const json: {
+      id?: string;
+      page?: string;
+      modifications?: Modification[];
+    } = {};
     json.page = this.pageSpec.spec();
     if (this.id != null) json.id = this.id;
     if (this.modifications.length > 0) json.modifications = this.modifications;
@@ -438,6 +457,8 @@ export class ModificationDescriptor {
 }
 
 export class ModificationSpec {
+  specs: ModificationDescriptor[];
+  pageSpec: PageSpec;
   constructor(specs) {
     this.specs = specs;
 

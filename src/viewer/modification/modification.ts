@@ -1,102 +1,123 @@
-import { Svue } from "svue";
 import {
   runify,
   Empty,
   Individual,
   ModificationSpec,
   CLOCKWISE,
-} from "./modifySpec.js";
+} from "./modifySpec";
 
-class Modification extends Svue {
+// TODO replace with typed and de-Svue'd `structure/Document`
+interface Document {
+  pageCount: number;
+  id: string;
+}
+
+class Modification {
+  copyBuffer: ModificationSpec | null;
+  modifySelectedMap: Record<string, unknown>;
+  rewind: boolean;
+  insert: null;
+  history: ModificationSpec[];
+  historyPosition: number;
+  insertDocument: Document | null;
+  documentCache: Record<string, unknown>;
+
   constructor() {
-    super({
-      data() {
-        return {
-          copyBuffer: null,
-          modifySelectedMap: {},
-          rewind: false,
-          insert: null,
-          history: [],
-          historyPosition: 0,
-          insertDocument: null,
-          documentCache: {},
-        };
-      },
-      computed: {
-        historyLength(history) {
-          return history.length;
-        },
-        modifySpec(history, historyLength, historyPosition) {
-          if (historyLength == 0) return null;
-          return history[historyPosition];
-        },
-        pageCount(modifySpec) {
-          if (modifySpec == null) return 0;
-          return modifySpec.length();
-        },
-        modifySelected(modifySelectedMap) {
-          const results = [];
-          for (let key in modifySelectedMap) {
-            if (
-              modifySelectedMap.hasOwnProperty(key) &&
-              modifySelectedMap[key] == true
-            ) {
-              results.push(key);
-            }
-          }
-          return results;
-        },
-        modifyNumSelected(modifySelected) {
-          return modifySelected.length;
-        },
-        modifyHasSelection(modifyNumSelected) {
-          const hasSelection = modifyNumSelected > 0;
-          if (hasSelection) {
-            this.clearInsertion();
-          }
-          return hasSelection;
-        },
-        modifySelectedPageSpec(modifySelected) {
-          return runify(modifySelected);
-        },
-        modifySelectedSpec(modifySpec, modifySelectedPageSpec) {
-          if (modifySpec == null) return null;
-          const selectedSpec = new ModificationSpec(
-            modifySelectedPageSpec.specs.reduce((prev, spec) => {
-              if (spec instanceof Empty) return prev;
-              if (spec instanceof Individual)
-                return prev.concat(modifySpec.slice(spec.pg, 1).specs);
-              return prev.concat(
-                modifySpec.slice(spec.start, spec.length()).specs,
-              );
-            }, []),
-          ).compress();
-          return selectedSpec;
-        },
-        hasInsert(insert) {
-          return insert != null;
-        },
-        hasCopyBuffer(copyBuffer) {
-          return copyBuffer != null;
-        },
-        copyBufferLength(copyBuffer) {
-          if (copyBuffer == null) return 0;
-          return copyBuffer.length();
-        },
-        canUndo(historyPosition) {
-          return historyPosition > 0;
-        },
-        canRedo(historyLength, historyPosition) {
-          return historyPosition + 1 < historyLength;
-        },
-        hasHistory(historyLength) {
-          return historyLength > 1;
-        },
-        uncommittedChanges(historyPosition) {
-          return historyPosition > 0;
-        },
-      },
-    });
+    this.copyBuffer = null;
+    this.modifySelectedMap = {};
+    this.rewind = false;
+    this.insert = null;
+    this.history = [];
+    this.historyPosition = 0;
+    this.insertDocument = null;
+    this.documentCache = null;
+  }
+
+  get historyLength() {
+    return this.history.length;
+  }
+
+  get modifySpec() {
+    if (this.historyLength === 0) return null;
+    return this.history[this.historyPosition];
+  }
+
+  get pageCount() {
+    if (this.modifySpec === null) return 0;
+    return this.modifySpec.length();
+  }
+
+  get modifySelected() {
+    const results = [];
+    for (let key in this.modifySelectedMap) {
+      if (
+        this.modifySelectedMap.hasOwnProperty(key) &&
+        this.modifySelectedMap[key] == true
+      ) {
+        results.push(key);
+      }
+    }
+    return results;
+  }
+
+  get modifyNumSelected() {
+    return this.modifySelected.length;
+  }
+
+  get modifyHasSelection() {
+    const hasSelection = this.modifyNumSelected > 0;
+    if (hasSelection) {
+      this.clearInsertion();
+    }
+    return hasSelection;
+  }
+
+  get modifySelectedPageSpec() {
+    return runify(this.modifySelected);
+  }
+
+  get modifySelectedSpec() {
+    if (this.modifySpec == null) return null;
+    const selectedSpec = new ModificationSpec(
+      this.modifySelectedPageSpec.specs.reduce((prev, spec) => {
+        if (spec instanceof Empty) return prev;
+        if (spec instanceof Individual)
+          return prev.concat(this.modifySpec.slice(spec.pg, 1).specs);
+        return prev.concat(
+          this.modifySpec.slice(spec.start, spec.length()).specs,
+        );
+      }, []),
+    ).compress();
+    return selectedSpec;
+  }
+
+  get hasInsert() {
+    return this.insert != null;
+  }
+
+  get hasCopyBuffer() {
+    return this.copyBuffer != null;
+  }
+
+  get copyBufferLength() {
+    if (this.copyBuffer === null) return 0;
+    return this.copyBuffer.length();
+  }
+
+  get canUndo() {
+    return this.historyPosition > 0;
+  }
+
+  get canRedo() {
+    return this.historyPosition + 1 < this.historyLength;
+  }
+
+  get hasHistory() {
+    return this.historyLength > 1;
+  }
+
+  get uncommittedChanges() {
+    return this.historyPosition > 0;
   }
 
   modifyUnselect() {
