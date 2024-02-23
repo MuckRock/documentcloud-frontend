@@ -27,25 +27,21 @@
     gap: 0.625rem;
 
     border-radius: 0.25rem;
-    border: 1px solid #b5ceed;
-    background: #eef3f9;
+    border: 1px solid var(--color-blue-gray, #b5ceed);
+    background: var(--color-gray-light, #eef3f9);
   }
 
-  .key {
-    color: rgba(21, 51, 89, 0.6);
-    font-family: "Source Sans Pro";
-    font-size: 0.625rem;
+  .key,
+  .value {
+    color: var(--color-blue-dark, rgba(21, 51, 89, 0.6));
+    font-size: var(--font-size-tiny, 0.625rem);
     font-style: italic;
     font-weight: 400;
     line-height: normal;
   }
 
   .value {
-    color: #153359;
-    font-family: "Source Sans Pro";
-    font-size: 0.625rem;
+    color: var(--color-blue-dark, #153359);
     font-style: normal;
-    font-weight: 400;
-    line-height: normal;
   }
 </style>

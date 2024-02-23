@@ -1,7 +1,5 @@
 <script lang="ts">
-  // todo: find a better long-term home for styles
-  import "../style/variables.css";
-  import "../style/global.css";
+  import "@/style/kit.css";
 
   import type { LayoutData } from "./$types";
   import type { User } from "@/api/types/orgAndUser.d.ts";

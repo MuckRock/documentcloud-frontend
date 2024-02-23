@@ -1,4 +1,8 @@
 <script context="module">
+  // legacy css
+  import "@/style/variables.css";
+  import "@/style/global.css";
+
   import { Story } from "@storybook/addon-svelte-csf";
   import NoteEmbed from "../(embed)/documents/[id]/annotations/[note_id]/+page.svelte";
 
