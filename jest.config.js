@@ -6,7 +6,8 @@ export default {
   },
   moduleFileExtensions: ["js", "ts", "svelte"],
   rootDir: "src",
-  setupFiles: ["dotenv/config"],
+  setupFiles: ["dotenv/config", "<rootDir>/langs/i18n.js"],
+  setupFilesAfterEnv: ["<rootDir>/../jest-setup.js"],
   testEnvironment: "jsdom",
   transform: {
     "^.+\\.svelte$": ["svelte-jester", { preprocess: true }],

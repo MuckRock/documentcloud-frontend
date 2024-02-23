@@ -13,7 +13,9 @@
       "@/*": ["src/*"],
       "svelte": ["node_modules/svelte"]
     },
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "moduleResolution": "nodenext",
+    "types": ["@testing-library/jest-dom"]
   },
   "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.js"],
   "exclude": ["public/*"]
