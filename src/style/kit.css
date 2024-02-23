@@ -1,0 +1,37 @@
+/* 
+Updated variables and styles for new SvelteKit routes
+*/
+
+:root {
+  /* fonts */
+  --font-sans: "Source Sans Pro";
+  --font-size-tiny: 0.625rem;
+  --font-size-small: 0.75rem;
+  --font-size-normal: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-largest: 1.5rem;
+
+  /* colors */
+  --color-black: #000;
+  --color-white: #fff;
+
+  --color-gray-light: #eef3f9;
+  --color-gray: #555555;
+  --color-gray-dark: #153359;
+
+  --color-yellow: #ffe325;
+  --color-green: #93e48f;
+  --color-green-shiny: #24cc99;
+  --color-blue: #4294f0;
+  --color-blue-light: #ff785c;
+  --color-blue-dark: #1e508c;
+  --color-blue-gray: #b5ceed;
+  --color-purple: #5c1e8c;
+
+  /* semantic aliases */
+  --color-primary: var(--color-blue);
+  --color-premium: var(--color-green-shiny);
+  --color-note-public: var(--color-yellow);
+  --color-note-private: var(--color-blue-light);
+  --color-note-org: var(--color-green);
+}

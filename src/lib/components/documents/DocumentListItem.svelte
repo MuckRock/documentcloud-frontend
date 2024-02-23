@@ -82,8 +82,8 @@ It's deliberately minimal and can be wrapped in other components to add addition
 
   .thumbnail {
     border-radius: 0.125rem;
-    border: 1px solid #cbcbcb;
-    background: #fff;
+    border: 1px solid var(--color-gray-light, #cbcbcb);
+    background: var(--color-white, #fff);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
   }
 
@@ -98,8 +98,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   h4 {
-    color: #000;
-    font-family: "Source Sans Pro";
+    color: var(--color-black, #000);
     font-size: 1rem;
     font-style: normal;
     font-weight: 600;
@@ -107,8 +106,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   .meta {
-    color: rgba(0, 0, 0, 0.6);
-    font-family: "Source Sans Pro";
+    color: var(--color-gray, rgba(0, 0, 0, 0.6));
     font-size: 0.75rem;
     font-style: normal;
     font-weight: 400;
@@ -116,8 +114,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   .description {
-    color: #000;
-    font-family: "Source Sans Pro";
+    color: var(--color-black, #000);
     font-size: 0.75rem;
     font-style: normal;
     font-weight: 400;
@@ -137,10 +134,9 @@ It's deliberately minimal and can be wrapped in other components to add addition
 
   .open {
     overflow: hidden;
-    color: var(--primary, #4294f0);
+    color: var(--color-primary, #4294f0);
     text-overflow: ellipsis;
-    font-family: "Source Sans Pro";
-    font-size: 0.75rem;
+    font-size: var(--font-size-small, 0.75rem);
     font-style: normal;
     font-weight: 700;
     line-height: normal;

@@ -2,9 +2,8 @@ import type { Preview } from "@storybook/svelte";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { mockDateDecorator } from "storybook-mock-date-decorator";
 
+import "@/style/kit.css";
 import "../src/lib/i18n/index.js";
-import "../src/style/variables.css";
-import "../src/style/global.css";
 
 // Initialize MSW
 initialize({
