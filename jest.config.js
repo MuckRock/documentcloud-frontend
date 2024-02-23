@@ -14,6 +14,7 @@ export default {
     "^.+\\.ts$": ["ts-jest", { useESM: true, tsconfig: "tsconfig.test.json" }],
   },
   transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
+  coverageDirectory: "<rootDir>/../coverage",
   collectCoverageFrom: ["./**/*.{js,ts,svelte}"],
-  coverageReporters: ["html", "text-summary"],
+  coverageReporters: ["lcov", "html", "text-summary"],
 };
