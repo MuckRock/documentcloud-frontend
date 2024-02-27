@@ -1,0 +1,22 @@
+{
+  // "extends": "@tsconfig/svelte/tsconfig.json" /* all options: https://www.typescriptlang.org/tsconfig#resolveJsonModule */,
+  "compilerOptions": {
+    // "ignoreDeprecations": "5.0",
+    // "verbatimModuleSyntax": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "lib": ["es2020", "DOM", "dom.iterable"],
+    "allowJs": true,
+    // "checkJs": true, /* 600+ errors */
+    "baseUrl": "/app",
+    "paths": {
+      "@/*": ["src/*"],
+      "svelte": ["node_modules/svelte"]
+    },
+    "downlevelIteration": true,
+    "moduleResolution": "nodenext",
+    "types": ["@testing-library/jest-dom"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.js"],
+  "exclude": ["public/*"]
+}

@@ -539,10 +539,13 @@
     "requestVerificationAction": "Request Verification to Upload"
   },
   "paginator": {
+    "page": "Page",
     "of": "of",
     "document": "{n, plural, one {Document} other {Documents}}",
-    "next": "Next",
-    "previous": "Previous"
+    "next": "Next Page",
+    "previous": "Previous Page",
+    "first": "First Page",
+    "last": "Last Page"
   },
   "processingBar": {
     "doneProcessing": "Done processing",

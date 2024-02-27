@@ -8,7 +8,7 @@
   import type { Event } from "../runs/ScheduledEvent.svelte";
 
   import Button from "../../common/Button.svelte";
-  import Drawer from "../Drawer.svelte";
+  import Drawer from "../../common/Drawer.svelte";
   import Form, { values } from "./Form.svelte";
   import Header from "./Header.svelte";
   import Selection from "./Selection.svelte";

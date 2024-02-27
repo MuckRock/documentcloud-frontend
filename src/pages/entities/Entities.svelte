@@ -16,6 +16,7 @@
   import closeSvg from "@/assets/close_inline.svg?raw";
 
   import { SPECIAL_CONTACT } from "../../config/config.js";
+  import Paginator from "../../common/Paginator.svelte";
 
   let loading = true;
   let fullText = null;
@@ -163,16 +164,12 @@
     <Link back={true} color={true}>{$_("entities.back")}</Link>
   </p>
   {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.entities.length > 0 || pagePushed)}
-    <p class="paginator">
-      <span>{$_("entities.page")}&nbsp;</span>
-      {#if $entities.entities.hasPrev}
-        <span class="paginate" on:click={() => prevPage()}>←</span>
-      {/if}
-      {#if $entities.entities.hasNext}
-        <span class="paginate" on:click={() => nextPage()}>→</span>
-      {/if}
-    </p>
-
+    <Paginator
+      has_next={$entities.entities.hasNext}
+      has_prev={$entities.entities.hasPrev}
+      on:next={nextPage}
+      on:previous={prevPage}
+    />
     <details>
       <!-- Todo: put in separate component -->
       <summary>{$_("entities.filter")}</summary>
@@ -480,18 +477,6 @@
             }
           }
         }
-      }
-    }
-  }
-
-  .paginator {
-    .paginate {
-      color: $searchSpecial;
-      cursor: pointer;
-      user-select: none;
-
-      &:hover {
-        opacity: 0.8;
       }
     }
   }

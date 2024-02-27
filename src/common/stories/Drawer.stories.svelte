@@ -7,7 +7,7 @@
 
   export const meta = {
     component: Drawer,
-    title: "Add-Ons / Drawer",
+    title: "Common / Drawer",
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
   };
