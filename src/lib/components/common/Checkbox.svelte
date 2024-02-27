@@ -41,7 +41,6 @@
 <style>
   label {
     display: flex;
-    padding-bottom: 1rem;
     align-items: center;
     gap: 0.625rem;
     align-self: stretch;
