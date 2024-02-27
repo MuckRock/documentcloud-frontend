@@ -6,7 +6,7 @@
 </script>
 
 <script>
-  import Search from "../../common/icons/Search.svelte";
+  import Search from "./icons/Search.svelte";
 </script>
 
 <label class="search">

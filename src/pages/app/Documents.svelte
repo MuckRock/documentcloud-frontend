@@ -15,7 +15,7 @@
   import Loader from "@/common/Loader.svelte";
   import Modal from "@/common/Modal.svelte";
   import NoDocuments from "./NoDocuments.svelte";
-  import Paginator from "./Paginator.svelte";
+  import Paginator from "../../common/Paginator.svelte";
   import ProcessingBar from "./ProcessingBar.svelte";
   import SearchBar from "./SearchBar.svelte";
   import SearchLink from "./SearchLink.svelte";
@@ -26,7 +26,12 @@
   // Store properties
   import { layout } from "@/manager/layout.js";
   import { documents } from "@/manager/documents.js";
-  import { search, projectIdUrl } from "@/search/search.js";
+  import {
+    search,
+    searchNext,
+    searchPrev,
+    projectIdUrl,
+  } from "@/search/search.js";
   import {
     orgsAndUsers,
     getUserById,
@@ -220,7 +225,14 @@
       <EmbedFooter {dialog} />
     {:else}
       <div class="narrowshow">
-        <Paginator />
+        <Paginator
+          page={$search.page}
+          totalPages={$search.results?.numPages}
+          on:next={searchNext}
+          on:previous={searchPrev}
+          has_next={$search.hasNext}
+          has_previous={$search.hasPrev}
+        />
       </div>
     {/if}
   </div>

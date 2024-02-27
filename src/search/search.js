@@ -62,6 +62,9 @@ export const search = new Svue({
     hasPrev(prevUrls) {
       return prevUrls.length > 0;
     },
+    page(prevUrls) {
+      return prevUrls.length + 1;
+    },
     start(prevUrls, results, params) {
       if (results == null) return 0;
       var startIndex = 1;

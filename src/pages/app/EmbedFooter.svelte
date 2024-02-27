@@ -1,14 +1,22 @@
 <script>
-  import Paginator from "./Paginator.svelte";
+  import Paginator from "../../common/Paginator.svelte";
   import Logo from "@/common/Logo.svelte";
 
   export let dialog = false;
+  import { search, searchNext, searchPrev } from "@/search/search.js";
 </script>
 
 <div class="footer" class:dialog>
   <div class="background" />
   <div class="paginator">
-    <Paginator />
+    <Paginator
+      page={$search.page}
+      totalPages={$search.results?.numPages}
+      on:next={searchNext}
+      on:previous={searchPrev}
+      has_next={$search.hasNext}
+      has_previous={$search.hasPrev}
+    />
   </div>
   {#if !dialog}
     <div class="logo">
