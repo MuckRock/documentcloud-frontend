@@ -1,6 +1,11 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import MainLayout from "../MainLayout.svelte";
+
+  import documents from "../../api/fixtures/documents/documents.json";
+  import DocumentListItem from "../documents/DocumentListItem.svelte";
+
+  let docList = documents.results as unknown as Document[];
 
   export const meta = {
     title: "Components / Main Layout",
@@ -9,13 +14,13 @@
   };
 </script>
 
-<Story name="Desktop">
+<Template>
   <MainLayout>
-    <ul slot="content">
-      <li>Content Item #1</li>
-      <li>Content Item #2</li>
-      <li>Content Item #3</li>
-    </ul>
+    <div slot="content" style="width: 100%;">
+      {#each docList as document}
+        <DocumentListItem {document} />
+      {/each}
+    </div>
     <ul slot="navigation">
       <li>Nav #1</li>
       <li>Nav #2</li>
@@ -27,4 +32,34 @@
       <li>Action #3</li>
     </ul>
   </MainLayout>
-</Story>
+</Template>
+
+<Story name="Desktop" />
+
+<Story
+  name="Tablet (H)"
+  parameters={{
+    viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
+  }}
+/>
+
+<Story
+  name="Tablet (V)"
+  parameters={{
+    viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
+  }}
+/>
+
+<Story
+  name="Mobile (L)"
+  parameters={{
+    viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
+  }}
+/>
+
+<Story
+  name="Mobile (S)"
+  parameters={{
+    viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
+  }}
+/>
