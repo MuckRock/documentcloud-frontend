@@ -3,30 +3,11 @@
 
   $: searchResults = data.searchResults;
 
+  // local utils
+
   function path(url: URL | string) {
     url = new URL(url);
 
     return url.pathname;
   }
 </script>
-
-<svelte:head>
-  <title>DocumentCloud</title>
-</svelte:head>
-
-<div class="container">
-  <h1>Document search results:</h1>
-
-  {#await searchResults}
-    <p>Loading ...</p>
-  {:then results}
-    {#each results?.results as document}
-      <div class="document">
-        <h2>{document.title}</h2>
-        <p><a href={path(document.canonical_url)}>Open</a></p>
-      </div>
-    {:else}
-      <p>No results.</p>
-    {/each}
-  {/await}
-</div>

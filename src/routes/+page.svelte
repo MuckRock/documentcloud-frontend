@@ -1,4 +1,6 @@
 <script>
+  import "@/style/kit.css";
+
   export let data;
 
   $: me = data.me;
