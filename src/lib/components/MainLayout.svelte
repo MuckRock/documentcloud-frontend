@@ -19,6 +19,8 @@
     <slot name="action" />
     <footer>
       <p>Allan Lasser</p>
+      <p>Language</p>
+      <p>Help</p>
     </footer>
   </nav>
 </div>
@@ -28,7 +30,7 @@
     display: flex;
     width: 100vw;
     height: 100vh;
-    gap: 1rem;
+    gap: 0;
     flex-shrink: 0;
     background: var(--gray-1, #f5f6f7);
   }
@@ -42,11 +44,13 @@
   }
   main {
     display: flex;
-    padding: 4rem 1rem;
+    padding: 4rem 0;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
     flex: 1 0 0;
+    max-height: 100%;
+    overflow-y: auto;
   }
   nav {
     flex: 1 0 0;
