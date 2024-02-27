@@ -19,3 +19,5 @@
 <Story name="on" args={{ status: "on" }} />
 
 <Story name="some" args={{ status: "some" }} />
+
+<Story name="labeled" args={{ label: "Select all" }} />

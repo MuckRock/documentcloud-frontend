@@ -6,17 +6,15 @@
 
   export let disabled = false;
   export let status: "off" | "on" | "some" = "off";
+  export let label = "";
 
   let checkbox: HTMLInputElement;
 
   $: checked = status === "on" || status === "some";
 
-  function handleChange() {
-    if (checked) {
-      dispatch("check", { status });
-    } else {
-      dispatch("uncheck", { status });
-    }
+  function onChange(e) {
+    console.log(e);
+    status = e.target.checked ? "on" : "off";
   }
 </script>
 
@@ -26,7 +24,9 @@
     bind:this={checkbox}
     {disabled}
     {checked}
-    on:input={handleChange}
+    on:input
+    on:change
+    on:input={onChange}
   />
   <span>
     {#if status === "on"}
@@ -35,13 +35,16 @@
       <Dash16 />
     {/if}
   </span>
+  {label}
 </label>
 
 <style>
   label {
-    width: 1.25rem;
-    height: 1.25rem;
-    flex-shrink: 0;
+    display: flex;
+    padding-bottom: 1rem;
+    align-items: center;
+    gap: 0.625rem;
+    align-self: stretch;
   }
 
   input {
