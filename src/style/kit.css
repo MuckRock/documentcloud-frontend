@@ -71,11 +71,16 @@ Updated variables and styles for new SvelteKit routes
 
 html,
 body {
+  margin: 0;
   font-family: var(--font-sans), sans-serif;
   line-height: 1.25;
 }
 
 /* reset */
+* {
+  box-sizing: border-box;
+}
+
 h1,
 h2,
 h3,
