@@ -3,8 +3,9 @@ export type Maybe<T> = T | undefined;
 export type Nullable<T> = T | null;
 
 export interface Page<T> {
-  count: number;
+  count?: number;
   next: Nullable<string>;
   previous: Nullable<string>;
   results: T[];
+  escaped?: boolean;
 }

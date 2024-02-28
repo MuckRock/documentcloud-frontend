@@ -5,9 +5,9 @@
  * Both modules can be merged later.
  * */
 
-import type { User, Org } from "../../api/types/orgAndUser";
-import type { Project } from "../../api/types/project";
-import type { Page } from "../../api/types/common";
+import type { User, Org } from "@/api/types/orgAndUser";
+import type { Project } from "@/api/types/project";
+import type { Page } from "@/api/types/common";
 
 export type access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
@@ -19,26 +19,26 @@ export type Highlight = Record<string, string[]>;
 
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
-  id: number;
+  id: number | string;
   access: access;
-  admin_noindex: boolean;
+  admin_noindex?: boolean;
   asset_url: string | URL;
   canonical_url: string | URL;
   created_at: string | Date;
   data: Record<string, string[]>;
   description: string;
   edit_access: boolean;
-  file_hash: string;
-  noindex: boolean;
+  file_hash?: string;
+  noindex?: boolean;
   language: string;
   organization: number | Org;
   original_extension: string;
   page_count: number;
-  page_spec: string;
-  publish_at: string | null;
+  page_spec?: string;
+  publish_at?: string | null;
   published_url: string | URL;
   related_article: string | URL;
-  revision_control: boolean;
+  revision_control?: boolean;
   slug: string;
   source: string;
   status: status;
@@ -52,14 +52,14 @@ export interface Document {
   sections?: Section[];
 
   // present in search results when query includes hl=true
-  highlight?: Highlight[];
+  highlight?: Highlight;
   note_highlights?: Record<string, Highlight[]>;
 }
 
 export type DocumentResults = Page<Document>;
 
 export interface Note {
-  id: number;
+  id: number | string;
   user: number | User;
   organization: number | Org;
   page_number: number;
@@ -78,7 +78,7 @@ export interface Note {
 export type NoteResults = Page<Note>;
 
 export interface Section {
-  id: number;
+  id: number | string;
   page_number: number;
   title: string;
 }
