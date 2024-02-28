@@ -1,17 +1,48 @@
 <script lang="ts">
   import OrgMenu from "./OrgMenu.svelte";
+  import Button from "./common/Button.svelte";
   import Logo from "./common/Logo.svelte";
-  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
+  import {
+    SidebarCollapse16,
+    SidebarExpand16,
+    X16,
+    XCircle16,
+  } from "svelte-octicons";
+
+  let panel: "navigation" | "action" | null = null;
+
+  function closePanel() {
+    panel = null;
+  }
+
+  function openPanel(name: typeof panel): () => void {
+    return () => {
+      panel = name;
+    };
+  }
 </script>
 
 <div class="container">
-  <nav class="navigation small">
-    <a href="#navigation"><SidebarCollapse16 /></a>
+  <nav class="small">
+    <Button mode="ghost" on:click={openPanel("navigation")}>
+      <SidebarCollapse16 />
+    </Button>
     <a href="/" class="logo"><Logo /></a>
-    <a href="#action"><SidebarExpand16 /></a>
+    <Button mode="ghost" on:click={openPanel("action")}>
+      <SidebarExpand16 />
+    </Button>
   </nav>
-  <nav class="navigation large" id="navigation">
+  <nav
+    class="navigation left large"
+    class:active={panel === "navigation"}
+    id="navigation"
+  >
     <header class="header">
+      <div class="small closePane">
+        <Button mode="ghost" on:click={closePanel}>
+          <SidebarExpand16 />
+        </Button>
+      </div>
       <a href="/" class="logo"><Logo /></a>
     </header>
     <main><slot name="navigation" /></main>
@@ -19,9 +50,19 @@
   <main class="content">
     <slot name="content" />
   </main>
-  <nav class="action large" id="action">
+  <nav class="action right large" class:active={panel === "action"} id="action">
     <header class="header">
       <OrgMenu />
+      <div class="small closePane">
+        <Button
+          mode="ghost"
+          on:click={() => {
+            panel = null;
+          }}
+        >
+          <SidebarCollapse16 />
+        </Button>
+      </div>
     </header>
     <main><slot name="action" /></main>
     <footer>
@@ -30,6 +71,13 @@
       <p>Help</p>
     </footer>
   </nav>
+  <div
+    class="small overlay"
+    class:active={panel !== null}
+    role="presentation"
+    on:click={closePanel}
+    on:keydown={closePanel}
+  />
 </div>
 
 <style>
@@ -89,42 +137,110 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.875rem;
+
     border-top: 1px solid var(--gray-2, #d8dee2);
     background: var(--gray-1, #f5f6f7);
   }
 
-  nav.small {
+  /* Start Mobile Styles */
+  /* When the viewport is smaller than 1024px, we move both sidebars
+  into a fixed position, then transform them to an offscreen position.
+  Then, when a button in a small-only navigation bar is clicked,
+  the appropriate sidebar will move out into a visible position. */
+
+  .small {
     display: none;
-    flex: 0 0 0;
-    max-width: unset;
   }
 
-  /* Mobile Styles */
+  nav.small {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    flex: 0 0 0;
+    max-width: unset;
+
+    border-bottom: 1px solid var(--gray-2, #d8dee2);
+  }
+
+  nav.small .logo {
+    height: 1.5rem;
+    width: auto;
+  }
+
+  .small.overlay {
+    display: block;
+    visibility: hidden;
+  }
+
   @media (max-width: 64rem) {
     .container {
       flex-direction: column;
     }
+    .small {
+      display: block;
+    }
     nav.large {
+      display: flex;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      background: var(--gray-1, #f5f6f7);
+      z-index: 2;
+      transition: transform 0.25s ease-in-out;
+      overflow: hidden;
+    }
+    nav.large.right {
+      transform: translateX(100%);
+      right: 0;
+      border-top-left-radius: 1rem;
+      border-bottom-left-radius: 1rem;
+    }
+    nav.large.left {
+      left: 0;
+      transform: translateX(-100%);
+      border-top-right-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+    }
+    nav.large.active {
+      display: flex;
+      transform: translateX(0);
+      transition: transform 0.25s ease-in-out;
+    }
+    nav.large header {
+      align-items: center;
+      flex-direction: row-reverse;
+      padding: 0.5rem;
+    }
+    nav.large .logo {
       display: none;
     }
     nav.small {
       display: flex;
-      flex-direction: row;
-      align-items: center;
+    }
+    .content {
       padding: 0.5rem;
     }
-    nav.small .logo {
-      flex: 1 0 0;
-      height: 1.5rem;
-      width: auto;
+    .small.overlay {
+      position: fixed;
+      z-index: 1;
+      background: var(--gray-5, #233944);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      transition:
+        opacity 0.25s linear,
+        visibility 0s linear 0.25s;
     }
-    nav.small a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    nav.small svg {
-      display: block;
+    .small.overlay.active {
+      visibility: visible;
+      opacity: 0.75;
+      transition:
+        opacity 0.25s linear,
+        visibility 0s linear 0s;
     }
   }
+  /* End Mobile Styles */
 </style>

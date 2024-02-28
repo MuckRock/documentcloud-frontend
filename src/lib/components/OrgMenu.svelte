@@ -25,6 +25,7 @@
     width: 100%;
     display: flex;
     gap: 0.5rem;
+    flex: 1 0 0;
   }
   .org {
     display: flex;
@@ -64,5 +65,22 @@
     flex: 0 0 0;
     align-self: stretch;
     fill: var(--premium);
+    height: 2rem;
+    width: 2rem;
+  }
+
+  /* Small styles */
+  @media (max-width: 64rem) {
+    .avatar {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+    .name {
+      font-size: var(--font-l, 1.25rem);
+    }
+    .premium {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
   }
 </style>
