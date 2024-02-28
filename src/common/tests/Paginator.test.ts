@@ -1,5 +1,5 @@
-import { jest } from "@jest/globals";
-import { render, screen, fireEvent } from "@testing-library/svelte";
+import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/svelte";
 import { userEvent } from "@testing-library/user-event";
 
 import Paginator from "../Paginator.svelte";
@@ -26,7 +26,7 @@ describe("Paginator", () => {
     const results = render(Paginator, {
       props: { has_previous: true, has_next: true },
     });
-    const mockPrevious = jest.fn();
+    const mockPrevious = vi.fn();
     results.component.$on("previous", mockPrevious);
     const previous = screen.getByTitle(/Previous/);
     await user.click(previous);
@@ -38,7 +38,7 @@ describe("Paginator", () => {
     const results = render(Paginator, {
       props: { has_previous: true, has_next: true },
     });
-    const mockNext = jest.fn();
+    const mockNext = vi.fn();
     results.component.$on("next", mockNext);
     const next = screen.getByTitle(/Next/);
     await user.click(next);
@@ -90,7 +90,7 @@ describe("Paginator", () => {
         has_next: true,
       },
     });
-    const mockGoTo = jest.fn();
+    const mockGoTo = vi.fn();
     results.component.$on("goTo", mockGoTo);
     const first = screen.getByTitle(/First/);
     await user.click(first);
@@ -115,7 +115,7 @@ describe("Paginator", () => {
         has_next: true,
       },
     });
-    const mockGoTo = jest.fn();
+    const mockGoTo = vi.fn();
     results.component.$on("goTo", mockGoTo);
     const pageNumber = screen.getByRole("spinbutton");
     expect(pageNumber).toHaveValue(1);

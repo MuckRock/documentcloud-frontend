@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
-  import KV from "../common/KV.svelte";
+  import KV from "../KV.svelte";
 
   export const meta = {
     title: "Components / Common / KV",
