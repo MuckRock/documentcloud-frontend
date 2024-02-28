@@ -25,19 +25,19 @@
 
 <Story name="slotted">
   <Button>
-    <PlusCircle16 fill="#fff" /> Upload
+    <PlusCircle16 /> Upload
   </Button>
 </Story>
 
 <Story name="slotted ghost">
   <Button ghost primary>
-    <PlusCircle16 fill="#4294F0" /> Upload
+    <PlusCircle16 /> Upload
   </Button>
 </Story>
 
 <Story name="disabled ghost">
   <Button ghost disabled>
-    <PlusCircle16 fill="#4294F0" /> Upload
+    <PlusCircle16 /> Upload
   </Button>
 </Story>
 
