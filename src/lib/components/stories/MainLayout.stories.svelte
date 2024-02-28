@@ -1,11 +1,12 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import MainLayout from "../MainLayout.svelte";
+  import type { Document } from "$lib/api/types";
 
   import documents from "../../api/fixtures/documents/documents.json";
   import DocumentListItem from "../documents/DocumentListItem.svelte";
 
-  let docList = documents.results as unknown as Document[];
+  let docList = documents.results as Document[];
 
   export const meta = {
     title: "Components / Main Layout",
