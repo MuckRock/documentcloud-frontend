@@ -56,6 +56,7 @@
       border 0.2s ease;
     user-select: none;
     width: 1.25em;
+    box-sizing: border-box;
   }
 
   span:hover {
