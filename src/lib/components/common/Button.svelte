@@ -55,6 +55,7 @@
     border: none;
     box-shadow: none;
     color: var(--primary, #4294f0);
+    fill: var(--primary, #4294f0);
   }
 
   button:disabled,
