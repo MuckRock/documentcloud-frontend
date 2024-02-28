@@ -16,8 +16,8 @@
 
 <Story name="off" />
 
-<Story name="on" args={{ status: "on" }} />
+<Story name="on" args={{ checked: true }} />
 
-<Story name="some" args={{ status: "some" }} />
+<Story name="some" args={{ indeterminate: true }} />
 
 <Story name="labeled" args={{ label: "Select all" }} />

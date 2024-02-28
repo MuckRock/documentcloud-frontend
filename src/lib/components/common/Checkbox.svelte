@@ -1,21 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { Check16, Dash16 } from "svelte-octicons";
 
-  const dispatch = createEventDispatcher();
-
   export let disabled = false;
-  export let status: "off" | "on" | "some" = "off";
+  export let checked = false;
+  export let indeterminate = false;
+
   export let label = "";
 
   let checkbox: HTMLInputElement;
-
-  $: checked = status === "on" || status === "some";
-
-  function onChange(e) {
-    console.log(e);
-    status = e.target.checked ? "on" : "off";
-  }
 </script>
 
 <label>
@@ -23,15 +15,15 @@
     type="checkbox"
     bind:this={checkbox}
     {disabled}
-    {checked}
+    bind:checked
+    bind:indeterminate
     on:input
     on:change
-    on:input={onChange}
   />
   <span>
-    {#if status === "on"}
+    {#if checked}
       <Check16 />
-    {:else if status === "some"}
+    {:else if indeterminate}
       <Dash16 />
     {/if}
   </span>
@@ -81,7 +73,8 @@
     border: solid 1px var(--primary, #4294f0);
   }
 
-  input:checked + span {
+  input:checked + span,
+  input:indeterminate + span {
     background: var(--primary, #4294f0);
     border: solid 1px var(--primary, #4294f0);
   }
