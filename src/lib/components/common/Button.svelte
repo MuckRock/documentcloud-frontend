@@ -32,7 +32,7 @@
     border-radius: 0.5rem;
     border: 1px solid var(--gray-4, #5c717c);
     background: var(--gray-3, #99a8b3);
-    box-shadow: 0px 2px 0px 0px #5c717c;
+    box-shadow: 0px 2px 0px 0px var(--gray-4, #5c717c);
 
     color: var(--gray-1, #f5f6f7);
     fill: var(--gray-1, #f5f6f7);
