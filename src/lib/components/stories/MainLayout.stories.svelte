@@ -3,8 +3,24 @@
   import MainLayout from "../MainLayout.svelte";
   import type { Document } from "$lib/api/types";
 
+  import { _ } from "svelte-i18n";
+  import {
+    Globe16,
+    Infinity16,
+    Lock16,
+    Organization16,
+    FileDirectory16,
+    Pencil16,
+    Plug16,
+    PlusCircle16,
+    Share16,
+  } from "svelte-octicons";
+  import Button from "$lib/components/common/Button.svelte";
+  import SidebarItem from "$lib/components/SidebarItem.svelte";
+
   import documents from "../../api/fixtures/documents/documents.json";
   import DocumentListItem from "../documents/DocumentListItem.svelte";
+  import Flex from "../common/Flex.svelte";
 
   let docList = documents.results as Document[];
 
@@ -17,21 +33,33 @@
 
 <Template>
   <MainLayout>
-    <div slot="content" style="width: 100%;">
+    <svelte:fragment slot="navigation">
+      <Flex direction="column">
+        <SidebarItem><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem>
+        <SidebarItem><Globe16 /> {$_("projects.yourPubDocuments")}</SidebarItem>
+        <SidebarItem><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem>
+        <SidebarItem
+          ><Organization16 />
+          {$_("projects.orgDocuments", {
+            values: { name: "MuckRock" },
+          })}</SidebarItem
+        >
+      </Flex>
+    </svelte:fragment>
+    <svelte:fragment slot="content">
       {#each docList as document}
         <DocumentListItem {document} />
       {/each}
-    </div>
-    <ul slot="navigation">
-      <li>Nav #1</li>
-      <li>Nav #2</li>
-      <li>Nav #3</li>
-    </ul>
-    <ul slot="action">
-      <li>Action #1</li>
-      <li>Action #2</li>
-      <li>Action #3</li>
-    </ul>
+    </svelte:fragment>
+    <svelte:fragment slot="action">
+      <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
+      <Flex direction="column">
+        <SidebarItem disabled><Share16 /> Share…</SidebarItem>
+        <SidebarItem disabled><Pencil16 /> Edit…</SidebarItem>
+        <SidebarItem disabled><FileDirectory16 /> Organize…</SidebarItem>
+        <SidebarItem disabled><Plug16 /> Run…</SidebarItem>
+      </Flex>
+    </svelte:fragment>
   </MainLayout>
 </Template>
 
