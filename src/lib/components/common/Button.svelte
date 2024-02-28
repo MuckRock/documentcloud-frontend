@@ -36,6 +36,7 @@
 
     color: var(--gray-1, #f5f6f7);
     text-align: center;
+    font-family: var(--font-sans, "Source Sans Pro");
     font-size: var(--font-m, 1rem);
     font-weight: var(--font-semibold, 600);
   }
