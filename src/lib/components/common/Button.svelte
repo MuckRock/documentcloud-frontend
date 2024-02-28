@@ -64,6 +64,12 @@
     background: var(--blue-1, #eef3f9);
   }
 
+  @media (hover: none) {
+    .ghost:hover {
+      background: transparent;
+    }
+  }
+
   button:disabled,
   .disabled {
     opacity: 0.5;
