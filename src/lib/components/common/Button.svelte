@@ -35,6 +35,7 @@
     box-shadow: 0px 2px 0px 0px #5c717c;
 
     color: var(--gray-1, #f5f6f7);
+    fill: var(--gray-1, #f5f6f7);
     text-align: center;
     font-family: var(--font-sans, "Source Sans Pro");
     font-size: var(--font-m, 1rem);
