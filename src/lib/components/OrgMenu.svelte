@@ -1,0 +1,68 @@
+<script lang="ts">
+  import Premium from "@/common/icons/Premium.svelte";
+  import { TriangleDown16 } from "svelte-octicons";
+
+  const name = "MuckRock";
+  const src =
+    "https://squarelet-staging.s3.amazonaws.com/media/org_avatars/logo_uEHCMva.png";
+</script>
+
+<div class="container">
+  <div class="org">
+    <div class="avatar">
+      <img alt="MuckRock's avatar" {src} />
+    </div>
+    <p class="name">{name}</p>
+    <span class="arrow"><TriangleDown16 /></span>
+  </div>
+  <div class="premium">
+    <Premium size={2} />
+  </div>
+</div>
+
+<style>
+  .container {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .org {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex: 1 0 0;
+  }
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: var(--gray-2, #d8dee2);
+  }
+  .avatar img {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+  .name {
+    color: #233944;
+    font-family: var(--font-sans, "Source Sans Pro");
+    font-size: var(--font-xl, 1.5rem);
+    font-weight: var(--font-semibold, 600);
+    line-height: 1rem;
+  }
+  .arrow {
+    width: 1rem;
+    height: 1rem;
+    fill: #5c717c;
+  }
+  .premium {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 0;
+    align-self: stretch;
+    fill: var(--premium);
+  }
+</style>
