@@ -19,9 +19,9 @@
 
 <Story name="link" args={{ href: "https://www.documentcloud.org" }} />
 
-<Story name="primary" args={{ primary: true }} />
+<Story name="primary" args={{ mode: "primary" }} />
 
-<Story name="ghost" args={{ ghost: true }} />
+<Story name="ghost" args={{ mode: "ghost" }} />
 
 <Story name="slotted">
   <Button>
@@ -30,13 +30,13 @@
 </Story>
 
 <Story name="slotted ghost">
-  <Button ghost primary>
+  <Button mode="ghost">
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
 <Story name="disabled ghost">
-  <Button ghost disabled>
+  <Button mode="ghost" disabled>
     <PlusCircle16 /> Upload
   </Button>
 </Story>
