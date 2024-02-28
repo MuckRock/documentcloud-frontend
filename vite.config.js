@@ -33,6 +33,7 @@ export default defineConfig({
   },
 
   test: {
+    setupFiles: ["./vitest-setup.js"],
     include: ["src/**/*.{test,spec}.{js,ts}"],
     exclude: [
       ...configDefaults.exclude,
