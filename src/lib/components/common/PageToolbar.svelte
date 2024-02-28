@@ -23,6 +23,7 @@
     display: flex;
     height: 2.5rem;
     padding: 0.625rem 1rem;
+    box-sizing: border-box;
     justify-content: space-between;
     align-items: center;
     width: 100%;
