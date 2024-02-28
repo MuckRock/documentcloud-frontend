@@ -1,6 +1,4 @@
 <svg
-  width="182"
-  height="32"
   viewBox="0 0 182 32"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
@@ -24,6 +22,8 @@
 <style>
   .icon {
     display: block;
+    height: 100%;
+    width: auto;
   }
   #DocumentCloud {
     fill: var(--gray-5, #233944);

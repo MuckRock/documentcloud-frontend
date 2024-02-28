@@ -1,19 +1,25 @@
 <script lang="ts">
   import OrgMenu from "./OrgMenu.svelte";
   import Logo from "./common/Logo.svelte";
+  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
 </script>
 
 <div class="container">
-  <nav class="navigation bar">
+  <nav class="navigation small">
+    <a href="#navigation"><SidebarCollapse16 /></a>
+    <a href="/" class="logo"><Logo /></a>
+    <a href="#action"><SidebarExpand16 /></a>
+  </nav>
+  <nav class="navigation large" id="navigation">
     <header class="header">
-      <a href="/"><Logo /></a>
+      <a href="/" class="logo"><Logo /></a>
     </header>
     <main><slot name="navigation" /></main>
   </nav>
   <main class="content">
     <slot name="content" />
   </main>
-  <nav class="action bar">
+  <nav class="action large" id="action">
     <header class="header">
       <OrgMenu />
     </header>
@@ -60,6 +66,10 @@
     flex-direction: column;
     position: relative;
   }
+  .logo {
+    height: 2rem;
+    width: auto;
+  }
   .content {
     padding: 4.0625rem 0;
   }
@@ -81,5 +91,40 @@
     gap: 0.875rem;
     border-top: 1px solid var(--gray-2, #d8dee2);
     background: var(--gray-1, #f5f6f7);
+  }
+
+  nav.small {
+    display: none;
+    flex: 0 0 0;
+    max-width: unset;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 64rem) {
+    .container {
+      flex-direction: column;
+    }
+    nav.large {
+      display: none;
+    }
+    nav.small {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0.5rem;
+    }
+    nav.small .logo {
+      flex: 1 0 0;
+      height: 1.5rem;
+      width: auto;
+    }
+    nav.small a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    nav.small svg {
+      display: block;
+    }
   }
 </style>
