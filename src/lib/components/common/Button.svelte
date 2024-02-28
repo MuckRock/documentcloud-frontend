@@ -57,6 +57,10 @@
     color: var(--primary, #4294f0);
     fill: var(--primary, #4294f0);
   }
+  
+  .ghost:hover {
+    background: var(--blue-1, #eef3f9);
+  }
 
   button:disabled,
   .disabled {
