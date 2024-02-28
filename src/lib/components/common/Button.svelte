@@ -49,7 +49,7 @@
   .primary {
     border-color: var(--blue-4, #1367d0);
     background: var(--primary, #4294f0);
-    box-shadow: 0px 2px 0px 0px #1367d0;
+    box-shadow: 0px 2px 0px 0px var(--blue-4, #1367d0);
   }
 
   .ghost {
