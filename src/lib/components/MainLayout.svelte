@@ -1,4 +1,5 @@
 <script lang="ts">
+  import OrgMenu from "./OrgMenu.svelte";
   import Logo from "./common/Logo.svelte";
 </script>
 
@@ -7,16 +8,16 @@
     <header class="header">
       <a href="/"><Logo /></a>
     </header>
-    <slot name="navigation" />
+    <main><slot name="navigation" /></main>
   </nav>
   <main class="content">
     <slot name="content" />
   </main>
   <nav class="action bar">
     <header class="header">
-      <p>MuckRock</p>
+      <OrgMenu />
     </header>
-    <slot name="action" />
+    <main><slot name="action" /></main>
     <footer>
       <p>Allan Lasser</p>
       <p>Language</p>
@@ -44,10 +45,9 @@
   }
   main {
     display: flex;
-    padding: 4rem 0;
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    padding: 1rem;
+    gap: 2rem;
     flex: 1 0 0;
     max-height: 100%;
     overflow-y: auto;
@@ -58,8 +58,10 @@
     max-width: 18rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     position: relative;
+  }
+  .content {
+    padding: 4.0625rem 0;
   }
   .navigation {
     border-right: 1px solid var(--gray-2, #d8dee2);
@@ -70,16 +72,14 @@
   .action footer {
     display: flex;
     width: 100%;
-    position: absolute;
-    bottom: 0rem;
-    left: 0;
-    right: 0;
+    position: sticky;
+    bottom: 0;
     padding: 1rem;
+    z-index: 1;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.875rem;
     border-top: 1px solid var(--gray-2, #d8dee2);
     background: var(--gray-1, #f5f6f7);
-    z-index: 1;
   }
 </style>

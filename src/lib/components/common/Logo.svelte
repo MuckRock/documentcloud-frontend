@@ -5,6 +5,7 @@
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
   title="DocumentCloud"
+  class="icon"
 >
   <path
     id="DocumentCloud"
@@ -21,6 +22,9 @@
 </svg>
 
 <style>
+  .icon {
+    display: block;
+  }
   #DocumentCloud {
     fill: var(--gray-5, #233944);
   }
