@@ -2,12 +2,7 @@
   import OrgMenu from "./OrgMenu.svelte";
   import Button from "./common/Button.svelte";
   import Logo from "./common/Logo.svelte";
-  import {
-    SidebarCollapse16,
-    SidebarExpand16,
-    X16,
-    XCircle16,
-  } from "svelte-octicons";
+  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
 
   let panel: "navigation" | "action" | null = null;
 
