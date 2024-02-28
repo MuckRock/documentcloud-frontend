@@ -181,6 +181,8 @@
       display: block;
     }
     nav.large {
+      min-width: 33vh;
+      max-width: 100vh;
       display: flex;
       position: fixed;
       top: 0;
