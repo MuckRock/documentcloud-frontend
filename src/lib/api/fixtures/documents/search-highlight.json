@@ -1,0 +1,1628 @@
+{
+  "count": 316330,
+  "next": "https://api.www.documentcloud.org/api/documents/search/?q=boston&hl=true&cursor=AoMIQj4dOnHip%2FOcgwMoMjIzOTM0MDc%3D",
+  "previous": null,
+  "results": [
+    {
+      "id": "2287364",
+      "user": 3379,
+      "organization": 487,
+      "access": "public",
+      "status": "success",
+      "title": "Boston",
+      "slug": "boston",
+      "language": "eng",
+      "created_at": "2015-08-17T21:35:43.662Z",
+      "updated_at": "2020-12-14T16:11:34.649Z",
+      "page_count": 2,
+      "original_extension": "pdf",
+      "file_hash": "fa49540608a414fdc7824724757663d708877d6e",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "8/17/2015\n\nPOs   SmartProcure 2.0\n\nPurchase Order\n\nDate: 5/14/2013\nAmount: $8,446.88\n\nVoucher-1877396\n\n City of <em>Boston</em>\n\n Keyw\n\n One City Hall Square\n<em>Boston</em>, MA 02201\n www.cityofboston.gov\n(http://www.cityofboston.gov)\n\n 1334 Ashton Road\nHanover, MD 21076\n www.keywcorp.com (http://www.keywcorp.com/)\n Rachel Brelsford (mailto:gpal@keywcorp.com)\n gpal@keywcorp.com (mailto:gpal@keywcorp.com)\n +1 (443) 270­5300\n +1 (443) 270­5301\n\nLine Items\nLine\n\nDescription\n\nCategory\n\nQuantity\n\nPrice\n\nAmount\n\n1\n\nINVESTIGATIVE SERVICES\n\nEquipment Other\n\n1\n\n$8,446.88\n\n$8,446.88\n\nTotal\n\n$8,446.88\n\nBuyer and Initiator\nhttps://app.smartprocure.us/#/pos/11041_Voucher­1877396\n\n1/2\n\n "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/2287364-boston"
+    },
+    {
+      "id": "23066715",
+      "user": 20080,
+      "organization": 125,
+      "access": "public",
+      "status": "success",
+      "title": "BOSTON",
+      "slug": "boston",
+      "source": "CIA CREST Database",
+      "language": "eng",
+      "created_at": "2022-09-27T23:29:24.943Z",
+      "updated_at": "2022-11-09T02:01:30.550Z",
+      "page_count": 1,
+      "projects": [209284],
+      "original_extension": "pdf",
+      "file_hash": "6c742445547047e262204f9e47c23d956468f51b",
+      "description": "",
+      "published_url": "",
+      "related_article": "",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {
+        "url": [
+          "https://www.cia.gov/library/readingroom/document/cia-rdp96-00792r000700150001-4"
+        ],
+        "file": [
+          "https://www.cia.gov/library/readingroom/docs/cia-rdp96-00792r000700150001-4.pdf"
+        ],
+        "collection": ["STARGATE"],
+        "content_type": ["PHOTO"],
+        "document_type": ["CREST"],
+        "document_number": ["CIA-RDP96-00792R000700150001-4"],
+        "sequence_number": ["1"],
+        "release_decision": ["RIFPUB"],
+        "document_page_count": ["1"],
+        "document_creation_date": ["November 4, 2016"],
+        "document_publication_date": ["September 1, 2000"],
+        "cid": ["bafkreicksxsqchileiu2meawm3x6fqxh67i3eq346c3rgilueab7rchgwa"],
+        "more3_link": [""],
+        "more2_link": [""],
+        "more2_title": [""],
+        "case_number": [""],
+        "more4_title": [""],
+        "more5_link": [""],
+        "more1_title": [""],
+        "more3_title": [""],
+        "estuaryId": ["47978628"],
+        "ipfsUrl": [
+          "https://dweb.link/ipfs/bafkreicksxsqchileiu2meawm3x6fqxh67i3eq346c3rgilueab7rchgwa"
+        ],
+        "more4_link": [""],
+        "more5_title": [""],
+        "publication_date": [""],
+        "more1_link": [""]
+      },
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/23066715-boston"
+    },
+    {
+      "id": "3513915",
+      "user": 1083,
+      "organization": 13,
+      "access": "public",
+      "status": "success",
+      "title": "Boston",
+      "slug": "Boston",
+      "language": "eng",
+      "created_at": "2017-03-09T17:22:28.739Z",
+      "updated_at": "2020-11-10T19:28:51.651Z",
+      "page_count": 22,
+      "original_extension": "pdf",
+      "file_hash": "c534a03b8cf20b32f92e85994f449d173d83fa19",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/3513915-Boston"
+    },
+    {
+      "id": "6243580",
+      "user": 22938,
+      "organization": 1569,
+      "access": "public",
+      "status": "success",
+      "title": "BOSTON",
+      "slug": "BOSTON",
+      "language": "eng",
+      "created_at": "2019-08-06T03:49:32.523Z",
+      "updated_at": "2020-11-09T15:09:40.160Z",
+      "page_count": 3,
+      "projects": [45199],
+      "original_extension": "doc",
+      "file_hash": "b34bd64ff2bb977ba0ffba688c889eec80a2249c",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "It was one of these new weapons, a FN Herstal pepper-spray pellet gun, that killed the Emerson College\nstudent in <em>Boston</em> after the pennant-clinching game, the police here have said. "
+        ],
+        "page_no_2": [
+          "While New York has 36,000 police officers, Chief Timoney\nsaid, <em>Boston</em> has only about 2,200 and Miami only 1,100.\n"
+        ],
+        "page_no_3": [
+          "The crowd, estimated by the city at 3.2 million people, was\nthe largest ever in <em>Boston</em>, according to Mayor Thomas M. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/6243580-BOSTON"
+    },
+    {
+      "id": "6243452",
+      "user": 22938,
+      "organization": 1569,
+      "access": "public",
+      "status": "success",
+      "title": "BOSTON",
+      "slug": "BOSTON",
+      "language": "eng",
+      "created_at": "2019-08-06T03:31:44.560Z",
+      "updated_at": "2020-11-09T15:09:40.130Z",
+      "page_count": 3,
+      "projects": [45199],
+      "original_extension": "doc",
+      "file_hash": "b34bd64ff2bb977ba0ffba688c889eec80a2249c",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "It was one of these new weapons, a FN Herstal pepper-spray pellet gun, that killed the Emerson College\nstudent in <em>Boston</em> after the pennant-clinching game, the police here have said. "
+        ],
+        "page_no_2": [
+          "While New York has 36,000 police officers, Chief Timoney\nsaid, <em>Boston</em> has only about 2,200 and Miami only 1,100.\n"
+        ],
+        "page_no_3": [
+          "The crowd, estimated by the city at 3.2 million people, was\nthe largest ever in <em>Boston</em>, according to Mayor Thomas M. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/6243452-BOSTON"
+    },
+    {
+      "id": "70328",
+      "user": 1083,
+      "organization": 13,
+      "access": "public",
+      "status": "success",
+      "title": "Boston",
+      "slug": "boston",
+      "language": "eng",
+      "created_at": "2011-02-20T08:00:58.777Z",
+      "updated_at": "2020-11-10T19:28:47.863Z",
+      "page_count": 1,
+      "original_extension": "pdf",
+      "related_article": "http://www.boston.com/ae/music/articles/2011/02/20/lawsuits_expose_details_of_delps_private_turmoil/",
+      "published_url": "http://www.boston.com/ae/music/boston_emails2",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/70328-boston"
+    },
+    {
+      "id": "21020996",
+      "user": 102442,
+      "organization": 32718,
+      "access": "public",
+      "status": "success",
+      "title": "BOSTON-e57ccc8cd255272caba251c540347f304f10438e",
+      "slug": "boston-e57ccc8cd255272caba251c540347f304f10438e",
+      "language": "eng",
+      "created_at": "2021-07-30T03:04:06.723Z",
+      "updated_at": "2021-07-30T03:04:18.818Z",
+      "page_count": 1,
+      "projects": [204059],
+      "original_extension": "pdf",
+      "file_hash": "47b14c368f63e14489dab05bd7dd04eced439aa1",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "Disclosure\nTHE NYPD SUBSTANTIATED THE FOLLOWING ALLEGATION, DATED 03/04/2006, AGAINST MOS <em>BOSTON</em>\nALEGATON\n© DEPARTMENT RULES VIOLATION - OFF DUTY EMPLOYMENT\nCASE STATUS. "
+        ]
+      },
+      "data": {
+        "fileid": ["e57ccc8cd255272caba251c540347f304f10438e"],
+        "mos_name": ["BOSTON"]
+      },
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/21020996-boston-e57ccc8cd255272caba251c540347f304f10438e"
+    },
+    {
+      "id": "4229282",
+      "user": 6984,
+      "organization": 85,
+      "access": "public",
+      "status": "success",
+      "title": "Boston,_Sherry_1_31_16_",
+      "slug": "Boston-Sherry-1-31-16",
+      "source": "http://www.gaeasyfile.com/",
+      "language": "eng",
+      "created_at": "2017-11-15T19:22:30.046Z",
+      "updated_at": "2021-01-07T19:58:07.209Z",
+      "page_count": 1,
+      "projects": [36073],
+      "original_extension": "pdf",
+      "file_hash": "b2de6b438527a3d4c8760c3ac95d51aa389e1d71",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          ". §21-5-34(d)(d.1)(1),\n\nSherry <em>Boston</em>\n\nis a candidate for / public officer of\n\n(Full Name of Candidate)\n\nSolicitor General\n(Office Sought/or Held)\n\nDeKalb County Board of Registration\nin & Elections\n(City or County)\n\nBy submitting this form I am affirming that I, the above named candidate, do not intend to accept during\nthis election cycle* a combined total of contributions exceeding $2,500.00 for the campaign nor make a\ncombined total of expenditures exceeding $2,500. "
+        ]
+      },
+      "data": {
+        "date": ["1/31/16"],
+        "office": ["Solicitor General"],
+        "candidate": ["Boston, Sherry"],
+        "jurisdiction": ["DeKalb County Board of Registration & Elections"],
+        "document_name": ["<$2500 Affidavit"],
+        "document_type": ["<$2500 Affidavit"]
+      },
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/4229282-Boston-Sherry-1-31-16"
+    },
+    {
+      "id": "3437950",
+      "user": 1083,
+      "organization": 13,
+      "access": "public",
+      "status": "success",
+      "title": "Boston Order",
+      "slug": "Boston-Order",
+      "language": "eng",
+      "created_at": "2017-01-29T15:00:14.256Z",
+      "updated_at": "2020-11-10T19:28:54.853Z",
+      "page_count": 3,
+      "original_extension": "pdf",
+      "file_hash": "509479371b22ed9db73d68186de7d482a7bba93c",
+      "related_article": "http://www.bostonglobe.com/metro/2017/01/29/judges-put-temporary-stop-trump-immigration-order/UQiz2kEXJMDQHuiIFoguuJ/story.html",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/3437950-Boston-Order"
+    },
+    {
+      "id": "1390996",
+      "user": 659,
+      "organization": 125,
+      "access": "public",
+      "status": "success",
+      "title": "851696 Boston",
+      "slug": "851696-boston",
+      "source": "Department of Corrections and Rehabilitation",
+      "language": "eng",
+      "created_at": "2015-01-06T21:58:15.455Z",
+      "updated_at": "2021-01-13T01:30:02.690Z",
+      "page_count": 1,
+      "original_extension": "pdf",
+      "file_hash": "3ab71d546b463810c2cb38afafa49724e08b69fc",
+      "related_article": "https://www.muckrock.com/foi/california-52/ca-doc-contractsmous-re-cai-boston-avenue-15063/",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "Lipton:\n\nPUBLIC RECORDS REQUEST\n\nThis letter is in response to your'request for public records dated December 20, 2014 and\nreceived on December 22, 2014, for the following records:\n\nAll contracts (and their amendments) and memorandums of understanding entered into\nby the California Department of Corrections and Rehabilitation (CDCR) for services and\nactivities related to CAI-<em>Boston</em> Avenue.\n\n"
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/1390996-851696-boston"
+    },
+    {
+      "id": "23926033",
+      "user": 20936,
+      "organization": 1088,
+      "access": "public",
+      "status": "success",
+      "title": "Boston affidavit",
+      "slug": "boston-affidavit",
+      "language": "eng",
+      "created_at": "2023-08-24T17:34:38.959Z",
+      "updated_at": "2023-08-24T23:38:06.543Z",
+      "page_count": 37,
+      "original_extension": "pdf",
+      "file_hash": "5dad468a5ea6b4b1674070b8b18dcf3089370293",
+      "noindex": false,
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "AFFIDAVIT OF SHERRY <em>BOSTON</em>\n1, SHERRY <em>BOSTON</em>, state as follows:\n\n1. reside in Atlanta, Georgia, in DeKalb County. "
+        ],
+        "page_no_11": [
+          "Se\nia\n5 ig SHERRY <em>BOSTON</em>, DISTRICT ATTORNEY\n——\nThe mission of the Office of the DeKalb County District Attorney is to safeguard\nour community through vigorous and fair prosecution of felony offenses.\noccurring within the Stone Mountain Judicial Circuit.\n"
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/23926033-boston-affidavit"
+    },
+    {
+      "id": "7033949",
+      "user": 13178,
+      "organization": 1602,
+      "access": "public",
+      "status": "success",
+      "title": "Boston TX",
+      "slug": "Boston-TX",
+      "language": "eng",
+      "created_at": "2020-08-11T23:23:32.322Z",
+      "updated_at": "2020-11-02T20:26:34.882Z",
+      "page_count": 12,
+      "original_extension": "pdf",
+      "file_hash": "5fd8944929664a8f133b8683916550b8c0f12b7d",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "Case 5:20-cv-00135-RWS Document 1 Filed 08/11/20 Page 1 of 12 PageID #: 1\n\nUNITED STATES DISTRICT COURT\nFOR THE EASTERN DISTRICT OF TEXAS\nTEXARKANA DIVISION\nCITY OF NEW <em>BOSTON</em>, TEXAS,\nindividually and on behalf all others\nsimilarly situated,\nPlaintiff,\nv.\n"
+        ],
+        "page_no_2": [
+          "Hulu does\nbusiness in New <em>Boston</em>, Texas, and has done so at all times relevant to this action.\n"
+        ],
+        "page_no_4": [
+          "Netflix has “end-to-end” control of its entire\nOpen Connect system, including any servers located in New <em>Boston</em> and other Texas\nmunicipalities.\n14.\n\n"
+        ],
+        "page_no_5": [
+          "Defendants were required to obtain a SICFA before providing video service in New\n\n<em>Boston</em>, and the other Texas municipalities in which it provides they provide their video services.\n"
+        ],
+        "page_no_8": [
+          "Defendants provide video service, and are video service providers, in New <em>Boston</em>\n\nand each municipality comprising the Class.\n\n"
+        ],
+        "page_no_9": [
+          "Defendants provide video service, and are video service providers, in New\n<em>Boston</em> and each municipality in the Class. "
+        ],
+        "page_no_11": [
+          "Davis\nTexas Bar No. 24031995\nkdavis@ldatty.com\n625 Sam Houston Drive\nPO Box 1221\nNew <em>Boston</em>, TX 75570\nTelephone: 903.628.5571\nFax: 903.628.5868\nBRUSTER PLLC\nAnthony K. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/7033949-Boston-TX"
+    },
+    {
+      "id": "4178289",
+      "user": 659,
+      "organization": 125,
+      "access": "public",
+      "status": "success",
+      "title": "Boston Bid",
+      "slug": "Boston-Bid",
+      "language": "eng",
+      "created_at": "2017-11-09T15:11:16.452Z",
+      "updated_at": "2021-01-13T01:15:24.906Z",
+      "page_count": 218,
+      "original_extension": "pdf",
+      "file_hash": "c5f9b973237e44deb76e8bdb7e10f65328b1be6b",
+      "related_article": "https://www.muckrock.com/foi/boston-3/amazon-hq2-bid-44971/",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_2": [
+          "Walsh\nCity of <em>Boston</em>\n\nIt is with pride and enthusiasm that I propose <em>Boston</em> become the home of Amazon’s second North\nAmerican headquarters. "
+        ],
+        "page_no_3": [
+          "The City\nof <em>Boston</em> flourishes as the hub of the region, and, in fact, all of Massachusetts and New England.\n"
+        ],
+        "page_no_4": [
+          "For 75 years, the venue has served as a\nmajor employer in Revere and <em>Boston</em>.\n"
+        ],
+        "page_no_5": [
+          "No ifs, ands, or\nbuts about it,\n<em>Boston</em> is the\nideal place for\nAmazon HQ2.\n"
+        ],
+        "page_no_8": [
+          "<em>Boston</em>. Yes.\n1\n \n\n2\n\nYour Perfect Match \n\n8\n\nA Thriving MSA. Yes. \nCultural Fit. "
+        ],
+        "page_no_9": [
+          "9\n\nAmazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match\n\nYour Perfect\nMatch\n“  Building on Amazon’s growing regional\npresence, <em>Boston</em> would be thrilled\nto welcome Amazon’s second North\nAmerican headquarters to our city. "
+        ],
+        "page_no_11": [
+          "11\n\n1   Your Perfect Match   A Thriving MSA\n\n4.9 million\nMSA Population\n\n15 minutes\nfrom Downtown <em>Boston</em> to Logan\nInternational Airport\n\n5 minutes\n\nfrom Suffolk Downs in East <em>Boston</em> and\nRevere to Logan International Airport\n\n1,000\n\nAmazon jobs in Cambridge\n\n200\n\nAmazon workspaces at WeWork in the\nBack Bay neighborhood of <em>Boston</em>\n\n900\n\nAmazon jobs announced in the Fort\nPoint neighborhood of <em>Boston</em>\n\nAmazon HQ2   City of <em>Boston</em>\n\n "
+        ],
+        "page_no_12": [
+          "Today, the <em>Boston</em> MSA (<em>Boston</em>) has a population of 4.9 million residents, up\nfrom 4.7 million in 2010.1 The 2016 GDP for the metro area was $423 billion.\n"
+        ],
+        "page_no_13": [
+          "13\n\n1   Your Perfect Match   Cultural Fit\n\nAmazon HQ2   City of <em>Boston</em>\n\n55%\n\n48,000\n\n29%\n\n$4.3\nBillion\n\nof Bostonians are Hispanic\nor non-White3\n\nof Boston’s population is foreign born4\n\n100+\n\ncountries represented by Boston’s\nforeign born population5\n\n60\n\nBoston’s foreign born population\nspeaks over 60 different languages6\n\n30%\n\nof people working in <em>Boston</em>\nare foreign born7\n\ninternational students attend Boston’s\nhigher education institutions8\n\nImmigrants living in <em>Boston</em>\ncontribute $4.3 billion worth\nof consumer spending, which\nsupports almost 20,000 jobs9\n\n35%\n\nof the population is between the\nages of 20 and 34 years old10\n\n "
+        ],
+        "page_no_14": [
+          "By addressing the divisions of race\nin <em>Boston</em>, we are choosing to leverage our diversity as a\nresource to enhance <em>Boston</em> today and in the future"
+        ],
+        "page_no_15": ["Amazon HQ2   City of <em>Boston</em>\n\n "],
+        "page_no_16": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Cultural Fit\n\n16\n\nExcellent Institutions.\n"
+        ],
+        "page_no_17": [
+          "The City of <em>Boston</em> is governed by Mayor Martin J. Walsh\nand the <em>Boston</em> City Council with the assistance of various\ndepartments, agencies, and commissions. "
+        ],
+        "page_no_18": [
+          "Amazon HQ2   City of <em>Boston</em>\n\nStable and Consistent\nBusiness Climate. Yes.\n"
+        ],
+        "page_no_19": [
+          "19\n\nAmazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Cultural Fit\n\n60,000\n\n#1\n\n20,000\n\n10%+\n\nnew jobs in Massachusetts\nfrom 2014 to 201614\n\nnew jobs in <em>Boston</em> from 2014 to 201515\n\nU.S. "
+        ],
+        "page_no_20": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Cultural Fit\n\n20\n\nIn the past three years,\n<em>Boston</em> has added 16.6 million\nsquare feet of development.\n\n16\n\nA Strong, Growing\nEconomy. "
+        ],
+        "page_no_21": [
+          "21\n\n1   Your Perfect Match   Cultural Fit\n\nAmazon HQ2   City of <em>Boston</em>\n\nRobotics. "
+        ],
+        "page_no_22": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Cultural Fit\n\n22\n\n“The world-class research\ninstitutions, depth of talent,\nrich robotics eco-system, and\nthe collaborative nature of\ngovernment, are why we've made\n<em>Boston</em> our home for solving\nsome of the future's biggest\nchallenges.”\n— Karl Iagnemma\nCEO and Co-Founder, NuTonomy\n\n“  I believe data science and AI are\nkey to Amazon’s future, and there\nis no better place for these skills\nthan the <em>Boston</em> region.”\n— Mohamad Ali\nCEO, Carbonite\n\n150+\n\nrobotics companies with $1.9 billion in sales19\n\n$200 Million\n\nIMAGE COURTESY OF INHA LEEX HALE, FLICKR.COM\n\nprivate investments in robotics over the past year20\n\n3,200\n\npeople employed in robotics jobs 21\n\n11\n\ndifferent robotics markets represented 22\n\n "
+        ],
+        "page_no_23": [
+          "23\n\n1   Your Perfect Match   Quality of Life\n\nAmazon HQ2   City of <em>Boston</em>\n\nWicked\nclose to\neverything.\n\n3Killington,\nHours\nVT\n\n2 Hours\nThe Berkshires\n\n3½ Hours\nNew York City\n\n "
+        ],
+        "page_no_24": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n4½ Hours\n\n1   Your Perfect Match   Quality of Life\n\n4½\nHours\nAcadia National Park\n\nMontréal\n\n24\n\nRecreational\nOpportunities. "
+        ],
+        "page_no_25": [
+          "<em>Boston</em> is a city\nthat moves, and that movement\nbrings the city to life.”\n— Matt O’Toole\nBrand President, Reebok\n\n4,500+\n\n20,172\n\n100+\n\n4,587\n\nFour\n\n500+\n\n$262\nMillion\n\n500+\n\nfood service and retail\nestablishments in 201523\n\nfood trucks in <em>Boston</em>\n\nJames Beard Award winners in <em>Boston</em>\n\ninvested in <em>Boston</em>-based food,\nrestaurant and agricultural\nstartups in the past 4 years\n\nhotel rooms in the city of\n<em>Boston</em> as of January 201724\n\nhotel rooms in development, coming\nto <em>Boston</em> in 2017 and beyond\n\nArts & Culture public events per year\n\npieces of public art throughout <em>Boston</em>\n\n20+\nbreweries\n\n "
+        ],
+        "page_no_26": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Quality of Life\n\n26\n\nExceptional Place to Live. "
+        ],
+        "page_no_27": [
+          "27\n\n1   Your Perfect Match   Quality of Life\n\n7,000+ Acres\nof public and private open space in Boston25\n\n23%\n\ncity area that is open space 26\n\n98%\n\nof Bostonians are within a ten minute\nwalk of a park or open space27\n\n5,000 Acres\nof parks\n\nDog-friendly\nparks\nthroughout the city\n\n2,100 Acres\nparkways, reservations and beaches\n\n38 Miles\nof connected Harborwalk\n\nAmazon HQ2   City of <em>Boston</em>\n\n "
+        ],
+        "page_no_28": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Quality of Life\n\nOpen Space. "
+        ],
+        "page_no_29": [
+          "29\n\n1   Your Perfect Match   Connectivity\n\nAmazon HQ2   City of <em>Boston</em>\n\nTransit Systems. "
+        ],
+        "page_no_30": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n30\n\nI\nS\nP\nL OT\nI\nN E\nE N\nT\nE I\nX A\nT L\nE\nN\nE\nU\nL\nB\n\nWonderland\n\nChelsea\n\n8\n1\n0\nR PR\nY\nO\nR P\nO O\nU S\nT E\nE D\n(\n2\nR\nE\nF\n\nNorth Station\n\nBeachmont\n\nS ILV E R LI NE E XT ENS I O N\n\n)\n\nAMT RAK CO NN ECT IO N S\n\nPRO P OSED GR EEN LI N E\nEXTEN SI O N (202 1 )\n\nO\n\nN\n\n1   Your Perfect Match   Connectivity\n\nSuffolk Downs\n\nP\nR\nC RE O\nO\nP\nN D/ O\nN B S\nE L E\nC U D\nT E\nO\nR\n\nKendall/MIT\n\n<em>Boston</em> Logan International Airport\n\nPark Street\n\nState\n\nDowntown Crossing\n\nBack Bay\n\nP ROP OSED SOU TH <em>BOSTON</em>\nWATERF RONT ROU TE (20 1 8)\n\nCharles/MGH\n\nEX\nIS\nTI\nNG\n\nFE\nRR\nY\n\nRO\nUT\nES\n\nSouth Station\n\nA\n\nM\n\nT\n\nR\n\nA\n\nK\n\nC\n\nO\n\nN\n\nN\n\nE\n\nC\n\nT\n\nIO\n\nN\n\nS\n\nTufts\nMedical\nCenter\n\nKey\nExisting\nProposed\nFerry\n\n "
+        ],
+        "page_no_31": [
+          "Regional Bus Service\nThe <em>Boston</em> to New York route is served by multiple bus\ncarriers. "
+        ],
+        "page_no_32": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Connectivity\n\n32\n\nOSLO\n\nCOPENHAGEN\nDUBLIN\nMANCHESTER\nHANNON\nAMSTERDAM\nBIRMINGHAM\nBERLIN\nLONDON\nDUSSELDORF\nPARIS\nFRANKFURT\nMUNICH\nZURICH\nRA\nMADRID\nLISBON\n\nROME\n\nBEIJING\n\nISTANBUL\n\nTOKYO\nTEL AVIV\nSHANGHAI\nDOHA\n\nDUBAI\n\n75 daily nonstop flights\nto New York City\n\nIn summer 2017, there were 403 weekly nonstop flights\nfrom <em>Boston</em> to New York City supported by four airlines; the\nnumber is projected to increase to 432 by summer 2018 .34\n\nHONG KONG\n\n50 daily nonstop flights to\nWashington, DC\n\nIn summer 2017, there were 325 weekly nonstop flights\nfrom <em>Boston</em> to Washington, DC supported by five airlines.\n\n"
+        ],
+        "page_no_33": [
+          "<em>Boston</em> is a leader in\nfiber connectivity.\nOver 2,500 miles of commercial fiber\nacross the city\nOne of the fastest in the nation for\npermitting and deploying wireless\ninfrastructure\n\nResidential Fiber Connectivity Plan\n\nKey\nGigabit cable broadband\navailable today\nFiber and cable\navailable today\nFiber under construction\nFuture fiber build\n\nAmazon HQ2   City of <em>Boston</em>\n\n "
+        ],
+        "page_no_34": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n<em>Boston</em> is\nConnected\n\nWe are one of the most connected\ncities in the world. "
+        ],
+        "page_no_35": [
+          "35\n\n1   Your Perfect Match   Sustainability\n\nAmazon HQ2   City of <em>Boston</em>\n\n#1\n\nU.S. "
+        ],
+        "page_no_36": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Sustainability\n\n36\n\n<em>Boston</em> is a Global Leader\nin Sustainability. "
+        ],
+        "page_no_37": [
+          "37\n\n1   Your Perfect Match   Housing\n\n80%\n\nof Boston’s goal to create 53,000 new\nunits of housing by 2030 have been\nbuilt, permitted or planned\n\n22,000\n\nunits have been built or are under construction38\n\n25,300\n\nadditional housing units are in the pipeline\n\n1 in 5\n\nhouseholds in <em>Boston</em> are affordable,\nmaking <em>Boston</em> a national leader\n\nAmazon HQ2   City of <em>Boston</em>\n\n "
+        ],
+        "page_no_38": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Housing\n\n38\n\nHousing. "
+        ],
+        "page_no_39": [
+          "39\n\n1   Your Perfect Match   Livable City\n\nAmazon HQ2   City of <em>Boston</em>\n\nBoston’s cost of\nliving is comparable\nto Seattle’s and\nconsiderably lower\nthan other coastal\npeers such as the\nBay Area, New York,\nLos Angeles and\nWashington DC.\n39\n\n5.15%\n\nState Personal Income Tax*\n\n6.25%\nState Sales Tax\n\n0%\n\nCity income tax\n\n#19 out of 120\nGlobal Cities for city competitiveness based\non its effective ability to attract capital,\nbusinesses, talent, and visitors40\n\n*Massachusetts state law allows for a reduction of the state income tax rate over time, down to 5% when economic growth triggers are met\n\n "
+        ],
+        "page_no_40": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Livable City\n\nLivable City. "
+        ],
+        "page_no_41": [
+          "Cities recognized by the White House in\nmaking significant strides in community policing\n\n 52%\n\nSerious crime rate has dropped from 2000 to 2015\n\n 45%\n\nViolent crime has decreased since 2000\n\n 54%\n\nProperty crime has decreased since 2000\n\n 36%\n\ndecrease in arrests since 2014\n\nAmazon HQ2   City of <em>Boston</em>\n\n "
+        ],
+        "page_no_42": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n1   Your Perfect Match   Commited to Public Safety\n\n42\n\nCommitted to Public Safety. "
+        ],
+        "page_no_43": [
+          "43\n\n2   Your Hub of Skilled Talent\n\nAmazon HQ2   City of <em>Boston</em>\n\nYour Hub of\nSkilled Talent\n“ The greater <em>Boston</em> region is an ideal\nlocation for Amazon to create its\nsecond corporate headquarters, with\ntremendous opportunities for technological\nadvancement. "
+        ],
+        "page_no_45": [
+          "45\n\nAmazon HQ2   City of <em>Boston</em>\n\n2   Your Hub of Skilled Talent   Labor Force\n\n#1\n\n52.1%\n\n757,000\n\n25%\n\n133,660\n\n300,000\n\n<em>Boston</em> is the largest employment\ncenter in the New England region\n\nof the <em>Boston</em> region’s labor force\nholds a Bachelor’s degree or higher3\n\njobs in the city of Boston1\n\nincrease in regional residents with\ndegrees in computers, mathematics,\nand statistics since 20104\n\nworkers in computer and mathematical\noccupations in the region2\n\nJobs by Industry\n\nstudents enrolled in colleges\nand universities, annually\n\nArts, Entertainment\n& Recreation\n\n17,000\n\nConstruction\n\n17,000\n\nInformation\n\n17,000\nOther\n\n8,000\n\nEducational\nServices\n\n58,000\n\nServices\n\n164,000\n\nIndustrial\n\n46,000\n\nGovernment\n\n77,000\n\n757K\nTotal Jobs 2014\n\nHealth Care and\nSocial Assistance\n\n140,000\nProfessional Services\n\n92,000\n\nFinance and\nInsurance\n\n121,000\n\n "
+        ],
+        "page_no_46": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n2   Your Hub of Skilled Talent   Labor Force\n\nRobust Labor Force. "
+        ],
+        "page_no_47": [
+          "47\n\nAmazon HQ2   City of <em>Boston</em>\n\n2   Your Hub of Skilled Talent   Labor Force\n\n7th highest\nnumber of workers employed in computer\nand mathematical occupations amongst\n34 comparable metropolitan areas12\n\n221,280\n\nworkers employed in management positions13\n\n61,210\n\nworkers in software development14\n\n65,790\n\nworkers in top executive management roles15\n\nLabor Productivity\n$160k\n\n<em>Boston</em> Worker\n\n$140k\n\n$39K\n\n$120k\n$100K\n$80K\n$60K\n\nNational Worker\n\n$40K\n$20K\n$0\n1970\n\n1975\n\n1980\n\n1985\n\n1990\n\n1995\n\n2000\n\n2005\n\n2010\n\n "
+        ],
+        "page_no_48": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n2   Your Hub of Skilled Talent   Labor Force\n\n48\n\nExperienced Labor Force. "
+        ],
+        "page_no_49": [
+          "49\n\n2   Your Hub of Skilled Talent   Labor Force\n\nAmazon HQ2   City of <em>Boston</em>\n\nPrograms that Advance Boston’s\nTech Talent Pipeline for Today and\nfor the Future\nTechHire <em>Boston</em>\n\nTech Apprentice Program\n\nTechGen\n\nThe STEM Starter\nAcademy\n\nIn 2016, SkillWorks and the <em>Boston</em>\nPrivate Industry Council (PIC) in\npartnership with the City of <em>Boston</em>\nlaunched TechHire <em>Boston</em>, to connect\nmore people to IT jobs in the future.\n"
+        ],
+        "page_no_50": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n2   Your Hub of Skilled Talent   Labor Force\n\nAbility to Attract Top\nTalent. "
+        ],
+        "page_no_51": [
+          "Brown\nPresident, <em>Boston</em> University\n\n“  Northeastern University today is the only\nuniversity with campuses in both <em>Boston</em>\nand Seattle, helping to produce a pipeline\nof talent for firms like Amazon. "
+        ],
+        "page_no_52": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n2   Your Hub of Skilled Talent   Higher Education\n\n“ Our universities provide the intellectual\ninfrastructure—the ideas, solutions,\ntechnologies and talent that fuel growth,\nand attract startups and established\ncompanies—that makes our region a\ncompetitive place for Amazon’s next\nventure, and for the future generations\nof thinkers and creators who will\nlive, work and study here. "
+        ],
+        "page_no_53": [
+          "53\n\n2   Your Hub of Skilled Talent   Higher Education\n\nAmazon HQ2   City of <em>Boston</em>\n\nBest and\nBrightest.\n"
+        ],
+        "page_no_54": [
+          "INSTITUTE OF TECHNOLOGY\n\nEMMANUEL\nCOLLEGE\n\na WENTWORTH\n\n<em>BOSTON</em>\nUNIVERSITY\n\n\nAmazon H02 I City of <em>Boston</em>\n\nHARVARD r.\n"
+        ],
+        "page_no_55": [
+          "Once they’re in <em>Boston</em>, they tend to stay—and act as one\nof the most important forces in the <em>Boston</em> economy. "
+        ],
+        "page_no_56": [
+          "University of Massachusetts <em>Boston</em>\n\nUMass <em>Boston</em> ranked 52nd on Reuter’s Most Innovative\nUniversities in the World list. "
+        ],
+        "page_no_57": [
+          "57\n\n2   Your Hub of Skilled Talent   Higher Education\n\n<em>Boston</em> area colleges\nand universities\nconferred the following\nrelevant degrees from\n2014–2016:\n16,145 degrees in Engineering\n10,537 degrees in Computer and\nInformation Sciences and Support\nServices\n2,739 degrees in Mathematics and\nStatistics\n53,818 degrees in Business\nManagement, Marketing, and\nRelated Support Services\n8,360 degrees in Legal Professions\nand Studies\n\n30+\n\nuniversities and colleges in the <em>Boston</em> region\nprovide computer science programs\n\nAmazon HQ2   City of <em>Boston</em>\n\n "
+        ],
+        "page_no_58": ["Amazon H02 I City of <em>Boston</em>\n\n \n\n"],
+        "page_no_59": [
+          "59\n\n2   Your Hub of Skilled Talent   K–12 Computer Science\n\nAmazon HQ2   City of <em>Boston</em>\n\n<em>Boston</em> Public\nSchools\nOverview\n\nComputer\nScience\nProgramming\n\n#1\n\n1st\n\n#1\n\nNearly 70%\n\nMassachusetts ranked as the best\nstate for public education\n\nMassachusetts is the first state in\nthe U.S. to offer a dollar-for-dollar\nmatch with private industry for\nK–12 computer science education\n\n<em>Boston</em> Latin School ranked best\npublic high school in Massachusetts\n\nof BPS students participated\nin Hour of Code during the\n2016–2017 academic year\n\n125\n\nFour\n\n55,000\n\nLeading\nexamples\n\nschools in the <em>Boston</em> Public\nSchool (BPS) district\n\nstudents in K–12\n\n±17,000\n\nstudents in grades 9–12\n\nhigh schools provide Computer Science\nAdvanced Placement Programs\n\nof Computer Science Programming\nare integrated in K–12 curriculum\nacross the district\n\n "
+        ],
+        "page_no_60": [
+          "Tech <em>Boston</em> also offers\nAdvanced Placement Computer Science.\nCharter Schools\nIn addition to the <em>Boston</em> Public Schools, charter schools\nin <em>Boston</em> are also increasingly incorporating computer\nscience curricula in the classroom. "
+        ],
+        "page_no_61": [
+          "61\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home\n\n<em>Boston</em>,\nYour Home\n“   City and state officials were true partners\nin our relocation, in everything from site\nselection to permitting our new campus.\n...Governor Baker and Mayor Walsh worked\nwith us every step of the way so we were\nable to break ground on our new campus in\nrecord time.”\n— Ann R. "
+        ],
+        "page_no_62": [
+          "161 Acres\n\nShovel-Ready\n\nOne Owner\n\nExtraordinary\n\nof Contiguous Land\n\nThe HYM Investment Group\n\nDowntown <em>Boston</em>\n\nLogan International Airport\n\nSite\n\nAssets and Connectivity\n\n "
+        ],
+        "page_no_63": [
+          "63\n\n3   <em>Boston</em>, Your Home   Logistics\n\n5 min.\n\n<em>BOSTON</em> LOGAN\nINTERNATIONAL AIRPORT\n\nAmazon HQ2   City of <em>Boston</em>\n\n12 min.\n"
+        ],
+        "page_no_64": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n10 min.\n\n3   <em>Boston</em>, Your Home   Logistics\n\n20 min. 20 min.\n"
+        ],
+        "page_no_65": [
+          "65\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Logistics\n\nTransportation and Connectivity. "
+        ],
+        "page_no_66": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n66\n\nB\n\nL\n\nU\n\nE\n\nP\nL OT\nI\nN E\nE N\nT\nE I\nX A\nT L\nE\nN\n\nS\n\nI\n\nO\n\nN\n\n3   <em>Boston</em>, Your Home   Logistics\n\nWonderland\nChelsea\nS ILVE R LIN E E XTE N SIO N\n\nNorth Station\n\nBeachmont\n\nSuffolk Downs\n\n<em>Boston</em> Logan International Airport\n\nState\n\nP RO P OS E D SOU TH BOSTO N\nWATE RFRO NT ROUTE (20 18)\n\nAquarium\n\nEX\nIS\nTI\nNG\n\nSouth\nStation\nA MTR AK CON NE C T\n\nFE\nRR\nY\n\nRO\nUT\nES\n\nI\n\nO\nN S\n\n "
+        ],
+        "page_no_67": [
+          "67\n\n3   <em>Boston</em>, Your Home   Community\n\nCentral Location. Yes.\nSuffolk Downs’ central location makes it easy to get\naround <em>Boston</em> and the region. "
+        ],
+        "page_no_68": [
+          "IMAGE COURTESY OF MILES ON THE MBTA BLOG\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Community\n\n68\n\n "
+        ],
+        "page_no_69": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Community\n\nIMAGE COURTESY OF THE <em>BOSTON</em> PUBLIC LIBRARY, LESLIE JONES COLLECTION\n\n69\n\nEast <em>Boston</em> and Revere. "
+        ],
+        "page_no_70": [
+          "Amazon HQ2   City of <em>Boston</em>\n\nSurrounding Neighborhoods and Culture\nSuffolk Downs in embedded in the vibrant and growing\nurban communities of East <em>Boston</em> and Revere. "
+        ],
+        "page_no_71": [
+          "71\n\n3   <em>Boston</em>, Your Home   Community\n\nAmazon HQ2   City of <em>Boston</em>\n\nOpen Space and Bicycle Network. "
+        ],
+        "page_no_72": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Community\n\n72\n\nDowntown <em>Boston</em>\n\nCambridge\n<em>Boston</em> Logan International Airport\n\nSomerville\nEverett\n\nEast <em>Boston</em> Greeenway\n\nChelsea\n\nConstitution Beach\n\nOrient Heights\n\nBelle Isle Marsh\n\nChelsea River\n\nSuffolk Downs\n\nON\n\nGT\n\nIN\n\nNN\n\nBE\nST\nWINTHROP\n\nAVE\n\nBeachmont\nBell Circle\n\nBeachmont\n\nRevere Beach\n\n "
+        ],
+        "page_no_73": [
+          "73\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Community\n\nHousing and Affordability. "
+        ],
+        "page_no_74": [
+          "Amazon HQ2   City of <em>Boston</em>\n\nLOGAN\nAIRPORT\n\n3   <em>Boston</em>, Your Home   Community\n\n74\n\nDOWNTOWN <em>BOSTON</em>\n\nSUFFOLK\nDOWNS\n\nPlanned MBTA Station\n\nNecco Factory\nWonderland Park\n\nREVERE\nBEACH\n\nSupportive Sites. "
+        ],
+        "page_no_75": ["Amazon HQ2   City of <em>Boston</em>\n\n "],
+        "page_no_76": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\n8 Million\n\n76\n\n10,000\n\nSquare Feet of Amazon\nHQ2 Office Space\n\nResidential Units of All\nShapes and Sizes\n\n1,500 Keys\n\n550,000\n\nat 5 Hotels\n\nSquare Feet of Creative\nRetail and Civic Spaces\n\n40 Acres\n\nof Urban Open Space\n\n "
+        ],
+        "page_no_77": [
+          "77\n\n3   <em>Boston</em>, Your Home   Site\n\nAmazon HQ2   City of <em>Boston</em>\n\nSuffolk Downs: A Dynamic Mix of\nUses and Offerings. "
+        ],
+        "page_no_78": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nWonderland\n\nRevere Beach\n\nBeachmont Square\n\nPerformance Theater\n\nAmazon HQ2\nPhase 1: Option B\n\nBeachmont\n\n78\n\n "
+        ],
+        "page_no_79": [
+          "79\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nCreative and Incubator Retail. "
+        ],
+        "page_no_80": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\n80\n\nBelle Isle Square\nA place where Amazon can pilot new retail projects? "
+        ],
+        "page_no_81": [
+          "81\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nBeachmont Square\nA family and pet friendly community? "
+        ],
+        "page_no_82": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nRetail will be clustered in four key districts. "
+        ],
+        "page_no_83": [
+          "83\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nResiliency, Sustainability,\nand District Energy at Suffolk Downs\nAttractive Site Characteristics Supporting Reliability\n& Sustainability\nThe 161-acre contiguous Site can enable a variety of\nenergy infrastructure and technology configurations and\nsolutions. "
+        ],
+        "page_no_84": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nHydropower\nQUÉBEC\n\nWind &\nHyrdopower\nNEW BRUNSWICK\nWind\nNORTHERN MAINE\n\n84\n\nHyrdopower\nNEWFOUNDLAND\n& LABRADOR\n\nOffshore Wind\nSOUTHERN NEW ENGLAND\n\n32%\nHeating\n\n43%\nCooling\nLoad Metric\nPeak Demand\nTotal Energy\nEUI (Peak Demand)\n\nElectricity\n\nHeating\n\nCooling\n\n19 MW\n\n150 MMBTU/hr\n\n17,000 Tons\n\n94,000 MWh\n\n430,000\n\n47,000 kTon-hrs\n\n22W/SF\n\n17 BTU/hr/SF\n\n490 SF/ton\n\n25%\n\nElectricity\n\n "
+        ],
+        "page_no_85": [
+          "3 <em>Boston</em>,Your Home Site Amazon H02 I City of <em>Boston</em>\n\nA A\n-, ?11\n\nRMNWATEH 1, ?"
+        ],
+        "page_no_86": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\n86\n\nPublic Common\nA landscape that speaks to our common future? "
+        ],
+        "page_no_87": [
+          "87\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nInfrastructure at Suffolk Downs. "
+        ],
+        "page_no_88": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nWater & Sanitary Sewer\nHigh quality water and sanitary service are provided by\nthe regional authority Massachusetts Water Resources\nAuthority (“MWRA”) and served through the local <em>Boston</em>\nand Revere water and sewer networks. "
+        ],
+        "page_no_89": [
+          "89\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\nEcology, Habitat, Health and\nWell-being at Suffolk Downs. "
+        ],
+        "page_no_90": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Site\n\n90\n\nOutdoor\nPerformance\nTheater\nA natural place to gather? "
+        ],
+        "page_no_91": [
+          "91\n\n3   <em>Boston</em>, Your Home   Building\n\nAmazon HQ2   City of <em>Boston</em>\n\n2019\n\nExpected Delivery of Amazon HQ2 Phase 1\n\n20 Month\nConstruction Timeframe of Phase 1\n\nPotential Expansion\n500,000 SF\n\nAmazon Phase 1\n500,000 SF\n\nResidential Buildings\n\nBelle Isle Square\n\nSuffolk Downs\n\n "
+        ],
+        "page_no_92": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Building\n\n92\n\nAmazon HQ2 Phase 1. "
+        ],
+        "page_no_93": [
+          "93\n\n3   <em>Boston</em>, Your Home   Building\n\nAmazon HQ2   City of <em>Boston</em>\n\nAmazon HQ2 at\nSuffolk Downs\nBuilding Design\nThe Phase 1 building design is focused around having\nAmazonians connected within not only the building, but also\nthe larger campus and the surrounding neighborhood at\nlarge. "
+        ],
+        "page_no_94": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Building\n\n94\n\nLEED Gold+\nLarge Floor Plates\nfor Flexibility and Efficiency\n\nLocal/Renewable\nBuilding Material\nto Reflect Amazon’s Commitment to Nature and Sustainability\n\n "
+        ],
+        "page_no_95": [
+          "95\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\nAmazon HQ2   City of <em>Boston</em>\n\n<em>Boston</em> Under Construction   \nby the Numbers\n\nOver $9 Billion\nof Development Under Construction\n\n106\n\nDevelopments Under Construction\n\n5.1 Million SF\nof Approved Development in the Pipeline\n\n "
+        ],
+        "page_no_96": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n96\n\nAdditional Sites. "
+        ],
+        "page_no_97": [
+          "TO SEATTLE\n— Imagine <em>Boston</em> 2030\npage 219\n\n "
+        ],
+        "page_no_98": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n1. "
+        ],
+        "page_no_99": [
+          "99\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\nAmazon HQ2   City of <em>Boston</em>\n\n1. "
+        ],
+        "page_no_100": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n100\n\nEAST <em>BOSTON</em>\n\nCHARLES\nRIVER\n\nDOWNTOWN\n\n<em>BOSTON</em>\nHARBOR\n\nBACK BAY\n\nSEAPORT\nSOUTH END\n\nDowntown\n\nDowntown\n\nDowntown\n\n10 minutes to Logan\n\n10 minutes to Logan\n\n10 minutes to Logan\n\n13 minutes to Logan\n\n17 minutes to Logan\n\n20 minutes to Logan\n\nD. "
+        ],
+        "page_no_101": [
+          "101\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\nAmazon HQ2   City of <em>Boston</em>\n\nDowntown\n\n3,020 MILES\nTO SEATTLE\n\nSouth End\n\n“   With its central location and dense surrounding\narea, there is potential for air-rights development as\nappropriate to knit the surrounding areas together as\nNewmarket and Widett Circle evolve. ”\n— Imagine <em>Boston</em> 2030\nPage 213\n\n "
+        ],
+        "page_no_102": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n102\n\n2. "
+        ],
+        "page_no_103": [
+          "103\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\nAmazon HQ2   City of <em>Boston</em>\n\n2. "
+        ],
+        "page_no_104": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n104\n\nEAST <em>BOSTON</em>\n\nCHARLES\nRIVER\n\nDOWNTOWN\n\n<em>BOSTON</em>\nHARBOR\n\nBACK BAY\n\nSOUTH END\n\nSEAPORT\n\nROXBURY\n\nBack Bay\n\nBack Bay\n\nRoxbury\n\n16 minutes to Logan\n\n13 minutes to Logan\n\n14 minutes to Logan\n\n23 minutes to Logan\n\n19 minutes to Logan\n\n32 minutes to Logan\n\nD. 350 Boylston Street\n\nwill contain up to 220,000 square\nfeet of office space in a mixed-use\ndevelopment containing retail uses.\n"
+        ],
+        "page_no_105": [
+          "105\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n3. "
+        ],
+        "page_no_106": [
+          "Station\n\nAmazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\n106\n\nBack Bay Station\n\nFenway Center\n\nFenway\n\nLongwood\nMedical Area\n\nLandmark Center\n\nambridge\n\nAllston Yards\n\n<em>Boston</em> Landing\n\nBrighton\n\n "
+        ],
+        "page_no_107": [
+          "107\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\nAmazon HQ2   City of <em>Boston</em>\n\n3. "
+        ],
+        "page_no_108": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n3   <em>Boston</em>, Your Home   Additional Sites\n\nDOWNTOWN\n\nCHARLES\nRIVER\n\n108\n\n<em>BOSTON</em>\nHARBOR\n\nBACK BAY\n\nSEAPORT\nFENWAY\n\nSOUTH END\n\nROXBURY\n\nFenway\n\nLANDMARK  401 PARK DRIVE\n<em>Boston</em>, Massachusetts\n\nBack Bay\n\nDowntown\n\nPARK DRIVE LAWN\nAPRIL 27, 2017\n\n14 minutes to Logan\n\n13 minutes to Logan\n\n09 minutes to Logan\n\n28 minutes to Logan\n\n20 minutes to Logan\n\n15 minutes to Logan\n\nD. "
+        ],
+        "page_no_109": [
+          "109\n\n4   <em>Boston</em>, Your Community Partner\n\nAmazon HQ2   City of <em>Boston</em>\n\n<em>Boston</em>, Your\nCommunity\nPartner\n“ We want all companies to thrive in <em>Boston</em>.\n"
+        ],
+        "page_no_111": [
+          "111\n\n4   <em>Boston</em>, Your Community Partner\n\nAmazon HQ2   City of <em>Boston</em>\n\nInvestments. "
+        ],
+        "page_no_112": [
+          "UMass <em>Boston</em>—Substructure State share for study, design, demolition and renovations\nDemolition / Quadrangle\nto address the deterioration of the existing parking garage\nDevelopment\nand raised plaza at the center of the UMass <em>Boston</em>\ncampus.\n"
+        ],
+        "page_no_113": [
+          "\n\n$25,000,000\n\n<em>Boston</em> Harbor Dredging\n\nRepresents the funding for the state share of costs related\nto the dredging of <em>Boston</em> Harbor. "
+        ],
+        "page_no_114": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n4   <em>Boston</em>, Your Community Partner\n\n114\n\nThe City of <em>Boston</em> proposes integrating the following investments into the\ncity’s Capital Plan and public infrastructure investments to benefit your future\nheadquarters as well as the existing neighborhood.\n\n"
+        ],
+        "page_no_115": [
+          "115\n\n4   <em>Boston</em>, Your Community Partner\n\nAmazon HQ2   City of <em>Boston</em>\n\nIncentives. "
+        ],
+        "page_no_116": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n4   <em>Boston</em>, Your Community Partner\n\n116\n\nThe City of <em>Boston</em> is interested in exploring additional resources in welcoming\nAmazon and its second headquarters to <em>Boston</em>.\n\n"
+        ],
+        "page_no_117": [
+          "117\n\n4   <em>Boston</em>, Your Community Partner\n\nAmazon HQ2   City of <em>Boston</em>\n\nInitiatives. "
+        ],
+        "page_no_118": [
+          "You will love <em>Boston</em>.”\n— John Harthorne\nCEO, MassChallenge\n\n "
+        ],
+        "page_no_119": [
+          "Our plan, known as Imagine <em>Boston</em> 2030,\nis guiding our growth. As we guide our growth\nand Amazon continues to expand its presence\nin <em>Boston</em>, we are ready to welcome Amazon’s\nsecond North American headquarters to <em>Boston</em>.\n\n"
+        ],
+        "page_no_121": [
+          "East <em>Boston</em>/Revere\nParcel Name\n\nAddress\n\nSuffolk Downs\n\n525 McClellan Highway,\n<em>Boston</em>, MA 02128\n\nOffice Space\n(in sf.)\n8 million\n\nOwner/Property Manager\n\nBPDA Status\n\nNotes\n\nThe HYM Investment Group, LLC\n\nSee Chapter 3\n\nSee Chapter 3\n\n "
+        ],
+        "page_no_122": [
+          "Amazon HQ2   City of <em>Boston</em>\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n2 Miles\n\n5\n\n5\n\nPermitted\n\n5   There’s More   RFP Response Directory\n\nPublicly Owned\n\n122\n\nHousing\n\nRetail\n\nOffice\n\nDining\n\nHotel\n\n\n\n\n\n\n\n\n\n\n\n "
+        ],
+        "page_no_123": [
+          "123\n\n5   There's More   RFP Response Directory\n\nAmazon HQ2   City of <em>Boston</em>\n\nAdditional Site Cluster #1\nSouth <em>Boston</em> Waterfront\nand Downtown <em>Boston</em>\nThe South <em>Boston</em> Waterfront, in combination with the traditional core\nDowntown business district, has emerged as a dynamic and mixed-use\ndestination for a wide range of innovation and technology companies.\n\n"
+        ],
+        "page_no_124": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\nPermitted\n\n3\n\n8\n\n15\n\n3\n\n10\n\n18\n\n\n\n3\n\n13\n\n20\n\n\n\n3\n\n10\n\n11\n\n\n\n\n\n3\n\n10\n\n11\n\n\n\n\n\n3\n\n10\n\n11\n\n\n\n\n\n3\n\n8\n\n18\n\n\n\n\n\n3\n\n10\n\n20\n\n3\n\n10\n\n11\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n3\n\n10\n\n20\n\n2\n\n10\n\n13\n\n3\n\n9\n\n30\n\n4\n\n10\n\n17\n\n\n\nPublicly Owned\n\nHousing\n\n\n\nRetail\n\nOffice\n\nDining\n\n\n\n\n\n\n\n\n\n\n\n124\n\nHotel\n\n\n\n\n\n\n\n\n\n\n\n\n\nHousing\n\nRetail\n\nOffice\n\nDining\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPermitted\n\nPublicly Owned\n\n\n\nHotel\n\n\n\n\n\n "
+        ],
+        "page_no_125": [
+          "125\n\n5   There's More   RFP Response Directory\n\nAmazon HQ2   City of <em>Boston</em>\n\nAdditional Site Cluster #1\nSouth <em>Boston</em> Waterfront and Downtown <em>Boston</em>\n\nHUB ON\nCAUSEWAY\n\n101 MAIN ST\n\nBULFINCH\nCROSSING\n\nBEACON\nHILL\n\n<em>BOSTON</em>\nCOMMON\nPUBLIC\nGARDEN\n\nBACK BAY\n\nSOUTH END\n\n "
+        ],
+        "page_no_126": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\n126\n\nEAST\n<em>BOSTON</em>\n\nNORTH\nEND\n\nLOGAN\nAIRPORT\n\n<em>BOSTON</em>\nHARBOR\n\nWINTHROP\nSQUARE\nPARCEL E\nSOUTH STATION\nPARCEL D\nPARCEL L4 -L5\n\n253 SUMMER ST\n\nPARCEL P\n\nPARCEL A2\nPARCEL H\n\n100 ACRES PLAN\n\nINNOVATION\nSQUARE\nPARCEL D3\nPARCEL Q1\n\n105 W FIRST ST\n\nBCEC\n\n "
+        ],
+        "page_no_127": [
+          "Owner/Property Manager\n\nBPDA Status\n\nNotes\n\nThe Abbey Group\n\nUnder Review\n\nformer <em>Boston</em> Flower Exchange\n\n1,050,00\n\nThe Druker Company, LTD.\n\n"
+        ],
+        "page_no_128": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\nPermitted\n\nPublicly Owned\n\nHousing\n\nRetail\n\nOffice\n\n4\n\n8\n\n37\n\n\n\n\n\n5\n\n11\n\n23\n\n\n\n\n\n\n\n4\n\n9\n\n22\n\n\n\n\n\n4\n\n8\n\n37\n\n\n\n\n\n3\n\n9\n\n14\n\n4\n\n8\n\n27\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n4\n\n16\n\n23\n\n4\n\n13\n\n19\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n6\n\n14\n\n32\n\n\n\n\n\n6\n\n14\n\n32\n\n\n\n\n\n5\n\n14\n\n32\n\n5\n\n22\n\n33\n\n5\n\n22\n\n33\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n5\n\n10\n\n30\n\n\n\n\n\nPermitted\n\nPublicly Owned\n\n\n\n\n\n\n\nHousing\n\nRetail\n\nOffice\n\n\n\n\n\n\n\n\n\n\n\n\n\nPublicly Owned\n\nHousing\n\nRetail\n\nOffice\n\n\n\n\n\n\n\n\n\n\n\nPermitted\n\nPublicly Owned\n\nDining\n\nHotel\n\nDining\n\nHotel\n\nDining\n\nHotel\n\nDining\n\nHotel\n\n\n\n\n\nPermitted\n\n128\n\n\n\n\n\n\n\n\n\n\n\nHousing\n\nRetail\n\nOffice\n\n\n\n "
+        ],
+        "page_no_129": [
+          "129\n\nAmazon HQ2   City of <em>Boston</em>\n\n5   There's More   RFP Response Directory\n\nAdditional Site Cluster #2\nSouth End, Back Bay, Roxbury, and Widett Circle\n\nCHARLES RIVER\n\nBACK BAY\n\nPARCEL 10\nTREMONT\nCROSSING\nPARCEL 8\n\nBLAIR LOT\n\nPARCEL B-2\n\n "
+        ],
+        "page_no_130": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\n130\n\n<em>BOSTON</em>\nCOMMON\n\nPUBLIC\nGARDEN\n\n350 BOYLSTON ST\n\nDOWNTOWN\n\nBACK BAY / SOUTH END\nGATEWAY\n\n321 HARRISON AVE\nEB-80\n\nSOUTH END\n\nHARRISON / ALBANY\nBLOCK\n\nSOUTH <em>BOSTON</em>\nEXCHANGE\nSOUTH END\nBIO-SQUARE II\nPARCEL G\n\nROXBURY\n\nWIDETT\nCIRCLE\n\n "
+        ],
+        "page_no_131": [
+          "Allston/Brighton\nParcel Name\n\nAddress\n\n<em>Boston</em> Landing\n\n38–180 Guest Street,\nBrighton, MA 02135\n\nHarvard ERC\nAllston Yards\n\nOffice Space\n(in sf.)\n\n"
+        ],
+        "page_no_132": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\nPermitted\n\n8\n\n22\n\n33\n\n8\n\n12\n\n28\n\n8\n\n22\n\n33\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n6\n\n14\n\n28\n\n\n\n5\n\n13\n\n30\n\n\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n4\n\n13\n\n20\n\nProximity to Logan\n(miles)\n\nProximity to Logan\n(minutes by car)\n\nProximity to Logan\n(minutes by transit)\n\n3\n\n9\n\n15\n\nPublicly Owned\n\nDining\n\nHotel\n\nOffice\n\nDining\n\nHotel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPublicly Owned\n\nHousing\n\nRetail\n\nOffice\n\nDining\n\nHotel\n\n\n\n\n\n\n\n\n\nPublicly Owned\n\nHousing\n\nRetail\n\nOffice\n\nDining\n\nHotel\n\n\n\n\n\n\n\n\n\n\n\nPermitted\n\nPermitted\n\nPermitted\n\n\n\nPublicly Owned\n\nHousing\n\nRetail\n\nOffice\n\n\n\n\n\n\n\n\n\n\n\n\n\nHousing\n\nRetail\n\n132\n\n "
+        ],
+        "page_no_133": [
+          "133\n\nAmazon HQ2   City of <em>Boston</em>\n\n5   There's More   RFP Response Directory\n\nAdditional Site Cluster #3\nAllston / Brighton to South Station\n\nHARVARD\n\nCAMBRIDGE\nALLSTON\n\n<em>BOSTON</em>\nLANDING\n\nHARVARD ERC\n\nALLSTON\nLANDING\n\nFENWAY\nCENTER\n\nBRIGHTON\nLANDMARK\nCENTER\n\nFENWAY\n\n "
+        ],
+        "page_no_134": [
+          "Y\n\nAmazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nMIT\n\nDOWNTOWN\n\nCHARLES\nRIVER\n\n<em>BOSTON</em>\nCOMMON\nPUBLIC\nGARDENS\n\nBACK BAY\n\n350 BOYLSTON ST\n\nBACK BAY /\nSOUTH END\nGATEWAY\n\n321 HARRISON AVE\nEB-80\n\nSOUTH END\n\nROXBURY\n\nSOUTH\nSTATION\n\n134\n\n "
+        ],
+        "page_no_135": [
+          "The City of <em>Boston</em> looks forward to further discussing investments, incentives, and initiatives\nwith Amazon. "
+        ],
+        "page_no_136": [
+          "There are currently 13,130\ntop executives employed within <em>Boston</em> and 65,770 top\nexecutives employed regionally throughout the <em>Boston</em>\nMSA. "
+        ],
+        "page_no_137": [
+          "137\n\nAmazon HQ2   City of <em>Boston</em>\n\n5   There's More   RFP Response Directory\n\nTable 1: Management, Finance, Law, & Administration\nEmployment in <em>Boston</em> Metropolitan Area\nManagement, Financial, Legal, and\nAdministrative Occupations\n\nEmployees Working\nin <em>Boston</em>\n\nMedian Annual Wage\n\nEmployees Working in\n<em>Boston</em>/Cambridge/\nNashua region (NECTA)\n\nMedian Annual Wage\n\nManagement\n\n55,290\n\n$125,357\n\n221,280\n\n$121,740\n\nTop Executives\n\n13,130\n\nN/A\n\n65,790\n\nN/A\n\n7,490\n\nN/A\n\n28,390\n\nN/A\n\nOperations Specialties Managers\n\n18,320\n\nN/A\n\n65,350\n\nN/A\n\nOther Management Occupations\n\n16350\n\nN/A\n\n61,750\n\nN/A\n\nBusiness and Financial Operations\n\n59,350\n\n$78,288\n\n169,270\n\n$76,900\n\nLegal Occupations\n\n11,880\n\n$128,523\n\n25,910\n\n$106,900\n\nOffice and Administrative Support Occupations\n\n79,610\n\n$46,118\n\n385,060\n\n$43,310\n\nAdvertising, Marketing, Promotions,\nPublic Relations, and Sales Managers\n\nSource: Executive Office of Labor and Workforce Development (EOLWD), BPDA Research Division Analysis.\n\n"
+        ],
+        "page_no_138": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nAs New England’s largest employment center with almost\n757,000 jobs, <em>Boston</em> draws talent both from its own\nresidents and from over 100 neighboring communities.\n"
+        ],
+        "page_no_139": [
+          "139\n\n5   There's More   RFP Response Directory\n\nTechHire <em>Boston</em>\nIn 2016, SkillWorks and the <em>Boston</em> Private Industry\nCouncil (PIC), in partnership with the City of <em>Boston</em>,\nlaunched TechHire <em>Boston</em>, a program that connects\nresidents and students to burgeoning IT jobs. "
+        ],
+        "page_no_140": [
+          "Additionally, include information on your local/regional K–12 education programs\nrelated to computer science.\n\n6.1  Programs/partnerships currently available\nand potential creative programs with higher\neducation institutions in the region\nThe <em>Boston</em> region is home to over 75 institutions of higher\nlearning, 31 of which are located in the city of <em>Boston</em>.21\nAs of academic year 2016–17, there were more than\n138,000 students enrolled in undergraduate and graduate\nprograms within <em>Boston</em>. "
+        ],
+        "page_no_141": [
+          "Each year, <em>Boston</em> University\nawards 25 four-year, full-tuition scholarships to <em>Boston</em>\nPublic high school seniors. "
+        ],
+        "page_no_142": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nof any admitted <em>Boston</em> Public high school graduate,\nincluding incoming transfer students. "
+        ],
+        "page_no_143": [
+          "Amazon HQ2   City of <em>Boston</em>\n\nDuring the 2016-2017 academic year, nearly 1,950 students\nstudied at Harvard Business School, which is the #1 business\nschool in the country. "
+        ],
+        "page_no_144": [
+          "The innovation\nlabs host public events and provide opportunities for\ninnovators and entrepreneurs from across Greater\n<em>Boston</em> to interact. "
+        ],
+        "page_no_145": [
+          "Once they’re in <em>Boston</em>, they tend to stay—and act as one\nof the most important forces in the <em>Boston</em> economy. "
+        ],
+        "page_no_146": [
+          "Amazon HQ2   City of <em>Boston</em>\n\n5   There’s More   RFP Response Directory\n\nspans low-power chips that could make speech\nrecognition ubiquitous,71 to others that can implement\nneural networks,72 to ones that harvest the human\nbody’s own heat73 to power themselves. "
+        ],
+        "page_no_147": [
+          "And for the broader innovation community of\n<em>Boston</em>, last year MIT started The Engine95 described\nabove. "
+        ],
+        "page_no_148": [
+          "Northeastern University is the only university\nwith campuses in both <em>Boston</em> and Seattle. "
+        ],
+        "page_no_149": [
+          ".\n•  <em>Boston</em> Course: <em>Boston</em> Course is a writing intensive\nthat helps students develop writing skills, literacy, and\ncritical analysis.\n"
+        ],
+        "page_no_150": [
+          "\n\n•  (K–12) Success <em>Boston</em>: Boston’s citywide college\ncompletion initiative, in partnership with the <em>Boston</em>\nFoundation, the <em>Boston</em> Public Schools, the City of <em>Boston</em>,\n37 area institutions of higher education and local nonprofit\npartners, is working to double the college completion rate\nfor students from the <em>Boston</em> Public Schools.\n\n"
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/4178289-Boston-Bid"
+    },
+    {
+      "id": "3913417",
+      "user": 659,
+      "organization": 125,
+      "access": "public",
+      "status": "success",
+      "title": "Boston PD_Redacted",
+      "slug": "Boston-PD-Redacted",
+      "source": "Executive Office of Public Safety and Security",
+      "language": "eng",
+      "created_at": "2017-08-04T19:11:41.636Z",
+      "updated_at": "2021-01-13T01:50:15.814Z",
+      "page_count": 14,
+      "original_extension": "pdf",
+      "file_hash": "d40f695c55ea6c381244c0ffb11f9aaeebb2379d",
+      "related_article": "https://www.muckrock.com/foi/massachusetts-1/2016-byrnes-jag-pass-through-grants-38864/",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "Applicant Information\nName of Local Police Department:\n\n<em>Boston</em> Police Department\n\n30,000.00\nName of Police Chief: William B. "
+        ],
+        "page_no_2": [
+          "Non- Supplant\n\n<em>Boston</em> Police Department\n\nI hereby certify that, in accordance with DOJ Financial Guidelines, the ______________________________\n(NAME OF APPLICANT)\n\nhas been informed by the EOPSS that supplanting of JAG funds is strictly prohibited and if awarded will not\nuse grant funds to replace state and local funds that would, in the absence of such assistance, otherwise be\nmade available for this law enforcement purpose.\n"
+        ],
+        "page_no_3": [
+          "<em>Boston</em>\nName of City/Town ______________________________________________________________________\n\nMartin J. "
+        ],
+        "page_no_4": [
+          "Meanwhile, serious property crime in <em>Boston</em> tends to\nbe concentrated in our more commercial districts, including Districts D-4 (South End) and A-1\n(downtown <em>Boston</em>). "
+        ],
+        "page_no_5": [
+          "This plan will be focusing on four districts within the City of <em>Boston</em>—A-1,\nB-2, B-3 and C-11—the districts where serious violent and property crime tend to be\nconcentrated.\n"
+        ],
+        "page_no_6": [
+          "The BPD is currently preparing to launch a pilot DDACTS program in four hot-spot\nneighborhoods of <em>Boston</em>: Districts A-1 (downtown <em>Boston</em>), B-2 (Roxbury), B-3 (Mattapan), and\nDorchester (C-11). "
+        ],
+        "page_no_7": [
+          "Narrative Template, Continued\n\nTransportation Department (BTD) and Public Health Commission / EMS, <em>Boston</em> Cyclist Union,\nWalk <em>Boston</em>, Tufts Medical Center, Universities and Colleges, neighborhood and resident groups\nin the four hot spot neighborhoods of <em>Boston</em> (for DDACTS), and all neighborhoods for the overall\ncollision analysis work.\n"
+        ],
+        "page_no_9": [
+          "Budget Narrative Summary\n\nCost Category\n\nFederal Share\n\nConsultants\n\n$\n\n0.00\n\nContracts\n\n$\n\n0.00\n\nEquipment/Technology\n\n$\n\n29,029.60\n\nOther\n\n$\n\n931.85\n\nTotal\n\n$\n\n29,961.45\n\nLocal Police Department:\n\n<em>Boston</em> Police Department\n\n9\n\n "
+        ],
+        "page_no_13": [
+          "City of <em>Boston</em> applies an administration fee of 3.21% on all grant funds.\n$29,029.60 * 3.21% = $931.85\n\nApplicants must also complete a Budget Excel Worksheet (refer to Attachment B) and submit with the Application Template.\n13\n\n "
+        ],
+        "page_no_14": [
+          "Proposals must be mailed or hand-delivered* to:\nThe Executive Office of Public Safety and Security\nOffice of Grants and Research\nTen Park Plaza, Suite 3720\n<em>Boston</em>, MA 02116-3933\nAttention: Kevin Stanton\n\nThe signed and completed Application Template and required documents must be received by OGR on\nTuesday, January 6, 2015 by 4:00pm. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/3913417-Boston-PD-Redacted"
+    },
+    {
+      "id": "4229276",
+      "user": 6984,
+      "organization": 85,
+      "access": "public",
+      "status": "success",
+      "title": "Boston,_Sherry_7_5_16_CCDR_CCDR_80904eb9108d4f97bbb813de06d1b37c.pdf",
+      "slug": "Boston-Sherry-7-5-16-CCDR-CCDR",
+      "source": "http://www.gaeasyfile.com/",
+      "language": "eng",
+      "created_at": "2017-11-15T19:22:14.773Z",
+      "updated_at": "2021-01-07T20:07:49.367Z",
+      "page_count": 8,
+      "projects": [36073],
+      "original_extension": "pdf",
+      "file_hash": "521b6849ef331a093119b5b892e4bd1ee68c5495",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "Yes\n\nNo\n\n(7) If yes, complete the following:\n\nSherry <em>Boston</em>\nName of Committee Chairperson\n\nName of Committee Treasurer\n\n4. "
+        ],
+        "page_no_2": [
+          "Public Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nPage 2 of 8\n\n "
+        ],
+        "page_no_3": [
+          "(Line 1 + 2 + 3 - 4 - 5 - 6)\n\nAmount\n\n* Election Cycle (Primary, General, Special, Special Primary, Run-Off Primary, Run-Off General, Run-Off Special, Run-Off Special Primary)\nPublic Officer/Candidate/Other Than Candidate Committee Name\n\nPublic Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nPage 3 of 8\n\n "
+        ],
+        "page_no_4": [
+          "Description\n\nRun-Off Primary\nRun-Off General\n\nCity\nState\n\nEmployer\n\nIn-Kind\nZip\n\nRun-Off Special\nRun-Off Special\nPrimary\n\nCommon Source\nCredit Received on\nLoan\n\nItemized Contributions Page Total\n\n$0.00\n\n$0.00\n\n*\nContribution Type (Monetary, In-Kind, Common Source, Credit Received on Loan)\n** Election Cycle (Primary, General, Special, Special Primary, Run-Off Primary, Run-Off General, Run-Off Special, Run-Off Special Primary)\n*** If any such person(s) shall have a fiduciary relationship to the lending institution or party making the advance or extension of credit\n\nPublic Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nPage 4 of 8\n\n "
+        ],
+        "page_no_5": [
+          "Primary\nGeneral\nSpecial\nSpecial Primary\nRun-Off Primary\nRun-Off General\nRun-Off Special\nRun-Off Special\nPrimary\n\nAddress 2\n\nPublic Officer\nCandidate\n\nCity\nState\n\nReference: OCGA § 21-5-34(b)(1)\n\nZip\n\nOther Than Candidate\nCommittee Name\nLoan Page Total\n\n$0.00\n\n* Contribution Type (Monetary, In-Kind, Common Source, Credit Received on Loan)\n** Election Cycle (Primary, General, Special, Special Primary, Run-Off Primary, Run-Off General, Run-Off Special, Run-Off Special Primary)\n*** If any such person(s) shall have a fiduciary relationship to the lending institution or party making the advance or extension of credit\n\nPublic Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nPage 5 of 8\n\n "
+        ],
+        "page_no_6": [
+          "Expenditure\nPurpose\n\nAmount\nPaid\n\nOccupation\n\nLast Name\nExpenditure\n\nAddress\n\nIn-Kind\nLoan Repayment\n\nAddress 2\n\nRefund\n\nEmployer\n\nReimbursement\n\nCity\n\nCredit Card\n3rd Party\n\nState\n\nZip\n\nDeferred Payment\nPayment on Deferred Expense\nInvestment\n\nPage Total\n\n$0.00\n\n* Expenditure Type (Expenditure, In-Kind, Loan Repayment, Refund, Reimbursement, Credit Card, 3rd Party, Deferred Payment on Deferred Expense, Investment)\nPublic Officer/Candidate/Other Than Candidate Committee Name\n\nPublic Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nPage 6 of 8\n\n "
+        ],
+        "page_no_7": [
+          "Investment Name\n\nAccount #\nValue at beginning of reporting period $\n\nInstitution/Person\nHolding Account\n\nValue at end of reporting period $\n\nMailing Address\nDifference in value $\nAddress2\nInterest Paid Out $\nCity\n\nState\n\nZip\nCash Dividends $\n\nInvestment Transactions\nDate\n\nPerson(s) Involved in Transaction\n\nValue of investment\npurchased\n\nTotal value of investments at beginning of reporting period\n\n$0.00\n\nTotal value of investments at end of reporting period\n\n$0.00\n\nTotal difference in value\n\n$0.00\n\nPublic Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nValue of investment\nsold\n\nProfit\n\nLoss\n\nPage Total Cash Dividends:\n\n$0.00\n\nPage Total Interest Paid Out:\n\n$0.00\n\nPage Total Profit:\n\n$0.00\n\nPage Total Loss:\n\n$0.00\n\nPage 7 of 8\n\n "
+        ],
+        "page_no_8": [
+          "Public Officer/Candidate/Other Than Candidate Committee Name Sherry <em>Boston</em>\n\nPage 8 of 8\n\n "
+        ]
+      },
+      "data": {
+        "date": ["7/5/16"],
+        "office": ["Solicitor General"],
+        "candidate": ["Boston, Sherry"],
+        "jurisdiction": ["DeKalb County Board of Registration & Elections"],
+        "document_name": ["CCDR"],
+        "document_type": ["CCDR"]
+      },
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/4229276-Boston-Sherry-7-5-16-CCDR-CCDR"
+    },
+    {
+      "id": "3259890",
+      "user": 16677,
+      "organization": 57,
+      "access": "public",
+      "status": "success",
+      "title": "Boston, MA",
+      "slug": "Boston-MA",
+      "language": "eng",
+      "created_at": "2017-01-10T21:41:09.259Z",
+      "updated_at": "2020-11-10T17:02:40.656Z",
+      "page_count": 13,
+      "projects": [31169],
+      "original_extension": "pdf",
+      "file_hash": "589110e1ac30be1e598458ff5b7dc5e6f224acd0",
+      "edit_access": false,
+      "notes": [
+        {
+          "id": "334535",
+          "user": 16677,
+          "organization": 57,
+          "access": "public",
+          "title": "The contract is still in effect as of January 2017, according to a spokesperson from the Boston Police Patrolmen's Association.",
+          "created_at": "2017-01-12T19:40:21.486Z",
+          "updated_at": "2020-11-10T17:02:52.658Z",
+          "page_number": 0
+        }
+      ],
+      "highlights": {
+        "page_no_1": [
+          "Sep 27 13 11 :20a\n\nEstelle\n\n954-752-5581\n\nCity of <em>Boston</em> and <em>Boston</em> Police Patrolmen's Association\nJLMC No. 12-32P\n\nAWARD\n\nThe panel convened pursuant to the joint submission of the parties after a declaration that\nthe parties were unable to agree to the terms and conditions of a new collective\nbargaining agreement for the period commencing July 1, 2010.\n"
+        ],
+        "page_no_8": [
+          "This includes but is not limited to the\nfollowing events/circumstances: First Night, <em>Boston</em> Marathon, Caribbean\nFestival, July 4th, major sporting events, major cultural events, and weather\nemergencies.\nii. "
+        ],
+        "page_no_12": [
+          "CITY OF <em>BOSTON</em>\nOFFICE OF ADMINISTRATION\n\n& FINANCE\n\nCity of <em>Boston</em> and <em>Boston</em> Police Patrolmen's Association JLMC No. 12-32P\nDissent by the City of <em>Boston</em> Panel Member John Dunlap\nThis award grants a sa lary increase of 25.4% to police officers over a six-yea r period and will cost the taxpayers\nmore than $80 million- more than twice as much as the City's offer would have cost. "
+        ],
+        "page_no_13": [
+          "The group of unions which had\nvoluntarily settled with the City included the <em>Boston</em> Teachers Union (BTU)- the City's largest union. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/3259890-Boston-MA"
+    },
+    {
+      "id": "690354",
+      "user": 4617,
+      "organization": 330,
+      "access": "public",
+      "status": "success",
+      "title": "Boston Charge",
+      "slug": "boston-charge",
+      "source": "US Justice Department",
+      "description": "The criminal complaint against Dzhokhar Tsarnaev",
+      "language": "eng",
+      "created_at": "2013-04-22T18:17:26.319Z",
+      "updated_at": "2020-10-30T17:20:51.478Z",
+      "page_count": 13,
+      "original_extension": "pdf",
+      "file_hash": "e37e492ce361882ec6c5f9eaeddfa5fc2501ee64",
+      "related_article": "http://www.justice.gov/iso/opa/resources/363201342213441988148.pdf",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_2": [
+          "I am currently assigned to one of the <em>Boston</em> Field Office's\nCounter-terrorism Squads.\n\n"
+        ],
+        "page_no_3": [
+          "The <em>Boston</em> Marathon Explosions\n\nThe <em>Boston</em> Marathon is an annual race that attracts runners from all over the\n\nUnited States and the world. "
+        ],
+        "page_no_4": [
+          "Case 1:13-mj-02106-MBB Document 3-1 Filed 04/21/13 Page 3 of 10\n\nBoylston Street in <em>Boston</em> from Hereford Street to the finish line, which is located between Exeter\nand Dartmouth Streets.\n\n"
+        ],
+        "page_no_7": [
+          "The man pointed a firearm at the victim and stated, \"Did you hear about the <em>Boston</em>\n6\n\n\f"
+        ],
+        "page_no_9": [
+          "A preliminary examination of the remains of the explosive devices that were used\n\nat the <em>Boston</em> Marathon revealed that they were low-grade explosives that were housed in pressure\ncookers. "
+        ],
+        "page_no_10": [
+          "Case 1:13-mj-02106-MBB Document 3-1 Filed 04/21/13 Page 9 of 10\n\nexplosives used at the <em>Boston</em> Marathon. "
+        ],
+        "page_no_12": [
+          "District Court - District of Massachusetts\n\nPlace of Offense:\n<em>Boston</em>\n\nCity\n\nFBI\n\nRelated Case Information:\n\nSuffolk\n\nCounty\n\nInvestigating Agency\n\nCategory No.\n\n"
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/690354-boston-charge"
+    },
+    {
+      "id": "5740788",
+      "user": 21213,
+      "organization": 2173,
+      "access": "public",
+      "status": "success",
+      "title": "Opinión Boston",
+      "slug": "Opinio-N-Boston",
+      "language": "spa",
+      "created_at": "2019-02-15T21:04:39.266Z",
+      "updated_at": "2021-01-11T13:57:50.338Z",
+      "page_count": 55,
+      "original_extension": "pdf",
+      "file_hash": "6406546cd5ea8487367741f5dfd7550c94fe4205",
+      "related_article": "https://www.telemundopr.com/noticias/destacados/WKAQ-Declaran-inconstitucionales-nombramientos-de-la-Junta--3-505903281.html",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/5740788-Opinio-N-Boston"
+    },
+    {
+      "id": "4229280",
+      "user": 6984,
+      "organization": 85,
+      "access": "public",
+      "status": "success",
+      "title": "Boston,_Sherry_1_31_16_Not_Seeking_Reelection_Affidavit_Not_Seeking_Reelection_Affidavit_78c860fe1b8a4e9d9f0b725d9bfc463e.pdf",
+      "slug": "Boston-Sherry-1-31-16-Not-Seeking-Reelection",
+      "source": "http://www.gaeasyfile.com/",
+      "language": "eng",
+      "created_at": "2017-11-15T19:22:27.759Z",
+      "updated_at": "2021-01-07T20:06:38.873Z",
+      "page_count": 2,
+      "projects": [36073],
+      "original_extension": "pdf",
+      "file_hash": "146f53711e3e706b3f8974790c5cbe52797741ad",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          ". - Suite 1402 West Tower - Atlanta, GA 30334\nEffective as of\n\n01/31/2016\n\nSherry <em>Boston</em>\nP.O. "
+        ]
+      },
+      "data": {
+        "date": ["1/31/16"],
+        "office": ["Solicitor General"],
+        "candidate": ["Boston, Sherry"],
+        "jurisdiction": ["DeKalb County Board of Registration & Elections"],
+        "document_name": ["Not Seeking Reelection Affidavit"],
+        "document_type": ["Not Seeking Reelection Affidavit"]
+      },
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/4229280-Boston-Sherry-1-31-16-Not-Seeking-Reelection"
+    },
+    {
+      "id": "3728138",
+      "user": 17647,
+      "organization": 2383,
+      "access": "public",
+      "status": "success",
+      "title": "Boston 2015",
+      "slug": "Boston-2015",
+      "language": "eng",
+      "created_at": "2017-05-22T14:07:03.252Z",
+      "updated_at": "2020-09-23T15:54:09.818Z",
+      "page_count": 8,
+      "projects": [33205],
+      "original_extension": "pdf",
+      "file_hash": "dcb12872ecedf648df81adb4408f737c6e104a73",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_3": [
+          "3132.3: oat-e \nDELTA 2588 PAUL <em>BOSTON</em>\nMAIN CABIN \n3:00pm 6:53pm\n\n \n     \n\n. \n"
+        ],
+        "page_no_4": [
+          "Sat, DEPART Annma3-3.. 3 - \n\nDELTA 2588 PAUL <em>BOSTON</em>\nMAIN CABIN (T)\n\n3:00pm 6:53pm\n\n52\"N?"
+        ],
+        "page_no_5": [
+          ". --\n\nDELTA 2391 <em>BOSTON</em> PAUL\n\n      \n\ninvo? - -u . \n\n\n\n\n   \n\nMAIN CABIN (L)\n4:40pm 6:50pm\nPassenger Info\nNAME FLIGHT SEAT\nRAY ANTHONY DELTA 2588 05C\nDELTA 2391 11C\n\nVisit delta com or use the Fly Deiia app to view, select or change your seat.\n\n"
+        ],
+        "page_no_6": [
+          ": Tim-n\n\nDELTA 2533 MPLS-ST PAUL <em>BOSTON</em>\nMAIN CABIN (U)\n\n3: 00pm 6:53pm\n\n      \n\n.Gift-7. {3.13? "
+        ],
+        "page_no_7": [
+          "A n1 n' _-1r\n'ru\" be} \n\n    \n\nMANAGE MY \"219' \n\n<em>BOSTON</em>\n\n6:53pm\n\n\"0 II ?"
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/3728138-Boston-2015"
+    },
+    {
+      "id": "353467",
+      "user": 657,
+      "organization": 124,
+      "access": "public",
+      "status": "success",
+      "title": "Boston Matthew",
+      "slug": "boston-matthew",
+      "language": "eng",
+      "created_at": "2012-05-04T15:35:47.545Z",
+      "updated_at": "2020-11-06T20:48:41.821Z",
+      "page_count": 8,
+      "projects": [5097],
+      "original_extension": "pdf",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/353467-boston-matthew"
+    },
+    {
+      "id": "236334",
+      "user": 98,
+      "organization": 206,
+      "access": "public",
+      "status": "success",
+      "title": "20081219 Boston",
+      "slug": "20081219-boston",
+      "language": "eng",
+      "created_at": "2011-08-18T17:04:31Z",
+      "updated_at": "2020-11-09T20:30:12.421Z",
+      "page_count": 2,
+      "projects": [2588],
+      "original_extension": "pdf",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {},
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/236334-20081219-boston"
+    },
+    {
+      "id": "23879788",
+      "user": 12709,
+      "organization": 1608,
+      "access": "public",
+      "status": "success",
+      "title": "1723 Boston rules on Negroes - Boston Common",
+      "slug": "1723-boston-rules-on-negroes-boston-common",
+      "language": "eng",
+      "created_at": "2023-07-18T14:39:42.205Z",
+      "updated_at": "2023-07-18T14:40:26.426Z",
+      "page_count": 256,
+      "projects": [214046],
+      "original_extension": "pdf",
+      "file_hash": "b17d62dfe9b89c117e534377eca397322b6acf36",
+      "noindex": false,
+      "edit_access": false,
+      "notes": [
+        {
+          "id": "2362326",
+          "user": 12709,
+          "organization": 1608,
+          "access": "public",
+          "title": "Boston rules: \"No Indian Negro or Molatto Servant or Slave...Shal abide there after Sun Sett\"",
+          "created_at": "2023-07-18T14:48:09.034Z",
+          "updated_at": "2023-07-18T14:48:09.034Z",
+          "page_number": 179,
+          "x1": 0.03142857,
+          "x2": 0.98948056,
+          "y1": 0.6519898,
+          "y2": 0.7233445
+        }
+      ],
+      "highlights": {
+        "page_no_3": [
+          "Record Commissioners\nCITY OF <em>BOSTON</em>,\nCONTAINING THK\n<em>BOSTON</em> RECORDS FROM ITOO TO 1728.\n"
+        ],
+        "page_no_5": ["City Hall, <em>Boston</em>, December, 1882."],
+        "page_no_7": [
+          "<em>BOSTON</em> TOWN RECORDS.\n[232.] 1700. March 11*^ Att a Publick meeting of the Inhabitants of <em>Boston</em>, Upon Pub￾lick Warning according to Law, were Chosen the Town officers after named. "
+        ],
+        "page_no_9": [
+          "It was Voted, That there be four hundred pounds raised upon\nthe inhabitants of <em>Boston</em> for the relief of the poor.\n"
+        ],
+        "page_no_11": [
+          "Meeting of the Inhabitants of <em>Boston</em>. Upon Publick Warning according to Law, were chosen for Repre￾sentatives, Viz*. "
+        ],
+        "page_no_13": [
+          "<em>Boston</em> Town Eecords, 1701. 7\n[240.] May 12'^^. 1701. Att a Publick Meeting of the Inbab￾ittants of this Town being this day convened at the Town House\nin <em>Boston</em> upon Lawful) warning.\n"
+        ],
+        "page_no_14": [
+          "Wee the Subscribers being appojaited a committee by the vote of the Town of <em>Boston</em>, past the 8'^. day of Aprill 1700, to lay out a highway to the land of Joseph Buckminster of Muddy River. "
+        ],
+        "page_no_15": [
+          "At a meeting of the fFreeholders and Inhabitants ofthe Town of <em>Boston</em> duly Qualified to act and Vote in Town affaires being\nOrderly warned and Assembled the twelfth day of May Anno. "
+        ],
+        "page_no_17": [
+          "<em>Boston</em> Town Kecoeds, 1701. 11\nTcii-ce fall of waiter, on pain of forfeiting the Summ of five Shil- lings for every Such Neglect, and that no person or persons shall be excused therefrom that fetch their water from the wells and\nConduits that are in the Streets & publick places. [245.] "
+        ],
+        "page_no_18": [
+          "Nor shall any person keep any hogg or swine in any hoggstey within twenty foot of any highway, street, lane or\nalley within this neck of <em>Boston</em>, or the dwelling house or shop of any Neighbour on penalty of Tenn Shillings for every transgression\nof this order, and Tenn shillings for every moneth such hogg or swine shall be kept and continued in such Stey. "
+        ],
+        "page_no_19": [
+          "<em>Boston</em> Town Eecords, 1701. 13\ning to drive any cart, dray, Trucks or sled, shall dureing Such\npassing through the streets or lanes as aforesaid either ride in the\nsaid Cart, dray. "
+        ],
+        "page_no_20": [
+          "Ordered, That no person dwelling or resideing within this Town\nof <em>Boston</em>, shall by himselfe or others, bu}', contract or bargaine,\nfor any sort of grain, meal, butter ffowls, mutton, veal, pork, eggs\nor any other sort of provision, while it is bringing between Rox￾bury gate and the houses of the Town, before two of the clock in the afternoon, On j^enalty of Twent}' shillings, for every such\noffence. "
+        ],
+        "page_no_21": [
+          "<em>Boston</em> Town Recoeds, 1701. 15\nsame to be well corded and of sufflcient highth, on pain of forfeit- ing Tenn Shillings for every transgression of this Order. "
+        ],
+        "page_no_22": [
+          "Ordered, That if any person shall keep or entertaine more then one Dogg or Bitch and sufler the same to go at lai'ge within this neck of <em>Boston</em>, and upon Complaint made unto the Select men for the time being by any of the Neighbourhood, that such Doggs are\noffencive to them, doing damage to their Gardens, Orchards, pas￾tures or other wise. "
+        ],
+        "page_no_23": [
+          "At a Generall and Publick Meeting of the Inhabitants of the Town of <em>Boston</em> being this day\nconvened at the Town house upon due warning according as the Law directs. "
+        ],
+        "page_no_24": [
+          "Ordered that no person or persons do presume hereafter to carry\nfire from any house or place within the Said' Neck or Town of <em>Boston</em> unto any other House or place within the same, but in a \"Warming pan, or other Safe Vessell well covered So as to Secure\nthe Said fire from the wind, and from being scattered by the way', or in the Streets or Lanes therof on Paine that every person\ntherein offending shall forfeite and pay for the use of the poor of Said Town the Suih of One shilling. "
+        ],
+        "page_no_25": [
+          "Ordered, that no person what soever shall carry or cause or suffer to be carryed or cast any dirt, dung Garbidge Carrion, Shreds, Shaveings, filth, Soyl, or Ilu))bish, or any thing that may be an Annoyance, out of their Houses, shops, yards, back Sides or any\nof the dependanceyes thereof and cast or Lay the Same in any of the Streets, Highwayes Lanes or Alleyes within this neck of <em>Boston</em> on pain of forfeiting the Suiii of Two Shillings for every such offence. "
+        ],
+        "page_no_26": [
+          "Nor shall any person from and after the end of October Ann° One thousand Seven hundred and one, Keep any Hogg or Swine\nin any Hogg stey within Twenty foot of any Highway, Street, Lane or Alley within this Neck of <em>Boston</em>, or of the dwelling house\nor Shop of any Neighbour on penalty of Ten Shillings for every Transgression of this order and Ten Shillings for every moneth\nsuch hogg or Swine shall be kept and continued in Such Stey, Unless in such place where the dung or filth runs into the Sea or\nSalt water. "
+        ],
+        "page_no_27": [
+          "<em>Boston</em> Town Eecords, 1701. 21\nStreet, Lane or Highway within this Town, shall within such time\nas any two or more of the Select men for the time being Shall grant after the Same is broken up, cause the same to be sufficiently repaired and amended to the Satisfaction of the Selectmen. "
+        ],
+        "page_no_28": [
+          "Soloman Phipps is chosen Constable of <em>Boston</em> for the District of IMuddy River. "
+        ],
+        "page_no_29": [
+          "<em>Boston</em> Town Eecoeds, 11Oy^. 23\nMess\". William Ireland & Samuell Townseud are chosen Fence\nveiwers for Rumney marsb.\n"
+        ],
+        "page_no_30": [
+          "At a Pubhck meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em> duly qualified &\nwarned according to Law, bein^' convened at the Town house did then and there Agree declare and chuse as followeth viz'. "
+        ],
+        "page_no_31": [
+          "<em>Boston</em> To^tst Eecoeds, 1702. 25 Highwayes belonging to the Town It is Voted that the Select men\ndo cause the Same to be measm-ed and make a report thereof to the next Town meeting. "
+        ],
+        "page_no_32": [
+          "At a Publick Meeting of the Free holders and other Inhabitants of <em>Boston</em> duly qualified & warned according to Law convened at the Town House y<^ 16 of Feb^^. 1702. "
+        ],
+        "page_no_33": [
+          "<em>Boston</em> Town Eecoeds, 1702/3. 27\nJohn Devotion, Thomas Woodward w''. chosen fence veiwers for Muddy Eiver. "
+        ],
+        "page_no_34": [
+          "At a Publick Meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em> duly quallified and warned ac- cording to Law being convened at the Town-House the day afore-"
+        ],
+        "page_no_35": [
+          "<em>Boston</em> Town Eeooeds, 1703/4. 29\nsaid did then and there chuse Vote declare and Agree as followeth\nviz'.Samuel Sewall Esq\"\". "
+        ],
+        "page_no_37": [
+          "<em>Boston</em> Town Eecords, 1704. 31\ning Such Places of the Streets as they shall judg most needful! "
+        ],
+        "page_no_38": [
+          "At a meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em> duly quallified and warned according to Law\nbeing convened at the Town House in <em>Boston</em> the SO\"' of Septemb''. 1704 did then and there Chuse as followeth viz'. "
+        ],
+        "page_no_39": [
+          "<em>Boston</em> Town Eecoeds, 1704/5. 33\nJxynathan Jackson, Ezekiell Lewise, Eliah Adams, and John\nCookson declare their refusall to Serve as Constables & Samuel\nGardener, Hopestill Foster, Benjameu Emmons jun'*. "
+        ],
+        "page_no_40": [
+          "Court at their next Sessions, relateing to a Petition of Sundry of the Inhabitants\nof Muddy River who pray that they may be dismist from the Town\nof <em>Boston</em>: & become a Town Ship of themselves. [276.] "
+        ],
+        "page_no_41": [
+          "<em>Boston</em> To^vn Eecords, 1705/6. 35 Town in Gen\". Assembly to be held the 30'^. of May Cnrr*. & so De Die in Diem. "
+        ],
+        "page_no_43": [
+          "<em>Boston</em> Town Eecoeds, 1706. 37 Snow & David Norton to Serve as Hoggreeves for y® year en￾sueing.\n"
+        ],
+        "page_no_44": [
+          "At a meeting of the Free holders and other Inhabit'' of the Town\nof <em>Boston</em> duly qualified and warned According to Law, being convened at the Town House the 14\"' day of May 1706 did then and there by their Vote declare and Chuse as followeth viz'. "
+        ],
+        "page_no_45": [
+          "<em>Boston</em> Town Eecoeds, 1706. 39\nColP. Samuel Checkley, M\"\". Elizur Holyoke, M\"\". "
+        ],
+        "page_no_46": [
+          "40 City Document No. 137'.\nthat the Inhabitants of <em>Boston</em> Should proceed to Fortifie the S*^ Town for then- better Security, according to the proposalls by them made and now presented to the Town meeting and are as foUow￾eth viz'. "
+        ],
+        "page_no_47": [
+          "<em>Boston</em> Totvtst Kecords, 1706/7. 41\nmeeting to Attend S^. Service, are appointed to Audit the Treas￾urers acco'. for this present year upon the report made to y'^ Town\nby y\" Coniittee for Fortifications. [284.] "
+        ],
+        "page_no_49": [
+          "<em>Boston</em> Toayn Eecoeds, 1707. 43\nCap'. Elisba Beunet & Jonathan Bill Sen^ to Serve as Tyth￾iug men. "
+        ],
+        "page_no_50": [
+          "At a meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em>, duly qualified and warned according to Law be- ing convened at the Town House the 29* day of Decemb'' 1707,\ndid then and there agree Vote and chuse as followeth viz'. "
+        ],
+        "page_no_51": [
+          "<em>Boston</em> Town Records, 1707/8. 45 & the Old Fortification, and to hear and consider of their pro￾posalls and terms On which they will undertake the Same, & to make report thereof at y® next meeting. "
+        ],
+        "page_no_52": [
+          "And this Town of <em>Boston</em> as a Town. vSaid lands haveing been long Since Sold p a Comittee of the Said Proprietors to Severall Gentlemen in Town\nfor the Suiiie of Five hundred pounds and has been Since Sold p them to other persons mostly of the Town of Brantree for the\nSuiiie of Seven hundred pounds, but the Town Esteeming the Lands to be their Right have often passed votes relating to that matter, which votes have never yet produced any good Effect, but"
+        ],
+        "page_no_53": [
+          "And the Land of Daniel Eppes of <em>Boston</em> afore-"
+        ],
+        "page_no_54": [
+          "At a Meeting of the Free holders and other* Inhabitants of the Town of <em>Boston</em> duly qualified and warned According to Law,\nbeing convened at the Town house the 29\"' day of March: 1708. "
+        ],
+        "page_no_55": [
+          "At a meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em> dul}' qualified and warned according to Law, being convened at the Town House the 12\"\" day of Aprill 1708. "
+        ],
+        "page_no_57": [
+          "<em>Boston</em> Town Records, 1708. 51 The Alley by Whartons House in Cow Lane leading Easterly into Harrisons' Rope Walke CrooJ^ed Alley. "
+        ],
+        "page_no_60": [
+          "At a meeting of the Freeholders and Other Inhabit'\" of the Town of <em>Boston</em> duly qualified and warned according to Law, be￾ing convened at the Town House the 17\"' day of May 1708."
+        ],
+        "page_no_61": [
+          "<em>Boston</em> Town Eecords, 1708. 55\nV-^oted that Pen Townsend Esq'\" be the moderator for this meeting. "
+        ],
+        "page_no_62": [
+          "At a meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em>, duly qualified and warned according to Law, be- ing convened at the Town House the 24\"' day of January Anno Domm' 1708. "
+        ],
+        "page_no_63": [
+          "<em>Boston</em> Tov^tst Eecords, 1708. 57\nagree with them to offer it as our Advice to the Towd of <em>Boston</em>, That for the future peace of the Town and the Consideration of the SuIIie of five hundred pounds being Impropriated and improved\nfor y*\" Publick good of the Town forever, and in Consideration of [300.] "
+        ],
+        "page_no_64": [
+          "At a meeting of the Free holders and other Inhabi￾tants of the Town of <em>Boston</em> duly qualified and Warned According\nto Law, being convened at the Town Hous the 14\"\" day of March Anno DomM'708/9.\n"
+        ],
+        "page_no_65": [
+          "<em>Boston</em> Town Records, 1708/9. 59\nation Untill Some other Public meeting of tlie Inhabitants to be\nTvarned for the Same purpose Voted in the negative. "
+        ],
+        "page_no_66": [
+          "At a meeting of the Free holders and other In- habitants of the Town of <em>Boston</em> duly qualified and warned\naccording to Law being convened at the Town House on Monday\nthe 14\"^ of March 1708/9 and Continued by Adjournment to Tues- day the 15\"\" day of the same, and being then Assembled.\n"
+        ],
+        "page_no_67": [
+          "At a meeting of the Freeholders and other inhabitants of the Town of <em>Boston</em> duly quallified & warned according to Law,\nbeing convened at the Town Hous: the 29th day of Aprill 1709. "
+        ],
+        "page_no_68": [
+          "At a meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em> duly qualified and Y/arned According to Law,\nbeing Convened at the Town House on monday the 19th of December 1709. "
+        ],
+        "page_no_69": [
+          "<em>Boston</em> To\\vtt Eecords, 1709. 63\nto Audits the Acco*' of the Committee for Fortifications Appointed\nby the Town in the year 1706, And the Acco\" of the Committee\nAppointed in this present year 1709 for repairing the Platforms\n&c. at the South Battrey, and also the Treasurer^ Acco'' for this present year. "
+        ],
+        "page_no_70": [
+          "At a Meeting of the Free holders and other Inhabi￾tants of the Town of <em>Boston</em> duly qualified and warned accord￾ing to Law, being convened at the Town House the 13* day\nof March 1709/0\nVoted. "
+        ],
+        "page_no_71": [
+          "<em>Boston</em> Town Records, 1709/10. 65\ngranted every body must be abundantly Satisfied. "
+        ],
+        "page_no_72": [
+          "Leaveing the end of S*^ Wharfe free for the Town, when they Shall See reason to plant Guns for the defence of Said Town, In con￾sideration whereof the Freeholders and other Inhabitants of the Town of <em>Boston</em>, Shall and do give Grant, Bargaine, Enfeoffe and"
+        ],
+        "page_no_73": [
+          "M\"\" Thomas Clark of <em>Boston</em> Pewterer haveing by his Petition\nSignified his request as followcth viz'. "
+        ],
+        "page_no_74": [
+          "The above is what M'' Gyles Dyer offers, And wee the present\nSelect men of the Town of <em>Boston</em>, Considering there has been\nSeverall years uneasieness about the S** Land, And also haveing"
+        ],
+        "page_no_75": [
+          "At a Meeting of the Free holders and Other Inhabit'\" of the Town of <em>Boston</em>, duly qualified & warned according to Law being Convened at y^ Town-House in <em>Boston</em> the 13\"' of March Ann\" 1709/0 and Continued by Adjournment to the 14\"* day of the Same, and then being convened. "
+        ],
+        "page_no_77": [
+          "<em>Boston</em> Town Eecords, 1709/10. 71\n1 . With respect to the Natural Course of Wast water running out\nof Severall Streets into that Slip, and in perticular the many Cellar draines in that part of the Town, which can have Vent in no other\nplace but ther: unto which priviledge that neiglibor hood do esteem\nthemselves to have a just and equitable Right, and Some of them do complaine, that the buildings w*^'' have been Set over the S*^ Slip for years past hath been greatly to their dainiige, for that y\" S*\nSlip, partly bj' the working of the Sea, and partly by Trash cast\nin, hath gi'adually fil'd up, and no way left to come at and clear the Same, the which inconveniency (unto a greater degree) they may reasonably expect in cas: the Same Should be wharfed or\nfil'd up. [314.] 2. "
+        ],
+        "page_no_78": [
+          "At a Meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em> duly qualified, and warned, according to Law,\nbeing convened at the Town-House the 15th of May 1710.\n"
+        ],
+        "page_no_79": [
+          "<em>Boston</em> Town Recoeds, 1710. 73 John Clark Esq% Cap* Ephr™ Savage, Cap* Thorn' Hutchinson,\nm'\" James Barnes are by y*\" Majority of Voters present chosen to Serve as Representitives. "
+        ],
+        "page_no_80": [
+          "At a meeting of the Free holders and other Inhabitants\nof the Town of <em>Boston</em>, duly qualified and warned According to Law, being convened at the Town-House the 14th of Octo\"\" 1710. "
+        ],
+        "page_no_81": [
+          "<em>Boston</em> Town Eecoeds, 1710/11. 75\nVotes for County Treasu'' delivered to Cousta Burnel. "
+        ],
+        "page_no_83": [
+          "<em>Boston</em> Town Kecords, 1711. 77\nport Esq'', Mesu\" Isaiah Tay, Daniel Oliver, Thorn' Gushing, Dr\nOliver Noyes, Joseph Wadsworth & Edw*^ Hutchinson, or any five of them, be a CoTnittee to Sell the Townes Lands in Brantree, and\nthat they have full power to Sign & execute Deeds for y\" same, &\ny' they Lay out y** S\"^ money in Some Real Estate for the use of\nthe Publick Lattin School, that y^ Stock be not Exhausted Pro￾vided y^ Town be advised w'*\" before y® money be disposed of. [321.] "
+        ],
+        "page_no_85": [
+          "At a Meeting of the Free holders and other Inhabit'' of the Town\nof <em>Boston</em>, duly qualified and Avarned Accordingly to Law being Convened at the Town House the 9\"' of JNIay 1711. "
+        ],
+        "page_no_86": [
+          "(The within Written Indenture of Bargain and Sale made by the\nSelect men, appointed and impowered by the Town a Coihittee for that purpose, was presented & Publickly Read in a Generall Town\nMeeting, Orderly Assembled at the Town House in <em>Boston</em>, upon\nLawfull warning the 9\"' day of May 1711. "
+        ],
+        "page_no_87": [
+          "That the Gentlemen that Represent this Town in the G' & Gen^^ Assembly be desired to move, That the Rule for ap- portioning the Town & County Assessments for <em>Boston</em> may be"
+        ],
+        "page_no_88": [
+          "At a meeting of the Free holders and other Inhabitants of the Town of <em>Boston</em>, duly qualified and warned according to Law, be- ing convened at the Town-House the 13\"* of March 1709/10.\n"
+        ],
+        "page_no_89": [
+          "That a line of Defence be forthwith made, across the neck between <em>Boston</em> and Roxbury.\n"
+        ],
+        "page_no_90": [
+          "At a Meeting of the Free holders and other Inhabi\"' of the Town\nof <em>Boston</em>, duly qualified and warned according to Law, being con- vened at the Town-House the 27* day of August 1711. "
+        ],
+        "page_no_91": [
+          "That being the Boundary between the Townes of <em>Boston</em>, Lynn and Reading. "
+        ],
+        "page_no_93": [
+          "At a Meeting, of the Free holders and other Inhabi￾tants of the Town of <em>Boston</em> duly qualified and Warned According\nto Law, being Convened at the Rev* m^ Colmans Meeting- House in <em>Boston</em> Aforesaid, on Monday the 10\"^ day of March\n1711-12."
+        ],
+        "page_no_95": [
+          "<em>Boston</em> Town Records, 1711. 89\nand Jolin Green Cooper are chosen to Serve as Constables for the Ensuing year. note that the first five above named being present took the Con￾stables oath at the Same meeting. "
+        ],
+        "page_no_96": [
+          "That the Veiwers of wood within the Town of <em>Boston</em>\nbe Allowed one pen}'^ p' Cord for So much wood as they Shall Veiw, and the Said peny p Cord to be paid by the buyer."
+        ],
+        "page_no_97": [
+          "A grant of three hundred pounds to be raised for the Support of the Watch for y^ year ensuing.\n,] At a meeting of the Free-holders and other Inhabit'^ of\nthe Town of <em>Boston</em>, duly qualified & warned according to Law,\nbeing Convened at the South Meeting-House in <em>Boston</em> the 14th day of M:iy 1712. "
+        ],
+        "page_no_98": [
+          "At a Meeting of the Free holders and other Inhabit'^ of y^ Town of <em>Boston</em>, duly qualified and warned According to Law, being Convened at the South Meeting House in <em>Boston</em> the 9th of March 1712/13.\n"
+        ],
+        "page_no_99": [
+          "<em>Boston</em> Town Eecords, 1712. 93\nAll for y^ year ensuing. Voted. That the Select men for y^ year ensuing be also Sur- veyors of the Highwayes.\n"
+        ],
+        "page_no_101": [
+          "<em>Boston</em> Town Records, 1712. 95\n\"Whereas Paul Dudley Esq'' hath Sinified his refusall to Serve\nas Sel: mau.\n"
+        ],
+        "page_no_102": [
+          "At a Meeting of the Free-holders and other Inhabi\"' of the Town of <em>Boston</em> duly qualified, being Regularly Assembled in a Publick Town Meeting at the Town-House the 13''^ of May.\n"
+        ],
+        "page_no_103": [
+          "<em>Boston</em> Town Records, 1712. 97\nSee Cause may now pass a Vote, Setting a time be 3'ond which\nthe}' will not receive any Such persons into y® worke-House.\n2. "
+        ],
+        "page_no_104": [
+          "That the remayning business of ihis Meeting be Con￾tinued to the Consideration of y\" next Publik Meeting, At a Meeting of the Free-holders and Other Inhabi\"' of the Town of <em>Boston</em> duly qualified and Warned, being Regularl}' As￾sembled at the Town-House, the 8\"^ day of March 1713. 14. "
+        ],
+        "page_no_105": [
+          "<em>Boston</em> Town Records, 1713. 99\nin that year, as they Shall think Just and reasonable, Provided the Same be done within Six moneths Next following. "
+        ],
+        "page_no_106": [
+          "That every Free-Holder or Inhabitant in the Town\nof <em>Boston</em> be obliged to Sweep or Rake up the Dirt into heaps be￾fore their respective Houses or Lands, Abutting to the paved\nStreets, Lanes, or Alley% being oixlered there unto by the Scavin￾ger ; And upon his C>' their Neglect or refusall, the Scavinger be\ndirected forthwith to employ a meet person to Sweep or Rake up\nthe Same, paying him therefor. "
+        ],
+        "page_no_107": [
+          "<em>Boston</em> Town Records, 1713. 101\nVoted. Thanks of this Town to m'\" John Cole for his past ser- vice as Master of a Free writeiug Scholl in this Town.\n"
+        ],
+        "page_no_108": [
+          "At a meeting of the Free-holders and other Inhabitants of the Town of <em>Boston</em> duly qualified, being Regularly Assembled in a Publick Town Meeting at the Town-lJouse the 17\"' of May 1714.\n"
+        ],
+        "page_no_109": [
+          "<em>Boston</em> Town Recobds, 1714. 103\nPursuant to a Return of the CoiTiittee appointed by the Town\nto Inspect the North Writeiug School. "
+        ],
+        "page_no_111": [
+          "<em>Boston</em> Town Eecords, 1714. 105\nhis School-House Together with the thanks of this Town for his past Service as School master. "
+        ],
+        "page_no_112": [
+          "At a meeting of the Free-hoWers and Other Inhabit'* of the Town of <em>Boston</em> duly qualified, being Regularlj- Assembled\nin a Publick Town Meeting at y^ Town House the 10'^ day of June. "
+        ],
+        "page_no_113": [
+          "<em>Boston</em> Town Records, 1714/15. 107\nthe Town the}' have Secured the S*^ Engine for the Service of the Town, and have paid for the purchace thereof the Sume of One\nhundred pounds.\n"
+        ],
+        "page_no_115": [
+          "At a meeting of the Free-holders and other Inhabitants of the Town of <em>Boston</em>, duly qualified, being Regularly Assembled in a\nPublick Town Meeting on the 14''^ of March 1714. 15. "
+        ],
+        "page_no_117": [
+          "That the Town will come in to halfe the Charge of makeing and maintaining a two raile fence from one end of the Neck, b,et\\v <em>Boston</em> & Roxbury to the Other for the benefit and\nSafety of Travillers: And that it be given as an Instruction to the next Representitives for this Town : That they Endevour to pro- cure the other halfe part there of to be done at the Charge of the Province, w\"\" Some Sutable provision in the Law, for defending\nthe Same against Such as Shall demoliish the Same or any part\nthereof. "
+        ],
+        "page_no_118": [
+          "At a Meeting of the Free-holders and Other Inhabitats of the Town of <em>Boston</em> duly qualified, being Regularly Assembled in a Publick Town Meeting at the Town-House the 17\"' of May 1715. "
+        ],
+        "page_no_119": [
+          "<em>Boston</em> Town Records, 1715. 113\nVoted. A grant of Two hundred and Sixty pounds to be Layd\nout in the afore S\"* Paveing, Provided that the Owners of the Lands w*^^ are Abutting on the Same do undertake and defray the Charge of paveing each Side of the S'^ Street, the Same breadth\nas hath been usually done by the neighbourhood in Other paved\nStreets. [359.] "
+        ],
+        "page_no_120": [
+          "At a Meeting of the Free-holders and other Inhabitants of the Town of <em>Boston</em> duly qualified, being Regularly Assembled in a Pub￾lick Town meeting at the Town House the 20\"\" of September 1715. "
+        ],
+        "page_no_121": [
+          "<em>Boston</em> Town Records, 1715. 115 A Motion Now made Ab* building a Row of Tooms in the bury￾ing place is continued to be considered at the next Meeting in March.\n[361.] "
+        ],
+        "page_no_123": [
+          "<em>Boston</em> Town Records, 1715. 117\nMesu'== Samuel Bridge, Thomas Barnard, jun\"\", Jabez Negus &\nObadiah Reed are Chosen Fence Veiwers for y\" year ensuing. "
+        ],
+        "page_no_125": [
+          "<em>Boston</em> Town Records, 1715. 119\nSchool ; And in Concert with the Select men, to purchace the Same.\n"
+        ],
+        "page_no_126": [
+          "Town of <em>Boston</em> duly qualified, being Regularly Assembled in a Publick Town Meeting at the Town-House the 8\"^ of May 1716.\n"
+        ],
+        "page_no_127": [
+          "<em>Boston</em> Town Records, 1716. 121\nIn answere to the Petition of Nathaniel Butt, who is the pres- ent Tennant to this Town for Deer Island. "
+        ],
+        "page_no_128": [
+          "That the Projection of an Act ab' a market in <em>Boston</em> now read, be further coninued to be considered at y® Meeting in March. "
+        ],
+        "page_no_129": [
+          "<em>Boston</em> Town Eecords, 1716/7. 123\nHabijah Savage, Samuel Greenwood, John Charnock & John\nBaker are Chosen to Serve as Select men for y*\" year ensuing.\n"
+        ],
+        "page_no_131": [
+          "The Inhabitants of <em>Boston</em> according to Adjourm' being now\nagaine Assembled.\n"
+        ],
+        "page_no_133": [
+          "At a Meeting of the Free hoklers and Other Inhabit\"\nof the Town of <em>Boston</em> duly qualified, being Regularly Assembled\nat the Town House the 10\"' day of March, 1717/8.\n"
+        ],
+        "page_no_135": [
+          "The Projection of an Act for a Publick Market in <em>Boston</em> w**\nat a former meeting of the Inhabi'^ was Continued untill now, and\nthe Same, being read & debated, and Voted disallowed\nMesu'^^ Benj'' Emmons\nWilF Jepson . "
+        ],
+        "page_no_137": [
+          "<em>Boston</em> Town Eecords, 1717/8. 131\nVoted an Adition of thirty pounds to m'' Jacob Sheafes Sallery So as to make the whole One hundred pounds p' annum. "
+        ],
+        "page_no_138": [
+          "At a Meeting of the Free-holders and other Inhabit*^ of the Town of <em>Boston</em> duly qualified, being Regularly Assembled\nin a Publick Town Meeting at the Town-house the 14'^ of May. "
+        ],
+        "page_no_139": [
+          "The Coinittee formerly appointed to Consider ab' Erecting School-house at the South end of <em>Boston</em>, and according\nto the Townes Vote on the 11\"' of march Last. "
+        ],
+        "page_no_140": [
+          "At a meeting of the Free holders and Other Inhabit'^ of\nthe Town of <em>Boston</em> duly qualified being Regularly Assembled\nin a Publick Town Meeting at the Town house the 9'' day of March.\n"
+        ],
+        "page_no_141": [
+          "<em>Boston</em>. Town Records, 1718. 135\nMesu^' Natha# Cunnigham Sworn\nWilliam Thomas. "
+        ],
+        "page_no_143": [
+          "<em>Boston</em> To^vN Records, 1718. 137\nMesu*'' Samuel Hood & declares his refusall. "
+        ],
+        "page_no_144": [
+          "At a meeting of the Freeholders and other Inhabitants\nof the Town of <em>Boston</em> duly qualified, being Regularly Assembled\nin a Publick Town meeting at y\" Town-house the 29* day of April 1719. "
+        ],
+        "page_no_145": [
+          "<em>Boston</em> Town Eecords, 1719. 139\nas the other Bell ringers for the like Servise Seven pounds p' annum in Stead of what was entered p. 382. "
+        ],
+        "page_no_147": [
+          "<em>Boston</em> Town Eecoeds, 1719.20. 141\nBenj'' Brame\nDavid Farnum\nJonath\" Loring\nNicholas Buttolph John Flo3'd are chosen to Serve as Assessors of the Rates & Taxes for year\nensueing. "
+        ],
+        "page_no_149": [
+          "<em>Boston</em> Town Records, 1719, 20. 143\nIn the Room m'\" Pitsou, Peter Frasier is chosen to Serve as Constable for y^ j'ear ensuing, and afterward by vote excused. [388.] "
+        ],
+        "page_no_150": [
+          "At a meeting of the Freeholders & other Inhabitants of the Town of <em>Boston</em> duly qualified, being Regularly Assembled in a Publick Town meeting at the Town House on Wednesday the 27'^ of April 1720. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/23879788-1723-boston-rules-on-negroes-boston-common"
+    },
+    {
+      "id": "24164580",
+      "user": 102112,
+      "organization": 125,
+      "access": "public",
+      "status": "success",
+      "title": "Boston Green Academy_EN",
+      "slug": "boston-green-academy_en",
+      "language": "eng",
+      "created_at": "2023-11-13T19:52:58.192Z",
+      "updated_at": "2023-11-13T19:53:11.214Z",
+      "page_count": 1,
+      "projects": [215836],
+      "original_extension": "pdf",
+      "file_hash": "080bbaefc55170f72feb1cfb7ca26107a560ca23",
+      "noindex": false,
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "The Energy \nAudit is to provide <em>Boston</em> Public Schools with a baseline of energy usage, for both \nrenewable and non-renewable Energy Conservation Measures to reduce carbon \nemissions. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/24164580-boston-green-academy_en"
+    },
+    {
+      "id": "22393407",
+      "user": 20080,
+      "organization": 125,
+      "access": "public",
+      "status": "success",
+      "title": "VISIT TO BOSTON",
+      "slug": "visit-to-boston",
+      "source": "CIA CREST Database",
+      "language": "eng",
+      "created_at": "2022-09-14T02:21:35.649Z",
+      "updated_at": "2022-09-14T02:21:48.015Z",
+      "page_count": 1,
+      "projects": [209284],
+      "original_extension": "pdf",
+      "file_hash": "cfcb07abd75d86f9b47a2c2080d6d0903fb88ce9",
+      "edit_access": false,
+      "notes": [],
+      "highlights": {
+        "page_no_1": [
+          "Santzed Copy Approve for Relea 2078052 CA RDPETROOSZERC0200120023-4\nhe oiecron oF\ncenteaL meiGENCe\n\n| PL, He to. 7481-63\n| [— 1 octiner 1083\n1\n\nWIE TO: Charles vatermin WT 10: charles Vatersan\n® oi wren omer on tn toner\n\nSECT © Vist to <em>boston</em> Seer: visit to toston\n\n. oistribution:\n| plan to te 10 <em>Boston</em>, October Lath ibtion:\n\nana She\" lcs best Eurpean affairs Ee\n\ntar speek 51 Shares ovens\n\nic hubing ers Putnas st Rarvard, Robert 112 Mri chore\n\nPipette riiits 1 2 dori\n\nen Mop ManR §iT\n\nnea , Via SAT\n\nind\nWith Rouner\nwomore\nIGE TE wo\nSE ———\n\f"
+        ]
+      },
+      "data": {
+        "url": [
+          "https://www.cia.gov/library/readingroom/document/cia-rdp87r00529r000200130023-4"
+        ],
+        "file": [
+          "https://www.cia.gov/library/readingroom/docs/cia-rdp87r00529r000200130023-4.pdf"
+        ],
+        "collection": ["General CIA Records"],
+        "content_type": ["MEMO"],
+        "document_type": ["CREST"],
+        "document_number": ["CIA-RDP87R00529R000200130023-4"],
+        "sequence_number": ["23"],
+        "publication_date": ["October 14, 1983"],
+        "release_decision": ["RIPPUB"],
+        "document_page_count": ["1"],
+        "document_creation_date": ["December 22, 2016"],
+        "document_publication_date": ["May 26, 2010"]
+      },
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/22393407-visit-to-boston"
+    }
+  ],
+  "escaped": false
+}
