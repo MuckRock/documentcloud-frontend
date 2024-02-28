@@ -32,4 +32,20 @@
     background: #fff;
     box-shadow: var(--shadow);
   }
+  
+  .left, .center, .right {
+    flex: 1 0 0;
+  }
+  
+  .left {
+    text-align: left;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  .right {
+    text-align: right;
+  }
 </style>
