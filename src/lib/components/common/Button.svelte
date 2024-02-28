@@ -74,4 +74,7 @@
     color: var(--gray-4, #5c717c);
     fill: var(--gray-4, #5c717c);
   }
+  .ghost:disabled:hover {
+    background: transparent;
+  }
 </style>
