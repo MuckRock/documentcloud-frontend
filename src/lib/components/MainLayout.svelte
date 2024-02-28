@@ -49,12 +49,7 @@
     <header class="header">
       <OrgMenu />
       <div class="small closePane">
-        <Button
-          mode="ghost"
-          on:click={() => {
-            panel = null;
-          }}
-        >
+        <Button mode="ghost" on:click={closePanel}>
           <SidebarCollapse16 />
         </Button>
       </div>

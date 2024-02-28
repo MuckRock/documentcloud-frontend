@@ -20,6 +20,18 @@
   </SidebarItem>
 </Story>
 
+<Story name="Hover">
+  <SidebarItem hover>
+    <Comment16 /> Add a note…
+  </SidebarItem>
+</Story>
+
+<Story name="Small">
+  <SidebarItem small>
+    <Comment16 /> Add a note…
+  </SidebarItem>
+</Story>
+
 <Story name="Disabled">
   <SidebarItem disabled>
     <Comment16 /> Add a note…

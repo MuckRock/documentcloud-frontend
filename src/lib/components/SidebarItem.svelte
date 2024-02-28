@@ -1,8 +1,10 @@
 <script lang="ts">
   export let disabled = false;
+  export let hover = false;
+  export let small = false;
 </script>
 
-<div class="container" class:disabled>
+<div class="container" class:hover class:disabled class:small>
   <slot />
 </div>
 
@@ -18,25 +20,36 @@
     fill: var(--gray-5, #233944);
     background: transparent;
 
-    font-size: 1rem;
+    font-size: var(--font-m, 1rem);
     font-weight: var(--font-semibold, 600);
+  }
 
-    cursor: pointer;
+  /* Small */
+  .container.small {
+    font-size: var(--font-s, 0.875rem);
   }
-  .container:hover {
-    background: var(--gray-2, #d8dee2);
-  }
-  @media (hover: none) {
-    .container:hover {
-      background: transparent;
-    }
-  }
+
+  /* Disabled */
   .container.disabled {
     pointer-events: none;
     cursor: default;
     opacity: 0.5;
   }
-  .container.disabled:hover {
+
+  /* Hover */
+  .container.hover {
+    cursor: pointer;
+  }
+  .container.hover:hover {
+    background: var(--gray-2, #d8dee2);
+  }
+  @media (hover: none) {
+    .container.hover:hover {
+      background: transparent;
+    }
+  }
+  .container.disabled.hover:hover {
     background: transparent;
+    cursor: default;
   }
 </style>

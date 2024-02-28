@@ -35,29 +35,37 @@
   <MainLayout>
     <svelte:fragment slot="navigation">
       <Flex direction="column">
-        <SidebarItem><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem>
-        <SidebarItem><Globe16 /> {$_("projects.yourPubDocuments")}</SidebarItem>
-        <SidebarItem><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem>
-        <SidebarItem
-          ><Organization16 />
+        <SidebarItem hover
+          ><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem
+        >
+        <SidebarItem hover
+          ><Globe16 /> {$_("projects.yourPubDocuments")}</SidebarItem
+        >
+        <SidebarItem hover
+          ><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem
+        >
+        <SidebarItem hover>
+          <Organization16 />
           {$_("projects.orgDocuments", {
             values: { name: "MuckRock" },
-          })}</SidebarItem
-        >
+          })}
+        </SidebarItem>
       </Flex>
     </svelte:fragment>
     <svelte:fragment slot="content">
-      {#each docList as document}
-        <DocumentListItem {document} />
-      {/each}
+      <Flex direction="column">
+        {#each docList as document}
+          <DocumentListItem {document} />
+        {/each}
+      </Flex>
     </svelte:fragment>
     <svelte:fragment slot="action">
       <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
       <Flex direction="column">
-        <SidebarItem disabled><Share16 /> Share…</SidebarItem>
-        <SidebarItem disabled><Pencil16 /> Edit…</SidebarItem>
-        <SidebarItem disabled><FileDirectory16 /> Organize…</SidebarItem>
-        <SidebarItem disabled><Plug16 /> Run…</SidebarItem>
+        <SidebarItem hover disabled><Share16 /> Share…</SidebarItem>
+        <SidebarItem hover disabled><Pencil16 /> Edit…</SidebarItem>
+        <SidebarItem hover disabled><FileDirectory16 /> Organize…</SidebarItem>
+        <SidebarItem hover disabled><Plug16 /> Run…</SidebarItem>
       </Flex>
     </svelte:fragment>
   </MainLayout>
