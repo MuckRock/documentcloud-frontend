@@ -7,14 +7,9 @@
 <script lang="ts">
   import type { DocumentResults } from "$lib/api/types";
   import DocumentListItem from "./DocumentListItem.svelte";
-  import { onMount } from "svelte";
+  import NoDocuments from "./NoDocuments.svelte";
 
   export let results: DocumentResults;
-
-  onMount(() => {
-    // @ts-ignore
-    window.searchResults = results;
-  });
 </script>
 
 <div class="results">
@@ -23,6 +18,8 @@
       <input type="checkbox" value={document.id} bind:group={$selected} />
       <DocumentListItem {document} />
     </div>
+  {:else}
+    <NoDocuments />
   {/each}
 </div>
 
