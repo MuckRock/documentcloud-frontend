@@ -95,6 +95,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     gap: 0.25rem;
     flex: 1 0 0;
     align-self: stretch;
+    min-width: 0;
   }
 
   h4 {
@@ -122,7 +123,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 100ch;
+    max-width: 100%;
   }
 
   .actions {
