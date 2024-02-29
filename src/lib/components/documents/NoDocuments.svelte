@@ -2,13 +2,13 @@
   import { _ } from "svelte-i18n";
 
   // SVG assets
-  import emptyResultsSvg from "@/assets/empty_results.svg?raw";
+  import { Search24 } from "svelte-octicons";
 </script>
 
 <div class="no-results">
   <h2>{$_("noDocuments.noSearchResults")}</h2>
   <div class="img">
-    {@html emptyResultsSvg}
+    <Search24 height="32" width="32" />
   </div>
   <div class="text">
     <p>
