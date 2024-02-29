@@ -20,14 +20,16 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import documents from "../../api/fixtures/documents/documents.json";
-  import DocumentListItem from "../documents/DocumentListItem.svelte";
   import Flex from "../common/Flex.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import Action from "../common/Action.svelte";
   import Pin from "@/common/Pin.svelte";
   import ResultsList from "../documents/ResultsList.svelte";
+  import ContentLayout from "../ContentLayout.svelte";
+  import PageToolbar from "../common/PageToolbar.svelte";
+  import Search from "../Search.svelte";
 
-  let docList = documents as DocumentResults;
+  let results = documents as DocumentResults;
 
   export const meta = {
     title: "Components / Main Layout",
@@ -72,9 +74,13 @@
         </Flex>
       </SidebarGroup>
     </svelte:fragment>
-    <svelte:fragment slot="content">
-      <ResultsList results={docList} />
-    </svelte:fragment>
+    <ContentLayout slot="content">
+      <PageToolbar slot="header">
+        <Search slot="center" />
+      </PageToolbar>
+      <ResultsList {results} />
+      <PageToolbar slot="footer" />
+    </ContentLayout>
     <svelte:fragment slot="action">
       <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
       <Flex direction="column">

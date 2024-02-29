@@ -20,6 +20,9 @@
   import Action from "$lib/components/common/Action.svelte";
   import Pin from "@/common/Pin.svelte";
   import ResultsList from "@/lib/components/documents/ResultsList.svelte";
+  import ContentLayout from "@/lib/components/ContentLayout.svelte";
+  import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
+  import Search from "@/lib/components/Search.svelte";
 
   export let data;
 
@@ -68,13 +71,17 @@
       </Flex>
     </SidebarGroup>
   </svelte:fragment>
-  <svelte:fragment slot="content">
+  <ContentLayout slot="content">
+    <PageToolbar slot="header">
+      <Search {query} />
+    </PageToolbar>
     {#await searchResults}
-      <p class="loading">Loading ...</p>
+      <ResultsList />
     {:then results}
       <ResultsList {results} />
     {/await}
-  </svelte:fragment>
+    <PageToolbar slot="footer" />
+  </ContentLayout>
   <svelte:fragment slot="action">
     <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
     <Flex direction="column">

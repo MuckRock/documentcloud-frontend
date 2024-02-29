@@ -35,13 +35,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    align-self: stretch;
   }
 
   input {
-    opacity: 0;
-    position: fixed;
-    z-index: -10;
+    display: none;
+    visibility: hidden;
   }
 
   span {
