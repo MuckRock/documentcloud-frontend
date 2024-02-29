@@ -1,13 +1,15 @@
 <script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
-  import SidebarSection from "../SidebarSection.svelte";
+  import { Story } from "@storybook/addon-svelte-csf";
+  import SidebarGroup from "../SidebarGroup.svelte";
   import SidebarItem from "../SidebarItem.svelte";
-  import Flex from "../common/Flex.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import Pin from "@/common/Pin.svelte";
+  import { Book16, FileDirectory16 } from "svelte-octicons";
+  import Action from "../../common/Action.svelte";
 
   export const meta = {
-    title: "Components / Sidebar / Section",
-    component: SidebarSection,
+    title: "Components / Sidebar / Group",
+    component: SidebarGroup,
     parameters: { layout: "centered" },
     argTypes: {
       toggle: {
@@ -17,8 +19,10 @@
   };
 </script>
 
-<Template>
-  <SidebarSection>
+<Story name="Group">
+  <SidebarGroup>
+    <SidebarItem slot="title"><FileDirectory16 /> Project</SidebarItem>
+    <Action slot="action" icon={Book16}>Explore</Action>
     <Flex direction="column" gap={0}>
       <SidebarItem small>
         <Pin active /> Oldest Computer
@@ -30,7 +34,5 @@
         <Pin active /> 1033 Project
       </SidebarItem>
     </Flex>
-  </SidebarSection>
-</Template>
-
-<Story name="Section" />
+  </SidebarGroup>
+</Story>

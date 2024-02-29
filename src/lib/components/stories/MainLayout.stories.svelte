@@ -16,7 +16,7 @@
     Share16,
   } from "svelte-octicons";
   import Button from "$lib/components/common/Button.svelte";
-  import SidebarItem from "$lib/components/SidebarItem.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import documents from "../../api/fixtures/documents/documents.json";
   import DocumentListItem from "../documents/DocumentListItem.svelte";

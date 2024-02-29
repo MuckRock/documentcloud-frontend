@@ -9,7 +9,7 @@
   role="button"
   tabindex={0}
   on:click|stopPropagation|preventDefault
-  on:keydown
+  on:keydown|stopPropagation
 >
   {#if icon}<svelte:component this={icon} height="14" width="14" />{/if}
   <slot />
