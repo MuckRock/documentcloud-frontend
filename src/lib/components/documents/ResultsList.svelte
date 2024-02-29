@@ -15,7 +15,10 @@
 <div class="results">
   {#each results.results as document (document.id)}
     <div class="row">
-      <input type="checkbox" value={document.id} bind:group={$selected} />
+      <!-- todo: add a11y label for screen readers -->
+      <label class="sr-only"
+        ><input type="checkbox" value={document.id} bind:group={$selected} />
+      </label>
       <DocumentListItem {document} />
     </div>
   {:else}

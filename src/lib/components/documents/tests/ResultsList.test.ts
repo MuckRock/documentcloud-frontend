@@ -1,8 +1,9 @@
 import type { DocumentResults } from "$lib/api/types";
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/svelte";
+import { get } from "svelte/store";
+import { render, screen, fireEvent } from "@testing-library/svelte";
 
-import ResultsList from "../ResultsList.svelte";
+import ResultsList, { selected } from "../ResultsList.svelte";
 import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
 
 const results = searchResults as DocumentResults;
@@ -17,7 +18,7 @@ const empty: DocumentResults = {
 
 describe("ResultsList", () => {
   it("shows results", () => {
-    render(ResultsList, { props: { results } });
+    render(ResultsList, { results });
 
     const headings = screen.getAllByRole("heading");
 
@@ -31,10 +32,25 @@ describe("ResultsList", () => {
   });
 
   it("shows a fallback for no results", () => {
-    render(ResultsList, { props: { results: empty } });
+    render(ResultsList, { results: empty });
 
     const heading = screen.getByRole("heading");
 
     expect(heading.textContent).toEqual("No search results");
+  });
+
+  it("populates $selected store", () => {
+    render(ResultsList, { results });
+
+    expect(get(selected)).toEqual([]);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    // check all the boxes
+    checkboxes.forEach(async (c) => {
+      await fireEvent.click(c);
+    });
+
+    expect(get(selected)).toEqual(results.results.map((d) => d.id));
   });
 });
