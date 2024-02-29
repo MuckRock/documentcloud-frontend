@@ -1,9 +1,9 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import DocumentListItem from "../documents/DocumentListItem.svelte";
+  import DocumentListItem from "../DocumentListItem.svelte";
 
-  import document from "../../api/fixtures/documents/document.json";
-  import expanded from "../../api/fixtures/documents/document-expanded.json";
+  import document from "../../../api/fixtures/documents/document.json";
+  import expanded from "../../../api/fixtures/documents/document-expanded.json";
 
   export const meta = {
     title: "Components / Documents / Document List Item",

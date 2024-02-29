@@ -1,10 +1,10 @@
 <script context="module" lang="ts">
   import type { DocumentResults } from "@/lib/api/types";
   import { Story } from "@storybook/addon-svelte-csf";
-  import ResultsList from "../documents/ResultsList.svelte";
+  import ResultsList from "../ResultsList.svelte";
 
   // typescript complains without the type assertion
-  import searchResults from "../../api/fixtures/documents/search-highlight.json";
+  import searchResults from "../../../api/fixtures/documents/search-highlight.json";
   const results = searchResults as DocumentResults;
 
   export const meta = {
