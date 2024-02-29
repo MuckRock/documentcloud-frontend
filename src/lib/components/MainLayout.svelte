@@ -107,9 +107,6 @@
     height: 2rem;
     width: auto;
   }
-  .content {
-    padding: 4.0625rem 0;
-  }
   .navigation {
     border-right: 1px solid var(--gray-2, #d8dee2);
   }
@@ -128,6 +125,9 @@
     gap: 0.875rem;
 
     background: var(--gray-1, #f5f6f7);
+  }
+  .content {
+    padding: 0;
   }
 
   /* Start Mobile Styles */
@@ -207,9 +207,6 @@
     }
     nav.small {
       display: flex;
-    }
-    .content {
-      padding: 0.5rem;
     }
     .small.overlay {
       position: fixed;

@@ -24,6 +24,7 @@
   export let data;
 
   $: searchResults = data.searchResults;
+  $: query = data.query;
 
   // local utils
 

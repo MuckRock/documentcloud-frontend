@@ -34,7 +34,7 @@
   label {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.5rem;
     align-self: stretch;
   }
 
@@ -45,11 +45,13 @@
   }
 
   span {
-    border: solid 1px var(--gray-3, #bbbbbb);
-    border-radius: 2px;
-    cursor: pointer;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 1.25rem;
+    border: solid 1px var(--gray-4, #5c717c);
+    border-radius: 0.25rem;
+    cursor: pointer;
     flex-shrink: 0;
     transition:
       box-shadow 0.2s ease,
@@ -57,17 +59,12 @@
     user-select: none;
     width: 1.25em;
     box-sizing: border-box;
+    background: var(--white, #ffffff);
+    fill: var(--white, #ffffff);
   }
 
   span:hover {
     border: solid 1px var(--primary, #4294f0);
-  }
-
-  /* make the svg the same size as its container */
-  span :global(svg) {
-    fill: white;
-    width: 1.25rem;
-    height: 1.25rem;
   }
 
   input:focus + span {
@@ -76,30 +73,30 @@
 
   input:checked + span,
   input:indeterminate + span {
-    background: var(--primary, #4294f0);
-    border: solid 1px var(--primary, #4294f0);
+    background: var(--blue-3, #4294f0);
+    border: solid 1px var(--blue-4, #1367d0);
   }
 
   input:checked:focus + span {
-    box-shadow: 0 0 0 2px var(--primary-faded, rgba(66, 148, 240, 0.13));
-    border: solid 1px var(--primary, #4294f0);
+    box-shadow: 0 0 0 2px var(--blue-2, #b5ceed);
+    border: solid 1px var(--blue-4, #1367d0);
   }
 
   input:disabled + span {
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--gray-3, #99a8b3);
     cursor: default;
   }
 
   input:disabled + span:hover {
-    border: solid 1px var(--gray-3, #bbbbbb);
+    border: solid 1px var(--gray-4, #5c717c);
   }
 
   input:checked:disabled + span {
-    background: rgba(0, 0, 0, 0.05);
-    border: solid 1px var(--gray-3, #bbbbbb);
+    background: var(--gray-3, #99a8b3);
+    border: solid 1px var(--gray-4, #5c717c);
   }
 
   input:checked:disabled + span:hover {
-    border: solid 1px var(--gray-3, #bbbbbb);
+    border: solid 1px var(--gray-4, #5c717c);
   }
 </style>

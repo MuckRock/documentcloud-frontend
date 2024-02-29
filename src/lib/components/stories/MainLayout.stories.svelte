@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import MainLayout from "../MainLayout.svelte";
-  import type { Document } from "$lib/api/types";
+  import type { DocumentResults } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import {
@@ -25,8 +25,9 @@
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import Action from "../common/Action.svelte";
   import Pin from "@/common/Pin.svelte";
+  import ResultsList from "../documents/ResultsList.svelte";
 
-  let docList = documents.results as Document[];
+  let docList = documents as DocumentResults;
 
   export const meta = {
     title: "Components / Main Layout",
@@ -72,11 +73,7 @@
       </SidebarGroup>
     </svelte:fragment>
     <svelte:fragment slot="content">
-      <Flex direction="column">
-        {#each docList as document}
-          <DocumentListItem {document} />
-        {/each}
-      </Flex>
+      <ResultsList results={docList} />
     </svelte:fragment>
     <svelte:fragment slot="action">
       <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>

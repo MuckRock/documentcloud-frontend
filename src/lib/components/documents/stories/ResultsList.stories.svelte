@@ -24,9 +24,9 @@
 </script>
 
 <Story name="yes results">
-  <ResultsList {results} />
+  <div style="width: 36rem"><ResultsList {results} /></div>
 </Story>
 
 <Story name="no results">
-  <ResultsList results={empty} />
+  <div style="width: 36rem"><ResultsList results={empty} /></div>
 </Story>
