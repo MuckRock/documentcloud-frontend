@@ -5,17 +5,21 @@
 -->
 
 <div class="toolbar">
-  <div class="left">
-    <slot name="left" />
-  </div>
-
-  <div class="center">
-    <slot name="center" />
-  </div>
-
-  <div class="right">
-    <slot name="right" />
-  </div>
+  {#if $$slots.left}
+    <div class="left">
+      <slot name="left" />
+    </div>
+  {/if}
+  {#if $$slots.center}
+    <div class="center">
+      <slot name="center" />
+    </div>
+  {/if}
+  {#if $$slots.right}
+    <div class="right">
+      <slot name="right" />
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -33,19 +37,21 @@
     background: #fff;
     box-shadow: var(--shadow);
   }
-  
-  .left, .center, .right {
+
+  .left,
+  .center,
+  .right {
     flex: 1 0 0;
   }
-  
+
   .left {
     text-align: left;
   }
-  
+
   .center {
     text-align: center;
   }
-  
+
   .right {
     text-align: right;
   }
