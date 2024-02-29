@@ -37,7 +37,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 1.25jrem;
   }
   footer {
     flex: 0 0 0;
