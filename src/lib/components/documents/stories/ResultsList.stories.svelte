@@ -23,10 +23,10 @@
   };
 </script>
 
-<Story name="yes results">
-  <ResultsList {results} />
+<Story name="With Results">
+  <div style="width: 36rem"><ResultsList {results} /></div>
 </Story>
 
-<Story name="no results">
-  <ResultsList results={empty} />
+<Story name="Empty">
+  <div style="width: 36rem"><ResultsList results={empty} /></div>
 </Story>

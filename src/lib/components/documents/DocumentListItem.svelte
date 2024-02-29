@@ -73,11 +73,13 @@ It's deliberately minimal and can be wrapped in other components to add addition
 
 <style>
   .document-list-item {
+    flex: 1 0 0;
     display: flex;
     max-width: 100%;
-    padding: 0rem 1.25rem;
+    min-width: 0;
     align-items: center;
-    gap: 0.625rem;
+    align-self: stretch;
+    gap: 0.5rem;
   }
 
   .thumbnail {
@@ -104,6 +106,10 @@ It's deliberately minimal and can be wrapped in other components to add addition
     font-style: normal;
     font-weight: var(--font-semibold, 600);
     line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   }
 
   .meta {
