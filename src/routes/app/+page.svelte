@@ -73,7 +73,7 @@
   </svelte:fragment>
   <ContentLayout slot="content">
     <PageToolbar slot="header">
-      <Search {query} />
+      <Search {query} slot="center" />
     </PageToolbar>
     {#await searchResults}
       <ResultsList />
