@@ -10,7 +10,7 @@
   import DocumentListItem from "./DocumentListItem.svelte";
   import Flex from "../common/Flex.svelte";
   import Checkbox from "../common/Checkbox.svelte";
-  import { Hourglass24, Search24 } from "svelte-octicons";
+  import { Search24 } from "svelte-octicons";
   import Empty from "../common/Empty.svelte";
 
   export let results: DocumentResults = undefined;
@@ -26,24 +26,20 @@
 </script>
 
 <div class="container">
-  {#if !results}
-    <Empty icon={Hourglass24}>Loading…</Empty>
+  {#each results.results as document (document.id)}
+    <Flex gap={0.625} align="center">
+      <Checkbox
+        checked={$selected.includes(document.id)}
+        on:change={(event) => updateSelection(event, document.id)}
+      />
+      <DocumentListItem {document} />
+    </Flex>
   {:else}
-    {#each results.results as document (document.id)}
-      <Flex gap={0.625} align="center">
-        <Checkbox
-          checked={$selected.includes(document.id)}
-          on:change={(event) => updateSelection(event, document.id)}
-        />
-        <DocumentListItem {document} />
-      </Flex>
-    {:else}
-      <Empty icon={Search24}>
-        <h2>{$_("noDocuments.noSearchResults")}</h2>
-        <p>{$_("noDocuments.queryNoResults")}</p>
-      </Empty>
-    {/each}
-  {/if}
+    <Empty icon={Search24}>
+      <h2>{$_("noDocuments.noSearchResults")}</h2>
+      <p>{$_("noDocuments.queryNoResults")}</p>
+    </Empty>
+  {/each}
 </div>
 
 <style>

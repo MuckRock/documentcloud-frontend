@@ -11,6 +11,7 @@
     PlusCircle16,
     Share16,
     Book16,
+    Hourglass24,
   } from "svelte-octicons";
   import MainLayout from "$lib/components/MainLayout.svelte";
   import Button from "$lib/components/common/Button.svelte";
@@ -19,10 +20,11 @@
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import Action from "$lib/components/common/Action.svelte";
   import Pin from "@/common/Pin.svelte";
-  import ResultsList from "@/lib/components/documents/ResultsList.svelte";
-  import ContentLayout from "@/lib/components/ContentLayout.svelte";
-  import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
-  import Search from "@/lib/components/Search.svelte";
+  import ResultsList from "$lib/components/documents/ResultsList.svelte";
+  import ContentLayout from "$lib/components/ContentLayout.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import Search from "$lib/components/Search.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
 
   export let data;
 
@@ -76,7 +78,7 @@
       <Search {query} slot="center" />
     </PageToolbar>
     {#await searchResults}
-      <ResultsList />
+      <Empty icon={Hourglass24}>Loading…</Empty>
     {:then results}
       <ResultsList {results} />
     {/await}
