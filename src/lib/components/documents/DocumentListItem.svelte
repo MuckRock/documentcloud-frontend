@@ -17,11 +17,11 @@
 
   const width = IMAGE_WIDTHS_MAP.get("thumbnail");
 
-  $: sizes = pageSizesFromSpec(document.page_spec);
-  $: aspect = sizes[0];
+  $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : null;
+  $: aspect = sizes ? sizes[0] : 11 / 8.5; // fallback to US letter for now
   $: height = width * aspect;
   $: date = new Date(document.created_at).toDateString();
-  $: projects = document.projects.every((p) => typeof p === "object")
+  $: projects = document.projects?.every((p) => typeof p === "object")
     ? (document.projects as Project[])
     : []; // only show projects if we've loaded them
 

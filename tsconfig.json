@@ -3,8 +3,8 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "allowJs": true,
-    "downlevelIteration": true,
-    "types": ["@testing-library/jest-dom"]
+    "downlevelIteration": true
+    // "types": ["@testing-library/jest-dom"]
   },
   "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.js"],
   "exclude": ["public/*"]
