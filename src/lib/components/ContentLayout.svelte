@@ -25,7 +25,7 @@
     position: relative;
   }
   header {
-    flex: 1 0 0;
+    flex: 0 0 0;
     width: 100%;
     position: sticky;
     top: 0;
@@ -37,10 +37,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 1.25rem;
+    padding: 0 1.25jrem;
   }
   footer {
-    flex: 1 0 0;
+    flex: 0 0 0;
     width: 100%;
     position: sticky;
     bottom: 0;
