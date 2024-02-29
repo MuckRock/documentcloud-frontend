@@ -1,6 +1,7 @@
 <script lang="ts">
   export let disabled = false;
   export let small = false;
+  export let hover = false;
   export let href: string = undefined;
 </script>
 
@@ -9,20 +10,14 @@
     <slot />
   </a>
 {:else}
-  <button
-    {disabled}
-    class="container"
-    class:disabled
-    class:small
-    on:click
-    on:keydown
-  >
+  <span class="container" class:hover class:disabled class:small>
     <slot />
-  </button>
+  </span>
 {/if}
 
 <style>
   .container {
+    width: 100%;
     display: flex;
     padding: 0.25rem 0.5rem;
     align-items: center;
@@ -38,24 +33,29 @@
     font-size: var(--font-m, 1rem);
     font-weight: var(--font-semibold, 600);
     text-decoration: none;
-
-    cursor: pointer;
   }
 
   /* Hover */
-  .container:hover,
-  .container:focus {
+  a.container:hover,
+  a.container:focus,
+  .container.hover:hover,
+  .container.hover:focus {
+    cursor: pointer;
     background: var(--gray-2, #d8dee2);
   }
   @media (hover: none) {
-    .container:hover {
+    a.container:hover,
+    .container.hover:hover {
+      cursor: default;
       background: transparent;
     }
   }
-  .container.disabled:hover,
-  .container.disbaled:focus {
-    background: transparent;
+  a.container.disabled:hover,
+  a.container.disabled:focus,
+  .container.disabled.hover:hover,
+  .container.disabled.hover:focus {
     cursor: default;
+    background: transparent;
   }
 
   /* Small */

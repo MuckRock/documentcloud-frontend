@@ -15,11 +15,11 @@
 </script>
 
 <Story name="Text Only">
-  <SidebarItem on:click={click} on:keydown={keydown}>Example</SidebarItem>
+  <SidebarItem>Example</SidebarItem>
 </Story>
 
 <Story name="Text and Icon">
-  <SidebarItem on:click={click} on:keydown={keydown}>
+  <SidebarItem>
     <Comment16 /> Add a note…
   </SidebarItem>
 </Story>
@@ -30,13 +30,19 @@
   </SidebarItem>
 </Story>
 
+<Story name="Hover">
+  <SidebarItem hover>
+    <Home16 /> Go Home
+  </SidebarItem>
+</Story>
+
 <Story name="Small">
-  <SidebarItem small on:click={click} on:keydown={keydown}>
+  <SidebarItem small>
     <Comment16 /> Add a note…
   </SidebarItem>
 </Story>
 
-<Story name="Disabled" on:click={click} on:keydown={keydown}>
+<Story name="Disabled">
   <SidebarItem disabled>
     <Comment16 /> Add a note…
   </SidebarItem>

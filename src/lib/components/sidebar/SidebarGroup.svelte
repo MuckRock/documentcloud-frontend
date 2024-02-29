@@ -5,6 +5,18 @@
   function toggle(val: boolean) {
     collapsed = !val;
   }
+  function onClick() {
+    toggle(collapsed);
+  }
+  function onKeydown({ key }) {
+    if (["Enter", " "].includes(key)) {
+      toggle(collapsed);
+    } else if (["ArrowDown", "ArrowRight"].includes(key)) {
+      collapsed = false;
+    } else if (["ArrowUp", "ArrowLeft"].includes(key)) {
+      collapsed = true;
+    }
+  }
 </script>
 
 <div class="container">
@@ -12,21 +24,13 @@
     <header
       role="button"
       tabindex={0}
-      on:click={() => toggle(collapsed)}
-      on:keydown={({ key }) => {
-        if (["Enter", " "].includes(key)) {
-          toggle(collapsed);
-        } else if (["ArrowDown", "ArrowRight"].includes(key)) {
-          collapsed = false;
-        } else if (["ArrowUp", "ArrowLeft"].includes(key)) {
-          collapsed = true;
-        }
-      }}
+      on:click={onClick}
+      on:keydown={onKeydown}
     >
       <span class="indicator" class:collapsed>
         <ChevronDown16 />
       </span>
-      <slot name="title" />
+      {#if $$slots.title}<span class="title"><slot name="title" /></span>{/if}
       <slot name="action" />
     </header>
   {/if}
@@ -38,15 +42,21 @@
 </div>
 
 <style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
   header {
+    flex: 1 0 0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     cursor: default;
   }
   main {
+    flex: 1 1 0;
     display: flex;
-    margin: 0.25rem 0;
     padding: 0.25rem;
     flex-direction: column;
     align-self: stretch;
@@ -61,5 +71,8 @@
   }
   .indicator.collapsed {
     transform: rotate(-90deg);
+  }
+  .title {
+    flex: 1 0 0;
   }
 </style>
