@@ -57,6 +57,7 @@ Updated variables and styles for new SvelteKit routes
   /* semantic aliases */
   --primary: var(--blue-3);
   --premium: var(--green-shiny);
+  --error: var(--red);
   --note-public: var(--color-yellow);
   --note-private: var(--color-blue-light);
   --note-org: var(--color-green);
