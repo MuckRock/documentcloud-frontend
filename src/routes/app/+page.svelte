@@ -15,7 +15,6 @@
   import MainLayout from "$lib/components/MainLayout.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import DocumentListItem from "$lib/components/documents/DocumentListItem.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import Action from "$lib/components/common/Action.svelte";
@@ -69,7 +68,11 @@
     </SidebarGroup>
   </svelte:fragment>
   <svelte:fragment slot="content">
-    <ResultsList results={searchResults} />
+    {#await searchResults}
+      <p class="loading">Loading ...</p>
+    {:then results}
+      <ResultsList {results} />
+    {/await}
   </svelte:fragment>
   <svelte:fragment slot="action">
     <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
