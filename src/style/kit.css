@@ -14,6 +14,7 @@ Updated variables and styles for new SvelteKit routes
   /* Font Weights */
   --font-regular: 400;
   --font-semibold: 600;
+  --font-bold: 700;
 
   /* colors */
   --white: #ffffff;
@@ -56,6 +57,7 @@ Updated variables and styles for new SvelteKit routes
   /* semantic aliases */
   --primary: var(--blue-3);
   --premium: var(--green-shiny);
+  --error: var(--red);
   --note-public: var(--color-yellow);
   --note-private: var(--color-blue-light);
   --note-org: var(--color-green);
@@ -74,6 +76,8 @@ body {
   margin: 0;
   font-family: var(--font-sans), sans-serif;
   line-height: 1.25;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* reset */

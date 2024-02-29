@@ -49,12 +49,7 @@
     <header class="header">
       <OrgMenu />
       <div class="small closePane">
-        <Button
-          mode="ghost"
-          on:click={() => {
-            panel = null;
-          }}
-        >
+        <Button mode="ghost" on:click={closePanel}>
           <SidebarCollapse16 />
         </Button>
       </div>
@@ -90,7 +85,6 @@
     gap: 0.5rem;
     align-items: flex-start;
     align-self: stretch;
-    border-bottom: 1px solid var(--gray-2, #d8dee2);
   }
   main {
     display: flex;
@@ -133,7 +127,6 @@
     align-items: flex-start;
     gap: 0.875rem;
 
-    border-top: 1px solid var(--gray-2, #d8dee2);
     background: var(--gray-1, #f5f6f7);
   }
 
