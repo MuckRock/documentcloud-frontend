@@ -25,18 +25,44 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Search from "$lib/components/Search.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
+  import Paginator from "@/common/Paginator.svelte";
 
   export let data;
 
+  let page = 1;
+  let per_page = 25;
+  let error: Error;
+
   $: searchResults = data.searchResults;
   $: query = data.query;
+  $: count = searchResults.count;
+  $: next = searchResults.next;
+  $: previous = searchResults.previous;
+  $: total_pages = Math.ceil(count / per_page);
 
-  // local utils
+  async function load(url) {
+    const res = await fetch(url, { credentials: "include" }).catch((e) => {
+      error = e;
+      throw e; // if something went wrong here, something broke
+    });
 
-  function path(url: URL | string) {
-    url = new URL(url);
+    if (!res.ok) {
+      // 404 or something similar
+      console.error(res.statusText);
+      error = { name: "Loading error", message: res.statusText };
+    }
 
-    return url.pathname;
+    data.searchResults = await res.json();
+  }
+
+  function load_next(e) {
+    page = Math.min(total_pages, page + 1);
+    load(next);
+  }
+
+  function load_previous(e) {
+    page = Math.max(0, page - 1);
+    load(previous);
   }
 </script>
 
@@ -57,6 +83,7 @@
         })}
       </SidebarItem>
     </Flex>
+
     <SidebarGroup>
       <SidebarItem slot="title"><FileDirectory16 /> Projects</SidebarItem>
       <Action slot="action" icon={Book16}>Explore</Action>
@@ -73,6 +100,7 @@
       </Flex>
     </SidebarGroup>
   </svelte:fragment>
+
   <ContentLayout slot="content">
     <PageToolbar slot="header">
       <Search {query} slot="center" />
@@ -82,16 +110,43 @@
     {:then results}
       <ResultsList {results} />
     {/await}
-    <PageToolbar slot="footer" />
+
+    <PageToolbar slot="footer">
+      <label slot="left">
+        <input type="checkbox" name="select_all" />
+        Select all
+      </label>
+      <Paginator
+        slot="center"
+        {page}
+        totalPages={total_pages}
+        has_next={Boolean(next)}
+        has_previous={Boolean(previous)}
+        on:next={load_next}
+        on:previous={load_previous}
+      />
+
+      <label slot="right">
+        Per page
+        <select name="per_page" bind:value={per_page}>
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+      </label>
+    </PageToolbar>
   </ContentLayout>
+
   <svelte:fragment slot="action">
     <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
+
     <Flex direction="column">
       <SidebarItem hover disabled><Share16 /> Share…</SidebarItem>
       <SidebarItem hover disabled><Pencil16 /> Edit…</SidebarItem>
       <SidebarItem hover disabled><FileDirectory16 /> Organize…</SidebarItem>
       <SidebarItem hover disabled><Plug16 /> Run…</SidebarItem>
     </Flex>
+
     <SidebarGroup>
       <SidebarItem slot="title"><Plug16 /> Add-Ons</SidebarItem>
       <Action slot="action" icon={Book16}>Explore</Action>
