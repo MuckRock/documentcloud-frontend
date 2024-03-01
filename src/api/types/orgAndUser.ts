@@ -32,8 +32,8 @@ export interface User {
   avatar_url: Maybe<string>;
   username: string;
   organization: number | Org;
-  organizations: string[];
-  admin_organizations: string[];
+  organizations: number[];
+  admin_organizations: number[];
   feature_level: number;
 }
 

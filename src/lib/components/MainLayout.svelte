@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { getContext } from "svelte";
   import OrgMenu from "./OrgMenu.svelte";
   import Button from "./common/Button.svelte";
   import Logo from "./common/Logo.svelte";
   import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
+  import type { Writable } from "svelte/store";
+  import type { User } from "@/api/types";
 
   let panel: "navigation" | "action" | null = null;
 
@@ -15,6 +18,8 @@
       panel = name;
     };
   }
+
+  const me = getContext<Writable<User>>("me");
 </script>
 
 <div class="container">
@@ -56,7 +61,7 @@
     </header>
     <main><slot name="action" /></main>
     <footer>
-      <p>Allan Lasser</p>
+      <p>{$me.name}</p>
       <p>Language</p>
       <p>Help</p>
     </footer>
