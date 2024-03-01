@@ -12,6 +12,7 @@
     Share16,
     Book16,
     Hourglass24,
+    Pin24,
   } from "svelte-octicons";
   import MainLayout from "$lib/components/MainLayout.svelte";
   import Button from "$lib/components/common/Button.svelte";
@@ -26,8 +27,14 @@
   import Search from "$lib/components/Search.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Paginator from "@/common/Paginator.svelte";
+  import type { DocumentResults } from "@/lib/api/types";
+  import type { AddOnListItem } from "@/addons/types";
 
-  export let data;
+  export let data: {
+    query: string;
+    searchResults: Promise<DocumentResults>;
+    pinnedAddons: Promise<AddOnListItem[]>;
+  };
 
   let page = 1;
   let per_page = 25;
@@ -151,18 +158,18 @@
       <SidebarItem slot="title"><Plug16 /> Add-Ons</SidebarItem>
       <Action slot="action" icon={Book16}>Explore</Action>
       <Flex direction="column" gap={0}>
-        <SidebarItem small href="/addon/1">
-          <Pin active /> Scraper
-        </SidebarItem>
-        <SidebarItem small href="/addon/2">
-          <Pin active /> Regex Extractor
-        </SidebarItem>
-        <SidebarItem small href="/addon/3">
-          <Pin active /> Tabula Spreadsheet Analysis
-        </SidebarItem>
-        <SidebarItem small href="/addon/4">
-          <Pin active /> GPT 3.5 Analysis
-        </SidebarItem>
+        {#await pinnedAddons}
+          <Empty icon={Hourglass24}>Loading…</Empty>
+        {:then addons}
+          {#each addons as addon}
+            <SidebarItem small href={`/addon/${addon.id}`}>
+              <Pin active={addon.active} />
+              {addon.name}
+            </SidebarItem>
+          {:else}
+            <Empty icon={Pin24}>Pinned add-ons will appear here</Empty>
+          {/each}
+        {/await}
       </Flex>
     </SidebarGroup>
   </svelte:fragment>
