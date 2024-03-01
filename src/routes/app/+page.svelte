@@ -159,7 +159,7 @@
       <SidebarItem slot="title"><Plug16 /> Add-Ons</SidebarItem>
       <Action slot="action" icon={Book16}>Explore</Action>
       <Flex direction="column" gap={0}>
-        {#await pinnedAddons}
+        {#await data.pinnedAddons}
           <Empty icon={Hourglass24}>Loading…</Empty>
         {:then addons}
           {#each addons.results as addon}

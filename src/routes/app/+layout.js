@@ -1,4 +1,4 @@
-import { search } from "$lib/api/documents";
+import { search } from "$lib/api/documents.js";
 import { getPinnedAddons } from "$lib/api/addons";
 
 export async function load({ url, fetch }) {
