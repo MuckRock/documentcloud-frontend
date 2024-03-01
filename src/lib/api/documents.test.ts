@@ -1,15 +1,18 @@
 import { describe, test as base, expect } from "vitest";
 import { APP_URL, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
 
-import * as documents from "./documents.js";
+import * as documents from "./documents";
+import type { Document } from "./types";
+
+type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
-  document: async ({}, use) => {
+  document: async ({}, use: Use<Document>) => {
     const document = await import(
       "./fixtures/documents/document-expanded.json"
     );
 
-    await use(document);
+    await use(document as unknown as Document);
   },
 });
 

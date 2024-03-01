@@ -13,7 +13,7 @@
     pageUrl,
     textUrl,
     userOrgString,
-  } from "$lib/api/documents.js";
+  } from "@/lib/api/documents";
   import { embedUrl } from "$lib/api/embed.js";
 
   export let data;

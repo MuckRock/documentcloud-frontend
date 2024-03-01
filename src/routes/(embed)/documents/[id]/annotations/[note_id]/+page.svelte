@@ -4,7 +4,7 @@
   import { _ } from "svelte-i18n";
 
   import { informSize } from "@/embed/iframeSizer.js";
-  import { pageImageUrl } from "$lib/api/documents.js";
+  import { pageImageUrl } from "@/lib/api/documents";
   import * as notes from "$lib/api/notes.js";
   import { embedUrl } from "$lib/api/embed.js";
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes.js";

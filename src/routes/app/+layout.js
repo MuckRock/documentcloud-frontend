@@ -1,5 +1,5 @@
-import { search } from "$lib/api/documents.js";
-import { getPinnedAddons } from "@/lib/api/addons.js";
+import { search } from "$lib/api/documents";
+import { getPinnedAddons } from "$lib/api/addons";
 
 export async function load({ url, fetch }) {
   const query = url.searchParams.get("q") || "";

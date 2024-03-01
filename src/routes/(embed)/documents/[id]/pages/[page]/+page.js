@@ -1,5 +1,5 @@
 // load data for a single page embed
-import * as documents from "$lib/api/documents.js";
+import * as documents from "@/lib/api/documents";
 import * as notesApi from "$lib/api/notes.js";
 
 /** @type {import('./$types').PageLoad} */
