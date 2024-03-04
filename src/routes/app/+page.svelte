@@ -29,11 +29,12 @@
   import Paginator from "@/common/Paginator.svelte";
   import type { DocumentResults } from "@/lib/api/types";
   import type { AddOnListItem } from "@/addons/types";
+  import type { Page } from "@/api/types/common";
 
   export let data: {
     query: string;
     searchResults: Promise<DocumentResults>;
-    pinnedAddons: Promise<AddOnListItem[]>;
+    pinnedAddons: Promise<Page<AddOnListItem>>;
   };
 
   let page = 1;
@@ -161,7 +162,7 @@
         {#await pinnedAddons}
           <Empty icon={Hourglass24}>Loading…</Empty>
         {:then addons}
-          {#each addons as addon}
+          {#each addons.results as addon}
             <SidebarItem small href={`/addon/${addon.id}`}>
               <Pin active={addon.active} />
               {addon.name}
