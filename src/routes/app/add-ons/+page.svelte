@@ -50,7 +50,7 @@
       {#await data.addons then res}
         <AddOnList
           loading={false}
-          items={res.items}
+          items={res.results}
           error={null}
           reload={null}
         />
