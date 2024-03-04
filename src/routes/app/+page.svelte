@@ -157,7 +157,9 @@
 
     <SidebarGroup>
       <SidebarItem slot="title"><Plug16 /> Add-Ons</SidebarItem>
-      <Action slot="action" icon={Book16}>Explore</Action>
+      <a href="/app/add-ons/" slot="action">
+        <Action icon={Book16}>Explore</Action>
+      </a>
       <Flex direction="column" gap={0}>
         {#await data.pinnedAddons}
           <Empty icon={Hourglass24}>Loading…</Empty>
