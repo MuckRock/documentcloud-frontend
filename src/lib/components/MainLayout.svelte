@@ -61,7 +61,7 @@
     </header>
     <main><slot name="action" /></main>
     <footer>
-      <p>{$me.name}</p>
+      <p>{$me?.name}</p>
       <p>Language</p>
       <p>Help</p>
     </footer>
