@@ -35,10 +35,6 @@
 
   $: searchResults = data.searchResults;
   $: query = data.query;
-  $: count = searchResults.count;
-  $: next = searchResults.next;
-  $: previous = searchResults.previous;
-  $: total_pages = Math.ceil(count / per_page);
 
   async function load(url) {
     const res = await fetch(url, { credentials: "include" }).catch((e) => {
@@ -52,17 +48,7 @@
       error = { name: "Loading error", message: res.statusText };
     }
 
-    data.searchResults = await res.json();
-  }
-
-  function load_next(e) {
-    page = Math.min(total_pages, page + 1);
-    load(next);
-  }
-
-  function load_previous(e) {
-    page = Math.max(0, page - 1);
-    load(previous);
+    data.searchResults = res.json();
   }
 </script>
 
@@ -116,15 +102,29 @@
         <input type="checkbox" name="select_all" />
         Select all
       </label>
-      <Paginator
-        slot="center"
-        {page}
-        totalPages={total_pages}
-        has_next={Boolean(next)}
-        has_previous={Boolean(previous)}
-        on:next={load_next}
-        on:previous={load_previous}
-      />
+
+      <svelte:fragment slot="center">
+        {#await searchResults then sr}
+          {@const count = sr.count}
+          {@const total_pages = Math.ceil(count / per_page)}
+          {@const next = sr.next}
+          {@const previous = sr.previous}
+          <Paginator
+            {page}
+            totalPages={total_pages}
+            has_next={Boolean(next)}
+            has_previous={Boolean(previous)}
+            on:next={(e) => {
+              page = Math.min(total_pages, page + 1);
+              load(next);
+            }}
+            on:previous={(e) => {
+              page = Math.max(0, page - 1);
+              load(previous);
+            }}
+          />
+        {/await}
+      </svelte:fragment>
 
       <label slot="right">
         Per page
