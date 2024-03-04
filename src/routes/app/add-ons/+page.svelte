@@ -66,3 +66,105 @@
     </div> -->
   </main>
 </div>
+
+<style>
+  .browser {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto 1fr;
+    gap: 1em;
+    padding: 1em 1em 0;
+    height: 100%;
+    width: 100%;
+    max-width: 44em;
+    box-sizing: border-box;
+  }
+  .header {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    gap: 0.5em;
+    margin-right: 2em;
+  }
+  .header h2 {
+    flex: 0 1 auto;
+    margin: 0;
+  }
+  .header p {
+    margin: 0;
+    font-weight: 600;
+    color: gray;
+  }
+  .sidebar {
+    flex: 1 1 12em;
+    display: flex;
+    flex-direction: column;
+  }
+  .search {
+    margin-bottom: 1em;
+  }
+  .results {
+    flex: 4 1 24em;
+    min-width: 20em;
+    min-height: 0;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .results .list {
+    flex: 1 1 24em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: calc(2 * var(--radius));
+    overflow-y: scroll;
+  }
+  .results .pagination {
+    flex: 0 0 auto;
+  }
+
+  .tip {
+    font-size: 0.9em;
+    margin: 0.5rem;
+    padding: 1rem;
+    background-color: var(--primary-faded);
+    border-color: var(--primary);
+    fill: var(--primary);
+    border: 1px solid;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    & .icon {
+      fill: var(--primary);
+    }
+    & .message {
+      margin: 0;
+    }
+  }
+  .pinned.tip {
+    background-color: hsl(341, 35%, 91%);
+    border-color: palevioletred;
+    & .icon {
+      fill: palevioletred;
+    }
+  }
+  .featured.tip {
+    background-color: hsl(39, 100%, 91%);
+    border-color: orange;
+    & .icon {
+      fill: orange;
+    }
+  }
+  .premium.tip {
+    background-color: hsl(161, 69%, 91%);
+    border-color: var(--premium, #24cc99);
+    & .icon {
+      fill: var(--premium, #24cc99);
+    }
+  }
+</style>
