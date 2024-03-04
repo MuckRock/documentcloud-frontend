@@ -163,7 +163,7 @@
           <Empty icon={Hourglass24}>Loading…</Empty>
         {:then addons}
           {#each addons.results as addon}
-            <SidebarItem small href={`/addon/${addon.id}`}>
+            <SidebarItem small href={`/app/add-ons/${addon.repository}/`}>
               <Pin active={addon.active} />
               {addon.name}
             </SidebarItem>
