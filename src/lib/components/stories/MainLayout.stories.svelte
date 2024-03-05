@@ -29,17 +29,40 @@
   import PageToolbar from "../common/PageToolbar.svelte";
   import Search from "../Search.svelte";
 
+  import { addons } from "@/addons/browser/stories/mockData";
+
   let results = documents as DocumentResults;
 
   export const meta = {
     title: "Components / Main Layout",
     component: MainLayout,
-    parameters: { layout: "fullscreen" },
+    parameters: {
+      layout: "fullscreen",
+      msw: {
+        handlers: [addons.data],
+      },
+    },
+    argTypes: {
+      basement: {
+        control: { type: "select" },
+        options: ["left", "right", null],
+      },
+    },
+  };
+
+  let args = {
+    modal: false,
+    basement: null,
   };
 </script>
 
-<Template>
-  <MainLayout>
+<Template let:args>
+  <MainLayout {...args}>
+    <svelte:fragment slot="modal">
+      <div style="width: 50%; height: 50%; background: white">
+        <h1>Modal</h1>
+      </div>
+    </svelte:fragment>
     <svelte:fragment slot="navigation">
       <Flex direction="column">
         <SidebarItem hover
@@ -108,16 +131,20 @@
         </Flex>
       </SidebarGroup>
     </svelte:fragment>
+    <svelte:fragment slot="basement">
+      <h1>Basement</h1>
+    </svelte:fragment>
   </MainLayout>
 </Template>
 
-<Story name="Desktop" />
+<Story name="Desktop" {...args} />
 
 <Story
   name="Tablet (H)"
   parameters={{
     viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
   }}
+  {...args}
 />
 
 <Story
@@ -125,6 +152,7 @@
   parameters={{
     viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
   }}
+  {...args}
 />
 
 <Story
@@ -132,6 +160,7 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
   }}
+  {...args}
 />
 
 <Story
@@ -139,4 +168,11 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
   }}
+  {...args}
 />
+
+<Story name="Modal" args={{ ...args, modal: true }} />
+
+<Story name="Basement (Left)" args={{ ...args, basement: "left" }} />
+
+<Story name="Basement (Right)" args={{ ...args, basement: "right" }} />
