@@ -11,10 +11,49 @@
   import Star from "@/common/icons/Star.svelte";
   import Credit from "@/common/icons/Credit.svelte";
 
-  let visible = false;
   let per_page = 10;
 
   export let data;
+
+  $: urlParams = buildParams({
+    per_page,
+    query: $query,
+    filter: $filter,
+  });
+  $: url = buildUrl(urlParams);
+  $: next_url = data.addons.next ? new URL(data.addons.next).toString() : null;
+  $: previous_url = data.addons.previous
+    ? new URL(data.addons.previous).toString()
+    : null;
+  $: items = data.addons.results;
+
+  /** Network logic */
+  let loading = false;
+  let error = null;
+
+  export async function load(url) {
+    loading = true;
+
+    data = await fetch(url, {
+      credentials: "include",
+    })
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) throw data;
+        return data;
+      })
+      .catch((err) => {
+        error = err;
+        loading = false;
+        return {};
+      });
+
+    loading = false;
+  }
+
+  $: loadNext = () => load(next_url);
+  $: loadPrev = () => load(previous_url);
+  $: reload = () => load(url);
 </script>
 
 <div class="browser">
@@ -48,22 +87,17 @@
         </aside>
       {/if}
       {#await data.addons then res}
-        <AddOnList
-          loading={false}
-          items={res.results}
-          error={null}
-          reload={null}
-        />
+        <AddOnList {loading} {items} {error} {reload} />
       {/await}
     </div>
-    <!-- <div class="pagination">
+    <div class="pagination">
       <Paginator
         has_next={Boolean(next_url)}
         has_previous={Boolean(previous_url)}
         on:next={loadNext}
         on:previous={loadPrev}
       />
-    </div> -->
+    </div>
   </main>
 </div>
 
