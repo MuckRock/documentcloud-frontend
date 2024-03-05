@@ -119,7 +119,7 @@
               load(next);
             }}
             on:previous={(e) => {
-              page = Math.max(0, page - 1);
+              page = Math.max(1, page - 1);
               load(previous);
             }}
           />
