@@ -7,6 +7,7 @@
   import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
   import type { Writable } from "svelte/store";
   import type { User } from "@/api/types";
+  import { SIGN_IN_URL } from "@/config/config";
 
   export let modal: boolean = false;
   export let basement: "left" | "right" | null = null;
@@ -66,7 +67,12 @@
   </main>
   <nav class="action right large" class:active={panel === "action"} id="action">
     <header class="header">
-      <OrgMenu />
+      <SignedIn>
+        <OrgMenu />
+        <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}
+          >Sign In</Button
+        >
+      </SignedIn>
       <div class="small closePane">
         <Button mode="ghost" on:click={closePanel}>
           <SidebarCollapse16 />
