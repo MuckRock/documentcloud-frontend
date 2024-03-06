@@ -9,6 +9,7 @@
   import AddOns from "./sidebar/AddOns.svelte";
   import type { AddOnListItem } from "@/lib/api/types";
   import type { Page } from "@/api/types";
+  import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
   export let data: {
     pinnedAddons: Promise<Page<AddOnListItem>>;
@@ -22,14 +23,18 @@
 <MainLayout>
   <svelte:fragment slot="navigation">
     <Documents />
-    <Projects />
+    <SignedIn>
+      <Projects />
+    </SignedIn>
   </svelte:fragment>
 
   <slot slot="content" />
 
   <svelte:fragment slot="action">
-    <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
-    <Actions />
-    <AddOns pinnedAddOns={data.pinnedAddons} />
+    <SignedIn>
+      <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
+      <Actions />
+      <AddOns pinnedAddOns={data.pinnedAddons} />
+    </SignedIn>
   </svelte:fragment>
 </MainLayout>
