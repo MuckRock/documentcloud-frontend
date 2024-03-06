@@ -19,7 +19,7 @@
   <title>DocumentCloud</title>
 </svelte:head>
 
-<MainLayout basement={data.basement}>
+<MainLayout>
   <svelte:fragment slot="navigation">
     <Documents />
     <Projects />

@@ -10,6 +10,7 @@
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
   import Credit from "@/common/icons/Credit.svelte";
+  import type { Page } from "@/api/types/common.js";
 
   let per_page = 10;
 
@@ -21,20 +22,18 @@
     filter: $filter,
   });
   $: url = buildUrl(urlParams);
-  $: next_url = data.addons.next ? new URL(data.addons.next).toString() : null;
-  $: previous_url = data.addons.previous
-    ? new URL(data.addons.previous).toString()
-    : null;
-  $: items = data.addons.results;
-
+  $: next_url = res.next ? new URL(res.next).toString() : null;
+  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
+  $: items = res.results;
   /** Network logic */
   let loading = false;
   let error = null;
+  let res: Page<AddOnListItem>;
 
   export async function load(url) {
     loading = true;
 
-    data = await fetch(url, {
+    res = await fetch(url, {
       credentials: "include",
     })
       .then(async (r) => {
@@ -86,9 +85,7 @@
           <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
         </aside>
       {/if}
-      {#await data.addons then res}
-        <AddOnList {loading} {items} {error} {reload} />
-      {/await}
+      <AddOnList {loading} {items} {error} {reload} />
     </div>
     <div class="pagination">
       <Paginator
