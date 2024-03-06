@@ -42,18 +42,9 @@
         handlers: [addons.data],
       },
     },
-    argTypes: {
-      basement: {
-        control: { type: "select" },
-        options: ["left", "right", null],
-      },
-    },
   };
 
-  let args = {
-    modal: false,
-    basement: null,
-  };
+  let args = {};
 </script>
 
 <Template let:args>
@@ -170,9 +161,3 @@
   }}
   {...args}
 />
-
-<Story name="Modal" args={{ ...args, modal: true }} />
-
-<Story name="Basement (Left)" args={{ ...args, basement: "left" }} />
-
-<Story name="Basement (Right)" args={{ ...args, basement: "right" }} />
