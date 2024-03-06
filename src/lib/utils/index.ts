@@ -1,0 +1,1 @@
+export { isErrorCode } from "./isErrorCode";

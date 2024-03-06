@@ -10,7 +10,7 @@
     pageImageUrl,
     canonicalUrl,
     userOrgString,
-  } from "$lib/api/documents.js";
+  } from "@/lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
 
   export let document: Document;

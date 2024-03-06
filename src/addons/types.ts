@@ -1,8 +1,3 @@
-interface Author {
-  name?: string;
-  avatar?: string;
-}
-
 type AddOnCategory = "premium" | string;
 
 interface AddOnProperty {

@@ -1,7 +1,7 @@
 import { error } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
-import { canonicalUrl } from "./documents.js";
+import { canonicalUrl } from "./documents";
 
 /**
  * Load notes from a single document from the API

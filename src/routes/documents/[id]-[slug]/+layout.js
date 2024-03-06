@@ -5,7 +5,7 @@
  */
 
 import { redirect } from "@sveltejs/kit";
-import * as documents from "$lib/api/documents.js";
+import * as documents from "@/lib/api/documents";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
