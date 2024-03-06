@@ -11,10 +11,9 @@
   import Star from "@/common/icons/Star.svelte";
   import Credit from "@/common/icons/Credit.svelte";
   import type { Page } from "@/api/types/common.js";
+  import { onMount } from "svelte";
 
   let per_page = 10;
-
-  export let data;
 
   $: urlParams = buildParams({
     per_page,
@@ -22,9 +21,9 @@
     filter: $filter,
   });
   $: url = buildUrl(urlParams);
-  $: next_url = res.next ? new URL(res.next).toString() : null;
-  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
-  $: items = res.results;
+  $: next_url = res?.next ? new URL(res.next).toString() : null;
+  $: previous_url = res?.previous ? new URL(res.previous).toString() : null;
+  $: items = res?.results;
   /** Network logic */
   let loading = false;
   let error = null;
@@ -32,7 +31,6 @@
 
   export async function load(url) {
     loading = true;
-
     res = await fetch(url, {
       credentials: "include",
     })
@@ -50,6 +48,7 @@
     loading = false;
   }
 
+  onMount(() => load(url));
   $: loadNext = () => load(next_url);
   $: loadPrev = () => load(previous_url);
   $: reload = () => load(url);

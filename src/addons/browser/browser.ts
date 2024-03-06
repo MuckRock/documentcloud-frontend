@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { baseApiUrl } from "../../api/base.js";
+import { BASE_API_URL } from "@/config/config.js";
 
 export const filter = writable("featured");
 
@@ -52,7 +52,7 @@ export function buildParams({
 }
 
 export function buildUrl({ query = "", filters = {}, per_page = 5 }) {
-  const u = new URL("addons/", baseApiUrl);
+  const u = new URL("addons/", BASE_API_URL);
 
   u.search = new URLSearchParams({
     query,
