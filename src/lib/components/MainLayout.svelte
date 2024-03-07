@@ -98,8 +98,8 @@
 <style>
   .container {
     display: flex;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     gap: 0;
     flex-shrink: 0;
     background: var(--gray-1, #f5f6f7);
