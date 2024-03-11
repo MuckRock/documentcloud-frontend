@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { filter, FILTERS } from "./browser";
-  import Filter from "./Filter.svelte";
+  import Filter from "../../common/Filter.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
   import Infinity from "svelte-octicons/lib/Infinity16.svelte";

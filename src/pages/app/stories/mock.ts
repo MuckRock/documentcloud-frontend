@@ -4,7 +4,7 @@ import { baseApiUrl } from "../../../api/base.js";
 import usersFixture from "../fixtures/users.json";
 import orgFixtures from "../fixtures/organizations.json";
 import listFixture from "../../../addons/fixtures/addon-list.json";
-import { projectList } from "../../../api/test/fixtures/project";
+import { projects as projectList } from "../../../api/fixtures/projects.fixtures";
 import { emptyList } from "../../../api/test/fixtures/empty";
 import meFixture from "../fixtures/me.json";
 import runFixtures from "../fixtures/addon_runs.json";

@@ -5,15 +5,30 @@
   export const query = writable("");
 </script>
 
-<script>
+<script lang="ts">
   import Search from "./icons/Search.svelte";
+
+  export let delay = 250;
+
+  let value = $query;
+  let timer;
+  const debounce = (v, fn) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(v);
+    }, delay);
+  };
+
+  $: {
+    debounce(value, query.set);
+  }
 </script>
 
 <label class="search">
   <Search size={0.8} />
   <input
     type="search"
-    bind:value={$query}
+    bind:value
     aria-label="Search Add-Ons"
     placeholder={$_("addonBrowserDialog.searchPlaceholder")}
   />

@@ -11,8 +11,8 @@
   import AddonList from "./addons/AddonList.svelte";
   import ProjectList from "./projects/ProjectList.svelte";
 
-  import { newProject, editProject } from "../../../manager/layout.js";
-  import { getMe } from "../../../api/orgAndUser.js";
+  import { browseProjects, editProject } from "../../../manager/layout.js";
+  import { getMe } from "../../../api/orgAndUser";
   import type { User } from "../../../api/types/orgAndUser";
 
   export let expanded;
@@ -62,7 +62,7 @@
   <section><DocumentFilters {user} /></section>
   {#if user}
     <section><AddonList /></section>
-    <section><ProjectList {user} {newProject} {editProject} /></section>
+    <section><ProjectList {user} {browseProjects} {editProject} /></section>
   {/if}
 </aside>
 

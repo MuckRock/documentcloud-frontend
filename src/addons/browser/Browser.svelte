@@ -13,6 +13,7 @@
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
   import Credit from "../../common/icons/Credit.svelte";
+  import Flex from "../../common/Flex.svelte";
 
   export let visible = false;
   export let per_page = 10;
@@ -80,8 +81,8 @@
         <Categories />
       </div>
     </aside>
-    <main class="results">
-      <div class="list">
+    <Flex as="main" direction="column" class="results">
+      <Flex direction="column" class="list">
         {#if $filter === "active"}
           <aside class="pinned tip">
             <div class="icon"><Pin size={1.75} /></div>
@@ -99,16 +100,14 @@
           </aside>
         {/if}
         <AddOnList {loading} {error} {items} bind:reload />
-      </div>
-      <div class="pagination">
-        <Paginator
-          has_next={Boolean(next_url)}
-          has_previous={Boolean(previous_url)}
-          on:next={loadNext}
-          on:previous={loadPrev}
-        />
-      </div>
-    </main>
+      </Flex>
+      <Paginator
+        has_next={Boolean(next_url)}
+        has_previous={Boolean(previous_url)}
+        on:next={loadNext}
+        on:previous={loadPrev}
+      />
+    </Flex>
   </div>
 </Drawer>
 
@@ -149,26 +148,21 @@
   .search {
     margin-bottom: 1em;
   }
-  .results {
+
+  /* Use of :global is required for passing style to Flex component */
+  .browser :global(.results) {
     flex: 4 1 24em;
     min-width: 20em;
     min-height: 0;
     max-height: 100%;
-    display: flex;
-    flex-direction: column;
   }
-  .results .list {
+  .browser :global(.results > .list) {
     flex: 1 1 24em;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.25);
     border-radius: calc(2 * var(--radius));
     overflow-y: scroll;
-  }
-  .results .pagination {
-    flex: 0 0 auto;
   }
 
   .tip {

@@ -12,7 +12,7 @@
   import DocumentInformationDialog from "@/common/dialog/DocumentInformationDialog.svelte";
   import MetaDialog from "@/common/dialog/MetaDialog.svelte";
   import OwnerDialog from "@/common/dialog/OwnerDialog.svelte";
-  import ProjectDialog from "@/common/dialog/ProjectDialog.svelte";
+  import ProjectDialogContainer from "../../common/dialog/ProjectDialogContainer.svelte";
   import ProjectAccessDialog from "@/common/dialog/ProjectAccessDialog.svelte";
   import ProjectEmbedDialog from "@/common/dialog/ProjectEmbedDialog.svelte";
   import ReprocessDialog from "@/common/dialog/ReprocessDialog.svelte";
@@ -82,7 +82,7 @@
 {:else if $layout.projectCollaboratorsOpen}
   <Modal component={CollaboratorDialog} on:close={hideCollaborators} />
 {:else if $layout.projectOpen}
-  <Modal component={ProjectDialog} on:close={hideProject} />
+  <Modal component={ProjectDialogContainer} on:close={hideProject} />
 {:else if $layout.reprocessOpen}
   <Modal component={ReprocessDialog} on:close={hideReprocess} />
 {:else if $layout.searchTipsOpen}

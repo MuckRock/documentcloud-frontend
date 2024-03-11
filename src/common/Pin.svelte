@@ -16,7 +16,13 @@
   }px;`;
 </script>
 
-<button class="pin" class:active class:disabled on:click style={cssVarStyles}>
+<button
+  class="pin"
+  class:active
+  class:disabled
+  on:click|stopPropagation|preventDefault
+  style={cssVarStyles}
+>
   <Pin {title} {size} />
 </button>
 

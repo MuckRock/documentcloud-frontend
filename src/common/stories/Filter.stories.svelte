@@ -2,7 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Filter from "../Filter.svelte";
-  import Star from "../../../common/icons/Star.svelte";
+  import Star from "../icons/Star.svelte";
 
   let args = { selected: false, name: "Pinned" };
 

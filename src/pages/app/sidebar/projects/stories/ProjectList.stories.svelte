@@ -19,8 +19,8 @@
 
   const args = {
     user: { id: 1 },
-    newProject: action("New Project"),
     editProject: action("Edit Project"),
+    browseProjects: action("Browse Projects"),
   };
 </script>
 

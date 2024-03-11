@@ -10,10 +10,15 @@ import { queryBuilder } from "../util/url.js";
 import type { Page, Project, User, Document, DocumentAccess } from "./types";
 
 // Create a project
-export async function newProject(title, description): Promise<Project> {
+export async function newProject(
+  title: string,
+  description: string,
+  isPrivate: boolean,
+): Promise<Project> {
   const { data } = await session.post(apiUrl("projects/"), {
     title,
     description,
+    private: isPrivate,
   });
   return data;
 }
@@ -28,10 +33,12 @@ export async function updateProject(
   projectId: number,
   title: string,
   description: string,
+  isPrivate: boolean,
 ): Promise<Project> {
   const { data } = await session.patch(apiUrl(`projects/${projectId}/`), {
     title,
     description,
+    private: isPrivate,
   });
   return data;
 }
@@ -61,13 +68,31 @@ export async function removeDocumentsFromProject(
   );
 }
 
+export async function getPublicProjects(
+  cursor?: string,
+  query?: string,
+  expand: string = DEFAULT_EXPAND,
+): Promise<Page<Project>> {
+  // Returns all public projects
+  const { data } = await session.get(
+    queryBuilder(apiUrl("projects/"), {
+      private: false,
+      cursor,
+      query,
+      expand,
+    }),
+  );
+  return data;
+}
+
 export async function getProjects(
   userId: number,
+  query?: string,
   expand: string = DEFAULT_EXPAND,
 ): Promise<Project[]> {
   // Returns all projects
   const projects = await grabAllPages(
-    queryBuilder(apiUrl("projects/"), { user: userId, expand }),
+    queryBuilder(apiUrl("projects/"), { user: userId, query, expand }),
   );
   return projects;
 }

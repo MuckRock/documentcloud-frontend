@@ -1,22 +1,17 @@
 <script lang="ts">
-  import Pencil16 from "svelte-octicons/lib/Pencil16.svelte";
   import ListItem from "../ListItem.svelte";
-  import { FileDirectoryFill16 } from "svelte-octicons";
+  import Pin from "../../../../common/icons/Pin.svelte";
+  import EditButton from "../../../../common/EditButton.svelte";
 
   export let title;
   export let onEditClick;
 </script>
 
 <ListItem label={title}>
-  <span slot="icon" class="folder"><FileDirectoryFill16 /></span>
+  <span slot="icon" class="pin"><Pin /></span>
   <span slot="action">
     {#if onEditClick}
-      <button
-        class="edit"
-        on:click|stopPropagation|preventDefault={onEditClick}
-      >
-        <Pencil16 />
-      </button>
+      <EditButton small title={`Edit ${title}`} on:click={onEditClick} />
     {/if}
   </span>
 </ListItem>
@@ -35,8 +30,8 @@
     background: rgba(0, 0, 0, 0.03);
   }
 
-  .folder {
-    fill: var(--primary);
+  .pin {
+    fill: var(--highlight-orange);
   }
 
   .title {
@@ -50,26 +45,5 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-  }
-
-  .edit {
-    flex: 0 0 2rem;
-    padding: 0.25rem;
-    height: 1.25rem;
-    width: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    appearance: none;
-    fill: var(--primary);
-    background: transparent;
-    border: none;
-    border-radius: 1rem;
-    cursor: pointer;
-  }
-
-  .edit:hover {
-    fill: var(--white);
-    background: var(--primary);
   }
 </style>

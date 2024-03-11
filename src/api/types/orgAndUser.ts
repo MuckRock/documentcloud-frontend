@@ -34,7 +34,8 @@ export interface User {
   organization: number | Org;
   organizations: number[];
   admin_organizations: number[];
-  feature_level: number;
+  feature_level?: number;
+  verified_journalist?: boolean;
 }
 
 export function isOrg(org?: null | number | Org): org is Org {

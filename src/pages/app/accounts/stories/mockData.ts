@@ -6,7 +6,8 @@ import {
   organizations,
   proOrg,
   users,
-} from "../../../../api/fixtures/orgAndUser.fixtures.js";
+} from "../../../../api/fixtures/orgAndUser.fixtures";
+import { Org } from "../../../../api/types/orgAndUser.js";
 
 /* Mock Request Handlers */
 const mockMeUrl = new URL(`users/me/`, baseApiUrl).toString();
@@ -43,14 +44,17 @@ export const mockGetMe = {
   ),
   freeOrgMember: rest.get(mockMeUrl, (req, res, ctx) =>
     res(
-      ctx.json({ ...me, organization: { ...me.organization, plan: "Free" } }),
+      ctx.json({
+        ...me,
+        organization: { ...(me.organization as Org), plan: "Free" },
+      }),
     ),
   ),
   freeOrgAdmin: rest.get(mockMeUrl, (req, res, ctx) =>
     res(
       ctx.json({
         ...me,
-        organization: { ...me.organization, plan: "Free" },
+        organization: { ...(me.organization as Org), plan: "Free" },
         admin_organizations: [...me.admin_organizations, 1],
       }),
     ),

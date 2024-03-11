@@ -80,7 +80,7 @@
 
   .description {
     margin: 0 0.5em;
-    opacity: 0.6z;
+    opacity: 0.6;
     font-size: 0.875em;
     line-height: 1.4;
     color: var(--darkgray);

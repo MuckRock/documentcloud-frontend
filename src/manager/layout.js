@@ -24,6 +24,7 @@ export const layout = new Svue({
       selectedMap: {},
 
       // Custom dialogs
+      projectBrowser: false,
       addonDispatchOpen: null,
       addonBrowserOpen: false,
       addonRunsOpen: false,
@@ -276,6 +277,14 @@ export function editData(documents) {
 
 export function hideData() {
   layout.dataOpen = false;
+}
+
+export function browseProjects() {
+  layout.projectBrowser = true;
+}
+
+export function hideProjectBrowser() {
+  layout.projectBrowser = false;
 }
 
 export function newProject() {
