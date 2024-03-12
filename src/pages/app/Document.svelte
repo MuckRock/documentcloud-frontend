@@ -88,10 +88,10 @@
       progress={$documents.realProgressMap[document.id]}
       processed={$documents.pagesProcessedMap[document.id]}
       pageCount={$documents.pageCountMap[document.id]}
-      noteCount={document.notes.length}
-      publicNote={document.notes.some((x) => x.access === "public")}
-      orgNote={document.notes.some((x) => x.access === "organization")}
-      privateNote={document.notes.some((x) => x.access === "private")}
+      noteCount={document.notes?.length}
+      publicNote={document.notes?.some((x) => x.access === "public")}
+      orgNote={document.notes?.some((x) => x.access === "organization")}
+      privateNote={document.notes?.some((x) => x.access === "private")}
       on:pick
     />
 

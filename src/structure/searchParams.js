@@ -4,6 +4,7 @@ import { DEFAULT_ORDERING } from "@/api/common.js";
 import { getProjectDocuments } from "@/api/project.ts";
 import { cacheAsync } from "@/util/cache.js";
 import { highlight } from "@/search/parse.js";
+import { Results } from "./results.js";
 
 const searchDocumentsCached = cacheAsync(searchDocuments);
 
