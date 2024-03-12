@@ -25,6 +25,8 @@
     processed: null,
     pageCount: null,
   };
+
+  const errorDoc = new Document({ ...document, status: null });
 </script>
 
 <Template let:args>
@@ -57,3 +59,5 @@
     progress: 0.5,
   }}
 />
+
+<Story name="error" args={{ ...args, document: errorDoc }} />
