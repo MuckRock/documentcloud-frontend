@@ -40,7 +40,7 @@ export class Project extends Svue {
           return project.add_remove_access;
         },
         embedUrl(slugId) {
-          return new URL(`projects/${slugId}`, APP_URL).toString();
+          return new URL(`/projects/${slugId}/`, APP_URL).toString();
         },
       },
     });
