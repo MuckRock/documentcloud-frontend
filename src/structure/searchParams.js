@@ -4,6 +4,8 @@ import { DEFAULT_ORDERING } from "@/api/common.js";
 import { getProjectDocuments } from "@/api/project.ts";
 import { cacheAsync } from "@/util/cache.js";
 import { highlight } from "@/search/parse.js";
+import { Results } from "./results.js";
+import { Document } from "./document.js";
 
 const searchDocumentsCached = cacheAsync(searchDocuments);
 
@@ -259,9 +261,7 @@ export class SearchParams extends Svue {
                 );
                 return new Results(url, {
                   ...data,
-                  results: data.results.map(
-                    (document) => new Document(document),
-                  ),
+                  results: data.results.map((d) => new Document(d.document)),
                 });
               },
               null,
