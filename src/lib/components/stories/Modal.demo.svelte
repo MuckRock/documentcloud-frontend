@@ -1,4 +1,8 @@
-<div>
+<script lang="ts">
+  import Card from "../common/Card.svelte";
+</script>
+
+<Card>
   <h1>CHAPTER 1. Loomings.</h1>
   <p>
     Call me Ishmael. Some years ago—never mind how long precisely—having little
@@ -17,11 +21,4 @@
     they but knew it, almost all men in their degree, some time or other,
     cherish very nearly the same feelings towards the ocean with me.
   </p>
-</div>
-
-<style>
-  div {
-    width: 50%;
-    height: 50%;
-  }
-</style>
+</Card>
