@@ -75,3 +75,10 @@
     it all.
   </p>
 </div>
+
+<style>
+  div {
+    padding: 2rem;
+    overflow-y: auto;
+  }
+</style>
