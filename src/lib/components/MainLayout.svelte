@@ -56,19 +56,8 @@
   class:right={basement === "right"}
 >
   <div class="modal" tabindex="-1" class:hidden={!modal}>
-    <div class="backdrop">
-      <div class="modal-content">
-        <button
-          type="button"
-          class="close"
-          aria-label="Close"
-          on:click={closeModal}
-        >
-          <XCircle24 />
-        </button>
-        <svelte:component this={modal} on:close={closeModal} />
-      </div>
-    </div>
+    <div class="backdrop" role="presentation" on:click={closeModal} />
+    <svelte:component this={modal} />
   </div>
 
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -148,6 +137,7 @@
     gap: 0;
     flex-shrink: 0;
     background: var(--gray-1, #f5f6f7);
+    overflow: hidden;
   }
   header {
     display: flex;
@@ -306,6 +296,7 @@
     position: relative;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
   }
   .container {
     transform: translateX(0);
@@ -346,11 +337,6 @@
   }
 
   /* Modal */
-  button.close {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
   .modal {
     display: flex;
     flex-direction: column;
@@ -363,10 +349,10 @@
     z-index: 1;
     width: 100%;
     height: 100%;
-  }
-
-  .modal-content {
-    background-color: var(--white, white);
+    padding: 0 2rem;
+    scroll-padding: -2rem;
+    max-height: 100%;
+    overflow-y: auto;
   }
 
   .modal.hidden {
@@ -375,7 +361,7 @@
   }
 
   .modal .backdrop {
-    position: absolute;
+    position: fixed;
     z-index: -1;
     width: 100%;
     height: 100%;
