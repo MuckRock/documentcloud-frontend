@@ -4,5 +4,7 @@ export async function load({ url, fetch }) {
   const pinnedAddons = getPinnedAddons(fetch);
   return {
     pinnedAddons,
+    basementComponent: null,
+    modal: null,
   };
 }

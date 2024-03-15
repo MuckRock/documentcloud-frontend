@@ -1,15 +1,28 @@
 <script lang="ts">
+  import type { ComponentType, SvelteComponent } from "svelte";
+  import type { Writable } from "svelte/store";
+  import type { User } from "@/api/types";
+
   import { getContext } from "svelte";
+  import {
+    SidebarCollapse16,
+    SidebarExpand16,
+    XCircle24,
+  } from "svelte-octicons";
+
   import OrgMenu from "./OrgMenu.svelte";
   import Button from "./common/Button.svelte";
   import Logo from "./common/Logo.svelte";
-  import SignedIn from "./common/SignedIn.svelte";
-  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
-  import type { Writable } from "svelte/store";
-  import type { User } from "@/api/types";
-  import { SIGN_IN_URL } from "@/config/config";
 
-  export let modal: boolean = false;
+  /*
+  There is one modal position on the page, so setting the component opens the modal
+  */
+  export let modal: ComponentType<SvelteComponent> = null;
+
+  /*
+  The basement component goes in the basement, and there are two sides
+  */
+  export let basementComponent: ComponentType<SvelteComponent> = null;
   export let basement: "left" | "right" | null = null;
 
   let panel: "navigation" | "action" | null = null;
@@ -31,75 +44,107 @@
   }
 
   function closeModal() {
-    modal = false;
+    modal = null;
   }
 
   const me = getContext<Writable<User>>("me");
 </script>
 
-<div class="container">
-  <nav class="small">
-    <Button mode="ghost" on:click={openPanel("navigation")}>
-      <SidebarCollapse16 />
-    </Button>
-    <a href="/" class="logo"><Logo /></a>
-    <Button mode="ghost" on:click={openPanel("action")}>
-      <SidebarExpand16 />
-    </Button>
-  </nav>
-  <nav
-    class="navigation left large"
-    class:active={panel === "navigation"}
-    id="navigation"
-  >
-    <header class="header">
-      <div class="small closePane">
-        <Button mode="ghost" on:click={closePanel}>
-          <SidebarExpand16 />
-        </Button>
-      </div>
-      <a href="/" class="logo"><Logo /></a>
-    </header>
-    <main><slot name="navigation" /></main>
-  </nav>
-  <main class="content">
-    <slot name="content" />
-  </main>
-  <nav class="action right large" class:active={panel === "action"} id="action">
-    <header class="header">
-      <SignedIn>
-        <OrgMenu />
-        <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}
-          >Sign In</Button
+<div
+  class="layout"
+  class:left={basement === "left"}
+  class:right={basement === "right"}
+>
+  <div class="modal" tabindex="-1" class:hidden={!modal}>
+    <div class="backdrop">
+      <div class="modal-content">
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          on:click={closeModal}
         >
-      </SignedIn>
-      <div class="small closePane">
-        <Button mode="ghost" on:click={closePanel}>
-          <SidebarCollapse16 />
-        </Button>
+          <XCircle24 />
+        </button>
+        <svelte:component this={modal} on:close={closeModal} />
       </div>
-    </header>
-    <main><slot name="action" /></main>
-    <footer>
-      <SignedIn>{$me.name}</SignedIn>
-      <p>Language</p>
-      <p>Help</p>
-    </footer>
-  </nav>
+    </div>
+  </div>
+
+  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div
-    class="small overlay"
-    class:active={panel !== null}
-    role="presentation"
-    on:click={closePanel}
-    on:keydown={closePanel}
-  />
+    class="container"
+    on:click={closeBasement}
+    on:keydown={closeBasement}
+    role="dialog"
+  >
+    <nav class="small">
+      <Button mode="ghost" on:click={openPanel("navigation")}>
+        <SidebarCollapse16 />
+      </Button>
+      <a href="/" class="logo"><Logo /></a>
+      <Button mode="ghost" on:click={openPanel("action")}>
+        <SidebarExpand16 />
+      </Button>
+    </nav>
+    <nav
+      class="navigation left large"
+      class:active={panel === "navigation"}
+      id="navigation"
+    >
+      <header class="header">
+        <div class="small closePane">
+          <Button mode="ghost" on:click={closePanel}>
+            <SidebarExpand16 />
+          </Button>
+        </div>
+        <a href="/" class="logo"><Logo /></a>
+      </header>
+      <main>
+        <slot name="navigation" />
+      </main>
+    </nav>
+    <main class="content">
+      <slot name="content" />
+    </main>
+    <nav
+      class="action right large"
+      class:active={panel === "action"}
+      id="action"
+    >
+      <header class="header">
+        <OrgMenu />
+        <div class="small closePane">
+          <Button mode="ghost" on:click={closePanel}>
+            <SidebarCollapse16 />
+          </Button>
+        </div>
+      </header>
+      <main><slot name="action" /></main>
+      <footer>
+        <p>{$me?.name}</p>
+        <p>Language</p>
+        <p>Help</p>
+      </footer>
+    </nav>
+    <div
+      class="small overlay"
+      class:active={panel !== null}
+      role="presentation"
+      on:click={closePanel}
+      on:keydown={closePanel}
+    />
+  </div>
+  <div class="basement">
+    <svelte:component this={basementComponent} />
+  </div>
 </div>
 
 <style>
   .container {
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     gap: 0;
     flex-shrink: 0;
     background: var(--gray-1, #f5f6f7);
@@ -255,4 +300,86 @@
     }
   }
   /* End Mobile Styles */
+
+  /* Basement and Layout Shift */
+  .layout {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  .container {
+    transform: translateX(0);
+    transition:
+      transform 0.5s ease-in-out,
+      border-radius 0.5s ease-in-out,
+      box-shadow 0.5s linear;
+  }
+  .basement {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: var(--blue-1);
+  }
+  .layout.right .container {
+    transform: translateX(-75%);
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0px 4px 16px 4px var(--gray-3, #99a8b3);
+  }
+  .layout.right .basement {
+    padding-left: 25%;
+  }
+  .layout.left .container {
+    transform: translateX(75%);
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0px 4px 16px 4px var(--gray-3, #99a8b3);
+  }
+  .layout.left .basement {
+    padding-right: 25%;
+  }
+
+  /* Modal */
+  button.close {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-content {
+    background-color: var(--white, white);
+  }
+
+  .modal.hidden {
+    display: none;
+    background-color: transparent;
+  }
+
+  .modal .backdrop {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: rgba(35, 57, 68, 0.5);
+    backdrop-filter: blur(2px);
+  }
 </style>

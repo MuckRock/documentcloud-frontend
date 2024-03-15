@@ -7,13 +7,9 @@
   import { PlusCircle16 } from "svelte-octicons";
   import Actions from "./sidebar/Actions.svelte";
   import AddOns from "./sidebar/AddOns.svelte";
-  import type { AddOnListItem } from "@/lib/api/types";
-  import type { Page } from "@/api/types";
   import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
-  export let data: {
-    pinnedAddons: Promise<Page<AddOnListItem>>;
-  };
+  export let data;
 </script>
 
 <svelte:head>
