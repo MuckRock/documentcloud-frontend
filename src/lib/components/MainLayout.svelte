@@ -4,11 +4,7 @@
   import type { User } from "@/api/types";
 
   import { getContext } from "svelte";
-  import {
-    SidebarCollapse16,
-    SidebarExpand16,
-    XCircle24,
-  } from "svelte-octicons";
+  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
 
   import OrgMenu from "./OrgMenu.svelte";
   import Button from "./common/Button.svelte";

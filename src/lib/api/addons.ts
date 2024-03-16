@@ -1,8 +1,10 @@
-import { error } from "@sveltejs/kit";
-import { BASE_API_URL } from "@/config/config.js";
 import { type AddOnListItem } from "@/addons/types";
-import { isErrorCode } from "../utils";
 import type { Page } from "@/api/types/common";
+
+import { error } from "@sveltejs/kit";
+
+import { BASE_API_URL } from "@/config/config.js";
+import { isErrorCode } from "../utils";
 
 export async function getPinnedAddons(
   fetch = globalThis.fetch,

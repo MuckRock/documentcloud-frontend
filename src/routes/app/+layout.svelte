@@ -1,22 +1,27 @@
 <script lang="ts">
-  import MainLayout from "@/lib/components/MainLayout.svelte";
   import "@/style/kit.css";
-  import Projects from "./sidebar/Projects.svelte";
-  import Documents from "./sidebar/Documents.svelte";
-  import Button from "@/lib/components/common/Button.svelte";
   import { PlusCircle16 } from "svelte-octicons";
-  import Actions from "./sidebar/Actions.svelte";
-  import AddOns from "./sidebar/AddOns.svelte";
+  import { page } from "$app/stores";
+
+  import Button from "@/lib/components/common/Button.svelte";
+  import MainLayout from "@/lib/components/MainLayout.svelte";
   import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
-  export let data;
+  import Actions from "./sidebar/Actions.svelte";
+  import AddOns from "./sidebar/AddOns.svelte";
+  import Documents from "./sidebar/Documents.svelte";
+  import Projects from "./sidebar/Projects.svelte";
+
+  // use $page.data to capture complete load results across routes
+  $: basement = $page.data.basement;
+  $: basementComponent = $page.data.basementComponent;
 </script>
 
 <svelte:head>
   <title>DocumentCloud</title>
 </svelte:head>
 
-<MainLayout>
+<MainLayout {basement} {basementComponent}>
   <svelte:fragment slot="navigation">
     <Documents />
     <SignedIn>
@@ -30,7 +35,7 @@
     <SignedIn>
       <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
       <Actions />
-      <AddOns pinnedAddOns={data.pinnedAddons} />
+      <AddOns pinnedAddOns={$page.data.pinnedAddons} />
     </SignedIn>
   </svelte:fragment>
 </MainLayout>
