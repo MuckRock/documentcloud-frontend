@@ -1,7 +1,7 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
-import { error, type NumericRange } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
@@ -48,6 +48,21 @@ export async function get(
 
   return resp.json();
 }
+/**
+ * Create new documents in a batch (or a batch of one).
+ *
+ * If documents contain a `file_url` property, the server will attempt to fetch and upload that file.
+ * Otherwise, the response will contain all documents fields plus a `presigned_url` field, which should
+ * be passed to `upload` to store the actual file.
+ *
+ * @async
+ * @export
+ */
+export async function create(documents: Document[], fetch = globalThis.fetch) {}
+
+export async function upload() {}
+
+export async function process() {}
 
 // utility functions
 

@@ -2,7 +2,6 @@ import { test as base, describe, expect } from "vitest";
 
 import { APP_URL } from "@/config/config.js";
 import * as notes from "./notes.js";
-import * as documents from "./documents";
 
 const test = base.extend({
   document: async ({}, use) => {
