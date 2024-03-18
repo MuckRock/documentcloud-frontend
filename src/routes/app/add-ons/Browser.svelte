@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import AddOnList from "@/addons/browser/AddOnList.svelte";
+  import type { Page } from "@/api/types/common";
   import type { AddOnListItem } from "$lib/api/types";
+
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
+
+  import AddOnList from "@/addons/browser/AddOnList.svelte";
   import { buildParams, buildUrl, filter } from "@/addons/browser/browser";
   import Filters from "@/addons/browser/Filters.svelte";
   import Categories from "@/addons/browser/Categories.svelte";
@@ -10,8 +14,6 @@
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
   import Credit from "@/common/icons/Credit.svelte";
-  import type { Page } from "@/api/types/common.js";
-  import { onMount } from "svelte";
 
   let per_page = 10;
 
@@ -53,6 +55,13 @@
   $: loadPrev = () => load(previous_url);
   $: reload = () => load(url);
 </script>
+
+<!--
+  @component
+  Browser.svelte is a browser for add-ons.
+  It lives outside of a route component because it's
+  injected as a dynamic component in MainLayout.svelte.
+-->
 
 <div class="browser">
   <header class="header">

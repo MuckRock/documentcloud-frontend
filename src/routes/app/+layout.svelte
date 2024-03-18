@@ -15,13 +15,14 @@
   // use $page.data to capture complete load results across routes
   $: basement = $page.data.basement;
   $: basementComponent = $page.data.basementComponent;
+  $: modal = $page.data.modal;
 </script>
 
 <svelte:head>
   <title>DocumentCloud</title>
 </svelte:head>
 
-<MainLayout {basement} {basementComponent}>
+<MainLayout {basement} {basementComponent} {modal}>
   <svelte:fragment slot="navigation">
     <Documents />
     <SignedIn>
