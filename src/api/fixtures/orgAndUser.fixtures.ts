@@ -1,5 +1,5 @@
-import { Org, Page, User } from "../types";
-import { GroupOrg, IndividualOrg } from "../types/orgAndUser";
+import type { Org, Page, User } from "../types";
+import type { GroupOrg, IndividualOrg } from "../types/orgAndUser";
 
 export const me: User = {
   id: 4,

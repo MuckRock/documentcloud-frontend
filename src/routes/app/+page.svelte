@@ -1,25 +1,21 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { Hourglass24 } from "svelte-octicons";
+  import { page } from "$app/stores";
+
   import ResultsList from "$lib/components/documents/ResultsList.svelte";
   import ContentLayout from "$lib/components/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Search from "$lib/components/Search.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Paginator from "@/common/Paginator.svelte";
-  import type { DocumentResults } from "@/lib/api/types";
 
-  export let data: {
-    query: string;
-    searchResults: Promise<DocumentResults>;
-  };
-
-  let page = 1;
+  let page_number = 1;
   let per_page = 25;
   let error: Error;
 
-  $: searchResults = data.searchResults;
-  $: query = data.query;
+  $: searchResults = $page.data.searchResults;
+  $: query = $page.data.query;
 
   async function load(url) {
     const res = await fetch(url, { credentials: "include" }).catch((e) => {
@@ -33,7 +29,7 @@
       error = { name: "Loading error", message: res.statusText };
     }
 
-    data.searchResults = res.json();
+    $page.data.searchResults = res.json();
   }
 </script>
 
@@ -60,16 +56,16 @@
         {@const next = sr.next}
         {@const previous = sr.previous}
         <Paginator
-          {page}
+          page={page_number}
           totalPages={total_pages}
           has_next={Boolean(next)}
           has_previous={Boolean(previous)}
           on:next={(e) => {
-            page = Math.min(total_pages, page + 1);
+            page_number = Math.min(total_pages, page_number + 1);
             load(next);
           }}
           on:previous={(e) => {
-            page = Math.max(1, page - 1);
+            page_number = Math.max(1, page_number - 1);
             load(previous);
           }}
         />

@@ -1,7 +1,11 @@
 <script context="module" lang="ts">
+  import type { DocumentResults } from "$lib/api/types";
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import MainLayout from "../MainLayout.svelte";
-  import type { DocumentResults } from "$lib/api/types";
+
+  // injected components
+  import Modal from "./Modal.demo.svelte";
+  import Basement from "./Basement.demo.svelte";
 
   import { _ } from "svelte-i18n";
   import {
@@ -42,18 +46,22 @@
         handlers: [addons.data],
       },
     },
+    argTypes: {
+      basement: {
+        control: { type: "select" },
+        options: ["left", "right", null],
+      },
+    },
   };
 
-  let args = {};
+  let args = {
+    modal: false,
+    basement: null,
+  };
 </script>
 
 <Template let:args>
   <MainLayout {...args}>
-    <svelte:fragment slot="modal">
-      <div style="width: 50%; height: 50%; background: white">
-        <h1>Modal</h1>
-      </div>
-    </svelte:fragment>
     <svelte:fragment slot="navigation">
       <Flex direction="column">
         <SidebarItem hover
@@ -122,9 +130,6 @@
         </Flex>
       </SidebarGroup>
     </svelte:fragment>
-    <svelte:fragment slot="basement">
-      <h1>Basement</h1>
-    </svelte:fragment>
   </MainLayout>
 </Template>
 
@@ -160,4 +165,16 @@
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
   }}
   {...args}
+/>
+
+<Story name="Modal component" args={{ ...args, modal: Modal }} />
+
+<Story
+  name="Basement (Left)"
+  args={{ ...args, basement: "left", basementComponent: Basement }}
+/>
+
+<Story
+  name="Basement (Right)"
+  args={{ ...args, basement: "right", basementComponent: Basement }}
 />
