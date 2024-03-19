@@ -1,6 +1,5 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import Badge from "../../common/Badge.svelte";
   import Checkbox from "../../common/Checkbox.svelte";
   import Flex from "../../common/Flex.svelte";
   import Tooltip from "../../common/Tooltip.svelte";
@@ -43,10 +42,15 @@
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selection.onCheck();
   }
+
+  $: loading = data.loading;
+  $: {
+    console.log(data);
+  }
 </script>
 
 <div class="barcontainer">
-  {#if !data.loading}
+  {#if !loading}
     <Flex gap={2} align="center" justify="space-between">
       <Flex gap={2} align="center">
         {#if loggedIn}
