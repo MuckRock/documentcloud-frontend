@@ -1,98 +1,127 @@
-<script>
-  import Checkbox from "@/common/Checkbox.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
-  import Dropdown from "@/common/Dropdown.svelte";
-  import Paginator from "../../common/Paginator.svelte";
+<script lang="ts">
   import { _ } from "svelte-i18n";
+  import Badge from "../../common/Badge.svelte";
+  import Checkbox from "../../common/Checkbox.svelte";
+  import Flex from "../../common/Flex.svelte";
+  import Tooltip from "../../common/Tooltip.svelte";
+  import Dropdown from "../../common/Dropdown.svelte";
+  import Paginator from "../../common/Paginator.svelte";
 
   // Menus
   import EditMenu from "./menus/EditMenu.svelte";
   import ProjectsMenu from "./menus/ProjectsMenu.svelte";
   import AddonsMenu from "./menus/AddonsMenu.svelte";
 
-  // Stores
-  import { search, searchNext, searchPrev } from "@/search/search.js";
-  import { layout } from "@/manager/layout.js";
-  import { manager, selectAll } from "@/manager/manager.js";
-  import { documents, unselectAll } from "@/manager/documents.js";
-  import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
-
-  function handleSelectAll({ detail }) {
-    if (!detail.indeterminate) selectAll();
-  }
-
   let outerHeight = 1000;
   let editVisible = false;
+
+  export let loggedIn: boolean;
+
+  export let data: {
+    loading: boolean;
+    documents: Array<any>;
+  };
+
+  export let selection: {
+    checked: boolean;
+    indeterminate: boolean;
+    editable: boolean;
+    onUncheck: () => void;
+    onCheck: () => void;
+  };
+
+  export let pagination: {
+    page: number;
+    totalPages?: number;
+    totalItems?: number;
+    onNext: () => void;
+    onPrev: () => void;
+    has_next: boolean;
+    has_prev: boolean;
+  };
+
+  function handleSelectAll({ detail }) {
+    if (!detail.indeterminate) selection.onCheck();
+  }
 </script>
 
 <div class="barcontainer">
-  {#if !$layout.loading}
-    <div class="bar">
-      {#if $orgsAndUsers.loggedIn}
-        <span class="action check scaledown">
-          {#if $documents.documents.length > 0}
-            <Checkbox
-              on:check={handleSelectAll}
-              on:uncheck={unselectAll}
-              indeterminate={$manager.someSelected}
-              checked={$layout.hasSelection}
-            />
-          {/if}
-        </span>
+  {#if !data.loading}
+    <Flex gap={2} align="center" justify="space-between">
+      <Flex gap={2} align="center">
+        {#if loggedIn}
+          <span class="action check scaledown">
+            {#if data.documents.length > 0}
+              <Checkbox
+                on:check={handleSelectAll}
+                on:uncheck={selection.onUncheck}
+                indeterminate={selection.indeterminate}
+                checked={selection.checked}
+              />
+            {/if}
+          </span>
 
-        {#if $layout.hasSelection && $layout.selectionEditable}
-          <Dropdown
-            name="edit-menu"
-            table={true}
-            fixed={outerHeight > 600}
-            on:active={(e) => (editVisible = e.detail)}
-          >
+          {#if selection.checked && selection.editable}
+            <Dropdown
+              name="edit-menu"
+              table={true}
+              fixed={outerHeight > 600}
+              on:active={(e) => (editVisible = e.detail)}
+            >
+              <span class="action nowrap" slot="title">
+                {$_("actionBar.editMenu")}
+                <span class="dropper">▼</span>
+              </span>
+              <EditMenu visible={editVisible} />
+            </Dropdown>
+          {:else}
+            <span class="action disabled shortpad nowrap">
+              <Tooltip
+                caption={selection.editable
+                  ? $_("actionBar.selectDocs")
+                  : $_("actionBar.noPerms")}
+              >
+                {$_("actionBar.editMenu")}
+                <span class="dropper">▼</span>
+              </Tooltip>
+            </span>
+          {/if}
+          <Dropdown name="projects-menu" table={true} fixed={outerHeight > 600}>
             <span class="action nowrap" slot="title">
-              {$_("actionBar.editMenu")}
+              {$_("actionBar.projectsMenu")}
               <span class="dropper">▼</span>
             </span>
-            <EditMenu visible={editVisible} />
+            <ProjectsMenu />
           </Dropdown>
-        {:else}
-          <span class="action disabled shortpad nowrap">
-            <Tooltip
-              caption={$layout.selectionEditable
-                ? $_("actionBar.selectDocs")
-                : $_("actionBar.noPerms")}
-            >
-              {$_("actionBar.editMenu")}
-              <span class="dropper">▼</span>
-            </Tooltip>
-          </span>
+          <Dropdown name="addons-menu" table={true} fixed={outerHeight > 600}>
+            <span class="action nowrap" slot="title">
+              <span>
+                {$_("actionBar.addOnsMenu")}
+                <span class="dropper">▼</span>
+              </span>
+            </span>
+            <AddonsMenu />
+          </Dropdown>
         {/if}
-        <Dropdown name="projects-menu" table={true} fixed={outerHeight > 600}>
-          <span class="action nowrap" slot="title">
-            {$_("actionBar.projectsMenu")}
-            <span class="dropper">▼</span>
-          </span>
-          <ProjectsMenu />
-        </Dropdown>
-        <Dropdown name="addons-menu" table={true} fixed={outerHeight > 600}>
-          <span class="action nowrap" slot="title">
-            <span class="badge"> {$_("common.new")}! </span>
-            {$_("actionBar.addOnsMenu")}
-            <span class="dropper">▼</span>
-          </span>
-          <AddonsMenu />
-        </Dropdown>
-      {/if}
-
-      <span class="narrowhide">
-        <Paginator
-          page={$search.page}
-          totalPages={$search.results?.numPages}
-          on:next={searchNext}
-          on:previous={searchPrev}
-          has_next={$search.hasNext}
-          has_previous={$search.hasPrev}
-        />
-      </span>
-    </div>
+      </Flex>
+      <Flex gap={2} align="center">
+        {#if pagination.totalItems}
+          <div class="documents">
+            {$_("paginator.document", { values: { n: pagination.totalItems } })}
+          </div>
+        {/if}
+        <span class="narrowhide">
+          <Paginator
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            on:next={pagination.onNext}
+            on:previous={pagination.onPrev}
+            has_next={pagination.has_next}
+            has_previous={pagination.has_prev}
+          />
+        </span>
+      </Flex>
+    </Flex>
   {/if}
 </div>
 
@@ -101,44 +130,34 @@
 <style lang="scss">
   .barcontainer {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-    padding: 14px 0;
+    padding: 0.75rem 0;
+    color: var(--darkgray);
 
     .nowrap {
       white-space: nowrap;
     }
 
-    .bar {
-      display: table-row;
+    .action {
+      color: $primary;
+      user-select: none;
+      cursor: pointer;
+      display: inline-block;
+      flex: 0 1 auto;
+      vertical-align: middle;
+      padding: 0 0.125rem;
 
-      .action {
-        font-size: 16px;
-        color: $primary;
-        padding: 0 25px;
-        user-select: none;
-        cursor: pointer;
-        display: table-cell;
-        vertical-align: middle;
+      &.check {
+        transform: translateY(2px);
+      }
 
-        &.check {
-          padding-right: 35px;
-          cursor: inherit;
-          transform: translateY(2px);
-        }
+      &.disabled {
+        color: $gray;
+        cursor: inherit;
+      }
 
-        &.disabled {
-          color: $gray;
-          cursor: inherit;
-        }
-
-        &:first-child,
-        &.shortpad {
-          padding-left: 8px;
-        }
-
-        &.scaledown {
-          > :global(*) {
-            zoom: 0.8;
-          }
+      &.scaledown {
+        > :global(*) {
+          zoom: 0.8;
         }
       }
     }
