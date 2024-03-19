@@ -28,7 +28,6 @@
   }
 
   async function getPinnedList() {
-    console.log("getPinnedList");
     const pinned = (await getProjects(user.id)).filter(
       (project) => project.pinned,
     );
