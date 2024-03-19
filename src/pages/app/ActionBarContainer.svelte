@@ -16,7 +16,7 @@
   $: selection = {
     checked: $layout.hasSelection,
     indeterminate: $manager.someSelected,
-    editable: $layout.selectionEditables,
+    editable: $layout.selectionEditable,
     onCheck: selectAll,
     onUncheck: unselectAll,
   };

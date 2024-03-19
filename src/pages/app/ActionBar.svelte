@@ -42,15 +42,10 @@
   function handleSelectAll({ detail }) {
     if (!detail.indeterminate) selection.onCheck();
   }
-
-  $: loading = data.loading;
-  $: {
-    console.log(data);
-  }
 </script>
 
 <div class="barcontainer">
-  {#if !loading}
+  {#if !data.loading}
     <Flex gap={2} align="center" justify="space-between">
       <Flex gap={2} align="center">
         {#if loggedIn}
