@@ -42,7 +42,6 @@
   $: items = res.results;
 
   export async function load(filter: FilterKey, cursor?: string) {
-    console.log("Loading: %s", filter);
     loading = true;
     try {
       user = await getMe();
