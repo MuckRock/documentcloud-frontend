@@ -36,9 +36,6 @@
     if (!equal($pinStore, pinned)) $pinStore = sortPins(pinned);
   }
 
-  // when the pinstore changes, refetch the list
-  $: $pinStore, getPinnedList();
-
   // fetch the list on mount
   onMount(async () => {
     await getPinnedList();

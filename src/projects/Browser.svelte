@@ -16,7 +16,7 @@
   import { getProjects, getPublicProjects } from "../api/project";
   import type { User } from "../api/types";
   import { getMe } from "../api/orgAndUser";
-  import Filters, { FilterKey, filter } from "./Filters.svelte";
+  import Filters, { type FilterKey, filter } from "./Filters.svelte";
 
   let drawer: Drawer;
 
