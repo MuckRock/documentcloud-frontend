@@ -16,7 +16,7 @@
   import { getProjects, getPublicProjects } from "../api/project";
   import type { User } from "../api/types";
   import { getMe } from "../api/orgAndUser";
-  import Filters, { FilterKey, filter } from "./Filters.svelte";
+  import Filters, { type FilterKey, filter } from "./Filters.svelte";
 
   let drawer: Drawer;
 
@@ -42,6 +42,7 @@
   $: items = res.results;
 
   export async function load(filter: FilterKey, cursor?: string) {
+    console.log("Loading: %s", filter);
     loading = true;
     try {
       user = await getMe();

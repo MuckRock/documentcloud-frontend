@@ -28,6 +28,7 @@
   }
 
   async function getPinnedList() {
+    console.log("getPinnedList");
     const pinned = (await getProjects(user.id)).filter(
       (project) => project.pinned,
     );
@@ -35,9 +36,6 @@
     // this prevents an endless update loop
     if (!equal($pinStore, pinned)) $pinStore = sortPins(pinned);
   }
-
-  // when the pinstore changes, refetch the list
-  $: $pinStore, getPinnedList();
 
   // fetch the list on mount
   onMount(async () => {
