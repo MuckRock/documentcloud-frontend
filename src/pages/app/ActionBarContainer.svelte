@@ -6,14 +6,14 @@
   import { orgsAndUsers } from "../../manager/orgsAndUsers";
   import ActionBar from "./ActionBar.svelte";
 
-  let loggedIn = $orgsAndUsers.loggedIn;
+  $: loggedIn = $orgsAndUsers.loggedIn;
 
-  let data = {
+  $: data = {
     loading: $layout.loading,
     documents: $documents.documents,
   };
 
-  let selection = {
+  $: selection = {
     checked: $layout.hasSelection,
     indeterminate: $manager.someSelected,
     editable: $layout.selectionEditables,
@@ -21,7 +21,7 @@
     onUncheck: unselectAll,
   };
 
-  let pagination = {
+  $: pagination = {
     page: $search.page,
     totalPages: $search.results?.numPages,
     totalItems: $search.results?.count,
