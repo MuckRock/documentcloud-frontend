@@ -34,7 +34,7 @@ export async function search(
  */
 export async function get(
   id: number,
-  fetch: typeof globalThis.fetch,
+  fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
   const expand = ["user", "organization", "projects", "revisions"];
@@ -58,11 +58,87 @@ export async function get(
  * @async
  * @export
  */
-export async function create(documents: Document[], fetch = globalThis.fetch) {}
+export async function create(
+  documents: Document[],
+  fetch = globalThis.fetch,
+): Promise<Document[]> {
+  const endpoint = new URL("documents/", BASE_API_URL);
 
-export async function upload() {}
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(documents),
+  });
 
-export async function process() {}
+  if (isErrorCode(resp.status)) {
+    error(resp.status, resp.statusText);
+  }
+
+  return resp.json() as Promise<Document[]>;
+}
+
+/**
+ * Upload file data to a presigned_url array.
+ * Use this after running `create` to add documents to the database.
+ *
+ * Note that this function takes an array of objects containing a document ID and
+ * a presigned URL, plus an array file data.
+ *
+ * @async
+ * @export
+ */
+export async function upload(
+  documents: { id: number; presigned_url: URL }[],
+  files: File[] | FileList,
+  fetch = globalThis.fetch,
+): Promise<Response[]> {
+  if (!(documents.length === files.length)) {
+    throw new Error("mismatched number of documents and files");
+  }
+  return Promise.all(
+    documents.map(({ id, presigned_url }, i) => {
+      const file = files[i];
+
+      return fetch(presigned_url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type || "application/octet-stream",
+        },
+        body: file,
+      });
+    }),
+  );
+}
+
+/**
+ * Extract images and text from uploaded documents
+ *
+ * @async
+ * @export
+ */
+export async function process(
+  documents: { id: number; force_ocr: boolean }[],
+  fetch = globalThis.fetch,
+): Promise<Response> {
+  const endpoint = new URL("document/process/", BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: { "Content-type": "application/json" },
+    body: JSON.stringify(documents),
+  });
+}
+
+/**
+ * Stop processing a document
+ *
+ * @param id Document ID
+ */
+export async function cancel(id: number) {}
 
 // utility functions
 

@@ -17,9 +17,14 @@ const test = base.extend({
 });
 
 describe("document fetching", () => {
-  test.todo("get a single document");
+  test.todo("documents.get");
+  test.todo("documents.search");
+});
 
-  test.todo("search documents");
+describe("document uploads and processing", () => {
+  test.todo("documents.create");
+  test.todo("documents.upload");
+  test.todo("documents.process");
 });
 
 describe("document helper methods", () => {
