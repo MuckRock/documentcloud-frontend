@@ -5,7 +5,7 @@
 
   // Components
   import AddonStatus from "../../addons/progress/AddonStatus.svelte";
-  import ActionBar from "./ActionBar.svelte";
+  import ActionBar from "./ActionBarContainer.svelte";
   import Anonymous from "./Anonymous.svelte";
   import AccountNavigation from "./accounts/AccountNavigation.svelte";
   import Button from "@/common/Button.svelte";

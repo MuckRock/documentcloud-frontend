@@ -547,7 +547,7 @@
   "paginator": {
     "page": "Page",
     "of": "of",
-    "document": "{n, plural, one {Document} other {Documents}}",
+    "document": "{n, plural, one {# Document} other {# Documents}}",
     "next": "Next Page",
     "previous": "Previous Page",
     "first": "First Page",
