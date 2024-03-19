@@ -127,50 +127,38 @@
 
 <svelte:window bind:outerHeight />
 
-<style lang="scss">
+<style>
   .barcontainer {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     padding: 0.75rem 0;
     color: var(--darkgray);
-
-    .nowrap {
-      white-space: nowrap;
-    }
-
-    .action {
-      color: $primary;
-      user-select: none;
-      cursor: pointer;
-      display: inline-block;
-      flex: 0 1 auto;
-      vertical-align: middle;
-      padding: 0 0.125rem;
-
-      &.check {
-        transform: translateY(2px);
-      }
-
-      &.disabled {
-        color: $gray;
-        cursor: inherit;
-      }
-
-      &.scaledown {
-        > :global(*) {
-          zoom: 0.8;
-        }
-      }
-    }
   }
 
-  .badge {
-    background-color: $primary;
-    color: $menuBg;
-    font-size: 12px;
-    padding: 0.25em 0.5em;
-    border-radius: 50%;
-    box-sizing: border-box;
-    margin-right: 0.25em;
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .action {
+    color: var(--primary);
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+    flex: 0 1 auto;
+    vertical-align: middle;
+    padding: 0 0.125rem;
+  }
+
+  .action.check {
+    transform: translateY(2px);
+  }
+
+  .action.disabled {
+    color: var(--gray);
+    cursor: inherit;
+  }
+
+  .action.scaledown > :global(*) {
+    zoom: 0.8;
   }
 
   @media only screen and (max-width: 720px) {
