@@ -13,6 +13,10 @@
   const MAX_BUFFER_SIZE = 5;
   const MAX_THUMB_WIDTH = 30;
   const MAX_THUMB_HEIGHT = 39;
+
+  $: {
+    console.log(modification);
+  }
 </script>
 
 {#if modification.modifyHasSelection}
