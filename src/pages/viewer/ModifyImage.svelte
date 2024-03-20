@@ -1,9 +1,9 @@
-<script>
-  import Image from "@/common/Image.svelte";
-  import { viewer } from "@/viewer/viewer.js";
-  import { pageImageUrl } from "@/api/viewer.js";
-  import { modification } from "@/viewer/modification/modification";
-  import { getDocument } from "@/api/document.js";
+<script lang="ts">
+  import Image from "../../common/Image.svelte";
+  import { viewer } from "../../viewer/viewer.js";
+  import { getDocument } from "../../api/document.js";
+  import { pageImageUrl } from "../../api/viewer.js";
+  import { modification } from "../../viewer/modification/modification";
 
   export let id;
   export let page;
@@ -19,7 +19,7 @@
       ? $viewer.document
       : $viewer.document != null && id == $viewer.document.id
         ? $viewer.document
-        : $modification.documentCache[id];
+        : modification.documentCache[id];
 
   const DEFAULT_PAGE_SIZE = 1;
   $: pageSize =
@@ -33,7 +33,7 @@
 
   $: {
     if ($viewer.document != null && id != $viewer.document.id) {
-      if ($modification.documentCache[id] == null) {
+      if (modification.documentCache[id] == null) {
         modification.documentCache[id] = {};
         // Update the document cache
         getDocument(id, null).then((doc) => {

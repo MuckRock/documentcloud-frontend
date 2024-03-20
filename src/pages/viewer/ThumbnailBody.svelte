@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
   import { _ } from "svelte-i18n";
 
   import ActionPane from "./pane/ActionPane.svelte";
   import ModifyImage from "./ModifyImage.svelte";
-  import Modification from "@/viewer/modification/Modification.svelte";
-  import { viewer } from "@/viewer/viewer.js";
-  import { layout } from "@/viewer/layout.js";
-  import { restorePosition, changeMode } from "@/viewer/document.js";
-  import { ModificationSpec } from "@/viewer/modification/modifySpec";
-  import { modification } from "@/viewer/modification/modification";
+  import Modification from "../../viewer/modification/Modification.svelte";
+  import { viewer } from "../../viewer/viewer.js";
+  import { layout } from "../../viewer/layout.js";
+  import { restorePosition, changeMode } from "../../viewer/document.js";
+  import { ModificationSpec } from "../../viewer/modification/modifySpec";
+  import { modification } from "../../viewer/modification/modification";
 
   $: modify = $layout.modifying;
 
@@ -38,7 +38,7 @@
   // Page objects
   $: {
     if (
-      $modification.modifySpec == null &&
+      modification.modifySpec == null &&
       $viewer.document != null &&
       $viewer.document.pageCount != null
     ) {
@@ -53,7 +53,7 @@
       ? null
       : Math.min(
           Math.floor(containerScrollTop / itemHeight) * itemsPerRow,
-          $modification.pageCount,
+          modification.pageCount,
         );
   $: endPage =
     itemsPerRow == null || containerHeight == null
@@ -61,12 +61,12 @@
       : Math.min(
           Math.ceil((containerScrollTop + containerHeight) / itemHeight) *
             itemsPerRow,
-          $modification.pageCount,
+          modification.pageCount,
         );
   $: overallHeight =
     itemsPerRow == null
       ? null
-      : Math.ceil($modification.pageCount / itemsPerRow) * itemHeight;
+      : Math.ceil(modification.pageCount / itemsPerRow) * itemHeight;
   $: paddingBottom =
     overallHeight == null || endPage == null || itemsPerRow == null
       ? 0
@@ -75,9 +75,9 @@
     startPage == null ||
     endPage == null ||
     itemsPerRow == null ||
-    $modification.modifySpec == null
+    modification.modifySpec == null
       ? []
-      : $modification.modifySpec
+      : modification.modifySpec
           .slice(startPage, endPage - startPage + 1)
           .toDescriptors()
           .map((descriptor, i) => ({
@@ -88,8 +88,8 @@
               descriptor.id == null ? $viewer.document.id : descriptor.id,
           }));
 
-  $: showInserts = !$modification.modifyHasSelection;
-  $: insertOnly = $modification.hasCopyBuffer;
+  $: showInserts = !modification.modifyHasSelection;
+  $: insertOnly = modification.hasCopyBuffer;
 
   function handleScroll() {
     if (container == null) return;
@@ -105,19 +105,19 @@
       return;
     }
 
-    selectState = selectState || !$modification.modifySelectedMap[page];
+    selectState = selectState || !modification.modifySelectedMap[page];
     if (selectState) {
       if (shift && lastSelected != null) {
         // Shift selection
         if (lastSelected < page) {
           // Forwards selection
           for (let i = lastSelected + 1; i < page; i++) {
-            $modification.modifySelectedMap[i] = true;
+            modification.modifySelectedMap[i] = true;
           }
         } else {
           // Backwards selection
           for (let i = lastSelected - 1; i > page; i--) {
-            $modification.modifySelectedMap[i] = true;
+            modification.modifySelectedMap[i] = true;
           }
         }
       }
@@ -125,8 +125,8 @@
     } else {
       lastSelected = null;
     }
-    $modification.modifySelectedMap = {
-      ...$modification.modifySelectedMap,
+    modification.modifySelectedMap = {
+      ...modification.modifySelectedMap,
       [page]: selectState,
     };
   }
@@ -154,7 +154,7 @@
       <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
         <span
           class="imgwrap"
-          class:selected={$modification.modifySelectedMap[page.index]}
+          class:selected={modification.modifySelectedMap[page.index]}
         >
           <div class="pgnum" class:left={!modify}>
             {$_("document.pageAbbrev")}
@@ -171,15 +171,15 @@
               <div
                 on:click={() => modification.selectInsert(page.index)}
                 class="insert before"
-                class:emphasized={(insertOnly && !$modification.hasInsert) ||
-                  $modification.insert == page.index}
+                class:emphasized={(insertOnly && !modification.hasInsert) ||
+                  modification.insert == page.index}
               />
-              {#if page.index == $modification.pageCount - 1}
+              {#if page.index == modification.pageCount - 1}
                 <div
                   on:click={() => modification.selectInsert(page.index + 1)}
                   class="insert after"
-                  class:emphasized={(insertOnly && !$modification.hasInsert) ||
-                    $modification.insert == page.index + 1}
+                  class:emphasized={(insertOnly && !modification.hasInsert) ||
+                    modification.insert == page.index + 1}
                 />
               {/if}
             {/if}

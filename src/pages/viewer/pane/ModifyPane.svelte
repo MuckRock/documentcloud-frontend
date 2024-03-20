@@ -1,29 +1,28 @@
-<script>
+<script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Button from "@/common/Button.svelte";
-  import Modification from "@/viewer/modification/Modification.svelte";
+  import Button from "../../../common/Button.svelte";
+  import Modification from "../../../viewer/modification/Modification.svelte";
   import ModifyImage from "../ModifyImage.svelte";
 
-  import { modification } from "@/viewer/modification/modification";
-  import { viewer } from "@/viewer/viewer.js";
-  import { cancelActions } from "@/viewer/document.js";
-  import { showInsertDialog, modify } from "@/viewer/layout.js";
+  import { modification } from "../../../viewer/modification/modification";
+  import { viewer } from "../../../viewer/viewer.js";
+  import { cancelActions } from "../../../viewer/document.js";
+  import { showInsertDialog, modify } from "../../../viewer/layout.js";
 
   const MAX_BUFFER_SIZE = 5;
-
   const MAX_THUMB_WIDTH = 30;
   const MAX_THUMB_HEIGHT = 39;
 </script>
 
-{#if $modification.modifyHasSelection}
+{#if modification.modifyHasSelection}
   <h3>
     {$_("modifyPane.pagesSelected", {
-      values: { n: $modification.modifyNumSelected },
+      values: { n: modification.modifyNumSelected },
     })}
   </h3>
   <div class="buttonpadded">
-    {#if $modification.uncommittedChanges}
+    {#if modification.uncommittedChanges}
       <Button
         tertiary={true}
         on:click={() => {
@@ -36,7 +35,7 @@
     <Button on:click={() => modification.copy()}
       >{$_("modifyPane.duplicate")}</Button
     >
-    {#if $modification.modifyNumSelected < $modification.pageCount}
+    {#if modification.modifyNumSelected < modification.pageCount}
       <Button on:click={() => modification.cut()}
         >{$_("modifyPane.move")}</Button
       >
@@ -47,30 +46,30 @@
     <Button secondary={true} on:click={() => modification.modifyUnselect()}>
       {$_("modifyPane.unselect")}
     </Button>
-    {#if $modification.modifyNumSelected < $modification.pageCount}
+    {#if modification.modifyNumSelected < modification.pageCount}
       <Button danger={true} on:click={() => modification.remove()}>
         {$_("modifyPane.remove")}
       </Button>
     {/if}
   </div>
-{:else if $modification.hasCopyBuffer && $viewer.document != null}
+{:else if modification.hasCopyBuffer && $viewer.document != null}
   <h3>
-    {#if $modification.hasInsert}
+    {#if modification.hasInsert}
       {$_("modifyPane.insertPages", {
-        values: { n: $modification.copyBufferLength },
+        values: { n: modification.copyBufferLength },
       })}
     {:else}
       {$_("modifyPane.pagesPending", {
-        values: { n: $modification.copyBufferLength },
+        values: { n: modification.copyBufferLength },
       })}
     {/if}
     <div class="buffer">
-      {#each $modification.copyBuffer
+      {#each modification.copyBuffer
         .slice(0, MAX_BUFFER_SIZE)
         .toDescriptors() as descriptor, i (JSON.stringify(descriptor.json()))}
         <span
           class="item"
-          class:faded={$modification.copyBufferLength > MAX_BUFFER_SIZE &&
+          class:faded={modification.copyBufferLength > MAX_BUFFER_SIZE &&
             i == MAX_BUFFER_SIZE - 1}
         >
           <Modification {descriptor}>
@@ -90,32 +89,32 @@
   </h3>
 
   <p>
-    {#if $modification.hasInsert}
-      {#if $modification.insert == 0}
+    {#if modification.hasInsert}
+      {#if modification.insert == 0}
         {$_("modifyPane.insertBegin", {
-          values: { n: $modification.copyBufferLength },
+          values: { n: modification.copyBufferLength },
         })}
-      {:else if $modification.insert == $modification.pageCount}
+      {:else if modification.insert == modification.pageCount}
         {$_("modifyPane.insertEnd", {
-          values: { n: $modification.copyBufferLength },
+          values: { n: modification.copyBufferLength },
         })}
       {:else}
         {$_("modifyPane.insertBetween", {
           values: {
-            n: $modification.copyBufferLength,
-            p0: $modification.insert,
-            p1: $modification.insert + 1,
+            n: modification.copyBufferLength,
+            p0: modification.insert,
+            p1: modification.insert + 1,
           },
         })}
       {/if}
     {:else}
       {$_("modifyPange.click", {
-        values: { n: $modification.copyBufferLength },
+        values: { n: modification.copyBufferLength },
       })}
     {/if}
   </p>
   <div class="buttonpadded">
-    {#if $modification.hasInsert}
+    {#if modification.hasInsert}
       <Button on:click={() => modification.pasteAtInsert()}
         >{$_("modifyPane.insert")}</Button
       >
@@ -128,7 +127,7 @@
       {$_("dialog.cancel")}
     </Button>
   </div>
-{:else if $modification.hasInsert}
+{:else if modification.hasInsert}
   <h3>{$_("modifyPane.insertPosition")}</h3>
   <div class="buttonpadded">
     <Button on:click={showInsertDialog}
@@ -145,9 +144,9 @@
   </p>
 {/if}
 
-{#if $modification.hasHistory && !$modification.hasInsert && !$modification.hasCopyBuffer && !$modification.modifyHasSelection}
+{#if modification.hasHistory && !modification.hasInsert && !modification.hasCopyBuffer && !modification.modifyHasSelection}
   <div class="buttonpadded">
-    {#if $modification.uncommittedChanges}
+    {#if modification.uncommittedChanges}
       <Button
         tertiary={true}
         on:click={() => {
@@ -158,12 +157,12 @@
       </Button>
     {/if}
     <Button
-      disabled={!$modification.canUndo}
+      disabled={!modification.canUndo}
       secondary={true}
       on:click={() => modification.undo()}>{$_("modifyPane.undo")}</Button
     >
     <Button
-      disabled={!$modification.canRedo}
+      disabled={!modification.canRedo}
       secondary={true}
       on:click={() => modification.redo()}>{$_("modifyPane.redo")}</Button
     >
