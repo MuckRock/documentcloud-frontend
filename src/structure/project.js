@@ -31,6 +31,9 @@ export class Project extends Svue {
         description(project) {
           return project.description;
         },
+        private(project) {
+          return project.private;
+        },
         editAccess(project) {
           if (project.edit_access == null) return false;
           return project.edit_access;
