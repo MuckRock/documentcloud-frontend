@@ -1,8 +1,12 @@
 <script lang="ts">
   import "@/style/kit.css";
 
+  import type { Project } from "$lib/api/types";
+
   import MainLayout from "$lib/components/MainLayout.svelte";
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
+  import Data from "./sidebar/Data.svelte";
+  import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
 
   import { embedUrl } from "@/api/embed.js";
@@ -12,6 +16,7 @@
   export let data;
 
   $: document = data.document;
+  $: projects = document.projects as Project[];
   $: canonical_url = canonicalUrl(document).toString();
 </script>
 
@@ -45,6 +50,10 @@
     <DocumentMetadata {document} />
 
     <Sections sections={document.sections} />
+
+    <Data {document} />
+
+    <Projects {projects} />
   </svelte:fragment>
 
   <slot slot="content" />

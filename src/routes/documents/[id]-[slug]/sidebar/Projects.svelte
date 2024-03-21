@@ -1,28 +1,26 @@
 <script lang="ts">
-  import type { Section } from "$lib/api/types";
+  import type { Project } from "$lib/api/types";
 
-  import { ListOrdered16 } from "svelte-octicons";
+  import { FileDirectory16 } from "svelte-octicons";
 
   import Empty from "@/lib/components/common/Empty.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
 
-  export let sections: Section[];
+  export let projects: Project[];
 </script>
 
 <SidebarGroup>
   <h2 slot="title">
-    <ListOrdered16 />
-    Sections
+    <FileDirectory16 />
+    Projects
   </h2>
 
-  {#each sections as section}
+  {#each projects as project}
     <SidebarItem>
-      {section.title}
+      {project.title}
     </SidebarItem>
   {:else}
-    <Empty icon={ListOrdered16}>
-      <p>Sections organize your document with a table of contents</p>
-    </Empty>
+    <Empty icon={FileDirectory16}>Add this document to projects</Empty>
   {/each}
 </SidebarGroup>
