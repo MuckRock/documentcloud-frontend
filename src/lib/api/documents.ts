@@ -1,10 +1,13 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
+import type { Document } from "./types";
+
 import { error } from "@sveltejs/kit";
-import { APP_URL, BASE_API_URL } from "@/config/config.js";
+
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
+import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { isErrorCode } from "../utils";
 
 /** Search documents */

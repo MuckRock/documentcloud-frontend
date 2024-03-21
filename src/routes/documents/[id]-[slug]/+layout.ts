@@ -9,7 +9,7 @@ import * as documents from "@/lib/api/documents";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
-  const document = await documents.get(params.id, fetch);
+  const document = await documents.get(+params.id, fetch);
 
   if (document.slug !== params.slug) {
     const canonical = new URL(document.canonical_url);
