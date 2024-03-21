@@ -6,6 +6,7 @@
 
 import { redirect } from "@sveltejs/kit";
 import * as documents from "@/lib/api/documents";
+import { getPinnedAddons } from "$lib/api/addons.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
@@ -16,5 +17,8 @@ export async function load({ fetch, params }) {
     redirect(302, canonical.pathname);
   }
 
-  return { document };
+  // stream this
+  const pinnedAddons = getPinnedAddons(fetch);
+
+  return { document, pinnedAddons };
 }

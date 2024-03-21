@@ -4,7 +4,12 @@
   import type { Project } from "$lib/api/types";
 
   import MainLayout from "$lib/components/MainLayout.svelte";
+  import SignedIn from "$lib/components/common/SignedIn.svelte";
+
+  // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
+  import Actions from "./sidebar/Actions.svelte";
+  import AddOns from "@/routes/app/sidebar/AddOns.svelte";
   import Data from "./sidebar/Data.svelte";
   import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
@@ -58,5 +63,11 @@
 
   <slot slot="content" />
 
-  <svelte:fragment slot="action"></svelte:fragment>
+  <svelte:fragment slot="action">
+    <Actions {document} />
+
+    <SignedIn>
+      <AddOns pinnedAddOns={data.pinnedAddons} />
+    </SignedIn>
+  </svelte:fragment>
 </MainLayout>
