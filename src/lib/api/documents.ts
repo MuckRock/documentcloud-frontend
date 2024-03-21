@@ -40,7 +40,7 @@ export async function get(
   fetch: typeof globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
-  const expand = ["user", "organization", "projects", "revisions"];
+  const expand = ["user", "organization", "projects", "revisions", "sections"];
   endpoint.searchParams.set("expand", expand.join(","));
 
   const resp = await fetch(endpoint, { credentials: "include" });

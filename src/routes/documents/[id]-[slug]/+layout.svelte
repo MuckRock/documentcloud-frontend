@@ -3,6 +3,7 @@
 
   import MainLayout from "$lib/components/MainLayout.svelte";
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
+  import Sections from "./sidebar/Sections.svelte";
 
   import { embedUrl } from "@/api/embed.js";
   import { pageImageUrl } from "@/api/viewer.js";
@@ -42,6 +43,8 @@
 <MainLayout>
   <svelte:fragment slot="navigation">
     <DocumentMetadata {document} />
+
+    <Sections sections={document.sections} />
   </svelte:fragment>
 
   <slot slot="content" />
