@@ -2,7 +2,7 @@ import { describe, test as base, expect } from "vitest";
 import { APP_URL, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
 
 import * as documents from "./documents";
-import type { Document } from "./types";
+import type { Document, sizes } from "./types";
 
 type Use<T> = (value: T) => Promise<void>;
 
@@ -51,7 +51,9 @@ describe("document helper methods", () => {
   test("pageImageUrl", ({ document }) => {
     const page = 1;
     IMAGE_WIDTHS_ENTRIES.forEach(([size, width]) => {
-      expect(documents.pageImageUrl(document, page, size)).toStrictEqual(
+      expect(
+        documents.pageImageUrl(document, page, size as sizes),
+      ).toStrictEqual(
         new URL(
           `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,
           document.asset_url,
@@ -88,4 +90,5 @@ describe("document helper methods", () => {
   });
 
   test.todo("userOrgString");
+  test.todo("pdfUrl");
 });
