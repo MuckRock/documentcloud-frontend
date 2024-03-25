@@ -14,6 +14,9 @@ export default defineConfig({
 
   define: {
     "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+    "process.env.DEPLOY_PRIME_URL": JSON.stringify(
+      process.env.DEPLOY_PRIME_URL,
+    ),
   },
 
   envPrefix: "DC_",
