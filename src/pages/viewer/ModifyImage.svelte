@@ -19,7 +19,7 @@
       ? $viewer.document
       : $viewer.document != null && id == $viewer.document.id
         ? $viewer.document
-        : modification.documentCache[id];
+        : $modification.documentCache[id];
 
   const DEFAULT_PAGE_SIZE = 1;
   $: pageSize =
@@ -33,12 +33,12 @@
 
   $: {
     if ($viewer.document != null && id != $viewer.document.id) {
-      if (modification.documentCache[id] == null) {
-        modification.documentCache[id] = {};
+      if ($modification.documentCache[id] == null) {
+        $modification.documentCache[id] = {};
         // Update the document cache
         getDocument(id, null).then((doc) => {
-          modification.documentCache[doc.id] = doc;
-          modification.documentCache = modification.documentCache;
+          $modification.documentCache[doc.id] = doc;
+          $modification.documentCache = $modification.documentCache;
         });
       }
     }

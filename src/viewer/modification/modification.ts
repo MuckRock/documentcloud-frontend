@@ -1,3 +1,4 @@
+import { Writable, writable } from "svelte/store";
 import {
   runify,
   Empty,
@@ -271,4 +272,6 @@ class Modification {
   }
 }
 
-export const modification = new Modification();
+export const modification: Writable<Modification> = writable(
+  new Modification(),
+);
