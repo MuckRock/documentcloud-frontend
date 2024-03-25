@@ -1,7 +1,10 @@
-import { modification } from "./modification";
+import { Modification } from "./modification";
 import { ModificationSpec } from "./modifySpec";
 
+let modification;
+
 beforeEach(() => {
+  modification = new Modification();
   modification.clear();
   modification.initSpec(ModificationSpec.getDocument(3));
 });

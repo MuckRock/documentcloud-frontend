@@ -13,7 +13,7 @@ interface Document {
   id: string;
 }
 
-class Modification {
+export class Modification {
   copyBuffer: ModificationSpec | null;
   modifySelectedMap: Record<string, unknown>;
   rewind: boolean;
