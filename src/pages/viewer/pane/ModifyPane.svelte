@@ -1,19 +1,22 @@
-<script>
+<script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Button from "@/common/Button.svelte";
-  import Modification from "@/viewer/modification/Modification.svelte";
+  import Button from "../../../common/Button.svelte";
+  import Modification from "../../../viewer/modification/Modification.svelte";
   import ModifyImage from "../ModifyImage.svelte";
 
-  import { modification } from "@/viewer/modification/modification.js";
-  import { viewer } from "@/viewer/viewer.js";
-  import { cancelActions } from "@/viewer/document.js";
-  import { showInsertDialog, modify } from "@/viewer/layout.js";
+  import { modification } from "../../../viewer/modification/modification";
+  import { viewer } from "../../../viewer/viewer.js";
+  import { cancelActions } from "../../../viewer/document.js";
+  import { showInsertDialog, modify } from "../../../viewer/layout.js";
 
   const MAX_BUFFER_SIZE = 5;
-
   const MAX_THUMB_WIDTH = 30;
   const MAX_THUMB_HEIGHT = 39;
+
+  $: {
+    console.log($modification);
+  }
 </script>
 
 {#if $modification.modifyHasSelection}
@@ -27,28 +30,28 @@
       <Button
         tertiary={true}
         on:click={() => {
-          modify(modification, cancelActions);
+          modify($modification, cancelActions);
         }}
       >
         {$_("modifyPane.applyModifications")}
       </Button>
     {/if}
-    <Button on:click={() => modification.copy()}
+    <Button on:click={() => $modification.copy()}
       >{$_("modifyPane.duplicate")}</Button
     >
     {#if $modification.modifyNumSelected < $modification.pageCount}
-      <Button on:click={() => modification.cut()}
+      <Button on:click={() => $modification.cut()}
         >{$_("modifyPane.move")}</Button
       >
     {/if}
-    <Button on:click={() => modification.rotateClockwise()}
+    <Button on:click={() => $modification.rotateClockwise()}
       >{$_("modifyPane.rotate")}</Button
     >
-    <Button secondary={true} on:click={() => modification.modifyUnselect()}>
+    <Button secondary={true} on:click={() => $modification.modifyUnselect()}>
       {$_("modifyPane.unselect")}
     </Button>
     {#if $modification.modifyNumSelected < $modification.pageCount}
-      <Button danger={true} on:click={() => modification.remove()}>
+      <Button danger={true} on:click={() => $modification.remove()}>
         {$_("modifyPane.remove")}
       </Button>
     {/if}
@@ -116,15 +119,15 @@
   </p>
   <div class="buttonpadded">
     {#if $modification.hasInsert}
-      <Button on:click={() => modification.pasteAtInsert()}
+      <Button on:click={() => $modification.pasteAtInsert()}
         >{$_("modifyPane.insert")}</Button
       >
     {:else}
-      <Button on:click={() => modification.pasteAtEnd()}
+      <Button on:click={() => $modification.pasteAtEnd()}
         >{$_("modifyPane.insertAtEnd")}</Button
       >
     {/if}
-    <Button secondary={true} on:click={() => modification.clearCopyBuffer()}>
+    <Button secondary={true} on:click={() => $modification.clearCopyBuffer()}>
       {$_("dialog.cancel")}
     </Button>
   </div>
@@ -134,7 +137,7 @@
     <Button on:click={showInsertDialog}
       >{$_("modifyPane.insertOtherDoc")}</Button
     >
-    <Button secondary={true} on:click={() => modification.clearInsertion()}>
+    <Button secondary={true} on:click={() => $modification.clearInsertion()}>
       {$_("dialog.cancel")}
     </Button>
   </div>
@@ -151,7 +154,7 @@
       <Button
         tertiary={true}
         on:click={() => {
-          modify(modification, cancelActions);
+          modify($modification, cancelActions);
         }}
       >
         {$_("modifyPane.applyModifications")}
@@ -160,12 +163,12 @@
     <Button
       disabled={!$modification.canUndo}
       secondary={true}
-      on:click={() => modification.undo()}>{$_("modifyPane.undo")}</Button
+      on:click={() => $modification.undo()}>{$_("modifyPane.undo")}</Button
     >
     <Button
       disabled={!$modification.canRedo}
       secondary={true}
-      on:click={() => modification.redo()}>{$_("modifyPane.redo")}</Button
+      on:click={() => $modification.redo()}>{$_("modifyPane.redo")}</Button
     >
   </div>
 {/if}

@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
   import { _ } from "svelte-i18n";
 
   import ActionPane from "./pane/ActionPane.svelte";
   import ModifyImage from "./ModifyImage.svelte";
-  import Modification from "@/viewer/modification/Modification.svelte";
-  import { viewer } from "@/viewer/viewer.js";
-  import { layout } from "@/viewer/layout.js";
-  import { restorePosition, changeMode } from "@/viewer/document.js";
-  import { ModificationSpec } from "@/viewer/modification/modifySpec.js";
-  import { modification } from "@/viewer/modification/modification.js";
+  import Modification from "../../viewer/modification/Modification.svelte";
+  import { viewer } from "../../viewer/viewer.js";
+  import { layout } from "../../viewer/layout.js";
+  import { restorePosition, changeMode } from "../../viewer/document.js";
+  import { ModificationSpec } from "../../viewer/modification/modifySpec";
+  import { modification } from "../../viewer/modification/modification";
 
   $: modify = $layout.modifying;
 
@@ -43,7 +43,7 @@
       $viewer.document.pageCount != null
     ) {
       // Init page spec
-      modification.initSpec(
+      $modification.initSpec(
         ModificationSpec.getDocument($viewer.document.pageCount),
       );
     }
@@ -169,14 +169,14 @@
             {/if}
             {#if showInserts}
               <div
-                on:click={() => modification.selectInsert(page.index)}
+                on:click={() => $modification.selectInsert(page.index)}
                 class="insert before"
                 class:emphasized={(insertOnly && !$modification.hasInsert) ||
                   $modification.insert == page.index}
               />
               {#if page.index == $modification.pageCount - 1}
                 <div
-                  on:click={() => modification.selectInsert(page.index + 1)}
+                  on:click={() => $modification.selectInsert(page.index + 1)}
                   class="insert after"
                   class:emphasized={(insertOnly && !$modification.hasInsert) ||
                     $modification.insert == page.index + 1}

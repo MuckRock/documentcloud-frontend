@@ -21,7 +21,7 @@ import {
 import { Note } from "@/structure/note.js";
 import { DEFAULT_EXPAND } from "../api/common.js";
 import { inIframe } from "@/util/iframe.js";
-import { modification } from "./modification/modification.js";
+import { modification } from "./modification/modification.ts";
 
 import {
   MOBILE_BREAKPOINT,
