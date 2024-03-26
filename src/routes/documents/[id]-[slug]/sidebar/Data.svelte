@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Tag16 } from "svelte-octicons";
+  import { Tag24 } from "svelte-octicons";
 
   import Empty from "@/lib/components/common/Empty.svelte";
   import KV from "@/lib/components/common/KV.svelte";
@@ -16,13 +16,13 @@
 </script>
 
 <SidebarGroup>
-  <h2 slot="title">
+  <SidebarItem slot="title">
     <Tag16 />
     Data & Tags
-  </h2>
+  </SidebarItem>
 
   {#if empty}
-    <Empty icon={Tag16}>
+    <Empty icon={Tag24}>
       <p>Use tags or key/value data to organize documents</p>
     </Empty>
     <!-- todo: data and tag components -->
