@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Tag24 } from "svelte-octicons";
+  import { Tag16, Tag24 } from "svelte-octicons";
 
   import Empty from "@/lib/components/common/Empty.svelte";
   import KV from "@/lib/components/common/KV.svelte";
