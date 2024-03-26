@@ -3,7 +3,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
 
   import { baseApiUrl } from "../../../../../api/base.js";
-  import { activeAddons } from "../../../../../test/fixtures/addons.js";
+  import { activeAddons } from "../../../../../test/fixtures/addons";
   import AddonListComponent from "../AddonList.svelte";
 
   const mockUrl = new URL(`addons/`, baseApiUrl).toString();

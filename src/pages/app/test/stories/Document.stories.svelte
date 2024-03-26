@@ -3,10 +3,10 @@
 
   import { Document as DocumentModel } from "../../../../structure/document.js";
   import Document from "../../Document.svelte";
-  import mockDocument from "../fixtures/document.json";
+  import { document } from "../../../../test/fixtures/documents";
 
   const args = {
-    document: new DocumentModel(mockDocument),
+    document: new DocumentModel(document),
     embed: false,
     dialog: false,
   };

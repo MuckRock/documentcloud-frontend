@@ -1,15 +1,14 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { action } from "@storybook/addon-actions";
   import { userEvent, within } from "@storybook/testing-library";
   import { expect } from "@storybook/jest";
 
   import RevisionsDialog from "../RevisionsDialog.svelte";
 
   import documentFixture from "../../../pages/app/test/fixtures/document.json";
-  import { revisionControl } from "./mockData";
-
-  import { mockGetMe } from "../../../pages/app/accounts/stories/mockData";
-  import { action } from "@storybook/addon-actions";
+  import { revisionControl } from "../../../test/handlers/documents";
+  import { mockGetMe } from "../../../test/handlers/accounts";
 
   const today = new Date().getDate();
   const manyRevisions = Array(100)
