@@ -17,7 +17,7 @@
   </SidebarItem>
 
   {#each sections as section}
-    <SidebarItem>
+    <SidebarItem small>
       {section.title}
     </SidebarItem>
   {:else}
