@@ -14,7 +14,7 @@
     textUrl,
     userOrgString,
   } from "@/lib/api/documents";
-  import { embedUrl } from "$lib/api/embed.js";
+  import { embedUrl } from "$lib/api/embed";
 
   export let data;
 

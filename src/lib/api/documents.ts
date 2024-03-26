@@ -1,10 +1,13 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
+import type { Document, sizes } from "./types";
+
 import { error } from "@sveltejs/kit";
-import { APP_URL, BASE_API_URL } from "@/config/config.js";
+
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
+import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { isErrorCode } from "../utils";
 
 /** Search documents */
@@ -37,7 +40,7 @@ export async function get(
   fetch: typeof globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
-  const expand = ["user", "organization", "projects", "revisions"];
+  const expand = ["user", "organization", "projects", "revisions", "sections"];
   endpoint.searchParams.set("expand", expand.join(","));
 
   const resp = await fetch(endpoint, { credentials: "include" });
@@ -74,7 +77,7 @@ export async function process() {}
  * @param {import('./types').Document} document
  * @returns {URL}
  */
-export function canonicalUrl(document) {
+export function canonicalUrl(document: Document): URL {
   const path = `/documents/${document.id}-${document.slug}/`;
   return new URL(path, APP_URL);
 }
@@ -88,7 +91,7 @@ export function canonicalUrl(document) {
  * @param {number} page
  * @returns {URL}
  */
-export function canonicalPageUrl(document, page) {
+export function canonicalPageUrl(document: Document, page: number): URL {
   return new URL(`/documents/${document.id}/pages/${page}/`, APP_URL);
 }
 
@@ -96,10 +99,8 @@ export function canonicalPageUrl(document, page) {
  * Generate the hash for a path, without the host or path
  *
  * @export
- * @param {number} page
- * @returns {URL}
  */
-export function pageHashUrl(page) {
+export function pageHashUrl(page: number): string {
   return `#document/p${page}`;
 }
 
@@ -111,7 +112,7 @@ export function pageHashUrl(page) {
  * @param {number} page
  * @returns {URL}
  */
-export function pageUrl(document, page) {
+export function pageUrl(document: Document, page: number): URL {
   return new URL(pageHashUrl(page), canonicalUrl(document));
 }
 
@@ -124,7 +125,11 @@ export function pageUrl(document, page) {
  * @param {import('./types').sizes} size
  * @returns {URL}
  */
-export function pageImageUrl(document, page, size) {
+export function pageImageUrl(
+  document: Document,
+  page: number,
+  size: sizes,
+): URL {
   return new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,
     document.asset_url,
@@ -135,11 +140,8 @@ export function pageImageUrl(document, page, size) {
  * Asset URL for page text
  *
  * @export
- * @param {import('./types').Document} document
- * @param {number} page
- * @returns {URL}
  */
-export function textUrl(document, page) {
+export function textUrl(document: Document, page: number): URL {
   return new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}.txt`,
     document.asset_url,
@@ -150,10 +152,8 @@ export function textUrl(document, page) {
  * Asset URL for JSON text
  *
  * @export
- * @param {import('./types').Document} document
- * @returns {URL}
  */
-export function jsonUrl(document) {
+export function jsonUrl(document: Document): URL {
   return new URL(
     `documents/${document.id}/${document.slug}.txt.json`,
     document.asset_url,
@@ -164,13 +164,23 @@ export function jsonUrl(document) {
  * Asset URL for text positions
  *
  * @export
- * @param {import('./types').Document} document
- * @param {number} page
- * @returns {URL}
  */
-export function selectableTextUrl(document, page) {
+export function selectableTextUrl(document: Document, page: number): URL {
   return new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}.position.json`,
+    document.asset_url,
+  );
+}
+
+/**
+ * Generate URL for the PDF version of a document.
+ * This will always be a PDF, regardless of the original file type.
+ *
+ * @export
+ */
+export function pdfUrl(document: Document): URL {
+  return new URL(
+    `documents/${document.id}/${document.slug}.pdf`,
     document.asset_url,
   );
 }
@@ -179,10 +189,8 @@ export function selectableTextUrl(document, page) {
  * Generate a user (organization) string
  *
  * @export
- * @param {import('./types').Document} document
- * @returns {string}
  */
-export function userOrgString(document) {
+export function userOrgString(document: Document): string {
   // we have an org and user
   if (isOrg(document.organization) && typeof document.user === "object") {
     return `${document.user.name} (${document.organization.name})`;
@@ -190,7 +198,7 @@ export function userOrgString(document) {
 
   // just a user
   if (typeof document.user === "object") {
-    return document.user;
+    return document.user.name;
   }
 
   // nothing, so return nothing
