@@ -11,10 +11,10 @@
 </script>
 
 <SidebarGroup>
-  <h2 slot="title">
+  <SidebarItem slot="title">
     <ListOrdered16 />
     Sections
-  </h2>
+  </SidebarItem>
 
   {#each sections as section}
     <SidebarItem>
