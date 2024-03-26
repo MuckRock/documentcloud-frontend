@@ -21,7 +21,7 @@
       {section.title}
     </SidebarItem>
   {:else}
-    <Empty icon={ListOrdered16}>
+    <Empty icon={ListOrdered24}>
       <p>Sections organize your document with a table of contents</p>
     </Empty>
   {/each}
