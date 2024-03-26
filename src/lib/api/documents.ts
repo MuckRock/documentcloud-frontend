@@ -1,6 +1,8 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
+import type { Document, DocumentResults } from "./types";
+
 import { error } from "@sveltejs/kit";
 import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
@@ -10,14 +12,17 @@ import { isErrorCode } from "../utils";
 /** Search documents */
 export async function search(
   query = "",
-  highlight = false,
+  options = { hl: false, per_page: 25, cursor: "" },
   fetch = globalThis.fetch,
-) {
+): Promise<DocumentResults> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
-  endpoint.searchParams.set("expand", DEFAULT_EXPAND);
+  // endpoint.searchParams.set("expand", DEFAULT_EXPAND);
   endpoint.searchParams.set("q", query);
-  endpoint.searchParams.set("hl", String(highlight));
+
+  for (const [k, v] of Object.entries(options)) {
+    endpoint.searchParams.set(k, String(v));
+  }
 
   const resp = await fetch(endpoint, { credentials: "include" });
 

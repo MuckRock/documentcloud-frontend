@@ -1,39 +1,36 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { Hourglass24 } from "svelte-octicons";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+
   import ResultsList from "$lib/components/documents/ResultsList.svelte";
   import ContentLayout from "$lib/components/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Search from "$lib/components/Search.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Paginator from "@/common/Paginator.svelte";
-  import type { DocumentResults } from "@/lib/api/types";
 
-  export let data: {
-    query: string;
-    searchResults: Promise<DocumentResults>;
-  };
+  export let data;
 
-  let page = 1;
-  let per_page = 25;
+  let page_number = 1;
   let error: Error;
 
   $: searchResults = data.searchResults;
   $: query = data.query;
+  $: per_page = data.per_page;
 
-  async function load(url) {
-    const res = await fetch(url, { credentials: "include" }).catch((e) => {
-      error = e;
-      throw e; // if something went wrong here, something broke
-    });
+  // update the cursor URL param, forcing refresh of search results
+  function setCursor(url: URL) {
+    const c = url.searchParams.get("cursor");
+    $page.url.searchParams.set("cursor", c);
+    goto($page.url);
+  }
 
-    if (!res.ok) {
-      // 404 or something similar
-      console.error(res.statusText);
-      error = { name: "Loading error", message: res.statusText };
-    }
-
-    data.searchResults = res.json();
+  // update the per_page query param
+  function setPerPage(e) {
+    $page.url.searchParams.set("per_page", e.target.value);
+    goto($page.url);
   }
 </script>
 
@@ -60,17 +57,17 @@
         {@const next = sr.next}
         {@const previous = sr.previous}
         <Paginator
-          {page}
+          page={page_number}
           totalPages={total_pages}
           has_next={Boolean(next)}
           has_previous={Boolean(previous)}
           on:next={(e) => {
-            page = Math.min(total_pages, page + 1);
-            load(next);
+            page_number = Math.min(total_pages, page_number + 1);
+            if (next) setCursor(new URL(next));
           }}
           on:previous={(e) => {
-            page = Math.max(1, page - 1);
-            load(previous);
+            page_number = Math.max(1, page_number - 1);
+            if (previous) setCursor(new URL(previous));
           }}
         />
       {/await}
@@ -78,7 +75,7 @@
 
     <label slot="right">
       Per page
-      <select name="per_page" bind:value={per_page}>
+      <select name="per_page" value={per_page} on:change={setPerPage}>
         <option value={25}>25</option>
         <option value={50}>50</option>
         <option value={100}>100</option>

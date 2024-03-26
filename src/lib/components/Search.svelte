@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Search24, XCircleFill24 } from "svelte-octicons";
-  import Button from "./common/Button.svelte";
 
   export let query: string = "";
+
   let input: HTMLInputElement;
 
   function clear() {
@@ -11,16 +11,19 @@
   }
 </script>
 
-<form class="container" on:submit|preventDefault>
+<form class="container" on:submit>
   <label for="query" title="Search"><Search24 /></label>
   <input
+    type="search"
     id="query"
-    name="query"
+    name="q"
+    autocomplete="off"
+    placeholder="Search…"
     bind:value={query}
     bind:this={input}
     on:change
-    autocomplete="off"
-    placeholder="Search…"
+    on:input
+    on:reset
   />
   <button
     title="Clear Search"
