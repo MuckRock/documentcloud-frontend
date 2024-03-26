@@ -14,7 +14,7 @@
   import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
 
-  import { embedUrl } from "@/api/embed.js";
+  import { embedUrl } from "@/api/embed";
   import { pageImageUrl } from "@/api/viewer.js";
   import { canonicalUrl } from "@/lib/api/documents";
 
