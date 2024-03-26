@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 
-import * as projects from "./projects.js";
+import * as projects from "./projects";
 
 describe("project tests", () => {
   test.todo("projects.get");
