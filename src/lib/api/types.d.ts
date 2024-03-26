@@ -95,6 +95,10 @@ export interface Document {
   updated_at: string | Date;
   user: number | User;
 
+  // for uploads
+  presigned_url?: string | URL;
+  file_url?: string | URL;
+
   // expandable relationship fields
   projects?: number[] | Project[];
   notes?: Note[];

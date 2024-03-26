@@ -10,6 +10,7 @@ export async function handle({ event, resolve }) {
   if (lang) {
     locale.set(lang);
   }
+
   return resolve(event, {
     transformPageChunk: ({ html }) => html.replace("%lang%", lang),
   });
