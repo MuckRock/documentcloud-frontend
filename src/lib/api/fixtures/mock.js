@@ -4,6 +4,7 @@ import meFixture from "../fixtures/users/me.json";
 import projectFixture from "../fixtures/projects/project.json";
 import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
 import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
+import oembedFixture from "../fixtures/oembed.json";
 
 import { BASE_API_URL } from "@/config/config.js";
 
@@ -34,6 +35,7 @@ const urls = {
     info: u("projects/"),
     documents: u("projects/*/documents/"),
   },
+  oembed: u("oembed/"),
 };
 
 export const me = {
@@ -48,3 +50,5 @@ export const projects = {
     pageHandler(projDocsPage1, projDocsPage2),
   ),
 };
+
+export const oembed = rest.get(urls.oembed, dataHandler(oembedFixture));

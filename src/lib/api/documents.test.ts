@@ -89,6 +89,27 @@ describe("document helper methods", () => {
     );
   });
 
-  test.todo("userOrgString");
-  test.todo("pdfUrl");
+  test("userOrgString", async ({ document }) => {
+    // user + org expanded
+    expect(documents.userOrgString(document)).toStrictEqual(
+      "Chris Amico (NewsHour)",
+    );
+
+    // user and org not expanded
+    const d2 = (await import("./fixtures/documents/document.json")) as Document;
+    expect(documents.userOrgString(d2)).toStrictEqual("");
+
+    // user, but no org
+    const d3 = { ...document, organization: 1 };
+    expect(documents.userOrgString(d3)).toStrictEqual("Chris Amico");
+  });
+
+  test("pdfUrl", ({ document }) => {
+    expect(documents.pdfUrl(document)).toStrictEqual(
+      new URL(
+        `documents/${document.id}/${document.slug}.pdf`,
+        document.asset_url,
+      ),
+    );
+  });
 });
