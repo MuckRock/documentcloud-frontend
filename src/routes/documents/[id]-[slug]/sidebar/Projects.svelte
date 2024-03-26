@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
-  import { FileDirectory16 } from "svelte-octicons";
+  import { FileDirectory24 } from "svelte-octicons";
 
   import Empty from "@/lib/components/common/Empty.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
@@ -11,16 +11,16 @@
 </script>
 
 <SidebarGroup>
-  <h2 slot="title">
+  <SidebarItem slot="title">
     <FileDirectory16 />
     Projects
-  </h2>
+  </SidebarItem>
 
   {#each projects as project}
-    <SidebarItem>
+    <SidebarItem small>
       {project.title}
     </SidebarItem>
   {:else}
-    <Empty icon={FileDirectory16}>Add this document to projects</Empty>
+    <Empty icon={FileDirectory24}>Add this document to projects</Empty>
   {/each}
 </SidebarGroup>
