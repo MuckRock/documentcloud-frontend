@@ -7,7 +7,8 @@
   import Error from "../../common/icons/Error.svelte";
   import Loader from "../../common/Loader.svelte";
   import Paginator from "../../common/Paginator.svelte";
-  import ScheduledEvent, { type Event } from "./ScheduledEvent.svelte";
+  import ScheduledEvent from "./ScheduledEvent.svelte";
+  import type { Event } from "../types";
 
   import { baseApiUrl } from "../../api/base.js";
 

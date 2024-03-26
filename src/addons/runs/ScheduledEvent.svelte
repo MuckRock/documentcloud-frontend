@@ -1,16 +1,5 @@
 <script lang="ts" context="module">
-  import type { AddOnListItem } from "../types.ts";
-
-  export interface Event {
-    id: number;
-    addon: AddOnListItem;
-    user: number;
-    parameters: any;
-    event: number;
-    scratch: any;
-    created_at: string;
-    updated_at: string;
-  }
+  import type { Event } from "../types.ts";
 
   // schedules and eventValues are the inverse of each other, so store them together
   export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];

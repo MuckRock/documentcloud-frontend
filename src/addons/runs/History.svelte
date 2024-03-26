@@ -4,11 +4,12 @@
 
   import Button from "../../common/Button.svelte";
   import Error from "../../common/icons/Error.svelte";
-  import HistoryEvent, { type Run } from "./HistoryEvent.svelte";
+  import HistoryEvent from "./HistoryEvent.svelte";
   import History24 from "svelte-octicons/lib/History24.svelte";
   import Loader from "../../common/Loader.svelte";
   import Paginator from "../../common/Paginator.svelte";
   import { baseApiUrl } from "../../api/base.js";
+  import { Run } from "../types";
 
   let res: {
     next?: string | null;

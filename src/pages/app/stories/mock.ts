@@ -3,7 +3,7 @@ import { baseApiUrl } from "../../../api/base.js";
 
 import usersFixture from "../fixtures/users.json";
 import orgFixtures from "../fixtures/organizations.json";
-import listFixture from "../../../addons/fixtures/addon-list.json";
+import { addonsList } from "../../../test/fixtures/addons.js";
 import { projects as projectList } from "../../../api/fixtures/projects.fixtures";
 import { emptyList } from "../../../api/test/fixtures/empty";
 import meFixture from "../fixtures/me.json";
@@ -29,7 +29,7 @@ const urls = {
 };
 
 export const addons = {
-  data: rest.get(urls.addons, dataHandler(listFixture)),
+  data: rest.get(urls.addons, dataHandler(addonsList)),
   loading: rest.get(urls.addons, loadingHandler),
   error: rest.get(urls.addons, errorHandler),
   empty: rest.get(urls.addons, emptyHandler),
