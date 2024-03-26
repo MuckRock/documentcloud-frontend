@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Section } from "$lib/api/types";
 
-  import { ListOrdered24 } from "svelte-octicons";
+  import { ListOrdered16, ListOrdered24 } from "svelte-octicons";
 
   import Empty from "@/lib/components/common/Empty.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
