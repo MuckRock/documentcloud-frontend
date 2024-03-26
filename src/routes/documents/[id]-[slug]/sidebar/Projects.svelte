@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
-  import { FileDirectory24 } from "svelte-octicons";
+  import { FileDirectory16, FileDirectory24 } from "svelte-octicons";
 
   import Empty from "@/lib/components/common/Empty.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
