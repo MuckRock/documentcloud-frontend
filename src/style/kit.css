@@ -130,7 +130,7 @@ dd {
 
 dt {
   color: var(--gray-5, #233944);
-  font-size: 0.75rem;
+  font-size: var(--font-xs, 0.75rem);
   font-weight: var(--font-semibold, 600);
 }
 
