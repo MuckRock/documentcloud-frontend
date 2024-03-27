@@ -7,9 +7,10 @@
     event as eventFixture,
     scheduled as klaxon,
   } from "../../../test/fixtures/addons";
-  import { schedule, send, pin } from "../../../test/handlers/addons";
+  import { scheduled, send, pin } from "../../../test/handlers/addons";
+  import { AddOnListItem, Event } from "../../types";
 
-  const { addon: scheduled, ...event } = eventFixture;
+  const { addon, ...event } = eventFixture;
   const addons = addonsList.results;
 
   let args = {
@@ -31,25 +32,31 @@
 
 <Story
   name="Success"
-  args={{ visible: true, addon: klaxon, event }}
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
   parameters={{
-    msw: { handlers: [schedule.success, send.success, pin.success] },
+    msw: { handlers: [scheduled.data, send.success, pin.success] },
   }}
 />
 <Story
   name="Error"
-  args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [schedule.error, send.error, pin.error] } }}
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
+  parameters={{ msw: { handlers: [scheduled.error, send.error, pin.error] } }}
 />
 <Story
   name="Loading"
-  args={{ visible: true, addon: klaxon, event }}
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
   parameters={{
-    msw: { handlers: [schedule.loading, send.loading, pin.loading] },
+    msw: { handlers: [scheduled.loading, send.loading, pin.loading] },
   }}
 />
 
-<Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />
+<Story
+  name="Klaxon"
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
+  parameters={{
+    msw: { handlers: [scheduled.loading, send.loading, pin.loading] },
+  }}
+/>
 
 <Story name="PDF Exporter" args={{ ...args, addon: addons[0] }} />
 

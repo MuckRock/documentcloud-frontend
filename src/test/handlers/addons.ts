@@ -1,6 +1,12 @@
 import { rest } from "msw";
 import { baseApiUrl } from "../../api/base.js";
-import { addonsList, run, runsList, eventsList } from "../fixtures/addons";
+import {
+  addonsList,
+  run,
+  runsList,
+  eventsList,
+  scheduled as klaxon,
+} from "../fixtures/addons";
 import {
   createApiUrl,
   dataHandler,
@@ -14,7 +20,7 @@ export const addons = generateGetHandler(`addons/`, addonsList);
 export const history = generateGetHandler(`/api/addon_runs/*`, runsList);
 export const scheduled = generateGetHandler(`/api/addon_events/*`, eventsList);
 
-export const schedule = generateAllHandler(`/api/addon_events/:event`, {});
+export const schedule = generateAllHandler(`/api/addon_events/:event`, klaxon);
 export const send = generateAllHandler(`/api/addon_runs/`, {});
 export const pin = generateAllHandler(`/api/addons/:id`, {});
 
