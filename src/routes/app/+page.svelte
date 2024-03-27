@@ -1,39 +1,43 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { Hourglass24 } from "svelte-octicons";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+
   import ResultsList from "$lib/components/documents/ResultsList.svelte";
   import ContentLayout from "$lib/components/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Search from "$lib/components/Search.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Paginator from "@/common/Paginator.svelte";
-  import type { DocumentResults } from "@/lib/api/types";
 
-  export let data: {
-    query: string;
-    searchResults: Promise<DocumentResults>;
-  };
-
-  let page = 1;
-  let per_page = 25;
-  let error: Error;
+  export let data;
 
   $: searchResults = data.searchResults;
   $: query = data.query;
+  $: per_page = data.per_page;
+  $: page_number = data.page;
 
-  async function load(url) {
-    const res = await fetch(url, { credentials: "include" }).catch((e) => {
-      error = e;
-      throw e; // if something went wrong here, something broke
-    });
+  // update the cursor URL param, forcing refresh of search results
+  async function setCursor(url: URL) {
+    const cursor = url.searchParams.get("cursor");
+    const page_number = url.searchParams.get("page");
 
-    if (!res.ok) {
-      // 404 or something similar
-      console.error(res.statusText);
-      error = { name: "Loading error", message: res.statusText };
-    }
+    // snapshot the current URL
+    const u = new URL($page.url);
 
-    data.searchResults = res.json();
+    // handle different environments that paginate differently
+    if (cursor) u.searchParams.set("cursor", cursor);
+    if (per_page) u.searchParams.set("page", page_number);
+
+    return goto(u);
+  }
+
+  // update the per_page query param
+  async function setPerPage(e) {
+    const u = new URL($page.url);
+    u.searchParams.set("per_page", e.target.value);
+    return goto(u);
   }
 </script>
 
@@ -59,18 +63,19 @@
         {@const total_pages = Math.ceil(count / per_page)}
         {@const next = sr.next}
         {@const previous = sr.previous}
+
         <Paginator
-          {page}
+          page={page_number}
           totalPages={total_pages}
           has_next={Boolean(next)}
           has_previous={Boolean(previous)}
-          on:next={(e) => {
-            page = Math.min(total_pages, page + 1);
-            load(next);
+          on:next={async (e) => {
+            await setCursor(new URL(next));
+            // page_number = Math.min(total_pages, page_number + 1);
           }}
-          on:previous={(e) => {
-            page = Math.max(1, page - 1);
-            load(previous);
+          on:previous={async (e) => {
+            await setCursor(new URL(previous));
+            // page_number = Math.max(1, page_number - 1);
           }}
         />
       {/await}
@@ -78,7 +83,7 @@
 
     <label slot="right">
       Per page
-      <select name="per_page" bind:value={per_page}>
+      <select name="per_page" value={per_page} on:change={setPerPage}>
         <option value={25}>25</option>
         <option value={50}>50</option>
         <option value={100}>100</option>
