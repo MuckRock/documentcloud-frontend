@@ -3,7 +3,7 @@
 
   import PremiumMenu from "../PremiumMenu.svelte";
 
-  import { organizations } from "../../../../api/fixtures/orgAndUser.fixtures";
+  import { organizationsList } from "../../../../test/fixtures/accounts";
 
   export const meta = {
     title: "App / Accounts / Menus / Premium",
@@ -16,8 +16,8 @@
   <PremiumMenu {...args} />
 </Template>
 
-<Story name="Premium User" args={{ org: organizations.results[1] }} />
+<Story name="Premium User" args={{ org: organizationsList.results[1] }} />
 <Story
   name="Free User"
-  args={{ org: { ...organizations.results[1], plan: "Free" } }}
+  args={{ org: { ...organizationsList.results[1], plan: "Free" } }}
 />

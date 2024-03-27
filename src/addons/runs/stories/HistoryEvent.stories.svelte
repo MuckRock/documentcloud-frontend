@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import run from "../../fixtures/run.json";
+  import { run } from "../../../test/fixtures/addons";
   import Event from "../HistoryEvent.svelte";
 
   export const meta = {

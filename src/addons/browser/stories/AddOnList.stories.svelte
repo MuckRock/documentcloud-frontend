@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
-  import defaultAddons from "../../fixtures/addons.json";
+  import { addonsList } from "../../../test/fixtures/addons";
   import AddOnList from "../AddOnList.svelte";
 
   const args = {
-    items: defaultAddons,
+    items: addonsList.results,
     loading: false,
     error: null,
   };

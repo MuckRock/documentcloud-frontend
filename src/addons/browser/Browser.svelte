@@ -52,7 +52,7 @@
         return data;
       })
       .catch((err) => {
-        error = err;
+        error = err.detail;
         loading = false;
         return {};
       });

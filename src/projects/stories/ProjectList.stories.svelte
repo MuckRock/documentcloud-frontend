@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
-  import { projects } from "../../api/fixtures/projects.fixtures";
+  import { projectList } from "../../test/fixtures/projects";
   import ProjectList from "../ProjectList.svelte";
 
   const args = {
-    items: projects.results,
+    items: projectList.results,
     loading: false,
     error: null,
   };
@@ -26,7 +26,7 @@
   name="With Own Data"
   args={{
     ...args,
-    items: projects.results.map((project) => ({
+    items: projectList.results.map((project) => ({
       ...project,
       edit_access: true,
     })),
@@ -36,7 +36,7 @@
   name="With Shared Data"
   args={{
     ...args,
-    items: projects.results.map((project) => ({
+    items: projectList.results.map((project) => ({
       ...project,
       edit_access: project.user === 4,
     })),

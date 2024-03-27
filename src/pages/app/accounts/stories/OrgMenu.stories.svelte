@@ -1,21 +1,18 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import {
-    me,
-    organizations,
-  } from "../../../../api/fixtures/orgAndUser.fixtures";
-
   import OrgMenu from "../OrgMenu.svelte";
+
+  import { me, organizationsList } from "../../../../test/fixtures/accounts";
   import {
     mockChangeOrg,
     mockGetOrg,
     mockGetOrgsList,
     mockInMyOrg,
-  } from "./mockData";
+  } from "../../../../test/handlers/accounts";
 
   const args = {
     user: me,
-    org: organizations.results[0],
+    org: organizationsList.results[0],
   };
 
   export const meta = {

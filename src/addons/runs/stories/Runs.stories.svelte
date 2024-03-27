@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import { history, scheduled } from "./mockData";
+  import { history, scheduled } from "../../../test/handlers/addons";
   import Runs from "../Runs.svelte";
 
   const args = { visible: true };

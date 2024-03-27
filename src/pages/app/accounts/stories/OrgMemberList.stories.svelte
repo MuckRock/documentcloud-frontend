@@ -2,9 +2,9 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import OrgMemberList from "../OrgMemberList.svelte";
-  import { mockInMyOrg } from "./mockData";
+  import { mockInMyOrg } from "../../../../test/handlers/accounts";
 
-  const args = { orgId: 1, myId: 4 };
+  const args = { orgId: 1, myId: 100012 };
 
   export const meta = {
     title: "App / Accounts / Menus / Org / Member List",

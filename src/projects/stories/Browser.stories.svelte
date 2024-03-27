@@ -4,8 +4,8 @@
   import Browser from "../Browser.svelte";
 
   const args = { visible: true };
-  import { projectHandlers } from "./mockData";
-  import { mockGetMe } from "../../pages/app/accounts/stories/mockData";
+  import { projects } from "../../test/handlers/projects";
+  import { mockGetMe } from "../../test/handlers/accounts";
 
   export const meta = {
     title: "App / Projects / Browser",
@@ -22,20 +22,20 @@
 <Story
   name="Success"
   {args}
-  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.data] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projects.data] } }}
 />
 <Story
   name="Loading"
   {args}
-  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.loading] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projects.loading] } }}
 />
 <Story
   name="Error"
   {args}
-  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.error] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projects.error] } }}
 />
 <Story
   name="Empty"
   {args}
-  parameters={{ msw: { handlers: [mockGetMe.data, projectHandlers.empty] } }}
+  parameters={{ msw: { handlers: [mockGetMe.data, projects.empty] } }}
 />

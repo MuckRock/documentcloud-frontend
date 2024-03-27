@@ -1,9 +1,9 @@
-<script context="module">
+<script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import ActionBar from "../ActionBar.svelte";
 
-  import documentFixture from "../../viewer/fixtures/document.json";
+  import { document } from "../../../test/fixtures/documents";
 
   export const meta = {
     title: "App / Action Bar",
@@ -15,7 +15,7 @@
     loggedIn: true,
     data: {
       loading: false,
-      documents: [documentFixture, documentFixture, documentFixture],
+      documents: [document, document, document],
     },
     selection: {
       checked: false,

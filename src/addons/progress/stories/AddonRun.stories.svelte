@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import run from "../../fixtures/run.json";
   import AddonRun from "../AddonRun.svelte";
-  import { handlers } from "./mockData";
+  import { run } from "../../../test/fixtures/addons";
+  import { progress as handlers } from "../../../test/handlers/addons";
 
   const args = { run, compact: false };
 

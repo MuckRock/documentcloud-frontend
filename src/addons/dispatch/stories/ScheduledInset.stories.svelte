@@ -2,8 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import ScheduledInset from "../ScheduledInset.svelte";
-  import addon from "../../fixtures/addon.json";
-  import klaxon from "../../fixtures/klaxon-scheduled.json";
+  import { addon, scheduled as klaxon } from "../../../test/fixtures/addons";
 
   export const meta = {
     title: "Add-Ons / Dispatch / Scheduled Inset",

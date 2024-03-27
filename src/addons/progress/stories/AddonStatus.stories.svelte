@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import AddonStatus from "../AddonStatus.svelte";
-  import { handlers } from "./mockData";
+  import { progress as handlers } from "../../../test/handlers/addons";
 
   const args = {};
 

@@ -1,13 +1,3 @@
-<script lang="ts" context="module">
-  import type { AddOnListItem } from "../types.ts";
-
-  export interface AddOnList {
-    items?: AddOnListItem[];
-    loading: boolean;
-    error?: string | null;
-  }
-</script>
-
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import Button from "../../common/Button.svelte";
@@ -16,6 +6,7 @@
   import Loader from "../../common/Loader.svelte";
 
   import ListItem from "./AddOnListItem.svelte";
+  import { AddOnListItem } from "../types";
 
   export let items: AddOnListItem[];
   export let loading: boolean;

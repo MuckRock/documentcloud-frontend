@@ -8,12 +8,13 @@ interface PremiumOrgFields {
 }
 
 export interface Org extends Partial<PremiumOrgFields> {
+  uuid: string;
   id: number;
   name: string;
   slug: string;
   avatar_url: string;
-  individual: boolean;
-  plan: "Free" | "Professional" | "Organization";
+  individual?: boolean;
+  plan?: "Free" | "Professional" | "Organization";
 }
 
 export interface GroupOrg extends Org {
@@ -27,6 +28,7 @@ export interface IndividualOrg extends Org {
 }
 
 export interface User {
+  uuid: string;
   id: number;
   name: Maybe<string>;
   avatar_url: Maybe<string>;
@@ -36,6 +38,7 @@ export interface User {
   admin_organizations: number[];
   feature_level?: number;
   verified_journalist?: boolean;
+  is_staff?: boolean;
 }
 
 export function isOrg(org?: null | number | Org): org is Org {

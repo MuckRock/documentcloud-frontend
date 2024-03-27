@@ -1,4 +1,4 @@
-import type { Page } from "../../types/common";
+import type { Page } from "../../api/types/common";
 
 export const emptyList: Page<undefined> = {
   count: 0,

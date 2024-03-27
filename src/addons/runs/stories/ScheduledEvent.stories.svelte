@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import event from "../../fixtures/event.json";
+  import { event } from "../../../test/fixtures/addons";
   import Event from "../ScheduledEvent.svelte";
 
   export const meta = {

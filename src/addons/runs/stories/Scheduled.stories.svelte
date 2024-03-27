@@ -2,7 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Scheduled from "../Scheduled.svelte";
-  import { scheduled } from "./mockData";
+  import { scheduled } from "../../../test/handlers/addons";
 
   const args = {};
 

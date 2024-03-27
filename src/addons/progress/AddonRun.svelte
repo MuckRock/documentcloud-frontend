@@ -8,7 +8,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Run } from "../runs/HistoryEvent.svelte";
+  import type { Run } from "../types";
 
   // Components
   import Progress from "../../common/Progress.svelte";
