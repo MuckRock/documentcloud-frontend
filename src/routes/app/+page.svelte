@@ -13,29 +13,31 @@
 
   export let data;
 
-  let page_number = 1;
-
   $: searchResults = data.searchResults;
   $: query = data.query;
   $: per_page = data.per_page;
   $: page_number = data.page;
 
   // update the cursor URL param, forcing refresh of search results
-  function setCursor(url: URL) {
+  async function setCursor(url: URL) {
     const cursor = url.searchParams.get("cursor");
     const page_number = url.searchParams.get("page");
 
-    // handle different environments that paginate differently
-    if (cursor) $page.url.searchParams.set("cursor", cursor);
-    if (per_page) $page.url.searchParams.set("page", page_number);
+    // snapshot the current URL
+    const u = new URL($page.url);
 
-    return goto($page.url);
+    // handle different environments that paginate differently
+    if (cursor) u.searchParams.set("cursor", cursor);
+    if (per_page) u.searchParams.set("page", page_number);
+
+    return goto(u);
   }
 
   // update the per_page query param
-  function setPerPage(e) {
-    $page.url.searchParams.set("per_page", e.target.value);
-    return goto($page.url);
+  async function setPerPage(e) {
+    const u = new URL($page.url);
+    u.searchParams.set("per_page", e.target.value);
+    return goto(u);
   }
 </script>
 
@@ -67,13 +69,13 @@
           totalPages={total_pages}
           has_next={Boolean(next)}
           has_previous={Boolean(previous)}
-          on:next={(e) => {
-            if (next) setCursor(new URL(next));
-            page_number = Math.min(total_pages, page_number + 1);
+          on:next={async (e) => {
+            await setCursor(new URL(next));
+            // page_number = Math.min(total_pages, page_number + 1);
           }}
-          on:previous={(e) => {
-            if (previous) setCursor(new URL(previous));
-            page_number = Math.max(1, page_number - 1);
+          on:previous={async (e) => {
+            await setCursor(new URL(previous));
+            // page_number = Math.max(1, page_number - 1);
           }}
         />
       {/await}
