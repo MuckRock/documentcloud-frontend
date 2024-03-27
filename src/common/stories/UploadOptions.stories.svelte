@@ -5,10 +5,7 @@
 
   let args = {};
 
-  import {
-    mockGetMe,
-    mockGetOrg,
-  } from "../../pages/app/accounts/stories/mockData";
+  import { mockGetMe, mockGetOrg } from "../../test/handlers/accounts";
 
   export const meta = {
     title: "Common / Upload Options",

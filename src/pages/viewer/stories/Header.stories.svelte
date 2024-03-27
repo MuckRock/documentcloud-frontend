@@ -3,11 +3,11 @@
 
   import Header from "../Header.svelte";
 
-  import documentFixture from "../fixtures/document.json";
+  import { document } from "../../../test/fixtures/documents";
   import { Document as DocumentState } from "../../../structure/document";
 
   const args = {
-    document: new DocumentState(documentFixture),
+    document: new DocumentState(document),
     loaded: true,
     title: true,
     showOrg: true,

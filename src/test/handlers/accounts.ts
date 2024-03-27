@@ -7,7 +7,7 @@ import {
   proOrg,
   usersList,
 } from "../fixtures/accounts";
-import { Org } from "../../api/types/orgAndUser.js";
+import { Org } from "../../api/types/orgAndUser";
 import {
   createApiUrl,
   dataHandler,
@@ -15,7 +15,7 @@ import {
   loadingHandler,
   errorHandler,
   generateGetHandler,
-} from "./utils.js";
+} from "./utils";
 
 export const users = {
   data: rest.get(createApiUrl("users/"), dataHandler(usersList)),

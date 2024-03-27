@@ -6,7 +6,7 @@
 
   import RevisionsDialog from "../RevisionsDialog.svelte";
 
-  import documentFixture from "../../../pages/app/test/fixtures/document.json";
+  import { document } from "../../../test/fixtures/documents";
   import { revisionControl } from "../../../test/handlers/documents";
   import { mockGetMe } from "../../../test/handlers/accounts";
 
@@ -26,7 +26,7 @@
   const args = {
     enabled: true,
     documentId: "1",
-    revisions: documentFixture.revisions,
+    revisions: document.revisions,
     onSave: action("Save"),
     onCancel: action("Cancel"),
   };
