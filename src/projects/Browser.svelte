@@ -56,7 +56,7 @@
       }
       // }
     } catch (err) {
-      error = err;
+      error = err.errorData.detail;
       projects = null;
     }
     loading = false;

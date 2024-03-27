@@ -84,7 +84,10 @@ export const mockGetMe = {
       ctx.json({
         ...meFixture,
         organization: { ...(meFixture.organization as Org), plan: "Free" },
-        admin_organizations: [...meFixture.admin_organizations, 1],
+        admin_organizations: [
+          ...meFixture.admin_organizations,
+          (meFixture.organization as Org).id,
+        ],
       }),
     ),
   ),
@@ -95,7 +98,7 @@ export const mockGetMe = {
 };
 
 /* Mock Request Handlers */
-export const mockInMyOrg = generateGetHandler(`/users`, usersList);
+export const mockInMyOrg = generateGetHandler(`users/*`, usersList);
 
 const listOrgsUrl = new URL(`organizations/`, baseApiUrl).toString();
 export const mockGetOrgsList = {

@@ -2,7 +2,7 @@ import { Org, Page, User } from "../../api/types";
 import { GroupOrg, IndividualOrg } from "../../api/types/orgAndUser";
 
 export const me: User = {
-  id: 1020,
+  id: 100012,
   avatar_url: "https://cdn.muckrock.com/media/avatars/20140211-0O1A7147-2.jpg",
   feature_level: 2,
   is_staff: true,

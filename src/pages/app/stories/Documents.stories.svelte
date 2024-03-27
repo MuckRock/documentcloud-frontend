@@ -30,7 +30,7 @@
     users.me,
     organizations.data,
     projects.data,
-    runs.data,
+    runs.empty,
   ];
 </script>
 

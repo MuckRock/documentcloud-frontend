@@ -7,7 +7,7 @@ export function createApiUrl(path: string): string {
 
 export const dataHandler = (data) => (req, res, ctx) => res(ctx.json(data));
 export const emptyHandler =
-  (emptyData = []) =>
+  (emptyData: any = []) =>
   (req, res, ctx) =>
     res(ctx.json(emptyData));
 export const errorHandler = (req, res, ctx) =>

@@ -55,6 +55,7 @@ export const projectList: Page<Project> = {
       title: "Add-on test",
       updated_at: "2022-03-01T15:55:05.536919Z",
       user: 100003,
+      pinned: true,
     },
     {
       id: 200008,

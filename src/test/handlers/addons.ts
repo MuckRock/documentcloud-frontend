@@ -10,9 +10,11 @@ import {
 import {
   createApiUrl,
   dataHandler,
+  emptyHandler,
   generateAllHandler,
   generateGetHandler,
 } from "./utils";
+import { emptyList } from "../fixtures/common";
 
 /* Mock Handlers */
 
@@ -38,4 +40,5 @@ export const progress = [
 
 export const runs = {
   data: rest.get(createApiUrl("addon_runs/"), dataHandler(runsList)),
+  empty: rest.get(createApiUrl("addon_runs/"), emptyHandler()),
 };
