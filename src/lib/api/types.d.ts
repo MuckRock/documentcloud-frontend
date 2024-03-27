@@ -135,6 +135,14 @@ export interface Section {
 
 export type SectionResults = Page<Section>;
 
+export interface SearchOptions {
+  hl?: boolean;
+  per_page?: number;
+  page?: number;
+  cursor?: string;
+  expand?: string;
+}
+
 export interface OEmbed {
   version: "1.0";
   provider_name: "DocumentCloud";

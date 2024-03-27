@@ -14,23 +14,28 @@
   export let data;
 
   let page_number = 1;
-  let error: Error;
 
   $: searchResults = data.searchResults;
   $: query = data.query;
   $: per_page = data.per_page;
+  $: page_number = data.page;
 
   // update the cursor URL param, forcing refresh of search results
   function setCursor(url: URL) {
-    const c = url.searchParams.get("cursor");
-    $page.url.searchParams.set("cursor", c);
-    goto($page.url);
+    const cursor = url.searchParams.get("cursor");
+    const page_number = url.searchParams.get("page");
+
+    // handle different environments that paginate differently
+    if (cursor) $page.url.searchParams.set("cursor", cursor);
+    if (per_page) $page.url.searchParams.set("page", page_number);
+
+    return goto($page.url);
   }
 
   // update the per_page query param
   function setPerPage(e) {
     $page.url.searchParams.set("per_page", e.target.value);
-    goto($page.url);
+    return goto($page.url);
   }
 </script>
 
@@ -56,18 +61,19 @@
         {@const total_pages = Math.ceil(count / per_page)}
         {@const next = sr.next}
         {@const previous = sr.previous}
+
         <Paginator
           page={page_number}
           totalPages={total_pages}
           has_next={Boolean(next)}
           has_previous={Boolean(previous)}
           on:next={(e) => {
-            page_number = Math.min(total_pages, page_number + 1);
             if (next) setCursor(new URL(next));
+            page_number = Math.min(total_pages, page_number + 1);
           }}
           on:previous={(e) => {
-            page_number = Math.max(1, page_number - 1);
             if (previous) setCursor(new URL(previous));
+            page_number = Math.max(1, page_number - 1);
           }}
         />
       {/await}
