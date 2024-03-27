@@ -30,7 +30,7 @@
   $: next_url = res.next ? new URL(res.next) : null;
   $: prev_url = res.previous ? new URL(res.previous) : null;
   $: events = res.results ?? [];
-  $: empty = !loading && !Boolean(res.results?.length);
+  $: empty = !loading && !Boolean(res.results?.length) && !error;
 
   export async function load(url?: string | URL) {
     try {
