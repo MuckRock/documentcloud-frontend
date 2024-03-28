@@ -139,3 +139,21 @@ dd {
   font-size: var(--font-s, 0.875rem);
   font-weight: var(--font-regular, 400);
 }
+
+/*
+Utility classes
+*/
+
+/* https://css-tricks.com/inclusively-hidden/
+ * Hiding class, making content visible only to screen readers but not visually
+ * "sr" meaning "screen-reader" 
+ */
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
