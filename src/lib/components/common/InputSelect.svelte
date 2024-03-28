@@ -31,14 +31,18 @@
   {placeholder}
   bind:value
   showChevron
+  --height="2.125rem"
+  --max-height="2.125rem"
   --background="var(--White, #fff)"
   --border="1px solid var(--gray-3, #99a8b3)"
   --border-radius="0.5rem"
   --border-focused="1px solid var(--blue-3, #4294f0)"
+  --padding="0 0 0 0.75rem"
   --item-hover-bg="var(--blue-1, #eef3f9)"
   --item-is-active-bg="var(--blue-3, #4294f0)"
   --list-shadow="var(--shadow)"
   --list-border="1px solid var(--gray-2, #d8dee2)"
+  --value-container-padding="0"
   class="select elevated sourceCodePro gray-4"
 >
   <ChevronDown16 slot="chevron-icon" />
