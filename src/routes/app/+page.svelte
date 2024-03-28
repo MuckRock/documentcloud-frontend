@@ -16,19 +16,22 @@
   $: searchResults = data.searchResults;
   $: query = data.query;
   $: per_page = data.per_page;
-  $: page_number = data.page;
+  $: current = data.cursor;
+  // $: page_number = data.page;
 
   // update the cursor URL param, forcing refresh of search results
-  async function setCursor(url: URL) {
-    const cursor = url.searchParams.get("cursor");
-    const page_number = url.searchParams.get("page");
-
+  function setCursor(next: string, previous: string) {
     // snapshot the current URL
     const u = new URL($page.url);
 
-    // handle different environments that paginate differently
-    if (cursor) u.searchParams.set("cursor", cursor);
-    if (per_page) u.searchParams.set("page", page_number);
+    u.searchParams.set("cursor", next);
+
+    // we need to store the current cursor in the URL so we can go back
+    if (previous) {
+      u.searchParams.set("previous", current);
+    } else {
+      u.searchParams.delete("previous");
+    }
 
     return goto(u);
   }
@@ -62,19 +65,18 @@
         {@const count = sr.count}
         {@const total_pages = Math.ceil(count / per_page)}
         {@const next = sr.next}
-        {@const previous = sr.previous}
 
         <Paginator
-          page={page_number}
           totalPages={total_pages}
           has_next={Boolean(next)}
-          has_previous={Boolean(previous)}
+          has_previous={Boolean(current)}
           on:next={async (e) => {
-            await setCursor(new URL(next));
+            const cursor = new URL(next).searchParams.get("cursor");
+            await setCursor(cursor, current);
             // page_number = Math.min(total_pages, page_number + 1);
           }}
           on:previous={async (e) => {
-            await setCursor(new URL(previous));
+            await setCursor(current, "");
             // page_number = Math.max(1, page_number - 1);
           }}
         />

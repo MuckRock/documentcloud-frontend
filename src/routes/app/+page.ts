@@ -5,10 +5,10 @@ export async function load({ url, fetch }) {
   const query = url.searchParams.get("q") || "";
   const per_page = +url.searchParams.get("per_page") || 25;
   const cursor = url.searchParams.get("cursor") || "";
-  const page = +url.searchParams.get("page") || null;
 
   const options: SearchOptions = {
-    hl: true,
+    hl: Boolean(query),
+    version: "2.0",
   };
 
   if (per_page) {
@@ -19,16 +19,11 @@ export async function load({ url, fetch }) {
     options.cursor = cursor;
   }
 
-  if (page) {
-    options.page = page;
-  }
-
   const searchResults = search(query, options, fetch);
 
   return {
     query,
     per_page,
-    page,
     cursor,
     searchResults,
   };

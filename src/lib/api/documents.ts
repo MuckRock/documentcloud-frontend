@@ -19,7 +19,12 @@ import { isErrorCode } from "../utils";
  *  */
 export async function search(
   query = "",
-  options: SearchOptions = { hl: false, per_page: 25, cursor: "" },
+  options: SearchOptions = {
+    hl: Boolean(query),
+    per_page: 25,
+    cursor: "",
+    version: "2.0",
+  },
   fetch = globalThis.fetch,
 ): Promise<DocumentResults> {
   const endpoint = new URL("documents/search/", BASE_API_URL);

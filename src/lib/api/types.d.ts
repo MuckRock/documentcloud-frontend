@@ -141,6 +141,7 @@ export interface SearchOptions {
   page?: number;
   cursor?: string;
   expand?: string;
+  version?: number | string;
 }
 
 export interface OEmbed {
