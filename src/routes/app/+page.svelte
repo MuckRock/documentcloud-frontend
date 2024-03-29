@@ -50,7 +50,7 @@
         on:change={selectAll}
       />
       {#if $selected.length > 0}
-        {$selected.length} selected
+        {$selected.length.toLocaleString()} selected
       {:else}
         Select all
       {/if}
@@ -58,7 +58,7 @@
 
     <svelte:fragment slot="center">
       {#if $visible && $total}
-        Showing {$visible.size} of {$total} results
+        Showing {$visible.size.toLocaleString()} of {$total.toLocaleString()} results
       {/if}
     </svelte:fragment>
   </PageToolbar>
