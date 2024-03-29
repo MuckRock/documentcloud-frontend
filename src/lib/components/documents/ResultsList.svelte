@@ -2,7 +2,12 @@
   import { writable, type Writable } from "svelte/store";
   import Button from "../common/Button.svelte";
 
-  export const selected: Writable<(number | string)[]> = writable([]);
+  // IDs might be strings or numbers, depending on the API endpoint
+  // enforce type consistency here to avoid comparison bugs later
+  export const selected: Writable<string[]> = writable([]);
+  export let visible: Writable<Set<string>> = writable(new Set());
+
+  export let total: Writable<number> = writable(0);
 </script>
 
 <script lang="ts">
@@ -25,6 +30,9 @@
   let end: HTMLElement;
   let observer: IntersectionObserver;
 
+  // track what's visible so we can compare to $selected
+  $: $visible = new Set(results.map((d) => String(d.id)));
+
   // load the next set of results
   async function load(url: URL) {
     loading = true;
@@ -39,37 +47,39 @@
     const r: DocumentResults = await res.json();
 
     results = [...results, ...r.results];
-    count = r.count;
+    $total = r.count;
     next = r.next;
     loading = false;
-    if (auto) watch();
+    if (auto) watch(end);
   }
 
-  function watch() {
+  function watch(el: HTMLElement) {
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && next) {
           await load(new URL(next));
-          observer.unobserve(end);
+          observer.unobserve(el);
         }
       });
     });
 
-    io.observe(end);
+    io.observe(el);
     return io;
   }
 
-  function unwatch(io: IntersectionObserver) {
-    io.unobserve(end);
+  function unwatch(io: IntersectionObserver, el: HTMLElement) {
+    io.unobserve(el);
   }
 
   onMount(() => {
+    // set initial total, update later
+    $total = count;
     if (auto) {
-      observer = watch();
+      observer = watch(end);
     }
 
     return () => {
-      unwatch(observer);
+      unwatch(observer, end);
     };
   });
 </script>
@@ -79,7 +89,11 @@
     <Flex gap={0.625} align="center">
       <label>
         <span class="sr-only">Select</span>
-        <input type="checkbox" bind:group={$selected} value={document.id} />
+        <input
+          type="checkbox"
+          bind:group={$selected}
+          value={String(document.id)}
+        />
       </label>
       <DocumentListItem {document} />
     </Flex>
