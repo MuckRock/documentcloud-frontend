@@ -24,6 +24,7 @@
       results={results.results}
       count={results.count}
       next={results.next}
+      auto
     />
   {/await}
 

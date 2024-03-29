@@ -8,6 +8,7 @@
 <script lang="ts">
   import type { Document, DocumentResults } from "$lib/api/types";
 
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import DocumentListItem from "./DocumentListItem.svelte";
@@ -18,8 +19,11 @@
   export let results: Document[] = [];
   export let count: number = undefined;
   export let next: string | null = null;
+  export let auto = false;
 
   let loading = false;
+  let end: HTMLElement;
+  let observer: IntersectionObserver;
 
   // load the next set of results
   async function load(url: URL) {
@@ -38,7 +42,36 @@
     count = r.count;
     next = r.next;
     loading = false;
+    watch();
   }
+
+  function watch() {
+    const io = new IntersectionObserver((entries, observer) => {
+      entries.forEach(async (entry) => {
+        if (entry.isIntersecting && next) {
+          await load(new URL(next));
+          observer.unobserve(end);
+        }
+      });
+    });
+
+    io.observe(end);
+    return io;
+  }
+
+  function unwatch(io: IntersectionObserver) {
+    io.unobserve(end);
+  }
+
+  onMount(() => {
+    if (auto) {
+      observer = watch();
+    }
+
+    return () => {
+      unwatch(observer);
+    };
+  });
 </script>
 
 <div class="container">
@@ -56,7 +89,7 @@
       <p>{$_("noDocuments.queryNoResults")}</p>
     </Empty>
   {/each}
-  <div class="end">
+  <div class="end" bind:this={end}>
     {#if next}
       <Button on:click={(e) => load(new URL(next))}>Load more</Button>
     {/if}
