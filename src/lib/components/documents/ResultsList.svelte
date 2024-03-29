@@ -42,7 +42,7 @@
     count = r.count;
     next = r.next;
     loading = false;
-    watch();
+    if (auto) watch();
   }
 
   function watch() {
@@ -91,9 +91,13 @@
   {/each}
   <div class="end" bind:this={end}>
     {#if next}
-      <Button disabled={loading} on:click={(e) => load(new URL(next))}
-        >Load more</Button
-      >
+      <Button disabled={loading} on:click={(e) => load(new URL(next))}>
+        {#if loading}
+          Loading ...
+        {:else}
+          Load more
+        {/if}
+      </Button>
     {/if}
   </div>
 </div>

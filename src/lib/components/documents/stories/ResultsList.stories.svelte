@@ -24,3 +24,7 @@
 <Story name="Empty">
   <div style="width: 36rem"><ResultsList /></div>
 </Story>
+
+<Story name="Infinite">
+  <div style="width: 36rem"><ResultsList {results} {count} {next} auto /></div>
+</Story>
