@@ -41,7 +41,7 @@
   {/await}
 
   <PageToolbar slot="footer">
-    <label slot="left">
+    <label slot="left" class="select-all">
       <input
         type="checkbox"
         name="select_all"
@@ -56,10 +56,24 @@
       {/if}
     </label>
 
-    <svelte:fragment slot="center">
+    <svelte:fragment slot="right">
       {#if $visible && $total}
         Showing {$visible.size.toLocaleString()} of {$total.toLocaleString()} results
       {/if}
     </svelte:fragment>
   </PageToolbar>
 </ContentLayout>
+
+<style>
+  label.select-all {
+    align-items: center;
+    align-self: stretch;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  input[type="checkbox"] {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+</style>

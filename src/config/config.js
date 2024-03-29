@@ -63,6 +63,7 @@ export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.map(([name, width]) => [
 
 export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS_ENTRIES);
 
+export const DEFAULT_PER_PAGE = 25;
 export const MAX_PER_PAGE = 100;
 
 export const PDF_SIZE_LIMIT = 525336576;

@@ -1,9 +1,11 @@
 import type { SearchOptions } from "$lib/api/types";
+
+import { DEFAULT_PER_PAGE } from "@/config/config.js";
 import { search } from "$lib/api/documents";
 
 export async function load({ url, fetch }) {
   const query = url.searchParams.get("q") || "";
-  const per_page = +url.searchParams.get("per_page") || 25;
+  const per_page = +url.searchParams.get("per_page") || DEFAULT_PER_PAGE;
   const cursor = url.searchParams.get("cursor") || "";
 
   const options: SearchOptions = {

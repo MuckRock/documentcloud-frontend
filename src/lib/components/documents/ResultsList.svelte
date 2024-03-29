@@ -1,6 +1,5 @@
 <script context="module" lang="ts">
   import { writable, type Writable } from "svelte/store";
-  import Button from "../common/Button.svelte";
 
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
@@ -17,6 +16,7 @@
   import { _ } from "svelte-i18n";
 
   import DocumentListItem from "./DocumentListItem.svelte";
+  import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import { Search24 } from "svelte-octicons";
   import Empty from "../common/Empty.svelte";
