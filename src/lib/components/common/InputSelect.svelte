@@ -32,7 +32,6 @@
   bind:value
   showChevron
   --height="2.125rem"
-  --max-height="2.125rem"
   --background="var(--White, #fff)"
   --border="1px solid var(--gray-3, #99a8b3)"
   --border-radius="0.5rem"

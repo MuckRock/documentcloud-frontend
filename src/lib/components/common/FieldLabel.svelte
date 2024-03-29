@@ -25,9 +25,10 @@
   .label {
     color: var(--gray-5, #233944);
     font-weight: 600;
+    font-size: var(--font-s);
   }
   .required {
-    font-size: var(--font-s);
+    font-size: var(--font-xs);
     color: var(--orange, #ec7b6b);
   }
   .icon {

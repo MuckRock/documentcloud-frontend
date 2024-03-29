@@ -1,11 +1,11 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
-  import InputLabel from "../InputLabel.svelte";
+  import FieldLabel from "../FieldLabel.svelte";
   import { Infinity16 } from "svelte-octicons";
 
   export const meta = {
-    title: "Components / Common / Inputs / Label",
-    component: InputLabel,
+    title: "Components / Common / Inputs / Field Label",
+    component: FieldLabel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
@@ -17,13 +17,13 @@
 </script>
 
 <Template let:args>
-  <InputLabel {...args}>Input Label</InputLabel>
+  <FieldLabel {...args}>Input Label</FieldLabel>
 </Template>
 
 <Story name="Default" {args} />
 <Story name="With Icon" let:args {args}>
-  <InputLabel {...args}
-    ><Infinity16 slot="icon" />Never-Ending Salad & Breadsticks</InputLabel
+  <FieldLabel {...args}
+    ><Infinity16 slot="icon" />Never-Ending Salad & Breadsticks</FieldLabel
   >
 </Story>
 <Story name="Required" args={{ ...args, required: true }} />

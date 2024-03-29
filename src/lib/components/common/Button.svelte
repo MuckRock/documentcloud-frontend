@@ -1,6 +1,7 @@
 <script lang="ts">
   export let href: string = null;
   export let mode: "standard" | "primary" | "ghost" = "standard";
+  export let full = false;
 
   export let disabled = false;
 
@@ -10,11 +11,11 @@
 </script>
 
 {#if href}
-  <a {href} {title} on:click class={mode}>
+  <a {href} {title} on:click class={mode} class:full>
     <slot>{label}</slot>
   </a>
 {:else}
-  <button {title} on:click class={mode} {disabled} {type}>
+  <button {title} on:click class={mode} {disabled} {type} class:full>
     <slot>{label}</slot>
   </button>
 {/if}
@@ -82,5 +83,9 @@
   }
   .ghost:disabled:hover {
     background: transparent;
+  }
+
+  .full {
+    display: flex;
   }
 </style>
