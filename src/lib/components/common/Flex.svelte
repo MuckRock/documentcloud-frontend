@@ -1,7 +1,7 @@
 <script lang="ts">
   /* Based on https://github.com/himynameisdave/svelte-flex */
 
-  type Align = "center" | "end" | "start" | "stretch";
+  type Align = "center" | "end" | "start" | "stretch" | "baseline";
   type Justify = "around" | "between" | "center" | "end" | "evenly" | "start";
   type Direction = "column" | "row";
 
@@ -16,6 +16,7 @@
     center: "center",
     end: "flex-end",
     stretch: "stretch",
+    baseline: "baseline",
   };
 
   const justifyMap: Record<Justify, string> = {
