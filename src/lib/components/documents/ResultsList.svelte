@@ -91,7 +91,9 @@
   {/each}
   <div class="end" bind:this={end}>
     {#if next}
-      <Button on:click={(e) => load(new URL(next))}>Load more</Button>
+      <Button disabled={loading} on:click={(e) => load(new URL(next))}
+        >Load more</Button
+      >
     {/if}
   </div>
 </div>
