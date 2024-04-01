@@ -4,7 +4,7 @@
   export let value = "";
 </script>
 
-<input type="text" {name} {placeholder} bind:value />
+<input type="text" {name} {placeholder} bind:value on:change />
 
 <style>
   input {
@@ -13,6 +13,7 @@
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    width: 100%;
 
     border-radius: 0.5rem;
     border: 1px solid var(--gray-3, hwb(205 60% 30%));

@@ -10,7 +10,11 @@
 </script>
 
 <div class="switch" class:disabled>
-  <button {disabled} role="switch" aria-checked={checked} on:click={handleClick}
+  <button
+    {disabled}
+    role="switch"
+    aria-checked={checked}
+    on:click|preventDefault={handleClick}
   ></button>
   <input {name} type="checkbox" bind:checked class="hidden" />
 </div>
