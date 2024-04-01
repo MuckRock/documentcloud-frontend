@@ -1,6 +1,6 @@
-import { Nullable } from "./common";
-import { Org, User } from "./orgAndUser";
-import { Project } from "./project";
+import type { Nullable } from "./common";
+import type { Org, User } from "./orgAndUser";
+import type { Project } from "./project";
 
 export type DocumentAccess = "public" | "organization" | "private";
 
