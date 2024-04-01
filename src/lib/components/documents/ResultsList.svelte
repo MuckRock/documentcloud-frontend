@@ -103,11 +103,15 @@
       <p>{$_("noDocuments.queryNoResults")}</p>
     </Empty>
   {/each}
-  <div class="end" bind:this={end}>
+  <div bind:this={end} class="end">
     {#if next}
-      <Button disabled={loading} on:click={(e) => load(new URL(next))}>
+      <Button
+        mode="ghost"
+        disabled={loading}
+        on:click={(e) => load(new URL(next))}
+      >
         {#if loading}
-          Loading ...
+          Loading &hellip;
         {:else}
           Load more
         {/if}
@@ -130,5 +134,10 @@
   input[type="checkbox"] {
     height: 1.25rem;
     width: 1.25rem;
+  }
+
+  .end {
+    display: flex;
+    justify-content: center;
   }
 </style>
