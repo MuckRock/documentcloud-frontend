@@ -13,7 +13,7 @@
 
   import { browseProjects, editProject } from "../../../manager/layout.js";
   import { getMe } from "../../../api/orgAndUser";
-  import { User } from "../../../api/types/orgAndUser";
+  import type { User } from "../../../api/types/orgAndUser";
 
   export let expanded;
 

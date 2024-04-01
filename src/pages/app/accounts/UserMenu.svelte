@@ -15,7 +15,7 @@
   } from "../../../api/auth.js";
   import { showMailkeySelected } from "../../../manager/manager.js";
   import { Maybe } from "../../../api/types/common";
-  import { User } from "../../../api/types/orgAndUser";
+  import type { User } from "../../../api/types/orgAndUser";
 
   export let user: Maybe<User>;
 

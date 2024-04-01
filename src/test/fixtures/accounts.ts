@@ -1,5 +1,5 @@
-import { Org, Page, User } from "../../api/types";
-import { GroupOrg, IndividualOrg } from "../../api/types/orgAndUser";
+import type { Org, Page, User } from "../../api/types";
+import type { GroupOrg, IndividualOrg } from "../../api/types/orgAndUser";
 
 export const me: User = {
   id: 100012,

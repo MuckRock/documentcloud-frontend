@@ -9,11 +9,10 @@
   import Drawer from "../common/Drawer.svelte";
   import Search, { query } from "../common/SearchInput.svelte";
   import Flex from "../common/Flex.svelte";
-  import Paginator from "../common/Paginator.svelte";
   import ProjectList from "./ProjectList.svelte";
   import { newProject } from "../manager/layout";
   import Button from "../common/Button.svelte";
-  import { getProjects, getPublicProjects } from "../api/project";
+  import { getProjects } from "../api/project";
   import type { User } from "../api/types";
   import { getMe } from "../api/orgAndUser";
   import Filters, { type FilterKey, filter } from "./Filters.svelte";

@@ -7,7 +7,7 @@ import {
   proOrg,
   usersList,
 } from "../fixtures/accounts";
-import { Org } from "../../api/types/orgAndUser";
+import type { Org } from "../../api/types/orgAndUser";
 import {
   createApiUrl,
   dataHandler,

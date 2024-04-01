@@ -2,11 +2,11 @@
   import { _, locale } from "svelte-i18n";
   import Organization16 from "svelte-octicons/lib/Organization16.svelte";
 
+  import type { User, Org } from "../../../api/types/orgAndUser";
   import Dropdown from "../../../common/Dropdown2.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Loader from "../../../common/Loader.svelte";
-  import { User, Org } from "../../../api/types/orgAndUser";
   import OrgMemberList from "./OrgMemberList.svelte";
   import {
     changeActive,
