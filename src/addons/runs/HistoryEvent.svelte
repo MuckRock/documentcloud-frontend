@@ -9,7 +9,7 @@
   } from "svelte-octicons";
   import Button from "../../common/Button.svelte";
   import Price from "../../premium-credits/Price.svelte";
-  import { Run } from "../types";
+  import type { Run } from "../types";
 
   export let run: Run;
 
