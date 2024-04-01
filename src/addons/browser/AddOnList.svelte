@@ -6,7 +6,7 @@
   import Loader from "../../common/Loader.svelte";
 
   import ListItem from "./AddOnListItem.svelte";
-  import { AddOnListItem } from "../types";
+  import type { AddOnListItem } from "../types";
 
   export let items: AddOnListItem[];
   export let loading: boolean;

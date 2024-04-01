@@ -8,7 +8,6 @@
     scheduled as klaxon,
   } from "../../../test/fixtures/addons";
   import { scheduled, send, pin } from "../../../test/handlers/addons";
-  import { AddOnListItem, Event } from "../../types";
 
   const { addon, ...event } = eventFixture;
   const addons = addonsList.results;

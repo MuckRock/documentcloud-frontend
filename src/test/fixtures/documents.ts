@@ -1,4 +1,4 @@
-import { Document, Page } from "../../api/types";
+import type { Document, Page } from "../../api/types";
 
 /*
 

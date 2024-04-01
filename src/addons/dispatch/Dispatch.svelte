@@ -4,7 +4,7 @@
   import { onMount, tick } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import type { AddOnListItem, Event } from "../types.ts";
+  import type { AddOnListItem, Event } from "../types";
 
   import Button from "../../common/Button.svelte";
   import Drawer from "../../common/Drawer.svelte";

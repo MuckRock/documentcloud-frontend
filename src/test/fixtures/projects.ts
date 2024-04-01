@@ -1,4 +1,4 @@
-import { Page, Project } from "../../api/types";
+import type { Page, Project } from "../../api/types";
 
 export let project: Project = {
   id: 29,
