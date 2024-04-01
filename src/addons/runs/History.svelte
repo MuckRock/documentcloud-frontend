@@ -9,7 +9,7 @@
   import Loader from "../../common/Loader.svelte";
   import Paginator from "../../common/Paginator.svelte";
   import { baseApiUrl } from "../../api/base.js";
-  import { Run } from "../types";
+  import type { Run } from "../types";
 
   let res: {
     next?: string | null;
