@@ -10,6 +10,7 @@
   export let justify: Justify = "start";
   export let reverse = false;
   export let gap: number = 0.5;
+  export let wrap: boolean = false;
 
   const alignMap: Record<Align, string> = {
     start: "flex-start",
@@ -35,6 +36,7 @@
   {...$$restProps}
   style:display="flex"
   style:flex-direction={directionWithReverse}
+  style:flex-wrap={wrap ? "wrap" : "nowrap"}
   style:align-items={alignMap[align]}
   style:justify-content={justifyMap[justify]}
   style:gap={`${gap}rem`}

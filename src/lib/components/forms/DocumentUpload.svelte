@@ -14,6 +14,7 @@
   import InputText from "../common/InputText.svelte";
   import InputFile from "../common/InputFile.svelte";
   import { removeUnsupportedTypes } from "@/lib/utils/validateFiles";
+  import AccessLevel from "../documents/AccessLevel.svelte";
 
   interface UploadFile {
     index: number;
@@ -25,6 +26,8 @@
 
   export let files: UploadFile[] = [];
 
+  let fileDropActive;
+
   function createUploadFile(file: File, index: number): UploadFile {
     return {
       index,
@@ -34,6 +37,22 @@
       file,
     };
   }
+
+  function addFiles(filesToAdd: FileList) {
+    const supportedFiles = removeUnsupportedTypes([...filesToAdd]);
+    files = files.concat(supportedFiles.map(createUploadFile));
+  }
+  function removeFile(fileToRemove: UploadFile) {
+    files = files.filter((file) => file.index !== fileToRemove.index);
+  }
+  function formatFileType(filetype: string) {
+    if (filetype && filetype.includes("/")) {
+      return filetype.split("/")[1];
+    }
+    return "unknown";
+  }
+
+  let accessLevel;
 
   const projectOptions = [
     { value: "1", label: "FBI Files" },
@@ -53,33 +72,10 @@
       help: $_("uploadOptions.textract"),
     },
   ];
-
-  let fileDropActive;
-  function addFiles(filesToAdd: FileList) {
-    const supportedFiles = removeUnsupportedTypes([...filesToAdd]);
-    files = files.concat(supportedFiles.map(createUploadFile));
-  }
-  function removeFile(fileToRemove: UploadFile) {
-    files = files.filter((file) => file.index !== fileToRemove.index);
-  }
-  function renameFile(index: number, name: string) {
-    files = files.map((file) => {
-      if (file.index === index) {
-        file.name = name;
-      }
-      return file;
-    });
-  }
-  function formatFileType(filetype: string) {
-    if (filetype && filetype.includes("/")) {
-      return filetype.split("/")[1];
-    }
-    return "unknown";
-  }
 </script>
 
 <form>
-  <Flex gap={1} align="stretch">
+  <Flex gap={1} align="stretch" wrap>
     <div class="files">
       <div class="fileList" class:empty={files.length === 0}>
         {#each files as file}
@@ -88,12 +84,7 @@
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
             <div class="fileName">
-              <InputText
-                bind:value={file.name}
-                on:change={() => {
-                  console.log(file);
-                }}
-              />
+              <InputText bind:value={file.name} />
             </div>
             <button
               class="fileRemove"
@@ -125,6 +116,10 @@
     </div>
     <div class="sidebar">
       <Flex gap={1} direction="column">
+        <Field>
+          <FieldLabel>Access Level</FieldLabel>
+          <AccessLevel bind:selected={accessLevel} />
+        </Field>
         <Field>
           <FieldLabel>Projects</FieldLabel>
           <InputSelect name="projects" multiple items={projectOptions} />
@@ -166,14 +161,12 @@
 
 <style>
   .files {
-    max-width: 32rem;
-    flex: 1 0 0;
+    flex: 2 0 20rem;
 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    flex: 1 0 0;
     align-self: stretch;
   }
 
@@ -268,8 +261,7 @@
   }
 
   .sidebar {
-    max-width: 18rem;
-    flex: 0 1 8rem;
+    flex: 1 1 8rem;
 
     display: flex;
     flex-direction: column;
