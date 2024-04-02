@@ -7,7 +7,8 @@
   import Error from "../../common/icons/Error.svelte";
   import Loader from "../../common/Loader.svelte";
   import Paginator from "../../common/Paginator.svelte";
-  import ScheduledEvent, { type Event } from "./ScheduledEvent.svelte";
+  import ScheduledEvent from "./ScheduledEvent.svelte";
+  import type { Event } from "../types";
 
   import { baseApiUrl } from "../../api/base.js";
 
@@ -29,7 +30,7 @@
   $: next_url = res.next ? new URL(res.next) : null;
   $: prev_url = res.previous ? new URL(res.previous) : null;
   $: events = res.results ?? [];
-  $: empty = !loading && res.results?.length === 0;
+  $: empty = !loading && !Boolean(res.results?.length) && !error;
 
   export async function load(url?: string | URL) {
     try {

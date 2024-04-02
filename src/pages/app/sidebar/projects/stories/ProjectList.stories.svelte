@@ -3,7 +3,7 @@
   import { action } from "@storybook/addon-actions";
   import ProjectList from "../ProjectList.svelte";
 
-  import { projects } from "../../../stories/mock";
+  import { projects } from "../../../../../test/handlers/projects";
 
   export const meta = {
     title: "App / Sidebar / Project List",

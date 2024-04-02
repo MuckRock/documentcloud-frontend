@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import ProjectDialog from "../ProjectDialog.svelte";
-  import { project } from "../../../api/fixtures/projects.fixtures";
+  import { project } from "../../../test/fixtures/projects";
   import { action } from "@storybook/addon-actions";
 
   const args = {

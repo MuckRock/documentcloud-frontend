@@ -3,7 +3,7 @@ import { USER_EXPAND, ORG_EXPAND, DEFAULT_EXPAND } from "./common.js";
 import { queryBuilder } from "../util/url.js";
 import { grabAllPages } from "../util/paginate.js";
 import { apiUrl } from "./base.js";
-import { Nullable, Org, User } from "./types";
+import type { Nullable, Org, User } from "./types";
 
 export async function getMe(expand = DEFAULT_EXPAND): Promise<Nullable<User>> {
   // Check that the user is logged in via cookies

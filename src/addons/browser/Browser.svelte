@@ -3,7 +3,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import AddOnList from "./AddOnList.svelte";
-  import type { AddOnListItem } from "../types.ts";
+  import type { AddOnListItem } from "../types";
   import Filters from "./Filters.svelte";
   import Categories from "./Categories.svelte";
   import { buildParams, buildUrl, filter } from "./browser";
@@ -52,7 +52,7 @@
         return data;
       })
       .catch((err) => {
-        error = err;
+        error = err.detail;
         loading = false;
         return {};
       });

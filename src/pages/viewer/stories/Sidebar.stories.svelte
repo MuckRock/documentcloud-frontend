@@ -2,11 +2,11 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Sidebar from "../Sidebar.svelte";
-  import documentFixture from "../fixtures/document.json";
+  import { document } from "../../../test/fixtures/documents";
   import { Document as DocumentState } from "../../../structure/document";
 
   const args = {
-    document: new DocumentState(documentFixture),
+    document: new DocumentState(document),
     loaded: true,
     signedIn: true,
     disableControls: false,
@@ -30,6 +30,6 @@
   name="Uneditable"
   args={{
     ...args,
-    document: new DocumentState({ ...documentFixture, edit_access: false }),
+    document: new DocumentState({ ...document, edit_access: false }),
   }}
 />

@@ -3,11 +3,11 @@
 
   import DocumentThumbnail from "../../DocumentThumbnail.svelte";
 
-  import mockDocument from "../fixtures/document.json";
+  import { document } from "../../../../test/fixtures/documents";
   import { Document } from "../../../../structure/document";
 
   const args = {
-    document: new Document(mockDocument),
+    document: new Document(document),
     embed: false,
     dialog: false,
     noteCount: 0,
@@ -30,7 +30,7 @@
 <Story name="Viewable" {args} />
 <Story
   name="Unviewable"
-  args={{ ...args, document: { ...document, viewable: false } }}
+  args={{ ...args, document: { ...args.document, viewable: false } }}
 />
 <Story name="Embed" args={{ ...args, embed: true }} />
 <Story name="Dialog" args={{ ...args, dialog: true }} />

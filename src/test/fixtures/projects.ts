@@ -1,17 +1,42 @@
-import type { Page } from "../../types/common";
-import type { Project } from "../../types/project";
+import type { Page, Project } from "../../api/types";
 
-export const project: Project = {
-  id: 200006,
-  created_at: "2022-03-01T15:55:05.527749Z",
-  description: "test",
-  edit_access: false,
-  add_remove_access: false,
+export let project: Project = {
+  id: 29,
+  created_at: "2020-10-23T15:59:33.779478Z",
+  description: "",
+  edit_access: null,
+  add_remove_access: null,
   private: false,
-  slug: "add-on-test",
-  title: "Add-on test",
-  updated_at: "2022-03-01T15:55:05.536919Z",
-  user: 100003,
+  slug: "miltary-contractors",
+  title: "Miltary Contractors",
+  updated_at: "2020-10-23T15:59:33.896698Z",
+  user: 1,
+};
+
+export let editableProject: Project = {
+  id: 29,
+  created_at: "2020-10-23T15:59:33.779478Z",
+  description: "",
+  edit_access: true,
+  add_remove_access: null,
+  private: false,
+  slug: "miltary-contractors",
+  title: "Miltary Contractors",
+  updated_at: "2020-10-23T15:59:33.896698Z",
+  user: 1,
+};
+
+export let privateProject: Project = {
+  id: 29,
+  created_at: "2020-10-23T15:59:33.779478Z",
+  description: "",
+  edit_access: true,
+  add_remove_access: null,
+  private: true,
+  slug: "miltary-contractors",
+  title: "Miltary Contractors",
+  updated_at: "2020-10-23T15:59:33.896698Z",
+  user: 1,
 };
 
 export const projectList: Page<Project> = {
@@ -30,6 +55,7 @@ export const projectList: Page<Project> = {
       title: "Add-on test",
       updated_at: "2022-03-01T15:55:05.536919Z",
       user: 100003,
+      pinned: true,
     },
     {
       id: 200008,

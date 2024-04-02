@@ -3,7 +3,7 @@
   import DocumentThumbnail from "../DocumentThumbnail.svelte";
 
   import { Document } from "../../../structure/document.js";
-  import document from "../fixtures/document.json";
+  import { document } from "../../../test/fixtures/documents";
 
   export const meta = {
     title: "App / Documents / Document Thumbnail",

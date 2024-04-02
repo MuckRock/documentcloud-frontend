@@ -5,7 +5,7 @@
   import HelpMenu from "./HelpMenu.svelte";
   import UserMenu from "./UserMenu.svelte";
   import OrgMenu from "./OrgMenu.svelte";
-  import { User, Org, isOrg } from "../../../api/types/orgAndUser";
+  import { type User, type Org, isOrg } from "../../../api/types/orgAndUser";
 
   let user: User | null = null;
   let org: Org | null = null;

@@ -1,9 +1,11 @@
-<script context="module">
+<script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import Documents from "../Documents.svelte";
 
   import { layout } from "../../../manager/layout.js";
-  import * as mock from "./mock";
+  import { users, organizations } from "../../../test/handlers/accounts";
+  import { projects } from "../../../test/handlers/projects";
+  import { runs } from "../../../test/handlers/addons";
 
   export const meta = {
     title: "App / Documents / Documents",
@@ -22,6 +24,14 @@
   };
 
   let container;
+
+  const handlers = [
+    users.data,
+    users.me,
+    organizations.data,
+    projects.data,
+    runs.empty,
+  ];
 </script>
 
 <Template let:args>
@@ -35,13 +45,7 @@
   {args}
   parameters={{
     msw: {
-      handlers: [
-        mock.users.data,
-        mock.users.me,
-        mock.organizations.data,
-        mock.projects.data,
-        mock.runs.data,
-      ],
+      handlers,
     },
   }}
 />
@@ -51,13 +55,7 @@
   args={{ ...args, embed: true }}
   parameters={{
     msw: {
-      handlers: [
-        mock.users.data,
-        mock.users.me,
-        mock.organizations.data,
-        mock.projects.data,
-        mock.runs.data,
-      ],
+      handlers,
     },
   }}
 />
@@ -67,13 +65,7 @@
   args={{ ...args, dialog: true }}
   parameters={{
     msw: {
-      handlers: [
-        mock.users.data,
-        mock.users.me,
-        mock.organizations.data,
-        mock.projects.data,
-        mock.runs.data,
-      ],
+      handlers,
     },
   }}
 />
