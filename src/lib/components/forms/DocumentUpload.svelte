@@ -1,8 +1,10 @@
 <script lang="ts">
+  import type { access } from "$lib/api/types";
   import { filesize } from "filesize";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
 
+  import AccessLevel from "./AccessLevel.svelte";
   import Button from "../common/Button.svelte";
   import Dropzone from "./Dropzone.svelte";
   import Empty from "../common/Empty.svelte";
@@ -14,8 +16,8 @@
   import InputText from "./InputText.svelte";
   import Premium from "../common/Premium.svelte";
   import Switch from "$lib/components/common/Switch.svelte";
+
   import { removeUnsupportedTypes } from "@/lib/utils/validateFiles";
-  import AccessLevel from "../documents/AccessLevel.svelte";
 
   interface UploadFile {
     index: number;
@@ -27,7 +29,35 @@
 
   export let files: UploadFile[] = [];
 
-  let fileDropActive;
+  let form: HTMLFormElement;
+
+  let fileDropActive: boolean;
+
+  let accessLevel: access;
+
+  const projectOptions = [
+    { value: "1", label: "FBI Files" },
+    { value: "2", label: "1033 Program" },
+  ];
+
+  const ocrEngineOptions = [
+    {
+      value: "tess4",
+      label: "Tesseract",
+      help: $_("uploadOptions.tesseract"),
+    },
+    {
+      value: "textract",
+      label: "Textract",
+      help: $_("uploadOptions.textract"),
+    },
+  ];
+
+  let ocrEngine = ocrEngineOptions[0];
+
+  export function values() {
+    return Object.fromEntries(new FormData(form));
+  }
 
   function createUploadFile(file: File, index: number): UploadFile {
     return {
@@ -43,39 +73,20 @@
     const supportedFiles = removeUnsupportedTypes([...filesToAdd]);
     files = files.concat(supportedFiles.map(createUploadFile));
   }
+
   function removeFile(fileToRemove: UploadFile) {
     files = files.filter((file) => file.index !== fileToRemove.index);
   }
+
   function formatFileType(filetype: string) {
     if (filetype && filetype.includes("/")) {
       return filetype.split("/")[1];
     }
     return "unknown";
   }
-
-  let accessLevel;
-
-  const projectOptions = [
-    { value: "1", label: "FBI Files" },
-    { value: "2", label: "1033 Program" },
-  ];
-
-  let ocrEngine: string | Record<string, string> = "tess4";
-  const ocrEngineOptions = [
-    {
-      value: "tess4",
-      label: "Tesseract",
-      help: $_("uploadOptions.tesseract"),
-    },
-    {
-      value: "textract",
-      label: "Textract",
-      help: $_("uploadOptions.textract"),
-    },
-  ];
 </script>
 
-<form>
+<form bind:this={form} method="post" enctype="multipart/form-data">
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
       <div class="fileList" class:empty={files.length === 0}>
@@ -84,7 +95,7 @@
             <p class="fileInfo">
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
-            <div class="fileName">
+            <div class="title">
               <InputText bind:value={file.name} />
             </div>
             <button
@@ -107,7 +118,7 @@
             <p class="drop-instructions">Drag and drop files here</p>
             <Flex align="center" justify="center">
               <span class="drop-instructions-or">or</span>
-              <InputFile multiple onFileSelect={addFiles}
+              <InputFile name="files" multiple onFileSelect={addFiles}
                 ><File16 /> Select Files</InputFile
               >
             </Flex>
@@ -119,7 +130,7 @@
       <Flex gap={1} direction="column">
         <Field>
           <FieldLabel>Access Level</FieldLabel>
-          <AccessLevel bind:selected={accessLevel} />
+          <AccessLevel name="access" bind:selected={accessLevel} />
         </Field>
         <Field>
           <FieldLabel>Projects</FieldLabel>
@@ -129,18 +140,16 @@
         <Field>
           <FieldLabel>OCR Engine</FieldLabel>
           <InputSelect
-            name="ocr_engine"
+            name="_ocr_engine_json"
             items={ocrEngineOptions}
             bind:value={ocrEngine}
           />
           <p slot="help">
-            {#if typeof ocrEngine !== "string"}
-              {@html ocrEngine?.help}
-            {/if}
+            {@html ocrEngine.help}
           </p>
         </Field>
         <Field inline>
-          <input type="checkbox" />
+          <input type="checkbox" name="force_ocr" />
           <FieldLabel>Force OCR</FieldLabel>
         </Field>
         <hr class="divider" />
@@ -163,7 +172,8 @@
           </Field>
         </Premium>
       </Flex>
-      <Button full mode="primary"><Upload16 />Begin Upload</Button>
+      <Button type="submit" full mode="primary"><Upload16 />Begin Upload</Button
+      >
     </div>
   </Flex>
 </form>
@@ -222,7 +232,7 @@
     text-transform: uppercase;
   }
 
-  .fileName {
+  .title {
     flex: 1 1 auto;
   }
 

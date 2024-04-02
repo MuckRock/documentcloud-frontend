@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { access } from "$lib/api/types";
   import {
     Globe24,
     Lock24,
@@ -8,7 +9,7 @@
   import Flex from "../common/Flex.svelte";
 
   interface Level {
-    value: "private" | "organization" | "public";
+    value: access;
     name: string;
     description: string;
     icon: typeof SvgComponent;
@@ -35,27 +36,27 @@
     },
   ];
 
-  export let name: string = null;
-  export let selected: "public" | "organization" | "private" = levels[0].value;
+  export let name: string;
+  export let selected: access = levels[0].value;
 </script>
 
 <Flex direction="column" gap={0.5}>
-  {#each levels as { value, name, description, icon }}
-    <div class="option" class:selected={value === selected}>
+  {#each levels as level}
+    <div class="option" class:selected={level.value === selected}>
       <input
         class="sr-only"
         type="radio"
         {name}
-        id={value}
+        id={level.value}
         bind:group={selected}
-        {value}
+        value={level.value}
       />
-      <label for={value} class="detail">
+      <label for={level.value} class="detail">
         <Flex gap={0.5}>
-          <svelte:component this={icon} />
+          <svelte:component this={level.icon} />
           <Flex direction="column" gap={0.125}>
             <p class="name">{name}</p>
-            <p class="description">{description}</p>
+            <p class="description">{level.description}</p>
           </Flex>
         </Flex>
       </label>

@@ -1,14 +1,19 @@
 <script lang="ts">
+  import type { PageData, ActionData } from "./$types";
   import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
   import type { User } from "@/api/types/orgAndUser";
 
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
 
   import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
-  import { create, upload, process } from "$lib/api/documents";
 
   const me: Writable<User> = getContext("me");
+
+  export let data: PageData;
+  export let form: ActionData;
+
+  let uploader: DocumentUpload;
 
   let files: FileList;
   let documents: Document[] = [];
@@ -20,10 +25,15 @@
       access: "private",
     } as Document;
   });
+
+  onMount(() => {
+    // @ts-ignore
+    window.uploader = uploader;
+  });
 </script>
 
 <svelte:head>
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<DocumentUpload />
+<DocumentUpload bind:this={uploader} />

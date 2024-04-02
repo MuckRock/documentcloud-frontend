@@ -9,9 +9,6 @@
   $: isPremium = isOrg(org)
     ? ["Organization", "Professional"].includes(org.plan)
     : false;
-  $: {
-    console.log({ isPremium });
-  }
 </script>
 
 {#if isPremium}
