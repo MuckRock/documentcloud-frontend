@@ -1,10 +1,10 @@
-<script context="module">
+<script lang="ts" context="module">
   import { Story } from "@storybook/addon-svelte-csf";
   import AllText from "../AllText.svelte";
 
-  import { Document } from "@/structure/document.js";
-  import { viewer } from "@/viewer/viewer.js";
-  import document from "../fixtures/document.json";
+  import { Document } from "../../../structure/document.js";
+  import { viewer } from "../../../viewer/viewer.js";
+  import { document } from "../../../test/fixtures/documents";
 
   viewer.document = new Document(document);
 

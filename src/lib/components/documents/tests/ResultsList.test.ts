@@ -18,7 +18,11 @@ const empty: DocumentResults = {
 
 describe("ResultsList", () => {
   it("shows results", () => {
-    render(ResultsList, { results });
+    render(ResultsList, {
+      results: results.results,
+      count: results.count,
+      next: results.next,
+    });
 
     const headings = screen.getAllByRole("heading");
 
@@ -32,7 +36,7 @@ describe("ResultsList", () => {
   });
 
   it("shows a fallback for no results", () => {
-    render(ResultsList, { results: empty });
+    render(ResultsList, { results: empty.results });
 
     const heading = screen.getByRole("heading");
 
@@ -40,7 +44,11 @@ describe("ResultsList", () => {
   });
 
   it("populates $selected store", () => {
-    render(ResultsList, { results });
+    render(ResultsList, {
+      results: results.results,
+      count: results.count,
+      next: results.next,
+    });
 
     expect(get(selected)).toEqual([]);
 

@@ -3,7 +3,7 @@
 
   import AddOnPin from "../AddOnPin.svelte";
   import AddOnPopularity from "../Popularity.svelte";
-  import type { AddOnListItem } from "../types.js";
+  import type { AddOnListItem } from "../types";
   import PremiumBadge from "../../premium-credits/PremiumBadge.svelte";
 
   export let addon: AddOnListItem;

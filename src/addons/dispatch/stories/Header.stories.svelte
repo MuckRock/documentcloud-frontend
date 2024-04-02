@@ -3,7 +3,9 @@
 
   import Header from "../Header.svelte";
 
-  import * as addons from "../../fixtures/addons.json";
+  import { addonsList } from "../../../test/fixtures/addons";
+
+  const addons = addonsList.results;
 
   export const meta = {
     title: "Add-Ons / Dispatch / Header",

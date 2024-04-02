@@ -66,7 +66,11 @@
 </script>
 
 {#if show}
-  <span on:mouseenter={handleMouseOver} on:mouseleave={handleMouseOut}>
+  <span
+    on:mouseenter={handleMouseOver}
+    on:mouseleave={handleMouseOut}
+    role="tooltip"
+  >
     <div
       bind:this={tooltip}
       class="tooltip"
