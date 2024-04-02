@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "provider_name": "DocumentCloud",
+  "provider_url": "https://www.documentcloud.org",
+  "cache_age": 300,
+  "title": "Lefler Thesis",
+  "width": 700,
+  "height": 905,
+  "html": "<iframe\n  src=\"https://embed.documentcloud.org/documents/282753-lefler-thesis/?embed=1\"\n  title=\"Lefler Thesis (Hosted by DocumentCloud)\"\n  width=\"700\"\n  height=\"905\"\n  style=\"border: 1px solid #aaa;\"\n  sandbox=\"allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox\"\n></iframe>\n",
+  "type": "rich"
+}
