@@ -29,7 +29,7 @@
   import PageToolbar from "../common/PageToolbar.svelte";
   import Search from "../Search.svelte";
 
-  import { addons } from "@/addons/browser/stories/mockData";
+  import { addons } from "@/tests/handlers/addons";
 
   let results = documents as DocumentResults;
 

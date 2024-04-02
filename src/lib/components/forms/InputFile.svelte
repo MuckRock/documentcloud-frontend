@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ComponentProps } from "svelte";
   import { DOCUMENT_TYPES } from "@/config/config.js";
-  import Button from "./Button.svelte";
+  import Button from "$lib/components/common/Button.svelte";
 
   export let name: string = null;
   export let onFileSelect: (files: FileList) => void;

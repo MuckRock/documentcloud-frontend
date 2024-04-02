@@ -3,7 +3,7 @@
   import InputSelect from "../InputSelect.svelte";
 
   export const meta = {
-    title: "Components / Common / Inputs / Select",
+    title: "Components / Forms / Inputs / Select",
     component: InputSelect,
     tags: ["autodocs"],
   };

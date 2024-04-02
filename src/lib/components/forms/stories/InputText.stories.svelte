@@ -3,7 +3,7 @@
   import InputText from "../InputText.svelte";
 
   export const meta = {
-    title: "Components / Common / Inputs / Text",
+    title: "Components / Forms / Inputs / Text",
     component: InputText,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

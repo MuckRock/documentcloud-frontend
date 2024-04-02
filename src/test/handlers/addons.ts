@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { baseApiUrl } from "../../api/base.js";
+
 import {
   addonsList,
   run,
@@ -7,6 +7,7 @@ import {
   eventsList,
   scheduled as klaxon,
 } from "../fixtures/addons";
+
 import {
   createApiUrl,
   dataHandler,
@@ -14,7 +15,6 @@ import {
   generateAllHandler,
   generateGetHandler,
 } from "./utils";
-import { emptyList } from "../fixtures/common";
 
 /* Mock Handlers */
 

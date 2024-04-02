@@ -1,6 +1,6 @@
 <script lang="ts">
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
-  import Flex from "./Flex.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
 
   export let required = false;
   export let premium = false;

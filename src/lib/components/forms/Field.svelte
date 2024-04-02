@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Flex from "./Flex.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
 
   export let inline = false;
 </script>
