@@ -1,6 +1,6 @@
 import { test, describe } from "vitest";
 
-import * as users from "./users.js";
+import * as accounts from "./accounts";
 
 describe("users and orgs tests", () => {
   test.todo("users.get");
