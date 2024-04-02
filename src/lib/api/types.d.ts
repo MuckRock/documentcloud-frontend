@@ -105,7 +105,6 @@ export interface Document {
   note_highlights?: Record<string, Highlight[]>;
 }
 
-// export type DocumentResults = Page<Document>;
 export interface DocumentResults extends Page<Document> {}
 
 export interface Note {
@@ -134,6 +133,14 @@ export interface Section {
 }
 
 export type SectionResults = Page<Section>;
+
+export interface SearchOptions {
+  hl?: boolean;
+  per_page?: number;
+  cursor?: string;
+  expand?: string;
+  version?: number | string;
+}
 
 export interface OEmbed {
   version: "1.0";

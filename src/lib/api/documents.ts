@@ -1,7 +1,7 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
-import type { Document, sizes } from "./types";
+import type { Document, DocumentResults, SearchOptions, sizes } from "./types";
 
 import { error } from "@sveltejs/kit";
 
@@ -10,17 +10,29 @@ import { isOrg } from "@/api/types/orgAndUser";
 import { APP_URL, BASE_API_URL } from "@/config/config.js";
 import { isErrorCode } from "../utils";
 
-/** Search documents */
+/**
+ * Search documents
+ * https://www.documentcloud.org/help/search/
+ *
+ *  */
 export async function search(
   query = "",
-  highlight = false,
+  options: SearchOptions = {
+    hl: Boolean(query),
+    per_page: 25,
+    cursor: "",
+    version: "2.0",
+  },
   fetch = globalThis.fetch,
-) {
+): Promise<DocumentResults> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
   endpoint.searchParams.set("q", query);
-  endpoint.searchParams.set("hl", String(highlight));
+
+  for (const [k, v] of Object.entries(options)) {
+    endpoint.searchParams.set(k, String(v));
+  }
 
   const resp = await fetch(endpoint, { credentials: "include" });
 
