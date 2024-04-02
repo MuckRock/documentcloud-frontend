@@ -7,6 +7,7 @@
   export const meta = {
     title: "Components / Sidebar / Item",
     component: SidebarItem,
+    tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 
