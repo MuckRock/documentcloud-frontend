@@ -3,7 +3,9 @@
 
   import Premium from "../Premium.svelte";
 
-  import addons from "../../fixtures/addons.json";
+  import { addonsList } from "../../../test/fixtures/addons";
+
+  const addons = addonsList.results;
 
   const individualOrg = {
     id: 4,

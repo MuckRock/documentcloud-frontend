@@ -1,13 +1,7 @@
 <script context="module" lang="ts">
-  import type { Event } from "../runs/ScheduledEvent.svelte";
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "disabled", selection: null });
-
-  export interface eventOptions {
-    name: string;
-    events: string[];
-  }
 </script>
 
 <script lang="ts">
@@ -16,11 +10,12 @@
   import { _ } from "svelte-i18n";
 
   import { autofield } from "./fields/index.js";
+  import type { Event, EventOptions } from "../types";
   import Button from "../../common/Button.svelte";
 
   export let properties: any = {};
   export let required = [];
-  export let eventOptions: eventOptions;
+  export let eventOptions: EventOptions;
   export let event: Event = null;
 
   const ajv = new Ajv();

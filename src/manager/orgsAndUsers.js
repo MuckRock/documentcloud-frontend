@@ -210,12 +210,12 @@ export async function inMyOrg(orgId, myId) {
   if (!orgId) return [];
   const users = await getUsers({ orgIds: [orgId] });
   // Sort by admin status, then username
-  const adminUsers = users
-    .filter((u) => u.admin_organizations?.includes(orgId))
-    .sort(alphabetizeUsers);
-  const regularUsers = users
-    .filter((u) => !adminUsers.includes(u))
-    .sort(alphabetizeUsers);
+  const adminUsers =
+    users
+      ?.filter((u) => u.admin_organizations?.includes(orgId))
+      .sort(alphabetizeUsers) ?? [];
+  const regularUsers =
+    users?.filter((u) => !adminUsers.includes(u)).sort(alphabetizeUsers) ?? [];
   // Remove me from the user list
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
 }

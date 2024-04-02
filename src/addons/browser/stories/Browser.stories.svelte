@@ -4,7 +4,7 @@
   import Browser from "../Browser.svelte";
 
   const args = { visible: true };
-  import { addons } from "./mockData";
+  import { addons } from "../../../test/handlers/addons";
 
   export const meta = {
     title: "Add-Ons / Browser",

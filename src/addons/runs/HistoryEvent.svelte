@@ -1,24 +1,3 @@
-<script context="module" lang="ts">
-  import Button from "../../common/Button.svelte";
-  import type { AddOnListItem } from "../types.ts";
-  // https://api.www.documentcloud.org/api/addon_runs/?expand=addon
-  export interface Run {
-    uuid: string;
-    addon: AddOnListItem;
-    user: number;
-    status: "success" | "failure" | "queued" | "in_progress";
-    progress: number;
-    message: string;
-    file_url?: string | null;
-    dismissed: boolean;
-    rating: number;
-    comment: string;
-    created_at: string;
-    updated_at: string;
-    credits_spent?: number;
-  }
-</script>
-
 <script lang="ts">
   import {
     CheckCircle24,
@@ -28,9 +7,11 @@
     Question24,
     Sync24,
   } from "svelte-octicons";
+  import Button from "../../common/Button.svelte";
   import Price from "../../premium-credits/Price.svelte";
+  import type { Run } from "../types";
 
-  export let run;
+  export let run: Run;
 
   $: ranAt = new Date(run.created_at);
 </script>

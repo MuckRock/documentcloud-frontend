@@ -1,7 +1,8 @@
-<script context="module">
+<script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import SearchBar from "../SearchBar.svelte";
-  import * as mock from "./mock";
+  import { organizations, users } from "../../../test/handlers/accounts";
+  import { projects } from "../../../test/handlers/projects";
 
   export const meta = {
     title: "App / Search / Search Bar",
@@ -9,6 +10,8 @@
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
+
+  const handlers = [users.data, organizations.data, projects.data];
 </script>
 
 <Template let:args>
@@ -22,7 +25,7 @@
   args={{ search: "project:example-project-123" }}
   parameters={{
     msw: {
-      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+      handlers,
     },
   }}
 />
@@ -32,7 +35,7 @@
   args={{ compact: true, search: "project:example-project-123" }}
   parameters={{
     msw: {
-      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+      handlers,
     },
   }}
 />
@@ -42,7 +45,7 @@
   args={{ example: true, search: "project:example-project-123" }}
   parameters={{
     msw: {
-      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+      handlers,
     },
   }}
 />
@@ -52,7 +55,7 @@
   args={{ dialog: true, search: "user:example-user-123" }}
   parameters={{
     msw: {
-      handlers: [mock.users.data, mock.organizations.data, mock.projects.data],
+      handlers,
     },
   }}
 />

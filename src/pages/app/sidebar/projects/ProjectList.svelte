@@ -3,7 +3,7 @@
   import { _ } from "svelte-i18n";
   import equal from "fast-deep-equal";
 
-  import type { Project, User } from "../../../../api/types";
+  import type { User } from "../../../../api/types";
   import { getProjects } from "../../../../api/project";
   import { projectUrl } from "../../../../search/search.js";
   import { Project as ProjectStructure } from "../../../../structure/project.js";

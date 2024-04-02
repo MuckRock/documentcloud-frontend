@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { AddOnListItem } from "../types.ts";
+  import type { AddOnListItem } from "../types";
   import BackArrow from "../../common/icons/BackArrow.svelte";
   import Button from "../../common/Button.svelte";
   import GitHubIcon from "svelte-octicons/lib/MarkGithub16.svelte";
@@ -13,7 +13,7 @@
 
   export let addon: AddOnListItem;
 
-  $: author = addon.repository.split("/")[0];
+  $: author = addon.repository?.split("/")[0];
   $: isPremium = addon?.parameters.categories?.includes("premium") ?? false;
 
   async function onShare() {

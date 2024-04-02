@@ -6,7 +6,7 @@
     mockGetOrgsList,
     mockChangeOrg,
     mockGetOrg,
-  } from "./mockData";
+  } from "../../../../test/handlers/accounts";
 
   import AccountNavigation from "../AccountNavigation.svelte";
 

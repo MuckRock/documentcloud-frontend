@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import History from "../History.svelte";
-  import { history } from "./mockData";
+  import { history } from "../../../test/handlers/addons";
 
   const args = {};
 

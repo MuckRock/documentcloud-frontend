@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { writable, type Writable } from "svelte/store";
-  import type { AddOnListItem } from "./types.ts";
+  import type { AddOnListItem } from "./types";
 
   export const pinned: Writable<AddOnListItem[]> = writable([]);
 </script>

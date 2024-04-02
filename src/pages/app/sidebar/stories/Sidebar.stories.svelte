@@ -2,7 +2,9 @@
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import SidebarComponent from "../Sidebar.svelte";
 
-  import * as mock from "../../stories/mock";
+  import { me } from "../../../../test/handlers/accounts";
+  import { projects } from "../../../../test/handlers/projects";
+  import { addons } from "../../../../test/handlers/addons";
 
   export const meta = {
     title: "App / Sidebar",
@@ -10,7 +12,7 @@
     parameters: {
       layout: "fullscreen",
       msw: {
-        handlers: [mock.me.data, mock.projects.data, mock.addons.data],
+        handlers: [me.data, projects.data, addons.data],
       },
     },
     argTypes: {
@@ -33,5 +35,5 @@
 <Story
   name="Logged Out"
   {args}
-  parameters={{ msw: { handlers: [mock.me.error] } }}
+  parameters={{ msw: { handlers: [me.error] } }}
 />

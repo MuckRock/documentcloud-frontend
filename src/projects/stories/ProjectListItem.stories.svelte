@@ -2,10 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import ProjectListItem from "../ProjectListItem.svelte";
-  import {
-    project,
-    editableProject,
-  } from "../../api/fixtures/projects.fixtures";
+  import { project, editableProject } from "../../test/fixtures/projects";
 
   const args = { project };
 

@@ -4,10 +4,10 @@
 
   import RevisionIcon from "../RevisionIcon.svelte";
 
-  import documentFixture from "../../pages/app/test/fixtures/document.json";
+  import { document } from "../../test/fixtures/documents";
 
   const args = {
-    revisions: documentFixture.revisions,
+    revisions: document.revisions,
     showCount: true,
   };
 

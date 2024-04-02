@@ -3,7 +3,7 @@
   import Document from "../Document.svelte";
 
   import * as structure from "../../../structure/document.js";
-  import document from "../fixtures/document.json";
+  import { document } from "../../../test/fixtures/documents";
 
   export const meta = {
     title: "App / Documents / Document",
