@@ -11,7 +11,7 @@
 
 <script lang="ts">
   import Select from "svelte-select";
-  import { ChevronDown16, X16 } from "svelte-octicons";
+  import { ChevronDown16, X12, X16 } from "svelte-octicons";
 
   export let name: string;
   export let required = false;
@@ -31,7 +31,6 @@
   {placeholder}
   bind:value
   showChevron
-  --height="2.125rem"
   --background="var(--White, #fff)"
   --border="1px solid var(--gray-3, #99a8b3)"
   --border-radius="0.5rem"
@@ -41,11 +40,17 @@
   --item-is-active-bg="var(--blue-3, #4294f0)"
   --list-shadow="var(--shadow)"
   --list-border="1px solid var(--gray-2, #d8dee2)"
-  --value-container-padding="0"
+  --multi-item-bg="var(--blue-1, #eef3f9)"
+  --multi-item-color="var(--blue-5, #053775)"
+  --multi-item-clear-icon-color="var(--blue-5, #053775)"
+  --multi-item-outline="var(--blue-2, #b5ceed)"
+  --multi-select-input-margin="0"
+  --multi-select-padding="0 0 0 0.75rem"
   class="select elevated sourceCodePro gray-4"
 >
   <ChevronDown16 slot="chevron-icon" />
   <X16 slot="clear-icon" />
+  <X12 slot="multi-clear-icon" fill="var(--multi-item-clear-icon-color)" />
   <div slot="item" let:item>
     <p>{item.label}</p>
   </div>

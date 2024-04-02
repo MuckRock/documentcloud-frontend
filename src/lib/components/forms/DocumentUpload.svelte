@@ -132,7 +132,7 @@
             items={ocrEngineOptions}
             bind:value={ocrEngine}
           />
-          <p class="ocrEngineHelp" slot="help">
+          <p slot="help">
             {#if typeof ocrEngine !== "string"}
               {@html ocrEngine?.help}
             {/if}
@@ -147,10 +147,18 @@
           <Field inline>
             <Switch name="revision_control" />
             <FieldLabel premium>Revision Control</FieldLabel>
+            <p slot="help">
+              All previous versions to the document will be preserved and
+              available for download.
+            </p>
           </Field>
           <Field inline slot="basic">
             <Switch name="revision_control" disabled />
             <FieldLabel premium>Revision Control</FieldLabel>
+            <p slot="help">
+              All previous versions to the document will be preserved and
+              available for download.
+            </p>
           </Field>
         </Premium>
       </Flex>
@@ -273,9 +281,5 @@
     width: 100%;
     border: none;
     border-top: 1px solid var(--gray-2, #d8dee2);
-  }
-
-  .ocrEngineHelp {
-    font-size: var(--font-xs);
   }
 </style>

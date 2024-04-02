@@ -7,6 +7,7 @@
 <Flex
   direction={inline ? "row" : "column"}
   align={inline ? "center" : "stretch"}
+  wrap={inline}
 >
   <slot />
   {#if $$slots.help}<div class="help"><slot name="help" /></div>{/if}
@@ -14,7 +15,8 @@
 
 <style>
   .help {
-    font-size: var(--font-s);
+    flex: 1 1 100%;
+    font-size: var(--font-xs);
     color: var(--gray-4);
   }
 </style>

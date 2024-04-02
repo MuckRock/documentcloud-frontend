@@ -52,7 +52,7 @@
     right: 1.5em;
     transition: transform 0.3s;
     border-radius: 0.75em;
-    box-shadow: 0 0px 0px 1px var(--gray-2);
+    box-shadow: 0 1px 4px 0px var(--gray-4);
   }
 
   .switch button[aria-checked="true"] {
@@ -63,6 +63,7 @@
   .switch button[aria-checked="true"]::before {
     transform: translateX(1.3em);
     transition: transform 0.3s;
+    box-shadow: 0 1px 4px 0px var(--blue-4);
   }
 
   .switch button:focus {
