@@ -2,17 +2,18 @@
   import { filesize } from "filesize";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
-  import Dropzone from "../common/Dropzone.svelte";
-  import Flex from "../common/Flex.svelte";
-  import Field from "../common/Field.svelte";
-  import FieldLabel from "../common/FieldLabel.svelte";
-  import InputSelect from "../common/InputSelect.svelte";
-  import Switch from "../common/Switch.svelte";
-  import Premium from "../common/Premium.svelte";
+
   import Button from "../common/Button.svelte";
+  import Dropzone from "./Dropzone.svelte";
   import Empty from "../common/Empty.svelte";
-  import InputText from "../common/InputText.svelte";
-  import InputFile from "../common/InputFile.svelte";
+  import Field from "./Field.svelte";
+  import FieldLabel from "./FieldLabel.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import InputFile from "./InputFile.svelte";
+  import InputSelect from "./InputSelect.svelte";
+  import InputText from "./InputText.svelte";
+  import Premium from "../common/Premium.svelte";
+  import Switch from "$lib/components/common/Switch.svelte";
   import { removeUnsupportedTypes } from "@/lib/utils/validateFiles";
   import AccessLevel from "../documents/AccessLevel.svelte";
 
