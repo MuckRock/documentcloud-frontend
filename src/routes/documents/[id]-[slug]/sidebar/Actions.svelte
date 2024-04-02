@@ -44,14 +44,14 @@
     </SignedIn>
   </SidebarItem>
 
-  <SidebarItem>
+  <SidebarItem href={revisions}>
     <History16 />
-    <a href={revisions}>Revision History</a>
+    Revision History
   </SidebarItem>
 
-  <SidebarItem>
+  <SidebarItem href={pdf} download>
     <Download16 />
-    <a target="_blank" rel="noopener noreferrer" href={pdf}>Download PDF</a>
+    Download File
   </SidebarItem>
 </Flex>
 
@@ -61,19 +61,19 @@
     Share &hellip;
   </SidebarItem>
 
-  <SidebarItem>
+  <SidebarItem href={annotate}>
     <Comment16 />
-    <a href={annotate}>Add a note &hellip;</a>
+    Add a note &hellip;
   </SidebarItem>
 
-  <SidebarItem>
+  <SidebarItem href={redact}>
     <EyeClosed16 />
-    <a href={redact}>Redact &hellip;</a>
+    Redact &hellip;
   </SidebarItem>
 
-  <SidebarItem>
+  <SidebarItem href={modify}>
     <Apps16 />
-    <a href={modify}>Modify Pages &hellip;</a>
+    Modify Pages &hellip;
   </SidebarItem>
 </Flex>
 

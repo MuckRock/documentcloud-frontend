@@ -2,11 +2,25 @@
   export let disabled = false;
   export let small = false;
   export let hover = false;
+  // handling link behavior
   export let href: string = undefined;
+  export let target: string = undefined;
+  export let rel: string = undefined;
+  export let download: boolean | string = undefined;
 </script>
 
 {#if href}
-  <a {href} class="container" class:disabled class:small on:click on:keydown>
+  <a
+    {href}
+    {target}
+    {rel}
+    {download}
+    class="container"
+    class:disabled
+    class:small
+    on:click
+    on:keydown
+  >
     <slot />
   </a>
 {:else}
