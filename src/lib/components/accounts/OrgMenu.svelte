@@ -63,18 +63,9 @@
     width: 2rem;
   }
 
-  /* Small styles */
   @media (max-width: 64rem) {
-    .avatar {
-      height: 1.5rem;
-      width: 1.5rem;
-    }
     .name {
-      font-size: var(--font-l, 1.25rem);
-    }
-    .premium {
-      height: 1.5rem;
-      width: 1.5rem;
+      display: none;
     }
   }
 </style>

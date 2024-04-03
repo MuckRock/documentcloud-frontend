@@ -38,7 +38,7 @@
 <Dropdown id={dropdownId} position="right">
   <SidebarItem slot="title">
     <img src={user.avatar_url} alt="Avatar" class="avatar" />
-    {user.name}
+    <span class="name">{user.name}</span>
     <div class="dropdownArrow"><ChevronDown16 /></div>
   </SidebarItem>
   <Menu>
@@ -68,5 +68,11 @@
   .dropdownArrow {
     display: flex;
     align-items: center;
+  }
+
+  @media (max-width: 64rem) {
+    .name {
+      display: none;
+    }
   }
 </style>
