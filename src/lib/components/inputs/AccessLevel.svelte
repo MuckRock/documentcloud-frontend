@@ -10,7 +10,7 @@
 
   interface Level {
     value: access;
-    name: string;
+    title: string;
     description: string;
     icon: typeof SvgComponent;
   }
@@ -18,19 +18,19 @@
   const levels: Level[] = [
     {
       value: "private",
-      name: "Private",
+      title: "Private",
       description: "Documents will only be visible to you",
       icon: Lock24,
     },
     {
       value: "organization",
-      name: "Organization",
+      title: "Organization",
       description: "Documents will only be visible to your organization",
       icon: Organization24,
     },
     {
       value: "public",
-      name: "Public",
+      title: "Public",
       description: "Documents will be publicly visible to everyone",
       icon: Globe24,
     },
@@ -38,9 +38,10 @@
 
   export let name: string;
   export let selected: access = levels[0].value;
+  export let direction: "column" | "row" = "column";
 </script>
 
-<Flex direction="column" gap={0.5}>
+<Flex {direction} gap={0.5}>
   {#each levels as level}
     <div class="option" class:selected={level.value === selected}>
       <input
@@ -55,7 +56,7 @@
         <Flex gap={0.5}>
           <svelte:component this={level.icon} />
           <Flex direction="column" gap={0.125}>
-            <p class="name">{level.name}</p>
+            <p class="title">{level.title}</p>
             <p class="description">{level.description}</p>
           </Flex>
         </Flex>
@@ -66,6 +67,7 @@
 
 <style>
   .option {
+    flex: 1 1 0;
     padding: 0.5rem;
     border-radius: 0.25rem;
     border: 1px solid var(--gray-2, #d8dee2);
@@ -83,7 +85,7 @@
   .detail {
     cursor: pointer;
   }
-  .name {
+  .title {
     font-weight: var(--font-semibold);
   }
   .description {

@@ -3,18 +3,19 @@
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
 
-  import AccessLevel from "./AccessLevel.svelte";
   import Button from "../common/Button.svelte";
-  import Dropzone from "./Dropzone.svelte";
   import Empty from "../common/Empty.svelte";
-  import Field from "./Field.svelte";
-  import FieldLabel from "./FieldLabel.svelte";
-  import Flex from "$lib/components/common/Flex.svelte";
-  import InputFile from "./InputFile.svelte";
-  import InputSelect from "./InputSelect.svelte";
-  import InputText from "./InputText.svelte";
+  import Field from "../common/Field.svelte";
+  import FieldLabel from "../common/FieldLabel.svelte";
+  import Flex from "../common/Flex.svelte";
   import Premium from "../common/Premium.svelte";
-  import Switch from "$lib/components/common/Switch.svelte";
+
+  import AccessLevel from "../inputs/AccessLevel.svelte";
+  import Dropzone from "../inputs/Dropzone.svelte";
+  import FileInput from "../inputs/File.svelte";
+  import Select from "../inputs/Select.svelte";
+  import Switch from "../inputs/Switch.svelte";
+  import Text from "../inputs/Text.svelte";
 
   import { DOCUMENT_TYPES } from "@/config/config.js";
   import { removeUnsupportedTypes } from "@/lib/utils/validateFiles";
@@ -107,7 +108,7 @@
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
             <div class="title">
-              <InputText name="title" bind:value={file.name} />
+              <Text name="title" bind:value={file.name} />
             </div>
             <button
               class="fileRemove"
@@ -135,8 +136,8 @@
             <p class="drop-instructions">Drag and drop files here</p>
             <Flex align="center" justify="center">
               <span class="drop-instructions-or">or</span>
-              <InputFile multiple onFileSelect={addFiles}
-                ><File16 /> Select Files</InputFile
+              <FileInput multiple onFileSelect={addFiles}
+                ><File16 /> Select Files</FileInput
               >
             </Flex>
           </div>
@@ -151,12 +152,12 @@
         </Field>
         <Field>
           <FieldLabel>Projects</FieldLabel>
-          <InputSelect name="projects" multiple items={projectOptions} />
+          <Select name="projects" multiple items={projectOptions} />
         </Field>
         <hr class="divider" />
         <Field>
           <FieldLabel>OCR Engine</FieldLabel>
-          <InputSelect
+          <Select
             name="ocr_engine"
             items={ocrEngineOptions}
             bind:value={ocrEngine}

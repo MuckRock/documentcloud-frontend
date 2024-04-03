@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import PageToolbar from "../PageToolbar.svelte";
-  import Checkbox from "../Checkbox.svelte";
+  import Checkbox from "../../inputs/Checkbox.svelte";
   import Paginator from "@/common/Paginator.svelte";
 
   export const meta = {

@@ -1,6 +1,11 @@
+<!-- @component
+  FieldLabel is a presentational component for giving title and details about a field.
+  It has props for whether the field is required or exclusive to premium account holders.
+-->
+
 <script lang="ts">
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
-  import Flex from "$lib/components/common/Flex.svelte";
+  import Flex from "./Flex.svelte";
 
   export let required = false;
   export let premium = false;

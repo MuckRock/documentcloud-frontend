@@ -1,3 +1,9 @@
+<!-- @component
+  Field is a presentational component for displaying inputs.
+  It has a slot for displaying styled "help" text,
+  for providing more instruction on a field's purpose or meaning.
+-->
+
 <script lang="ts">
   import Flex from "$lib/components/common/Flex.svelte";
 

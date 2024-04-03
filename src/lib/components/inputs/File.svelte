@@ -1,3 +1,8 @@
+<!-- @component
+  The File input provides a styled wrapper around `<input type="file" />`.
+  It mimics the way our common `Button` component handles displaying children.
+-->
+
 <script lang="ts">
   import type { ComponentProps } from "svelte";
   import { DOCUMENT_TYPES } from "@/config/config.js";

@@ -1,3 +1,7 @@
+<!-- @component
+  The Text input provides styling to the default `<input type="text" … />`.
+-->
+
 <script lang="ts">
   export let name: string = null;
   export let placeholder = "";

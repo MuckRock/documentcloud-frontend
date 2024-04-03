@@ -1,10 +1,10 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
-  import InputText from "../InputText.svelte";
+  import Text from "../Text.svelte";
 
   export const meta = {
-    title: "Components / Forms / Inputs / Text",
-    component: InputText,
+    title: "Components / Inputs / Text",
+    component: Text,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
@@ -15,7 +15,7 @@
 </script>
 
 <Template let:args>
-  <InputText {...args} />
+  <Text {...args} />
 </Template>
 
 <Story name="Empty" {args} />

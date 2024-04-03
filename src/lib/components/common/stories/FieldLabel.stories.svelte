@@ -1,10 +1,10 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
-  import FieldLabel from "../FieldLabel.svelte";
+  import FieldLabel from "..//FieldLabel.svelte";
   import { Infinity16 } from "svelte-octicons";
 
   export const meta = {
-    title: "Components / Forms / Inputs / Field Label",
+    title: "Components / Common / Field Label",
     component: FieldLabel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

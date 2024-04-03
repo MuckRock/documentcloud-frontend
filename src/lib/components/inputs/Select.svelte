@@ -1,5 +1,4 @@
-<!-- InputSelect.svelte
-  
+<!-- @component
   `svelte-select` provides a flexible, customizable basis for the InputSelect component.
 
   - https://github.com/rob-balfre/svelte-select

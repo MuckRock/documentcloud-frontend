@@ -3,7 +3,7 @@
   import AccessLevel from "../AccessLevel.svelte";
 
   export const meta = {
-    title: "Components / Documents / Access Level",
+    title: "Components / Inputs / Access Level",
     component: AccessLevel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
@@ -21,3 +21,4 @@
 <Story name="Private" {args} />
 <Story name="Organization" args={{ ...args, level: "organization" }} />
 <Story name="Public" args={{ ...args, level: "public" }} />
+<Story name="Row" args={{ ...args, direction: "row" }} />

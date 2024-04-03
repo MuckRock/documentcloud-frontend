@@ -3,7 +3,7 @@
   import Switch from "../Switch.svelte";
 
   export const meta = {
-    title: "Components / Common / Inputs / Switch",
+    title: "Components / Inputs / Switch",
     component: Switch,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

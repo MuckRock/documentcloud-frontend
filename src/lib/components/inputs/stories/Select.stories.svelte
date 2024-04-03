@@ -1,10 +1,10 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
-  import InputSelect from "../InputSelect.svelte";
+  import Select from "../Select.svelte";
 
   export const meta = {
-    title: "Components / Forms / Inputs / Select",
-    component: InputSelect,
+    title: "Components / Inputs / Select",
+    component: Select,
     tags: ["autodocs"],
   };
 
@@ -22,7 +22,7 @@
 </script>
 
 <Template let:args>
-  <InputSelect {...args} />
+  <Select {...args} />
 </Template>
 
 <Story name="Empty" {args} />

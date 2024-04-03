@@ -1,11 +1,11 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
-  import InputFile from "../InputFile.svelte";
+  import File from "../File.svelte";
 
   export const meta = {
-    title: "Components / Forms / Inputs / File",
-    component: InputFile,
+    title: "Components / Inputs / File",
+    component: File,
     tags: ["autodocs"],
   };
 
@@ -17,7 +17,7 @@
 </script>
 
 <Template let:args>
-  <InputFile {...args}>Select Files</InputFile>
+  <File {...args}>Select Files</File>
 </Template>
 
 <Story name="Default" {args} />
