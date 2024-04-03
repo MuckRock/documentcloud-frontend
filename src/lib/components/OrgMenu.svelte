@@ -1,22 +1,17 @@
 <script lang="ts">
-  import Premium from "@/common/icons/Premium.svelte";
-  import { TriangleDown16 } from "svelte-octicons";
+  import type { Org } from "@/api/types";
+  import { ChevronDown16 } from "svelte-octicons";
 
-  const name = "MuckRock";
-  const src =
-    "https://squarelet-staging.s3.amazonaws.com/media/org_avatars/logo_uEHCMva.png";
+  export let org: Org;
 </script>
 
 <div class="container">
   <div class="org">
     <div class="avatar">
-      <img alt="MuckRock's avatar" {src} />
+      <img alt="MuckRock's avatar" src={org.avatar_url} />
     </div>
-    <p class="name">{name}</p>
-    <span class="arrow"><TriangleDown16 /></span>
-  </div>
-  <div class="premium">
-    <Premium size={2} />
+    <p class="name">{org.name}</p>
+    <span class="arrow"><ChevronDown16 /></span>
   </div>
 </div>
 
