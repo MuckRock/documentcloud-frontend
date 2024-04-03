@@ -130,6 +130,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100ch;
+    width: 100%;
   }
 
   .actions {
