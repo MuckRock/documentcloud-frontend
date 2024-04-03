@@ -29,8 +29,8 @@
     flex: 1 0 0;
   }
   .avatar {
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
 
     overflow: hidden;
     border-radius: 0.75rem;
@@ -44,7 +44,6 @@
   .name {
     color: #233944;
     font-family: var(--font-sans, "Source Sans Pro");
-    font-size: var(--font-xl, 1.5rem);
     font-weight: var(--font-semibold, 600);
     line-height: 1rem;
   }

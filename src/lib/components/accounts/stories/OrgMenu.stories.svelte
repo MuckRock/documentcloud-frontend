@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
-  import OrgMenu from "../OrgMenu.svelte";
+  import OrgMenu from "../accounts/OrgMenu.svelte";
 
   export const meta = {
     title: "Components / Org Menu",
