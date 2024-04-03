@@ -1,8 +1,11 @@
 <script lang="ts">
+  import type { User } from "@/api/types";
+
   import { _ } from "svelte-i18n";
+  import { page } from "$app/stores";
+
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import type { User } from "@/api/types";
   import {
     ChevronDown16,
     Gear16,
@@ -22,9 +25,7 @@
   export const SQUARELET_URL = SQUARELET_BASE;
   export const SIGN_IN_URL = DC_BASE + DC_LOGIN;
   export const SIGN_UP_URL =
-    SQUARELET_BASE +
-    SQUARELET_SIGNUP +
-    encodeURIComponent(window.location.href);
+    SQUARELET_BASE + SQUARELET_SIGNUP + encodeURIComponent($page.url.href);
   export const SIGN_OUT_URL = DC_BASE + DC_LOGOUT;
 
   export let user: User;

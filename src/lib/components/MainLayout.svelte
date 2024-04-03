@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { getContext } from "svelte";
-  import Button from "./common/Button.svelte";
-  import Logo from "./common/Logo.svelte";
-  import SignedIn from "./common/SignedIn.svelte";
-  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
   import type { Writable } from "svelte/store";
   import { type Org, type User } from "@/api/types";
-  import { SIGN_IN_URL } from "@/config/config";
+
+  import { getContext } from "svelte";
+  import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
+
+  import Button from "./common/Button.svelte";
   import Flex from "./common/Flex.svelte";
+  import Logo from "./common/Logo.svelte";
+  import SignedIn from "./common/SignedIn.svelte";
   import UserMenu from "./accounts/UserMenu.svelte";
   import OrgMenu from "./accounts/OrgMenu.svelte";
+
+  import { SIGN_IN_URL } from "@/config/config";
 
   export let modal: boolean = false;
   export let basement: "left" | "right" | null = null;
@@ -38,8 +41,6 @@
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
-
-  console.log(me, org);
 </script>
 
 <div class="container">
