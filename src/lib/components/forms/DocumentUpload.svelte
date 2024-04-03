@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { access } from "$lib/api/types";
   import { filesize } from "filesize";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
@@ -17,6 +16,7 @@
   import Premium from "../common/Premium.svelte";
   import Switch from "$lib/components/common/Switch.svelte";
 
+  import { DOCUMENT_TYPES } from "@/config/config.js";
   import { removeUnsupportedTypes } from "@/lib/utils/validateFiles";
 
   interface UploadFile {
@@ -32,8 +32,6 @@
   let form: HTMLFormElement;
 
   let fileDropActive: boolean;
-
-  let accessLevel: access;
 
   const projectOptions = [
     { value: "1", label: "FBI Files" },
@@ -70,8 +68,11 @@
   }
 
   function addFiles(filesToAdd: FileList) {
-    const supportedFiles = removeUnsupportedTypes([...filesToAdd]);
-    files = files.concat(supportedFiles.map(createUploadFile));
+    console.log(...filesToAdd);
+    // const supportedFiles = removeUnsupportedTypes([...filesToAdd]);
+    // files = files.concat(supportedFiles.map(createUploadFile));
+    const newFiles = Array.from(filesToAdd).map(createUploadFile);
+    files = [...files, ...newFiles];
   }
 
   function removeFile(fileToRemove: UploadFile) {
@@ -84,9 +85,19 @@
     }
     return "unknown";
   }
+
+  $: console.log(files);
 </script>
 
-<form bind:this={form} method="post" enctype="multipart/form-data">
+<form
+  on:submit
+  on:reset
+  on:formdata
+  on:change
+  bind:this={form}
+  method="post"
+  enctype="multipart/form-data"
+>
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
       <div class="fileList" class:empty={files.length === 0}>
@@ -96,7 +107,7 @@
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
             <div class="title">
-              <InputText bind:value={file.name} />
+              <InputText name="title" bind:value={file.name} />
             </div>
             <button
               class="fileRemove"
@@ -104,6 +115,12 @@
             >
               <XCircleFill24 />
             </button>
+            <input
+              type="file"
+              name="file"
+              bind:value={file.file}
+              accept={DOCUMENT_TYPES.join(",")}
+            />
           </Flex>
         {:else}
           <Empty icon={File24}>
@@ -118,7 +135,7 @@
             <p class="drop-instructions">Drag and drop files here</p>
             <Flex align="center" justify="center">
               <span class="drop-instructions-or">or</span>
-              <InputFile name="files" multiple onFileSelect={addFiles}
+              <InputFile multiple onFileSelect={addFiles}
                 ><File16 /> Select Files</InputFile
               >
             </Flex>
@@ -130,7 +147,7 @@
       <Flex gap={1} direction="column">
         <Field>
           <FieldLabel>Access Level</FieldLabel>
-          <AccessLevel name="access" bind:selected={accessLevel} />
+          <AccessLevel name="access" />
         </Field>
         <Field>
           <FieldLabel>Projects</FieldLabel>
@@ -140,7 +157,7 @@
         <Field>
           <FieldLabel>OCR Engine</FieldLabel>
           <InputSelect
-            name="_ocr_engine_json"
+            name="ocr_engine"
             items={ocrEngineOptions}
             bind:value={ocrEngine}
           />
@@ -153,6 +170,7 @@
           <FieldLabel>Force OCR</FieldLabel>
         </Field>
         <hr class="divider" />
+
         <Premium>
           <Field inline>
             <Switch name="revision_control" />

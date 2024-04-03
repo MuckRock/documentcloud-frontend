@@ -10,8 +10,8 @@
 
   const me: Writable<User> = getContext("me");
 
-  export let data: PageData;
-  export let form: ActionData;
+  // export let data: PageData;
+  // export let form: ActionData;
 
   let uploader: DocumentUpload;
 
