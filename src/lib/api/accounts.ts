@@ -6,6 +6,7 @@ type Fetch = typeof globalThis.fetch;
 /** Get the logged-in user */
 export async function getMe(fetch: Fetch): Promise<Maybe<User>> {
   const endpoint = new URL("users/me/", BASE_API_URL);
+  endpoint.searchParams.set("expand", "organization");
   try {
     const resp = await fetch(endpoint, { credentials: "include" });
     if (!resp.ok) return;
