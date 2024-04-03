@@ -9,8 +9,9 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import Pin from "@/common/Pin.svelte";
+  import { getPinnedAddons } from "@/lib/api/addons";
 
-  export let pinnedAddOns: Promise<Page<AddOnListItem>>;
+  let pinnedAddOns = getPinnedAddons();
 </script>
 
 <SidebarGroup>

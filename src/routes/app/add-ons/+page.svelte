@@ -1,7 +1,11 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import AddOnList from "@/addons/browser/AddOnList.svelte";
+  import { onMount } from "svelte";
+  import { Hourglass24 } from "svelte-octicons";
+
+  import type { Page } from "@/api/types/common.js";
   import type { AddOnListItem } from "$lib/api/types";
+  import AddOnList from "@/addons/browser/AddOnList.svelte";
   import { buildParams, buildUrl, filter } from "@/addons/browser/browser";
   import Filters from "@/addons/browser/Filters.svelte";
   import Categories from "@/addons/browser/Categories.svelte";
@@ -10,8 +14,11 @@
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
   import Credit from "@/common/icons/Credit.svelte";
-  import type { Page } from "@/api/types/common.js";
-  import { onMount } from "svelte";
+  import ContentLayout from "$lib/components/ContentLayout.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import MainLayout from "$lib/components/MainLayout.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import Error from "@/lib/components/common/Error.svelte";
 
   let per_page = 10;
 
@@ -54,20 +61,23 @@
   $: reload = () => load(url);
 </script>
 
-<div class="browser">
-  <header class="header">
-    <h2>{$_("addonBrowserDialog.title")}</h2>
-    <p>{$_("addonBrowserDialog.subtitle")}</p>
-  </header>
-  <aside class="sidebar">
-    <div class="search"><Search /></div>
+<MainLayout>
+  <svelte:fragment slot="navigation">
+    <header class="header">
+      <h2>{$_("addonBrowserDialog.title")}</h2>
+      <p>{$_("addonBrowserDialog.subtitle")}</p>
+    </header>
     <div class="filters">
       <Filters />
       <Categories />
     </div>
-  </aside>
-  <main class="results">
-    <div class="list">
+  </svelte:fragment>
+
+  <svelte:fragment slot="content">
+    <ContentLayout>
+      <PageToolbar slot="header">
+        <Search slot="center" />
+      </PageToolbar>
       {#if $filter === "active"}
         <aside class="pinned tip">
           <div class="icon"><Pin size={1.75} /></div>
@@ -84,18 +94,29 @@
           <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
         </aside>
       {/if}
-      <AddOnList {loading} {items} {error} {reload} />
-    </div>
-    <div class="pagination">
-      <Paginator
-        has_next={Boolean(next_url)}
-        has_previous={Boolean(previous_url)}
-        on:next={loadNext}
-        on:previous={loadPrev}
-      />
-    </div>
-  </main>
-</div>
+      {#if loading}
+        <Empty icon={Hourglass24}>Loading…</Empty>
+      {:else if error}
+        <Error>{String(error)}</Error>
+      {:else}
+        <div class="list">
+          <AddOnList {loading} {items} {error} {reload} />
+        </div>
+      {/if}
+
+      <PageToolbar slot="footer">
+        <svelte:fragment slot="center">
+          <Paginator
+            has_next={Boolean(next_url)}
+            has_previous={Boolean(previous_url)}
+            on:next={loadNext}
+            on:previous={loadPrev}
+          />
+        </svelte:fragment>
+      </PageToolbar>
+    </ContentLayout>
+  </svelte:fragment>
+</MainLayout>
 
 <style>
   .browser {
