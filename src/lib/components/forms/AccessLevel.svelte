@@ -55,7 +55,7 @@
         <Flex gap={0.5}>
           <svelte:component this={level.icon} />
           <Flex direction="column" gap={0.125}>
-            <p class="name">{name}</p>
+            <p class="name">{level.name}</p>
             <p class="description">{level.description}</p>
           </Flex>
         </Flex>
