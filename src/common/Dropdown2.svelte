@@ -133,8 +133,9 @@
   .title {
     display: block;
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: var(--radius);
+    padding: 0.25rem;
+    color: var(--gray-5);
+    fill: var(--gray-4);
   }
   .title.border {
     border: 1px solid rgba(0, 0, 0, 0.1);

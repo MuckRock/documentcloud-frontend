@@ -39,14 +39,16 @@
     border-radius: 0.25rem;
     border: none;
 
-    color: var(--gray-5, #233944);
-    fill: var(--gray-5, #233944);
+    color: inherit;
+    fill: inherit;
     background: transparent;
 
     font-family: var(--font-sans, "Source Sans Pro");
     font-size: var(--font-m, 1rem);
     font-weight: var(--font-semibold, 600);
     text-decoration: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   /* Hover */

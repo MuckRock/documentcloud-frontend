@@ -33,9 +33,9 @@ export const BASE_API_URL = DC_BASE + API;
 export const DC_LOGIN = "/accounts/login/squarelet";
 export const DC_LOGOUT = "/accounts/logout/";
 export const SQUARELET_SIGNUP = "/accounts/signup/?intent=documentcloud&next=";
-export const SIGN_IN_URL = DC_BASE + DC_LOGIN;
-export const SIGN_UP_URL = SQUARELET_BASE + SQUARELET_SIGNUP;
-export const SIGN_OUT_URL = DC_BASE + DC_LOGOUT;
+export const SIGN_IN_URL = new URL(DC_LOGIN, DC_BASE).toString();
+export const SIGN_UP_URL = new URL(SQUARELET_SIGNUP, SQUARELET_BASE).toString();
+export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
 
 export const LANGUAGES = [
   ["US English", "en", "🇺🇸"],

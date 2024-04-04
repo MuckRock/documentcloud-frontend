@@ -2,6 +2,8 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import OrgMenu from "../OrgMenu.svelte";
 
+  import { organization } from "@/test/fixtures/accounts";
+
   export const meta = {
     title: "Components / Org Menu",
     component: OrgMenu,
@@ -10,5 +12,5 @@
 </script>
 
 <Story name="Org Menu" id="orgMenu">
-  <OrgMenu />
+  <OrgMenu org={organization} />
 </Story>
