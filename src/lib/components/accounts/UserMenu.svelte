@@ -14,19 +14,7 @@
   } from "svelte-octicons";
   import Menu from "@/common/Menu.svelte";
 
-  import {
-    DC_BASE,
-    DC_LOGIN,
-    SQUARELET_BASE,
-    SQUARELET_SIGNUP,
-    DC_LOGOUT,
-  } from "@/config/config.js";
-
-  export const SQUARELET_URL = SQUARELET_BASE;
-  export const SIGN_IN_URL = DC_BASE + DC_LOGIN;
-  export const SIGN_UP_URL =
-    SQUARELET_BASE + SQUARELET_SIGNUP + encodeURIComponent($page.url.href);
-  export const SIGN_OUT_URL = DC_BASE + DC_LOGOUT;
+  import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
 
   export let user: User;
 
@@ -43,7 +31,7 @@
     <div class="dropdownArrow"><ChevronDown16 /></div>
   </SidebarItem>
   <Menu>
-    <SidebarItem href={SQUARELET_URL} target="_blank" on:click={close}>
+    <SidebarItem href={SQUARELET_BASE} target="_blank" on:click={close}>
       <Gear16 />
       {$_("authSection.user.acctSettings")}
     </SidebarItem>

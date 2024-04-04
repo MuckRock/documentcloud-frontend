@@ -52,6 +52,8 @@
     height: 1rem;
     fill: #5c717c;
   }
+
+  /* unused
   .premium {
     display: flex;
     justify-content: center;
@@ -61,7 +63,8 @@
     fill: var(--premium);
     height: 2rem;
     width: 2rem;
-  }
+  } 
+  */
 
   @media (max-width: 64rem) {
     .name {
