@@ -2,18 +2,22 @@
   <slot>Define some menu items</slot>
 </div>
 
-<style lang="scss">
+<style>
   .menu {
-    @include menu;
-
-    border: 1px solid #cdcdcd;
-    padding: 7px 0;
-
-    :global(.small) {
-      color: $gray;
-      font-size: 11px;
-      text-transform: uppercase;
-      margin: 3px 0 0 0;
-    }
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.25rem;
+    background: var(--white, #ffffff);
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-1);
+    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    gap: 0.25rem;
+  }
+  :global(.menu.small) {
+    color: var(--gray-3);
+    font-size: 11px;
+    text-transform: uppercase;
+    margin: 3px 0 0 0;
   }
 </style>

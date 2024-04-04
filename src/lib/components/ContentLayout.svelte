@@ -23,6 +23,7 @@
     flex: 1 0 0;
     align-self: stretch;
     position: relative;
+    width: 100%;
   }
   header {
     flex: 0 0 0;

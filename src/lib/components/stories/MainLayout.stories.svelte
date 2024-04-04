@@ -29,7 +29,7 @@
   import PageToolbar from "../common/PageToolbar.svelte";
   import Search from "../Search.svelte";
 
-  import { addons } from "@/addons/browser/stories/mockData";
+  import { addons } from "@/test/handlers/addons";
 
   let results = documents as DocumentResults;
 
@@ -40,6 +40,13 @@
       layout: "fullscreen",
       msw: {
         handlers: [addons.data],
+      },
+      sveltekit_experimental: {
+        stores: {
+          page: {
+            url: "/",
+          },
+        },
       },
     },
   };
@@ -92,7 +99,7 @@
       <PageToolbar slot="header">
         <Search slot="center" />
       </PageToolbar>
-      <ResultsList {results} />
+      <ResultsList results={results.results} />
       <PageToolbar slot="footer" />
     </ContentLayout>
     <svelte:fragment slot="action">
