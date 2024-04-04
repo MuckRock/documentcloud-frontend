@@ -9,3 +9,8 @@ export interface Page<T> {
   results: T[];
   escaped?: boolean;
 }
+
+export interface PageParams {
+  cursor?: string;
+  per_page?: number;
+}
