@@ -41,6 +41,13 @@
       msw: {
         handlers: [addons.data],
       },
+      sveltekit_experimental: {
+        stores: {
+          page: {
+            url: "/",
+          },
+        },
+      },
     },
   };
 
