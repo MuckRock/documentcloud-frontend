@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { _ } from "svelte-i18n";
-  import { onMount } from "svelte";
-  import { Hourglass24 } from "svelte-octicons";
+  import { Hourglass24, Infinity16, Star16 } from "svelte-octicons";
 
   import type { Page } from "@/api/types/common.js";
   import type { AddOnListItem } from "$lib/api/types";
@@ -19,46 +19,19 @@
   import MainLayout from "$lib/components/MainLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Error from "@/lib/components/common/Error.svelte";
+  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
+  import type { PageData } from "./$types";
+  import Premium from "@/common/icons/Premium.svelte";
 
-  let per_page = 10;
+  export let data: PageData;
 
-  $: urlParams = buildParams({
-    per_page,
-    query: $query,
-    filter: $filter,
-  });
-  $: url = buildUrl(urlParams);
-  $: next_url = res?.next ? new URL(res.next).toString() : null;
-  $: previous_url = res?.previous ? new URL(res.previous).toString() : null;
-  $: items = res?.results;
-  /** Network logic */
-  let loading = false;
-  let error = null;
-  let res: Page<AddOnListItem>;
-
-  export async function load(url) {
-    loading = true;
-    res = await fetch(url, {
-      credentials: "include",
-    })
-      .then(async (r) => {
-        const data = await r.json();
-        if (!r.ok) throw data;
-        return data;
-      })
-      .catch((err) => {
-        error = err;
-        loading = false;
-        return {};
-      });
-
-    loading = false;
+  function gotoPage(pageUrl: string) {
+    const { url } = data;
+    const cursor = new URL(pageUrl).searchParams.get("cursor");
+    if (!cursor) return;
+    url.searchParams.set("cursor", cursor);
+    goto(url);
   }
-
-  onMount(() => load(url));
-  $: loadNext = () => load(next_url);
-  $: loadPrev = () => load(previous_url);
-  $: reload = () => load(url);
 </script>
 
 <MainLayout>
@@ -68,8 +41,22 @@
       <p>{$_("addonBrowserDialog.subtitle")}</p>
     </header>
     <div class="filters">
-      <Filters />
-      <Categories />
+      <SidebarItem href="/app/add-ons">
+        <Infinity16 />
+        All
+      </SidebarItem>
+      <SidebarItem href="/app/add-ons?active=true">
+        <Pin />
+        Pinned
+      </SidebarItem>
+      <SidebarItem href="/app/add-ons?featured=true">
+        <Star16 />
+        Featured
+      </SidebarItem>
+      <SidebarItem href="/app/add-ons?premium=true">
+        <Premium />
+        Premium
+      </SidebarItem>
     </div>
   </svelte:fragment>
 
@@ -94,23 +81,23 @@
           <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
         </aside>
       {/if}
-      {#if loading}
+      {#await data.addons}
         <Empty icon={Hourglass24}>Loading…</Empty>
-      {:else if error}
-        <Error>{String(error)}</Error>
-      {:else}
+      {:then page}
         <div class="list">
-          <AddOnList {loading} {items} {error} {reload} />
+          <AddOnList items={page.results} />
         </div>
-      {/if}
+      {:catch error}
+        <Error>{String(error)}</Error>
+      {/await}
 
       <PageToolbar slot="footer">
         <svelte:fragment slot="center">
           <Paginator
-            has_next={Boolean(next_url)}
-            has_previous={Boolean(previous_url)}
-            on:next={loadNext}
-            on:previous={loadPrev}
+            has_next={Boolean(data.next_url)}
+            has_previous={Boolean(data.previous_url)}
+            on:next={() => gotoPage(data.next_url)}
+            on:previous={() => gotoPage(data.previous_url)}
           />
         </svelte:fragment>
       </PageToolbar>
