@@ -12,6 +12,7 @@
   export let onFileSelect: (files: FileList) => void;
   export let multiple = false;
   export let buttonMode: ComponentProps<Button>["mode"] = "ghost";
+  export let files: FileList = null;
 
   // Bound to the file picker input
   let picker: HTMLInputElement;
@@ -40,6 +41,7 @@
     {name}
     accept={DOCUMENT_TYPES.join(",")}
     {multiple}
+    bind:files
     bind:this={picker}
     on:change={handleFiles}
     class="picker"

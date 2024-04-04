@@ -18,22 +18,18 @@
   import Text from "../inputs/Text.svelte";
 
   import { DOCUMENT_TYPES } from "@/config/config.js";
-  import { removeUnsupportedTypes } from "@/lib/utils/validateFiles";
+  import { isSupported } from "@/lib/utils/validateFiles";
+  import { afterUpdate } from "svelte";
 
-  interface UploadFile {
-    index: number;
-    name: string;
-    type: string;
-    size: number;
-    file: File;
-  }
+  export let files: File[] = [];
 
-  export let files: UploadFile[] = [];
+  let uploader: HTMLInputElement;
 
   let form: HTMLFormElement;
 
   let fileDropActive: boolean;
 
+  // todo: fetch projects in load function
   const projectOptions = [
     { value: "1", label: "FBI Files" },
     { value: "2", label: "1033 Program" },
@@ -55,29 +51,15 @@
   let ocrEngine = ocrEngineOptions[0];
 
   export function values() {
-    return Object.fromEntries(new FormData(form));
-  }
-
-  function createUploadFile(file: File, index: number): UploadFile {
-    return {
-      index,
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      file,
-    };
+    return Array.from(new FormData(form));
   }
 
   function addFiles(filesToAdd: FileList) {
-    console.log(...filesToAdd);
-    // const supportedFiles = removeUnsupportedTypes([...filesToAdd]);
-    // files = files.concat(supportedFiles.map(createUploadFile));
-    const newFiles = Array.from(filesToAdd).map(createUploadFile);
-    files = [...files, ...newFiles];
+    files = files.concat(Array.from(filesToAdd).filter(isSupported));
   }
 
-  function removeFile(fileToRemove: UploadFile) {
-    files = files.filter((file) => file.index !== fileToRemove.index);
+  function removeFile(index: number) {
+    files = files.filter((f, i) => i !== index);
   }
 
   function formatFileType(filetype: string) {
@@ -87,7 +69,19 @@
     return "unknown";
   }
 
-  $: console.log(files);
+  $: total = files.reduce((t, file) => {
+    return t + file.size;
+  }, 0);
+
+  afterUpdate(() => {
+    const dt = new DataTransfer();
+
+    files.forEach((file) => {
+      dt.items.add(file);
+    });
+
+    uploader.files = dt.files;
+  });
 </script>
 
 <form
@@ -102,33 +96,32 @@
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
       <div class="fileList" class:empty={files.length === 0}>
-        {#each files as file}
+        {#each files as file, index}
           <Flex align="center" gap={1}>
             <p class="fileInfo">
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
             <div class="title">
               <Text name="title" bind:value={file.name} />
+              <input type="hidden" name="filename" value={file.name} />
             </div>
             <button
               class="fileRemove"
-              on:click|preventDefault={() => removeFile(file)}
+              on:click|preventDefault={() => removeFile(index)}
             >
               <XCircleFill24 />
             </button>
-            <input
-              type="file"
-              name="file"
-              bind:value={file.file}
-              accept={DOCUMENT_TYPES.join(",")}
-            />
           </Flex>
         {:else}
           <Empty icon={File24}>
-            Get started by selecting, pasting, or dragging-and-dropping files
+            Get started by selecting, pasting or dragging-and-dropping files
             below
           </Empty>
         {/each}
+
+        <div class="total">
+          <p>Total upload size: {filesize(total)}</p>
+        </div>
       </div>
       <div class="fileUpload">
         <Dropzone bind:active={fileDropActive} onDrop={addFiles}>
@@ -193,6 +186,14 @@
       </Flex>
       <Button type="submit" full mode="primary"><Upload16 />Begin Upload</Button
       >
+
+      <input
+        type="file"
+        name="uploads"
+        multiple
+        bind:this={uploader}
+        accept={DOCUMENT_TYPES.join(",")}
+      />
     </div>
   </Flex>
 </form>
@@ -311,5 +312,9 @@
     width: 100%;
     border: none;
     border-top: 1px solid var(--gray-2, #d8dee2);
+  }
+
+  input[name="uploads"] {
+    display: none;
   }
 </style>
