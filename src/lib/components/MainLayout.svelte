@@ -132,7 +132,7 @@
     background: var(--white, #ffffff);
     border-bottom: 1px solid var(--gray-2, #d8dee2);
     box-shadow: var(--shadow);
-    flex: 0 0 0;
+    flex: 0 0 auto;
     padding: 0 1rem;
     z-index: 1;
   }
@@ -203,7 +203,8 @@
       display: block;
     }
     header {
-      gap: 1rem;
+      gap: 0.5rem;
+      overflow-x: auto;
     }
     nav {
       min-width: 33vh;
