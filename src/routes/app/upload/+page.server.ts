@@ -7,20 +7,20 @@ import * as documents from "$lib/api/documents";
 export const actions = {
   default: async ({ request, cookies, fetch }) => {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    const data = await request.formData();
+    const form = await request.formData();
 
     // one per file
-    const files = Array.from(data.getAll("uploads")) as File[];
-    const titles = data.getAll("title") as string[];
-    const filenames = data.getAll("filename") as string[];
+    const files = Array.from(form.getAll("uploads")) as File[];
+    const titles = form.getAll("title") as string[];
+    const filenames = form.getAll("filename") as string[];
 
     // one per batch
-    const access = data.get("access") as Access;
+    const access = form.get("access") as Access;
 
     // value is a JSON string
-    const ocr_engine: OCREngine = JSON.parse(data.get("ocr_engine") as string);
-    const force_ocr = Boolean(data.get("force_ocr"));
-    const revision_control = Boolean(data.get("revision_control"));
+    const ocr_engine: OCREngine = JSON.parse(form.get("ocr_engine") as string);
+    const force_ocr = Boolean(form.get("force_ocr"));
+    const revision_control = Boolean(form.get("revision_control"));
 
     // not yet implemented
     // const projects = data.get("projects");
@@ -31,7 +31,6 @@ export const actions = {
       return {
         title,
         access,
-        ocr_engine: ocr_engine.value,
         revision_control,
       };
     });
@@ -52,7 +51,12 @@ export const actions = {
 
     // process
     const process_response = await documents.process(
-      created.map((d) => ({ id: d.id, force_ocr })),
+      created.map((d) => ({
+        id: d.id,
+        force_ocr,
+        ocr_engine: ocr_engine.value,
+      })),
+      csrf_token,
       fetch,
     );
 

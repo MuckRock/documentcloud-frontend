@@ -4,6 +4,7 @@
   import { filesize } from "filesize";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
+  import { enhance } from "$app/forms";
 
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";

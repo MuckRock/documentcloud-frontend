@@ -11,6 +11,8 @@ import type { Page } from "@/api/types/common";
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
+export type Data = Record<string, string[]>;
+
 export type Status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
 
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
@@ -70,11 +72,15 @@ export interface AddOnListItem {
 // most fields are optional
 export interface DocumentUpload {
   access: Access;
-  data?: Record<string, string[]>;
+  data?: Data;
   language?: string;
   ocr_engine?: string;
+  original_extension?: string;
   noindex?: boolean;
+  projects?: number[]; // project ids only
+  related_article?: string | URL;
   revision_control?: boolean;
+  source?: string;
   title: string;
 }
 
@@ -86,7 +92,7 @@ export interface Document {
   asset_url: string | URL;
   canonical_url: string | URL;
   created_at: string | Date;
-  data: Record<string, string[]>;
+  data: Data;
   description?: string;
   edit_access: boolean;
   file_hash?: string;

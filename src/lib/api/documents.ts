@@ -10,10 +10,9 @@ import type {
 } from "./types";
 
 import { error } from "@sveltejs/kit";
-import { CSRF_HEADER_NAME } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
-import { APP_URL, BASE_API_URL } from "@/config/config.js";
+import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { isErrorCode } from "../utils";
 
 /**
@@ -69,6 +68,7 @@ export async function get(
 
   return resp.json();
 }
+
 /**
  * Create new documents in a batch (or a batch of one).
  *
@@ -92,12 +92,15 @@ export async function create(
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      CSRF_HEADER_NAME: csrf_token,
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
     },
     body: JSON.stringify(documents),
+    referrerPolicy: "origin",
   });
 
   if (isErrorCode(resp.status)) {
+    console.error(await resp.json());
     error(resp.status, resp.statusText);
   }
 
@@ -143,16 +146,21 @@ export async function upload(
  * @export
  */
 export async function process(
-  documents: { id: string | number; force_ocr: boolean }[],
+  documents: { id: string | number; force_ocr: boolean; ocr_engine: string }[],
+  csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Response> {
   console.log(`processing ${documents.length} documents`);
-  const endpoint = new URL("document/process/", BASE_API_URL);
+  const endpoint = new URL("documents/process/", BASE_API_URL);
 
   return fetch(endpoint, {
     credentials: "include",
     method: "POST",
-    headers: { "Content-type": "application/json" },
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
     body: JSON.stringify(documents),
   });
 }
