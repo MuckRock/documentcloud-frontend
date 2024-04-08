@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { access } from "$lib/api/types";
+  import type { Access } from "$lib/api/types";
   import {
     Globe24,
     Lock24,
@@ -9,7 +9,7 @@
   import Flex from "../common/Flex.svelte";
 
   interface Level {
-    value: access;
+    value: Access;
     title: string;
     description: string;
     icon: typeof SvgComponent;
@@ -37,7 +37,7 @@
   ];
 
   export let name: string;
-  export let selected: access = levels[0].value;
+  export let selected: Access = levels[0].value;
   export let direction: "column" | "row" = "column";
 </script>
 

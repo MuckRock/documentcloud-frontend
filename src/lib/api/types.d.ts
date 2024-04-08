@@ -9,11 +9,11 @@ import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
 import type { Page } from "@/api/types/common";
 
-export type access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
+export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
-export type status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+export type Status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
 
-export type sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
+export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
 export type Highlight = Record<string, string[]>;
 
@@ -66,10 +66,22 @@ export interface AddOnListItem {
   usage?: number;
 }
 
+// subset of document fields only used in uploading
+// most fields are optional
+export interface DocumentUpload {
+  access: Access;
+  data?: Record<string, string[]>;
+  language?: string;
+  ocr_engine?: string;
+  noindex?: boolean;
+  revision_control?: boolean;
+  title: string;
+}
+
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
   id: number | string;
-  access: access;
+  access: Access;
   admin_noindex?: boolean;
   asset_url: string | URL;
   canonical_url: string | URL;
@@ -80,6 +92,7 @@ export interface Document {
   file_hash?: string;
   noindex?: boolean;
   language: string;
+  ocr_engine: string;
   organization: number | Org;
   original_extension: string;
   page_count: number;
@@ -90,7 +103,7 @@ export interface Document {
   revision_control?: boolean;
   slug: string;
   source?: string;
-  status: status;
+  status: Status;
   title: string;
   updated_at: string | Date;
   user: number | User;
@@ -116,7 +129,7 @@ export interface Note {
   user: number | User;
   organization: number | Org;
   page_number: number;
-  access: access;
+  access: Access;
   edit_access?: boolean;
   title: string;
   content?: string;
@@ -166,6 +179,12 @@ export type ProjectResults = Page<Project>;
 export interface ProjectMembershipItem {
   document: number | Document;
   edit_access: boolean;
+}
+
+export interface OCREngine {
+  value: string;
+  label: string;
+  help?: string;
 }
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

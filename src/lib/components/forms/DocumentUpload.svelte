@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Project } from "$lib/api/types";
+
   import { filesize } from "filesize";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
@@ -22,18 +24,13 @@
   import { afterUpdate } from "svelte";
 
   export let files: File[] = [];
+  export let projects: Project[] = [];
 
   let uploader: HTMLInputElement;
 
   let form: HTMLFormElement;
 
   let fileDropActive: boolean;
-
-  // todo: fetch projects in load function
-  const projectOptions = [
-    { value: "1", label: "FBI Files" },
-    { value: "2", label: "1033 Program" },
-  ];
 
   const ocrEngineOptions = [
     {
@@ -145,7 +142,7 @@
         </Field>
         <Field>
           <FieldLabel>Projects</FieldLabel>
-          <Select name="projects" multiple items={projectOptions} />
+          <Select name="projects" multiple items={projects} />
         </Field>
         <hr class="divider" />
         <Field>

@@ -1,10 +1,16 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
-import type { Document, DocumentResults, SearchOptions, sizes } from "./types";
+import type {
+  Document,
+  DocumentUpload,
+  DocumentResults,
+  SearchOptions,
+  Sizes,
+} from "./types";
 
 import { error } from "@sveltejs/kit";
-
+import { CSRF_HEADER_NAME } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
 import { APP_URL, BASE_API_URL } from "@/config/config.js";
@@ -74,9 +80,11 @@ export async function get(
  * @export
  */
 export async function create(
-  documents: Document[],
+  documents: DocumentUpload[],
+  csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Document[]> {
+  console.log(`creating ${documents.length} documents`);
   const endpoint = new URL("documents/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -84,6 +92,7 @@ export async function create(
     method: "POST",
     headers: {
       "Content-type": "application/json",
+      CSRF_HEADER_NAME: csrf_token,
     },
     body: JSON.stringify(documents),
   });
@@ -106,17 +115,16 @@ export async function create(
  * @export
  */
 export async function upload(
-  documents: { id: number; presigned_url: URL }[],
-  files: File[] | FileList,
+  documents: {
+    id: string | number;
+    presigned_url: URL;
+    file: File;
+  }[],
   fetch = globalThis.fetch,
 ): Promise<Response[]> {
-  if (!(documents.length === files.length)) {
-    throw new Error("mismatched number of documents and files");
-  }
+  console.log(`uploading ${documents.length} documents`);
   return Promise.all(
-    documents.map(({ id, presigned_url }, i) => {
-      const file = files[i];
-
+    documents.map(({ id, presigned_url, file }, i) => {
       return fetch(presigned_url, {
         method: "PUT",
         headers: {
@@ -135,9 +143,10 @@ export async function upload(
  * @export
  */
 export async function process(
-  documents: { id: number; force_ocr: boolean }[],
+  documents: { id: string | number; force_ocr: boolean }[],
   fetch = globalThis.fetch,
 ): Promise<Response> {
+  console.log(`processing ${documents.length} documents`);
   const endpoint = new URL("document/process/", BASE_API_URL);
 
   return fetch(endpoint, {
@@ -216,7 +225,7 @@ export function pageUrl(document: Document, page: number): URL {
 export function pageImageUrl(
   document: Document,
   page: number,
-  size: sizes,
+  size: Sizes,
 ): URL {
   return new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,
