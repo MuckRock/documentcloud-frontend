@@ -9,7 +9,7 @@
 
   import { page } from "$app/stores";
 
-  let pinned: Project[] = [];
+  let pinned: Project[] | Promise<Project[]> = [];
 
   $: pinned = $page.data.pinnedProjects || [];
 </script>
@@ -18,11 +18,13 @@
   <SidebarItem slot="title"><FileDirectory16 /> Projects</SidebarItem>
   <Action slot="action" icon={Book16}>Explore</Action>
   <Flex direction="column" gap={0}>
-    {#each pinned as project}
-      <SidebarItem small>
-        <Pin active={project.pinned} />
-        {project.title}
-      </SidebarItem>
-    {/each}
+    {#await pinned then projects}
+      {#each projects as project}
+        <SidebarItem small>
+          <Pin active={project.pinned} />
+          {project.title}
+        </SidebarItem>
+      {/each}
+    {/await}
   </Flex>
 </SidebarGroup>

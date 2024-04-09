@@ -26,7 +26,7 @@ export const actions = {
     const ocr_engine: OCREngine = JSON.parse(form.get("ocr_engine") as string);
     const force_ocr = Boolean(form.get("force_ocr"));
     const revision_control = Boolean(form.get("revision_control"));
-    const projects = JSON.parse(form.get("projects") as string);
+    const projects = JSON.parse((form.get("projects") as string) || "[]");
 
     // not yet implemented
     // const language = data.get("language");
@@ -66,6 +66,14 @@ export const actions = {
       fetch,
     );
 
-    console.log(process_response.status);
+    // todo: i18n
+    const message = process_response.ok
+      ? `Uploaded ${created.length} documents`
+      : process_response.statusText;
+
+    return {
+      success: true,
+      message,
+    };
   },
 } satisfies Actions;
