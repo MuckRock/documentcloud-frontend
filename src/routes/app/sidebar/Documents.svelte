@@ -17,12 +17,12 @@
   const org: Writable<Org> = getContext("org");
 
   // +user:chris-amico-1020 +access:public
-  $: mine = `+user:${slugify($me.name)}-${$me.id}`;
+  $: mine = $me ? `+user:${slugify($me.name)}-${$me.id}` : "";
   $: minePublic = `${mine} +access:public`;
   $: minePrivate = `${mine} +access:private`;
 
   // +organization:muckrock-125
-  $: orgDocs = `+organization:${slugify($org.name)}-${$org.id}`;
+  $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";
 
   function searchUrl(query: string) {
     const q = new URLSearchParams([["q", query]]);
