@@ -4,7 +4,9 @@
   import { filesize } from "filesize";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
+
   import { enhance } from "$app/forms";
+  import { page } from "$app/stores";
 
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
@@ -24,12 +26,10 @@
   import { isSupported } from "@/lib/utils/validateFiles";
   import { afterUpdate } from "svelte";
 
-  export let files: File[] = [];
-  export let projects: Project[] = [];
+  let files: File[] = [];
+  let projects: Project[] = [];
 
   let uploader: HTMLInputElement;
-
-  let form: HTMLFormElement;
 
   let fileDropActive: boolean;
 
@@ -48,9 +48,7 @@
 
   let ocrEngine = ocrEngineOptions[0];
 
-  export function values() {
-    return Array.from(new FormData(form));
-  }
+  $: projects = $page.data.projects.results;
 
   function addFiles(filesToAdd: FileList) {
     files = files.concat(Array.from(filesToAdd).filter(isSupported));
@@ -83,13 +81,10 @@
 </script>
 
 <form
-  on:submit
-  on:reset
-  on:formdata
-  on:change
-  bind:this={form}
+  use:enhance
   method="post"
   enctype="multipart/form-data"
+  action="/app/upload/"
 >
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
@@ -143,7 +138,13 @@
         </Field>
         <Field>
           <FieldLabel>Projects</FieldLabel>
-          <Select name="projects" multiple items={projects} />
+          <Select
+            name="projects"
+            multiple
+            items={projects}
+            itemId="id"
+            label="title"
+          />
         </Field>
         <hr class="divider" />
         <Field>

@@ -15,6 +15,8 @@
   export let name: string;
   export let required = false;
   export let items: any[];
+  export let itemId: string = "value";
+  export let label: string = "label";
   export let value: any = null;
   export let multiple = false;
   export let clearable = false;
@@ -28,6 +30,8 @@
   {multiple}
   {clearable}
   {placeholder}
+  {itemId}
+  {label}
   bind:value
   showChevron
   --background="var(--White, #fff)"
@@ -51,7 +55,7 @@
   <X16 slot="clear-icon" />
   <X12 slot="multi-clear-icon" fill="var(--multi-item-clear-icon-color)" />
   <div slot="item" let:item>
-    <p>{item.label}</p>
+    <p>{item[label]}</p>
   </div>
 </Select>
 
