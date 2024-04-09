@@ -16,6 +16,11 @@
     <p>
       {form.message}
     </p>
+  {:else}
+    <p>
+      Select or drag a document to begin the document upload process. You will
+      then be able to edit document information.
+    </p>
   {/if}
 
   <DocumentUpload />
