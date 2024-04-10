@@ -18,6 +18,7 @@
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Dropzone from "../inputs/Dropzone.svelte";
   import FileInput from "../inputs/File.svelte";
+  import Language from "../inputs/Language.svelte";
   import Select from "../inputs/Select.svelte";
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
@@ -95,7 +96,7 @@
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
             <div class="title">
-              <Text name="title" bind:value={file.name} />
+              <Text name="title" bind:value={file.name} required />
               <input type="hidden" name="filename" value={file.name} />
             </div>
             <button
@@ -147,6 +148,10 @@
           />
         </Field>
         <hr class="divider" />
+        <Field>
+          <FieldLabel>Language</FieldLabel>
+          <Language />
+        </Field>
         <Field>
           <FieldLabel>OCR Engine</FieldLabel>
           <Select

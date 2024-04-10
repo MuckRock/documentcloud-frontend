@@ -6,9 +6,20 @@
   export let name: string = null;
   export let placeholder = "";
   export let value = "";
+  export let required = false;
 </script>
 
-<input type="text" {name} {placeholder} bind:value on:change />
+<input
+  type="text"
+  {name}
+  {placeholder}
+  {required}
+  bind:value
+  on:change
+  on:input
+  on:focus
+  on:blur
+/>
 
 <style>
   input {

@@ -1,3 +1,5 @@
+<svelte:options accessors />
+
 <!-- @component
   `svelte-select` provides a flexible, customizable basis for the InputSelect component.
 
@@ -7,6 +9,20 @@
   For data-specific select inputs, like a selection with user avatars,
   create a custom Select implementation and give it the `select` class.
 -->
+
+<script context="module" lang="ts">
+  /**
+   * Select wraps values in an object, which turns into a JSON string in HTML.
+   * This function will unwrap it.
+   */
+  export function unwrap(value: string, fallback: any = null): any {
+    try {
+      return JSON.parse(value).value;
+    } catch {
+      return fallback;
+    }
+  }
+</script>
 
 <script lang="ts">
   import Select from "svelte-select";
@@ -18,6 +34,7 @@
   export let itemId: string = "value";
   export let label: string = "label";
   export let value: any = null;
+  export let justValue: any = null; // read-only; don't set this
   export let multiple = false;
   export let clearable = false;
   export let placeholder: string = multiple ? "Select multiple" : "Select one";
@@ -33,6 +50,7 @@
   {itemId}
   {label}
   bind:value
+  bind:justValue
   showChevron
   --background="var(--White, #fff)"
   --border="1px solid var(--gray-3, #99a8b3)"

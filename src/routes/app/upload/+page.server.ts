@@ -6,8 +6,9 @@ import type {
   Project,
 } from "$lib/api/types";
 
-import { CSRF_COOKIE_NAME } from "@/config/config.js";
+import { CSRF_COOKIE_NAME, DEFAULT_LANGUAGE } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
+import { unwrap } from "$lib/components/inputs/Select.svelte";
 
 export const actions = {
   default: async ({ request, cookies, fetch }) => {
@@ -23,19 +24,18 @@ export const actions = {
     const access = form.get("access") as Access;
 
     // value is a JSON string
-    const ocr_engine: OCREngine = JSON.parse(form.get("ocr_engine") as string);
+    const ocr_engine: OCREngine = unwrap(form.get("ocr_engine") as string);
     const force_ocr = Boolean(form.get("force_ocr"));
     const revision_control = Boolean(form.get("revision_control"));
-    const projects = JSON.parse((form.get("projects") as string) || "[]");
-
-    // not yet implemented
-    // const language = data.get("language");
+    const projects = unwrap(form.get("projects") as string, []);
+    const language = unwrap(form.get("language") as string, DEFAULT_LANGUAGE);
 
     // put things together
     const docs: DocumentUpload[] = titles.map((title, i) => {
       return {
         title,
         access,
+        language,
         projects: projects.map((p: Project) => p.id),
         revision_control,
       };

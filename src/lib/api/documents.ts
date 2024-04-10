@@ -100,7 +100,7 @@ export async function create(
   });
 
   if (isErrorCode(resp.status)) {
-    console.error(await resp.json());
+    console.error(await resp.text());
     error(resp.status, resp.statusText);
   }
 
