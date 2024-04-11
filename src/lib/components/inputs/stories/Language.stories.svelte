@@ -15,3 +15,5 @@
 </Template>
 
 <Story name="default" />
+
+<Story name="multiple" args={{ multiple: true }} />

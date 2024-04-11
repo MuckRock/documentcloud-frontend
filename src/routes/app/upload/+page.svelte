@@ -9,19 +9,19 @@
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<Flex direction="column">
-  <h1>Upload documents</h1>
+<DocumentUpload>
+  <Flex direction="column">
+    <h1>Upload documents</h1>
 
-  {#if form?.success}
-    <p>
-      {form.message}
-    </p>
-  {:else}
-    <p>
-      Select or drag a document to begin the document upload process. You will
-      then be able to edit document information.
-    </p>
-  {/if}
-
-  <DocumentUpload />
-</Flex>
+    {#if form?.success}
+      <p>
+        {form.message}
+      </p>
+    {:else}
+      <p>
+        Select or drag a document to begin the document upload process. You will
+        then be able to edit document information.
+      </p>
+    {/if}
+  </Flex>
+</DocumentUpload>

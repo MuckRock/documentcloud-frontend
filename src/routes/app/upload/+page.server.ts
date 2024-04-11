@@ -1,6 +1,7 @@
 import type { Actions } from "./$types";
 import type {
   Access,
+  Document,
   DocumentUpload,
   OCREngine,
   Project,
@@ -41,7 +42,15 @@ export const actions = {
       };
     });
 
-    const created = await documents.create(docs, csrf_token, fetch);
+    let created: Document[];
+    try {
+      created = await documents.create(docs, csrf_token, fetch);
+    } catch (err) {
+      return {
+        success: false,
+        error: err,
+      };
+    }
 
     // upload
     const uploads = created.map((d, i) => ({

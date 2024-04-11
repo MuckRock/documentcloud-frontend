@@ -100,8 +100,7 @@ export async function create(
   });
 
   if (isErrorCode(resp.status)) {
-    console.error(await resp.text());
-    error(resp.status, resp.statusText);
+    throw new Error(await resp.text());
   }
 
   return resp.json() as Promise<Document[]>;

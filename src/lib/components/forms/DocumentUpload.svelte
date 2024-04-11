@@ -66,6 +66,11 @@
     return "unknown";
   }
 
+  function filenameToTitle(filename: string): string {
+    const [name, ...ext] = filename.split(".");
+    return name.replace(/_/g, " ").replace(/([A-Z])/g, " $1");
+  }
+
   $: total = files.reduce((t, file) => {
     return t + file.size;
   }, 0);
@@ -89,6 +94,9 @@
 >
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
+      <!-- add any header and messaging using this slot -->
+      <slot />
+
       <div class="fileList" class:empty={files.length === 0}>
         {#each files as file, index}
           <Flex align="center" gap={1}>
@@ -96,7 +104,7 @@
               {formatFileType(file.type)} / {filesize(file.size)}
             </p>
             <div class="title">
-              <Text name="title" bind:value={file.name} required />
+              <Text name="title" value={filenameToTitle(file.name)} required />
               <input type="hidden" name="filename" value={file.name} />
             </div>
             <button
