@@ -16,6 +16,6 @@
   svg {
     display: block;
     transform: rotate(-45deg);
-    fill: var(--fill, var(--black, #0c1e27));
+    fill: var(--fill, var(--orange, #ec7b6b));
   }
 </style>

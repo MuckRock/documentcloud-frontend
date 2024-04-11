@@ -21,6 +21,6 @@
 <style>
   svg {
     display: block;
-    fill: var(--fill, var(--black, #0c1e27));
+    fill: var(--fill, var(--green, #27c6a2));
   }
 </style>
