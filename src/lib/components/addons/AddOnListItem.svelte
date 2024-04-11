@@ -53,14 +53,22 @@
     color: inherit;
     text-decoration: none;
   }
-  .addon-link:hover .container {
-    background-color: var(--menuBg);
-  }
+
   .container {
     display: block;
     min-width: 12rem;
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0.75rem;
     text-align: left;
+    border-top: 1px solid var(--gray-2);
+    background-color: var(--white);
+  }
+
+  .addon-link:first-child .container {
+    border-top: none;
+  }
+
+  .addon-link:hover .container {
+    background-color: var(--blue-1);
   }
 
   .row {
@@ -79,7 +87,7 @@
     display: flex;
     align-items: flex-end;
     gap: 1rem;
-    color: var(--darkgray);
+    color: var(--gray-4);
   }
 
   .description {
@@ -87,19 +95,21 @@
     opacity: 0.6;
     font-size: 0.875em;
     line-height: 1.4;
-    color: var(--darkgray);
+    color: var(--gray-4);
     overflow: hidden;
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     & > * {
       margin-top: 0;
+      font-size: 0.875rem;
     }
   }
 
   .addon-name {
     margin: 0;
     font-weight: 600;
+    font-size: var(--font-l);
   }
 
   .center-self {

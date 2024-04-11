@@ -24,9 +24,7 @@
 </script>
 
 <Template let:args>
-  <div class="container">
-    <AddOnListItem {...args} />
-  </div>
+  <AddOnListItem {...args} />
 </Template>
 
 <Story name="Default" {args} />
@@ -45,6 +43,19 @@
   }}
 />
 <Story
+  name="HTML Description"
+  args={{
+    addon: {
+      ...args,
+      name: "SideKick",
+      parameters: {
+        description:
+          "<h1>Heading</h2><p><strong>Lorem ipsum dolor sit amet,</strong> <em>consetetur sadipscing elitr,</em> <a>sed diam nonumy eirmod</a> tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>",
+      },
+    },
+  }}
+/>
+<Story
   name="Premium"
   args={{
     addon: {
@@ -53,10 +64,3 @@
     },
   }}
 />
-
-<style>
-  .container {
-    max-width: 32rem;
-    border: 1px solid #eee;
-  }
-</style>
