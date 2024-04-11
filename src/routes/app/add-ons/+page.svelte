@@ -31,6 +31,15 @@
     goto(url);
   }
 
+  function search(event: SubmitEvent) {
+    const { url } = data;
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const query = formData.get("query") ?? "";
+    if (!query) return;
+    url.searchParams.set("query", query);
+    goto(url);
+  }
+
   $: active =
     Array.from((data.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
@@ -45,7 +54,7 @@
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Search name="query" {query} slot="center" />
+        <Search name="query" {query} on:submit={search} slot="center" />
       </PageToolbar>
 
       {#if active === "active"}
