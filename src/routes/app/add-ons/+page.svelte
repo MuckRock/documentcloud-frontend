@@ -1,14 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { _ } from "svelte-i18n";
-  import { Hourglass24, Infinity16, Star16 } from "svelte-octicons";
+  import { Hourglass24, Infinity16, Star16, StarFill16 } from "svelte-octicons";
 
-  import type { Page } from "@/api/types/common.js";
-  import type { AddOnListItem } from "$lib/api/types";
   import AddOnList from "@/addons/browser/AddOnList.svelte";
-  import { buildParams, buildUrl, filter } from "@/addons/browser/browser";
-  import Filters from "@/addons/browser/Filters.svelte";
-  import Categories from "@/addons/browser/Categories.svelte";
   import Paginator from "@/common/Paginator.svelte";
   import Search, { query } from "@/common/SearchInput.svelte";
   import Pin from "@/common/icons/Pin.svelte";
@@ -20,10 +15,10 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Error from "@/lib/components/common/Error.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
-  import type { PageData } from "./$types";
   import Premium from "@/common/icons/Premium.svelte";
+  import AddOnsNavigation from "@/lib/components/addons/AddOnsNavigation.svelte";
 
-  export let data: PageData;
+  export let data;
 
   function gotoPage(pageUrl: string) {
     const { url } = data;
@@ -32,50 +27,37 @@
     url.searchParams.set("cursor", cursor);
     goto(url);
   }
+
+  function hasFilter(filter: string) {
+    return (data.url as URL).searchParams.has(filter, "true");
+  }
+
+  $: active =
+    Array.from((data.url as URL).searchParams.entries()).find(
+      ([_, value]) => value === "true",
+    )?.[0] ?? "all";
 </script>
 
 <MainLayout>
-  <svelte:fragment slot="navigation">
-    <header class="header">
-      <h2>{$_("addonBrowserDialog.title")}</h2>
-      <p>{$_("addonBrowserDialog.subtitle")}</p>
-    </header>
-    <div class="filters">
-      <SidebarItem href="/app/add-ons">
-        <Infinity16 />
-        All
-      </SidebarItem>
-      <SidebarItem href="/app/add-ons?active=true">
-        <Pin />
-        Pinned
-      </SidebarItem>
-      <SidebarItem href="/app/add-ons?featured=true">
-        <Star16 />
-        Featured
-      </SidebarItem>
-      <SidebarItem href="/app/add-ons?premium=true">
-        <Premium />
-        Premium
-      </SidebarItem>
-    </div>
-  </svelte:fragment>
+  <AddOnsNavigation {active} slot="navigation" />
 
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
         <Search slot="center" />
       </PageToolbar>
-      {#if $filter === "active"}
+
+      {#if hasFilter("active")}
         <aside class="pinned tip">
           <div class="icon"><Pin size={1.75} /></div>
           <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
         </aside>
-      {:else if $filter === "featured"}
+      {:else if hasFilter("featured")}
         <aside class="featured tip">
           <div class="icon"><Star size={1.75} /></div>
           <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
         </aside>
-      {:else if $filter === "premium"}
+      {:else if hasFilter("premium")}
         <aside class="premium tip">
           <div class="icon"><Credit badge size={1.75} /></div>
           <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>

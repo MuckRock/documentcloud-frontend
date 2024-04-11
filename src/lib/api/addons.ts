@@ -6,13 +6,13 @@ import { isErrorCode } from "../utils/api";
 import { error } from "@sveltejs/kit";
 
 export const CATEGORIES = [
-  ["export", "Export"],
   ["ai", "AI"],
+  ["statistical", "Analyze"],
   ["bulk", "Bulk"],
-  ["extraction", "Extraction"],
+  ["export", "Export"],
+  ["extraction", "Extract"],
   ["file", "File"],
   ["monitor", "Monitor"],
-  ["statistical", "Statistical"],
 ];
 
 export async function getAddons(

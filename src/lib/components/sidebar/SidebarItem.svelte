@@ -3,7 +3,7 @@
   export let disabled = false;
   export let small = false;
   export let hover = false;
-
+  export let active = false;
   // handling link behavior
   export let href: string = undefined;
   export let target: string = undefined;
@@ -21,6 +21,7 @@
     class:active
     class:disabled
     class:small
+    class:active
     on:click
     on:keydown
   >
@@ -55,6 +56,8 @@
   }
 
   /* Hover */
+  a.container.active,
+  .container.active,
   a.container:hover,
   a.container:focus,
   .container.hover:hover,
