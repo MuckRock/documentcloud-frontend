@@ -25,7 +25,7 @@
       All
     </SidebarItem>
     <SidebarItem
-      active={active === "pinned"}
+      active={active === "active"}
       href="/app/add-ons?active=true"
       --hover="var(--orange-light)"
     >

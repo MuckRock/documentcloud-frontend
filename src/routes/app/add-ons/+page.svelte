@@ -1,7 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { _ } from "svelte-i18n";
-  import { Hourglass24, Infinity16, Star16, StarFill16 } from "svelte-octicons";
+  import {
+    Hourglass24,
+    Infinity16,
+    Plug24,
+    Star16,
+    StarFill16,
+  } from "svelte-octicons";
 
   import AddOnList from "@/addons/browser/AddOnList.svelte";
   import Paginator from "@/common/Paginator.svelte";
@@ -16,6 +22,7 @@
   import Error from "@/lib/components/common/Error.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";
+  import ListItem from "@/addons/browser/AddOnListItem.svelte";
   import AddOnsNavigation from "@/lib/components/addons/AddOnsNavigation.svelte";
 
   export let data;
@@ -47,17 +54,17 @@
         <Search slot="center" />
       </PageToolbar>
 
-      {#if hasFilter("active")}
+      {#if active === "active"}
         <aside class="pinned tip">
           <div class="icon"><Pin size={1.75} /></div>
           <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
         </aside>
-      {:else if hasFilter("featured")}
+      {:else if active === "featured"}
         <aside class="featured tip">
           <div class="icon"><Star size={1.75} /></div>
           <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
         </aside>
-      {:else if hasFilter("premium")}
+      {:else if active === "premium"}
         <aside class="premium tip">
           <div class="icon"><Credit badge size={1.75} /></div>
           <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
@@ -66,9 +73,11 @@
       {#await data.addons}
         <Empty icon={Hourglass24}>Loading…</Empty>
       {:then page}
-        <div class="list">
-          <AddOnList items={page.results} />
-        </div>
+        {#each page.results as addon}
+          <ListItem {addon} />
+        {:else}
+          <Empty icon={Plug24}>No Add-Ons Found</Empty>
+        {/each}
       {:catch error}
         <Error>{String(error)}</Error>
       {/await}
