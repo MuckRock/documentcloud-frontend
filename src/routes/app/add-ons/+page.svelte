@@ -1,15 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { _ } from "svelte-i18n";
-  import {
-    Hourglass24,
-    Infinity16,
-    Plug24,
-    Star16,
-    StarFill16,
-  } from "svelte-octicons";
+  import { Hourglass24, Plug24 } from "svelte-octicons";
 
-  import AddOnList from "@/addons/browser/AddOnList.svelte";
   import Paginator from "@/common/Paginator.svelte";
   import Search, { query } from "@/common/SearchInput.svelte";
   import Pin from "@/common/icons/Pin.svelte";
@@ -20,9 +13,7 @@
   import MainLayout from "$lib/components/MainLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Error from "@/lib/components/common/Error.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
-  import ListItem from "@/addons/browser/AddOnListItem.svelte";
+  import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import AddOnsNavigation from "@/lib/components/addons/AddOnsNavigation.svelte";
 
   export let data;
@@ -33,10 +24,6 @@
     if (!cursor) return;
     url.searchParams.set("cursor", cursor);
     goto(url);
-  }
-
-  function hasFilter(filter: string) {
-    return (data.url as URL).searchParams.has(filter, "true");
   }
 
   $: active =
