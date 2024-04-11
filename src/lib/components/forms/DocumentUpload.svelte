@@ -26,12 +26,14 @@
 
     // put things together
     const docs: DocumentUpload[] = titles.map((title, i) => {
+      const [name, ...ext] = filenames[i].split("."); // don't assume there's only one extension
       return {
         title,
         access,
         language,
         projects: projects.map((p: Project) => p.id),
         revision_control,
+        original_extension: ext[ext.length - 1],
       };
     });
 
