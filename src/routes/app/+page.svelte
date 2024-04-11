@@ -43,7 +43,7 @@
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Search {query} slot="center" />
+        <Search name="q" {query} slot="center" />
       </PageToolbar>
       {#await searchResults}
         <Empty icon={Hourglass24}>Loading…</Empty>

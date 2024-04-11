@@ -4,7 +4,7 @@
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
   import Paginator from "@/common/Paginator.svelte";
-  import Search, { query } from "@/common/SearchInput.svelte";
+  import Search from "$lib/components/Search.svelte";
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
   import Credit from "@/common/icons/Credit.svelte";
@@ -35,6 +35,8 @@
     Array.from((data.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
     )?.[0] ?? "all";
+
+  $: query = (data.url as URL).searchParams.get("query") ?? "";
 </script>
 
 <MainLayout>
@@ -43,7 +45,7 @@
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Search slot="center" />
+        <Search name="query" {query} slot="center" />
       </PageToolbar>
 
       {#if active === "active"}

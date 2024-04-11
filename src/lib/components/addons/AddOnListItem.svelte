@@ -60,7 +60,6 @@
     padding: 0.5rem 0.5rem 0.75rem;
     text-align: left;
     border-top: 1px solid var(--gray-2);
-    background-color: var(--white);
   }
 
   .addon-link:first-child .container {
