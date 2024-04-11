@@ -18,7 +18,12 @@
 
   export let data;
 
-  function gotoPage(pageUrl: string) {
+  // TODO: Improve cursor handling in page data responses
+  /** The pagination URL provided in the reponse corresponds to an API query.
+   *  This gets the cursor from the pagination URL and uses it to update the
+   *  current URL's searchParams value (there should be a smarter way to do this).
+   */
+  function paginate(pageUrl: string) {
     const { url } = data;
     const cursor = new URL(pageUrl).searchParams.get("cursor");
     if (!cursor) return;
@@ -71,12 +76,16 @@
 
       <PageToolbar slot="footer">
         <svelte:fragment slot="center">
-          <Paginator
-            has_next={Boolean(data.next_url)}
-            has_previous={Boolean(data.previous_url)}
-            on:next={() => gotoPage(data.next_url)}
-            on:previous={() => gotoPage(data.previous_url)}
-          />
+          {#await data.addons}
+            <Paginator />
+          {:then page}
+            <Paginator
+              has_next={Boolean(page.next_url)}
+              has_previous={Boolean(page.previous_url)}
+              on:next={() => paginate(page.next_url)}
+              on:previous={() => paginate(page.previous_url)}
+            />
+          {/await}
         </svelte:fragment>
       </PageToolbar>
     </ContentLayout>
