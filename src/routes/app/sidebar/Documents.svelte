@@ -5,6 +5,7 @@
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Globe16, Infinity16, Lock16, Organization16 } from "svelte-octicons";
+  import { page } from "$app/stores";
 
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
@@ -15,6 +16,8 @@
 
   const me: Writable<User> = getContext("me");
   const org: Writable<Org> = getContext("org");
+
+  $: query = $page.url.searchParams.get("q") || "";
 
   // +user:chris-amico-1020 +access:public
   $: mine = $me ? `+user:${slugify($me.name)}-${$me.id}` : "";
@@ -35,17 +38,23 @@
 </script>
 
 <Flex direction="column">
-  <SidebarItem hover href={searchUrl("")}
+  <SidebarItem hover href={searchUrl("")} active={query === ""}
     ><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem
   >
   <SignedIn>
-    <SidebarItem hover href={searchUrl(minePublic)}
+    <SidebarItem
+      hover
+      href={searchUrl(minePublic)}
+      active={query === minePublic}
       ><Globe16 /> {$_("projects.yourPubDocuments")}</SidebarItem
     >
-    <SidebarItem hover href={searchUrl(minePrivate)}
+    <SidebarItem
+      hover
+      href={searchUrl(minePrivate)}
+      active={query === minePrivate}
       ><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem
     >
-    <SidebarItem hover href={searchUrl(orgDocs)}>
+    <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
       <Organization16 />
       {$_("projects.orgDocuments", {
         values: { name: "MuckRock" },

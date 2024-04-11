@@ -1,4 +1,5 @@
 <script lang="ts">
+  export let active = false;
   export let disabled = false;
   export let small = false;
   export let hover = false;
@@ -16,6 +17,7 @@
     {rel}
     {download}
     class="container"
+    class:active
     class:disabled
     class:small
     on:click
@@ -24,7 +26,7 @@
     <slot />
   </a>
 {:else}
-  <span class="container" class:hover class:disabled class:small>
+  <span class="container" class:active class:hover class:disabled class:small>
     <slot />
   </span>
 {/if}
@@ -72,6 +74,10 @@
   .container.disabled.hover:focus {
     cursor: default;
     background: transparent;
+  }
+
+  .container.active {
+    background-color: var(--blue-2, #b5ceed);
   }
 
   /* Small */

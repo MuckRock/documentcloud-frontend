@@ -31,6 +31,12 @@
   </SidebarItem>
 </Story>
 
+<Story name="Active">
+  <SidebarItem active>
+    <Home16 /> Go Home
+  </SidebarItem>
+</Story>
+
 <Story name="Hover">
   <SidebarItem hover>
     <Home16 /> Go Home
