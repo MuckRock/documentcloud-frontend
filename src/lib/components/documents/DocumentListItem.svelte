@@ -1,7 +1,9 @@
 <script lang="ts">
+  import type { Document, Project } from "$lib/api/types";
+
   import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
-  import type { Document, Project } from "$lib/api/types";
+  import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
   import KV from "../common/KV.svelte";
 
@@ -16,6 +18,13 @@
   export let document: Document;
 
   const width = IMAGE_WIDTHS_MAP.get("thumbnail");
+
+  // this can be updated later if we want different icons
+  const statusIcons = {
+    error: Alert24,
+    nofile: File24,
+    pending: Hourglass24,
+  };
 
   $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : null;
   $: aspect = sizes ? sizes[0] : 11 / 8.5; // fallback to US letter for now
@@ -38,12 +47,18 @@ It's deliberately minimal and can be wrapped in other components to add addition
 <div class="document-list-item">
   <div class="thumbnail">
     <a href={canonicalUrl(document).toString()}>
-      <img
-        src={pageImageUrl(document, 1, "thumbnail").toString()}
-        alt="Page 1, {document.title}"
-        width="{width}px"
-        height="{height}px"
-      />
+      {#if document.status === "success" || document.status === "readable"}
+        <img
+          src={pageImageUrl(document, 1, "thumbnail").toString()}
+          alt="Page 1, {document.title}"
+          width="{width}px"
+          height="{height}px"
+        />
+      {:else}
+        <div class="fallback {document.status}">
+          <svelte:component this={statusIcons[document.status]} />
+        </div>
+      {/if}
     </a>
   </div>
   <div class="info">
@@ -84,8 +99,8 @@ It's deliberately minimal and can be wrapped in other components to add addition
 
   .thumbnail {
     border-radius: 0.125rem;
-    border: 1px solid var(--color-gray-light, #cbcbcb);
-    background: var(--color-white, #fff);
+    border: 1px solid var(--gray-2, #cbcbcb);
+    background: var(--white, #fff);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
   }
 
@@ -147,5 +162,21 @@ It's deliberately minimal and can be wrapped in other components to add addition
     font-weight: 700;
     line-height: normal;
     text-transform: uppercase;
+  }
+
+  .fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--white);
+    fill: var(--gray-3);
+    /* US letter size, thumbnail width */
+    height: calc(60px * 11 / 8.5);
+    width: 60px;
+  }
+
+  .fallback.error {
+    fill: var(--red, #f00);
   }
 </style>

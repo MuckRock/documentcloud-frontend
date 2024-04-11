@@ -20,3 +20,9 @@
 <Story name="default" args={{ document: expanded }} />
 
 <Story name="minimal" args={{ document }} />
+
+<Story name="pending" args={{ document: { ...document, status: "pending" } }} />
+
+<Story name="error" args={{ document: { ...document, status: "error" } }} />
+
+<Story name="no file" args={{ document: { ...document, status: "nofile" } }} />
