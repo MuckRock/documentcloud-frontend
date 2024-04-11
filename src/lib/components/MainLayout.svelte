@@ -1,21 +1,22 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
   import { type Org, type User } from "@/api/types";
+  import { page } from "$app/stores";
 
   import { getContext } from "svelte";
   import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
 
   import Button from "./common/Button.svelte";
   import Flex from "./common/Flex.svelte";
-  import Logo from "./common/Logo.svelte";
   import SignedIn from "./common/SignedIn.svelte";
   import UserMenu from "./accounts/UserMenu.svelte";
   import OrgMenu from "./accounts/OrgMenu.svelte";
 
   import { SIGN_IN_URL } from "@/config/config";
+  import Breadcrumbs from "./navigation/Breadcrumbs.svelte";
+  import LanguageMenu from "./navigation/LanguageMenu.svelte";
 
   export let modal: boolean = false;
-  export let basement: "left" | "right" | null = null;
 
   let panel: "navigation" | "action" | null = null;
 
@@ -27,12 +28,6 @@
     return () => {
       panel = name;
     };
-  }
-
-  function closeBasement() {
-    if (basement !== null) {
-      basement = null;
-    }
   }
 
   function closeModal() {
@@ -52,8 +47,9 @@
         </Button>
       </div>
     {/if}
-    <a href="/" class="logo"><Logo /></a>
-    <div class="breadcrumbs"></div>
+    <slot name="breadcrumbs">
+      <Breadcrumbs trail={$page.data.breadcrumbs} />
+    </slot>
     <SignedIn>
       <Flex>
         <OrgMenu org={$org} />
@@ -164,16 +160,6 @@
     max-height: 100%;
     max-width: 100%;
     overflow-y: auto;
-  }
-
-  .logo {
-    height: 1.5rem;
-    width: auto;
-    padding: 0 0.5rem;
-  }
-
-  .breadcrumbs {
-    flex: 1 0 0;
   }
 
   .navigation {

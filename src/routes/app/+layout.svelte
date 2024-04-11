@@ -2,8 +2,6 @@
   import "@/style/kit.css";
 
   import { PlusCircle16 } from "svelte-octicons";
-  import type { AddOnListItem } from "@/lib/api/types";
-  import type { Page } from "@/api/types";
 
   import MainLayout from "@/lib/components/MainLayout.svelte";
   import Button from "@/lib/components/common/Button.svelte";
@@ -14,9 +12,7 @@
   import Documents from "./sidebar/Documents.svelte";
   import Projects from "./sidebar/Projects.svelte";
 
-  export let data: {
-    pinnedAddons: Promise<Page<AddOnListItem>>;
-  };
+  export let data;
 </script>
 
 <svelte:head>

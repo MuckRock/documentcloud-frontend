@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { LayoutData } from "./$types";
   import type { Org, User } from "@/api/types/orgAndUser.d.ts";
+  import type { Breadcrumb } from "@/lib/components/common/Breadcrumbs.svelte";
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";

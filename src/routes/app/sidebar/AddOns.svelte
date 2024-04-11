@@ -3,7 +3,6 @@
   import type { AddOnListItem } from "@/addons/types";
 
   import { Book16, Hourglass24, Pin24, Plug16 } from "svelte-octicons";
-
   import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
