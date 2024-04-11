@@ -1,11 +1,109 @@
-<script lang="ts">
-  import type { Project } from "$lib/api/types";
+<script context="module" lang="ts">
+  import { error, type ActionResult } from "@sveltejs/kit";
+  /**
+   * Collect form data into documents and do three-step upload.
+   * Exported here for testing and reuse.
+   */
+  export async function upload(
+    form: FormData,
+    csrf_token: string,
+    fetch = globalThis.fetch,
+  ): Promise<ActionResult> {
+    // one per file
+    const files = Array.from(form.getAll("uploads")) as File[];
+    const titles = form.getAll("title") as string[];
+    const filenames = form.getAll("filename") as string[];
 
+    // one per batch
+    const access = form.get("access") as Access;
+
+    // value is a JSON string
+    const ocr_engine: OCREngine = unwrap(form.get("ocr_engine") as string);
+    const force_ocr = Boolean(form.get("force_ocr"));
+    const revision_control = Boolean(form.get("revision_control"));
+    const projects = unwrap(form.get("projects") as string, []);
+    const language = unwrap(form.get("language") as string, DEFAULT_LANGUAGE);
+
+    // put things together
+    const docs: DocumentUpload[] = titles.map((title, i) => {
+      return {
+        title,
+        access,
+        language,
+        projects: projects.map((p: Project) => p.id),
+        revision_control,
+      };
+    });
+
+    let created: Document[];
+    try {
+      created = await documents.create(docs, csrf_token, fetch);
+    } catch (err) {
+      return {
+        type: "error",
+        status: 400,
+        error: err,
+      };
+    }
+
+    // upload
+    const uploads = created.map((d, i) => ({
+      id: d.id,
+      presigned_url: new URL(d.presigned_url),
+      file: files[i],
+    }));
+
+    // todo: handle retries and errors
+    const upload_responses = await documents.upload(uploads, fetch);
+
+    console.log(upload_responses.map((r) => r.status));
+
+    // process
+    const process_response = await documents.process(
+      created.map((d) => ({
+        id: d.id,
+        force_ocr,
+        ocr_engine: ocr_engine.value,
+      })),
+      csrf_token,
+      fetch,
+    );
+
+    // todo: i18n
+    if (process_response.ok) {
+      return {
+        type: "success",
+        status: 201,
+        data: {
+          success: true,
+          message: `Uploaded ${created.length} documents`,
+        },
+      };
+    }
+
+    return {
+      type: "error",
+      status: process_response.status,
+      error: await process_response.text(),
+    };
+  }
+</script>
+
+<script lang="ts">
+  import type {
+    Access,
+    Document,
+    DocumentUpload,
+    OCREngine,
+    Project,
+  } from "$lib/api/types";
+
+  import { applyAction } from "$app/forms";
   import { filesize } from "filesize";
+  import { afterUpdate } from "svelte";
   import { _ } from "svelte-i18n";
   import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
 
-  import { enhance } from "$app/forms";
   import { page } from "$app/stores";
 
   import Button from "../common/Button.svelte";
@@ -19,13 +117,13 @@
   import Dropzone from "../inputs/Dropzone.svelte";
   import FileInput from "../inputs/File.svelte";
   import Language from "../inputs/Language.svelte";
-  import Select from "../inputs/Select.svelte";
+  import Select, { unwrap } from "../inputs/Select.svelte";
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
 
-  import { DOCUMENT_TYPES } from "@/config/config.js";
+  import * as documents from "$lib/api/documents";
+  import { DEFAULT_LANGUAGE, DOCUMENT_TYPES } from "@/config/config.js";
   import { isSupported } from "@/lib/utils/validateFiles";
-  import { afterUpdate } from "svelte";
 
   let files: File[] = [];
   let projects: Project[] = [];
@@ -49,7 +147,12 @@
 
   let ocrEngine = ocrEngineOptions[0];
 
+  $: csrf_token = $page.data.csrf_token;
   $: projects = $page.data.projects.results;
+
+  $: total = files.reduce((t, file) => {
+    return t + file.size;
+  }, 0);
 
   function addFiles(filesToAdd: FileList) {
     files = files.concat(Array.from(filesToAdd).filter(isSupported));
@@ -71,9 +174,20 @@
     return name.replace(/_/g, " ").replace(/([A-Z])/g, " $1");
   }
 
-  $: total = files.reduce((t, file) => {
-    return t + file.size;
-  }, 0);
+  // handle uploads client side instead of going through the server
+  async function onSubmit(e: SubmitEvent) {
+    const form = e.target as HTMLFormElement;
+    const fd = new FormData(form);
+
+    const result = await upload(fd, csrf_token);
+
+    // send data up
+    applyAction(result);
+
+    if (result.type === "success") {
+      form.reset();
+    }
+  }
 
   afterUpdate(() => {
     const dt = new DataTransfer();
@@ -87,10 +201,10 @@
 </script>
 
 <form
-  use:enhance
   method="post"
   enctype="multipart/form-data"
   action="/app/upload/"
+  on:submit|preventDefault={onSubmit}
 >
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
