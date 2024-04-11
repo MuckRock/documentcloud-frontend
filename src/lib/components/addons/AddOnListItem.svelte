@@ -62,10 +62,6 @@
     border-top: 1px solid var(--gray-2);
   }
 
-  .addon-link:first-child .container {
-    border-top: none;
-  }
-
   .addon-link:hover .container {
     background-color: var(--blue-1);
   }
