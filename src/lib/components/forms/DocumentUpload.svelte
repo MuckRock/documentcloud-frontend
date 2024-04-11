@@ -128,6 +128,7 @@
   let files: File[] = [];
   let projects: Project[] = [];
 
+  let loading = false;
   let uploader: HTMLInputElement;
 
   let fileDropActive: boolean;
@@ -171,22 +172,26 @@
 
   function filenameToTitle(filename: string): string {
     const [name, ...ext] = filename.split(".");
-    return name.replace(/_/g, " ").replace(/([A-Z])/g, " $1");
+    return name.replace(/_/g, " ");
   }
 
   // handle uploads client side instead of going through the server
   async function onSubmit(e: SubmitEvent) {
+    loading = true;
     const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
 
     const result = await upload(fd, csrf_token);
 
     // send data up
-    applyAction(result);
+    await applyAction(result);
 
     if (result.type === "success") {
       form.reset();
+      files = [];
     }
+
+    loading = false;
   }
 
   afterUpdate(() => {
@@ -240,7 +245,11 @@
         </div>
       </div>
       <div class="fileUpload">
-        <Dropzone bind:active={fileDropActive} onDrop={addFiles}>
+        <Dropzone
+          bind:active={fileDropActive}
+          onDrop={addFiles}
+          disabled={loading}
+        >
           <div class="fileDrop" class:active={fileDropActive}>
             <p class="drop-instructions">Drag and drop files here</p>
             <Flex align="center" justify="center">
@@ -310,7 +319,8 @@
           </Field>
         </Premium>
       </Flex>
-      <Button type="submit" full mode="primary"><Upload16 />Begin Upload</Button
+      <Button type="submit" full mode="primary" disabled={loading}
+        ><Upload16 />Begin Upload</Button
       >
 
       <input

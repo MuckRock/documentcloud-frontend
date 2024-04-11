@@ -1,9 +1,11 @@
 <script lang="ts">
-  import type { ActionData } from "./$types";
+  import { page } from "$app/stores";
+
   import Flex from "$lib/components/common/Flex.svelte";
   import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
 
-  export let form: ActionData;
+  // using $page.form captures the correct type from applyAction
+  $: form = $page.form;
 </script>
 
 <svelte:head>
@@ -14,11 +16,11 @@
   <Flex direction="column">
     <h1>Upload documents</h1>
 
-    {#if form?.type === "success"}
+    {#if form?.success}
       <p>
-        {form.data?.message}
+        {form?.message}
       </p>
-    {:else if form?.type === "error"}
+    {:else if form?.error}
       <p class="error">
         {form?.error}
       </p>
