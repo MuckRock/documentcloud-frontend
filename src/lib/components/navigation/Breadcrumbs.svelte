@@ -35,6 +35,11 @@
     max-width: 100%;
   }
 
+  .divider {
+    display: flex;
+    align-items: center;
+  }
+
   .crumb {
     flex: 0 1 auto;
     font-size: var(--font-l);
