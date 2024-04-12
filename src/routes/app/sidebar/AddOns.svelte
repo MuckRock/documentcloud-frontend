@@ -11,7 +11,7 @@
   import Pin from "@/common/Pin.svelte";
   import { getPinnedAddons } from "@/lib/api/addons";
 
-  let pinnedAddOns = getPinnedAddons();
+  export let pinnedAddOns: Promise<Page<AddOnListItem>>;
 </script>
 
 <SidebarGroup>

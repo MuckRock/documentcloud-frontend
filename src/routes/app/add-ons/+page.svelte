@@ -14,7 +14,7 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Error from "@/lib/components/common/Error.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
-  import AddOnsNavigation from "@/lib/components/addons/AddOnsNavigation.svelte";
+  import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
 
   export let data;
 
@@ -37,7 +37,7 @@
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const query = formData.get("query") ?? "";
     if (!query) return;
-    url.searchParams.set("query", query);
+    url.searchParams.set("query", query as string);
     goto(url);
   }
 

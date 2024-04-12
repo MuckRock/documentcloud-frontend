@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { AddOnListItem } from "@/addons/types";
+
   import { _ } from "svelte-i18n";
 
   import AddOnPin from "@/addons/AddOnPin.svelte";
   import AddOnPopularity from "@/addons/Popularity.svelte";
-  import type { AddOnListItem } from "@/addons/types";
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
 
   export let addon: AddOnListItem;

@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { Hash16, Infinity16, StarFill16, Tag16 } from "svelte-octicons";
-  import Pin from "@/common/icons/Pin.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
   import { _ } from "svelte-i18n";
+  import { Infinity16, StarFill16 } from "svelte-octicons";
+
+  import Pin from "@/common/icons/Pin.svelte";
+  import Premium from "@/common/icons/Premium.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import Flex from "../common/Flex.svelte";
+
   import { CATEGORIES } from "$lib/api/addons";
 
   export let active: string = "all";

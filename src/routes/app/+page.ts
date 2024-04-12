@@ -2,6 +2,7 @@ import type { SearchOptions } from "$lib/api/types";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
 import { search } from "$lib/api/documents";
+import { getPinnedAddons } from "@/lib/api/addons.js";
 
 export async function load({ url, fetch }) {
   const query = url.searchParams.get("q") || "";
@@ -22,11 +23,13 @@ export async function load({ url, fetch }) {
   }
 
   const searchResults = search(query, options, fetch);
+  const pinnedAddons = getPinnedAddons(fetch);
 
   return {
     query,
     per_page,
     cursor,
     searchResults,
+    pinnedAddons,
   };
 }
