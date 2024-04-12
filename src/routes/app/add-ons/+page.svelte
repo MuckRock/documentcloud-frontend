@@ -32,6 +32,7 @@
   }
 
   function search(event: SubmitEvent) {
+    event.preventDefault();
     const { url } = data;
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const query = formData.get("query") ?? "";
