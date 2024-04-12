@@ -3,6 +3,7 @@
   export let disabled = false;
   export let small = false;
   export let hover = false;
+
   // handling link behavior
   export let href: string = undefined;
   export let target: string = undefined;
@@ -41,9 +42,9 @@
     border-radius: 0.25rem;
     border: none;
 
-    color: inherit;
-    fill: inherit;
-    background: transparent;
+    color: var(--color, inherit);
+    fill: var(--fill, inherit);
+    background: var(--background, transparent);
 
     font-family: var(--font-sans, "Source Sans Pro");
     font-size: var(--font-m, 1rem);
@@ -59,7 +60,9 @@
   .container.hover:hover,
   .container.hover:focus {
     cursor: pointer;
-    background: var(--gray-2, #d8dee2);
+    background: var(--hover-background, var(--gray-2, #d8dee2));
+    color: var(--hover-color, var(--color, inherit));
+    fill: var(--hover-fill, var(--fill, inherit));
   }
   @media (hover: none) {
     a.container:hover,
@@ -76,8 +79,11 @@
     background: transparent;
   }
 
+  /* Active */
   .container.active {
-    background-color: var(--blue-2, #b5ceed);
+    background: var(--active-background, var(--blue-2, #b5ceed));
+    color: var(--active-color, var(--color, inherit));
+    fill: var(--active-fill, var(--fill, inherit));
   }
 
   /* Small */
