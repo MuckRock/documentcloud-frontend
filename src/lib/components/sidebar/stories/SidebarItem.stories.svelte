@@ -1,8 +1,9 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
+  import { Comment16, Home16, Link16, Paintbrush16 } from "svelte-octicons";
   import SidebarItem from "../SidebarItem.svelte";
-  import { Comment16, Home16 } from "svelte-octicons";
+  import Flex from "../../common/Flex.svelte";
 
   export const meta = {
     title: "Components / Sidebar / Item",
@@ -35,6 +36,23 @@
   <SidebarItem hover>
     <Home16 /> Go Home
   </SidebarItem>
+</Story>
+
+<Story name="Active">
+  <Flex>
+    <SidebarItem active>Static</SidebarItem>
+    <SidebarItem active href="#">
+      <Link16 /> Link
+    </SidebarItem>
+    <SidebarItem
+      active
+      --active-background="var(--orange-light)"
+      --active-color="var(--orange-dark)"
+      --active-fill="var(--orange)"
+    >
+      <Paintbrush16 /> Custom Active Colors
+    </SidebarItem>
+  </Flex>
 </Story>
 
 <Story name="Small">
