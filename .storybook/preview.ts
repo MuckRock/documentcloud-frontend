@@ -5,7 +5,7 @@ import UserContextDecorator from "./decorators/UserContextDecorator.svelte";
 import OrgContextDecorator from "./decorators/OrgContextDecorator.svelte";
 
 import "@/style/kit.css";
-import "../src/lib/i18n/index.js";
+import "@/lib/i18n/index.js";
 
 // Initialize MSW
 initialize({
@@ -29,7 +29,9 @@ const preview: Preview = {
       stores: {
         page: {
           url: "/",
-          data: {},
+          data: {
+            breadcrumbs: [],
+          },
         },
       },
     },

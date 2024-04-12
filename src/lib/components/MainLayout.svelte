@@ -59,6 +59,7 @@
         Sign In
       </Button>
     </SignedIn>
+    <LanguageMenu />
     {#if $$slots.action}
       <div class="small openPane">
         <Button mode="ghost" on:click={openPanel("action")}>
