@@ -15,6 +15,7 @@
   import { SIGN_IN_URL } from "@/config/config";
   import Breadcrumbs from "./navigation/Breadcrumbs.svelte";
   import LanguageMenu from "./navigation/LanguageMenu.svelte";
+  import HelpMenu from "./navigation/HelpMenu.svelte";
 
   export let modal: boolean = false;
 
@@ -60,6 +61,7 @@
       </Button>
     </SignedIn>
     <LanguageMenu />
+    <HelpMenu />
     {#if $$slots.action}
       <div class="small openPane">
         <Button mode="ghost" on:click={openPanel("action")}>
