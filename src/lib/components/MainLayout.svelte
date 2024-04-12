@@ -9,8 +9,8 @@
   import Button from "./common/Button.svelte";
   import Flex from "./common/Flex.svelte";
   import SignedIn from "./common/SignedIn.svelte";
-  import UserMenu from "./accounts/UserMenu.svelte";
-  import OrgMenu from "./accounts/OrgMenu.svelte";
+  import UserMenu from "./navigation/UserMenu.svelte";
+  import OrgMenu from "./navigation/OrgMenu.svelte";
 
   import { SIGN_IN_URL } from "@/config/config";
   import Breadcrumbs from "./navigation/Breadcrumbs.svelte";
