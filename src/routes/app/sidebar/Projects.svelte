@@ -18,12 +18,16 @@
   <SidebarItem slot="title"><FileDirectory16 /> Projects</SidebarItem>
   <Action slot="action" icon={Book16}>Explore</Action>
   <Flex direction="column" gap={0}>
-    {#await pinned then projects}
+    {#await pinned}
+      <Empty icon={Hourglass24}>Loading pinned projects…</Empty>
+    {:then projects}
       {#each projects as project}
         <SidebarItem small>
           <Pin active={project.pinned} />
           {project.title}
         </SidebarItem>
+      {:else}
+        <Empty icon={FileDirectory24}>Pinned projects will appear here</Empty>
       {/each}
     {/await}
   </Flex>
