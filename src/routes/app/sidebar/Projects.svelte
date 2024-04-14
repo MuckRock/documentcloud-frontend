@@ -1,11 +1,19 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
+
+  import {
+    Book16,
+    FileDirectory16,
+    FileDirectory24,
+    Hourglass24,
+  } from "svelte-octicons";
+
   import Pin from "@/common/Pin.svelte";
   import Action from "@/lib/components/common/Action.svelte";
+  import Empty from "@/lib/components/common/Empty.svelte";
   import Flex from "@/lib/components/common/Flex.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
-  import { Book16, FileDirectory16 } from "svelte-octicons";
 
   import { page } from "$app/stores";
 

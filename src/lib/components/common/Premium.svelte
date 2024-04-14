@@ -5,7 +5,7 @@
 
   const me = getContext<Writable<User>>("me");
 
-  $: org = $me.organization;
+  $: org = $me?.organization;
   $: isPremium = isOrg(org)
     ? ["Organization", "Professional"].includes(org.plan)
     : false;
