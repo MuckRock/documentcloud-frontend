@@ -46,7 +46,7 @@ export default defineConfig({
     ],
     environment: "jsdom",
     coverage: {
-      reporter: ["text", "html", "clover", "json"],
+      reporter: ["text", "html", "lcov", "clover", "json"],
     },
   },
 });

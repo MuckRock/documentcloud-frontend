@@ -32,3 +32,19 @@
     ],
   }}
 />
+<Story
+  name="With Oversized Files"
+  args={{
+    ...args,
+    files: [
+      new File([new ArrayBuffer(525336577)], "fileOne.pdf", {
+        type: "application/pdf",
+      }),
+      new File([new ArrayBuffer(128000)], "fileTwo.pdf"),
+      new File([new ArrayBuffer(27262977)], "fileThree.png", {
+        type: "image/png",
+      }),
+      new File([new ArrayBuffer(128000)], "fileFour.png"),
+    ],
+  }}
+/>

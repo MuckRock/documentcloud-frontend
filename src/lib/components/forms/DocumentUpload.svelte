@@ -106,7 +106,13 @@
   import { filesize } from "filesize";
   import { afterUpdate } from "svelte";
   import { _ } from "svelte-i18n";
-  import { File16, File24, Upload16, XCircleFill24 } from "svelte-octicons";
+  import {
+    Alert16,
+    File16,
+    File24,
+    Upload16,
+    XCircleFill24,
+  } from "svelte-octicons";
 
   import { page } from "$app/stores";
 
@@ -126,14 +132,20 @@
   import Text from "../inputs/Text.svelte";
 
   import * as documents from "$lib/api/documents";
-  import { DOCUMENT_TYPES } from "@/config/config.js";
+  import {
+    DOCUMENT_SIZE_LIMIT,
+    DOCUMENT_TYPES,
+    PDF_SIZE_LIMIT,
+  } from "@/config/config.js";
   import {
     filenameToTitle,
     getFileExtension,
     isSupported,
+    isWithinSizeLimit,
   } from "@/lib/utils/files";
+  import Tooltip from "@/common/Tooltip.svelte";
 
-  let files: File[] = [];
+  export let files: File[] = [];
   let projects: Project[] = [];
 
   let loading = false;
@@ -157,11 +169,13 @@
   let ocrEngine = ocrEngineOptions[0];
 
   $: csrf_token = $page.data.csrf_token;
-  $: projects = $page.data.projects.results;
+  $: projects = $page.data.projects?.results;
 
   $: total = files.reduce((t, file) => {
     return t + file.size;
   }, 0);
+
+  $: exceedsSizeLimit = files.some((file) => !isWithinSizeLimit(file));
 
   function addFiles(filesToAdd: FileList) {
     files = files.concat(Array.from(filesToAdd).filter(isSupported));
@@ -215,8 +229,21 @@
       <div class="fileList" class:empty={files.length === 0}>
         {#each files as file, index}
           <Flex align="center" gap={1}>
-            <p class="fileInfo">
-              {getFileExtension(file)} / {filesize(file.size)}
+            <p class="fileInfo" class:error={!isWithinSizeLimit(file)}>
+              <span class="uppercase"
+                >{getFileExtension(file)} / {filesize(file.size)}</span
+              >
+              {#if !isWithinSizeLimit(file)}
+                <Tooltip
+                  caption="The maximum size for a {getFileExtension(
+                    file,
+                  ).toUpperCase()} is {getFileExtension(file) === 'pdf'
+                    ? '500MB'
+                    : '25MB'}"
+                >
+                  <Alert16 fill="var(--red)" />
+                </Tooltip>
+              {/if}
             </p>
             <div class="title">
               <Text name="title" value={filenameToTitle(file.name)} required />
@@ -235,10 +262,14 @@
             below
           </Empty>
         {/each}
-
-        <div class="total">
-          <p>Total upload size: {filesize(total)}</p>
-        </div>
+        {#if files.length > 0}
+          <div class="total">
+            <p>
+              Total: {files.length} file{files.length > 1 ? "s" : ""},
+              <span class="uppercase">{filesize(total)}</span>
+            </p>
+          </div>
+        {/if}
       </div>
       <div class="fileUpload">
         <Dropzone
@@ -315,8 +346,11 @@
           </Field>
         </Premium>
       </Flex>
-      <Button type="submit" full mode="primary" disabled={loading}
-        ><Upload16 />Begin Upload</Button
+      <Button
+        type="submit"
+        full
+        mode="primary"
+        disabled={loading || exceedsSizeLimit}><Upload16 />Begin Upload</Button
       >
 
       <input
@@ -350,6 +384,20 @@
     flex: 1 0 0;
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
+    position: relative;
+  }
+
+  .fileList .total {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    background: var(--white);
+    border: 1px solid var(--gray-2);
+    font-size: var(--font-s);
+    font-weight: var(--font-semibold);
+    box-shadow: var(--shadow);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
   }
 
   .fileList.empty {
@@ -381,7 +429,13 @@
     font-size: var(--font-xs);
     color: var(--gray-5);
     white-space: nowrap;
-    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .fileInfo.error {
+    color: var(--red);
   }
 
   .title {
@@ -404,6 +458,13 @@
   .fileRemove:hover,
   .fileRemove:focus {
     background: var(--blue-1);
+  }
+
+  .excessiveFileSize {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    color: var(--red-dark);
+    font-size: var(--font-s);
   }
 
   .drop-instructions {
@@ -444,6 +505,10 @@
     width: 100%;
     border: none;
     border-top: 1px solid var(--gray-2, #d8dee2);
+  }
+
+  .uppercase {
+    text-transform: uppercase;
   }
 
   input[name="uploads"] {
