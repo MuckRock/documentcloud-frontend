@@ -371,7 +371,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
     align-self: stretch;
   }
 
@@ -385,11 +384,13 @@
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
     position: relative;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .fileList .total {
     position: absolute;
-    bottom: 0.5rem;
+    bottom: -0.85rem;
     left: 0.5rem;
     background: var(--white);
     border: 1px solid var(--gray-2);
@@ -422,6 +423,9 @@
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
     background: var(--gray-1, #f5f6f7);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
   }
 
   .fileInfo {
