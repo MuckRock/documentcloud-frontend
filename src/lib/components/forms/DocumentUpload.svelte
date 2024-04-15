@@ -127,7 +127,11 @@
 
   import * as documents from "$lib/api/documents";
   import { DOCUMENT_TYPES } from "@/config/config.js";
-  import { isSupported } from "@/lib/utils/validateFiles";
+  import {
+    filenameToTitle,
+    getFileExtension,
+    isSupported,
+  } from "@/lib/utils/files";
 
   let files: File[] = [];
   let projects: Project[] = [];
@@ -165,18 +169,6 @@
 
   function removeFile(index: number) {
     files = files.filter((f, i) => i !== index);
-  }
-
-  function formatFileType(filetype: string) {
-    if (filetype && filetype.includes("/")) {
-      return filetype.split("/")[1];
-    }
-    return "unknown";
-  }
-
-  function filenameToTitle(filename: string): string {
-    const [name, ...ext] = filename.split(".");
-    return name.replace(/_+/g, " ").replace(/\s+/, " ").trim();
   }
 
   // handle uploads client side instead of going through the server
@@ -224,7 +216,7 @@
         {#each files as file, index}
           <Flex align="center" gap={1}>
             <p class="fileInfo">
-              {formatFileType(file.type)} / {filesize(file.size)}
+              {getFileExtension(file)} / {filesize(file.size)}
             </p>
             <div class="title">
               <Text name="title" value={filenameToTitle(file.name)} required />
