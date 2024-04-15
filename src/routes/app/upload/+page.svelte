@@ -6,13 +6,15 @@
 
   // using $page.form captures the correct type from applyAction
   $: form = $page.form;
+  $: csrf_token = $page.data.csrf_token;
+  $: projects = $page.data.projects.result;
 </script>
 
 <svelte:head>
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<DocumentUpload>
+<DocumentUpload {csrf_token} {projects}>
   <Flex direction="column">
     <h1>Upload documents</h1>
 

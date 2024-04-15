@@ -130,11 +130,7 @@
   import Text from "../inputs/Text.svelte";
 
   import * as documents from "$lib/api/documents";
-  import {
-    DOCUMENT_SIZE_LIMIT,
-    DOCUMENT_TYPES,
-    PDF_SIZE_LIMIT,
-  } from "@/config/config.js";
+  import { DOCUMENT_TYPES } from "@/config/config.js";
   import {
     filenameToTitle,
     getFileExtension,
@@ -143,8 +139,9 @@
   } from "@/lib/utils/files";
   import Tooltip from "@/common/Tooltip.svelte";
 
+  export let csrf_token = "";
   export let files: File[] = [];
-  let projects: Project[] = [];
+  export let projects: Project[] = [];
 
   let loading = false;
   let uploader: HTMLInputElement;
@@ -165,9 +162,6 @@
   ];
 
   let ocrEngine = ocrEngineOptions[0];
-
-  $: csrf_token = $page.data.csrf_token;
-  $: projects = $page.data.projects?.results;
 
   $: total = files.reduce((t, file) => {
     return t + file.size;
@@ -226,7 +220,7 @@
 
       <div class="fileList" class:empty={files.length === 0}>
         {#each files as file, index}
-          <Flex align="center" gap={1}>
+          <Flex align="center" gap={1} role="listitem">
             <p class="fileInfo" class:error={!isWithinSizeLimit(file)}>
               <span class="uppercase"
                 >{getFileExtension(file)} / {filesize(file.size)}</span

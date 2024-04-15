@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { AriaRole } from "svelte/elements";
+
   /* Based on https://github.com/himynameisdave/svelte-flex */
 
   type Align = "center" | "end" | "start" | "stretch" | "baseline";
@@ -11,6 +13,7 @@
   export let reverse = false;
   export let gap: number = 0.5;
   export let wrap: boolean = false;
+  export let role: AriaRole = null;
 
   const alignMap: Record<Align, string> = {
     start: "flex-start",
@@ -41,6 +44,7 @@
   style:justify-content={justifyMap[justify]}
   style:gap={`${gap}rem`}
   class={$$restProps.class}
+  {role}
 >
   <slot />
 </div>
