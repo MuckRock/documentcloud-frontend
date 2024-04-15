@@ -112,8 +112,6 @@
     XCircleFill24,
   } from "svelte-octicons";
 
-  import { page } from "$app/stores";
-
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
   import Field from "../common/Field.svelte";
