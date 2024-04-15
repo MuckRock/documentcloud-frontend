@@ -1,5 +1,7 @@
 <script context="module" lang="ts">
-  import { error, type ActionResult } from "@sveltejs/kit";
+  import type { ActionResult } from "@sveltejs/kit";
+  import { DEFAULT_LANGUAGE } from "@/config/config.js";
+
   /**
    * Collect form data into documents and do three-step upload.
    * Exported here for testing and reuse.
@@ -15,7 +17,7 @@
     const filenames = form.getAll("filename") as string[];
 
     // one per batch
-    const access = form.get("access") as Access;
+    const access = (form.get("access") || "private") as Access;
 
     // value is a JSON string
     const ocr_engine: OCREngine = unwrap(form.get("ocr_engine") as string);
@@ -124,7 +126,7 @@
   import Text from "../inputs/Text.svelte";
 
   import * as documents from "$lib/api/documents";
-  import { DEFAULT_LANGUAGE, DOCUMENT_TYPES } from "@/config/config.js";
+  import { DOCUMENT_TYPES } from "@/config/config.js";
   import { isSupported } from "@/lib/utils/validateFiles";
 
   let files: File[] = [];
@@ -174,7 +176,7 @@
 
   function filenameToTitle(filename: string): string {
     const [name, ...ext] = filename.split(".");
-    return name.replace(/_/g, " ");
+    return name.replace(/_+/g, " ").replace(/\s+/, " ").trim();
   }
 
   // handle uploads client side instead of going through the server

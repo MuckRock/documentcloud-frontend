@@ -1,8 +1,17 @@
-import { describe, test as base, expect } from "vitest";
+import type { Document, DocumentUpload, Sizes } from "./types";
+
+import {
+  vi,
+  test as base,
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+} from "vitest";
 import { APP_URL, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
 
 import * as documents from "./documents";
-import type { Document, Sizes } from "./types";
 
 type Use<T> = (value: T) => Promise<void>;
 
@@ -14,6 +23,12 @@ const test = base.extend({
 
     await use(document as unknown as Document);
   },
+
+  created: async ({}, use: Use<Document>) => {
+    const created = await import("./fixtures/documents/create.json");
+
+    await use(created as unknown as Document);
+  },
 });
 
 describe("document fetching", () => {
@@ -22,9 +37,35 @@ describe("document fetching", () => {
 });
 
 describe("document uploads and processing", () => {
-  test.todo("documents.create");
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test("documents.create", async ({ created }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async json() {
+        return created;
+      },
+    }));
+
+    const doc: DocumentUpload = {
+      title: created.title,
+      access: created.access,
+      language: created.language,
+      original_extension: created.original_extension,
+    };
+
+    documents.create([doc], "token", mockFetch).then((d) => {
+      expect(d).toMatchObject(created);
+    });
+  });
+
   test.todo("documents.upload");
+
   test.todo("documents.process");
+
+  test.todo("documents.cancel");
 });
 
 describe("document helper methods", () => {

@@ -74,7 +74,6 @@ export interface DocumentUpload {
   access: Access;
   data?: Data;
   language?: string;
-  ocr_engine?: string;
   original_extension?: string;
   noindex?: boolean;
   projects?: number[]; // project ids only
@@ -98,7 +97,6 @@ export interface Document {
   file_hash?: string;
   noindex?: boolean;
   language: string;
-  ocr_engine: string;
   organization: number | Org;
   original_extension: string;
   page_count: number;
