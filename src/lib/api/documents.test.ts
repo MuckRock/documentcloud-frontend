@@ -21,13 +21,15 @@ const test = base.extend({
       "./fixtures/documents/document-expanded.json"
     );
 
-    await use(document as unknown as Document);
+    await use(document as Document);
   },
 
-  created: async ({}, use: Use<Document>) => {
-    const created = await import("./fixtures/documents/create.json");
+  created: async ({}, use: Use<Document[]>) => {
+    const { default: created } = await import(
+      "./fixtures/documents/create.json"
+    );
 
-    await use(created as unknown as Document);
+    await use(created as Document[]);
   },
 });
 
@@ -49,21 +51,50 @@ describe("document uploads and processing", () => {
       },
     }));
 
-    const doc: DocumentUpload = {
-      title: created.title,
-      access: created.access,
-      language: created.language,
-      original_extension: created.original_extension,
-    };
+    const docs: DocumentUpload[] = created.map((d) => ({
+      title: d.title,
+      access: d.access,
+      language: d.language,
+      original_extension: d.original_extension,
+    }));
 
-    documents.create([doc], "token", mockFetch).then((d) => {
+    documents.create(docs, "token", mockFetch).then((d) => {
       expect(d).toMatchObject(created);
     });
   });
 
-  test.todo("documents.upload");
+  test("documents.upload", async ({ created }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+    }));
 
-  test.todo("documents.process");
+    created.forEach(async (doc) => {
+      const file = new File(
+        ["test content"],
+        "finalseasonal-allergies-pollen-and-mold-2023-en.pdf",
+        { type: "application/pdf" },
+      );
+
+      const resp = await documents.upload(
+        new URL(doc.presigned_url),
+        file,
+        mockFetch,
+      );
+
+      expect(resp.ok).toBeTruthy();
+    });
+  });
+
+  test("documents.process", async ({ created }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async text() {
+        return "OK";
+      },
+    }));
+
+    // const resp = await documents.process();
+  });
 
   test.todo("documents.cancel");
 });

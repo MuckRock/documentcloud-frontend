@@ -107,39 +107,29 @@ export async function create(
 }
 
 /**
- * Upload file data to a presigned_url array.
+ * Upload file data to a presigned_url on cloud storage.
  * Use this after running `create` to add documents to the database.
- *
- * Note that this function takes an array of objects containing a document ID and
- * a presigned URL, plus an array file data.
+ * This function is a very thin wrapper around fetch.
  *
  * @async
  * @export
  */
 export async function upload(
-  documents: {
-    id: string | number;
-    presigned_url: URL;
-    file: File;
-  }[],
+  presigned_url: URL,
+  file: File,
   fetch = globalThis.fetch,
-): Promise<Response[]> {
-  console.log(`uploading ${documents.length} documents`);
-  return Promise.all(
-    documents.map(({ id, presigned_url, file }, i) => {
-      return fetch(presigned_url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": file.type || "application/octet-stream",
-        },
-        body: file,
-      });
-    }),
-  );
+): Promise<Response> {
+  return fetch(presigned_url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type || "application/octet-stream",
+    },
+    body: file,
+  });
 }
 
 /**
- * Extract images and text from uploaded documents
+ * Tell the backend to begin processing a batch of documents.
  *
  * @async
  * @export
@@ -169,7 +159,7 @@ export async function process(
  *
  * @param id Document ID
  */
-export async function cancel(id: number) {}
+export async function cancel(id: number | string) {}
 
 // utility functions
 

@@ -28,7 +28,7 @@
 
     // put things together
     const docs: DocumentUpload[] = titles.map((title, i) => {
-      const [name, ...ext] = filenames[i].split("."); // don't assume there's only one extension
+      const ext = getFileExtension(files[i]);
       return {
         title,
         access,
@@ -51,14 +51,12 @@
     }
 
     // upload
-    const uploads = created.map((d, i) => ({
-      id: d.id,
-      presigned_url: new URL(d.presigned_url),
-      file: files[i],
-    }));
+    const uploads = created.map((d, i) =>
+      documents.upload(new URL(d.presigned_url), files[i], fetch),
+    );
 
     // todo: handle retries and errors
-    const upload_responses = await documents.upload(uploads, fetch);
+    const upload_responses = await Promise.all(uploads);
 
     console.log(upload_responses.map((r) => r.status));
 
