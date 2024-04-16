@@ -4,10 +4,10 @@ import * as notesApi from "$lib/api/notes.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {
-  const { page } = params;
+  const page = +params.page;
   let [document, notes] = await Promise.all([
-    documents.get(params.id, fetch),
-    notesApi.list(params.id, fetch),
+    documents.get(+params.id, fetch),
+    notesApi.list(+params.id, fetch),
   ]);
 
   return {

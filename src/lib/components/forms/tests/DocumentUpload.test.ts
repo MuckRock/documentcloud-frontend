@@ -23,7 +23,7 @@ describe("DocumentUpload form", () => {
     });
     await act(() => fireEvent(dropElement, dropEvent));
     const fileListItem = screen.getByRole("listitem");
-    expect(fileListItem).toContainHTML("128 kB");
+    expect(fileListItem).toContain("128 kB");
   });
   it("provides feedback when a file is too large", async () => {
     render(DocumentUploadForm);
@@ -39,6 +39,6 @@ describe("DocumentUpload form", () => {
     });
     await act(() => fireEvent(dropElement, dropEvent));
     const fileListItem = screen.getByRole("listitem");
-    expect(fileListItem).toContainHTML("The maximum size for a PDF is 500MB");
+    expect(fileListItem).toContain("The maximum size for a PDF is 500MB");
   });
 });

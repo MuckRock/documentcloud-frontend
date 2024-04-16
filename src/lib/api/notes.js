@@ -37,7 +37,7 @@ export async function list(doc_id, fetch) {
  * @param {globalThis.fetch} fetch
  * @returns {Promise<import('./types').Note>}
  */
-export async function get(doc_id, note_id, fetch) {
+export async function get(doc_id, note_id, fetch = globalThis.fetch) {
   const endpoint = new URL(
     `documents/${doc_id}/notes/${note_id}.json`,
     BASE_API_URL,
