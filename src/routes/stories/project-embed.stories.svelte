@@ -8,7 +8,7 @@
 
   import documents from "$lib/api/fixtures/projects/project-documents-expanded.json";
   import project from "$lib/api/fixtures/projects/project.json";
-  import * as mock from "$lib/api/fixtures/mock.js";
+  import * as mock from "$lib/api/fixtures/mock";
 
   export const meta = {
     title: "Embed / Project",
