@@ -1,0 +1,46 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+# This runs CI specifically for development of the `sveltekit` branch.
+# It uses our new testing infrastructure.
+
+name: SvelteKit CI
+
+on:
+  pull_request:
+    branches: [sveltekit]
+
+jobs:
+  
+  unit-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - run: npm ci
+      - run: npm run build
+        env:
+          NODE_ENV: production
+      - run: npm test:coverage
+      - name: Report Coverage
+        uses: davelosert/vitest-coverage-report-action@v2
+  
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - run: npm ci
+      - run: npm run build
+        env:
+          NODE_ENV: production
+      - run: npm run check
+  
