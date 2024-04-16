@@ -2,7 +2,6 @@
   viewBox="0 0 182 32"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
-  title="DocumentCloud"
   class="icon"
 >
   <path

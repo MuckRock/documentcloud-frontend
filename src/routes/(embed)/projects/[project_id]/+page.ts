@@ -1,6 +1,6 @@
 // load data for project embeds
 
-import * as projects from "$lib/api/projects.js";
+import * as projects from "$lib/api/projects";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {
