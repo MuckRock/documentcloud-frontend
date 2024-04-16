@@ -16,7 +16,7 @@
 
 <div class="card">
   <DocumentUpload {csrf_token} {projects}>
-    <Flex direction="column">
+    <header>
       <h1 class="title">Upload documents</h1>
 
       {#if form?.success}
@@ -33,23 +33,29 @@
           will then be able to edit document information.
         </p>
       {/if}
-    </Flex>
+    </header>
   </DocumentUpload>
 </div>
 
 <style>
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
   .card {
     margin: 1rem;
     padding: 1rem;
     border-radius: 1rem;
     box-shadow: var(--shadow);
+    background: var(--white);
   }
   .title {
     font-size: var(--font-xl);
     font-weight: var(--font-semibold);
   }
   .description {
-    margin: 1rem 0;
     opacity: 0.7;
   }
 </style>
