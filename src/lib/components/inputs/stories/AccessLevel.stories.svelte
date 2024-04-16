@@ -10,7 +10,7 @@
   };
 
   let args = {
-    level: "private",
+    selected: "private",
   };
 </script>
 
@@ -19,6 +19,6 @@
 </Template>
 
 <Story name="Private" {args} />
-<Story name="Organization" args={{ ...args, level: "organization" }} />
-<Story name="Public" args={{ ...args, level: "public" }} />
+<Story name="Organization" args={{ ...args, selected: "organization" }} />
+<Story name="Public" args={{ ...args, selected: "public" }} />
 <Story name="Row" args={{ ...args, direction: "row" }} />
