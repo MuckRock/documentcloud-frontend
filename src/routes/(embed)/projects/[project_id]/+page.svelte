@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import type { Document } from "$lib/api/types";
   import DocumentListItem from "$lib/components/documents/DocumentListItem.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
 
@@ -11,17 +12,17 @@
   $: count = data.documents.count;
   $: next = data.documents.next;
   $: previous = data.documents.previous;
-  $: documents = data.documents.results.map((d) => d.document);
+  $: documents = data.documents.results.map((d) => d.document) as Document[];
   $: total_pages = Math.ceil(count / per_page);
 
   async function load(url) {
-    const res = await fetch(url, { credentials: "include" }).catch((e) => ({
-      ok: false,
-      error: e,
-    }));
+    const res = await fetch(url, { credentials: "include" }).catch((e) => {
+      console.error(e);
+      return { ok: false, json: () => {} };
+    });
 
     if (!res.ok) {
-      console.error(res.error);
+      return;
     }
 
     data.documents = await res.json();

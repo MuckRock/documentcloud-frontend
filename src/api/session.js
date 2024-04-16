@@ -86,6 +86,7 @@ export class SessionCache {
 
 const sessionCache = new SessionCache();
 
+// @ts-ignore
 session.getStatic = async function getStatic(url) {
   if (sessionCache.has(url)) {
     return sessionCache.lookup(url);

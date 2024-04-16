@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Annotation from "./Annotation.svelte";
@@ -17,6 +18,8 @@
   import { embedUrl } from "$lib/api/embed";
 
   export let data;
+
+  const dispatch = createEventDispatcher();
 
   let elem;
   let active = null;

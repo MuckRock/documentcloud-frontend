@@ -12,6 +12,7 @@ export function documentDimensionUrl(document) {
 function getDesiredSize(desiredWidth) {
   for (let i = 0; i < IMAGE_WIDTHS.length; i++) {
     const [width, name] = IMAGE_WIDTHS[i];
+    // @ts-ignore
     if (desiredWidth <= width) return name;
   }
   return IMAGE_WIDTHS[IMAGE_WIDTHS.length - 1][1];
