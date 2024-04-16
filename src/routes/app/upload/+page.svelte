@@ -50,6 +50,8 @@
     border-radius: 1rem;
     box-shadow: var(--shadow);
     background: var(--white);
+    overflow-y: auto;
+    height: fit-content;
   }
   .title {
     font-size: var(--font-xl);
