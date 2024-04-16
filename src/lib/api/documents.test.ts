@@ -93,7 +93,13 @@ describe("document uploads and processing", () => {
       },
     }));
 
-    // const resp = await documents.process();
+    const resp = await documents.process(
+      created.map((d) => ({ id: d.id })),
+      "csrf_token",
+      mockFetch,
+    );
+
+    expect(resp.ok).toBeTruthy();
   });
 
   test.todo("documents.cancel");

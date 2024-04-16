@@ -135,7 +135,11 @@ export async function upload(
  * @export
  */
 export async function process(
-  documents: { id: string | number; force_ocr: boolean; ocr_engine: string }[],
+  documents: {
+    id: string | number;
+    force_ocr?: boolean;
+    ocr_engine?: string;
+  }[],
   csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Response> {
