@@ -37,16 +37,21 @@ export default defineConfig({
 
   test: {
     setupFiles: ["./vitest-setup.js"],
-    include: ["src/**/*.{test,spec}.{js,ts}"],
+    include: [
+      "src/lib/**/*.{test,spec}.{js,ts}",
+      "src/routes/**/*.{test,spec}.{js,ts}",
+    ],
     exclude: [
       ...configDefaults.exclude,
       "storybook-static",
+      "node_modules",
       "./src/config/*",
       "../src/**/*.stories.@(js|jsx|ts|tsx|svelte)",
     ],
     environment: "jsdom",
     coverage: {
-      reporter: ["text", "html", "lcov", "clover", "json"],
+      include: ["src/lib/**", "src/routes/**"],
+      reporter: ["text", "html", "lcov", "clover", "json", "json-summary"],
     },
   },
 });
