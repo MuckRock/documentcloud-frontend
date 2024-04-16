@@ -6,7 +6,7 @@
   import "@/style/global.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectEmbed from "../(embed)/projects/[project_id]/+page.svelte";
+  import ProjectEmbed from "../projects/[project_id]/+page.svelte";
 
   import documents from "$lib/api/fixtures/projects/project-documents-expanded.json";
   import project from "$lib/api/fixtures/projects/project.json";

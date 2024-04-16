@@ -5,7 +5,7 @@
   import "@/style/global.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import PageEmbed from "../(embed)/documents/[id]/pages/[page]/+page.svelte";
+  import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";
 
   import document from "$lib/api/fixtures/documents/document-expanded.json";
   import { results } from "$lib/api/fixtures/notes/notes-expanded.json";
