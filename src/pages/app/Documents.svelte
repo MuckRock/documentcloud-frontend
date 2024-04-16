@@ -181,7 +181,7 @@
             >
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
-            <a href="https://airtable.com/shrZrgdmuOwW0ZLPM" target="_new">
+            <a href="https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form" target="_new">
               <Button>{$_("noDocuments.requestVerificationAction")}</Button>
             </a>
           {/if}
