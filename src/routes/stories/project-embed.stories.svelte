@@ -1,4 +1,6 @@
-<script context="module">
+<script context="module" lang="ts">
+  import type { Project, ProjectMembershipList } from "$lib/api/types";
+
   // legacy css
   import "@/style/variables.css";
   import "@/style/global.css";
@@ -17,7 +19,13 @@
     parameters: { layout: "centered" },
   };
 
-  const data = { project, documents };
+  const data = {
+    project: project as Project,
+    documents: documents as ProjectMembershipList,
+    embed: true,
+    me: null,
+    org: null,
+  };
 </script>
 
 <Story
