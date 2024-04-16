@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
   import type { ActionResult } from "@sveltejs/kit";
   import { DEFAULT_LANGUAGE } from "@/config/config.js";
+  import { userDocs } from "$lib/api/accounts";
 
   /**
    * Collect form data into documents and do three-step upload.
@@ -9,6 +10,7 @@
   export async function upload(
     form: FormData,
     csrf_token: string,
+    user: User,
     fetch = globalThis.fetch,
   ): Promise<ActionResult> {
     // one per file
@@ -35,7 +37,7 @@
         language,
         projects: projects.map((p: Project) => p.id),
         revision_control,
-        original_extension: ext[ext.length - 1],
+        original_extension: ext,
       };
     });
 
@@ -73,25 +75,24 @@
 
     // todo: i18n
     if (process_response.ok) {
+      const query = new URLSearchParams([["q", userDocs(user, access)]]);
       return {
-        type: "success",
-        status: 201,
-        data: {
-          success: true,
-          message: `Uploaded ${created.length} documents`,
-        },
+        type: "redirect",
+        status: 302,
+        location: "/app/?" + query.toString(),
       };
     }
 
     return {
       type: "error",
       status: process_response.status,
-      error: await process_response.text(),
+      error: await process_response.json(),
     };
   }
 </script>
 
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type {
     Access,
     Document,
@@ -99,10 +100,12 @@
     OCREngine,
     Project,
   } from "$lib/api/types";
+  import type { User } from "@/api/types/orgAndUser";
 
   import { applyAction } from "$app/forms";
+  import { goto } from "$app/navigation";
   import { filesize } from "filesize";
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Alert16,
@@ -140,6 +143,8 @@
   export let csrf_token = "";
   export let files: File[] = [];
   export let projects: Project[] = [];
+
+  const me: Writable<User> = getContext("me");
 
   let loading = false;
   let uploader: HTMLInputElement;
@@ -181,7 +186,7 @@
     const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
 
-    const result = await upload(fd, csrf_token);
+    const result = await upload(fd, csrf_token, $me);
 
     // send data up
     await applyAction(result);
@@ -189,6 +194,10 @@
     if (result.type === "success") {
       form.reset();
       files = [];
+    }
+
+    if (result.type === "redirect") {
+      goto(result.location, { invalidateAll: true });
     }
 
     loading = false;
@@ -236,7 +245,12 @@
               {/if}
             </p>
             <div class="title">
-              <Text name="title" value={filenameToTitle(file.name)} required />
+              <Text
+                name="title"
+                value={filenameToTitle(file.name)}
+                required
+                disabled={loading}
+              />
               <input type="hidden" name="filename" value={file.name} />
             </div>
             <button
@@ -267,11 +281,15 @@
           onDrop={addFiles}
           disabled={loading}
         >
-          <div class="fileDrop" class:active={fileDropActive}>
+          <div
+            class="fileDrop"
+            class:active={fileDropActive}
+            class:disabled={loading}
+          >
             <p class="drop-instructions">Drag and drop files here</p>
             <Flex align="center" justify="center">
               <span class="drop-instructions-or">or</span>
-              <FileInput multiple onFileSelect={addFiles}
+              <FileInput multiple onFileSelect={addFiles} disabled={loading}
                 ><File16 /> Select Files</FileInput
               >
             </Flex>

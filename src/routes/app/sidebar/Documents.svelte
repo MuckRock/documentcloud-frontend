@@ -13,16 +13,15 @@
 
   import { APP_URL } from "@/config/config";
   import { slugify } from "@/util/string.js";
+  import { userDocs } from "$lib/api/accounts";
 
   const me: Writable<User> = getContext("me");
   const org: Writable<Org> = getContext("org");
 
   $: query = $page.url.searchParams.get("q") || "";
 
-  // +user:chris-amico-1020 +access:public
-  $: mine = $me ? `+user:${slugify($me.name)}-${$me.id}` : "";
-  $: minePublic = `${mine} +access:public`;
-  $: minePrivate = `${mine} +access:private`;
+  $: minePublic = userDocs($me, "public");
+  $: minePrivate = userDocs($me, "private");
 
   // +organization:muckrock-125
   $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";

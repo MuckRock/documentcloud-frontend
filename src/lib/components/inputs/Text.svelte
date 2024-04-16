@@ -7,6 +7,7 @@
   export let placeholder = "";
   export let value = "";
   export let required = false;
+  export let disabled = false;
 </script>
 
 <input
@@ -14,6 +15,7 @@
   {name}
   {placeholder}
   {required}
+  {disabled}
   bind:value
   on:change
   on:input

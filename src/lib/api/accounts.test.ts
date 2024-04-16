@@ -3,7 +3,8 @@ import { vi, test, describe, it, expect, beforeEach, afterEach } from "vitest";
 import { BASE_API_URL } from "@/config/config";
 import * as fixtures from "@/test/fixtures/accounts";
 
-import { getMe, getOrg } from "./accounts";
+import { getMe, getOrg, userDocs } from "./accounts";
+import { slugify } from "@/util/string.js";
 
 describe("getMe", async () => {
   let mockFetch;
@@ -62,3 +63,15 @@ test("getOrg", async () => {
 
 test.todo("users.get");
 test.todo("users.list");
+
+describe("utility methods", () => {
+  test("userDocs", () => {
+    expect(userDocs(fixtures.me, "public")).toStrictEqual(
+      `+user:${slugify(fixtures.me.name)}-${fixtures.me.id} access:public`,
+    );
+
+    expect(userDocs(fixtures.me, "private")).toStrictEqual(
+      `+user:${slugify(fixtures.me.name)}-${fixtures.me.id} access:private`,
+    );
+  });
+});

@@ -191,4 +191,12 @@ export interface OCREngine {
   help?: string;
 }
 
+export interface Pending {
+  doc_id: number;
+  images: number;
+  texts: number;
+  text_positions: number;
+  pages: number;
+}
+
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

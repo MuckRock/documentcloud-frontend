@@ -13,6 +13,7 @@
   export let multiple = false;
   export let buttonMode: ComponentProps<Button>["mode"] = "ghost";
   export let files: FileList = null;
+  export let disabled = false;
 
   // Bound to the file picker input
   let picker: HTMLInputElement;
@@ -32,8 +33,8 @@
   }
 </script>
 
-<span class="container">
-  <Button mode={buttonMode} on:click={openFilePicker}>
+<span class="container" class:disabled>
+  <Button mode={buttonMode} on:click={openFilePicker} {disabled}>
     <slot />
   </Button>
   <input
@@ -41,6 +42,7 @@
     {name}
     accept={DOCUMENT_TYPES.join(",")}
     {multiple}
+    {disabled}
     bind:files
     bind:this={picker}
     on:change={handleFiles}
