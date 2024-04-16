@@ -35,7 +35,7 @@ export async function list(doc_id, fetch) {
  * @export
  * @param {number} doc_id
  * @param {globalThis.fetch} fetch
- * @returns {import('./types').Note}
+ * @returns {Promise<import('./types').Note>}
  */
 export async function get(doc_id, note_id, fetch) {
   const endpoint = new URL(
