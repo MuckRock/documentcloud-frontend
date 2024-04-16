@@ -11,7 +11,6 @@ on:
     branches: [sveltekit]
 
 jobs:
-  
   unit-test:
     runs-on: ubuntu-latest
 
@@ -25,10 +24,10 @@ jobs:
       - run: npm run build
         env:
           NODE_ENV: production
-      - run: npm test:coverage
+      - run: npm run test:coverage
       - name: Report Coverage
         uses: davelosert/vitest-coverage-report-action@v2
-  
+
   check:
     runs-on: ubuntu-latest
 
@@ -43,4 +42,3 @@ jobs:
         env:
           NODE_ENV: production
       - run: npm run check
-  
