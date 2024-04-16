@@ -51,6 +51,7 @@ export default defineConfig({
     environment: "jsdom",
     coverage: {
       include: ["src/lib/**", "src/routes/**"],
+      exclude: ["../src/**/*.stories.@(js|jsx|ts|tsx|svelte)"],
       reporter: ["text", "html", "lcov", "clover", "json", "json-summary"],
     },
   },
