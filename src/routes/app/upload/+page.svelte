@@ -14,23 +14,42 @@
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<DocumentUpload {csrf_token} {projects}>
-  <Flex direction="column">
-    <h1>Upload documents</h1>
+<div class="card">
+  <DocumentUpload {csrf_token} {projects}>
+    <Flex direction="column">
+      <h1 class="title">Upload documents</h1>
 
-    {#if form?.success}
-      <p>
-        {form?.message}
-      </p>
-    {:else if form?.error}
-      <p class="error">
-        {form?.error}
-      </p>
-    {:else}
-      <p>
-        Select or drag a document to begin the document upload process. You will
-        then be able to edit document information.
-      </p>
-    {/if}
-  </Flex>
-</DocumentUpload>
+      {#if form?.success}
+        <p class="description">
+          {form?.message}
+        </p>
+      {:else if form?.error}
+        <p class="description error">
+          {form?.error}
+        </p>
+      {:else}
+        <p class="description">
+          Select or drag a document to begin the document upload process. You
+          will then be able to edit document information.
+        </p>
+      {/if}
+    </Flex>
+  </DocumentUpload>
+</div>
+
+<style>
+  .card {
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+  }
+  .title {
+    font-size: var(--font-xl);
+    font-weight: var(--font-semibold);
+  }
+  .description {
+    margin: 1rem 0;
+    opacity: 0.7;
+  }
+</style>
