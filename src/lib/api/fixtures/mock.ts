@@ -1,6 +1,6 @@
 import { rest } from "msw";
 
-import meFixture from "../fixtures/users/me.json";
+import { me as meFixture } from "@/test/fixtures/accounts";
 import projectFixture from "../fixtures/projects/project.json";
 import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
 import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
