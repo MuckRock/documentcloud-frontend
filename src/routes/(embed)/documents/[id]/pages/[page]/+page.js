@@ -10,11 +10,9 @@ export async function load({ params, fetch }) {
     notesApi.list(params.id, fetch),
   ]);
 
-  notes = notes.results.filter((note) => note.page_number === page - 1);
-
   return {
     document,
-    notes,
-    page,
+    notes: notes.results.filter((note) => note.page_number === page - 1),
+    page: +page,
   };
 }

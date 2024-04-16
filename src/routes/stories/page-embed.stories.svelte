@@ -1,4 +1,5 @@
-<script context="module">
+<script context="module" lang="ts">
+  import type { Document, Note } from "$lib/api/types";
   // legacy css
   import "@/style/variables.css";
   import "@/style/global.css";
@@ -19,7 +20,14 @@
     parameters: { layout: "centered" },
   };
 
-  const data = { document, page, notes };
+  const data = {
+    document: document as Document,
+    page,
+    notes: notes as Note[],
+    embed: false,
+    me: null,
+    org: null,
+  };
 </script>
 
 <Story name="default">
