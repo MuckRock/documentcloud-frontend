@@ -22,6 +22,7 @@
     "dompurify": "^3.0.8",
     "fast-copy": "^2.1.0",
     "fast-deep-equal": "^3.1.3",
+    "filesize": "^10.1.1",
     "isomorphic-dompurify": "^2.4.0",
     "jsdom": "^24.0.0",
     "lucene": "^2.1.1",
@@ -36,6 +37,7 @@
     "svelte-octicons": "^18.7.1",
     "svelte-preprocess": "^5.0.3",
     "svelte-preprocess-sass": "^2.0.0",
+    "svelte-select": "^5.8.3",
     "svue": "github:MuckRock/svue",
     "ts-node": "^9.1.1",
     "typescript": "^5.0.3"

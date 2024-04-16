@@ -16,10 +16,31 @@ export async function get(id, fetch) {}
  * Get a list of projects
  *
  * @export
+ * @param {any} params filter params
  * @param {globalThis.fetch} fetch
- * @returns {import('./types').ProjectResults}
+ * @returns {Promise<import('./types').ProjectResults>}
  */
-export async function list(fetch) {}
+export async function list(params = {}, fetch) {
+  const endpoint = new URL("projects/", BASE_API_URL);
+
+  for (const [k, v] of Object.entries(params)) {
+    endpoint.searchParams.set(k, v);
+  }
+
+  const res = await fetch(endpoint, { credentials: "include" }).catch((e) => ({
+    ok: false,
+    error: e,
+  }));
+
+  if (!res.ok) {
+    error(res.status, {
+      message: res.statusText,
+      error: res.error,
+    });
+  }
+
+  return res.json();
+}
 
 /**
  * Get documents in a project with membership access

@@ -25,6 +25,14 @@ const preview: Preview = {
       csrftoken: "mockToken",
     },
     cookiePreserve: true,
+    sveltekit_experimental: {
+      stores: {
+        page: {
+          url: "/",
+          data: {},
+        },
+      },
+    },
   },
 };
 

@@ -1,13 +1,18 @@
 /** API helpers related to documents.
  * Lots of duplicated code here that should get consolidated at some point.
  */
-import type { Document, DocumentResults, SearchOptions, sizes } from "./types";
+import type {
+  Document,
+  DocumentUpload,
+  DocumentResults,
+  SearchOptions,
+  Sizes,
+} from "./types";
 
 import { error } from "@sveltejs/kit";
-
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
-import { APP_URL, BASE_API_URL } from "@/config/config.js";
+import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { isErrorCode } from "../utils";
 
 /**
@@ -49,7 +54,7 @@ export async function search(
  */
 export async function get(
   id: number,
-  fetch: typeof globalThis.fetch,
+  fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
   const expand = ["user", "organization", "projects", "revisions", "sections"];
@@ -63,6 +68,7 @@ export async function get(
 
   return resp.json();
 }
+
 /**
  * Create new documents in a batch (or a batch of one).
  *
@@ -73,11 +79,90 @@ export async function get(
  * @async
  * @export
  */
-export async function create(documents: Document[], fetch = globalThis.fetch) {}
+export async function create(
+  documents: DocumentUpload[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Document[]> {
+  console.log(`creating ${documents.length} documents`);
+  const endpoint = new URL("documents/", BASE_API_URL);
 
-export async function upload() {}
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(documents),
+  });
 
-export async function process() {}
+  if (isErrorCode(resp.status)) {
+    throw new Error(await resp.text());
+  }
+
+  return resp.json() as Promise<Document[]>;
+}
+
+/**
+ * Upload file data to a presigned_url on cloud storage.
+ * Use this after running `create` to add documents to the database.
+ * This function is a very thin wrapper around fetch.
+ *
+ * @async
+ * @export
+ */
+export async function upload(
+  presigned_url: URL,
+  file: File,
+  fetch = globalThis.fetch,
+): Promise<Response> {
+  return fetch(presigned_url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type || "application/octet-stream",
+    },
+    body: file,
+  });
+}
+
+/**
+ * Tell the backend to begin processing a batch of documents.
+ *
+ * @async
+ * @export
+ */
+export async function process(
+  documents: {
+    id: string | number;
+    force_ocr?: boolean;
+    ocr_engine?: string;
+  }[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Response> {
+  console.log(`processing ${documents.length} documents`);
+  const endpoint = new URL("documents/process/", BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(documents),
+  });
+}
+
+/**
+ * Stop processing a document
+ *
+ * @param id Document ID
+ */
+export async function cancel(id: number | string) {}
 
 // utility functions
 
@@ -140,7 +225,7 @@ export function pageUrl(document: Document, page: number): URL {
 export function pageImageUrl(
   document: Document,
   page: number,
-  size: sizes,
+  size: Sizes,
 ): URL {
   return new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,

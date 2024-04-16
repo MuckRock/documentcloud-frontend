@@ -45,7 +45,7 @@
       <input
         type="checkbox"
         name="select_all"
-        checked={$selected.length === $visible.size}
+        checked={$selected.length > 0 && $selected.length === $visible.size}
         indeterminate={$selected.length > 0 && $selected.length < $visible.size}
         on:change={selectAll}
       />

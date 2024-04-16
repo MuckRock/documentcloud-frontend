@@ -33,6 +33,10 @@ export default {
       "@": "./src",
       "@/*": "./src/*",
     },
+    csrf: {
+      // BUG: https://github.com/sveltejs/kit/issues/8026
+      checkOrigin: process.env.NODE_ENV === "development" ? false : true,
+    },
   },
 
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess

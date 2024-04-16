@@ -5,11 +5,11 @@ Updated variables and styles for new SvelteKit routes
 :root {
   /* fonts */
   --font-sans: "Source Sans Pro";
-  --font-xs: 0.75rem;
-  --font-s: 0.875rem;
-  --font-m: 1rem;
-  --font-l: 1.25rem;
-  --font-xl: 1.5rem;
+  --font-xs: 0.75em;
+  --font-s: 0.875em;
+  --font-m: 1em;
+  --font-l: 1.25em;
+  --font-xl: 1.5em;
 
   /* Font Weights */
   --font-regular: 400;
@@ -119,6 +119,10 @@ h5 {
 
 p {
   font-size: var(--font-m);
+}
+
+a {
+  color: var(--primary);
 }
 
 dl,

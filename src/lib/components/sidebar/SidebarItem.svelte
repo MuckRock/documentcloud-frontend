@@ -1,8 +1,9 @@
 <script lang="ts">
+  export let active = false;
   export let disabled = false;
   export let small = false;
   export let hover = false;
-  export let active = false;
+
   // handling link behavior
   export let href: string = undefined;
   export let target: string = undefined;
@@ -17,9 +18,9 @@
     {rel}
     {download}
     class="container"
+    class:active
     class:disabled
     class:small
-    class:active
     on:click
     on:keydown
   >

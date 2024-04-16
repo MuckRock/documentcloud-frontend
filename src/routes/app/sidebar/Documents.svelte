@@ -1,19 +1,59 @@
 <script lang="ts">
+  import type { User, Org } from "@/api/types/orgAndUser";
+  import type { Writable } from "svelte/store";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import Flex from "@/lib/components/common/Flex.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
   import { Globe16, Infinity16, Lock16, Organization16 } from "svelte-octicons";
-  import SignedIn from "@/lib/components/common/SignedIn.svelte";
+  import { page } from "$app/stores";
+
+  import Flex from "$lib/components/common/Flex.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import SignedIn from "$lib/components/common/SignedIn.svelte";
+
+  import { APP_URL } from "@/config/config";
+  import { slugify } from "@/util/string.js";
+  import { userDocs } from "$lib/api/accounts";
+
+  const me: Writable<User> = getContext("me");
+  const org: Writable<Org> = getContext("org");
+
+  $: query = $page.url.searchParams.get("q") || "";
+
+  $: minePublic = userDocs($me, "public");
+  $: minePrivate = userDocs($me, "private");
+
+  // +organization:muckrock-125
+  $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";
+
+  function searchUrl(query: string) {
+    const q = new URLSearchParams([["q", query]]);
+    const u = new URL("/app/", APP_URL);
+
+    u.search = q.toString();
+
+    return u.toString();
+  }
 </script>
 
 <Flex direction="column">
-  <SidebarItem hover><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem>
+  <SidebarItem hover href={searchUrl("")} active={query === ""}
+    ><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem
+  >
   <SignedIn>
-    <SidebarItem hover
+    <SidebarItem
+      hover
+      href={searchUrl(minePublic)}
+      active={query === minePublic}
       ><Globe16 /> {$_("projects.yourPubDocuments")}</SidebarItem
     >
-    <SidebarItem hover><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem>
-    <SidebarItem hover>
+    <SidebarItem
+      hover
+      href={searchUrl(minePrivate)}
+      active={query === minePrivate}
+      ><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem
+    >
+    <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
       <Organization16 />
       {$_("projects.orgDocuments", {
         values: { name: "MuckRock" },

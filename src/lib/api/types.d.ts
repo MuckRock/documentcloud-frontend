@@ -9,11 +9,13 @@ import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
 import type { Page } from "@/api/types/common";
 
-export type access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
+export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
-export type status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+export type Data = Record<string, string[]>;
 
-export type sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
+export type Status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
+
+export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
 export type Highlight = Record<string, string[]>;
 
@@ -66,15 +68,30 @@ export interface AddOnListItem {
   usage?: number;
 }
 
+// subset of document fields only used in uploading
+// most fields are optional
+export interface DocumentUpload {
+  access: Access;
+  data?: Data;
+  language?: string;
+  original_extension?: string;
+  noindex?: boolean;
+  projects?: number[]; // project ids only
+  related_article?: string | URL;
+  revision_control?: boolean;
+  source?: string;
+  title: string;
+}
+
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
   id: number | string;
-  access: access;
+  access: Access;
   admin_noindex?: boolean;
   asset_url: string | URL;
   canonical_url: string | URL;
   created_at: string | Date;
-  data: Record<string, string[]>;
+  data: Data;
   description?: string;
   edit_access: boolean;
   file_hash?: string;
@@ -90,10 +107,14 @@ export interface Document {
   revision_control?: boolean;
   slug: string;
   source?: string;
-  status: status;
+  status: Status;
   title: string;
   updated_at: string | Date;
   user: number | User;
+
+  // for uploads
+  presigned_url?: string | URL;
+  file_url?: string | URL;
 
   // expandable relationship fields
   projects?: number[] | Project[];
@@ -112,7 +133,7 @@ export interface Note {
   user: number | User;
   organization: number | Org;
   page_number: number;
-  access: access;
+  access: Access;
   edit_access?: boolean;
   title: string;
   content?: string;
@@ -162,6 +183,20 @@ export type ProjectResults = Page<Project>;
 export interface ProjectMembershipItem {
   document: number | Document;
   edit_access: boolean;
+}
+
+export interface OCREngine {
+  value: string;
+  label: string;
+  help?: string;
+}
+
+export interface Pending {
+  doc_id: number;
+  images: number;
+  texts: number;
+  text_positions: number;
+  pages: number;
 }
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

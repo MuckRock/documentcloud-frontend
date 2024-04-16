@@ -1,8 +1,9 @@
-import { describe, test as base, expect } from "vitest";
-import { APP_URL, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
+import type { Document, DocumentUpload, Sizes } from "./types";
+
+import { vi, test as base, describe, expect, afterEach } from "vitest";
+import { APP_URL, DC_BASE, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
 
 import * as documents from "./documents";
-import type { Document, sizes } from "./types";
 
 type Use<T> = (value: T) => Promise<void>;
 
@@ -12,14 +13,122 @@ const test = base.extend({
       "./fixtures/documents/document-expanded.json"
     );
 
-    await use(document as unknown as Document);
+    await use(document as Document);
+  },
+
+  created: async ({}, use: Use<Document[]>) => {
+    const { default: created } = await import(
+      "./fixtures/documents/create.json"
+    );
+
+    await use(created as Document[]);
   },
 });
 
 describe("document fetching", () => {
-  test.todo("get a single document");
+  test.todo("documents.get");
+  test.todo("documents.search");
+});
 
-  test.todo("search documents");
+describe("document uploads and processing", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test("documents.create", async ({ created }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async json() {
+        return created;
+      },
+    }));
+
+    const docs: DocumentUpload[] = created.map((d) => ({
+      title: d.title,
+      access: d.access,
+      language: d.language,
+      original_extension: d.original_extension,
+    }));
+
+    documents.create(docs, "token", mockFetch).then((d) => {
+      expect(d).toMatchObject(created);
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL("/api/documents/", DC_BASE),
+      {
+        body: JSON.stringify(docs),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "token",
+        },
+        method: "POST",
+      },
+    );
+  });
+
+  test("documents.upload", async ({ created }) => {
+    created.forEach(async (doc) => {
+      const mockFetch = vi.fn().mockImplementation(async () => ({
+        ok: true,
+      }));
+
+      const file = new File(
+        ["test content"],
+        "finalseasonal-allergies-pollen-and-mold-2023-en.pdf",
+        { type: "application/pdf" },
+      );
+
+      const resp = await documents.upload(
+        new URL(doc.presigned_url),
+        file,
+        mockFetch,
+      );
+
+      expect(resp.ok).toBeTruthy();
+      expect(mockFetch).toHaveBeenCalledWith(new URL(doc.presigned_url), {
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+        method: "PUT",
+      });
+    });
+  });
+
+  test("documents.process", async ({ created }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async text() {
+        return "OK";
+      },
+    }));
+
+    const resp = await documents.process(
+      created.map((d) => ({ id: d.id })),
+      "csrf_token",
+      mockFetch,
+    );
+
+    expect(resp.ok).toBeTruthy();
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL("/api/documents/process/", DC_BASE),
+      {
+        body: JSON.stringify(created.map((d) => ({ id: d.id }))),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "csrf_token",
+        },
+        method: "POST",
+      },
+    );
+  });
+
+  test.todo("documents.cancel");
 });
 
 describe("document helper methods", () => {
@@ -52,7 +161,7 @@ describe("document helper methods", () => {
     const page = 1;
     IMAGE_WIDTHS_ENTRIES.forEach(([size, width]) => {
       expect(
-        documents.pageImageUrl(document, page, size as sizes),
+        documents.pageImageUrl(document, page, size as Sizes),
       ).toStrictEqual(
         new URL(
           `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,

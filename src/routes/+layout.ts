@@ -18,10 +18,10 @@ export async function load({ fetch, url }) {
   // todo: ensure this doesn't load for embeds
   const me = await getMe(fetch);
   let org;
-  if (typeof me.organization === "number") {
+  if (me && typeof me.organization === "number") {
     org = await getOrg(fetch, me.organization);
   } else {
-    org = me.organization;
+    org = me?.organization;
   }
 
   return { me, org, embed };
