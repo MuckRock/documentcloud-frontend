@@ -1,15 +1,7 @@
 import type { Document, DocumentUpload, Sizes } from "./types";
 
-import {
-  vi,
-  test as base,
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-} from "vitest";
-import { APP_URL, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
+import { vi, test as base, describe, expect, afterEach } from "vitest";
+import { APP_URL, DC_BASE, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
 
 import * as documents from "./documents";
 
@@ -61,14 +53,28 @@ describe("document uploads and processing", () => {
     documents.create(docs, "token", mockFetch).then((d) => {
       expect(d).toMatchObject(created);
     });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL("/api/documents/", DC_BASE),
+      {
+        body: JSON.stringify(docs),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "token",
+        },
+        method: "POST",
+      },
+    );
   });
 
   test("documents.upload", async ({ created }) => {
-    const mockFetch = vi.fn().mockImplementation(async () => ({
-      ok: true,
-    }));
-
     created.forEach(async (doc) => {
+      const mockFetch = vi.fn().mockImplementation(async () => ({
+        ok: true,
+      }));
+
       const file = new File(
         ["test content"],
         "finalseasonal-allergies-pollen-and-mold-2023-en.pdf",
@@ -82,6 +88,13 @@ describe("document uploads and processing", () => {
       );
 
       expect(resp.ok).toBeTruthy();
+      expect(mockFetch).toHaveBeenCalledWith(new URL(doc.presigned_url), {
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+        method: "PUT",
+      });
     });
   });
 
@@ -100,6 +113,19 @@ describe("document uploads and processing", () => {
     );
 
     expect(resp.ok).toBeTruthy();
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL("/api/documents/process/", DC_BASE),
+      {
+        body: JSON.stringify(created.map((d) => ({ id: d.id }))),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "csrf_token",
+        },
+        method: "POST",
+      },
+    );
   });
 
   test.todo("documents.cancel");

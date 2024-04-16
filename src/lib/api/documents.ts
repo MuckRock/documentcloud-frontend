@@ -96,7 +96,6 @@ export async function create(
       Referer: APP_URL,
     },
     body: JSON.stringify(documents),
-    referrerPolicy: "origin",
   });
 
   if (isErrorCode(resp.status)) {
