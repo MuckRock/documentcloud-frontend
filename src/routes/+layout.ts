@@ -24,5 +24,5 @@ export async function load({ fetch, url }) {
     org = me?.organization;
   }
 
-  return { me, org, embed };
+  return { me, org, embed, breadcrumbs: [] };
 }

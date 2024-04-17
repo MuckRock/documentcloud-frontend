@@ -2,7 +2,7 @@
  * Methods related to the DocumentCloud document API
  */
 
-import session from "./session.js";
+import session from "./session";
 import { apiUrl } from "./base.js";
 import { timeout } from "@/util/timeout.js";
 import { queryBuilder } from "@/util/url.js";

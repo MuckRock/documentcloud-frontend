@@ -10,6 +10,7 @@
     ChevronDown16,
     Gear16,
     Paperclip16,
+    Person16,
     SignOut16,
   } from "svelte-octicons";
   import Menu from "@/common/Menu.svelte";
@@ -26,8 +27,14 @@
 
 <Dropdown id={dropdownId} position="right">
   <SidebarItem slot="title">
-    <img src={user.avatar_url} alt="Avatar" class="avatar" />
-    <span class="name">{user.name}</span>
+    <div class="avatar">
+      {#if user.avatar_url}
+        <img src={user.avatar_url} alt="Avatar" />
+      {:else}
+        <Person16 fill="var(--gray-4)" />
+      {/if}
+    </div>
+    <span class="name">{user.name ?? user.username}</span>
     <div class="dropdownArrow"><ChevronDown16 /></div>
   </SidebarItem>
   <Menu>
@@ -52,6 +59,16 @@
     height: 1.5rem;
     width: 1.5rem;
     border-radius: 0.75rem;
+    background: var(--gray-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .avatar > img {
+    height: 100%;
+    width: 100%;
   }
 
   .dropdownArrow {

@@ -20,8 +20,8 @@
 
   $: query = $page.url.searchParams.get("q") || "";
 
-  $: minePublic = userDocs($me, "public");
-  $: minePrivate = userDocs($me, "private");
+  $: minePublic = $me ? userDocs($me, "public") : "";
+  $: minePrivate = $me ? userDocs($me, "private") : "";
 
   // +organization:muckrock-125
   $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";

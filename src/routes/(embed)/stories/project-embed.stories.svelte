@@ -25,6 +25,7 @@
     embed: true,
     me: null,
     org: null,
+    breadcrumbs: [],
   };
 </script>
 

@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { isErrorCode, isRedirectCode } from "./api";
+import { isErrorCode, isRedirectCode } from "../api";
 
 test("isErrorCode", () => {
   expect(isErrorCode(200)).toBe(false);
