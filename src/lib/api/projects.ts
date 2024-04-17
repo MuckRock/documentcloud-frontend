@@ -3,6 +3,7 @@ import type { Project, ProjectResults, ProjectMembershipList } from "./types";
 
 import { error, type NumericRange } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
+import { isErrorCode } from "$lib/utils/isErrorCode";
 
 /**
  * Get a single project
@@ -22,8 +23,8 @@ export async function get(
     error(500, { message: e });
   });
 
-  if (!res.ok) {
-    error(res.status as NumericRange<400, 599>, {
+  if (isErrorCode(res.status)) {
+    error(res.status, {
       message: res.statusText,
     });
   }
@@ -52,8 +53,8 @@ export async function list(
     error(500, { message: e });
   });
 
-  if (!res.ok) {
-    error(res.status as NumericRange<400, 599>, {
+  if (isErrorCode(res.status)) {
+    error(res.status, {
       message: res.statusText,
     });
   }
@@ -84,8 +85,8 @@ export async function documents(
     error(500, { message: e });
   });
 
-  if (!res.ok) {
-    error(res.status as NumericRange<400, 599>, {
+  if (isErrorCode(res.status)) {
+    error(res.status, {
       message: res.statusText,
     });
   }
