@@ -1,4 +1,4 @@
-import session from "@/api/session.js";
+import session from "@/api/session";
 import { queryBuilder } from "./url.js";
 
 import { MAX_PER_PAGE } from "../config/config.js";
