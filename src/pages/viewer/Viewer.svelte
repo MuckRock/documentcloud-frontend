@@ -39,7 +39,7 @@
   } from "@/viewer/layout.js";
   import { doc, showAnnotation } from "@/viewer/document.js";
   import { viewer } from "@/viewer/viewer.js";
-  import { pageImageUrl } from "@/api/viewer.js";
+  import { pageImageUrl } from "@/api/viewer";
 
   let shareOption = null;
 

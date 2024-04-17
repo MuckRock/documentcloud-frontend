@@ -1,10 +1,12 @@
-<script context="module">
+<script context="module" lang="ts">
+  import type { Project, ProjectMembershipList } from "$lib/api/types";
+
   // legacy css
   import "@/style/variables.css";
   import "@/style/global.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectEmbed from "../(embed)/projects/[project_id]/+page.svelte";
+  import ProjectEmbed from "../projects/[project_id]/+page.svelte";
 
   import documents from "$lib/api/fixtures/projects/project-documents-expanded.json";
   import project from "$lib/api/fixtures/projects/project.json";
@@ -17,7 +19,13 @@
     parameters: { layout: "centered" },
   };
 
-  const data = { project, documents };
+  const data = {
+    project: project as Project,
+    documents: documents as ProjectMembershipList,
+    embed: true,
+    me: null,
+    org: null,
+  };
 </script>
 
 <Story

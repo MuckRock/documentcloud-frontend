@@ -1,10 +1,11 @@
 // load data for flatpages
-import { error, redirect } from "@sveltejs/kit";
+import { error, redirect, type NumericRange } from "@sveltejs/kit";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import DOMPurify from "isomorphic-dompurify";
 
 import { BASE_API_URL } from "@/config/config.js";
+import { isErrorCode, isRedirectCode } from "@/lib/utils/api";
 
 marked.use(gfmHeadingId());
 
@@ -16,12 +17,12 @@ export async function load({ fetch, params }) {
 
   const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (resp.status > 400) {
+  if (isErrorCode(resp.status)) {
     error(resp.status, resp.statusText);
   }
 
   // we should be following redirects, so this shouldn't happen
-  if (resp.status > 300) {
+  if (isRedirectCode(resp.status)) {
     redirect(resp.status, resp.headers.get("Location"));
   }
 

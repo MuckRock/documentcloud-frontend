@@ -99,6 +99,8 @@
 <!-- Element to Trigger Dropdown -->
 <div class="dropdownContainer" class:open={isOpen} {id}>
   <div
+    role="button"
+    tabindex={0}
     bind:this={title}
     class={`title ${titleColor}`}
     class:open={isOpen}

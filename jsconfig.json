@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": false,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": ["@testing-library/jest-dom"]
   },
   // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias and https://kit.svelte.dev/docs/configuration#files
   //

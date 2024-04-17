@@ -1,15 +1,6 @@
 import type { Actions } from "./$types";
-import type {
-  Access,
-  Document,
-  DocumentUpload,
-  OCREngine,
-  Project,
-} from "$lib/api/types";
 
-import { CSRF_COOKIE_NAME, DEFAULT_LANGUAGE } from "@/config/config.js";
-import * as documents from "$lib/api/documents";
-import { unwrap } from "$lib/components/inputs/Select.svelte";
+import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { upload } from "$lib/components/forms/DocumentUpload.svelte";
 
 export function load({ cookies }) {
@@ -23,6 +14,6 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
-    return upload(form, csrf_token, fetch);
+    return upload(form, csrf_token, null, fetch);
   },
 } satisfies Actions;

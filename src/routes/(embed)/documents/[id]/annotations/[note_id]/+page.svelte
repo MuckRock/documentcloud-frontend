@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
   import DomPurify from "dompurify";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { informSize } from "@/embed/iframeSizer.js";
   import { pageImageUrl } from "@/lib/api/documents";
-  import * as notes from "$lib/api/notes.js";
+  import * as notes from "@/lib/api/notes";
   import { embedUrl } from "$lib/api/embed";
-  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes.js";
+  import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 
@@ -32,9 +32,6 @@
 
   onMount(async () => {
     informSize(elem);
-
-    // debug
-    window.note = note;
   });
 </script>
 
@@ -51,11 +48,11 @@
   <link
     rel="alternate"
     type="application/json+oembed"
-    href={embedUrl(url)}
+    href={embedUrl(url).toString()}
     {title}
   />
-  {#if note.description}
-    <meta property="og:description" content={note.description} />
+  {#if note.content}
+    <meta property="og:description" content={note.content} />
   {/if}
   <meta property="og:image" content={src} />
 </svelte:head>
@@ -63,7 +60,7 @@
 <div class="DC-note" bind:this={elem} style={`background-image: url(${src})`}>
   <div class="DC-note-header">
     <a
-      href={noteUrl(doc, note)}
+      href={noteUrl(doc, note).toString()}
       class="DC-note-embed-resource"
       target="_blank"
       title={$_("embedNote.viewTheNote", { values: { title: note.title } })}
@@ -89,7 +86,7 @@
         100}%"
     >
       <a
-        href={noteUrl(doc, note)}
+        href={noteUrl(doc, note).toString()}
         target="_blank"
         class="DC-note-image-link"
         style:left="{(note.x1 * -100) / notes.width(note)}%"
@@ -108,7 +105,7 @@
 
   <div class="DC-note-credit">
     <a
-      href={noteUrl(doc, note)}
+      href={noteUrl(doc, note).toString()}
       target="_blank"
       title={$_("embedNote.viewTheNote", { values: { title: note.title } })}
     >

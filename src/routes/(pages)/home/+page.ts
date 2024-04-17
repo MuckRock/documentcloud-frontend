@@ -5,6 +5,7 @@ import { gfmHeadingId } from "marked-gfm-heading-id";
 import DOMPurify from "isomorphic-dompurify";
 
 import { BASE_API_URL } from "@/config/config.js";
+import { isErrorCode } from "@/lib/utils/api";
 
 marked.use(gfmHeadingId());
 
@@ -15,7 +16,7 @@ const endpoint = new URL("home/", ROOT);
 export async function load({ fetch }) {
   const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp.ok) {
+  if (isErrorCode(resp.status)) {
     error(resp.status, resp.statusText);
   }
 

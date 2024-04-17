@@ -1,8 +1,10 @@
-import { error } from "@sveltejs/kit";
-import { BASE_API_URL } from "@/config/config.js";
-import { type AddOnListItem } from "@/addons/types";
-import { isErrorCode } from "../utils";
 import type { Page } from "@/api/types/common";
+import type { AddOnListItem } from "@/addons/types";
+
+import { error } from "@sveltejs/kit";
+
+import { BASE_API_URL } from "@/config/config.js";
+import { isErrorCode } from "../utils";
 
 export async function getPinnedAddons(
   fetch = globalThis.fetch,
@@ -15,7 +17,7 @@ export async function getPinnedAddons(
   if (isErrorCode(resp.status)) {
     error(resp.status, resp.statusText);
   }
-  return resp.json();
+  return resp.json() as Promise<Page<AddOnListItem>>;
 }
 
 export async function getAddons(
@@ -26,5 +28,5 @@ export async function getAddons(
   if (isErrorCode(resp.status)) {
     error(resp.status, resp.statusText);
   }
-  return resp.json();
+  return resp.json() as Promise<Page<AddOnListItem>>;
 }

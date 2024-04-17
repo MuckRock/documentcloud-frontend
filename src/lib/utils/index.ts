@@ -1,1 +1,1 @@
-export { isErrorCode } from "./isErrorCode";
+export { isErrorCode, isRedirectCode } from "./api";

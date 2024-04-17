@@ -8,7 +8,7 @@
   import { onMount, tick } from "svelte";
   import { getAnnotation } from "@/api/annotation.js";
   import { getDocument } from "@/api/document.js";
-  import { pageImageUrl } from "@/api/viewer.js";
+  import { pageImageUrl } from "@/api/viewer";
   import { embedUrl } from "@/api/embed.js";
   import {
     currentUrl,

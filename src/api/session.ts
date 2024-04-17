@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosInstance } from "axios";
 import axiosRetry from "axios-retry";
 
 import { DC_BASE } from "../config/config.js";
@@ -30,11 +30,12 @@ export function getCsrfToken() {
   return token;
 }
 
-const session = axios.create({
-  xsrfCookieName: CSRF_COOKIE_NAME,
-  xsrfHeaderName: CSRF_HEADER_NAME,
-  withCredentials: cookiesEnabled,
-});
+const session: AxiosInstance & { getStatic?: (url: string) => any } =
+  axios.create({
+    xsrfCookieName: CSRF_COOKIE_NAME,
+    xsrfHeaderName: CSRF_HEADER_NAME,
+    withCredentials: cookiesEnabled,
+  });
 
 session.interceptors.response.use(
   (response) => {
@@ -54,6 +55,11 @@ session.interceptors.response.use(
 );
 
 const CACHE_LIMIT = 50;
+
+export interface SessionCache {
+  cached: any[];
+  cachedByUrl: Record<string, any>;
+}
 
 export class SessionCache {
   constructor() {
@@ -86,7 +92,7 @@ export class SessionCache {
 
 const sessionCache = new SessionCache();
 
-session.getStatic = async function getStatic(url) {
+session.getStatic = async function getStatic(url: string) {
   if (sessionCache.has(url)) {
     return sessionCache.lookup(url);
   }

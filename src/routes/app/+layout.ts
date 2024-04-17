@@ -1,5 +1,5 @@
 import { getPinnedAddons } from "@/lib/api/addons";
-import * as projects from "$lib/api/projects.js";
+import * as projects from "$lib/api/projects";
 
 export async function load({ url, fetch }) {
   const pinnedAddons = getPinnedAddons(fetch);

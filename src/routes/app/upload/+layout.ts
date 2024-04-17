@@ -2,7 +2,7 @@
  * Data loading for upload
  */
 
-import * as projectsApi from "$lib/api/projects.js";
+import * as projectsApi from "$lib/api/projects";
 
 export async function load({ fetch, parent }) {
   const { me } = await parent();

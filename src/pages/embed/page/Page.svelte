@@ -9,7 +9,7 @@
   import { informSize } from "@/embed/iframeSizer.js";
   import { getDocument } from "@/api/document.js";
   import { getAnnotations } from "@/api/annotation.js";
-  import { textUrl, pageImageUrl } from "@/api/viewer.js";
+  import { textUrl, pageImageUrl } from "@/api/viewer";
   import { embedUrl } from "@/api/embed.js";
 
   import { APP_URL, DC_BASE } from "../../../config/config.js";

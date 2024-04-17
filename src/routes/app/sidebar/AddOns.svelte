@@ -1,7 +1,9 @@
 <script lang="ts">
+  import type { Page } from "@/api/types/common";
+  import type { AddOnListItem } from "@/addons/types";
+
   import { Book16, Hourglass24, Pin24, Plug16 } from "svelte-octicons";
-  import type { Page } from "@/api/types";
-  import type { AddOnListItem } from "$lib/api/types";
+
   import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";

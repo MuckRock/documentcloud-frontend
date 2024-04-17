@@ -22,9 +22,9 @@ jobs:
         run: npm ci
       - name: Publish to Chromatic
         uses: chromaui/action@v1
-        continue-on-error: true # remove once Svue errors are out
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          exitOnceUploaded: true
           # onlyChanged: true
           # externals: |
           #  - 'public/**'

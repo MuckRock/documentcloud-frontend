@@ -51,6 +51,9 @@ export const CSRF_HEADER_NAME = "X-CSRFToken";
 
 export const POLL_INTERVAL = 5000;
 
+/**
+ * @type {Array<[string, number]>}
+ */
 export const IMAGE_WIDTHS_ENTRIES = [
   ["xlarge", 2000],
   ["large", 1000],
@@ -59,10 +62,9 @@ export const IMAGE_WIDTHS_ENTRIES = [
   ["thumbnail", 60],
 ];
 
-export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.map(([name, width]) => [
-  width,
-  name,
-]).sort((a, b) => a[0] - b[0]);
+export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.sort(
+  (a, b) => a[1] - b[1],
+).map(([k, v]) => [v, k]);
 
 export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS_ENTRIES);
 
