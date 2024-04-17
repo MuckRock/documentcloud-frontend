@@ -5,9 +5,9 @@
 
   import { informSize } from "@/embed/iframeSizer.js";
   import { pageImageUrl } from "@/lib/api/documents";
-  import * as notes from "$lib/api/notes.js";
+  import * as notes from "@/lib/api/notes";
   import { embedUrl } from "$lib/api/embed";
-  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes.js";
+  import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 
