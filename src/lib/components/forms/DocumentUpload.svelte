@@ -472,13 +472,6 @@
     background: var(--blue-1);
   }
 
-  .excessiveFileSize {
-    padding: 0.25rem;
-    border-radius: 0.25rem;
-    color: var(--red-dark);
-    font-size: var(--font-s);
-  }
-
   .drop-instructions {
     color: var(--gray-5, #233944);
     text-align: center;

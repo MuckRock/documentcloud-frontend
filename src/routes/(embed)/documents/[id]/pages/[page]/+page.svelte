@@ -115,13 +115,11 @@
     {#each shimPlacements as s}
       <div
         class="dc-embed-shim"
-        on:click={() => (active = null)}
         style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) *
           100}%;bottom:{(1 - s[3]) * 100}%"
         tabindex="-1"
         role="dialog"
         aria-modal="true"
-        on:keydown={onKeyup}
       />
     {/each}
 
