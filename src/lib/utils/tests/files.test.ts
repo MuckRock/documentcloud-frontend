@@ -1,5 +1,5 @@
 import { describe, test, it, expect } from "vitest";
-import * as files from "./files";
+import * as files from "../files";
 
 describe("files.getFileExtensionFromType", () => {
   it("returns the second half of a Mimetype", () => {
