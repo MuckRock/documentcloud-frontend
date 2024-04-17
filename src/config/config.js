@@ -62,7 +62,9 @@ export const IMAGE_WIDTHS_ENTRIES = [
   ["thumbnail", 60],
 ];
 
-export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.sort((a, b) => a[1] - b[1]);
+export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.sort(
+  (a, b) => a[1] - b[1],
+).map(([k, v]) => [v, k]);
 
 export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS_ENTRIES);
 
