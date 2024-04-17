@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import { IMAGE_WIDTHS } from "../config/config.js";
-  import { pageImageUrl } from "@/api/viewer.js";
+  import { pageImageUrl } from "@/api/viewer";
   import { timeout } from "@/util/timeout.js";
 
   const dispatch = createEventDispatcher();

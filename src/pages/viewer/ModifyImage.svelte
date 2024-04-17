@@ -1,7 +1,7 @@
 <script>
   import Image from "@/common/Image.svelte";
   import { viewer } from "@/viewer/viewer.js";
-  import { pageImageUrl } from "@/api/viewer.js";
+  import { pageImageUrl } from "@/api/viewer";
   import { modification } from "@/viewer/modification/modification.js";
   import { getDocument } from "@/api/document.js";
 

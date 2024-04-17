@@ -29,7 +29,7 @@
   import closeSimpleSvg from "@/assets/close_inline.svg?raw";
   import pencilSvg from "@/assets/pencil.svg?raw";
 
-  import { pageImageUrl } from "@/api/viewer.js";
+  import { pageImageUrl } from "@/api/viewer";
   import RevisionIcon from "../../common/RevisionIcon.svelte";
 
   export let document;

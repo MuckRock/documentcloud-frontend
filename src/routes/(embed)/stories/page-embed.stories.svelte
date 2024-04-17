@@ -6,8 +6,6 @@
 
   import { Story } from "@storybook/addon-svelte-csf";
   import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";
-
-  import document from "$lib/api/fixtures/documents/document-expanded.json";
   import { results } from "$lib/api/fixtures/notes/notes-expanded.json";
 
   const page = 1;
@@ -21,7 +19,7 @@
   };
 
   const data = {
-    document: document as Document,
+    document: document as unknown as Document,
     page,
     notes: notes as Note[],
     embed: false,

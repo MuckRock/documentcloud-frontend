@@ -15,7 +15,7 @@
   import Sections from "./sidebar/Sections.svelte";
 
   import { embedUrl } from "@/api/embed";
-  import { pageImageUrl } from "@/api/viewer.js";
+  import { pageImageUrl } from "@/api/viewer";
   import { canonicalUrl } from "@/lib/api/documents";
 
   export let data;

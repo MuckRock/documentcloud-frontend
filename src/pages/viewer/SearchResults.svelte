@@ -6,7 +6,7 @@
   import { layout } from "@/viewer/layout.js";
   import { viewer } from "@/viewer/viewer.js";
   import { doc, changeMode, restorePosition } from "@/viewer/document.js";
-  import { selectableTextUrl } from "@/api/viewer.js";
+  import { selectableTextUrl } from "@/api/viewer";
   import session from "@/api/session.js";
 
   async function handlePage(page) {

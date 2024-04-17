@@ -11,6 +11,7 @@
   import document from "$lib/api/fixtures/documents/document-expanded.json";
   import note from "$lib/api/fixtures/notes/note-expanded.json";
   import notes from "$lib/api/fixtures/notes/notes-expanded.json";
+  import type { SvelteComponent } from "svelte";
 
   export const meta = {
     title: "Embed / Note",

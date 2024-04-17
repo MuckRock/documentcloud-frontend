@@ -8,7 +8,7 @@
   import { router } from "@/router/router.js";
   import { getDocument } from "@/api/document.js";
   import { extractEntities } from "@/api/entity.js";
-  import { jsonUrl } from "@/api/viewer.js";
+  import { jsonUrl } from "@/api/viewer";
   import session from "@/api/session.js";
   import { entities, getE } from "@/entities/entities.js";
   import { updateInCollection } from "@/manager/documents.js";
