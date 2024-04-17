@@ -16,8 +16,8 @@ export const CATEGORIES = [
 ];
 
 export async function getAddons(
-  fetch = globalThis.fetch,
   params: AddOnParams = {},
+  fetch = globalThis.fetch,
 ): Promise<Page<AddOnListItem>> {
   const endpoint = new URL("addons", BASE_API_URL);
   Object.entries(params).forEach(([key, value]) => {
@@ -33,5 +33,5 @@ export async function getAddons(
 export async function getPinnedAddons(
   fetch = globalThis.fetch,
 ): Promise<Page<AddOnListItem>> {
-  return getAddons(fetch, { active: true });
+  return getAddons({ active: true }, fetch);
 }

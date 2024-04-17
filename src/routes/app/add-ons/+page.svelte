@@ -1,5 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
@@ -24,7 +26,7 @@
    *  current URL's searchParams value (there should be a smarter way to do this).
    */
   function paginate(pageUrl: string) {
-    const { url } = data;
+    const url = new URL($page.url); // make a copy
     const cursor = new URL(pageUrl).searchParams.get("cursor");
     if (!cursor) return;
     url.searchParams.set("cursor", cursor);
@@ -33,7 +35,7 @@
 
   function search(event: SubmitEvent) {
     event.preventDefault();
-    const { url } = data;
+    const url = new URL($page.url); // make a copy
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const query = formData.get("query") ?? "";
     if (!query) return;
@@ -42,11 +44,11 @@
   }
 
   $: active =
-    Array.from((data.url as URL).searchParams.entries()).find(
+    Array.from(($page.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
     )?.[0] ?? "all";
 
-  $: query = (data.url as URL).searchParams.get("query") ?? "";
+  $: query = ($page.url as URL).searchParams.get("query") ?? "";
 </script>
 
 <MainLayout>
@@ -92,10 +94,10 @@
             <Paginator />
           {:then page}
             <Paginator
-              has_next={Boolean(page.next_url)}
-              has_previous={Boolean(page.previous_url)}
-              on:next={() => paginate(page.next_url)}
-              on:previous={() => paginate(page.previous_url)}
+              has_next={Boolean(page.next)}
+              has_previous={Boolean(page.previous)}
+              on:next={() => paginate(page.next)}
+              on:previous={() => paginate(page.previous)}
             />
           {/await}
         </svelte:fragment>
