@@ -1,7 +1,7 @@
 import type { SearchOptions } from "$lib/api/types";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
-import { search } from "$lib/api/documents";
+import { search, pending } from "$lib/api/documents";
 
 export async function load({ url, fetch }) {
   const query = url.searchParams.get("q") || "";
@@ -28,5 +28,6 @@ export async function load({ url, fetch }) {
     per_page,
     cursor,
     searchResults,
+    pending: pending(fetch),
   };
 }

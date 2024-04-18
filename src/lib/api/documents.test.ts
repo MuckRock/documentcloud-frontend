@@ -1,4 +1,4 @@
-import type { Document, DocumentUpload, Sizes } from "./types";
+import type { Document, DocumentUpload, Pending, Sizes } from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
 import { APP_URL, DC_BASE, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
@@ -22,6 +22,14 @@ const test = base.extend({
     );
 
     await use(created as Document[]);
+  },
+
+  pending: async ({}, use: Use<Pending[]>) => {
+    const { default: pending } = await import(
+      "./fixtures/documents/pending.json"
+    );
+
+    await use(pending);
   },
 });
 
@@ -129,6 +137,19 @@ describe("document uploads and processing", () => {
   });
 
   test.todo("documents.cancel");
+
+  test("pending", async ({ pending }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async json() {
+        return pending;
+      },
+    }));
+
+    documents.pending(mockFetch).then((p) => {
+      expect(p).toMatchObject(pending);
+    });
+  });
 });
 
 describe("document helper methods", () => {

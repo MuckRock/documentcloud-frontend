@@ -5,6 +5,7 @@ import type {
   Document,
   DocumentUpload,
   DocumentResults,
+  Pending,
   SearchOptions,
   Sizes,
 } from "./types";
@@ -84,7 +85,6 @@ export async function create(
   csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Document[]> {
-  console.log(`creating ${documents.length} documents`);
   const endpoint = new URL("documents/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -142,7 +142,6 @@ export async function process(
   csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Response> {
-  console.log(`processing ${documents.length} documents`);
   const endpoint = new URL("documents/process/", BASE_API_URL);
 
   return fetch(endpoint, {
@@ -163,6 +162,21 @@ export async function process(
  * @param id Document ID
  */
 export async function cancel(id: number | string) {}
+
+export async function pending(fetch = globalThis.fetch): Promise<Pending[]> {
+  const endpoint = new URL("documents/pending/", BASE_API_URL);
+
+  // if this request fails for any reason, just return nothing
+  const resp = await fetch(endpoint, { credentials: "include" }).catch((e) => ({
+    ok: false,
+    json() {
+      return [];
+    },
+  }));
+
+  // if there's an error above, this will return an empty array
+  return resp.json();
+}
 
 // utility functions
 

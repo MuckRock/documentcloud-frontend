@@ -1,6 +1,8 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { Hourglass24 } from "svelte-octicons";
+
+  import Pending from "$lib/components/documents/Pending.svelte";
   import ResultsList, {
     selected,
     total,
@@ -15,6 +17,7 @@
 
   $: searchResults = data.searchResults;
   $: query = data.query;
+  $: pending = data.pending;
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -37,7 +40,11 @@
       count={results.count}
       next={results.next}
       auto
-    />
+    >
+      {#await pending then p}
+        <Pending pending={p} />
+      {/await}
+    </ResultsList>
   {/await}
 
   <PageToolbar slot="footer">

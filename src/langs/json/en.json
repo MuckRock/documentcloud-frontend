@@ -555,7 +555,7 @@
   },
   "processingBar": {
     "doneProcessing": "Done processing",
-    "processingDocuments": "Processing {n, plural, one {document} other {# documents}}"
+    "processingDocuments": "Processing {n, plural, one {# document} other {# documents}}"
   },
   "searchBar": {
     "tips": "Search tips: add filters by typing <code>user:</code>, <code>project:</code>, or <code>organization:</code>, etc. Use <code>sort:</code> to order results.",

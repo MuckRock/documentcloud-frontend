@@ -85,6 +85,7 @@
 </script>
 
 <div class="container">
+  <slot />
   {#each results as document (document.id)}
     <Flex gap={0.625} align="center">
       <label>
