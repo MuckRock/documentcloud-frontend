@@ -24,7 +24,9 @@
 
 <SidebarGroup>
   <SidebarItem slot="title"><FileDirectory16 /> Projects</SidebarItem>
-  <a href="/projects" slot="action"><Action icon={Book16}>Explore</Action></a>
+  <a href="/app/projects" slot="action"
+    ><Action icon={Book16}>Explore</Action></a
+  >
   <Flex direction="column" gap={0}>
     {#await pinned}
       <Empty icon={Hourglass24}>Loading pinned projects…</Empty>

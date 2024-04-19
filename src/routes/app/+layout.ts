@@ -8,7 +8,7 @@ export async function load({ url, fetch, parent }) {
     .list({ pinned: true }, fetch)
     .then((r) => r.results);
   const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: "/app", title: "Documents" }, // TODO: move document manager to `/documents` route
+    // { href: "/app", title: "Documents" }, // TODO: move document manager to `/documents` route
   ]);
   return {
     pinnedAddons,
