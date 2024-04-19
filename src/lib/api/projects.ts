@@ -3,7 +3,7 @@ import type { Project, ProjectResults, ProjectMembershipList } from "./types";
 
 import { error, type NumericRange } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
-import { isErrorCode } from "$lib/utils/api";
+import { getAll, isErrorCode } from "$lib/utils/api";
 
 /**
  * Get a single project
@@ -33,7 +33,7 @@ export async function get(
 }
 
 /**
- * Get a list of projects
+ * Get a page of projects
  *
  * @export
  * @param {any} params filter params
@@ -60,6 +60,26 @@ export async function list(
   }
 
   return res.json();
+}
+
+/**
+ * Get a list of all projects owned by the user
+ */
+export async function getOwned(userId: number): Promise<Project[]> {
+  const endpoint = new URL("projects/", BASE_API_URL);
+  endpoint.searchParams.set("user", String(userId));
+  const projects = await getAll<Project>(endpoint);
+  return projects.filter((project) => project.user === userId);
+}
+
+/**
+ * Get a list of all projects shared with the user
+ */
+export async function getShared(userId: number): Promise<Project[]> {
+  const endpoint = new URL("projects/", BASE_API_URL);
+  endpoint.searchParams.set("user", String(userId));
+  const projects = await getAll<Project>(endpoint);
+  return projects.filter((project) => project.user !== userId);
 }
 
 /**
