@@ -1,5 +1,8 @@
 <script lang="ts">
-  import type { Document, Highlight } from "$lib/api/types";
+  import type { Document, Highlights } from "$lib/api/types";
+
+  import { _ } from "svelte-i18n";
+
   import { pageUrl } from "$lib/api/documents";
 
   /*
@@ -9,7 +12,7 @@
     ]
   }
   */
-  export let highlight: Highlight;
+  export let highlights: Highlights;
   export let document: Document;
 
   const PAGE_NO_RE = /^page_no_(\d+)$/;
@@ -23,9 +26,9 @@
   }
 </script>
 
-{#each Object.entries(highlight) as [page, segments]}
+{#each Object.entries(highlights) as [page, segments]}
   {@const [number, href] = pageLink(page)}
-  <h4><a {href}>Page {number}</a></h4>
+  <h4><a {href}>{$_("document.page")} {number}</a></h4>
   <blockquote class="highlight">
     {#each segments as segment}
       <p class="segment">{@html segment}</p>
@@ -36,5 +39,6 @@
 <style>
   .segment :global(em) {
     background-color: var(--yellow);
+    font-style: normal;
   }
 </style>

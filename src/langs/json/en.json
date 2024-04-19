@@ -438,6 +438,7 @@
     "totalMatchingPages": "{n} of {m} pages matching the query",
     "showAll": "Show all",
     "matchingPages": "{n} pages matching the query",
+    "page": "Page",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
     "source": "Source",
