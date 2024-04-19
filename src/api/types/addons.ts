@@ -1,11 +1,11 @@
 import type { PageParams } from "./common";
 
 export interface AddOnParams extends PageParams {
-  query?: boolean;
+  query?: string;
   active?: boolean;
   default?: boolean;
   featured?: boolean;
   premium?: boolean;
   category?: string;
-  respository?: string;
+  repository?: string;
 }

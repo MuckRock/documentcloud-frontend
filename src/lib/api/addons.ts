@@ -35,3 +35,17 @@ export async function getPinnedAddons(
 ): Promise<Page<AddOnListItem>> {
   return getAddons({ active: true }, fetch);
 }
+
+export async function getAddon(
+  owner: string,
+  repo: string,
+  fetch = globalThis.fetch,
+): Promise<AddOnListItem | null> {
+  const repository = [owner, repo].join("/");
+  const addons = await getAddons({ repository }, fetch);
+  // there should only be one result, if the addon exists
+  if (addons.results.length < 1) {
+    return null;
+  }
+  return addons.results[0];
+}
