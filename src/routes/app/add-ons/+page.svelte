@@ -17,6 +17,8 @@
   import Error from "@/lib/components/common/Error.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
+  import Tip from "@/lib/components/common/Tip.svelte";
+  import Premium from "@/common/icons/Premium.svelte";
 
   export let data;
 
@@ -61,20 +63,32 @@
       </PageToolbar>
 
       {#if active === "active"}
-        <aside class="pinned tip">
-          <div class="icon"><Pin size={1.75} /></div>
-          <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
-        </aside>
+        <Tip
+          --background-color="var(--orange-light)"
+          --border-color="var(--orange)"
+          --fill="var(--orange-dark)"
+        >
+          <Pin size={1.75} slot="icon" />
+          {$_("addonBrowserDialog.pinnedTip")}
+        </Tip>
       {:else if active === "featured"}
-        <aside class="featured tip">
-          <div class="icon"><Star size={1.75} /></div>
-          <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
-        </aside>
+        <Tip
+          --background-color="var(--yellow-light)"
+          --border-color="var(--yellow)"
+          --fill="var(--yellow-dark)"
+        >
+          <Star size={1.75} slot="icon" />
+          {$_("addonBrowserDialog.featuredTip")}
+        </Tip>
       {:else if active === "premium"}
-        <aside class="premium tip">
-          <div class="icon"><Credit badge size={1.75} /></div>
-          <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
-        </aside>
+        <Tip
+          --background-color="var(--green-light)"
+          --border-color="var(--green)"
+          --fill="var(--green-dark)"
+        >
+          <Premium size={1.75} slot="icon" />
+          {$_("addonBrowserDialog.premiumTip")}
+        </Tip>
       {/if}
       {#await data.addons}
         <Empty icon={Hourglass24}>Loading…</Empty>
@@ -105,47 +119,3 @@
     </ContentLayout>
   </svelte:fragment>
 </MainLayout>
-
-<style>
-  .tip {
-    font-size: 0.9em;
-    margin: 0.5rem;
-    padding: 1rem;
-    background-color: var(--primary-faded);
-    border-color: var(--primary);
-    fill: var(--primary);
-    border: 1px solid;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    & .icon {
-      fill: var(--primary);
-    }
-    & .message {
-      margin: 0;
-    }
-  }
-  .pinned.tip {
-    background-color: hsl(341, 35%, 91%);
-    border-color: palevioletred;
-    & .icon {
-      fill: palevioletred;
-    }
-  }
-  .featured.tip {
-    background-color: hsl(39, 100%, 91%);
-    border-color: orange;
-    & .icon {
-      fill: orange;
-    }
-  }
-  .premium.tip {
-    background-color: hsl(161, 69%, 91%);
-    border-color: var(--premium, #24cc99);
-    & .icon {
-      fill: var(--premium, #24cc99);
-    }
-  }
-</style>

@@ -60,7 +60,6 @@
     min-width: 12rem;
     padding: 0.5rem 0.5rem 0.75rem;
     text-align: left;
-    border-top: 1px solid var(--gray-2);
   }
 
   .addon-link:hover .container {
