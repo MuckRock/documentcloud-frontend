@@ -49,6 +49,7 @@
     Array.from(($page.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
     )?.[0] ?? "all";
+  $: showTip = ["active", "featured", "premium"].includes(active);
 
   $: query = ($page.url as URL).searchParams.get("query") ?? "";
 </script>
@@ -61,34 +62,37 @@
       <PageToolbar slot="header">
         <Search name="query" {query} on:submit={search} slot="center" />
       </PageToolbar>
-
-      {#if active === "active"}
-        <Tip
-          --background-color="var(--orange-light)"
-          --border-color="var(--orange)"
-          --fill="var(--orange-dark)"
-        >
-          <Pin size={1.75} slot="icon" />
-          {$_("addonBrowserDialog.pinnedTip")}
-        </Tip>
-      {:else if active === "featured"}
-        <Tip
-          --background-color="var(--yellow-light)"
-          --border-color="var(--yellow)"
-          --fill="var(--yellow-dark)"
-        >
-          <Star size={1.75} slot="icon" />
-          {$_("addonBrowserDialog.featuredTip")}
-        </Tip>
-      {:else if active === "premium"}
-        <Tip
-          --background-color="var(--green-light)"
-          --border-color="var(--green)"
-          --fill="var(--green-dark)"
-        >
-          <Premium size={1.75} slot="icon" />
-          {$_("addonBrowserDialog.premiumTip")}
-        </Tip>
+      {#if showTip}
+        <div class="tip">
+          {#if active === "active"}
+            <Tip
+              --background-color="var(--orange-light)"
+              --border-color="var(--orange)"
+              --fill="var(--orange-dark)"
+            >
+              <Pin size={1.75} slot="icon" />
+              {$_("addonBrowserDialog.pinnedTip")}
+            </Tip>
+          {:else if active === "featured"}
+            <Tip
+              --background-color="var(--yellow-light)"
+              --border-color="var(--yellow)"
+              --fill="var(--yellow-dark)"
+            >
+              <Star size={1.75} slot="icon" />
+              {$_("addonBrowserDialog.featuredTip")}
+            </Tip>
+          {:else if active === "premium"}
+            <Tip
+              --background-color="var(--green-light)"
+              --border-color="var(--green)"
+              --fill="var(--green-dark)"
+            >
+              <Premium size={1.75} slot="icon" />
+              {$_("addonBrowserDialog.premiumTip")}
+            </Tip>
+          {/if}
+        </div>
       {/if}
       {#await data.addons}
         <Empty icon={Hourglass24}>Loading…</Empty>
@@ -119,3 +123,9 @@
     </ContentLayout>
   </svelte:fragment>
 </MainLayout>
+
+<style>
+  .tip {
+    margin: 1rem;
+  }
+</style>
