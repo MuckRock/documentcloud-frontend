@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { Highlight } from "$lib/api/types";
+  import type { Document, Highlight } from "$lib/api/types";
+  import { pageUrl } from "$lib/api/documents";
 
   /*
   {
@@ -9,10 +10,22 @@
   }
   */
   export let highlight: Highlight;
+  export let document: Document;
+
+  const PAGE_NO_RE = /^page_no_(\d+)$/;
+
+  function pageLink(page: string): [number, string] {
+    const match = PAGE_NO_RE.exec(page);
+    if (!match) return [NaN, ""];
+
+    const number = +match[1];
+    return [number, pageUrl(document, number).toString()];
+  }
 </script>
 
 {#each Object.entries(highlight) as [page, segments]}
-  <h4>{page}</h4>
+  {@const [number, href] = pageLink(page)}
+  <h4><a {href}>Page {number}</a></h4>
   <blockquote class="highlight">
     {#each segments as segment}
       <p class="segment">{@html segment}</p>
