@@ -8,11 +8,11 @@
   } from "$lib/components/documents/ResultsList.svelte";
   import ContentLayout from "$lib/components/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Search from "$lib/components/Search.svelte";
+  import Search from "$lib/components/inputs/Search.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Button from "@/lib/components/common/Button.svelte";
-  import MainLayout from "@/lib/components/MainLayout.svelte";
-  import SignedIn from "@/lib/components/common/SignedIn.svelte";
+  import Button from "$lib/components/common/Button.svelte";
+  import MainLayout from "$lib/components/MainLayout.svelte";
+  import SignedIn from "$lib/components/common/SignedIn.svelte";
   import Actions from "./sidebar/Actions.svelte";
   import AddOns from "./sidebar/AddOns.svelte";
   import Documents from "./sidebar/Documents.svelte";

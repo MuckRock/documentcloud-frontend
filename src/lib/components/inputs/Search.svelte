@@ -57,6 +57,11 @@
   input::placeholder {
     color: var(--gray-4, #5c717c);
   }
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
   label {
     display: flex;
     align-items: center;
