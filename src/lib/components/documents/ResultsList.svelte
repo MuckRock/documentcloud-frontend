@@ -14,12 +14,13 @@
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-
-  import DocumentListItem from "./DocumentListItem.svelte";
-  import Button from "../common/Button.svelte";
-  import Flex from "../common/Flex.svelte";
   import { Search24 } from "svelte-octicons";
+
+  import Button from "../common/Button.svelte";
+  import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
+  import Flex from "../common/Flex.svelte";
+  import SearchHighlights from "./SearchHighlights.svelte";
 
   export let results: Document[] = [];
   export let count: number = undefined;
@@ -96,6 +97,8 @@
         />
       </label>
       <DocumentListItem {document} />
+
+      <SearchHighlights {document} highlights={document.highlights} />
     </Flex>
   {:else}
     <Empty icon={Search24}>

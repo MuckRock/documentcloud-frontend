@@ -18,6 +18,10 @@
   };
 </script>
 
-<Story name="default">
+<Story name="closed">
   <SearchHighlights {document} {highlights} />
+</Story>
+
+<Story name="open">
+  <SearchHighlights {document} {highlights} open />
 </Story>
