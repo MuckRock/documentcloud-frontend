@@ -12,16 +12,16 @@
 
   export const meta = {
     title: "Components / Documents / Search Highlights",
-    component: highlights,
+    component: SearchHighlights,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 </script>
 
 <Story name="closed">
-  <SearchHighlights {document} {highlights} />
+  <SearchHighlights {document} />
 </Story>
 
 <Story name="open">
-  <SearchHighlights {document} {highlights} open />
+  <SearchHighlights {document} open />
 </Story>

@@ -19,6 +19,11 @@ export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
 export type Highlights = Record<string, string[]>;
 
+export interface NoteHighlight {
+  title: string[];
+  description: string[];
+}
+
 type AddOnCategory = "premium" | string;
 
 interface AddOnProperty {
@@ -123,7 +128,7 @@ export interface Document {
 
   // present in search results when query includes hl=true
   highlights?: Highlights;
-  note_highlights?: Record<string, Highlights[]>;
+  note_highlights?: Record<string, NoteHighlight>;
 }
 
 export interface DocumentResults extends Page<Document> {}

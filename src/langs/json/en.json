@@ -437,12 +437,14 @@
     "project": "Project",
     "totalMatchingPages": "{n} of {m} pages matching the query",
     "showAll": "Show all",
-    "matchingPages": "{n} pages matching the query",
+    "matchingPages": "{n, plural, one {# page} other {# pages}} matching the query",
+    "matchingNotes": "{n, plural, one {# note} other {# notes}} matching the query",
     "page": "Page",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
     "source": "Source",
-    "noteCount": "{n, plural, one {# note} other {# notes}}"
+    "noteCount": "{n, plural, one {# note} other {# notes}}",
+    "noteLink": "See note"
   },
   "documentThumbnail": {
     "pages": "pages",

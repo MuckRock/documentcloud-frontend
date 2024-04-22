@@ -20,6 +20,7 @@
   import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
+  import NoteHighlights from "./NoteHighlights.svelte";
   import SearchHighlights from "./SearchHighlights.svelte";
 
   export let results: Document[] = [];
@@ -97,8 +98,13 @@
         />
       </label>
       <DocumentListItem {document} />
+      {#if document.highlights}
+        <SearchHighlights {document} />
+      {/if}
 
-      <SearchHighlights {document} highlights={document.highlights} />
+      {#if document.note_highlights}
+        <NoteHighlights {document} />
+      {/if}
     </Flex>
   {:else}
     <Empty icon={Search24}>

@@ -12,18 +12,19 @@
 -->
 
 <script lang="ts">
-  import type { Document, Highlights } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
+  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
   import { pageUrl } from "$lib/api/documents";
 
-  export let highlights: Highlights;
   export let document: Document;
   export let open = false;
 
   const PAGE_NO_RE = /^page_no_(\d+)$/;
 
+  $: highlights = document.highlights;
   $: count = Object.keys(highlights).length;
 
   function pageLink(page: string): [number, string] {
@@ -32,6 +33,10 @@
 
     const number = +match[1];
     return [number, pageUrl(document, number).toString()];
+  }
+
+  function sanitize(s: string): string {
+    return DOMPurify.sanitize(s, { ALLOWED_TAGS: ["em"] });
   }
 </script>
 
@@ -44,7 +49,7 @@
       <h4><a {href}>{$_("document.page")} {number}</a></h4>
       <blockquote class="highlight">
         {#each segments as segment}
-          <p class="segment">{@html segment}</p>
+          <p class="segment">{@html sanitize(segment)}</p>
         {/each}
       </blockquote>
     {/each}
