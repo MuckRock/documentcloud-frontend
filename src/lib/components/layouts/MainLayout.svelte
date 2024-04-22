@@ -6,16 +6,16 @@
   import { getContext } from "svelte";
   import { SidebarCollapse16, SidebarExpand16 } from "svelte-octicons";
 
-  import Button from "./common/Button.svelte";
-  import Flex from "./common/Flex.svelte";
-  import SignedIn from "./common/SignedIn.svelte";
-  import UserMenu from "./navigation/UserMenu.svelte";
-  import OrgMenu from "./navigation/OrgMenu.svelte";
+  import Button from "../common/Button.svelte";
+  import Flex from "../common/Flex.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
+  import UserMenu from "../navigation/UserMenu.svelte";
+  import OrgMenu from "../navigation/OrgMenu.svelte";
 
   import { SIGN_IN_URL } from "@/config/config";
-  import Breadcrumbs from "./navigation/Breadcrumbs.svelte";
-  import LanguageMenu from "./navigation/LanguageMenu.svelte";
-  import HelpMenu from "./navigation/HelpMenu.svelte";
+  import Breadcrumbs from "../navigation/Breadcrumbs.svelte";
+  import LanguageMenu from "../navigation/LanguageMenu.svelte";
+  import HelpMenu from "../navigation/HelpMenu.svelte";
 
   export let modal: boolean = false;
 

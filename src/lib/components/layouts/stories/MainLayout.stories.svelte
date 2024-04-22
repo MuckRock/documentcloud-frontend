@@ -19,15 +19,15 @@
   import Button from "$lib/components/common/Button.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
-  import documents from "../../api/fixtures/documents/documents.json";
-  import Flex from "../common/Flex.svelte";
-  import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import Action from "../common/Action.svelte";
+  import documents from "../../../api/fixtures/documents/documents.json";
+  import Flex from "../../common/Flex.svelte";
+  import SidebarGroup from "../../sidebar/SidebarGroup.svelte";
+  import Action from "../../common/Action.svelte";
   import Pin from "@/common/Pin.svelte";
-  import ResultsList from "../documents/ResultsList.svelte";
+  import ResultsList from "../../documents/ResultsList.svelte";
   import ContentLayout from "../ContentLayout.svelte";
-  import PageToolbar from "../common/PageToolbar.svelte";
-  import Search from "../inputs/Search.svelte";
+  import PageToolbar from "../../common/PageToolbar.svelte";
+  import Search from "../../inputs/Search.svelte";
 
   import { addons } from "@/test/handlers/addons";
 

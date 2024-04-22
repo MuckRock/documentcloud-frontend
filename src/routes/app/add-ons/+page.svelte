@@ -9,10 +9,9 @@
   import Search from "@/lib/components/inputs/Search.svelte";
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
-  import Credit from "@/common/icons/Credit.svelte";
-  import ContentLayout from "$lib/components/ContentLayout.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import MainLayout from "$lib/components/MainLayout.svelte";
+  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Error from "@/lib/components/common/Error.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
