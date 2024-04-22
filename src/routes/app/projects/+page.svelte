@@ -13,6 +13,7 @@
   import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
   import Search from "@/lib/components/inputs/Search.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
+  import ProjectListItem from "@/lib/components/projects/ProjectListItem.svelte";
 
   export let data;
 
@@ -49,8 +50,7 @@
     </PageToolbar>
 
     {#each data.projects as project}
-      <p>{project.title}</p>
-      <p>{project.description}</p>
+      <ProjectListItem {project} />
     {:else}
       <Empty icon={FileDirectory24}>No projects found</Empty>
     {/each}
