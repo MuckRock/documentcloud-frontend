@@ -1,8 +1,213 @@
 {
-  "count": 316330,
-  "next": "https://api.www.documentcloud.org/api/documents/search/?q=boston&hl=true&cursor=AoMIQj4dOnHip%2FOcgwMoMjIzOTM0MDc%3D",
+  "count": 326697,
+  "next": "https://api.www.documentcloud.org/api/documents/search/?format=json&hl=true&q=boston&cursor=AoMIQkKnlnHToPabywInMTUxMzAwMg%3D%3D",
   "previous": null,
   "results": [
+    {
+      "id": "1501881",
+      "user": 1083,
+      "organization": 13,
+      "access": "public",
+      "status": "success",
+      "title": "Mayor Walsh State of the City 2015 as Prepared",
+      "slug": "mayor-walsh-state-of-the-city-2015-as-prepared",
+      "language": "eng",
+      "created_at": "2015-01-13T20:55:46.282Z",
+      "updated_at": "2020-11-10T19:28:54.782Z",
+      "page_count": 9,
+      "original_extension": "pdf",
+      "file_hash": "6cbfbf0f05eca2c1902063a4d66d51972e19e2ac",
+      "related_article": "http://www.bostonglobe.com/metro/2015/01/13/mayor-martin-walsh-delivers-state-city-address/MEtguJ2GJu7N2fELAQviRN/story.html",
+      "edit_access": false,
+      "notes": [
+        {
+          "id": "196957",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Firefighters killed in Back Bay fire receive top award",
+          "created_at": "2015-01-13T22:36:39.109Z",
+          "updated_at": "2020-11-10T19:29:00.833Z",
+          "content": "Boston Firefighter Michael R. Kennedy was a square-jawed, 33-year-old Marine Corps veteran who saw combat in Iraq and a first responder who rushed to treat victims of the Boston Marathon bombings. He spent days off roaring down the road on his motorcycle and pushing himself and others to the limits as a Crossfit trainer.\n\nFire Lieutenant Edward J. Walsh Jr. had tried a career in finance, but his passion was for firefighting. Nine and a half years ago, Walsh became a Boston firefighter, following in the footsteps of his late father, a lieutenant in the Watertown Fire Department.\n\n[<a href=\"Fire%20Lieutenant%20Edward%20J.%20Walsh%20Jr.%20had%20tried%20a%20career%20in%20finance,%20but%20his%20passion%20was%20for%20firefighting.%20Nine%20and%20a%20half%20years%20ago,%20Walsh%20became%20a%20Boston%20firefighter,%20following%20in%20the%20footsteps%20of%20his%20late%20father,%20a%20lieutenant%20in%20the%20Watertown%20Fire%20Department.\">Story</a>]",
+          "page_number": 0
+        },
+        {
+          "id": "196979",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Paris terror attacks January 2015",
+          "created_at": "2015-01-13T23:31:14.434Z",
+          "updated_at": "2020-11-10T19:29:00.834Z",
+          "content": "<a href=\"http://www.bostonglobe.com/news/bigpicture/2015/01/07/paris-attack/uBmT4MiTPlmjL0fPyrSDEJ/story.html\">The Big Picture: Paris attack</a>\n",
+          "page_number": 0
+        },
+        {
+          "id": "197010",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Boston police officer dies after medical emergency",
+          "created_at": "2015-01-14T00:55:03.392Z",
+          "updated_at": "2020-11-10T19:29:00.833Z",
+          "content": "Boston police officer dies after medical emergency. [<a href=\"http://www.bostonglobe.com/metro/2014/04/11/boston-police-officer-dies-after-medical-emergency/4Cg93lvhdmzcwTy0SPicKJ/story.html\">Story</a>]\n",
+          "page_number": 0
+        },
+        {
+          "id": "197011",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Dawnn Jaffier’s life of service recalled by mourners",
+          "created_at": "2015-01-14T00:55:37.666Z",
+          "updated_at": "2020-11-10T19:29:00.836Z",
+          "content": "Dawnn Jaffier’s life of service recalled by mourners. [<a href=\"http://www.bostonglobe.com/2014/08/30/hundreds-gather-mourn-dawnn-jaffier/wlAbF5oZKb3swYgB9NvUKN/story.html\">Story</a>]\n",
+          "page_number": 0
+        },
+        {
+          "id": "197013",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "State and national economies poised for growth",
+          "created_at": "2015-01-14T00:57:45.167Z",
+          "updated_at": "2020-11-10T19:29:00.837Z",
+          "content": "State and national economies poised for growth. [<a href=\"http://www.bostonglobe.com/business/2014/01/30/state-economy-expands-strong-pace/86gXzvEr5Y8FSMJ6QRI1DL/story.html\">Story</a>]",
+          "page_number": 1
+        },
+        {
+          "id": "197012",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Tom Menino's life",
+          "created_at": "2015-01-14T00:56:22.875Z",
+          "updated_at": "2020-11-10T19:29:00.833Z",
+          "content": "A look back at Tom Menino's tenure as Mayor of Boston. [<a href=\"http://www.bostonglobe.com/metro/specials/menino\">Story</a>]",
+          "page_number": 1
+        },
+        {
+          "id": "197014",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Mayor Walsh visited Ireland this year",
+          "created_at": "2015-01-14T00:59:36.348Z",
+          "updated_at": "2020-11-10T19:29:00.835Z",
+          "content": "An emotional Mayor Martin J. Walsh of Boston landed before dawn Friday on Irish soil and paid homage to Shannon Airport, the point of departure to Boston for scores of immigrants, including his parents, and the setting of a poignant speech by President John F. Kennedy. [<a href=\"http://www.bostonglobe.com/metro/2014/09/19/walsh-lands-ireland-evoking-jfk/Hmos5Fv7EDFDnGAgbe33BO/story.html\">Story</a>]",
+          "page_number": 1
+        },
+        {
+          "id": "197031",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "City tests new weapons in fight against potholes",
+          "created_at": "2015-01-14T01:14:09.405Z",
+          "updated_at": "2020-11-10T19:29:00.835Z",
+          "content": "In the latest round of Boston versus potholes, the city is bringing in the big guns: a Silly Putty-like material encased in portable plastic bags invented by college students. Shape-shifting goo that hardens instantly under pressure. [<a href=\"http://www.bostonglobe.com/metro/2013/03/21/potholes/jUvJ1uT03j5tCGIlSvCsPL/story.html\">Story</a>]",
+          "page_number": 2
+        },
+        {
+          "id": "197034",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Skyline blooms as Boston OK’s over $1.5b in projects",
+          "created_at": "2015-01-14T01:15:30.784Z",
+          "updated_at": "2020-11-10T19:29:00.836Z",
+          "content": "City regulators this week approved more than $1.5 billion in new construction projects, including a $500 million expansion of New Balance’s headquarters in Brighton, as well as large residential and retail developments in Downtown Crossing, the Fenway, and the South End. [<a href=\"http://www.bostonglobe.com/business/2012/09/14/boston-approves-billion-development-projects-boston-new-construction/ALjAbgqvSN0slA8KHN3gVP/story.html\">Story</a>]",
+          "page_number": 2
+        },
+        {
+          "id": "197023",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Boston EMS workers OK pay raise",
+          "created_at": "2015-01-14T01:06:36.632Z",
+          "updated_at": "2020-11-10T19:29:00.837Z",
+          "content": "Workers in Boston’s Emergency Medical Services will receive a pay raise of nearly 15 percent over six years under a newly settled contract with Mayor Martin J. Walsh. [<a href=\"http://www.bostonglobe.com/metro/2014/08/29/boston-ems-union-approves-new-contract/01DPyGIoB4DOLmpOjajW5L/story.html\">Story</a>]",
+          "page_number": 2
+        }
+      ],
+      "highlights": {
+        "page_no_1": [
+          "To all the people of <em>Boston</em> and our region, present tonight or watching at home: good evening.\n"
+        ],
+        "page_no_2": [
+          "As <em>Boston</em>\napproaches its 400th birthday, our goal is a thriving, healthy, and innovative city for all; one\ncommunity that is a global leader for the 21st century. "
+        ],
+        "page_no_3": [
+          "We created\nthe most diverse command staff in the <em>Boston</em> Police Department's history. "
+        ],
+        "page_no_4": [
+          "<em>Boston</em> now competes\nagainst the world, as America’s city. Whatever the outcome, <em>Boston</em> will prove itself a global\nleader. "
+        ],
+        "page_no_5": [
+          "We tripled the size of\nthe Success <em>Boston</em> college completion program. "
+        ],
+        "page_no_6": [
+          "Page 6 of 9\n\n+++\n<em>Boston</em> is a city of revolutionary innovation. But in <em>Boston</em> we know that a revolution only\nsucceeds when it galvanizes the whole community. "
+        ],
+        "page_no_7": [
+          "Demand for housing in <em>Boston</em> is at a historic high:\nputting prices and rents out of reach for too many. "
+        ],
+        "page_no_8": [
+          "For that, I\ncommend the officers of the <em>Boston</em> Police Department ... and those who protested. "
+        ],
+        "page_no_9": [
+          "Finally, I think about the <em>Boston</em> firefighters I saw at Beacon Street on March 26. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/1501881-mayor-walsh-state-of-the-city-2015-as-prepared",
+      "note_highlights": {
+        "197010": {
+          "title": [
+            "<em>Boston</em> police officer dies after medical emergency"
+          ],
+          "description": [
+            "<em>Boston</em> police officer dies after medical emergency. [<a href=\"http://www.bostonglobe.com/metro/2014"
+          ]
+        },
+        "197034": {
+          "title": [
+            "Skyline blooms as <em>Boston</em> OK’s over $1.5b in projects"
+          ],
+          "description": [
+            "://www.bostonglobe.com/business/2012/09/14/<em>boston</em>-approves-billion-development-projects-<em>boston</em>-new-construction"
+          ]
+        },
+        "197023": {
+          "title": ["<em>Boston</em> EMS workers OK pay raise"],
+          "description": [
+            "://www.bostonglobe.com/metro/2014/08/29/<em>boston</em>-ems-union-approves-new-contract/01DPyGIoB4DOLmpOjajW5L/story.html\">Story</a>]"
+          ]
+        },
+        "197012": {
+          "description": [
+            "A look back at Tom Menino's tenure as Mayor of <em>Boston</em>. [<a href=\"http://www.bostonglobe.com/metro"
+          ]
+        },
+        "197014": {
+          "description": [
+            "An emotional Mayor Martin J. Walsh of <em>Boston</em> landed before dawn Friday on Irish soil and paid"
+          ]
+        },
+        "196957": {
+          "description": [
+            "<em>Boston</em> Firefighter Michael R. Kennedy was a square-jawed, 33-year-old Marine Corps veteran who saw"
+          ]
+        },
+        "197031": {
+          "description": [
+            "In the latest round of <em>Boston</em> versus potholes, the city is bringing in the big guns: a Silly Putty"
+          ]
+        }
+      }
+    },
     {
       "id": "2287364",
       "user": 3379,
@@ -26,7 +231,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/2287364-boston"
+      "canonical_url": "https://www.documentcloud.org/documents/2287364-boston",
+      "note_highlights": {}
     },
     {
       "id": "23066715",
@@ -47,7 +253,7 @@
       "description": "",
       "published_url": "",
       "related_article": "",
-      "edit_access": false,
+      "edit_access": true,
       "notes": [],
       "highlights": {},
       "data": {
@@ -85,7 +291,8 @@
         "more1_link": [""]
       },
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/23066715-boston"
+      "canonical_url": "https://www.documentcloud.org/documents/23066715-boston",
+      "note_highlights": {}
     },
     {
       "id": "3513915",
@@ -106,7 +313,8 @@
       "highlights": {},
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/3513915-Boston"
+      "canonical_url": "https://www.documentcloud.org/documents/3513915-Boston",
+      "note_highlights": {}
     },
     {
       "id": "6243580",
@@ -138,7 +346,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/6243580-BOSTON"
+      "canonical_url": "https://www.documentcloud.org/documents/6243580-BOSTON",
+      "note_highlights": {}
     },
     {
       "id": "6243452",
@@ -170,7 +379,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/6243452-BOSTON"
+      "canonical_url": "https://www.documentcloud.org/documents/6243452-BOSTON",
+      "note_highlights": {}
     },
     {
       "id": "70328",
@@ -192,7 +402,61 @@
       "highlights": {},
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/70328-boston"
+      "canonical_url": "https://www.documentcloud.org/documents/70328-boston",
+      "note_highlights": {}
+    },
+    {
+      "id": "3259890",
+      "user": 16677,
+      "organization": 57,
+      "access": "public",
+      "status": "success",
+      "title": "Boston, MA",
+      "slug": "Boston-MA",
+      "language": "eng",
+      "created_at": "2017-01-10T21:41:09.259Z",
+      "updated_at": "2020-11-10T17:02:40.656Z",
+      "page_count": 13,
+      "projects": [31169],
+      "original_extension": "pdf",
+      "file_hash": "589110e1ac30be1e598458ff5b7dc5e6f224acd0",
+      "edit_access": false,
+      "notes": [
+        {
+          "id": "334535",
+          "user": 16677,
+          "organization": 57,
+          "access": "public",
+          "title": "The contract is still in effect as of January 2017, according to a spokesperson from the Boston Police Patrolmen's Association.",
+          "created_at": "2017-01-12T19:40:21.486Z",
+          "updated_at": "2020-11-10T17:02:52.658Z",
+          "page_number": 0
+        }
+      ],
+      "highlights": {
+        "page_no_1": [
+          "Sep 27 13 11 :20a\n\nEstelle\n\n954-752-5581\n\nCity of <em>Boston</em> and <em>Boston</em> Police Patrolmen's Association\nJLMC No. 12-32P\n\nAWARD\n\nThe panel convened pursuant to the joint submission of the parties after a declaration that\nthe parties were unable to agree to the terms and conditions of a new collective\nbargaining agreement for the period commencing July 1, 2010.\n"
+        ],
+        "page_no_8": [
+          "This includes but is not limited to the\nfollowing events/circumstances: First Night, <em>Boston</em> Marathon, Caribbean\nFestival, July 4th, major sporting events, major cultural events, and weather\nemergencies.\nii. "
+        ],
+        "page_no_12": [
+          "CITY OF <em>BOSTON</em>\nOFFICE OF ADMINISTRATION\n\n& FINANCE\n\nCity of <em>Boston</em> and <em>Boston</em> Police Patrolmen's Association JLMC No. 12-32P\nDissent by the City of <em>Boston</em> Panel Member John Dunlap\nThis award grants a sa lary increase of 25.4% to police officers over a six-yea r period and will cost the taxpayers\nmore than $80 million- more than twice as much as the City's offer would have cost. "
+        ],
+        "page_no_13": [
+          "The group of unions which had\nvoluntarily settled with the City included the <em>Boston</em> Teachers Union (BTU)- the City's largest union. "
+        ]
+      },
+      "data": {},
+      "asset_url": "https://s3.documentcloud.org/",
+      "canonical_url": "https://www.documentcloud.org/documents/3259890-Boston-MA",
+      "note_highlights": {
+        "334535": {
+          "title": [
+            "The contract is still in effect as of January 2017, according to a spokesperson from the <em>Boston</em>"
+          ]
+        }
+      }
     },
     {
       "id": "21020996",
@@ -221,7 +485,8 @@
         "mos_name": ["BOSTON"]
       },
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/21020996-boston-e57ccc8cd255272caba251c540347f304f10438e"
+      "canonical_url": "https://www.documentcloud.org/documents/21020996-boston-e57ccc8cd255272caba251c540347f304f10438e",
+      "note_highlights": {}
     },
     {
       "id": "4229282",
@@ -255,7 +520,8 @@
         "document_type": ["<$2500 Affidavit"]
       },
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/4229282-Boston-Sherry-1-31-16"
+      "canonical_url": "https://www.documentcloud.org/documents/4229282-Boston-Sherry-1-31-16",
+      "note_highlights": {}
     },
     {
       "id": "3437950",
@@ -277,7 +543,8 @@
       "highlights": {},
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/3437950-Boston-Order"
+      "canonical_url": "https://www.documentcloud.org/documents/3437950-Boston-Order",
+      "note_highlights": {}
     },
     {
       "id": "1390996",
@@ -295,7 +562,7 @@
       "original_extension": "pdf",
       "file_hash": "3ab71d546b463810c2cb38afafa49724e08b69fc",
       "related_article": "https://www.muckrock.com/foi/california-52/ca-doc-contractsmous-re-cai-boston-avenue-15063/",
-      "edit_access": false,
+      "edit_access": true,
       "notes": [],
       "highlights": {
         "page_no_1": [
@@ -304,7 +571,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/1390996-851696-boston"
+      "canonical_url": "https://www.documentcloud.org/documents/1390996-851696-boston",
+      "note_highlights": {}
     },
     {
       "id": "23926033",
@@ -333,7 +601,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/23926033-boston-affidavit"
+      "canonical_url": "https://www.documentcloud.org/documents/23926033-boston-affidavit",
+      "note_highlights": {}
     },
     {
       "id": "7033949",
@@ -376,7 +645,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/7033949-Boston-TX"
+      "canonical_url": "https://www.documentcloud.org/documents/7033949-Boston-TX",
+      "note_highlights": {}
     },
     {
       "id": "4178289",
@@ -393,7 +663,7 @@
       "original_extension": "pdf",
       "file_hash": "c5f9b973237e44deb76e8bdb7e10f65328b1be6b",
       "related_article": "https://www.muckrock.com/foi/boston-3/amazon-hq2-bid-44971/",
-      "edit_access": false,
+      "edit_access": true,
       "notes": [],
       "highlights": {
         "page_no_2": [
@@ -822,7 +1092,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/4178289-Boston-Bid"
+      "canonical_url": "https://www.documentcloud.org/documents/4178289-Boston-Bid",
+      "note_highlights": {}
     },
     {
       "id": "3913417",
@@ -840,7 +1111,7 @@
       "original_extension": "pdf",
       "file_hash": "d40f695c55ea6c381244c0ffb11f9aaeebb2379d",
       "related_article": "https://www.muckrock.com/foi/massachusetts-1/2016-byrnes-jag-pass-through-grants-38864/",
-      "edit_access": false,
+      "edit_access": true,
       "notes": [],
       "highlights": {
         "page_no_1": [
@@ -876,7 +1147,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/3913417-Boston-PD-Redacted"
+      "canonical_url": "https://www.documentcloud.org/documents/3913417-Boston-PD-Redacted",
+      "note_highlights": {}
     },
     {
       "id": "4229276",
@@ -931,53 +1203,8 @@
         "document_type": ["CCDR"]
       },
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/4229276-Boston-Sherry-7-5-16-CCDR-CCDR"
-    },
-    {
-      "id": "3259890",
-      "user": 16677,
-      "organization": 57,
-      "access": "public",
-      "status": "success",
-      "title": "Boston, MA",
-      "slug": "Boston-MA",
-      "language": "eng",
-      "created_at": "2017-01-10T21:41:09.259Z",
-      "updated_at": "2020-11-10T17:02:40.656Z",
-      "page_count": 13,
-      "projects": [31169],
-      "original_extension": "pdf",
-      "file_hash": "589110e1ac30be1e598458ff5b7dc5e6f224acd0",
-      "edit_access": false,
-      "notes": [
-        {
-          "id": "334535",
-          "user": 16677,
-          "organization": 57,
-          "access": "public",
-          "title": "The contract is still in effect as of January 2017, according to a spokesperson from the Boston Police Patrolmen's Association.",
-          "created_at": "2017-01-12T19:40:21.486Z",
-          "updated_at": "2020-11-10T17:02:52.658Z",
-          "page_number": 0
-        }
-      ],
-      "highlights": {
-        "page_no_1": [
-          "Sep 27 13 11 :20a\n\nEstelle\n\n954-752-5581\n\nCity of <em>Boston</em> and <em>Boston</em> Police Patrolmen's Association\nJLMC No. 12-32P\n\nAWARD\n\nThe panel convened pursuant to the joint submission of the parties after a declaration that\nthe parties were unable to agree to the terms and conditions of a new collective\nbargaining agreement for the period commencing July 1, 2010.\n"
-        ],
-        "page_no_8": [
-          "This includes but is not limited to the\nfollowing events/circumstances: First Night, <em>Boston</em> Marathon, Caribbean\nFestival, July 4th, major sporting events, major cultural events, and weather\nemergencies.\nii. "
-        ],
-        "page_no_12": [
-          "CITY OF <em>BOSTON</em>\nOFFICE OF ADMINISTRATION\n\n& FINANCE\n\nCity of <em>Boston</em> and <em>Boston</em> Police Patrolmen's Association JLMC No. 12-32P\nDissent by the City of <em>Boston</em> Panel Member John Dunlap\nThis award grants a sa lary increase of 25.4% to police officers over a six-yea r period and will cost the taxpayers\nmore than $80 million- more than twice as much as the City's offer would have cost. "
-        ],
-        "page_no_13": [
-          "The group of unions which had\nvoluntarily settled with the City included the <em>Boston</em> Teachers Union (BTU)- the City's largest union. "
-        ]
-      },
-      "data": {},
-      "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/3259890-Boston-MA"
+      "canonical_url": "https://www.documentcloud.org/documents/4229276-Boston-Sherry-7-5-16-CCDR-CCDR",
+      "note_highlights": {}
     },
     {
       "id": "690354",
@@ -1023,7 +1250,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/690354-boston-charge"
+      "canonical_url": "https://www.documentcloud.org/documents/690354-boston-charge",
+      "note_highlights": {}
     },
     {
       "id": "5740788",
@@ -1045,7 +1273,8 @@
       "highlights": {},
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/5740788-Opinio-N-Boston"
+      "canonical_url": "https://www.documentcloud.org/documents/5740788-Opinio-N-Boston",
+      "note_highlights": {}
     },
     {
       "id": "4229280",
@@ -1079,7 +1308,8 @@
         "document_type": ["Not Seeking Reelection Affidavit"]
       },
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/4229280-Boston-Sherry-1-31-16-Not-Seeking-Reelection"
+      "canonical_url": "https://www.documentcloud.org/documents/4229280-Boston-Sherry-1-31-16-Not-Seeking-Reelection",
+      "note_highlights": {}
     },
     {
       "id": "3728138",
@@ -1117,7 +1347,8 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/3728138-Boston-2015"
+      "canonical_url": "https://www.documentcloud.org/documents/3728138-Boston-2015",
+      "note_highlights": {}
     },
     {
       "id": "353467",
@@ -1138,7 +1369,8 @@
       "highlights": {},
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/353467-boston-matthew"
+      "canonical_url": "https://www.documentcloud.org/documents/353467-boston-matthew",
+      "note_highlights": {}
     },
     {
       "id": "236334",
@@ -1159,7 +1391,8 @@
       "highlights": {},
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/236334-20081219-boston"
+      "canonical_url": "https://www.documentcloud.org/documents/236334-20081219-boston",
+      "note_highlights": {}
     },
     {
       "id": "23879788",
@@ -1550,79 +1783,103 @@
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/23879788-1723-boston-rules-on-negroes-boston-common"
+      "canonical_url": "https://www.documentcloud.org/documents/23879788-1723-boston-rules-on-negroes-boston-common",
+      "note_highlights": {
+        "2362326": {
+          "title": [
+            "<em>Boston</em> rules: \"No Indian Negro or Molatto Servant or Slave...Shal abide there after Sun Sett\""
+          ]
+        }
+      }
     },
     {
-      "id": "24164580",
-      "user": 102112,
-      "organization": 125,
+      "id": "1513002",
+      "user": 1083,
+      "organization": 13,
       "access": "public",
       "status": "success",
-      "title": "Boston Green Academy_EN",
-      "slug": "boston-green-academy_en",
+      "title": "Data Agreement between Uber and Boston",
+      "slug": "final-city-data-agreement-boston-uber-011215",
       "language": "eng",
-      "created_at": "2023-11-13T19:52:58.192Z",
-      "updated_at": "2023-11-13T19:53:11.214Z",
-      "page_count": 1,
-      "projects": [215836],
+      "created_at": "2015-01-29T22:39:04.497Z",
+      "updated_at": "2020-11-10T19:28:47.819Z",
+      "page_count": 7,
       "original_extension": "pdf",
-      "file_hash": "080bbaefc55170f72feb1cfb7ca26107a560ca23",
-      "noindex": false,
+      "file_hash": "216b9e697fd04e828b7f7d1f7cc0d4485c38d9a8",
       "edit_access": false,
-      "notes": [],
+      "notes": [
+        {
+          "id": "201412",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Scope of Uber ridership",
+          "created_at": "2015-01-29T22:45:19.389Z",
+          "updated_at": "2020-11-10T19:29:00.841Z",
+          "content": "Although Uber has provided statistics about its driver base in Boston, including how much they work and earn, little is known about the level of service it provides.",
+          "page_number": 0
+        },
+        {
+          "id": "201411",
+          "user": 1083,
+          "organization": 13,
+          "access": "public",
+          "title": "Boston will notify Uber",
+          "created_at": "2015-01-29T22:43:57.436Z",
+          "updated_at": "2020-11-10T19:29:00.841Z",
+          "content": "Under the agreement, the City of Boston has to tell Uber if it receives a request for the data.",
+          "page_number": 1
+        }
+      ],
       "highlights": {
         "page_no_1": [
-          "The Energy \nAudit is to provide <em>Boston</em> Public Schools with a baseline of energy usage, for both \nrenewable and non-renewable Energy Conservation Measures to reduce carbon \nemissions. "
+          "Agreement\nBetween Uber Technologies, Inc. and the City of <em>Boston</em>\nOn the Provision obeer City Data\n\nThis Agreement is entered into this 12m day of January, 2015, between the City of <em>Boston</em>\n(hereinafter the ?"
+        ],
+        "page_no_3": [
+          "representatives to execute this Agreement on\n\nCITY OF <em>BOSTON</em>\nBy: \nprimed: Jascha Franklin-Hodge\n\nTitle; Chief Information Officer\n\nAPPROVED AS 10 FQRM\n.  \n\n.- r15\" \n\"1(9qu 1\" arr?) "
+        ],
+        "page_no_5": [
+          "Dorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDorchester\nDowntown\nDowntown\nDowntown\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nEast <em>Boston</em>\nFenway\nFenway\nFenway\nFenway\nFenway\nFenway\nFenway\nFenway\nFenway\nHarbor Islands\nHyde Park\nHyde Park\nHyde Park\nHyde Park\nHyde Park\nHyde Park\nHyde Park\n\nCensus Tract 910.01\nCensus Tract 911\nCensus Tract 912\nCensus Tract 913\nCensus Tract 914\nCensus Tract 915\nCensus Tract 916\nCensus Tract 917\nCensus Tract 918\nCensus Tract 919\nCensus Tract 920\nCensus Tract 921.01\nCensus Tract 922\nCensus Tract 923\nCensus Tract 924\nCensus Tract 303\nCensus Tract 701.01\nCensus Tract 702\nCensus Tract 501.01\nCensus Tract 502\nCensus Tract 503\nCensus Tract 504\nCensus Tract 505\nCensus Tract 506\nCensus Tract 50?\n"
+        ],
+        "page_no_7": [
+          "Roxbury\nRoxbury\nRoxbury\nRoxbury\nRoxbury\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\nSouth <em>Boston</em>\n\nSouth <em>Boston</em> Waterfront\nSouth <em>Boston</em> Waterfront\n\nSouth End\nSouth End\nSouth End\nSouth End\nSouth End\nSouth End\nSouth End\nSouth End\nSouth End\nWest End\nWest End\nWest Roxhury\nWest Roxbury\nWest Roxbury\nWest Roxbury\nWest Roxbury\nWest Roxbury\nWest Roxbury\n\nCensus Tract 820\nCensus Tract 8221\nCensus Tract 904\nCensus Tract 906\nCensus Tract 9803\nCensus Tract 601.01\nCensus Tract 602\nCensus Tract 603.01\nCensus Tract 604\nCensus Tract 605.01\nCensus Tract 607\nCensus Tract 608\nCensus Tract 610\nCensus Tract 611.01\nCensus Tract 612\nCensus Tract 9812.01\nCensus Tract 606\nCensus Tract 9812.02\n\nCensus Tract 703\n\nCensus Tract 704.02\nCensus Tract 705\nCensus Tract 706\nCensus Tract 707\nCensus Tract 708\nCensus Tract 709\nCensus Tract 711.01\nCensus Tract 712.01\nCensus Tract 203.01\nCensus Tract 203.03\nCensus Tract 1106.01\nCensus Tract 1301\nCensus Tract 1302\nCensus Tract 1303\nCensus Tract 1304.02\nCensus Tract 1304.04\nCensus Tract 1304.06\n\n25025082000\n25025082100\n25025090400\n25025090600\n25025980300\n25025060101\n25025060200\n25025060301\n25025060400\n25025060501\n25025060700\n25025060800\n25025061000\n25025061101\n25025061200\n25025981201\n25025060600\n25025981202\n25025070300\n25025070402\n25025070500\n25025070600\n25025070700\n25025070800\n25025070900\n25025071101\n25025071201\n25025020301\n25025020303\n25025110601\n25025130100\n25025130200\n25025130300\n25025130402\n25025130404\n25025130406\n\n"
         ]
       },
       "data": {},
       "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/24164580-boston-green-academy_en"
-    },
-    {
-      "id": "22393407",
-      "user": 20080,
-      "organization": 125,
-      "access": "public",
-      "status": "success",
-      "title": "VISIT TO BOSTON",
-      "slug": "visit-to-boston",
-      "source": "CIA CREST Database",
-      "language": "eng",
-      "created_at": "2022-09-14T02:21:35.649Z",
-      "updated_at": "2022-09-14T02:21:48.015Z",
-      "page_count": 1,
-      "projects": [209284],
-      "original_extension": "pdf",
-      "file_hash": "cfcb07abd75d86f9b47a2c2080d6d0903fb88ce9",
-      "edit_access": false,
-      "notes": [],
-      "highlights": {
-        "page_no_1": [
-          "Santzed Copy Approve for Relea 2078052 CA RDPETROOSZERC0200120023-4\nhe oiecron oF\ncenteaL meiGENCe\n\n| PL, He to. 7481-63\n| [— 1 octiner 1083\n1\n\nWIE TO: Charles vatermin WT 10: charles Vatersan\n® oi wren omer on tn toner\n\nSECT © Vist to <em>boston</em> Seer: visit to toston\n\n. oistribution:\n| plan to te 10 <em>Boston</em>, October Lath ibtion:\n\nana She\" lcs best Eurpean affairs Ee\n\ntar speek 51 Shares ovens\n\nic hubing ers Putnas st Rarvard, Robert 112 Mri chore\n\nPipette riiits 1 2 dori\n\nen Mop ManR §iT\n\nnea , Via SAT\n\nind\nWith Rouner\nwomore\nIGE TE wo\nSE ———\n\f"
-        ]
-      },
-      "data": {
-        "url": [
-          "https://www.cia.gov/library/readingroom/document/cia-rdp87r00529r000200130023-4"
-        ],
-        "file": [
-          "https://www.cia.gov/library/readingroom/docs/cia-rdp87r00529r000200130023-4.pdf"
-        ],
-        "collection": ["General CIA Records"],
-        "content_type": ["MEMO"],
-        "document_type": ["CREST"],
-        "document_number": ["CIA-RDP87R00529R000200130023-4"],
-        "sequence_number": ["23"],
-        "publication_date": ["October 14, 1983"],
-        "release_decision": ["RIPPUB"],
-        "document_page_count": ["1"],
-        "document_creation_date": ["December 22, 2016"],
-        "document_publication_date": ["May 26, 2010"]
-      },
-      "asset_url": "https://s3.documentcloud.org/",
-      "canonical_url": "https://www.documentcloud.org/documents/22393407-visit-to-boston"
+      "canonical_url": "https://www.documentcloud.org/documents/1513002-final-city-data-agreement-boston-uber-011215",
+      "note_highlights": {
+        "201411": {
+          "title": ["<em>Boston</em> will notify Uber"],
+          "description": [
+            "Under the agreement, the City of <em>Boston</em> has to tell Uber if it receives a request for the data."
+          ]
+        },
+        "201412": {
+          "description": [
+            "Although Uber has provided statistics about its driver base in <em>Boston</em>, including how much they work"
+          ]
+        }
+      }
     }
   ],
-  "escaped": false
+  "escaped": false,
+  "debug": {
+    "text_query": "(boston) _query_:\"{!join from=document_s fromIndex=notes to=id score=total v='+type:note +(access:public OR user:1020) +(title:(boston) description:(boston))' }\" _query_:\" +( ( (user:1020 OR projects_edit_access:(911 212458 215823 212199 215229 215525 217646 215836 217855 216360 6909 214482 45565)) AND access:(private organization) ) OR (access:(public organization) AND organization:(19198 170 125)) ) +{!join from=document_s fromIndex=notes to=id score=total v='+type:note +(access:organization) +(title:(boston) description:(boston))'} \" ",
+    "qtime": 1864,
+    "fq": [
+      "!access:invisible",
+      "filter(access:public AND status:(success readable)) OR (user:1020) OR (access:organization AND organization:(19198 170 125)) OR (projects_edit_access:(911 212458 215823 212199 215229 215525 217646 215836 217855 216360 6909 214482 45565))"
+    ],
+    "sort": "score desc, created_at desc, id desc",
+    "hl": "on",
+    "hl.highlightMultiTerm": "true",
+    "rows": 25,
+    "cursorMark": "*",
+    "uf": "* _query_ -projects_edit_access",
+    "qq_user": 1020,
+    "notes.qq_user": 1020,
+    "qq_organizations": "19198,170,125",
+    "qq_projects": "911,212458,215823,212199,215229,215525,217646,215836,217855,216360,6909,214482,45565"
+  }
 }

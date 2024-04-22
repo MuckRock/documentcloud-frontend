@@ -62,7 +62,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     </a>
   </div>
   <div class="info">
-    <h4>{document.title}</h4>
+    <h3>{document.title}</h3>
     <p class="meta">
       {$_("document.pageCount", { values: { n: document.page_count } })} -
       {#if userOrgString(document)}{userOrgString(document)} -
@@ -115,7 +115,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     min-width: 0;
   }
 
-  h4 {
+  h3 {
     color: var(--gray-5, #233944);
     font-size: var(--font-m, 1rem);
     font-style: normal;

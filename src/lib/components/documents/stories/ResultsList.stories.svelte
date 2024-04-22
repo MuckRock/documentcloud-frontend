@@ -1,11 +1,17 @@
 <script context="module" lang="ts">
-  import type { Document, DocumentResults } from "@/lib/api/types";
+  import type { Document } from "@/lib/api/types";
+
   import { Story } from "@storybook/addon-svelte-csf";
   import ResultsList from "../ResultsList.svelte";
 
   // typescript complains without the type assertion
-  import searchResults from "../../../api/fixtures/documents/search-highlight.json";
-  const results = searchResults.results as Document[];
+  import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
+  const highlighted = searchResults.results as Document[];
+  const results = highlighted.map((d) => ({
+    ...d,
+    highlights: null,
+    note_highlights: null,
+  }));
   const count = searchResults.count;
   const next = searchResults.next;
 
@@ -27,4 +33,10 @@
 
 <Story name="Infinite">
   <div style="width: 36rem"><ResultsList {results} {count} {next} auto /></div>
+</Story>
+
+<Story name="Highlighted">
+  <div style="width: 36rem">
+    <ResultsList results={highlighted} {count} {next} />
+  </div>
 </Story>
