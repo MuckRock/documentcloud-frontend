@@ -42,11 +42,11 @@
 
 {#if count}
   <details class="highlights" bind:open>
-    <summary>{$_("document.matchingPages", { values: { n: count } })}</summary>
+    <summary>{$_("documents.matchingPages", { values: { n: count } })}</summary>
 
     {#each Object.entries(highlights) as [page, segments]}
       {@const [number, href] = pageLink(page)}
-      <h4><a {href}>{$_("document.page")} {number}</a></h4>
+      <h4><a {href}>{$_("documents.page")} {number}</a></h4>
       <blockquote class="highlight">
         {#each segments as segment}
           <p class="segment">{@html sanitize(segment)}</p>

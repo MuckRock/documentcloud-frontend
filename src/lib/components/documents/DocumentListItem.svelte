@@ -64,7 +64,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
   <div class="info">
     <h3>{document.title}</h3>
     <p class="meta">
-      {$_("document.pageCount", { values: { n: document.page_count } })} -
+      {$_("documents.pageCount", { values: { n: document.page_count } })} -
       {#if userOrgString(document)}{userOrgString(document)} -
       {/if}
       {date}
@@ -76,7 +76,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     {/if}
     <div class="actions">
       <a href={canonicalUrl(document).toString()} class="open"
-        >{$_("document.open")}</a
+        >{$_("documents.open")}</a
       >
 
       {#each projects as project}
