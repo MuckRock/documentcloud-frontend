@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Search24, XCircleFill24 } from "svelte-octicons";
 
+  export let name: string = null;
   export let query: string = "";
   let input: HTMLInputElement;
 
@@ -15,7 +16,7 @@
   <input
     type="search"
     id="query"
-    name="q"
+    {name}
     autocomplete="off"
     placeholder="Search…"
     bind:value={query}
@@ -55,6 +56,11 @@
   }
   input::placeholder {
     color: var(--gray-4, #5c717c);
+  }
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
   }
   label {
     display: flex;

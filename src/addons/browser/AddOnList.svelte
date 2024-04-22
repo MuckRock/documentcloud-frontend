@@ -8,10 +8,10 @@
   import ListItem from "./AddOnListItem.svelte";
   import type { AddOnListItem } from "../types";
 
-  export let items: AddOnListItem[];
-  export let loading: boolean;
-  export let error: string | undefined;
-  export let reload: () => void | undefined;
+  export let items: AddOnListItem[] = [];
+  export let loading: boolean = false;
+  export let error: string | undefined = undefined;
+  export let reload: () => void | undefined = undefined;
 
   $: empty = !(items && items.length > 0);
 </script>

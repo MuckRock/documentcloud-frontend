@@ -3,7 +3,6 @@
   export let disabled = false;
   export let small = false;
   export let hover = false;
-
   // handling link behavior
   export let href: string = undefined;
   export let target: string = undefined;
@@ -55,6 +54,8 @@
   }
 
   /* Hover */
+  a.container.active,
+  .container.active,
   a.container:hover,
   a.container:focus,
   .container.hover:hover,
