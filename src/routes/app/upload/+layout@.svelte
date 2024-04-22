@@ -1,7 +1,7 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import MainLayout from "@/lib/components/MainLayout.svelte";
+  import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
   import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
   import Documents from "../sidebar/Documents.svelte";

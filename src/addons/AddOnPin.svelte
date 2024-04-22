@@ -52,4 +52,9 @@
   }
 </script>
 
-<Pin active={addon.active} on:click={toggle} {size} />
+<Pin
+  active={addon.active}
+  on:click={toggle}
+  {size}
+  --fill={addon.active ? "var(--orange)" : "var(--gray-3)"}
+/>

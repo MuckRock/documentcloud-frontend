@@ -30,6 +30,7 @@
     width: 100%;
     position: sticky;
     top: 0;
+    z-index: 2;
     padding: 0.625rem;
   }
   main {
@@ -37,13 +38,14 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
   }
   footer {
     flex: 0 0 0;
     width: 100%;
     position: sticky;
     bottom: 0;
+    z-index: 2;
     padding: 0.625rem;
   }
 </style>

@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
-  import Logo from "../common/Logo.svelte";
+  import Logo from "../Logo.svelte";
 
   export const meta = {
     title: "Components / Common / Logo",

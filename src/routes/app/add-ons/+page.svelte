@@ -1,200 +1,132 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
-  import AddOnList from "@/addons/browser/AddOnList.svelte";
-  import type { AddOnListItem } from "$lib/api/types";
-  import { buildParams, buildUrl, filter } from "@/addons/browser/browser";
-  import Filters from "@/addons/browser/Filters.svelte";
-  import Categories from "@/addons/browser/Categories.svelte";
+  import { Hourglass24, Plug24 } from "svelte-octicons";
+
   import Paginator from "@/common/Paginator.svelte";
-  import Search, { query } from "@/common/SearchInput.svelte";
+  import Search from "@/lib/components/inputs/Search.svelte";
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
-  import Credit from "@/common/icons/Credit.svelte";
-  import type { Page } from "@/api/types/common.js";
-  import { onMount } from "svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import Error from "@/lib/components/common/Error.svelte";
+  import ListItem from "$lib/components/addons/AddOnListItem.svelte";
+  import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
+  import Tip from "@/lib/components/common/Tip.svelte";
+  import Premium from "@/common/icons/Premium.svelte";
 
-  let per_page = 10;
+  export let data;
 
-  $: urlParams = buildParams({
-    per_page,
-    query: $query,
-    filter: $filter,
-  });
-  $: url = buildUrl(urlParams);
-  $: next_url = res?.next ? new URL(res.next).toString() : null;
-  $: previous_url = res?.previous ? new URL(res.previous).toString() : null;
-  $: items = res?.results;
-  /** Network logic */
-  let loading = false;
-  let error = null;
-  let res: Page<AddOnListItem>;
-
-  export async function load(url) {
-    loading = true;
-    res = await fetch(url, {
-      credentials: "include",
-    })
-      .then(async (r) => {
-        const data = await r.json();
-        if (!r.ok) throw data;
-        return data;
-      })
-      .catch((err) => {
-        error = err;
-        loading = false;
-        return {};
-      });
-
-    loading = false;
+  // TODO: Improve cursor handling in page data responses
+  /** The pagination URL provided in the reponse corresponds to an API query.
+   *  This gets the cursor from the pagination URL and uses it to update the
+   *  current URL's searchParams value (there should be a smarter way to do this).
+   */
+  function paginate(pageUrl: string) {
+    const url = new URL($page.url); // make a copy
+    const cursor = new URL(pageUrl).searchParams.get("cursor");
+    if (!cursor) return;
+    url.searchParams.set("cursor", cursor);
+    goto(url);
   }
 
-  onMount(() => load(url));
-  $: loadNext = () => load(next_url);
-  $: loadPrev = () => load(previous_url);
-  $: reload = () => load(url);
+  function search(event: SubmitEvent) {
+    event.preventDefault();
+    const url = new URL($page.url); // make a copy
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const query = formData.get("query") ?? "";
+    if (!query) return;
+    url.searchParams.set("query", query as string);
+    goto(url);
+  }
+
+  $: active =
+    Array.from(($page.url as URL).searchParams.entries()).find(
+      ([_, value]) => value === "true",
+    )?.[0] ??
+    ($page.url as URL).searchParams.get("category") ??
+    "all";
+  $: showTip = ["active", "featured", "premium"].includes(active);
+
+  $: query = ($page.url as URL).searchParams.get("query") ?? "";
 </script>
 
-<div class="browser">
-  <header class="header">
-    <h2>{$_("addonBrowserDialog.title")}</h2>
-    <p>{$_("addonBrowserDialog.subtitle")}</p>
-  </header>
-  <aside class="sidebar">
-    <div class="search"><Search /></div>
-    <div class="filters">
-      <Filters />
-      <Categories />
-    </div>
-  </aside>
-  <main class="results">
-    <div class="list">
-      {#if $filter === "active"}
-        <aside class="pinned tip">
-          <div class="icon"><Pin size={1.75} /></div>
-          <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
-        </aside>
-      {:else if $filter === "featured"}
-        <aside class="featured tip">
-          <div class="icon"><Star size={1.75} /></div>
-          <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
-        </aside>
-      {:else if $filter === "premium"}
-        <aside class="premium tip">
-          <div class="icon"><Credit badge size={1.75} /></div>
-          <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
-        </aside>
+<MainLayout>
+  <AddOnsNavigation {active} slot="navigation" />
+
+  <svelte:fragment slot="content">
+    <ContentLayout>
+      <PageToolbar slot="header">
+        <Search name="query" {query} on:submit={search} slot="center" />
+      </PageToolbar>
+      {#if showTip}
+        <div class="tip">
+          {#if active === "active"}
+            <Tip
+              --background-color="var(--orange-light)"
+              --border-color="var(--orange)"
+              --fill="var(--orange-dark)"
+            >
+              <Pin size={1.75} slot="icon" />
+              {$_("addonBrowserDialog.pinnedTip")}
+            </Tip>
+          {:else if active === "featured"}
+            <Tip
+              --background-color="var(--yellow-light)"
+              --border-color="var(--yellow)"
+              --fill="var(--yellow-dark)"
+            >
+              <Star size={1.75} slot="icon" />
+              {$_("addonBrowserDialog.featuredTip")}
+            </Tip>
+          {:else if active === "premium"}
+            <Tip
+              --background-color="var(--green-light)"
+              --border-color="var(--green)"
+              --fill="var(--green-dark)"
+            >
+              <Premium size={1.75} slot="icon" />
+              {$_("addonBrowserDialog.premiumTip")}
+            </Tip>
+          {/if}
+        </div>
       {/if}
-      <AddOnList {loading} {items} {error} {reload} />
-    </div>
-    <div class="pagination">
-      <Paginator
-        has_next={Boolean(next_url)}
-        has_previous={Boolean(previous_url)}
-        on:next={loadNext}
-        on:previous={loadPrev}
-      />
-    </div>
-  </main>
-</div>
+      {#await data.addons}
+        <Empty icon={Hourglass24}>Loading…</Empty>
+      {:then page}
+        {#each page.results as addon}
+          <ListItem {addon} />
+        {:else}
+          <Empty icon={Plug24}>No Add-Ons Found</Empty>
+        {/each}
+      {:catch error}
+        <Error>{String(error)}</Error>
+      {/await}
+
+      <PageToolbar slot="footer">
+        <svelte:fragment slot="center">
+          {#await data.addons}
+            <Paginator />
+          {:then page}
+            <Paginator
+              has_next={Boolean(page.next)}
+              has_previous={Boolean(page.previous)}
+              on:next={() => paginate(page.next)}
+              on:previous={() => paginate(page.previous)}
+            />
+          {/await}
+        </svelte:fragment>
+      </PageToolbar>
+    </ContentLayout>
+  </svelte:fragment>
+</MainLayout>
 
 <style>
-  .browser {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    grid-template-rows: auto 1fr;
-    gap: 1em;
-    padding: 1em 1em 0;
-    height: 100%;
-    width: 100%;
-    max-width: 44em;
-    box-sizing: border-box;
-  }
-  .header {
-    grid-column: span 2;
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
-    gap: 0.5em;
-    margin-right: 2em;
-  }
-  .header h2 {
-    flex: 0 1 auto;
-    margin: 0;
-  }
-  .header p {
-    margin: 0;
-    font-weight: 600;
-    color: gray;
-  }
-  .sidebar {
-    flex: 1 1 12em;
-    display: flex;
-    flex-direction: column;
-  }
-  .search {
-    margin-bottom: 1em;
-  }
-  .results {
-    flex: 4 1 24em;
-    min-width: 20em;
-    min-height: 0;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  .results .list {
-    flex: 1 1 24em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    border-radius: calc(2 * var(--radius));
-    overflow-y: scroll;
-  }
-  .results .pagination {
-    flex: 0 0 auto;
-  }
-
   .tip {
-    font-size: 0.9em;
-    margin: 0.5rem;
-    padding: 1rem;
-    background-color: var(--primary-faded);
-    border-color: var(--primary);
-    fill: var(--primary);
-    border: 1px solid;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    & .icon {
-      fill: var(--primary);
-    }
-    & .message {
-      margin: 0;
-    }
-  }
-  .pinned.tip {
-    background-color: hsl(341, 35%, 91%);
-    border-color: palevioletred;
-    & .icon {
-      fill: palevioletred;
-    }
-  }
-  .featured.tip {
-    background-color: hsl(39, 100%, 91%);
-    border-color: orange;
-    & .icon {
-      fill: orange;
-    }
-  }
-  .premium.tip {
-    background-color: hsl(161, 69%, 91%);
-    border-color: var(--premium, #24cc99);
-    & .icon {
-      fill: var(--premium, #24cc99);
-    }
+    margin: 1rem;
   }
 </style>

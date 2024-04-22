@@ -24,7 +24,7 @@ describe("ResultsList", () => {
       next: results.next,
     });
 
-    const headings = screen.getAllByRole("heading");
+    const headings = screen.getAllByRole("heading", { level: 3 });
 
     // check that we rendered the right number of documents
     expect(headings.length).toEqual(results.results.length);

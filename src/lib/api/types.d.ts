@@ -17,7 +17,12 @@ export type Status = "success" | "readable" | "pending" | "error" | "nofile"; //
 
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
-export type Highlight = Record<string, string[]>;
+export type Highlights = Record<string, string[]>;
+
+export interface NoteHighlight {
+  title: string[];
+  description: string[];
+}
 
 type AddOnCategory = "premium" | string;
 
@@ -122,8 +127,8 @@ export interface Document {
   sections?: Section[];
 
   // present in search results when query includes hl=true
-  highlights?: Highlight;
-  note_highlights?: Record<string, Highlight[]>;
+  highlights?: Highlights;
+  note_highlights?: Record<string, NoteHighlight>;
 }
 
 export interface DocumentResults extends Page<Document> {}

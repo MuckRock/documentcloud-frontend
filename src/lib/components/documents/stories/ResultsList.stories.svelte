@@ -6,8 +6,13 @@
   import Pending from "../Pending.svelte";
 
   // typescript complains without the type assertion
-  import searchResults from "../../../api/fixtures/documents/search-highlight.json";
-  const results = searchResults.results as Document[];
+  import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
+  const highlighted = searchResults.results as Document[];
+  const results = highlighted.map((d) => ({
+    ...d,
+    highlights: null,
+    note_highlights: null,
+  }));
   const count = searchResults.count;
   const next = searchResults.next;
 
@@ -38,5 +43,11 @@
     <ResultsList {results} {count} {next}>
       <Pending {pending} />
     </ResultsList>
+  </div>
+</Story>
+
+<Story name="Highlighted">
+  <div style="width: 36rem">
+    <ResultsList results={highlighted} {count} {next} />
   </div>
 </Story>

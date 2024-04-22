@@ -14,12 +14,14 @@
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-
-  import DocumentListItem from "./DocumentListItem.svelte";
-  import Button from "../common/Button.svelte";
-  import Flex from "../common/Flex.svelte";
   import { Search24 } from "svelte-octicons";
+
+  import Button from "../common/Button.svelte";
+  import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
+  import Flex from "../common/Flex.svelte";
+  import NoteHighlights from "./NoteHighlights.svelte";
+  import SearchHighlights from "./SearchHighlights.svelte";
 
   export let results: Document[] = [];
   export let count: number = undefined;
@@ -87,16 +89,26 @@
 <div class="container">
   <slot />
   {#each results as document (document.id)}
-    <Flex gap={0.625} align="center">
-      <label>
-        <span class="sr-only">Select</span>
-        <input
-          type="checkbox"
-          bind:group={$selected}
-          value={String(document.id)}
-        />
-      </label>
-      <DocumentListItem {document} />
+    <Flex direction="column">
+      <Flex gap={0.625} align="center">
+        <label>
+          <span class="sr-only">Select</span>
+          <input
+            type="checkbox"
+            bind:group={$selected}
+            value={String(document.id)}
+          />
+        </label>
+        <DocumentListItem {document} />
+      </Flex>
+
+      {#if document.highlights}
+        <SearchHighlights {document} />
+      {/if}
+
+      {#if document.note_highlights}
+        <NoteHighlights {document} />
+      {/if}
     </Flex>
   {:else}
     <Empty icon={Search24}>
