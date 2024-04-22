@@ -25,7 +25,7 @@
   import Action from "../../common/Action.svelte";
   import Pin from "@/common/Pin.svelte";
   import ResultsList from "../../documents/ResultsList.svelte";
-  import ContentLayout from "../../ContentLayout.svelte";
+  import ContentLayout from "../ContentLayout.svelte";
   import PageToolbar from "../../common/PageToolbar.svelte";
   import Search from "../../inputs/Search.svelte";
 
