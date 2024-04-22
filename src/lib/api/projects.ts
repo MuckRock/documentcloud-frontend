@@ -2,7 +2,8 @@
 import type { Project, ProjectResults, ProjectMembershipList } from "./types";
 
 import { error, type NumericRange } from "@sveltejs/kit";
-import { BASE_API_URL } from "@/config/config.js";
+
+import { BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { getAll, isErrorCode } from "$lib/utils/api";
 
 /**
@@ -80,6 +81,39 @@ export async function getShared(userId: number): Promise<Project[]> {
   endpoint.searchParams.set("user", String(userId));
   const projects = await getAll<Project>(endpoint);
   return projects.filter((project) => project.user !== userId);
+}
+
+/**
+ * Set the pinned status of a project.
+ * When requesting PATCH on the project endpoint,
+ * it returns the updated project object.
+ */
+export async function pinProject(
+  csrftoken: string,
+  id: number,
+  pinned = true,
+): Promise<Project> {
+  const endpoint = new URL(`/api/projects/${id}/`, BASE_API_URL);
+  const options: RequestInit = {
+    credentials: "include",
+    method: "PATCH", // this component can only update whether a project is pinned
+    headers: {
+      [CSRF_HEADER_NAME]: csrftoken,
+      "Content-type": "application/json",
+    },
+  };
+
+  // The endpoint returns the updated project
+  const res = await fetch(endpoint, {
+    ...options,
+    body: JSON.stringify({ pinned }),
+  });
+  if (isErrorCode(res.status)) {
+    error(res.status, {
+      message: res.statusText,
+    });
+  }
+  return res.json();
 }
 
 /**

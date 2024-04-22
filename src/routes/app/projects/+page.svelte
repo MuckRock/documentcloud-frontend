@@ -6,6 +6,7 @@
 
   import Button from "@/lib/components/common/Button.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
+  import Flex from "@/lib/components/common/Flex.svelte";
 
   import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
   import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
@@ -30,15 +31,16 @@
 
 <MainLayout>
   <svelte:fragment slot="navigation">
-    <Button mode="primary" href="/create">Create Project</Button>
-    <SidebarItem active={data.list === "owned"} href="?list=owned">
-      <Person16 />
-      Your Projects
-    </SidebarItem>
-    <SidebarItem active={data.list === "shared"} href="?list=shared">
-      <People16 />
-      Shared with you
-    </SidebarItem>
+    <Flex direction="column">
+      <SidebarItem active={data.list === "owned"} href="?list=owned">
+        <Person16 />
+        Your Projects
+      </SidebarItem>
+      <SidebarItem active={data.list === "shared"} href="?list=shared">
+        <People16 />
+        Shared with you
+      </SidebarItem>
+    </Flex>
   </svelte:fragment>
 
   <ContentLayout slot="content">
@@ -55,4 +57,8 @@
 
     <PageToolbar slot="footer"></PageToolbar>
   </ContentLayout>
+
+  <svelte:fragment slot="action">
+    <Button mode="primary" href="/create">Create Project</Button>
+  </svelte:fragment>
 </MainLayout>

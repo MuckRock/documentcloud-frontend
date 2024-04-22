@@ -1,0 +1,99 @@
+<script lang="ts">
+  import { _ } from "svelte-i18n";
+  import { Globe16, Lock16 } from "svelte-octicons";
+
+  import type { Project } from "$lib/api/types";
+  import ProjectPin from "./ProjectPin.svelte";
+
+  export let project: Project;
+</script>
+
+<a
+  href={`/app/projects/${project.id}-${project.slug}`}
+  id={project.id.toString()}
+>
+  <div class="container">
+    <div class="row margin">
+      <div class="center-self">
+        <ProjectPin {project} />
+      </div>
+      <div class="stretch row gap-lg">
+        <h3 class="project-title">{project.title}</h3>
+      </div>
+      {#if project.private}
+        <span class="small center center-self" title="Private Project"
+          ><Lock16 /></span
+        >
+      {:else}
+        <span class="small center center-self" title="Public Project"
+          ><Globe16 /></span
+        >
+      {/if}
+    </div>
+    {#if project.description}
+      <div class="description">{@html project.description}</div>
+    {/if}
+  </div>
+</a>
+
+<style>
+  a:hover .container,
+  a:target .container {
+    background-color: var(--menuBg);
+  }
+
+  .container {
+    display: block;
+    min-width: 12rem;
+    padding: 0.5rem;
+    text-align: left;
+  }
+
+  .row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .margin {
+    margin: 0.5rem;
+  }
+
+  .description {
+    margin: 0 0.5em;
+    opacity: 0.6;
+    font-size: 0.875em;
+    line-height: 1.4;
+    color: var(--darkgray);
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    & > * {
+      margin-top: 0;
+    }
+  }
+
+  .project-title {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .small {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+
+  .center-self {
+    align-self: center;
+  }
+
+  .center {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .stretch {
+    flex: 1 1 auto;
+  }
+</style>
