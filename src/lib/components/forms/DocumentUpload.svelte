@@ -139,6 +139,7 @@
     isWithinSizeLimit,
   } from "@/lib/utils/files";
   import Tooltip from "@/common/Tooltip.svelte";
+  import Divider from "../common/Divider.svelte";
 
   export let csrf_token = "";
   export let files: File[] = [];
@@ -313,7 +314,7 @@
             label="title"
           />
         </Field>
-        <hr class="divider" />
+        <Divider />
         <Field>
           <FieldLabel>Language</FieldLabel>
           <Language />
@@ -333,7 +334,7 @@
           <input type="checkbox" name="force_ocr" />
           <FieldLabel>Force OCR</FieldLabel>
         </Field>
-        <hr class="divider" />
+        <Divider />
 
         <Premium>
           <Field inline>
@@ -504,12 +505,6 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-  }
-
-  .divider {
-    width: 100%;
-    border: none;
-    border-top: 1px solid var(--gray-2, #d8dee2);
   }
 
   .uppercase {
