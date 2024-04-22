@@ -88,16 +88,19 @@
 
 <div class="container">
   {#each results as document (document.id)}
-    <Flex gap={0.625} align="center">
-      <label>
-        <span class="sr-only">Select</span>
-        <input
-          type="checkbox"
-          bind:group={$selected}
-          value={String(document.id)}
-        />
-      </label>
-      <DocumentListItem {document} />
+    <Flex direction="column">
+      <Flex gap={0.625} align="center">
+        <label>
+          <span class="sr-only">Select</span>
+          <input
+            type="checkbox"
+            bind:group={$selected}
+            value={String(document.id)}
+          />
+        </label>
+        <DocumentListItem {document} />
+      </Flex>
+
       {#if document.highlights}
         <SearchHighlights {document} />
       {/if}

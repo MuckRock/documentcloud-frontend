@@ -64,7 +64,16 @@
 <style>
   h4 :global(em),
   .segment :global(em) {
-    background-color: var(--yellow);
+    background-color: var(--yellow-bright);
     font-style: normal;
+  }
+
+  blockquote {
+    border-left: 0.25rem solid var(--yellow-bright);
+    padding-left: 0.5rem;
+  }
+
+  cite {
+    font-size: var(--font-s);
   }
 </style>

@@ -6,7 +6,12 @@
 
   // typescript complains without the type assertion
   import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
-  const results = searchResults.results as Document[];
+  const highlighted = searchResults.results as Document[];
+  const results = highlighted.map((d) => ({
+    ...d,
+    highlights: null,
+    note_highlights: null,
+  }));
   const count = searchResults.count;
   const next = searchResults.next;
 
@@ -31,5 +36,7 @@
 </Story>
 
 <Story name="Highlighted">
-  <div style="width: 36rem"><ResultsList {results} {count} {next} /></div>
+  <div style="width: 36rem">
+    <ResultsList results={highlighted} {count} {next} />
+  </div>
 </Story>
