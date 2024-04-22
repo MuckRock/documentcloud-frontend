@@ -48,7 +48,9 @@
   $: active =
     Array.from(($page.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
-    )?.[0] ?? "all";
+    )?.[0] ??
+    ($page.url as URL).searchParams.get("category") ??
+    "all";
   $: showTip = ["active", "featured", "premium"].includes(active);
 
   $: query = ($page.url as URL).searchParams.get("query") ?? "";

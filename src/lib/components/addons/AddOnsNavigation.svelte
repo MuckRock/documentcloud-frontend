@@ -21,7 +21,7 @@
     <SidebarItem
       active={active === "all"}
       href="/app/add-ons"
-      --hover="var(--blue-2)"
+      --hover-background="var(--blue-2)"
     >
       <Infinity16 fill="var(--blue-3)" />
       All
@@ -29,7 +29,7 @@
     <SidebarItem
       active={active === "active"}
       href="/app/add-ons?active=true"
-      --hover="var(--orange-light)"
+      --hover-background="var(--orange-light)"
     >
       <Pin --fill="var(--orange)" />
       Pinned
@@ -37,7 +37,7 @@
     <SidebarItem
       active={active === "featured"}
       href="/app/add-ons?featured=true"
-      --hover="var(--yellow-light)"
+      --hover-background="var(--yellow-light)"
     >
       <StarFill16 fill="var(--yellow)" />
       Featured
@@ -45,7 +45,7 @@
     <SidebarItem
       active={active === "premium"}
       href="/app/add-ons?premium=true"
-      --hover="var(--green-light)"
+      --hover-background="var(--green-light)"
     >
       <Premium --fill="var(--green)" />
       Premium
@@ -54,7 +54,10 @@
   <Flex direction="column">
     <SidebarItem small --color="var(--gray-4)">Collections</SidebarItem>
     {#each CATEGORIES as [key, label]}
-      <SidebarItem href={`/app/add-ons?category=${key}`}>
+      <SidebarItem
+        href={`/app/add-ons?category=${key}`}
+        active={active === key}
+      >
         <!-- <Hash16 fill="var(--gray-4)" /> -->
         {label}
       </SidebarItem>
