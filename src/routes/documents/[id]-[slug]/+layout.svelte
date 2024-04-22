@@ -3,7 +3,7 @@
 
   import type { Project } from "$lib/api/types";
 
-  import MainLayout from "$lib/components/MainLayout.svelte";
+  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
   // sidebars

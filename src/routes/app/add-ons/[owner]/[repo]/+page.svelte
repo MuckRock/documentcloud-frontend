@@ -1,5 +1,5 @@
 <script lang="ts">
-  import MainLayout from "@/lib/components/MainLayout.svelte";
+  import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
 
   export let data;
 </script>
