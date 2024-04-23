@@ -51,16 +51,18 @@
       {#await searchResults}
         <Empty icon={Hourglass24}>Loading…</Empty>
       {:then results}
-        {#await pending then p}
-          <Pending pending={p} />
-        {/await}
-
         <ResultsList
           results={results.results}
           count={results.count}
           next={results.next}
           auto
-        />
+        >
+          <svelte:fragment slot="start">
+            {#await pending then p}
+              <Pending pending={p} />
+            {/await}
+          </svelte:fragment>
+        </ResultsList>
       {/await}
 
       <PageToolbar slot="footer">

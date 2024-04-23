@@ -41,7 +41,7 @@
 <Story name="Pending documents">
   <div style="width: 36rem">
     <ResultsList {results} {count} {next}>
-      <Pending {pending} />
+      <Pending {pending} slot="start" />
     </ResultsList>
   </div>
 </Story>

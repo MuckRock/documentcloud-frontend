@@ -150,6 +150,16 @@ describe("document uploads and processing", () => {
       expect(p).toMatchObject(pending);
     });
   });
+
+  test("pending error", async () => {
+    const mockFetch = vi.fn().mockImplementation(async () => {
+      throw new Error("Bad fetch");
+    });
+
+    documents.pending(mockFetch).then((p) => {
+      expect(p).toEqual([]);
+    });
+  });
 });
 
 describe("document helper methods", () => {

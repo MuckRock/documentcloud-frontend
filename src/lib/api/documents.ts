@@ -163,19 +163,22 @@ export async function process(
  */
 export async function cancel(id: number | string) {}
 
+/**
+ * Get pending documents. This returns an empty array for any error.
+ *
+ * @param {fetch} fetch
+ * @returns {Promise<Pending>}
+ */
 export async function pending(fetch = globalThis.fetch): Promise<Pending[]> {
   const endpoint = new URL("documents/pending/", BASE_API_URL);
 
-  // if this request fails for any reason, just return nothing
-  const resp = await fetch(endpoint, { credentials: "include" }).catch((e) => ({
-    ok: false,
-    json() {
-      return [];
-    },
-  }));
-
-  // if there's an error above, this will return an empty array
-  return resp.json();
+  try {
+    const resp = await fetch(endpoint, { credentials: "include" });
+    if (isErrorCode(resp.status)) return [];
+    return resp.json();
+  } catch (e) {
+    return [];
+  }
 }
 
 // utility functions
