@@ -37,9 +37,14 @@
 </a>
 
 <style>
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
   a:hover .container,
   a:target .container {
-    background-color: var(--menuBg);
+    background-color: var(--blue-1);
   }
 
   .container {
