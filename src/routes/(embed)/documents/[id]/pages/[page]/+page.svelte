@@ -28,7 +28,7 @@
   $: slugId = `${doc.id}-${doc.slug}`;
   $: notes = data.notes;
   $: page = +data.page;
-  $: title = `${doc.title} (${$_("document.pageAbbrev")} ${data.page})`;
+  $: title = `${doc.title} (${$_("documents.pageAbbrev")} ${data.page})`;
   $: url = canonicalPageUrl(doc, page).toString();
   $: sizes = pageSizesFromSpec(doc.page_spec);
   $: aspect = sizes[page - 1];
