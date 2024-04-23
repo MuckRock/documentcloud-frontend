@@ -3,6 +3,7 @@
 
   import { Story } from "@storybook/addon-svelte-csf";
   import ResultsList from "../ResultsList.svelte";
+  import Pending from "../Pending.svelte";
 
   // typescript complains without the type assertion
   import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
@@ -14,6 +15,8 @@
   }));
   const count = searchResults.count;
   const next = searchResults.next;
+
+  import pending from "$lib/api/fixtures/documents/pending.json";
 
   export const meta = {
     title: "Components / Documents / Results list",
@@ -33,6 +36,14 @@
 
 <Story name="Infinite">
   <div style="width: 36rem"><ResultsList {results} {count} {next} auto /></div>
+</Story>
+
+<Story name="Pending documents">
+  <div style="width: 36rem">
+    <ResultsList {results} {count} {next}>
+      <Pending {pending} slot="start" />
+    </ResultsList>
+  </div>
 </Story>
 
 <Story name="Highlighted">

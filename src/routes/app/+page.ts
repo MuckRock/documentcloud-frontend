@@ -1,7 +1,7 @@
 import type { SearchOptions } from "$lib/api/types";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
-import { search } from "$lib/api/documents";
+import { search, pending } from "$lib/api/documents";
 import { getPinnedAddons } from "@/lib/api/addons.js";
 
 export async function load({ url, fetch }) {
@@ -30,6 +30,7 @@ export async function load({ url, fetch }) {
     per_page,
     cursor,
     searchResults,
+    pending: pending(fetch),
     pinnedAddons,
   };
 }

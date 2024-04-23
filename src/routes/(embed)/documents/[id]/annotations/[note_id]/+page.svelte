@@ -24,7 +24,7 @@
   $: sizes = pageSizesFromSpec(doc.page_spec);
   $: aspect = sizes[note.page_number];
   $: url = canonicalNoteUrl(doc, note).toString();
-  $: title = `${note.title} (${$_("document.pageAbbrev")} ${
+  $: title = `${note.title} (${$_("documents.pageAbbrev")} ${
     note.page_number + 1
   })`;
   $: maxWidth = docWidth * notes.width(note);
@@ -67,7 +67,7 @@
     >
       <span class="DC-note-title">{note.title}</span>
       <span class="DC-note-page-number"
-        >({$_("document.pageAbbrev")} {note.page_number + 1})</span
+        >({$_("documents.pageAbbrev")} {note.page_number + 1})</span
       >
     </a>
   </div>

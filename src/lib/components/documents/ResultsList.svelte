@@ -87,6 +87,7 @@
 </script>
 
 <div class="container">
+  <slot name="start" />
   {#each results as document (document.id)}
     <Flex direction="column">
       <Flex gap={0.625} align="center">
@@ -130,6 +131,8 @@
       </Button>
     {/if}
   </div>
+
+  <slot name="end" />
 </div>
 
 <style>

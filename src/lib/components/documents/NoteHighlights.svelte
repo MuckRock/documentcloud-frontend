@@ -37,7 +37,7 @@
 
 {#if count > 0}
   <details bind:open>
-    <summary>{$_("document.matchingNotes", { values: { n: count } })}</summary>
+    <summary>{$_("documents.matchingNotes", { values: { n: count } })}</summary>
 
     {#each Object.entries(note_highlights) as [note_id, highlight]}
       {@const note = notes.get(note_id)}
@@ -53,7 +53,7 @@
         {/if}
         <cite>
           <a href={noteUrl(document, note).toString()}
-            >{$_("document.noteLink")}</a
+            >{$_("documents.noteLink")}</a
           >
         </cite>
       </blockquote>

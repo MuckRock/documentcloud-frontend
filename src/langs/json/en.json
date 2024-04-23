@@ -425,9 +425,7 @@
     "allDocuments": "All {access}Documents",
     "mustBeVerified": "You must be a verified journalist to upload documents",
     "upload": "Upload",
-    "dropFile": "Drop file to upload"
-  },
-  "document": {
+    "dropFile": "Drop file to upload",
     "open": "Open",
     "updating": "Updating document...",
     "processing": "Processing",
@@ -557,8 +555,9 @@
     "last": "Last Page"
   },
   "processingBar": {
+    "processing": "Processing last upload",
     "doneProcessing": "Done processing",
-    "processingDocuments": "Processing {n, plural, one {document} other {# documents}}"
+    "processingDocuments": "{n, plural, one {# document} other {# documents}} remaining"
   },
   "searchBar": {
     "tips": "Search tips: add filters by typing <code>user:</code>, <code>project:</code>, or <code>organization:</code>, etc. Use <code>sort:</code> to order results.",
