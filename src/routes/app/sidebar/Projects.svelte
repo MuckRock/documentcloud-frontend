@@ -32,7 +32,7 @@
       <Empty icon={Hourglass24}>Loading pinned projects…</Empty>
     {:then projects}
       {#each projects as project}
-        <SidebarItem small href={`/app/projects/${project.id}`}>
+        <SidebarItem small href={`/app/projects/${project.id}-${project.slug}`}>
           <Pin active={project.pinned} />
           {project.title}
         </SidebarItem>
