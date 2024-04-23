@@ -3,36 +3,25 @@
 
   import { _ } from "svelte-i18n";
   import { Sync24 } from "svelte-octicons";
+  import Tip from "../common/Tip.svelte";
 
   export let pending: Pending[];
 </script>
 
 {#if pending.length > 0}
-  <div class="pending">
-    <Sync24 />
-    <div>
-      <h4>{$_("processingBar.processing")}</h4>
-      <p>
-        {$_("processingBar.processingDocuments", {
-          values: { n: pending.length },
-        })}
-      </p>
-    </div>
-  </div>
+  <Tip
+    --background-color="var(--blue-1)"
+    --border-color="var(--blue-3)"
+    --border-radius="0.5rem"
+    --gap="0.75rem"
+    --padding="0.5rem 0.75rem"
+  >
+    <Sync24 slot="icon" />
+    <h4>{$_("processingBar.processing")}</h4>
+    <p>
+      {$_("processingBar.processingDocuments", {
+        values: { n: pending.length },
+      })}
+    </p>
+  </Tip>
 {/if}
-
-<style>
-  .pending {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-    justify-content: start;
-
-    border: 1px solid var(--blue-3, #b5ceed);
-    border-radius: 0.5rem;
-    background: var(--blue-1, #eef3f9);
-    padding: 0.5rem 0.75rem;
-
-    box-shadow: var(--shadow);
-  }
-</style>
