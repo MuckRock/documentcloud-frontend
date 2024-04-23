@@ -7,5 +7,5 @@ test("AddOnListItem", () => {
   const result = render(AddOnListItem, { addon });
   expect(result.getByRole("heading")).toHaveTextContent(addon.name);
   const premium = render(AddOnListItem, { addon: premiumAddon });
-  expect(premium.getByRole("status")).toBeInTheDocument();
+  expect(premium.getByRole("status")).toHaveTextContent("Premium");
 });
