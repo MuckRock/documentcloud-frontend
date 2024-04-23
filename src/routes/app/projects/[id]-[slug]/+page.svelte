@@ -36,13 +36,15 @@
     {#await documents}
       <Empty icon={Hourglass24}>Loading project documents…</Empty>
     {:then projectItems}
-      {#each projectItems.results as { document }}
-        {#if typeof document !== "number"}
-          <DocumentListItem {document} />
-        {/if}
-      {:else}
-        <Empty icon={File24}>This project has no documents.</Empty>
-      {/each}
+      <div>
+        {#each projectItems.results as { document }}
+          {#if typeof document !== "number"}
+            <DocumentListItem {document} />
+          {/if}
+        {:else}
+          <Empty icon={File24}>This project has no documents.</Empty>
+        {/each}
+      </div>
     {:catch}
       <Error>Error loading project documents</Error>
     {/await}
