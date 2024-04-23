@@ -4,7 +4,6 @@
   import { _ } from "svelte-i18n";
 
   import AddOnPin from "@/addons/AddOnPin.svelte";
-  import AddOnPopularity from "@/addons/Popularity.svelte";
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
 
   export let addon: AddOnListItem;
@@ -35,11 +34,8 @@
             >
           </p>
         {/if}
-        {#if addon.usage}
-          <AddOnPopularity useCount={addon.usage} />
-        {/if}
         {#if isPremium}
-          <span class="badge"><PremiumBadge /></span>
+          <span class="badge" role="status"><PremiumBadge /></span>
         {/if}
       </div>
     </div>
