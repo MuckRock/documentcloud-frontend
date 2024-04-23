@@ -58,7 +58,6 @@
         href={`/app/add-ons?category=${key}`}
         active={active === key}
       >
-        <!-- <Hash16 fill="var(--gray-4)" /> -->
         {label}
       </SidebarItem>
     {/each}
