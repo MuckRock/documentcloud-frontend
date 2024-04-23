@@ -4,10 +4,7 @@
   import { tick } from "svelte";
   import { _ } from "svelte-i18n";
 
-  // SVG assets
-  import viewerSearchIconSvg from "@/assets/viewer_search_icon.svg?raw";
-  import searchIconSvg from "@/assets/search_icon.svg?raw";
-  import closeInlineSvg from "@/assets/close_inline.svg?raw";
+  import { Search16, Search24, XCircle16 } from "svelte-octicons";
 
   let query = "";
   let searchElem = null;
@@ -58,11 +55,43 @@
   }
 </script>
 
-<style>
-  .icon {
-    margin: 0 12px;
-  }
+<div class="input" class:expand={$layout.searchExpanded}>
+  <div class="container">
+    <input
+      type="search"
+      bind:this={searchElem}
+      bind:value={query}
+      placeholder={$_("searchBar.search")}
+      disabled={$layout.searchPending}
+      on:keypress={(e) => {
+        if (e.key == "Enter") {
+          search();
+        }
+      }}
+    />
+  </div>
+  <button
+    class="searchicon buttonLike"
+    class:disabled={invalidQuery || $layout.searchPending}
+    on:click={search}
+  >
+    <Search16 />
+  </button>
+  <button class="closeicon buttonLike" on:click={retract}>
+    <XCircle16 />
+  </button>
+</div>
+<button
+  class="icon buttonLike"
+  class:hide={$layout.searchExpanded}
+  on:click={expandSearch}
+>
+  <Search24 />
+</button>
 
+<svelte:window on:keydown={handleKeyDown} />
+
+<style>
   .icon.hide {
     display: none;
   }
@@ -126,39 +155,3 @@
     display: inherit;
   }
 </style>
-
-<div class="input" class:expand={$layout.searchExpanded}>
-  <div class="container">
-    <input
-      type="search"
-      bind:this={searchElem}
-      bind:value={query}
-      placeholder={$_("searchBar.search")}
-      disabled={$layout.searchPending}
-      on:keypress={(e) => {
-        if (e.key == "Enter") {
-          search();
-        }
-      }}
-    />
-  </div>
-  <button
-    class="searchicon buttonLike"
-    class:disabled={invalidQuery || $layout.searchPending}
-    on:click={search}
-  >
-    {@html searchIconSvg}
-  </button>
-  <button class="closeicon buttonLike" on:click={retract}>
-    {@html closeInlineSvg}
-  </button>
-</div>
-<button
-  class="icon buttonLike"
-  class:hide={$layout.searchExpanded}
-  on:click={expandSearch}
->
-  {@html viewerSearchIconSvg}
-</button>
-
-<svelte:window on:keydown={handleKeyDown} />

@@ -53,16 +53,6 @@
   }
 </script>
 
-<style lang="scss">
-  :global(.beta) {
-    color: $gray;
-    font-size: 11px;
-    vertical-align: top;
-    letter-spacing: 0.4px;
-    margin-left: 1px;
-  }
-</style>
-
 <Menu>
   <MenuItem on:click={() => editDocumentInfoSelected()}>
     {$_("editMenu.editDocInfo")}
@@ -110,3 +100,13 @@
     </MenuItem>
   {/if}
 </Menu>
+
+<style lang="scss">
+  :global(.beta) {
+    color: $gray;
+    font-size: 11px;
+    vertical-align: top;
+    letter-spacing: 0.4px;
+    margin-left: 1px;
+  }
+</style>

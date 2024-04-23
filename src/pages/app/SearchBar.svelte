@@ -1,22 +1,24 @@
 <script>
+  import { _ } from "svelte-i18n";
+  import { onMount, onDestroy } from "svelte";
+
   import SearchInput from "./SearchInput.svelte";
   import Button from "@/common/Button.svelte";
-  import { onMount, onDestroy } from "svelte";
 
   import {
     handleSearch,
     search as searchData,
     userSearchQuery,
-  } from "@/search/search";
+  } from "@/search/search.js";
   import { showSearchTips } from "@/manager/layout.js";
   import { router } from "@/router/router.js";
-  import { _ } from "svelte-i18n";
 
   export let search = "";
   export let example = false;
   export let compact = false;
   export let embed = false;
   export let dialog = false;
+
   let transformedQuery;
 
   function submitSearch() {
@@ -53,39 +55,6 @@
   });
 </script>
 
-<style lang="scss">
-  .searchcontainer {
-    margin: 0 0 20px 0;
-
-    @media only screen and (max-width: 720px) {
-      margin: 0 0 30px 0;
-    }
-
-    &.example {
-      margin: 0;
-    }
-
-    .info {
-      color: $gray;
-      font-size: 12px;
-      margin-left: 5px;
-      margin-top: -3px;
-
-      > span {
-        vertical-align: middle;
-        margin-right: 2px;
-      }
-    }
-
-    :global(code) {
-      color: #8a8a8a;
-      border: solid 1px gainsboro;
-      padding: 0 2px;
-      border-radius: $radius;
-    }
-  }
-</style>
-
 <div class="searchcontainer" class:example>
   <SearchInput
     bind:value={search}
@@ -110,3 +79,38 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .searchcontainer {
+    margin: 0 0 20px 0;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .searchcontainer {
+      margin: 0 0 30px 0;
+    }
+  }
+
+  .searchcontainer.example {
+    margin: 0;
+  }
+
+  .searchcontainer .info {
+    color: var(--gray);
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: -3px;
+  }
+
+  .searchcontainer .info > span {
+    vertical-align: middle;
+    margin-right: 2px;
+  }
+
+  .searchcontainer :global(code) {
+    color: #8a8a8a;
+    border: solid 1px gainsboro;
+    padding: 0 2px;
+    border-radius: var(--radius);
+  }
+</style>

@@ -15,15 +15,15 @@ import axios from "axios";
 
 import { Document, transformHighlights } from "@/structure/document.js";
 
-const POLL_TIMEOUT = process.env.POLL_TIMEOUT;
-
-const GET_BATCH = parseInt(process.env.GET_BATCH);
-const GET_BATCH_DELAY = parseInt(process.env.GET_BATCH_DELAY);
-const UPLOAD_BATCH = parseInt(process.env.UPLOAD_BATCH);
-const UPLOAD_BATCH_DELAY = parseInt(process.env.UPLOAD_BATCH_DELAY);
-
-const HIGHLIGHT_START = process.env.HIGHLIGHT_START;
-const HIGHLIGHT_END = process.env.HIGHLIGHT_END;
+import {
+  POLL_INTERVAL,
+  GET_BATCH,
+  GET_BATCH_DELAY,
+  UPLOAD_BATCH,
+  UPLOAD_BATCH_DELAY,
+  HIGHLIGHT_START,
+  HIGHLIGHT_END,
+} from "../config/config.js";
 
 // Statuses
 export const PENDING = "pending";
@@ -73,7 +73,7 @@ export async function searchDocumentsUrl(url) {
 
 async function searchDocumentsHelper(url) {
   const { data } = await session.get(url);
-  if (data.results.length > 0 && data.results[0].hasOwnProperty("document")) {
+  if (data.results?.length > 0 && data.results[0].hasOwnProperty("document")) {
     // if we are using the project API, the document is one level down
     data.results = filterDeleted(
       data.results.map((doc) => new Document(doc.document)),
@@ -112,7 +112,7 @@ export async function getDocumentsWithIds(
     GET_BATCH,
     GET_BATCH_DELAY,
     async (subIds) => {
-      if (subIds.length == 0) return [];
+      if (subIds?.length == 0) return [];
       // Return documents with the specified ids
       const params = { expand, id__in: subIds };
       if (remaining) params["remaining"] = true;
@@ -159,6 +159,19 @@ export async function changeAccess(ids, access) {
     apiUrl(`documents/`),
     ids.map((id) => ({ id, access })),
   );
+}
+
+export async function changeRevisionControl(id, revision_control) {
+  // Enable or disable revision control on specified document
+  const { data } = await session.patch(
+    apiUrl(
+      queryBuilder(`documents/${id}/`, {
+        expand: [DEFAULT_EXPAND, "revisions"].join(","),
+      }),
+    ),
+    { revision_control },
+  );
+  return data;
 }
 
 export async function reprocessDocument(ids, forceOcr, ocrEngine) {
@@ -241,7 +254,7 @@ export async function pollDocument(
   }
 
   // Retrigger after timeout
-  await timeout(POLL_TIMEOUT);
+  await timeout(POLL_INTERVAL);
   pollDocument(id, docFn, doneFn, conditionFn);
 }
 
@@ -253,6 +266,7 @@ export async function pollDocument(
  * @param {Array<Project>} projects Projects to upload the documents to
  * @param {boolean} forceOcr If true, OCRs regardless of embedded text
  * @param {string} ocrEngine Select OCR engine
+ * @param {boolean} revision_control Toggles revision history on document
  * @param {Function} createProgressFn A function to call with process progress
  * @param {Function} progressFn A function to call with upload progress
  * @param {Function} processProgressFn A function to call with process progress
@@ -265,6 +279,7 @@ export async function uploadDocuments(
   language,
   forceOcr,
   ocrEngine,
+  revision_control,
   projects,
   createProgressFn,
   progressFn,
@@ -307,6 +322,7 @@ export async function uploadDocuments(
             language,
             original_extension: getExtension(doc.file),
             projects: projectIds,
+            revision_control,
           })),
         );
         createCount += subDocs.length;

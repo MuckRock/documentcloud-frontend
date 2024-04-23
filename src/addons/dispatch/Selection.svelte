@@ -26,6 +26,43 @@
   }
 </script>
 
+{#if documents.size > 0}
+  <fieldset class="selection">
+    <legend>{$_("addonDispatchDialog.select")}</legend>
+    {#if documents.has("query")}
+      <label>
+        <input
+          type="radio"
+          name="selection"
+          value="query"
+          bind:group={choice}
+        />
+        {$_("addonDispatchDialog.labelQuery", {
+          values: { n: $search?.results?.count ?? 0 },
+        })}
+      </label>
+    {/if}
+
+    {#if documents.has("selected")}
+      <label>
+        <input
+          type="radio"
+          name="selection"
+          value="selected"
+          bind:group={choice}
+        />
+        {$_("addonDispatchDialog.labelSelected", {
+          values: { n: $layout.selected?.length },
+        })}
+      </label>
+    {/if}
+  </fieldset>
+  <p class="help">
+    {$_("addonDispatchDialog.selectionHelp")}
+    <a href="/help/add-ons">{$_("addonDispatchDialog.selectionLearnMore")}</a>
+  </p>
+{/if}
+
 <style>
   fieldset {
     display: flex;
@@ -65,40 +102,3 @@
     }
   }
 </style>
-
-{#if documents.size > 0}
-  <fieldset class="selection">
-    <legend>{$_("addonDispatchDialog.select")}</legend>
-    {#if documents.has("query")}
-      <label>
-        <input
-          type="radio"
-          name="selection"
-          value="query"
-          bind:group={choice}
-        />
-        {$_("addonDispatchDialog.labelQuery", {
-          values: { n: $search?.results?.count ?? 0 },
-        })}
-      </label>
-    {/if}
-
-    {#if documents.has("selected")}
-      <label>
-        <input
-          type="radio"
-          name="selection"
-          value="selected"
-          bind:group={choice}
-        />
-        {$_("addonDispatchDialog.labelSelected", {
-          values: { n: $layout.selected.length },
-        })}
-      </label>
-    {/if}
-  </fieldset>
-  <p class="help">
-    {$_("addonDispatchDialog.selectionHelp")}
-    <a href="/help/add-ons">{$_("addonDispatchDialog.selectionLearnMore")}</a>
-  </p>
-{/if}

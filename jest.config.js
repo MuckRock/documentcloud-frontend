@@ -1,9 +1,20 @@
-module.exports = {
+/** @type {import('jest').Config} */
+export default {
+  extensionsToTreatAsEsm: [".svelte", ".ts"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@/(.*)$": "<rootDir>/$1",
   },
-  moduleFileExtensions: ["js", "svelte"],
-  modulePaths: ["src"],
+  moduleFileExtensions: ["js", "ts", "svelte"],
+  rootDir: "src",
+  setupFiles: ["dotenv/config", "<rootDir>/langs/i18n.js"],
+  setupFilesAfterEnv: ["<rootDir>/../jest-setup.js"],
+  testEnvironment: "jsdom",
+  transform: {
+    "^.+\\.svelte$": ["svelte-jester", { preprocess: true }],
+    "^.+\\.ts$": ["ts-jest", { useESM: true, tsconfig: "tsconfig.test.json" }],
+  },
   transformIgnorePatterns: ["/node_modules/(?!svue).+\\.js$"],
-  setupFiles: ["dotenv/config"],
+  coverageDirectory: "<rootDir>/../coverage",
+  collectCoverageFrom: ["./**/*.{js,ts,svelte}"],
+  coverageReporters: ["lcov", "html", "text-summary"],
 };

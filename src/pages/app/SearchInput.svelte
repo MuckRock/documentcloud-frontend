@@ -1,10 +1,9 @@
 <script>
   import { _ } from "svelte-i18n";
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
 
   import NoWhitespace from "@/common/NoWhitespace.svelte";
 
-  import emitter from "@/emit.js";
   import { highlight } from "@/search/parse.js";
   import { fieldValid, sortCompletions } from "@/search/searchFields.js";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
@@ -14,13 +13,15 @@
   import {
     autocompleteOrganizations,
     autocompleteUsers,
-  } from "@/api/orgAndUser.js";
+  } from "@/api/orgAndUser.ts";
   import { slugify } from "@/util/string.js";
   import { timeoutify } from "@/util/closure.js";
 
   // SVG assets
   import searchIconSvg from "@/assets/search_icon.svg?raw";
   import closeInlineSvg from "@/assets/close_inline.svg?raw";
+
+  const dispatch = createEventDispatcher();
 
   const fieldAliases = {
     projects: "project",
@@ -33,10 +34,6 @@
     if (fieldAliases[field] != null) return fieldAliases[field];
     return field;
   }
-
-  const emit = emitter({
-    search() {},
-  });
 
   export let value = "";
   export let example = false;
@@ -463,8 +460,8 @@
   $: autocomplete = noCompletion
     ? ""
     : selectedCompletion == null
-    ? completions[0].feed
-    : selectedCompletion.feed;
+      ? completions[0].feed
+      : selectedCompletion.feed;
 
   function handleBlur() {
     handleCursor();
@@ -508,7 +505,7 @@
 
     if (e.which == 13 || e.keyCode == 13) {
       // Search on enter
-      emit.search();
+      dispatch("search");
       e.preventDefault();
       return;
     }
@@ -569,6 +566,104 @@
     window.dispatchEvent(new Event("resize"));
   });
 </script>
+
+<div class="search" class:compact>
+  {@html searchIconSvg}
+  <textarea
+    bind:this={input}
+    bind:value
+    disabled={example}
+    class:compact
+    class:example
+    placeholder={$_("searchBar.search")}
+    use:textAreaResize={0}
+    spellcheck="false"
+    on:keydown={handleKeyDown}
+    on:keyup={handleKeyUp}
+    on:input={handleCursor}
+    on:click={handleCursor}
+    on:touchend={handleCursor}
+    on:focus={handleCursor}
+    on:blur={handleBlur}
+  />
+  <div class="mirror" bind:this={mirror} class:compact class:example>
+    {#each highlights as highlight}
+      {#if highlight.type == "field"}
+        <span class:field={highlight.valid}>
+          <NoWhitespace>
+            <b>{highlight.field}</b>
+            <span>{highlight.value}</span>
+          </NoWhitespace>
+        </span>
+      {:else if highlight.type == "quote"}
+        <span class="quote">
+          <NoWhitespace><span>{highlight.text}</span></NoWhitespace>
+        </span>
+      {:else if highlight.type == "operator"}
+        <span class="operator">
+          <NoWhitespace><b>{highlight.text}</b></NoWhitespace>
+        </span>
+      {:else}
+        {#each highlight.text.split(/( )/g) as rawText}
+          <!-- Split raw text by space to avoid line-break issues -->
+          {#if rawText != ""}<span> <span>{rawText}</span> </span>{/if}
+        {/each}
+      {/if}
+    {/each}
+    {#if autocomplete.length > 0}
+      <span class="autocomplete"> <span>{autocomplete}</span> </span>
+    {/if}
+  </div>
+  {#if !example && value.length != 0}
+    <div class="closeicon" on:click={() => (value = "")}>
+      {@html closeInlineSvg}
+    </div>
+  {/if}
+  <div class="tagbank" style={completionX}>
+    <div class="completions">
+      {#if processedCompletions == null}
+        <!-- Completions are loading -->
+        <div class="completion loading">Loading...</div>
+      {:else}
+        {#each processedCompletions.completions as completion}
+          <div
+            class="completion"
+            class:active={completionIndex != null &&
+              completionIndex == completion.index}
+            on:mouseover={() => {
+              if (completion.index != null) completionIndex = completion.index;
+            }}
+            on:mouseout={() => {
+              if (completion.index != null) completionIndex = null;
+            }}
+            on:mousedown|preventDefault={() =>
+              triggerCompletion(
+                completion,
+                fieldPost != null ? fieldPost.length : 0,
+              )}
+            class:groupstart={completion.type == "groupstart"}
+          >
+            <div
+              class:negative={completion.score != null && completion.score < 0}
+            >
+              <div>
+                <!-- Highlight completion letters -->
+                {#each completion.text as letter, i}
+                  {#if completion.highlightLetters != null && completion.highlightLetters.includes(i)}
+                    <b>{letter}</b>
+                  {:else}<span>{letter}</span>{/if}
+                {/each}
+              </div>
+            </div>
+            {#if completion.info != null}
+              <div class="info">{completion.info}</div>
+            {/if}
+          </div>
+        {/each}
+      {/if}
+    </div>
+  </div>
+</div>
 
 <style lang="scss">
   $fontSize: 16px;
@@ -778,101 +873,3 @@
     -webkit-text-fill-color: $gray;
   }
 </style>
-
-<div class="search" class:compact>
-  {@html searchIconSvg}
-  <textarea
-    bind:this={input}
-    bind:value
-    disabled={example}
-    class:compact
-    class:example
-    placeholder={$_("searchBar.search")}
-    use:textAreaResize={0}
-    spellcheck="false"
-    on:keydown={handleKeyDown}
-    on:keyup={handleKeyUp}
-    on:input={handleCursor}
-    on:click={handleCursor}
-    on:touchend={handleCursor}
-    on:focus={handleCursor}
-    on:blur={handleBlur}
-  />
-  <div class="mirror" bind:this={mirror} class:compact class:example>
-    {#each highlights as highlight}
-      {#if highlight.type == "field"}
-        <span class:field={highlight.valid}>
-          <NoWhitespace>
-            <b>{highlight.field}</b>
-            <span>{highlight.value}</span>
-          </NoWhitespace>
-        </span>
-      {:else if highlight.type == "quote"}
-        <span class="quote">
-          <NoWhitespace><span>{highlight.text}</span></NoWhitespace>
-        </span>
-      {:else if highlight.type == "operator"}
-        <span class="operator">
-          <NoWhitespace><b>{highlight.text}</b></NoWhitespace>
-        </span>
-      {:else}
-        {#each highlight.text.split(/( )/g) as rawText}
-          <!-- Split raw text by space to avoid line-break issues -->
-          {#if rawText != ""}<span> <span>{rawText}</span> </span>{/if}
-        {/each}
-      {/if}
-    {/each}
-    {#if autocomplete.length > 0}
-      <span class="autocomplete"> <span>{autocomplete}</span> </span>
-    {/if}
-  </div>
-  {#if !example && value.length != 0}
-    <div class="closeicon" on:click={() => (value = "")}>
-      {@html closeInlineSvg}
-    </div>
-  {/if}
-  <div class="tagbank" style={completionX}>
-    <div class="completions">
-      {#if processedCompletions == null}
-        <!-- Completions are loading -->
-        <div class="completion loading">Loading...</div>
-      {:else}
-        {#each processedCompletions.completions as completion}
-          <div
-            class="completion"
-            class:active={completionIndex != null &&
-              completionIndex == completion.index}
-            on:mouseover={() => {
-              if (completion.index != null) completionIndex = completion.index;
-            }}
-            on:mouseout={() => {
-              if (completion.index != null) completionIndex = null;
-            }}
-            on:mousedown|preventDefault={() =>
-              triggerCompletion(
-                completion,
-                fieldPost != null ? fieldPost.length : 0,
-              )}
-            class:groupstart={completion.type == "groupstart"}
-          >
-            <div
-              class:negative={completion.score != null && completion.score < 0}
-            >
-              <div>
-                <!-- Highlight completion letters -->
-                {#each completion.text as letter, i}
-                  {#if completion.highlightLetters != null && completion.highlightLetters.includes(i)}
-                    <b>{letter}</b>
-                  {:else}<span>{letter}</span>{/if}
-                {/each}
-              </div>
-            </div>
-            {#if completion.info != null}
-              <div class="info">{completion.info}</div>
-            {/if}
-          </div>
-        {/each}
-      {/if}
-    </div>
-  </div>
-</div>

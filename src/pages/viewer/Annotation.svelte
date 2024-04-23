@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -19,23 +19,22 @@
     deletePageAnnotation,
   } from "@/viewer/layout.js";
   import { wrapSeparate } from "@/util/wrapLoad.js";
-  import emitter from "@/emit.js";
 
   // SVG assets
   import closeInlineSvg from "@/assets/close_inline.svg?raw";
   import simpleLinkSvg from "@/assets/simplelink.svg?raw";
   import pencilSvg from "@/assets/pencil.svg?raw";
 
+  import {
+    NOTE_TITLE_CHAR_LIMIT,
+    NOTE_CONTENT_CHAR_LIMIT,
+  } from "../../config/config.js";
+
   // Asynchronously load dompurify
   import { loadDompurify } from "@/util/domPurify.js";
   loadDompurify();
 
-  const noteTitleLimit = process.env.NOTE_TITLE_CHAR_LIMIT;
-  const noteContentLimit = process.env.NOTE_CONTENT_CHAR_LIMIT;
-
-  const emit = emitter({
-    stateChange() {},
-  });
+  const dispatch = createEventDispatcher();
 
   export let page;
   export let pageNote = false;
@@ -51,23 +50,23 @@
   export let compact = false;
   export let titlePassages = null;
   export let hlContent = null;
+  export let access = annotation?.access;
 
   let editOverride = false;
   let loading = writable(false);
 
-  let title = annotation.title;
-  let description = annotation.content;
-  export let access = annotation.access;
+  let title = annotation?.title;
+  let description = annotation?.content;
 
   $: editMode = mode == "edit" || editOverride;
   $: {
     editMode;
     description;
     // Emit state changes to capture mutations
-    emit.stateChange();
+    dispatch("stateChange");
   }
 
-  $: titleValid = title.trim().length > 0;
+  $: titleValid = title?.trim().length > 0;
   $: accessValid =
     (page.document.editAccess && access == "public") ||
     access == "organization" ||
@@ -75,9 +74,9 @@
     access == "private";
 
   $: changed =
-    title != annotation.title ||
-    description != annotation.content ||
-    access != annotation.access;
+    title != annotation?.title ||
+    description != annotation?.content ||
+    access != annotation?.access;
   $: changeValid = (mode == "view" && changed) || mode == "edit";
 
   $: valid = titleValid && accessValid && changeValid;
@@ -89,24 +88,25 @@
 
   const ANNOTATION_PADDING = 20;
   $: y1 =
-    headerHeight == null ? null : y + annotation.y1 * height - headerHeight;
+    headerHeight == null ? null : y + annotation?.y1 * height - headerHeight;
   $: y2 =
-    footerHeight == null ? null : y + annotation.y2 * height + footerHeight;
+    footerHeight == null ? null : y + annotation?.y2 * height + footerHeight;
 
   $: shift =
     y1 == null || y2 == null
       ? "none"
       : y1 < ANNOTATION_PADDING
-      ? "down"
-      : y2 > $doc.docHeight - ANNOTATION_PADDING
-      ? "up"
-      : "none";
+        ? "down"
+        : y2 > $doc.docHeight - ANNOTATION_PADDING
+          ? "up"
+          : "none";
 
   $: noteUrl = page.document.noteHashUrl(annotation);
 
   // Focus on title on mount
   let titleInput;
   let annotationElem;
+
   onMount(async () => {
     if (titleInput != null) titleInput.focus();
 
@@ -122,7 +122,7 @@
       if (editOverride) {
         // Update annotation
         annotation = await updatePageAnnotation(
-          annotation.id,
+          annotation?.id,
           page.document.id,
           title,
           description,
@@ -147,9 +147,9 @@
   function handleCancel() {
     if (editOverride) {
       // Restore fields
-      title = annotation.title;
-      description = annotation.content;
-      access = annotation.access;
+      title = annotation?.title;
+      description = annotation?.content;
+      access = annotation?.access;
       editOverride = false;
     } else {
       cancelAnnotation();
@@ -158,7 +158,7 @@
 
   async function handleDelete() {
     await wrapSeparate(loading, layout, async () => {
-      await deletePageAnnotation(annotation.id, page.document.id);
+      await deletePageAnnotation(annotation?.id, page.document.id);
     });
   }
 
@@ -168,6 +168,217 @@
     }
   }
 </script>
+
+<div
+  class="annotation"
+  class:grayed
+  class:behind
+  class:pagenote={pageNote}
+  class:up={shift == "up"}
+  class:public={access == "public"}
+  class:organization={access == "organization"}
+  class:private={access == "private"}
+  class:disabled={$loading}
+  on:mousedown|stopPropagation
+  style={shift == "up" || pageNote
+    ? ""
+    : `top: ${annotation?.y1 * 100}%; height: ${annotation?.height * 100}%`}
+>
+  <header
+    bind:this={annotationElem}
+    bind:offsetHeight={headerHeight}
+    class:showimage={showImageOnPageNote}
+    class:hidden={shift == "down"}
+  >
+    {#if !pageNote}
+      <div class="closeflag">
+        <button class="closer buttonLike" on:click={cancelAnnotation}>
+          {@html closeInlineSvg}
+        </button>
+      </div>
+    {/if}
+    <Loader active={$loading} transparent={true}>
+      <!-- Title -->
+      {#if editMode}
+        <input
+          maxlength={NOTE_TITLE_CHAR_LIMIT}
+          bind:this={titleInput}
+          placeholder={$_("annotation.title")}
+          bind:value={title}
+        />
+      {:else}
+        <h3>
+          {#if titlePassages}
+            {#each titlePassages as passage}
+              <h4 class="highlight">
+                {#each passage as term}
+                  {#if term.type == "highlight"}
+                    <span class="passage highlighted">{term.text}</span>
+                  {:else}
+                    <span class="passage">{term.text}</span>
+                  {/if}
+                {/each}
+              </h4>
+            {/each}
+          {:else}
+            {annotation?.title}
+          {/if}
+          {#if !compact}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <button class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </button>
+            {/if}
+          {/if}
+        </h3>
+      {/if}
+    </Loader>
+  </header>
+  {#if shift == "down"}
+    <header />
+  {/if}
+  {#if !pageNote || showImageOnPageNote}
+    <div class="excerpt">
+      <div
+        class="body"
+        style={showImageOnPageNote
+          ? `height: 0; padding-top: ${annotation?.height * aspect * 100}%`
+          : ""}
+      >
+        <div
+          style="margin-top: {-annotation?.y1 * aspect * 100 -
+            (showImageOnPageNote ? annotation?.height * aspect * 100 : 0)}%"
+        >
+          <ProgressiveImage
+            alt="Page {page.pageNumber + 1} of {page.document.title}"
+            {width}
+            aspect={page.aspect}
+            {page}
+          />
+          <!-- Faded flanks -->
+          <div
+            class="faded left"
+            class:nobottom={showImageOnPageNote}
+            style="left: 0; width: {annotation?.x1 * 100}%"
+          />
+          <div
+            class="faded right"
+            class:nobottom={showImageOnPageNote}
+            style="left: {annotation?.x2 * 100}%; right: 0"
+          />
+        </div>
+      </div>
+    </div>
+  {/if}
+  <footer
+    bind:offsetHeight={footerHeight}
+    bind:offsetWidth={footerWidth}
+    class:showimage={showImageOnPageNote}
+    class:capsize={pageNote && !editMode}
+  >
+    {#if shift == "down"}
+      <div class="closeflag">
+        <button class="closer" on:click={cancelAnnotation}>
+          {@html closeInlineSvg}
+        </button>
+      </div>
+      <Loader active={$loading} transparent={true}>
+        <!-- Title -->
+        {#if editMode}
+          <input
+            maxlength={NOTE_TITLE_CHAR_LIMIT}
+            bind:this={titleInput}
+            placeholder={$_("annotation.title")}
+            bind:value={title}
+            class="padded"
+          />
+        {:else}
+          <h3>
+            {annotation?.title}
+            <a class="link" href={noteUrl}>
+              {@html simpleLinkSvg}
+            </a>
+            {#if page.document.editAccess}
+              <button class="pencil" on:click={() => (editOverride = true)}>
+                {@html pencilSvg}
+              </button>
+            {/if}
+          </h3>
+        {/if}
+      </Loader>
+    {/if}
+
+    <!-- Description/Content -->
+    {#if editMode}
+      <HtmlEditor
+        maxlength={NOTE_CONTENT_CHAR_LIMIT}
+        placeholder={$_("annotation.description")}
+        bind:value={description}
+      />
+    {:else if hlContent}
+      <span class="highlight">
+        <HtmlField content={hlContent} />
+      </span>
+    {:else}
+      <HtmlField content={annotation?.content} />
+    {/if}
+    <!-- Footer content -->
+    {#if editMode}
+      <AccessToggle
+        stacked={footerWidth < 350}
+        bind:access
+        editAccess={page.document.editAccess}
+      />
+      <div class="buttonpadded">
+        <Button
+          on:click={createOrUpdateAnnotation}
+          disabledReason={titleValid
+            ? changeValid
+              ? null
+              : $_("annotation.unchanged")
+            : $_("annotation.noTitle")}
+        >
+          {#if editOverride}{$_("dialog.update")}{:else}{$_("dialog.save")}{/if}
+        </Button>
+        {#if editOverride}
+          <Button danger={true} on:click={handleDelete}
+            >{$_("dialog.delete")}</Button
+          >
+        {/if}
+        <Button secondary={true} on:click={handleCancel}
+          >{$_("dialog.cancel")}</Button
+        >
+      </div>
+    {:else if !compact}
+      <div class="twopanel">
+        <div class="cell leftalign">
+          {#if access == "organization"}
+            {$_("annotation.org")}
+          {:else if access == "private"}
+            {$_("annotation.private")}
+          {/if}
+        </div>
+        <div class="cell rightalign">
+          {#if annotation?.organization == null}
+            {$_("annotation.by", { values: { name: annotation?.username } })}
+          {:else}
+            {$_("annotation.byOrg", {
+              values: {
+                name: annotation?.username,
+                org: annotation?.organization,
+              },
+            })}
+          {/if}
+        </div>
+      </div>
+    {/if}
+  </footer>
+</div>
+
+<svelte:window on:keydown={handleKeyDown} />
 
 <style lang="scss">
   .annotation {
@@ -198,23 +409,23 @@
     }
 
     &.public {
-      $border: solid var(--annotationBorderWidth, 3px)
+      border: solid var(--annotationBorderWidth, 3px)
         var(--annotationBorder, #ffe325);
       .excerpt::before {
-        border-left: $border;
-        border-right: $border;
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       header {
-        border-top: $border;
-        border-left: $border;
-        border-right: $border;
+        border-top: var(--border);
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       footer {
-        border-left: $border;
-        border-right: $border;
-        border-bottom: $border;
+        border-left: var(--border);
+        border-right: var(--border);
+        border-bottom: var(--border);
       }
 
       .closeflag {
@@ -223,22 +434,22 @@
     }
 
     &.organization {
-      $border: solid var(--annotationBorderWidth) var(--organizationAnnotation);
+      border: solid var(--annotationBorderWidth) var(--organizationAnnotation);
       .excerpt::before {
-        border-left: $border;
-        border-right: $border;
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       header {
-        border-top: $border;
-        border-left: $border;
-        border-right: $border;
+        border-top: var(--border);
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       footer {
-        border-left: $border;
-        border-right: $border;
-        border-bottom: $border;
+        border-left: var(--border);
+        border-right: var(--border);
+        border-bottom: var(--border);
       }
 
       .closeflag {
@@ -247,22 +458,22 @@
     }
 
     &.private {
-      $border: solid var(--annotationBorderWidth) var(--privateAnnotation);
+      border: solid var(--annotationBorderWidth) var(--privateAnnotation);
       .excerpt::before {
-        border-left: $border;
-        border-right: $border;
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       header {
-        border-top: $border;
-        border-left: $border;
-        border-right: $border;
+        border-top: var(--border);
+        border-left: var(--border);
+        border-right: var(--border);
       }
 
       footer {
-        border-left: $border;
-        border-right: $border;
-        border-bottom: $border;
+        border-left: var(--border);
+        border-right: var(--border);
+        border-bottom: var(--border);
       }
 
       .closeflag {
@@ -370,8 +581,8 @@
       padding-top: var(--padding, 10px);
 
       // Borders
-      border-top-left-radius: $radius;
-      border-top-right-radius: $radius;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
 
       h3,
       h4 {
@@ -388,8 +599,8 @@
       padding-bottom: var(--padding, 10px);
 
       // Borders
-      border-bottom-left-radius: $radius;
-      border-bottom-right-radius: $radius;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
       box-sizing: border-box;
 
       &.capsize {
@@ -460,7 +671,7 @@
     .twopanel {
       display: table;
       width: 100%;
-      color: $viewerGray;
+      color: var(--viewerGray);
       font-size: 11px;
 
       .cell {
@@ -532,224 +743,13 @@
   .highlight {
     .passage {
       &.highlighted {
-        background: $annotationBorder;
+        background: var(--annotationBorder);
       }
     }
 
     :global(em) {
       font-style: normal;
-      background: $annotationBorder;
+      background: var(--annotationBorder);
     }
   }
 </style>
-
-<div
-  class="annotation"
-  class:grayed
-  class:behind
-  class:pagenote={pageNote}
-  class:up={shift == "up"}
-  class:public={access == "public"}
-  class:organization={access == "organization"}
-  class:private={access == "private"}
-  class:disabled={$loading}
-  on:mousedown|stopPropagation
-  style={shift == "up" || pageNote
-    ? ""
-    : `top: ${annotation.y1 * 100}%; height: ${annotation.height * 100}%`}
->
-  <header
-    bind:this={annotationElem}
-    bind:offsetHeight={headerHeight}
-    class:showimage={showImageOnPageNote}
-    class:hidden={shift == "down"}
-  >
-    {#if !pageNote}
-      <div class="closeflag">
-        <button class="closer buttonLike" on:click={cancelAnnotation}>
-          {@html closeInlineSvg}
-        </button>
-      </div>
-    {/if}
-    <Loader active={$loading} transparent={true}>
-      <!-- Title -->
-      {#if editMode}
-        <input
-          maxlength={noteTitleLimit}
-          bind:this={titleInput}
-          placeholder={$_("annotation.title")}
-          bind:value={title}
-        />
-      {:else}
-        <h3>
-          {#if titlePassages}
-            {#each titlePassages as passage}
-              <h4 class="highlight">
-                {#each passage as term}
-                  {#if term.type == "highlight"}
-                    <span class="passage highlighted">{term.text}</span>
-                  {:else}
-                    <span class="passage">{term.text}</span>
-                  {/if}
-                {/each}
-              </h4>
-            {/each}
-          {:else}
-            {annotation.title}
-          {/if}
-          {#if !compact}
-            <a class="link" href={noteUrl}>
-              {@html simpleLinkSvg}
-            </a>
-            {#if page.document.editAccess}
-              <button class="pencil" on:click={() => (editOverride = true)}>
-                {@html pencilSvg}
-              </button>
-            {/if}
-          {/if}
-        </h3>
-      {/if}
-    </Loader>
-  </header>
-  {#if shift == "down"}
-    <header />
-  {/if}
-  {#if !pageNote || showImageOnPageNote}
-    <div class="excerpt">
-      <div
-        class="body"
-        style={showImageOnPageNote
-          ? `height: 0; padding-top: ${annotation.height * aspect * 100}%`
-          : ""}
-      >
-        <div
-          style="margin-top: {-annotation.y1 * aspect * 100 -
-            (showImageOnPageNote ? annotation.height * aspect * 100 : 0)}%"
-        >
-          <ProgressiveImage
-            alt="Page {page.pageNumber + 1} of {page.document.title}"
-            {width}
-            aspect={page.aspect}
-            {page}
-          />
-          <!-- Faded flanks -->
-          <div
-            class="faded left"
-            class:nobottom={showImageOnPageNote}
-            style="left: 0; width: {annotation.x1 * 100}%"
-          />
-          <div
-            class="faded right"
-            class:nobottom={showImageOnPageNote}
-            style="left: {annotation.x2 * 100}%; right: 0"
-          />
-        </div>
-      </div>
-    </div>
-  {/if}
-  <footer
-    bind:offsetHeight={footerHeight}
-    bind:offsetWidth={footerWidth}
-    class:showimage={showImageOnPageNote}
-    class:capsize={pageNote && !editMode}
-  >
-    {#if shift == "down"}
-      <div class="closeflag">
-        <button class="closer" on:click={cancelAnnotation}>
-          {@html closeInlineSvg}
-        </button>
-      </div>
-      <Loader active={$loading} transparent={true}>
-        <!-- Title -->
-        {#if editMode}
-          <input
-            maxlength={noteTitleLimit}
-            bind:this={titleInput}
-            placeholder={$_("annotation.title")}
-            bind:value={title}
-            class="padded"
-          />
-        {:else}
-          <h3>
-            {annotation.title}
-            <a class="link" href={noteUrl}>
-              {@html simpleLinkSvg}
-            </a>
-            {#if page.document.editAccess}
-              <button class="pencil" on:click={() => (editOverride = true)}>
-                {@html pencilSvg}
-              </button>
-            {/if}
-          </h3>
-        {/if}
-      </Loader>
-    {/if}
-
-    <!-- Description/Content -->
-    {#if editMode}
-      <HtmlEditor
-        maxlength={noteContentLimit}
-        placeholder={$_("annotation.description")}
-        bind:value={description}
-      />
-    {:else if hlContent}
-      <span class="highlight">
-        <HtmlField content={hlContent} />
-      </span>
-    {:else}
-      <HtmlField content={annotation.content} />
-    {/if}
-    <!-- Footer content -->
-    {#if editMode}
-      <AccessToggle
-        stacked={footerWidth < 350}
-        bind:access
-        editAccess={page.document.editAccess}
-      />
-      <div class="buttonpadded">
-        <Button
-          on:click={createOrUpdateAnnotation}
-          disabledReason={titleValid
-            ? changeValid
-              ? null
-              : $_("annotation.unchanged")
-            : $_("annotation.noTitle")}
-        >
-          {#if editOverride}{$_("dialog.update")}{:else}{$_("dialog.save")}{/if}
-        </Button>
-        {#if editOverride}
-          <Button danger={true} on:click={handleDelete}
-            >{$_("dialog.delete")}</Button
-          >
-        {/if}
-        <Button secondary={true} on:click={handleCancel}
-          >{$_("dialog.cancel")}</Button
-        >
-      </div>
-    {:else if !compact}
-      <div class="twopanel">
-        <div class="cell leftalign">
-          {#if access == "organization"}
-            {$_("annotation.org")}
-          {:else if access == "private"}
-            {$_("annotation.private")}
-          {/if}
-        </div>
-        <div class="cell rightalign">
-          {#if annotation.organization == null}
-            {$_("annotation.by", { values: { name: annotation.username } })}
-          {:else}
-            {$_("annotation.byOrg", {
-              values: {
-                name: annotation.username,
-                org: annotation.organization,
-              },
-            })}
-          {/if}
-        </div>
-      </div>
-    {/if}
-  </footer>
-</div>
-
-<svelte:window on:keydown={handleKeyDown} />

@@ -1,13 +1,3 @@
-<script lang="ts" context="module">
-  import type { AddOnListItem } from "../types.ts";
-
-  export interface AddOnList {
-    items?: AddOnListItem[];
-    loading: boolean;
-    error?: string | null;
-  }
-</script>
-
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import Button from "../../common/Button.svelte";
@@ -16,6 +6,7 @@
   import Loader from "../../common/Loader.svelte";
 
   import ListItem from "./AddOnListItem.svelte";
+  import type { AddOnListItem } from "../types";
 
   export let items: AddOnListItem[];
   export let loading: boolean;
@@ -24,6 +15,31 @@
 
   $: empty = !(items && items.length > 0);
 </script>
+
+<div class="list" class:empty class:loading class:error>
+  {#if loading}
+    <!-- Loading state -->
+    <Loader active center big pad />
+    <p>{$_("addonBrowserDialog.loading")}</p>
+  {:else if error}
+    <!-- Error state -->
+    <div class="icon"><Error /></div>
+    <p>{error}</p>
+    {#if reload}<Button action on:click={reload}
+        >{$_("addonBrowserDialog.retry")}</Button
+      >{/if}
+  {:else if empty}
+    <!-- Empty state -->
+    <div class="icon"><EmptyResults /></div>
+    <p>{$_("addonBrowserDialog.empty")}</p>
+  {:else}
+    <ul>
+      {#each items as addon (addon.id)}
+        <li><ListItem {addon} /></li>
+      {/each}
+    </ul>
+  {/if}
+</div>
 
 <style>
   .list {
@@ -63,28 +79,3 @@
     list-style-type: none;
   }
 </style>
-
-<div class="list" class:empty class:loading class:error>
-  {#if loading}
-    <!-- Loading state -->
-    <Loader active center big pad />
-    <p>{$_("addonBrowserDialog.loading")}</p>
-  {:else if error}
-    <!-- Error state -->
-    <div class="icon"><Error /></div>
-    <p>{error}</p>
-    {#if reload}<Button action on:click={reload}
-        >{$_("addonBrowserDialog.retry")}</Button
-      >{/if}
-  {:else if empty}
-    <!-- Empty state -->
-    <div class="icon"><EmptyResults /></div>
-    <p>{$_("addonBrowserDialog.empty")}</p>
-  {:else}
-    <ul>
-      {#each items as addon (addon.id)}
-        <li><ListItem {addon} /></li>
-      {/each}
-    </ul>
-  {/if}
-</div>

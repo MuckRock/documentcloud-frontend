@@ -10,6 +10,7 @@
 
   export let title = "";
   export let content = "";
+  export let message = "";
 
   let notFound = false;
   let loading;
@@ -27,8 +28,9 @@
   }
 
   async function load() {
-    console.log(`Loading page content: ${endpoint}`);
-    const resp = await fetch(endpoint);
+    const resp = await fetch(endpoint, {
+      credentials: "include",
+    });
 
     if (!resp.ok) {
       notFound = true;
@@ -52,15 +54,6 @@
   });
 </script>
 
-<style>
-  .notfound {
-    padding: 2em;
-  }
-  .notfound :global(a) {
-    color: var(--primary, #4294f0);
-  }
-</style>
-
 {#await loading then done}
   {#if notFound}
     <div class="notfound">
@@ -68,10 +61,10 @@
         <Link to="default">{$_("common.home")}</Link>
       </p>
 
-      <h1>{$_("notfound.title")}</h1>
+      <h1>{title || $_("notfound.title")}</h1>
 
       <div>
-        <p>{$_("notfound.content")}</p>
+        <p>{message || $_("notfound.content")}</p>
       </div>
 
       <slot />
@@ -80,3 +73,12 @@
     <FlatPage {title} {content} />
   {/if}
 {/await}
+
+<style>
+  .notfound {
+    padding: 2em;
+  }
+  .notfound :global(a) {
+    color: var(--primary, #4294f0);
+  }
+</style>

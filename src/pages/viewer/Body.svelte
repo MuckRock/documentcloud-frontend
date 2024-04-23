@@ -1,4 +1,7 @@
 <script>
+  import ScrollZoom from "scrollzoom";
+  import { onMount, onDestroy, tick } from "svelte";
+
   import Page from "./Page.svelte";
   import SearchResults from "./SearchResults.svelte";
 
@@ -8,16 +11,14 @@
     cancelAnnotation,
   } from "@/viewer/layout.js";
   import { doc } from "@/viewer/document.js";
-  import ScrollZoom from "scrollzoom";
   import ActionPane from "./pane/ActionPane.svelte";
-  import { onMount, onDestroy, tick } from "svelte";
 
   import {
     enterRedactMode,
     enterAnnotateMode,
     enterModifyMode,
     enterSectionsMode,
-  } from "@/viewer/actions";
+  } from "@/viewer/actions.js";
 
   let docElem;
   let actionHeight;
@@ -166,6 +167,7 @@
   ];
   const elements = [document.documentElement, document.body];
   const prevStyles = styles.map(() => "");
+
   onMount(() => {
     // Set document root styles
     for (let i = 0; i < styles.length; i++) {
@@ -281,31 +283,6 @@
   }
 </script>
 
-<style lang="scss">
-  .doc {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    min-width: 1px;
-    min-height: 1px;
-    box-sizing: border-box;
-    overflow: auto;
-    z-index: $viewerBodyZ;
-    touch-action: manipulation;
-    background: $viewerBodyBg;
-
-    :global(img) {
-      background: white;
-    }
-
-    &.grayed {
-      background: $viewerBodyBgDarker;
-    }
-  }
-</style>
-
 <ActionPane bind:actionHeight />
 
 <div
@@ -328,3 +305,28 @@
   on:gestureend|preventDefault
   on:keypress={handleKeyPress}
 />
+
+<style>
+  .doc {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    min-width: 1px;
+    min-height: 1px;
+    box-sizing: border-box;
+    overflow: auto;
+    z-index: var(--viewerBodyZ);
+    touch-action: manipulation;
+    background: var(--viewerBodyBg);
+  }
+
+  .doc :global(img) {
+    background: white;
+  }
+
+  .doc.grayed {
+    background: var(--viewerBodyBgDarker);
+  }
+</style>

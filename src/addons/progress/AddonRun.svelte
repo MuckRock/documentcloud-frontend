@@ -8,7 +8,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Run } from "../runs/HistoryEvent.svelte";
+  import type { Run } from "../types";
 
   // Components
   import Progress from "../../common/Progress.svelte";
@@ -57,7 +57,7 @@
     const resp = await fetch(endpoint, options);
 
     if (!resp.ok) {
-      throw new Error(resp.statusText);
+      throw new Error(`Error updating add-on run: ${resp.statusText}`);
     }
 
     // delete returns an empty response
@@ -97,64 +97,6 @@
     return new Date(s).toLocaleString();
   }
 </script>
-
-<style>
-  .dismiss {
-    margin: 0 1px 0 14px;
-  }
-
-  .valign,
-  .dismiss {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .info {
-    font-weight: bold;
-    display: inline-block;
-    vertical-align: middle;
-    padding-right: 20px;
-    width: 20%;
-  }
-
-  .info.compact {
-    width: 100%;
-    padding-right: 0;
-  }
-
-  .message {
-    display: block;
-    width: 100%;
-  }
-
-  .addonRun {
-    padding: 8px 20px;
-    border-top: 1px solid rgba(128, 128, 128, 0.15);
-  }
-
-  .failure,
-  .cancelled {
-    background: var(--errorbg);
-  }
-
-  .failure .info,
-  .cancelled .info {
-    color: var(--caution);
-  }
-
-  .rate {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  a {
-    text-decoration: underline;
-  }
-
-  a:hover {
-    filter: brightness(85%);
-  }
-</style>
 
 <div class="addonRun {run.status}">
   <div class="info processingText" class:compact>
@@ -220,9 +162,69 @@
   {#if run.message || run.file_url}
     <div class="info message processingText" class:compact>
       {#if run.message}{run.message}{/if}
-      {#if run.message && run.file_url} - {/if}
+      {#if run.message && run.file_url}
+        -
+      {/if}
       {#if run.file_url}<a href={run.file_url}>{$_("addonProgress.download")}</a
         >{/if}
     </div>
   {/if}
 </div>
+
+<style>
+  .dismiss {
+    margin: 0 1px 0 14px;
+  }
+
+  .valign,
+  .dismiss {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .info {
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 20px;
+    width: 20%;
+  }
+
+  .info.compact {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .message {
+    display: block;
+    width: 100%;
+  }
+
+  .addonRun {
+    padding: 8px 20px;
+    border-top: 1px solid rgba(128, 128, 128, 0.15);
+  }
+
+  .failure,
+  .cancelled {
+    background: var(--errorbg);
+  }
+
+  .failure .info,
+  .cancelled .info {
+    color: var(--caution);
+  }
+
+  .rate {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover {
+    filter: brightness(85%);
+  }
+</style>

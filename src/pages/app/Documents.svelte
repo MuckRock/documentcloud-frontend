@@ -5,9 +5,9 @@
 
   // Components
   import AddonStatus from "../../addons/progress/AddonStatus.svelte";
-  import ActionBar from "./ActionBar.svelte";
+  import ActionBar from "./ActionBarContainer.svelte";
   import Anonymous from "./Anonymous.svelte";
-  import AuthSection from "@/pages/app/AuthSection.svelte";
+  import AccountNavigation from "./accounts/AccountNavigation.svelte";
   import Button from "@/common/Button.svelte";
   import Draggable from "@/common/Draggable.svelte";
   import Document from "./Document.svelte";
@@ -15,18 +15,23 @@
   import Loader from "@/common/Loader.svelte";
   import Modal from "@/common/Modal.svelte";
   import NoDocuments from "./NoDocuments.svelte";
-  import Paginator from "./Paginator.svelte";
+  import Paginator from "../../common/Paginator.svelte";
   import ProcessingBar from "./ProcessingBar.svelte";
   import SearchBar from "./SearchBar.svelte";
   import SearchLink from "./SearchLink.svelte";
   import SpecialMessage from "@/common/SpecialMessage.svelte";
   import Title from "@/common/Title.svelte";
-  import UploadDialog from "./UploadDialog.svelte";
+  import UploadDialog from "./upload/UploadDialog.svelte";
 
   // Store properties
   import { layout } from "@/manager/layout.js";
   import { documents } from "@/manager/documents.js";
-  import { search, projectIdUrl } from "@/search/search.js";
+  import {
+    search,
+    searchNext,
+    searchPrev,
+    projectIdUrl,
+  } from "@/search/search.js";
   import {
     orgsAndUsers,
     getUserById,
@@ -135,6 +140,104 @@
   }
 </script>
 
+<Loader active={$layout.loading}>
+  <div class="documents">
+    <div class="sticky" class:embed>
+      {#if !embed}
+        {#if $layout.uploading && !$layout.error}
+          <Modal
+            on:close={() => ($layout.uploading = false)}
+            component={UploadDialog}
+            properties={{ initialFiles: preUploadFiles }}
+          />
+        {/if}
+
+        {#if $orgsAndUsers.loggedIn}
+          <SpecialMessage />
+        {/if}
+        <AccountNavigation />
+      {/if}
+      {#if embed && $layout.projectEmbedTitle != null}
+        <div class="projectembedtitle">{$layout.projectEmbedTitle}</div>
+      {/if}
+      {#if !dialog && embed && $search.params != null && $search.params.projectEmbedId != null && $layout.projectEmbedSearchBar}
+        <!-- Use a search link -->
+        <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
+      {:else if !embed || dialog}
+        <!-- Don't show search bar in embed (for now) -->
+        <SearchBar {embed} {dialog} />
+      {/if}
+
+      <div>
+        {#if !embed}
+          <Title>{title}</Title>
+          {#if $orgsAndUsers.loggedIn}
+            <Button
+              on:click={showUploadModal}
+              disabledReason={$orgsAndUsers.isVerified
+                ? null
+                : $_("documents.mustBeVerified")}
+              >+ {$_("documents.upload")}</Button
+            >
+          {/if}
+          {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
+            <a href="https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form" target="_new">
+              <Button>{$_("noDocuments.requestVerificationAction")}</Button>
+            </a>
+          {/if}
+        {/if}
+      </div>
+      {#if !embed}
+        <ActionBar />
+
+        <ProcessingBar />
+
+        <AddonStatus />
+      {/if}
+    </div>
+
+    <div class="docscontainer">
+      <Draggable
+        on:files={showUploadModal}
+        disabled={embed || !$orgsAndUsers.loggedIn || !$orgsAndUsers.isVerified}
+      >
+        {#if !$orgsAndUsers.loggedIn && $search.params?.query === "" && !anonymousClosed}
+          <Anonymous bind:closed={anonymousClosed} />
+        {:else}
+          {#each $documents.documents as document (document.id)}
+            <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
+              <Document {embed} {dialog} {document} on:pick />
+            </div>
+          {/each}
+        {/if}
+        {#if $documents.documents.length == 0 && !$layout.loading}
+          <NoDocuments />
+        {/if}
+        {#if $orgsAndUsers.loggedIn}
+          <div class="toastouter">
+            <div class="toast">{$_("documents.dropFile")}</div>
+          </div>
+        {/if}
+      </Draggable>
+    </div>
+
+    {#if embed}
+      <EmbedFooter {dialog} />
+    {:else}
+      <div class="narrowshow">
+        <Paginator
+          page={$search.page}
+          totalPages={$search.results?.numPages}
+          on:next={searchNext}
+          on:previous={searchPrev}
+          has_next={$search.hasNext}
+          has_previous={$search.hasPrev}
+        />
+      </div>
+    {/if}
+  </div>
+</Loader>
+
 <style lang="scss">
   .docscontainer {
     margin-top: 17px;
@@ -238,94 +341,3 @@
     margin: 0.5em 0 1em -10px;
   }
 </style>
-
-<Loader active={$layout.loading}>
-  <div class="documents">
-    <div class="sticky" class:embed>
-      {#if !embed}
-        {#if $layout.uploading && !$layout.error}
-          <Modal
-            on:close={() => ($layout.uploading = false)}
-            component={UploadDialog}
-            properties={{ initialFiles: preUploadFiles }}
-          />
-        {/if}
-
-        {#if $orgsAndUsers.loggedIn}
-          <SpecialMessage />
-        {/if}
-        <AuthSection />
-      {/if}
-      {#if embed && $layout.projectEmbedTitle != null}
-        <div class="projectembedtitle">{$layout.projectEmbedTitle}</div>
-      {/if}
-      {#if !dialog && embed && $search.params != null && $search.params.projectEmbedId != null && $layout.projectEmbedSearchBar}
-        <!-- Use a search link -->
-        <SearchLink link={projectIdUrl($search.params.projectEmbedId)} />
-      {:else if !embed || dialog}
-        <!-- Don't show search bar in embed (for now) -->
-        <SearchBar {embed} {dialog} />
-      {/if}
-
-      <div>
-        {#if !embed}
-          <Title>{title}</Title>
-          {#if $orgsAndUsers.loggedIn}
-            <Button
-              on:click={showUploadModal}
-              disabledReason={$orgsAndUsers.isVerified
-                ? null
-                : $_("documents.mustBeVerified")}
-              >+ {$_("documents.upload")}</Button
-            >
-          {/if}
-          {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
-            <a href="https://airtable.com/shrZrgdmuOwW0ZLPM" target="_new">
-              <Button>{$_("noDocuments.requestVerificationAction")}</Button>
-            </a>
-          {/if}
-        {/if}
-      </div>
-      {#if !embed}
-        <ActionBar />
-
-        <ProcessingBar />
-
-        <AddonStatus />
-      {/if}
-    </div>
-
-    <div class="docscontainer">
-      <Draggable
-        on:files={showUploadModal}
-        disabled={embed || !$orgsAndUsers.loggedIn || !$orgsAndUsers.isVerified}
-      >
-        {#if !$orgsAndUsers.loggedIn && $search.params.query === "" && !anonymousClosed}
-          <Anonymous bind:closed={anonymousClosed} />
-        {:else}
-          {#each $documents.documents as document (document.id)}
-            <div class:inlinecard={embed} animate:flip={{ duration: 400 }}>
-              <Document {embed} {dialog} {document} on:pick />
-            </div>
-          {/each}
-        {/if}
-        {#if $documents.documents.length == 0 && !$layout.loading}
-          <NoDocuments />
-        {/if}
-        {#if $orgsAndUsers.loggedIn}
-          <div class="toastouter">
-            <div class="toast">{$_("documents.dropFile")}</div>
-          </div>
-        {/if}
-      </Draggable>
-    </div>
-
-    {#if embed}
-      <EmbedFooter {dialog} />
-    {:else}
-      <div class="narrowshow">
-        <Paginator />
-      </div>
-    {/if}
-  </div>
-</Loader>

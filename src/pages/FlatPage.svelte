@@ -9,6 +9,8 @@
   import { getQueryStringParams, falsyParamValue } from "../util/url.js";
   import { inIframe } from "../util/iframe.js";
 
+  import { APP_URL } from "../config/config.js";
+
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg?raw";
 
@@ -26,7 +28,13 @@
   }
 
   function navTo(hash, smooth = false) {
-    const elem = document.querySelector(hash);
+    let elem;
+    try {
+      elem = document.querySelector(hash);
+    } catch (error) {
+      elem = null;
+    }
+
     if (elem) {
       if (elem.scrollIntoView) {
         elem.scrollIntoView({
@@ -43,7 +51,7 @@
 
   function injectLinkReferences() {
     if (!contentElem) {
-      console.log("No content element");
+      console.warn("No content element");
       return;
     }
 
@@ -161,6 +169,35 @@
     document.documentElement.style.scrollBehavior = "auto";
   });
 </script>
+
+<svelte:head>
+  <title>{title} | DocumentCloud</title>
+</svelte:head>
+
+<div class="page">
+  <header>
+    <div class="logo">
+      {#if inIframe()}
+        <a href={APP_URL} target="_blank" rel="noreferrer noopener"
+          >{@html mastLogoSvg}</a
+        >
+      {:else}
+        <a href={APP_URL}>
+          {@html mastLogoSvg}
+        </a>
+      {/if}
+    </div>
+  </header>
+  <div class="content" bind:this={contentElem}>
+    {#if !hideToc}
+      <div class="toccontainer">
+        <div class="toc" bind:this={sidebarElem} />
+      </div>
+    {/if}
+
+    {@html render(content)}
+  </div>
+</div>
 
 <style lang="scss">
   .page {
@@ -336,32 +373,3 @@
     }
   }
 </style>
-
-<svelte:head>
-  <title>{title} | DocumentCloud</title>
-</svelte:head>
-
-<div class="page">
-  <header>
-    <div class="logo">
-      {#if inIframe()}
-        <a href={process.env.APP_URL} target="_blank" rel="noreferrer"
-          >{@html mastLogoSvg}</a
-        >
-      {:else}
-        <Link to="app">
-          {@html mastLogoSvg}
-        </Link>
-      {/if}
-    </div>
-  </header>
-  <div class="content" bind:this={contentElem}>
-    {#if !hideToc}
-      <div class="toccontainer">
-        <div class="toc" bind:this={sidebarElem} />
-      </div>
-    {/if}
-
-    {@html render(content)}
-  </div>
-</div>

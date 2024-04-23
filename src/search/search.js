@@ -12,7 +12,8 @@ import { apiSearchUrl, searchDocumentsUrl } from "@/api/document.js";
 import deepEqual from "fast-deep-equal";
 import { _ } from "@/langs/i18n.js";
 
-const TAG_KEY = process.env.TAG_KEY;
+import { TAG_KEY } from "../config/config.js";
+
 let lastSearch = null;
 
 export const search = new Svue({
@@ -60,6 +61,9 @@ export const search = new Svue({
     },
     hasPrev(prevUrls) {
       return prevUrls.length > 0;
+    },
+    page(prevUrls) {
+      return prevUrls.length + 1;
     },
     start(prevUrls, results, params) {
       if (results == null) return 0;
@@ -184,13 +188,13 @@ export function projectIdUrl(projectId) {
   return searchUrl(`+project:${projectId} `);
 }
 
-export function userOrgUrl(obj, key, publicAccessOnly = false) {
-  const access = publicAccessOnly ? "+access:public " : "";
+export function userOrgUrl(obj, key, options = {}) {
+  const access = options?.access ? `+access:${options.access} ` : "";
   return searchUrl(`+${key}:${slugify(obj.name, obj.id)} ${access}`);
 }
 
-export function userUrl(user, publicAccessOnly = false) {
-  return userOrgUrl(user, "user", publicAccessOnly);
+export function userUrl(user, options) {
+  return userOrgUrl(user, "user", options);
 }
 
 export function userSearchQuery(user) {

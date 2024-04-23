@@ -135,6 +135,77 @@
   const MAX_THUMB_HEIGHT = 119;
 </script>
 
+<ActionPane bind:actionHeight />
+
+<div
+  style="top: {$layout.headerHeight +
+    actionOffset}px; bottom: {$layout.footerHeight}px; right:
+  {$layout.sidebarWidth}px;"
+  class="doc"
+  bind:this={container}
+  bind:clientWidth={containerWidth}
+  bind:clientHeight={containerHeight}
+  on:scroll={handleScroll}
+>
+  <div
+    style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px; padding-left: {paddingLeft}px"
+  >
+    {#each pages as page (`${page.index}-${JSON.stringify(page.descriptor.json())}`)}
+      <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
+        <span
+          class="imgwrap"
+          class:selected={$modification.modifySelectedMap[page.index]}
+        >
+          <div class="pgnum" class:left={!modify}>
+            {$_("document.pageAbbrev")}
+            {page.index + 1}
+          </div>
+          {#if modify}
+            {#if !insertOnly}
+              <div
+                class="selector"
+                on:click={(e) => select(page.index, e.shiftKey)}
+              />
+            {/if}
+            {#if showInserts}
+              <div
+                on:click={() => modification.selectInsert(page.index)}
+                class="insert before"
+                class:emphasized={(insertOnly && !$modification.hasInsert) ||
+                  $modification.insert == page.index}
+              />
+              {#if page.index == $modification.pageCount - 1}
+                <div
+                  on:click={() => modification.selectInsert(page.index + 1)}
+                  class="insert after"
+                  class:emphasized={(insertOnly && !$modification.hasInsert) ||
+                    $modification.insert == page.index + 1}
+                />
+              {/if}
+            {/if}
+          {/if}
+          <Modification descriptor={page.descriptor}>
+            <span
+              class="img"
+              class:disabled={insertOnly}
+              on:click={(e) => select(page.index, e.shiftKey)}
+            >
+              <ModifyImage
+                id={page.document}
+                page={page.pg}
+                descriptor={page.descriptor}
+                size={140}
+                maxThumb={[MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT]}
+              />
+            </span>
+          </Modification>
+        </span>
+      </span>
+      {#if page.index % itemsPerRow == itemsPerRow - 1}<br />{/if}
+    {/each}
+  </div>
+</div>
+
 <style lang="scss">
   .doc {
     left: 0;
@@ -283,74 +354,3 @@
     }
   }
 </style>
-
-<ActionPane bind:actionHeight />
-
-<div
-  style="top: {$layout.headerHeight +
-    actionOffset}px; bottom: {$layout.footerHeight}px; right:
-  {$layout.sidebarWidth}px;"
-  class="doc"
-  bind:this={container}
-  bind:clientWidth={containerWidth}
-  bind:clientHeight={containerHeight}
-  on:scroll={handleScroll}
->
-  <div
-    style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px; padding-left: {paddingLeft}px"
-  >
-    {#each pages as page (`${page.index}-${JSON.stringify(page.descriptor.json())}`)}
-      <span class="item" style="width: {itemWidth}px; height: {itemHeight}px">
-        <span
-          class="imgwrap"
-          class:selected={$modification.modifySelectedMap[page.index]}
-        >
-          <div class="pgnum" class:left={!modify}>
-            {$_("document.pageAbbrev")}
-            {page.index + 1}
-          </div>
-          {#if modify}
-            {#if !insertOnly}
-              <div
-                class="selector"
-                on:click={(e) => select(page.index, e.shiftKey)}
-              />
-            {/if}
-            {#if showInserts}
-              <div
-                on:click={() => modification.selectInsert(page.index)}
-                class="insert before"
-                class:emphasized={(insertOnly && !$modification.hasInsert) ||
-                  $modification.insert == page.index}
-              />
-              {#if page.index == $modification.pageCount - 1}
-                <div
-                  on:click={() => modification.selectInsert(page.index + 1)}
-                  class="insert after"
-                  class:emphasized={(insertOnly && !$modification.hasInsert) ||
-                    $modification.insert == page.index + 1}
-                />
-              {/if}
-            {/if}
-          {/if}
-          <Modification descriptor={page.descriptor}>
-            <span
-              class="img"
-              class:disabled={insertOnly}
-              on:click={(e) => select(page.index, e.shiftKey)}
-            >
-              <ModifyImage
-                id={page.document}
-                page={page.pg}
-                descriptor={page.descriptor}
-                size={140}
-                maxThumb={[MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT]}
-              />
-            </span>
-          </Modification>
-        </span>
-      </span>
-      {#if page.index % itemsPerRow == itemsPerRow - 1}<br />{/if}
-    {/each}
-  </div>
-</div>

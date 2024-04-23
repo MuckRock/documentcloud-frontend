@@ -1,33 +1,28 @@
 <script>
-  import { viewer } from "@/viewer/viewer.js";
-
   // SVG assets
-  import fullScreenSvg from "@/assets/fullscreen.svg?raw";
+  import { ScreenFull24 } from "svelte-octicons";
+
+  export let url;
 </script>
 
-<style lang="scss">
+{#if url}
+  <a target="_blank" href={url}>
+    <span class="fullscreen">
+      <ScreenFull24 />
+    </span>
+  </a>
+{/if}
+
+<style>
   .fullscreen {
-    @include buttonLike;
     display: inline-block;
     vertical-align: middle;
     margin: 0 10px 0 6px;
     line-height: 0;
+  }
 
-    :global(svg) {
-      display: inline-block;
-      vertical-align: middle;
-    }
+  .fullscreen :global(svg) {
+    display: inline-block;
+    vertical-align: middle;
   }
 </style>
-
-{#if $viewer.loaded}
-  <a target="_blank" href={$viewer.document.canonicalUrl}>
-    <span class="fullscreen">
-      {@html fullScreenSvg}
-    </span>
-  </a>
-{:else}
-  <span class="fullscreen">
-    {@html fullScreenSvg}
-  </span>
-{/if}

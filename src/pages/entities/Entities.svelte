@@ -15,7 +15,8 @@
 
   import closeSvg from "@/assets/close_inline.svg?raw";
 
-  const CONTACT = process.env.SPECIAL_CONTACT;
+  import { SPECIAL_CONTACT } from "../../config/config.js";
+  import Paginator from "../../common/Paginator.svelte";
 
   let loading = true;
   let fullText = null;
@@ -158,130 +159,17 @@
     entitiesByCategory == null ? [] : Object.keys(entitiesByCategory).sort();
 </script>
 
-<style lang="scss">
-  p {
-    max-width: 33em;
-  }
-
-  a {
-    color: $primary;
-  }
-
-  .highlight {
-    background: rgb(250, 244, 208);
-  }
-
-  .body {
-    margin: 20px;
-  }
-
-  .categories {
-    margin: 0 -10px;
-  }
-
-  .category {
-    border: solid 1px gainsboro;
-    margin: 10px;
-    display: inline-block;
-    vertical-align: top;
-
-    .categorytitle {
-      font-weight: bold;
-      padding: 6px 10px;
-    }
-
-    .entity {
-      padding: 6px 10px;
-      cursor: pointer;
-
-      .subtitle {
-        color: $gray;
-        font-weight: 12px;
-      }
-
-      &:hover {
-        background: $primary;
-        color: white;
-
-        .subtitle {
-          color: $light-gray;
-
-          a {
-            color: white;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .paginator {
-    .paginate {
-      color: $searchSpecial;
-      cursor: pointer;
-      user-select: none;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-  }
-
-  .close {
-    @include buttonLike;
-    display: inline-block;
-    margin-left: 5px;
-  }
-
-  summary {
-    @include buttonLike;
-    outline: none;
-    margin-left: 8px;
-  }
-
-  .filters {
-    margin-bottom: 20px;
-    display: inline-block;
-    border: solid 1px gainsboro;
-    padding: 20px 20px 20px 20px;
-  }
-
-  .filtergroup {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 30px;
-
-    h3 {
-      margin-bottom: 0.5em;
-    }
-
-    .action {
-      color: $primary;
-      font-size: 13px;
-      @include buttonLike;
-      margin: 0.5em 0;
-    }
-  }
-</style>
-
 <div class="body">
   <p>
     <Link back={true} color={true}>{$_("entities.back")}</Link>
   </p>
   {#if !loading && $entities.entities != null && fullText != null && ($entities.entities.entities.length > 0 || pagePushed)}
-    <p class="paginator">
-      <span>{$_("entities.page")}&nbsp;</span>
-      {#if $entities.entities.hasPrev}
-        <span class="paginate" on:click={() => prevPage()}>←</span>
-      {/if}
-      {#if $entities.entities.hasNext}
-        <span class="paginate" on:click={() => nextPage()}>→</span>
-      {/if}
-    </p>
-
+    <Paginator
+      has_next={$entities.entities.hasNext}
+      has_prev={$entities.entities.hasPrev}
+      on:next={nextPage}
+      on:previous={prevPage}
+    />
     <details>
       <!-- Todo: put in separate component -->
       <summary>{$_("entities.filter")}</summary>
@@ -514,7 +402,7 @@
       </p>
     {:else}
       <p>
-        {@html $_("entities.welcome", { values: { contact: CONTACT } })}
+        {@html $_("entities.welcome", { values: { contact: SPECIAL_CONTACT } })}
       </p>
       <p>
         {$_("entities.manual")}
@@ -532,3 +420,100 @@
     {/if}
   {:else}{$_("common.loading")}{/if}
 </div>
+
+<style lang="scss">
+  p {
+    max-width: 33em;
+  }
+
+  a {
+    color: $primary;
+  }
+
+  .highlight {
+    background: rgb(250, 244, 208);
+  }
+
+  .body {
+    margin: 20px;
+  }
+
+  .categories {
+    margin: 0 -10px;
+  }
+
+  .category {
+    border: solid 1px gainsboro;
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+
+    .categorytitle {
+      font-weight: bold;
+      padding: 6px 10px;
+    }
+
+    .entity {
+      padding: 6px 10px;
+      cursor: pointer;
+
+      .subtitle {
+        color: $gray;
+        font-weight: 12px;
+      }
+
+      &:hover {
+        background: $primary;
+        color: white;
+
+        .subtitle {
+          color: $light-gray;
+
+          a {
+            color: white;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .close {
+    @include buttonLike;
+    display: inline-block;
+    margin-left: 5px;
+  }
+
+  summary {
+    @include buttonLike;
+    outline: none;
+    margin-left: 8px;
+  }
+
+  .filters {
+    margin-bottom: 20px;
+    display: inline-block;
+    border: solid 1px gainsboro;
+    padding: 20px 20px 20px 20px;
+  }
+
+  .filtergroup {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 30px;
+
+    h3 {
+      margin-bottom: 0.5em;
+    }
+
+    .action {
+      color: $primary;
+      font-size: 13px;
+      @include buttonLike;
+      margin: 0.5em 0;
+    }
+  }
+</style>

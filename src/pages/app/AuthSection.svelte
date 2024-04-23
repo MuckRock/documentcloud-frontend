@@ -45,31 +45,6 @@
   $: individualOrg = pickOne(orgs.filter((org) => org.individual));
 </script>
 
-<style>
-  .auth {
-    user-select: none;
-    margin: 0 0 20px 0;
-  }
-  .auth :global(a),
-  .auth .title,
-  .auth .dot {
-    color: var(--gray), rgba(0, 0, 0, 0.53);
-    font-size: 13px;
-  }
-
-  .auth .dot {
-    margin: 0 3px;
-  }
-
-  .auth .scope {
-    color: gray;
-  }
-
-  .auth .color {
-    color: var(--primary, #4294f0);
-  }
-</style>
-
 <div class="auth">
   <Link to="home">{$_("common.home")}</Link>
   <span class="dot">·</span>
@@ -163,3 +138,28 @@
     </Dropdown>
   {:else}<a href={SIGN_IN_URL}>{$_("authSection.signIn")}</a>{/if}
 </div>
+
+<style>
+  .auth {
+    user-select: none;
+    margin: 0 0 20px 0;
+  }
+  .auth :global(a),
+  .auth .title,
+  .auth .dot {
+    color: var(--gray), rgba(0, 0, 0, 0.53);
+    font-size: 13px;
+  }
+
+  .auth .dot {
+    margin: 0 3px;
+  }
+
+  .auth .scope {
+    color: gray;
+  }
+
+  .auth .color {
+    color: var(--primary, #4294f0);
+  }
+</style>

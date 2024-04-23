@@ -1,16 +1,5 @@
 <script lang="ts" context="module">
-  import type { AddOnListItem } from "../types.ts";
-
-  export interface Event {
-    id: number;
-    addon: AddOnListItem;
-    user: number;
-    parameters: any;
-    event: number;
-    scratch: any;
-    created_at: string;
-    updated_at: string;
-  }
+  import type { Event } from "../types.ts";
 
   // schedules and eventValues are the inverse of each other, so store them together
   export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];
@@ -32,13 +21,42 @@
   export let event: Event;
 
   $: disabled = event.event === 0;
-  $: key = event.addon.parameters?.eventOptions?.name;
+  $: key = event.addon?.parameters?.eventOptions?.name;
   $: target = event.parameters[key];
 
   function url(event: Event) {
     return `#add-ons/${event.addon.repository}/${event.id}`;
   }
 </script>
+
+<a
+  href={url(event)}
+  title={$_("dialog.edit")}
+  class="addon-event"
+  id="event-{event.id}"
+  class:disabled
+>
+  <div class="info">
+    <p class="name">
+      {event.addon.name}
+    </p>
+    {#if target}
+      <p class="target">{target}</p>
+    {/if}
+    {#if disabled}
+      <p class="routine">{schedules[event.event]}</p>
+    {:else}
+      <p class="routine">
+        {$_("addonRuns.runsOn", {
+          values: { schedule: schedules[event.event] },
+        })}
+      </p>
+    {/if}
+  </div>
+  <div class="actions">
+    <Button action href={url(event)}><Pencil16 /></Button>
+  </div>
+</a>
 
 <style>
   .addon-event {
@@ -78,32 +96,3 @@
     color: var(--darkgray);
   }
 </style>
-
-<a
-  href={url(event)}
-  title={$_("dialog.edit")}
-  class="addon-event"
-  id="event-{event.id}"
-  class:disabled
->
-  <div class="info">
-    <p class="name">
-      {event.addon.name}
-    </p>
-    {#if target}
-      <p class="target">{target}</p>
-    {/if}
-    {#if disabled}
-      <p class="routine">{schedules[event.event]}</p>
-    {:else}
-      <p class="routine">
-        {$_("addonRuns.runsOn", {
-          values: { schedule: schedules[event.event] },
-        })}
-      </p>
-    {/if}
-  </div>
-  <div class="actions">
-    <Button action href={url(event)}><Pencil16 /></Button>
-  </div>
-</a>

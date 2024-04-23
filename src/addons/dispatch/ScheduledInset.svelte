@@ -2,8 +2,8 @@
   import { _ } from "svelte-i18n";
   import { onMount } from "svelte";
 
-  import type { AddOnListItem } from "../types.ts";
-  import ScheduledEvent, { type Event } from "../runs/ScheduledEvent.svelte";
+  import type { AddOnListItem, Event } from "../types";
+  import ScheduledEvent from "../runs/ScheduledEvent.svelte";
 
   import { baseApiUrl } from "../../api/base.js";
 
@@ -52,6 +52,22 @@
   });
 </script>
 
+{#if events.length > 0}
+  <details class="scheduled-list" bind:open>
+    <summary>
+      {$_("addonDispatchDialog.showAddons", {
+        values: { n: events.length },
+      })}
+    </summary>
+
+    <ul>
+      {#each events as event}
+        <li><ScheduledEvent {event} /></li>
+      {/each}
+    </ul>
+  </details>
+{/if}
+
 <style>
   .scheduled-list {
     width: 100%;
@@ -71,19 +87,3 @@
     padding: 0;
   }
 </style>
-
-{#if events.length > 0}
-  <details class="scheduled-list" bind:open>
-    <summary>
-      {$_("addonDispatchDialog.showAddons", {
-        values: { n: events.length },
-      })}
-    </summary>
-
-    <ul>
-      {#each events as event}
-        <li><ScheduledEvent {event} /></li>
-      {/each}
-    </ul>
-  </details>
-{/if}

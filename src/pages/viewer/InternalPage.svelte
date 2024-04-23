@@ -1,23 +1,24 @@
 <script>
-  import ExtraPageContent from "./ExtraPageContent.svelte";
-  import PageNoteInsert from "./PageNoteInsert.svelte";
-  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
-  import Annotation from "./Annotation.svelte";
-
-  import { showIfFullyVisible } from "@/util/visibility.js";
-  import { doc, showAnnotation } from "@/viewer/document.js";
-  import { viewer } from "@/viewer/viewer.js";
-  import { layout } from "@/viewer/layout.js";
-  import { markup } from "@/util/markup.js";
-  import { hoveredNote } from "@/viewer/hoveredNote.js";
-  import { selectableTextUrl } from "@/api/viewer.js";
-  import session from "@/api/session.js";
-  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights.js";
   import { onDestroy, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  // Selectable text
+  import Annotation from "./Annotation.svelte";
+  import ExtraPageContent from "./ExtraPageContent.svelte";
+  import PageNoteInsert from "./PageNoteInsert.svelte";
   import SelectableWord from "./SelectableWord.svelte";
+  import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+
+  import session from "@/api/session.js";
+  import { selectableTextUrl } from "@/api/viewer.js";
+
+  import { doc, showAnnotation } from "@/viewer/document.js";
+  import { layout } from "@/viewer/layout.js";
+  import { viewer } from "@/viewer/viewer.js";
+  import { hoveredNote } from "@/viewer/hoveredNote.js";
+
+  import { coalesceSelectableHighlights } from "@/util/coalesceHighlights.js";
+  import { markup } from "@/util/markup.js";
+  import { showIfFullyVisible } from "@/util/visibility.js";
 
   export let page;
   export let width;
@@ -141,126 +142,6 @@
     e.preventDefault();
   }
 </script>
-
-<style lang="scss">
-  .numbercontainer {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    user-select: none;
-
-    .number {
-      position: sticky;
-      text-align: right;
-      box-sizing: border-box;
-      padding: 12px 20px 12px 0;
-      font-weight: bold;
-      font-size: 12px;
-      white-space: pre;
-      top: 20px;
-
-      &.grayed {
-        pointer-events: none;
-      }
-
-      a {
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-
-  .page {
-    width: 100%;
-    height: 100%;
-    user-select: none;
-  }
-
-  .redaction {
-    position: absolute;
-    background: black;
-    pointer-events: none;
-  }
-
-  .tag {
-    @include buttonLike;
-
-    position: absolute;
-    left: -35px;
-    opacity: 0.5;
-    z-index: $viewerTagZ;
-
-    &:hover,
-    &.hover {
-      opacity: 0.8;
-    }
-
-    &.grayed {
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    &.disabled {
-      pointer-events: none;
-    }
-  }
-
-  .annotation {
-    position: absolute;
-    pointer-events: none;
-    margin-left: -$annotationBorderWidth;
-    margin-top: -$annotationBorderWidth;
-    border-radius: $radius;
-    box-sizing: content-box;
-
-    &.selectable {
-      cursor: pointer;
-      pointer-events: all;
-
-      &:hover,
-      &.hover {
-        box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.2);
-      }
-    }
-
-    &.public {
-      border: $annotationBorderWidth solid $annotationBorder;
-      background: rgba($annotationBorder, 0.2);
-    }
-
-    &.organization {
-      border: $annotationBorderWidth solid $organizationAnnotation;
-      background: rgba($organizationAnnotation, 0.2);
-    }
-
-    &.private {
-      border: $annotationBorderWidth solid $privateAnnotation;
-      background: rgba($privateAnnotation, 0.2);
-    }
-
-    &.grayed {
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    &.amplified {
-      backdrop-filter: brightness(125%);
-
-      &.public {
-        background: rgba($annotationBorder, 0.1);
-      }
-
-      &.organization {
-        background: rgba($organizationAnnotation, 0.1);
-      }
-
-      &.private {
-        background: rgba($privateAnnotation, 0.1);
-      }
-    }
-  }
-</style>
 
 <div class="numbercontainer" style="right: {width}px;">
   <div
@@ -440,3 +321,123 @@
 </div>
 
 <svelte:window on:mouseup={handleMouseUp} />
+
+<style lang="scss">
+  .numbercontainer {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    user-select: none;
+
+    .number {
+      position: sticky;
+      text-align: right;
+      box-sizing: border-box;
+      padding: 12px 20px 12px 0;
+      font-weight: bold;
+      font-size: 12px;
+      white-space: pre;
+      top: 20px;
+
+      &.grayed {
+        pointer-events: none;
+      }
+
+      a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+  }
+
+  .redaction {
+    position: absolute;
+    background: black;
+    pointer-events: none;
+  }
+
+  .tag {
+    @include buttonLike;
+
+    position: absolute;
+    left: -35px;
+    opacity: 0.5;
+    z-index: $viewerTagZ;
+
+    &:hover,
+    &.hover {
+      opacity: 0.8;
+    }
+
+    &.grayed {
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+
+  .annotation {
+    position: absolute;
+    pointer-events: none;
+    margin-left: -$annotationBorderWidth;
+    margin-top: -$annotationBorderWidth;
+    border-radius: $radius;
+    box-sizing: content-box;
+
+    &.selectable {
+      cursor: pointer;
+      pointer-events: all;
+
+      &:hover,
+      &.hover {
+        box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    &.public {
+      border: $annotationBorderWidth solid $annotationBorder;
+      background: rgba($annotationBorder, 0.2);
+    }
+
+    &.organization {
+      border: $annotationBorderWidth solid $organizationAnnotation;
+      background: rgba($organizationAnnotation, 0.2);
+    }
+
+    &.private {
+      border: $annotationBorderWidth solid $privateAnnotation;
+      background: rgba($privateAnnotation, 0.2);
+    }
+
+    &.grayed {
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    &.amplified {
+      backdrop-filter: brightness(125%);
+
+      &.public {
+        background: rgba($annotationBorder, 0.1);
+      }
+
+      &.organization {
+        background: rgba($organizationAnnotation, 0.1);
+      }
+
+      &.private {
+        background: rgba($privateAnnotation, 0.1);
+      }
+    }
+  }
+</style>

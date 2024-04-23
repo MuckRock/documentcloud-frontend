@@ -23,8 +23,12 @@ import { DEFAULT_EXPAND } from "../api/common.js";
 import { inIframe } from "@/util/iframe.js";
 import { modification } from "./modification/modification.js";
 
-// A little bigger than normal mobile break to hide sidebar in narrow viewports
-export const MOBILE_BREAKPOINT = 800;
+import {
+  MOBILE_BREAKPOINT,
+  HEADER_HEIGHT,
+  FOOTER_HEIGHT,
+  SIDEBAR_WIDTH,
+} from "../pages/viewer/constants.js";
 
 export const layout = new Svue({
   data() {
@@ -33,10 +37,10 @@ export const layout = new Svue({
       viewer,
 
       // Height of header row
-      headerHeight: 36,
-      baseSidebarWidth: 350,
+      headerHeight: HEADER_HEIGHT,
+      baseSidebarWidth: SIDEBAR_WIDTH,
       // Height of footer row
-      footerHeight: 36,
+      footerHeight: FOOTER_HEIGHT,
 
       // Show the title in the header (title=true)
       title: true,
@@ -77,6 +81,7 @@ export const layout = new Svue({
       showInfo: false,
       showData: false,
       showAccess: false,
+      showRevisions: false,
 
       // Sections
       showEditSections: false,
@@ -236,13 +241,15 @@ export const layout = new Svue({
       showAccess,
       showEditSections,
       showEmbedDialog,
+      showRevisions,
     ) {
       return (
         showInfo ||
         showData ||
         showAccess ||
         showEditSections ||
-        showEmbedDialog
+        showEmbedDialog ||
+        showRevisions
       );
     },
   },
@@ -555,6 +562,10 @@ export function hideDocumentInfo() {
 
 export function hideDocumentData() {
   layout.showData = false;
+}
+
+export function hideRevisions() {
+  layout.showRevisions = false;
 }
 
 export function hideAccess() {

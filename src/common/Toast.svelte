@@ -33,12 +33,9 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
-
   import CloseIcon from "svelte-octicons/lib/X16.svelte";
 
-  // Constants
-  const toastLength = parseInt(process.env.TOAST_LENGTH);
-  const toastFade = parseInt(process.env.TOAST_FADE);
+  import { TOAST_LENGTH, TOAST_FADE } from "../config/config.js";
 
   export let toast: Toast;
   export let i: number;
@@ -52,7 +49,7 @@
 
   function beginClose() {
     fading = true;
-    toastTimeout = setTimeout(close, toastFade);
+    toastTimeout = setTimeout(close, TOAST_FADE);
   }
 
   function close() {
@@ -73,16 +70,26 @@
 
     cancel();
     if (fade) {
-      toastTimeout = setTimeout(beginClose, toastLength);
+      toastTimeout = setTimeout(beginClose, TOAST_LENGTH);
     }
   }
 
   onMount(() => {
     if (fade) {
-      toastTimeout = setTimeout(beginClose, toastLength);
+      toastTimeout = setTimeout(beginClose, TOAST_LENGTH);
     }
   });
 </script>
+
+<div
+  class={["toast", toast.status ?? "info"].join(" ")}
+  class:fading
+  on:mouseenter={cancel}
+  on:mouseleave={reset}
+>
+  <button class="close" on:click={close}><CloseIcon /></button>
+  <p class="content">{toast.content}</p>
+</div>
 
 <style lang="scss">
   .toast {
@@ -173,13 +180,3 @@
     user-select: none;
   }
 </style>
-
-<div
-  class={["toast", toast.status ?? "info"].join(" ")}
-  class:fading
-  on:mouseenter={cancel}
-  on:mouseleave={reset}
->
-  <button class="close" on:click={close}><CloseIcon /></button>
-  <p class="content">{toast.content}</p>
-</div>

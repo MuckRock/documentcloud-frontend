@@ -3,7 +3,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Drawer from "../Drawer.svelte";
+  import Drawer from "../../common/Drawer.svelte";
   import Scheduled from "./Scheduled.svelte";
   import History from "./History.svelte";
 
@@ -11,6 +11,15 @@
 
   let drawer: Drawer;
 </script>
+
+<Drawer bind:this={drawer} {visible} anchor="right" on:open on:close>
+  <div slot="content">
+    <h2>{$_("addonRuns.scheduled")}</h2>
+    <Scheduled />
+    <h2>{$_("addonRuns.previous")}</h2>
+    <History />
+  </div>
+</Drawer>
 
 <style>
   [slot="content"] {
@@ -23,12 +32,3 @@
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 </style>
-
-<Drawer bind:this={drawer} {visible} anchor="right" on:open on:close>
-  <div slot="content">
-    <h2>{$_("addonRuns.scheduled")}</h2>
-    <Scheduled />
-    <h2>{$_("addonRuns.previous")}</h2>
-    <History />
-  </div>
-</Drawer>

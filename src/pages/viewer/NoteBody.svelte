@@ -6,22 +6,6 @@
   let width = 0;
 </script>
 
-<style lang="scss">
-  .doc {
-    left: 0;
-    background: $viewerBodyBg;
-    position: absolute;
-    overflow: auto;
-    padding: 2em 0;
-
-    .notes {
-      max-width: 720px;
-      width: 90%;
-      margin: 0 auto;
-    }
-  }
-</style>
-
 <div
   style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
   {$layout.sidebarWidth}px;"
@@ -47,3 +31,19 @@
     {/if}
   </div>
 </div>
+
+<style lang="scss">
+  .doc {
+    left: 0;
+    background: $viewerBodyBg;
+    position: absolute;
+    overflow: auto;
+    padding: 2em 0;
+
+    .notes {
+      max-width: 720px;
+      width: 90%;
+      margin: 0 auto;
+    }
+  }
+</style>

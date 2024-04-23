@@ -2,6 +2,7 @@ import ArrayField from "./ArrayField.svelte";
 import Checkbox from "./Checkbox.svelte";
 import Number from "./Number.svelte";
 import Text from "./Text.svelte";
+import Select from "./Select.svelte";
 
 // https://json-schema.org/understanding-json-schema/reference/type.html
 const fields = {
@@ -29,6 +30,11 @@ export function autofield(params, fallback = Text) {
   if (!fields[type]) {
     console.warn("Unknown field type: %s", type);
     return fallback;
+  }
+
+  // only string enums for now
+  if (type === "string" && params.enum) {
+    return Select;
   }
 
   return fields[type];

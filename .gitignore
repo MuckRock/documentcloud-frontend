@@ -21,14 +21,25 @@ public/node_modules_*
 public/embed/*
 public/notes/*
 public/viewer/*
+public/assets/
 
 # Netlify
 .netlify
 
 # Local test env file
-.env.test
-.env.sentry-build-plugin
+.env
+.env.*
+playwright-report
+test-results
+coverage
+
+# local fixtures, everyone should generate their own
+tests/fixtures/development.json
 
 .vscode
 
 scratch/
+build/
+dist/
+storybook-static/
+.svelte-kit/

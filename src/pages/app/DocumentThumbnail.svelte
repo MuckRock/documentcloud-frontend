@@ -1,11 +1,10 @@
 <script>
-  import Link from "@/router/Link.svelte";
+  import { _ } from "svelte-i18n";
+  import { createEventDispatcher } from "svelte";
+
   import Image from "@/common/Image.svelte";
   import Loader from "@/common/Loader.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
-  import emitter from "@/emit.js";
-  import { documents } from "@/manager/documents.js";
-  import { _ } from "svelte-i18n";
 
   // SVG assets
   import errorIconSvg from "@/assets/error_icon.svg?raw";
@@ -20,106 +19,12 @@
   export let publicNote = false;
   export let orgNote = false;
   export let privateNote = false;
+  export let progress = null;
+  export let processed = null;
+  export let pageCount = null;
 
-  const emit = emitter({
-    pick() {},
-  });
-
-  $: realProgress =
-    document == null ? null : $documents.realProgressMap[document.id];
-  $: pagesProcessed =
-    document == null ? null : $documents.pagesProcessedMap[document.id];
-  $: pageCount = document == null ? null : $documents.pageCountMap[document.id];
+  const dispatch = createEventDispatcher();
 </script>
-
-<style lang="scss">
-  .img {
-    padding: 0 35px 20px 35px;
-    display: table-cell;
-    vertical-align: top;
-    position: relative;
-
-    @media only screen and (max-width: 720px) {
-      padding: 10px 15px 20px 15px;
-    }
-
-    :global(img),
-    > *,
-    .fullstatus {
-      width: 70px;
-      height: 88px;
-      display: table-cell;
-      text-align: center;
-      vertical-align: middle;
-      object-fit: contain;
-
-      @media only screen and (max-width: 720px) {
-        width: 43px;
-        height: 54px;
-        font-size: 12px;
-      }
-    }
-
-    &.embed {
-      padding: 5px 15px 10px 15px;
-
-      :global(img),
-      > *,
-      .fullstatus {
-        width: 43px;
-        height: 54px;
-        font-size: 12px;
-      }
-    }
-
-    .error {
-      background: #fffafa;
-    }
-
-    .imgwrap {
-      background: white;
-      outline: $normaloutline;
-      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
-    }
-
-    .caption {
-      text-align: left;
-
-      p {
-        margin: 5px 0;
-      }
-    }
-
-    .note-count {
-      display: inline-block;
-      font-size: $small;
-      font-weight: normal;
-      color: $gray;
-      margin: 2px 0;
-      padding: 0;
-      height: inherit;
-    }
-
-    .tag {
-      position: absolute;
-      top: 13px;
-      left: 19px;
-      opacity: 0.5;
-      z-index: $viewerTagZ;
-      width: inherit;
-      height: inherit;
-
-      &:hover {
-        opacity: 0.8;
-      }
-
-      :global(svg) {
-        height: 12px;
-        display: block;
-      }
-    }
-  }
-</style>
 
 <div class="img" data-id={document.id} class:embed>
   <span class="imgwrap">
@@ -127,7 +32,7 @@
       {#if dialog}
         <Image
           clickable={true}
-          on:click={() => emit.pick(document)}
+          on:click={() => dispatch("pick", document)}
           src={document.thumbnail}
         />
       {:else if embed && document.publishedUrl != null && document.publishedUrl.trim().length > 0}
@@ -135,18 +40,22 @@
           ><Image src={document.thumbnail} /></a
         >
       {:else}
-        <Link newPage={embed} to="viewer" params={{ id: document.slugId }}>
+        <a
+          href={document.canonicalUrl}
+          target={embed ? "_blank" : null}
+          rel={embed ? "noopener noreferrer" : null}
+        >
           <Image src={document.thumbnail} />
-        </Link>
+        </a>
       {/if}
     {:else if document.pending}
       <Tooltip>
         <div slot="caption" class="caption">
-          {#if realProgress != null}
-            <p>{Math.floor(realProgress * 100)}%</p>
-            {#if pagesProcessed != null}
+          {#if progress != null}
+            <p>{Math.floor(progress * 100)}%</p>
+            {#if processed != null}
               <p>
-                {pagesProcessed} / {pageCount}
+                {processed} / {pageCount}
                 {$_("documentThumbnail.pages")}
               </p>
             {/if}
@@ -179,3 +88,97 @@
     </div>
   {/if}
 </div>
+
+<style>
+  .img {
+    padding: 0 35px 20px 35px;
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .img {
+      padding: 0 15px 20px 15px;
+    }
+  }
+
+  .img :global(img),
+  .img > *,
+  .img .fullstatus {
+    width: 70px;
+    height: 88px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    object-fit: contain;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .img :global(img),
+    .img > *,
+    .img .fullstatus {
+      width: 43px;
+      height: 54px;
+      font-size: 12px;
+    }
+  }
+
+  .img.embed {
+    padding: 5px 15px 10px 15px;
+  }
+
+  .img.embed :global(img),
+  .img.embed > *,
+  .img.embed .fullstatus {
+    width: 43px;
+    height: 54px;
+    font-size: 12px;
+  }
+
+  .img .error {
+    background: #fffafa;
+  }
+
+  .img .imgwrap {
+    background: white;
+    outline: var(--normaloutline);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
+  }
+
+  .img .caption {
+    text-align: left;
+  }
+  .img .caption p {
+    margin: 5px 0;
+  }
+
+  .img .note-count {
+    display: inline-block;
+    font-size: var(--small);
+    font-weight: normal;
+    color: var(--gray);
+    margin: 2px 0;
+    padding: 0;
+    height: inherit;
+  }
+
+  .img .tag {
+    position: absolute;
+    top: 13px;
+    left: 19px;
+    opacity: 0.5;
+    z-index: var(--viewerTagZ);
+    width: inherit;
+    height: inherit;
+  }
+
+  .img .tag:hover {
+    opacity: 0.8;
+  }
+
+  .img .tag :global(svg) {
+    height: 12px;
+    display: block;
+  }
+</style>

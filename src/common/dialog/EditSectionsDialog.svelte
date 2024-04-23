@@ -1,6 +1,10 @@
 <script>
+  import { writable } from "svelte/store";
+  import { _ } from "svelte-i18n";
+
   import Button from "@/common/Button.svelte";
   import Loader from "@/common/Loader.svelte";
+
   import { hideEditSections } from "@/viewer/layout.js";
   import { viewer } from "@/viewer/viewer.js";
   import { layout } from "@/viewer/layout.js";
@@ -8,15 +12,12 @@
   import { addSection, removeSection, replaceSection } from "@/api/section.js";
   import { wrapLoadSeparate } from "@/util/wrapLoad.js";
   import { showConfirm } from "@/manager/confirmDialog.js";
-  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg?raw";
   import closeSimpleSvg from "@/assets/close_simple.svg?raw";
 
-  import { writable } from "svelte/store";
-
-  const sectionTitleLimit = process.env.SECTION_TITLE_CHAR_LIMIT;
+  import { SECTION_TITLE_CHAR_LIMIT } from "../../config/config.js";
 
   let loading = writable(false);
 
@@ -166,6 +167,107 @@
   $: titleValid = titleUpdateValid && titleTrimmed.length > 0;
 </script>
 
+<Loader center={true} active={$loading}>
+  <div>
+    <div class="mcontent">
+      <h1>{$_("dialogEditSectionsDialog.editSections")}</h1>
+      <p>{$_("dialogEditSectionsDialog.manageSections")}</p>
+
+      <!-- Existing TOC -->
+      <div class="toc" class:disabled={update}>
+        {#if $viewer.sections.length > 0}
+          {#each $viewer.sections as section, i}
+            <div class="section" class:special={update && updatingIndex == i}>
+              <button
+                class="buttonLike edit"
+                on:click={() => !update && editSection(i)}
+              >
+                {@html pencilSvg}
+              </button>
+              <button
+                class="remove buttonLike"
+                on:click={async () => !update && (await handleSectionRemove(i))}
+              >
+                {@html closeSimpleSvg}
+              </button>
+              <span class="page"
+                >{$_("dialogEditSectionsDialog.pageAbbrevNo", {
+                  values: { n: section.page + 1 },
+                })}</span
+              >
+              <span class="title">{section.title}</span>
+            </div>
+          {/each}
+        {:else}
+          <!-- No sections -->
+          <div class="empty">{$_("dialogEditSectionsDialog.empty")}</div>
+        {/if}
+      </div>
+
+      <!-- Add section input range -->
+      <div class="pendingsection">
+        <p>
+          {#if update}
+            {$_("dialogEditSectionsDialog.edit")}
+          {:else}
+            {$_("dialogEditSectionsDialog.add")}
+          {/if}
+        </p>
+        <div class="actions">
+          <span class="page">{$_("dialogEditSectionsDialog.pageAbbrev")}</span>
+          <input
+            class="pageinput"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="#"
+            bind:value={pendingPage}
+          />
+          <input
+            maxlength={SECTION_TITLE_CHAR_LIMIT}
+            class="titleinput"
+            type="text"
+            placeholder={$_("dialogEditSectionsDialog.title")}
+            bind:value={pendingTitle}
+          />
+          <span class="add">
+            <Button
+              disabledReason={pageValid
+                ? titleValid
+                  ? null
+                  : titleUpdateValid
+                    ? $_("dialogEditSectionsDialog.missingTitle")
+                    : $_("dialogEditSectionsDialog.updateTitle")
+                : pageCollided
+                  ? $_("dialogEditSectionsDialog.uniquePageNumber")
+                  : $_("dialogEditSectionsDialog.invalidPageNumber")}
+              on:click={handleSectionAdd}
+            >
+              {#if update}
+                + {$_("dialog.update")}
+              {:else}
+                + {$_("dialogEditSectionsDialog.add")}
+              {/if}
+            </Button>
+          </span>
+          {#if update}
+            <span class="cancel">
+              <Button secondary={true} on:click={cancelUpdate}
+                >{$_("dialog.cancel")}</Button
+              >
+            </span>
+          {/if}
+        </div>
+        <div class="buttonpadded">
+          <Button primary={true} on:click={hideEditSections}
+            >{$_("dialog.done")}</Button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</Loader>
+
 <style lang="scss">
   .toc {
     border-top: solid 1px $gray;
@@ -250,101 +352,3 @@
     }
   }
 </style>
-
-<Loader center={true} active={$loading}>
-  <div>
-    <div class="mcontent">
-      <h1>{$_("dialogEditSectionsDialog.editSections")}</h1>
-      <p>{$_("dialogEditSectionsDialog.manageSections")}</p>
-
-      <!-- Existing TOC -->
-      <div class="toc" class:disabled={update}>
-        {#if $viewer.sections.length > 0}
-          {#each $viewer.sections as section, i}
-            <div class="section" class:special={update && updatingIndex == i}>
-              <span class="edit" on:click={() => !update && editSection(i)}>
-                {@html pencilSvg}
-              </span>
-              <span
-                class="remove"
-                on:click={async () => !update && (await handleSectionRemove(i))}
-              >
-                {@html closeSimpleSvg}
-              </span>
-              <span class="page"
-                >{$_("dialogEditSectionsDialog.pageAbbrevNo", {
-                  values: { n: section.page + 1 },
-                })}</span
-              >
-              <span class="title">{section.title}</span>
-            </div>
-          {/each}
-        {:else}
-          <!-- No sections -->
-          <div class="empty">{$_("dialogEditSectionsDialog.empty")}</div>
-        {/if}
-      </div>
-
-      <!-- Add section input range -->
-      <div class="pendingsection">
-        <p>
-          {#if update}
-            {$_("dialogEditSectionsDialog.edit")}
-          {:else}
-            {$_("dialogEditSectionsDialog.add")}
-          {/if}
-        </p>
-        <div class="actions">
-          <span class="page">{$_("dialogEditSectionsDialog.pageAbbrev")}</span>
-          <input
-            class="pageinput"
-            type="text"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            placeholder="#"
-            bind:value={pendingPage}
-          />
-          <input
-            maxlength={sectionTitleLimit}
-            class="titleinput"
-            type="text"
-            placeholder={$_("dialogEditSectionsDialog.title")}
-            bind:value={pendingTitle}
-          />
-          <span class="add">
-            <Button
-              disabledReason={pageValid
-                ? titleValid
-                  ? null
-                  : titleUpdateValid
-                  ? $_("dialogEditSectionsDialog.missingTitle")
-                  : $_("dialogEditSectionsDialog.updateTitle")
-                : pageCollided
-                ? $_("dialogEditSectionsDialog.uniquePageNumber")
-                : $_("dialogEditSectionsDialog.invalidPageNumber")}
-              on:click={handleSectionAdd}
-            >
-              {#if update}
-                + {$_("dialog.update")}
-              {:else}
-                + {$_("dialogEditSectionsDialog.add")}
-              {/if}
-            </Button>
-          </span>
-          {#if update}
-            <span class="cancel">
-              <Button secondary={true} on:click={cancelUpdate}
-                >{$_("dialog.cancel")}</Button
-              >
-            </span>
-          {/if}
-        </div>
-        <div class="buttonpadded">
-          <Button primary={true} on:click={hideEditSections}
-            >{$_("dialog.done")}</Button
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-</Loader>

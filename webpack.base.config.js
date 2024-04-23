@@ -1,18 +1,21 @@
-const path = require("path");
+import path from "node:path";
+import url from "node:url";
 
-const autoPreprocess = require("svelte-preprocess");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-const CircularDependencyPlugin = require("circular-dependency-plugin");
-const DotEnv = require("dotenv-webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
+import autoPreprocess from "svelte-preprocess";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import CircularDependencyPlugin from "circular-dependency-plugin";
+import DotEnv from "dotenv-webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { sentryWebpackPlugin } from "@sentry/webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
 
-const { preprocessOptions } = require("./preprocess.config.js");
+import { preprocessOptions } from "./preprocess.config.js";
 
-const environment =
-  process.env.NODE_ENV || "development";
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const environment = process.env.NODE_ENV || "development";
 
 const useAnalyzer = environment.endsWith("analyze");
 
@@ -40,10 +43,9 @@ function wrap(spec) {
   return spec;
 }
 
-module.exports = wrap({
+export default wrap({
   resolve: {
     alias: {
-      svelte: path.resolve("node_modules", "svelte"),
       "@": path.resolve(__dirname, "src"),
 
       // these packages don't export correctly, so we use an alias to fix imports
@@ -59,6 +61,7 @@ module.exports = wrap({
         __dirname,
         "node_modules/magic-string/dist/magic-string.es.mjs",
       ),
+      svue: path.resolve(__dirname, "node_modules/svue/dist/svue.js"),
     },
     conditionNames: ["svelte", "browser"],
     extensions: [".mjs", ".js", ".ts", ".svelte", ".css", ".scss"],
@@ -114,11 +117,10 @@ module.exports = wrap({
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].[contenthash].css",
+      filename: "assets/[name].[contenthash].css",
     }),
     new DotEnv({
-      path: prod ? `.env.${environment}` : ".env",
-      defaults: ".env",
+      path: ".env",
       systemvars: true,
     }),
     new CircularDependencyPlugin({

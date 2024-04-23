@@ -5,7 +5,7 @@ import {
   Individual,
   ModificationSpec,
   CLOCKWISE,
-} from "./modifySpec";
+} from "./modifySpec.js";
 
 class Modification extends Svue {
   constructor() {

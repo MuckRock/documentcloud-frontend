@@ -9,18 +9,17 @@ import {
   editMetadata,
   addData,
   removeData,
-} from "@/api/document.js";
+  changeRevisionControl,
+} from "../api/document.js";
 import {
   addDocumentsToProject,
   removeDocumentsFromProject,
-} from "@/api/project.js";
-import { layout, hideAccess } from "./layout.js";
+} from "../api/project.ts";
+import { layout, hideAccess, hideRevisions } from "./layout.js";
 import { wrapLoad, wrapSeparate } from "@/util/wrapLoad.js";
 import { showConfirm } from "./confirmDialog.js";
 import { router } from "@/router/router.js";
 import { search, handleUpload, setDocuments } from "@/search/search.js";
-import { pushToast } from "../common/Toast.svelte";
-import { handlePlural } from "@/util/string.js";
 import { removeFromArray, addToArrayIfUnique } from "@/util/array.js";
 import { modifications } from "./modifications.js";
 import { docEquals, copyDoc } from "@/structure/document.js";
@@ -34,6 +33,9 @@ const PROCESSING_CHANGE_TIMEOUT = 500;
 
 function mapReduce(l, id, fn) {
   const results = {};
+  if (!l || l.length === 0) {
+    return results;
+  }
   for (let i = 0; i < l.length; i++) {
     const x = l[i];
     results[x[id]] = fn(x);
@@ -99,7 +101,8 @@ export const documents = new Svue({
       return allDocuments;
     },
     pendingExisting(docsById, pending) {
-      return pending.filter((x) => {
+      if (!pending) return [];
+      return pending?.filter((x) => {
         const id = x.doc_id;
         return docsById[id] != null;
       });
@@ -151,7 +154,7 @@ export const documents = new Svue({
       return getDocumentsByCondition((doc) => doc.readable, documents);
     },
     numProcessing(pending) {
-      return pending.length;
+      return (pending && pending.length) || 0;
     },
     rawDoneProcessing(numProcessing) {
       // Wait a second before modulating value
@@ -159,7 +162,7 @@ export const documents = new Svue({
     },
 
     processingProgress(pending) {
-      if (pending.length == 0) return 1;
+      if (!pending || pending.length == 0) return 1;
 
       // Operate on documents with non-null progresses
       let totalPages = 0;
@@ -266,7 +269,7 @@ export function removeFromCollection(docId, modify = true) {
   }
 
   // Refresh when you delete everything to pull new search
-  if (newDocuments.length == 0 && process.env.NODE_ENV != "test")
+  if (newDocuments.length == 0 && process.env.NODE_ENV !== "test")
     window.location.reload();
 }
 
@@ -431,6 +434,22 @@ export async function changeAccessForDocuments(
   hideAccess();
 }
 
+export async function changeRevisionControlForDocument(
+  document,
+  revision_control,
+) {
+  await wrapLoad(layout, async () => {
+    await changeRevisionControl(document.id, revision_control);
+    updateInCollection(document, (d) => {
+      d.doc = {
+        ...d.doc,
+        revision_control,
+      };
+    });
+  });
+  hideRevisions();
+}
+
 export async function changeOwnerForDocuments(
   documents,
   user,
@@ -558,7 +577,7 @@ async function updatePending() {
   if (documents.staticMode) return;
 
   const pending = await wrapSeparate(null, layout, () => getPendingProgress());
-  for (let i = 0; i < pending.length; i++) {
+  for (let i = 0; i < (pending || []).length; i++) {
     const pendingDoc = pending[i];
     const existingDoc = documents.pendingMap[pendingDoc.doc_id];
     if (existingDoc != null) {
@@ -585,7 +604,7 @@ export async function initDocuments() {
   updatePending();
 }
 
-export async function addDocsToProject(project, documents, showToast = true) {
+export async function addDocsToProject(project, documents) {
   documents = documents.filter((doc) => !doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
@@ -604,22 +623,9 @@ export async function addDocsToProject(project, documents, showToast = true) {
       ),
     );
   });
-  if (!layout.error && showToast) {
-    pushToast(
-      `Successfully added ${handlePlural(
-        documents.length,
-        "document",
-        true,
-      )} to ${project.title}.`,
-    );
-  }
 }
 
-export async function removeDocsFromProject(
-  project,
-  documents,
-  showToast = true,
-) {
+export async function removeDocsFromProject(project, documents) {
   documents = documents.filter((doc) => doc.projectIds.includes(project.id));
   if (documents.length == 0) return;
   await wrapLoad(layout, async () => {
@@ -638,13 +644,4 @@ export async function removeDocsFromProject(
       ),
     );
   });
-  if (!layout.error && showToast) {
-    pushToast(
-      `Successfully removed ${handlePlural(
-        documents.length,
-        "document",
-        true,
-      )} from project (${project.title}).`,
-    );
-  }
 }

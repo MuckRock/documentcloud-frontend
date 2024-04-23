@@ -1,5 +1,5 @@
 <script>
-  import { layout, cancelAnnotation } from "@/viewer/layout.js";
+  import { layout } from "@/viewer/layout.js";
   import { doc } from "@/viewer/document.js";
 
   import AllText from "./AllText.svelte";
@@ -21,6 +21,21 @@
     };
   }
 </script>
+
+<div
+  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
+  {$layout.sidebarWidth}px;"
+  bind:this={docElem}
+  on:scroll={handleScroll}
+  class="doc"
+  class:grayed={$layout.displayAnnotate}
+>
+  {#if $doc.mode == "text"}
+    <AllText {scrollParams} />
+  {:else if $doc.mode == "search"}
+    <SearchResults />
+  {/if}
+</div>
 
 <style lang="scss">
   .doc {
@@ -44,18 +59,3 @@
     }
   }
 </style>
-
-<div
-  style="top: {$layout.headerHeight}px; bottom: {$layout.footerHeight}px; right:
-  {$layout.sidebarWidth}px;"
-  bind:this={docElem}
-  on:scroll={handleScroll}
-  class="doc"
-  class:grayed={$layout.displayAnnotate}
->
-  {#if $doc.mode == "text"}
-    <AllText {scrollParams} />
-  {:else if $doc.mode == "search"}
-    <SearchResults />
-  {/if}
-</div>

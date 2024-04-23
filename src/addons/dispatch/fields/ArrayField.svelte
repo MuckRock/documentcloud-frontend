@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { beforeUpdate } from "svelte";
   import Plus16 from "svelte-octicons/lib/Plus16.svelte";
+
   import Checkbox from "./Checkbox.svelte";
   import X16 from "svelte-octicons/lib/X16.svelte";
   import Number from "./Number.svelte";
@@ -15,9 +17,16 @@
   };
 
   export let count: number = 1;
+  export let value: any[] = Array(count).fill(null);
 
-  export let value = Array(count).fill(null);
-  $: numItems = value.length;
+  $: numItems = value?.length ?? 0;
+
+  beforeUpdate(() => {
+    // value should always be an array
+    if (!Array.isArray(value)) {
+      value = [];
+    }
+  });
 
   // only one level of nesting allowed
   const types = {
@@ -38,6 +47,35 @@
     value = value;
   }
 </script>
+
+<fieldset class={items.type}>
+  {#if title}
+    <legend>{title}</legend>
+  {/if}
+  {#each value as v, i}
+    <div class="item item-{i}">
+      <svelte:component
+        this={types[items.type]}
+        bind:value={value[i]}
+        {...items}
+        inline
+        name="{name}.{i}"
+      />
+
+      {#if numItems > 1}
+        <Button action on:click={(e) => remove(e, i)}><X16 /></Button>
+      {/if}
+    </div>
+  {/each}
+
+  <div class="array-controls">
+    <Button on:click={push}><Plus16 fill="white" /></Button>
+  </div>
+</fieldset>
+
+{#if description}
+  <p class="help">{description}</p>
+{/if}
 
 <style>
   fieldset {
@@ -73,32 +111,3 @@
     color: var(--gray);
   }
 </style>
-
-<fieldset class={items.type}>
-  {#if title}
-    <legend>{title}</legend>
-  {/if}
-  {#each value as v, i}
-    <div class="item item-{i}">
-      <svelte:component
-        this={types[items.type]}
-        bind:value={value[i]}
-        {...items}
-        inline
-        name="{name}.{i}"
-      />
-
-      {#if numItems > 1}
-        <Button action on:click={(e) => remove(e, i)}><X16 /></Button>
-      {/if}
-    </div>
-  {/each}
-
-  <div class="array-controls">
-    <Button on:click={push}><Plus16 fill="white" /></Button>
-  </div>
-</fieldset>
-
-{#if description}
-  <p class="help">{description}</p>
-{/if}

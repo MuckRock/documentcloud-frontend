@@ -17,6 +17,26 @@
   });
 </script>
 
+{#if !$documents.doneProcessing || !dismissed}
+  <div class="processingbar">
+    <div class="info">
+      {#if $documents.doneProcessing}
+        <span class="valign">{$_("processingBar.doneProcessing")}</span>
+        <span class="dismiss">
+          <Button small={true} on:click={() => (dismissed = true)}>
+            {$_("dialog.dismiss")}
+          </Button>
+        </span>
+      {:else}
+        {$_("processingBar.processingDocuments", {
+          values: { n: $documents.numProcessing },
+        })}
+      {/if}
+    </div>
+    <Progress progress={$documents.processingProgress} />
+  </div>
+{/if}
+
 <style lang="scss">
   .processingbar {
     background: #eff7ff;
@@ -44,23 +64,3 @@
     }
   }
 </style>
-
-{#if !$documents.doneProcessing || !dismissed}
-  <div class="processingbar">
-    <div class="info">
-      {#if $documents.doneProcessing}
-        <span class="valign">{$_("processingBar.doneProcessing")}</span>
-        <span class="dismiss">
-          <Button small={true} on:click={() => (dismissed = true)}>
-            {$_("dialog.dismiss")}
-          </Button>
-        </span>
-      {:else}
-        {$_("processingBar.processingDocuments", {
-          values: { n: $documents.numProcessing },
-        })}
-      {/if}
-    </div>
-    <Progress progress={$documents.processingProgress} />
-  </div>
-{/if}

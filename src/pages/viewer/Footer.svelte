@@ -1,101 +1,24 @@
-<script>
+<script lang="ts">
   // Controls
   import ViewDropdown from "./controls/ViewDropdown.svelte";
   import Paginator from "./controls/Paginator.svelte";
   import Zoom from "./controls/Zoom.svelte";
   import FullScreen from "./controls/FullScreen.svelte";
 
-  import { layout } from "@/viewer/layout.js";
+  import { FOOTER_HEIGHT } from "./constants.js";
 
-  $: style = `height: ${$layout.footerHeight}px;`;
+  export let disableControls = false;
+  export let compact = false;
+  export let embed = false;
+  export let showFullscreen = false;
+  export let document;
+
+  $: style = `height: ${FOOTER_HEIGHT}px;`;
 </script>
 
-<style lang="scss">
-  footer {
-    position: absolute;
-    bottom: 0;
-    border-top: $viewerHeaderBorder;
-    z-index: $viewerFooterZ;
-    text-align: center;
-
-    &.disabled {
-      pointer-events: none;
-      filter: brightness(90%);
-    }
-  }
-
-  .cell {
-    display: table-cell;
-    vertical-align: middle;
-
-    &.side {
-      width: 200px;
-      text-align: left;
-      padding: 0 0 0 16px;
-
-      &.right {
-        text-align: right;
-        padding: 0 16px 0 0;
-      }
-    }
-
-    &.center {
-      text-align: center;
-    }
-
-    &.floatleft {
-      @media only screen and (max-width: $earlyBreak) {
-        position: absolute;
-        left: 0;
-        top: 6px;
-      }
-    }
-
-    &.floatright {
-      @media only screen and (max-width: $earlyBreak) {
-        position: absolute;
-        right: -14px;
-        top: 5px;
-        width: auto;
-      }
-    }
-
-    .adjustright {
-      @media only screen and (max-width: $earlyBreak) {
-        margin-top: -2px;
-        margin-right: 14px;
-      }
-    }
-  }
-
-  .hide {
-    &.ib {
-      display: inline-block;
-
-      @media only screen and (max-width: 720px) {
-        display: none;
-      }
-    }
-
-    @media only screen and (max-width: 720px) {
-      display: none;
-    }
-
-    &.hideearly {
-      @media only screen and (max-width: $earlyBreak) {
-        display: none;
-      }
-    }
-  }
-</style>
-
-<footer
-  class="vheader"
-  class:disabled={$layout.disableControls}
-  style="height: {$layout.footerHeight}px"
->
+<footer class="vheader" class:disabled={disableControls} {style}>
   <div class="vcontent">
-    {#if !$layout.compact}
+    {#if !compact}
       <div class="cell side hide floatleft" {style}>
         <ViewDropdown />
       </div>
@@ -103,13 +26,84 @@
         <Paginator />
       </div>
       <div class="cell side right floatright" {style}>
-        <span class="hide ib adjustright" class:hideearly={$layout.embed}>
+        <span class="hide ib adjustright" class:hideearly={embed}>
           <Zoom />
         </span>
-        {#if $layout.embed && $layout.showFullscreen}
-          <FullScreen />
+        {#if document && embed && showFullscreen}
+          <FullScreen url={document.canonicalUrl} />
         {/if}
       </div>
     {/if}
   </div>
 </footer>
+
+<style>
+  footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: var(--viewerHeaderBorder);
+    z-index: var(--viewerFooterZ);
+    text-align: center;
+  }
+
+  footer.disabled {
+    pointer-events: none;
+    filter: brightness(90%);
+  }
+
+  .cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .cell.side {
+    width: 200px;
+    text-align: left;
+    padding: 0 0 0 16px;
+  }
+
+  .cell.side.right {
+    text-align: right;
+    padding: 0 16px 0 0;
+  }
+
+  .cell.center {
+    text-align: center;
+  }
+
+  .hide.ib {
+    display: inline-block;
+  }
+
+  @media only screen and (max-width: 720px) {
+    .hide {
+      display: none;
+    }
+    .hide.ib {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 900px) {
+    .cell.floatright {
+      position: absolute;
+      right: -14px;
+      top: 5px;
+      width: auto;
+    }
+    .cell.floatleft {
+      position: absolute;
+      left: 0;
+      top: 6px;
+    }
+    .adjustright {
+      margin-top: -2px;
+      margin-right: 14px;
+    }
+    .hide.hideearly {
+      display: none;
+    }
+  }
+</style>

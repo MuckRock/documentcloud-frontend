@@ -1,17 +1,26 @@
 <script>
+  import { _, date } from "svelte-i18n";
+
   import Checkbox from "@/common/Checkbox.svelte";
   import Button from "@/common/Button.svelte";
   import AccessIcon from "@/common/AccessIcon.svelte";
   import Image from "@/common/Image.svelte";
   import Progress from "@/common/Progress.svelte";
   import HtmlField from "@/common/HtmlField.svelte";
-  import Link from "@/router/Link.svelte";
   import DocumentThumbnail from "./DocumentThumbnail.svelte";
   import Annotation from "@/pages/viewer/Annotation.svelte";
-  import { _, date } from "svelte-i18n";
+
+  import { TAG_KEY } from "../../config/config.js";
+  import { documents } from "@/manager/documents.js";
 
   // Stores
-  import { layout, unselectDocument, editData } from "@/manager/layout.js";
+  import {
+    layout,
+    unselectDocument,
+    editData,
+    openAccess,
+    openRevisions,
+  } from "../../manager/layout.js";
   import { removeDocument, selectDocument } from "@/manager/documents.js";
   import { projects } from "@/manager/projects.js";
   import { projectUrl, dataUrl } from "@/search/search.js";
@@ -21,6 +30,7 @@
   import pencilSvg from "@/assets/pencil.svg?raw";
 
   import { pageImageUrl } from "@/api/viewer.js";
+  import RevisionIcon from "../../common/RevisionIcon.svelte";
 
   export let document;
   export let embed = false;
@@ -58,189 +68,7 @@
   function handleKeyup(e) {
     if (e.key == "Shift") shiftKey = false;
   }
-
-  const TAG_KEY = process.env.TAG_KEY;
 </script>
-
-<style lang="scss">
-  h2 {
-    font-size: $normal;
-    padding-top: 10px;
-    padding-bottom: 6px;
-    word-break: break-word;
-    margin: 2px 0;
-    padding: 0;
-  }
-
-  h3 {
-    font-size: $small;
-    font-weight: normal;
-    color: $gray;
-    margin: 2px 0;
-    padding: 0;
-  }
-
-  .card {
-    display: table;
-
-    @media only screen and (max-width: 720px) {
-      margin-bottom: 15px;
-    }
-
-    .row {
-      display: table-row;
-
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
-  }
-
-  .check {
-    padding-top: 30px;
-    padding-left: 30px;
-  }
-
-  .updating {
-    color: $gray;
-    margin-bottom: 26px;
-  }
-
-  .valign {
-    vertical-align: middle;
-    display: inline-block;
-
-    &.marginleft {
-      margin-left: 8px;
-    }
-  }
-
-  .actions {
-    font-size: 14px;
-    padding-bottom: 10px;
-
-    span {
-      display: inline-block;
-      margin: 6px 0;
-
-      &.pending {
-        color: $gray;
-        font-style: italic;
-      }
-
-      &.error {
-        color: $caution;
-      }
-    }
-  }
-
-  .hinfo {
-    font-size: 13px;
-    font-weight: bold;
-    margin: 15px 0;
-
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .x {
-      @include buttonLike;
-
-      padding-right: 5px;
-      height: 14px;
-
-      :global(svg) {
-        height: 12px;
-        opacity: 0.7;
-      }
-    }
-
-    .padleft {
-      @include buttonLike;
-      padding-left: 5px;
-    }
-  }
-
-  .highlights {
-    color: #333;
-    font-size: 14px;
-    line-height: 18px;
-    display: table;
-    width: 100%;
-    padding-bottom: 27px;
-
-    .row {
-      display: table-row;
-
-      > * {
-        display: table-cell;
-        vertical-align: top;
-      }
-    }
-
-    .page {
-      text-align: center;
-
-      :global(img) {
-        width: 40px;
-        height: 52px;
-        box-sizing: border-box;
-        border: solid 1px gainsboro;
-      }
-
-      .number {
-        font-weight: bold;
-        font-size: 11px;
-        padding-bottom: 15px;
-      }
-    }
-
-    .highlight {
-      width: 100%;
-      padding-top: 8px;
-      padding-left: 15px;
-      padding-bottom: 15px;
-
-      .passage {
-        &.highlighted {
-          background: $annotationBorder;
-        }
-      }
-    }
-  }
-
-  .note-highlights {
-    position: relative;
-  }
-
-  .smallinfo {
-    font-size: 12px;
-    color: $gray;
-    display: inline-block;
-    margin-right: 2px;
-    font-style: italic;
-  }
-
-  .pencil {
-    @include buttonLike;
-    vertical-align: middle;
-    height: 10px;
-  }
-
-  .description {
-    margin: 8px 0 -8px 0;
-
-    &.embeddescription {
-      margin-bottom: 20px;
-
-      :global(.content) {
-        max-height: 135px;
-      }
-    }
-  }
-</style>
 
 <div class="card">
   <div class="row">
@@ -257,35 +85,56 @@
       {embed}
       {dialog}
       {document}
+      progress={$documents.realProgressMap[document.id]}
+      processed={$documents.pagesProcessedMap[document.id]}
+      pageCount={$documents.pageCountMap[document.id]}
+      noteCount={document.notes?.length}
+      publicNote={document.notes?.some((x) => x.access === "public")}
+      orgNote={document.notes?.some((x) => x.access === "organization")}
+      privateNote={document.notes?.some((x) => x.access === "private")}
       on:pick
-      noteCount={document.notes.length}
-      publicNote={document.notes.some((x) => x.access == "public")}
-      orgNote={document.notes.some((x) => x.access == "organization")}
-      privateNote={document.notes.some((x) => x.access == "private")}
     />
 
     <div class="info">
-      <h2>
-        <span class="valign">{document.title}</span>
+      <div class="document-title-row">
+        <h2>{document.title}</h2>
         {#if !embed}
-          <span class="valign marginleft">
-            <AccessIcon {document} />
-          </span>
+          <div class="document-title-row-actions">
+            <AccessIcon
+              access={document.access}
+              editable={document.editAccess}
+              on:click={() => openAccess([document])}
+            />
+            <RevisionIcon
+              revisions={document.revisions}
+              showCount
+              on:click={() => openRevisions([document])}
+            />
+          </div>
         {/if}
-      </h2>
+      </div>
       {#if !embed}
-        <h3>
+        <div class="document-meta-row">
           {#if document.pageCount > 0}
-            {$_("document.pageCount", { values: { n: document.pageCount } })} -
+            <p class="document-meta pageCount">
+              {$_("document.pageCount", { values: { n: document.pageCount } })}
+            </p>
           {/if}
           {#if document.source != null && document.source.trim().length > 0}
-            {$_("document.source")}: {document.source} -
+            <p class="document-meta source">
+              {$_("document.source")}: {document.source}
+            </p>
           {/if}
           {#if document.userName !== null}
-            {document.userOrgString} -
+            <p class="document-meta userName">{document.userOrgString}</p>
           {/if}
-          {$date(document.createdAt, { format: "medium" })}
-        </h3>
+          <time
+            class="document-meta createdAt"
+            datetime={document.createdAt.toISOString()}
+            title={document.createdAt.toISOString()}
+            >{$date(document.createdAt, { format: "medium" })}</time
+          >
+        </div>
       {/if}
       {#if document.description != null && document.description.trim().length > 0}
         <div class="description" class:embeddescription={embed}>
@@ -295,13 +144,13 @@
       {#if !embed}
         <div class="actions">
           {#if document.viewable}
-            <Link to="viewer" params={{ id: document.slugId }}>
-              <Button action={true}>{$_("document.open")}</Button>
-            </Link>
+            <a href={document.canonicalUrl}>
+              <Button action>{$_("document.open")}</Button>
+            </a>
             {#if document.readable}
               <div class="updating">
                 {$_("document.updating")}
-                <Progress initializing={true} progress={0} compact={true} />
+                <Progress initializing compact progress={0} />
               </div>
             {/if}
           {:else if document.pending}
@@ -331,34 +180,40 @@
           {#if document.projectIds != null}
             {#each document.projectIds as id}
               {#if $projects.projectsById[id] != null}
-                <Link toUrl={projectUrl($projects.projectsById[id])}>
+                <a href={projectUrl($projects.projectsById[id])}>
                   <Button plain={true}>
                     <div class="smallinfo">{$_("document.project")}</div>
                     {$projects.projectsById[id].title}
                   </Button>
-                </Link>
+                </a>
               {/if}
             {/each}
             {#each document.dataPoints as { key, value }}
-              <Link toUrl={dataUrl(key, value)}>
+              <a href={dataUrl(key, value)}>
                 <Button plain={true}>
                   {#if key != TAG_KEY}{key}:{/if}
                   {value}
                 </Button>
-              </Link>
+              </a>
             {/each}
             {#if document.dataPoints.length > 0 && document.editAccess}
-              <span class="pencil" on:click={() => editData([document])}>
+              <button
+                class="pencil buttonLike"
+                on:click={() => editData([document])}
+              >
                 {@html pencilSvg}
-              </span>
+              </button>
             {/if}
           {/if}
         </div>
         {#if document.highlights != null && document.highlights.length > 0 && !closeHighlights}
           <div class="hinfo">
-            <span class="x" on:click={() => (closeHighlights = true)}>
+            <button
+              class="x buttonLike"
+              on:click={() => (closeHighlights = true)}
+            >
               {@html closeSimpleSvg}
-            </span>
+            </button>
 
             {#if moreToExpand}
               <span>
@@ -369,9 +224,12 @@
                   },
                 })}
               </span>
-              <span class="padleft" on:click={() => (expandHighlights = true)}>
+              <button
+                class="padleft buttonLike"
+                on:click={() => (expandHighlights = true)}
+              >
                 {$_("document.showAll")}
-              </span>
+              </button>
             {:else}
               <span>
                 {$_("document.matchingPages", {
@@ -384,9 +242,9 @@
           <div class="highlights">
             {#each highlights as highlight}
               <div>
-                <Link
-                  inlineBlock={true}
-                  toUrl={document.relativePageUrl(highlight.page + 1)}
+                <a
+                  class="ib"
+                  href={document.relativePageUrl(highlight.page + 1)}
                 >
                   <div class="row">
                     <div class="page">
@@ -411,7 +269,7 @@
                       </div>
                     {/each}
                   </div>
-                </Link>
+                </a>
               </div>
             {/each}
           </div>
@@ -419,9 +277,12 @@
 
         {#if document.noteHighlights != null && document.noteHighlights.length > 0 && !closeNoteHighlights}
           <div class="hinfo">
-            <span class="x" on:click={() => (closeNoteHighlights = true)}>
+            <button
+              class="x buttonLike"
+              on:click={() => (closeNoteHighlights = true)}
+            >
               {@html closeSimpleSvg}
-            </span>
+            </button>
 
             <span>Notes matching the query</span>
           </div>
@@ -429,7 +290,7 @@
           <div class="highlights note-highlights">
             {#each noteHighlights as highlight}
               <div>
-                <Link toUrl={document.relativeNoteUrl(highlight.note)}>
+                <a href={document.relativeNoteUrl(highlight.note)}>
                   <!-- to get correct aspect ratio we would need to store the page spec
                   in solr
                   --->
@@ -448,7 +309,7 @@
                     titlePassages={highlight.titlePassages}
                     hlContent={highlight.hlContent}
                   />
-                </Link>
+                </a>
               </div>
             {/each}
           </div>
@@ -459,3 +320,196 @@
 </div>
 
 <svelte:window on:keydown={handleKeydown} on:keyup={handleKeyup} />
+
+<style>
+  h2 {
+    font-size: var(--normal);
+    font-weight: 600;
+    padding-top: 10px;
+    padding-bottom: 6px;
+    word-break: break-word;
+    margin: 2px 0;
+    padding: 0;
+  }
+
+  .card {
+    display: table;
+  }
+  @media only screen and (max-width: 720px) {
+    .card {
+      margin-bottom: 15px;
+    }
+  }
+
+  .card .row {
+    display: table-row;
+  }
+
+  .card .row > * {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  .check {
+    padding-top: 30px;
+    padding-left: 30px;
+  }
+
+  .updating {
+    color: var(--gray);
+    margin-bottom: 26px;
+  }
+
+  .actions {
+    font-size: 14px;
+    padding-bottom: 10px;
+  }
+  .actions span {
+    display: inline-block;
+    margin: 6px 0;
+  }
+
+  .actions span.pending {
+    color: var(--gray);
+    font-style: italic;
+  }
+
+  .actions span.error {
+    color: var(--caution);
+  }
+
+  .hinfo {
+    font-size: 13px;
+    font-weight: bold;
+    margin: 15px 0;
+  }
+
+  .hinfo > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .hinfo .x {
+    padding-right: 5px;
+    height: 14px;
+  }
+
+  .hinfo .x :global(svg) {
+    height: 12px;
+    opacity: 0.7;
+  }
+
+  .hinfo .padleft {
+    padding-left: 5px;
+  }
+
+  .highlights {
+    color: #333;
+    font-size: 14px;
+    line-height: 18px;
+    display: table;
+    width: 100%;
+    padding-bottom: 27px;
+  }
+
+  .highlights .row {
+    display: table-row;
+  }
+
+  .highlights .row > * {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  .highlights .page {
+    text-align: center;
+  }
+
+  .page :global(img) {
+    width: 40px;
+    height: 52px;
+    box-sizing: border-box;
+    border: solid 1px gainsboro;
+  }
+
+  .highlights .page .number {
+    font-weight: bold;
+    font-size: 11px;
+    padding-bottom: 15px;
+  }
+
+  .highlights .highlight {
+    width: 100%;
+    padding-top: 8px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }
+  .highlights .highlight .passage.highlighted {
+    background: var(--annotationBorder);
+  }
+
+  .note-highlights {
+    position: relative;
+  }
+
+  .smallinfo {
+    font-size: 12px;
+    color: var(--gray);
+    display: inline-block;
+    margin-right: 2px;
+    font-style: italic;
+  }
+
+  .pencil {
+    vertical-align: middle;
+    height: 10px;
+  }
+
+  .document-title-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .document-title-row h2 {
+    flex: 0 1 auto;
+  }
+
+  .document-title-row-actions {
+    flex: 0 1 auto;
+    display: flex;
+    gap: 0.5em 0;
+    flex-direction: row;
+    align-items: center;
+    height: 1.5em;
+  }
+
+  .document-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .document-meta {
+    color: var(--gray);
+    font-size: var(--small);
+    line-height: 1.5;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+  }
+
+  .document-meta:not(:last-child)::after {
+    content: "–";
+    margin: 0 0.25rem;
+  }
+
+  .description {
+    margin: 8px 0 -8px 0;
+  }
+  .description.embeddescription {
+    margin-bottom: 20px;
+  }
+
+  .description.embeddescription :global(.content) {
+    max-height: 135px;
+  }
+</style>

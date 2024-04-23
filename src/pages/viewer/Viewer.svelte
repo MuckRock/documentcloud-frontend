@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import { onMount } from "svelte";
 
-  import Header from "./header/Header.svelte";
+  import Header from "./Header.svelte";
   import Body from "./Body.svelte";
   import SimpleBody from "./SimpleBody.svelte";
   import NoteBody from "./NoteBody.svelte";
@@ -33,6 +33,7 @@
     hideDocumentInfo,
     hideDocumentData,
     hideEditSections,
+    hideRevisions,
     hideInsertDialog,
     forceReprocess,
   } from "@/viewer/layout.js";
@@ -84,7 +85,12 @@
     if (!$viewer.embed) {
       await initOrgsAndUsers();
 
-      plausible("pageview", { u: obscureURL() });
+      window.plausible && plausible("pageview", { u: obscureURL() });
+
+      // debug
+      window.layout = layout;
+      window.doc = doc;
+      window.viewer = viewer;
     }
   });
 
@@ -166,6 +172,11 @@
     component={$viewerEditDialogs.dataDialog}
     on:close={hideDocumentData}
   />
+{:else if $layout.showRevisions}
+  <Modal
+    component={$viewerEditDialogs.revisionsDialog}
+    on:close={hideRevisions}
+  />
 {:else if $layout.showEditSections}
   <Modal
     component={$viewerEditDialogs.editSectionsDialog}
@@ -202,7 +213,16 @@
   <Toasts />
 
   <Loader active={$layout.loading}>
-    <Header />
+    <Header
+      document={$viewer.document}
+      loaded={$viewer.loaded}
+      title={$layout.title}
+      showOrg={$layout.title}
+      disableControls={$layout.disableControls}
+      embed={$viewer.embed}
+      sidebarOpen={$layout.showSidebar}
+      on:toggle.sidebar={($layout.showSidebar = !$layout.showSidebar)}
+    />
     {#if $doc.mode == "image"}
       <Body mode={$doc.mode} />
     {:else if $doc.mode == "text" || $doc.mode == "search"}
@@ -214,7 +234,25 @@
     {:else if $doc.mode == "modify"}
       <ThumbnailBody modify={true} />
     {/if}
-    <Sidebar />
-    <Footer />
+
+    <Sidebar
+      document={$viewer.document}
+      signedIn={$viewer.me !== null}
+      loaded={$viewer.loaded}
+      embed={$layout.embed}
+      hidePdfLink={$layout.hidePdfLink}
+      showOrg={$layout.showOrg}
+      displayAnnotate={$layout.displayAnnotate}
+      disableControls={$layout.disableControls}
+      show={$layout.showSidebar}
+    />
+
+    <Footer
+      disableControls={$layout.disableControls}
+      compact={$layout.compact}
+      embed={$layout.embed}
+      showFullscreen={$layout.showFullscreen}
+      document={$viewer.document}
+    />
   </Loader>
 {/if}

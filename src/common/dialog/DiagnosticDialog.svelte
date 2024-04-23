@@ -1,10 +1,13 @@
 <script>
+  import { _ } from "svelte-i18n";
+
   import Button from "@/common/Button.svelte";
+  import DocumentThumbnail from "@/pages/app/DocumentThumbnail.svelte";
+
+  import { STAFF_ONLY_S3_URL } from "../../config/config.js";
   import emitter from "@/emit.js";
   import { layout } from "@/manager/layout.js";
-  import DocumentThumbnail from "@/pages/app/DocumentThumbnail.svelte";
   import { apiUrl } from "@/api/base.js";
-  import { _ } from "svelte-i18n";
 
   const emit = emitter({
     dismiss() {},
@@ -12,32 +15,6 @@
 
   $: documents = $layout.selected;
 </script>
-
-<style lang="scss">
-  $border: solid 1px gainsboro;
-  table {
-    border-spacing: 0;
-
-    td,
-    th {
-      border: none;
-      border-right: $border;
-      border-bottom: $border;
-      padding: 5px;
-
-      &:first-child {
-        border-left: $border;
-      }
-    }
-
-    tr:first-child {
-      td,
-      th {
-        border-top: $border;
-      }
-    }
-  }
-</style>
 
 <div>
   <div class="mcontent">
@@ -73,10 +50,8 @@
               </a>
               <a
                 target="_blank"
-                href={process.env.STAFF_ONLY_S3_URL.replace(
-                  "$$ID$$",
-                  document.id,
-                )}
+                rel="noopener noreferer"
+                href={STAFF_ONLY_S3_URL.replace("$$ID$$", document.id)}
               >
                 <Button small={true}
                   >{$_("dialogDiagnosticDialog.viewS3")}</Button
@@ -93,3 +68,29 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  $border: solid 1px gainsboro;
+  table {
+    border-spacing: 0;
+
+    td,
+    th {
+      border: none;
+      border-right: $border;
+      border-bottom: $border;
+      padding: 5px;
+
+      &:first-child {
+        border-left: $border;
+      }
+    }
+
+    tr:first-child {
+      td,
+      th {
+        border-top: $border;
+      }
+    }
+  }
+</style>

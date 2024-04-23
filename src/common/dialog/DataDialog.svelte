@@ -1,10 +1,15 @@
 <script>
+  import { writable } from "svelte/store";
+  import { _ } from "svelte-i18n";
+
   import Loader from "@/common/Loader.svelte";
   import Button from "@/common/Button.svelte";
   import Dropdown from "@/common/Dropdown.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import NoWhitespace from "@/common/NoWhitespace.svelte";
+
+  import { TAG_KEY } from "../../config/config.js";
   import { viewer } from "@/viewer/viewer.js";
   import emitter from "@/emit.js";
   import { layout } from "@/manager/layout.js";
@@ -17,8 +22,6 @@
   import { showConfirm } from "@/manager/confirmDialog.js";
   import { wrapMultipleSeparate } from "@/util/wrapLoad.js";
   import { intersection } from "@/util/array.js";
-  import { writable } from "svelte/store";
-  import { _ } from "svelte-i18n";
 
   // SVG assets
   import pencilSvg from "@/assets/pencil.svg?raw";
@@ -35,8 +38,6 @@
   }
 
   let loading = writable(false);
-
-  const TAG_KEY = process.env.TAG_KEY;
 
   // Technically needs to pass one or more of these characters,
   // but keyTrimmed captures that and gives a more descriptive message
@@ -181,69 +182,6 @@
   }
 </script>
 
-<style lang="scss">
-  .lpad {
-    margin-left: 5px;
-  }
-
-  .add {
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .dropdown {
-      padding: 0 0 0 15px;
-      width: 122px;
-
-      .info {
-        p {
-          margin: 6px 7px 1px 7px;
-        }
-        em {
-          background: rgba(0, 0, 0, 0.04);
-          border-radius: $radius;
-          padding: 2px 5px;
-          box-shadow: 0 0 2px rgba(0, 0, 0, 0.22);
-        }
-      }
-    }
-  }
-
-  input:read-only {
-    background: rgba(0, 0, 0, 0.05);
-    pointer-events: none;
-  }
-
-  .fyi {
-    background: $fyi;
-    padding: 1em;
-    border-radius: 10px;
-    color: $modal;
-    line-height: 1.3;
-    font-size: 14px;
-  }
-
-  .row {
-    margin: 6px 0;
-
-    > * {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .pencil {
-      @include buttonLike;
-      margin: 0 12px 0 5px;
-    }
-  }
-
-  .faded {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-</style>
-
 <Loader center={true} active={$loading}>
   <div>
     <div class="mcontent">
@@ -332,10 +270,10 @@
               disabledReason={inputValid
                 ? null
                 : keyValid
-                ? addTag
-                  ? $_("dialogDataDialog.enterTag")
-                  : $_("dialogDataDialog.enterKey")
-                : $_("dialogDataDialog.keyInvalid")}
+                  ? addTag
+                    ? $_("dialogDataDialog.enterTag")
+                    : $_("dialogDataDialog.enterKey")
+                  : $_("dialogDataDialog.keyInvalid")}
               on:click={handleAdd}
             >
               + Add
@@ -383,9 +321,12 @@
               {:else}
                 {#if key != TAG_KEY}<input readonly bind:value={key} /> :{/if}
                 <input readonly bind:value />
-                <span class="pencil" on:click={() => startEdit(key, value)}>
+                <button
+                  class="buttonLike pencil"
+                  on:click={() => startEdit(key, value)}
+                >
                   {@html pencilSvg}
-                </span>
+                </button>
                 <Button
                   nondescript={true}
                   caution={true}
@@ -405,3 +346,66 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+  .lpad {
+    margin-left: 5px;
+  }
+
+  .add {
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .dropdown {
+      padding: 0 0 0 15px;
+      width: 122px;
+
+      .info {
+        p {
+          margin: 6px 7px 1px 7px;
+        }
+        em {
+          background: rgba(0, 0, 0, 0.04);
+          border-radius: $radius;
+          padding: 2px 5px;
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.22);
+        }
+      }
+    }
+  }
+
+  input:read-only {
+    background: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+  }
+
+  .fyi {
+    background: $fyi;
+    padding: 1em;
+    border-radius: 10px;
+    color: $modal;
+    line-height: 1.3;
+    font-size: 14px;
+  }
+
+  .row {
+    margin: 6px 0;
+
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .pencil {
+      @include buttonLike;
+      margin: 0 12px 0 5px;
+    }
+  }
+
+  .faded {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+</style>

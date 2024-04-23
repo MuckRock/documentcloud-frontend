@@ -11,13 +11,6 @@
   export let inline = false;
 </script>
 
-<style>
-  input {
-    flex: 1 1 auto;
-    max-width: 100%;
-  }
-</style>
-
 <Field {title} {description} {inline} {required}>
   <input
     type="text"
@@ -31,3 +24,10 @@
     on:blur
   />
 </Field>
+
+<style>
+  input {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+</style>

@@ -6,13 +6,16 @@
   import Sidebar from "./sidebar/Sidebar.svelte";
   import MainContainer from "./MainContainer.svelte";
 
+  // projects ui
+  import ProjectBrowser from "../../projects/Browser.svelte";
+
   // new add-ons ui
   import Browser from "../../addons/browser/Browser.svelte";
   import Dispatch from "../../addons/dispatch/Dispatch.svelte";
   import Runs from "../../addons/runs/Runs.svelte";
 
   import { setHash, router } from "../../router/router.js";
-  import { layout } from "../../manager/layout.js";
+  import { hideProjectBrowser, layout } from "../../manager/layout.js";
   import { orgsAndUsers } from "../../manager/orgsAndUsers.js";
 
   // hash routing, like in Viewer.svelte
@@ -78,8 +81,6 @@
     ],
   ];
 
-  let sidebar = null;
-
   // add-on ui
   let browser;
   let dispatch;
@@ -87,14 +88,6 @@
 
   function closeDrawer(e) {
     setHash("");
-  }
-
-  function setSidebarExpanded(expanded) {
-    layout.sidebarExpanded = expanded;
-
-    if (typeof window !== "undefined" && window.plausible) {
-      plausible("app-sidebar-expand", { props: { expanded } });
-    }
   }
 
   async function hashRoute() {
@@ -120,7 +113,7 @@
         (window.plausible.q = window.plausible.q || []).push(arguments);
       };
 
-    plausible("pageview");
+    window.plausible && plausible("pageview");
     hashRoute();
 
     // debug
@@ -150,14 +143,14 @@
     ></script>{/if}
 </svelte:head>
 
-<Sidebar
-  bind:this={sidebar}
-  on:retractSidebar={() => setSidebarExpanded(false)}
-  expanded={$layout.sidebarExpanded}
-/>
-<MainContainer
-  on:expandSidebar={() => setSidebarExpanded(true)}
-  concealed={$layout.sidebarExpanded}
+<div class="app-layout">
+  <Sidebar />
+  <main><MainContainer /></main>
+</div>
+
+<ProjectBrowser
+  bind:visible={$layout.projectBrowser}
+  on:close={hideProjectBrowser}
 />
 
 <Browser
@@ -177,3 +170,16 @@
   bind:this={runs}
   on:close={closeDrawer}
 />
+
+<style>
+  .app-layout {
+    display: flex;
+    height: 100vh;
+  }
+
+  .app-layout main {
+    flex: 1 1 auto;
+    background: var(--white);
+    overflow: auto;
+  }
+</style>

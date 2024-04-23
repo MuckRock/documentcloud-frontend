@@ -24,6 +24,7 @@ export const layout = new Svue({
       selectedMap: {},
 
       // Custom dialogs
+      projectBrowser: false,
       addonDispatchOpen: null,
       addonBrowserOpen: false,
       addonRunsOpen: false,
@@ -37,6 +38,7 @@ export const layout = new Svue({
       searchTipsOpen: false,
       diagnosticsOpen: false,
       mailkeyOpen: false,
+      viewDocumentRevisions: null,
 
       // nest any captured URL params here
       params: {
@@ -250,6 +252,14 @@ export function hideAccess() {
   layout.accessEditDocuments = [];
 }
 
+export function openRevisions(document) {
+  layout.viewDocumentRevisions = document;
+}
+
+export function hideRevisions() {
+  layout.viewDocumentRevisions = null;
+}
+
 export function hideReprocess() {
   layout.reprocessDocuments = [];
 }
@@ -267,6 +277,14 @@ export function editData(documents) {
 
 export function hideData() {
   layout.dataOpen = false;
+}
+
+export function browseProjects() {
+  layout.projectBrowser = true;
+}
+
+export function hideProjectBrowser() {
+  layout.projectBrowser = false;
 }
 
 export function newProject() {

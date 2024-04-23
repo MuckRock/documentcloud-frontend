@@ -1,6 +1,5 @@
 import { extractSlugId, isNumber } from "@/util/string.js";
-
-const languageOptions = process.env.LANGUAGE_CODES.split("|");
+import { LANGUAGE_CODES } from "../config/config.js";
 
 export const sortCompletions = [
   {
@@ -104,7 +103,7 @@ export function fieldValid(text, example = false) {
     };
   } else if (field == "language") {
     return {
-      valid: id != null && languageOptions.includes(id),
+      valid: id != null && LANGUAGE_CODES.includes(id),
     };
   } else if (field.startsWith("data_")) {
     return {

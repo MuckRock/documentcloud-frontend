@@ -105,6 +105,65 @@
   $: days = getDayObjects(viewedMonth, viewedYear);
 </script>
 
+<div class="currentdate">
+  {$date(value, { format: "medium" })}
+  {$time(value, { format: "short" })}
+</div>
+<div class="calendarcontainer">
+  <div class="calendarheader">
+    <div class="monthrow">
+      <div
+        class="arrow"
+        class:hidden={viewedYear * 12 + viewedMonth <=
+          startYear * 12 + startMonth}
+        on:click={() => setMonth(-1)}
+      >
+        {@html CalendarLeft}
+      </div>
+      <div class="month">{months[viewedMonth]} {viewedYear}</div>
+      <div class="arrow" on:click={() => setMonth(1)}>
+        {@html CalendarRight}
+      </div>
+    </div>
+  </div>
+  <table>
+    {#each days as week}
+      <tr>
+        {#each week as day}
+          <td
+            class:disabled={dateLessThan(day, now)}
+            class:plain={day.getMonth() != viewedMonth}
+            class:selected={day.getFullYear() == year &&
+              day.getMonth() == month &&
+              day.getDate() == dayOfMonth}
+            on:click={() => {
+              dayOfMonth = day.getDate();
+              month = day.getMonth();
+              year = day.getFullYear();
+            }}>{day.getDate()}</td
+          >
+        {/each}
+      </tr>
+    {/each}
+  </table>
+
+  <div class="timepicker">
+    <select bind:value={hour}>
+      {#each Array(24) as _, i}
+        <option value={i}>{lpad(`${i}`, 2)}</option>
+      {/each}
+    </select>
+    <span class="signifier">{$_("calendar.hourShortcode")}</span>
+    :
+    <select bind:value={minute}>
+      {#each Array(60) as _, i}
+        <option value={i}>{lpad(`${i}`, 2)}</option>
+      {/each}
+    </select>
+    <span class="signifier">{$_("calendar.minuteShortcode")}</span>
+  </div>
+</div>
+
 <style lang="scss">
   .calendarcontainer {
     width: 100%;
@@ -205,62 +264,3 @@
     font-size: 12px;
   }
 </style>
-
-<div class="currentdate">
-  {$date(value, { format: "medium" })}
-  {$time(value, { format: "short" })}
-</div>
-<div class="calendarcontainer">
-  <div class="calendarheader">
-    <div class="monthrow">
-      <div
-        class="arrow"
-        class:hidden={viewedYear * 12 + viewedMonth <=
-          startYear * 12 + startMonth}
-        on:click={() => setMonth(-1)}
-      >
-        {@html CalendarLeft}
-      </div>
-      <div class="month">{months[viewedMonth]} {viewedYear}</div>
-      <div class="arrow" on:click={() => setMonth(1)}>
-        {@html CalendarRight}
-      </div>
-    </div>
-  </div>
-  <table>
-    {#each days as week}
-      <tr>
-        {#each week as day}
-          <td
-            class:disabled={dateLessThan(day, now)}
-            class:plain={day.getMonth() != viewedMonth}
-            class:selected={day.getFullYear() == year &&
-              day.getMonth() == month &&
-              day.getDate() == dayOfMonth}
-            on:click={() => {
-              dayOfMonth = day.getDate();
-              month = day.getMonth();
-              year = day.getFullYear();
-            }}>{day.getDate()}</td
-          >
-        {/each}
-      </tr>
-    {/each}
-  </table>
-
-  <div class="timepicker">
-    <select bind:value={hour}>
-      {#each Array(24) as _, i}
-        <option value={i}>{lpad(`${i}`, 2)}</option>
-      {/each}
-    </select>
-    <span class="signifier">{$_("calendar.hourShortcode")}</span>
-    :
-    <select bind:value={minute}>
-      {#each Array(60) as _, i}
-        <option value={i}>{lpad(`${i}`, 2)}</option>
-      {/each}
-    </select>
-    <span class="signifier">{$_("calendar.minuteShortcode")}</span>
-  </div>
-</div>

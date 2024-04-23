@@ -2,20 +2,35 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import { baseApiUrl } from "../../api/base.js";
   import AddOnList from "./AddOnList.svelte";
-  import type { AddOnListItem } from "../types.ts";
-  import Drawer from "../Drawer.svelte";
-  import Paginator from "../Paginator.svelte";
-  import Search, { query } from "./SearchInput.svelte";
-  import Filters, { filter, FILTERS, CATEGORIES } from "./Filters.svelte";
+  import type { AddOnListItem } from "../types";
+  import Filters from "./Filters.svelte";
+  import Categories from "./Categories.svelte";
+  import { buildParams, buildUrl, filter } from "./browser";
+  import Drawer from "../../common/Drawer.svelte";
+  import Paginator from "../../common/Paginator.svelte";
+  import Search, { query } from "../../common/SearchInput.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";
+  import Credit from "../../common/icons/Credit.svelte";
+  import Flex from "../../common/Flex.svelte";
 
   export let visible = false;
   export let per_page = 10;
 
   let drawer: Drawer;
+
+  $: urlParams = buildParams({
+    per_page,
+    query: $query,
+    filter: $filter,
+  });
+  $: url = buildUrl(urlParams);
+  $: next_url = res.next ? new URL(res.next).toString() : null;
+  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
+  $: items = res.results;
+
+  /** Network logic */
   let loading = false;
   let error = null;
   let res: {
@@ -23,21 +38,9 @@
     previous?: string | null;
     results?: AddOnListItem[];
   } = {};
-
   const options: RequestInit = {
     credentials: "include",
   };
-
-  $: urlParams = buildParams({
-    per_page,
-    query: $query,
-    filter: $filter,
-  });
-
-  $: url = buildUrl(urlParams);
-  $: next_url = res.next ? new URL(res.next).toString() : null;
-  $: previous_url = res.previous ? new URL(res.previous).toString() : null;
-  $: items = res.results;
 
   export async function load(url) {
     loading = true;
@@ -49,7 +52,7 @@
         return data;
       })
       .catch((err) => {
-        error = err;
+        error = err.detail;
         loading = false;
         return {};
       });
@@ -63,50 +66,50 @@
   $: loadNext = () => load(next_url);
   $: loadPrev = () => load(previous_url);
   $: reload = () => load(url);
-
-  function buildUrl({ query = "", filters = {}, per_page = 5 }) {
-    const u = new URL("addons/", baseApiUrl);
-
-    u.search = new URLSearchParams({
-      query,
-      per_page: String(per_page),
-      ...filters,
-    }).toString();
-
-    return u.toString();
-  }
-
-  function buildParams({
-    query = "",
-    per_page = 5,
-    filter = [],
-  }: {
-    query: string;
-    per_page: number;
-    filter: string | string[];
-  }) {
-    if (!Array.isArray(filter)) {
-      filter = [filter];
-    }
-    const params = { per_page, query, filters: {} };
-    const filters = FILTERS.map(([n]) => n).filter((n) => filter.includes(n));
-    const categories = CATEGORIES.map(([n]) => n).filter((n) =>
-      filter.includes(n),
-    );
-    params.filters = filters.reduce((m, f) => {
-      if (f !== "all") {
-        m[f] = true;
-      }
-      return m;
-    }, {});
-
-    if (categories.length) {
-      params.filters["category"] = categories.join(",");
-    }
-
-    return params;
-  }
 </script>
+
+<Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
+  <div slot="content" class="browser">
+    <header class="header">
+      <h2>{$_("addonBrowserDialog.title")}</h2>
+      <p>{$_("addonBrowserDialog.subtitle")}</p>
+    </header>
+    <aside class="sidebar">
+      <div class="search"><Search /></div>
+      <div class="filters">
+        <Filters />
+        <Categories />
+      </div>
+    </aside>
+    <Flex as="main" direction="column" class="results">
+      <Flex direction="column" class="list">
+        {#if $filter === "active"}
+          <aside class="pinned tip">
+            <div class="icon"><Pin size={1.75} /></div>
+            <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
+          </aside>
+        {:else if $filter === "featured"}
+          <aside class="featured tip">
+            <div class="icon"><Star size={1.75} /></div>
+            <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
+          </aside>
+        {:else if $filter === "premium"}
+          <aside class="premium tip">
+            <div class="icon"><Credit badge size={1.75} /></div>
+            <p class="message">{$_("addonBrowserDialog.premiumTip")}</p>
+          </aside>
+        {/if}
+        <AddOnList {loading} {error} {items} bind:reload />
+      </Flex>
+      <Paginator
+        has_next={Boolean(next_url)}
+        has_previous={Boolean(previous_url)}
+        on:next={loadNext}
+        on:previous={loadPrev}
+      />
+    </Flex>
+  </div>
+</Drawer>
 
 <style>
   .browser {
@@ -145,26 +148,21 @@
   .search {
     margin-bottom: 1em;
   }
-  .results {
+
+  /* Use of :global is required for passing style to Flex component */
+  .browser :global(.results) {
     flex: 4 1 24em;
     min-width: 20em;
     min-height: 0;
     max-height: 100%;
-    display: flex;
-    flex-direction: column;
   }
-  .results .list {
+  .browser :global(.results > .list) {
     flex: 1 1 24em;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     background-color: white;
     border: 1px solid rgba(0, 0, 0, 0.25);
     border-radius: calc(2 * var(--radius));
     overflow-y: scroll;
-  }
-  .results .pagination {
-    flex: 0 0 auto;
   }
 
   .tip {
@@ -201,41 +199,11 @@
       fill: orange;
     }
   }
+  .premium.tip {
+    background-color: hsl(161, 69%, 91%);
+    border-color: var(--premium, #24cc99);
+    & .icon {
+      fill: var(--premium, #24cc99);
+    }
+  }
 </style>
-
-<Drawer bind:this={drawer} bind:visible anchor="right" on:open on:close>
-  <div slot="content" class="browser">
-    <header class="header">
-      <h2>{$_("addonBrowserDialog.title")}</h2>
-      <p>{$_("addonBrowserDialog.subtitle")}</p>
-    </header>
-    <aside class="sidebar">
-      <div class="search"><Search /></div>
-      <div class="filters"><Filters /></div>
-    </aside>
-    <main class="results">
-      <div class="list">
-        {#if $filter === "active"}
-          <aside class="pinned tip">
-            <div class="icon"><Pin size={1.75} /></div>
-            <p class="message">{$_("addonBrowserDialog.pinnedTip")}</p>
-          </aside>
-        {:else if $filter === "featured"}
-          <aside class="featured tip">
-            <div class="icon"><Star size={1.75} /></div>
-            <p class="message">{$_("addonBrowserDialog.featuredTip")}</p>
-          </aside>
-        {/if}
-        <AddOnList {loading} {error} {items} bind:reload />
-      </div>
-      <div class="pagination">
-        <Paginator
-          has_next={Boolean(next_url)}
-          has_previous={Boolean(previous_url)}
-          on:next={loadNext}
-          on:previous={loadPrev}
-        />
-      </div>
-    </main>
-  </div>
-</Drawer>

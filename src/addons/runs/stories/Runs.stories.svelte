@@ -1,19 +1,17 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { history, scheduled } from "../../../test/handlers/addons";
   import Runs from "../Runs.svelte";
 
-  import { handlers as historyHandlers } from "./History.stories.svelte";
-  import { handlers as scheduledHandlers } from "./Scheduled.stories.svelte";
-
   const args = { visible: true };
-</script>
 
-<Meta
-  title="Add-Ons / Runs"
-  tags={["autodocs"]}
-  parameters={{ layout: "fullscreen" }}
-  component={Runs}
-/>
+  export const meta = {
+    title: "Add-Ons / Runs",
+    tags: ["autodocs"],
+    parameters: { layout: "fullscreen" },
+    component: Runs,
+  };
+</script>
 
 <Template let:args>
   <Runs {...args} />
@@ -23,27 +21,27 @@
   name="Success"
   {args}
   parameters={{
-    msw: { handlers: [historyHandlers.data, scheduledHandlers.data] },
+    msw: { handlers: [history.data, scheduled.data] },
   }}
 />
 <Story
   name="Loading"
   {args}
   parameters={{
-    msw: { handlers: [historyHandlers.loading, scheduledHandlers.loading] },
+    msw: { handlers: [history.loading, scheduled.loading] },
   }}
 />
 <Story
   name="Error"
   {args}
   parameters={{
-    msw: { handlers: [historyHandlers.error, scheduledHandlers.error] },
+    msw: { handlers: [history.error, scheduled.error] },
   }}
 />
 <Story
   name="Empty"
   {args}
   parameters={{
-    msw: { handlers: [historyHandlers.empty, scheduledHandlers.empty] },
+    msw: { handlers: [history.empty, scheduled.empty] },
   }}
 />

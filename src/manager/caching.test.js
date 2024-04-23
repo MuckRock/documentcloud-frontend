@@ -2,10 +2,10 @@ import {
   documents,
   updateInCollection,
   removeFromCollection,
-} from "./documents";
-import { makeDocument } from "@/structure/documentFactory.js";
-import { setDocuments, search } from "@/search/search.js";
-import { addToArrayIfUnique, removeFromArray } from "@/util/array.js";
+} from "./documents.js";
+import { makeDocument } from "../structure/documentFactory.js";
+import { setDocuments, search } from "../search/search.js";
+import { addToArrayIfUnique, removeFromArray } from "../util/array.js";
 import { modifications } from "./modifications.js";
 
 beforeEach(() => {

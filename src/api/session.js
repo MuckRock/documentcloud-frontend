@@ -1,6 +1,8 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
 
+import { DC_BASE } from "../config/config.js";
+
 // Hook in failed request interceptor
 axiosRetry(axios, {
   retries: 3,
@@ -18,11 +20,12 @@ try {
 
 export function getCsrfToken() {
   if (typeof window === "undefined" || typeof document === "undefined") return;
-
-  const [key, token] = document.cookie
-    .split(";")
-    .map((c) => c.split("="))
-    .find(([k, v]) => k === CSRF_COOKIE_NAME);
+  const [key, token] =
+    document.cookie
+      ?.split(";")
+      ?.map((c) => c.split("="))
+      // in case there's spaces in the cookie string, trim the key
+      ?.find(([k, v]) => k.trim() === CSRF_COOKIE_NAME) ?? [];
 
   return token;
 }
@@ -97,7 +100,7 @@ session.getStatic = async function getStatic(url) {
   // On the second request, we do not sent the session cookie
   // If we are fetching a public asset, the first request is directly to S3.  In
   // that case we must not send the session cookie on the first request.
-  if (url.startsWith(process.env.DC_BASE)) {
+  if (url.startsWith(DC_BASE)) {
     result = await session.get(url).then((r) => r.data);
     let redirect = result.location;
 
@@ -108,7 +111,7 @@ session.getStatic = async function getStatic(url) {
       result = await axios.get(redirect).then((r) => r.data);
     }
   } else {
-      result = await axios.get(url).then((r) => r.data);
+    result = await axios.get(url).then((r) => r.data);
   }
 
   sessionCache.cache(url, result);

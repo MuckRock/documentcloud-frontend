@@ -1,5 +1,5 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import ArrayField from "../ArrayField.svelte";
 
@@ -8,13 +8,13 @@
     title: "Array Field",
     description: "An array of items",
   };
-</script>
 
-<Meta
-  title="Add-Ons / Dispatch / Form / Fields / Array Field"
-  component={ArrayField}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Add-Ons / Dispatch / Form / Fields / Array Field",
+    component: ArrayField,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <ArrayField {...args} />

@@ -1,6 +1,9 @@
 // Adapted from https://svelte.dev/repl/ead0f1fcd2d4402bbbd64eca1d665341?version=3.14.1
 
 export function showIfFullyVisible(el) {
+  // for very old browsers we don't support, bail
+  if (typeof window.IntersectionObserver === "undefined") return;
+
   const setVisible = (visibility) => {
     el.style.visibility = visibility ? "visible" : "hidden";
   };

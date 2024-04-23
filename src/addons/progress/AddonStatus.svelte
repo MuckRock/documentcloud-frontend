@@ -4,8 +4,7 @@
 
   import AddonRun, { runs } from "./AddonRun.svelte";
   import { baseApiUrl } from "../../api/base.js";
-
-  const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL, 10);
+  import { POLL_INTERVAL } from "../../config/config.js";
 
   const endpoint = new URL(
     "/api/addon_runs/?expand=addon&dismissed=false&per_page=20",
@@ -22,7 +21,10 @@
     const resp = await fetch(endpoint, options);
 
     if (!resp.ok) {
-      throw new Error(resp.statusText);
+      // just bail on errors and try again next cycle
+      return console.error(
+        `Failed to load add-on run status: ${resp.statusText}`,
+      );
     }
 
     const { results } = await resp.json();
@@ -40,6 +42,15 @@
   });
 </script>
 
+{#if $runs.length > 0}
+  <div class="addonStatus">
+    <h3 class="title">{$_("addonProgress.progress")}</h3>
+    {#each $runs as run (run.uuid)}
+      <AddonRun {run} />
+    {/each}
+  </div>
+{/if}
+
 <style>
   .addonStatus {
     background: #eff7ff;
@@ -56,12 +67,3 @@
     padding: 8px 20px;
   }
 </style>
-
-{#if $runs.length > 0}
-  <div class="addonStatus">
-    <h3 class="title">{$_("addonProgress.progress")}</h3>
-    {#each $runs as run (run.uuid)}
-      <AddonRun {run} />
-    {/each}
-  </div>
-{/if}

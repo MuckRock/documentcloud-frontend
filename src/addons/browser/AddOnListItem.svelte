@@ -3,17 +3,50 @@
 
   import AddOnPin from "../AddOnPin.svelte";
   import AddOnPopularity from "../Popularity.svelte";
-  import type { AddOnListItem } from "../types.js";
+  import type { AddOnListItem } from "../types";
+  import PremiumBadge from "../../premium-credits/PremiumBadge.svelte";
 
   export let addon: AddOnListItem;
 
-  $: description = addon.parameters?.description;
-  $: if (!addon?.author) {
-    addon.author = { name: addon?.repository?.split("/")[0] };
-  }
-
-  $: url = `#add-ons/${addon.repository}`;
+  $: description = addon?.parameters?.description;
+  $: author = { name: addon?.repository?.split("/")[0] };
+  $: url = `#add-ons/${addon?.repository}`;
+  $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
 </script>
+
+<a class="addon-link" href={url}>
+  <div class="container" id={addon.repository}>
+    <div class="row">
+      <div class="center-self">
+        <AddOnPin {addon} />
+      </div>
+      <div class="stretch">
+        <h3 class="addon-name">{addon.name}</h3>
+      </div>
+      <div class="metadata">
+        {#if author?.name}
+          <p class="author">
+            <a
+              href="http://github.com/{addon.repository}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
+            >
+          </p>
+        {/if}
+        {#if addon.usage}
+          <AddOnPopularity useCount={addon.usage} />
+        {/if}
+        {#if isPremium}
+          <span class="badge"><PremiumBadge /></span>
+        {/if}
+      </div>
+    </div>
+    {#if description}
+      <div class="description">{@html description}</div>
+    {/if}
+  </div>
+</a>
 
 <style>
   .addon-link:hover .container {
@@ -26,11 +59,16 @@
     text-align: left;
   }
 
-  .top-row {
+  .row {
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
     margin: 0.5rem;
+  }
+
+  .badge {
+    margin-bottom: -0.25em;
+    font-size: 0.8em;
   }
 
   .metadata {
@@ -42,7 +80,7 @@
 
   .description {
     margin: 0 0.5em;
-    opacity: 0.6z;
+    opacity: 0.6;
     font-size: 0.875em;
     line-height: 1.4;
     color: var(--darkgray);
@@ -76,34 +114,3 @@
     margin: 0;
   }
 </style>
-
-<a class="addon-link" href={url}>
-  <div class="container" id={addon.repository}>
-    <div class="top-row">
-      <div class="center-self">
-        <AddOnPin {addon} />
-      </div>
-      <div class="stretch">
-        <h3 class="addon-name">{addon.name}</h3>
-      </div>
-      <div class="metadata">
-        {#if addon?.author?.name}
-          <p class="author">
-            <a
-              href="http://github.com/{addon.repository}"
-              target="_blank"
-              rel="noopener noreferrer"
-              title={$_("addonBrowserDialog.viewsource")}>{addon.author.name}</a
-            >
-          </p>
-        {/if}
-        {#if addon.usage}
-          <AddOnPopularity useCount={addon.usage} />
-        {/if}
-      </div>
-    </div>
-    {#if description}
-      <div class="description">{@html description}</div>
-    {/if}
-  </div>
-</a>

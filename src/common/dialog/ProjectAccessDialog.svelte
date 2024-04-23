@@ -34,35 +34,6 @@
   }
 </script>
 
-<style lang="scss">
-  label {
-    display: table;
-    margin: 12px 0;
-  }
-
-  input {
-    display: table-cell;
-  }
-
-  p {
-    margin: 0 0 10px 0;
-  }
-
-  .accessoption {
-    display: table-cell;
-    padding-left: 10px;
-  }
-
-  h3 {
-    font-size: 16px;
-    margin: 0;
-  }
-
-  small {
-    margin: 5px 0;
-  }
-</style>
-
 <Loader active={$loading}>
   <div>
     <div class="mcontent">
@@ -126,3 +97,32 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+  label {
+    display: table;
+    margin: 12px 0;
+  }
+
+  input {
+    display: table-cell;
+  }
+
+  p {
+    margin: 0 0 10px 0;
+  }
+
+  .accessoption {
+    display: table-cell;
+    padding-left: 10px;
+  }
+
+  h3 {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  small {
+    margin: 5px 0;
+  }
+</style>

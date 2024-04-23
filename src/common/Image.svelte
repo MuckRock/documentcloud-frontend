@@ -148,6 +148,50 @@
   });
 </script>
 
+<span
+  class:aspect={aspect != null}
+  class:crosshair
+  class:clickable
+  class:nomove={$layout.nomove}
+  style={(aspect != null ? `padding-top: ${100 * aspect}%;` : "") +
+    (width != null ? `width: ${width}px;` : "") +
+    (height != null ? `height: ${height}px;` : "")}
+  on:mousedown={handleMouseDown}
+  on:touchstart={handleMouseDown}
+  on:click
+>
+  {#if delay == null || ready}
+    <img
+      on:load={handleLoad}
+      class:fade
+      class:show
+      style={(width != null ? `width: ${width}px;` : "") +
+        (height != null ? `height: ${height}px;` : "")}
+      on:error={handleError}
+      bind:this={img}
+      src={computedSrc}
+      {alt}
+      draggable="false"
+    />
+  {/if}
+  {#if showLoading && (!show || makeNull)}
+    <div class="loading">
+      {#if makeNull}
+        {$_("image.error")}
+      {:else}
+        {$_("common.loading")}
+      {/if}
+    </div>
+  {/if}
+</span>
+
+<svelte:window
+  on:mouseup={handleMouseUp}
+  on:touchend={handleMouseUp}
+  on:mousemove={handleMouseMove}
+  on:touchmove={handleMouseMove}
+/>
+
 <style lang="scss">
   span {
     display: inline-block;
@@ -192,7 +236,9 @@
     &.fade {
       opacity: 0;
       filter: blur(3px);
-      transition: opacity 1s ease, filter 0.5s ease;
+      transition:
+        opacity 1s ease,
+        filter 0.5s ease;
     }
 
     &.show {
@@ -212,47 +258,3 @@
     color: gray;
   }
 </style>
-
-<span
-  class:aspect={aspect != null}
-  class:crosshair
-  class:clickable
-  class:nomove={$layout.nomove}
-  style={(aspect != null ? `padding-top: ${100 * aspect}%;` : "") +
-    (width != null ? `width: ${width}px;` : "") +
-    (height != null ? `height: ${height}px;` : "")}
-  on:mousedown={handleMouseDown}
-  on:touchstart={handleMouseDown}
-  on:click
->
-  {#if delay == null || ready}
-    <img
-      on:load={handleLoad}
-      class:fade
-      class:show
-      style={(width != null ? `width: ${width}px;` : "") +
-        (height != null ? `height: ${height}px;` : "")}
-      on:error={handleError}
-      bind:this={img}
-      src={computedSrc}
-      {alt}
-      draggable="false"
-    />
-  {/if}
-  {#if showLoading && (!show || makeNull)}
-    <div class="loading">
-      {#if makeNull}
-        {$_("image.error")}
-      {:else}
-        {$_("common.loading")}
-      {/if}
-    </div>
-  {/if}
-</span>
-
-<svelte:window
-  on:mouseup={handleMouseUp}
-  on:touchend={handleMouseUp}
-  on:mousemove={handleMouseMove}
-  on:touchmove={handleMouseMove}
-/>

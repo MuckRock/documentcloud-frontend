@@ -8,7 +8,7 @@
 
   import { layout } from "@/manager/layout.js";
   import { viewer } from "@/viewer/viewer.js";
-  import { autocompleteUsers } from "@/api/orgAndUser.js";
+  import { autocompleteUsers } from "@/api/orgAndUser.ts";
   import { orgsAndUsers } from "@/manager/orgsAndUsers.js";
   import { changeOwnerForDocuments } from "@/manager/documents.js";
   import { sameProp } from "@/util/array.js";
@@ -29,8 +29,8 @@
     user == null
       ? $_("dialogOwnerDialog.selectUser")
       : organization == null
-      ? $_("dialogOwnerDialog.selectOrg")
-      : null;
+        ? $_("dialogOwnerDialog.selectOrg")
+        : null;
 
   $: isViewer = $viewer.document != null;
   $: numOwnerSelected = isViewer ? 1 : $layout.numOwnerSelected;
@@ -46,33 +46,6 @@
     emit.dismiss();
   }
 </script>
-
-<style lang="scss">
-  table {
-    position: border-box;
-    width: 100%;
-    font-size: 16px;
-    font-family: inherit;
-  }
-
-  td:first-child {
-    white-space: nowrap;
-    padding-right: 5px;
-  }
-
-  td:last-child {
-    width: 100%;
-    position: relative;
-  }
-
-  .warning {
-    padding: 15px 30px;
-    background: $warning;
-    border-radius: $radius;
-    display: table;
-    max-width: 700px;
-  }
-</style>
 
 <!-- Don't show until self orgs have populated -->
 <Loader active={$orgsAndUsers.selfOrgs == null}>
@@ -128,3 +101,30 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+  table {
+    position: border-box;
+    width: 100%;
+    font-size: 16px;
+    font-family: inherit;
+  }
+
+  td:first-child {
+    white-space: nowrap;
+    padding-right: 5px;
+  }
+
+  td:last-child {
+    width: 100%;
+    position: relative;
+  }
+
+  .warning {
+    padding: 15px 30px;
+    background: $warning;
+    border-radius: $radius;
+    display: table;
+    max-width: 700px;
+  }
+</style>

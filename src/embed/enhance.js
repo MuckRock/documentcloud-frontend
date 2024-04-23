@@ -1,4 +1,5 @@
 import { setupResizeEvent } from "./iframeSizer.js";
+import { APP_URL } from "../config/config.js";
 
 const embeds = document.querySelectorAll(".DC-embed");
 const enhanced = "DC-embed-enhanced";
@@ -34,7 +35,7 @@ embeds.forEach((embed) => {
   // Create the iframe
   const iframe = document.createElement("iframe");
   iframe.style = "border: none; width: 100%;";
-  iframe.src = `${process.env.APP_URL}documents/${slugId}/pages/${page}`;
+  iframe.src = `${APP_URL}documents/${slugId}/pages/${page}`;
   setupResizeEvent(iframe);
 
   embed.appendChild(iframe);

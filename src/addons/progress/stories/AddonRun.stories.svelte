@@ -1,24 +1,16 @@
-<script>
-  import { rest } from "msw";
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import run from "../../fixtures/run.json";
-  import { baseApiUrl } from "../../../api/base";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import AddonRun from "../AddonRun.svelte";
+  import { run } from "../../../test/fixtures/addons";
+  import { progress as handlers } from "../../../test/handlers/addons";
 
   const args = { run, compact: false };
 
-  const mockUpdateUrl = new URL("/api/addon_runs/:run/", baseApiUrl).toString();
-  const handlers = [
-    rest.patch(mockUpdateUrl, async (req, res, ctx) => {
-      const body = await req.json();
-      console.log(JSON.stringify(body));
-      return res(ctx.json({ ...run, ...body }));
-    }),
-    rest.delete(mockUpdateUrl, (req, res, ctx) => res(ctx.json({}))),
-  ];
+  export const meta = {
+    title: "Add-Ons / Progress / Run",
+    component: AddonRun,
+  };
 </script>
-
-<Meta title="Add-Ons / Progress / Run" component={AddonRun} />
 
 <Template let:args>
   <AddonRun {...args} />

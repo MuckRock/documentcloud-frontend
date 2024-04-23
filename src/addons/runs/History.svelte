@@ -4,11 +4,12 @@
 
   import Button from "../../common/Button.svelte";
   import Error from "../../common/icons/Error.svelte";
-  import HistoryEvent, { type Run } from "./HistoryEvent.svelte";
+  import HistoryEvent from "./HistoryEvent.svelte";
   import History24 from "svelte-octicons/lib/History24.svelte";
   import Loader from "../../common/Loader.svelte";
-  import Paginator from "../Paginator.svelte";
+  import Paginator from "../../common/Paginator.svelte";
   import { baseApiUrl } from "../../api/base.js";
+  import type { Run } from "../types";
 
   let res: {
     next?: string | null;
@@ -62,6 +63,44 @@
   onMount(load);
 </script>
 
+<div class="history-list">
+  {#if empty}
+    <div class="empty">
+      <div class="icon"><History24 /></div>
+      <p>{$_("addonRuns.history.empty")}</p>
+    </div>
+  {:else if loading}
+    <div class="loading">
+      <Loader active center big pad />
+      <p>{$_("addonRuns.history.loading")}</p>
+    </div>
+  {:else if error}
+    <div class="error">
+      <div class="icon"><Error /></div>
+      <p>{error}</p>
+      <Button action on:click={() => load()}
+        >{$_("addonRuns.history.retry")}</Button
+      >
+    </div>
+  {:else}
+    <ul>
+      {#each runs as run}
+        <li><HistoryEvent {run} /></li>
+      {/each}
+    </ul>
+  {/if}
+  {#if prev_url || next_url}
+    <div class="pagination-controls">
+      <Paginator
+        has_next={Boolean(next_url)}
+        has_previous={Boolean(prev_url)}
+        on:next={loadNext}
+        on:previous={loadPrev}
+      />
+    </div>
+  {/if}
+</div>
+
 <style>
   .history-list ul {
     margin: 0;
@@ -109,41 +148,3 @@
     background: var(--menubg, white);
   }
 </style>
-
-<div class="history-list">
-  {#if empty}
-    <div class="empty">
-      <div class="icon"><History24 /></div>
-      <p>{$_("addonRuns.history.empty")}</p>
-    </div>
-  {:else if loading}
-    <div class="loading">
-      <Loader active center big pad />
-      <p>{$_("addonRuns.history.loading")}</p>
-    </div>
-  {:else if error}
-    <div class="error">
-      <div class="icon"><Error /></div>
-      <p>{error}</p>
-      <Button action on:click={() => load()}
-        >{$_("addonRuns.history.retry")}</Button
-      >
-    </div>
-  {:else}
-    <ul>
-      {#each runs as run}
-        <li><HistoryEvent {run} /></li>
-      {/each}
-    </ul>
-  {/if}
-  {#if prev_url || next_url}
-    <div class="pagination-controls">
-      <Paginator
-        has_next={Boolean(next_url)}
-        has_previous={Boolean(prev_url)}
-        on:next={loadNext}
-        on:previous={loadPrev}
-      />
-    </div>
-  {/if}
-</div>

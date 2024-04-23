@@ -1,7 +1,7 @@
 import { Svue } from "svue";
 import { uniquify } from "@/util/array.js";
 
-const APP_URL = process.env.APP_URL;
+import { APP_URL } from "../config/config.js";
 
 export class Project extends Svue {
   constructor(rawProject, structure = {}) {
@@ -31,6 +31,9 @@ export class Project extends Svue {
         description(project) {
           return project.description;
         },
+        private(project) {
+          return project.private;
+        },
         editAccess(project) {
           if (project.edit_access == null) return false;
           return project.edit_access;
@@ -40,7 +43,7 @@ export class Project extends Svue {
           return project.add_remove_access;
         },
         embedUrl(slugId) {
-          return `${APP_URL}projects/${slugId}/`;
+          return new URL(`/projects/${slugId}/`, APP_URL).toString();
         },
       },
     });

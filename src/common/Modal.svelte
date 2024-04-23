@@ -43,6 +43,32 @@
   });
 </script>
 
+<svelte:window on:keydown={handleKeyDown} />
+
+<div class:fullscreen>
+  <div class="shim" on:click={dismiss} />
+  <div class="modalcontainer">
+    <div class="modalintermediate">
+      <div bind:this={modal} class="modal">
+        <div class="header">
+          {#if dismissable}
+            <button class="dismiss buttonLike" on:click={dismiss}>
+              <XCircle24 />
+            </button>
+          {/if}
+        </div>
+
+        <svelte:component
+          this={component}
+          {...properties}
+          on:setDismissable={setDismissable}
+          on:dismiss={dismiss}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
 <style lang="scss">
   .shim {
     background: #051d38b5;
@@ -164,29 +190,3 @@
     cursor: pointer;
   }
 </style>
-
-<svelte:window on:keydown={handleKeyDown} />
-
-<div class:fullscreen>
-  <div class="shim" on:click={dismiss} />
-  <div class="modalcontainer">
-    <div class="modalintermediate">
-      <div bind:this={modal} class="modal">
-        <div class="header">
-          {#if dismissable}
-            <button class="dismiss buttonLike" on:click={dismiss}>
-              <XCircle24 />
-            </button>
-          {/if}
-        </div>
-
-        <svelte:component
-          this={component}
-          {...properties}
-          on:setDismissable={setDismissable}
-          on:dismiss={dismiss}
-        />
-      </div>
-    </div>
-  </div>
-</div>

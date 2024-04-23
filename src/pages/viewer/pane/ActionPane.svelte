@@ -17,6 +17,36 @@
   }
 </script>
 
+<!-- Action pane -->
+{#if $layout.action !== null}
+  <div
+    class="actionpane"
+    style="top: {$layout.headerHeight}px; right: {$layout.sidebarWidth}px"
+    bind:clientHeight={actionHeight}
+  >
+    <div class="actionclose">
+      <button class="buttonLike" on:click={cancelActions}>
+        <XCircle24 />
+      </button>
+    </div>
+    <div class="actioncontent">
+      {#if $layout.selectNoteEmbed}
+        <SelectNotePane />
+      {:else if $layout.redacting}
+        <RedactPane />
+      {:else if $layout.annotating}
+        <AnnotatePane />
+      {:else if $layout.modifying}
+        <ModifyPane />
+      {:else if $layout.searching}
+        <SearchPane />
+      {/if}
+    </div>
+  </div>
+{/if}
+
+<svelte:window on:keydown={handleKeyDown} />
+
 <style>
   .actionpane {
     position: absolute;
@@ -58,33 +88,3 @@
     margin: 0 4px;
   }
 </style>
-
-<!-- Action pane -->
-{#if $layout.action !== null}
-  <div
-    class="actionpane"
-    style="top: {$layout.headerHeight}px; right: {$layout.sidebarWidth}px"
-    bind:clientHeight={actionHeight}
-  >
-    <div class="actionclose">
-      <button class="buttonLike" on:click={cancelActions}>
-        <XCircle24 />
-      </button>
-    </div>
-    <div class="actioncontent">
-      {#if $layout.selectNoteEmbed}
-        <SelectNotePane />
-      {:else if $layout.redacting}
-        <RedactPane />
-      {:else if $layout.annotating}
-        <AnnotatePane />
-      {:else if $layout.modifying}
-        <ModifyPane />
-      {:else if $layout.searching}
-        <SearchPane />
-      {/if}
-    </div>
-  </div>
-{/if}
-
-<svelte:window on:keydown={handleKeyDown} />

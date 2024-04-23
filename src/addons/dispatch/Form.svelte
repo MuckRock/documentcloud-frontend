@@ -1,13 +1,7 @@
 <script context="module" lang="ts">
-  import type { Event } from "../runs/ScheduledEvent.svelte";
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "disabled", selection: null });
-
-  export interface eventOptions {
-    name: string;
-    events: string[];
-  }
 </script>
 
 <script lang="ts">
@@ -16,11 +10,12 @@
   import { _ } from "svelte-i18n";
 
   import { autofield } from "./fields/index.js";
+  import type { Event, EventOptions } from "../types";
   import Button from "../../common/Button.svelte";
 
   export let properties: any = {};
   export let required = [];
-  export let eventOptions: eventOptions;
+  export let eventOptions: EventOptions;
   export let event: Event = null;
 
   const ajv = new Ajv();
@@ -64,29 +59,6 @@
   }
 </script>
 
-<style>
-  form {
-    width: 100%;
-  }
-
-  fieldset {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    margin: 0 0 1em 0;
-    padding: 1em;
-    background: var(--light-gray);
-    border-radius: var(--radius);
-    border-color: rgba(0, 0, 0, 0.1);
-    border-width: 1px;
-  }
-
-  .controls {
-    display: flex;
-    justify-content: space-between;
-  }
-</style>
-
 <form method="post" bind:this={form} on:input on:change on:submit on:reset>
   <slot name="before" />
 
@@ -101,6 +73,7 @@
           required={required.includes(name)}
           bind:value={$values[name]}
           defaultValue={params.default}
+          choices={params.enum}
         />
       {/each}
     </fieldset>
@@ -124,7 +97,9 @@
     </fieldset>
   {/if}
 
-  <slot name="after" />
+  <slot name="selection" />
+
+  <slot name="premium" />
 
   <slot name="controls">
     <div class="controls">
@@ -133,3 +108,26 @@
     </div>
   </slot>
 </form>
+
+<style>
+  form {
+    width: 100%;
+  }
+
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 0 0 1em 0;
+    padding: 1em;
+    background: var(--light-gray);
+    border-radius: var(--radius);
+    border-color: rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>

@@ -1,7 +1,7 @@
 import rlite from "rlite-router";
 import { Svue } from "svue";
-import Empty from "@/pages/home/Empty.svelte"; // explicit extension for tests
-import { lazyComponent } from "@/util/lazyComponent.js";
+import Empty from "../pages/home/Empty.svelte";
+import { lazyComponent } from "./lazyComponent.js";
 
 const endings = [".html", ".html"];
 
@@ -60,7 +60,7 @@ export class Router extends Svue {
   }
 
   lookup(name) {
-    return this.routes[name].path;
+    return this.routes?.[name]?.path;
   }
 
   resolve(path) {

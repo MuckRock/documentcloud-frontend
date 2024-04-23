@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
   import { tweened } from "svelte/motion";
-  import { sigmoid, interp, scale } from "@/util/easing.js";
+  import { POLL_INTERVAL } from "../config/config.js";
+  import { sigmoid, interp, scale } from "../util/easing.js";
 
-  export let progress;
+  export let progress: null | number;
   export let initializing = false;
   export let compact = false;
   export let failure = false;
 
-  const PROGRESS_DURATION = parseInt(process.env.POLL_INTERVAL);
   const PROGRESS_END_DURATION = 400; // how quickly to jump at end
   const PROGRESS_BACKWARDS_DURATION = 400; // how quickly to jump backwards
 
@@ -23,7 +23,7 @@
   }
 
   const smoothProgress = tweened(realProgress, {
-    duration: PROGRESS_DURATION,
+    duration: POLL_INTERVAL,
     interpolate(a, b) {
       // Jump immediately to 0
       if (b == 0) return (t) => 0;
@@ -31,7 +31,7 @@
       // If going backwards, don't tween
       if (b < a) {
         return interp(
-          scale(sigmoid, PROGRESS_BACKWARDS_DURATION / PROGRESS_DURATION),
+          scale(sigmoid, PROGRESS_BACKWARDS_DURATION / POLL_INTERVAL),
           a,
           b,
         );
@@ -40,7 +40,7 @@
       // If reaching end of progress, tween with a faster rate
       if (b == 1) {
         return interp(
-          scale(sigmoid, PROGRESS_END_DURATION / PROGRESS_DURATION),
+          scale(sigmoid, PROGRESS_END_DURATION / POLL_INTERVAL),
           a,
           b,
         );
@@ -61,6 +61,21 @@
   )}%`;
 </script>
 
+<div class="container">
+  {#if !isNull}
+    <div class="bar" class:initializing class:compact class:failure>
+      <div
+        class="inner"
+        class:complete
+        style="width: {$smoothProgress * 100}%"
+      />
+    </div>
+    {#if !compact}
+      <div class="text" class:failure>{progressPercent}</div>
+    {/if}
+  {/if}
+</div>
+
 <style lang="scss">
   .container {
     width: 100%;
@@ -70,12 +85,12 @@
 
     .bar {
       height: 18px;
-      border-radius: $radius;
+      border-radius: var(--radius);
       display: table-cell;
       vertical-align: middle;
       width: 100%;
       max-width: 300px;
-      background: $barFaded;
+      background: var(--barFaded);
       position: relative;
       margin-top: 1em;
       margin-right: 18px;
@@ -114,15 +129,15 @@
         );
         background-size: 48px 48px;
         animation: slide 1s infinite linear forwards;
-        border-radius: $radius;
+        border-radius: var(--radius);
 
         &.complete {
           animation: none;
-          background: $primary;
+          background: var(--primary);
         }
       }
       &.failure .inner {
-        background: $caution;
+        background: var(--caution);
       }
     }
     .text {
@@ -132,7 +147,7 @@
       vertical-align: middle;
       padding-left: 20px;
       &.failure {
-        color: $caution;
+        color: var(--caution);
       }
     }
   }
@@ -146,18 +161,3 @@
     }
   }
 </style>
-
-<div class="container">
-  {#if !isNull}
-    <div class="bar" class:initializing class:compact class:failure>
-      <div
-        class="inner"
-        class:complete
-        style="width: {$smoothProgress * 100}%"
-      />
-    </div>
-    {#if !compact}
-      <div class="text" class:failure>{progressPercent}</div>
-    {/if}
-  {/if}
-</div>

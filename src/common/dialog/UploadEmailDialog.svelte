@@ -1,7 +1,7 @@
 <script>
   import Button from "@/common/Button.svelte";
   import emitter from "@/emit.js";
-  import { createMailkey, destroyMailkey } from "@/api/orgAndUser.js";
+  import { createMailkey, destroyMailkey } from "@/api/orgAndUser.ts";
   import { _ } from "svelte-i18n";
 
   const emit = emitter({
@@ -22,16 +22,6 @@
     message = $_("uploadEmailDialog.destroyMsg");
   }
 </script>
-
-<style lang="scss">
-  p :global(a) {
-    text-decoration: underline;
-    color: #5a76a0;
-    &:hover {
-      filter: brightness(85%);
-    }
-  }
-</style>
 
 <div>
   <div class="mcontent">
@@ -55,3 +45,13 @@
     </div>
   </div>
 </div>
+
+<style lang="scss">
+  p :global(a) {
+    text-decoration: underline;
+    color: #5a76a0;
+    &:hover {
+      filter: brightness(85%);
+    }
+  }
+</style>

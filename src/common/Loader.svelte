@@ -7,6 +7,17 @@
   export let pad = false;
 </script>
 
+<div class:loader={active} class:inline class:pad>
+  {#if active}
+    <div class="shim">
+      <div class="spinner" class:center class:big />
+    </div>
+  {/if}
+  <div class="contents" class:transparent>
+    <slot />
+  </div>
+</div>
+
 <style>
   div {
     --smallBordersize: 4px;
@@ -64,11 +75,13 @@
     box-sizing: border-radius;
     width: var(--smallSpinsize, 10px);
     height: var(--smallSpinsize, 10px);
-    animation: spin 1.5s cubic-bezier(0.65, 0.175, 0.355, 0.835) infinite,
+    animation:
+      spin 1.5s cubic-bezier(0.65, 0.175, 0.355, 0.835) infinite,
       opaquify 1s ease;
     z-index: var(--spinnerZ, 8);
     opacity: 0;
   }
+
   .spinner.big {
     border: var(--bigBordersize, 7px) solid transparent;
     border-top: var(--bigBordersize, 7px) solid var(--gray, rgba(0, 0, 0, 0.53));
@@ -76,22 +89,25 @@
       var(--gray, rgba(0, 0, 0, 0.53));
     width: var(--bigSpinsize, 17px);
     height: var(--bigSpinsize, 17px);
-    animation: spin 1.5s cubic-bezier(0.25, 0.175, 0.355, 0.57) infinite,
+    animation:
+      spin 1.5s cubic-bezier(0.25, 0.175, 0.355, 0.57) infinite,
       opaquify 1s ease;
   }
 
   .spinner.center {
     top: calc(
-      50% - var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px)
+      50% - (var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px))
     );
     left: calc(
-      50% - var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px)
+      50% - (var(--smallSpinsize, 10px) / 2 + var(--smallBordersize, 4px))
     );
   }
 
   .spinner.center.big {
-    top: calc(50% - var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px));
-    left: calc(50% - var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px));
+    top: calc(50% - (var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px)));
+    left: calc(
+      50% - (var(--bigSpinsize, 17px) / 2 + var(--bigBordersize, 7px))
+    );
   }
 
   .loader .spinner {
@@ -116,14 +132,3 @@
     }
   }
 </style>
-
-<div class:loader={active} class:inline class:pad>
-  {#if active}
-    <div class="shim">
-      <div class="spinner" class:center class:big />
-    </div>
-  {/if}
-  <div class="contents" class:transparent>
-    <slot />
-  </div>
-</div>

@@ -1,6 +1,10 @@
-const languageCodes = process.env.LANGUAGE_CODES.split("|");
-const languageNames = process.env.LANGUAGE_NAMES.split("|");
-export const defaultLanguage = process.env.DEFAULT_LANGUAGE;
+import {
+  LANGUAGE_CODES,
+  LANGUAGE_NAMES,
+  DEFAULT_LANGUAGE,
+} from "../config/config.js";
+
+export const defaultLanguage = DEFAULT_LANGUAGE;
 
 function makeLanguagePairs(codes, names) {
   const results = [];
@@ -11,9 +15,9 @@ function makeLanguagePairs(codes, names) {
   return results;
 }
 
-export const languages = makeLanguagePairs(languageCodes, languageNames);
+export const languages = makeLanguagePairs(LANGUAGE_CODES, LANGUAGE_NAMES);
 
 const textractLanguageCodes = ["eng", "spa", "ita", "por", "fra", "deu"];
-export const textractLanguages = languages.filter((l) =>
-  textractLanguageCodes.indexOf(l[0]) != -1
+export const textractLanguages = languages.filter(
+  (l) => textractLanguageCodes.indexOf(l[0]) != -1,
 );

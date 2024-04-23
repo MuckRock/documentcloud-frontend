@@ -1,60 +1,29 @@
-<script>
-  import { rest } from "msw";
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Dispatch from "../Dispatch.svelte";
-  import * as addons from "../../fixtures/addons.json";
-  import * as eventFixture from "../../fixtures/event.json";
-  import { baseApiUrl } from "../../../api/base";
+  import {
+    addonsList,
+    event as eventFixture,
+    scheduled as klaxon,
+  } from "../../../test/fixtures/addons";
+  import { scheduled, send, pin } from "../../../test/handlers/addons";
 
-  const { addon: klaxon, ...event } = eventFixture;
-
-  const mockScheduleUrl = new URL(
-    "/api/addon_events/:event",
-    baseApiUrl,
-  ).toString();
-  const scheduleSuccess = rest.all(mockScheduleUrl, (req, res, ctx) =>
-    res(ctx.json({})),
-  );
-  const scheduleLoading = rest.all(mockScheduleUrl, (req, res, ctx) =>
-    res(ctx.delay("infinite")),
-  );
-  const scheduleError = rest.all(mockScheduleUrl, (req, res, ctx) =>
-    res(ctx.status(400, "Something went wrong")),
-  );
-
-  const mockSendUrl = new URL("/api/addon_runs/", baseApiUrl).toString();
-  const sendSuccess = rest.all(mockSendUrl, (req, res, ctx) =>
-    res(ctx.json({})),
-  );
-  const sendLoading = rest.all(mockSendUrl, (req, res, ctx) =>
-    res(ctx.delay("infinite")),
-  );
-  const sendError = rest.all(mockSendUrl, (req, res, ctx) =>
-    res(ctx.status(400, "Something went wrong")),
-  );
-
-  const mockPinUrl = new URL("/api/addons/:id", baseApiUrl).toString();
-  const pinSuccess = rest.all(mockPinUrl, (req, res, ctx) => res(ctx.json({})));
-  const pinLoading = rest.all(mockPinUrl, (req, res, ctx) =>
-    res(ctx.delay("infinite")),
-  );
-  const pinError = rest.all(mockPinUrl, (req, res, ctx) =>
-    res(ctx.status(400, "Something went wrong")),
-  );
+  const { addon, ...event } = eventFixture;
+  const addons = addonsList.results;
 
   let args = {
     visible: true,
     addon: null,
     event: null,
   };
-</script>
 
-<Meta
-  title="Add-Ons / Dispatch"
-  component={Dispatch}
-  parameters={{ layout: "centered" }}
-/>
+  export const meta = {
+    title: "Add-Ons / Dispatch",
+    component: Dispatch,
+    parameters: { layout: "centered" },
+  };
+</script>
 
 <Template let:args>
   <Dispatch {...args} />
@@ -62,21 +31,31 @@
 
 <Story
   name="Success"
-  args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [scheduleSuccess, sendSuccess, pinSuccess] } }}
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
+  parameters={{
+    msw: { handlers: [scheduled.data, send.success, pin.success] },
+  }}
 />
 <Story
   name="Error"
-  args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [scheduleError, sendError, pinError] } }}
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
+  parameters={{ msw: { handlers: [scheduled.error, send.error, pin.error] } }}
 />
 <Story
   name="Loading"
-  args={{ visible: true, addon: klaxon, event }}
-  parameters={{ msw: { handlers: [scheduleLoading, sendLoading, pinLoading] } }}
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
+  parameters={{
+    msw: { handlers: [scheduled.loading, send.loading, pin.loading] },
+  }}
 />
 
-<Story name="Klaxon" args={{ visible: true, addon: klaxon, event }} />
+<Story
+  name="Klaxon"
+  args={{ visible: true, addon: klaxon.results[0].addon, event }}
+  parameters={{
+    msw: { handlers: [scheduled.loading, send.loading, pin.loading] },
+  }}
+/>
 
 <Story name="PDF Exporter" args={{ ...args, addon: addons[0] }} />
 
@@ -97,3 +76,5 @@
 <Story name="Bad Redactions" args={{ ...args, addon: addons[5] }} />
 
 <Story name="Site Snapshot" args={{ ...args, addon: addons[6] }} />
+
+<Story name="Translate Documents" args={{ ...args, addon: addons[7] }} />

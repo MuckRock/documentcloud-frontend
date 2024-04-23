@@ -1,8 +1,13 @@
 <script>
-  import { onMount } from "svelte";
   import axios from "axios";
+  import { onMount } from "svelte";
   import { pushUrl } from "@/router/router.js";
   import { projectUrl, orgUrl, userUrl } from "@/search/search.js";
+
+  import {
+    PROJECT_REDIRECT_HASH_URL,
+    ORG_REDIRECT_HASH_URL,
+  } from "../../config/config.js";
 
   export let query = null;
 
@@ -10,13 +15,13 @@
     {
       regex: /^Project: ?"(.*)" ?$/,
       type: "hash",
-      fn: process.env.PROJECT_REDIRECT_HASH_URL,
+      fn: PROJECT_REDIRECT_HASH_URL,
       urlHandler: (id, projectName) => projectUrl({ title: projectName, id }),
     },
     {
       regex: /^Group:(.*) ?$/,
       type: "hash",
-      fn: process.env.ORG_REDIRECT_HASH_URL,
+      fn: ORG_REDIRECT_HASH_URL,
       urlHandler: (id, orgSlug) => orgUrl({ name: orgSlug, id }),
     },
     {

@@ -5,6 +5,18 @@
   export let required = false;
 </script>
 
+<div class="field" class:inline class:required>
+  <label>
+    {#if title}
+      <span class="title">{title}</span>
+    {/if}
+    <slot />
+  </label>
+  {#if description}
+    <p class="help">{description}</p>
+  {/if}
+</div>
+
 <style>
   .field {
     display: inline-block;
@@ -38,15 +50,3 @@
     color: var(--caution);
   }
 </style>
-
-<div class="field" class:inline class:required>
-  <label>
-    {#if title}
-      <span class="title">{title}</span>
-    {/if}
-    <slot />
-  </label>
-  {#if description}
-    <p class="help">{description}</p>
-  {/if}
-</div>

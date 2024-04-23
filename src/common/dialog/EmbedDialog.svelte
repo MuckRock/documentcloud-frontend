@@ -47,116 +47,6 @@
   }
 </script>
 
-<style lang="scss">
-  .warning {
-    padding: 15px 30px;
-    background: $warning;
-    border-radius: $radius;
-    display: table;
-    max-width: 700px;
-
-    &.readable {
-      background: $fyi;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.24);
-      margin-bottom: 35px;
-    }
-
-    > * {
-      display: table-cell;
-      vertical-align: top;
-    }
-
-    .erroricon {
-      padding-top: 20px;
-      padding-right: 20px;
-    }
-  }
-
-  .shareoptions {
-    display: table;
-    margin: 25px 0 25px -10px;
-    $border: solid 2px gainsboro;
-    border-collapse: separate;
-    border-spacing: 10px 0;
-
-    @media only screen and (max-width: 720px) {
-      margin-left: -5px;
-      border-spacing: 5px 0;
-    }
-
-    .shareicon,
-    .sharedescription {
-      display: table-row;
-    }
-
-    .sharecell {
-      display: table-cell;
-      text-align: center;
-      padding: 0 20px;
-      cursor: pointer;
-      border-left: $border;
-      border-right: $border;
-
-      &.hover {
-        background: $viewerPaneColor;
-
-        &.faded {
-          background: inherit;
-        }
-      }
-
-      @media only screen and (max-width: 720px) {
-        padding: 0 7px;
-        text-align: left;
-
-        :global(svg) {
-          width: 80%;
-        }
-      }
-    }
-
-    .shareicon {
-      .sharecell {
-        vertical-align: middle;
-        padding-top: 15px;
-        border-top-left-radius: $radius;
-        border-top-right-radius: $radius;
-        border-top: $border;
-      }
-    }
-
-    .sharedescription {
-      .sharecell {
-        vertical-align: middle;
-        padding-bottom: 10px;
-        border-bottom-left-radius: $radius;
-        border-bottom-right-radius: $radius;
-        border-bottom: $border;
-      }
-
-      h2 {
-        font-size: 16px;
-        font-weight: 600;
-      }
-
-      p {
-        text-align: left;
-        font-size: 14px;
-        color: $gray;
-        max-width: 150px;
-      }
-    }
-  }
-
-  .faded {
-    pointer-events: none;
-
-    > :global(*) {
-      opacity: 0.2;
-    }
-  }
-</style>
-
 <Loader active={$loading}>
   <div>
     <div class="mcontent">
@@ -290,3 +180,113 @@
     </div>
   </div>
 </Loader>
+
+<style lang="scss">
+  .warning {
+    padding: 15px 30px;
+    background: $warning;
+    border-radius: $radius;
+    display: table;
+    max-width: 700px;
+
+    &.readable {
+      background: $fyi;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.24);
+      margin-bottom: 35px;
+    }
+
+    > * {
+      display: table-cell;
+      vertical-align: top;
+    }
+
+    .erroricon {
+      padding-top: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  .shareoptions {
+    display: table;
+    margin: 25px 0 25px -10px;
+    $border: solid 2px gainsboro;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+
+    @media only screen and (max-width: 720px) {
+      margin-left: -5px;
+      border-spacing: 5px 0;
+    }
+
+    .shareicon,
+    .sharedescription {
+      display: table-row;
+    }
+
+    .sharecell {
+      display: table-cell;
+      text-align: center;
+      padding: 0 20px;
+      cursor: pointer;
+      border-left: $border;
+      border-right: $border;
+
+      &.hover {
+        background: $viewerPaneColor;
+
+        &.faded {
+          background: inherit;
+        }
+      }
+
+      @media only screen and (max-width: 720px) {
+        padding: 0 7px;
+        text-align: left;
+
+        :global(svg) {
+          width: 80%;
+        }
+      }
+    }
+
+    .shareicon {
+      .sharecell {
+        vertical-align: middle;
+        padding-top: 15px;
+        border-top-left-radius: $radius;
+        border-top-right-radius: $radius;
+        border-top: $border;
+      }
+    }
+
+    .sharedescription {
+      .sharecell {
+        vertical-align: middle;
+        padding-bottom: 10px;
+        border-bottom-left-radius: $radius;
+        border-bottom-right-radius: $radius;
+        border-bottom: $border;
+      }
+
+      h2 {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      p {
+        text-align: left;
+        font-size: 14px;
+        color: $gray;
+        max-width: 150px;
+      }
+    }
+  }
+
+  .faded {
+    pointer-events: none;
+
+    > :global(*) {
+      opacity: 0.2;
+    }
+  }
+</style>

@@ -1,16 +1,14 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import run from "../../fixtures/run.json";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { run } from "../../../test/fixtures/addons";
   import Event from "../HistoryEvent.svelte";
 
-  const args = { run };
+  export const meta = {
+    title: "Add-Ons / Runs / History / Event",
+    component: Event,
+    parameters: { layout: "centered" },
+  };
 </script>
-
-<Meta
-  title="Add-Ons / Runs / History / Event"
-  component={Event}
-  parameters={{ layout: "centered" }}
-/>
 
 <Template let:args>
   <Event {...args} />
@@ -21,3 +19,7 @@
 <Story name="Queued" args={{ run: { ...run, status: "queued" } }} />
 <Story name="In Progress" args={{ run: { ...run, status: "in_progress" } }} />
 <Story name="Unknown" args={{ run: { ...run, status: "unexpectedStatus" } }} />
+<Story
+  name="Premium Run"
+  args={{ run: { ...run, status: "success", credits_spent: 700 } }}
+/>

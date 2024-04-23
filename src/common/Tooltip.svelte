@@ -65,6 +65,32 @@
   }
 </script>
 
+{#if show}
+  <span
+    on:mouseenter={handleMouseOver}
+    on:mouseleave={handleMouseOut}
+    role="tooltip"
+  >
+    <div
+      bind:this={tooltip}
+      class="tooltip"
+      class:show={mouseIn && delayShow}
+      style="left: {$coords.x}px; top: {$coords.y}px;"
+    >
+      <slot name="caption">{caption}</slot>
+    </div>
+    <slot />
+  </span>
+{:else}
+  <slot />
+{/if}
+
+<svelte:window
+  on:mousemove={handleMouseMove}
+  on:scroll={handleMouseOut}
+  on:resize={handleMouseOut}
+/>
+
 <style lang="scss">
   span {
     display: inline-block;
@@ -91,25 +117,3 @@
     }
   }
 </style>
-
-{#if show}
-  <span on:mouseenter={handleMouseOver} on:mouseleave={handleMouseOut}>
-    <div
-      bind:this={tooltip}
-      class="tooltip"
-      class:show={mouseIn && delayShow}
-      style="left: {$coords.x}px; top: {$coords.y}px;"
-    >
-      <slot name="caption">{caption}</slot>
-    </div>
-    <slot />
-  </span>
-{:else}
-  <slot />
-{/if}
-
-<svelte:window
-  on:mousemove={handleMouseMove}
-  on:scroll={handleMouseOut}
-  on:resize={handleMouseOut}
-/>

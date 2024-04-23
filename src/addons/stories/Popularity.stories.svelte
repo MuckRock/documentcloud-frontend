@@ -1,18 +1,14 @@
-<script>
-  import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" context="module">
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import Popularity from "../Popularity.svelte";
 
-  const args = {
-    useCount: 100,
+  export const meta = {
+    title: "Add-Ons / Popularity",
+    tags: ["autodocs"],
+    component: Popularity,
+    parameters: { layout: "centered" },
   };
 </script>
-
-<Meta
-  title="Add-Ons / Popularity"
-  tags={["autodocs"]}
-  component={Popularity}
-  parameters={{ layout: "centered" }}
-/>
 
 <Template let:args>
   <Popularity {...args} />

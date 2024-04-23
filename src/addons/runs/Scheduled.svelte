@@ -6,8 +6,9 @@
   import Clock24 from "svelte-octicons/lib/Clock24.svelte";
   import Error from "../../common/icons/Error.svelte";
   import Loader from "../../common/Loader.svelte";
-  import Paginator from "../Paginator.svelte";
-  import ScheduledEvent, { type Event } from "./ScheduledEvent.svelte";
+  import Paginator from "../../common/Paginator.svelte";
+  import ScheduledEvent from "./ScheduledEvent.svelte";
+  import type { Event } from "../types";
 
   import { baseApiUrl } from "../../api/base.js";
 
@@ -29,7 +30,7 @@
   $: next_url = res.next ? new URL(res.next) : null;
   $: prev_url = res.previous ? new URL(res.previous) : null;
   $: events = res.results ?? [];
-  $: empty = !loading && res.results?.length === 0;
+  $: empty = !loading && !Boolean(res.results?.length) && !error;
 
   export async function load(url?: string | URL) {
     try {
@@ -62,42 +63,6 @@
 
   onMount(load);
 </script>
-
-<style>
-  .scheduled-list ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-  .scheduled-list li {
-    padding: 0;
-  }
-  .empty,
-  .loading,
-  .error {
-    margin: 2em 1em;
-    color: var(--darkgray);
-    fill: var(--gray);
-  }
-  .error {
-    color: var(--caution);
-  }
-  .empty .icon {
-    transform: scale(2);
-    opacity: 0.4;
-  }
-  .error .icon {
-    height: 3em;
-    width: 3em;
-  }
-  .empty,
-  .error,
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-</style>
 
 <div class="scheduled-list">
   {#if empty}
@@ -134,3 +99,39 @@
     />
   {/if}
 </div>
+
+<style>
+  .scheduled-list ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  .scheduled-list li {
+    padding: 0;
+  }
+  .empty,
+  .loading,
+  .error {
+    margin: 2em 1em;
+    color: var(--darkgray);
+    fill: var(--gray);
+  }
+  .error {
+    color: var(--caution);
+  }
+  .empty .icon {
+    transform: scale(2);
+    opacity: 0.4;
+  }
+  .error .icon {
+    height: 3em;
+    width: 3em;
+  }
+  .empty,
+  .error,
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

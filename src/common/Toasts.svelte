@@ -2,6 +2,12 @@
   import Toast, { toasts } from "./Toast.svelte";
 </script>
 
+<div class="toastcontainer">
+  {#each $toasts as toast, i (toast.idx)}
+    <Toast {toast} {i} />
+  {/each}
+</div>
+
 <style>
   .toastcontainer {
     position: fixed;
@@ -13,9 +19,3 @@
     pointer-events: none;
   }
 </style>
-
-<div class="toastcontainer">
-  {#each $toasts as toast, i (toast.idx)}
-    <Toast {toast} {i} />
-  {/each}
-</div>

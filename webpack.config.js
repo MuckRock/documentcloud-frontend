@@ -1,4 +1,4 @@
-const appConfig = require("./webpack.app.config.js");
-const embedConfig = require("./webpack.embed.config.js");
+import appConfig from "./webpack.app.config.js";
+import embedConfig from "./webpack.embed.config.js";
 
-module.exports = [appConfig, ...embedConfig];
+export default [appConfig, ...embedConfig];

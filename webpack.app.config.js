@@ -1,13 +1,20 @@
-const baseConfig = require("./webpack.base.config.js");
+import path from "node:path";
+import url from "node:url";
 
-module.exports = {
+import baseConfig from "./webpack.base.config.js";
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const config = {
   ...baseConfig,
   entry: {
     bundle: ["./src/main.js"],
   },
   output: {
-    path: __dirname + "/public",
-    filename: "[name].[chunkhash].js",
+    path: path.join(__dirname, "public"),
+    filename: "assets/[name].[chunkhash].js",
+    chunkFilename: "assets/[name].[chunkhash].js",
     publicPath: "/",
   },
   plugins: [...baseConfig.plugins],
@@ -27,3 +34,5 @@ module.exports = {
     },
   },
 };
+
+export default config;

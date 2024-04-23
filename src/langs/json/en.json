@@ -34,6 +34,9 @@
     "organizationExplanation": "Only members of your organization can view this document",
     "publicExplanation": "Anyone can search and view this document"
   },
+  "revisionIcon": {
+    "tooltip": "Revision control is enabled on this document. It has {count, plural, one {revision} other {# revisions}}"
+  },
   "appearanceCustomizer": {
     "customizeAppearance": "Customize Appearance",
     "hide": "Hide help text",
@@ -312,6 +315,19 @@
     "invalid": "Invalid project",
     "cannotEmbed": "Cannot embed this project, as it does not appear to exist."
   },
+  "dialogRevisionsDialog": {
+    "heading": "Revision History",
+    "controlLabel": "Save document revision history",
+    "total": "{n} total",
+    "download": "Download",
+    "empty": "No revisions found",
+    "error": "Error loading revision data. Please contact support for assistance.",
+    "upgrade": {
+      "message": "Pro and Organization users can record and access the entire version history of their documents.",
+      "nonAdminCta": "Contact your organization administrator about upgrading your account.",
+      "adminCta": "Upgrade"
+    }
+  },
   "htmlEditor": {
     "preview": "Preview:"
   },
@@ -338,9 +354,13 @@
     "forceOcr": "Force OCR:",
     "ocrEngine": "OCR Engine:",
     "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
-    "textractPremium": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans. It is a premium feature available on <strong>Professional</strong> and <strong>Organization</strong> plans. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.documentcloud.org/premium/\">Learn more</a> or <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">sign up</a>.",
+    "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
+    "premiumToutAdmin": "This premium feature is available on <strong>Professional</strong> and <strong>Organization</strong> plans. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{upgradeUrl}\">Upgrade today!</a>",
+    "premiumToutMember": "Contact your organization's admin about upgrading to an <strong>Organization</strong> plan.",
     "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left.",
-    "documentLanguagePlaceholder": "Begin typing to see options"
+    "documentLanguagePlaceholder": "Begin typing to see options",
+    "revisionControl": "Revision Control:",
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download."
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",
@@ -350,20 +370,52 @@
     "addOnsMenu": "Add-Ons"
   },
   "authSection": {
-    "help": "Help",
-    "language": "Language",
-    "faq": "FAQ",
-    "searchDocs": "Search Documentation",
-    "apiDocs": "API Documentation",
-    "addOns": "Add-Ons",
-    "premium": "DocumentCloud Premium",
-    "emailUs": "Email Us",
-    "acctSettings": "Account settings",
-    "signOut": "Sign out",
-    "changeOrg": "Change organization",
-    "personalAcct": "Personal Account",
-    "signIn": "Sign in",
-    "uploadEmail": "Upload via email"
+    "help": {
+      "title": "Help",
+      "faq": "FAQ",
+      "searchDocs": "Search Documentation",
+      "apiDocs": "API Documentation",
+      "addOns": "Add-Ons",
+      "premium": "DocumentCloud Premium",
+      "emailUs": "Email Us"
+    },
+    "language": {
+      "title": "Language"
+    },
+    "user": {
+      "uploadEmail": "Upload via email",
+      "acctSettings": "Account settings",
+      "signOut": "Sign out",
+      "signIn": "Sign in"
+    },
+    "premiumUpgrade": {
+      "title": "Premium",
+      "heading": "Go Pro with DocumentCloud’s premium tools",
+      "orgHeading": "Power your team with DocumentCloud’s premium tools",
+      "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
+      "orgDescription": "Upgrade to an Organization plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
+      "docs": "Learn more about DocumentCloud Premium",
+      "addons": "Explore premium add-ons",
+      "orgs": "Join or start an organization",
+      "cta": "Upgrade Plan"
+    },
+    "org": {
+      "changeOrg": "Change organization",
+      "personalAcct": "Personal Account",
+      "adminRole": "Admin",
+      "memberListError": "An error occurred while loading the member list.",
+      "memberListEmpty": "This organization has no other members.",
+      "userCount": "{n, plural, one {# organization member} other {# organization members}}"
+    },
+    "credits": {
+      "monthlyOrg": "Monthly Org Allowance",
+      "monthlyPro": "Monthly Pro Allowance",
+      "refreshOn": "Credit allowance will reset on {date}",
+      "purchased": "Purchased Credits",
+      "purchasedHelpText": "Purchased credits never expire and will only be used after you run out of monthly credits.",
+      "purchaseCreditsButton": "Purchase Credits",
+      "purchaseCreditsAdminOnly": "Only org admins may purchase additional credits."
+    }
   },
   "documents": {
     "yourDocuments": "Your Documents",
@@ -411,6 +463,10 @@
     "delete": "Delete",
     "diagnosticInfo": "Diagnostic Info"
   },
+  "manager.documents": {
+    "added": "Successfully added {n, plural, one {# document} other {# documents}} to {project}",
+    "removed": "Successfully removed {n, plural, one {# document} other {# documents}} from {project}"
+  },
   "metaFields": {
     "defaultFieldInvalidText": "The document already has this {fieldName}",
 
@@ -452,10 +508,18 @@
     "publishedUrlFieldButton": "Edit"
   },
   "projectsMenu": {
-    "newProject": "+ New Project",
+    "browseProjects": "Browse",
+    "newProject": "New",
     "projMembership": "Project Membership",
     "selectDocs": "Select documents to place them in projects",
-    "createProj": "Create a project to organize and share documents"
+    "createProj": "Create a project to organize and share documents",
+    "remove": "Remove {n, plural, one {document} other {# documents}} from project",
+    "add": "Add {n, plural, one {document} other {# documents}} to project"
+  },
+  "projectBrowser": {
+    "loading": "Loading projects…",
+    "retry": "Retry",
+    "empty": "No projects found."
   },
   "addonsMenu": {
     "newAddon": "Request new Add-on from Staff",
@@ -481,10 +545,13 @@
     "requestVerificationAction": "Request Verification to Upload"
   },
   "paginator": {
+    "page": "Page",
     "of": "of",
-    "document": "{n, plural, one {Document} other {Documents}}",
-    "next": "Next",
-    "previous": "Previous"
+    "document": "{n, plural, one {# Document} other {# Documents}}",
+    "next": "Next Page",
+    "previous": "Previous Page",
+    "first": "First Page",
+    "last": "Last Page"
   },
   "processingBar": {
     "doneProcessing": "Done processing",
@@ -501,11 +568,12 @@
   "projects": {
     "header": "Projects",
     "allDocuments": "All Documents",
-    "yourDocuments": "Your Documents",
+    "yourDocuments": "Your Private Documents",
     "yourPubDocuments": "Your Public Documents",
     "orgDocuments": "{name}’s Documents",
-    "newProject": "+ New Project",
-    "createProject": "Create your first project by clicking “New Project” above."
+    "newProject": "New Project",
+    "createProject": "Create your first project by clicking “New Project” above.",
+    "pinsEmpty": "Pinned projects will appear here for quick access"
   },
   "organizations": {
     "sameOrgUsers": "Users in organization"
@@ -669,6 +737,8 @@
     "occurrences": "{n, plural, one {# occurrence} other {# occurrences}}"
   },
   "sidebar": {
+    "toggleOpen": "Open Sidebar",
+    "toggleClose": "Close Sidebar",
     "updating": "Updating docucment...",
     "original": "Original Document (PDF) »",
     "related": "Related Article »",
@@ -690,7 +760,9 @@
     "sections": "Edit Sections",
     "sectionsDesc": "Add sections to organize your document with a table of contents.",
     "privateNote": "Add Private Note",
-    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article."
+    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
+    "revisions": "Revision History",
+    "revisionsDesc": "Toggle revision history and view previous versions of your document."
   },
   "viewer": {
     "notFound": "Document not found",
@@ -706,6 +778,8 @@
     "addons": "Add-Ons",
     "backButton": "Browse Add-Ons",
     "select": "Documents to run this Add-On against:",
+    "premium": "This Add-On uses Premium Credits:",
+    "premiumSpendLimit": "Set a spending limit",
     "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again.",
     "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.",
     "runSelected": "This Add-On will try to run against the {n, plural, one {# currently selected document} other {# currently selected documents}}.",
@@ -729,7 +803,13 @@
     "scheduleSuccess": "Add-on is now scheduled",
     "runSuccess": "Add-on is now running",
     "selectionHelp": "From the main list, select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
-    "selectionLearnMore": "Learn more about how Add-Ons work"
+    "selectionLearnMore": "Learn more about how Add-Ons work",
+    "cost": "{amount} {unit} per {price, plural, one {credit} other {# credits}}",
+    "premiumUpgrade": {
+      "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
+      "callToAction": "Upgrade Plan",
+      "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
+    }
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
@@ -747,7 +827,8 @@
     "viewsource": "View Source",
     "usage": "Usage",
     "pinnedTip": "Quickly access your favorite Add-Ons by clicking the “Pin” icon next to its name. They’ll then be available to run from the Add-Ons dropdown menu.",
-    "featuredTip": "Here’s some of the DocumentCloud team’s favorite Add-Ons, including both new additions as well as classics we think every user should try."
+    "featuredTip": "Here’s some of the DocumentCloud team’s favorite Add-Ons, including both new additions as well as classics we think every user should try.",
+    "premiumTip": "Premium add-ons have powerful functionality backed by AI and cloud services. They have an additional cost to run and are only available to Professional and Organizational users."
   },
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
@@ -783,11 +864,14 @@
     "disable": "Disable upload via email"
   },
   "anonymous": {
-      "title": "Welcome to DocumentCloud, an open document archive from MuckRock!",
-      "p1": "This site helps organize, analyze and host millions of records contributed by verified newsrooms, research organizations and other groups that help inform the public through the user of primary source materials. Using the search bar above, you can browse through {n} publicly published documents, with thousands more added ever day.",
-      "p2": "If you're part of a newsroom, academic organization, or other public-interest organization that vets and publishes materials in the public interest, <a href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud&next=https%3A%2F%2Fwww.documentcloud.org%2Fhome\">you can register here</a> and request verification to upload materials, or <a href=\"https://www.documentcloud.org/about/\">learn more about DocumentCloud</a> and it's powerful suite of hosting, analysis and publication tools.",
-      "p3": "Want more fascinating documents, open data and original reporting to your inbox? Subscribe to MuckRock's newsletter:",
-      "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>.",
-      "subscribe": "Subscribe"
+    "title": "Welcome to DocumentCloud, an open document archive from MuckRock!",
+    "p1": "This site helps organize, analyze and host millions of records contributed by verified newsrooms, research organizations and other groups that help inform the public through the user of primary source materials. Using the search bar above, you can browse through {n} publicly published documents, with thousands more added ever day.",
+    "p2": "If you're part of a newsroom, academic organization, or other public-interest organization that vets and publishes materials in the public interest, <a href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud&next=https%3A%2F%2Fwww.documentcloud.org%2Fhome\">you can register here</a> and request verification to upload materials, or <a href=\"https://www.documentcloud.org/about/\">learn more about DocumentCloud</a> and it's powerful suite of hosting, analysis and publication tools.",
+    "p3": "Want more fascinating documents, open data and original reporting to your inbox? Subscribe to MuckRock's newsletter:",
+    "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>.",
+    "subscribe": "Subscribe"
+  },
+  "premium": {
+    "badge": "Premium"
   }
 }

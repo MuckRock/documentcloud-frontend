@@ -8,13 +8,23 @@
   $: title = disabled
     ? "Pinning is disabled"
     : active
-    ? "Click to Unpin"
-    : "Click to Pin";
+      ? "Click to Unpin"
+      : "Click to Pin";
 
   $: cssVarStyles = `--padding:${size * 0.25}em; --border-radius:${
     size * 4
   }px;`;
 </script>
+
+<button
+  class="pin"
+  class:active
+  class:disabled
+  on:click|stopPropagation|preventDefault
+  style={cssVarStyles}
+>
+  <Pin {title} {size} />
+</button>
 
 <style>
   .pin {
@@ -28,7 +38,9 @@
     justify-content: center;
     fill: #ccc;
     cursor: pointer;
-    transition: background-color 0.1s linear, fill 0.1s linear;
+    transition:
+      background-color 0.1s linear,
+      fill 0.1s linear;
   }
 
   .pin:hover {
@@ -48,7 +60,3 @@
     background: transparent;
   }
 </style>
-
-<button class="pin" class:active class:disabled on:click style={cssVarStyles}>
-  <Pin {title} {size} />
-</button>

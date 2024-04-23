@@ -1,11 +1,12 @@
 import { setupResizeEvent } from "./iframeSizer.js";
 import { queryBuilder } from "@/util/url.js";
+import { EMBED_URL } from "../config/config.js";
 
 function logInvalidQuery(options, container) {
   const q = options.q;
   console.error(`Query ${q} is not supported`);
   const iframe = document.createElement("iframe");
-  iframe.src = queryBuilder(`${process.env.EMBED_URL}project404`, {
+  iframe.src = queryBuilder(`${EMBED_URL}project404`, {
     projectQuery: q,
     toc: 0,
   });
@@ -80,10 +81,7 @@ function injectIframe(options, container) {
 
   // Set up iframe
   const iframe = document.createElement("iframe");
-  iframe.src = queryBuilder(
-    `${process.env.EMBED_URL}projects/${slugId}`,
-    queryParams,
-  );
+  iframe.src = queryBuilder(`${EMBED_URL}projects/${slugId}`, queryParams);
   iframe.style = style;
   iframe.title =
     options.title != null

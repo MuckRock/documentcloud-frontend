@@ -2,9 +2,8 @@
   import { _ } from "svelte-i18n";
   import { onMount } from "svelte";
   import { baseApiUrl } from "../api/base.js";
+  import { SPECIAL_VERSION, SPECIAL_CONTACT } from "../config/config.js";
 
-  const version = process.env.SPECIAL_VERSION;
-  const contact = process.env.SPECIAL_CONTACT;
   const endpoint = new URL("/api/flatpages/tipofday/", baseApiUrl);
 
   let loading;
@@ -25,9 +24,26 @@
     loading = load();
   });
 
-  $: show = version != null && version.trim().length > 0;
-  $: showContact = contact != null && contact.trim().length > 0;
+  $: show = SPECIAL_VERSION != null && SPECIAL_VERSION.trim().length > 0;
+  $: showContact = SPECIAL_CONTACT != null && SPECIAL_CONTACT.trim().length > 0;
 </script>
+
+{#if show}
+  <div class="container">
+    <div class="special">
+      {#await loading then content}
+        {@html content}
+      {:catch}
+        {SPECIAL_VERSION}
+        {#if showContact}
+          {@html $_("specialMessage.constactUs", {
+            values: { contact: SPECIAL_CONTACT },
+          })}
+        {/if}
+      {/await}
+    </div>
+  </div>
+{/if}
 
 <style>
   .container {
@@ -52,20 +68,3 @@
     text-decoration: underline;
   }
 </style>
-
-{#if show}
-  <div class="container">
-    <div class="special">
-      {#await loading then content}
-        {@html content}
-      {:catch}
-        {version}
-        {#if showContact}
-          {@html $_("specialMessage.constactUs", {
-            values: { contact: contact },
-          })}
-        {/if}
-      {/await}
-    </div>
-  </div>
-{/if}

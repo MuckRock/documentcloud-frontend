@@ -1,14 +1,15 @@
 import { Svue } from "svue";
+import * as config from "../config/config.js";
 
 const DOCUMENTCLOUD_TOKEN_STORAGE_KEY = "documentcloud_token";
 
-export const SQUARELET_URL = process.env.SQUARELET_BASE;
-export const SIGN_IN_URL = process.env.DC_BASE + process.env.DC_LOGIN;
+export const SQUARELET_URL = config.SQUARELET_BASE;
+export const SIGN_IN_URL = config.DC_BASE + config.DC_LOGIN;
 export const SIGN_UP_URL =
-  process.env.SQUARELET_BASE +
-  process.env.SQUARELET_SIGNUP +
+  config.SQUARELET_BASE +
+  config.SQUARELET_SIGNUP +
   encodeURIComponent(window.location.href);
-export const SIGN_OUT_URL = process.env.DC_BASE + process.env.DC_LOGOUT;
+export const SIGN_OUT_URL = config.DC_BASE + config.DC_LOGOUT;
 
 export const auth = new Svue({
   data() {

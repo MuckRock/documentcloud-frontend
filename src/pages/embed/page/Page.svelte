@@ -1,14 +1,18 @@
 <script>
+  import { onMount, tick } from "svelte";
+  import { _ } from "svelte-i18n";
+
   import Note from "./Note.svelte";
   import Annotation from "./Annotation.svelte";
   import ProgressiveImage from "@/common/ProgressiveImage.svelte";
+
   import { informSize } from "@/embed/iframeSizer.js";
-  import { onMount, tick } from "svelte";
   import { getDocument } from "@/api/document.js";
   import { getAnnotations } from "@/api/annotation.js";
   import { textUrl, pageImageUrl } from "@/api/viewer.js";
   import { embedUrl } from "@/api/embed.js";
-  import { _ } from "svelte-i18n";
+
+  import { APP_URL, DC_BASE } from "../../../config/config.js";
 
   export let id;
   export let page;
@@ -39,8 +43,7 @@
   onMount(async () => {
     const pageResourcePath = isPageResourcePath.exec(window.location.pathname);
     if (pageResourcePath != null) {
-      const pageResourceUrl =
-        process.env.DC_BASE + "/files" + window.location.pathname;
+      const pageResourceUrl = DC_BASE + "/files" + window.location.pathname;
       window.location.href = pageResourceUrl;
       return;
     }
@@ -67,50 +70,6 @@
     active = note;
   }
 </script>
-
-<style lang="scss">
-  .dc-embed {
-    font-size: 10pt;
-    max-width: 600px;
-    background: rgb(244, 244, 244);
-    padding: 18px 20px;
-    box-sizing: border-box;
-    border: solid 1px gainsboro;
-    border-radius: $radius;
-
-    a {
-      color: #5a76a0;
-      text-decoration: underline;
-    }
-
-    :global(img) {
-      max-width: 100%;
-      height: auto;
-      margin: 0;
-      border: 1px solid #ccc;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      clear: both;
-    }
-
-    .dc-page {
-      font-size: 14px;
-      line-height: 18px;
-    }
-
-    .dc-embed-container {
-      position: relative;
-      line-height: 0;
-      margin: 10px 0;
-    }
-
-    .dc-embed-shim {
-      position: absolute;
-      background: rgba(0, 0, 0, 0.4);
-      cursor: pointer;
-    }
-  }
-</style>
 
 <svelte:head>
   {#if doc != null && canonicalPageUrl != "" && title != ""}
@@ -193,7 +152,7 @@
     <div style="font-size:14px;line-height:18px;text-align:center">
       Contributed to
       <a
-        href={process.env.APP_URL}
+        href={APP_URL}
         title={$_("embedPage.gotoDocCloud")}
         target="_blank"
         style="color: #5a76a0; text-decoration: underline;
@@ -225,3 +184,47 @@
     </div>
   {/if}
 </div>
+
+<style lang="scss">
+  .dc-embed {
+    font-size: 10pt;
+    max-width: 600px;
+    background: rgb(244, 244, 244);
+    padding: 18px 20px;
+    box-sizing: border-box;
+    border: solid 1px gainsboro;
+    border-radius: $radius;
+
+    a {
+      color: #5a76a0;
+      text-decoration: underline;
+    }
+
+    :global(img) {
+      max-width: 100%;
+      height: auto;
+      margin: 0;
+      border: 1px solid #ccc;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      clear: both;
+    }
+
+    .dc-page {
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .dc-embed-container {
+      position: relative;
+      line-height: 0;
+      margin: 10px 0;
+    }
+
+    .dc-embed-shim {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+  }
+</style>

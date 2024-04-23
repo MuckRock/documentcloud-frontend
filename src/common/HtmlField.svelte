@@ -46,6 +46,14 @@
   }
 </script>
 
+<div class="preview static">
+  <div class="content" bind:this={elem}>
+    {#if $domPurify.domPurify !== null && typeof $domPurify.domPurify.sanitize === "function"}
+      {@html $domPurify.domPurify.sanitize(content)}
+    {/if}
+  </div>
+</div>
+
 <style lang="scss">
   $subpadding: 8px;
 
@@ -54,7 +62,10 @@
 
     .content {
       margin: 4px $subpadding;
-      font: 13px/18px Georgia, Times, serif;
+      font:
+        13px/18px Georgia,
+        Times,
+        serif;
       cursor: text;
       color: #3c3c3c;
       max-height: 300px;
@@ -71,11 +82,3 @@
     }
   }
 </style>
-
-<div class="preview static">
-  <div class="content" bind:this={elem}>
-    {#if $domPurify.domPurify !== null && typeof $domPurify.domPurify.sanitize === "function"}
-      {@html $domPurify.domPurify.sanitize(content)}
-    {/if}
-  </div>
-</div>
