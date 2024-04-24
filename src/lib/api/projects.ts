@@ -1,5 +1,6 @@
 // api methods for projects
-import type { Project, ProjectResults, ProjectMembershipList } from "./types";
+import type { Page } from "@/api/types";
+import type { Project, ProjectResults, Document } from "./types";
 
 import { error, type NumericRange } from "@sveltejs/kit";
 
@@ -134,7 +135,7 @@ export async function pinProject(
 export async function documents(
   id: number | string,
   fetch = globalThis.fetch,
-): Promise<ProjectMembershipList> {
+): Promise<Page<{ document: Document; edit_access: boolean }>> {
   const endpoint = new URL(`projects/${id}/documents/`, BASE_API_URL);
   const expand = ["user", "organization", "document"];
 

@@ -1,6 +1,5 @@
 <script lang="ts">
   import {
-    File24,
     Hourglass24,
     Pencil16,
     People16,
@@ -15,13 +14,28 @@
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
   import Error from "@/lib/components/common/Error.svelte";
-  import DocumentListItem from "@/lib/components/documents/DocumentListItem.svelte";
   import { projectSearchUrl } from "@/lib/utils/search";
+  import Search from "@/lib/components/inputs/Search.svelte";
+  import ResultsList, {
+    selected,
+    total,
+    visible,
+  } from "@/lib/components/documents/ResultsList.svelte";
+  import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
 
   export let data;
 
   $: project = data.project;
-  $: documents = data.documents;
+  $: documentSearch = data.documents;
+  $: query = data.query;
+
+  function selectAll(e) {
+    if (e.target.checked) {
+      $selected = [...$visible];
+    } else {
+      $selected = [];
+    }
+  }
 </script>
 
 <MainLayout>
@@ -33,21 +47,45 @@
   </svelte:fragment>
 
   <ContentLayout slot="content">
-    {#await documents}
+    <PageToolbar slot="header">
+      <Search name="q" {query} slot="center" />
+    </PageToolbar>
+    {#await documentSearch}
       <Empty icon={Hourglass24}>Loading project documents…</Empty>
-    {:then projectItems}
-      <div>
-        {#each projectItems.results as { document }}
-          {#if typeof document !== "number"}
-            <DocumentListItem {document} />
-          {/if}
-        {:else}
-          <Empty icon={File24}>This project has no documents.</Empty>
-        {/each}
-      </div>
+    {:then documentSearchResults}
+      <ResultsList
+        results={documentSearchResults.results}
+        next={documentSearchResults.next}
+        count={documentSearchResults.count}
+        auto
+      />
     {:catch}
       <Error>Error loading project documents</Error>
     {/await}
+    <PageToolbar slot="footer">
+      <label slot="left" class="select-all">
+        <input
+          type="checkbox"
+          name="select_all"
+          checked={$selected.length === $visible.size}
+          indeterminate={$selected.length > 0 &&
+            $selected.length < $visible.size}
+          on:change={selectAll}
+        />
+        {#if $selected.length > 0}
+          {$selected.length.toLocaleString()} selected
+        {:else}
+          Select all
+        {/if}
+      </label>
+
+      <svelte:fragment slot="right">
+        {#if $visible && $total}
+          Showing {$visible.size.toLocaleString()} of {$total.toLocaleString()}
+          results
+        {/if}
+      </svelte:fragment>
+    </PageToolbar>
   </ContentLayout>
 
   <svelte:fragment slot="action">

@@ -166,6 +166,7 @@ export interface SearchOptions {
   cursor?: string;
   expand?: string;
   version?: number | string;
+  project?: number | string;
 }
 
 export interface OEmbed {
