@@ -155,12 +155,12 @@
     {
       value: "tess4",
       label: "Tesseract",
-      help: $_("uploadOptions.tesseract"),
+      help: $_("uploadDialog.tesseract"),
     },
     {
       value: "textract",
       label: "Textract",
-      help: $_("uploadOptions.textract"),
+      help: $_("uploadDialog.textract"),
     },
   ];
 
@@ -262,14 +262,13 @@
           </Flex>
         {:else}
           <Empty icon={File24}>
-            Get started by selecting, pasting or dragging-and-dropping files
-            below
+            {$_("uploadDialog.empty")}
           </Empty>
         {/each}
         {#if files.length > 0}
           <div class="total">
             <p>
-              Total: {files.length} file{files.length > 1 ? "s" : ""},
+              {$_("uploadDialog.totalFiles", { values: { n: files.length } })},
               <span class="uppercase">{filesize(total)}</span>
             </p>
           </div>
@@ -286,11 +285,11 @@
             class:active={fileDropActive}
             class:disabled={loading}
           >
-            <p class="drop-instructions">Drag and drop files here</p>
+            <p class="drop-instructions">{$_("uploadDialog.dragDrop")}</p>
             <Flex align="center" justify="center">
-              <span class="drop-instructions-or">or</span>
+              <span class="drop-instructions-or">{$_("common.or")}</span>
               <FileInput multiple onFileSelect={addFiles} disabled={loading}
-                ><File16 /> Select Files</FileInput
+                ><File16 />{$_("uploadDialog.selectFiles")}</FileInput
               >
             </Flex>
           </div>
@@ -300,11 +299,11 @@
     <div class="sidebar">
       <Flex gap={1} direction="column">
         <Field>
-          <FieldLabel>Access Level</FieldLabel>
+          <FieldLabel>{$_("uploadDialog.accessLevel")}</FieldLabel>
           <AccessLevel name="access" />
         </Field>
         <Field>
-          <FieldLabel>Projects</FieldLabel>
+          <FieldLabel>{$_("uploadDialog.projects")}</FieldLabel>
           <Select
             name="projects"
             multiple
@@ -315,11 +314,11 @@
         </Field>
         <hr class="divider" />
         <Field>
-          <FieldLabel>Language</FieldLabel>
+          <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
           <Language />
         </Field>
         <Field>
-          <FieldLabel>OCR Engine</FieldLabel>
+          <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
           <Select
             name="ocr_engine"
             items={ocrEngineOptions}
@@ -331,25 +330,24 @@
         </Field>
         <Field inline>
           <input type="checkbox" name="force_ocr" />
-          <FieldLabel>Force OCR</FieldLabel>
+          <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
         </Field>
         <hr class="divider" />
 
         <Premium>
           <Field inline>
             <Switch name="revision_control" />
-            <FieldLabel premium>Revision Control</FieldLabel>
+            <FieldLabel premium>{$_("uploadDialog.revisionControl")}</FieldLabel
+            >
             <p slot="help">
-              All previous versions to the document will be preserved and
-              available for download.
+              {$_("uploadDialog.revisionControlHelp")}
             </p>
           </Field>
           <Field inline slot="basic">
             <Switch name="revision_control" disabled />
             <FieldLabel premium>Revision Control</FieldLabel>
             <p slot="help">
-              All previous versions to the document will be preserved and
-              available for download.
+              {$_("uploadDialog.revisionControlHelp")}
             </p>
           </Field>
         </Premium>
@@ -358,7 +356,8 @@
         type="submit"
         full
         mode="primary"
-        disabled={loading || exceedsSizeLimit}><Upload16 />Begin Upload</Button
+        disabled={loading || exceedsSizeLimit}
+        ><Upload16 />{$_("uploadDialog.beginUpload")}</Button
       >
 
       <input

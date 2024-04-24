@@ -92,7 +92,7 @@
     <Flex direction="column">
       <Flex gap={0.625} align="center">
         <label>
-          <span class="sr-only">Select</span>
+          <span class="sr-only">{$_("documents.select")}</span>
           <input
             type="checkbox"
             bind:group={$selected}

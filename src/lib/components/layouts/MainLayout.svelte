@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import { type Org, type User } from "@/api/types";
+  import type { Org, User } from "@/api/types";
+
+  import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
 
   import { getContext } from "svelte";
@@ -57,7 +59,7 @@
         <UserMenu user={$me} />
       </Flex>
       <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
-        Sign In
+        {$_("authSection.user.signIn")}
       </Button>
     </SignedIn>
     <LanguageMenu />

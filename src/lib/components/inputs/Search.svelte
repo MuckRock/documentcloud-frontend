@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Search24, XCircleFill24 } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
 
   export let name: string = null;
   export let query: string = "";
@@ -18,7 +19,7 @@
     id="query"
     {name}
     autocomplete="off"
-    placeholder="Search…"
+    placeholder={$_("searchBar.search")}
     bind:value={query}
     bind:this={input}
     on:change

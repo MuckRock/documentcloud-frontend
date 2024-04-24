@@ -5,7 +5,8 @@
     "documentCloud": "DocumentCloud",
     "home": "Home",
     "new": "New",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "or": "or"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -13,6 +14,27 @@
     "signIn": "Sign in",
     "signUp": "Sign up",
     "goToApp": "Go to app"
+  },
+  "inputs": {
+    "required": "Required"
+  },
+  "access": {
+    "access": "Access",
+    "private": {
+      "value": "private",
+      "title": "Private",
+      "description": "Documents will only be visible to you"
+    },
+    "organization": {
+      "value": "organization",
+      "title": "Organization",
+      "description": "Documents will only be visible to your organization"
+    },
+    "public": {
+      "value": "public",
+      "title": "Public",
+      "description": "Documents will be publicly visible to everyone"
+    }
   },
   "notfound": {
     "title": "Page not found",
@@ -349,6 +371,45 @@
   "specialMessage": {
     "contactUs": "<a href={contact} target=\"_blank\">Contact us</a> with bug reports, questions, and suggestions."
   },
+  "uploadDialog": {
+    "docUpload": "Document Upload",
+    "docUploadProj": "Document Upload to {title}",
+    "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
+    "pdfSizeWarning": "You can only upload PDF files under {size}.",
+    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
+    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
+    "fileLimitWarning": "You can only upload {limit} files at once.",
+    "moreOptions": "More options",
+    "beginUpload": "Begin Upload",
+    "selectFiles": "Select files",
+    "dragDrop": "Drag and drop files here",
+    "publicMsg": "Document will be publicly visible.",
+    "collabMsg": "Document will be visible to your organization.",
+    "privateMsg": "Document will be visible to you alone.",
+    "collabName": "Organization",
+    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
+    "uploading": "Uploading ... ({uploaded}/{length})",
+    "gettingInfo": "Getting upload information ({percent})",
+    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
+    "errorHeading": "Error occurred while uploading",
+    "errorMsg": "We failed to {errorMessage}. Please try again later.",
+    "editDocInfo": "Edit document information:",
+    "untitled": "Untitled",
+    "uploadFiles": "Upload additional files",
+    "selectMore": "+ Select more files",
+    "dragDropMore": "Drag and drop additional files here",
+    "totalFiles": "Total: {n, plural, one {# file} other {# files}}",
+    "accessLevel": "Access Level",
+    "projects": "Projects",
+    "language": "Language",
+    "ocrEngine": "OCR Engine",
+    "forceOcr": "Force OCR",
+    "revisionControl": "Revision Control",
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
+    "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
+    "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files below"
+  },
   "uploadOptions": {
     "documentLang": "Document language:",
     "forceOcr": "Force OCR:",
@@ -360,7 +421,8 @@
     "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left.",
     "documentLanguagePlaceholder": "Begin typing to see options",
     "revisionControl": "Revision Control:",
-    "revisionControlHelp": "All previous versions to the document will be preserved and available for download."
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files below"
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",
@@ -440,6 +502,7 @@
     "page": "Page",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
+    "select": "Select",
     "source": "Source",
     "noteCount": "{n, plural, one {# note} other {# notes}}",
     "noteLink": "See note"
@@ -579,34 +642,6 @@
   },
   "organizations": {
     "sameOrgUsers": "Users in organization"
-  },
-  "uploadDialog": {
-    "docUpload": "Document Upload",
-    "docUploadProj": "Document Upload to {title}",
-    "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
-    "pdfSizeWarning": "You can only upload PDF files under {size}.",
-    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
-    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
-    "fileLimitWarning": "You can only upload {limit} files at once.",
-    "moreOptions": "More options",
-    "beginUpload": "Begin upload",
-    "selectFiles": "+ Select files",
-    "dragDrop": "Drag and drop files here",
-    "publicMsg": "Document will be publicly visible.",
-    "collabMsg": "Document will be visible to your organization.",
-    "privateMsg": "Document will be visible to you alone.",
-    "collabName": "Organization",
-    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
-    "uploading": "Uploading ... ({uploaded}/{length})",
-    "gettingInfo": "Getting upload information ({percent})",
-    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
-    "errorHeading": "Error occurred while uploading",
-    "errorMsg": "We failed to {errorMessage}. Please try again later.",
-    "editDocInfo": "Edit document information:",
-    "untitled": "Untitled",
-    "uploadFiles": "Upload additional files",
-    "selectMore": "+ Select more files",
-    "dragDropMore": "Drag and drop additional files here"
   },
   "embedNote": {
     "viewTheNote": "View the note ‘{title}‘ in its original document context on DocumentCloud in a new window or tab",

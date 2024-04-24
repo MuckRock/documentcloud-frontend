@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Access } from "$lib/api/types";
+  import { _ } from "svelte-i18n";
+
   import {
     Globe24,
     Lock24,
@@ -17,21 +19,21 @@
 
   const levels: Level[] = [
     {
-      value: "private",
-      title: "Private",
-      description: "Documents will only be visible to you",
+      value: $_("access.private.value") as Access,
+      title: $_("access.private.title"),
+      description: $_("access.private.description"),
       icon: Lock24,
     },
     {
-      value: "organization",
-      title: "Organization",
-      description: "Documents will only be visible to your organization",
+      value: $_("access.organization.value") as Access,
+      title: $_("access.organization.title"),
+      description: $_("access.organization.description"),
       icon: Organization24,
     },
     {
-      value: "public",
-      title: "Public",
-      description: "Documents will be publicly visible to everyone",
+      value: $_("access.public.value") as Access,
+      title: $_("access.public.title"),
+      description: $_("access.public.description"),
       icon: Globe24,
     },
   ];
