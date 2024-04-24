@@ -70,11 +70,12 @@ export async function list(
 export async function getOwned(
   userId: number,
   query?: string,
+  fetch = globalThis.fetch,
 ): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
   endpoint.searchParams.set("query", query);
-  const projects = await getAll<Project>(endpoint);
+  const projects = await getAll<Project>(endpoint, undefined, fetch);
   return projects.filter((project) => project.user === userId);
 }
 
@@ -84,11 +85,12 @@ export async function getOwned(
 export async function getShared(
   userId: number,
   query?: string,
+  fetch = globalThis.fetch,
 ): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
   endpoint.searchParams.set("query", query);
-  const projects = await getAll<Project>(endpoint);
+  const projects = await getAll<Project>(endpoint, undefined, fetch);
   return projects.filter((project) => project.user !== userId);
 }
 
@@ -101,6 +103,7 @@ export async function pinProject(
   csrftoken: string,
   id: number,
   pinned = true,
+  fetch = globalThis.fetch,
 ): Promise<Project> {
   const endpoint = new URL(`/api/projects/${id}/`, BASE_API_URL);
   const options: RequestInit = {
