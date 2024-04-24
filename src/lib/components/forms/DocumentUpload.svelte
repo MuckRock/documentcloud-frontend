@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { ActionResult } from "@sveltejs/kit";
   import { DEFAULT_LANGUAGE } from "@/config/config.js";
-  import { userDocs } from "$lib/api/accounts";
+  import { userDocs } from "$lib/utils/search";
 
   /**
    * Collect form data into documents and do three-step upload.
@@ -504,12 +504,6 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 2rem;
-  }
-
-  .divider {
-    width: 100%;
-    border: none;
-    border-top: 1px solid var(--gray-2, #d8dee2);
   }
 
   .uppercase {

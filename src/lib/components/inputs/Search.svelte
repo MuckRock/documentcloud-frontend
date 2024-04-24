@@ -3,7 +3,9 @@
 
   export let name: string = null;
   export let query: string = "";
+
   let input: HTMLInputElement;
+  let form: HTMLFormElement;
 
   function clear() {
     query = "";
@@ -11,7 +13,7 @@
   }
 </script>
 
-<form class="container" on:submit>
+<form class="container" on:submit bind:this={form}>
   <label for="query" title="Search"><Search24 /></label>
   <input
     type="search"
