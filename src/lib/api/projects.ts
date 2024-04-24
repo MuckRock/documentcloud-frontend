@@ -74,7 +74,9 @@ export async function getOwned(
 ): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
-  endpoint.searchParams.set("query", query);
+  if (query) {
+    endpoint.searchParams.set("query", query);
+  }
   const projects = await getAll<Project>(endpoint, undefined, fetch);
   return projects.filter((project) => project.user === userId);
 }
@@ -89,7 +91,9 @@ export async function getShared(
 ): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
-  endpoint.searchParams.set("query", query);
+  if (query) {
+    endpoint.searchParams.set("query", query);
+  }
   const projects = await getAll<Project>(endpoint, undefined, fetch);
   return projects.filter((project) => project.user !== userId);
 }
@@ -105,7 +109,7 @@ export async function pinProject(
   pinned = true,
   fetch = globalThis.fetch,
 ): Promise<Project> {
-  const endpoint = new URL(`/api/projects/${id}/`, BASE_API_URL);
+  const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
   const options: RequestInit = {
     credentials: "include",
     method: "PATCH", // this component can only update whether a project is pinned
