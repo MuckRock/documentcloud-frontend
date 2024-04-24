@@ -9,6 +9,8 @@ import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
 import type { Page } from "@/api/types/common";
 
+export type { Page } from "@/api/types/common";
+
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
 export type Data = Record<string, string[]>;

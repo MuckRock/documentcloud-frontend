@@ -1,6 +1,4 @@
 <script context="module" lang="ts">
-  import type { Project, ProjectMembershipList } from "$lib/api/types";
-
   // legacy css
   import "@/style/variables.css";
   import "@/style/global.css";
@@ -11,6 +9,7 @@
   import documents from "$lib/api/fixtures/projects/project-documents-expanded.json";
   import project from "$lib/api/fixtures/projects/project.json";
   import * as mock from "$lib/api/fixtures/mock";
+  import type { Page, Project, Document } from "@/lib/api/types";
 
   export const meta = {
     title: "Embed / Project",
@@ -21,7 +20,7 @@
 
   const data = {
     project: project as Project,
-    documents: documents as ProjectMembershipList,
+    documents: documents as Page<{ document: Document; edit_access: boolean }>,
     embed: true,
     me: null,
     org: null,

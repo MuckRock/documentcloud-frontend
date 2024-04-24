@@ -36,7 +36,9 @@ export async function search(
   endpoint.searchParams.set("q", query);
 
   for (const [k, v] of Object.entries(options)) {
-    endpoint.searchParams.set(k, String(v));
+    if (v) {
+      endpoint.searchParams.set(k, String(v));
+    }
   }
 
   const resp = await fetch(endpoint, { credentials: "include" });
