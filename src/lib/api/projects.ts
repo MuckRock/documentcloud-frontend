@@ -66,9 +66,13 @@ export async function list(
 /**
  * Get a list of all projects owned by the user
  */
-export async function getOwned(userId: number): Promise<Project[]> {
+export async function getOwned(
+  userId: number,
+  query?: string,
+): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
+  endpoint.searchParams.set("query", query);
   const projects = await getAll<Project>(endpoint);
   return projects.filter((project) => project.user === userId);
 }
@@ -76,9 +80,13 @@ export async function getOwned(userId: number): Promise<Project[]> {
 /**
  * Get a list of all projects shared with the user
  */
-export async function getShared(userId: number): Promise<Project[]> {
+export async function getShared(
+  userId: number,
+  query?: string,
+): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
+  endpoint.searchParams.set("query", query);
   const projects = await getAll<Project>(endpoint);
   return projects.filter((project) => project.user !== userId);
 }
