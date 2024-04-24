@@ -1,5 +1,6 @@
 <script lang="ts">
   import { FileDirectory24, People16, Person16 } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
@@ -34,11 +35,11 @@
     <Flex direction="column">
       <SidebarItem active={data.list === "owned"} href="?list=owned">
         <Person16 />
-        Your Projects
+        {$_("projects.yours")}
       </SidebarItem>
       <SidebarItem active={data.list === "shared"} href="?list=shared">
         <People16 />
-        Shared with you
+        {$_("projects.shared")}
       </SidebarItem>
     </Flex>
   </svelte:fragment>
@@ -51,13 +52,13 @@
     {#each data.projects as project}
       <ProjectListItem {project} />
     {:else}
-      <Empty icon={FileDirectory24}>No projects found</Empty>
+      <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
     {/each}
 
     <PageToolbar slot="footer"></PageToolbar>
   </ContentLayout>
 
   <svelte:fragment slot="action">
-    <Button mode="primary" href="/create">Create Project</Button>
+    <Button mode="primary" href="#create">{$_("projects.create")}</Button>
   </svelte:fragment>
 </MainLayout>

@@ -21,11 +21,11 @@
         <h3 class="project-title">{project.title}</h3>
       </div>
       {#if project.private}
-        <span class="small center center-self" title="Private Project"
+        <span class="small center center-self" title={$_("projects.private")}
           ><Lock16 /></span
         >
       {:else}
-        <span class="small center center-self" title="Public Project"
+        <span class="small center center-self" title={$_("projects.public")}
           ><Globe16 /></span
         >
       {/if}

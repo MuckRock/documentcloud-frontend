@@ -3,6 +3,8 @@
   import type { AddOnListItem } from "@/addons/types";
 
   import { Book16, Hourglass24, Pin24, Plug16 } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
+
   import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
@@ -15,13 +17,13 @@
 </script>
 
 <SidebarGroup>
-  <SidebarItem slot="title"><Plug16 /> Add-Ons</SidebarItem>
+  <SidebarItem slot="title"><Plug16 />{$_("sidebar.addons.title")}</SidebarItem>
   <a href="/app/add-ons/" slot="action">
-    <Action icon={Book16}>Explore</Action>
+    <Action icon={Book16}>{$_("common.explore")}</Action>
   </a>
   <Flex direction="column" gap={0}>
     {#await pinnedAddOns}
-      <Empty icon={Hourglass24}>Loading…</Empty>
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then addons}
       {#each addons.results as addon}
         <SidebarItem small href={`/app/add-ons/${addon.repository}/`}>
@@ -29,7 +31,7 @@
           {addon.name}
         </SidebarItem>
       {:else}
-        <Empty icon={Pin24}>Pinned add-ons will appear here</Empty>
+        <Empty icon={Pin24}>{$_("sidebar.addons.pinned")}</Empty>
       {/each}
     {/await}
   </Flex>

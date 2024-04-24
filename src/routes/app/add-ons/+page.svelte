@@ -95,12 +95,12 @@
         </div>
       {/if}
       {#await data.addons}
-        <Empty icon={Hourglass24}>Loading…</Empty>
+        <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
       {:then page}
         {#each page.results as addon}
           <ListItem {addon} />
         {:else}
-          <Empty icon={Plug24}>No Add-Ons Found</Empty>
+          <Empty icon={Plug24}>{$_("addonBrowserDialog.empty")}</Empty>
         {/each}
       {:catch error}
         <Error>{String(error)}</Error>

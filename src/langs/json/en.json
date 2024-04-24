@@ -1,12 +1,13 @@
 {
   "common": {
     "emailAddress": "Email address",
-    "loading": "Loading...",
+    "loading": "Loading…",
     "documentCloud": "DocumentCloud",
     "home": "Home",
     "new": "New",
     "learnMore": "Learn more",
-    "or": "or"
+    "or": "or",
+    "explore": "Explore"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -16,7 +17,10 @@
     "goToApp": "Go to app"
   },
   "inputs": {
-    "required": "Required"
+    "required": "Required",
+    "selectAll": "Select all",
+    "selected": "selected",
+    "resultsCount": "Showing {n, number} of {total, number} results"
   },
   "access": {
     "access": "Access",
@@ -372,6 +376,8 @@
     "contactUs": "<a href={contact} target=\"_blank\">Contact us</a> with bug reports, questions, and suggestions."
   },
   "uploadDialog": {
+    "title": "Upload documents",
+    "description": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
     "docUpload": "Document Upload",
     "docUploadProj": "Document Upload to {title}",
     "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
@@ -638,7 +644,17 @@
     "orgDocuments": "{name}’s Documents",
     "newProject": "New Project",
     "createProject": "Create your first project by clicking “New Project” above.",
-    "pinsEmpty": "Pinned projects will appear here for quick access"
+    "pinsEmpty": "Pinned projects will appear here for quick access",
+    "private": "Private Project",
+    "public": "Public Project",
+    "loading": "Loading project documents…",
+    "empty": "This project is empty",
+    "error": "Error loading project documents",
+    "viewInSearch": "View in Document Search",
+    "yours": "Your Projects",
+    "shared": "Shared with you",
+    "none": "No projects found",
+    "create": "Create project"
   },
   "organizations": {
     "sameOrgUsers": "Users in organization"
@@ -783,6 +799,7 @@
     "source": "Source: {source}",
     "actions": "Document Actions",
     "share": "Share",
+    "shareEmbed": "Share & Embed",
     "shareDesc": "Create an embed or share on social media.",
     "annotate": "Add Note",
     "annotateDesc": "Leave a public, private or shared note, which can be embedded within an article.",
@@ -799,7 +816,18 @@
     "privateNote": "Add Private Note",
     "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "revisions": "Revision History",
-    "revisionsDesc": "Toggle revision history and view previous versions of your document."
+    "revisionsDesc": "Toggle revision history and view previous versions of your document.",
+    "collaborate": "Manage Collaborators",
+    "edit": "Edit",
+    "upload": "Upload Documents",
+    "addons": {
+      "title": "Add-Ons",
+      "pinned": "Pinned add-ons will appear here"
+    },
+    "projects": {
+      "title": "Projects",
+      "pinned": "Pinned projects will appear here"
+    }
   },
   "viewer": {
     "notFound": "Document not found",
