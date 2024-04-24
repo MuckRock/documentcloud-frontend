@@ -53,7 +53,7 @@
     {#await documentSearch}
       <Empty icon={Hourglass24}>Loading project documents…</Empty>
     {:then documentSearchResults}
-      {#if documentSearchResults.results}
+      {#if documentSearchResults.results.length}
         <ResultsList
           results={documentSearchResults.results}
           next={documentSearchResults.next}
