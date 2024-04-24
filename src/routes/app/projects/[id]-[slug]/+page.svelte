@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    FileDirectory24,
     Hourglass24,
     Pencil16,
     People16,
@@ -53,12 +54,16 @@
     {#await documentSearch}
       <Empty icon={Hourglass24}>Loading project documents…</Empty>
     {:then documentSearchResults}
-      <ResultsList
-        results={documentSearchResults.results}
-        next={documentSearchResults.next}
-        count={documentSearchResults.count}
-        auto
-      />
+      {#if documentSearchResults.results}
+        <ResultsList
+          results={documentSearchResults.results}
+          next={documentSearchResults.next}
+          count={documentSearchResults.count}
+          auto
+        />
+      {:else}
+        <Empty icon={FileDirectory24}>This project is empty</Empty>
+      {/if}
     {:catch}
       <Error>Error loading project documents</Error>
     {/await}
