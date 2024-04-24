@@ -53,15 +53,15 @@
     {#await documentSearch}
       <Empty icon={Hourglass24}>Loading project documents…</Empty>
     {:then documentSearchResults}
-      {#if documentSearchResults.results.length}
+      {#if !query && !documentSearchResults.results.length}
+        <Empty icon={FileDirectory24}>This project is empty</Empty>
+      {:else}
         <ResultsList
           results={documentSearchResults.results}
           next={documentSearchResults.next}
           count={documentSearchResults.count}
           auto
         />
-      {:else}
-        <Empty icon={FileDirectory24}>This project is empty</Empty>
       {/if}
     {:catch}
       <Error>Error loading project documents</Error>
