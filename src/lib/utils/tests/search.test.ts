@@ -1,3 +1,4 @@
+import { test, expect } from "vitest";
 import { slugify } from "@/util/string";
 import { me } from "@/test/fixtures/accounts";
 import { userDocs } from "../search";
