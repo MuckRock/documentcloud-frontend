@@ -165,3 +165,9 @@ Utility classes
   white-space: nowrap;
   width: 1px;
 }
+
+hr.divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--gray-2, #d8dee2);
+}

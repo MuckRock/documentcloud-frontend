@@ -10,7 +10,6 @@
 
   import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
   import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
-  import Divider from "@/lib/components/common/Divider.svelte";
   import Flex from "@/lib/components/common/Flex.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
@@ -101,7 +100,7 @@
       >
       <SidebarItem href="#share"><Share16 /> Share & Embed</SidebarItem>
     </Flex>
-    <Divider />
+    <hr class="divider" />
     <SidebarItem href={projectSearchUrl(project)}>
       <Search16 /> View in Document Search
     </SidebarItem>

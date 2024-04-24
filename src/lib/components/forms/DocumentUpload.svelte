@@ -139,7 +139,6 @@
     isWithinSizeLimit,
   } from "@/lib/utils/files";
   import Tooltip from "@/common/Tooltip.svelte";
-  import Divider from "../common/Divider.svelte";
 
   export let csrf_token = "";
   export let files: File[] = [];
@@ -314,7 +313,7 @@
             label="title"
           />
         </Field>
-        <Divider />
+        <hr class="divider" />
         <Field>
           <FieldLabel>Language</FieldLabel>
           <Language />
@@ -334,7 +333,7 @@
           <input type="checkbox" name="force_ocr" />
           <FieldLabel>Force OCR</FieldLabel>
         </Field>
-        <Divider />
+        <hr class="divider" />
 
         <Premium>
           <Field inline>
