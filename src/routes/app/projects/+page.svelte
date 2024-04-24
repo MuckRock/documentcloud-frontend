@@ -22,7 +22,6 @@
     const url = new URL($page.url); // make a copy
     const formData = new FormData(event.currentTarget as HTMLFormElement);
     const query = formData.get("query") ?? "";
-    if (!query) return;
     url.searchParams.set("query", query as string);
     goto(url);
   }

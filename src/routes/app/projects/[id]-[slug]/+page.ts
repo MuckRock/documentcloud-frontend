@@ -8,8 +8,8 @@ export async function load({ params, url, parent, fetch }) {
   const breadcrumbs = await breadcrumbTrail(parent, [
     { href: url.pathname, title: project.title },
   ]);
-  const query = url.searchParams.get("q");
-  const cursor = url.searchParams.get("cursor");
+  const query = url.searchParams.get("q") ?? "";
+  const cursor = url.searchParams.get("cursor") ?? "";
   const documents = search(query, { cursor, project: project.id });
   return {
     breadcrumbs,
