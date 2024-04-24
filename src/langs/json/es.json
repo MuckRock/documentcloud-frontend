@@ -71,7 +71,7 @@
     "selectAccess": "Seleccione un nivel de acceso para el {n, plural, un {documento seleccionado} other {# documentos seleccionados}}",
     "public": "Acceso público",
     "publicDesc": "Cualquiera en Internet puede buscar y ver el documento.",
-    "verifiedHelp": "Solo los usuarios verificados o los miembros de organizaciones verificadas pueden hacer públicos los documentos cargados. Si es periodista o trabaja en la publicación de materiales aprobados para informar al público, <a href=\"https://airtable.com/shrZrgdmuOwW0ZLPM\" target=\"_blank\"> obtenga más información y solicite la verificación aquí. </a>",
+    "verifiedHelp": "Solo los usuarios verificados o los miembros de organizaciones verificadas pueden hacer públicos los documentos cargados. Si es periodista o trabaja en la publicación de materiales aprobados para informar al público, <a href=\"https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form\" target=\"_blank\"> obtenga más información y solicite la verificación aquí. </a>",
     "privateToOrg": "No puede cambiar el nivel de acceso a “Privado para su organización” porque {n, plural,one {este documento está}other {uno o mas documentos están}} asociado a su cuenta personal, y no a una organización. Para {n, plural,one {agregarlo}other {agregarlos}} a una organización, {n, plural,one {selecciónelo}other {selecciónelos}} en la vista de administración y haga clic en \"Cambiar propietario\".<a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">Puede unirse o crear una organización en esta página.</a>",
     "private": "Acceso privado",
     "privateDesc": "Solo personas con permiso explícito (mediante la colaboración) tienen acceso.",
@@ -433,7 +433,7 @@
     "verify1": "Tenga en cuenta que actualmente su cuenta <b>no está verificada para subir documentos</b>. Puede buscar en el repositorio público, organizar los documentos que le interesan en proyectos, dejar notas privadas y colaborar en la edición y anotación de documentos a los que te inviten otros usuarios.",
     "verify2": "Si quiere subir o publicar documentos y es periodista en activo u otra organización interesada en publicar materiales de fuentes primarias de interés público, tendrá que tener su cuenta verificada o añadirla a una organización verificada. Se trata de un proceso sencillo:",
     "verify3": "Primero, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">compruebe si su organización ya existe</a> y, si es así, haga clic en \"Solicitar unirse\" en su página.",
-    "verify4": "Si su organización aún no se ha verificado, o si es autónomo, <a target=\"_blank\" href=\"https://airtable.com/shrZrgdmuOwW0ZLPM\">solicite la verificación aquí</a>. Las solicitudes suelen tardar dos días laborables en procesarse.",
+    "verify4": "Si su organización aún no se ha verificado, o si es autónomo, <a target=\"_blank\" href=\"https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form\">solicite la verificación aquí</a>. Las solicitudes suelen tardar dos días laborables en procesarse.",
     "uploadFirst": "Suba su primer documento",
     "upload1": "Suba un archivo para empezar a utilizar DocumentCloud. Puede arrastrar el archivo a esta ventana, o hacer clic en el botón azul \"Cargar\" de arriba.",
     "upload2": "Una vez que cargue el archivo, DocumentCloud procesará el documento y extraerá su contenido. Posiblemente esto tarde unos minutos en completarse, pero una vez que lo haya hecho, su documento se optimizará para analizarlo y compartirlo en la web."
