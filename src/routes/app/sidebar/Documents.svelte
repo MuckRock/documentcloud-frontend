@@ -13,7 +13,7 @@
 
   import { APP_URL } from "@/config/config";
   import { slugify } from "@/util/string.js";
-  import { userDocs } from "$lib/api/accounts";
+  import { userDocs } from "$lib/utils/search";
 
   const me: Writable<User> = getContext("me");
   const org: Writable<Org> = getContext("org");
