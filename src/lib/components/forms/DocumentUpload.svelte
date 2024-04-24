@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { ActionResult } from "@sveltejs/kit";
   import { DEFAULT_LANGUAGE } from "@/config/config.js";
-  import { userDocs } from "$lib/api/accounts";
+  import { userDocs } from "$lib/utils/search";
 
   /**
    * Collect form data into documents and do three-step upload.
