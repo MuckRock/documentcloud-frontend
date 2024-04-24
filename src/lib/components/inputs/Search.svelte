@@ -10,7 +10,6 @@
   function clear() {
     query = "";
     input.focus();
-    form.submit();
   }
 </script>
 
