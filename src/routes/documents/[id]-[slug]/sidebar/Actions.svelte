@@ -11,6 +11,7 @@
     Pencil16,
     Share16,
   } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
 
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
@@ -37,51 +38,51 @@
 <Flex direction="column">
   <SidebarItem>
     <Lock16 />
-    <span class="access">{document.access} access</span>
+    <span class="access"
+      >{$_(`access.${document.access}.title`)} {$_("access.access")}</span
+    >
 
     <SignedIn>
-      <Action icon={Pencil16}><a href={edit}>Edit</a></Action>
+      <Action icon={Pencil16}><a href={edit}>{$_("sidebar.edit")}</a></Action>
     </SignedIn>
   </SidebarItem>
 
-  <SidebarItem href={revisions}>
-    <History16 />
-    Revision History
-  </SidebarItem>
+  {#if document.revision_control}
+    <SidebarItem href={revisions}>
+      <History16 />
+      {$_("sidebar.revisions")}
+    </SidebarItem>
+  {/if}
 
   <SidebarItem href={pdf} download>
     <Download16 />
-    Download File
+    {$_("sidebar.download")}
   </SidebarItem>
 </Flex>
 
 <Flex direction="column">
   <SidebarItem>
     <Share16 />
-    Share &hellip;
+    {$_("sidebar.share")} &hellip;
   </SidebarItem>
 
   <SidebarItem href={annotate}>
     <Comment16 />
-    Add a note &hellip;
+    {$_("sidebar.annotate")} &hellip;
   </SidebarItem>
 
   <SidebarItem href={redact}>
     <EyeClosed16 />
-    Redact &hellip;
+    {$_("sidebar.redact")} &hellip;
   </SidebarItem>
 
   <SidebarItem href={modify}>
     <Apps16 />
-    Modify Pages &hellip;
+    {$_("sidebar.modify")} &hellip;
   </SidebarItem>
 </Flex>
 
 <style>
-  .access {
-    text-transform: capitalize;
-  }
-
   a {
     color: var(--black);
     text-decoration: none;

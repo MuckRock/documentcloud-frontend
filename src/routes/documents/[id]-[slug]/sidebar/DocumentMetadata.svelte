@@ -34,24 +34,22 @@
   - uploaded
 -->
 <Flex direction="column" gap={1}>
-  <SidebarItem>
-    <h1>{document.title}</h1>
-  </SidebarItem>
-
-  <SidebarItem>
-    {#if document.description}
-      <p class="description">
-        {document.description}
-      </p>
-    {/if}
+  <header>
+    <h1>
+      {document.title}
+    </h1>
     <SignedIn>
       <Action icon={Pencil16}><a href={edit}>Edit</a></Action>
     </SignedIn>
-  </SidebarItem>
+  </header>
 
+  {#if document.description}
+    <p class="description">
+      {document.description}
+    </p>
+  {/if}
+  <Metadata key="Contributed by" value={userOrgString(document)} />
   <Flex>
-    <Metadata key="Contributed by" value={userOrgString(document)}></Metadata>
-
     <Metadata key="Last updated on" value={dateFormat(document.updated_at)}
       ><Clock16 slot="icon" />
     </Metadata>
@@ -61,3 +59,10 @@
     </Metadata>
   </Flex>
 </Flex>
+
+<style>
+  header h1 {
+    display: inline;
+    overflow-wrap: break-word;
+  }
+</style>
