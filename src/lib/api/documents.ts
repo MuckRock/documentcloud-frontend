@@ -60,10 +60,24 @@ export async function get(
   fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
-  const expand = ["user", "organization", "projects", "revisions", "sections"];
+  const expand = [
+    "user",
+    "organization",
+    "projects",
+    "revisions",
+    "sections",
+    "notes",
+  ];
   endpoint.searchParams.set("expand", expand.join(","));
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
+
+  // backend error, not much we can do
+  if (!resp) {
+    error(500);
+  }
 
   if (isErrorCode(resp.status)) {
     error(resp.status, resp.statusText);

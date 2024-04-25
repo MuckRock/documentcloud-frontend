@@ -19,7 +19,7 @@ export async function getAddons(
   params: AddOnParams = {},
   fetch = globalThis.fetch,
 ): Promise<Page<AddOnListItem>> {
-  const endpoint = new URL("addons", BASE_API_URL);
+  const endpoint = new URL("addons/", BASE_API_URL);
   Object.entries(params).forEach(([key, value]) => {
     endpoint.searchParams.set(key, String(value));
   });
