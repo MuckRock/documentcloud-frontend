@@ -49,7 +49,7 @@
         <Search name="q" {query} slot="center" />
       </PageToolbar>
       {#await searchResults}
-        <Empty icon={Hourglass24}>Loading…</Empty>
+        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
       {:then results}
         <ResultsList
           results={results.results}
@@ -76,16 +76,17 @@
             on:change={selectAll}
           />
           {#if $selected.length > 0}
-            {$selected.length.toLocaleString()} selected
+            {$selected.length.toLocaleString()} {$_("inputs.selected")}
           {:else}
-            Select all
+            {$_("inputs.selectAll")}
           {/if}
         </label>
 
         <svelte:fragment slot="right">
           {#if $visible && $total}
-            Showing {$visible.size.toLocaleString()} of {$total.toLocaleString()}
-            results
+            {$_("inputs.resultsCount", {
+              values: { n: $visible.size, total: $total },
+            })}
           {/if}
         </svelte:fragment>
       </PageToolbar>
@@ -95,7 +96,7 @@
   <svelte:fragment slot="action">
     <SignedIn>
       <Button mode="primary" href="/app/upload/"
-        ><PlusCircle16 /> Upload Documents</Button
+        ><PlusCircle16 />{$_("sidebar.upload")}</Button
       >
       <Actions />
       <AddOns pinnedAddOns={data.pinnedAddons} />

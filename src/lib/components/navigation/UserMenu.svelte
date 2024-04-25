@@ -2,7 +2,6 @@
   import type { User } from "@/api/types";
 
   import { _ } from "svelte-i18n";
-  import { page } from "$app/stores";
 
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";

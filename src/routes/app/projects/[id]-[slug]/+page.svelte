@@ -7,6 +7,7 @@
     Search16,
     Share16,
   } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
 
   import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
   import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
@@ -51,10 +52,10 @@
       <Search name="q" {query} slot="center" />
     </PageToolbar>
     {#await documentSearch}
-      <Empty icon={Hourglass24}>Loading project documents…</Empty>
+      <Empty icon={Hourglass24}>{$_("projects.loading")}</Empty>
     {:then documentSearchResults}
       {#if !query && !documentSearchResults.results.length}
-        <Empty icon={FileDirectory24}>This project is empty</Empty>
+        <Empty icon={FileDirectory24}>{$_("projects.empty")}</Empty>
       {:else}
         <ResultsList
           results={documentSearchResults.results}
@@ -64,29 +65,30 @@
         />
       {/if}
     {:catch}
-      <Error>Error loading project documents</Error>
+      <Error>{$_("projects.error")}</Error>
     {/await}
     <PageToolbar slot="footer">
       <label slot="left" class="select-all">
         <input
           type="checkbox"
           name="select_all"
-          checked={$selected.length === $visible.size}
+          checked={$selected.length > 0 && $selected.length === $visible.size}
           indeterminate={$selected.length > 0 &&
             $selected.length < $visible.size}
           on:change={selectAll}
         />
         {#if $selected.length > 0}
-          {$selected.length.toLocaleString()} selected
+          {$selected.length.toLocaleString()} {$_("inputs.selected")}
         {:else}
-          Select all
+          {$_("inputs.selectAll")}
         {/if}
       </label>
 
       <svelte:fragment slot="right">
         {#if $visible && $total}
-          Showing {$visible.size.toLocaleString()} of {$total.toLocaleString()}
-          results
+          {$_("inputs.resultsCount", {
+            values: { n: $visible.size, total: $total },
+          })}
         {/if}
       </svelte:fragment>
     </PageToolbar>
@@ -94,15 +96,17 @@
 
   <svelte:fragment slot="action">
     <Flex direction="column">
-      <SidebarItem href="#edit"><Pencil16 /> Edit</SidebarItem>
+      <SidebarItem href="#edit"><Pencil16 />{$_("sidebar.edit")}</SidebarItem>
       <SidebarItem href="#collaborate"
-        ><People16 /> Manage Collaborators</SidebarItem
+        ><People16 />{$_("sidebar.collaborate")}</SidebarItem
       >
-      <SidebarItem href="#share"><Share16 /> Share & Embed</SidebarItem>
+      <SidebarItem href="#share"
+        ><Share16 />{$_("sidebar.shareEmbed")}</SidebarItem
+      >
     </Flex>
     <hr class="divider" />
     <SidebarItem href={projectSearchUrl(project)}>
-      <Search16 /> View in Document Search
+      <Search16 />{$_("projects.viewInSearch")}
     </SidebarItem>
   </svelte:fragment>
 </MainLayout>

@@ -7,6 +7,7 @@
     FileDirectory24,
     Hourglass24,
   } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
 
   import Pin from "@/common/Pin.svelte";
   import Action from "@/lib/components/common/Action.svelte";
@@ -23,21 +24,26 @@
 </script>
 
 <SidebarGroup>
-  <SidebarItem slot="title"><FileDirectory16 /> Projects</SidebarItem>
-  <a href="/app/projects" slot="action"
-    ><Action icon={Book16}>Explore</Action></a
+  <SidebarItem slot="title"
+    ><FileDirectory16 />{$_("sidebar.projects.title")}</SidebarItem
+  >
+  <a href="/app/projects/" slot="action"
+    ><Action icon={Book16}>{$_("common.explore")}</Action></a
   >
   <Flex direction="column" gap={0}>
     {#await pinned}
-      <Empty icon={Hourglass24}>Loading pinned projects…</Empty>
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then projects}
       {#each projects as project}
-        <SidebarItem small href={`/app/projects/${project.id}-${project.slug}`}>
+        <SidebarItem
+          small
+          href={`/app/projects/${project.id}-${project.slug}/`}
+        >
           <Pin active={project.pinned} />
           {project.title}
         </SidebarItem>
       {:else}
-        <Empty icon={FileDirectory24}>Pinned projects will appear here</Empty>
+        <Empty icon={FileDirectory24}>{$_("sidebar.projects.pinned")}</Empty>
       {/each}
     {/await}
   </Flex>

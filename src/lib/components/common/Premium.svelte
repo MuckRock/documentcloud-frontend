@@ -1,3 +1,8 @@
+<!--
+  @component
+  Render the default slot if the user has a premium account (individual or organization).
+  The "basic" slot is available as a fallback.
+-->
 <script lang="ts">
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";

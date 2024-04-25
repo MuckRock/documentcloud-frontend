@@ -37,6 +37,10 @@
   function clean(html: string) {
     return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
   }
+
+  function onError() {
+    document.status = "error";
+  }
 </script>
 
 <!--
@@ -53,6 +57,8 @@ It's deliberately minimal and can be wrapped in other components to add addition
           alt="Page 1, {document.title}"
           width="{width}px"
           height="{height}px"
+          loading="lazy"
+          on:error={onError}
         />
       {:else}
         <div class="fallback {document.status}">

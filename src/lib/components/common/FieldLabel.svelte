@@ -4,6 +4,7 @@
 -->
 
 <script lang="ts">
+  import { _ } from "svelte-i18n";
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
   import Flex from "./Flex.svelte";
 
@@ -19,7 +20,7 @@
       {/if}
       <slot />
       {#if required}
-        <span class="required">Required</span>
+        <span class="required">{$_("inputs.required")}</span>
       {/if}
     </Flex>
     {#if premium}<PremiumBadge />{/if}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { _ } from "svelte-i18n";
 
-  import Flex from "$lib/components/common/Flex.svelte";
   import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
 
   // using $page.form captures the correct type from applyAction
@@ -17,7 +17,7 @@
 <div class="card">
   <DocumentUpload {csrf_token} {projects}>
     <header>
-      <h1 class="title">Upload documents</h1>
+      <h1 class="title">{$_("uploadDialog.title")}</h1>
 
       {#if form?.success}
         <p class="description">
@@ -29,8 +29,7 @@
         </p>
       {:else}
         <p class="description">
-          Select or drag a document to begin the document upload process. You
-          will then be able to edit document information.
+          {$_("uploadDialog.description")}
         </p>
       {/if}
     </header>
