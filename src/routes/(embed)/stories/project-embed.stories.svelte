@@ -15,7 +15,7 @@
     title: "Embed / Project",
     component: ProjectEmbed,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
   };
 
   const data = {

@@ -64,8 +64,17 @@
 </div>
 
 <style>
+  header {
+    padding: 1rem;
+  }
+
   .documents {
-    display: flex;
-    flex-flow: row wrap;
+    padding: 1rem;
+  }
+
+  @media (min-width: 720px) {
+    .documents {
+      column-count: 3;
+    }
   }
 </style>
