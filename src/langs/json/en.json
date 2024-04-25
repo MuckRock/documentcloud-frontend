@@ -820,6 +820,7 @@
     "collaborate": "Manage Collaborators",
     "edit": "Edit",
     "upload": "Upload Documents",
+    "download": "Download file",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"
