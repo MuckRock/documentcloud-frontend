@@ -163,6 +163,7 @@
   .DC-note-image-max-bounds {
     border-radius: var(--radius);
     box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+    box-sizing: content-box;
     position: relative;
     font-size: 0;
     overflow: hidden;
