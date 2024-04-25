@@ -63,5 +63,6 @@
 <style>
   header h1 {
     display: inline;
+    overflow-wrap: break-word;
   }
 </style>
