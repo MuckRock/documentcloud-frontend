@@ -17,7 +17,7 @@ describe("getAddons", () => {
   });
   it("calls the addons API endpoint", async () => {
     await addons.getAddons({}, mockFetch);
-    const expectedEndpoint = new URL(`addons`, BASE_API_URL);
+    const expectedEndpoint = new URL("addons/", BASE_API_URL);
     expect(mockFetch).toHaveBeenCalledWith(
       expectedEndpoint,
       expect.any(Object),
@@ -28,7 +28,7 @@ describe("getAddons", () => {
       { active: true, featured: true, query: "foobar" },
       mockFetch,
     );
-    const expectedEndpoint = new URL(`addons`, BASE_API_URL);
+    const expectedEndpoint = new URL("addons/", BASE_API_URL);
     expectedEndpoint.searchParams.set("active", "true");
     expectedEndpoint.searchParams.set("featured", "true");
     expectedEndpoint.searchParams.set("query", "foobar");
@@ -57,7 +57,7 @@ test("getPinnedAddons", async () => {
     .mockResolvedValue({ ok: true, json: async () => {} });
   await addons.getPinnedAddons(mockFetch);
   expect(mockFetch).toHaveBeenCalledWith(
-    new URL(`addons?active=true`, BASE_API_URL),
+    new URL(`addons/?active=true`, BASE_API_URL),
     expect.any(Object),
   );
 });
@@ -76,7 +76,7 @@ describe("getAddon", async () => {
   it("calls the addons list endpoint with a respository query argument", async () => {
     await addons.getAddon("MuckRock", "addon-repo", mockFetch);
     expect(mockFetch).toHaveBeenCalledWith(
-      new URL(`addons?repository=MuckRock%2Faddon-repo`, BASE_API_URL),
+      new URL(`addons/?repository=MuckRock%2Faddon-repo`, BASE_API_URL),
       expect.any(Object),
     );
   });
