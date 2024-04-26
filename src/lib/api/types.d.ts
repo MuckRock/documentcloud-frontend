@@ -207,4 +207,18 @@ export interface Pending {
   pages: number;
 }
 
+// See JSON Text https://www.documentcloud.org/help/api/#static-assets
+export interface TextPage {
+  page: number;
+  contents: string;
+  ocr: string | null;
+  lang: string;
+  updated: number; // timestamp
+}
+
+export interface DocumentText {
+  updated: number; // timestamp
+  pages: TextPage[];
+}
+
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

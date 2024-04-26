@@ -18,7 +18,6 @@ function documentPath(document: Document) {
 export async function load({ fetch, params, parent }) {
   const document = await documents.get(+params.id, fetch).catch(console.error);
 
-  console.log({ document });
   if (!document) {
     error(404, "Document not found");
   }
