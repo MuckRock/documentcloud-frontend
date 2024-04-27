@@ -17,17 +17,30 @@
 
 <style>
   .page {
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: var(--font-md, 1rem);
+    padding: 1.5rem;
   }
 
   .page pre {
     background-color: var(--white, #fff);
-    padding: 1rem;
+    padding: 1.5rem;
     text-wrap: pretty;
+
+    color: var(--gray-5, #233944);
+    font-family: "Source Code Pro", monospace;
+    font-size: var(--font-xs);
+    line-height: 1.25rem;
+    box-shadow: var(--shadow);
+    width: 100%;
   }
 
+  h4,
   h4 a {
-    color: var(--black);
+    color: var(--gray-4, #5c717c);
     text-decoration: none;
   }
 
