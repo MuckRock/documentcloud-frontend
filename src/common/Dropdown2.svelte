@@ -130,7 +130,7 @@
     position: relative;
   }
   .dropdownContainer.open {
-    z-index: var(--menuActive);
+    z-index: var(--menuActive, 16);
   }
   .title {
     display: block;
@@ -143,7 +143,7 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
   .title:hover {
-    background: var(--light-primary);
+    background: var(--light-primary, #eff7ff);
   }
   .title.open {
     background: var(--primary);
@@ -187,7 +187,7 @@
   }
 
   .overlay {
-    z-index: var(--menuShim);
+    z-index: var(--menuShim, 14);
     position: fixed;
     top: 0;
     left: 0;

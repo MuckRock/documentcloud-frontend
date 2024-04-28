@@ -1,4 +1,10 @@
-import type { Document, DocumentUpload, Pending, Sizes } from "./types";
+import type {
+  Document,
+  DocumentText,
+  DocumentUpload,
+  Pending,
+  Sizes,
+} from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
 import { APP_URL, DC_BASE, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
@@ -31,11 +37,36 @@ const test = base.extend({
 
     await use(pending);
   },
+
+  text: async ({}, use: Use<DocumentText>) => {
+    const { default: text } = await import(
+      "./fixtures/documents/document.txt.json"
+    );
+
+    await use(text);
+  },
 });
 
 describe("document fetching", () => {
   test.todo("documents.get");
   test.todo("documents.search");
+
+  test("documents.text", async ({ document, text }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async json() {
+        return text;
+      },
+    }));
+
+    const endpoint = documents.jsonUrl(document);
+
+    documents.text(document, mockFetch).then((t) => {
+      expect(t).toMatchObject(text);
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(endpoint);
+  });
 });
 
 describe("document uploads and processing", () => {

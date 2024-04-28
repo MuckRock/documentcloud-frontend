@@ -3,6 +3,7 @@
  */
 import type {
   Document,
+  DocumentText,
   DocumentUpload,
   DocumentResults,
   Pending,
@@ -81,6 +82,20 @@ export async function get(
 
   if (isErrorCode(resp.status)) {
     error(resp.status, resp.statusText);
+  }
+
+  return resp.json();
+}
+
+export async function text(
+  document: Document,
+  fetch = globalThis.fetch,
+): Promise<DocumentText> {
+  const url = jsonUrl(document);
+  const resp = await fetch(url).catch(console.error);
+
+  if (!resp || isErrorCode(resp.status)) {
+    return { updated: 0, pages: [] };
   }
 
   return resp.json();
