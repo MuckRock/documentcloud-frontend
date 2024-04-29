@@ -17,6 +17,8 @@ import { isOrg } from "@/api/types/orgAndUser";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { isErrorCode } from "../utils";
 
+export const MODES = new Set(["document", "text", "thumbnails", "notes"]);
+
 /**
  * Search documents
  * https://www.documentcloud.org/help/search/

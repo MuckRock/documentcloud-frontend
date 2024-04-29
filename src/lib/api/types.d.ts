@@ -15,11 +15,13 @@ export type Access = "public" | "private" | "organization"; // https://www.docum
 
 export type Data = Record<string, string[]>;
 
+export type Highlights = Record<string, string[]>;
+
 export type Status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
 
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
-export type Highlights = Record<string, string[]>;
+export type ViewerMode = "document" | "text" | "thumbnails" | "notes";
 
 export interface NoteHighlight {
   title: string[];

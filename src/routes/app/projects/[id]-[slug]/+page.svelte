@@ -16,7 +16,7 @@
   import Empty from "@/lib/components/common/Empty.svelte";
   import Error from "@/lib/components/common/Error.svelte";
   import { projectSearchUrl } from "@/lib/utils/search";
-  import Search from "@/lib/components/inputs/Search.svelte";
+  import Search from "@/lib/components/forms/Search.svelte";
   import ResultsList, {
     selected,
     total,
