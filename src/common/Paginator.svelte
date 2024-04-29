@@ -100,7 +100,7 @@
           bind:value={inputValue}
           on:change={handleChange}
           on:keyup={handleKeyup}
-          style={`width: ${inputWidth}ch`}
+          style={`min-width: ${inputWidth}ch`}
         />
       {:else}
         <span class="pageNumber">{page}</span>
