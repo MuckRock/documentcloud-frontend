@@ -35,8 +35,19 @@
     goto(u);
   }
 
+  // pagination
+  function next() {
+    currentPage = Math.min(currentPage + 1, document.page_count);
+  }
+
+  function previous() {
+    currentPage = Math.max(currentPage - 1, 1);
+  }
+
   // scroll to a page
-  function scrollToPage(n: number) {}
+  function scrollToPage(n: number) {
+    currentPage = n;
+  }
 </script>
 
 <ContentLayout>
@@ -65,10 +76,14 @@
 
     <Paginator
       slot="center"
-      on:goTo={console.log}
       goToNav
-      page={currentPage}
+      on:goTo={(e) => scrollToPage(e.detail)}
+      on:next={next}
+      on:previous={previous}
+      bind:page={currentPage}
       totalPages={document.page_count}
+      has_next={currentPage < document.page_count}
+      has_previous={currentPage > 1}
     />
   </PageToolbar>
 </ContentLayout>
