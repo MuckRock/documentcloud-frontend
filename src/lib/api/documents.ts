@@ -87,15 +87,56 @@ export async function get(
   return resp.json();
 }
 
+/**
+ * Get text for a document. It may be a private asset, which requires a two-step fetch.
+ *
+ * @param document The document to get text for
+ * @param fetch A fetch function
+ * @returns
+ */
 export async function text(
   document: Document,
   fetch = globalThis.fetch,
 ): Promise<DocumentText> {
-  const url = jsonUrl(document);
-  const resp = await fetch(url).catch(console.error);
+  // for errors
+  const empty = { updated: 0, pages: [] };
+
+  // for public documents, we can just fetch the asset
+  if (document.access === "public") {
+    const url = jsonUrl(document);
+    const resp = await fetch(url).catch(console.error);
+
+    if (!resp || isErrorCode(resp.status)) {
+      return empty;
+    }
+
+    return resp.json();
+  }
+
+  // for private and organization docs, we need to hit the API first
+  // with credentials, and then fetch the returned location
+  let resp: Response | void = await fetch(jsonUrl(document), {
+    credentials: "include",
+    redirect: "error",
+    headers: {
+      Accept: "application/json",
+    },
+  }).catch(console.error);
+
+  if (!resp) {
+    return empty;
+  }
+
+  const { location } = await resp.json();
+
+  if (!location) {
+    return empty;
+  }
+
+  resp = await fetch(location).catch(console.error);
 
   if (!resp || isErrorCode(resp.status)) {
-    return { updated: 0, pages: [] };
+    return empty;
   }
 
   return resp.json();
