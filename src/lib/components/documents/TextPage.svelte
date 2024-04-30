@@ -27,6 +27,7 @@
 
   .page pre {
     background-color: var(--white, #fff);
+    margin: 0;
     padding: 1.5rem;
     text-wrap: pretty;
 
