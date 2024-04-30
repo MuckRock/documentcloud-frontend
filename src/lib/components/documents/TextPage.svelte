@@ -23,7 +23,7 @@
     align-self: stretch;
     gap: var(--font-m, 1rem);
     padding: 0 1rem;
-    margin: 0.75rem 0;
+    margin: 0.75rem 0 0;
     max-width: 100%;
   }
 
@@ -32,6 +32,7 @@
     margin: 0;
     padding: 1.5rem;
     text-wrap: pretty;
+    word-break: break-word;
 
     color: var(--gray-5, #233944);
     font-family: "Source Code Pro", monospace;

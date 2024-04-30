@@ -106,9 +106,11 @@
 
   {#if mode === "text"}
     {#await text then { pages }}
-      {#each pages as { page, contents }}
-        <TextPage {page} {contents} --zoom={zoom} />
-      {/each}
+      <div class="textPages">
+        {#each pages as { page, contents }}
+          <TextPage {page} {contents} --zoom={zoom} />
+        {/each}
+      </div>
     {/await}
   {/if}
 
@@ -147,6 +149,13 @@
 </ContentLayout>
 
 <style>
+  .textPages {
+    max-width: 48rem;
+    padding: 0 1rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+
   label.mode,
   label.zoom {
     display: flex;
