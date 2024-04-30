@@ -22,7 +22,9 @@
     align-items: flex-start;
     align-self: stretch;
     gap: var(--font-md, 1rem);
-    padding: 1.5rem;
+    padding: 0 1rem;
+    margin: .75rem auto 0;
+    max-width: 48rem;
   }
 
   .page pre {
