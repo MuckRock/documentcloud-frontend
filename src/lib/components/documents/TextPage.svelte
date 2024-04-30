@@ -32,8 +32,8 @@
 
     color: var(--gray-5, #233944);
     font-family: "Source Code Pro", monospace;
-    font-size: var(--font-xs);
-    line-height: 1.25rem;
+    font-size: calc(var(--font-xs) * var(--zoom, 1));
+    line-height: calc(1.25rem * var(--zoom, 1));
     box-shadow: var(--shadow);
     width: 100%;
   }
