@@ -45,6 +45,7 @@
   h4 a {
     color: var(--gray-4, #5c717c);
     text-decoration: none;
+    font-weight: var(--font-regular);
   }
 
   h4 a:hover {
