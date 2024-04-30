@@ -103,21 +103,23 @@ export async function text(
   // for errors
   const empty = { updated: 0, pages: [] };
   let url = jsonUrl(document);
-  
-  // for public documents, we can just fetch the asset  
+
+  // for public documents, we can just fetch the asset
   // for private and organization docs, we need to hit the API first
   // with credentials, and then fetch the returned location
   if (document.access !== "public") {
     const resp: Response | void = await fetch(url, {
       credentials: "include",
       redirect: "error",
-       headers: {
+      headers: {
         Accept: "application/json",
       },
     }).catch(console.error);
-    if (!resp || isErrorCode(resp.status) {
+
+    if (!resp || isErrorCode(resp.status)) {
       return empty;
-    } 
+    }
+
     const { location } = await resp.json();
     if (!location) {
       return empty;
@@ -125,7 +127,7 @@ export async function text(
     url = location;
   }
 
-  const resp = await fetch(location).catch(console.error);
+  const resp = await fetch(url).catch(console.error);
   if (!resp || isErrorCode(resp.status)) {
     return empty;
   }

@@ -4,8 +4,6 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { ThreeBars16 } from "svelte-octicons";
-
   // icons
   import DocumentIcon from "@/common/icons/Document.svelte";
   import NotesIcon from "@/common/icons/Notes.svelte";
