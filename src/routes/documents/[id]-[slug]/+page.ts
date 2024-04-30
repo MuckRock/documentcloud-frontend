@@ -6,7 +6,7 @@ export async function load({ fetch, parent, url }) {
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
 
   if (!documents.MODES.has(mode)) {
-    mode = "document";
+    mode = documents.MODES[0];
   }
 
   // only load text in text mode

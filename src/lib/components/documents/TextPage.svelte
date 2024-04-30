@@ -21,10 +21,10 @@
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
-    gap: var(--font-md, 1rem);
+    gap: var(--font-m, 1rem);
     padding: 0 1rem;
-    margin: .75rem auto 0;
-    max-width: 48rem;
+    margin: 0.75rem 0;
+    max-width: 100%;
   }
 
   .page pre {

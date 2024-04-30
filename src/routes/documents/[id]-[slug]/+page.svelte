@@ -1,15 +1,24 @@
 <script lang="ts">
+  import type { ViewerMode } from "@/lib/api/types.js";
+
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
   import { ThreeBars16 } from "svelte-octicons";
+
+  // icons
+  import DocumentIcon from "@/common/icons/Document.svelte";
+  import NotesIcon from "@/common/icons/Notes.svelte";
+  import TextIcon from "@/common/icons/Text.svelte";
+  import ThumbnailsIcon from "@/common/icons/Thumbnails.svelte";
 
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "@/common/Paginator.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import TextPage from "$lib/components/documents/TextPage.svelte";
-  import type { ViewerMode } from "@/lib/api/types.js";
+
+  import * as documents from "$lib/api/documents";
 
   export let data;
 
@@ -20,12 +29,19 @@
     ["notes", "Notes"],
   ]);
 
+  const icons = {
+    document: DocumentIcon,
+    text: TextIcon,
+    thumbnails: ThumbnailsIcon,
+    notes: NotesIcon,
+  };
+
   // internal state
   let currentPage = 1;
   let zoom = 1;
 
   $: document = data.document;
-  $: mode = modes.has(data.mode) ? data.mode : "document";
+  $: mode = modes.has(data.mode) ? data.mode : documents.MODES[0];
   $: text = data.text;
   $: zoomLevels = getZoomLevels(mode);
 
@@ -101,7 +117,7 @@
   <PageToolbar slot="footer">
     <label class="mode" slot="left">
       <span class="sr-only">Mode</span>
-      <ThreeBars16 />
+      <svelte:component this={icons[mode]} />
       <select name="mode" value={mode} on:change={setMode}>
         {#each modes.entries() as [value, name]}
           <option {value}>{name}</option>
@@ -144,6 +160,8 @@
   label.zoom select,
   label.mode select {
     border: none;
+    font-family: var(--font-sans);
+    font-size: var(--font-m);
   }
 
   label.zoom {
