@@ -1,7 +1,18 @@
-import type { Document, DocumentUpload, Pending, Sizes } from "./types";
+import type {
+  Document,
+  DocumentText,
+  DocumentUpload,
+  Pending,
+  Sizes,
+} from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
-import { APP_URL, DC_BASE, IMAGE_WIDTHS_ENTRIES } from "@/config/config.js";
+import {
+  APP_URL,
+  BASE_API_URL,
+  DC_BASE,
+  IMAGE_WIDTHS_ENTRIES,
+} from "@/config/config.js";
 
 import * as documents from "./documents";
 
@@ -31,11 +42,79 @@ const test = base.extend({
 
     await use(pending);
   },
+
+  text: async ({}, use: Use<DocumentText>) => {
+    const { default: text } = await import(
+      "./fixtures/documents/document.txt.json"
+    );
+
+    await use(text);
+  },
 });
 
 describe("document fetching", () => {
   test.todo("documents.get");
   test.todo("documents.search");
+
+  test("documents.text public", async ({ document, text }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      async json() {
+        return text;
+      },
+    }));
+
+    const endpoint = documents.jsonUrl(document);
+
+    documents.text(document, mockFetch).then((t) => {
+      expect(t).toMatchObject(text);
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(endpoint);
+  });
+
+  test("documents.text private", async ({ document, text }) => {
+    const { asset_url } = document;
+    const privateText = new URL("private.txt.json", asset_url).toString();
+    const privateDoc = {
+      ...document,
+      access: "private",
+      asset_url: BASE_API_URL,
+    } as Document;
+
+    // to get private assets, we need to hit the API first for credentials
+    // then fetch the actual asset from cloud storage
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      console.log(endpoint.toString(), options);
+      // call 2
+      if (endpoint === privateText) {
+        return {
+          ok: true,
+          async json() {
+            return text;
+          },
+        };
+      }
+
+      // call 1
+      return {
+        status: 200,
+        headers: new Headers([["Location", privateText]]),
+        async json() {
+          return {
+            location: privateText,
+          };
+        },
+      };
+    });
+
+    documents.text(privateDoc, mockFetch).then((t) => {
+      expect(t).toMatchObject(text);
+
+      // we need two fetches for private assets
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    });
+  });
 });
 
 describe("document uploads and processing", () => {

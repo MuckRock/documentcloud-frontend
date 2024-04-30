@@ -15,11 +15,13 @@ export type Access = "public" | "private" | "organization"; // https://www.docum
 
 export type Data = Record<string, string[]>;
 
+export type Highlights = Record<string, string[]>;
+
 export type Status = "success" | "readable" | "pending" | "error" | "nofile"; // https://www.documentcloud.org/help/api#statuses
 
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
-export type Highlights = Record<string, string[]>;
+export type ViewerMode = "document" | "text" | "thumbnails" | "notes";
 
 export interface NoteHighlight {
   title: string[];
@@ -205,6 +207,20 @@ export interface Pending {
   texts: number;
   text_positions: number;
   pages: number;
+}
+
+// See JSON Text https://www.documentcloud.org/help/api/#static-assets
+export interface TextPage {
+  page: number;
+  contents: string;
+  ocr: string | null;
+  lang: string;
+  updated: number; // timestamp
+}
+
+export interface DocumentText {
+  updated: number; // timestamp
+  pages: TextPage[];
 }
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

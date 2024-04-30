@@ -6,7 +6,7 @@
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
   import Paginator from "@/common/Paginator.svelte";
-  import Search from "@/lib/components/inputs/Search.svelte";
+  import Search from "@/lib/components/forms/Search.svelte";
   import Pin from "@/common/icons/Pin.svelte";
   import Star from "@/common/icons/Star.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";

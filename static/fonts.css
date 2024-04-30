@@ -4,7 +4,8 @@
   font-style: normal;
   font-weight: 400;
   src: url("/fonts/source-sans-pro-v21-latin-regular.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("/fonts/source-sans-pro-v21-latin-regular.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */ url("/fonts/source-sans-pro-v21-latin-regular.woff2")
@@ -24,7 +25,8 @@
   font-style: italic;
   font-weight: 400;
   src: url("/fonts/source-sans-pro-v21-latin-italic.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("/fonts/source-sans-pro-v21-latin-italic.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */ url("/fonts/source-sans-pro-v21-latin-italic.woff2")
@@ -44,7 +46,8 @@
   font-style: normal;
   font-weight: 600;
   src: url("/fonts/source-sans-pro-v21-latin-600.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("/fonts/source-sans-pro-v21-latin-600.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */ url("/fonts/source-sans-pro-v21-latin-600.woff2")
@@ -64,7 +67,8 @@
   font-style: normal;
   font-weight: 700;
   src: url("/fonts/source-sans-pro-v21-latin-700.eot"); /* IE9 Compat Modes */
-  src: local(""),
+  src:
+    local(""),
     url("/fonts/source-sans-pro-v21-latin-700.eot?#iefix")
       format("embedded-opentype"),
     /* IE6-IE8 */ url("/fonts/source-sans-pro-v21-latin-700.woff2")
@@ -76,4 +80,18 @@
     /* Safari, Android, iOS */
       url("/fonts/source-sans-pro-v21-latin-700.svg#SourceSansPro")
       format("svg"); /* Legacy iOS */
+}
+
+/* Source Code Pro */
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  src: url("/fonts/SourceCodePro-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: italic;
+  src: url("/fonts/SourceCodePro-Italic-VariableFont_wght.ttf")
+    format("truetype");
 }

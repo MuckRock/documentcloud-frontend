@@ -12,7 +12,7 @@
   import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
   import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
   import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
-  import Search from "@/lib/components/inputs/Search.svelte";
+  import Search from "@/lib/components/forms/Search.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
   import ProjectListItem from "@/lib/components/projects/ProjectListItem.svelte";
 

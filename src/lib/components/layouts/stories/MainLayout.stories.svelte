@@ -27,7 +27,7 @@
   import ResultsList from "../../documents/ResultsList.svelte";
   import ContentLayout from "../ContentLayout.svelte";
   import PageToolbar from "../../common/PageToolbar.svelte";
-  import Search from "../../inputs/Search.svelte";
+  import Search from "../../forms/Search.svelte";
 
   import { addons } from "@/test/handlers/addons";
 
