@@ -102,45 +102,33 @@ export async function text(
 ): Promise<DocumentText> {
   // for errors
   const empty = { updated: 0, pages: [] };
-
-  // for public documents, we can just fetch the asset
-  if (document.access === "public") {
-    const url = jsonUrl(document);
-    const resp = await fetch(url).catch(console.error);
-
-    if (!resp || isErrorCode(resp.status)) {
-      return empty;
-    }
-
-    return resp.json();
-  }
-
+  let url = jsonUrl(document);
+  
+  // for public documents, we can just fetch the asset  
   // for private and organization docs, we need to hit the API first
   // with credentials, and then fetch the returned location
-  let resp: Response | void = await fetch(jsonUrl(document), {
-    credentials: "include",
-    redirect: "error",
-    headers: {
-      Accept: "application/json",
-    },
-  }).catch(console.error);
-
-  if (!resp) {
-    return empty;
+  if (document.access !== "public") {
+    const resp: Response | void = await fetch(url, {
+      credentials: "include",
+      redirect: "error",
+       headers: {
+        Accept: "application/json",
+      },
+    }).catch(console.error);
+    if (!resp || isErrorCode(resp.status) {
+      return empty;
+    } 
+    const { location } = await resp.json();
+    if (!location) {
+      return empty;
+    }
+    url = location;
   }
 
-  const { location } = await resp.json();
-
-  if (!location) {
-    return empty;
-  }
-
-  resp = await fetch(location).catch(console.error);
-
+  const resp = await fetch(location).catch(console.error);
   if (!resp || isErrorCode(resp.status)) {
     return empty;
   }
-
   return resp.json();
 }
 
