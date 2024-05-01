@@ -22,7 +22,3 @@
 <Story name="small">
   <ThumbnailGrid {document} size="small" />
 </Story>
-
-<Story name="normal">
-  <ThumbnailGrid {document} size="normal" />
-</Story>
