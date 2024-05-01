@@ -734,9 +734,21 @@
     "notes": "Notes",
     "search": "Search Results"
   },
+  "mode": {
+    "mode": "Mode",
+    "document": "Document",
+    "text": "Text",
+    "thumbnails": "Thumbnails",
+    "notes": "Notes"
+  },
   "zoom": {
+    "zoom": "Zoom",
+    "size": "Size",
     "fitWidth": "Fit width",
-    "fitHeight": "Fit height"
+    "fitHeight": "Fit height",
+    "thumbnail": "Thumbnail",
+    "small": "Small",
+    "normal": "Normal"
   },
   "drawer": {
     "close": "Close Drawer"

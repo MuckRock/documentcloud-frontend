@@ -1,8 +1,10 @@
 <script lang="ts">
-  import type { ViewerMode } from "@/lib/api/types.js";
+  import type { Sizes, ViewerMode } from "@/lib/api/types.js";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+
+  import { _ } from "svelte-i18n";
 
   // icons
   import DocumentIcon from "@/common/icons/Document.svelte";
@@ -15,16 +17,17 @@
   import Paginator from "@/common/Paginator.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import TextPage from "$lib/components/documents/TextPage.svelte";
+  import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
 
-  import * as documents from "$lib/api/documents";
+  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 
   export let data;
 
   const modes = new Map([
-    ["document", "Document"],
-    ["text", "Text"],
-    ["thumbnails", "Thumbnails"],
-    ["notes", "Notes"],
+    ["document", $_("mode.document")],
+    ["text", $_("mode.text")],
+    ["thumbnails", $_("mode.thumbnails")],
+    ["notes", $_("mode.notes")],
   ]);
 
   const icons = {
@@ -36,11 +39,11 @@
 
   // internal state
   let currentPage = 1;
-  let zoom = 1;
 
   $: document = data.document;
-  $: mode = modes.has(data.mode) ? data.mode : documents.MODES[0];
+  $: mode = data.mode;
   $: text = data.text;
+  $: zoom = getDefaultZoom(mode);
   $: zoomLevels = getZoomLevels(mode);
 
   function setMode(e) {
@@ -67,15 +70,25 @@
   }
 
   /**
-   * Generate zoom levels based on mode, since each zooms in a slightly different way
-   *
+   * Generate a default zoom, based on mode
    * @param mode
+   */
+  function getDefaultZoom(mode: ViewerMode): number | Sizes {
+    if (mode === "thumbnails") {
+      return "thumbnail";
+    }
+
+    return 1;
+  }
+
+  /**
+   * Generate zoom levels based on mode, since each zooms in a slightly different way
    */
   function getZoomLevels(mode: ViewerMode): (string | number)[][] {
     if (mode === "document") {
       return [
-        ["width", "Fit Width"],
-        ["height", "Fit Height"],
+        ["width", $_("zoom.fitWidth")],
+        ["height", $_("zoom.fitHeight")],
         [0.5, "50%"],
         [0.75, "75%"],
         [1, "100%"],
@@ -94,8 +107,25 @@
       ];
     }
 
-    // todo: thumbnails and notes, maybe
+    // todo: notes, maybe
+    if (mode === "thumbnails") {
+      return [
+        ["thumbnail", $_("zoom.thumbnail")],
+        ["small", $_("zoom.small")],
+        ["normal", $_("zoom.normal")],
+      ];
+    }
+
     return [];
+  }
+
+  // for typescript
+  function zoomToSize(zoom: any): Sizes {
+    if (IMAGE_WIDTHS_MAP.has(zoom)) {
+      return zoom;
+    }
+
+    return "thumbnail";
   }
 </script>
 
@@ -114,6 +144,10 @@
     {/await}
   {/if}
 
+  {#if mode === "thumbnails"}
+    <ThumbnailGrid {document} size={zoomToSize(zoom)} />
+  {/if}
+
   <PageToolbar slot="footer">
     <label class="mode" slot="left">
       <span class="sr-only">Mode</span>
@@ -125,20 +159,27 @@
       </select>
     </label>
 
-    <Paginator
-      slot="center"
-      goToNav
-      on:goTo={(e) => scrollToPage(e.detail)}
-      on:next={next}
-      on:previous={previous}
-      bind:page={currentPage}
-      totalPages={document.page_count}
-      has_next={currentPage < document.page_count}
-      has_previous={currentPage > 1}
-    />
+    <svelte:fragment slot="center">
+      {#if mode !== "thumbnails"}
+        <Paginator
+          goToNav
+          on:goTo={(e) => scrollToPage(e.detail)}
+          on:next={next}
+          on:previous={previous}
+          bind:page={currentPage}
+          totalPages={document.page_count}
+          has_next={currentPage < document.page_count}
+          has_previous={currentPage > 1}
+        />
+      {/if}
+    </svelte:fragment>
 
     <label class="zoom" slot="right">
-      Zoom
+      {#if mode === "thumbnails"}
+        {$_("zoom.size")}
+      {:else}
+        {$_("zoom.zoom")}
+      {/if}
       <select name="zoom" bind:value={zoom}>
         {#each zoomLevels as [value, label]}
           <option {value}>{label}</option>
