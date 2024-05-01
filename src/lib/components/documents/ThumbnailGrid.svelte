@@ -56,11 +56,19 @@
   h4 a {
     color: var(--gray-4, #5c717c);
     text-decoration: none;
+    font-size: var(--font-s);
     font-weight: var(--font-regular);
   }
 
   .page:hover a {
     text-decoration: underline;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
   }
 
   .page img {
