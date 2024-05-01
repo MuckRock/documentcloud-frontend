@@ -75,7 +75,7 @@
    */
   function getDefaultZoom(mode: ViewerMode): number | Sizes {
     if (mode === "thumbnails") {
-      return "thumbnail";
+      return "small";
     }
 
     return 1;
@@ -113,6 +113,7 @@
         ["thumbnail", $_("zoom.thumbnail")],
         ["small", $_("zoom.small")],
         ["normal", $_("zoom.normal")],
+        ["large", $_("zoom.large")],
       ];
     }
 
@@ -125,7 +126,7 @@
       return zoom;
     }
 
-    return "thumbnail";
+    return "small";
   }
 </script>
 

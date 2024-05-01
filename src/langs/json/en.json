@@ -748,7 +748,8 @@
     "fitHeight": "Fit height",
     "thumbnail": "Thumbnail",
     "small": "Small",
-    "normal": "Normal"
+    "normal": "Normal",
+    "large": "Large"
   },
   "drawer": {
     "close": "Close Drawer"

@@ -15,8 +15,16 @@
   export let document: Document;
   export let size: Sizes = "thumbnail";
 
+  const SCALE = {
+    thumbnail: 1,
+    small: 1,
+    normal: 3,
+    large: 3,
+  };
+
   $: sizes = pageSizesFromSpec(document.page_spec);
-  $: width = IMAGE_WIDTHS_MAP.get(size);
+  $: scale = SCALE[size] ?? 1;
+  $: width = IMAGE_WIDTHS_MAP.get(size) / scale;
 </script>
 
 <div class="pages" style:--image-width="{width}px">
