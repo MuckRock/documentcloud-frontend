@@ -57,7 +57,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, var(--image-width));
     gap: 1.5rem;
-    padding: 3rem;
+    padding: 2rem;
+    justify-content: space-evenly;
   }
 
   h4,
