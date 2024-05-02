@@ -746,9 +746,9 @@
     "size": "Size",
     "fitWidth": "Fit width",
     "fitHeight": "Fit height",
-    "thumbnail": "Thumbnail",
+    "thumbnail": "Tiny",
     "small": "Small",
-    "normal": "Normal",
+    "normal": "Medium",
     "large": "Large"
   },
   "drawer": {
