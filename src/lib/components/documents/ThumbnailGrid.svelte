@@ -31,14 +31,8 @@
   {#each sizes as aspect, n}
     {@const page_number = n + 1}
     {@const height = width * aspect}
-    <div class="page">
-      <h4>
-        <a href={pageUrl(document, page_number).href}>
-          {$_("documents.pageAbbrev")}
-          {page_number}
-        </a>
-      </h4>
-      <a href={pageUrl(document, page_number).href}>
+    <Page no={page_number} let:href>
+      <a {href}>
         <img
           src={pageImageUrl(document, page_number, size).href}
           alt="Page {page_number}, {document.title}"
@@ -48,7 +42,7 @@
           loading="lazy"
         />
       </a>
-    </div>
+    </Page>
   {/each}
 </div>
 
@@ -61,26 +55,12 @@
     justify-content: space-evenly;
   }
 
-  h4,
-  h4 a {
-    color: var(--gray-4, #5c717c);
-    text-decoration: none;
-    font-size: var(--font-s);
-    font-weight: var(--font-regular);
-  }
-
-  .page:hover a {
+  
+  a:hover {
     text-decoration: underline;
   }
 
-  .page {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
-  }
-
-  .page img {
+  img {
     box-shadow: var(--shadow);
   }
 </style>
