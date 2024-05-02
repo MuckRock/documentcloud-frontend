@@ -138,6 +138,9 @@
 <style>
   .container {
     padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
   }
 
   label {
