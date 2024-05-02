@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { Document, Project } from "$lib/api/types";
+  import type { Access, Document, Project } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
   import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
   import KV from "../common/KV.svelte";
+  import NoteTab from "./NoteTab.svelte";
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import {
@@ -33,6 +34,22 @@
   $: projects = document.projects?.every((p) => typeof p === "object")
     ? (document.projects as Project[])
     : []; // only show projects if we've loaded them
+
+  $: hasPublicNotes = document.notes?.some((note) => note.access === "public");
+  $: hasOrgNotes = document.notes?.some(
+    (note) => note.access === "organization",
+  );
+  $: hasPrivateNotes = document.notes?.some(
+    (note) => note.access === "private",
+  );
+
+  $: tabs = [
+    hasPublicNotes && ("public" as Access),
+    hasOrgNotes && ("organization" as Access),
+    hasPrivateNotes && ("private" as Access),
+  ].filter(Boolean);
+
+  $: console.log({ tabs });
 
   function clean(html: string) {
     return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
@@ -66,7 +83,15 @@ It's deliberately minimal and can be wrapped in other components to add addition
         </div>
       {/if}
     </a>
+    {#if document.notes && document.notes.length > 0}
+      <p class="notes">{document.notes.length} notes</p>
+    {/if}
+
+    {#each tabs as access}
+      <NoteTab {access} size="small" />
+    {/each}
   </div>
+
   <div class="info">
     <h3>{document.title}</h3>
     <p class="meta">
@@ -104,15 +129,41 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   .thumbnail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .thumbnail img,
+  .thumbnail .fallback {
     border-radius: 0.125rem;
     border: 1px solid var(--gray-2, #cbcbcb);
     background: var(--white, #fff);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
   }
 
+  .thumbnail p {
+    color: var(--gray-5);
+    font-size: var(--font-xs);
+  }
+
+  .thumbnail :global(.tab) {
+    position: absolute;
+    left: -0.5rem;
+    top: 0.5rem;
+  }
+
+  .thumbnail :global(.tab):nth-of-type(2) {
+    top: 1.125rem;
+  }
+
+  .thumbnail :global(.tab):nth-of-type(3) {
+    top: 1.8125rem;
+  }
+
   .info {
     display: flex;
-    padding: 1.25rem 0rem;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;

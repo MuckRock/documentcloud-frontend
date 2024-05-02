@@ -58,9 +58,9 @@ Updated variables and styles for new SvelteKit routes
   --primary: var(--blue-3);
   --premium: var(--green-shiny);
   --error: var(--red);
-  --note-public: var(--color-yellow);
-  --note-private: var(--color-blue-light);
-  --note-org: var(--color-green);
+  --note-public: var(--yellow-bright);
+  --note-private: var(--blue-3);
+  --note-org: var(--green);
 
   /* Text-size styles */
   --action: 12px;
