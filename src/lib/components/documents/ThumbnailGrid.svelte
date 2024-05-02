@@ -8,8 +8,10 @@
 
   import { _ } from "svelte-i18n";
 
+  import Page from "./Page.svelte";
+
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
-  import { pageUrl, pageImageUrl } from "$lib/api/documents";
+  import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
 
   export let document: Document;
@@ -31,7 +33,7 @@
   {#each sizes as aspect, n}
     {@const page_number = n + 1}
     {@const height = width * aspect}
-    <Page no={page_number} let:href>
+    <Page {page_number} let:href>
       <a {href}>
         <img
           src={pageImageUrl(document, page_number, size).href}
@@ -55,7 +57,6 @@
     justify-content: space-evenly;
   }
 
-  
   a:hover {
     text-decoration: underline;
   }
