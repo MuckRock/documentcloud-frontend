@@ -49,8 +49,6 @@
     hasPrivateNotes && ("private" as Access),
   ].filter(Boolean);
 
-  $: console.log({ tabs });
-
   function clean(html: string) {
     return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
   }
@@ -84,7 +82,9 @@ It's deliberately minimal and can be wrapped in other components to add addition
       {/if}
     </a>
     {#if document.notes && document.notes.length > 0}
-      <p class="notes">{document.notes.length} notes</p>
+      <p class="notes">
+        {$_("documents.noteCount", { values: { n: document.notes.length } })}
+      </p>
     {/if}
 
     {#each tabs as access}
