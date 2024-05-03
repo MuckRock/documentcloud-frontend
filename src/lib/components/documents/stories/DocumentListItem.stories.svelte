@@ -4,6 +4,7 @@
 
   import document from "../../../api/fixtures/documents/document.json";
   import expanded from "../../../api/fixtures/documents/document-expanded.json";
+  import santaanas from "$lib/api/fixtures/documents/examples/the-santa-anas.json";
 
   export const meta = {
     title: "Components / Documents / Document List Item",
@@ -20,6 +21,8 @@
 <Story name="default" args={{ document: expanded }} />
 
 <Story name="minimal" args={{ document }} />
+
+<Story name="notes" args={{ document: santaanas }} />
 
 <Story name="pending" args={{ document: { ...document, status: "pending" } }} />
 
