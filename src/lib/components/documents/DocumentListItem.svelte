@@ -87,9 +87,13 @@ It's deliberately minimal and can be wrapped in other components to add addition
       </p>
     {/if}
 
-    {#each tabs as access}
-      <NoteTab {access} size="small" />
-    {/each}
+    {#if tabs.length > 0}
+      <div class="tabs">
+        {#each tabs as access}
+          <NoteTab {access} size="small" />
+        {/each}
+      </div>
+    {/if}
   </div>
 
   <div class="info">
@@ -148,18 +152,13 @@ It's deliberately minimal and can be wrapped in other components to add addition
     font-size: var(--font-xs);
   }
 
-  .thumbnail :global(.tab) {
+  .thumbnail .tabs {
     position: absolute;
     left: -0.5rem;
     top: 0.5rem;
-  }
-
-  .thumbnail :global(.tab):nth-of-type(2) {
-    top: 1.125rem;
-  }
-
-  .thumbnail :global(.tab):nth-of-type(3) {
-    top: 1.8125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
   }
 
   .info {
