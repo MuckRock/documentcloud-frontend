@@ -8,7 +8,7 @@
   export let page_number: number;
   export let mode: ViewerMode = "document";
 
-  $: id = pageHashUrl(page_number);
+  $: id = pageHashUrl(page_number).replace("#", "");
   $: href = `?mode=${mode}` + pageHashUrl(page_number);
 </script>
 
