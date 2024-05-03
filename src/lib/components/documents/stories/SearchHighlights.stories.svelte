@@ -8,7 +8,6 @@
 
   // find one document with highlights
   const document = search.results.find((d) => d.id === "3913417") as Document;
-  const highlights = document.highlights;
 
   export const meta = {
     title: "Components / Documents / Search Highlights",

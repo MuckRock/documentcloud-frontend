@@ -1,33 +1,20 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
+  import Page from "./Page.svelte";
+
   export let page: number;
   export let contents: string;
 </script>
 
-<div class="page">
-  <h4 id="p{page + 1}">
-    <a href="#p{page + 1}">{$_("documents.pageAbbrev")} {page + 1}</a>
-  </h4>
-
+<Page page_number={page + 1} mode="text">
   <pre>
     {contents}
   </pre>
-</div>
+</Page>
 
 <style>
-  .page {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    align-self: stretch;
-    gap: var(--font-m, 1rem);
-    padding: 0 1rem;
-    margin: 0.75rem 0 0;
-    max-width: 100%;
-  }
-
-  .page pre {
+  pre {
     background-color: var(--white, #fff);
     margin: 0;
     padding: 1.5rem;
@@ -40,16 +27,5 @@
     line-height: calc(1.25rem * var(--zoom, 1));
     box-shadow: var(--shadow);
     width: 100%;
-  }
-
-  h4,
-  h4 a {
-    color: var(--gray-4, #5c717c);
-    text-decoration: none;
-    font-weight: var(--font-regular);
-  }
-
-  h4 a:hover {
-    text-decoration: underline;
   }
 </style>
