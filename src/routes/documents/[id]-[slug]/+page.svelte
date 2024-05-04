@@ -15,6 +15,7 @@
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "@/common/Paginator.svelte";
+  import PDF from "$lib/components/documents/PDF.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import TextPage from "$lib/components/documents/TextPage.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
@@ -107,7 +108,6 @@
       ];
     }
 
-    // todo: notes, maybe
     if (mode === "thumbnails") {
       return [
         ["thumbnail", $_("zoom.thumbnail")],
@@ -117,6 +117,7 @@
       ];
     }
 
+    // todo: notes, maybe
     return [];
   }
 
@@ -134,6 +135,10 @@
   <PageToolbar slot="header">
     <Search slot="center" />
   </PageToolbar>
+
+  {#if mode === "document"}
+    <PDF {document} scale={+zoom || 1} />
+  {/if}
 
   {#if mode === "text"}
     {#await text then { pages }}

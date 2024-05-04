@@ -23,6 +23,13 @@ export default defineConfig({
 
   plugins: [sveltekit()],
 
+  // allow top-level await
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext",
+    },
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),

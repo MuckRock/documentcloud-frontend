@@ -27,7 +27,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    align-self: stretch;
+    align-self: center;
     gap: var(--font-m, 1rem);
     padding: 0 1rem;
     margin: 0.75rem 0 0;
