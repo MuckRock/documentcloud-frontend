@@ -74,7 +74,13 @@
    * Generate a default zoom, based on mode
    * @param mode
    */
-  function getDefaultZoom(mode: ViewerMode): number | Sizes {
+  function getDefaultZoom(
+    mode: ViewerMode,
+  ): number | Sizes | "width" | "height" {
+    if (mode === "document") {
+      return "width";
+    }
+
     if (mode === "thumbnails") {
       return "small";
     }
@@ -122,6 +128,14 @@
   }
 
   // for typescript
+  function zoomToScale(zoom: any): number | "width" | "height" {
+    if (zoom === "width" || zoom === "height") {
+      return zoom;
+    }
+
+    return +zoom || 1;
+  }
+
   function zoomToSize(zoom: any): Sizes {
     if (IMAGE_WIDTHS_MAP.has(zoom)) {
       return zoom;
@@ -137,7 +151,7 @@
   </PageToolbar>
 
   {#if mode === "document"}
-    <PDF {document} scale={+zoom || 1} />
+    <PDF {document} scale={zoomToScale(zoom)} />
   {/if}
 
   {#if mode === "text"}
