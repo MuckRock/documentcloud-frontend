@@ -22,6 +22,7 @@
   import { pageSizesFromSpec } from "@/api/pageSize.js";
   import { pdfUrl } from "$lib/api/documents";
 
+  export let asset_url: URL = null;
   export let document: Document;
   export let scale: number | "width" | "height" = 1;
 
@@ -29,10 +30,9 @@
   let pdf;
 
   $: sizes = pageSizesFromSpec(document.page_spec);
-  $: url = pdfUrl(document);
 
   onMount(async () => {
-    task = pdfjs.getDocument(url);
+    task = pdfjs.getDocument(asset_url);
     pdf = await task.promise;
   });
 </script>

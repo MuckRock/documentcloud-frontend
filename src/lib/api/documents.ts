@@ -15,7 +15,7 @@ import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import { isErrorCode } from "../utils";
+import { isErrorCode, getPrivateAsset } from "../utils/index";
 
 export const MODES = new Set(["document", "text", "thumbnails", "notes"]);
 
@@ -91,10 +91,6 @@ export async function get(
 
 /**
  * Get text for a document. It may be a private asset, which requires a two-step fetch.
- *
- * @param document The document to get text for
- * @param fetch A fetch function
- * @returns
  */
 export async function text(
   document: Document,
@@ -108,23 +104,7 @@ export async function text(
   // for private and organization docs, we need to hit the API first
   // with credentials, and then fetch the returned location
   if (document.access !== "public") {
-    const resp: Response | void = await fetch(url, {
-      credentials: "include",
-      redirect: "error",
-      headers: {
-        Accept: "application/json",
-      },
-    }).catch(console.error);
-
-    if (!resp || isErrorCode(resp.status)) {
-      return empty;
-    }
-
-    const { location } = await resp.json();
-    if (!location) {
-      return empty;
-    }
-    url = location;
+    url = await getPrivateAsset(url, fetch);
   }
 
   const resp = await fetch(url).catch(console.error);

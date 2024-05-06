@@ -14,11 +14,16 @@ working with PDF.svelte.
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
 
+  $: orientation = aspect > 1 ? "vertical" : "horizontal";
+
+  // render when anything changes
+  $: render(canvas, container, aspect, scale, pdf);
+
   async function render(
     canvas: HTMLCanvasElement,
     container: HTMLElement,
     aspect: number,
-    scale: number | "width" | "height",
+    scale: number | "width" | "height", // todo: convert width and height to a reasonable number
     pdf,
   ) {
     // check that we have things
@@ -48,15 +53,12 @@ working with PDF.svelte.
       transform,
     });
   }
-
-  // render when anything changes
-  $: render(canvas, container, aspect, scale, pdf);
 </script>
 
 <Page {page_number}>
   <div
     bind:this={container}
-    class="page-container scale-{scale}"
+    class="page-container scale-{scale} {orientation}"
     style="--aspect: {aspect};"
   >
     <canvas bind:this={canvas}></canvas>

@@ -151,7 +151,7 @@
   </PageToolbar>
 
   {#if mode === "document"}
-    <PDF {document} scale={zoomToScale(zoom)} />
+    <PDF {document} scale={zoomToScale(zoom)} asset_url={data.asset_url} />
   {/if}
 
   {#if mode === "text"}

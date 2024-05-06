@@ -8,7 +8,7 @@ import type { Document } from "@/lib/api/types";
 import { redirect, error } from "@sveltejs/kit";
 import * as documents from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons";
-import { breadcrumbTrail } from "$lib/utils/navigation";
+import { breadcrumbTrail, getPrivateAsset } from "$lib/utils/index";
 
 function documentPath(document: Document) {
   return `/documents/${document.id}-${document.slug}`;
@@ -32,11 +32,20 @@ export async function load({ fetch, params, parent }) {
     { href: documentPath(document), title: document.title },
   ]);
 
+  let asset_url = documents.pdfUrl(document);
+  if (document.access !== "public") {
+    asset_url = await getPrivateAsset(asset_url).catch((e) => {
+      console.log(e);
+      return asset_url;
+    });
+  }
+
   // stream this
   const pinnedAddons = getPinnedAddons(fetch);
 
   return {
     document,
+    asset_url,
     pinnedAddons,
     breadcrumbs,
   };
