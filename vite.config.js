@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   build: {
     sourcemap: true,
+    target: "esnext",
   },
 
   define: {
