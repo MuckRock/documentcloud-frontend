@@ -31,6 +31,11 @@ const config: StorybookConfig = {
       },
     };
 
+    config.build = {
+      ...config.build,
+      target: "esnext",
+    };
+
     return config;
   },
 };
