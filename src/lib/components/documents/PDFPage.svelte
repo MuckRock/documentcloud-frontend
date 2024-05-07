@@ -19,6 +19,17 @@ working with PDF.svelte.
   // render when anything changes
   $: render(canvas, container, aspect, scale, pdf);
 
+  function scaleToNumber(
+    scale: number | "width" | "height",
+    orientation: string,
+  ): number {
+    if (typeof scale === "number") return scale;
+
+    if (orientation === "vertical") return 2;
+
+    return 1;
+  }
+
   async function render(
     canvas: HTMLCanvasElement,
     container: HTMLElement,
@@ -30,7 +41,7 @@ working with PDF.svelte.
     if (![canvas, container, aspect, scale, pdf].every(Boolean)) return;
 
     // be smarter about this eventually
-    const numericScale = typeof scale === "number" ? scale : 2;
+    const numericScale = scaleToNumber(scale, orientation);
 
     const context = canvas.getContext("2d");
     const page = await pdf.getPage(page_number);

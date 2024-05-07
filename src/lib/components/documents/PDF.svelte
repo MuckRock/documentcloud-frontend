@@ -20,20 +20,21 @@
   import PdfPage from "./PDFPage.svelte";
 
   import { pageSizesFromSpec } from "@/api/pageSize.js";
-  import { pdfUrl } from "$lib/api/documents";
 
   export let asset_url: URL = null;
   export let document: Document;
   export let scale: number | "width" | "height" = 1;
+  export let pdf = null;
 
-  let task: ReturnType<typeof pdfjs.getDocument> | undefined;
-  let pdf;
+  let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
 
   $: sizes = pageSizesFromSpec(document.page_spec);
 
   onMount(async () => {
-    task = pdfjs.getDocument({ url: asset_url });
-    pdf = await task.promise;
+    if (!pdf) {
+      task = pdfjs.getDocument({ url: asset_url });
+      pdf = await task.promise;
+    }
   });
 </script>
 
