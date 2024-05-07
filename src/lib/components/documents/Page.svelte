@@ -7,12 +7,14 @@
 
   export let page_number: number;
   export let mode: ViewerMode = "document";
+  export let wide = false;
+  export let tall = false;
 
   $: id = pageHashUrl(page_number).replace("#", "");
   $: href = `?mode=${mode}` + pageHashUrl(page_number);
 </script>
 
-<div class="page">
+<div class="page" class:wide class:tall>
   <h4 {id}>
     <a {href}>
       {$_("documents.pageAbbrev")}
@@ -32,6 +34,10 @@
     padding: 0 1rem;
     margin: 0.75rem 0 0;
     max-width: 100%;
+  }
+
+  .page.wide {
+    width: 100%;
   }
 
   h4,

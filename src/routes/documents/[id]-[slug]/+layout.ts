@@ -34,8 +34,9 @@ export async function load({ fetch, params, parent }) {
 
   let asset_url = documents.pdfUrl(document);
   if (document.access !== "public") {
-    asset_url = await getPrivateAsset(asset_url).catch((e) => {
-      console.log(e);
+    asset_url = await getPrivateAsset(asset_url, fetch).catch((e) => {
+      console.error(e);
+      console.error(asset_url.href);
       return asset_url;
     });
   }

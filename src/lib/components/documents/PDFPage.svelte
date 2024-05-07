@@ -30,7 +30,7 @@ working with PDF.svelte.
     if (![canvas, container, aspect, scale, pdf].every(Boolean)) return;
 
     // be smarter about this eventually
-    const numericScale = typeof scale === "number" ? scale : 1;
+    const numericScale = typeof scale === "number" ? scale : 2;
 
     const context = canvas.getContext("2d");
     const page = await pdf.getPage(page_number);
@@ -39,13 +39,16 @@ working with PDF.svelte.
 
     const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null;
 
+    // set the pixel dimensions of the canvas
     canvas.width = Math.floor(viewport.width * dpr);
     canvas.height = Math.floor(viewport.height * dpr);
 
-    canvas.style.width = Math.floor(viewport.width) + "px";
-    canvas.style.height = Math.floor(viewport.height) + "px";
-    container.style.width = Math.floor(viewport.width) + "px";
-    container.style.height = Math.floor(viewport.height) + "px";
+    // set the container size, if using a numeric zoom
+    if (typeof scale === "number") {
+      container.style.setProperty("--width", Math.floor(viewport.width) + "px");
+    } else if (scale === "height") {
+      container.style.removeProperty("--width");
+    }
 
     page.render({
       canvasContext: context,
@@ -55,7 +58,7 @@ working with PDF.svelte.
   }
 </script>
 
-<Page {page_number}>
+<Page {page_number} wide={scale === "width"} tall={scale === "height"}>
   <div
     bind:this={container}
     class="page-container scale-{scale} {orientation}"
@@ -72,6 +75,7 @@ working with PDF.svelte.
     position: relative;
 
     box-shadow: var(--shadow);
+    width: var(--width, "100%");
   }
 
   .page-container.scale-width {
@@ -79,7 +83,7 @@ working with PDF.svelte.
   }
 
   .page-container.scale-height {
-    height: 100%;
+    height: 90vh;
   }
 
   canvas {

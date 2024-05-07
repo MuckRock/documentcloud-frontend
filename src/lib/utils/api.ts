@@ -49,6 +49,10 @@ export async function getPrivateAsset(
     },
   });
 
+  if (!resp.ok) {
+    throw new Error(resp.statusText);
+  }
+
   // {"location": "s3 URL with credentials"}
   const { location } = await resp.json();
 

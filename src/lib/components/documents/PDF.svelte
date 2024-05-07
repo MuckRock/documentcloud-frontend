@@ -32,7 +32,7 @@
   $: sizes = pageSizesFromSpec(document.page_spec);
 
   onMount(async () => {
-    task = pdfjs.getDocument(asset_url);
+    task = pdfjs.getDocument({ url: asset_url });
     pdf = await task.promise;
   });
 </script>
@@ -51,5 +51,6 @@
     flex-direction: column;
     margin: 0 auto;
     gap: 3rem;
+    width: 100%;
   }
 </style>
