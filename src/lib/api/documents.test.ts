@@ -101,6 +101,7 @@ describe("document fetching", () => {
 
       // call 1
       return {
+        ok: true,
         status: 200,
         async json() {
           return {
