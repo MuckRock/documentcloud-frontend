@@ -115,6 +115,11 @@ export async function text(
 }
 
 /**
+ * Fetch text positions for a single page of a document
+ */
+export async function textPositions(document: Document, page: number) {}
+
+/**
  * Create new documents in a batch (or a batch of one).
  *
  * If documents contain a `file_url` property, the server will attempt to fetch and upload that file.

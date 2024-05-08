@@ -223,4 +223,15 @@ export interface DocumentText {
   pages: TextPage[];
 }
 
+export interface TextPosition {
+  text: string;
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  upright?: boolean;
+  direction?: number;
+  metadata?: any;
+}
+
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

@@ -4,12 +4,15 @@ This component exists to manage state and rendering for a single page,
 working with PDF.svelte.
 -->
 <script lang="ts">
+  import type { TextPosition } from "$lib/api/types";
+
   import Page from "./Page.svelte";
 
   export let aspect: number;
   export let page_number: number; // 1-indexed
   export let pdf; // PDFDocumentProxy
   export let scale: number | "width" | "height";
+  export let text: TextPosition[] = [];
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -76,6 +79,17 @@ working with PDF.svelte.
     style="--aspect: {aspect};"
   >
     <canvas bind:this={canvas}></canvas>
+    {#if text.length > 0}
+      <div class="selectable-text">
+        {#each text as word}
+          <span
+            class="word"
+            style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
+            >{word.text}</span
+          >
+        {/each}
+      </div>
+    {/if}
   </div>
 </Page>
 
@@ -95,6 +109,19 @@ working with PDF.svelte.
 
   .page-container.scale-height {
     height: 90vh;
+  }
+
+  .selectable-text {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    user-select: text;
+  }
+
+  .word {
+    color: transparent;
+    position: absolute;
   }
 
   canvas {
