@@ -27,7 +27,7 @@
   }
 </script>
 
-<Story name="default">
+<Story name="server text">
   {#await load(url) then pdf}
     <PdfPage
       aspect={sizes[0]}
@@ -36,5 +36,11 @@
       {pdf}
       text={textPositions}
     />
+  {/await}
+</Story>
+
+<Story name="embedded text">
+  {#await load(url) then pdf}
+    <PdfPage aspect={sizes[0]} page_number={1} scale={1.5} {pdf} />
   {/await}
 </Story>

@@ -4,6 +4,7 @@ import type {
   DocumentUpload,
   Pending,
   Sizes,
+  TextPosition,
 } from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
@@ -50,6 +51,14 @@ const test = base.extend({
 
     await use(text);
   },
+
+  textPositions: async ({}, use: Use<TextPosition[]>) => {
+    const { default: textPositions } = await import(
+      "./fixtures/documents/examples/the-santa-anas-p1.position.json"
+    );
+
+    await use(textPositions);
+  },
 });
 
 describe("document fetching", () => {
@@ -88,7 +97,6 @@ describe("document fetching", () => {
     // to get private assets, we need to hit the API first for credentials
     // then fetch the actual asset from cloud storage
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
-      console.log(endpoint.href, options);
       // call 2
       if (endpoint.toString() === privateText.toString()) {
         return {
@@ -116,6 +124,22 @@ describe("document fetching", () => {
 
     // we need two fetches for private assets
     expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  test("documents.textPositions", async ({ document, textPositions }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return textPositions;
+        },
+      };
+    });
+
+    const t = await documents.textPositions(document, 1, mockFetch);
+
+    expect(t).toMatchObject(textPositions);
   });
 });
 

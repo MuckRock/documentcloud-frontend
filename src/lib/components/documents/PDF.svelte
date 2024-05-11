@@ -35,6 +35,9 @@
       task = pdfjs.getDocument({ url: asset_url });
       pdf = await task.promise;
     }
+
+    // @ts-ignore
+    // window.pdf = pdf;
   });
 </script>
 

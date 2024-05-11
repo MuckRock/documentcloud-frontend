@@ -6,6 +6,8 @@
 import type { Document } from "@/lib/api/types";
 
 import { redirect, error } from "@sveltejs/kit";
+
+import { DC_BASE } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons";
 import { breadcrumbTrail, getPrivateAsset } from "$lib/utils/index";
@@ -33,7 +35,9 @@ export async function load({ fetch, params, parent }) {
   ]);
 
   let asset_url = documents.pdfUrl(document);
-  if (document.access !== "public") {
+
+  // assets still processing are in private storage until finished
+  if (document.access !== "public" || String(asset_url).startsWith(DC_BASE)) {
     asset_url = await getPrivateAsset(asset_url, fetch).catch((e) => {
       console.error(e);
       console.error(asset_url.href);

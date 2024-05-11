@@ -78,7 +78,7 @@
     mode: ViewerMode,
   ): number | Sizes | "width" | "height" {
     if (mode === "document") {
-      return 1;
+      return "width";
     }
 
     if (mode === "thumbnails") {

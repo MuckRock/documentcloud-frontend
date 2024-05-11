@@ -9,6 +9,7 @@ import type {
   Pending,
   SearchOptions,
   Sizes,
+  TextPosition,
 } from "./types";
 
 import { error } from "@sveltejs/kit";
@@ -115,9 +116,33 @@ export async function text(
 }
 
 /**
- * Fetch text positions for a single page of a document
+ * Fetch text positions for a single page of a document.
+ * Since older documents don't have selectable text, this will
+ * return an empty array in failure cases.
  */
-export async function textPositions(document: Document, page: number) {}
+export async function textPositions(
+  document: Document,
+  page: number,
+  fetch = globalThis.fetch,
+): Promise<TextPosition[]> {
+  let url = selectableTextUrl(document, page);
+
+  if (document.access !== "public") {
+    try {
+      url = await getPrivateAsset(url);
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  const resp = await fetch(url).catch(console.error);
+  if (!resp || isErrorCode(resp.status)) {
+    return [];
+  }
+
+  return resp.json();
+}
 
 /**
  * Create new documents in a batch (or a batch of one).
