@@ -6,6 +6,7 @@ working with PDF.svelte.
 <script lang="ts">
   import type { TextPosition } from "$lib/api/types";
 
+  import { afterUpdate } from "svelte";
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
 
   import Page from "./Page.svelte";
@@ -30,17 +31,11 @@ working with PDF.svelte.
 
   // render when anything changes
   $: page = pdf.getPage(page_number);
-  $: viewport = page.then((p) =>
-    p.getViewport({ scale: scaleToNumber(scale, orientation) }),
-  );
   $: textContent =
     !text.length &&
     page.then((p) => p.getTextContent({ includeMarkedContent: true }));
-  $: page.then((p) => render(p, canvas, container, scale));
-  $: page.then((p) => renderTextLayer(p, textContainer, scale));
-  $: numericScale = scaleToNumber(scale, orientation);
-  $: scaleFactor =
-    scaleToNumber(scale, orientation) * pdfjs.PixelsPerInch.PDF_TO_CSS_UNITS;
+  // $: page.then((p) => render(p, canvas, container, scale));
+  // $: page.then((p) => renderTextLayer(p, textContainer, scale));
 
   // debugging
   /*
@@ -49,15 +44,24 @@ working with PDF.svelte.
   );
   $: textContent.then(console.log);
   */
-  function scaleToNumber(
+
+  /**
+   * Return a numeric scale based on intrinsic page size and container size
+   * @param page
+   * @param container
+   */
+  function fitPage(
+    page,
+    container: HTMLElement,
     scale: number | "width" | "height",
-    orientation: string,
   ): number {
     if (typeof scale === "number") return scale;
+    if (!container) return 1;
 
-    if (orientation === "vertical") return 1.5;
+    const [x1, y1, width, height] = page.view;
+    const { clientWidth, clientHeight } = container;
 
-    return 1;
+    return scale === "width" ? clientWidth / width : clientHeight / height;
   }
 
   async function render(
@@ -75,7 +79,7 @@ working with PDF.svelte.
     if (![canvas, container, scale, page].every(Boolean)) return;
 
     // be smarter about this eventually
-    const numericScale = scaleToNumber(scale, orientation);
+    const numericScale = fitPage(page, container, scale);
 
     const context = canvas.getContext("2d");
     const viewport = page.getViewport({ scale: numericScale });
@@ -106,55 +110,59 @@ working with PDF.svelte.
 
   async function renderTextLayer(
     page,
-    container: HTMLElement,
+    textContainer: HTMLElement,
+    pageContainer: HTMLElement,
     scale: number | "width" | "height",
   ) {
     if (text.length > 0) return;
-    if (!container) return;
+    if (!textContainer) return;
 
-    const numericScale = scaleToNumber(scale, orientation);
+    const numericScale = fitPage(page, pageContainer, scale);
     const viewport = page.getViewport({ scale: numericScale });
     const content = await page.getTextContent();
 
+    // pdfjs scales text using this CSS property, so set it here when we know it
+    textContainer.style.setProperty("--scale-factor", numericScale.toFixed(2));
+
     pdfjs.renderTextLayer({
       textContentSource: content,
-      container,
+      container: textContainer,
       viewport,
     });
   }
+
+  afterUpdate(async () => {
+    const p = await page;
+
+    render(p, canvas, container, scale);
+    renderTextLayer(p, textContainer, container, scale);
+  });
 </script>
 
 <Page {page_number} wide={scale === "width"} tall={scale === "height"}>
-  {#await viewport then viewport}
-    {@const { pageWidth, pageHeight, pageX, pageY } = viewport.rawDims}
-    {@const transform = [1, 0, 0, -1, -pageX, pageY + pageHeight]}
-    <div
-      bind:this={container}
-      class="page-container scale-{scale} {orientation}"
-      style:--aspect={aspect}
-      style:--scale-factor={numericScale}
-      style:--page-width="{pageWidth}px"
-      style:--page-height="{pageWidth}px"
-    >
-      <canvas bind:this={canvas}></canvas>
-      {#if text.length > 0}
-        <div bind:this={textContainer} class="selectable-text">
-          {#each text as word}
-            <span
-              role="presentation"
-              class="word"
-              style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
-              >{word.text}</span
-            >
-          {/each}
-        </div>
-      {:else}
-        <div bind:this={textContainer} class="selectable-text embedded">
-          <!-- pdfjs.renderTextLayer will fill this in -->
-        </div>
-      {/if}
-    </div>
-  {/await}
+  <div
+    bind:this={container}
+    class="page-container scale-{scale} {orientation}"
+    style:--aspect={aspect}
+  >
+    <canvas bind:this={canvas}></canvas>
+    {#if text.length > 0}
+      <div bind:this={textContainer} class="selectable-text">
+        {#each text as word}
+          <span
+            role="presentation"
+            class="word"
+            style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
+            >{word.text}</span
+          >
+        {/each}
+      </div>
+    {:else}
+      <div bind:this={textContainer} class="selectable-text embedded">
+        <!-- pdfjs.renderTextLayer will fill this in -->
+      </div>
+    {/if}
+  </div>
 </Page>
 
 <style>
@@ -180,7 +188,6 @@ working with PDF.svelte.
     top: 0;
     bottom: 0;
     width: 100%;
-    user-select: text;
     opacity: 0.5;
   }
 

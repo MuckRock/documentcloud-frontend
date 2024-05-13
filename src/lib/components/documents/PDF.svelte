@@ -37,7 +37,7 @@
     }
 
     // @ts-ignore
-    // window.pdf = pdf;
+    window.pdf = pdf;
   });
 </script>
 
