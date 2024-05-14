@@ -211,7 +211,7 @@ Selectable text can be rendered in one of two ways:
   }
 
   .selectable-text.embedded :global(:is(span, br)) {
-    color: red;
+    color: transparent;
     position: absolute;
     white-space: pre;
     cursor: text;
