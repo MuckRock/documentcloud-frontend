@@ -7,7 +7,7 @@
     "pdfjs-dist/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
-  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { pageSizes } from "@/api/pageSize.js";
 
   import document from "$lib/api/fixtures/documents/examples/the-santa-anas.json";
   import textPositions from "$lib/api/fixtures/documents/examples/the-santa-anas-p1.position.json";
@@ -19,7 +19,8 @@
     parameters: { layout: "centered" },
   };
 
-  const sizes = pageSizesFromSpec(document.page_spec);
+  const sizes = pageSizes(document.page_spec);
+  const [width, height] = sizes[0];
   const url = new URL(pdfFile, import.meta.url);
 
   async function load(url: URL) {
@@ -30,17 +31,18 @@
 <Story name="server text">
   {#await load(url) then pdf}
     <PdfPage
-      aspect={sizes[0]}
       page_number={1}
       scale={1.5}
       {pdf}
       text={textPositions}
+      {width}
+      {height}
     />
   {/await}
 </Story>
 
 <Story name="embedded text">
   {#await load(url) then pdf}
-    <PdfPage aspect={sizes[0]} page_number={1} scale={1.5} {pdf} />
+    <PdfPage page_number={1} scale={1.5} {pdf} {width} {height} />
   {/await}
 </Story>

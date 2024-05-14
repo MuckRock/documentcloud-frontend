@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { Sizes, ViewerMode } from "@/lib/api/types.js";
 
-  import { goto } from "$app/navigation";
+  import { browser } from "$app/environment";
+  import { afterNavigate, goto } from "$app/navigation";
   import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
@@ -12,6 +13,7 @@
   import TextIcon from "@/common/icons/Text.svelte";
   import ThumbnailsIcon from "@/common/icons/Thumbnails.svelte";
 
+  // components
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "@/common/Paginator.svelte";
@@ -20,7 +22,9 @@
   import TextPage from "$lib/components/documents/TextPage.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
 
+  // config and utils
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+  import { pageHashUrl, pageFromHash } from "$lib/api/documents";
 
   export let data;
 
@@ -47,6 +51,17 @@
   $: zoom = getDefaultZoom(mode);
   $: zoomLevels = getZoomLevels(mode);
 
+  // lifecycle
+  afterNavigate(() => {
+    const { hash } = $page.url;
+
+    currentPage = pageFromHash(hash);
+
+    if (currentPage > 1) {
+      scrollToPage(currentPage);
+    }
+  });
+
   function setMode(e) {
     const mode = e.target.value;
     const u = new URL($page.url);
@@ -68,6 +83,14 @@
   // scroll to a page
   function scrollToPage(n: number) {
     currentPage = n;
+    if (!browser) return;
+
+    const pageId = pageHashUrl(n).replace("#", "");
+    const heading = window.document.getElementById(pageId);
+
+    if (!heading) return console.error(`Missing page ${n}`);
+
+    heading.scrollIntoView();
   }
 
   /**

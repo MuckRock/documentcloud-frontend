@@ -7,6 +7,7 @@
   import { pdfUrl } from "$lib/api/documents";
 
   import doc from "$lib/api/fixtures/documents/document-expanded.json";
+  import * as mock from "$lib/api/fixtures/mock";
 
   export const meta = {
     title: "Components / Documents / PDF Viewer",
@@ -20,5 +21,15 @@
 <Story name="default">
   <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
     <PDF {document} asset_url={pdfUrl(document)} />
+  </div>
+</Story>
+
+<Story name="fit width" parameters={{ layout: "fullscreen" }}>
+  <PDF {document} asset_url={pdfUrl(document)} scale="width" />
+</Story>
+
+<Story name="no pdf" parameters={{ msw: { handlers: [mock.loading] } }}>
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF {document} asset_url={new URL(mock.urls.loading)} />
   </div>
 </Story>

@@ -19,21 +19,22 @@
 
   import PdfPage from "./PDFPage.svelte";
 
-  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { pageSizes } from "@/api/pageSize.js";
 
   export let asset_url: URL = null;
   export let document: Document;
   export let scale: number | "width" | "height" = 1;
-  export let pdf = null;
+  export let pdf = new Promise(() => {}); // this is always a promise
 
   let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
 
-  $: sizes = pageSizesFromSpec(document.page_spec);
+  $: sizes = pageSizes(document.page_spec);
 
   onMount(async () => {
-    if (!pdf) {
+    // we might move this to a load function
+    if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
-      pdf = await task.promise;
+      pdf = task.promise;
     }
 
     // @ts-ignore
@@ -42,11 +43,9 @@
 </script>
 
 <div class="pages">
-  {#if pdf}
-    {#each sizes as aspect, n}
-      <PdfPage {aspect} page_number={n + 1} {pdf} {scale} />
-    {/each}
-  {/if}
+  {#each sizes as [width, height], n}
+    <PdfPage page_number={n + 1} {pdf} {scale} {width} {height} />
+  {/each}
 </div>
 
 <style>

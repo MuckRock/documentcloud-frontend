@@ -293,6 +293,20 @@ export function pageHashUrl(page: number): string {
 }
 
 /**
+ * The opposite of pageHashUrl, extracting a page number from a URL hash
+ *
+ * @param hash URL hash
+ */
+export function pageFromHash(hash: string): number {
+  const re = /^#document\/p(\d+)$/;
+  const match = re.exec(hash);
+
+  if (!match) return 1;
+
+  return +match[1] || 1;
+}
+
+/**
  * Hash URL for a single page within the document viewer
  *
  * @export

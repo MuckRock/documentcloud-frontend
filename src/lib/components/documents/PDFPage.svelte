@@ -10,16 +10,16 @@ Selectable text can be rendered in one of two ways:
 <script lang="ts">
   import type { TextPosition } from "$lib/api/types";
 
-  import { afterUpdate } from "svelte";
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
 
   import Page from "./Page.svelte";
 
-  export let aspect: number;
   export let page_number: number; // 1-indexed
-  export let pdf; // PDFDocumentProxy
+  export let pdf; // Promise<PDFDocumentProxy>
   export let scale: number | "width" | "height";
   export let text: TextPosition[] = [];
+  export let width: number;
+  export let height: number;
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -28,10 +28,18 @@ Selectable text can be rendered in one of two ways:
   // keep track of this to avoid overlapping renders
   let renderTask;
 
-  $: orientation = aspect > 1 ? "vertical" : "horizontal";
+  $: aspect = height / width;
+  $: orientation = height > width ? "vertical" : "horizontal";
+  $: numericScale = fitPage(width, height, container, scale);
 
   // render when anything changes
-  $: page = pdf.getPage(page_number);
+  $: page = Promise.resolve(pdf).then((pdf) => pdf?.getPage(page_number));
+
+  // we need to wait on both promises to render on initial load
+  $: Promise.all([pdf, page]).then(([pdf, page]) => {
+    render(page, canvas, container, scale);
+    renderTextLayer(page, textContainer, container, scale);
+  });
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
@@ -39,17 +47,22 @@ Selectable text can be rendered in one of two ways:
    * @param container
    */
   function fitPage(
-    page,
+    width: number,
+    height: number,
     container: HTMLElement,
     scale: number | "width" | "height",
   ): number {
     if (typeof scale === "number") return scale;
     if (!container) return 1;
 
-    const [x1, y1, width, height] = page.view;
+    // const [x1, y1, width, height] = page.view;
     const { clientWidth, clientHeight } = container;
 
     return scale === "width" ? clientWidth / width : clientHeight / height;
+  }
+
+  function renderEmpty(container: HTMLElement, scale) {
+    console.log("renderEmpty");
   }
 
   async function render(
@@ -63,12 +76,14 @@ Selectable text can be rendered in one of two ways:
       await renderTask.promise;
     }
 
+    // this is ugly but we're in the promised land
+    // page = await page;
+
     // check that we have things
-    if (![canvas, container, scale, page].every(Boolean)) return;
+    if (![canvas, container, scale, page].every(Boolean))
+      return renderEmpty(container, scale);
 
-    // be smarter about this eventually
-    const numericScale = fitPage(page, container, scale);
-
+    const numericScale = fitPage(width, height, container, scale);
     const context = canvas.getContext("2d");
     const viewport = page.getViewport({ scale: numericScale });
     const dpr = window?.devicePixelRatio ?? 1;
@@ -105,12 +120,15 @@ Selectable text can be rendered in one of two ways:
     if (text.length > 0) return;
     if (!textContainer) return;
 
-    const numericScale = fitPage(page, pageContainer, scale);
+    // page = await page;
+    if (!page) return;
+
+    const numericScale = fitPage(width, height, pageContainer, scale);
     const viewport = page.getViewport({ scale: numericScale });
     const content = await page.getTextContent();
 
-    // pdfjs scales text using this CSS property, so set it here when we know it
-    textContainer.style.setProperty("--scale-factor", numericScale.toFixed(2));
+    // svelte's reactivity ends up a step behind, so do this here
+    container.style.setProperty("--scale-factor", numericScale.toFixed(2));
 
     pdfjs.renderTextLayer({
       textContentSource: content,
@@ -118,13 +136,6 @@ Selectable text can be rendered in one of two ways:
       viewport,
     });
   }
-
-  afterUpdate(async () => {
-    const p = await page;
-
-    render(p, canvas, container, scale);
-    renderTextLayer(p, textContainer, container, scale);
-  });
 </script>
 
 <Page {page_number} wide={scale === "width"} tall={scale === "height"}>
@@ -132,8 +143,9 @@ Selectable text can be rendered in one of two ways:
     bind:this={container}
     class="page-container scale-{scale} {orientation}"
     style:--aspect={aspect}
+    style:--scale-factor={numericScale.toFixed(2)}
   >
-    <canvas bind:this={canvas}></canvas>
+    <canvas bind:this={canvas} {width} {height}></canvas>
     {#if text.length > 0}
       <div bind:this={textContainer} class="selectable-text">
         {#each text as word}
@@ -205,6 +217,10 @@ Selectable text can be rendered in one of two ways:
     white-space: pre;
     cursor: text;
     transform-origin: 0% 0%;
+  }
+
+  .selectable-text :global(br) {
+    user-select: none;
   }
 
   canvas {

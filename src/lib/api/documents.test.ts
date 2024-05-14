@@ -280,8 +280,17 @@ describe("document helper methods", () => {
     );
   });
 
-  test("pageHashUrl", ({ document }) => {
+  test("pageHashUrl", () => {
     expect(documents.pageHashUrl(1)).toStrictEqual(`#document/p1`);
+  });
+
+  test("pageFromHash", () => {
+    const hash = documents.pageHashUrl(10);
+
+    expect(documents.pageFromHash(hash)).toStrictEqual(10);
+
+    // invalid hash returns page 1
+    expect(documents.pageFromHash("#nopage")).toStrictEqual(1);
   });
 
   test("pageUrl", ({ document }) => {
