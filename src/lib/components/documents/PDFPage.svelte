@@ -2,6 +2,10 @@
 A single page of a PDF document.
 This component exists to manage state and rendering for a single page,
 working with PDF.svelte.
+
+Selectable text can be rendered in one of two ways:
+- Extracted from the PDF page (preferred)
+- Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
   import type { TextPosition } from "$lib/api/types";
@@ -19,31 +23,15 @@ working with PDF.svelte.
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
-
-  // keep track of this in case we need it later
-  let renderTask;
-
-  // embedded text
   let textContainer: HTMLElement;
-  let textContent: Promise<any>;
+
+  // keep track of this to avoid overlapping renders
+  let renderTask;
 
   $: orientation = aspect > 1 ? "vertical" : "horizontal";
 
   // render when anything changes
   $: page = pdf.getPage(page_number);
-  $: textContent =
-    !text.length &&
-    page.then((p) => p.getTextContent({ includeMarkedContent: true }));
-  // $: page.then((p) => render(p, canvas, container, scale));
-  // $: page.then((p) => renderTextLayer(p, textContainer, scale));
-
-  // debugging
-  /*
-  $: page.then((p) =>
-    console.log(p.getViewport({ scale: scaleToNumber(scale, orientation) })),
-  );
-  $: textContent.then(console.log);
-  */
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
@@ -191,6 +179,11 @@ working with PDF.svelte.
     opacity: 0.5;
   }
 
+  .word {
+    color: transparent;
+    position: absolute;
+  }
+
   .selectable-text.embedded {
     position: absolute;
     text-align: initial;
@@ -204,11 +197,6 @@ working with PDF.svelte.
     forced-color-adjust: none;
     transform-origin: 0 0;
     caret-color: CanvasText;
-  }
-
-  .word {
-    color: transparent;
-    position: absolute;
   }
 
   .selectable-text.embedded :global(:is(span, br)) {
@@ -226,6 +214,7 @@ working with PDF.svelte.
     width: 100%;
   }
 
+  /* pdfjs creates this */
   :global(.hiddenCanvasElement) {
     display: none;
   }
