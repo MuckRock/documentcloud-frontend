@@ -61,10 +61,6 @@ Selectable text can be rendered in one of two ways:
     return scale === "width" ? clientWidth / width : clientHeight / height;
   }
 
-  function renderEmpty(container: HTMLElement, scale) {
-    console.log("renderEmpty");
-  }
-
   async function render(
     page, // pdf.getPage
     canvas: HTMLCanvasElement,
@@ -76,12 +72,8 @@ Selectable text can be rendered in one of two ways:
       await renderTask.promise;
     }
 
-    // this is ugly but we're in the promised land
-    // page = await page;
-
     // check that we have things
-    if (![canvas, container, scale, page].every(Boolean))
-      return renderEmpty(container, scale);
+    if (![canvas, container, scale, page].every(Boolean)) return;
 
     const numericScale = fitPage(width, height, container, scale);
     const context = canvas.getContext("2d");
@@ -136,7 +128,13 @@ Selectable text can be rendered in one of two ways:
       viewport,
     });
   }
+
+  function onResize(e) {
+    numericScale = fitPage(width, height, container, scale);
+  }
 </script>
+
+<svelte:window on:resize={onResize} />
 
 <Page {page_number} wide={scale === "width"} tall={scale === "height"}>
   <div
@@ -144,6 +142,7 @@ Selectable text can be rendered in one of two ways:
     class="page-container scale-{scale} {orientation}"
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
+    style:--width="{width}px"
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
     {#if text.length > 0}
@@ -212,7 +211,7 @@ Selectable text can be rendered in one of two ways:
   }
 
   .selectable-text.embedded :global(:is(span, br)) {
-    color: transparent;
+    color: red;
     position: absolute;
     white-space: pre;
     cursor: text;
