@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Sizes, ViewerMode } from "@/lib/api/types.js";
 
-  import { browser } from "$app/environment";
   import { afterNavigate, goto, replaceState } from "$app/navigation";
   import { page } from "$app/stores";
 
@@ -21,12 +20,13 @@
   import Paginator from "@/common/Paginator.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import TextPage from "$lib/components/documents/TextPage.svelte";
+  import Text from "$lib/components/documents/Text.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
 
   // config and utils
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageHashUrl, pageFromHash } from "$lib/api/documents";
+  import { scrollToPage } from "$lib/utils/scroll";
 
   export let data;
 
@@ -72,6 +72,10 @@
 
     u.searchParams.set("mode", mode);
 
+    if ($currentPage > 1) {
+      u.hash = pageHashUrl($currentPage);
+    }
+
     goto(u);
   }
 
@@ -79,31 +83,19 @@
   function next() {
     $currentPage = Math.min($currentPage + 1, document.page_count);
     scrollToPage($currentPage);
+    replaceState(pageHashUrl($currentPage), {});
   }
 
   function previous() {
     $currentPage = Math.max($currentPage - 1, 1);
     scrollToPage($currentPage);
+    replaceState(pageHashUrl($currentPage), {});
   }
 
   function onHashChange(e: HashChangeEvent) {
     const { hash } = new URL(e.newURL);
     $currentPage = pageFromHash(hash);
     scrollToPage($currentPage);
-  }
-
-  // scroll to a page
-  function scrollToPage(n: number) {
-    if (!browser) return;
-
-    const pageId = pageHashUrl(n).replace("#", "");
-    const heading = window.document.getElementById(pageId);
-
-    if (!heading) return console.error(`Missing page ${n}`);
-    heading.scrollIntoView();
-
-    // push or replace?
-    replaceState(pageHashUrl(n), {});
   }
 
   /**
@@ -195,13 +187,7 @@
   {/if}
 
   {#if mode === "text"}
-    {#await text then { pages }}
-      <div class="textPages">
-        {#each pages as { page, contents }}
-          <TextPage {page} {contents} --zoom={zoom} />
-        {/each}
-      </div>
-    {/await}
+    <Text {text} zoom={+zoom || 1} total={document.page_count} />
   {/if}
 
   {#if mode === "thumbnails"}
@@ -250,13 +236,6 @@
 </ContentLayout>
 
 <style>
-  .textPages {
-    max-width: 48rem;
-    padding: 0 1rem;
-    margin: 0 auto;
-    width: 100%;
-  }
-
   label.mode,
   label.zoom {
     display: flex;
