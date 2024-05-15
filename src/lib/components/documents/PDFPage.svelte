@@ -28,6 +28,9 @@ Selectable text can be rendered in one of two ways:
   // keep track of this to avoid overlapping renders
   let renderTask;
 
+  // visibility, for loading optimization
+  let visible: boolean = false;
+
   $: aspect = height / width;
   $: orientation = height > width ? "vertical" : "horizontal";
   $: numericScale = fitPage(width, height, container, scale);
@@ -43,8 +46,10 @@ Selectable text can be rendered in one of two ways:
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
-   * @param page
+   * @param width Original document width
+   * @param height Original document height
    * @param container
+   * @param scale
    */
   function fitPage(
     width: number,
@@ -136,10 +141,17 @@ Selectable text can be rendered in one of two ways:
 
 <svelte:window on:resize={onResize} />
 
-<Page {page_number} wide={scale === "width"} tall={scale === "height"}>
+<Page
+  {page_number}
+  wide={scale === "width"}
+  tall={scale === "height"}
+  track
+  let:visible
+>
   <div
     bind:this={container}
     class="page-container scale-{scale} {orientation}"
+    class:visible
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
     style:--width="{width}px"

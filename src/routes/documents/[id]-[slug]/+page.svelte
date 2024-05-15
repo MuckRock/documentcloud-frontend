@@ -2,9 +2,11 @@
   import type { Sizes, ViewerMode } from "@/lib/api/types.js";
 
   import { browser } from "$app/environment";
-  import { afterNavigate, goto } from "$app/navigation";
+  import { afterNavigate, goto, replaceState } from "$app/navigation";
   import { page } from "$app/stores";
 
+  import { setContext } from "svelte";
+  import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
   // icons
@@ -42,8 +44,10 @@
     notes: NotesIcon,
   };
 
-  // internal state
-  let currentPage = 1;
+  // pagination store, available via context
+  const currentPage: Writable<number> = writable(1);
+
+  setContext("currentPage", currentPage);
 
   $: document = data.document;
   $: mode = data.mode;
@@ -55,10 +59,10 @@
   afterNavigate(() => {
     const { hash } = $page.url;
 
-    currentPage = pageFromHash(hash);
+    $currentPage = pageFromHash(hash);
 
-    if (currentPage > 1) {
-      scrollToPage(currentPage);
+    if ($currentPage > 1) {
+      scrollToPage($currentPage);
     }
   });
 
@@ -73,24 +77,33 @@
 
   // pagination
   function next() {
-    currentPage = Math.min(currentPage + 1, document.page_count);
+    $currentPage = Math.min($currentPage + 1, document.page_count);
+    scrollToPage($currentPage);
   }
 
   function previous() {
-    currentPage = Math.max(currentPage - 1, 1);
+    $currentPage = Math.max($currentPage - 1, 1);
+    scrollToPage($currentPage);
+  }
+
+  function onHashChange(e: HashChangeEvent) {
+    const { hash } = new URL(e.newURL);
+    $currentPage = pageFromHash(hash);
+    scrollToPage($currentPage);
   }
 
   // scroll to a page
   function scrollToPage(n: number) {
-    currentPage = n;
     if (!browser) return;
 
     const pageId = pageHashUrl(n).replace("#", "");
     const heading = window.document.getElementById(pageId);
 
     if (!heading) return console.error(`Missing page ${n}`);
-
     heading.scrollIntoView();
+
+    // push or replace?
+    replaceState(pageHashUrl(n), {});
   }
 
   /**
@@ -170,6 +183,8 @@
   }
 </script>
 
+<svelte:window on:hashchange={onHashChange} />
+
 <ContentLayout>
   <PageToolbar slot="header">
     <Search slot="center" />
@@ -211,10 +226,10 @@
           on:goTo={(e) => scrollToPage(e.detail)}
           on:next={next}
           on:previous={previous}
-          bind:page={currentPage}
+          bind:page={$currentPage}
           totalPages={document.page_count}
-          has_next={currentPage < document.page_count}
-          has_previous={currentPage > 1}
+          has_next={$currentPage < document.page_count}
+          has_previous={$currentPage > 1}
         />
       {/if}
     </svelte:fragment>
