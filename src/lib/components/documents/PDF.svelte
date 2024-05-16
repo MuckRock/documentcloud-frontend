@@ -26,7 +26,7 @@
   export let scale: number | "width" | "height" = 1;
   export let pdf = new Promise(() => {}); // this is always a promise
 
-  let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
+  export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
 
   $: sizes = pageSizes(document.page_spec);
 

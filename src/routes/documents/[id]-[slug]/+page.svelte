@@ -176,6 +176,17 @@
 </script>
 
 <svelte:window on:hashchange={onHashChange} />
+<svelte:head>
+  {#if mode === "document"}
+    <link
+      rel="preload"
+      href={data.asset_url.href}
+      as="fetch"
+      crossorigin="anonymous"
+      type="application/pdf"
+    />
+  {/if}
+</svelte:head>
 
 <ContentLayout>
   <PageToolbar slot="header">

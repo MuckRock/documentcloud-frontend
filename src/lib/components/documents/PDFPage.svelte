@@ -182,6 +182,7 @@ Selectable text can be rendered in one of two ways:
     margin: 0;
     position: relative;
 
+    background-color: var(--white, white);
     box-shadow: var(--shadow);
     width: var(--width, "100%");
   }
