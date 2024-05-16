@@ -55,13 +55,6 @@
     <meta property="og:description" content={document.description} />
   {/if}
   <meta property="og:image" content={pageImageUrl(document, 0, 700)} />
-
-  <link
-    rel="preload"
-    href={pdfjs.GlobalWorkerOptions.workerSrc}
-    as="script"
-    crossorigin="anonymous"
-  />
 </svelte:head>
 
 <MainLayout>

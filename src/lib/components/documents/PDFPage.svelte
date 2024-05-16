@@ -27,6 +27,7 @@ Selectable text can be rendered in one of two ways:
 
   // keep track of this to avoid overlapping renders
   let renderTask;
+  let loaded = false;
 
   // visibility, for loading optimization
   let visible: boolean = false;
@@ -36,7 +37,8 @@ Selectable text can be rendered in one of two ways:
   $: numericScale = fitPage(width, height, container, scale);
 
   // render when anything changes
-  $: page = Promise.resolve(pdf).then((pdf) => pdf?.getPage(page_number));
+  $: page =
+    visible && Promise.resolve(pdf).then((pdf) => pdf?.getPage(page_number));
 
   // we need to wait on both promises to render on initial load
   $: Promise.all([pdf, page]).then(([pdf, page]) => {
@@ -104,7 +106,7 @@ Selectable text can be rendered in one of two ways:
       viewport,
       transform,
     });
-
+    loaded = true;
     return renderTask.promise;
   }
 
@@ -147,6 +149,9 @@ Selectable text can be rendered in one of two ways:
   tall={scale === "height"}
   track
   let:visible
+  on:visible={() => {
+    visible = true;
+  }}
 >
   <div
     bind:this={container}
@@ -155,6 +160,7 @@ Selectable text can be rendered in one of two ways:
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
     style:--width="{width}px"
+    data-loaded={loaded}
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
     {#if text.length > 0}
