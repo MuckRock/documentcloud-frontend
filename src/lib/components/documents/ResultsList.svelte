@@ -86,7 +86,7 @@
   });
 </script>
 
-<div class="container">
+<div class="container" data-sveltekit-preload-data="hover">
   <slot name="start" />
   {#each results as document (document.id)}
     <Flex direction="column">

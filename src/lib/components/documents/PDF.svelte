@@ -11,11 +11,8 @@
 
   import { onMount } from "svelte";
 
+  // worker is configured in +layout.svelte
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
-    import.meta.url,
-  ).href;
 
   import PdfPage from "./PDFPage.svelte";
 

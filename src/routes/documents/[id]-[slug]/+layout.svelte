@@ -3,6 +3,13 @@
 
   import type { Project } from "$lib/api/types";
 
+  // load this here to get the worker started early
+  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/build/pdf.worker.mjs",
+    import.meta.url,
+  ).href;
+
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
@@ -48,6 +55,13 @@
     <meta property="og:description" content={document.description} />
   {/if}
   <meta property="og:image" content={pageImageUrl(document, 0, 700)} />
+
+  <link
+    rel="preload"
+    href={pdfjs.GlobalWorkerOptions.workerSrc}
+    as="script"
+    crossorigin="anonymous"
+  />
 </svelte:head>
 
 <MainLayout>
