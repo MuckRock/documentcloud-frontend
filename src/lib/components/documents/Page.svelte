@@ -44,7 +44,8 @@
 
           if (
             boundingClientRect.top > rootBounds.top &&
-            boundingClientRect.top < rootBounds.height / 2
+            boundingClientRect.top < rootBounds.height / 2 &&
+            currentPage // in case context is missing
           ) {
             $currentPage = page_number;
           }

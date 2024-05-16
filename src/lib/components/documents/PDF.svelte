@@ -13,6 +13,12 @@
 
   // worker is configured in +layout.svelte
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/build/pdf.worker.mjs",
+      import.meta.url,
+    ).href;
+  }
 
   import PdfPage from "./PDFPage.svelte";
 
