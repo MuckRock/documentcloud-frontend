@@ -33,12 +33,21 @@
 
   $: sizes = pageSizes(document.page_spec);
 
+  let progress = {
+    loaded: 0,
+    total: 0,
+  };
+
   onMount(async () => {
     // we might move this to a load function
     if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
       pdf = task.promise;
     }
+
+    task.onProgress = (p) => {
+      progress = p;
+    };
 
     // @ts-ignore
     window.pdf = pdf;

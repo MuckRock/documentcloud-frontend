@@ -72,7 +72,7 @@ Selectable text can be rendered in one of two ways:
     page, // pdf.getPage
     canvas: HTMLCanvasElement,
     container: HTMLElement,
-    scale: number | "width" | "height", // todo: convert width and height to a reasonable number
+    scale: number | "width" | "height",
   ) {
     // only one render task at a time;
     if (renderTask) {
@@ -139,9 +139,19 @@ Selectable text can be rendered in one of two ways:
   function onResize(e) {
     numericScale = fitPage(width, height, container, scale);
   }
+
+  function onVisibilityChange(e: Event) {
+    if (window.document.visibilityState === "visible" && !canvas.hidden) {
+      Promise.all([pdf, page]).then(([pdf, page]) => {
+        render(page, canvas, container, scale);
+      });
+    }
+  }
 </script>
 
 <svelte:window on:resize={onResize} />
+
+<svelte:document on:visibilitychange={onVisibilityChange} />
 
 <Page
   {page_number}
