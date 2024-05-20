@@ -11,11 +11,14 @@
 
   import { onMount } from "svelte";
 
+  // worker is configured in +layout.svelte
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
-    import.meta.url,
-  ).href;
+  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/build/pdf.worker.mjs",
+      import.meta.url,
+    ).href;
+  }
 
   import PdfPage from "./PDFPage.svelte";
 
@@ -26,9 +29,14 @@
   export let scale: number | "width" | "height" = 1;
   export let pdf = new Promise(() => {}); // this is always a promise
 
-  let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
+  export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
 
   $: sizes = pageSizes(document.page_spec);
+
+  let progress = {
+    loaded: 0,
+    total: 0,
+  };
 
   onMount(async () => {
     // we might move this to a load function
@@ -36,6 +44,10 @@
       task = pdfjs.getDocument({ url: asset_url });
       pdf = task.promise;
     }
+
+    task.onProgress = (p) => {
+      progress = p;
+    };
 
     // @ts-ignore
     window.pdf = pdf;

@@ -27,6 +27,7 @@ Selectable text can be rendered in one of two ways:
 
   // keep track of this to avoid overlapping renders
   let renderTask;
+  let loaded = false;
 
   // visibility, for loading optimization
   let visible: boolean = false;
@@ -36,7 +37,8 @@ Selectable text can be rendered in one of two ways:
   $: numericScale = fitPage(width, height, container, scale);
 
   // render when anything changes
-  $: page = Promise.resolve(pdf).then((pdf) => pdf?.getPage(page_number));
+  $: page =
+    visible && Promise.resolve(pdf).then((pdf) => pdf?.getPage(page_number));
 
   // we need to wait on both promises to render on initial load
   $: Promise.all([pdf, page]).then(([pdf, page]) => {
@@ -70,7 +72,7 @@ Selectable text can be rendered in one of two ways:
     page, // pdf.getPage
     canvas: HTMLCanvasElement,
     container: HTMLElement,
-    scale: number | "width" | "height", // todo: convert width and height to a reasonable number
+    scale: number | "width" | "height",
   ) {
     // only one render task at a time;
     if (renderTask) {
@@ -104,7 +106,7 @@ Selectable text can be rendered in one of two ways:
       viewport,
       transform,
     });
-
+    loaded = true;
     return renderTask.promise;
   }
 
@@ -137,9 +139,19 @@ Selectable text can be rendered in one of two ways:
   function onResize(e) {
     numericScale = fitPage(width, height, container, scale);
   }
+
+  function onVisibilityChange(e: Event) {
+    if (window.document.visibilityState === "visible" && !canvas.hidden) {
+      Promise.all([pdf, page]).then(([pdf, page]) => {
+        render(page, canvas, container, scale);
+      });
+    }
+  }
 </script>
 
 <svelte:window on:resize={onResize} />
+
+<svelte:document on:visibilitychange={onVisibilityChange} />
 
 <Page
   {page_number}
@@ -147,6 +159,9 @@ Selectable text can be rendered in one of two ways:
   tall={scale === "height"}
   track
   let:visible
+  on:visible={() => {
+    visible = true;
+  }}
 >
   <div
     bind:this={container}
@@ -155,6 +170,7 @@ Selectable text can be rendered in one of two ways:
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
     style:--width="{width}px"
+    data-loaded={loaded}
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
     {#if text.length > 0}
@@ -182,6 +198,7 @@ Selectable text can be rendered in one of two ways:
     margin: 0;
     position: relative;
 
+    background-color: var(--white, white);
     box-shadow: var(--shadow);
     width: var(--width, "100%");
   }
