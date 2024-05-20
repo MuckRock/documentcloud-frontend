@@ -108,6 +108,8 @@
   h4,
   h4 a {
     color: var(--gray-4, #5c717c);
+    position: sticky;
+    left: 1rem;
     text-decoration: none;
     font-weight: var(--font-regular);
   }

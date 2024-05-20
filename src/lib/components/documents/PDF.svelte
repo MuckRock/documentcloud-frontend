@@ -67,5 +67,6 @@
     margin: 0 auto;
     gap: 3rem;
     width: 100%;
+    overflow-x: auto;
   }
 </style>
