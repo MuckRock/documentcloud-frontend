@@ -92,6 +92,12 @@
     replaceState(pageHashUrl($currentPage), {});
   }
 
+  function gotoPage(n: number) {
+    $currentPage = n;
+    scrollToPage($currentPage);
+    replaceState(pageHashUrl($currentPage), {});
+  }
+
   function onHashChange(e: HashChangeEvent) {
     const { hash } = new URL(e.newURL);
     $currentPage = pageFromHash(hash);
@@ -220,7 +226,7 @@
       {#if mode !== "thumbnails"}
         <Paginator
           goToNav
-          on:goTo={(e) => scrollToPage(e.detail)}
+          on:goTo={(e) => gotoPage(e.detail)}
           on:next={next}
           on:previous={previous}
           bind:page={$currentPage}
