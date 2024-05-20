@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
   import DocumentListItem from "$lib/components/documents/DocumentListItem.svelte";
-  import Paginator from "$lib/components/common/Paginator.svelte";
+  import Paginator from "@/common/Paginator.svelte";
 
   export let data;
 
@@ -52,9 +52,8 @@
 
   <footer>
     <Paginator
-      total={count}
-      {page}
-      {per_page}
+      totalPages={count}
+      page={page + 1}
       has_next={Boolean(next)}
       has_previous={Boolean(previous)}
       on:next={load_next}
