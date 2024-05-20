@@ -7,7 +7,7 @@
   export let contents: string;
 </script>
 
-<Page page_number={page + 1} mode="text">
+<Page page_number={page + 1} mode="text" track>
   <pre>
     {contents}
   </pre>

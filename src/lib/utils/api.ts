@@ -32,3 +32,30 @@ export async function getAll<T>(
   }
   return results;
 }
+
+/**
+ * Handle the two-step redirect needed to get a private asset from S3.
+ */
+export async function getPrivateAsset(
+  url: URL | string,
+  fetch = globalThis.fetch,
+): Promise<URL> {
+  // any errors here should be caught higher up
+  const resp = await fetch(url, {
+    credentials: "include",
+    redirect: "error",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!resp.ok) {
+    throw new Error(resp.statusText);
+  }
+
+  // {"location": "s3 URL with credentials"}
+  const { location } = await resp.json();
+
+  // if this isn't a valid URL, it's an error
+  return new URL(location);
+}

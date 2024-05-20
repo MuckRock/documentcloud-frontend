@@ -26,7 +26,7 @@ function pageHandler(one, two) {
   };
 }
 
-const urls = {
+export const urls = {
   users: u("users/"),
   me: u("users/me/"),
   documents: u("documents/"),
@@ -36,6 +36,7 @@ const urls = {
     documents: u("projects/*/documents/"),
   },
   oembed: u("oembed/"),
+  loading: u("loading/"), // use this to signal infinite loading state
 };
 
 export const me = {
@@ -52,3 +53,7 @@ export const projects = {
 };
 
 export const oembed = rest.get(urls.oembed, dataHandler(oembedFixture));
+
+export const loading = rest.get(urls.loading, (req, res, ctx) =>
+  res(ctx.delay("infinite")),
+);

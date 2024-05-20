@@ -3,9 +3,8 @@
   import TextPage from "../TextPage.svelte";
 
   export const meta = {
-    title: "Components / Documents / Text",
+    title: "Components / Documents / Text page",
     component: TextPage,
-    tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 

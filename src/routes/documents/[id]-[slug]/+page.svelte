@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { Sizes, ViewerMode } from "@/lib/api/types.js";
 
-  import { goto } from "$app/navigation";
+  import { afterNavigate, goto, replaceState } from "$app/navigation";
   import { page } from "$app/stores";
 
+  import { setContext } from "svelte";
+  import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
   // icons
@@ -12,14 +14,19 @@
   import TextIcon from "@/common/icons/Text.svelte";
   import ThumbnailsIcon from "@/common/icons/Thumbnails.svelte";
 
+  // components
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "@/common/Paginator.svelte";
+  import PDF from "$lib/components/documents/PDF.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import TextPage from "$lib/components/documents/TextPage.svelte";
+  import Text from "$lib/components/documents/Text.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
 
+  // config and utils
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+  import { pageHashUrl, pageFromHash } from "$lib/api/documents";
+  import { scrollToPage } from "$lib/utils/scroll";
 
   export let data;
 
@@ -37,8 +44,10 @@
     notes: NotesIcon,
   };
 
-  // internal state
-  let currentPage = 1;
+  // pagination store, available via context
+  const currentPage: Writable<number> = writable(1);
+
+  setContext("currentPage", currentPage);
 
   $: document = data.document;
   $: mode = data.mode;
@@ -46,34 +55,66 @@
   $: zoom = getDefaultZoom(mode);
   $: zoomLevels = getZoomLevels(mode);
 
+  // lifecycle
+  afterNavigate(() => {
+    const { hash } = $page.url;
+
+    $currentPage = pageFromHash(hash);
+
+    if ($currentPage > 1) {
+      scrollToPage($currentPage);
+    }
+  });
+
   function setMode(e) {
     const mode = e.target.value;
     const u = new URL($page.url);
 
     u.searchParams.set("mode", mode);
 
+    if ($currentPage > 1) {
+      u.hash = pageHashUrl($currentPage);
+    }
+
     goto(u);
   }
 
   // pagination
   function next() {
-    currentPage = Math.min(currentPage + 1, document.page_count);
+    $currentPage = Math.min($currentPage + 1, document.page_count);
+    scrollToPage($currentPage);
+    replaceState(pageHashUrl($currentPage), {});
   }
 
   function previous() {
-    currentPage = Math.max(currentPage - 1, 1);
+    $currentPage = Math.max($currentPage - 1, 1);
+    scrollToPage($currentPage);
+    replaceState(pageHashUrl($currentPage), {});
   }
 
-  // scroll to a page
-  function scrollToPage(n: number) {
-    currentPage = n;
+  function gotoPage(n: number) {
+    $currentPage = n;
+    scrollToPage($currentPage);
+    replaceState(pageHashUrl($currentPage), {});
+  }
+
+  function onHashChange(e: HashChangeEvent) {
+    const { hash } = new URL(e.newURL);
+    $currentPage = pageFromHash(hash);
+    scrollToPage($currentPage);
   }
 
   /**
    * Generate a default zoom, based on mode
    * @param mode
    */
-  function getDefaultZoom(mode: ViewerMode): number | Sizes {
+  function getDefaultZoom(
+    mode: ViewerMode,
+  ): number | Sizes | "width" | "height" {
+    if (mode === "document") {
+      return "width";
+    }
+
     if (mode === "thumbnails") {
       return "small";
     }
@@ -92,6 +133,7 @@
         [0.5, "50%"],
         [0.75, "75%"],
         [1, "100%"],
+        [1.25, "125%"],
         [1.5, "150%"],
         [2, "200%"],
       ];
@@ -102,12 +144,12 @@
         [0.5, "50%"],
         [0.75, "75%"],
         [1, "100%"],
+        [1.25, "125%"],
         [1.5, "150%"],
         [2, "200%"],
       ];
     }
 
-    // todo: notes, maybe
     if (mode === "thumbnails") {
       return [
         ["thumbnail", $_("zoom.thumbnail")],
@@ -117,10 +159,19 @@
       ];
     }
 
+    // todo: notes, maybe
     return [];
   }
 
   // for typescript
+  function zoomToScale(zoom: any): number | "width" | "height" {
+    if (zoom === "width" || zoom === "height") {
+      return zoom;
+    }
+
+    return +zoom || 1;
+  }
+
   function zoomToSize(zoom: any): Sizes {
     if (IMAGE_WIDTHS_MAP.has(zoom)) {
       return zoom;
@@ -130,19 +181,30 @@
   }
 </script>
 
+<svelte:window on:hashchange={onHashChange} />
+<svelte:head>
+  {#if mode === "document"}
+    <link
+      rel="preload"
+      href={data.asset_url.href}
+      as="fetch"
+      crossorigin="anonymous"
+      type="application/pdf"
+    />
+  {/if}
+</svelte:head>
+
 <ContentLayout>
   <PageToolbar slot="header">
     <Search slot="center" />
   </PageToolbar>
 
+  {#if mode === "document"}
+    <PDF {document} scale={zoomToScale(zoom)} asset_url={data.asset_url} />
+  {/if}
+
   {#if mode === "text"}
-    {#await text then { pages }}
-      <div class="textPages">
-        {#each pages as { page, contents }}
-          <TextPage {page} {contents} --zoom={zoom} />
-        {/each}
-      </div>
-    {/await}
+    <Text {text} zoom={+zoom || 1} total={document.page_count} />
   {/if}
 
   {#if mode === "thumbnails"}
@@ -164,13 +226,13 @@
       {#if mode !== "thumbnails"}
         <Paginator
           goToNav
-          on:goTo={(e) => scrollToPage(e.detail)}
+          on:goTo={(e) => gotoPage(e.detail)}
           on:next={next}
           on:previous={previous}
-          bind:page={currentPage}
+          bind:page={$currentPage}
           totalPages={document.page_count}
-          has_next={currentPage < document.page_count}
-          has_previous={currentPage > 1}
+          has_next={$currentPage < document.page_count}
+          has_previous={$currentPage > 1}
         />
       {/if}
     </svelte:fragment>
@@ -191,13 +253,6 @@
 </ContentLayout>
 
 <style>
-  .textPages {
-    max-width: 48rem;
-    padding: 0 1rem;
-    margin: 0 auto;
-    width: 100%;
-  }
-
   label.mode,
   label.zoom {
     display: flex;

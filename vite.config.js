@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   build: {
     sourcemap: true,
+    target: "esnext",
   },
 
   define: {
@@ -22,6 +23,13 @@ export default defineConfig({
   envPrefix: "DC_",
 
   plugins: [sveltekit()],
+
+  // allow top-level await
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "esnext",
+    },
+  },
 
   resolve: {
     alias: {
@@ -40,6 +48,7 @@ export default defineConfig({
     include: [
       "src/lib/**/*.{test,spec}.{js,ts}",
       "src/routes/**/*.{test,spec}.{js,ts}",
+      "src/api/pageSize.test.js",
     ],
     exclude: [
       ...configDefaults.exclude,

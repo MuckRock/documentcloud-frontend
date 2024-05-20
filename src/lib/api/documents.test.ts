@@ -4,6 +4,7 @@ import type {
   DocumentUpload,
   Pending,
   Sizes,
+  TextPosition,
 } from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
@@ -50,9 +51,21 @@ const test = base.extend({
 
     await use(text);
   },
+
+  textPositions: async ({}, use: Use<TextPosition[]>) => {
+    const { default: textPositions } = await import(
+      "./fixtures/documents/examples/the-santa-anas-p1.position.json"
+    );
+
+    await use(textPositions);
+  },
 });
 
 describe("document fetching", () => {
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
   test.todo("documents.get");
   test.todo("documents.search");
 
@@ -66,28 +79,26 @@ describe("document fetching", () => {
 
     const endpoint = documents.jsonUrl(document);
 
-    documents.text(document, mockFetch).then((t) => {
-      expect(t).toMatchObject(text);
-    });
+    const t = await documents.text(document, mockFetch);
+    expect(t).toMatchObject(text);
 
     expect(mockFetch).toHaveBeenCalledWith(endpoint);
   });
 
   test("documents.text private", async ({ document, text }) => {
     const { asset_url } = document;
-    const privateText = new URL("private.txt.json", asset_url).toString();
+    const privateText = new URL("private.txt.json", asset_url);
     const privateDoc = {
       ...document,
       access: "private",
-      asset_url: BASE_API_URL,
+      asset_url: new URL(document.asset_url, BASE_API_URL).href,
     } as Document;
 
     // to get private assets, we need to hit the API first for credentials
     // then fetch the actual asset from cloud storage
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
-      console.log(endpoint.toString(), options);
       // call 2
-      if (endpoint === privateText) {
+      if (endpoint.toString() === privateText.toString()) {
         return {
           ok: true,
           async json() {
@@ -98,8 +109,8 @@ describe("document fetching", () => {
 
       // call 1
       return {
+        ok: true,
         status: 200,
-        headers: new Headers([["Location", privateText]]),
         async json() {
           return {
             location: privateText,
@@ -108,12 +119,27 @@ describe("document fetching", () => {
       };
     });
 
-    documents.text(privateDoc, mockFetch).then((t) => {
-      expect(t).toMatchObject(text);
+    const t = await documents.text(privateDoc, mockFetch);
+    expect(t).toMatchObject(text);
 
-      // we need two fetches for private assets
-      expect(mockFetch).toHaveBeenCalledTimes(2);
+    // we need two fetches for private assets
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  test("documents.textPositions", async ({ document, textPositions }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return textPositions;
+        },
+      };
     });
+
+    const t = await documents.textPositions(document, 1, mockFetch);
+
+    expect(t).toMatchObject(textPositions);
   });
 });
 
@@ -254,8 +280,17 @@ describe("document helper methods", () => {
     );
   });
 
-  test("pageHashUrl", ({ document }) => {
+  test("pageHashUrl", () => {
     expect(documents.pageHashUrl(1)).toStrictEqual(`#document/p1`);
+  });
+
+  test("pageFromHash", () => {
+    const hash = documents.pageHashUrl(10);
+
+    expect(documents.pageFromHash(hash)).toStrictEqual(10);
+
+    // invalid hash returns page 1
+    expect(documents.pageFromHash("#nopage")).toStrictEqual(1);
   });
 
   test("pageUrl", ({ document }) => {

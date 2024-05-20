@@ -9,13 +9,14 @@ import type {
   Pending,
   SearchOptions,
   Sizes,
+  TextPosition,
 } from "./types";
 
 import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import { isErrorCode } from "../utils";
+import { isErrorCode, getPrivateAsset } from "../utils/index";
 
 export const MODES = new Set(["document", "text", "thumbnails", "notes"]);
 
@@ -91,10 +92,6 @@ export async function get(
 
 /**
  * Get text for a document. It may be a private asset, which requires a two-step fetch.
- *
- * @param document The document to get text for
- * @param fetch A fetch function
- * @returns
  */
 export async function text(
   document: Document,
@@ -108,29 +105,42 @@ export async function text(
   // for private and organization docs, we need to hit the API first
   // with credentials, and then fetch the returned location
   if (document.access !== "public") {
-    const resp: Response | void = await fetch(url, {
-      credentials: "include",
-      redirect: "error",
-      headers: {
-        Accept: "application/json",
-      },
-    }).catch(console.error);
-
-    if (!resp || isErrorCode(resp.status)) {
-      return empty;
-    }
-
-    const { location } = await resp.json();
-    if (!location) {
-      return empty;
-    }
-    url = location;
+    url = await getPrivateAsset(url, fetch);
   }
 
   const resp = await fetch(url).catch(console.error);
   if (!resp || isErrorCode(resp.status)) {
     return empty;
   }
+  return resp.json();
+}
+
+/**
+ * Fetch text positions for a single page of a document.
+ * Since older documents don't have selectable text, this will
+ * return an empty array in failure cases.
+ */
+export async function textPositions(
+  document: Document,
+  page: number,
+  fetch = globalThis.fetch,
+): Promise<TextPosition[]> {
+  let url = selectableTextUrl(document, page);
+
+  if (document.access !== "public") {
+    try {
+      url = await getPrivateAsset(url);
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  const resp = await fetch(url).catch(console.error);
+  if (!resp || isErrorCode(resp.status)) {
+    return [];
+  }
+
   return resp.json();
 }
 
@@ -280,6 +290,20 @@ export function canonicalPageUrl(document: Document, page: number): URL {
  */
 export function pageHashUrl(page: number): string {
   return `#document/p${page}`;
+}
+
+/**
+ * The opposite of pageHashUrl, extracting a page number from a URL hash
+ *
+ * @param hash URL hash
+ */
+export function pageFromHash(hash: string): number {
+  const re = /^#document\/p(\d+)$/;
+  const match = re.exec(hash);
+
+  if (!match) return 1;
+
+  return +match[1] || 1;
 }
 
 /**

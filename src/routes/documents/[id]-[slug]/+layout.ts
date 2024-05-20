@@ -6,12 +6,13 @@
 import type { Document } from "@/lib/api/types";
 
 import { redirect, error } from "@sveltejs/kit";
+
 import * as documents from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons";
-import { breadcrumbTrail } from "$lib/utils/navigation";
+import { breadcrumbTrail } from "$lib/utils/index";
 
 function documentPath(document: Document) {
-  return `/documents/${document.id}-${document.slug}`;
+  return `/documents/${document.id}-${document.slug}/`;
 }
 
 /** @type {import('./$types').PageLoad} */
@@ -28,7 +29,7 @@ export async function load({ fetch, params, parent }) {
   }
 
   const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: "/app", title: "Documents" }, // TODO: move document manager to `/documents` route
+    { href: "/app/", title: "Documents" }, // TODO: move document manager to `/documents` route
     { href: documentPath(document), title: document.title },
   ]);
 
