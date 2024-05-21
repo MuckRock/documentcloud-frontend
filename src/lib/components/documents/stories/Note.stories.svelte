@@ -15,10 +15,10 @@
   };
 </script>
 
-<Story name="small">
+<Story name="default">
   <Note focused note={notes[0]} />
 </Story>
 
-<Story name="bigger">
-  <Note focused note={notes[1]} />
+<Story name="editable">
+  <Note focused note={{ ...notes[1], edit_access: true }} />
 </Story>

@@ -74,7 +74,17 @@
   "notes": [
     {
       "id": 551,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 0,
       "access": "public",
@@ -90,7 +100,17 @@
     },
     {
       "id": 549,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 0,
       "access": "public",
@@ -106,7 +126,17 @@
     },
     {
       "id": 550,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 0,
       "access": "public",
@@ -122,7 +152,17 @@
     },
     {
       "id": 552,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 0,
       "access": "public",
@@ -138,7 +178,17 @@
     },
     {
       "id": 554,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 1,
       "access": "public",
@@ -154,7 +204,17 @@
     },
     {
       "id": 553,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 1,
       "access": "public",
@@ -170,7 +230,17 @@
     },
     {
       "id": 556,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 2,
       "access": "public",
@@ -186,7 +256,17 @@
     },
     {
       "id": 555,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 2,
       "access": "public",
@@ -202,7 +282,17 @@
     },
     {
       "id": 557,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 2,
       "access": "public",
@@ -218,7 +308,17 @@
     },
     {
       "id": 558,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 2,
       "access": "public",
@@ -234,7 +334,17 @@
     },
     {
       "id": 560,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 4,
       "access": "public",
@@ -250,7 +360,17 @@
     },
     {
       "id": 559,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 4,
       "access": "public",
@@ -266,7 +386,17 @@
     },
     {
       "id": 562,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 5,
       "access": "public",
@@ -282,7 +412,17 @@
     },
     {
       "id": 561,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 5,
       "access": "public",
@@ -298,7 +438,17 @@
     },
     {
       "id": 563,
-      "user": 126,
+      "user": {
+        "id": 126,
+        "avatar_url": "",
+        "name": "Chris Amico",
+        "organization": 14187,
+        "organizations": [14187],
+        "admin_organizations": [14187],
+        "username": "ChrisAmico_lSozDZNW",
+        "uuid": "caea06a2-ee1c-43e6-865a-a09078522bf1",
+        "verified_journalist": true
+      },
       "organization": 60,
       "page_number": 6,
       "access": "public",
