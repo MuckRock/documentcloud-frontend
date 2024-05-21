@@ -8,11 +8,15 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import type { TextPosition } from "$lib/api/types";
+  import type { TextPosition, Note as NoteType } from "$lib/api/types";
 
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
 
+  import Note from "./Note.svelte";
+  import NoteTab from "./NoteTab.svelte";
   import Page from "./Page.svelte";
+
+  import { noteHashUrl } from "$lib/api/notes";
 
   export let page_number: number; // 1-indexed
   export let pdf; // Promise<PDFDocumentProxy>
@@ -20,6 +24,7 @@ Selectable text can be rendered in one of two ways:
   export let text: TextPosition[] = [];
   export let width: number;
   export let height: number;
+  export let notes: NoteType[] = [];
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -189,6 +194,20 @@ Selectable text can be rendered in one of two ways:
         <!-- pdfjs.renderTextLayer will fill this in -->
       </div>
     {/if}
+    <div class="notes">
+      {#each notes as note}
+        <a
+          class="note"
+          href={noteHashUrl(note)}
+          title={note.title}
+          style:top="{note.y1 * 100}%"
+        >
+          <NoteTab access={note.access} />
+        </a>
+
+        <Note {note} />
+      {/each}
+    </div>
   </div>
 </Page>
 
@@ -216,7 +235,6 @@ Selectable text can be rendered in one of two ways:
     top: 0;
     bottom: 0;
     width: 100%;
-    opacity: 0.5;
   }
 
   .word {
@@ -256,6 +274,21 @@ Selectable text can be rendered in one of two ways:
     top: 0;
     bottom: 0;
     width: 100%;
+  }
+
+  .notes {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .note {
+    position: absolute;
+    pointer-events: all;
+    left: -3rem;
+    transform: translateY(calc(-1.75rem / 3));
   }
 
   /* pdfjs creates this */

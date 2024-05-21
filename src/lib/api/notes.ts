@@ -71,6 +71,10 @@ export function noteUrl(document: Document, note: Note): URL {
   );
 }
 
+export function noteHashUrl(note: Note): string {
+  return `#document/p${note.page_number + 1}/a${note.id}`;
+}
+
 /** Width of a note, relative to the document */
 export function width(note: Note): number {
   return note.x2 - note.x1;

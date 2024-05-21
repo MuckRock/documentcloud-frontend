@@ -33,6 +33,10 @@ describe("note helper methods", () => {
     );
   });
 
+  test("noteHashUrl", () => {
+    expect(notes.noteHashUrl(n)).toStrictEqual("#document/p3/a557");
+  });
+
   test("width", () => {
     expect(notes.width(n)).toStrictEqual(n.x2 - n.x1);
   });

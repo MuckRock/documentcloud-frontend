@@ -33,6 +33,15 @@
 
   $: sizes = pageSizes(document.page_spec);
 
+  // index notes by page
+  $: notes = document.notes.reduce((m, note) => {
+    if (!m[note.page_number]) {
+      m[note.page_number] = [];
+    }
+    m[note.page_number].push(note);
+    return m;
+  }, {});
+
   let progress = {
     loaded: 0,
     total: 0,
@@ -56,7 +65,8 @@
 
 <div class="pages">
   {#each sizes as [width, height], n}
-    <PdfPage page_number={n + 1} {pdf} {scale} {width} {height} />
+    {@const page_number = n + 1}
+    <PdfPage {page_number} {pdf} {scale} {width} {height} notes={notes[n]} />
   {/each}
 </div>
 
