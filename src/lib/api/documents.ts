@@ -293,12 +293,13 @@ export function pageHashUrl(page: number): string {
 }
 
 /**
- * The opposite of pageHashUrl, extracting a page number from a URL hash
+ * The opposite of pageHashUrl, extracting a page number from a URL hash.
+ * Note that this will also match note hash URLs, which use the same prefix.
  *
  * @param hash URL hash
  */
 export function pageFromHash(hash: string): number {
-  const re = /^#document\/p(\d+)$/;
+  const re = /^#document\/p(\d+)/; // match pages and notes
   const match = re.exec(hash);
 
   if (!match) return 1;

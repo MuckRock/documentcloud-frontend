@@ -194,20 +194,22 @@ Selectable text can be rendered in one of two ways:
         <!-- pdfjs.renderTextLayer will fill this in -->
       </div>
     {/if}
-    <div class="notes">
-      {#each notes as note}
-        <a
-          class="note"
-          href={noteHashUrl(note)}
-          title={note.title}
-          style:top="{note.y1 * 100}%"
-        >
-          <NoteTab access={note.access} />
-        </a>
+    {#if notes}
+      <div class="notes">
+        {#each notes as note}
+          <a
+            class="note"
+            href={noteHashUrl(note)}
+            title={note.title}
+            style:top="{note.y1 * 100}%"
+          >
+            <NoteTab access={note.access} />
+          </a>
 
-        <Note {note} />
-      {/each}
-    </div>
+          <Note {note} />
+        {/each}
+      </div>
+    {/if}
   </div>
 </Page>
 
@@ -288,7 +290,6 @@ Selectable text can be rendered in one of two ways:
     position: absolute;
     pointer-events: all;
     left: -3rem;
-    transform: translateY(calc(-1.75rem / 3));
   }
 
   /* pdfjs creates this */

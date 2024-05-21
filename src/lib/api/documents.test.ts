@@ -291,6 +291,9 @@ describe("document helper methods", () => {
 
     // invalid hash returns page 1
     expect(documents.pageFromHash("#nopage")).toStrictEqual(1);
+
+    // match a note hash
+    expect(documents.pageFromHash("#document/p2/a2000002")).toStrictEqual(2);
   });
 
   test("pageUrl", ({ document }) => {

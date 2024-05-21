@@ -46,6 +46,7 @@
 
   // pagination store, available via context
   const currentPage: Writable<number> = writable(1);
+  let activeNote;
 
   setContext("currentPage", currentPage);
 

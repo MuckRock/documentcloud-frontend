@@ -21,9 +21,8 @@
   import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
 
-  import { embedUrl } from "@/api/embed";
-  import { pageImageUrl } from "@/api/viewer";
-  import { canonicalUrl } from "@/lib/api/documents";
+  import { embedUrl } from "$lib/api/embed";
+  import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
 
   export let data;
 
@@ -48,13 +47,16 @@
   <link
     rel="alternate"
     type="application/json+oembed"
-    href={embedUrl(document.canonical_url)}
+    href={embedUrl(document.canonical_url).href}
     title={document.title}
   />
   {#if document?.description?.trim().length > 0}
     <meta property="og:description" content={document.description} />
   {/if}
-  <meta property="og:image" content={pageImageUrl(document, 0, 700)} />
+  <meta
+    property="og:image"
+    content={pageImageUrl(document, 0, "normal").href}
+  />
 </svelte:head>
 
 <MainLayout>
