@@ -17,6 +17,7 @@
   // update context so other components can access and update
   setContext("me", me);
   setContext("org", org);
+  setContext("embed", data.embed);
 </script>
 
 <slot />

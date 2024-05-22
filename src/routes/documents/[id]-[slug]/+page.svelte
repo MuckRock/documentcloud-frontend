@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Sizes, ViewerMode } from "@/lib/api/types.js";
+  import type { Note, Sizes, ViewerMode } from "@/lib/api/types.js";
 
   import { afterNavigate, goto, replaceState } from "$app/navigation";
   import { page } from "$app/stores";
@@ -26,6 +26,7 @@
   // config and utils
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageHashUrl, pageFromHash } from "$lib/api/documents";
+  import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
 
   export let data;
@@ -44,17 +45,20 @@
     notes: NotesIcon,
   };
 
-  // pagination store, available via context
+  // stores we need deeper in the component tree, available via context
   const currentPage: Writable<number> = writable(1);
-  let activeNote;
+  const activeNote: Writable<Note> = writable(null);
+  const mode: Writable<ViewerMode> = writable(data.mode);
 
   setContext("currentPage", currentPage);
+  setContext("activeNote", activeNote);
+  setContext("mode", mode);
 
   $: document = data.document;
-  $: mode = data.mode;
+  $: $mode = data.mode;
   $: text = data.text;
-  $: zoom = getDefaultZoom(mode);
-  $: zoomLevels = getZoomLevels(mode);
+  $: zoom = getDefaultZoom($mode);
+  $: zoomLevels = getZoomLevels($mode);
 
   // lifecycle
   afterNavigate(() => {
@@ -64,6 +68,11 @@
 
     if ($currentPage > 1) {
       scrollToPage($currentPage);
+    }
+
+    const noteId = noteFromHash(hash);
+    if (noteId) {
+      $activeNote = document.notes.find((note) => note.id === noteId);
     }
   });
 
@@ -103,6 +112,11 @@
     const { hash } = new URL(e.newURL);
     $currentPage = pageFromHash(hash);
     scrollToPage($currentPage);
+
+    const noteId = noteFromHash(hash);
+    if (noteId) {
+      $activeNote = document.notes.find((note) => note.id === noteId);
+    }
   }
 
   /**
@@ -184,7 +198,7 @@
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if mode === "document"}
+  {#if $mode === "document"}
     <link
       rel="preload"
       href={data.asset_url.href}
@@ -200,23 +214,23 @@
     <Search slot="center" />
   </PageToolbar>
 
-  {#if mode === "document"}
+  {#if $mode === "document"}
     <PDF {document} scale={zoomToScale(zoom)} asset_url={data.asset_url} />
   {/if}
 
-  {#if mode === "text"}
+  {#if $mode === "text"}
     <Text {text} zoom={+zoom || 1} total={document.page_count} />
   {/if}
 
-  {#if mode === "thumbnails"}
+  {#if $mode === "thumbnails"}
     <ThumbnailGrid {document} size={zoomToSize(zoom)} />
   {/if}
 
   <PageToolbar slot="footer">
     <label class="mode" slot="left">
       <span class="sr-only">Mode</span>
-      <svelte:component this={icons[mode]} />
-      <select name="mode" value={mode} on:change={setMode}>
+      <svelte:component this={icons[$mode]} />
+      <select name="mode" value={$mode} on:change={setMode}>
         {#each modes.entries() as [value, name]}
           <option {value}>{name}</option>
         {/each}
@@ -224,7 +238,7 @@
     </label>
 
     <svelte:fragment slot="center">
-      {#if mode !== "thumbnails"}
+      {#if $mode !== "thumbnails"}
         <Paginator
           goToNav
           on:goTo={(e) => gotoPage(e.detail)}
@@ -239,7 +253,7 @@
     </svelte:fragment>
 
     <label class="zoom" slot="right">
-      {#if mode === "thumbnails"}
+      {#if $mode === "thumbnails"}
         {$_("zoom.size")}
       {:else}
         {$_("zoom.zoom")}

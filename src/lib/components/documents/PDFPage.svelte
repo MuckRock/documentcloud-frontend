@@ -10,7 +10,12 @@ Selectable text can be rendered in one of two ways:
 <script lang="ts">
   import type { TextPosition, Note as NoteType } from "$lib/api/types";
 
+  import { pushState } from "$app/navigation";
+
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import { XCircleFill16 } from "svelte-octicons";
 
   import Note from "./Note.svelte";
   import NoteTab from "./NoteTab.svelte";
@@ -25,6 +30,8 @@ Selectable text can be rendered in one of two ways:
   export let width: number;
   export let height: number;
   export let notes: NoteType[] = [];
+
+  const activeNote: Writable<NoteType> = getContext("activeNote");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -152,6 +159,11 @@ Selectable text can be rendered in one of two ways:
       });
     }
   }
+
+  function closeNote() {
+    $activeNote = null;
+    pushState(window.location.pathname, {});
+  }
 </script>
 
 <svelte:window on:resize={onResize} />
@@ -204,9 +216,14 @@ Selectable text can be rendered in one of two ways:
             style:top="{note.y1 * 100}%"
           >
             <NoteTab access={note.access} />
+            {#if $activeNote}
+              <button class="close" on:click|preventDefault={closeNote}>
+                <XCircleFill16 />
+              </button>
+            {/if}
           </a>
 
-          <Note {note} />
+          <Note {note} focused={note === $activeNote} />
         {/each}
       </div>
     {/if}
@@ -284,12 +301,38 @@ Selectable text can be rendered in one of two ways:
     bottom: 0;
     width: 100%;
     pointer-events: none;
+
+    /* make all child elements position relative to this container */
+    /* transform: rotate(0deg); */
+  }
+
+  .notes :global(*) {
+    pointer-events: all;
   }
 
   .note {
     position: absolute;
     pointer-events: all;
     left: -3rem;
+  }
+
+  .note button {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+
+    position: absolute;
+    margin: auto 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    padding-left: 0.5rem;
+    justify-content: left;
+    align-items: center;
   }
 
   /* pdfjs creates this */

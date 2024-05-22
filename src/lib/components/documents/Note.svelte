@@ -4,10 +4,13 @@
   It has two states, focused and normal.
 -->
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type { User } from "@/api/types/orgAndUser";
-  import type { Note } from "$lib/api/types";
+  import type { Note, ViewerMode } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
+  import { getContext } from "svelte";
+
   import { _ } from "svelte-i18n";
   import {
     Globe16,
@@ -20,10 +23,12 @@
 
   import { noteHashUrl, width, height } from "$lib/api/notes";
   import { pageHashUrl } from "$lib/api/documents";
-  import { not } from "ajv/dist/compile/codegen";
 
   export let note: Note;
   export let focused = false;
+
+  const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
+  const ALLOWED_ATTR = ["href"];
 
   const access = {
     private: {
@@ -43,6 +48,8 @@
     },
   };
 
+  const mode: Writable<ViewerMode> = getContext("mode");
+
   $: id = noteHashUrl(note).replace("#", "");
   $: href = noteHashUrl(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
@@ -51,20 +58,30 @@
   function clean(html: string) {
     return DOMPurify.sanitize(html, {
       USE_PROFILES: { html: true },
-      ALLOWED_TAGS: ["a", "strong", "em", "b", "i"],
+      ALLOWED_TAGS,
+      ALLOWED_ATTR,
     });
   }
 </script>
 
 {#if focused}
-  <div {id} class="note focused {note.access}">
+  <div
+    {id}
+    class="note focused {note.access} {$mode || 'notes'}"
+    style:--x1={note.x1}
+    style:--x2={note.x2}
+    style:--y1={note.y1}
+    style:--y2={note.y2}
+    style:--width={width(note)}
+    style:--height={height(note)}
+  >
     <header>
       <h3>{note.title}</h3>
       <div class="actions">
         {#if note.edit_access}
-          <Action icon={Pencil16}>Edit</Action>
+          <Action icon={Pencil16}>{$_("dialog.edit")}</Action>
           <Action --color="var(--red)" --fill="var(--red)" icon={Trash16}
-            >Delete</Action
+            >{$_("dialog.delete")}</Action
           >
         {/if}
       </div>
@@ -109,7 +126,7 @@
   </div>
 {:else}
   <a
-    {id}
+    data-sveltekit-replacestate
     {href}
     class="note {note.access}"
     title={note.title}
@@ -155,6 +172,21 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--font-xs, 0.75rem);
+    pointer-events: all;
+
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2, #d8dee2);
+    background: var(--white, #fff);
+
+    /* shadow-2 */
+    box-shadow: 0px 2px 8px 2px var(--shadow, rgba(30, 48, 56, 0.15));
+  }
+
+  /* overlay */
+  .focused.document {
+    position: absolute;
+    top: calc(var(--y1) * 100%);
+    left: calc(var(--x1) * 100%);
   }
 
   .focused header {
@@ -229,10 +261,11 @@
     font-size: var(--font-s);
   }
 
-  /*   
+  /* yellow doesn't give enough contrast
   span.access.public {
     background-color: var(--note-public);
   }
+  */
 
   span.access.organization {
     color: var(--note-org);
@@ -243,5 +276,4 @@
     color: var(--note-private);
     fill: var(--note-private);
   }
- */
 </style>
