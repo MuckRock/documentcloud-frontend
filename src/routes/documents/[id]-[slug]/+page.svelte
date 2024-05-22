@@ -22,6 +22,7 @@
   import Search from "$lib/components/forms/Search.svelte";
   import Text from "$lib/components/documents/Text.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
+  import Notes from "$lib/components/documents/Notes.svelte";
 
   // config and utils
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
@@ -224,6 +225,10 @@
 
   {#if $mode === "thumbnails"}
     <ThumbnailGrid {document} size={zoomToSize(zoom)} />
+  {/if}
+
+  {#if $mode === "notes"}
+    <Notes notes={document.notes} />
   {/if}
 
   <PageToolbar slot="footer">
