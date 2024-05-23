@@ -1,7 +1,7 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import type { Project } from "$lib/api/types";
+  import type { Document, Project } from "$lib/api/types";
 
   // load this here to get the worker started early
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
@@ -9,6 +9,8 @@
     "pdfjs-dist/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
+
+  import { setContext } from "svelte";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
@@ -26,14 +28,16 @@
 
   export let data;
 
+  setContext<Document>("document", data.document);
+
   $: document = data.document;
   $: projects = document.projects as Project[];
-  $: canonical_url = canonicalUrl(document).toString();
+  $: canonical_url = canonicalUrl(document).href;
 </script>
 
 <svelte:head>
   <!-- Insert canonical URL -->
-  <link rel="canonical" href={document.canonical_url.toString()} />
+  <link rel="canonical" href={canonical_url} />
 
   {#if document.noindex || document.admin_noindex}
     <meta name="robots" content="noindex" />

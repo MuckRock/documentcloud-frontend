@@ -2,6 +2,7 @@
   import type { Note as NoteType } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
+  import { setContext } from "svelte";
   import Note from "../Note.svelte";
 
   import document from "$lib/api/fixtures/documents/document-expanded.json";
@@ -17,6 +18,10 @@
     component: Note,
     parameters: { layout: "centered" },
   };
+</script>
+
+<script lang="ts">
+  setContext("document", document);
 </script>
 
 <Story name="default">

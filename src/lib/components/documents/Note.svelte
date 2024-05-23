@@ -2,15 +2,17 @@
   @component
   A single note, either overlaid on a document or on its own.
   It has two states, focused and normal.
+
+  It can use *either* a loaded PDF or a document image to render
+  a document excerpt.
 -->
 <script lang="ts">
   import type { Writable } from "svelte/store";
   import type { User } from "@/api/types/orgAndUser";
-  import type { Note, ViewerMode } from "$lib/api/types";
+  import type { Document, Note, Sizes, ViewerMode } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
-  import { getContext } from "svelte";
-
+  import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Globe16,
@@ -22,13 +24,17 @@
   import Action from "../common/Action.svelte";
 
   import { noteHashUrl, width, height } from "$lib/api/notes";
-  import { pageHashUrl } from "$lib/api/documents";
+  import { pageImageUrl } from "$lib/api/documents";
+  import { getPrivateAsset } from "$lib/utils/api";
 
   export let note: Note;
   export let focused = false;
+  export let pdf = null; // PDFDocumentProxy
 
   const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
   const ALLOWED_ATTR = ["href"];
+  const SIZE: Sizes = "large";
+  const BUFFER = 20; // padding around image excerpt
 
   const access = {
     private: {
@@ -50,10 +56,61 @@
 
   const mode: Writable<ViewerMode> = getContext("mode");
 
+  let document: Document = getContext("document");
+  let canvas: HTMLCanvasElement;
+
   $: id = noteHashUrl(note).replace("#", "");
   $: href = noteHashUrl(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
+
+  onMount(() => {
+    render(canvas, document, pdf);
+  });
+
+  async function render(canvas: HTMLCanvasElement, document: Document, pdf) {
+    if (pdf) {
+      return renderPDF(canvas, pdf);
+    }
+
+    if (document) {
+      return renderImage(canvas, document);
+    }
+
+    // we don't have a pdf or a document, for some reason
+    console.error(`Can't render note ${note.id} on page ${page_number}.`);
+  }
+
+  async function renderImage(canvas: HTMLCanvasElement, document: Document) {
+    const context = canvas.getContext("2d");
+    const image = new Image();
+
+    let src = pageImageUrl(document, page_number, SIZE);
+    /*
+    if (document.access !== "public") {
+      src = await getPrivateAsset(src);
+    }
+    */
+
+    image.src = src.href;
+    image.addEventListener("load", (e) => {
+      canvas.width = width(note) * image.width;
+      canvas.height = height(note) * image.height;
+      context.drawImage(
+        image,
+        note.x1 * image.width,
+        note.y1 * image.height,
+        width(note) * image.width,
+        height(note) * image.height,
+        0,
+        0,
+        width(note) * image.width,
+        height(note) * image.height,
+      );
+    });
+  }
+
+  async function renderPDF(canvas: HTMLCanvasElement, pdf) {}
 
   function clean(html: string) {
     return DOMPurify.sanitize(html, {
@@ -72,8 +129,8 @@
     style:--x2={note.x2}
     style:--y1={note.y1}
     style:--y2={note.y2}
-    style:--width={width(note)}
-    style:--height={height(note)}
+    style:--note-width={width(note)}
+    style:--note-height={height(note)}
   >
     <header>
       <h3>{note.title}</h3>
@@ -88,13 +145,15 @@
     </header>
     <div class="excerpt">
       <h4 {id}>
-        <a href={pageHashUrl(page_number)}>
+        <a href={noteHashUrl(note)}>
           {$_("documents.pageAbbrev")}
           {page_number}
         </a>
       </h4>
 
-      <div class="highlight"></div>
+      <div class="highlight">
+        <canvas width="0" height="0" bind:this={canvas}></canvas>
+      </div>
     </div>
     <div class="content">
       <p>{@html clean(note.content)}</p>
@@ -203,22 +262,6 @@
     gap: var(--font-md, 1rem);
   }
 
-  .excerpt {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-    align-self: stretch;
-  }
-
-  .highlight {
-    height: 4.25rem;
-    align-self: stretch;
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2, #d8dee2);
-    background: var(--gray-1, #f5f6f7);
-  }
-
   h4,
   h4 a {
     color: var(--gray-4, #5c717c);
@@ -228,6 +271,41 @@
 
   h4 a:hover {
     text-decoration: underline;
+  }
+
+  .excerpt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    align-self: stretch;
+  }
+
+  .highlight {
+    align-self: stretch;
+    border-radius: 0.5rem;
+    border: 2px solid var(--gray-2, #d8dee2);
+    background: var(--gray-1, #f5f6f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .public .highlight {
+    border-color: var(--note-public);
+  }
+
+  .private .highlight {
+    border-color: var(--note-private);
+  }
+
+  .organization .highlight {
+    border-color: var(--note-org);
+  }
+
+  canvas {
+    max-width: 100%;
+    padding: 0.25rem;
   }
 
   footer {
