@@ -83,6 +83,8 @@
 
     u.searchParams.set("mode", mode);
 
+    // reset hash, keeping page number
+    u.hash = "";
     if ($currentPage > 1) {
       u.hash = pageHashUrl($currentPage);
     }

@@ -54,7 +54,7 @@
     </SidebarItem>
   {/if}
 
-  <SidebarItem href={pdf} download>
+  <SidebarItem href={pdf} download target="_blank">
     <Download16 />
     {$_("sidebar.download")}
   </SidebarItem>

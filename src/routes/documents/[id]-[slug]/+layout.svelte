@@ -63,7 +63,7 @@
   <svelte:fragment slot="navigation">
     <DocumentMetadata {document} />
 
-    <Sections sections={document.sections} />
+    <Sections {document} sections={document.sections} notes={document.notes} />
 
     <Data {document} />
 

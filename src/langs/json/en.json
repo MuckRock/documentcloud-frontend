@@ -841,6 +841,12 @@
     "projects": {
       "title": "Projects",
       "pinned": "Pinned projects will appear here"
+    },
+    "toc": {
+      "notes": "Notes",
+      "pageAbbrev": "p.",
+      "sections": "Sections",
+      "title": "Notes & Sections"
     }
   },
   "viewer": {
