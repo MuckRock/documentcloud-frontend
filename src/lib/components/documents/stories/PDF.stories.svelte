@@ -20,6 +20,12 @@
 
 <Story name="default">
   <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
+  </div>
+</Story>
+
+<Story name="show notes">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
     <PDF {document} asset_url={pdfUrl(document)} />
   </div>
 </Story>

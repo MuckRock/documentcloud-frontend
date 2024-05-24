@@ -63,13 +63,10 @@
   let renderTask;
   let rendering;
 
-  $: id = noteHashUrl(note).replace("#", "");
   $: href = noteHashUrl(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
   $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
-
-  $: console.log(note.id, focused);
 
   onMount(() => {
     rendering = render(canvas, document, pdf);
@@ -98,7 +95,7 @@
     const image = new Image();
 
     let src = pageImageUrl(document, page_number, SIZE);
-    /*
+    /* not sure we need this
     if (document.access !== "public") {
       src = await getPrivateAsset(src);
     }
@@ -167,8 +164,7 @@
   }
 
   function onClick(e) {
-    focused = true;
-    $activeNote = note;
+    activeNote?.set(note);
     pushState(e.target.href, {});
   }
 </script>
@@ -195,7 +191,7 @@
       </div>
     </header>
     <div class="excerpt">
-      <h4 {id}>
+      <h4>
         <a href={noteHashUrl(note)}>
           {$_("documents.pageAbbrev")}
           {page_number}

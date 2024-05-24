@@ -108,8 +108,6 @@ Selectable text can be rendered in one of two ways:
     // set the container size, if using a numeric zoom
     if (typeof scale === "number") {
       container.style.setProperty("--width", Math.floor(viewport.width) + "px");
-    } else if (scale === "height") {
-      container.style.removeProperty("--width");
     }
 
     // store the task, return the promise
@@ -161,14 +159,13 @@ Selectable text can be rendered in one of two ways:
   }
 
   function openNote(e, note: NoteType) {
-    $activeNote = note;
-    if (e.target.href) {
-      pushState(e.target.href, {});
-    }
+    activeNote?.set(note);
+    const href = e.target?.href || noteHashUrl(note);
+    pushState(href, {});
   }
 
   function closeNote() {
-    $activeNote = null;
+    activeNote?.set(null);
     pushState(window.location.pathname, {});
   }
 </script>
@@ -194,6 +191,7 @@ Selectable text can be rendered in one of two ways:
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
     style:--width="{width}px"
+    style:--height="{height}px"
     data-loaded={loaded}
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
@@ -259,7 +257,9 @@ Selectable text can be rendered in one of two ways:
   }
 
   .page-container.scale-height {
+    aspect-ratio: 1 / var(--aspect);
     height: 90vh;
+    width: inherit;
   }
 
   .selectable-text {
