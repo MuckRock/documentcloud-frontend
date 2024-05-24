@@ -201,7 +201,7 @@
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if $mode === "document"}
+  {#if $mode === "document" || $mode === "notes"}
     <link
       rel="preload"
       href={data.asset_url.href}
@@ -230,7 +230,7 @@
   {/if}
 
   {#if $mode === "notes"}
-    <Notes notes={document.notes} />
+    <Notes notes={document.notes} asset_url={data.asset_url} />
   {/if}
 
   <PageToolbar slot="footer">

@@ -207,25 +207,27 @@ Selectable text can be rendered in one of two ways:
       </div>
     {/if}
     {#if notes}
-      <div class="notes">
-        {#each notes as note}
-          <a
-            class="note"
-            href={noteHashUrl(note)}
-            title={note.title}
-            style:top="{note.y1 * 100}%"
-          >
-            <NoteTab access={note.access} />
-            {#if $activeNote}
-              <button class="close" on:click|preventDefault={closeNote}>
-                <XCircleFill16 />
-              </button>
-            {/if}
-          </a>
+      {#await pdf then pdf}
+        <div class="notes">
+          {#each notes as note}
+            <a
+              class="note"
+              href={noteHashUrl(note)}
+              title={note.title}
+              style:top="{note.y1 * 100}%"
+            >
+              <NoteTab access={note.access} />
+              {#if $activeNote}
+                <button class="close" on:click|preventDefault={closeNote}>
+                  <XCircleFill16 />
+                </button>
+              {/if}
+            </a>
 
-          <Note {note} focused={note === $activeNote} />
-        {/each}
-      </div>
+            <Note {note} focused={note === $activeNote} {pdf} />
+          {/each}
+        </div>
+      {/await}
     {/if}
   </div>
 </Page>

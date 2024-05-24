@@ -58,25 +58,30 @@
 
   let document: Document = getContext("document");
   let canvas: HTMLCanvasElement;
+  let renderTask;
+  let rendering;
 
   $: id = noteHashUrl(note).replace("#", "");
   $: href = noteHashUrl(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
-  $: render(canvas, document, pdf);
+  $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
 
   onMount(() => {
-    render(canvas, document, pdf);
+    rendering = render(canvas, document, pdf);
   });
 
   async function render(canvas: HTMLCanvasElement, document: Document, pdf) {
     if (!canvas) return;
+    if (rendering) {
+      await rendering;
+    }
 
     if (pdf) {
       return renderPDF(canvas, pdf);
     }
 
-    if (document) {
+    if (document && !pdf) {
       return renderImage(canvas, document);
     }
 
@@ -114,6 +119,10 @@
   }
 
   async function renderPDF(canvas: HTMLCanvasElement, pdf) {
+    if (renderTask) {
+      await renderTask.promise;
+    }
+
     const context = canvas.getContext("2d");
     const page = await pdf.getPage(page_number);
     const [x, y, w, h] = page.view;
@@ -136,11 +145,13 @@
     canvas.width = Math.floor(noteWidth * dpr);
     canvas.height = Math.floor(noteHeight * dpr);
 
-    page.render({
+    renderTask = page.render({
       canvasContext: context,
       viewport,
       transform,
     });
+
+    return renderTask.promise;
   }
 
   function clean(html: string) {
