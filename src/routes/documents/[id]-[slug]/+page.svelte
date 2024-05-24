@@ -245,7 +245,7 @@
     </label>
 
     <svelte:fragment slot="center">
-      {#if $mode !== "thumbnails"}
+      {#if $mode === "document" || $mode === "text"}
         <Paginator
           goToNav
           on:goTo={(e) => gotoPage(e.detail)}
@@ -259,18 +259,22 @@
       {/if}
     </svelte:fragment>
 
-    <label class="zoom" slot="right">
-      {#if $mode === "thumbnails"}
-        {$_("zoom.size")}
-      {:else}
-        {$_("zoom.zoom")}
+    <svelte:fragment slot="right">
+      {#if zoomLevels.length}
+        <label class="zoom">
+          {#if $mode === "thumbnails"}
+            {$_("zoom.size")}
+          {:else}
+            {$_("zoom.zoom")}
+          {/if}
+          <select name="zoom" bind:value={zoom}>
+            {#each zoomLevels as [value, label]}
+              <option {value}>{label}</option>
+            {/each}
+          </select>
+        </label>
       {/if}
-      <select name="zoom" bind:value={zoom}>
-        {#each zoomLevels as [value, label]}
-          <option {value}>{label}</option>
-        {/each}
-      </select>
-    </label>
+    </svelte:fragment>
   </PageToolbar>
 </ContentLayout>
 

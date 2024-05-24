@@ -160,6 +160,13 @@ Selectable text can be rendered in one of two ways:
     }
   }
 
+  function openNote(e, note: NoteType) {
+    $activeNote = note;
+    if (e.target.href) {
+      pushState(e.target.href, {});
+    }
+  }
+
   function closeNote() {
     $activeNote = null;
     pushState(window.location.pathname, {});
@@ -215,16 +222,20 @@ Selectable text can be rendered in one of two ways:
               href={noteHashUrl(note)}
               title={note.title}
               style:top="{note.y1 * 100}%"
+              on:click={(e) => openNote(e, note)}
             >
               <NoteTab access={note.access} />
               {#if $activeNote}
-                <button class="close" on:click|preventDefault={closeNote}>
+                <button
+                  class="close"
+                  on:click|preventDefault|stopPropagation={closeNote}
+                >
                   <XCircleFill16 />
                 </button>
               {/if}
             </a>
 
-            <Note {note} focused={note === $activeNote} {pdf} />
+            <Note {note} focused={note.id === $activeNote?.id} {pdf} />
           {/each}
         </div>
       {/await}

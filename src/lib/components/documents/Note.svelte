@@ -11,6 +11,8 @@
   import type { User } from "@/api/types/orgAndUser";
   import type { Document, Note, Sizes, ViewerMode } from "$lib/api/types";
 
+  import { pushState } from "$app/navigation";
+
   import DOMPurify from "isomorphic-dompurify";
   import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -25,7 +27,7 @@
 
   import { noteHashUrl, width, height } from "$lib/api/notes";
   import { pageImageUrl } from "$lib/api/documents";
-  import { getPrivateAsset } from "$lib/utils/api";
+  // import { getPrivateAsset } from "$lib/utils/api";
 
   export let note: Note;
   export let focused = false;
@@ -34,7 +36,6 @@
   const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
   const ALLOWED_ATTR = ["href"];
   const SIZE: Sizes = "large";
-  const BUFFER = 20; // padding around image excerpt
 
   const access = {
     private: {
@@ -54,9 +55,10 @@
     },
   };
 
+  const activeNote: Writable<Note> = getContext("activeNote");
+  const document: Document = getContext("document");
   const mode: Writable<ViewerMode> = getContext("mode");
 
-  let document: Document = getContext("document");
   let canvas: HTMLCanvasElement;
   let renderTask;
   let rendering;
@@ -66,6 +68,8 @@
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
   $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
+
+  $: console.log(note.id, focused);
 
   onMount(() => {
     rendering = render(canvas, document, pdf);
@@ -161,11 +165,16 @@
       ALLOWED_ATTR,
     });
   }
+
+  function onClick(e) {
+    focused = true;
+    $activeNote = note;
+    pushState(e.target.href, {});
+  }
 </script>
 
 {#if focused}
   <div
-    {id}
     class="note focused {note.access} {$mode || 'notes'}"
     style:--x1={note.x1}
     style:--x2={note.x2}
@@ -227,7 +236,6 @@
   </div>
 {:else}
   <a
-    data-sveltekit-replacestate
     {href}
     class="note {note.access}"
     title={note.title}
@@ -235,6 +243,7 @@
     style:left="{note.x1 * 100}%"
     style:width="{width(note) * 100}%"
     style:height="{height(note) * 100}%"
+    on:click={onClick}
   >
     {note.title}
   </a>
