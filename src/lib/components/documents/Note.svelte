@@ -63,12 +63,15 @@
   $: href = noteHashUrl(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
+  $: render(canvas, document, pdf);
 
   onMount(() => {
     render(canvas, document, pdf);
   });
 
   async function render(canvas: HTMLCanvasElement, document: Document, pdf) {
+    if (!canvas) return;
+
     if (pdf) {
       return renderPDF(canvas, pdf);
     }
@@ -110,7 +113,35 @@
     });
   }
 
-  async function renderPDF(canvas: HTMLCanvasElement, pdf) {}
+  async function renderPDF(canvas: HTMLCanvasElement, pdf) {
+    const context = canvas.getContext("2d");
+    const page = await pdf.getPage(page_number);
+    const [x, y, w, h] = page.view;
+
+    const scale = 1;
+    const offsetX = note.x1 * w;
+    const offsetY = note.y1 * h;
+    const noteWidth = width(note) * w;
+    const noteHeight = height(note) * h;
+    const viewport = page.getViewport({
+      scale,
+      offsetX: -offsetX * scale,
+      offsetY: -offsetY * scale,
+    });
+
+    const dpr = window?.devicePixelRatio ?? 1;
+    const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null;
+
+    // set the pixel dimensions of the canvas
+    canvas.width = Math.floor(noteWidth * dpr);
+    canvas.height = Math.floor(noteHeight * dpr);
+
+    page.render({
+      canvasContext: context,
+      viewport,
+      transform,
+    });
+  }
 
   function clean(html: string) {
     return DOMPurify.sanitize(html, {

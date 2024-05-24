@@ -1,13 +1,21 @@
 <script lang="ts" context="module">
   import type { Note as NoteType } from "$lib/api/types";
 
+  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    "pdfjs-dist/build/pdf.worker.mjs",
+    import.meta.url,
+  ).href;
+
   import { Story } from "@storybook/addon-svelte-csf";
   import { setContext } from "svelte";
   import Note from "../Note.svelte";
 
   import document from "$lib/api/fixtures/documents/document-expanded.json";
+  import pdfFile from "$lib/api/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
 
   const notes = document.notes as NoteType[];
+  const url = new URL(pdfFile, import.meta.url);
 
   const html = `A chance for the Prime Minister and his Deputy to portray themselves as the "<b>action men</b>" of British politics.  
   Within a month-and-a-half, <a href="https://en.wikipedia.org/wiki/George_Osborne">George Osborne</a>, the country's new 38 year-old Chancellor of the Exchequor (i.e. the country's Finance Minister) 
@@ -18,6 +26,10 @@
     component: Note,
     parameters: { layout: "centered" },
   };
+
+  async function load(url: URL) {
+    return pdfjs.getDocument(url).promise;
+  }
 </script>
 
 <script lang="ts">
@@ -42,4 +54,10 @@
 
 <Story name="note with HTML">
   <Note focused note={{ ...notes[2], content: html }} />
+</Story>
+
+<Story name="render using PDF">
+  {#await load(url) then pdf}
+    <Note focused note={{ ...notes[2], content: html }} {pdf} />
+  {/await}
 </Story>
