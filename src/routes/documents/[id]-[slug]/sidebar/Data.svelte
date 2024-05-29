@@ -37,7 +37,7 @@
         <h4>{$_("sidebar.data.tags")}</h4>
       </SidebarItem>
 
-      <Flex>
+      <Flex wrap>
         {#each tags as tag}
           <KV tag value={tag} />
         {/each}
@@ -50,7 +50,7 @@
       <SidebarItem>
         <h4>{$_("sidebar.data.data")}</h4>
       </SidebarItem>
-      <Flex direction="row">
+      <Flex wrap>
         {#each data as [key, values]}
           {#each values as value}
             <KV {key} {value} />
