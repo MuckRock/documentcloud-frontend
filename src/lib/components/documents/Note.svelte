@@ -32,6 +32,7 @@
   export let note: Note;
   export let focused = false;
   export let pdf = null; // PDFDocumentProxy
+  export let scale = 1.5;
 
   const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
   const ALLOWED_ATTR = ["href"];
@@ -128,15 +129,14 @@
     const page = await pdf.getPage(page_number);
     const [x, y, w, h] = page.view;
 
-    const scale = 1;
-    const offsetX = note.x1 * w;
-    const offsetY = note.y1 * h;
-    const noteWidth = width(note) * w;
-    const noteHeight = height(note) * h;
+    const offsetX = note.x1 * w * scale;
+    const offsetY = note.y1 * h * scale;
+    const noteWidth = width(note) * w * scale;
+    const noteHeight = height(note) * h * scale;
     const viewport = page.getViewport({
       scale,
-      offsetX: -offsetX * scale,
-      offsetY: -offsetY * scale,
+      offsetX: -offsetX,
+      offsetY: -offsetY,
     });
 
     const dpr = window?.devicePixelRatio ?? 1;
@@ -190,17 +190,8 @@
         {/if}
       </div>
     </header>
-    <div class="excerpt">
-      <h4>
-        <a href={noteHashUrl(note)}>
-          {$_("documents.pageAbbrev")}
-          {page_number}
-        </a>
-      </h4>
-
-      <div class="highlight">
-        <canvas width="0" height="0" bind:this={canvas}></canvas>
-      </div>
+    <div class="highlight">
+      <canvas width="0" height="0" bind:this={canvas}></canvas>
     </div>
     <div class="content">
       <p>{@html clean(note.content)}</p>
@@ -271,9 +262,8 @@
   }
 
   /* focused mode */
-  .focused {
+  .note.focused {
     display: flex;
-    width: 38.0625rem;
     padding: var(--font-xs, 0.75rem) var(--font-md, 1rem);
     flex-direction: column;
     align-items: flex-start;
@@ -289,10 +279,21 @@
   }
 
   /* overlay */
-  .focused.document {
+  .note.focused.document {
+    display: flex;
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+
     position: absolute;
-    top: calc(var(--y1) * 100%);
-    left: calc(var(--x1) * 100%);
+    /* shift up to account for the note header */
+    top: calc(var(--y1) * 100% - 3rem);
+    /* left: calc(var(--x1) * 100% - 1px - var(--font-xs)); */
+    left: 0;
+    max-width: 100%; /* maybe should just be width: 100% */
+
+    z-index: 10;
   }
 
   .focused header {
@@ -307,25 +308,6 @@
     justify-content: center;
     align-items: center;
     gap: var(--font-md, 1rem);
-  }
-
-  h4,
-  h4 a {
-    color: var(--gray-4, #5c717c);
-    text-decoration: none;
-    font-weight: var(--font-regular);
-  }
-
-  h4 a:hover {
-    text-decoration: underline;
-  }
-
-  .excerpt {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-    align-self: stretch;
   }
 
   .highlight {

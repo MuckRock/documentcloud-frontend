@@ -110,6 +110,8 @@ Selectable text can be rendered in one of two ways:
       container.style.setProperty("--width", Math.floor(viewport.width) + "px");
     }
 
+    console.log(canvas, viewport);
+
     // store the task, return the promise
     renderTask = page.render({
       canvasContext: context,
@@ -129,7 +131,6 @@ Selectable text can be rendered in one of two ways:
     if (text.length > 0) return;
     if (!textContainer) return;
 
-    // page = await page;
     if (!page) return;
 
     const numericScale = fitPage(width, height, pageContainer, scale);
@@ -223,7 +224,7 @@ Selectable text can be rendered in one of two ways:
               on:click={(e) => openNote(e, note)}
             >
               <NoteTab access={note.access} />
-              {#if $activeNote}
+              {#if note.id === $activeNote?.id}
                 <button
                   class="close"
                   on:click|preventDefault|stopPropagation={closeNote}
@@ -233,7 +234,12 @@ Selectable text can be rendered in one of two ways:
               {/if}
             </a>
 
-            <Note {note} focused={note.id === $activeNote?.id} {pdf} />
+            <Note
+              {note}
+              focused={note.id === $activeNote?.id}
+              {pdf}
+              scale={numericScale}
+            />
           {/each}
         </div>
       {/await}
@@ -250,6 +256,9 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--white, white);
     box-shadow: var(--shadow);
     width: var(--width, "100%");
+
+    /* make this the container for everything below */
+    contain: layout;
   }
 
   .page-container.scale-width {

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document } from "@/lib/api/types";
+  import type { Document, Note, ViewerMode } from "@/lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import PDF from "../PDF.svelte";
@@ -16,6 +16,17 @@
   };
 
   const document = doc as Document;
+</script>
+
+<script lang="ts">
+  import { setContext } from "svelte";
+  import { writable, type Writable } from "svelte/store";
+
+  const activeNote: Writable<Note> = writable(null);
+  const mode: Writable<ViewerMode> = writable("document");
+
+  setContext("activeNote", activeNote);
+  setContext("mode", mode);
 </script>
 
 <Story name="default">
