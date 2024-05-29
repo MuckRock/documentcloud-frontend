@@ -10,6 +10,8 @@
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
+  import * as search from "$lib/utils/search";
+
   export let document: Document;
 
   $: tags = document.data["_tag"];
@@ -39,7 +41,7 @@
 
       <Flex wrap>
         {#each tags as tag}
-          <KV tag value={tag} />
+          <KV tag value={tag} href={search.searchUrl(search.tag(tag)).href} />
         {/each}
       </Flex>
     </div>
@@ -53,7 +55,11 @@
       <Flex wrap>
         {#each data as [key, values]}
           {#each values as value}
-            <KV {key} {value} />
+            <KV
+              {key}
+              {value}
+              href={search.searchUrl(search.kv(key, value)).href}
+            />
           {/each}
         {/each}
       </Flex>
