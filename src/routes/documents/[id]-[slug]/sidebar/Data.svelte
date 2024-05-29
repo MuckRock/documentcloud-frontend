@@ -12,8 +12,8 @@
 
   export let document: Document;
 
-  $: tags = document.data["_tags"];
-  $: data = Object.entries(document.data).filter(([k, v]) => k !== "_tags");
+  $: tags = document.data["_tag"];
+  $: data = Object.entries(document.data).filter(([k, v]) => k !== "_tag");
   $: empty = Object.keys(document.data).length === 0;
 </script>
 

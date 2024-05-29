@@ -12,7 +12,7 @@
   } as Document;
 
   const tags = {
-    _tags: ["British politics", "2010", "PBS NewsHour"],
+    _tag: ["British politics", "2010", "PBS NewsHour"],
   };
 
   const kv = {
