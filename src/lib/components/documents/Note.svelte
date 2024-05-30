@@ -30,7 +30,6 @@
   // import { getPrivateAsset } from "$lib/utils/api";
 
   export let note: Note;
-  export let focused = false;
   export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
 
@@ -169,99 +168,59 @@
   }
 </script>
 
-{#if focused}
-  <div
-    class="note focused {note.access} {$mode || 'notes'}"
-    style:--x1={note.x1}
-    style:--x2={note.x2}
-    style:--y1={note.y1}
-    style:--y2={note.y2}
-    style:--note-width={width(note)}
-    style:--note-height={height(note)}
-  >
-    <header>
-      <h3>{note.title}</h3>
-      <div class="actions">
-        {#if note.edit_access}
-          <Action icon={Pencil16}>{$_("dialog.edit")}</Action>
-          <Action --color="var(--red)" --fill="var(--red)" icon={Trash16}
-            >{$_("dialog.delete")}</Action
-          >
-        {/if}
-      </div>
-    </header>
-    <div class="highlight">
-      <canvas width="0" height="0" bind:this={canvas}></canvas>
-    </div>
-    <div class="content">
-      <p>{@html clean(note.content)}</p>
-    </div>
-    <footer>
+<div
+  class="note focused {note.access} {$mode || 'notes'}"
+  style:--x1={note.x1}
+  style:--x2={note.x2}
+  style:--y1={note.y1}
+  style:--y2={note.y2}
+  style:--note-width={width(note)}
+  style:--note-height={height(note)}
+>
+  <header>
+    <h3>{note.title}</h3>
+    <div class="actions">
       {#if note.edit_access}
-        <label class="access">
-          <svelte:component this={access[note.access].icon} />
-          <span class="sr-only">{$_("access.access")}</span>
-          <select name="access" value={note.access}>
-            {#each Object.values(access) as opt}
-              <option value={opt.value}>{opt.title}</option>
-            {/each}
-          </select>
-        </label>
-      {:else}
-        <span class="access {note.access}">
-          <svelte:component this={access[note.access].icon} />
-          {$_(`access.${access[note.access].value}.title`)}
-        </span>
+        <Action icon={Pencil16}>{$_("dialog.edit")}</Action>
+        <Action --color="var(--red)" --fill="var(--red)" icon={Trash16}
+          >{$_("dialog.delete")}</Action
+        >
       {/if}
-
-      {#if user}
-        <p class="author">
-          {$_("annotation.by", { values: { name: user.name } })}
-        </p>
-      {/if}
-    </footer>
+    </div>
+  </header>
+  <div class="highlight">
+    <canvas width="0" height="0" bind:this={canvas}></canvas>
   </div>
-{:else}
-  <a
-    {href}
-    class="note {note.access}"
-    title={note.title}
-    style:top="{note.y1 * 100}%"
-    style:left="{note.x1 * 100}%"
-    style:width="{width(note) * 100}%"
-    style:height="{height(note) * 100}%"
-    on:click={onClick}
-  >
-    {note.title}
-  </a>
-{/if}
+  <div class="content">
+    <p>{@html clean(note.content)}</p>
+  </div>
+  <footer>
+    {#if note.edit_access}
+      <label class="access">
+        <svelte:component this={access[note.access].icon} />
+        <span class="sr-only">{$_("access.access")}</span>
+        <select name="access" value={note.access}>
+          {#each Object.values(access) as opt}
+            <option value={opt.value}>{opt.title}</option>
+          {/each}
+        </select>
+      </label>
+    {:else}
+      <span class="access {note.access}">
+        <svelte:component this={access[note.access].icon} />
+        {$_(`access.${access[note.access].value}.title`)}
+      </span>
+    {/if}
+
+    {#if user}
+      <p class="author">
+        {$_("annotation.by", { values: { name: user.name } })}
+      </p>
+    {/if}
+  </footer>
+</div>
 
 <style>
-  /* overlay mode */
-  a.note {
-    border-radius: 0.25rem;
-    color: transparent;
-    position: absolute;
-    opacity: 0.5;
-    pointer-events: all;
-    mix-blend-mode: multiply;
-  }
-
-  a.note.public {
-    background-color: var(--note-public);
-  }
-
-  a.note.private {
-    background-color: var(--note-private);
-    border-color: var(--note-private);
-  }
-
-  a.note.organization {
-    background-color: var(--note-org);
-    border-color: var(--note-org);
-  }
-
-  /* focused mode */
   .note.focused {
     display: flex;
     padding: var(--font-xs, 0.75rem) var(--font-md, 1rem);
@@ -368,13 +327,13 @@
     font-size: var(--font-s);
   }
 
-  /* yellow doesn't give enough contrast
-  span.access.public {
-    background-color: var(--note-public);
+  span.access.public,
+  .public label.access {
+    fill: var(--note-public);
   }
-  */
 
-  span.access.organization {
+  span.access.organization,
+  .organization label.access {
     color: var(--note-org);
     fill: var(--note-org);
   }

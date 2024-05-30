@@ -848,11 +848,16 @@
       "pinned": "Pinned projects will appear here"
     },
     "toc": {
+      "empty": "Sections organize your document with a table of contents",
       "notes": "Notes",
       "pageAbbrev": "p.",
       "sections": "Sections",
       "title": "Notes & Sections"
     }
+  },
+  "notes": {
+    "empty": "No notes",
+    "cta": "Annotate this document"
   },
   "viewer": {
     "notFound": "Document not found",

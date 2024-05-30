@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Note as NoteType } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import { setContext } from "svelte";
@@ -12,10 +12,10 @@
     parameters: { layout: "centered" },
   };
 
-  import document from "$lib/api/fixtures/documents/document-expanded.json";
+  import doc from "$lib/api/fixtures/documents/document-expanded.json";
   import pdfFile from "$lib/api/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
 
-  const notes = document.notes as NoteType[];
+  const document = doc as Document;
   const url = new URL(pdfFile, import.meta.url);
 </script>
 
@@ -24,9 +24,13 @@
 </script>
 
 <Story name="notes using images">
-  <Notes {notes} />
+  <Notes {document} />
 </Story>
 
 <Story name="notes using a PDF file">
-  <Notes {notes} asset_url={url} />
+  <Notes {document} asset_url={url} />
+</Story>
+
+<Story name="no notes">
+  <Notes document={{ ...document, notes: [] }} />
 </Story>

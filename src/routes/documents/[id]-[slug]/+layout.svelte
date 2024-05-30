@@ -22,6 +22,7 @@
   import Data from "./sidebar/Data.svelte";
   import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
+  import Notes from "./sidebar/Notes.svelte";
 
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
@@ -67,7 +68,9 @@
   <svelte:fragment slot="navigation">
     <DocumentMetadata {document} />
 
-    <Sections {document} sections={document.sections} notes={document.notes} />
+    <Notes {document} />
+
+    <Sections {document} />
 
     <Data {document} />
 

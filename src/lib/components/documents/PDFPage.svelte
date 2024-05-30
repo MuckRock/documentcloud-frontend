@@ -8,16 +8,17 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type { TextPosition, Note as NoteType } from "$lib/api/types";
 
   import { pushState } from "$app/navigation";
 
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   import { getContext } from "svelte";
-  import type { Writable } from "svelte/store";
   import { XCircleFill16 } from "svelte-octicons";
 
   import Note from "./Note.svelte";
+  import NoteLink from "./NoteLink.svelte";
   import NoteTab from "./NoteTab.svelte";
   import Page from "./Page.svelte";
 
@@ -216,6 +217,7 @@ Selectable text can be rendered in one of two ways:
       {#await pdf then pdf}
         <div class="notes">
           {#each notes as note}
+            {@const is_active = note.id === $activeNote?.id}
             <a
               class="note"
               href={noteHashUrl(note)}
@@ -224,7 +226,7 @@ Selectable text can be rendered in one of two ways:
               on:click={(e) => openNote(e, note)}
             >
               <NoteTab access={note.access} />
-              {#if note.id === $activeNote?.id}
+              {#if is_active}
                 <button
                   class="close"
                   on:click|preventDefault|stopPropagation={closeNote}
@@ -233,13 +235,11 @@ Selectable text can be rendered in one of two ways:
                 </button>
               {/if}
             </a>
-
-            <Note
-              {note}
-              focused={note.id === $activeNote?.id}
-              {pdf}
-              scale={numericScale}
-            />
+            {#if is_active}
+              <Note {note} {pdf} scale={numericScale} />
+            {:else}
+              <NoteLink {note} />
+            {/if}
           {/each}
         </div>
       {/await}
@@ -323,9 +323,6 @@ Selectable text can be rendered in one of two ways:
     bottom: 0;
     width: 100%;
     pointer-events: none;
-
-    /* make all child elements position relative to this container */
-    /* transform: rotate(0deg); */
   }
 
   .notes :global(*) {

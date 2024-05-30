@@ -37,27 +37,27 @@
 </script>
 
 <Story name="default">
-  <Note focused note={notes[0]} />
+  <Note note={notes[0]} />
 </Story>
 
 <Story name="editable">
-  <Note focused note={{ ...notes[1], edit_access: true }} />
+  <Note note={{ ...notes[1], edit_access: true }} />
 </Story>
 
 <Story name="private access">
-  <Note focused note={{ ...notes[1], access: "private" }} />
+  <Note note={{ ...notes[1], access: "private" }} />
 </Story>
 
 <Story name="collaborators access">
-  <Note focused note={{ ...notes[1], access: "organization" }} />
+  <Note note={{ ...notes[1], access: "organization" }} />
 </Story>
 
 <Story name="note with HTML">
-  <Note focused note={{ ...notes[2], content: html }} />
+  <Note note={{ ...notes[2], content: html }} />
 </Story>
 
 <Story name="render using PDF">
   {#await load(url) then pdf}
-    <Note focused note={{ ...notes[2], content: html }} {pdf} />
+    <Note note={{ ...notes[2], content: html }} {pdf} />
   {/await}
 </Story>

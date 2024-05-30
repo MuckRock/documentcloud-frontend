@@ -9,76 +9,37 @@
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
 
   import { pageUrl } from "$lib/api/documents";
-  import { noteUrl } from "$lib/api/notes";
 
   export let document: Document;
-  export let notes: Note[] = [];
-  export let sections: Section[] = [];
 
-  $: toc = group(sections, notes);
-  $: empty = notes.length + sections.length === 0;
-
-  function group(sections: Section[], notes: Note[]) {
-    let ungrouped: Note[] = [...notes];
-
-    const grouped = sections
-      .reverse()
-      .map((section) => {
-        const group = {
-          section,
-          notes: notes.filter((n) => n.page_number >= section.page_number),
-        };
-
-        ungrouped = ungrouped.filter(
-          (n) => n.page_number < section.page_number,
-        );
-
-        return group;
-      })
-      .reverse();
-
-    return { ungrouped, grouped };
-  }
+  $: sections = document.sections;
+  $: empty = sections.length === 0;
 </script>
 
 <SidebarGroup>
   <SidebarItem slot="title">
     <ListOrdered16 />
-    {$_("sidebar.toc.title")}
+    {$_("sidebar.toc.sections")}
   </SidebarItem>
 
   <ol>
-    {#each toc.ungrouped as note}
+    {#each sections as section}
       <li>
-        <SidebarItem href={noteUrl(document, note).href} small>
-          {note.title}
+        <SidebarItem href={pageUrl(document, section.page_number).href}>
+          {section.title}
+
           <span class="page_number">
             {$_("sidebar.toc.pageAbbrev")}
-            {note.page_number + 1}</span
+            {section.page_number + 1}</span
           >
         </SidebarItem>
       </li>
     {/each}
   </ol>
 
-  <ol>
-    {#each toc.grouped as { section, notes }}
-      <li>
-        <SidebarItem href={pageUrl(document, section.page_number).href}>
-          {section.title}
-        </SidebarItem>
-        <ol class="notes">
-          {#each notes as note}
-            <SidebarItem small>{note.title}</SidebarItem>
-          {/each}
-        </ol>
-      </li>
-    {/each}
-  </ol>
-
   {#if empty}
     <Empty icon={ListOrdered24}>
-      <p>Sections organize your document with a table of contents</p>
+      <p>{$_("sidebar.toc.empty")}</p>
     </Empty>
   {/if}
 </SidebarGroup>

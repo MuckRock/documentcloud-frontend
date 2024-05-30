@@ -75,7 +75,7 @@
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding-left: 3rem;
+    padding: 0 3rem;
     gap: 3rem;
     width: 100%;
     overflow-x: auto;
