@@ -67,7 +67,7 @@
 
     $currentPage = pageFromHash(hash);
 
-    if ($currentPage > 1) {
+    if ($currentPage > 1 && ["document", "text"].includes($mode)) {
       scrollToPage($currentPage);
     }
 
@@ -230,7 +230,7 @@
   {/if}
 
   {#if $mode === "notes"}
-    <Notes notes={document.notes} asset_url={data.asset_url} />
+    <Notes {document} asset_url={data.asset_url} />
   {/if}
 
   <PageToolbar slot="footer">

@@ -78,7 +78,7 @@
 
   {#if empty}
     <Empty icon={ListOrdered24}>
-      <p>Sections organize your document with a table of contents</p>
+      <p>{$_("sidebar.toc.empty")}</p>
     </Empty>
   {/if}
 </SidebarGroup>
