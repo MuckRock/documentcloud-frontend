@@ -22,9 +22,7 @@
 <SidebarGroup>
   <SidebarItem slot="title">
     <Tag16 />
-    <h3>
-      {$_("sidebar.data.title")}
-    </h3>
+    {$_("sidebar.data.title")}
   </SidebarItem>
 
   {#if empty}
