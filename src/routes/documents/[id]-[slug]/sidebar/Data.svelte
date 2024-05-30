@@ -31,26 +31,17 @@
     </Empty>
   {/if}
 
-  {#if tags}
-    <div class="tags">
-      <SidebarItem>
-        <h4>{$_("sidebar.data.tags")}</h4>
-      </SidebarItem>
-
-      <Flex wrap>
+  <Flex direction="column">
+    {#if tags}
+      <Flex wrap class="tags">
         {#each tags as tag}
           <KV tag value={tag} href={search.searchUrl(search.tag(tag)).href} />
         {/each}
       </Flex>
-    </div>
-  {/if}
+    {/if}
 
-  {#if data.length}
-    <div class="data">
-      <SidebarItem>
-        <h4>{$_("sidebar.data.data")}</h4>
-      </SidebarItem>
-      <Flex wrap>
+    {#if data.length}
+      <Flex wrap class="data">
         {#each data as [key, values]}
           {#each values as value}
             <KV
@@ -61,6 +52,6 @@
           {/each}
         {/each}
       </Flex>
-    </div>
-  {/if}
+    {/if}
+  </Flex>
 </SidebarGroup>
