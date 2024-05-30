@@ -843,7 +843,7 @@
       "pinned": "Pinned projects will appear here"
     },
     "toc": {
-      "emtpy": "Sections organize your document with a table of contents",
+      "empty": "Sections organize your document with a table of contents",
       "notes": "Notes",
       "pageAbbrev": "p.",
       "sections": "Sections",

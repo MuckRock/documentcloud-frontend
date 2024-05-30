@@ -327,13 +327,13 @@
     font-size: var(--font-s);
   }
 
-  /* yellow doesn't give enough contrast
-  span.access.public {
-    background-color: var(--note-public);
+  span.access.public,
+  .public label.access {
+    fill: var(--note-public);
   }
-  */
 
-  span.access.organization {
+  span.access.organization,
+  .organization label.access {
     color: var(--note-org);
     fill: var(--note-org);
   }
