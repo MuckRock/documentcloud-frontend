@@ -111,7 +111,6 @@ Selectable text can be rendered in one of two ways:
       container.style.setProperty("--width", Math.floor(viewport.width) + "px");
     }
 
-    console.log(canvas, viewport);
 
     // store the task, return the promise
     renderTask = page.render({

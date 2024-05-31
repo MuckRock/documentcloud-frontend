@@ -27,7 +27,7 @@
     {#each notes as note}
       <li>
         <SidebarItem href={noteUrl(document, note).href} small>
-          {note.title}
+          <span class="note_title">{note.title}</span>
           <span class="page_number">
             {$_("sidebar.toc.pageAbbrev")}
             {note.page_number + 1}</span

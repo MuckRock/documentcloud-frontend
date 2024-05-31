@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Document, Note, Section } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { ListOrdered16, ListOrdered24 } from "svelte-octicons";
