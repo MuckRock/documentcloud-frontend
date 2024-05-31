@@ -8,11 +8,21 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import type { TextPosition } from "$lib/api/types";
+  import type { Writable } from "svelte/store";
+  import type { TextPosition, Note as NoteType } from "$lib/api/types";
+
+  import { pushState } from "$app/navigation";
 
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  import { getContext } from "svelte";
+  import { XCircleFill16 } from "svelte-octicons";
 
+  import Note from "./Note.svelte";
+  import NoteLink from "./NoteLink.svelte";
+  import NoteTab from "./NoteTab.svelte";
   import Page from "./Page.svelte";
+
+  import { noteHashUrl } from "$lib/api/notes";
 
   export let page_number: number; // 1-indexed
   export let pdf; // Promise<PDFDocumentProxy>
@@ -20,6 +30,9 @@ Selectable text can be rendered in one of two ways:
   export let text: TextPosition[] = [];
   export let width: number;
   export let height: number;
+  export let notes: NoteType[] = [];
+
+  const activeNote: Writable<NoteType> = getContext("activeNote");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -96,9 +109,8 @@ Selectable text can be rendered in one of two ways:
     // set the container size, if using a numeric zoom
     if (typeof scale === "number") {
       container.style.setProperty("--width", Math.floor(viewport.width) + "px");
-    } else if (scale === "height") {
-      container.style.removeProperty("--width");
     }
+
 
     // store the task, return the promise
     renderTask = page.render({
@@ -119,7 +131,6 @@ Selectable text can be rendered in one of two ways:
     if (text.length > 0) return;
     if (!textContainer) return;
 
-    // page = await page;
     if (!page) return;
 
     const numericScale = fitPage(width, height, pageContainer, scale);
@@ -147,6 +158,17 @@ Selectable text can be rendered in one of two ways:
       });
     }
   }
+
+  function openNote(e, note: NoteType) {
+    activeNote?.set(note);
+    const href = e.target?.href || noteHashUrl(note);
+    pushState(href, {});
+  }
+
+  function closeNote() {
+    activeNote?.set(null);
+    pushState(window.location.pathname, {});
+  }
 </script>
 
 <svelte:window on:resize={onResize} />
@@ -170,6 +192,7 @@ Selectable text can be rendered in one of two ways:
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
     style:--width="{width}px"
+    style:--height="{height}px"
     data-loaded={loaded}
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
@@ -189,6 +212,37 @@ Selectable text can be rendered in one of two ways:
         <!-- pdfjs.renderTextLayer will fill this in -->
       </div>
     {/if}
+    {#if notes}
+      {#await pdf then pdf}
+        <div class="notes">
+          {#each notes as note}
+            {@const is_active = note.id === $activeNote?.id}
+            <a
+              class="note"
+              href={noteHashUrl(note)}
+              title={note.title}
+              style:top="{note.y1 * 100}%"
+              on:click={(e) => openNote(e, note)}
+            >
+              <NoteTab access={note.access} />
+              {#if is_active}
+                <button
+                  class="close"
+                  on:click|preventDefault|stopPropagation={closeNote}
+                >
+                  <XCircleFill16 />
+                </button>
+              {/if}
+            </a>
+            {#if is_active}
+              <Note {note} {pdf} scale={numericScale} />
+            {:else}
+              <NoteLink {note} />
+            {/if}
+          {/each}
+        </div>
+      {/await}
+    {/if}
   </div>
 </Page>
 
@@ -201,6 +255,9 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--white, white);
     box-shadow: var(--shadow);
     width: var(--width, "100%");
+
+    /* make this the container for everything below */
+    contain: layout;
   }
 
   .page-container.scale-width {
@@ -208,7 +265,9 @@ Selectable text can be rendered in one of two ways:
   }
 
   .page-container.scale-height {
+    aspect-ratio: 1 / var(--aspect);
     height: 90vh;
+    width: inherit;
   }
 
   .selectable-text {
@@ -216,7 +275,6 @@ Selectable text can be rendered in one of two ways:
     top: 0;
     bottom: 0;
     width: 100%;
-    opacity: 0.5;
   }
 
   .word {
@@ -256,6 +314,43 @@ Selectable text can be rendered in one of two ways:
     top: 0;
     bottom: 0;
     width: 100%;
+  }
+
+  .notes {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .notes :global(*) {
+    pointer-events: all;
+  }
+
+  .note {
+    position: absolute;
+    pointer-events: all;
+    left: -3rem;
+  }
+
+  .note button {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+
+    position: absolute;
+    margin: auto 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    padding-left: 0.5rem;
+    justify-content: left;
+    align-items: center;
   }
 
   /* pdfjs creates this */

@@ -1,7 +1,7 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import type { Project } from "$lib/api/types";
+  import type { Document, Project } from "$lib/api/types";
 
   // load this here to get the worker started early
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
@@ -9,6 +9,8 @@
     "pdfjs-dist/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
+
+  import { setContext } from "svelte";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
@@ -20,21 +22,23 @@
   import Data from "./sidebar/Data.svelte";
   import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
+  import Notes from "./sidebar/Notes.svelte";
 
-  import { embedUrl } from "@/api/embed";
-  import { pageImageUrl } from "@/api/viewer";
-  import { canonicalUrl } from "@/lib/api/documents";
+  import { embedUrl } from "$lib/api/embed";
+  import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
 
   export let data;
 
+  setContext<Document>("document", data.document);
+
   $: document = data.document;
   $: projects = document.projects as Project[];
-  $: canonical_url = canonicalUrl(document).toString();
+  $: canonical_url = canonicalUrl(document).href;
 </script>
 
 <svelte:head>
   <!-- Insert canonical URL -->
-  <link rel="canonical" href={document.canonical_url.toString()} />
+  <link rel="canonical" href={canonical_url} />
 
   {#if document.noindex || document.admin_noindex}
     <meta name="robots" content="noindex" />
@@ -48,20 +52,25 @@
   <link
     rel="alternate"
     type="application/json+oembed"
-    href={embedUrl(document.canonical_url)}
+    href={embedUrl(document.canonical_url).href}
     title={document.title}
   />
   {#if document?.description?.trim().length > 0}
     <meta property="og:description" content={document.description} />
   {/if}
-  <meta property="og:image" content={pageImageUrl(document, 0, 700)} />
+  <meta
+    property="og:image"
+    content={pageImageUrl(document, 0, "normal").href}
+  />
 </svelte:head>
 
 <MainLayout>
   <svelte:fragment slot="navigation">
     <DocumentMetadata {document} />
 
-    <Sections sections={document.sections} />
+    <Notes {document} />
+
+    <Sections {document} />
 
     <Data {document} />
 

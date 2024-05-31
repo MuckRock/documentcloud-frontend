@@ -71,6 +71,29 @@ export function noteUrl(document: Document, note: Note): URL {
   );
 }
 
+/**
+ * Generate the hash URL for a note, without the document URL
+ * @param note
+ * @returns hash
+ */
+export function noteHashUrl(note: Note): string {
+  return `#document/p${note.page_number + 1}/a${note.id}`;
+}
+
+/**
+ * Opposite of noteHashUrl, returning a note ID.
+ * To get the page number, use pageFromHash
+ * @param hash
+ */
+export function noteFromHash(hash: string): number {
+  const re = /^#document\/p(\d+)\/a(\d+)$/;
+  const match = re.exec(hash);
+
+  if (!match) return null;
+
+  return +match[2] || null;
+}
+
 /** Width of a note, relative to the document */
 export function width(note: Note): number {
   return note.x2 - note.x1;

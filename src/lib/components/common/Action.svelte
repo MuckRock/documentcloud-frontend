@@ -26,8 +26,8 @@
     border-radius: 0.5rem;
 
     background: transparent;
-    color: var(--primary, --blue-3, #4294f0);
-    fill: var(--primary, --blue-3, #4294f0);
+    color: var(--color, var(--primary, --blue-3, #4294f0));
+    fill: var(--fill, var(--primary, --blue-3, #4294f0));
 
     font-size: var(--font-xs, 0.75rem);
     font-weight: var(--font-bold, 700);

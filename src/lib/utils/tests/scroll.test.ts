@@ -22,9 +22,7 @@ describe("scroll helpers", () => {
   });
 
   test("scrollToPage", () => {
-    const scrollIntoView = vi.fn().mockImplementation(function () {
-      console.log(this);
-    });
+    const scrollIntoView = vi.fn();
     const getElementById = vi
       .spyOn(document, "getElementById")
       .mockImplementation(

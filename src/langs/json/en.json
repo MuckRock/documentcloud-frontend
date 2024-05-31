@@ -822,7 +822,6 @@
     "modifyDesc": "Rearrange, rotate, delete, insert, and split pages.",
     "info": "Edit Document Info",
     "infoDesc": "Modify document information like description and related URL.",
-    "data": "Edit Tags and Data",
     "dataDesc": "Add tags and key/value pairs to categorize your document.",
     "sections": "Edit Sections",
     "sectionsDesc": "Add sections to organize your document with a table of contents.",
@@ -838,10 +837,27 @@
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"
     },
+    "data": {
+      "title": "Data & Tags",
+      "empty": "Use tags or key/value data to organize documents",
+      "tags": "Tags",
+      "data": "Data"
+    },
     "projects": {
       "title": "Projects",
       "pinned": "Pinned projects will appear here"
+    },
+    "toc": {
+      "empty": "Sections organize your document with a table of contents",
+      "notes": "Notes",
+      "pageAbbrev": "p.",
+      "sections": "Sections",
+      "title": "Notes & Sections"
     }
+  },
+  "notes": {
+    "empty": "Add notes to highlight and comment on your document",
+    "cta": "Annotate this document"
   },
   "viewer": {
     "notFound": "Document not found",

@@ -1,11 +1,12 @@
 <script lang="ts">
-  export let key: string;
+  export let key: string = "";
   export let value: string;
   export let href: string = null;
+  export let inline: boolean = false;
   export let tag: boolean = false;
 </script>
 
-<div class="kv">
+<div class="kv" class:inline>
   {#if !tag}
     <span class="key">{key}</span>
   {/if}
@@ -29,6 +30,10 @@
     border-radius: 0.25rem;
     border: 1px solid var(--blue-2, #b5ceed);
     background: var(--blue-1, #eef3f9);
+  }
+
+  .kv.inline {
+    display: inline-flex;
   }
 
   .key,
