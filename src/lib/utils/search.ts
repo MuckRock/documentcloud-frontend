@@ -38,5 +38,5 @@ export function tag(t: string): string {
  * @returns formatted query
  */
 export function kv(key: string, value: string): string {
-  return `+data__${key}:"${value}"`;
+  return `+data_${key}:"${value}"`;
 }

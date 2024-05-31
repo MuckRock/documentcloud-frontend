@@ -30,7 +30,7 @@ describe("search utilities", () => {
 
   test("kv", () => {
     expect(kv("parties", "David Cameron")).toStrictEqual(
-      `+data__parties:"David Cameron"`,
+      `+data_parties:"David Cameron"`,
     );
   });
 });
