@@ -54,8 +54,14 @@
     list-style: none;
     padding: 0;
   }
+
   span.page_number {
     color: var(--gray-4);
     font-size: var(--font-s);
+  }
+
+  .note_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
