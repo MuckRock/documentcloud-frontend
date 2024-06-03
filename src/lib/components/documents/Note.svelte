@@ -25,6 +25,7 @@
   } from "svelte-octicons";
   import Action from "../common/Action.svelte";
 
+  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { noteHashUrl, width, height } from "$lib/api/notes";
   import { pageImageUrl } from "$lib/api/documents";
   // import { getPrivateAsset } from "$lib/utils/api";
@@ -33,8 +34,6 @@
   export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
 
-  const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
-  const ALLOWED_ATTR = ["href"];
   const SIZE: Sizes = "large";
 
   const access = {
