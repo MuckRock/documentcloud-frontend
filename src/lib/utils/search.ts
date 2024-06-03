@@ -40,3 +40,16 @@ export function tag(t: string): string {
 export function kv(key: string, value: string): string {
   return `+data_${key}:"${value}"`;
 }
+
+/**
+ * Find `query` in `contents` and add `<mark>` tags
+ * @param contents
+ * @param query
+ * @returns html with <mark> tags
+ */
+export function highlight(contents: string, query: string): string {
+  if (!query) return contents;
+
+  const re = new RegExp(query, "gi");
+  return contents.replaceAll(re, (match) => `<mark>${match}</mark>`);
+}

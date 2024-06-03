@@ -3,13 +3,16 @@
 
   import Page from "./Page.svelte";
 
+  import { highlight } from "$lib/utils/search";
+
   export let page: number;
   export let contents: string;
+  export let query: string = ""; // search query
 </script>
 
 <Page page_number={page + 1} mode="text" track>
   <pre>
-    {contents}
+    {@html highlight(contents, query)}
   </pre>
 </Page>
 
@@ -27,5 +30,9 @@
     line-height: calc(1.25rem * var(--zoom, 1));
     box-shadow: var(--shadow);
     width: 100%;
+  }
+
+  pre :global(mark) {
+    background: var(--note-public, mark);
   }
 </style>

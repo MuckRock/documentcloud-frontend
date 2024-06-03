@@ -23,9 +23,11 @@ Selectable text can be rendered in one of two ways:
   import Page from "./Page.svelte";
 
   import { noteHashUrl } from "$lib/api/notes";
+  import { highlight } from "$lib/utils/search";
 
   export let page_number: number; // 1-indexed
   export let pdf; // Promise<PDFDocumentProxy>
+  export let query: string = ""; // search query
   export let scale: number | "width" | "height";
   export let text: TextPosition[] = [];
   export let width: number;
@@ -40,6 +42,7 @@ Selectable text can be rendered in one of two ways:
 
   // keep track of this to avoid overlapping renders
   let renderTask;
+  let textRenderTask;
   let loaded = false;
 
   // visibility, for loading optimization
@@ -56,7 +59,11 @@ Selectable text can be rendered in one of two ways:
   // we need to wait on both promises to render on initial load
   $: Promise.all([pdf, page]).then(([pdf, page]) => {
     render(page, canvas, container, scale);
-    renderTextLayer(page, textContainer, container, scale);
+    renderTextLayer(page, textContainer, container, scale, query);
+  });
+
+  $: textRenderTask?.promise.then(() => {
+    markHighlights(textContainer, query);
   });
 
   /**
@@ -111,7 +118,6 @@ Selectable text can be rendered in one of two ways:
       container.style.setProperty("--width", Math.floor(viewport.width) + "px");
     }
 
-
     // store the task, return the promise
     renderTask = page.render({
       canvasContext: context,
@@ -127,6 +133,7 @@ Selectable text can be rendered in one of two ways:
     textContainer: HTMLElement,
     pageContainer: HTMLElement,
     scale: number | "width" | "height",
+    query: string = "",
   ) {
     if (text.length > 0) return;
     if (!textContainer) return;
@@ -140,10 +147,21 @@ Selectable text can be rendered in one of two ways:
     // svelte's reactivity ends up a step behind, so do this here
     container.style.setProperty("--scale-factor", numericScale.toFixed(2));
 
-    pdfjs.renderTextLayer({
+    textRenderTask = pdfjs.renderTextLayer({
       textContentSource: content,
       container: textContainer,
       viewport,
+    });
+
+    return textRenderTask.promise;
+  }
+
+  function markHighlights(textContainer: HTMLElement, query: string) {
+    if (!query || !textContainer) return;
+    container.querySelectorAll("span").forEach((span) => {
+      if (span.textContent) {
+        span.innerHTML = highlight(span.textContent, query);
+      }
     });
   }
 
@@ -307,6 +325,12 @@ Selectable text can be rendered in one of two ways:
 
   .selectable-text :global(br) {
     user-select: none;
+  }
+
+  .selectable-text :global(mark) {
+    background-color: var(--note-public, mark);
+    color: transparent;
+    opacity: 0.35;
   }
 
   canvas {

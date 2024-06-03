@@ -13,8 +13,8 @@
 
   import { scrollToPage } from "$lib/utils/scroll";
 
+  export let query: string = ""; // search query
   export let text: Promise<DocumentText> | DocumentText;
-
   export let total: number = 0;
   export let zoom: number = 1;
 
@@ -38,7 +38,7 @@
     {/each}
   {:then { pages }}
     {#each pages as { page, contents }}
-      <TextPage {page} {contents} />
+      <TextPage {page} {contents} {query} />
     {/each}
   {/await}
 </div>

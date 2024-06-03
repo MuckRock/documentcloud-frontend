@@ -22,6 +22,7 @@
   const sizes = pageSizes(document.page_spec);
   const [width, height] = sizes[0];
   const url = new URL(pdfFile, import.meta.url);
+  const query = "los angeles";
 
   async function load(url: URL) {
     return pdfjs.getDocument(url).promise;
@@ -44,5 +45,11 @@
 <Story name="embedded text">
   {#await load(url) then pdf}
     <PdfPage page_number={1} scale={1.5} {pdf} {width} {height} />
+  {/await}
+</Story>
+
+<Story name="search results">
+  {#await load(url) then pdf}
+    <PdfPage page_number={1} scale={1.5} {pdf} {width} {height} {query} />
   {/await}
 </Story>

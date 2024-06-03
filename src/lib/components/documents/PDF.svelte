@@ -26,6 +26,7 @@
 
   export let asset_url: URL = null;
   export let document: Document;
+  export let query: string = ""; // search query
   export let scale: number | "width" | "height" = 1;
   export let pdf = new Promise(() => {}); // this is always a promise
 
@@ -66,7 +67,15 @@
 <div class="pages">
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
-    <PdfPage {page_number} {pdf} {scale} {width} {height} notes={notes[n]} />
+    <PdfPage
+      {page_number}
+      {pdf}
+      {scale}
+      {width}
+      {height}
+      notes={notes[n]}
+      {query}
+    />
   {/each}
 </div>
 

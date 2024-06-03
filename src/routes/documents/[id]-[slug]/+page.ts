@@ -20,6 +20,8 @@ export async function load({ fetch, parent, url }) {
     mode = documents.MODES[0];
   }
 
+  const query = url.searchParams.get("q") ?? "";
+
   const { document } = await parent();
 
   // only load text in text mode
@@ -49,6 +51,7 @@ export async function load({ fetch, parent, url }) {
   return {
     asset_url,
     mode,
+    query,
     text,
     // pdfTask: task,
   };
