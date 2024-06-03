@@ -15,7 +15,6 @@
 
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import SignedIn from "$lib/components/common/SignedIn.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
@@ -23,7 +22,7 @@
   export let document: Document;
 
   function relative(document: Document, path: string) {
-    return new URL(path, canonicalUrl(document)).toString();
+    return new URL(path, canonicalUrl(document)).href;
   }
 
   // urls
@@ -42,12 +41,12 @@
       >{$_(`access.${document.access}.title`)} {$_("access.access")}</span
     >
 
-    <SignedIn>
+    {#if document.edit_access}
       <Action icon={Pencil16}><a href={edit}>{$_("sidebar.edit")}</a></Action>
-    </SignedIn>
+    {/if}
   </SidebarItem>
 
-  {#if document.revision_control}
+  {#if document.revision_control && document.edit_access}
     <SidebarItem href={revisions}>
       <History16 />
       {$_("sidebar.revisions")}
@@ -66,20 +65,26 @@
     {$_("sidebar.share")} &hellip;
   </SidebarItem>
 
-  <SidebarItem href={annotate}>
-    <Comment16 />
-    {$_("sidebar.annotate")} &hellip;
-  </SidebarItem>
+  {#if document.edit_access}
+    <SidebarItem href={annotate}>
+      <Comment16 />
+      {$_("sidebar.annotate")} &hellip;
+    </SidebarItem>
+  {/if}
 
-  <SidebarItem href={redact}>
-    <EyeClosed16 />
-    {$_("sidebar.redact")} &hellip;
-  </SidebarItem>
+  {#if document.edit_access}
+    <SidebarItem href={redact}>
+      <EyeClosed16 />
+      {$_("sidebar.redact")} &hellip;
+    </SidebarItem>
+  {/if}
 
-  <SidebarItem href={modify}>
-    <Apps16 />
-    {$_("sidebar.modify")} &hellip;
-  </SidebarItem>
+  {#if document.edit_access}
+    <SidebarItem href={modify}>
+      <Apps16 />
+      {$_("sidebar.modify")} &hellip;
+    </SidebarItem>
+  {/if}
 </Flex>
 
 <style>

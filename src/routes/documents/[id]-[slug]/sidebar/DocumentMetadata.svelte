@@ -6,9 +6,6 @@
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import Metadata from "$lib/components/common/Metadata.svelte";
-  import SignedIn from "$lib/components/common/SignedIn.svelte";
-
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import { canonicalUrl, userOrgString } from "$lib/api/documents";
 
@@ -38,9 +35,9 @@
     <h1>
       {document.title}
     </h1>
-    <SignedIn>
+    {#if document.edit_access}
       <Action icon={Pencil16}><a href={edit}>Edit</a></Action>
-    </SignedIn>
+    {/if}
   </header>
 
   {#if document.description}
