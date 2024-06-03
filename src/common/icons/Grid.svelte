@@ -2,7 +2,7 @@
   const REM = 16;
 
   export let size = 1.1;
-  export let title = "Thumbnails";
+  export let title = "Grid";
 </script>
 
 <svg

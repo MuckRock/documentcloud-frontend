@@ -18,7 +18,7 @@ import { isOrg } from "@/api/types/orgAndUser";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
-export const MODES = new Set(["document", "text", "thumbnails", "notes"]);
+export const MODES = new Set(["document", "text", "grid", "notes"]);
 
 /**
  * Search documents

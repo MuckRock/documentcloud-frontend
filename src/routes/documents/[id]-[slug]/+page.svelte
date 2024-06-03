@@ -12,7 +12,7 @@
   import DocumentIcon from "@/common/icons/Document.svelte";
   import NotesIcon from "@/common/icons/Notes.svelte";
   import TextIcon from "@/common/icons/Text.svelte";
-  import ThumbnailsIcon from "@/common/icons/Thumbnails.svelte";
+  import GridIcon from "@/common/icons/Grid.svelte";
 
   // components
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
@@ -35,14 +35,14 @@
   const modes = new Map([
     ["document", $_("mode.document")],
     ["text", $_("mode.text")],
-    ["thumbnails", $_("mode.thumbnails")],
+    ["grid", $_("mode.grid")],
     ["notes", $_("mode.notes")],
   ]);
 
   const icons = {
     document: DocumentIcon,
     text: TextIcon,
-    thumbnails: ThumbnailsIcon,
+    grid: GridIcon,
     notes: NotesIcon,
   };
 
@@ -133,7 +133,7 @@
       return "width";
     }
 
-    if (mode === "thumbnails") {
+    if (mode === "grid") {
       return "small";
     }
 
@@ -168,7 +168,7 @@
       ];
     }
 
-    if (mode === "thumbnails") {
+    if (mode === "grid") {
       return [
         ["thumbnail", $_("zoom.thumbnail")],
         ["small", $_("zoom.small")],
@@ -225,7 +225,7 @@
     <Text {text} zoom={+zoom || 1} total={document.page_count} />
   {/if}
 
-  {#if $mode === "thumbnails"}
+  {#if $mode === "grid"}
     <ThumbnailGrid {document} size={zoomToSize(zoom)} />
   {/if}
 
@@ -262,7 +262,7 @@
     <svelte:fragment slot="right">
       {#if zoomLevels.length}
         <label class="zoom">
-          {#if $mode === "thumbnails"}
+          {#if $mode === "grid"}
             {$_("zoom.size")}
           {:else}
             {$_("zoom.zoom")}

@@ -13,7 +13,6 @@
   import { setContext } from "svelte";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
-  import SignedIn from "$lib/components/common/SignedIn.svelte";
 
   // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
@@ -82,8 +81,8 @@
   <svelte:fragment slot="action">
     <Actions {document} />
 
-    <SignedIn>
+    {#if document.edit_access}
       <AddOns pinnedAddOns={data.pinnedAddons} />
-    </SignedIn>
+    {/if}
   </svelte:fragment>
 </MainLayout>

@@ -21,7 +21,7 @@ export type Status = "success" | "readable" | "pending" | "error" | "nofile"; //
 
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
-export type ViewerMode = "document" | "text" | "thumbnails" | "notes";
+export type ViewerMode = "document" | "text" | "grid" | "notes";
 
 export interface NoteHighlight {
   title: string[];
