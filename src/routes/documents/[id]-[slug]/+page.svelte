@@ -57,6 +57,7 @@
 
   $: document = data.document;
   $: $mode = data.mode;
+  $: query = data.query;
   $: text = data.text;
   $: zoom = getDefaultZoom($mode);
   $: zoomLevels = getZoomLevels($mode);
@@ -214,15 +215,20 @@
 
 <ContentLayout>
   <PageToolbar slot="header">
-    <Search slot="center" />
+    <Search name="q" {query} slot="center" />
   </PageToolbar>
 
   {#if $mode === "document"}
-    <PDF {document} scale={zoomToScale(zoom)} asset_url={data.asset_url} />
+    <PDF
+      {document}
+      scale={zoomToScale(zoom)}
+      asset_url={data.asset_url}
+      {query}
+    />
   {/if}
 
   {#if $mode === "text"}
-    <Text {text} zoom={+zoom || 1} total={document.page_count} />
+    <Text {text} zoom={+zoom || 1} total={document.page_count} {query} />
   {/if}
 
   {#if $mode === "grid"}

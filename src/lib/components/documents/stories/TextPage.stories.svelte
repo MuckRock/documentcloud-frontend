@@ -11,8 +11,13 @@
   import txt from "$lib/api/fixtures/documents/document.txt.json";
 
   const page = txt.pages[0];
+  const query = "los angeles";
 </script>
 
 <Story name="default">
   <TextPage page={page.page} contents={page.contents} />
+</Story>
+
+<Story name="search results">
+  <TextPage page={page.page} contents={page.contents} {query} />
 </Story>
