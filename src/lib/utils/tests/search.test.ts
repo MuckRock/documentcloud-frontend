@@ -3,7 +3,7 @@ import { test, expect, describe } from "vitest";
 import { APP_URL } from "@/config/config.js";
 import { slugify } from "@/util/string";
 import { me } from "@/test/fixtures/accounts";
-import { userDocs, tag, kv, searchUrl } from "../search";
+import { userDocs, tag, kv, searchUrl, highlight } from "../search";
 
 describe("search utilities", () => {
   test("search URL", () => {
@@ -32,5 +32,16 @@ describe("search utilities", () => {
     expect(kv("parties", "David Cameron")).toStrictEqual(
       `+data_parties:"David Cameron"`,
     );
+  });
+
+  test("search highlighting", () => {
+    const text = `Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, 
+    and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.`;
+    const marked = `Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, 
+    and nothing particular to interest me on shore, I thought I would <mark>sail</mark> about a little and see the watery part of the world.`;
+
+    const query = "sail";
+
+    expect(highlight(text, query)).toStrictEqual(marked);
   });
 });
