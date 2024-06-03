@@ -31,4 +31,8 @@
     box-shadow: var(--shadow);
     width: 100%;
   }
+
+  pre :global(mark) {
+    background: var(--note-public, mark);
+  }
 </style>

@@ -327,6 +327,12 @@ Selectable text can be rendered in one of two ways:
     user-select: none;
   }
 
+  .selectable-text :global(mark) {
+    background-color: var(--note-public, mark);
+    color: transparent;
+    opacity: 0.35;
+  }
+
   canvas {
     position: absolute;
     top: 0;
