@@ -268,6 +268,64 @@ describe("document uploads and processing", () => {
 });
 
 describe("document helper methods", () => {
+  test("assetUrl", async ({ document }) => {
+    const privateDoc = {
+      ...document,
+      access: "private",
+      asset_url: new URL("/files/", DC_BASE).href,
+    } as Document;
+
+    const processingDoc = {
+      ...privateDoc,
+      access: "public",
+      status: "readable",
+    } as Document;
+
+    const privateUrl = documents.pdfUrl(privateDoc);
+
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      // call 2
+      if (endpoint.toString() === privateUrl.href) {
+        return {
+          ok: true,
+          status: 200,
+          async json() {
+            return privateDoc;
+          },
+        };
+      }
+
+      // call 1
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return {
+            location: privateUrl,
+          };
+        },
+      };
+    });
+
+    let asset_url = await documents.assetUrl(document, mockFetch);
+
+    // for public documents, these are the same
+    expect(asset_url).toStrictEqual(documents.pdfUrl(document));
+    expect(mockFetch).toBeCalledTimes(0); // didn't use it
+
+    // for private documents and those still processing, the URL should be private
+    asset_url = await documents.assetUrl(privateDoc, mockFetch);
+
+    expect(asset_url).toStrictEqual(privateUrl);
+    expect(mockFetch).toBeCalledTimes(1);
+
+    // documents still processing are kind of private
+    asset_url = await documents.assetUrl(processingDoc, mockFetch);
+
+    expect(asset_url).toStrictEqual(privateUrl);
+    expect(mockFetch).toBeCalledTimes(2); // we've called it twice now
+  });
+
   test("canonicalUrl", ({ document }) => {
     expect(documents.canonicalUrl(document)).toStrictEqual(
       new URL(`/documents/${document.id}-${document.slug}/`, APP_URL),

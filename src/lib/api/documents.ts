@@ -15,7 +15,12 @@ import type {
 import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
-import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
+import {
+  APP_URL,
+  BASE_API_URL,
+  CSRF_HEADER_NAME,
+  DC_BASE,
+} from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
 export const MODES = new Set(["document", "text", "grid", "notes"]);
@@ -256,6 +261,29 @@ export async function pending(fetch = globalThis.fetch): Promise<Pending[]> {
 }
 
 // utility functions
+
+/**
+ * Get the asset URL for a document, handling the private redirect if needed
+ * @param document
+ * @returns {Promise<URL>}
+ */
+export async function assetUrl(
+  document: Document,
+  fetch = globalThis.fetch,
+): Promise<URL> {
+  let asset_url = pdfUrl(document);
+
+  // assets still processing are in private storage until finished
+  if (document.access !== "public" || String(asset_url).startsWith(DC_BASE)) {
+    asset_url = await getPrivateAsset(asset_url, fetch).catch((e) => {
+      console.error(e);
+      console.error(asset_url.href);
+      return asset_url;
+    });
+  }
+
+  return asset_url;
+}
 
 /**
  * Canonical URL for a document, relative to the current server
