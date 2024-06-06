@@ -17,15 +17,19 @@
   // components
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Paginator from "@/common/Paginator.svelte";
+  import Paginator, { currentPage } from "./components/ViewerPaginator.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import Text from "$lib/components/documents/Text.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
   import Notes from "$lib/components/documents/Notes.svelte";
+  import Zoom, {
+    zoom,
+    zoomToScale,
+    zoomToSize,
+  } from "./components/Zoom.svelte";
 
   // config and utils
-  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageHashUrl, pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
@@ -47,7 +51,7 @@
   };
 
   // stores we need deeper in the component tree, available via context
-  const currentPage: Writable<number> = writable(1);
+  // const currentPage: Writable<number> = writable(1);
   const activeNote: Writable<Note> = writable(null);
   const mode: Writable<ViewerMode> = writable(data.mode);
 
@@ -59,8 +63,6 @@
   $: $mode = data.mode;
   $: query = data.query;
   $: text = data.text;
-  $: zoom = getDefaultZoom($mode);
-  $: zoomLevels = getZoomLevels($mode);
 
   // lifecycle
   afterNavigate(() => {
@@ -94,24 +96,6 @@
   }
 
   // pagination
-  function next() {
-    $currentPage = Math.min($currentPage + 1, document.page_count);
-    scrollToPage($currentPage);
-    replaceState(pageHashUrl($currentPage), {});
-  }
-
-  function previous() {
-    $currentPage = Math.max($currentPage - 1, 1);
-    scrollToPage($currentPage);
-    replaceState(pageHashUrl($currentPage), {});
-  }
-
-  function gotoPage(n: number) {
-    $currentPage = n;
-    scrollToPage($currentPage);
-    replaceState(pageHashUrl($currentPage), {});
-  }
-
   function onHashChange(e: HashChangeEvent) {
     const { hash } = new URL(e.newURL);
     $currentPage = pageFromHash(hash);
@@ -121,82 +105,6 @@
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
     }
-  }
-
-  /**
-   * Generate a default zoom, based on mode
-   * @param mode
-   */
-  function getDefaultZoom(
-    mode: ViewerMode,
-  ): number | Sizes | "width" | "height" {
-    if (mode === "document") {
-      return "width";
-    }
-
-    if (mode === "grid") {
-      return "small";
-    }
-
-    return 1;
-  }
-
-  /**
-   * Generate zoom levels based on mode, since each zooms in a slightly different way
-   */
-  function getZoomLevels(mode: ViewerMode): (string | number)[][] {
-    if (mode === "document") {
-      return [
-        ["width", $_("zoom.fitWidth")],
-        ["height", $_("zoom.fitHeight")],
-        [0.5, "50%"],
-        [0.75, "75%"],
-        [1, "100%"],
-        [1.25, "125%"],
-        [1.5, "150%"],
-        [2, "200%"],
-      ];
-    }
-
-    if (mode === "text") {
-      return [
-        [0.5, "50%"],
-        [0.75, "75%"],
-        [1, "100%"],
-        [1.25, "125%"],
-        [1.5, "150%"],
-        [2, "200%"],
-      ];
-    }
-
-    if (mode === "grid") {
-      return [
-        ["thumbnail", $_("zoom.thumbnail")],
-        ["small", $_("zoom.small")],
-        ["normal", $_("zoom.normal")],
-        ["large", $_("zoom.large")],
-      ];
-    }
-
-    // todo: notes, maybe
-    return [];
-  }
-
-  // for typescript
-  function zoomToScale(zoom: any): number | "width" | "height" {
-    if (zoom === "width" || zoom === "height") {
-      return zoom;
-    }
-
-    return +zoom || 1;
-  }
-
-  function zoomToSize(zoom: any): Sizes {
-    if (IMAGE_WIDTHS_MAP.has(zoom)) {
-      return zoom;
-    }
-
-    return "small";
   }
 </script>
 
@@ -221,18 +129,18 @@
   {#if $mode === "document"}
     <PDF
       {document}
-      scale={zoomToScale(zoom)}
+      scale={zoomToScale($zoom)}
       asset_url={data.asset_url}
       {query}
     />
   {/if}
 
   {#if $mode === "text"}
-    <Text {text} zoom={+zoom || 1} total={document.page_count} {query} />
+    <Text {text} zoom={+$zoom || 1} total={document.page_count} {query} />
   {/if}
 
   {#if $mode === "grid"}
-    <ThumbnailGrid {document} size={zoomToSize(zoom)} />
+    <ThumbnailGrid {document} size={zoomToSize($zoom)} />
   {/if}
 
   {#if $mode === "notes"}
@@ -252,55 +160,25 @@
 
     <svelte:fragment slot="center">
       {#if $mode === "document" || $mode === "text"}
-        <Paginator
-          goToNav
-          on:goTo={(e) => gotoPage(e.detail)}
-          on:next={next}
-          on:previous={previous}
-          bind:page={$currentPage}
-          totalPages={document.page_count}
-          has_next={$currentPage < document.page_count}
-          has_previous={$currentPage > 1}
-        />
+        <Paginator totalPages={document.page_count} />
       {/if}
     </svelte:fragment>
 
-    <svelte:fragment slot="right">
-      {#if zoomLevels.length}
-        <label class="zoom">
-          {#if $mode === "grid"}
-            {$_("zoom.size")}
-          {:else}
-            {$_("zoom.zoom")}
-          {/if}
-          <select name="zoom" bind:value={zoom}>
-            {#each zoomLevels as [value, label]}
-              <option {value}>{label}</option>
-            {/each}
-          </select>
-        </label>
-      {/if}
-    </svelte:fragment>
+    <Zoom slot="right" mode={$mode} />
   </PageToolbar>
 </ContentLayout>
 
 <style>
-  label.mode,
-  label.zoom {
+  label.mode {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: var(--font-m);
   }
 
-  label.zoom select,
   label.mode select {
     border: none;
     font-family: var(--font-sans);
     font-size: var(--font-m);
-  }
-
-  label.zoom {
-    justify-content: right;
   }
 </style>

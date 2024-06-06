@@ -23,6 +23,8 @@ export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
 export type ViewerMode = "document" | "text" | "grid" | "notes";
 
+export type Zoom = number | Sizes | "width" | "height";
+
 export interface NoteHighlight {
   title: string[];
   description: string[];

@@ -2,7 +2,7 @@
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import Data from "../Data.svelte";
+  import Data from "../sidebar/Data.svelte";
 
   import doc from "$lib/api/fixtures/documents/document.json";
 
