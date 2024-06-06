@@ -22,7 +22,7 @@ export async function load({ url, fetch }) {
     options.cursor = cursor;
   }
 
-  const searchResults = search(query, options, fetch);
+  const searchResults = search(query, options, fetch).catch(console.error);
   const pinnedAddons = getPinnedAddons(fetch);
 
   return {
