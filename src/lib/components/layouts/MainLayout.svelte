@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { ComponentType, SvelteComponent } from "svelte";
   import type { Writable } from "svelte/store";
   import type { Org, User } from "@/api/types";
 
@@ -19,9 +20,13 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
 
-  export let modal: boolean = false;
+  import Modal from "./Modal.svelte";
+
+  export let modal: ComponentType<SvelteComponent> = null;
 
   let panel: "navigation" | "action" | null = null;
+
+  $: modal = modal ?? $page.data.modal;
 
   function closePanel() {
     panel = null;
@@ -34,7 +39,7 @@
   }
 
   function closeModal() {
-    modal = false;
+    modal = null;
   }
 
   const me = getContext<Writable<User>>("me");
@@ -112,6 +117,12 @@
     on:click={closePanel}
     on:keydown={closePanel}
   />
+
+  {#if modal}
+    <Modal on:close={closeModal}>
+      <svelte:component this={modal} on:close={closeModal} />
+    </Modal>
+  {/if}
 </div>
 
 <style>

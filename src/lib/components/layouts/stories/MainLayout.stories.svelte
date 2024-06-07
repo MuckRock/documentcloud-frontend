@@ -29,12 +29,14 @@
   import PageToolbar from "../../common/PageToolbar.svelte";
   import Search from "../../forms/Search.svelte";
 
+  import Dialog from "./Dialog.demo.svelte";
+
   import { addons } from "@/test/handlers/addons";
 
   let results = documents as DocumentResults;
 
   export const meta = {
-    title: "Components / Main Layout",
+    title: "Layout / Main Layout",
     component: MainLayout,
     parameters: {
       layout: "fullscreen",
@@ -56,11 +58,6 @@
 
 <Template let:args>
   <MainLayout {...args}>
-    <svelte:fragment slot="modal">
-      <div style="width: 50%; height: 50%; background: white">
-        <h1>Modal</h1>
-      </div>
-    </svelte:fragment>
     <svelte:fragment slot="navigation">
       <Flex direction="column">
         <SidebarItem hover
@@ -129,13 +126,12 @@
         </Flex>
       </SidebarGroup>
     </svelte:fragment>
-    <svelte:fragment slot="basement">
-      <h1>Basement</h1>
-    </svelte:fragment>
   </MainLayout>
 </Template>
 
 <Story name="Desktop" {...args} />
+
+<Story name="Modal open" args={{ ...args, modal: Dialog }} />
 
 <Story
   name="Tablet (H)"
