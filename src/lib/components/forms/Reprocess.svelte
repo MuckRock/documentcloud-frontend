@@ -20,7 +20,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   import Language from "../inputs/Language.svelte";
   import Select, { unwrap } from "../inputs/Select.svelte";
 
-  import { process, cancel } from "$lib/api/documents";
+  import { process, cancel, canonicalUrl } from "$lib/api/documents";
 
   export let documents: Document[] = [];
 
@@ -51,8 +51,8 @@ This will mostly be used inside a modal but isn't dependent on one.
       new Set<Status>(["pending", "readable"]).has(d.status),
     );
 
-    // cancel anything pending
-    await Promise.all(pending.map((d) => cancel(d, csrf_token)));
+    // cancel anything pending, with an empty catch because they might be done by the time this runs
+    await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch();
 
     // send it
     const payload = documents.map((d) => ({
@@ -65,7 +65,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     const resp = await process(payload, csrf_token);
 
     if (resp.ok) {
-      invalidate($page.url);
+      await Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
       dispatch("close");
     } else {
       // show errors

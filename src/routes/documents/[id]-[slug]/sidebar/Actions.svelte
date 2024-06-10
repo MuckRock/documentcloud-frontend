@@ -3,7 +3,6 @@
   import type { ModalContext } from "$lib/components/layouts/Modal.svelte";
 
   import { getContext, type ComponentType, type SvelteComponent } from "svelte";
-  import { type Writable } from "svelte/store";
   import {
     Apps16,
     Comment16,
@@ -101,7 +100,11 @@
   {/if}
 
   {#if document.edit_access}
-    <SidebarItem hover>
+    <SidebarItem>
+      {#if document.status !== "success"}
+        {$_("status.status")}:
+        {$_(`status.${document.status}.title`)}
+      {/if}
       <Action on:click={openReprocess}>
         <IssueReopened16 />
         {$_("sidebar.reprocess")}

@@ -40,6 +40,34 @@
       "description": "Documents will be publicly visible to everyone"
     }
   },
+  "status": {
+    "status": "Status",
+    "success": {
+      "value": "success",
+      "title": "Success",
+      "description": "The document has been succesfully processed"
+    },
+    "readable": {
+      "value": "readable",
+      "title": "Readable",
+      "description": "The document is currently processing, but is readable during the operation"
+    },
+    "pending": {
+      "value": "pending",
+      "title": "Pending",
+      "description": "The document is processing and not currently readable"
+    },
+    "error": {
+      "value": "error",
+      "title": "Error",
+      "description": "There was an error during processing"
+    },
+    "nofile": {
+      "value": "nofile",
+      "title": "No file",
+      "description": "The document was created, but no file has been uploaded yet"
+    }
+  },
   "notfound": {
     "title": "Page not found",
     "content": "Please try another URL"
