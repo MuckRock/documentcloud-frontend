@@ -3,7 +3,22 @@ A modal that displays some content over other content.
 It's either here or not. There is no "closed" state.
 
 Any content is slotted.
+
+This module also exports a writable $modal store and a ModalContext type, describing the shape
+of the $modal store. These are used to set the active modal on any given page.
 -->
+<script context="module" lang="ts">
+  import type { ComponentType, SvelteComponent } from "svelte";
+  import { writable, type Writable } from "svelte/store";
+
+  export type ModalContext = Writable<{
+    component: ComponentType<SvelteComponent>;
+    props?: any;
+  }>;
+
+  export const modal: ModalContext = writable(null);
+</script>
+
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";

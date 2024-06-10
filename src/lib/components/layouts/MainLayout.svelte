@@ -20,9 +20,9 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
 
-  import Modal from "./Modal.svelte";
+  import Modal, { type ModalContext } from "./Modal.svelte";
 
-  const modal: Writable<ComponentType<SvelteComponent>> = getContext("modal");
+  const modal: ModalContext = getContext("modal");
 
   let panel: "navigation" | "action" | null = null;
 
@@ -118,7 +118,11 @@
 
   {#if $modal}
     <Modal on:close={closeModal}>
-      <svelte:component this={$modal} on:close={closeModal} />
+      <svelte:component
+        this={$modal.component}
+        {...$modal.props}
+        on:close={closeModal}
+      />
     </Modal>
   {/if}
 </div>

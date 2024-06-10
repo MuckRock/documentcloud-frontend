@@ -10,7 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 import * as documents from "$lib/api/documents";
 
-export async function load({ fetch, parent, url }) {
+export async function load({ fetch, parent, url, data }) {
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
 
@@ -38,6 +38,7 @@ export async function load({ fetch, parent, url }) {
   // const task = pdfjs.getDocument({ url: asset_url });
 
   return {
+    ...data, // include csrf_token
     asset_url,
     mode,
     query,

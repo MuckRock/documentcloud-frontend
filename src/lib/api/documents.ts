@@ -9,6 +9,7 @@ import type {
   Pending,
   SearchOptions,
   Sizes,
+  Status,
   TextPosition,
 } from "./types";
 
@@ -237,10 +238,31 @@ export async function process(
 
 /**
  * Stop processing a document
- *
- * @param id Document ID
  */
-export async function cancel(id: number | string) {}
+export async function cancel(
+  document: Document,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Response | undefined> {
+  const processing: Set<Status> = new Set(["pending", "readable"]);
+
+  // non-processing status is a no-op
+  if (!processing.has(document.status)) return;
+
+  const endpoint = new URL(
+    `/api/documents/${document.id}/process/`,
+    BASE_API_URL,
+  );
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  });
+}
 
 /**
  * Get pending documents. This returns an empty array for any error.

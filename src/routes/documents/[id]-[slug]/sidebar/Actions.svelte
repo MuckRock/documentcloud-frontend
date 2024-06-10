@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
+  import type { ModalContext } from "$lib/components/layouts/Modal.svelte";
 
   import { getContext, type ComponentType, type SvelteComponent } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { type Writable } from "svelte/store";
   import {
     Apps16,
     Comment16,
@@ -16,8 +17,6 @@
   } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
-  import { page } from "$app/stores";
-
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
@@ -27,7 +26,7 @@
 
   export let document: Document;
 
-  const modal: Writable<ComponentType<SvelteComponent>> = getContext("modal");
+  const modal: ModalContext = getContext("modal");
 
   // urls
   $: edit = relative(document, "edit/");
@@ -42,7 +41,10 @@
   }
 
   function openReprocess() {
-    $modal = Reprocess;
+    $modal = {
+      component: Reprocess,
+      props: { documents: [document] },
+    };
   }
 </script>
 

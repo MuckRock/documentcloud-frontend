@@ -29,8 +29,6 @@
   import PageToolbar from "../../common/PageToolbar.svelte";
   import Search from "../../forms/Search.svelte";
 
-  import Dialog from "./Dialog.demo.svelte";
-
   import { addons } from "@/test/handlers/addons";
 
   let results = documents as DocumentResults;
@@ -54,6 +52,20 @@
   };
 
   let args = {};
+</script>
+
+<script>
+  import { setContext } from "svelte";
+  import Dialog from "./Dialog.demo.svelte";
+  import { modal } from "../Modal.svelte";
+
+  setContext("modal", modal);
+
+  function openModal() {
+    $modal = {
+      component: Dialog,
+    };
+  }
 </script>
 
 <Template let:args>
@@ -97,7 +109,14 @@
         <Search slot="center" />
       </PageToolbar>
       <ResultsList results={results.results} />
-      <PageToolbar slot="footer" />
+
+      <PageToolbar slot="footer">
+        <svelte:fragment slot="center">
+          <Button disabled={Boolean($modal)} mode="ghost" on:click={openModal}
+            >Open modal</Button
+          >
+        </svelte:fragment>
+      </PageToolbar>
     </ContentLayout>
     <svelte:fragment slot="action">
       <Button mode="primary"><PlusCircle16 /> Upload Documents</Button>
@@ -130,8 +149,6 @@
 </Template>
 
 <Story name="Desktop" {...args} />
-
-<Story name="Modal open" {...args} />
 
 <Story
   name="Tablet (H)"

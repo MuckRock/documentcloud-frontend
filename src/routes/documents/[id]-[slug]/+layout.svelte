@@ -14,9 +14,12 @@
   ).href;
 
   import { setContext } from "svelte";
-  import { writable } from "svelte/store";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import {
+    modal,
+    type ModalContext,
+  } from "$lib/components/layouts/Modal.svelte";
 
   // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
@@ -32,10 +35,8 @@
 
   export let data;
 
-  const modal: Writable<ComponentType<SvelteComponent>> = writable(null);
-
   setContext<Document>("document", data.document);
-  setContext("modal", modal);
+  setContext<ModalContext>("modal", modal);
 
   $: document = data.document;
   $: projects = document.projects as Project[];
