@@ -26,10 +26,18 @@ of the $modal store. These are used to set the active modal on any given page.
   import Button from "../common/Button.svelte";
 
   const dispatch = createEventDispatcher();
+
+  function onKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      dispatch("close");
+    }
+  }
 </script>
 
+<svelte:window on:keydown={onKeydown} />
+
 <div class="modal" tabindex="-1">
-  <div class="dialog" transition:fade>
+  <div class="dialog" transition:fade={{ duration: 250 }}>
     <Button mode="ghost" on:click={() => dispatch("close")}>
       <X16 />
     </Button>
@@ -49,6 +57,7 @@ of the $modal store. These are used to set the active modal on any given page.
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
+    z-index: 5;
   }
 
   .dialog {
