@@ -22,11 +22,9 @@
 
   import Modal from "./Modal.svelte";
 
-  export let modal: ComponentType<SvelteComponent> = null;
+  const modal: Writable<ComponentType<SvelteComponent>> = getContext("modal");
 
   let panel: "navigation" | "action" | null = null;
-
-  $: modal = modal ?? $page.data.modal;
 
   function closePanel() {
     panel = null;
@@ -39,7 +37,7 @@
   }
 
   function closeModal() {
-    modal = null;
+    $modal = null;
   }
 
   const me = getContext<Writable<User>>("me");
@@ -118,9 +116,9 @@
     on:keydown={closePanel}
   />
 
-  {#if modal}
+  {#if $modal}
     <Modal on:close={closeModal}>
-      <svelte:component this={modal} on:close={closeModal} />
+      <svelte:component this={$modal} on:close={closeModal} />
     </Modal>
   {/if}
 </div>

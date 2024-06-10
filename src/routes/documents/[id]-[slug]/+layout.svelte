@@ -1,6 +1,9 @@
 <script lang="ts">
   import "@/style/kit.css";
 
+  import type { ComponentType, SvelteComponent } from "svelte";
+  import type { Writable } from "svelte/store";
+
   import type { Document, Project } from "$lib/api/types";
 
   // load this here to get the worker started early
@@ -11,6 +14,7 @@
   ).href;
 
   import { setContext } from "svelte";
+  import { writable } from "svelte/store";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
 
@@ -28,7 +32,10 @@
 
   export let data;
 
+  const modal: Writable<ComponentType<SvelteComponent>> = writable(null);
+
   setContext<Document>("document", data.document);
+  setContext("modal", modal);
 
   $: document = data.document;
   $: projects = document.projects as Project[];

@@ -833,6 +833,7 @@
     "edit": "Edit",
     "upload": "Upload Documents",
     "download": "Download file",
+    "reprocess": "Reprocess",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"

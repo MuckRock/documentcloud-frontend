@@ -1,29 +1,33 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
+  import { getContext, type ComponentType, type SvelteComponent } from "svelte";
+  import { writable, type Writable } from "svelte/store";
   import {
     Apps16,
     Comment16,
     Download16,
     EyeClosed16,
     History16,
+    IssueReopened16,
     Lock16,
     Pencil16,
     Share16,
   } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
+  import { page } from "$app/stores";
+
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
 
   export let document: Document;
 
-  function relative(document: Document, path: string) {
-    return new URL(path, canonicalUrl(document)).href;
-  }
+  const modal: Writable<ComponentType<SvelteComponent>> = getContext("modal");
 
   // urls
   $: edit = relative(document, "edit/");
@@ -32,6 +36,14 @@
   $: annotate = relative(document, "annotate/");
   $: redact = relative(document, "redact/");
   $: modify = relative(document, "modify/");
+
+  function relative(document: Document, path: string) {
+    return new URL(path, canonicalUrl(document)).href;
+  }
+
+  function openReprocess() {
+    $modal = Reprocess;
+  }
 </script>
 
 <Flex direction="column">
@@ -60,7 +72,7 @@
 </Flex>
 
 <Flex direction="column">
-  <SidebarItem>
+  <SidebarItem hover>
     <Share16 />
     {$_("sidebar.share")} &hellip;
   </SidebarItem>
@@ -83,6 +95,15 @@
     <SidebarItem href={modify}>
       <Apps16 />
       {$_("sidebar.modify")} &hellip;
+    </SidebarItem>
+  {/if}
+
+  {#if document.edit_access}
+    <SidebarItem hover>
+      <Action on:click={openReprocess}>
+        <IssueReopened16 />
+        {$_("sidebar.reprocess")}
+      </Action>
     </SidebarItem>
   {/if}
 </Flex>

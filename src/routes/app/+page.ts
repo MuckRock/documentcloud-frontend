@@ -23,7 +23,7 @@ export async function load({ url, fetch }) {
   }
 
   const searchResults = search(query, options, fetch).catch(console.error);
-  const pinnedAddons = getPinnedAddons(fetch);
+  const pinnedAddons = getPinnedAddons(fetch).catch(console.error);
 
   return {
     query,

@@ -131,7 +131,7 @@
 
 <Story name="Desktop" {...args} />
 
-<Story name="Modal open" args={{ ...args, modal: Dialog }} />
+<Story name="Modal open" {...args} />
 
 <Story
   name="Tablet (H)"

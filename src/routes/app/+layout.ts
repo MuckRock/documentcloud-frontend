@@ -3,7 +3,7 @@ import { getPinnedAddons } from "$lib/api/addons";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 
 export async function load({ fetch, parent }) {
-  const pinnedAddons = getPinnedAddons(fetch);
+  const pinnedAddons = getPinnedAddons(fetch).catch(console.error);
   const pinnedProjects = projects
     .list({ pinned: true }, fetch)
     .then((r) => r.results)
