@@ -47,15 +47,15 @@ This will mostly be used inside a modal but isn't dependent on one.
   };
 
   let errors: string[] = [];
-
   let force_ocr = false;
-
   let form: HTMLFormElement;
+  let submitting = false;
 
   // todo: warn if documents are in more than one language
   $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
 
   async function onSubmit(e: SubmitEvent) {
+    submitting = true; // while submitting
     const { csrf_token } = $page.data;
     const pending = documents.filter((d) =>
       new Set<Status>(["pending", "readable"]).has(d.status),
@@ -80,9 +80,10 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     if (resp.ok) {
       await Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
-      dispatch("close");
+      dispatch("close"); // closing destroys the component
     } else {
       errors = await resp.json();
+      submitting = false; // now you can try again
     }
   }
 </script>
@@ -132,7 +133,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
     </Field>
   </Flex>
-  <Button type="submit" full mode="primary"
+  <Button disabled={submitting} type="submit" full mode="primary"
     ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}</Button
   >
 </form>
