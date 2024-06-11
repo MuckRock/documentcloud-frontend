@@ -46,6 +46,8 @@ This will mostly be used inside a modal but isn't dependent on one.
     label: LANGUAGE_MAP.get(documents[0]?.language),
   };
 
+  let errors: string[] = [];
+
   let force_ocr = false;
 
   let form: HTMLFormElement;
@@ -80,7 +82,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       await Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
       dispatch("close");
     } else {
-      // show errors
+      errors = await resp.json();
     }
   }
 </script>
@@ -101,6 +103,15 @@ This will mostly be used inside a modal but isn't dependent on one.
         </p>
       {/if}
     </header>
+    {#if errors.length > 0}
+      <div class="errors">
+        <ul>
+          {#each errors as e}
+            <li>{e}</li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
     <Field>
       <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
       <Language bind:value={language} />
@@ -132,5 +143,9 @@ This will mostly be used inside a modal but isn't dependent on one.
     display: flex;
     flex-flow: column nowrap;
     gap: 0.5rem;
+  }
+
+  .errors li {
+    color: var(--red);
   }
 </style>
