@@ -360,11 +360,11 @@ describe("document helper methods", () => {
       status: "readable",
     } as Document;
 
-    const privateUrl = documents.pdfUrl(privateDoc);
+    const privateUrl = new URL("private.pdf", privateDoc.asset_url);
 
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       // call 2
-      if (endpoint.toString() === privateUrl.href) {
+      if (endpoint.toString() === privateUrl.toString()) {
         return {
           ok: true,
           status: 200,
@@ -380,7 +380,7 @@ describe("document helper methods", () => {
         status: 200,
         async json() {
           return {
-            location: privateUrl,
+            location: privateUrl.href,
           };
         },
       };
