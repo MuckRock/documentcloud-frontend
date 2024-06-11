@@ -64,9 +64,11 @@ This will mostly be used inside a modal but isn't dependent on one.
     // cancel anything pending, with an empty catch because they might be done by the time this runs
     await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch();
 
-    // update language
+    // maybe update language
     await Promise.all(
-      documents.map((d) => edit(d, { language: language.value }, csrf_token)),
+      documents
+        .filter((d) => d.language !== language.value)
+        .map((d) => edit(d, { language: language.value }, csrf_token)),
     ).catch(console.error);
 
     // send it
