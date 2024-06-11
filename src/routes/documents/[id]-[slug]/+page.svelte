@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Note, Sizes, ViewerMode } from "@/lib/api/types.js";
+  import type { Note, ViewerMode } from "@/lib/api/types.js";
 
   import { afterNavigate, goto, replaceState } from "$app/navigation";
   import { page } from "$app/stores";

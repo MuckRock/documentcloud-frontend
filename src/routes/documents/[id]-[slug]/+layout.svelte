@@ -1,17 +1,7 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import type { ComponentType, SvelteComponent } from "svelte";
-  import type { Writable } from "svelte/store";
-
   import type { Document, Project } from "$lib/api/types";
-
-  // load this here to get the worker started early
-  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
-    import.meta.url,
-  ).href;
 
   import { setContext } from "svelte";
 
