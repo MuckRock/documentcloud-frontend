@@ -10,7 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 import * as documents from "$lib/api/documents";
 
-export async function load({ fetch, parent, url, data }) {
+export async function load({ fetch, parent, url, data, depends }) {
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
 
@@ -33,6 +33,9 @@ export async function load({ fetch, parent, url, data }) {
   }
 
   const asset_url = await documents.assetUrl(document, fetch);
+
+  // so we can reload when we reprocess
+  depends(`document:${document.id}`);
 
   // this needs node 22
   // const task = pdfjs.getDocument({ url: asset_url });

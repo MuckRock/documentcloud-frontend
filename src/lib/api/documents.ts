@@ -249,10 +249,7 @@ export async function cancel(
   // non-processing status is a no-op
   if (!processing.has(document.status)) return;
 
-  const endpoint = new URL(
-    `/api/documents/${document.id}/process/`,
-    BASE_API_URL,
-  );
+  const endpoint = new URL(`documents/${document.id}/process/`, BASE_API_URL);
 
   return fetch(endpoint, {
     credentials: "include",
@@ -262,6 +259,36 @@ export async function cancel(
       Referer: APP_URL,
     },
   });
+}
+
+export async function edit(
+  document: Document,
+  data: Partial<Document>,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Document> {
+  const endpoint = new URL(`documents/${document.id}/`, BASE_API_URL);
+
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(data),
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API unavailable");
+  }
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(await resp.json());
+  }
+
+  return resp.json();
 }
 
 /**

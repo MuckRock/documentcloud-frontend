@@ -18,9 +18,10 @@ This will mostly be used inside a modal but isn't dependent on one.
   import FieldLabel from "../common/FieldLabel.svelte";
   import Flex from "../common/Flex.svelte";
   import Language from "../inputs/Language.svelte";
-  import Select, { unwrap } from "../inputs/Select.svelte";
+  import Select from "../inputs/Select.svelte";
 
-  import { process, cancel, canonicalUrl } from "$lib/api/documents";
+  import { LANGUAGE_MAP } from "@/config/config.js";
+  import { process, cancel, edit } from "$lib/api/documents";
 
   export let documents: Document[] = [];
 
@@ -40,10 +41,17 @@ This will mostly be used inside a modal but isn't dependent on one.
   ];
 
   let ocrEngine = ocrEngineOptions[0];
-  let language: { value: string; label: string };
+  let language: { value: string; label: string } = {
+    value: documents[0]?.language,
+    label: LANGUAGE_MAP.get(documents[0]?.language),
+  };
+
   let force_ocr = false;
 
   let form: HTMLFormElement;
+
+  // todo: warn if documents are in more than one language
+  $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
 
   async function onSubmit(e: SubmitEvent) {
     const { csrf_token } = $page.data;
@@ -54,11 +62,15 @@ This will mostly be used inside a modal but isn't dependent on one.
     // cancel anything pending, with an empty catch because they might be done by the time this runs
     await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch();
 
+    // update language
+    await Promise.all(
+      documents.map((d) => edit(d, { language: language.value }, csrf_token)),
+    ).catch(console.error);
+
     // send it
     const payload = documents.map((d) => ({
       id: d.id,
       force_ocr,
-      language: language.value,
       ocr_engine: ocrEngine.value,
     }));
 

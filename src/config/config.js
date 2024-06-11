@@ -113,6 +113,11 @@ export const LANGUAGE_NAMES =
   );
 export const DEFAULT_LANGUAGE = "eng";
 
+export const LANGUAGE_MAP = LANGUAGE_CODES.reduce((m, code, i) => {
+  m.set(code, LANGUAGE_NAMES[i]);
+  return m;
+}, new Map());
+
 export const DOCUMENT_TYPES =
   "123,602,abw,agd,bmp,cdr,cgm,cmx,csv,cwk,dbf,dif,doc,docx,dot,emf,eps,fb2,fhd,fodg,fodp,fods,fodt,gif,gnm,gnumeric,htm,html,hwp,jpeg,jpg,jtd,jtt,key,kth,mml,numbers,odb,odf,odg,odp,ods,odt,p65,pages,pbm,pcd,pct,pcx,pdf,pgm,plt,pm3,pm4,pm5,pm6,pmd,png,pot,ppm,pps,ppt,pptx,psd,pub,qxp,ras,rlf,rtf,sda,sdc,sdd,sdp,sdw,sgf,sgl,sgv,slk,stc,std,sti,stw,svg,svm,sxc,sxd,sxi,sxm,sxw,tga,tif,tiff,txt,uof,uop,uos,uot,vor,vsd,wb2,wdb,wk1,wk3,wk4,wks,wpd,wps,wq1,wq2,wri,xbm,xls,xlsx,xlt,xlw,xml,xpm,zabw,zmf".split(
     ",",

@@ -322,6 +322,30 @@ describe("document uploads and processing", () => {
   });
 });
 
+describe("document write methods", () => {
+  test("documents.edit", async ({ document }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json() {
+          return { ...document, ...body };
+        },
+      };
+    });
+
+    let updated = await documents.edit(
+      document,
+      { title: "Updated title" },
+      "token",
+      mockFetch,
+    );
+
+    expect(updated.title).toStrictEqual("Updated title");
+  });
+});
+
 describe("document helper methods", () => {
   test("assetUrl", async ({ document }) => {
     const privateDoc = {

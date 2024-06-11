@@ -22,7 +22,6 @@ export async function load({ fetch, params, parent, depends }) {
   if (!document) {
     error(404, "Document not found");
   }
-  console.log(`Loaded document: ${document.title}`);
 
   if (document.slug !== params.slug) {
     const canonical = new URL(document.canonical_url);

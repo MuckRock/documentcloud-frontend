@@ -539,7 +539,8 @@
     "select": "Select",
     "source": "Source",
     "noteCount": "{n, plural, one {# note} other {# notes}}",
-    "noteLink": "See note"
+    "noteLink": "See note",
+    "language": "Language"
   },
   "documentThumbnail": {
     "pages": "pages",
@@ -836,7 +837,7 @@
     "updating": "Updating docucment...",
     "original": "Original Document (PDF) »",
     "related": "Related Article »",
-    "contributed": "Contributed by {name}",
+    "contributed": "Contributed by",
     "source": "Source: {source}",
     "actions": "Document Actions",
     "share": "Share",
@@ -862,6 +863,9 @@
     "upload": "Upload Documents",
     "download": "Download file",
     "reprocess": "Reprocess",
+    "created": "Created on",
+    "updated": "Last updated on",
+    "language": "Language",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"
