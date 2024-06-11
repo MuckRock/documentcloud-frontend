@@ -2,7 +2,7 @@ version: "3"
 
 services:
   base:
-    image: node:18
+    image: node:22
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
