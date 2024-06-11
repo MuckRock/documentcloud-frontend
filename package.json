@@ -95,7 +95,7 @@
     "build-storybook": "storybook build",
     "storybook": "storybook dev -p 6006"
   },
-  "engine": 18,
+  "engine": 22,
   "browserslist": "> 0.25%, not dead",
   "msw": {
     "workerDirectory": "./public"
