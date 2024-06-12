@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { Note, ViewerMode } from "@/lib/api/types.js";
 
-  import { afterNavigate, goto, replaceState } from "$app/navigation";
+  import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { setContext } from "svelte";
+  import { afterUpdate, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -30,6 +30,7 @@
   } from "./components/Zoom.svelte";
 
   // config and utils
+  import { POLL_INTERVAL } from "@/config/config.js";
   import { pageHashUrl, pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
@@ -77,6 +78,15 @@
     const noteId = noteFromHash(hash);
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
+    }
+  });
+
+  afterUpdate(() => {
+    // todo: can we make this more granular? do other things trigger invalidation?
+    if (document.status === "pending" || document.status === "readable") {
+      setTimeout(() => {
+        invalidate(`document:${document.id}`);
+      }, POLL_INTERVAL);
     }
   });
 
