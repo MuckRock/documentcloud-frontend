@@ -50,3 +50,12 @@
     <PDF {document} asset_url={new URL(mock.urls.loading)} />
   </div>
 </Story>
+
+<Story name="missing page spec">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF
+      document={{ ...document, notes: [], page_spec: undefined }}
+      asset_url={pdfUrl(document)}
+    />
+  </div>
+</Story>

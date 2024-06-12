@@ -66,6 +66,14 @@ Selectable text can be rendered in one of two ways:
     markHighlights(textContainer, query);
   });
 
+  // handle 0 sizing when page_spec is unavailable
+  $: if (page && width === 0 && height === 0) {
+    page.then((p) => {
+      width = p.view[2];
+      height = p.view[3];
+    });
+  }
+
   /**
    * Return a numeric scale based on intrinsic page size and container size
    * @param width Original document width
