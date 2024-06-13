@@ -21,6 +21,7 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   // modals
+  import Edit from "$lib/components/forms/Edit.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
@@ -40,6 +41,13 @@
     return new URL(path, canonicalUrl(document)).href;
   }
 
+  function openEdit() {
+    $modal = {
+      component: Edit,
+      props: { document },
+    };
+  }
+
   function openReprocess() {
     $modal = {
       component: Reprocess,
@@ -56,7 +64,7 @@
     >
 
     {#if document.edit_access}
-      <Action icon={Pencil16}>{$_("sidebar.edit")}</Action>
+      <Action icon={Pencil16} on:click={openEdit}>{$_("sidebar.edit")}</Action>
     {/if}
   </SidebarItem>
 

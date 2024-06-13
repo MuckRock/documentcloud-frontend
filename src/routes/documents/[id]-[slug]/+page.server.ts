@@ -1,6 +1,8 @@
 import type { Actions } from "./$types.js";
 import type { Document } from "$lib/api/types";
 
+import { fail } from "@sveltejs/kit";
+
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { edit } from "$lib/api/documents";
 
@@ -26,11 +28,14 @@ export const actions = {
       return m;
     }, update);
 
-    const document = await edit(id, update, csrf_token, fetch);
-
-    return {
-      success: true,
-      document,
-    };
+    try {
+      const document = await edit(id, update, csrf_token, fetch);
+      return {
+        success: true,
+        document,
+      };
+    } catch (error) {
+      return fail(400);
+    }
   },
 } satisfies Actions;

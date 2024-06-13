@@ -12,8 +12,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
-  import Premium from "../common/Premium.svelte";
 
+  import AccessLevel from "../inputs/AccessLevel.svelte";
   import Field from "../inputs/Field.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
@@ -57,6 +57,10 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
         value={document.related_article.toString()}
       />
     </Field>
+
+    <hr class="divider" />
+
+    <AccessLevel name="access" selected={document.access} direction="row" />
 
     <Flex class="buttons">
       <Button type="submit" mode="primary">Save</Button>
