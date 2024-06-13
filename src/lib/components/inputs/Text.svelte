@@ -6,16 +6,19 @@
   export let name: string = null;
   export let placeholder = "";
   export let value = "";
+  export let autofocus = false;
   export let required = false;
   export let disabled = false;
 </script>
 
+<!-- svelte-ignore a11y-autofocus -->
 <input
   type="text"
   {name}
   {placeholder}
   {required}
   {disabled}
+  {autofocus}
   bind:value
   on:change
   on:input

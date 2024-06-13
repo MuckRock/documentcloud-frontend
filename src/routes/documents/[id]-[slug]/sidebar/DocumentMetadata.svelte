@@ -1,24 +1,33 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
+  import type { ModalContext } from "$lib/components/layouts/Modal.svelte";
 
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Clock16, Pencil16 } from "svelte-octicons";
 
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import Metadata from "$lib/components/common/Metadata.svelte";
+  import Edit from "$lib/components/forms/Edit.svelte";
 
   import { LANGUAGE_MAP } from "@/config/config.js";
-  import { canonicalUrl, userOrgString } from "$lib/api/documents";
+  import { userOrgString } from "$lib/api/documents";
 
   export let document: Document;
+
+  const modal: ModalContext = getContext("modal");
 
   function dateFormat(date: Date | string) {
     return new Date(date).toLocaleDateString();
   }
 
-  // urls
-  $: edit = new URL("edit/", canonicalUrl(document)).toString();
+  function openEdit() {
+    $modal = {
+      component: Edit,
+      props: { document },
+    };
+  }
 </script>
 
 <!--
@@ -38,7 +47,7 @@
       {document.title}
     </h1>
     {#if document.edit_access}
-      <Action icon={Pencil16}><a href={edit}>{$_("sidebar.edit")}</a></Action>
+      <Action icon={Pencil16} on:click={openEdit}>{$_("sidebar.edit")}</Action>
     {/if}
   </header>
 

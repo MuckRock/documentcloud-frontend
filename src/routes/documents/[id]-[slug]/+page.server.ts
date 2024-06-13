@@ -1,4 +1,5 @@
 import type { Actions } from "./$types.js";
+import type { Document } from "$lib/api/types";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { edit } from "$lib/api/documents";
@@ -10,5 +11,26 @@ export function load({ cookies }) {
 }
 
 export const actions = {
-  async edit({ fetch, request }) {},
+  async edit({ cookies, fetch, request, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const form = await request.formData();
+    const { id } = params;
+
+    const update: Partial<Document> = {};
+
+    // set any fields that aren't blank
+    Array.from(form).reduce((m, [k, v]) => {
+      if (v) {
+        m[k] = v;
+      }
+      return m;
+    }, update);
+
+    const document = await edit(id, update, csrf_token, fetch);
+
+    return {
+      success: true,
+      document,
+    };
+  },
 } satisfies Actions;

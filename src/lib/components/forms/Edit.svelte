@@ -5,6 +5,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
+  import { enhance } from "$app/forms";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -23,15 +25,19 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   const dispatch = createEventDispatcher();
 
   $: action = new URL("?/edit", canonicalUrl(document)).href;
+
+  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+    dispatch("close");
+  }
 </script>
 
-<form {action} method="post">
-  <Flex direction="column">
+<form {action} method="post" use:enhance={onSubmit}>
+  <Flex direction="column" gap={1}>
     <header>
       <h2>{$_("edit.title")}</h2>
     </header>
     <Field title="Title">
-      <Text name="title" value={document.title} required />
+      <Text name="title" value={document.title} required autofocus />
     </Field>
     <Field title="Description">
       <TextArea name="description" value={document.description} />
@@ -52,9 +58,15 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       />
     </Field>
 
-    <div class="buttons">
+    <Flex class="buttons">
       <Button type="submit" mode="primary">Save</Button>
       <Button on:click={(e) => dispatch("close")}>Cancel</Button>
-    </div>
+    </Flex>
   </Flex>
 </form>
+
+<style>
+  form {
+    width: 100%;
+  }
+</style>

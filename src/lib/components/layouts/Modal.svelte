@@ -64,7 +64,7 @@ of the $modal store. These are used to set the active modal on any given page.
     border-radius: var(--font-md, 1rem);
     background: var(--white, #fff);
     box-shadow: 0px 4px 16px 4px #99a8b3;
-    margin: 10rem auto 0 auto;
+    margin: 5rem auto 0 auto;
     max-width: 88ch;
     overflow-x: hidden;
     overflow-y: auto;
