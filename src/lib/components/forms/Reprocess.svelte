@@ -68,7 +68,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     await Promise.all(
       documents
         .filter((d) => d.language !== language.value)
-        .map((d) => edit(d, { language: language.value }, csrf_token)),
+        .map((d) => edit(d.id, { language: language.value }, csrf_token)),
     ).catch(console.error);
 
     // send it

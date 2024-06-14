@@ -902,6 +902,18 @@
     "accessible": "Document not accessible",
     "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
   },
+  "edit": {
+    "title": "Edit document metadata",
+    "allowedHTML": "Limited HTML can be used for formatting. See API documentation for details.",
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "source": "Source",
+      "published_url": "Published URL",
+      "related_article": "Related article URL",
+      "access": "Access"
+    }
+  },
   "addonDispatchDialog": {
     "addons": "Add-Ons",
     "backButton": "Browse Add-Ons",

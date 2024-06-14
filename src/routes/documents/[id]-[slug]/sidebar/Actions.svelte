@@ -2,7 +2,7 @@
   import type { Document } from "$lib/api/types";
   import type { ModalContext } from "$lib/components/layouts/Modal.svelte";
 
-  import { getContext, type ComponentType, type SvelteComponent } from "svelte";
+  import { getContext } from "svelte";
   import {
     Apps16,
     Comment16,
@@ -19,6 +19,9 @@
   import Action from "$lib/components/common/Action.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+
+  // modals
+  import Edit from "$lib/components/forms/Edit.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
@@ -28,7 +31,6 @@
   const modal: ModalContext = getContext("modal");
 
   // urls
-  $: edit = relative(document, "edit/");
   $: revisions = relative(document, "revisions/");
   $: pdf = pdfUrl(document).toString();
   $: annotate = relative(document, "annotate/");
@@ -37,6 +39,13 @@
 
   function relative(document: Document, path: string) {
     return new URL(path, canonicalUrl(document)).href;
+  }
+
+  function openEdit() {
+    $modal = {
+      component: Edit,
+      props: { document },
+    };
   }
 
   function openReprocess() {
@@ -55,7 +64,7 @@
     >
 
     {#if document.edit_access}
-      <Action icon={Pencil16}><a href={edit}>{$_("sidebar.edit")}</a></Action>
+      <Action icon={Pencil16} on:click={openEdit}>{$_("sidebar.edit")}</Action>
     {/if}
   </SidebarItem>
 
@@ -112,14 +121,3 @@
     </SidebarItem>
   {/if}
 </Flex>
-
-<style>
-  a {
-    color: var(--black);
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-</style>

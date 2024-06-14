@@ -62,6 +62,8 @@ Updated variables and styles for new SvelteKit routes
   --note-private: var(--blue-3);
   --note-org: var(--green);
 
+  --caution: var(--red);
+
   /* Text-size styles */
   --action: 12px;
 

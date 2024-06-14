@@ -1,33 +1,27 @@
 <!-- @component
-  The Text input provides styling to the default `<input type="text" … />`.
+A text area for writing text
 -->
-
 <script lang="ts">
+  import { textAreaResize } from "@/util/textareaResize.js";
+
   export let name: string = null;
-  export let placeholder = "";
   export let value = "";
-  export let autofocus = false;
+  export let placeholder = "";
   export let required = false;
   export let disabled = false;
 </script>
 
-<!-- svelte-ignore a11y-autofocus -->
-<input
-  type="text"
+<textarea
+  bind:value
   {name}
-  {placeholder}
   {required}
   {disabled}
-  {autofocus}
-  bind:value
-  on:change
-  on:input
-  on:focus
-  on:blur
+  {placeholder}
+  use:textAreaResize
 />
 
 <style>
-  input {
+  textarea {
     display: flex;
     padding: 0.375rem 0.75rem;
     justify-content: center;
@@ -48,8 +42,5 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-  }
-  input::placeholder {
-    color: var(--Gray-3, #99a8b3);
   }
 </style>

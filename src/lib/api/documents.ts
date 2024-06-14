@@ -261,13 +261,22 @@ export async function cancel(
   });
 }
 
+/**
+ * Edit the top-level fields of a document with a PATCH request
+ *
+ * @param id Document ID
+ * @param data Fields to update
+ * @param csrf_token
+ * @param fetch
+ * @returns Updated document
+ */
 export async function edit(
-  document: Document,
+  id: number | string,
   data: Partial<Document>,
   csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Document> {
-  const endpoint = new URL(`documents/${document.id}/`, BASE_API_URL);
+  const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
 
   const resp = await fetch(endpoint, {
     credentials: "include",

@@ -336,7 +336,7 @@ describe("document write methods", () => {
     });
 
     let updated = await documents.edit(
-      document,
+      document.id,
       { title: "Updated title" },
       "token",
       mockFetch,
