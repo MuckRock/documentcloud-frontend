@@ -904,7 +904,6 @@
   },
   "edit": {
     "title": "Edit document metadata",
-    "allowedHTML": "Limited HTML can be used for formatting. See API documentation for details.",
     "fields": {
       "title": "Title",
       "description": "Description",
@@ -912,7 +911,10 @@
       "published_url": "Published URL",
       "related_article": "Related article URL",
       "access": "Access"
-    }
+      },
+    "allowedHTML": "Limited HTML can be used for formatting. See API documentation for details.",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

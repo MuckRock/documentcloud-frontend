@@ -66,8 +66,10 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <AccessLevel name="access" selected={document.access} direction="row" />
 
     <Flex class="buttons">
-      <Button type="submit" mode="primary">Save</Button>
-      <Button on:click={(e) => dispatch("close")}>Cancel</Button>
+      <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
+      <Button full on:click={(e) => dispatch("close")}
+        >{$_("edit.cancel")}</Button
+      >
     </Flex>
   </Flex>
 </form>

@@ -135,9 +135,14 @@ This will mostly be used inside a modal but isn't dependent on one.
       <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
     </Field>
   </Flex>
-  <Button disabled={submitting} type="submit" full mode="primary"
-    ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}</Button
-  >
+  <Flex class="buttons">
+    <Button disabled={submitting} type="submit" full mode="primary"
+      ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
+    </Button>
+    <Button full on:click={(e) => dispatch("close")}
+      >{$_("edit.cancel")}
+    </Button>
+  </Flex>
 </form>
 
 <style>
