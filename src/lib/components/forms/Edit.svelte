@@ -36,22 +36,25 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <header>
       <h2>{$_("edit.title")}</h2>
     </header>
-    <Field title="Title">
+    <Field title={$_("edit.fields.title")}>
       <Text name="title" value={document.title} required autofocus />
     </Field>
-    <Field title="Description">
+    <Field
+      title={$_("edit.fields.description")}
+      description={$_("edit.allowedHTML")}
+    >
       <TextArea name="description" value={document.description} />
     </Field>
 
-    <Field title="Source">
+    <Field title={$_("edit.fields.source")}>
       <Text name="source" value={document.source} />
     </Field>
 
-    <Field title="Published URL">
+    <Field title={$_("edit.fields.published_url")}>
       <Text name="published_url" value={document.published_url.toString()} />
     </Field>
 
-    <Field title="Related article">
+    <Field title={$_("edit.fields.related_article")}>
       <Text
         name="related_article"
         value={document.related_article.toString()}
