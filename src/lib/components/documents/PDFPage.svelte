@@ -59,7 +59,7 @@ Selectable text can be rendered in one of two ways:
   // we need to wait on both promises to render on initial load
   $: Promise.all([pdf, page]).then(([pdf, page]) => {
     render(page, canvas, container, scale);
-    renderTextLayer(page, textContainer, container, scale, query);
+    renderTextLayer(page, textContainer, container, scale);
   });
 
   $: textRenderTask?.promise.then(() => {
@@ -141,7 +141,6 @@ Selectable text can be rendered in one of two ways:
     textContainer: HTMLElement,
     pageContainer: HTMLElement,
     scale: number | "width" | "height",
-    query: string = "",
   ) {
     if (text.length > 0) return;
     if (!textContainer) return;

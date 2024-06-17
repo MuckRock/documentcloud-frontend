@@ -2,6 +2,7 @@
   export let href: string = null;
   export let mode: "standard" | "primary" | "ghost" = "standard";
   export let full = false;
+  export let size: "small" | "normal" = "normal";
 
   export let disabled = false;
 
@@ -11,11 +12,11 @@
 </script>
 
 {#if href}
-  <a {href} {title} on:click class={mode} class:full>
+  <a {href} {title} on:click class="{mode} {size}" class:full>
     <slot>{label}</slot>
   </a>
 {:else}
-  <button {title} on:click class={mode} {disabled} {type} class:full>
+  <button {title} on:click class="{mode} {size}" {disabled} {type} class:full>
     <slot>{label}</slot>
   </button>
 {/if}
@@ -63,6 +64,12 @@
 
   .ghost:hover {
     background: var(--blue-1, #eef3f9);
+  }
+
+  .small {
+    font-size: var(--font-s, 0.875rem);
+    padding: 0.25rem 0.5rem;
+    box-shadow: var(--shadow);
   }
 
   @media (hover: none) {

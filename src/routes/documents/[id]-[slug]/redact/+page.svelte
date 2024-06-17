@@ -7,14 +7,17 @@
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
+  import { Check16, SquareFill24, Undo16 } from "svelte-octicons";
 
+  import Button from "$lib/components/common/Button.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Paginator, { currentPage } from "../components/ViewerPaginator.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
   import Zoom, { zoom, zoomToScale } from "../components/Zoom.svelte";
 
-  import { pageFromHash } from "$lib/api/documents";
+  import { canonicalUrl, pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
 
@@ -29,6 +32,7 @@
 
   $: asset_url = data.asset_url;
   $: document = data.document;
+  $: action = new URL("?/redact", canonicalUrl(document)).href;
 
   // lifecycle
   afterNavigate(() => {
@@ -71,13 +75,29 @@
 </svelte:head>
 
 <ContentLayout>
+  <svelte:fragment slot="header">
+    <Tip --background-color="var(--yellow-bright)">
+      <SquareFill24 slot="icon" />
+      <h3>{$_("redact.title")}</h3>
+      <p>{$_("redact.instructions")}</p>
+    </Tip>
+  </svelte:fragment>
+
   <PDF {document} {asset_url} scale={zoomToScale($zoom)} />
 
   <PageToolbar slot="footer">
     <svelte:fragment slot="left">
-      <div>
+      <form method="post" {action}>
         <!-- additional controls here -->
-      </div>
+        <Button type="submit" mode="primary" size="small">
+          <Check16 />
+          {$_("redact.confirm")}
+        </Button>
+        <Button type="reset" size="small">
+          <Undo16 />
+          {$_("redact.undo")}
+        </Button>
+      </form>
     </svelte:fragment>
 
     <Paginator slot="center" totalPages={document.page_count} />

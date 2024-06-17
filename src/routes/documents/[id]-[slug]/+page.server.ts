@@ -12,6 +12,10 @@ export function load({ cookies }) {
   return { csrf_token };
 }
 
+/**
+ * All document actions are defined here, because users end up
+ * back on the document viewer after any successful action.
+ */
 export const actions = {
   async edit({ cookies, fetch, request, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
@@ -38,4 +42,6 @@ export const actions = {
       return fail(400);
     }
   },
+
+  async redact({ cookies, fetch, request, params }) {},
 } satisfies Actions;
