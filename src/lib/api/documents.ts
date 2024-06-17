@@ -7,6 +7,7 @@ import type {
   DocumentUpload,
   DocumentResults,
   Pending,
+  Redaction,
   SearchOptions,
   Sizes,
   Status,
@@ -298,6 +299,27 @@ export async function edit(
   }
 
   return resp.json();
+}
+
+export async function redact(
+  id: number | string,
+  redactions: Redaction[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${id}/redactions/`, BASE_API_URL);
+
+  // redaction is a fire-and-reprocess method, so all we have to go on is a response
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(redactions),
+  });
 }
 
 /**

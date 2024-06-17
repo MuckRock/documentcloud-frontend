@@ -3,6 +3,7 @@ import type {
   DocumentText,
   DocumentUpload,
   Pending,
+  Redaction,
   Sizes,
   TextPosition,
 } from "./types";
@@ -59,6 +60,12 @@ const test = base.extend({
     );
 
     await use(textPositions);
+  },
+
+  redactions: async ({}, use: Use<Redaction[]>) => {
+    const { default: redactions } = await import("./fixtures/redactions.json");
+
+    await use(redactions);
   },
 });
 
@@ -343,6 +350,44 @@ describe("document write methods", () => {
     );
 
     expect(updated.title).toStrictEqual("Updated title");
+  });
+
+  test("documents.redact", async ({ document, redactions }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      // the api returns the same redaction it was sent
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 201,
+        async json() {
+          return body;
+        },
+      };
+    });
+
+    const resp = await documents.redact(
+      document.id,
+      redactions,
+      "token",
+      mockFetch,
+    );
+
+    expect(resp.status).toStrictEqual(201);
+    expect(await resp.json()).toStrictEqual(redactions);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`documents/${document.id}/redactions/`, BASE_API_URL),
+      {
+        body: JSON.stringify(redactions),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "token",
+        },
+        method: "POST",
+      },
+    );
   });
 });
 

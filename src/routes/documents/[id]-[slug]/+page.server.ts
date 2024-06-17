@@ -43,5 +43,9 @@ export const actions = {
     }
   },
 
-  async redact({ cookies, fetch, request, params }) {},
+  async redact({ cookies, fetch, request, params }) {
+    return {
+      success: true,
+    };
+  },
 } satisfies Actions;

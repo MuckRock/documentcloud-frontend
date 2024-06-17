@@ -56,7 +56,12 @@ This will mostly be used inside a modal but isn't dependent on one.
 
   async function onSubmit(e: SubmitEvent) {
     submitting = true; // while submitting
+
     const { csrf_token } = $page.data;
+    if (!csrf_token) {
+      throw new Error("missing csrf_token");
+    }
+
     const pending = documents.filter((d) =>
       new Set<Status>(["pending", "readable"]).has(d.status),
     );

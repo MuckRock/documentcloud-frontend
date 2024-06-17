@@ -236,4 +236,12 @@ export interface TextPosition {
   metadata?: any;
 }
 
+export interface Redaction {
+  page_number: number;
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+}
+
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

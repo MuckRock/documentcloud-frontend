@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Note, ViewerMode } from "$lib/api/types";
 
+  import { enhance } from "$app/forms";
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
@@ -60,6 +61,14 @@
       $activeNote = document.notes.find((note) => note.id === noteId);
     }
   }
+
+  async function onSubmit({
+    formElement,
+    formData,
+    action,
+    cancel,
+    submitter,
+  }) {}
 </script>
 
 <svelte:window on:hashchange={onHashChange} />
@@ -87,7 +96,7 @@
 
   <PageToolbar slot="footer">
     <svelte:fragment slot="left">
-      <form method="post" {action}>
+      <form method="post" {action} use:enhance={onSubmit}>
         <!-- additional controls here -->
         <Button type="submit" mode="primary" size="small">
           <Check16 />
