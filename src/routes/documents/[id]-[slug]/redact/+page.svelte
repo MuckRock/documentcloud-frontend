@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Note, ViewerMode } from "$lib/api/types";
+  import type { Note, Redaction, ViewerMode } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { afterNavigate } from "$app/navigation";
@@ -30,6 +30,8 @@
 
   setContext("activeNote", activeNote);
   setContext("mode", mode);
+
+  let redactions: Redaction[] = [];
 
   $: asset_url = data.asset_url;
   $: document = data.document;

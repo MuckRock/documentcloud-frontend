@@ -63,7 +63,9 @@ const test = base.extend({
   },
 
   redactions: async ({}, use: Use<Redaction[]>) => {
-    const { default: redactions } = await import("./fixtures/redactions.json");
+    const { default: redactions } = await import(
+      "./fixtures/documents/redactions.json"
+    );
 
     await use(redactions);
   },

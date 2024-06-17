@@ -11,8 +11,6 @@
   import type { User } from "@/api/types/orgAndUser";
   import type { Document, Note, Sizes, ViewerMode } from "$lib/api/types";
 
-  import { pushState } from "$app/navigation";
-
   import DOMPurify from "isomorphic-dompurify";
   import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -54,7 +52,6 @@
     },
   };
 
-  const activeNote: Writable<Note> = getContext("activeNote");
   const document: Document = getContext("document");
   const mode: Writable<ViewerMode> = getContext("mode");
 
@@ -159,11 +156,6 @@
       ALLOWED_TAGS,
       ALLOWED_ATTR,
     });
-  }
-
-  function onClick(e) {
-    activeNote?.set(note);
-    pushState(e.target.href, {});
   }
 </script>
 
