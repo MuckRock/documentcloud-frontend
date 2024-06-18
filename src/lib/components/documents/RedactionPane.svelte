@@ -9,11 +9,11 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   export const redactions: Writable<Redaction[]> = writable([]);
 
   function width(redaction: Redaction): number {
-    return redaction.x2 - redaction.x1;
+    return Math.abs(redaction.x2 - redaction.x1);
   }
 
   function height(redaction: Redaction): number {
-    return redaction.y2 - redaction.y1;
+    return Math.abs(redaction.y2 - redaction.y1);
   }
 </script>
 
@@ -50,10 +50,15 @@ It's layered over a PDF page and allows us to render redactions and draw new one
     const { offsetX, offsetY } = e;
     const { clientWidth, clientHeight } = e.target;
 
+    const x = offsetX / clientWidth;
+    const y = offsetY / clientHeight;
+
     currentRedaction = {
-      ...currentRedaction,
-      x2: offsetX / clientWidth,
-      y2: offsetY / clientHeight,
+      page_number,
+      x1: Math.min(currentRedaction.x1, x),
+      x2: Math.max(currentRedaction.x2, x),
+      y1: Math.min(currentRedaction.y1, y),
+      y2: Math.max(currentRedaction.y2, y),
     };
   }
 
@@ -63,10 +68,16 @@ It's layered over a PDF page and allows us to render redactions and draw new one
     const { offsetX, offsetY } = e;
     const { clientWidth, clientHeight } = e.target;
 
-    Object.assign(currentRedaction, {
-      x2: offsetX / clientWidth,
-      y2: offsetY / clientHeight,
-    });
+    const x = offsetX / clientWidth;
+    const y = offsetY / clientHeight;
+
+    currentRedaction = {
+      page_number,
+      x1: Math.min(currentRedaction.x1, x),
+      x2: Math.max(currentRedaction.x2, x),
+      y1: Math.min(currentRedaction.y1, y),
+      y2: Math.max(currentRedaction.y2, y),
+    };
 
     $redactions = [...$redactions, currentRedaction];
     currentRedaction = null;
