@@ -6,6 +6,7 @@ import type {
   Redaction,
   Sizes,
   TextPosition,
+  ViewerMode,
 } from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
@@ -552,5 +553,31 @@ describe("document helper methods", () => {
         document.asset_url,
       ),
     );
+  });
+
+  test("documents.shouldPreload", () => {
+    const yes: ViewerMode[] = ["annotating", "document", "notes", "redacting"];
+    const no: ViewerMode[] = ["grid", "text"];
+
+    yes.forEach((mode) => {
+      expect(documents.shouldPreload(mode)).toBeTruthy();
+    });
+
+    no.forEach((mode) => {
+      expect(documents.shouldPreload(mode)).toBeFalsy();
+    });
+  });
+
+  test("documents.shouldPaginate", () => {
+    const yes: ViewerMode[] = ["annotating", "document", "redacting", "text"];
+    const no: ViewerMode[] = ["grid", "notes"];
+
+    yes.forEach((mode) => {
+      expect(documents.shouldPaginate(mode)).toBeTruthy();
+    });
+
+    no.forEach((mode) => {
+      expect(documents.shouldPaginate(mode)).toBeFalsy();
+    });
   });
 });

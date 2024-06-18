@@ -1,7 +1,6 @@
 <!--
   @component
   A single note, either overlaid on a document or on its own.
-  It has two states, focused and normal.
 
   It can use *either* a loaded PDF or a document image to render
   a document excerpt.
@@ -160,7 +159,7 @@
 </script>
 
 <div
-  class="note focused {note.access} {$mode || 'notes'}"
+  class="note {note.access} {$mode || 'notes'}"
   style:--x1={note.x1}
   style:--x2={note.x2}
   style:--y1={note.y1}
@@ -212,7 +211,7 @@
 </div>
 
 <style>
-  .note.focused {
+  .note {
     display: flex;
     padding: var(--font-xs, 0.75rem) var(--font-md, 1rem);
     flex-direction: column;
@@ -229,7 +228,9 @@
   }
 
   /* overlay */
-  .note.focused.document {
+  .note.document,
+  .note.annotating,
+  .note.redacting {
     display: flex;
     padding: 0.75rem 1rem;
     flex-direction: column;
@@ -246,7 +247,7 @@
     z-index: 10;
   }
 
-  .focused header {
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;

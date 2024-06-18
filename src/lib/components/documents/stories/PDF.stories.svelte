@@ -67,6 +67,7 @@
 
 <Story name="redactions in progress">
   <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <button on:click={() => ($redactions = redacted)}>Show redactions</button>
     <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
   </div>
 </Story>

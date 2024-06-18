@@ -22,9 +22,10 @@
 
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable("document"); // only ever one mode on this route
+  const mode: Writable<ViewerMode> = writable("annotating"); // only ever one mode on this route
 
   setContext("activeNote", activeNote);
+  setContext("currentPage", currentPage);
   setContext("mode", mode);
 
   $: asset_url = data.asset_url;

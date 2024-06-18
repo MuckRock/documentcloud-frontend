@@ -12,6 +12,7 @@ import type {
   Sizes,
   Status,
   TextPosition,
+  ViewerMode,
 } from "./types";
 
 import { error } from "@sveltejs/kit";
@@ -25,7 +26,14 @@ import {
 } from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
-export const MODES = new Set(["document", "text", "grid", "notes"]);
+export const READING_MODES = new Set<ViewerMode>([
+  "document",
+  "text",
+  "grid",
+  "notes",
+]);
+
+export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
 
 /**
  * Search documents
@@ -514,4 +522,52 @@ export function userOrgString(document: Document): string {
 
   // nothing, so return nothing
   return "";
+}
+
+/**
+ * Whether a page should preload a document asset, based on viewer mode
+ * @param mode viewer mode
+ * @returns {boolean}
+ */
+export function shouldPreload(mode: ViewerMode): boolean {
+  switch (mode) {
+    case "document":
+      return true;
+
+    case "notes":
+      return true;
+
+    case "redacting":
+      return true;
+
+    case "annotating":
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+/**
+ * Whether a viewer mode is paginated
+ * @param mode
+ * @returns {boolean}
+ */
+export function shouldPaginate(mode: ViewerMode): boolean {
+  switch (mode) {
+    case "document":
+      return true;
+
+    case "text":
+      return true;
+
+    case "annotating":
+      return true;
+
+    case "redacting":
+      return true;
+
+    default:
+      return false;
+  }
 }
