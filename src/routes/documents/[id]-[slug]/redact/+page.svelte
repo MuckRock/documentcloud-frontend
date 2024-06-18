@@ -17,6 +17,7 @@
   import PDF from "$lib/components/documents/PDF.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
   import Zoom, { zoom, zoomToScale } from "../components/Zoom.svelte";
+  import { redactions } from "$lib/components/documents/RedactionPane.svelte";
 
   import { canonicalUrl, pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
@@ -32,11 +33,9 @@
   setContext("currentPage", currentPage);
   setContext("mode", mode);
 
-  let redactions: Redaction[] = [];
-
   $: asset_url = data.asset_url;
   $: document = data.document;
-  $: action = new URL("?/redact", canonicalUrl(document)).href;
+  $: action = canonicalUrl(document).pathname + "?/redact";
 
   // lifecycle
   afterNavigate(() => {
@@ -65,13 +64,21 @@
     }
   }
 
+  function undo() {
+    $redactions.pop();
+    $redactions = $redactions;
+  }
+
   async function onSubmit({
     formElement,
     formData,
     action,
     cancel,
     submitter,
-  }) {}
+  }) {
+    formData.set("redactions", JSON.stringify($redactions));
+    formData.set("csrftoken", data.csrf_token);
+  }
 </script>
 
 <svelte:window on:hashchange={onHashChange} />
@@ -98,19 +105,22 @@
   <PDF {document} {asset_url} scale={zoomToScale($zoom)} />
 
   <PageToolbar slot="footer">
-    <svelte:fragment slot="left">
-      <form method="post" {action} use:enhance={onSubmit}>
-        <!-- additional controls here -->
-        <Button type="submit" mode="primary" size="small">
-          <Check16 />
-          {$_("redact.confirm")}
-        </Button>
-        <Button type="reset" size="small">
-          <Undo16 />
-          {$_("redact.undo")}
-        </Button>
-      </form>
-    </svelte:fragment>
+    <form slot="left" method="post" {action} use:enhance>
+      <!-- additional controls here -->
+      <input
+        type="hidden"
+        name="redactions"
+        value={JSON.stringify($redactions)}
+      />
+      <Button type="submit" mode="primary" size="small">
+        <Check16 />
+        {$_("redact.confirm")}
+      </Button>
+      <Button type="button" size="small" on:click={undo}>
+        <Undo16 />
+        {$_("redact.undo")}
+      </Button>
+    </form>
 
     <Paginator slot="center" totalPages={document.page_count} />
 

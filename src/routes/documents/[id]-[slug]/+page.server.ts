@@ -44,6 +44,9 @@ export const actions = {
   },
 
   async redact({ cookies, fetch, request, params }) {
+    const form = await request.formData();
+
+    console.log(form.get("redactions"));
     return {
       success: true,
     };

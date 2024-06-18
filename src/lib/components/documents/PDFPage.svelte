@@ -12,7 +12,7 @@ Selectable text can be rendered in one of two ways:
   import type {
     TextPosition,
     Note as NoteType,
-    Redaction,
+    ViewerMode,
   } from "$lib/api/types";
 
   import { pushState } from "$app/navigation";
@@ -40,6 +40,7 @@ Selectable text can be rendered in one of two ways:
   export let notes: NoteType[] = [];
 
   const activeNote: Writable<NoteType> = getContext("activeNote");
+  const mode: Writable<ViewerMode> = getContext("mode");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -276,8 +277,11 @@ Selectable text can be rendered in one of two ways:
       {/await}
     {/if}
 
-    {#if $redactions.length > 0}
-      <RedactionPane page_number={page_number - 1} />
+    {#if $redactions.length > 0 || $mode === "redacting"}
+      <RedactionPane
+        page_number={page_number - 1}
+        active={$mode === "redacting"}
+      />
     {/if}
   </div>
 </Page>
