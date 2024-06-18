@@ -20,9 +20,67 @@ It's layered over a PDF page and allows us to render redactions and draw new one
 <script lang="ts">
   export let active = false;
   export let page_number: number; // 0-indexed
+
+  let container: HTMLElement;
+  let currentRedaction: Redaction = null;
+
+  // handle interaction events
+  let dragging = false;
+
+  function pointerdown(e) {
+    if (!active) return;
+
+    dragging = true;
+
+    const { offsetX, offsetY } = e;
+    const { clientWidth, clientHeight } = e.target;
+
+    currentRedaction = {
+      page_number,
+      x1: offsetX / clientWidth,
+      x2: offsetX / clientWidth,
+      y1: offsetY / clientHeight,
+      y2: offsetY / clientHeight,
+    };
+  }
+
+  function pointermove(e) {
+    if (!dragging || !active) return;
+
+    const { offsetX, offsetY } = e;
+    const { clientWidth, clientHeight } = e.target;
+
+    currentRedaction = {
+      ...currentRedaction,
+      x2: offsetX / clientWidth,
+      y2: offsetY / clientHeight,
+    };
+  }
+
+  function pointerup(e) {
+    dragging = false;
+
+    const { offsetX, offsetY } = e;
+    const { clientWidth, clientHeight } = e.target;
+
+    Object.assign(currentRedaction, {
+      x2: offsetX / clientWidth,
+      y2: offsetY / clientHeight,
+    });
+
+    $redactions = [...$redactions, currentRedaction];
+    currentRedaction = null;
+  }
 </script>
 
-<div class="redactions" class:active>
+<div
+  class="redactions"
+  class:active
+  bind:this={container}
+  on:pointerdown={pointerdown}
+  on:pointermove={pointermove}
+  on:pointerup={pointerup}
+>
   {#each $redactions.filter((r) => r.page_number === page_number) as redaction}
     <span
       class="redaction"
@@ -32,6 +90,16 @@ It's layered over a PDF page and allows us to render redactions and draw new one
       style:height="{height(redaction) * 100}%"
     ></span>
   {/each}
+
+  {#if currentRedaction}
+    <span
+      class="current redaction"
+      style:left="{currentRedaction.x1 * 100}%"
+      style:width="{width(currentRedaction) * 100}%"
+      style:top="{currentRedaction.y1 * 100}%"
+      style:height="{height(currentRedaction) * 100}%"
+    ></span>
+  {/if}
 </div>
 
 <style>
