@@ -116,7 +116,12 @@
         <Check16 />
         {$_("redact.confirm")}
       </Button>
-      <Button type="button" size="small" on:click={undo}>
+      <Button
+        type="button"
+        size="small"
+        disabled={$redactions.length === 0}
+        on:click={undo}
+      >
         <Undo16 />
         {$_("redact.undo")}
       </Button>

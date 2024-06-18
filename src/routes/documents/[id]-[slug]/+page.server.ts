@@ -1,10 +1,11 @@
 import type { Actions } from "./$types.js";
 import type { Document } from "$lib/api/types";
 
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
-import { edit } from "$lib/api/documents";
+import { edit, redact } from "$lib/api/documents";
+import { isErrorCode } from "$lib/utils/api";
 
 export function load({ cookies }) {
   const csrf_token = cookies.get(CSRF_COOKIE_NAME);
@@ -44,11 +45,27 @@ export const actions = {
   },
 
   async redact({ cookies, fetch, request, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
+    const redactions = JSON.parse(form.get("redactions") as string);
 
-    console.log(form.get("redactions"));
+    const resp = await redact(params.id, redactions, csrf_token, fetch).catch(
+      console.error,
+    );
+
+    // probably the API is down
+    if (!resp) {
+      return fail(500, { message: "Something went wrong." });
+    }
+
+    // something else broke
+    if (isErrorCode(resp.status)) {
+      return fail(resp.status, { message: await resp.text() });
+    }
+
     return {
       success: true,
+      redactions: await resp.json(), // this should be the same as above
     };
   },
 } satisfies Actions;
