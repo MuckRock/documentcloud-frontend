@@ -1,7 +1,7 @@
 import type { Actions } from "./$types.js";
 import type { Document } from "$lib/api/types";
 
-import { fail, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { edit, redact } from "$lib/api/documents";
@@ -55,12 +55,13 @@ export const actions = {
 
     // probably the API is down
     if (!resp) {
-      return fail(500, { message: "Something went wrong." });
+      return fail(500, { error: "Something went wrong." });
     }
 
     // something else broke
     if (isErrorCode(resp.status)) {
-      return fail(resp.status, { message: await resp.text() });
+      // {"error": "..."}
+      return fail(resp.status, await resp.json());
     }
 
     return {
