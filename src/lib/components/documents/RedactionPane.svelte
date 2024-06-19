@@ -6,7 +6,11 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   import type { Redaction } from "$lib/api/types";
   import { writable, type Writable } from "svelte/store";
 
+  // active redactions
   export const redactions: Writable<Redaction[]> = writable([]);
+
+  // redactions being processed on the server
+  export const pending: Writable<Redaction[]> = writable([]);
 
   function width(redaction: Redaction): number {
     return Math.abs(redaction.x2 - redaction.x1);
@@ -23,6 +27,10 @@ It's layered over a PDF page and allows us to render redactions and draw new one
 
   let container: HTMLElement;
   let currentRedaction: Redaction = null;
+
+  $: redactions_for_page = [...$pending, ...$redactions].filter(
+    (r) => r.page_number === page_number,
+  );
 
   // handle interaction events
   let dragging = false;
@@ -92,7 +100,7 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   on:pointermove={pointermove}
   on:pointerup={pointerup}
 >
-  {#each $redactions.filter((r) => r.page_number === page_number) as redaction}
+  {#each redactions_for_page as redaction}
     <span
       class="redaction"
       style:left="{redaction.x1 * 100}%"

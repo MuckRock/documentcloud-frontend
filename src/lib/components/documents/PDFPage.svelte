@@ -25,7 +25,7 @@ Selectable text can be rendered in one of two ways:
   import NoteLink from "./NoteLink.svelte";
   import NoteTab from "./NoteTab.svelte";
   import Page from "./Page.svelte";
-  import RedactionPane, { redactions } from "./RedactionPane.svelte";
+  import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
 
   import { noteHashUrl } from "$lib/api/notes";
   import { highlight } from "$lib/utils/search";
@@ -79,6 +79,10 @@ Selectable text can be rendered in one of two ways:
       height = p.view[3];
     });
   }
+
+  $: redactions_for_page = [...$pending, ...$redactions].filter(
+    (r) => r.page_number === page_number,
+  );
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
@@ -277,7 +281,7 @@ Selectable text can be rendered in one of two ways:
       {/await}
     {/if}
 
-    {#if $redactions.length > 0 || $mode === "redacting"}
+    {#if redactions_for_page.length > 0 || $mode === "redacting"}
       <RedactionPane
         page_number={page_number - 1}
         active={$mode === "redacting"}

@@ -16,7 +16,10 @@ This almost certainly lives in a modal.
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
 
-  import { redactions } from "$lib/components/documents/RedactionPane.svelte";
+  import {
+    pending,
+    redactions,
+  } from "$lib/components/documents/RedactionPane.svelte";
   import { canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;
@@ -41,6 +44,7 @@ This almost certainly lives in a modal.
       }
 
       if (result.type === "success") {
+        $pending = result.data.redactions;
         dispatch("close");
       }
     };
