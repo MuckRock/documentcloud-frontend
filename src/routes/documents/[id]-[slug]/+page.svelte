@@ -29,6 +29,9 @@
     zoomToSize,
   } from "./components/Zoom.svelte";
 
+  // writable results
+  import { pending } from "$lib/components/documents/RedactionPane.svelte";
+
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
   import {

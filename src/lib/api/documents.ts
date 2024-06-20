@@ -571,3 +571,12 @@ export function shouldPaginate(mode: ViewerMode): boolean {
       return false;
   }
 }
+
+/**
+ * Is the document still processing?
+ * @param status
+ * @returns {boolean}
+ */
+export function isProcessing(status: Status): boolean {
+  return status === "pending" || status == "readable" || status === "nofile";
+}

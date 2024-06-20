@@ -22,7 +22,7 @@
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import { redactions } from "$lib/components/documents/RedactionPane.svelte";
 
-  import { canonicalUrl, pageFromHash } from "$lib/api/documents";
+  import { pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
 

@@ -5,6 +5,7 @@ import type {
   Pending,
   Redaction,
   Sizes,
+  Status,
   TextPosition,
   ViewerMode,
 } from "./types";
@@ -578,6 +579,19 @@ describe("document helper methods", () => {
 
     no.forEach((mode) => {
       expect(documents.shouldPaginate(mode)).toBeFalsy();
+    });
+  });
+
+  test("documents.isProcessing", () => {
+    const yes: Status[] = ["pending", "readable", "nofile"];
+    const no: Status[] = ["error", "success"];
+
+    yes.forEach((status) => {
+      expect(documents.isProcessing(status)).toBeTruthy();
+    });
+
+    no.forEach((status) => {
+      expect(documents.isProcessing(status)).toBeFalsy();
     });
   });
 });

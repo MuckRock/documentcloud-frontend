@@ -7,7 +7,8 @@ This almost certainly lives in a modal.
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { enhance } from "$app/forms";
+  import { enhance, applyAction } from "$app/forms";
+  import { invalidate, goto } from "$app/navigation";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -36,7 +37,6 @@ This almost certainly lives in a modal.
 
     return async ({ result, update }) => {
       // `result` is an `ActionResult` object
-      // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
       console.log(result);
 
       if (result.type === "failure") {
@@ -44,8 +44,10 @@ This almost certainly lives in a modal.
       }
 
       if (result.type === "success") {
+        await invalidate(`document:${document.id}`);
         $pending = result.data.redactions;
         dispatch("close");
+        goto(canonicalUrl(document));
       }
     };
   }
