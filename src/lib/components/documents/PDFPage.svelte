@@ -81,7 +81,7 @@ Selectable text can be rendered in one of two ways:
   }
 
   $: redactions_for_page = [...$pending, ...$redactions].filter(
-    (r) => r.page_number === page_number,
+    (r) => r.page_number === page_number - 1,
   );
 
   /**

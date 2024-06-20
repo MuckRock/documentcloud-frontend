@@ -7,7 +7,7 @@ This almost certainly lives in a modal.
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { enhance, applyAction } from "$app/forms";
+  import { enhance } from "$app/forms";
   import { invalidate, goto } from "$app/navigation";
 
   import { createEventDispatcher } from "svelte";
@@ -37,13 +37,12 @@ This almost certainly lives in a modal.
 
     return async ({ result, update }) => {
       // `result` is an `ActionResult` object
-      console.log(result);
-
       if (result.type === "failure") {
         error = result.data.error;
       }
 
       if (result.type === "success") {
+        // need to invalidate before navigating
         await invalidate(`document:${document.id}`);
         $pending = result.data.redactions;
         dispatch("close");
