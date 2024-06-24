@@ -43,6 +43,7 @@
 
   function openEdit() {
     $modal = {
+      title: $_("edit.title"),
       component: Edit,
       props: { document },
     };

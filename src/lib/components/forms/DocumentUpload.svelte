@@ -222,7 +222,7 @@
 >
   <Flex gap={1} align="stretch" wrap>
     <div class="files">
-      <!-- add any header and messaging using this slot -->
+      <!-- Add any header and messaging using this slot -->
       <slot />
 
       <div class="fileList" class:empty={files.length === 0}>
