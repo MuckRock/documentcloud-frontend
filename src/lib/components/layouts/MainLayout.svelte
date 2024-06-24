@@ -47,7 +47,7 @@
   <header>
     {#if $$slots.navigation}
       <div class="small openPane">
-        <Button mode="ghost" on:click={openPanel("navigation")}>
+        <Button minW={false} mode="ghost" on:click={openPanel("navigation")}>
           <SidebarCollapse16 />
         </Button>
       </div>
@@ -68,7 +68,7 @@
     <HelpMenu />
     {#if $$slots.action}
       <div class="small openPane">
-        <Button mode="ghost" on:click={openPanel("action")}>
+        <Button minW={false} mode="ghost" on:click={openPanel("action")}>
           <SidebarExpand16 />
         </Button>
       </div>
@@ -116,7 +116,7 @@
   />
 
   {#if $modal}
-    <Modal on:close={closeModal}>
+    <Modal on:close={closeModal} title={$modal?.title}>
       <svelte:component
         this={$modal?.component}
         {...$modal?.props}

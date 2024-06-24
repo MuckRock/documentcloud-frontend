@@ -44,6 +44,7 @@
   function openEdit() {
     if (!modal) return console.warn("modal store is not in context");
     $modal = {
+      title: $_("edit.title"),
       component: Edit,
       props: { document },
     };
@@ -52,6 +53,7 @@
   function openReprocess() {
     if (!modal) return console.warn("modal store is not in context");
     $modal = {
+      title: $_("dialogReprocessDialog.title"),
       component: Reprocess,
       props: { documents: [document] },
     };
@@ -113,6 +115,7 @@
   {/if}
 
   {#if document.edit_access}
+  <!-- TODO: Processing component -->
     <SidebarItem>
       {#if document.status !== "success"}
         {$_("status.status")}:

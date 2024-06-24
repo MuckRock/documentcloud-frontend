@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let title: string;
+  export let title: string = "";
   export let description: string = "";
   export let inline = false;
   export let required = false;
@@ -13,13 +13,14 @@
     <slot />
   </label>
   {#if description}
-    <p class="help">{description}</p>
+    <p class="help">{@html description}</p>
   {/if}
 </div>
 
 <style>
   .field {
-    display: inline-block;
+    display: block;
+    flex: 1 1 auto;
   }
   .field label {
     gap: 0.5em;

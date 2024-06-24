@@ -33,9 +33,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
-    <header>
-      <h2>{$_("edit.title")}</h2>
-    </header>
+    <!-- Add any header and messaging using this slot -->
+    <slot />
     <Field title={$_("edit.fields.title")}>
       <Text name="title" value={document.title} required autofocus />
     </Field>
@@ -49,21 +48,23 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <Field title={$_("edit.fields.source")}>
       <Text name="source" value={document.source} />
     </Field>
-
-    <Field title={$_("edit.fields.published_url")}>
-      <Text name="published_url" value={document.published_url.toString()} />
-    </Field>
-
-    <Field title={$_("edit.fields.related_article")}>
-      <Text
-        name="related_article"
-        value={document.related_article.toString()}
-      />
-    </Field>
+    <Flex gap={2}>
+      <Field title={$_("edit.fields.published_url")}>
+        <Text name="published_url" value={document.published_url.toString()} />
+      </Field>
+      <Field title={$_("edit.fields.related_article")}>
+        <Text
+          name="related_article"
+          value={document.related_article.toString()}
+        />
+      </Field>
+    </Flex>
 
     <hr class="divider" />
 
-    <AccessLevel name="access" selected={document.access} direction="row" />
+    <Field title={$_("edit.fields.access.title")} description={$_("edit.fields.access.description")}>
+      <AccessLevel name="access" selected={document.access} direction="row" />
+    </Field>
 
     <Flex class="buttons">
       <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>

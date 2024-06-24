@@ -197,8 +197,9 @@
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
-    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text. Do you wish to continue?",
-    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text. Do you wish to continue?",
+    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text.",
+    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text.",
+    "continue": "Do you wish to continue?",
     "confirm": "Reprocess"
   },
   "dialogDeleteDialog": {
@@ -910,9 +911,12 @@
       "source": "Source",
       "published_url": "Published URL",
       "related_article": "Related article URL",
-      "access": "Access"
-      },
-    "allowedHTML": "Limited HTML can be used for formatting. See API documentation for details.",
+      "access": {
+        "title": "Access",
+        "description": "Changing the access setting will reprocess your document."
+      }
+    },
+    "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
     "save": "Save",
     "cancel": "Cancel"
   },

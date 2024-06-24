@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import {_} from 'svelte-i18n';
   import type { Document } from "$lib/api/types";
   import { Story } from "@storybook/addon-svelte-csf";
   import Reprocess from "../Reprocess.svelte";
@@ -16,10 +17,22 @@
   };
 </script>
 
-<Story name="one document">
-  <Reprocess documents={[document]} />
+<Story name="Single Document">
+  <Reprocess documents={[document]}>
+    <header>
+      <h2>
+        {$_("dialogReprocessDialog.title")}
+      </h2>
+    </header>
+  </Reprocess>
 </Story>
 
-<Story name="selected documents">
-  <Reprocess {documents} />
+<Story name="Multiple Documents">
+  <Reprocess {documents}>
+    <header>
+      <h2>
+        {$_("dialogReprocessDialog.title")}
+      </h2>
+    </header>
+  </Reprocess>
 </Story>

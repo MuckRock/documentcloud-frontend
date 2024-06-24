@@ -12,6 +12,7 @@ of the $modal store. These are used to set the active modal on any given page.
   import { writable, type Writable } from "svelte/store";
 
   export type ModalContext = Writable<{
+    title?: string;
     component: ComponentType<SvelteComponent>;
     props?: any;
   }>;
@@ -21,11 +22,14 @@ of the $modal store. These are used to set the active modal on any given page.
 
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { fade } from "svelte/transition";
-  import { X16 } from "svelte-octicons";
+  import { fade, fly } from "svelte/transition";
+  import { quintOut } from 'svelte/easing';
+  import { XCircle24 } from "svelte-octicons";
   import Button from "../common/Button.svelte";
 
   const dispatch = createEventDispatcher();
+
+  export let title: string = null;
 
   function onKeydown(e: KeyboardEvent) {
     if (e.key === "Escape") {
@@ -36,44 +40,68 @@ of the $modal store. These are used to set the active modal on any given page.
 
 <svelte:window on:keydown={onKeydown} />
 
-<div class="modal" tabindex="-1">
-  <div class="dialog" transition:fade={{ duration: 250 }}>
-    <Button mode="ghost" on:click={() => dispatch("close")}>
-      <X16 />
-    </Button>
-    <div class="content">
+<div class="backdrop" tabindex="-1" transition:fade={{ duration: 200 }}>
+  <div class="dialog card" transition:fly={{ duration: 400, easing: quintOut, y: '25vw' }}>
+    <header>
+      <Button minW={false} mode="ghost" on:click={() => dispatch("close")}>
+        <XCircle24 />
+      </Button>
+      {#if title}
+      <h1>{title}</h1>
+      {/if}
+    </header>
+    <main class="content">
       <slot />
-    </div>
+    </main>
   </div>
 </div>
 
 <style>
-  .modal {
-    background: rgba(92, 113, 124, 0.5);
-    backdrop-filter: blur(2px);
+  .backdrop {
     position: fixed;
     top: 0;
     bottom: 0;
+    width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    width: 100%;
-    z-index: 5;
+    z-index: var(--z-modal);
+    background: rgba(92, 113, 124, 0.50);
+    backdrop-filter: blur(2px);
+    padding: var(--font-md, 1rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
-  .dialog {
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 40rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    padding: 1.5rem;
     border-radius: var(--font-md, 1rem);
     background: var(--white, #fff);
     box-shadow: 0px 4px 16px 4px #99a8b3;
-    margin: 3rem auto 0 auto;
-    max-width: 88ch;
-    overflow-x: hidden;
-    overflow-y: auto;
-    z-index: 5;
+  }
+
+  .card > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
+  .card > header > h1 {
+    font-weight: var(--font-semibold);
+    font-size: var(--font-xl)
   }
 
   .content {
     display: flex;
-    padding: 1rem 2rem 2rem;
     flex-direction: column;
     align-items: center;
     gap: var(--font-m, 1rem);
