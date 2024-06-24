@@ -83,6 +83,7 @@
 
   afterUpdate(() => {
     // todo: can we make this more granular? do other things trigger invalidation?
+    // https://github.com/orgs/MuckRock/projects/14/views/1?pane=issue&itemId=68215069
     if (document.status === "pending" || document.status === "readable") {
       setTimeout(() => {
         invalidate(`document:${document.id}`);

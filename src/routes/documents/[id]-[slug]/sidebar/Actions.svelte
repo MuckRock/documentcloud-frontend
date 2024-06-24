@@ -109,6 +109,7 @@
   {/if}
 
   {#if document.edit_access}
+  <!-- TODO: Processing component -->
     <SidebarItem>
       {#if document.status !== "success"}
         {$_("status.status")}:
