@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
-  import type { ModalContext } from "$lib/components/layouts/Modal.svelte";
+  import {
+    MODAL,
+    type ModalContext,
+  } from "$lib/components/layouts/Modal.svelte";
 
   import { getContext } from "svelte";
   import {
@@ -28,7 +31,7 @@
 
   export let document: Document;
 
-  const modal: ModalContext = getContext("modal");
+  const modal: ModalContext = getContext(MODAL);
 
   // urls
   $: revisions = relative(document, "revisions/");
@@ -115,7 +118,7 @@
   {/if}
 
   {#if document.edit_access}
-  <!-- TODO: Processing component -->
+    <!-- TODO: Processing component -->
     <SidebarItem>
       {#if document.status !== "success"}
         {$_("status.status")}:

@@ -26,7 +26,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   $: action = new URL("?/edit", canonicalUrl(document)).href;
 
-  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+  function onSubmit() {
     dispatch("close");
   }
 </script>
@@ -62,7 +62,10 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
     <hr class="divider" />
 
-    <Field title={$_("edit.fields.access.title")} description={$_("edit.fields.access.description")}>
+    <Field
+      title={$_("edit.fields.access.title")}
+      description={$_("edit.fields.access.description")}
+    >
       <AccessLevel name="access" selected={document.access} direction="row" />
     </Field>
 

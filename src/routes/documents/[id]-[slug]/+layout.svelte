@@ -8,6 +8,7 @@
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import {
     modal,
+    MODAL,
     type ModalContext,
   } from "$lib/components/layouts/Modal.svelte";
 
@@ -26,7 +27,7 @@
   export let data;
 
   setContext<Document>("document", data.document);
-  setContext<ModalContext>("modal", modal);
+  setContext<ModalContext>(MODAL, modal);
 
   $: document = data.document;
   $: projects = document.projects as Project[];

@@ -18,12 +18,13 @@ of the $modal store. These are used to set the active modal on any given page.
   }>;
 
   export const modal: ModalContext = writable(null);
+  export const MODAL = "modal"; // constant for context
 </script>
 
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import { quintOut } from 'svelte/easing';
+  import { quintOut } from "svelte/easing";
   import { XCircle24 } from "svelte-octicons";
   import Button from "../common/Button.svelte";
 
@@ -41,13 +42,16 @@ of the $modal store. These are used to set the active modal on any given page.
 <svelte:window on:keydown={onKeydown} />
 
 <div class="backdrop" tabindex="-1" transition:fade={{ duration: 200 }}>
-  <div class="dialog card" transition:fly={{ duration: 400, easing: quintOut, y: '25vw' }}>
+  <div
+    class="dialog card"
+    transition:fly={{ duration: 400, easing: quintOut, y: "25vw" }}
+  >
     <header>
       <Button minW={false} mode="ghost" on:click={() => dispatch("close")}>
         <XCircle24 />
       </Button>
       {#if title}
-      <h1>{title}</h1>
+        <h1>{title}</h1>
       {/if}
     </header>
     <main class="content">
@@ -65,7 +69,7 @@ of the $modal store. These are used to set the active modal on any given page.
     overflow-x: hidden;
     overflow-y: auto;
     z-index: var(--z-modal);
-    background: rgba(92, 113, 124, 0.50);
+    background: rgba(92, 113, 124, 0.5);
     backdrop-filter: blur(2px);
     padding: var(--font-md, 1rem);
     display: flex;
@@ -97,7 +101,7 @@ of the $modal store. These are used to set the active modal on any given page.
 
   .card > header > h1 {
     font-weight: var(--font-semibold);
-    font-size: var(--font-xl)
+    font-size: var(--font-xl);
   }
 
   .content {

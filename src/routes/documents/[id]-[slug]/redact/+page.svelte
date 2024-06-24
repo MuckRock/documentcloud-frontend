@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { Note, ViewerMode } from "$lib/api/types";
-  import type { ModalContext } from "$lib/components/layouts/Modal.svelte";
+  import {
+    MODAL,
+    type ModalContext,
+  } from "$lib/components/layouts/Modal.svelte";
 
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
@@ -31,7 +34,7 @@
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
   const mode: Writable<ViewerMode> = writable("redacting"); // only ever one mode on this route
-  const modal: ModalContext = getContext("modal");
+  const modal: ModalContext = getContext(MODAL);
 
   setContext("activeNote", activeNote);
   setContext("currentPage", currentPage);

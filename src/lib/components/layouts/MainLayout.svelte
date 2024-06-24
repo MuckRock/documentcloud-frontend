@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { ComponentType, SvelteComponent } from "svelte";
   import type { Writable } from "svelte/store";
   import type { Org, User } from "@/api/types";
 
@@ -20,10 +19,10 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
 
-  import Modal, { type ModalContext } from "./Modal.svelte";
+  import Modal, { MODAL, type ModalContext } from "./Modal.svelte";
 
   const me = getContext<Writable<User>>("me");
-  const modal: ModalContext = getContext("modal");
+  const modal: ModalContext = getContext(MODAL);
   const org = getContext<Writable<Org>>("org");
 
   let panel: "navigation" | "action" | null = null;
