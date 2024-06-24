@@ -5,7 +5,6 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<h2>Chowder.</h2>
 <div>
   <p>
     It was quite late in the evening when the little Moss came snugly to anchor,

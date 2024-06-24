@@ -117,7 +117,7 @@
   />
 
   {#if $modal}
-    <Modal on:close={closeModal}>
+    <Modal on:close={closeModal} title={$modal?.title}>
       <svelte:component
         this={$modal?.component}
         {...$modal?.props}

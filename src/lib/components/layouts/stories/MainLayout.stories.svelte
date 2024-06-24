@@ -63,6 +63,7 @@
 
   function openModal() {
     $modal = {
+      title: 'Chowder.',
       component: Dialog,
     };
   }
