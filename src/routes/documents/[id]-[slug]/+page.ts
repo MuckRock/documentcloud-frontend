@@ -41,7 +41,7 @@ export async function load({ fetch, parent, url, data, depends }) {
   // const task = pdfjs.getDocument({ url: asset_url });
 
   return {
-    ...data, // include csrf_token
+    ...(data ?? {}), // include csrf_token
     asset_url,
     mode,
     query,
