@@ -51,6 +51,7 @@
 
   function openReprocess() {
     $modal = {
+      title: $_("dialogReprocessDialog.title"),
       component: Reprocess,
       props: { documents: [document] },
     };

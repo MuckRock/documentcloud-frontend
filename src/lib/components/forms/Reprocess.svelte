@@ -91,57 +91,59 @@ This will mostly be used inside a modal but isn't dependent on one.
 </script>
 
 <form method="post" on:submit|preventDefault={onSubmit} bind:this={form}>
-  <Flex direction="column">
-    <header>
-      <h2>
-        {$_("dialogReprocessDialog.title")}
-      </h2>
-      {#if documents.length === 1}
-        <p>{$_("dialogReprocessDialog.reprocessSingleDoc")}</p>
-      {:else}
-        <p>
-          {$_("dialogReprocessDialog.reprocessDocs", {
-            values: { n: documents.length },
-          })}
-        </p>
-      {/if}
-    </header>
+  <Flex direction="column" gap={1.5}>
+    <!-- Add any header and messaging using this slot -->
+    <slot />
     {#if errors.length > 0}
-      <div class="errors">
-        <ul>
-          {#each errors as e}
-            <li>{e}</li>
-          {/each}
-        </ul>
-      </div>
+    <div class="errors">
+      <ul>
+        {#each errors as e}
+          <li>{e}</li>
+        {/each}
+      </ul>
+    </div>
     {/if}
-    <Field>
-      <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
-      <Language bind:value={language} />
-    </Field>
-    <Field>
-      <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
-      <Select
-        name="ocr_engine"
-        items={ocrEngineOptions}
-        bind:value={ocrEngine}
-      />
-      <p slot="help">
-        {@html ocrEngine.help}
+    <Flex direction="column" gap={1}>
+      <Field>
+        <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
+        <Language bind:value={language} />
+      </Field>
+      <Field>
+        <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
+        <Select
+          name="ocr_engine"
+          items={ocrEngineOptions}
+          bind:value={ocrEngine}
+        />
+        <p slot="help">
+          {@html ocrEngine.help}
+        </p>
+      </Field>
+      <Field inline>
+        <input type="checkbox" name="force_ocr" bind:checked={force_ocr} />
+        <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
+      </Field>
+    </Flex>
+    <div>
+    {#if documents.length === 1}
+      <p class="disclaimer">{$_("dialogReprocessDialog.reprocessSingleDoc")}</p>
+    {:else}
+      <p class="disclaimer">
+        {$_("dialogReprocessDialog.reprocessDocs", {
+          values: { n: documents.length },
+        })}
       </p>
-    </Field>
-    <Field inline>
-      <input type="checkbox" name="force_ocr" bind:checked={force_ocr} />
-      <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
-    </Field>
-  </Flex>
-  <Flex class="buttons">
-    <Button disabled={submitting} type="submit" full mode="primary"
-      ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
-    </Button>
-    <Button full on:click={(e) => dispatch("close")}
-      >{$_("edit.cancel")}
-    </Button>
+    {/if}
+      <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
+    </div>
+    <Flex class="buttons">
+      <Button disabled={submitting} type="submit" full mode="primary"
+        ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
+      </Button>
+      <Button full on:click={(e) => dispatch("close")}
+        >{$_("edit.cancel")}
+      </Button>
+    </Flex>
   </Flex>
 </form>
 
@@ -151,6 +153,12 @@ This will mostly be used inside a modal but isn't dependent on one.
     display: flex;
     flex-flow: column nowrap;
     gap: 0.5rem;
+  }
+
+  .disclaimer {
+    line-height: 1.4;
+    color: var(--gray-4);
+    font-size: var(--font-m);
   }
 
   .errors li {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let title: string;
+  export let title: string = "";
   export let description: string = "";
   export let inline = false;
   export let required = false;
