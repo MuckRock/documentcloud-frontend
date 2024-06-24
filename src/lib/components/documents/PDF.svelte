@@ -11,7 +11,7 @@
 
   import { onMount } from "svelte";
 
-  // worker is configured in +layout.svelte
+  // worker can be configured in +layout.svelte
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -31,7 +31,6 @@
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Promise<any> = new Promise(() => {});
-
   export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
 
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
@@ -82,8 +81,8 @@
       {scale}
       {width}
       {height}
-      notes={notes[n]}
       {query}
+      notes={notes[n]}
     />
   {/each}
 </div>

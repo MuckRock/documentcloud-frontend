@@ -2,11 +2,16 @@
   import type { Document, Note, ViewerMode } from "@/lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
+
   import PDF from "../PDF.svelte";
+  import { redactions } from "../RedactionPane.svelte";
+
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pdfUrl } from "$lib/api/documents";
 
   import doc from "$lib/api/fixtures/documents/document-expanded.json";
+  import redacted from "@/lib/api/fixtures/documents/redactions.json";
+
   import * as mock from "$lib/api/fixtures/mock";
 
   export const meta = {
@@ -57,5 +62,12 @@
       document={{ ...document, notes: [], page_spec: undefined }}
       asset_url={pdfUrl(document)}
     />
+  </div>
+</Story>
+
+<Story name="redactions in progress">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <button on:click={() => ($redactions = redacted)}>Show redactions</button>
+    <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
   </div>
 </Story>

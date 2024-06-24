@@ -29,9 +29,17 @@
     zoomToSize,
   } from "./components/Zoom.svelte";
 
+  // writable results
+  import { pending } from "$lib/components/documents/RedactionPane.svelte";
+
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
-  import { pageHashUrl, pageFromHash } from "$lib/api/documents";
+  import {
+    pageHashUrl,
+    pageFromHash,
+    shouldPaginate,
+    shouldPreload,
+  } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
 
@@ -71,7 +79,7 @@
 
     $currentPage = pageFromHash(hash);
 
-    if ($currentPage > 1 && ["document", "text"].includes($mode)) {
+    if ($currentPage > 1 && shouldPaginate($mode)) {
       scrollToPage($currentPage);
     }
 
@@ -121,7 +129,7 @@
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if $mode === "document" || $mode === "notes"}
+  {#if shouldPreload($mode)}
     <link
       rel="preload"
       href={data.asset_url.href}
@@ -170,7 +178,7 @@
     </label>
 
     <svelte:fragment slot="center">
-      {#if $mode === "document" || $mode === "text"}
+      {#if shouldPaginate($mode)}
         <Paginator totalPages={document.page_count} />
       {/if}
     </svelte:fragment>

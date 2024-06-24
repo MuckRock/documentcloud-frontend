@@ -23,6 +23,8 @@
 
 <Story name="ghost" args={{ mode: "ghost" }} />
 
+<Story name="small" args={{ size: "small" }} />
+
 <Story name="slotted">
   <Button>
     <PlusCircle16 /> Upload

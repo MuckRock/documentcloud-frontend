@@ -9,7 +9,11 @@ Selectable text can be rendered in one of two ways:
 -->
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { TextPosition, Note as NoteType } from "$lib/api/types";
+  import type {
+    TextPosition,
+    Note as NoteType,
+    ViewerMode,
+  } from "$lib/api/types";
 
   import { pushState } from "$app/navigation";
 
@@ -21,6 +25,7 @@ Selectable text can be rendered in one of two ways:
   import NoteLink from "./NoteLink.svelte";
   import NoteTab from "./NoteTab.svelte";
   import Page from "./Page.svelte";
+  import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
 
   import { noteHashUrl } from "$lib/api/notes";
   import { highlight } from "$lib/utils/search";
@@ -35,6 +40,7 @@ Selectable text can be rendered in one of two ways:
   export let notes: NoteType[] = [];
 
   const activeNote: Writable<NoteType> = getContext("activeNote");
+  const mode: Writable<ViewerMode> = getContext("mode");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -59,7 +65,7 @@ Selectable text can be rendered in one of two ways:
   // we need to wait on both promises to render on initial load
   $: Promise.all([pdf, page]).then(([pdf, page]) => {
     render(page, canvas, container, scale);
-    renderTextLayer(page, textContainer, container, scale, query);
+    renderTextLayer(page, textContainer, container, scale);
   });
 
   $: textRenderTask?.promise.then(() => {
@@ -73,6 +79,10 @@ Selectable text can be rendered in one of two ways:
       height = p.view[3];
     });
   }
+
+  $: redactions_for_page = [...$pending, ...$redactions].filter(
+    (r) => r.page_number === page_number - 1,
+  );
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
@@ -141,7 +151,6 @@ Selectable text can be rendered in one of two ways:
     textContainer: HTMLElement,
     pageContainer: HTMLElement,
     scale: number | "width" | "height",
-    query: string = "",
   ) {
     if (text.length > 0) return;
     if (!textContainer) return;
@@ -222,6 +231,7 @@ Selectable text can be rendered in one of two ways:
     data-loaded={loaded}
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
+
     {#if text.length > 0}
       <div bind:this={textContainer} class="selectable-text">
         {#each text as word}
@@ -238,6 +248,7 @@ Selectable text can be rendered in one of two ways:
         <!-- pdfjs.renderTextLayer will fill this in -->
       </div>
     {/if}
+
     {#if notes}
       {#await pdf then pdf}
         <div class="notes">
@@ -268,6 +279,13 @@ Selectable text can be rendered in one of two ways:
           {/each}
         </div>
       {/await}
+    {/if}
+
+    {#if redactions_for_page.length > 0 || $mode === "redacting"}
+      <RedactionPane
+        page_number={page_number - 1}
+        active={$mode === "redacting"}
+      />
     {/if}
   </div>
 </Page>

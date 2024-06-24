@@ -7,10 +7,12 @@ import type {
   DocumentUpload,
   DocumentResults,
   Pending,
+  Redaction,
   SearchOptions,
   Sizes,
   Status,
   TextPosition,
+  ViewerMode,
 } from "./types";
 
 import { error } from "@sveltejs/kit";
@@ -24,7 +26,14 @@ import {
 } from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
-export const MODES = new Set(["document", "text", "grid", "notes"]);
+export const READING_MODES = new Set<ViewerMode>([
+  "document",
+  "text",
+  "grid",
+  "notes",
+]);
+
+export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
 
 /**
  * Search documents
@@ -300,6 +309,27 @@ export async function edit(
   return resp.json();
 }
 
+export async function redact(
+  id: number | string,
+  redactions: Redaction[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${id}/redactions/`, BASE_API_URL);
+
+  // redaction is a fire-and-reprocess method, so all we have to go on is a response
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(redactions),
+  });
+}
+
 /**
  * Get pending documents. This returns an empty array for any error.
  *
@@ -492,4 +522,61 @@ export function userOrgString(document: Document): string {
 
   // nothing, so return nothing
   return "";
+}
+
+/**
+ * Whether a page should preload a document asset, based on viewer mode
+ * @param mode viewer mode
+ * @returns {boolean}
+ */
+export function shouldPreload(mode: ViewerMode): boolean {
+  switch (mode) {
+    case "document":
+      return true;
+
+    case "notes":
+      return true;
+
+    case "redacting":
+      return true;
+
+    case "annotating":
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+/**
+ * Whether a viewer mode is paginated
+ * @param mode
+ * @returns {boolean}
+ */
+export function shouldPaginate(mode: ViewerMode): boolean {
+  switch (mode) {
+    case "document":
+      return true;
+
+    case "text":
+      return true;
+
+    case "annotating":
+      return true;
+
+    case "redacting":
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+/**
+ * Is the document still processing?
+ * @param status
+ * @returns {boolean}
+ */
+export function isProcessing(status: Status): boolean {
+  return status === "pending" || status == "readable" || status === "nofile";
 }

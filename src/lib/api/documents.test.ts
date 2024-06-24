@@ -3,8 +3,11 @@ import type {
   DocumentText,
   DocumentUpload,
   Pending,
+  Redaction,
   Sizes,
+  Status,
   TextPosition,
+  ViewerMode,
 } from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
@@ -59,6 +62,14 @@ const test = base.extend({
     );
 
     await use(textPositions);
+  },
+
+  redactions: async ({}, use: Use<Redaction[]>) => {
+    const { default: redactions } = await import(
+      "./fixtures/documents/redactions.json"
+    );
+
+    await use(redactions);
   },
 });
 
@@ -344,6 +355,44 @@ describe("document write methods", () => {
 
     expect(updated.title).toStrictEqual("Updated title");
   });
+
+  test("documents.redact", async ({ document, redactions }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      // the api returns the same redaction it was sent
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 201,
+        async json() {
+          return body;
+        },
+      };
+    });
+
+    const resp = await documents.redact(
+      document.id,
+      redactions,
+      "token",
+      mockFetch,
+    );
+
+    expect(resp.status).toStrictEqual(201);
+    expect(await resp.json()).toStrictEqual(redactions);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`documents/${document.id}/redactions/`, BASE_API_URL),
+      {
+        body: JSON.stringify(redactions),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "token",
+        },
+        method: "POST",
+      },
+    );
+  });
 });
 
 describe("document helper methods", () => {
@@ -505,5 +554,44 @@ describe("document helper methods", () => {
         document.asset_url,
       ),
     );
+  });
+
+  test("documents.shouldPreload", () => {
+    const yes: ViewerMode[] = ["annotating", "document", "notes", "redacting"];
+    const no: ViewerMode[] = ["grid", "text"];
+
+    yes.forEach((mode) => {
+      expect(documents.shouldPreload(mode)).toBeTruthy();
+    });
+
+    no.forEach((mode) => {
+      expect(documents.shouldPreload(mode)).toBeFalsy();
+    });
+  });
+
+  test("documents.shouldPaginate", () => {
+    const yes: ViewerMode[] = ["annotating", "document", "redacting", "text"];
+    const no: ViewerMode[] = ["grid", "notes"];
+
+    yes.forEach((mode) => {
+      expect(documents.shouldPaginate(mode)).toBeTruthy();
+    });
+
+    no.forEach((mode) => {
+      expect(documents.shouldPaginate(mode)).toBeFalsy();
+    });
+  });
+
+  test("documents.isProcessing", () => {
+    const yes: Status[] = ["pending", "readable", "nofile"];
+    const no: Status[] = ["error", "success"];
+
+    yes.forEach((status) => {
+      expect(documents.isProcessing(status)).toBeTruthy();
+    });
+
+    no.forEach((status) => {
+      expect(documents.isProcessing(status)).toBeFalsy();
+    });
   });
 });

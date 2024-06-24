@@ -18,6 +18,7 @@ services:
     environment:
       DOCKER: true
       NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
+      NODE_ENV: development
 
   documentcloud_frontend_app:
     image: node:20

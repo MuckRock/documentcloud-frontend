@@ -40,56 +40,65 @@ It exports a $zoom store that can be passed around to other components.
    * @param mode
    */
   function getDefaultZoom(mode: ViewerMode): Zoom {
-    if (mode === "document") {
-      return "width";
-    }
+    switch (mode) {
+      case "document":
+        return "width";
 
-    if (mode === "grid") {
-      return "small";
-    }
+      case "annotating":
+        return "width";
 
-    return 1;
+      case "redacting":
+        return "width";
+
+      case "grid":
+        return "small";
+
+      default:
+        return 1;
+    }
   }
 
   /**
    * Generate zoom levels based on mode, since each zooms in a slightly different way
    */
   function getZoomLevels(mode: ViewerMode): (string | number)[][] {
-    if (mode === "document") {
-      return [
-        ["width", $_("zoom.fitWidth")],
-        ["height", $_("zoom.fitHeight")],
-        [0.5, "50%"],
-        [0.75, "75%"],
-        [1, "100%"],
-        [1.25, "125%"],
-        [1.5, "150%"],
-        [2, "200%"],
-      ];
-    }
+    switch (mode) {
+      case "document":
+      case "annotating":
+      case "redacting":
+        return [
+          ["width", $_("zoom.fitWidth")],
+          ["height", $_("zoom.fitHeight")],
+          [0.5, "50%"],
+          [0.75, "75%"],
+          [1, "100%"],
+          [1.25, "125%"],
+          [1.5, "150%"],
+          [2, "200%"],
+        ];
 
-    if (mode === "text") {
-      return [
-        [0.5, "50%"],
-        [0.75, "75%"],
-        [1, "100%"],
-        [1.25, "125%"],
-        [1.5, "150%"],
-        [2, "200%"],
-      ];
-    }
+      case "text":
+        return [
+          [0.5, "50%"],
+          [0.75, "75%"],
+          [1, "100%"],
+          [1.25, "125%"],
+          [1.5, "150%"],
+          [2, "200%"],
+        ];
 
-    if (mode === "grid") {
-      return [
-        ["thumbnail", $_("zoom.thumbnail")],
-        ["small", $_("zoom.small")],
-        ["normal", $_("zoom.normal")],
-        ["large", $_("zoom.large")],
-      ];
-    }
+      case "grid":
+        return [
+          ["thumbnail", $_("zoom.thumbnail")],
+          ["small", $_("zoom.small")],
+          ["normal", $_("zoom.normal")],
+          ["large", $_("zoom.large")],
+        ];
 
-    // todo: notes, maybe
-    return [];
+      default:
+        // todo: notes, maybe
+        return [];
+    }
   }
 </script>
 

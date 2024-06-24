@@ -24,7 +24,7 @@
   import Edit from "$lib/components/forms/Edit.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
-  import { canonicalUrl, pdfUrl } from "$lib/api/documents";
+  import { canonicalUrl, pdfUrl, isProcessing } from "$lib/api/documents";
 
   export let document: Document;
 
@@ -42,6 +42,7 @@
   }
 
   function openEdit() {
+    if (!modal) return console.warn("modal store is not in context");
     $modal = {
       title: $_("edit.title"),
       component: Edit,
@@ -50,6 +51,7 @@
   }
 
   function openReprocess() {
+    if (!modal) return console.warn("modal store is not in context");
     $modal = {
       title: $_("dialogReprocessDialog.title"),
       component: Reprocess,
@@ -66,7 +68,9 @@
     >
 
     {#if document.edit_access}
-      <Action icon={Pencil16} on:click={openEdit}>{$_("sidebar.edit")}</Action>
+      <Action icon={Pencil16} on:click={openEdit} disabled={!modal}
+        >{$_("sidebar.edit")}</Action
+      >
     {/if}
   </SidebarItem>
 
@@ -90,21 +94,21 @@
   </SidebarItem>
 
   {#if document.edit_access}
-    <SidebarItem href={annotate}>
+    <SidebarItem href={annotate} disabled={isProcessing(document.status)}>
       <Comment16 />
       {$_("sidebar.annotate")} &hellip;
     </SidebarItem>
   {/if}
 
   {#if document.edit_access}
-    <SidebarItem href={redact}>
+    <SidebarItem href={redact} disabled={isProcessing(document.status)}>
       <EyeClosed16 />
       {$_("sidebar.redact")} &hellip;
     </SidebarItem>
   {/if}
 
   {#if document.edit_access}
-    <SidebarItem href={modify}>
+    <SidebarItem href={modify} disabled={isProcessing(document.status)}>
       <Apps16 />
       {$_("sidebar.modify")} &hellip;
     </SidebarItem>
@@ -117,7 +121,7 @@
         {$_("status.status")}:
         {$_(`status.${document.status}.title`)}
       {/if}
-      <Action on:click={openReprocess}>
+      <Action on:click={openReprocess} disabled={!modal}>
         <IssueReopened16 />
         {$_("sidebar.reprocess")}
       </Action>

@@ -22,7 +22,9 @@
 
   import Modal, { type ModalContext } from "./Modal.svelte";
 
+  const me = getContext<Writable<User>>("me");
   const modal: ModalContext = getContext("modal");
+  const org = getContext<Writable<Org>>("org");
 
   let panel: "navigation" | "action" | null = null;
 
@@ -39,9 +41,6 @@
   function closeModal() {
     $modal = null;
   }
-
-  const me = getContext<Writable<User>>("me");
-  const org = getContext<Writable<Org>>("org");
 </script>
 
 <div class="container">
