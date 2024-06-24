@@ -23,8 +23,8 @@ of the $modal store. These are used to set the active modal on any given page.
 
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { fade, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
+  import { fade, fly } from "svelte/transition";
   import { XCircle24 } from "svelte-octicons";
   import Button from "../common/Button.svelte";
 

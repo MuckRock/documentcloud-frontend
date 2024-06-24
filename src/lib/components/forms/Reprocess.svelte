@@ -100,13 +100,13 @@ This will mostly be used inside a modal but isn't dependent on one.
     <!-- Add any header and messaging using this slot -->
     <slot />
     {#if errors.length > 0}
-    <div class="errors">
-      <ul>
-        {#each errors as e}
-          <li>{e}</li>
-        {/each}
-      </ul>
-    </div>
+      <div class="errors">
+        <ul>
+          {#each errors as e}
+            <li>{e}</li>
+          {/each}
+        </ul>
+      </div>
     {/if}
     <Flex direction="column" gap={1}>
       <Field>
@@ -130,15 +130,17 @@ This will mostly be used inside a modal but isn't dependent on one.
       </Field>
     </Flex>
     <div>
-    {#if documents.length === 1}
-      <p class="disclaimer">{$_("dialogReprocessDialog.reprocessSingleDoc")}</p>
-    {:else}
-      <p class="disclaimer">
-        {$_("dialogReprocessDialog.reprocessDocs", {
-          values: { n: documents.length },
-        })}
-      </p>
-    {/if}
+      {#if documents.length === 1}
+        <p class="disclaimer">
+          {$_("dialogReprocessDialog.reprocessSingleDoc")}
+        </p>
+      {:else}
+        <p class="disclaimer">
+          {$_("dialogReprocessDialog.reprocessDocs", {
+            values: { n: documents.length },
+          })}
+        </p>
+      {/if}
       <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
     </div>
     <Flex class="buttons">
@@ -153,7 +155,6 @@ This will mostly be used inside a modal but isn't dependent on one.
 </form>
 
 <style>
-  header,
   form {
     display: flex;
     flex-flow: column nowrap;
