@@ -43,7 +43,7 @@ of the $modal store. These are used to set the active modal on any given page.
 <div class="backdrop" tabindex="-1" transition:fade={{ duration: 200 }}>
   <div class="dialog card" transition:fly={{ duration: 400, easing: quintOut, y: '25vw' }}>
     <header>
-      <Button mode="ghost" on:click={() => dispatch("close")}>
+      <Button minW={false} mode="ghost" on:click={() => dispatch("close")}>
         <XCircle24 />
       </Button>
       {#if title}

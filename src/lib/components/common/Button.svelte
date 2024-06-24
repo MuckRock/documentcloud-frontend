@@ -2,6 +2,7 @@
   export let href: string = null;
   export let mode: "standard" | "primary" | "ghost" = "standard";
   export let full = false;
+  export let minW = true;
 
   export let disabled = false;
 
@@ -11,11 +12,11 @@
 </script>
 
 {#if href}
-  <a {href} {title} on:click class={mode} class:full>
+  <a {href} {title} on:click class={mode} class:full class:minW>
     <slot>{label}</slot>
   </a>
 {:else}
-  <button {title} on:click class={mode} {disabled} {type} class:full>
+  <button {title} on:click class={mode} {disabled} {type} class:full class:minW>
     <slot>{label}</slot>
   </button>
 {/if}
@@ -87,5 +88,9 @@
 
   .full {
     display: flex;
+  }
+
+  .minW {
+    min-width: 6rem;
   }
 </style>
