@@ -62,3 +62,4 @@ test("getOrg", async () => {
 
 test.todo("users.get");
 test.todo("users.list");
+test.todo("getUpgradeUrl");

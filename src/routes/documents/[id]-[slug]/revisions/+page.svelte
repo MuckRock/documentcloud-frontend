@@ -2,11 +2,13 @@
   import { _ } from "svelte-i18n";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Revisions from "$lib/components/documents/Revisions.svelte";
+  import RevisionControl from "$lib/components/forms/RevisionControl.svelte";
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
 
   export let data;
 
   $: document = data.document;
+  $: user = data.me;
 </script>
 
 <ContentLayout>
@@ -16,6 +18,8 @@
   </header>
 
   <Revisions {document} />
+
+  <RevisionControl {document} {user} />
 </ContentLayout>
 
 <style>
