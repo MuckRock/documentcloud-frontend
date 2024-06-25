@@ -1,4 +1,4 @@
-import type { SearchOptions } from "$lib/api/types";
+import type { DocumentResults, SearchOptions } from "$lib/api/types";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
 import { search, pending } from "$lib/api/documents";
@@ -28,7 +28,7 @@ export async function load({ url, fetch }) {
       results: [],
       count: 0,
       next: null,
-    };
+    } as DocumentResults;
   });
   const pinnedAddons = getPinnedAddons(fetch).catch((e) => {
     console.error(e);

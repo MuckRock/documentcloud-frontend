@@ -13,7 +13,7 @@ Confirm deletion or one or more documents.
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl, deleted } from "$lib/api/documents";
 
   export let documents: Document[];
 
@@ -25,11 +25,17 @@ Confirm deletion or one or more documents.
   $: action = bulk
     ? "/app/?/delete"
     : canonicalUrl(documents[0]).href + "?/delete"; // TODO: update to /documents/ when we move things
+
+  function onSubmit() {
+    return ({ result, update }) => {
+      documents.forEach((d) => $deleted.add(String(d.id)));
+      update(result);
+    };
+  }
 </script>
 
-<form {action} method="post" use:enhance>
-  <Flex direction="column">
-    <h2>{$_("delete.title")}</h2>
+<form {action} method="post" use:enhance={onSubmit}>
+  <Flex direction="column" gap={1}>
     <p>{$_("delete.really", { values: { n: documents.length } })}</p>
 
     {#if error}

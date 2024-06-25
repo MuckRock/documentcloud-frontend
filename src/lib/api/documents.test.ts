@@ -1,5 +1,6 @@
 import type {
   Document,
+  DocumentResults,
   DocumentText,
   DocumentUpload,
   Pending,
@@ -24,6 +25,12 @@ import * as documents from "./documents";
 type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
+  search: async ({}, use: Use<DocumentResults>) => {
+    const results = await import("./fixtures/documents/search-highlight.json");
+
+    await use(results as DocumentResults);
+  },
+
   document: async ({}, use: Use<Document>) => {
     const document = await import(
       "./fixtures/documents/document-expanded.json"
@@ -78,8 +85,53 @@ describe("document fetching", () => {
     vi.resetAllMocks();
   });
 
-  test.todo("documents.get");
-  test.todo("documents.search");
+  test("documents.get", async ({ document }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return document;
+        },
+      };
+    });
+
+    const result = await documents.get(+document.id, mockFetch);
+
+    expect(result).toStrictEqual(document);
+    expect(mockFetch).toBeCalledWith(
+      new URL(
+        `documents/${document.id}.json?expand=user%2Corganization%2Cprojects%2Crevisions%2Csections%2Cnotes.user`,
+        BASE_API_URL,
+      ),
+      {
+        credentials: "include",
+      },
+    );
+  });
+
+  test("documents.search", async ({ search }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return search;
+        },
+      };
+    });
+
+    const results = await documents.search("boston", { hl: true }, mockFetch);
+
+    expect(results).toStrictEqual(search);
+    expect(mockFetch).toBeCalledWith(
+      new URL(
+        "documents/search/?expand=user%2Corganization&q=boston&hl=true",
+        BASE_API_URL,
+      ),
+      { credentials: "include" },
+    );
+  });
 
   test("documents.text public", async ({ document, text }) => {
     const mockFetch = vi.fn().mockImplementation(async () => ({

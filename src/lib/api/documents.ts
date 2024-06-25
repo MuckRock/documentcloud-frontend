@@ -15,6 +15,7 @@ import type {
   ViewerMode,
 } from "./types";
 
+import { writable, type Writable } from "svelte/store";
 import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
@@ -34,6 +35,9 @@ export const READING_MODES = new Set<ViewerMode>([
 ]);
 
 export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
+
+// for keeping track of deleted documents that haven't been purged from search yet
+export const deleted: Writable<Set<string>> = writable(new Set());
 
 /**
  * Search documents

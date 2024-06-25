@@ -79,7 +79,7 @@
     "vitest": "^1.6.0"
   },
   "scripts": {
-    "dev": "vite dev",
+    "dev": "NODE_ENV=development vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "sync": "svelte-kit sync",

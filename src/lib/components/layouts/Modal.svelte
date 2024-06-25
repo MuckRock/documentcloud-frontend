@@ -41,7 +41,7 @@ of the $modal store. These are used to set the active modal on any given page.
 
 <svelte:window on:keydown={onKeydown} />
 
-<div class="backdrop" tabindex="-1" transition:fade={{ duration: 200 }}>
+<div class="backdrop" transition:fade={{ duration: 200 }}>
   <div
     class="dialog card"
     transition:fly={{ duration: 400, easing: quintOut, y: "25vw" }}
