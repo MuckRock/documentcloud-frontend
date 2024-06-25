@@ -271,6 +271,30 @@ export async function cancel(
 }
 
 /**
+ * Delete a document. There is no undo.
+ *
+ * @param id
+ * @param csrf_token
+ * @param fetch
+ */
+export async function destroy(
+  id: string | number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  });
+}
+
+/**
  * Edit the top-level fields of a document with a PATCH request
  *
  * @param id Document ID

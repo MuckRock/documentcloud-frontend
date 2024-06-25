@@ -334,6 +334,30 @@ describe("document uploads and processing", () => {
 });
 
 describe("document write methods", () => {
+  test("documents.destroy", async ({ document }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+
+    const resp = await documents.destroy(document.id, "token", mockFetch);
+
+    expect(resp.status).toStrictEqual(204);
+    expect(mockFetch).toBeCalledWith(
+      new URL(`documents/${document.id}/`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "DELETE",
+        headers: {
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+      },
+    );
+  });
+
   test("documents.edit", async ({ document }) => {
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       const body = JSON.parse(options.body);

@@ -1,10 +1,10 @@
 import type { Actions } from "./$types.js";
 import type { Document } from "$lib/api/types";
 
-import { error, fail, redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
-import { edit, redact } from "$lib/api/documents";
+import { destroy, edit, redact } from "$lib/api/documents";
 import { isErrorCode } from "$lib/utils/api";
 
 export function load({ cookies }) {
@@ -18,6 +18,30 @@ export function load({ cookies }) {
  * back on the document viewer after any successful action.
  */
 export const actions = {
+  async delete({ cookies, fetch, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const { id } = params;
+
+    console.log(`Deleting document: ${id}`);
+
+    const resp = await destroy(id, csrf_token, fetch).catch((e) => {
+      console.error(e);
+    });
+
+    // probably the API is down
+    if (!resp) {
+      return fail(500, { error: "Something went wrong." });
+    }
+
+    // something else broke
+    if (isErrorCode(resp.status)) {
+      // {"error": "..."}
+      return fail(resp.status, await resp.json());
+    }
+
+    return redirect(302, "/app/");
+  },
+
   async edit({ cookies, fetch, request, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
