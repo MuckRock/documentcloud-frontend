@@ -22,8 +22,23 @@ export async function load({ url, fetch }) {
     options.cursor = cursor;
   }
 
-  const searchResults = search(query, options, fetch).catch(console.error);
-  const pinnedAddons = getPinnedAddons(fetch);
+  const searchResults = search(query, options, fetch).catch((e) => {
+    console.error(e);
+    return {
+      results: [],
+      count: 0,
+      next: null,
+    };
+  });
+  const pinnedAddons = getPinnedAddons(fetch).catch((e) => {
+    console.error(e);
+    return {
+      results: [],
+      count: 0,
+      next: null,
+      previous: null,
+    };
+  });
 
   return {
     query,

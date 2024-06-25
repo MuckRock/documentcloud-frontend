@@ -2,10 +2,12 @@
   import type { SvgComponent } from "svelte-octicons";
 
   export let icon: typeof SvgComponent = null;
+  export let disabled = false;
 </script>
 
 <span
   class="container"
+  class:disabled
   role="button"
   tabindex={0}
   on:click|stopPropagation
@@ -40,6 +42,11 @@
   .container:hover {
     background: var(--blue-1, #eef3f9);
   }
+
+  .disabled {
+    pointer-events: none;
+  }
+
   @media (hover: none) {
     .container:hover {
       background: transparent;

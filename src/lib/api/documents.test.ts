@@ -3,14 +3,18 @@ import type {
   DocumentText,
   DocumentUpload,
   Pending,
+  Redaction,
   Sizes,
+  Status,
   TextPosition,
+  ViewerMode,
 } from "./types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
 import {
   APP_URL,
   BASE_API_URL,
+  CSRF_HEADER_NAME,
   DC_BASE,
   IMAGE_WIDTHS_ENTRIES,
 } from "@/config/config.js";
@@ -58,6 +62,14 @@ const test = base.extend({
     );
 
     await use(textPositions);
+  },
+
+  redactions: async ({}, use: Use<Redaction[]>) => {
+    const { default: redactions } = await import(
+      "./fixtures/documents/redactions.json"
+    );
+
+    await use(redactions);
   },
 });
 
@@ -175,7 +187,7 @@ describe("document uploads and processing", () => {
         headers: {
           "Content-type": "application/json",
           Referer: APP_URL,
-          "X-CSRFToken": "token",
+          [CSRF_HEADER_NAME]: "token",
         },
         method: "POST",
       },
@@ -234,14 +246,68 @@ describe("document uploads and processing", () => {
         headers: {
           "Content-type": "application/json",
           Referer: APP_URL,
-          "X-CSRFToken": "csrf_token",
+          [CSRF_HEADER_NAME]: "csrf_token",
         },
         method: "POST",
       },
     );
   });
 
-  test.todo("documents.cancel");
+  test("documents.cancel", async ({ document }) => {
+    const csrf_token = "token";
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+      };
+    });
+
+    // cancelling a finished document is a noop
+    let result = await documents.cancel(document, csrf_token, mockFetch);
+
+    expect(result).toBeUndefined();
+
+    result = await documents.cancel(
+      { ...document, status: "pending" },
+      csrf_token,
+      mockFetch,
+    );
+    expect(result.status).toEqual(200);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`/api/documents/${document.id}/process/`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "DELETE",
+        headers: {
+          [CSRF_HEADER_NAME]: csrf_token,
+          Referer: APP_URL,
+        },
+      },
+    );
+
+    await documents.cancel(
+      { ...document, status: "readable" },
+      csrf_token,
+      mockFetch,
+    );
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+
+    // error and nofile status are also done, so cancel does nothing
+    await documents.cancel(
+      { ...document, status: "error" },
+      csrf_token,
+      mockFetch,
+    );
+    await documents.cancel(
+      { ...document, status: "nofile" },
+      csrf_token,
+      mockFetch,
+    );
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
 
   test("pending", async ({ pending }) => {
     const mockFetch = vi.fn().mockImplementation(async () => ({
@@ -267,6 +333,68 @@ describe("document uploads and processing", () => {
   });
 });
 
+describe("document write methods", () => {
+  test("documents.edit", async ({ document }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json() {
+          return { ...document, ...body };
+        },
+      };
+    });
+
+    let updated = await documents.edit(
+      document.id,
+      { title: "Updated title" },
+      "token",
+      mockFetch,
+    );
+
+    expect(updated.title).toStrictEqual("Updated title");
+  });
+
+  test("documents.redact", async ({ document, redactions }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      // the api returns the same redaction it was sent
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 201,
+        async json() {
+          return body;
+        },
+      };
+    });
+
+    const resp = await documents.redact(
+      document.id,
+      redactions,
+      "token",
+      mockFetch,
+    );
+
+    expect(resp.status).toStrictEqual(201);
+    expect(await resp.json()).toStrictEqual(redactions);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`documents/${document.id}/redactions/`, BASE_API_URL),
+      {
+        body: JSON.stringify(redactions),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "token",
+        },
+        method: "POST",
+      },
+    );
+  });
+});
+
 describe("document helper methods", () => {
   test("assetUrl", async ({ document }) => {
     const privateDoc = {
@@ -281,11 +409,11 @@ describe("document helper methods", () => {
       status: "readable",
     } as Document;
 
-    const privateUrl = documents.pdfUrl(privateDoc);
+    const privateUrl = new URL("private.pdf", privateDoc.asset_url);
 
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       // call 2
-      if (endpoint.toString() === privateUrl.href) {
+      if (endpoint.toString() === privateUrl.toString()) {
         return {
           ok: true,
           status: 200,
@@ -301,7 +429,7 @@ describe("document helper methods", () => {
         status: 200,
         async json() {
           return {
-            location: privateUrl,
+            location: privateUrl.href,
           };
         },
       };
@@ -426,5 +554,44 @@ describe("document helper methods", () => {
         document.asset_url,
       ),
     );
+  });
+
+  test("documents.shouldPreload", () => {
+    const yes: ViewerMode[] = ["annotating", "document", "notes", "redacting"];
+    const no: ViewerMode[] = ["grid", "text"];
+
+    yes.forEach((mode) => {
+      expect(documents.shouldPreload(mode)).toBeTruthy();
+    });
+
+    no.forEach((mode) => {
+      expect(documents.shouldPreload(mode)).toBeFalsy();
+    });
+  });
+
+  test("documents.shouldPaginate", () => {
+    const yes: ViewerMode[] = ["annotating", "document", "redacting", "text"];
+    const no: ViewerMode[] = ["grid", "notes"];
+
+    yes.forEach((mode) => {
+      expect(documents.shouldPaginate(mode)).toBeTruthy();
+    });
+
+    no.forEach((mode) => {
+      expect(documents.shouldPaginate(mode)).toBeFalsy();
+    });
+  });
+
+  test("documents.isProcessing", () => {
+    const yes: Status[] = ["pending", "readable", "nofile"];
+    const no: Status[] = ["error", "success"];
+
+    yes.forEach((status) => {
+      expect(documents.isProcessing(status)).toBeTruthy();
+    });
+
+    no.forEach((status) => {
+      expect(documents.isProcessing(status)).toBeFalsy();
+    });
   });
 });

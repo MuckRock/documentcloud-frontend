@@ -40,6 +40,34 @@
       "description": "Documents will be publicly visible to everyone"
     }
   },
+  "status": {
+    "status": "Status",
+    "success": {
+      "value": "success",
+      "title": "Success",
+      "description": "The document has been succesfully processed"
+    },
+    "readable": {
+      "value": "readable",
+      "title": "Readable",
+      "description": "The document is currently processing, but is readable during the operation"
+    },
+    "pending": {
+      "value": "pending",
+      "title": "Pending",
+      "description": "The document is processing and not currently readable"
+    },
+    "error": {
+      "value": "error",
+      "title": "Error",
+      "description": "There was an error during processing"
+    },
+    "nofile": {
+      "value": "nofile",
+      "title": "No file",
+      "description": "The document was created, but no file has been uploaded yet"
+    }
+  },
   "notfound": {
     "title": "Page not found",
     "content": "Please try another URL"
@@ -169,8 +197,9 @@
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
-    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text. Do you wish to continue?",
-    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text. Do you wish to continue?",
+    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text.",
+    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text.",
+    "continue": "Do you wish to continue?",
     "confirm": "Reprocess"
   },
   "dialogDeleteDialog": {
@@ -511,7 +540,8 @@
     "select": "Select",
     "source": "Source",
     "noteCount": "{n, plural, one {# note} other {# notes}}",
-    "noteLink": "See note"
+    "noteLink": "See note",
+    "language": "Language"
   },
   "documentThumbnail": {
     "pages": "pages",
@@ -808,7 +838,7 @@
     "updating": "Updating docucment...",
     "original": "Original Document (PDF) »",
     "related": "Related Article »",
-    "contributed": "Contributed by {name}",
+    "contributed": "Contributed by",
     "source": "Source: {source}",
     "actions": "Document Actions",
     "share": "Share",
@@ -833,6 +863,10 @@
     "edit": "Edit",
     "upload": "Upload Documents",
     "download": "Download file",
+    "reprocess": "Reprocess",
+    "created": "Created on",
+    "updated": "Last updated on",
+    "language": "Language",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"
@@ -868,6 +902,32 @@
     "errorDesc": "A processing error has been encountered in the document you requested",
     "accessible": "Document not accessible",
     "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
+  },
+  "edit": {
+    "title": "Edit document metadata",
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "source": "Source",
+      "published_url": "Published URL",
+      "related_article": "Related article URL",
+      "access": {
+        "title": "Access",
+        "description": "Changing the access setting will reprocess your document."
+      }
+    },
+    "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "redact": {
+    "confirm": "Confirm redactions",
+    "really": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
+    "title": "Redact Document",
+    "instructions": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
+    "undo": "Undo",
+    "cancel": "Cancel",
+    "error": "Error"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

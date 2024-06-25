@@ -3,9 +3,8 @@
   import DocumentUpload from "../DocumentUpload.svelte";
 
   export const meta = {
-    title: "Components / Forms / Document Upload",
+    title: "Forms / Document Upload",
     component: DocumentUpload,
-    tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 

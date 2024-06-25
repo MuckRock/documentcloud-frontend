@@ -16,7 +16,7 @@ function documentPath(document: Document) {
 }
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params, parent }) {
+export async function load({ fetch, params, parent, depends }) {
   const document = await documents.get(+params.id, fetch).catch(console.error);
 
   if (!document) {
@@ -27,6 +27,8 @@ export async function load({ fetch, params, parent }) {
     const canonical = new URL(document.canonical_url);
     redirect(302, canonical.pathname);
   }
+
+  depends(`document:${document.id}`);
 
   const breadcrumbs = await breadcrumbTrail(parent, [
     { href: "/app/", title: "Documents" }, // TODO: move document manager to `/documents` route

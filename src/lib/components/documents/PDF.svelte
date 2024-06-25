@@ -11,7 +11,7 @@
 
   import { onMount } from "svelte";
 
-  // worker is configured in +layout.svelte
+  // worker can be configured in +layout.svelte
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -28,11 +28,12 @@
   export let document: Document;
   export let query: string = ""; // search query
   export let scale: number | "width" | "height" = 1;
-  export let pdf = new Promise(() => {}); // this is always a promise
 
+  // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
+  export let pdf: Promise<any> = new Promise(() => {});
   export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
 
-  $: sizes = pageSizes(document.page_spec);
+  $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
 
   // index notes by page
   $: notes = document.notes.reduce((m, note) => {
@@ -48,7 +49,7 @@
     total: 0,
   };
 
-  onMount(async () => {
+  onMount(() => {
     // we might move this to a load function
     if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
@@ -59,8 +60,15 @@
       progress = p;
     };
 
-    // @ts-ignore
-    window.pdf = pdf;
+    pdf.then((p) => {
+      // handle missing page_spec
+      if (sizes.length === 0) {
+        sizes = Array(p.numPages).fill([0, 0]);
+      }
+
+      // @ts-ignore
+      window.pdf = p;
+    });
   });
 </script>
 
@@ -73,8 +81,8 @@
       {scale}
       {width}
       {height}
-      notes={notes[n]}
       {query}
+      notes={notes[n]}
     />
   {/each}
 </div>

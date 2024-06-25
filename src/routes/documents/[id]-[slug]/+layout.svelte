@@ -3,16 +3,14 @@
 
   import type { Document, Project } from "$lib/api/types";
 
-  // load this here to get the worker started early
-  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
-    import.meta.url,
-  ).href;
-
   import { setContext } from "svelte";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import {
+    modal,
+    MODAL,
+    type ModalContext,
+  } from "$lib/components/layouts/Modal.svelte";
 
   // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
@@ -29,6 +27,7 @@
   export let data;
 
   setContext<Document>("document", data.document);
+  setContext<ModalContext>(MODAL, modal);
 
   $: document = data.document;
   $: projects = document.projects as Project[];

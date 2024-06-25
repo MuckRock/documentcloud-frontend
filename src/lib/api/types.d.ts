@@ -21,7 +21,14 @@ export type Status = "success" | "readable" | "pending" | "error" | "nofile"; //
 
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
-export type ViewerMode = "document" | "text" | "grid" | "notes";
+// modes ending in -ing are writing modes
+export type ViewerMode =
+  | "document"
+  | "text"
+  | "grid"
+  | "notes"
+  | "redacting"
+  | "annotating";
 
 export type Zoom = number | Sizes | "width" | "height";
 
@@ -234,6 +241,14 @@ export interface TextPosition {
   upright?: boolean;
   direction?: number;
   metadata?: any;
+}
+
+export interface Redaction {
+  page_number: number;
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
 }
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

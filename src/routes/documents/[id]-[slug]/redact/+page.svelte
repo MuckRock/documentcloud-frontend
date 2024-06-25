@@ -1,18 +1,29 @@
 <script lang="ts">
   import type { Note, ViewerMode } from "$lib/api/types";
+  import {
+    MODAL,
+    type ModalContext,
+  } from "$lib/components/layouts/Modal.svelte";
 
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { setContext } from "svelte";
+  import { getContext, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
+  import { Check16, SquareFill24, Undo16 } from "svelte-octicons";
 
+  import Button from "$lib/components/common/Button.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import Paginator, { currentPage } from "../components/ViewerPaginator.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
   import Zoom, { zoom, zoomToScale } from "../components/Zoom.svelte";
+
+  import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
+  import { redactions } from "$lib/components/documents/RedactionPane.svelte";
 
   import { pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
@@ -22,9 +33,11 @@
 
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable("document"); // only ever one mode on this route
+  const mode: Writable<ViewerMode> = writable("redacting"); // only ever one mode on this route
+  const modal: ModalContext = getContext(MODAL);
 
   setContext("activeNote", activeNote);
+  setContext("currentPage", currentPage);
   setContext("mode", mode);
 
   $: asset_url = data.asset_url;
@@ -56,6 +69,18 @@
       $activeNote = document.notes.find((note) => note.id === noteId);
     }
   }
+
+  function confirm() {
+    $modal = {
+      component: ConfirmRedaction,
+      props: { document },
+    };
+  }
+
+  function undo() {
+    $redactions.pop();
+    $redactions = $redactions;
+  }
 </script>
 
 <svelte:window on:hashchange={onHashChange} />
@@ -71,14 +96,33 @@
 </svelte:head>
 
 <ContentLayout>
+  <svelte:fragment slot="header">
+    <Tip --background-color="var(--yellow-bright)">
+      <SquareFill24 slot="icon" />
+      <h3>{$_("redact.title")}</h3>
+      <p>{$_("redact.instructions")}</p>
+    </Tip>
+  </svelte:fragment>
+
   <PDF {document} {asset_url} scale={zoomToScale($zoom)} />
 
   <PageToolbar slot="footer">
-    <svelte:fragment slot="left">
-      <div>
-        <!-- additional controls here -->
-      </div>
-    </svelte:fragment>
+    <Flex slot="left">
+      <!-- additional controls here -->
+      <Button mode="primary" size="small" on:click={confirm}>
+        <Check16 />
+        {$_("redact.confirm")}
+      </Button>
+      <Button
+        type="button"
+        size="small"
+        disabled={$redactions.length === 0}
+        on:click={undo}
+      >
+        <Undo16 />
+        {$_("redact.undo")}
+      </Button>
+    </Flex>
 
     <Paginator slot="center" totalPages={document.page_count} />
 

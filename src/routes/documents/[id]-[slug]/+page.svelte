@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { Note, Sizes, ViewerMode } from "@/lib/api/types.js";
+  import type { Note, ViewerMode } from "@/lib/api/types.js";
 
-  import { afterNavigate, goto, replaceState } from "$app/navigation";
+  import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { setContext } from "svelte";
+  import { afterUpdate, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -29,8 +29,17 @@
     zoomToSize,
   } from "./components/Zoom.svelte";
 
+  // writable results
+  import { pending } from "$lib/components/documents/RedactionPane.svelte";
+
   // config and utils
-  import { pageHashUrl, pageFromHash } from "$lib/api/documents";
+  import { POLL_INTERVAL } from "@/config/config.js";
+  import {
+    pageHashUrl,
+    pageFromHash,
+    shouldPaginate,
+    shouldPreload,
+  } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
 
@@ -70,13 +79,23 @@
 
     $currentPage = pageFromHash(hash);
 
-    if ($currentPage > 1 && ["document", "text"].includes($mode)) {
+    if ($currentPage > 1 && shouldPaginate($mode)) {
       scrollToPage($currentPage);
     }
 
     const noteId = noteFromHash(hash);
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
+    }
+  });
+
+  afterUpdate(() => {
+    // todo: can we make this more granular? do other things trigger invalidation?
+    // https://github.com/orgs/MuckRock/projects/14/views/1?pane=issue&itemId=68215069
+    if (document.status === "pending" || document.status === "readable") {
+      setTimeout(() => {
+        invalidate(`document:${document.id}`);
+      }, POLL_INTERVAL);
     }
   });
 
@@ -110,7 +129,7 @@
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if $mode === "document" || $mode === "notes"}
+  {#if shouldPreload($mode)}
     <link
       rel="preload"
       href={data.asset_url.href}
@@ -159,7 +178,7 @@
     </label>
 
     <svelte:fragment slot="center">
-      {#if $mode === "document" || $mode === "text"}
+      {#if shouldPaginate($mode)}
         <Paginator totalPages={document.page_count} />
       {/if}
     </svelte:fragment>
