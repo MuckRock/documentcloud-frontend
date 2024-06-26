@@ -35,6 +35,8 @@ export const READING_MODES = new Set<ViewerMode>([
 
 export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
 
+export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
+
 /**
  * Search documents
  * https://www.documentcloud.org/help/search/

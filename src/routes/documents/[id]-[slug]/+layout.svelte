@@ -1,9 +1,12 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import type { Document, Project } from "$lib/api/types";
+  import type { Document, Project, ViewerMode } from "$lib/api/types";
+
+  import { page } from "$app/stores";
 
   import { setContext } from "svelte";
+  import { writable, type Writable } from "svelte/store";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import {
@@ -26,12 +29,18 @@
 
   export let data;
 
+  const mode: Writable<ViewerMode> = writable($page.data.mode);
+
   setContext<Document>("document", data.document);
   setContext<ModalContext>(MODAL, modal);
+  setContext("mode", mode);
 
+  $: $mode = $page.data.mode;
   $: document = data.document;
   $: projects = document.projects as Project[];
   $: canonical_url = canonicalUrl(document).href;
+
+  $: console.log($page.data.mode);
 </script>
 
 <svelte:head>
@@ -68,7 +77,7 @@
 
     <Notes {document} />
 
-    <Sections {document} />
+    <Sections {document} mode={$mode} />
 
     <Data {document} />
 

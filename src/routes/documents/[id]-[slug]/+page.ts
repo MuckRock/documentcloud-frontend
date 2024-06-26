@@ -43,7 +43,6 @@ export async function load({ fetch, parent, url, data, depends }) {
   return {
     ...(data ?? {}), // include csrf_token
     asset_url,
-    mode,
     query,
     text,
     // pdfTask: task,

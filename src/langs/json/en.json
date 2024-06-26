@@ -886,7 +886,7 @@
       "notes": "Notes",
       "pageAbbrev": "p.",
       "sections": "Sections",
-      "title": "Notes & Sections"
+      "cta": "Add sections"
     }
   },
   "notes": {
@@ -928,6 +928,12 @@
     "undo": "Undo",
     "cancel": "Cancel",
     "error": "Error"
+  },
+  "sections": {
+    "page": "Page",
+    "title": "Section title",
+    "delete": "Delete",
+    "new": "Add a new section"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

@@ -22,7 +22,7 @@
 
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable("annotating"); // only ever one mode on this route
+  const mode: Writable<ViewerMode> = writable(data.mode);
 
   setContext("activeNote", activeNote);
   setContext("currentPage", currentPage);
@@ -83,6 +83,6 @@
 
     <Paginator slot="center" totalPages={document.page_count} />
 
-    <Zoom slot="right" mode={$mode} />
+    <Zoom slot="right" mode={data.mode} />
   </PageToolbar>
 </ContentLayout>

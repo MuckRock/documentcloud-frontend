@@ -16,7 +16,7 @@ function documentPath(document: Document) {
 }
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params, parent, depends }) {
+export async function load({ fetch, params, parent, depends, url }) {
   const document = await documents.get(+params.id, fetch).catch(console.error);
 
   if (!document) {
