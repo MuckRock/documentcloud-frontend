@@ -6,6 +6,8 @@ or get an upgrade prompt.
   import type { Document } from "$lib/api/types";
   import type { User, Org } from "@/api/types/orgAndUser";
 
+  import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -20,14 +22,24 @@ or get an upgrade prompt.
   export let document: Document;
   export let user: User = null; // using a prop for testability
 
-  $: action = canonicalUrl(document).href + "?/revisions";
+  $: action = canonicalUrl(document).href + "?/edit";
   $: organization =
     typeof user?.organization === "object" ? (user.organization as Org) : null;
   $: plan = organization?.plan ?? "Free";
+
+  function onSubmit({ formData }) {
+    const enabled = formData.get("revision_control") === "on";
+    formData.set("revision_control", enabled);
+
+    return ({ result, update }) => {
+      invalidate(`document:${document.id}`);
+      update(result);
+    };
+  }
 </script>
 
 {#if plan !== "Free"}
-  <form {action} method="post">
+  <form {action} method="post" use:enhance={onSubmit}>
     <Flex direction="column" gap={1} align="center">
       <Field title={$_("dialogRevisionsDialog.controlLabel")}>
         <Switch name="revision_control" checked={document.revision_control} />

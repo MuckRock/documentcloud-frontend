@@ -2,6 +2,7 @@
   import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
+
   import Button from "$lib/components/common/Button.svelte";
   import RelativeTime from "@/common/RelativeTime.svelte";
 
@@ -16,15 +17,15 @@
       <td class="revision-version count">{revision.version}</td>
       <td class="revision-details">
         <p class="revision-comment">{revision.comment}</p>
-        <span class="revision-time"
-          ><RelativeTime date={new Date(revision.created_at)} /></span
-        >
+        <span class="revision-time">
+          <RelativeTime date={new Date(revision.created_at)} />
+        </span>
       </td>
-      <td class="revision-download"
-        ><Button href={revision.url}
-          >{$_("dialogRevisionsDialog.download")}</Button
-        ></td
-      >
+      <td class="revision-download">
+        <Button href={revision.url}>
+          {$_("dialogRevisionsDialog.download")}
+        </Button>
+      </td>
     </tr>
   {:else}
     <tr class="empty"><td>{$_("dialogRevisionsDialog.empty")}</td></tr>

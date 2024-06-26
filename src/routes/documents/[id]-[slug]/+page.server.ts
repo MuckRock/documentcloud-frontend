@@ -33,6 +33,8 @@ export const actions = {
       return m;
     }, update);
 
+    console.log(update);
+
     try {
       const document = await edit(id, update, csrf_token, fetch);
       return {
