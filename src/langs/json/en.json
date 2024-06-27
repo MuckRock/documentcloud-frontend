@@ -867,6 +867,7 @@
     "created": "Created on",
     "updated": "Last updated on",
     "language": "Language",
+    "delete": "Delete",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"
@@ -934,6 +935,14 @@
     "title": "Title",
     "delete": "Delete",
     "new": "Add a new section"
+  },
+  "delete": {
+    "title": "Confirm delete",
+    "really": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}.",
+    "continue": "Do you wish to continue?",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "error": "Error"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

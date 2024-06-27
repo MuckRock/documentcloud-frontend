@@ -7,6 +7,7 @@
 
   import { getContext } from "svelte";
   import {
+    Alert16,
     Apps16,
     Comment16,
     Download16,
@@ -24,6 +25,7 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   // modals
+  import ConfirmDelete from "$lib/components/forms/ConfirmDelete.svelte";
   import Edit from "$lib/components/forms/Edit.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
@@ -58,6 +60,16 @@
     $modal = {
       title: $_("dialogReprocessDialog.title"),
       component: Reprocess,
+      props: { documents: [document] },
+    };
+  }
+
+  function openDelete() {
+    if (!modal) return console.warn("modal store is not in context");
+
+    $modal = {
+      title: $_("delete.title"),
+      component: ConfirmDelete,
       props: { documents: [document] },
     };
   }
@@ -119,14 +131,28 @@
 
   {#if document.edit_access}
     <!-- TODO: Processing component -->
-    <SidebarItem>
+    <SidebarItem disabled={!modal || document.status === "nofile"}>
       {#if document.status !== "success"}
         {$_("status.status")}:
         {$_(`status.${document.status}.title`)}
       {/if}
-      <Action on:click={openReprocess} disabled={!modal}>
+      <Action on:click={openReprocess}>
         <IssueReopened16 />
         {$_("sidebar.reprocess")}
+      </Action>
+    </SidebarItem>
+  {/if}
+
+  {#if document.edit_access}
+    <SidebarItem>
+      <Action
+        on:click={openDelete}
+        disabled={!modal}
+        --fill="var(--caution)"
+        --color="var(--caution)"
+      >
+        <Alert16 />
+        {$_("sidebar.delete")}
       </Action>
     </SidebarItem>
   {/if}
