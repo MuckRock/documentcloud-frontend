@@ -57,7 +57,7 @@
 <script>
   import Dialog from "./Dialog.demo.svelte";
   import Modal from "../Modal.svelte";
-  import Portal from "../../common/Portal.svelte";
+  import Portal from "../Portal.svelte";
 
   let modalOpen = false;
 </script>

@@ -1,4 +1,4 @@
-<!-- lib/components/common/Portal.svelte -->
+<!-- lib/components/layouts/Portal.svelte -->
 <!-- Source: https://github.com/sveltejs/svelte/issues/3088#issuecomment-1065827485 -->
 
 <script lang="ts">

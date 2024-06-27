@@ -11,7 +11,7 @@
 
   import { LANGUAGE_MAP } from "@/config/config.js";
   import { userOrgString } from "$lib/api/documents";
-  import Portal from "$lib/components/common/Portal.svelte";
+  import Portal from "@/lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
   export let document: Document;

@@ -24,7 +24,7 @@
   import { pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
-  import Portal from "@/lib/components/common/Portal.svelte";
+  import Portal from "@/lib/components/layouts/Portal.svelte";
   import Modal from "@/lib/components/layouts/Modal.svelte";
 
   export let data;

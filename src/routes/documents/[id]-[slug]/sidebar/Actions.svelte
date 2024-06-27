@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
-  import Portal from "$lib/components/common/Portal.svelte";
+  import Portal from "@/lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
   import {
