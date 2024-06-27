@@ -16,7 +16,7 @@
     aria-checked={checked}
     on:click|preventDefault={handleClick}
   ></button>
-  <input {name} type="checkbox" bind:checked class="hidden" />
+  <input {name} type="checkbox" bind:checked class="hidden" on:change />
 </div>
 
 <style>

@@ -1,9 +1,9 @@
 import { vi, test, describe, it, expect, beforeEach, afterEach } from "vitest";
 
-import { BASE_API_URL } from "@/config/config";
+import { BASE_API_URL, SQUARELET_BASE } from "@/config/config";
 import * as fixtures from "@/test/fixtures/accounts";
 
-import { getMe, getOrg } from "./accounts";
+import { getMe, getOrg, getUpgradeUrl } from "./accounts";
 
 describe("getMe", async () => {
   let mockFetch;
@@ -62,3 +62,9 @@ test("getOrg", async () => {
 
 test.todo("users.get");
 test.todo("users.list");
+
+test("getUpgradeUrl", () => {
+  expect(getUpgradeUrl()).toEqual(new URL("/users/~payment/", SQUARELET_BASE));
+  expect(getUpgradeUrl(fixtures.proOrg)).toEqual(new URL("/users/~payment/", SQUARELET_BASE));
+  expect(getUpgradeUrl(fixtures.organization)).toEqual(new URL(`/organizations/${fixtures.organization.slug}/payment/`, SQUARELET_BASE))
+});

@@ -99,6 +99,15 @@ export interface DocumentUpload {
   title: string;
 }
 
+// https://www.documentcloud.org/help/api#revisions
+export interface Revision {
+  version: number;
+  user: number;
+  created_at: string;
+  comment: string;
+  url: string;
+}
+
 // https://www.documentcloud.org/help/api#documents
 export interface Document {
   id: number | string;
@@ -136,6 +145,7 @@ export interface Document {
   projects?: number[] | Project[];
   notes?: Note[];
   sections?: Section[];
+  revisions?: Revision[];
 
   // present in search results when query includes hl=true
   highlights?: Highlights;

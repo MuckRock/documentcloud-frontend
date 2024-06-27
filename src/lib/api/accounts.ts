@@ -1,5 +1,5 @@
 import type { Maybe, User, Org } from "@/api/types";
-import { BASE_API_URL } from "@/config/config.js";
+import { BASE_API_URL, SQUARELET_BASE } from "@/config/config.js";
 
 type Fetch = typeof globalThis.fetch;
 
@@ -20,4 +20,13 @@ export async function getOrg(fetch: Fetch, id: number): Promise<Org> {
   const endpoint = new URL(`organizations/${id}/`, BASE_API_URL);
   const resp = await fetch(endpoint, { credentials: "include" });
   return resp.json();
+}
+
+export function getUpgradeUrl(org: Org = null): URL {
+  if (!org || org.individual) {
+    // Redirect the user to their Squarelet account settings
+    return new URL("/users/~payment/", SQUARELET_BASE);
+  }
+  // Redirect the user to the Squarelet organization settings
+  return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
 }
