@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { BASE_API_URL } from "@/config/config.js";
+import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { canonicalUrl } from "./documents";
 import type { Document, Note, NoteResults } from "./types";
@@ -13,7 +13,7 @@ export async function list(
   doc_id: number,
   fetch = globalThis.fetch,
 ): Promise<NoteResults> {
-  const endpoint = new URL(`documents/${doc_id}/notes.json`, BASE_API_URL);
+  const endpoint = new URL(`documents/${doc_id}/notes/`, BASE_API_URL);
 
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
 
@@ -36,7 +36,7 @@ export async function get(
   fetch = globalThis.fetch,
 ): Promise<Note> {
   const endpoint = new URL(
-    `documents/${doc_id}/notes/${note_id}.json`,
+    `documents/${doc_id}/notes/${note_id}/`,
     BASE_API_URL,
   );
 
@@ -49,6 +49,122 @@ export async function get(
   }
 
   return resp.json();
+}
+
+// writing methods
+
+/**
+ * Create a new note
+ *
+ * @param doc_id Document ID
+ * @param note Note data
+ * @param csrf_token
+ * @param fetch
+ * @returns {Note}
+ */
+export async function create(
+  doc_id: string | number,
+  note: Partial<Note>,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Note> {
+  const endpoint = new URL(`documents/${doc_id}/notes/`, BASE_API_URL);
+
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify(note),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "POST",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (!resp.ok) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
+}
+
+/**
+ * Update a note and return the updated version
+ *
+ * @param doc_id Document ID
+ * @param note_id Note ID
+ * @param note Data to update (partial is fine)
+ * @param csrf_token
+ * @param fetch
+ * @returns {Note}
+ */
+export async function update(
+  doc_id: string | number,
+  note_id: string | number,
+  note: Partial<Note>,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Note> {
+  const endpoint = new URL(
+    `documents/${doc_id}/notes/${note_id}/`,
+    BASE_API_URL,
+  );
+
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify(note),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "PATCH",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (!resp.ok) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
+}
+
+/**
+ * Delete a note and return the HTTP response
+ *
+ * @param doc_id Document ID
+ * @param note_id Note ID
+ * @param csrf_token
+ * @param fetch
+ * @returns {Response}
+ */
+export async function remove(
+  doc_id: string | number,
+  note_id: string | number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Response> {
+  const endpoint = new URL(
+    `documents/${doc_id}/notes/${note_id}/`,
+    BASE_API_URL,
+  );
+
+  return fetch(endpoint, {
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "DELETE",
+  });
 }
 
 /**
