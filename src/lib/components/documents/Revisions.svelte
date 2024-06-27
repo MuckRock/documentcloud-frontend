@@ -74,6 +74,12 @@
   .revision-version {
     background-color: rgba(0 0 0 / 0.05);
   }
+  .revision:first-child .revision-version {
+    border-top-right-radius: .5rem;
+  }
+  .revision:last-child .revision-version {
+    border-bottom-right-radius: .5rem;
+  }
   .revision-download {
     text-align: right;
   }
