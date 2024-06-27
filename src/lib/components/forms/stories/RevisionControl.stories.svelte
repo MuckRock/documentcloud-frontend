@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-  import type { Org, User } from "@/api/types";
   import type { Document } from "$lib/api/types";
   import { Story } from "@storybook/addon-svelte-csf";
   import RevisionControl from "../RevisionControl.svelte";
@@ -18,9 +17,5 @@
 </script>
 
 <Story name="default">
-  <RevisionControl {document} user={me} />
-</Story>
-
-<Story name="upgrade prompt">
   <RevisionControl {document} />
 </Story>
