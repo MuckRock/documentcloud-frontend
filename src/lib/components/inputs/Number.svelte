@@ -50,12 +50,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: "Source Sans Pro";
-    font-size: 1rem;
+    font-size: var(--font-size, 1rem);
     font-style: normal;
     font-weight: 400;
     line-height: normal;
   }
   input::placeholder {
-    color: var(--Gray-3, #99a8b3);
+    color: var(--gray-3, #99a8b3);
   }
 </style>

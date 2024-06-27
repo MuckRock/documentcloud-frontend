@@ -21,14 +21,13 @@
 </script>
 
 <SidebarGroup>
+  <SidebarItem slot="title">
+    <ListOrdered16 />
+    {$_("sidebar.toc.sections")}
+  </SidebarItem>
   {#if mode === "annotating"}
     <EditSections {document} />
   {:else}
-    <SidebarItem slot="title">
-      <ListOrdered16 />
-      {$_("sidebar.toc.sections")}
-    </SidebarItem>
-
     <ol>
       {#each sections as section}
         <li>

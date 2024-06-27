@@ -45,6 +45,7 @@ export async function load({ fetch, parent, url, data, depends }) {
     asset_url,
     query,
     text,
+    mode,
     // pdfTask: task,
   };
 }

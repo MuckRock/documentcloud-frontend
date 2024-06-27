@@ -39,8 +39,6 @@
   $: document = data.document;
   $: projects = document.projects as Project[];
   $: canonical_url = canonicalUrl(document).href;
-
-  $: console.log($page.data.mode);
 </script>
 
 <svelte:head>

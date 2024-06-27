@@ -53,7 +53,13 @@ Create, update and delete sections for a single document
             </label>
           </td>
           <td class="action">
-            <Button mode="ghost" title={$_("sections.delete")} minW={false}>
+            <Button
+              mode="ghost"
+              title={$_("sections.delete")}
+              minW={false}
+              name="action"
+              value="delete"
+            >
               <Trash16 fill="var(--caution)" />
             </Button>
           </td>
@@ -88,7 +94,13 @@ Create, update and delete sections for a single document
           </label>
         </td>
         <td class="action">
-          <Button mode="ghost" title={$_("sections.delete")} minW={false}>
+          <Button
+            mode="ghost"
+            title={$_("sections.delete")}
+            minW={false}
+            name="action"
+            value="add"
+          >
             <PlusCircle16 />
           </Button>
         </td>
@@ -110,10 +122,12 @@ Create, update and delete sections for a single document
   td,
   th {
     padding: 0 0.5rem 0.5rem 0;
+    --font-size: var(--font-s);
   }
 
   th {
     text-align: start;
+    font-size: var(--font-m);
   }
 
   td.page_number {
