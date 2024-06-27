@@ -55,18 +55,11 @@
 </script>
 
 <script>
-  import { setContext } from "svelte";
   import Dialog from "./Dialog.demo.svelte";
-  import { modal } from "../Modal.svelte";
+  import Modal from "../Modal.svelte";
+  import Portal from "../../common/Portal.svelte";
 
-  setContext("modal", modal);
-
-  function openModal() {
-    $modal = {
-      title: 'Chowder.',
-      component: Dialog,
-    };
-  }
+  let modalOpen = false;
 </script>
 
 <Template let:args>
@@ -113,9 +106,17 @@
 
       <PageToolbar slot="footer">
         <svelte:fragment slot="center">
-          <Button disabled={Boolean($modal)} mode="ghost" on:click={openModal}
-            >Open modal</Button
-          >
+          <Button disabled={modalOpen} mode="ghost" on:click={() => modalOpen = true}>
+            Open modal
+          </Button>
+          {#if modalOpen}
+          <Portal>
+            <Modal on:close={() => modalOpen = false}>
+              <h1 slot="title">Chowder.</h1>
+              <Dialog />
+            </Modal>
+          </Portal>
+          {/if}
         </svelte:fragment>
       </PageToolbar>
     </ContentLayout>

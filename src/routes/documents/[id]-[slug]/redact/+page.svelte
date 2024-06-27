@@ -1,14 +1,10 @@
 <script lang="ts">
   import type { Note, ViewerMode } from "$lib/api/types";
-  import {
-    MODAL,
-    type ModalContext,
-  } from "$lib/components/layouts/Modal.svelte";
 
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { getContext, setContext } from "svelte";
+  import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
   import { Check16, SquareFill24, Undo16 } from "svelte-octicons";
@@ -28,13 +24,14 @@
   import { pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
+  import Portal from "@/lib/components/common/Portal.svelte";
+  import Modal from "@/lib/components/layouts/Modal.svelte";
 
   export let data;
 
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
   const mode: Writable<ViewerMode> = writable("redacting"); // only ever one mode on this route
-  const modal: ModalContext = getContext(MODAL);
 
   setContext("activeNote", activeNote);
   setContext("currentPage", currentPage);
@@ -70,12 +67,7 @@
     }
   }
 
-  function confirm() {
-    $modal = {
-      component: ConfirmRedaction,
-      props: { document },
-    };
-  }
+  let confirmOpen = false;
 
   function undo() {
     $redactions.pop();
@@ -109,7 +101,7 @@
   <PageToolbar slot="footer">
     <Flex slot="left">
       <!-- additional controls here -->
-      <Button mode="primary" size="small" on:click={confirm}>
+      <Button mode="primary" size="small" on:click={() => confirmOpen = true}>
         <Check16 />
         {$_("redact.confirm")}
       </Button>
@@ -128,4 +120,13 @@
 
     <Zoom slot="right" mode={$mode} />
   </PageToolbar>
+
+  {#if confirmOpen}
+  <Portal>
+    <Modal on:close={() => confirmOpen = false}>
+      <h1 slot="title">{$_("redact.confirm")}</h1>
+      <ConfirmRedaction {document} on:close={() => confirmOpen = false} />
+    </Modal>
+  </Portal>
+  {/if}
 </ContentLayout>

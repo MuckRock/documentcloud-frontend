@@ -1,11 +1,6 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
-  import {
-    MODAL,
-    type ModalContext,
-  } from "$lib/components/layouts/Modal.svelte";
-
-  import { getContext } from "svelte";
+  
   import { _ } from "svelte-i18n";
   import { Clock16, Pencil16 } from "svelte-octicons";
 
@@ -16,21 +11,15 @@
 
   import { LANGUAGE_MAP } from "@/config/config.js";
   import { userOrgString } from "$lib/api/documents";
+  import Portal from "$lib/components/common/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
 
   export let document: Document;
 
-  const modal: ModalContext = getContext(MODAL);
+  let editOpen = false;
 
   function dateFormat(date: Date | string) {
     return new Date(date).toLocaleDateString();
-  }
-
-  function openEdit() {
-    $modal = {
-      title: $_("edit.title"),
-      component: Edit,
-      props: { document },
-    };
   }
 </script>
 
@@ -51,7 +40,15 @@
       {document.title}
     </h1>
     {#if document.edit_access}
-      <Action icon={Pencil16} on:click={openEdit}>{$_("sidebar.edit")}</Action>
+      <Action icon={Pencil16} on:click={() => editOpen = true}>{$_("sidebar.edit")}</Action>
+      {#if editOpen}
+      <Portal>
+        <Modal on:close={() => editOpen = false}>
+          <h1 slot="title">{$_("edit.title")}</h1>
+          <Edit {document} on:close={() => editOpen = false}/>
+        </Modal>
+      </Portal>
+      {/if}
     {/if}
   </header>
 
