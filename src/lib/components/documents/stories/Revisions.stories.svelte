@@ -16,10 +16,10 @@
   const document = { ...doc, revisions } as Document;
 </script>
 
-<Story name="default">
+<Story name="With Revisions">
   <Revisions {document} />
 </Story>
 
-<Story name="no revisions">
+<Story name="Empty">
   <Revisions document={empty} />
 </Story>

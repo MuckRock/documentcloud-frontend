@@ -5,6 +5,8 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import RelativeTime from "@/common/RelativeTime.svelte";
+  import { Download16, History24 } from "svelte-octicons";
+  import Empty from "../common/Empty.svelte";
 
   export let document: Document;
 
@@ -22,13 +24,18 @@
         </span>
       </td>
       <td class="revision-download">
-        <Button href={revision.url}>
+        <Button mode="ghost" href={revision.url}>
+          <Download16 />
           {$_("dialogRevisionsDialog.download")}
         </Button>
       </td>
     </tr>
   {:else}
-    <tr class="empty"><td>{$_("dialogRevisionsDialog.empty")}</td></tr>
+    <tr class="empty"><td>
+      <Empty icon={History24}>
+        {$_("dialogRevisionsDialog.empty")}
+      </Empty>
+    </td></tr>
   {/each}
 </table>
 
