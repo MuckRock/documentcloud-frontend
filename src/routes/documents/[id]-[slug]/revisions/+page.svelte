@@ -8,6 +8,8 @@
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
   import Flex from "@/lib/components/common/Flex.svelte";
   import UpgradePrompt from "@/premium-credits/UpgradePrompt.svelte";
+  import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
+  import Card from "@/lib/components/common/Card.svelte";
 
   export let data;
 
@@ -19,15 +21,19 @@
 </script>
 
 <ContentLayout>
-  <header slot="header">
-    <Flex align="baseline">
+  <PageToolbar slot="header">
+    <Flex align="baseline" slot="left">
       <h2>{$_("dialogRevisionsDialog.heading")}</h2>
       <PremiumBadge />
     </Flex>
-  </header>
+    {#if plan !== "Free"}
+    <RevisionControl {document} slot="right" />
+    {/if}
+  </PageToolbar>
   {#if plan !== "Free"}
-  <RevisionControl {document} />
-  <Revisions {document} />
+  <Card>
+    <Revisions {document} />
+  </Card>
   {:else}
   <UpgradePrompt
     message={$_("dialogRevisionsDialog.upgrade.message")}
@@ -36,13 +42,3 @@
   />
   {/if}
 </ContentLayout>
-
-<style>
-  header {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-</style>
