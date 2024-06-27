@@ -22,13 +22,11 @@ export type Status = "success" | "readable" | "pending" | "error" | "nofile"; //
 export type Sizes = "thumbnail" | "small" | "normal" | "large" | "xlarge";
 
 // modes ending in -ing are writing modes
-export type ViewerMode =
-  | "document"
-  | "text"
-  | "grid"
-  | "notes"
-  | "redacting"
-  | "annotating";
+export type ReadMode = "document" | "text" | "grid" | "notes";
+
+export type WriteMode = "redacting" | "annotating";
+
+export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "width" | "height";
 

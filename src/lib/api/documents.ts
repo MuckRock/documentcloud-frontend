@@ -530,22 +530,7 @@ export function userOrgString(document: Document): string {
  * @returns {boolean}
  */
 export function shouldPreload(mode: ViewerMode): boolean {
-  switch (mode) {
-    case "document":
-      return true;
-
-    case "notes":
-      return true;
-
-    case "redacting":
-      return true;
-
-    case "annotating":
-      return true;
-
-    default:
-      return false;
-  }
+  return ["document", "notes", "redacting", "annotating"].includes(mode);
 }
 
 /**
@@ -554,22 +539,7 @@ export function shouldPreload(mode: ViewerMode): boolean {
  * @returns {boolean}
  */
 export function shouldPaginate(mode: ViewerMode): boolean {
-  switch (mode) {
-    case "document":
-      return true;
-
-    case "text":
-      return true;
-
-    case "annotating":
-      return true;
-
-    case "redacting":
-      return true;
-
-    default:
-      return false;
-  }
+  return ["document", "text", "annotating", "redacting"].includes(mode);
 }
 
 /**
@@ -578,5 +548,5 @@ export function shouldPaginate(mode: ViewerMode): boolean {
  * @returns {boolean}
  */
 export function isProcessing(status: Status): boolean {
-  return status === "pending" || status == "readable" || status === "nofile";
+  return ["pending", "readable", "nofile"].includes(status);
 }
