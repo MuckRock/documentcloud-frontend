@@ -21,7 +21,7 @@
 </script>
 
 <ContentLayout>
-  <Flex align="baseline" slot="header">
+  <Flex align="baseline" justify="center" slot="header">
     <h2>{$_("dialogRevisionsDialog.heading")}</h2>
     <PremiumBadge />
   </Flex>
