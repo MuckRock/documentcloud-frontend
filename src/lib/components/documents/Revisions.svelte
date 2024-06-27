@@ -43,7 +43,8 @@
   .revisions {
     width: 100%;
     border-collapse: collapse;
-    border-radius: var(--font-md, 1rem);
+    border-radius: .5rem;
+    overflow: hidden;
   }
   .revision {
     vertical-align: baseline;
