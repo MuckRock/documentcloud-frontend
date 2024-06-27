@@ -148,7 +148,7 @@
     "confirm": "Reprocess"
   },
   "dialogDeleteDialog": {
-    "title": "Confirm reprocess",
+    "title": "Confirm delete",
     "deleteDocs": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}. Do you wish to continue?"
   },
   "dialogCancelProcessingDialog": {
