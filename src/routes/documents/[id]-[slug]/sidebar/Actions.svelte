@@ -89,7 +89,7 @@
     {/if}
   </SidebarItem>
 
-  {#if document.revision_control && document.edit_access}
+  {#if document.edit_access}
     <SidebarItem href={revisions}>
       <History16 />
       {$_("sidebar.revisions")}
