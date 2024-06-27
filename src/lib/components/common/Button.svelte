@@ -1,6 +1,6 @@
 <script lang="ts">
   export let href: string = null;
-  export let mode: "standard" | "primary" | "ghost" = "standard";
+  export let mode: "standard" | "primary" | "ghost" | "danger" = "standard";
   export let full = false;
   export let size: "small" | "normal" = "normal";
   export let minW = true;
@@ -61,6 +61,12 @@
     border-color: var(--blue-4, #1367d0);
     background: var(--primary, #4294f0);
     box-shadow: 0px 2px 0px 0px var(--blue-4, #1367d0);
+  }
+
+  .danger {
+    background: var(--orange-3, #EC7B6B);
+    border: 1px solid var(--orange-4, #69515C);
+    box-shadow: 0px 2px 0px 0px var(--orange-4, #69515C);
   }
 
   .ghost {

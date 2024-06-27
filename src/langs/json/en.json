@@ -867,6 +867,7 @@
     "created": "Created on",
     "updated": "Last updated on",
     "language": "Language",
+    "delete": "Delete",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here"
@@ -926,6 +927,14 @@
     "title": "Redact Document",
     "instructions": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
     "undo": "Undo",
+    "cancel": "Cancel",
+    "error": "Error"
+  },
+  "delete": {
+    "title": "Confirm delete",
+    "really": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}.",
+    "continue": "Do you wish to continue?",
+    "confirm": "Delete",
     "cancel": "Cancel",
     "error": "Error"
   },

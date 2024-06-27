@@ -23,6 +23,8 @@
 
 <Story name="ghost" args={{ mode: "ghost" }} />
 
+<Story name="danger" args={{ mode: "danger" }} />
+
 <Story name="small" args={{ size: "small" }} />
 
 <Story name="slotted">

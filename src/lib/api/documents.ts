@@ -15,6 +15,7 @@ import type {
   ViewerMode,
 } from "./types";
 
+import { writable, type Writable } from "svelte/store";
 import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "@/api/types/orgAndUser";
@@ -34,6 +35,9 @@ export const READING_MODES = new Set<ViewerMode>([
 ]);
 
 export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
+
+// for keeping track of deleted documents that haven't been purged from search yet
+export const deleted: Writable<Set<string>> = writable(new Set());
 
 /**
  * Search documents
@@ -259,6 +263,30 @@ export async function cancel(
   if (!processing.has(document.status)) return;
 
   const endpoint = new URL(`documents/${document.id}/process/`, BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  });
+}
+
+/**
+ * Delete a document. There is no undo.
+ *
+ * @param id
+ * @param csrf_token
+ * @param fetch
+ */
+export async function destroy(
+  id: string | number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
 
   return fetch(endpoint, {
     credentials: "include",

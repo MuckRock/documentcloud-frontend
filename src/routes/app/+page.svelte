@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { DocumentResults } from "$lib/api/types";
   import { _ } from "svelte-i18n";
   import { Hourglass24, PlusCircle16 } from "svelte-octicons";
 
@@ -20,9 +21,14 @@
   import Documents from "./sidebar/Documents.svelte";
   import Projects from "./sidebar/Projects.svelte";
 
+  import { deleted } from "$lib/api/documents";
+
   export let data;
 
-  $: searchResults = data.searchResults;
+  $: searchResults =
+    $deleted.size > 0
+      ? data.searchResults.then((r) => excludeDeleted(r, $deleted))
+      : data.searchResults;
   $: query = data.query;
   $: pending = data.pending;
 
@@ -32,6 +38,22 @@
     } else {
       $selected = [];
     }
+  }
+
+  // filter out deleted documents that haven't been purged from search yet
+  function excludeDeleted(
+    searchResults: DocumentResults,
+    deleted: Set<string>,
+  ): DocumentResults {
+    const filtered = searchResults.results.filter(
+      (d) => !deleted.has(String(d.id)),
+    );
+
+    return {
+      ...searchResults,
+      results: filtered,
+      count: searchResults.count - deleted.size,
+    };
   }
 </script>
 
