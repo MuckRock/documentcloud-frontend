@@ -932,7 +932,8 @@
   },
   "delete": {
     "title": "Confirm delete",
-    "really": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}. Do you wish to continue?",
+    "really": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}.",
+    "continue": "Do you wish to continue?",
     "confirm": "Delete",
     "cancel": "Cancel",
     "error": "Error"

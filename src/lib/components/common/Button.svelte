@@ -64,9 +64,9 @@
   }
 
   .danger {
-    background: var(--caution, red);
-    border: 1px solid var(--gray-1, #5c717c);
-    box-shadow: 0px 2px 0px 0px var(--gray-2, #5c717c);
+    background: var(--orange-3, #EC7B6B);
+    border: 1px solid var(--orange-4, #69515C);
+    box-shadow: 0px 2px 0px 0px var(--orange-4, #69515C);
   }
 
   .ghost {

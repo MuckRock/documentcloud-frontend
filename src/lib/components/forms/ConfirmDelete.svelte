@@ -8,7 +8,7 @@ Confirm deletion or one or more documents.
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Check16, Undo16 } from "svelte-octicons";
+  import { Trash16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -37,6 +37,7 @@ Confirm deletion or one or more documents.
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <p>{$_("delete.really", { values: { n: documents.length } })}</p>
+    <p>{$_("delete.continue", { values: { n: documents.length } })}</p>
 
     {#if error}
       <p class="error">
@@ -47,13 +48,18 @@ Confirm deletion or one or more documents.
 
     <Flex>
       <Button type="submit" mode="danger">
-        <Check16 />
+        <Trash16 />
         {$_("delete.confirm")}
       </Button>
       <Button on:click={() => dispatch("close")}>
-        <Undo16 />
         {$_("delete.cancel")}
       </Button>
     </Flex>
   </Flex>
 </form>
+
+<style>
+  form {
+    color: var(--gray-5, #233944);
+  }
+</style>
