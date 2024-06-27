@@ -32,7 +32,7 @@
 </script>
 
 <form {action} method="post" use:enhance={onSubmit} bind:this={formRef}>
-  <Flex gap={1} align="center">
+  <Flex gap={1} align="center" justify="between">
     <Field inline title={$_("dialogRevisionsDialog.controlLabel")}>
       <Switch name="revision_control" checked={document.revision_control} on:change={() => formRef.submit()} {disabled} />
     </Field>

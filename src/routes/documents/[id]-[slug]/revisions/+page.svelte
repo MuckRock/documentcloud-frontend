@@ -21,15 +21,14 @@
 </script>
 
 <ContentLayout>
-  <PageToolbar slot="header">
-    <Flex align="baseline" slot="left">
-      <h2>{$_("dialogRevisionsDialog.heading")}</h2>
-      <PremiumBadge />
-    </Flex>
-    <RevisionControl {document} disabled={plan == "Free"} slot="right" />
-  </PageToolbar>
+  <Flex align="baseline" slot="header">
+    <h2>{$_("dialogRevisionsDialog.heading")}</h2>
+    <PremiumBadge />
+  </Flex>
   {#if plan !== "Free"}
   <Card>
+    <RevisionControl {document} />
+    <hr class="divider" />
     <Revisions {document} />
   </Card>
   {:else}
