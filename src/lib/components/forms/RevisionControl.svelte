@@ -14,6 +14,7 @@
   import { canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;
+  export let disabled = false;
 
   let formRef: HTMLFormElement;
 
@@ -31,12 +32,12 @@
 </script>
 
 <form {action} method="post" use:enhance={onSubmit} bind:this={formRef}>
-  <Flex direction="column" gap={1} align="end">
+  <Flex gap={1} align="center">
     <Field inline title={$_("dialogRevisionsDialog.controlLabel")}>
-      <Switch name="revision_control" checked={document.revision_control} on:change={() => formRef.submit()} />
+      <Switch name="revision_control" checked={document.revision_control} on:change={() => formRef.submit()} {disabled} />
     </Field>
     <Flex class="buttons">
-      <Button size="small" type="submit" mode="primary">{$_("dialog.save")}</Button>
+      <Button size="small" type="submit" mode="primary" {disabled}>{$_("dialog.save")}</Button>
     </Flex>
   </Flex>
 </form>

@@ -26,9 +26,7 @@
       <h2>{$_("dialogRevisionsDialog.heading")}</h2>
       <PremiumBadge />
     </Flex>
-    {#if plan !== "Free"}
-    <RevisionControl {document} slot="right" />
-    {/if}
+    <RevisionControl {document} disabled={plan == "Free"} slot="right" />
   </PageToolbar>
   {#if plan !== "Free"}
   <Card>
