@@ -10,6 +10,7 @@
     flex-direction: column;
     gap: 1rem;
     max-width: 40rem;
+    margin: 0 auto;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
