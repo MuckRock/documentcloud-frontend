@@ -26,9 +26,8 @@
     </Flex>
   </header>
   {#if plan !== "Free"}
-  <Revisions {document} />
-
   <RevisionControl {document} />
+  <Revisions {document} />
   {:else}
   <UpgradePrompt
     message={$_("dialogRevisionsDialog.upgrade.message")}
