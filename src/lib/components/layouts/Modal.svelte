@@ -30,8 +30,6 @@ of the $modal store. These are used to set the active modal on any given page.
 
   const dispatch = createEventDispatcher();
 
-  export let title: string = null;
-
   function onKeydown(e: KeyboardEvent) {
     if (e.key === "Escape") {
       dispatch("close");
@@ -50,9 +48,7 @@ of the $modal store. These are used to set the active modal on any given page.
       <Button minW={false} mode="ghost" on:click={() => dispatch("close")}>
         <XCircle24 />
       </Button>
-      {#if title}
-        <h1>{title}</h1>
-      {/if}
+      <slot name="title" />
     </header>
     <main class="content">
       <slot />
@@ -97,11 +93,6 @@ of the $modal store. These are used to set the active modal on any given page.
     align-items: center;
     justify-content: space-between;
     flex-direction: row-reverse;
-  }
-
-  .card > header > h1 {
-    font-weight: var(--font-semibold);
-    font-size: var(--font-xl);
   }
 
   .content {

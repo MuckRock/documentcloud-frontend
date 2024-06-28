@@ -10,7 +10,8 @@
 </script>
 
 <Story name="With Title">
-  <Modal title="The Ship">
+  <Modal>
+    <h1 slot="title">The Ship</h1>
     <div>
       <p>
         In bed we concocted our plans for the morrow. But to my surprise and no

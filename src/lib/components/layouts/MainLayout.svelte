@@ -19,10 +19,7 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
 
-  import Modal, { MODAL, type ModalContext } from "./Modal.svelte";
-
   const me = getContext<Writable<User>>("me");
-  const modal: ModalContext = getContext(MODAL);
   const org = getContext<Writable<Org>>("org");
 
   let panel: "navigation" | "action" | null = null;
@@ -35,10 +32,6 @@
     return () => {
       panel = name;
     };
-  }
-
-  function closeModal() {
-    $modal = null;
   }
 </script>
 
@@ -113,16 +106,6 @@
     on:click={closePanel}
     on:keydown={closePanel}
   />
-
-  {#if $modal}
-    <Modal on:close={closeModal} title={$modal?.title}>
-      <svelte:component
-        this={$modal?.component}
-        {...$modal?.props}
-        on:close={closeModal}
-      />
-    </Modal>
-  {/if}
 </div>
 
 <style>

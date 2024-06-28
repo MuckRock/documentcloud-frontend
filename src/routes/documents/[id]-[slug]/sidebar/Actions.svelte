@@ -1,11 +1,8 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
-  import {
-    MODAL,
-    type ModalContext,
-  } from "$lib/components/layouts/Modal.svelte";
+  import Portal from "@/lib/components/layouts/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
 
-  import { getContext } from "svelte";
   import {
     Alert16,
     Apps16,
@@ -33,8 +30,6 @@
 
   export let document: Document;
 
-  const modal: ModalContext = getContext(MODAL);
-
   // urls
   $: revisions = relative(document, "revisions/");
   $: pdf = pdfUrl(document).toString();
@@ -46,33 +41,9 @@
     return new URL(path, canonicalUrl(document)).href;
   }
 
-  function openEdit() {
-    if (!modal) return console.warn("modal store is not in context");
-    $modal = {
-      title: $_("edit.title"),
-      component: Edit,
-      props: { document },
-    };
-  }
-
-  function openReprocess() {
-    if (!modal) return console.warn("modal store is not in context");
-    $modal = {
-      title: $_("dialogReprocessDialog.title"),
-      component: Reprocess,
-      props: { documents: [document] },
-    };
-  }
-
-  function openDelete() {
-    if (!modal) return console.warn("modal store is not in context");
-
-    $modal = {
-      title: $_("delete.title"),
-      component: ConfirmDelete,
-      props: { documents: [document] },
-    };
-  }
+  let editOpen = false;
+  let reprocessOpen = false;
+  let deleteOpen = false;
 </script>
 
 <Flex direction="column">
@@ -83,11 +54,19 @@
     >
 
     {#if document.edit_access}
-      <Action icon={Pencil16} on:click={openEdit} disabled={!modal}
-        >{$_("sidebar.edit")}</Action
-      >
+      <Action icon={Pencil16} on:click={() => editOpen = true}>
+        {$_("sidebar.edit")}
+      </Action>
     {/if}
   </SidebarItem>
+  {#if editOpen}
+    <Portal>
+      <Modal on:close={() => editOpen = false}>
+        <h1 slot="title">{$_("edit.title")}</h1>
+        <Edit {document} on:close={() => editOpen = false} />
+      </Modal>
+    </Portal>
+  {/if}
 
   {#if document.edit_access}
     <SidebarItem href={revisions}>
@@ -131,29 +110,44 @@
 
   {#if document.edit_access}
     <!-- TODO: Processing component -->
-    <SidebarItem disabled={!modal || document.status === "nofile"}>
+    <SidebarItem disabled={document.status === "nofile"}>
       {#if document.status !== "success"}
         {$_("status.status")}:
         {$_(`status.${document.status}.title`)}
       {/if}
-      <Action on:click={openReprocess}>
+      <Action on:click={() => reprocessOpen = true}>
         <IssueReopened16 />
         {$_("sidebar.reprocess")}
       </Action>
+      {#if reprocessOpen}
+      <Portal>
+        <Modal on:close={() => reprocessOpen = false}>
+          <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
+          <Reprocess documents={[document]} on:close={() => reprocessOpen = false} />
+        </Modal>
+      </Portal>
+      {/if}
     </SidebarItem>
   {/if}
 
   {#if document.edit_access}
     <SidebarItem>
       <Action
-        on:click={openDelete}
-        disabled={!modal}
-        --fill="var(--caution)"
-        --color="var(--caution)"
+        on:click={() => deleteOpen = true}
+        --fill="var(--orange-3)"
+        --color="var(--orange-3)"
       >
         <Alert16 />
         {$_("sidebar.delete")}
       </Action>
     </SidebarItem>
+    {#if deleteOpen}
+    <Portal>
+      <Modal on:close={() => deleteOpen = false}>
+        <h1 slot="title">{$_("delete.title")}</h1>
+        <ConfirmDelete documents={[document]} on:close={() => deleteOpen = false} />
+      </Modal>
+    </Portal>
+    {/if}
   {/if}
 </Flex>
