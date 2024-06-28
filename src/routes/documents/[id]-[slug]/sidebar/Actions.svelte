@@ -110,7 +110,7 @@
 
   {#if document.edit_access}
     <!-- TODO: Processing component -->
-    <SidebarItem disabled={!modal || document.status === "nofile"}>
+    <SidebarItem disabled={document.status === "nofile"}>
       {#if document.status !== "success"}
         {$_("status.status")}:
         {$_(`status.${document.status}.title`)}
