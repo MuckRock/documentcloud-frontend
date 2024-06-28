@@ -921,6 +921,16 @@
     "save": "Save",
     "cancel": "Cancel"
   },
+  "annotate": {
+    "title": "Add Note",
+    "instructions": "Highlight a portion of the page, or click between pages to create a note.",
+    "fields": {
+      "title": "Title",
+      "content": "Content"
+    },
+    "save": "Save",
+    "cancel": "Cancel"
+  },
   "redact": {
     "confirm": "Confirm redactions",
     "really": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",

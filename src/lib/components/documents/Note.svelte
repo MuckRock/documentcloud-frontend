@@ -58,7 +58,6 @@
   let renderTask;
   let rendering;
 
-  $: href = noteHashUrl(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
   $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas

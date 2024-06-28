@@ -259,4 +259,6 @@ export interface Redaction {
   y2: number;
 }
 
+export type Bounds = [number, number, number, number];
+
 export type ProjectMembershipList = Page<ProjectMembershipItem>;
