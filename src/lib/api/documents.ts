@@ -36,6 +36,8 @@ export const READING_MODES = new Set<ViewerMode>([
 
 export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
 
+export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
+
 // for keeping track of deleted documents that haven't been purged from search yet
 export const deleted: Writable<Set<string>> = writable(new Set());
 

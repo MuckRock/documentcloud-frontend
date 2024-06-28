@@ -4,7 +4,7 @@
   import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { afterUpdate, setContext } from "svelte";
+  import { afterUpdate, getContext, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -28,9 +28,6 @@
     zoomToScale,
     zoomToSize,
   } from "./components/Zoom.svelte";
-
-  // writable results
-  import { pending } from "$lib/components/documents/RedactionPane.svelte";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
@@ -62,11 +59,10 @@
   // stores we need deeper in the component tree, available via context
   // const currentPage: Writable<number> = writable(1);
   const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable(data.mode);
+  const mode: Writable<ViewerMode> = getContext("mode");
 
   setContext("currentPage", currentPage);
   setContext("activeNote", activeNote);
-  setContext("mode", mode);
 
   $: document = data.document;
   $: $mode = data.mode;

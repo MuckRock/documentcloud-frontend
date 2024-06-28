@@ -10,6 +10,10 @@
   export let title: string = "";
   export let type: "submit" | "reset" | "button" = "button";
   export let label = "Submit";
+
+  // not used in link mode
+  export let name: string = undefined;
+  export let value: any = undefined;
 </script>
 
 {#if href}
@@ -23,6 +27,8 @@
     class="{mode} {size}"
     {disabled}
     {type}
+    {name}
+    {value}
     class:full
     class:minW
   >
