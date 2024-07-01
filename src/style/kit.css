@@ -153,6 +153,28 @@ summary {
   cursor: pointer;
 }
 
+:global(.definition) {
+  font-family: var(--font-sans, "Source Sans Pro");
+  font-size: var(--font-xs, 0.75rem);
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.03125rem;
+  text-transform: uppercase;
+  font-feature-settings: 'ss04' on;
+}
+
+:global(.label) {
+  font-family: var(--font-sans, "Source Sans Pro");
+  font-size: var(--font-xs, 0.75rem);
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.03125rem;
+  text-transform: uppercase;
+  font-feature-settings: 'ss04' on;
+}
+
 /*
 Utility classes
 */
