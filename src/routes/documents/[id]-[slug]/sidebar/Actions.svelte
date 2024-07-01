@@ -47,6 +47,47 @@
 </script>
 
 <Flex direction="column">
+  {#if document.edit_access}
+  <Flex direction="column">
+    {#if document.status !== "success"}
+    <Flex align="baseline">
+      <p class="definition">{$_("status.status")}</p>
+      <p class="label">{$_(`status.${document.status}.title`)}</p>
+    </Flex>
+    {/if}
+    <Flex>
+      <!-- TODO: Processing component -->
+      <Action on:click={() => reprocessOpen = true} disabled={document.status === "nofile"}>
+        <IssueReopened16 />
+        {$_("sidebar.reprocess")}
+      </Action>
+      {#if reprocessOpen}
+      <Portal>
+        <Modal on:close={() => reprocessOpen = false}>
+          <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
+          <Reprocess documents={[document]} on:close={() => reprocessOpen = false} />
+        </Modal>
+      </Portal>
+      {/if}
+      <Action
+        on:click={() => deleteOpen = true}
+        --fill="var(--orange-3)"
+        --color="var(--orange-3)"
+      >
+        <Alert16 />
+        {$_("sidebar.delete")}
+      </Action>
+      {#if deleteOpen}
+      <Portal>
+        <Modal on:close={() => deleteOpen = false}>
+          <h1 slot="title">{$_("delete.title")}</h1>
+          <ConfirmDelete documents={[document]} on:close={() => deleteOpen = false} />
+        </Modal>
+      </Portal>
+      {/if}
+    </Flex>
+  </Flex>
+  {/if}
   <SidebarItem>
     <Lock16 />
     <span class="access"
@@ -106,48 +147,5 @@
       <Apps16 />
       {$_("sidebar.modify")} &hellip;
     </SidebarItem>
-  {/if}
-
-  {#if document.edit_access}
-    <!-- TODO: Processing component -->
-    <SidebarItem disabled={document.status === "nofile"}>
-      {#if document.status !== "success"}
-        {$_("status.status")}:
-        {$_(`status.${document.status}.title`)}
-      {/if}
-      <Action on:click={() => reprocessOpen = true}>
-        <IssueReopened16 />
-        {$_("sidebar.reprocess")}
-      </Action>
-      {#if reprocessOpen}
-      <Portal>
-        <Modal on:close={() => reprocessOpen = false}>
-          <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
-          <Reprocess documents={[document]} on:close={() => reprocessOpen = false} />
-        </Modal>
-      </Portal>
-      {/if}
-    </SidebarItem>
-  {/if}
-
-  {#if document.edit_access}
-    <SidebarItem>
-      <Action
-        on:click={() => deleteOpen = true}
-        --fill="var(--orange-3)"
-        --color="var(--orange-3)"
-      >
-        <Alert16 />
-        {$_("sidebar.delete")}
-      </Action>
-    </SidebarItem>
-    {#if deleteOpen}
-    <Portal>
-      <Modal on:close={() => deleteOpen = false}>
-        <h1 slot="title">{$_("delete.title")}</h1>
-        <ConfirmDelete documents={[document]} on:close={() => deleteOpen = false} />
-      </Modal>
-    </Portal>
-    {/if}
   {/if}
 </Flex>
