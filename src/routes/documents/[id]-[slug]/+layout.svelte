@@ -9,11 +9,6 @@
   import { writable, type Writable } from "svelte/store";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
-  import {
-    modal,
-    MODAL,
-    type ModalContext,
-  } from "$lib/components/layouts/Modal.svelte";
 
   // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
@@ -32,7 +27,6 @@
   const mode: Writable<ViewerMode> = writable($page.data.mode);
 
   setContext<Document>("document", data.document);
-  setContext<ModalContext>(MODAL, modal);
   setContext("mode", mode);
 
   $: $mode = $page.data.mode;

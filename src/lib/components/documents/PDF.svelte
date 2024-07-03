@@ -76,6 +76,7 @@
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
     <PdfPage
+      {document}
       {page_number}
       {pdf}
       {scale}
@@ -83,6 +84,7 @@
       {height}
       {query}
       notes={notes[n]}
+      edit_access={document.edit_access}
     />
   {/each}
 </div>

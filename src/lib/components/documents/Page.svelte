@@ -80,12 +80,19 @@
 </script>
 
 <div bind:this={container} class="page" class:wide class:tall>
-  <h4 bind:this={heading} {id}>
-    <a {href}>
-      {$_("documents.pageAbbrev")}
-      {page_number}
-    </a>
-  </h4>
+  <header>
+    <h4 bind:this={heading} {id}>
+      <a {href}>
+        {$_("documents.pageAbbrev")}
+        {page_number}
+      </a>
+    </h4>
+    {#if $$slots.actions}
+      <div class="actions">
+        <slot name="actions" />
+      </div>
+    {/if}
+  </header>
   <slot {id} {href} {visible} />
 </div>
 
@@ -116,5 +123,13 @@
 
   h4 a:hover {
     text-decoration: underline;
+  }
+
+  header {
+    display: flex;
+    height: var(--font-md, 1rem);
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
   }
 </style>

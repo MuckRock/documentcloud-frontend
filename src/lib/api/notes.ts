@@ -2,7 +2,7 @@ import { error } from "@sveltejs/kit";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { canonicalUrl } from "./documents";
-import type { Document, Note, NoteResults } from "./types";
+import type { BBox, Document, Note, NoteResults } from "./types";
 import { isErrorCode } from "../utils";
 
 /**
@@ -211,11 +211,11 @@ export function noteFromHash(hash: string): number {
 }
 
 /** Width of a note, relative to the document */
-export function width(note: Note): number {
+export function width(note: BBox): number {
   return note.x2 - note.x1;
 }
 
 /** Height of a note, relative to the document */
-export function height(note: Note): number {
+export function height(note: BBox): number {
   return note.y2 - note.y1;
 }

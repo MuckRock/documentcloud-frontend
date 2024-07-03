@@ -10,8 +10,9 @@ Selectable text can be rendered in one of two ways:
 <script lang="ts">
   import type { Writable } from "svelte/store";
   import type {
-    TextPosition,
+    Document,
     Note as NoteType,
+    TextPosition,
     ViewerMode,
   } from "$lib/api/types";
 
@@ -19,25 +20,30 @@ Selectable text can be rendered in one of two ways:
 
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   import { getContext } from "svelte";
-  import { XCircleFill16 } from "svelte-octicons";
+  import { _ } from "svelte-i18n";
+  import { Comment16, ListOrdered16, XCircleFill16 } from "svelte-octicons";
 
-  import Note from "./Note.svelte";
-  import NoteLink from "./NoteLink.svelte";
-  import NoteTab from "./NoteTab.svelte";
+  import Action from "../common/Action.svelte";
+  import AnnotationPane from "./AnnotationPane.svelte";
+  import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
   import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
 
-  import { noteHashUrl } from "$lib/api/notes";
+  import { canonicalUrl, pageHashUrl } from "$lib/api/documents";
   import { highlight } from "$lib/utils/search";
 
+  export let document: Document;
   export let page_number: number; // 1-indexed
   export let pdf; // Promise<PDFDocumentProxy>
-  export let query: string = ""; // search query
+
   export let scale: number | "width" | "height";
-  export let text: TextPosition[] = [];
   export let width: number;
   export let height: number;
+
+  export let edit_access = false;
+  export let query: string = ""; // search query
   export let notes: NoteType[] = [];
+  export let text: TextPosition[] = [];
 
   const activeNote: Writable<NoteType> = getContext("activeNote");
   const mode: Writable<ViewerMode> = getContext("mode");
@@ -83,6 +89,16 @@ Selectable text can be rendered in one of two ways:
   $: redactions_for_page = [...$pending, ...$redactions].filter(
     (r) => r.page_number === page_number - 1,
   );
+
+  // urls
+  $: annotate = new URL(
+    `annotate/${pageHashUrl(page_number)}`,
+    canonicalUrl(document),
+  ).href;
+  $: section = new URL(
+    `annotate/${pageHashUrl(page_number)}`,
+    canonicalUrl(document),
+  ).href;
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
@@ -193,17 +209,6 @@ Selectable text can be rendered in one of two ways:
       });
     }
   }
-
-  function openNote(e, note: NoteType) {
-    activeNote?.set(note);
-    const href = e.target?.href || noteHashUrl(note);
-    pushState(href, {});
-  }
-
-  function closeNote() {
-    activeNote?.set(null);
-    pushState(window.location.pathname, {});
-  }
 </script>
 
 <svelte:window on:resize={onResize} />
@@ -220,6 +225,16 @@ Selectable text can be rendered in one of two ways:
     visible = true;
   }}
 >
+  <div slot="actions">
+    {#if edit_access}
+      <Action icon={Comment16}>
+        <a href={annotate}>{$_("annotate.cta.note")}</a>
+      </Action>
+      <Action icon={ListOrdered16}>
+        <a href={section}>{$_("annotate.cta.section")}</a>
+      </Action>
+    {/if}
+  </div>
   <div
     bind:this={container}
     class="page-container scale-{scale} {orientation}"
@@ -249,35 +264,11 @@ Selectable text can be rendered in one of two ways:
       </div>
     {/if}
 
-    {#if notes}
+    {#if $mode === "annotating"}
+      <AnnotationPane {document} {notes} page_number={page_number - 1} />
+    {:else}
       {#await pdf then pdf}
-        <div class="notes">
-          {#each notes as note}
-            {@const is_active = note.id === $activeNote?.id}
-            <a
-              class="note"
-              href={noteHashUrl(note)}
-              title={note.title}
-              style:top="{note.y1 * 100}%"
-              on:click={(e) => openNote(e, note)}
-            >
-              <NoteTab access={note.access} />
-              {#if is_active}
-                <button
-                  class="close"
-                  on:click|preventDefault|stopPropagation={closeNote}
-                >
-                  <XCircleFill16 />
-                </button>
-              {/if}
-            </a>
-            {#if is_active}
-              <Note {note} {pdf} scale={numericScale} />
-            {:else}
-              <NoteLink {note} />
-            {/if}
-          {/each}
-        </div>
+        <NotesPane {notes} {pdf} scale={numericScale} />
       {/await}
     {/if}
 
@@ -364,43 +355,6 @@ Selectable text can be rendered in one of two ways:
     top: 0;
     bottom: 0;
     width: 100%;
-  }
-
-  .notes {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    pointer-events: none;
-  }
-
-  .notes :global(*) {
-    pointer-events: all;
-  }
-
-  .note {
-    position: absolute;
-    pointer-events: all;
-    left: -3rem;
-  }
-
-  .note button {
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: pointer;
-
-    position: absolute;
-    margin: auto 0;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-
-    display: flex;
-    padding-left: 0.5rem;
-    justify-content: left;
-    align-items: center;
   }
 
   /* pdfjs creates this */

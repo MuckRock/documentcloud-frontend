@@ -23,7 +23,7 @@
   import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { noteHashUrl, width, height } from "$lib/api/notes";
+  import { width, height } from "$lib/api/notes";
   import { pageImageUrl } from "$lib/api/documents";
   // import { getPrivateAsset } from "$lib/utils/api";
 

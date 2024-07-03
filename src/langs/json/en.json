@@ -929,7 +929,11 @@
       "content": "Content"
     },
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "cta": {
+      "note": "Annotate page",
+      "section": "Start section"
+    }
   },
   "redact": {
     "confirm": "Confirm redactions",
