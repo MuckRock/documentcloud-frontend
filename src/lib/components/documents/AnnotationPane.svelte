@@ -23,7 +23,7 @@ Only one note can be added/edited at a time.
   import { noteHashUrl, width, height } from "$lib/api/notes";
 
   export let document: Document;
-  export let notes: NoteType[];
+  export let notes: NoteType[] = [];
 
   export let page_number: number; // zero-indexed
 
@@ -32,6 +32,7 @@ Only one note can be added/edited at a time.
   let newNote: Partial<NoteType> & BBox = null; // is this too clever?
 
   let dragging = false;
+  let form: EditNote;
 
   $: editing = Boolean($activeNote) || (Boolean(newNote) && !dragging);
 
@@ -50,8 +51,6 @@ Only one note can be added/edited at a time.
       y1: offsetY / clientHeight,
       y2: offsetY / clientHeight,
     };
-
-    console.log("Started new note");
   }
 
   function pointermove(e) {
@@ -112,8 +111,6 @@ Only one note can be added/edited at a time.
       content: "",
       access: "private",
     };
-
-    console.log("Editing note");
   }
 
   function openNote(e, note: NoteType) {
@@ -147,7 +144,7 @@ Only one note can be added/edited at a time.
   on:pointermove|self={pointermove}
   on:pointerup|self={pointerup}
 >
-  {#each notes as note}
+  {#each notes || [] as note}
     {@const is_active = note.id === $activeNote?.id}
     <a
       class="note"
@@ -176,7 +173,13 @@ Only one note can be added/edited at a time.
       ></div>
 
       <div class="note-form" style:top="calc({note.y2} * 100% + 1rem)">
-        <EditNote {document} {note} {page_number} on:close={closeNote} />
+        <EditNote
+          bind:this={form}
+          {document}
+          bind:note
+          {page_number}
+          on:close={closeNote}
+        />
       </div>
     {:else}
       <NoteLink {note} />
@@ -195,8 +198,9 @@ Only one note can be added/edited at a time.
     {#if !dragging}
       <div class="note-form" style:top="calc({newNote.y2} * 100% + 1rem)">
         <EditNote
+          bind:this={form}
           {document}
-          note={newNote}
+          bind:note={newNote}
           {page_number}
           on:close={closeNote}
         />

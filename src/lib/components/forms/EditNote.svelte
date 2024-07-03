@@ -7,6 +7,9 @@ Positioning and generating coordinates should happen outside of this form.
 <script lang="ts">
   import type { Bounds, Document, Note } from "$lib/api/types";
 
+  import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -24,15 +27,27 @@ Positioning and generating coordinates should happen outside of this form.
   export let note: Partial<Note> = {}; // for updating
   export let page_number: number = note.page_number;
 
-  export let coords: Bounds = undefined;
-
   const dispatch = createEventDispatcher();
 
-  $: action = new URL("annotate/?/update", canonicalUrl(document)).href;
+  $: coords = [note.x1, note.x2, note.y1, note.y2];
+  $: canonical = canonicalUrl(document);
+  $: action = note.id
+    ? new URL("annotate/?/update", canonical).href
+    : new URL("annotate/?/create", canonical).href;
   $: page_level = !coords || coords.every((c) => c === null);
+
+  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+    formElement.disabled = true;
+    return ({ result, update }) => {
+      if (result.type === "success") {
+        dispatch("close");
+        invalidate(`document:${document.id}`);
+      }
+    };
+  }
 </script>
 
-<form {action} method="post" class:page_level>
+<form {action} method="post" class:page_level use:enhance={onSubmit}>
   <Card>
     <Field title={$_("annotate.fields.title")} required>
       <Text
@@ -47,6 +62,9 @@ Positioning and generating coordinates should happen outside of this form.
 
     <AccessLevel name="access" bind:selected={note.access} direction="row" />
 
+    {#if note.id}
+      <input type="hidden" name="id" value={note.id} />
+    {/if}
     <input
       type="hidden"
       name="page_number"
@@ -56,9 +74,15 @@ Positioning and generating coordinates should happen outside of this form.
 
     <Flex class="buttons">
       <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
-      <Button type="reset" on:click={(e) => dispatch("close")}
-        >{$_("annotate.cancel")}</Button
-      >
+      <Button type="reset" on:click={() => dispatch("close")}
+        >{$_("annotate.cancel")}
+      </Button>
+      <Button
+        type="submit"
+        mode="danger"
+        formaction={new URL("annotate/?/delete", canonical).href}
+        >{$_("annotate.delete")}
+      </Button>
     </Flex>
   </Card>
 </form>

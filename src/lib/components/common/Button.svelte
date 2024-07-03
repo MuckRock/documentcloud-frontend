@@ -14,6 +14,7 @@
   // not used in link mode
   export let name: string = undefined;
   export let value: any = undefined;
+  export let formaction: string = undefined;
 </script>
 
 {#if href}
@@ -29,6 +30,7 @@
     {type}
     {name}
     {value}
+    {formaction}
     class:full
     class:minW
   >
@@ -70,9 +72,9 @@
   }
 
   .danger {
-    background: var(--orange-3, #EC7B6B);
-    border: 1px solid var(--orange-4, #69515C);
-    box-shadow: 0px 2px 0px 0px var(--orange-4, #69515C);
+    background: var(--orange-3, #ec7b6b);
+    border: 1px solid var(--orange-4, #69515c);
+    box-shadow: 0px 2px 0px 0px var(--orange-4, #69515c);
   }
 
   .ghost {

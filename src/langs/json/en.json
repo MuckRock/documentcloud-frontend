@@ -930,6 +930,7 @@
     },
     "save": "Save",
     "cancel": "Cancel",
+    "delete": "Delete",
     "cta": {
       "note": "Annotate page",
       "section": "Start section"
