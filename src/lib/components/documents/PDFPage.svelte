@@ -16,8 +16,6 @@ Selectable text can be rendered in one of two ways:
     ViewerMode,
   } from "$lib/api/types";
 
-  import { pushState } from "$app/navigation";
-
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -45,7 +43,6 @@ Selectable text can be rendered in one of two ways:
   export let notes: NoteType[] = [];
   export let text: TextPosition[] = [];
 
-  const activeNote: Writable<NoteType> = getContext("activeNote");
   const mode: Writable<ViewerMode> = getContext("mode");
 
   let canvas: HTMLCanvasElement;
@@ -198,11 +195,11 @@ Selectable text can be rendered in one of two ways:
     });
   }
 
-  function onResize(e) {
+  function onResize() {
     numericScale = fitPage(width, height, container, scale);
   }
 
-  function onVisibilityChange(e: Event) {
+  function onVisibilityChange() {
     if (window.document.visibilityState === "visible" && !canvas.hidden) {
       Promise.all([pdf, page]).then(([pdf, page]) => {
         render(page, canvas, container, scale);

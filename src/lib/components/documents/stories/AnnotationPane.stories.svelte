@@ -3,6 +3,7 @@
 
   import { Story } from "@storybook/addon-svelte-csf";
   import AnnotationPane from "../AnnotationPane.svelte";
+  import Page from "../Page.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
 
   export const meta = {
@@ -39,22 +40,28 @@
 <Story name="default">
   <Flex class="pages" direction="column" gap={1}>
     {#each sizes as [width, height], page_number}
-      <div class="page">
-        <AnnotationPane
-          {document}
-          {page_number}
-          notes={notes[page_number] || []}
-        />
-      </div>
+      <Page page_number={page_number + 1}>
+        <div class="page-container">
+          <AnnotationPane
+            {document}
+            {page_number}
+            notes={notes[page_number] || []}
+          />
+        </div>
+      </Page>
     {/each}
   </Flex>
 </Story>
 
 <style>
-  .page {
+  .page-container {
+    margin: 0;
     position: relative;
+
+    background-color: var(--white, white);
+    box-shadow: var(--shadow);
+
     width: 88ch;
     aspect-ratio: 2 / 3;
-    box-shadow: var(--shadow);
   }
 </style>

@@ -1,5 +1,5 @@
 import type { Actions } from "./$types.js";
-import type { Access, Bounds, Document, Note, Section } from "$lib/api/types";
+import type { Access, Note, Section } from "$lib/api/types";
 
 import { fail } from "@sveltejs/kit";
 

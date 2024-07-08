@@ -18,7 +18,6 @@
 
   let io: IntersectionObserver;
   let container: HTMLElement;
-  let heading: HTMLElement;
   let visible: boolean;
 
   $: id = pageHashUrl(page_number).replace("#", "");
@@ -79,9 +78,9 @@
   });
 </script>
 
-<div bind:this={container} class="page" class:wide class:tall>
+<div {id} bind:this={container} class="page" class:wide class:tall>
   <header>
-    <h4 bind:this={heading} {id}>
+    <h4>
       <a {href}>
         {$_("documents.pageAbbrev")}
         {page_number}

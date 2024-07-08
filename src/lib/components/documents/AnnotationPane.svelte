@@ -266,7 +266,7 @@ Only one note can be added/edited at a time.
 
   .box {
     position: absolute;
-    border: 3px solid;
+    border: 3px dashed var(--gray-4);
     background-color: transparent;
     /* if we make boxes editable
     cursor: grab;
