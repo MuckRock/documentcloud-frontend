@@ -14,6 +14,7 @@ export async function newProject(
   title: string,
   description: string,
   isPrivate: boolean,
+  pinned: boolean = true,
 ): Promise<Project> {
   const { data } = await session.post(apiUrl("projects/"), {
     title,
