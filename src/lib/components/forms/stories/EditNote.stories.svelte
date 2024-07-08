@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Bounds, Document } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import EditNote from "../EditNote.svelte";
@@ -13,7 +13,6 @@
 
   const document = doc as Document;
   const note = document.notes[0];
-  const coords = [note.x1, note.x2, note.y1, note.y2] as Bounds;
 </script>
 
 <Story name="New note">
@@ -21,5 +20,5 @@
 </Story>
 
 <Story name="Update note">
-  <EditNote {document} {note} {coords} page_number={note.page_number} />
+  <EditNote {document} {note} page_number={note.page_number} />
 </Story>
