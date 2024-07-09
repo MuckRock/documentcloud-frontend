@@ -219,3 +219,10 @@ export function width(note: BBox): number {
 export function height(note: BBox): number {
   return note.y2 - note.y1;
 }
+
+export function isPageLevel(note: Partial<Note>): boolean {
+  if (!note) return false;
+  return [note?.x1, note?.x2, note?.y1, note?.y2].every(
+    (n) => n === undefined || n === null,
+  );
+}

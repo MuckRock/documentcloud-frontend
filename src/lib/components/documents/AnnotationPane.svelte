@@ -14,13 +14,17 @@ Only one note can be added/edited at a time.
   import { pushState } from "$app/navigation";
 
   import { getContext } from "svelte";
+  import { _ } from "svelte-i18n";
   import { XCircleFill16 } from "svelte-octicons";
 
   import EditNote from "../forms/EditNote.svelte";
   import NoteLink from "./NoteLink.svelte";
   import NoteTab from "./NoteTab.svelte";
 
-  import { noteHashUrl, width, height } from "$lib/api/notes";
+  import Modal from "../layouts/Modal.svelte";
+  import Portal from "../layouts/Portal.svelte";
+
+  import { noteHashUrl, width, height, isPageLevel } from "$lib/api/notes";
 
   export let document: Document;
   export let notes: NoteType[] = [];
@@ -35,10 +39,13 @@ Only one note can be added/edited at a time.
   let form: EditNote;
 
   $: editing = Boolean($activeNote) || (Boolean(newNote) && !dragging);
+  $: edit_page_note =
+    Boolean($activeNote) &&
+    isPageLevel($activeNote) &&
+    $activeNote.page_number === page_number;
 
   function pointerdown(e) {
     if ($activeNote || newNote) return;
-    console.log(e.target);
 
     dragging = true;
 
@@ -208,6 +215,23 @@ Only one note can be added/edited at a time.
     {/if}
   {/if}
 </div>
+
+{#if edit_page_note}
+  <Portal>
+    <Modal on:close={closeNote}>
+      <h2 slot="title">
+        {$_("annotate.cta.add-note")}
+      </h2>
+
+      <EditNote
+        {document}
+        note={$activeNote}
+        {page_number}
+        on:close={closeNote}
+      />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   .notes {

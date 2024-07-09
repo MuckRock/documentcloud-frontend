@@ -2,7 +2,7 @@
 Create, update and delete sections for a single document
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Section } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { PlusCircle16, Trash16 } from "svelte-octicons";
@@ -12,6 +12,7 @@ Create, update and delete sections for a single document
   import Number from "../inputs/Number.svelte";
 
   export let document: Document;
+  export let section: Partial<Section> = undefined;
 
   $: sections = document.sections ?? [];
 </script>
@@ -83,6 +84,7 @@ Create, update and delete sections for a single document
               min={1}
               max={document.page_count}
               required
+              value={section?.page_number}
             />
           </label>
         </td>
@@ -90,7 +92,12 @@ Create, update and delete sections for a single document
           <!-- svelte-ignore a11y-label-has-associated-control -->
           <label>
             <span class="sr-only">{$_("sections.title")}</span>
-            <Text name="title" placeholder={$_("sections.title")} required />
+            <Text
+              name="title"
+              placeholder={$_("sections.title")}
+              required
+              value={section?.title}
+            />
           </label>
         </td>
         <td class="action">

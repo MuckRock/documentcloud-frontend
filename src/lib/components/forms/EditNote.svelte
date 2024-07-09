@@ -36,9 +36,11 @@ Positioning and generating coordinates should happen outside of this form.
     : new URL("annotate/?/create", canonical).href;
   $: page_level = !coords || coords.every((c) => c === null);
 
-  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+  $: console.log(note);
+
+  function onSubmit({ formElement }) {
     formElement.disabled = true;
-    return ({ result, update }) => {
+    return ({ result }) => {
       if (result.type === "success") {
         dispatch("close");
         invalidate(`document:${document.id}`);
@@ -77,12 +79,15 @@ Positioning and generating coordinates should happen outside of this form.
       <Button type="reset" on:click={() => dispatch("close")}
         >{$_("annotate.cancel")}
       </Button>
-      <Button
-        type="submit"
-        mode="danger"
-        formaction={new URL("annotate/?/delete", canonical).href}
-        >{$_("annotate.delete")}
-      </Button>
+
+      {#if note.id}
+        <Button
+          type="submit"
+          mode="danger"
+          formaction={new URL("annotate/?/delete", canonical).href}
+          >{$_("annotate.delete")}
+        </Button>
+      {/if}
     </Flex>
   </Card>
 </form>

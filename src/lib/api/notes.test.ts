@@ -175,4 +175,11 @@ describe("note helper methods", () => {
   test("height", ({ note }) => {
     expect(notes.height(note)).toStrictEqual(note.y2 - note.y1);
   });
+
+  test("isPageLevel", ({ note }) => {
+    const copy: Note = { ...note, x1: null, x2: null, y1: null, y2: null };
+
+    expect(notes.isPageLevel(copy)).toBeTruthy();
+    expect(notes.isPageLevel(note)).toBeFalsy();
+  });
 });

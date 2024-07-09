@@ -12,6 +12,7 @@ Selectable text can be rendered in one of two ways:
   import type {
     Document,
     Note as NoteType,
+    Section,
     TextPosition,
     ViewerMode,
   } from "$lib/api/types";
@@ -19,16 +20,16 @@ Selectable text can be rendered in one of two ways:
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Comment16, ListOrdered16, XCircleFill16 } from "svelte-octicons";
 
-  import Action from "../common/Action.svelte";
   import AnnotationPane from "./AnnotationPane.svelte";
+  import Note from "./Note.svelte";
   import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
+  import PageAnnotation from "./PageAnnotation.svelte";
   import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
 
-  import { canonicalUrl, pageHashUrl } from "$lib/api/documents";
   import { highlight } from "$lib/utils/search";
+  import { isPageLevel } from "$lib/api/notes";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -38,9 +39,9 @@ Selectable text can be rendered in one of two ways:
   export let width: number;
   export let height: number;
 
-  export let edit_access = false;
   export let query: string = ""; // search query
   export let notes: NoteType[] = [];
+  export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
 
   const mode: Writable<ViewerMode> = getContext("mode");
@@ -87,15 +88,8 @@ Selectable text can be rendered in one of two ways:
     (r) => r.page_number === page_number - 1,
   );
 
-  // urls
-  $: annotate = new URL(
-    `annotate/${pageHashUrl(page_number)}`,
-    canonicalUrl(document),
-  ).href;
-  $: section = new URL(
-    `annotate/${pageHashUrl(page_number)}`,
-    canonicalUrl(document),
-  ).href;
+  $: page_level_notes = notes?.filter((n) => isPageLevel(n)) ?? [];
+  $: in_page_notes = notes?.filter((n) => !isPageLevel(n)) ?? [];
 
   /**
    * Return a numeric scale based on intrinsic page size and container size
@@ -222,16 +216,19 @@ Selectable text can be rendered in one of two ways:
     visible = true;
   }}
 >
-  <div slot="actions">
-    {#if edit_access}
-      <Action icon={Comment16}>
-        <a href={annotate}>{$_("annotate.cta.note")}</a>
-      </Action>
-      <Action icon={ListOrdered16}>
-        <a href={section}>{$_("annotate.cta.section")}</a>
-      </Action>
-    {/if}
+  <PageAnnotation
+    {document}
+    page_number={page_number - 1}
+    {section}
+    slot="actions"
+  />
+
+  <div class="page-notes">
+    {#each page_level_notes as note}
+      <Note {note} />
+    {/each}
   </div>
+
   <div
     bind:this={container}
     class="page-container scale-{scale} {orientation}"
@@ -262,10 +259,14 @@ Selectable text can be rendered in one of two ways:
     {/if}
 
     {#if $mode === "annotating"}
-      <AnnotationPane {document} {notes} page_number={page_number - 1} />
+      <AnnotationPane
+        {document}
+        notes={in_page_notes}
+        page_number={page_number - 1}
+      />
     {:else}
       {#await pdf then pdf}
-        <NotesPane {notes} {pdf} scale={numericScale} />
+        <NotesPane notes={in_page_notes} {pdf} scale={numericScale} />
       {/await}
     {/if}
 
@@ -297,6 +298,13 @@ Selectable text can be rendered in one of two ways:
     aspect-ratio: 1 / var(--aspect);
     height: 90vh;
     width: inherit;
+  }
+
+  .page-notes {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+    width: 100%;
   }
 
   .selectable-text {

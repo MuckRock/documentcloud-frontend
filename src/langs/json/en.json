@@ -932,8 +932,10 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "cta": {
-      "note": "Annotate page",
-      "section": "Start section"
+      "add-note": "Add a page note",
+      "edit-note": "Edit page note",
+      "add-section": "Start section",
+      "edit-section": "Edit section"
     }
   },
   "redact": {
