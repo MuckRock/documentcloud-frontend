@@ -32,6 +32,7 @@
 
   setContext("activeNote", activeNote);
   setContext("mode", mode);
+  setContext("document", document);
 </script>
 
 <Story name="default">
