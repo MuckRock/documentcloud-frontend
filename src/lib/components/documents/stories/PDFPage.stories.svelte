@@ -68,14 +68,6 @@
 
 <Story name="annotation options">
   {#await load(url) then pdf}
-    <PdfPage
-      {document}
-      page_number={1}
-      scale={1.5}
-      {pdf}
-      {width}
-      {height}
-      edit_access
-    />
+    <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
   {/await}
 </Story>
