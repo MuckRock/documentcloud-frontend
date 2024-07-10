@@ -69,7 +69,7 @@
 
     <Notes {document} />
 
-    <Sections {document} mode={$mode} />
+    <Sections {document} />
 
     <Data {document} />
 

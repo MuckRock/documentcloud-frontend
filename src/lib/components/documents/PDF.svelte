@@ -88,6 +88,7 @@
       {width}
       {height}
       {query}
+      section={sections[n]}
       notes={notes[n]}
     />
   {/each}

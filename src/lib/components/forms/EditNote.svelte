@@ -36,8 +36,6 @@ Positioning and generating coordinates should happen outside of this form.
     : new URL("annotate/?/create", canonical).href;
   $: page_level = !coords || coords.every((c) => c === null);
 
-  $: console.log(note);
-
   function onSubmit({ formElement }) {
     formElement.disabled = true;
     return ({ result }) => {

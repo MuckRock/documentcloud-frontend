@@ -951,7 +951,10 @@
     "page": "Page",
     "title": "Title",
     "delete": "Delete",
-    "new": "Add a new section"
+    "new": "Add a new section",
+    "clear": "Clear",
+    "update": "Update section",
+    "overwrite": "There is already a section starting on page {n}."
   },
   "delete": {
     "title": "Confirm delete",

@@ -1,5 +1,11 @@
 import { describe, test, expect, vi } from "vitest";
-import { isErrorCode, isRedirectCode, getPrivateAsset } from "../api";
+import {
+  isErrorCode,
+  isRedirectCode,
+  getPrivateAsset,
+  getCsrfToken,
+} from "../api";
+import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
 describe("response code tests", () => {
   test("isErrorCode", () => {
@@ -59,5 +65,13 @@ describe("api handling", () => {
     const url = await getPrivateAsset(publicUrl, mockFetch);
 
     expect(url.href).toEqual(privateUrl);
+  });
+});
+
+describe("cookie handling", () => {
+  test("get csrf token", () => {
+    document.cookie = `${CSRF_COOKIE_NAME}=token`;
+
+    expect(getCsrfToken(document)).toStrictEqual("token");
   });
 });

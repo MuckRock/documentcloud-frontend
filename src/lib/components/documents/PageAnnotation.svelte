@@ -54,7 +54,11 @@ A container for page-level annotation, handling markup and interaction.
           {$_("annotate.cta.add-section")}
         {/if}
       </h2>
-      <EditSections {document} on:close={close} {section} />
+      <EditSections
+        {document}
+        on:close={close}
+        section={section || { page_number }}
+      />
     </Modal>
   </Portal>
 {/if}

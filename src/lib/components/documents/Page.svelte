@@ -86,6 +86,9 @@
         {page_number}
       </a>
     </h4>
+
+    <slot name="title" />
+
     {#if $$slots.actions}
       <div class="actions">
         <slot name="actions" />

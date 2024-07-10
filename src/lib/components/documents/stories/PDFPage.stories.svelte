@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Section } from "$lib/api/types";
   import { Story } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
@@ -26,6 +26,15 @@
   const [width, height] = sizes[0];
   const query = "los angeles";
   const url = new URL(pdfFile, import.meta.url);
+
+  // sections
+  const section: Section = { id: 1, page_number: 1, title: "Something uneasy" };
+  const long_section: Section = {
+    id: 1,
+    page_number: 1,
+    title:
+      "What it means is that tonight a Santa Ana will begin to blow, a hot wind from the northeast whining down through the Cajon and SanGorgonio Passes, blowing up sand storms out along Route 66, drying the hills andthe nerves to flash point.",
+  };
 
   async function load(url: URL) {
     return pdfjs.getDocument(url).promise;
@@ -69,5 +78,33 @@
 <Story name="annotation options">
   {#await load(url) then pdf}
     <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
+  {/await}
+</Story>
+
+<Story name="section start">
+  {#await load(url) then pdf}
+    <PdfPage
+      {document}
+      page_number={1}
+      scale={1.5}
+      {pdf}
+      {width}
+      {height}
+      {section}
+    />
+  {/await}
+</Story>
+
+<Story name="long section start">
+  {#await load(url) then pdf}
+    <PdfPage
+      {document}
+      page_number={1}
+      scale={1.5}
+      {pdf}
+      {width}
+      {height}
+      section={long_section}
+    />
   {/await}
 </Story>

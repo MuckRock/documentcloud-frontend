@@ -216,6 +216,14 @@ Selectable text can be rendered in one of two ways:
     visible = true;
   }}
 >
+  <svelte:fragment slot="title">
+    {#if section}
+      <h3 class="section">
+        {section.title}
+      </h3>
+    {/if}
+  </svelte:fragment>
+
   <PageAnnotation
     {document}
     page_number={page_number - 1}
@@ -223,11 +231,13 @@ Selectable text can be rendered in one of two ways:
     slot="actions"
   />
 
-  <div class="page-notes">
-    {#each page_level_notes as note}
-      <Note {note} />
-    {/each}
-  </div>
+  {#if page_level_notes.length}
+    <div class="page-notes">
+      {#each page_level_notes as note}
+        <Note {note} />
+      {/each}
+    </div>
+  {/if}
 
   <div
     bind:this={container}
@@ -280,6 +290,15 @@ Selectable text can be rendered in one of two ways:
 </Page>
 
 <style>
+  .section {
+    color: var(--gray-4);
+    font-weight: var(--font-semibold);
+    max-width: 66ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .page-container {
     aspect-ratio: 1 / var(--aspect);
     margin: 0;
