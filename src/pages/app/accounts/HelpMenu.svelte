@@ -55,12 +55,12 @@
         {$_("authSection.help.premium")}
       </MenuItem>
     </Link>
-    <Link toUrl="https://www.muckrock.com/donate/" color={true}>
+    <a href="https://www.muckrock.com/donate/" class="color">
       <MenuItem>
         <Gift16 slot="icon" />
         {$_("authSection.help.donate")}
       </MenuItem>
-    </Link>
+    </a>
     <a href="mailto:info@documentcloud.org" class="color" target="_blank">
       <MenuItem>
         <Mail16 slot="icon" />
