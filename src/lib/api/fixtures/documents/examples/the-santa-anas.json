@@ -5,7 +5,10 @@
   "asset_url": "https://s3.documentcloud.org/",
   "canonical_url": "https://www.documentcloud.org/documents/24438447-the-santa-anas",
   "created_at": "2024-02-22T15:07:26.369660Z",
-  "data": {},
+  "data": {
+    "_tag": ["Environment", "California"],
+    "Author": ["Joan Didion"]
+  },
   "description": "",
   "edit_access": true,
   "file_hash": "943e567078a5c191dd60caa238886d4df9a397f4",

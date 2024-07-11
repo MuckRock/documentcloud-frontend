@@ -964,6 +964,16 @@
     "cancel": "Cancel",
     "error": "Error"
   },
+  "data": {
+    "title": "Edit tags and data",
+    "key": "Key",
+    "newkey": "Add a new key",
+    "value": "Value",
+    "tag": "Tag",
+    "tags": "Tags",
+    "update": "Update",
+    "delete": "Delete"
+  },
   "addonDispatchDialog": {
     "addons": "Add-Ons",
     "backButton": "Browse Add-Ons",
