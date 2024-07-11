@@ -347,7 +347,8 @@
     "changeOrg": "Змінити організацію",
     "personalAcct": "Особистий акаунт",
     "signIn": "Увійти",
-    "uploadEmail": "Вивантажити через email"
+    "uploadEmail": "Вивантажити через email",
+    "donate": "Пiдтримати"
   },
   "documents": {
     "yourDocuments": "Ваші документи",

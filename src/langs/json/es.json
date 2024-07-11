@@ -338,7 +338,8 @@
     "signOut": "Cerrar sesión",
     "changeOrg": "Cambiar la organización",
     "personalAcct": "Cuenta personal",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "donate": "Hacer una donación"
   },
   "documents": {
     "yourDocuments": "Sus documentos",
