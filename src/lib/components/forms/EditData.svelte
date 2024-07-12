@@ -43,14 +43,7 @@
     document.data[key] = document.data[key].filter((v) => v !== value);
   }
 
-  function update(e) {
-    console.log(e.detail);
-  }
-
-  function onSubmit({ formElement, formData, action, cancel, submitter }) {
-    console.log(formData);
-
-    // cancel();
+  function onSubmit() {
     return async ({ result, update }) => {
       // `result` is an `ActionResult` object
       // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
@@ -76,14 +69,7 @@
     <!-- kv -->
     {#each data as [key, values]}
       {#each values as value}
-        <KeyValue
-          {keys}
-          {key}
-          {value}
-          on:key={update}
-          on:value={update}
-          on:delete={(e) => remove(e.detail)}
-        />
+        <KeyValue {keys} {key} {value} on:delete={(e) => remove(e.detail)} />
       {/each}
     {/each}
 
@@ -92,8 +78,6 @@
         {keys}
         key="_tag"
         value={tag}
-        on:key={update}
-        on:value={update}
         on:delete={(e) => remove(e.detail)}
       />
     {/each}

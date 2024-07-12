@@ -30,22 +30,13 @@ This uses `svelte-select` to let users more easily choose existing keys.
     // always include _tag
     if (!keys) keys = ["_tag"];
     if (!keys.includes("_tag")) {
-      keys.push("_tag");
+      keys = [...keys, "_tag"];
     }
   });
 
   export function clear() {
     key = "";
     value = "";
-  }
-
-  function setKey(e) {
-    const { value, label, created } = e.detail;
-    dispatch("key", { before: key, after: value, created });
-  }
-
-  function setValue(e) {
-    dispatch("value", { before: value, after: e.target.value });
   }
 
   function onFilter(e) {
@@ -69,7 +60,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
       placeholder={$_("data.newkey")}
       class="select elevated"
       bind:justValue={key}
-      on:change={setKey}
+      on:change
       on:input
       on:blur
       on:clear
@@ -93,7 +84,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
         name="value"
         placeholder={$_("data.value")}
         bind:value
-        on:change={setValue}
+        on:change
         on:input
       />
     </label>
