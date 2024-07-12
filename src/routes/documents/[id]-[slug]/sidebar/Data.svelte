@@ -4,15 +4,23 @@
   import { _ } from "svelte-i18n";
   import { Tag16, Tag24 } from "svelte-octicons";
 
+  import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import KV from "$lib/components/common/KV.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
+  // editing UI
+  import EditData from "@/lib/components/forms/EditData.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+
   import * as search from "$lib/utils/search";
 
   export let document: Document;
+
+  let edit;
 
   $: tags = document.data["_tag"];
   $: data = Object.entries(document.data).filter(([k, v]) => k !== "_tag");
@@ -54,4 +62,19 @@
       </Flex>
     {/if}
   </Flex>
+
+  {#if document.edit_access}
+    <Action on:click={(e) => (edit = true)}>
+      <p>{$_("data.title")}</p>
+    </Action>
+  {/if}
 </SidebarGroup>
+
+{#if edit}
+  <Portal>
+    <Modal on:close={(e) => (edit = false)}>
+      <h2 slot="title">{$_("data.title")}</h2>
+      <EditData {document} on:close={(e) => (edit = false)} />
+    </Modal>
+  </Portal>
+{/if}

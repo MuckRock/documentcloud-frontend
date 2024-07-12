@@ -16,7 +16,5 @@
 </script>
 
 <Story name="default">
-  <div style="min-width: 22rem;">
-    <EditData {document} />
-  </div>
+  <EditData {document} />
 </Story>

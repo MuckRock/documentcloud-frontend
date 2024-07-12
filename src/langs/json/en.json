@@ -967,12 +967,14 @@
   "data": {
     "title": "Edit tags and data",
     "key": "Key",
-    "newkey": "Add a new key",
+    "newkey": "New item",
     "value": "Value",
     "tag": "Tag",
     "tags": "Tags",
     "update": "Update",
-    "delete": "Delete"
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

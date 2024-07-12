@@ -1,18 +1,13 @@
+<svelte:options accessors />
+
 <!-- @component
 Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelte-select` to let users more easily choose existing keys.
 -->
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { beforeUpdate, createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    CheckCircle16,
-    ChevronDown12,
-    PlusCircle16,
-    Trash16,
-    X12,
-    XCircle16,
-  } from "svelte-octicons";
+  import { ChevronDown12, PlusCircle16, Trash16, X12 } from "svelte-octicons";
   import Select from "svelte-select";
 
   import Button from "../common/Button.svelte";
@@ -20,42 +15,74 @@ This uses `svelte-select` to let users more easily choose existing keys.
   export let keys: string[] = ["_tag"];
   export let key: string = "";
   export let value: string = "";
+  export let add = false;
 
   const dispatch = createEventDispatcher();
+
+  let filterText: string = "";
 
   $: items = keys.map((key) => {
     const label = key === "_tag" ? $_("data.tag") : key;
     return { value: key, label, created: false };
   });
 
-  function setKey(e) {}
+  beforeUpdate(() => {
+    // always include _tag
+    if (!keys) keys = ["_tag"];
+    if (!keys.includes("_tag")) {
+      keys.push("_tag");
+    }
+  });
 
-  function setValue(e) {}
+  export function clear() {
+    key = "";
+    value = "";
+  }
+
+  function setKey(e) {
+    const { value, label, created } = e.detail;
+    dispatch("key", { before: key, after: value, created });
+  }
+
+  function setValue(e) {
+    dispatch("value", { before: value, after: e.target.value });
+  }
+
+  function onFilter(e) {
+    if (e.detail.length === 0 && filterText.length > 0) {
+      const prev = items.filter((i) => !i.created);
+      items = [
+        ...prev,
+        { value: filterText, label: filterText, created: true },
+      ];
+    }
+  }
 </script>
 
 <tr class="kv">
   <td class="key">
     <Select
-      name="key"
       {items}
       value={key}
-      bind:justValue={key}
-      required
+      bind:filterText
       showChevron
       placeholder={$_("data.newkey")}
       class="select elevated"
-      on:change
+      bind:justValue={key}
+      on:change={setKey}
       on:input
       on:blur
       on:clear
-      on:filter
+      on:filter={onFilter}
     >
       <ChevronDown12 slot="chevron-icon" />
       <X12 slot="clear-icon" />
       <div slot="item" let:item>
-        <p>{item.label}</p>
+        <p>{item.created ? "+ " : ""}{item.label}</p>
       </div>
     </Select>
+    <!-- maybe gross/redundant, but effectively unwraps Select -->
+    <input type="hidden" name="key" value={key} />
   </td>
   <td class="value">
     <label>
@@ -66,31 +93,34 @@ This uses `svelte-select` to let users more easily choose existing keys.
         name="value"
         placeholder={$_("data.value")}
         bind:value
-        required
-        on:change={console.log}
+        on:change={setValue}
         on:input
       />
     </label>
   </td>
   <td class="action">
-    <Button
-      mode="ghost"
-      title={$_("data.update")}
-      minW={false}
-      value="update"
-      on:click
-    >
-      <CheckCircle16 />
-    </Button>
-    <Button
-      mode="ghost"
-      title={$_("data.delete")}
-      minW={false}
-      value="delete"
-      on:click
-    >
-      <Trash16 fill="var(--caution)" />
-    </Button>
+    {#if add}
+      <Button
+        mode="ghost"
+        title={$_("data.update")}
+        minW={false}
+        value="add"
+        disabled={!key || !value}
+        on:click={(e) => dispatch("add", { key, value })}
+      >
+        <PlusCircle16 />
+      </Button>
+    {:else}
+      <Button
+        mode="ghost"
+        title={$_("data.delete")}
+        minW={false}
+        value="delete"
+        on:click={(e) => dispatch("delete", { key, value })}
+      >
+        <Trash16 fill="var(--caution)" />
+      </Button>
+    {/if}
   </td>
 </tr>
 
@@ -121,7 +151,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
 
   input.value {
     display: flex;
-    padding: 0.375rem 0.75rem;
+    padding: 0.65rem 0.75rem;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;

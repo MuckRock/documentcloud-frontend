@@ -1,26 +1,66 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
+  import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
-
+  import Flex from "../common/Flex.svelte";
   import KeyValue from "../inputs/KeyValue.svelte";
+
+  import { canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;
 
   const dispatch = createEventDispatcher();
 
-  $: keys = Object.keys(document.data).filter((k) => k !== "_tag");
-  $: tags = document.data["_tag"];
-  $: data = Object.entries(document.data).filter(([k, v]) => k !== "_tag");
-  $: empty = Object.keys(document.data).length === 0;
+  let kv: KeyValue;
+
+  $: keys = Object.keys(document.data) ?? [];
+  $: tags = document.data["_tag"] ?? [];
+  $: data =
+    Object.entries(document?.data)?.filter(([k, v]) => k !== "_tag") ?? [];
+  $: action = new URL("?/data", canonicalUrl(document)).href;
+
+  function add({ key, value }) {
+    if (!key || !value) return;
+
+    if (key in document.data) {
+      document.data[key] = [...document.data[key], value];
+    } else {
+      document.data[key] = [value];
+    }
+
+    kv.clear();
+  }
+
+  function remove({ key, value }) {
+    if (!(key in document.data)) return;
+
+    document.data[key] = document.data[key].filter((v) => v !== value);
+  }
+
+  function update(e) {
+    console.log(e.detail);
+  }
+
+  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+    console.log(formData);
+
+    // cancel();
+    return async ({ result, update }) => {
+      // `result` is an `ActionResult` object
+      // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+      dispatch("close");
+      update(result);
+    };
+  }
 </script>
 
-<form class="card" method="post">
+<form {action} class="card" method="post" use:enhance={onSubmit}>
   <table>
     <thead>
       <tr>
@@ -30,27 +70,47 @@
         <th>
           {$_("data.value")}
         </th>
-        <td></td>
       </tr>
     </thead>
 
     <!-- kv -->
     {#each data as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} />
+        <KeyValue
+          {keys}
+          {key}
+          {value}
+          on:key={update}
+          on:value={update}
+          on:delete={(e) => remove(e.detail)}
+        />
       {/each}
     {/each}
 
     {#each tags as tag}
-      <KeyValue key="_tag" value={tag} />
+      <KeyValue
+        {keys}
+        key="_tag"
+        value={tag}
+        on:key={update}
+        on:value={update}
+        on:delete={(e) => remove(e.detail)}
+      />
     {/each}
     <tfoot>
-      <KeyValue />
+      <KeyValue
+        {keys}
+        bind:this={kv}
+        add
+        on:add={(e) => add(e.detail)}
+        on:delete={(e) => remove(e.detail)}
+      />
     </tfoot>
   </table>
-  <div class="buttons">
-    <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
-  </div>
+  <Flex class="buttons">
+    <Button type="submit" mode="primary">{$_("data.save")}</Button>
+    <Button on:click={() => dispatch("close")}>{$_("data.cancel")}</Button>
+  </Flex>
 </form>
 
 <style>
