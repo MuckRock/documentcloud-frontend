@@ -82,12 +82,16 @@
       />
     {/each}
     <tfoot>
+      <tr>
+        <th>
+          {$_("data.addNew")}
+        </th>
+      </tr>
       <KeyValue
         {keys}
         bind:this={kv}
         add
         on:add={(e) => add(e.detail)}
-        on:delete={(e) => remove(e.detail)}
       />
     </tfoot>
   </table>

@@ -974,7 +974,8 @@
     "update": "Update",
     "delete": "Delete",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "addNew": "Add new data:"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",
