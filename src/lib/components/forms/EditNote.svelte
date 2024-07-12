@@ -29,12 +29,12 @@ Positioning and generating coordinates should happen outside of this form.
 
   const dispatch = createEventDispatcher();
 
-  $: coords = [note.x1, note.x2, note.y1, note.y2];
+  $: coords = [note.x1, note.x2, note.y1, note.y2] as Partial<Bounds>;
   $: canonical = canonicalUrl(document);
   $: action = note.id
     ? new URL("annotate/?/update", canonical).href
     : new URL("annotate/?/create", canonical).href;
-  $: page_level = !coords || coords.every((c) => c === null);
+  $: page_level = !coords || coords.every((c) => !Boolean(c));
 
   function onSubmit({ formElement }) {
     formElement.disabled = true;
@@ -48,7 +48,7 @@ Positioning and generating coordinates should happen outside of this form.
 </script>
 
 <form {action} method="post" class:page_level use:enhance={onSubmit}>
-  <Card>
+  <Flex direction="column" gap={1}>
     <Field title={$_("annotate.fields.title")} required>
       <Text
         name="title"
@@ -72,11 +72,13 @@ Positioning and generating coordinates should happen outside of this form.
     />
     <input type="hidden" name="coords" value={JSON.stringify(coords)} />
 
-    <Flex class="buttons">
-      <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
-      <Button type="reset" on:click={() => dispatch("close")}
-        >{$_("annotate.cancel")}
-      </Button>
+    <Flex class="buttons" justify="between">
+      <Flex>
+        <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
+        <Button type="reset" on:click={() => dispatch("close")}
+          >{$_("annotate.cancel")}
+        </Button>
+      </Flex>
 
       {#if note.id}
         <Button
@@ -87,5 +89,5 @@ Positioning and generating coordinates should happen outside of this form.
         </Button>
       {/if}
     </Flex>
-  </Card>
+  </Flex>
 </form>

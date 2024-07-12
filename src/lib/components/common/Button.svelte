@@ -1,5 +1,4 @@
 <script lang="ts">
-  export let href: string = null;
   export let mode: "standard" | "primary" | "ghost" | "danger" = "standard";
   export let full = false;
   export let size: "small" | "normal" = "normal";
@@ -10,8 +9,9 @@
   export let title: string = "";
   export let type: "submit" | "reset" | "button" = "button";
   export let label = "Submit";
-
-  // not used in link mode
+  // anchor-specific properties
+  export let href: string = null;
+  // button-specific properties
   export let name: string = undefined;
   export let value: any = undefined;
   export let formaction: string = undefined;

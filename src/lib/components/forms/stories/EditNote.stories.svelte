@@ -7,6 +7,9 @@
   export const meta = {
     title: "Forms / Edit note",
     component: EditNote,
+    parameters: {
+      layout: 'centered'
+    }
   };
 
   import doc from "$lib/api/fixtures/documents/document-expanded.json";

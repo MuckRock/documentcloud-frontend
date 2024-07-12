@@ -28,21 +28,21 @@ A container for page-level annotation, handling markup and interaction.
   }
 </script>
 
+{#if document.edit_access}
 <div>
-  {#if document.edit_access}
-    <Action icon={Comment16} on:click={() => (pageNote = true)}>
-      {$_("annotate.cta.add-note")}
-    </Action>
+  <Action icon={Comment16} on:click={() => (pageNote = true)}>
+    {$_("annotate.cta.add-note")}
+  </Action>
 
-    <Action icon={ListOrdered16} on:click={() => (editSection = true)}>
-      {#if section}
-        {$_("annotate.cta.edit-section")}
-      {:else}
-        {$_("annotate.cta.add-section")}
-      {/if}
-    </Action>
-  {/if}
+  <Action icon={ListOrdered16} on:click={() => (editSection = true)}>
+    {#if section}
+      {$_("annotate.cta.edit-section")}
+    {:else}
+      {$_("annotate.cta.add-section")}
+    {/if}
+  </Action>
 </div>
+{/if}
 
 {#if editSection}
   <Portal>

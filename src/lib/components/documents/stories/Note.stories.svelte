@@ -26,7 +26,7 @@
   export const meta = {
     title: "Components / Documents / Note",
     component: Note,
-    parameters: { layout: "padded" },
+    parameters: { layout: "centered" },
   };
 
   async function load(url: URL) {

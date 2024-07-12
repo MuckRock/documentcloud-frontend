@@ -52,7 +52,7 @@ This form is entirely client-side.
   }
 </script>
 
-<form class="card" method="post">
+<form method="post">
   <table bind:this={table}>
     {#if sections.length}
       <thead>
@@ -67,7 +67,7 @@ This form is entirely client-side.
       </thead>
     {/if}
     <tbody>
-      {#each sections as section, i}
+      {#each sections as section}
         <tr class="section edit" id="section-{section.id}">
           <td class="page_number">
             <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -114,8 +114,10 @@ This form is entirely client-side.
                 await remove(document.id, section.id, csrftoken);
                 await invalidate(`document:${document.id}`);
               }}
+              --fill="var(--caution)"
+              --background="var(--orange-light)"
             >
-              <Trash16 fill="var(--caution)" />
+              <Trash16 />
             </Button>
           </td>
         </tr>
@@ -183,6 +185,8 @@ This form is entirely client-side.
             on:click={(e) => {
               section = { title: "" };
             }}
+            --fill="var(--gray-3)"
+            --background="var(--gray-1)"
           >
             <XCircle16 />
           </Button>
@@ -209,12 +213,9 @@ This form is entirely client-side.
   thead,
   tfoot {
     width: 100%;
-
-    background: var(--gray-1, #f5f6f7);
   }
 
   form {
-    background: var(--gray-1, #f5f6f7);
     padding: 1rem;
   }
 
@@ -252,5 +253,9 @@ This form is entirely client-side.
     font-size: var(--font-s);
     line-height: var(--font-s);
     color: var(--caution);
+  }
+
+  .buttons {
+    margin-top: 1rem;
   }
 </style>

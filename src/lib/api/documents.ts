@@ -12,6 +12,8 @@ import type {
   Sizes,
   Status,
   TextPosition,
+  ReadMode,
+  WriteMode,
   ViewerMode,
 } from "./types";
 
@@ -27,14 +29,14 @@ import {
 } from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
-export const READING_MODES = new Set<ViewerMode>([
+export const READING_MODES = new Set<ReadMode>([
   "document",
   "text",
   "grid",
   "notes",
 ]);
 
-export const WRITING_MODES = new Set<ViewerMode>(["annotating", "redacting"]);
+export const WRITING_MODES = new Set<WriteMode>(["annotating", "redacting"]);
 
 export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
 
