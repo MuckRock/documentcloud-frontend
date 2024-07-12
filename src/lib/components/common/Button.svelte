@@ -81,12 +81,12 @@
     background: none;
     border: none;
     box-shadow: none;
-    color: var(--primary, #4294f0);
-    fill: var(--primary, #4294f0);
+    color: var(--color, var(--primary, #4294f0));
+    fill: var(--fill, var(--primary, #4294f0));
   }
 
   .ghost:hover {
-    background: var(--blue-1, #eef3f9);
+    background: var(--background, var(--blue-1, #eef3f9));
   }
 
   .small {

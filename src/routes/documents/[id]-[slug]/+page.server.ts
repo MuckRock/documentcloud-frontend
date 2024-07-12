@@ -18,6 +18,38 @@ export function load({ cookies }) {
  * back on the document viewer after any successful action.
  */
 export const actions = {
+  // like edit but specifically for data
+  async data({ cookies, request, fetch, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const { id } = params;
+
+    // array of [['key', '...'], ['value', '...']]
+    const form = await request.formData();
+    const keys = form.getAll("key") as string[];
+    const values = form.getAll("value") as string[];
+
+    const data = keys.reduce((m, key, i) => {
+      const value = values[i];
+      if (key in m) {
+        m[key].push(value);
+      } else {
+        m[key] = [value];
+      }
+      return m;
+    }, {});
+
+    try {
+      const document = await edit(id, { data }, csrf_token, fetch);
+      return {
+        success: true,
+        document,
+      };
+    } catch (error) {
+      console.error(error);
+      return fail(400);
+    }
+  },
+
   async delete({ cookies, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const { id } = params;
@@ -64,6 +96,7 @@ export const actions = {
         document,
       };
     } catch (error) {
+      console.error(error);
       return fail(400);
     }
   },

@@ -7,13 +7,7 @@ This form is entirely client-side.
 
   import { invalidate } from "$app/navigation";
 
-  import {
-    afterUpdate,
-    beforeUpdate,
-    createEventDispatcher,
-    onMount,
-    tick,
-  } from "svelte";
+  import { beforeUpdate, createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     CheckCircle16,
@@ -79,7 +73,6 @@ This form is entirely client-side.
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label>
               <span class="sr-only">{$_("sections.page")}</span>
-              <!-- ts-ignore -->
               <Number
                 name="page_number"
                 value={section.page_number + 1}
@@ -207,7 +200,7 @@ This form is entirely client-side.
     </tfoot>
   </table>
   <div class="buttons">
-    <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
+    <Button mode="primary" on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
   </div>
 </form>
 
@@ -232,8 +225,10 @@ This form is entirely client-side.
   }
 
   th {
+    padding: 0.5rem 0.5rem 0.5rem 0;
     text-align: start;
     font-size: var(--font-m);
+    font-weight: var(--font-semibold);
   }
 
   td.page_number {
