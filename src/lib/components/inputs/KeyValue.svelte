@@ -69,7 +69,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
       <ChevronDown12 slot="chevron-icon" />
       <X12 slot="clear-icon" />
       <div slot="item" let:item>
-        <p>{item.created ? "+ " : ""}{item.label}</p>
+        <p>{item.created ? `Add “${item.label}”` : item.label}</p>
       </div>
     </Select>
     <!-- maybe gross/redundant, but effectively unwraps Select -->
@@ -123,6 +123,8 @@ This uses `svelte-select` to let users more easily choose existing keys.
     --border: 0.25px solid var(--gray-3, #99a8b3);
     --border-radius: 0.25rem;
     --border-focused: 0.25px solid var(--blue-3, #4294f0);
+    --clear-select-width: 1.5rem;
+    --chevron-width: 1.5rem;
     --font-size: var(--font-m, 1rem);
     --padding: 0 0 0 1rem;
     --item-hover-bg: var(--blue-1, #eef3f9);
@@ -138,7 +140,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
   }
 
   td {
-    padding: 0 0.5rem 0.5rem 0;
+    padding: 0 0.25rem 0.5rem 0;
     --font-size: var(--font-s);
   }
 

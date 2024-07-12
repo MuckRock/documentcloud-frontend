@@ -200,7 +200,7 @@ This form is entirely client-side.
     </tfoot>
   </table>
   <div class="buttons">
-    <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
+    <Button mode="primary" on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
   </div>
 </form>
 
@@ -225,8 +225,10 @@ This form is entirely client-side.
   }
 
   th {
+    padding: 0.5rem 0.5rem 0.5rem 0;
     text-align: start;
     font-size: var(--font-m);
+    font-weight: var(--font-semibold);
   }
 
   td.page_number {

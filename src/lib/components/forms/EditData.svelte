@@ -1,17 +1,14 @@
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
-
-  import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
-
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-
-  import Button from "../common/Button.svelte";
-  import Flex from "../common/Flex.svelte";
-  import KeyValue from "../inputs/KeyValue.svelte";
-
+  
+  import { enhance } from "$app/forms";
   import { canonicalUrl } from "$lib/api/documents";
+  import type { Document } from "$lib/api/types";
+  import Button from "$lib/components/common/Button.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import KeyValue from "$lib/components/inputs/KeyValue.svelte";
+  import type { ActionResult } from "@sveltejs/kit";
 
   export let document: Document;
 
@@ -44,8 +41,7 @@
   }
 
   function onSubmit() {
-    return async ({ result, update }) => {
-      // `result` is an `ActionResult` object
+    return async ({ result, update }: {result: ActionResult; update: (options?: Record<string, any>) => void}) => {
       // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
       dispatch("close");
       update(result);
@@ -106,20 +102,19 @@
   thead,
   tfoot {
     width: 100%;
-    background: var(--gray-1, #f5f6f7);
   }
 
   form {
-    background: var(--gray-1, #f5f6f7);
     padding: 1rem;
   }
 
   th {
     text-align: start;
     font-size: var(--font-m);
+    font-weight: var(--font-semibold);
   }
 
   th {
-    padding: 0 0.5rem 0.5rem 0;
+    padding: 0.5rem 0.5rem 0.5rem 0;
   }
 </style>

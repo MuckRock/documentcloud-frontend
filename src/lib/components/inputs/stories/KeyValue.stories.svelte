@@ -14,14 +14,16 @@
 
 <Template let:args>
   <table>
-    <KeyValue {keys} key={args.key} value={args.value} />
+    <KeyValue {keys} {...args} />
   </table>
 </Template>
 
-<Story name="key and value" args={{ key: "author", value: "Joan Didion" }} />
+<Story name="Add" args={{ add: true, key: "_tag", value: "Foobar" }} />
 
-<Story name="tag input" args={{ key: "_tag" }} />
+<Story name="Edit" args={{ key: "author", value: "Joan Didion" }} />
 
-<Story name="tag with value" args={{ key: "_tag", value: "California" }} />
+<Story name="Tag input" args={{ key: "_tag" }} />
 
-<Story name="empty" />
+<Story name="Tag with value" args={{ key: "_tag", value: "California" }} />
+
+<Story name="Empty" />
