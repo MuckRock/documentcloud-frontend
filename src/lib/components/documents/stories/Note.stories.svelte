@@ -17,6 +17,8 @@
   const notes = document.notes as NoteType[];
   const url = new URL(pdfFile, import.meta.url);
 
+  const page_note = { ...notes[0], x1: null, x2: null, y1: null, y2: null };
+
   const html = `A chance for the Prime Minister and his Deputy to portray themselves as the "<b>action men</b>" of British politics.  
   Within a month-and-a-half, <a href="https://en.wikipedia.org/wiki/George_Osborne">George Osborne</a>, the country's new 38 year-old Chancellor of the Exchequor (i.e. the country's Finance Minister) 
   will present a budget to Parliament that calls for emergency actions to reduce Britain's forecast $280 billion deficit.`;
@@ -24,7 +26,7 @@
   export const meta = {
     title: "Components / Documents / Note",
     component: Note,
-    parameters: { layout: "padded" },
+    parameters: { layout: "centered" },
   };
 
   async function load(url: URL) {
@@ -38,6 +40,10 @@
 
 <Story name="default">
   <Note note={notes[0]} />
+</Story>
+
+<Story name="page-level note">
+  <Note note={page_note} />
 </Story>
 
 <Story name="editable">

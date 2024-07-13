@@ -2,21 +2,19 @@
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import ConfirmRedaction from "../ConfirmRedaction.svelte";
+  import EditData from "../EditData.svelte";
 
-  import doc from "$lib/api/fixtures/documents/document.json";
+  import doc from "$lib/api/fixtures/documents/examples/the-santa-anas.json";
 
   const document = doc as Document;
 
   export const meta = {
-    title: "Forms / Confirm redaction",
-    component: ConfirmRedaction,
+    title: "Forms / Edit data",
+    component: EditData,
     parameters: { layout: "centered" },
   };
 </script>
 
 <Story name="default">
-  <div style="max-width: 66ch;">
-    <ConfirmRedaction {document} />
-  </div>
+  <EditData {document} />
 </Story>

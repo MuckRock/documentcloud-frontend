@@ -14,8 +14,8 @@ export async function load({ fetch, parent, url, data, depends }) {
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
 
-  if (!documents.READING_MODES.has(mode)) {
-    mode = documents.READING_MODES[0];
+  if (!documents.MODES.has(mode)) {
+    mode = documents.MODES[0];
   }
 
   const query = url.searchParams.get("q") ?? "";
@@ -43,9 +43,9 @@ export async function load({ fetch, parent, url, data, depends }) {
   return {
     ...(data ?? {}), // include csrf_token
     asset_url,
-    mode,
     query,
     text,
+    mode,
     // pdfTask: task,
   };
 }

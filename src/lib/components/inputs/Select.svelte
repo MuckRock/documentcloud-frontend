@@ -52,7 +52,7 @@
   bind:value
   bind:justValue
   showChevron
-  --background="var(--White, #fff)"
+  --background="var(--white, #fff)"
   --border="1px solid var(--gray-3, #99a8b3)"
   --border-radius="0.5rem"
   --border-focused="1px solid var(--blue-3, #4294f0)"

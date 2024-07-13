@@ -35,12 +35,17 @@
 
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
 
-  // index notes by page
+  // index notes and sections by page
   $: notes = document.notes.reduce((m, note) => {
     if (!m[note.page_number]) {
       m[note.page_number] = [];
     }
     m[note.page_number].push(note);
+    return m;
+  }, {});
+
+  $: sections = document.sections.reduce((m, section) => {
+    m[section.page_number] = section;
     return m;
   }, {});
 
@@ -76,12 +81,14 @@
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
     <PdfPage
+      {document}
       {page_number}
       {pdf}
       {scale}
       {width}
       {height}
       {query}
+      section={sections[n]}
       notes={notes[n]}
     />
   {/each}

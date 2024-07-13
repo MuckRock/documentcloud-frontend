@@ -7,11 +7,13 @@
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
+  import { Comment24 } from "svelte-octicons";
 
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Paginator, { currentPage } from "../components/ViewerPaginator.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
   import Zoom, { zoom, zoomToScale } from "../components/Zoom.svelte";
 
   import { pageFromHash } from "$lib/api/documents";
@@ -22,7 +24,7 @@
 
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable("annotating"); // only ever one mode on this route
+  const mode: Writable<ViewerMode> = writable(data.mode);
 
   setContext("activeNote", activeNote);
   setContext("currentPage", currentPage);
@@ -72,6 +74,12 @@
 </svelte:head>
 
 <ContentLayout>
+  <Tip slot="header" --background-color="var(--yellow-bright)">
+    <Comment24 slot="icon" />
+    <h3>{$_("annotate.title")}</h3>
+    <p>{$_("annotate.instructions")}</p>
+  </Tip>
+
   <PDF {document} {asset_url} scale={zoomToScale($zoom)} />
 
   <PageToolbar slot="footer">
@@ -83,6 +91,6 @@
 
     <Paginator slot="center" totalPages={document.page_count} />
 
-    <Zoom slot="right" mode={$mode} />
+    <Zoom slot="right" mode={data.mode} />
   </PageToolbar>
 </ContentLayout>

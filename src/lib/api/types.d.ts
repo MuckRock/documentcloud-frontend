@@ -84,6 +84,14 @@ export interface AddOnListItem {
   usage?: number;
 }
 
+// anything with a box
+export interface BBox {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+}
+
 // subset of document fields only used in uploading
 // most fields are optional
 export interface DocumentUpload {
@@ -154,7 +162,7 @@ export interface Document {
 
 export interface DocumentResults extends Page<Document> {}
 
-export interface Note {
+export interface Note extends BBox {
   id: number | string;
   user: number | User;
   organization: number | Org;
@@ -163,10 +171,6 @@ export interface Note {
   edit_access?: boolean;
   title: string;
   content?: string;
-  x1?: number;
-  x2?: number;
-  y1?: number;
-  y2?: number;
   created_at: string | Date;
   updated_at: string | Date;
 }
@@ -240,23 +244,17 @@ export interface DocumentText {
   pages: TextPage[];
 }
 
-export interface TextPosition {
+export interface TextPosition extends BBox {
   text: string;
-  x1: number;
-  x2: number;
-  y1: number;
-  y2: number;
   upright?: boolean;
   direction?: number;
   metadata?: any;
 }
 
-export interface Redaction {
+export interface Redaction extends BBox {
   page_number: number;
-  x1: number;
-  x2: number;
-  y1: number;
-  y2: number;
 }
+
+export type Bounds = [number, number, number, number];
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

@@ -887,7 +887,7 @@
       "notes": "Notes",
       "pageAbbrev": "p.",
       "sections": "Sections",
-      "title": "Notes & Sections"
+      "cta": "Add sections"
     }
   },
   "notes": {
@@ -921,6 +921,23 @@
     "save": "Save",
     "cancel": "Cancel"
   },
+  "annotate": {
+    "title": "Add Note",
+    "instructions": "Highlight a portion of the page, or click between pages to create a note.",
+    "fields": {
+      "title": "Title",
+      "content": "Content"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "cta": {
+      "add-note": "Add a page note",
+      "edit-note": "Edit page note",
+      "add-section": "Start section",
+      "edit-section": "Edit section"
+    }
+  },
   "redact": {
     "confirm": "Confirm redactions",
     "really": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
@@ -930,6 +947,15 @@
     "cancel": "Cancel",
     "error": "Error"
   },
+  "sections": {
+    "page": "Page",
+    "title": "Title",
+    "delete": "Delete",
+    "new": "Add a new section",
+    "clear": "Clear",
+    "update": "Update section",
+    "overwrite": "There is already a section starting on page {n}."
+  },
   "delete": {
     "title": "Confirm delete",
     "really": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}.",
@@ -937,6 +963,19 @@
     "confirm": "Delete",
     "cancel": "Cancel",
     "error": "Error"
+  },
+  "data": {
+    "title": "Edit tags and data",
+    "key": "Key",
+    "newkey": "New item",
+    "value": "Value",
+    "tag": "Tag",
+    "tags": "Tags",
+    "update": "Update",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "addNew": "Add new data:"
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

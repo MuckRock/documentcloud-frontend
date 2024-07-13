@@ -5,20 +5,26 @@
 <script lang="ts">
   export let name: string = null;
   export let placeholder = "";
-  export let value = "";
+  export let value: number = undefined;
   export let autofocus = false;
   export let required = false;
   export let disabled = false;
+  export let min: number = undefined;
+  export let max: number = undefined;
+  export let step: number = undefined;
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
 <input
-  type="text"
+  type="number"
   {name}
   {placeholder}
   {required}
   {disabled}
   {autofocus}
+  {min}
+  {max}
+  {step}
   bind:value
   on:change
   on:input
@@ -44,7 +50,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: "Source Sans Pro";
-    font-size: var(--font-size, var(--font-m, 1rem));
+    font-size: var(--font-size, 1rem);
     font-style: normal;
     font-weight: 400;
     line-height: normal;

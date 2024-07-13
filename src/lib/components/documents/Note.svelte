@@ -13,18 +13,12 @@
   import DOMPurify from "isomorphic-dompurify";
   import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    Globe16,
-    Lock16,
-    Pencil16,
-    People16,
-    Trash16,
-  } from "svelte-octicons";
+  import { Globe16, Lock16, Pencil16, People16 } from "svelte-octicons";
   import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { noteHashUrl, width, height } from "$lib/api/notes";
-  import { pageImageUrl } from "$lib/api/documents";
+  import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
+  import { pageImageUrl, canonicalUrl } from "$lib/api/documents";
   // import { getPrivateAsset } from "$lib/utils/api";
 
   export let note: Note;
@@ -55,13 +49,17 @@
   const mode: Writable<ViewerMode> = getContext("mode");
 
   let canvas: HTMLCanvasElement;
-  let renderTask;
-  let rendering;
+  let renderTask: { promise: Promise<any> };
+  let rendering: Promise<any>;
 
-  $: href = noteHashUrl(note);
+  $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
   $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
+  $: edit_link = new URL(
+    `annotate/${noteHashUrl(note)}`,
+    canonicalUrl(document),
+  ).href;
 
   onMount(() => {
     rendering = render(canvas, document, pdf);
@@ -160,6 +158,7 @@
 
 <div
   class="note {note.access} {$mode || 'notes'}"
+  class:page_level
   style:--x1={note.x1}
   style:--x2={note.x2}
   style:--y1={note.y1}
@@ -171,36 +170,25 @@
     <h3>{note.title}</h3>
     <div class="actions">
       {#if note.edit_access}
-        <Action icon={Pencil16}>{$_("dialog.edit")}</Action>
-        <Action --color="var(--red)" --fill="var(--red)" icon={Trash16}
-          >{$_("dialog.delete")}</Action
-        >
+        <Action icon={Pencil16}>
+          <a href={edit_link}>{$_("dialog.edit")}</a>
+        </Action>
       {/if}
     </div>
   </header>
-  <div class="highlight">
-    <canvas width="0" height="0" bind:this={canvas}></canvas>
-  </div>
+  {#if !page_level}
+    <div class="highlight">
+      <canvas width="0" height="0" bind:this={canvas}></canvas>
+    </div>
+  {/if}
   <div class="content">
     <p>{@html clean(note.content)}</p>
   </div>
   <footer>
-    {#if note.edit_access}
-      <label class="access">
-        <svelte:component this={access[note.access].icon} />
-        <span class="sr-only">{$_("access.access")}</span>
-        <select name="access" value={note.access}>
-          {#each Object.values(access) as opt}
-            <option value={opt.value}>{opt.title}</option>
-          {/each}
-        </select>
-      </label>
-    {:else}
-      <span class="access {note.access}">
-        <svelte:component this={access[note.access].icon} />
-        {$_(`access.${access[note.access].value}.title`)}
-      </span>
-    {/if}
+    <span class="access {note.access}">
+      <svelte:component this={access[note.access].icon} />
+      {$_(`access.${access[note.access].value}.title`)}
+    </span>
 
     {#if user}
       <p class="author">
@@ -245,6 +233,13 @@
     max-width: 100%; /* maybe should just be width: 100% */
 
     z-index: 10;
+  }
+
+  /* page-level */
+  .note.page_level {
+    position: relative;
+    width: 100%;
+    z-index: inherit;
   }
 
   header {
@@ -300,18 +295,6 @@
     font-size: var(--font-s);
   }
 
-  label.access {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  label.access select {
-    border: none;
-    font-family: var(--font-sans);
-    font-size: var(--font-s);
-  }
-
   span.access {
     display: flex;
     align-items: center;
@@ -319,13 +302,11 @@
     font-size: var(--font-s);
   }
 
-  span.access.public,
-  .public label.access {
+  span.access.public {
     fill: var(--note-public);
   }
 
-  span.access.organization,
-  .organization label.access {
+  span.access.organization {
     color: var(--note-org);
     fill: var(--note-org);
   }

@@ -54,16 +54,16 @@
     >
 
     {#if document.edit_access}
-      <Action icon={Pencil16} on:click={() => editOpen = true}>
+      <Action icon={Pencil16} on:click={() => (editOpen = true)}>
         {$_("sidebar.edit")}
       </Action>
     {/if}
   </SidebarItem>
   {#if editOpen}
     <Portal>
-      <Modal on:close={() => editOpen = false}>
+      <Modal on:close={() => (editOpen = false)}>
         <h1 slot="title">{$_("edit.title")}</h1>
-        <Edit {document} on:close={() => editOpen = false} />
+        <Edit {document} on:close={() => (editOpen = false)} />
       </Modal>
     </Portal>
   {/if}
@@ -115,25 +115,17 @@
         {$_("status.status")}:
         {$_(`status.${document.status}.title`)}
       {/if}
-      <Action on:click={() => reprocessOpen = true}>
+      <Action on:click={() => (reprocessOpen = true)}>
         <IssueReopened16 />
         {$_("sidebar.reprocess")}
       </Action>
-      {#if reprocessOpen}
-      <Portal>
-        <Modal on:close={() => reprocessOpen = false}>
-          <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
-          <Reprocess documents={[document]} on:close={() => reprocessOpen = false} />
-        </Modal>
-      </Portal>
-      {/if}
     </SidebarItem>
   {/if}
 
   {#if document.edit_access}
     <SidebarItem>
       <Action
-        on:click={() => deleteOpen = true}
+        on:click={() => (deleteOpen = true)}
         --fill="var(--orange-3)"
         --color="var(--orange-3)"
       >
@@ -141,13 +133,29 @@
         {$_("sidebar.delete")}
       </Action>
     </SidebarItem>
-    {#if deleteOpen}
-    <Portal>
-      <Modal on:close={() => deleteOpen = false}>
-        <h1 slot="title">{$_("delete.title")}</h1>
-        <ConfirmDelete documents={[document]} on:close={() => deleteOpen = false} />
-      </Modal>
-    </Portal>
-    {/if}
   {/if}
 </Flex>
+
+{#if reprocessOpen}
+  <Portal>
+    <Modal on:close={() => (reprocessOpen = false)}>
+      <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
+      <Reprocess
+        documents={[document]}
+        on:close={() => (reprocessOpen = false)}
+      />
+    </Modal>
+  </Portal>
+{/if}
+
+{#if deleteOpen}
+  <Portal>
+    <Modal on:close={() => (deleteOpen = false)}>
+      <h1 slot="title">{$_("delete.title")}</h1>
+      <ConfirmDelete
+        documents={[document]}
+        on:close={() => (deleteOpen = false)}
+      />
+    </Modal>
+  </Portal>
+{/if}

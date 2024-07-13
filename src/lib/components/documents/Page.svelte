@@ -18,7 +18,6 @@
 
   let io: IntersectionObserver;
   let container: HTMLElement;
-  let heading: HTMLElement;
   let visible: boolean;
 
   $: id = pageHashUrl(page_number).replace("#", "");
@@ -79,13 +78,23 @@
   });
 </script>
 
-<div bind:this={container} class="page" class:wide class:tall>
-  <h4 bind:this={heading} {id}>
-    <a {href}>
-      {$_("documents.pageAbbrev")}
-      {page_number}
-    </a>
-  </h4>
+<div {id} bind:this={container} class="page" class:wide class:tall>
+  <header>
+    <h4>
+      <a {href}>
+        {$_("documents.pageAbbrev")}
+        {page_number}
+      </a>
+    </h4>
+
+    <slot name="title" />
+
+    {#if $$slots.actions}
+      <div class="actions">
+        <slot name="actions" />
+      </div>
+    {/if}
+  </header>
   <slot {id} {href} {visible} />
 </div>
 
@@ -96,6 +105,7 @@
     align-items: flex-start;
     align-self: center;
     gap: var(--font-m, 1rem);
+    position: relative;
     padding: 0 1rem;
     margin: 0.75rem 0 0;
     max-width: 100%;
@@ -116,5 +126,13 @@
 
   h4 a:hover {
     text-decoration: underline;
+  }
+
+  header {
+    display: flex;
+    height: var(--font-md, 1rem);
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
   }
 </style>

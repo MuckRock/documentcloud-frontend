@@ -1,9 +1,12 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import type { Document, Project } from "$lib/api/types";
+  import type { Document, Project, ViewerMode } from "$lib/api/types";
+
+  import { page } from "$app/stores";
 
   import { setContext } from "svelte";
+  import { writable, type Writable } from "svelte/store";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
 
@@ -21,8 +24,12 @@
 
   export let data;
 
-  setContext<Document>("document", data.document);
+  const mode: Writable<ViewerMode> = writable($page.data.mode);
 
+  setContext<Document>("document", data.document);
+  setContext("mode", mode);
+
+  $: $mode = $page.data.mode;
   $: document = data.document;
   $: projects = document.projects as Project[];
   $: canonical_url = canonicalUrl(document).href;

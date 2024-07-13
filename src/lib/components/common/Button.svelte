@@ -1,5 +1,4 @@
 <script lang="ts">
-  export let href: string = null;
   export let mode: "standard" | "primary" | "ghost" | "danger" = "standard";
   export let full = false;
   export let size: "small" | "normal" = "normal";
@@ -10,6 +9,12 @@
   export let title: string = "";
   export let type: "submit" | "reset" | "button" = "button";
   export let label = "Submit";
+  // anchor-specific properties
+  export let href: string = null;
+  // button-specific properties
+  export let name: string = undefined;
+  export let value: any = undefined;
+  export let formaction: string = undefined;
 </script>
 
 {#if href}
@@ -23,6 +28,9 @@
     class="{mode} {size}"
     {disabled}
     {type}
+    {name}
+    {value}
+    {formaction}
     class:full
     class:minW
   >
@@ -64,21 +72,21 @@
   }
 
   .danger {
-    background: var(--orange-3, #EC7B6B);
-    border: 1px solid var(--orange-4, #69515C);
-    box-shadow: 0px 2px 0px 0px var(--orange-4, #69515C);
+    background: var(--orange-3, #ec7b6b);
+    border: 1px solid var(--orange-4, #69515c);
+    box-shadow: 0px 2px 0px 0px var(--orange-4, #69515c);
   }
 
   .ghost {
     background: none;
     border: none;
     box-shadow: none;
-    color: var(--primary, #4294f0);
-    fill: var(--primary, #4294f0);
+    color: var(--color, var(--primary, #4294f0));
+    fill: var(--fill, var(--primary, #4294f0));
   }
 
   .ghost:hover {
-    background: var(--blue-1, #eef3f9);
+    background: var(--background, var(--blue-1, #eef3f9));
   }
 
   .small {

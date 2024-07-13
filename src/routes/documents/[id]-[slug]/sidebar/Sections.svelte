@@ -8,12 +8,13 @@
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
 
-  import { pageUrl } from "$lib/api/documents";
+  import { canonicalUrl, pageUrl } from "$lib/api/documents";
 
   export let document: Document;
 
   $: sections = document.sections;
   $: empty = sections.length === 0;
+  $: annotate = new URL("annotate/", canonicalUrl(document)).href;
 </script>
 
 <SidebarGroup>
@@ -21,17 +22,16 @@
     <ListOrdered16 />
     {$_("sidebar.toc.sections")}
   </SidebarItem>
-
   <ol>
     {#each sections as section}
       <li>
-        <SidebarItem href={pageUrl(document, section.page_number).href}>
+        <SidebarItem href={pageUrl(document, section.page_number + 1).href}>
           {section.title}
 
           <span class="page_number">
             {$_("sidebar.toc.pageAbbrev")}
-            {section.page_number + 1}</span
-          >
+            {section.page_number + 1}
+          </span>
         </SidebarItem>
       </li>
     {/each}
@@ -39,7 +39,13 @@
 
   {#if empty}
     <Empty icon={ListOrdered24}>
-      <p>{$_("sidebar.toc.empty")}</p>
+      {#if document.edit_access}
+        <p>
+          <a href={annotate}> {$_("sidebar.toc.cta")}</a>
+        </p>
+      {:else}
+        <p>{$_("sidebar.toc.empty")}</p>
+      {/if}
     </Empty>
   {/if}
 </SidebarGroup>
