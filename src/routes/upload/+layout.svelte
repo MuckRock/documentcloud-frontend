@@ -4,8 +4,8 @@
   import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
   import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
-  import Documents from "../sidebar/Documents.svelte";
-  import Projects from "../sidebar/Projects.svelte";
+  import Documents from "../app/sidebar/Documents.svelte";
+  import Projects from "../app/sidebar/Projects.svelte";
 </script>
 
 <MainLayout>

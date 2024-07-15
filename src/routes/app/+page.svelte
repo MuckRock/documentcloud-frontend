@@ -117,7 +117,7 @@
 
   <svelte:fragment slot="action">
     <SignedIn>
-      <Button mode="primary" href="/app/upload/"
+      <Button mode="primary" href="/upload/"
         ><PlusCircle16 />{$_("sidebar.upload")}</Button
       >
       <Actions />

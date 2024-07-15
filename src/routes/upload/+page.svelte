@@ -5,16 +5,19 @@
   import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
 
   // using $page.form captures the correct type from applyAction
+
+  export let data;
+
   $: form = $page.form;
-  $: csrf_token = $page.data.csrf_token;
-  $: projects = $page.data.projects.result;
+  $: csrf_token = data.csrf_token;
+  $: projects = data.projects.results;
 </script>
 
 <svelte:head>
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<div class="card">
+<div class="form-container">
   <DocumentUpload {csrf_token} {projects}>
     <header>
       <h1 class="title">{$_("uploadDialog.title")}</h1>
@@ -43,7 +46,7 @@
     gap: 0.5rem;
     margin-bottom: 1rem;
   }
-  .card {
+  .form-container {
     margin: 1rem;
     padding: 1rem;
     border-radius: 1rem;
