@@ -7,6 +7,7 @@
   import { Globe16, Infinity16, Lock16, Organization16 } from "svelte-octicons";
   import { page } from "$app/stores";
 
+  import DocumentIcon from "@/common/icons/Document.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
@@ -20,6 +21,7 @@
 
   $: query = $page.url.searchParams.get("q") || "";
 
+  $: mine = $me ? userDocs($me) : "";
   $: minePublic = $me ? userDocs($me, "public") : "";
   $: minePrivate = $me ? userDocs($me, "private") : "";
 
@@ -37,22 +39,33 @@
 </script>
 
 <Flex direction="column">
-  <SidebarItem hover href={searchUrl("")} active={query === ""}
-    ><Infinity16 /> {$_("projects.allDocuments")}</SidebarItem
-  >
+  <SidebarItem hover href={searchUrl("")} active={query === ""}>
+    <Infinity16 />
+    {$_("projects.allDocuments")}
+  </SidebarItem>
+
   <SignedIn>
+    <SidebarItem hover href={searchUrl(mine)} active={query === mine}>
+      <DocumentIcon />
+      {$_("documents.yourDocuments")}
+    </SidebarItem>
+
     <SidebarItem
       hover
       href={searchUrl(minePublic)}
       active={query === minePublic}
-      ><Globe16 /> {$_("projects.yourPubDocuments")}</SidebarItem
     >
+      <Globe16 />
+      {$_("projects.yourPubDocuments")}
+    </SidebarItem>
     <SidebarItem
       hover
       href={searchUrl(minePrivate)}
       active={query === minePrivate}
-      ><Lock16 /> {$_("projects.yourDocuments")}</SidebarItem
     >
+      <Lock16 />
+      {$_("projects.yourDocuments")}
+    </SidebarItem>
     <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
       <Organization16 />
       {$_("projects.orgDocuments", {
