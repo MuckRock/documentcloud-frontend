@@ -33,7 +33,7 @@ export const actions = {
         note: created,
       };
     } catch (e) {
-      return fail(400, { error: e });
+      return fail(400, { error: e.message });
     }
   },
 
@@ -63,7 +63,7 @@ export const actions = {
         note: updated,
       };
     } catch (e) {
-      return fail(400, { error: e });
+      return fail(400, { error: e.message });
     }
   },
 
