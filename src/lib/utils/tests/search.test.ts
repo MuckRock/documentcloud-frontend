@@ -13,6 +13,8 @@ describe("search utilities", () => {
   });
 
   test("userDocs", () => {
+    expect(userDocs(me)).toStrictEqual(`+user:${slugify(me.name)}-${me.id}`);
+
     expect(userDocs(me, "public")).toStrictEqual(
       `+user:${slugify(me.name)}-${me.id} access:public`,
     );

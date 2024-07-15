@@ -18,8 +18,12 @@ export function projectSearchUrl(project): string {
  * @param user
  * @param access
  */
-export function userDocs(user: User, access: Access): string {
-  return `+user:${slugify(user.name)}-${user.id} access:${access}`;
+export function userDocs(user: User, access: Access = undefined): string {
+  if (access) {
+    return `+user:${slugify(user.name)}-${user.id} access:${access}`;
+  }
+
+  return `+user:${slugify(user.name)}-${user.id}`;
 }
 
 /**
