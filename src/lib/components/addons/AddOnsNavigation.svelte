@@ -20,7 +20,7 @@
   <Flex direction="column">
     <SidebarItem
       active={active === "all"}
-      href="/app/add-ons/"
+      href="/add-ons/"
       --hover-background="var(--blue-2)"
     >
       <Infinity16 fill="var(--blue-3)" />
@@ -28,7 +28,7 @@
     </SidebarItem>
     <SidebarItem
       active={active === "active"}
-      href="/app/add-ons/?active=true"
+      href="/add-ons/?active=true"
       --hover-background="var(--orange-light)"
     >
       <Pin --fill="var(--orange)" />
@@ -36,7 +36,7 @@
     </SidebarItem>
     <SidebarItem
       active={active === "featured"}
-      href="/app/add-ons/?featured=true"
+      href="/add-ons/?featured=true"
       --hover-background="var(--yellow-light)"
     >
       <StarFill16 fill="var(--yellow)" />
@@ -44,7 +44,7 @@
     </SidebarItem>
     <SidebarItem
       active={active === "premium"}
-      href="/app/add-ons/?premium=true"
+      href="/add-ons/?premium=true"
       --hover-background="var(--green-light)"
     >
       <Premium --fill="var(--green)" />
@@ -54,10 +54,7 @@
   <Flex direction="column">
     <SidebarItem small --color="var(--gray-4)">Collections</SidebarItem>
     {#each CATEGORIES as [key, label]}
-      <SidebarItem
-        href={`/app/add-ons/?category=${key}`}
-        active={active === key}
-      >
+      <SidebarItem href={`/add-ons/?category=${key}`} active={active === key}>
         {label}
       </SidebarItem>
     {/each}

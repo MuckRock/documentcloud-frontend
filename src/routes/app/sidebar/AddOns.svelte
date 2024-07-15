@@ -18,7 +18,7 @@
 
 <SidebarGroup>
   <SidebarItem slot="title"><Plug16 />{$_("sidebar.addons.title")}</SidebarItem>
-  <a href="/app/add-ons/" slot="action">
+  <a href="/add-ons/" slot="action">
     <Action icon={Book16}>{$_("common.explore")}</Action>
   </a>
   <Flex direction="column" gap={0}>
@@ -26,7 +26,7 @@
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then addons}
       {#each addons.results as addon}
-        <SidebarItem small href={`/app/add-ons/${addon.repository}/`}>
+        <SidebarItem small href={`/add-ons/${addon.repository}/`}>
           <Pin active={addon.active} />
           {addon.name}
         </SidebarItem>
