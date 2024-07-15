@@ -54,6 +54,10 @@
   $: query = ($page.url as URL).searchParams.get("query") ?? "";
 </script>
 
+<svelte:head>
+  <title>Add-Ons | DocumentCloud</title>
+</svelte:head>
+
 <MainLayout>
   <AddOnsNavigation {active} slot="navigation" />
 
