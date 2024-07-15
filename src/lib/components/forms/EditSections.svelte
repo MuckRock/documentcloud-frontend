@@ -5,22 +5,12 @@ This form is entirely client-side.
 <script lang="ts">
   import type { Document, Section } from "$lib/api/types";
 
-  import { invalidate } from "$app/navigation";
-
   import { beforeUpdate, createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    CheckCircle16,
-    PlusCircle16,
-    Trash16,
-    XCircle16,
-  } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import Text from "../inputs/Text.svelte";
-  import Number from "../inputs/Number.svelte";
+  import EditSectionRow from "./EditSectionRow.svelte";
 
-  import { create, update, remove } from "$lib/api/sections";
   import { getCsrfToken } from "$lib/utils/api";
 
   export let document: Document;
@@ -44,12 +34,6 @@ This form is entirely client-side.
   onMount(() => {
     csrftoken = getCsrfToken();
   });
-
-  // for typescript
-  function fixValue(e: Event) {
-    const target = e.currentTarget as HTMLInputElement;
-    return +target.value - 1;
-  }
 </script>
 
 <form method="post">
@@ -68,59 +52,7 @@ This form is entirely client-side.
     {/if}
     <tbody>
       {#each sections as section}
-        <tr class="section edit" id="section-{section.id}">
-          <td class="page_number">
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label>
-              <span class="sr-only">{$_("sections.page")}</span>
-              <Number
-                name="page_number"
-                value={section.page_number + 1}
-                min={1}
-                max={document.page_count}
-                required
-                on:input={(e) => (section.page_number = fixValue(e))}
-              />
-            </label>
-          </td>
-          <td class="title">
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label>
-              <span class="sr-only">{$_("sections.title")}</span>
-              <Text name="title" bind:value={section.title} required />
-            </label>
-          </td>
-          <td class="action">
-            <Button
-              mode="ghost"
-              title={$_("sections.update")}
-              minW={false}
-              name="action"
-              value="update"
-              on:click={async (e) => {
-                await update(document.id, section.id, section, csrftoken);
-                await invalidate(`document:${document.id}`);
-              }}
-            >
-              <CheckCircle16 />
-            </Button>
-            <Button
-              mode="ghost"
-              title={$_("sections.delete")}
-              minW={false}
-              name="action"
-              value="delete"
-              on:click={async (e) => {
-                await remove(document.id, section.id, csrftoken);
-                await invalidate(`document:${document.id}`);
-              }}
-              --fill="var(--caution)"
-              --background="var(--orange-light)"
-            >
-              <Trash16 />
-            </Button>
-          </td>
-        </tr>
+        <EditSectionRow {document} {...section} {csrftoken} />
       {/each}
     </tbody>
     <tfoot>
@@ -129,69 +61,14 @@ This form is entirely client-side.
           {$_("sections.new")}
         </th>
       </tr>
-      <tr class="section create">
-        <td class="page_number">
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-          <label>
-            <span class="sr-only">{$_("sections.page")}</span>
-            <Number
-              name="page_number"
-              placeholder={$_("sections.page")}
-              min={1}
-              max={document.page_count}
-              required
-              value={section.page_number + 1}
-              on:input={(e) => (section.page_number = fixValue(e))}
-            />
-          </label>
-        </td>
-        <td class="title">
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-          <label>
-            <span class="sr-only">{$_("sections.title")}</span>
-            <Text
-              name="title"
-              placeholder={$_("sections.title")}
-              required
-              bind:value={section.title}
-            />
-          </label>
-        </td>
-        <td class="action">
-          <Button
-            mode="ghost"
-            title={$_("sections.new")}
-            minW={false}
-            name="action"
-            value="add"
-            disabled={existing_pages.has(section.page_number)}
-            on:click={async (e) => {
-              await create(
-                document.id,
-                { title: section.title, page_number: section.page_number - 1 },
-                csrftoken,
-              );
-              await invalidate(`document:${document.id}`);
-              section = {};
-            }}
-          >
-            <PlusCircle16 />
-          </Button>
+      <EditSectionRow
+        {document}
+        {csrftoken}
+        title={section.title}
+        page_number={section.page_number}
+        disabled={existing_pages.has(section.page_number)}
+      />
 
-          <Button
-            mode="ghost"
-            title={$_("sections.clear")}
-            minW={false}
-            on:click={(e) => {
-              section = { title: "" };
-            }}
-            --fill="var(--gray-3)"
-            --background="var(--gray-1)"
-          >
-            <XCircle16 />
-          </Button>
-        </td>
-      </tr>
       {#if existing_pages.has(section.page_number)}
         <tr class="warning">
           <td colspan="2">
@@ -204,7 +81,9 @@ This form is entirely client-side.
     </tfoot>
   </table>
   <div class="buttons">
-    <Button mode="primary" on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
+    <Button mode="primary" on:click={() => dispatch("close")}>
+      {$_("dialog.done")}
+    </Button>
   </div>
 </form>
 
@@ -217,6 +96,7 @@ This form is entirely client-side.
 
   form {
     padding: 1rem;
+    width: 100%;
   }
 
   td,
@@ -230,23 +110,6 @@ This form is entirely client-side.
     text-align: start;
     font-size: var(--font-m);
     font-weight: var(--font-semibold);
-  }
-
-  td.page_number {
-    min-width: 10ch;
-  }
-
-  td.title {
-    min-width: 10ch;
-  }
-
-  td.action {
-    max-width: 10ch;
-    display: flex;
-  }
-
-  tr.section {
-    padding: 0.125rem;
   }
 
   .warning {
