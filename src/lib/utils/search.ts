@@ -4,7 +4,7 @@ import { APP_URL } from "@/config/config.js";
 import { slugify } from "@/util/string.js";
 
 export function searchUrl(query: string): URL {
-  const href = new URL("app/", APP_URL);
+  const href = new URL("documents/", APP_URL);
   href.searchParams.set("q", query);
   return href;
 }
