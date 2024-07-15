@@ -23,7 +23,6 @@ This form is entirely client-side.
 
   $: sections = document.sections ?? [];
   $: existing_pages = new Set(sections.map((s) => s.page_number));
-  $: console.log(section);
 
   beforeUpdate(() => {
     // updating, so remove new section data
@@ -67,6 +66,7 @@ This form is entirely client-side.
         {csrftoken}
         title={section.title}
         page_number={section.page_number}
+        disabled={existing_pages.has(section.page_number)}
       />
 
       {#if existing_pages.has(section.page_number)}
