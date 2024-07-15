@@ -20,5 +20,5 @@
     <a href="/home/">Home</a>
   </li>
   <li><a href="/help/">Help</a></li>
-  <li><a href="/app/">Browse documents</a></li>
+  <li><a href="/documents/">Browse documents</a></li>
 </ul>

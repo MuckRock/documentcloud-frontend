@@ -23,7 +23,7 @@ Confirm deletion or one or more documents.
 
   $: bulk = documents.length !== 1; // if it's zero, handle that elsewhere
   $: action = bulk
-    ? "/app/?/delete"
+    ? "/documents/?/delete"
     : canonicalUrl(documents[0]).href + "?/delete"; // TODO: update to /documents/ when we move things
 
   function onSubmit() {

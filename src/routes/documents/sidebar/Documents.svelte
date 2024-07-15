@@ -28,7 +28,7 @@
 
   function searchUrl(query: string) {
     const q = new URLSearchParams([["q", query]]);
-    const u = new URL("/app/", APP_URL);
+    const u = new URL("/documents/", APP_URL);
 
     u.search = q.toString();
 

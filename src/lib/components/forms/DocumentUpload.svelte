@@ -79,7 +79,7 @@
       return {
         type: "redirect",
         status: 302,
-        location: "/app/?" + query.toString(),
+        location: "/documents/?" + query.toString(),
       };
     }
 

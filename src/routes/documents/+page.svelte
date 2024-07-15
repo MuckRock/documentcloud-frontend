@@ -16,10 +16,10 @@
   import Empty from "$lib/components/common/Empty.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
-  import Actions from "./sidebar/Actions.svelte";
-  import AddOns from "./sidebar/AddOns.svelte";
-  import Documents from "./sidebar/Documents.svelte";
-  import Projects from "./sidebar/Projects.svelte";
+  import Actions from "../documents/sidebar/Actions.svelte";
+  import AddOns from "../documents/sidebar/AddOns.svelte";
+  import Documents from "../documents/sidebar/Documents.svelte";
+  import Projects from "../documents/sidebar/Projects.svelte";
 
   import { deleted } from "$lib/api/documents";
 

@@ -13,7 +13,7 @@
   // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
   import Actions from "./sidebar/Actions.svelte";
-  import AddOns from "@/routes/app/sidebar/AddOns.svelte";
+  import AddOns from "@/routes/documents/sidebar/AddOns.svelte";
   import Data from "./sidebar/Data.svelte";
   import Projects from "./sidebar/Projects.svelte";
   import Sections from "./sidebar/Sections.svelte";
