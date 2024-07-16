@@ -81,7 +81,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development vite dev",
-    "build": "node embeds.js && vite build",
+    "build": "vite build && node embeds.js",
     "preview": "vite preview",
     "sync": "svelte-kit sync",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",

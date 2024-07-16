@@ -2,16 +2,16 @@ import * as path from "node:path";
 import * as esbuild from "esbuild";
 
 const targets = [
-  ["./src/embed/enhance.js", "static/embed", "enhance.js"] /* page embeds */,
-  ["./src/embed/noteLoader.js", "static/notes", "loader.js"] /* node embed */,
+  ["./src/embed/enhance.js", "build/embed", "enhance.js"] /* page embeds */,
+  ["./src/embed/noteLoader.js", "build/notes", "loader.js"] /* node embed */,
   [
     "./src/embed/documentLoader.js",
-    "static/viewer",
+    "build/viewer",
     "loader.js",
   ] /* document embed */,
   [
     "./src/embed/projectLoader.js",
-    "static/embed",
+    "build/embed",
     "loader.js",
   ] /* was search embed, but now only project embeds */,
 ];
