@@ -7,12 +7,14 @@ import { userDocs, tag, kv, searchUrl, highlight } from "../search";
 
 describe("search utilities", () => {
   test("search URL", () => {
-    const href = new URL(`/app/`, APP_URL);
+    const href = new URL(`/documents/`, APP_URL);
     href.searchParams.set("q", "Nick Clegg");
     expect(searchUrl("Nick Clegg")).toStrictEqual(href);
   });
 
   test("userDocs", () => {
+    expect(userDocs(me)).toStrictEqual(`+user:${slugify(me.name)}-${me.id}`);
+
     expect(userDocs(me, "public")).toStrictEqual(
       `+user:${slugify(me.name)}-${me.id} access:public`,
     );

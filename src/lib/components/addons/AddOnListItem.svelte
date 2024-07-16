@@ -8,7 +8,7 @@
 
   export let addon: AddOnListItem;
 
-  $: url = `/app/add-ons/${addon?.repository}/`;
+  $: url = `/add-ons/${addon?.repository}/`;
   $: description = addon?.parameters?.description;
   $: author = { name: addon?.repository?.split("/")[0] };
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;

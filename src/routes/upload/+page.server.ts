@@ -5,7 +5,6 @@ import { upload } from "$lib/components/forms/DocumentUpload.svelte";
 
 export function load({ cookies }) {
   const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-
   return { csrf_token };
 }
 

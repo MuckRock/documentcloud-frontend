@@ -71,7 +71,7 @@ export const actions = {
       return fail(resp.status, await resp.json());
     }
 
-    return redirect(302, "/app/");
+    return redirect(302, "/documents/");
   },
 
   async edit({ cookies, fetch, request, params }) {

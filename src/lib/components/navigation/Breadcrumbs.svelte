@@ -16,7 +16,7 @@
 <div class="breadcrumbs">
   <Flex gap={0.375} align="center">
     <slot name="root">
-      <a href="/app" class="logo crumb"><Logo /></a>
+      <a href="/" class="logo crumb"><Logo /></a>
     </slot>
     {#each trail as { href, title }}
       <span class="divider"><TriangleRight16 fill="var(--gray-3)" /></span>

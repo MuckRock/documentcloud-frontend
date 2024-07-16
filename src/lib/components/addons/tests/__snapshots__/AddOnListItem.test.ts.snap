@@ -4,7 +4,7 @@ exports[`AddOnListItem 1`] = `
 <div>
   <a
     class="addon-link svelte-4n3o90"
-    href="/app/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
+    href="/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
   >
     <div
       class="container svelte-4n3o90"
@@ -85,7 +85,7 @@ exports[`AddOnListItem 2`] = `
 <div>
   <a
     class="addon-link svelte-4n3o90"
-    href="/app/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
+    href="/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
   >
     <div
       class="container svelte-4n3o90"

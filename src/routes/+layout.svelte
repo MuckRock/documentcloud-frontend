@@ -1,6 +1,8 @@
 <script lang="ts">
+  import "@/style/kit.css";
+
   import type { LayoutData } from "./$types";
-  import type { Org, User } from "@/api/types/orgAndUser.d.ts";
+  import type { Org, User } from "@/api/types/orgAndUser";
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";

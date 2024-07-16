@@ -4,7 +4,7 @@ import { APP_URL } from "@/config/config.js";
 import { slugify } from "@/util/string.js";
 
 export function searchUrl(query: string): URL {
-  const href = new URL("app/", APP_URL);
+  const href = new URL("documents/", APP_URL);
   href.searchParams.set("q", query);
   return href;
 }
@@ -18,8 +18,12 @@ export function projectSearchUrl(project): string {
  * @param user
  * @param access
  */
-export function userDocs(user: User, access: Access): string {
-  return `+user:${slugify(user.name)}-${user.id} access:${access}`;
+export function userDocs(user: User, access: Access = undefined): string {
+  if (access) {
+    return `+user:${slugify(user.name)}-${user.id} access:${access}`;
+  }
+
+  return `+user:${slugify(user.name)}-${user.id}`;
 }
 
 /**

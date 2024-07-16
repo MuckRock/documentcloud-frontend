@@ -25,7 +25,7 @@ exports[`AddOnsNavigation 1`] = `
       >
         <a
           class="container svelte-1u8xuj9 active"
-          href="/app/add-ons/"
+          href="/add-ons/"
         >
           <svg
             class="octicon octicon-infinity"
@@ -50,7 +50,7 @@ exports[`AddOnsNavigation 1`] = `
       >
         <a
           class="container svelte-1u8xuj9"
-          href="/app/add-ons/?active=true"
+          href="/add-ons/?active=true"
         >
           <div
             style="display: contents; --fill: var(--orange);"
@@ -81,7 +81,7 @@ exports[`AddOnsNavigation 1`] = `
       >
         <a
           class="container svelte-1u8xuj9"
-          href="/app/add-ons/?featured=true"
+          href="/add-ons/?featured=true"
         >
           <svg
             class="octicon octicon-star-fill"
@@ -106,7 +106,7 @@ exports[`AddOnsNavigation 1`] = `
       >
         <a
           class="container svelte-1u8xuj9"
-          href="/app/add-ons/?premium=true"
+          href="/add-ons/?premium=true"
         >
           <div
             style="display: contents; --fill: var(--green);"
@@ -155,7 +155,7 @@ exports[`AddOnsNavigation 1`] = `
        
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=ai"
+        href="/add-ons/?category=ai"
       >
         AI
          
@@ -163,7 +163,7 @@ exports[`AddOnsNavigation 1`] = `
       
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=statistical"
+        href="/add-ons/?category=statistical"
       >
         Analyze
          
@@ -171,7 +171,7 @@ exports[`AddOnsNavigation 1`] = `
       
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=bulk"
+        href="/add-ons/?category=bulk"
       >
         Bulk
          
@@ -179,7 +179,7 @@ exports[`AddOnsNavigation 1`] = `
       
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=export"
+        href="/add-ons/?category=export"
       >
         Export
          
@@ -187,7 +187,7 @@ exports[`AddOnsNavigation 1`] = `
       
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=extraction"
+        href="/add-ons/?category=extraction"
       >
         Extract
          
@@ -195,7 +195,7 @@ exports[`AddOnsNavigation 1`] = `
       
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=file"
+        href="/add-ons/?category=file"
       >
         File
          
@@ -203,7 +203,7 @@ exports[`AddOnsNavigation 1`] = `
       
       <a
         class="container svelte-1u8xuj9"
-        href="/app/add-ons/?category=monitor"
+        href="/add-ons/?category=monitor"
       >
         Monitor
          

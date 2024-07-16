@@ -9,7 +9,7 @@
 </script>
 
 <a
-  href={`/app/projects/${project.id}-${project.slug}`}
+  href={`/documents/projects/${project.id}-${project.slug}`}
   id={project.id.toString()}
 >
   <div class="container">

@@ -35,7 +35,7 @@
         title,
         access,
         language,
-        projects: projects.map((p: Project) => p.id),
+        projects,
         revision_control,
         original_extension: ext,
       };
@@ -79,7 +79,7 @@
       return {
         type: "redirect",
         status: 302,
-        location: "/app/?" + query.toString(),
+        location: "/documents/?" + query.toString(),
       };
     }
 
@@ -217,7 +217,7 @@
 <form
   method="post"
   enctype="multipart/form-data"
-  action="/app/upload/"
+  action="/upload/"
   on:submit|preventDefault={onSubmit}
 >
   <Flex gap={1} align="stretch" wrap>
@@ -288,9 +288,10 @@
             <p class="drop-instructions">{$_("uploadDialog.dragDrop")}</p>
             <Flex align="center" justify="center">
               <span class="drop-instructions-or">{$_("common.or")}</span>
-              <FileInput multiple onFileSelect={addFiles} disabled={loading}
-                ><File16 />{$_("uploadDialog.selectFiles")}</FileInput
-              >
+              <FileInput multiple onFileSelect={addFiles} disabled={loading}>
+                <File16 />
+                {$_("uploadDialog.selectFiles")}
+              </FileInput>
             </Flex>
           </div>
         </Dropzone>
@@ -337,8 +338,9 @@
         <Premium>
           <Field inline>
             <Switch name="revision_control" />
-            <FieldLabel premium>{$_("uploadDialog.revisionControl")}</FieldLabel
-            >
+            <FieldLabel premium>
+              {$_("uploadDialog.revisionControl")}
+            </FieldLabel>
             <p slot="help">
               {$_("uploadDialog.revisionControlHelp")}
             </p>
@@ -356,9 +358,10 @@
         type="submit"
         full
         mode="primary"
-        disabled={loading || exceedsSizeLimit}
-        ><Upload16 />{$_("uploadDialog.beginUpload")}</Button
+        disabled={loading || exceedsSizeLimit || !csrf_token}
       >
+        <Upload16 />{$_("uploadDialog.beginUpload")}
+      </Button>
 
       <input
         type="file"

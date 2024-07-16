@@ -10,7 +10,7 @@ export async function load({ fetch, parent }) {
     .catch(console.error);
 
   const breadcrumbs = await breadcrumbTrail(parent, [
-    // { href: "/app", title: "Documents" }, // TODO: move document manager to `/documents` route
+    // { href: "/documents", title: "Documents" }, // TODO: move document manager to `/documents` route
   ]);
 
   return {
