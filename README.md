@@ -2,13 +2,11 @@
 
 **DocumentCloud Frontend** &middot; [Squarelet][squarelet] &middot; [MuckRock][muckrock] &middot; [DocumentCloud][documentcloud]
 
-The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
+The main frontend for DocumentCloud, written in [SvelteKit](https://kit.svelte.dev/).
 
 ## Usage
 
 This project depends on both [Squarelet](https://github.com/muckrock/squarelet) and the [DocumentCloud (Django)](https://github.com/muckrock/documentcloud). Follow the steps in their READMEs before setting up this project.
-
-This project is a Svelte + Webpack project wrapped in Docker compose.
 
 In order to install dependencies inside the Docker container, run:
 
@@ -34,7 +32,7 @@ Once everything is up and running, you should be able to see the website live at
 
 ## Building for production
 
-Run `make build` to build the production version of the app. The project will be output in the `public` directory.
+Run `make build` to build the production version of the app. The project will be output in the `dist` directory.
 
 ## Architecture
 
@@ -56,7 +54,7 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 
 ## Unit tests
 
-Run unit tests with `npm test`.
+Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-run tests as code changes.
 
 ## Browser tests
 
@@ -91,6 +89,12 @@ tests
 Tests are organized around major parts of the codebase -- `manager`, `pages` and `viewer`. Tests under `anonymous` don't use an authenticated user.
 
 Tests rely on specific docouments available in each environment, which will have different URLs, so lists of known documents are provided in `development.json`, `staging.json` and `production.json`. Those correspond to the `NODE_ENV` environment variable.
+
+## Legacy embed scripts
+
+Earlier interations of DocumentCloud used scripts to inject the viewer, pages and notes into other web pages. This approach has been deprecated in favor of `iframe`-based embeds, but lots of legacy embeds exist across the internet. To support these older embeds, we've rewritten the original scripts to inject an `iframe` where appropriate.
+
+These scripts live in the `src/embeds` directory and are built with `esbuild`. They're not part of the larger SvelteKit project, so they have a separate build process that may change later. (Our main build tool, Vite, also depends on `esbuild`.)
 
 ## Storybooks
 

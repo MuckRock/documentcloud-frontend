@@ -22,7 +22,7 @@ function loadNote(src) {
     // Create the iframe
     const iframe = document.createElement("iframe");
     iframe.style = "border: none; width: 100%;";
-    iframe.src = `${APP_URL}documents/${id}/annotations/${noteId}`;
+    iframe.src = new URL(`documents/${id}/annotations/${noteId}`, APP_URL).href;
     setupResizeEvent(iframe);
 
     noteElem.appendChild(iframe);

@@ -23,6 +23,10 @@ public/notes/*
 public/viewer/*
 public/assets/
 
+static/embed/*
+static/notes/*
+static/viewer/*
+
 # Netlify
 .netlify
 

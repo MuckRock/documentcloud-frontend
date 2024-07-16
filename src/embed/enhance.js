@@ -35,7 +35,7 @@ embeds.forEach((embed) => {
   // Create the iframe
   const iframe = document.createElement("iframe");
   iframe.style = "border: none; width: 100%;";
-  iframe.src = `${APP_URL}documents/${slugId}/pages/${page}`;
+  iframe.src = new URL(`documents/${slugId}/pages/${page}`, APP_URL).href;
   setupResizeEvent(iframe);
 
   embed.appendChild(iframe);
