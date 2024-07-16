@@ -31,7 +31,7 @@
       href="/add-ons/?active=true"
       --hover-background="var(--orange-2)"
     >
-      <Pin --fill="var(--orange)" />
+      <Pin --fill="var(--orange-3)" />
       Pinned
     </SidebarItem>
     <SidebarItem
@@ -39,7 +39,7 @@
       href="/add-ons/?featured=true"
       --hover-background="var(--yellow-2)"
     >
-      <StarFill16 fill="var(--yellow)" />
+      <StarFill16 fill="var(--yellow-3)" />
       Featured
     </SidebarItem>
     <SidebarItem
@@ -47,7 +47,7 @@
       href="/add-ons/?premium=true"
       --hover-background="var(--green-2)"
     >
-      <Premium --fill="var(--green)" />
+      <Premium --fill="var(--green-3)" />
       Premium
     </SidebarItem>
   </Flex>

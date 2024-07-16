@@ -233,6 +233,6 @@ It's deliberately minimal and can be wrapped in other components to add addition
   }
 
   .fallback.error {
-    fill: var(--red, #f00);
+    fill: var(--red-3, #f00);
   }
 </style>

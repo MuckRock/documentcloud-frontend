@@ -240,7 +240,7 @@
                     ? '500MB'
                     : '25MB'}"
                 >
-                  <Alert16 fill="var(--red)" />
+                  <Alert16 fill="var(--red-3)" />
                 </Tooltip>
               {/if}
             </p>
@@ -449,7 +449,7 @@
   }
 
   .fileInfo.error {
-    color: var(--red);
+    color: var(--red-3);
   }
 
   .title {

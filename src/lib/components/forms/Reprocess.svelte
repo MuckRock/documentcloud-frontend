@@ -168,6 +168,6 @@ This will mostly be used inside a modal but isn't dependent on one.
   }
 
   .errors li {
-    color: var(--red);
+    color: var(--red-3);
   }
 </style>

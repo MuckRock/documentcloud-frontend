@@ -35,7 +35,7 @@
   }
   .required {
     font-size: var(--font-xs);
-    color: var(--orange, #ec7b6b);
+    color: var(--orange-3, #ec7b6b);
   }
   .icon {
     display: inline-flex;
