@@ -67,7 +67,8 @@ function injectIframe(url, options, container) {
 
   iframe.style = style;
   iframe.src =
-    queryBuilder(`${APP_URL}documents/${id}-${slug}`, queryParams) + urlPostfix;
+    queryBuilder(new URL(`documents/${id}-${slug}`).href, queryParams) +
+    urlPostfix;
   setupResizeEvent(iframe);
 
   container.appendChild(iframe);
