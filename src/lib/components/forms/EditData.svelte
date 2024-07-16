@@ -110,7 +110,7 @@
 
   th {
     text-align: start;
-    font-size: var(--font-m);
+    font-size: var(--font-md);
     font-weight: var(--font-semibold);
   }
 

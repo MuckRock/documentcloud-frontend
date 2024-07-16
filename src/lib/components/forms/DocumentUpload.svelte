@@ -240,7 +240,7 @@
                     ? '500MB'
                     : '25MB'}"
                 >
-                  <Alert16 fill="var(--red)" />
+                  <Alert16 fill="var(--red-3)" />
                 </Tooltip>
               {/if}
             </p>
@@ -404,9 +404,9 @@
     left: 0.5rem;
     background: var(--white);
     border: 1px solid var(--gray-2);
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
     font-weight: var(--font-semibold);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
   }
@@ -449,7 +449,7 @@
   }
 
   .fileInfo.error {
-    color: var(--red);
+    color: var(--red-3);
   }
 
   .title {

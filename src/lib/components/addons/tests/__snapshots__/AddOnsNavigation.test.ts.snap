@@ -24,7 +24,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--blue-2);"
       >
         <a
-          class="container svelte-1u8xuj9 active"
+          class="container svelte-a23iq4 active"
           href="/add-ons/"
         >
           <svg
@@ -46,14 +46,14 @@ exports[`AddOnsNavigation 1`] = `
       </div>
        
       <div
-        style="display: contents; --hover-background: var(--orange-light);"
+        style="display: contents; --hover-background: var(--orange-2);"
       >
         <a
-          class="container svelte-1u8xuj9"
+          class="container svelte-a23iq4"
           href="/add-ons/?active=true"
         >
           <div
-            style="display: contents; --fill: var(--orange);"
+            style="display: contents; --fill: var(--orange-3);"
           >
             <svg
               class="svelte-x1la67"
@@ -77,15 +77,15 @@ exports[`AddOnsNavigation 1`] = `
       </div>
        
       <div
-        style="display: contents; --hover-background: var(--yellow-light);"
+        style="display: contents; --hover-background: var(--yellow-2);"
       >
         <a
-          class="container svelte-1u8xuj9"
+          class="container svelte-a23iq4"
           href="/add-ons/?featured=true"
         >
           <svg
             class="octicon octicon-star-fill"
-            fill="var(--yellow)"
+            fill="var(--yellow-3)"
             height="16"
             viewBox="0 0 16 16"
             width="16"
@@ -102,14 +102,14 @@ exports[`AddOnsNavigation 1`] = `
       </div>
        
       <div
-        style="display: contents; --hover-background: var(--green-light);"
+        style="display: contents; --hover-background: var(--green-2);"
       >
         <a
-          class="container svelte-1u8xuj9"
+          class="container svelte-a23iq4"
           href="/add-ons/?premium=true"
         >
           <div
-            style="display: contents; --fill: var(--green);"
+            style="display: contents; --fill: var(--green-3);"
           >
             <svg
               class="svelte-13bl109"
@@ -146,7 +146,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --color: var(--gray-4);"
       >
         <span
-          class="container svelte-1u8xuj9 small"
+          class="container svelte-a23iq4 small"
         >
           Collections
         </span>
@@ -154,7 +154,7 @@ exports[`AddOnsNavigation 1`] = `
       </div>
        
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=ai"
       >
         AI
@@ -162,7 +162,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=statistical"
       >
         Analyze
@@ -170,7 +170,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=bulk"
       >
         Bulk
@@ -178,7 +178,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=export"
       >
         Export
@@ -186,7 +186,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=extraction"
       >
         Extract
@@ -194,7 +194,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=file"
       >
         File
@@ -202,7 +202,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-1u8xuj9"
+        class="container svelte-a23iq4"
         href="/add-ons/?category=monitor"
       >
         Monitor

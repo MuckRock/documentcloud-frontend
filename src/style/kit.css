@@ -3,66 +3,77 @@ Updated variables and styles for new SvelteKit routes
 */
 
 :root {
-  /* fonts */
+  /* Font Families */
   --font-sans: "Source Sans Pro";
-  --font-xs: 0.75em;
-  --font-s: 0.875em;
-  --font-m: 1em;
-  --font-l: 1.25em;
-  --font-xl: 1.5em;
+  --font-mono: "Source Code Pro";
+
+  /* Font Sizes */
+  --font-xs: 0.750em;
+  --font-sm: 0.875em;
+  --font-md: 1.000em;
+  --font-lg: 1.250em;
+  --font-xl: 1.500em;
 
   /* Font Weights */
   --font-regular: 400;
   --font-semibold: 600;
   --font-bold: 700;
 
-  /* colors */
+  /* Colors */
   --white: #ffffff;
   --black: #0c1e27;
 
-  --gray-1: #f5f6f7;
-  --gray-2: #d8dee2;
-  --gray-3: #99a8b3;
-  --gray-4: #5c717c;
   --gray-5: #233944;
+  --gray-4: #5c717c;
+  --gray-3: #99a8b3;
+  --gray-2: #d8dee2;
+  --gray-1: #f5f6f7;
 
-  --red: #e1275f;
-  --red-dark: #5d275f;
-  --red-light: #e9a1bb;
-
-  --orange: #ec7b6b;
-  --orange-dark: #69515c;
-  --orange-light: #ffc2ba;
-
-  --yellow: #eccb6b;
-  --yellow-bright: #ffe325;
-  --yellow-light: #ffe5ba;
-  --yellow-dark: #69755c;
-
-  --green: #27c6a2;
-  --green-dark: #117383;
-  --green-light: #9de3d3;
-  --green-shiny: #24cc99;
-
-  --blue-1: #eef3f9;
-  --blue-2: #b5ceed;
-  --blue-3: #4294f0;
-  --blue-4: #1367d0;
   --blue-5: #053775;
+  --blue-4: #1367d0;
+  --blue-3: #4294f0;
+  --blue-2: #b5ceed;
+  --blue-1: #eef3f9;
 
-  --purple: #744af0;
-  --purple-light: #dfd5fa;
-  --purple-dark: #343ba6;
+  --red-5: #302240;
+  --red-4: #5d275f;
+  --red-3: #e1275f;
+  --red-2: #eaa4bb;
+  --red-1: #fae8ee;
+
+  --orange-5: #36353f;
+  --orange-4: #69515c;
+  --orange-3: #ec7b6b;
+  --orange-2: #ffc2ba;
+  --orange-1: #fff0ee;
+
+  --yellow-5: #36453f;
+  --yellow-4: #69755c;
+  --yellow-3: #eccb6b;
+  --yellow-2: #ffe5ba;
+  --yellow-1: #fff9ee;
+
+  --green-5: #0e4450;
+  --green-4: #117383;
+  --green-3: #27c6a2;
+  --green-2: #9de3d3;
+  --green-1: #ebf9f6;
+
+  --purple-5: #1e2b60;
+  --purple-4: #343ba6;
+  --purple-3: #744af0;
+  --purple-2: #dfd5fa;
+  --purple-1: #f4f1fe;
 
   /* semantic aliases */
   --primary: var(--blue-3);
-  --premium: var(--green-shiny);
-  --error: var(--red);
-  --note-public: var(--yellow-bright);
-  --note-private: var(--blue-3);
-  --note-org: var(--green);
+  --premium: var(--green-3);
+  --error: var(--red-3);
+  --caution: var(--orange-3);
 
-  --caution: var(--red);
+  --note-public: var(--yellow-3);
+  --note-private: var(--blue-3);
+  --note-org: var(--green-3);
 
   /* Text-size styles */
   --action: 12px;
@@ -70,7 +81,11 @@ Updated variables and styles for new SvelteKit routes
   /* Effect styles */
   --border: #d9d9d9;
   --glare: inset 8px 8px 16px rgba(255, 255, 255, 0.25);
-  --shadow: 0px 2px 4px rgba(128, 128, 128, 0.15);
+  
+  /* Shadows */
+  --shadow-1: 0 2px 4px 2px rgba(30 48 56 / 0.15);
+  --shadow-2: 0 2px 8px 2px rgba(30 48 56 / 0.15);
+  --shadow-3: 0 2px 16px 2px rgba(30 48 56 / 0.15);
 
   /* Z-Index Layers */
   --z-modal: 5;

@@ -35,7 +35,7 @@
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
     background: #fff;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
   }
 
   .left,

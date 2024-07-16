@@ -57,7 +57,7 @@
     fill: var(--gray-1, #f5f6f7);
     text-align: center;
     font-family: var(--font-sans, "Source Sans Pro");
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
     font-weight: var(--font-semibold, 600);
   }
 
@@ -90,9 +90,9 @@
   }
 
   .small {
-    font-size: var(--font-s, 0.875rem);
+    font-size: var(--font-sm, 0.875rem);
     padding: 0.25rem 0.5rem;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
   }
 
   @media (hover: none) {

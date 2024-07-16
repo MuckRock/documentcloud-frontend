@@ -66,6 +66,6 @@
     position: relative;
     width: 88ch;
     aspect-ratio: 2 / 3;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
   }
 </style>

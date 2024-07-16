@@ -22,6 +22,6 @@
     fill: var(--gray-3, #99a8b3);
 
     text-align: center;
-    font-size: var(--font-s, 0.75rem);
+    font-size: var(--font-sm, 0.875rem);
   }
 </style>

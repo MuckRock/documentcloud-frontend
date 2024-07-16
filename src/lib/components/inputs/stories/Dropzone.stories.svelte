@@ -49,7 +49,7 @@
     opacity: 0.5;
   }
   .dropzone dl {
-    font-family: var(--font-code, "Source Code Pro");
+    font-family: var(--font-mono, "Source Code Pro", monospace);
     font-size: var(--font-xs);
   }
   .dropzone dt {

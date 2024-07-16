@@ -109,7 +109,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
         value="delete"
         on:click={(e) => dispatch("delete", { key, value })}
         --fill="var(--caution)"
-        --background="var(--orange-light)"
+        --background="var(--orange-2)"
       >
         <Trash16 />
       </Button>
@@ -125,11 +125,11 @@ This uses `svelte-select` to let users more easily choose existing keys.
     --border-focused: 0.25px solid var(--blue-3, #4294f0);
     --clear-select-width: 1.5rem;
     --chevron-width: 1.5rem;
-    --font-size: var(--font-m, 1rem);
+    --font-size: var(--font-md, 1rem);
     --padding: 0 0 0 1rem;
     --item-hover-bg: var(--blue-1, #eef3f9);
     --item-is-active-bg: var(--blue-3, #4294f0);
-    --list-shadow: var(--shadow);
+    --list-shadow: var(--shadow-1);
     --list-border: 0.25px solid var(--gray-2, #d8dee2);
 
     min-width: 20ch;
@@ -141,7 +141,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
 
   td {
     padding: 0 0.25rem 0.5rem 0;
-    --font-size: var(--font-s);
+    --font-size: var(--font-sm);
   }
 
   input.value {
@@ -161,7 +161,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: "Source Sans Pro";
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
     font-style: normal;
     font-weight: 400;
     line-height: normal;

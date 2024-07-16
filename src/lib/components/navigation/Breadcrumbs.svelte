@@ -42,7 +42,7 @@
 
   .crumb {
     flex: 0 1 auto;
-    font-size: var(--font-l);
+    font-size: var(--font-lg);
     text-decoration: none;
     color: var(--gray-4);
     padding: 0.25rem 0.5rem;

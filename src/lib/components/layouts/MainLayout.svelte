@@ -126,7 +126,7 @@
     align-items: center;
     background: var(--white, #ffffff);
     border-bottom: 1px solid var(--gray-2, #d8dee2);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
     flex: 0 0 auto;
     padding: 0 1rem;
     z-index: 1;

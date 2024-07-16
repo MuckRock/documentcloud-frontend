@@ -100,7 +100,7 @@
   .addon-name {
     margin: 0;
     font-weight: 600;
-    font-size: var(--font-l);
+    font-size: var(--font-lg);
   }
 
   .center-self {

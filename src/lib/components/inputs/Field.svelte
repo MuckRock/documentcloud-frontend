@@ -33,7 +33,7 @@
   }
   .help {
     margin: 0.5rem 0;
-    font-size: var(--font-s, 0.8em);
+    font-size: var(--font-sm, 0.875em);
     color: var(--gray-3);
   }
   .inline.field {

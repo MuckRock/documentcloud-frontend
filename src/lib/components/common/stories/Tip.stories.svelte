@@ -26,9 +26,9 @@
 
 <Story name="With Colors">
   <Tip
-    --fill="var(--green-dark)"
-    --background-color="var(--green-light)"
-    --border-color="var(--green)"
+    --fill="var(--green-4)"
+    --background-color="var(--green-2)"
+    --border-color="var(--green-3)"
   >
     <Premium slot="icon" />
     This feature is for premium users.

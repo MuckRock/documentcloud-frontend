@@ -46,7 +46,7 @@
     background: var(--background, transparent);
 
     font-family: var(--font-sans, "Source Sans Pro");
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
     font-weight: var(--font-semibold, 600);
     text-decoration: none;
     white-space: nowrap;
@@ -89,7 +89,7 @@
 
   /* Small */
   .container.small {
-    font-size: var(--font-s, 0.875rem);
+    font-size: var(--font-sm, 0.875rem);
   }
 
   /* Disabled */

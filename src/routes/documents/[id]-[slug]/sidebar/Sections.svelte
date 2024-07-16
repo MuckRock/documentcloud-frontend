@@ -57,6 +57,6 @@
   }
   span.page_number {
     color: var(--gray-4);
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
   }
 </style>

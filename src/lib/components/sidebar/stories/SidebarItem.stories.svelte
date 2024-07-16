@@ -46,9 +46,9 @@
     </SidebarItem>
     <SidebarItem
       active
-      --active-background="var(--orange-light)"
-      --active-color="var(--orange-dark)"
-      --active-fill="var(--orange)"
+      --active-background="var(--orange-2)"
+      --active-color="var(--orange-4)"
+      --active-fill="var(--orange-3)"
     >
       <Paintbrush16 /> Custom Active Colors
     </SidebarItem>

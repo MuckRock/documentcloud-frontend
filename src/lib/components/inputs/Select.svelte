@@ -59,7 +59,7 @@
   --padding="0 0 0 0.75rem"
   --item-hover-bg="var(--blue-1, #eef3f9)"
   --item-is-active-bg="var(--blue-3, #4294f0)"
-  --list-shadow="var(--shadow)"
+  --list-shadow="var(--shadow-1)"
   --list-border="1px solid var(--gray-2, #d8dee2)"
   --multi-item-bg="var(--blue-1, #eef3f9)"
   --multi-item-color="var(--blue-5, #053775)"

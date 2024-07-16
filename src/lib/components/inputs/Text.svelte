@@ -44,7 +44,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: "Source Sans Pro";
-    font-size: var(--font-size, var(--font-m, 1rem));
+    font-size: var(--font-size, var(--font-md, 1rem));
     font-style: normal;
     font-weight: 400;
     line-height: normal;

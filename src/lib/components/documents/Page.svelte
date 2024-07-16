@@ -104,7 +104,7 @@
     flex-direction: column;
     align-items: flex-start;
     align-self: center;
-    gap: var(--font-m, 1rem);
+    gap: var(--font-md, 1rem);
     position: relative;
     padding: 0 1rem;
     margin: 0.75rem 0 0;

@@ -55,7 +55,7 @@
     border: none;
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-regular, 400);
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
   }
   input::placeholder {
     color: var(--gray-4, #5c717c);
@@ -78,7 +78,7 @@
     padding: 0;
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-regular, 400);
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
     background: transparent;
     fill: var(--gray-3, #99a8b3);
     cursor: pointer;
