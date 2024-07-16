@@ -92,7 +92,7 @@
   .small {
     font-size: var(--font-sm, 0.875rem);
     padding: 0.25rem 0.5rem;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
   }
 
   @media (hover: none) {

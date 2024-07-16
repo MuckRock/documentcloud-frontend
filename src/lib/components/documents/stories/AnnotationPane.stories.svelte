@@ -59,7 +59,7 @@
     position: relative;
 
     background-color: var(--white, white);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
 
     width: 88ch;
     aspect-ratio: 2 / 3;

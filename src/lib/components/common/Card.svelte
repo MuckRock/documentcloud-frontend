@@ -18,6 +18,6 @@
     padding: 1.5rem;
     border-radius: var(--font-md, 1rem);
     background: var(--white, #fff);
-    box-shadow: 0px 2px 4px 2px var(--shadow, rgba(30, 48, 56, 0.15));
+    box-shadow: var(--shadow-1, 0px 2px 4px 2px rgba(30, 48, 56, 0.15));
   }
 </style>

@@ -129,7 +129,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
     --padding: 0 0 0 1rem;
     --item-hover-bg: var(--blue-1, #eef3f9);
     --item-is-active-bg: var(--blue-3, #4294f0);
-    --list-shadow: var(--shadow);
+    --list-shadow: var(--shadow-1);
     --list-border: 0.25px solid var(--gray-2, #d8dee2);
 
     min-width: 20ch;

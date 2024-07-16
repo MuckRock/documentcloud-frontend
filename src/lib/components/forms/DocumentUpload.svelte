@@ -406,7 +406,7 @@
     border: 1px solid var(--gray-2);
     font-size: var(--font-sm);
     font-weight: var(--font-semibold);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
   }

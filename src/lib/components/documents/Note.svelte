@@ -212,7 +212,7 @@
     background: var(--white, #fff);
 
     /* shadow-2 */
-    box-shadow: 0px 2px 8px 2px var(--shadow, rgba(30, 48, 56, 0.15));
+    box-shadow: 0px 2px 8px 2px var(--shadow-1, rgba(30, 48, 56, 0.15));
   }
 
   /* overlay */

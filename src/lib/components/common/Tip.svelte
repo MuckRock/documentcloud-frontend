@@ -20,7 +20,7 @@
     fill: var(--fill, var(--gray-4, #5c717c));
     background-color: var(--background-color, var(--gray-1, #f5f6f7));
     border: 1px solid var(--border-color, var(--gray-3, #99a8b3));
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
   }
   .icon {
     display: flex;

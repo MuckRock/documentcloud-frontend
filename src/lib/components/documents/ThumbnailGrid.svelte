@@ -63,6 +63,6 @@
 
   img {
     background-color: var(--white, white);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
   }
 </style>

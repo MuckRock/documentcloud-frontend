@@ -54,7 +54,7 @@
   .placeholder {
     aspect-ratio: calc(11 / 8.5);
     background-color: var(--white, white);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
     width: 66ch;
   }
 </style>
