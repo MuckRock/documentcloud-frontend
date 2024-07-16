@@ -25,7 +25,7 @@
     word-break: break-word;
 
     color: var(--gray-5, #233944);
-    font-family: "Source Code Pro", monospace;
+    font-family: var(--font-mono, "Source Code Pro", monospace);
     font-size: calc(var(--font-xs) * var(--zoom, 1));
     line-height: calc(1.25rem * var(--zoom, 1));
     box-shadow: var(--shadow);
