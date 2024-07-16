@@ -56,6 +56,9 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 
 Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-run tests as code changes.
 
+We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated.
+To update snapshots, run `npm run test:unit -- -u`.
+
 ## Browser tests
 
 All of the browser test commands depend on the front end running, so start the app with `make dev` and start the backend and Squarelet as well.
