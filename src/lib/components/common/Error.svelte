@@ -15,7 +15,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    color: var(--red-dark, #5d275f);
+    color: var(--red-4, #5d275f);
     fill: var(--red, #e1275f);
 
     text-align: center;

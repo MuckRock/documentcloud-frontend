@@ -29,7 +29,7 @@
     <SidebarItem
       active={active === "active"}
       href="/add-ons/?active=true"
-      --hover-background="var(--orange-light)"
+      --hover-background="var(--orange-2)"
     >
       <Pin --fill="var(--orange)" />
       Pinned
@@ -37,7 +37,7 @@
     <SidebarItem
       active={active === "featured"}
       href="/add-ons/?featured=true"
-      --hover-background="var(--yellow-light)"
+      --hover-background="var(--yellow-2)"
     >
       <StarFill16 fill="var(--yellow)" />
       Featured
@@ -45,7 +45,7 @@
     <SidebarItem
       active={active === "premium"}
       href="/add-ons/?premium=true"
-      --hover-background="var(--green-light)"
+      --hover-background="var(--green-2)"
     >
       <Premium --fill="var(--green)" />
       Premium

@@ -72,7 +72,7 @@
             <Tip
               --background-color="var(--orange-light)"
               --border-color="var(--orange)"
-              --fill="var(--orange-dark)"
+              --fill="var(--orange-4)"
             >
               <Pin size={1.75} slot="icon" />
               {$_("addonBrowserDialog.pinnedTip")}
@@ -81,7 +81,7 @@
             <Tip
               --background-color="var(--yellow-light)"
               --border-color="var(--yellow)"
-              --fill="var(--yellow-dark)"
+              --fill="var(--yellow-4)"
             >
               <Star size={1.75} slot="icon" />
               {$_("addonBrowserDialog.featuredTip")}
@@ -90,7 +90,7 @@
             <Tip
               --background-color="var(--green-light)"
               --border-color="var(--green)"
-              --fill="var(--green-dark)"
+              --fill="var(--green-4)"
             >
               <Premium size={1.75} slot="icon" />
               {$_("addonBrowserDialog.premiumTip")}

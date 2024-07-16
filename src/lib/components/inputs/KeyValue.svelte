@@ -109,7 +109,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
         value="delete"
         on:click={(e) => dispatch("delete", { key, value })}
         --fill="var(--caution)"
-        --background="var(--orange-light)"
+        --background="var(--orange-2)"
       >
         <Trash16 />
       </Button>
