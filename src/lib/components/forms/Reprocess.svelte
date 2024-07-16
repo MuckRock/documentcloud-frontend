@@ -164,7 +164,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   .disclaimer {
     line-height: 1.4;
     color: var(--gray-4);
-    font-size: var(--font-m);
+    font-size: var(--font-md);
   }
 
   .errors li {

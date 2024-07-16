@@ -292,14 +292,14 @@
 
   footer p {
     color: var(--gray-4, #5c717c);
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
   }
 
   span.access {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
   }
 
   span.access.public {

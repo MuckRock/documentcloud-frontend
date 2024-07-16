@@ -188,12 +188,12 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: var(--font-m);
+    font-size: var(--font-md);
   }
 
   label.mode select {
     border: none;
     font-family: var(--font-sans);
-    font-size: var(--font-m);
+    font-size: var(--font-md);
   }
 </style>

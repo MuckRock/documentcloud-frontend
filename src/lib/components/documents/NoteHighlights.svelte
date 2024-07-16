@@ -74,6 +74,6 @@
   }
 
   cite {
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
   }
 </style>

@@ -102,19 +102,19 @@ This form is entirely client-side.
   td,
   th {
     padding: 0 0.5rem 0.5rem 0;
-    --font-size: var(--font-s);
+    --font-size: var(--font-sm);
   }
 
   th {
     padding: 0.5rem 0.5rem 0.5rem 0;
     text-align: start;
-    font-size: var(--font-m);
+    font-size: var(--font-md);
     font-weight: var(--font-semibold);
   }
 
   .warning {
-    font-size: var(--font-s);
-    line-height: var(--font-s);
+    font-size: var(--font-sm);
+    line-height: var(--font-sm);
     color: var(--caution);
   }
 

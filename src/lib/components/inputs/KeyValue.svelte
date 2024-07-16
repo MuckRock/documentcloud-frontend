@@ -125,7 +125,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
     --border-focused: 0.25px solid var(--blue-3, #4294f0);
     --clear-select-width: 1.5rem;
     --chevron-width: 1.5rem;
-    --font-size: var(--font-m, 1rem);
+    --font-size: var(--font-md, 1rem);
     --padding: 0 0 0 1rem;
     --item-hover-bg: var(--blue-1, #eef3f9);
     --item-is-active-bg: var(--blue-3, #4294f0);
@@ -141,7 +141,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
 
   td {
     padding: 0 0.25rem 0.5rem 0;
-    --font-size: var(--font-s);
+    --font-size: var(--font-sm);
   }
 
   input.value {
@@ -161,7 +161,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: "Source Sans Pro";
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
     font-style: normal;
     font-weight: 400;
     line-height: normal;

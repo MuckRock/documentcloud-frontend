@@ -173,7 +173,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
 
   h3 {
     color: var(--gray-5, #233944);
-    font-size: var(--font-m, 1rem);
+    font-size: var(--font-md, 1rem);
     font-style: normal;
     font-weight: var(--font-semibold, 600);
     line-height: normal;

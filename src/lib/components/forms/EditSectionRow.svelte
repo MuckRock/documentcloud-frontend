@@ -124,7 +124,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
 <style>
   td {
     padding: 0 0.5rem 0.5rem 0;
-    --font-size: var(--font-s);
+    --font-size: var(--font-sm);
   }
 
   td.page_number {

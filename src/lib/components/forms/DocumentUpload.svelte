@@ -404,7 +404,7 @@
     left: 0.5rem;
     background: var(--white);
     border: 1px solid var(--gray-2);
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
     font-weight: var(--font-semibold);
     box-shadow: var(--shadow);
     padding: 0.25rem 0.5rem;

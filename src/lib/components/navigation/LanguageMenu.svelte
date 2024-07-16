@@ -46,7 +46,7 @@
 
 <style>
   .flag {
-    font-size: var(--font-l);
+    font-size: var(--font-lg);
     height: 1.5rem;
     width: 1.5rem;
     display: flex;

@@ -31,7 +31,7 @@
   .label {
     color: var(--gray-5, #233944);
     font-weight: 600;
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
   }
   .required {
     font-size: var(--font-xs);

@@ -19,6 +19,6 @@
     fill: var(--red, #e1275f);
 
     text-align: center;
-    font-size: var(--font-s, 0.75rem);
+    font-size: var(--font-sm, 0.875rem);
   }
 </style>

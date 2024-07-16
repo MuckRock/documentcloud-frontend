@@ -99,6 +99,6 @@ of the $modal store. These are used to set the active modal on any given page.
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--font-m, 1rem);
+    gap: var(--font-md, 1rem);
   }
 </style>
