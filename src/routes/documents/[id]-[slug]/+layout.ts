@@ -31,7 +31,7 @@ export async function load({ fetch, params, parent, depends, url }) {
   depends(`document:${document.id}`);
 
   const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: "/documents/", title: "Documents" }, // TODO: move document manager to `/documents` route
+    { href: "/documents/", title: "Documents" },
     { href: documentPath(document), title: document.title },
   ]);
 
