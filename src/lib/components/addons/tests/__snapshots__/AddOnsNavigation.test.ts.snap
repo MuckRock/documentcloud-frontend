@@ -53,7 +53,7 @@ exports[`AddOnsNavigation 1`] = `
           href="/add-ons/?active=true"
         >
           <div
-            style="display: contents; --fill: var(--orange);"
+            style="display: contents; --fill: var(--orange-3);"
           >
             <svg
               class="svelte-x1la67"
@@ -85,7 +85,7 @@ exports[`AddOnsNavigation 1`] = `
         >
           <svg
             class="octicon octicon-star-fill"
-            fill="var(--yellow)"
+            fill="var(--yellow-3)"
             height="16"
             viewBox="0 0 16 16"
             width="16"
@@ -109,7 +109,7 @@ exports[`AddOnsNavigation 1`] = `
           href="/add-ons/?premium=true"
         >
           <div
-            style="display: contents; --fill: var(--green);"
+            style="display: contents; --fill: var(--green-3);"
           >
             <svg
               class="svelte-13bl109"
