@@ -27,6 +27,7 @@
   export let count: number = undefined;
   export let next: string | null = null;
   export let auto = false;
+  export let preload: "hover" | "tap" = "hover";
 
   let loading = false;
   let end: HTMLElement;
@@ -86,7 +87,7 @@
   });
 </script>
 
-<div class="container" data-sveltekit-preload-data="hover">
+<div class="container" data-sveltekit-preload-data={preload}>
   <slot name="start" />
   {#each results as document (document.id)}
     <Flex direction="column">

@@ -3,9 +3,8 @@
   import AddOnNavigation from "../AddOnsNavigation.svelte";
 
   export const meta = {
-    title: "Components / Add-Ons / Navigation",
+    title: "Add-Ons / Navigation",
     component: AddOnNavigation,
-    tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 
@@ -18,4 +17,4 @@
   <AddOnNavigation {...args} />
 </Template>
 
-<Story name="Navigation" {args} />
+<Story name="default" {args} />

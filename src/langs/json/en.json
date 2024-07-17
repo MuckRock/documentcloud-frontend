@@ -870,7 +870,8 @@
     "delete": "Delete",
     "addons": {
       "title": "Add-Ons",
-      "pinned": "Pinned add-ons will appear here"
+      "pinned": "Pinned add-ons will appear here",
+      "runs":"Schedule & history"
     },
     "data": {
       "title": "Data & Tags",

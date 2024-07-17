@@ -8,11 +8,11 @@ Updated variables and styles for new SvelteKit routes
   --font-mono: "Source Code Pro";
 
   /* Font Sizes */
-  --font-xs: 0.750em;
+  --font-xs: 0.75em;
   --font-sm: 0.875em;
-  --font-md: 1.000em;
-  --font-lg: 1.250em;
-  --font-xl: 1.500em;
+  --font-md: 1em;
+  --font-lg: 1.25em;
+  --font-xl: 1.5em;
 
   /* Font Weights */
   --font-regular: 400;
@@ -81,7 +81,7 @@ Updated variables and styles for new SvelteKit routes
   /* Effect styles */
   --border: #d9d9d9;
   --glare: inset 8px 8px 16px rgba(255, 255, 255, 0.25);
-  
+
   /* Shadows */
   --shadow-1: 0 2px 4px 2px rgba(30 48 56 / 0.15);
   --shadow-2: 0 2px 8px 2px rgba(30 48 56 / 0.15);
@@ -122,15 +122,15 @@ h1 {
 }
 
 h2 {
-  font-size: var(--font-l);
+  font-size: var(--font-lg);
 }
 
 h3 {
-  font-size: var(--font-m);
+  font-size: var(--font-md);
 }
 
 h4 {
-  font-size: var(--font-s);
+  font-size: var(--font-sm);
 }
 
 h5 {
@@ -197,7 +197,6 @@ hr.divider {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  max-width: 40rem;
   margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;

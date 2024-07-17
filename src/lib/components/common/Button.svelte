@@ -10,7 +10,10 @@
   export let type: "submit" | "reset" | "button" = "button";
   export let label = "Submit";
   // anchor-specific properties
-  export let href: string = null;
+  export let href: string = undefined;
+  export let target: string = undefined;
+  export let rel: string =
+    target === "_blank" ? "noopener noreferrer" : undefined;
   // button-specific properties
   export let name: string = undefined;
   export let value: any = undefined;
@@ -18,7 +21,16 @@
 </script>
 
 {#if href}
-  <a {href} {title} on:click class="{mode} {size}" class:full class:minW>
+  <a
+    {href}
+    {title}
+    {target}
+    {rel}
+    on:click
+    class="{mode} {size}"
+    class:full
+    class:minW
+  >
     <slot>{label}</slot>
   </a>
 {:else}

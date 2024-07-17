@@ -26,7 +26,7 @@
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then addons}
       {#each addons.results as addon}
-        <SidebarItem small href={`/add-ons/${addon.repository}/`}>
+        <SidebarItem small href="/add-ons/{addon.repository}/">
           <Pin active={addon.active} />
           {addon.name}
         </SidebarItem>
@@ -34,5 +34,8 @@
         <Empty icon={Pin24}>{$_("sidebar.addons.pinned")}</Empty>
       {/each}
     {/await}
+    <SidebarItem>
+      <a href="/add-ons/runs/">{$_("sidebar.addons.runs")}</a>
+    </SidebarItem>
   </Flex>
 </SidebarGroup>

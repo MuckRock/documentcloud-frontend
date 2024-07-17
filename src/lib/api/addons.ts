@@ -1,10 +1,10 @@
 import type { Page } from "@/api/types/common";
 import type { AddOnParams } from "@/api/types/addons";
-import type { AddOnListItem } from "@/addons/types";
+import type { AddOnListItem, Event, Run } from "@/addons/types";
 import { BASE_API_URL } from "@/config/config";
 import { isErrorCode } from "../utils/api";
-import { error } from "@sveltejs/kit";
 
+// todo i18n
 export const CATEGORIES = [
   ["ai", "AI"],
   ["statistical", "Analyze"],
@@ -23,9 +23,16 @@ export async function getAddons(
   Object.entries(params).forEach(([key, value]) => {
     endpoint.searchParams.set(key, String(value));
   });
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
   if (isErrorCode(resp.status)) {
-    error(resp.status, resp.statusText);
+    throw new Error(resp.statusText);
   }
   return resp.json();
 }
