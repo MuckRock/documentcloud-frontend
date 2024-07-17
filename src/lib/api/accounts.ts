@@ -1,4 +1,4 @@
-import type { Maybe, User, Org } from "@/api/types";
+import type { Maybe, Nullable, User, Org } from "@/api/types";
 import { BASE_API_URL, SQUARELET_BASE } from "@/config/config.js";
 
 type Fetch = typeof globalThis.fetch;
@@ -29,4 +29,25 @@ export function getUpgradeUrl(org: Org = null): URL {
   }
   // Redirect the user to the Squarelet organization settings
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
+}
+
+export async function createMailkey(fetch: Fetch): Promise<Nullable<string>> {
+  const endpoint = new URL(`users/mailkey/`, BASE_API_URL);
+  try {
+    const resp = await fetch(endpoint, { method: "POST", credentials: "include" });
+    const data = await resp.json();
+    return data.mailkey;
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function destroyMailkey(fetch: Fetch): Promise<boolean> {
+  const endpoint = new URL(`users/mailkey/`, BASE_API_URL);
+  try {
+    await fetch(endpoint, { method: "DELETE", credentials: "include" });
+    return true;
+  } catch (e) {
+    return false;
+  }
 }

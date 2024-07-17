@@ -3,7 +3,7 @@ import { vi, test, describe, it, expect, beforeEach, afterEach } from "vitest";
 import { BASE_API_URL, SQUARELET_BASE } from "@/config/config";
 import * as fixtures from "@/test/fixtures/accounts";
 
-import { getMe, getOrg, getUpgradeUrl } from "./accounts";
+import { createMailkey, destroyMailkey, getMe, getOrg, getUpgradeUrl } from "./accounts";
 
 describe("getMe", async () => {
   let mockFetch;
@@ -67,4 +67,49 @@ test("getUpgradeUrl", () => {
   expect(getUpgradeUrl()).toEqual(new URL("/users/~payment/", SQUARELET_BASE));
   expect(getUpgradeUrl(fixtures.proOrg)).toEqual(new URL("/users/~payment/", SQUARELET_BASE));
   expect(getUpgradeUrl(fixtures.organization)).toEqual(new URL(`/organizations/${fixtures.organization.slug}/payment/`, SQUARELET_BASE))
+});
+
+describe("createMailkey", () => {
+  let mockFetch;
+  beforeEach(() => {
+    mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      json: vi.fn().mockReturnValue({mailkey: 'xxxxxxxxx'}),
+    }));
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+  it("makes a POST request and returns the mailkey on success", async () => {
+    const resp = await createMailkey(mockFetch);
+    expect(resp).toBe('xxxxxxxxx');
+    expect(mockFetch).toHaveBeenCalledWith(new URL('users/mailkey/', BASE_API_URL), {method: "POST", credentials: "include"});
+  });
+  it("returns null on error", async () => {
+    mockFetch = vi.fn().mockRejectedValue(new Error("Fetch Error"));
+    const resp = await createMailkey(mockFetch);
+    expect(resp).toBeNull();
+  })
+});
+
+describe("destroyMailkey", () => {
+  let mockFetch;
+  beforeEach(() => {
+    mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true
+    }));
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+  it("makes a DELETE request and returns `true` upon success", async () => {
+    const resp = await destroyMailkey(mockFetch);
+    expect(resp).toBe(true);
+    expect(mockFetch).toHaveBeenCalledWith(new URL('users/mailkey/', BASE_API_URL), {method: "DELETE", credentials: "include"});
+  });
+  it("returns false on error", async () => {
+    mockFetch = vi.fn().mockRejectedValue(new Error("Fetch Error"));
+    const resp = await destroyMailkey(mockFetch);
+    expect(resp).toBe(false);
+  })
 });
