@@ -111,5 +111,7 @@ describe("destroyMailkey", () => {
     mockFetch = vi.fn().mockRejectedValue(new Error("Fetch Error"));
     const resp = await destroyMailkey(mockFetch);
     expect(resp).toBe(false);
+    mockFetch = vi.fn().mockResolvedValue({ok: false});
+    expect(await destroyMailkey(mockFetch)).toBe(false);
   })
 });

@@ -45,7 +45,8 @@ export async function createMailkey(fetch: Fetch): Promise<Nullable<string>> {
 export async function destroyMailkey(fetch: Fetch): Promise<boolean> {
   const endpoint = new URL(`users/mailkey/`, BASE_API_URL);
   try {
-    await fetch(endpoint, { method: "DELETE", credentials: "include" });
+    const resp = await fetch(endpoint, { method: "DELETE", credentials: "include" });
+    if (!resp.ok) throw new Error();
     return true;
   } catch (e) {
     return false;
