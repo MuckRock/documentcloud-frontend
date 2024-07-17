@@ -45,7 +45,7 @@ exports[`Mailkey 1`] = `
         class="content svelte-oeb706"
       >
         <div
-          class="description svelte-147s6va"
+          class="description svelte-mrguwb"
         >
           <p>
             You can upload documents to your account by sending them to to a special email address as attachments.
@@ -56,7 +56,7 @@ exports[`Mailkey 1`] = `
             </strong>
           </p>
           <p>
-            This address will accept attachments from any email account. You can generate a new upload address at any time (which will disable the old one) or turn off this feature entirely. Documents are uploaded as private.
+            This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
           </p>
           <p>
             We’d love your feedback and to hear about creative use cases at 
@@ -145,7 +145,7 @@ exports[`Mailkey 2`] = `
         class="content svelte-oeb706"
       >
         <div
-          class="description svelte-147s6va"
+          class="description svelte-mrguwb"
         >
           <p>
             You can upload documents to your account by sending them to to a special email address as attachments.
@@ -156,7 +156,7 @@ exports[`Mailkey 2`] = `
             </strong>
           </p>
           <p>
-            This address will accept attachments from any email account. You can generate a new upload address at any time (which will disable the old one) or turn off this feature entirely. Documents are uploaded as private.
+            This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
           </p>
           <p>
             We’d love your feedback and to hear about creative use cases at 
@@ -171,7 +171,7 @@ exports[`Mailkey 2`] = `
         </div>
          
         <p
-          class="svelte-147s6va"
+          class="message svelte-mrguwb"
         >
           Something happened
         </p>

@@ -1079,7 +1079,7 @@
   },
   "mailkey": {
     "title": "Upload via email",
-    "description": "<p>You can upload documents to your account by sending them to to a special email address as attachments.</p><p><strong>For security reasons, this email is only shown to you once. Please copy it to a secure location.</strong></p><p>This address will accept attachments from any email account. You can generate a new upload address at any time (which will disable the old one) or turn off this feature entirely. Documents are uploaded as private.</p><p>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.</p>",
+    "description": "<p>You can upload documents to your account by sending them to to a special email address as attachments.</p><p><strong>For security reasons, this email is only shown to you once. Please copy it to a secure location.</strong></p><p>This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.</p><p>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.</p>",
     "create": {
       "button": "Create new email address",
       "success": "<strong>Upload email address succesfully created</strong>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",

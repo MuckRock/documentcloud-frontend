@@ -4,7 +4,7 @@
   import UserMenu from "../UserMenu.svelte";
 
   export const meta = {
-    title: "Components / Navigation / User Menu",
+    title: "Components / Accounts / User Menu",
     component: UserMenu,
     parameters: { layout: "centered" },
   };

@@ -42,7 +42,7 @@
   <h1 slot="title">{$_("mailkey.title")}</h1>
   <div class="description">{@html $_("mailkey.description")}</div>
   {#if message}
-    <p class:error>
+    <p class="message" class:error>
       {@html message}
     </p>
   {/if}
@@ -62,6 +62,9 @@
   :global(.description p) {
     margin-bottom: 1rem;
     -webkit-column-break-inside: avoid;
+  }
+  :global(.description strong, .message strong) {
+    font-weight: var(--font-semibold);
   }
   .error {
     color: var(--red-3);
