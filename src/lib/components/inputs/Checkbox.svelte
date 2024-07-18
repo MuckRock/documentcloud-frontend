@@ -1,8 +1,9 @@
 <script lang="ts">
   import { Check16, Dash16 } from "svelte-octicons";
 
+  export let name: string = undefined;
   export let disabled = false;
-  export let checked = false;
+  export let value = false;
   export let indeterminate = false;
 
   export let label = "";
@@ -13,15 +14,16 @@
 <label>
   <input
     type="checkbox"
+    {name}
     bind:this={checkbox}
     {disabled}
-    bind:checked
+    bind:checked={value}
     bind:indeterminate
     on:input
     on:change
   />
   <span>
-    {#if checked}
+    {#if value}
       <Check16 />
     {:else if indeterminate}
       <Dash16 />

@@ -27,11 +27,9 @@
       required={addon.parameters.required}
       eventOptions={addon.parameters.eventOptions}
     />
-    <div class="values">
-      <h2>Data</h2>
-      <code>
-        {JSON.stringify($values, null, 2)}
-      </code>
+    <div class="values" style="max-width: 66ch">
+      <h2><code>$values</code></h2>
+      <pre><code>{JSON.stringify($values, null, 2)}</code></pre>
     </div>
   </Flex>
 </Template>

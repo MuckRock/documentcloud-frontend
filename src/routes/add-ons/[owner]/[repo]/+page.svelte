@@ -1,7 +1,11 @@
 <script lang="ts">
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Hourglass24 } from "svelte-octicons";
 
+  import AddOnDispatch, {
+    values,
+  } from "$lib/components/forms/AddOnDispatch.svelte";
   import AddOnMeta from "$lib/components/addons/AddOnMeta.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
@@ -12,9 +16,12 @@
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
   import Search from "$lib/components/forms/Search.svelte";
+  import Selection from "$lib/components/inputs/Selection.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
 
   export let data;
+
+  setContext("selected", selected);
 
   $: addon = data.addon;
   $: query = data.query;
@@ -36,7 +43,23 @@
 <MainLayout>
   <AddOnMeta {addon} slot="navigation" />
   <svelte:fragment slot="content">
-    <div class="card"></div>
+    <div class="card">
+      <AddOnDispatch
+        properties={addon.parameters.properties}
+        required={addon.parameters.required}
+        eventOptions={addon.parameters.eventOptions}
+      >
+        <svelte:fragment slot="selection">
+          {#await searchResults then results}
+            <Selection
+              bind:value={$values["selection"]}
+              documents={new Set(addon.parameters.documents)}
+              resultsCount={results.count}
+            />
+          {/await}
+        </svelte:fragment>
+      </AddOnDispatch>
+    </div>
 
     <ContentLayout>
       <PageToolbar slot="header">
@@ -83,3 +106,10 @@
     </ContentLayout>
   </svelte:fragment>
 </MainLayout>
+
+<style>
+  .card {
+    margin: 0.75rem;
+    padding: 0.75rem;
+  }
+</style>

@@ -41,6 +41,10 @@
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
+  export function reset() {
+    $values = { event: "disabled", selection: null };
+  }
+
   export function validate() {
     $values = noNulls($values);
     const valid = validator($values);
@@ -112,7 +116,9 @@
   <slot name="controls">
     <div class="controls">
       <Button mode="primary" type="submit" label="Submit" />
-      <Button type="reset" label="Reset" />
+      <Button type="reset" on:click={reset}>
+        {$_("addonDispatchDialog.reset")}
+      </Button>
     </div>
   </slot>
 </form>
