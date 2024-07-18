@@ -23,7 +23,10 @@
         <span class="required">{$_("inputs.required")}</span>
       {/if}
     </Flex>
-    {#if premium}<PremiumBadge />{/if}
+    <Flex align="baseline">
+      {#if premium}<PremiumBadge />{/if}
+      <slot name="action" />
+    </Flex>
   </Flex>
 </div>
 
@@ -31,7 +34,8 @@
   .label {
     color: var(--gray-5, #233944);
     font-weight: 600;
-    font-size: var(--font-sm);
+    font-size: var(--font-md);
+    font-feature-settings: 'ss04' on;
   }
   .required {
     font-size: var(--font-xs);

@@ -43,7 +43,7 @@
     color: var(--gray-5, #233944);
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: "Source Sans Pro";
+    font-family: var(--font-family, var(--font-sans, "Source Sans Pro"));
     font-size: var(--font-size, var(--font-md, 1rem));
     font-style: normal;
     font-weight: 400;

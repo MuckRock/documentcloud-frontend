@@ -38,6 +38,7 @@
   export let multiple = false;
   export let clearable = false;
   export let placeholder: string = multiple ? "Select multiple" : "Select one";
+  export let floatingConfig = {};
 </script>
 
 <Select
@@ -49,6 +50,7 @@
   {placeholder}
   {itemId}
   {label}
+  {floatingConfig}
   bind:value
   bind:justValue
   showChevron
