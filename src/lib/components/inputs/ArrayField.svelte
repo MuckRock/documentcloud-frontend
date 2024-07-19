@@ -2,10 +2,11 @@
   import { beforeUpdate } from "svelte";
   import { Plus16, X16 } from "svelte-octicons";
 
+  import Button from "$lib/components/common/Button.svelte";
   import Checkbox from "./Checkbox.svelte";
+  import Field from "./Field.svelte";
   import Number from "./Number.svelte";
   import Text from "./Text.svelte";
-  import Button from "$lib/components/common/Button.svelte";
 
   export let name: string = "";
   export let title: string = "";
@@ -51,18 +52,20 @@
   {#if title}
     <legend>{title}</legend>
   {/if}
+
   {#each value as v, i}
     <div class="item item-{i}">
-      <svelte:component
-        this={types[items.type]}
-        bind:value={value[i]}
-        {...items}
-        inline
-        name="{name}.{i}"
-      />
+      <Field title={items.title} inline>
+        <svelte:component
+          this={types[items.type]}
+          bind:value={value[i]}
+          {...items}
+          {name}
+        />
+      </Field>
 
       {#if numItems > 1}
-        <Button on:click={(e) => remove(e, i)}><X16 /></Button>
+        <Button minW={false} on:click={(e) => remove(e, i)}><X16 /></Button>
       {/if}
     </div>
   {/each}
@@ -80,7 +83,7 @@
   fieldset {
     padding: 0.5em;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius);
+    border-radius: var(--radius, 5px);
   }
   legend {
     font-weight: 600;
@@ -96,7 +99,7 @@
     gap: 0.5em;
     align-items: center;
     justify-content: space-between;
-    border-radius: var(--radius);
+    border-radius: var(--radius, 5px);
   }
   .boolean .item {
     padding: 0 0.5em;
@@ -107,6 +110,6 @@
   .help {
     margin: 0.5em 1rem;
     font-size: 0.8em;
-    color: var(--gray);
+    color: var(--gray-4);
   }
 </style>

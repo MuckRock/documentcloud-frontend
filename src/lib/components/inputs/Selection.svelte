@@ -43,6 +43,7 @@
           values: { n: resultsCount ?? 0 },
         })}
       </label>
+      <input type="hidden" name="query" value={query} />
     {/if}
 
     {#if documents.has("selected")}
@@ -57,11 +58,14 @@
           values: { n: $selected?.length },
         })}
       </label>
+      <input type="hidden" name="documents" value={$selected.join(",")} />
     {/if}
   </fieldset>
   <p class="help">
     {$_("addonDispatchDialog.selectionHelp")}
-    <a href="/help/add-ons/">{$_("addonDispatchDialog.selectionLearnMore")}</a>
+    <a data-sveltekit-preload-data="tap" href="/help/add-ons/"
+      >{$_("addonDispatchDialog.selectionLearnMore")}</a
+    >
   </p>
 {/if}
 

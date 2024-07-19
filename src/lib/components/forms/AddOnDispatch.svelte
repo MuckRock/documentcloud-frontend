@@ -7,18 +7,23 @@
 <script lang="ts">
   import type { Event, EventOptions } from "@/addons/types";
 
+  import { enhance } from "$app/forms";
+
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
   import { _ } from "svelte-i18n";
 
-  import { autofield } from "../inputs/generator";
+  import ArrayField from "../inputs/ArrayField.svelte";
   import Button from "../common/Button.svelte";
   import Field from "../inputs/Field.svelte";
+
+  import { autofield } from "../inputs/generator";
 
   export let properties: any = {};
   export let required = [];
   export let eventOptions: EventOptions;
   export let event: Event = null;
+  export let action: string = "";
 
   const ajv = new Ajv();
   addFormats(ajv);
@@ -65,28 +70,39 @@
   }
 </script>
 
-<form method="post" bind:this={form} on:input on:change on:submit on:reset>
+<form method="post" {action} bind:this={form} on:submit on:reset use:enhance>
   <slot name="before" />
 
   {#if hasFields}
     <fieldset>
       {#each Object.entries(properties) as [name, p]}
         {@const params = objectify(p)}
-        <Field
-          title={params.title}
-          description={params.description}
-          required={required.includes(name)}
-        >
-          <svelte:component
-            this={autofield(params)}
-            {...params}
-            {name}
-            required={required.includes(name)}
+        {#if params.type === "array"}
+          <!-- let arrays be a special case -->
+          <ArrayField
             bind:value={$values[name]}
-            defaultValue={params.default}
-            choices={params.enum}
+            {name}
+            items={params.items}
+            title={params.title}
+            description={params.description}
           />
-        </Field>
+        {:else}
+          <Field
+            title={params.title}
+            description={params.description}
+            required={required.includes(name)}
+          >
+            <svelte:component
+              this={autofield(params)}
+              {...params}
+              {name}
+              required={required.includes(name)}
+              bind:value={$values[name]}
+              defaultValue={params.default}
+              choices={params.enum}
+            />
+          </Field>
+        {/if}
       {/each}
     </fieldset>
   {/if}

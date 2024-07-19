@@ -16,7 +16,7 @@
 </script>
 
 <Template let:args={addon}>
-  <Flex direction="column">
+  <Flex direction="column" style="width: 50vw">
     <h2>{addon.name}</h2>
     <AddOnDispatch
       on:input
@@ -27,7 +27,7 @@
       required={addon.parameters.required}
       eventOptions={addon.parameters.eventOptions}
     />
-    <div class="values" style="max-width: 66ch">
+    <div class="values" style="max-width: 88ch">
       <h2><code>$values</code></h2>
       <pre><code>{JSON.stringify($values, null, 2)}</code></pre>
     </div>

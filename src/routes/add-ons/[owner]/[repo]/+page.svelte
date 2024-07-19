@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { setContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import type { Org, User } from "@/api/types/orgAndUser";
+
+  import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Hourglass24 } from "svelte-octicons";
 
@@ -19,13 +22,26 @@
   import Selection from "$lib/components/inputs/Selection.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
 
+  import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
+
   export let data;
 
   setContext("selected", selected);
 
+  const me: Writable<User> = getContext("me");
+
   $: addon = data.addon;
   $: query = data.query;
   $: searchResults = data.searchResults;
+  $: action = `/add-ons/${addon.repository}/?/dispatch`;
+
+  $: organization =
+    typeof $me.organization === "object" ? $me.organization : null;
+  $: isPremiumUser = isPremiumOrg(organization);
+  $: creditBalance = getCreditBalance(organization) ?? 0;
+  $: isPremiumAddon =
+    addon?.parameters.categories?.includes("premium") ?? false;
+  $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -43,8 +59,9 @@
 <MainLayout>
   <AddOnMeta {addon} slot="navigation" />
   <svelte:fragment slot="content">
-    <div class="card">
+    <div class="form-container card">
       <AddOnDispatch
+        {action}
         properties={addon.parameters.properties}
         required={addon.parameters.required}
         eventOptions={addon.parameters.eventOptions}
@@ -55,6 +72,7 @@
               bind:value={$values["selection"]}
               documents={new Set(addon.parameters.documents)}
               resultsCount={results.count}
+              {query}
             />
           {/await}
         </svelte:fragment>
@@ -108,7 +126,7 @@
 </MainLayout>
 
 <style>
-  .card {
+  .form-container {
     margin: 0.75rem;
     padding: 0.75rem;
   }

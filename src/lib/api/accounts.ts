@@ -30,3 +30,13 @@ export function getUpgradeUrl(org: Org = null): URL {
   // Redirect the user to the Squarelet organization settings
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
 }
+
+export function isPremiumOrg(org: Org): Boolean {
+  if (!org || !org.plan) return null;
+  return org.plan !== "Free";
+}
+
+export function getCreditBalance(org: Org): Number {
+  if (!org) return null;
+  return org.monthly_credits + org.purchased_credits;
+}

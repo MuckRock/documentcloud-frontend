@@ -1,6 +1,6 @@
 import type { Page } from "@/api/types/common";
 import type { AddOnParams } from "@/api/types/addons";
-import type { AddOnListItem, Event, Run } from "@/addons/types";
+import type { AddOnListItem, Event, Run, AddOnPayload } from "@/addons/types";
 import { BASE_API_URL } from "@/config/config";
 import { isErrorCode } from "../utils/api";
 
@@ -56,3 +56,15 @@ export async function getAddon(
   }
   return addons.results[0];
 }
+
+// dispatching
+
+export async function dispatch() {}
+
+export async function schedule() {}
+
+export async function cancel() {}
+
+export function buildPayload(addon: AddOnListItem, formData: FormData) {}
+
+export function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {}
