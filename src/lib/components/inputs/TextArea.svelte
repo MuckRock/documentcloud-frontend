@@ -9,6 +9,7 @@ A text area for writing text
   export let placeholder = "";
   export let required = false;
   export let disabled = false;
+  export let readonly = false;
 </script>
 
 <textarea
@@ -17,6 +18,7 @@ A text area for writing text
   {required}
   {disabled}
   {placeholder}
+  {readonly}
   use:textAreaResize
 />
 

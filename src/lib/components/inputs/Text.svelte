@@ -9,6 +9,7 @@
   export let autofocus = false;
   export let required = false;
   export let disabled = false;
+  export let readonly = false;
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
@@ -19,6 +20,7 @@
   {required}
   {disabled}
   {autofocus}
+  {readonly}
   bind:value
   on:change
   on:input
