@@ -10,7 +10,6 @@
   import Select from "../inputs/Select.svelte";
   import Number from "../inputs/Number.svelte";
   import type { Document } from "@/lib/api/types";
-  import { assetUrl } from "@/lib/api/documents";
   import CustomizeEmbed, {embedSettings} from "./CustomizeEmbed.svelte";
   import { createEmbedSearchParams } from "@/lib/utils/embed";
 
@@ -27,8 +26,6 @@
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`);
   $: wpShortcode = `[documentcloud url="${String(document.canonical_url)}" ${Array.from(embedUrlParams).slice(1).map(([key, value]) => `${key}="${value}"`).join(' ')}]`;
-
-  // embedUrlParams.forEach((value, key) => `${key}="${value}"`)}]`;
 
   const notes = document.notes.map(note => ({
     value: note.id,

@@ -27,6 +27,7 @@
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
   import { canonicalUrl, pdfUrl, isProcessing } from "$lib/api/documents";
+  import Share from "@/lib/components/documents/Share.svelte";
 
   export let document: Document;
 
@@ -41,6 +42,7 @@
     return new URL(path, canonicalUrl(document)).href;
   }
 
+  let shareOpen = false;
   let editOpen = false;
   let reprocessOpen = false;
   let deleteOpen = false;
@@ -82,10 +84,17 @@
 </Flex>
 
 <Flex direction="column">
-  <SidebarItem hover>
+  <SidebarItem hover on:click={() => (shareOpen = true)}>
     <Share16 />
     {$_("sidebar.share")} &hellip;
   </SidebarItem>
+  {#if shareOpen}
+  <Portal>
+    <Modal on:close={() => (shareOpen = false)}>
+      <Share {document} />
+    </Modal>
+  </Portal>
+  {/if}
 
   {#if document.edit_access}
     <SidebarItem href={annotate} disabled={isProcessing(document.status)}>
