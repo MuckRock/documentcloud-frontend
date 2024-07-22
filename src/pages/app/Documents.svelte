@@ -181,7 +181,7 @@
             >
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
-            <a href="https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form" target="_new">
+            <a href="https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form?prefill_MR+User+Name={$orgsAndUsers.me.username}&prefill_MR+User+Account+URL=https://accounts.muckrock.com/users/{$orgsAndUsers.me.username}/&prefill_MR+Organization+Name={$orgsAndUsers.me.organization.slug}&prefill_MR+Organization+Account+URL=https://accounts.muckrock.com/organizations/{$orgsAndUsers.me.organization.slug}" target="_new">
               <Button>{$_("noDocuments.requestVerificationAction")}</Button>
             </a>
           {/if}
