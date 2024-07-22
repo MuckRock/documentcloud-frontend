@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Copy16, File16, Hash16, Note16, Sliders16 } from "svelte-octicons";
+  import { Check16, Copy16, File16, Hash16, Note16, Sliders16 } from "svelte-octicons";
   import Flex from "../common/Flex.svelte";
   import Tab from "../common/Tab.svelte";
   import Field from "../common/Field.svelte";
@@ -11,6 +11,8 @@
   import Number from "../inputs/Number.svelte";
   import type { Document } from "@/lib/api/types";
   import { assetUrl } from "@/lib/api/documents";
+  import CustomizeEmbed, {embedSettings} from "./CustomizeEmbed.svelte";
+  import { createEmbedSearchParams } from "@/lib/utils/embed";
 
   export let document: Document;
   export let page: number = null;
@@ -21,29 +23,17 @@
     currentTab = tab;
   }
 
+  let customizeEmbedOpen = false;
+  $: embedUrlParams = createEmbedSearchParams($embedSettings);
+  $: embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`);
+
   const notes = document.notes.map(note => ({
     value: note.id,
     label: `pg. ${note.page_number + 1} – ${note.title}`
   }));
-  // $: embedUrl = queryBuilder($layout.embedDocument.canonicalUrl, {
-  //   embed: embedded ? 1 : null,
-  //   responsive: responsive,
-  //   sidebar: sidebarBehavior,
-  //   title: titleBehavior,
-  //   pdf: pdfBehavior,
-  //   fullscreen: fullscreenBehavior,
-  //   text: textBehavior,
-  //   onlyshoworg: onlyOrgBehavior,
-  // });
-  // $: linkUrl = queryBuilder(embedUrl, {
-  //   embed: null,
-  // });
+  
+  
 
-  async function getDocumentAssetUrl() {
-    return assetUrl(document);
-  }
-
-  let assetUrlPromise = getDocumentAssetUrl();
 
   function copyPermalink(e: Event) {
     console.debug('copy permalink');
@@ -126,13 +116,27 @@
     <header>
       <FieldLabel>
         Embed Preview
-        <Button slot="action" size="small" mode="ghost">
-          <Sliders16 /> Customize Embed
-        </Button>
+        <div slot="action">
+          {#if customizeEmbedOpen}
+          <Button size="small" mode="ghost" on:click={() => customizeEmbedOpen = false}>
+            <Check16 /> Save Settings
+          </Button>
+          {:else}
+          <Button size="small" mode="ghost" on:click={() => customizeEmbedOpen = true}>
+            <Sliders16 /> Customize Embed
+          </Button>
+          {/if}
+        </div>
       </FieldLabel>
     </header>
-    <main>
-      <iframe title="Embed Preview" src="" />
+    <main class="embedPreview">
+      {#if customizeEmbedOpen}
+      <div class="embedSettings">
+        <CustomizeEmbed />
+      </div>
+      {:else}
+      <iframe title="Embed Preview" src={embedSrc.toString()} />
+      {/if}
     </main>
   </div>
 </div>
@@ -183,6 +187,16 @@
     border-radius: .5rem;
     border: 1px solid var(--gray-2);
     box-shadow: var(--shadow-1);
+  }
+  .embedPreview {
+    background: var(--gray-1);
+  }
+  .embedSettings {
+    padding: 0 .5em;
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
+    height: 100%;
+    overflow-y: auto;
   }
 
 </style>
