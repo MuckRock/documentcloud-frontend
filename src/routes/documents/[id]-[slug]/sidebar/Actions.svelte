@@ -141,6 +141,7 @@
 {#if shareOpen}
   <Portal>
     <Modal on:close={() => (shareOpen = false)}>
+      <h1 slot="title">{$_("sidebar.share")}</h1>
       <Share {document} />
     </Modal>
   </Portal>

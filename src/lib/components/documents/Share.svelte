@@ -147,6 +147,7 @@
 
 <style>
   .container {
+    width: 100%;
     min-height: 24rem;
     display: flex;
     gap: 1rem;
@@ -171,6 +172,10 @@
   .right, .left {
     display: flex;
     flex-direction: column;
+    flex: 1 1 12rem;
+  }
+  .right {
+    flex: 2 1 24rem;
   }
   .right header {
     padding: .375rem 0;
@@ -179,9 +184,11 @@
   .right main {
     min-height: 0;
     height: 100%;
+    width: 100%
   }
   .right iframe {
     height: 100%;
+    width: 100%;
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2);
   }
