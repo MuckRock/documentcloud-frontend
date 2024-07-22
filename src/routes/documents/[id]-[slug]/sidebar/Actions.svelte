@@ -88,13 +88,6 @@
     <Share16 />
     {$_("sidebar.share")} &hellip;
   </SidebarItem>
-  {#if shareOpen}
-  <Portal>
-    <Modal on:close={() => (shareOpen = false)}>
-      <Share {document} />
-    </Modal>
-  </Portal>
-  {/if}
 
   {#if document.edit_access}
     <SidebarItem href={annotate} disabled={isProcessing(document.status)}>
@@ -144,6 +137,14 @@
     </SidebarItem>
   {/if}
 </Flex>
+
+{#if shareOpen}
+  <Portal>
+    <Modal on:close={() => (shareOpen = false)}>
+      <Share {document} />
+    </Modal>
+  </Portal>
+{/if}
 
 {#if reprocessOpen}
   <Portal>
