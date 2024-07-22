@@ -26,6 +26,9 @@
   let customizeEmbedOpen = false;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`);
+  $: wpShortcode = `[documentcloud url="${String(document.canonical_url)}" ${Array.from(embedUrlParams).slice(1).map(([key, value]) => `${key}="${value}"`).join(' ')}]`;
+
+  // embedUrlParams.forEach((value, key) => `${key}="${value}"`)}]`;
 
   const notes = document.notes.map(note => ({
     value: note.id,
@@ -90,7 +93,7 @@
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
-        <Text value="permalink" --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
+        <Text value={String(document.canonical_url)} --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
       </Field>
       <Field>
         <FieldLabel>
@@ -99,7 +102,11 @@
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
-        <Text value="shortcode" --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
+        <Text
+          value={wpShortcode}
+          --font-family="var(--font-mono)"
+          --font-size="var(--font-sm)"
+        />
       </Field>
       <Field>
         <FieldLabel>
@@ -108,7 +115,7 @@
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
-        <TextArea value="<iframe />" --font-family="var(--font-mono)" --font-size="var(--font-sm)" --resize="vertical" />
+        <TextArea value={embedSrc.toString()} --font-family="var(--font-mono)" --font-size="var(--font-sm)" --resize="vertical" />
       </Field>
     </div>
   </div>

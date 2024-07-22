@@ -24,7 +24,9 @@
     Object.keys(settingsConfig).forEach((key) => {
       const config = settingsConfig[key];
       const storageValue = storageManager.get(String(config.storageIndex), config.defaultValue);
-      $embedSettings[key] = storageValue;
+      if ($embedSettings[key] === null) {
+        $embedSettings[key] = storageValue;
+      }
     });
   });
 </script>
