@@ -1,3 +1,5 @@
+import type { DefinedError } from "ajv";
+
 type AddOnCategory = "premium" | string;
 
 interface AddOnProperty {
@@ -90,4 +92,6 @@ export interface AddOnPayload {
   event?: number;
   documents?: number[] | string[];
   query?: string;
+  errors?: DefinedError[];
+  valid?: boolean;
 }
