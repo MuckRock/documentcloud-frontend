@@ -111,6 +111,26 @@ describe("addon payloads", () => {
     });
   });
 
+  test("buildPayload scheduled event", () => {
+    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+    const parameters = {
+      site: "https://www.documentcloud.org",
+      project: "test",
+      event: "weekly",
+    };
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(scraper, form);
+
+    expect(payload).toMatchObject({
+      addon: scraper.id,
+      parameters: {
+        site: "https://www.documentcloud.org",
+        project: "test",
+      },
+      event: addons.eventValues.weekly,
+    });
+  });
+
   test("buildPayload array param", () => {
     const siteSnapshot = addonsList.results.find(
       (a) => a.name === "Site Snapshot",
@@ -129,6 +149,32 @@ describe("addon payloads", () => {
       addon: siteSnapshot.id,
       parameters,
       valid: true,
+    });
+  });
+
+  test("buildPayload remove blank values", () => {
+    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+
+    const parameters = {
+      site: "https://www.documentcloud.org",
+      project: "test",
+      slack_webhook: "",
+    };
+
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(scraper, form, true);
+
+    if (payload.errors) {
+      console.error(payload.errors);
+    }
+    expect(payload.valid).toBeTruthy();
+
+    expect(payload).toMatchObject({
+      addon: scraper.id,
+      parameters: {
+        site: "https://www.documentcloud.org",
+        project: "test",
+      },
     });
   });
 

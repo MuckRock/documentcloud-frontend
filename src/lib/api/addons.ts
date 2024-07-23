@@ -178,16 +178,20 @@ export async function dispatch(
  * Update or cancel an add-on event
  */
 export async function update(
-  event: Event,
+  event_id: number,
   payload: AddOnPayload,
   csrf_token: string,
   fetch = globalThis.fetch,
 ) {
-  const endpoint = new URL(`addon_events/${event.id}/`, BASE_API_URL);
+  const endpoint = new URL(`addon_events/${event_id}/`, BASE_API_URL);
   return fetch(endpoint, {
     credentials: "include",
     method: "PUT",
-    headers: { "X-CSRFToken": csrf_token, "Content-type": "application/json" },
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
     body: JSON.stringify(payload),
   });
 }
@@ -231,6 +235,10 @@ export function buildPayload(
     payload.query = formData.get("query").toString();
   }
 
+  if (formData.has("event")) {
+    payload.event = eventValues[formData.get("event") as string];
+  }
+
   if (validate) {
     const { valid, errors } = validatePayload(addon, payload);
     payload.valid = valid;
@@ -248,7 +256,18 @@ function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {
   const { properties, required } = addon.parameters;
   const validator = ajv.compile({ type: "object", properties, required });
 
+  payload.parameters = noNulls(payload.parameters);
   const valid = validator(payload.parameters);
 
   return { valid, errors: validator.errors };
+}
+
+function noNulls(values: Record<string, any>): Record<string, any> {
+  const nulls = new Set([null, undefined, ""]);
+  return Object.entries(values).reduce((m, [k, v]) => {
+    if (!nulls.has(v)) {
+      m[k] = v;
+    }
+    return m;
+  }, {});
 }

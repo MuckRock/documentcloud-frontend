@@ -3,16 +3,16 @@ import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
-import { getAddon, buildPayload, dispatch } from "$lib/api/addons";
+import { getEvent, buildPayload, update } from "$lib/api/addons";
 import { isErrorCode } from "$lib/utils";
 
 export const actions = {
-  async dispatch({ cookies, fetch, request, params }) {
-    const [form, addon] = await Promise.all([
+  async update({ cookies, fetch, params, request }) {
+    const [form, event] = await Promise.all([
       request.formData(),
-      getAddon(params.owner, params.repo, fetch),
+      getEvent(+params.event, fetch),
     ]);
-
+    const addon = event.addon;
     const payload = buildPayload(addon, form, true);
 
     if (!payload.valid) {
@@ -21,7 +21,7 @@ export const actions = {
 
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
 
-    const resp = await dispatch(payload, csrf_token, fetch).catch(
+    const resp = await update(+event.id, payload, csrf_token, fetch).catch(
       console.error,
     );
 
@@ -30,12 +30,12 @@ export const actions = {
     }
 
     if (isErrorCode(resp.status)) {
-      return fail(resp.status, { errors: [resp.statusText] });
+      return fail(resp.status, { errors: [await resp.json()] });
     }
 
     return {
       success: resp.ok,
-      run: await resp.json(),
+      event: await resp.json(),
     };
   },
 } satisfies Actions;
