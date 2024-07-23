@@ -60,11 +60,37 @@ export async function getAddon(
   return addons.results[0];
 }
 
+export async function getEvent(
+  id: number,
+  fetch = globalThis.fetch,
+): Promise<Event> {
+  const endpoint = new URL(`addon_events/${id}/`, BASE_API_URL);
+
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
+}
+
 /**
  * List add-on runs
  */
 export async function history(
-  params: { cursor?: string; dismissed?: boolean; event?: number } = {},
+  params: {
+    cursor?: string;
+    dismissed?: boolean;
+    event?: number;
+    per_page?: number;
+  } = {},
   fetch = globalThis.fetch,
 ): Promise<Page<Run>> {
   const endpoint = new URL("addon_runs/?expand=addon", BASE_API_URL);
@@ -91,7 +117,7 @@ export async function history(
  * List scheduled add-on events
  */
 export async function scheduled(
-  params: { cursor?: string; addon?: number } = {},
+  params: { cursor?: string; addon?: number; per_page?: number } = {},
   fetch = globalThis.fetch,
 ): Promise<Page<Event>> {
   const endpoint = new URL("addon_events/?expand=addon", BASE_API_URL);

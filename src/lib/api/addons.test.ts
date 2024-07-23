@@ -198,7 +198,8 @@ describe("addon payloads", () => {
 });
 
 describe("add-on dispatch and scheduling", () => {
-  test.todo("addons.runs");
+  test.todo("addons.getEvent");
+  test.todo("addons.history");
   test.todo("addons.scheduled");
   test.todo("addons.dispatch");
   test.todo("addons.update");

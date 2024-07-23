@@ -12,7 +12,6 @@
 <Story name="default">
   <Scheduled
     events={eventsList.results}
-    count={eventsList.count}
     next={eventsList.next}
     previous={eventsList.previous}
   />

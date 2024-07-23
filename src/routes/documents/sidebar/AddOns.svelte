@@ -34,8 +34,10 @@
         <Empty icon={Pin24}>{$_("sidebar.addons.pinned")}</Empty>
       {/each}
     {/await}
-    <SidebarItem>
-      <a href="/add-ons/runs/">{$_("sidebar.addons.runs")}</a>
-    </SidebarItem>
+    <!-- not using this route, for the moment
+      <SidebarItem>
+        <a href="/add-ons/runs/">{$_("sidebar.addons.runs")}</a>
+      </SidebarItem>
+    -->
   </Flex>
 </SidebarGroup>
