@@ -1,35 +1,40 @@
 <script lang="ts">
-  import {_} from 'svelte-i18n';
+  import { _ } from "svelte-i18n";
+
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Modal from "../layouts/Modal.svelte";
-  import { createMailkey, destroyMailkey } from '$lib/api/accounts';
+
+  import { createMailkey, destroyMailkey } from "$lib/api/accounts";
+  import { getCsrfToken } from "$lib/utils/api";
 
   export let fetch = globalThis.fetch;
-  export let message: string = '';
+  export let message: string = "";
   let error = false;
 
   function reset() {
-    message = '';
+    message = "";
     error = false;
   }
 
   async function create() {
     reset();
-    const mailkey = await createMailkey(fetch);
+    const csrf_token = getCsrfToken();
+    const mailkey = await createMailkey(csrf_token, fetch);
     if (mailkey) {
       message = $_("mailkey.create.success", {
         values: { mailkey: mailkey },
       });
     } else {
       error = true;
-      message = $_("mailkey.create.failure")
+      message = $_("mailkey.create.failure");
     }
   }
 
   async function destroy() {
     reset();
-    if (await destroyMailkey(fetch)) {
+    const csrf_token = getCsrfToken();
+    if (await destroyMailkey(csrf_token, fetch)) {
       message = $_("mailkey.destroy.success");
     } else {
       error = true;
@@ -47,8 +52,12 @@
     </p>
   {/if}
   <Flex gap={1} wrap justify="center">
-    <Button mode="primary" on:click={create}>{$_("mailkey.create.button")}</Button>
-    <Button mode="danger" on:click={destroy}>{$_("mailkey.destroy.button")}</Button>
+    <Button mode="primary" on:click={create}
+      >{$_("mailkey.create.button")}</Button
+    >
+    <Button mode="danger" on:click={destroy}
+      >{$_("mailkey.destroy.button")}</Button
+    >
   </Flex>
 </Modal>
 

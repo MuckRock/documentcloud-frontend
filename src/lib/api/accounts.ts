@@ -1,5 +1,10 @@
 import type { Maybe, Nullable, User, Org } from "@/api/types";
-import { BASE_API_URL, SQUARELET_BASE } from "@/config/config.js";
+import {
+  APP_URL,
+  BASE_API_URL,
+  CSRF_HEADER_NAME,
+  SQUARELET_BASE,
+} from "@/config/config.js";
 
 type Fetch = typeof globalThis.fetch;
 
@@ -31,10 +36,21 @@ export function getUpgradeUrl(org: Org = null): URL {
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
 }
 
-export async function createMailkey(fetch: Fetch): Promise<Nullable<string>> {
+export async function createMailkey(
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Nullable<string>> {
   const endpoint = new URL(`users/mailkey/`, BASE_API_URL);
   try {
-    const resp = await fetch(endpoint, { method: "POST", credentials: "include" });
+    const resp = await fetch(endpoint, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        Referer: APP_URL,
+        [CSRF_HEADER_NAME]: csrf_token,
+      },
+    });
     const data = await resp.json();
     return data.mailkey;
   } catch (e) {
@@ -42,11 +58,22 @@ export async function createMailkey(fetch: Fetch): Promise<Nullable<string>> {
   }
 }
 
-export async function destroyMailkey(fetch: Fetch): Promise<boolean> {
+export async function destroyMailkey(
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<boolean> {
   const endpoint = new URL(`users/mailkey/`, BASE_API_URL);
   try {
-    const resp = await fetch(endpoint, { method: "DELETE", credentials: "include" });
-    if (!resp.ok) throw new Error();
+    const resp = await fetch(endpoint, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        Referer: APP_URL,
+        [CSRF_HEADER_NAME]: csrf_token,
+      },
+    });
+    if (!resp.ok) throw new Error(resp.statusText);
     return true;
   } catch (e) {
     return false;
