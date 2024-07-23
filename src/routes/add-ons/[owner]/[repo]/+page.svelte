@@ -25,6 +25,7 @@
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
 
   export let data;
+  export let form;
 
   setContext("selected", selected);
 
@@ -35,6 +36,7 @@
   $: searchResults = data.searchResults;
   $: action = `/add-ons/${addon.repository}/?/dispatch`;
 
+  // todo: disable if not premium
   $: organization =
     typeof $me.organization === "object" ? $me.organization : null;
   $: isPremiumUser = isPremiumOrg(organization);
@@ -42,6 +44,8 @@
   $: isPremiumAddon =
     addon?.parameters.categories?.includes("premium") ?? false;
   $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
+
+  $: console.log(form);
 
   function selectAll(e) {
     if (e.target.checked) {

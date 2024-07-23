@@ -3,13 +3,7 @@ import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
-import {
-  getAddon,
-  buildPayload,
-  validatePayload,
-  dispatch,
-  update,
-} from "$lib/api/addons";
+import { getAddon, buildPayload, dispatch, update } from "$lib/api/addons";
 import { isErrorCode } from "@/lib/utils";
 
 export const actions = {
@@ -20,7 +14,6 @@ export const actions = {
     ]);
 
     const payload = buildPayload(addon, form, true);
-    const { valid, errors } = validatePayload(addon, payload);
 
     if (!payload.valid) {
       return fail(400, { errors: payload.errors });

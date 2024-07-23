@@ -5,21 +5,27 @@
   import { _ } from "svelte-i18n";
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
-  import Paginator from "@/common/Paginator.svelte";
-  import Search from "@/lib/components/forms/Search.svelte";
-  import Pin from "@/common/icons/Pin.svelte";
-  import Star from "@/common/icons/Star.svelte";
+  import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
+  import Error from "@/lib/components/common/Error.svelte";
+  import History from "$lib/components/addons/History.svelte";
+  import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Error from "@/lib/components/common/Error.svelte";
-  import ListItem from "$lib/components/addons/AddOnListItem.svelte";
-  import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
-  import Tip from "@/lib/components/common/Tip.svelte";
+  import Paginator from "@/common/Paginator.svelte";
   import Premium from "@/common/icons/Premium.svelte";
+  import Pin from "@/common/icons/Pin.svelte";
+  import Scheduled from "$lib/components/addons/Scheduled.svelte";
+  import Search from "@/lib/components/forms/Search.svelte";
+  import Star from "@/common/icons/Star.svelte";
+  import Tip from "@/lib/components/common/Tip.svelte";
 
   export let data;
+
+  $: addons = data.addons;
+  $: events = data.events;
+  $: runs = data.runs;
 
   // TODO: Improve cursor handling in page data responses
   /** The pagination URL provided in the reponse corresponds to an API query.
@@ -98,7 +104,7 @@
           {/if}
         </div>
       {/if}
-      {#await data.addons}
+      {#await addons}
         <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
       {:then page}
         {#each page.results as addon}
@@ -112,7 +118,7 @@
 
       <PageToolbar slot="footer">
         <svelte:fragment slot="center">
-          {#await data.addons}
+          {#await addons}
             <Paginator />
           {:then page}
             <Paginator
@@ -125,6 +131,24 @@
         </svelte:fragment>
       </PageToolbar>
     </ContentLayout>
+  </svelte:fragment>
+
+  <svelte:fragment slot="action">
+    {#await events}
+      <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+    {:then events}
+      <Scheduled
+        events={events.results}
+        next={events.next}
+        previous={events.previous}
+      />
+    {/await}
+
+    {#await runs}
+      <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+    {:then runs}
+      <History runs={runs.results} next={runs.next} previous={runs.previous} />
+    {/await}
   </svelte:fragment>
 </MainLayout>
 

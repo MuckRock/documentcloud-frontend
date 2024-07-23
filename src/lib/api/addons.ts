@@ -60,6 +60,60 @@ export async function getAddon(
   return addons.results[0];
 }
 
+/**
+ * List add-on runs
+ */
+export async function history(
+  params: { cursor?: string; dismissed?: boolean; event?: number } = {},
+  fetch = globalThis.fetch,
+): Promise<Page<Run>> {
+  const endpoint = new URL("addon_runs/?expand=addon", BASE_API_URL);
+  for (const [k, v] of Object.entries(params)) {
+    endpoint.searchParams.set(k, String(v));
+  }
+
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
+}
+
+/**
+ * List scheduled add-on events
+ */
+export async function scheduled(
+  params: { cursor?: string; addon?: number } = {},
+  fetch = globalThis.fetch,
+): Promise<Page<Event>> {
+  const endpoint = new URL("addon_events/?expand=addon", BASE_API_URL);
+  for (const [k, v] of Object.entries(params)) {
+    endpoint.searchParams.set(k, String(v));
+  }
+
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
+}
+
 // dispatching
 
 /**
@@ -150,7 +204,7 @@ export function buildPayload(
   return payload;
 }
 
-export function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {
+function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {
   // todo: investigate whether there's any benefit to creating a global ajv instance
   const ajv = new Ajv({ coerceTypes: true, useDefaults: true });
   addFormats(ajv);
