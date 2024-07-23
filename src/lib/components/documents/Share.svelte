@@ -1,20 +1,22 @@
 <script lang="ts">
-  import { Check16, Copy16, File16, Hash16, Note16, Sliders16 } from "svelte-octicons";
-  import Flex from "../common/Flex.svelte";
-  import Tab from "../common/Tab.svelte";
-  import Field from "../common/Field.svelte";
-  import Text from "../inputs/Text.svelte";
-  import FieldLabel from "../common/FieldLabel.svelte";
+  import { Check16, Copy16, File16, Hash16, Note16, Note24, Sliders16 } from "svelte-octicons";
   import Button from "../common/Button.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Field from "../common/Field.svelte";
+  import FieldLabel from "../common/FieldLabel.svelte";
+  import Empty from "../common/Empty.svelte";
+  import Tab from "../common/Tab.svelte";
+  import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
   import Select from "../inputs/Select.svelte";
   import Number from "../inputs/Number.svelte";
   import type { Document } from "@/lib/api/types";
   import CustomizeEmbed, {embedSettings} from "./CustomizeEmbed.svelte";
   import { createEmbedSearchParams } from "@/lib/utils/embed";
+  import { EMBED_URL } from "@/config/config";
 
   export let document: Document;
-  export let page: number = null;
+  export let page: number = 1;
   export let note: string | number = null;
   
   export let currentTab: "document" | "page" | "note" = "document";
@@ -22,18 +24,27 @@
     currentTab = tab;
   }
 
+  let embedSrc;
   let customizeEmbedOpen = false;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
-  $: embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`);
+  $: {
+    switch(currentTab) {
+      case 'document':
+        embedSrc = new URL(`/documents/${document.id}/`, EMBED_URL)
+      case 'page':
+        embedSrc = new URL(`/documents/${document.id}/pages/${page}`, EMBED_URL)
+      case 'note':
+        embedSrc = new URL(`/documents/${document.id}/annotations/${note}`, EMBED_URL)
+      default:
+        embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`)
+    }
+  };
   $: wpShortcode = `[documentcloud url="${String(document.canonical_url)}" ${Array.from(embedUrlParams).slice(1).map(([key, value]) => `${key}="${value}"`).join(' ')}]`;
 
   const notes = document.notes.map(note => ({
     value: note.id,
     label: `pg. ${note.page_number + 1} – ${note.title}`
   }));
-  
-  
-
 
   function copyPermalink(e: Event) {
     console.debug('copy permalink');
@@ -58,7 +69,7 @@
         <Tab on:click={() => setCurrentTab("page")} active={currentTab === "page"}>
           <Hash16 /> Page
         </Tab>
-        <Tab on:click={() => setCurrentTab("note")} active={currentTab === "note"}>
+        <Tab on:click={() => setCurrentTab("note")} active={currentTab === "note"} disabled={document.notes.length === 0}>
           <Note16 /> Note
         </Tab>
       </Flex>
@@ -70,7 +81,7 @@
           <FieldLabel>
             Pick page:
           </FieldLabel>
-          <Number value={page ?? 1} min={1} max={document.page_count} />
+          <Number bind:value={page} min={1} max={document.page_count} />
         </Field>
       </div>
       {:else if currentTab === "note"}
@@ -79,7 +90,7 @@
           <FieldLabel>
             Pick note:
           </FieldLabel>
-          <Select name="note" items={notes} value={note} />
+          <Select name="note" items={notes} bind:value={note} />
         </Field>
       </div>
       {/if}
@@ -126,20 +137,26 @@
             <Check16 /> Save Settings
           </Button>
           {:else}
-          <Button size="small" mode="ghost" on:click={() => customizeEmbedOpen = true}>
+          <Button size="small" mode="ghost" on:click={() => customizeEmbedOpen = true} disabled={currentTab !== 'document'}>
             <Sliders16 /> Customize Embed
           </Button>
           {/if}
         </div>
       </FieldLabel>
     </header>
-    <main class="embedPreview">
+    <main>
       {#if customizeEmbedOpen}
       <div class="embedSettings">
         <CustomizeEmbed />
       </div>
       {:else}
-      <iframe title="Embed Preview" src={embedSrc.toString()} />
+        {#if currentTab === 'note' && note === null}
+        <Empty icon={Note24}>
+          <p>Select a note to preview its embed</p>
+        </Empty>
+        {:else}
+        <iframe class="embed" title="Embed Preview" src={embedSrc.toString()} />
+        {/if}
       {/if}
     </main>
   </div>
@@ -148,7 +165,7 @@
 <style>
   .container {
     width: 100%;
-    min-height: 24rem;
+    height: 32rem;
     display: flex;
     gap: 1rem;
   }
@@ -186,12 +203,6 @@
     height: 100%;
     width: 100%
   }
-  .right iframe {
-    height: 100%;
-    width: 100%;
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2);
-  }
   .subselection {
     background: var(--white);
     padding: 1rem;
@@ -199,15 +210,18 @@
     border: 1px solid var(--gray-2);
     box-shadow: var(--shadow-1);
   }
-  .embedPreview {
-    background: var(--gray-1);
+  iframe.embed {
+    height: 100%;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
   }
   .embedSettings {
     padding: 0 .5em;
+    background: var(--gray-1);
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2);
     height: 100%;
     overflow-y: auto;
   }
-
 </style>
