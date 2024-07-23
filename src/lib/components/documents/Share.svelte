@@ -24,7 +24,7 @@
     currentTab = tab;
   }
 
-  let embedSrc;
+  let embedSrc, iframe;
   let customizeEmbedOpen = false;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
@@ -39,23 +39,26 @@
         embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`)
     }
   };
+  $: permalink = String(document.canonical_url);
   $: wpShortcode = `[documentcloud url="${String(document.canonical_url)}" ${Array.from(embedUrlParams).slice(1).map(([key, value]) => `${key}="${value}"`).join(' ')}]`;
+  $: {
+    iframe = `<iframe src="${embedSrc}"`;
+    if ($embedSettings.width) {
+      iframe += ` width="${$embedSettings.width}"`
+    }
+    if ($embedSettings.height) {
+      iframe += ` height="${$embedSettings.height}"`
+    }
+    iframe += ' />';
+  }
 
   const notes = document.notes.map(note => ({
     value: note.id,
     label: `pg. ${note.page_number + 1} – ${note.title}`
   }));
 
-  function copyPermalink(e: Event) {
-    console.debug('copy permalink');
-  }
-
-  function copyShortcode(e: Event) {
-    console.debug('copy shortcode');
-  }
-
-  function copyHtml(e: Event) {
-    console.debug('copy html');
+  async function copy(text: string) {
+    await navigator.clipboard.writeText(text);
   }
 </script>
 
@@ -97,16 +100,16 @@
       <Field>
         <FieldLabel>
           Permalink
-          <Button slot="action" size="small" mode="ghost" on:click={copyPermalink}>
+          <Button slot="action" size="small" mode="ghost" on:click={() => copy(permalink)} disabled={!navigator.clipboard}>
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
-        <Text value={String(document.canonical_url)} --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
+        <Text value={permalink} --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
       </Field>
       <Field>
         <FieldLabel>
           WordPress Shortcode
-          <Button slot="action" size="small" mode="ghost" on:click={copyShortcode}>
+          <Button slot="action" size="small" mode="ghost" on:click={() => copy(wpShortcode)} disabled={!navigator.clipboard}>
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
@@ -119,11 +122,11 @@
       <Field>
         <FieldLabel>
           Embed HTML iFrame
-          <Button slot="action" size="small" mode="ghost" on:click={copyHtml}>
+          <Button slot="action" size="small" mode="ghost" on:click={() => copy(iframe)} disabled={!navigator.clipboard}>
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
-        <TextArea value={embedSrc.toString()} --font-family="var(--font-mono)" --font-size="var(--font-sm)" --resize="vertical" />
+        <TextArea value={iframe} --font-family="var(--font-mono)" --font-size="var(--font-sm)" --resize="vertical" />
       </Field>
     </div>
   </div>
