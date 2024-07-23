@@ -20,6 +20,10 @@
   <Tab active {...args} on:click on:click={handleClick}><Note16 /> Note</Tab>
 </Story>
 
+<Story name="Disabled" let:args>
+  <Tab disabled {...args} on:click on:click={handleClick}><Note16 /> Note</Tab>
+</Story>
+
 <Story name="Without Icon" let:args>
   <Tab {...args} on:click on:click={handleClick}>Note</Tab>
 </Story>

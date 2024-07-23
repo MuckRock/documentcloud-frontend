@@ -1,9 +1,10 @@
 <script lang="ts">
   export let active = false;
+  export let disabled = false;
 </script>
 
-<div class="tab" class:active>
-  <button on:click>
+<div class="tab" class:active class:disabled>
+  <button on:click {disabled}>
     <slot />
   </button>
 </div>
@@ -17,6 +18,10 @@
   }
   .tab.active {
     border-bottom: 2px solid var(--active-color, var(--blue-3, #4294F0));
+  }
+  .tab.disabled {
+    pointer-events: none;
+    opacity: .7;
   }
   button {
     /* Reset button appearance */
