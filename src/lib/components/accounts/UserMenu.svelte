@@ -4,6 +4,8 @@
   import { _ } from "svelte-i18n";
 
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Mailkey from "./Mailkey.svelte";
+  import Portal from "../layouts/Portal.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import {
     ChevronDown16,
@@ -22,10 +24,15 @@
   function close() {
     closeDropdown(dropdownId);
   }
+
+  let mailkeyOpen = false;
+  function setMailkeyOpen(open?: boolean) {
+    mailkeyOpen = open ?? !mailkeyOpen;
+  }
 </script>
 
 <Dropdown id={dropdownId} position="right">
-  <SidebarItem slot="title">
+  <SidebarItem slot="title" title="Open Menu">
     <div class="avatar">
       {#if user.avatar_url}
         <img src={user.avatar_url} alt="Avatar" />
@@ -41,8 +48,10 @@
       <Gear16 />
       {$_("authSection.user.acctSettings")}
     </SidebarItem>
-    <!-- TODO mailkey page -->
-    <SidebarItem hover on:click={close}>
+    <SidebarItem hover on:click={() => {
+      setMailkeyOpen(true);
+      close();
+    }}>
       <Paperclip16 />
       {$_("authSection.user.uploadEmail")}
     </SidebarItem>
@@ -52,6 +61,11 @@
     </SidebarItem>
   </Menu>
 </Dropdown>
+{#if mailkeyOpen}
+<Portal>
+  <Mailkey on:close={() => setMailkeyOpen(false)} />
+</Portal>
+{/if}
 
 <style>
   .avatar {

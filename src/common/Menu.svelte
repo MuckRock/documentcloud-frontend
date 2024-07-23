@@ -1,4 +1,4 @@
-<div class="menu">
+<div class="menu" role="menu">
   <slot>Define some menu items</slot>
 </div>
 

@@ -29,6 +29,7 @@ function pageHandler(one, two) {
 export const urls = {
   users: u("users/"),
   me: u("users/me/"),
+  mailkey: u("users/mailkey/"),
   documents: u("documents/"),
   search: u("documents/search/"),
   project: {
@@ -57,3 +58,10 @@ export const oembed = rest.get(urls.oembed, dataHandler(oembedFixture));
 export const loading = rest.get(urls.loading, (req, res, ctx) =>
   res(ctx.delay("infinite")),
 );
+
+export const mailkey = {
+  create: rest.post(urls.mailkey, dataHandler({mailkey: 'xxxxxxxxx'})),
+  delete: rest.delete(urls.mailkey, dataHandler(undefined)),
+  createError: rest.post(urls.mailkey, errorHandler),
+  deleteError: rest.delete(urls.mailkey, errorHandler),
+}

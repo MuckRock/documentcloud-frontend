@@ -1,0 +1,206 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Mailkey 1`] = `
+<div>
+  <div
+    class="backdrop svelte-oeb706"
+  >
+    <div
+      class="dialog card svelte-oeb706"
+    >
+      <header
+        class="svelte-oeb706"
+      >
+        <button
+          class="ghost normal svelte-1kzv5gr"
+          title=""
+          type="button"
+          value="undefined"
+        >
+          <svg
+            class="octicon octicon-x-circle"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.036 7.976a.75.75 0 0 0-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 1 0 1.06 1.06L12 13.06l2.963 2.964a.75.75 0 0 0 1.061-1.06L13.061 12l2.963-2.964a.75.75 0 1 0-1.06-1.06L12 10.939 9.036 7.976Z"
+            />
+            <path
+              d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"
+            />
+          </svg>
+        </button>
+        
+         
+        <h1
+          slot="title"
+        >
+          Upload via email
+        </h1>
+      </header>
+       
+      <main
+        class="content svelte-oeb706"
+      >
+        <div
+          class="description svelte-mrguwb"
+        >
+          <p>
+            You can upload documents to your account by sending them to to a special email address as attachments.
+          </p>
+          <p>
+            <strong>
+              For security reasons, this email is only shown to you once. Please copy it to a secure location.
+            </strong>
+          </p>
+          <p>
+            This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
+          </p>
+          <p>
+            We’d love your feedback and to hear about creative use cases at 
+            <a
+              href="mailto:info@documentcloud.org"
+              target="_blank"
+            >
+              info@documentcloud.org
+            </a>
+            .
+          </p>
+        </div>
+         
+         
+        <div
+          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+        >
+          <button
+            class="primary normal svelte-1kzv5gr minW"
+            title=""
+            type="button"
+            value="undefined"
+          >
+            Create new email address
+          </button>
+          
+           
+          <button
+            class="danger normal svelte-1kzv5gr minW"
+            title=""
+            type="button"
+            value="undefined"
+          >
+            Delete existing address
+          </button>
+          
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mailkey 2`] = `
+<div>
+  <div
+    class="backdrop svelte-oeb706"
+  >
+    <div
+      class="dialog card svelte-oeb706"
+    >
+      <header
+        class="svelte-oeb706"
+      >
+        <button
+          class="ghost normal svelte-1kzv5gr"
+          title=""
+          type="button"
+          value="undefined"
+        >
+          <svg
+            class="octicon octicon-x-circle"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.036 7.976a.75.75 0 0 0-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 1 0 1.06 1.06L12 13.06l2.963 2.964a.75.75 0 0 0 1.061-1.06L13.061 12l2.963-2.964a.75.75 0 1 0-1.06-1.06L12 10.939 9.036 7.976Z"
+            />
+            <path
+              d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"
+            />
+          </svg>
+        </button>
+        
+         
+        <h1
+          slot="title"
+        >
+          Upload via email
+        </h1>
+      </header>
+       
+      <main
+        class="content svelte-oeb706"
+      >
+        <div
+          class="description svelte-mrguwb"
+        >
+          <p>
+            You can upload documents to your account by sending them to to a special email address as attachments.
+          </p>
+          <p>
+            <strong>
+              For security reasons, this email is only shown to you once. Please copy it to a secure location.
+            </strong>
+          </p>
+          <p>
+            This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
+          </p>
+          <p>
+            We’d love your feedback and to hear about creative use cases at 
+            <a
+              href="mailto:info@documentcloud.org"
+              target="_blank"
+            >
+              info@documentcloud.org
+            </a>
+            .
+          </p>
+        </div>
+         
+        <p
+          class="message svelte-mrguwb"
+        >
+          Something happened
+        </p>
+         
+        <div
+          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+        >
+          <button
+            class="primary normal svelte-1kzv5gr minW"
+            title=""
+            type="button"
+            value="undefined"
+          >
+            Create new email address
+          </button>
+          
+           
+          <button
+            class="danger normal svelte-1kzv5gr minW"
+            title=""
+            type="button"
+            value="undefined"
+          >
+            Delete existing address
+          </button>
+          
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+`;
