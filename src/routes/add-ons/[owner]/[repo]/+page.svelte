@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Org, User } from "@/api/types/orgAndUser";
+  import type { User } from "@/api/types/orgAndUser";
 
   import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";

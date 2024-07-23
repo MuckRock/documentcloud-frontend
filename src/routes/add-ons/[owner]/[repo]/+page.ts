@@ -1,4 +1,4 @@
-import type { DocumentResults, SearchOptions } from "$lib/api/types";
+import type { DocumentResults } from "$lib/api/types";
 
 import { error } from "@sveltejs/kit";
 

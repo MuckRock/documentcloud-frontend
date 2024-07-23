@@ -18,6 +18,16 @@ export const CATEGORIES = [
   ["monitor", "Monitor"],
 ];
 
+// schedules and eventValues are the inverse of each other, so store them together
+export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];
+export const eventValues = {
+  disabled: 0,
+  hourly: 1,
+  daily: 2,
+  weekly: 3,
+  upload: 4,
+};
+
 export async function getAddons(
   params: AddOnParams = {},
   fetch = globalThis.fetch,
@@ -64,7 +74,7 @@ export async function getEvent(
   id: number,
   fetch = globalThis.fetch,
 ): Promise<Event> {
-  const endpoint = new URL(`addon_events/${id}/`, BASE_API_URL);
+  const endpoint = new URL(`addon_events/${id}/?expand=addon`, BASE_API_URL);
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
     console.error,

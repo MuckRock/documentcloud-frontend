@@ -18,12 +18,15 @@
   import Field from "../inputs/Field.svelte";
 
   import { autofield } from "../inputs/generator";
+  import { schedules, eventValues } from "$lib/api/addons";
+  import { afterNavigate } from "$app/navigation";
 
   export let properties: any = {};
   export let required = [];
   export let eventOptions: EventOptions;
   export let event: Event = null;
   export let action: string = "";
+  export let disablePremium = false;
 
   const ajv = new Ajv();
   addFormats(ajv);
@@ -33,6 +36,16 @@
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
   $: hasFields = Object.keys(properties).length > 0;
+
+  afterNavigate(() => {
+    // set initial values
+    if (event) {
+      $values = {
+        ...event.parameters,
+        event: schedules[event.event],
+      };
+    }
+  });
 
   function objectify(params: any) {
     if (typeof params === "string") {
@@ -129,14 +142,24 @@
 
   <slot name="premium" />
 
-  <slot name="controls">
-    <div class="controls">
-      <Button mode="primary" type="submit" label="Submit" />
-      <Button type="reset" on:click={reset}>
-        {$_("addonDispatchDialog.reset")}
-      </Button>
-    </div>
-  </slot>
+  <div class="controls">
+    {#if event}
+      <Button
+        type="submit"
+        mode="primary"
+        label={$_("dialog.save")}
+        disabled={disablePremium}
+      />
+    {:else}
+      <Button
+        type="submit"
+        mode="primary"
+        label={$_("dialog.dispatch")}
+        disabled={disablePremium}
+      />
+    {/if}
+    <Button type="button" on:click={reset} label={$_("dialog.reset")} />
+  </div>
 </form>
 
 <style>
