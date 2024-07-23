@@ -38,13 +38,16 @@
   {:else}
   <fieldset>
     <legend>{$_(config.field.label)}</legend>
-    <Flex>
     {#if config.field.type === 'dimension'}
+    <Flex>
       <div class="flexItem">
         <Field inline>
           <label>
             <input type="radio" name={name} value={config.field.automatic.value} bind:group={$embedSettings[name]} />
             {$_(config.field.automatic.label)}
+            {#if config.defaultValue === config.field.automatic.value}
+            <span class="default">{$_("share.default")}</span>
+            {/if}
           </label>
           <p slot="help">{$_(config.field.automatic.help)}</p>
         </Field>
@@ -54,27 +57,37 @@
           <label>
             <input type="radio" name={name} value={$embedSettings[name] >= 1 ? $embedSettings[name] : config.field.fixed.value} bind:group={$embedSettings[name]} />
             {$_(config.field.fixed.label)}
+            {#if config.defaultValue === config.field.fixed.value}
+            <span class="default">{$_("share.default")}</span>
+            {/if}
           </label>
           <p slot="help">{$_(config.field.fixed.help)}</p>
         </Field>
       </div>
-      {#if $embedSettings[name] >= 1}
+    </Flex>
+    {#if $embedSettings[name] >= 1}
+    <div class="number-input">
       <NumberInput min={1} name={name} bind:value={$embedSettings[name]} />
-      {/if}
+    </div>
+    {/if}
     {:else}
+    <Flex>
       {#each config.field.options as option}
       <div class="flexItem">
         <Field inline>
           <label>
             <input type="radio" name={name} value={option.value} bind:group={$embedSettings[name]} />
             {$_(option.label)}
+            {#if config.defaultValue === option.value}
+            <span class="default">{$_("share.default")}</span>
+            {/if}
           </label>
           <p slot="help">{$_(option.help)}</p>
         </Field>
       </div>
       {/each}
-    {/if}
     </Flex>
+    {/if}
   </fieldset>
   {/if}
   {/each}
@@ -89,6 +102,15 @@
   .flexItem {
     flex: 0 1 12rem;
     padding: 0 .5rem;
+  }
+  .number-input {
+    margin-top: 1rem;
+  }
+  .default {
+    font-size: var(--font-xs);
+    color: var(--gray-4);
+    font-weight: var(--font-semibold);
+    margin-left: .25rem;
   }
   legend {
     color: var(--gray-5);

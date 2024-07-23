@@ -97,7 +97,7 @@
     "show": "Show help text"
   },
   "appearanceDimension": {
-    "responsive": "Automatic (default)",
+    "responsive": "Automatic",
     "fixed": "Fixed"
   },
   "calendar": {
@@ -221,7 +221,7 @@
   },
   "dialogDocumentEmbedDialog": {
     "responsive": "Responsive",
-    "respOn": "On (default)",
+    "respOn": "On",
     "respOnHelp": "Fill the width of the article container (usually works best)",
     "respOff": "Off",
     "respOffHelp": "The document will fit the sizes specified below",
@@ -232,11 +232,11 @@
     "heightAuto": "The height is based on the size of the document, with no maximum size. If responsive, will be set to the height of the browser window minus 100px",
     "heightFixed": "Set a maximum height if the document is responsive, or set a fixed size if not responsive",
     "sidebarBehavior": "Sidebar behavior",
-    "sbResponsive": "Responsive (default)",
+    "sbResponsive": "Responsive",
     "sbResponsiveHelp": "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
     "hidden": "Hidden",
     "visible": "Visible",
-    "visibleDefault": "Visible (default)",
+    "visibleDefault": "Visible",
     "sbHiddenHelp": "Hide the sidebar by default",
     "sbVisibleHelp": "Show the sidebar by default",
     "titleBehavior": "Title behavior",
@@ -252,7 +252,7 @@
     "tmVisibleHelp": "Show an option to view the document’s text in the view dropdown",
     "tmHiddenHelp": "Hide text mode",
     "contributedByFormat": "Contributed by format",
-    "cbfUserAndOrg": "User and org (default)",
+    "cbfUserAndOrg": "User and org",
     "cbfUserAndOrgHelp": "Show a document’s attribution as the user name followed by the organization",
     "cbfOrgOnly": "Org only",
     "cbfOrgOnlyHelp": "Attribute the document to just the organization",
@@ -1090,5 +1090,8 @@
       "success": "<strong>Any upload email address has been removed from your account.</strong>",
       "failure": "Failed to destroy your upload email address. Please try again later."
     }
+  },
+  "share": {
+    "default": "Default"
   }
 }
