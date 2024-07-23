@@ -3,6 +3,7 @@
   export let disabled = false;
   export let small = false;
   export let hover = false;
+  export let title = '';
   // handling link behavior
   export let href: string = undefined;
   export let target: string = undefined;
@@ -16,6 +17,7 @@
     {target}
     {rel}
     {download}
+    {title}
     class="container"
     class:active
     class:disabled
@@ -26,7 +28,7 @@
     <slot />
   </a>
 {:else}
-  <span class="container" class:active class:hover class:disabled class:small>
+  <span {title} class="container" class:active class:hover class:disabled class:small on:click on:keydown role="button" tabindex={0}>
     <slot />
   </span>
 {/if}
