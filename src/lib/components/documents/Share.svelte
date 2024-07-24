@@ -10,52 +10,70 @@
   import TextArea from "../inputs/TextArea.svelte";
   import Select from "../inputs/Select.svelte";
   import Number from "../inputs/Number.svelte";
-  import type { Document } from "@/lib/api/types";
+  import type { Document, Note } from "@/lib/api/types";
   import CustomizeEmbed, {embedSettings} from "./CustomizeEmbed.svelte";
   import { createEmbedSearchParams } from "@/lib/utils/embed";
-  import { EMBED_URL } from "@/config/config";
+  import { APP_URL, EMBED_URL } from "@/config/config";
+  import { canonicalPageUrl, canonicalUrl, pageUrl } from "@/lib/api/documents";
+  import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
+  import { embedUrl } from "@/api/embed";
 
   export let document: Document;
   export let page: number = 1;
   export let note: string | number = null;
   
+  interface NoteOption {
+    value: string | number;
+    label: string;
+  }
+  const noteOptions = document.notes?.map<NoteOption>(note => ({
+    value: note.id,
+    label: `pg. ${note.page_number + 1} – ${note.title}`
+  }));
+  let selectedNote: NoteOption = note ? noteOptions?.find(({value}) => value === note) : noteOptions?.[0];
+  // bind the selected note to the note prop
+  $: {
+    note = selectedNote.value;
+  }
+
   export let currentTab: "document" | "page" | "note" = "document";
   function setCurrentTab(tab: typeof currentTab) {
     currentTab = tab;
   }
 
-  let embedSrc, iframe;
+  let permalink: URL, embedSrc: URL, iframe: string, wpShortcode: string;
   let customizeEmbedOpen = false;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
     switch(currentTab) {
       case 'document':
-        embedSrc = new URL(`/documents/${document.id}/`, EMBED_URL)
+        permalink = canonicalUrl(document);
+        embedSrc = canonicalUrl(document);
+        iframe = `<iframe src="${embedSrc}?${embedUrlParams.toString()}"`;
+        wpShortcode = `[documentcloud url="${embedSrc}" ${Array.from(embedUrlParams).slice(1).map(([key, value]) => `${key}="${value}"`).join(' ')}]`;
+        if ($embedSettings.width) {
+          iframe += ` width="${$embedSettings.width}"`
+        }
+        if ($embedSettings.height) {
+          iframe += ` height="${$embedSettings.height}"`
+        }
+        iframe += ' />';
+        break;
       case 'page':
-        embedSrc = new URL(`/documents/${document.id}/pages/${page}`, EMBED_URL)
+        permalink = pageUrl(document, page);
+        embedSrc = canonicalPageUrl(document, page);
+        iframe = `<iframe src="${embedSrc}" />`
+        wpShortcode = `[documentcloud url="${embedSrc}"]`;
+        break;
       case 'note':
-        embedSrc = new URL(`/documents/${document.id}/annotations/${note}`, EMBED_URL)
-      default:
-        embedSrc = new URL(`${document.canonical_url}?${embedUrlParams}`)
+        const noteObject = document.notes.find(({id}) => String(id) === String(selectedNote.value));
+        permalink = noteUrl(document, noteObject);
+        embedSrc = canonicalNoteUrl(document, noteObject)
+        iframe = `<iframe src="${embedSrc}" />`
+        wpShortcode = `[documentcloud url="${embedSrc}"]`;
+        break;
     }
   };
-  $: permalink = String(document.canonical_url);
-  $: wpShortcode = `[documentcloud url="${String(document.canonical_url)}" ${Array.from(embedUrlParams).slice(1).map(([key, value]) => `${key}="${value}"`).join(' ')}]`;
-  $: {
-    iframe = `<iframe src="${embedSrc}"`;
-    if ($embedSettings.width) {
-      iframe += ` width="${$embedSettings.width}"`
-    }
-    if ($embedSettings.height) {
-      iframe += ` height="${$embedSettings.height}"`
-    }
-    iframe += ' />';
-  }
-
-  const notes = document.notes.map(note => ({
-    value: note.id,
-    label: `pg. ${note.page_number + 1} – ${note.title}`
-  }));
 
   async function copy(text: string) {
     await navigator.clipboard.writeText(text);
@@ -93,18 +111,18 @@
           <FieldLabel>
             Pick note:
           </FieldLabel>
-          <Select name="note" items={notes} bind:value={note} />
+          <Select name="note" items={noteOptions} bind:value={selectedNote} />
         </Field>
       </div>
       {/if}
       <Field>
         <FieldLabel>
           Permalink
-          <Button slot="action" size="small" mode="ghost" on:click={() => copy(permalink)} disabled={!navigator.clipboard}>
+          <Button slot="action" size="small" mode="ghost" on:click={() => copy(String(permalink))} disabled={!navigator.clipboard}>
             <Copy16 /> Copy
           </Button>
         </FieldLabel>
-        <Text value={permalink} --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
+        <Text value={String(permalink)} --font-family="var(--font-mono)" --font-size="var(--font-sm)" />
       </Field>
       <Field>
         <FieldLabel>
