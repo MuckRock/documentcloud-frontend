@@ -89,7 +89,7 @@
 
 <ContentLayout>
   <svelte:fragment slot="header">
-    <Tip --background-color="var(--yellow-bright)">
+    <Tip --background-color="var(--yellow-3)">
       <SquareFill24 slot="icon" />
       <h3>{$_("redact.title")}</h3>
       <p>{$_("redact.instructions")}</p>
@@ -101,7 +101,7 @@
   <PageToolbar slot="footer">
     <Flex slot="left">
       <!-- additional controls here -->
-      <Button mode="primary" size="small" on:click={() => confirmOpen = true}>
+      <Button mode="primary" size="small" on:click={() => (confirmOpen = true)}>
         <Check16 />
         {$_("redact.confirm")}
       </Button>
@@ -122,11 +122,11 @@
   </PageToolbar>
 
   {#if confirmOpen}
-  <Portal>
-    <Modal on:close={() => confirmOpen = false}>
-      <h1 slot="title">{$_("redact.confirm")}</h1>
-      <ConfirmRedaction {document} on:close={() => confirmOpen = false} />
-    </Modal>
-  </Portal>
+    <Portal>
+      <Modal on:close={() => (confirmOpen = false)}>
+        <h1 slot="title">{$_("redact.confirm")}</h1>
+        <ConfirmRedaction {document} on:close={() => (confirmOpen = false)} />
+      </Modal>
+    </Portal>
   {/if}
 </ContentLayout>
