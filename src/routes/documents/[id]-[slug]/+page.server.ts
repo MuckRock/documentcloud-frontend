@@ -79,15 +79,10 @@ export const actions = {
     const form = await request.formData();
     const { id } = params;
 
-    const update: Partial<Document> = {};
+    const update: Partial<Document> = Object.fromEntries(form);
 
-    // set any fields that aren't blank
-    Array.from(form).reduce((m, [k, v]) => {
-      if (v) {
-        m[k] = v;
-      }
-      return m;
-    }, update);
+    // noindex is a boolean so needs special treatment
+    update.noindex = form.get("noindex") === "checked";
 
     try {
       const document = await edit(id, update, csrf_token, fetch);

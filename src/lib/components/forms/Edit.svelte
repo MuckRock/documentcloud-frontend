@@ -15,6 +15,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Field from "../inputs/Field.svelte";
+  import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
 
@@ -61,6 +62,10 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     </Flex>
 
     <hr class="divider" />
+
+    <Field title={$_("edit.fields.noindex")} inline>
+      <Switch name="noindex" checked={document.noindex} />
+    </Field>
 
     <Field
       title={$_("edit.fields.access.title")}

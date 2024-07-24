@@ -912,6 +912,7 @@
       "source": "Source",
       "published_url": "Published URL",
       "related_article": "Related article URL",
+      "noindex": "Hide from search engines and DocumentCloud search",
       "access": {
         "title": "Access",
         "description": "Changing the access setting will reprocess your document."
