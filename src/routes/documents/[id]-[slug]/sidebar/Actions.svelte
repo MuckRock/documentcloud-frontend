@@ -35,7 +35,7 @@
   $: pdf = pdfUrl(document).toString();
   $: annotate = relative(document, "annotate/");
   $: redact = relative(document, "redact/");
-  $: modify = relative(document, "modify/");
+  // $: modify = relative(document, "modify/");
 
   function relative(document: Document, path: string) {
     return new URL(path, canonicalUrl(document)).href;
@@ -101,12 +101,14 @@
     </SidebarItem>
   {/if}
 
-  {#if document.edit_access}
+  <!--
+    {#if document.edit_access}
     <SidebarItem href={modify} disabled={isProcessing(document.status)}>
       <Apps16 />
       {$_("sidebar.modify")} &hellip;
     </SidebarItem>
-  {/if}
+    {/if}
+  -->
 
   {#if document.edit_access}
     <!-- TODO: Processing component -->

@@ -27,7 +27,7 @@
   $: empty = Object.keys(document.data).length === 0;
 </script>
 
-<SidebarGroup>
+<SidebarGroup name="data">
   <SidebarItem slot="title">
     <Tag16 />
     {$_("sidebar.data.title")}
