@@ -23,13 +23,13 @@
   $: pinned = $page.data.pinnedProjects || [];
 </script>
 
-<SidebarGroup>
-  <SidebarItem slot="title"
-    ><FileDirectory16 />{$_("sidebar.projects.title")}</SidebarItem
-  >
-  <a href="/documents/projects/" slot="action"
-    ><Action icon={Book16}>{$_("common.explore")}</Action></a
-  >
+<SidebarGroup name="projects">
+  <SidebarItem slot="title">
+    <FileDirectory16 />{$_("sidebar.projects.title")}
+  </SidebarItem>
+  <a href="/documents/projects/" slot="action">
+    <Action icon={Book16}>{$_("common.explore")}</Action>
+  </a>
   <Flex direction="column" gap={0}>
     {#await pinned}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>

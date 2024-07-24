@@ -11,12 +11,11 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import Pin from "@/common/Pin.svelte";
-  import { getPinnedAddons } from "@/lib/api/addons";
 
   export let pinnedAddOns: Promise<Page<AddOnListItem>>;
 </script>
 
-<SidebarGroup>
+<SidebarGroup name="addons">
   <SidebarItem slot="title"><Plug16 />{$_("sidebar.addons.title")}</SidebarItem>
   <a href="/add-ons/" slot="action">
     <Action icon={Book16}>{$_("common.explore")}</Action>

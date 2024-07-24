@@ -10,7 +10,7 @@
   export let projects: Project[];
 </script>
 
-<SidebarGroup>
+<SidebarGroup name="projects:viewer">
   <SidebarItem slot="title">
     <FileDirectory16 />
     Projects
