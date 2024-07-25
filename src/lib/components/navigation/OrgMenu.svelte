@@ -12,8 +12,9 @@
   import Menu from "@/common/Menu.svelte";
   import MenuInsert from "@/common/MenuInsert.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import PremiumIcon from "@/common/icons/Premium.svelte";
 
-  import {} from "$lib/api/accounts";
+  import { getUpgradeUrl } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
 
   export let active_org: Org;
@@ -21,22 +22,30 @@
   export let users: User[] = [];
 
   $: isPremium = active_org.plan !== "Free";
+  $: upgrade_url = getUpgradeUrl(active_org).href;
 
   function setOrg(org: Org) {}
 </script>
 
 <Dropdown id="organization">
   <SidebarItem slot="title">
-    <div class="avatar">
-      <img
-        alt={$_("authSection.org.avatar", {
-          values: { name: active_org.name },
-        })}
-        src={active_org.avatar_url}
-      />
-    </div>
-    <p class="organization">{active_org.name}</p>
-    <span class="arrow"><ChevronDown16 /></span>
+    {#if active_org.individual}
+      <div class="premium">
+        <PremiumIcon />
+        {$_("authSection.premiumUpgrade.title")}
+      </div>
+    {:else}
+      <div class="avatar">
+        <img
+          alt={$_("authSection.org.avatar", {
+            values: { name: active_org.name },
+          })}
+          src={active_org.avatar_url}
+        />
+      </div>
+      <p class="organization">{active_org.name}</p>
+      <span class="arrow"><ChevronDown16 /></span>
+    {/if}
   </SidebarItem>
 
   <Menu>
@@ -60,9 +69,11 @@
         <p class="description">
           {$_("authSection.premiumUpgrade.description")}
         </p>
-        <Button label={$_("authSection.premiumUpgrade.cta")} />
+        <Button mode="premium" href={upgrade_url}>
+          {$_("authSection.premiumUpgrade.cta")}
+        </Button>
         <div class="learnMore">
-          <a href="/help/premium/" on:click={close}>
+          <a href="/help/premium/">
             {$_("authSection.premiumUpgrade.docs")}
           </a>
         </div>
@@ -123,6 +134,15 @@
 </Dropdown>
 
 <style>
+  .premium {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    gap: 0.5rem;
+    color: var(--premium);
+  }
+
   .avatar {
     width: 1.5rem;
     height: 1.5rem;
@@ -192,6 +212,15 @@
     text-transform: uppercase;
     letter-spacing: 0.1ch;
     color: var(--primary);
+  }
+
+  .learnMore {
+    font-size: 0.8em;
+    color: var(--gray-4);
+  }
+
+  .learnMore:hover {
+    opacity: 0.7;
   }
 
   @media (max-width: 32rem) {

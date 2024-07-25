@@ -1,5 +1,6 @@
 <script lang="ts">
-  export let mode: "standard" | "primary" | "ghost" | "danger" = "standard";
+  export let mode: "standard" | "primary" | "ghost" | "danger" | "premium" =
+    "standard";
   export let full = false;
   export let size: "small" | "normal" = "normal";
   export let minW = true;
@@ -87,6 +88,12 @@
 
   .ghost:hover {
     background: var(--background, var(--blue-1, #eef3f9));
+  }
+
+  .premium {
+    background: var(--premium, #24cc99);
+    box-shadow: var(--shadow-1);
+    border-color: var(--gray-3);
   }
 
   .small {
