@@ -6,16 +6,19 @@
 
 <script lang="ts">
   import type { Project } from "../api/types/project";
+  import type { User } from "../api/types";
+
   import Drawer from "../common/Drawer.svelte";
   import Search, { query } from "../common/SearchInput.svelte";
   import Flex from "../common/Flex.svelte";
   import ProjectList from "./ProjectList.svelte";
-  import { newProject } from "../manager/layout";
   import Button from "../common/Button.svelte";
-  import { getProjects } from "../api/project";
-  import type { User } from "../api/types";
-  import { getMe } from "../api/orgAndUser";
   import Filters, { type FilterKey, filter } from "./Filters.svelte";
+  import Paginator from "../common/Paginator.svelte";
+
+  import { getProjects } from "../api/project";
+  import { getMe } from "../api/orgAndUser";
+  import { newProject } from "../manager/layout";
 
   let drawer: Drawer;
 
@@ -44,18 +47,22 @@
     loading = true;
     try {
       user = await getMe();
-      // if (filter === "public") {
-      //   res = await getPublicProjects($query, cursor);
-      // } else {
-      res.results = await getProjects(user.id, $query);
-      if (filter === "user") {
-        res.results = res.results.filter((project) => project.user === user.id);
+      if (filter === "public") {
+        res = await getPublicProjects($query, cursor);
       } else {
-        res.results = res.results.filter((project) => project.user !== user.id);
+        res.results = await getProjects(user.id, $query);
+        if (filter === "user") {
+          res.results = res.results.filter(
+            (project) => project.user === user.id,
+          );
+        } else {
+          res.results = res.results.filter(
+            (project) => project.user !== user.id,
+          );
+        }
       }
-      // }
     } catch (err) {
-      error = err.errorData.detail;
+      error = err?.errorData?.detail;
       projects = null;
     }
     loading = false;
@@ -84,14 +91,14 @@
       <Flex direction="column" class="list">
         <ProjectList {loading} {error} {items} bind:reload />
       </Flex>
-      <!-- {#if $filter === "public"}
+      {#if $filter === "public"}
         <Paginator
           has_next={Boolean(next_cursor)}
           has_previous={Boolean(previous_cursor)}
           on:next={loadNext}
           on:previous={loadPrev}
         />
-      {/if} -->
+      {/if}
     </Flex>
   </div>
 </Drawer>

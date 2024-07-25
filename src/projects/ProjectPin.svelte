@@ -14,9 +14,10 @@
 </script>
 
 <script lang="ts">
+  import Pin from "../common/Pin.svelte";
+
   import { getCsrfToken } from "../api/session.js";
   import { baseApiUrl } from "../api/base.js";
-  import Pin from "../common/Pin.svelte";
 
   export let project: Project;
   export let size = 1;

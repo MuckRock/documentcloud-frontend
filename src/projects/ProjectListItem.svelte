@@ -1,20 +1,21 @@
 <script lang="ts">
+  import type { Project } from "../api/types/project";
+
   import { _ } from "svelte-i18n";
+  import { Globe16, Lock16 } from "svelte-octicons";
 
   import ProjectPin from "./ProjectPin.svelte";
-  import type { Project } from "../api/types/project";
   import EditButton from "../common/EditButton.svelte";
-  import { Globe16, Lock16 } from "svelte-octicons";
-  import { projectUrl } from "../search/search.js";
   import Link from "../router/Link.svelte";
+
   import { Project as ProjectStructure } from "../structure/project";
+  import { projectUrl } from "../search/search.js";
 
   export let project: Project;
   export let editProject;
 </script>
 
 <div class="project-link">
-  <!-- TODO: Replace `Link` with `a` in `sveltekit` branch -->
   <Link toUrl={projectUrl(project)}>
     <div class="container" id={`#project-${project.id}`}>
       <div class="row margin">
@@ -33,13 +34,13 @@
           </div>
         {/if}
         {#if project.private}
-          <span class="small center center-self" title="Private Project"
-            ><Lock16 /></span
-          >
+          <span class="small center center-self" title="Private Project">
+            <Lock16 />
+          </span>
         {:else}
-          <span class="small center center-self" title="Public Project"
-            ><Globe16 /></span
-          >
+          <span class="small center center-self" title="Public Project">
+            <Globe16 />
+          </span>
         {/if}
       </div>
       {#if project.description}
