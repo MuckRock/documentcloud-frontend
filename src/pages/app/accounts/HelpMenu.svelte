@@ -15,6 +15,7 @@
     Zap16,
     Mail16,
     Question16,
+    Gift16,
   } from "svelte-octicons";
 </script>
 
@@ -54,6 +55,12 @@
         {$_("authSection.help.premium")}
       </MenuItem>
     </Link>
+    <a href="https://www.muckrock.com/donate/" class="color">
+      <MenuItem>
+        <Gift16 slot="icon" />
+        {$_("authSection.help.donate")}
+      </MenuItem>
+    </a>
     <a href="mailto:info@documentcloud.org" class="color" target="_blank">
       <MenuItem>
         <Mail16 slot="icon" />

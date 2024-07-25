@@ -338,7 +338,8 @@
     "signOut": "Se déconnecter",
     "changeOrg": "Changer l'organisation",
     "personalAcct": "Compte personnel",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "donate": "Faire un don"
   },
   "documents": {
     "yourDocuments": "Vos Documents",
@@ -433,7 +434,8 @@
     "verify1": "Notez que votre compte n'est pas actuellement <b>vérifié pour envoyer</b> des documents. Vous pouvez rechercher dans la base publique, organiser les documents qui vous intéressent dans des projets, laisser des notes privées, et collaborer à l'édition et à l'annotation de documents pour lesquels d'autres utilisateurs vous ont invité.",
     "verify2": "Si vous souhaitez envoyer ou publier des documents et que vous êtes un journaliste en activité ou membre d'une organisation intéressée par la publication de documents d'intérêt public, vous devrez faire vérifier votre compte ou l'ajouter à une organisation vérifiée. Ce processus est simple :",
     "verify3": "Tout d'abord, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">vérifiez si votre organisation existe déjà</a> et, si vous la trouvez, cliquez sur \"Demander à rejoindre\" sur sa page.",
-    "verify4": "Si votre organisation n'a pas encore été vérifiée, ou si vous êtes un indépendant, <a target=\"_blank\" href=\"https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form\">demandez la vérification ici</a>. Les demandes de vérification prennent généralement deux jours ouvrables pour être traitées.",
+    "verify4": "Si votre organisation n'a pas encore été vérifiée, ou si vous êtes un indépendant, ",
+    "verify5": "demandez la vérification ici.",
     "uploadFirst": "Téléchargez votre premier document",
     "upload1": "Envoyez un document pour commencer à utiliser DocumentCloud. Vous pouvez faire glisser le fichier dans cette fenêtre, ou cliquez sur le bouton bleu “Envoyer” ci-dessus.",
     "upload2": "Une fois que vous avez envoyé un fichier, DocumentCloud traitera le document et traitera son contenu. Cela peut prendre quelques minutes, mais une fois que cela sera fait, votre document sera optimisé pour l'analyse et le partage sur le Web."

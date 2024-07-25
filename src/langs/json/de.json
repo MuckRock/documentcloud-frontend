@@ -347,7 +347,8 @@
     "changeOrg": "Organisation ändern",
     "personalAcct": "Persönliches Konto",
     "signIn": "Anmelden",
-    "uploadEmail": "Hochladen per E-Mail"
+    "uploadEmail": "Hochladen per E-Mail",
+    "donate": "Spenden"
   },
   "documents": {
     "yourDocuments": "Ihre Dokumente",
@@ -452,7 +453,8 @@
     "verify1": "Bitte beachten Sie, dass Ihr Konto derzeit <b>nicht für das Hochladen von Dokumenten verifiziert ist</b>. Sie können das öffentliche Repositorium durchsuchen, für sie interessante Dokument in Projekten organisieren, persönliche Anmerkungen hinterlassen sowie Dokumente mitbearbeiten und kommentieren, zu denen Sie von anderen Benutzern eingeladen werden.",
     "verify2": "Wenn Sie Dokumente hochladen oder veröffentlichen möchten und Sie ein aktiver Journalist oder eine andere Organisation sind, die an der Veröffentlichung von Materialien aus Primärquellen von öffentlichem Interesse interessiert ist, müssen Sie Ihr Konto verifizieren lassen oder es einer verifizierten Organisation hinzufügen. Dies ist ein einfacher Prozess:",
     "verify3": "Prüfen Sie zunächst <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">, ob Ihre Organisation bereits existiert</a>, und wenn Sie sie gefunden haben, klicken Sie auf ihrer Seite auf \"Beitritt beantragen\".",
-    "verify4": "Wenn Ihre Organisation noch nicht verifiziert ist oder wenn Sie Freiberufler sind, <a target=\"_blank\" href=\"https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form\">beantragen Sie hier die Verifizierung</a>. Die Bearbeitung von Anfragen dauert in der Regel zwei Werktage.",
+    "verify4": "Wenn Ihre Organisation noch nicht verifiziert ist oder wenn Sie Freiberufler sind, ",
+    "verify5": "beantragen Sie hier die Verifizierung.",
     "uploadFirst": "Laden Sie Ihr erstes Dokument hoch",
     "upload1": "Laden Sie eine Dokumentdatei hoch, um mit der Nutzung von DocumentCloud zu beginnen. Sie können die Datei in dieses Fenster ziehen oder oben auf die blaue Schaltfläche „Hochladen“ klicken.",
     "upload2": "Nachdem Sie eine Datei hochgeladen haben, verarbeitet DocumentCloud das Dokument und extrahiert seinen Inhalt. Dieser Vorgang kann einige Minuten dauern, aber sobald er abgeschlossen ist, ist Ihr Dokument für die Analyse und das Teilen im Internet optimiert.",
