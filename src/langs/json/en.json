@@ -1094,6 +1094,19 @@
     }
   },
   "share": {
-    "default": "Default"
+    "default": "Default",
+    "document": "Document",
+    "page": "Page",
+    "note": "Note",
+    "copy": "Copy",
+    "permalink": "Permalink",
+    "iframe": "Embed HTML iFrame",
+    "preview": "Embed Preview",
+    "save": "Save Settings",
+    "customize": "Customize Embed",
+    "fields": {
+      "page": "Pick page",
+      "note": "Pick note"
+    }
   }
 }

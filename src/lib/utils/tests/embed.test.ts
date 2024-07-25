@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest';
+import { test, expect } from "vitest";
 import { settingsConfig, createEmbedSearchParams } from "../embed";
 
 test("settingsConfig", () => {
@@ -6,6 +6,8 @@ test("settingsConfig", () => {
 });
 
 test("createEmbedSearchParams", () => {
-  expect(createEmbedSearchParams({embed: 1}).toString()).toEqual('embed=1');
-  expect(createEmbedSearchParams({embed: 1, responsive: null}).toString()).toEqual('embed=1');
-})
+  expect(createEmbedSearchParams({ embed: 1 }).toString()).toEqual("embed=1");
+  expect(
+    createEmbedSearchParams({ embed: 1, responsive: null }).toString(),
+  ).toEqual("embed=1");
+});

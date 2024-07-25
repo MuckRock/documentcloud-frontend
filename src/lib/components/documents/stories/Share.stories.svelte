@@ -6,8 +6,8 @@
 
   let args = {
     document,
-    currentTab: 'document'
-  }
+    currentTab: "document",
+  };
 
   export const meta = {
     title: "Components / Documents / Share",
@@ -17,11 +17,11 @@
 </script>
 
 <Template let:args>
-  <Share {document} {...args}  />
+  <Share {document} {...args} />
 </Template>
 
-<Story name="Document" args={{...args, document}} />
+<Story name="Document" args={{ ...args, document }} />
 
-<Story name="Page" args={{...args, document, currentTab: 'page'}} />
+<Story name="Page" args={{ ...args, document, currentTab: "page" }} />
 
-<Story name="Note" args={{...args, document, currentTab: 'note'}} />
+<Story name="Note" args={{ ...args, document, currentTab: "note" }} />
