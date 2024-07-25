@@ -69,8 +69,8 @@ export async function removeDocumentsFromProject(
 }
 
 export async function getPublicProjects(
-  cursor?: string,
   query?: string,
+  cursor?: string,
   expand: string = DEFAULT_EXPAND,
 ): Promise<Page<Project>> {
   // Returns all public projects

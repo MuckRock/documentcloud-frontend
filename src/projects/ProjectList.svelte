@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import type { Project } from "../api/types/project";
+
+  import { _ } from "svelte-i18n";
+
   import Button from "../common/Button.svelte";
   import EmptyResults from "../common/icons/EmptyResults.svelte";
   import Error from "../common/icons/Error.svelte";
   import Loader from "../common/Loader.svelte";
-  import { editProject } from "../manager/layout.js";
-
   import ListItem from "./ProjectListItem.svelte";
+
+  import { editProject } from "../manager/layout.js";
 
   export let items: Project[];
   export let loading: boolean;
