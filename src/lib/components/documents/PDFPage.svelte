@@ -30,6 +30,12 @@ Selectable text can be rendered in one of two ways:
 
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
+  import Flex from "../common/Flex.svelte";
+  import { Share16 } from "svelte-octicons";
+  import Portal from "../layouts/Portal.svelte";
+  import Share from "./Share.svelte";
+  import Action from "../common/Action.svelte";
+  import Modal from "../layouts/Modal.svelte";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -43,6 +49,9 @@ Selectable text can be rendered in one of two ways:
   export let notes: NoteType[] = [];
   export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
+
+  // share page
+  let pageShareOpen = false;
 
   const mode: Writable<ViewerMode> = getContext("mode");
 
@@ -224,12 +233,16 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </svelte:fragment>
 
-  <PageAnnotation
-    {document}
-    page_number={page_number - 1}
-    {section}
-    slot="actions"
-  />
+  <Flex slot="actions" align="center">
+    <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
+      {$_("dialog.share")}
+    </Action>
+    <PageAnnotation
+      {document}
+      page_number={page_number - 1}
+      {section}
+    />
+  </Flex>
 
   {#if page_level_notes.length}
     <div class="page-notes">
@@ -288,6 +301,14 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </div>
 </Page>
+{#if pageShareOpen}
+<Portal>
+  <Modal on:close={() => (pageShareOpen = false)}>
+    <h1 slot="title">{$_("dialog.share")}</h1>
+    <Share {document} page={page_number} currentTab="page" />
+  </Modal>
+</Portal>
+{/if}
 
 <style>
   .section {

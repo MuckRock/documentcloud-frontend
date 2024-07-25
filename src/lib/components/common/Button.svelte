@@ -89,6 +89,10 @@
     background: var(--background, var(--blue-1, #eef3f9));
   }
 
+  .ghost.small {
+    box-shadow: none;
+  }
+
   .small {
     font-size: var(--font-sm, 0.875rem);
     padding: 0.25rem 0.5rem;

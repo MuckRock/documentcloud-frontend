@@ -3,16 +3,16 @@
 exports[`Mailkey 1`] = `
 <div>
   <div
-    class="backdrop svelte-oeb706"
+    class="backdrop svelte-65lbzd"
   >
     <div
-      class="dialog card svelte-oeb706"
+      class="dialog card svelte-65lbzd"
     >
       <header
-        class="svelte-oeb706"
+        class="svelte-65lbzd"
       >
         <button
-          class="ghost normal svelte-1kzv5gr"
+          class="ghost normal svelte-1jin8o6"
           title=""
           type="button"
           value="undefined"
@@ -42,7 +42,7 @@ exports[`Mailkey 1`] = `
       </header>
        
       <main
-        class="content svelte-oeb706"
+        class="content svelte-65lbzd"
       >
         <div
           class="description svelte-mrguwb"
@@ -75,7 +75,7 @@ exports[`Mailkey 1`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal svelte-1kzv5gr minW"
+            class="primary normal svelte-1jin8o6 minW"
             title=""
             type="button"
             value="undefined"
@@ -85,7 +85,7 @@ exports[`Mailkey 1`] = `
           
            
           <button
-            class="danger normal svelte-1kzv5gr minW"
+            class="danger normal svelte-1jin8o6 minW"
             title=""
             type="button"
             value="undefined"
@@ -103,16 +103,16 @@ exports[`Mailkey 1`] = `
 exports[`Mailkey 2`] = `
 <div>
   <div
-    class="backdrop svelte-oeb706"
+    class="backdrop svelte-65lbzd"
   >
     <div
-      class="dialog card svelte-oeb706"
+      class="dialog card svelte-65lbzd"
     >
       <header
-        class="svelte-oeb706"
+        class="svelte-65lbzd"
       >
         <button
-          class="ghost normal svelte-1kzv5gr"
+          class="ghost normal svelte-1jin8o6"
           title=""
           type="button"
           value="undefined"
@@ -142,7 +142,7 @@ exports[`Mailkey 2`] = `
       </header>
        
       <main
-        class="content svelte-oeb706"
+        class="content svelte-65lbzd"
       >
         <div
           class="description svelte-mrguwb"
@@ -180,7 +180,7 @@ exports[`Mailkey 2`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal svelte-1kzv5gr minW"
+            class="primary normal svelte-1jin8o6 minW"
             title=""
             type="button"
             value="undefined"
@@ -190,7 +190,7 @@ exports[`Mailkey 2`] = `
           
            
           <button
-            class="danger normal svelte-1kzv5gr minW"
+            class="danger normal svelte-1jin8o6 minW"
             title=""
             type="button"
             value="undefined"
