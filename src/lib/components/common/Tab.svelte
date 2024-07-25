@@ -3,7 +3,7 @@
   export let disabled = false;
 </script>
 
-<div class="tab" class:active class:disabled>
+<div class="tab" role="tab" class:active class:disabled>
   <button on:click {disabled}>
     <slot />
   </button>
