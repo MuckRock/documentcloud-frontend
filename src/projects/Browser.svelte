@@ -16,7 +16,7 @@
   import Filters, { type FilterKey, filter } from "./Filters.svelte";
   import Paginator from "../common/Paginator.svelte";
 
-  import { getProjects } from "../api/project";
+  import { getProjects, getPublicProjects } from "../api/project";
   import { getMe } from "../api/orgAndUser";
   import { newProject } from "../manager/layout";
 
@@ -125,11 +125,6 @@
   .header h2 {
     flex: 0 1 auto;
     margin: 0;
-  }
-  .header p {
-    margin: 0;
-    font-weight: 600;
-    color: gray;
   }
   .sidebar {
     flex: 1 1 12em;
