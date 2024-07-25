@@ -122,6 +122,7 @@
     "delete": "Delete",
     "done": "Done",
     "edit": "Edit",
+    "share": "Share",
     "remove": "Remove",
     "save": "Save",
     "create": "Create",
@@ -902,7 +903,8 @@
     "error": "Document has encountered an error",
     "errorDesc": "A processing error has been encountered in the document you requested",
     "accessible": "Document not accessible",
-    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
+    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it",
+    "share": "Share"
   },
   "edit": {
     "title": "Edit document metadata",
