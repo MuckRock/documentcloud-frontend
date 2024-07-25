@@ -49,7 +49,7 @@
     </slot>
     <SignedIn>
       <Flex>
-        <OrgMenu org={$org} />
+        <OrgMenu active_org={$org} />
         <UserMenu user={$me} />
       </Flex>
       <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
@@ -129,7 +129,7 @@
     box-shadow: var(--shadow-1);
     flex: 0 0 auto;
     padding: 0 1rem;
-    z-index: 1;
+    z-index: 3;
   }
 
   main {

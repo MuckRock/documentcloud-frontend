@@ -23,23 +23,23 @@
     <div class="dropdownArrow"><ChevronDown16 /></div>
   </SidebarItem>
   <Menu>
-    <SidebarItem href="/help/faq">
+    <SidebarItem href="/help/faq/">
       <CommentDiscussion16 />
       {$_("authSection.help.faq")}
     </SidebarItem>
-    <SidebarItem href="/help/search">
+    <SidebarItem href="/help/search/">
       <Search16 />
       {$_("authSection.help.searchDocs")}
     </SidebarItem>
-    <SidebarItem href="/help/api">
+    <SidebarItem href="/help/api/">
       <Code16 />
       {$_("authSection.help.apiDocs")}
     </SidebarItem>
-    <SidebarItem href="/help/add-ons">
+    <SidebarItem href="/help/add-ons/">
       <Plug16 />
       {$_("authSection.help.addOns")}
     </SidebarItem>
-    <SidebarItem href="/help/premium">
+    <SidebarItem href="/help/premium/">
       <Premium />
       {$_("authSection.help.premium")}
     </SidebarItem>
