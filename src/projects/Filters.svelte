@@ -26,9 +26,9 @@
     <li {id} class:selected={$filter === id}>
       <Filter {name} selected={$filter === id}>
         <input slot="input" type="radio" value={id} bind:group={$filter} />
-        <span class="icon" slot="icon"
-          ><svelte:component this={filterIcons[id]} /></span
-        >
+        <span class="icon" slot="icon">
+          <svelte:component this={filterIcons[id]} />
+        </span>
       </Filter>
     </li>
   {/each}
