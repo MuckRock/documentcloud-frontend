@@ -13,22 +13,33 @@
   export const meta = {
     title: "Components / Navigation / Org Menu",
     component: OrgMenu,
-    parameters: { layout: "centered" },
   };
 </script>
 
 <Story name="Full organization">
-  <OrgMenu
-    active_org={organization}
-    users={usersList.results}
-    orgs={organizationsList.results}
-  />
+  <div>
+    <OrgMenu
+      active_org={organization}
+      users={usersList.results}
+      orgs={organizationsList.results}
+    />
+  </div>
 </Story>
 
 <Story name="Free org">
-  <OrgMenu active_org={freeOrg} />
+  <div>
+    <OrgMenu active_org={freeOrg} orgs={organizationsList.results} />
+  </div>
 </Story>
 
 <Story name="Pro org">
-  <OrgMenu active_org={proOrg} />
+  <div>
+    <OrgMenu active_org={proOrg} orgs={organizationsList.results} />
+  </div>
 </Story>
+
+<style>
+  div {
+    max-width: 20rem;
+  }
+</style>

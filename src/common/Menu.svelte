@@ -10,7 +10,7 @@
     background: var(--white, #ffffff);
     border-radius: 0.5rem;
     border: 1px solid var(--gray-1);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
     padding: 0.5rem;
     gap: 0.25rem;
   }

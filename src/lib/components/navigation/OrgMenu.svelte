@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { Org, User } from "@/api/types";
 
-  import { _ } from "svelte-i18n";
+  import { _, locale } from "svelte-i18n";
   import { ChevronDown16, Person16 } from "svelte-octicons";
 
-  import CreditMeter from "@/premium-credits/CreditMeter.svelte";
+  import Button from "../common/Button.svelte";
+  import CreditMeter, {
+    formatResetDate,
+  } from "@/premium-credits/CreditMeter.svelte";
   import Dropdown from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuInsert from "@/common/MenuInsert.svelte";
@@ -37,6 +40,35 @@
   </SidebarItem>
 
   <Menu>
+    {#if isPremium}
+      <MenuInsert>
+        <CreditMeter
+          id="org-credits"
+          label={$_("authSection.credits.monthlyOrg")}
+          helpText={$_("authSection.credits.refreshOn", {
+            values: {
+              date: formatResetDate(active_org.credit_reset_date, $locale),
+            },
+          })}
+          value={active_org.monthly_credits}
+          max={active_org.monthly_credit_allowance}
+        />
+      </MenuInsert>
+    {:else}
+      <MenuInsert>
+        <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
+        <p class="description">
+          {$_("authSection.premiumUpgrade.description")}
+        </p>
+        <Button label={$_("authSection.premiumUpgrade.cta")} />
+        <div class="learnMore">
+          <a href="/help/premium/" on:click={close}>
+            {$_("authSection.premiumUpgrade.docs")}
+          </a>
+        </div>
+      </MenuInsert>
+    {/if}
+
     {#if users.length}
       <p class="user-count">
         {$_("authSection.org.userCount", { values: { n: users.length } })}
@@ -162,7 +194,7 @@
     color: var(--primary);
   }
 
-  @media (max-width: 64rem) {
+  @media (max-width: 32rem) {
     .organization {
       display: none;
     }
