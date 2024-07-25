@@ -6,6 +6,19 @@
   // SVG assets
   import documentSilhouetteSvg from "@/assets/document_silhouette.svg?raw";
   import emptyResultsSvg from "@/assets/empty_results.svg?raw";
+
+
+  function constructPrefillUrl() {
+    const baseUrl = "https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form";
+    const email = encodeURIComponent(orgsAndUsers.me.email);
+    const username = encodeURIComponent(orgsAndUsers.me.username);
+    const accountUrl = `https://accounts.muckrock.com/users/${username}/`;
+    const orgSlug = encodeURIComponent(orgsAndUsers.me.organization.slug);
+    const orgAccountUrl = `https://accounts.muckrock.com/organizations/${orgSlug}`;
+    
+    return `${baseUrl}?prefill_MR+User+Email=${email}&prefill_MR+User+Name=${username}&prefill_MR+User+Account+URL=${accountUrl}&prefill_MR+Organization+Name=${orgSlug}&prefill_MR+Organization+Account+URL=${orgAccountUrl}`;
+  }
+
 </script>
 
 <div class="container">
@@ -36,7 +49,10 @@
           {@html $_("noDocuments.verify3")}
         </li>
         <li>
-          {@html $_("noDocuments.verify4")}
+          {@html $_("noDocuments.verify4")} 
+          <a target="_blank" href={constructPrefillUrl()}>
+            {$_("noDocuments.verify5")}
+          </a>
         </li>
       </ul>
     </div>
