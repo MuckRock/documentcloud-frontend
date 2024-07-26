@@ -78,7 +78,7 @@ of the $modal store. These are used to set the active modal on any given page.
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    max-width: 40rem;
+    max-width: 48rem;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
@@ -100,5 +100,6 @@ of the $modal store. These are used to set the active modal on any given page.
     flex-direction: column;
     align-items: center;
     gap: var(--font-md, 1rem);
+    min-height: 0;
   }
 </style>

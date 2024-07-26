@@ -52,6 +52,17 @@
   let preUploadFiles = [];
   let anonymousClosed = false;
 
+  function constructPrefillUrl() {
+    const baseUrl = "https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form";
+    const email = encodeURIComponent(orgsAndUsers.me.email);
+    const username = encodeURIComponent(orgsAndUsers.me.username);
+    const accountUrl = `https://accounts.muckrock.com/users/${username}/`;
+    const orgSlug = encodeURIComponent(orgsAndUsers.me.organization.slug);
+    const orgAccountUrl = `https://accounts.muckrock.com/organizations/${orgSlug}`;
+    
+    return `${baseUrl}?prefill_MR+User+Email=${email}&prefill_MR+User+Name=${username}&prefill_MR+User+Account+URL=${accountUrl}&prefill_MR+Organization+Name=${orgSlug}&prefill_MR+Organization+Account+URL=${orgAccountUrl}`;
+  }
+
   function showUploadModal({ detail: files }) {
     if (files != null) {
       preUploadFiles = Array.from(files);
@@ -181,7 +192,7 @@
             >
           {/if}
           {#if $orgsAndUsers.loggedIn && !$orgsAndUsers.isVerified}
-            <a href="https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form" target="_new">
+            <a href="{constructPrefillUrl()}" target="_new">
               <Button>{$_("noDocuments.requestVerificationAction")}</Button>
             </a>
           {/if}

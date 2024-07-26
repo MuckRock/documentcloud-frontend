@@ -78,6 +78,12 @@
     box-shadow: 0px 2px 0px 0px var(--orange-4, #69515c);
   }
 
+  .premium {
+    background: var(--premium, #24cc99);
+    box-shadow: var(--shadow-1);
+    border-color: var(--gray-3);
+  }
+
   .ghost {
     background: none;
     border: none;
@@ -86,14 +92,12 @@
     fill: var(--fill, var(--primary, #4294f0));
   }
 
-  .ghost:hover {
-    background: var(--background, var(--blue-1, #eef3f9));
+  .ghost.small {
+    box-shadow: none;
   }
 
-  .premium {
-    background: var(--premium, #24cc99);
-    box-shadow: var(--shadow-1);
-    border-color: var(--gray-3);
+  .ghost:hover {
+    background: var(--background, var(--blue-1, #eef3f9));
   }
 
   .small {

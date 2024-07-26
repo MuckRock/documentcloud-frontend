@@ -13,12 +13,15 @@
   import DOMPurify from "isomorphic-dompurify";
   import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Globe16, Lock16, Pencil16, People16 } from "svelte-octicons";
+  import { Globe16, Lock16, Pencil16, People16, Share16 } from "svelte-octicons";
   import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
   import { pageImageUrl, canonicalUrl } from "$lib/api/documents";
+  import Portal from "../layouts/Portal.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import Share from "./Share.svelte";
   // import { getPrivateAsset } from "$lib/utils/api";
 
   export let note: Note;
@@ -51,6 +54,8 @@
   let canvas: HTMLCanvasElement;
   let renderTask: { promise: Promise<any> };
   let rendering: Promise<any>;
+
+  let shareNoteOpen = false;
 
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
@@ -169,6 +174,9 @@
   <header>
     <h3>{note.title}</h3>
     <div class="actions">
+      <Action icon={Share16} on:click={() => (shareNoteOpen = true)}>
+        {$_("dialog.share")}
+      </Action>
       {#if note.edit_access}
         <Action icon={Pencil16}>
           <a href={edit_link}>{$_("dialog.edit")}</a>
@@ -197,6 +205,14 @@
     {/if}
   </footer>
 </div>
+{#if shareNoteOpen}
+<Portal>
+  <Modal on:close={() => (shareNoteOpen = false)}>
+    <h1 slot="title">{$_("dialog.share")}</h1>
+    <Share {document} note={note.id} currentTab="note" />
+  </Modal>
+</Portal>
+{/if}
 
 <style>
   .note {
