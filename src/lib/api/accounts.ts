@@ -64,6 +64,37 @@ export async function getOrg(
   return resp.json();
 }
 
+export async function setOrg(
+  org: number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL("users/me/", BASE_API_URL);
+  endpoint.searchParams.set("expand", "organization");
+
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify({ organization: org }),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      Referer: APP_URL,
+      [CSRF_HEADER_NAME]: csrf_token,
+    },
+    method: "PATCH",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    console.error(await resp.json());
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
+}
+
 export function getUpgradeUrl(org: Org = null): URL {
   if (!org || org.individual) {
     // Redirect the user to their Squarelet account settings

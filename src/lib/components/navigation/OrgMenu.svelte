@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Org, User } from "@/api/types";
 
+  import { invalidateAll } from "$app/navigation";
   import { _, locale } from "svelte-i18n";
   import { ChevronDown16, Person16 } from "svelte-octicons";
 
@@ -8,14 +9,15 @@
   import CreditMeter, {
     formatResetDate,
   } from "@/premium-credits/CreditMeter.svelte";
-  import Dropdown from "@/common/Dropdown2.svelte";
+  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuInsert from "@/common/MenuInsert.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import PremiumIcon from "@/common/icons/Premium.svelte";
 
-  import { getUpgradeUrl } from "$lib/api/accounts";
+  import { getUpgradeUrl, setOrg } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
+  import { getCsrfToken } from "$lib/utils/api";
 
   export let active_org: Org;
   export let orgs: Org[] = [];
@@ -24,9 +26,15 @@
   $: isPremium = active_org.plan !== "Free";
   $: upgrade_url = getUpgradeUrl(active_org).href;
 
-  $: console.log({ users, orgs });
+  // wrapping setOrg here
+  async function switchOrg(org: Org) {
+    const csrf_token = getCsrfToken();
 
-  function setOrg(org: Org) {}
+    await setOrg(org.id, csrf_token);
+    await invalidateAll();
+
+    closeDropdown("organization");
+  }
 </script>
 
 <Dropdown id="organization">
@@ -66,20 +74,22 @@
         />
       </MenuInsert>
     {:else}
-      <MenuInsert>
-        <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
-        <p class="description">
-          {$_("authSection.premiumUpgrade.description")}
-        </p>
-        <Button mode="premium" href={upgrade_url}>
-          {$_("authSection.premiumUpgrade.cta")}
-        </Button>
-        <div class="learnMore">
-          <a href="/help/premium/">
-            {$_("authSection.premiumUpgrade.docs")}
-          </a>
-        </div>
-      </MenuInsert>
+      <div class="min-width">
+        <MenuInsert>
+          <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
+          <p class="description">
+            {$_("authSection.premiumUpgrade.description")}
+          </p>
+          <Button mode="premium" href={upgrade_url}>
+            {$_("authSection.premiumUpgrade.cta")}
+          </Button>
+          <div class="learnMore">
+            <a href="/help/premium/">
+              {$_("authSection.premiumUpgrade.docs")}
+            </a>
+          </div>
+        </MenuInsert>
+      </div>
     {/if}
 
     {#if users.length}
@@ -90,7 +100,7 @@
         {#each users as user}
           {@const href = searchUrl(userDocs(user)).href}
           <li>
-            <SidebarItem {href}>
+            <SidebarItem {href} on:click={(e) => closeDropdown("organization")}>
               {#if user.avatar_url}
                 <img src={user.avatar_url} class="avatar" alt="" />
               {:else}
@@ -125,7 +135,7 @@
         </SidebarItem>
         <Menu>
           {#each orgs as org}
-            <SidebarItem hover on:click={(e) => setOrg(org)}>
+            <SidebarItem hover on:click={(e) => switchOrg(org)}>
               {org.name}
             </SidebarItem>
           {/each}
@@ -143,6 +153,10 @@
     background: transparent;
     gap: 0.5rem;
     color: var(--premium);
+  }
+
+  .min-width {
+    min-width: 20rem;
   }
 
   .avatar {
