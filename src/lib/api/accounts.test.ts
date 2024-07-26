@@ -14,6 +14,8 @@ import {
   getMe,
   getOrg,
   getUpgradeUrl,
+  userOrgs,
+  orgUsers,
 } from "./accounts";
 
 describe("getMe", async () => {
@@ -63,7 +65,7 @@ test("getOrg", async () => {
     ok: true,
     json: vi.fn().mockReturnValue(fixtures.organization),
   }));
-  const resp = await getOrg(mockFetch, 1);
+  const resp = await getOrg(1, mockFetch);
   expect(resp).toEqual(fixtures.organization);
   expect(mockFetch).toHaveBeenCalledWith(
     new URL("organizations/1/", BASE_API_URL),
@@ -71,8 +73,8 @@ test("getOrg", async () => {
   );
 });
 
-test.todo("users.get");
-test.todo("users.list");
+test.todo("userOrgs");
+test.todo("orgUsers");
 
 test("getUpgradeUrl", () => {
   expect(getUpgradeUrl()).toEqual(new URL("/users/~payment/", SQUARELET_BASE));

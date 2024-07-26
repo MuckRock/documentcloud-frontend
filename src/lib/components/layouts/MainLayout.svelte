@@ -22,6 +22,9 @@
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
 
+  const user_orgs = getContext<Writable<Promise<Org[]>>>("user_orgs");
+  const org_users = getContext<Writable<Promise<User[]>>>("org_users");
+
   let panel: "navigation" | "action" | null = null;
 
   function closePanel() {
@@ -49,7 +52,9 @@
     </slot>
     <SignedIn>
       <Flex>
-        <OrgMenu active_org={$org} />
+        {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
+          <OrgMenu active_org={$org} {orgs} {users} />
+        {/await}
         <UserMenu user={$me} />
       </Flex>
       <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>

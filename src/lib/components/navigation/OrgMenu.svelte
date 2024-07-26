@@ -24,6 +24,8 @@
   $: isPremium = active_org.plan !== "Free";
   $: upgrade_url = getUpgradeUrl(active_org).href;
 
+  $: console.log({ users, orgs });
+
   function setOrg(org: Org) {}
 </script>
 
