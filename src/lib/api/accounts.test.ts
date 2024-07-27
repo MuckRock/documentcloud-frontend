@@ -4,6 +4,7 @@ import {
   APP_URL,
   BASE_API_URL,
   CSRF_HEADER_NAME,
+  MAX_PER_PAGE,
   SQUARELET_BASE,
 } from "@/config/config";
 import * as fixtures from "@/test/fixtures/accounts";
@@ -73,8 +74,45 @@ test("getOrg", async () => {
   );
 });
 
-test.todo("userOrgs");
-test.todo("orgUsers");
+test.todo('setOrg');
+
+test('userOrgs', async () => {
+  const mockFetch = vi.fn().mockImplementation(async () => ({
+    ok: true,
+    json: vi.fn().mockReturnValue(fixtures.organizationsList),
+  }));
+  expect(await userOrgs(fixtures.me, mockFetch)).toEqual(fixtures.organizationsList.results);
+  expect(mockFetch).toHaveBeenCalledWith(
+    new URL(`organizations/?id__in=${encodeURIComponent(fixtures.me.organizations.join(','))}&per_page=${MAX_PER_PAGE}`, BASE_API_URL),
+    {
+      credentials: "include"
+    }
+  )
+})
+
+describe('orgUsers', () => {
+  let mockFetch;
+  beforeEach(() => {
+    mockFetch = vi.fn();
+  })
+  it('returns an empty list when the org is individual', () => {
+    expect(orgUsers(fixtures.proOrg, mockFetch)).resolves.toEqual([]);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+  it('fetches a list of all users in a group org', async () => {
+    mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      json: vi.fn().mockReturnValue(fixtures.usersList),
+    }));
+    expect(await orgUsers(fixtures.organization, mockFetch)).toEqual(fixtures.usersList.results);
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`users/?organization=${fixtures.organization.id}&per_page=${MAX_PER_PAGE}`, BASE_API_URL),
+      {
+        credentials: "include"
+      }
+    )
+  })
+});
 
 test("getUpgradeUrl", () => {
   expect(getUpgradeUrl()).toEqual(new URL("/users/~payment/", SQUARELET_BASE));
