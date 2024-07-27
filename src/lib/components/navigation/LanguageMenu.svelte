@@ -1,11 +1,12 @@
 <script lang="ts">
   import { _, locale } from "svelte-i18n";
+  import { Check16, ChevronDown16 } from "svelte-octicons";
 
-  import langs from "@/langs/langs.json";
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import { Check16, ChevronDown16 } from "svelte-octicons";
+
+  import langs from "@/langs/langs.json";
 
   $: currentLang = langs.find(([_, code]) => code == $locale) ?? langs[0];
 

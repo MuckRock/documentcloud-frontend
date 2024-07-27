@@ -72,6 +72,7 @@ export async function search(
   const resp = await fetch(endpoint, { credentials: "include" });
 
   if (isErrorCode(resp.status)) {
+    console.error(await resp.json());
     error(resp.status, resp.statusText);
   }
 

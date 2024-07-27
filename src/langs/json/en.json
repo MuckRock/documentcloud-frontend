@@ -499,6 +499,7 @@
       "cta": "Upgrade Plan"
     },
     "org": {
+      "avatar": "Avatar: {name}",
       "changeOrg": "Change organization",
       "personalAcct": "Personal Account",
       "adminRole": "Admin",
