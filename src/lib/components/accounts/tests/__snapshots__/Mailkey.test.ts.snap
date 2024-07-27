@@ -12,7 +12,7 @@ exports[`Mailkey 1`] = `
         class="svelte-65lbzd"
       >
         <button
-          class="ghost normal svelte-18kx5bp"
+          class="ghost normal svelte-1pv8m9b"
           title=""
           type="button"
           value="undefined"
@@ -75,7 +75,7 @@ exports[`Mailkey 1`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal svelte-18kx5bp minW"
+            class="primary normal svelte-1pv8m9b minW"
             title=""
             type="button"
             value="undefined"
@@ -85,7 +85,7 @@ exports[`Mailkey 1`] = `
           
            
           <button
-            class="danger normal svelte-18kx5bp minW"
+            class="danger normal svelte-1pv8m9b minW"
             title=""
             type="button"
             value="undefined"
@@ -112,7 +112,7 @@ exports[`Mailkey 2`] = `
         class="svelte-65lbzd"
       >
         <button
-          class="ghost normal svelte-18kx5bp"
+          class="ghost normal svelte-1pv8m9b"
           title=""
           type="button"
           value="undefined"
@@ -180,7 +180,7 @@ exports[`Mailkey 2`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal svelte-18kx5bp minW"
+            class="primary normal svelte-1pv8m9b minW"
             title=""
             type="button"
             value="undefined"
@@ -190,7 +190,7 @@ exports[`Mailkey 2`] = `
           
            
           <button
-            class="danger normal svelte-18kx5bp minW"
+            class="danger normal svelte-1pv8m9b minW"
             title=""
             type="button"
             value="undefined"
