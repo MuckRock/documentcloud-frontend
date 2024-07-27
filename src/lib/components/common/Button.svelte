@@ -79,9 +79,9 @@
   }
 
   .premium {
-    background: var(--premium, #24cc99);
-    box-shadow: var(--shadow-1);
-    border-color: var(--gray-3);
+    background: var(--green-3, #27c6a2);
+    box-shadow: 0px 2px 0px 0px var(--green-4, #117383);
+    border-color: var(--green-4, #117383);
   }
 
   .ghost {
