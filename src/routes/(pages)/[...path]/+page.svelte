@@ -199,14 +199,14 @@
     }
 
     :global(li) {
+      list-style: none;
+      margin: 0.8em 0;
+
       @media only screen and (max-width: 720px) {
         :global(.deep) {
           display: none;
         }
       }
-
-      list-style: none;
-      margin: 0.8em 0;
     }
   }
 
