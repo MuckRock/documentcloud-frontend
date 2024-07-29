@@ -41,6 +41,12 @@
   }
 </script>
 
+<Story name="embedded text">
+  {#await load(url) then pdf}
+    <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
+  {/await}
+</Story>
+
 <Story name="server text">
   {#await load(url) then pdf}
     <PdfPage
@@ -55,12 +61,6 @@
   {/await}
 </Story>
 
-<Story name="embedded text">
-  {#await load(url) then pdf}
-    <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
-  {/await}
-</Story>
-
 <Story name="search results">
   {#await load(url) then pdf}
     <PdfPage
@@ -72,12 +72,6 @@
       {height}
       {query}
     />
-  {/await}
-</Story>
-
-<Story name="annotation options">
-  {#await load(url) then pdf}
-    <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
   {/await}
 </Story>
 
