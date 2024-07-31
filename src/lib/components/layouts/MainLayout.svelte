@@ -18,6 +18,7 @@
   import Breadcrumbs from "../navigation/Breadcrumbs.svelte";
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
+  import Toaster from "./Toaster.svelte";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
@@ -111,6 +112,8 @@
     on:click={closePanel}
     on:keydown={closePanel}
   />
+
+  <Toaster />
 </div>
 
 <style>
