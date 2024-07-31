@@ -258,3 +258,9 @@ export interface Redaction extends BBox {
 export type Bounds = [number, number, number, number];
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;
+
+export interface Flatpage {
+  url: string;
+  title: string;
+  content: string; // Could be HTML or Markdown
+}
