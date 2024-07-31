@@ -33,7 +33,6 @@
   const dispatch = createEventDispatcher();
 
   function close() {
-    console.log("Close toast ", id);
     dispatch("close");
   }
 

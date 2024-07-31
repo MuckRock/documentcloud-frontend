@@ -17,11 +17,10 @@
 
   function addToast(newToast: ToastItem, prev: ToastItem[]) {
     const id = Date.now();
-    console.log(`adding #${id}`);
     return [...prev, { ...newToast, id }];
   }
 
-  const toasts = writable<ToastItem[]>([]);
+  export const toasts = writable<ToastItem[]>([]);
 
   export function toast<P>(
     contents: ToastContents<P>,
