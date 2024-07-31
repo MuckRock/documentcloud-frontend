@@ -59,6 +59,7 @@
 </script>
 
 <div
+  id={`toast-${id}`}
   class={["toast", status].join(" ")}
   on:mouseenter={cancel}
   on:mouseleave={reset}
