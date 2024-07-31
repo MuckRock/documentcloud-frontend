@@ -4,6 +4,7 @@ import { browser } from "$app/environment";
 import { getMe, orgUsers, userOrgs } from "$lib/api/accounts";
 
 import "$lib/i18n/index.js"; // Import to initialize. Important :)
+import { getTipOfDay } from "@/lib/api/flatpages.js";
 
 export const trailingSlash = "always";
 
@@ -19,6 +20,7 @@ export async function load({ fetch, url }) {
   // todo: ensure this doesn't load for embeds
   const me = await getMe(fetch);
   const org = me?.organization as Org;
+  const tipOfDay = me ? await getTipOfDay(fetch) : null;
 
   let user_orgs: Promise<Org[]>, org_users: Promise<User[]>;
   if (me && org) {
@@ -32,5 +34,5 @@ export async function load({ fetch, url }) {
     });
   }
 
-  return { me, org, embed, breadcrumbs: [], user_orgs, org_users };
+  return { me, org, tipOfDay, embed, breadcrumbs: [], user_orgs, org_users };
 }

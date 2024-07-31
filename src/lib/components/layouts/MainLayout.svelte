@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Org, User } from "@/api/types";
+  import type { Org, User, Flatpage } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
@@ -19,9 +19,11 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
   import Toaster from "./Toaster.svelte";
+  import TipOfDay from "../common/TipOfDay.svelte";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
+  const tipOfDay = getContext<Flatpage>("tipOfDay");
 
   const user_orgs = getContext<Writable<Promise<Org[]>>>("user_orgs");
   const org_users = getContext<Writable<Promise<User[]>>>("org_users");
@@ -40,6 +42,7 @@
 </script>
 
 <div class="container">
+  {#if tipOfDay}<TipOfDay message={tipOfDay.content} />{/if}
   <header>
     {#if $$slots.navigation}
       <div class="small openPane">
