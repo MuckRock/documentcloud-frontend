@@ -3,15 +3,14 @@
   import AddOnMeta from "../AddOnMeta.svelte";
 
   export const meta = {
-    title: "Add-Ons / Metadata",
+    title: "Components / Add-Ons / Metadata",
     component: AddOnMeta,
-    parameters: { layout: "centered" },
   };
 
   import { addon } from "@/test/fixtures/addons";
 </script>
 
-<Story name="default">
+<Story name="Metadata">
   <nav>
     <AddOnMeta {addon} />
   </nav>
@@ -21,7 +20,7 @@
   nav {
     flex: 1 0 0;
     min-width: 16rem;
-    max-width: 18rem;
+    max-width: 48rem;
     max-height: 100%;
     overflow-y: auto;
     display: flex;

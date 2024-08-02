@@ -38,7 +38,7 @@
       <div class="primary-info">
         <p class="name">{run.addon.name}</p>
         {#if run.file_url}
-          <a href={run.file_url}>
+          <a href={run.file_url} download>
             <Action>
               <Paperclip16 />{$_("addonProgress.download")}
             </Action>
@@ -114,6 +114,7 @@
     flex: 1 1 auto;
   }
   .info .row {
+    gap: 1rem;
     align-items: baseline;
     justify-content: space-between;
   }
@@ -121,10 +122,11 @@
     flex: 1 1 auto;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.5em;
   }
   .name {
-    margin: 0 1rem 0 0;
+    flex: 0 1 auto;
     font-weight: 600;
   }
   .date {

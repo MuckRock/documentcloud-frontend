@@ -3,18 +3,19 @@
   import type { Event } from "@/addons/types";
 
   import { _ } from "svelte-i18n";
-  import { Clock16 } from "svelte-octicons";
+  import { Clock16, Hourglass24 } from "svelte-octicons";
 
   import ScheduledEvent from "./ScheduledEvent.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Paginator from "@/common/Paginator.svelte";
+  import Empty from "../common/Empty.svelte";
 
   export let events: Event[];
   export let previous: string = undefined;
   export let next: string = undefined;
 
-  let loading = false;
+  export let loading = false;
 
   // load the next set of results
   async function load(url: URL) {
@@ -42,9 +43,13 @@
     {$_("addonRuns.scheduled")}
   </SidebarItem>
 
-  {#each events as event}
-    <ScheduledEvent {event} />
-  {/each}
+  {#if loading}
+    <Empty icon={Hourglass24}>Loading scheduled runs…</Empty>
+  {:else}
+    {#each events as event}
+      <ScheduledEvent {event} />
+    {/each}
+  {/if}
 
   {#if previous || next}
     <Paginator

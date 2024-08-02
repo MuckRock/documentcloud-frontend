@@ -1,6 +1,15 @@
 <script lang="ts" context="module">
   // schedules and eventValues are the inverse of each other, so store them together
+
+  // TODO: i18n
   export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];
+  export const scheduleLabel = [
+    "Disabled",
+    "Runs hourly",
+    "Runs daily",
+    "Runs weekly",
+    "Runs on upload",
+  ];
   export const eventValues = {
     disabled: 0,
     hourly: 1,
@@ -11,12 +20,9 @@
 </script>
 
 <script lang="ts">
-  import type { Event } from "@/addons/types";
-
   import { _ } from "svelte-i18n";
-  import { Pencil16 } from "svelte-octicons";
 
-  import Action from "../common/Action.svelte";
+  import type { Event } from "@/addons/types";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   export let event: Event;
@@ -39,16 +45,15 @@
       <p class="target">{target}</p>
     {/if}
     {#if disabled}
-      <p class="routine">{schedules[event.event]}</p>
+      <p class="routine">{scheduleLabel[event.event]}</p>
     {:else}
       <p class="routine">
         {$_("addonRuns.runsOn", {
-          values: { schedule: schedules[event.event] },
+          values: { schedule: scheduleLabel[event.event] },
         })}
       </p>
     {/if}
   </div>
-  <Action icon={Pencil16}>{$_("dialog.edit")}</Action>
 </SidebarItem>
 
 <style>
@@ -64,11 +69,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .target,
   .routine {
     color: var(--gray-5);
-    font-style: italic;
+    font-size: var(--font-sm);
+    font-weight: var(--font-regular);
   }
-  .target {
-    color: var(--gray-5);
+  p.routine {
+    font-style: italic;
+    margin-top: 0.25em;
   }
 </style>

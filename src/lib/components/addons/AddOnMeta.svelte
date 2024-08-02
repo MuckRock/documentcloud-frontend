@@ -13,37 +13,58 @@
   $: github_org = addon.repository.split("/")[0];
 </script>
 
-<Flex class="description" direction="column">
-  {@html addon.parameters.description}
-</Flex>
-{#if addon.parameters.instructions}
-  <Flex class="instructions" direction="column">
-    {@html addon.parameters.instructions}
-  </Flex>
-{/if}
-
-<Flex class="actions" direction="column" align="start">
-  <div class="created-by">
-    <span>{$_("addonDispatchDialog.createdBy")}</span>
-    <h3>{github_org}</h3>
+<div class="conatiner">
+  <h2 class="name">{addon.name}</h2>
+  <div class="description">
+    {@html addon.parameters.description}
   </div>
-  <Button mode="ghost">
-    <Share16 />
-    {$_("addonDispatchDialog.share")}
-  </Button>
-  <Button mode="ghost" href={repo} target="_blank">
-    <MarkGithub16 />
-    {$_("addonDispatchDialog.viewsource")}
-  </Button>
-</Flex>
+  {#if addon.parameters.instructions}
+    <div class="instructions">
+      {@html addon.parameters.instructions}
+    </div>
+  {/if}
+
+  <Flex align="baseline" justify="between">
+    <div class="created-by">
+      <span>{$_("addonDispatchDialog.createdBy")}</span>
+      <h3>{github_org}</h3>
+    </div>
+    <Flex>
+      <Button mode="ghost">
+        <Share16 />
+        {$_("addonDispatchDialog.share")}
+      </Button>
+      <Button mode="ghost" href={repo} target="_blank">
+        <MarkGithub16 />
+        {$_("addonDispatchDialog.viewsource")}
+      </Button>
+    </Flex>
+  </Flex>
+</div>
 
 <style>
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  h2,
+  h3 {
+    font-weight: var(--font-semibold);
+  }
+
+  .description,
+  .instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
   .created-by {
     display: flex;
-    padding: 0rem 0.375rem;
-    flex-direction: column;
-    align-items: flex-start;
-    align-self: stretch;
+    align-items: baseline;
+    gap: 0.5rem;
   }
 
   .created-by span {

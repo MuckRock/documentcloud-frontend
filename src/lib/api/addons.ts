@@ -262,7 +262,7 @@ function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {
   return { valid, errors: validator.errors };
 }
 
-function noNulls(values: Record<string, any>): Record<string, any> {
+function noNulls<T extends Record<string, any>>(values: T): Partial<T> {
   const nulls = new Set([null, undefined, ""]);
   return Object.entries(values).reduce((m, [k, v]) => {
     if (!nulls.has(v)) {

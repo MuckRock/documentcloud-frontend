@@ -4,7 +4,7 @@
   import Event from "../ScheduledEvent.svelte";
 
   export const meta = {
-    title: "Add-Ons / Scheduled Event",
+    title: "Components / Add-Ons / Scheduled Event",
     component: Event,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

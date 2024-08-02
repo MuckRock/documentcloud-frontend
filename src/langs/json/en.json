@@ -871,7 +871,7 @@
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here",
-      "runs":"Schedule & history"
+      "runs": "Schedule & history"
     },
     "data": {
       "title": "Data & Tags",
@@ -1039,7 +1039,7 @@
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
     "previous": "Previous Runs",
-    "runsOn": "Runs {schedule}",
+    "runsOn": "{schedule}",
     "upcoming": {
       "empty": "Scheduled add-ons will appear here",
       "loading": "Loading…",

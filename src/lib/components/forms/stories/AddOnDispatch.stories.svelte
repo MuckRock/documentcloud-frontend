@@ -17,7 +17,6 @@
 
 <Template let:args={addon}>
   <Flex direction="column" style="width: 50vw">
-    <h2>{addon.name}</h2>
     <AddOnDispatch
       on:input
       on:change

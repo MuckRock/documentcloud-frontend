@@ -79,6 +79,7 @@ Updated variables and styles for new SvelteKit routes
   --action: 12px;
 
   /* Effect styles */
+  --radius: 0.5rem;
   --border: #d9d9d9;
   --glare: inset 8px 8px 16px rgba(255, 255, 255, 0.25);
 

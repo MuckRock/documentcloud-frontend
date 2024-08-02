@@ -11,7 +11,7 @@
   };
 
   export const meta = {
-    title: "Add-Ons / History",
+    title: "Components / Add-Ons / History",
     component: History,
     parameters: { layout: "centered" },
   };
@@ -28,7 +28,7 @@
 />
 <Story
   name="Loading"
-  {args}
+  args={{ ...args, loading: true }}
   parameters={{ msw: { handlers: [history.loading] } }}
 />
 <Story
@@ -38,6 +38,6 @@
 />
 <Story
   name="Empty"
-  {args}
+  args={{ ...args, runs: [] }}
   parameters={{ msw: { handlers: [history.empty] } }}
 />

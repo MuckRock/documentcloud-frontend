@@ -17,7 +17,7 @@
   const args = { addon };
 
   export const meta = {
-    title: "Add-Ons / List Item",
+    title: "Components / Add-Ons / List Item",
     component: AddOnListItem,
     parameters: { layout: "centered" },
   };

@@ -18,7 +18,7 @@
   import Field from "../inputs/Field.svelte";
 
   import { autofield } from "../inputs/generator";
-  import { schedules, eventValues } from "$lib/api/addons";
+  import { schedules } from "$lib/api/addons";
   import { afterNavigate } from "$app/navigation";
 
   export let properties: any = {};
@@ -70,7 +70,9 @@
     return { valid, errors: validator.errors };
   }
 
-  function noNulls(values: { [s: string]: unknown } | ArrayLike<unknown>) {
+  function noNulls<T extends Record<string, unknown> | ArrayLike<unknown>>(
+    values: T,
+  ) {
     return Object.entries(values).reduce(
       (m, [k, v]) => {
         if (v !== null) {
@@ -101,6 +103,7 @@
           />
         {:else}
           <Field
+            inline={params.type === "boolean"}
             title={params.title}
             description={params.description}
             required={required.includes(name)}
@@ -174,7 +177,7 @@
     margin: 0 0 1em 0;
     padding: 1em;
     background: var(--light-gray);
-    border-radius: var(--radius);
+    border-radius: 0.5rem;
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 1px;
   }

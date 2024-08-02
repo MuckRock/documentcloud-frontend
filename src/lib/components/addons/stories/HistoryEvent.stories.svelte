@@ -4,7 +4,7 @@
   import Event from "../HistoryEvent.svelte";
 
   export const meta = {
-    title: "Add-Ons / History Event",
+    title: "Components / Add-Ons / History Event",
     component: Event,
     parameters: { layout: "centered" },
     tags: ["autodocs"],
