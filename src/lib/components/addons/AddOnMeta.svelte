@@ -24,7 +24,7 @@
     </div>
   {/if}
 
-  <Flex align="baseline" justify="between">
+  <Flex wrap align="baseline" justify="between">
     <div class="created-by">
       <span>{$_("addonDispatchDialog.createdBy")}</span>
       <h3>{github_org}</h3>
@@ -45,6 +45,11 @@
 <style>
   h2 {
     margin-bottom: 1rem;
+    font-size: var(--font-xl);
+  }
+
+  h3 {
+    font-size: var(--font-l);
   }
 
   h2,
