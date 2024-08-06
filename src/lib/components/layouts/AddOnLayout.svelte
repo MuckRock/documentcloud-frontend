@@ -16,6 +16,7 @@
     visible,
   } from "../documents/ResultsList.svelte";
   import Empty from "../common/Empty.svelte";
+  import Flex from "../common/Flex.svelte";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
@@ -39,27 +40,30 @@
 </script>
 
 <div class="container">
-  <div class="addon">
-    <AddOnMeta {addon} />
-    <AddOnDispatch
-      {action}
-      {event}
-      properties={addon.parameters.properties}
-      required={addon.parameters.required}
-      eventOptions={addon.parameters.eventOptions}
-    >
-      <svelte:fragment slot="selection">
-        {#await search then results}
-          <Selection
-            bind:value={$values["selection"]}
-            documents={new Set(addon.parameters.documents)}
-            resultsCount={results.count}
-            {query}
-          />
-        {/await}
-      </svelte:fragment>
-    </AddOnDispatch>
-  </div>
+  <section class="addon">
+    <header><AddOnMeta {addon} /></header>
+    <main>
+      <!-- TODO: Tabs to view add-on dispatch, history and schedule -->>
+      <AddOnDispatch
+        {action}
+        {event}
+        properties={addon.parameters.properties}
+        required={addon.parameters.required}
+        eventOptions={addon.parameters.eventOptions}
+      >
+        <svelte:fragment slot="selection">
+          {#await search then results}
+            <Selection
+              bind:value={$values["selection"]}
+              documents={new Set(addon.parameters.documents)}
+              resultsCount={results.count}
+              {query}
+            />
+          {/await}
+        </svelte:fragment>
+      </AddOnDispatch>
+    </main>
+  </section>
   {#if addon.parameters.documents}
     <div class="docs">
       <ContentLayout>
@@ -123,19 +127,25 @@
     flex: 1 1 50%;
     max-width: 48rem;
     overflow-y: auto;
-    border-radius: 1rem;
   }
   .addon {
-    background-color: var(--white);
-    border: 1px solid var(--gray-1);
-    box-shadow: var(--shadow-1);
-    padding: 1rem;
+    height: min-content;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow: visible;
+  }
+  .addon main {
+    overflow-y: auto;
+    background-color: var(--white);
+    border: 1px solid var(--gray-1);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-1);
   }
   .docs {
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
+    border-radius: 1rem;
   }
 </style>

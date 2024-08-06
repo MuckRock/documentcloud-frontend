@@ -161,20 +161,26 @@
         disabled={disablePremium}
       />
     {/if}
-    <Button type="button" on:click={reset} label={$_("dialog.reset")} />
+    <Button
+      type="button"
+      mode="ghost"
+      on:click={reset}
+      label={$_("dialog.reset")}
+    />
   </div>
 </form>
 
 <style>
   form {
     width: 100%;
+    background: var(--white);
   }
 
   fieldset {
     display: flex;
     flex-direction: column;
     gap: 1em;
-    margin: 0 0 1em 0;
+    margin: 1rem;
     padding: 1em;
     background: var(--white);
     border-radius: 0.5rem;
@@ -183,13 +189,12 @@
 
   .controls {
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     gap: 1rem;
     position: sticky;
     bottom: 0;
     background-color: var(--white);
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2);
+    padding: 1rem;
+    border-top: 1px solid var(--gray-1);
   }
 </style>
