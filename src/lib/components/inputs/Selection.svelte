@@ -76,9 +76,8 @@
     gap: 0.5em;
     margin: 0;
     padding: 1em;
-    border-radius: var(--radius, 5);
-    border-color: rgba(0, 0, 0, 0.1);
-    border-width: 1px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
   }
 
   legend {

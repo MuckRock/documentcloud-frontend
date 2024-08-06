@@ -113,17 +113,23 @@
   .container {
     display: flex;
     justify-content: center;
+    width: 100%;
     height: 100%;
+    padding: 1rem;
+    gap: 1rem;
   }
   .addon,
   .docs {
     flex: 1 1 50%;
+    max-width: 48rem;
     overflow-y: auto;
+    border-radius: 1rem;
   }
   .addon {
-    margin: 1rem 0;
+    background-color: var(--white);
+    border: 1px solid var(--gray-1);
+    box-shadow: var(--shadow-1);
     padding: 1rem;
-    max-width: 48rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -131,7 +137,5 @@
   .docs {
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
-    border-radius: 1rem;
-    margin: 1rem;
   }
 </style>

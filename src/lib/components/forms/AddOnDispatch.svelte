@@ -176,15 +176,20 @@
     gap: 1em;
     margin: 0 0 1em 0;
     padding: 1em;
-    background: var(--light-gray);
+    background: var(--white);
     border-radius: 0.5rem;
-    border-color: rgba(0, 0, 0, 0.1);
-    border-width: 1px;
+    border: 1px solid var(--gray-2);
   }
 
   .controls {
     display: flex;
     justify-content: start;
     gap: 1rem;
+    position: sticky;
+    bottom: 0;
+    background-color: var(--white);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
   }
 </style>
