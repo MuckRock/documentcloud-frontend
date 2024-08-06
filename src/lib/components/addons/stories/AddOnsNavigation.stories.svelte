@@ -5,7 +5,6 @@
   export const meta = {
     title: "Components / Add-Ons / Navigation",
     component: AddOnNavigation,
-    tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 

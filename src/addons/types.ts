@@ -1,3 +1,5 @@
+import type { DefinedError } from "ajv";
+
 type AddOnCategory = "premium" | string;
 
 interface AddOnProperty {
@@ -79,4 +81,17 @@ export interface Run {
   created_at: string;
   updated_at: string;
   credits_spent?: number;
+}
+
+// payload for creating or scheduling an add-on run
+// including the `event` property will schedule runs (or cancel, if it's zero)
+// the `documents` and `query` properties tell the add-on what documents to run against
+export interface AddOnPayload {
+  addon: number;
+  parameters: any;
+  event?: number;
+  documents?: number[] | string[];
+  query?: string;
+  errors?: DefinedError[];
+  valid?: boolean;
 }

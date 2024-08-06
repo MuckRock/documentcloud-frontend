@@ -1,10 +1,14 @@
-import { getAddons } from "$lib/api/addons.js";
-import { breadcrumbTrail } from "$lib/utils/navigation";
+import { getAddons, scheduled, history } from "$lib/api/addons.js";
 
-export async function load({ url, fetch, parent }) {
+export async function load({ url, fetch }) {
   const params = Object.fromEntries(url.searchParams.entries());
   const addons = getAddons(params, fetch);
+  const events = scheduled({ per_page: 5 }, fetch);
+  const runs = history({ per_page: 5 }, fetch);
+
   return {
     addons,
+    events,
+    runs,
   };
 }

@@ -15,6 +15,8 @@ import {
   getMe,
   getOrg,
   getUpgradeUrl,
+  isPremiumOrg,
+  getCreditBalance,
   userOrgs,
   orgUsers,
 } from "./accounts";
@@ -74,44 +76,54 @@ test("getOrg", async () => {
   );
 });
 
-test.todo('setOrg');
+test.todo("setOrg");
 
-test('userOrgs', async () => {
+test("userOrgs", async () => {
   const mockFetch = vi.fn().mockImplementation(async () => ({
     ok: true,
     json: vi.fn().mockReturnValue(fixtures.organizationsList),
   }));
-  expect(await userOrgs(fixtures.me, mockFetch)).toEqual(fixtures.organizationsList.results);
+  expect(await userOrgs(fixtures.me, mockFetch)).toEqual(
+    fixtures.organizationsList.results,
+  );
   expect(mockFetch).toHaveBeenCalledWith(
-    new URL(`organizations/?id__in=${encodeURIComponent(fixtures.me.organizations.join(','))}&per_page=${MAX_PER_PAGE}`, BASE_API_URL),
+    new URL(
+      `organizations/?id__in=${encodeURIComponent(fixtures.me.organizations.join(","))}&per_page=${MAX_PER_PAGE}`,
+      BASE_API_URL,
+    ),
     {
-      credentials: "include"
-    }
-  )
-})
+      credentials: "include",
+    },
+  );
+});
 
-describe('orgUsers', () => {
+describe("orgUsers", () => {
   let mockFetch;
   beforeEach(() => {
     mockFetch = vi.fn();
-  })
-  it('returns an empty list when the org is individual', () => {
+  });
+  it("returns an empty list when the org is individual", () => {
     expect(orgUsers(fixtures.proOrg, mockFetch)).resolves.toEqual([]);
     expect(mockFetch).not.toHaveBeenCalled();
   });
-  it('fetches a list of all users in a group org', async () => {
+  it("fetches a list of all users in a group org", async () => {
     mockFetch = vi.fn().mockImplementation(async () => ({
       ok: true,
       json: vi.fn().mockReturnValue(fixtures.usersList),
     }));
-    expect(await orgUsers(fixtures.organization, mockFetch)).toEqual(fixtures.usersList.results);
+    expect(await orgUsers(fixtures.organization, mockFetch)).toEqual(
+      fixtures.usersList.results,
+    );
     expect(mockFetch).toHaveBeenCalledWith(
-      new URL(`users/?organization=${fixtures.organization.id}&per_page=${MAX_PER_PAGE}`, BASE_API_URL),
+      new URL(
+        `users/?organization=${fixtures.organization.id}&per_page=${MAX_PER_PAGE}`,
+        BASE_API_URL,
+      ),
       {
-        credentials: "include"
-      }
-    )
-  })
+        credentials: "include",
+      },
+    );
+  });
 });
 
 test("getUpgradeUrl", () => {
@@ -194,4 +206,16 @@ describe("destroyMailkey", () => {
     mockFetch = vi.fn().mockResolvedValue({ ok: false });
     expect(await destroyMailkey(mockFetch)).toBe(false);
   });
+});
+
+test("isPremiumOrg", () => {
+  expect(isPremiumOrg(fixtures.freeOrg)).toBe(false);
+  expect(isPremiumOrg(fixtures.proOrg)).toBe(true);
+  expect(isPremiumOrg(null)).toBe(false);
+});
+
+test("getCreditBalance", () => {
+  expect(getCreditBalance(null)).toBeNull();
+  expect(getCreditBalance(fixtures.freeOrg)).toBe(0);
+  expect(getCreditBalance(fixtures.proOrg)).toBe(5500);
 });

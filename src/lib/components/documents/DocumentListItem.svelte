@@ -96,7 +96,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     {/if}
   </div>
 
-  <div class="info">
+  <div class="documentInfo">
     <h3>{document.title}</h3>
     <p class="meta">
       {$_("documents.pageCount", { values: { n: document.page_count } })} -
@@ -161,7 +161,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
     gap: 0.125rem;
   }
 
-  .info {
+  .documentInfo {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
