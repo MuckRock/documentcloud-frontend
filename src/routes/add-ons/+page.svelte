@@ -133,7 +133,7 @@
     </ContentLayout>
   </svelte:fragment>
 
-  <svelte:fragment slot="action">
+  <div class="history" slot="action">
     {#await events}
       <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
     {:then events}
@@ -149,11 +149,14 @@
     {:then runs}
       <History runs={runs.results} next={runs.next} previous={runs.previous} />
     {/await}
-  </svelte:fragment>
+  </div>
 </MainLayout>
 
 <style>
   .tip {
     margin: 1rem;
+  }
+  .history {
+    max-width: unset;
   }
 </style>
