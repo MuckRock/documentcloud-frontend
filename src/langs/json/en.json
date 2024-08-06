@@ -1016,6 +1016,7 @@
     "selectionHelp": "Select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
     "cost": "{amount} {unit} per {price, plural, one {credit} other {# credits}}",
+    "editing": "Editing a previously dispatched addon",
     "premiumUpgrade": {
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
       "callToAction": "Upgrade Plan",

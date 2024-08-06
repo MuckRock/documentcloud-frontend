@@ -1,6 +1,13 @@
 <script lang="ts">
   import { setContext } from "svelte";
-  import { Hourglass24 } from "svelte-octicons";
+  import {
+    Clock16,
+    Clock24,
+    History16,
+    History24,
+    Hourglass24,
+    Play16,
+  } from "svelte-octicons";
   import { _ } from "svelte-i18n";
   import type { AddOnListItem, Event } from "@/addons/types";
   import type { DocumentResults } from "$lib/api/types";
@@ -17,6 +24,8 @@
   } from "../documents/ResultsList.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
+  import Tab from "../common/Tab.svelte";
+  import { schedules } from "../addons/ScheduledEvent.svelte";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
@@ -26,9 +35,15 @@
 
   setContext("selected", selected);
 
+  let currentTab: "dispatch" | "history" | "scheduled" = "dispatch";
+
   $: action = event
     ? `/add-ons/${addon.repository}/${event.id}/?/update`
     : `/add-ons/${addon.repository}/?/dispatch`;
+
+  $: canSchedule = addon.parameters.eventOptions?.events.some((event) =>
+    schedules.includes(event),
+  );
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -42,26 +57,56 @@
 <div class="container">
   <section class="addon">
     <header><AddOnMeta {addon} /></header>
-    <main>
-      <!-- TODO: Tabs to view add-on dispatch, history and schedule -->>
-      <AddOnDispatch
-        {action}
-        {event}
-        properties={addon.parameters.properties}
-        required={addon.parameters.required}
-        eventOptions={addon.parameters.eventOptions}
+    <div class="tabs" role="tablist">
+      <Tab
+        active={currentTab === "dispatch"}
+        on:click={() => (currentTab = "dispatch")}
       >
-        <svelte:fragment slot="selection">
-          {#await search then results}
-            <Selection
-              bind:value={$values["selection"]}
-              documents={new Set(addon.parameters.documents)}
-              resultsCount={results.count}
-              {query}
-            />
-          {/await}
-        </svelte:fragment>
-      </AddOnDispatch>
+        <Play16 />
+        Dispatch
+      </Tab>
+      <Tab
+        active={currentTab === "history"}
+        on:click={() => (currentTab = "history")}
+      >
+        <History16 />
+        History
+      </Tab>
+      {#if canSchedule}
+        <Tab
+          active={currentTab === "scheduled"}
+          on:click={() => (currentTab = "scheduled")}
+        >
+          <Clock16 />
+          Scheduled
+        </Tab>
+      {/if}
+    </div>
+    <main>
+      {#if currentTab === "scheduled"}
+        <Empty icon={Clock24}>TODO: Implement scheduled runs</Empty>
+      {:else if currentTab === "history"}
+        <Empty icon={History24}>TODO: Implement previous runs</Empty>
+      {:else}
+        <AddOnDispatch
+          {action}
+          {event}
+          properties={addon.parameters.properties}
+          required={addon.parameters.required}
+          eventOptions={addon.parameters.eventOptions}
+        >
+          <svelte:fragment slot="selection">
+            {#await search then results}
+              <Selection
+                bind:value={$values["selection"]}
+                documents={new Set(addon.parameters.documents)}
+                resultsCount={results.count}
+                {query}
+              />
+            {/await}
+          </svelte:fragment>
+        </AddOnDispatch>
+      {/if}
     </main>
   </section>
   {#if addon.parameters.documents}
@@ -133,8 +178,14 @@
     max-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     overflow: visible;
+  }
+  .addon header {
+    margin-bottom: 1rem;
+  }
+  .addon .tabs {
+    display: flex;
+    padding: 0 1rem;
   }
   .addon main {
     overflow-y: auto;

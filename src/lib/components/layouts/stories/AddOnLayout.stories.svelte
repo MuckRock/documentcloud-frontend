@@ -22,7 +22,6 @@
 
   let args = {
     addon,
-    event,
     query: "",
     search: Promise.resolve(documentsList),
   };
@@ -49,6 +48,8 @@
     },
   }}
 />
+
+<Story name="With Event" args={{ ...args, event }} />
 
 <style>
   .vh {

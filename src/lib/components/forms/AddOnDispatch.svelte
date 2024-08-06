@@ -20,6 +20,8 @@
   import { autofield } from "../inputs/generator";
   import { schedules } from "$lib/api/addons";
   import { afterNavigate } from "$app/navigation";
+  import Tip from "../common/Tip.svelte";
+  import { Pencil24 } from "svelte-octicons";
 
   export let properties: any = {};
   export let required = [];
@@ -87,7 +89,18 @@
 
 <form method="post" {action} bind:this={form} on:submit on:reset use:enhance>
   <slot name="before" />
-
+  {#if event}
+    <div class="tip">
+      <Tip
+        --color="var(--yellow-5)"
+        --fill="var(--yellow-4)"
+        --border-color="var(--yellow-2)"
+        --background-color="var(--yellow-1)"
+        ><Pencil24 slot="icon" />
+        {$_("addonDispatchDialog.editing")}
+      </Tip>
+    </div>
+  {/if}
   {#if hasFields}
     <fieldset>
       {#each Object.entries(properties) as [name, p]}
@@ -174,6 +187,10 @@
   form {
     width: 100%;
     background: var(--white);
+  }
+
+  .tip {
+    margin: 1rem;
   }
 
   fieldset {
