@@ -25,6 +25,8 @@
 
 <Story name="danger" args={{ mode: "danger" }} />
 
+<Story name="premium" args={{ model: "premium" }} />
+
 <Story name="small" args={{ size: "small" }} />
 
 <Story name="slotted">

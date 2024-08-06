@@ -14,6 +14,7 @@
   direction={inline ? "row" : "column"}
   align={inline ? "center" : "stretch"}
   wrap={inline}
+  gap={0.375}
 >
   <slot />
   {#if $$slots.help}<div class="help"><slot name="help" /></div>{/if}

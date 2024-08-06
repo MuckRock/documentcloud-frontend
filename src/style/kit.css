@@ -86,10 +86,11 @@ Updated variables and styles for new SvelteKit routes
   /* Shadows */
   --shadow-1: 0 2px 4px 2px rgba(30 48 56 / 0.15);
   --shadow-2: 0 2px 8px 2px rgba(30 48 56 / 0.15);
-  --shadow-3: 0 2px 16px 2px rgba(30 48 56 / 0.15);
+  --shadow-3: 0 2px 16px 2px rgba(30 48 56 / 0.075);
 
   /* Z-Index Layers */
   --z-modal: 5;
+  --z-toast: 10;
 }
 
 html,
@@ -139,7 +140,7 @@ h5 {
 }
 
 p {
-  font-size: var(--font-m);
+  font-size: var(--font-md);
 }
 
 a {
@@ -149,7 +150,7 @@ a {
 dl,
 dt,
 dd {
-  font-size: var(--font-m);
+  font-size: var(--font-md);
   margin: 0;
 }
 
@@ -161,7 +162,7 @@ dt {
 
 dd {
   color: var(--gray-5, #233944);
-  font-size: var(--font-s, 0.875rem);
+  font-size: var(--font-sm, 0.875rem);
   font-weight: var(--font-regular, 400);
 }
 

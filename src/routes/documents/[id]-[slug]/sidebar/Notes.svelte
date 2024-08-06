@@ -17,7 +17,7 @@
   $: annotate = new URL("annotate/", canonicalUrl(document)).href;
 </script>
 
-<SidebarGroup>
+<SidebarGroup name="notes">
   <SidebarItem slot="title">
     <Note16 />
     {$_("sidebar.toc.notes")}

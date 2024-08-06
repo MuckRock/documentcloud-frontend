@@ -1,0 +1,194 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`settingsConfig 1`] = `
+{
+  "embed": {
+    "defaultValue": 1,
+    "field": {
+      "type": "hidden",
+    },
+    "storageIndex": null,
+  },
+  "fullscreen": {
+    "defaultValue": null,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.fullscreenOption",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.fsVisibleHelp",
+          "label": "dialogDocumentEmbedDialog.visibleDefault",
+          "value": null,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.fsHiddenHelp",
+          "label": "dialogDocumentEmbedDialog.hidden",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 5,
+  },
+  "height": {
+    "defaultValue": null,
+    "field": {
+      "automatic": {
+        "help": "dialogDocumentEmbedDialog.heightAuto",
+        "label": "appearanceDimension.responsive",
+        "value": null,
+      },
+      "fixed": {
+        "help": "dialogDocumentEmbedDialog.widthFixed",
+        "label": "appearanceDimension.fixed",
+        "value": 500,
+      },
+      "label": "dialogDocumentEmbedDialog.height",
+      "type": "dimension",
+    },
+    "storageIndex": 2,
+  },
+  "onlyshoworg": {
+    "defaultValue": null,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.contributedByFormat",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.cbfUserAndOrgHelp",
+          "label": "dialogDocumentEmbedDialog.cbfUserAndOrg",
+          "value": null,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.cbfOrgOnlyHelp",
+          "label": "dialogDocumentEmbedDialog.cbfOrgOnly",
+          "value": 1,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 7,
+  },
+  "pdf": {
+    "defaultValue": null,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.pdfLink",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.plVisibleHelp",
+          "label": "dialogDocumentEmbedDialog.visibleDefault",
+          "value": null,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.plHiddenHelp",
+          "label": "dialogDocumentEmbedDialog.hidden",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 4,
+  },
+  "responsive": {
+    "defaultValue": 1,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.responsive",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.respOnHelp",
+          "label": "dialogDocumentEmbedDialog.respOn",
+          "value": 1,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.respOffHelp",
+          "label": "dialogDocumentEmbedDialog.respOff",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 8,
+  },
+  "sidebar": {
+    "defaultValue": null,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.sidebarBehavior",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.sbResponsiveHelp",
+          "label": "dialogDocumentEmbedDialog.sbResponsive",
+          "value": null,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.sbHiddenHelp",
+          "label": "dialogDocumentEmbedDialog.hidden",
+          "value": 0,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.sbVisibleHelp",
+          "label": "dialogDocumentEmbedDialog.visible",
+          "value": 1,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 0,
+  },
+  "text": {
+    "defaultValue": null,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.textMode",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.tmVisibleHelp",
+          "label": "dialogDocumentEmbedDialog.visibleDefault",
+          "value": null,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.tmHiddenHelp",
+          "label": "dialogDocumentEmbedDialog.hidden",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 6,
+  },
+  "title": {
+    "defaultValue": 1,
+    "field": {
+      "label": "dialogDocumentEmbedDialog.titleBehavior",
+      "options": [
+        {
+          "help": "dialogDocumentEmbedDialog.tVisibleHelp",
+          "label": "dialogDocumentEmbedDialog.visibleDefault",
+          "value": 1,
+        },
+        {
+          "help": "dialogDocumentEmbedDialog.tHiddenHelp",
+          "label": "dialogDocumentEmbedDialog.hidden",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+    "storageIndex": 3,
+  },
+  "width": {
+    "defaultValue": null,
+    "field": {
+      "automatic": {
+        "help": "dialogDocumentEmbedDialog.widthAuto",
+        "label": "appearanceDimension.responsive",
+        "value": null,
+      },
+      "fixed": {
+        "help": "dialogDocumentEmbedDialog.widthFixed",
+        "label": "appearanceDimension.fixed",
+        "value": 500,
+      },
+      "label": "dialogDocumentEmbedDialog.width",
+      "type": "dimension",
+    },
+    "storageIndex": 1,
+  },
+}
+`;

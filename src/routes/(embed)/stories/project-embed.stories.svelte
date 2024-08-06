@@ -24,6 +24,8 @@
     embed: true,
     me: null,
     org: null,
+    user_orgs: Promise.resolve([]),
+    org_users: Promise.resolve([]),
     breadcrumbs: [],
   };
 </script>

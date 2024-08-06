@@ -9,6 +9,7 @@ A text area for writing text
   export let placeholder = "";
   export let required = false;
   export let disabled = false;
+  export let readonly = false;
 </script>
 
 <textarea
@@ -17,6 +18,7 @@ A text area for writing text
   {required}
   {disabled}
   {placeholder}
+  {readonly}
   use:textAreaResize
 />
 
@@ -37,10 +39,12 @@ A text area for writing text
     color: var(--gray-5, #233944);
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: "Source Sans Pro";
-    font-size: 1rem;
+    font-family: var(--font-family, var(--font-sans, "Source Sans Pro"));
+    font-size: var(--font-size, var(--font-md, 1rem));
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+
+    resize: var(--resize, both);
   }
 </style>

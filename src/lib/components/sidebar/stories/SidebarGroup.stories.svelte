@@ -54,3 +54,22 @@
     </SidebarGroup>
   </div>
 </Story>
+
+<Story name="Remember collapsed state">
+  <p>Refresh to check that <code>collapsed</code> state persists</p>
+  <SidebarGroup name="storybook-files">
+    <SidebarItem slot="title"><FileDirectory16 /> Project</SidebarItem>
+    <Action slot="action" icon={Book16}>Explore</Action>
+    <Flex direction="column" gap={0}>
+      <SidebarItem small href="/project/1">
+        <Pin active /> Oldest Computer
+      </SidebarItem>
+      <SidebarItem small href="/project/2">
+        <Pin active /> FBI Files
+      </SidebarItem>
+      <SidebarItem small href="/project/3">
+        <Pin active /> 1033 Project
+      </SidebarItem>
+    </Flex>
+  </SidebarGroup>
+</Story>

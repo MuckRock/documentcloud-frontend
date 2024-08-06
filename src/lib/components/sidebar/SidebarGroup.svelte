@@ -1,13 +1,24 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
+  import { onMount } from "svelte";
   import { ChevronDown16 } from "svelte-octicons";
 
-  let collapsed = false;
+  export let collapsed = false;
+  export let name: string = undefined;
+
+  $: key = `SidebarGroup:${name}`;
+
   function toggle(val: boolean) {
     collapsed = !val;
+    if (name && browser) {
+      localStorage.setItem(key, String(collapsed));
+    }
   }
+
   function onClick() {
     toggle(collapsed);
   }
+
   function onKeydown({ key }) {
     if (["Enter", " "].includes(key)) {
       toggle(collapsed);
@@ -17,6 +28,12 @@
       collapsed = true;
     }
   }
+
+  onMount(() => {
+    if (name) {
+      collapsed = localStorage.getItem(key) === "true";
+    }
+  });
 </script>
 
 <div class="container">

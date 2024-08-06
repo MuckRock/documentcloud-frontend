@@ -1,15 +1,15 @@
-import type { Maybe, Nullable, User, Org } from "@/api/types";
+import type { Maybe, Nullable, User, Org, Page } from "@/api/types";
 import {
   APP_URL,
   BASE_API_URL,
   CSRF_HEADER_NAME,
+  MAX_PER_PAGE,
   SQUARELET_BASE,
 } from "@/config/config.js";
-
-type Fetch = typeof globalThis.fetch;
+import { isErrorCode, getAll } from "../utils";
 
 /** Get the logged-in user */
-export async function getMe(fetch: Fetch): Promise<Maybe<User>> {
+export async function getMe(fetch = globalThis.fetch): Promise<Maybe<User>> {
   const endpoint = new URL("users/me/", BASE_API_URL);
   endpoint.searchParams.set("expand", "organization");
   try {
@@ -21,9 +21,77 @@ export async function getMe(fetch: Fetch): Promise<Maybe<User>> {
   }
 }
 
-export async function getOrg(fetch: Fetch, id: number): Promise<Org> {
+/**
+ * Get a list or organizations a user belongs to
+ *
+ * @param user
+ * @param fetch
+ */
+export async function userOrgs(
+  user: User,
+  fetch = globalThis.fetch,
+): Promise<Org[]> {
+  const endpoint = new URL("organizations/", BASE_API_URL);
+  endpoint.searchParams.set("id__in", user.organizations.join(","));
+
+  return getAll<Org>(endpoint, MAX_PER_PAGE, fetch);
+}
+
+/**
+ * Get a list of users belonging to an organization, or an empty array
+ * for individual orgs.
+ *
+ * @param org
+ * @param fetch
+ */
+export async function orgUsers(
+  org: Org,
+  fetch = globalThis.fetch,
+): Promise<User[]> {
+  if (org.individual) return [];
+  const endpoint = new URL("users/", BASE_API_URL);
+  endpoint.searchParams.set("organization", String(org.id));
+
+  return getAll<User>(endpoint, MAX_PER_PAGE, fetch);
+}
+
+export async function getOrg(
+  id: number,
+  fetch = globalThis.fetch,
+): Promise<Org> {
   const endpoint = new URL(`organizations/${id}/`, BASE_API_URL);
   const resp = await fetch(endpoint, { credentials: "include" });
+  return resp.json();
+}
+
+export async function setOrg(
+  org: number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL("users/me/", BASE_API_URL);
+  endpoint.searchParams.set("expand", "organization");
+
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify({ organization: org }),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      Referer: APP_URL,
+      [CSRF_HEADER_NAME]: csrf_token,
+    },
+    method: "PATCH",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    console.error(await resp.json());
+    throw new Error(resp.statusText);
+  }
+
   return resp.json();
 }
 

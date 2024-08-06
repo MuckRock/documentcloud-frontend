@@ -1,5 +1,6 @@
 <script lang="ts">
-  export let mode: "standard" | "primary" | "ghost" | "danger" = "standard";
+  export let mode: "standard" | "primary" | "ghost" | "danger" | "premium" =
+    "standard";
   export let full = false;
   export let size: "small" | "normal" = "normal";
   export let minW = true;
@@ -89,12 +90,22 @@
     box-shadow: 0px 2px 0px 0px var(--orange-4, #69515c);
   }
 
+  .premium {
+    background: var(--green-3, #27c6a2);
+    box-shadow: 0px 2px 0px 0px var(--green-4, #117383);
+    border-color: var(--green-4, #117383);
+  }
+
   .ghost {
     background: none;
     border: none;
     box-shadow: none;
     color: var(--color, var(--primary, #4294f0));
     fill: var(--fill, var(--primary, #4294f0));
+  }
+
+  .ghost.small {
+    box-shadow: none;
   }
 
   .ghost:hover {

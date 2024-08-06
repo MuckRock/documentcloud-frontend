@@ -11,6 +11,6 @@
     padding: 1rem;
     gap: 0.5rem;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius);
+    border-radius: var(--radius, 3px);
   }
 </style>

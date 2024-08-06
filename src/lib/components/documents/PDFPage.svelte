@@ -30,6 +30,12 @@ Selectable text can be rendered in one of two ways:
 
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
+  import Flex from "../common/Flex.svelte";
+  import { Share16 } from "svelte-octicons";
+  import Portal from "../layouts/Portal.svelte";
+  import Share from "./Share.svelte";
+  import Action from "../common/Action.svelte";
+  import Modal from "../layouts/Modal.svelte";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -44,6 +50,12 @@ Selectable text can be rendered in one of two ways:
   export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
 
+  // make hidden things visible, for debugging
+  export let debug = false;
+
+  // share page
+  let pageShareOpen = false;
+
   const mode: Writable<ViewerMode> = getContext("mode");
 
   let canvas: HTMLCanvasElement;
@@ -52,8 +64,9 @@ Selectable text can be rendered in one of two ways:
 
   // keep track of this to avoid overlapping renders
   let renderTask;
-  let textRenderTask;
+  let textPromise: Promise<void>; // resolves when text is rendered
   let loaded = false;
+  let textLayer; // TextLayer
 
   // visibility, for loading optimization
   let visible: boolean = false;
@@ -69,10 +82,10 @@ Selectable text can be rendered in one of two ways:
   // we need to wait on both promises to render on initial load
   $: Promise.all([pdf, page]).then(([pdf, page]) => {
     render(page, canvas, container, scale);
-    renderTextLayer(page, textContainer, container, scale);
+    textPromise = renderTextLayer(page, textContainer, container, scale);
   });
 
-  $: textRenderTask?.promise.then(() => {
+  $: textPromise?.then(() => {
     markHighlights(textContainer, query);
   });
 
@@ -154,7 +167,7 @@ Selectable text can be rendered in one of two ways:
   }
 
   async function renderTextLayer(
-    page,
+    page, // PdfPageProxy
     textContainer: HTMLElement,
     pageContainer: HTMLElement,
     scale: number | "width" | "height",
@@ -171,13 +184,13 @@ Selectable text can be rendered in one of two ways:
     // svelte's reactivity ends up a step behind, so do this here
     container.style.setProperty("--scale-factor", numericScale.toFixed(2));
 
-    textRenderTask = pdfjs.renderTextLayer({
+    textLayer = new pdfjs.TextLayer({
       textContentSource: content,
       container: textContainer,
       viewport,
     });
 
-    return textRenderTask.promise;
+    return textLayer.render();
   }
 
   function markHighlights(textContainer: HTMLElement, query: string) {
@@ -224,12 +237,12 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </svelte:fragment>
 
-  <PageAnnotation
-    {document}
-    page_number={page_number - 1}
-    {section}
-    slot="actions"
-  />
+  <Flex slot="actions" align="center">
+    <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
+      {$_("dialog.share")}
+    </Action>
+    <PageAnnotation {document} page_number={page_number - 1} {section} />
+  </Flex>
 
   {#if page_level_notes.length}
     <div class="page-notes">
@@ -243,6 +256,7 @@ Selectable text can be rendered in one of two ways:
     bind:this={container}
     class="page-container scale-{scale} {orientation}"
     class:visible
+    class:debug
     style:--aspect={aspect}
     style:--scale-factor={numericScale.toFixed(2)}
     style:--width="{width}px"
@@ -288,6 +302,14 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </div>
 </Page>
+{#if pageShareOpen}
+  <Portal>
+    <Modal on:close={() => (pageShareOpen = false)}>
+      <h1 slot="title">{$_("dialog.share")}</h1>
+      <Share {document} page={page_number} currentTab="page" />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   .section {
@@ -359,6 +381,10 @@ Selectable text can be rendered in one of two ways:
     white-space: pre;
     cursor: text;
     transform-origin: 0% 0%;
+  }
+
+  .debug .selectable-text.embedded :global(:is(span, br)) {
+    color: red;
   }
 
   .selectable-text :global(br) {

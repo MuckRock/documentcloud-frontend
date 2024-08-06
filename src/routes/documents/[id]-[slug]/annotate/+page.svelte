@@ -74,7 +74,7 @@
 </svelte:head>
 
 <ContentLayout>
-  <Tip slot="header" --background-color="var(--yellow-bright)">
+  <Tip slot="header" --background-color="var(--yellow-3)">
     <Comment24 slot="icon" />
     <h3>{$_("annotate.title")}</h3>
     <p>{$_("annotate.instructions")}</p>

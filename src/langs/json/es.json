@@ -338,7 +338,8 @@
     "signOut": "Cerrar sesión",
     "changeOrg": "Cambiar la organización",
     "personalAcct": "Cuenta personal",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "donate": "Hacer una donación"
   },
   "documents": {
     "yourDocuments": "Sus documentos",
@@ -433,7 +434,8 @@
     "verify1": "Tenga en cuenta que actualmente su cuenta <b>no está verificada para subir documentos</b>. Puede buscar en el repositorio público, organizar los documentos que le interesan en proyectos, dejar notas privadas y colaborar en la edición y anotación de documentos a los que te inviten otros usuarios.",
     "verify2": "Si quiere subir o publicar documentos y es periodista en activo u otra organización interesada en publicar materiales de fuentes primarias de interés público, tendrá que tener su cuenta verificada o añadirla a una organización verificada. Se trata de un proceso sencillo:",
     "verify3": "Primero, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">compruebe si su organización ya existe</a> y, si es así, haga clic en \"Solicitar unirse\" en su página.",
-    "verify4": "Si su organización aún no se ha verificado, o si es autónomo, <a target=\"_blank\" href=\"https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form\">solicite la verificación aquí</a>. Las solicitudes suelen tardar dos días laborables en procesarse.",
+    "verify4": "Si su organización aún no se ha verificado, o si es autónomo, ",
+    "verify5": "solicite la verificación aquí",
     "uploadFirst": "Suba su primer documento",
     "upload1": "Suba un archivo para empezar a utilizar DocumentCloud. Puede arrastrar el archivo a esta ventana, o hacer clic en el botón azul \"Cargar\" de arriba.",
     "upload2": "Una vez que cargue el archivo, DocumentCloud procesará el documento y extraerá su contenido. Posiblemente esto tarde unos minutos en completarse, pero una vez que lo haya hecho, su documento se optimizará para analizarlo y compartirlo en la web."

@@ -2,15 +2,44 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import OrgMenu from "../OrgMenu.svelte";
 
-  import { organization } from "@/test/fixtures/accounts";
+  import {
+    organization,
+    organizationsList,
+    usersList,
+    proOrg,
+    freeOrg,
+  } from "@/test/fixtures/accounts";
 
   export const meta = {
-    title: "Components / Org Menu",
+    title: "Components / Navigation / Org Menu",
     component: OrgMenu,
-    parameters: { layout: "centered" },
   };
 </script>
 
-<Story name="Org Menu" id="orgMenu">
-  <OrgMenu org={organization} />
+<Story name="Full organization">
+  <div>
+    <OrgMenu
+      active_org={organization}
+      users={usersList.results}
+      orgs={organizationsList.results}
+    />
+  </div>
 </Story>
+
+<Story name="Free org">
+  <div>
+    <OrgMenu active_org={freeOrg} orgs={organizationsList.results} />
+  </div>
+</Story>
+
+<Story name="Pro org">
+  <div>
+    <OrgMenu active_org={proOrg} orgs={organizationsList.results} />
+  </div>
+</Story>
+
+<style>
+  div {
+    max-width: 20rem;
+  }
+</style>

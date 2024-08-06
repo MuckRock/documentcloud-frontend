@@ -27,6 +27,7 @@
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
   import { canonicalUrl, pdfUrl, isProcessing } from "$lib/api/documents";
+  import Share from "@/lib/components/documents/Share.svelte";
 
   export let document: Document;
 
@@ -35,12 +36,13 @@
   $: pdf = pdfUrl(document).toString();
   $: annotate = relative(document, "annotate/");
   $: redact = relative(document, "redact/");
-  $: modify = relative(document, "modify/");
+  // $: modify = relative(document, "modify/");
 
   function relative(document: Document, path: string) {
     return new URL(path, canonicalUrl(document)).href;
   }
 
+  let shareOpen = false;
   let editOpen = false;
   let reprocessOpen = false;
   let deleteOpen = false;
@@ -82,7 +84,7 @@
 </Flex>
 
 <Flex direction="column">
-  <SidebarItem hover>
+  <SidebarItem hover on:click={() => (shareOpen = true)}>
     <Share16 />
     {$_("sidebar.share")} &hellip;
   </SidebarItem>
@@ -101,12 +103,14 @@
     </SidebarItem>
   {/if}
 
-  {#if document.edit_access}
+  <!--
+    {#if document.edit_access}
     <SidebarItem href={modify} disabled={isProcessing(document.status)}>
       <Apps16 />
       {$_("sidebar.modify")} &hellip;
     </SidebarItem>
-  {/if}
+    {/if}
+  -->
 
   {#if document.edit_access}
     <!-- TODO: Processing component -->
@@ -135,6 +139,15 @@
     </SidebarItem>
   {/if}
 </Flex>
+
+{#if shareOpen}
+  <Portal>
+    <Modal on:close={() => (shareOpen = false)}>
+      <h1 slot="title">{$_("dialog.share")}</h1>
+      <Share {document} />
+    </Modal>
+  </Portal>
+{/if}
 
 {#if reprocessOpen}
   <Portal>
