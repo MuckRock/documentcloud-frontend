@@ -19,23 +19,23 @@ exports[`UserMenu 1`] = `
         title="Open Menu"
       >
         <div
-          class="avatar svelte-1rp7tlm"
+          class="avatar svelte-18necmm"
         >
           <img
             alt="Avatar"
-            class="svelte-1rp7tlm"
+            class="svelte-18necmm"
             src="https://cdn.muckrock.com/media/avatars/20140211-0O1A7147-2.jpg"
           />
         </div>
          
         <span
-          class="name svelte-1rp7tlm"
+          class="name svelte-q31ql1"
         >
           Chris Amico
         </span>
          
         <div
-          class="dropdownArrow svelte-1rp7tlm"
+          class="dropdownArrow svelte-q31ql1"
         >
           <svg
             class="octicon octicon-chevron-down"
