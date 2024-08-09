@@ -9,7 +9,8 @@ import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
 import type { Page } from "@/api/types/common";
 
-export type { Page } from "@/api/types/common";
+// re-export these for convenience
+export type { Page, User, Org, Project };
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
@@ -205,9 +206,6 @@ export interface OEmbed {
   html: string;
   type: "rich";
 }
-
-// re-export for consistency
-export type { Project };
 
 export type ProjectResults = Page<Project>;
 
