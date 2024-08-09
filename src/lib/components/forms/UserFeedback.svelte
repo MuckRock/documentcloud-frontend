@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
   import type { User } from "@/api/types";
   import { createFeedback, type Feedback } from "@/lib/api/feedback";
@@ -17,22 +18,22 @@
     {
       id: "comment",
       value: "Comment",
-      label: "Send a Comment",
-      placeholder: "I think that…",
+      label: $_("feedback.types.comment.label"),
+      placeholder: $_("feedback.types.comment.placeholder"),
       icon: Comment16,
     },
     {
       id: "bug",
       value: "Bug",
-      label: "Report a Bug",
-      placeholder: "I want to…",
+      label: $_("feedback.types.bug.label"),
+      placeholder: $_("feedback.types.bug.placeholder"),
       icon: Bug16,
     },
     {
       id: "question",
       value: "Question",
-      label: "Ask a Question",
-      placeholder: "How can I…",
+      label: $_("feedback.types.question.label"),
+      placeholder: $_("feedback.types.question.placeholder"),
       icon: Question16,
     },
   ];
@@ -42,7 +43,7 @@
   const dispatch = createEventDispatcher();
   $: placeholder =
     feedbackTypes.find((type) => type.value === feedbackType)?.placeholder ??
-    "My feedback is…";
+    $_("feedback.defaultPlaceholder");
 
   let status: null | "loading" | "success" | "error" = null;
 
@@ -64,7 +65,7 @@
     try {
       await createFeedback(data);
       status = "success";
-      toast("We have received your feedback. Thank you!", {
+      toast($_("feedback.success"), {
         status: "success",
       });
       dispatch("close");
@@ -75,20 +76,10 @@
   }
 </script>
 
-<!-- TODO: I18N -->
-
 <form class="userFeedback" on:submit|preventDefault={handleSubmit}>
   <header>
-    <h1>Share Your Feedback</h1>
     <div class="hello-message">
-      <p>
-        Thanks for trying out the public preview for the next major version of
-        DocumentCloud! We are still hard at work adding features, fixing bugs,
-        and improving the experience. We welcome your feedback&mdash;comments,
-        ideas, and questions&mdash;to inform our progress. We are a very small
-        team so we cannot guarantee that we will respond to all feedback, but we
-        will read and review all of it.
-      </p>
+      {@html $_("feedback.hello")}
     </div>
   </header>
   <fieldset class="feedbackType">
@@ -107,11 +98,11 @@
   </fieldset>
   {#if user}
     <fieldset class="userIdentity">
-      <legend>Sharing feedback as:</legend>
+      <legend>{$_("feedback.userIdentity.legend")}</legend>
       {#if anonymous}
         <Flex align="center">
           <UserAvatar />
-          <span class="name">Anonymous</span>
+          <span class="name">{$_("feedback.userIdentity.anonymous")}</span>
           <input type="hidden" name="user" value={null} />
         </Flex>
       {:else}
@@ -123,7 +114,7 @@
       {/if}
       <label class="anonymous">
         <input type="checkbox" bind:checked={anonymous} />
-        Share anonymously
+        {$_("feedback.userIdentity.shareAnonymously")}
       </label>
     </fieldset>
   {/if}
