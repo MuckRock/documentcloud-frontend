@@ -27,6 +27,7 @@
   setContext("user_orgs", user_orgs);
   setContext("org_users", org_users);
   setContext("embed", data.embed);
+  setContext("tipOfDay", data.tipOfDay);
 </script>
 
 <slot />
