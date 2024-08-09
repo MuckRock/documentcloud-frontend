@@ -19,6 +19,9 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
   import Toaster from "./Toaster.svelte";
+  import UserFeedback from "../forms/UserFeedback.svelte";
+  import Portal from "./Portal.svelte";
+  import Modal from "./Modal.svelte";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
@@ -37,6 +40,8 @@
       panel = name;
     };
   }
+
+  let feedbackOpen = false;
 </script>
 
 <div class="container">
@@ -64,6 +69,16 @@
     </SignedIn>
     <LanguageMenu />
     <HelpMenu />
+    <Button mode="ghost" on:click={() => (feedbackOpen = true)}>Feedback</Button
+    >
+    {#if feedbackOpen}
+      <Portal>
+        <Modal on:close={() => (feedbackOpen = false)}>
+          <h1 slot="title">{$_("feedback.title")}</h1>
+          <UserFeedback user={$me} />
+        </Modal>
+      </Portal>
+    {/if}
     {#if $$slots.action}
       <div class="small openPane">
         <Button minW={false} mode="ghost" on:click={openPanel("action")}>
