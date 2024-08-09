@@ -30,6 +30,7 @@
     user_orgs: Promise.resolve([]),
     org_users: Promise.resolve([]),
     breadcrumbs: [],
+    tipOfDay: null,
   };
 </script>
 

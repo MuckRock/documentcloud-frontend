@@ -3,6 +3,7 @@ import { initialize, mswLoader } from "msw-storybook-addon";
 import { mockDateDecorator } from "storybook-mock-date-decorator";
 import UserContextDecorator from "./decorators/UserContextDecorator.svelte";
 import OrgContextDecorator from "./decorators/OrgContextDecorator.svelte";
+import TipOfDayContextDecorator from "./decorators/TipOfDayContextDecorator.svelte";
 
 import "@/style/kit.css";
 import "@/lib/i18n/index.js";
@@ -45,6 +46,7 @@ export let decorators = [
   mockDateDecorator,
   () => UserContextDecorator,
   () => OrgContextDecorator,
+  () => TipOfDayContextDecorator,
 ];
 
 export default preview;

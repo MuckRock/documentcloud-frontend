@@ -9,7 +9,8 @@ import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
 import type { Page } from "@/api/types/common";
 
-export type { Page } from "@/api/types/common";
+// re-export these for convenience
+export type { Page, User, Org, Project };
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
@@ -206,9 +207,6 @@ export interface OEmbed {
   type: "rich";
 }
 
-// re-export for consistency
-export type { Project };
-
 export type ProjectResults = Page<Project>;
 
 export interface ProjectMembershipItem {
@@ -258,3 +256,9 @@ export interface Redaction extends BBox {
 export type Bounds = [number, number, number, number];
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;
+
+export interface Flatpage {
+  url: string;
+  title: string;
+  content: string; // Could be HTML or Markdown
+}
