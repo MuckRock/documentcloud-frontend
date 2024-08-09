@@ -1,7 +1,11 @@
 <script lang="ts">
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
+  import type { User } from "@/api/types";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import UserAvatar from "../accounts/UserAvatar.svelte";
+
+  export let user: User = undefined;
 
   let feedback = "";
   let feedbackType = "Comment";
@@ -29,6 +33,8 @@
       icon: Question16,
     },
   ];
+
+  let anonymous = !Boolean(user);
 
   $: placeholder =
     feedbackTypes.find((type) => type.value === feedbackType)?.placeholder ??
@@ -82,12 +88,35 @@
       </label>
     {/each}
   </fieldset>
+  {#if user}
+    <fieldset class="userIdentity">
+      <legend>Sharing feedback as:</legend>
+      {#if anonymous}
+        <Flex align="center">
+          <UserAvatar />
+          <span class="name">Anonymous</span>
+          <input type="hidden" name="user" value={null} />
+        </Flex>
+      {:else}
+        <Flex align="center">
+          <UserAvatar {user} />
+          <span class="name">{user.name ?? user.username}</span>
+          <input type="hidden" name="user" value={user.name ?? user.username} />
+        </Flex>
+      {/if}
+      <label class="anonymous">
+        <input type="checkbox" bind:checked={anonymous} />
+        Share anonymously
+      </label>
+    </fieldset>
+  {/if}
   <textarea
     class="feedback"
     name="message"
     bind:value={feedback}
     {placeholder}
   />
+
   <footer class="actions">
     <Flex align="center">
       <Button type="submit" mode="primary" disabled={!feedback} />
@@ -96,9 +125,14 @@
 </form>
 
 <style>
-  header {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  header,
+  footer {
     padding: 0.5rem;
-    margin-bottom: 0.5rem;
   }
   h1 {
     margin-bottom: 0.5rem;
@@ -109,7 +143,7 @@
     line-height: 1.6;
   }
   .feedback {
-    margin: 0.75rem 0;
+    margin: 0;
     padding: 0.75rem;
     min-height: 5rem;
     width: 100%;
@@ -124,33 +158,52 @@
     font-weight: 400;
     line-height: normal;
   }
-  .feedbackType {
+  fieldset {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     margin: 0;
     gap: 0.5rem;
     border: 1px solid var(--gray-1);
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     padding: 0.5rem;
+  }
+  fieldset legend {
+    padding: 0 0.5rem;
+    font-size: var(--font-xs);
+    font-weight: var(--font-semibold);
   }
   .feedbackType label {
     flex: 1 0 auto;
     padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     white-space: nowrap;
+    font-weight: var(--font-semibold);
+
+    fill: var(--gray-4);
+    color: var(--gray-5);
+
+    transition: all 0.1s linear;
   }
   .feedbackType label:hover {
     background: var(--gray-1);
   }
   .feedbackType label.active {
+    fill: var(--blue-4);
+    color: var(--blue-5);
+    border-color: var(--blue-3);
     background: var(--blue-1);
   }
   .feedbackType input {
     display: none;
+  }
+  .userIdentity {
+    padding: 0.5rem 1rem;
   }
 </style>
