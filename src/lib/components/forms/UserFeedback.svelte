@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
   import type { User } from "@/api/types";
+  import { createFeedback, type Feedback } from "@/lib/api/feedback";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import UserAvatar from "../accounts/UserAvatar.svelte";
+  import { toast } from "../layouts/Toaster.svelte";
 
   export let user: User = undefined;
 
@@ -36,25 +39,39 @@
 
   let anonymous = !Boolean(user);
 
+  const dispatch = createEventDispatcher();
   $: placeholder =
     feedbackTypes.find((type) => type.value === feedbackType)?.placeholder ??
     "My feedback is…";
 
   let status: null | "loading" | "success" | "error" = null;
-  let statusText = "";
 
-  function handleSubmit(e: SubmitEvent) {
+  // For simplicity, we directly call the Baserow API from the client.
+  // Unfortunately, this exposes our API token and endpoint to end users.
+  // If we want a more secure approach, we can provide the submission logic
+  // in SvelteKit server logic, though that approach is more complex.
+  async function handleSubmit(e: SubmitEvent) {
     status = "loading";
     const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
 
     // POST form data to baserow
-    for (let [key, value] of fd.entries()) {
-      console.log(key, value);
+    const data: Feedback = {
+      Type: String(fd.get("type")) ?? "",
+      Message: String(fd.get("message")) ?? "",
+      User: String(fd.get("user")) ?? "",
+    };
+    try {
+      await createFeedback(data);
+      status = "success";
+      toast("We have received your feedback. Thank you!", {
+        status: "success",
+      });
+      dispatch("close");
+    } catch (e) {
+      toast(String(e), { status: "error" });
+      status = "error";
     }
-
-    status = "success";
-    statusText = "We have received your feedback. Thank you!";
   }
 </script>
 
@@ -101,7 +118,7 @@
         <Flex align="center">
           <UserAvatar {user} />
           <span class="name">{user.name ?? user.username}</span>
-          <input type="hidden" name="user" value={user.name ?? user.username} />
+          <input type="hidden" name="user" value={user.email} />
         </Flex>
       {/if}
       <label class="anonymous">
@@ -119,7 +136,11 @@
 
   <footer class="actions">
     <Flex align="center">
-      <Button type="submit" mode="primary" disabled={!feedback} />
+      <Button
+        type="submit"
+        mode="primary"
+        disabled={!feedback || status === "loading"}
+      />
     </Flex>
   </footer>
 </form>
