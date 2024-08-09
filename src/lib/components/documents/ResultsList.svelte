@@ -60,7 +60,7 @@
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && next) {
           await load(new URL(next));
-          observer.unobserve(el);
+          observer?.unobserve(el);
         }
       });
     });
@@ -70,7 +70,7 @@
   }
 
   function unwatch(io: IntersectionObserver, el: HTMLElement) {
-    io.unobserve(el);
+    io?.unobserve(el);
   }
 
   onMount(() => {
