@@ -1,13 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { enhance } from "$app/forms";
   import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
   import type { User } from "@/api/types";
-  import { createFeedback, type Feedback } from "@/lib/api/feedback";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import UserAvatar from "../accounts/UserAvatar.svelte";
   import { toast } from "../layouts/Toaster.svelte";
+  import { APP_URL } from "@/config/config";
 
   export let user: User = undefined;
 
@@ -47,36 +48,32 @@
 
   let status: null | "loading" | "success" | "error" = null;
 
-  // For simplicity, we directly call the Baserow API from the client.
-  // Unfortunately, this exposes our API token and endpoint to end users.
-  // If we want a more secure approach, we can provide the submission logic
-  // in SvelteKit server logic, though that approach is more complex.
-  async function handleSubmit(e: SubmitEvent) {
+  function handleSubmit() {
     status = "loading";
-    const form = e.target as HTMLFormElement;
-    const fd = new FormData(form);
-
-    // POST form data to baserow
-    const data: Feedback = {
-      Type: String(fd.get("type")) ?? "",
-      Message: String(fd.get("message")) ?? "",
-      User: String(fd.get("user")) ?? "",
+    return async ({ result, update }) => {
+      if (result.success) {
+        status = "success";
+        toast($_("feedback.success"), {
+          status: "success",
+        });
+        dispatch("close");
+      } else if (result.error) {
+        status = "error";
+        toast(result.error, { status: "error" });
+      }
+      // `result` is an `ActionResult` object
+      // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+      update(result);
     };
-    try {
-      await createFeedback(data);
-      status = "success";
-      toast($_("feedback.success"), {
-        status: "success",
-      });
-      dispatch("close");
-    } catch (e) {
-      toast(String(e), { status: "error" });
-      status = "error";
-    }
   }
 </script>
 
-<form class="userFeedback" on:submit|preventDefault={handleSubmit}>
+<form
+  class="userFeedback"
+  method="POST"
+  action="{APP_URL}?/feedback"
+  use:enhance={handleSubmit}
+>
   <header>
     <div class="hello-message">
       {@html $_("feedback.hello")}

@@ -1,7 +1,9 @@
+import { env } from "$env/dynamic/private";
+
 // Feedback is submitted to a Baserow table via the API
 
-const BASEROW_API_TOKEN = process.env.BASEROW_API_TOKEN;
-const BASEROW_FEEDBACK_TABLE_ID = process.env.BASEROW_FEEDBACK_TABLE;
+const BASEROW_API_TOKEN = env.BASEROW_API_TOKEN;
+const BASEROW_FEEDBACK_TABLE_ID = env.BASEROW_FEEDBACK_TABLE;
 
 export interface Feedback {
   Type: string;
