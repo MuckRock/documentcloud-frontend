@@ -148,7 +148,7 @@
   }
   .hello-message {
     font-size: var(--font-sm);
-    color: var(--gray-4);
+    color: var(--gray-5);
     line-height: 1.6;
   }
   .feedback {
