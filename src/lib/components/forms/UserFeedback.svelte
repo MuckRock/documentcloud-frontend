@@ -50,7 +50,7 @@
 
   function handleSubmit() {
     status = "loading";
-    return async ({ result, update }) => {
+    return async ({ result }) => {
       if (result.success) {
         status = "success";
         toast($_("feedback.success"), {
@@ -61,9 +61,6 @@
         status = "error";
         toast(result.error, { status: "error" });
       }
-      // `result` is an `ActionResult` object
-      // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-      update(result);
     };
   }
 </script>
