@@ -57,7 +57,7 @@
           status: "success",
         });
         dispatch("close");
-      } else if (result.error) {
+      } else if (result.failure) {
         status = "error";
         toast(result.error, { status: "error" });
       }

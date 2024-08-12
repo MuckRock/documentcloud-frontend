@@ -1,6 +1,7 @@
 import { _ } from "svelte-i18n";
 import { createFeedback, type Feedback } from "@/lib/api/feedback";
 import type { Actions } from "./$types";
+import { error, fail } from "@sveltejs/kit";
 
 export const actions = {
   feedback: async ({ request, fetch }) => {
@@ -15,7 +16,7 @@ export const actions = {
       await createFeedback(feedback, fetch);
       return { success: true };
     } catch (e) {
-      return { error: String(e) };
+      fail(500, { message: String(e) });
     }
   },
 } satisfies Actions;
