@@ -51,13 +51,13 @@
   function handleSubmit() {
     status = "loading";
     return async ({ result }) => {
-      if (result.success) {
+      if (result.type === "success") {
         status = "success";
         toast($_("feedback.success"), {
           status: "success",
         });
         dispatch("close");
-      } else if (result.failure) {
+      } else if (result.type === "failure") {
         status = "error";
         toast(result.error, { status: "error" });
       }
