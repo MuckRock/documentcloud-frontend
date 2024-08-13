@@ -1112,5 +1112,30 @@
       "page": "Pick page",
       "note": "Pick note"
     }
+  },
+  "feedback": {
+    "title": "Share Your Feedback",
+    "hello": "<p>Thanks for trying out the public preview for the next major version of DocumentCloud! We are still hard at work adding features, fixing bugs, and improving the experience. We welcome your feedback&mdash;comments, ideas, and questions&mdash;to inform our progress. We are a very small team so we cannot guarantee that we will respond to all feedback, but we will read and review all of it.</p>",
+    "defaultPlaceholder": "My feedback is…",
+    "types": {
+      "comment": {
+        "label": "Send a Comment",
+        "placeholder": "I think that…"
+      },
+      "bug": {
+        "label": "Report a Bug",
+        "placeholder": "I want to…"
+      },
+      "question": {
+        "label": "Ask a Question",
+        "placeholder": "How can I…"
+      }
+    },
+    "userIdentity": {
+      "legend": "Attribution",
+      "anonymous": "Anonymous",
+      "shareAnonymously": "Share anonymously"
+    },
+    "success": "We have received your feedback. Thank you!"
   }
 }

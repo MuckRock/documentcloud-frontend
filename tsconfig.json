@@ -6,6 +6,11 @@
     "downlevelIteration": true
     // "types": ["@testing-library/jest-dom"]
   },
-  "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.js"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "src/**/*.js",
+    ".svelte-kit/ambient.d.ts"
+  ],
   "exclude": ["public/*"]
 }
