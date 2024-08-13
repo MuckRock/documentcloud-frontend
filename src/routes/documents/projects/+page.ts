@@ -8,9 +8,15 @@ export async function load({ url, parent, fetch }) {
   const query = params.query ?? "";
   let projects: Project[];
   if (list === "owned") {
-    projects = await getOwned(me.id, query);
+    projects = await getOwned(me.id, query).catch((e) => {
+      console.error(e);
+      return [];
+    });
   } else if (list === "shared") {
-    projects = await getShared(me.id, query);
+    projects = await getShared(me.id, query).catch((e) => {
+      console.error(e);
+      return [];
+    });
   }
 
   return {
