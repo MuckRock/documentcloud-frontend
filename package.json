@@ -8,6 +8,7 @@
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-typescript": "^7.21.4",
     "@sentry/svelte": "^7.66.0",
+    "@sentry/sveltekit": "^8.25.0",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/adapter-netlify": "^4.1.0",
     "@sveltejs/kit": "^2.5.10",

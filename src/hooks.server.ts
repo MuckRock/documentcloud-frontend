@@ -1,3 +1,6 @@
+import { env } from "$env/dynamic/private";
+import { sequence } from "@sveltejs/kit/hooks";
+import * as Sentry from "@sentry/sveltekit";
 // https://kit.svelte.dev/docs/hooks#server-hooks
 import { locale } from "svelte-i18n";
 import { DC_BASE } from "./config/config.js";
@@ -5,19 +8,10 @@ import { DC_BASE } from "./config/config.js";
 // This polyfill is required for PDF.js to run on the server
 import "core-js/proposals/promise-with-resolvers";
 
-/** @type {import('@sveltejs/kit').Handle} */
-export async function handle({ event, resolve }) {
-  const lang =
-    event.request.headers.get("accept-language")?.split(",")[0] ?? "en-US";
-
-  if (lang) {
-    locale.set(lang);
-  }
-
-  return resolve(event, {
-    transformPageChunk: ({ html }) => html.replace("%lang%", lang),
-  });
-}
+Sentry.init({
+  dsn: env.SENTRY_DSN,
+  tracesSampleRate: 1,
+});
 
 /** @type {import('@sveltejs/kit').HandleFetch} */
 export async function handleFetch({ event, request, fetch }) {
@@ -29,3 +23,20 @@ export async function handleFetch({ event, request, fetch }) {
 
   return fetch(request);
 }
+export const handleError = Sentry.handleErrorWithSentry();
+
+export const handle = sequence(
+  Sentry.sentryHandle(),
+  async function _handle({ event, resolve }) {
+    const lang =
+      event.request.headers.get("accept-language")?.split(",")[0] ?? "en-US";
+
+    if (lang) {
+      locale.set(lang);
+    }
+
+    return resolve(event, {
+      transformPageChunk: ({ html }) => html.replace("%lang%", lang),
+    });
+  },
+);

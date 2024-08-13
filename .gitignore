@@ -55,3 +55,6 @@ scratch/
 build/
 dist/
 storybook-static/
+
+# Sentry Config File
+.sentryclirc

@@ -1,3 +1,4 @@
+import { sentrySvelteKit } from "@sentry/sveltekit";
 import path from "node:path";
 import url from "node:url";
 
@@ -22,7 +23,16 @@ export default defineConfig({
 
   envPrefix: "DC_",
 
-  plugins: [sveltekit()],
+  plugins: [
+    sentrySvelteKit({
+      sourceMapsUploadOptions: {
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT ?? "documentcloud-frontend-staging",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      },
+    }),
+    sveltekit(),
+  ],
 
   // allow top-level await
   optimizeDeps: {
