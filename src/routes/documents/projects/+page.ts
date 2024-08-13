@@ -6,14 +6,15 @@ export async function load({ url, parent, fetch }) {
   const params = Object.fromEntries(url.searchParams.entries());
   const list = params.list ?? "owned";
   const query = params.query ?? "";
-  let projects: Project[];
-  if (list === "owned") {
-    projects = await getOwned(me.id, query).catch((e) => {
+  let projects: Project[] = [];
+
+  if (me && list === "owned") {
+    projects = await getOwned(me.id, query, fetch).catch((e) => {
       console.error(e);
       return [];
     });
-  } else if (list === "shared") {
-    projects = await getShared(me.id, query).catch((e) => {
+  } else if (me && list === "shared") {
+    projects = await getShared(me.id, query, fetch).catch((e) => {
       console.error(e);
       return [];
     });
