@@ -20,7 +20,12 @@
   </div>
   {#if addon.parameters.instructions}
     <div class="instructions">
-      {@html addon.parameters.instructions}
+      <details>
+        <summary>
+          {$_("addonDispatchDialog.instructions")}
+        </summary>
+        {@html addon.parameters.instructions}
+      </details>
     </div>
   {/if}
 
