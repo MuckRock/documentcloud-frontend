@@ -63,6 +63,7 @@
     position: fixed;
     bottom: 0;
     right: 0;
+    z-index: var(--z-toast);
     margin: 0.5rem;
     display: flex;
     flex-direction: column-reverse;

@@ -7,6 +7,7 @@ export const me: User = {
   feature_level: 2,
   is_staff: true,
   name: "Chris Amico",
+  email: "chris@muckrock.com",
   organization: {
     id: 125,
     avatar_url: "https://cdn.muckrock.com/media/org_avatars/logo.png",

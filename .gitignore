@@ -33,6 +33,7 @@ static/viewer/*
 # Local test env file
 .env
 .env.*
+.envrc
 playwright-report
 test-results
 coverage

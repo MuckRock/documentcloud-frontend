@@ -18,6 +18,7 @@
   // from the referenced tsconfig.json - TypeScript does not merge them in
   "include": [
     ".svelte-kit/**",
+    ".svelte-kit/ambient.d.ts",
     "vite.config.js",
     "vite.config.ts",
     "src/lib/**/*.js",

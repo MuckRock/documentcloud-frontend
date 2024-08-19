@@ -30,9 +30,10 @@ export interface IndividualOrg extends Org {
 export interface User {
   uuid: string;
   id: number;
+  email?: string;
+  username: string;
   name: Maybe<string>;
   avatar_url: Maybe<string>;
-  username: string;
   organization: number | Org;
   organizations: number[];
   admin_organizations: number[];

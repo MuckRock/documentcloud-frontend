@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Org, User } from "@/api/types";
+  import type { Org, User, Flatpage } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
@@ -19,9 +19,14 @@
   import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import HelpMenu from "../navigation/HelpMenu.svelte";
   import Toaster from "./Toaster.svelte";
+  import UserFeedback from "../forms/UserFeedback.svelte";
+  import Portal from "./Portal.svelte";
+  import Modal from "./Modal.svelte";
+  import TipOfDay from "../common/TipOfDay.svelte";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
+  const tipOfDay = getContext<Flatpage>("tipOfDay");
 
   const user_orgs = getContext<Writable<Promise<Org[]>>>("user_orgs");
   const org_users = getContext<Writable<Promise<User[]>>>("org_users");
@@ -37,9 +42,12 @@
       panel = name;
     };
   }
+
+  let feedbackOpen = false;
 </script>
 
 <div class="container">
+  {#if tipOfDay}<TipOfDay message={tipOfDay.content} />{/if}
   <header>
     {#if $$slots.navigation}
       <div class="small openPane">
@@ -64,6 +72,17 @@
     </SignedIn>
     <LanguageMenu />
     <HelpMenu />
+    <Button mode="ghost" on:click={() => (feedbackOpen = true)}>
+      Feedback
+    </Button>
+    {#if feedbackOpen}
+      <Portal>
+        <Modal on:close={() => (feedbackOpen = false)}>
+          <h1 slot="title">{$_("feedback.title")}</h1>
+          <UserFeedback user={$me} on:close={() => (feedbackOpen = false)} />
+        </Modal>
+      </Portal>
+    {/if}
     {#if $$slots.action}
       <div class="small openPane">
         <Button minW={false} mode="ghost" on:click={openPanel("action")}>
