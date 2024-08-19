@@ -1001,6 +1001,7 @@
     "showRuns": "Show Runs",
     "hideRuns": "Hide Runs",
     "showAddons": "Show Scheduled Add-Ons ({n})",
+    "scheduled": "Scheduled",
     "runSchedule": "Run on a schedule:",
     "runOnce": "Run once",
     "disable": "Disable",
@@ -1048,7 +1049,7 @@
     "runsOn": "{schedule}",
     "upcoming": {
       "empty": "Scheduled add-ons will appear here",
-      "loading": "Loading…",
+      "loading": "Loading …",
       "retry": "Retry"
     },
     "history": {

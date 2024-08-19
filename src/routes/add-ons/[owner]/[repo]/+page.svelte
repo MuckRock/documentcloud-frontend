@@ -17,6 +17,7 @@
   $: addon = data.addon;
   $: query = data.query;
   $: search = data.searchResults;
+  $: scheduled = data.scheduled;
 
   // todo: disable if not premium
   $: organization =
@@ -33,5 +34,12 @@
 </svelte:head>
 
 <MainLayout>
-  <AddOnLayout slot="content" {addon} {query} {search} {disablePremium} />
+  <AddOnLayout
+    slot="content"
+    {addon}
+    {query}
+    {search}
+    {disablePremium}
+    {scheduled}
+  />
 </MainLayout>

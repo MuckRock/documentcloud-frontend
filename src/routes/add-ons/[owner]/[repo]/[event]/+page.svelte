@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
+  import type { User } from "@/api/types/orgAndUser";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import type { User } from "@/api/types/orgAndUser";
-  import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import AddOnLayout from "@/lib/components/layouts/AddOnLayout.svelte";
+
+  import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
 
   export let data;
   export let form;
@@ -17,6 +19,7 @@
   $: addon = data.event.addon;
   $: query = data.query;
   $: search = data.searchResults;
+  $: scheduled = data.scheduled;
 
   // todo: disable if not premium
   $: organization =
@@ -40,5 +43,6 @@
     {search}
     {query}
     {disablePremium}
+    {scheduled}
   />
 </MainLayout>

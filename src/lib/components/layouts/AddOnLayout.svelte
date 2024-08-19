@@ -1,4 +1,8 @@
 <script lang="ts">
+  import type { AddOnListItem, Event } from "@/addons/types";
+  import type { DocumentResults, Page } from "$lib/api/types";
+
+  import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
   import {
     Clock16,
@@ -8,27 +12,26 @@
     Hourglass24,
     Play16,
   } from "svelte-octicons";
-  import { _ } from "svelte-i18n";
-  import type { AddOnListItem, Event } from "@/addons/types";
-  import type { DocumentResults } from "$lib/api/types";
-  import Selection from "$lib/components/inputs/Selection.svelte";
+
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
   import ContentLayout from "./ContentLayout.svelte";
+  import Empty from "../common/Empty.svelte";
   import PageToolbar from "../common/PageToolbar.svelte";
-  import Search from "../forms/Search.svelte";
   import ResultsList, {
     selected,
     total,
     visible,
   } from "../documents/ResultsList.svelte";
-  import Empty from "../common/Empty.svelte";
-  import Flex from "../common/Flex.svelte";
+  import Scheduled from "../addons/Scheduled.svelte";
+  import Search from "../forms/Search.svelte";
+  import Selection from "$lib/components/inputs/Selection.svelte";
   import Tab from "../common/Tab.svelte";
   import { schedules } from "../addons/ScheduledEvent.svelte";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
+  export let scheduled: Promise<Page<Event>> | null = null;
   export let search: Promise<DocumentResults>;
   export let query: string;
   export let disablePremium: boolean = false;
@@ -65,28 +68,40 @@
         <Play16 />
         Dispatch
       </Tab>
+
+      <!--
       <Tab
         active={currentTab === "history"}
         on:click={() => (currentTab = "history")}
-      >
+        >
         <History16 />
         History
       </Tab>
+      -->
+
       {#if canSchedule}
         <Tab
           active={currentTab === "scheduled"}
           on:click={() => (currentTab = "scheduled")}
         >
           <Clock16 />
-          Scheduled
+          {$_("addonDispatchDialog.scheduled")}
         </Tab>
       {/if}
     </div>
     <main>
       {#if currentTab === "scheduled"}
-        <Empty icon={Clock24}>TODO: Implement scheduled runs</Empty>
-      {:else if currentTab === "history"}
+        {#await scheduled then scheduled}
+          <Scheduled
+            events={scheduled.results}
+            next={scheduled.next}
+            previous={scheduled.previous}
+          />
+        {/await}
+        <!--
+        {:else if currentTab === "history"}
         <Empty icon={History24}>TODO: Implement previous runs</Empty>
+        -->
       {:else}
         <AddOnDispatch
           {action}

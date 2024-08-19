@@ -44,10 +44,14 @@
   </SidebarItem>
 
   {#if loading}
-    <Empty icon={Hourglass24}>Loading scheduled runs…</Empty>
+    <Empty icon={Hourglass24}>{$_("addonRuns.upcoming.loading")}</Empty>
   {:else}
     {#each events as event}
       <ScheduledEvent {event} />
+    {:else}
+      <Empty>
+        {$_("addonRuns.upcoming.empty")}
+      </Empty>
     {/each}
   {/if}
 

@@ -2,7 +2,7 @@ import type { DocumentResults } from "$lib/api/types";
 
 import { error } from "@sveltejs/kit";
 
-import { getAddon } from "@/lib/api/addons.js";
+import * as addons from "$lib/api/addons";
 import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 import { userDocs } from "$lib/utils/search";
@@ -10,7 +10,7 @@ import { userDocs } from "$lib/utils/search";
 export async function load({ url, params, fetch, parent }) {
   const { owner, repo } = params;
 
-  const addon = await getAddon(owner, repo, fetch).catch(console.error);
+  const addon = await addons.getAddon(owner, repo, fetch).catch(console.error);
   if (!addon) {
     return error(404, "Add-On not found");
   }
@@ -36,5 +36,6 @@ export async function load({ url, params, fetch, parent }) {
     breadcrumbs,
     query,
     searchResults,
+    scheduled: addons.scheduled({ addon: addon.id, per_page: 100 }, fetch),
   };
 }
