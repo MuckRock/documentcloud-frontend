@@ -9,8 +9,8 @@
     parameters: { layout: "padded" },
   };
 
-  import revisions from "$lib/api/fixtures/documents/revisions.json";
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
+  import revisions from "@/test/fixtures/documents/revisions.json";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
 
   const empty = doc as Document;
   const document = { ...doc, revisions } as Document;

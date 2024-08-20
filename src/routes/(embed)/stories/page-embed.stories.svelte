@@ -6,8 +6,8 @@
 
   import { Story } from "@storybook/addon-svelte-csf";
   import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";
-  import document from "$lib/api/fixtures/documents/document-expanded.json";
-  import { results } from "$lib/api/fixtures/notes/notes-expanded.json";
+  import document from "@/test/fixtures/documents/document-expanded.json";
+  import { results } from "@/test/fixtures/notes/notes-expanded.json";
 
   const page = 1;
   const notes = results.filter((note) => note.page_number === page - 1);

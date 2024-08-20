@@ -4,7 +4,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import Data from "../sidebar/Data.svelte";
 
-  import doc from "$lib/api/fixtures/documents/document.json";
+  import doc from "@/test/fixtures/documents/document.json";
 
   const document = {
     ...doc,

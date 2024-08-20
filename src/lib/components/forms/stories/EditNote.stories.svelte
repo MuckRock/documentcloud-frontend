@@ -8,11 +8,11 @@
     title: "Forms / Edit note",
     component: EditNote,
     parameters: {
-      layout: 'centered'
-    }
+      layout: "centered",
+    },
   };
 
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
 
   const document = doc as Document;
   const note = document.notes[0];

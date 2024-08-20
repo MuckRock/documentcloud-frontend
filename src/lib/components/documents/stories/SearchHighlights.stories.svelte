@@ -4,7 +4,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import SearchHighlights from "../SearchHighlights.svelte";
 
-  import search from "$lib/api/fixtures/documents/search-highlight.json";
+  import search from "@/test/fixtures/documents/search-highlight.json";
 
   // find one document with highlights
   const document = search.results.find((d) => d.id === "3913417") as Document;

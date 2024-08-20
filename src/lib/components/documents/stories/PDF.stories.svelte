@@ -9,10 +9,10 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pdfUrl } from "$lib/api/documents";
 
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
-  import redacted from "@/lib/api/fixtures/documents/redactions.json";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
+  import redacted from "@/test/fixtures/documents/redactions.json";
 
-  import * as mock from "$lib/api/fixtures/mock";
+  import * as mock from "@/test/fixtures/mock";
 
   export const meta = {
     title: "Components / Documents / PDF Viewer",

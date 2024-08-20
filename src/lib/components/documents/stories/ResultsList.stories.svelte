@@ -6,7 +6,7 @@
   import Pending from "../Pending.svelte";
 
   // typescript complains without the type assertion
-  import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
+  import searchResults from "@/test/fixtures/documents/search-highlight.json";
   const highlighted = searchResults.results as Document[];
   const results = highlighted.map((d) => ({
     ...d,
@@ -16,7 +16,7 @@
   const count = searchResults.count;
   const next = searchResults.next;
 
-  import pending from "$lib/api/fixtures/documents/pending.json";
+  import pending from "@/test/fixtures/documents/pending.json";
 
   export const meta = {
     title: "Components / Documents / Results list",

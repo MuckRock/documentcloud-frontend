@@ -10,7 +10,7 @@
     parameters: { layout: "fullscreen" },
   };
 
-  import doc from "$lib/api/fixtures/documents/examples/lefler-thesis.json";
+  import doc from "@/test/fixtures/documents/examples/lefler-thesis.json";
 
   const document = doc as Document;
 </script>

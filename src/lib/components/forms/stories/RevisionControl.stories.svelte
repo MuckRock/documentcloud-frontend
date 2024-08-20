@@ -12,13 +12,13 @@
 
   import { me } from "@/test/fixtures/accounts";
 
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
 
   const document = { ...doc, user: me } as Document;
 </script>
 
 <Story name="Enabled">
-  <RevisionControl {document} on:change={() => action('change')} />
+  <RevisionControl {document} on:change={() => action("change")} />
 </Story>
 
 <Story name="Disabled">
