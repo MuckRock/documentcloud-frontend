@@ -21,8 +21,6 @@ export default defineConfig({
     ),
   },
 
-  envPrefix: "DC_",
-
   plugins: [
     sentrySvelteKit({
       sourceMapsUploadOptions: {

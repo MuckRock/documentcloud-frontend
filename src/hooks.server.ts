@@ -1,3 +1,5 @@
+import type { Handle } from "@sveltejs/kit";
+
 import { env } from "$env/dynamic/private";
 import { sequence } from "@sveltejs/kit/hooks";
 import * as Sentry from "@sentry/sveltekit";
@@ -23,20 +25,21 @@ export async function handleFetch({ event, request, fetch }) {
 
   return fetch(request);
 }
+
 export const handleError = Sentry.handleErrorWithSentry();
 
-export const handle = sequence(
-  Sentry.sentryHandle(),
-  async function _handle({ event, resolve }) {
-    const lang =
-      event.request.headers.get("accept-language")?.split(",")[0] ?? "en-US";
+/** @type {import('@sveltejs/kit').Handle} */
+async function language({ event, resolve }) {
+  const lang =
+    event.request.headers.get("accept-language")?.split(",")[0] ?? "en-US";
 
-    if (lang) {
-      locale.set(lang);
-    }
+  if (lang) {
+    locale.set(lang);
+  }
 
-    return resolve(event, {
-      transformPageChunk: ({ html }) => html.replace("%lang%", lang),
-    });
-  },
-);
+  return resolve(event, {
+    transformPageChunk: ({ html }) => html.replace("%lang%", lang),
+  });
+}
+
+export const handle: Handle = sequence(Sentry.sentryHandle(), language);

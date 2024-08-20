@@ -1,18 +1,16 @@
-import { env } from "$env/dynamic/private";
+import { PUBLIC_SENTRY_DSN as SENTRY_DSN } from "$env/static/public";
 import { handleErrorWithSentry, replayIntegration } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
 
 Sentry.init({
-  dsn: env.SENTRY_DSN,
+  dsn: SENTRY_DSN,
   tracesSampleRate: 1.0,
 
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
+  // Capture Replay for 10% of all sessions,
   replaysSessionSampleRate: 0.1,
 
-  // If the entire session is not sampled, use the below sample rate to sample
-  // sessions when an error occurs.
-  replaysOnErrorSampleRate: 1.0,
+  // plus for 50% of sessions with an error
+  replaysOnErrorSampleRate: 0.5,
 
   // If you don't want to use Session Replay, just remove the line below:
   integrations: [replayIntegration()],
