@@ -49,17 +49,17 @@ describe("getAddons", () => {
     });
     await expect(addons.getAddons({}, mockFetch)).rejects.toThrowError();
   });
-});
 
-test("getPinnedAddons", async () => {
-  const mockFetch = vi
-    .fn()
-    .mockResolvedValue({ ok: true, json: async () => {} });
-  await addons.getPinnedAddons(mockFetch);
-  expect(mockFetch).toHaveBeenCalledWith(
-    new URL(`addons/?active=true`, BASE_API_URL),
-    expect.any(Object),
-  );
+  test("getPinnedAddons", async () => {
+    const mockFetch = vi
+      .fn()
+      .mockResolvedValue({ ok: true, json: async () => {} });
+    await addons.getPinnedAddons(mockFetch);
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`addons/?active=true`, BASE_API_URL),
+      expect.any(Object),
+    );
+  });
 });
 
 describe("getAddon", async () => {
@@ -93,3 +93,173 @@ describe("getAddon", async () => {
     expect(response).toEqual(null);
   });
 });
+
+describe("addon payloads", () => {
+  test("buildPayload single dispatch", () => {
+    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+    const parameters = {
+      site: "https://www.documentcloud.org",
+      project: "test",
+    };
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(scraper, form);
+
+    expect(payload).toMatchObject({
+      addon: scraper.id,
+      parameters,
+    });
+  });
+
+  test("buildPayload scheduled event", () => {
+    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+    const parameters = {
+      site: "https://www.documentcloud.org",
+      project: "test",
+      event: "weekly",
+    };
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(scraper, form);
+
+    expect(payload).toMatchObject({
+      addon: scraper.id,
+      parameters: {
+        site: "https://www.documentcloud.org",
+        project: "test",
+      },
+      event: addons.eventValues.weekly,
+    });
+  });
+
+  test("buildPayload array param", () => {
+    const siteSnapshot = addonsList.results.find(
+      (a) => a.name === "Site Snapshot",
+    );
+    const parameters = {
+      sites: ["https://www.muckrock.com", "https://www.documentcloud.org"],
+      project_id: 1,
+      access_level: "public",
+    };
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(siteSnapshot, form, true);
+
+    expect(payload.valid).toBeTruthy();
+
+    expect(payload).toMatchObject({
+      addon: siteSnapshot.id,
+      parameters,
+      valid: true,
+    });
+  });
+
+  test("buildPayload remove blank values", () => {
+    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+
+    const parameters = {
+      site: "https://www.documentcloud.org",
+      project: "test",
+      slack_webhook: "",
+    };
+
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(scraper, form, true);
+
+    if (payload.errors) {
+      console.error(payload.errors);
+    }
+    expect(payload.valid).toBeTruthy();
+
+    expect(payload).toMatchObject({
+      addon: scraper.id,
+      parameters: {
+        site: "https://www.documentcloud.org",
+        project: "test",
+      },
+    });
+  });
+
+  test("buildPayload with documents", () => {
+    const translate = addonsList.results.find(
+      (a) => a.name === "Translate Documents",
+    );
+    const parameters = {
+      access_level: "public",
+      project_id: 1,
+      input_lang: "af",
+      output_lang: "zh-CN",
+    };
+
+    const form = buildForm({
+      ...parameters,
+      documents: "1,2,3",
+      selection: "selected",
+    });
+    const payload = addons.buildPayload(translate, form, true);
+
+    if (!payload.valid) {
+      console.error(payload.errors);
+    }
+
+    // put this after the above test so we can see errors on failure
+    expect(payload.valid).toBeTruthy();
+
+    expect(payload).toMatchObject({
+      addon: translate.id,
+      parameters,
+      documents: [1, 2, 3],
+    });
+  });
+
+  test("buildPayload with query", () => {
+    const translate = addonsList.results.find(
+      (a) => a.name === "Translate Documents",
+    );
+    const parameters = {
+      access_level: "public",
+      project_id: 1,
+      input_lang: "af",
+      output_lang: "zh-CN",
+    };
+
+    const form = buildForm({
+      ...parameters,
+      query: "+user:chris-100000",
+      selection: "query",
+    });
+    const payload = addons.buildPayload(translate, form, true);
+
+    if (!payload.valid) {
+      console.error(payload.errors);
+    }
+
+    // put this after the above test so we can see errors on failure
+    expect(payload.valid).toBeTruthy();
+
+    expect(payload).toMatchObject({
+      addon: translate.id,
+      parameters,
+      query: "+user:chris-100000",
+    });
+  });
+});
+
+describe("add-on dispatch and scheduling", () => {
+  test.todo("addons.getEvent");
+  test.todo("addons.history");
+  test.todo("addons.scheduled");
+  test.todo("addons.dispatch");
+  test.todo("addons.update");
+});
+
+function buildForm(parameters: Record<string, any>): FormData {
+  const form = new FormData();
+
+  for (const [k, v] of Object.entries(parameters)) {
+    if (Array.isArray(v)) {
+      v.forEach((value) => form.append(k, value));
+    } else {
+      form.set(k, v);
+    }
+  }
+
+  return form;
+}

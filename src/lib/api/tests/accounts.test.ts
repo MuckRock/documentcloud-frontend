@@ -15,6 +15,8 @@ import {
   getMe,
   getOrg,
   getUpgradeUrl,
+  isPremiumOrg,
+  getCreditBalance,
   userOrgs,
   orgUsers,
 } from "../accounts";
@@ -204,4 +206,16 @@ describe("destroyMailkey", () => {
     mockFetch = vi.fn().mockResolvedValue({ ok: false });
     expect(await destroyMailkey(mockFetch)).toBe(false);
   });
+});
+
+test("isPremiumOrg", () => {
+  expect(isPremiumOrg(fixtures.freeOrg)).toBe(false);
+  expect(isPremiumOrg(fixtures.proOrg)).toBe(true);
+  expect(isPremiumOrg(null)).toBe(false);
+});
+
+test("getCreditBalance", () => {
+  expect(getCreditBalance(null)).toBeNull();
+  expect(getCreditBalance(fixtures.freeOrg)).toBe(0);
+  expect(getCreditBalance(fixtures.proOrg)).toBe(5500);
 });

@@ -2,7 +2,7 @@ import type { DocumentResults, SearchOptions } from "$lib/api/types";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
 import { search, pending } from "$lib/api/documents";
-import { getPinnedAddons } from "@/lib/api/addons.js";
+import { getPinnedAddons } from "$lib/api/addons.js";
 
 export async function load({ url, fetch }) {
   const query = url.searchParams.get("q") || "";
