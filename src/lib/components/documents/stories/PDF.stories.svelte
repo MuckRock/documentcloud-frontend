@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import { rest } from "msw";
   import type { Document, Note, ViewerMode } from "@/lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
@@ -11,8 +12,6 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import redacted from "@/test/fixtures/documents/redactions.json";
-
-  import * as mock from "@/test/fixtures/mock";
 
   export const meta = {
     title: "Components / Documents / PDF Viewer",
@@ -51,9 +50,18 @@
   <PDF {document} asset_url={pdfUrl(document)} scale="width" />
 </Story>
 
-<Story name="no pdf" parameters={{ msw: { handlers: [mock.loading] } }}>
+<Story
+  name="no pdf"
+  parameters={{
+    msw: {
+      handlers: [
+        rest.get("loading", (req, res, ctx) => res(ctx.delay("infinite"))),
+      ],
+    },
+  }}
+>
   <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF {document} asset_url={new URL(mock.urls.loading)} />
+    <PDF {document} asset_url={new URL("loading")} />
   </div>
 </Story>
 

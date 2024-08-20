@@ -3,7 +3,7 @@
   import { action } from "@storybook/addon-actions";
 
   import Mailkey from "../Mailkey.svelte";
-  import { mailkey } from "@/test/fixtures/mock";
+  import { mailkey } from "@/test/handlers/accounts";
 
   export const meta = {
     title: "Components / Accounts / Mailkey",

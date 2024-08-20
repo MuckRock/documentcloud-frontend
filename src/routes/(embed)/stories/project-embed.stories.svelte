@@ -8,7 +8,7 @@
 
   import documents from "@/test/fixtures/projects/project-documents-expanded.json";
   import project from "@/test/fixtures/projects/project.json";
-  import * as mock from "@/test/fixtures/mock";
+  import { projects } from "@/test/handlers/projects";
   import type { Page, Project, Document } from "@/lib/api/types";
 
   export const meta = {
@@ -34,7 +34,7 @@
 <Story
   name="default"
   parameters={{
-    msw: { handlers: [mock.projects.info, mock.projects.documents] },
+    msw: { handlers: [projects.info, projects.documents] },
   }}
 >
   <ProjectEmbed {data} />
