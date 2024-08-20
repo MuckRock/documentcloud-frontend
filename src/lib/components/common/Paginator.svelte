@@ -158,7 +158,7 @@
     appearance: none;
     font-family: var(--font-sans);
     font-size: 1rem;
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-regular);
     flex: 0 1 auto;
     margin: 0 0.125rem;
     padding: 0.125rem 0.25rem;

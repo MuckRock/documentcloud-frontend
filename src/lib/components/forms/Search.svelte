@@ -69,6 +69,9 @@
   input:focus {
     outline: none;
   }
+  input:focus {
+    outline: none;
+  }
   input::placeholder {
     color: var(--gray-4, #5c717c);
   }

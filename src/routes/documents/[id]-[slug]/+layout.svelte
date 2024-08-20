@@ -11,13 +11,8 @@
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
 
   // sidebars
-  import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
   import Actions from "./sidebar/Actions.svelte";
   import AddOns from "@/routes/documents/sidebar/AddOns.svelte";
-  import Data from "./sidebar/Data.svelte";
-  import Projects from "./sidebar/Projects.svelte";
-  import Sections from "./sidebar/Sections.svelte";
-  import Notes from "./sidebar/Notes.svelte";
 
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
@@ -64,23 +59,9 @@
 </svelte:head>
 
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
-    <DocumentMetadata {document} />
-
-    <Notes {document} />
-
-    <Sections {document} />
-
-    <Data {document} />
-
-    <Projects {projects} />
-  </svelte:fragment>
-
   <slot slot="content" />
-
   <svelte:fragment slot="action">
     <Actions {document} />
-
     {#if document.edit_access}
       <AddOns pinnedAddOns={data.pinnedAddons} />
     {/if}

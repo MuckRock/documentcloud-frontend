@@ -5,6 +5,8 @@
   import type { Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
+  import { currentPage } from "$lib/stores/viewer";
+
   import { pageHashUrl } from "$lib/api/documents";
 
   export let page_number: number;
@@ -13,7 +15,6 @@
   export let tall = false;
   export let track: boolean | "once" = false;
 
-  const currentPage: Writable<number> = getContext("currentPage");
   const dispatch = createEventDispatcher();
 
   let io: IntersectionObserver;

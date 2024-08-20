@@ -772,9 +772,9 @@
   },
   "mode": {
     "mode": "Mode",
-    "document": "Document",
+    "document": "File",
     "text": "Text",
-    "grid": "Grid",
+    "grid": "Pages",
     "notes": "Notes"
   },
   "zoom": {

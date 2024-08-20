@@ -53,6 +53,14 @@ It exports a $zoom store that can be passed around to other components.
 {/if}
 
 <style>
+  label {
+    visibility: hidden;
+  }
+
+  select {
+    visibility: visible;
+  }
+
   label.zoom {
     display: flex;
     align-items: center;
@@ -60,13 +68,16 @@ It exports a $zoom store that can be passed around to other components.
     font-size: var(--font-md);
   }
 
-  label.zoom select {
-    border: none;
-    font-family: var(--font-sans);
-    font-size: var(--font-md);
-  }
-
   label.zoom {
     justify-content: right;
+  }
+
+  select {
+    padding: 0.125em 0.25rem;
+    border: 1px solid var(--gray-2);
+    border-radius: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: var(--font-md);
+    box-shadow: none;
   }
 </style>
