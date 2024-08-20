@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
-  import Paginator from "../components/ViewerPaginator.svelte";
+  import Paginator from "$lib/components/documents/Paginator.svelte";
 
   export const meta = {
     title: "Viewer / Paginator",
