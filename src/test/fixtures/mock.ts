@@ -1,10 +1,10 @@
 import { rest } from "msw";
 
-import { me as meFixture } from "@/test/fixtures/accounts";
-import projectFixture from "../fixtures/projects/project.json";
-import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
-import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
-import oembedFixture from "../fixtures/oembed.json";
+import { me as meFixture } from "./accounts";
+import projectFixture from "./projects/project.json";
+import projDocsPage1 from "./projects/project-documents-expanded.json";
+import projDocsPage2 from "./projects/project-documents-2.json";
+import oembedFixture from "./oembed.json";
 
 import { BASE_API_URL } from "@/config/config.js";
 
@@ -60,8 +60,8 @@ export const loading = rest.get(urls.loading, (req, res, ctx) =>
 );
 
 export const mailkey = {
-  create: rest.post(urls.mailkey, dataHandler({mailkey: 'xxxxxxxxx'})),
+  create: rest.post(urls.mailkey, dataHandler({ mailkey: "xxxxxxxxx" })),
   delete: rest.delete(urls.mailkey, dataHandler(undefined)),
   createError: rest.post(urls.mailkey, errorHandler),
   deleteError: rest.delete(urls.mailkey, errorHandler),
-}
+};
