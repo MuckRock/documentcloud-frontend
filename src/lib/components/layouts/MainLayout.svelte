@@ -72,12 +72,6 @@
     </SignedIn>
     <LanguageMenu />
     <HelpMenu />
-    <Button
-      mode="ghost"
-      on:click={() => {
-        throw new Error("Testing Sentry");
-      }}>Test Sentry</Button
-    >
     <Button mode="ghost" on:click={() => (feedbackOpen = true)}>
       Feedback
     </Button>
