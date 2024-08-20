@@ -214,6 +214,8 @@ export interface ProjectMembershipItem {
   edit_access: boolean;
 }
 
+export type ProjectMembershipList = Page<ProjectMembershipItem>;
+
 export interface OCREngine {
   value: string;
   label: string;
@@ -254,8 +256,6 @@ export interface Redaction extends BBox {
 }
 
 export type Bounds = [number, number, number, number];
-
-export type ProjectMembershipList = Page<ProjectMembershipItem>;
 
 export interface Flatpage {
   url: string;

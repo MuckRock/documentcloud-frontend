@@ -7,16 +7,19 @@ import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 import { userDocs } from "$lib/utils/search";
 
-export async function load({ url, params, fetch, parent }) {
-  const { owner, repo } = params;
+export async function load({ params, fetch, parent, url }) {
+  const event = await addons
+    .getEvent(+params.event, fetch)
+    .catch(console.error);
 
-  const addon = await addons.getAddon(owner, repo, fetch).catch(console.error);
-  if (!addon) {
-    return error(404, "Add-On not found");
+  if (!event) {
+    return error(404, "Event not found");
   }
 
+  // there's probably something better to use as a breadcrumb title
   const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: url.pathname, title: addon.name },
+    { href: `/add-ons/${event.addon.repository}/`, title: event.addon.name },
+    { href: url.pathname, title: event.id.toString() },
   ]);
 
   const { me } = await parent();
@@ -32,10 +35,13 @@ export async function load({ url, params, fetch, parent }) {
   });
 
   return {
-    addon,
     breadcrumbs,
+    event,
     query,
     searchResults,
-    scheduled: addons.scheduled({ addon: addon.id, per_page: 100 }, fetch),
+    scheduled: addons.scheduled(
+      { addon: event.addon.id, per_page: 100 },
+      fetch,
+    ),
   };
 }
