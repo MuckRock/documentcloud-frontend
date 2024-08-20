@@ -10,9 +10,9 @@
   ).href;
   import { pageSizes } from "@/api/pageSize.js";
 
-  import doc from "$lib/api/fixtures/documents/examples/the-santa-anas.json";
-  import textPositions from "$lib/api/fixtures/documents/examples/the-santa-anas-p1.position.json";
-  import pdfFile from "$lib/api/fixtures/documents/examples/the-santa-anas.pdf";
+  import doc from "@/test/fixtures/documents/examples/the-santa-anas.json";
+  import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
+  import pdfFile from "@/test/fixtures/documents/examples/the-santa-anas.pdf";
 
   const document = doc as Document;
 

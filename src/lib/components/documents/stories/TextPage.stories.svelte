@@ -8,7 +8,7 @@
     parameters: { layout: "centered" },
   };
 
-  import txt from "$lib/api/fixtures/documents/document.txt.json";
+  import txt from "@/test/fixtures/documents/document.txt.json";
 
   const page = txt.pages[0];
   const query = "los angeles";

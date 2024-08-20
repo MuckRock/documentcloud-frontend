@@ -9,7 +9,7 @@
     parameters: { layout: "centered" },
   };
 
-  import txt from "$lib/api/fixtures/documents/document.txt.json";
+  import txt from "@/test/fixtures/documents/document.txt.json";
 
   const loading: Promise<DocumentText> = new Promise(() => {});
 </script>

@@ -3,7 +3,7 @@
   import RedactionPane, { redactions } from "../RedactionPane.svelte";
   import Flex from "../../common/Flex.svelte";
 
-  import redacted from "$lib/api/fixtures/documents/redactions.json";
+  import redacted from "@/test/fixtures/documents/redactions.json";
 
   export const meta = {
     title: "Components / Documents / Redaction pane",

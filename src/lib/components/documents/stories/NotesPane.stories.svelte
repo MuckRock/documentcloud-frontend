@@ -11,7 +11,7 @@
     parameters: { layout: "centered" },
   };
 
-  import pdfFile from "$lib/api/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
+  import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
 
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -19,7 +19,7 @@
     import.meta.url,
   ).href;
   import { pageSizes } from "@/api/pageSize.js";
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
 
   const document = doc as Document;
   const sizes = pageSizes(document.page_spec);

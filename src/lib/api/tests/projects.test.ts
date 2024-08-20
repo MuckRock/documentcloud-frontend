@@ -1,7 +1,9 @@
 import { vi, describe, it, test, expect, beforeEach, afterEach } from "vitest";
-import { project, projectList } from "@/test/fixtures/projects";
-import * as projects from "./projects";
+
 import { BASE_API_URL } from "@/config/config";
+import { project, projectList } from "@/test/fixtures/projects";
+
+import * as projects from "../projects";
 
 describe("projects.get", () => {
   let mockFetch;

@@ -2,7 +2,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import Pending from "../Pending.svelte";
 
-  import pending from "$lib/api/fixtures/documents/pending.json";
+  import pending from "@/test/fixtures/documents/pending.json";
 
   export const meta = {
     title: "Components / Documents / Pending",
