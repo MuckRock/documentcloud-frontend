@@ -20,11 +20,14 @@
   };
 
   const document = doc as Document;
+
+  const loadingUrl = createApiUrl("loading/");
 </script>
 
 <script lang="ts">
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
+  import { createApiUrl } from "@/test/handlers/utils";
 
   const activeNote: Writable<Note> = writable(null);
   const mode: Writable<ViewerMode> = writable("document");
@@ -55,13 +58,13 @@
   parameters={{
     msw: {
       handlers: [
-        rest.get("loading", (req, res, ctx) => res(ctx.delay("infinite"))),
+        rest.get(loadingUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
       ],
     },
   }}
 >
   <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF {document} asset_url={new URL("loading")} />
+    <PDF {document} asset_url={new URL(loadingUrl)} />
   </div>
 </Story>
 
