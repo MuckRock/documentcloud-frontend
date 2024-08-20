@@ -33,7 +33,7 @@
   <header>
     <div class="headercontents">
       <div class="logo">
-        <a href="/documents/">{@html mastLogoSvg}</a>
+        <a href="/">{@html mastLogoSvg}</a>
       </div>
       {#if showLogin}
         <div class="narrowhide">
@@ -47,7 +47,7 @@
               <div class="signin">
                 <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
               </div>
-              <a href="/documents/">
+              <a href="/">
                 <Button>{$_("homeTemplate.goToApp")}</Button>
               </a>
             </div>
@@ -76,7 +76,7 @@
             <div class="signin">
               <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
             </div>
-            <a href="/documents/">
+            <a href="/">
               <Button>{$_("homeTemplate.goToApp")}</Button>
             </a>
           </div>

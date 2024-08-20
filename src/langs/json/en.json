@@ -874,7 +874,8 @@
     "delete": "Delete",
     "addons": {
       "title": "Add-Ons",
-      "pinned": "Pinned add-ons will appear here"
+      "pinned": "Pinned add-ons will appear here",
+      "runs": "Schedule & history"
     },
     "data": {
       "title": "Data & Tags",
@@ -1000,9 +1001,11 @@
     "showRuns": "Show Runs",
     "hideRuns": "Hide Runs",
     "showAddons": "Show Scheduled Add-Ons ({n})",
+    "scheduled": "Scheduled",
     "runSchedule": "Run on a schedule:",
     "runOnce": "Run once",
     "disable": "Disable",
+    "reset": "Reset",
     "signIn": "Sign in to use Add-Ons",
     "createdBy": "Created by",
     "categories": "Categories",
@@ -1011,9 +1014,11 @@
     "shareClipboardSuccess": "Copied add-on URL to your clipboard",
     "scheduleSuccess": "Add-on is now scheduled",
     "runSuccess": "Add-on is now running",
-    "selectionHelp": "From the main list, select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
+    "selectionHelp": "Select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
     "cost": "{amount} {unit} per {price, plural, one {credit} other {# credits}}",
+    "editing": "Editing a previously dispatched addon",
+    "instructions": "Instructions",
     "premiumUpgrade": {
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
       "callToAction": "Upgrade Plan",
@@ -1042,10 +1047,10 @@
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
     "previous": "Previous Runs",
-    "runsOn": "Runs {schedule}",
+    "runsOn": "{schedule}",
     "upcoming": {
       "empty": "Scheduled add-ons will appear here",
-      "loading": "Loading…",
+      "loading": "Loading …",
       "retry": "Retry"
     },
     "history": {

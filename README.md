@@ -115,7 +115,7 @@ To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh
 
 ```sh
 node -v
-nvm install 16
+nvm install 20
 # or
 nvm install --lts
 ```

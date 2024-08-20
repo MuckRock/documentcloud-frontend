@@ -104,6 +104,16 @@ export function getUpgradeUrl(org: Org = null): URL {
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
 }
 
+export function isPremiumOrg(org: Org): boolean {
+  if (!org || !org.plan) return false;
+  return org.plan !== "Free";
+}
+
+export function getCreditBalance(org: Org): number | null {
+  if (!org) return null;
+  return org.monthly_credits + org.purchased_credits;
+}
+
 export async function createMailkey(
   csrf_token: string,
   fetch = globalThis.fetch,
