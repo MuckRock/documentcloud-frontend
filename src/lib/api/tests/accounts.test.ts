@@ -19,7 +19,7 @@ import {
   getCreditBalance,
   userOrgs,
   orgUsers,
-} from "./accounts";
+} from "../accounts";
 
 describe("getMe", async () => {
   let mockFetch;

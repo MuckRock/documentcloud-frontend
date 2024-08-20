@@ -19,7 +19,7 @@
   import Button from "$lib/components/common/Button.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
-  import documents from "../../../api/fixtures/documents/documents.json";
+  import documents from "@/test/fixtures/documents/documents.json";
   import Flex from "../../common/Flex.svelte";
   import SidebarGroup from "../../sidebar/SidebarGroup.svelte";
   import Action from "../../common/Action.svelte";
@@ -106,16 +106,20 @@
 
       <PageToolbar slot="footer">
         <svelte:fragment slot="center">
-          <Button disabled={modalOpen} mode="ghost" on:click={() => modalOpen = true}>
+          <Button
+            disabled={modalOpen}
+            mode="ghost"
+            on:click={() => (modalOpen = true)}
+          >
             Open modal
           </Button>
           {#if modalOpen}
-          <Portal>
-            <Modal on:close={() => modalOpen = false}>
-              <h1 slot="title">Chowder.</h1>
-              <Dialog />
-            </Modal>
-          </Portal>
+            <Portal>
+              <Modal on:close={() => (modalOpen = false)}>
+                <h1 slot="title">Chowder.</h1>
+                <Dialog />
+              </Modal>
+            </Portal>
           {/if}
         </svelte:fragment>
       </PageToolbar>

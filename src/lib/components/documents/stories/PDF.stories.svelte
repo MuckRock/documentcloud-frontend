@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import { rest } from "msw";
   import type { Document, Note, ViewerMode } from "@/lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
@@ -9,10 +10,8 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pdfUrl } from "$lib/api/documents";
 
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
-  import redacted from "@/lib/api/fixtures/documents/redactions.json";
-
-  import * as mock from "$lib/api/fixtures/mock";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
+  import redacted from "@/test/fixtures/documents/redactions.json";
 
   export const meta = {
     title: "Components / Documents / PDF Viewer",
@@ -21,11 +20,14 @@
   };
 
   const document = doc as Document;
+
+  const loadingUrl = createApiUrl("loading/");
 </script>
 
 <script lang="ts">
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
+  import { createApiUrl } from "@/test/handlers/utils";
 
   const activeNote: Writable<Note> = writable(null);
   const mode: Writable<ViewerMode> = writable("document");
@@ -51,9 +53,18 @@
   <PDF {document} asset_url={pdfUrl(document)} scale="width" />
 </Story>
 
-<Story name="no pdf" parameters={{ msw: { handlers: [mock.loading] } }}>
+<Story
+  name="no pdf"
+  parameters={{
+    msw: {
+      handlers: [
+        rest.get(loadingUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
+      ],
+    },
+  }}
+>
   <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF {document} asset_url={new URL(mock.urls.loading)} />
+    <PDF {document} asset_url={new URL(loadingUrl)} />
   </div>
 </Story>
 

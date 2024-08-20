@@ -1,5 +1,4 @@
 import { rest } from "msw";
-import { baseApiUrl } from "../../api/base.js";
 import {
   freeOrg,
   me as meFixture,
@@ -7,7 +6,7 @@ import {
   proOrg,
   usersList,
 } from "../fixtures/accounts";
-import type { Org } from "../../api/types/orgAndUser";
+import type { Org } from "$lib/api/types";
 import {
   createApiUrl,
   dataHandler,
@@ -17,41 +16,55 @@ import {
   generateGetHandler,
 } from "./utils";
 
+export const urls = {
+  users: createApiUrl("users/"),
+  me: createApiUrl("users/me/"),
+  orgs: createApiUrl("organizations/"),
+  org: createApiUrl("organizations/:id/*"),
+  mailkey: createApiUrl("users/mailkey/"),
+};
+
 export const users = {
-  data: rest.get(createApiUrl("users/"), dataHandler(usersList)),
-  empty: rest.get(createApiUrl("users/"), emptyHandler()),
-  loading: rest.get(createApiUrl("users/"), loadingHandler),
-  error: rest.get(createApiUrl("users/"), errorHandler),
-  me: rest.get(createApiUrl("users/me/"), dataHandler(meFixture)),
+  data: rest.get(urls.users, dataHandler(usersList)),
+  empty: rest.get(urls.users, emptyHandler()),
+  loading: rest.get(urls.users, loadingHandler),
+  error: rest.get(urls.users, errorHandler),
+  me: rest.get(urls.me, dataHandler(meFixture)),
 };
 
 export const me = {
-  data: rest.get(createApiUrl("users/me/"), dataHandler(meFixture)),
-  empty: rest.get(createApiUrl("users/me/"), emptyHandler()),
-  loading: rest.get(createApiUrl("users/me/"), loadingHandler),
-  error: rest.get(createApiUrl("users/me/"), errorHandler),
+  data: rest.get(urls.me, dataHandler(meFixture)),
+  empty: rest.get(urls.me, emptyHandler()),
+  loading: rest.get(urls.me, loadingHandler),
+  error: rest.get(urls.me, errorHandler),
 };
 
 export const organizations = {
-  data: rest.get(createApiUrl("organizations"), dataHandler(organizationsList)),
-  empty: rest.get(createApiUrl("organizations"), emptyHandler()),
-  loading: rest.get(createApiUrl("organizations"), loadingHandler),
-  error: rest.get(createApiUrl("organizations"), errorHandler),
+  data: rest.get(urls.orgs, dataHandler(organizationsList)),
+  empty: rest.get(urls.orgs, emptyHandler()),
+  loading: rest.get(urls.orgs, loadingHandler),
+  error: rest.get(urls.orgs, errorHandler),
+};
+
+export const mailkey = {
+  create: rest.post(urls.mailkey, dataHandler({ mailkey: "xxxxxxxxx" })),
+  delete: rest.delete(urls.mailkey, dataHandler(undefined)),
+  createError: rest.post(urls.mailkey, errorHandler),
+  deleteError: rest.delete(urls.mailkey, errorHandler),
 };
 
 /* Mock Request Handlers */
-const meUrl = new URL(`users/me/`, baseApiUrl).toString();
 export const mockGetMe = {
-  data: rest.get(meUrl, dataHandler(meFixture)),
+  data: rest.get(urls.me, dataHandler(meFixture)),
   freeUser: rest.get(
-    meUrl,
+    urls.me,
     dataHandler({
       ...meFixture,
       organization: freeOrg,
       admin_organizations: [...meFixture.admin_organizations, freeOrg.id],
     }),
   ),
-  proUser: rest.get(meUrl, (req, res, ctx) =>
+  proUser: rest.get(urls.me, (req, res, ctx) =>
     res(
       ctx.json({
         ...meFixture,
@@ -60,10 +73,10 @@ export const mockGetMe = {
       }),
     ),
   ),
-  noOrgs: rest.get(meUrl, (req, res, ctx) =>
+  noOrgs: rest.get(urls.me, (req, res, ctx) =>
     res(ctx.json({ ...meFixture, organization: 4 })),
   ),
-  orgAdmin: rest.get(meUrl, (req, res, ctx) =>
+  orgAdmin: rest.get(urls.me, (req, res, ctx) =>
     res(
       ctx.json({
         ...meFixture,
@@ -71,7 +84,7 @@ export const mockGetMe = {
       }),
     ),
   ),
-  freeOrgMember: rest.get(meUrl, (req, res, ctx) =>
+  freeOrgMember: rest.get(urls.me, (req, res, ctx) =>
     res(
       ctx.json({
         ...meFixture,
@@ -79,7 +92,7 @@ export const mockGetMe = {
       }),
     ),
   ),
-  freeOrgAdmin: rest.get(meUrl, (req, res, ctx) =>
+  freeOrgAdmin: rest.get(urls.me, (req, res, ctx) =>
     res(
       ctx.json({
         ...meFixture,
@@ -91,8 +104,8 @@ export const mockGetMe = {
       }),
     ),
   ),
-  loading: rest.get(meUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
-  error: rest.get(meUrl, (req, res, ctx) =>
+  loading: rest.get(urls.me, (req, res, ctx) => res(ctx.delay("infinite"))),
+  error: rest.get(urls.me, (req, res, ctx) =>
     res(ctx.status(404, "Not Found"), ctx.json({ detail: "Not found." })),
   ),
 };
@@ -100,10 +113,9 @@ export const mockGetMe = {
 /* Mock Request Handlers */
 export const mockInMyOrg = generateGetHandler(`users/*`, usersList);
 
-const listOrgsUrl = new URL(`organizations/`, baseApiUrl).toString();
 export const mockGetOrgsList = {
   ...generateGetHandler(`organizations/`, organizationsList),
-  empty: rest.get(listOrgsUrl, (req, res, ctx) =>
+  empty: rest.get(urls.orgs, (req, res, ctx) =>
     res(
       ctx.json({
         next: null,
@@ -114,10 +126,9 @@ export const mockGetOrgsList = {
   ),
 };
 
-const getOrgUrl = new URL(`organizations/:id/*`, baseApiUrl).toString();
 export const mockGetOrg = {
   ...generateGetHandler(`organizations/:id/*`, {}),
-  data: rest.get(getOrgUrl, (req, res, ctx) =>
+  data: rest.get(urls.org, (req, res, ctx) =>
     res(
       ctx.json(
         organizationsList.results.find(
@@ -126,10 +137,10 @@ export const mockGetOrg = {
       ),
     ),
   ),
-  pro: rest.get(getOrgUrl, (req, res, ctx) => res(ctx.json(proOrg))),
-  free: rest.get(getOrgUrl, (req, res, ctx) => res(ctx.json(freeOrg))),
+  pro: rest.get(urls.org, (req, res, ctx) => res(ctx.json(proOrg))),
+  free: rest.get(urls.org, (req, res, ctx) => res(ctx.json(freeOrg))),
 };
 
-export const mockChangeOrg = rest.patch(meUrl, (req, res, ctx) =>
+export const mockChangeOrg = rest.patch(urls.me, (req, res, ctx) =>
   res(ctx.json(meFixture)),
 );

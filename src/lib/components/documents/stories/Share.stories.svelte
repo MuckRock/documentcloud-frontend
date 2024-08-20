@@ -2,7 +2,7 @@
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
 
-  import document from "$lib/api/fixtures/documents/document-expanded.json";
+  import document from "@/test/fixtures/documents/document-expanded.json";
 
   let args = {
     document,

@@ -3,7 +3,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import NoteHighlights from "../NoteHighlights.svelte";
 
-  import search from "$lib/api/fixtures/documents/search-highlight.json";
+  import search from "@/test/fixtures/documents/search-highlight.json";
 
   const document = search.results.find((d) => d.id === "1501881") as Document;
 

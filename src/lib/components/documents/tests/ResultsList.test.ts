@@ -4,7 +4,7 @@ import { get } from "svelte/store";
 import { render, screen, fireEvent } from "@testing-library/svelte";
 
 import ResultsList, { selected } from "../ResultsList.svelte";
-import searchResults from "$lib/api/fixtures/documents/search-highlight.json";
+import searchResults from "@/test/fixtures/documents/search-highlight.json";
 
 const results = searchResults as DocumentResults;
 

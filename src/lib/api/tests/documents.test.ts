@@ -9,7 +9,7 @@ import type {
   Status,
   TextPosition,
   ViewerMode,
-} from "./types";
+} from "../types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
 import {
@@ -20,20 +20,22 @@ import {
   IMAGE_WIDTHS_ENTRIES,
 } from "@/config/config.js";
 
-import * as documents from "./documents";
+import * as documents from "../documents";
 
 type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
   search: async ({}, use: Use<DocumentResults>) => {
-    const results = await import("./fixtures/documents/search-highlight.json");
+    const results = await import(
+      "@/test/fixtures/documents/search-highlight.json"
+    );
 
     await use(results as DocumentResults);
   },
 
   document: async ({}, use: Use<Document>) => {
     const document = await import(
-      "./fixtures/documents/document-expanded.json"
+      "@/test/fixtures/documents/document-expanded.json"
     );
 
     await use(document as Document);
@@ -41,7 +43,7 @@ const test = base.extend({
 
   created: async ({}, use: Use<Document[]>) => {
     const { default: created } = await import(
-      "./fixtures/documents/create.json"
+      "@/test/fixtures/documents/create.json"
     );
 
     await use(created as Document[]);
@@ -49,7 +51,7 @@ const test = base.extend({
 
   pending: async ({}, use: Use<Pending[]>) => {
     const { default: pending } = await import(
-      "./fixtures/documents/pending.json"
+      "@/test/fixtures/documents/pending.json"
     );
 
     await use(pending);
@@ -57,7 +59,7 @@ const test = base.extend({
 
   text: async ({}, use: Use<DocumentText>) => {
     const { default: text } = await import(
-      "./fixtures/documents/document.txt.json"
+      "@/test/fixtures/documents/document.txt.json"
     );
 
     await use(text);
@@ -65,7 +67,7 @@ const test = base.extend({
 
   textPositions: async ({}, use: Use<TextPosition[]>) => {
     const { default: textPositions } = await import(
-      "./fixtures/documents/examples/the-santa-anas-p1.position.json"
+      "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json"
     );
 
     await use(textPositions);
@@ -73,7 +75,7 @@ const test = base.extend({
 
   redactions: async ({}, use: Use<Redaction[]>) => {
     const { default: redactions } = await import(
-      "./fixtures/documents/redactions.json"
+      "@/test/fixtures/documents/redactions.json"
     );
 
     await use(redactions);
@@ -615,7 +617,9 @@ describe("document helper methods", () => {
     );
 
     // user and org not expanded
-    const d2 = (await import("./fixtures/documents/document.json")) as Document;
+    const d2 = (await import(
+      "@/test/fixtures/documents/document.json"
+    )) as Document;
     expect(documents.userOrgString(d2)).toStrictEqual("");
 
     // user, but no org

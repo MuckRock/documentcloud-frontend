@@ -6,9 +6,9 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import ProjectEmbed from "../projects/[project_id]/+page.svelte";
 
-  import documents from "$lib/api/fixtures/projects/project-documents-expanded.json";
-  import project from "$lib/api/fixtures/projects/project.json";
-  import * as mock from "$lib/api/fixtures/mock";
+  import documents from "@/test/fixtures/projects/project-documents-expanded.json";
+  import project from "@/test/fixtures/projects/project.json";
+  import { projects } from "@/test/handlers/projects";
   import type { Page, Project, Document } from "@/lib/api/types";
 
   export const meta = {
@@ -34,7 +34,7 @@
 <Story
   name="default"
   parameters={{
-    msw: { handlers: [mock.projects.info, mock.projects.documents] },
+    msw: { handlers: [projects.info, projects.documents] },
   }}
 >
   <ProjectEmbed {data} />

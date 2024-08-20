@@ -4,7 +4,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import EditData from "../EditData.svelte";
 
-  import doc from "$lib/api/fixtures/documents/examples/the-santa-anas.json";
+  import doc from "@/test/fixtures/documents/examples/the-santa-anas.json";
 
   const document = doc as Document;
 

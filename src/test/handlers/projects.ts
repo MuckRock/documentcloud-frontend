@@ -5,14 +5,23 @@ import {
   errorHandler,
   loadingHandler,
   createApiUrl,
+  pageHandler,
 } from "./utils";
-import { projectList } from "../fixtures/projects";
 import { emptyList } from "../fixtures/common";
+import { projectList } from "../fixtures/projects";
+import projectFixture from "../fixtures/projects/project.json";
+import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
+import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
 
-const projectsUrl = createApiUrl("projects/*");
+const projectUrl = createApiUrl("projects/*");
 export const projects = {
-  data: rest.get(projectsUrl, dataHandler(projectList)),
-  empty: rest.get(projectsUrl, emptyHandler(emptyList)),
-  loading: rest.get(projectsUrl, loadingHandler),
-  error: rest.get(projectsUrl, errorHandler),
+  info: rest.get(createApiUrl("projects/"), dataHandler(projectList)),
+  data: rest.get(projectUrl, dataHandler(projectFixture)),
+  empty: rest.get(projectUrl, emptyHandler(emptyList)),
+  loading: rest.get(projectUrl, loadingHandler),
+  error: rest.get(projectUrl, errorHandler),
+  documents: rest.get(
+    createApiUrl("projects/*/documents/"),
+    pageHandler(projDocsPage1, projDocsPage2),
+  ),
 };

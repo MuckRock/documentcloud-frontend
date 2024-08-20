@@ -4,8 +4,8 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import EditSections from "../EditSections.svelte";
 
-  import doc from "$lib/api/fixtures/documents/document.json";
-  import sections from "$lib/api/fixtures/sections.json";
+  import doc from "@/test/fixtures/documents/document.json";
+  import sections from "@/test/fixtures/sections.json";
 
   const document = { ...doc, sections: sections.results } as Document;
 

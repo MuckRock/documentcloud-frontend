@@ -12,8 +12,8 @@
     parameters: { layout: "centered" },
   };
 
-  import doc from "$lib/api/fixtures/documents/document-expanded.json";
-  import pdfFile from "$lib/api/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
+  import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
 
   const document = doc as Document;
   const url = new URL(pdfFile, import.meta.url);

@@ -4,8 +4,8 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import ConfirmDelete from "../ConfirmDelete.svelte";
 
-  import doc from "$lib/api/fixtures/documents/document.json";
-  import docs from "$lib/api/fixtures/documents/documents.json";
+  import doc from "@/test/fixtures/documents/document.json";
+  import docs from "@/test/fixtures/documents/documents.json";
 
   const document = doc as Document;
   const documents = docs.results as Document[];
