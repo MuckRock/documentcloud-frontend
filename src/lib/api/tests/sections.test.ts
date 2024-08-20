@@ -1,23 +1,23 @@
-import type { Document, Section, SectionResults } from "./types";
+import type { Document, Section, SectionResults } from "../types";
 
 import { vi, test as base, describe, expect, afterEach } from "vitest";
 
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import * as sections from "./sections";
+import * as sections from "../sections";
 
 type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
   async document({}, use: Use<Document>) {
     const document = await import(
-      "./fixtures/documents/document-expanded.json"
+      "@/test/fixtures/documents/document-expanded.json"
     );
 
     await use(document as Document);
   },
 
   async sectionList({}, use: Use<SectionResults>) {
-    const results = await import("./fixtures/sections.json");
+    const results = await import("@/test/fixtures/sections.json");
 
     await use(results);
   },

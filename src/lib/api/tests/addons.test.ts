@@ -1,8 +1,8 @@
 import { vi, test, describe, it, expect, beforeEach, afterEach } from "vitest";
-import * as addons from "./addons";
 import { BASE_API_URL } from "@/config/config";
 import { addonsList } from "@/test/fixtures/addons";
 import { emptyList } from "@/test/fixtures/common";
+import * as addons from "../addons";
 
 afterEach(() => {
   vi.restoreAllMocks();

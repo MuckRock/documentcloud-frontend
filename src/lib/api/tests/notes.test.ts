@@ -1,28 +1,29 @@
-import type { Document, Note, NoteResults } from "./types";
 import { afterEach, vi, test as base, describe, expect } from "vitest";
 
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import * as notes from "./notes";
+
+import * as notes from "../notes";
+import type { Document, Note, NoteResults } from "../types";
 
 type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
   async document({}, use: Use<Document>) {
     const document = await import(
-      "./fixtures/documents/document-expanded.json"
+      "@/test/fixtures/documents/document-expanded.json"
     );
 
     await use(document as Document);
   },
 
   async note({}, use: Use<Note>) {
-    const note = await import("./fixtures/notes/note-expanded.json");
+    const note = await import("@/test/fixtures/notes/note-expanded.json");
 
     await use(note as Note);
   },
 
   async noteList({}, use: Use<NoteResults>) {
-    const list = await import("./fixtures/notes/notes-expanded.json");
+    const list = await import("@/test/fixtures/notes/notes-expanded.json");
 
     await use(list as NoteResults);
   },
