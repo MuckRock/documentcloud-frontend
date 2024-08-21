@@ -32,7 +32,7 @@
   }
 </script>
 
-<Dropdown id={dropdownId} position="right">
+<Dropdown id={dropdownId} position="bottom right">
   <SidebarItem slot="title" title="Open Menu">
     <UserAvatar {user} />
     <span class="name">{user.name ?? user.username}</span>

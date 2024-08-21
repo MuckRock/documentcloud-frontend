@@ -20,7 +20,7 @@
 
 {#if langs.length > 1}
   <!-- Language Menu -->
-  <Dropdown id="language" position="right">
+  <Dropdown id="language" position="bottom right">
     <SidebarItem slot="title">
       <span class="flag">{currentLang[2]}</span>
       <!-- <span class="lang">{currentLang[0]}</span> -->

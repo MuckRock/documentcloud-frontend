@@ -161,7 +161,7 @@
   }
   .dropdown {
     display: none;
-    margin: 0;
+    margin: 0.25rem 0;
     width: auto;
     min-width: 100%;
   }
@@ -187,7 +187,7 @@
   }
 
   .overlay {
-    z-index: var(--menuShim, 14);
+    z-index: var(--z-dropdownBackdrop);
     position: fixed;
     top: 0;
     left: 0;

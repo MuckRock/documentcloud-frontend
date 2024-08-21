@@ -17,7 +17,7 @@
 </script>
 
 <!-- Help Menu -->
-<Dropdown id="help" position="right">
+<Dropdown id="help" position="bottom right">
   <SidebarItem slot="title">
     <Question24 />
     <div class="dropdownArrow"><ChevronDown16 /></div>

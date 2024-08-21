@@ -37,7 +37,7 @@
   }
 </script>
 
-<Dropdown id="organization">
+<Dropdown id="organization" position="bottom right">
   <SidebarItem slot="title">
     {#if active_org.individual}
       <div class="premium">
