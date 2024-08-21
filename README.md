@@ -42,9 +42,18 @@ See the [Wiki](https://github.com/MuckRock/documentcloud-frontend/wiki) for info
 
 DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome, FireFox, Safari and Microsoft Edge. Older versions of those browsers will likely work, too, but we can't guarantee a bug-free experience on versions from more than a year ago, or on browsers that no longer receive updates, such as Internet Explorer.
 
+## Environment Variables
+
+- Use `process.env` for things running on a development machine in a Node context, like Vite configs and other dev or build scripts.
+- In SvelteKit:
+  - In a server context, you can use `import {env} from "$env/dynamic/private` to access variables defined in `process.env`.
+  - In a client context, you can only `import {env} from "$env/static/public` to access variables named with a `PUBLIC_` prefix.
+
+_Learn more about using environment variables in [the SvelteKit learning docs](https://learn.svelte.dev/tutorial/env-static-private)._
+
 ## Developing
 
-## Installing new packages
+### Installing new packages
 
 Run the relevant `npm install ...` command and then get the change mirrored on the Docker image by running `make install`.
 
@@ -52,14 +61,14 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 [documentcloud]: https://github.com/MuckRock/documentcloud
 [squarelet]: https://github.com/muckrock/squarelet
 
-## Unit tests
+### Unit tests
 
 Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-run tests as code changes.
 
 We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated.
 To update snapshots, run `npm run test:unit -- -u`.
 
-## Browser tests
+### Browser tests
 
 All of the browser test commands depend on the front end running, so start the app with `make dev` and start the backend and Squarelet as well.
 
