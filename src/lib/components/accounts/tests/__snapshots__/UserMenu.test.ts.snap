@@ -4,16 +4,16 @@ exports[`UserMenu 1`] = `
 <div>
    
   <div
-    class="dropdownContainer svelte-2lrn0b"
+    class="dropdownContainer svelte-6er823"
     id="user-menu"
   >
     <div
-      class="title primary svelte-2lrn0b"
+      class="title primary svelte-6er823"
       role="button"
       tabindex="0"
     >
       <span
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         role="button"
         tabindex="0"
         title="Open Menu"
@@ -54,14 +54,14 @@ exports[`UserMenu 1`] = `
     </div>
      
     <div
-      class="dropdown svelte-2lrn0b bottom right"
+      class="dropdown svelte-6er823 bottom right"
     >
       <div
         class="menu svelte-18fuj21"
         role="menu"
       >
         <a
-          class="container svelte-a23iq4"
+          class="container svelte-prcwhd"
           href="https://dev.squarelet.com"
           target="_blank"
           title=""
@@ -83,7 +83,7 @@ exports[`UserMenu 1`] = `
         
          
         <span
-          class="container svelte-a23iq4 hover"
+          class="container svelte-prcwhd hover"
           role="button"
           tabindex="0"
           title=""
@@ -105,7 +105,7 @@ exports[`UserMenu 1`] = `
         
          
         <a
-          class="container svelte-a23iq4"
+          class="container svelte-prcwhd"
           href="https://api.dev.documentcloud.org/accounts/logout/"
           title=""
         >
