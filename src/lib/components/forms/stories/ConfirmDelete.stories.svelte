@@ -9,6 +9,7 @@
 
   const document = doc as Document;
   const documents = docs.results as Document[];
+  const ids = documents.map((d) => d.id);
 
   export const meta = {
     title: "Forms / Confirm delete",
@@ -19,12 +20,18 @@
 
 <Story name="one document">
   <div style="max-width: 66ch;">
-    <ConfirmDelete documents={[document]} />
+    <ConfirmDelete {document} />
   </div>
 </Story>
 
 <Story name="bulk delete">
   <div style="max-width: 66ch;">
-    <ConfirmDelete {documents} />
+    <ConfirmDelete {ids} />
+  </div>
+</Story>
+
+<Story name="disabled">
+  <div style="max-width: 66ch;">
+    <ConfirmDelete ids={[]} />
   </div>
 </Story>

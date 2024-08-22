@@ -420,6 +420,31 @@ describe("document write methods", () => {
     );
   });
 
+  test("documents.destroy_many", async ({ documents: docs }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+
+    const ids = docs.results.map((d) => d.id);
+    const endpoint = new URL("documents/", BASE_API_URL);
+    endpoint.searchParams.set("id__in", ids.join(","));
+
+    const resp = await documents.destroy_many(ids, "token", mockFetch);
+
+    expect(resp.status).toStrictEqual(204);
+    expect(mockFetch).toBeCalledWith(endpoint, {
+      credentials: "include",
+      method: "DELETE",
+      headers: {
+        [CSRF_HEADER_NAME]: "token",
+        Referer: APP_URL,
+      },
+    });
+  });
+
   test("documents.edit", async ({ document }) => {
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       const body = JSON.parse(options.body);

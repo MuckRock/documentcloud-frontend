@@ -33,10 +33,18 @@
   >
     <Share16 />{$_("dialog.share")} &hellip;
   </SidebarItem>
-  <SidebarItem hover on:click={(e) => (edit = true)}>
+  <SidebarItem
+    hover
+    disabled={$selected.length < 1}
+    on:click={(e) => (edit = true)}
+  >
     <Pencil16 />{$_("dialog.edit")} &hellip;
   </SidebarItem>
-  <SidebarItem hover on:click={(e) => (organize = true)}>
+  <SidebarItem
+    hover
+    disabled={$selected.length < 1}
+    on:click={(e) => (organize = true)}
+  >
     <FileDirectory16 />{$_("dialog.organize")} &hellip;
   </SidebarItem>
   <SidebarItem hover href="/add-ons/">

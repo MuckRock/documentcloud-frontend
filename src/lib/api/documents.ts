@@ -304,6 +304,31 @@ export async function destroy(
 }
 
 /**
+ * Delete many documents. There is no undo.
+ *
+ * @param ids
+ * @param csrf_token
+ * @param fetch
+ */
+export async function destroy_many(
+  ids: (string | number)[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/`, BASE_API_URL);
+  endpoint.searchParams.set("id__in", ids.join(","));
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  });
+}
+
+/**
  * Edit the top-level fields of a document with a PATCH request
  *
  * @param id Document ID

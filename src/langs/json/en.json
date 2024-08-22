@@ -973,7 +973,8 @@
     "continue": "Do you wish to continue?",
     "confirm": "Delete",
     "cancel": "Cancel",
-    "error": "Error"
+    "error": "Error",
+    "none": "No documents selected. Close this form and select at least one document first."
   },
   "data": {
     "title": "Edit tags and data",
@@ -987,6 +988,16 @@
     "save": "Save",
     "cancel": "Cancel",
     "addNew": "Add new data:"
+  },
+  "bulk": {
+    "title": "Bulk actions",
+    "actions": {
+      "edit": "Edit access and metadata",
+      "data": "Edit tags and data",
+      "reprocess": "Reprocess",
+      "delete": "Delete documents",
+      "project": "Add to project"
+    }
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",
