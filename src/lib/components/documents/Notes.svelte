@@ -51,9 +51,11 @@
       {:else}
         <Empty icon={ListOrdered24}>
           <h2>{$_("notes.empty")}</h2>
-          <p>
-            <a href={annotate}> {$_("notes.cta")}</a>
-          </p>
+          {#if document.edit_access}
+            <p>
+              <a href={annotate}> {$_("notes.cta")}</a>
+            </p>
+          {/if}
         </Empty>
       {/each}
     {/await}
@@ -71,9 +73,11 @@
     {:else}
       <Empty icon={ListOrdered24}>
         <h2>{$_("notes.empty")}</h2>
-        <p>
-          <a href={annotate}> {$_("notes.cta")}</a>
-        </p>
+        {#if document.edit_access}
+          <p>
+            <a href={annotate}> {$_("notes.cta")}</a>
+          </p>
+        {/if}
       </Empty>
     {/each}
   {/if}
