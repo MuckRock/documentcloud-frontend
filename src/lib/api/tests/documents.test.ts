@@ -41,6 +41,14 @@ const test = base.extend({
     await use(document as Document);
   },
 
+  documents: async ({}, use: Use<DocumentResults>) => {
+    const { default: documents } = await import(
+      "@/test/fixtures/documents/documents.json"
+    );
+
+    await use(documents as DocumentResults);
+  },
+
   created: async ({}, use: Use<Document[]>) => {
     const { default: created } = await import(
       "@/test/fixtures/documents/create.json"
@@ -432,6 +440,38 @@ describe("document write methods", () => {
     );
 
     expect(updated.title).toStrictEqual("Updated title");
+  });
+
+  test("documents.edit_many", async ({ documents: docs }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json() {
+          return body;
+        },
+      };
+    });
+
+    const update = docs.results.map((d) => ({ ...d, source: "New source" }));
+    const resp = await documents.edit_many(update, "token", mockFetch);
+
+    expect(resp.status).toEqual(200);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL("documents/", BASE_API_URL),
+      {
+        credentials: "include",
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        body: JSON.stringify(update),
+      },
+    );
   });
 
   test("documents.redact", async ({ document, redactions }) => {

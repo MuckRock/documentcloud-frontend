@@ -50,7 +50,7 @@
     margin: 1rem;
     padding: 1rem;
     border-radius: 1rem;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-1);
     background: var(--white);
     overflow-y: auto;
     height: fit-content;

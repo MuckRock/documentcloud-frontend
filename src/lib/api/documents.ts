@@ -84,7 +84,7 @@ export async function search(
  * Example: https://api.www.documentcloud.org/api/documents/1/
  */
 export async function get(
-  id: number,
+  id: string | number,
   fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
@@ -340,6 +340,37 @@ export async function edit(
   }
 
   return resp.json();
+}
+
+/**
+ * Bulk edit top-level fields of an array of documents.
+ * Each document *must* have an `id` property.
+ *
+ * This returns the response directly, since a successful update
+ * will result in invalidation and refetching data.
+ *
+ * @param documents
+ * @param csrf_token
+ * @param fetch
+ * @returns {Promise<Response>}
+ */
+export async function edit_many(
+  documents: Partial<Document>[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Response> {
+  const endpoint = new URL("documents/", BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(documents),
+  });
 }
 
 export async function redact(

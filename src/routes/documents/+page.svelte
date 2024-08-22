@@ -1,29 +1,34 @@
 <script lang="ts">
   import type { DocumentResults } from "$lib/api/types";
+
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Hourglass24, PlusCircle16 } from "svelte-octicons";
 
+  import Actions from "../documents/sidebar/Actions.svelte";
+  import AddOns from "../documents/sidebar/AddOns.svelte";
+  import Button from "$lib/components/common/Button.svelte";
+  import BulkActions from "$lib/components/forms/BulkActions.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import Documents from "../documents/sidebar/Documents.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Pending from "$lib/components/documents/Pending.svelte";
+  import Projects from "../documents/sidebar/Projects.svelte";
   import ResultsList, {
     selected,
     total,
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Search from "@/lib/components/forms/Search.svelte";
-  import Empty from "$lib/components/common/Empty.svelte";
-  import Button from "$lib/components/common/Button.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
-  import Actions from "../documents/sidebar/Actions.svelte";
-  import AddOns from "../documents/sidebar/AddOns.svelte";
-  import Documents from "../documents/sidebar/Documents.svelte";
-  import Projects from "../documents/sidebar/Projects.svelte";
 
   import { deleted } from "$lib/api/documents";
 
   export let data;
+
+  setContext("selected", selected);
 
   $: searchResults =
     $deleted.size > 0
@@ -103,6 +108,8 @@
             {$_("inputs.selectAll")}
           {/if}
         </label>
+
+        <BulkActions slot="center" />
 
         <svelte:fragment slot="right">
           {#if $visible && $total}
