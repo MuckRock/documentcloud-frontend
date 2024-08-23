@@ -1,11 +1,17 @@
 import type { Actions } from "./$types.js";
 import type { Document } from "$lib/api/types";
 
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { destroy_many, edit_many } from "$lib/api/documents";
 import { isErrorCode } from "$lib/utils/api";
+
+export function load({ cookies }) {
+  const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+
+  return { csrf_token };
+}
 
 export const actions = {
   async delete({ cookies, fetch, request }) {

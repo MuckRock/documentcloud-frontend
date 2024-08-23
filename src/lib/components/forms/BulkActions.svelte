@@ -89,7 +89,9 @@ Most actual actions are deferred to their own forms, so this is more of a switch
         <ConfirmDelete documents={$selected} on:close={close} />
       {/if}
 
-      {#if visible === "reprocess"}{/if}
+      {#if visible === "reprocess"}
+        <Reprocess documents={$selected} on:close={close} />
+      {/if}
 
       {#if visible === "data"}{/if}
 

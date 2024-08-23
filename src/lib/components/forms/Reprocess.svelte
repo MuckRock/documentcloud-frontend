@@ -86,8 +86,11 @@ This will mostly be used inside a modal but isn't dependent on one.
     const resp = await process(payload, csrf_token);
 
     if (resp.ok) {
-      await Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
       dispatch("close"); // closing destroys the component
+      await Promise.all([
+        ...documents.map((d) => invalidate(`document:${d.id}`)),
+        invalidate($page.url),
+      ]);
     } else {
       errors = await resp.json();
       submitting = false; // now you can try again

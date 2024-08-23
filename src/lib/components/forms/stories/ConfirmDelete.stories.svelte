@@ -9,7 +9,6 @@
 
   const document = doc as Document;
   const documents = docs.results as Document[];
-  const ids = documents.map((d) => d.id);
 
   export const meta = {
     title: "Forms / Confirm delete",
