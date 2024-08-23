@@ -2,6 +2,8 @@
 
 <script lang="ts">
   import type { Writable } from "svelte/store";
+  import type { Document } from "$lib/api/types";
+
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -10,7 +12,7 @@
   export let query: string = undefined;
   export let resultsCount: number = undefined;
 
-  const selected: Writable<string[]> = getContext("selected");
+  const selected: Writable<Document[]> = getContext("selected");
 
   // default to the first option, for convenience
   let choice = [...documents][0];
@@ -20,7 +22,7 @@
       value = { query };
       break;
     case "selected":
-      value = { documents: $selected ?? [] };
+      value = { documents: $selected?.map((d) => d.id) ?? [] };
       break;
 
     default:
@@ -58,7 +60,11 @@
           values: { n: $selected?.length },
         })}
       </label>
-      <input type="hidden" name="documents" value={$selected.join(",")} />
+      <input
+        type="hidden"
+        name="documents"
+        value={$selected.map((d) => d.id).join(",")}
+      />
     {/if}
   </fieldset>
   <p class="help">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
+  import type { Document } from "$lib/api/types";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -15,9 +16,7 @@
   import EditMany from "$lib/components/forms/EditMany.svelte";
   import Share from "$lib/components/documents/Share.svelte";
 
-  import * as documents from "$lib/api/documents";
-
-  const selected: Writable<string[]> = getContext("selected");
+  const selected: Writable<Document[]> = getContext("selected");
 
   let edit = false;
   let organize = false;
@@ -35,14 +34,14 @@
   </SidebarItem>
   <SidebarItem
     hover
-    disabled={$selected.length < 1}
+    disabled={$selected?.length < 1}
     on:click={(e) => (edit = true)}
   >
     <Pencil16 />{$_("dialog.edit")} &hellip;
   </SidebarItem>
   <SidebarItem
     hover
-    disabled={$selected.length < 1}
+    disabled={$selected?.length < 1}
     on:click={(e) => (organize = true)}
   >
     <FileDirectory16 />{$_("dialog.organize")} &hellip;
@@ -56,9 +55,9 @@
   <Portal>
     <Modal on:close={() => (edit = false)}>
       <h1 slot="title">{$_("dialog.edit")}</h1>
-      <EditMany ids={$selected} on:close={() => (edit = false)}>
-        {#if $selected.length}
-          <p>{$_("edit.many", { values: { n: $selected.length } })}</p>
+      <EditMany documents={$selected} on:close={() => (edit = false)}>
+        {#if $selected?.length}
+          <p>{$_("edit.many", { values: { n: $selected?.length } })}</p>
         {/if}
       </EditMany>
     </Modal>
@@ -76,11 +75,9 @@
 {#if share}
   <Portal>
     <Modal on:close={() => (share = false)}>
-      {@const id = $selected[0]}
+      {@const document = $selected[0]}
       <h1 slot="title">{$_("dialog.share")}</h1>
-      {#await documents.get(id) then document}
-        <Share {document} />
-      {/await}
+      <Share {document} />
     </Modal>
   </Portal>
 {/if}

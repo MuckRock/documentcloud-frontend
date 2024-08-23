@@ -2,7 +2,6 @@
 Confirm deletion or one or more documents.
 -->
 <script lang="ts">
-  import type { SubmitFunction } from "@sveltejs/kit";
   import type { Document } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
@@ -17,18 +16,18 @@ Confirm deletion or one or more documents.
   import { canonicalUrl, deleted } from "$lib/api/documents";
 
   // one document or a list of IDs
-  export let document: Document = undefined;
-  export let ids: (string | number)[] = [];
+  export let documents: Document[] = [];
 
   const dispatch = createEventDispatcher();
 
   let error: string = undefined;
 
-  $: bulk = document === undefined; // if it's zero, handle that elsewhere
-  $: count = document ? 1 : ids.length;
+  $: ids = documents.map((d) => d.id);
+  $: bulk = documents.length !== 1; // if it's zero, handle that elsewhere
+  $: count = documents.length;
   $: action = bulk
     ? "/documents/?/delete"
-    : canonicalUrl(document).href + "?/delete"; // TODO: update to /documents/ when we move things
+    : canonicalUrl(documents[0]).href + "?/delete";
 
   function onSubmit({ submitter }) {
     submitter.disabled = true;
@@ -36,9 +35,6 @@ Confirm deletion or one or more documents.
       if (result.type === "success") {
         dispatch("close");
         ids.forEach((d) => $deleted.add(String(d)));
-        if (document !== undefined) {
-          $deleted.add(document.id.toString());
-        }
       }
       update(result);
       submitter.disabled = false;

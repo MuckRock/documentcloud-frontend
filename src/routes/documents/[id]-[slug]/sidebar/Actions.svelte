@@ -164,7 +164,10 @@
   <Portal>
     <Modal on:close={() => (deleteOpen = false)}>
       <h1 slot="title">{$_("delete.title")}</h1>
-      <ConfirmDelete {document} on:close={() => (deleteOpen = false)} />
+      <ConfirmDelete
+        documents={[document]}
+        on:close={() => (deleteOpen = false)}
+      />
     </Modal>
   </Portal>
 {/if}

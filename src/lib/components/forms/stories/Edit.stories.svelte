@@ -28,7 +28,7 @@
 
 <Story name="Bulk edit">
   <div style="min-width: 600px;">
-    <EditMany ids={[document.id]}>
+    <EditMany documents={[document]}>
       <header>
         <h2>{$_("edit.title")}</h2>
         <p>
@@ -41,7 +41,7 @@
 
 <Story name="Bulk edit, no documents">
   <div style="min-width: 600px;">
-    <EditMany ids={[]}>
+    <EditMany documents={[]}>
       <header>
         <h2>{$_("edit.title")}</h2>
         <p>

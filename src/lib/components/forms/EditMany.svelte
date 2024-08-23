@@ -3,11 +3,12 @@ Edit metadata for many documents. This touches all top-level data.
 Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
+  import type { Document } from "$lib/api/types";
   import { enhance } from "$app/forms";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Alert24, X24 } from "svelte-octicons";
+  import { Alert24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -19,11 +20,13 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import TextArea from "../inputs/TextArea.svelte";
   import Tip from "../common/Tip.svelte";
 
-  export let ids: (number | string)[];
+  export let documents: Document[];
 
   const dispatch = createEventDispatcher();
 
   const action = "/documents/?/edit";
+
+  $: ids = documents.map((d) => d.id);
 
   function onSubmit() {
     dispatch("close");
@@ -35,7 +38,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <!-- Add any header and messaging using this slot -->
     <slot />
 
-    {#if ids.length < 1}
+    {#if documents.length < 1}
       <Tip
         --background-color="var(--caution)"
         --color="var(--gray-1)"
@@ -81,7 +84,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <input type="hidden" name="documents" value={ids.join(",")} />
 
     <Flex class="buttons">
-      <Button type="submit" mode="primary" full disabled={ids.length < 1}>
+      <Button type="submit" mode="primary" full disabled={documents.length < 1}>
         {$_("edit.save")}
       </Button>
       <Button full on:click={(e) => dispatch("close")}>

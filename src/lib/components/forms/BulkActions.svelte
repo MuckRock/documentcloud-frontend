@@ -8,6 +8,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
 <script lang="ts">
   import type { Writable } from "svelte/store";
+  import type { Document } from "$lib/api/types";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -23,7 +24,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import EditMany from "./EditMany.svelte";
   import Reprocess from "./Reprocess.svelte";
 
-  const selected: Writable<string[]> = getContext("selected");
+  const selected: Writable<Document[]> = getContext("selected");
 
   const id = "bulk-actions";
 
@@ -77,7 +78,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     <Modal on:close={close}>
       <h1 slot="title">{actions[visible]}</h1>
       {#if visible === "edit"}
-        <EditMany ids={$selected} on:close={close}>
+        <EditMany documents={$selected} on:close={close}>
           {#if $selected.length}
             <p>{$_("edit.many", { values: { n: $selected.length } })}</p>
           {/if}
@@ -85,8 +86,14 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "delete"}
-        <ConfirmDelete ids={$selected} on:close={close} />
+        <ConfirmDelete documents={$selected} on:close={close} />
       {/if}
+
+      {#if visible === "reprocess"}{/if}
+
+      {#if visible === "data"}{/if}
+
+      {#if visible === "project"}{/if}
     </Modal>
   </Portal>
 {/if}

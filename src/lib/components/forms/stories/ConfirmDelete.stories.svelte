@@ -20,18 +20,18 @@
 
 <Story name="one document">
   <div style="max-width: 66ch;">
-    <ConfirmDelete {document} />
+    <ConfirmDelete documents={[document]} />
   </div>
 </Story>
 
 <Story name="bulk delete">
   <div style="max-width: 66ch;">
-    <ConfirmDelete {ids} />
+    <ConfirmDelete {documents} />
   </div>
 </Story>
 
 <Story name="disabled">
   <div style="max-width: 66ch;">
-    <ConfirmDelete ids={[]} />
+    <ConfirmDelete documents={[]} />
   </div>
 </Story>
