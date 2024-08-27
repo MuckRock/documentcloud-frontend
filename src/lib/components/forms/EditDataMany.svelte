@@ -1,6 +1,10 @@
+<!-- @component
+Edit data for many documents at once.
+This will mostly merge with existing data.
+-->
 <script lang="ts">
   import type { ActionResult } from "@sveltejs/kit";
-  import type { Document } from "$lib/api/types";
+  import type { Document, Data } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { createEventDispatcher } from "svelte";
@@ -10,36 +14,33 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import KeyValue from "$lib/components/inputs/KeyValue.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
-
-  export let document: Document;
+  export let documents: Document[];
 
   const dispatch = createEventDispatcher();
+  const action = "/documents/?/data";
 
   let kv: KeyValue;
+  let data: Data = {};
 
-  $: keys = Object.keys(document.data) ?? [];
-  $: tags = document.data["_tag"] ?? [];
-  $: data =
-    Object.entries(document?.data)?.filter(([k, v]) => k !== "_tag") ?? [];
-  $: action = new URL("?/data", canonicalUrl(document)).href;
+  $: keys = documents.map((d) => Object.keys(d.data)).flat();
+  $: tags = documents.map((d) => d.data["_tag"] ?? []).flat();
 
   function add({ key, value }) {
     if (!key || !value) return;
 
-    if (key in document.data) {
-      document.data[key] = [...document.data[key], value];
+    if (key in data) {
+      data[key] = [...data[key], value];
     } else {
-      document.data[key] = [value];
+      data[key] = [value];
     }
 
     kv.clear();
   }
 
   function remove({ key, value }) {
-    if (!(key in document.data)) return;
+    if (!(key in data)) return;
 
-    document.data[key] = document.data[key].filter((v) => v !== value);
+    data[key] = data[key].filter((v) => v !== value);
   }
 
   function onSubmit() {
@@ -58,6 +59,7 @@
 </script>
 
 <form {action} class="card" method="post" use:enhance={onSubmit}>
+  <p>{$_("data.many", { values: { n: documents.length } })}</p>
   <table>
     <thead>
       <tr>
@@ -71,7 +73,7 @@
     </thead>
 
     <!-- kv -->
-    {#each data as [key, values]}
+    {#each Object.entries(data) as [key, values]}
       {#each values as value}
         <KeyValue {keys} {key} {value} on:delete={(e) => remove(e.detail)} />
       {/each}

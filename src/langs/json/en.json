@@ -987,7 +987,8 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
-    "addNew": "Add new data:"
+    "addNew": "Add new item:",
+    "many": "Saving will add the following data and tags to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
   },
   "bulk": {
     "title": "Bulk actions",

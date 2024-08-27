@@ -13,6 +13,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
   import Button from "../common/Button.svelte";
 
   export let keys: string[] = ["_tag"];
+  // export let values: string[] = [];
   export let key: string = "";
   export let value: string = "";
   export let add = false;

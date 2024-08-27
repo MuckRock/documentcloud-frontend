@@ -361,7 +361,8 @@ export async function edit(
   }
 
   if (isErrorCode(resp.status)) {
-    throw new Error(await resp.json());
+    const { data } = await resp.json();
+    throw new Error(data);
   }
 
   return resp.json();

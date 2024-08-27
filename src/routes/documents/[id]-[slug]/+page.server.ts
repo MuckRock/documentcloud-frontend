@@ -19,7 +19,7 @@ export function load({ cookies }) {
  */
 export const actions = {
   // like edit but specifically for data
-  async data({ cookies, request, fetch, params }) {
+  async data({ cookies, request, fetch, params, url }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const { id } = params;
 
@@ -45,6 +45,7 @@ export const actions = {
         document,
       };
     } catch (error) {
+      console.error(`Data: ${url}`);
       console.error(error);
       return fail(400);
     }
