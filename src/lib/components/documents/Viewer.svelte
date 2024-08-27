@@ -12,12 +12,10 @@
   import ThumbnailGrid from "./ThumbnailGrid.svelte";
   import Text from "./Text.svelte";
   import Notes from "./Notes.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
-  import Dropdown from "@/common/Dropdown2.svelte";
-  import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
-  import Empty from "../common/Empty.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import { EyeClosed16, Note16 } from "svelte-octicons";
+  import Button from "../common/Button.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Sections from "./Sections.svelte";
 
   export let mode: ViewerMode;
   export let document: Document;
@@ -31,8 +29,13 @@
   <ContentLayout>
     <PageToolbar slot="header">
       <SelectMode slot="left" bind:mode />
-      <div slot="center" />
-      <Search name="q" {query} slot="right" />
+      <Flex justify="end" slot="right">
+        {#if document.edit_access}
+          <Button ghost><Note16 /> Annotate</Button>
+          <Button ghost><EyeClosed16 /> Redact</Button>
+        {/if}
+        <Search name="q" {query} />
+      </Flex>
     </PageToolbar>
     {#if mode === "document"}
       <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} />
@@ -46,28 +49,7 @@
     <PageToolbar slot="footer">
       <svelte:fragment slot="left">
         {#if mode === "document"}
-          <Dropdown id="sections" position="top left" --offset="5px">
-            <div class="toolbarItem" slot="title">
-              <SidebarItem>
-                <ListOrdered16 />
-                Sections
-                <ChevronUp12 />
-              </SidebarItem>
-            </div>
-            <Menu>
-              {#each document.sections as section}
-                <MenuItem>{section.title}</MenuItem>
-              {:else}
-                <Empty icon={ListOrdered24}>
-                  {#if document.edit_access}
-                    <p>{$_("sidebar.toc.cta")}</p>
-                  {:else}
-                    <p>{$_("sidebar.toc.empty")}</p>
-                  {/if}
-                </Empty>
-              {/each}
-            </Menu>
-          </Dropdown>
+          <Sections {document} />
         {/if}
       </svelte:fragment>~
       <svelte:fragment slot="center">
@@ -83,22 +65,7 @@
 
 <style>
   .container {
-    min-height: 100vh;
-    background: var(--gray-1);
-  }
-  .documentLayout {
-    display: flex;
-  }
-  .documentLayout aside {
-    flex: 0 1 12rem;
-    border-right: 1px solid var(--gray-2);
-    padding: 1rem;
-  }
-  .documentLayout main {
-    flex: 1 1 auto;
-  }
-  .toolbarItem {
-    border-radius: 0.5rem;
-    overflow: hidden;
+    height: 100%;
+    min-height: 100%;
   }
 </style>

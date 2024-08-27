@@ -23,7 +23,7 @@
 </script>
 
 <div class="container">
-  <Flex role="tablist">
+  <Flex gap={0} role="tablist">
     {#each modes.entries() as [value, name]}
       <Tab
         active={mode === value}

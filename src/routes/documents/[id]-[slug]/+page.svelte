@@ -3,7 +3,7 @@
 
   import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
-  import { currentPage, activeNote } from "@/lib/stores/viewer";
+  import { currentPage, activeNote } from "$lib/stores/viewer";
 
   import { afterUpdate, getContext, setContext } from "svelte";
   import { type Writable } from "svelte/store";
@@ -19,10 +19,7 @@
   } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
-  import Viewer from "@/lib/components/documents/Viewer.svelte";
-  import DocumentMetadata from "@/lib/components/documents/sidebar/DocumentMetadata.svelte";
-  import Data from "@/lib/components/documents/sidebar/Data.svelte";
-  import Projects from "../sidebar/Projects.svelte";
+  import DocumentLayout from "@/lib/components/layouts/DocumentLayout.svelte";
 
   export let data;
 
@@ -104,5 +101,4 @@
   {/if}
 </svelte:head>
 
-<DocumentMetadata {document} />
-<Viewer bind:mode={$mode} {document} {text} {query} />
+<DocumentLayout {document} {text} {query} mode={$mode} />

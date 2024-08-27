@@ -8,18 +8,34 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Viewer",
+    title: "Components / Documents / Viewer",
     component: Viewer,
     parameters: {
       layout: "fullscreen",
     },
     tags: ["autodocs"],
   };
+
+  let args = {
+    document,
+    mode: "document",
+    text: txt,
+  };
 </script>
 
 <Template let:args>
-  <Viewer {...args} />
+  <div class="vh">
+    <Viewer {...args} />
+  </div>
 </Template>
+
+<Story
+  name="Edit Access"
+  args={{
+    ...args,
+    document: { ...document, edit_access: true },
+  }}
+/>
 
 <Story name="Document">
   <Viewer mode="document" text={txt} {document} />
@@ -36,3 +52,9 @@
 <Story name="Notes">
   <Viewer mode="notes" text={txt} {document} />
 </Story>
+
+<style>
+  .vh {
+    height: 100vh;
+  }
+</style>

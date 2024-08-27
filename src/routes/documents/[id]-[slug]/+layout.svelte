@@ -8,12 +8,6 @@
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
-  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
-
-  // sidebars
-  import Actions from "./sidebar/Actions.svelte";
-  import AddOns from "@/routes/documents/sidebar/AddOns.svelte";
-
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
 
@@ -58,12 +52,4 @@
   />
 </svelte:head>
 
-<SidebarLayout>
-  <slot slot="content" />
-  <svelte:fragment slot="action">
-    <Actions {document} />
-    {#if document.edit_access}
-      <AddOns pinnedAddOns={data.pinnedAddons} />
-    {/if}
-  </svelte:fragment>
-</SidebarLayout>
+<slot />
