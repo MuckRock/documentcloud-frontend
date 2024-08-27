@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Search24, XCircleFill24 } from "svelte-octicons";
+  import { Search16, XCircleFill24 } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
   export let name: string = null;
@@ -15,7 +15,7 @@
 </script>
 
 <form class="container" on:submit bind:this={form}>
-  <label for="query" title="Search"><Search24 /></label>
+  <label for="query" title="Search"><Search16 /></label>
   <input
     type="search"
     id="query"
@@ -43,10 +43,18 @@
     display: flex;
     align-items: center;
     align-self: stretch;
-    gap: 0.75rem;
+    gap: 0.25rem;
+    padding: 0 0.5rem;
 
     color: var(--gray-5, #233944);
     fill: var(--gray-5, #233944);
+    border: 1px solid var(--gray-2);
+    border-radius: 0.5rem;
+  }
+  form:focus-within {
+    outline: inherit;
+    border-color: var(--blue-3);
+    box-shadow: 0 0 0 1px var(--blue-3);
   }
   input {
     flex: 1 0 0;
@@ -56,6 +64,9 @@
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-regular, 400);
     font-size: var(--font-md, 1rem);
+  }
+  input:focus {
+    outline: none;
   }
   input::placeholder {
     color: var(--gray-4, #5c717c);
