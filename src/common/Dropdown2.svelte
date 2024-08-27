@@ -132,7 +132,7 @@
     align-items: center;
   }
   .dropdownContainer.open {
-    z-index: var(--menuActive, 16);
+    z-index: var(--z-dropdown);
   }
   .title {
     display: inline-block;

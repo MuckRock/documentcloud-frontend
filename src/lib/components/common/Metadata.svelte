@@ -21,6 +21,16 @@
   .text {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 0.125em 1rem;
+  }
+
+  dt {
+    font-size: var(--font-xs);
+    color: var(--gray-4);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  dd {
+    font-size: var(--font-sm);
   }
 </style>

@@ -64,6 +64,7 @@
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-regular, 400);
     font-size: var(--font-md, 1rem);
+    box-shadow: none;
   }
   input:focus {
     outline: none;
