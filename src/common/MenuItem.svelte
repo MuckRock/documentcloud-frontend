@@ -75,6 +75,7 @@
     user-select: none;
     white-space: nowrap;
     box-sizing: border-box;
+    border-radius: 0.25rem;
   }
 
   .item .label {

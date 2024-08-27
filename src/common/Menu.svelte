@@ -13,6 +13,7 @@
     box-shadow: var(--shadow-1);
     padding: 0.5rem;
     gap: 0.25rem;
+    min-width: 16rem;
   }
   :global(.menu.small) {
     color: var(--gray-3);
