@@ -120,7 +120,8 @@
   <div bind:this={end} class="end">
     {#if next}
       <Button
-        mode="ghost"
+        ghost
+        mode="primary"
         disabled={loading}
         on:click={(e) => load(new URL(next))}
       >

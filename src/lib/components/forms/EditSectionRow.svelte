@@ -65,7 +65,8 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
   <td class="action">
     {#if id}
       <Button
-        mode="ghost"
+        ghost
+        mode="primary"
         title={$_("sections.update")}
         minW={false}
         name="action"
@@ -80,7 +81,8 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         <CheckCircle16 />
       </Button>
       <Button
-        mode="ghost"
+        ghost
+        mode="primary"
         title={$_("sections.delete")}
         minW={false}
         name="action"
@@ -94,7 +96,8 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
       </Button>
     {:else}
       <Button
-        mode="ghost"
+        ghost
+        mode="primary"
         title={$_("sections.new")}
         minW={false}
         name="action"
@@ -110,7 +113,8 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
       </Button>
 
       <Button
-        mode="ghost"
+        ghost
+        mode="primary"
         title={$_("sections.clear")}
         minW={false}
         on:click={reset}

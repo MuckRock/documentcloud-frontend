@@ -147,7 +147,8 @@
           <Button
             slot="action"
             size="small"
-            mode="ghost"
+            ghost
+            mode="primary"
             on:click={() => copy(String(permalink))}
             disabled={!navigator.clipboard}
           >
@@ -168,7 +169,7 @@
           <Button
             slot="action"
             size="small"
-            mode="ghost"
+            ghost mode="primary"
             on:click={() => copy(wpShortcode)}
             disabled={!navigator.clipboard}
           >
@@ -189,7 +190,8 @@
           <Button
             slot="action"
             size="small"
-            mode="ghost"
+            ghost
+            mode="primary"
             on:click={() => copy(iframe)}
             disabled={!navigator.clipboard}
           >
@@ -214,7 +216,8 @@
           {#if customizeEmbedOpen}
             <Button
               size="small"
-              mode="ghost"
+              ghost
+              mode="primary"
               on:click={() => (customizeEmbedOpen = false)}
             >
               <Check16 />
@@ -223,7 +226,8 @@
           {:else}
             <Button
               size="small"
-              mode="ghost"
+              ghost
+              mode="primary"
               on:click={() => (customizeEmbedOpen = true)}
               disabled={currentTab !== "document"}
             >

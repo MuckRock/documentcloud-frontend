@@ -51,7 +51,12 @@
   <header>
     {#if $$slots.navigation}
       <div class="small openPane">
-        <Button minW={false} mode="ghost" on:click={openPanel("navigation")}>
+        <Button
+          minW={false}
+          ghost
+          mode="primary"
+          on:click={openPanel("navigation")}
+        >
           <SidebarCollapse16 />
         </Button>
       </div>
@@ -72,7 +77,7 @@
     </SignedIn>
     <LanguageMenu />
     <HelpMenu />
-    <Button mode="ghost" on:click={() => (feedbackOpen = true)}>
+    <Button ghost mode="primary" on:click={() => (feedbackOpen = true)}>
       Feedback
     </Button>
     {#if feedbackOpen}
@@ -85,7 +90,12 @@
     {/if}
     {#if $$slots.action}
       <div class="small openPane">
-        <Button minW={false} mode="ghost" on:click={openPanel("action")}>
+        <Button
+          minW={false}
+          ghost
+          mode="primary"
+          on:click={openPanel("action")}
+        >
           <SidebarExpand16 />
         </Button>
       </div>
@@ -100,7 +110,7 @@
         id="navigation"
       >
         <div class="small closePane">
-          <Button mode="ghost" on:click={closePanel}>
+          <Button ghost mode="primary" on:click={closePanel}>
             <SidebarExpand16 />
           </Button>
         </div>
@@ -115,7 +125,7 @@
     {#if $$slots.action}
       <nav class="action right" class:active={panel === "action"} id="action">
         <div class="small closePane">
-          <Button mode="ghost" on:click={closePanel}>
+          <Button ghost mode="primary" on:click={closePanel}>
             <SidebarCollapse16 />
           </Button>
         </div>

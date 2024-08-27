@@ -36,13 +36,13 @@
 </Story>
 
 <Story name="slotted ghost">
-  <Button mode="ghost">
+  <Button ghost mode="primary">
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
 <Story name="disabled ghost">
-  <Button mode="ghost" disabled>
+  <Button ghost mode="primary" disabled>
     <PlusCircle16 /> Upload
   </Button>
 </Story>

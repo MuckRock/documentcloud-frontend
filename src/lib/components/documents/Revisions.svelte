@@ -24,7 +24,7 @@
         </span>
       </td>
       <td class="revision-download">
-        <Button mode="ghost" href={revision.url}>
+        <Button ghost mode="primary" href={revision.url}>
           <Download16 />
           {$_("dialogRevisionsDialog.download")}
         </Button>

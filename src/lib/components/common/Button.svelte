@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let mode: "standard" | "primary" | "ghost" | "danger" | "premium" =
-    "standard";
+  export let mode: "standard" | "primary" | "danger" | "premium" = "standard";
+  export let ghost = false;
   export let full = false;
   export let size: "small" | "normal" = "normal";
   export let minW = true;
@@ -13,6 +13,7 @@
   // anchor-specific properties
   export let href: string = undefined;
   export let target: string = undefined;
+  export let download: boolean | string = undefined;
   export let rel: string =
     target === "_blank" ? "noopener noreferrer" : undefined;
   // button-specific properties
@@ -27,8 +28,10 @@
     {title}
     {target}
     {rel}
+    {download}
     on:click
     class="{mode} {size}"
+    class:ghost
     class:full
     class:minW
   >
@@ -44,6 +47,7 @@
     {name}
     {value}
     {formaction}
+    class:ghost
     class:full
     class:minW
   >
@@ -66,8 +70,8 @@
     background: var(--gray-3, #99a8b3);
     box-shadow: 0px 2px 0px 0px var(--gray-4, #5c717c);
 
-    color: var(--gray-1, #f5f6f7);
-    fill: var(--gray-1, #f5f6f7);
+    color: var(--white, #ffffff);
+    fill: var(--white, #ffffff);
     text-align: center;
     font-family: var(--font-sans, "Source Sans Pro");
     font-size: var(--font-md, 1rem);
@@ -100,8 +104,23 @@
     background: none;
     border: none;
     box-shadow: none;
-    color: var(--color, var(--primary, #4294f0));
-    fill: var(--fill, var(--primary, #4294f0));
+    color: var(--color, var(--gray-4, #5c717c));
+    fill: var(--fill, var(--gray-4, #5c717c));
+  }
+
+  .ghost.primary {
+    color: var(--blue-3, #1367d0);
+    fill: var(--blue-3, #1367d0);
+  }
+
+  .ghost.danger {
+    color: var(--orange-3, #ec7b6b);
+    fill: var(--orange-3, #ec7b6b);
+  }
+
+  .ghost.premium {
+    color: var(--green-3, #27c6a2);
+    fill: var(--green-3, #27c6a2);
   }
 
   .ghost.small {
