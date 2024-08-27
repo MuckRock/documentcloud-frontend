@@ -105,7 +105,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
     {:else}
       <Button
         ghost
-        mode="primary"
+        mode="danger"
         title={$_("data.delete")}
         minW={false}
         value="delete"
