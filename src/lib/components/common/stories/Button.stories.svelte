@@ -21,7 +21,7 @@
 
 <Story name="primary" args={{ mode: "primary" }} />
 
-<Story name="ghost" args={{ mode: "ghost" }} />
+<Story name="ghost" args={{ ghost: true, mode: "primary" }} />
 
 <Story name="danger" args={{ mode: "danger" }} />
 
