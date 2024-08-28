@@ -16,7 +16,10 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
-  import Zoom, { zoom, zoomToScale } from "../components/Zoom.svelte";
+  import Zoom, {
+    zoom,
+    zoomToScale,
+  } from "$lib/components/documents/Zoom.svelte";
 
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import { redactions } from "$lib/components/documents/RedactionPane.svelte";

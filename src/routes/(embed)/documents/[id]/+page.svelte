@@ -29,8 +29,8 @@
     zoom,
     zoomToScale,
     zoomToSize,
-  } from "../../../documents/[id]-[slug]/components/Zoom.svelte";
   import Paginator, { currentPage } from "../../../documents/[id]-[slug]/components/ViewerPaginator.svelte";
+  } from "$lib/components/documents/Zoom.svelte";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";

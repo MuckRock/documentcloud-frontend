@@ -29,77 +29,12 @@ It exports a $zoom store that can be passed around to other components.
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
+  import { getDefaultZoom, getZoomLevels } from "@/lib/utils/viewer";
 
   export let mode: ViewerMode;
 
   $: zoomLevels = getZoomLevels(mode);
   $: $zoom = getDefaultZoom(mode);
-
-  /**
-   * Generate a default zoom, based on mode
-   * @param mode
-   */
-  function getDefaultZoom(mode: ViewerMode): Zoom {
-    switch (mode) {
-      case "document":
-        return "width";
-
-      case "annotating":
-        return "width";
-
-      case "redacting":
-        return "width";
-
-      case "grid":
-        return "small";
-
-      default:
-        return 1;
-    }
-  }
-
-  /**
-   * Generate zoom levels based on mode, since each zooms in a slightly different way
-   */
-  function getZoomLevels(mode: ViewerMode): (string | number)[][] {
-    switch (mode) {
-      case "document":
-      case "annotating":
-      case "redacting":
-        return [
-          ["width", $_("zoom.fitWidth")],
-          ["height", $_("zoom.fitHeight")],
-          [0.5, "50%"],
-          [0.75, "75%"],
-          [1, "100%"],
-          [1.25, "125%"],
-          [1.5, "150%"],
-          [2, "200%"],
-        ];
-
-      case "text":
-        return [
-          [0.5, "50%"],
-          [0.75, "75%"],
-          [1, "100%"],
-          [1.25, "125%"],
-          [1.5, "150%"],
-          [2, "200%"],
-        ];
-
-      case "grid":
-        return [
-          ["thumbnail", $_("zoom.thumbnail")],
-          ["small", $_("zoom.small")],
-          ["normal", $_("zoom.normal")],
-          ["large", $_("zoom.large")],
-        ];
-
-      default:
-        // todo: notes, maybe
-        return [];
-    }
-  }
 </script>
 
 {#if zoomLevels.length}

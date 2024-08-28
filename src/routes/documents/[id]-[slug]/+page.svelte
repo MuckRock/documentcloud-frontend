@@ -18,16 +18,16 @@
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator, { currentPage } from "./components/ViewerPaginator.svelte";
+  import Zoom, {
+    zoom,
+    zoomToScale,
+    zoomToSize,
+  } from "$lib/components/documents/Zoom.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import Text from "$lib/components/documents/Text.svelte";
   import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
   import Notes from "$lib/components/documents/Notes.svelte";
-  import Zoom, {
-    zoom,
-    zoomToScale,
-    zoomToSize,
-  } from "./components/Zoom.svelte";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";

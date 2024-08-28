@@ -14,7 +14,10 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
-  import Zoom, { zoom, zoomToScale } from "../components/Zoom.svelte";
+  import Zoom, {
+    zoom,
+    zoomToScale,
+  } from "$lib/components/documents/Zoom.svelte";
 
   import { pageFromHash } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";

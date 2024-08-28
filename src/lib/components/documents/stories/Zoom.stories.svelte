@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
-  import Zoom from "../components/Zoom.svelte";
+  import Zoom from "../Zoom.svelte";
 
   export const meta = {
     title: "Viewer / Zoom",
