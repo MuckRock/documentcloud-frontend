@@ -3,6 +3,7 @@
 
   import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
+  import { currentPage } from "@/lib/stores/viewer";
 
   import { afterUpdate, getContext, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
@@ -17,7 +18,7 @@
   // components
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Paginator, { currentPage } from "./components/ViewerPaginator.svelte";
+  import Paginator from "$lib/components/documents/Paginator.svelte";
   import Zoom, {
     zoom,
     zoomToScale,

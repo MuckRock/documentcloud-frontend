@@ -29,8 +29,9 @@
     zoom,
     zoomToScale,
     zoomToSize,
-  import Paginator, { currentPage } from "../../../documents/[id]-[slug]/components/ViewerPaginator.svelte";
   } from "$lib/components/documents/Zoom.svelte";
+  import Paginator from "$lib/components/documents/Paginator.svelte";
+  import { currentPage, activeNote } from "@/lib/stores/viewer.js";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
@@ -61,7 +62,6 @@
 
   // stores we need deeper in the component tree, available via context
   // const currentPage: Writable<number> = writable(1);
-  const activeNote: Writable<Note> = writable(null);
   const mode: Writable<ViewerMode> = getContext("mode");
 
   setContext("currentPage", currentPage);
@@ -140,11 +140,7 @@
 
 <ContentLayout>
   {#if $mode === "document"}
-    <PDF
-      {document}
-      scale={zoomToScale($zoom)}
-      asset_url={data.asset_url}
-    />
+    <PDF {document} scale={zoomToScale($zoom)} asset_url={data.asset_url} />
   {/if}
 
   {#if $mode === "text"}

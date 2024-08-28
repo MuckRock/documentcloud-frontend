@@ -3,6 +3,7 @@
 
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
+  import { currentPage } from "@/lib/stores/viewer";
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
@@ -10,7 +11,7 @@
   import { Comment24 } from "svelte-octicons";
 
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
-  import Paginator, { currentPage } from "../components/ViewerPaginator.svelte";
+  import Paginator from "$lib/components/documents/Paginator.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import PDF from "$lib/components/documents/PDF.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
