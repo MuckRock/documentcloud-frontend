@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import Button from "./Button.svelte";
+  import Button from "@/lib/components/common/Button.svelte";
   import {
     ArrowLeft16,
     ArrowRight16,
@@ -65,8 +65,10 @@
 <div class="paginator">
   {#if page && totalPages && goToNav}
     <Button
-      square
+      size="small"
       ghost
+      mode="primary"
+      minW={false}
       disabled={page === 1}
       on:click={() => goTo(1)}
       title={$_("paginator.first")}
@@ -75,8 +77,10 @@
     </Button>
   {/if}
   <Button
-    square
+    size="small"
     ghost
+    mode="primary"
+    minW={false}
     disabled={!has_previous}
     on:click={previous}
     title={$_("paginator.previous")}
@@ -110,8 +114,10 @@
     </div>
   {/if}
   <Button
-    square
+    size="small"
     ghost
+    mode="primary"
+    minW={false}
     disabled={!has_next}
     on:click={next}
     title={$_("paginator.next")}
@@ -120,8 +126,10 @@
   </Button>
   {#if page && totalPages && goToNav}
     <Button
-      square
+      size="small"
       ghost
+      mode="primary"
+      minW={false}
       disabled={page === totalPages}
       on:click={() => goTo(totalPages)}
       title={$_("paginator.last")}

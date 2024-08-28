@@ -128,14 +128,17 @@
 <style>
   .dropdownContainer {
     position: relative;
+    display: flex;
+    align-items: center;
   }
   .dropdownContainer.open {
-    z-index: var(--menuActive, 16);
+    z-index: var(--z-dropdown);
   }
   .title {
-    display: block;
+    display: inline-block;
     cursor: pointer;
-    padding: 0.25rem;
+    border-radius: 0.5rem;
+    padding: 0.075rem;
     color: var(--gray-5);
     fill: var(--gray-4);
   }
@@ -161,7 +164,7 @@
   }
   .dropdown {
     display: none;
-    margin: 0;
+    margin: 0.25rem 0;
     width: auto;
     min-width: 100%;
   }
@@ -170,10 +173,10 @@
     position: absolute;
   }
   .dropdown.top {
-    bottom: 100%;
+    bottom: calc(100% + var(--offset, 0));
   }
   .dropdown.bottom {
-    top: 100%;
+    top: calc(100% + var(--offset, 0));
   }
   .dropdown.left {
     left: 0;
@@ -187,7 +190,7 @@
   }
 
   .overlay {
-    z-index: var(--menuShim, 14);
+    z-index: var(--z-dropdownBackdrop);
     position: fixed;
     top: 0;
     left: 0;

@@ -108,7 +108,8 @@
         <svelte:fragment slot="center">
           <Button
             disabled={modalOpen}
-            mode="ghost"
+            ghost
+            mode="primary"
             on:click={() => (modalOpen = true)}
           >
             Open modal

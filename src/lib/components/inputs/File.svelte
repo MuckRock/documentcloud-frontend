@@ -11,7 +11,7 @@
   export let name: string = null;
   export let onFileSelect: (files: FileList) => void;
   export let multiple = false;
-  export let buttonMode: ComponentProps<Button>["mode"] = "ghost";
+  export let buttonMode: ComponentProps<Button>["mode"] = "primary";
   export let files: FileList = null;
   export let disabled = false;
 
@@ -34,7 +34,7 @@
 </script>
 
 <span class="container" class:disabled>
-  <Button mode={buttonMode} on:click={openFilePicker} {disabled}>
+  <Button ghost mode={buttonMode} on:click={openFilePicker} {disabled}>
     <slot />
   </Button>
   <input

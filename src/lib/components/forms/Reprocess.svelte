@@ -144,7 +144,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
     </div>
     <Flex class="buttons">
-      <Button disabled={submitting} type="submit" full mode="primary"
+      <Button disabled={submitting} type="submit" full mode="danger"
         ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
       <Button full on:click={(e) => dispatch("close")}

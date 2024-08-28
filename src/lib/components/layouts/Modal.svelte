@@ -45,7 +45,12 @@ of the $modal store. These are used to set the active modal on any given page.
     transition:fly={{ duration: 400, easing: quintOut, y: "25vw" }}
   >
     <header>
-      <Button minW={false} mode="ghost" on:click={() => dispatch("close")}>
+      <Button
+        minW={false}
+        ghost
+        mode="primary"
+        on:click={() => dispatch("close")}
+      >
         <XCircle24 />
       </Button>
       <slot name="title" />

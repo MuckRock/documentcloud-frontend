@@ -19,12 +19,11 @@
     display: flex;
     padding: 0;
     flex-direction: column;
-    align-items: flex-start;
     flex: 1 0 0;
     align-self: stretch;
     position: relative;
     width: 100%;
-    height: fit-content;
+    height: auto;
     min-height: 100%;
   }
   header {

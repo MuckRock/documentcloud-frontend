@@ -21,7 +21,7 @@
 
 <Story name="primary" args={{ mode: "primary" }} />
 
-<Story name="ghost" args={{ mode: "ghost" }} />
+<Story name="ghost" args={{ ghost: true, mode: "primary" }} />
 
 <Story name="danger" args={{ mode: "danger" }} />
 
@@ -36,13 +36,13 @@
 </Story>
 
 <Story name="slotted ghost">
-  <Button mode="ghost">
+  <Button ghost mode="primary">
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
 <Story name="disabled ghost">
-  <Button mode="ghost" disabled>
+  <Button ghost mode="primary" disabled>
     <PlusCircle16 /> Upload
   </Button>
 </Story>

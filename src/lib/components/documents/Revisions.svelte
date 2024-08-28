@@ -24,18 +24,20 @@
         </span>
       </td>
       <td class="revision-download">
-        <Button mode="ghost" href={revision.url}>
+        <Button ghost mode="primary" href={revision.url}>
           <Download16 />
           {$_("dialogRevisionsDialog.download")}
         </Button>
       </td>
     </tr>
   {:else}
-    <tr class="empty"><td>
-      <Empty icon={History24}>
-        {$_("dialogRevisionsDialog.empty")}
-      </Empty>
-    </td></tr>
+    <tr class="empty"
+      ><td>
+        <Empty icon={History24}>
+          {$_("dialogRevisionsDialog.empty")}
+        </Empty>
+      </td></tr
+    >
   {/each}
 </table>
 
@@ -43,7 +45,7 @@
   .revisions {
     width: 100%;
     border-collapse: collapse;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     overflow: hidden;
   }
   .revision {
@@ -75,10 +77,10 @@
     background-color: rgba(0 0 0 / 0.05);
   }
   .revision:first-child .revision-version {
-    border-top-right-radius: .5rem;
+    border-top-right-radius: 0.5rem;
   }
   .revision:last-child .revision-version {
-    border-bottom-right-radius: .5rem;
+    border-bottom-right-radius: 0.5rem;
   }
   .revision-download {
     text-align: right;

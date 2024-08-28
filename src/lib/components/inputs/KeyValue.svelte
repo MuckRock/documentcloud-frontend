@@ -92,7 +92,8 @@ This uses `svelte-select` to let users more easily choose existing keys.
   <td class="action">
     {#if add}
       <Button
-        mode="ghost"
+        ghost
+        mode="primary"
         title={$_("data.update")}
         minW={false}
         value="add"
@@ -103,7 +104,8 @@ This uses `svelte-select` to let users more easily choose existing keys.
       </Button>
     {:else}
       <Button
-        mode="ghost"
+        ghost
+        mode="danger"
         title={$_("data.delete")}
         minW={false}
         value="delete"

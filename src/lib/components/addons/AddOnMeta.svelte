@@ -35,11 +35,11 @@
       <h3>{github_org}</h3>
     </div>
     <Flex>
-      <Button mode="ghost">
+      <Button ghost mode="primary">
         <Share16 />
         {$_("addonDispatchDialog.share")}
       </Button>
-      <Button mode="ghost" href={repo} target="_blank">
+      <Button ghost mode="primary" href={repo} target="_blank">
         <MarkGithub16 />
         {$_("addonDispatchDialog.viewsource")}
       </Button>

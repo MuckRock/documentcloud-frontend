@@ -176,7 +176,8 @@
     {/if}
     <Button
       type="button"
-      mode="ghost"
+      ghost
+      mode="primary"
       on:click={reset}
       label={$_("dialog.reset")}
     />

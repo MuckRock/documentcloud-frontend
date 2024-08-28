@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   export let danger = false;
   export let selectable = true;
   export let primary = false;
@@ -11,28 +11,47 @@
 
   let className = "";
   export { className as class };
-
-  $: tag = href ? "a" : "button";
 </script>
 
-<svelte:element
-  this={tag}
-  {target}
-  {href}
-  class="item {className}"
-  class:selectable
-  class:selected
-  class:danger
-  class:primary
-  class:disabled
-  class:indent
-  class:special
-  on:click
->
-  <slot name="icon" />
-  <span class="label"><slot>Define an item</slot></span>
-  {#if selected}<span class="scope">✓</span>{/if}
-</svelte:element>
+{#if href}
+  <a
+    {target}
+    {href}
+    class="item {className}"
+    class:selectable
+    class:selected
+    class:danger
+    class:primary
+    class:disabled
+    class:indent
+    class:special
+    on:click
+    role="menuitem"
+    tabindex="0"
+  >
+    <slot name="icon" />
+    <span class="label"><slot>Define an item</slot></span>
+    {#if selected}<span class="scope">✓</span>{/if}
+  </a>
+{:else}
+  <button
+    class="item {className}"
+    class:selectable
+    class:selected
+    class:danger
+    class:primary
+    class:disabled
+    class:indent
+    class:special
+    on:click
+    role="menuitem"
+    tabindex="0"
+  >
+    <slot name="icon" />
+    <span class="label"><slot>Define an item</slot></span>
+    {#if selected}<span class="scope">✓</span>{/if}
+  </button>
+{/if}
 
 <style>
   button,
@@ -56,6 +75,7 @@
     user-select: none;
     white-space: nowrap;
     box-sizing: border-box;
+    border-radius: 0.25rem;
   }
 
   .item .label {

@@ -32,7 +32,7 @@
     fill: var(--fill, var(--primary, --blue-3, #4294f0));
 
     font-size: var(--font-xs, 0.75rem);
-    font-weight: var(--font-bold, 700);
+    font-weight: var(--font-semibold, 700);
     line-height: normal;
     text-transform: uppercase;
 
