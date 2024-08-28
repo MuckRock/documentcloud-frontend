@@ -96,6 +96,13 @@ This will mostly merge with existing data.
       <KeyValue {keys} bind:this={kv} add on:add={(e) => add(e.detail)} />
     </tfoot>
   </table>
+
+  <input
+    type="hidden"
+    name="documents"
+    value={documents.map((d) => d.id).join(",")}
+  />
+
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("data.save")}</Button>
     <Button on:click={() => dispatch("close")}>{$_("data.cancel")}</Button>

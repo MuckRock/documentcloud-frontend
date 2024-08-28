@@ -927,7 +927,7 @@
       }
     },
     "nodocs": "No documents selected. Close this form and select at least one document first.",
-    "many": "Editing {n, plural, one {one document} other {# documents}}. This will set the same values for all selected documents.",
+    "many": "Editing {n, plural, one {one document} other {# documents}}. This will add the same values to all selected documents.",
     "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
     "save": "Save",
     "cancel": "Cancel"
@@ -991,10 +991,10 @@
     "many": "Saving will add the following data and tags to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
   },
   "bulk": {
-    "title": "Bulk actions",
+    "title": "Edit selected",
     "actions": {
-      "edit": "Edit access and metadata",
-      "data": "Edit tags and data",
+      "edit": "Access and metadata",
+      "data": "Add tags and data",
       "reprocess": "Reprocess",
       "delete": "Delete documents",
       "project": "Add to project"

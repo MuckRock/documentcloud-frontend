@@ -1,4 +1,6 @@
 import type {
+  Data,
+  DataUpdate,
   Document,
   DocumentResults,
   DocumentText,
@@ -495,6 +497,51 @@ describe("document write methods", () => {
           Referer: APP_URL,
         },
         body: JSON.stringify(update),
+      },
+    );
+  });
+
+  test("documents.add_tags", async ({ document }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      // fake update
+      endpoint = new URL(endpoint);
+      const key = endpoint.pathname.split("/").filter(Boolean).pop();
+      const body: DataUpdate = JSON.parse(options.body);
+      const data = { ...document.data };
+
+      data[key] = [...(data[key] ?? []), ...body.values];
+
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return data;
+        },
+      };
+    });
+
+    const data = await documents.add_tags(
+      document.id,
+      "_tag",
+      ["one", "two"],
+      "token",
+      mockFetch,
+    );
+
+    expect(data["_tag"]).toEqual(["one", "two"]);
+    expect(mockFetch).toBeCalledWith(
+      new URL(`documents/${document.id}/data/_tag/`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        body: JSON.stringify({
+          values: ["one", "two"],
+        }),
       },
     );
   });

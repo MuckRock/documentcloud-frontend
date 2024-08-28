@@ -30,6 +30,10 @@ export const actions = {
 
     const data = keys.reduce((m, key, i) => {
       const value = values[i];
+
+      // filter out blanks
+      if (key === "" || value === "") return m;
+
       if (key in m) {
         m[key].push(value);
       } else {

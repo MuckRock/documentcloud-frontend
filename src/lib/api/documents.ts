@@ -2,6 +2,8 @@
  * Lots of duplicated code here that should get consolidated at some point.
  */
 import type {
+  Data,
+  DataUpdate,
   Document,
   DocumentText,
   DocumentUpload,
@@ -397,6 +399,41 @@ export async function edit_many(
     },
     body: JSON.stringify(documents),
   });
+}
+
+/**
+ * Add tags to a document.
+ */
+export async function add_tags(
+  doc_id: number | string,
+  key: string,
+  values: string[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${doc_id}/data/${key}/`, BASE_API_URL);
+  const data: DataUpdate = { values };
+
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(data),
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
 }
 
 export async function redact(

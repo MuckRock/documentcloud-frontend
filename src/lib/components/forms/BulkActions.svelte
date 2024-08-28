@@ -10,8 +10,15 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
-  import { getContext } from "svelte";
+  import { getContext, type ComponentType } from "svelte";
   import { _ } from "svelte-i18n";
+  import {
+    Alert16,
+    FileDirectory16,
+    IssueReopened16,
+    Pencil16,
+    Tag16,
+  } from "svelte-octicons";
 
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
@@ -23,18 +30,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import ConfirmDelete from "./ConfirmDelete.svelte";
   import EditMany from "./EditMany.svelte";
   import Reprocess from "./Reprocess.svelte";
+  import EditDataMany from "./EditDataMany.svelte";
 
   const selected: Writable<Document[]> = getContext("selected");
 
   const id = "bulk-actions";
-
-  const _actions: [Action, string][] = [
-    ["edit", $_("bulk.actions.edit")],
-    ["data", $_("bulk.actions.data")],
-    ["reprocess", $_("bulk.actions.reprocess")],
-    ["delete", $_("bulk.actions.delete")],
-    ["project", $_("bulk.actions.project")],
-  ];
 
   const actions: Record<Action, string> = {
     edit: $_("bulk.actions.edit"),
@@ -42,6 +42,14 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     reprocess: $_("bulk.actions.reprocess"),
     delete: $_("bulk.actions.delete"),
     project: $_("bulk.actions.project"),
+  };
+
+  const icons: Record<Action, ComponentType> = {
+    edit: Pencil16,
+    data: Tag16,
+    reprocess: IssueReopened16,
+    delete: Alert16,
+    project: FileDirectory16,
   };
 
   let visible: Action = null;
@@ -67,8 +75,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       <SidebarItem
         hover
         disabled={$selected.length < 1}
-        on:click={() => show(action)}>{label}</SidebarItem
+        on:click={() => show(action)}
       >
+        <svelte:component this={icons[action]} />
+        {label}
+      </SidebarItem>
     {/each}
   </Menu>
 </Dropdown>
@@ -93,9 +104,13 @@ Most actual actions are deferred to their own forms, so this is more of a switch
         <Reprocess documents={$selected} on:close={close} />
       {/if}
 
-      {#if visible === "data"}{/if}
+      {#if visible === "data"}
+        <EditDataMany documents={$selected} on:close={close} />
+      {/if}
 
-      {#if visible === "project"}{/if}
+      {#if visible === "project"}
+        <p>Coming soon ...</p>
+      {/if}
     </Modal>
   </Portal>
 {/if}
