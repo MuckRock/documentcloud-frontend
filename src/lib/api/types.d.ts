@@ -214,6 +214,11 @@ export interface ProjectMembershipItem {
   edit_access: boolean;
 }
 
+export interface ProjectUser {
+  user: User;
+  access: "view" | "edit" | "admin";
+}
+
 export type ProjectMembershipList = Page<ProjectMembershipItem>;
 
 export interface OCREngine {

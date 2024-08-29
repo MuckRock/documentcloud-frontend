@@ -58,7 +58,12 @@
 
   <ContentLayout slot="content">
     <PageToolbar slot="header">
-      <Search name="query" {query} slot="center" />
+      <Search
+        slot="center"
+        name="query"
+        placeholder={$_("projects.placeholder.projects")}
+        {query}
+      />
     </PageToolbar>
 
     {#each projects as project}

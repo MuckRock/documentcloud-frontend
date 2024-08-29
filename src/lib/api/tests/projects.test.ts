@@ -1,9 +1,31 @@
-import { vi, describe, it, test, expect, beforeEach, afterEach } from "vitest";
+import type { Page, ProjectUser } from "$lib/api/types";
+
+import {
+  vi,
+  describe,
+  it,
+  test as base,
+  expect,
+  beforeEach,
+  afterEach,
+} from "vitest";
 
 import { BASE_API_URL } from "@/config/config";
 import { project, projectList } from "@/test/fixtures/projects";
 
 import * as projects from "../projects";
+
+type Use<T> = (value: T) => Promise<void>;
+
+const test = base.extend({
+  async users({}, use: Use<Page<ProjectUser>>) {
+    const { default: users } = await import(
+      "@/test/fixtures/projects/project-users.json"
+    );
+
+    await use(users as Page<ProjectUser>);
+  },
+});
 
 describe("projects.get", () => {
   let mockFetch;
@@ -181,6 +203,31 @@ describe("projects.pinProject", () => {
     await expect(
       projects.pinProject(1, false, "csrftoken", mockFetch),
     ).rejects.toThrowError();
+  });
+});
+
+describe("project user management", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+  test("projects.users", async ({ users }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return users;
+        },
+      };
+    });
+
+    const result = await projects.users(1, mockFetch);
+
+    expect(result).toEqual(users.results);
+    expect(mockFetch).toBeCalledWith(
+      new URL("projects/1/users/?expand=user&per_page=100", BASE_API_URL),
+      { credentials: "include" },
+    );
   });
 });
 

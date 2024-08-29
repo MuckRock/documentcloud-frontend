@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from "svelte-i18n";
   import {
     FileDirectory24,
     Hourglass24,
@@ -7,28 +8,33 @@
     Search16,
     Share16,
   } from "svelte-octicons";
-  import { _ } from "svelte-i18n";
 
-  import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
-  import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
-  import Flex from "@/lib/components/common/Flex.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
-  import Empty from "@/lib/components/common/Empty.svelte";
-  import Error from "@/lib/components/common/Error.svelte";
-  import { projectSearchUrl } from "@/lib/utils/search";
-  import Search from "@/lib/components/forms/Search.svelte";
+  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+
+  import Action from "@/lib/components/common/Action.svelte";
+  import Collaborators from "@/lib/components/projects/Collaborators.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import Error from "$lib/components/common/Error.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import ResultsList, {
     selected,
     total,
     visible,
-  } from "@/lib/components/documents/ResultsList.svelte";
-  import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
+  } from "$lib/components/documents/ResultsList.svelte";
+  import Search from "$lib/components/forms/Search.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+
+  import { projectSearchUrl } from "$lib/utils/search";
 
   export let data;
 
   $: project = data.project;
   $: documentSearch = data.documents;
   $: query = data.query;
+  $: me = data.me;
+  $: users = data.users.filter((u) => u.user.id !== me.id);
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -45,6 +51,8 @@
       <h1>{project.title}</h1>
       <p>{project.description}</p>
     </Flex>
+
+    <Collaborators {users} {project} />
   </svelte:fragment>
 
   <ContentLayout slot="content">

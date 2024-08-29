@@ -688,7 +688,17 @@
     "yours": "Your Projects",
     "shared": "Shared with you",
     "none": "No projects found",
-    "create": "Create project"
+    "create": "Create project",
+    "placeholder": {
+      "projects": "Search projects",
+      "documents": "Search documents"
+    },
+    "collaborators": {
+      "title": "Collaborators",
+      "manage": "Change access",
+      "empty": "No collaborators",
+      "add": "Invite users to this project"
+    }
   },
   "organizations": {
     "sameOrgUsers": "Users in organization"

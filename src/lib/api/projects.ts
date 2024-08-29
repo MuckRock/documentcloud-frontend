@@ -1,6 +1,6 @@
 // api methods for projects
 import type { Page } from "@/api/types";
-import type { Project, ProjectResults, Document } from "./types";
+import type { Document, Project, ProjectResults, ProjectUser } from "./types";
 
 import { BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { getAll, isErrorCode } from "$lib/utils/api";
@@ -129,7 +129,26 @@ export async function pinProject(
   if (isErrorCode(resp.status)) {
     throw new Error(resp.statusText);
   }
+
   return resp.json();
+}
+
+/**
+ * Get collaborators on a project
+ *
+ * @param project_id
+ * @param fetch
+ */
+export async function users(
+  project_id: number,
+  fetch = globalThis.fetch,
+): Promise<ProjectUser[]> {
+  const endpoint = new URL(
+    `projects/${project_id}/users/?expand=user`,
+    BASE_API_URL,
+  );
+
+  return getAll<ProjectUser>(endpoint, undefined, fetch);
 }
 
 /**
