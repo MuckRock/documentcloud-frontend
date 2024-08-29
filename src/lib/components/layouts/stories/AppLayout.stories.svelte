@@ -10,7 +10,6 @@
   const document = doc as Document;
 
   import { addons } from "@/test/handlers/addons";
-  import DocumentLayout from "../DocumentLayout.svelte";
 
   export const meta = {
     title: "Layout / App",
@@ -36,12 +35,7 @@
 <Template let:args>
   <div class="vh">
     <AppLayout {...args}>
-      <DocumentLayout
-        document={{ ...document, edit_access: true }}
-        mode={"document"}
-        text={txt}
-        query=""
-      />
+      <p>Foobar!</p>
     </AppLayout>
   </div>
 </Template>

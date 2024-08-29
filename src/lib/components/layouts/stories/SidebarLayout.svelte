@@ -58,7 +58,6 @@
   import Dialog from "./Dialog.demo.svelte";
   import Modal from "../Modal.svelte";
   import Portal from "../Portal.svelte";
-  import DocumentLayout from "../DocumentLayout.svelte";
 
   let modalOpen = false;
 </script>
