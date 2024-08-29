@@ -14,6 +14,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import { _ } from "svelte-i18n";
   import {
     Alert16,
+    ChevronDown12,
     FileDirectory16,
     IssueReopened16,
     Pencil16,
@@ -68,6 +69,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 <Dropdown {id} position="top right">
   <SidebarItem slot="title" disabled={$selected.length < 1}>
     {$_("bulk.title")}
+    <ChevronDown12 />
   </SidebarItem>
 
   <Menu>

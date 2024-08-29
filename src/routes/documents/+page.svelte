@@ -25,6 +25,7 @@
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
   import { deleted } from "$lib/api/documents";
+  import Flex from "@/lib/components/common/Flex.svelte";
 
   export let data;
 
@@ -73,7 +74,25 @@
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Search name="q" {query} slot="center" />
+        <Flex slot="left" gap={1}>
+          <label class="select-all">
+            <input
+              type="checkbox"
+              name="select_all"
+              checked={$selected.length === $visible.size}
+              indeterminate={$selected.length > 0 &&
+                $selected.length < $visible.size}
+              on:change={selectAll}
+            />
+            {#if $selected.length > 0}
+              {$selected.length.toLocaleString()} {$_("inputs.selected")}
+            {:else}
+              {$_("inputs.selectAll")}
+            {/if}
+          </label>
+          <BulkActions />
+        </Flex>
+        <Search name="q" {query} slot="right" />
       </PageToolbar>
       {#await searchResults}
         <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
@@ -93,25 +112,7 @@
       {/await}
 
       <PageToolbar slot="footer">
-        <label slot="left" class="select-all">
-          <input
-            type="checkbox"
-            name="select_all"
-            checked={$selected.length === $visible.size}
-            indeterminate={$selected.length > 0 &&
-              $selected.length < $visible.size}
-            on:change={selectAll}
-          />
-          {#if $selected.length > 0}
-            {$selected.length.toLocaleString()} {$_("inputs.selected")}
-          {:else}
-            {$_("inputs.selectAll")}
-          {/if}
-        </label>
-
-        <BulkActions slot="center" />
-
-        <svelte:fragment slot="right">
+        <svelte:fragment slot="center">
           {#if $visible && $total}
             {$_("inputs.resultsCount", {
               values: { n: $visible.size, total: $total },
