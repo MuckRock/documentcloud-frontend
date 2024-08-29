@@ -101,9 +101,9 @@ export async function getShared(
  * it returns the updated project object.
  */
 export async function pinProject(
-  csrftoken: string,
   id: number,
   pinned = true,
+  csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<Project> {
   const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
@@ -111,7 +111,7 @@ export async function pinProject(
     credentials: "include",
     method: "PATCH", // this component can only update whether a project is pinned
     headers: {
-      [CSRF_HEADER_NAME]: csrftoken,
+      [CSRF_HEADER_NAME]: csrf_token,
       "Content-type": "application/json",
     },
   };

@@ -1,6 +1,11 @@
 <script lang="ts" context="module">
-  import { writable, type Writable } from "svelte/store";
   import type { Project } from "@/lib/api/types";
+
+  import { invalidate } from "$app/navigation";
+  import { page } from "$app/stores";
+
+  import { writable, type Writable } from "svelte/store";
+  import { getCsrfToken } from "$lib/utils/api";
 
   export const pinned: Writable<Project[]> = writable([]);
 
@@ -15,25 +20,23 @@
 
 <script lang="ts">
   import Pin from "@/common/Pin.svelte";
-  import { pinProject } from "@/lib/api/projects";
-  import { page } from "$app/stores";
+  import { pinProject } from "$lib/api/projects";
 
   export let project: Project;
   export let size = 1;
 
-  $: csrf_token = $page.data.csrf_token;
-
-  async function toggle(event) {
-    event.preventDefault();
-
+  async function toggle(e) {
+    e.preventDefault();
+    const csrf_token = getCsrfToken();
     const newPinnedState = !project.pinned;
     try {
       // optimistic update
       project.pinned = newPinnedState;
-      project = await pinProject(csrf_token, project.id, newPinnedState);
-    } catch {
+      project = await pinProject(project.id, newPinnedState, csrf_token);
+    } catch (e) {
       // undo optimistic update on error
       project.pinned = !project.pinned;
+      console.error(e);
     }
 
     // now that we've updated, set $pinned

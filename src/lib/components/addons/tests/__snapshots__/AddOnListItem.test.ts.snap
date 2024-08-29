@@ -24,7 +24,7 @@ exports[`AddOnListItem 1`] = `
               style="--padding:0.25em; --border-radius:4px;"
             >
               <svg
-                class="svelte-x1la67"
+                class="svelte-yezalu"
                 height="16px"
                 viewBox="0 0 16 16"
                 width="16px"
@@ -105,7 +105,7 @@ exports[`AddOnListItem 2`] = `
               style="--padding:0.25em; --border-radius:4px;"
             >
               <svg
-                class="svelte-x1la67"
+                class="svelte-yezalu"
                 height="16px"
                 viewBox="0 0 16 16"
                 width="16px"

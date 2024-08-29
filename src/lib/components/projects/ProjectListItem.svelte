@@ -71,6 +71,7 @@
     line-height: 1.4;
     color: var(--darkgray);
     overflow: hidden;
+    line-clamp: 4;
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;

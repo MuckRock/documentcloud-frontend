@@ -152,7 +152,7 @@ describe("projects.pinProject", () => {
     vi.restoreAllMocks();
   });
   it("makes a PATCH request to the provided project ID", async () => {
-    await projects.pinProject("csrftoken", 1, false, mockFetch);
+    await projects.pinProject(1, false, "csrftoken", mockFetch);
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`${BASE_API_URL}projects/1/`),
       {
@@ -169,7 +169,7 @@ describe("projects.pinProject", () => {
   it("throws a 500 error if fetch fails", async () => {
     mockFetch = vi.fn().mockRejectedValue("Error");
     await expect(
-      projects.pinProject("csrftoken", 1, false, mockFetch),
+      projects.pinProject(1, false, "csrftoken", mockFetch),
     ).rejects.toThrowError();
   });
   it("throws an error if fetch succeeds with an error status", async () => {
@@ -179,7 +179,7 @@ describe("projects.pinProject", () => {
       statusText: "Whoops",
     });
     await expect(
-      projects.pinProject("csrftoken", 1, false, mockFetch),
+      projects.pinProject(1, false, "csrftoken", mockFetch),
     ).rejects.toThrowError();
   });
 });
