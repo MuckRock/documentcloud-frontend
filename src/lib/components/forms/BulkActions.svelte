@@ -66,7 +66,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   }
 </script>
 
-<Dropdown {id} position="top right">
+<Dropdown {id} position="bottom left">
   <SidebarItem slot="title" disabled={$selected.length < 1}>
     {$_("bulk.title")}
     <ChevronDown12 />

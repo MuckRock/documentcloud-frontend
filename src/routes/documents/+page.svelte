@@ -74,24 +74,7 @@
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Flex slot="left" gap={1}>
-          <label class="select-all">
-            <input
-              type="checkbox"
-              name="select_all"
-              checked={$selected.length === $visible.size}
-              indeterminate={$selected.length > 0 &&
-                $selected.length < $visible.size}
-              on:change={selectAll}
-            />
-            {#if $selected.length > 0}
-              {$selected.length.toLocaleString()} {$_("inputs.selected")}
-            {:else}
-              {$_("inputs.selectAll")}
-            {/if}
-          </label>
-          <BulkActions />
-        </Flex>
+        <BulkActions slot="left" />
         <Search name="q" {query} slot="right" />
       </PageToolbar>
       {#await searchResults}
@@ -112,7 +95,22 @@
       {/await}
 
       <PageToolbar slot="footer">
-        <svelte:fragment slot="center">
+        <label class="select-all" slot="left">
+          <input
+            type="checkbox"
+            name="select_all"
+            checked={$selected.length === $visible.size}
+            indeterminate={$selected.length > 0 &&
+              $selected.length < $visible.size}
+            on:change={selectAll}
+          />
+          {#if $selected.length > 0}
+            {$selected.length.toLocaleString()} {$_("inputs.selected")}
+          {:else}
+            {$_("inputs.selectAll")}
+          {/if}
+        </label>
+        <svelte:fragment slot="right">
           {#if $visible && $total}
             {$_("inputs.resultsCount", {
               values: { n: $visible.size, total: $total },
