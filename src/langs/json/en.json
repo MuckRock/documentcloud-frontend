@@ -680,7 +680,7 @@
     "createProject": "Create your first project by clicking “New Project” above.",
     "pinsEmpty": "Pinned projects will appear here for quick access",
     "private": "Private Project",
-    "public": "Public Project",
+    "public": "Public Projects",
     "loading": "Loading project documents…",
     "empty": "This project is empty",
     "error": "Error loading project documents",

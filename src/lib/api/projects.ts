@@ -2,8 +2,6 @@
 import type { Page } from "@/api/types";
 import type { Project, ProjectResults, Document } from "./types";
 
-import { error, type NumericRange } from "@sveltejs/kit";
-
 import { BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { getAll, isErrorCode } from "$lib/utils/api";
 
@@ -11,9 +9,6 @@ import { getAll, isErrorCode } from "$lib/utils/api";
  * Get a single project
  *
  * @export
- * @param {number} id
- * @param {globalThis.fetch} fetch
- * @returns {Promise<import('./types').Project>}
  */
 export async function get(
   id: number,
@@ -21,28 +16,28 @@ export async function get(
 ): Promise<Project> {
   const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
 
-  const res = await fetch(endpoint, { credentials: "include" }).catch((e) => {
-    error(500, { message: e });
-  });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
-  if (isErrorCode(res.status)) {
-    error(res.status, {
-      message: res.statusText,
-    });
+  if (!resp) {
+    throw new Error("API error");
   }
 
-  return res.json();
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
 }
 
 /**
  * Get a page of projects
  *
  * @export
- * @param {any} params filter params
- * @param {globalThis.fetch} fetch
  */
 export async function list(
-  params: any = {},
+  params: Record<string, any> = {},
   fetch = globalThis.fetch,
 ): Promise<ProjectResults> {
   const endpoint = new URL("projects/", BASE_API_URL);
@@ -51,17 +46,19 @@ export async function list(
     endpoint.searchParams.set(k, String(v));
   }
 
-  const res = await fetch(endpoint, { credentials: "include" }).catch((e) => {
-    error(500, { message: e });
-  });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
-  if (isErrorCode(res.status)) {
-    error(res.status, {
-      message: res.statusText,
-    });
+  if (!resp) {
+    throw new Error("API error");
   }
 
-  return res.json();
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
 }
 
 /**
@@ -120,24 +117,25 @@ export async function pinProject(
   };
 
   // The endpoint returns the updated project
-  const res = await fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     ...options,
     body: JSON.stringify({ pinned }),
-  });
-  if (isErrorCode(res.status)) {
-    error(res.status, {
-      message: res.statusText,
-    });
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
   }
-  return res.json();
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+  return resp.json();
 }
 
 /**
  * Get documents in a project with membership access
  *
  * @export
- * @param {number} id
- * @param {globalThis.fetch} fetch
  */
 export async function documents(
   id: number | string,
@@ -151,15 +149,17 @@ export async function documents(
   endpoint.searchParams.set("ordering", "-created_at");
   endpoint.searchParams.set("per_page", "12");
 
-  const res = await fetch(endpoint, { credentials: "include" }).catch((e) => {
-    error(500, { message: e });
-  });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
-  if (isErrorCode(res.status)) {
-    error(res.status, {
-      message: res.statusText,
-    });
+  if (!resp) {
+    throw new Error("API error");
   }
 
-  return res.json();
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
+  }
+
+  return resp.json();
 }
