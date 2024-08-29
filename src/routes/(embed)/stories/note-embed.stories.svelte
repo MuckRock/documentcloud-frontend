@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document, Note } from "$lib/api/types";
+  import type { Document, Note, ViewerMode } from "$lib/api/types";
 
   // legacy css
   import "@/style/variables.css";
@@ -25,6 +25,7 @@
     note: note as Note,
     document: document as Document,
     embed: true,
+    mode: "document" as ViewerMode,
     me: null,
     org: null,
     user_orgs: Promise.resolve([]),

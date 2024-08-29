@@ -34,7 +34,7 @@
   const mode: Writable<ViewerMode> = writable("annotating");
 
   setContext("activeNote", activeNote);
-  setContext("mode", mode);
+  setContext("currentMode", mode);
 </script>
 
 <Story name="default">

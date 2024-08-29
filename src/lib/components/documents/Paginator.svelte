@@ -3,13 +3,16 @@ Wraps the common paginator with viewer-specific state and functions
 -->
 
 <script lang="ts">
-  import { currentPage } from "@/lib/stores/viewer";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
   import { replaceState } from "$app/navigation";
   import { pageHashUrl } from "$lib/api/documents";
   import { scrollToPage } from "$lib/utils/scroll";
   import Paginator from "$lib/components/common/Paginator.svelte";
 
   export let totalPages: number;
+
+  const currentPage: Writable<number> = getContext("currentPage");
 
   // pagination
   function next() {

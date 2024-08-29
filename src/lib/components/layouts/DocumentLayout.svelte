@@ -7,7 +7,6 @@
   import Metadata from "../documents/Metadata.svelte";
   import Viewer from "../documents/Viewer.svelte";
 
-  export let mode: ViewerMode;
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
@@ -18,7 +17,7 @@
     <DocumentHeader {document} />
   </header>
   <main>
-    <Viewer {mode} {document} {text} {query} />
+    <Viewer {document} {text} {query} />
   </main>
   <aside>
     <div class="sticky top column">

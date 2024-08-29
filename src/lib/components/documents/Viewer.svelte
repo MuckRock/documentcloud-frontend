@@ -1,5 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
   import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
   import { pdfUrl, shouldPaginate } from "$lib/api/documents";
   import PageToolbar from "../common/PageToolbar.svelte";
@@ -17,18 +19,20 @@
   import Flex from "../common/Flex.svelte";
   import Sections from "./Sections.svelte";
 
-  export let mode: ViewerMode;
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
+
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
 
   $: asset_url = pdfUrl(document);
+  $: mode = $currentMode;
 </script>
 
 <div class="container">
   <ContentLayout>
     <PageToolbar slot="header">
-      <SelectMode slot="left" bind:mode />
+      <SelectMode slot="left" />
       <Flex justify="end" slot="right">
         {#if document.edit_access}
           <Button ghost><Note16 /> Annotate</Button>

@@ -3,9 +3,8 @@
 
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
-  import { currentPage } from "@/lib/stores/viewer";
 
-  import { setContext } from "svelte";
+  import { getContext, setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
   import { Comment24 } from "svelte-octicons";
@@ -28,11 +27,11 @@
 
   // stores we need deeper in the component tree, available via context
   const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable(data.mode);
-
+  const currentMode: Writable<ViewerMode> = writable(data.mode);
   setContext("activeNote", activeNote);
-  setContext("currentPage", currentPage);
-  setContext("mode", mode);
+  setContext("mode", currentMode);
+
+  const currentPage: Writable<number> = getContext("currentPage");
 
   $: asset_url = data.asset_url;
   $: document = data.document;

@@ -1,56 +1,56 @@
 <script lang="ts">
-  import type { ViewerMode } from "@/lib/api/types.js";
-
+  import { _ } from "svelte-i18n";
+  import { onMount, afterUpdate, getContext } from "svelte";
   import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
-  import { currentPage, activeNote } from "$lib/stores/viewer";
-
-  import { afterUpdate, getContext, setContext } from "svelte";
-  import { type Writable } from "svelte/store";
-  import { _ } from "svelte-i18n";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
   import {
     pageHashUrl,
-    pageFromHash,
     shouldPaginate,
     shouldPreload,
   } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
-  import { scrollToPage } from "$lib/utils/scroll";
+  import type { Note, ViewerMode } from "$lib/api/types.js";
   import DocumentLayout from "@/lib/components/layouts/DocumentLayout.svelte";
+  import type { Writable } from "svelte/store";
 
   export let data;
 
-  // stores we need deeper in the component tree, available via context
-  // const currentPage: Writable<number> = writable(1);
-  const mode: Writable<ViewerMode> = getContext("mode");
-
-  setContext("currentPage", currentPage);
-  setContext("activeNote", activeNote);
+  let previousMode: ViewerMode;
 
   $: document = data.document;
-  $: $mode = data.mode;
   $: query = data.query;
   $: text = data.text;
 
-  // lifecycle
-  afterNavigate(() => {
-    const { hash } = $page.url;
+  const activeNote: Writable<Note> = getContext("activeNote");
+  const currentPage: Writable<number> = getContext("currentPage");
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
-    $currentPage = pageFromHash(hash);
-
-    if ($currentPage > 1 && shouldPaginate($mode)) {
-      scrollToPage($currentPage);
-    }
-
+  function setCurrentNoteFromHash(url: URL) {
+    const { hash } = url;
     const noteId = noteFromHash(hash);
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
     }
+  }
+
+  // Navigation Lifecycle
+  afterNavigate(() => {
+    setCurrentNoteFromHash($page.url);
   });
 
+  // Pagination Lifecycle
+  function onHashChange(e: HashChangeEvent) {
+    setCurrentNoteFromHash(new URL(e.newURL));
+  }
+
+  // Component Lifecycle
+  onMount(() => {
+    // initialize state from data
+    $currentMode = data.mode;
+  });
   afterUpdate(() => {
     // todo: can we make this more granular? do other things trigger invalidation?
     // https://github.com/orgs/MuckRock/projects/14/views/1?pane=issue&itemId=68215069
@@ -63,34 +63,27 @@
 
   $: {
     const u = new URL($page.url);
-
-    u.searchParams.set("mode", $mode);
-
-    // reset hash, keeping page number
-    u.hash = "";
-    if ($currentPage > 1) {
+    // When the mode changes, update the URL param to match.
+    u.searchParams.set("mode", $currentMode);
+    // Reset the hash, keeping page number if we should paginate.
+    if (shouldPaginate($currentMode) && $currentPage > 1) {
       u.hash = pageHashUrl($currentPage);
+    } else {
+      u.hash = "";
     }
-
-    goto(u);
-  }
-
-  // pagination
-  function onHashChange(e: HashChangeEvent) {
-    const { hash } = new URL(e.newURL);
-    $currentPage = pageFromHash(hash);
-    scrollToPage($currentPage);
-
-    const noteId = noteFromHash(hash);
-    if (noteId) {
-      $activeNote = document.notes.find((note) => note.id === noteId);
+    // Only navigate when the mode changes.
+    // Since we're accessing $page or $currentPage, this will run when
+    // those values change, as well. We want to avoid unnecessary runs.
+    if (previousMode !== $currentMode) {
+      goto(u);
+      previousMode = $currentMode;
     }
   }
 </script>
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if shouldPreload($mode)}
+  {#if shouldPreload($currentMode)}
     <link
       rel="preload"
       href={data.asset_url.href}
@@ -101,4 +94,4 @@
   {/if}
 </svelte:head>
 
-<DocumentLayout {document} {text} {query} mode={$mode} />
+<DocumentLayout {document} {text} {query} />

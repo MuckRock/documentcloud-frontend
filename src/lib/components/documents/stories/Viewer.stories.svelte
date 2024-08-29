@@ -38,19 +38,19 @@
 />
 
 <Story name="Document">
-  <Viewer mode="document" text={txt} {document} />
+  <Viewer text={txt} {document} />
 </Story>
 
 <Story name="Text">
-  <Viewer mode="text" text={txt} {document} />
+  <Viewer text={txt} {document} />
 </Story>
 
 <Story name="Thumbnails">
-  <Viewer mode="grid" text={txt} {document} />
+  <Viewer text={txt} {document} />
 </Story>
 
 <Story name="Notes">
-  <Viewer mode="notes" text={txt} {document} />
+  <Viewer text={txt} {document} />
 </Story>
 
 <style>

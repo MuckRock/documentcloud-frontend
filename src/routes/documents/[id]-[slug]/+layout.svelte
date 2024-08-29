@@ -1,26 +1,24 @@
 <script lang="ts">
   import "@/style/kit.css";
-
-  import type { Document, Project, ViewerMode } from "$lib/api/types";
-
-  import { page } from "$app/stores";
-
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
-
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
+  import type { Document, Note, ViewerMode } from "$lib/api/types";
 
   export let data;
 
-  const mode: Writable<ViewerMode> = writable($page.data.mode);
+  const currentPage: Writable<number> = writable(1);
+  const activeNote: Writable<Note> = writable(null);
+  const currentMode: Writable<ViewerMode> = writable(data.mode);
 
   setContext<Document>("document", data.document);
-  setContext("mode", mode);
+  // stores we need deeper in the component tree, available via context
+  setContext("currentPage", currentPage);
+  setContext("activeNote", activeNote);
+  setContext("currentMode", currentMode);
 
-  $: $mode = $page.data.mode;
   $: document = data.document;
-  $: projects = document.projects as Project[];
   $: canonical_url = canonicalUrl(document).href;
 </script>
 

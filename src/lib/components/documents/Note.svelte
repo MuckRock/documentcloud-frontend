@@ -13,7 +13,13 @@
   import DOMPurify from "isomorphic-dompurify";
   import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Globe16, Lock16, Pencil16, People16, Share16 } from "svelte-octicons";
+  import {
+    Globe16,
+    Lock16,
+    Pencil16,
+    People16,
+    Share16,
+  } from "svelte-octicons";
   import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
@@ -49,7 +55,7 @@
   };
 
   const document: Document = getContext("document");
-  const mode: Writable<ViewerMode> = getContext("mode");
+  const mode: Writable<ViewerMode> = getContext("currentMode");
 
   let canvas: HTMLCanvasElement;
   let renderTask: { promise: Promise<any> };
@@ -206,12 +212,12 @@
   </footer>
 </div>
 {#if shareNoteOpen}
-<Portal>
-  <Modal on:close={() => (shareNoteOpen = false)}>
-    <h1 slot="title">{$_("dialog.share")}</h1>
-    <Share {document} note={note.id} currentTab="note" />
-  </Modal>
-</Portal>
+  <Portal>
+    <Modal on:close={() => (shareNoteOpen = false)}>
+      <h1 slot="title">{$_("dialog.share")}</h1>
+      <Share {document} note={note.id} currentTab="note" />
+    </Modal>
+  </Portal>
 {/if}
 
 <style>

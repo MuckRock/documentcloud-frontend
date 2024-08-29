@@ -4,8 +4,10 @@
   import Flex from "../common/Flex.svelte";
   import Tab from "../common/Tab.svelte";
   import type { ViewerMode } from "@/lib/api/types";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
 
-  export let mode: ViewerMode;
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
   const modes: Map<ViewerMode, string> = new Map([
     ["document", $_("mode.document")],
@@ -26,9 +28,9 @@
   <Flex gap={0} role="tablist">
     {#each modes.entries() as [value, name]}
       <Tab
-        active={mode === value}
+        active={$currentMode === value}
         on:click={() => {
-          mode = value;
+          $currentMode = value;
         }}
       >
         <svelte:component this={icons[value]} />

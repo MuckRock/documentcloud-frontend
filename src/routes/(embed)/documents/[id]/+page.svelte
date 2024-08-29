@@ -31,7 +31,6 @@
     zoomToSize,
   } from "$lib/components/documents/Zoom.svelte";
   import Paginator from "$lib/components/documents/Paginator.svelte";
-  import { currentPage, activeNote } from "@/lib/stores/viewer.js";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
@@ -45,6 +44,9 @@
   import { scrollToPage } from "$lib/utils/scroll";
 
   export let data;
+
+  const currentPage: Writable<number> = getContext("currentPage");
+  const activeNote: Writable<Note> = getContext("activeNote");
 
   const modes = new Map([
     ["document", $_("mode.document")],

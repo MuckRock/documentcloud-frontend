@@ -56,7 +56,7 @@ Selectable text can be rendered in one of two ways:
   // share page
   let pageShareOpen = false;
 
-  const mode: Writable<ViewerMode> = getContext("mode");
+  const mode: Writable<ViewerMode> = getContext("currentMode");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
