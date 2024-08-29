@@ -11,7 +11,7 @@
   import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import Scheduled from "$lib/components/addons/Scheduled.svelte";
@@ -64,7 +64,7 @@
   <title>Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<MainLayout>
+<SidebarLayout>
   <AddOnsNavigation {active} slot="navigation" />
 
   <svelte:fragment slot="content">
@@ -150,7 +150,7 @@
       <History runs={runs.results} next={runs.next} previous={runs.previous} />
     {/await}
   </div>
-</MainLayout>
+</SidebarLayout>
 
 <style>
   .tip {

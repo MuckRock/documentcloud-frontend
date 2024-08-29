@@ -181,6 +181,8 @@
     height: 100%;
     padding: 1rem;
     gap: 1rem;
+    max-width: 80rem;
+    margin: 0 auto;
   }
   .addon,
   .docs {

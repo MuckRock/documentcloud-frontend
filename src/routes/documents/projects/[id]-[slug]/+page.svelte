@@ -9,7 +9,7 @@
   } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
-  import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
   import Flex from "@/lib/components/common/Flex.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
@@ -39,7 +39,7 @@
   }
 </script>
 
-<MainLayout>
+<SidebarLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
       <h1>{project.title}</h1>
@@ -109,4 +109,4 @@
       <Search16 />{$_("projects.viewInSearch")}
     </SidebarItem>
   </svelte:fragment>
-</MainLayout>
+</SidebarLayout>

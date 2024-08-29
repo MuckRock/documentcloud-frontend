@@ -3,7 +3,8 @@
   export let disabled = false;
   export let small = false;
   export let hover = false;
-  export let title = '';
+  export let title = "";
+  export let inline = false;
   // handling link behavior
   export let href: string = undefined;
   export let target: string = undefined;
@@ -22,13 +23,26 @@
     class:active
     class:disabled
     class:small
+    class:inline
     on:click
     on:keydown
   >
     <slot />
   </a>
 {:else}
-  <span {title} class="container" class:active class:hover class:disabled class:small on:click on:keydown role="button" tabindex={0}>
+  <span
+    {title}
+    class="container"
+    class:active
+    class:hover
+    class:disabled
+    class:small
+    class:inline
+    on:click
+    on:keydown
+    role="button"
+    tabindex={0}
+  >
     <slot />
   </span>
 {/if}
@@ -48,11 +62,15 @@
     background: var(--background, transparent);
 
     font-family: var(--font-sans, "Source Sans Pro");
-    font-size: var(--font-md, 1rem);
+    font-size: var(--font-size, var(--font-md, 1rem));
     font-weight: var(--font-semibold, 600);
     text-decoration: none;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+  .container.inline {
+    display: inline-flex;
+    width: auto;
   }
 
   /* Hover */

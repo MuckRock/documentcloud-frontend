@@ -23,7 +23,7 @@
     align-self: stretch;
     position: relative;
     width: 100%;
-    height: auto;
+    height: min-content;
     min-height: 100%;
   }
   header {
