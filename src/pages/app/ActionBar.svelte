@@ -4,7 +4,7 @@
   import Flex from "../../common/Flex.svelte";
   import Tooltip from "../../common/Tooltip.svelte";
   import Dropdown from "../../common/Dropdown.svelte";
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
 
   // Menus
   import EditMenu from "./menus/EditMenu.svelte";

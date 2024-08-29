@@ -16,7 +16,7 @@
   import closeSvg from "@/assets/close_inline.svg?raw";
 
   import { SPECIAL_CONTACT } from "../../config/config.js";
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
 
   let loading = true;
   let fullText = null;

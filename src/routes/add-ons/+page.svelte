@@ -13,9 +13,9 @@
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Paginator from "@/common/Paginator.svelte";
   import Premium from "@/common/icons/Premium.svelte";
   import Pin from "@/common/icons/Pin.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
   import Scheduled from "$lib/components/addons/Scheduled.svelte";
   import Search from "@/lib/components/forms/Search.svelte";
   import Star from "@/common/icons/Star.svelte";

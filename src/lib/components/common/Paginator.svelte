@@ -155,10 +155,16 @@
   }
 
   input.pageNumber {
+    appearance: none;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: var(--font-semibold);
     flex: 0 1 auto;
-    padding: 0.125rem;
+    margin: 0 0.125rem;
+    padding: 0.125rem 0.25rem;
     text-align: center;
-    border-color: rgba(0, 0, 0, 0.125);
+    border: 1px solid var(--gray-2);
+    border-radius: 0.5rem;
     box-shadow: none;
   }
 

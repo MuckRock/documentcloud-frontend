@@ -15,7 +15,7 @@
   import Loader from "@/common/Loader.svelte";
   import Modal from "@/common/Modal.svelte";
   import NoDocuments from "./NoDocuments.svelte";
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
   import ProcessingBar from "./ProcessingBar.svelte";
   import SearchBar from "./SearchBar.svelte";
   import SearchLink from "./SearchLink.svelte";

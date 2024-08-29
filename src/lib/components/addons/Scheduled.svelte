@@ -8,7 +8,7 @@
   import ScheduledEvent from "./ScheduledEvent.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import Paginator from "@/common/Paginator.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
   import Empty from "../common/Empty.svelte";
 
   export let events: Event[];
