@@ -34,7 +34,7 @@
   .container {
     display: grid;
     grid-template-rows: auto 1fr;
-    grid-template-columns: minmax(32rem, 64rem) min(16rem, 32rem);
+    grid-template-columns: minmax(42rem, 84rem) 16rem;
     justify-content: center;
     min-height: 100%;
     padding: 0 0.5rem;
