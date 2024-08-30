@@ -24,17 +24,16 @@
 <SidebarGroup name="collaborators">
   <SidebarItem slot="title">
     {$_("projects.collaborators.title")}
+    {#if project.add_remove_access}
+      <Action icon={Pencil16} title={$_("projects.manage")}>
+        <span class="sr-only">{$_("projects.manage")}</span>
+      </Action>
+    {/if}
   </SidebarItem>
 
   {#each sort(users) as user}
     <SidebarItem small>
       {user.user.name} ({user.access})
-
-      {#if project.add_remove_access}
-        <Action icon={Pencil16} title={$_("projects.manage")}>
-          <span class="sr-only">{$_("projects.manage")}</span>
-        </Action>
-      {/if}
     </SidebarItem>
   {:else}
     <Empty>

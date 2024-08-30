@@ -12,8 +12,8 @@
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
 
-  import Action from "@/lib/components/common/Action.svelte";
   import Collaborators from "@/lib/components/projects/Collaborators.svelte";
+  import ProjectActions from "@/lib/components/projects/ProjectActions.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
@@ -57,7 +57,12 @@
 
   <ContentLayout slot="content">
     <PageToolbar slot="header">
-      <Search name="q" {query} slot="center" />
+      <Search
+        slot="center"
+        name="q"
+        {query}
+        placeholder={$_("projects.placeholder.documents")}
+      />
     </PageToolbar>
     {#await documentSearch}
       <Empty icon={Hourglass24}>{$_("projects.loading")}</Empty>
@@ -102,19 +107,5 @@
     </PageToolbar>
   </ContentLayout>
 
-  <svelte:fragment slot="action">
-    <Flex direction="column">
-      <SidebarItem href="#edit"><Pencil16 />{$_("sidebar.edit")}</SidebarItem>
-      <SidebarItem href="#collaborate"
-        ><People16 />{$_("sidebar.collaborate")}</SidebarItem
-      >
-      <SidebarItem href="#share"
-        ><Share16 />{$_("sidebar.shareEmbed")}</SidebarItem
-      >
-    </Flex>
-    <hr class="divider" />
-    <SidebarItem href={projectSearchUrl(project)}>
-      <Search16 />{$_("projects.viewInSearch")}
-    </SidebarItem>
-  </svelte:fragment>
+  <ProjectActions slot="action" {project} />
 </MainLayout>
