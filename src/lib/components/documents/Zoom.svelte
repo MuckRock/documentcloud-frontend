@@ -3,9 +3,12 @@ Shared zoom component for all viewer routes.
 It exports a $zoom store that can be passed around to other components.
 -->
 <script context="module" lang="ts">
+  import { _, unwrapFunctionStore } from "svelte-i18n";
   import { writable, type Writable } from "svelte/store";
   import type { Sizes, ViewerMode, Zoom } from "$lib/api/types";
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+
+  const i18n = unwrapFunctionStore(_);
 
   export const zoom: Writable<Zoom> = writable(1);
 
@@ -25,12 +28,75 @@ It exports a $zoom store that can be passed around to other components.
 
     return "small";
   }
+
+  /**
+   * Generate a default zoom, based on mode
+   * @param mode
+   */
+  export function getDefaultZoom(mode: ViewerMode): Zoom {
+    switch (mode) {
+      case "document":
+        return "width";
+
+      case "annotating":
+        return "width";
+
+      case "redacting":
+        return "width";
+
+      case "grid":
+        return "small";
+
+      default:
+        return 1;
+    }
+  }
+
+  /**
+   * Generate zoom levels based on mode, since each zooms in a slightly different way
+   */
+  export function getZoomLevels(mode: ViewerMode): (string | number)[][] {
+    switch (mode) {
+      case "document":
+      case "annotating":
+      case "redacting":
+        return [
+          ["width", i18n("zoom.fitWidth")],
+          ["height", i18n("zoom.fitHeight")],
+          [0.5, "50%"],
+          [0.75, "75%"],
+          [1, "100%"],
+          [1.25, "125%"],
+          [1.5, "150%"],
+          [2, "200%"],
+        ];
+
+      case "text":
+        return [
+          [0.5, "50%"],
+          [0.75, "75%"],
+          [1, "100%"],
+          [1.25, "125%"],
+          [1.5, "150%"],
+          [2, "200%"],
+        ];
+
+      case "grid":
+        return [
+          ["thumbnail", i18n("zoom.thumbnail")],
+          ["small", i18n("zoom.small")],
+          ["normal", i18n("zoom.normal")],
+          ["large", i18n("zoom.large")],
+        ];
+
+      default:
+        // todo: notes, maybe
+        return [];
+    }
+  }
 </script>
 
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { getDefaultZoom, getZoomLevels } from "@/lib/utils/viewer";
-
   export let mode: ViewerMode;
 
   $: zoomLevels = getZoomLevels(mode);
