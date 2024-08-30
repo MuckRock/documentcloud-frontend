@@ -1,10 +1,46 @@
-<script lang="ts">
+<script context="module" lang="ts">
   import type { Access } from "$lib/api/types";
-  import { _ } from "svelte-i18n";
+  import {
+    Globe24,
+    Lock24,
+    Organization24,
+    type SvgComponent,
+  } from "svelte-octicons";
+  import { unwrapFunctionStore, _ } from "svelte-i18n";
 
+  const i18n = unwrapFunctionStore(_);
+
+  export interface Level {
+    value: Access;
+    title: string;
+    description: string;
+    icon: typeof SvgComponent;
+  }
+
+  export const levels: Level[] = [
+    {
+      value: i18n("access.private.value") as Access,
+      title: i18n("access.private.title"),
+      description: i18n("access.private.description"),
+      icon: Lock24,
+    },
+    {
+      value: i18n("access.organization.value") as Access,
+      title: i18n("access.organization.title"),
+      description: i18n("access.organization.description"),
+      icon: Organization24,
+    },
+    {
+      value: i18n("access.public.value") as Access,
+      title: i18n("access.public.title"),
+      description: i18n("access.public.description"),
+      icon: Globe24,
+    },
+  ];
+</script>
+
+<script lang="ts">
   import Flex from "../common/Flex.svelte";
-
-  import { levels } from "$lib/utils/access";
 
   export let name: string;
   export let selected: Access = levels[0].value;
