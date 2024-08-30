@@ -75,7 +75,7 @@
     display: flex;
     flex-direction: row;
     overflow: hidden;
-    max-width: 80rem;
+    max-width: var(--app-max-w, 100rem);
     margin: 0 auto;
     height: 100%;
   }

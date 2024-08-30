@@ -181,7 +181,7 @@
     height: 100%;
     padding: 1rem;
     gap: 1rem;
-    max-width: 80rem;
+    max-width: var(--app-max-w, 100rem);
     margin: 0 auto;
   }
   .addon,

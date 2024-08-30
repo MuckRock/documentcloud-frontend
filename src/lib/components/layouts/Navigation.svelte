@@ -71,7 +71,7 @@
   }
   .inner {
     width: 100%;
-    max-width: 80rem;
+    max-width: var(--app-max-w, 100rem);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
