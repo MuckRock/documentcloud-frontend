@@ -111,6 +111,7 @@
     padding: 0 1rem;
     margin: 0.75rem 0 0;
     max-width: 100%;
+    scroll-margin-top: 6rem;
   }
 
   .page.wide {
