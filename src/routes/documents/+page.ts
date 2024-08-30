@@ -4,7 +4,7 @@ import { DEFAULT_PER_PAGE } from "@/config/config.js";
 import { search, pending } from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons.js";
 
-export async function load({ url, fetch }) {
+export async function load({ url, fetch, data }) {
   const query = url.searchParams.get("q") || "";
   const per_page = +url.searchParams.get("per_page") || DEFAULT_PER_PAGE;
   const cursor = url.searchParams.get("cursor") || "";
@@ -30,6 +30,7 @@ export async function load({ url, fetch }) {
       next: null,
     } as DocumentResults;
   });
+
   const pinnedAddons = getPinnedAddons(fetch).catch((e) => {
     console.error(e);
     return {
@@ -41,6 +42,7 @@ export async function load({ url, fetch }) {
   });
 
   return {
+    ...data,
     query,
     per_page,
     cursor,

@@ -1,17 +1,16 @@
 <script context="module" lang="ts">
   import { writable, type Writable } from "svelte/store";
+  import type { Document, DocumentResults } from "$lib/api/types";
 
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
-  export const selected: Writable<string[]> = writable([]);
-  export let visible: Writable<Set<string>> = writable(new Set());
+  export const selected: Writable<Document[]> = writable([]);
+  export let visible: Writable<Set<Document>> = writable(new Set());
 
   export let total: Writable<number> = writable(0);
 </script>
 
 <script lang="ts">
-  import type { Document, DocumentResults } from "$lib/api/types";
-
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
@@ -34,7 +33,7 @@
   let observer: IntersectionObserver;
 
   // track what's visible so we can compare to $selected
-  $: $visible = new Set(results.map((d) => String(d.id)));
+  $: $visible = new Set(results);
 
   // load the next set of results
   async function load(url: URL) {
@@ -94,11 +93,7 @@
       <Flex gap={0.625} align="center">
         <label>
           <span class="sr-only">{$_("documents.select")}</span>
-          <input
-            type="checkbox"
-            bind:group={$selected}
-            value={String(document.id)}
-          />
+          <input type="checkbox" bind:group={$selected} value={document} />
         </label>
         <DocumentListItem {document} />
       </Flex>

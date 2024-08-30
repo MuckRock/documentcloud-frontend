@@ -59,6 +59,6 @@ describe("ResultsList", () => {
       await fireEvent.click(c);
     });
 
-    expect(get(selected)).toEqual(results.results.map((d) => d.id));
+    expect(get(selected)).toEqual(results.results);
   });
 });

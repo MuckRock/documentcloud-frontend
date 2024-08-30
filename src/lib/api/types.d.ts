@@ -257,6 +257,11 @@ export interface Redaction extends BBox {
 
 export type Bounds = [number, number, number, number];
 
+export interface DataUpdate {
+  values: string[];
+  remove?: string[];
+}
+
 export interface Flatpage {
   url: string;
   title: string;
