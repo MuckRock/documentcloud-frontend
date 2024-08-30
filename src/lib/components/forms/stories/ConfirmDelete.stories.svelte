@@ -28,3 +28,9 @@
     <ConfirmDelete {documents} />
   </div>
 </Story>
+
+<Story name="disabled">
+  <div style="max-width: 66ch;">
+    <ConfirmDelete documents={[]} />
+  </div>
+</Story>

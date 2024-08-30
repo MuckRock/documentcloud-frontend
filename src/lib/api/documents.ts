@@ -2,6 +2,8 @@
  * Lots of duplicated code here that should get consolidated at some point.
  */
 import type {
+  Data,
+  DataUpdate,
   Document,
   DocumentText,
   DocumentUpload,
@@ -84,7 +86,7 @@ export async function search(
  * Example: https://api.www.documentcloud.org/api/documents/1/
  */
 export async function get(
-  id: number,
+  id: string | number,
   fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<Document> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
@@ -304,6 +306,31 @@ export async function destroy(
 }
 
 /**
+ * Delete many documents. There is no undo.
+ *
+ * @param ids
+ * @param csrf_token
+ * @param fetch
+ */
+export async function destroy_many(
+  ids: (string | number)[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/`, BASE_API_URL);
+  endpoint.searchParams.set("id__in", ids.join(","));
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  });
+}
+
+/**
  * Edit the top-level fields of a document with a PATCH request
  *
  * @param id Document ID
@@ -336,7 +363,74 @@ export async function edit(
   }
 
   if (isErrorCode(resp.status)) {
-    throw new Error(await resp.json());
+    const { data } = await resp.json();
+    throw new Error(data);
+  }
+
+  return resp.json();
+}
+
+/**
+ * Bulk edit top-level fields of an array of documents.
+ * Each document *must* have an `id` property.
+ *
+ * This returns the response directly, since a successful update
+ * will result in invalidation and refetching data.
+ *
+ * @param documents
+ * @param csrf_token
+ * @param fetch
+ * @returns {Promise<Response>}
+ */
+export async function edit_many(
+  documents: Partial<Document>[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<Response> {
+  const endpoint = new URL("documents/", BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(documents),
+  });
+}
+
+/**
+ * Add tags to a document.
+ */
+export async function add_tags(
+  doc_id: number | string,
+  key: string,
+  values: string[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${doc_id}/data/${key}/`, BASE_API_URL);
+  const data: DataUpdate = { values };
+
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(data),
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API error");
+  }
+
+  if (isErrorCode(resp.status)) {
+    throw new Error(resp.statusText);
   }
 
   return resp.json();

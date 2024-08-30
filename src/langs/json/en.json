@@ -132,7 +132,9 @@
     "dismiss": "Dismiss",
     "continue": "Continue",
     "dispatch": "Dispatch",
-    "submit": "Submit"
+    "submit": "Submit",
+    "organize": "Organize",
+    "run": "Run"
   },
   "dialogAccessDialog": {
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
@@ -934,6 +936,8 @@
         "description": "Changing the access setting will reprocess your document."
       }
     },
+    "nodocs": "No documents selected. Close this form and select at least one document first.",
+    "many": "Editing {n, plural, one {one document} other {# documents}}. This will add the same values to all selected documents.",
     "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
     "save": "Save",
     "cancel": "Cancel"
@@ -979,7 +983,8 @@
     "continue": "Do you wish to continue?",
     "confirm": "Delete",
     "cancel": "Cancel",
-    "error": "Error"
+    "error": "Error",
+    "none": "No documents selected. Close this form and select at least one document first."
   },
   "data": {
     "title": "Edit tags and data",
@@ -992,7 +997,18 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
-    "addNew": "Add new data:"
+    "addNew": "Add new item:",
+    "many": "Saving will add the following data and tags to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
+  },
+  "bulk": {
+    "title": "Edit selected",
+    "actions": {
+      "edit": "Access and metadata",
+      "data": "Add tags and data",
+      "reprocess": "Reprocess",
+      "delete": "Delete documents",
+      "project": "Add to project"
+    }
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",

@@ -1,4 +1,6 @@
 import type {
+  Data,
+  DataUpdate,
   Document,
   DocumentResults,
   DocumentText,
@@ -39,6 +41,14 @@ const test = base.extend({
     );
 
     await use(document as Document);
+  },
+
+  documents: async ({}, use: Use<DocumentResults>) => {
+    const { default: documents } = await import(
+      "@/test/fixtures/documents/documents.json"
+    );
+
+    await use(documents as DocumentResults);
   },
 
   created: async ({}, use: Use<Document[]>) => {
@@ -412,6 +422,31 @@ describe("document write methods", () => {
     );
   });
 
+  test("documents.destroy_many", async ({ documents: docs }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+
+    const ids = docs.results.map((d) => d.id);
+    const endpoint = new URL("documents/", BASE_API_URL);
+    endpoint.searchParams.set("id__in", ids.join(","));
+
+    const resp = await documents.destroy_many(ids, "token", mockFetch);
+
+    expect(resp.status).toStrictEqual(204);
+    expect(mockFetch).toBeCalledWith(endpoint, {
+      credentials: "include",
+      method: "DELETE",
+      headers: {
+        [CSRF_HEADER_NAME]: "token",
+        Referer: APP_URL,
+      },
+    });
+  });
+
   test("documents.edit", async ({ document }) => {
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       const body = JSON.parse(options.body);
@@ -432,6 +467,83 @@ describe("document write methods", () => {
     );
 
     expect(updated.title).toStrictEqual("Updated title");
+  });
+
+  test("documents.edit_many", async ({ documents: docs }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      const body = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json() {
+          return body;
+        },
+      };
+    });
+
+    const update = docs.results.map((d) => ({ ...d, source: "New source" }));
+    const resp = await documents.edit_many(update, "token", mockFetch);
+
+    expect(resp.status).toEqual(200);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL("documents/", BASE_API_URL),
+      {
+        credentials: "include",
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        body: JSON.stringify(update),
+      },
+    );
+  });
+
+  test("documents.add_tags", async ({ document }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      // fake update
+      endpoint = new URL(endpoint);
+      const key = endpoint.pathname.split("/").filter(Boolean).pop();
+      const body: DataUpdate = JSON.parse(options.body);
+      const data = { ...document.data };
+
+      data[key] = [...(data[key] ?? []), ...body.values];
+
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return data;
+        },
+      };
+    });
+
+    const data = await documents.add_tags(
+      document.id,
+      "_tag",
+      ["one", "two"],
+      "token",
+      mockFetch,
+    );
+
+    expect(data["_tag"]).toEqual(["one", "two"]);
+    expect(mockFetch).toBeCalledWith(
+      new URL(`documents/${document.id}/data/_tag/`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        body: JSON.stringify({
+          values: ["one", "two"],
+        }),
+      },
+    );
   });
 
   test("documents.redact", async ({ document, redactions }) => {

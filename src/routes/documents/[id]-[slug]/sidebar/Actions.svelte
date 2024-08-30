@@ -5,7 +5,6 @@
 
   import {
     Alert16,
-    Apps16,
     Comment16,
     Download16,
     EyeClosed16,
@@ -27,7 +26,7 @@
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
 
   import { canonicalUrl, pdfUrl, isProcessing } from "$lib/api/documents";
-  import Share from "@/lib/components/documents/Share.svelte";
+  import Share from "$lib/components/documents/Share.svelte";
 
   export let document: Document;
 

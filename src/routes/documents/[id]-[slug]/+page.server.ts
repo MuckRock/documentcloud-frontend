@@ -19,7 +19,7 @@ export function load({ cookies }) {
  */
 export const actions = {
   // like edit but specifically for data
-  async data({ cookies, request, fetch, params }) {
+  async data({ cookies, request, fetch, params, url }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const { id } = params;
 
@@ -30,6 +30,10 @@ export const actions = {
 
     const data = keys.reduce((m, key, i) => {
       const value = values[i];
+
+      // filter out blanks
+      if (key === "" || value === "") return m;
+
       if (key in m) {
         m[key].push(value);
       } else {
@@ -45,6 +49,7 @@ export const actions = {
         document,
       };
     } catch (error) {
+      console.error(`Data: ${url}`);
       console.error(error);
       return fail(400);
     }
