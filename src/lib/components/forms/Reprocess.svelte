@@ -10,7 +10,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   import { _ } from "svelte-i18n";
   import { IssueReopened16 } from "svelte-octicons";
 
-  import { invalidate } from "$app/navigation";
+  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
 
   import Button from "../common/Button.svelte";
@@ -86,11 +86,8 @@ This will mostly be used inside a modal but isn't dependent on one.
     const resp = await process(payload, csrf_token);
 
     if (resp.ok) {
+      await invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
-      await Promise.all([
-        ...documents.map((d) => invalidate(`document:${d.id}`)),
-        invalidate($page.url),
-      ]);
     } else {
       errors = await resp.json();
       submitting = false; // now you can try again
