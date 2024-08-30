@@ -1,6 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { onMount, afterUpdate, getContext } from "svelte";
+  import { browser } from "$app/environment";
   import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
 
@@ -61,7 +62,7 @@
     }
   });
 
-  $: {
+  $: if (browser) {
     const u = new URL($page.url);
     // When the mode changes, update the URL param to match.
     u.searchParams.set("mode", $currentMode);
