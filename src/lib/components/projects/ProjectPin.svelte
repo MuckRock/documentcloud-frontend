@@ -2,10 +2,11 @@
   import type { Project } from "@/lib/api/types";
 
   import { invalidate } from "$app/navigation";
-  import { page } from "$app/stores";
 
   import { writable, type Writable } from "svelte/store";
   import { getCsrfToken } from "$lib/utils/api";
+
+  import { canonicalUrl } from "$lib/api/projects";
 
   export const pinned: Writable<Project[]> = writable([]);
 
@@ -33,6 +34,7 @@
       // optimistic update
       project.pinned = newPinnedState;
       project = await pinProject(project.id, newPinnedState, csrf_token);
+      await invalidate(canonicalUrl(project));
     } catch (e) {
       // undo optimistic update on error
       project.pinned = !project.pinned;

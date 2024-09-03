@@ -123,9 +123,9 @@
 
   <svelte:fragment slot="action">
     <SignedIn>
-      <Button mode="primary" href="/upload/"
-        ><PlusCircle16 />{$_("sidebar.upload")}</Button
-      >
+      <Button mode="primary" href="/upload/">
+        <PlusCircle16 />{$_("sidebar.upload")}
+      </Button>
       <Actions />
       <AddOns pinnedAddOns={data.pinnedAddons} />
     </SignedIn>

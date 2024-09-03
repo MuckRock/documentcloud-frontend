@@ -1,7 +1,12 @@
 <script lang="ts">
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { FileDirectory24, Hourglass24 } from "svelte-octicons";
+  import {
+    FileDirectory24,
+    Hourglass24,
+    Globe16,
+    Lock16,
+  } from "svelte-octicons";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
@@ -13,6 +18,7 @@
   import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import ProjectPin from "$lib/components/projects/ProjectPin.svelte";
   import ResultsList, {
     selected,
     total,
@@ -42,7 +48,15 @@
 <MainLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
-      <h1>{project.title}</h1>
+      <h1>
+        {project.title}
+        {#if project.private}
+          <Lock16 />
+        {:else}
+          <Globe16 />
+        {/if}
+        <ProjectPin {project} />
+      </h1>
       <p>{project.description}</p>
     </Flex>
 
@@ -105,3 +119,11 @@
 
   <ProjectActions slot="action" {project} />
 </MainLayout>
+
+<style>
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+</style>
