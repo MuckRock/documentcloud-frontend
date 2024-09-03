@@ -173,10 +173,10 @@
     position: absolute;
   }
   .dropdown.top {
-    bottom: calc(100% + var(--offset, 0));
+    bottom: calc(100% + var(--offset, 0px));
   }
   .dropdown.bottom {
-    top: calc(100% + var(--offset, 0));
+    top: calc(100% + var(--offset, 0px));
   }
   .dropdown.left {
     left: 0;

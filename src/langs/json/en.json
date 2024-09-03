@@ -691,6 +691,9 @@
     "shared": "Shared with you",
     "none": "No projects found",
     "create": "Create project",
+    "edit": "Edit project metadata",
+    "share": "Share & embed this project",
+    "users": "Manage Collaborators",
     "placeholder": {
       "projects": "Search projects",
       "documents": "Search documents"
@@ -700,6 +703,12 @@
       "manage": "Change access",
       "empty": "No collaborators",
       "add": "Invite users to this project"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "private": "Private Project",
+      "pinned": "Pin project"
     }
   },
   "organizations": {

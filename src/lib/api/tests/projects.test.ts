@@ -1,4 +1,4 @@
-import type { Page, ProjectUser } from "$lib/api/types";
+import type { Page, Project, ProjectUser } from "$lib/api/types";
 
 import {
   vi,
@@ -10,7 +10,7 @@ import {
   afterEach,
 } from "vitest";
 
-import { BASE_API_URL } from "@/config/config";
+import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config";
 import { project, projectList } from "@/test/fixtures/projects";
 
 import * as projects from "../projects";
@@ -227,6 +227,111 @@ describe("project user management", () => {
     expect(mockFetch).toBeCalledWith(
       new URL("projects/1/users/?expand=user&per_page=100", BASE_API_URL),
       { credentials: "include" },
+    );
+  });
+});
+
+describe("project lifecycle", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("projects.create", async () => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 201,
+        async json() {
+          return project;
+        },
+      };
+    });
+
+    const data = {
+      title: project.title,
+      description: project.description,
+      private: project.private,
+      pinned: project.pinned,
+    };
+
+    const created = await projects.create(data, "token", mockFetch);
+
+    expect(created).toMatchObject(project);
+    expect(mockFetch).toBeCalledWith(new URL("projects/", BASE_API_URL), {
+      body: JSON.stringify(data),
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        [CSRF_HEADER_NAME]: "token",
+        Referer: APP_URL,
+      },
+      method: "POST",
+    });
+  });
+
+  test("projects.edit", async () => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      const update = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return { ...project, ...update };
+        },
+      };
+    });
+
+    const update: Partial<Project> = { title: "New title" };
+
+    const updated = await projects.edit(project.id, update, "token", mockFetch);
+
+    expect(updated).toMatchObject({ ...project, ...update });
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`projects/${project.id}/`, BASE_API_URL),
+      {
+        body: JSON.stringify(update),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        method: "PATCH",
+      },
+    );
+  });
+
+  test("projects.destroy", async () => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+
+    const resp = await projects.destroy(project.id, "token", mockFetch);
+
+    expect(resp.status).toEqual(204);
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`projects/${project.id}/`, BASE_API_URL),
+      {
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        method: "DELETE",
+      },
+    );
+  });
+});
+
+describe("project utils", () => {
+  test("projects.canonicalUrl", () => {
+    const url = projects.canonicalUrl(project);
+    expect(url).toStrictEqual(
+      new URL(`documents/projects/${project.id}-${project.slug}/`, APP_URL),
     );
   });
 });

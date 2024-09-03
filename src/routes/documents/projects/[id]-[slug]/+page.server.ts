@@ -5,6 +5,8 @@ import type {
   ProjectUser,
 } from "$lib/api/types";
 
+import * as projects from "$lib/api/projects";
+
 export const actions = {
   async edit() {},
 

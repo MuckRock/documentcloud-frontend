@@ -9,8 +9,13 @@
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
+  import Modal from "../layouts/Modal.svelte";
+  import Portal from "../layouts/Portal.svelte";
+
   export let project: Project;
   export let users: ProjectUser[];
+
+  let edit = false;
 
   function sort(users: ProjectUser[]) {
     return users.sort(
@@ -25,7 +30,11 @@
   <SidebarItem slot="title">
     {$_("projects.collaborators.title")}
     {#if project.add_remove_access}
-      <Action icon={Pencil16} title={$_("projects.manage")}>
+      <Action
+        icon={Pencil16}
+        title={$_("projects.manage")}
+        on:click={() => (edit = true)}
+      >
         <span class="sr-only">{$_("projects.manage")}</span>
       </Action>
     {/if}
@@ -44,3 +53,11 @@
     </Empty>
   {/each}
 </SidebarGroup>
+
+{#if edit}
+  <Portal>
+    <Modal on:close={() => (edit = false)}>
+      <p>edit</p>
+    </Modal>
+  </Portal>
+{/if}

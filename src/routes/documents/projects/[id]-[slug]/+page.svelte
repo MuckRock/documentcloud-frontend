@@ -1,19 +1,14 @@
 <script lang="ts">
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    FileDirectory24,
-    Hourglass24,
-    Pencil16,
-    People16,
-    Search16,
-    Share16,
-  } from "svelte-octicons";
+  import { FileDirectory24, Hourglass24 } from "svelte-octicons";
 
   import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
 
-  import Collaborators from "@/lib/components/projects/Collaborators.svelte";
-  import ProjectActions from "@/lib/components/projects/ProjectActions.svelte";
+  import BulkActions from "$lib/components/forms/BulkActions.svelte";
+  import Collaborators from "$lib/components/projects/Collaborators.svelte";
+  import ProjectActions from "$lib/components/projects/ProjectActions.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
@@ -24,11 +19,10 @@
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-
-  import { projectSearchUrl } from "$lib/utils/search";
 
   export let data;
+
+  setContext("selected", selected);
 
   $: project = data.project;
   $: documentSearch = data.documents;
@@ -57,8 +51,10 @@
 
   <ContentLayout slot="content">
     <PageToolbar slot="header">
+      <BulkActions slot="left" />
+
       <Search
-        slot="center"
+        slot="right"
         name="q"
         {query}
         placeholder={$_("projects.placeholder.documents")}

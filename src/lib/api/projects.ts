@@ -2,7 +2,7 @@
 import type { Page } from "@/api/types";
 import type { Document, Project, ProjectResults, ProjectUser } from "./types";
 
-import { BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
+import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { getAll, isErrorCode } from "$lib/utils/api";
 
 /**
@@ -151,9 +151,108 @@ export async function users(
   return getAll<ProjectUser>(endpoint, undefined, fetch);
 }
 
+// writable methods
+/**
+ * Create a new project
+ *
+ * @param project
+ * @param csrf_token
+ * @param fetch
+ */
+export async function create(
+  project: {
+    title: string;
+    description?: string;
+    private?: boolean;
+    pinned?: boolean;
+  },
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL("projects/", BASE_API_URL);
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify(project),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "POST",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API unavailable");
+  }
+
+  if (isErrorCode(resp.status)) {
+    const { data } = await resp.json();
+    throw new Error(data);
+  }
+
+  return resp.json();
+}
+
+export async function edit(
+  project_id: number,
+  data: Partial<Project>,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`projects/${project_id}/`, BASE_API_URL);
+
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify(data),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "PATCH",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API unavailable");
+  }
+
+  if (isErrorCode(resp.status)) {
+    const { data } = await resp.json();
+    throw new Error(data);
+  }
+
+  return resp.json();
+}
+
+/**
+ * Delete a project. There is no undo.
+ *
+ * @param project_id
+ * @param csrf_token
+ * @param fetch
+ */
+export async function destroy(
+  project_id: number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`projects/${project_id}/`, BASE_API_URL);
+
+  return fetch(endpoint, {
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "DELETE",
+  });
+}
+
 /**
  * Get documents in a project with membership access
  *
+ * @deprecated
  * @export
  */
 export async function documents(
@@ -181,4 +280,10 @@ export async function documents(
   }
 
   return resp.json();
+}
+
+// utils
+
+export function canonicalUrl(project: Project): URL {
+  return new URL(`documents/projects/${project.id}-${project.slug}/`, APP_URL);
 }

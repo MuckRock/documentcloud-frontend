@@ -1,3 +1,7 @@
+<script context="module" lang="ts">
+  type Action = "edit" | "share" | "users";
+</script>
+
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
@@ -10,11 +14,19 @@
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
+  import EditProject from "../forms/EditProject.svelte";
+
   import { projectSearchUrl } from "$lib/utils/search";
 
   export let project: Project;
 
-  let show: "edit" | "share" | "users" = null;
+  let show: Action = null;
+
+  const actions: Record<Action, string> = {
+    edit: $_("projects.edit"),
+    share: $_("projects.share"),
+    users: $_("projects.users"),
+  };
 </script>
 
 <Flex direction="column">
@@ -40,8 +52,11 @@
 {#if show}
   <Portal>
     <Modal on:close={() => (show = null)}>
+      <h1 slot="title">
+        {actions[show]}
+      </h1>
       {#if show === "edit"}
-        <p>Edit</p>
+        <EditProject {project} on:close={() => (show = null)} />
       {/if}
 
       {#if show === "share"}

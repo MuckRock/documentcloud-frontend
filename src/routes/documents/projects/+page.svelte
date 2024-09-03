@@ -22,7 +22,13 @@
   import ProjectListItem from "$lib/components/projects/ProjectListItem.svelte";
   import Paginator from "@/common/Paginator.svelte";
 
+  import EditProject from "@/lib/components/forms/EditProject.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+
   export let data;
+
+  let create = false;
 
   $: query = data.query;
   $: projects = data.projects.results;
@@ -84,6 +90,17 @@
   </ContentLayout>
 
   <svelte:fragment slot="action">
-    <Button mode="primary" href="#create">{$_("projects.create")}</Button>
+    <Button mode="primary" on:click={() => (create = true)}>
+      {$_("projects.create")}
+    </Button>
   </svelte:fragment>
 </MainLayout>
+
+{#if create}
+  <Portal>
+    <Modal on:close={() => (create = false)}>
+      <h1 slot="title">{$_("projects.create")}</h1>
+      <EditProject on:close={() => (create = false)} />
+    </Modal>
+  </Portal>
+{/if}
