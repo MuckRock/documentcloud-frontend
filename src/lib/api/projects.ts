@@ -138,6 +138,8 @@ export async function pinProject(
  *
  * @param project_id
  * @param fetch
+ *
+ * @deprecated
  */
 export async function users(
   project_id: number,

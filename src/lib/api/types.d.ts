@@ -14,6 +14,8 @@ export type { Page, User, Org, Project };
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
+export type ProjectAccess = "view" | "edit" | "admin";
+
 export type Data = Record<string, string[]>;
 
 export type Highlights = Record<string, string[]>;
@@ -216,7 +218,7 @@ export interface ProjectMembershipItem {
 
 export interface ProjectUser {
   user: User;
-  access: "view" | "edit" | "admin";
+  access: ProjectAccess;
 }
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;
