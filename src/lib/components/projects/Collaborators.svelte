@@ -47,7 +47,7 @@
   {:else}
     <Empty>
       {$_("projects.collaborators.empty")}
-      <Action>
+      <Action on:click={() => (edit = true)}>
         {$_("projects.collaborators.add")}
       </Action>
     </Empty>

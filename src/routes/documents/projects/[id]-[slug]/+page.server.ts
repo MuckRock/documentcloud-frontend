@@ -35,4 +35,8 @@ export const actions = {
   },
 
   async users() {},
+
+  async invite() {},
+
+  async remove() {},
 } satisfies Actions;

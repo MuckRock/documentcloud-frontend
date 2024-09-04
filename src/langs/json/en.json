@@ -711,6 +711,30 @@
       "pinned": "Pin project"
     }
   },
+  "collaborators": {
+    "remove": {
+      "confirm": "Confirm remove user",
+      "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
+    },
+    "add": "Add", 
+    "addCollaborators": "Add Collaborators",
+    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
+    "admin": "Admin",
+    "view": "View",
+    "edit": "Edit",
+    "help": {
+      "admin": "Collaborators can edit this project and its documents",
+      "edit": "Collaborators can edit documents in this project",
+      "view": "Collaborators can view documents in this project",
+      "remove": "Remove this user from this project"
+    },
+    "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
+    "manage": "Manage Collaborators",
+    "name": "Name",
+    "access": "Access",
+    "you": "(you)",
+    "change": "Change access"
+  },
   "organizations": {
     "sameOrgUsers": "Users in organization"
   },

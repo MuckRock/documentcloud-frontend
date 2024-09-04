@@ -9,7 +9,7 @@ export async function load({ url, parent, fetch }) {
   const { me } = await parent();
   const query = url.searchParams.get("query") ?? "";
   const cursor = url.searchParams.get("cursor") ?? "";
-  const per_page = url.searchParams.get("per_page") ?? DEFAULT_PER_PAGE;
+  const per_page = +url.searchParams.get("per_page") || DEFAULT_PER_PAGE;
 
   const params: Record<string, any> = {
     query,

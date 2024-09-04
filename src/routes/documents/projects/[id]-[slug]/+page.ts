@@ -2,6 +2,7 @@ import { error, redirect } from "@sveltejs/kit";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
 import * as projects from "$lib/api/projects";
+import * as collaborators from "$lib/api/collaborators";
 import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 
@@ -9,7 +10,7 @@ export async function load({ params, url, parent, fetch }) {
   const id = parseInt(params.id);
   const [project, users] = await Promise.all([
     projects.get(id, fetch).catch(console.error),
-    projects.users(id, fetch).catch(console.error),
+    collaborators.list(id, fetch).catch(console.error),
   ]).catch((e) => {
     return [];
   });
