@@ -37,8 +37,9 @@ export async function add(
   }
 
   if (isErrorCode(resp.status)) {
-    const { data } = await resp.json();
-    throw new Error(data);
+    const data = await resp.json();
+    console.error(data);
+    throw new Error(resp.statusText);
   }
 
   return resp.json();
@@ -72,8 +73,9 @@ export async function update(
   }
 
   if (isErrorCode(resp.status)) {
-    const { data } = await resp.json();
-    throw new Error(data);
+    const data = await resp.json();
+    console.error(data);
+    throw new Error(resp.statusText);
   }
 
   return resp.json();

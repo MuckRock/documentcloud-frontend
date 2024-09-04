@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import type { Project } from "$lib/api/types";
+  import type { Project, ProjectUser } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { People16, Pencil16, Search16, Share16 } from "svelte-octicons";
@@ -15,10 +15,12 @@
   import Portal from "../layouts/Portal.svelte";
 
   import EditProject from "../forms/EditProject.svelte";
+  import ManageCollaborators from "../forms/ManageCollaborators.svelte";
 
   import { projectSearchUrl } from "$lib/utils/search";
 
   export let project: Project;
+  export let users: ProjectUser[];
 
   let show: Action = null;
 
@@ -64,7 +66,7 @@
       {/if}
 
       {#if show === "users"}
-        <p>Manage users</p>
+        <ManageCollaborators {project} {users} on:close={() => (show = null)} />
       {/if}
     </Modal>
   </Portal>

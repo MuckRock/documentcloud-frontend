@@ -12,6 +12,8 @@ They might get separated later.
     User,
   } from "$lib/api/types";
 
+  import { enhance } from "$app/forms";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -37,18 +39,30 @@ They might get separated later.
     },
     { admin: [], edit: [], view: [] } satisfies Record<ProjectAccess, User[]>,
   );
+
+  function sort(users: User[]) {
+    return users.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+    submitter.disabled = true;
+    return async ({ result, update }) => {
+      submitter.disabled = false;
+      return update(result);
+    };
+  }
 </script>
 
 <Flex direction="column">
-  <form {action} method="post">
-    <h1>{$_("collaborators.addCollaborators")}</h1>
+  <form action={invite} method="post" use:enhance>
+    <h2>{$_("collaborators.addCollaborators")}</h2>
     <p>{@html $_("collaborators.invite")}</p>
     <Flex align="center">
       <Field title={$_("common.emailAddress")} sronly>
         <Text name="email" placeholder={$_("common.emailAddress")} />
       </Field>
       <Field>
-        <select class="access">
+        <select name="access" class="access">
           <option value="view">{$_("collaborators.view")}</option>
           <option value="edit">{$_("collaborators.edit")}</option>
           <option value="admin">{$_("collaborators.admin")}</option>
@@ -61,8 +75,7 @@ They might get separated later.
   </form>
 
   {#if users.length}
-    <form action={invite} method="post">
-      <h1>{$_("collaborators.manage")}</h1>
+    <form {action} method="post" use:enhance>
       {#each Object.entries(grouped) as [access, group]}
         {#if group.length}
           <Flex direction="column" class="users {access}">
@@ -75,7 +88,7 @@ They might get separated later.
                 <th>{$_("collaborators.name")}</th>
                 <th>{$_("collaborators.access")}</th>
               </tr>
-              {#each group as user}
+              {#each sort(group) as user}
                 <tr>
                   <td>{user.name}</td>
                   <td>
@@ -84,9 +97,12 @@ They might get separated later.
                       <select name="access" value={access}>
                         <option value="view">{$_("collaborators.view")}</option>
                         <option value="edit">{$_("collaborators.edit")}</option>
-                        <option value="admin"
-                          >{$_("collaborators.admin")}</option
-                        >
+                        <option value="admin">
+                          {$_("collaborators.admin")}
+                        </option>
+                        <option value="remove">
+                          {$_("collaborators.remove.label")}
+                        </option>
                       </select>
                     </Field>
                   </td>
@@ -97,9 +113,9 @@ They might get separated later.
         {/if}
       {/each}
       <Flex class="buttons">
-        <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
-        <Button full on:click={(e) => dispatch("close")}>
-          {$_("edit.cancel")}
+        <Button type="submit" mode="primary" full>{$_("dialog.save")}</Button>
+        <Button full on:click={() => dispatch("close")}>
+          {$_("dialog.done")}
         </Button>
       </Flex>
     </form>

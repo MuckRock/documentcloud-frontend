@@ -713,6 +713,7 @@
   },
   "collaborators": {
     "remove": {
+      "label": "Remove user",
       "confirm": "Confirm remove user",
       "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
     },

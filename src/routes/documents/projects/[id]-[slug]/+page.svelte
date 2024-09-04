@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { ProjectUser, User } from "$lib/api/types";
+
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
@@ -33,8 +35,7 @@
   $: project = data.project;
   $: documentSearch = data.documents;
   $: query = data.query;
-  $: me = data.me;
-  $: users = data.users.filter((u) => u.user.id !== me.id);
+  $: users = data.users;
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -117,7 +118,7 @@
     </PageToolbar>
   </ContentLayout>
 
-  <ProjectActions slot="action" {project} />
+  <ProjectActions slot="action" {project} {users} />
 </MainLayout>
 
 <style>

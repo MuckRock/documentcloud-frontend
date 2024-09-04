@@ -13,5 +13,5 @@
 </script>
 
 <Story name="default">
-  <ProjectActions {project} />
+  <ProjectActions {project} users={[]} />
 </Story>

@@ -9,6 +9,7 @@
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
+  import ManageCollaborators from "../forms/ManageCollaborators.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
@@ -57,7 +58,8 @@
 {#if edit}
   <Portal>
     <Modal on:close={() => (edit = false)}>
-      <p>edit</p>
+      <h1 slot="title">{$_("collaborators.manage")}</h1>
+      <ManageCollaborators {project} {users} on:close={() => (edit = false)} />
     </Modal>
   </Portal>
 {/if}
