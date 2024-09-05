@@ -1,4 +1,4 @@
-import type { Page, Project, ProjectUser } from "$lib/api/types";
+import type { Page, Project, ProjectMembershipItem } from "$lib/api/types";
 
 import {
   vi,
@@ -18,12 +18,12 @@ import * as projects from "../projects";
 type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
-  async users({}, use: Use<Page<ProjectUser>>) {
-    const { default: users } = await import(
-      "@/test/fixtures/projects/project-users.json"
+  async documents({}, use: Use<Page<ProjectMembershipItem>>) {
+    const { default: documents } = await import(
+      "@/test/fixtures/projects/project-documents.json"
     );
 
-    await use(users as Page<ProjectUser>);
+    await use(documents);
   },
 });
 
@@ -206,31 +206,6 @@ describe("projects.pinProject", () => {
   });
 });
 
-describe("project user management", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-  test("projects.users", async ({ users }) => {
-    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
-      return {
-        ok: true,
-        status: 200,
-        async json() {
-          return users;
-        },
-      };
-    });
-
-    const result = await projects.users(1, mockFetch);
-
-    expect(result).toEqual(users.results);
-    expect(mockFetch).toBeCalledWith(
-      new URL("projects/1/users/?expand=user&per_page=100", BASE_API_URL),
-      { credentials: "include" },
-    );
-  });
-});
-
 describe("project lifecycle", () => {
   afterEach(() => {
     vi.clearAllMocks();
@@ -336,4 +311,66 @@ describe("project utils", () => {
   });
 });
 
-test.todo("projects.documents");
+describe("manage project documents", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("projects.add", async ({ documents }) => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      const docs = JSON.parse(options.body).map((d) => {
+        d.edit_access = true;
+        return d;
+      });
+
+      return {
+        ok: true,
+        status: 201,
+        async json() {
+          return docs;
+        },
+      };
+    });
+
+    const ids = documents.results.map((d) => d.document as number);
+    const docs = await projects.add(1, ids, "token", mockFetch);
+
+    expect(docs).toMatchObject(documents.results);
+    expect(mockFetch).toBeCalledWith(
+      new URL("projects/1/documents/", BASE_API_URL),
+      {
+        body: JSON.stringify(ids.map((document) => ({ document }))),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        method: "POST",
+      },
+    );
+  });
+
+  test("projects.remove", async ({ documents }) => {
+    const mockFetch = vi.fn().mockImplementation(async () => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+    const ids = documents.results.map((d) => d.document as number);
+    const endpoint = new URL(`projects/1/documents/`, BASE_API_URL);
+    endpoint.searchParams.set("document_id__in", ids.join(","));
+
+    expect(await projects.remove(1, ids, "token", mockFetch));
+    expect(mockFetch).toBeCalledWith(endpoint, {
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        [CSRF_HEADER_NAME]: "token",
+        Referer: APP_URL,
+      },
+      method: "DELETE",
+    });
+  });
+});

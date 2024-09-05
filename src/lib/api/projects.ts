@@ -1,6 +1,12 @@
 // api methods for projects
 import type { Page } from "@/api/types";
-import type { Document, Project, ProjectResults, ProjectUser } from "./types";
+import type {
+  APIError,
+  Document,
+  Project,
+  ProjectMembershipItem,
+  ProjectResults,
+} from "./types";
 
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { getAll, isErrorCode } from "$lib/utils/api";
@@ -133,26 +139,6 @@ export async function pinProject(
   return resp.json();
 }
 
-/**
- * Get collaborators on a project
- *
- * @param project_id
- * @param fetch
- *
- * @deprecated
- */
-export async function users(
-  project_id: number,
-  fetch = globalThis.fetch,
-): Promise<ProjectUser[]> {
-  const endpoint = new URL(
-    `projects/${project_id}/users/?expand=user`,
-    BASE_API_URL,
-  );
-
-  return getAll<ProjectUser>(endpoint, undefined, fetch);
-}
-
 // writable methods
 /**
  * Create a new project
@@ -249,6 +235,88 @@ export async function destroy(
     },
     method: "DELETE",
   });
+}
+
+/**
+ * Add documents to a project
+ *
+ * @param project_id
+ * @param documents
+ * @param csrf_token
+ * @param fetch
+ */
+export async function add(
+  project_id: number,
+  documents: (string | number)[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<ProjectMembershipItem[] | APIError> {
+  const endpoint = new URL(`projects/${project_id}/documents/`, BASE_API_URL);
+  const data = documents.map((document) => ({ document }));
+  const resp = await fetch(endpoint, {
+    body: JSON.stringify(data),
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "POST",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API unavailable");
+  }
+
+  // trying out some new error handling
+  if (isErrorCode(resp.status)) {
+    return {
+      error: {
+        status: resp.status,
+        message: resp.statusText,
+        ...(await resp.json()),
+      },
+    };
+  }
+
+  return resp.json();
+}
+
+export async function remove(
+  project_id: number,
+  documents: (string | number)[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<APIError | null> {
+  const endpoint = new URL(`projects/${project_id}/documents/`, BASE_API_URL);
+  endpoint.searchParams.set("document_id__in", documents.join(","));
+
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    method: "DELETE",
+  }).catch(console.error);
+
+  if (!resp) {
+    throw new Error("API unavailable");
+  }
+
+  // trying out some new error handling
+  if (isErrorCode(resp.status)) {
+    return {
+      error: {
+        status: resp.status,
+        message: resp.statusText,
+        ...(await resp.json()),
+      },
+    };
+  }
+
+  return null;
 }
 
 /**

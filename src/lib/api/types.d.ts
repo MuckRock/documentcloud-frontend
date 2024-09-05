@@ -33,6 +33,13 @@ export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "width" | "height";
 
+export interface APIError {
+  error: {
+    status: number;
+    message: string;
+  };
+}
+
 export interface NoteHighlight {
   title: string[];
   description: string[];
