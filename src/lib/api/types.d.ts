@@ -160,7 +160,7 @@ export interface Document {
   file_url?: string | URL;
 
   // expandable relationship fields
-  projects?: number[] | Project[];
+  projects?: (Project | number)[];
   notes?: Note[];
   sections?: Section[];
   revisions?: Revision[];

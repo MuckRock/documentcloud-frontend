@@ -7,7 +7,8 @@
     "new": "New",
     "learnMore": "Learn more",
     "or": "or",
-    "explore": "Explore"
+    "explore": "Explore",
+    "more": "More"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -694,6 +695,7 @@
     "edit": "Edit project metadata",
     "share": "Share & embed this project",
     "users": "Manage Collaborators",
+    "add": "Add",
     "placeholder": {
       "projects": "Search projects",
       "documents": "Search documents"
