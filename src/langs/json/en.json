@@ -8,7 +8,8 @@
     "learnMore": "Learn more",
     "or": "or",
     "explore": "Explore",
-    "more": "More"
+    "more": "More",
+    "add": "Add"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -695,7 +696,12 @@
     "edit": "Edit project metadata",
     "share": "Share & embed this project",
     "users": "Manage Collaborators",
-    "add": "Add",
+    "add": "Add {n, plural, one {this document} other {# documents}} to a project",
+    "delete": {
+      "action": "Delete project",
+      "confirm": "Confirm delete",
+      "really": "Are you sure you want to delete this project ({project})?"
+    },
     "placeholder": {
       "projects": "Search projects",
       "documents": "Search documents"

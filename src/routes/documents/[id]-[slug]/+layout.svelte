@@ -73,7 +73,7 @@
 
     <Data {document} />
 
-    <Projects {projects} />
+    <Projects {projects} {document} />
   </svelte:fragment>
 
   <slot slot="content" />

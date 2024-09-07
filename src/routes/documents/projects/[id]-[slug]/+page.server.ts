@@ -1,17 +1,31 @@
 import type { Actions } from "./$types";
-import type {
-  Project,
-  ProjectAccess,
-  ProjectMembershipItem,
-  ProjectUser,
-} from "$lib/api/types";
+import type { Project, ProjectAccess } from "$lib/api/types";
 
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import * as projects from "$lib/api/projects";
 import * as collaborators from "$lib/api/collaborators";
 
 export const actions = {
+  async delete({ cookies, request, fetch, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const project_id = +params.id;
+
+    const resp = await projects
+      .destroy(project_id, csrf_token, fetch)
+      .catch(console.error);
+
+    if (!resp) {
+      return fail(500, { message: "API error" });
+    }
+
+    if (resp.status === 204) {
+      return redirect(302, "/documents/projects/");
+    }
+
+    return fail(resp.status, { error: await resp.json() });
+  },
+
   async edit({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();

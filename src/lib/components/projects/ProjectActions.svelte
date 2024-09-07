@@ -1,12 +1,18 @@
 <script context="module" lang="ts">
-  type Action = "edit" | "share" | "users";
+  type Action = "edit" | "share" | "users" | "delete";
 </script>
 
 <script lang="ts">
   import type { Project, ProjectUser } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { People16, Pencil16, Search16, Share16 } from "svelte-octicons";
+  import {
+    Alert16,
+    People16,
+    Pencil16,
+    Search16,
+    Share16,
+  } from "svelte-octicons";
 
   import Flex from "../common/Flex.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
@@ -16,6 +22,7 @@
 
   import EditProject from "../forms/EditProject.svelte";
   import ManageCollaborators from "../forms/ManageCollaborators.svelte";
+  import DeleteProject from "../forms/DeleteProject.svelte";
 
   import { projectSearchUrl } from "$lib/utils/search";
 
@@ -28,7 +35,12 @@
     edit: $_("projects.edit"),
     share: $_("projects.share"),
     users: $_("projects.users"),
+    delete: $_("projects.delete.confirm"),
   };
+
+  function hide() {
+    show = null;
+  }
 </script>
 
 <Flex direction="column">
@@ -43,6 +55,15 @@
   <SidebarItem hover on:click={() => (show = "share")}>
     <Share16 />{$_("sidebar.shareEmbed")}
   </SidebarItem>
+  <SidebarItem
+    hover
+    --color="var(--caution)"
+    --fill="var(--caution)"
+    on:click={() => (show = "delete")}
+  >
+    <Alert16 />
+    {$_("projects.delete.action")}
+  </SidebarItem>
 </Flex>
 
 <hr class="divider" />
@@ -53,12 +74,12 @@
 
 {#if show}
   <Portal>
-    <Modal on:close={() => (show = null)}>
+    <Modal on:close={hide}>
       <h1 slot="title">
         {actions[show]}
       </h1>
       {#if show === "edit"}
-        <EditProject {project} on:close={() => (show = null)} />
+        <EditProject {project} on:close={hide} />
       {/if}
 
       {#if show === "share"}
@@ -66,7 +87,11 @@
       {/if}
 
       {#if show === "users"}
-        <ManageCollaborators {project} {users} on:close={() => (show = null)} />
+        <ManageCollaborators {project} {users} on:close={hide} />
+      {/if}
+
+      {#if show === "delete"}
+        <DeleteProject {project} on:close={hide} />
       {/if}
     </Modal>
   </Portal>

@@ -67,6 +67,19 @@ export async function list(
   return resp.json();
 }
 
+export async function getForUser(
+  userId: number,
+  query?: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL("projects/", BASE_API_URL);
+  endpoint.searchParams.set("user", String(userId));
+  if (query) {
+    endpoint.searchParams.set("query", query);
+  }
+  return getAll<Project>(endpoint, undefined, fetch);
+}
+
 /**
  * Get a list of all projects owned by the user
  */
@@ -75,12 +88,7 @@ export async function getOwned(
   query?: string,
   fetch = globalThis.fetch,
 ): Promise<Project[]> {
-  const endpoint = new URL("projects/", BASE_API_URL);
-  endpoint.searchParams.set("user", String(userId));
-  if (query) {
-    endpoint.searchParams.set("query", query);
-  }
-  const projects = await getAll<Project>(endpoint, undefined, fetch);
+  const projects = await getForUser(userId, query, fetch);
   return projects.filter((project) => project.user === userId);
 }
 
@@ -92,12 +100,7 @@ export async function getShared(
   query?: string,
   fetch = globalThis.fetch,
 ): Promise<Project[]> {
-  const endpoint = new URL("projects/", BASE_API_URL);
-  endpoint.searchParams.set("user", String(userId));
-  if (query) {
-    endpoint.searchParams.set("query", query);
-  }
-  const projects = await getAll<Project>(endpoint, undefined, fetch);
+  const projects = await getForUser(userId, query, fetch);
   return projects.filter((project) => project.user !== userId);
 }
 

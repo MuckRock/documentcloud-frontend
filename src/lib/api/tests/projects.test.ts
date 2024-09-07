@@ -102,6 +102,32 @@ describe("projects.list", () => {
   });
 });
 
+describe("projects for users", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("projects.getForUser", async () => {
+    const mockFetch = vi.fn().mockImplementation(async (endpont, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return projectList;
+        },
+      };
+    });
+
+    const result = await projects.getForUser(1, undefined, mockFetch);
+
+    expect(result).toMatchObject(projectList.results);
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`projects/?user=1&per_page=100`, BASE_API_URL),
+      { credentials: "include" },
+    );
+  });
+});
+
 describe("projects.getOwned", () => {
   let mockFetch;
   beforeEach(() => {

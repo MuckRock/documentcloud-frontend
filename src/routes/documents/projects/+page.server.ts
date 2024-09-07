@@ -22,6 +22,7 @@ export const actions = {
       const created = await projects.create(project, csrf_token, fetch);
       return { success: true, project: created };
     } catch (error) {
+      // todo: return better errors
       return fail(400, { error });
     }
   },

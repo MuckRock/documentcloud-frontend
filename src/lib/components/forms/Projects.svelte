@@ -5,11 +5,14 @@ because it needs to load all of a user's projects
 and we don't want to do that everywhere.
 -->
 <script lang="ts">
-  import type { Document, Project } from "$lib/api/types";
+  import type { Writable } from "svelte/store";
+  import type { Document, Project, User } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
+  import { page } from "$app/stores";
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -19,12 +22,17 @@ and we don't want to do that everywhere.
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
 
+  import { getForUser, add, remove } from "$lib/api/projects";
+  import { getCsrfToken } from "$lib/utils/api";
   import { intersection } from "@/util/array.js";
 
-  export let documents: Document[];
-  export let projects: Project[];
+  export let documents: Document[] = [];
+  export let projects: Project[] = [];
 
   const dispatch = createEventDispatcher();
+  const me: Writable<User> = getContext("me");
+
+  let common: Set<number>;
 
   $: common = new Set(
     intersection(
@@ -32,13 +40,40 @@ and we don't want to do that everywhere.
       (a, b) => {
         return a.id === b.id;
       },
-    ),
+    ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
   );
 
-  $: console.log(common);
+  onMount(async () => {
+    if ($me && projects.length === 0) {
+      projects = await getForUser($me.id);
+    }
+  });
+
+  // typescript doesn't know what to do with svelte's events
+  async function toggle(project: Project, e) {
+    const { checked } = e.target;
+    const ids = documents.map((d) => d.id);
+    const csrf_token = getCsrfToken();
+    if (checked) {
+      await add(project.id, ids, csrf_token);
+    } else {
+      await remove(project.id, ids, csrf_token);
+    }
+    await Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
+  }
+
+  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+    submitter.disabled = true;
+    return async ({ result, update }) => {
+      if (result.success) {
+        projects = [...projects, result.project];
+      }
+      submitter.disabled = false;
+    };
+  }
 </script>
 
-<form method="post" action="/documents/projects/" use:enhance>
+<form method="post" action="/documents/projects/" use:enhance={onSubmit}>
   <Flex direction="column">
     <h2>{$_("projects.create")}</h2>
     <Field title={$_("projects.fields.title")} required inline>
@@ -55,28 +90,41 @@ and we don't want to do that everywhere.
           <Switch name="private" />
         </Field>
         <Field title={$_("projects.fields.pinned")} inline>
-          <Switch name="pinned" checked />
+          <Switch name="pinned" />
         </Field>
       </Flex>
     </details>
-    <Button mode="primary" type="submit">{$_("projects.add")} +</Button>
+    <Flex>
+      <Button mode="primary" type="submit">
+        {$_("common.add")} +
+      </Button>
+    </Flex>
   </Flex>
-  <hr class="divider" />
-  <Flex direction="column" class="projects">
-    {#each projects as project}
-      <label class="project">
-        <input
-          type="checkbox"
-          name="project"
-          value={project.id}
-          checked={common.has(project.id)}
-        />
-        {project.title}
-      </label>
-    {/each}
-  </Flex>
-  <hr class="divider" />
+
+  {#if projects.length}
+    <hr class="divider" />
+    <Flex direction="column" class="projects">
+      {#each projects as project}
+        <label class="project">
+          <input
+            type="checkbox"
+            name="project"
+            value={project.id}
+            checked={common.has(project.id)}
+            on:change={(e) => toggle(project, e)}
+          />
+          {project.title}
+        </label>
+      {/each}
+    </Flex>
+    <hr class="divider" />
+  {/if}
   <Flex class="buttons">
+    <input
+      type="hidden"
+      name="documents"
+      value={documents.map((d) => d.id).join(",")}
+    />
     <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
   </Flex>
 </form>
@@ -86,6 +134,7 @@ and we don't want to do that everywhere.
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
   }
 
   label {
