@@ -43,11 +43,17 @@ and we don't want to do that everywhere.
     ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
   );
 
+  $: console.log(projects);
+
   onMount(async () => {
     if ($me && projects.length === 0) {
       projects = await getForUser($me.id);
     }
   });
+
+  function invalidateDocs(documents: Document[]) {
+    return Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
+  }
 
   // typescript doesn't know what to do with svelte's events
   async function toggle(project: Project, e) {
@@ -59,22 +65,23 @@ and we don't want to do that everywhere.
     } else {
       await remove(project.id, ids, csrf_token);
     }
-    await Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
+    await invalidateDocs(documents);
   }
 
   function onSubmit({ formElement, formData, action, cancel, submitter }) {
     submitter.disabled = true;
     return async ({ result, update }) => {
-      if (result.success) {
-        projects = [...projects, result.project];
+      if (result.type === "success") {
+        projects = [...projects, result.data.project];
+        update(result);
       }
       submitter.disabled = false;
     };
   }
 </script>
 
-<form method="post" action="/documents/projects/" use:enhance={onSubmit}>
-  <Flex direction="column">
+<div class="container">
+  <form method="post" action="/documents/projects/" use:enhance={onSubmit}>
     <h2>{$_("projects.create")}</h2>
     <Field title={$_("projects.fields.title")} required inline>
       <Text name="title" placeholder={$_("projects.fields.title")} />
@@ -99,7 +106,7 @@ and we don't want to do that everywhere.
         {$_("common.add")} +
       </Button>
     </Flex>
-  </Flex>
+  </form>
 
   {#if projects.length}
     <hr class="divider" />
@@ -127,10 +134,11 @@ and we don't want to do that everywhere.
     />
     <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
   </Flex>
-</form>
+</div>
 
 <style>
-  form {
+  form,
+  .container {
     display: flex;
     flex-direction: column;
     gap: 1rem;

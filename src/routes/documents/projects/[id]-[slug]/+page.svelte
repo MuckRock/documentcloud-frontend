@@ -46,6 +46,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{project.title} | DocumentCloud</title>
+</svelte:head>
+
 <MainLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">

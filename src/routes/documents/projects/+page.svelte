@@ -44,6 +44,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{$_("projects.header")} | DocumentCloud</title>
+</svelte:head>
+
 <MainLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
