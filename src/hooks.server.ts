@@ -7,9 +7,6 @@ import * as Sentry from "@sentry/sveltekit";
 import { locale } from "svelte-i18n";
 import { DC_BASE } from "./config/config.js";
 
-// This polyfill is required for PDF.js to run on the server
-import "core-js/proposals/promise-with-resolvers";
-
 Sentry.init({
   dsn: env.SENTRY_DSN,
   tracesSampleRate: 1,

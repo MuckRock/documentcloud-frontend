@@ -1,11 +1,10 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
-  // worker is configured in +layout.svelte
-  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-      "pdfjs-dist/build/pdf.worker.mjs",
+      "pdfjs-dist/legacy/build/pdf.worker.mjs",
       import.meta.url,
     ).href;
   }
