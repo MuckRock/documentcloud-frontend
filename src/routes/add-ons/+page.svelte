@@ -8,18 +8,18 @@
   import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Error from "@/lib/components/common/Error.svelte";
+  import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Paginator from "@/common/Paginator.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
   import Pin from "@/common/icons/Pin.svelte";
+  import Premium from "@/common/icons/Premium.svelte";
   import Scheduled from "$lib/components/addons/Scheduled.svelte";
-  import Search from "@/lib/components/forms/Search.svelte";
+  import Search from "$lib/components/forms/Search.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import Star from "@/common/icons/Star.svelte";
-  import Tip from "@/lib/components/common/Tip.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
 
   export let data;
 
@@ -40,15 +40,6 @@
     goto(url);
   }
 
-  function search(event: SubmitEvent) {
-    event.preventDefault();
-    const url = new URL($page.url); // make a copy
-    const formData = new FormData(event.currentTarget as HTMLFormElement);
-    const query = formData.get("query") ?? "";
-    url.searchParams.set("query", query as string);
-    goto(url);
-  }
-
   $: active =
     Array.from(($page.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
@@ -64,13 +55,13 @@
   <title>Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<MainLayout>
+<SidebarLayout>
   <AddOnsNavigation {active} slot="navigation" />
 
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Search name="query" {query} on:submit={search} slot="center" />
+        <Search name="query" {query} slot="center" />
       </PageToolbar>
       {#if showTip}
         <div class="tip">
@@ -150,7 +141,7 @@
       <History runs={runs.results} next={runs.next} previous={runs.previous} />
     {/await}
   </div>
-</MainLayout>
+</SidebarLayout>
 
 <style>
   .tip {

@@ -4,7 +4,6 @@
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
 
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
   import AddOnLayout from "@/lib/components/layouts/AddOnLayout.svelte";
@@ -33,13 +32,4 @@
   <title>{addon.name} | Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<MainLayout>
-  <AddOnLayout
-    slot="content"
-    {addon}
-    {query}
-    {search}
-    {disablePremium}
-    {scheduled}
-  />
-</MainLayout>
+<AddOnLayout {addon} {query} {search} {disablePremium} {scheduled} />

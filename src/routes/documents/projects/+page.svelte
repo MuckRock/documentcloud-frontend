@@ -10,7 +10,7 @@
   import Flex from "@/lib/components/common/Flex.svelte";
 
   import PageToolbar from "@/lib/components/common/PageToolbar.svelte";
-  import MainLayout from "@/lib/components/layouts/MainLayout.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
   import Search from "@/lib/components/forms/Search.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
@@ -30,7 +30,7 @@
   $: query = ($page.url as URL).searchParams.get("query") ?? "";
 </script>
 
-<MainLayout>
+<SidebarLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
       <SidebarItem active={data.list === "owned"} href="?list=owned">
@@ -61,4 +61,4 @@
   <svelte:fragment slot="action">
     <Button mode="primary" href="#create">{$_("projects.create")}</Button>
   </svelte:fragment>
-</MainLayout>
+</SidebarLayout>

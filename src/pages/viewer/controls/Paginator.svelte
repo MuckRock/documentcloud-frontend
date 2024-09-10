@@ -2,7 +2,7 @@
 <script>
   import { doc } from "../../../viewer/document.js";
   import { viewer } from "../../../viewer/viewer.js";
-  import Paginator from "../../../common/Paginator.svelte";
+  import Paginator from "../../../lib/components/common/Paginator.svelte";
 
   $: mode = $doc.mode;
 
