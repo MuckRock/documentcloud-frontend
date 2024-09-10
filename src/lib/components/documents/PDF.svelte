@@ -11,7 +11,6 @@
 
   import { onMount } from "svelte";
 
-  // import "core-js/proposals/promise-with-resolvers";
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(

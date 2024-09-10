@@ -2,9 +2,6 @@ import * as env from "$env/static/public";
 import { handleErrorWithSentry, replayIntegration } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
 
-// This polyfill is required for PDF.js to run on older browsers
-// import "core-js/proposals/promise-with-resolvers";
-
 Sentry.init({
   // @ts-ignore
   dsn: env.PUBLIC_SENTRY_DSN,
