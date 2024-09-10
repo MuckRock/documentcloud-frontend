@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import Toaster from "./Toaster.svelte";
   import Navigation from "./Navigation.svelte";
 </script>
@@ -25,5 +24,6 @@
   .inner {
     flex: 1 1 0;
     overflow: auto;
+    display: flex;
   }
 </style>

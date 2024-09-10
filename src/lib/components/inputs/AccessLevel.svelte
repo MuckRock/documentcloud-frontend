@@ -1,4 +1,13 @@
 <script context="module" lang="ts">
+  export interface Level {
+    value: Access;
+    title: string;
+    description: string;
+    icon: typeof SvgComponent;
+  }
+</script>
+
+<script lang="ts">
   import type { Access } from "$lib/api/types";
   import {
     Globe24,
@@ -6,45 +15,36 @@
     Organization24,
     type SvgComponent,
   } from "svelte-octicons";
-  import { unwrapFunctionStore, _ } from "svelte-i18n";
+  import { _ } from "svelte-i18n";
 
-  const i18n = unwrapFunctionStore(_);
-
-  export interface Level {
-    value: Access;
-    title: string;
-    description: string;
-    icon: typeof SvgComponent;
-  }
+  import Flex from "../common/Flex.svelte";
 
   export const levels: Level[] = [
     {
-      value: i18n("access.private.value") as Access,
-      title: i18n("access.private.title"),
-      description: i18n("access.private.description"),
+      value: $_("access.private.value") as Access,
+      title: $_("access.private.title"),
+      description: $_("access.private.description"),
       icon: Lock24,
     },
     {
-      value: i18n("access.organization.value") as Access,
-      title: i18n("access.organization.title"),
-      description: i18n("access.organization.description"),
+      value: $_("access.organization.value") as Access,
+      title: $_("access.organization.title"),
+      description: $_("access.organization.description"),
       icon: Organization24,
     },
     {
-      value: i18n("access.public.value") as Access,
-      title: i18n("access.public.title"),
-      description: i18n("access.public.description"),
+      value: $_("access.public.value") as Access,
+      title: $_("access.public.title"),
+      description: $_("access.public.description"),
       icon: Globe24,
     },
   ];
-</script>
-
-<script lang="ts">
-  import Flex from "../common/Flex.svelte";
 
   export let name: string;
   export let selected: Access = levels[0].value;
   export let direction: "column" | "row" = "column";
+
+  $: console.log(selected);
 </script>
 
 <Flex {direction} gap={0.5}>

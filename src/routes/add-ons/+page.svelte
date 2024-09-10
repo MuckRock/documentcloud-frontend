@@ -11,15 +11,15 @@
   import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
-  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
+  import Pin from "@/common/icons/Pin.svelte";
+  import Premium from "@/common/icons/Premium.svelte";
   import Scheduled from "$lib/components/addons/Scheduled.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import Tip from "$lib/components/common/Tip.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import Star from "@/common/icons/Star.svelte";
-  import Pin from "@/common/icons/Pin.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
 
   export let data;
 
@@ -37,15 +37,6 @@
     const cursor = new URL(pageUrl).searchParams.get("cursor");
     if (!cursor) return;
     url.searchParams.set("cursor", cursor);
-    goto(url);
-  }
-
-  function search(event: SubmitEvent) {
-    event.preventDefault();
-    const url = new URL($page.url); // make a copy
-    const formData = new FormData(event.currentTarget as HTMLFormElement);
-    const query = formData.get("query") ?? "";
-    url.searchParams.set("query", query as string);
     goto(url);
   }
 
@@ -70,7 +61,7 @@
   <svelte:fragment slot="content">
     <ContentLayout>
       <PageToolbar slot="header">
-        <Search name="query" {query} on:submit={search} slot="center" />
+        <Search name="query" {query} slot="center" />
       </PageToolbar>
       {#if showTip}
         <div class="tip">
