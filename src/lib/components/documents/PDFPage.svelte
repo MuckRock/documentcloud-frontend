@@ -17,6 +17,7 @@ Selectable text can be rendered in one of two ways:
     ViewerMode,
   } from "$lib/api/types";
 
+  import "core-js/proposals/promise-with-resolvers";
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
