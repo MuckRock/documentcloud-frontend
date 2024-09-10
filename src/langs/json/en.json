@@ -918,9 +918,9 @@
     "revisions": "Revision History",
     "revisionsDesc": "Toggle revision history and view previous versions of your document.",
     "collaborate": "Manage Collaborators",
-    "edit": "Edit",
+    "edit": "Edit Metadata",
     "upload": "Upload Documents",
-    "download": "Download file",
+    "download": "Download File",
     "reprocess": "Reprocess",
     "created": "Created on",
     "updated": "Last updated on",
@@ -932,14 +932,15 @@
       "runs": "Schedule & history"
     },
     "data": {
-      "title": "Data & Tags",
+      "title": "Tags & Data",
       "empty": "Use tags or key/value data to organize documents",
       "tags": "Tags",
       "data": "Data"
     },
     "projects": {
       "title": "Projects",
-      "pinned": "Pinned projects will appear here"
+      "pinned": "Pinned projects will appear here",
+      "empty": "Use projects to organize documents"
     },
     "toc": {
       "empty": "Sections organize your document with a table of contents",

@@ -11,16 +11,15 @@
   import { page } from "$app/stores";
 
   import Button from "$lib/components/common/Button.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
+  import ProjectListItem from "$lib/components/projects/ProjectListItem.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import ProjectListItem from "$lib/components/projects/ProjectListItem.svelte";
-  import Paginator from "@/common/Paginator.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
 
   import EditProject from "@/lib/components/forms/EditProject.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
@@ -48,7 +47,7 @@
   <title>{$_("projects.header")} | DocumentCloud</title>
 </svelte:head>
 
-<MainLayout>
+<SidebarLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
       <SidebarItem active={data.list === "owned"} href="?list=owned">
@@ -98,13 +97,13 @@
       {$_("projects.create")}
     </Button>
   </svelte:fragment>
-</MainLayout>
 
-{#if create}
-  <Portal>
-    <Modal on:close={() => (create = false)}>
-      <h1 slot="title">{$_("projects.create")}</h1>
-      <EditProject on:close={() => (create = false)} />
-    </Modal>
-  </Portal>
-{/if}
+  {#if create}
+    <Portal>
+      <Modal on:close={() => (create = false)}>
+        <h1 slot="title">{$_("projects.create")}</h1>
+        <EditProject on:close={() => (create = false)} />
+      </Modal>
+    </Portal>
+  {/if}
+</SidebarLayout>

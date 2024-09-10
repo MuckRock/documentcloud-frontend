@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import MainLayout from "../MainLayout.svelte";
+  import SidebarLayout from "../SidebarLayout.svelte";
   import type { DocumentResults } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
@@ -34,8 +34,8 @@
   let results = documents as DocumentResults;
 
   export const meta = {
-    title: "Layout / Main Layout",
-    component: MainLayout,
+    title: "Layout / Sidebar",
+    component: SidebarLayout,
     parameters: {
       layout: "fullscreen",
       msw: {
@@ -63,7 +63,7 @@
 </script>
 
 <Template let:args>
-  <MainLayout {...args}>
+  <SidebarLayout {...args}>
     <svelte:fragment slot="navigation">
       <Flex direction="column">
         <SidebarItem hover
@@ -152,39 +152,7 @@
         </Flex>
       </SidebarGroup>
     </svelte:fragment>
-  </MainLayout>
+  </SidebarLayout>
 </Template>
 
 <Story name="Desktop" {...args} />
-
-<Story
-  name="Tablet (H)"
-  parameters={{
-    viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
-  }}
-  {...args}
-/>
-
-<Story
-  name="Tablet (V)"
-  parameters={{
-    viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
-  }}
-  {...args}
-/>
-
-<Story
-  name="Mobile (L)"
-  parameters={{
-    viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
-  }}
-  {...args}
-/>
-
-<Story
-  name="Mobile (S)"
-  parameters={{
-    viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
-  }}
-  {...args}
-/>

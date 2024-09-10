@@ -24,7 +24,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--blue-2);"
       >
         <a
-          class="container svelte-a23iq4 active"
+          class="container svelte-prcwhd active"
           href="/add-ons/"
           title=""
         >
@@ -50,7 +50,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--orange-2);"
       >
         <a
-          class="container svelte-a23iq4"
+          class="container svelte-prcwhd"
           href="/add-ons/?active=true"
           title=""
         >
@@ -82,7 +82,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--yellow-2);"
       >
         <a
-          class="container svelte-a23iq4"
+          class="container svelte-prcwhd"
           href="/add-ons/?featured=true"
           title=""
         >
@@ -108,7 +108,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--green-2);"
       >
         <a
-          class="container svelte-a23iq4"
+          class="container svelte-prcwhd"
           href="/add-ons/?premium=true"
           title=""
         >
@@ -150,7 +150,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --color: var(--gray-4);"
       >
         <span
-          class="container svelte-a23iq4 small"
+          class="container svelte-prcwhd small"
           role="button"
           tabindex="0"
           title=""
@@ -161,7 +161,7 @@ exports[`AddOnsNavigation 1`] = `
       </div>
        
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=ai"
         title=""
       >
@@ -170,7 +170,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=statistical"
         title=""
       >
@@ -179,7 +179,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=bulk"
         title=""
       >
@@ -188,7 +188,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=export"
         title=""
       >
@@ -197,7 +197,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=extraction"
         title=""
       >
@@ -206,7 +206,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=file"
         title=""
       >
@@ -215,7 +215,7 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="container svelte-a23iq4"
+        class="container svelte-prcwhd"
         href="/add-ons/?category=monitor"
         title=""
       >

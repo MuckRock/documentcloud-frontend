@@ -12,7 +12,7 @@
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Documents from "../documents/sidebar/Documents.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Pending from "$lib/components/documents/Pending.svelte";
   import Projects from "../documents/sidebar/Projects.svelte";
@@ -25,7 +25,6 @@
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
   import { deleted } from "$lib/api/documents";
-  import Flex from "@/lib/components/common/Flex.svelte";
 
   export let data;
 
@@ -63,7 +62,7 @@
   }
 </script>
 
-<MainLayout>
+<SidebarLayout>
   <svelte:fragment slot="navigation">
     <Documents />
     <SignedIn>
@@ -130,7 +129,7 @@
       <AddOns pinnedAddOns={data.pinnedAddons} />
     </SignedIn>
   </svelte:fragment>
-</MainLayout>
+</SidebarLayout>
 
 <style>
   label.select-all {

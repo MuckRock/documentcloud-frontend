@@ -12,7 +12,7 @@ ViewerPaginator wraps the common paginator with viewer-specific state and functi
 </script>
 
 <script lang="ts">
-  import Paginator from "@/common/Paginator.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
 
   export let totalPages: number;
 

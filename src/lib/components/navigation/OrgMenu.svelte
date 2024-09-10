@@ -33,11 +33,11 @@
     await setOrg(org.id, csrf_token);
     await invalidateAll();
 
-    closeDropdown("organization");
+    closeDropdown("org-menu");
   }
 </script>
 
-<Dropdown id="organization" position="bottom right">
+<Dropdown id="org-menu" position="bottom right">
   <SidebarItem slot="title">
     {#if active_org.individual}
       <div class="premium">

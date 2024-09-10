@@ -7,7 +7,7 @@
   import HistoryEvent from "./HistoryEvent.svelte";
   import History24 from "svelte-octicons/lib/History24.svelte";
   import Loader from "../../common/Loader.svelte";
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
   import { baseApiUrl } from "../../api/base.js";
   import type { Run } from "../types";
 

@@ -3,6 +3,8 @@ Updated variables and styles for new SvelteKit routes
 */
 
 :root {
+  --app-max-w: 100rem;
+  
   /* Font Families */
   --font-sans: "Source Sans Pro";
   --font-mono: "Source Code Pro";

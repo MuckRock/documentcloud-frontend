@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 import { userEvent } from "@testing-library/user-event";
 
-import Paginator from "../Paginator.svelte";
+import Paginator from "../../lib/components/common/Paginator.svelte";
 
 describe("Paginator", () => {
   it("has next and previous buttons", () => {

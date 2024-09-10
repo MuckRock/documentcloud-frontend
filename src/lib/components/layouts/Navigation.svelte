@@ -68,10 +68,11 @@
     background: var(--white, #ffffff);
     border-bottom: 1px solid var(--gray-1, #d8dee2);
     flex: 0 0 auto;
+    box-shadow: var(--shadow-1);
   }
   .inner {
     width: 100%;
-    max-width: 80rem;
+    max-width: var(--app-max-w, 100rem);
     display: flex;
     flex-direction: row;
     justify-content: space-between;

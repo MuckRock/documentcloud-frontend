@@ -6,7 +6,7 @@
   import { History16, History24, Hourglass24 } from "svelte-octicons";
 
   import HistoryEvent from "./HistoryEvent.svelte";
-  import Paginator from "@/common/Paginator.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Empty from "../common/Empty.svelte";

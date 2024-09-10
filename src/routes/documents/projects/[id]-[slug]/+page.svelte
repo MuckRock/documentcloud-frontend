@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { ProjectUser, User } from "$lib/api/types";
-
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
@@ -10,9 +8,6 @@
     Lock16,
   } from "svelte-octicons";
 
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
-
   import BulkActions from "$lib/components/forms/BulkActions.svelte";
   import Collaborators from "$lib/components/projects/Collaborators.svelte";
   import ProjectActions from "$lib/components/projects/ProjectActions.svelte";
@@ -21,6 +16,8 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import ProjectPin from "$lib/components/projects/ProjectPin.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
+  import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
   import ResultsList, {
     selected,
     total,
@@ -50,7 +47,7 @@
   <title>{project.title} | DocumentCloud</title>
 </svelte:head>
 
-<MainLayout>
+<SidebarLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
       <h1>
@@ -123,7 +120,7 @@
   </ContentLayout>
 
   <ProjectActions slot="action" {project} {users} />
-</MainLayout>
+</SidebarLayout>
 
 <style>
   h1 {

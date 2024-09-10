@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
   import DocumentListItem from "$lib/components/documents/DocumentListItem.svelte";
-  import Paginator from "@/common/Paginator.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
 
   export let data;
 

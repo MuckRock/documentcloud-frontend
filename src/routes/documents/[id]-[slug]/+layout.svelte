@@ -8,7 +8,7 @@
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
-  import MainLayout from "$lib/components/layouts/MainLayout.svelte";
+  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
 
   // sidebars
   import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
@@ -63,7 +63,7 @@
   />
 </svelte:head>
 
-<MainLayout>
+<SidebarLayout>
   <svelte:fragment slot="navigation">
     <DocumentMetadata {document} />
 
@@ -85,4 +85,4 @@
       <AddOns pinnedAddOns={data.pinnedAddons} />
     {/if}
   </svelte:fragment>
-</MainLayout>
+</SidebarLayout>

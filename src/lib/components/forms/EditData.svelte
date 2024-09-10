@@ -57,7 +57,7 @@
   }
 </script>
 
-<form {action} class="card" method="post" use:enhance={onSubmit}>
+<form {action} method="post" use:enhance={onSubmit}>
   <table>
     <thead>
       <tr>
@@ -108,6 +108,7 @@
   }
 
   form {
+    width: 100%;
     padding: 1rem;
   }
 
