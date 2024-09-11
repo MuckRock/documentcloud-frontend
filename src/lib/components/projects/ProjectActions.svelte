@@ -83,7 +83,7 @@
       {/if}
 
       {#if show === "share"}
-        <p>Share</p>
+        <Empty icon={Share24}>Project sharing coming soon. Use our Feedback form to let us know how you use project sharing.</Empty>
       {/if}
 
       {#if show === "users"}
