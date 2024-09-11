@@ -8,6 +8,7 @@
   import Empty from "../common/Empty.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import UserAvatar from "../accounts/UserAvatar.svelte";
 
   import ManageCollaborators from "../forms/ManageCollaborators.svelte";
   import Modal from "../layouts/Modal.svelte";
@@ -43,6 +44,7 @@
 
   {#each sort(users) as user}
     <SidebarItem small>
+      <UserAvatar user={user.user} />
       {user.user.name} ({user.access})
     </SidebarItem>
   {:else}

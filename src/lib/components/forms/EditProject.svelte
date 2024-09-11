@@ -60,7 +60,13 @@ Edit project metadata
     </Field>
 
     <Flex class="buttons">
-      <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
+      {#if project?.id}
+        <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
+      {:else}
+        <Button type="submit" mode="primary" full>
+          {$_("projects.create")}
+        </Button>
+      {/if}
       <Button full on:click={(e) => dispatch("close")}>
         {$_("edit.cancel")}
       </Button>

@@ -97,13 +97,13 @@
       {$_("projects.create")}
     </Button>
   </svelte:fragment>
-
-  {#if create}
-    <Portal>
-      <Modal on:close={() => (create = false)}>
-        <h1 slot="title">{$_("projects.create")}</h1>
-        <EditProject on:close={() => (create = false)} />
-      </Modal>
-    </Portal>
-  {/if}
 </SidebarLayout>
+
+{#if create}
+  <Portal>
+    <Modal on:close={() => (create = false)}>
+      <h1 slot="title">{$_("projects.create")}</h1>
+      <EditProject on:close={() => (create = false)} />
+    </Modal>
+  </Portal>
+{/if}

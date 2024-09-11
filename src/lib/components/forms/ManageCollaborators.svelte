@@ -16,11 +16,13 @@ They might get separated later.
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Plus16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Field from "../inputs/Field.svelte";
   import Flex from "../common/Flex.svelte";
   import Text from "../inputs/Text.svelte";
+  import UserAvatar from "../accounts/UserAvatar.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
 
@@ -54,7 +56,7 @@ They might get separated later.
 </script>
 
 <Flex direction="column">
-  <form action={invite} method="post" use:enhance>
+  <form action={invite} method="post" use:enhance={onSubmit}>
     <h2>{$_("collaborators.addCollaborators")}</h2>
     <p>{@html $_("collaborators.invite")}</p>
     <Flex align="center">
@@ -69,7 +71,8 @@ They might get separated later.
         </select>
       </Field>
       <Button mode="primary" type="submit">
-        + {$_("collaborators.add")}
+        <Plus16 />
+        {$_("collaborators.add")}
       </Button>
     </Flex>
   </form>
@@ -84,13 +87,13 @@ They might get separated later.
               {$_(`collaborators.help.${access}`)}
             </p>
             <table>
-              <tr>
+              <tr class="sr-only">
                 <th>{$_("collaborators.name")}</th>
                 <th>{$_("collaborators.access")}</th>
               </tr>
               {#each sort(group) as user}
                 <tr>
-                  <td>{user.name}</td>
+                  <td><Flex><UserAvatar {user} /> {user.name}</Flex></td>
                   <td>
                     <input type="hidden" name="user" value={user.id} />
                     <Field title={$_("collaborators.change")} sronly>

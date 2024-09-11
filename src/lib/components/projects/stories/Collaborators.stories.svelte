@@ -22,3 +22,7 @@
 <Story name="manage">
   <Collaborators {users} project={{ ...project, add_remove_access: true }} />
 </Story>
+
+<Story name="empty">
+  <Collaborators {project} users={[]} />
+</Story>
