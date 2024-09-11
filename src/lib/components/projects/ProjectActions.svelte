@@ -12,8 +12,10 @@
     Pencil16,
     Search16,
     Share16,
+    Share24,
   } from "svelte-octicons";
 
+  import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
@@ -83,7 +85,10 @@
       {/if}
 
       {#if show === "share"}
-        <Empty icon={Share24}>Project sharing coming soon. Use our Feedback form to let us know how you use project sharing.</Empty>
+        <Empty icon={Share24}
+          >Project sharing coming soon. Use our Feedback form to let us know how
+          you use project sharing.</Empty
+        >
       {/if}
 
       {#if show === "users"}

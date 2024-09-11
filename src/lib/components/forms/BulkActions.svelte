@@ -69,7 +69,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 </script>
 
 <Dropdown {id} {position}>
-  <SidebarItem slot="title" disabled={$selected?.length < 1 ?? true}>
+  <SidebarItem slot="title" disabled={$selected?.length < 1}>
     {$_("bulk.title")}
     <ChevronDown12 />
   </SidebarItem>
@@ -78,7 +78,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     {#each Object.entries(actions) as [action, label]}
       <SidebarItem
         hover
-        disabled={$selected?.length < 1 ?? true}
+        disabled={$selected?.length < 1}
         on:click={() => show(action)}
       >
         <svelte:component this={icons[action]} />
