@@ -3,18 +3,18 @@
 exports[`AddOnListItem 1`] = `
 <div>
   <a
-    class="addon-link svelte-zccvfh"
+    class="addon-link svelte-1sp09hk"
     href="/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
   >
     <div
-      class="container svelte-zccvfh"
+      class="container svelte-1sp09hk"
       id="MuckRock/documentcloud-bulk-edit-addon"
     >
       <div
-        class="row svelte-zccvfh"
+        class="row svelte-1sp09hk"
       >
         <div
-          class="center-self svelte-zccvfh"
+          class="center-self svelte-1sp09hk"
         >
           <div
             style="display: contents; --fill: var(--gray-3);"
@@ -42,23 +42,23 @@ exports[`AddOnListItem 1`] = `
         </div>
          
         <div
-          class="stretch svelte-zccvfh"
+          class="stretch svelte-1sp09hk"
         >
           <h3
-            class="addon-name svelte-zccvfh"
+            class="addon-name svelte-1sp09hk"
           >
             Bulk Edit
           </h3>
         </div>
          
         <div
-          class="metadata svelte-zccvfh"
+          class="metadata svelte-1sp09hk"
         >
           <p
-            class="author svelte-zccvfh"
+            class="author svelte-1sp09hk"
           >
             <a
-              class="svelte-zccvfh"
+              class="svelte-1sp09hk"
               href="http://github.com/MuckRock/documentcloud-bulk-edit-addon"
               rel="noopener noreferrer"
               target="_blank"
@@ -72,7 +72,7 @@ exports[`AddOnListItem 1`] = `
       </div>
        
       <div
-        class="description svelte-zccvfh"
+        class="description svelte-1sp09hk"
       >
         This will update document information for all documents in your current search.  Please be sure you have edit access to these documents before running this add-on.
       </div>
@@ -84,18 +84,18 @@ exports[`AddOnListItem 1`] = `
 exports[`AddOnListItem 2`] = `
 <div>
   <a
-    class="addon-link svelte-zccvfh"
+    class="addon-link svelte-1sp09hk"
     href="/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
   >
     <div
-      class="container svelte-zccvfh"
+      class="container svelte-1sp09hk"
       id="MuckRock/documentcloud-azure-document-intelligence-ocr-addon"
     >
       <div
-        class="row svelte-zccvfh"
+        class="row svelte-1sp09hk"
       >
         <div
-          class="center-self svelte-zccvfh"
+          class="center-self svelte-1sp09hk"
         >
           <div
             style="display: contents; --fill: var(--gray-3);"
@@ -123,23 +123,23 @@ exports[`AddOnListItem 2`] = `
         </div>
          
         <div
-          class="stretch svelte-zccvfh"
+          class="stretch svelte-1sp09hk"
         >
           <h3
-            class="addon-name svelte-zccvfh"
+            class="addon-name svelte-1sp09hk"
           >
             Azure Document Intelligence OCR
           </h3>
         </div>
          
         <div
-          class="metadata svelte-zccvfh"
+          class="metadata svelte-1sp09hk"
         >
           <p
-            class="author svelte-zccvfh"
+            class="author svelte-1sp09hk"
           >
             <a
-              class="svelte-zccvfh"
+              class="svelte-1sp09hk"
               href="http://github.com/MuckRock/documentcloud-azure-document-intelligence-ocr-addon"
               rel="noopener noreferrer"
               target="_blank"
@@ -150,7 +150,7 @@ exports[`AddOnListItem 2`] = `
           </p>
            
           <span
-            class="badge svelte-zccvfh"
+            class="badge svelte-1sp09hk"
             role="status"
           >
             <div
@@ -193,7 +193,7 @@ exports[`AddOnListItem 2`] = `
       </div>
        
       <div
-        class="description svelte-zccvfh"
+        class="description svelte-1sp09hk"
       >
         <p>
           This Add-On uses Azure’s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.
