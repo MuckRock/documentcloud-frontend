@@ -3,6 +3,7 @@
 
   export let icon: typeof SvgComponent = null;
   export let disabled = false;
+  export let title: string = undefined;
 </script>
 
 <span
@@ -10,6 +11,7 @@
   class:disabled
   role="button"
   tabindex={0}
+  {title}
   on:click|stopPropagation
   on:keydown|stopPropagation
 >

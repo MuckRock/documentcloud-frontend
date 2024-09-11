@@ -11,6 +11,7 @@ export let project: Project = {
   title: "Miltary Contractors",
   updated_at: "2020-10-23T15:59:33.896698Z",
   user: 1,
+  pinned: false,
 };
 
 export let editableProject: Project = {

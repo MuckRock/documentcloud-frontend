@@ -33,6 +33,8 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Reprocess from "./Reprocess.svelte";
   import EditDataMany from "./EditDataMany.svelte";
 
+  export let position = "bottom right";
+
   const selected: Writable<Document[]> = getContext("selected");
 
   const id = "bulk-actions";
@@ -66,8 +68,8 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   }
 </script>
 
-<Dropdown {id} position="bottom left">
-  <SidebarItem slot="title" disabled={$selected.length < 1}>
+<Dropdown {id} {position}>
+  <SidebarItem slot="title" disabled={$selected?.length < 1}>
     {$_("bulk.title")}
     <ChevronDown12 />
   </SidebarItem>
@@ -76,7 +78,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     {#each Object.entries(actions) as [action, label]}
       <SidebarItem
         hover
-        disabled={$selected.length < 1}
+        disabled={$selected?.length < 1}
         on:click={() => show(action)}
       >
         <svelte:component this={icons[action]} />
@@ -92,8 +94,8 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       <h1 slot="title">{actions[visible]}</h1>
       {#if visible === "edit"}
         <EditMany documents={$selected} on:close={close}>
-          {#if $selected.length}
-            <p>{$_("edit.many", { values: { n: $selected.length } })}</p>
+          {#if $selected?.length}
+            <p>{$_("edit.many", { values: { n: $selected?.length } })}</p>
           {/if}
         </EditMany>
       {/if}

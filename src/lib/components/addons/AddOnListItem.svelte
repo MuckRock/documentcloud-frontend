@@ -88,6 +88,7 @@
     line-height: 1.4;
     color: var(--gray-4);
     overflow: hidden;
+    line-clamp: 4;
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;

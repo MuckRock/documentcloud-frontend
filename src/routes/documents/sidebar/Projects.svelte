@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
+  import { page } from "$app/stores";
+
   import {
     Book16,
     FileDirectory16,
@@ -16,11 +18,15 @@
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
 
-  import { page } from "$app/stores";
+  import { canonicalUrl } from "$lib/api/projects";
 
   let pinned: Project[] | Promise<Project[]> = [];
 
   $: pinned = $page.data.pinnedProjects || [];
+
+  function sort(projects: Project[]) {
+    return projects.sort((a, b) => a.title.localeCompare(b.title));
+  }
 </script>
 
 <SidebarGroup name="projects">
@@ -34,11 +40,8 @@
     {#await pinned}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then projects}
-      {#each projects as project}
-        <SidebarItem
-          small
-          href={`/documents/projects/${project.id}-${project.slug}/`}
-        >
+      {#each sort(projects) as project}
+        <SidebarItem small href={canonicalUrl(project).href}>
           <Pin active={project.pinned} />
           {project.title}
         </SidebarItem>
