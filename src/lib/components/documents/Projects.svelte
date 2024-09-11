@@ -1,36 +1,60 @@
 <script lang="ts">
+  import type { Document, Project } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
-  import type { Project } from "$lib/api/types";
+  import { FileDirectory16, FileDirectory24 } from "svelte-octicons";
 
-  import {
-    ChevronDown12,
-    FileDirectory16,
-    FileDirectory24,
-  } from "svelte-octicons";
-
+  import Action from "@/lib/components/common/Action.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
+  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
-  import Dropdown2 from "@/common/Dropdown2.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
 
+  import Modal from "@/lib/components/layouts/Modal.svelte";
+  import Portal from "@/lib/components/layouts/Portal.svelte";
+  import Projects from "@/lib/components/forms/Projects.svelte";
+
+  import { canonicalUrl } from "$lib/api/projects";
+
+  export let document: Document;
   export let projects: Project[];
+
+  let show = false;
+
+  function hide() {
+    show = false;
+  }
 </script>
 
-<Dropdown2 id="projects:viewer" position="bottom left" --offset=".25rem">
+<SidebarGroup name="projects:viewer">
   <SidebarItem slot="title">
     <FileDirectory16 />
-    {$_("sidebar.projects.title")}
-    <ChevronDown12 />
+    {$_("projects.header")}
   </SidebarItem>
-  <Menu>
-    {#each projects as project}
-      <MenuItem>
-        <FileDirectory16 slot="icon" />
-        {project.title}
-      </MenuItem>
-    {:else}
-      <Empty icon={FileDirectory24}>{$_("sidebar.projects.empty")}</Empty>
-    {/each}
-  </Menu>
-</Dropdown2>
+
+  {#each projects as project}
+    <SidebarItem small href={canonicalUrl(project).href}>
+      {project.title}
+    </SidebarItem>
+  {:else}
+    <Empty icon={FileDirectory24}>
+      <Action on:click={() => (show = true)}>
+        {$_("projects.add", { values: { n: 1 } })}
+      </Action>
+    </Empty>
+  {/each}
+  {#if projects.length}
+    <SidebarItem>
+      <Action on:click={() => (show = true)}>
+        {$_("projects.add", { values: { n: 1 } })}
+      </Action>
+    </SidebarItem>
+  {/if}
+</SidebarGroup>
+
+{#if show}
+  <Portal>
+    <Modal on:close={hide}>
+      <Projects documents={[document]} on:close={hide} />
+    </Modal>
+  </Portal>
+{/if}

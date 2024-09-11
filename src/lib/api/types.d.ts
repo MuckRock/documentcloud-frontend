@@ -14,6 +14,8 @@ export type { Page, User, Org, Project };
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
+export type ProjectAccess = "view" | "edit" | "admin";
+
 export type Data = Record<string, string[]>;
 
 export type Highlights = Record<string, string[]>;
@@ -30,6 +32,13 @@ export type WriteMode = "redacting" | "annotating";
 export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "width" | "height";
+
+export interface APIError {
+  error: {
+    status: number;
+    message: string;
+  };
+}
 
 export interface NoteHighlight {
   title: string[];
@@ -151,7 +160,7 @@ export interface Document {
   file_url?: string | URL;
 
   // expandable relationship fields
-  projects?: number[] | Project[];
+  projects?: (Project | number)[];
   notes?: Note[];
   sections?: Section[];
   revisions?: Revision[];
@@ -212,6 +221,11 @@ export type ProjectResults = Page<Project>;
 export interface ProjectMembershipItem {
   document: number | Document;
   edit_access: boolean;
+}
+
+export interface ProjectUser {
+  user: User;
+  access: ProjectAccess;
 }
 
 export type ProjectMembershipList = Page<ProjectMembershipItem>;

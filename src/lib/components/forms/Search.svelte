@@ -4,6 +4,7 @@
 
   export let name: string = null;
   export let query: string = "";
+  export let placeholder: string = $_("searchBar.search");
 
   let input: HTMLInputElement;
   let form: HTMLFormElement;
@@ -19,9 +20,9 @@
   <input
     type="search"
     id="query"
-    {name}
     autocomplete="off"
-    placeholder={$_("searchBar.search")}
+    {name}
+    {placeholder}
     bind:value={query}
     bind:this={input}
     on:change

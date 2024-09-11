@@ -102,9 +102,9 @@
     overflow-y: auto;
 
     background: var(--gray-1);
-    margin: 0.875rem 0;
+    /* margin: 0.875rem 0; */
     border: 1px solid var(--gray-2);
-    border-radius: 1rem;
+    /* border-radius: var(--radius, 0); */
     box-shadow: inset var(--shadow-2);
   }
 
@@ -125,10 +125,6 @@
   @media (max-width: 64rem) {
     .small {
       display: block;
-    }
-    header {
-      gap: 0.5rem;
-      overflow-x: auto;
     }
     nav {
       min-width: 33vh;

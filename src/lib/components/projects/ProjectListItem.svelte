@@ -1,17 +1,19 @@
 <script lang="ts">
+  import type { Project } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import { Globe16, Lock16 } from "svelte-octicons";
 
-  import type { Project } from "$lib/api/types";
   import ProjectPin from "./ProjectPin.svelte";
 
+  import { canonicalUrl } from "$lib/api/projects";
+
   export let project: Project;
+
+  $: href = canonicalUrl(project).href;
 </script>
 
-<a
-  href={`/documents/projects/${project.id}-${project.slug}`}
-  id={project.id.toString()}
->
+<a {href} id={project.id.toString()}>
   <div class="container">
     <div class="row margin">
       <div class="center-self">
@@ -21,13 +23,13 @@
         <h3 class="project-title">{project.title}</h3>
       </div>
       {#if project.private}
-        <span class="small center center-self" title={$_("projects.private")}
-          ><Lock16 /></span
-        >
+        <span class="small center center-self" title={$_("projects.private")}>
+          <Lock16 />
+        </span>
       {:else}
-        <span class="small center center-self" title={$_("projects.public")}
-          ><Globe16 /></span
-        >
+        <span class="small center center-self" title={$_("projects.public")}>
+          <Globe16 />
+        </span>
       {/if}
     </div>
     {#if project.description}
@@ -71,6 +73,7 @@
     line-height: 1.4;
     color: var(--darkgray);
     overflow: hidden;
+    line-clamp: 4;
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;

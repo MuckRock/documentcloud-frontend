@@ -4,14 +4,7 @@
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
-  import {
-    Clock16,
-    Clock24,
-    History16,
-    History24,
-    Hourglass24,
-    Play16,
-  } from "svelte-octicons";
+  import { Clock16, Hourglass24, Play16 } from "svelte-octicons";
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
@@ -208,12 +201,12 @@
     overflow-y: auto;
     background-color: var(--white);
     border: 1px solid var(--gray-1);
-    border-radius: 1rem;
+    border-radius: var(--radius, 0.5rem);
     box-shadow: var(--shadow-1);
   }
   .docs {
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
-    border-radius: 1rem;
+    border-radius: var(--radius, 0.5rem);
   }
 </style>

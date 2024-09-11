@@ -3,12 +3,13 @@
   export let description: string = "";
   export let inline = false;
   export let required = false;
+  export let sronly = false;
 </script>
 
 <div class="field" class:inline class:required>
   <label>
     {#if title}
-      <span class="title">{title}</span>
+      <span class="title" class:sr-only={sronly}>{title}</span>
     {/if}
     <slot />
   </label>
