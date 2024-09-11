@@ -10,7 +10,6 @@ and we don't want to do that everywhere.
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import { page } from "$app/stores";
 
   import { createEventDispatcher, getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -43,8 +42,6 @@ and we don't want to do that everywhere.
     ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
   );
 
-  $: console.log(projects);
-
   onMount(async () => {
     if ($me && projects.length === 0) {
       projects = await getForUser($me.id);
@@ -68,7 +65,7 @@ and we don't want to do that everywhere.
     await invalidateDocs(documents);
   }
 
-  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+  function onSubmit({ submitter }) {
     submitter.disabled = true;
     return async ({ result, update }) => {
       if (result.type === "success") {
@@ -77,6 +74,12 @@ and we don't want to do that everywhere.
       }
       submitter.disabled = false;
     };
+  }
+
+  function sort(projects: Project[]) {
+    return projects.sort(
+      (a, b) => +b.pinned - +a.pinned || a.title.localeCompare(b.title),
+    );
   }
 </script>
 
@@ -111,7 +114,7 @@ and we don't want to do that everywhere.
   {#if projects.length}
     <hr class="divider" />
     <Flex direction="column" class="projects">
-      {#each projects as project}
+      {#each sort(projects) as project}
         <label class="project">
           <input
             type="checkbox"
