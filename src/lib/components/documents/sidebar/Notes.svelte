@@ -44,12 +44,9 @@
         <Note24 />
         <p>{$_("notes.empty")}</p>
         {#if document.edit_access}
-          <Button
-            ghost
-            mode="primary"
-            on:click={() => ($currentMode = "annotating")}
-            >{$_("notes.cta")}</Button
-          >
+          <Button ghost mode="primary" href={annotate}>
+            {$_("notes.cta")}
+          </Button>
         {/if}
       </Empty>
     {/each}

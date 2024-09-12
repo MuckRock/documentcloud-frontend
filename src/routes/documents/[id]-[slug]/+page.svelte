@@ -39,20 +39,26 @@
   }
 
   // Navigation Lifecycle
+
   afterNavigate(() => {
     setCurrentNoteFromHash($page.url);
+    // update the mode if it changes in the URL params
+    $currentMode = data.mode;
   });
 
   // Pagination Lifecycle
+
   function onHashChange(e: HashChangeEvent) {
     setCurrentNoteFromHash(new URL(e.newURL));
   }
 
   // Component Lifecycle
+
   onMount(() => {
     // initialize state from data
     $currentMode = data.mode;
   });
+
   afterUpdate(() => {
     // todo: can we make this more granular? do other things trigger invalidation?
     // https://github.com/orgs/MuckRock/projects/14/views/1?pane=issue&itemId=68215069
