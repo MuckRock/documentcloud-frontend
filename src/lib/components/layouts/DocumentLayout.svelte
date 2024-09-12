@@ -25,7 +25,6 @@
 <div class="container">
   <nav>
     <div class="sticky top column">
-      <Access {document} />
       <Projects {projects} {document} />
       <Data {document} />
       <Notes {document} />
@@ -41,6 +40,7 @@
   </article>
   <aside>
     <div class="sticky top column">
+      <Access {document} />
       <Actions {document} />
     </div>
     <div class="sticky bottom">
@@ -81,7 +81,7 @@
     margin-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 0.5rem;
   }
 
   main {

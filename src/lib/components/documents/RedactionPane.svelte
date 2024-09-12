@@ -4,7 +4,7 @@ It's layered over a PDF page and allows us to render redactions and draw new one
 -->
 <script context="module" lang="ts">
   import type { Redaction } from "$lib/api/types";
-  import { writable, type Writable } from "svelte/store";
+  import { get, writable, type Writable } from "svelte/store";
 
   // active redactions
   export const redactions: Writable<Redaction[]> = writable([]);
@@ -18,6 +18,14 @@ It's layered over a PDF page and allows us to render redactions and draw new one
 
   function height(redaction: Redaction): number {
     return Math.abs(redaction.y2 - redaction.y1);
+  }
+
+  export function undo() {
+    redactions.set(get(redactions).slice(0, -1));
+  }
+
+  export function clear() {
+    redactions.set([]);
   }
 </script>
 

@@ -828,7 +828,9 @@
     "document": "File",
     "text": "Text",
     "grid": "Pages",
-    "notes": "Notes"
+    "notes": "Notes",
+    "annotating": "Annotate",
+    "redacting": "Redact"
   },
   "zoom": {
     "zoom": "Zoom",
@@ -1004,12 +1006,14 @@
     }
   },
   "redact": {
-    "confirm": "Confirm redactions",
+    "confirm": "Save",
+    "confirmTitle": "Save Redactions",
     "really": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
     "title": "Redact Document",
     "instructions": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
     "undo": "Undo",
     "cancel": "Cancel",
+    "cancelWarning": "You will lose unsaved redactions. Are you sure you want to cancel?",
     "error": "Error"
   },
   "sections": {

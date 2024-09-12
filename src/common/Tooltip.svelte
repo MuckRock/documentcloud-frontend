@@ -93,7 +93,7 @@
 
 <style lang="scss">
   span {
-    display: inline-block;
+    display: contents;
     position: relative;
   }
 
@@ -105,12 +105,13 @@
     pointer-events: none;
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    line-height: 1em;
+    line-height: 1.2em;
     padding: 0.3em 0.8em;
     border-radius: 3px;
     box-shadow: 0 0 2px #0000007a;
     z-index: $tooltipZ;
     transition: $opacity-fast;
+    max-width: 16rem;
 
     &.show {
       opacity: 1;
