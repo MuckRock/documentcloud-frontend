@@ -49,12 +49,12 @@
   .container {
     display: flex;
     justify-content: center;
-    max-width: 100rem;
+    width: 100%;
+    max-width: var(--app-max-w, 100rem);
     max-height: 100%;
     margin: 0 auto;
     padding: 0 0.5rem;
     position: relative;
-    background: var(--white);
   }
 
   header {
@@ -99,7 +99,7 @@
     flex-direction: column;
     gap: 1rem;
     max-height: 100%;
-    padding: 2rem 1rem 1rem;
+    padding: 4rem 1rem 1rem;
     overflow-y: auto;
   }
 
