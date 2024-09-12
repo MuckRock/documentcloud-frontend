@@ -14,10 +14,12 @@
   import ThumbnailGrid from "./ThumbnailGrid.svelte";
   import Text from "./Text.svelte";
   import Notes from "./Notes.svelte";
-  import { EyeClosed16, Note16 } from "svelte-octicons";
+  import { Comment16, EyeClosed16 } from "svelte-octicons";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Sections from "./Sections.svelte";
+  import RedactionToolbar from "./RedactionToolbar.svelte";
+  import AnnotationToolbar from "./AnnotationToolbar.svelte";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
@@ -31,17 +33,29 @@
 
 <div class="container">
   <ContentLayout>
-    <PageToolbar slot="header">
-      <SelectMode slot="left" />
-      <Flex justify="end" slot="right">
-        {#if document.edit_access}
-          <Button ghost><Note16 /> Annotate</Button>
-          <Button ghost><EyeClosed16 /> Redact</Button>
-        {/if}
-        <Search name="q" {query} />
-      </Flex>
-    </PageToolbar>
-    {#if mode === "document"}
+    <div slot="header">
+      {#if mode === "annotating"}
+        <AnnotationToolbar />
+      {:else if mode === "redacting"}
+        <RedactionToolbar {document} />
+      {:else}
+        <PageToolbar>
+          <SelectMode slot="left" />
+          <Flex justify="end" slot="right">
+            {#if document.edit_access}
+              <Button ghost on:click={() => ($currentMode = "annotating")}
+                ><Comment16 /> Annotate</Button
+              >
+              <Button ghost on:click={() => ($currentMode = "redacting")}
+                ><EyeClosed16 /> Redact</Button
+              >
+            {/if}
+            <!-- <Search name="q" {query} /> -->
+          </Flex>
+        </PageToolbar>
+      {/if}
+    </div>
+    {#if mode in ["document", "annotating", "redacting"]}
       <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} />
     {:else if mode === "text"}
       <Text {text} zoom={+$zoom || 1} total={document.page_count} {query} />

@@ -54,7 +54,8 @@
   </Flex>
   <Flex gap={0} justify="end" align="center" slot="right">
     <Button ghost size="small" mode="danger" on:click={onCancel}>
-      <X16 /> Cancel
+      <X16 />
+      {$_("redact.cancel")}
     </Button>
     <Button
       size="small"

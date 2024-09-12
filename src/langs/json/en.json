@@ -989,7 +989,7 @@
     "cancel": "Cancel"
   },
   "annotate": {
-    "title": "Add Note",
+    "title": "Annotate Document",
     "instructions": "Highlight a portion of the page, or click between pages to create a note.",
     "fields": {
       "title": "Title",
@@ -1012,7 +1012,7 @@
     "title": "Redact Document",
     "instructions": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
     "undo": "Undo",
-    "cancel": "Cancel",
+    "cancel": "Discard",
     "cancelWarning": "You will lose unsaved redactions. Are you sure you want to cancel?",
     "error": "Error"
   },
