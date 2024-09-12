@@ -82,8 +82,9 @@
   nav,
   aside {
     z-index: 1;
-    width: 16rem;
-    flex: 0 0 auto;
+    flex: 1 0 0;
+    min-width: 16rem;
+    max-width: 18rem;
 
     display: flex;
     flex-direction: column;
