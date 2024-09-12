@@ -29,6 +29,7 @@
 
   $: asset_url = pdfUrl(document);
   $: mode = $currentMode;
+  $: showPDF = ["document", "annotating", "redacting"].includes(mode);
 </script>
 
 <div class="container">
@@ -55,7 +56,7 @@
         </PageToolbar>
       {/if}
     </div>
-    {#if mode in ["document", "annotating", "redacting"]}
+    {#if showPDF}
       <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} />
     {:else if mode === "text"}
       <Text {text} zoom={+$zoom || 1} total={document.page_count} {query} />
