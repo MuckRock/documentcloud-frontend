@@ -51,11 +51,11 @@
 <style>
   .container {
     display: grid;
-    grid-template-rows: 2rem auto 1fr;
     grid-template-columns: 18rem minmax(40rem, 1fr) 18rem;
     justify-content: center;
-    min-height: 100%;
-    max-width: 100%;
+    height: 100%;
+    max-width: 100rem;
+    margin: 0 auto;
     padding: 0 0.5rem;
     position: relative;
     background: var(--white);
@@ -68,14 +68,12 @@
   nav {
     z-index: 1;
     grid-column: 1/2;
-    grid-row: 2/4;
     padding: 1rem 1.5rem;
   }
 
   article {
     z-index: 0;
     grid-column: 2/3;
-    grid-row: 1/4;
 
     margin-bottom: 0.5rem;
     display: flex;
@@ -95,13 +93,18 @@
   aside {
     z-index: 1;
     grid-column: 3/4;
-    grid-row: 2/4;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     padding: 1rem 1.5rem;
+  }
+
+  nav,
+  aside {
+    padding-top: 3rem;
+    top: 3rem;
   }
 
   .sticky {

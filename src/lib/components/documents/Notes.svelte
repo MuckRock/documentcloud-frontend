@@ -39,7 +39,7 @@
     {#await pdf then pdf}
       {#each notes as note}
         <div class="note-wrapper">
-          <Note {note} {pdf} />
+          <Note {document} {note} {pdf} />
           <h4>
             <a href={noteUrl(document, note).href}>
               {$_("documents.page")}
@@ -61,7 +61,7 @@
   {:else}
     {#each notes as note}
       <div class="note-wrapper">
-        <Note {note} />
+        <Note {document} {note} />
         <h4>
           <a href={noteUrl(document, note).href}>
             {$_("documents.page")}

@@ -30,6 +30,7 @@
   import Share from "./Share.svelte";
   // import { getPrivateAsset } from "$lib/utils/api";
 
+  export let document: Document;
   export let note: Note;
   export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
@@ -54,7 +55,6 @@
     },
   };
 
-  const document: Document = getContext("document");
   const mode: Writable<ViewerMode> = getContext("currentMode");
 
   let canvas: HTMLCanvasElement;

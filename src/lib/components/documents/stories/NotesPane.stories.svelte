@@ -54,7 +54,12 @@
     {#await load(url) then pdf}
       {#each sizes as [width, height], page_number}
         <div class="page">
-          <NotesPane {pdf} notes={notes[page_number] || []} scale={1.25} />
+          <NotesPane
+            {document}
+            {pdf}
+            notes={notes[page_number] || []}
+            scale={1.25}
+          />
         </div>
       {/each}
     {/await}
