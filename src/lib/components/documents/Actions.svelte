@@ -10,7 +10,7 @@
   } from "svelte-octicons";
 
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
-  import type { Document } from "$lib/api/types";
+  import type { Document, Org, User } from "$lib/api/types";
   import Button from "$lib/components/common/Button.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
   import ConfirmDelete from "$lib/components/forms/ConfirmDelete.svelte";
@@ -19,11 +19,19 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
 
   import Share from "./Share.svelte";
+  import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
+  import Premium from "@/common/icons/Premium.svelte";
+  import RevisionControl from "../forms/RevisionControl.svelte";
+  import Revisions from "./Revisions.svelte";
+  import UpgradePrompt from "@/premium-credits/UpgradePrompt.svelte";
+  import { getUpgradeUrl } from "$lib/api/accounts";
 
   export let document: Document;
+  export let user: User;
 
   let shareOpen = false;
   let editOpen = false;
+  let revisionsOpen = false;
   let reprocessOpen = false;
   let deleteOpen = false;
 
@@ -32,6 +40,9 @@
   }
 
   $: canEdit = document.edit_access;
+  $: organization =
+    typeof user?.organization === "object" ? (user.organization as Org) : null;
+  $: plan = organization?.plan ?? "Free";
 </script>
 
 <div class="actions wideGap">
@@ -46,9 +57,15 @@
         <Pencil16 />
         {$_("sidebar.edit")}
       </Button>
-      <Button ghost minW={false} href={relativeUrl(document, "revisions/")}>
+      <Button
+        ghost
+        mode="premium"
+        minW={false}
+        on:click={() => (revisionsOpen = true)}
+      >
         <History16 />
         {$_("sidebar.revisions")}
+        <Premium />
       </Button>
     </div>
   {/if}
@@ -86,6 +103,29 @@
     <Modal on:close={() => (editOpen = false)}>
       <h1 slot="title">{$_("edit.title")}</h1>
       <Edit {document} on:close={() => (editOpen = false)} />
+    </Modal>
+  </Portal>
+{/if}
+{#if revisionsOpen}
+  <Portal>
+    <Modal on:close={() => (revisionsOpen = false)}>
+      <h1 slot="title">
+        {$_("dialogRevisionsDialog.heading")}
+        <PremiumBadge />
+      </h1>
+      <div>
+        {#if plan !== "Free"}
+          <RevisionControl {document} />
+          <hr class="divider" />
+          <Revisions {document} />
+        {:else}
+          <UpgradePrompt
+            message={$_("dialogRevisionsDialog.upgrade.message")}
+            callToAction={$_("dialogRevisionsDialog.upgrade.adminCta")}
+            href={getUpgradeUrl(organization).href}
+          />
+        {/if}
+      </div>
     </Modal>
   </Portal>
 {/if}

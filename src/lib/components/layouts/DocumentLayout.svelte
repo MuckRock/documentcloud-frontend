@@ -1,11 +1,6 @@
 <script lang="ts">
-  import type {
-    Document,
-    DocumentText,
-    Project,
-    ViewerMode,
-  } from "$lib/api/types";
-  import Flex from "../common/Flex.svelte";
+  import type { Document, DocumentText, Project, User } from "$lib/api/types";
+  import type { Writable } from "svelte/store";
   import Access from "../documents/Access.svelte";
   import Actions from "../documents/Actions.svelte";
   import Data from "../documents/Data.svelte";
@@ -14,6 +9,9 @@
   import Projects from "../documents/Projects.svelte";
   import Notes from "../documents/sidebar/Notes.svelte";
   import Viewer from "../documents/Viewer.svelte";
+  import { getContext } from "svelte";
+
+  const user: Writable<User> = getContext("me");
 
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;
@@ -41,7 +39,7 @@
   <aside>
     <div class="sticky top column">
       <Access {document} />
-      <Actions {document} />
+      <Actions {document} user={$user} />
     </div>
     <div class="sticky bottom">
       <Metadata {document} />
