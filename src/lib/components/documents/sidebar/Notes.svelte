@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Document, Note } from "$lib/api/types";
+  import type { Document, Note, ViewerMode } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Note16, Note24 } from "svelte-octicons";
@@ -10,8 +10,13 @@
 
   import { canonicalUrl } from "$lib/api/documents";
   import { noteUrl } from "$lib/api/notes";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+  import Button from "../../common/Button.svelte";
 
   export let document: Document;
+
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
   $: notes = document.notes;
   $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
@@ -37,12 +42,14 @@
     {:else}
       <Empty>
         <Note24 />
+        <p>{$_("notes.empty")}</p>
         {#if document.edit_access}
-          <p>
-            <a href={annotate}> {$_("notes.cta")}</a>
-          </p>
-        {:else}
-          <p>{$_("notes.empty")}</p>
+          <Button
+            ghost
+            mode="primary"
+            on:click={() => ($currentMode = "annotating")}
+            >{$_("notes.cta")}</Button
+          >
         {/if}
       </Empty>
     {/each}
