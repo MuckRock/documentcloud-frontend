@@ -10,6 +10,7 @@
   import Notes from "../documents/sidebar/Notes.svelte";
   import Viewer from "../documents/Viewer.svelte";
   import { getContext } from "svelte";
+  import Flex from "../common/Flex.svelte";
 
   const user: Writable<User> = getContext("me");
 
@@ -22,12 +23,10 @@
 </script>
 
 <div class="container">
-  <nav>
-    <div class="sticky top column">
-      <Projects {projects} {document} />
-      <Data {document} />
-      <Notes {document} />
-    </div>
+  <nav class="column">
+    <Projects {projects} {document} />
+    <Data {document} />
+    <Notes {document} />
   </nav>
   <article>
     <header>
@@ -37,24 +36,21 @@
       <Viewer {document} {text} {query} />
     </main>
   </article>
-  <aside>
-    <div class="sticky top column">
+  <aside class="column between">
+    <Flex direction="column" gap={2}>
       <Access {document} />
       <Actions {document} user={$user} {action} />
-    </div>
-    <div class="sticky bottom">
-      <Metadata {document} />
-    </div>
+    </Flex>
+    <Metadata {document} />
   </aside>
 </div>
 
 <style>
   .container {
-    display: grid;
-    grid-template-columns: 18rem minmax(40rem, 1fr) 18rem;
+    display: flex;
     justify-content: center;
-    height: 100%;
     max-width: 100rem;
+    max-height: 100%;
     margin: 0 auto;
     padding: 0 0.5rem;
     position: relative;
@@ -65,20 +61,17 @@
     padding: 2rem 1.5rem 1rem;
   }
 
-  nav {
-    z-index: 1;
-    grid-column: 1/2;
-    padding: 1rem 1.5rem;
-  }
-
   article {
+    flex: 1 1 auto;
     z-index: 0;
     grid-column: 2/3;
 
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+
+    overflow-y: auto;
   }
 
   main {
@@ -90,38 +83,27 @@
     box-shadow: inset var(--shadow-2);
   }
 
+  nav,
   aside {
     z-index: 1;
-    grid-column: 3/4;
+    width: 18rem;
+    flex: 0 0 auto;
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-
-    padding: 1rem 1.5rem;
-  }
-
-  nav,
-  aside {
-    padding-top: 3rem;
-    top: 3rem;
-  }
-
-  .sticky {
-    position: sticky;
+    gap: 2rem;
   }
 
   .column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-height: 100%;
+    padding: 2rem 1rem 1rem;
+    overflow-y: auto;
   }
 
-  .sticky.top {
-    top: 1rem;
-  }
-
-  .sticky.bottom {
-    bottom: 2rem;
+  .between {
+    justify-content: space-between;
   }
 </style>
