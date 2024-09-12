@@ -3,6 +3,8 @@
   import Projects from "../Projects.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
+  import type { Document } from "@/lib/api/types";
+  const document = doc as Document;
 
   export const meta = {
     title: "Components / Documents / Menus / Projects",
@@ -15,9 +17,9 @@
 </script>
 
 <Story name="With Data">
-  <Projects projects={doc.projects} />
+  <Projects {document} projects={doc.projects} />
 </Story>
 
 <Story name="Empty">
-  <Projects projects={[]} />
+  <Projects {document} projects={[]} />
 </Story>
