@@ -1017,6 +1017,7 @@
     "error": "Error"
   },
   "sections": {
+    "edit": "Edit Sections",
     "page": "Page",
     "title": "Title",
     "delete": "Delete",

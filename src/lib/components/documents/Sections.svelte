@@ -7,8 +7,16 @@
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import Empty from "../common/Empty.svelte";
+  import Portal from "../layouts/Portal.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import EditSections from "../forms/EditSections.svelte";
+  import Button from "../common/Button.svelte";
 
   export let document: Document;
+
+  $: sections = document.sections ?? [];
+
+  let formOpen = false;
 </script>
 
 <Dropdown id="sections" position="top left" --offset="5px">
@@ -20,19 +28,34 @@
     </SidebarItem>
   </div>
   <Menu>
-    {#each document.sections ?? [] as section}
+    {#each sections as section}
       <MenuItem>{section.title}</MenuItem>
     {:else}
       <Empty icon={ListOrdered24}>
-        {#if document.edit_access}
-          <p>{$_("sidebar.toc.cta")}</p>
-        {:else}
-          <p>{$_("sidebar.toc.empty")}</p>
-        {/if}
+        <p>{$_("sidebar.toc.empty")}</p>
       </Empty>
     {/each}
+    {#if document.edit_access}
+      {#if sections.length === 0}
+        <Button ghost mode="primary" on:click={() => (formOpen = true)}
+          >{$_("sidebar.toc.cta")}</Button
+        >
+      {:else}
+        <Button ghost mode="primary" on:click={() => (formOpen = true)}
+          >{$_("sections.edit")}</Button
+        >
+      {/if}
+    {/if}
   </Menu>
 </Dropdown>
+{#if formOpen}
+  <Portal>
+    <Modal on:close={() => (formOpen = false)}>
+      <h1 slot="title">{$_("sections.edit")}</h1>
+      <EditSections {document} on:close={() => (formOpen = false)} />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   .toolbarItem {
