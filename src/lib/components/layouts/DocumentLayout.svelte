@@ -53,7 +53,6 @@
     max-width: var(--app-max-w, 100rem);
     max-height: 100%;
     margin: 0 auto;
-    padding: 0 0.5rem;
     position: relative;
   }
 
@@ -64,13 +63,10 @@
   article {
     flex: 1 1 auto;
     z-index: 0;
-    grid-column: 2/3;
-
     padding-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-
     overflow-y: auto;
   }
 
@@ -86,7 +82,7 @@
   nav,
   aside {
     z-index: 1;
-    width: 18rem;
+    width: 16rem;
     flex: 0 0 auto;
 
     display: flex;
