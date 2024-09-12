@@ -16,6 +16,7 @@
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
+  export let action: string = "";
 
   $: projects = (document.projects ?? []) as Project[];
 </script>
@@ -39,7 +40,7 @@
   <aside>
     <div class="sticky top column">
       <Access {document} />
-      <Actions {document} user={$user} />
+      <Actions {document} user={$user} {action} />
     </div>
     <div class="sticky bottom">
       <Metadata {document} />

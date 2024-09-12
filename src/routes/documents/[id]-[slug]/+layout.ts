@@ -37,6 +37,8 @@ export async function load({ fetch, params, parent, depends, url }) {
     mode = documents.MODES[0];
   }
 
+  let action = url.searchParams.get("action");
+
   const breadcrumbs = await breadcrumbTrail(parent, [
     { href: "/documents/", title: "Documents" },
     { href: documentPath(document), title: document.title },
@@ -48,6 +50,7 @@ export async function load({ fetch, params, parent, depends, url }) {
   return {
     document,
     mode,
+    action,
     pinnedAddons,
     breadcrumbs,
   };

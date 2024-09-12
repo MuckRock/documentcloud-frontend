@@ -28,12 +28,13 @@
 
   export let document: Document;
   export let user: User;
+  export let action: string = "";
 
-  let shareOpen = false;
-  let editOpen = false;
-  let revisionsOpen = false;
-  let reprocessOpen = false;
-  let deleteOpen = false;
+  $: shareOpen = action === "share";
+  $: editOpen = action === "edit";
+  $: revisionsOpen = action === "revisions";
+  $: reprocessOpen = action === "reprocess";
+  $: deleteOpen = action === "delete";
 
   function relativeUrl(document: Document, path: string) {
     return new URL(path, canonicalUrl(document)).href;

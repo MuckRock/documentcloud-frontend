@@ -24,6 +24,7 @@
   $: document = data.document;
   $: query = data.query;
   $: text = data.text;
+  $: action = data.action;
 
   const activeNote: Writable<Note> = getContext("activeNote");
   const currentPage: Writable<number> = getContext("currentPage");
@@ -95,4 +96,4 @@
   {/if}
 </svelte:head>
 
-<DocumentLayout {document} {text} {query} />
+<DocumentLayout {document} {text} {query} {action} />
