@@ -14,7 +14,7 @@
   export let document: Document;
 
   $: notes = document.notes;
-  $: annotate = new URL("annotate/", canonicalUrl(document)).href;
+  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 </script>
 
 <SidebarGroup name="notes">

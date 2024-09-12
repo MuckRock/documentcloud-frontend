@@ -24,7 +24,7 @@
   export let asset_url: URL = undefined;
 
   $: notes = document.notes;
-  $: annotate = new URL("annotate/", canonicalUrl(document)).href;
+  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 
   onMount(async () => {
     if (asset_url && !task) {

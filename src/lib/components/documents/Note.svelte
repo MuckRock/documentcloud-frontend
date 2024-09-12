@@ -68,7 +68,7 @@
   $: user = typeof note.user === "object" ? (note.user as User) : null;
   $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
   $: edit_link = new URL(
-    `annotate/${noteHashUrl(note)}`,
+    `${noteHashUrl(note)}?mode=annotating`,
     canonicalUrl(document),
   ).href;
 
