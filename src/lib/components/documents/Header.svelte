@@ -1,16 +1,9 @@
 <script lang="ts">
-  import type { Document, Project } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
-  import Flex from "$lib/components/common/Flex.svelte";
-
-  import Data from "./Data.svelte";
-  import Projects from "./Projects.svelte";
-
   export let document: Document;
-
-  $: projects = (document.projects ?? []) as Project[];
 </script>
 
 <!--
@@ -19,23 +12,15 @@
 
   - title
   - description
-  - tags & data
-  - projects
 -->
-<Flex direction="column" gap={2}>
-  <header>
-    <h1>{document.title}</h1>
-    {#if document.description}
-      <div class="description">
-        {@html document.description}
-      </div>
-    {/if}
-    <Flex>
-      <Data {document} />
-      <Projects {projects} />
-    </Flex>
-  </header>
-</Flex>
+<header>
+  <h1>{document.title}</h1>
+  {#if document.description}
+    <div class="description">
+      {@html document.description}
+    </div>
+  {/if}
+</header>
 
 <style>
   header h1 {

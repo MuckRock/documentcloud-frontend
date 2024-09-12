@@ -16,9 +16,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
 
   import * as search from "$lib/utils/search";
-  import Dropdown from "@/common/Dropdown2.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import Button from "../common/Button.svelte";
+  import SidebarGroup from "../sidebar/SidebarGroup.svelte";
 
   export let document: Document;
 
@@ -29,56 +27,54 @@
   $: empty = Object.keys(document.data).length === 0;
 </script>
 
-<Dropdown id="document-projects" position="bottom left" --offset=".25rem">
+<SidebarGroup name="projects:viewer">
   <SidebarItem slot="title">
     <Tag16 />
     {$_("sidebar.data.title")}
-    <ChevronDown12 />
   </SidebarItem>
-  <Menu>
+  <div slot="action">
+    {#if document.edit_access}
+      <Action on:click={() => (edit = true)} icon={Pencil16}>
+        {$_("common.edit")}
+      </Action>
+    {/if}
+  </div>
+  <div>
     {#if empty}
       <Empty icon={Tag24}>
         <p>{$_("sidebar.data.empty")}</p>
       </Empty>
-    {/if}
-
-    <Flex direction="column" gap={1}>
-      {#if tags}
-        <Flex wrap class="tags">
-          {#each tags as tag}
-            <KV tag value={tag} href={search.searchUrl(search.tag(tag)).href} />
-          {/each}
-        </Flex>
-      {/if}
-
-      {#if data.length}
-        <Flex wrap class="data">
-          {#each data as [key, values]}
-            {#each values as value}
+    {:else}
+      <Flex direction="column" gap={1}>
+        {#if tags}
+          <Flex wrap class="tags">
+            {#each tags as tag}
               <KV
-                {key}
-                {value}
-                href={search.searchUrl(search.kv(key, value)).href}
+                tag
+                value={tag}
+                href={search.searchUrl(search.tag(tag)).href}
               />
             {/each}
-          {/each}
-        </Flex>
-      {/if}
+          </Flex>
+        {/if}
 
-      {#if document.edit_access}
-        <Button
-          size="small"
-          ghost
-          mode="primary"
-          on:click={() => (edit = true)}
-        >
-          <Pencil16 />
-          {$_("data.title")}
-        </Button>
-      {/if}
-    </Flex>
-  </Menu>
-</Dropdown>
+        {#if data.length}
+          <Flex wrap class="data">
+            {#each data as [key, values]}
+              {#each values as value}
+                <KV
+                  {key}
+                  {value}
+                  href={search.searchUrl(search.kv(key, value)).href}
+                />
+              {/each}
+            {/each}
+          </Flex>
+        {/if}
+      </Flex>
+    {/if}
+  </div>
+</SidebarGroup>
 
 {#if edit}
   <Portal>

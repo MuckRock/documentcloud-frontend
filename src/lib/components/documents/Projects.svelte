@@ -2,7 +2,7 @@
   import type { Document, Project } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { FileDirectory16, FileDirectory24 } from "svelte-octicons";
+  import { FileDirectory16, FileDirectory24, Pencil16 } from "svelte-octicons";
 
   import Action from "@/lib/components/common/Action.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
@@ -18,10 +18,10 @@
   export let document: Document;
   export let projects: Project[];
 
-  let show = false;
+  let edit = false;
 
   function hide() {
-    show = false;
+    edit = false;
   }
 </script>
 
@@ -30,6 +30,13 @@
     <FileDirectory16 />
     {$_("projects.header")}
   </SidebarItem>
+  <div slot="action">
+    {#if document.edit_access}
+      <Action on:click={() => (edit = true)} icon={Pencil16}>
+        {$_("common.edit", { values: { n: 1 } })}
+      </Action>
+    {/if}
+  </div>
 
   {#each projects as project}
     <SidebarItem small href={canonicalUrl(project).href}>
@@ -37,21 +44,14 @@
     </SidebarItem>
   {:else}
     <Empty icon={FileDirectory24}>
-      <Action on:click={() => (show = true)}>
+      <Action on:click={() => (edit = true)}>
         {$_("projects.add", { values: { n: 1 } })}
       </Action>
     </Empty>
   {/each}
-  {#if projects.length}
-    <SidebarItem>
-      <Action on:click={() => (show = true)}>
-        {$_("projects.add", { values: { n: 1 } })}
-      </Action>
-    </SidebarItem>
-  {/if}
 </SidebarGroup>
 
-{#if show}
+{#if edit}
   <Portal>
     <Modal on:close={hide}>
       <Projects documents={[document]} on:close={hide} />

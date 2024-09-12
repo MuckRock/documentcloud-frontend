@@ -4,10 +4,13 @@
   import { LANGUAGE_MAP } from "@/config/config.js";
   import { userOrgString } from "$lib/api/documents";
   import type { Document } from "$lib/api/types";
-  import { dateFormat } from "@/lib/utils/datetime";
   import Metadata from "../common/Metadata.svelte";
 
   export let document: Document;
+
+  function dateFormat(date: Date | string) {
+    return new Date(date).toLocaleDateString();
+  }
 </script>
 
 <!--
