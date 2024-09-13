@@ -7,9 +7,10 @@
 -->
 
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
-  import { onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -22,6 +23,7 @@
   import PdfPage from "./PDFPage.svelte";
 
   import { pageSizes } from "@/api/pageSize.js";
+  import { scrollToPage } from "$lib/utils/scroll";
 
   export let asset_url: URL = null;
   export let document: Document;
@@ -31,6 +33,8 @@
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Promise<any> = new Promise(() => {});
   export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
+
+  const currentPage: Writable<number> = getContext("currentPage");
 
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
 
@@ -68,6 +72,10 @@
       // handle missing page_spec
       if (sizes.length === 0) {
         sizes = Array(p.numPages).fill([0, 0]);
+      }
+
+      if ($currentPage > 1) {
+        scrollToPage($currentPage);
       }
 
       // @ts-ignore
