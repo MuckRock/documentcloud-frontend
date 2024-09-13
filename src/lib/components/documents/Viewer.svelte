@@ -49,7 +49,7 @@
           <Flex justify="end" slot="right">
             <Search name="q" {query} />
             {#if document.edit_access}
-              <Button ghost href="?mode=redacting">
+              <Button ghost href="?mode=annotating">
                 <Comment16 />
                 {$_("mode.annotating")}
               </Button>
