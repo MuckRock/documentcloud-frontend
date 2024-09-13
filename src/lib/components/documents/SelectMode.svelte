@@ -33,7 +33,7 @@
     {#each modes.entries() as [value, name]}
       <Tab
         active={$currentMode === value}
-        on:click={() => goto(`?mode=${value}`)}
+        on:click={() => goto(`?mode=${value}`, { noScroll: value === "text" })}
       >
         <svelte:component this={icons[value]} />
         {name}
