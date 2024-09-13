@@ -1,8 +1,4 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { ViewerMode } from "$lib/api/types";
-
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Comment16, Question16 } from "svelte-octicons";
 
@@ -10,8 +6,6 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
-
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 </script>
 
 <PageToolbar>
