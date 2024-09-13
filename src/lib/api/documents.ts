@@ -509,7 +509,7 @@ export async function assetUrl(
  * @returns {URL}
  */
 export function embedUrl(document: Document): URL {
-  const path = `/documents/${document.id}/`;
+  const path = `/embed/documents/${document.id}/`;
   return new URL(path, APP_URL);
 }
 

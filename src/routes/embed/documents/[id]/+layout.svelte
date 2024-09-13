@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { ViewerMode, Note } from "$lib/api/types.js";
+  import type { LayoutData } from "./$types";
+  import type { ViewerMode, Note } from "$lib/api/types";
   import { canonicalUrl } from "$lib/api/documents";
   import { setContext } from "svelte";
   import { type Writable, writable } from "svelte/store";
 
-  export let data;
+  export let data: LayoutData;
 
   $: document = data.document;
   $: canonical_url = canonicalUrl(document).href;
