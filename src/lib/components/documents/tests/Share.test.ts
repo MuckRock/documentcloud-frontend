@@ -6,7 +6,12 @@ import Share from "../Share.svelte";
 
 import type { Document } from "@/lib/api/types";
 import documentFixture from "@/test/fixtures/documents/document-expanded.json";
-import { canonicalPageUrl, canonicalUrl, pageUrl } from "@/lib/api/documents";
+import {
+  canonicalPageUrl,
+  canonicalUrl,
+  embedUrl,
+  pageUrl,
+} from "@/lib/api/documents";
 import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
 
 describe("Share", () => {
@@ -39,7 +44,7 @@ describe("Share", () => {
     await user.click(screen.getByText("Document"));
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
     expect(inputs[1]).toHaveValue(
-      `<iframe src="${canonicalUrl(document)}?embed=1" />`,
+      `<iframe src="${embedUrl(document)}?embed=1" />`,
     );
     // Page tab
     await user.click(screen.getByText("Page"));
@@ -63,7 +68,7 @@ describe("Share", () => {
     // Default settings
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
     expect(inputs[1]).toHaveValue(
-      `<iframe src="${canonicalUrl(document)}?embed=1" />`,
+      `<iframe src="${embedUrl(document)}?embed=1" />`,
     );
     // Customize width and height
     await user.click(screen.getByText("Customize Embed"));
@@ -73,13 +78,13 @@ describe("Share", () => {
     await user.click(radioSelections[0]);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
     expect(inputs[1]).toHaveValue(
-      `<iframe src="${canonicalUrl(document)}?embed=1&width=500" width="500" />`,
+      `<iframe src="${embedUrl(document)}?embed=1&width=500" width="500" />`,
     );
     // Height
     await user.click(radioSelections[1]);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
     expect(inputs[1]).toHaveValue(
-      `<iframe src="${canonicalUrl(document)}?embed=1&width=500&height=500" width="500" height="500" />`,
+      `<iframe src="${embedUrl(document)}?embed=1&width=500&height=500" width="500" height="500" />`,
     );
   });
   it("disables customization of page and note embeds", async () => {

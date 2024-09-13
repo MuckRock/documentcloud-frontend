@@ -104,6 +104,14 @@ export function getUpgradeUrl(org: Org = null): URL {
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
 }
 
+export function isUser(user?: null | number | User): user is User {
+  return user !== undefined && user !== null && typeof user !== "number";
+}
+
+export function isOrg(org?: null | number | Org): org is Org {
+  return org !== undefined && org !== null && typeof org !== "number";
+}
+
 export function isPremiumOrg(org: Org): boolean {
   if (!org || !org.plan) return false;
   return org.plan !== "Free";

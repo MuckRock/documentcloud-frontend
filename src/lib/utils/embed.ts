@@ -40,6 +40,21 @@ export let settings = {
   onlyshoworg: null,
 };
 
+export type EmbedSettings = typeof settings;
+
+export const defaultSettings: EmbedSettings = {
+  embed: 1,
+  responsive: 1,
+  width: null,
+  height: null,
+  sidebar: null,
+  title: 1,
+  pdf: 0,
+  text: null,
+  fullscreen: 1,
+  onlyshoworg: 0,
+};
+
 export function createEmbedSearchParams(
   params: Partial<typeof settings>,
 ): URLSearchParams {
@@ -49,6 +64,18 @@ export function createEmbedSearchParams(
     searchParams[key] = String(value);
   });
   return new URLSearchParams(searchParams);
+}
+
+export function getEmbedSettings(
+  searchParams: URLSearchParams,
+): typeof settings {
+  const embedSettings = Object.assign({}, defaultSettings);
+  Object.keys(embedSettings).forEach((key) => {
+    if (searchParams.has(key)) {
+      embedSettings[key] = searchParams.get(key);
+    }
+  });
+  return embedSettings;
 }
 
 export const settingsConfig: Record<keyof typeof settings, EmbedSettingConfig> =

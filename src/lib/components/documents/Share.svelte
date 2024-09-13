@@ -29,7 +29,12 @@
   import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
 
   import { createEmbedSearchParams } from "@/lib/utils/embed";
-  import { canonicalPageUrl, canonicalUrl, pageUrl } from "@/lib/api/documents";
+  import {
+    canonicalPageUrl,
+    canonicalUrl,
+    embedUrl,
+    pageUrl,
+  } from "@/lib/api/documents";
   import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
 
   export let document: Document;
@@ -58,7 +63,7 @@
     switch (currentTab) {
       case "document":
         permalink = canonicalUrl(document);
-        embedSrc = canonicalUrl(document);
+        embedSrc = embedUrl(document);
         iframe = `<iframe src="${embedSrc}?${embedUrlParams.toString()}"`;
         wpShortcode = `[documentcloud url="${embedSrc}" ${Array.from(
           embedUrlParams,

@@ -842,6 +842,11 @@
     "normal": "Medium",
     "large": "Large"
   },
+  "embed": {
+    "download": "Download",
+    "enterFullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen"
+  },
   "drawer": {
     "close": "Close Drawer"
   },

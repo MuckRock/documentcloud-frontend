@@ -11,6 +11,7 @@ import { error } from "@sveltejs/kit";
 
 import * as documents from "$lib/api/documents";
 import type { ViewerMode } from "$lib/api/types";
+import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, url, params, depends }) {
@@ -29,8 +30,11 @@ export async function load({ fetch, url, params, depends }) {
     mode = documents.MODES[0];
   }
 
+  let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);
+
   return {
     document,
     mode,
+    settings,
   };
 }

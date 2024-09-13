@@ -4,17 +4,10 @@ import * as documents from "@/lib/api/documents";
 import * as notesApi from "$lib/api/notes";
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ params, fetch, url }) {
-  let mode: ViewerMode =
-    (url.searchParams.get("mode") as ViewerMode) ?? "document";
+export async function load({ parent, fetch, url }) {
+  const { document, mode } = await parent();
 
-  if (!documents.MODES.has(mode)) {
-    mode = documents.MODES[0];
-  }
-
-  let [document] = await Promise.all([
-    documents.get(+params.id, fetch),
-  ]);
+  const query = url.searchParams.get("q") ?? "";
 
   const asset_url = await documents.assetUrl(document, fetch);
 
@@ -29,9 +22,8 @@ export async function load({ params, fetch, url }) {
   }
 
   return {
-    document,
+    asset_url,
+    query,
     text,
-    mode,
-    asset_url
   };
 }

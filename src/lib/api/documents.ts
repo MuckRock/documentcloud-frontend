@@ -501,6 +501,19 @@ export async function assetUrl(
 }
 
 /**
+ * Embed URL for a document, relative to the current server
+ * This will be correct in all environments, including deploy previews
+ *
+ * @export
+ * @param {import('./types').Document} document
+ * @returns {URL}
+ */
+export function embedUrl(document: Document): URL {
+  const path = `/documents/${document.id}/`;
+  return new URL(path, APP_URL);
+}
+
+/**
  * Canonical URL for a document, relative to the current server
  * This will be correct in all environments, including deploy previews
  *

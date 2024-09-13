@@ -32,6 +32,7 @@
     org_users: Promise.resolve([]),
     breadcrumbs: [],
     tipOfDay: null,
+    settings: {},
   };
 </script>
 
