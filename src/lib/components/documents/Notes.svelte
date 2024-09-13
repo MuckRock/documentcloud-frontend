@@ -24,7 +24,7 @@
   export let asset_url: URL = undefined;
 
   $: notes = document.notes;
-  $: annotate = new URL("annotate/", canonicalUrl(document)).href;
+  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 
   onMount(async () => {
     if (asset_url && !task) {
@@ -39,7 +39,7 @@
     {#await pdf then pdf}
       {#each notes as note}
         <div class="note-wrapper">
-          <Note {note} {pdf} />
+          <Note {document} {note} {pdf} />
           <h4>
             <a href={noteUrl(document, note).href}>
               {$_("documents.page")}
@@ -50,16 +50,18 @@
       {:else}
         <Empty icon={ListOrdered24}>
           <h2>{$_("notes.empty")}</h2>
-          <p>
-            <a href={annotate}> {$_("notes.cta")}</a>
-          </p>
+          {#if document.edit_access}
+            <p>
+              <a href={annotate}> {$_("notes.cta")}</a>
+            </p>
+          {/if}
         </Empty>
       {/each}
     {/await}
   {:else}
     {#each notes as note}
       <div class="note-wrapper">
-        <Note {note} />
+        <Note {document} {note} />
         <h4>
           <a href={noteUrl(document, note).href}>
             {$_("documents.page")}
@@ -70,9 +72,11 @@
     {:else}
       <Empty icon={ListOrdered24}>
         <h2>{$_("notes.empty")}</h2>
-        <p>
-          <a href={annotate}> {$_("notes.cta")}</a>
-        </p>
+        {#if document.edit_access}
+          <p>
+            <a href={annotate}> {$_("notes.cta")}</a>
+          </p>
+        {/if}
       </Empty>
     {/each}
   {/if}

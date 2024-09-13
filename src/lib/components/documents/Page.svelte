@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { ViewerMode } from "@/lib/api/types";
-
-  import { createEventDispatcher, getContext, onMount } from "svelte";
   import type { Writable } from "svelte/store";
+  import type { ViewerMode } from "$lib/api/types";
+
+  import { createEventDispatcher, onMount, getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { pageHashUrl } from "$lib/api/documents";
+  import { replaceState } from "$app/navigation";
 
   export let page_number: number;
   export let mode: ViewerMode = "document";
@@ -13,8 +14,9 @@
   export let tall = false;
   export let track: boolean | "once" = false;
 
-  const currentPage: Writable<number> = getContext("currentPage");
   const dispatch = createEventDispatcher();
+
+  const currentPage: Writable<number> = getContext("currentPage");
 
   let io: IntersectionObserver;
   let container: HTMLElement;
@@ -47,6 +49,7 @@
             currentPage // in case context is missing
           ) {
             $currentPage = page_number;
+            replaceState(pageHashUrl($currentPage), {});
           }
         });
       },
@@ -109,6 +112,7 @@
     padding: 0 1rem;
     margin: 0.75rem 0 0;
     max-width: 100%;
+    scroll-margin-top: 6rem;
   }
 
   .page.wide {

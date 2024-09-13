@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import type { Note as NoteType } from "$lib/api/types";
+  import type { Document, Note as NoteType } from "$lib/api/types";
 
   import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -11,9 +11,10 @@
   import { setContext } from "svelte";
   import Note from "../Note.svelte";
 
-  import document from "@/test/fixtures/documents/document-expanded.json";
+  import doc from "@/test/fixtures/documents/document-expanded.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
 
+  const document = doc as Document;
   const notes = document.notes as NoteType[];
   const url = new URL(pdfFile, import.meta.url);
 
@@ -39,31 +40,31 @@
 </script>
 
 <Story name="default">
-  <Note note={notes[0]} />
+  <Note {document} note={notes[0]} />
 </Story>
 
 <Story name="page-level note">
-  <Note note={page_note} />
+  <Note {document} note={page_note} />
 </Story>
 
 <Story name="editable">
-  <Note note={{ ...notes[1], edit_access: true }} />
+  <Note {document} note={{ ...notes[1], edit_access: true }} />
 </Story>
 
 <Story name="private access">
-  <Note note={{ ...notes[1], access: "private" }} />
+  <Note {document} note={{ ...notes[1], access: "private" }} />
 </Story>
 
 <Story name="collaborators access">
-  <Note note={{ ...notes[1], access: "organization" }} />
+  <Note {document} note={{ ...notes[1], access: "organization" }} />
 </Story>
 
 <Story name="note with HTML">
-  <Note note={{ ...notes[2], content: html }} />
+  <Note {document} note={{ ...notes[2], content: html }} />
 </Story>
 
 <Story name="render using PDF">
   {#await load(url) then pdf}
-    <Note note={{ ...notes[2], content: html }} {pdf} />
+    <Note {document} note={{ ...notes[2], content: html }} {pdf} />
   {/await}
 </Story>

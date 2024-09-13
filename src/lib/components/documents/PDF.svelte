@@ -98,9 +98,10 @@
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding: 0 3rem;
+    padding: 3rem;
     gap: 3rem;
     width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
   }
 </style>

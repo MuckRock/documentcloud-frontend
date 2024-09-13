@@ -108,9 +108,17 @@
     fill: var(--fill, var(--gray-4, #5c717c));
   }
 
+  .ghost:hover {
+    background: var(--background, var(--gray-1, #eef3f9));
+  }
+
   .ghost.primary {
     color: var(--blue-3, #1367d0);
     fill: var(--blue-3, #1367d0);
+  }
+
+  .ghost.primary:hover {
+    background: var(--blue-1, #eef3f9);
   }
 
   .ghost.danger {
@@ -118,9 +126,17 @@
     fill: var(--orange-3, #ec7b6b);
   }
 
+  .ghost.danger:hover {
+    background: var(--orange-1, #fff0ee);
+  }
+
   .ghost.premium {
     color: var(--green-3, #27c6a2);
     fill: var(--green-3, #27c6a2);
+  }
+
+  .ghost.premium:hover {
+    background: var(--green-1, #ebf9f6);
   }
 
   .ghost.small {
@@ -134,7 +150,7 @@
   .small {
     font-size: var(--font-sm, 0.875rem);
     padding: 0.25rem 0.5rem;
-    box-shadow: var(--shadow-1);
+    box-shadow: none;
   }
 
   @media (hover: none) {

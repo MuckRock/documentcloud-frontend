@@ -1,10 +1,11 @@
 import type { Actions } from "./$types";
-import type { Document } from "$lib/api/types";
+import type { Access, Document, Note } from "$lib/api/types";
 
 import { fail, redirect } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { destroy, edit, redact } from "$lib/api/documents";
+import * as notes from "$lib/api/notes";
 import { isErrorCode } from "$lib/utils/api";
 
 export function load({ cookies }) {
@@ -124,6 +125,94 @@ export const actions = {
     return {
       success: true,
       redactions: await resp.json(), // this should be the same as above
+    };
+  },
+
+  async createAnnotation({ cookies, request, fetch, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const form = await request.formData();
+
+    const [x1, x2, y1, y2] = JSON.parse(form.get("coords") as string);
+
+    const note: Partial<Note> = {
+      title: form.get("title") as string,
+      content: (form.get("content") as string) ?? "",
+      access: form.get("access") as Access,
+      page_number: +form.get("page_number"),
+      x1,
+      x2,
+      y1,
+      y2,
+    };
+
+    try {
+      const created = await notes.create(params.id, note, csrf_token, fetch);
+      return {
+        success: true,
+        note: created,
+      };
+    } catch (e) {
+      return fail(400, { error: e.message });
+    }
+  },
+
+  async updateAnnotation({ cookies, request, fetch, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const form = await request.formData();
+
+    const note_id = +form.get("id");
+
+    // only limited update options for now
+    const note: Partial<Note> = {
+      title: form.get("title") as string,
+      content: (form.get("content") as string) ?? "",
+      access: form.get("access") as Access,
+    };
+
+    try {
+      const updated = await notes.update(
+        params.id,
+        note_id,
+        note,
+        csrf_token,
+        fetch,
+      );
+      return {
+        success: true,
+        note: updated,
+      };
+    } catch (e) {
+      return fail(400, { error: e.message });
+    }
+  },
+
+  async deleteAnnotation({ cookies, request, fetch, params }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const form = await request.formData();
+
+    const note_id = +form.get("id");
+
+    if (!note_id) return fail(400, { id: "missing" });
+
+    const resp = await notes
+      .remove(params.id, note_id, csrf_token, fetch)
+      .catch((e) => {
+        console.log(e);
+      });
+
+    // probably the API is down
+    if (!resp) {
+      return fail(500, { error: "Something went wrong." });
+    }
+
+    // something else broke
+    if (isErrorCode(resp.status)) {
+      // {"error": "..."}
+      return fail(resp.status, await resp.json());
+    }
+
+    return {
+      success: true,
     };
   },
 } satisfies Actions;

@@ -5,12 +5,13 @@ which you can't undo.
 This almost certainly lives in a modal.
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, ViewerMode } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate, goto } from "$app/navigation";
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
+  import type { Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
   import { Check16, Undo16 } from "svelte-octicons";
 
@@ -29,6 +30,8 @@ This almost certainly lives in a modal.
 
   let error: string;
 
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
+
   $: action = canonicalUrl(document).pathname + "?/redact";
 
   function onSubmit({ formElement, formData, action, cancel, submitter }) {
@@ -46,15 +49,14 @@ This almost certainly lives in a modal.
         await invalidate(`document:${document.id}`);
         $pending = result.data.redactions;
         dispatch("close");
-        goto(canonicalUrl(document));
+        $currentMode = "document";
       }
     };
   }
 </script>
 
 <form {action} method="post" use:enhance={onSubmit}>
-  <Flex direction="column">
-    <h2>{$_("redact.confirm")}</h2>
+  <Flex direction="column" gap={1}>
     <p>{$_("redact.really")}</p>
 
     {#if error}
@@ -76,7 +78,6 @@ This almost certainly lives in a modal.
         {$_("redact.confirm")}
       </Button>
       <Button on:click={() => dispatch("close")}>
-        <Undo16 />
         {$_("redact.cancel")}
       </Button>
     </Flex>
@@ -85,6 +86,6 @@ This almost certainly lives in a modal.
 
 <style>
   .error {
-    color: var(--error, red);
+    color: var(--error, var(--red-3));
   }
 </style>

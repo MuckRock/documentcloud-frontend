@@ -2,7 +2,7 @@
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import Data from "../sidebar/Data.svelte";
+  import Data from "../Data.svelte";
 
   import doc from "@/test/fixtures/documents/document.json";
 
@@ -27,7 +27,7 @@
   };
 
   export const meta = {
-    title: "Viewer / Sidebar / Data",
+    title: "Components / Documents / Menus / Data",
     component: Data,
     parameters: {
       layout: "centered",
@@ -50,4 +50,8 @@
 
 <Story name="KV Data">
   <Data document={{ ...document, data: kv }} />
+</Story>
+
+<Story name="Editable">
+  <Data document={{ ...document, data, edit_access: true }} />
 </Story>

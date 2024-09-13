@@ -93,6 +93,7 @@ Updated variables and styles for new SvelteKit routes
   /* Z-Index Layers */
   --z-dropdownBackdrop: 4;
   --z-dropdown: 5;
+  --z-navigation: 7;
   --z-modal: 10;
   --z-toast: 20;
 }

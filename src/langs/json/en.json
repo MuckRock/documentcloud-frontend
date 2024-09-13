@@ -9,7 +9,8 @@
     "or": "or",
     "explore": "Explore",
     "more": "More",
-    "add": "Add"
+    "add": "Add",
+    "edit": "Edit"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -725,7 +726,7 @@
       "confirm": "Confirm remove user",
       "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
     },
-    "add": "Add", 
+    "add": "Add",
     "addCollaborators": "Add Collaborators",
     "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
     "admin": "Admin",
@@ -824,10 +825,12 @@
   },
   "mode": {
     "mode": "Mode",
-    "document": "Document",
+    "document": "File",
     "text": "Text",
-    "grid": "Grid",
-    "notes": "Notes"
+    "grid": "Pages",
+    "notes": "Notes",
+    "annotating": "Annotate",
+    "redacting": "Redact"
   },
   "zoom": {
     "zoom": "Zoom",
@@ -986,7 +989,7 @@
     "cancel": "Cancel"
   },
   "annotate": {
-    "title": "Add Note",
+    "title": "Annotate Document",
     "instructions": "Highlight a portion of the page, or click between pages to create a note.",
     "fields": {
       "title": "Title",
@@ -1003,15 +1006,18 @@
     }
   },
   "redact": {
-    "confirm": "Confirm redactions",
+    "confirm": "Save",
+    "confirmTitle": "Save Redactions",
     "really": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
     "title": "Redact Document",
     "instructions": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
     "undo": "Undo",
-    "cancel": "Cancel",
+    "cancel": "Discard",
+    "cancelWarning": "You will lose unsaved redactions. Are you sure you want to cancel?",
     "error": "Error"
   },
   "sections": {
+    "edit": "Edit Sections",
     "page": "Page",
     "title": "Title",
     "delete": "Delete",

@@ -56,7 +56,7 @@ Selectable text can be rendered in one of two ways:
   // share page
   let pageShareOpen = false;
 
-  const mode: Writable<ViewerMode> = getContext("mode");
+  const mode: Writable<ViewerMode> = getContext("currentMode");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -247,7 +247,7 @@ Selectable text can be rendered in one of two ways:
   {#if page_level_notes.length}
     <div class="page-notes">
       {#each page_level_notes as note}
-        <Note {note} />
+        <Note {document} {note} />
       {/each}
     </div>
   {/if}
@@ -290,7 +290,12 @@ Selectable text can be rendered in one of two ways:
       />
     {:else}
       {#await pdf then pdf}
-        <NotesPane notes={in_page_notes} {pdf} scale={numericScale} />
+        <NotesPane
+          {document}
+          notes={in_page_notes}
+          {pdf}
+          scale={numericScale}
+        />
       {/await}
     {/if}
 

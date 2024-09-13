@@ -20,6 +20,7 @@
     padding: 0.25rem 0.5rem;
     align-items: center;
     gap: 0.25rem;
+    font-size: 1rem;
     font-weight: 600;
     border-radius: 0.375rem;
     background: var(--badge-color, var(--light-gray));

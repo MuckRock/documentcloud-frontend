@@ -14,7 +14,7 @@
 
   $: sections = document.sections;
   $: empty = sections.length === 0;
-  $: annotate = new URL("annotate/", canonicalUrl(document)).href;
+  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 </script>
 
 <SidebarGroup name="sections">

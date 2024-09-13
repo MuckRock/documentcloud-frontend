@@ -3,7 +3,7 @@
  * We do this in a layout module because sub-routes can use the same
  * document without loading it again.
  */
-import type { Document } from "@/lib/api/types";
+import type { Document, ViewerMode } from "@/lib/api/types";
 
 import { redirect, error } from "@sveltejs/kit";
 
@@ -16,7 +16,7 @@ function documentPath(document: Document) {
 }
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params, parent, depends }) {
+export async function load({ fetch, params, parent, depends, url }) {
   const document = await documents.get(+params.id, fetch).catch(console.error);
 
   if (!document) {
@@ -30,6 +30,15 @@ export async function load({ fetch, params, parent, depends }) {
 
   depends(`document:${document.id}`);
 
+  let mode: ViewerMode =
+    (url.searchParams.get("mode") as ViewerMode) ?? "document";
+
+  if (!documents.MODES.has(mode)) {
+    mode = documents.MODES[0];
+  }
+
+  let action = url.searchParams.get("action");
+
   const breadcrumbs = await breadcrumbTrail(parent, [
     { href: "/documents/", title: "Documents" },
     { href: documentPath(document), title: document.title },
@@ -40,6 +49,8 @@ export async function load({ fetch, params, parent, depends }) {
 
   return {
     document,
+    mode,
+    action,
     pinnedAddons,
     breadcrumbs,
   };

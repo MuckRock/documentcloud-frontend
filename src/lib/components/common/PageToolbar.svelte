@@ -25,8 +25,8 @@
 <style>
   .toolbar {
     display: flex;
-    height: 2.5rem;
-    padding: 0.625rem 1rem;
+    min-height: 2.5rem;
+    padding: 0 0.25rem;
     box-sizing: border-box;
     justify-content: space-between;
     align-items: center;
@@ -35,7 +35,7 @@
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
     background: #fff;
-    box-shadow: var(--shadow-1);
+    box-shadow: var(--shadow-2);
   }
 
   .left,

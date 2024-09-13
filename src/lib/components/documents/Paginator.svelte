@@ -1,20 +1,21 @@
-<!-- @component
-ViewerPaginator wraps the common paginator with viewer-specific state and functions
+<!-- @component documents/Paginator.svelte
+Wraps the common paginator with viewer-specific state and functions
 -->
-<script context="module" lang="ts">
-  import { writable, type Writable } from "svelte/store";
+
+<script lang="ts">
+  import type { Writable } from "svelte/store";
+  import { getContext } from "svelte";
 
   import { replaceState } from "$app/navigation";
+
+  import Paginator from "$lib/components/common/Paginator.svelte";
+
   import { pageHashUrl } from "$lib/api/documents";
   import { scrollToPage } from "$lib/utils/scroll";
 
-  export const currentPage: Writable<number> = writable(1);
-</script>
-
-<script lang="ts">
-  import Paginator from "$lib/components/common/Paginator.svelte";
-
   export let totalPages: number;
+
+  const currentPage: Writable<number> = getContext("currentPage");
 
   // pagination
   function next() {

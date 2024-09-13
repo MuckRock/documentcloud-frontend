@@ -3,9 +3,12 @@ Shared zoom component for all viewer routes.
 It exports a $zoom store that can be passed around to other components.
 -->
 <script context="module" lang="ts">
+  import { _, unwrapFunctionStore } from "svelte-i18n";
   import { writable, type Writable } from "svelte/store";
   import type { Sizes, ViewerMode, Zoom } from "$lib/api/types";
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+
+  const i18n = unwrapFunctionStore(_);
 
   export const zoom: Writable<Zoom> = writable(1);
 
@@ -25,21 +28,12 @@ It exports a $zoom store that can be passed around to other components.
 
     return "small";
   }
-</script>
-
-<script lang="ts">
-  import { _ } from "svelte-i18n";
-
-  export let mode: ViewerMode;
-
-  $: zoomLevels = getZoomLevels(mode);
-  $: $zoom = getDefaultZoom(mode);
 
   /**
    * Generate a default zoom, based on mode
    * @param mode
    */
-  function getDefaultZoom(mode: ViewerMode): Zoom {
+  export function getDefaultZoom(mode: ViewerMode): Zoom {
     switch (mode) {
       case "document":
         return "width";
@@ -61,14 +55,14 @@ It exports a $zoom store that can be passed around to other components.
   /**
    * Generate zoom levels based on mode, since each zooms in a slightly different way
    */
-  function getZoomLevels(mode: ViewerMode): (string | number)[][] {
+  export function getZoomLevels(mode: ViewerMode): (string | number)[][] {
     switch (mode) {
       case "document":
       case "annotating":
       case "redacting":
         return [
-          ["width", $_("zoom.fitWidth")],
-          ["height", $_("zoom.fitHeight")],
+          ["width", i18n("zoom.fitWidth")],
+          ["height", i18n("zoom.fitHeight")],
           [0.5, "50%"],
           [0.75, "75%"],
           [1, "100%"],
@@ -89,10 +83,10 @@ It exports a $zoom store that can be passed around to other components.
 
       case "grid":
         return [
-          ["thumbnail", $_("zoom.thumbnail")],
-          ["small", $_("zoom.small")],
-          ["normal", $_("zoom.normal")],
-          ["large", $_("zoom.large")],
+          ["thumbnail", i18n("zoom.thumbnail")],
+          ["small", i18n("zoom.small")],
+          ["normal", i18n("zoom.normal")],
+          ["large", i18n("zoom.large")],
         ];
 
       default:
@@ -100,6 +94,13 @@ It exports a $zoom store that can be passed around to other components.
         return [];
     }
   }
+</script>
+
+<script lang="ts">
+  export let mode: ViewerMode;
+
+  $: zoomLevels = getZoomLevels(mode);
+  $: $zoom = getDefaultZoom(mode);
 </script>
 
 {#if zoomLevels.length}
@@ -118,6 +119,14 @@ It exports a $zoom store that can be passed around to other components.
 {/if}
 
 <style>
+  label {
+    visibility: hidden;
+  }
+
+  select {
+    visibility: visible;
+  }
+
   label.zoom {
     display: flex;
     align-items: center;
@@ -125,13 +134,16 @@ It exports a $zoom store that can be passed around to other components.
     font-size: var(--font-md);
   }
 
-  label.zoom select {
-    border: none;
-    font-family: var(--font-sans);
-    font-size: var(--font-md);
-  }
-
   label.zoom {
     justify-content: right;
+  }
+
+  select {
+    padding: 0.125em 0.25rem;
+    border: 1px solid var(--gray-2);
+    border-radius: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: var(--font-md);
+    box-shadow: none;
   }
 </style>

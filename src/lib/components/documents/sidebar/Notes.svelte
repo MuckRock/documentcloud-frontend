@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { Document, Note } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Note16, Note24 } from "svelte-octicons";
 
+  import Button from "../../common/Button.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
@@ -14,7 +15,7 @@
   export let document: Document;
 
   $: notes = document.notes;
-  $: annotate = new URL("annotate/", canonicalUrl(document)).href;
+  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 </script>
 
 <SidebarGroup name="notes">
@@ -30,19 +31,18 @@
           <span class="note_title">{note.title}</span>
           <span class="page_number">
             {$_("sidebar.toc.pageAbbrev")}
-            {note.page_number + 1}</span
-          >
+            {note.page_number + 1}
+          </span>
         </SidebarItem>
       </li>
     {:else}
       <Empty>
         <Note24 />
+        <p>{$_("notes.empty")}</p>
         {#if document.edit_access}
-          <p>
-            <a href={annotate}> {$_("notes.cta")}</a>
-          </p>
-        {:else}
-          <p>{$_("notes.empty")}</p>
+          <Button ghost mode="primary" href={annotate}>
+            {$_("notes.cta")}
+          </Button>
         {/if}
       </Empty>
     {/each}
@@ -61,6 +61,7 @@
   }
 
   .note_title {
+    flex: 1 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
   }

@@ -1,37 +1,24 @@
 <script lang="ts">
   import "@/style/kit.css";
-
-  import type { Document, Project, ViewerMode } from "$lib/api/types";
-
-  import { page } from "$app/stores";
-
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
-
-  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
-
-  // sidebars
-  import DocumentMetadata from "./sidebar/DocumentMetadata.svelte";
-  import Actions from "./sidebar/Actions.svelte";
-  import AddOns from "@/routes/documents/sidebar/AddOns.svelte";
-  import Data from "./sidebar/Data.svelte";
-  import Projects from "./sidebar/Projects.svelte";
-  import Sections from "./sidebar/Sections.svelte";
-  import Notes from "./sidebar/Notes.svelte";
-
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
+  import type { Document, Note, ViewerMode } from "$lib/api/types";
 
   export let data;
 
-  const mode: Writable<ViewerMode> = writable($page.data.mode);
+  const currentPage: Writable<number> = writable(1);
+  const activeNote: Writable<Note> = writable(null);
+  const currentMode: Writable<ViewerMode> = writable(data.mode);
 
   setContext<Document>("document", data.document);
-  setContext("mode", mode);
+  // stores we need deeper in the component tree, available via context
+  setContext("currentPage", currentPage);
+  setContext("activeNote", activeNote);
+  setContext("currentMode", currentMode);
 
-  $: $mode = $page.data.mode;
   $: document = data.document;
-  $: projects = document.projects as Project[];
   $: canonical_url = canonicalUrl(document).href;
 </script>
 
@@ -63,26 +50,4 @@
   />
 </svelte:head>
 
-<SidebarLayout>
-  <svelte:fragment slot="navigation">
-    <DocumentMetadata {document} />
-
-    <Notes {document} />
-
-    <Sections {document} />
-
-    <Data {document} />
-
-    <Projects {projects} {document} />
-  </svelte:fragment>
-
-  <slot slot="content" />
-
-  <svelte:fragment slot="action">
-    <Actions {document} />
-
-    {#if document.edit_access}
-      <AddOns pinnedAddOns={data.pinnedAddons} />
-    {/if}
-  </svelte:fragment>
-</SidebarLayout>
+<slot />

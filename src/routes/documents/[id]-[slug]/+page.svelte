@@ -1,88 +1,63 @@
 <script lang="ts">
-  import type { Note, ViewerMode } from "@/lib/api/types.js";
-
+  import { _ } from "svelte-i18n";
+  import { onMount, afterUpdate, getContext } from "svelte";
+  import { browser } from "$app/environment";
   import { afterNavigate, goto, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
-
-  import { afterUpdate, getContext, setContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
-  import { _ } from "svelte-i18n";
-
-  // icons
-  import DocumentIcon from "@/common/icons/Document.svelte";
-  import NotesIcon from "@/common/icons/Notes.svelte";
-  import TextIcon from "@/common/icons/Text.svelte";
-  import GridIcon from "@/common/icons/Grid.svelte";
-
-  // components
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Paginator, { currentPage } from "./components/ViewerPaginator.svelte";
-  import PDF from "$lib/components/documents/PDF.svelte";
-  import Search from "$lib/components/forms/Search.svelte";
-  import Text from "$lib/components/documents/Text.svelte";
-  import ThumbnailGrid from "$lib/components/documents/ThumbnailGrid.svelte";
-  import Notes from "$lib/components/documents/Notes.svelte";
-  import Zoom, {
-    zoom,
-    zoomToScale,
-    zoomToSize,
-  } from "./components/Zoom.svelte";
 
   // config and utils
   import { POLL_INTERVAL } from "@/config/config.js";
   import {
     pageHashUrl,
-    pageFromHash,
     shouldPaginate,
     shouldPreload,
   } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
-  import { scrollToPage } from "$lib/utils/scroll";
+  import type { Note, ViewerMode } from "$lib/api/types.js";
+  import DocumentLayout from "@/lib/components/layouts/DocumentLayout.svelte";
+  import type { Writable } from "svelte/store";
 
   export let data;
 
-  const modes = new Map([
-    ["document", $_("mode.document")],
-    ["text", $_("mode.text")],
-    ["grid", $_("mode.grid")],
-    ["notes", $_("mode.notes")],
-  ]);
-
-  const icons = {
-    document: DocumentIcon,
-    text: TextIcon,
-    grid: GridIcon,
-    notes: NotesIcon,
-  };
-
-  // stores we need deeper in the component tree, available via context
-  // const currentPage: Writable<number> = writable(1);
-  const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = getContext("mode");
-
-  setContext("currentPage", currentPage);
-  setContext("activeNote", activeNote);
+  let previousMode: ViewerMode;
 
   $: document = data.document;
-  $: $mode = data.mode;
+  $: asset_url = data.asset_url;
   $: query = data.query;
   $: text = data.text;
+  $: action = data.action;
 
-  // lifecycle
-  afterNavigate(() => {
-    const { hash } = $page.url;
+  const activeNote: Writable<Note> = getContext("activeNote");
+  const currentPage: Writable<number> = getContext("currentPage");
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
-    $currentPage = pageFromHash(hash);
-
-    if ($currentPage > 1 && shouldPaginate($mode)) {
-      scrollToPage($currentPage);
-    }
-
+  function setCurrentNoteFromHash(url: URL) {
+    const { hash } = url;
     const noteId = noteFromHash(hash);
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
     }
+  }
+
+  // Navigation Lifecycle
+
+  afterNavigate(() => {
+    setCurrentNoteFromHash($page.url);
+    // update the mode if it changes in the URL params
+    $currentMode = data.mode;
+  });
+
+  // Pagination Lifecycle
+
+  function onHashChange(e: HashChangeEvent) {
+    setCurrentNoteFromHash(new URL(e.newURL));
+  }
+
+  // Component Lifecycle
+
+  onMount(() => {
+    // initialize state from data
+    $currentMode = data.mode;
   });
 
   afterUpdate(() => {
@@ -95,37 +70,29 @@
     }
   });
 
-  function setMode(e) {
-    const mode = e.target.value;
+  $: if (browser) {
     const u = new URL($page.url);
-
-    u.searchParams.set("mode", mode);
-
-    // reset hash, keeping page number
-    u.hash = "";
-    if ($currentPage > 1) {
+    // When the mode changes, update the URL param to match.
+    u.searchParams.set("mode", $currentMode);
+    // Reset the hash, keeping page number if we should paginate.
+    if (shouldPaginate($currentMode) && $currentPage > 1) {
       u.hash = pageHashUrl($currentPage);
+    } else {
+      u.hash = "";
     }
-
-    goto(u);
-  }
-
-  // pagination
-  function onHashChange(e: HashChangeEvent) {
-    const { hash } = new URL(e.newURL);
-    $currentPage = pageFromHash(hash);
-    scrollToPage($currentPage);
-
-    const noteId = noteFromHash(hash);
-    if (noteId) {
-      $activeNote = document.notes.find((note) => note.id === noteId);
+    // Only navigate when the mode changes.
+    // Since we're accessing $page or $currentPage, this will run when
+    // those values change, as well. We want to avoid unnecessary runs.
+    if (previousMode !== $currentMode) {
+      goto(u);
+      previousMode = $currentMode;
     }
   }
 </script>
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if shouldPreload($mode)}
+  {#if shouldPreload($currentMode)}
     <link
       rel="preload"
       href={data.asset_url.href}
@@ -136,64 +103,4 @@
   {/if}
 </svelte:head>
 
-<ContentLayout>
-  <PageToolbar slot="header">
-    <Search name="q" {query} slot="center" />
-  </PageToolbar>
-
-  {#if $mode === "document"}
-    <PDF
-      {document}
-      scale={zoomToScale($zoom)}
-      asset_url={data.asset_url}
-      {query}
-    />
-  {/if}
-
-  {#if $mode === "text"}
-    <Text {text} zoom={+$zoom || 1} total={document.page_count} {query} />
-  {/if}
-
-  {#if $mode === "grid"}
-    <ThumbnailGrid {document} size={zoomToSize($zoom)} />
-  {/if}
-
-  {#if $mode === "notes"}
-    <Notes {document} asset_url={data.asset_url} />
-  {/if}
-
-  <PageToolbar slot="footer">
-    <label class="mode" slot="left">
-      <span class="sr-only">Mode</span>
-      <svelte:component this={icons[$mode]} />
-      <select name="mode" value={$mode} on:change={setMode}>
-        {#each modes.entries() as [value, name]}
-          <option {value}>{name}</option>
-        {/each}
-      </select>
-    </label>
-
-    <svelte:fragment slot="center">
-      {#if shouldPaginate($mode)}
-        <Paginator totalPages={document.page_count} />
-      {/if}
-    </svelte:fragment>
-
-    <Zoom slot="right" mode={$mode} />
-  </PageToolbar>
-</ContentLayout>
-
-<style>
-  label.mode {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: var(--font-md);
-  }
-
-  label.mode select {
-    border: none;
-    font-family: var(--font-sans);
-    font-size: var(--font-md);
-  }
-</style>
+<DocumentLayout {document} {asset_url} {text} {query} {action} />

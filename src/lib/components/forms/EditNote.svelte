@@ -32,8 +32,8 @@ Positioning and generating coordinates should happen outside of this form.
   $: coords = [note.x1, note.x2, note.y1, note.y2] as Partial<Bounds>;
   $: canonical = canonicalUrl(document);
   $: action = note.id
-    ? new URL("annotate/?/update", canonical).href
-    : new URL("annotate/?/create", canonical).href;
+    ? new URL("?/updateAnnotation", canonical).href
+    : new URL("?/createAnnotation", canonical).href;
   $: page_level = !coords || coords.every((c) => !Boolean(c));
 
   function onSubmit({ formElement }) {
@@ -90,7 +90,7 @@ Positioning and generating coordinates should happen outside of this form.
         <Button
           type="submit"
           mode="danger"
-          formaction={new URL("annotate/?/delete", canonical).href}
+          formaction={new URL("?/deleteAnnotation", canonical).href}
           >{$_("annotate.delete")}
         </Button>
       {/if}

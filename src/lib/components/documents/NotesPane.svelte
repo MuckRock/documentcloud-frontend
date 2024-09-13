@@ -4,7 +4,7 @@ To create or edit notes, see `AnnotationPane.svelte`.
 -->
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Note as NoteType } from "$lib/api/types";
+  import type { Document, Note as NoteType } from "$lib/api/types";
 
   import { pushState } from "$app/navigation";
 
@@ -17,6 +17,7 @@ To create or edit notes, see `AnnotationPane.svelte`.
 
   import { noteHashUrl } from "$lib/api/notes";
 
+  export let document: Document;
   export let notes: NoteType[] = [];
   export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
@@ -56,7 +57,7 @@ To create or edit notes, see `AnnotationPane.svelte`.
       {/if}
     </a>
     {#if is_active}
-      <Note {note} {pdf} {scale} />
+      <Note {document} {note} {pdf} {scale} />
     {:else}
       <NoteLink {note} />
     {/if}

@@ -33,7 +33,7 @@
   const mode: Writable<ViewerMode> = writable("document");
 
   setContext("activeNote", activeNote);
-  setContext("mode", mode);
+  setContext("currentMode", mode);
   setContext("document", document);
 </script>
 

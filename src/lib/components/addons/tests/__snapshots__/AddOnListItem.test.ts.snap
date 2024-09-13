@@ -154,11 +154,11 @@ exports[`AddOnListItem 2`] = `
             role="status"
           >
             <div
-              class="badge svelte-1o24gyr"
+              class="badge svelte-1draejg"
               style="--badge-color: transparent; --label-color: var(--premium);"
             >
               <span
-                class="icon svelte-1o24gyr"
+                class="icon svelte-1draejg"
               >
                 <svg
                   class="svelte-13bl109"
@@ -183,7 +183,7 @@ exports[`AddOnListItem 2`] = `
               </span>
                
               <span
-                class="label svelte-1o24gyr"
+                class="label svelte-1draejg"
               >
                 Premium
               </span>

@@ -91,9 +91,9 @@
   on:resize={handleMouseOut}
 />
 
-<style lang="scss">
+<style>
   span {
-    display: inline-block;
+    display: contents;
     position: relative;
   }
 
@@ -105,15 +105,16 @@
     pointer-events: none;
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    line-height: 1em;
+    line-height: 1.2em;
     padding: 0.3em 0.8em;
     border-radius: 3px;
     box-shadow: 0 0 2px #0000007a;
-    z-index: $tooltipZ;
-    transition: $opacity-fast;
+    z-index: var(--z-toast, 19);
+    transition: opacity 0.25s ease;
+    max-width: 16rem;
+  }
 
-    &.show {
-      opacity: 1;
-    }
+  .tooltip.show {
+    opacity: 1;
   }
 </style>
