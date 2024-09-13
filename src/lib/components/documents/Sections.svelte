@@ -1,16 +1,19 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import type { Document } from "$lib/api/types";
-  import Dropdown from "@/common/Dropdown2.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+
+  import { _ } from "svelte-i18n";
   import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
+
+  import Button from "../common/Button.svelte";
+  import Dropdown from "@/common/Dropdown2.svelte";
+  import Empty from "../common/Empty.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
-  import Empty from "../common/Empty.svelte";
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
+
+  import EditSections from "../forms/EditSections.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
-  import EditSections from "../forms/EditSections.svelte";
-  import Button from "../common/Button.svelte";
 
   export let document: Document;
 

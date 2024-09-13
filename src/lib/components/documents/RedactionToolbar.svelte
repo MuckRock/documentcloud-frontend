@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
+  import type { Document, ViewerMode } from "$lib/api/types";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Check16,
@@ -10,32 +12,29 @@
     X16,
   } from "svelte-octicons";
 
-  import type { Document, ViewerMode } from "$lib/api/types";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Flex from "$lib/components/common/Flex.svelte";
   import Button from "$lib/components/common/Button.svelte";
-  import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import {
     redactions,
     undo,
     clear,
   } from "$lib/components/documents/RedactionPane.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
+
+  import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
 
   export let document: Document;
 
-  let confirmOpen = false;
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
+
+  let confirmOpen = false;
 
   function onCancel() {
     if ($redactions.length > 0) {
-      if (
-        confirm(
-          "You will lose unconfirmed redactions. Are you sure you want to cancel?",
-        )
-      ) {
+      if (confirm($_("redact.cancelWarning"))) {
         clear();
         $currentMode = "document";
       }
@@ -48,9 +47,9 @@
 <PageToolbar>
   <Flex align="center" slot="left">
     <h3 class="title"><EyeClosed16 /> {$_("redact.title")}</h3>
-    <Tooltip caption={$_("redact.instructions")}
-      ><Question16 fill="var(--blue-3)" /></Tooltip
-    >
+    <Tooltip caption={$_("redact.instructions")}>
+      <Question16 fill="var(--blue-3)" />
+    </Tooltip>
   </Flex>
   <Flex gap={0} justify="end" align="center" slot="right">
     <Button ghost size="small" mode="danger" on:click={onCancel}>
@@ -63,7 +62,8 @@
       disabled={$redactions.length === 0}
       on:click={undo}
     >
-      <Undo16 /> Undo
+      <Undo16 />
+      {$_("redact.undo")}
     </Button>
     <Button size="small" mode="primary" on:click={() => (confirmOpen = true)}>
       <Check16 />
@@ -71,6 +71,7 @@
     </Button>
   </Flex>
 </PageToolbar>
+
 {#if confirmOpen}
   <Portal>
     <Modal on:close={() => (confirmOpen = false)}>

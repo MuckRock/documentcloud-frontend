@@ -1,11 +1,13 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+  import type { ViewerMode } from "@/lib/api/types";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { File16, Typography16, Apps16, Note16 } from "svelte-octicons";
+
   import Flex from "../common/Flex.svelte";
   import Tab from "../common/Tab.svelte";
-  import type { ViewerMode } from "@/lib/api/types";
-  import { getContext } from "svelte";
-  import type { Writable } from "svelte/store";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 

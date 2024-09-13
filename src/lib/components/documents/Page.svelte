@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount, getContext } from "svelte";
   import type { Writable } from "svelte/store";
+  import type { ViewerMode } from "$lib/api/types";
+
+  import { createEventDispatcher, onMount, getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { pageHashUrl } from "$lib/api/documents";
-  import type { ViewerMode } from "$lib/api/types";
   import { replaceState } from "$app/navigation";
 
   export let page_number: number;

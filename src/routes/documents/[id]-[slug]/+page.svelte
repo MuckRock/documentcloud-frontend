@@ -22,6 +22,7 @@
   let previousMode: ViewerMode;
 
   $: document = data.document;
+  $: asset_url = data.asset_url;
   $: query = data.query;
   $: text = data.text;
   $: action = data.action;
@@ -102,4 +103,4 @@
   {/if}
 </svelte:head>
 
-<DocumentLayout {document} {text} {query} {action} />
+<DocumentLayout {document} {asset_url} {text} {query} {action} />

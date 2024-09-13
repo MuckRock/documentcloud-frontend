@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Document, Org, User } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import {
     Download16,
@@ -9,22 +11,24 @@
     Trash16,
   } from "svelte-octicons";
 
-  import { canonicalUrl, pdfUrl } from "$lib/api/documents";
-  import type { Document, Org, User } from "$lib/api/types";
   import Button from "$lib/components/common/Button.svelte";
-  import Reprocess from "$lib/components/forms/Reprocess.svelte";
+
   import ConfirmDelete from "$lib/components/forms/ConfirmDelete.svelte";
   import Edit from "$lib/components/forms/Edit.svelte";
-  import Portal from "$lib/components/layouts/Portal.svelte";
-  import Modal from "$lib/components/layouts/Modal.svelte";
-
+  import Reprocess from "$lib/components/forms/Reprocess.svelte";
+  import RevisionControl from "$lib/components/forms/RevisionControl.svelte";
   import Share from "./Share.svelte";
+
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
   import Premium from "@/common/icons/Premium.svelte";
-  import RevisionControl from "../forms/RevisionControl.svelte";
   import Revisions from "./Revisions.svelte";
   import UpgradePrompt from "@/premium-credits/UpgradePrompt.svelte";
+
   import { getUpgradeUrl } from "$lib/api/accounts";
+  import { canonicalUrl, pdfUrl } from "$lib/api/documents";
 
   export let document: Document;
   export let user: User;
@@ -36,18 +40,13 @@
   $: reprocessOpen = action === "reprocess";
   $: deleteOpen = action === "delete";
 
-  function relativeUrl(document: Document, path: string) {
-    return new URL(path, canonicalUrl(document)).href;
-  }
-
-  $: canEdit = document.edit_access;
   $: organization =
     typeof user?.organization === "object" ? (user.organization as Org) : null;
   $: plan = organization?.plan ?? "Free";
 </script>
 
 <div class="actions wideGap">
-  {#if canEdit}
+  {#if document.edit_access}
     <div class="actions">
       <Button
         ghost
@@ -75,12 +74,12 @@
       <Share16 />
       {$_("sidebar.shareEmbed")}
     </Button>
-    <Button ghost href={pdfUrl(document).toString()} download target="_blank">
+    <Button ghost href={pdfUrl(document).href} download target="_blank">
       <Download16 />
       {$_("sidebar.download")}
     </Button>
   </div>
-  {#if canEdit}
+  {#if document.edit_access}
     <div class="actions">
       <Button
         ghost
@@ -99,7 +98,7 @@
   {/if}
 </div>
 
-{#if canEdit && editOpen}
+{#if document.edit_access && editOpen}
   <Portal>
     <Modal on:close={() => (editOpen = false)}>
       <h1 slot="title">{$_("edit.title")}</h1>
@@ -107,6 +106,7 @@
     </Modal>
   </Portal>
 {/if}
+
 {#if revisionsOpen}
   <Portal>
     <Modal on:close={() => (revisionsOpen = false)}>
@@ -130,6 +130,7 @@
     </Modal>
   </Portal>
 {/if}
+
 {#if shareOpen}
   <Portal>
     <Modal on:close={() => (shareOpen = false)}>
@@ -138,6 +139,7 @@
     </Modal>
   </Portal>
 {/if}
+
 {#if reprocessOpen}
   <Portal>
     <Modal on:close={() => (reprocessOpen = false)}>

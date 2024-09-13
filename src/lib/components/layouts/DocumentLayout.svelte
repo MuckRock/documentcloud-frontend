@@ -1,20 +1,25 @@
 <script lang="ts">
-  import type { Document, DocumentText, Project, User } from "$lib/api/types";
   import type { Writable } from "svelte/store";
+  import type { Document, DocumentText, Project, User } from "$lib/api/types";
+
+  import { getContext } from "svelte";
+
   import Access from "../documents/Access.svelte";
   import Actions from "../documents/Actions.svelte";
   import Data from "../documents/Data.svelte";
   import DocumentHeader from "../documents/Header.svelte";
-  import Metadata from "../documents/Metadata.svelte";
-  import Projects from "../documents/Projects.svelte";
-  import Notes from "../documents/sidebar/Notes.svelte";
-  import Viewer from "../documents/Viewer.svelte";
-  import { getContext } from "svelte";
   import Flex from "../common/Flex.svelte";
+  import Metadata from "../documents/Metadata.svelte";
+  import Notes from "../documents/sidebar/Notes.svelte";
+  import Projects from "../documents/Projects.svelte";
+  import Viewer from "../documents/Viewer.svelte";
 
-  const user: Writable<User> = getContext("me");
+  import { pdfUrl } from "$lib/api/documents";
+
+  const me: Writable<User> = getContext("me");
 
   export let document: Document;
+  export let asset_url: URL = pdfUrl(document);
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
   export let action: string = "";
@@ -33,13 +38,13 @@
       <DocumentHeader {document} />
     </header>
     <main class="viewer">
-      <Viewer {document} {text} {query} />
+      <Viewer {document} {asset_url} {text} {query} />
     </main>
   </article>
   <aside class="column between">
     <Flex direction="column" gap={2}>
       <Access {document} />
-      <Actions {document} user={$user} {action} />
+      <Actions {document} user={$me} {action} />
     </Flex>
     <Metadata {document} />
   </aside>
@@ -75,7 +80,7 @@
 
     background: var(--gray-1);
     border: 1px solid var(--gray-2);
-    border-radius: 1rem;
+    border-radius: var(--radius, 0.5rem);
     box-shadow: inset var(--shadow-2);
   }
 

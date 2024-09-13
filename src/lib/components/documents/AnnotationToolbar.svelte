@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
+  import type { ViewerMode } from "$lib/api/types";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Comment16, Question16 } from "svelte-octicons";
-  import type { ViewerMode } from "$lib/api/types";
+
+  import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
-  import Button from "$lib/components/common/Button.svelte";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 </script>
@@ -22,13 +24,8 @@
       <Question16 fill="var(--blue-3)" />
     </Tooltip>
   </Flex>
-  <Button
-    size="small"
-    slot="right"
-    mode="primary"
-    on:click={() => ($currentMode = "document")}
-  >
-    Done
+  <Button size="small" slot="right" mode="primary" href="?mode=document">
+    {$_("dialog.done")}
   </Button>
 </PageToolbar>
 

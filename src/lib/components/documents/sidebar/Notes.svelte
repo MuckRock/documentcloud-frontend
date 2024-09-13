@@ -1,22 +1,18 @@
 <script lang="ts">
-  import type { Document, Note, ViewerMode } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Note16, Note24 } from "svelte-octicons";
 
+  import Button from "../../common/Button.svelte";
   import Empty from "@/lib/components/common/Empty.svelte";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
 
   import { canonicalUrl } from "$lib/api/documents";
   import { noteUrl } from "$lib/api/notes";
-  import { getContext } from "svelte";
-  import type { Writable } from "svelte/store";
-  import Button from "../../common/Button.svelte";
 
   export let document: Document;
-
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
   $: notes = document.notes;
   $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
@@ -35,8 +31,8 @@
           <span class="note_title">{note.title}</span>
           <span class="page_number">
             {$_("sidebar.toc.pageAbbrev")}
-            {note.page_number + 1}</span
-          >
+            {note.page_number + 1}
+          </span>
         </SidebarItem>
       </li>
     {:else}

@@ -1,23 +1,33 @@
-<script lang="ts">
-  import type { Document } from "$lib/api/types";
-
-  import { _ } from "svelte-i18n";
-
-  export let document: Document;
-</script>
-
 <!--
   @component
   Document top-matter:
-
   - title
   - description
 -->
+<script lang="ts">
+  import type { Document } from "$lib/api/types";
+
+  import DOMPurify from "isomorphic-dompurify";
+  import { _ } from "svelte-i18n";
+
+  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+
+  export let document: Document;
+
+  $: description = document.description?.trim()
+    ? clean(document.description)
+    : "";
+
+  function clean(html: string) {
+    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
+  }
+</script>
+
 <header>
   <h1>{document.title}</h1>
-  {#if document.description}
+  {#if description}
     <div class="description">
-      {@html document.description}
+      {@html description}
     </div>
   {/if}
 </header>

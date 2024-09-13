@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import type { Document, Access } from "@/lib/api/types";
   import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+
+  import { _ } from "svelte-i18n";
   import { Globe24, Lock24, Organization24 } from "svelte-octicons";
+
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   export let document: Document;
 
