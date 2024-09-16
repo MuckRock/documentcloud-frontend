@@ -6,7 +6,7 @@
   import { _ } from "svelte-i18n";
   import { Comment16, EyeClosed16 } from "svelte-octicons";
 
-  import AnnotationToolbar from "./AnnotationToolbar.svelte";
+  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
   import Flex from "../common/Flex.svelte";
   import Button from "../common/Button.svelte";
   import ContentLayout from "../layouts/ContentLayout.svelte";
@@ -14,7 +14,7 @@
   import PageToolbar from "../common/PageToolbar.svelte";
   import Paginator from "./Paginator.svelte";
   import PDF from "./PDF.svelte";
-  import RedactionToolbar from "./RedactionToolbar.svelte";
+  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
   import Search from "../forms/Search.svelte";
   import Sections from "./Sections.svelte";
   import SelectMode from "./SelectMode.svelte";
@@ -49,11 +49,11 @@
           <Flex justify="end" slot="right">
             <Search name="q" {query} />
             {#if document.edit_access}
-              <Button ghost on:click={() => ($currentMode = "annotating")}>
+              <Button ghost href="?mode=annotating">
                 <Comment16 />
                 {$_("mode.annotating")}
               </Button>
-              <Button ghost on:click={() => ($currentMode = "redacting")}>
+              <Button ghost href="?mode=redacting">
                 <EyeClosed16 />
                 {$_("mode.redacting")}
               </Button>

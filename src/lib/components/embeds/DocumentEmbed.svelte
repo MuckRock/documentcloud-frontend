@@ -1,10 +1,13 @@
 <script lang="ts">
+  import type { Document, DocumentText } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
-  import type { Document, DocumentText } from "@/lib/api/types";
+
   import { type EmbedSettings, defaultSettings } from "$lib/utils/embed";
-  import Viewer from "../documents/Viewer.svelte";
-  import { isOrg, isUser } from "@/lib/api/accounts";
   import Metadata from "../common/Metadata.svelte";
+  import Viewer from "../documents/Viewer.svelte";
+
+  import { isOrg, isUser } from "$lib/api/accounts";
 
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;

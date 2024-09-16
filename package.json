@@ -30,6 +30,7 @@
     "lucene": "^2.1.1",
     "marked": "^7.0.5",
     "marked-gfm-heading-id": "^3.0.6",
+    "plausible-tracker": "^0.3.9",
     "postcss": "^8.4.25",
     "rlite-router": "^2.0.3",
     "sass": "^1.60.0",

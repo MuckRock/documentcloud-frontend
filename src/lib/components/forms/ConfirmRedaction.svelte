@@ -5,15 +5,14 @@ which you can't undo.
 This almost certainly lives in a modal.
 -->
 <script lang="ts">
-  import type { Document, ViewerMode } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate, goto } from "$app/navigation";
 
-  import { createEventDispatcher, getContext } from "svelte";
-  import type { Writable } from "svelte/store";
+  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Check16, Undo16 } from "svelte-octicons";
+  import { Check16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -30,15 +29,13 @@ This almost certainly lives in a modal.
 
   let error: string;
 
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-
   $: action = canonicalUrl(document).pathname + "?/redact";
 
-  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+  function onSubmit({ formElement, submitter }) {
     formElement.disabled = true;
     submitter.disabled = true;
 
-    return async ({ result, update }) => {
+    return async ({ result }) => {
       // `result` is an `ActionResult` object
       if (result.type === "failure") {
         error = result.data.error;
@@ -48,8 +45,8 @@ This almost certainly lives in a modal.
         // need to invalidate before navigating
         await invalidate(`document:${document.id}`);
         $pending = result.data.redactions;
+        goto("?mode=document");
         dispatch("close");
-        $currentMode = "document";
       }
     };
   }

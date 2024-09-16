@@ -2,6 +2,8 @@
   import type { Writable } from "svelte/store";
   import type { Document, ViewerMode } from "$lib/api/types";
 
+  import { goto } from "$app/navigation";
+
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
@@ -36,10 +38,10 @@
     if ($redactions.length > 0) {
       if (confirm($_("redact.cancelWarning"))) {
         clear();
-        $currentMode = "document";
+        goto("?mode=document");
       }
     } else {
-      $currentMode = "document";
+      goto("?mode=document");
     }
   }
 </script>
