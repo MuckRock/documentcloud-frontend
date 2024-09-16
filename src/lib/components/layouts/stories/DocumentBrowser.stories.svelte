@@ -1,7 +1,8 @@
 <script context="module" lang="ts">
   import type { Meta } from "@storybook/svelte";
-  import DocumentBrowser from "../DocumentBrowser.svelte";
+
   import { Story, Template } from "@storybook/addon-svelte-csf";
+  import DocumentBrowser from "../DocumentBrowser.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
 

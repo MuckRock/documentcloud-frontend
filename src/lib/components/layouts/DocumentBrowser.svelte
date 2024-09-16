@@ -1,4 +1,14 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+  import type {
+    DocumentResults,
+    Pending,
+    Project,
+    User,
+  } from "@/lib/api/types";
+
+  import { goto } from "$app/navigation";
+
   import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { FileDirectory24, Hourglass24, Upload24 } from "svelte-octicons";
@@ -15,22 +25,17 @@
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import type {
-    DocumentResults,
-    Pending,
-    Project,
-    User,
-  } from "@/lib/api/types";
-  import type { Writable } from "svelte/store";
+
   import Dropzone from "../inputs/Dropzone.svelte";
   import {
     filesToUpload,
     uploadToProject,
   } from "../forms/DocumentUpload.svelte";
+
   import { isSupported } from "@/lib/utils/files";
-  import { goto } from "$app/navigation";
 
   setContext("selected", selected);
+
   const me: Writable<User> = getContext("me");
 
   interface UITextProps {
@@ -74,8 +79,9 @@
       icon={Upload24}
       --color="var(--blue-5)"
       --fill="var(--blue-4)"
-      --font-size="var(--font-md)">{$_("documentBrowser.dropToUpload")}</Empty
-    >
+      --font-size="var(--font-md)"
+      >{$_("documentBrowser.dropToUpload")}
+    </Empty>
   </div>
   <ContentLayout>
     <PageToolbar slot="header">

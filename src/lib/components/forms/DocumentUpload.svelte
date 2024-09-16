@@ -416,7 +416,7 @@
 
   .fileList .total {
     position: absolute;
-    bottom: -0.85rem;
+    bottom: 0.5rem;
     left: 0.5rem;
     background: var(--white);
     border: 1px solid var(--gray-2);

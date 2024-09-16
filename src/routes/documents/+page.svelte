@@ -1,9 +1,8 @@
 <script lang="ts">
+  import type { DocumentResults } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
-
-  import { deleted } from "$lib/api/documents";
-  import type { DocumentResults } from "$lib/api/types";
 
   import Button from "$lib/components/common/Button.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
@@ -15,6 +14,8 @@
   import Projects from "../documents/sidebar/Projects.svelte";
 
   import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
+
+  import { deleted } from "$lib/api/documents";
 
   export let data;
 
