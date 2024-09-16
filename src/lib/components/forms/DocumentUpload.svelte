@@ -12,6 +12,11 @@
     return files;
   }
   export const uploadToProject = writable<Project>(null);
+  function getProjectToUpload() {
+    const project = get(uploadToProject);
+    uploadToProject.set(null);
+    return project;
+  }
 
   /**
    * Collect form data into documents and do three-step upload.
@@ -321,7 +326,7 @@
             items={projects}
             itemId="id"
             label="title"
-            value={$uploadToProject}
+            value={getProjectToUpload()}
           />
         </Field>
         <hr class="divider" />
