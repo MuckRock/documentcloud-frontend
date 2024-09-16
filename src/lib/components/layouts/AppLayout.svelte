@@ -1,15 +1,18 @@
 <script lang="ts">
   import Toaster from "./Toaster.svelte";
   import Navigation from "./Navigation.svelte";
+  import PlausibleTracker from "../common/PlausibleTracker.svelte";
 </script>
 
-<div class="container">
-  <Navigation />
-  <div class="inner">
-    <slot />
+<PlausibleTracker>
+  <div class="container">
+    <Navigation />
+    <div class="inner">
+      <slot />
+    </div>
+    <Toaster />
   </div>
-  <Toaster />
-</div>
+</PlausibleTracker>
 
 <style>
   .container {
