@@ -2,6 +2,8 @@
   import type { Writable } from "svelte/store";
   import type { ViewerMode } from "@/lib/api/types";
 
+  import { goto } from "$app/navigation";
+
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { File16, Typography16, Apps16, Note16 } from "svelte-octicons";
@@ -31,9 +33,7 @@
     {#each modes.entries() as [value, name]}
       <Tab
         active={$currentMode === value}
-        on:click={() => {
-          $currentMode = value;
-        }}
+        on:click={() => goto(`?mode=${value}`)}
       >
         <svelte:component this={icons[value]} />
         {name}
