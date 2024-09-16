@@ -3,13 +3,18 @@
   export let active = false;
   export let disabled = false;
 
+  let dropDepth = 0;
+
   function enter() {
     if (disabled) return;
+    dropDepth++;
     active = true;
   }
 
   function leave() {
     if (disabled) return;
+    dropDepth--;
+    if (dropDepth > 0) return;
     active = false;
   }
 
