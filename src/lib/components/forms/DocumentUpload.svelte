@@ -2,6 +2,21 @@
   import type { ActionResult } from "@sveltejs/kit";
   import { DEFAULT_LANGUAGE } from "@/config/config.js";
   import { userDocs } from "$lib/utils/search";
+  import { get, writable } from "svelte/store";
+
+  export const filesToUpload = writable<File[]>([]);
+  function getFilesToUpload() {
+    // Empty the store when returning the files
+    const files = get(filesToUpload);
+    filesToUpload.set([]);
+    return files;
+  }
+  export const uploadToProject = writable<Project>(null);
+  function getProjectToUpload() {
+    const project = get(uploadToProject);
+    uploadToProject.set(null);
+    return project;
+  }
 
   /**
    * Collect form data into documents and do three-step upload.
@@ -141,7 +156,7 @@
   import Tooltip from "@/common/Tooltip.svelte";
 
   export let csrf_token = "";
-  export let files: File[] = [];
+  export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
 
   const me: Writable<User> = getContext("me");
@@ -311,6 +326,7 @@
             items={projects}
             itemId="id"
             label="title"
+            value={getProjectToUpload()}
           />
         </Field>
         <hr class="divider" />
@@ -400,7 +416,7 @@
 
   .fileList .total {
     position: absolute;
-    bottom: -0.85rem;
+    bottom: 0.5rem;
     left: 0.5rem;
     background: var(--white);
     border: 1px solid var(--gray-2);
