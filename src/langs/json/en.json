@@ -2,6 +2,8 @@
   "common": {
     "emailAddress": "Email address",
     "loading": "Loading…",
+    "empty": "No results",
+    "error": "An error ocurred",
     "documentCloud": "DocumentCloud",
     "home": "Home",
     "new": "New",
@@ -10,7 +12,8 @@
     "explore": "Explore",
     "more": "More",
     "add": "Add",
-    "edit": "Edit"
+    "edit": "Edit",
+    "search": "Search"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -624,6 +627,9 @@
     "remove": "Remove {n, plural, one {document} other {# documents}} from project",
     "add": "Add {n, plural, one {document} other {# documents}} to project"
   },
+  "documentBrowser": {
+    "dropToUpload": "Drop to upload documents"
+  },
   "projectBrowser": {
     "loading": "Loading projects…",
     "retry": "Retry",
@@ -688,7 +694,7 @@
     "public": "Public Projects",
     "loading": "Loading project documents…",
     "empty": "This project is empty",
-    "error": "Error loading project documents",
+    "error": "Error loading documents",
     "viewInSearch": "View in Document Search",
     "yours": "Your Projects",
     "shared": "Shared with you",

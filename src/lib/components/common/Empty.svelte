@@ -18,10 +18,10 @@
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    color: var(--gray-4, #99a8b3);
-    fill: var(--gray-3, #99a8b3);
+    color: var(--color, var(--gray-4, #99a8b3));
+    fill: var(--fill, var(--gray-3, #99a8b3));
 
     text-align: center;
-    font-size: var(--font-sm, 0.875rem);
+    font-size: var(--font-size, var(--font-sm, 0.875rem));
   }
 </style>

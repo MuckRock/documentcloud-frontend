@@ -43,8 +43,6 @@
   export let name: string;
   export let selected: Access = levels[0].value;
   export let direction: "column" | "row" = "column";
-
-  $: console.log(selected);
 </script>
 
 <Flex {direction} gap={0.5}>
