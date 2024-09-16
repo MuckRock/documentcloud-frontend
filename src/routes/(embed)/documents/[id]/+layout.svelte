@@ -15,3 +15,5 @@
   setContext("currentPage", currentPage);
   setContext("currentMode", currentMode);
 </script>
+
+<slot />
