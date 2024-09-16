@@ -25,7 +25,6 @@
   $: minePublic = $me ? userDocs($me, "public") : "";
   $: minePrivate = $me ? userDocs($me, "private") : "";
 
-  // +organization:muckrock-125
   $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";
 
   function searchUrl(query: string) {
@@ -41,7 +40,7 @@
 <Flex direction="column">
   <SidebarItem hover href={searchUrl("")} active={query === ""}>
     <Infinity16 />
-    {$_("projects.allDocuments")}
+    {$_("documents.allDocuments")}
   </SidebarItem>
 
   <SignedIn>
@@ -56,7 +55,9 @@
       active={query === minePublic}
     >
       <Globe16 />
-      {$_("projects.yourPubDocuments")}
+      {$_("documents.accessDocuments", {
+        values: { access: "Public " },
+      })}
     </SidebarItem>
     <SidebarItem
       hover
@@ -64,13 +65,17 @@
       active={query === minePrivate}
     >
       <Lock16 />
-      {$_("projects.yourDocuments")}
-    </SidebarItem>
-    <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
-      <Organization16 />
-      {$_("projects.orgDocuments", {
-        values: { name: "MuckRock" },
+      {$_("documents.accessDocuments", {
+        values: { access: "Private " },
       })}
     </SidebarItem>
+    {#if !$org.individual}
+      <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
+        <Organization16 />
+        {$_("documents.nameDocuments", {
+          values: { name: $org.name },
+        })}
+      </SidebarItem>
+    {/if}
   </SignedIn>
 </Flex>
