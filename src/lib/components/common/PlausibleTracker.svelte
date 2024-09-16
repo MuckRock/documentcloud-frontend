@@ -10,13 +10,14 @@
 
   let plausible;
   const user: Writable<Maybe<User>> = getContext("me");
+  const embed: Writable<boolean> = getContext("embed");
 
   onMount(() => {
     plausible = Plausible();
   });
 
   afterNavigate(() => {
-    if (user && browser) {
+    if (!embed && user && browser) {
       plausible.trackPageview();
     }
   });
