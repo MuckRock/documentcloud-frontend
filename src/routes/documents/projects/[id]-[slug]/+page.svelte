@@ -42,6 +42,7 @@
   <DocumentBrowser
     slot="content"
     documents={documentSearch}
+    {project}
     {query}
     uiText={{
       empty: $_("projects.empty"),

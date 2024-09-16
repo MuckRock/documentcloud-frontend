@@ -627,6 +627,9 @@
     "remove": "Remove {n, plural, one {document} other {# documents}} from project",
     "add": "Add {n, plural, one {document} other {# documents}} to project"
   },
+  "documentBrowser": {
+    "dropToUpload": "Drop to upload documents"
+  },
   "projectBrowser": {
     "loading": "Loading projects…",
     "retry": "Retry",

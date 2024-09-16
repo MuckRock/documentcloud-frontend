@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { setContext } from "svelte";
+  import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { FileDirectory24, Hourglass24 } from "svelte-octicons";
+  import { FileDirectory24, Hourglass24, Upload24 } from "svelte-octicons";
 
   import BulkActions from "$lib/components/forms/BulkActions.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
@@ -15,9 +15,23 @@
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import type { DocumentResults, Pending, Project } from "@/lib/api/types";
+  import type {
+    DocumentResults,
+    Pending,
+    Project,
+    User,
+  } from "@/lib/api/types";
+  import type { Writable } from "svelte/store";
+  import Dropzone from "../inputs/Dropzone.svelte";
+  import {
+    filesToUpload,
+    uploadToProject,
+  } from "../forms/DocumentUpload.svelte";
+  import { isSupported } from "@/lib/utils/files";
+  import { goto } from "$app/navigation";
 
   setContext("selected", selected);
+  const me: Writable<User> = getContext("me");
 
   interface UITextProps {
     loading: string;
@@ -44,60 +58,79 @@
       $selected = [];
     }
   }
+
+  function onDrop(files: FileList) {
+    if ($me?.verified_journalist) {
+      $filesToUpload = Array.from(files).filter(isSupported);
+      $uploadToProject = project;
+      goto("/upload/");
+    }
+  }
 </script>
 
-<ContentLayout>
-  <PageToolbar slot="header">
-    <BulkActions slot="left" />
-    <Search slot="right" name="q" {query} placeholder={uiText.search} />
-  </PageToolbar>
-  {#await documents}
-    <Empty icon={Hourglass24}>{uiText.loading}</Empty>
-  {:then documentsResults}
-    {#if !query && !documentsResults.results?.length}
-      <Empty icon={FileDirectory24}>{uiText.empty}</Empty>
-    {:else}
-      <ResultsList
-        results={documentsResults.results}
-        next={documentsResults.next}
-        count={documentsResults.count}
-        auto
-      >
-        <svelte:fragment slot="start">
-          {#await pending then p}
-            <PendingDocs pending={p} />
-          {/await}
-        </svelte:fragment>
-      </ResultsList>
-    {/if}
-  {:catch}
-    <Error>{uiText.error}</Error>
-  {/await}
-  <PageToolbar slot="footer">
-    <label slot="left" class="select-all">
-      <input
-        type="checkbox"
-        name="select_all"
-        checked={$selected.length > 0 && $selected.length === $visible.size}
-        indeterminate={$selected.length > 0 && $selected.length < $visible.size}
-        on:change={selectAll}
-      />
-      {#if $selected.length > 0}
-        {$selected.length.toLocaleString()} {$_("inputs.selected")}
+<Dropzone {onDrop} disabled={!$me?.verified_journalist} let:active let:disabled>
+  <div class:active class:disabled class="dropOverlay">
+    <Empty
+      icon={Upload24}
+      --color="var(--blue-5)"
+      --fill="var(--blue-4)"
+      --font-size="var(--font-md)">{$_("documentBrowser.dropToUpload")}</Empty
+    >
+  </div>
+  <ContentLayout>
+    <PageToolbar slot="header">
+      <BulkActions slot="left" />
+      <Search slot="right" name="q" {query} placeholder={uiText.search} />
+    </PageToolbar>
+    {#await documents}
+      <Empty icon={Hourglass24}>{uiText.loading}</Empty>
+    {:then documentsResults}
+      {#if !query && !documentsResults.results?.length}
+        <Empty icon={FileDirectory24}>{uiText.empty}</Empty>
       {:else}
-        {$_("inputs.selectAll")}
+        <ResultsList
+          results={documentsResults.results}
+          next={documentsResults.next}
+          count={documentsResults.count}
+          auto
+        >
+          <svelte:fragment slot="start">
+            {#await pending then p}
+              <PendingDocs pending={p} />
+            {/await}
+          </svelte:fragment>
+        </ResultsList>
       {/if}
-    </label>
+    {:catch}
+      <Error>{uiText.error}</Error>
+    {/await}
+    <PageToolbar slot="footer">
+      <label slot="left" class="select-all">
+        <input
+          type="checkbox"
+          name="select_all"
+          checked={$selected.length > 0 && $selected.length === $visible.size}
+          indeterminate={$selected.length > 0 &&
+            $selected.length < $visible.size}
+          on:change={selectAll}
+        />
+        {#if $selected.length > 0}
+          {$selected.length.toLocaleString()} {$_("inputs.selected")}
+        {:else}
+          {$_("inputs.selectAll")}
+        {/if}
+      </label>
 
-    <svelte:fragment slot="right">
-      {#if $visible && $total}
-        {$_("inputs.resultsCount", {
-          values: { n: $visible.size, total: $total },
-        })}
-      {/if}
-    </svelte:fragment>
-  </PageToolbar>
-</ContentLayout>
+      <svelte:fragment slot="right">
+        {#if $visible && $total}
+          {$_("inputs.resultsCount", {
+            values: { n: $visible.size, total: $total },
+          })}
+        {/if}
+      </svelte:fragment>
+    </PageToolbar>
+  </ContentLayout>
+</Dropzone>
 
 <style>
   label.select-all {
@@ -110,5 +143,23 @@
   input[type="checkbox"] {
     height: 1.25rem;
     width: 1.25rem;
+  }
+
+  .dropOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: calc(var(--z-toolbar) - 1);
+    background: var(--blue-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.75;
+    visibility: hidden;
+  }
+  .dropOverlay.active {
+    visibility: visible;
   }
 </style>
