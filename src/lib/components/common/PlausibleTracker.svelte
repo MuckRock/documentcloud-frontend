@@ -12,9 +12,7 @@
   const user: Writable<Maybe<User>> = getContext("me");
 
   onMount(() => {
-    if (browser) {
-      plausible = Plausible();
-    }
+    plausible = Plausible();
   });
 
   afterNavigate(() => {
