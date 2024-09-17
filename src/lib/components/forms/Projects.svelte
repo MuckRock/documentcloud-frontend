@@ -24,12 +24,13 @@ and we don't want to do that everywhere.
   import { getForUser, add, remove } from "$lib/api/projects";
   import { getCsrfToken } from "$lib/utils/api";
   import { intersection } from "@/util/array.js";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
 
   const dispatch = createEventDispatcher();
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 
   let common: Set<number>;
 

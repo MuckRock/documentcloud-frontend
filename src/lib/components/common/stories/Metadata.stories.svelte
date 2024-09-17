@@ -13,11 +13,12 @@
 </script>
 
 <Story name="default">
-  <Metadata key="Last Updated" value="March 21, 2024" />
+  <Metadata key="Last Updated">March 21, 2024</Metadata>
 </Story>
 
 <Story name="icon">
-  <Metadata key="Last Updated" value="March 21, 2024">
+  <Metadata key="Last Updated">
+    March 21, 2024
     <Tag16 slot="icon" />
   </Metadata>
 </Story>

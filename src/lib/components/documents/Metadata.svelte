@@ -24,19 +24,18 @@
 </script>
 
 <div class="meta">
-  <Metadata key={$_("sidebar.contributed")} value={userOrgString(document)} />
-  <Metadata
-    key={$_("sidebar.created")}
-    value={dateFormat(document.created_at)}
-  />
-  <Metadata
-    key={$_("sidebar.updated")}
-    value={dateFormat(document.updated_at)}
-  />
-  <Metadata
-    key={$_("sidebar.language")}
-    value={LANGUAGE_MAP.get(document.language)}
-  />
+  <Metadata key={$_("sidebar.contributed")}>
+    {userOrgString(document)}
+  </Metadata>
+  <Metadata key={$_("sidebar.created")}>
+    {dateFormat(document.created_at)}
+  </Metadata>
+  <Metadata key={$_("sidebar.updated")}>
+    {dateFormat(document.updated_at)}
+  </Metadata>
+  <Metadata key={$_("sidebar.language")}>
+    {LANGUAGE_MAP.get(document.language)}
+  </Metadata>
 </div>
 
 <style>

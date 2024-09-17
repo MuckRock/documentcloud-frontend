@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { User, Org } from "@/api/types/orgAndUser";
+  import type { Org } from "@/api/types/orgAndUser";
   import type { Writable } from "svelte/store";
 
   import { getContext } from "svelte";
@@ -15,8 +15,9 @@
   import { APP_URL } from "@/config/config";
   import { slugify } from "@/util/string.js";
   import { userDocs } from "$lib/utils/search";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
 
   $: query = $page.url.searchParams.get("q") || "";
@@ -25,7 +26,6 @@
   $: minePublic = $me ? userDocs($me, "public") : "";
   $: minePrivate = $me ? userDocs($me, "private") : "";
 
-  // +organization:muckrock-125
   $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";
 
   function searchUrl(query: string) {
@@ -41,7 +41,9 @@
 <Flex direction="column">
   <SidebarItem hover href={searchUrl("")} active={query === ""}>
     <Infinity16 />
-    {$_("projects.allDocuments")}
+    {$_("documents.allDocuments", {
+      values: { access: "" },
+    })}
   </SidebarItem>
 
   <SignedIn>
@@ -56,7 +58,9 @@
       active={query === minePublic}
     >
       <Globe16 />
-      {$_("projects.yourPubDocuments")}
+      {$_("documents.accessDocuments", {
+        values: { access: "Public " },
+      })}
     </SidebarItem>
     <SidebarItem
       hover
@@ -64,13 +68,17 @@
       active={query === minePrivate}
     >
       <Lock16 />
-      {$_("projects.yourDocuments")}
-    </SidebarItem>
-    <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
-      <Organization16 />
-      {$_("projects.orgDocuments", {
-        values: { name: "MuckRock" },
+      {$_("documents.accessDocuments", {
+        values: { access: "Private " },
       })}
     </SidebarItem>
+    {#if $org && !$org.individual}
+      <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
+        <Organization16 />
+        {$_("documents.nameDocuments", {
+          values: { name: $org.name, access: "" },
+        })}
+      </SidebarItem>
+    {/if}
   </SignedIn>
 </Flex>

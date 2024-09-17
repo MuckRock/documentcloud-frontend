@@ -1,18 +1,15 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { User } from "@/api/types/orgAndUser";
-
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import AddOnLayout from "@/lib/components/layouts/AddOnLayout.svelte";
 
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
+  import { getCurrentUser } from "@/lib/utils/permissions.js";
 
   export let data;
   export let form;
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 
   $: event = data.event;
   $: addon = data.event.addon;

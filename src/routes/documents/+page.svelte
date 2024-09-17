@@ -16,6 +16,12 @@
 
   import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
 
+  import {
+    canUploadFiles,
+    getCurrentUser,
+    isSignedIn,
+  } from "@/lib/utils/permissions";
+
   // stores
   import { deleted } from "$lib/api/documents";
   import { selected } from "$lib/components/documents/ResultsList.svelte";
@@ -23,6 +29,8 @@
   export let data;
 
   setContext("selected", selected);
+
+  const me = getCurrentUser();
 
   $: searchResults =
     $deleted.size > 0
@@ -59,12 +67,14 @@
   <DocumentBrowser slot="content" documents={searchResults} {query} {pending} />
 
   <svelte:fragment slot="action">
-    <SignedIn>
-      <Button mode="primary" href="/upload/">
-        <PlusCircle16 />{$_("sidebar.upload")}
-      </Button>
+    {#if isSignedIn($me)}
+      {#if canUploadFiles($me)}
+        <Button mode="primary" href="/upload/">
+          <PlusCircle16 />{$_("sidebar.upload")}
+        </Button>
+      {/if}
       <Actions />
       <AddOns pinnedAddOns={data.pinnedAddons} />
-    </SignedIn>
+    {/if}
   </svelte:fragment>
 </SidebarLayout>

@@ -1,9 +1,4 @@
 <script lang="ts">
-  // types
-  import type { Writable } from "svelte/store";
-  import type { User } from "@/api/types/orgAndUser.d.ts";
-
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
 
@@ -16,13 +11,14 @@
 
   // Authentication
   import { SIGN_IN_URL, SIGN_UP_URL, SIGN_OUT_URL } from "@/config/config.js";
+  import { getCurrentUser } from "@/lib/utils/permissions.js";
 
   // Show the login controls
   const showLogin = true;
 
   export let data;
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 </script>
 
 <svelte:head>

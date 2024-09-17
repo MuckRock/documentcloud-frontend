@@ -1,4 +1,4 @@
-import { getAddons, scheduled, history } from "$lib/api/addons.js";
+import { getAddons, scheduled, history } from "$lib/api/addons";
 
 export async function load({ url, fetch }) {
   const params = Object.fromEntries(url.searchParams.entries());

@@ -17,7 +17,7 @@
   import Menu from "@/common/Menu.svelte";
 
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
-  import UserAvatar from "./UserAvatar.svelte";
+  import Avatar from "./Avatar.svelte";
 
   export let user: User;
 
@@ -34,7 +34,7 @@
 
 <Dropdown id={dropdownId} position="bottom right">
   <SidebarItem slot="title" title="Open Menu">
-    <UserAvatar {user} />
+    <Avatar {user} />
     <span class="name">{user.name ?? user.username}</span>
     <div class="dropdownArrow"><ChevronDown16 /></div>
   </SidebarItem>
