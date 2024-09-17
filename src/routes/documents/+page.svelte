@@ -56,6 +56,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>DocumentCloud</title>
+</svelte:head>
+
 <SidebarLayout>
   <svelte:fragment slot="navigation">
     <Documents />
