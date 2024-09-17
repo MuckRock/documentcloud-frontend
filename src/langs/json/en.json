@@ -558,6 +558,9 @@
     "pages": "pages",
     "loading": "Loading progress information..."
   },
+  "error": {
+    "report": "Report a problem"
+  },
   "mainContainer": {
     "error": "Error",
     "errorMsg": "We could not reach the DocumentCloud server. Please try refreshing the page later.",
