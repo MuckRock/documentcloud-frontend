@@ -7,11 +7,12 @@
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
   import type { User } from "@/api/types";
+  import { isSignedIn } from "@/lib/utils/permissions";
 
   const me = getContext<Writable<User>>("me");
 </script>
 
-{#if $me}
+{#if isSignedIn($me)}
   <slot />
 {:else}
   <slot name="signedOut" />

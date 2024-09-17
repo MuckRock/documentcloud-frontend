@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DocumentResults } from "$lib/api/types";
+  import type { DocumentResults, User } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
@@ -16,8 +16,13 @@
   import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
 
   import { deleted } from "$lib/api/documents";
+  import { canUploadFiles, isSignedIn } from "@/lib/utils/permissions";
+  import type { Writable } from "svelte/store";
+  import { getContext } from "svelte";
 
   export let data;
+
+  const me: Writable<User> = getContext("me");
 
   $: searchResults =
     $deleted.size > 0
@@ -54,12 +59,14 @@
   <DocumentBrowser slot="content" documents={searchResults} {query} {pending} />
 
   <svelte:fragment slot="action">
-    <SignedIn>
-      <Button mode="primary" href="/upload/">
-        <PlusCircle16 />{$_("sidebar.upload")}
-      </Button>
+    {#if isSignedIn($me)}
+      {#if canUploadFiles($me)}
+        <Button mode="primary" href="/upload/">
+          <PlusCircle16 />{$_("sidebar.upload")}
+        </Button>
+      {/if}
       <Actions />
       <AddOns pinnedAddOns={data.pinnedAddons} />
-    </SignedIn>
+    {/if}
   </svelte:fragment>
 </SidebarLayout>
