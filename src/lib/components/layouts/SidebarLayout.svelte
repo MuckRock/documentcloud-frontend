@@ -158,7 +158,7 @@
     .small.overlay {
       visibility: hidden;
       position: fixed;
-      z-index: 1;
+      z-index: calc(var(--z-drawer) - 1);
       background: var(--gray-5, #233944);
       top: 0;
       left: 0;
