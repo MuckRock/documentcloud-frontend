@@ -22,7 +22,7 @@ They might get separated later.
   import Field from "../inputs/Field.svelte";
   import Flex from "../common/Flex.svelte";
   import Text from "../inputs/Text.svelte";
-  import UserAvatar from "../accounts/UserAvatar.svelte";
+  import Avatar from "../accounts/Avatar.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
 
@@ -93,7 +93,7 @@ They might get separated later.
               </tr>
               {#each sort(group) as user}
                 <tr>
-                  <td><Flex><UserAvatar {user} /> {user.name}</Flex></td>
+                  <td><Flex><Avatar {user} /> {user.name}</Flex></td>
                   <td>
                     <input type="hidden" name="user" value={user.id} />
                     <Field title={$_("collaborators.change")} sronly>

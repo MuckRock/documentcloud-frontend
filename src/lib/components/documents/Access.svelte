@@ -1,11 +1,14 @@
 <script lang="ts">
-  import type { Document, Access } from "@/lib/api/types";
-  import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
-
   import { _ } from "svelte-i18n";
   import { Globe24, Lock24, Organization24 } from "svelte-octicons";
 
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import type { Document, Access } from "@/lib/api/types";
+  import { isOrg } from "@/lib/api/accounts";
+  import Avatar from "$lib/components/accounts/Avatar.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import Metadata from "$lib/components/common/Metadata.svelte";
+  import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   export let document: Document;
 
@@ -42,3 +45,11 @@
   <svelte:component this={access.icon} />
   {access.title}
 </SidebarItem>
+{#if document.access === "organization" && isOrg(document.organization)}
+  <Metadata key={$_("sidebar.sharedWith")}>
+    <Flex>
+      <Avatar org={document.organization} />
+      {document.organization.name}
+    </Flex>
+  </Metadata>
+{/if}
