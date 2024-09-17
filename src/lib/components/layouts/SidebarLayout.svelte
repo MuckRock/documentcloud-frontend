@@ -134,7 +134,7 @@
       top: 0;
       bottom: 0;
       background: var(--gray-1, #f5f6f7);
-      z-index: 2;
+      z-index: var(--z-drawer);
       transition: transform 0.25s ease-in-out;
       overflow: hidden;
     }
@@ -158,7 +158,7 @@
     .small.overlay {
       visibility: hidden;
       position: fixed;
-      z-index: 1;
+      z-index: calc(var(--z-drawer) - 1);
       background: var(--gray-5, #233944);
       top: 0;
       left: 0;
