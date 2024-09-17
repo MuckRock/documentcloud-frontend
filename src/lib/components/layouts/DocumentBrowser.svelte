@@ -1,15 +1,9 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type {
-    DocumentResults,
-    Pending,
-    Project,
-    User,
-  } from "@/lib/api/types";
+  import type { DocumentResults, Pending, Project } from "@/lib/api/types";
 
   import { goto } from "$app/navigation";
 
-  import { getContext, setContext } from "svelte";
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { FileDirectory24, Hourglass24, Upload24 } from "svelte-octicons";
 
@@ -33,10 +27,11 @@
   } from "../forms/DocumentUpload.svelte";
 
   import { isSupported } from "@/lib/utils/files";
+  import { canUploadFiles, getCurrentUser } from "@/lib/utils/permissions";
 
   setContext("selected", selected);
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 
   interface UITextProps {
     loading: string;
@@ -65,7 +60,7 @@
   }
 
   function onDrop(files: FileList) {
-    if ($me?.verified_journalist) {
+    if (canUploadFiles($me)) {
       $filesToUpload = Array.from(files).filter(isSupported);
       $uploadToProject = project;
       goto("/upload/");
@@ -73,7 +68,7 @@
   }
 </script>
 
-<Dropzone {onDrop} disabled={!$me?.verified_journalist} let:active let:disabled>
+<Dropzone {onDrop} disabled={!canUploadFiles($me)} let:active let:disabled>
   <div class:active class:disabled class="dropOverlay">
     <Empty
       icon={Upload24}

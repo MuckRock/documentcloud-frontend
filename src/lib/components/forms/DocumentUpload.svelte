@@ -107,7 +107,6 @@
 </script>
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import type {
     Access,
     Document,
@@ -120,7 +119,7 @@
   import { applyAction } from "$app/forms";
   import { goto } from "$app/navigation";
   import { filesize } from "filesize";
-  import { afterUpdate, getContext } from "svelte";
+  import { afterUpdate } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Alert16,
@@ -154,12 +153,13 @@
     isWithinSizeLimit,
   } from "@/lib/utils/files";
   import Tooltip from "@/common/Tooltip.svelte";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
   export let csrf_token = "";
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 
   let loading = false;
   let uploader: HTMLInputElement;

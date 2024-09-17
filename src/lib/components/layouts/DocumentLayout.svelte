@@ -1,8 +1,5 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, DocumentText, Project, User } from "$lib/api/types";
-
-  import { getContext } from "svelte";
+  import type { Document, DocumentText, Project } from "$lib/api/types";
 
   import Access from "../documents/Access.svelte";
   import Actions from "../documents/Actions.svelte";
@@ -15,8 +12,9 @@
   import Viewer from "../documents/Viewer.svelte";
 
   import { pdfUrl } from "$lib/api/documents";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 
   export let document: Document;
   export let asset_url: URL = pdfUrl(document);
