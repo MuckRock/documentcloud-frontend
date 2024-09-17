@@ -33,11 +33,13 @@ and we don't want to do that everywhere.
 
   let common: Set<number>;
 
+  $: console.log(documents);
+
   $: common = new Set(
     intersection(
-      documents.map((d) => d.projects),
+      documents.map((d) => d.projects ?? []),
       (a, b) => {
-        return a.id === b.id;
+        return a.id === b?.id;
       },
     ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
   );

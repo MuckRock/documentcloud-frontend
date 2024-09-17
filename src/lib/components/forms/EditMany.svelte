@@ -26,7 +26,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   const action = "/documents/?/edit";
 
-  $: ids = documents.map((d) => d.id);
+  $: ids = documents?.map((d) => d.id) ?? [];
 
   function onSubmit() {
     dispatch("close");

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { DocumentResults } from "$lib/api/types";
 
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
 
@@ -15,9 +16,13 @@
 
   import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
 
+  // stores
   import { deleted } from "$lib/api/documents";
+  import { selected } from "$lib/components/documents/ResultsList.svelte";
 
   export let data;
+
+  setContext("selected", selected);
 
   $: searchResults =
     $deleted.size > 0
