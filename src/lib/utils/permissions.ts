@@ -1,12 +1,14 @@
 /** Checks whether users have permission to view, update, or delete resources. */
 
-import { getContext } from "svelte";
 import type { Writable } from "svelte/store";
 import type { User } from "@/api/types";
 
-/** A helper that returns the signed-in user.
- *  @returns the signed in user from context.
- *  @throws if called outside component initialization.
+import { getContext } from "svelte";
+
+/**
+ * A helper that returns the signed-in user.
+ * @returns the signed in user from context.
+ * @throws if called outside component initialization.
  */
 export function getCurrentUser(): Writable<User | null> {
   return getContext("me");
