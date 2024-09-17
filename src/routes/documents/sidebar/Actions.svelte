@@ -69,7 +69,7 @@
   <Portal>
     <Modal on:close={() => (organize = false)}>
       <h1 slot="title">{$_("dialog.organize")}</h1>
-      <Projects documents={$selected} />
+      <Projects documents={$selected} on:close={() => (organize = false)} />
     </Modal>
   </Portal>
 {/if}
