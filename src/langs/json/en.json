@@ -529,7 +529,7 @@
     "yourDocuments": "Your Documents",
     "searchResults": "Search Results",
     "accessDocuments": "Your {access}Documents",
-    "nameDocuments": "{name}'s {access}Documents",
+    "nameDocuments": "{name}’s {access}Documents",
     "allDocuments": "All {access}Documents",
     "mustBeVerified": "You must be a verified journalist to upload documents",
     "upload": "Upload",

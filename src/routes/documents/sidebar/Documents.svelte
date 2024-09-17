@@ -40,7 +40,9 @@
 <Flex direction="column">
   <SidebarItem hover href={searchUrl("")} active={query === ""}>
     <Infinity16 />
-    {$_("documents.allDocuments")}
+    {$_("documents.allDocuments", {
+      values: { access: "" },
+    })}
   </SidebarItem>
 
   <SignedIn>
@@ -69,11 +71,11 @@
         values: { access: "Private " },
       })}
     </SidebarItem>
-    {#if !$org.individual}
+    {#if $org && !$org.individual}
       <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
         <Organization16 />
         {$_("documents.nameDocuments", {
-          values: { name: $org.name },
+          values: { name: $org.name, access: "" },
         })}
       </SidebarItem>
     {/if}
