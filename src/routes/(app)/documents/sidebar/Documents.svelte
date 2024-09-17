@@ -20,7 +20,7 @@
   const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
 
-  $: query = $page.url.searchParams.get("q") || "";
+  $: query = $page.url.searchParams?.get("q") || "";
 
   $: mine = $me ? userDocs($me) : "";
   $: minePublic = $me ? userDocs($me, "public") : "";
