@@ -22,7 +22,7 @@ import type {
 import { writable, type Writable } from "svelte/store";
 import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
-import { isOrg } from "@/api/types/orgAndUser";
+import { isOrg } from "./accounts";
 import {
   APP_URL,
   BASE_API_URL,
