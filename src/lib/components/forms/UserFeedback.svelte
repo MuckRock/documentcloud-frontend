@@ -6,7 +6,7 @@
   import type { User } from "@/api/types";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
-  import UserAvatar from "../accounts/UserAvatar.svelte";
+  import Avatar from "../accounts/Avatar.svelte";
   import { toast } from "../layouts/Toaster.svelte";
   import { APP_URL } from "@/config/config";
 
@@ -95,13 +95,13 @@
       <legend>{$_("feedback.userIdentity.legend")}</legend>
       {#if anonymous}
         <Flex align="center">
-          <UserAvatar />
+          <Avatar />
           <span class="name">{$_("feedback.userIdentity.anonymous")}</span>
           <input type="hidden" name="user" value={null} />
         </Flex>
       {:else}
         <Flex align="center">
-          <UserAvatar {user} />
+          <Avatar {user} />
           <span class="name">{user.name ?? user.username}</span>
           <input type="hidden" name="user" value={user.email} />
         </Flex>
