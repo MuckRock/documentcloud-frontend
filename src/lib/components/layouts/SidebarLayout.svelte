@@ -134,7 +134,7 @@
       top: 0;
       bottom: 0;
       background: var(--gray-1, #f5f6f7);
-      z-index: 2;
+      z-index: var(--z-drawer);
       transition: transform 0.25s ease-in-out;
       overflow: hidden;
     }
