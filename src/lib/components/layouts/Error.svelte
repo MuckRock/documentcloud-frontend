@@ -1,18 +1,14 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
+  import Button from "../common/Button.svelte";
   import Error from "../common/Error.svelte";
   import UserFeedback from "../forms/UserFeedback.svelte";
   import Modal from "./Modal.svelte";
   import Portal from "./Portal.svelte";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
-  // todo: refactor this with getCurrentUser after merging #665
-  import { getContext } from "svelte";
-  import type { Writable } from "svelte/store";
-  import type { User } from "@/lib/api/types";
-  import Button from "../common/Button.svelte";
-  let me: Writable<User> = getContext("me");
-  // end todo
+  const me = getCurrentUser();
 
   let feedbackOpen = false;
 </script>
