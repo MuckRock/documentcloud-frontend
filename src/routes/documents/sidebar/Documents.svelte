@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { User, Org } from "@/api/types/orgAndUser";
+  import type { Org } from "@/api/types/orgAndUser";
   import type { Writable } from "svelte/store";
 
   import { getContext } from "svelte";
@@ -15,8 +15,9 @@
   import { APP_URL } from "@/config/config";
   import { slugify } from "@/util/string.js";
   import { userDocs } from "$lib/utils/search";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
 
   $: query = $page.url.searchParams.get("q") || "";

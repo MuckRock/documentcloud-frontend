@@ -5,11 +5,10 @@
   import type { Writable } from "svelte/store";
   import { afterNavigate } from "$app/navigation";
   import { browser } from "$app/environment";
-  import type { User } from "@/lib/api/types";
-  import type { Maybe } from "@/api/types/common";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
   let plausible;
-  const user: Writable<Maybe<User>> = getContext("me");
+  const user = getCurrentUser();
   const embed: Writable<boolean> = getContext("embed");
 
   onMount(() => {
