@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { DocumentResults } from "$lib/api/types";
 
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
 
@@ -15,14 +16,19 @@
 
   import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
 
-  import { deleted } from "$lib/api/documents";
   import {
     canUploadFiles,
     getCurrentUser,
     isSignedIn,
   } from "@/lib/utils/permissions";
 
+  // stores
+  import { deleted } from "$lib/api/documents";
+  import { selected } from "$lib/components/documents/ResultsList.svelte";
+
   export let data;
+
+  setContext("selected", selected);
 
   const me = getCurrentUser();
 
@@ -49,6 +55,10 @@
     };
   }
 </script>
+
+<svelte:head>
+  <title>DocumentCloud</title>
+</svelte:head>
 
 <SidebarLayout>
   <svelte:fragment slot="navigation">

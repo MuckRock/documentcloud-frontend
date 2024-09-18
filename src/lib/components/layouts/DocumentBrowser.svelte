@@ -8,6 +8,7 @@
   import { FileDirectory24, Hourglass24, Upload24 } from "svelte-octicons";
 
   import BulkActions from "$lib/components/forms/BulkActions.svelte";
+  import Dropzone from "../inputs/Dropzone.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
@@ -20,7 +21,6 @@
   } from "$lib/components/documents/ResultsList.svelte";
   import Search from "$lib/components/forms/Search.svelte";
 
-  import Dropzone from "../inputs/Dropzone.svelte";
   import {
     filesToUpload,
     uploadToProject,

@@ -14,6 +14,7 @@
 
   // forms
   import EditMany from "$lib/components/forms/EditMany.svelte";
+  import Projects from "$lib/components/forms/Projects.svelte";
   import Share from "$lib/components/documents/Share.svelte";
 
   const selected: Writable<Document[]> = getContext("selected");
@@ -68,6 +69,7 @@
   <Portal>
     <Modal on:close={() => (organize = false)}>
       <h1 slot="title">{$_("dialog.organize")}</h1>
+      <Projects documents={$selected} on:close={() => (organize = false)} />
     </Modal>
   </Portal>
 {/if}
