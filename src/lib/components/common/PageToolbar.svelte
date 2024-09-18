@@ -25,17 +25,8 @@
 <style>
   .toolbar {
     display: flex;
-    min-height: 2.5rem;
-    padding: 0 0.25rem;
-    box-sizing: border-box;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
-
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2, #d8dee2);
-    background: #fff;
-    box-shadow: var(--shadow-2);
+    overflow-x: auto;
   }
 
   .left,
