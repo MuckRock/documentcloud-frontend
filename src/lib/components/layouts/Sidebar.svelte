@@ -13,12 +13,8 @@
    *  $: isOpen = $sidebars['sidebar-id'];
    *  ```
    */
-  import { getContext, onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
   export const sidebars: Writable<Record<string, boolean>> = writable({});
-  export function getSidebars(): typeof sidebars {
-    return getContext("sidebars");
-  }
 </script>
 
 <script lang="ts">
