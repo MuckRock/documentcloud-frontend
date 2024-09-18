@@ -65,7 +65,7 @@
 
 {#if isOpen}
   <aside class="container {position}" transition:fly={flyOptions}>
-    <header class:reverse={position === "right"}>
+    <header class:reverse={position === "left"}>
       {#if $$slots.title}
         <span class="title"><slot name="title" /></span>
       {/if}
@@ -95,6 +95,7 @@
     max-width: 18rem;
     max-height: 100%;
     overflow-y: auto;
+    position: relative;
   }
 
   header {
@@ -104,6 +105,10 @@
     gap: 2rem;
     padding: 0.5rem;
     border-bottom: 1px solid var(--gray-1);
+    background: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   header.reverse {
