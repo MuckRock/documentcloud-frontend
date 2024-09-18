@@ -1,13 +1,19 @@
 <script>
-  import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
+  import { _ } from "svelte-i18n";
+  import Error from "$lib/components/layouts/Error.svelte";
 </script>
 
-{#if $page.status === 404}
-  <h1>{$_("notfound.title")}</h1>
-  <div>
-    <p>{$_("notfound.content")}</p>
-  </div>
-{:else}
-  <h1>{$page.status}: {$page.error.message}</h1>
-{/if}
+<Error>
+  <h1 slot="status">
+    {$page.status}
+  </h1>
+
+  <p slot="message">
+    {#if $page.status === 404}
+      {$_("notfound.content")}
+    {:else}
+      {$page.error.message}
+    {/if}
+  </p>
+</Error>

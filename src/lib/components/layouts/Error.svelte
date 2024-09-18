@@ -3,9 +3,10 @@
 
   import Button from "../common/Button.svelte";
   import Error from "../common/Error.svelte";
-  import UserFeedback from "../forms/UserFeedback.svelte";
   import Modal from "./Modal.svelte";
   import Portal from "./Portal.svelte";
+  import UserFeedback from "../forms/UserFeedback.svelte";
+
   import { getCurrentUser } from "$lib/utils/permissions";
 
   const me = getCurrentUser();
@@ -32,6 +33,7 @@
     {$_("error.report")}
   </Button>
 </div>
+
 {#if feedbackOpen}
   <Portal>
     <Modal on:close={() => (feedbackOpen = false)}>
