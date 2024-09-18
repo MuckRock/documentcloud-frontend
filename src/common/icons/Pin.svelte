@@ -16,5 +16,6 @@
   svg {
     display: block;
     transform: rotate(-45deg);
+    fill: var(--fill, inherit);
   }
 </style>

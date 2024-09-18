@@ -24,20 +24,21 @@ and we don't want to do that everywhere.
   import { getForUser, add, remove } from "$lib/api/projects";
   import { getCsrfToken } from "$lib/utils/api";
   import { intersection } from "@/util/array.js";
+  import { getCurrentUser } from "@/lib/utils/permissions";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
 
   const dispatch = createEventDispatcher();
-  const me: Writable<User> = getContext("me");
+  const me = getCurrentUser();
 
   let common: Set<number>;
 
   $: common = new Set(
     intersection(
-      documents.map((d) => d.projects),
+      documents.map((d) => d.projects ?? []),
       (a, b) => {
-        return a.id === b.id;
+        return a.id === b?.id;
       },
     ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
   );

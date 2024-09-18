@@ -1,4 +1,5 @@
-import type { Maybe, Nullable, User, Org, Page } from "@/api/types";
+import type { Maybe, Nullable, User, Org } from "@/api/types";
+
 import {
   APP_URL,
   BASE_API_URL,
@@ -108,8 +109,9 @@ export function isUser(user?: null | number | User): user is User {
   return user !== undefined && user !== null && typeof user !== "number";
 }
 
-export function isOrg(org?: null | number | Org): org is Org {
-  return org !== undefined && org !== null && typeof org !== "number";
+export function isOrg(o?: null | number | Org): o is Org {
+  if (o === null || o === undefined || typeof o === "number") return false;
+  return true;
 }
 
 export function isPremiumOrg(org: Org): boolean {

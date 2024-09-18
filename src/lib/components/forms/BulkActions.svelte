@@ -29,9 +29,10 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   // forms
   import ConfirmDelete from "./ConfirmDelete.svelte";
+  import EditDataMany from "./EditDataMany.svelte";
   import EditMany from "./EditMany.svelte";
   import Reprocess from "./Reprocess.svelte";
-  import EditDataMany from "./EditDataMany.svelte";
+  import Projects from "./Projects.svelte";
 
   export let position = "bottom right";
 
@@ -113,7 +114,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "project"}
-        <p>Coming soon ...</p>
+        <Projects documents={$selected} on:close={close} />
       {/if}
     </Modal>
   </Portal>

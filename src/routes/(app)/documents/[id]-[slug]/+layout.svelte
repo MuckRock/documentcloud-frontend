@@ -1,10 +1,13 @@
 <script lang="ts">
+  import type { Document, Note, ViewerMode } from "$lib/api/types";
+
   import "@/style/kit.css";
+
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
+
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
-  import type { Document, Note, ViewerMode } from "$lib/api/types";
 
   export let data;
 

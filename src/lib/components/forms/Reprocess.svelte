@@ -159,6 +159,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     display: flex;
     flex-flow: column nowrap;
     gap: 0.5rem;
+    width: 100%;
   }
 
   .disclaimer {
