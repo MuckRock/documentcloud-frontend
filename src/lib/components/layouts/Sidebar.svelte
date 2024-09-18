@@ -27,11 +27,12 @@
   import { SidebarCollapse16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
+  import { browser } from "$app/environment";
 
   export let id: string;
   export let position: "left" | "right" = "left";
 
-  let viewWidth: number = window.innerWidth;
+  let viewWidth: number = Boolean(browser) ? window.innerWidth : undefined;
 
   $: isSmall = viewWidth < 64 * 16;
   $: {
@@ -46,10 +47,6 @@
     duration: isSmall ? 200 : 0,
     x: 400 * (position === "left" ? -1 : 1),
     easing: circOut,
-  };
-
-  const slideOptions = {
-    axis: "x",
   };
 
   $: fadeOptions = {
