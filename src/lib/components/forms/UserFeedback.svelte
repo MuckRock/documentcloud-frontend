@@ -13,7 +13,7 @@
   export let user: User = undefined;
 
   let feedback = "";
-  let feedbackType = "Comment";
+  export let feedbackType = "Comment";
 
   let feedbackTypes = [
     {

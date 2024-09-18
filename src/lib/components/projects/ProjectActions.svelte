@@ -13,6 +13,7 @@
     Search16,
     Share16,
     Share24,
+    PlusCircle16,
   } from "svelte-octicons";
 
   import Empty from "../common/Empty.svelte";
@@ -27,9 +28,19 @@
   import DeleteProject from "../forms/DeleteProject.svelte";
 
   import { projectSearchUrl } from "$lib/utils/search";
+  import Button from "../common/Button.svelte";
+  import { uploadToProject } from "../forms/DocumentUpload.svelte";
+  import { goto } from "$app/navigation";
+  import {
+    canUploadFiles,
+    getCurrentUser,
+    isSignedIn,
+  } from "@/lib/utils/permissions";
 
   export let project: Project;
   export let users: ProjectUser[];
+
+  const me = getCurrentUser();
 
   let show: Action = null;
 
@@ -43,29 +54,47 @@
   function hide() {
     show = null;
   }
+
+  function onUploadClick() {
+    $uploadToProject = project;
+    goto("/upload/");
+  }
 </script>
 
 <Flex direction="column">
-  <SidebarItem hover on:click={() => (show = "edit")}>
-    <Pencil16 />{$_("sidebar.edit")}
-  </SidebarItem>
+  {#if isSignedIn($me) && canUploadFiles($me)}
+    <Button mode="primary" on:click={onUploadClick}>
+      <PlusCircle16 />{$_("sidebar.uploadToProject")}
+    </Button>
+  {/if}
 
-  <SidebarItem hover on:click={() => (show = "users")}>
-    <People16 />{$_("sidebar.collaborate")}
-  </SidebarItem>
+  {#if project.edit_access}
+    <SidebarItem hover on:click={() => (show = "edit")}>
+      <Pencil16 />{$_("sidebar.edit")}
+    </SidebarItem>
+  {/if}
+
+  {#if project.add_remove_access}
+    <SidebarItem hover on:click={() => (show = "users")}>
+      <People16 />{$_("sidebar.collaborate")}
+    </SidebarItem>
+  {/if}
 
   <SidebarItem hover on:click={() => (show = "share")}>
     <Share16 />{$_("sidebar.shareEmbed")}
   </SidebarItem>
-  <SidebarItem
-    hover
-    --color="var(--caution)"
-    --fill="var(--caution)"
-    on:click={() => (show = "delete")}
-  >
-    <Alert16 />
-    {$_("projects.delete.action")}
-  </SidebarItem>
+
+  {#if project.edit_access}
+    <SidebarItem
+      hover
+      --color="var(--caution)"
+      --fill="var(--caution)"
+      on:click={() => (show = "delete")}
+    >
+      <Alert16 />
+      {$_("projects.delete.action")}
+    </SidebarItem>
+  {/if}
 </Flex>
 
 <hr class="divider" />
