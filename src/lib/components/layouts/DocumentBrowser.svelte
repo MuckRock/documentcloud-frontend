@@ -5,27 +5,39 @@
 
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { FileDirectory24, Hourglass24, Upload24 } from "svelte-octicons";
+  import {
+    FileDirectory24,
+    Hourglass24,
+    Upload24,
+    ThreeBars16,
+    KebabHorizontal16,
+  } from "svelte-octicons";
 
-  import BulkActions from "$lib/components/forms/BulkActions.svelte";
-  import Dropzone from "../inputs/Dropzone.svelte";
+  // Common components
+  import Flex from "$lib/components/common/Flex.svelte";
+  import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  // Document comopnents
   import PendingDocs from "$lib/components/documents/Pending.svelte";
-  import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
   import ResultsList, {
     selected,
     total,
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
+  // Form components
   import Search from "$lib/components/forms/Search.svelte";
-
   import {
     filesToUpload,
     uploadToProject,
-  } from "../forms/DocumentUpload.svelte";
-
+  } from "$lib/components/forms/DocumentUpload.svelte";
+  import BulkActions from "$lib/components/forms/BulkActions.svelte";
+  import Dropzone from "$lib/components/inputs/Dropzone.svelte";
+  // Layout comopnents
+  import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
+  import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
+  // Utilities
   import { isSupported } from "@/lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "@/lib/utils/permissions";
 
@@ -79,10 +91,36 @@
     </Empty>
   </div>
   <ContentLayout>
-    <PageToolbar slot="header">
-      <BulkActions slot="left" />
-      <Search slot="right" name="q" {query} placeholder={uiText.search} />
-    </PageToolbar>
+    <svelte:fragment slot="header">
+      <Flex key="left-sidebar">
+        {#if $sidebars["navigation"] === false}
+          <div class="toolbar">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["navigation"] = true)}
+            >
+              <ThreeBars16 />
+            </Button>
+          </div>
+        {/if}
+        <PageToolbar>
+          <BulkActions slot="left" />
+          <Search slot="right" name="q" {query} placeholder={uiText.search} />
+        </PageToolbar>
+        {#if $sidebars["action"] === false}
+          <div class="toolbar">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["action"] = true)}
+            >
+              <KebabHorizontal16 />
+            </Button>
+          </div>
+        {/if}
+      </Flex>
+    </svelte:fragment>
     {#await documents}
       <Empty icon={Hourglass24}>{uiText.loading}</Empty>
     {:then documentsResults}

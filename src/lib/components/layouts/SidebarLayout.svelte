@@ -4,17 +4,19 @@
 
 <main>
   {#if $$slots.navigation}
-    <Sidebar>
+    <Sidebar position="left" id="navigation">
+      <h3 slot="title" class="sr-only">Navigation</h3>
       <slot name="navigation" />
     </Sidebar>
   {/if}
 
-  <article class="content">
+  <article class="content" id="content">
     <slot name="content" />
   </article>
 
   {#if $$slots.action}
-    <Sidebar>
+    <Sidebar position="right" id="action">
+      <h3 slot="title" class="sr-only">Actions</h3>
       <slot name="action" />
     </Sidebar>
   {/if}
@@ -30,7 +32,9 @@
     margin: 0 auto;
     height: 100%;
     max-height: 100%;
+    max-width: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   article {
@@ -50,5 +54,10 @@
 
   .content {
     padding: 0;
+  }
+
+  h3 {
+    font-weight: var(--font-semibold);
+    font-size: var(--font-md);
   }
 </style>

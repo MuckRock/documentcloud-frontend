@@ -39,16 +39,15 @@
 </script>
 
 <Template let:args>
-  <div class="vh-100">
+  <div class="vh-100 vw-100">
     <SidebarLayout {...args}>
       <svelte:fragment slot="navigation">
         <Documents />
         <Projects />
       </svelte:fragment>
-      <DocumentBrowser
-        documents={Promise.resolve(documentsList)}
-        slot="content"
-      />
+      <svelte:fragment slot="content">
+        <DocumentBrowser documents={Promise.resolve(documentsList)} />
+      </svelte:fragment>
       <svelte:fragment slot="action">
         <Button mode="primary" href="/upload/">
           <PlusCircle16 />{$_("sidebar.upload")}
@@ -65,5 +64,9 @@
 <style>
   .vh-100 {
     height: 100vh;
+  }
+
+  .vw-100 {
+    width: 100vw;
   }
 </style>
