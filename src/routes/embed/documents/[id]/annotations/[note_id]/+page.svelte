@@ -1,5 +1,5 @@
 <script lang="ts">
-  import DomPurify from "dompurify";
+  import DOMPurify from "isomorphic-dompurify";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -15,7 +15,7 @@
 
   const docWidth = IMAGE_WIDTHS_MAP.get("normal");
 
-  let elem;
+  let elem: HTMLElement;
 
   $: doc = data.document;
   $: note = data.note;
@@ -30,9 +30,13 @@
   $: maxWidth = docWidth * notes.width(note);
   $: height = docWidth * aspect;
 
-  onMount(async () => {
+  onMount(() => {
     informSize(elem);
   });
+
+  function clean(s: string): string {
+    return DOMPurify.sanitize(s);
+  }
 </script>
 
 <svelte:head>
@@ -100,7 +104,7 @@
   </div>
 
   <div class="DC-note-body">
-    {@html DomPurify.sanitize(note.content)}
+    {@html clean(note.content)}
   </div>
 
   <div class="DC-note-credit">

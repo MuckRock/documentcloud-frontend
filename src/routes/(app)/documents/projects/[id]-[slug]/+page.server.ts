@@ -107,7 +107,7 @@ export const actions = {
         user,
       };
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return fail(400);
     }
   },

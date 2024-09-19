@@ -1,29 +1,30 @@
 <script context="module" lang="ts">
   import type { Document, Note, ViewerMode } from "$lib/api/types";
+
   // legacy css
   import "@/style/variables.css";
   import "@/style/global.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";
-  import document from "@/test/fixtures/documents/document-expanded.json";
-  import { results } from "@/test/fixtures/notes/notes-expanded.json";
+  import NoteEmbed from "../documents/[id]/annotations/[note_id]/+page.svelte";
 
-  const page = 1;
-  const notes = results.filter((note) => note.page_number === page - 1);
+  import document from "@/test/fixtures/documents/document-expanded.json";
+  import note from "@/test/fixtures/notes/note-expanded.json";
+  import notes from "@/test/fixtures/notes/notes-expanded.json";
 
   export const meta = {
-    title: "Embed / Page",
-    component: PageEmbed,
+    title: "Embed / Note",
+    component: NoteEmbed,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 
+  const bigNote = notes.results[1] as Note;
+
   const data = {
+    note: note as Note,
     document: document as Document,
-    page,
-    notes: notes as Note[],
-    embed: false,
+    embed: true,
     mode: "document" as ViewerMode,
     me: null,
     org: null,
@@ -31,9 +32,14 @@
     org_users: Promise.resolve([]),
     breadcrumbs: [],
     tipOfDay: null,
+    settings: {},
   };
 </script>
 
 <Story name="default">
-  <PageEmbed {data} />
+  <NoteEmbed {data} />
+</Story>
+
+<Story name="bigger note">
+  <NoteEmbed data={{ ...data, note: bigNote }} />
 </Story>

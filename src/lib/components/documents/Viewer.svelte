@@ -30,6 +30,7 @@
   export let asset_url: URL = pdfUrl(document);
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
+  export let embed: boolean = getContext("embed") ?? false; // are we embedded?
 
   $: mode = $currentMode;
   $: showPDF = ["document", "annotating", "redacting"].includes(mode);
@@ -48,7 +49,7 @@
           <SelectMode slot="left" />
           <Flex justify="end" slot="right">
             <Search name="q" {query} />
-            {#if document.edit_access}
+            {#if !embed && document.edit_access}
               <Button ghost href="?mode=annotating">
                 <Comment16 />
                 {$_("mode.annotating")}
@@ -79,7 +80,7 @@
         {#if mode === "document"}
           <Sections {document} />
         {/if}
-      </svelte:fragment>~
+      </svelte:fragment>
       <svelte:fragment slot="center">
         {#if shouldPaginate(mode)}
           <Paginator totalPages={document.page_count} />

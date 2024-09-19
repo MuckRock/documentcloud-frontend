@@ -60,7 +60,7 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const { id } = params;
 
-    console.log(`Deleting document: ${id}`);
+    console.info(`Deleting document: ${id}`);
 
     const resp = await destroy(id, csrf_token, fetch).catch((e) => {
       console.error(e);
@@ -197,7 +197,7 @@ export const actions = {
     const resp = await notes
       .remove(params.id, note_id, csrf_token, fetch)
       .catch((e) => {
-        console.log(e);
+        console.error(e);
       });
 
     // probably the API is down

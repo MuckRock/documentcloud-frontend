@@ -36,13 +36,11 @@
   }
 
   // Navigation Lifecycle
-
   afterNavigate(() => {
     setCurrentNoteFromHash($page.url);
   });
 
   // Pagination Lifecycle
-
   function onHashChange(e: HashChangeEvent) {
     setCurrentNoteFromHash(new URL(e.newURL));
   }

@@ -1,10 +1,12 @@
+// https://kit.svelte.dev/docs/hooks#server-hooks
 import type { Handle } from "@sveltejs/kit";
 
 import { env } from "$env/dynamic/private";
+
 import { sequence } from "@sveltejs/kit/hooks";
 import * as Sentry from "@sentry/sveltekit";
-// https://kit.svelte.dev/docs/hooks#server-hooks
 import { locale } from "svelte-i18n";
+
 import { DC_BASE } from "./config/config.js";
 
 Sentry.init({

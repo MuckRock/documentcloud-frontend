@@ -1,4 +1,5 @@
-import type { Maybe, Nullable, User, Org, Page } from "@/api/types";
+import type { Maybe, Nullable, User, Org } from "@/api/types";
+
 import {
   APP_URL,
   BASE_API_URL,
@@ -102,6 +103,10 @@ export function getUpgradeUrl(org: Org = null): URL {
   }
   // Redirect the user to the Squarelet organization settings
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
+}
+
+export function isUser(user?: null | number | User): user is User {
+  return user !== undefined && user !== null && typeof user !== "number";
 }
 
 export function isOrg(o?: null | number | Org): o is Org {

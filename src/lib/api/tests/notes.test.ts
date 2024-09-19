@@ -143,10 +143,7 @@ describe("writing notes", () => {
 describe("note helper methods", () => {
   test("canonicalNoteUrl", ({ document, note }) => {
     expect(notes.canonicalNoteUrl(document, note)).toStrictEqual(
-      new URL(
-        "/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/annotations/557/",
-        APP_URL,
-      ),
+      new URL("/documents/2622/annotations/557/", APP_URL),
     );
   });
 

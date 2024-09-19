@@ -1,14 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`settingsConfig 1`] = `
+exports[`embed settings > settingsConfig 1`] = `
 {
-  "embed": {
-    "defaultValue": 1,
-    "field": {
-      "type": "hidden",
-    },
-    "storageIndex": null,
-  },
   "fullscreen": {
     "defaultValue": null,
     "field": {

@@ -28,7 +28,6 @@ export interface EmbedSettingConfig {
 }
 
 export let settings = {
-  embed: 1,
   responsive: null,
   width: null,
   height: null,
@@ -38,6 +37,20 @@ export let settings = {
   text: null,
   fullscreen: null,
   onlyshoworg: null,
+};
+
+export type EmbedSettings = typeof settings;
+
+export const defaultSettings: EmbedSettings = {
+  responsive: 1,
+  width: null,
+  height: null,
+  sidebar: null,
+  title: 1,
+  pdf: 0,
+  text: null,
+  fullscreen: 1,
+  onlyshoworg: 0,
 };
 
 export function createEmbedSearchParams(
@@ -51,15 +64,20 @@ export function createEmbedSearchParams(
   return new URLSearchParams(searchParams);
 }
 
+export function getEmbedSettings(
+  searchParams: URLSearchParams,
+): typeof settings {
+  const embedSettings = Object.assign({}, defaultSettings);
+  Object.keys(embedSettings).forEach((key) => {
+    if (searchParams.has(key)) {
+      embedSettings[key] = searchParams.get(key);
+    }
+  });
+  return embedSettings;
+}
+
 export const settingsConfig: Record<keyof typeof settings, EmbedSettingConfig> =
   {
-    embed: {
-      storageIndex: null,
-      defaultValue: 1,
-      field: {
-        type: "hidden",
-      },
-    },
     responsive: {
       storageIndex: 8, // out-of-order because added later
       defaultValue: 1,
@@ -242,3 +260,30 @@ export const settingsConfig: Record<keyof typeof settings, EmbedSettingConfig> =
       },
     },
   };
+
+/**
+ * Is this URL an embed or a regular view
+ *
+ * @param url
+ */
+export function isEmbed(url: URL): Boolean {
+  return (
+    url.searchParams.has("embed") || url.hostname === "embed.documentcloud.org"
+  );
+}
+
+/**
+ * @type {import('@sveltejs/kit').Reroute}
+ *
+ * Point embedded routes to the proper component
+ */
+export function reroute({ url }) {
+  // you can still go to embed routes directly
+  if (url.pathname.startsWith("/embed/")) return url.pathname;
+
+  // this lets us use the same viewer URL with different components
+  // depending on whether we're embedded or not
+  if (isEmbed(url)) {
+    return "/embed" + url.pathname;
+  }
+}

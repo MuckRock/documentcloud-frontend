@@ -2,7 +2,7 @@
 import * as documents from "@/lib/api/documents";
 import * as notesApi from "$lib/api/notes";
 
-export async function load({ params, url, fetch }) {
+export async function load({ params, fetch }) {
   const [document, note] = await Promise.all([
     documents.get(+params.id, fetch),
     notesApi.get(+params.id, parseInt(params.note_id), fetch),

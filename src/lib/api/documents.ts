@@ -28,6 +28,7 @@ import {
   BASE_API_URL,
   CSRF_HEADER_NAME,
   DC_BASE,
+  EMBED_URL,
 } from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
@@ -498,6 +499,26 @@ export async function assetUrl(
   }
 
   return asset_url;
+}
+
+/**
+ * Embed URL for a document, relative to the current server
+ * This will be correct in all environments, including deploy previews
+ * @export
+ * @param {import('./types').Document} document
+ * @param {URLSearchParams} params Optional embed parameters
+ * @returns {URL}
+ */
+export function embedUrl(document: Document, params?: URLSearchParams): URL {
+  const path = `/documents/${document.id}-${document.slug}/?embed=1`;
+  const url = new URL(path, EMBED_URL);
+
+  if (params) {
+    const combined = new URLSearchParams([["embed", "1"], ...params]);
+    url.search = combined.toString();
+  }
+
+  return url;
 }
 
 /**
