@@ -8,10 +8,10 @@
   import DocumentBrowser from "../DocumentBrowser.svelte";
   import Button from "$lib/components/common/Button.svelte";
 
-  import Actions from "@/routes/documents/sidebar/Actions.svelte";
-  import AddOns from "@/routes/documents/sidebar/AddOns.svelte";
-  import Documents from "@/routes/documents/sidebar/Documents.svelte";
-  import Projects from "@/routes/documents/sidebar/Projects.svelte";
+  import Actions from "@/routes/(app)/documents/sidebar/Actions.svelte";
+  import AddOns from "@/routes/(app)/documents/sidebar/AddOns.svelte";
+  import Documents from "@/routes/(app)/documents/sidebar/Documents.svelte";
+  import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { activeAddons } from "@/test/fixtures/addons";
