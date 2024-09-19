@@ -13,7 +13,7 @@
     title: "Components / Documents / Search Highlights",
     component: SearchHighlights,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
   };
 </script>
 

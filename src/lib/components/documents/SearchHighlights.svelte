@@ -12,53 +12,33 @@
 -->
 
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
-
-  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
+  import type { Document } from "$lib/api/types";
   import { pageUrl } from "$lib/api/documents";
+  import Highlight from "@/lib/components/common/Highlight.svelte";
+  import { pageNumber } from "$lib/utils/search";
+  import HighlightGroup from "../common/HighlightGroup.svelte";
 
   export let document: Document;
   export let open = false;
 
-  const PAGE_NO_RE = /^page_no_(\d+)$/;
+  $: highlights = Object.entries(document.highlights);
 
-  $: highlights = document.highlights;
-  $: count = Object.keys(highlights).length;
-
-  function pageLink(page: string): [number, string] {
-    const match = PAGE_NO_RE.exec(page);
-    if (!match) return [NaN, ""];
-
-    const number = +match[1];
-    return [number, pageUrl(document, number).toString()];
-  }
-
-  function sanitize(s: string): string {
-    return DOMPurify.sanitize(s, { ALLOWED_TAGS: ["em"] });
+  function pageHref(id: string): string {
+    const pageNo = pageNumber(id);
+    return pageUrl(document, pageNo).toString();
   }
 </script>
 
-{#if count}
-  <details class="highlights" bind:open>
-    <summary>{$_("documents.matchingPages", { values: { n: count } })}</summary>
-
-    {#each Object.entries(highlights) as [page, segments]}
-      {@const [number, href] = pageLink(page)}
-      <h4><a {href}>{$_("documents.page")} {number}</a></h4>
-      <blockquote class="highlight">
-        {#each segments as segment}
-          <p class="segment">{@html sanitize(segment)}</p>
-        {/each}
-      </blockquote>
-    {/each}
-  </details>
-{/if}
-
-<style>
-  .segment :global(em) {
-    background-color: var(--yellow-3);
-    font-style: normal;
-  }
-</style>
+<HighlightGroup {highlights} getHref={pageHref} bind:open>
+  <svelte:fragment slot="summary">
+    {$_("documents.matchingPages", { values: { n: highlights.length } })}
+  </svelte:fragment>
+  <svelte:fragment let:id let:highlight>
+    <Highlight
+      title="{$_('documents.pageAbbrev')} {pageNumber(id)}"
+      segments={highlight}
+    />
+  </svelte:fragment>
+</HighlightGroup>

@@ -57,3 +57,14 @@ export function highlight(contents: string, query: string): string {
   const re = new RegExp(query, "gi");
   return contents.replaceAll(re, (match) => `<mark>${match}</mark>`);
 }
+
+/**
+ * Parse the page number from a search highlight key.
+ */
+export function pageNumber(page: string): number {
+  const PAGE_NO_RE = /^page_no_(\d+)$/;
+  const match = PAGE_NO_RE.exec(page);
+  if (!match) return NaN;
+  const number = parseInt(match[1]);
+  return number;
+}

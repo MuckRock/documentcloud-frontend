@@ -11,7 +11,7 @@
     title: "Components / Documents / Note Highlights",
     component: NoteHighlights,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
   };
 </script>
 

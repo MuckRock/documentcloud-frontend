@@ -15,6 +15,9 @@
     "edit": "Edit",
     "search": "Search"
   },
+  "search": {
+    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
+  },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
     "signOut": "Sign out",

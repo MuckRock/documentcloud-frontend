@@ -17,63 +17,33 @@
 -->
 
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
-
-  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
+
+  import type { Document } from "$lib/api/types";
   import { noteUrl } from "$lib/api/notes";
+  import Highlight from "../common/Highlight.svelte";
+  import HighlightGroup from "../common/HighlightGroup.svelte";
 
   export let document: Document;
   export let open = false;
 
-  $: note_highlights = document.note_highlights;
-  $: count = Object.keys(note_highlights).length;
+  $: highlights = Object.entries(document.note_highlights);
   $: notes = new Map(document.notes.map((n) => [n.id, n]));
 
-  function sanitize(s: string): string {
-    return DOMPurify.sanitize(s, { ALLOWED_TAGS: ["em"] });
+  function noteHref(id: string): string {
+    const note = notes.get(id);
+    return noteUrl(document, note).toString();
   }
 </script>
 
-{#if count > 0}
-  <details bind:open>
-    <summary>{$_("documents.matchingNotes", { values: { n: count } })}</summary>
-
-    {#each Object.entries(note_highlights) as [note_id, highlight]}
-      {@const note = notes.get(note_id)}
-      <blockquote>
-        {#if highlight.title}
-          <h4>{@html sanitize(highlight.title.join("\n").trim())}</h4>
-        {/if}
-
-        {#if highlight.description}
-          {#each highlight.description as segment}
-            <p class="segment">{@html sanitize(segment)}</p>
-          {/each}
-        {/if}
-        <cite>
-          <a href={noteUrl(document, note).toString()}
-            >{$_("documents.noteLink")}</a
-          >
-        </cite>
-      </blockquote>
-    {/each}
-  </details>
-{/if}
-
-<style>
-  h4 :global(em),
-  .segment :global(em) {
-    background-color: var(--yellow-3);
-    font-style: normal;
-  }
-
-  blockquote {
-    border-left: 0.25rem solid var(--yellow-3);
-    padding-left: 0.5rem;
-  }
-
-  cite {
-    font-size: var(--font-sm);
-  }
-</style>
+<HighlightGroup {highlights} getHref={noteHref} bind:open>
+  <svelte:fragment slot="summary">
+    {$_("documents.matchingNotes", { values: { n: highlights.length } })}
+  </svelte:fragment>
+  <svelte:fragment let:highlight>
+    <Highlight
+      title={(highlight.title ?? []).join("\n").trim()}
+      segments={highlight.description}
+    />
+  </svelte:fragment>
+</HighlightGroup>
