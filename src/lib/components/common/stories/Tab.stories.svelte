@@ -12,7 +12,7 @@
   };
 
   function handleClick() {
-    action('click');
+    action("click");
   }
 </script>
 
@@ -29,5 +29,17 @@
 </Story>
 
 <Story name="Custom colors" let:args>
-  <Tab active {...args} on:click on:click={handleClick} --text-color="var(--green-4)" --icon-color="var(--green-3)" --active-color="var(--orange-3)"><Note16 /> Note</Tab>
+  <Tab
+    active
+    {...args}
+    on:click
+    on:click={handleClick}
+    --text-color="var(--green-4)"
+    --icon-color="var(--green-3)"
+    --active-color="var(--orange-3)"><Note16 /> Note</Tab
+  >
+</Story>
+
+<Story name="With Href" let:args>
+  <Tab {...args} href="#note"><Note16 /> Notes</Tab>
 </Story>
