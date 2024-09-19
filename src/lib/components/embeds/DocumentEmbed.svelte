@@ -24,7 +24,7 @@
   {#if Boolean(settings.title)}
     <header>
       <h1>{document.title}</h1>
-      <Metadata key="Contributed by" value={contributedBy} />
+      <Metadata key="Contributed by">{contributedBy}</Metadata>
     </header>
   {/if}
   <main>

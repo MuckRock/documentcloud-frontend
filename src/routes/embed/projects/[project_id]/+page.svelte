@@ -15,7 +15,7 @@
   $: documents = data.documents.results.map((d) => d.document) as Document[];
   $: total_pages = Math.ceil(count / per_page);
 
-  async function load(url) {
+  async function load(url: string | URL) {
     const res = await fetch(url, { credentials: "include" }).catch((e) => {
       console.error(e);
       return { ok: false, json: () => {} };
@@ -28,16 +28,20 @@
     data.documents = await res.json();
   }
 
-  function load_next(e) {
+  function load_next() {
     page = Math.min(total_pages, page + 1);
     load(next);
   }
 
-  function load_previous(e) {
+  function load_previous() {
     page = Math.max(0, page - 1);
     load(previous);
   }
 </script>
+
+<svelte:head>
+  <title>{project.title}</title>
+</svelte:head>
 
 <div class="dc-project-embed">
   <header>
@@ -52,7 +56,6 @@
 
   <footer>
     <Paginator
-      totalPages={count}
       page={page + 1}
       has_next={Boolean(next)}
       has_previous={Boolean(previous)}

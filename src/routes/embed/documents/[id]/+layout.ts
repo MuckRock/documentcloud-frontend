@@ -23,8 +23,6 @@ export async function load({ fetch, url, params, depends }) {
 
   depends(`document:${document.id}`);
 
-  console.log(document);
-
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
 

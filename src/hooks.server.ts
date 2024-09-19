@@ -1,10 +1,12 @@
-import { type Handle, redirect } from "@sveltejs/kit";
+// https://kit.svelte.dev/docs/hooks#server-hooks
+import type { Handle } from "@sveltejs/kit";
 
 import { env } from "$env/dynamic/private";
+
 import { sequence } from "@sveltejs/kit/hooks";
 import * as Sentry from "@sentry/sveltekit";
-// https://kit.svelte.dev/docs/hooks#server-hooks
 import { locale } from "svelte-i18n";
+
 import { DC_BASE } from "./config/config.js";
 
 Sentry.init({
@@ -39,15 +41,4 @@ async function language({ event, resolve }) {
   });
 }
 
-/** @type {import('@sveltejs/kit').Handle} */
-async function embed({ event, resolve }) {
-  const isEmbed =
-    event.url.hostname === "embed.documentcloud.org" ||
-    event.url.searchParams.has("embed");
-  if (isEmbed) {
-    throw redirect(302, `/embed${event.url.path}`);
-  }
-  return resolve(event);
-}
-
-export const handle: Handle = sequence(Sentry.sentryHandle(), embed, language);
+export const handle: Handle = sequence(Sentry.sentryHandle(), language);

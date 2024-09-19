@@ -5,7 +5,7 @@ import "$lib/i18n/index.js"; // Import to initialize. Important :)
 
 export const trailingSlash = "always";
 
-export async function load({ fetch, url }) {
+export async function load() {
   if (browser) {
     locale.set(window.navigator.language);
   }
