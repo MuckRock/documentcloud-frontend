@@ -64,12 +64,12 @@
 <style>
   h4 :global(em),
   .segment :global(em) {
-    background-color: var(--yellow-bright);
+    background-color: var(--yellow-3);
     font-style: normal;
   }
 
   blockquote {
-    border-left: 0.25rem solid var(--yellow-bright);
+    border-left: 0.25rem solid var(--yellow-3);
     padding-left: 0.5rem;
   }
 

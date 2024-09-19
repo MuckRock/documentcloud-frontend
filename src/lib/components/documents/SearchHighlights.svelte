@@ -58,7 +58,7 @@
 
 <style>
   .segment :global(em) {
-    background-color: var(--yellow-bright);
+    background-color: var(--yellow-3);
     font-style: normal;
   }
 </style>
