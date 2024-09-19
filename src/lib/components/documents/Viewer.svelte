@@ -4,25 +4,19 @@
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Comment16, EyeClosed16 } from "svelte-octicons";
 
-  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
-  import Flex from "../common/Flex.svelte";
-  import Button from "../common/Button.svelte";
   import ContentLayout from "../layouts/ContentLayout.svelte";
   import Notes from "./Notes.svelte";
-  import PageToolbar from "../common/PageToolbar.svelte";
-  import Paginator from "./Paginator.svelte";
   import PDF from "./PDF.svelte";
-  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
-  import Search from "../forms/Search.svelte";
-  import Sections from "./Sections.svelte";
-  import SelectMode from "./SelectMode.svelte";
   import Text from "./Text.svelte";
   import ThumbnailGrid from "./ThumbnailGrid.svelte";
-  import Zoom, { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
+  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
+  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
+  import ReadingToolbar from "./toolbars/ReadingToolbar.svelte";
+  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
 
-  import { pdfUrl, shouldPaginate } from "$lib/api/documents";
+  import { pdfUrl } from "$lib/api/documents";
+  import PaginationToolbar from "./toolbars/PaginationToolbar.svelte";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
@@ -45,22 +39,7 @@
       {:else if mode === "redacting"}
         <RedactionToolbar {document} />
       {:else}
-        <PageToolbar>
-          <SelectMode slot="left" />
-          <Flex justify="end" slot="right">
-            <Search name="q" {query} />
-            {#if !embed && document.edit_access}
-              <Button ghost href="?mode=annotating">
-                <Comment16 />
-                {$_("mode.annotating")}
-              </Button>
-              <Button ghost href="?mode=redacting">
-                <EyeClosed16 />
-                {$_("mode.redacting")}
-              </Button>
-            {/if}
-          </Flex>
-        </PageToolbar>
+        <ReadingToolbar {document} {query} />
       {/if}
     </div>
 
@@ -75,20 +54,7 @@
       <Notes {document} {asset_url} />
     {/if}
 
-    <PageToolbar slot="footer">
-      <svelte:fragment slot="left">
-        {#if mode === "document"}
-          <Sections {document} />
-        {/if}
-      </svelte:fragment>
-      <svelte:fragment slot="center">
-        {#if shouldPaginate(mode)}
-          <Paginator totalPages={document.page_count} />
-        {/if}
-      </svelte:fragment>
-
-      <Zoom slot="right" {mode} />
-    </PageToolbar>
+    <PaginationToolbar {document} slot="footer" />
   </ContentLayout>
 </div>
 
