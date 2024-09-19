@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Document, DocumentText } from "$lib/api/types";
 
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { type EmbedSettings, defaultSettings } from "$lib/utils/embed";
@@ -12,6 +13,9 @@
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;
   export let settings: Partial<EmbedSettings> = defaultSettings;
+
+  // if we're using this layout, we're embedded
+  setContext("embed", true);
 
   $: user = isUser(document.user) ? document.user.name : undefined;
   $: org = isOrg(document.organization)

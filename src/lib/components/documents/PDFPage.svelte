@@ -50,6 +50,8 @@ Selectable text can be rendered in one of two ways:
   export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
 
+  export let embed: boolean = getContext("embed") ?? false; // are we embedded?
+
   // make hidden things visible, for debugging
   export let debug = false;
 
@@ -237,12 +239,16 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </svelte:fragment>
 
-  <Flex slot="actions" align="center">
-    <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
-      {$_("dialog.share")}
-    </Action>
-    <PageAnnotation {document} page_number={page_number - 1} {section} />
-  </Flex>
+  <svelte:fragment slot="actions">
+    {#if !embed}
+      <Flex align="center">
+        <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
+          {$_("dialog.share")}
+        </Action>
+        <PageAnnotation {document} page_number={page_number - 1} {section} />
+      </Flex>
+    {/if}
+  </svelte:fragment>
 
   {#if page_level_notes.length}
     <div class="page-notes">

@@ -7,10 +7,10 @@
  * document without loading it again.
  */
 
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
 import * as documents from "$lib/api/documents";
-import type { ViewerMode } from "$lib/api/types";
+import type { ViewerMode, ReadMode } from "$lib/api/types";
 import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed.js";
 
 /** @type {import('./$types').PageLoad} */
@@ -28,6 +28,12 @@ export async function load({ fetch, url, params, depends }) {
 
   if (!documents.MODES.has(mode)) {
     mode = documents.MODES[0];
+  }
+
+  // embeds are only readable
+  // not sure if there's a better way to lie to typescript here
+  if (!documents.READING_MODES.has(mode as ReadMode)) {
+    return redirect(302, url.pathname);
   }
 
   let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);

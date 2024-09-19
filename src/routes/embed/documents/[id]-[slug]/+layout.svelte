@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { LayoutData } from "../[id]/$types";
   import type { ViewerMode, Note } from "$lib/api/types";
-  import { canonicalUrl } from "$lib/api/documents";
-  import { setContext } from "svelte";
+
   import { type Writable, writable } from "svelte/store";
 
-  export let data: LayoutData;
+  import { canonicalUrl } from "$lib/api/documents";
+  import { setContext } from "svelte";
+
+  export let data;
 
   $: document = data.document;
   $: canonical_url = canonicalUrl(document).href;
@@ -21,6 +22,8 @@
 </script>
 
 <svelte:head>
+  <title>{document.title} | DocumentCloud</title>
+
   <!-- Insert canonical URL -->
   <link rel="canonical" href={canonical_url} />
 

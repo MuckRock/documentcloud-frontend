@@ -3,9 +3,9 @@
 
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Note } from "@/lib/api/types.js";
+  import type { Note, ViewerMode } from "@/lib/api/types.js";
 
-  import { afterNavigate, invalidate } from "$app/navigation";
+  import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
   import { getContext } from "svelte";
@@ -27,12 +27,13 @@
 
   export let data;
 
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
   const currentPage: Writable<number> = getContext("currentPage");
   const activeNote: Writable<Note> = getContext("activeNote");
 
   $: document = data.document;
-  $: mode = data.mode;
   $: text = data.text;
+  $: $currentMode = data.mode; // set $currentMode from URL search param
 
   // lifecycle
   afterNavigate(() => {
@@ -40,7 +41,7 @@
 
     $currentPage = pageFromHash(hash);
 
-    if ($currentPage > 1 && shouldPaginate(mode)) {
+    if ($currentPage > 1 && shouldPaginate($currentMode)) {
       scrollToPage($currentPage);
     }
 
@@ -65,7 +66,7 @@
 
 <svelte:window on:hashchange={onHashChange} />
 <svelte:head>
-  {#if shouldPreload(mode)}
+  {#if shouldPreload($currentMode)}
     <link
       rel="preload"
       href={data.asset_url.href}

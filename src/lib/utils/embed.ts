@@ -269,3 +269,14 @@ export const settingsConfig: Record<keyof typeof settings, EmbedSettingConfig> =
       },
     },
   };
+
+/**
+ * Is this URL an embed or a regular view
+ *
+ * @param url
+ */
+export function isEmbed(url: URL): Boolean {
+  return (
+    url.searchParams.has("embed") || url.hostname === "embed.documentcloud.org"
+  );
+}
