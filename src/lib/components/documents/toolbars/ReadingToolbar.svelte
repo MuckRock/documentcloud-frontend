@@ -7,6 +7,7 @@
     Typography16,
     Apps16,
     Note16,
+    ChevronDown12,
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -15,15 +16,31 @@
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
 
-  import type { Document, ReadMode, ViewerMode } from "@/lib/api/types";
+  import type {
+    Document,
+    ReadMode,
+    ViewerMode,
+    WriteMode,
+  } from "@/lib/api/types";
   import type { Writable } from "svelte/store";
   import { getContext } from "svelte";
+  import { remToPx } from "@/lib/utils/layout";
+  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import SidebarItem from "../../sidebar/SidebarItem.svelte";
 
   export let document: Document;
   export let query: string = "";
   export let embed: boolean = getContext("embed") ?? false; // are we embedded?
 
+  let width: number;
   const mode: Writable<ViewerMode> = getContext("currentMode");
+
+  const BREAKPOINTS = {
+    READ_MENU: 52,
+    WRITE_MENU: 37,
+  };
 
   const readModes: Map<ReadMode, string> = new Map([
     ["document", $_("mode.document")],
@@ -32,35 +49,78 @@
     ["notes", $_("mode.notes")],
   ]);
 
+  const writeModes: Map<WriteMode, string> = new Map([
+    ["annotating", $_("mode.annotating")],
+    ["redacting", $_("mode.redacting")],
+  ]);
+
   const icons = {
     document: File16,
     text: Typography16,
     grid: Apps16,
     notes: Note16,
+    annotating: Comment16,
+    redacting: EyeClosed16,
   };
 </script>
 
-<PageToolbar>
-  <div class="tabs" role="tablist" slot="left">
-    {#each readModes.entries() as [value, name]}
-      <Tab active={$mode === value} href="?mode={value}">
-        <svelte:component this={icons[value]} />
-        {name}
-      </Tab>
-    {/each}
-  </div>
-  <Flex justify="end" slot="right">
-    <Search name="q" {query} />
-    {#if !embed && document.edit_access}
-      <Button ghost href="?mode=annotating">
-        <Comment16 />
-        {$_("mode.annotating")}
-      </Button>
-      <Button ghost href="?mode=redacting">
-        <EyeClosed16 />
-        {$_("mode.redacting")}
-      </Button>
+<PageToolbar bind:width>
+  <svelte:fragment slot="left">
+    {#if width > remToPx(BREAKPOINTS["READ_MENU"])}
+      <div class="tabs" role="tablist">
+        {#each readModes.entries() as [value, name]}
+          <Tab active={$mode === value} href="?mode={value}">
+            <svelte:component this={icons[value]} />
+            {name}
+          </Tab>
+        {/each}
+      </div>
+    {:else}
+      <Dropdown2 id="reading-mode" position="bottom left">
+        <div class="toolbarItem" slot="title">
+          <SidebarItem>
+            <svelte:component this={icons[$mode]} />
+            {Array.from(readModes).find(([value]) => value === $mode)[1]}
+            <ChevronDown12 />
+          </SidebarItem>
+        </div>
+        <Menu>
+          {#each readModes.entries() as [value, name]}
+            <MenuItem
+              selected={$mode === value}
+              href="?mode={value}"
+              on:click={() => closeDropdown("reading-mode")}
+            >
+              <svelte:component this={icons[value]} slot="icon" />
+              {name}
+            </MenuItem>
+          {/each}
+          {#if width < remToPx(BREAKPOINTS["WRITE_MENU"])}
+            {#each writeModes as [value, name]}
+              <MenuItem
+                selected={$mode === value}
+                href="?mode={value}"
+                on:click={() => closeDropdown("reading-mode")}
+              >
+                <svelte:component this={icons[value]} slot="icon" />
+                {name}
+              </MenuItem>
+            {/each}
+          {/if}
+        </Menu>
+      </Dropdown2>
     {/if}
+  </svelte:fragment>
+  <Flex justify="end" slot="right">
+    {#if width > remToPx(37) && document.edit_access}
+      {#each writeModes as [value, name]}
+        <Button ghost href="?mode={value}">
+          <svelte:component this={icons[value]} />
+          {name}
+        </Button>
+      {/each}
+    {/if}
+    <Search name="q" {query} />
   </Flex>
 </PageToolbar>
 
