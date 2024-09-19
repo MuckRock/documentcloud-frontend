@@ -19,6 +19,7 @@ import {
   BASE_API_URL,
   CSRF_HEADER_NAME,
   DC_BASE,
+  EMBED_URL,
   IMAGE_WIDTHS_ENTRIES,
 } from "@/config/config.js";
 
@@ -650,6 +651,12 @@ describe("document helper methods", () => {
     );
   });
 
+  test("embedUrl", ({ document }) => {
+    expect(documents.embedUrl(document)).toStrictEqual(
+      new URL(`/documents/${document.id}-${document.slug}/?embed=1`, EMBED_URL),
+    );
+  });
+
   test("canonicalPageUrl", ({ document }) => {
     expect(documents.canonicalPageUrl(document, 1)).toStrictEqual(
       new URL(`/documents/${document.id}/pages/1/`, APP_URL),
@@ -748,7 +755,7 @@ describe("document helper methods", () => {
     );
   });
 
-  test("documents.shouldPreload", () => {
+  test("shouldPreload", () => {
     const yes: ViewerMode[] = ["annotating", "document", "notes", "redacting"];
     const no: ViewerMode[] = ["grid", "text"];
 
@@ -761,7 +768,7 @@ describe("document helper methods", () => {
     });
   });
 
-  test("documents.shouldPaginate", () => {
+  test("shouldPaginate", () => {
     const yes: ViewerMode[] = ["annotating", "document", "redacting", "text"];
     const no: ViewerMode[] = ["grid", "notes"];
 
@@ -774,7 +781,7 @@ describe("document helper methods", () => {
     });
   });
 
-  test("documents.isProcessing", () => {
+  test("isProcessing", () => {
     const yes: Status[] = ["pending", "readable", "nofile"];
     const no: Status[] = ["error", "success"];
 

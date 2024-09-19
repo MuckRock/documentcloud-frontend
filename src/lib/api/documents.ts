@@ -28,6 +28,7 @@ import {
   BASE_API_URL,
   CSRF_HEADER_NAME,
   DC_BASE,
+  EMBED_URL,
 } from "@/config/config.js";
 import { isErrorCode, getPrivateAsset } from "../utils/index";
 
@@ -509,8 +510,8 @@ export async function assetUrl(
  * @returns {URL}
  */
 export function embedUrl(document: Document): URL {
-  const path = `/embed/documents/${document.id}-${document.slug}/?embed=1`;
-  return new URL(path, APP_URL);
+  const path = `/documents/${document.id}-${document.slug}/?embed=1`;
+  return new URL(path, EMBED_URL);
 }
 
 /**
