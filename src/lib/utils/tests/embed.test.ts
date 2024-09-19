@@ -5,6 +5,7 @@ import {
   getEmbedSettings,
   defaultSettings,
   isEmbed,
+  reroute,
 } from "../embed";
 
 describe("embed settings", () => {
@@ -58,6 +59,23 @@ describe("embed utilities", () => {
 
     for (const [url, embed] of urls) {
       expect(isEmbed(new URL(url))).toEqual(embed);
+    }
+  });
+
+  test("embed reroute", () => {
+    // [original, rewritten]
+    const paths: [string, string][] = [
+      ["/embed/documents/1-slug/", "/embed/documents/1-slug/"],
+      ["/documents/1-slug/?embed=1", "/embed/documents/1-slug/"],
+      [
+        "https://embed.documentcloud.org/documents/1-slug/",
+        "/embed/documents/1-slug/",
+      ],
+    ];
+
+    for (const [original, rewritten] of paths) {
+      const url = new URL(original, "https://www.documentcloud.org");
+      expect(reroute({ url })).toEqual(rewritten);
     }
   });
 });

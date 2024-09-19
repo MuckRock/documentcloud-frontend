@@ -280,3 +280,19 @@ export function isEmbed(url: URL): Boolean {
     url.searchParams.has("embed") || url.hostname === "embed.documentcloud.org"
   );
 }
+
+/**
+ * @type {import('@sveltejs/kit').Reroute}
+ *
+ * Point embedded routes to the proper component
+ */
+export function reroute({ url }) {
+  // you can still go to embed routes directly
+  if (url.pathname.startsWith("/embed/")) return url.pathname;
+
+  // this lets us use the same viewer URL with different components
+  // depending on whether we're embedded or not
+  if (isEmbed(url)) {
+    return "/embed" + url.pathname;
+  }
+}
