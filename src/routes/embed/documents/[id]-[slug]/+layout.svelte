@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { LayoutData } from "./$types";
+  import type { LayoutData } from "../[id]/$types";
   import type { ViewerMode, Note } from "$lib/api/types";
   import { canonicalUrl } from "$lib/api/documents";
   import { setContext } from "svelte";

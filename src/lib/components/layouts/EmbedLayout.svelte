@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import Logo from "../common/Logo.svelte";
   import type { EmbedSettings } from "@/lib/utils/embed";
+
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
   import { ScreenFull16, ScreenNormal16, Download16 } from "svelte-octicons";
+
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import Logo from "../common/Logo.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
 
   export let canonicalUrl: string;
@@ -13,15 +16,21 @@
 
   let embedRef: HTMLDivElement;
   let isFullscreen = false;
-  $: isFullscreenSupported = document.fullscreenEnabled;
+  let isFullscreenSupported = false;
+
+  onMount(() => {
+    isFullscreenSupported = window.document.fullscreenEnabled;
+  });
+
   function handleFullscreenChange() {
-    isFullscreen = Boolean(document.fullscreenElement);
+    isFullscreen = Boolean(window.document.fullscreenElement);
   }
+
   function toggleFullscreen() {
-    if (!document.fullscreenElement) {
+    if (!window.document.fullscreenElement) {
       embedRef?.requestFullscreen();
     } else {
-      document.exitFullscreen();
+      window.document.exitFullscreen();
     }
   }
 </script>

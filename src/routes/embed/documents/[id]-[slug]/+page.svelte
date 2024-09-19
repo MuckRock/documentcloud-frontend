@@ -2,17 +2,19 @@
 <!-- TODO: CONSOLIDATE VIEWER RENDERING LOGIC -->
 
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type { Note } from "@/lib/api/types.js";
 
   import { afterNavigate, invalidate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { afterUpdate, getContext } from "svelte";
-  import type { Writable } from "svelte/store";
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
+  import DocumentEmbed from "@/lib/components/embeds/DocumentEmbed.svelte";
+  import EmbedLayout from "@/lib/components/layouts/EmbedLayout.svelte";
+
   // config and utils
-  import { POLL_INTERVAL } from "@/config/config.js";
   import {
     canonicalUrl,
     pageFromHash,
@@ -22,8 +24,6 @@
   } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
-  import EmbedLayout from "@/lib/components/layouts/EmbedLayout.svelte";
-  import DocumentEmbed from "@/lib/components/embeds/DocumentEmbed.svelte";
 
   export let data;
 
@@ -47,16 +47,6 @@
     const noteId = noteFromHash(hash);
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
-    }
-  });
-
-  afterUpdate(() => {
-    // todo: can we make this more granular? do other things trigger invalidation?
-    // https://github.com/orgs/MuckRock/projects/14/views/1?pane=issue&itemId=68215069
-    if (document.status === "pending" || document.status === "readable") {
-      setTimeout(() => {
-        invalidate(`document:${document.id}`);
-      }, POLL_INTERVAL);
     }
   });
 
