@@ -56,21 +56,28 @@
     note = selectedNote?.value ?? null;
   }
 
-  let permalink: URL, embedSrc: URL, iframe: string, wpShortcode: string;
+  let permalink: URL;
+  let embedSrc: URL;
+  let iframe: string;
+  // let wpShortcode: string; is broken in WordPress
+
   let customizeEmbedOpen = false;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
     switch (currentTab) {
       case "document":
         permalink = canonicalUrl(document);
-        embedSrc = embedUrl(document);
-        iframe = `<iframe src="${embedSrc}?${embedUrlParams.toString()}"`;
-        wpShortcode = `[documentcloud url="${embedSrc}" ${Array.from(
+        embedSrc = embedUrl(document, embedUrlParams);
+
+        iframe = `<iframe src="${embedSrc.href}"`;
+        /*
+        wpShortcode = `[documentcloud url="${embedSrc.href}" ${Array.from(
           embedUrlParams,
         )
           .slice(1)
           .map(([key, value]) => `${key}="${value}"`)
           .join(" ")}]`;
+        */
         if ($embedSettings.width) {
           iframe += ` width="${$embedSettings.width}"`;
         }
@@ -82,8 +89,9 @@
       case "page":
         permalink = pageUrl(document, page);
         embedSrc = canonicalPageUrl(document, page);
-        iframe = `<iframe src="${embedSrc}" />`;
-        wpShortcode = `[documentcloud url="${embedSrc}"]`;
+        embedSrc.searchParams.set("embed", "1");
+        iframe = `<iframe src="${embedSrc.href}" />`;
+        // wpShortcode = `[documentcloud url="${embedSrc}"]`;
         break;
       case "note":
         const noteObject = document.notes?.find(
@@ -92,8 +100,9 @@
         if (noteObject) {
           permalink = noteUrl(document, noteObject);
           embedSrc = canonicalNoteUrl(document, noteObject);
-          iframe = `<iframe src="${embedSrc}" />`;
-          wpShortcode = `[documentcloud url="${embedSrc}"]`;
+          embedSrc.searchParams.set("embed", "1");
+          iframe = `<iframe src="${embedSrc.href}" />`;
+          // wpShortcode = `[documentcloud url="${embedSrc}"]`;
         }
         break;
     }

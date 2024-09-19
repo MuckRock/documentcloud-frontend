@@ -1,8 +1,13 @@
-import { error } from "@sveltejs/kit";
-import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
+import type { BBox, Document, Note, NoteResults } from "./types";
+
+import {
+  APP_URL,
+  BASE_API_URL,
+  CSRF_HEADER_NAME,
+  EMBED_URL,
+} from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { canonicalUrl } from "./documents";
-import type { BBox, Document, Note, NoteResults } from "./types";
 import { isErrorCode } from "../utils";
 
 /**
@@ -20,7 +25,7 @@ export async function list(
   const resp = await fetch(endpoint, { credentials: "include" });
 
   if (isErrorCode(resp.status)) {
-    error(resp.status, resp.statusText);
+    throw new Error(resp.statusText);
   }
 
   return resp.json();
@@ -45,7 +50,7 @@ export async function get(
   const resp = await fetch(endpoint, { credentials: "include" });
 
   if (isErrorCode(resp.status)) {
-    error(resp.status, resp.statusText);
+    throw new Error(resp.statusText);
   }
 
   return resp.json();
@@ -173,7 +178,10 @@ export async function remove(
  * @example https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/annotations/557
  */
 export function canonicalNoteUrl(document: Document, note: Note): URL {
-  return new URL(`annotations/${note.id}/`, canonicalUrl(document));
+  return new URL(
+    `/documents/${document.id}/annotations/${note.id}/`,
+    EMBED_URL,
+  );
 }
 
 /**

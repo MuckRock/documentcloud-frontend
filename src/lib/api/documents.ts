@@ -504,14 +504,21 @@ export async function assetUrl(
 /**
  * Embed URL for a document, relative to the current server
  * This will be correct in all environments, including deploy previews
- *
  * @export
  * @param {import('./types').Document} document
+ * @param {URLSearchParams} params Optional embed parameters
  * @returns {URL}
  */
-export function embedUrl(document: Document): URL {
+export function embedUrl(document: Document, params?: URLSearchParams): URL {
   const path = `/documents/${document.id}-${document.slug}/?embed=1`;
-  return new URL(path, EMBED_URL);
+  const url = new URL(path, EMBED_URL);
+
+  if (params) {
+    const combined = new URLSearchParams([["embed", "1"], ...params]);
+    url.search = combined.toString();
+  }
+
+  return url;
 }
 
 /**
