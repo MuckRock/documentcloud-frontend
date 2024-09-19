@@ -1,4 +1,5 @@
-<!-- @component Sidebar
+<!-- 
+ @component Sidebar
   Sidebars provide additional UI surface for controls, information, and more.
   Sidebars may be collapsed or open. When space allows, sidebars should flow
   alongside content and default to being open. When space is limited, sidebars
@@ -6,24 +7,28 @@
 -->
 
 <script lang="ts" context="module">
-  /** Sidebar open state is stored in an id-indexed object.
-   *  To keep track of whether a sidebar is open or not, use
-   *  a reactive statement, like this:
-   *  ```
-   *  $: isOpen = $sidebars['sidebar-id'];
-   *  ```
+  /**
+   * Sidebar open state is stored in an id-indexed object.
+   *
+   * To keep track of whether a sidebar is open or not, use
+   * a reactive statement, like this:
+   * ```
+   * $: isOpen = $sidebars['sidebar-id'];
+   * ```
    */
   import { writable, type Writable } from "svelte/store";
+
   export const sidebars: Writable<Record<string, boolean>> = writable({});
 </script>
 
 <script lang="ts">
-  import { fly, fade } from "svelte/transition";
+  import { browser } from "$app/environment";
+
   import { circOut } from "svelte/easing";
+  import { fly, fade } from "svelte/transition";
   import { SidebarCollapse16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
-  import { browser } from "$app/environment";
 
   export let id: string;
   export let position: "left" | "right" = "left";
@@ -35,9 +40,6 @@
     $sidebars[id] = isSmall ? false : true;
   }
   $: isOpen = $sidebars[id];
-  $: {
-    console.log(id, isOpen);
-  }
 
   $: flyOptions = {
     duration: isSmall ? 200 : 0,

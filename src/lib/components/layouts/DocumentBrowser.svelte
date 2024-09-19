@@ -11,6 +11,7 @@
     Upload24,
     ThreeBars16,
     KebabHorizontal16,
+    SidebarExpand16,
   } from "svelte-octicons";
 
   // Common components
@@ -100,7 +101,9 @@
               minW={false}
               on:click={() => ($sidebars["navigation"] = true)}
             >
-              <ThreeBars16 />
+              <span class="flipV">
+                <SidebarExpand16 />
+              </span>
             </Button>
           </div>
         {/if}
@@ -115,7 +118,7 @@
               minW={false}
               on:click={() => ($sidebars["action"] = true)}
             >
-              <KebabHorizontal16 />
+              <SidebarExpand16 />
             </Button>
           </div>
         {/if}
@@ -200,5 +203,9 @@
   }
   .dropOverlay.active {
     visibility: visible;
+  }
+
+  .flipV {
+    transform: rotate(180deg);
   }
 </style>
