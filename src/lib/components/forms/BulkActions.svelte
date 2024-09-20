@@ -14,7 +14,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import { _ } from "svelte-i18n";
   import {
     Alert16,
-    ChevronDown12,
+    ChevronUp12,
     FileDirectory16,
     IssueReopened16,
     Pencil16,
@@ -34,7 +34,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Reprocess from "./Reprocess.svelte";
   import Projects from "./Projects.svelte";
 
-  export let position = "bottom right";
+  export let position = "top left";
 
   const selected: Writable<Document[]> = getContext("selected");
 
@@ -72,7 +72,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 <Dropdown {id} {position}>
   <SidebarItem slot="title" disabled={$selected?.length < 1}>
     {$_("bulk.title")}
-    <ChevronDown12 />
+    <ChevronUp12 />
   </SidebarItem>
 
   <Menu>

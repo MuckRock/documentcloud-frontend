@@ -50,6 +50,8 @@
     fill: var(--gray-5, #233944);
     border: 1px solid var(--gray-2);
     border-radius: 0.5rem;
+
+    overflow: hidden;
   }
   form:focus-within {
     outline: inherit;
@@ -109,6 +111,7 @@
     transition:
       transform 0.25s ease-in-out,
       opacity 0.125s linear,
-      visibility 0s linear 0.25s;
+      visibility 0s linear 0.25s,
+      position 0s linear 0.25s;
   }
 </style>

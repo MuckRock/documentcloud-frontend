@@ -1069,7 +1069,7 @@
     "many": "Saving will add the following data and tags to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
   },
   "bulk": {
-    "title": "Edit selected",
+    "title": "Edit",
     "actions": {
       "edit": "Access and metadata",
       "data": "Add tags and data",
