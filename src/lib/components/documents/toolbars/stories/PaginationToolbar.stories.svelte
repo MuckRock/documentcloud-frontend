@@ -19,7 +19,9 @@
 </script>
 
 <Template let:args>
-  <PaginationToolbar {...args} />
+  <div class="vh justify-end">
+    <PaginationToolbar {...args} />
+  </div>
 </Template>
 
 <Story name="Default" {args} />
@@ -57,3 +59,14 @@
   }}
   {args}
 />
+
+<style>
+  .vh {
+    height: 100vh;
+  }
+  .justify-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+</style>
