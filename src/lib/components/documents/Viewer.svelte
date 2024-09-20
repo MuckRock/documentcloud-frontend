@@ -53,8 +53,11 @@
     {:else if mode === "notes"}
       <Notes {document} {asset_url} />
     {/if}
-
-    <PaginationToolbar {document} slot="footer" />
+    <svelte:fragment slot="footer">
+      {#if mode !== "notes"}
+        <PaginationToolbar {document} />
+      {/if}
+    </svelte:fragment>
   </ContentLayout>
 </div>
 
