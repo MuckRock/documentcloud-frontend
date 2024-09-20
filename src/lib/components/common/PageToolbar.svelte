@@ -29,7 +29,6 @@
   .toolbar {
     display: flex;
     width: 100%;
-    overflow-x: auto;
   }
 
   .left,
