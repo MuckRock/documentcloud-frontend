@@ -1,9 +1,7 @@
 <!-- @component A collection of highlights from search results.-->
 
-<script lang="ts">
+<script lang="ts" generics="H">
   import { _ } from "svelte-i18n";
-
-  type H = $$Generic;
 
   export let open = false;
   export let highlights: [string, H][] = [];
