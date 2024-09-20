@@ -20,16 +20,24 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import { scrollToPage } from "$lib/utils/scroll";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let document: Document;
 
   let sectionsOpen = false;
+  let width: number;
   let embed: boolean = getContext("embed") ?? false; // are we embedded?
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
   const currentPage: Writable<number> = getContext("currentPage");
 
+  const BREAKPOINTS = {
+    TWO_ROWS: remToPx(34),
+  };
+
   $: sections = document.sections ?? [];
   $: totalPages = document.page_count;
+  $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
+  $: canEditSections = !embed && document.edit_access;
 
   // pagination
   function next() {
@@ -51,30 +59,32 @@
   }
 </script>
 
-<PageToolbar>
-  <svelte:fragment slot="left">
-  </svelte:fragment>
-  <svelte:fragment slot="center">
-    {#if shouldPaginate($currentMode)}
-  {#if $currentMode === "document"}
-    <div class="sections">
+<div
+  class="toolbar"
+  class:twoRows={width <= BREAKPOINTS.TWO_ROWS}
+  bind:clientWidth={width}
+>
+  <div class="sections">
+    {#if showPDF && (sections || canEditSections)}
       <Dropdown id="sections" position="top left" --offset="5px">
         <div class="toolbarItem" slot="title">
           <SidebarItem>
             <ListOrdered16 />
-            {#if width > BREAKPOINTS.HIDE_LABELS}Sections{/if}
+            Sections
             <ChevronUp12 />
           </SidebarItem>
         </div>
         <Menu>
           {#each sections as section}
-            <MenuItem>{section.title}</MenuItem>
+            <MenuItem on:click={() => gotoPage(section.page_number)}
+              >{section.title}</MenuItem
+            >
           {:else}
             <Empty icon={ListOrdered24}>
               <p>{$_("sidebar.toc.empty")}</p>
             </Empty>
           {/each}
-          {#if !embed && document.edit_access}
+          {#if canEditSections}
             {#if sections.length === 0}
               <Button
                 ghost
@@ -93,8 +103,10 @@
           {/if}
         </Menu>
       </Dropdown>
-    </div>
-  {/if}
+    {/if}
+  </div>
+  {#if shouldPaginate($currentMode)}
+    <div class="paginator">
       <Paginator
         goToNav
         on:goTo={(e) => gotoPage(e.detail)}
@@ -105,11 +117,13 @@
         has_next={$currentPage < totalPages}
         has_previous={$currentPage > 1}
       />
-    {/if}
-  </svelte:fragment>
-  <Zoom slot="right" mode={$currentMode} />
-</PageToolbar>
-{#if sectionsOpen}
+    </div>
+  {/if}
+  <div class="zoom">
+    <Zoom mode={$currentMode} />
+  </div>
+</div>
+{#if canEditSections && sectionsOpen}
   <Portal>
     <Modal on:close={() => (sectionsOpen = false)}>
       <h1 slot="title">{$_("sections.edit")}</h1>
@@ -117,3 +131,24 @@
     </Modal>
   </Portal>
 {/if}
+
+<style>
+  .toolbar {
+    width: 100%;
+  }
+  .paginator {
+    flex: 1 1 auto;
+  }
+  .sections,
+  .zoom {
+    flex: 1 1 8em;
+  }
+  .toolbar.twoRows {
+    flex-wrap: wrap;
+    padding: 0.25rem;
+  }
+  .toolbar.twoRows .paginator {
+    order: -1;
+    flex: 1 1 100%;
+  }
+</style>
