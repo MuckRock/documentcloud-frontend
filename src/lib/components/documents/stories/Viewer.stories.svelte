@@ -1,7 +1,13 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
+  import ViewerContextDecorator from "@/../.storybook/decorators/ViewerContextDecorator.svelte";
   import Viewer from "../Viewer.svelte";
-  import type { Document, Note, ViewerMode } from "@/lib/api/types";
+  import type {
+    Document,
+    DocumentText,
+    Note,
+    ViewerMode,
+  } from "@/lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
@@ -16,16 +22,22 @@
     tags: ["autodocs"],
   };
 
-  let args = {
+  let args: {
+    document: Document;
+    text: DocumentText;
+    mode: ViewerMode;
+  } = {
     document,
-    mode: "document",
     text: txt,
+    mode: "document",
   };
 </script>
 
 <Template let:args>
   <div class="vh">
-    <Viewer {...args} />
+    <ViewerContextDecorator mode={args.mode}>
+      <Viewer {...args} />
+    </ViewerContextDecorator>
   </div>
 </Template>
 
@@ -37,21 +49,10 @@
   }}
 />
 
-<Story name="Document">
-  <Viewer text={txt} {document} />
-</Story>
-
-<Story name="Text">
-  <Viewer text={txt} {document} />
-</Story>
-
-<Story name="Thumbnails">
-  <Viewer text={txt} {document} />
-</Story>
-
-<Story name="Notes">
-  <Viewer text={txt} {document} />
-</Story>
+<Story name="Document" {args} />
+<Story name="Text" args={{ ...args, mode: "text" }} />
+<Story name="Thumbnails" args={{ ...args, mode: "grid" }} />
+<Story name="Notes" args={{ ...args, mode: "notes" }} />
 
 <style>
   .vh {
