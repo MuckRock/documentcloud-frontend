@@ -113,6 +113,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.375rem 1rem;
+    overflow: hidden;
   }
   .bottom-nav {
     position: sticky;

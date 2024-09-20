@@ -41,6 +41,7 @@
   .breadcrumbs {
     flex: 1 0 0;
     max-width: 100%;
+    overflow: hidden;
   }
 
   .divider {
