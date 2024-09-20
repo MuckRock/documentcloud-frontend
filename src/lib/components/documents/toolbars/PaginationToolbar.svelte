@@ -30,8 +30,8 @@
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
   const currentPage: Writable<number> = getContext("currentPage");
 
-  const BREAKPOINTS = {
-    TWO_ROWS: remToPx(34),
+  $: BREAKPOINTS = {
+    TWO_ROWS: width <= remToPx(34),
   };
 
   $: sections = document.sections ?? [];
@@ -61,7 +61,7 @@
 
 <div
   class="toolbar"
-  class:twoRows={width <= BREAKPOINTS.TWO_ROWS}
+  class:twoRows={BREAKPOINTS.TWO_ROWS}
   bind:clientWidth={width}
 >
   <div class="sections">

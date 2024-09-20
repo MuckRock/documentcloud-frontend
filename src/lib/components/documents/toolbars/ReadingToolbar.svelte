@@ -37,9 +37,10 @@
   let width: number;
   const mode: Writable<ViewerMode> = getContext("currentMode");
 
-  const BREAKPOINTS = {
-    READ_MENU: 52,
-    WRITE_MENU: 37,
+  $: canWrite = !embed && document.edit_access;
+  $: BREAKPOINTS = {
+    READ_MENU: width > remToPx(52),
+    WRITE_MENU: width < remToPx(37),
   };
 
   const readModes: Map<ReadMode, string> = new Map([
@@ -66,7 +67,7 @@
 
 <PageToolbar bind:width>
   <svelte:fragment slot="left">
-    {#if width > remToPx(BREAKPOINTS["READ_MENU"])}
+    {#if BREAKPOINTS.READ_MENU}
       <div class="tabs" role="tablist">
         {#each readModes.entries() as [value, name]}
           <Tab active={$mode === value} href="?mode={value}">
@@ -95,7 +96,7 @@
               {name}
             </MenuItem>
           {/each}
-          {#if width < remToPx(BREAKPOINTS["WRITE_MENU"])}
+          {#if BREAKPOINTS.WRITE_MENU && canWrite}
             {#each writeModes as [value, name]}
               <MenuItem
                 selected={$mode === value}
@@ -112,7 +113,7 @@
     {/if}
   </svelte:fragment>
   <Flex justify="end" slot="right">
-    {#if width > remToPx(37) && document.edit_access}
+    {#if BREAKPOINTS.WRITE_MENU && canWrite}
       {#each writeModes as [value, name]}
         <Button ghost href="?mode={value}">
           <svelte:component this={icons[value]} />
