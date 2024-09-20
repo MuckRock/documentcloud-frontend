@@ -100,7 +100,7 @@
     <svelte:fragment slot="header">
       <Flex>
         {#if $sidebars["navigation"] === false}
-          <div class="toolbar">
+          <div class="toolbar w-auto">
             <Button
               ghost
               minW={false}
@@ -120,7 +120,7 @@
           </Flex>
         </PageToolbar>
         {#if $sidebars["action"] === false}
-          <div class="toolbar">
+          <div class="toolbar w-auto">
             <Button
               ghost
               minW={false}
@@ -219,12 +219,16 @@
   }
 
   .flipV {
+    display: flex;
     transform: rotate(180deg);
   }
 
   .toolbar {
     width: 100%;
     flex-wrap: wrap;
+  }
+  .w-auto {
+    width: auto;
   }
   .resultsCount {
     flex: 1 1 auto;

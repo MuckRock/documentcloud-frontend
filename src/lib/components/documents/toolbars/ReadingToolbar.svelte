@@ -113,7 +113,7 @@
     {/if}
   </svelte:fragment>
   <Flex justify="end" slot="right">
-    {#if BREAKPOINTS.WRITE_MENU && canWrite}
+    {#if !BREAKPOINTS.WRITE_MENU && canWrite}
       {#each writeModes as [value, name]}
         <Button ghost href="?mode={value}">
           <svelte:component this={icons[value]} />
