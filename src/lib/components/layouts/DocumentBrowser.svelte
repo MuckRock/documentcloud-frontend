@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DocumentResults, Pending, Project } from "@/lib/api/types";
+  import type { DocumentResults, Pending, Project } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -13,11 +13,13 @@
   } from "svelte-octicons";
 
   // Common components
-  import Flex from "$lib/components/common/Flex.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
+
   // Document comopnents
   import PendingDocs from "$lib/components/documents/Pending.svelte";
   import ResultsList, {
@@ -25,22 +27,24 @@
     total,
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
+
   // Form components
+  import Dropzone from "$lib/components/inputs/Dropzone.svelte";
+  import BulkActions from "$lib/components/forms/BulkActions.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
     uploadToProject,
   } from "$lib/components/forms/DocumentUpload.svelte";
-  import BulkActions from "$lib/components/forms/BulkActions.svelte";
-  import Dropzone from "$lib/components/inputs/Dropzone.svelte";
+
   // Layout comopnents
-  import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
+
   // Utilities
-  import { isSupported } from "@/lib/utils/files";
-  import { canUploadFiles, getCurrentUser } from "@/lib/utils/permissions";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import { remToPx } from "@/lib/utils/layout";
+  import { isSupported } from "$lib/utils/files";
+  import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
+  import { remToPx } from "$lib/utils/layout";
 
   setContext("selected", selected);
 
@@ -65,6 +69,7 @@
   };
 
   let width: number;
+
   $: BREAKPOINTS = {
     HIDE_COUNT: width < remToPx(26),
   };

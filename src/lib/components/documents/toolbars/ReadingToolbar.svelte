@@ -1,4 +1,14 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
+  import type {
+    Document,
+    ReadMode,
+    ViewerMode,
+    WriteMode,
+  } from "$lib/api/types";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Comment16,
@@ -16,25 +26,19 @@
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
 
-  import type {
-    Document,
-    ReadMode,
-    ViewerMode,
-    WriteMode,
-  } from "@/lib/api/types";
-  import type { Writable } from "svelte/store";
-  import { getContext } from "svelte";
-  import { remToPx } from "@/lib/utils/layout";
   import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import SidebarItem from "../../sidebar/SidebarItem.svelte";
+
+  import { remToPx } from "$lib/utils/layout";
 
   export let document: Document;
   export let query: string = "";
   export let embed: boolean = getContext("embed") ?? false; // are we embedded?
 
   let width: number;
+
   const mode: Writable<ViewerMode> = getContext("currentMode");
 
   $: canWrite = !embed && document.edit_access;

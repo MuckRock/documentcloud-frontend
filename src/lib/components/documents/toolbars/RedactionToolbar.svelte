@@ -24,7 +24,8 @@
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
-  import { remToPx } from "@/lib/utils/layout";
+
+  import { remToPx } from "$lib/utils/layout";
 
   export let document: Document;
 

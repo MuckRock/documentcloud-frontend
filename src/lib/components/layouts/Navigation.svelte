@@ -1,24 +1,29 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import type { Writable } from "svelte/store";
-  import { page } from "$app/stores";
   import type { Flatpage, Org, User } from "$lib/api/types";
+
+  import { page } from "$app/stores";
+
   import { getContext } from "svelte";
+  import { _ } from "svelte-i18n";
+
+  import Breadcrumbs from "../navigation/Breadcrumbs.svelte";
+  import Button from "../common/Button.svelte";
+  import Flex from "../common/Flex.svelte";
+
+  import HelpMenu from "../navigation/HelpMenu.svelte";
+  import OrgMenu from "../navigation/OrgMenu.svelte";
+  import LanguageMenu from "../navigation/LanguageMenu.svelte";
   import SignedIn from "../common/SignedIn.svelte";
   import TipOfDay from "../common/TipOfDay.svelte";
-  import Breadcrumbs from "../navigation/Breadcrumbs.svelte";
-  import Flex from "../common/Flex.svelte";
-  import OrgMenu from "../navigation/OrgMenu.svelte";
   import UserMenu from "../accounts/UserMenu.svelte";
-  import Button from "../common/Button.svelte";
-  import LanguageMenu from "../navigation/LanguageMenu.svelte";
-  import HelpMenu from "../navigation/HelpMenu.svelte";
-  import { SIGN_IN_URL } from "@/config/config";
+
   import Portal from "./Portal.svelte";
   import Modal from "./Modal.svelte";
   import UserFeedback from "../forms/UserFeedback.svelte";
+
+  import { SIGN_IN_URL } from "@/config/config";
   import { remToPx } from "@/lib/utils/layout";
-  import { Megaphone16 } from "svelte-octicons";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
@@ -28,6 +33,7 @@
 
   let feedbackOpen = false;
   let width: number;
+
   $: BREAKPOINTS = {
     BOTTOM_NAV: width < remToPx(36),
   };
@@ -61,7 +67,7 @@
       mode="primary"
       on:click={() => (feedbackOpen = true)}
     >
-      Feedback
+      {$_("common.feedback")}
     </Button>
 
     {#if feedbackOpen}

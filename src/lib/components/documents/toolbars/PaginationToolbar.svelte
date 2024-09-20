@@ -1,32 +1,35 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import { _ } from "svelte-i18n";
-  import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
+  import type { Document, ViewerMode } from "$lib/api/types";
 
   import { replaceState } from "$app/navigation";
 
-  import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
-  import type { Document, ViewerMode } from "$lib/api/types";
-  import Empty from "$lib/components/common/Empty.svelte";
+  import { getContext } from "svelte";
+  import { _ } from "svelte-i18n";
+  import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
+
   import Button from "$lib/components/common/Button.svelte";
   import Dropdown from "@/common/Dropdown2.svelte";
+  import EditSections from "$lib/components/forms/EditSections.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
-  import Zoom from "$lib/components/documents/Zoom.svelte";
-  import EditSections from "$lib/components/forms/EditSections.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import Zoom from "$lib/components/documents/Zoom.svelte";
+
+  import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
+  import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { remToPx } from "@/lib/utils/layout";
 
   export let document: Document;
 
   let sectionsOpen = false;
   let width: number;
   let embed: boolean = getContext("embed") ?? false; // are we embedded?
+
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
   const currentPage: Writable<number> = getContext("currentPage");
 
@@ -105,6 +108,7 @@
       </Dropdown>
     {/if}
   </div>
+
   {#if shouldPaginate($currentMode)}
     <div class="paginator">
       <Paginator
@@ -119,10 +123,12 @@
       />
     </div>
   {/if}
+
   <div class="zoom">
     <Zoom mode={$currentMode} />
   </div>
 </div>
+
 {#if canEditSections && sectionsOpen}
   <Portal>
     <Modal on:close={() => (sectionsOpen = false)}>

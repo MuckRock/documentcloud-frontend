@@ -1,16 +1,13 @@
 <script context="module" lang="ts">
+  import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
+
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import ViewerContextDecorator from "@/../.storybook/decorators/ViewerContextDecorator.svelte";
   import Viewer from "../Viewer.svelte";
-  import type {
-    Document,
-    DocumentText,
-    Note,
-    ViewerMode,
-  } from "@/lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
+
   const document = doc as Document;
 
   export const meta = {

@@ -6,17 +6,22 @@
   import { _ } from "svelte-i18n";
 
   import ContentLayout from "../layouts/ContentLayout.svelte";
+
+  // modes
   import Notes from "./Notes.svelte";
   import PDF from "./PDF.svelte";
   import Text from "./Text.svelte";
   import ThumbnailGrid from "./ThumbnailGrid.svelte";
-  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
-  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
-  import ReadingToolbar from "./toolbars/ReadingToolbar.svelte";
-  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
 
-  import { pdfUrl } from "$lib/api/documents";
+  // toolbars
+  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
   import PaginationToolbar from "./toolbars/PaginationToolbar.svelte";
+  import ReadingToolbar from "./toolbars/ReadingToolbar.svelte";
+  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
+
+  // utils
+  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
+  import { pdfUrl } from "$lib/api/documents";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
@@ -24,10 +29,9 @@
   export let asset_url: URL = pdfUrl(document);
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
-  export let embed: boolean = getContext("embed") ?? false; // are we embedded?
 
   $: mode = $currentMode;
-  $: showPDF = ["document", "annotating", "redacting"].includes(mode);
+  $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
 </script>
 
 <div class="container">

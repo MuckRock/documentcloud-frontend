@@ -13,7 +13,8 @@
     "more": "More",
     "add": "Add",
     "edit": "Edit",
-    "search": "Search"
+    "search": "Search",
+    "feedback": "Feedback"
   },
   "search": {
     "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"

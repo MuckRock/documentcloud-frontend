@@ -7,9 +7,11 @@
 
 <script lang="ts">
   import { TriangleRight16 } from "svelte-octicons";
-  import Logo from "../common/Logo.svelte";
+
   import Flex from "../common/Flex.svelte";
-  import { remToPx } from "@/lib/utils/layout";
+  import Logo from "../common/Logo.svelte";
+
+  import { remToPx } from "$lib/utils/layout";
 
   export let trail: Breadcrumb[] = [];
 
