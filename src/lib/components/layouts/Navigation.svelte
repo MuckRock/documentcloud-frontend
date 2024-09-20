@@ -17,6 +17,8 @@
   import Portal from "./Portal.svelte";
   import Modal from "./Modal.svelte";
   import UserFeedback from "../forms/UserFeedback.svelte";
+  import { remToPx } from "@/lib/utils/layout";
+  import { Megaphone16 } from "svelte-octicons";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
@@ -25,30 +27,43 @@
   const org_users = getContext<Writable<Promise<User[]>>>("org_users");
 
   let feedbackOpen = false;
+  let width: number;
+  $: BREAKPOINTS = {
+    BOTTOM_NAV: width < remToPx(36),
+  };
 </script>
 
 {#if tipOfDay}<TipOfDay message={tipOfDay.content} />{/if}
-<nav>
+<nav bind:clientWidth={width}>
   <div class="inner">
     <slot name="breadcrumbs">
       <Breadcrumbs trail={$page.data.breadcrumbs} />
     </slot>
-    <SignedIn>
-      <Flex>
-        {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-          <OrgMenu active_org={$org} {orgs} {users} />
-        {/await}
-        <UserMenu user={$me} />
-      </Flex>
-      <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
-        {$_("authSection.user.signIn")}
-      </Button>
-    </SignedIn>
-    <LanguageMenu />
-    <HelpMenu />
-    <Button ghost mode="primary" on:click={() => (feedbackOpen = true)}>
+    {#if !BREAKPOINTS.BOTTOM_NAV}
+      <SignedIn>
+        <Flex>
+          {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
+            <OrgMenu active_org={$org} {orgs} {users} />
+          {/await}
+          <UserMenu user={$me} />
+        </Flex>
+        <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
+          {$_("authSection.user.signIn")}
+        </Button>
+      </SignedIn>
+      <LanguageMenu />
+      <HelpMenu />
+    {/if}
+
+    <Button
+      minW={false}
+      ghost
+      mode="primary"
+      on:click={() => (feedbackOpen = true)}
+    >
       Feedback
     </Button>
+
     {#if feedbackOpen}
       <Portal>
         <Modal on:close={() => (feedbackOpen = false)}>
@@ -60,6 +75,25 @@
   </div>
 </nav>
 <slot />
+{#if BREAKPOINTS.BOTTOM_NAV}
+  <nav class="bottom-nav">
+    <SignedIn>
+      <Flex>
+        {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
+          <OrgMenu position="top left" active_org={$org} {orgs} {users} />
+        {/await}
+        <UserMenu position="top left" user={$me} />
+      </Flex>
+      <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
+        {$_("authSection.user.signIn")}
+      </Button>
+    </SignedIn>
+    <Flex>
+      <LanguageMenu position="top right" />
+      <HelpMenu position="top right" />
+    </Flex>
+  </nav>
+{/if}
 
 <style>
   nav {
@@ -79,5 +113,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.375rem 1rem;
+  }
+  .bottom-nav {
+    position: sticky;
+    bottom: 0;
+    padding: 0.375rem 1rem;
+    justify-content: space-between;
+  }
+  @media (max-width: 32rem) {
+    .inner,
+    .bottom-nav {
+      padding: 0.375rem 0.5rem;
+    }
   }
 </style>

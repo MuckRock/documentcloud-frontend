@@ -10,17 +10,26 @@
     Plug16,
     Mail16,
     Question24,
-    ChevronDown16,
+    ChevronDown12,
+    ChevronUp12,
   } from "svelte-octicons";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";
+
+  export let position = "bottom right";
 </script>
 
 <!-- Help Menu -->
-<Dropdown id="help" position="bottom right">
+<Dropdown id="help" {position}>
   <SidebarItem slot="title">
     <Question24 />
-    <div class="dropdownArrow"><ChevronDown16 /></div>
+    <div class="dropdownArrow">
+      {#if position.includes("bottom")}
+        <ChevronDown12 />
+      {:else}
+        <ChevronUp12 />
+      {/if}
+    </div>
   </SidebarItem>
   <Menu>
     <SidebarItem href="/help/faq/">

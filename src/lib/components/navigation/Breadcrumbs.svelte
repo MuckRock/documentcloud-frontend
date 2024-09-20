@@ -9,23 +9,31 @@
   import { TriangleRight16 } from "svelte-octicons";
   import Logo from "../common/Logo.svelte";
   import Flex from "../common/Flex.svelte";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let trail: Breadcrumb[] = [];
+
+  let width: number;
+  $: BREAKPOINTS = {
+    SHOW_BREADCRUMBS: width > remToPx(32),
+  };
 </script>
 
-<div class="breadcrumbs">
+<div class="breadcrumbs" bind:clientWidth={width}>
   <Flex gap={0.375} align="center">
     <slot name="root">
       <a href="/" class="logo crumb"><Logo /></a>
     </slot>
-    {#each trail as { href, title }}
-      <span class="divider"><TriangleRight16 fill="var(--gray-3)" /></span>
-      {#if href}
-        <a class="crumb" {href} {title}>{title}</a>
-      {:else}
-        <span {title} class="crumb">{title}</span>
-      {/if}
-    {/each}
+    {#if BREAKPOINTS.SHOW_BREADCRUMBS}
+      {#each trail as { href, title }}
+        <span class="divider"><TriangleRight16 fill="var(--gray-3)" /></span>
+        {#if href}
+          <a class="crumb" {href} {title}>{title}</a>
+        {:else}
+          <span {title} class="crumb">{title}</span>
+        {/if}
+      {/each}
+    {/if}
   </Flex>
 </div>
 
@@ -55,7 +63,6 @@
 
   .crumb:last-child {
     color: inherit;
-    flex: 0 0 auto;
   }
 
   a.crumb:hover {

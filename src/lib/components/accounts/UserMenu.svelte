@@ -8,10 +8,10 @@
   import Portal from "../layouts/Portal.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import {
-    ChevronDown16,
+    ChevronDown12,
     Gear16,
     Paperclip16,
-    Person16,
+    ChevronUp12,
     SignOut16,
   } from "svelte-octicons";
   import Menu from "@/common/Menu.svelte";
@@ -20,6 +20,7 @@
   import Avatar from "./Avatar.svelte";
 
   export let user: User;
+  export let position = "bottom right";
 
   const dropdownId = "user-menu";
   function close() {
@@ -32,11 +33,17 @@
   }
 </script>
 
-<Dropdown id={dropdownId} position="bottom right">
+<Dropdown id={dropdownId} {position}>
   <SidebarItem slot="title" title="Open Menu">
     <Avatar {user} />
     <span class="name">{user.name ?? user.username}</span>
-    <div class="dropdownArrow"><ChevronDown16 /></div>
+    <div class="dropdownArrow">
+      {#if position.includes("bottom")}
+        <ChevronDown12 />
+      {:else}
+        <ChevronUp12 />
+      {/if}
+    </div>
   </SidebarItem>
   <Menu>
     <SidebarItem href={SQUARELET_BASE} target="_blank" on:click={close}>

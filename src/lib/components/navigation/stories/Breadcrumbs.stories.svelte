@@ -5,7 +5,7 @@
   export const meta = {
     title: "Components / Navigation / Breadcrumbs",
     component: Breadcrumbs,
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
   };
 </script>
 
@@ -37,7 +37,7 @@
 </Story>
 
 <Story name="Long Crumb">
-  <div style="width: 48rem;">
+  <div style="width: 100%;">
     <Breadcrumbs
       trail={[
         { title: "Documents" },
@@ -45,7 +45,6 @@
           href: "/documents/[id]",
           title: "BADFILENAME__TOOLONG__FINAL FINAL DRAFT 2.pdf",
         },
-        { href: "/documents/[id]/organize", title: "Organize" },
       ]}
     />
   </div>
