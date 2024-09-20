@@ -20,7 +20,7 @@
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
   import NoteHighlights from "./NoteHighlights.svelte";
-  import SearchHighlights from "./SearchHighlights.svelte";
+  import PageHighlights from "./PageHighlights.svelte";
 
   export let results: Document[] = [];
   export let count: number = undefined;
@@ -99,7 +99,7 @@
       </Flex>
 
       {#if document.highlights}
-        <SearchHighlights {document} />
+        <PageHighlights {document} />
       {/if}
 
       {#if document.note_highlights}

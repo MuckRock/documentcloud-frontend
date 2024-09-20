@@ -2,7 +2,7 @@
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import SearchHighlights from "../SearchHighlights.svelte";
+  import PageHighlights from "../PageHighlights.svelte";
 
   import search from "@/test/fixtures/documents/search-highlight.json";
 
@@ -10,17 +10,17 @@
   const document = search.results.find((d) => d.id === "3913417") as Document;
 
   export const meta = {
-    title: "Components / Documents / Search Highlights",
-    component: SearchHighlights,
+    title: "Components / Documents / Page Highlights",
+    component: PageHighlights,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
   };
 </script>
 
 <Story name="closed">
-  <SearchHighlights {document} />
+  <PageHighlights {document} />
 </Story>
 
 <Story name="open">
-  <SearchHighlights {document} open />
+  <PageHighlights {document} open />
 </Story>
