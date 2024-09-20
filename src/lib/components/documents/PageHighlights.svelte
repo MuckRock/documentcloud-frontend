@@ -10,15 +10,16 @@
   }
   ```
 -->
-
 <script lang="ts">
+  import type { Document } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
 
-  import type { Document } from "$lib/api/types";
-  import { pageUrl } from "$lib/api/documents";
-  import Highlight from "@/lib/components/common/Highlight.svelte";
-  import { pageNumber } from "$lib/utils/search";
+  import Highlight from "../common/Highlight.svelte";
   import HighlightGroup from "../common/HighlightGroup.svelte";
+
+  import { pageUrl } from "$lib/api/documents";
+  import { pageNumber } from "$lib/utils/search";
 
   export let document: Document;
   export let open = false;
