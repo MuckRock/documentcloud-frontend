@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DocumentResults, Pending, Project } from "@/lib/api/types";
+  import type { DocumentResults, Pending, Project } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -9,17 +9,17 @@
     FileDirectory24,
     Hourglass24,
     Upload24,
-    ThreeBars16,
-    KebabHorizontal16,
     SidebarExpand16,
   } from "svelte-octicons";
 
   // Common components
-  import Flex from "$lib/components/common/Flex.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
+
   // Document comopnents
   import PendingDocs from "$lib/components/documents/Pending.svelte";
   import ResultsList, {
@@ -27,20 +27,24 @@
     total,
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
+
   // Form components
+  import Dropzone from "$lib/components/inputs/Dropzone.svelte";
+  import BulkActions from "$lib/components/forms/BulkActions.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
     uploadToProject,
   } from "$lib/components/forms/DocumentUpload.svelte";
-  import BulkActions from "$lib/components/forms/BulkActions.svelte";
-  import Dropzone from "$lib/components/inputs/Dropzone.svelte";
+
   // Layout comopnents
-  import ContentLayout from "@/lib/components/layouts/ContentLayout.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
+
   // Utilities
-  import { isSupported } from "@/lib/utils/files";
-  import { canUploadFiles, getCurrentUser } from "@/lib/utils/permissions";
+  import { isSupported } from "$lib/utils/files";
+  import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
+  import { remToPx } from "$lib/utils/layout";
 
   setContext("selected", selected);
 
@@ -62,6 +66,12 @@
     error: $_("common.error"),
     empty: $_("common.empty"),
     search: $_("common.search"),
+  };
+
+  let width: number;
+
+  $: BREAKPOINTS = {
+    HIDE_COUNT: width < remToPx(26),
   };
 
   function selectAll(e) {
@@ -93,9 +103,9 @@
   </div>
   <ContentLayout>
     <svelte:fragment slot="header">
-      <Flex key="left-sidebar">
+      <Flex>
         {#if $sidebars["navigation"] === false}
-          <div class="toolbar">
+          <div class="toolbar w-auto">
             <Button
               ghost
               minW={false}
@@ -108,11 +118,14 @@
           </div>
         {/if}
         <PageToolbar>
-          <BulkActions slot="left" />
-          <Search slot="right" name="q" {query} placeholder={uiText.search} />
+          <Flex slot="right">
+            <div style:flex="1 1 auto">
+              <Search name="q" {query} placeholder={uiText.search} />
+            </div>
+          </Flex>
         </PageToolbar>
         {#if $sidebars["action"] === false}
-          <div class="toolbar">
+          <div class="toolbar w-auto">
             <Button
               ghost
               minW={false}
@@ -146,31 +159,36 @@
     {:catch}
       <Error>{uiText.error}</Error>
     {/await}
-    <PageToolbar slot="footer">
-      <label slot="left" class="select-all">
-        <input
-          type="checkbox"
-          name="select_all"
-          checked={$selected.length > 0 && $selected.length === $visible.size}
-          indeterminate={$selected.length > 0 &&
-            $selected.length < $visible.size}
-          on:change={selectAll}
-        />
-        {#if $selected.length > 0}
-          {$selected.length.toLocaleString()} {$_("inputs.selected")}
-        {:else}
-          {$_("inputs.selectAll")}
-        {/if}
-      </label>
-
-      <svelte:fragment slot="right">
-        {#if $visible && $total}
+    <div class="toolbar" slot="footer" bind:clientWidth={width}>
+      <Flex>
+        <SidebarItem>
+          <label class="select-all">
+            <input
+              type="checkbox"
+              name="select_all"
+              checked={$selected.length > 0 &&
+                $selected.length === $visible.size}
+              indeterminate={$selected.length > 0 &&
+                $selected.length < $visible.size}
+              on:change={selectAll}
+            />
+            {#if $selected.length > 0}
+              {$selected.length.toLocaleString()} {$_("inputs.selected")}
+            {:else}
+              {$_("inputs.selectAll")}
+            {/if}
+          </label>
+        </SidebarItem>
+        <BulkActions />
+      </Flex>
+      {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
+        <p class="resultsCount">
           {$_("inputs.resultsCount", {
             values: { n: $visible.size, total: $total },
           })}
-        {/if}
-      </svelte:fragment>
-    </PageToolbar>
+        </p>
+      {/if}
+    </div>
   </ContentLayout>
 </Dropzone>
 
@@ -206,6 +224,25 @@
   }
 
   .flipV {
+    display: flex;
     transform: rotate(180deg);
+  }
+
+  .toolbar {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .w-auto {
+    width: auto;
+  }
+  .resultsCount {
+    flex: 1 1 auto;
+    text-align: right;
+    font-size: var(--font-sm);
+    margin: 0.25rem 0.5rem;
+  }
+  .select-all {
+    min-width: 7rem;
+    margin: 0.25rem 0;
   }
 </style>

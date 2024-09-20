@@ -134,7 +134,7 @@
 
 <style>
   .container {
-    padding: 0 2rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -144,6 +144,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    padding-left: 0.5rem;
   }
 
   input[type="checkbox"] {

@@ -1,12 +1,14 @@
 <script lang="ts">
   import { _, locale } from "svelte-i18n";
-  import { Check16, ChevronDown16 } from "svelte-octicons";
+  import { Check16, ChevronDown12, ChevronUp12 } from "svelte-octicons";
 
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import langs from "@/langs/langs.json";
+
+  export let position = "bottom right";
 
   $: currentLang = langs.find(([_, code]) => code == $locale) ?? langs[0];
 
@@ -20,11 +22,17 @@
 
 {#if langs.length > 1}
   <!-- Language Menu -->
-  <Dropdown id="language" position="bottom right">
+  <Dropdown id="language" {position}>
     <SidebarItem slot="title">
       <span class="flag">{currentLang[2]}</span>
       <!-- <span class="lang">{currentLang[0]}</span> -->
-      <div class="dropdownArrow"><ChevronDown16 /></div>
+      <div class="dropdownArrow">
+        {#if position.includes("bottom")}
+          <ChevronDown12 />
+        {:else}
+          <ChevronUp12 />
+        {/if}
+      </div>
     </SidebarItem>
     <Menu>
       {#each langs as [name, code, flag]}

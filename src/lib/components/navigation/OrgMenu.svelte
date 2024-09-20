@@ -3,7 +3,7 @@
 
   import { invalidateAll } from "$app/navigation";
   import { _, locale } from "svelte-i18n";
-  import { ChevronDown16, Person16 } from "svelte-octicons";
+  import { ChevronDown12, ChevronUp12, Person16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import CreditMeter, {
@@ -22,6 +22,7 @@
   export let active_org: Org;
   export let orgs: Org[] = [];
   export let users: User[] = [];
+  export let position = "bottom right";
 
   $: isPremium = active_org.plan !== "Free";
   $: upgrade_url = getUpgradeUrl(active_org).href;
@@ -37,7 +38,7 @@
   }
 </script>
 
-<Dropdown id="org-menu" position="bottom right">
+<Dropdown id="org-menu" {position}>
   <SidebarItem slot="title">
     {#if active_org.individual}
       <div class="premium">
@@ -54,94 +55,105 @@
         />
       </div>
       <p class="organization">{active_org.name}</p>
-      <span class="arrow"><ChevronDown16 /></span>
+      <div class="dropdownArrow">
+        {#if position.includes("bottom")}
+          <ChevronDown12 />
+        {:else}
+          <ChevronUp12 />
+        {/if}
+      </div>
     {/if}
   </SidebarItem>
 
   <Menu>
-    {#if isPremium}
-      <MenuInsert>
-        <CreditMeter
-          id="org-credits"
-          label={$_("authSection.credits.monthlyOrg")}
-          helpText={$_("authSection.credits.refreshOn", {
-            values: {
-              date: formatResetDate(active_org.credit_reset_date, $locale),
-            },
-          })}
-          value={active_org.monthly_credits}
-          max={active_org.monthly_credit_allowance}
-        />
-      </MenuInsert>
-    {:else}
-      <div class="min-width">
+    <div class="menu-inner">
+      {#if isPremium}
         <MenuInsert>
-          <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
-          <p class="description">
-            {$_("authSection.premiumUpgrade.description")}
-          </p>
-          <Button mode="premium" href={upgrade_url}>
-            {$_("authSection.premiumUpgrade.cta")}
-          </Button>
-          <div class="learnMore">
-            <a href="/help/premium/">
-              {$_("authSection.premiumUpgrade.docs")}
-            </a>
-          </div>
+          <CreditMeter
+            id="org-credits"
+            label={$_("authSection.credits.monthlyOrg")}
+            helpText={$_("authSection.credits.refreshOn", {
+              values: {
+                date: formatResetDate(active_org.credit_reset_date, $locale),
+              },
+            })}
+            value={active_org.monthly_credits}
+            max={active_org.monthly_credit_allowance}
+          />
         </MenuInsert>
-      </div>
-    {/if}
+      {:else}
+        <div class="min-width">
+          <MenuInsert>
+            <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
+            <p class="description">
+              {$_("authSection.premiumUpgrade.description")}
+            </p>
+            <Button mode="premium" href={upgrade_url}>
+              {$_("authSection.premiumUpgrade.cta")}
+            </Button>
+            <div class="learnMore">
+              <a href="/help/premium/">
+                {$_("authSection.premiumUpgrade.docs")}
+              </a>
+            </div>
+          </MenuInsert>
+        </div>
+      {/if}
 
-    {#if users.length}
-      <p class="user-count">
-        {$_("authSection.org.userCount", { values: { n: users.length } })}
-      </p>
-      <ul class="user-list">
-        {#each users as user}
-          {@const href = searchUrl(userDocs(user)).href}
-          <li>
-            <SidebarItem {href} on:click={(e) => closeDropdown("organization")}>
-              {#if user.avatar_url}
-                <img src={user.avatar_url} class="avatar" alt="" />
-              {:else}
-                <span class="icon"><Person16 /></span>
-              {/if}
-              <span class="name">{user.name}</span>
-              {#if user.admin_organizations.includes(active_org.id)}
-                <span class="badge">{$_("authSection.org.adminRole")}</span>
-              {/if}
-            </SidebarItem>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-
-    {#if orgs.length}
-      <p class="switch">
-        {$_("authSection.org.changeOrg")}
-      </p>
-      <Dropdown id="org-switch">
-        <SidebarItem slot="title">
-          <div class="avatar">
-            <img
-              alt={$_("authSection.org.avatar", {
-                values: { name: active_org.name },
-              })}
-              src={active_org.avatar_url}
-            />
-          </div>
-          <p class="organization">{active_org.name}</p>
-          <span class="arrow"><ChevronDown16 /></span>
-        </SidebarItem>
-        <Menu>
-          {#each orgs as org}
-            <SidebarItem hover on:click={(e) => switchOrg(org)}>
-              {org.name}
-            </SidebarItem>
+      {#if users.length}
+        <p class="user-count">
+          {$_("authSection.org.userCount", { values: { n: users.length } })}
+        </p>
+        <ul class="user-list">
+          {#each users as user}
+            {@const href = searchUrl(userDocs(user)).href}
+            <li>
+              <SidebarItem
+                {href}
+                on:click={(e) => closeDropdown("organization")}
+              >
+                {#if user.avatar_url}
+                  <img src={user.avatar_url} class="avatar" alt="" />
+                {:else}
+                  <span class="icon"><Person16 /></span>
+                {/if}
+                <span class="name">{user.name}</span>
+                {#if user.admin_organizations.includes(active_org.id)}
+                  <span class="badge">{$_("authSection.org.adminRole")}</span>
+                {/if}
+              </SidebarItem>
+            </li>
           {/each}
-        </Menu>
-      </Dropdown>
-    {/if}
+        </ul>
+      {/if}
+
+      {#if orgs.length}
+        <p class="switch">
+          {$_("authSection.org.changeOrg")}
+        </p>
+        <Dropdown id="org-switch">
+          <SidebarItem slot="title">
+            <div class="avatar">
+              <img
+                alt={$_("authSection.org.avatar", {
+                  values: { name: active_org.name },
+                })}
+                src={active_org.avatar_url}
+              />
+            </div>
+            <p class="organization">{active_org.name}</p>
+            <span class="arrow"><ChevronDown12 /></span>
+          </SidebarItem>
+          <Menu>
+            {#each orgs as org}
+              <SidebarItem hover on:click={(e) => switchOrg(org)}>
+                {org.name}
+              </SidebarItem>
+            {/each}
+          </Menu>
+        </Dropdown>
+      {/if}
+    </div>
   </Menu>
 </Dropdown>
 
@@ -242,6 +254,9 @@
   @media (max-width: 32rem) {
     .organization {
       display: none;
+    }
+    .menu-inner {
+      font-size: var(--font-sm);
     }
   }
 </style>

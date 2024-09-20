@@ -4,11 +4,11 @@ exports[`UserMenu 1`] = `
 <div>
    
   <div
-    class="dropdownContainer svelte-1ep6rnf"
+    class="dropdownContainer svelte-1w62t89"
     id="user-menu"
   >
     <div
-      class="title primary svelte-1ep6rnf"
+      class="title primary svelte-1w62t89"
       role="button"
       tabindex="0"
     >
@@ -40,13 +40,13 @@ exports[`UserMenu 1`] = `
         >
           <svg
             class="octicon octicon-chevron-down"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
+            height="12"
+            viewBox="0 0 12 12"
+            width="12"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"
+              d="M6 8.825c-.2 0-.4-.1-.5-.2l-3.3-3.3c-.3-.3-.3-.8 0-1.1.3-.3.8-.3 1.1 0l2.7 2.7 2.7-2.7c.3-.3.8-.3 1.1 0 .3.3.3.8 0 1.1l-3.2 3.2c-.2.2-.4.3-.6.3Z"
             />
           </svg>
         </div>
@@ -55,7 +55,7 @@ exports[`UserMenu 1`] = `
     </div>
      
     <div
-      class="dropdown svelte-1ep6rnf bottom right"
+      class="dropdown svelte-1w62t89 bottom right"
     >
       <div
         class="menu svelte-18fuj21"

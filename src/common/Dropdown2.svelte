@@ -198,4 +198,17 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.1);
   }
+
+  @media (max-width: 32rem) {
+    .dropdownContainer {
+      position: unset;
+    }
+    .dropdown.open,
+    .dropdown.left.open,
+    .dropdown.right.open {
+      left: 0;
+      right: 0;
+      width: 100vw;
+    }
+  }
 </style>

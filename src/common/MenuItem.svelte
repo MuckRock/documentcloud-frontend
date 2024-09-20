@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { CheckCircleFill16 } from "svelte-octicons";
+
   export let danger = false;
   export let selectable = true;
   export let primary = false;
@@ -31,7 +33,7 @@
   >
     <slot name="icon" />
     <span class="label"><slot>Define an item</slot></span>
-    {#if selected}<span class="scope">✓</span>{/if}
+    {#if selected}<CheckCircleFill16 />{/if}
   </a>
 {:else}
   <button
@@ -49,7 +51,7 @@
   >
     <slot name="icon" />
     <span class="label"><slot>Define an item</slot></span>
-    {#if selected}<span class="scope">✓</span>{/if}
+    {#if selected}<CheckCircleFill16 />{/if}
   </button>
 {/if}
 
@@ -62,6 +64,9 @@
     margin: 0;
     text-align: left;
     width: 100%;
+    text-decoration: none;
+    color: inherit;
+    font-weight: var(--font-semibold);
   }
 
   .item {

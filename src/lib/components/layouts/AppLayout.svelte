@@ -6,10 +6,11 @@
 
 <PlausibleTracker>
   <div class="container">
-    <Navigation />
-    <div class="inner">
-      <slot />
-    </div>
+    <Navigation>
+      <div class="inner">
+        <slot />
+      </div>
+    </Navigation>
     <Toaster />
   </div>
 </PlausibleTracker>

@@ -1,10 +1,8 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, ViewerMode } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Check16,
@@ -16,7 +14,6 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import {
     redactions,
     undo,
@@ -28,11 +25,17 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
+  import { remToPx } from "$lib/utils/layout";
+
   export let document: Document;
 
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-
+  let width: number;
   let confirmOpen = false;
+
+  $: BREAKPOINTS = {
+    SHOW_LABELS: width > remToPx(32),
+    X_SMALL: width < remToPx(24),
+  };
 
   function onCancel() {
     if ($redactions.length > 0) {
@@ -46,33 +49,54 @@
   }
 </script>
 
-<PageToolbar>
-  <Flex align="center" slot="left">
+<div class="toolbar" bind:clientWidth={width}>
+  <Flex align="center">
     <h3 class="title"><EyeClosed16 /> {$_("redact.title")}</h3>
     <Tooltip caption={$_("redact.instructions")}>
       <Question16 fill="var(--blue-3)" />
     </Tooltip>
   </Flex>
-  <Flex gap={0} justify="end" align="center" slot="right">
-    <Button ghost size="small" mode="danger" on:click={onCancel}>
+  <Flex gap={BREAKPOINTS.X_SMALL ? 0.5 : 1} justify="end" align="center">
+    <Button
+      ghost
+      size="small"
+      mode="danger"
+      title={$_("redact.cancel")}
+      minW={false}
+      on:click={onCancel}
+    >
       <X16 />
-      {$_("redact.cancel")}
+      {#if BREAKPOINTS.SHOW_LABELS}
+        {$_("redact.cancel")}
+      {/if}
     </Button>
     <Button
       size="small"
       ghost
       disabled={$redactions.length === 0}
+      title={$_("redact.undo")}
+      minW={false}
       on:click={undo}
     >
       <Undo16 />
-      {$_("redact.undo")}
+      {#if BREAKPOINTS.SHOW_LABELS}
+        {$_("redact.undo")}
+      {/if}
     </Button>
-    <Button size="small" mode="primary" on:click={() => (confirmOpen = true)}>
+    <Button
+      size="small"
+      mode="primary"
+      title={$_("redact.confirm")}
+      minW={!BREAKPOINTS.X_SMALL}
+      on:click={() => (confirmOpen = true)}
+    >
       <Check16 />
-      {$_("redact.confirm")}
+      {#if BREAKPOINTS.SHOW_LABELS}
+        {$_("redact.confirm")}
+      {/if}
     </Button>
   </Flex>
-</PageToolbar>
+</div>
 
 {#if confirmOpen}
   <Portal>
@@ -84,6 +108,9 @@
 {/if}
 
 <style>
+  .toolbar {
+    width: 100%;
+  }
   .title {
     font-weight: var(--font-semibold);
     font-size: var(--font-md);
