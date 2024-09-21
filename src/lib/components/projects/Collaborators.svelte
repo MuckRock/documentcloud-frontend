@@ -20,6 +20,7 @@
   let edit = false;
 
   function sort(users: ProjectUser[]) {
+    if (!users) return [];
     return users.sort(
       (a, b) =>
         a.access.localeCompare(b.access) ||

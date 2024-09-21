@@ -25,6 +25,10 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
 
+  import { getCurrentUser } from "$lib/utils/permissions";
+
+  const me = getCurrentUser();
+
   export let data;
 
   let create = false;
@@ -50,14 +54,16 @@
 <SidebarLayout>
   <svelte:fragment slot="navigation">
     <Flex direction="column">
-      <SidebarItem active={data.list === "owned"} href="?list=owned">
-        <Person16 />
-        {$_("projects.yours")}
-      </SidebarItem>
-      <SidebarItem active={data.list === "shared"} href="?list=shared">
-        <People16 />
-        {$_("projects.shared")}
-      </SidebarItem>
+      {#if $me}
+        <SidebarItem active={data.list === "owned"} href="?list=owned">
+          <Person16 />
+          {$_("projects.yours")}
+        </SidebarItem>
+        <SidebarItem active={data.list === "shared"} href="?list=shared">
+          <People16 />
+          {$_("projects.shared")}
+        </SidebarItem>
+      {/if}
       <SidebarItem active={data.list === "public"} href="?list=public">
         <Globe16 />
         {$_("projects.public")}
@@ -93,9 +99,11 @@
   </ContentLayout>
 
   <svelte:fragment slot="action">
-    <Button mode="primary" on:click={() => (create = true)}>
-      {$_("projects.create")}
-    </Button>
+    {#if $me}
+      <Button mode="primary" on:click={() => (create = true)}>
+        {$_("projects.create")}
+      </Button>
+    {/if}
   </svelte:fragment>
 </SidebarLayout>
 

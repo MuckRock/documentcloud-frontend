@@ -5,6 +5,8 @@
 <script lang="ts">
   import type { Project, ProjectUser } from "$lib/api/types";
 
+  import { goto } from "$app/navigation";
+
   import { _ } from "svelte-i18n";
   import {
     Alert16,
@@ -16,6 +18,7 @@
     PlusCircle16,
   } from "svelte-octicons";
 
+  import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
@@ -28,14 +31,12 @@
   import DeleteProject from "../forms/DeleteProject.svelte";
 
   import { projectSearchUrl } from "$lib/utils/search";
-  import Button from "../common/Button.svelte";
   import { uploadToProject } from "../forms/DocumentUpload.svelte";
-  import { goto } from "$app/navigation";
   import {
     canUploadFiles,
     getCurrentUser,
     isSignedIn,
-  } from "@/lib/utils/permissions";
+  } from "$lib/utils/permissions";
 
   export let project: Project;
   export let users: ProjectUser[];
