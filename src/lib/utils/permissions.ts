@@ -20,6 +20,7 @@ export function isSignedIn(user?: User | null): user is User {
 }
 
 /* Checks if the user can upload file. Must be verified journalist or staff. */
-export function canUploadFiles(user: User) {
+export function canUploadFiles(user?: User): boolean {
+  if (!user) return false;
   return user.verified_journalist || user.is_staff;
 }
