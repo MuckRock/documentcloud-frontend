@@ -13,7 +13,7 @@ exports[`UserMenu 1`] = `
       tabindex="0"
     >
       <span
-        class="container svelte-prcwhd"
+        class="sidebarItem container svelte-e7d4ct"
         role="button"
         tabindex="0"
         title="Open Menu"
@@ -30,13 +30,18 @@ exports[`UserMenu 1`] = `
         </div>
          
         <span
-          class="name svelte-q31ql1"
+          class="label svelte-e7d4ct"
         >
-          Chris Amico
+          <span
+            class="name svelte-q31ql1"
+          >
+            Chris Amico
+          </span>
         </span>
          
         <div
           class="dropdownArrow svelte-q31ql1"
+          slot="end"
         >
           <svg
             class="octicon octicon-chevron-down"
@@ -62,7 +67,7 @@ exports[`UserMenu 1`] = `
         role="menu"
       >
         <a
-          class="container svelte-prcwhd"
+          class="sidebarItem container svelte-e7d4ct"
           href="https://dev.squarelet.com"
           target="_blank"
           title=""
@@ -70,6 +75,7 @@ exports[`UserMenu 1`] = `
           <svg
             class="octicon octicon-gear"
             height="16"
+            slot="start"
             viewBox="0 0 16 16"
             width="16"
             xmlns="http://www.w3.org/2000/svg"
@@ -79,12 +85,17 @@ exports[`UserMenu 1`] = `
             />
           </svg>
            
-          Account settings
+          <span
+            class="label svelte-e7d4ct"
+          >
+            Account settings
+          </span>
+           
         </a>
         
          
         <span
-          class="container svelte-prcwhd hover"
+          class="sidebarItem container svelte-e7d4ct hover"
           role="button"
           tabindex="0"
           title=""
@@ -92,6 +103,7 @@ exports[`UserMenu 1`] = `
           <svg
             class="octicon octicon-paperclip"
             height="16"
+            slot="start"
             viewBox="0 0 16 16"
             width="16"
             xmlns="http://www.w3.org/2000/svg"
@@ -101,18 +113,24 @@ exports[`UserMenu 1`] = `
             />
           </svg>
            
-          Upload via email
+          <span
+            class="label svelte-e7d4ct"
+          >
+            Upload via email
+          </span>
+           
         </span>
         
          
         <a
-          class="container svelte-prcwhd"
+          class="sidebarItem container svelte-e7d4ct"
           href="https://api.dev.documentcloud.org/accounts/logout/"
           title=""
         >
           <svg
             class="octicon octicon-sign-out"
             height="16"
+            slot="start"
             viewBox="0 0 16 16"
             width="16"
             xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +140,12 @@ exports[`UserMenu 1`] = `
             />
           </svg>
            
-          Sign out
+          <span
+            class="label svelte-e7d4ct"
+          >
+            Sign out
+          </span>
+           
         </a>
         
       </div>
