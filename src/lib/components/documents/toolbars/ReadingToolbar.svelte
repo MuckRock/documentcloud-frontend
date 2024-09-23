@@ -128,7 +128,7 @@
       {/each}
     {/if}
     {#if BREAKPOINTS.SEARCH_MENU}
-      <Dropdown2 id="document-search" position="top left">
+      <Dropdown2 id="document-search" position="bottom right">
         <Button minW={false} ghost slot="title"
           ><Search16 /> {$_("common.search")}</Button
         >
