@@ -196,6 +196,7 @@
 
 <style>
   .container {
+    width: 100%;
     background: var(--gray-1);
     box-shadow: inset var(--shadow-2);
   }
