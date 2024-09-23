@@ -56,16 +56,16 @@
     <Flex direction="column">
       {#if $me}
         <SidebarItem active={data.list === "owned"} href="?list=owned">
-          <Person16 />
+          <Person16 slot="start" />
           {$_("projects.yours")}
         </SidebarItem>
         <SidebarItem active={data.list === "shared"} href="?list=shared">
-          <People16 />
+          <People16 slot="start" />
           {$_("projects.shared")}
         </SidebarItem>
       {/if}
       <SidebarItem active={data.list === "public"} href="?list=public">
-        <Globe16 />
+        <Globe16 slot="start" />
         {$_("projects.public")}
       </SidebarItem>
     </Flex>

@@ -32,20 +32,21 @@
 <SidebarGroup name="collaborators">
   <SidebarItem slot="title">
     {$_("projects.collaborators.title")}
-    {#if project.add_remove_access}
-      <Action
-        icon={Pencil16}
-        title={$_("projects.manage")}
-        on:click={() => (edit = true)}
-      >
-        <span class="sr-only">{$_("projects.manage")}</span>
-      </Action>
-    {/if}
   </SidebarItem>
+  {#if project.add_remove_access}
+    <Action
+      icon={Pencil16}
+      title={$_("projects.manage")}
+      on:click={() => (edit = true)}
+      slot="action"
+    >
+      <span class="sr-only">{$_("projects.manage")}</span>
+    </Action>
+  {/if}
 
   {#each sort(users) as user}
     <SidebarItem small>
-      <Avatar user={user.user} />
+      <Avatar user={user.user} slot="start" />
       {user.user.name} ({user.access})
     </SidebarItem>
   {:else}

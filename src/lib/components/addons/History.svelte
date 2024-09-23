@@ -41,7 +41,7 @@
 
 <SidebarGroup>
   <SidebarItem slot="title">
-    <History16 />
+    <History16 slot="start" />
     {$_("addonRuns.previous")}
   </SidebarItem>
 

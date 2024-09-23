@@ -22,8 +22,8 @@
 <!-- Help Menu -->
 <Dropdown id="help" {position}>
   <SidebarItem slot="title">
-    <Question24 />
-    <div class="dropdownArrow">
+    <Question24 slot="start" />
+    <div class="dropdownArrow" slot="end">
       {#if position.includes("bottom")}
         <ChevronDown12 />
       {:else}
@@ -33,27 +33,27 @@
   </SidebarItem>
   <Menu>
     <SidebarItem href="/help/faq/">
-      <CommentDiscussion16 />
+      <CommentDiscussion16 slot="start" />
       {$_("authSection.help.faq")}
     </SidebarItem>
     <SidebarItem href="/help/search/">
-      <Search16 />
+      <Search16 slot="start" />
       {$_("authSection.help.searchDocs")}
     </SidebarItem>
     <SidebarItem href="/help/api/">
-      <Code16 />
+      <Code16 slot="start" />
       {$_("authSection.help.apiDocs")}
     </SidebarItem>
     <SidebarItem href="/help/add-ons/">
-      <Plug16 />
+      <Plug16 slot="start" />
       {$_("authSection.help.addOns")}
     </SidebarItem>
     <SidebarItem href="/help/premium/">
-      <Premium />
+      <Premium slot="start" />
       {$_("authSection.help.premium")}
     </SidebarItem>
     <SidebarItem href="mailto:info@documentcloud.org" target="_blank">
-      <Mail16 />
+      <Mail16 slot="start" />
       {$_("authSection.help.emailUs")}
     </SidebarItem>
   </Menu>

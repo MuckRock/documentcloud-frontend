@@ -72,7 +72,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 <Dropdown {id} {position}>
   <SidebarItem slot="title" disabled={$selected?.length < 1}>
     {$_("bulk.title")}
-    <ChevronUp12 />
+    <ChevronUp12 slot="end" />
   </SidebarItem>
 
   <Menu>

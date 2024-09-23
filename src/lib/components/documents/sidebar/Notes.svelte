@@ -20,7 +20,7 @@
 
 <SidebarGroup name="notes">
   <SidebarItem slot="title">
-    <Note16 />
+    <Note16 slot="start" />
     {$_("sidebar.toc.notes")}
   </SidebarItem>
 

@@ -35,9 +35,9 @@
 
 <Dropdown id={dropdownId} {position}>
   <SidebarItem slot="title" title="Open Menu">
-    <Avatar {user} />
+    <Avatar {user} slot="start" />
     <span class="name">{user.name ?? user.username}</span>
-    <div class="dropdownArrow">
+    <div class="dropdownArrow" slot="end">
       {#if position.includes("bottom")}
         <ChevronDown12 />
       {:else}
@@ -47,7 +47,7 @@
   </SidebarItem>
   <Menu>
     <SidebarItem href={SQUARELET_BASE} target="_blank" on:click={close}>
-      <Gear16 />
+      <Gear16 slot="start" />
       {$_("authSection.user.acctSettings")}
     </SidebarItem>
     <SidebarItem
@@ -57,11 +57,11 @@
         close();
       }}
     >
-      <Paperclip16 />
+      <Paperclip16 slot="start" />
       {$_("authSection.user.uploadEmail")}
     </SidebarItem>
     <SidebarItem href={SIGN_OUT_URL} on:click={close}>
-      <SignOut16 />
+      <SignOut16 slot="start" />
       {$_("authSection.user.signOut")}
     </SidebarItem>
   </Menu>

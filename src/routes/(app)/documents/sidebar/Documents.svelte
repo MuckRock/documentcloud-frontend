@@ -40,7 +40,7 @@
 
 <Flex direction="column">
   <SidebarItem hover href={searchUrl("")} active={query === ""}>
-    <Infinity16 />
+    <Infinity16 slot="start" />
     {$_("documents.allDocuments", {
       values: { access: "" },
     })}
@@ -48,7 +48,7 @@
 
   <SignedIn>
     <SidebarItem hover href={searchUrl(mine)} active={query === mine}>
-      <DocumentIcon />
+      <DocumentIcon slot="start" />
       {$_("documents.yourDocuments")}
     </SidebarItem>
 
@@ -57,7 +57,7 @@
       href={searchUrl(minePublic)}
       active={query === minePublic}
     >
-      <Globe16 />
+      <Globe16 slot="start" />
       {$_("documents.accessDocuments", {
         values: { access: "Public " },
       })}
@@ -67,14 +67,14 @@
       href={searchUrl(minePrivate)}
       active={query === minePrivate}
     >
-      <Lock16 />
+      <Lock16 slot="start" />
       {$_("documents.accessDocuments", {
         values: { access: "Private " },
       })}
     </SidebarItem>
     {#if $org && !$org.individual}
       <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
-        <Organization16 />
+        <Organization16 slot="start" />
         {$_("documents.nameDocuments", {
           values: { name: $org.name, access: "" },
         })}
