@@ -18,11 +18,14 @@
   import { getUpgradeUrl, setOrg } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
   import { getCsrfToken } from "$lib/utils/api";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let active_org: Org;
   export let orgs: Org[] = [];
   export let users: User[] = [];
   export let position = "bottom right";
+
+  let width: number;
 
   $: isPremium = active_org.plan !== "Free";
   $: upgrade_url = getUpgradeUrl(active_org).href;
@@ -38,37 +41,42 @@
   }
 </script>
 
-<Dropdown id="org-menu" {position}>
-  {#if active_org.individual}
-    <SidebarItem slot="title">
-      <div class="premium">
-        <PremiumIcon />
-        {$_("authSection.premiumUpgrade.title")}
-      </div>
-    </SidebarItem>
-  {:else}
-    <SidebarItem slot="title">
-      <div class="avatar" slot="start">
-        <img
-          alt={$_("authSection.org.avatar", {
-            values: { name: active_org.name },
-          })}
-          src={active_org.avatar_url}
-        />
-      </div>
-      <p class="orgname hide-sm">{active_org.name}</p>
-      <div class="dropdownArrow" slot="end">
-        {#if position.includes("bottom")}
-          <ChevronDown12 />
-        {:else}
-          <ChevronUp12 />
-        {/if}
-      </div>
-    </SidebarItem>
-  {/if}
+<svelte:window bind:innerWidth={width} />
 
+<Dropdown id="org-menu" {position}>
+  <svelte:fragment slot="title">
+    {#if active_org.individual}
+      <SidebarItem>
+        <div class="premium">
+          <PremiumIcon />
+          {$_("authSection.premiumUpgrade.title")}
+        </div>
+      </SidebarItem>
+    {:else}
+      <SidebarItem>
+        <div class="avatar" slot="start">
+          <img
+            alt={$_("authSection.org.avatar", {
+              values: { name: active_org.name },
+            })}
+            src={active_org.avatar_url}
+          />
+        </div>
+        {#if width > remToPx(48)}<p class="orgname hide-sm">
+            {active_org.name}
+          </p>{/if}
+        <div class="dropdownArrow" slot="end">
+          {#if position.includes("bottom")}
+            <ChevronDown12 />
+          {:else}
+            <ChevronUp12 />
+          {/if}
+        </div>
+      </SidebarItem>
+    {/if}
+  </svelte:fragment>
   <Menu>
-    <div class="menu-inner">
+    <div class="menu-inner" class:sm={width <= remToPx(32)}>
       {#if isPremium}
         <MenuInsert>
           <CreditMeter
@@ -255,12 +263,12 @@
     opacity: 0.7;
   }
 
-  @media (max-width: 32rem) {
-    .hide-sm {
-      display: none;
-    }
-    .menu-inner {
-      font-size: var(--font-sm);
-    }
+  .menu-inner {
+    min-width: 24rem;
+  }
+
+  .menu-inner.sm {
+    min-width: unset;
+    font-size: var(--font-sm);
   }
 </style>

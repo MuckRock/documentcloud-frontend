@@ -128,6 +128,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .label:empty {
+    display: none;
+  }
 
   :global(.sidebarItem svg) {
     flex: 0 0 auto;

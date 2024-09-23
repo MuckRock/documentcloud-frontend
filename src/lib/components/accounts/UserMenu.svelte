@@ -18,9 +18,12 @@
 
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
   import Avatar from "./Avatar.svelte";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let user: User;
   export let position = "bottom right";
+
+  let width: number;
 
   const dropdownId = "user-menu";
   function close() {
@@ -33,10 +36,14 @@
   }
 </script>
 
+<svelte:window bind:innerWidth={width} />
+
 <Dropdown id={dropdownId} {position}>
   <SidebarItem slot="title" title="Open Menu">
     <Avatar {user} slot="start" />
-    <span class="name">{user.name ?? user.username}</span>
+    {#if width > remToPx(48)}
+      <span class="name">{user.name ?? user.username}</span>
+    {/if}
     <div class="dropdownArrow" slot="end">
       {#if position.includes("bottom")}
         <ChevronDown12 />
@@ -76,11 +83,5 @@
   .dropdownArrow {
     display: flex;
     align-items: center;
-  }
-
-  @media (max-width: 64rem) {
-    .name {
-      display: none;
-    }
   }
 </style>

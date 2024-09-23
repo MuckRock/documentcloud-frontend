@@ -10,6 +10,7 @@
   const document = doc as Document;
 
   import { addons } from "@/test/handlers/addons";
+  import { organizations, users } from "@/test/handlers/accounts";
 
   export const meta = {
     title: "Layout / App",
@@ -17,7 +18,7 @@
     parameters: {
       layout: "fullscreen",
       msw: {
-        handlers: [addons.data],
+        handlers: [addons.data, organizations.data, users.data],
       },
       sveltekit_experimental: {
         stores: {
