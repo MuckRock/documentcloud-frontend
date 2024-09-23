@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { Document, DocumentText, Project } from "$lib/api/types";
+  import { _ } from "svelte-i18n";
 
-  import Access from "../documents/Access.svelte";
+  import Access, { getLevel } from "../documents/Access.svelte";
   import Actions from "../documents/Actions.svelte";
   import Data from "../documents/Data.svelte";
   import DocumentHeader from "../documents/Header.svelte";
+  import DocumentMetadata from "../documents/Metadata.svelte";
   import Flex from "../common/Flex.svelte";
-  import Metadata from "../documents/Metadata.svelte";
+  import Metadata from "../common/Metadata.svelte";
   import Notes from "../documents/sidebar/Notes.svelte";
   import Projects from "../documents/Projects.svelte";
   import Viewer from "../documents/Viewer.svelte";
@@ -14,6 +16,8 @@
   import { pdfUrl } from "$lib/api/documents";
   import { getCurrentUser } from "@/lib/utils/permissions";
   import SidebarLayout from "./SidebarLayout.svelte";
+  import { isOrg } from "@/api/types/orgAndUser";
+  import Avatar from "../accounts/Avatar.svelte";
 
   const me = getCurrentUser();
 
@@ -42,10 +46,21 @@
   </article>
   <aside class="column between" slot="action">
     <Flex direction="column" gap={2}>
-      <Access {document} />
+      <div style="font-size: var(--font-xl)">
+        <Access level={getLevel(document.access)} />
+      </div>
+      {#if document.access === "organization" && isOrg(document.organization)}
+        <Metadata key={$_("sidebar.sharedWith")}>
+          <Flex>
+            <Avatar org={document.organization} />
+            {document.organization.name}
+          </Flex>
+        </Metadata>
+      {/if}
+
       <Actions {document} user={$me} {action} />
     </Flex>
-    <Metadata {document} />
+    <DocumentMetadata {document} />
   </aside>
 </SidebarLayout>
 
