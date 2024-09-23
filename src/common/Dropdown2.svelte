@@ -130,8 +130,6 @@
     position: relative;
     display: flex;
     align-items: center;
-  }
-  .dropdownContainer.open {
     z-index: var(--z-dropdown);
   }
   .title {
@@ -209,6 +207,7 @@
       left: 0;
       right: 0;
       width: 100vw;
+      z-index: var(--z-dropdown);
     }
   }
 </style>

@@ -29,12 +29,14 @@
   .toolbar {
     display: flex;
     width: 100%;
+    position: unset;
   }
 
   .left,
   .center,
   .right {
     flex: 1 0 0;
+    min-width: 0;
   }
 
   .left {
