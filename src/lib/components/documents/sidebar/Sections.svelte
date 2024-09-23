@@ -19,7 +19,7 @@
 
 <SidebarGroup name="sections">
   <SidebarItem slot="title">
-    <ListOrdered16 />
+    <ListOrdered16 slot="start" />
     {$_("sidebar.toc.sections")}
   </SidebarItem>
   <ol>

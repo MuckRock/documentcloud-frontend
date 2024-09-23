@@ -19,7 +19,7 @@
     {rel}
     {download}
     {title}
-    class="container"
+    class="sidebarItem container"
     class:active
     class:disabled
     class:small
@@ -27,12 +27,14 @@
     on:click
     on:keydown
   >
-    <slot />
+    <slot name="start" />
+    <span class="label"><slot /></span>
+    <slot name="end" />
   </a>
 {:else}
   <span
     {title}
-    class="container"
+    class="sidebarItem container"
     class:active
     class:hover
     class:disabled
@@ -43,13 +45,15 @@
     role="button"
     tabindex={0}
   >
-    <slot />
+    <slot name="start" />
+    <span class="label"><slot /></span>
+    <slot name="end" />
   </span>
 {/if}
 
 <style>
   .container {
-    width: 100%;
+    min-width: 0;
     display: flex;
     padding: 0.25rem 0.5rem;
     align-items: center;
@@ -117,5 +121,15 @@
     pointer-events: none;
     cursor: default;
     opacity: 0.5;
+  }
+
+  .label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global(.sidebarItem svg) {
+    flex: 0 0 auto;
   }
 </style>

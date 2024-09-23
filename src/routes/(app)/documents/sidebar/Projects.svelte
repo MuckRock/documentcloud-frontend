@@ -31,7 +31,7 @@
 
 <SidebarGroup name="projects">
   <SidebarItem slot="title">
-    <FileDirectory16 />{$_("sidebar.projects.title")}
+    <FileDirectory16 slot="start" />{$_("sidebar.projects.title")}
   </SidebarItem>
   <a href="/documents/projects/" slot="action">
     <Action icon={Book16}>{$_("common.explore")}</Action>
@@ -42,7 +42,7 @@
     {:then projects}
       {#each sort(projects) as project}
         <SidebarItem small href={canonicalUrl(project).href}>
-          <Pin active={project.pinned} />
+          <Pin active={project.pinned} slot="start" />
           {project.title}
         </SidebarItem>
       {:else}

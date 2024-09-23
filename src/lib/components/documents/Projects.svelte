@@ -27,7 +27,7 @@
 
 <SidebarGroup name="projects:viewer">
   <SidebarItem slot="title">
-    <FileDirectory16 />
+    <FileDirectory16 slot="start" />
     {$_("projects.header")}
   </SidebarItem>
   <div slot="action">

@@ -24,9 +24,9 @@
   <!-- Language Menu -->
   <Dropdown id="language" {position}>
     <SidebarItem slot="title">
-      <span class="flag">{currentLang[2]}</span>
+      <span class="flag" slot="start">{currentLang[2]}</span>
       <!-- <span class="lang">{currentLang[0]}</span> -->
-      <div class="dropdownArrow">
+      <div class="dropdownArrow" slot="end">
         {#if position.includes("bottom")}
           <ChevronDown12 />
         {:else}

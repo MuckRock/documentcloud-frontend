@@ -72,9 +72,9 @@
       <Dropdown id="sections" position="top left" --offset="5px">
         <div class="toolbarItem" slot="title">
           <SidebarItem>
-            <ListOrdered16 />
+            <ListOrdered16 slot="start" />
             Sections
-            <ChevronUp12 />
+            <ChevronUp12 slot="end" />
           </SidebarItem>
         </div>
         <Menu>
