@@ -24,7 +24,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--blue-2);"
       >
         <a
-          class="sidebarItem container svelte-dm9f91 active"
+          class="sidebarItem container svelte-xb9fwu active"
           href="/add-ons/"
           title=""
         >
@@ -43,7 +43,7 @@ exports[`AddOnsNavigation 1`] = `
           </svg>
            
           <span
-            class="label svelte-dm9f91"
+            class="label svelte-xb9fwu"
           >
             All
           </span>
@@ -56,7 +56,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--orange-2);"
       >
         <a
-          class="sidebarItem container svelte-dm9f91"
+          class="sidebarItem container svelte-xb9fwu"
           href="/add-ons/?active=true"
           title=""
         >
@@ -80,7 +80,7 @@ exports[`AddOnsNavigation 1`] = `
           </div>
            
           <span
-            class="label svelte-dm9f91"
+            class="label svelte-xb9fwu"
           >
             Pinned
           </span>
@@ -93,7 +93,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--yellow-2);"
       >
         <a
-          class="sidebarItem container svelte-dm9f91"
+          class="sidebarItem container svelte-xb9fwu"
           href="/add-ons/?featured=true"
           title=""
         >
@@ -112,7 +112,7 @@ exports[`AddOnsNavigation 1`] = `
           </svg>
            
           <span
-            class="label svelte-dm9f91"
+            class="label svelte-xb9fwu"
           >
             Featured
           </span>
@@ -125,7 +125,7 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --hover-background: var(--green-2);"
       >
         <a
-          class="sidebarItem container svelte-dm9f91"
+          class="sidebarItem container svelte-xb9fwu"
           href="/add-ons/?premium=true"
           title=""
         >
@@ -155,7 +155,7 @@ exports[`AddOnsNavigation 1`] = `
           </div>
            
           <span
-            class="label svelte-dm9f91"
+            class="label svelte-xb9fwu"
           >
             Premium
           </span>
@@ -172,14 +172,14 @@ exports[`AddOnsNavigation 1`] = `
         style="display: contents; --color: var(--gray-4);"
       >
         <span
-          class="sidebarItem container svelte-dm9f91 small"
+          class="sidebarItem container svelte-xb9fwu small"
           role="button"
           tabindex="0"
           title=""
         >
            
           <span
-            class="label svelte-dm9f91"
+            class="label svelte-xb9fwu"
           >
             Collections
           </span>
@@ -189,13 +189,13 @@ exports[`AddOnsNavigation 1`] = `
       </div>
        
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=ai"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           AI
            
@@ -204,13 +204,13 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=statistical"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           Analyze
            
@@ -219,13 +219,13 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=bulk"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           Bulk
            
@@ -234,13 +234,13 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=export"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           Export
            
@@ -249,13 +249,13 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=extraction"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           Extract
            
@@ -264,13 +264,13 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=file"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           File
            
@@ -279,13 +279,13 @@ exports[`AddOnsNavigation 1`] = `
       </a>
       
       <a
-        class="sidebarItem container svelte-dm9f91"
+        class="sidebarItem container svelte-xb9fwu"
         href="/add-ons/?category=monitor"
         title=""
       >
          
         <span
-          class="label svelte-dm9f91"
+          class="label svelte-xb9fwu"
         >
           Monitor
            
