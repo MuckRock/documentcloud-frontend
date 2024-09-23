@@ -102,6 +102,7 @@
           properties={addon.parameters.properties}
           required={addon.parameters.required}
           eventOptions={addon.parameters.eventOptions}
+          {disablePremium}
         >
           <svelte:fragment slot="selection">
             {#await search then results}
