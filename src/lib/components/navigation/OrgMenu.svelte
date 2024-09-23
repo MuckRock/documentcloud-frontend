@@ -39,14 +39,16 @@
 </script>
 
 <Dropdown id="org-menu" {position}>
-  <SidebarItem slot="title">
-    {#if active_org.individual}
+  {#if active_org.individual}
+    <SidebarItem slot="title">
       <div class="premium">
         <PremiumIcon />
         {$_("authSection.premiumUpgrade.title")}
       </div>
-    {:else}
-      <div class="avatar">
+    </SidebarItem>
+  {:else}
+    <SidebarItem slot="title">
+      <div class="avatar" slot="start">
         <img
           alt={$_("authSection.org.avatar", {
             values: { name: active_org.name },
@@ -54,16 +56,16 @@
           src={active_org.avatar_url}
         />
       </div>
-      <p class="organization">{active_org.name}</p>
-      <div class="dropdownArrow">
+      <p class="orgname hide-sm">{active_org.name}</p>
+      <div class="dropdownArrow" slot="end">
         {#if position.includes("bottom")}
           <ChevronDown12 />
         {:else}
           <ChevronUp12 />
         {/if}
       </div>
-    {/if}
-  </SidebarItem>
+    </SidebarItem>
+  {/if}
 
   <Menu>
     <div class="menu-inner">
@@ -112,12 +114,14 @@
                 {href}
                 on:click={(e) => closeDropdown("organization")}
               >
-                {#if user.avatar_url}
-                  <img src={user.avatar_url} class="avatar" alt="" />
-                {:else}
-                  <span class="icon"><Person16 /></span>
-                {/if}
-                <span class="name">{user.name}</span>
+                <svelte:fragment slot="start">
+                  {#if user.avatar_url}
+                    <img src={user.avatar_url} class="avatar" alt="" />
+                  {:else}
+                    <span class="icon"><Person16 /></span>
+                  {/if}
+                </svelte:fragment>
+                <span class="username">{user.name}</span>
                 {#if user.admin_organizations.includes(active_org.id)}
                   <span class="badge">{$_("authSection.org.adminRole")}</span>
                 {/if}
@@ -133,7 +137,7 @@
         </p>
         <Dropdown id="org-switch">
           <SidebarItem slot="title">
-            <div class="avatar">
+            <div class="avatar" slot="start">
               <img
                 alt={$_("authSection.org.avatar", {
                   values: { name: active_org.name },
@@ -141,8 +145,8 @@
                 src={active_org.avatar_url}
               />
             </div>
-            <p class="organization">{active_org.name}</p>
-            <span class="arrow"><ChevronDown12 /></span>
+            <p class="orgname">{active_org.name}</p>
+            <span class="arrow" slot="end"><ChevronDown12 /></span>
           </SidebarItem>
           <Menu>
             {#each orgs as org}
@@ -186,7 +190,7 @@
     width: 100%;
   }
 
-  .organization {
+  .orgname {
     color: var(--black, #233944);
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-semibold, 600);
@@ -228,7 +232,7 @@
     justify-content: center;
   }
 
-  .name {
+  .username {
     flex: 1 1 auto;
     font-size: var(--font-sm);
     font-weight: var(--font-regular);
@@ -252,7 +256,7 @@
   }
 
   @media (max-width: 32rem) {
-    .organization {
+    .hide-sm {
       display: none;
     }
     .menu-inner {

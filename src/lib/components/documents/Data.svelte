@@ -29,7 +29,7 @@
 
 <SidebarGroup name="projects:viewer">
   <SidebarItem slot="title">
-    <Tag16 />
+    <Tag16 slot="start" />
     {$_("sidebar.data.title")}
   </SidebarItem>
   <div slot="action">

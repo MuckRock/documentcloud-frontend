@@ -42,7 +42,7 @@
   --color="var(--gray-5)"
   --font-size="var(--font-lg)"
 >
-  <svelte:component this={access.icon} />
+  <svelte:component this={access.icon} slot="start" />
   {access.title}
 </SidebarItem>
 {#if document.access === "organization" && isOrg(document.organization)}

@@ -31,24 +31,24 @@
     disabled={$selected?.length !== 1}
     on:click={(e) => (share = true)}
   >
-    <Share16 />{$_("dialog.share")} &hellip;
+    <Share16 slot="start" />{$_("dialog.share")} &hellip;
   </SidebarItem>
   <SidebarItem
     hover
     disabled={$selected?.length < 1}
     on:click={(e) => (edit = true)}
   >
-    <Pencil16 />{$_("dialog.edit")} &hellip;
+    <Pencil16 slot="start" />{$_("dialog.edit")} &hellip;
   </SidebarItem>
   <SidebarItem
     hover
     disabled={$selected?.length < 1}
     on:click={(e) => (organize = true)}
   >
-    <FileDirectory16 />{$_("dialog.organize")} &hellip;
+    <FileDirectory16 slot="start" />{$_("dialog.organize")} &hellip;
   </SidebarItem>
   <SidebarItem hover href="/add-ons/">
-    <Plug16 />{$_("dialog.run")} &hellip;
+    <Plug16 slot="start" />{$_("dialog.run")} &hellip;
   </SidebarItem>
 </Flex>
 

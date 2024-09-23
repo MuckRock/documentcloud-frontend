@@ -71,18 +71,18 @@
 
   {#if project.edit_access}
     <SidebarItem hover on:click={() => (show = "edit")}>
-      <Pencil16 />{$_("sidebar.edit")}
+      <Pencil16 slot="start" />{$_("sidebar.edit")}
     </SidebarItem>
   {/if}
 
   {#if project.add_remove_access}
     <SidebarItem hover on:click={() => (show = "users")}>
-      <People16 />{$_("sidebar.collaborate")}
+      <People16 slot="start" />{$_("sidebar.collaborate")}
     </SidebarItem>
   {/if}
 
   <SidebarItem hover on:click={() => (show = "share")}>
-    <Share16 />{$_("sidebar.shareEmbed")}
+    <Share16 slot="start" />{$_("sidebar.shareEmbed")}
   </SidebarItem>
 
   {#if project.edit_access}
@@ -92,7 +92,7 @@
       --fill="var(--caution)"
       on:click={() => (show = "delete")}
     >
-      <Alert16 />
+      <Alert16 slot="start" />
       {$_("projects.delete.action")}
     </SidebarItem>
   {/if}
@@ -101,7 +101,7 @@
 <hr class="divider" />
 
 <SidebarItem href={projectSearchUrl(project)}>
-  <Search16 />{$_("projects.viewInSearch")}
+  <Search16 slot="start" />{$_("projects.viewInSearch")}
 </SidebarItem>
 
 {#if show}

@@ -5,7 +5,8 @@
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import ContentLayout from "../layouts/ContentLayout.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   // modes
   import Notes from "./Notes.svelte";
@@ -22,6 +23,9 @@
   // utils
   import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
   import { pdfUrl } from "$lib/api/documents";
+  import Button from "../common/Button.svelte";
+  import { SidebarExpand16 } from "svelte-octicons";
+  import Flex from "../common/Flex.svelte";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
@@ -37,7 +41,20 @@
 <div class="container">
   <ContentLayout>
     <!-- toolbars -->
-    <div slot="header">
+    <Flex slot="header">
+      {#if $sidebars["navigation"] === false}
+        <div class="toolbar w-auto">
+          <Button
+            ghost
+            minW={false}
+            on:click={() => ($sidebars["navigation"] = true)}
+          >
+            <span class="flipV">
+              <SidebarExpand16 />
+            </span>
+          </Button>
+        </div>
+      {/if}
       {#if mode === "annotating"}
         <AnnotationToolbar />
       {:else if mode === "redacting"}
@@ -45,7 +62,18 @@
       {:else}
         <ReadingToolbar {document} {query} />
       {/if}
-    </div>
+      {#if $sidebars["action"] === false}
+        <div class="toolbar w-auto">
+          <Button
+            ghost
+            minW={false}
+            on:click={() => ($sidebars["action"] = true)}
+          >
+            <SidebarExpand16 />
+          </Button>
+        </div>
+      {/if}
+    </Flex>
 
     <!-- content -->
     {#if showPDF}
@@ -69,5 +97,9 @@
   .container {
     height: 100%;
     min-height: 100%;
+  }
+  .flipV {
+    display: flex;
+    transform: rotate(180deg);
   }
 </style>

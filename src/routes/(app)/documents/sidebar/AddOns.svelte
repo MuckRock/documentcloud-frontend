@@ -16,7 +16,9 @@
 </script>
 
 <SidebarGroup name="addons">
-  <SidebarItem slot="title"><Plug16 />{$_("sidebar.addons.title")}</SidebarItem>
+  <SidebarItem slot="title"
+    ><Plug16 slot="start" />{$_("sidebar.addons.title")}</SidebarItem
+  >
   <a href="/add-ons/" slot="action">
     <Action icon={Book16}>{$_("common.explore")}</Action>
   </a>
@@ -26,7 +28,7 @@
     {:then addons}
       {#each addons.results as addon}
         <SidebarItem small href="/add-ons/{addon.repository}/">
-          <Pin active={addon.active} />
+          <Pin active={addon.active} slot="start" />
           {addon.name}
         </SidebarItem>
       {:else}

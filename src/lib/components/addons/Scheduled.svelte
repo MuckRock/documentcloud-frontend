@@ -39,7 +39,7 @@
 
 <SidebarGroup>
   <SidebarItem slot="title">
-    <Clock16 />
+    <Clock16 slot="start" />
     {$_("addonRuns.scheduled")}
   </SidebarItem>
 

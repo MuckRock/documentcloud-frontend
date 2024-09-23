@@ -27,17 +27,19 @@
 
 <Story name="With Items">
   <SidebarGroup>
-    <SidebarItem slot="title"><FileDirectory16 /> Project</SidebarItem>
+    <SidebarItem slot="title"
+      ><FileDirectory16 slot="start" /> Project</SidebarItem
+    >
     <Action slot="action" icon={Book16}>Explore</Action>
     <Flex direction="column" gap={0}>
       <SidebarItem small href="/project/1">
-        <Pin active /> Oldest Computer
+        <Pin active slot="start" /> Oldest Computer
       </SidebarItem>
       <SidebarItem small href="/project/2">
-        <Pin active /> FBI Files
+        <Pin active slot="start" /> FBI Files
       </SidebarItem>
       <SidebarItem small href="/project/3">
-        <Pin active /> 1033 Project
+        <Pin active slot="start" /> 1033 Project
       </SidebarItem>
     </Flex>
   </SidebarGroup>
@@ -46,7 +48,9 @@
 <Story name="Empty">
   <div style="width: 18rem">
     <SidebarGroup>
-      <SidebarItem slot="title"><ListOrdered16 /> Sections</SidebarItem>
+      <SidebarItem slot="title"
+        ><ListOrdered16 slot="start" /> Sections</SidebarItem
+      >
       <Action slot="action" icon={Pencil16}>Edit</Action>
       <EmptyComponent icon={ListOrdered16}>
         Sections organize your document with a table of contents
@@ -58,17 +62,19 @@
 <Story name="Remember collapsed state">
   <p>Refresh to check that <code>collapsed</code> state persists</p>
   <SidebarGroup name="storybook-files">
-    <SidebarItem slot="title"><FileDirectory16 /> Project</SidebarItem>
+    <SidebarItem slot="title"
+      ><FileDirectory16 slot="start" /> Project</SidebarItem
+    >
     <Action slot="action" icon={Book16}>Explore</Action>
     <Flex direction="column" gap={0}>
       <SidebarItem small href="/project/1">
-        <Pin active /> Oldest Computer
+        <Pin active slot="start" /> Oldest Computer
       </SidebarItem>
       <SidebarItem small href="/project/2">
-        <Pin active /> FBI Files
+        <Pin active slot="start" /> FBI Files
       </SidebarItem>
       <SidebarItem small href="/project/3">
-        <Pin active /> 1033 Project
+        <Pin active slot="start" /> 1033 Project
       </SidebarItem>
     </Flex>
   </SidebarGroup>

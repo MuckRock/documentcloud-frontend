@@ -84,9 +84,9 @@
       <Dropdown2 id="reading-mode" position="bottom left">
         <div class="toolbarItem" slot="title">
           <SidebarItem>
-            <svelte:component this={icons[$mode]} />
+            <svelte:component this={icons[$mode]} slot="start" />
             {Array.from(readModes).find(([value]) => value === $mode)[1]}
-            <ChevronDown12 />
+            <ChevronDown12 slot="end" />
           </SidebarItem>
         </div>
         <Menu>
