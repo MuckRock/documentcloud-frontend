@@ -141,13 +141,13 @@
     padding: 1rem 0.5rem;
     max-height: 100%;
     overflow-y: auto;
-    box-shadow: var(--shadow-1);
     z-index: 1;
   }
   main {
     max-height: 100%;
     overflow-y: auto;
     background: var(--gray-1);
+    box-shadow: inset var(--shadow-2);
   }
   .history {
     max-width: unset;
@@ -156,6 +156,8 @@
     gap: 2rem;
   }
   .container {
+    max-width: var(--app-max-w, 100rem);
+    margin: 0 auto;
     max-height: 100%;
     display: grid;
     grid-template-columns: 16rem 2fr 40%;
