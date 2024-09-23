@@ -5,6 +5,8 @@
   import { _ } from "svelte-i18n";
   import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
+  import DocAccess, { getLevel } from "../documents/Access.svelte";
+  import Flex from "../common/Flex.svelte";
   import KV from "../common/KV.svelte";
   import NoteTab from "./NoteTab.svelte";
 
@@ -42,6 +44,7 @@
   $: hasPrivateNotes = document.notes?.some(
     (note) => note.access === "private",
   );
+  $: level = getLevel(document.access);
 
   $: tabs = [
     hasPublicNotes && ("public" as Access),
@@ -63,28 +66,21 @@
 This is a list item showing one document. 
 It's deliberately minimal and can be wrapped in other components to add additional functionality.
 -->
-<div class="document-list-item">
+<a href={canonicalUrl(document).toString()} class="document-list-item">
   <div class="thumbnail">
-    <a href={canonicalUrl(document).toString()}>
-      {#if document.status === "success" || document.status === "readable"}
-        <img
-          src={pageImageUrl(document, 1, "thumbnail").toString()}
-          alt="Page 1, {document.title}"
-          width="{width}px"
-          height="{height}px"
-          loading="lazy"
-          on:error={onError}
-        />
-      {:else}
-        <div class="fallback {document.status}">
-          <svelte:component this={statusIcons[document.status]} />
-        </div>
-      {/if}
-    </a>
-    {#if document.notes && document.notes.length > 0}
-      <p class="notes">
-        {$_("documents.noteCount", { values: { n: document.notes.length } })}
-      </p>
+    {#if document.status === "success" || document.status === "readable"}
+      <img
+        src={pageImageUrl(document, 1, "thumbnail").toString()}
+        alt="Page 1, {document.title}"
+        width="{width}px"
+        height="{height}px"
+        loading="lazy"
+        on:error={onError}
+      />
+    {:else}
+      <div class="fallback {document.status}">
+        <svelte:component this={statusIcons[document.status]} />
+      </div>
     {/if}
 
     {#if tabs.length > 0}
@@ -100,6 +96,11 @@ It's deliberately minimal and can be wrapped in other components to add addition
     <h3>{document.title}</h3>
     <p class="meta">
       {$_("documents.pageCount", { values: { n: document.page_count } })} -
+      {#if document.notes && document.notes.length > 0}{$_(
+          "documents.noteCount",
+          { values: { n: document.notes.length } },
+        )} -
+      {/if}
       {#if userOrgString(document)}{userOrgString(document)} -
       {/if}
       {date}
@@ -109,17 +110,18 @@ It's deliberately minimal and can be wrapped in other components to add addition
         {clean(document.description)}
       </p>
     {/if}
-    <div class="actions">
-      <a href={canonicalUrl(document).toString()} class="open"
-        >{$_("documents.open")}</a
-      >
-
+    <Flex align="center" gap={0.625} class="actions">
+      {#if level}
+        <div style="font-size: var(--font-sm)">
+          <DocAccess {level} />
+        </div>
+      {/if}
       {#each projects as project}
         <KV key="Project" value={project.title} />
       {/each}
-    </div>
+    </Flex>
   </div>
-</div>
+</a>
 
 <style>
   .document-list-item {
@@ -130,6 +132,16 @@ It's deliberately minimal and can be wrapped in other components to add addition
     align-items: center;
     align-self: stretch;
     gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    color: inherit;
+    text-decoration: none;
+    background-color: transparent;
+  }
+
+  .document-list-item:hover,
+  .document-list-item:focus {
+    background-color: var(--blue-1);
   }
 
   .thumbnail {
@@ -145,11 +157,6 @@ It's deliberately minimal and can be wrapped in other components to add addition
     border: 1px solid var(--gray-2, #cbcbcb);
     background: var(--white, #fff);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
-  }
-
-  .thumbnail p {
-    color: var(--gray-5);
-    font-size: var(--font-xs);
   }
 
   .thumbnail .tabs {
@@ -202,22 +209,6 @@ It's deliberately minimal and can be wrapped in other components to add addition
     white-space: nowrap;
     max-width: 100ch;
     width: 100%;
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    align-self: stretch;
-  }
-
-  .open {
-    color: var(--primary, #4294f0);
-    font-size: var(--font-xs, 0.75rem);
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    text-transform: uppercase;
   }
 
   .fallback {

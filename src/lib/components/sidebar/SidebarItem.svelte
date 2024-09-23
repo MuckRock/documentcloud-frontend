@@ -57,7 +57,7 @@
     display: flex;
     padding: 0.25rem 0.5rem;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.5em;
     border-radius: 0.25rem;
     border: none;
 
@@ -66,7 +66,7 @@
     background: var(--background, transparent);
 
     font-family: var(--font-sans, "Source Sans Pro");
-    font-size: var(--font-size, var(--font-md, 1rem));
+    font-size: var(--font-size, inherit);
     font-weight: var(--font-semibold, 600);
     text-decoration: none;
     white-space: nowrap;
