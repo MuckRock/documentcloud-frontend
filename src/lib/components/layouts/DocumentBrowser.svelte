@@ -91,108 +91,116 @@
   }
 </script>
 
-<Dropzone {onDrop} disabled={!canUploadFiles($me)} let:active let:disabled>
-  <div class:active class:disabled class="dropOverlay">
-    <Empty
-      icon={Upload24}
-      --color="var(--blue-5)"
-      --fill="var(--blue-4)"
-      --font-size="var(--font-md)"
-      >{$_("documentBrowser.dropToUpload")}
-    </Empty>
-  </div>
-  <ContentLayout>
-    <svelte:fragment slot="header">
-      <Flex>
-        {#if $sidebars["navigation"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              on:click={() => ($sidebars["navigation"] = true)}
-            >
-              <span class="flipV">
-                <SidebarExpand16 />
-              </span>
-            </Button>
-          </div>
-        {/if}
-        <PageToolbar>
-          <Flex slot="right">
-            <div style:flex="1 1 auto">
-              <Search name="q" {query} placeholder={uiText.search} />
-            </div>
-          </Flex>
-        </PageToolbar>
-        {#if $sidebars["action"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              on:click={() => ($sidebars["action"] = true)}
-            >
-              <SidebarExpand16 />
-            </Button>
-          </div>
-        {/if}
-      </Flex>
-    </svelte:fragment>
-    {#await documents}
-      <Empty icon={Hourglass24}>{uiText.loading}</Empty>
-    {:then documentsResults}
-      {#if !query && !documentsResults.results?.length}
-        <Empty icon={FileDirectory24}>{uiText.empty}</Empty>
-      {:else}
-        <ResultsList
-          results={documentsResults.results}
-          next={documentsResults.next}
-          count={documentsResults.count}
-          auto
-        >
-          <svelte:fragment slot="start">
-            {#await pending then p}
-              <PendingDocs pending={p} />
-            {/await}
-          </svelte:fragment>
-        </ResultsList>
-      {/if}
-    {:catch}
-      <Error>{uiText.error}</Error>
-    {/await}
-    <div class="toolbar" slot="footer" bind:clientWidth={width}>
-      <Flex>
-        <SidebarItem>
-          <label class="select-all">
-            <input
-              type="checkbox"
-              name="select_all"
-              checked={$selected.length > 0 &&
-                $selected.length === $visible.size}
-              indeterminate={$selected.length > 0 &&
-                $selected.length < $visible.size}
-              on:change={selectAll}
-            />
-            {#if $selected.length > 0}
-              {$selected.length.toLocaleString()} {$_("inputs.selected")}
-            {:else}
-              {$_("inputs.selectAll")}
-            {/if}
-          </label>
-        </SidebarItem>
-        <BulkActions />
-      </Flex>
-      {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
-        <p class="resultsCount">
-          {$_("inputs.resultsCount", {
-            values: { n: $visible.size, total: $total },
-          })}
-        </p>
-      {/if}
+<div class="container">
+  <Dropzone {onDrop} disabled={!canUploadFiles($me)} let:active let:disabled>
+    <div class:active class:disabled class="dropOverlay">
+      <Empty
+        icon={Upload24}
+        --color="var(--blue-5)"
+        --fill="var(--blue-4)"
+        --font-size="var(--font-md)"
+        >{$_("documentBrowser.dropToUpload")}
+      </Empty>
     </div>
-  </ContentLayout>
-</Dropzone>
+    <ContentLayout>
+      <svelte:fragment slot="header">
+        <Flex>
+          {#if $sidebars["navigation"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                on:click={() => ($sidebars["navigation"] = true)}
+              >
+                <span class="flipV">
+                  <SidebarExpand16 />
+                </span>
+              </Button>
+            </div>
+          {/if}
+          <PageToolbar>
+            <Flex slot="right">
+              <div style:flex="1 1 auto">
+                <Search name="q" {query} placeholder={uiText.search} />
+              </div>
+            </Flex>
+          </PageToolbar>
+          {#if $sidebars["action"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                on:click={() => ($sidebars["action"] = true)}
+              >
+                <SidebarExpand16 />
+              </Button>
+            </div>
+          {/if}
+        </Flex>
+      </svelte:fragment>
+      {#await documents}
+        <Empty icon={Hourglass24}>{uiText.loading}</Empty>
+      {:then documentsResults}
+        {#if !query && !documentsResults.results?.length}
+          <Empty icon={FileDirectory24}>{uiText.empty}</Empty>
+        {:else}
+          <ResultsList
+            results={documentsResults.results}
+            next={documentsResults.next}
+            count={documentsResults.count}
+            auto
+          >
+            <svelte:fragment slot="start">
+              {#await pending then p}
+                <PendingDocs pending={p} />
+              {/await}
+            </svelte:fragment>
+          </ResultsList>
+        {/if}
+      {:catch}
+        <Error>{uiText.error}</Error>
+      {/await}
+      <div class="toolbar" slot="footer" bind:clientWidth={width}>
+        <Flex>
+          <SidebarItem>
+            <label class="select-all">
+              <input
+                type="checkbox"
+                name="select_all"
+                checked={$selected.length > 0 &&
+                  $selected.length === $visible.size}
+                indeterminate={$selected.length > 0 &&
+                  $selected.length < $visible.size}
+                on:change={selectAll}
+              />
+              {#if $selected.length > 0}
+                {$selected.length.toLocaleString()} {$_("inputs.selected")}
+              {:else}
+                {$_("inputs.selectAll")}
+              {/if}
+            </label>
+          </SidebarItem>
+          <BulkActions />
+        </Flex>
+        {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
+          <p class="resultsCount">
+            {$_("inputs.resultsCount", {
+              values: { n: $visible.size, total: $total },
+            })}
+          </p>
+        {/if}
+      </div>
+    </ContentLayout>
+  </Dropzone>
+</div>
 
 <style>
+  .container {
+    width: 100%;
+    background: var(--gray-1);
+    box-shadow: inset var(--shadow-2);
+  }
+
   label.select-all {
     align-items: center;
     align-self: stretch;

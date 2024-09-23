@@ -11,9 +11,15 @@
   import { _ } from "svelte-i18n";
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let document: Document;
 
+  let width: number;
+
+  $: BREAKPOINTS = {
+    TWO_COLUMN: width > remToPx(48),
+  };
   $: description = document.description?.trim()
     ? clean(document.description)
     : "";
@@ -23,7 +29,7 @@
   }
 </script>
 
-<header>
+<header bind:clientWidth={width} class:twoColumn={BREAKPOINTS.TWO_COLUMN}>
   <h1>{document.title}</h1>
   {#if description}
     <div class="description">
@@ -41,14 +47,19 @@
     line-height: 1.2;
   }
   header {
+    margin: 0 auto;
     max-width: 64rem;
     display: flex;
     flex-direction: column;
     gap: 1rem 0;
   }
   .description {
-    columns: 2;
+    line-height: 1.4;
     color: var(--gray-5);
+  }
+  .twoColumn .description {
+    columns: 2;
+    column-gap: 1rem;
   }
   :global(.description > *) {
     margin-bottom: 1rem;

@@ -41,10 +41,6 @@
     max-height: 100%;
     max-width: 100%;
     overflow-y: auto;
-
-    background: var(--gray-1);
-    border: 1px solid var(--gray-2);
-    box-shadow: inset var(--shadow-2);
   }
 
   .content {

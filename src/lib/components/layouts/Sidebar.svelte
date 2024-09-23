@@ -91,6 +91,8 @@
     max-height: 100%;
     overflow-y: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   header {
@@ -124,6 +126,8 @@
     flex-direction: column;
     position: relative;
     gap: 1rem;
+    height: 100%;
+    z-index: 0;
   }
 
   .icon {

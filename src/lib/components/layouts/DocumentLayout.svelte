@@ -13,6 +13,7 @@
 
   import { pdfUrl } from "$lib/api/documents";
   import { getCurrentUser } from "@/lib/utils/permissions";
+  import SidebarLayout from "./SidebarLayout.svelte";
 
   const me = getCurrentUser();
 
@@ -25,13 +26,13 @@
   $: projects = (document.projects ?? []) as Project[];
 </script>
 
-<div class="container">
-  <nav class="column">
+<SidebarLayout>
+  <nav class="column" slot="navigation">
     <Projects {projects} {document} />
     <Data {document} />
     <Notes {document} />
   </nav>
-  <article>
+  <article slot="content">
     <header>
       <DocumentHeader {document} />
     </header>
@@ -39,14 +40,14 @@
       <Viewer {document} {asset_url} {text} {query} />
     </main>
   </article>
-  <aside class="column between">
+  <aside class="column between" slot="action">
     <Flex direction="column" gap={2}>
       <Access {document} />
       <Actions {document} user={$me} {action} />
     </Flex>
     <Metadata {document} />
   </aside>
-</div>
+</SidebarLayout>
 
 <style>
   .container {
@@ -60,7 +61,7 @@
   }
 
   header {
-    padding: 2rem 1.5rem 1rem;
+    padding: 1rem;
   }
 
   article {
@@ -88,6 +89,8 @@
     flex: 1 0 0;
     min-width: 16rem;
     max-width: 18rem;
+    height: 100%;
+    min-height: 100%;
 
     display: flex;
     flex-direction: column;
@@ -98,9 +101,6 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    max-height: 100%;
-    padding: 4rem 1rem 1rem;
-    overflow-y: auto;
   }
 
   .between {
