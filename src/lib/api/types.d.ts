@@ -33,11 +33,18 @@ export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "width" | "height";
 
-export interface APIError {
-  error: {
-    status: number;
-    message: string;
-  };
+export interface APIError<E> {
+  status: number;
+  message: string;
+  errors?: E;
+}
+
+/**
+ * Wrap an API response so we can pass errors along
+ */
+export interface APIResponse<T, E> {
+  data?: T;
+  error?: APIError<E>;
 }
 
 export interface NoteHighlight {

@@ -1,5 +1,6 @@
 import type { NumericRange } from "@sveltejs/kit";
 import type { Page } from "@/api/types";
+import type { APIError, APIResponse } from "$lib/api/types";
 import { CSRF_COOKIE_NAME, MAX_PER_PAGE } from "@/config/config";
 
 export function isErrorCode(status: number): status is NumericRange<400, 599> {
@@ -10,6 +11,47 @@ export function isRedirectCode(
   status: number,
 ): status is NumericRange<300, 308> {
   return status >= 300 && status <= 308;
+}
+
+/**
+ * Handle what comes back from the API and return either data or errors.
+ *
+ * Two generic types are passed through:
+ *
+ * - T is data from the API
+ * - E is an error coming back from the API
+ *
+ * @param resp The fetch response from the API. If this is missing, fetch
+ * threw an error and we should send a 500 to the user because the API is
+ * probably down.
+ */
+export async function getApiResponse<T, E>(
+  resp?: Response,
+): Promise<APIResponse<T, E>> {
+  const response: APIResponse<T, E> = {};
+
+  if (!resp) {
+    response.error = {
+      status: 500,
+      message: "API error",
+    };
+
+    return response;
+  }
+
+  if (isErrorCode(resp.status)) {
+    response.error = {
+      status: resp.status,
+      message: resp.statusText,
+      errors: await resp.json(),
+    };
+
+    return response;
+  }
+
+  // everything worked
+  response.data = await resp.json();
+  return response;
 }
 
 /**

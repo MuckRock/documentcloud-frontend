@@ -2,9 +2,11 @@ import { describe, test, expect, vi } from "vitest";
 import {
   isErrorCode,
   isRedirectCode,
+  getApiResponse,
   getPrivateAsset,
   getCsrfToken,
 } from "../api";
+
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
 describe("response code tests", () => {
@@ -65,6 +67,31 @@ describe("api handling", () => {
     const url = await getPrivateAsset(publicUrl, mockFetch);
 
     expect(url.href).toEqual(privateUrl);
+  });
+
+  test("getApiResponse", async () => {
+    let resp: Response;
+
+    const body = { test: true };
+    const errors = { error: ["This is an error"] };
+    resp = new Response(JSON.stringify(body), { status: 200 });
+
+    let response = await getApiResponse(resp);
+
+    expect(response.data).toEqual(body);
+    expect(response.error).toBeUndefined();
+
+    resp = new Response(JSON.stringify(errors), { status: 400 });
+
+    response = await getApiResponse(resp);
+    expect(response.data).toBeUndefined();
+    expect(response.error.status).toEqual(400);
+    expect(response.error.errors).toEqual(errors);
+
+    // no response is a 500
+    response = await getApiResponse();
+    expect(response.data).toBeUndefined();
+    expect(response.error.status).toEqual(500);
   });
 });
 
