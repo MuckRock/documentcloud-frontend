@@ -96,7 +96,11 @@ export async function setOrg(
   return resp.json();
 }
 
-export function getUpgradeUrl(org: Org = null): URL {
+export function getUserName(user: User): string {
+  return user.name ?? user.username;
+}
+
+export function getUpgradeUrl(org: Nullable<Org> = null): URL {
   if (!org || org.individual) {
     // Redirect the user to their Squarelet account settings
     return new URL("/users/~payment/", SQUARELET_BASE);
@@ -121,7 +125,7 @@ export function isPremiumOrg(org: Org): boolean {
 
 export function getCreditBalance(org: Org): number | null {
   if (!org) return null;
-  return org.monthly_credits + org.purchased_credits;
+  return (org.monthly_credits ?? 0) + (org.purchased_credits ?? 0);
 }
 
 export async function createMailkey(

@@ -52,6 +52,7 @@
 {/if}
 
 <style>
+  a.container,
   .container {
     min-width: 0;
     display: flex;
@@ -61,8 +62,8 @@
     border-radius: 0.25rem;
     border: none;
 
-    color: var(--color, inherit);
-    fill: var(--fill, inherit);
+    color: var(--color, var(--gray-5, inherit));
+    fill: var(--fill, var(--gray-4, inherit));
     background: var(--background, transparent);
 
     font-family: var(--font-sans, "Source Sans Pro");
@@ -72,20 +73,19 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+  a.container.inline,
   .container.inline {
     display: inline-flex;
     width: auto;
   }
 
   /* Hover */
-  a.container.active,
-  .container.active,
   a.container:hover,
   a.container:focus,
   .container.hover:hover,
   .container.hover:focus {
     cursor: pointer;
-    background: var(--hover-background, var(--gray-2, #d8dee2));
+    background: var(--hover-background, var(--gray-1, #d8dee2));
     color: var(--hover-color, var(--color, inherit));
     fill: var(--hover-fill, var(--fill, inherit));
   }
@@ -105,10 +105,11 @@
   }
 
   /* Active */
+  a.container.active,
   .container.active {
-    background: var(--active-background, var(--blue-2, #b5ceed));
-    color: var(--active-color, var(--color, inherit));
-    fill: var(--active-fill, var(--fill, inherit));
+    background: var(--active-background, var(--blue-1, #b5ceed));
+    color: var(--active-color, var(--blue-5, inherit));
+    fill: var(--active-fill, var(--blue-4, inherit));
   }
 
   /* Small */
@@ -124,6 +125,7 @@
   }
 
   .label {
+    flex: 1 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

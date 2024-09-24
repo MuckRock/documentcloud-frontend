@@ -175,6 +175,7 @@
 
   .full {
     display: flex;
+    width: 100%;
   }
 
   .minW {

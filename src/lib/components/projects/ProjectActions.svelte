@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import type { Project, ProjectUser } from "$lib/api/types";
+  import type { Nullable, Project, ProjectUser } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -15,6 +15,7 @@
     Search16,
     Share16,
     Share24,
+    Trash16,
     PlusCircle16,
   } from "svelte-octicons";
 
@@ -43,7 +44,7 @@
 
   const me = getCurrentUser();
 
-  let show: Action = null;
+  let show: Nullable<Action> = null;
 
   const actions: Record<Action, string> = {
     edit: $_("projects.edit"),
@@ -62,47 +63,49 @@
   }
 </script>
 
-<Flex direction="column">
-  {#if isSignedIn($me) && canUploadFiles($me)}
-    <Button mode="primary" on:click={onUploadClick}>
+<div class="actions wideGap">
+  {#if isSignedIn($me) && canUploadFiles($me) && project.edit_access}
+    <Button full mode="primary" on:click={onUploadClick}>
       <PlusCircle16 />{$_("sidebar.uploadToProject")}
     </Button>
   {/if}
 
-  {#if project.edit_access}
-    <SidebarItem hover on:click={() => (show = "edit")}>
-      <Pencil16 slot="start" />{$_("sidebar.edit")}
-    </SidebarItem>
+  {#if project.edit_access || project.add_remove_access}
+    <!-- Admin & Editor Actions -->
+    <div class="actions">
+      {#if project.edit_access}
+        <Button ghost mode="primary" on:click={() => (show = "edit")}>
+          <Pencil16 />
+          {$_("sidebar.edit")}
+        </Button>
+      {/if}
+
+      {#if project.add_remove_access}
+        <Button ghost on:click={() => (show = "users")}>
+          <People16 />{$_("sidebar.collaborate")}
+        </Button>
+      {/if}
+
+      {#if project.edit_access}
+        <Button ghost mode="danger" on:click={() => (show = "delete")}>
+          <Trash16 />
+          {$_("projects.delete.action")}
+        </Button>
+      {/if}
+    </div>
   {/if}
 
-  {#if project.add_remove_access}
-    <SidebarItem hover on:click={() => (show = "users")}>
-      <People16 slot="start" />{$_("sidebar.collaborate")}
-    </SidebarItem>
-  {/if}
+  <!-- Viewer Actions -->
+  <div class="actions">
+    <Button ghost on:click={() => (show = "share")}>
+      <Share16 />{$_("sidebar.shareEmbed")}
+    </Button>
 
-  <SidebarItem hover on:click={() => (show = "share")}>
-    <Share16 slot="start" />{$_("sidebar.shareEmbed")}
-  </SidebarItem>
-
-  {#if project.edit_access}
-    <SidebarItem
-      hover
-      --color="var(--caution)"
-      --fill="var(--caution)"
-      on:click={() => (show = "delete")}
-    >
-      <Alert16 slot="start" />
-      {$_("projects.delete.action")}
-    </SidebarItem>
-  {/if}
-</Flex>
-
-<hr class="divider" />
-
-<SidebarItem href={projectSearchUrl(project)}>
-  <Search16 slot="start" />{$_("projects.viewInSearch")}
-</SidebarItem>
+    <Button ghost href={projectSearchUrl(project)}>
+      <Search16 />{$_("projects.viewInSearch")}
+    </Button>
+  </div>
+</div>
 
 {#if show}
   <Portal>
@@ -131,3 +134,15 @@
     </Modal>
   </Portal>
 {/if}
+
+<style>
+  .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .wideGap {
+    gap: 1rem;
+  }
+</style>

@@ -713,7 +713,10 @@
     "add": "Add {n, plural, one {this document} other {# documents}} to a project",
     "access": {
       "public": "Public",
-      "private": "Private"
+      "private": "Private",
+      "admin": "Admin",
+      "edit": "Editor",
+      "view": "Viewer"
     },
     "delete": {
       "action": "Delete project",
@@ -726,6 +729,7 @@
     },
     "collaborators": {
       "title": "Collaborators",
+      "edit": "Manage",
       "manage": "Change access",
       "empty": "No collaborators",
       "add": "Invite users to this project"
