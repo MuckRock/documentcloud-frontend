@@ -150,7 +150,15 @@
   .small {
     font-size: var(--font-sm, 0.875rem);
     padding: 0.25rem 0.5rem;
+    box-shadow: inset var(--shadow-3);
+  }
+
+  .small:hover {
     box-shadow: none;
+  }
+
+  .small.danger {
+    border-color: var(--orange-3);
   }
 
   @media (hover: none) {

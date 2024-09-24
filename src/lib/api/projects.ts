@@ -360,3 +360,7 @@ export async function documents(
 export function canonicalUrl(project: Project): URL {
   return new URL(`documents/projects/${project.id}-${project.slug}/`, APP_URL);
 }
+
+export function embedUrl(project: Project): URL {
+  return new URL(`embed/projects/${project.id}/?embed=1`, APP_URL);
+}

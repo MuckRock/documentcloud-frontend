@@ -1212,11 +1212,14 @@
     "page": "Page",
     "note": "Note",
     "copy": "Copy",
+    "copiedToClipboard": "Copied to clipboard",
     "permalink": "Permalink",
     "iframe": "Embed HTML iFrame",
     "preview": "Embed Preview",
     "save": "Save Settings",
     "customize": "Customize Embed",
+    "privateWarning": "This {type} is private.",
+    "privateFix": "Edit metadata",
     "fields": {
       "page": "Pick page",
       "note": "Pick note"
