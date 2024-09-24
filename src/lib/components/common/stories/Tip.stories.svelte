@@ -55,7 +55,7 @@
     --background-color="var(--blue-1)"
     --border-color="var(--blue-3)"
   >
-    <Info16 height="32" width="32" slot="icon" />
+    <Info24 height="32" width="32" slot="icon" />
     Learn about all the interesting facts
   </Tip>
 </Story>
