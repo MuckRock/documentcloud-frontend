@@ -197,9 +197,7 @@
 <style>
   .container {
     width: 100%;
-    height: min-content;
-    background: var(--gray-1);
-    box-shadow: inset var(--shadow-2);
+    height: auto;
   }
 
   label.select-all {
