@@ -26,10 +26,13 @@ export async function load({ url, parent, fetch }) {
     previous: null,
   };
 
+  let error: unknown;
+
   // for owned and shared, we just get everything at once
   if (me && filter === "owned") {
     projects.results = await getOwned(me.id, query, fetch).catch((e) => {
       console.error(e);
+      error = e;
       return [];
     });
   }
@@ -37,19 +40,18 @@ export async function load({ url, parent, fetch }) {
   if (me && filter === "shared") {
     projects.results = await getShared(me.id, query, fetch).catch((e) => {
       console.error(e);
+      error = e;
       return [];
     });
   }
 
   // for public, we get the first page and paginate
   if (filter === "public") {
-    projects = await list(params, fetch).catch((e) => {
-      console.error(e);
-      return projects;
-    });
+    ({ data: projects, error } = await list(params, fetch));
   }
 
   return {
+    error,
     list: filter,
     projects,
     query,
