@@ -92,11 +92,11 @@ Updated variables and styles for new SvelteKit routes
 
   /* Z-Index Layers */
   --z-toolbar: 2;
-  --z-dropdownBackdrop: 4;
-  --z-dropdown: 5;
   --z-navigation: 7;
   --z-drawer: 9;
   --z-modal: 10;
+  --z-dropdownBackdrop: 11;
+  --z-dropdown: 12;
   --z-toast: 20;
 }
 
@@ -228,5 +228,4 @@ hr.divider {
   border: 1px solid var(--gray-2, #d8dee2);
   box-shadow: var(--shadow-2);
   background: var(--white);
-  z-index: var(--z-toolbar);
 }

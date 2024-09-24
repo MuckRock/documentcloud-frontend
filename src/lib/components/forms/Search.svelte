@@ -63,6 +63,7 @@
     appearance: none;
     padding: 0.25rem;
     border: none;
+    background: var(--white);
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-regular, 400);
     font-size: var(--font-md, 1rem);

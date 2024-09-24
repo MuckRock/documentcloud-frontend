@@ -3,6 +3,7 @@ import url from "node:url";
 
 import adapter from "@sveltejs/adapter-netlify";
 import sveltePreprocess from "svelte-preprocess";
+import { fastDimension } from "svelte-fast-dimension";
 import autoprefixer from "autoprefixer";
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -41,23 +42,26 @@ export default {
 
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
   // for more information about preprocessors
-  preprocess: sveltePreprocess({
-    scss: {
-      includePaths: ["./src"],
-      importer: [
-        scssAliases({
-          "@": path.resolve(__dirname, "src"),
-        }),
-      ],
-      prependData: '@import "@/style/variables.scss";',
-    },
-    postcss: {
-      plugins: [autoprefixer],
-    },
-    typescript: {
-      compilerOptions: {
-        target: "es2020",
+  preprocess: [
+    fastDimension(),
+    sveltePreprocess({
+      scss: {
+        includePaths: ["./src"],
+        importer: [
+          scssAliases({
+            "@": path.resolve(__dirname, "src"),
+          }),
+        ],
+        prependData: '@import "@/style/variables.scss";',
       },
-    },
-  }),
+      postcss: {
+        plugins: [autoprefixer],
+      },
+      typescript: {
+        compilerOptions: {
+          target: "es2020",
+        },
+      },
+    }),
+  ],
 };

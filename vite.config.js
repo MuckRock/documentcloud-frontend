@@ -37,6 +37,7 @@ export default defineConfig({
     esbuildOptions: {
       target: "esnext",
     },
+    include: ["svelte-fast-dimension/action"],
   },
 
   resolve: {
