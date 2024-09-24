@@ -1,16 +1,22 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import AppLayout from "../AppLayout.svelte";
-  import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
-  import doc from "@/test/fixtures/documents/document-expanded.json";
-  import txt from "@/test/fixtures/documents/document.txt.json";
-  const document = doc as Document;
+  import DocumentBrowser from "../DocumentBrowser.svelte";
+  import SidebarLayout from "../SidebarLayout.svelte";
+  import Documents from "@/routes/(app)/documents/sidebar/Documents.svelte";
+  import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
+  import Button from "../../common/Button.svelte";
+  import { PlusCircle16 } from "svelte-octicons";
+  import Actions from "@/routes/(app)/documents/sidebar/Actions.svelte";
+  import AddOns from "@/routes/(app)/documents/sidebar/AddOns.svelte";
 
+  import { documentsList } from "@/test/fixtures/documents";
   import { addons } from "@/test/handlers/addons";
   import { organizations, users } from "@/test/handlers/accounts";
+  import { activeAddons } from "@/test/fixtures/addons";
 
   export const meta = {
     title: "Layout / App",
@@ -34,11 +40,27 @@
 </script>
 
 <Template let:args>
-  <div class="vh">
-    <AppLayout {...args}>
-      <p>Foobar!</p>
-    </AppLayout>
-  </div>
+  <AppLayout {...args}>
+    <SidebarLayout>
+      <svelte:fragment slot="navigation">
+        <Documents />
+        <Projects />
+      </svelte:fragment>
+
+      <DocumentBrowser
+        slot="content"
+        documents={Promise.resolve(documentsList)}
+      />
+
+      <svelte:fragment slot="action">
+        <Button mode="primary" href="/upload/">
+          <PlusCircle16 />{$_("sidebar.upload")}
+        </Button>
+        <Actions />
+        <AddOns pinnedAddOns={Promise.resolve(activeAddons)} />
+      </svelte:fragment>
+    </SidebarLayout>
+  </AppLayout>
 </Template>
 
 <Story name="Desktop" {...args} />
@@ -74,9 +96,3 @@
   }}
   {...args}
 />
-
-<style>
-  .vh {
-    height: 100vh;
-  }
-</style>
