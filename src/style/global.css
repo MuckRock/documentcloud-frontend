@@ -105,7 +105,7 @@ a {
 }
 
 a.active {
-  font-weight: normal !important;
+  font-weight: normal;
 }
 
 a.active .project {

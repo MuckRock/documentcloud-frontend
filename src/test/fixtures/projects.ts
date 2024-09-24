@@ -1,3 +1,4 @@
+import type { ProjectUser } from "@/lib/api/types";
 import type { Page, Project } from "../../api/types";
 
 export let project: Project = {
@@ -297,6 +298,256 @@ export const projectList: Page<Project> = {
       title: "Timeout test",
       updated_at: "2023-01-26T20:46:26.668099Z",
       user: 1,
+    },
+  ],
+};
+
+export const projectUsers: Page<ProjectUser> = {
+  next: null,
+  previous: null,
+  results: [
+    {
+      user: {
+        id: 104081,
+        avatar_url:
+          "https://cdn.muckrock.com/media/avatars/dillon-crop-square.jpg",
+        is_staff: false,
+        name: "Dillon Bergin",
+        organization: 51993,
+        organizations: [51989, 51990, 34128, 125, 51993, 46370, 62177],
+        admin_organizations: [51989, 51990, 34128, 51993, 46370, 62177],
+        username: "Dillon-Bergin",
+        uuid: "a274d91b-e497-4391-9352-7fab126b5bbe",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 105494,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Adriene Hill",
+        organization: 42572,
+        organizations: [35614, 10006, 42572],
+        admin_organizations: [35614, 42572],
+        username: "Adriene",
+        uuid: "b6c2bce5-8fab-44c0-8f9f-d2d345b7ab8c",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 109298,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Derek Kravitz",
+        organization: 39752,
+        organizations: [10219, 39752],
+        admin_organizations: [10219, 39752],
+        username: "DerekRKravitz",
+        uuid: "70376af4-3258-4bf6-ae2c-3540ebe63d25",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 101425,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Molly Peterson",
+        organization: 37614,
+        organizations: [10006, 813, 31622, 37614],
+        admin_organizations: [10006, 31622],
+        username: "mollypeterson",
+        uuid: "3b19bacb-e17c-4ef1-b8c8-4df216c3d666",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 1020,
+        avatar_url:
+          "https://cdn.muckrock.com/media/avatars/20140211-0O1A7147-2.jpg",
+        is_staff: true,
+        name: "Chris Amico",
+        organization: 125,
+        organizations: [19198, 170, 125],
+        admin_organizations: [19198, 170],
+        username: "chrisamico",
+        uuid: "800bbb85-ea7a-46e9-8f56-16f862e66e52",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 108486,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Mike K",
+        organization: 42572,
+        organizations: [38883, 42572],
+        admin_organizations: [38883],
+        username: "mikekessler213",
+        uuid: "34b645e4-eb32-4ab7-9bc0-d43d5ab16ff8",
+        verified_journalist: false,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 110708,
+        avatar_url: "https://cdn.muckrock.com/media/avatars/kelly-square.jpg",
+        is_staff: false,
+        name: "Kelly Kauffman",
+        organization: 125,
+        organizations: [41234, 125, 51993, 62177],
+        admin_organizations: [41234, 62177],
+        username: "kellykauffman",
+        uuid: "c918d430-351f-4795-83dc-93d69219150d",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 111462,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Holly McDede",
+        organization: 813,
+        organizations: [42059, 813],
+        admin_organizations: [42059],
+        username: "hollymcdede",
+        uuid: "5b026426-e75f-4dcc-9c42-438776c3e25b",
+        verified_journalist: true,
+      },
+      access: "edit",
+    },
+    {
+      user: {
+        id: 111662,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Lindsay Shachnow",
+        organization: 42277,
+        organizations: [42277],
+        admin_organizations: [42277],
+        username: "lindsayshachnow",
+        uuid: "64a0a5c1-f059-4861-a165-f918934d766e",
+        verified_journalist: true,
+      },
+      access: "edit",
+    },
+    {
+      user: {
+        id: 20080,
+        avatar_url:
+          "https://cdn.muckrock.com/media/account_images/22_MuckRock_2018_PRELIMANRY_EDITS_DSC_5387_2018_Derek_Kouyoumjian_preview_SfuGGnJ.jpg",
+        is_staff: true,
+        name: "Mitchell Kotler",
+        organization: 125,
+        organizations: [
+          63361, 63362, 10000, 3168, 125, 41248, 63685, 63367, 10002,
+        ],
+        admin_organizations: [
+          63361, 63362, 10000, 3168, 125, 41248, 63685, 63367, 10002,
+        ],
+        username: "mitch",
+        uuid: "8136b9b8-95b9-4302-950d-5402e9065978",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 113744,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Maanvi",
+        organization: 45125,
+        organizations: [45125],
+        admin_organizations: [45125],
+        username: "maanvi_singh",
+        uuid: "445859b2-3721-4551-a999-e04d34acfbba",
+        verified_journalist: false,
+      },
+      access: "view",
+    },
+    {
+      user: {
+        id: 113353,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "John Lippert",
+        organization: 44466,
+        organizations: [44466],
+        admin_organizations: [44466],
+        username: "johnlippert",
+        uuid: "ae7f1b47-ad01-4100-b3f3-fe2a22085d19",
+        verified_journalist: true,
+      },
+      access: "admin",
+    },
+    {
+      user: {
+        id: 102112,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: true,
+        name: "Sanjin Ibrahimovic",
+        organization: 125,
+        organizations: [125, 32363],
+        admin_organizations: [32363],
+        username: "sanjin",
+        uuid: "84859f4e-6757-47dc-8fe4-1976d31828dc",
+        verified_journalist: true,
+      },
+      access: "view",
+    },
+    {
+      user: {
+        id: 100773,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "LPL",
+        organization: 30905,
+        organizations: [12037, 30905],
+        admin_organizations: [12037, 30905],
+        username: "LPL",
+        uuid: "813cbf63-0f81-4dc9-bdcb-4b65a664e517",
+        verified_journalist: true,
+      },
+      access: "view",
+    },
+    {
+      user: {
+        id: 114243,
+        avatar_url:
+          "https://cdn.muckrock.com/static/images/avatars/profile.png",
+        is_staff: false,
+        name: "Emily Alpert",
+        organization: 46323,
+        organizations: [46323],
+        admin_organizations: [46323],
+        username: "ealpert",
+        uuid: "8eabeb89-67bd-438f-9ce1-c33763215376",
+        verified_journalist: false,
+      },
+      access: "view",
     },
   ],
 };

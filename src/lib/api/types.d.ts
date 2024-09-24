@@ -7,10 +7,10 @@
 
 import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
-import type { Page } from "@/api/types/common";
+import type { Page, Maybe, Nullable } from "@/api/types/common";
 
 // re-export these for convenience
-export type { Page, User, Org, Project };
+export type { Maybe, Nullable, Page, User, Org, Project };
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
