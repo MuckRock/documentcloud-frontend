@@ -22,14 +22,7 @@ export async function load({ url, fetch, data }) {
     options.cursor = cursor;
   }
 
-  const searchResults = search(query, options, fetch).catch((e) => {
-    console.error(e);
-    return {
-      results: [],
-      count: 0,
-      next: null,
-    } as DocumentResults;
-  });
+  const searchResults = search(query, options, fetch);
 
   const pinnedAddons = getPinnedAddons(fetch).catch((e) => {
     console.error(e);

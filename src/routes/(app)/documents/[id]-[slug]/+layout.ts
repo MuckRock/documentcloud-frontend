@@ -17,7 +17,11 @@ function documentPath(document: Document) {
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params, parent, depends, url }) {
-  const document = await documents.get(+params.id, fetch).catch(console.error);
+  const { data: document, error: err } = await documents.get(+params.id, fetch);
+
+  if (err) {
+    error(err.status, err.message);
+  }
 
   if (!document) {
     error(404, "Document not found");
