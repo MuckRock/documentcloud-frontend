@@ -402,6 +402,9 @@ export async function add_tags(
   return getApiResponse<Data, any>(resp);
 }
 
+/**
+ * Redact a document. This is a fire-and-forget operation, so we return the response directly.
+ */
 export async function redact(
   id: number | string,
   redactions: Redaction[],

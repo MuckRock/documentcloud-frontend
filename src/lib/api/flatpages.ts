@@ -1,5 +1,5 @@
-import { BASE_API_URL } from "@/config/config";
 import type { Flatpage } from "./types";
+import { BASE_API_URL } from "@/config/config";
 
 export async function getTipOfDay(
   fetch = globalThis.fetch,

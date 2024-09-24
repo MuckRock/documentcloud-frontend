@@ -50,6 +50,12 @@ export async function getApiResponse<T, E = unknown>(
   }
 
   // everything worked
+
+  if (resp.status === 204) {
+    // deletes return nothing
+    return {};
+  }
+
   try {
     response.data = await resp.json();
   } catch (e) {
@@ -57,14 +63,14 @@ export async function getApiResponse<T, E = unknown>(
       case "SyntaxError": // provide more specific error
         response.error = {
           status: 500,
-          message: "The API returned invalid JSON"
-        }
+          message: "The API returned invalid JSON",
+        };
         break;
       default: // catch-all handling
         response.error = {
           status: 500,
-          message: String(e), 
-        }
+          message: String(e),
+        };
     }
   }
   return response;
