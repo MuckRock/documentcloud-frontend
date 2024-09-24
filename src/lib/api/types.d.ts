@@ -49,11 +49,14 @@ type AddOnCategory = "premium" | string;
 
 interface AddOnProperty {
   type: string;
-  title: string;
+  title?: string;
   description?: string;
-  default?: string;
+  default?: string | string[] | number;
   format?: string;
-  enum?: string[];
+  enum?: (string | boolean)[];
+  items?: AddOnProperty;
+  maximum?: number;
+  minimum?: number;
 }
 
 interface AddOnParameters {
@@ -68,11 +71,11 @@ interface AddOnParameters {
   properties: Record<string, AddOnProperty>;
   cost: {
     amount: number;
-    price: number;
+    price?: number;
     unit: string;
   };
   eventOptions: {
-    name: string;
+    name?: string;
     events: string[];
   };
 }

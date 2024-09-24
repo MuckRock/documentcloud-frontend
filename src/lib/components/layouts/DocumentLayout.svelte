@@ -1,5 +1,11 @@
 <script lang="ts">
-  import type { Document, DocumentText, Project } from "$lib/api/types";
+  import type {
+    AddOnListItem,
+    Document,
+    DocumentText,
+    Page,
+    Project,
+  } from "$lib/api/types";
   import { _ } from "svelte-i18n";
 
   import Access, { getLevel } from "../documents/Access.svelte";
@@ -18,6 +24,7 @@
   import SidebarLayout from "./SidebarLayout.svelte";
   import { isOrg } from "@/api/types/orgAndUser";
   import Avatar from "../accounts/Avatar.svelte";
+  import AddOns from "@/lib/components/common/AddOns.svelte";
 
   const me = getCurrentUser();
 
@@ -26,6 +33,7 @@
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
   export let action: string = "";
+  export let addons: Promise<Page<AddOnListItem>>;
 
   $: projects = (document.projects ?? []) as Project[];
 </script>
@@ -54,6 +62,8 @@
         </Metadata>
       {/if}
       <Actions {document} user={$me} {action} />
+
+      <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
     </Flex>
     <DocumentMetadata {document} />
   </aside>

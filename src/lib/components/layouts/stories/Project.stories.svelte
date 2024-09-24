@@ -5,6 +5,7 @@
 
   import { project, projectUsers } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
+  import { activeAddons } from "@/test/fixtures/addons";
 
   export const meta: Meta = {
     title: "Layout / Project",
@@ -18,6 +19,7 @@
     project,
     users: projectUsers.results,
     documents: Promise.resolve(documentsList),
+    addons: Promise.resolve(activeAddons),
   };
 </script>
 

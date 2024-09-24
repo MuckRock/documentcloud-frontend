@@ -9,10 +9,11 @@
   $: documents = data.documents;
   $: query = data.query;
   $: users = data.users ?? [];
+  $: addons = data.pinnedAddons;
 </script>
 
 <svelte:head>
   <title>{project.title} | DocumentCloud</title>
 </svelte:head>
 
-<Project {project} {users} {documents} {query} />
+<Project {project} {users} {documents} {query} {addons} />

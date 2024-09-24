@@ -5,12 +5,12 @@
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
 
+  import AddOns from "$lib/components/common/AddOns.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
 
   import Actions from "../documents/sidebar/Actions.svelte";
-  import AddOns from "../documents/sidebar/AddOns.svelte";
   import Documents from "../documents/sidebar/Documents.svelte";
   import Projects from "../documents/sidebar/Projects.svelte";
 

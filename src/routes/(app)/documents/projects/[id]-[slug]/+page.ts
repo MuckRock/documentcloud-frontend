@@ -6,6 +6,7 @@ import * as collaborators from "$lib/api/collaborators";
 import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 import type { Project, ProjectUser, Nullable } from "@/lib/api/types";
+import { getPinnedAddons } from "$lib/api/addons";
 
 export async function load({ params, url, parent, fetch }) {
   const id = parseInt(params.id);
@@ -39,11 +40,15 @@ export async function load({ params, url, parent, fetch }) {
     fetch,
   );
 
+  // stream this
+  const pinnedAddons = getPinnedAddons(fetch);
+
   return {
     breadcrumbs,
     documents,
     query,
     project,
     users,
+    pinnedAddons,
   };
 }

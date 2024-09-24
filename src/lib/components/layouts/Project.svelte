@@ -1,18 +1,27 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Project, ProjectUser, DocumentResults } from "$lib/api/types";
-  import Collaborators from "../projects/Collaborators.svelte";
-  import ProjectActions from "../projects/ProjectActions.svelte";
-  import ProjectHeader from "../projects/ProjectHeader.svelte";
+  import type {
+    Page,
+    Project,
+    ProjectUser,
+    DocumentResults,
+    AddOnListItem,
+  } from "$lib/api/types";
+  import AddOns from "$lib/components/common/AddOns.svelte";
+  import Collaborators from "$lib/components/projects/Collaborators.svelte";
+  import ProjectActions from "$lib/components/projects/ProjectActions.svelte";
+  import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";
   import DocumentBrowser from "./DocumentBrowser.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
-  import Flex from "../common/Flex.svelte";
 
   export let project: Project;
   export let users: ProjectUser[];
   export let documents: Promise<DocumentResults>;
   export let query: string = "";
+  export let addons: Promise<Page<AddOnListItem>>;
+
+  $: projectQuery = `+project:${project.id}`;
 </script>
 
 <SidebarLayout>
@@ -37,7 +46,10 @@
     </main>
   </article>
 
-  <ProjectActions slot="action" {project} {users} />
+  <svelte:fragment slot="action">
+    <ProjectActions {project} {users} />
+    <AddOns pinnedAddOns={addons} query={projectQuery} />
+  </svelte:fragment>
 </SidebarLayout>
 
 <style>

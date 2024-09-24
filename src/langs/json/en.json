@@ -960,7 +960,8 @@
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here",
-      "runs": "Schedule & history"
+      "runs": "Schedule & history",
+      "documents": "This add-on runs on documents"
     },
     "data": {
       "title": "Tags & Data",

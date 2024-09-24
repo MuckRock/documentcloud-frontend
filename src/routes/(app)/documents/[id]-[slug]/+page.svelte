@@ -26,6 +26,7 @@
   $: text = data.text;
   $: action = data.action;
   $: $currentMode = data.mode; // set $currentMode from URL search param
+  $: addons = data.pinnedAddons;
 
   function setCurrentNoteFromHash(url: URL) {
     const { hash } = url;
@@ -69,4 +70,4 @@
   {/if}
 </svelte:head>
 
-<DocumentLayout {document} {asset_url} {text} {query} {action} />
+<DocumentLayout {document} {asset_url} {text} {query} {action} {addons} />
