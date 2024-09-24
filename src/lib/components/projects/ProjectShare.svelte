@@ -122,8 +122,8 @@
   }
   .share {
     flex: 1 1 auto;
-    min-height: 50vh;
-    min-width: 70vw;
+    height: min(50vh, 100%);
+    width: min(70vw, 100%);
     display: flex;
     flex-flow: row-reverse wrap-reverse;
     align-items: flex-end;
