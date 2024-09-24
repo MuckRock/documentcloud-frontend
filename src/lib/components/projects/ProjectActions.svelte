@@ -38,6 +38,7 @@
     getCurrentUser,
     isSignedIn,
   } from "$lib/utils/permissions";
+  import ProjectShare from "./ProjectShare.svelte";
 
   export let project: Project;
   export let users: ProjectUser[];
@@ -118,10 +119,7 @@
       {/if}
 
       {#if show === "share"}
-        <Empty icon={Share24}
-          >Project sharing coming soon. Use our Feedback form to let us know how
-          you use project sharing.</Empty
-        >
+        <ProjectShare {project} on:close={hide} />
       {/if}
 
       {#if show === "users"}
