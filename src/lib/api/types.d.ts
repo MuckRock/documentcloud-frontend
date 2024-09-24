@@ -42,7 +42,7 @@ export interface APIError<E> {
 /**
  * Wrap an API response so we can pass errors along
  */
-export interface APIResponse<T, E> {
+export interface APIResponse<T, E = unknown> {
   data?: T;
   error?: APIError<E>;
 }

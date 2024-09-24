@@ -80,18 +80,18 @@
     HIDE_COUNT: width < remToPx(26),
   };
 
-  $: searchResults = documents.then((r) => excludeDeleted(r.data, $deleted));
+  $: searchResults = documents.then((r) => excludeDeleted($deleted, r.data));
 
   // filter out deleted documents that haven't been purged from search yet
   function excludeDeleted(
-    searchResults: DocumentResults,
     deleted: Set<string>,
+    searchResults?: DocumentResults, // optional params must come second
   ): DocumentResults {
     if (deleted.size === 0) return searchResults;
 
-    const filtered = searchResults.results.filter(
+    const filtered = searchResults?.results.filter(
       (d) => !deleted.has(String(d.id)),
-    );
+    ) ?? [];
 
     return {
       ...searchResults,

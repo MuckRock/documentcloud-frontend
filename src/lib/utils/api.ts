@@ -25,7 +25,7 @@ export function isRedirectCode(
  * threw an error and we should send a 500 to the user because the API is
  * probably down.
  */
-export async function getApiResponse<T, E>(
+export async function getApiResponse<T, E = unknown>(
   resp?: Response | void,
 ): Promise<APIResponse<T, E>> {
   const response: APIResponse<T, E> = {};
@@ -50,7 +50,23 @@ export async function getApiResponse<T, E>(
   }
 
   // everything worked
-  response.data = await resp.json();
+  try {
+    response.data = await resp.json();
+  } catch (e) {
+    switch (e.name) {
+      case "SyntaxError": // provide more specific error
+        response.error = {
+          status: 500,
+          message: "The API returned invalid JSON"
+        }
+        break;
+      default: // catch-all handling
+        response.error = {
+          status: 500,
+          message: String(e), 
+        }
+    }
+  }
   return response;
 }
 
