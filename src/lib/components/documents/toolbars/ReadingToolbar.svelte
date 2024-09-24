@@ -18,6 +18,7 @@
     Apps16,
     Note16,
     ChevronDown12,
+    Search16,
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -45,6 +46,7 @@
   $: BREAKPOINTS = {
     READ_MENU: width > remToPx(52),
     WRITE_MENU: width < remToPx(37),
+    SEARCH_MENU: width < remToPx(24),
   };
 
   const readModes: Map<ReadMode, string> = new Map([
@@ -125,7 +127,18 @@
         </Button>
       {/each}
     {/if}
-    <Search name="q" {query} />
+    {#if BREAKPOINTS.SEARCH_MENU}
+      <Dropdown2 id="document-search" position="bottom right">
+        <Button minW={false} ghost slot="title"
+          ><Search16 /> {$_("common.search")}</Button
+        >
+        <Menu>
+          <Search name="q" {query} />
+        </Menu>
+      </Dropdown2>
+    {:else}
+      <Search name="q" {query} />
+    {/if}
   </Flex>
 </PageToolbar>
 
