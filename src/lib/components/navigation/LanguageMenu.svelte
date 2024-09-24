@@ -7,6 +7,7 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import langs from "@/langs/langs.json";
+  import Flex from "../common/Flex.svelte";
 
   export let position = "bottom right";
 
@@ -44,9 +45,10 @@
           hover
           active={code === $locale}
         >
-          <span class="flag">{flag}</span>
-          <span class="lang">{name}</span>
-          {#if code === $locale}<Check16 />{/if}
+          <Flex align="center">
+            <span class="flag">{flag}</span>
+            <span class="lang">{name}</span>
+          </Flex>
         </SidebarItem>
       {/each}
     </Menu>

@@ -13,7 +13,7 @@ exports[`UserMenu 1`] = `
       tabindex="0"
     >
       <span
-        class="sidebarItem container svelte-e7d4ct"
+        class="sidebarItem container svelte-xb9fwu"
         role="button"
         tabindex="0"
         title="Open Menu"
@@ -30,17 +30,18 @@ exports[`UserMenu 1`] = `
         </div>
          
         <span
-          class="label svelte-e7d4ct"
+          class="label svelte-xb9fwu"
         >
           <span
-            class="name svelte-q31ql1"
+            class="name"
           >
             Chris Amico
           </span>
+          
         </span>
          
         <div
-          class="dropdownArrow svelte-q31ql1"
+          class="dropdownArrow svelte-nncahh"
           slot="end"
         >
           <svg
@@ -67,7 +68,7 @@ exports[`UserMenu 1`] = `
         role="menu"
       >
         <a
-          class="sidebarItem container svelte-e7d4ct"
+          class="sidebarItem container svelte-xb9fwu"
           href="https://dev.squarelet.com"
           target="_blank"
           title=""
@@ -86,7 +87,7 @@ exports[`UserMenu 1`] = `
           </svg>
            
           <span
-            class="label svelte-e7d4ct"
+            class="label svelte-xb9fwu"
           >
             Account settings
           </span>
@@ -95,7 +96,7 @@ exports[`UserMenu 1`] = `
         
          
         <span
-          class="sidebarItem container svelte-e7d4ct hover"
+          class="sidebarItem container svelte-xb9fwu hover"
           role="button"
           tabindex="0"
           title=""
@@ -114,7 +115,7 @@ exports[`UserMenu 1`] = `
           </svg>
            
           <span
-            class="label svelte-e7d4ct"
+            class="label svelte-xb9fwu"
           >
             Upload via email
           </span>
@@ -123,7 +124,7 @@ exports[`UserMenu 1`] = `
         
          
         <a
-          class="sidebarItem container svelte-e7d4ct"
+          class="sidebarItem container svelte-xb9fwu"
           href="https://api.dev.documentcloud.org/accounts/logout/"
           title=""
         >
@@ -141,7 +142,7 @@ exports[`UserMenu 1`] = `
           </svg>
            
           <span
-            class="label svelte-e7d4ct"
+            class="label svelte-xb9fwu"
           >
             Sign out
           </span>

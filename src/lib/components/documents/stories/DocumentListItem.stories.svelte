@@ -29,3 +29,13 @@
 <Story name="error" args={{ document: { ...document, status: "error" } }} />
 
 <Story name="no file" args={{ document: { ...document, status: "nofile" } }} />
+
+<Story
+  name="Org Access"
+  args={{ document: { ...expanded, access: "organization" } }}
+/>
+
+<Story
+  name="Private Access"
+  args={{ document: { ...expanded, access: "private" } }}
+/>
