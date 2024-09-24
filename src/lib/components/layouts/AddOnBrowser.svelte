@@ -156,6 +156,7 @@
     gap: 2rem;
   }
   .container {
+    width: 100%;
     max-width: var(--app-max-w, 100rem);
     margin: 0 auto;
     max-height: 100%;
