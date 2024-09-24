@@ -154,6 +154,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 1rem;
   }
   .container {
     width: 100%;
