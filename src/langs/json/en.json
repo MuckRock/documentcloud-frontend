@@ -711,6 +711,10 @@
     "share": "Share & embed this project",
     "users": "Manage Collaborators",
     "add": "Add {n, plural, one {this document} other {# documents}} to a project",
+    "access": {
+      "public": "Public",
+      "private": "Private"
+    },
     "delete": {
       "action": "Delete project",
       "confirm": "Confirm delete",
