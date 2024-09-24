@@ -29,7 +29,7 @@
       <li>
         <SidebarItem href={noteUrl(document, note).href} small>
           <span class="note_title">{note.title}</span>
-          <span class="page_number">
+          <span class="page_number" slot="start">
             {$_("sidebar.toc.pageAbbrev")}
             {note.page_number + 1}
           </span>
