@@ -26,7 +26,7 @@ export function isRedirectCode(
  * probably down.
  */
 export async function getApiResponse<T, E>(
-  resp?: Response,
+  resp?: Response | void,
 ): Promise<APIResponse<T, E>> {
   const response: APIResponse<T, E> = {};
 

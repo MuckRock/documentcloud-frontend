@@ -88,7 +88,7 @@
     "sync": "svelte-kit sync",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-    "test": "npm run test:unit && npm run test:browser",
+    "test": "TZ=UTC vitest run",
     "test:browser": "playwright test",
     "test:unit": "TZ=UTC vitest run",
     "test:watch": " TZ=UTC vitest watch",

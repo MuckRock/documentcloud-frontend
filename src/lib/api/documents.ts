@@ -2,6 +2,7 @@
  * Lots of duplicated code here that should get consolidated at some point.
  */
 import type {
+  APIResponse,
   Data,
   DataUpdate,
   Document,
@@ -17,10 +18,10 @@ import type {
   ReadMode,
   WriteMode,
   ViewerMode,
+  ValidationError,
 } from "./types";
 
 import { writable, type Writable } from "svelte/store";
-import { error } from "@sveltejs/kit";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { isOrg } from "./accounts";
 import {
@@ -30,7 +31,7 @@ import {
   DC_BASE,
   EMBED_URL,
 } from "@/config/config.js";
-import { isErrorCode, getPrivateAsset } from "../utils/index";
+import { isErrorCode, getPrivateAsset, getApiResponse } from "../utils/api";
 
 export const READING_MODES = new Set<ReadMode>([
   "document",
@@ -60,7 +61,7 @@ export async function search(
     version: "2.0",
   },
   fetch = globalThis.fetch,
-): Promise<DocumentResults> {
+): Promise<APIResponse<DocumentResults, null>> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
@@ -72,14 +73,11 @@ export async function search(
     }
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
-  if (isErrorCode(resp.status)) {
-    console.error(await resp.json());
-    error(resp.status, resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<DocumentResults, null>(resp);
 }
 
 /**
@@ -89,7 +87,7 @@ export async function search(
 export async function get(
   id: string | number,
   fetch: typeof globalThis.fetch = globalThis.fetch,
-): Promise<Document> {
+): Promise<APIResponse<Document, null>> {
   const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
   const expand = [
     "user",
@@ -105,20 +103,12 @@ export async function get(
     console.error,
   );
 
-  // backend error, not much we can do
-  if (!resp) {
-    error(500);
-  }
-
-  if (isErrorCode(resp.status)) {
-    error(resp.status, resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Document, null>(resp);
 }
 
 /**
  * Get text for a document. It may be a private asset, which requires a two-step fetch.
+ * Errors will produce an empty response.
  */
 export async function text(
   document: Document,
@@ -177,15 +167,12 @@ export async function textPositions(
  * If documents contain a `file_url` property, the server will attempt to fetch and upload that file.
  * Otherwise, the response will contain all documents fields plus a `presigned_url` field, which should
  * be passed to `upload` to store the actual file.
- *
- * @async
- * @export
  */
 export async function create(
   documents: DocumentUpload[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Document[]> {
+): Promise<APIResponse<Document[], any>> {
   const endpoint = new URL("documents/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -199,20 +186,13 @@ export async function create(
     body: JSON.stringify(documents),
   });
 
-  if (isErrorCode(resp.status)) {
-    throw new Error(await resp.text());
-  }
-
-  return resp.json() as Promise<Document[]>;
+  return getApiResponse<Document[], any>(resp);
 }
 
 /**
  * Upload file data to a presigned_url on cloud storage.
  * Use this after running `create` to add documents to the database.
  * This function is a very thin wrapper around fetch.
- *
- * @async
- * @export
  */
 export async function upload(
   presigned_url: URL,
@@ -230,9 +210,7 @@ export async function upload(
 
 /**
  * Tell the backend to begin processing a batch of documents.
- *
- * @async
- * @export
+ * Only errors are returned here. A null response means success.
  */
 export async function process(
   documents: {
@@ -242,10 +220,10 @@ export async function process(
   }[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response> {
+): Promise<APIResponse<"OK", any>> {
   const endpoint = new URL("documents/process/", BASE_API_URL);
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "POST",
     headers: {
@@ -254,7 +232,9 @@ export async function process(
       Referer: APP_URL,
     },
     body: JSON.stringify(documents),
-  });
+  }).catch(console.error);
+
+  return getApiResponse<null, any>(resp);
 }
 
 /**
@@ -264,46 +244,46 @@ export async function cancel(
   document: Document,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response | undefined> {
+): Promise<APIResponse<null, any>> {
   const processing: Set<Status> = new Set(["pending", "readable"]);
 
   // non-processing status is a no-op
-  if (!processing.has(document.status)) return;
+  if (!processing.has(document.status)) return {};
 
   const endpoint = new URL(`documents/${document.id}/process/`, BASE_API_URL);
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "DELETE",
     headers: {
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  });
+  }).catch(console.error);
+
+  return getApiResponse<null, any>(resp);
 }
 
 /**
  * Delete a document. There is no undo.
- *
- * @param id
- * @param csrf_token
- * @param fetch
  */
 export async function destroy(
   id: string | number,
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<null, any>> {
   const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "DELETE",
     headers: {
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  });
+  }).catch(console.log);
+
+  return getApiResponse<null, any>(resp);
 }
 
 /**
@@ -317,18 +297,20 @@ export async function destroy_many(
   ids: (string | number)[],
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<null, any>> {
   const endpoint = new URL(`documents/`, BASE_API_URL);
   endpoint.searchParams.set("id__in", ids.join(","));
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "DELETE",
     headers: {
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  });
+  }).catch(console.log);
+
+  return getApiResponse<null, any>(resp);
 }
 
 /**
@@ -345,7 +327,7 @@ export async function edit(
   data: Partial<Document>,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Document> {
+): Promise<APIResponse<Document, ValidationError>> {
   const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -359,16 +341,7 @@ export async function edit(
     body: JSON.stringify(data),
   }).catch(console.error);
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  if (isErrorCode(resp.status)) {
-    const { data } = await resp.json();
-    throw new Error(data);
-  }
-
-  return resp.json();
+  return getApiResponse<Document, ValidationError>(resp);
 }
 
 /**
@@ -411,7 +384,7 @@ export async function add_tags(
   values: string[],
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<Data, any>> {
   const endpoint = new URL(`documents/${doc_id}/data/${key}/`, BASE_API_URL);
   const data: DataUpdate = { values };
 
@@ -426,15 +399,7 @@ export async function add_tags(
     body: JSON.stringify(data),
   }).catch(console.error);
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Data, any>(resp);
 }
 
 export async function redact(
@@ -442,7 +407,7 @@ export async function redact(
   redactions: Redaction[],
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<Response> {
   const endpoint = new URL(`documents/${id}/redactions/`, BASE_API_URL);
 
   // redaction is a fire-and-reprocess method, so all we have to go on is a response
@@ -460,9 +425,6 @@ export async function redact(
 
 /**
  * Get pending documents. This returns an empty array for any error.
- *
- * @param {fetch} fetch
- * @returns {Promise<Pending>}
  */
 export async function pending(fetch = globalThis.fetch): Promise<Pending[]> {
   const endpoint = new URL("documents/pending/", BASE_API_URL);

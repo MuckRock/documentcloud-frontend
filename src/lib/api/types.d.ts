@@ -288,3 +288,6 @@ export interface Flatpage {
   title: string;
   content: string; // Could be HTML or Markdown
 }
+
+// known errors
+export interface ValidationError extends Record<string, string[]> {}

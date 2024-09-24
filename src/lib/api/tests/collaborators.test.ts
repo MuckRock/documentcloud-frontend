@@ -72,17 +72,18 @@ describe("manage project users", () => {
       };
     });
 
-    const result = await collaborators.add(
+    const { data } = await collaborators.add(
       project.id,
       { email: me.email, access: "admin" },
       "token",
       mockFetch,
     );
 
-    expect(result.results).toMatchObject([
-      ...users.results,
-      { user: me, access: "admin" },
-    ]);
+    expect(data).toMatchObject({
+      previous: null,
+      next: null,
+      results: [...users.results, { user: me, access: "admin" }],
+    });
 
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`projects/${project.id}/users/`, BASE_API_URL),
@@ -120,7 +121,7 @@ describe("manage project users", () => {
 
     const me = users.results.find((u) => u.user.id === 1020);
 
-    const updated = await collaborators.update(
+    const { data: updated } = await collaborators.update(
       project.id,
       me.user.id,
       "edit",
@@ -149,18 +150,19 @@ describe("manage project users", () => {
       return {
         ok: true,
         status: 204,
+        async json() {},
       };
     });
 
     const me = users.results.find((u) => u.user.id === 1020);
-    const resp = await collaborators.remove(
+    const { data } = await collaborators.remove(
       project.id,
       me.user.id,
       "token",
       mockFetch,
     );
 
-    expect(resp.status).toStrictEqual(204);
+    expect(data).toBeUndefined();
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`projects/${project.id}/users/${me.user.id}/`, BASE_API_URL),
       {
