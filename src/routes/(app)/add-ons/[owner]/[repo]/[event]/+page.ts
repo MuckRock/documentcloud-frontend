@@ -8,12 +8,13 @@ import { breadcrumbTrail } from "$lib/utils/navigation";
 import { userDocs } from "$lib/utils/search";
 
 export async function load({ params, fetch, parent, url }) {
-  const event = await addons
-    .getEvent(+params.event, fetch)
-    .catch(console.error);
+  const { data: event, error: err } = await addons.getEvent(
+    +params.event,
+    fetch,
+  );
 
-  if (!event) {
-    return error(404, "Event not found");
+  if (err) {
+    return error(err.status, err.message);
   }
 
   // there's probably something better to use as a breadcrumb title
@@ -25,23 +26,15 @@ export async function load({ params, fetch, parent, url }) {
   const { me } = await parent();
   const query = url.searchParams.get("q") || userDocs(me);
 
-  const searchResults = search(query, {}, fetch).catch((e) => {
-    console.error(e);
-    return {
-      results: [],
-      count: 0,
-      next: null,
-    } as DocumentResults;
-  });
+  const searchResults = search(query, {}, fetch).then((r) => r.data);
 
   return {
     breadcrumbs,
     event,
     query,
     searchResults,
-    scheduled: addons.scheduled(
-      { addon: event.addon.id, per_page: 100 },
-      fetch,
-    ),
+    scheduled: addons
+      .scheduled({ addon: event.addon.id, per_page: 100 }, fetch)
+      .then((r) => r.data),
   };
 }

@@ -6,6 +6,7 @@
 
   import { Story } from "@storybook/addon-svelte-csf";
   import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";
+
   import document from "@/test/fixtures/documents/document-expanded.json";
   import { results } from "@/test/fixtures/notes/notes-expanded.json";
 

@@ -1,11 +1,12 @@
 import type { Page } from "@/api/types/common";
 import type { AddOnParams } from "@/api/types/addons";
 import type { AddOnListItem, Event, Run, AddOnPayload } from "@/addons/types";
+import type { APIResponse, ValidationError } from "./types";
 
 import Ajv, { type DefinedError } from "ajv";
 import addFormats from "ajv-formats";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import { isErrorCode } from "../utils/api";
+import { getApiResponse, isErrorCode } from "../utils/api";
 
 // todo i18n
 export const CATEGORIES = [
@@ -28,31 +29,28 @@ export const eventValues = {
   upload: 4,
 };
 
+/**
+ * List add-ons, with optional filters
+ */
 export async function getAddons(
   params: AddOnParams = {},
   fetch = globalThis.fetch,
-): Promise<Page<AddOnListItem>> {
+): Promise<APIResponse<Page<AddOnListItem>, unknown>> {
   const endpoint = new URL("addons/", BASE_API_URL);
   Object.entries(params).forEach(([key, value]) => {
     endpoint.searchParams.set(key, String(value));
   });
-  const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
-  );
+  const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-  return resp.json();
+  return getApiResponse<Page<AddOnListItem>>(resp);
 }
 
+/**
+ * List pinned add-ons
+ */
 export async function getPinnedAddons(
   fetch = globalThis.fetch,
-): Promise<Page<AddOnListItem>> {
+): Promise<APIResponse<Page<AddOnListItem>, unknown>> {
   return getAddons({ active: true }, fetch);
 }
 
@@ -62,9 +60,9 @@ export async function getAddon(
   fetch = globalThis.fetch,
 ): Promise<AddOnListItem | null> {
   const repository = [owner, repo].join("/");
-  const addons = await getAddons({ repository }, fetch);
+  const { data: addons, error } = await getAddons({ repository }, fetch);
   // there should only be one result, if the addon exists
-  if (addons.results.length < 1) {
+  if (error || addons.results.length < 1) {
     return null;
   }
   return addons.results[0];
@@ -73,22 +71,12 @@ export async function getAddon(
 export async function getEvent(
   id: number,
   fetch = globalThis.fetch,
-): Promise<Event> {
+): Promise<APIResponse<Event, unknown>> {
   const endpoint = new URL(`addon_events/${id}/?expand=addon`, BASE_API_URL);
 
-  const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
-  );
+  const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Event>(resp);
 }
 
 /**
@@ -102,25 +90,15 @@ export async function history(
     per_page?: number;
   } = {},
   fetch = globalThis.fetch,
-): Promise<Page<Run>> {
+): Promise<APIResponse<Page<Run>, unknown>> {
   const endpoint = new URL("addon_runs/?expand=addon", BASE_API_URL);
   for (const [k, v] of Object.entries(params)) {
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
-  );
+  const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Page<Run>>(resp);
 }
 
 /**
@@ -129,40 +107,30 @@ export async function history(
 export async function scheduled(
   params: { cursor?: string; addon?: number; per_page?: number } = {},
   fetch = globalThis.fetch,
-): Promise<Page<Event>> {
+): Promise<APIResponse<Page<Event>, unknown>> {
   const endpoint = new URL("addon_events/?expand=addon", BASE_API_URL);
   for (const [k, v] of Object.entries(params)) {
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
-  );
+  const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Page<Event>>(resp);
 }
 
 // dispatching
 
 /**
- * Create or schedule a single add-on run, returning the HTTP response
+ * Create or schedule a single add-on run
  */
 export async function dispatch(
   payload: AddOnPayload,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response> {
+): Promise<APIResponse<Event | Run, ValidationError>> {
   const path = payload.event ? "addon_events/" : "addon_runs/";
   const endpoint = new URL(path, BASE_API_URL);
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "POST",
     headers: {
@@ -172,6 +140,8 @@ export async function dispatch(
     },
     body: JSON.stringify(payload),
   });
+
+  return getApiResponse<Run | Event, ValidationError>(resp);
 }
 
 /**
@@ -182,9 +152,9 @@ export async function update(
   payload: AddOnPayload,
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<Event, ValidationError>> {
   const endpoint = new URL(`addon_events/${event_id}/`, BASE_API_URL);
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "PUT",
     headers: {
@@ -194,6 +164,8 @@ export async function update(
     },
     body: JSON.stringify(payload),
   });
+
+  return getApiResponse<Event, ValidationError>(resp);
 }
 
 /**

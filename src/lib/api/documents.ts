@@ -220,7 +220,7 @@ export async function process(
   }[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<"OK", any>> {
+): Promise<APIResponse<"OK", unknown>> {
   const endpoint = new URL("documents/process/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -234,7 +234,7 @@ export async function process(
     body: JSON.stringify(documents),
   }).catch(console.error);
 
-  return getApiResponse<null, any>(resp);
+  return getApiResponse<null, unknown>(resp);
 }
 
 /**

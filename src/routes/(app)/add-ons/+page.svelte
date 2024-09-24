@@ -10,7 +10,6 @@
   $: addons = data.addons;
   $: events = data.events;
   $: runs = data.runs;
-  $: query = ($page.url as URL).searchParams.get("query") ?? "";
   $: active =
     Array.from(($page.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
