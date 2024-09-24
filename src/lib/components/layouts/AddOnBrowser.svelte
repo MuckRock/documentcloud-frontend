@@ -149,6 +149,10 @@
     background: var(--gray-1);
     box-shadow: inset var(--shadow-2);
   }
+  .nav {
+    min-width: 16rem;
+    max-width: 18rem;
+  }
   .history {
     max-width: unset;
     display: flex;
@@ -162,7 +166,7 @@
     margin: 0 auto;
     max-height: 100%;
     display: grid;
-    grid-template-columns: 16rem 2fr 40%;
+    grid-template-columns: 18rem 2fr 40%;
     grid-template-rows: 1fr;
   }
 </style>
