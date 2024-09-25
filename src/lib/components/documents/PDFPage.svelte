@@ -30,13 +30,23 @@ Selectable text can be rendered in one of two ways:
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
   import Flex from "../common/Flex.svelte";
-  import { Share16 } from "svelte-octicons";
+  import {
+    Share16,
+    Comment16,
+    ListOrdered16,
+    KebabHorizontal16,
+  } from "svelte-octicons";
   import Portal from "../layouts/Portal.svelte";
   import Share from "./Share.svelte";
   import Action from "../common/Action.svelte";
   import Modal from "../layouts/Modal.svelte";
   import EditSections from "../forms/EditSections.svelte";
   import EditNote from "../forms/EditNote.svelte";
+  import { remToPx } from "@/lib/utils/layout";
+  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Button from "../common/Button.svelte";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -224,6 +234,9 @@ Selectable text can be rendered in one of two ways:
       });
     }
   }
+
+  let pageWidth: number;
+  $: id = `page_${page_number}`;
 </script>
 
 <svelte:window on:resize={onResize} />
@@ -239,6 +252,7 @@ Selectable text can be rendered in one of two ways:
   on:visible={() => {
     visible = true;
   }}
+  bind:width={pageWidth}
 >
   <svelte:fragment slot="title">
     {#if section}
@@ -248,16 +262,77 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </svelte:fragment>
 
-  <svelte:fragment slot="actions">
+  <div slot="actions">
     {#if !embed}
-      <Flex align="center">
-        <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
-          {$_("dialog.share")}
-        </Action>
-        <PageAnnotation {document} page_number={page_number - 1} {section} />
-      </Flex>
+      {#if pageWidth > remToPx(32) || !document.edit_access}
+        <Flex align="center">
+          <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
+            {$_("dialog.share")}
+          </Action>
+          {#if document.edit_access}
+            <div>
+              <Action icon={Comment16} on:click={() => (pageNote = true)}>
+                {$_("annotate.cta.add-note")}
+              </Action>
+
+              <Action
+                icon={ListOrdered16}
+                on:click={() => (editSection = true)}
+              >
+                {#if section}
+                  {$_("annotate.cta.edit-section")}
+                {:else}
+                  {$_("annotate.cta.add-section")}
+                {/if}
+              </Action>
+            </div>
+          {/if}
+        </Flex>
+      {:else}
+        <Dropdown2 id="{id}-actions" position="bottom right">
+          <Button minW={false} slot="title" ghost mode="primary">
+            <KebabHorizontal16 />
+          </Button>
+          <Menu>
+            <MenuItem
+              on:click={() => {
+                closeDropdown(`${id}-actions`);
+                pageShareOpen = true;
+              }}
+            >
+              <Share16 slot="icon" />
+              {$_("dialog.share")}
+            </MenuItem>
+            {#if document.edit_access}
+              <MenuItem
+                on:click={() => {
+                  closeDropdown(`${id}-actions`);
+                  pageNote = true;
+                }}
+              >
+                <Comment16 slot="icon" />
+                {$_("annotate.cta.add-note")}
+              </MenuItem>
+
+              <MenuItem
+                on:click={() => {
+                  closeDropdown(`${id}-actions`);
+                  editSection = true;
+                }}
+              >
+                <ListOrdered16 slot="icon" />
+                {#if section}
+                  {$_("annotate.cta.edit-section")}
+                {:else}
+                  {$_("annotate.cta.add-section")}
+                {/if}
+              </MenuItem>
+            {/if}
+          </Menu>
+        </Dropdown2>
+      {/if}
     {/if}
-  </svelte:fragment>
+  </div>
 
   {#if page_level_notes.length}
     <div class="page-notes">

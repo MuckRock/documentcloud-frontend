@@ -14,7 +14,7 @@
   import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
   import pdfFile from "@/test/fixtures/documents/examples/the-santa-anas.pdf";
 
-  const document = doc as Document;
+  const document = { ...doc, edit_access: true } as Document;
 
   export const meta = {
     title: "Components / Documents / PDF Page",
@@ -43,7 +43,15 @@
 
 <Story name="fit width" parameters={{ layout: "fullscreen" }}>
   {#await load(url) then pdf}
-    <PdfPage {document} page_number={1} scale="width" {pdf} {width} {height} />
+    <PdfPage
+      {document}
+      page_number={1}
+      scale="width"
+      {pdf}
+      {width}
+      {height}
+      {section}
+    />
   {/await}
 </Story>
 
@@ -95,12 +103,12 @@
   {/await}
 </Story>
 
-<Story name="long section start">
+<Story name="long section start" parameters={{ layout: "fullscreen" }}>
   {#await load(url) then pdf}
     <PdfPage
       {document}
       page_number={1}
-      scale={1.5}
+      scale="width"
       {pdf}
       {width}
       {height}
