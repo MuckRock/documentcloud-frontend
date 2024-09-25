@@ -10,7 +10,12 @@ import {
   afterEach,
 } from "vitest";
 
-import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config";
+import {
+  APP_URL,
+  BASE_API_URL,
+  CSRF_HEADER_NAME,
+  EMBED_URL,
+} from "@/config/config";
 import { project, projectList } from "@/test/fixtures/projects";
 
 import * as projects from "../projects";
@@ -347,6 +352,13 @@ describe("project utils", () => {
     const url = projects.canonicalUrl(project);
     expect(url).toStrictEqual(
       new URL(`/projects/${project.id}-${project.slug}/`, APP_URL),
+    );
+  });
+
+  test("projects.embedUrl", () => {
+    const url = projects.embedUrl(project);
+    expect(url).toStrictEqual(
+      new URL(`/projects/${project.id}-${project.slug}/?embed=1`, EMBED_URL),
     );
   });
 });
