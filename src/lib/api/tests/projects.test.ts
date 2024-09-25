@@ -346,7 +346,7 @@ describe("project utils", () => {
   test("projects.canonicalUrl", () => {
     const url = projects.canonicalUrl(project);
     expect(url).toStrictEqual(
-      new URL(`documents/projects/${project.id}-${project.slug}/`, APP_URL),
+      new URL(`/projects/${project.id}-${project.slug}/`, APP_URL),
     );
   });
 });

@@ -85,7 +85,7 @@ and we don't want to do that everywhere.
 </script>
 
 <div class="container">
-  <form method="post" action="/documents/projects/" use:enhance={onSubmit}>
+  <form method="post" action="/projects/" use:enhance={onSubmit}>
     <h2>{$_("projects.create")}</h2>
     <Field title={$_("projects.fields.title")} required inline>
       <Text name="title" placeholder={$_("projects.fields.title")} />

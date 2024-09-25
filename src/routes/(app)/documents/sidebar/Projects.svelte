@@ -33,7 +33,7 @@
   <SidebarItem slot="title">
     <FileDirectory16 slot="start" />{$_("sidebar.projects.title")}
   </SidebarItem>
-  <a href="/documents/projects/" slot="action">
+  <a href="/projects/" slot="action">
     <Action icon={Book16}>{$_("common.explore")}</Action>
   </a>
   <Flex direction="column" gap={0}>
