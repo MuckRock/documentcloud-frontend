@@ -43,17 +43,24 @@ export const actions = {
       return m;
     }, {});
 
-    try {
-      const document = await edit(id, { data }, csrf_token, fetch);
-      return {
-        success: true,
-        document,
-      };
-    } catch (error) {
-      console.error(`Data: ${url}`);
-      console.error(error);
-      return fail(400);
+    const { data: document, error } = await edit(
+      id,
+      { data },
+      csrf_token,
+      fetch,
+    );
+
+    if (error) {
+      return fail(error.status, {
+        message: error.message,
+        error: error.errors,
+      });
     }
+
+    return {
+      success: true,
+      document,
+    };
   },
 
   async delete({ cookies, fetch, params }) {
@@ -62,19 +69,11 @@ export const actions = {
 
     console.info(`Deleting document: ${id}`);
 
-    const resp = await destroy(id, csrf_token, fetch).catch((e) => {
-      console.error(e);
-    });
+    // data will be null on success
+    const { error } = await destroy(id, csrf_token, fetch);
 
-    // probably the API is down
-    if (!resp) {
-      return fail(500, { error: "Something went wrong." });
-    }
-
-    // something else broke
-    if (isErrorCode(resp.status)) {
-      // {"error": "..."}
-      return fail(resp.status, await resp.json());
+    if (error) {
+      return fail(error.status, { message: error.message });
     }
 
     return redirect(302, "/documents/");
@@ -87,19 +86,24 @@ export const actions = {
 
     const update: Partial<Document> = Object.fromEntries(form);
 
-    // noindex is a boolean so needs special treatment
-    update.noindex = form.get("noindex") === "checked";
+    console.log(update);
 
-    try {
-      const document = await edit(id, update, csrf_token, fetch);
-      return {
-        success: true,
-        document,
-      };
-    } catch (error) {
-      console.error(error);
-      return fail(400);
+    // noindex is a boolean so needs special treatment
+    update.noindex = form.get("noindex") === "on";
+
+    const { data: document, error } = await edit(id, update, csrf_token, fetch);
+
+    if (error) {
+      return fail(error.status, {
+        message: error.message,
+        errors: error.errors,
+      });
     }
+
+    return {
+      success: true,
+      document,
+    };
   },
 
   async redact({ cookies, fetch, request, params }) {
@@ -118,7 +122,6 @@ export const actions = {
 
     // something else broke
     if (isErrorCode(resp.status)) {
-      // {"error": "..."}
       return fail(resp.status, await resp.json());
     }
 
@@ -145,15 +148,24 @@ export const actions = {
       y2,
     };
 
-    try {
-      const created = await notes.create(params.id, note, csrf_token, fetch);
-      return {
-        success: true,
-        note: created,
-      };
-    } catch (e) {
-      return fail(400, { error: e.message });
+    const { data: created, error } = await notes.create(
+      params.id,
+      note,
+      csrf_token,
+      fetch,
+    );
+
+    if (error) {
+      return fail(error.status, {
+        message: error.message,
+        errors: error.errors,
+      });
     }
+
+    return {
+      success: true,
+      note: created,
+    };
   },
 
   async updateAnnotation({ cookies, request, fetch, params }) {
@@ -169,21 +181,25 @@ export const actions = {
       access: form.get("access") as Access,
     };
 
-    try {
-      const updated = await notes.update(
-        params.id,
-        note_id,
-        note,
-        csrf_token,
-        fetch,
-      );
-      return {
-        success: true,
-        note: updated,
-      };
-    } catch (e) {
-      return fail(400, { error: e.message });
+    const { data: updated, error } = await notes.update(
+      params.id,
+      note_id,
+      note,
+      csrf_token,
+      fetch,
+    );
+
+    if (error) {
+      return fail(error.status, {
+        message: error.message,
+        errors: error.errors,
+      });
     }
+
+    return {
+      success: true,
+      note: updated,
+    };
   },
 
   async deleteAnnotation({ cookies, request, fetch, params }) {
@@ -194,21 +210,10 @@ export const actions = {
 
     if (!note_id) return fail(400, { id: "missing" });
 
-    const resp = await notes
-      .remove(params.id, note_id, csrf_token, fetch)
-      .catch((e) => {
-        console.error(e);
-      });
+    const { error } = await notes.remove(params.id, note_id, csrf_token, fetch);
 
-    // probably the API is down
-    if (!resp) {
-      return fail(500, { error: "Something went wrong." });
-    }
-
-    // something else broke
-    if (isErrorCode(resp.status)) {
-      // {"error": "..."}
-      return fail(resp.status, await resp.json());
+    if (error) {
+      return fail(error.status, { message: error.message });
     }
 
     return {

@@ -38,7 +38,8 @@ describe("getAddons", () => {
     );
   });
   it("returns the full list", async () => {
-    const response = await addons.getAddons({}, mockFetch);
+    const { data: response, error } = await addons.getAddons({}, mockFetch);
+    expect(error).toBeUndefined();
     expect(response).toBe(addonsList);
   });
   it("calls SvelteKit's error fn given a response error", async () => {

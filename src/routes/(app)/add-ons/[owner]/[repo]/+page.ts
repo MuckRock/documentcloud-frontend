@@ -22,20 +22,15 @@ export async function load({ url, params, fetch, parent }) {
   const { me } = await parent();
   const query = url.searchParams.get("q") || userDocs(me);
 
-  const searchResults = search(query, {}, fetch).catch((e) => {
-    console.error(e);
-    return {
-      results: [],
-      count: 0,
-      next: null,
-    } as DocumentResults;
-  });
+  const searchResults = search(query, {}, fetch).then((r) => r.data);
 
   return {
     addon,
     breadcrumbs,
     query,
     searchResults,
-    scheduled: addons.scheduled({ addon: addon.id, per_page: 100 }, fetch),
+    scheduled: addons
+      .scheduled({ addon: addon.id, per_page: 100 }, fetch)
+      .then((r) => r.data),
   };
 }

@@ -15,10 +15,14 @@ import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, url, params, depends }) {
-  const document = await documents.get(+params.id, fetch).catch(console.error);
+  const { data: document, error: err } = await documents.get(+params.id, fetch);
+
+  if (err) {
+    return error(err.status, err.message);
+  }
 
   if (!document) {
-    error(404, "Document not found");
+    return error(404, "Document not found");
   }
 
   depends(`document:${document.id}`);

@@ -2,7 +2,7 @@
 One row of the `EditSections.svelte` form, to encapsulate logic.
 -->
 <script lang="ts">
-  import type { Document, Section } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { invalidate } from "$app/navigation";
 
@@ -15,7 +15,6 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
   } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import Number from "../inputs/Number.svelte";
   import Text from "../inputs/Text.svelte";
 
   import { create, update, remove } from "$lib/api/sections";
@@ -72,7 +71,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         name="action"
         value="update"
         {disabled}
-        on:click={async (e) => {
+        on:click={async () => {
           const section = { id, page_number, title };
           await update(document.id, id, section, csrftoken);
           await invalidate(`document:${document.id}`);
@@ -87,7 +86,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         minW={false}
         name="action"
         value="delete"
-        on:click={async (e) => {
+        on:click={async () => {
           await remove(document.id, id, csrftoken);
           await invalidate(`document:${document.id}`);
         }}

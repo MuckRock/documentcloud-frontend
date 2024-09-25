@@ -13,7 +13,11 @@ export async function load({ fetch, parent, data }) {
       projectsApi.list({ per_page: 100, user: me.id }, fetch),
     ]);
 
-    return { ...data, pinnedProjects: pinned.results, projects };
+    return {
+      ...data,
+      pinnedProjects: pinned.data?.results,
+      projects: projects.data,
+    };
   }
 
   // anonymous gets empty results

@@ -11,7 +11,7 @@ export async function load({ params, fetch }) {
   ]);
 
   return {
-    document,
+    document: document.data,
     notes: notes.results.filter((note) => note.page_number === page - 1),
     page: +page,
   };

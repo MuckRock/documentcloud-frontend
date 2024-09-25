@@ -11,19 +11,13 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const project_id = +params.id;
 
-    const resp = await projects
-      .destroy(project_id, csrf_token, fetch)
-      .catch(console.error);
+    const { error } = await projects.destroy(project_id, csrf_token, fetch);
 
-    if (!resp) {
-      return fail(500, { message: "API error" });
+    if (error) {
+      return fail(error.status, { message: error.message });
     }
 
-    if (resp.status === 204) {
-      return redirect(302, "/documents/projects/");
-    }
-
-    return fail(resp.status, { error: await resp.json() });
+    return redirect(302, "/documents/projects/");
   },
 
   async edit({ cookies, request, fetch, params }) {
@@ -37,17 +31,18 @@ export const actions = {
       private: form.get("private") === "on",
     };
 
-    try {
-      const updated = await projects.edit(
-        +params.id,
-        update,
-        csrf_token,
-        fetch,
-      );
-      return { success: true, project: updated };
-    } catch (error) {
-      return fail(400, { error });
+    const { data: updated, error } = await projects.edit(
+      +params.id,
+      update,
+      csrf_token,
+      fetch,
+    );
+
+    if (error) {
+      return fail(error.status, { message: error.message });
     }
+
+    return { success: true, project: updated };
   },
 
   async users({ request, cookies, params, fetch }) {
@@ -58,33 +53,29 @@ export const actions = {
     const users = form.getAll("user").map(Number);
     const access = form.getAll("access");
 
-    try {
-      // batch update
-      const updated = await Promise.all(
-        users.map((u, i) => {
-          const a = access[i];
-          if (a === "remove") {
-            // this returns an empty body, so just fire and forget
-            collaborators.remove(project_id, u, csrf_token, fetch);
-          } else {
-            return collaborators.update(
-              project_id,
-              u,
-              a as ProjectAccess,
-              csrf_token,
-              fetch,
-            );
-          }
-        }),
-      );
-      return {
-        success: true,
-        users: updated,
-      };
-    } catch (error) {
-      console.error(error);
-      return fail(400, { error: error.toString() });
-    }
+    // batch update
+    const updated = await Promise.all(
+      users.map((u, i) => {
+        const a = access[i];
+        if (a === "remove") {
+          // this returns an empty body, so just fire and forget
+          collaborators.remove(project_id, u, csrf_token, fetch);
+        } else {
+          return collaborators.update(
+            project_id,
+            u,
+            a as ProjectAccess,
+            csrf_token,
+            fetch,
+          );
+        }
+      }),
+    );
+
+    return {
+      success: true,
+      users: updated,
+    };
   },
 
   async invite({ request, cookies, params, fetch }) {
@@ -94,21 +85,20 @@ export const actions = {
     const email = form.get("email") as string;
     const access = form.get("access") as ProjectAccess;
 
-    try {
-      const user = await collaborators.add(
-        +params.id,
-        { email, access },
-        csrf_token,
-        fetch,
-      );
+    const { data: user, error } = await collaborators.add(
+      +params.id,
+      { email, access },
+      csrf_token,
+      fetch,
+    );
 
-      return {
-        success: true,
-        user,
-      };
-    } catch (error) {
-      console.error(error);
-      return fail(400);
+    if (error) {
+      return fail(error.status, { ...error });
     }
+
+    return {
+      success: true,
+      user,
+    };
   },
 } satisfies Actions;

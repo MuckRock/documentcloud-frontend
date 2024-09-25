@@ -9,7 +9,7 @@ export async function load({ params, fetch }) {
   ]);
 
   return {
-    document,
-    note,
+    document: document.data,
+    note: note.data,
   };
 }

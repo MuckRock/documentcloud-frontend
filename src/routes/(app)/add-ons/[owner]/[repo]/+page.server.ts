@@ -4,7 +4,6 @@ import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
 import { getAddon, buildPayload, dispatch } from "$lib/api/addons";
-import { isErrorCode } from "$lib/utils";
 
 export const actions = {
   async dispatch({ cookies, fetch, request, params }) {
@@ -21,21 +20,16 @@ export const actions = {
 
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
 
-    const resp = await dispatch(payload, csrf_token, fetch).catch(
-      console.error,
-    );
+    const { data, error } = await dispatch(payload, csrf_token, fetch);
 
-    if (!resp) {
-      return fail(500, { errors: ["API error"] });
-    }
-
-    if (isErrorCode(resp.status)) {
-      return fail(resp.status, { errors: [resp.statusText] });
+    if (error) {
+      return fail(error.status, { ...error });
     }
 
     return {
-      success: resp.ok,
-      run: await resp.json(),
+      success: true,
+      type: payload.event ? "event" : "run",
+      ...data,
     };
   },
 } satisfies Actions;

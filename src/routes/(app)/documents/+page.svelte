@@ -14,16 +14,15 @@
   import Documents from "../documents/sidebar/Documents.svelte";
   import Projects from "../documents/sidebar/Projects.svelte";
 
-  import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
+  import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
 
   import {
     canUploadFiles,
     getCurrentUser,
     isSignedIn,
-  } from "@/lib/utils/permissions";
+  } from "$lib/utils/permissions";
 
   // stores
-  import { deleted } from "$lib/api/documents";
   import { selected } from "$lib/components/documents/ResultsList.svelte";
 
   export let data;
@@ -32,28 +31,8 @@
 
   const me = getCurrentUser();
 
-  $: searchResults =
-    $deleted.size > 0
-      ? data.searchResults.then((r) => excludeDeleted(r, $deleted))
-      : data.searchResults;
   $: query = data.query;
   $: pending = data.pending;
-
-  // filter out deleted documents that haven't been purged from search yet
-  function excludeDeleted(
-    searchResults: DocumentResults,
-    deleted: Set<string>,
-  ): DocumentResults {
-    const filtered = searchResults.results.filter(
-      (d) => !deleted.has(String(d.id)),
-    );
-
-    return {
-      ...searchResults,
-      results: filtered,
-      count: searchResults.count - deleted.size,
-    };
-  }
 </script>
 
 <svelte:head>
@@ -68,7 +47,12 @@
     </SignedIn>
   </svelte:fragment>
 
-  <DocumentBrowser slot="content" documents={searchResults} {query} {pending} />
+  <DocumentBrowser
+    slot="content"
+    documents={data.searchResults}
+    {query}
+    {pending}
+  />
 
   <svelte:fragment slot="action">
     {#if isSignedIn($me)}

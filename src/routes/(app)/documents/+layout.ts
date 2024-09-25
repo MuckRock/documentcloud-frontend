@@ -6,11 +6,10 @@ export async function load({ fetch, parent }) {
   const pinnedAddons = getPinnedAddons(fetch).catch(console.error);
   const pinnedProjects = projects
     .list({ pinned: true }, fetch)
-    .then((r) => r.results)
-    .catch(console.error);
+    .then((r) => r.data?.results);
 
   const breadcrumbs = await breadcrumbTrail(parent, [
-    // { href: "/documents", title: "Documents" }, // TODO: move document manager to `/documents` route
+    { href: "/documents/", title: "Documents" },
   ]);
 
   return {

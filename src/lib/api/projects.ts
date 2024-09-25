@@ -1,77 +1,57 @@
 // api methods for projects
 import type { Page } from "@/api/types";
 import type {
-  APIError,
+  APIResponse,
   Document,
   Project,
   ProjectMembershipItem,
   ProjectResults,
+  ValidationError,
 } from "./types";
 
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import { getAll, isErrorCode } from "$lib/utils/api";
+import { getAll, getApiResponse, isErrorCode } from "$lib/utils/api";
 
 /**
  * Get a single project
- *
- * @export
  */
 export async function get(
   id: number,
   fetch = globalThis.fetch,
-): Promise<Project> {
+): Promise<APIResponse<Project, unknown>> {
   const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
 
-  const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
-  );
+  const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Project>(resp);
 }
 
 /**
  * Get a page of projects
- *
- * @export
  */
 export async function list(
   params: Record<string, any> = {},
   fetch = globalThis.fetch,
-): Promise<ProjectResults> {
+): Promise<APIResponse<ProjectResults, unknown>> {
   const endpoint = new URL("projects/", BASE_API_URL);
 
   for (const [k, v] of Object.entries(params)) {
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
-  );
+  const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<ProjectResults>(resp);
 }
 
+/**
+ * Get all projects a user has access to -- owned or shared
+ */
 export async function getForUser(
   userId: number,
   query?: string,
   fetch = globalThis.fetch,
-) {
+): Promise<Project[]> {
   const endpoint = new URL("projects/", BASE_API_URL);
   endpoint.searchParams.set("user", String(userId));
   if (query) {
@@ -114,7 +94,7 @@ export async function pinProject(
   pinned = true,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Project> {
+) {
   const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
   const options: RequestInit = {
     credentials: "include",
@@ -129,26 +109,15 @@ export async function pinProject(
   const resp = await fetch(endpoint, {
     ...options,
     body: JSON.stringify({ pinned }),
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Project>(resp);
 }
 
 // writable methods
+
 /**
  * Create a new project
- *
- * @param project
- * @param csrf_token
- * @param fetch
  */
 export async function create(
   project: {
@@ -159,7 +128,7 @@ export async function create(
   },
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<Project, ValidationError>> {
   const endpoint = new URL("projects/", BASE_API_URL);
   const resp = await fetch(endpoint, {
     body: JSON.stringify(project),
@@ -170,18 +139,9 @@ export async function create(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  if (isErrorCode(resp.status)) {
-    const { data } = await resp.json();
-    throw new Error(data);
-  }
-
-  return resp.json();
+  return getApiResponse<Project, ValidationError>(resp);
 }
 
 export async function edit(
@@ -189,7 +149,7 @@ export async function edit(
   data: Partial<Project>,
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<Project, ValidationError>> {
   const endpoint = new URL(`projects/${project_id}/`, BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -201,26 +161,13 @@ export async function edit(
       Referer: APP_URL,
     },
     method: "PATCH",
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  if (isErrorCode(resp.status)) {
-    const { data } = await resp.json();
-    throw new Error(data);
-  }
-
-  return resp.json();
+  return getApiResponse<Project, ValidationError>(resp);
 }
 
 /**
  * Delete a project. There is no undo.
- *
- * @param project_id
- * @param csrf_token
- * @param fetch
  */
 export async function destroy(
   project_id: number,
@@ -229,7 +176,7 @@ export async function destroy(
 ) {
   const endpoint = new URL(`projects/${project_id}/`, BASE_API_URL);
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     headers: {
       "Content-type": "application/json",
@@ -238,6 +185,8 @@ export async function destroy(
     },
     method: "DELETE",
   });
+
+  return getApiResponse<null>(resp);
 }
 
 /**
@@ -253,7 +202,7 @@ export async function add(
   documents: (string | number)[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<ProjectMembershipItem[] | APIError> {
+): Promise<APIResponse<ProjectMembershipItem[], unknown>> {
   const endpoint = new URL(`projects/${project_id}/documents/`, BASE_API_URL);
   const data = documents.map((document) => ({ document }));
   const resp = await fetch(endpoint, {
@@ -265,32 +214,20 @@ export async function add(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  // trying out some new error handling
-  if (isErrorCode(resp.status)) {
-    return {
-      error: {
-        status: resp.status,
-        message: resp.statusText,
-        ...(await resp.json()),
-      },
-    };
-  }
-
-  return resp.json();
+  return getApiResponse<ProjectMembershipItem[]>(resp);
 }
 
+/**
+ * Remove documents from a project
+ */
 export async function remove(
   project_id: number,
   documents: (string | number)[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIError | null> {
+) {
   const endpoint = new URL(`projects/${project_id}/documents/`, BASE_API_URL);
   endpoint.searchParams.set("document_id__in", documents.join(","));
 
@@ -302,24 +239,9 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  // trying out some new error handling
-  if (isErrorCode(resp.status)) {
-    return {
-      error: {
-        status: resp.status,
-        message: resp.statusText,
-        ...(await resp.json()),
-      },
-    };
-  }
-
-  return null;
+  return getApiResponse<null>(resp);
 }
 
 /**

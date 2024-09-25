@@ -1,5 +1,10 @@
 <script lang="ts">
-  import type { DocumentResults, Pending, Project } from "$lib/api/types";
+  import type {
+    APIResponse,
+    DocumentResults,
+    Pending,
+    Project,
+  } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -42,6 +47,7 @@
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   // Utilities
+  import { deleted } from "$lib/api/documents";
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
@@ -57,7 +63,7 @@
     search: string;
   }
 
-  export let documents: Promise<DocumentResults>;
+  export let documents: Promise<APIResponse<DocumentResults, any>>;
   export let query: string = "";
   export let project: Project = null;
   export let pending: Promise<Pending[]> = Promise.resolve([]);
@@ -73,6 +79,26 @@
   $: BREAKPOINTS = {
     HIDE_COUNT: width < remToPx(26),
   };
+
+  $: searchResults = documents.then((r) => excludeDeleted($deleted, r.data));
+
+  // filter out deleted documents that haven't been purged from search yet
+  function excludeDeleted(
+    deleted: Set<string>,
+    searchResults?: DocumentResults, // optional params must come second
+  ): DocumentResults {
+    if (deleted.size === 0) return searchResults;
+
+    const filtered = searchResults?.results.filter(
+      (d) => !deleted.has(String(d.id)),
+    ) ?? [];
+
+    return {
+      ...searchResults,
+      results: filtered,
+      count: searchResults.count - deleted.size,
+    };
+  }
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -138,7 +164,7 @@
           {/if}
         </Flex>
       </svelte:fragment>
-      {#await documents}
+      {#await searchResults}
         <Empty icon={Hourglass24}>{uiText.loading}</Empty>
       {:then documentsResults}
         {#if !query && !documentsResults.results?.length}
