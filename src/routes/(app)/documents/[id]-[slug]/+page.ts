@@ -7,15 +7,8 @@ export async function load({ fetch, parent, url, data, depends }) {
 
   const { document, mode } = await parent();
 
-  // only load text in text mode
-  let text: Promise<DocumentText> = Promise.resolve({
-    updated: 0,
-    pages: [],
-  });
-
-  if (mode === "text") {
-    text = documents.text(document, fetch);
-  }
+  // load text
+  let text = await documents.text(document, fetch);
 
   const asset_url = await documents.assetUrl(document, fetch);
 

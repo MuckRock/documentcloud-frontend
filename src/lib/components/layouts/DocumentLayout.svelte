@@ -30,8 +30,8 @@
   const me = getCurrentUser();
 
   export let document: Document;
+  export let text: DocumentText;
   export let asset_url: URL = pdfUrl(document);
-  export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
   export let action: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;

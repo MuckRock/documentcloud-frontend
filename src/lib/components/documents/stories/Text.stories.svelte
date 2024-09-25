@@ -10,14 +10,8 @@
   };
 
   import txt from "@/test/fixtures/documents/document.txt.json";
-
-  const loading: Promise<DocumentText> = new Promise(() => {});
 </script>
 
 <Story name="default">
   <Text text={txt} />
-</Story>
-
-<Story name="waiting to load">
-  <Text text={loading} total={txt.pages.length} />
 </Story>
