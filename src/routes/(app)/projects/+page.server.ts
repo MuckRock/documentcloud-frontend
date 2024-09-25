@@ -7,7 +7,7 @@ import * as projects from "$lib/api/projects";
 
 export const actions = {
   // create is the only thing we can do here
-  async default({ cookies, request, params, fetch }) {
+  async default({ cookies, request, fetch }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 

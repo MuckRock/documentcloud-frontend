@@ -26,7 +26,7 @@ Edit project metadata
 
   $: action = project?.id
     ? new URL("?/edit", canonicalUrl(project as Project)).href
-    : "/documents/projects/";
+    : "/projects/";
 
   // handle optimistic updates
   $: is_pinned = $pinned.includes(project as Project) || project.pinned;

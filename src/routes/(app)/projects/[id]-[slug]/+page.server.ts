@@ -17,7 +17,7 @@ export const actions = {
       return fail(error.status, { message: error.message });
     }
 
-    return redirect(302, "/documents/projects/");
+    return redirect(302, "/projects/");
   },
 
   async edit({ cookies, request, fetch, params }) {

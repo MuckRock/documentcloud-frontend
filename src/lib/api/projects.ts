@@ -9,7 +9,12 @@ import type {
   ValidationError,
 } from "./types";
 
-import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
+import {
+  APP_URL,
+  BASE_API_URL,
+  CSRF_HEADER_NAME,
+  EMBED_URL,
+} from "@/config/config.js";
 import { getAll, getApiResponse, isErrorCode } from "$lib/utils/api";
 
 /**
@@ -280,9 +285,9 @@ export async function documents(
 // utils
 
 export function canonicalUrl(project: Project): URL {
-  return new URL(`documents/projects/${project.id}-${project.slug}/`, APP_URL);
+  return new URL(`/projects/${project.id}-${project.slug}/`, APP_URL);
 }
 
 export function embedUrl(project: Project): URL {
-  return new URL(`embed/projects/${project.id}/?embed=1`, APP_URL);
+  return new URL(`/projects/${project.id}-${project.slug}/?embed=1`, EMBED_URL);
 }

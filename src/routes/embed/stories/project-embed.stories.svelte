@@ -4,7 +4,7 @@
   import "@/style/global.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectEmbed from "../projects/[project_id]/+page.svelte";
+  import ProjectEmbed from "../projects/[project_id]-[slug]/+page.svelte";
 
   import documents from "@/test/fixtures/documents/documents-expanded.json";
   import project from "@/test/fixtures/projects/project.json";
