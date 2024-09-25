@@ -51,4 +51,9 @@
     z-index: 2;
     padding: 0.625rem;
   }
+
+  header:empty,
+  footer:empty {
+    display: none;
+  }
 </style>

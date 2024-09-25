@@ -1,29 +1,19 @@
 // load data for project embeds
 
-import { error, redirect } from "@sveltejs/kit";
-import * as projects from "$lib/api/projects";
+import { error } from "@sveltejs/kit";
+import { search } from "$lib/api/documents";
+import { get } from "$lib/api/projects";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {
-  let id = params.project_id;
-  let slug = params.slug;
-  if (slug.match(/\d+/)) {
-    // we're in the old-style URL pattern, so redirect
-    id = params.slug;
-  }
-  const [project, documents] = await Promise.all([
-    projects.get(+id, fetch),
-    projects.documents(+params.project_id, fetch),
-  ]);
-
+  const project = await get(+params.project_id, fetch);
+  const documents = search(`+project:${params.project_id}`, undefined, fetch);
   if (project.error) {
     return error(project.error.status, project.error.message);
   }
-
-  if (project.data.slug !== params.slug) {
-    return redirect(302, projects.embedUrl(project.data));
+  if (!project.data) {
+    return error(404, "Project not found");
   }
-
   return {
     documents,
     error: project.error,

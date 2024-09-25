@@ -6,10 +6,10 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import ProjectEmbed from "../projects/[project_id]-[slug]/+page.svelte";
 
-  import documents from "@/test/fixtures/projects/project-documents-expanded.json";
+  import documents from "@/test/fixtures/documents/documents-expanded.json";
   import project from "@/test/fixtures/projects/project.json";
   import { projects } from "@/test/handlers/projects";
-  import type { Page, Project, Document } from "@/lib/api/types";
+  import type { Page, Project, Document, APIResponse } from "@/lib/api/types";
 
   export const meta = {
     title: "Embed / Project",
@@ -20,7 +20,10 @@
 
   const data = {
     project: project as Project,
-    documents: documents as Page<{ document: Document; edit_access: boolean }>,
+    documents: Promise.resolve({ data: documents } as APIResponse<
+      Page<Document>,
+      null
+    >),
     embed: true,
     me: null,
     org: null,
@@ -38,5 +41,13 @@
     msw: { handlers: [projects.info, projects.documents] },
   }}
 >
-  <ProjectEmbed {data} />
+  <div class="vh">
+    <ProjectEmbed {data} />
+  </div>
 </Story>
+
+<style>
+  .vh {
+    height: 100vh;
+  }
+</style>
