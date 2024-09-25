@@ -1,0 +1,78 @@
+User-agent: *
+
+Allow: /*
+Crawl-delay: 5
+
+Disallow: /*?
+
+User-agent: ChatGPT-User
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: YouBot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: PerplexityBot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: Applebot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: Amazonbot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: omgili
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: omgilibot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: cohere-ai
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: CCBot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: FacebookBot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: Twitterbot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: ClaudeBot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: Google-Extended
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+User-agent: GPTBot
+Allow: /home/$
+Allow: /help/*
+Disallow: /*
+
+Host: www.documentcloud.org
