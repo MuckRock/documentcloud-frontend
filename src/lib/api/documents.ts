@@ -23,7 +23,7 @@ import type {
 
 import { writable, type Writable } from "svelte/store";
 import { DEFAULT_EXPAND } from "@/api/common.js";
-import { isOrg } from "./accounts";
+import { getUserName, isOrg } from "./accounts";
 import {
   APP_URL,
   BASE_API_URL,
@@ -623,12 +623,12 @@ export function pdfUrl(document: Document): URL {
 export function userOrgString(document: Document): string {
   // we have an org and user
   if (isOrg(document.organization) && typeof document.user === "object") {
-    return `${document.user.name} (${document.organization.name})`;
+    return `${getUserName(document.user)} (${document.organization.name})`;
   }
 
   // just a user
   if (typeof document.user === "object") {
-    return document.user.name;
+    return getUserName(document.user);
   }
 
   // nothing, so return nothing

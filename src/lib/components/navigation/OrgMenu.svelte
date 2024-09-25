@@ -15,7 +15,7 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import PremiumIcon from "@/common/icons/Premium.svelte";
 
-  import { getUpgradeUrl, setOrg } from "$lib/api/accounts";
+  import { getUpgradeUrl, getUserName, setOrg } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
   import { getCsrfToken } from "$lib/utils/api";
   import { remToPx } from "@/lib/utils/layout";
@@ -129,7 +129,7 @@
                     <span class="icon"><Person16 /></span>
                   {/if}
                 </svelte:fragment>
-                <span class="username">{user.name}</span>
+                <span class="username">{getUserName(user)}</span>
                 {#if user.admin_organizations.includes(active_org.id)}
                   <span class="badge">{$_("authSection.org.adminRole")}</span>
                 {/if}

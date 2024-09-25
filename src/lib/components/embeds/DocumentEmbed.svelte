@@ -8,7 +8,7 @@
   import Metadata from "../common/Metadata.svelte";
   import Viewer from "../documents/Viewer.svelte";
 
-  import { isOrg, isUser } from "$lib/api/accounts";
+  import { getUserName, isOrg, isUser } from "$lib/api/accounts";
 
   export let document: Document;
   export let text: Promise<DocumentText> | DocumentText;
@@ -17,7 +17,7 @@
   // if we're using this layout, we're embedded
   setContext("embed", true);
 
-  $: user = isUser(document.user) ? document.user.name : undefined;
+  $: user = isUser(document.user) ? getUserName(document.user) : undefined;
   $: org = isOrg(document.organization)
     ? document.organization.name
     : undefined;

@@ -25,6 +25,7 @@ They might get separated later.
   import Avatar from "../accounts/Avatar.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
+  import { getUserName } from "@/lib/api/accounts";
 
   export let project: Project;
   export let users: ProjectUser[];
@@ -93,7 +94,7 @@ They might get separated later.
               </tr>
               {#each sort(group) as user}
                 <tr>
-                  <td><Flex><Avatar {user} /> {user.name}</Flex></td>
+                  <td><Flex><Avatar {user} /> {getUserName(user)}</Flex></td>
                   <td>
                     <input type="hidden" name="user" value={user.id} />
                     <Field title={$_("collaborators.change")} sronly>
