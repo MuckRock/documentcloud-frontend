@@ -109,8 +109,12 @@ describe("document fetching", () => {
       };
     });
 
-    const result = await documents.get(+document.id, mockFetch);
+    const { data: result, error } = await documents.get(
+      +document.id,
+      mockFetch,
+    );
 
+    expect(error).toBeUndefined();
     expect(result).toStrictEqual(document);
     expect(mockFetch).toBeCalledWith(
       new URL(
@@ -134,8 +138,13 @@ describe("document fetching", () => {
       };
     });
 
-    const results = await documents.search("boston", { hl: true }, mockFetch);
+    const { data: results, error } = await documents.search(
+      "boston",
+      { hl: true },
+      mockFetch,
+    );
 
+    expect(error).toBeUndefined();
     expect(results).toStrictEqual(search);
     expect(mockFetch).toBeCalledWith(
       new URL(
@@ -240,9 +249,8 @@ describe("document uploads and processing", () => {
       original_extension: d.original_extension,
     }));
 
-    documents.create(docs, "token", mockFetch).then((d) => {
-      expect(d).toMatchObject(created);
-    });
+    const { data } = await documents.create(docs, "token", mockFetch);
+    expect(data).toMatchObject(created);
 
     expect(mockFetch).toHaveBeenCalledWith(
       new URL("/api/documents/", DC_BASE),
@@ -291,18 +299,18 @@ describe("document uploads and processing", () => {
   test("documents.process", async ({ created }) => {
     const mockFetch = vi.fn().mockImplementation(async () => ({
       ok: true,
-      async text() {
+      async json() {
         return "OK";
       },
     }));
 
-    const resp = await documents.process(
+    const { data } = await documents.process(
       created.map((d) => ({ id: d.id })),
       "csrf_token",
       mockFetch,
     );
 
-    expect(resp.ok).toBeTruthy();
+    expect(data).toEqual("OK");
     expect(mockFetch).toHaveBeenCalledWith(
       new URL("/api/documents/process/", DC_BASE),
       {
@@ -324,20 +332,21 @@ describe("document uploads and processing", () => {
       return {
         ok: true,
         status: 200,
+        async json() {},
       };
     });
 
     // cancelling a finished document is a noop
-    let result = await documents.cancel(document, csrf_token, mockFetch);
+    let { data } = await documents.cancel(document, csrf_token, mockFetch);
 
-    expect(result).toBeUndefined();
+    expect(data).toBeUndefined();
 
-    result = await documents.cancel(
+    ({ data } = await documents.cancel(
       { ...document, status: "pending" },
       csrf_token,
       mockFetch,
-    );
-    expect(result.status).toEqual(200);
+    ));
+    expect(data).toBeUndefined();
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -404,12 +413,18 @@ describe("document write methods", () => {
       return {
         ok: true,
         status: 204,
+        json() {},
       };
     });
 
-    const resp = await documents.destroy(document.id, "token", mockFetch);
+    const { data, error } = await documents.destroy(
+      document.id,
+      "token",
+      mockFetch,
+    );
 
-    expect(resp.status).toStrictEqual(204);
+    expect(data).toBeUndefined();
+    expect(error).toBeUndefined();
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/`, BASE_API_URL),
       {
@@ -428,6 +443,7 @@ describe("document write methods", () => {
       return {
         ok: true,
         status: 204,
+        async json() {},
       };
     });
 
@@ -435,9 +451,14 @@ describe("document write methods", () => {
     const endpoint = new URL("documents/", BASE_API_URL);
     endpoint.searchParams.set("id__in", ids.join(","));
 
-    const resp = await documents.destroy_many(ids, "token", mockFetch);
+    const { data, error } = await documents.destroy_many(
+      ids,
+      "token",
+      mockFetch,
+    );
 
-    expect(resp.status).toStrictEqual(204);
+    expect(data).toBeUndefined();
+    expect(error).toBeUndefined();
     expect(mockFetch).toBeCalledWith(endpoint, {
       credentials: "include",
       method: "DELETE",
@@ -460,7 +481,7 @@ describe("document write methods", () => {
       };
     });
 
-    let updated = await documents.edit(
+    const { data: updated, error } = await documents.edit(
       document.id,
       { title: "Updated title" },
       "token",
@@ -483,9 +504,9 @@ describe("document write methods", () => {
     });
 
     const update = docs.results.map((d) => ({ ...d, source: "New source" }));
-    const resp = await documents.edit_many(update, "token", mockFetch);
+    const { error } = await documents.edit_many(update, "token", mockFetch);
 
-    expect(resp.status).toEqual(200);
+    expect(error).toBeUndefined();
 
     expect(mockFetch).toHaveBeenCalledWith(
       new URL("documents/", BASE_API_URL),
@@ -521,7 +542,7 @@ describe("document write methods", () => {
       };
     });
 
-    const data = await documents.add_tags(
+    const { data } = await documents.add_tags(
       document.id,
       "_tag",
       ["one", "two"],

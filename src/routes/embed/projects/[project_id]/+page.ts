@@ -10,7 +10,8 @@ export async function load({ params, fetch }) {
   ]);
 
   return {
-    project,
     documents,
+    error: project.error,
+    project: project.data,
   };
 }

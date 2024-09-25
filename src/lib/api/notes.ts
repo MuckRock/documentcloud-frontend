@@ -1,4 +1,11 @@
-import type { BBox, Document, Note, NoteResults } from "./types";
+import type {
+  APIResponse,
+  BBox,
+  Document,
+  Note,
+  NoteResults,
+  ValidationError,
+} from "./types";
 
 import {
   APP_URL,
@@ -8,16 +15,14 @@ import {
 } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { canonicalUrl } from "./documents";
-import { isErrorCode } from "../utils";
+import { getApiResponse, isErrorCode } from "../utils";
 
 /**
  * Load notes from a single document from the API
  * @example https://api.www.documentcloud.org/api/documents/2622/notes/
+ * @deprecated
  */
-export async function list(
-  doc_id: number,
-  fetch = globalThis.fetch,
-): Promise<NoteResults> {
+export async function list(doc_id: number, fetch = globalThis.fetch) {
   const endpoint = new URL(`documents/${doc_id}/notes/`, BASE_API_URL);
 
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
@@ -39,7 +44,7 @@ export async function get(
   doc_id: number,
   note_id: number,
   fetch = globalThis.fetch,
-): Promise<Note> {
+): Promise<APIResponse<Note, unknown>> {
   const endpoint = new URL(
     `documents/${doc_id}/notes/${note_id}/`,
     BASE_API_URL,
@@ -49,30 +54,20 @@ export async function get(
 
   const resp = await fetch(endpoint, { credentials: "include" });
 
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Note>(resp);
 }
 
 // writing methods
 
 /**
  * Create a new note
- *
- * @param doc_id Document ID
- * @param note Note data
- * @param csrf_token
- * @param fetch
- * @returns {Note}
  */
 export async function create(
   doc_id: string | number,
   note: Partial<Note>,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Note> {
+): Promise<APIResponse<Note, ValidationError>> {
   const endpoint = new URL(`documents/${doc_id}/notes/`, BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -84,28 +79,13 @@ export async function create(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (!resp.ok) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Note, ValidationError>(resp);
 }
 
 /**
  * Update a note and return the updated version
- *
- * @param doc_id Document ID
- * @param note_id Note ID
- * @param note Data to update (partial is fine)
- * @param csrf_token
- * @param fetch
- * @returns {Note}
  */
 export async function update(
   doc_id: string | number,
@@ -113,7 +93,7 @@ export async function update(
   note: Partial<Note>,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Note> {
+): Promise<APIResponse<Note, ValidationError>> {
   const endpoint = new URL(
     `documents/${doc_id}/notes/${note_id}/`,
     BASE_API_URL,
@@ -128,40 +108,26 @@ export async function update(
       Referer: APP_URL,
     },
     method: "PATCH",
-  }).catch(console.error);
+  });
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (!resp.ok) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Note, ValidationError>(resp);
 }
 
 /**
- * Delete a note and return the HTTP response
- *
- * @param doc_id Document ID
- * @param note_id Note ID
- * @param csrf_token
- * @param fetch
- * @returns {Response}
+ * Delete a note
  */
 export async function remove(
   doc_id: string | number,
   note_id: string | number,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response> {
+) {
   const endpoint = new URL(
     `documents/${doc_id}/notes/${note_id}/`,
     BASE_API_URL,
   );
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     headers: {
       "Content-type": "application/json",
@@ -170,6 +136,8 @@ export async function remove(
     },
     method: "DELETE",
   });
+
+  return getApiResponse<null>(resp);
 }
 
 /**

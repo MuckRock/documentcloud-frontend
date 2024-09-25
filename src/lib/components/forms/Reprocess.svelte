@@ -46,7 +46,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     label: LANGUAGE_MAP.get(documents[0]?.language),
   };
 
-  let errors: string[] = [];
+  let errors: unknown;
   let force_ocr = false;
   let form: HTMLFormElement;
   let submitting = false;
@@ -83,13 +83,13 @@ This will mostly be used inside a modal but isn't dependent on one.
       ocr_engine: ocrEngine.value,
     }));
 
-    const resp = await process(payload, csrf_token);
+    const { error } = await process(payload, csrf_token);
 
-    if (resp.ok) {
+    if (!error) {
       await invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
     } else {
-      errors = await resp.json();
+      console.error(error);
       submitting = false; // now you can try again
     }
   }
@@ -99,15 +99,17 @@ This will mostly be used inside a modal but isn't dependent on one.
   <Flex direction="column" gap={1.5}>
     <!-- Add any header and messaging using this slot -->
     <slot />
-    {#if errors.length > 0}
+    <!-- todo: figure out what errors are possible with reprocessing
+      {#if errors.length > 0}
       <div class="errors">
         <ul>
           {#each errors as e}
-            <li>{e}</li>
+          <li>{e}</li>
           {/each}
         </ul>
       </div>
-    {/if}
+      {/if}
+      -->
     <Flex direction="column" gap={1}>
       <Field>
         <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
@@ -168,7 +170,9 @@ This will mostly be used inside a modal but isn't dependent on one.
     font-size: var(--font-md);
   }
 
+  /*
   .errors li {
     color: var(--red-3);
   }
+  */
 </style>

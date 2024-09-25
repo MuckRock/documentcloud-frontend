@@ -15,7 +15,6 @@ Positioning and generating coordinates should happen outside of this form.
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Button from "../common/Button.svelte";
-  import Card from "../common/Card.svelte";
   import Field from "../inputs/Field.svelte";
   import Flex from "../common/Flex.svelte";
   import Text from "../inputs/Text.svelte";
@@ -36,12 +35,14 @@ Positioning and generating coordinates should happen outside of this form.
     : new URL("?/createAnnotation", canonical).href;
   $: page_level = !coords || coords.every((c) => !Boolean(c));
 
-  function onSubmit({ formElement }) {
-    formElement.disabled = true;
-    return ({ result }) => {
+  function onSubmit({ formData, submitter }) {
+    submitter.disabled = true;
+    return ({ result, update }) => {
+      console.log(result);
       if (result.type === "success") {
+        // invalidate(`document:${document.id}`);
+        update(result);
         dispatch("close");
-        invalidate(`document:${document.id}`);
       }
     };
   }
@@ -91,7 +92,8 @@ Positioning and generating coordinates should happen outside of this form.
           type="submit"
           mode="danger"
           formaction={new URL("?/deleteAnnotation", canonical).href}
-          >{$_("annotate.delete")}
+        >
+          {$_("annotate.delete")}
         </Button>
       {/if}
     </Flex>

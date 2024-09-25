@@ -52,8 +52,14 @@ describe("writing notes", () => {
       };
     });
 
-    const result = await notes.create(document.id, note, "token", mockFetch);
+    const { data: result, error } = await notes.create(
+      document.id,
+      note,
+      "token",
+      mockFetch,
+    );
 
+    expect(error).toBeUndefined();
     expect(result).toEqual(note);
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/notes/`, BASE_API_URL),
@@ -85,7 +91,7 @@ describe("writing notes", () => {
 
     const update: Partial<Note> = { title: "New title" };
 
-    const result = await notes.update(
+    const { data: result, error } = await notes.update(
       document.id,
       note.id,
       update,
@@ -93,6 +99,7 @@ describe("writing notes", () => {
       mockFetch,
     );
 
+    expect(error).toBeUndefined();
     expect(result).toMatchObject({ ...note, ...update });
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/notes/${note.id}/`, BASE_API_URL),
@@ -114,17 +121,19 @@ describe("writing notes", () => {
       return {
         ok: true,
         status: 204,
+        async json() {},
       };
     });
 
-    const resp = await notes.remove(
+    const { data, error } = await notes.remove(
       document.id,
       note.id,
       csrf_token,
       mockFetch,
     );
 
-    expect(resp.status).toStrictEqual(204);
+    expect(data).toBeUndefined();
+    expect(error).toBeUndefined();
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/notes/${note.id}/`, BASE_API_URL),
       {

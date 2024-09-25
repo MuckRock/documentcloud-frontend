@@ -1,4 +1,8 @@
 <script lang="ts">
+  import type { Page } from "@/lib/api/types";
+  import type { AddOnListItem, Event, Run } from "@/addons/types";
+  import type { APIResponse } from "$lib/api/types";
+
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
@@ -19,12 +23,10 @@
   import Search from "$lib/components/forms/Search.svelte";
   import Star from "@/common/icons/Star.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
-  import type { Page } from "@/lib/api/types";
-  import type { AddOnListItem, Event, Run } from "@/addons/types";
 
-  export let addons: Promise<Page<AddOnListItem>>;
-  export let events: Promise<Page<Event>>;
-  export let runs: Promise<Page<Run>>;
+  export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
+  export let events: Promise<APIResponse<Page<Event>>>;
+  export let runs: Promise<APIResponse<Page<Run>>>;
   export let active: string = "all";
   export let query: string = "";
 
@@ -87,7 +89,7 @@
       {/if}
       {#await addons}
         <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
-      {:then page}
+      {:then { data: page }}
         {#each page.results as addon}
           <ListItem {addon} />
         {:else}
@@ -101,7 +103,7 @@
         <svelte:fragment slot="center">
           {#await addons}
             <Paginator />
-          {:then page}
+          {:then { data: page }}
             <Paginator
               has_next={Boolean(page.next)}
               has_previous={Boolean(page.previous)}
@@ -116,7 +118,7 @@
   <aside class="history">
     {#await events}
       <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
-    {:then events}
+    {:then { data: events }}
       <Scheduled
         events={events.results}
         next={events.next}
@@ -126,7 +128,7 @@
 
     {#await runs}
       <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
-    {:then runs}
+    {:then { data: runs }}
       <History runs={runs.results} next={runs.next} previous={runs.previous} />
     {/await}
   </aside>

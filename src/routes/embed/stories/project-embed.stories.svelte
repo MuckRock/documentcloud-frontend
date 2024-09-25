@@ -28,6 +28,7 @@
     org_users: Promise.resolve([]),
     breadcrumbs: [],
     tipOfDay: null,
+    error: undefined,
   };
 </script>
 

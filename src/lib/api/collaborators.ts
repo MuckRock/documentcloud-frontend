@@ -1,8 +1,13 @@
 // manage users in a project
-import type { ProjectAccess, ProjectUser } from "./types";
+import type {
+  APIResponse,
+  ProjectAccess,
+  ProjectUser,
+  ValidationError,
+} from "./types";
 
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import { getAll, isErrorCode } from "$lib/utils/api";
+import { getAll, getApiResponse } from "$lib/utils/api";
 
 export async function list(project_id: number, fetch = globalThis.fetch) {
   const endpoint = new URL(
@@ -13,12 +18,15 @@ export async function list(project_id: number, fetch = globalThis.fetch) {
   return getAll<ProjectUser>(endpoint, undefined, fetch);
 }
 
+/**
+ * Add a collaborator to a project
+ */
 export async function add(
   project_id: number,
   user: { email: string; access: ProjectAccess },
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<ProjectUser, ValidationError>> {
   const endpoint = new URL(`projects/${project_id}/users/`, BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -32,26 +40,19 @@ export async function add(
     method: "POST",
   }).catch(console.error);
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  if (isErrorCode(resp.status)) {
-    const data = await resp.json();
-    console.error(data);
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<ProjectUser, ValidationError>(resp);
 }
 
+/**
+ * Update a user's permissions within a project
+ */
 export async function update(
   project_id: number,
   user_id: number,
   access: ProjectAccess,
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<ProjectUser, ValidationError>> {
   const endpoint = new URL(
     `projects/${project_id}/users/${user_id}/`,
     BASE_API_URL,
@@ -68,17 +69,7 @@ export async function update(
     method: "PATCH",
   }).catch(console.error);
 
-  if (!resp) {
-    throw new Error("API unavailable");
-  }
-
-  if (isErrorCode(resp.status)) {
-    const data = await resp.json();
-    console.error(data);
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<ProjectUser, ValidationError>(resp);
 }
 
 export async function remove(
@@ -86,13 +77,13 @@ export async function remove(
   user_id: number,
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<null, any>> {
   const endpoint = new URL(
     `projects/${project_id}/users/${user_id}/`,
     BASE_API_URL,
   );
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     headers: {
       "Content-type": "application/json",
@@ -100,5 +91,7 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  });
+  }).catch(console.error);
+
+  return getApiResponse<null, any>(resp);
 }

@@ -30,15 +30,19 @@
     e.preventDefault();
     const csrf_token = getCsrfToken();
     const newPinnedState = !project.pinned;
-    try {
-      // optimistic update
-      project.pinned = newPinnedState;
-      project = await pinProject(project.id, newPinnedState, csrf_token);
-      await invalidate(canonicalUrl(project));
-    } catch (e) {
-      // undo optimistic update on error
+    let error: unknown;
+
+    ({ data: project, error } = await pinProject(
+      project.id,
+      newPinnedState,
+      csrf_token,
+    ));
+
+    if (error) {
       project.pinned = !project.pinned;
-      console.error(e);
+      console.error(error);
+    } else {
+      await invalidate(canonicalUrl(project));
     }
 
     // now that we've updated, set $pinned

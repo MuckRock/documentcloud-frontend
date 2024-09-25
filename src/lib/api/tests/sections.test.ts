@@ -50,13 +50,14 @@ describe("sections: writing", () => {
       };
     });
 
-    const result = await sections.create(
+    const { data: result, error } = await sections.create(
       document.id,
       { page_number: 1, title: "Title" },
       "token",
       mockFetch,
     );
 
+    expect(error).toBeUndefined();
     expect(result).toStrictEqual(section);
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/sections/`, BASE_API_URL),
@@ -91,7 +92,7 @@ describe("sections: writing", () => {
       title: "New title",
     };
 
-    const result = await sections.update(
+    const { data: result, error } = await sections.update(
       document.id,
       section.id,
       update,
@@ -99,6 +100,7 @@ describe("sections: writing", () => {
       mockFetch,
     );
 
+    expect(error).toBeUndefined();
     expect(result).toMatchObject({ ...section, ...update });
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/sections/${section.id}/`, BASE_API_URL),
@@ -124,14 +126,14 @@ describe("sections: writing", () => {
       };
     });
 
-    const resp = await sections.remove(
+    const { error } = await sections.remove(
       document.id,
       section.id,
       "token",
       mockFetch,
     );
 
-    expect(resp.status).toStrictEqual(204);
+    expect(error).toBeUndefined();
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/sections/${section.id}/`, BASE_API_URL),
       {

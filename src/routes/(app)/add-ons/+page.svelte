@@ -10,17 +10,17 @@
   $: addons = data.addons;
   $: events = data.events;
   $: runs = data.runs;
-  $: query = ($page.url as URL).searchParams.get("query") ?? "";
   $: active =
     Array.from(($page.url as URL).searchParams.entries()).find(
       ([_, value]) => value === "true",
     )?.[0] ??
     ($page.url as URL).searchParams.get("category") ??
     "all";
+  $: query = ($page.url as URL).searchParams.get("query") ?? "";
 </script>
 
 <svelte:head>
   <title>Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<AddOnBrowser {addons} {events} {runs} {active} />
+<AddOnBrowser {addons} {events} {runs} {active} {query} />

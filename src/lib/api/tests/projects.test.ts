@@ -39,13 +39,14 @@ describe("projects.get", () => {
     vi.restoreAllMocks();
   });
   it("fetches a single project by ID", async () => {
-    let res = await projects.get(1, mockFetch);
+    const { data: res, error } = await projects.get(1, mockFetch);
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`${BASE_API_URL}projects/1/`),
       {
         credentials: "include",
       },
     );
+    expect(error).toBeUndefined();
     expect(res).toBe(project);
   });
   it("throws a 500 error if fetch fails", async () => {
@@ -74,11 +75,13 @@ describe("projects.list", () => {
     vi.restoreAllMocks();
   });
   it("fetches a list of projects", async () => {
-    const res = await projects.list({}, mockFetch);
+    const { data: res, error } = await projects.list({}, mockFetch);
+
     expect(mockFetch).toHaveBeenCalledWith(
       new URL("projects/", BASE_API_URL),
       expect.any(Object),
     );
+    expect(error).toBeUndefined();
     expect(res).toBe(projectList);
   });
   it("attaches any params to the URL as searchParams", async () => {
@@ -255,8 +258,13 @@ describe("project lifecycle", () => {
       pinned: project.pinned,
     };
 
-    const created = await projects.create(data, "token", mockFetch);
+    const { data: created, error } = await projects.create(
+      data,
+      "token",
+      mockFetch,
+    );
 
+    expect(error).toBeUndefined();
     expect(created).toMatchObject(project);
     expect(mockFetch).toBeCalledWith(new URL("projects/", BASE_API_URL), {
       body: JSON.stringify(data),
@@ -284,8 +292,14 @@ describe("project lifecycle", () => {
 
     const update: Partial<Project> = { title: "New title" };
 
-    const updated = await projects.edit(project.id, update, "token", mockFetch);
+    const { data: updated, error } = await projects.edit(
+      project.id,
+      update,
+      "token",
+      mockFetch,
+    );
 
+    expect(error).toBeUndefined();
     expect(updated).toMatchObject({ ...project, ...update });
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`projects/${project.id}/`, BASE_API_URL),
@@ -310,9 +324,9 @@ describe("project lifecycle", () => {
       };
     });
 
-    const resp = await projects.destroy(project.id, "token", mockFetch);
+    const { error } = await projects.destroy(project.id, "token", mockFetch);
 
-    expect(resp.status).toEqual(204);
+    expect(error).toBeUndefined();
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`projects/${project.id}/`, BASE_API_URL),
       {
@@ -359,8 +373,14 @@ describe("manage project documents", () => {
     });
 
     const ids = documents.results.map((d) => d.document as number);
-    const docs = await projects.add(1, ids, "token", mockFetch);
+    const { data: docs, error } = await projects.add(
+      1,
+      ids,
+      "token",
+      mockFetch,
+    );
 
+    expect(error).toBeUndefined();
     expect(docs).toMatchObject(documents.results);
     expect(mockFetch).toBeCalledWith(
       new URL("projects/1/documents/", BASE_API_URL),
