@@ -56,7 +56,7 @@
           <PlusCircle16 />{$_("sidebar.upload")}
         </Button>
         <Actions />
-        <AddOns pinnedAddOns={Promise.resolve(activeAddons)} />
+        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
       </svelte:fragment>
     </SidebarLayout>
   </AppLayout>

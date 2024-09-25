@@ -1,5 +1,6 @@
 <script lang="ts">
   import { APP_URL } from "@/config/config";
+  import type { APIResponse } from "@/lib/api/types";
   import type { Page } from "@/api/types/common";
   import type { AddOnListItem } from "@/addons/types";
 
@@ -21,7 +22,7 @@
   import Error from "./Error.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
 
-  export let pinnedAddOns: Promise<Page<AddOnListItem>>;
+  export let pinnedAddOns: Promise<APIResponse<Page<AddOnListItem>>>;
   export let query: string = "";
 
   function getHref(query: string, addon?: AddOnListItem): string {
@@ -48,22 +49,26 @@
   <Flex direction="column" gap={0}>
     {#await pinnedAddOns}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-    {:then addons}
-      {#each addons.results as addon}
-        <SidebarItem small href={getHref(query, addon)}>
-          <Pin active={addon.active} slot="start" />
-          {addon.name}
-          <svelte:fragment slot="end">
-            {#if addon.parameters.documents}
-              <Tooltip caption={$_("sidebar.addons.documents")}>
-                <FileCode16 />
-              </Tooltip>
-            {/if}
-          </svelte:fragment>
-        </SidebarItem>
+    {:then { data, error }}
+      {#if error}
+        <Error>{error.message}</Error>
       {:else}
-        <Empty icon={Pin24}>{$_("sidebar.addons.pinned")}</Empty>
-      {/each}
+        {#each data.results as addon}
+          <SidebarItem small href={getHref(query, addon)}>
+            <Pin active={addon.active} slot="start" />
+            {addon.name}
+            <svelte:fragment slot="end">
+              {#if addon.parameters.documents}
+                <Tooltip caption={$_("sidebar.addons.documents")}>
+                  <FileCode16 />
+                </Tooltip>
+              {/if}
+            </svelte:fragment>
+          </SidebarItem>
+        {:else}
+          <Empty icon={Pin24}>{$_("sidebar.addons.pinned")}</Empty>
+        {/each}
+      {/if}
     {:catch error}
       <Error>{error}</Error>
     {/await}

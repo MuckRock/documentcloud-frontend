@@ -24,7 +24,7 @@ export async function load({ url, fetch, data }) {
 
   const searchResults = search(query, options, fetch);
 
-  const pinnedAddons = getPinnedAddons(fetch).then((r) => r.data);
+  const pinnedAddons = getPinnedAddons(fetch);
 
   return {
     ...data,

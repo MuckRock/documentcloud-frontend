@@ -7,6 +7,7 @@
     ProjectUser,
     DocumentResults,
     AddOnListItem,
+    APIResponse,
   } from "$lib/api/types";
   import AddOns from "$lib/components/common/AddOns.svelte";
   import Collaborators from "$lib/components/projects/Collaborators.svelte";
@@ -17,9 +18,9 @@
 
   export let project: Project;
   export let users: ProjectUser[];
-  export let documents: Promise<DocumentResults>;
+  export let documents: Promise<APIResponse<DocumentResults>>;
   export let query: string = "";
-  export let addons: Promise<Page<AddOnListItem>>;
+  export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
   $: projectQuery = `+project:${project.id}`;
 </script>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {
     AddOnListItem,
+    APIResponse,
     Document,
     DocumentText,
     Page,
@@ -33,7 +34,7 @@
   export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
   export let action: string = "";
-  export let addons: Promise<Page<AddOnListItem>>;
+  export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
   $: projects = (document.projects ?? []) as Project[];
 </script>
