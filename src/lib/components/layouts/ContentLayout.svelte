@@ -25,6 +25,8 @@
     width: 100%;
     height: min-content;
     min-height: 100%;
+    background: var(--gray-1);
+    box-shadow: inset var(--shadow-2);
   }
   header {
     flex: 0 0 0;

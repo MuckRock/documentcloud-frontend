@@ -102,6 +102,7 @@
           properties={addon.parameters.properties}
           required={addon.parameters.required}
           eventOptions={addon.parameters.eventOptions}
+          {disablePremium}
         >
           <svelte:fragment slot="selection">
             {#await search then results}
@@ -172,8 +173,6 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: 1rem;
-    gap: 1rem;
     max-width: var(--app-max-w, 100rem);
     margin: 0 auto;
   }
@@ -188,21 +187,16 @@
     max-height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: visible;
+    overflow-y: auto;
   }
   .addon header {
     margin-bottom: 1rem;
+    padding: 1rem;
   }
   .addon .tabs {
     display: flex;
     padding: 0 1rem;
-  }
-  .addon main {
-    overflow-y: auto;
-    background-color: var(--white);
-    border: 1px solid var(--gray-1);
-    border-radius: var(--radius, 0.5rem);
-    box-shadow: var(--shadow-1);
+    border-bottom: 1px solid var(--gray-2);
   }
   .docs {
     background-color: var(--gray-1);

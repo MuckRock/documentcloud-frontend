@@ -141,24 +141,32 @@
     padding: 1rem 0.5rem;
     max-height: 100%;
     overflow-y: auto;
-    box-shadow: var(--shadow-1);
     z-index: 1;
   }
   main {
     max-height: 100%;
     overflow-y: auto;
     background: var(--gray-1);
+    box-shadow: inset var(--shadow-2);
+  }
+  .nav {
+    min-width: 16rem;
+    max-width: 18rem;
   }
   .history {
     max-width: unset;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 1rem;
   }
   .container {
+    width: 100%;
+    max-width: var(--app-max-w, 100rem);
+    margin: 0 auto;
     max-height: 100%;
     display: grid;
-    grid-template-columns: 16rem 2fr 40%;
+    grid-template-columns: 18rem 2fr 40%;
     grid-template-rows: 1fr;
   }
 </style>

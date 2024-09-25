@@ -137,11 +137,13 @@ It's deliberately minimal and can be wrapped in other components to add addition
     color: inherit;
     text-decoration: none;
     background-color: transparent;
+    border: 1px solid transparent;
   }
 
   .document-list-item:hover,
   .document-list-item:focus {
     background-color: var(--blue-1);
+    border-color: var(--blue-2);
   }
 
   .thumbnail {
