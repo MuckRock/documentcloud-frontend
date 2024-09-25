@@ -13,7 +13,7 @@
   export let wide = false;
   export let tall = false;
   export let track: boolean | "once" = false;
-  export let width: number;
+  export let width: number = undefined;
 
   const dispatch = createEventDispatcher();
 
