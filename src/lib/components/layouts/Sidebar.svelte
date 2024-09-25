@@ -153,7 +153,7 @@
   the appropriate sidebar will move out into a visible position. */
 
   @media (max-width: 64rem) {
-    .container {
+    .sidebarContainer {
       min-width: 33vw;
       max-width: 100vw;
       top: 0;
@@ -162,12 +162,12 @@
       background: var(--white);
       position: fixed;
     }
-    .container.right {
+    .sidebarContainer.right {
       right: 0;
       border-top-left-radius: 1rem;
       border-bottom-left-radius: 1rem;
     }
-    .container.left {
+    .sidebarContainer.left {
       left: 0;
       border-top-right-radius: 1rem;
       border-bottom-right-radius: 1rem;

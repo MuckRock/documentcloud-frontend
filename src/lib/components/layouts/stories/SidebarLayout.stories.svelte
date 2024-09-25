@@ -9,7 +9,7 @@
   import Button from "$lib/components/common/Button.svelte";
 
   import Actions from "@/routes/(app)/documents/sidebar/Actions.svelte";
-  import AddOns from "@/routes/(app)/documents/sidebar/AddOns.svelte";
+  import AddOns from "@/lib/components/common/AddOns.svelte";
   import Documents from "@/routes/(app)/documents/sidebar/Documents.svelte";
   import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
 
@@ -55,7 +55,7 @@
           <PlusCircle16 />{$_("sidebar.upload")}
         </Button>
         <Actions />
-        <AddOns pinnedAddOns={Promise.resolve(activeAddons)} />
+        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
       </svelte:fragment>
     </SidebarLayout>
   </div>

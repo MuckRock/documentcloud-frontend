@@ -36,6 +36,7 @@
     pageUrl,
   } from "@/lib/api/documents";
   import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
+  import { toast } from "../layouts/Toaster.svelte";
 
   export let document: Document;
   export let page: number = 1;
@@ -110,6 +111,7 @@
 
   async function copy(text: string) {
     await navigator.clipboard.writeText(text);
+    toast($_("share.copiedToClipboard"));
   }
 </script>
 

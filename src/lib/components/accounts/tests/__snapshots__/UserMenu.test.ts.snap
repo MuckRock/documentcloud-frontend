@@ -13,7 +13,7 @@ exports[`UserMenu 1`] = `
       tabindex="0"
     >
       <span
-        class="sidebarItem container svelte-xb9fwu"
+        class="sidebarItem container svelte-1i964q1"
         role="button"
         tabindex="0"
         title="Open Menu"
@@ -30,7 +30,7 @@ exports[`UserMenu 1`] = `
         </div>
          
         <span
-          class="label svelte-xb9fwu"
+          class="label svelte-1i964q1"
         >
           <span
             class="name"
@@ -68,7 +68,7 @@ exports[`UserMenu 1`] = `
         role="menu"
       >
         <a
-          class="sidebarItem container svelte-xb9fwu"
+          class="sidebarItem container svelte-1i964q1"
           href="https://dev.squarelet.com"
           target="_blank"
           title=""
@@ -87,7 +87,7 @@ exports[`UserMenu 1`] = `
           </svg>
            
           <span
-            class="label svelte-xb9fwu"
+            class="label svelte-1i964q1"
           >
             Account settings
           </span>
@@ -96,7 +96,7 @@ exports[`UserMenu 1`] = `
         
          
         <span
-          class="sidebarItem container svelte-xb9fwu hover"
+          class="sidebarItem container svelte-1i964q1 hover"
           role="button"
           tabindex="0"
           title=""
@@ -115,7 +115,7 @@ exports[`UserMenu 1`] = `
           </svg>
            
           <span
-            class="label svelte-xb9fwu"
+            class="label svelte-1i964q1"
           >
             Upload via email
           </span>
@@ -124,7 +124,7 @@ exports[`UserMenu 1`] = `
         
          
         <a
-          class="sidebarItem container svelte-xb9fwu"
+          class="sidebarItem container svelte-1i964q1"
           href="https://api.dev.documentcloud.org/accounts/logout/"
           title=""
         >
@@ -142,7 +142,7 @@ exports[`UserMenu 1`] = `
           </svg>
            
           <span
-            class="label svelte-xb9fwu"
+            class="label svelte-1i964q1"
           >
             Sign out
           </span>

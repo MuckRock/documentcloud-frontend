@@ -7,10 +7,10 @@
 
 import type { User, Org } from "@/api/types/orgAndUser";
 import type { Project } from "@/api/types/project";
-import type { Page } from "@/api/types/common";
+import type { Page, Maybe, Nullable } from "@/api/types/common";
 
 // re-export these for convenience
-export type { Page, User, Org, Project };
+export type { Maybe, Nullable, Page, User, Org, Project };
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
@@ -56,11 +56,14 @@ type AddOnCategory = "premium" | string;
 
 interface AddOnProperty {
   type: string;
-  title: string;
+  title?: string;
   description?: string;
-  default?: string;
+  default?: string | string[] | number;
   format?: string;
-  enum?: string[];
+  enum?: (string | boolean)[];
+  items?: AddOnProperty;
+  maximum?: number;
+  minimum?: number;
 }
 
 interface AddOnParameters {
@@ -75,11 +78,11 @@ interface AddOnParameters {
   properties: Record<string, AddOnProperty>;
   cost: {
     amount: number;
-    price: number;
+    price?: number;
     unit: string;
   };
   eventOptions: {
-    name: string;
+    name?: string;
     events: string[];
   };
 }

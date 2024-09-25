@@ -52,7 +52,7 @@ exports[`DocumentListItem > renders 1`] = `
             style="display: contents; --color: var(--gray-5); --font-size: inherit;"
           >
             <span
-              class="sidebarItem container svelte-xb9fwu inline"
+              class="sidebarItem container svelte-1i964q1 inline"
               role="button"
               tabindex="0"
               title="Documents will be publicly visible to everyone"
@@ -72,7 +72,7 @@ exports[`DocumentListItem > renders 1`] = `
               
                
               <span
-                class="label svelte-xb9fwu"
+                class="label svelte-1i964q1"
               >
                 Public
               </span>

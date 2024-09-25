@@ -6,6 +6,7 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
+  import { activeAddons } from "@/test/fixtures/addons";
   const document = doc as Document;
 
   export const meta = {
@@ -28,6 +29,7 @@
     mode: "document",
     text: txt,
     query: "",
+    addons: Promise.resolve(activeAddons),
   };
 </script>
 
