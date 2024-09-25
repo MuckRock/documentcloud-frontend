@@ -53,6 +53,10 @@
   <PDF {document} asset_url={pdfUrl(document)} scale="width" />
 </Story>
 
+<Story name="Zoom 200%" parameters={{ layout: "fullscreen" }}>
+  <PDF {document} asset_url={pdfUrl(document)} scale={2} />
+</Story>
+
 <Story
   name="no pdf"
   parameters={{

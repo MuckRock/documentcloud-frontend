@@ -24,6 +24,7 @@
 
   import { pageSizes } from "@/api/pageSize.js";
   import { scrollToPage } from "$lib/utils/scroll";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let asset_url: URL = null;
   export let document: Document;
@@ -82,9 +83,16 @@
       window.pdf = p;
     });
   });
+
+  let width: number;
 </script>
 
-<div class="pages">
+<div
+  class="pages"
+  bind:clientWidth={width}
+  class:sm={width < remToPx(35)}
+  class:lg={width > remToPx(70)}
+>
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
     <PdfPage
@@ -107,9 +115,17 @@
     flex-direction: column;
     margin: 0 auto;
     padding: 3rem;
-    gap: 3rem;
+    gap: 1.5rem;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
+  }
+  .sm.pages {
+    padding: 1.5rem;
+    gap: 0.75rem;
+  }
+  .lg.pages {
+    padding: 4.5rem;
+    gap: 2.25rem;
   }
 </style>
