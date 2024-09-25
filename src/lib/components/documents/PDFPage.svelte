@@ -25,7 +25,6 @@ Selectable text can be rendered in one of two ways:
   import Note from "./Note.svelte";
   import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
-  import PageAnnotation from "./PageAnnotation.svelte";
   import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
 
   import { highlight } from "$lib/utils/search";
@@ -36,6 +35,8 @@ Selectable text can be rendered in one of two ways:
   import Share from "./Share.svelte";
   import Action from "../common/Action.svelte";
   import Modal from "../layouts/Modal.svelte";
+  import EditSections from "../forms/EditSections.svelte";
+  import EditNote from "../forms/EditNote.svelte";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -72,6 +73,14 @@ Selectable text can be rendered in one of two ways:
 
   // visibility, for loading optimization
   let visible: boolean = false;
+
+  let editSection = false;
+  let pageNote = false;
+
+  function close() {
+    editSection = false;
+    pageNote = false;
+  }
 
   $: aspect = height / width;
   $: orientation = height > width ? "vertical" : "horizontal";
@@ -318,6 +327,34 @@ Selectable text can be rendered in one of two ways:
     <Modal on:close={() => (pageShareOpen = false)}>
       <h1 slot="title">{$_("dialog.share")}</h1>
       <Share {document} page={page_number} currentTab="page" />
+    </Modal>
+  </Portal>
+{/if}
+{#if editSection}
+  <Portal>
+    <Modal on:close={close}>
+      <h2 slot="title">
+        {#if section}
+          {$_("annotate.cta.edit-section")}
+        {:else}
+          {$_("annotate.cta.add-section")}
+        {/if}
+      </h2>
+      <EditSections
+        {document}
+        on:close={close}
+        section={section || { page_number: page_number - 1 }}
+      />
+    </Modal>
+  </Portal>
+{/if}
+{#if pageNote}
+  <Portal>
+    <Modal on:close={close}>
+      <h2 slot="title">
+        {$_("annotate.cta.add-note")}
+      </h2>
+      <EditNote {document} page_number={page_number - 1} on:close={close} />
     </Modal>
   </Portal>
 {/if}
