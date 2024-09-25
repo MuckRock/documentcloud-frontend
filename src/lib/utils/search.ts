@@ -2,6 +2,7 @@ import type { User } from "@/api/types";
 import type { Access } from "../api/types";
 import { APP_URL } from "@/config/config.js";
 import { slugify } from "@/util/string.js";
+import { getUserName } from "../api/accounts";
 
 export function searchUrl(query: string): URL {
   const href = new URL("documents/", APP_URL);
@@ -19,11 +20,12 @@ export function projectSearchUrl(project): string {
  * @param access
  */
 export function userDocs(user: User, access: Access = undefined): string {
+  const username = getUserName(user);
   if (access) {
-    return `+user:${slugify(user.name)}-${user.id} access:${access}`;
+    return `+user:${slugify(username)}-${user.id} access:${access}`;
   }
 
-  return `+user:${slugify(user.name)}-${user.id}`;
+  return `+user:${slugify(username)}-${user.id}`;
 }
 
 /**
