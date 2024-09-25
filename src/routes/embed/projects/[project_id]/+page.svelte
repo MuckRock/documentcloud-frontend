@@ -1,29 +1,31 @@
 <script lang="ts">
-  import { canonicalUrl } from "@/lib/api/projects";
-  import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
-  import ProjectHeader from "@/lib/components/projects/ProjectHeader.svelte";
-  import EmbedLayout from "@/lib/components/layouts/EmbedLayout.svelte";
   import { setContext } from "svelte";
+
+  import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
+  import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";
+  import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
+
+  import { canonicalUrl } from "$lib/api/projects";
 
   setContext("embed", true);
 
   export let data;
+
+  $: documents = data.documents;
+  $: project = data.project;
 </script>
 
 <svelte:head>
-  <title>{data.project.title}</title>
+  <title>{project.title}</title>
 </svelte:head>
 
-<EmbedLayout canonicalUrl={canonicalUrl(data.project).href}>
+<EmbedLayout canonicalUrl={canonicalUrl(project).href}>
   <article>
     <header>
-      <ProjectHeader
-        project={data.project}
-        show={{ pin: false, access: false }}
-      />
+      <ProjectHeader {project} show={{ pin: false, access: false }} />
     </header>
     <main>
-      <DocumentBrowser documents={data.documents} />
+      <DocumentBrowser {documents} />
     </main>
   </article>
 </EmbedLayout>

@@ -32,7 +32,7 @@
   let end: HTMLElement;
   let observer: IntersectionObserver;
 
-  const embed: Writable<boolean> = getContext("embed");
+  const embed: boolean = getContext("embed");
 
   // track what's visible so we can compare to $selected
   $: $visible = new Set(results);

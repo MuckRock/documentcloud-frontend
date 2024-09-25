@@ -51,11 +51,10 @@
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
-  import type { Writable } from "svelte/store";
 
   setContext("selected", selected);
 
-  const embed: Writable<boolean> = getContext("embed");
+  const embed: boolean = getContext("embed");
   const me = getCurrentUser();
 
   interface UITextProps {
