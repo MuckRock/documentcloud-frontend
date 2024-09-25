@@ -69,8 +69,14 @@
 @component
 This is a list item showing one document. 
 It's deliberately minimal and can be wrapped in other components to add additional functionality.
+
+If we're in an embed, we want to open links to documents in new tabs and hide the access label.
 -->
-<a href={canonicalUrl(document).toString()} class="document-list-item">
+<a
+  href={canonicalUrl(document).toString()}
+  class="document-list-item"
+  target={embed ? "_blank" : undefined}
+>
   <div class="thumbnail">
     {#if document.status === "success" || document.status === "readable"}
       <img
