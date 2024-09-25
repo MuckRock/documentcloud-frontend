@@ -11,7 +11,7 @@
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
 
   export let document: Document;
-  export let text: Promise<DocumentText> | DocumentText;
+  export let text: DocumentText;
   export let settings: Partial<EmbedSettings> = defaultSettings;
 
   // if we're using this layout, we're embedded

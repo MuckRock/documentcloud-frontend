@@ -14,14 +14,13 @@
   import { scrollToPage } from "$lib/utils/scroll";
 
   export let query: string = ""; // search query
-  export let text: Promise<DocumentText> | DocumentText;
+  export let text: DocumentText;
   export let total: number = 0;
   export let zoom: number = 1;
 
   const currentPage: Writable<number> = getContext("currentPage");
 
   onMount(async () => {
-    await text; // wait until it loads
     if ($currentPage > 1) {
       scrollToPage($currentPage);
     }

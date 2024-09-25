@@ -30,8 +30,8 @@
   const me = getCurrentUser();
 
   export let document: Document;
+  export let text: DocumentText;
   export let asset_url: URL = pdfUrl(document);
-  export let text: Promise<DocumentText> | DocumentText;
   export let query: string = "";
   export let action: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
@@ -66,7 +66,7 @@
 
       <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
     </Flex>
-    <DocumentMetadata {document} />
+    <DocumentMetadata {document} {text} />
   </aside>
 </SidebarLayout>
 

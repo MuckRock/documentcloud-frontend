@@ -31,7 +31,7 @@
 
   export let document: Document;
   export let asset_url: URL = pdfUrl(document);
-  export let text: Promise<DocumentText> | DocumentText;
+  export let text: DocumentText;
   export let query: string = "";
 
   $: mode = $currentMode;
