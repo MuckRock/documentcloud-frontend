@@ -41,6 +41,12 @@
   }
 </script>
 
+<Story name="fit width" parameters={{ layout: "fullscreen" }}>
+  {#await load(url) then pdf}
+    <PdfPage {document} page_number={1} scale="width" {pdf} {width} {height} />
+  {/await}
+</Story>
+
 <Story name="embedded text">
   {#await load(url) then pdf}
     <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
