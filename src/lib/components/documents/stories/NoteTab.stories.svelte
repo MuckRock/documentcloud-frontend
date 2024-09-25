@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { Template, Story } from "@storybook/addon-svelte-csf";
   import NoteTab from "../NoteTab.svelte";
 
   export const meta = {
@@ -8,20 +8,21 @@
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
+
+  let args = {
+    access: "public",
+    size: "normal",
+  };
 </script>
 
-<Story name="public note">
-  <NoteTab access="public" />
-</Story>
+<Template let:args>
+  <NoteTab {...args} />
+</Template>
 
-<Story name="organization note">
-  <NoteTab access="organization" />
-</Story>
+<Story name="public note" {args} />
 
-<Story name="private note">
-  <NoteTab access="private" />
-</Story>
+<Story name="organization note" args={{ ...args, access: "organization" }} />
 
-<Story name="small">
-  <NoteTab size="small" />
-</Story>
+<Story name="private note" args={{ ...args, access: "private" }} />
+
+<Story name="small note" args={{ ...args, size: "small" }} />
