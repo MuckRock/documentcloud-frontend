@@ -8,7 +8,7 @@
   - text language
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, DocumentText } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -17,10 +17,25 @@
   import Metadata from "../common/Metadata.svelte";
 
   export let document: Document;
+  export let text: DocumentText;
 
   function dateFormat(date: Date | string) {
     return new Date(date).toLocaleDateString();
   }
+
+  $: ocrEngine =
+    text.pages
+      .map((page) => page.ocr)
+      .reduce((acc, cur) => (acc = cur ?? acc)) ?? null;
+
+  let ocrEngineMap = {
+    tess4: "Tesseract",
+    textract: "Textract",
+    googlecv: "Google Cloud Vision",
+    ocrspace1: "OCRSpace",
+    azuredi: "Azure Document Intelligence",
+    doctr: "docTR",
+  };
 </script>
 
 <div class="meta">
@@ -36,6 +51,11 @@
   <Metadata key={$_("sidebar.language")}>
     {LANGUAGE_MAP.get(document.language)}
   </Metadata>
+  {#if ocrEngine && Object.keys(ocrEngineMap).includes(ocrEngine)}
+    <Metadata key={$_("sidebar.ocr_engine")}>
+      {ocrEngineMap[ocrEngine]}
+    </Metadata>
+  {/if}
 </div>
 
 <style>

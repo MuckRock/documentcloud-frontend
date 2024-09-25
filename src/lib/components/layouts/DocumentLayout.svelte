@@ -66,7 +66,7 @@
 
       <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
     </Flex>
-    <DocumentMetadata {document} />
+    <DocumentMetadata {document} {text} />
   </aside>
 </SidebarLayout>
 
