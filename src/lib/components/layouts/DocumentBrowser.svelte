@@ -8,7 +8,7 @@
 
   import { goto } from "$app/navigation";
 
-  import { setContext } from "svelte";
+  import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     FileDirectory24,
@@ -51,9 +51,11 @@
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
+  import type { Writable } from "svelte/store";
 
   setContext("selected", selected);
 
+  const embed: Writable<boolean> = getContext("embed");
   const me = getCurrentUser();
 
   interface UITextProps {
@@ -89,9 +91,8 @@
   ): DocumentResults {
     if (deleted.size === 0) return searchResults;
 
-    const filtered = searchResults?.results.filter(
-      (d) => !deleted.has(String(d.id)),
-    ) ?? [];
+    const filtered =
+      searchResults?.results.filter((d) => !deleted.has(String(d.id))) ?? [];
 
     return {
       ...searchResults,
@@ -130,39 +131,41 @@
     </div>
     <ContentLayout>
       <svelte:fragment slot="header">
-        <Flex>
-          {#if $sidebars["navigation"] === false}
-            <div class="toolbar w-auto">
-              <Button
-                ghost
-                minW={false}
-                on:click={() => ($sidebars["navigation"] = true)}
-              >
-                <span class="flipV">
-                  <SidebarExpand16 />
-                </span>
-              </Button>
-            </div>
-          {/if}
-          <PageToolbar>
-            <Flex slot="right">
-              <div style:flex="1 1 auto">
-                <Search name="q" {query} placeholder={uiText.search} />
+        {#if !embed}
+          <Flex>
+            {#if $sidebars["navigation"] === false}
+              <div class="toolbar w-auto">
+                <Button
+                  ghost
+                  minW={false}
+                  on:click={() => ($sidebars["navigation"] = true)}
+                >
+                  <span class="flipV">
+                    <SidebarExpand16 />
+                  </span>
+                </Button>
               </div>
-            </Flex>
-          </PageToolbar>
-          {#if $sidebars["action"] === false}
-            <div class="toolbar w-auto">
-              <Button
-                ghost
-                minW={false}
-                on:click={() => ($sidebars["action"] = true)}
-              >
-                <SidebarExpand16 />
-              </Button>
-            </div>
-          {/if}
-        </Flex>
+            {/if}
+            <PageToolbar>
+              <Flex slot="right">
+                <div style:flex="1 1 auto">
+                  <Search name="q" {query} placeholder={uiText.search} />
+                </div>
+              </Flex>
+            </PageToolbar>
+            {#if $sidebars["action"] === false}
+              <div class="toolbar w-auto">
+                <Button
+                  ghost
+                  minW={false}
+                  on:click={() => ($sidebars["action"] = true)}
+                >
+                  <SidebarExpand16 />
+                </Button>
+              </div>
+            {/if}
+          </Flex>
+        {/if}
       </svelte:fragment>
       {#await searchResults}
         <Empty icon={Hourglass24}>{uiText.loading}</Empty>
@@ -186,36 +189,40 @@
       {:catch}
         <Error>{uiText.error}</Error>
       {/await}
-      <div class="toolbar" slot="footer" bind:clientWidth={width}>
-        <Flex>
-          <SidebarItem>
-            <label class="select-all">
-              <input
-                type="checkbox"
-                name="select_all"
-                checked={$selected.length > 0 &&
-                  $selected.length === $visible.size}
-                indeterminate={$selected.length > 0 &&
-                  $selected.length < $visible.size}
-                on:change={selectAll}
-              />
-              {#if $selected.length > 0}
-                {$selected.length.toLocaleString()} {$_("inputs.selected")}
-              {:else}
-                {$_("inputs.selectAll")}
-              {/if}
-            </label>
-          </SidebarItem>
-          <BulkActions />
-        </Flex>
-        {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
-          <p class="resultsCount">
-            {$_("inputs.resultsCount", {
-              values: { n: $visible.size, total: $total },
-            })}
-          </p>
+      <svelte:fragment slot="footer">
+        {#if !embed}
+          <div class="toolbar" bind:clientWidth={width}>
+            <Flex>
+              <SidebarItem>
+                <label class="select-all">
+                  <input
+                    type="checkbox"
+                    name="select_all"
+                    checked={$selected.length > 0 &&
+                      $selected.length === $visible.size}
+                    indeterminate={$selected.length > 0 &&
+                      $selected.length < $visible.size}
+                    on:change={selectAll}
+                  />
+                  {#if $selected.length > 0}
+                    {$selected.length.toLocaleString()} {$_("inputs.selected")}
+                  {:else}
+                    {$_("inputs.selectAll")}
+                  {/if}
+                </label>
+              </SidebarItem>
+              <BulkActions />
+            </Flex>
+            {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
+              <p class="resultsCount">
+                {$_("inputs.resultsCount", {
+                  values: { n: $visible.size, total: $total },
+                })}
+              </p>
+            {/if}
+          </div>
         {/if}
-      </div>
+      </svelte:fragment>
     </ContentLayout>
   </Dropzone>
 </div>

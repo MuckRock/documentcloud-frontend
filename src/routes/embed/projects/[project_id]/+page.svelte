@@ -1,82 +1,52 @@
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
-  import DocumentListItem from "$lib/components/documents/DocumentListItem.svelte";
-  import Paginator from "$lib/components/common/Paginator.svelte";
+  import { canonicalUrl } from "@/lib/api/projects";
+  import DocumentBrowser from "@/lib/components/layouts/DocumentBrowser.svelte";
+  import ProjectHeader from "@/lib/components/projects/ProjectHeader.svelte";
+  import EmbedLayout from "@/lib/components/layouts/EmbedLayout.svelte";
+  import { setContext } from "svelte";
+
+  setContext("embed", true);
 
   export let data;
-
-  let page = 0;
-  let per_page = 12;
-
-  $: project = data.project;
-  $: count = data.documents.count;
-  $: next = data.documents.next;
-  $: previous = data.documents.previous;
-  $: documents = data.documents.results.map((d) => d.document) as Document[];
-  $: total_pages = Math.ceil(count / per_page);
-
-  async function load(url: string | URL) {
-    const res = await fetch(url, { credentials: "include" }).catch((e) => {
-      console.error(e);
-      return { ok: false, json: () => {} };
-    });
-
-    if (!res.ok) {
-      return;
-    }
-
-    data.documents = await res.json();
-  }
-
-  function load_next() {
-    page = Math.min(total_pages, page + 1);
-    load(next);
-  }
-
-  function load_previous() {
-    page = Math.max(0, page - 1);
-    load(previous);
-  }
 </script>
 
 <svelte:head>
-  <title>{project.title}</title>
+  <title>{data.project.title}</title>
 </svelte:head>
 
-<div class="dc-project-embed">
-  <header>
-    <h1>{project.title}</h1>
-  </header>
-
-  <div class="documents">
-    {#each documents as document (document.id)}
-      <DocumentListItem {document} />
-    {/each}
-  </div>
-
-  <footer>
-    <Paginator
-      page={page + 1}
-      has_next={Boolean(next)}
-      has_previous={Boolean(previous)}
-      on:next={load_next}
-      on:previous={load_previous}
-    />
-  </footer>
-</div>
+<EmbedLayout canonicalUrl={canonicalUrl(data.project).href}>
+  <article>
+    <header>
+      <ProjectHeader
+        project={data.project}
+        show={{ pin: false, access: false }}
+      />
+    </header>
+    <main>
+      <DocumentBrowser documents={data.documents} />
+    </main>
+  </article>
+</EmbedLayout>
 
 <style>
+  article {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+  }
   header {
-    padding: 1rem;
+    flex: 0 0 0;
+    padding: 0.5rem;
+    background: var(--white);
+    font-size: var(--font-sm);
+    border-bottom: 1px solid var(--gray-2);
+    box-shadow: var(--shadow-2);
+    z-index: 1;
   }
-
-  .documents {
-    padding: 1rem;
-  }
-
-  @media (min-width: 720px) {
-    .documents {
-      column-count: 3;
-    }
+  main {
+    flex: 1 1 auto;
+    overflow-y: auto;
   }
 </style>

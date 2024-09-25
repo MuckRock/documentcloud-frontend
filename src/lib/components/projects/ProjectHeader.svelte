@@ -7,6 +7,10 @@
   import ProjectPin from "./ProjectPin.svelte";
 
   export let project: Project;
+  export let show = {
+    pin: true,
+    access: true,
+  };
 
   let width: number;
 </script>
@@ -18,17 +22,23 @@
   class:twoColumn={width > remToPx(48)}
 >
   <Flex align="baseline" wrap justify="between">
-    <ProjectPin {project} />
+    {#if show.pin}
+      <ProjectPin {project} />
+    {/if}
     <h1>{project.title}</h1>
-    <div class="access">
-      {#if project.private}
-        <Flex align="center"><Lock16 /> {$_("projects.access.private")}</Flex>
-      {:else}
-        <Flex align="center"><Globe16 /> {$_("projects.access.public")}</Flex>
-      {/if}
-    </div>
+    {#if show.access}
+      <div class="access">
+        {#if project.private}
+          <Flex align="center"><Lock16 /> {$_("projects.access.private")}</Flex>
+        {:else}
+          <Flex align="center"><Globe16 /> {$_("projects.access.public")}</Flex>
+        {/if}
+      </div>
+    {/if}
   </Flex>
-  <p class="description">{project.description}</p>
+  {#if project.description}
+    <p class="description">{project.description}</p>
+  {/if}
 </div>
 
 <style>

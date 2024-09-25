@@ -17,8 +17,12 @@
     userOrgString,
   } from "@/lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
 
   export let document: Document;
+
+  const embed: Writable<boolean> = getContext("embed");
 
   const width = IMAGE_WIDTHS_MAP.get("thumbnail");
 
@@ -111,7 +115,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
       </p>
     {/if}
     <Flex align="center" gap={0.625} class="actions">
-      {#if level}
+      {#if !embed && level}
         <div style="font-size: var(--font-sm)">
           <DocAccess {level} />
         </div>
