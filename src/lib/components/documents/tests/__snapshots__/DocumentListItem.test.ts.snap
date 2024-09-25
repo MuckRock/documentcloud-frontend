@@ -3,15 +3,15 @@
 exports[`DocumentListItem > renders 1`] = `
 <div>
   <a
-    class="document-list-item svelte-d6td3"
+    class="document-list-item svelte-u1blcs"
     href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/"
   >
     <div
-      class="thumbnail svelte-d6td3"
+      class="thumbnail svelte-u1blcs"
     >
       <img
         alt="Page 1, Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018"
-        class="svelte-d6td3"
+        class="svelte-u1blcs"
         height="77.64705882352942px"
         loading="lazy"
         src="https://s3.documentcloud.org/documents/24002098/pages/quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018-p1-thumbnail.gif"
@@ -21,16 +21,16 @@ exports[`DocumentListItem > renders 1`] = `
     </div>
      
     <div
-      class="documentInfo svelte-d6td3"
+      class="documentInfo svelte-u1blcs"
     >
       <h3
-        class="svelte-d6td3"
+        class="svelte-u1blcs"
       >
         Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018
       </h3>
        
       <p
-        class="meta svelte-d6td3"
+        class="meta svelte-u1blcs"
       >
         20 pages
          -

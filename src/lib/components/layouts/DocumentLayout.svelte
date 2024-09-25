@@ -37,12 +37,8 @@
     <Notes {document} />
   </nav>
   <article slot="content">
-    <header>
-      <DocumentHeader {document} />
-    </header>
-    <main class="viewer">
-      <Viewer {document} {asset_url} {text} {query} />
-    </main>
+    <header><DocumentHeader {document} /></header>
+    <main><Viewer {document} {asset_url} {text} {query} /></main>
   </article>
   <aside class="column between" slot="action">
     <Flex direction="column" gap={2}>
@@ -57,7 +53,6 @@
           </Flex>
         </Metadata>
       {/if}
-
       <Actions {document} user={$me} {action} />
     </Flex>
     <DocumentMetadata {document} />
@@ -65,23 +60,19 @@
 </SidebarLayout>
 
 <style>
+  article {
+    flex: 1 1 auto;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
   header {
     padding: 1rem;
   }
 
-  article {
-    flex: 1 1 auto;
-    z-index: 0;
-    padding-bottom: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    overflow-y: auto;
-  }
-
   main {
-    flex: 1 1 auto;
-
     background: var(--gray-1);
     border: 1px solid var(--gray-2);
     border-radius: var(--radius, 0.5rem);
