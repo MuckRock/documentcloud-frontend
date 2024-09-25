@@ -9,6 +9,7 @@
   import Avatar from "../accounts/Avatar.svelte";
   import { toast } from "../layouts/Toaster.svelte";
   import { APP_URL } from "@/config/config";
+  import { getUserName } from "@/lib/api/accounts";
 
   export let user: User = undefined;
 
@@ -102,7 +103,7 @@
       {:else}
         <Flex align="center">
           <Avatar {user} />
-          <span class="name">{user.name ?? user.username}</span>
+          <span class="name">{getUserName(user)}</span>
           <input type="hidden" name="user" value={user.email} />
         </Flex>
       {/if}

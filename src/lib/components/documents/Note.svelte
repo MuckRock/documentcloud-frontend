@@ -28,6 +28,7 @@
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Share from "./Share.svelte";
+  import { getUserName } from "@/lib/api/accounts";
   // import { getPrivateAsset } from "$lib/utils/api";
 
   export let document: Document;
@@ -206,7 +207,7 @@
 
     {#if user}
       <p class="author">
-        {$_("annotation.by", { values: { name: user.name } })}
+        {$_("annotation.by", { values: { name: getUserName(user) } })}
       </p>
     {/if}
   </footer>

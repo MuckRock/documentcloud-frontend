@@ -19,6 +19,7 @@
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
   import Avatar from "./Avatar.svelte";
   import { remToPx } from "@/lib/utils/layout";
+  import { getUserName } from "@/lib/api/accounts";
 
   export let user: User;
   export let position = "bottom right";
@@ -42,7 +43,7 @@
   <SidebarItem slot="title" title="Open Menu">
     <Avatar {user} slot="start" />
     {#if width > remToPx(48)}
-      <span class="name">{user.name ?? user.username}</span>
+      <span class="name">{getUserName(user)}</span>
     {/if}
     <div class="dropdownArrow" slot="end">
       {#if position.includes("bottom")}
