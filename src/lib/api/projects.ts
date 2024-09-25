@@ -289,8 +289,5 @@ export function canonicalUrl(project: Project): URL {
 }
 
 export function embedUrl(project: Project): URL {
-  return new URL(
-    `embed/projects/${project.id}-${project.slug}/?embed=1`,
-    EMBED_URL,
-  );
+  return new URL(`/projects/${project.id}-${project.slug}/?embed=1`, EMBED_URL);
 }
