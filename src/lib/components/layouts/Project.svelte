@@ -64,6 +64,7 @@
     padding: 1rem;
   }
   main {
+    flex: 1 0 0;
     max-height: 100%;
     overflow-y: auto;
     border-radius: 0.25rem;
