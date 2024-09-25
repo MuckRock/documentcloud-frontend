@@ -4,15 +4,15 @@ import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
 import { getEvent, buildPayload, update } from "$lib/api/addons";
-import { isErrorCode } from "$lib/utils";
 
 export const actions = {
   async update({ cookies, fetch, params, request }) {
+    // todo: figure out how to skip reloading the event and addon
     const [form, event] = await Promise.all([
       request.formData(),
       getEvent(+params.event, fetch),
     ]);
-    const addon = event.addon;
+    const addon = event.data.addon;
     const payload = buildPayload(addon, form, true);
 
     if (!payload.valid) {
@@ -21,21 +21,20 @@ export const actions = {
 
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
 
-    const resp = await update(+event.id, payload, csrf_token, fetch).catch(
-      console.error,
+    const { data, error } = await update(
+      +params.event,
+      payload,
+      csrf_token,
+      fetch,
     );
 
-    if (!resp) {
-      return fail(500, { errors: ["API error"] });
-    }
-
-    if (isErrorCode(resp.status)) {
-      return fail(resp.status, { errors: [await resp.json()] });
+    if (error) {
+      return fail(error.status, { ...error });
     }
 
     return {
-      success: resp.ok,
-      event: await resp.json(),
+      success: true,
+      event: data,
     };
   },
 } satisfies Actions;

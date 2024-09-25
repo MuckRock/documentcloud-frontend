@@ -184,7 +184,7 @@ export async function create(
       Referer: APP_URL,
     },
     body: JSON.stringify(documents),
-  });
+  }).catch(console.error);
 
   return getApiResponse<Document[], any>(resp);
 }
@@ -297,7 +297,7 @@ export async function destroy_many(
   ids: (string | number)[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<null, any>> {
+): Promise<APIResponse<null, unknown>> {
   const endpoint = new URL(`documents/`, BASE_API_URL);
   endpoint.searchParams.set("id__in", ids.join(","));
 
@@ -310,7 +310,7 @@ export async function destroy_many(
     },
   }).catch(console.log);
 
-  return getApiResponse<null, any>(resp);
+  return getApiResponse<null, unknown>(resp);
 }
 
 /**
@@ -348,22 +348,18 @@ export async function edit(
  * Bulk edit top-level fields of an array of documents.
  * Each document *must* have an `id` property.
  *
- * This returns the response directly, since a successful update
- * will result in invalidation and refetching data.
- *
  * @param documents
  * @param csrf_token
  * @param fetch
- * @returns {Promise<Response>}
  */
 export async function edit_many(
   documents: Partial<Document>[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response> {
+) {
   const endpoint = new URL("documents/", BASE_API_URL);
 
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "PATCH",
     headers: {
@@ -372,7 +368,9 @@ export async function edit_many(
       Referer: APP_URL,
     },
     body: JSON.stringify(documents),
-  });
+  }).catch(console.error);
+
+  return getApiResponse<DocumentResults>(resp);
 }
 
 /**

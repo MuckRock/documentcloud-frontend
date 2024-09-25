@@ -35,6 +35,8 @@
     },
   };
 
+  const documents = Promise.resolve({ data: documentsList });
+
   let args = {};
 </script>
 
@@ -46,7 +48,7 @@
         <Projects />
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <DocumentBrowser documents={Promise.resolve(documentsList)} />
+        <DocumentBrowser {documents} />
       </svelte:fragment>
       <svelte:fragment slot="action">
         <Button mode="primary" href="/upload/">

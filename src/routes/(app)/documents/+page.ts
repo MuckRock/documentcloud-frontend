@@ -24,15 +24,7 @@ export async function load({ url, fetch, data }) {
 
   const searchResults = search(query, options, fetch);
 
-  const pinnedAddons = getPinnedAddons(fetch).catch((e) => {
-    console.error(e);
-    return {
-      results: [],
-      count: 0,
-      next: null,
-      previous: null,
-    };
-  });
+  const pinnedAddons = getPinnedAddons(fetch).then((r) => r.data);
 
   return {
     ...data,

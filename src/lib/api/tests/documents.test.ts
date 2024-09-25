@@ -504,9 +504,9 @@ describe("document write methods", () => {
     });
 
     const update = docs.results.map((d) => ({ ...d, source: "New source" }));
-    const resp = await documents.edit_many(update, "token", mockFetch);
+    const { error } = await documents.edit_many(update, "token", mockFetch);
 
-    expect(resp.status).toEqual(200);
+    expect(error).toBeUndefined();
 
     expect(mockFetch).toHaveBeenCalledWith(
       new URL("documents/", BASE_API_URL),

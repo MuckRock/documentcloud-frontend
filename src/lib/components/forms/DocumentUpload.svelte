@@ -56,16 +56,11 @@
       };
     });
 
-    let created: Document[];
-    try {
-      created = await documents.create(docs, csrf_token, fetch);
-    } catch (err) {
-      return {
-        type: "error",
-        status: 400,
-        error: err,
-      };
-    }
+    let { data: created, error } = await documents.create(
+      docs,
+      csrf_token,
+      fetch,
+    );
 
     // upload
     const uploads = created.map((d, i) =>
@@ -89,7 +84,7 @@
     );
 
     // todo: i18n
-    if (process_response.ok) {
+    if (!process_response.error) {
       const query = new URLSearchParams([["q", userDocs(user, access)]]);
       return {
         type: "redirect",
@@ -100,8 +95,8 @@
 
     return {
       type: "error",
-      status: process_response.status,
-      error: await process_response.json(),
+      status: process_response.error.status,
+      error: process_response.error.errors,
     };
   }
 </script>
@@ -109,7 +104,6 @@
 <script lang="ts">
   import type {
     Access,
-    Document,
     DocumentUpload,
     OCREngine,
     Project,
@@ -151,9 +145,9 @@
     getFileExtension,
     isSupported,
     isWithinSizeLimit,
-  } from "@/lib/utils/files";
+  } from "$lib/utils/files";
   import Tooltip from "@/common/Tooltip.svelte";
-  import { getCurrentUser } from "@/lib/utils/permissions";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
   export let csrf_token = "";
   export let files: File[] = getFilesToUpload();

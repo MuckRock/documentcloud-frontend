@@ -44,13 +44,16 @@ export const actions = {
       )
       .flat();
 
-    try {
-      await Promise.all(promises);
-      return { success: true };
-    } catch (e) {
-      console.error(e);
-      return fail(400, { error: e });
+    const results = await Promise.all(promises);
+    const errors = results.filter((r) => r.error);
+
+    if (errors.length) {
+      return fail(400, { errors });
     }
+
+    return {
+      success: true,
+    };
   },
 
   async delete({ cookies, fetch, request }) {
@@ -59,16 +62,10 @@ export const actions = {
 
     const ids = String(form.get("documents")).split(",");
 
-    const resp = await destroy_many(ids, csrf_token, fetch).catch(
-      console.error,
-    );
+    const { error } = await destroy_many(ids, csrf_token, fetch);
 
-    if (!resp) {
-      return fail(500);
-    }
-
-    if (isErrorCode(resp.status)) {
-      return fail(resp.status);
+    if (error) {
+      return fail(error.status, { ...error });
     }
 
     return {
@@ -91,14 +88,10 @@ export const actions = {
       return { ...update, id };
     });
 
-    const resp = await edit_many(docs, csrf_token, fetch).catch(console.error);
+    const { error } = await edit_many(docs, csrf_token, fetch);
 
-    if (!resp) {
-      return fail(500);
-    }
-
-    if (isErrorCode(resp.status)) {
-      return fail(resp.status);
+    if (error) {
+      return fail(error.status, { ...error });
     }
 
     return {

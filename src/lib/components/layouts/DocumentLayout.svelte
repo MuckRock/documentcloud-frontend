@@ -65,16 +65,6 @@
 </SidebarLayout>
 
 <style>
-  .container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    max-width: var(--app-max-w, 100rem);
-    max-height: 100%;
-    margin: 0 auto;
-    position: relative;
-  }
-
   header {
     padding: 1rem;
   }
