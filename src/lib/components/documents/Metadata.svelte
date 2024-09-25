@@ -19,16 +19,7 @@
   export let document: Document;
   export let text: DocumentText;
 
-  function dateFormat(date: Date | string) {
-    return new Date(date).toLocaleDateString();
-  }
-
-  $: ocrEngine =
-    text.pages
-      .map((page) => page.ocr)
-      .reduce((acc, cur) => (acc = cur ?? acc)) ?? null;
-
-  let ocrEngineMap = {
+  const ocrEngineMap = {
     tess4: "Tesseract",
     textract: "Textract",
     googlecv: "Google Cloud Vision",
@@ -36,6 +27,22 @@
     azuredi: "Azure Document Intelligence",
     doctr: "docTR",
   };
+
+  const engines = Object.keys(ocrEngineMap);
+
+  let engine: string;
+
+  $: ocrEngine =
+    text?.pages
+      .map((page) => page?.ocr)
+      .reduce((acc, cur) => (acc = cur ?? acc), null) ?? null;
+
+  $: engine = ocrEngine?.split("_")[0];
+  $: console.log(engine, ocrEngine);
+
+  function dateFormat(date: Date | string) {
+    return new Date(date).toLocaleDateString();
+  }
 </script>
 
 <div class="meta">
@@ -51,9 +58,9 @@
   <Metadata key={$_("sidebar.language")}>
     {LANGUAGE_MAP.get(document.language)}
   </Metadata>
-  {#if ocrEngine && Object.keys(ocrEngineMap).includes(ocrEngine)}
+  {#if engine && Object.keys(ocrEngineMap).includes(engine)}
     <Metadata key={$_("sidebar.ocr_engine")}>
-      {ocrEngineMap[ocrEngine]}
+      {ocrEngineMap[engine]}
     </Metadata>
   {/if}
 </div>

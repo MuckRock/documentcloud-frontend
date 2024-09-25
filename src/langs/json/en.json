@@ -957,6 +957,7 @@
     "updated": "Last updated on",
     "language": "Language",
     "delete": "Delete",
+    "ocr_engine": "OCR Engine",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here",
