@@ -1,7 +1,15 @@
+<!--
+@component
+This is a list item showing one document. 
+It's deliberately minimal and can be wrapped in other components to add additional functionality.
+
+If we're in an embed, we want to open links to documents in new tabs and hide the access label.
+-->
 <script lang="ts">
   import type { Access, Document, Project } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
@@ -12,13 +20,15 @@
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import {
-    pageImageUrl,
     canonicalUrl,
+    pageImageUrl,
     userOrgString,
   } from "@/lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
 
   export let document: Document;
+
+  const embed: boolean = getContext("embed");
 
   const width = IMAGE_WIDTHS_MAP.get("thumbnail");
 
@@ -61,16 +71,15 @@
   }
 </script>
 
-<!--
-@component
-This is a list item showing one document. 
-It's deliberately minimal and can be wrapped in other components to add additional functionality.
--->
-<a href={canonicalUrl(document).toString()} class="document-list-item">
+<a
+  href={canonicalUrl(document).href}
+  class="document-list-item"
+  target={embed ? "_blank" : undefined}
+>
   <div class="thumbnail">
     {#if document.status === "success" || document.status === "readable"}
       <img
-        src={pageImageUrl(document, 1, "thumbnail").toString()}
+        src={pageImageUrl(document, 1, "thumbnail").href}
         alt="Page 1, {document.title}"
         width="{width}px"
         height="{height}px"
@@ -96,12 +105,11 @@ It's deliberately minimal and can be wrapped in other components to add addition
     <h3>{document.title}</h3>
     <p class="meta">
       {$_("documents.pageCount", { values: { n: document.page_count } })} -
-      {#if document.notes && document.notes.length > 0}{$_(
-          "documents.noteCount",
-          { values: { n: document.notes.length } },
-        )} -
+      {#if document.notes && document.notes.length > 0}
+        {$_("documents.noteCount", { values: { n: document.notes.length } })} -
       {/if}
-      {#if userOrgString(document)}{userOrgString(document)} -
+      {#if userOrgString(document)}
+        {userOrgString(document)} -
       {/if}
       {date}
     </p>
@@ -111,7 +119,7 @@ It's deliberately minimal and can be wrapped in other components to add addition
       </p>
     {/if}
     <Flex align="center" gap={0.625} class="actions">
-      {#if level}
+      {#if !embed && level}
         <div style="font-size: var(--font-sm)">
           <DocAccess {level} />
         </div>

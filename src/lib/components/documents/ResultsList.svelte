@@ -11,7 +11,7 @@
 </script>
 
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
 
@@ -31,6 +31,8 @@
   let loading = false;
   let end: HTMLElement;
   let observer: IntersectionObserver;
+
+  const embed: boolean = getContext("embed");
 
   // track what's visible so we can compare to $selected
   $: $visible = new Set(results);
@@ -91,10 +93,12 @@
   {#each results as document (document.id)}
     <Flex direction="column">
       <Flex gap={0.625} align="center">
-        <label>
-          <span class="sr-only">{$_("documents.select")}</span>
-          <input type="checkbox" bind:group={$selected} value={document} />
-        </label>
+        {#if !embed}
+          <label>
+            <span class="sr-only">{$_("documents.select")}</span>
+            <input type="checkbox" bind:group={$selected} value={document} />
+          </label>
+        {/if}
         <DocumentListItem {document} />
       </Flex>
 
