@@ -4,7 +4,10 @@
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
+  import { SidebarExpand16 } from "svelte-octicons";
 
+  import Button from "$lib/components/common/Button.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
@@ -23,9 +26,6 @@
   // utils
   import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
   import { pdfUrl } from "$lib/api/documents";
-  import Button from "../common/Button.svelte";
-  import { SidebarExpand16 } from "svelte-octicons";
-  import Flex from "../common/Flex.svelte";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 

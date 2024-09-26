@@ -14,11 +14,7 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import {
-    redactions,
-    undo,
-    clear,
-  } from "$lib/components/documents/RedactionPane.svelte";
+  import { redactions, undo, clear } from "../RedactionPane.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
 
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";

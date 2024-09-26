@@ -27,7 +27,7 @@
   import { pageImageUrl, canonicalUrl } from "$lib/api/documents";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
-  import Share from "./Share.svelte";
+  import Share from "../documents/Share.svelte";
   import { getUserName } from "@/lib/api/accounts";
   // import { getPrivateAsset } from "$lib/utils/api";
 

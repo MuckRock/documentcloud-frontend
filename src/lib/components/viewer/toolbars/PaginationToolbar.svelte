@@ -18,7 +18,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import Zoom from "$lib/components/documents/Zoom.svelte";
+  import Zoom from "../Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
