@@ -20,33 +20,36 @@ Selectable text can be rendered in one of two ways:
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-
-  import AnnotationPane from "./AnnotationPane.svelte";
-  import Note from "./Note.svelte";
-  import NotesPane from "./NotesPane.svelte";
-  import Page from "./Page.svelte";
-  import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
-
-  import { highlight } from "$lib/utils/search";
-  import { isPageLevel } from "$lib/api/notes";
-  import Flex from "../common/Flex.svelte";
   import {
     Share16,
     Comment16,
     ListOrdered16,
     KebabHorizontal16,
   } from "svelte-octicons";
-  import Portal from "../layouts/Portal.svelte";
-  import Share from "./Share.svelte";
+
+  // page parts
+  import AnnotationPane from "./AnnotationPane.svelte";
+  import Note from "./Note.svelte";
+  import NotesPane from "./NotesPane.svelte";
+  import Page from "./Page.svelte";
+  import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
+
+  // writable ui
   import Action from "../common/Action.svelte";
-  import Modal from "../layouts/Modal.svelte";
-  import EditSections from "../forms/EditSections.svelte";
-  import EditNote from "../forms/EditNote.svelte";
-  import { remToPx } from "@/lib/utils/layout";
-  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Button from "../common/Button.svelte";
+  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import EditNote from "../forms/EditNote.svelte";
+  import EditSections from "../forms/EditSections.svelte";
+  import Flex from "../common/Flex.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import Share from "./Share.svelte";
+  import Portal from "../layouts/Portal.svelte";
+
+  import { highlight } from "$lib/utils/search";
+  import { isPageLevel } from "$lib/api/notes";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
