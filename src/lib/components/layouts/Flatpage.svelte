@@ -202,7 +202,7 @@
 
   :global(.page .content > *) {
     display: block;
-    width: 100%;
+    width: auto;
   }
 
   :global(.page .content ul) {
