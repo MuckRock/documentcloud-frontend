@@ -41,7 +41,7 @@
         <div class="note-wrapper">
           <Note {document} {note} {pdf} {embed} />
           <h4>
-            <a href={getViewerHref({ document, note })}>
+            <a href={getViewerHref({ document, note, embed })}>
               {$_("documents.page")}
               {note.page_number + 1}
             </a>
@@ -63,7 +63,7 @@
       <div class="note-wrapper">
         <Note {document} {note} {embed} />
         <h4>
-          <a href={getViewerHref({ document, note })}>
+          <a href={getViewerHref({ document, note, embed })}>
             {$_("documents.page")}
             {note.page_number + 1}
           </a>
