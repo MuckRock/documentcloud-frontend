@@ -1,5 +1,5 @@
 <!-- @component
-A box to draw notes in, similar to RedactionPane.
+A box to draw notes in, similar to RedactionLayer.
 This adds a layer to PDFPage and handles interactions.
 
 This layer needs to coordinate between note coordinates 

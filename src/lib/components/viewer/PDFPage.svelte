@@ -28,10 +28,10 @@ Selectable text can be rendered in one of two ways:
   } from "svelte-octicons";
 
   // page parts
-  import AnnotationPane from "./AnnotationPane.svelte";
   import Note from "./Note.svelte";
   import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
+  import AnnotationLayer from "./AnnotationLayer.svelte";
   import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
 
   // writable ui
@@ -378,7 +378,7 @@ Selectable text can be rendered in one of two ways:
     {/if}
 
     {#if $mode === "annotating"}
-      <AnnotationPane
+      <AnnotationLayer
         {document}
         notes={in_page_notes}
         page_number={page_number - 1}
