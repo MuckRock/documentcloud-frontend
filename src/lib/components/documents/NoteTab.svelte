@@ -15,9 +15,8 @@
 
 <style>
   .tab {
-    width: 4.875rem;
-    height: 1.75rem;
-
+    width: 6vw;
+    height: 3vw;
     opacity: 0.8;
     background: var(--blue-3, #4294f0);
     mix-blend-mode: multiply;

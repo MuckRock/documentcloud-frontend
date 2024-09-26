@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { AddOnListItem, Event } from "@/addons/types";
-  import type { DocumentResults, Page } from "$lib/api/types";
+  import type { DocumentResults, Maybe, Page } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
@@ -24,8 +24,8 @@
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
-  export let scheduled: Promise<Page<Event>> | null = null;
-  export let search: Promise<DocumentResults>;
+  export let scheduled: Promise<Maybe<Page<Event>>> | null = null;
+  export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
   export let disablePremium: boolean = false;
 
@@ -85,11 +85,13 @@
     <main>
       {#if currentTab === "scheduled"}
         {#await scheduled then scheduled}
-          <Scheduled
-            events={scheduled.results}
-            next={scheduled.next}
-            previous={scheduled.previous}
-          />
+          {#if scheduled}
+            <Scheduled
+              events={scheduled.results}
+              next={scheduled.next}
+              previous={scheduled.previous}
+            />
+          {/if}
         {/await}
         <!--
         {:else if currentTab === "history"}
@@ -109,7 +111,7 @@
               <Selection
                 bind:value={$values["selection"]}
                 documents={new Set(addon.parameters.documents)}
-                resultsCount={results.count}
+                resultsCount={results?.count}
                 {query}
               />
             {/await}
@@ -129,9 +131,9 @@
             <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
           {:then search}
             <ResultsList
-              results={search.results}
-              next={search.next}
-              count={search.count}
+              results={search?.results}
+              next={search?.next}
+              count={search?.count}
               auto
             />
           {/await}

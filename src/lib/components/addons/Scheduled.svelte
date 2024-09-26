@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Page } from "@/api/types/common";
+  import type { Maybe, Nullable, Page } from "$lib/api/types";
   import type { Event } from "@/addons/types";
 
   import { _ } from "svelte-i18n";
@@ -12,8 +12,8 @@
   import Empty from "../common/Empty.svelte";
 
   export let events: Event[];
-  export let previous: string = undefined;
-  export let next: string = undefined;
+  export let previous: Maybe<Nullable<string>> = undefined;
+  export let next: Maybe<Nullable<string>> = undefined;
 
   export let loading = false;
 
@@ -60,10 +60,14 @@
       has_next={Boolean(next)}
       has_previous={Boolean(previous)}
       on:next={(e) => {
-        load(new URL(next));
+        if (next) {
+          load(new URL(next));
+        }
       }}
       on:previous={(e) => {
-        load(new URL(previous));
+        if (previous) {
+          load(new URL(previous));
+        }
       }}
     />
   {/if}

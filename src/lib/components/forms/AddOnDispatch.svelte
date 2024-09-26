@@ -6,6 +6,7 @@
 
 <script lang="ts">
   import type { Event, EventOptions } from "@/addons/types";
+  import type { Maybe, Nullable } from "@/lib/api/types";
 
   import { enhance } from "$app/forms";
   import { afterNavigate } from "$app/navigation";
@@ -25,9 +26,9 @@
   import { getCurrentUser } from "$lib/utils/permissions";
 
   export let properties: any = {};
-  export let required = [];
-  export let eventOptions: EventOptions;
-  export let event: Event = null;
+  export let required: string[] = [];
+  export let eventOptions: Maybe<EventOptions>;
+  export let event: Maybe<Nullable<Event>> = null;
   export let action: string = "";
   export let disablePremium = false;
 
@@ -149,7 +150,7 @@
               ? $_("addonDispatchDialog.disable")
               : $_("addonDispatchDialog.runOnce")}
           </option>
-          {#each eventOptions.events as event}
+          {#each eventOptions?.events ?? [] as event}
             <option value={event}>{capitalize(event)}</option>
           {/each}
         </select>

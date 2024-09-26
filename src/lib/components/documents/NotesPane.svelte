@@ -78,9 +78,10 @@ To create or edit notes, see `AnnotationPane.svelte`.
   }
 
   .note {
+    transform: translateY(-25%);
     position: absolute;
     pointer-events: all;
-    left: -3rem;
+    left: -3vw;
   }
 
   .note button {

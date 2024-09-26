@@ -144,10 +144,10 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
   .title:hover {
-    background: var(--light-primary, #eff7ff);
+    background: var(--blue-1);
   }
   .title.open {
-    background: var(--primary);
+    background: var(--blue-1);
     color: var(--white);
     fill: var(--white);
   }

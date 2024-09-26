@@ -4,11 +4,11 @@ exports[`UserMenu 1`] = `
 <div>
    
   <div
-    class="dropdownContainer svelte-1oyth"
+    class="dropdownContainer svelte-99kp9x"
     id="user-menu"
   >
     <div
-      class="title primary svelte-1oyth"
+      class="title primary svelte-99kp9x"
       role="button"
       tabindex="0"
     >
@@ -61,7 +61,7 @@ exports[`UserMenu 1`] = `
     </div>
      
     <div
-      class="dropdown svelte-1oyth bottom right"
+      class="dropdown svelte-99kp9x bottom right"
     >
       <div
         class="menu svelte-18fuj21"

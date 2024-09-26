@@ -13,6 +13,7 @@
   export let wide = false;
   export let tall = false;
   export let track: boolean | "once" = false;
+  export let width: number = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -81,16 +82,22 @@
   });
 </script>
 
-<div {id} bind:this={container} class="page" class:wide class:tall>
+<div
+  {id}
+  bind:this={container}
+  bind:clientWidth={width}
+  class="page"
+  class:wide
+  class:tall
+>
+  <div class="title"><slot name="title" /></div>
   <header>
-    <h4>
+    <h4 class="pageNumber">
       <a {href}>
         {$_("documents.pageAbbrev")}
         {page_number}
       </a>
     </h4>
-
-    <slot name="title" />
 
     {#if $$slots.actions}
       <div class="actions">
@@ -107,10 +114,7 @@
     flex-direction: column;
     align-items: flex-start;
     align-self: center;
-    gap: var(--font-md, 1rem);
     position: relative;
-    padding: 0 1rem;
-    margin: 0.75rem 0 0;
     max-width: 100%;
     scroll-margin-top: 6rem;
   }
@@ -119,24 +123,41 @@
     width: 100%;
   }
 
-  h4,
-  h4 a {
-    color: var(--gray-4, #5c717c);
-    position: sticky;
-    left: 1rem;
-    text-decoration: none;
-    font-weight: var(--font-regular);
-  }
-
-  h4 a:hover {
-    text-decoration: underline;
-  }
-
   header {
     display: flex;
-    height: var(--font-md, 1rem);
+    padding: 0.5rem;
+    gap: 1rem;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+  }
+
+  .pageNumber {
+    flex: 0 0 auto;
+    color: var(--gray-4, #5c717c);
+    font-weight: var(--font-regular);
+  }
+
+  .pageNumber a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .pageNumber a:hover {
+    text-decoration: underline;
+  }
+
+  .title {
+    width: 100%;
+    padding: 0.5rem;
+    overflow: hidden;
+    border-bottom: 2px solid var(--gray-2);
+  }
+  .title:empty {
+    display: none;
+  }
+
+  .actions {
+    flex: 0 0 auto;
   }
 </style>
