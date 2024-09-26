@@ -281,7 +281,7 @@ export async function destroy(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  }).catch(console.log);
+  }).catch(console.error);
 
   return getApiResponse<null, any>(resp);
 }
@@ -308,7 +308,7 @@ export async function destroy_many(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  }).catch(console.log);
+  }).catch(console.error);
 
   return getApiResponse<null, unknown>(resp);
 }

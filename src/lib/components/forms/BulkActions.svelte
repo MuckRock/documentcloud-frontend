@@ -34,8 +34,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Reprocess from "./Reprocess.svelte";
   import Projects from "./Projects.svelte";
 
+  import { getCurrentUser } from "$lib/utils/permissions";
+
   export let position = "top left";
 
+  const me = getCurrentUser();
   const selected: Writable<Document[]> = getContext("selected");
 
   const id = "bulk-actions";
@@ -70,7 +73,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 </script>
 
 <Dropdown {id} {position}>
-  <SidebarItem slot="title" disabled={$selected?.length < 1}>
+  <SidebarItem slot="title" disabled={!$me || $selected?.length < 1}>
     {$_("bulk.title")}
     <ChevronUp12 slot="end" />
   </SidebarItem>
@@ -79,7 +82,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     {#each Object.entries(actions) as [action, label]}
       <SidebarItem
         hover
-        disabled={$selected?.length < 1}
+        disabled={!$me || $selected?.length < 1}
         on:click={() => show(action)}
       >
         <svelte:component this={icons[action]} />

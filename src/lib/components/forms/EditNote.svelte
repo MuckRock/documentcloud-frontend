@@ -38,7 +38,6 @@ Positioning and generating coordinates should happen outside of this form.
   function onSubmit({ formData, submitter }) {
     submitter.disabled = true;
     return ({ result, update }) => {
-      console.log(result);
       if (result.type === "success") {
         // invalidate(`document:${document.id}`);
         update(result);

@@ -8,20 +8,21 @@
   import type { Event, EventOptions } from "@/addons/types";
 
   import { enhance } from "$app/forms";
+  import { afterNavigate } from "$app/navigation";
 
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
   import { _ } from "svelte-i18n";
+  import { Pencil24 } from "svelte-octicons";
 
   import ArrayField from "../inputs/ArrayField.svelte";
   import Button from "../common/Button.svelte";
   import Field from "../inputs/Field.svelte";
+  import Tip from "../common/Tip.svelte";
 
   import { autofield } from "../inputs/generator";
   import { schedules } from "$lib/api/addons";
-  import { afterNavigate } from "$app/navigation";
-  import Tip from "../common/Tip.svelte";
-  import { Pencil24 } from "svelte-octicons";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
   export let properties: any = {};
   export let required = [];
@@ -32,6 +33,8 @@
 
   const ajv = new Ajv();
   addFormats(ajv);
+
+  const me = getCurrentUser();
 
   let form: HTMLFormElement;
 
@@ -159,28 +162,30 @@
   <slot name="premium" />
 
   <div class="controls">
-    {#if event}
+    {#if $me}
+      {#if event}
+        <Button
+          type="submit"
+          mode="primary"
+          label={$_("dialog.save")}
+          disabled={disablePremium}
+        />
+      {:else}
+        <Button
+          type="submit"
+          mode="primary"
+          label={$_("dialog.dispatch")}
+          disabled={disablePremium}
+        />
+      {/if}
       <Button
-        type="submit"
+        type="button"
+        ghost
         mode="primary"
-        label={$_("dialog.save")}
-        disabled={disablePremium}
-      />
-    {:else}
-      <Button
-        type="submit"
-        mode="primary"
-        label={$_("dialog.dispatch")}
-        disabled={disablePremium}
+        on:click={reset}
+        label={$_("dialog.reset")}
       />
     {/if}
-    <Button
-      type="button"
-      ghost
-      mode="primary"
-      on:click={reset}
-      label={$_("dialog.reset")}
-    />
   </div>
 </form>
 

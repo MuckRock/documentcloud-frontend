@@ -45,6 +45,21 @@
     target.searchParams.set("cursor", u.searchParams.get("cursor"));
     goto(target);
   }
+
+  function search(e: Event) {
+    e.preventDefault();
+    const input = e.target as HTMLInputElement;
+    const url = new URL($page.url);
+    const query = input.value;
+
+    if (query) {
+      url.searchParams.set("query", query);
+    } else {
+      url.searchParams.delete("query");
+    }
+
+    return goto(url);
+  }
 </script>
 
 <svelte:head>
@@ -78,6 +93,7 @@
         name="query"
         placeholder={$_("projects.placeholder.projects")}
         {query}
+        on:submit={search}
       />
     </PageToolbar>
 

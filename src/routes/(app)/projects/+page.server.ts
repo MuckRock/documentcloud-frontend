@@ -14,8 +14,8 @@ export const actions = {
     const project = {
       title: form.get("title") as string,
       description: form.get("description") as string,
-      pinned: form.get("pinned") === "checked",
-      private: form.get("private") === "checked",
+      pinned: form.get("pinned") === "on",
+      private: form.get("private") === "on",
     };
 
     try {

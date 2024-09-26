@@ -17,8 +17,12 @@ export async function load({ url, parent, fetch }) {
     per_page,
   };
 
-  const filter: ProjectFilter =
+  let filter: ProjectFilter =
     (url.searchParams.get("list") as ProjectFilter) ?? "owned";
+
+  if (!me) {
+    filter = "public";
+  }
 
   let projects: ProjectResults = {
     results: [],

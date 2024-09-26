@@ -38,7 +38,6 @@
       .reduce((acc, cur) => (acc = cur ?? acc), null) ?? null;
 
   $: engine = ocrEngine?.split("_")[0];
-  $: console.log(engine, ocrEngine);
 
   function dateFormat(date: Date | string) {
     return new Date(date).toLocaleDateString();
