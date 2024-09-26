@@ -22,15 +22,14 @@
 
   import PdfPage from "./PDFPage.svelte";
 
-  import { pageSizes } from "@/api/pageSize.js";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { remToPx } from "@/lib/utils/layout";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { remToPx } from "$lib/utils/layout";
+  import { isEmbedded, pageSizes } from "$lib/utils/viewer";
 
   export let asset_url: URL = null;
   export let document: Document;
-  export let query: string = ""; // search query
   export let scale: number | "width" | "height" = 1;
+  export let query: string = ""; // search query
   export let embed = isEmbedded();
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
