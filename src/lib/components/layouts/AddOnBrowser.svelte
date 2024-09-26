@@ -24,8 +24,6 @@
   import Star from "@/common/icons/Star.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
 
-  import { getCurrentUser } from "$lib/utils/permissions";
-
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
   export let events: Promise<APIResponse<Page<Event>>>;
   export let runs: Promise<APIResponse<Page<Run>>>;

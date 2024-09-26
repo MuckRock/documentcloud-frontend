@@ -32,8 +32,11 @@ Confirm deletion or one or more documents.
     ? "/documents/?/delete"
     : canonicalUrl(documents[0]).href + "?/delete";
 
-  function onSubmit({ submitter }) {
+  function onSubmit({ submitter, cancel }) {
     submitter.disabled = true;
+    if (!$me) {
+      return cancel();
+    }
     return ({ result, update }) => {
       if (result.type === "success") {
         dispatch("close");

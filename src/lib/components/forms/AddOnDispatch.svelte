@@ -162,30 +162,28 @@
   <slot name="premium" />
 
   <div class="controls">
-    {#if $me}
-      {#if event}
-        <Button
-          type="submit"
-          mode="primary"
-          label={$_("dialog.save")}
-          disabled={disablePremium}
-        />
-      {:else}
-        <Button
-          type="submit"
-          mode="primary"
-          label={$_("dialog.dispatch")}
-          disabled={disablePremium}
-        />
-      {/if}
+    {#if event}
       <Button
-        type="button"
-        ghost
+        type="submit"
         mode="primary"
-        on:click={reset}
-        label={$_("dialog.reset")}
+        label={$_("dialog.save")}
+        disabled={!$me || disablePremium}
+      />
+    {:else}
+      <Button
+        type="submit"
+        mode="primary"
+        label={$_("dialog.dispatch")}
+        disabled={!$me || disablePremium}
       />
     {/if}
+    <Button
+      type="button"
+      ghost
+      mode="primary"
+      on:click={reset}
+      label={$_("dialog.reset")}
+    />
   </div>
 </form>
 
