@@ -20,6 +20,7 @@ describe("permission checks", () => {
       true,
     );
     expect(canUploadFiles({ ...unauthorized, is_staff: true })).toBe(true);
+    expect(canUploadFiles()).toBe(false);
   });
 });
 
