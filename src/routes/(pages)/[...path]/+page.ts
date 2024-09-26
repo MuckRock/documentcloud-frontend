@@ -1,7 +1,7 @@
 // load data for flatpages
-import { error, redirect, type NumericRange } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
-import { isErrorCode, isRedirectCode } from "@/lib/utils/api";
+import { isRedirectCode } from "@/lib/utils/api";
 import { getApiResponse } from "$lib/utils/api";
 import type { Flatpage } from "@/lib/api/types.js";
 
@@ -15,6 +15,5 @@ export async function load({ fetch, params }) {
   if (isRedirectCode(resp.status)) {
     redirect(resp.status, resp.headers.get("Location"));
   }
-
   return getApiResponse<Flatpage>(resp);
 }
