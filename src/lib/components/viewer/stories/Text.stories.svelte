@@ -8,9 +8,10 @@
     parameters: { layout: "centered" },
   };
 
+  import { document } from "@/test/fixtures/documents";
   import txt from "@/test/fixtures/documents/document.txt.json";
 </script>
 
 <Story name="default">
-  <Text text={txt} />
+  <Text {document} text={txt} />
 </Story>

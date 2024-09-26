@@ -4,13 +4,17 @@
   import Page from "./Page.svelte";
 
   import { highlight } from "$lib/utils/search";
+  import type { Document } from "$lib/api/types";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
+  export let document: Document;
   export let page: number;
   export let contents: string;
   export let query: string = ""; // search query
+  export let embed = isEmbedded();
 </script>
 
-<Page page_number={page + 1} mode="text" track>
+<Page {document} {embed} page_number={page + 1} mode="text" track>
   <pre>
     {@html highlight(contents, query)}
   </pre>

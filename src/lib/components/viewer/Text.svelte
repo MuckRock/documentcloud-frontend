@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { DocumentText } from "$lib/api/types";
+  import type { Document, DocumentText } from "$lib/api/types";
 
   import { getContext, onMount } from "svelte";
 
@@ -12,11 +12,14 @@
   import TextPage from "./TextPage.svelte";
 
   import { scrollToPage } from "$lib/utils/scroll";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
+  export let document: Document;
   export let query: string = ""; // search query
   export let text: DocumentText;
   export let total: number = 0;
   export let zoom: number = 1;
+  export let embed = isEmbedded();
 
   const currentPage: Writable<number> = getContext("currentPage");
 
@@ -31,13 +34,13 @@
   {#await text}
     <!-- loading state-->
     {#each Array(total).fill(null) as p, n}
-      <Page page_number={n + 1} mode="text">
+      <Page {document} {embed} page_number={n + 1} mode="text">
         <div class="placeholder"></div>
       </Page>
     {/each}
   {:then { pages }}
     {#each pages as { page, contents }}
-      <TextPage {page} {contents} {query} />
+      <TextPage {document} {page} {contents} {query} {embed} />
     {/each}
   {/await}
 </div>

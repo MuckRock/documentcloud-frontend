@@ -26,6 +26,7 @@
   // utils
   import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
   import { pdfUrl } from "$lib/api/documents";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
@@ -33,6 +34,7 @@
   export let asset_url: URL = pdfUrl(document);
   export let text: DocumentText;
   export let query: string = "";
+  export let embed = isEmbedded();
 
   $: mode = $currentMode;
   $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
@@ -42,7 +44,7 @@
   <ContentLayout>
     <!-- toolbars -->
     <Flex slot="header">
-      {#if $sidebars["navigation"] === false}
+      {#if !embed && $sidebars["navigation"] === false}
         <div class="toolbar w-auto">
           <Button
             ghost
@@ -55,14 +57,14 @@
           </Button>
         </div>
       {/if}
-      {#if mode === "annotating"}
+      {#if !embed && mode === "annotating"}
         <AnnotationToolbar />
-      {:else if mode === "redacting"}
+      {:else if !embed && mode === "redacting"}
         <RedactionToolbar {document} />
       {:else}
-        <ReadingToolbar {document} {query} />
+        <ReadingToolbar {document} {query} {embed} />
       {/if}
-      {#if $sidebars["action"] === false}
+      {#if !embed && $sidebars["action"] === false}
         <div class="toolbar w-auto">
           <Button
             ghost
@@ -77,17 +79,24 @@
 
     <!-- content -->
     {#if showPDF}
-      <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} />
+      <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} {embed} />
     {:else if mode === "text"}
-      <Text {text} zoom={+$zoom || 1} total={document.page_count} {query} />
+      <Text
+        {document}
+        {text}
+        zoom={+$zoom || 1}
+        total={document.page_count}
+        {query}
+        {embed}
+      />
     {:else if mode === "grid"}
-      <ThumbnailGrid {document} size={zoomToSize($zoom)} />
+      <ThumbnailGrid {document} size={zoomToSize($zoom)} {embed} />
     {:else if mode === "notes"}
-      <Notes {document} {asset_url} />
+      <Notes {document} {asset_url} {embed} />
     {/if}
     <svelte:fragment slot="footer">
       {#if mode !== "notes"}
-        <PaginationToolbar {document} />
+        <PaginationToolbar {document} {embed} />
       {/if}
     </svelte:fragment>
   </ContentLayout>

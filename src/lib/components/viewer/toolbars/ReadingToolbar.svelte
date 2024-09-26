@@ -33,10 +33,11 @@
   import SidebarItem from "../../sidebar/SidebarItem.svelte";
 
   import { remToPx } from "$lib/utils/layout";
+  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let query: string = "";
-  export let embed: boolean = getContext("embed") ?? false; // are we embedded?
+  export let embed = isEmbedded();
 
   let width: number;
 
@@ -76,7 +77,10 @@
     {#if BREAKPOINTS.READ_MENU}
       <div class="tabs" role="tablist">
         {#each readModes.entries() as [value, name]}
-          <Tab active={$mode === value} href="?mode={value}">
+          <Tab
+            active={$mode === value}
+            href={getViewerHref({ document, mode: value, embed })}
+          >
             <svelte:component this={icons[value]} />
             {name}
           </Tab>
@@ -95,7 +99,7 @@
           {#each readModes.entries() as [value, name]}
             <MenuItem
               selected={$mode === value}
-              href="?mode={value}"
+              href={getViewerHref({ document, mode: value, embed })}
               on:click={() => closeDropdown("reading-mode")}
             >
               <svelte:component this={icons[value]} slot="icon" />
@@ -106,7 +110,7 @@
             {#each writeModes as [value, name]}
               <MenuItem
                 selected={$mode === value}
-                href="?mode={value}"
+                href={getViewerHref({ document, mode: value, embed })}
                 on:click={() => closeDropdown("reading-mode")}
               >
                 <svelte:component this={icons[value]} slot="icon" />
@@ -121,7 +125,7 @@
   <Flex justify="end" slot="right">
     {#if !BREAKPOINTS.WRITE_MENU && canWrite}
       {#each writeModes as [value, name]}
-        <Button ghost href="?mode={value}">
+        <Button ghost href={getViewerHref({ document, mode: value, embed })}>
           <svelte:component this={icons[value]} />
           {name}
         </Button>

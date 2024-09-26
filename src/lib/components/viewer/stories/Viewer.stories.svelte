@@ -23,10 +23,12 @@
     document: Document;
     text: DocumentText;
     mode: ViewerMode;
+    embed: boolean;
   } = {
     document,
     text: txt,
     mode: "document",
+    embed: false,
   };
 </script>
 
@@ -43,6 +45,14 @@
   args={{
     ...args,
     document: { ...document, edit_access: true },
+  }}
+/>
+<Story
+  name="Embedded"
+  args={{
+    ...args,
+    document: { ...document },
+    embed: true,
   }}
 />
 

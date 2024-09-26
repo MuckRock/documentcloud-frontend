@@ -4,7 +4,7 @@ To create or edit notes, see `AnnotationPane.svelte`.
 -->
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Document, Note as NoteType } from "$lib/api/types";
+  import type { Document, Note as NoteType, ViewerMode } from "$lib/api/types";
 
   import { pushState } from "$app/navigation";
 
@@ -16,17 +16,22 @@ To create or edit notes, see `AnnotationPane.svelte`.
   import NoteTab from "./NoteTab.svelte";
 
   import { noteHashUrl } from "$lib/api/notes";
+  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let notes: NoteType[] = [];
   export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
+  export let embed = isEmbedded();
 
   const activeNote: Writable<NoteType> = getContext("activeNote");
+  const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
   function openNote(e, note: NoteType) {
     activeNote?.set(note);
-    const href = e.target?.href || noteHashUrl(note);
+    const href =
+      e.target?.href ||
+      getViewerHref({ document, note, mode: $currentMode, embed });
     pushState(href, {});
   }
 
@@ -41,7 +46,7 @@ To create or edit notes, see `AnnotationPane.svelte`.
     {@const is_active = note.id === $activeNote?.id}
     <a
       class="note"
-      href={noteHashUrl(note)}
+      href={getViewerHref({ document, note, mode: $currentMode, embed })}
       title={note.title}
       style:top="{note.y1 * 100}%"
       on:click={(e) => openNote(e, note)}

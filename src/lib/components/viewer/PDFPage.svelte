@@ -50,6 +50,7 @@ Selectable text can be rendered in one of two ways:
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
   import { remToPx } from "@/lib/utils/layout";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -63,8 +64,7 @@ Selectable text can be rendered in one of two ways:
   export let notes: NoteType[] = [];
   export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
-
-  export let embed: boolean = getContext("embed") ?? false; // are we embedded?
+  export let embed = isEmbedded();
 
   // make hidden things visible, for debugging
   export let debug = false;
@@ -247,7 +247,9 @@ Selectable text can be rendered in one of two ways:
 <svelte:document on:visibilitychange={onVisibilityChange} />
 
 <Page
+  {document}
   {page_number}
+  {embed}
   wide={scale === "width"}
   tall={scale === "height"}
   track

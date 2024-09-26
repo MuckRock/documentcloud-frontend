@@ -25,11 +25,13 @@
   import { pageSizes } from "@/api/pageSize.js";
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "@/lib/utils/layout";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
   export let asset_url: URL = null;
   export let document: Document;
   export let query: string = ""; // search query
   export let scale: number | "width" | "height" = 1;
+  export let embed = isEmbedded();
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Promise<any> = new Promise(() => {});
@@ -105,6 +107,7 @@
       {query}
       section={sections[n]}
       notes={notes[n]}
+      {embed}
     />
   {/each}
 </div>

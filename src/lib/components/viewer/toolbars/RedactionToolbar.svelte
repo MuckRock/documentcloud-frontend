@@ -22,6 +22,7 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
 
   import { remToPx } from "$lib/utils/layout";
+  import { getViewerHref } from "@/lib/utils/viewer";
 
   export let document: Document;
 
@@ -34,13 +35,14 @@
   };
 
   function onCancel() {
+    const href = getViewerHref({ document });
     if ($redactions.length > 0) {
       if (confirm($_("redact.cancelWarning"))) {
         clear();
-        goto("?mode=document");
+        goto(href);
       }
     } else {
-      goto("?mode=document");
+      goto(href);
     }
   }
 </script>

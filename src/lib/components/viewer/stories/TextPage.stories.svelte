@@ -8,6 +8,7 @@
     parameters: { layout: "centered" },
   };
 
+  import { document } from "@/test/fixtures/documents";
   import txt from "@/test/fixtures/documents/document.txt.json";
 
   const page = txt.pages[0];
@@ -15,9 +16,9 @@
 </script>
 
 <Story name="default">
-  <TextPage page={page.page} contents={page.contents} />
+  <TextPage {document} page={page.page} contents={page.contents} />
 </Story>
 
 <Story name="search results">
-  <TextPage page={page.page} contents={page.contents} {query} />
+  <TextPage {document} page={page.page} contents={page.contents} {query} />
 </Story>

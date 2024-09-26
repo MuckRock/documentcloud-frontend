@@ -1,19 +1,22 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { ViewerMode } from "$lib/api/types";
+  import type { Document, ViewerMode } from "$lib/api/types";
 
   import { createEventDispatcher, onMount, getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { pageHashUrl } from "$lib/api/documents";
   import { replaceState } from "$app/navigation";
+  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
 
+  export let document: Document;
   export let page_number: number;
   export let mode: ViewerMode = "document";
   export let wide = false;
   export let tall = false;
   export let track: boolean | "once" = false;
   export let width: number = undefined;
+  export let embed = isEmbedded();
 
   const dispatch = createEventDispatcher();
 
@@ -24,7 +27,7 @@
   let visible: boolean;
 
   $: id = pageHashUrl(page_number).replace("#", "");
-  $: href = `?mode=${mode}` + pageHashUrl(page_number);
+  $: href = getViewerHref({ document, mode, page: page_number, embed });
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(

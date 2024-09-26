@@ -15,16 +15,16 @@
   import Empty from "../common/Empty.svelte";
   import Note from "./Note.svelte";
 
-  import { noteUrl } from "$lib/api/notes";
-  import { canonicalUrl } from "$lib/api/documents";
+  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let pdf = new Promise(() => {});
   export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
   export let asset_url: URL = undefined;
+  export let embed = isEmbedded();
 
   $: notes = document.notes;
-  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
+  $: annotate = getViewerHref({ document, mode: "annotating" });
 
   onMount(async () => {
     if (asset_url && !task) {
@@ -39,9 +39,9 @@
     {#await pdf then pdf}
       {#each notes as note}
         <div class="note-wrapper">
-          <Note {document} {note} {pdf} />
+          <Note {document} {note} {pdf} {embed} />
           <h4>
-            <a href={noteUrl(document, note).href}>
+            <a href={getViewerHref({ document, note })}>
               {$_("documents.page")}
               {note.page_number + 1}
             </a>
@@ -61,9 +61,9 @@
   {:else}
     {#each notes as note}
       <div class="note-wrapper">
-        <Note {document} {note} />
+        <Note {document} {note} {embed} />
         <h4>
-          <a href={noteUrl(document, note).href}>
+          <a href={getViewerHref({ document, note })}>
             {$_("documents.page")}
             {note.page_number + 1}
           </a>

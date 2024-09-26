@@ -29,12 +29,13 @@
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
   import { getUserName } from "@/lib/api/accounts";
-  // import { getPrivateAsset } from "$lib/utils/api";
+  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let note: Note;
   export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
+  export let embed = isEmbedded();
 
   const SIZE: Sizes = "large";
 
@@ -68,10 +69,8 @@
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
   $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
-  $: edit_link = new URL(
-    `?mode=annotating${noteHashUrl(note)}`,
-    canonicalUrl(document),
-  ).href;
+  $: edit_link = getViewerHref({ document, note, mode: "annotating" });
+  $: canEdit = note.edit_access && !embed;
 
   onMount(() => {
     rendering = render(canvas, document, pdf);
@@ -184,7 +183,7 @@
       <Action icon={Share16} on:click={() => (shareNoteOpen = true)}>
         {$_("dialog.share")}
       </Action>
-      {#if note.edit_access}
+      {#if canEdit}
         <Action icon={Pencil16}>
           <a href={edit_link}>{$_("dialog.edit")}</a>
         </Action>

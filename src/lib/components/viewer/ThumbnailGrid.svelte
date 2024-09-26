@@ -13,9 +13,11 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let size: Sizes = "thumbnail";
+  export let embed = isEmbedded();
 
   const SCALE = {
     thumbnail: 1,
@@ -33,7 +35,7 @@
   {#each sizes as aspect, n}
     {@const page_number = n + 1}
     {@const height = width * aspect}
-    <Page {page_number} let:href>
+    <Page {document} {page_number} {embed} let:href>
       <a {href}>
         <img
           src={pageImageUrl(document, page_number, size).href}

@@ -40,7 +40,7 @@
 <Story name="default">
   <Flex class="pages" direction="column" gap={1}>
     {#each sizes as [width, height], page_number}
-      <Page page_number={page_number + 1}>
+      <Page {document} page_number={page_number + 1}>
         <div class="page-container">
           <AnnotationPane
             {document}

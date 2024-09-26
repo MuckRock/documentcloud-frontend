@@ -23,12 +23,13 @@
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
+  import { isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
+  export let embed = isEmbedded();
 
   let sectionsOpen = false;
   let width: number;
-  let embed: boolean = getContext("embed") ?? false; // are we embedded?
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
   const currentPage: Writable<number> = getContext("currentPage");
