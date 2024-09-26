@@ -20,22 +20,36 @@ Selectable text can be rendered in one of two ways:
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
+  import {
+    Share16,
+    Comment16,
+    ListOrdered16,
+    KebabHorizontal16,
+  } from "svelte-octicons";
 
+  // page parts
   import AnnotationPane from "./AnnotationPane.svelte";
   import Note from "./Note.svelte";
   import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
-  import PageAnnotation from "./PageAnnotation.svelte";
   import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
+
+  // writable ui
+  import Action from "../common/Action.svelte";
+  import Button from "../common/Button.svelte";
+  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import EditNote from "../forms/EditNote.svelte";
+  import EditSections from "../forms/EditSections.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import Share from "./Share.svelte";
+  import Portal from "../layouts/Portal.svelte";
 
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
-  import Flex from "../common/Flex.svelte";
-  import { Share16 } from "svelte-octicons";
-  import Portal from "../layouts/Portal.svelte";
-  import Share from "./Share.svelte";
-  import Action from "../common/Action.svelte";
-  import Modal from "../layouts/Modal.svelte";
+  import { remToPx } from "@/lib/utils/layout";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
@@ -72,6 +86,14 @@ Selectable text can be rendered in one of two ways:
 
   // visibility, for loading optimization
   let visible: boolean = false;
+
+  let editSection = false;
+  let pageNote = false;
+
+  function close() {
+    editSection = false;
+    pageNote = false;
+  }
 
   $: aspect = height / width;
   $: orientation = height > width ? "vertical" : "horizontal";
@@ -215,6 +237,9 @@ Selectable text can be rendered in one of two ways:
       });
     }
   }
+
+  let pageWidth: number;
+  $: id = `page_${page_number}`;
 </script>
 
 <svelte:window on:resize={onResize} />
@@ -230,6 +255,7 @@ Selectable text can be rendered in one of two ways:
   on:visible={() => {
     visible = true;
   }}
+  bind:width={pageWidth}
 >
   <svelte:fragment slot="title">
     {#if section}
@@ -239,16 +265,77 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </svelte:fragment>
 
-  <svelte:fragment slot="actions">
+  <div slot="actions">
     {#if !embed}
-      <Flex align="center">
-        <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
-          {$_("dialog.share")}
-        </Action>
-        <PageAnnotation {document} page_number={page_number - 1} {section} />
-      </Flex>
+      {#if pageWidth > remToPx(32) || !document.edit_access}
+        <Flex align="center">
+          <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
+            {$_("dialog.share")}
+          </Action>
+          {#if document.edit_access}
+            <div>
+              <Action icon={Comment16} on:click={() => (pageNote = true)}>
+                {$_("annotate.cta.add-note")}
+              </Action>
+
+              <Action
+                icon={ListOrdered16}
+                on:click={() => (editSection = true)}
+              >
+                {#if section}
+                  {$_("annotate.cta.edit-section")}
+                {:else}
+                  {$_("annotate.cta.add-section")}
+                {/if}
+              </Action>
+            </div>
+          {/if}
+        </Flex>
+      {:else}
+        <Dropdown2 id="{id}-actions" position="bottom right">
+          <Button minW={false} slot="title" ghost mode="primary">
+            <KebabHorizontal16 />
+          </Button>
+          <Menu>
+            <MenuItem
+              on:click={() => {
+                closeDropdown(`${id}-actions`);
+                pageShareOpen = true;
+              }}
+            >
+              <Share16 slot="icon" />
+              {$_("dialog.share")}
+            </MenuItem>
+            {#if document.edit_access}
+              <MenuItem
+                on:click={() => {
+                  closeDropdown(`${id}-actions`);
+                  pageNote = true;
+                }}
+              >
+                <Comment16 slot="icon" />
+                {$_("annotate.cta.add-note")}
+              </MenuItem>
+
+              <MenuItem
+                on:click={() => {
+                  closeDropdown(`${id}-actions`);
+                  editSection = true;
+                }}
+              >
+                <ListOrdered16 slot="icon" />
+                {#if section}
+                  {$_("annotate.cta.edit-section")}
+                {:else}
+                  {$_("annotate.cta.add-section")}
+                {/if}
+              </MenuItem>
+            {/if}
+          </Menu>
+        </Dropdown2>
+      {/if}
     {/if}
-  </svelte:fragment>
+  </div>
 
   {#if page_level_notes.length}
     <div class="page-notes">
@@ -321,6 +408,34 @@ Selectable text can be rendered in one of two ways:
     </Modal>
   </Portal>
 {/if}
+{#if editSection}
+  <Portal>
+    <Modal on:close={close}>
+      <h2 slot="title">
+        {#if section}
+          {$_("annotate.cta.edit-section")}
+        {:else}
+          {$_("annotate.cta.add-section")}
+        {/if}
+      </h2>
+      <EditSections
+        {document}
+        on:close={close}
+        section={section || { page_number: page_number - 1 }}
+      />
+    </Modal>
+  </Portal>
+{/if}
+{#if pageNote}
+  <Portal>
+    <Modal on:close={close}>
+      <h2 slot="title">
+        {$_("annotate.cta.add-note")}
+      </h2>
+      <EditNote {document} page_number={page_number - 1} on:close={close} />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   .section {
@@ -357,6 +472,7 @@ Selectable text can be rendered in one of two ways:
     flex-flow: column nowrap;
     gap: 1rem;
     width: 100%;
+    margin-bottom: 1rem;
   }
 
   .selectable-text {
