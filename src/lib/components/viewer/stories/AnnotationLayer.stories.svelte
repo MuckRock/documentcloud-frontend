@@ -2,13 +2,13 @@
   import type { Document, Note, ViewerMode } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import AnnotationPane from "../AnnotationPane.svelte";
+  import AnnotationLayer from "../AnnotationLayer.svelte";
   import Page from "../Page.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
 
   export const meta = {
-    title: "Components / Viewer / Annotation pane",
-    component: AnnotationPane,
+    title: "Components / Viewer / Annotation Layer",
+    component: AnnotationLayer,
     parameters: { layout: "centered" },
   };
 
@@ -42,7 +42,7 @@
     {#each sizes as [width, height], page_number}
       <Page {document} page_number={page_number + 1}>
         <div class="page-container">
-          <AnnotationPane
+          <AnnotationLayer
             {document}
             {page_number}
             notes={notes[page_number] || []}
