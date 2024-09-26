@@ -29,7 +29,6 @@ Selectable text can be rendered in one of two ways:
 
   // page parts
   import Note from "./Note.svelte";
-  import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
   import AnnotationLayer from "./AnnotationLayer.svelte";
   import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
@@ -377,22 +376,16 @@ Selectable text can be rendered in one of two ways:
       </div>
     {/if}
 
-    {#if $mode === "annotating"}
+    {#await pdf then pdf}
       <AnnotationLayer
         {document}
+        {mode}
+        {pdf}
         notes={in_page_notes}
         page_number={page_number - 1}
+        {embed}
       />
-    {:else}
-      {#await pdf then pdf}
-        <NotesPane
-          {document}
-          notes={in_page_notes}
-          {pdf}
-          scale={numericScale}
-        />
-      {/await}
-    {/if}
+    {/await}
 
     {#if redactions_for_page.length > 0 || $mode === "redacting"}
       <RedactionLayer

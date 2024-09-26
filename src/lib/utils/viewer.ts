@@ -21,6 +21,14 @@ export function getCurrentPage(): Writable<number> {
   return getContext("currentPage");
 }
 
+export function getCurrentMode(): Writable<ViewerMode> {
+  return getContext("currentMode");
+}
+
+export function getActiveNote(): Writable<Note> {
+  return getContext("activeNote");
+}
+
 export function getViewerHref(options: ViewerHrefOptions = {}) {
   const { document, page, note, mode = "document", embed = false } = options;
   let hash = "";

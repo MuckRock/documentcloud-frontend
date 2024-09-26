@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
   import type { Document, Note, ViewerMode } from "$lib/api/types";
 
+  import ViewerContextDecorator from "@/../.storybook/decorators/ViewerContextDecorator.svelte";
   import { Story } from "@storybook/addon-svelte-csf";
   import AnnotationLayer from "../AnnotationLayer.svelte";
   import Page from "../Page.svelte";
@@ -26,31 +27,40 @@
   }, {});
 </script>
 
-<script lang="ts">
-  import { setContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+<Story name="Reading">
+  <ViewerContextDecorator mode="document">
+    <Flex class="pages" direction="column" gap={1}>
+      {#each sizes as [width, height], page_number}
+        <Page {document} page_number={page_number + 1}>
+          <div class="page-container">
+            <AnnotationLayer
+              {document}
+              {page_number}
+              notes={notes[page_number] || []}
+            />
+          </div>
+        </Page>
+      {/each}
+    </Flex>
+  </ViewerContextDecorator>
+</Story>
 
-  const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable("annotating");
-
-  setContext("activeNote", activeNote);
-  setContext("currentMode", mode);
-</script>
-
-<Story name="default">
-  <Flex class="pages" direction="column" gap={1}>
-    {#each sizes as [width, height], page_number}
-      <Page {document} page_number={page_number + 1}>
-        <div class="page-container">
-          <AnnotationLayer
-            {document}
-            {page_number}
-            notes={notes[page_number] || []}
-          />
-        </div>
-      </Page>
-    {/each}
-  </Flex>
+<Story name="Writing">
+  <ViewerContextDecorator mode="annotating">
+    <Flex class="pages" direction="column" gap={1}>
+      {#each sizes as [width, height], page_number}
+        <Page {document} page_number={page_number + 1}>
+          <div class="page-container">
+            <AnnotationLayer
+              {document}
+              {page_number}
+              notes={notes[page_number] || []}
+            />
+          </div>
+        </Page>
+      {/each}
+    </Flex>
+  </ViewerContextDecorator>
 </Story>
 
 <style>

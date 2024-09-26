@@ -7,6 +7,7 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
+  import Note from "../Note.svelte";
 
   const document = doc as Document;
 
@@ -44,7 +45,11 @@
   name="Edit Access"
   args={{
     ...args,
-    document: { ...document, edit_access: true },
+    document: {
+      ...document,
+      edit_access: true,
+      notes: document.notes.map((note) => ({ ...note, edit_access: true })),
+    },
   }}
 />
 <Story

@@ -29,7 +29,11 @@
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
   import { getUserName } from "@/lib/api/accounts";
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+  import {
+    getCurrentMode,
+    getViewerHref,
+    isEmbedded,
+  } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let note: Note;
@@ -57,7 +61,7 @@
     },
   };
 
-  const mode: Writable<ViewerMode> = getContext("currentMode");
+  const mode = getCurrentMode();
 
   let canvas: HTMLCanvasElement;
   let renderTask: { promise: Promise<any> };
@@ -179,7 +183,7 @@
   style:--note-height={height(note)}
 >
   <header>
-    <h3>{note.title}</h3>
+    <h3>{note.title} {canEdit} {document.edit_access} {embed}</h3>
     <div class="actions">
       <Action icon={Share16} on:click={() => (shareNoteOpen = true)}>
         {$_("dialog.share")}
