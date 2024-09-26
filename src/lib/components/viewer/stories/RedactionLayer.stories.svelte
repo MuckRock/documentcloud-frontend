@@ -1,13 +1,13 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import RedactionPane, { redactions } from "../RedactionPane.svelte";
+  import RedactionLayer, { redactions } from "../RedactionLayer.svelte";
   import Flex from "../../common/Flex.svelte";
 
   import redacted from "@/test/fixtures/documents/redactions.json";
 
   export const meta = {
-    title: "Components / Viewer / Redaction pane",
-    component: RedactionPane,
+    title: "Components / Viewer / Redaction Layer",
+    component: RedactionLayer,
     parameters: { layout: "centered" },
   };
 </script>
@@ -28,7 +28,7 @@
   <Flex class="pages" direction="column" gap={1}>
     {#each redacted as page}
       <div class="page">
-        <RedactionPane {...args} page_number={page.page_number} />
+        <RedactionLayer {...args} page_number={page.page_number} />
       </div>
     {/each}
   </Flex>

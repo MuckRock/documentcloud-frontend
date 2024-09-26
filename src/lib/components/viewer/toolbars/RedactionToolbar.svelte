@@ -14,9 +14,8 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import { redactions, undo, clear } from "../RedactionPane.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
-
+  import { redactions, undo, clear } from "../RedactionLayer.svelte";
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
