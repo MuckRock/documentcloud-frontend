@@ -14,6 +14,9 @@ Confirm deletion or one or more documents.
   import Flex from "../common/Flex.svelte";
 
   import { canonicalUrl, deleted } from "$lib/api/documents";
+  import { getCurrentUser } from "$lib/utils/permissions";
+
+  const me = getCurrentUser();
 
   // one document or a list of IDs
   export let documents: Document[] = [];
@@ -29,8 +32,11 @@ Confirm deletion or one or more documents.
     ? "/documents/?/delete"
     : canonicalUrl(documents[0]).href + "?/delete";
 
-  function onSubmit({ submitter }) {
+  function onSubmit({ submitter, cancel }) {
     submitter.disabled = true;
+    if (!$me) {
+      return cancel();
+    }
     return ({ result, update }) => {
       if (result.type === "success") {
         dispatch("close");
@@ -63,7 +69,7 @@ Confirm deletion or one or more documents.
     {/if}
 
     <Flex>
-      <Button type="submit" mode="danger" disabled={count === 0}>
+      <Button type="submit" mode="danger" disabled={count === 0 || !$me}>
         <Trash16 />
         {$_("delete.confirm")}
       </Button>

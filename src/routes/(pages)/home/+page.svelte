@@ -29,7 +29,7 @@
   <header>
     <div class="headercontents">
       <div class="logo">
-        <a href="/">{@html mastLogoSvg}</a>
+        <a href="/documents/">{@html mastLogoSvg}</a>
       </div>
       {#if showLogin}
         <div class="narrowhide">

@@ -10,7 +10,7 @@ import { userDocs } from "$lib/utils/search";
 export async function load({ url, params, fetch, parent }) {
   const { owner, repo } = params;
 
-  const addon = await addons.getAddon(owner, repo, fetch).catch(console.error);
+  const addon = await addons.getAddon(owner, repo, fetch);
   if (!addon) {
     return error(404, "Add-On not found");
   }
@@ -20,7 +20,7 @@ export async function load({ url, params, fetch, parent }) {
   ]);
 
   const { me } = await parent();
-  const query = url.searchParams.get("q") || userDocs(me);
+  const query = me ? url.searchParams.get("q") || userDocs(me) : "";
 
   const searchResults = search(query, {}, fetch).then((r) => r.data);
 

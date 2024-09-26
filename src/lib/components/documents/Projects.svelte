@@ -44,9 +44,11 @@
     </SidebarItem>
   {:else}
     <Empty icon={FileDirectory24}>
-      <Action on:click={() => (edit = true)}>
-        {$_("projects.add", { values: { n: 1 } })}
-      </Action>
+      {#if document.edit_access}
+        <Action on:click={() => (edit = true)}>
+          {$_("projects.add", { values: { n: 1 } })}
+        </Action>
+      {/if}
     </Empty>
   {/each}
 </SidebarGroup>

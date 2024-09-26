@@ -6,23 +6,24 @@
 
 <script lang="ts">
   import type { Event, EventOptions } from "@/addons/types";
+  import type { Maybe, Nullable } from "@/lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { afterNavigate } from "$app/navigation";
 
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
   import { _ } from "svelte-i18n";
+  import { Pencil24 } from "svelte-octicons";
 
   import ArrayField from "../inputs/ArrayField.svelte";
   import Button from "../common/Button.svelte";
   import Field from "../inputs/Field.svelte";
+  import Tip from "../common/Tip.svelte";
 
   import { autofield } from "../inputs/generator";
   import { schedules } from "$lib/api/addons";
-  import { afterNavigate } from "$app/navigation";
-  import Tip from "../common/Tip.svelte";
-  import { Pencil24 } from "svelte-octicons";
-  import type { Maybe, Nullable } from "@/lib/api/types";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
   export let properties: any = {};
   export let required: string[] = [];
@@ -33,6 +34,8 @@
 
   const ajv = new Ajv();
   addFormats(ajv);
+
+  const me = getCurrentUser();
 
   let form: HTMLFormElement;
 
@@ -165,14 +168,14 @@
         type="submit"
         mode="primary"
         label={$_("dialog.save")}
-        disabled={disablePremium}
+        disabled={!$me || disablePremium}
       />
     {:else}
       <Button
         type="submit"
         mode="primary"
         label={$_("dialog.dispatch")}
-        disabled={disablePremium}
+        disabled={!$me || disablePremium}
       />
     {/if}
     <Button

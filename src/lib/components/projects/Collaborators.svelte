@@ -46,8 +46,8 @@
     <People16 slot="start" />
     {$_("projects.collaborators.title")}
   </SidebarItem>
-  <svelte:fragment slot="action"
-    >{#if project.add_remove_access}
+  <svelte:fragment slot="action">
+    {#if project.add_remove_access}
       <Action
         icon={Pencil16}
         title={$_("projects.collaborators.edit")}
@@ -55,8 +55,8 @@
       >
         {$_("projects.collaborators.edit")}
       </Action>
-    {/if}</svelte:fragment
-  >
+    {/if}
+  </svelte:fragment>
 
   {#each sort(users) as user}
     {#if isProjectUser || project.edit_access}
@@ -74,9 +74,11 @@
   {:else}
     <Empty>
       {$_("projects.collaborators.empty")}
-      <Action on:click={() => (edit = true)}>
-        {$_("projects.collaborators.add")}
-      </Action>
+      {#if $me}
+        <Action on:click={() => (edit = true)}>
+          {$_("projects.collaborators.add")}
+        </Action>
+      {/if}
     </Empty>
   {/each}
 </SidebarGroup>

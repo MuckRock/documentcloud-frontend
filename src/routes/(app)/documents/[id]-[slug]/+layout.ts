@@ -3,7 +3,7 @@
  * We do this in a layout module because sub-routes can use the same
  * document without loading it again.
  */
-import type { Document, ViewerMode } from "@/lib/api/types";
+import type { Document, ViewerMode, ReadMode } from "@/lib/api/types";
 
 import { redirect, error } from "@sveltejs/kit";
 
@@ -27,18 +27,20 @@ export async function load({ fetch, params, parent, depends, url }) {
     error(404, "Document not found");
   }
 
+  const canonical = new URL(document.canonical_url);
   if (document.slug !== params.slug) {
-    const canonical = new URL(document.canonical_url);
     redirect(302, canonical.pathname);
   }
-
-  depends(`document:${document.id}`);
 
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
 
   if (!documents.MODES.has(mode)) {
     mode = documents.MODES[0];
+  }
+
+  if (!document.edit_access && !documents.READING_MODES.has(mode as ReadMode)) {
+    return redirect(302, canonical);
   }
 
   let action = url.searchParams.get("action");
@@ -50,6 +52,8 @@ export async function load({ fetch, params, parent, depends, url }) {
 
   // stream this
   const pinnedAddons = getPinnedAddons(fetch);
+
+  depends(`document:${document.id}`);
 
   return {
     document,

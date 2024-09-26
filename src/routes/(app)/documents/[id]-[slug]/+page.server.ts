@@ -86,8 +86,6 @@ export const actions = {
 
     const update: Partial<Document> = Object.fromEntries(form);
 
-    console.log(update);
-
     // noindex is a boolean so needs special treatment
     update.noindex = form.get("noindex") === "on";
 
