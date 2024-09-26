@@ -44,7 +44,7 @@ Selectable text can be rendered in one of two ways:
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import Modal from "../layouts/Modal.svelte";
-  import Share from "./Share.svelte";
+  import Share from "../documents/Share.svelte";
   import Portal from "../layouts/Portal.svelte";
 
   import { highlight } from "$lib/utils/search";
