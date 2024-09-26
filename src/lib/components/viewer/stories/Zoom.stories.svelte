@@ -3,7 +3,7 @@
   import Zoom from "../Zoom.svelte";
 
   export const meta = {
-    title: "Components / Documents / Zoom",
+    title: "Components / Viewer / Zoom",
     component: Zoom,
     parameters: {
       layout: "centered",

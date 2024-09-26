@@ -11,7 +11,7 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Documents / Viewer",
+    title: "Components / Viewer",
     component: Viewer,
     parameters: {
       layout: "fullscreen",

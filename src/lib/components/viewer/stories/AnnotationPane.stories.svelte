@@ -7,7 +7,7 @@
   import Flex from "$lib/components/common/Flex.svelte";
 
   export const meta = {
-    title: "Components / Documents / Annotation pane",
+    title: "Components / Viewer / Annotation pane",
     component: AnnotationPane,
     parameters: { layout: "centered" },
   };

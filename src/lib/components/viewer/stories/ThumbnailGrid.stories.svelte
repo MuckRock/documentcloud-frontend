@@ -5,7 +5,7 @@
   import ThumbnailGrid from "../ThumbnailGrid.svelte";
 
   export const meta = {
-    title: "Components / Documents / Thumbnail grid",
+    title: "Components / Viewer / Thumbnail grid",
     component: ThumbnailGrid,
     parameters: { layout: "fullscreen" },
   };

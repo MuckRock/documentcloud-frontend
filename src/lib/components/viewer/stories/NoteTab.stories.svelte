@@ -3,7 +3,7 @@
   import NoteTab from "../NoteTab.svelte";
 
   export const meta = {
-    title: "Components / Documents / Note tab",
+    title: "Components / Viewer / Note tab",
     component: NoteTab,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

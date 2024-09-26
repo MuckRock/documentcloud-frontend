@@ -17,7 +17,7 @@
   const document = { ...doc, edit_access: true } as Document;
 
   export const meta = {
-    title: "Components / Documents / PDF Page",
+    title: "Components / Viewer / PDF Page",
     component: PdfPage,
     parameters: { layout: "centered" },
   };

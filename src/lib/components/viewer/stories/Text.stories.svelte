@@ -3,7 +3,7 @@
   import Text from "../Text.svelte";
 
   export const meta = {
-    title: "Components / Documents / Text",
+    title: "Components / Viewer / Text",
     component: Text,
     parameters: { layout: "centered" },
   };

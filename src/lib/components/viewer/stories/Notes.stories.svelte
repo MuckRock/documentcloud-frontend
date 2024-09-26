@@ -7,7 +7,7 @@
   import Notes from "../Notes.svelte";
 
   export const meta = {
-    title: "Components / Documents / Notes View",
+    title: "Components / Viewer / Notes View",
     component: Notes,
     parameters: { layout: "centered" },
   };

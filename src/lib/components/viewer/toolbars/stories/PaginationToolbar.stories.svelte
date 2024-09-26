@@ -6,7 +6,7 @@
   import { document } from "@/test/fixtures/documents";
 
   export const meta: Meta = {
-    title: "Components / Documents / Toolbars / Pagination",
+    title: "Components / Viewer / Toolbars / Pagination",
     component: PaginationToolbar,
     parameters: {
       layout: "fullscreen",

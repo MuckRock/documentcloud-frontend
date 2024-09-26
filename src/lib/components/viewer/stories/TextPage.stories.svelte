@@ -3,7 +3,7 @@
   import TextPage from "../TextPage.svelte";
 
   export const meta = {
-    title: "Components / Documents / Text page",
+    title: "Components / Viewer / Text page",
     component: TextPage,
     parameters: { layout: "centered" },
   };

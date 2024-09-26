@@ -6,7 +6,7 @@
   import Flex from "$lib/components/common/Flex.svelte";
 
   export const meta = {
-    title: "Components / Documents / Notes pane",
+    title: "Components / Viewer / Notes pane",
     component: NotesPane,
     parameters: { layout: "centered" },
   };
