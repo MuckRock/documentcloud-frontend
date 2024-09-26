@@ -1,3 +1,7 @@
+<!-- @component
+Page is a generic container for Viewer content.
+-->
+
 <script lang="ts">
   import type { Writable } from "svelte/store";
   import type { Document, ViewerMode } from "$lib/api/types";

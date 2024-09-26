@@ -81,14 +81,7 @@
     {#if showPDF}
       <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} {embed} />
     {:else if mode === "text"}
-      <Text
-        {document}
-        {text}
-        zoom={+$zoom || 1}
-        total={document.page_count}
-        {query}
-        {embed}
-      />
+      <Text {document} {text} zoom={+$zoom || 1} {query} {embed} />
     {:else if mode === "grid"}
       <Grid {document} size={zoomToSize($zoom)} {embed} />
     {:else if mode === "notes"}
