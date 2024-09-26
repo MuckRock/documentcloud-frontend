@@ -12,10 +12,10 @@
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   // modes
-  import Notes from "./Notes.svelte";
   import PDF from "./PDF.svelte";
   import Text from "./Text.svelte";
-  import ThumbnailGrid from "./ThumbnailGrid.svelte";
+  import Grid from "./Grid.svelte";
+  import Notes from "./Notes.svelte";
 
   // toolbars
   import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
@@ -90,7 +90,7 @@
         {embed}
       />
     {:else if mode === "grid"}
-      <ThumbnailGrid {document} size={zoomToSize($zoom)} {embed} />
+      <Grid {document} size={zoomToSize($zoom)} {embed} />
     {:else if mode === "notes"}
       <Notes {document} {asset_url} {embed} />
     {/if}

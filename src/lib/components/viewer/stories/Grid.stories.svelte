@@ -2,11 +2,11 @@
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
-  import ThumbnailGrid from "../ThumbnailGrid.svelte";
+  import Grid from "../Grid.svelte";
 
   export const meta = {
-    title: "Components / Viewer / Thumbnail grid",
-    component: ThumbnailGrid,
+    title: "Components / Viewer / Grid",
+    component: Grid,
     parameters: { layout: "fullscreen" },
   };
 
@@ -16,9 +16,9 @@
 </script>
 
 <Story name="thumbnail">
-  <ThumbnailGrid {document} />
+  <Grid {document} />
 </Story>
 
 <Story name="small">
-  <ThumbnailGrid {document} size="small" />
+  <Grid {document} size="small" />
 </Story>
