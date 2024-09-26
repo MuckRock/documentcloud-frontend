@@ -118,12 +118,12 @@ export function isOrg(o?: null | number | Org): o is Org {
   return true;
 }
 
-export function isPremiumOrg(org: Org): boolean {
+export function isPremiumOrg(org?: Nullable<Org>): boolean {
   if (!org || !org.plan) return false;
   return org.plan !== "Free";
 }
 
-export function getCreditBalance(org: Org): number | null {
+export function getCreditBalance(org?: Nullable<Org>): Nullable<number> {
   if (!org) return null;
   return (org.monthly_credits ?? 0) + (org.purchased_credits ?? 0);
 }

@@ -22,11 +22,12 @@
   import { afterNavigate } from "$app/navigation";
   import Tip from "../common/Tip.svelte";
   import { Pencil24 } from "svelte-octicons";
+  import type { Maybe, Nullable } from "@/lib/api/types";
 
   export let properties: any = {};
-  export let required = [];
-  export let eventOptions: EventOptions;
-  export let event: Event = null;
+  export let required: string[] = [];
+  export let eventOptions: Maybe<EventOptions>;
+  export let event: Maybe<Nullable<Event>> = null;
   export let action: string = "";
   export let disablePremium = false;
 
@@ -146,7 +147,7 @@
               ? $_("addonDispatchDialog.disable")
               : $_("addonDispatchDialog.runOnce")}
           </option>
-          {#each eventOptions.events as event}
+          {#each eventOptions?.events ?? [] as event}
             <option value={event}>{capitalize(event)}</option>
           {/each}
         </select>

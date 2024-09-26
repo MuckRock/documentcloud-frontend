@@ -19,7 +19,8 @@ export function projectSearchUrl(project): string {
  * @param user
  * @param access
  */
-export function userDocs(user: User, access: Access = undefined): string {
+export function userDocs(user?: User, access?: Access): string {
+  if (!user) return "";
   const username = getUserName(user);
   if (access) {
     return `+user:${slugify(username)}-${user.id} access:${access}`;
