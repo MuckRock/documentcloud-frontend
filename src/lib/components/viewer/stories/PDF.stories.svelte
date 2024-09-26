@@ -5,7 +5,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
 
   import PDF from "../PDF.svelte";
-  import { redactions } from "../RedactionPane.svelte";
+  import { redactions } from "../RedactionLayer.svelte";
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pdfUrl } from "$lib/api/documents";

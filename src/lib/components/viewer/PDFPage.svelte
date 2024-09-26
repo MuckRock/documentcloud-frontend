@@ -32,7 +32,7 @@ Selectable text can be rendered in one of two ways:
   import Note from "./Note.svelte";
   import NotesPane from "./NotesPane.svelte";
   import Page from "./Page.svelte";
-  import RedactionPane, { pending, redactions } from "./RedactionPane.svelte";
+  import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
 
   // writable ui
   import Action from "../common/Action.svelte";
@@ -395,7 +395,7 @@ Selectable text can be rendered in one of two ways:
     {/if}
 
     {#if redactions_for_page.length > 0 || $mode === "redacting"}
-      <RedactionPane
+      <RedactionLayer
         page_number={page_number - 1}
         active={$mode === "redacting"}
       />
