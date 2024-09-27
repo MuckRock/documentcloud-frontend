@@ -7,10 +7,9 @@
 -->
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -24,19 +23,19 @@
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "$lib/utils/layout";
-  import { isEmbedded, pageSizes } from "$lib/utils/viewer";
+  import { pageSizes } from "$lib/utils/viewer";
+  import { getCurrentPage, getDocument } from "./ViewerContext.svelte";
 
   export let asset_url: URL = null;
-  export let document: Document;
+  export let document: Document = getDocument();
   export let scale: number | "width" | "height" = 1;
   export let query: string = ""; // search query
-  export let embed = isEmbedded();
+
+  const currentPage = getCurrentPage();
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Promise<any> = new Promise(() => {});
   export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
-
-  const currentPage: Writable<number> = getContext("currentPage");
 
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
 
@@ -106,7 +105,6 @@
       {query}
       section={sections[n]}
       notes={notes[n]}
-      {embed}
     />
   {/each}
 </div>

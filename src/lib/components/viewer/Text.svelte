@@ -8,16 +8,21 @@
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { highlight } from "$lib/utils/search";
-  import { isEmbedded, getCurrentPage } from "@/lib/utils/viewer";
 
   import Page from "./Page.svelte";
+  import {
+    getDocument,
+    getText,
+    getCurrentPage,
+    isEmbedded,
+  } from "./ViewerContext.svelte";
 
-  export let document: Document;
+  export let text: DocumentText = getText();
+  export let document: Document = getDocument();
   export let query: string = ""; // search query
-  export let text: DocumentText;
   export let zoom: number = 1;
-  export let embed = isEmbedded();
 
+  const embed = isEmbedded();
   const currentPage = getCurrentPage();
 
   onMount(async () => {

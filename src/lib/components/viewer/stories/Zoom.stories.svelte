@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { Template, Story } from "@storybook/addon-svelte-csf";
   import Zoom from "../Zoom.svelte";
 
   export const meta = {
@@ -10,16 +10,18 @@
     },
     tags: ["autodocs"],
   };
+
+  let args = {
+    mode: "document",
+  };
 </script>
 
-<Story name="document">
-  <Zoom mode="document" />
-</Story>
+<Template let:args>
+  <Zoom {...args} />
+</Template>
 
-<Story name="text">
-  <Zoom mode="text" />
-</Story>
+<Story name="Document Zoom" {args} />
 
-<Story name="grid">
-  <Zoom mode="grid" />
-</Story>
+<Story name="Text Zoom" args={{ ...args, mode: "text" }} />
+
+<Story name="Grid Zoom" args={{ ...args, mode: "grid" }} />

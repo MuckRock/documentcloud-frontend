@@ -9,9 +9,12 @@
   };
 
   import { document } from "@/test/fixtures/documents";
-  import txt from "@/test/fixtures/documents/document.txt.json";
+  import text from "@/test/fixtures/documents/document.txt.json";
+  import ViewerContext from "../ViewerContext.svelte";
 </script>
 
 <Story name="default">
-  <Text {document} text={txt} />
+  <ViewerContext {document} {text}>
+    <Text />
+  </ViewerContext>
 </Story>

@@ -1,8 +1,6 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
+  import type { Document, DocumentText } from "$lib/api/types";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { SidebarExpand16 } from "svelte-octicons";
 
@@ -26,15 +24,20 @@
   // utils
   import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
   import { pdfUrl } from "$lib/api/documents";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import {
+    getCurrentMode,
+    getDocument,
+    getText,
+    isEmbedded,
+  } from "./ViewerContext.svelte";
 
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-
-  export let document: Document;
+  export let document: Document = getDocument();
+  export let text: DocumentText = getText();
   export let asset_url: URL = pdfUrl(document);
   export let query: string = "";
-  export let text: DocumentText;
-  export let embed = isEmbedded();
+
+  const embed = isEmbedded();
+  const currentMode = getCurrentMode();
 
   $: mode = $currentMode;
   $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
@@ -79,17 +82,17 @@
 
     <!-- content -->
     {#if showPDF}
-      <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} {embed} />
+      <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} />
     {:else if mode === "text"}
-      <Text {document} {text} zoom={+$zoom || 1} {query} {embed} />
+      <Text {document} {text} zoom={+$zoom || 1} {query} />
     {:else if mode === "grid"}
-      <Grid {document} size={zoomToSize($zoom)} {embed} />
+      <Grid {document} size={zoomToSize($zoom)} />
     {:else if mode === "notes"}
-      <Notes {document} {asset_url} {embed} />
+      <Notes {document} {asset_url} />
     {/if}
     <svelte:fragment slot="footer">
       {#if mode !== "notes"}
-        <PaginationToolbar {document} {embed} />
+        <PaginationToolbar {document} />
       {/if}
     </svelte:fragment>
   </ContentLayout>

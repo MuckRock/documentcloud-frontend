@@ -45,7 +45,8 @@ Selectable text can be rendered in one of two ways:
   export let notes: NoteType[] = [];
   export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
-  export let embed = isEmbedded();
+
+  const embed = isEmbedded();
 
   // make hidden things visible, for debugging
   export let debug = false;
