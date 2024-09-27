@@ -4,6 +4,7 @@
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
+  import { SidebarExpand16 } from "svelte-octicons";
 
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
@@ -21,18 +22,17 @@
   import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
 
   // utils
-  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
-  import { pdfUrl } from "$lib/api/documents";
   import Button from "../common/Button.svelte";
-  import { SidebarExpand16 } from "svelte-octicons";
   import Flex from "../common/Flex.svelte";
+  import { pdfUrl } from "$lib/api/documents";
+  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
 
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
 
   export let document: Document;
   export let asset_url: URL = pdfUrl(document);
-  export let text: DocumentText;
   export let query: string = "";
+  export let text: DocumentText;
 
   $: mode = $currentMode;
   $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);

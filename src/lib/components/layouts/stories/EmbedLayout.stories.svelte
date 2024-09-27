@@ -1,15 +1,13 @@
 <script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story } from "@storybook/addon-svelte-csf";
   import EmbedLayout from "../EmbedLayout.svelte";
 
-  import type { Document, Page, Note, Project } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
-  import note from "@/test/fixtures/notes/note-expanded.json";
-  import { project } from "@/test/fixtures/projects";
   import DocumentEmbed from "../../embeds/DocumentEmbed.svelte";
-  import { canonicalUrl, pdfUrl } from "@/lib/api/documents";
+  import { canonicalUrl, pdfUrl } from "$lib/api/documents";
 
   const document = doc as Document;
 
@@ -30,8 +28,6 @@
     },
   };
 </script>
-
-<Template let:args />
 
 <Story name="With Document" {args} let:args>
   <div class="vh">

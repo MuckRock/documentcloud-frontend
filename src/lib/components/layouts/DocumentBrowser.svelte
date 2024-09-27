@@ -1,10 +1,5 @@
 <script lang="ts">
-  import type {
-    APIResponse,
-    DocumentResults,
-    Pending,
-    Project,
-  } from "$lib/api/types";
+  import type { APIResponse, DocumentResults, Project } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -26,7 +21,6 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   // Document comopnents
-  import PendingDocs from "$lib/components/documents/Pending.svelte";
   import ResultsList, {
     selected,
     total,
@@ -67,7 +61,6 @@
   export let documents: Promise<APIResponse<DocumentResults, any>>;
   export let query: string = "";
   export let project: Project = null;
-  export let pending: Promise<Pending[]> = Promise.resolve([]);
   export let uiText: UITextProps = {
     loading: $_("common.loading"),
     error: $_("common.error"),
@@ -177,13 +170,7 @@
             next={documentsResults.next}
             count={documentsResults.count}
             auto
-          >
-            <svelte:fragment slot="start">
-              {#await pending then p}
-                <PendingDocs pending={p} />
-              {/await}
-            </svelte:fragment>
-          </ResultsList>
+          />
         {/if}
       {:catch}
         <Error>{uiText.error}</Error>

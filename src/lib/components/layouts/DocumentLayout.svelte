@@ -11,6 +11,8 @@
 
   import Access, { getLevel } from "../documents/Access.svelte";
   import Actions from "../documents/Actions.svelte";
+  import AddOns from "$lib/components/common/AddOns.svelte";
+  import Avatar from "../accounts/Avatar.svelte";
   import Data from "../documents/Data.svelte";
   import DocumentHeader from "../documents/Header.svelte";
   import DocumentMetadata from "../documents/Metadata.svelte";
@@ -18,14 +20,12 @@
   import Metadata from "../common/Metadata.svelte";
   import Notes from "../documents/sidebar/Notes.svelte";
   import Projects from "../documents/Projects.svelte";
+  import SidebarLayout from "./SidebarLayout.svelte";
   import Viewer from "../documents/Viewer.svelte";
 
-  import { pdfUrl } from "$lib/api/documents";
-  import { getCurrentUser } from "@/lib/utils/permissions";
-  import SidebarLayout from "./SidebarLayout.svelte";
+  import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "@/api/types/orgAndUser";
-  import Avatar from "../accounts/Avatar.svelte";
-  import AddOns from "@/lib/components/common/AddOns.svelte";
+  import { pdfUrl } from "$lib/api/documents";
 
   const me = getCurrentUser();
 
