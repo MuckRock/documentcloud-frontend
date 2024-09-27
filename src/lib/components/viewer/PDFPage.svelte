@@ -20,12 +20,6 @@ Selectable text can be rendered in one of two ways:
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    Share16,
-    Comment16,
-    ListOrdered16,
-    KebabHorizontal16,
-  } from "svelte-octicons";
 
   // page parts
   import Note from "./Note.svelte";
@@ -34,21 +28,9 @@ Selectable text can be rendered in one of two ways:
   import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
 
   // writable ui
-  import Action from "../common/Action.svelte";
-  import Button from "../common/Button.svelte";
-  import Dropdown from "@/lib/components/common/Dropdown.svelte";
-  import EditNote from "../forms/EditNote.svelte";
-  import EditSections from "../forms/EditSections.svelte";
-  import Flex from "../common/Flex.svelte";
-  import Menu from "$lib/components/common/Menu.svelte";
-  import MenuItem from "$lib/components/common/MenuItem.svelte";
-  import Modal from "../layouts/Modal.svelte";
-  import Share from "../documents/Share.svelte";
-  import Portal from "../layouts/Portal.svelte";
 
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
-  import { remToPx } from "@/lib/utils/layout";
   import { isEmbedded } from "@/lib/utils/viewer";
 
   export let document: Document;
@@ -67,9 +49,6 @@ Selectable text can be rendered in one of two ways:
 
   // make hidden things visible, for debugging
   export let debug = false;
-
-  // share page
-  let pageShareOpen = false;
 
   const mode: Writable<ViewerMode> = getContext("currentMode");
 
@@ -238,7 +217,6 @@ Selectable text can be rendered in one of two ways:
   }
 
   let pageWidth: number;
-  $: id = `page_${page_number}`;
 </script>
 
 <svelte:window on:resize={onResize} />
@@ -265,78 +243,6 @@ Selectable text can be rendered in one of two ways:
       </h3>
     {/if}
   </svelte:fragment>
-
-  <div slot="actions">
-    {#if !embed}
-      {#if pageWidth > remToPx(32) || !document.edit_access}
-        <Flex align="center">
-          <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
-            {$_("dialog.share")}
-          </Action>
-          {#if document.edit_access}
-            <div>
-              <Action icon={Comment16} on:click={() => (pageNote = true)}>
-                {$_("annotate.cta.add-note")}
-              </Action>
-
-              <Action
-                icon={ListOrdered16}
-                on:click={() => (editSection = true)}
-              >
-                {#if section}
-                  {$_("annotate.cta.edit-section")}
-                {:else}
-                  {$_("annotate.cta.add-section")}
-                {/if}
-              </Action>
-            </div>
-          {/if}
-        </Flex>
-      {:else}
-        <Dropdown position="bottom-end">
-          <Button minW={false} slot="anchor" ghost mode="primary">
-            <KebabHorizontal16 />
-          </Button>
-          <Menu slot="default" let:close>
-            <MenuItem
-              on:click={() => {
-                close();
-                pageShareOpen = true;
-              }}
-            >
-              <Share16 slot="icon" />
-              {$_("dialog.share")}
-            </MenuItem>
-            {#if document.edit_access}
-              <MenuItem
-                on:click={() => {
-                  close();
-                  pageNote = true;
-                }}
-              >
-                <Comment16 slot="icon" />
-                {$_("annotate.cta.add-note")}
-              </MenuItem>
-
-              <MenuItem
-                on:click={() => {
-                  close();
-                  editSection = true;
-                }}
-              >
-                <ListOrdered16 slot="icon" />
-                {#if section}
-                  {$_("annotate.cta.edit-section")}
-                {:else}
-                  {$_("annotate.cta.add-section")}
-                {/if}
-              </MenuItem>
-            {/if}
-          </Menu>
-        </Dropdown>
-      {/if}
-    {/if}
-  </div>
 
   {#if page_level_notes.length}
     <div class="page-notes">
@@ -395,42 +301,6 @@ Selectable text can be rendered in one of two ways:
     {/if}
   </div>
 </Page>
-{#if pageShareOpen}
-  <Portal>
-    <Modal on:close={() => (pageShareOpen = false)}>
-      <h1 slot="title">{$_("dialog.share")}</h1>
-      <Share {document} page={page_number} currentTab="page" />
-    </Modal>
-  </Portal>
-{/if}
-{#if editSection}
-  <Portal>
-    <Modal on:close={close}>
-      <h2 slot="title">
-        {#if section}
-          {$_("annotate.cta.edit-section")}
-        {:else}
-          {$_("annotate.cta.add-section")}
-        {/if}
-      </h2>
-      <EditSections
-        {document}
-        on:close={close}
-        section={section || { page_number: page_number - 1 }}
-      />
-    </Modal>
-  </Portal>
-{/if}
-{#if pageNote}
-  <Portal>
-    <Modal on:close={close}>
-      <h2 slot="title">
-        {$_("annotate.cta.add-note")}
-      </h2>
-      <EditNote {document} page_number={page_number - 1} on:close={close} />
-    </Modal>
-  </Portal>
-{/if}
 
 <style>
   .section {
