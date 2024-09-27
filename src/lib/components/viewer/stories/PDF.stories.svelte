@@ -2,14 +2,17 @@
   import { rest } from "msw";
   import type { Document, Note, ViewerMode } from "@/lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import PDF from "../PDF.svelte";
   import { redactions } from "../RedactionLayer.svelte";
 
+  import ViewerContext from "../ViewerContext.svelte";
+
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pdfUrl } from "$lib/api/documents";
 
+  import { createApiUrl } from "@/test/handlers/utils";
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import redacted from "@/test/fixtures/documents/redactions.json";
 
@@ -22,43 +25,51 @@
   const document = doc as Document;
 
   const loadingUrl = createApiUrl("loading/");
+
+  let args = {
+    context: {
+      document,
+      mode: "document",
+    },
+    props: {
+      document: {
+        ...document,
+        notes: [],
+      },
+      asset_url: pdfUrl(document),
+    },
+  };
 </script>
 
-<script lang="ts">
-  import { setContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
-  import { createApiUrl } from "@/test/handlers/utils";
+<Template let:args>
+  <ViewerContext {...args.context}>
+    <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+      <PDF {...args.props} />
+    </div>
+  </ViewerContext>
+</Template>
 
-  const activeNote: Writable<Note> = writable(null);
-  const mode: Writable<ViewerMode> = writable("document");
+<Story name="Default" {args} />
 
-  setContext("activeNote", activeNote);
-  setContext("currentMode", mode);
-  setContext("document", document);
-</script>
+<Story
+  name="With Notes"
+  args={{ ...args, props: { ...args.props, document } }}
+/>
 
-<Story name="default">
-  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
-  </div>
-</Story>
-
-<Story name="show notes">
-  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF {document} asset_url={pdfUrl(document)} />
-  </div>
-</Story>
-
-<Story name="fit width" parameters={{ layout: "fullscreen" }}>
-  <PDF {document} asset_url={pdfUrl(document)} scale="width" />
+<Story name="Fit width" parameters={{ layout: "fullscreen" }}>
+  <ViewerContext {document} mode="document">
+    <PDF {document} asset_url={pdfUrl(document)} scale="width" />
+  </ViewerContext>
 </Story>
 
 <Story name="Zoom 200%" parameters={{ layout: "fullscreen" }}>
-  <PDF {document} asset_url={pdfUrl(document)} scale={2} />
+  <ViewerContext {document} mode="document">
+    <PDF {document} asset_url={pdfUrl(document)} scale={2} />
+  </ViewerContext>
 </Story>
 
 <Story
-  name="no pdf"
+  name="Missing PDF"
   parameters={{
     msw: {
       handlers: [
@@ -66,24 +77,25 @@
       ],
     },
   }}
->
-  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF {document} asset_url={new URL(loadingUrl)} />
-  </div>
-</Story>
+  args={{ ...args, props: { document, asset_url: new URL(loadingUrl) } }}
+/>
 
-<Story name="missing page spec">
-  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <PDF
-      document={{ ...document, notes: [], page_spec: undefined }}
-      asset_url={pdfUrl(document)}
-    />
-  </div>
-</Story>
+<Story
+  name="Missing page_spec"
+  args={{
+    ...args,
+    props: {
+      ...args.props,
+      document: { ...document, notes: [], page_spec: undefined },
+    },
+  }}
+/>
 
-<Story name="redactions in progress">
-  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-    <button on:click={() => ($redactions = redacted)}>Show redactions</button>
-    <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
-  </div>
+<Story name="Redactions in-progress">
+  <ViewerContext {document}>
+    <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+      <button on:click={() => ($redactions = redacted)}>Show redactions</button>
+      <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
+    </div>
+  </ViewerContext>
 </Story>

@@ -1,7 +1,6 @@
 <script context="module" lang="ts">
-  import type { Document, Note, ViewerMode } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
-  import ViewerContextDecorator from "@/../.storybook/decorators/ViewerContextDecorator.svelte";
   import { Story } from "@storybook/addon-svelte-csf";
   import AnnotationLayer from "../AnnotationLayer.svelte";
   import Page from "../Page.svelte";
@@ -15,6 +14,7 @@
 
   import { pageSizes } from "@/api/pageSize.js";
   import doc from "@/test/fixtures/documents/document-expanded.json";
+  import ViewerContext from "../ViewerContext.svelte";
 
   const document = doc as Document;
   const sizes = pageSizes(document.page_spec);
@@ -28,7 +28,7 @@
 </script>
 
 <Story name="Reading">
-  <ViewerContextDecorator mode="document">
+  <ViewerContext {document}>
     <Flex class="pages" direction="column" gap={1}>
       {#each sizes as [width, height], page_number}
         <Page {document} page_number={page_number + 1}>
@@ -42,11 +42,11 @@
         </Page>
       {/each}
     </Flex>
-  </ViewerContextDecorator>
+  </ViewerContext>
 </Story>
 
 <Story name="Writing">
-  <ViewerContextDecorator mode="annotating">
+  <ViewerContext {document} mode="annotating">
     <Flex class="pages" direction="column" gap={1}>
       {#each sizes as [width, height], page_number}
         <Page {document} page_number={page_number + 1}>
@@ -60,7 +60,7 @@
         </Page>
       {/each}
     </Flex>
-  </ViewerContextDecorator>
+  </ViewerContext>
 </Story>
 
 <style>

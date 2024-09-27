@@ -2,7 +2,7 @@
   import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import ViewerContextDecorator from "@/../.storybook/decorators/ViewerContextDecorator.svelte";
+  import ViewerContext from "../ViewerContext.svelte";
   import Viewer from "../Viewer.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
@@ -35,9 +35,9 @@
 
 <Template let:args>
   <div class="vh">
-    <ViewerContextDecorator mode={args.mode}>
+    <ViewerContext {document} mode={args.mode}>
       <Viewer {...args} />
-    </ViewerContextDecorator>
+    </ViewerContext>
   </div>
 </Template>
 
