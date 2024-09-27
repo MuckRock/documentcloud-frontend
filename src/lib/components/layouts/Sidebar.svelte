@@ -59,7 +59,7 @@
 <svelte:window bind:innerWidth={viewWidth} />
 
 {#if isOpen}
-  <aside class="sidebarContainer {position}" transition:fly={flyOptions}>
+  <aside class="sidebarContainer {position}" {id} transition:fly={flyOptions}>
     <header class:reverse={position === "left"}>
       {#if $$slots.title}
         <span class="title"><slot name="title" /></span>
