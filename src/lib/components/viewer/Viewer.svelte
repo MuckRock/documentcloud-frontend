@@ -18,10 +18,10 @@
   import Notes from "./Notes.svelte";
 
   // toolbars
-  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
-  import PaginationToolbar from "./toolbars/PaginationToolbar.svelte";
-  import ReadingToolbar from "./toolbars/ReadingToolbar.svelte";
-  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
+  import AnnotationToolbar from "./AnnotationToolbar.svelte";
+  import PaginationToolbar from "./PaginationToolbar.svelte";
+  import ReadingToolbar from "./ReadingToolbar.svelte";
+  import RedactionToolbar from "./RedactionToolbar.svelte";
 
   // utils
   import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";

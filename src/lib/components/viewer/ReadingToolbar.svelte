@@ -29,8 +29,7 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-
-  import SidebarItem from "../../sidebar/SidebarItem.svelte";
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
