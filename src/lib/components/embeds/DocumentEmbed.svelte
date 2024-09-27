@@ -6,7 +6,7 @@
 
   import { type EmbedSettings, defaultSettings } from "$lib/utils/embed";
   import Metadata from "../common/Metadata.svelte";
-  import Viewer from "../documents/Viewer.svelte";
+  import Viewer from "../viewer/Viewer.svelte";
 
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
 

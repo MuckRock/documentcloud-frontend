@@ -20,7 +20,7 @@ This almost certainly lives in a modal.
   import {
     pending,
     redactions,
-  } from "$lib/components/documents/RedactionPane.svelte";
+  } from "$lib/components/viewer/RedactionPane.svelte";
   import { canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;

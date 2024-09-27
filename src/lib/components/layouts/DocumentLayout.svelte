@@ -18,7 +18,7 @@
   import Metadata from "../common/Metadata.svelte";
   import Notes from "../documents/sidebar/Notes.svelte";
   import Projects from "../documents/Projects.svelte";
-  import Viewer from "../documents/Viewer.svelte";
+  import Viewer from "../viewer/Viewer.svelte";
 
   import { pdfUrl } from "$lib/api/documents";
   import { getCurrentUser } from "@/lib/utils/permissions";

@@ -16,7 +16,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   import DocAccess, { getLevel } from "../documents/Access.svelte";
   import Flex from "../common/Flex.svelte";
   import KV from "../common/KV.svelte";
-  import NoteTab from "./NoteTab.svelte";
+  import NoteTab from "../viewer/NoteTab.svelte";
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import {
