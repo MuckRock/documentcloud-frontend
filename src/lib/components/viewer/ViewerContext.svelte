@@ -6,8 +6,21 @@ layouts, stories, and tests.
   import { getContext, setContext } from "svelte";
   import { type Writable, writable } from "svelte/store";
 
+  import type {
+    Maybe,
+    Nullable,
+    Document,
+    DocumentText,
+    Note,
+    ViewerMode,
+  } from "@/lib/api/types";
+
   export function getDocument(): Document {
     return getContext("document");
+  }
+
+  export function getText(): Maybe<DocumentText> {
+    return getContext("text");
   }
 
   export function isEmbedded(): boolean {
@@ -29,9 +42,8 @@ layouts, stories, and tests.
 </script>
 
 <script lang="ts">
-  import type { Nullable, Note, ViewerMode, Document } from "@/lib/api/types";
-
   export let document: Document;
+  export let text: Maybe<DocumentText> = undefined;
   export let embed: boolean = false;
   export let page: number = 1;
   export let mode: ViewerMode = "document";
@@ -39,6 +51,7 @@ layouts, stories, and tests.
 
   // stores we need deeper in the component tree, available via context
   setContext("document", document);
+  setContext("text", text);
   setContext("embed", embed);
   setContext("currentPage", writable(page));
   setContext("activeNote", writable(note));
