@@ -1,25 +1,14 @@
 <script lang="ts">
-  import type { Document, Note, ViewerMode } from "$lib/api/types";
-
-  import { setContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import "@/style/kit.css";
 
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "@/lib/api/documents";
+  import ViewerContext from "@/lib/components/viewer/ViewerContext.svelte";
 
   export let data;
 
-  const currentPage: Writable<number> = writable(1);
-  const activeNote: Writable<Note> = writable(null);
-  const currentMode: Writable<ViewerMode> = writable(data.mode);
-
-  setContext<Document>("document", data.document);
-  // stores we need deeper in the component tree, available via context
-  setContext("currentPage", currentPage);
-  setContext("activeNote", activeNote);
-  setContext("currentMode", currentMode);
-
   $: document = data.document;
+  $: mode = data.mode;
   $: canonical_url = canonicalUrl(document).href;
 </script>
 
@@ -51,4 +40,6 @@
   <meta property="og:title" content={document.title} />
 </svelte:head>
 
-<slot />
+<ViewerContext {document} {mode}>
+  <slot />
+</ViewerContext>
