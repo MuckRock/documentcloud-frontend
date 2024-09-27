@@ -44,8 +44,12 @@ describe("getViewerHref", () => {
   });
   it("overwrites the page hash with the note hash is both are provided", () => {
     expect(getViewerHref({ page: 10, note })).toMatch(noteHashUrl(note));
+    expect(getViewerHref({ page: 10, note })).not.toMatch(pageHashUrl(10));
     expect(getViewerHref({ document, page: 10, note })).toMatch(
       noteHashUrl(note),
+    );
+    expect(getViewerHref({ document, page: 10, note })).not.toMatch(
+      pageHashUrl(10),
     );
   });
 });
