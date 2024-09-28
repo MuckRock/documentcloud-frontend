@@ -5,7 +5,7 @@
 </script>
 
 <PlausibleTracker>
-  <div class="container">
+  <div class="app">
     <Navigation>
       <div class="inner">
         <slot />
@@ -16,7 +16,7 @@
 </PlausibleTracker>
 
 <style>
-  .container {
+  .app {
     display: flex;
     flex-direction: column;
     width: 100vw;
@@ -29,5 +29,17 @@
     flex: 1 1 0;
     overflow: auto;
     display: flex;
+  }
+
+  @supports (height: 100dvh) {
+    .app {
+      height: 100dvh;
+    }
+  }
+
+  @supports (width: 100dvw) {
+    .app {
+      width: 100dvw;
+    }
   }
 </style>

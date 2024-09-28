@@ -1,0 +1,154 @@
+<script lang="ts">
+  import type { Writable } from "svelte/store";
+
+  import type {
+    Document,
+    ReadMode,
+    ViewerMode,
+    WriteMode,
+  } from "$lib/api/types";
+
+  import { getContext } from "svelte";
+  import { _ } from "svelte-i18n";
+  import {
+    Comment16,
+    EyeClosed16,
+    File16,
+    Typography16,
+    Apps16,
+    Note16,
+    ChevronDown12,
+    Search16,
+  } from "svelte-octicons";
+
+  import Button from "$lib/components/common/Button.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import Tab from "$lib/components/common/Tab.svelte";
+  import Search from "$lib/components/forms/Search.svelte";
+
+  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Menu from "@/common/Menu.svelte";
+  import MenuItem from "@/common/MenuItem.svelte";
+  import SidebarItem from "../../sidebar/SidebarItem.svelte";
+
+  import { remToPx } from "$lib/utils/layout";
+  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+
+  export let document: Document;
+  export let query: string = "";
+  export let embed = isEmbedded();
+
+  let width: number;
+
+  const mode: Writable<ViewerMode> = getContext("currentMode");
+
+  $: canWrite = !embed && document.edit_access;
+  $: BREAKPOINTS = {
+    READ_MENU: width > remToPx(52),
+    WRITE_MENU: width < remToPx(37),
+    SEARCH_MENU: width < remToPx(24),
+  };
+
+  const readModes: Map<ReadMode, string> = new Map([
+    ["document", $_("mode.document")],
+    ["text", $_("mode.text")],
+    ["grid", $_("mode.grid")],
+    ["notes", $_("mode.notes")],
+  ]);
+
+  const writeModes: Map<WriteMode, string> = new Map([
+    ["annotating", $_("mode.annotating")],
+    ["redacting", $_("mode.redacting")],
+  ]);
+
+  const icons = {
+    document: File16,
+    text: Typography16,
+    grid: Apps16,
+    notes: Note16,
+    annotating: Comment16,
+    redacting: EyeClosed16,
+  };
+</script>
+
+<PageToolbar bind:width>
+  <svelte:fragment slot="left">
+    {#if BREAKPOINTS.READ_MENU}
+      <div class="tabs" role="tablist">
+        {#each readModes.entries() as [value, name]}
+          <Tab
+            active={$mode === value}
+            href={getViewerHref({ document, mode: value, embed })}
+          >
+            <svelte:component this={icons[value]} />
+            {name}
+          </Tab>
+        {/each}
+      </div>
+    {:else}
+      <Dropdown2 id="reading-mode" position="bottom left">
+        <div class="toolbarItem" slot="title">
+          <SidebarItem>
+            <svelte:component this={icons[$mode]} slot="start" />
+            {Array.from(readModes).find(([value]) => value === $mode)[1]}
+            <ChevronDown12 slot="end" />
+          </SidebarItem>
+        </div>
+        <Menu>
+          {#each readModes.entries() as [value, name]}
+            <MenuItem
+              selected={$mode === value}
+              href={getViewerHref({ document, mode: value, embed })}
+              on:click={() => closeDropdown("reading-mode")}
+            >
+              <svelte:component this={icons[value]} slot="icon" />
+              {name}
+            </MenuItem>
+          {/each}
+          {#if BREAKPOINTS.WRITE_MENU && canWrite}
+            {#each writeModes as [value, name]}
+              <MenuItem
+                selected={$mode === value}
+                href={getViewerHref({ document, mode: value, embed })}
+                on:click={() => closeDropdown("reading-mode")}
+              >
+                <svelte:component this={icons[value]} slot="icon" />
+                {name}
+              </MenuItem>
+            {/each}
+          {/if}
+        </Menu>
+      </Dropdown2>
+    {/if}
+  </svelte:fragment>
+  <Flex justify="end" slot="right">
+    {#if !BREAKPOINTS.WRITE_MENU && canWrite}
+      {#each writeModes as [value, name]}
+        <Button ghost href={getViewerHref({ document, mode: value, embed })}>
+          <svelte:component this={icons[value]} />
+          {name}
+        </Button>
+      {/each}
+    {/if}
+    {#if BREAKPOINTS.SEARCH_MENU}
+      <Dropdown2 id="document-search" position="bottom right">
+        <Button minW={false} ghost slot="title"
+          ><Search16 /> {$_("common.search")}</Button
+        >
+        <Menu>
+          <Search name="q" {query} />
+        </Menu>
+      </Dropdown2>
+    {:else}
+      <Search name="q" {query} />
+    {/if}
+  </Flex>
+</PageToolbar>
+
+<style>
+  .tabs {
+    display: flex;
+    padding: 0 1rem;
+  }
+</style>

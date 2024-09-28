@@ -22,7 +22,7 @@
   import PendingDocuments from "../processing/Documents.svelte";
   import Projects from "../documents/Projects.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
-  import Viewer from "../documents/Viewer.svelte";
+  import Viewer from "../viewer/Viewer.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "@/api/types/orgAndUser";

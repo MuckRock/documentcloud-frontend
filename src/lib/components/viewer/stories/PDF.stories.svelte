@@ -1,0 +1,89 @@
+<script context="module" lang="ts">
+  import { rest } from "msw";
+  import type { Document, Note, ViewerMode } from "@/lib/api/types";
+
+  import { Story } from "@storybook/addon-svelte-csf";
+
+  import PDF from "../PDF.svelte";
+  import { redactions } from "../RedactionPane.svelte";
+
+  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+  import { pdfUrl } from "$lib/api/documents";
+
+  import doc from "@/test/fixtures/documents/document-expanded.json";
+  import redacted from "@/test/fixtures/documents/redactions.json";
+
+  export const meta = {
+    title: "Components / Viewer / PDF Viewer",
+    component: PDF,
+    parameters: { layout: "centered" },
+  };
+
+  const document = doc as Document;
+
+  const loadingUrl = createApiUrl("loading/");
+</script>
+
+<script lang="ts">
+  import { setContext } from "svelte";
+  import { writable, type Writable } from "svelte/store";
+  import { createApiUrl } from "@/test/handlers/utils";
+
+  const activeNote: Writable<Note> = writable(null);
+  const mode: Writable<ViewerMode> = writable("document");
+
+  setContext("activeNote", activeNote);
+  setContext("currentMode", mode);
+  setContext("document", document);
+</script>
+
+<Story name="default">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
+  </div>
+</Story>
+
+<Story name="show notes">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF {document} asset_url={pdfUrl(document)} />
+  </div>
+</Story>
+
+<Story name="fit width" parameters={{ layout: "fullscreen" }}>
+  <PDF {document} asset_url={pdfUrl(document)} scale="width" />
+</Story>
+
+<Story name="Zoom 200%" parameters={{ layout: "fullscreen" }}>
+  <PDF {document} asset_url={pdfUrl(document)} scale={2} />
+</Story>
+
+<Story
+  name="no pdf"
+  parameters={{
+    msw: {
+      handlers: [
+        rest.get(loadingUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
+      ],
+    },
+  }}
+>
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF {document} asset_url={new URL(loadingUrl)} />
+  </div>
+</Story>
+
+<Story name="missing page spec">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <PDF
+      document={{ ...document, notes: [], page_spec: undefined }}
+      asset_url={pdfUrl(document)}
+    />
+  </div>
+</Story>
+
+<Story name="redactions in progress">
+  <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+    <button on:click={() => ($redactions = redacted)}>Show redactions</button>
+    <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
+  </div>
+</Story>
