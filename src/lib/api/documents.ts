@@ -6,6 +6,7 @@ import type {
   Data,
   DataUpdate,
   Document,
+  DocumentFilters,
   DocumentText,
   DocumentUpload,
   DocumentResults,
@@ -104,6 +105,28 @@ export async function get(
   );
 
   return getApiResponse<Document, null>(resp);
+}
+
+/**
+ * Get a filtered list of documents from the database, not from search.
+ * This will be slower than using search but allows more filtering.
+ *
+ * @param params Filter documents
+ * @param fetch
+ */
+export async function list(
+  params: DocumentFilters,
+  fetch = globalThis.fetch,
+): Promise<APIResponse<DocumentResults, unknown>> {
+  const endpoint = new URL("documents/", BASE_API_URL);
+
+  for (const [k, v] of Object.entries(params)) {
+    endpoint.searchParams.set(k, String(v));
+  }
+
+  const resp = await fetch(endpoint, { credentials: "include" });
+
+  return getApiResponse<DocumentResults>(resp);
 }
 
 /**

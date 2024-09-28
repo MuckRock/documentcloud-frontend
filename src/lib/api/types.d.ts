@@ -214,6 +214,13 @@ export interface SearchOptions {
   project?: number | string;
 }
 
+// https://www.documentcloud.org/help/api#filters-1
+// filters passed directly to URLSearchParams
+// add more as needed
+export interface DocumentFilters {
+  id__in: string; // comma-separated list
+}
+
 export interface OEmbed {
   version: "1.0";
   provider_name: "DocumentCloud";

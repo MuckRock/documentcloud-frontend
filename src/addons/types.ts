@@ -25,6 +25,7 @@ interface AddOnParameters {
   title: string;
   description: string;
   instructions: string;
+  custom_disabled_email_footer: string;
   categories: AddOnCategory[];
   documents: string[];
   required: string[];
@@ -75,6 +76,7 @@ export interface Run {
   progress: number;
   message: string;
   file_url?: string | null;
+  file_expires_at?: string | null;
   dismissed: boolean;
   rating: number;
   comment: string;

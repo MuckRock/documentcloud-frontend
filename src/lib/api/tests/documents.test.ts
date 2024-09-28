@@ -1,5 +1,4 @@
 import type {
-  Data,
   DataUpdate,
   Document,
   DocumentResults,
@@ -125,6 +124,27 @@ describe("document fetching", () => {
         credentials: "include",
       },
     );
+  });
+
+  test("documents.list", async ({ documents: docs }) => {
+    const ids = docs.results.map((d) => d.id);
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return docs;
+        },
+      };
+    });
+
+    const { data, error } = await documents.list(
+      { id__in: ids.join(",") },
+      mockFetch,
+    );
+
+    expect(error).toBeUndefined();
+    expect(data).toEqual(docs);
   });
 
   test("documents.search", async ({ search }) => {
