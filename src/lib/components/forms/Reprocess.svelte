@@ -131,7 +131,7 @@ This will mostly be used inside a modal but isn't dependent on one.
         <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
       </Field>
     </Flex>
-    <div>
+    <Flex direction="column">
       {#if documents.length === 1}
         <p class="disclaimer">
           {$_("dialogReprocessDialog.reprocessSingleDoc")}
@@ -143,8 +143,13 @@ This will mostly be used inside a modal but isn't dependent on one.
           })}
         </p>
       {/if}
+      <ul class="documents">
+        {#each documents as document}
+          <li>{document.title}</li>
+        {/each}
+      </ul>
       <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
-    </div>
+    </Flex>
     <Flex class="buttons">
       <Button disabled={submitting} type="submit" full mode="danger"
         ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}

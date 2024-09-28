@@ -19,6 +19,7 @@
   import Flex from "../common/Flex.svelte";
   import Metadata from "../common/Metadata.svelte";
   import Notes from "../documents/sidebar/Notes.svelte";
+  import PendingDocuments from "../processing/Documents.svelte";
   import Projects from "../documents/Projects.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
   import Viewer from "../documents/Viewer.svelte";
@@ -44,11 +45,14 @@
     <Projects {projects} {document} />
     <Data {document} />
     <Notes {document} />
+    <PendingDocuments />
   </nav>
+
   <article slot="content">
     <header><DocumentHeader {document} /></header>
     <main><Viewer {document} {asset_url} {text} {query} /></main>
   </article>
+
   <aside class="column between" slot="action">
     <Flex direction="column" gap={2}>
       <div style="font-size: var(--font-xl)">

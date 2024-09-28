@@ -15,24 +15,34 @@ so we can invalidate documents as they finish processing.
 <script lang="ts">
   import { invalidate } from "$app/navigation";
 
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
 
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import PendingDocument from "./PendingDocument.svelte";
 
+  import { POLL_INTERVAL } from "@/config/config";
   import { list, pending } from "$lib/api/documents";
 
   let documents: Map<number, Document> = new Map();
   let seen: Set<number> = new Set();
   let finished: number[] = [];
+  let timeout: string | number | NodeJS.Timeout;
+  let loading = false;
 
   onMount(async () => {
     await load();
   });
 
+  onDestroy(() => {
+    stop();
+  });
+
   async function load() {
-    if ($current.length === 0) {
+    if (loading) return;
+    loading = true;
+    if ($current.length === 0 || timeout) {
       $current = await pending();
     }
 
@@ -40,11 +50,16 @@ so we can invalidate documents as they finish processing.
     $current.forEach((d) => seen.add(d.doc_id));
 
     const ids = new Set($current.map((d) => d.doc_id));
+    const to_fetch = $current
+      .filter((d) => !documents.has(d.doc_id))
+      .map((d) => d.doc_id);
 
-    const { data, error } = await list({ id__in: [...ids].join(",") });
-    if (!error) {
-      data.results.forEach((d) => documents.set(+d.id, d));
-      documents = documents;
+    if (to_fetch.length > 0) {
+      const { data, error } = await list({ id__in: to_fetch.join(",") });
+      if (!error) {
+        data.results.forEach((d) => documents.set(+d.id, d));
+        documents = documents;
+      }
     }
 
     // finished are seen IDs not in current
@@ -59,10 +74,26 @@ so we can invalidate documents as they finish processing.
       const id = finished.pop();
       invalidate(`documents:${id}`);
     }
+
+    // set the timer for next update if we still have pending
+    loading = false;
+    if ($current.length > 0) {
+      timeout = setTimeout(load, POLL_INTERVAL);
+    } else {
+      stop();
+    }
+  }
+
+  function stop() {
+    clearTimeout(timeout);
+    timeout = null;
   }
 </script>
 
-<SidebarGroup>
+<SidebarGroup name="processing.documents">
+  <SidebarItem slot="title">
+    {$_("processing.documents")}
+  </SidebarItem>
   {#each $current as status}
     <PendingDocument {status} document={documents.get(status.doc_id)} />
   {/each}

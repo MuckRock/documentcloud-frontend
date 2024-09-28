@@ -210,8 +210,8 @@
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
-    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text.",
-    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text.",
+    "reprocessDocs": "Proceeding will force the following {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text:",
+    "reprocessSingleDoc": "Proceeding will force the following document to reprocess page and image text:",
     "continue": "Do you wish to continue?",
     "confirm": "Reprocess"
   },
@@ -1225,6 +1225,10 @@
       "page": "Pick page",
       "note": "Pick note"
     }
+  },
+  "processing": {
+    "documents": "Pending documents",
+    "restart": "Restart processing"
   },
   "feedback": {
     "title": "Share Your Feedback",

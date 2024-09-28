@@ -12,6 +12,7 @@
 
   import Actions from "../documents/sidebar/Actions.svelte";
   import Documents from "../documents/sidebar/Documents.svelte";
+  import PendingDocuments from "$lib/components/processing/Documents.svelte";
   import Projects from "../documents/sidebar/Projects.svelte";
 
   import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
@@ -43,6 +44,7 @@
     <Documents />
     <SignedIn>
       <Projects />
+      <PendingDocuments />
     </SignedIn>
   </svelte:fragment>
 
