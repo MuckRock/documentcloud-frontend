@@ -5,6 +5,7 @@
   export let name: string = null;
   export let query: string = "";
   export let placeholder: string = $_("searchBar.search");
+  export let action: string = undefined;
 
   let input: HTMLInputElement;
   let form: HTMLFormElement;
@@ -15,7 +16,7 @@
   }
 </script>
 
-<form class="container" on:submit bind:this={form}>
+<form class="container" {action} on:submit on:reset bind:this={form}>
   <label for="query" title="Search"><Search16 /></label>
   <input
     type="search"
