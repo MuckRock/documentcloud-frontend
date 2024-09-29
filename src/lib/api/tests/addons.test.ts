@@ -265,7 +265,7 @@ describe("add-on dispatch and scheduling", () => {
     expect(error).toBeUndefined();
     expect(data).toEqual({ ...run, dismissed: true });
     expect(mockFetch).toHaveBeenCalledWith(
-      new URL(`addon_runs/${run.uuid}/`, BASE_API_URL),
+      new URL(`addon_runs/${run.uuid}/?expand=addon`, BASE_API_URL),
       {
         credentials: "include",
         method: "PATCH",
