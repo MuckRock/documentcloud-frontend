@@ -1,5 +1,8 @@
 import type { PageParams } from "./common";
 
+/**
+ * @deprecated
+ */
 export interface AddOnParams extends PageParams {
   query?: string;
   active?: boolean;

@@ -2,6 +2,25 @@ import type { DefinedError } from "ajv";
 
 type AddOnCategory = "premium" | string;
 
+export type Status =
+  | "success"
+  | "failure"
+  | "queued"
+  | "in_progress"
+  | "cancelled";
+
+import type { PageParams } from "@/api/types/common";
+
+export interface AddOnParams extends PageParams {
+  query?: string;
+  active?: boolean;
+  default?: boolean;
+  featured?: boolean;
+  premium?: boolean;
+  category?: string;
+  repository?: string;
+}
+
 interface AddOnProperty {
   type: string;
   title?: string;
@@ -72,7 +91,7 @@ export interface Run {
   uuid: string;
   addon: AddOnListItem;
   user: number;
-  status: "success" | "failure" | "queued" | "in_progress";
+  status: Status;
   progress: number;
   message: string;
   file_url?: string | null;

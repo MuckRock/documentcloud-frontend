@@ -1169,7 +1169,14 @@
     "feedback": "Feedback on this Add-On run",
     "progress": "Add-Ons in progress",
     "thanks": "Thanks for the feedback!",
-    "download": "Download file"
+    "download": "Download file",
+    "status": {
+      "success": "Success",
+      "failure": "Failure",
+      "queued": "Queued",
+      "in_progress": "In progress",
+      "cancelled": "Cancelled"
+    }
   },
   "addonSidebar": {
     "title": "Add-Ons",
@@ -1227,6 +1234,7 @@
     }
   },
   "processing": {
+    "addons": "Running Add-Ons",
     "documents": "Pending documents",
     "restart": "Restart processing"
   },
