@@ -4,14 +4,15 @@
   import Menu from "@/common/Menu.svelte";
 
   import {
-    CommentDiscussion16,
-    Search16,
-    Code16,
-    Plug16,
-    Mail16,
-    Question24,
     ChevronDown12,
     ChevronUp12,
+    Code16,
+    CommentDiscussion16,
+    Gift16,
+    Mail16,
+    Plug16,
+    Question24,
+    Search16,
   } from "svelte-octicons";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";
@@ -51,6 +52,10 @@
     <SidebarItem href="/help/premium/">
       <Premium slot="start" />
       {$_("authSection.help.premium")}
+    </SidebarItem>
+    <SidebarItem href="https://www.muckrock.com/donate/">
+      <Gift16 slot="start" />
+      {$_("authSection.help.donate")}
     </SidebarItem>
     <SidebarItem href="mailto:info@documentcloud.org" target="_blank">
       <Mail16 slot="start" />
