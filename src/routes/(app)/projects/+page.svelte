@@ -37,6 +37,7 @@
   $: projects = data.projects.results;
   $: next = data.projects.next;
   $: previous = data.projects.previous;
+  $: list = data.list;
 
   function paginate(u: URL | string) {
     u = new URL(u);
@@ -48,16 +49,23 @@
 
   function search(e: Event) {
     e.preventDefault();
-    const input = e.target as HTMLInputElement;
+    const form = e.target as HTMLFormElement;
+    const fd = new FormData(form);
+    const q = fd.get("query") as string;
     const url = new URL($page.url);
-    const query = input.value;
 
-    if (query) {
-      url.searchParams.set("query", query);
+    if (q) {
+      url.searchParams.set("query", q);
     } else {
       url.searchParams.delete("query");
     }
 
+    return goto(url);
+  }
+
+  function reset() {
+    const url = new URL($page.url);
+    url.searchParams.delete("query");
     return goto(url);
   }
 </script>
@@ -94,6 +102,7 @@
         placeholder={$_("projects.placeholder.projects")}
         {query}
         on:submit={search}
+        on:reset={reset}
       />
     </PageToolbar>
 
