@@ -1128,7 +1128,9 @@
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
       "callToAction": "Upgrade Plan",
       "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
-    }
+    },
+    "dispatch": "Dispatch",
+    "history": "History"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",

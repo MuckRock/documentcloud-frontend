@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-  import type { Event, EventOptions } from "@/addons/types";
+  import type { Event, EventOptions, Run } from "@/addons/types";
   import type { Maybe, Nullable } from "@/lib/api/types";
 
   import { enhance } from "$app/forms";
@@ -13,6 +13,7 @@
 
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
+  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Pencil24 } from "svelte-octicons";
 
@@ -35,9 +36,11 @@
   const ajv = new Ajv();
   addFormats(ajv);
 
+  const dispatch = createEventDispatcher();
   const me = getCurrentUser();
 
   let form: HTMLFormElement;
+  let created: Maybe<Event | Run> = null;
 
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
@@ -89,9 +92,32 @@
       { event: "disabled", selection: null },
     );
   }
+
+  /** @type {import('@sveltejs/kit').SubmitFunction} */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+
+    return ({ result, update }) => {
+      const { type, data } = result;
+      if (type === "success") {
+        console.log(result);
+        created = data.type === "event" ? data.event : data.run;
+        dispatch("dispatch", data);
+      }
+      update(result);
+      submitter.disabled = false;
+    };
+  }
 </script>
 
-<form method="post" {action} bind:this={form} on:submit on:reset use:enhance>
+<form
+  method="post"
+  {action}
+  bind:this={form}
+  on:submit
+  on:reset
+  use:enhance={onSubmit}
+>
   <slot name="before" />
   {#if event}
     <div class="tip">

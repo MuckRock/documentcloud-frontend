@@ -93,6 +93,7 @@ export async function history(
     dismissed?: boolean;
     event?: number;
     per_page?: number;
+    addon?: number;
   } = {},
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Run>, unknown>> {
