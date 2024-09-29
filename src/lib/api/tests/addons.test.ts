@@ -278,6 +278,31 @@ describe("add-on dispatch and scheduling", () => {
       },
     );
   });
+
+  test("addons.cancel", async () => {
+    const mockFetch = vi.fn().mockImplementation(async () => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+
+    const { error } = await addons.cancel(run.uuid, "token", mockFetch);
+
+    expect(error).toBeUndefined();
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`addon_runs/${run.uuid}/`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+      },
+    );
+  });
 });
 
 function buildForm(parameters: Record<string, any>): FormData {

@@ -46,7 +46,15 @@ All loading and invalidation logic lives in `AddOns.svelte`.
   }
 
   // todo
-  async function cancel() {}
+  async function cancel() {
+    const csrftoken = getCsrfToken();
+    const { status } = run;
+    run = { ...run, status: "cancelled" }; // optimistic update
+    const { data, error } = await addons.cancel(run.uuid, csrftoken);
+    if (error) {
+      run = { ...run, status }; // put it back
+    }
+  }
 </script>
 
 <SidebarItem disabled={run.dismissed || run.status === "cancelled"}>
@@ -63,6 +71,7 @@ All loading and invalidation logic lives in `AddOns.svelte`.
         ghost
         disabled={!is_running}
         on:click={cancel}
+        title={$_("dialog.cancel")}
       >
         <XCircle16 />
       </Button>

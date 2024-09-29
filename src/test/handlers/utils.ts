@@ -1,8 +1,8 @@
 import { rest } from "msw";
-import { baseApiUrl } from "../../api/base.js";
+import { BASE_API_URL } from "@/config/config.js";
 
 export function createApiUrl(path: string): string {
-  return new URL(path, baseApiUrl).toString();
+  return new URL(path, BASE_API_URL).toString();
 }
 
 export const dataHandler = (data) => (req, res, ctx) => res(ctx.json(data));

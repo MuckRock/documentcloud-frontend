@@ -202,6 +202,25 @@ export async function dismiss(
   return getApiResponse<Run>(resp);
 }
 
+export async function cancel(
+  uuid: string,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`/api/addon_runs/${uuid}/`, BASE_API_URL);
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  }).catch(console.error);
+
+  return getApiResponse<null>(resp);
+}
+
 /**
  * Build a payload to dispatch or schedule an add-on run.
  * Note that this may not give all the correct types,

@@ -25,7 +25,9 @@ This component should update on a timer.
   let timeout: string | number | NodeJS.Timeout;
 
   onMount(async () => {
-    await load();
+    if ($running.length === 0) {
+      await load();
+    }
   });
 
   afterUpdate(() => {
