@@ -4,13 +4,7 @@
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
-  import {
-    Clock16,
-    History16,
-    History24,
-    Hourglass24,
-    Play16,
-  } from "svelte-octicons";
+  import { Clock16, History16, Hourglass24, Play16 } from "svelte-octicons";
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
@@ -101,7 +95,9 @@
     </div>
     <main>
       {#if currentTab === "scheduled"}
-        {#await scheduled then scheduled}
+        {#await scheduled}
+          <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+        {:then scheduled}
           {#if scheduled}
             <Scheduled
               events={scheduled.results}
@@ -111,13 +107,17 @@
           {/if}
         {/await}
       {:else if currentTab === "history"}
-        {#await history then history}
-          <History
-            runs={history.results}
-            next={history.next}
-            previous={history.previous}
-          />
-        {/await}
+        <div class="padding">
+          {#await history}
+            <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+          {:then history}
+            <History
+              runs={history.results}
+              next={history.next}
+              previous={history.previous}
+            />
+          {/await}
+        </div>
       {:else}
         <AddOnDispatch
           {action}
@@ -226,5 +226,8 @@
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
     border-radius: var(--radius, 0.5rem);
+  }
+  .padding {
+    padding: 1rem;
   }
 </style>
