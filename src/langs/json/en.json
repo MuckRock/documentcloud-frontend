@@ -1238,7 +1238,8 @@
   "processing": {
     "addons": "Add-Ons",
     "documents": "Documents",
-    "restart": "Restart processing"
+    "restart": "Restart processing",
+    "totalCount": "{n} running {n, plural, one {process} other {processes}}"
   },
   "feedback": {
     "title": "Share Your Feedback",

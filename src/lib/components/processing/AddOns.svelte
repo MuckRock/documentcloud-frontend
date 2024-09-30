@@ -11,6 +11,7 @@ This component should update on a timer.
 
 <script lang="ts">
   import { afterUpdate, onMount, onDestroy } from "svelte";
+  import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
 
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
@@ -97,45 +98,47 @@ This component should update on a timer.
     {$_("processing.addons")}
   </SidebarItem>
 
-  {#each $running as run}
-    <Process name={run.addon.name} status={run.status}>
-      <Flex slot="actions" let:isRunning>
-        {#if isRunning}
-          <!-- Cancel -->
-          <Button
-            minW={false}
-            mode="danger"
-            ghost
-            on:click={() => cancelRun(run)}
-            title={$_("dialog.cancel")}
-          >
-            <XCircle16 />
-          </Button>
-        {:else}
-          <Button minW={false} ghost on:click={() => dismissRun(run)}>
-            {$_("dialog.dismiss")}
-          </Button>
-          <Button
-            size="small"
-            ghost
-            minW={false}
-            mode="success"
-            on:click={() => rateRun(1, run)}
-          >
-            <Thumbsup16 />
-          </Button>
-          <Button
-            size="small"
-            ghost
-            minW={false}
-            mode="danger"
-            on:click={() => rateRun(-1, run)}
-          >
-            <Thumbsdown16 />
-          </Button>
-          <!-- todo: retry -->
-        {/if}
-      </Flex>
-    </Process>
+  {#each $running as run (run.uuid)}
+    <div role="menuitem" animate:flip>
+      <Process name={run.addon.name} status={run.status}>
+        <Flex slot="actions" let:isRunning>
+          {#if isRunning}
+            <!-- Cancel -->
+            <Button
+              minW={false}
+              mode="danger"
+              ghost
+              on:click={() => cancelRun(run)}
+              title={$_("dialog.cancel")}
+            >
+              <XCircle16 />
+            </Button>
+          {:else}
+            <Button minW={false} ghost on:click={() => dismissRun(run)}>
+              {$_("dialog.dismiss")}
+            </Button>
+            <Button
+              size="small"
+              ghost
+              minW={false}
+              mode="success"
+              on:click={() => rateRun(1, run)}
+            >
+              <Thumbsup16 />
+            </Button>
+            <Button
+              size="small"
+              ghost
+              minW={false}
+              mode="danger"
+              on:click={() => rateRun(-1, run)}
+            >
+              <Thumbsdown16 />
+            </Button>
+            <!-- todo: retry -->
+          {/if}
+        </Flex>
+      </Process>
+    </div>
   {/each}
 </SidebarGroup>

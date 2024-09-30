@@ -99,7 +99,7 @@ export const progress: Run[] = [
     updated_at: "2024-09-27T01:20:52.134042Z",
   },
   {
-    uuid: "45306c6d-eece-43c2-9db5-77caa28da24d",
+    uuid: "45306c6d-eece-43c2-9db5-77caa28da24f",
     addon,
     user: 1020,
     status: "in_progress",
@@ -115,7 +115,7 @@ export const progress: Run[] = [
     updated_at: "2024-09-27T01:20:52.842831Z",
   },
   {
-    uuid: "45306c6d-eece-43c2-9db5-77caa28da24d",
+    uuid: "45306c6d-eece-43c2-9db5-77caa28da24e",
     addon,
     user: 1020,
     status: "in_progress",
@@ -131,7 +131,7 @@ export const progress: Run[] = [
     updated_at: "2024-09-27T01:21:26.810935Z",
   },
   {
-    uuid: "45306c6d-eece-43c2-9db5-77caa28da24d",
+    uuid: "45306c6d-eece-43c2-9db5-77caa28da24c",
     addon,
     user: 1020,
     status: "success",

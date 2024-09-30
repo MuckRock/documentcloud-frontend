@@ -19,7 +19,6 @@
   import Flex from "../common/Flex.svelte";
   import Metadata from "../common/Metadata.svelte";
   import Notes from "../documents/sidebar/Notes.svelte";
-  import PendingDocuments from "../processing/Documents.svelte";
   import Projects from "../documents/Projects.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
   import Viewer from "../viewer/Viewer.svelte";
@@ -45,7 +44,6 @@
     <Projects {projects} {document} />
     <Data {document} />
     <Notes {document} />
-    <PendingDocuments />
   </nav>
 
   <article slot="content">

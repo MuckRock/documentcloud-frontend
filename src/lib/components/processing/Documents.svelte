@@ -10,12 +10,33 @@ so we can invalidate documents as they finish processing.
   import type { Document, Nullable, Pending } from "$lib/api/types";
 
   export const current: Writable<Pending[]> = writable([]);
+
+  export function getProgress(process: Pending): number {
+    const { texts, images, text_positions, pages } = process;
+    if (pages === null) return 0;
+
+    const remaining = (texts + images + text_positions) / 3;
+
+    return (pages - remaining) / pages;
+  }
+
+  export function getStatus(process: Pending): Status {
+    switch (getProgress(process)) {
+      case 0:
+        return "failure";
+      case 1:
+        return "success";
+      default:
+        return "in_progress";
+    }
+  }
 </script>
 
 <script lang="ts">
   import { invalidate } from "$app/navigation";
 
   import { onMount, onDestroy } from "svelte";
+  import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
 
   import SidebarItem from "../sidebar/SidebarItem.svelte";
@@ -96,26 +117,6 @@ so we can invalidate documents as they finish processing.
     clearTimeout(timeout);
     timeout = null;
   }
-
-  function getProgress(process: Pending): number {
-    const { texts, images, text_positions, pages } = process;
-    if (pages === null) return 0;
-
-    const remaining = (texts + images + text_positions) / 3;
-
-    return (pages - remaining) / pages;
-  }
-
-  function getStatus(process: Pending): Status {
-    switch (getProgress(process)) {
-      case 0:
-        return "failure";
-      case 1:
-        return "success";
-      default:
-        return "in_progress";
-    }
-  }
 </script>
 
 <SidebarGroup name="processing.documents">
@@ -123,26 +124,28 @@ so we can invalidate documents as they finish processing.
     <File16 slot="start" />
     {$_("processing.documents")}
   </SidebarItem>
-  {#each $current as process}
+  {#each $current as process (process.doc_id)}
     {@const document = documents.get(process.doc_id)}
-    <Process
-      name={document?.title}
-      status={getStatus(process)}
-      progress={getProgress(process)}
-    >
-      <Flex slot="actions">
-        <Tooltip caption={$_("bulk.actions.reprocess")}>
-          <Button
-            ghost
-            minW={false}
-            mode="danger"
-            on:click={() => (reprocess = document)}
-          >
-            <IssueReopened16 />
-          </Button>
-        </Tooltip>
-      </Flex>
-    </Process>
+    <div role="menuitem" animate:flip>
+      <Process
+        name={document?.title}
+        status={getStatus(process)}
+        progress={getProgress(process)}
+      >
+        <Flex slot="actions">
+          <Tooltip caption={$_("bulk.actions.reprocess")}>
+            <Button
+              ghost
+              minW={false}
+              mode="danger"
+              on:click={() => (reprocess = document)}
+            >
+              <IssueReopened16 />
+            </Button>
+          </Tooltip>
+        </Flex>
+      </Process>
+    </div>
   {/each}
 </SidebarGroup>
 {#if reprocess}
