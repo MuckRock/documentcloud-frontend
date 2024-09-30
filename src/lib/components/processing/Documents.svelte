@@ -7,7 +7,7 @@ so we can invalidate documents as they finish processing.
 -->
 <script context="module" lang="ts">
   import { type Writable, writable } from "svelte/store";
-  import type { Document, Pending } from "$lib/api/types";
+  import type { Document, Nullable, Pending } from "$lib/api/types";
 
   export const current: Writable<Pending[]> = writable([]);
 </script>
@@ -20,16 +20,24 @@ so we can invalidate documents as they finish processing.
 
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import PendingDocument from "./PendingDocument.svelte";
 
   import { POLL_INTERVAL } from "@/config/config";
   import { list, pending } from "$lib/api/documents";
+  import { File16, IssueReopened16 } from "svelte-octicons";
+  import Process, { type Status } from "./Process.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Button from "../common/Button.svelte";
+  import Portal from "../layouts/Portal.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import Reprocess from "../forms/Reprocess.svelte";
+  import Tooltip from "@/common/Tooltip.svelte";
 
   let documents: Map<number, Document> = new Map();
   let seen: Set<number> = new Set();
   let finished: number[] = [];
   let timeout: string | number | NodeJS.Timeout;
   let loading = false;
+  let reprocess: Nullable<Document> = null;
 
   onMount(async () => {
     await load();
@@ -88,13 +96,60 @@ so we can invalidate documents as they finish processing.
     clearTimeout(timeout);
     timeout = null;
   }
+
+  function getProgress(process: Pending): number {
+    const { texts, images, text_positions, pages } = process;
+    if (pages === null) return 0;
+
+    const remaining = (texts + images + text_positions) / 3;
+
+    return (pages - remaining) / pages;
+  }
+
+  function getStatus(process: Pending): Status {
+    switch (getProgress(process)) {
+      case 0:
+        return "failure";
+      case 1:
+        return "success";
+      default:
+        return "in_progress";
+    }
+  }
 </script>
 
 <SidebarGroup name="processing.documents">
   <SidebarItem slot="title">
+    <File16 slot="start" />
     {$_("processing.documents")}
   </SidebarItem>
-  {#each $current as status}
-    <PendingDocument {status} document={documents.get(status.doc_id)} />
+  {#each $current as process}
+    {@const document = documents.get(process.doc_id)}
+    <Process
+      name={document?.title}
+      status={getStatus(process)}
+      progress={getProgress(process)}
+    >
+      <Flex slot="actions">
+        <Tooltip caption={$_("bulk.actions.reprocess")}>
+          <Button
+            ghost
+            minW={false}
+            mode="danger"
+            on:click={() => (reprocess = document)}
+          >
+            <IssueReopened16 />
+          </Button>
+        </Tooltip>
+      </Flex>
+    </Process>
   {/each}
 </SidebarGroup>
+{#if reprocess}
+  <Portal>
+    <Modal on:close={() => (reprocess = null)}>
+      <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
+      <Reprocess documents={[reprocess]} on:close={() => (reprocess = null)} />
+    </Modal>
+  </Portal>
+{/if}
