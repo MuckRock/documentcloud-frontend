@@ -15,7 +15,7 @@
   import addFormats from "ajv-formats";
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Pencil24 } from "svelte-octicons";
+  import { Pencil24, Sync24 } from "svelte-octicons";
 
   import ArrayField from "../inputs/ArrayField.svelte";
   import Button from "../common/Button.svelte";
@@ -41,6 +41,7 @@
 
   let form: HTMLFormElement;
   let created: Maybe<Event | Run> = null;
+  let running = false;
 
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
@@ -96,11 +97,12 @@
   /** @type {import('@sveltejs/kit').SubmitFunction} */
   function onSubmit({ submitter }) {
     submitter.disabled = true;
+    running = true;
 
     return ({ result, update }) => {
+      running = false;
       const { type, data } = result;
       if (type === "success") {
-        console.log(result);
         created = data.type === "event" ? data.event : data.run;
         dispatch("dispatch", data);
       }
@@ -190,31 +192,38 @@
 
   <div class="controls">
     {#if event}
-      <Button
-        type="submit"
-        mode="primary"
-        label={$_("dialog.save")}
-        disabled={!$me || disablePremium}
-      />
+      <Button type="submit" mode="primary" disabled={!$me || disablePremium}>
+        {#if running}
+          <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+        {:else}
+          {$_("dialog.save")}
+        {/if}
+      </Button>
     {:else}
-      <Button
-        type="submit"
-        mode="primary"
-        label={$_("dialog.dispatch")}
-        disabled={!$me || disablePremium}
-      />
+      <Button type="submit" mode="primary" disabled={!$me || disablePremium}>
+        {#if running}
+          <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+        {:else}
+          {$_("dialog.dispatch")}
+        {/if}
+      </Button>
     {/if}
-    <Button
-      type="button"
-      ghost
-      mode="primary"
-      on:click={reset}
-      label={$_("dialog.reset")}
-    />
+    <Button type="button" ghost mode="primary" on:click={reset}>
+      {$_("dialog.reset")}
+    </Button>
   </div>
 </form>
 
 <style>
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
   form {
     width: 100%;
     background: var(--white);
@@ -244,5 +253,16 @@
     background-color: var(--white);
     padding: 1rem;
     border-top: 1px solid var(--gray-1);
+  }
+
+  .in-progress.icon {
+    display: block;
+    fill: var(--white, white);
+    transform-origin: center center;
+    animation: spin 2s linear infinite reverse;
+    animation-play-state: running;
+    & svg {
+      display: block;
+    }
   }
 </style>
