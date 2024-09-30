@@ -92,58 +92,60 @@ This component should update on a timer.
   }
 </script>
 
-<SidebarGroup name="processing.addons">
-  <SidebarItem slot="title">
-    <Plug16 slot="start" />
-    {$_("processing.addons")}
-  </SidebarItem>
+{#if $running.length > 0}
+  <SidebarGroup name="processing.addons">
+    <SidebarItem slot="title">
+      <Plug16 slot="start" />
+      {$_("processing.addons")}
+    </SidebarItem>
 
-  {#each $running as run (run.uuid)}
-    <div role="menuitem" animate:flip>
-      <Process name={run.addon.name} status={run.status}>
-        <Flex slot="actions" let:isRunning>
-          {#if isRunning}
-            <!-- Cancel -->
-            <Button
-              minW={false}
-              mode="danger"
-              ghost
-              on:click={() => cancelRun(run)}
-              title={$_("dialog.cancel")}
-            >
-              <XCircle16 />
-            </Button>
-          {:else}
-            <Button
-              size="small"
-              minW={false}
-              ghost
-              on:click={() => dismissRun(run)}
-            >
-              {$_("dialog.dismiss")}
-            </Button>
-            <Button
-              size="small"
-              ghost
-              minW={false}
-              mode="success"
-              on:click={() => rateRun(1, run)}
-            >
-              <Thumbsup16 />
-            </Button>
-            <Button
-              size="small"
-              ghost
-              minW={false}
-              mode="danger"
-              on:click={() => rateRun(-1, run)}
-            >
-              <Thumbsdown16 />
-            </Button>
-            <!-- todo: retry -->
-          {/if}
-        </Flex>
-      </Process>
-    </div>
-  {/each}
-</SidebarGroup>
+    {#each $running as run (run.uuid)}
+      <div role="menuitem" animate:flip>
+        <Process name={run.addon.name} status={run.status}>
+          <Flex slot="actions" let:isRunning>
+            {#if isRunning}
+              <!-- Cancel -->
+              <Button
+                minW={false}
+                mode="danger"
+                ghost
+                on:click={() => cancelRun(run)}
+                title={$_("dialog.cancel")}
+              >
+                <XCircle16 />
+              </Button>
+            {:else}
+              <Button
+                size="small"
+                minW={false}
+                ghost
+                on:click={() => dismissRun(run)}
+              >
+                {$_("dialog.dismiss")}
+              </Button>
+              <Button
+                size="small"
+                ghost
+                minW={false}
+                mode="success"
+                on:click={() => rateRun(1, run)}
+              >
+                <Thumbsup16 />
+              </Button>
+              <Button
+                size="small"
+                ghost
+                minW={false}
+                mode="danger"
+                on:click={() => rateRun(-1, run)}
+              >
+                <Thumbsdown16 />
+              </Button>
+              <!-- todo: retry -->
+            {/if}
+          </Flex>
+        </Process>
+      </div>
+    {/each}
+  </SidebarGroup>
+{/if}

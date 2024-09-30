@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fly, slide } from "svelte/transition";
+  import { fly } from "svelte/transition";
   import AddOns, { running } from "./AddOns.svelte";
   import Documents, { current, getStatus } from "./Documents.svelte";
   import type { Status } from "./Process.svelte";
@@ -61,12 +61,8 @@
       <ProcessSummary counts={totalCounts} />
     </header>
     <main>
-      {#if totalAddons > 0}
-        <AddOns />
-      {/if}
-      {#if totalDocuments > 0}
-        <Documents />
-      {/if}
+      <AddOns />
+      <Documents />
     </main>
   </div>
 {/if}

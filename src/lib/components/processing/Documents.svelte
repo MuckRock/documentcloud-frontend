@@ -119,35 +119,37 @@ so we can invalidate documents as they finish processing.
   }
 </script>
 
-<SidebarGroup name="processing.documents">
-  <SidebarItem slot="title">
-    <File16 slot="start" />
-    {$_("processing.documents")}
-  </SidebarItem>
-  {#each $current as process (process.doc_id)}
-    {@const document = documents.get(process.doc_id)}
-    <div role="menuitem" animate:flip>
-      <Process
-        name={document?.title}
-        status={getStatus(process)}
-        progress={getProgress(process)}
-      >
-        <Flex slot="actions">
-          <Tooltip caption={$_("bulk.actions.reprocess")}>
-            <Button
-              ghost
-              minW={false}
-              mode="danger"
-              on:click={() => (reprocess = document)}
-            >
-              <IssueReopened16 />
-            </Button>
-          </Tooltip>
-        </Flex>
-      </Process>
-    </div>
-  {/each}
-</SidebarGroup>
+{#if $current.length}
+  <SidebarGroup name="processing.documents">
+    <SidebarItem slot="title">
+      <File16 slot="start" />
+      {$_("processing.documents")}
+    </SidebarItem>
+    {#each $current as process (process.doc_id)}
+      {@const document = documents.get(process.doc_id)}
+      <div role="menuitem" animate:flip>
+        <Process
+          name={document?.title}
+          status={getStatus(process)}
+          progress={getProgress(process)}
+        >
+          <Flex slot="actions">
+            <Tooltip caption={$_("bulk.actions.reprocess")}>
+              <Button
+                ghost
+                minW={false}
+                mode="danger"
+                on:click={() => (reprocess = document)}
+              >
+                <IssueReopened16 />
+              </Button>
+            </Tooltip>
+          </Flex>
+        </Process>
+      </div>
+    {/each}
+  </SidebarGroup>
+{/if}
 {#if reprocess}
   <Portal>
     <Modal on:close={() => (reprocess = null)}>
