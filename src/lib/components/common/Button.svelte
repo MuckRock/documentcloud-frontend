@@ -1,5 +1,11 @@
 <script lang="ts">
-  export let mode: "standard" | "primary" | "danger" | "premium" = "standard";
+  export let mode:
+    | "standard"
+    | "success"
+    | "failure"
+    | "primary"
+    | "danger"
+    | "premium" = "standard";
   export let ghost = false;
   export let full = false;
   export let size: "small" | "normal" = "normal";
@@ -94,10 +100,17 @@
     box-shadow: 0px 2px 0px 0px var(--orange-4, #69515c);
   }
 
-  .premium {
+  .premium,
+  .success {
     background: var(--green-3, #27c6a2);
     box-shadow: 0px 2px 0px 0px var(--green-4, #117383);
     border-color: var(--green-4, #117383);
+  }
+
+  .failure {
+    background: var(--red-3, #27c6a2);
+    box-shadow: 0px 2px 0px 0px var(--red-4, #117383);
+    border-color: var(--red-4, #117383);
   }
 
   .ghost {
@@ -130,13 +143,24 @@
     background: var(--orange-1, #fff0ee);
   }
 
-  .ghost.premium {
+  .ghost.premium,
+  .ghost.success {
     color: var(--green-3, #27c6a2);
     fill: var(--green-3, #27c6a2);
   }
 
-  .ghost.premium:hover {
+  .ghost.premium:hover,
+  .ghost.success:hover {
     background: var(--green-1, #ebf9f6);
+  }
+
+  .ghost.failure {
+    color: var(--red-3);
+    fill: var(--red-3);
+  }
+
+  .ghost.failure:hover {
+    background: var(--red-1);
   }
 
   .ghost.small {
