@@ -1236,8 +1236,8 @@
     }
   },
   "processing": {
-    "addons": "Running Add-Ons",
-    "documents": "Pending documents",
+    "addons": "Add-Ons",
+    "documents": "Documents",
     "restart": "Restart processing"
   },
   "feedback": {

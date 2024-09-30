@@ -223,6 +223,40 @@ export async function cancel(
 }
 
 /**
+ * Users may rate an addon run positively (1),
+ * negatively (-1), or neutrally (0). We use this
+ * to aggregate the usefulness and stability of
+ * our addon library.
+ * @param value: -1, 1, or 0
+ * @param uuid
+ * @param csrf_token
+ * @param fetch
+ */
+export async function rate(
+  value: number,
+  uuid: string,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(
+    `/api/addon_runs/${uuid}/?expand=addon`,
+    BASE_API_URL,
+  );
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify({ rating: value }),
+  }).catch(console.error);
+
+  return getApiResponse<Run>(resp);
+}
+
+/**
  * Build a payload to dispatch or schedule an add-on run.
  * Note that this may not give all the correct types,
  * because FormData makes everything a string.

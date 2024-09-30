@@ -16,12 +16,14 @@ This component should update on a timer.
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
-  import RunningAddOn from "./RunningAddOn.svelte";
-
+  import { getCsrfToken } from "$lib/utils/api";
   import { POLL_INTERVAL } from "@/config/config";
-  import { history } from "$lib/api/addons";
+  import { history, dismiss, cancel, rate } from "$lib/api/addons";
+  import { Plug16, Thumbsdown16, Thumbsup16, XCircle16 } from "svelte-octicons";
+  import Process from "./Process.svelte";
+  import Button from "../common/Button.svelte";
+  import Flex from "../common/Flex.svelte";
 
-  let loading = false;
   let timeout: string | number | NodeJS.Timeout;
 
   onMount(async () => {
@@ -51,14 +53,89 @@ This component should update on a timer.
       $running = data.results;
     }
   }
+
+  async function rateRun(rating: number, run: Run) {
+    const csrftoken = getCsrfToken();
+    const prevRating = run.rating;
+    run = { ...run, rating }; // optimistic update
+    const { data, error } = await rate(rating, run.uuid, csrftoken);
+    if (error) {
+      console.error(error.errors);
+      run = { ...run, rating: prevRating }; // put it back
+    } else {
+      run = data;
+    }
+  }
+
+  async function dismissRun(run: Run) {
+    const csrftoken = getCsrfToken();
+    run = { ...run, dismissed: true }; // optimistic update
+    const { data, error } = await dismiss(run.uuid, csrftoken);
+    if (error) {
+      console.error(error.errors);
+      run = { ...run, dismissed: false }; // put it back
+    } else {
+      run = data;
+    }
+  }
+
+  // todo
+  async function cancelRun(run: Run) {
+    const csrftoken = getCsrfToken();
+    const { status } = run;
+    run = { ...run, status: "cancelled" }; // optimistic update
+    const { data, error } = await cancel(run.uuid, csrftoken);
+    if (error) {
+      run = { ...run, status }; // put it back
+    }
+  }
 </script>
 
 <SidebarGroup name="processing.addons">
   <SidebarItem slot="title">
+    <Plug16 slot="start" />
     {$_("processing.addons")}
   </SidebarItem>
 
   {#each $running as run}
-    <RunningAddOn {run} />
+    <Process name={run.addon.name} status={run.status}>
+      <Flex slot="actions" let:isRunning>
+        {#if isRunning}
+          <!-- Cancel -->
+          <Button
+            minW={false}
+            mode="danger"
+            ghost
+            on:click={() => cancelRun(run)}
+            title={$_("dialog.cancel")}
+          >
+            <XCircle16 />
+          </Button>
+        {:else}
+          <Button minW={false} ghost on:click={() => dismissRun(run)}>
+            {$_("dialog.dismiss")}
+          </Button>
+          <Button
+            size="small"
+            ghost
+            minW={false}
+            mode="success"
+            on:click={() => rateRun(1, run)}
+          >
+            <Thumbsup16 />
+          </Button>
+          <Button
+            size="small"
+            ghost
+            minW={false}
+            mode="danger"
+            on:click={() => rateRun(-1, run)}
+          >
+            <Thumbsdown16 />
+          </Button>
+          <!-- todo: retry -->
+        {/if}
+      </Flex>
+    </Process>
   {/each}
 </SidebarGroup>
