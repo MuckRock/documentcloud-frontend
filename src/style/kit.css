@@ -229,3 +229,21 @@ hr.divider {
   box-shadow: var(--shadow-2);
   background: var(--white);
 }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  transform-origin: center center;
+  animation: spin 2s linear infinite reverse;
+  animation-play-state: running;
+  & svg {
+    display: block;
+  }
+}
