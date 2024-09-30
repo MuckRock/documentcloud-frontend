@@ -35,8 +35,12 @@
   $: text = data.text;
   $: $currentMode = data.mode; // set $currentMode from URL search param
 
+  $: console.log($currentPage);
+  $: console.log($page.url);
+
   // lifecycle
   afterNavigate(() => {
+    console.log($page.url.href);
     const { hash } = $page.url;
 
     $currentPage = pageFromHash(hash);
@@ -53,7 +57,9 @@
 
   // pagination
   function onHashChange(e: HashChangeEvent) {
+    console.log(e);
     const { hash } = new URL(e.newURL);
+    console.log(hash);
     $currentPage = pageFromHash(hash);
     scrollToPage($currentPage);
 
@@ -64,7 +70,7 @@
   }
 </script>
 
-<svelte:window on:hashchange={onHashChange} />
+<svelte:window on:hashchange={onHashChange} on:popstate={console.log} />
 <svelte:head>
   {#if shouldPreload($currentMode)}
     <link
