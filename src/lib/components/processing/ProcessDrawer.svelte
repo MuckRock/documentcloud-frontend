@@ -74,6 +74,7 @@
 <style>
   .drawer {
     min-width: 18rem;
+    background: var(--white);
     box-shadow: var(--shadow-1);
     border: 1px solid var(--gray-2);
 
