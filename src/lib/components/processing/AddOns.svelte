@@ -114,7 +114,12 @@ This component should update on a timer.
               <XCircle16 />
             </Button>
           {:else}
-            <Button minW={false} ghost on:click={() => dismissRun(run)}>
+            <Button
+              size="small"
+              minW={false}
+              ghost
+              on:click={() => dismissRun(run)}
+            >
               {$_("dialog.dismiss")}
             </Button>
             <Button
