@@ -33,7 +33,7 @@ export const actions = {
     }
 
     return {
-      success: true,
+      type: "event",
       event: data,
     };
   },

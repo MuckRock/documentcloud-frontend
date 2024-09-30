@@ -32,5 +32,6 @@ export async function load({ url, params, fetch, parent }) {
     scheduled: addons
       .scheduled({ addon: addon.id, per_page: 100 }, fetch)
       .then((r) => r.data),
+    history: addons.history({ addon: addon.id }, fetch).then((r) => r.data),
   };
 }
