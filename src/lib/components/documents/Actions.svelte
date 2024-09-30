@@ -28,7 +28,7 @@
   import UpgradePrompt from "@/premium-credits/UpgradePrompt.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
-  import { canonicalUrl, pdfUrl } from "$lib/api/documents";
+  import { pdfUrl } from "$lib/api/documents";
 
   export let document: Document;
   export let user: User;

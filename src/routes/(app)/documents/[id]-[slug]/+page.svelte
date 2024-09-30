@@ -61,7 +61,7 @@
 <svelte:head>
   {#if shouldPreload($currentMode)}
     <link
-      rel="preload"
+      rel="prefetch"
       href={data.asset_url.href}
       as="fetch"
       crossorigin="anonymous"
