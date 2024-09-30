@@ -314,7 +314,7 @@ describe("add-on dispatch and scheduling", () => {
         },
       };
     });
-    const { data, error } = await addons.rate(1, run.uuid, "token", mockFetch);
+    const { data, error } = await addons.rate(run.uuid, 1, "token", mockFetch);
 
     expect(error).toBeUndefined();
     expect(data).toEqual({ ...run, rating: 1 });

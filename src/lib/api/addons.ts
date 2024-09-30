@@ -227,14 +227,14 @@ export async function cancel(
  * negatively (-1), or neutrally (0). We use this
  * to aggregate the usefulness and stability of
  * our addon library.
- * @param value: -1, 1, or 0
  * @param uuid
+ * @param value: -1, 1, or 0
  * @param csrf_token
  * @param fetch
  */
 export async function rate(
-  value: number,
   uuid: string,
+  value: number,
   csrf_token: string,
   fetch = globalThis.fetch,
 ) {

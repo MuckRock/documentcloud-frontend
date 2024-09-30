@@ -11,4 +11,4 @@
   <title>{title} | DocumentCloud</title>
 </svelte:head>
 
-<Flatpage {title} {content} />
+<Flatpage {content} />

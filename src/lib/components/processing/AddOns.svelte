@@ -59,7 +59,7 @@ This component should update on a timer.
     const csrftoken = getCsrfToken();
     const prevRating = run.rating;
     run = { ...run, rating }; // optimistic update
-    const { data, error } = await rate(rating, run.uuid, csrftoken);
+    const { data, error } = await rate(run.uuid, rating, csrftoken);
     if (error) {
       console.error(error.errors);
       run = { ...run, rating: prevRating }; // put it back
