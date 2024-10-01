@@ -195,7 +195,7 @@ export async function create(
   documents: DocumentUpload[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<Document[], any>> {
+): Promise<APIResponse<Document[], unknown>> {
   const endpoint = new URL("documents/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -209,7 +209,7 @@ export async function create(
     body: JSON.stringify(documents),
   }).catch(console.error);
 
-  return getApiResponse<Document[], any>(resp);
+  return getApiResponse<Document[], unknown>(resp);
 }
 
 /**

@@ -6,12 +6,7 @@
     CircleSlash16,
   } from "svelte-octicons";
 
-  export type Status =
-    | "in_progress"
-    | "queued"
-    | "success"
-    | "failure"
-    | "cancelled";
+  import type { Status } from "@/addons/types";
 
   export const icons: Record<Status, ComponentType> = {
     cancelled: CircleSlash16,
@@ -23,12 +18,12 @@
 </script>
 
 <script lang="ts">
-  import { type ComponentType } from "svelte";
+  import type { ComponentType } from "svelte";
+  import type { Maybe } from "@/lib/api/types";
 
   import { _ } from "svelte-i18n";
 
   import Flex from "../common/Flex.svelte";
-  import type { Maybe } from "@/lib/api/types";
 
   export let status: Status;
   export let name: string;

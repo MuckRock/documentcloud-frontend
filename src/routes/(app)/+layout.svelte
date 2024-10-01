@@ -4,7 +4,9 @@
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import AppLayout from "@/lib/components/layouts/AppLayout.svelte";
+
+  import AppLayout from "$lib/components/layouts/AppLayout.svelte";
+  import { current } from "$lib/components/processing/Documents.svelte";
 
   export let data: LayoutData;
 
@@ -19,6 +21,7 @@
 
   $: user_orgs.set(data.user_orgs);
   $: org_users.set(data.org_users);
+  $: data.pending.then((p) => ($current = p)); // this allows all running processes to load
 
   // update context so other components can access and update
   setContext("me", me);

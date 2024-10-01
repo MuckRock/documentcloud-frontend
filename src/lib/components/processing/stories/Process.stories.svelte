@@ -20,9 +20,9 @@
 <Template let:args>
   <Process {...args}>
     <Flex slot="actions" align="center">
-      <Button ghost mode="danger" size="small" minW={false}
-        ><XCircle16 /></Button
-      >
+      <Button ghost mode="danger" size="small" minW={false}>
+        <XCircle16 />
+      </Button>
     </Flex>
   </Process>
 </Template>
@@ -40,12 +40,12 @@
   <Process name="Completed Run" status="success">
     <Flex slot="actions">
       <Button size="small" ghost>Dismiss</Button>
-      <Button size="small" ghost minW={false} mode="success"
-        ><Thumbsup16 /></Button
-      >
-      <Button size="small" ghost minW={false} mode="danger"
-        ><Thumbsdown16 /></Button
-      >
+      <Button size="small" ghost minW={false} mode="success">
+        <Thumbsup16 />
+      </Button>
+      <Button size="small" ghost minW={false} mode="danger">
+        <Thumbsdown16 />
+      </Button>
     </Flex>
   </Process>
 </Story>

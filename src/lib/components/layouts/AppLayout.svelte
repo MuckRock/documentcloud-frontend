@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Toaster from "./Toaster.svelte";
   import Navigation from "./Navigation.svelte";
   import PlausibleTracker from "../common/PlausibleTracker.svelte";
   import ProcessDrawer from "../processing/ProcessDrawer.svelte";
+  import Toaster from "./Toaster.svelte";
 </script>
 
 <PlausibleTracker>

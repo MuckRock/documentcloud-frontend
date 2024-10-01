@@ -13,17 +13,18 @@ This component should update on a timer.
   import { afterUpdate, onMount, onDestroy } from "svelte";
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
+  import { Plug16, Thumbsdown16, Thumbsup16, XCircle16 } from "svelte-octicons";
 
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
-  import { getCsrfToken } from "$lib/utils/api";
-  import { POLL_INTERVAL } from "@/config/config";
-  import { history, dismiss, cancel, rate } from "$lib/api/addons";
-  import { Plug16, Thumbsdown16, Thumbsup16, XCircle16 } from "svelte-octicons";
-  import Process from "./Process.svelte";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import Process from "./Process.svelte";
+
+  import { POLL_INTERVAL } from "@/config/config";
+  import { history, dismiss, cancel, rate } from "$lib/api/addons";
+  import { getCsrfToken } from "$lib/utils/api";
 
   let timeout: string | number | NodeJS.Timeout;
 

@@ -1,6 +1,7 @@
 import type { Org, User } from "@/api/types/orgAndUser.js";
 import { getMe, orgUsers, userOrgs } from "$lib/api/accounts";
-import { getTipOfDay } from "@/lib/api/flatpages.js";
+import { pending } from "$lib/api/documents";
+import { getTipOfDay } from "$lib/api/flatpages";
 
 export const trailingSlash = "always";
 
@@ -21,5 +22,13 @@ export async function load({ fetch, url }) {
     });
   }
 
-  return { me, org, tipOfDay, breadcrumbs: [], user_orgs, org_users };
+  return {
+    me,
+    org,
+    tipOfDay,
+    breadcrumbs: [],
+    user_orgs,
+    org_users,
+    pending: pending(fetch),
+  };
 }

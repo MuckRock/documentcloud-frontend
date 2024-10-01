@@ -1,6 +1,9 @@
 <script lang="ts">
+  import type { Status } from "@/addons/types";
+
   import Flex from "../common/Flex.svelte";
-  import { icons, type Status } from "./Process.svelte";
+  import { icons } from "./Process.svelte";
+
   export let counts: Record<Status, number> = {
     queued: 0,
     in_progress: 0,

@@ -33,25 +33,28 @@ so we can invalidate documents as they finish processing.
 </script>
 
 <script lang="ts">
+  import type { Status } from "@/addons/types";
+
   import { invalidate } from "$app/navigation";
 
   import { onMount, onDestroy } from "svelte";
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
+  import { File16, IssueReopened16 } from "svelte-octicons";
 
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
 
-  import { POLL_INTERVAL } from "@/config/config";
-  import { list, pending } from "$lib/api/documents";
-  import { File16, IssueReopened16 } from "svelte-octicons";
-  import Process, { type Status } from "./Process.svelte";
-  import Flex from "../common/Flex.svelte";
   import Button from "../common/Button.svelte";
-  import Portal from "../layouts/Portal.svelte";
+  import Flex from "../common/Flex.svelte";
   import Modal from "../layouts/Modal.svelte";
+  import Portal from "../layouts/Portal.svelte";
+  import Process from "./Process.svelte";
   import Reprocess from "../forms/Reprocess.svelte";
   import Tooltip from "@/common/Tooltip.svelte";
+
+  import { POLL_INTERVAL } from "@/config/config";
+  import { list, pending } from "$lib/api/documents";
 
   let documents: Map<number, Document> = new Map();
   let seen: Set<number> = new Set();

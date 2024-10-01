@@ -42,7 +42,7 @@ Confirm deletion or one or more documents.
         ids.forEach((d) => $deleted.add(String(d)));
         dispatch("close");
       } else {
-        console.log(result);
+        console.error(result);
       }
       update(result);
       submitter.disabled = false;

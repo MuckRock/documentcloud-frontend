@@ -1,8 +1,11 @@
 <script lang="ts">
+  import type { Status } from "@/addons/types";
+
   import { fly } from "svelte/transition";
+  import { _ } from "svelte-i18n";
+
   import AddOns, { running } from "./AddOns.svelte";
   import Documents, { current, getStatus } from "./Documents.svelte";
-  import type { Status } from "./Process.svelte";
   import ProcessSummary from "./ProcessSummary.svelte";
 
   const totalCounts: Record<Status, number> = {
@@ -28,7 +31,6 @@
 
   $: documents = $current.reduce(
     (acc, cur) => {
-      console.log(acc, cur);
       const status = getStatus(cur);
       const curCount = acc[status] ?? 0;
       acc[status] = curCount + 1;
@@ -44,9 +46,6 @@
   $: total = sumCounts(totalCounts);
   $: totalAddons = sumCounts(addons);
   $: totalDocuments = sumCounts(documents);
-  $: {
-    console.log(addons, documents, totalCounts);
-  }
 </script>
 
 {#if total > 0}
@@ -54,10 +53,10 @@
     class="drawer"
     role="menu"
     tabindex="0"
-    transition:fly={{ opacity: 100, y: 40 }}
+    transition:fly={{ opacity: 500, y: 40 }}
   >
     <header>
-      <h3>{total} active processes</h3>
+      <h3>{$_("processing.totalCount", { values: { n: total } })}</h3>
       <ProcessSummary counts={totalCounts} />
     </header>
     <main>
@@ -79,17 +78,21 @@
     right: 0;
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
+    max-height: 50%;
+    overflow-y: auto;
 
     transform: translateY(calc(100% - 2.25rem));
-    transition: transform 0.25s ease-in-out;
+    transition: transform 0.5s ease-in-out;
 
     z-index: var(--z-drawer);
   }
+
   .drawer:hover,
   .drawer:focus,
   .drawer:focus-within {
     transform: translateY(0%);
   }
+
   header,
   main {
     display: flex;
