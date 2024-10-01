@@ -37,7 +37,7 @@
   const tabs: Tab[] = ["dispatch", "history", "scheduled"];
 
   function getDefaultTab(): Tab {
-    const hash = $page.url.hash.slice(1);
+    const hash = $page.url.hash?.slice(1);
     if (tabs.some((tab) => tab === hash)) return hash as Tab;
     return "dispatch";
   }
