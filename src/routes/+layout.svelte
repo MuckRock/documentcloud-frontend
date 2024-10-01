@@ -1,11 +1,12 @@
 <script>
+  import { browser } from "$app/environment";
+  import { locale } from "svelte-i18n";
+
   import "@/style/variables.css";
   import "@/style/global.css";
   import "@/style/kit.css";
 
-  import { locale } from "svelte-i18n";
-
-  $: useCyrillicCharset = ["uk", "ru"].includes($locale);
+  $: useCyrillicCharset = browser ? ["uk", "ru"].includes($locale) : false;
 </script>
 
 <svelte:head>
