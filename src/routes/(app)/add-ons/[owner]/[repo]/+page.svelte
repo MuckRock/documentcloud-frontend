@@ -21,10 +21,19 @@
     addon?.parameters.categories?.includes("premium") ?? false;
   $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
   $: history = data.history;
+  $: currentTab = data.currentTab;
 </script>
 
 <svelte:head>
   <title>{addon.name} | Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<AddOnLayout {addon} {query} {search} {disablePremium} {scheduled} {history} />
+<AddOnLayout
+  {addon}
+  {query}
+  {search}
+  {disablePremium}
+  {scheduled}
+  {history}
+  {currentTab}
+/>

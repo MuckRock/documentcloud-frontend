@@ -30,10 +30,10 @@
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
   export let disablePremium: boolean = false;
+  export let currentTab: "dispatch" | "history" | "scheduled" | string =
+    "dispatch";
 
   setContext("selected", selected);
-
-  let currentTab: "dispatch" | "history" | "scheduled" = "dispatch";
 
   $: action = event
     ? `/add-ons/${addon.repository}/${event.id}/?/update`
