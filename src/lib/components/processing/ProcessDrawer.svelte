@@ -44,31 +44,29 @@
   }
 
   $: total = sumCounts(totalCounts);
-  $: totalAddons = sumCounts(addons);
-  $: totalDocuments = sumCounts(documents);
 </script>
 
-{#if total > 0}
-  <div
-    class="drawer"
-    role="menu"
-    tabindex="0"
-    transition:fly={{ opacity: 500, y: 40 }}
-  >
-    <header>
-      <h3>{$_("processing.totalCount", { values: { n: total } })}</h3>
-      <ProcessSummary counts={totalCounts} />
-    </header>
-    <main>
-      <AddOns />
-      <Documents />
-    </main>
-  </div>
-{/if}
+<div
+  class="drawer"
+  class:zero={total === 0}
+  role="menu"
+  tabindex="0"
+  transition:fly={{ opacity: 100, y: 40 }}
+>
+  <header>
+    <h3>{$_("processing.totalCount", { values: { n: total } })}</h3>
+    <ProcessSummary counts={totalCounts} />
+  </header>
+  <main>
+    <AddOns />
+    <Documents />
+  </main>
+</div>
 
 <style>
   .drawer {
-    min-width: 18rem;
+    display: block;
+    width: 20rem;
     background: var(--white);
     box-shadow: var(--shadow-1);
     border: 1px solid var(--gray-2);
@@ -91,6 +89,9 @@
   .drawer:focus,
   .drawer:focus-within {
     transform: translateY(0%);
+  }
+  .drawer.zero {
+    display: none;
   }
 
   header,
