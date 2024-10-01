@@ -22,7 +22,7 @@
     msw: { handlers: [mock.documents.list, mock.documents.pending] },
   }}
 >
-  <ProcessContext documents={writable(pending)}>
+  <ProcessContext>
     <Documents />
   </ProcessContext>
 </Story>

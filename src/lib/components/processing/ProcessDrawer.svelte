@@ -6,7 +6,10 @@
 
   import AddOns from "./AddOns.svelte";
   import Documents, { getStatus } from "./Documents.svelte";
-  import { getDocuments, getAddons } from "./ProcessContext.svelte";
+  import {
+    getPendingDocuments,
+    getRunningAddons,
+  } from "./ProcessContext.svelte";
   import ProcessSummary from "./ProcessSummary.svelte";
 
   const totalCounts: Record<Status, number> = {
@@ -21,8 +24,8 @@
     return Object.values(counts).reduce((acc, cur) => acc + cur, 0);
   }
 
-  const running = getAddons();
-  const current = getDocuments();
+  const running = getRunningAddons();
+  const current = getPendingDocuments();
 
   $: addons = $running.reduce(
     (acc, cur) => {

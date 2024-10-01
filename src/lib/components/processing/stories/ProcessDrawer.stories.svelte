@@ -24,7 +24,7 @@
     },
   }}
 >
-  <ProcessContext documents={writable(pending)} addons={writable(progress)}>
+  <ProcessContext>
     <ProcessDrawer />
   </ProcessContext>
 </Story>

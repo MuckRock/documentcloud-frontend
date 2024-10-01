@@ -15,7 +15,7 @@
 </script>
 
 <Story name="default" parameters={{ msw: { handlers: [runs.running] } }}>
-  <ProcessContext addons={writable(progress)}>
+  <ProcessContext>
     <AddOns />
   </ProcessContext>
 </Story>

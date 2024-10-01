@@ -50,7 +50,7 @@ so we can invalidate documents as they finish processing.
 
   import { POLL_INTERVAL } from "@/config/config";
   import { canonicalUrl, list, pending } from "$lib/api/documents";
-  import { getDocuments } from "./ProcessContext.svelte";
+  import { getPendingDocuments } from "./ProcessContext.svelte";
 
   let documents: Map<number, Document> = new Map();
   let seen: Set<number> = new Set();
@@ -59,15 +59,49 @@ so we can invalidate documents as they finish processing.
   let loading = false;
   let reprocess: Nullable<Document> = null;
 
-  const current = getDocuments();
+  const current = getPendingDocuments();
 
-  onMount(async () => {
-    await load();
+  onMount(() => {
+    // await load();
   });
 
   onDestroy(() => {
     stop();
   });
+
+  // update whenever $current changes
+  $: update($current);
+
+  async function update(current: Pending[]) {
+    // track our initial set
+    current.forEach((d) => seen.add(d.doc_id));
+
+    const ids = new Set(current.map((d) => d.doc_id));
+    const to_fetch = current
+      .filter((d) => !documents.has(d.doc_id))
+      .map((d) => d.doc_id);
+
+    if (to_fetch.length > 0) {
+      const { data, error } = await list({ id__in: to_fetch.join(",") });
+      if (!error) {
+        data.results.forEach((d) => documents.set(+d.id, d));
+        documents = documents;
+      }
+    }
+
+    // finished are seen IDs not in current
+    seen.forEach((id) => {
+      if (!ids.has(id)) {
+        finished.push(id);
+      }
+    });
+
+    // invalidate and empty our queue
+    while (finished.length > 1) {
+      const id = finished.pop();
+      invalidate(`documents:${id}`);
+    }
+  }
 
   async function load() {
     if (loading) return;

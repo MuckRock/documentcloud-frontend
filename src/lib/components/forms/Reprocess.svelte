@@ -22,6 +22,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
   import { LANGUAGE_MAP } from "@/config/config.js";
   import { process, cancel, edit } from "$lib/api/documents";
+  import { load } from "$lib/components/processing/ProcessContext.svelte";
 
   export let documents: Document[] = [];
 
@@ -86,6 +87,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     const { error } = await process(payload, csrf_token);
 
     if (!error) {
+      load();
       await invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
     } else {

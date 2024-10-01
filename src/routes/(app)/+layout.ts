@@ -1,6 +1,5 @@
 import type { Org, User } from "@/api/types/orgAndUser.js";
 import { getMe, orgUsers, userOrgs } from "$lib/api/accounts";
-import { pending } from "$lib/api/documents";
 import { getTipOfDay } from "$lib/api/flatpages";
 
 export const trailingSlash = "always";
@@ -29,6 +28,5 @@ export async function load({ fetch, url }) {
     breadcrumbs: [],
     user_orgs,
     org_users,
-    pending: pending(fetch),
   };
 }
