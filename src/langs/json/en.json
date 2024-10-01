@@ -1239,7 +1239,7 @@
     "addons": "Add-Ons",
     "documents": "Documents",
     "restart": "Restart processing",
-    "totalCount": "{n} running {n, plural, one {process} other {processes}}"
+    "totalCount": "{n} active {n, plural, one {process} other {processes}}"
   },
   "feedback": {
     "title": "Share Your Feedback",
