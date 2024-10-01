@@ -22,8 +22,6 @@ so we can invalidate documents as they finish processing.
 
   export function getStatus(process: Pending): Status {
     switch (getProgress(process)) {
-      case 0:
-        return "failure";
       case 1:
         return "success";
       default:
