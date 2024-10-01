@@ -4,7 +4,7 @@ import { getTipOfDay } from "$lib/api/flatpages";
 
 export const trailingSlash = "always";
 
-export async function load({ fetch, url }) {
+export async function load({ fetch }) {
   const me = await getMe(fetch);
   const org = me?.organization as Org;
   const tipOfDay = me ? await getTipOfDay(fetch) : null;

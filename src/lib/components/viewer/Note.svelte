@@ -24,7 +24,7 @@
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
-  import { pageImageUrl, canonicalUrl } from "$lib/api/documents";
+  import { pageImageUrl } from "$lib/api/documents";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
@@ -168,6 +168,7 @@
 </script>
 
 <div
+  id="a{note.id}"
   class="note {note.access} {$mode || 'notes'}"
   class:page_level
   style:--x1={note.x1}

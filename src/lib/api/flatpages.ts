@@ -6,7 +6,10 @@ export async function getTipOfDay(
 ): Promise<Flatpage | undefined> {
   const endpoint = new URL("flatpages/tipofday/", BASE_API_URL);
   try {
-    const resp = await fetch(endpoint, { credentials: "include" });
+    const resp = await fetch(endpoint, { credentials: "include" }).catch(
+      console.error,
+    );
+    if (!resp) return;
     if (!resp.ok) return;
     return resp.json();
   } catch (e) {

@@ -35,12 +35,8 @@
   $: text = data.text;
   $: $currentMode = data.mode; // set $currentMode from URL search param
 
-  $: console.log($currentPage);
-  $: console.log($page.url);
-
   // lifecycle
   afterNavigate(() => {
-    console.log($page.url.href);
     const { hash } = $page.url;
 
     $currentPage = pageFromHash(hash);
@@ -56,10 +52,9 @@
   });
 
   // pagination
-  function onHashChange(e: HashChangeEvent) {
+  function onHashChange(e: HashChangeEvent | PopStateEvent) {
     console.log(e);
-    const { hash } = new URL(e.newURL);
-    console.log(hash);
+    const { hash } = window.location;
     $currentPage = pageFromHash(hash);
     scrollToPage($currentPage);
 
