@@ -6,6 +6,8 @@
   import { setContext } from "svelte";
   import { Clock16, History16, Hourglass24, Play16 } from "svelte-octicons";
 
+  import { page } from "$app/stores";
+
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
   import ContentLayout from "./ContentLayout.svelte";
@@ -30,8 +32,9 @@
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
   export let disablePremium: boolean = false;
-  export let currentTab: "dispatch" | "history" | "scheduled" | string =
-    "dispatch";
+
+  let currentTab: "dispatch" | "history" | "scheduled" | string =
+    $page.url.hash ?? "dispatch";
 
   setContext("selected", selected);
 
