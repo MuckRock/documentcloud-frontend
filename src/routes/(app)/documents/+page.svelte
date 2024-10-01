@@ -32,7 +32,6 @@
   const me = getCurrentUser();
 
   $: query = data.query;
-  $: pending = data.pending;
 </script>
 
 <svelte:head>
@@ -47,12 +46,7 @@
     </SignedIn>
   </svelte:fragment>
 
-  <DocumentBrowser
-    slot="content"
-    documents={data.searchResults}
-    {query}
-    {pending}
-  />
+  <DocumentBrowser slot="content" documents={data.searchResults} {query} />
 
   <svelte:fragment slot="action">
     {#if isSignedIn($me)}

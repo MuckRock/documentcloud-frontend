@@ -1,6 +1,6 @@
 import { vi, test, describe, it, expect, beforeEach, afterEach } from "vitest";
-import { BASE_API_URL } from "@/config/config";
-import { addonsList } from "@/test/fixtures/addons";
+import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config";
+import { addonsList, run } from "@/test/fixtures/addons";
 import { emptyList } from "@/test/fixtures/common";
 import * as addons from "../addons";
 
@@ -249,6 +249,89 @@ describe("add-on dispatch and scheduling", () => {
   test.todo("addons.scheduled");
   test.todo("addons.dispatch");
   test.todo("addons.update");
+
+  test("addons.dismiss", async () => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return { ...run, dismissed: true };
+        },
+      };
+    });
+    const { data, error } = await addons.dismiss(run.uuid, "token", mockFetch);
+
+    expect(error).toBeUndefined();
+    expect(data).toEqual({ ...run, dismissed: true });
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`addon_runs/${run.uuid}/?expand=addon`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        body: JSON.stringify({ dismissed: true }),
+      },
+    );
+  });
+
+  test("addons.cancel", async () => {
+    const mockFetch = vi.fn().mockImplementation(async () => {
+      return {
+        ok: true,
+        status: 204,
+      };
+    });
+
+    const { error } = await addons.cancel(run.uuid, "token", mockFetch);
+
+    expect(error).toBeUndefined();
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`addon_runs/${run.uuid}/`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+      },
+    );
+  });
+
+  test("addons.rate", async () => {
+    const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return { ...run, rating: 1 };
+        },
+      };
+    });
+    const { data, error } = await addons.rate(run.uuid, 1, "token", mockFetch);
+
+    expect(error).toBeUndefined();
+    expect(data).toEqual({ ...run, rating: 1 });
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`addon_runs/${run.uuid}/?expand=addon`, BASE_API_URL),
+      {
+        credentials: "include",
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          [CSRF_HEADER_NAME]: "token",
+          Referer: APP_URL,
+        },
+        body: JSON.stringify({ rating: 1 }),
+      },
+    );
+  });
 });
 
 function buildForm(parameters: Record<string, any>): FormData {

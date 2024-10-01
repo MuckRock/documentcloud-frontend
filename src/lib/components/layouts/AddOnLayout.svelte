@@ -1,15 +1,18 @@
 <script lang="ts">
-  import type { AddOnListItem, Event } from "@/addons/types";
+  import type { AddOnListItem, Event, Run } from "@/addons/types";
   import type { DocumentResults, Maybe, Page } from "$lib/api/types";
+
+  import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
-  import { Clock16, Hourglass24, Play16 } from "svelte-octicons";
+  import { Clock16, History16, Hourglass24, Play16 } from "svelte-octicons";
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
   import ContentLayout from "./ContentLayout.svelte";
   import Empty from "../common/Empty.svelte";
+  import History from "../addons/History.svelte";
   import PageToolbar from "../common/PageToolbar.svelte";
   import ResultsList, {
     selected,
@@ -25,13 +28,23 @@
   export let addon: AddOnListItem;
   export let event: Event | null = null;
   export let scheduled: Promise<Maybe<Page<Event>>> | null = null;
+  export let history: Promise<Maybe<Page<Run>>> | null = null;
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
   export let disablePremium: boolean = false;
 
-  setContext("selected", selected);
+  type Tab = "dispatch" | "history" | "scheduled";
+  const tabs: Tab[] = ["dispatch", "history", "scheduled"];
 
-  let currentTab: "dispatch" | "history" | "scheduled" = "dispatch";
+  function getDefaultTab(): Tab {
+    const hash = $page.url.hash?.slice(1);
+    if (tabs.some((tab) => tab === hash)) return hash as Tab;
+    return "dispatch";
+  }
+
+  let currentTab: Tab = getDefaultTab();
+
+  setContext("selected", selected);
 
   $: action = event
     ? `/add-ons/${addon.repository}/${event.id}/?/update`
@@ -48,6 +61,17 @@
       $selected = [];
     }
   }
+
+  // go to the correct tab after submitting
+  function onDispatch({ detail }) {
+    if (detail.type === "event") {
+      currentTab = "scheduled";
+    }
+
+    if (detail.type === "run") {
+      currentTab = "history";
+    }
+  }
 </script>
 
 <div class="container">
@@ -59,18 +83,16 @@
         on:click={() => (currentTab = "dispatch")}
       >
         <Play16 />
-        Dispatch
+        {$_("addonDispatchDialog.dispatch")}
       </Tab>
 
-      <!--
       <Tab
         active={currentTab === "history"}
         on:click={() => (currentTab = "history")}
-        >
+      >
         <History16 />
-        History
+        {$_("addonDispatchDialog.history")}
       </Tab>
-      -->
 
       {#if canSchedule}
         <Tab
@@ -84,7 +106,9 @@
     </div>
     <main>
       {#if currentTab === "scheduled"}
-        {#await scheduled then scheduled}
+        {#await scheduled}
+          <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+        {:then scheduled}
           {#if scheduled}
             <Scheduled
               events={scheduled.results}
@@ -93,10 +117,18 @@
             />
           {/if}
         {/await}
-        <!--
-        {:else if currentTab === "history"}
-        <Empty icon={History24}>TODO: Implement previous runs</Empty>
-        -->
+      {:else if currentTab === "history"}
+        <div class="padding">
+          {#await history}
+            <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+          {:then history}
+            <History
+              runs={history.results}
+              next={history.next}
+              previous={history.previous}
+            />
+          {/await}
+        </div>
       {:else}
         <AddOnDispatch
           {action}
@@ -105,6 +137,7 @@
           required={addon.parameters.required}
           eventOptions={addon.parameters.eventOptions}
           {disablePremium}
+          on:dispatch={onDispatch}
         >
           <svelte:fragment slot="selection">
             {#await search then results}
@@ -204,5 +237,8 @@
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
     border-radius: var(--radius, 0.5rem);
+  }
+  .padding {
+    padding: 1rem;
   }
 </style>

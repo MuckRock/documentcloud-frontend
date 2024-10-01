@@ -25,7 +25,7 @@
     {:else if run.status === "queued"}
       <span class="queued icon" title="Queued"><Hourglass24 /></span>
     {:else if run.status === "in_progress"}
-      <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+      <span class="in-progress icon spin" title="In Progress"><Sync24 /></span>
     {:else}
       <span class="unknown-status icon" title="Unknown Status"
         ><Question24 /></span
@@ -60,14 +60,6 @@
 </div>
 
 <style>
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
   .addon-run {
     margin: 0.5em;
     display: flex;
@@ -90,12 +82,6 @@
   .in-progress.icon {
     display: block;
     fill: var(--primary);
-    transform-origin: center center;
-    animation: spin 2s linear infinite reverse;
-    animation-play-state: running;
-    & svg {
-      display: block;
-    }
   }
   .unknown-status.icon {
     fill: var(--gray);

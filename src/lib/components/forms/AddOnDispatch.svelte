@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-  import type { Event, EventOptions } from "@/addons/types";
+  import type { Event, EventOptions, Run } from "@/addons/types";
   import type { Maybe, Nullable } from "@/lib/api/types";
 
   import { enhance } from "$app/forms";
@@ -13,8 +13,9 @@
 
   import Ajv from "ajv";
   import addFormats from "ajv-formats";
+  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Pencil24 } from "svelte-octicons";
+  import { Pencil24, Sync24 } from "svelte-octicons";
 
   import ArrayField from "../inputs/ArrayField.svelte";
   import Button from "../common/Button.svelte";
@@ -35,9 +36,12 @@
   const ajv = new Ajv();
   addFormats(ajv);
 
+  const dispatch = createEventDispatcher();
   const me = getCurrentUser();
 
   let form: HTMLFormElement;
+  let created: Maybe<Event | Run> = null;
+  let running = false;
 
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
@@ -89,9 +93,33 @@
       { event: "disabled", selection: null },
     );
   }
+
+  /** @type {import('@sveltejs/kit').SubmitFunction} */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+    running = true;
+
+    return ({ result, update }) => {
+      running = false;
+      const { type, data } = result;
+      if (type === "success") {
+        created = data.type === "event" ? data.event : data.run;
+        dispatch("dispatch", data);
+      }
+      update(result);
+      submitter.disabled = false;
+    };
+  }
 </script>
 
-<form method="post" {action} bind:this={form} on:submit on:reset use:enhance>
+<form
+  method="post"
+  {action}
+  bind:this={form}
+  on:submit
+  on:reset
+  use:enhance={onSubmit}
+>
   <slot name="before" />
   {#if event}
     <div class="tip">
@@ -123,13 +151,13 @@
             inline={params.type === "boolean"}
             title={params.title}
             description={params.description}
-            required={required.includes(name)}
+            required={required?.includes(name)}
           >
             <svelte:component
               this={autofield(params)}
               {...params}
               {name}
-              required={required.includes(name)}
+              required={required?.includes(name)}
               bind:value={$values[name]}
               defaultValue={params.default}
               choices={params.enum}
@@ -164,31 +192,38 @@
 
   <div class="controls">
     {#if event}
-      <Button
-        type="submit"
-        mode="primary"
-        label={$_("dialog.save")}
-        disabled={!$me || disablePremium}
-      />
+      <Button type="submit" mode="primary" disabled={!$me || disablePremium}>
+        {#if running}
+          <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+        {:else}
+          {$_("dialog.save")}
+        {/if}
+      </Button>
     {:else}
-      <Button
-        type="submit"
-        mode="primary"
-        label={$_("dialog.dispatch")}
-        disabled={!$me || disablePremium}
-      />
+      <Button type="submit" mode="primary" disabled={!$me || disablePremium}>
+        {#if running}
+          <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+        {:else}
+          {$_("dialog.dispatch")}
+        {/if}
+      </Button>
     {/if}
-    <Button
-      type="button"
-      ghost
-      mode="primary"
-      on:click={reset}
-      label={$_("dialog.reset")}
-    />
+    <Button type="button" ghost mode="primary" on:click={reset}>
+      {$_("dialog.reset")}
+    </Button>
   </div>
 </form>
 
 <style>
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
   form {
     width: 100%;
     background: var(--white);
@@ -218,5 +253,16 @@
     background-color: var(--white);
     padding: 1rem;
     border-top: 1px solid var(--gray-1);
+  }
+
+  .in-progress.icon {
+    display: block;
+    fill: var(--white, white);
+    transform-origin: center center;
+    animation: spin 2s linear infinite reverse;
+    animation-play-state: running;
+    & svg {
+      display: block;
+    }
   }
 </style>

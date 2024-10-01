@@ -1,12 +1,17 @@
 import type { Page } from "@/api/types/common";
-import type { AddOnParams } from "@/api/types/addons";
-import type { AddOnListItem, Event, Run, AddOnPayload } from "@/addons/types";
+import type {
+  AddOnParams,
+  AddOnListItem,
+  Event,
+  Run,
+  AddOnPayload,
+} from "@/addons/types";
 import type { APIResponse, ValidationError } from "./types";
 
 import Ajv, { type DefinedError } from "ajv";
 import addFormats from "ajv-formats";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
-import { getApiResponse, isErrorCode } from "../utils/api";
+import { getApiResponse } from "../utils/api";
 
 // todo i18n
 export const CATEGORIES = [
@@ -88,6 +93,7 @@ export async function history(
     dismissed?: boolean;
     event?: number;
     per_page?: number;
+    addon?: number;
   } = {},
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Run>, unknown>> {
@@ -163,9 +169,91 @@ export async function update(
       Referer: APP_URL,
     },
     body: JSON.stringify(payload),
-  });
+  }).catch(console.error);
 
   return getApiResponse<Event, ValidationError>(resp);
+}
+
+/**
+ * Dismiss an addon
+ * @param run
+ * @param csrf_token
+ * @param fetch
+ */
+export async function dismiss(
+  uuid: string,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+): Promise<APIResponse<Run, unknown>> {
+  const endpoint = new URL(
+    `/api/addon_runs/${uuid}/?expand=addon`,
+    BASE_API_URL,
+  );
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify({ dismissed: true }),
+  }).catch(console.error);
+
+  return getApiResponse<Run>(resp);
+}
+
+export async function cancel(
+  uuid: string,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`/api/addon_runs/${uuid}/`, BASE_API_URL);
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+  }).catch(console.error);
+
+  return getApiResponse<null>(resp);
+}
+
+/**
+ * Users may rate an addon run positively (1),
+ * negatively (-1), or neutrally (0). We use this
+ * to aggregate the usefulness and stability of
+ * our addon library.
+ * @param uuid
+ * @param value: -1, 1, or 0
+ * @param csrf_token
+ * @param fetch
+ */
+export async function rate(
+  uuid: string,
+  value: number,
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(
+    `/api/addon_runs/${uuid}/?expand=addon`,
+    BASE_API_URL,
+  );
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify({ rating: value }),
+  }).catch(console.error);
+
+  return getApiResponse<Run>(resp);
 }
 
 /**

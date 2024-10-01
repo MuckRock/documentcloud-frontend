@@ -210,8 +210,8 @@
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
-    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text.",
-    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text.",
+    "reprocessDocs": "Proceeding will force the following {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text:",
+    "reprocessSingleDoc": "Proceeding will force the following document to reprocess page and image text:",
     "continue": "Do you wish to continue?",
     "confirm": "Reprocess"
   },
@@ -1128,7 +1128,9 @@
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
       "callToAction": "Upgrade Plan",
       "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
-    }
+    },
+    "dispatch": "Dispatch",
+    "history": "History"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
@@ -1169,7 +1171,14 @@
     "feedback": "Feedback on this Add-On run",
     "progress": "Add-Ons in progress",
     "thanks": "Thanks for the feedback!",
-    "download": "Download file"
+    "download": "Download file",
+    "status": {
+      "success": "Success",
+      "failure": "Failure",
+      "queued": "Queued",
+      "in_progress": "In progress",
+      "cancelled": "Cancelled"
+    }
   },
   "addonSidebar": {
     "title": "Add-Ons",
@@ -1225,6 +1234,12 @@
       "page": "Pick page",
       "note": "Pick note"
     }
+  },
+  "processing": {
+    "addons": "Add-Ons",
+    "documents": "Documents",
+    "restart": "Restart processing",
+    "totalCount": "{n} active {n, plural, one {process} other {processes}}"
   },
   "feedback": {
     "title": "Share Your Feedback",

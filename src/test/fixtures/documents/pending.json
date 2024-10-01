@@ -5,5 +5,19 @@
     "texts": 2,
     "text_positions": 5,
     "pages": 11
+  },
+  {
+    "doc_id": 20000067,
+    "images": 131,
+    "texts": 131,
+    "text_positions": 141,
+    "pages": 151
+  },
+  {
+    "doc_id": 20000069,
+    "images": 18,
+    "texts": 18,
+    "text_positions": 18,
+    "pages": 151
   }
 ]

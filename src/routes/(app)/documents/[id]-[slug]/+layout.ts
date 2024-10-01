@@ -11,10 +11,6 @@ import * as documents from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons";
 import { breadcrumbTrail } from "$lib/utils/index";
 
-function documentPath(document: Document) {
-  return `/documents/${document.id}-${document.slug}/`;
-}
-
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params, parent, depends, url }) {
   const { data: document, error: err } = await documents.get(+params.id, fetch);
@@ -46,8 +42,7 @@ export async function load({ fetch, params, parent, depends, url }) {
   let action = url.searchParams.get("action");
 
   const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: "/documents/", title: "Documents" },
-    { href: documentPath(document), title: document.title },
+    { href: canonical.pathname, title: document.title },
   ]);
 
   // stream this

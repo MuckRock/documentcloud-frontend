@@ -82,6 +82,15 @@
       format("svg"); /* Legacy iOS */
 }
 
+/* Limited Cyrillic Charset for Language Menu */
+@font-face {
+  font-family: "Source Sans Pro";
+  font-style: normal;
+  font-weight: 600;
+  src: url("/fonts/source-sans-pro-cyrillic-menuset-600.woff") format("woff");
+  src: url("/fonts/source-sans-pro-cyrillic-menuset-600.woff2") format("woff2");
+}
+
 /* Source Code Pro */
 @font-face {
   font-family: "Source Code Pro";
@@ -95,3 +104,4 @@
   src: url("/fonts/SourceCodePro-Italic-VariableFont_wght.ttf")
     format("truetype");
 }
+

@@ -4,7 +4,8 @@
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import AppLayout from "@/lib/components/layouts/AppLayout.svelte";
+
+  import AppLayout from "$lib/components/layouts/AppLayout.svelte";
 
   export let data: LayoutData;
 

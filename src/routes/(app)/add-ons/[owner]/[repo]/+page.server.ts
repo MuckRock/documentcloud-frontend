@@ -26,10 +26,10 @@ export const actions = {
       return fail(error.status, { ...error });
     }
 
+    const type = payload.event ? "event" : "run";
     return {
-      success: true,
-      type: payload.event ? "event" : "run",
-      ...data,
+      type,
+      [type]: data,
     };
   },
 } satisfies Actions;

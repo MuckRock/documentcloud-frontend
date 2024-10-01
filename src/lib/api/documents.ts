@@ -6,6 +6,7 @@ import type {
   Data,
   DataUpdate,
   Document,
+  DocumentFilters,
   DocumentText,
   DocumentUpload,
   DocumentResults,
@@ -107,6 +108,28 @@ export async function get(
 }
 
 /**
+ * Get a filtered list of documents from the database, not from search.
+ * This will be slower than using search but allows more filtering.
+ *
+ * @param params Filter documents
+ * @param fetch
+ */
+export async function list(
+  params: DocumentFilters,
+  fetch = globalThis.fetch,
+): Promise<APIResponse<DocumentResults, unknown>> {
+  const endpoint = new URL("documents/", BASE_API_URL);
+
+  for (const [k, v] of Object.entries(params)) {
+    endpoint.searchParams.set(k, String(v));
+  }
+
+  const resp = await fetch(endpoint, { credentials: "include" });
+
+  return getApiResponse<DocumentResults>(resp);
+}
+
+/**
  * Get text for a document. It may be a private asset, which requires a two-step fetch.
  * Errors will produce an empty response.
  */
@@ -172,7 +195,7 @@ export async function create(
   documents: DocumentUpload[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<Document[], any>> {
+): Promise<APIResponse<Document[], unknown>> {
   const endpoint = new URL("documents/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -186,7 +209,7 @@ export async function create(
     body: JSON.stringify(documents),
   }).catch(console.error);
 
-  return getApiResponse<Document[], any>(resp);
+  return getApiResponse<Document[], unknown>(resp);
 }
 
 /**

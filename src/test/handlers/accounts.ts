@@ -1,4 +1,7 @@
+import type { Org } from "$lib/api/types";
+
 import { rest } from "msw";
+
 import {
   freeOrg,
   me as meFixture,
@@ -6,7 +9,6 @@ import {
   proOrg,
   usersList,
 } from "../fixtures/accounts";
-import type { Org } from "$lib/api/types";
 import {
   createApiUrl,
   dataHandler,

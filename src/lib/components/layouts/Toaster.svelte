@@ -61,7 +61,7 @@
 <style>
   #toaster {
     position: fixed;
-    bottom: 0;
+    bottom: 2.5rem;
     right: 0;
     z-index: var(--z-toast);
     margin: 0.5rem;
