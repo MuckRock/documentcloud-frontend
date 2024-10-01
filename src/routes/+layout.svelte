@@ -10,10 +10,9 @@
 </script>
 
 <svelte:head>
+  <link rel="stylesheet" href="/fonts-latin.css" />
   {#if useCyrillicCharset}
     <link rel="stylesheet" href="/fonts-cyrillic.css" />
-  {:else}
-    <link rel="stylesheet" href="/fonts-latin.css" />
   {/if}
 </svelte:head>
 
