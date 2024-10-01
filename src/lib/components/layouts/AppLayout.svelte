@@ -3,18 +3,21 @@
   import PlausibleTracker from "../common/PlausibleTracker.svelte";
   import ProcessDrawer from "../processing/ProcessDrawer.svelte";
   import Toaster from "./Toaster.svelte";
+  import ProcessContext from "../processing/ProcessContext.svelte";
 </script>
 
 <PlausibleTracker>
-  <div class="app">
-    <Navigation>
-      <div class="inner">
-        <slot />
-      </div>
-    </Navigation>
-    <Toaster />
-    <ProcessDrawer />
-  </div>
+  <ProcessContext>
+    <div class="app">
+      <Navigation>
+        <div class="inner">
+          <slot />
+        </div>
+      </Navigation>
+      <Toaster />
+      <ProcessDrawer />
+    </div>
+  </ProcessContext>
 </PlausibleTracker>
 
 <style>

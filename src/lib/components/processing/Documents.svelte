@@ -6,10 +6,7 @@ This component keeps track of pending items it has seen,
 so we can invalidate documents as they finish processing.
 -->
 <script context="module" lang="ts">
-  import { type Writable, writable } from "svelte/store";
   import type { Document, Nullable, Pending } from "$lib/api/types";
-
-  export const current: Writable<Pending[]> = writable([]);
 
   export function getProgress(process: Pending): number {
     const { texts, images, text_positions, pages } = process;
@@ -53,6 +50,7 @@ so we can invalidate documents as they finish processing.
 
   import { POLL_INTERVAL } from "@/config/config";
   import { list, pending } from "$lib/api/documents";
+  import { getDocuments } from "./ProcessContext.svelte";
 
   let documents: Map<number, Document> = new Map();
   let seen: Set<number> = new Set();
@@ -60,6 +58,8 @@ so we can invalidate documents as they finish processing.
   let timeout: string | number | NodeJS.Timeout;
   let loading = false;
   let reprocess: Nullable<Document> = null;
+
+  const current = getDocuments();
 
   onMount(async () => {
     await load();

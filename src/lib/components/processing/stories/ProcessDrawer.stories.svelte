@@ -1,7 +1,9 @@
 <script context="module" lang="ts">
+  import { writable } from "svelte/store";
   import { Story } from "@storybook/addon-svelte-csf";
-  import { running } from "../AddOns.svelte";
-  import { current } from "../Documents.svelte";
+  import { pending } from "@/test/fixtures/documents/pending";
+  import { progress } from "@/test/fixtures/addons/progress";
+  import ProcessContext from "../ProcessContext.svelte";
   import ProcessDrawer from "../ProcessDrawer.svelte";
 
   import { runs } from "@/test/handlers/addons";
@@ -14,23 +16,6 @@
   };
 </script>
 
-<script lang="ts">
-  import { pending } from "@/test/fixtures/documents/pending";
-  import { progress } from "@/test/fixtures/addons/progress";
-  import { onMount } from "svelte";
-  import Toaster, { toast } from "../../layouts/Toaster.svelte";
-
-  onMount(() => {
-    setTimeout(() => {
-      $running = progress;
-      $current = pending;
-    }, 500);
-    setTimeout(() => {
-      toast("Process succeeded!", { status: "success" });
-    }, 1500);
-  });
-</script>
-
 <Story
   name="default"
   parameters={{
@@ -39,6 +24,7 @@
     },
   }}
 >
-  <ProcessDrawer />
-  <Toaster />
+  <ProcessContext documents={writable(pending)} addons={writable(progress)}>
+    <ProcessDrawer />
+  </ProcessContext>
 </Story>

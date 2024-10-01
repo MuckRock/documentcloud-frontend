@@ -4,8 +4,9 @@
   import { fly } from "svelte/transition";
   import { _ } from "svelte-i18n";
 
-  import AddOns, { running } from "./AddOns.svelte";
-  import Documents, { current, getStatus } from "./Documents.svelte";
+  import AddOns from "./AddOns.svelte";
+  import Documents, { getStatus } from "./Documents.svelte";
+  import { getDocuments, getAddons } from "./ProcessContext.svelte";
   import ProcessSummary from "./ProcessSummary.svelte";
 
   const totalCounts: Record<Status, number> = {
@@ -19,6 +20,9 @@
   function sumCounts(counts: Record<Status, number>) {
     return Object.values(counts).reduce((acc, cur) => acc + cur, 0);
   }
+
+  const running = getAddons();
+  const current = getDocuments();
 
   $: addons = $running.reduce(
     (acc, cur) => {

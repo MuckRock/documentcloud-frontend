@@ -2,13 +2,6 @@
 Fetch and display status of all running add-ons.
 This component should update on a timer.
 -->
-<script context="module" lang="ts">
-  import type { Run } from "@/addons/types";
-  import { writable, type Writable } from "svelte/store";
-
-  export const running: Writable<Run[]> = writable([]);
-</script>
-
 <script lang="ts">
   import { afterUpdate, onMount, onDestroy } from "svelte";
   import { flip } from "svelte/animate";
@@ -25,8 +18,12 @@ This component should update on a timer.
   import { POLL_INTERVAL } from "@/config/config";
   import { history, dismiss, cancel, rate } from "$lib/api/addons";
   import { getCsrfToken } from "$lib/utils/api";
+  import type { Run } from "@/addons/types";
+  import { getAddons } from "./ProcessContext.svelte";
 
   let timeout: string | number | NodeJS.Timeout;
+
+  const running = getAddons();
 
   onMount(async () => {
     if ($running.length === 0) {
