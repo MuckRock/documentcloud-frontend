@@ -1,8 +1,11 @@
 <script context="module" lang="ts">
   import type { ActionResult } from "@sveltejs/kit";
-  import { DEFAULT_LANGUAGE } from "@/config/config.js";
-  import { userDocs } from "$lib/utils/search";
+
   import { get, writable } from "svelte/store";
+
+  import { DEFAULT_LANGUAGE } from "@/config/config.js";
+  import { load } from "$lib/components/processing/ProcessContext.svelte";
+  import { userDocs } from "$lib/utils/search";
 
   export const filesToUpload = writable<File[]>([]);
   function getFilesToUpload() {
@@ -70,7 +73,7 @@
     // todo: handle retries and errors
     const upload_responses = await Promise.all(uploads);
 
-    console.log(upload_responses.map((r) => r.status));
+    // console.log(upload_responses.map((r) => r.status));
 
     // process
     const process_response = await documents.process(
@@ -85,6 +88,7 @@
 
     // todo: i18n
     if (!process_response.error) {
+      load();
       const query = new URLSearchParams([["q", userDocs(user, access)]]);
       return {
         type: "redirect",

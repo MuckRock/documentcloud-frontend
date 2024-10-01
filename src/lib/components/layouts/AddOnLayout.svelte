@@ -2,6 +2,8 @@
   import type { AddOnListItem, Event, Run } from "@/addons/types";
   import type { DocumentResults, Maybe, Page } from "$lib/api/types";
 
+  import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
   import { Clock16, History16, Hourglass24, Play16 } from "svelte-octicons";
@@ -31,9 +33,18 @@
   export let query: string;
   export let disablePremium: boolean = false;
 
-  setContext("selected", selected);
+  type Tab = "dispatch" | "history" | "scheduled";
+  const tabs: Tab[] = ["dispatch", "history", "scheduled"];
 
-  let currentTab: "dispatch" | "history" | "scheduled" = "dispatch";
+  function getDefaultTab(): Tab {
+    const hash = $page.url.hash?.slice(1);
+    if (tabs.some((tab) => tab === hash)) return hash as Tab;
+    return "dispatch";
+  }
+
+  let currentTab: Tab = getDefaultTab();
+
+  setContext("selected", selected);
 
   $: action = event
     ? `/add-ons/${addon.repository}/${event.id}/?/update`

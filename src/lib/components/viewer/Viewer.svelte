@@ -32,8 +32,8 @@
 
   export let document: Document;
   export let asset_url: URL = pdfUrl(document);
-  export let text: DocumentText;
   export let query: string = "";
+  export let text: DocumentText;
   export let embed = isEmbedded();
 
   $: mode = $currentMode;

@@ -5,7 +5,6 @@
   import Logo from "$lib/components/common/Logo.svelte";
   import { renderMarkdown } from "$lib/utils/markdown";
 
-  export let title: string;
   export let content: string;
 
   $: markdownContent = renderMarkdown(content);

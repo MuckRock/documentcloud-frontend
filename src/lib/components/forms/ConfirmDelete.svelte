@@ -39,8 +39,10 @@ Confirm deletion or one or more documents.
     }
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("close");
         ids.forEach((d) => $deleted.add(String(d)));
+        dispatch("close");
+      } else {
+        console.error(result);
       }
       update(result);
       submitter.disabled = false;

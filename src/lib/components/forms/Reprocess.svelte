@@ -22,6 +22,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
   import { LANGUAGE_MAP } from "@/config/config.js";
   import { process, cancel, edit } from "$lib/api/documents";
+  import { load } from "$lib/components/processing/ProcessContext.svelte";
 
   export let documents: Document[] = [];
 
@@ -86,6 +87,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     const { error } = await process(payload, csrf_token);
 
     if (!error) {
+      load();
       await invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
     } else {
@@ -131,7 +133,7 @@ This will mostly be used inside a modal but isn't dependent on one.
         <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
       </Field>
     </Flex>
-    <div>
+    <Flex direction="column">
       {#if documents.length === 1}
         <p class="disclaimer">
           {$_("dialogReprocessDialog.reprocessSingleDoc")}
@@ -143,8 +145,13 @@ This will mostly be used inside a modal but isn't dependent on one.
           })}
         </p>
       {/if}
+      <ul class="documents">
+        {#each documents as document}
+          <li>{document.title}</li>
+        {/each}
+      </ul>
       <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
-    </div>
+    </Flex>
     <Flex class="buttons">
       <Button disabled={submitting} type="submit" full mode="danger"
         ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
