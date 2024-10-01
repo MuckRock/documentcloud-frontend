@@ -50,13 +50,7 @@
   $: total = sumCounts(totalCounts);
 </script>
 
-<div
-  class="drawer"
-  class:zero={total === 0}
-  role="menu"
-  tabindex="0"
-  transition:fly={{ opacity: 100, y: 40 }}
->
+<div class="drawer" class:zero={total === 0} role="menu" tabindex="0">
   <header>
     <h3>{$_("processing.totalCount", { values: { n: total } })}</h3>
     <ProcessSummary counts={totalCounts} />
@@ -69,7 +63,8 @@
 
 <style>
   .drawer {
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: 20rem;
     background: var(--white);
     box-shadow: var(--shadow-1);
@@ -105,6 +100,10 @@
     gap: 0.5rem;
   }
   header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--white);
     font-weight: var(--font-semibold);
     align-items: baseline;
     justify-content: space-between;
