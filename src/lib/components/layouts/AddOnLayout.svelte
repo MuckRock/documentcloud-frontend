@@ -2,6 +2,9 @@
   import type { AddOnListItem, Event, Run } from "@/addons/types";
   import type { DocumentResults, Maybe, Page } from "$lib/api/types";
 
+  import { afterNavigate } from "$app/navigation";
+  import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
   import { Clock16, History16, Hourglass24, Play16 } from "svelte-octicons";
@@ -31,7 +34,7 @@
   export let query: string;
   export let disablePremium: boolean = false;
   export let currentTab: "dispatch" | "history" | "scheduled" | string =
-    "dispatch";
+    $page.url.hash.slice(1) ?? "dispatch";
 
   setContext("selected", selected);
 
@@ -42,6 +45,10 @@
   $: canSchedule = addon.parameters.eventOptions?.events.some((event) =>
     schedules.includes(event),
   );
+
+  afterNavigate(() => {
+    currentTab = $page.url.hash.slice(1) ?? "dispatch";
+  });
 
   function selectAll(e) {
     if (e.target.checked) {
