@@ -109,6 +109,9 @@
     justify-content: space-between;
     border-bottom: 1px solid var(--gray-2);
   }
+  h3 {
+    font-weight: var(--font-semibold);
+  }
   main {
     flex-direction: column;
   }
