@@ -14,7 +14,7 @@ import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 import { getPinnedAddons } from "$lib/api/addons";
 
-export async function load({ params, url, parent, fetch }) {
+export async function load({ params, url, parent, data, fetch }) {
   const id = parseInt(params.id, 10);
 
   const [project, users]: [
@@ -53,6 +53,7 @@ export async function load({ params, url, parent, fetch }) {
   const pinnedAddons = getPinnedAddons(fetch);
 
   return {
+    ...(data ?? {}), // include csrf_token
     breadcrumbs,
     documents,
     query,

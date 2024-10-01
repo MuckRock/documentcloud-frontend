@@ -151,13 +151,13 @@
             inline={params.type === "boolean"}
             title={params.title}
             description={params.description}
-            required={required.includes(name)}
+            required={required?.includes(name)}
           >
             <svelte:component
               this={autofield(params)}
               {...params}
               {name}
-              required={required.includes(name)}
+              required={required?.includes(name)}
               bind:value={$values[name]}
               defaultValue={params.default}
               choices={params.enum}
