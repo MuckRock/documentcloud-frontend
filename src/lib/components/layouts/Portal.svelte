@@ -3,7 +3,6 @@
 
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { beforeNavigate } from "$app/navigation";
 
   export let target: HTMLElement | null | undefined = globalThis.document?.body;
 
@@ -15,19 +14,10 @@
     }
   });
 
-  beforeNavigate(() => {
-    if (ref?.parentNode) {
-      ref.parentNode?.removeChild(ref);
-    }
-  });
-
-  // this block is almost needless/useless (if not totally) as, on destroy, the ref will no longer exist/be in the DOM anyways
   onDestroy(() => {
-    setTimeout(() => {
-      if (ref?.parentNode) {
-        ref.parentNode?.removeChild(ref);
-      }
-    });
+    if (target) {
+      target.removeChild(ref);
+    }
   });
 </script>
 
