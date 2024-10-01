@@ -99,7 +99,11 @@ This component should update on a timer.
 
     {#each $running as run (run.uuid)}
       <div role="menuitem" animate:flip>
-        <Process name={run.addon.name} status={run.status}>
+        <Process
+          name={run.addon?.name ?? "Unnamed Run"}
+          href={`/add-ons/${run.addon?.repository}/#history`}
+          status={run.status}
+        >
           <Flex slot="actions" let:isRunning>
             {#if isRunning}
               <!-- Cancel -->

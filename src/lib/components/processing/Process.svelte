@@ -27,6 +27,7 @@
 
   export let status: Status;
   export let name: string;
+  export let href: Maybe<string> = undefined;
   export let progress: Maybe<number> = undefined;
 
   $: isRunning = ["in_progress", "queued"].includes(status);
@@ -37,7 +38,11 @@
     <div class="icon" class:spin={status === "in_progress"}>
       <svelte:component this={icons[status]} />
     </div>
-    <div class="name">{name}</div>
+    {#if href}
+      <a {href} class="name">{name}</a>
+    {:else}
+      <span class="name">{name}</span>
+    {/if}
     {#if $$slots.actions}
       <Flex slot="end">
         <slot name="actions" {isRunning} />
@@ -91,6 +96,9 @@
     flex: 1 1 auto;
     font-weight: var(--font-semibold);
     color: var(--gray-5);
+  }
+  a.name:hover {
+    color: var(--blue-3);
   }
 
   progress {

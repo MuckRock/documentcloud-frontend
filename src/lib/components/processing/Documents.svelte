@@ -49,7 +49,7 @@ so we can invalidate documents as they finish processing.
   import Tooltip from "@/common/Tooltip.svelte";
 
   import { POLL_INTERVAL } from "@/config/config";
-  import { list, pending } from "$lib/api/documents";
+  import { canonicalUrl, list, pending } from "$lib/api/documents";
   import { getDocuments } from "./ProcessContext.svelte";
 
   let documents: Map<number, Document> = new Map();
@@ -131,6 +131,7 @@ so we can invalidate documents as they finish processing.
       <div role="menuitem" animate:flip>
         <Process
           name={document?.title}
+          href={document ? canonicalUrl(document).href : undefined}
           status={getStatus(process)}
           progress={getProgress(process)}
         >
