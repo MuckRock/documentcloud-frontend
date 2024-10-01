@@ -33,8 +33,16 @@
   export let query: string;
   export let disablePremium: boolean = false;
 
-  let currentTab: "dispatch" | "history" | "scheduled" | string =
-    $page.url.hash ?? "dispatch";
+  type Tab = "dispatch" | "history" | "scheduled";
+  const tabs: Tab[] = ["dispatch", "history", "scheduled"];
+
+  function getDefaultTab(): Tab {
+    const hash = $page.url.hash;
+    if (tabs.some((tab) => tab === hash)) return hash as Tab;
+    return "dispatch";
+  }
+
+  let currentTab: Tab = getDefaultTab();
 
   setContext("selected", selected);
 
