@@ -5,6 +5,12 @@ import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import * as projects from "$lib/api/projects";
 
+export function load({ cookies }) {
+  const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+
+  return { csrf_token };
+}
+
 export const actions = {
   // create is the only thing we can do here
   async default({ cookies, request, fetch }) {
