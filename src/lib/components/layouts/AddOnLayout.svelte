@@ -2,7 +2,6 @@
   import type { AddOnListItem, Event, Run } from "@/addons/types";
   import type { DocumentResults, Maybe, Page } from "$lib/api/types";
 
-  import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
@@ -33,8 +32,17 @@
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
   export let disablePremium: boolean = false;
-  export let currentTab: "dispatch" | "history" | "scheduled" | string =
-    $page.url.hash.slice(1) ?? "dispatch";
+
+  type Tab = "dispatch" | "history" | "scheduled";
+  const tabs: Tab[] = ["dispatch", "history", "scheduled"];
+
+  function getDefaultTab(): Tab {
+    const hash = $page.url.hash;
+    if (tabs.some((tab) => tab === hash)) return hash as Tab;
+    return "dispatch";
+  }
+
+  let currentTab: Tab = getDefaultTab();
 
   setContext("selected", selected);
 
@@ -45,10 +53,6 @@
   $: canSchedule = addon.parameters.eventOptions?.events.some((event) =>
     schedules.includes(event),
   );
-
-  afterNavigate(() => {
-    currentTab = $page.url.hash.slice(1) ?? "dispatch";
-  });
 
   function selectAll(e) {
     if (e.target.checked) {

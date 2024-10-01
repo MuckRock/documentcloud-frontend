@@ -23,7 +23,6 @@ export async function load({ url, params, fetch, parent }) {
   const query = me ? url.searchParams.get("q") || userDocs(me) : "";
 
   const searchResults = search(query, {}, fetch).then((r) => r.data);
-  // const currentTab = url.hash ?? "dispatch";
 
   return {
     addon,
@@ -34,6 +33,5 @@ export async function load({ url, params, fetch, parent }) {
       .scheduled({ addon: addon.id, per_page: 100 }, fetch)
       .then((r) => r.data),
     history: addons.history({ addon: addon.id }, fetch).then((r) => r.data),
-    // currentTab,
   };
 }
