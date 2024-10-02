@@ -1,4 +1,5 @@
 import type { Maybe, Nullable, User, Org } from "@/api/types";
+import type { APIResponse } from "./types";
 
 import {
   APP_URL,
@@ -7,7 +8,7 @@ import {
   MAX_PER_PAGE,
   SQUARELET_BASE,
 } from "@/config/config.js";
-import { isErrorCode, getAll } from "../utils";
+import { getAll, getApiResponse } from "../utils";
 
 /** Get the logged-in user */
 export async function getMe(fetch = globalThis.fetch): Promise<Maybe<User>> {
@@ -69,7 +70,7 @@ export async function setOrg(
   org: number,
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<User, unknown>> {
   const endpoint = new URL("users/me/", BASE_API_URL);
   endpoint.searchParams.set("expand", "organization");
 
@@ -84,16 +85,7 @@ export async function setOrg(
     method: "PATCH",
   }).catch(console.error);
 
-  if (!resp) {
-    throw new Error("API error");
-  }
-
-  if (isErrorCode(resp.status)) {
-    console.error(await resp.json());
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<User>(resp);
 }
 
 export function getUserName(user: User): string {

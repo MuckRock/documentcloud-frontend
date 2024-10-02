@@ -11,13 +11,19 @@
   import DocumentLayout from "$lib/components/layouts/DocumentLayout.svelte";
 
   // config and utils
-  import { shouldPreload } from "$lib/api/documents";
+  import {
+    shouldPreload,
+    pageFromHash,
+    shouldPaginate,
+  } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
+  import { scrollToPage } from "$lib/utils/scroll";
 
   export let data;
 
   const activeNote: Writable<Note> = getContext("activeNote");
   const currentMode: Writable<ViewerMode> = getContext("currentMode");
+  const currentPage: Writable<number> = getContext("currentPage");
 
   $: document = data.document;
   $: asset_url = data.asset_url;
@@ -27,30 +33,40 @@
   $: $currentMode = data.mode; // set $currentMode from URL search param
   $: addons = data.pinnedAddons;
 
-  function setCurrentNoteFromHash(url: URL) {
-    const { hash } = url;
+  // lifecycle
+  afterNavigate(() => {
+    const { hash } = $page.url;
+
+    $currentPage = pageFromHash(hash);
+
+    if ($currentPage > 1 && shouldPaginate($currentMode)) {
+      scrollToPage($currentPage);
+    }
+
+    const noteId = noteFromHash(hash);
+    if (noteId) {
+      $activeNote = document.notes.find((note) => note.id === noteId);
+    }
+  });
+
+  // go to page
+  function onHashChange() {
+    const { hash } = window.location;
+    $currentPage = pageFromHash(hash);
+    scrollToPage($currentPage);
+
     const noteId = noteFromHash(hash);
     if (noteId) {
       $activeNote = document.notes.find((note) => note.id === noteId);
     }
   }
-
-  // Navigation Lifecycle
-  afterNavigate(() => {
-    setCurrentNoteFromHash($page.url);
-  });
-
-  // Pagination Lifecycle
-  function onHashChange(e: HashChangeEvent) {
-    setCurrentNoteFromHash(new URL(e.newURL));
-  }
 </script>
 
-<svelte:window on:hashchange={onHashChange} />
+<svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
 <svelte:head>
   {#if shouldPreload($currentMode)}
     <link
-      rel="preload"
+      rel="prefetch"
       href={data.asset_url.href}
       as="fetch"
       crossorigin="anonymous"

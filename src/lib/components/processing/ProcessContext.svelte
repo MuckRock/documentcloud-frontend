@@ -69,7 +69,6 @@ This makes the state of those processes available via context.
 
   onMount(() => {
     load();
-    console.log(load);
   });
 
   afterUpdate(() => {

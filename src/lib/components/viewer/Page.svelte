@@ -53,7 +53,7 @@
             currentPage // in case context is missing
           ) {
             $currentPage = page_number;
-            replaceState(pageHashUrl($currentPage), {});
+            // replaceState(pageHashUrl($currentPage), {});
           }
         });
       },

@@ -52,8 +52,9 @@
   });
 
   // pagination
-  function onHashChange(e: HashChangeEvent) {
-    const { hash } = new URL(e.newURL);
+  function onHashChange(e: HashChangeEvent | PopStateEvent) {
+    console.log(e);
+    const { hash } = window.location;
     $currentPage = pageFromHash(hash);
     scrollToPage($currentPage);
 
@@ -64,7 +65,7 @@
   }
 </script>
 
-<svelte:window on:hashchange={onHashChange} />
+<svelte:window on:hashchange={onHashChange} on:popstate={console.log} />
 <svelte:head>
   {#if shouldPreload($currentMode)}
     <link

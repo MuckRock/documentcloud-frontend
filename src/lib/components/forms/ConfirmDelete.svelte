@@ -44,6 +44,7 @@ Confirm deletion or one or more documents.
       } else {
         console.error(result);
       }
+      dispatch("close");
       update(result);
       submitter.disabled = false;
     };
