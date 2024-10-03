@@ -8,6 +8,16 @@ declare global {
     // interface PageState {}
     // interface Platform {}
   }
+
+  namespace svelteHTML {
+    interface HTMLAttributes<T> {
+      "on:vite:preloadError"?: (event: any) => any;
+    }
+
+    interface HTMLProps<T> {
+      "on:vite:preloadError"?: (event: any) => any;
+    }
+  }
 }
 
 export {};
