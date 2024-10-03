@@ -1,26 +1,19 @@
 // load homepage data
 import { error } from "@sveltejs/kit";
+import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
-import DOMPurify from "isomorphic-dompurify";
 
-import { BASE_API_URL } from "@/config/config.js";
-import { isErrorCode } from "@/lib/utils/api";
+import * as flatpages from "$lib/api/flatpages";
 
 marked.use(gfmHeadingId());
 
-const ROOT = new URL("flatpages/", BASE_API_URL);
-const endpoint = new URL("home/", ROOT);
-
-/** @type {import('./$types').PageLoad} */
 export async function load({ fetch }) {
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const { data: page, error: err } = await flatpages.get("/home/", fetch);
 
-  if (isErrorCode(resp.status)) {
-    error(resp.status, resp.statusText);
+  if (err) {
+    return error(err.status, { message: err.message });
   }
-
-  const page = await resp.json();
 
   return {
     title: page.title,
@@ -29,6 +22,6 @@ export async function load({ fetch }) {
   };
 }
 
-function render(content) {
+function render(content: string): string {
   return DOMPurify.sanitize(marked.parse(content));
 }

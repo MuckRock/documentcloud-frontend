@@ -3,8 +3,8 @@
 
   export let data;
 
-  $: title = data.data.title;
-  $: content = data.data.content;
+  $: title = data.title;
+  $: content = data.content;
 </script>
 
 <svelte:head>
