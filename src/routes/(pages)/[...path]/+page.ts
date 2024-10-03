@@ -1,19 +1,15 @@
 // load data for flatpages
-import { redirect } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { BASE_API_URL } from "@/config/config.js";
-import { isRedirectCode } from "@/lib/utils/api";
-import { getApiResponse } from "$lib/utils/api";
-import type { Flatpage } from "@/lib/api/types.js";
 
-const ROOT = new URL("flatpages/", BASE_API_URL);
+import * as flatpages from "$lib/api/flatpages";
 
-/** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
-  const endpoint = new URL(params.path, ROOT);
-  const resp = await fetch(endpoint, { credentials: "include" });
-  // we should be following redirects, so this shouldn't happen
-  if (isRedirectCode(resp.status)) {
-    redirect(resp.status, resp.headers.get("Location"));
+  const { data, error: err } = await flatpages.get(params.path, fetch);
+
+  if (err) {
+    return error(err.status, { message: err.message });
   }
-  return getApiResponse<Flatpage>(resp);
+
+  return data;
 }
