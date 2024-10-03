@@ -61,8 +61,8 @@ They might get separated later.
     <h2>{$_("collaborators.addCollaborators")}</h2>
     <p>{@html $_("collaborators.invite")}</p>
     <Flex align="center">
-      <Field title={$_("common.emailAddress")} sronly>
-        <Text name="email" placeholder={$_("common.emailAddress")} />
+      <Field title={$_("common.emailAddress")} sronly required>
+        <Text name="email" placeholder={$_("common.emailAddress")} required />
       </Field>
       <Field>
         <select name="access" class="access">

@@ -47,6 +47,7 @@ Edit project metadata
         name="title"
         placeholder={$_("projects.fields.title")}
         value={project.title}
+        required
       />
     </Field>
     <Field title={$_("projects.fields.description")}>

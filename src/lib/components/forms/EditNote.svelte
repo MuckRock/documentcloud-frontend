@@ -60,6 +60,7 @@ Positioning and generating coordinates should happen outside of this form.
         name="title"
         placeholder={$_("annotate.fields.title")}
         bind:value={note.title}
+        required
       />
     </Field>
     <Field title={$_("annotate.fields.content")}>

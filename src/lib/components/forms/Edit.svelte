@@ -36,7 +36,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
     <slot />
-    <Field title={$_("edit.fields.title")}>
+    <Field title={$_("edit.fields.title")} required>
       <Text name="title" value={document.title} required autofocus />
     </Field>
     <Field
