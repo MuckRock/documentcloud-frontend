@@ -8,6 +8,7 @@ const config: StorybookConfig = {
     "../src/lib/**/*.stories.@(js|jsx|ts|tsx|svelte)",
     "../src/routes/**/*.stories.@(js|jsx|ts|tsx|svelte)",
   ],
+  staticDirs: ["../public", "../static"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
