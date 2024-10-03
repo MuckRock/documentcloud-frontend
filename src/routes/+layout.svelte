@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { browser } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
   import { updated } from "$app/stores";
