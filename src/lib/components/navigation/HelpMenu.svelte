@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
-  import Menu from "@/common/Menu.svelte";
+  import { page } from "$app/stores";
 
+  import { _ } from "svelte-i18n";
   import {
     ChevronDown12,
     ChevronUp12,
@@ -15,10 +14,13 @@
     Question24,
     Search16,
   } from "svelte-octicons";
+
+  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Menu from "@/common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";
+
   import { startTour, isTourAvailable } from "../onboarding/GuidedTour.svelte";
-  import { page } from "$app/stores";
 
   export let position = "bottom right";
 

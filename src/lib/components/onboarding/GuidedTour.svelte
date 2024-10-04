@@ -5,12 +5,16 @@
   and if the user hasn't already taken it, we'll prompt them to take the guided tour.
  -->
 <script lang="ts" context="module">
-  import { get } from "svelte/store";
-  import { page } from "$app/stores";
-  import { driver, type Driver, type DriveStep, type Config } from "driver.js";
-  import "driver.js/dist/driver.css";
-  import { StorageManager } from "$lib/utils/storage";
   import type { Maybe } from "$lib/api/types";
+
+  import "driver.js/dist/driver.css";
+
+  import { page } from "$app/stores";
+
+  import { driver, type Driver, type DriveStep, type Config } from "driver.js";
+  import { get } from "svelte/store";
+
+  import { StorageManager } from "$lib/utils/storage";
   import { scripts } from "./scripts";
 
   const storage = new StorageManager("guided-tour");
