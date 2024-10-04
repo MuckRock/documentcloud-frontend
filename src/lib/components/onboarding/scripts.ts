@@ -1,7 +1,7 @@
 import type { DriveStep } from "driver.js";
 
 export const scripts: Record<string, DriveStep[]> = {
-  "/documents": [
+  "/(app)/documents": [
     {
       popover: {
         title: "Welcome to the new DocumentCloud",
@@ -56,7 +56,7 @@ export const scripts: Record<string, DriveStep[]> = {
       },
     },
   ],
-  "/documents/[id]-[slug]": [
+  "/(app)/documents/[id]-[slug]": [
     {
       popover: {
         title: "This is the new document viewer",
