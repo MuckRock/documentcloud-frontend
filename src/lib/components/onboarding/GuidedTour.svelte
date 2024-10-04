@@ -58,16 +58,21 @@
   import { onMount } from "svelte";
 
   onMount(() => {
-    const currentRoute = getRoute();
-    const history = getTourHistory();
-    const offerTour = history[currentRoute] ?? true;
-    driverObj = driver({
-      ...driverConfig,
-      steps: getScript(),
-      onDestroyStarted: endTour,
-    });
-    if (offerTour) {
-      startTour();
+    // do we have a tour?
+    const steps = getScript();
+    if (steps) {
+      driverObj = driver({
+        ...driverConfig,
+        steps,
+        onDestroyStarted: endTour,
+      });
+      // should we start the tour?
+      const currentRoute = getRoute();
+      const history = getTourHistory();
+      const offerTour = history[currentRoute] ?? true;
+      if (offerTour) {
+        startTour();
+      }
     }
   });
 </script>
