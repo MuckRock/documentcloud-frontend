@@ -36,7 +36,7 @@
   });
 </script>
 
-<div class="container">
+<div class="container" id={name}>
   {#if $$slots.title || $$slots.action}
     <header
       role="button"
