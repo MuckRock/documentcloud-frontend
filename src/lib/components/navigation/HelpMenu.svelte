@@ -31,7 +31,7 @@
     startTour();
   }
 
-  $: showTour = isTourAvailable($page.route.id);
+  $: showTour = isTourAvailable($page?.route?.id);
 </script>
 
 <!-- Help Menu -->

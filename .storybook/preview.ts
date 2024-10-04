@@ -31,6 +31,7 @@ const preview: Preview = {
       stores: {
         page: {
           url: "/",
+          route: { id: "/" },
           data: {
             breadcrumbs: [],
           },

@@ -26,7 +26,7 @@
   type Tours = Record<string, boolean>;
 
   export function getRoute(): Maybe<string> {
-    return get(page)?.route.id;
+    return get(page)?.route?.id;
   }
 
   export function getScript(route?: string): Maybe<DriveStep[]> {
