@@ -15,6 +15,7 @@
   import Projects from "../documents/sidebar/Projects.svelte";
 
   import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
+  import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
 
   import {
     canUploadFiles,
@@ -60,3 +61,4 @@
     {/if}
   </svelte:fragment>
 </SidebarLayout>
+<GuidedTour />
