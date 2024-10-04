@@ -10,6 +10,7 @@
     CommentDiscussion16,
     Gift16,
     Mail16,
+    Milestone16,
     Plug16,
     Question24,
     Search16,
