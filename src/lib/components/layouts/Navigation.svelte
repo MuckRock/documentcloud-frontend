@@ -66,6 +66,7 @@
       ghost
       mode="primary"
       on:click={() => (feedbackOpen = true)}
+      id="feedback"
     >
       {$_("common.feedback")}
     </Button>

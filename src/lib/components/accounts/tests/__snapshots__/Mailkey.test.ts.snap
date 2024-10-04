@@ -12,10 +12,9 @@ exports[`Mailkey 1`] = `
         class="svelte-65lbzd"
       >
         <button
-          class="primary normal svelte-141617s ghost"
+          class="primary normal ghost svelte-141617s"
           title=""
           type="button"
-          value="undefined"
         >
           <svg
             class="octicon octicon-x-circle"
@@ -75,20 +74,18 @@ exports[`Mailkey 1`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal svelte-141617s minW"
+            class="primary normal minW svelte-141617s"
             title=""
             type="button"
-            value="undefined"
           >
             Create new email address
           </button>
           
            
           <button
-            class="danger normal svelte-141617s minW"
+            class="danger normal minW svelte-141617s"
             title=""
             type="button"
-            value="undefined"
           >
             Delete existing address
           </button>
@@ -112,10 +109,9 @@ exports[`Mailkey 2`] = `
         class="svelte-65lbzd"
       >
         <button
-          class="primary normal svelte-141617s ghost"
+          class="primary normal ghost svelte-141617s"
           title=""
           type="button"
-          value="undefined"
         >
           <svg
             class="octicon octicon-x-circle"
@@ -180,20 +176,18 @@ exports[`Mailkey 2`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal svelte-141617s minW"
+            class="primary normal minW svelte-141617s"
             title=""
             type="button"
-            value="undefined"
           >
             Create new email address
           </button>
           
            
           <button
-            class="danger normal svelte-141617s minW"
+            class="danger normal minW svelte-141617s"
             title=""
             type="button"
-            value="undefined"
           >
             Delete existing address
           </button>

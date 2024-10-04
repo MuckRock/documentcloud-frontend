@@ -40,6 +40,7 @@
     class:ghost
     class:full
     class:minW
+    {...$$restProps}
   >
     <slot>{label}</slot>
   </a>
@@ -56,6 +57,7 @@
     class:ghost
     class:full
     class:minW
+    {...$$restProps}
   >
     <slot>{label}</slot>
   </button>

@@ -9,6 +9,7 @@
   import { _ } from "svelte-i18n";
 
   import DocumentLayout from "$lib/components/layouts/DocumentLayout.svelte";
+  import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
 
   // config and utils
   import {
@@ -76,3 +77,4 @@
 </svelte:head>
 
 <DocumentLayout {document} {asset_url} {text} {query} {action} {addons} />
+<GuidedTour />
