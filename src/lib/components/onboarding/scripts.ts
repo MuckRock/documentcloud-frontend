@@ -47,7 +47,7 @@ export const scripts: Record<string, DriveStep[]> = {
       },
     },
     {
-      element: "#add-ons",
+      element: "#addons",
       popover: {
         title: "Go further with Add-Ons",
         description:
@@ -84,7 +84,7 @@ export const scripts: Record<string, DriveStep[]> = {
       },
     },
     {
-      element: "#actions",
+      element: "#action",
       popover: {
         title: "Take action",
         description:
