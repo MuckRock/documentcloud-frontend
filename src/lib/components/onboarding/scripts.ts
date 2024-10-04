@@ -55,11 +55,20 @@ export const scripts: Record<string, DriveStep[]> = {
         align: "center",
       },
     },
+    {
+      element: "#feedback",
+      popover: {
+        title: "Let us know what you think",
+        description:
+          "We're constantly fixing bugs and improving DocumentCloud. If you have thoughts, questions, or problems, send us your feedback.",
+        align: "center",
+      },
+    },
   ],
   "/(app)/documents/[id]-[slug]": [
     {
       popover: {
-        title: "This is the new document viewer",
+        title: "This is our new document viewer",
         description:
           "We've made reading, annotating, and redacting your documents better than ever. Would you like to see what's new?",
         align: "center",
@@ -79,7 +88,7 @@ export const scripts: Record<string, DriveStep[]> = {
       popover: {
         title: "A whole new view",
         description:
-          "We now render your PDFs directly in your browser, with improved text-selection and navigation controls. Switch views from the top toolbar.",
+          "We now render PDFs directly in your browser, with improved text-selection and navigation controls. Switch views from the top toolbar.",
         align: "center",
       },
     },
