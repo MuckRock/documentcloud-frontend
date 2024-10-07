@@ -111,7 +111,12 @@ export async function getPrivateAsset(
     headers: {
       Accept: "application/json",
     },
-  });
+  }).catch(console.error);
+
+  // should this be an API response?
+  if (!resp) {
+    throw new Error("API error");
+  }
 
   if (!resp.ok) {
     throw new Error(resp.statusText);
