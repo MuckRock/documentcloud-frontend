@@ -75,7 +75,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style>
   .toast {
     padding: 0.5rem 0.5rem;
     border-radius: 0.5rem;

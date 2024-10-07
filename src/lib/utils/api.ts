@@ -43,7 +43,7 @@ export async function getApiResponse<T, E = unknown>(
     response.error = {
       status: resp.status,
       message: resp.statusText,
-      errors: await resp.json(),
+      errors: resp.json ? await resp.json() : null,
     };
 
     return response;

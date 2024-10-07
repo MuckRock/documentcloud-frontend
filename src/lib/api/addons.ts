@@ -45,7 +45,9 @@ export async function getAddons(
   Object.entries(params).forEach(([key, value]) => {
     endpoint.searchParams.set(key, String(value));
   });
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Page<AddOnListItem>>(resp);
 }
@@ -79,7 +81,9 @@ export async function getEvent(
 ): Promise<APIResponse<Event, unknown>> {
   const endpoint = new URL(`addon_events/${id}/?expand=addon`, BASE_API_URL);
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Event>(resp);
 }
@@ -102,7 +106,9 @@ export async function history(
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Page<Run>>(resp);
 }
@@ -119,7 +125,9 @@ export async function scheduled(
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Page<Event>>(resp);
 }
@@ -145,7 +153,7 @@ export async function dispatch(
       Referer: APP_URL,
     },
     body: JSON.stringify(payload),
-  });
+  }).catch(console.error);
 
   return getApiResponse<Run | Event, ValidationError>(resp);
 }
@@ -175,7 +183,8 @@ export async function update(
 }
 
 /**
- * Dismiss an addon
+ * Dismiss an add-on, without cancelling
+ *
  * @param run
  * @param csrf_token
  * @param fetch
@@ -203,6 +212,13 @@ export async function dismiss(
   return getApiResponse<Run>(resp);
 }
 
+/**
+ * Cancel an add-on run in progress
+ *
+ * @param uuid
+ * @param csrf_token
+ * @param fetch
+ */
 export async function cancel(
   uuid: string,
   csrf_token: string,

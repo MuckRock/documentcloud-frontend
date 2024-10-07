@@ -42,13 +42,19 @@ describe("getAddons", () => {
     expect(error).toBeUndefined();
     expect(response).toBe(addonsList);
   });
-  it("calls SvelteKit's error fn given a response error", async () => {
+  it("returns an API error given a response error", async () => {
     mockFetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
       statusText: "Server Error!",
     });
-    await expect(addons.getAddons({}, mockFetch)).rejects.toThrowError();
+
+    const { data, error } = await addons.getAddons({}, mockFetch);
+    expect(data).toBeUndefined();
+    expect(error).toMatchObject({
+      status: 500,
+      message: "Server Error!",
+    });
   });
 
   test("getPinnedAddons", async () => {

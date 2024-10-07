@@ -52,7 +52,9 @@ export async function get(
 
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Note>(resp);
 }
@@ -79,7 +81,7 @@ export async function create(
       Referer: APP_URL,
     },
     method: "POST",
-  });
+  }).catch(console.error);
 
   return getApiResponse<Note, ValidationError>(resp);
 }
@@ -108,7 +110,7 @@ export async function update(
       Referer: APP_URL,
     },
     method: "PATCH",
-  });
+  }).catch(console.error);
 
   return getApiResponse<Note, ValidationError>(resp);
 }
@@ -135,7 +137,7 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  });
+  }).catch(console.error);
 
   return getApiResponse<null>(resp);
 }

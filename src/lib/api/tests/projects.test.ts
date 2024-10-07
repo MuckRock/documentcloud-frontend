@@ -56,7 +56,13 @@ describe("projects.get", () => {
   });
   it("throws a 500 error if fetch fails", async () => {
     mockFetch = vi.fn().mockRejectedValue("Error");
-    await expect(projects.get(1, mockFetch)).rejects.toThrowError();
+    const { error, data } = await projects.get(1, mockFetch);
+
+    expect(data).toBeUndefined();
+    expect(error).toMatchObject({
+      status: 500,
+      message: "API error",
+    });
   });
   it("throws an error if fetch succeeds with an error status", async () => {
     mockFetch = vi.fn().mockResolvedValue({
@@ -64,7 +70,14 @@ describe("projects.get", () => {
       status: 500,
       statusText: "Whoops",
     });
-    await expect(projects.get(1, mockFetch)).rejects.toThrowError();
+
+    const { data, error } = await projects.get(1, mockFetch);
+
+    expect(data).toBeUndefined();
+    expect(error).toMatchObject({
+      status: 500,
+      message: "Whoops",
+    });
   });
 });
 
@@ -207,6 +220,7 @@ describe("projects.pinProject", () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
+
   it("makes a PATCH request to the provided project ID", async () => {
     await projects.pinProject(1, false, "csrftoken", mockFetch);
     expect(mockFetch).toHaveBeenCalledWith(
@@ -218,25 +232,44 @@ describe("projects.pinProject", () => {
           "X-CSRFToken": "csrftoken",
           "Content-type": "application/json",
         },
-        body: `{"pinned":false}`,
+        body: JSON.stringify({ pinned: false }),
       },
     );
   });
-  it("throws a 500 error if fetch fails", async () => {
+
+  it("returns an API error if fetch fails", async () => {
     mockFetch = vi.fn().mockRejectedValue("Error");
-    await expect(
-      projects.pinProject(1, false, "csrftoken", mockFetch),
-    ).rejects.toThrowError();
+    const { error } = await projects.pinProject(
+      1,
+      false,
+      "csrftoken",
+      mockFetch,
+    );
+
+    expect(error).toMatchObject({
+      status: 500,
+      message: "API error",
+    });
   });
+
   it("throws an error if fetch succeeds with an error status", async () => {
     mockFetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
       statusText: "Whoops",
     });
-    await expect(
-      projects.pinProject(1, false, "csrftoken", mockFetch),
-    ).rejects.toThrowError();
+
+    const { error } = await projects.pinProject(
+      1,
+      false,
+      "csrftoken",
+      mockFetch,
+    );
+
+    expect(error).toMatchObject({
+      status: 500,
+      message: "Whoops",
+    });
   });
 });
 
