@@ -111,7 +111,13 @@ describe("projects.list", () => {
   });
   it("throws a 500 error if fetch fails", async () => {
     mockFetch = vi.fn().mockRejectedValue("Error");
-    await expect(projects.list({}, mockFetch)).rejects.toThrowError();
+    const { error, data } = await projects.list({}, mockFetch);
+
+    expect(data).toBeUndefined();
+    expect(error).toMatchObject({
+      status: 500,
+      message: "API error",
+    });
   });
   it("throws an error if fetch succeeds with an error status", async () => {
     mockFetch = vi.fn().mockResolvedValue({
@@ -119,7 +125,14 @@ describe("projects.list", () => {
       status: 500,
       statusText: "Whoops",
     });
-    await expect(projects.list({}, mockFetch)).rejects.toThrowError();
+
+    const { data, error } = await projects.list({}, mockFetch);
+
+    expect(data).toBeUndefined();
+    expect(error).toMatchObject({
+      status: 500,
+      message: "Whoops",
+    });
   });
 });
 
