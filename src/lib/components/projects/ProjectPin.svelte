@@ -30,26 +30,31 @@
     e.preventDefault();
     const csrf_token = getCsrfToken();
     const newPinnedState = !project.pinned;
-    let error: unknown;
 
-    ({ data: project, error } = await pinProject(
+    const { data, error } = await pinProject(
       project.id,
       newPinnedState,
       csrf_token,
-    ));
+    );
 
     if (error) {
       project.pinned = !project.pinned;
       console.error(error);
     } else {
+      project = data;
       await invalidate(canonicalUrl(project));
-    }
 
-    // now that we've updated, set $pinned
-    $pinned = project.pinned
-      ? sortPins([...$pinned, project])
-      : $pinned.filter((a) => a.id !== project.id);
+      // now that we've updated, set $pinned
+      $pinned = project.pinned
+        ? sortPins([...$pinned, project])
+        : $pinned.filter((a) => a.id !== project.id);
+    }
   }
 </script>
 
-<Pin active={project.pinned} on:click={toggle} {size} />
+<Pin
+  active={project.pinned}
+  {size}
+  disabled={!project.edit_access}
+  on:click={toggle}
+/>
