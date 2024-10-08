@@ -17,11 +17,12 @@
 </script>
 
 <button
+  {disabled}
   class="pin"
   class:active
   class:disabled
-  on:click|stopPropagation|preventDefault
   style={cssVarStyles}
+  on:click|stopPropagation|preventDefault
 >
   <Pin {title} {size} />
 </button>
