@@ -16,4 +16,4 @@ package = "@netlify/plugin-lighthouse"
 # to audit a path other than /
 # route1 audit will use the top level thresholds
   [[plugins.inputs.audits]]
-    path = "/documents"
+    path = "documents/"
