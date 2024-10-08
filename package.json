@@ -49,6 +49,7 @@
     "typescript": "^5.0.3"
   },
   "devDependencies": {
+    "@netlify/plugin-lighthouse": "^6.0.0",
     "@playwright/test": "^1.39.0",
     "@storybook/addon-essentials": "^7.6.10",
     "@storybook/addon-interactions": "^7.6.10",

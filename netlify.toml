@@ -5,3 +5,15 @@ publish = "build"
 
 [[context.production.plugins]]
 package = "/plugins/cache-bust"
+
+[[plugins]]
+package = "@netlify/plugin-lighthouse"
+# https://github.com/netlify/netlify-plugin-lighthouse
+# Set minimum thresholds for each report area
+#  [plugins.inputs.thresholds]
+#    performance = 0.9
+#
+# to audit a path other than /
+# route1 audit will use the top level thresholds
+  [[plugins.inputs.audits]]
+    path = "/documents"
