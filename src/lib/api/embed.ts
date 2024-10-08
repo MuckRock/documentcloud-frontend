@@ -5,7 +5,6 @@ import { BASE_API_URL } from "@/config/config.js";
 
 /**
  * Generate an oembed URL for a given DocumentCloud URL
- *
  * @export
  */
 export function embedUrl(url: URL | string): URL {
@@ -14,7 +13,7 @@ export function embedUrl(url: URL | string): URL {
 
 /**
  * Fetch embed code from the OEmbed API endpoint
- *
+ * @deprecated
  * @export
  */
 export async function getEmbed(url: URL | string): Promise<OEmbed> {

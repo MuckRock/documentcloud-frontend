@@ -57,6 +57,11 @@ export async function orgUsers(
   return getAll<User>(endpoint, MAX_PER_PAGE, fetch);
 }
 
+/**
+ * @deprecated
+ * @param id
+ * @param fetch
+ */
 export async function getOrg(
   id: number,
   fetch = globalThis.fetch,

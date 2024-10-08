@@ -124,7 +124,9 @@ export async function list(
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<DocumentResults>(resp);
 }

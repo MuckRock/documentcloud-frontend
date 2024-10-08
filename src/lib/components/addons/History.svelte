@@ -23,9 +23,12 @@
   async function load(url: URL) {
     loading = true;
 
-    const res = await fetch(url, { credentials: "include" });
+    // todo: better error handling
+    const res = await fetch(url, { credentials: "include" }).catch(
+      console.error,
+    );
+    if (!res) return console.error("API error");
     if (!res.ok) {
-      // todo: better error handling
       console.error(res.statusText);
       loading = false;
     }

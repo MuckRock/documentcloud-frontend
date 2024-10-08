@@ -40,10 +40,13 @@
   // load the next set of results
   async function load(url: URL) {
     loading = true;
-    const res = await fetch(url, { credentials: "include" });
+    const res = await fetch(url, { credentials: "include" }).catch(
+      console.error,
+    );
 
+    // todo: better error handling
+    if (!res) return console.error("API error");
     if (!res.ok) {
-      // todo: better error handling
       console.error(res.statusText);
       loading = false;
     }

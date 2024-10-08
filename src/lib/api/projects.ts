@@ -26,7 +26,9 @@ export async function get(
 ): Promise<APIResponse<Project, unknown>> {
   const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Project>(resp);
 }
@@ -44,7 +46,9 @@ export async function list(
     endpoint.searchParams.set(k, String(v));
   }
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<ProjectResults>(resp);
 }
@@ -67,6 +71,7 @@ export async function getForUser(
 
 /**
  * Get a list of all projects owned by the user
+ * @deprecated
  */
 export async function getOwned(
   userId: number,
@@ -79,6 +84,7 @@ export async function getOwned(
 
 /**
  * Get a list of all projects shared with the user
+ * @deprecated
  */
 export async function getShared(
   userId: number,
@@ -114,7 +120,7 @@ export async function pinProject(
   const resp = await fetch(endpoint, {
     ...options,
     body: JSON.stringify({ pinned }),
-  });
+  }).catch(console.error);
 
   return getApiResponse<Project>(resp);
 }
@@ -144,7 +150,7 @@ export async function create(
       Referer: APP_URL,
     },
     method: "POST",
-  });
+  }).catch(console.error);
 
   return getApiResponse<Project, ValidationError>(resp);
 }
@@ -166,7 +172,7 @@ export async function edit(
       Referer: APP_URL,
     },
     method: "PATCH",
-  });
+  }).catch(console.error);
 
   return getApiResponse<Project, ValidationError>(resp);
 }
@@ -189,7 +195,7 @@ export async function destroy(
       Referer: APP_URL,
     },
     method: "DELETE",
-  });
+  }).catch(console.error);
 
   return getApiResponse<null>(resp);
 }
@@ -219,7 +225,7 @@ export async function add(
       Referer: APP_URL,
     },
     method: "POST",
-  });
+  }).catch(console.error);
 
   return getApiResponse<ProjectMembershipItem[]>(resp);
 }
@@ -244,7 +250,7 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  });
+  }).catch(console.error);
 
   return getApiResponse<null>(resp);
 }

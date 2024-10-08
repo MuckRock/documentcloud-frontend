@@ -30,7 +30,9 @@ export async function get(
   }
 
   const endpoint = new URL("flatpages" + path, BASE_API_URL);
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
   return getApiResponse<Flatpage>(resp);
 }
