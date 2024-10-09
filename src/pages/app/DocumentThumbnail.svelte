@@ -4,7 +4,7 @@
 
   import Image from "@/common/Image.svelte";
   import Loader from "@/common/Loader.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
 
   // SVG assets
   import errorIconSvg from "@/assets/error_icon.svg?raw";

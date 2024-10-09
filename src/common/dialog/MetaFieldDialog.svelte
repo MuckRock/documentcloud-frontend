@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
 
   import Button from "@/common/Button.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "../lib/components/common/Tooltip.svelte";
   import HtmlEditor from "@/common/HtmlEditor.svelte";
   import { editSelectedDocumentInfo } from "@/manager/documents.js";
   import emitter from "@/emit.js";

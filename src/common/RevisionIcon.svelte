@@ -10,7 +10,7 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import Tooltip from "./Tooltip.svelte";
+  import Tooltip from "../lib/components/common/Tooltip.svelte";
 
   // SVG assets
   import History16 from "svelte-octicons/lib/History16.svelte";

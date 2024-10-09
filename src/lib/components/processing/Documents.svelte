@@ -46,7 +46,7 @@ so we can invalidate documents as they finish processing.
   import Portal from "../layouts/Portal.svelte";
   import Process from "./Process.svelte";
   import Reprocess from "../forms/Reprocess.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
 
   import { POLL_INTERVAL } from "@/config/config";
   import { canonicalUrl, list, pending } from "$lib/api/documents";

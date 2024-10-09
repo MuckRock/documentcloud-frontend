@@ -4,7 +4,7 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
   import { getViewerHref } from "@/lib/utils/viewer";
 
   let width: number;

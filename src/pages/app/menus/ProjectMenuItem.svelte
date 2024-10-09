@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
 
   import MenuItem from "@/common/MenuItem.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
   import { layout } from "@/manager/layout.js";
 
   import {

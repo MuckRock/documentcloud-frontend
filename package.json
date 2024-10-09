@@ -7,6 +7,7 @@
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-typescript": "^7.21.4",
+    "@floating-ui/dom": "^1.6.11",
     "@sentry/svelte": "^7.66.0",
     "@sentry/sveltekit": "^8.25.0",
     "@sveltejs/adapter-auto": "^3.0.0",
