@@ -299,6 +299,7 @@ test("inMyOrg", () => {
     user.organizations.includes(org.id),
   );
   const me = fixtures.me;
+  expect(inMyOrg(org.id, me.id)).toEqual([]);
   expect(inMyOrg(org.id, me.id, users)).toEqual([
     {
       id: 3,
