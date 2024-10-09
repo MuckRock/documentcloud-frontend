@@ -11,6 +11,7 @@
     Organization16,
   } from "svelte-octicons";
 
+  import { SQUARELET_BASE } from "@/config/config";
   import Button from "../common/Button.svelte";
   import CreditMeter, {
     formatResetDate,
@@ -31,7 +32,6 @@
   import { getCsrfToken } from "$lib/utils/api";
   import { remToPx } from "@/lib/utils/layout";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import { SQUARELET_URL } from "@/api/auth";
 
   export let active_org: Org;
   export let orgs: Org[] = [];
@@ -195,7 +195,7 @@
           </Menu>
         </Dropdown>
       {:else}
-        <Button ghost href="{SQUARELET_URL}/organizations">
+        <Button ghost href="{SQUARELET_BASE}/organizations">
           <Organization16 />
           {$_("authSection.premiumUpgrade.orgs")}
         </Button>
