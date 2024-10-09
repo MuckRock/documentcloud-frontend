@@ -1,5 +1,3 @@
-import { getContext } from "svelte";
-import type { Writable } from "svelte/store";
 import type { Document, Note, ViewerMode } from "$lib/api/types";
 import { canonicalUrl, pageHashUrl } from "../api/documents";
 import { noteHashUrl } from "../api/notes";
@@ -10,23 +8,6 @@ interface ViewerHrefOptions {
   note?: Note;
   mode?: ViewerMode;
   embed?: boolean;
-}
-
-export function isEmbedded(): boolean {
-  // are we embedded?
-  return getContext("embed") ?? false;
-}
-
-export function getCurrentPage(): Writable<number> {
-  return getContext("currentPage");
-}
-
-export function getCurrentMode(): Writable<ViewerMode> {
-  return getContext("currentMode");
-}
-
-export function getActiveNote(): Writable<Note> {
-  return getContext("activeNote");
 }
 
 export function getViewerHref(options: ViewerHrefOptions = {}) {
@@ -61,12 +42,11 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
   if (pageSpec.trim().length == 0) return [];
 
   const parts = pageSpec.split(";");
-
   return parts.reduce((sizes, part, i) => {
-    const [size, range] = part.split(":");
-    const [width, height] = size.split("x").map(parseFloat);
+    const [size, range] = part?.split(":");
+    const [width, height] = size?.split("x").map(parseFloat);
 
-    range.split(",").forEach((rangePart) => {
+    range?.split(",").forEach((rangePart) => {
       if (rangePart.includes("-")) {
         const [start, end] = rangePart.split("-").map((x) => parseInt(x, 10));
         for (let page = start; page <= end; page++) {

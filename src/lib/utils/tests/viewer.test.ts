@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { document } from "@/test/fixtures/documents";
 import { note } from "@/test/fixtures/notes";
-import { getViewerHref } from "../viewer";
+import { getViewerHref, pageSizes } from "../viewer";
 import {
   canonicalUrl,
   pageHashUrl,
@@ -51,5 +51,23 @@ describe("getViewerHref", () => {
     expect(getViewerHref({ document, page: 10, note })).not.toMatch(
       pageHashUrl(10),
     );
+  });
+});
+
+describe("pageSizes", () => {
+  // Transform page_spec value into width + height for each page
+  it("returns an empty array for an empty pageSpec value", () => {
+    expect(pageSizes(" ")).toEqual([]);
+  });
+  it("splits each pageSpec part into a new array entry", () => {
+    expect(pageSizes(";;;;;;")).toEqual(new Array(7));
+  });
+  it("checks each part for a comma-delimited value", () => {
+    expect(pageSizes("1x1:0;2x2:1-3")).toEqual([
+      [1, 1],
+      [2, 2],
+      [2, 2],
+      [2, 2],
+    ]);
   });
 });
