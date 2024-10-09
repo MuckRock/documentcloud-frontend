@@ -31,7 +31,7 @@ Selectable text can be rendered in one of two ways:
 
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
 
   export let document: Document;
   export let page_number: number; // 1-indexed

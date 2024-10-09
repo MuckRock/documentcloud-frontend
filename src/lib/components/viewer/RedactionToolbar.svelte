@@ -21,7 +21,7 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
 
   import { remToPx } from "$lib/utils/layout";
-  import { getViewerHref } from "@/lib/utils/viewer";
+  import { getViewerHref } from "$lib/utils/viewer";
 
   export let document: Document;
 

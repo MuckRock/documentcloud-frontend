@@ -32,7 +32,8 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   import { remToPx } from "$lib/utils/layout";
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+  import { getViewerHref } from "$lib/utils/viewer";
+  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
 
   export let document: Document;
   export let query: string = "";

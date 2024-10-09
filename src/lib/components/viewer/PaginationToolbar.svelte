@@ -23,7 +23,7 @@
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
 
   export let document: Document;
   export let embed = isEmbedded();

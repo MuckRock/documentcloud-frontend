@@ -15,7 +15,8 @@
   import Empty from "../common/Empty.svelte";
   import Note from "./Note.svelte";
 
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+  import { getViewerHref } from "$lib/utils/viewer";
+  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
 
   export let document: Document;
   export let pdf = new Promise(() => {});
