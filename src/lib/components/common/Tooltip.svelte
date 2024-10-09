@@ -1,119 +1,119 @@
-<script>
-  import { spring } from "svelte/motion";
+<script lang="ts">
+  import {
+    computePosition,
+    flip,
+    offset as offsetFn,
+    arrow as arrowFn,
+    shift,
+    type Placement,
+    type MiddlewareData,
+  } from "@floating-ui/dom";
+  import { type ComponentType } from "svelte";
+  import { writable } from "svelte/store";
 
-  export let caption;
-  export let delay = 0;
-  export let show = true;
+  export let caption: string | ComponentType;
+  export let placement: Placement = "bottom";
+  export let offset: number = 6;
+  export let arrow = false;
 
-  export let offsetTop = null;
-  export let offsetRight = null;
+  let anchor: HTMLDivElement;
+  let tooltip: HTMLDivElement;
+  let arrowRef: HTMLDivElement;
+  let tooltipCoords = writable({ x: 0, y: 0 });
 
-  $: top = offsetTop == null ? 0 : offsetTop;
+  function positionArrow(placement: Placement, middlewareData: MiddlewareData) {
+    // Accessing the data
+    const { x: arrowX, y: arrowY } = middlewareData.arrow;
 
-  let mouseIn = false;
-  let tooltip;
-  let coords = spring({ x: 0, y: 0 });
-  let delayShow = true;
-  let delayTimer = null;
+    const staticSide = {
+      top: "bottom",
+      right: "left",
+      bottom: "top",
+      left: "right",
+    }[placement.split("-")[0]];
 
-  function setPosition(e, hard = false) {
-    if (tooltip == null) return;
-    let newX = e.clientX;
-    let newY = e.clientY - tooltip.offsetHeight;
-
-    // If the planned tooltip coordinates run offscreen, adjust accordingly
-    if (
-      newX + tooltip.offsetWidth >=
-      (offsetRight == null ? document.body.offsetWidth : offsetRight)
-    )
-      newX -= tooltip.offsetWidth;
-    if (newY < top) newY += tooltip.offsetHeight;
-
-    // Update x and y
-    coords.set({ x: newX, y: newY }, { hard });
+    Object.assign(arrowRef.style, {
+      left: arrowX != null ? `${arrowX}px` : "",
+      top: arrowY != null ? `${arrowY}px` : "",
+      right: "",
+      bottom: "",
+      [staticSide]: "-4px",
+    });
   }
 
-  function setUpDelay() {
-    // Clear existing timer
-    if (delayTimer != null) {
-      clearTimeout(delayTimer);
-      delayTimer = null;
-    }
-
-    // Create a new timer
-    if (delay > 0) {
-      delayShow = false;
-      delayTimer = setTimeout(() => (delayShow = true), delay);
-    } else {
-      delayShow = true;
-    }
+  function update() {
+    const middleware = [offsetFn(offset), shift({ padding: 6 }), flip()];
+    if (arrowRef) middleware.push(arrowFn({ element: arrowRef }));
+    computePosition(anchor, tooltip, {
+      placement,
+      middleware,
+    }).then(({ x, y, placement, middlewareData }) => {
+      tooltipCoords.set({ x, y });
+      if (arrowRef) {
+        positionArrow(placement, middlewareData);
+      }
+    });
   }
 
-  function handleMouseOver(e) {
-    setUpDelay();
-    mouseIn = true;
-    setPosition(e, true);
+  function showTooltip() {
+    tooltip.style.display = "block";
+    update();
   }
 
-  function handleMouseOut() {
-    mouseIn = false;
-  }
-
-  function handleMouseMove(e) {
-    if (!mouseIn) return;
-    setPosition(e);
+  function hideTooltip() {
+    tooltip.style.display = "";
   }
 </script>
 
-{#if show}
-  <span
-    on:mouseenter={handleMouseOver}
-    on:mouseleave={handleMouseOut}
-    role="tooltip"
-  >
-    <div
-      bind:this={tooltip}
-      class="tooltip"
-      class:show={mouseIn && delayShow}
-      style="left: {$coords.x}px; top: {$coords.y}px;"
-    >
-      <slot name="caption">{caption}</slot>
-    </div>
-    <slot />
-  </span>
-{:else}
+<div
+  bind:this={tooltip}
+  role="tooltip"
+  class="tooltip"
+  style="left: {$tooltipCoords.x}px; top: {$tooltipCoords.y}px;"
+>
+  <slot name="caption">{caption}</slot>
+  {#if arrow}<div class="arrow" bind:this={arrowRef}></div>{/if}
+</div>
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<div
+  role="presentation"
+  class="anchor"
+  bind:this={anchor}
+  tabindex="0"
+  on:mouseenter={showTooltip}
+  on:mouseleave={hideTooltip}
+  on:focus={showTooltip}
+  on:blur={hideTooltip}
+>
   <slot />
-{/if}
-
-<svelte:window
-  on:mousemove={handleMouseMove}
-  on:scroll={handleMouseOut}
-  on:resize={handleMouseOut}
-/>
+</div>
 
 <style>
-  span {
-    display: contents;
-    position: relative;
+  .anchor {
+    display: inline-block;
   }
-
+  .arrow {
+    position: absolute;
+    background: var(--gray-5);
+    width: 0.5rem;
+    height: 0.5rem;
+    transform: rotate(45deg);
+  }
   .tooltip {
-    font-weight: normal;
-    font-size: 14px;
-    opacity: 0;
-    pointer-events: none;
+    display: none;
+    width: max-content;
+    position: absolute;
+    top: 0;
+    left: 0;
     background: var(--gray-5);
     color: var(--gray-1);
+    font-weight: var(--font-semibold);
+    font-size: var(--font-sm);
     line-height: 1.2em;
-    padding: 0.3em 0.8em;
-    border-radius: 3px;
-    box-shadow: 0 0 2px #0000007a;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: var(--shadow-1);
     z-index: var(--z-toast, 19);
-    transition: opacity 0.25s ease;
     max-width: 16rem;
-  }
-
-  .tooltip.show {
-    opacity: 1;
   }
 </style>
