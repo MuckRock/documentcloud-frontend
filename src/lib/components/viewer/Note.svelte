@@ -6,12 +6,11 @@
   a document excerpt.
 -->
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import type { User } from "@/api/types/orgAndUser";
-  import type { Document, Note, Sizes, ViewerMode } from "$lib/api/types";
+  import type { Document, Note, Sizes } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Globe16,
