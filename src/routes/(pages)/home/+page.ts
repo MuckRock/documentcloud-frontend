@@ -5,11 +5,15 @@ import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 
 import * as flatpages from "$lib/api/flatpages";
+import { getMe } from "$lib/api/accounts";
 
 marked.use(gfmHeadingId());
 
 export async function load({ fetch }) {
-  const { data: page, error: err } = await flatpages.get("/home/", fetch);
+  const [{ data: page, error: err }, me] = await Promise.all([
+    flatpages.get("/home/", fetch),
+    getMe(fetch),
+  ]);
 
   if (err) {
     return error(err.status, { message: err.message });
@@ -19,6 +23,7 @@ export async function load({ fetch }) {
     title: page.title,
     url: page.url,
     content: render(page.content),
+    me,
   };
 }
 

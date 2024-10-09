@@ -10,15 +10,20 @@
   import mastheadResponsiveSvg from "@/assets/masthead_responsive.svg?raw";
 
   // Authentication
-  import { SIGN_IN_URL, SIGN_UP_URL, SIGN_OUT_URL } from "@/config/config.js";
-  import { getCurrentUser } from "@/lib/utils/permissions.js";
+  import {
+    APP_URL,
+    SIGN_IN_URL,
+    SIGN_UP_URL,
+    SIGN_OUT_URL,
+  } from "@/config/config.js";
 
   // Show the login controls
   const showLogin = true;
 
   export let data;
 
-  const me = getCurrentUser();
+  $: me = data.me;
+  $: sign_in_url = new URL(`?next=${APP_URL}`, SIGN_IN_URL);
 </script>
 
 <svelte:head>
@@ -33,11 +38,11 @@
       </div>
       {#if showLogin}
         <div class="narrowhide">
-          {#if $me}
+          {#if me}
             <div class="signupcontainer">
               <div class="supplemental">
                 {$_("homeTemplate.signedIn", {
-                  values: { name: $me?.name },
+                  values: { name: me?.name },
                 })}
               </div>
               <div class="signin">
@@ -50,7 +55,7 @@
           {:else}
             <div class="signupcontainer">
               <div class="signin">
-                <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
+                <a href={sign_in_url}>{$_("homeTemplate.signIn")}</a>
               </div>
               <a href={SIGN_UP_URL + $page.url}>
                 <Button>{$_("homeTemplate.signUp")}</Button>
@@ -62,11 +67,11 @@
     </div>
     {#if showLogin}
       <div class="narrowshow">
-        {#if $me !== null}
+        {#if me}
           <div class="signupcontainer">
             <div class="supplemental">
               {$_("homeTemplate.signedIn", {
-                values: { name: $me?.name },
+                values: { name: me?.name },
               })}
             </div>
             <div class="signin">
@@ -163,6 +168,10 @@
     color: var(--homeBlack, #222222);
     font-size: 16px;
     line-height: 24px;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
   }
 
   .content :global(a) {
