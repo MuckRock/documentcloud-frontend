@@ -31,9 +31,9 @@
   import { getUserName } from "@/lib/api/accounts";
   import {
     getCurrentMode,
-    getViewerHref,
     isEmbedded,
-  } from "@/lib/utils/viewer";
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerHref } from "$lib/utils/viewer";
 
   export let document: Document;
   export let note: Note;

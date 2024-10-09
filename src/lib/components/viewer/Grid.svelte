@@ -13,7 +13,7 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
 
   export let document: Document;
   export let size: Sizes = "thumbnail";

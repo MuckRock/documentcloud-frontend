@@ -25,9 +25,9 @@ Only one note can be added/edited at a time.
   import {
     getActiveNote,
     getCurrentMode,
-    getViewerHref,
     isEmbedded,
-  } from "@/lib/utils/viewer";
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
 
   export let document: Document;

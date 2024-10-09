@@ -10,8 +10,8 @@ Page is a generic container for Viewer content.
   import { _ } from "svelte-i18n";
 
   import { pageHashUrl } from "$lib/api/documents";
-  import { replaceState } from "$app/navigation";
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerHref } from "$lib/utils/viewer";
 
   export let document: Document;
   export let page_number: number;
