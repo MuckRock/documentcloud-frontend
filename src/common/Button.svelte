@@ -26,7 +26,7 @@
   export let disabledReason = null;
 </script>
 
-<Tooltip delay={500} show={disabledReason != null} caption={disabledReason}>
+<Tooltip caption={disabledReason}>
   {#if href}
     <a
       {href}
