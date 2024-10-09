@@ -32,6 +32,28 @@ export function getViewerHref(options: ViewerHrefOptions = {}) {
 }
 
 /**
+ * Return a numeric scale based on intrinsic page size and container size
+ * @param width Original document width
+ * @param height Original document height
+ * @param container
+ * @param scale
+ */
+export function fitPage(
+  width: number,
+  height: number,
+  container: HTMLElement,
+  scale: number | "width" | "height",
+): number {
+  if (typeof scale === "number") return scale;
+  if (!container) return 1;
+
+  // const [x1, y1, width, height] = page.view;
+  const { clientWidth, clientHeight } = container;
+
+  return scale === "width" ? clientWidth / width : clientHeight / height;
+}
+
+/**
  * Parse page_spec into width and height of each page
  *
  * @param pageSpec A string encoding page dimensions in a compact format

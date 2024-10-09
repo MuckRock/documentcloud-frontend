@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { document } from "@/test/fixtures/documents";
 import { note } from "@/test/fixtures/notes";
-import { getViewerHref, pageSizes } from "../viewer";
+import { fitPage, getViewerHref, pageSizes } from "../viewer";
 import {
   canonicalUrl,
   pageHashUrl,
@@ -69,5 +69,17 @@ describe("pageSizes", () => {
       [2, 2],
       [2, 2],
     ]);
+  });
+});
+
+describe("fitPage", () => {
+  it("returns sensible defaults", () => {
+    expect(fitPage(1, 1, undefined, 10)).toEqual(10);
+    expect(fitPage(1, 1, undefined, "width")).toEqual(1);
+  });
+  it("returns a scale based on the container", () => {
+    const container = { clientWidth: 1000, clientHeight: 1000 } as HTMLElement;
+    expect(fitPage(750, 1000, container, "width")).toEqual(1000 / 750);
+    expect(fitPage(750, 2000, container, "height")).toEqual(1000 / 2000);
   });
 });
