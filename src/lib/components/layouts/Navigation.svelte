@@ -22,7 +22,7 @@
   import Modal from "./Modal.svelte";
   import UserFeedback from "../forms/UserFeedback.svelte";
 
-  import { SIGN_IN_URL } from "@/config/config";
+  import { APP_URL, SIGN_IN_URL } from "@/config/config";
   import { remToPx } from "@/lib/utils/layout";
 
   const me = getContext<Writable<User>>("me");
@@ -37,6 +37,8 @@
   $: BREAKPOINTS = {
     BOTTOM_NAV: width < remToPx(36),
   };
+
+  $: sign_in_url = new URL(`?next=${APP_URL}`, SIGN_IN_URL);
 </script>
 
 {#if tipOfDay}<TipOfDay message={tipOfDay.content} />{/if}
@@ -53,7 +55,7 @@
           {/await}
           <UserMenu user={$me} />
         </Flex>
-        <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
+        <Button slot="signedOut" mode="primary" href={sign_in_url.href}>
           {$_("authSection.user.signIn")}
         </Button>
       </SignedIn>

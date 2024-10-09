@@ -55,7 +55,7 @@
           {:else}
             <div class="signupcontainer">
               <div class="signin">
-                <a href={sign_in_url}>{$_("homeTemplate.signIn")}</a>
+                <a href={sign_in_url.href}>{$_("homeTemplate.signIn")}</a>
               </div>
               <a href={SIGN_UP_URL + $page.url}>
                 <Button>{$_("homeTemplate.signUp")}</Button>
@@ -84,7 +84,7 @@
         {:else}
           <div class="signupcontainer">
             <div class="signin">
-              <a href={SIGN_IN_URL}>{$_("homeTemplate.signIn")}</a>
+              <a href={sign_in_url.href}>{$_("homeTemplate.signIn")}</a>
             </div>
             <a href={SIGN_UP_URL}>
               <Button>{$_("homeTemplate.signUp")}</Button>
