@@ -11,7 +11,6 @@
     Organization16,
   } from "svelte-octicons";
 
-  import { SQUARELET_BASE } from "@/config/config";
   import Button from "../common/Button.svelte";
   import CreditMeter, {
     formatResetDate,
@@ -19,19 +18,15 @@
   import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuInsert from "@/common/MenuInsert.svelte";
+  import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import PremiumIcon from "@/common/icons/Premium.svelte";
 
-  import {
-    getUpgradeUrl,
-    getUserName,
-    inMyOrg,
-    setOrg,
-  } from "$lib/api/accounts";
+  import { SQUARELET_BASE } from "@/config/config";
+  import { getUpgradeUrl, getUserName, setOrg } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
   import { getCsrfToken } from "$lib/utils/api";
   import { remToPx } from "@/lib/utils/layout";
-  import SidebarGroup from "../sidebar/SidebarGroup.svelte";
 
   export let active_org: Org;
   export let orgs: Org[] = [];
@@ -39,10 +34,6 @@
   export let position = "bottom right";
 
   let width: number;
-
-  function isOrgAdmin(u: User) {
-    return u.admin_organizations.includes(active_org.id);
-  }
 
   $: isPremium = active_org.plan !== "Free";
   $: isPro = isPremium && active_org.individual;

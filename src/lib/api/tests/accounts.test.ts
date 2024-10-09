@@ -1,3 +1,5 @@
+import type { Org } from "../types";
+
 import {
   vi,
   test,
@@ -34,7 +36,6 @@ import {
   isUser,
   setOrg,
 } from "../accounts";
-import type { Org } from "../types";
 
 describe("getMe", async () => {
   let mockFetch;
