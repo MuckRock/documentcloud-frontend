@@ -150,7 +150,7 @@
     isSupported,
     isWithinSizeLimit,
   } from "$lib/utils/files";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
   import { getCurrentUser } from "$lib/utils/permissions";
 
   export let csrf_token = "";

@@ -8,7 +8,7 @@
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Logo from "../common/Logo.svelte";
-  import Tooltip from "@/common/Tooltip.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
 
   export let canonicalUrl: string;
   export let downloadUrl: string = "";

@@ -98,13 +98,12 @@
   }
 
   .tooltip {
-    position: fixed;
     font-weight: normal;
     font-size: 14px;
     opacity: 0;
     pointer-events: none;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
+    background: var(--gray-5);
+    color: var(--gray-1);
     line-height: 1.2em;
     padding: 0.3em 0.8em;
     border-radius: 3px;

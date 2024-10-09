@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Tooltip from "./Tooltip.svelte";
+  import Tooltip from "../lib/components/common/Tooltip.svelte";
 
   export let href: string | null = null;
   export let external = false;

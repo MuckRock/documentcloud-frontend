@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import Checkbox from "../../common/Checkbox.svelte";
   import Flex from "../../common/Flex.svelte";
-  import Tooltip from "../../common/Tooltip.svelte";
+  import Tooltip from "../lib/components/common/Tooltip.svelte";
   import Dropdown from "../../common/Dropdown.svelte";
   import Paginator from "../../lib/components/common/Paginator.svelte";
 
