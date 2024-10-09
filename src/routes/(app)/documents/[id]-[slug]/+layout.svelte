@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { Document, Note, ViewerMode } from "$lib/api/types";
 
-  import "@/style/kit.css";
-
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
@@ -32,25 +30,25 @@
   {#if document.noindex || document.admin_noindex}
     <meta name="robots" content="noindex" />
   {/if}
-  <!-- Social cards -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="og:url" content={canonical_url} />
-  <meta property="og:url" content={canonical_url} />
-  <meta property="og:title" content={document.title} />
-  <title>{document.title} - DocumentCloud</title>
+  <title>{document.title} | DocumentCloud</title>
   <link
     rel="alternate"
     type="application/json+oembed"
     href={embedUrl(document.canonical_url).href}
     title={document.title}
   />
-  {#if document?.description?.trim().length > 0}
+  {#if document.description?.trim().length > 0}
+    <meta name="description" content={document.description} />
     <meta property="og:description" content={document.description} />
   {/if}
   <meta
     property="og:image"
     content={pageImageUrl(document, 0, "normal").href}
   />
+  <!-- Social cards -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content={canonical_url} />
+  <meta property="og:title" content={document.title} />
 </svelte:head>
 
 <slot />

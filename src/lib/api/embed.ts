@@ -8,7 +8,9 @@ import { BASE_API_URL } from "@/config/config.js";
  * @export
  */
 export function embedUrl(url: URL | string): URL {
-  return new URL(`oembed/?url=${url.toString()}`, BASE_API_URL);
+  const endpoint = new URL("oembed/", BASE_API_URL);
+  endpoint.searchParams.set("url", url.toString());
+  return endpoint;
 }
 
 /**

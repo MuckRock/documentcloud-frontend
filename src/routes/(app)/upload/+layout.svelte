@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "@/style/kit.css";
-
   import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
   import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
