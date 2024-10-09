@@ -90,7 +90,7 @@
 
 <style>
   .anchor {
-    display: inline-block;
+    display: flex;
   }
   .arrow {
     position: absolute;
