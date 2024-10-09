@@ -167,6 +167,10 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     border: 1px solid var(--gray-2, #cbcbcb);
     background: var(--white, #fff);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    /* Constrain tall documents */
+    max-height: 4.875rem;
+    object-fit: cover;
+    object-fit: top center;
   }
 
   .thumbnail .tabs {
