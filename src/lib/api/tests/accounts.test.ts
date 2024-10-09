@@ -1,4 +1,13 @@
-import { vi, test, describe, it, expect, beforeEach, afterEach } from "vitest";
+import {
+  vi,
+  test,
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  type Mock,
+} from "vitest";
 
 import {
   APP_URL,
@@ -21,7 +30,11 @@ import {
   orgUsers,
   alphabetizeUsers,
   inMyOrg,
+  isOrg,
+  isUser,
+  setOrg,
 } from "../accounts";
+import type { Org } from "../types";
 
 describe("getMe", async () => {
   let mockFetch;
@@ -78,7 +91,32 @@ test("getOrg", async () => {
   );
 });
 
-test.todo("setOrg");
+test("setOrg", async () => {
+  const orgToSet = 2;
+  const mockFetch = vi.fn().mockImplementation(async () => ({
+    ok: true,
+    json: vi.fn().mockReturnValue({ ...fixtures.me, organization: orgToSet }),
+  }));
+  expect(await setOrg(orgToSet, "csrf_token", mockFetch)).toEqual({
+    data: {
+      ...fixtures.me,
+      organization: orgToSet,
+    },
+  });
+  expect(mockFetch).toHaveBeenCalledWith(
+    new URL(`users/me/?expand=organization`, BASE_API_URL),
+    {
+      body: `{"organization":${orgToSet}}`,
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+        Referer: APP_URL,
+        [CSRF_HEADER_NAME]: "csrf_token",
+      },
+      method: "PATCH",
+    },
+  );
+});
 
 test("userOrgs", async () => {
   const mockFetch = vi.fn().mockImplementation(async () => ({
@@ -176,7 +214,7 @@ describe("createMailkey", () => {
 });
 
 describe("destroyMailkey", () => {
-  let mockFetch;
+  let mockFetch: Mock;
   beforeEach(() => {
     mockFetch = vi.fn().mockImplementation(async () => ({
       ok: true,
@@ -201,13 +239,31 @@ describe("destroyMailkey", () => {
       },
     );
   });
+  it("returns false on bad status", async () => {
+    mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: false,
+    }));
+    expect(await destroyMailkey("token", mockFetch)).toBe(false);
+  });
   it("returns false on error", async () => {
     mockFetch = vi.fn().mockRejectedValue(new Error("Fetch Error"));
-    const resp = await destroyMailkey(mockFetch);
+    const resp = await destroyMailkey("token", mockFetch);
     expect(resp).toBe(false);
-    mockFetch = vi.fn().mockResolvedValue({ ok: false });
-    expect(await destroyMailkey(mockFetch)).toBe(false);
   });
+});
+
+test("isUser", () => {
+  expect(isUser(undefined)).toBe(false);
+  expect(isUser(null)).toBe(false);
+  expect(isUser(1)).toBe(false);
+  expect(isUser(fixtures.me)).toBe(true);
+});
+
+test("isOrg", () => {
+  expect(isOrg(undefined)).toBe(false);
+  expect(isOrg(null)).toBe(false);
+  expect(isOrg(1)).toBe(false);
+  expect(isOrg(fixtures.organization)).toBe(true);
 });
 
 test("isPremiumOrg", () => {
@@ -220,6 +276,8 @@ test("getCreditBalance", () => {
   expect(getCreditBalance(null)).toBeNull();
   expect(getCreditBalance(fixtures.freeOrg)).toBe(0);
   expect(getCreditBalance(fixtures.proOrg)).toBe(5500);
+  // handles missing props
+  expect(getCreditBalance({} as Org)).toBe(0);
 });
 
 test("alphabetizeUsers", () => {
