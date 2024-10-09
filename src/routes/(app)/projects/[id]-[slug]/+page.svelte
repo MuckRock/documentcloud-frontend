@@ -28,7 +28,7 @@
     rel="alternate"
     type="application/json+oembed"
     href={embed_url.href}
-    title={document.title}
+    title={project.title}
   />
   {#if project.description?.trim().length > 0}
     <meta name="description" content={project.description} />
