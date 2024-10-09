@@ -7,6 +7,7 @@
     title: "Components / Common / Tooltip",
     component: Tooltip,
     tags: ["autodocs"],
+    parameters: { layout: "centered" },
   };
 
   let args = {

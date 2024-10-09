@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { ComponentType } from "svelte";
+  import { writable } from "svelte/store";
   import {
     computePosition,
     flip,
@@ -8,8 +10,6 @@
     type Placement,
     type MiddlewareData,
   } from "@floating-ui/dom";
-  import { type ComponentType } from "svelte";
-  import { writable } from "svelte/store";
 
   export let caption: string | ComponentType;
   export let placement: Placement = "bottom";
@@ -17,8 +17,8 @@
   export let arrow = false;
 
   let anchor: HTMLDivElement;
-  let tooltip: HTMLDivElement;
   let arrowRef: HTMLDivElement;
+  let tooltip: HTMLDivElement;
   let tooltipCoords = writable({ x: 0, y: 0 });
 
   function positionArrow(placement: Placement, middlewareData: MiddlewareData) {
