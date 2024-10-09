@@ -24,8 +24,10 @@
 
   import { APP_URL, SIGN_IN_URL } from "@/config/config";
   import { remToPx } from "@/lib/utils/layout";
+  import { inMyOrg } from "$lib/api/accounts";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
-  const me = getContext<Writable<User>>("me");
+  const me = getCurrentUser();
   const org = getContext<Writable<Org>>("org");
   const tipOfDay = getContext<Flatpage>("tipOfDay");
   const user_orgs = getContext<Writable<Promise<Org[]>>>("user_orgs");
@@ -51,7 +53,11 @@
       <SignedIn>
         <Flex>
           {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-            <OrgMenu active_org={$org} {orgs} {users} />
+            <OrgMenu
+              active_org={$org}
+              {orgs}
+              users={inMyOrg($org.id, $me.id, users)}
+            />
           {/await}
           <UserMenu user={$me} />
         </Flex>

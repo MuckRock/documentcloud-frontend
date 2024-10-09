@@ -5,7 +5,7 @@
   import type { Writable } from "svelte/store";
   import { afterNavigate } from "$app/navigation";
   import { browser } from "$app/environment";
-  import { getCurrentUser } from "@/lib/utils/permissions";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
   let plausible;
   const user = getCurrentUser();

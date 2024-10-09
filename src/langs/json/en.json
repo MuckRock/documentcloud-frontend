@@ -500,7 +500,7 @@
       "signIn": "Sign in"
     },
     "premiumUpgrade": {
-      "title": "Premium",
+      "title": "Upgrade",
       "heading": "Go Pro with DocumentCloud’s premium tools",
       "orgHeading": "Power your team with DocumentCloud’s premium tools",
       "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
@@ -509,6 +509,9 @@
       "addons": "Explore premium add-ons",
       "orgs": "Join or start an organization",
       "cta": "Upgrade Plan"
+    },
+    "pro": {
+      "title": "Professional"
     },
     "org": {
       "avatar": "Avatar: {name}",

@@ -168,3 +168,21 @@ export async function destroyMailkey(
     return false;
   }
 }
+
+export function alphabetizeUsers(userA: User, userB: User) {
+  const aName = getUserName(userA);
+  const bName = getUserName(userB);
+  return aName.localeCompare(bName);
+}
+
+export function inMyOrg(orgId: number, myId: number, users?: User[]) {
+  // Sort by admin status, then username
+  const adminUsers =
+    users
+      ?.filter((u) => u.admin_organizations?.includes(orgId))
+      .sort(alphabetizeUsers) ?? [];
+  const regularUsers =
+    users?.filter((u) => !adminUsers.includes(u)).sort(alphabetizeUsers) ?? [];
+  // Remove me from the user list
+  return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
+}

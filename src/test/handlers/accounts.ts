@@ -19,7 +19,7 @@ import {
 } from "./utils";
 
 export const urls = {
-  users: createApiUrl("users/"),
+  users: createApiUrl("users/*"),
   me: createApiUrl("users/me/"),
   orgs: createApiUrl("organizations/"),
   org: createApiUrl("organizations/:id/*"),
