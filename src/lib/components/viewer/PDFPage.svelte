@@ -66,14 +66,6 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = false;
 
-  let editSection = false;
-  let pageNote = false;
-
-  function close() {
-    editSection = false;
-    pageNote = false;
-  }
-
   $: aspect = height / width;
   $: orientation = height > width ? "vertical" : "horizontal";
   $: numericScale = fitPage(width, height, container, scale);
