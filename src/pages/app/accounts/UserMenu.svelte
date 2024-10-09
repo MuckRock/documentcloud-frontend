@@ -8,11 +8,7 @@
 
   import { Paperclip16, Gear16, SignOut16, Person16 } from "svelte-octicons";
 
-  import {
-    SQUARELET_URL,
-    SIGN_IN_URL,
-    SIGN_OUT_URL,
-  } from "../../../api/auth.js";
+  import { SQUARELET_URL, SIGN_IN_URL, SIGN_OUT_URL } from "@/api/auth.js";
   import { showMailkeySelected } from "../../../manager/manager.js";
   import type { Maybe } from "../../../api/types/common";
   import type { User } from "../../../api/types/orgAndUser";

@@ -24,6 +24,7 @@
 
   import { SIGN_IN_URL } from "@/config/config";
   import { remToPx } from "@/lib/utils/layout";
+  import { inMyOrg } from "$lib/api/accounts";
 
   const me = getContext<Writable<User>>("me");
   const org = getContext<Writable<Org>>("org");
@@ -49,7 +50,11 @@
       <SignedIn>
         <Flex>
           {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-            <OrgMenu active_org={$org} {orgs} {users} />
+            <OrgMenu
+              active_org={$org}
+              {orgs}
+              users={inMyOrg($org.id, $me.id, users)}
+            />
           {/await}
           <UserMenu user={$me} />
         </Flex>

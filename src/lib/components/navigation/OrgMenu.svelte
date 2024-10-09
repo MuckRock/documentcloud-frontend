@@ -3,7 +3,13 @@
 
   import { invalidateAll } from "$app/navigation";
   import { _, locale } from "svelte-i18n";
-  import { ChevronDown12, ChevronUp12, Person16 } from "svelte-octicons";
+  import {
+    ChevronDown12,
+    ChevronUp12,
+    Person16,
+    People16,
+    Organization16,
+  } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import CreditMeter, {
@@ -15,10 +21,17 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import PremiumIcon from "@/common/icons/Premium.svelte";
 
-  import { getUpgradeUrl, getUserName, setOrg } from "$lib/api/accounts";
+  import {
+    getUpgradeUrl,
+    getUserName,
+    inMyOrg,
+    setOrg,
+  } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
   import { getCsrfToken } from "$lib/utils/api";
   import { remToPx } from "@/lib/utils/layout";
+  import SidebarGroup from "../sidebar/SidebarGroup.svelte";
+  import { SQUARELET_URL } from "@/api/auth";
 
   export let active_org: Org;
   export let orgs: Org[] = [];
@@ -27,8 +40,14 @@
 
   let width: number;
 
+  function isOrgAdmin(u: User) {
+    return u.admin_organizations.includes(active_org.id);
+  }
+
   $: isPremium = active_org.plan !== "Free";
+  $: isPro = isPremium && active_org.individual;
   $: upgrade_url = getUpgradeUrl(active_org).href;
+  $: otherOrgs = orgs.filter((org) => org.id !== active_org.id);
 
   // wrapping setOrg here
   async function switchOrg(org: Org) {
@@ -46,10 +65,17 @@
 <Dropdown id="org-menu" {position}>
   <svelte:fragment slot="title">
     {#if active_org.individual}
-      <SidebarItem>
-        <div class="premium">
-          <PremiumIcon />
-          {$_("authSection.premiumUpgrade.title")}
+      <SidebarItem --fill="var(--green-3)" --color="var(--green-5)">
+        <PremiumIcon slot="start" />
+        {isPro
+          ? $_("authSection.pro.title")
+          : $_("authSection.premiumUpgrade.title")}
+        <div class="dropdownArrow" slot="end">
+          {#if position.includes("bottom")}
+            <ChevronDown12 />
+          {:else}
+            <ChevronUp12 />
+          {/if}
         </div>
       </SidebarItem>
     {:else}
@@ -81,7 +107,9 @@
         <MenuInsert>
           <CreditMeter
             id="org-credits"
-            label={$_("authSection.credits.monthlyOrg")}
+            label={isPro
+              ? $_("authSection.credits.monthlyPro")
+              : $_("authSection.credits.monthlyOrg")}
             helpText={$_("authSection.credits.refreshOn", {
               values: {
                 date: formatResetDate(active_org.credit_reset_date, $locale),
@@ -111,35 +139,37 @@
       {/if}
 
       {#if users.length}
-        <p class="user-count">
-          {$_("authSection.org.userCount", { values: { n: users.length } })}
-        </p>
-        <ul class="user-list">
-          {#each users as user}
-            {@const href = searchUrl(userDocs(user)).href}
-            <li>
-              <SidebarItem
-                {href}
-                on:click={(e) => closeDropdown("organization")}
-              >
-                <svelte:fragment slot="start">
-                  {#if user.avatar_url}
-                    <img src={user.avatar_url} class="avatar" alt="" />
-                  {:else}
-                    <span class="icon"><Person16 /></span>
+        <SidebarGroup>
+          <SidebarItem slot="title">
+            <People16 slot="start" />
+            {$_("authSection.org.userCount", { values: { n: users.length } })}
+          </SidebarItem>
+          <ul class="user-list">
+            {#each users as user}
+              {@const href = searchUrl(userDocs(user)).href}
+              <li>
+                <SidebarItem
+                  {href}
+                  on:click={(e) => closeDropdown("organization")}
+                >
+                  <svelte:fragment slot="start">
+                    {#if user.avatar_url}
+                      <img src={user.avatar_url} class="avatar" alt="" />
+                    {:else}
+                      <span class="icon"><Person16 /></span>
+                    {/if}
+                  </svelte:fragment>
+                  <span class="username">{getUserName(user)}</span>
+                  {#if user.admin_organizations.includes(active_org.id)}
+                    <span class="badge">{$_("authSection.org.adminRole")}</span>
                   {/if}
-                </svelte:fragment>
-                <span class="username">{getUserName(user)}</span>
-                {#if user.admin_organizations.includes(active_org.id)}
-                  <span class="badge">{$_("authSection.org.adminRole")}</span>
-                {/if}
-              </SidebarItem>
-            </li>
-          {/each}
-        </ul>
+                </SidebarItem>
+              </li>
+            {/each}
+          </ul>
+        </SidebarGroup>
       {/if}
-
-      {#if orgs.length}
+      {#if otherOrgs.length}
         <p class="switch">
           {$_("authSection.org.changeOrg")}
         </p>
@@ -157,28 +187,24 @@
             <span class="arrow" slot="end"><ChevronDown12 /></span>
           </SidebarItem>
           <Menu>
-            {#each orgs as org}
-              <SidebarItem hover on:click={(e) => switchOrg(org)}>
-                {org.name}
+            {#each otherOrgs as otherOrg}
+              <SidebarItem hover on:click={(e) => switchOrg(otherOrg)}>
+                {otherOrg.name}
               </SidebarItem>
             {/each}
           </Menu>
         </Dropdown>
+      {:else}
+        <Button ghost href="{SQUARELET_URL}/organizations">
+          <Organization16 />
+          {$_("authSection.premiumUpgrade.orgs")}
+        </Button>
       {/if}
     </div>
   </Menu>
 </Dropdown>
 
 <style>
-  .premium {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    gap: 0.5rem;
-    color: var(--premium);
-  }
-
   .min-width {
     min-width: 20rem;
   }
@@ -219,11 +245,13 @@
     overflow-y: auto;
   }
 
-  .user-count,
   .switch {
-    font-size: 0.875em;
-    color: var(--gray-5);
-    margin: 0.25rem 0.5rem;
+    color: var(--gray-4);
+    margin: 1rem 0.5rem 0.25rem 0.5rem;
+    text-transform: uppercase;
+    font-size: var(--font-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.0625rem;
   }
 
   .avatar,
