@@ -8,17 +8,14 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import type {
     Document,
     Note as NoteType,
     Section,
     TextPosition,
-    ViewerMode,
   } from "$lib/api/types";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   // page parts
@@ -31,11 +28,15 @@ Selectable text can be rendered in one of two ways:
 
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
-  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
+  import {
+    isEmbedded,
+    getCurrentMode,
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { fitPage } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
-  export let pdf; // Promise<PDFDocumentProxy>
+  export let pdf: Promise<pdfjs.PDFDocumentProxy>;
 
   export let scale: number | "width" | "height";
   export let width: number;
@@ -47,11 +48,10 @@ Selectable text can be rendered in one of two ways:
   export let text: TextPosition[] = [];
 
   const embed = isEmbedded();
+  const mode = getCurrentMode();
 
   // make hidden things visible, for debugging
   export let debug = false;
-
-  const mode: Writable<ViewerMode> = getContext("currentMode");
 
   let canvas: HTMLCanvasElement;
   let container: HTMLElement;
@@ -106,28 +106,6 @@ Selectable text can be rendered in one of two ways:
 
   $: page_level_notes = notes?.filter((n) => isPageLevel(n)) ?? [];
   $: in_page_notes = notes?.filter((n) => !isPageLevel(n)) ?? [];
-
-  /**
-   * Return a numeric scale based on intrinsic page size and container size
-   * @param width Original document width
-   * @param height Original document height
-   * @param container
-   * @param scale
-   */
-  function fitPage(
-    width: number,
-    height: number,
-    container: HTMLElement,
-    scale: number | "width" | "height",
-  ): number {
-    if (typeof scale === "number") return scale;
-    if (!container) return 1;
-
-    // const [x1, y1, width, height] = page.view;
-    const { clientWidth, clientHeight } = container;
-
-    return scale === "width" ? clientWidth / width : clientHeight / height;
-  }
 
   async function render(
     page, // pdf.getPage
