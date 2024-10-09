@@ -113,7 +113,7 @@
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     box-shadow: var(--shadow-1);
-    z-index: var(--z-toast, 19);
+    z-index: var(--z-tooltip, 21);
     max-width: 16rem;
   }
 </style>
