@@ -11,28 +11,20 @@ import * as documents from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons";
 import { breadcrumbTrail } from "$lib/utils/index";
 
+import loadDocument from "$lib/load/document";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params, parent, depends, url }) {
-  const { data: document, error: err } = await documents.get(+params.id, fetch);
-
-  if (err) {
-    error(err.status, err.message);
-  }
-
-  if (!document) {
-    error(404, "Document not found");
-  }
+  let { document, text, asset_url, mode } = await loadDocument({
+    fetch,
+    params,
+    depends,
+    url,
+  });
 
   const canonical = new URL(document.canonical_url);
   if (document.slug !== params.slug) {
     redirect(302, canonical.pathname);
-  }
-
-  let mode: ViewerMode =
-    (url.searchParams.get("mode") as ViewerMode) ?? "document";
-
-  if (!documents.MODES.has(mode)) {
-    mode = documents.MODES[0];
   }
 
   if (!document.edit_access && !documents.READING_MODES.has(mode as ReadMode)) {
@@ -48,11 +40,11 @@ export async function load({ fetch, params, parent, depends, url }) {
   // stream this
   const pinnedAddons = getPinnedAddons(fetch);
 
-  depends(`document:${document.id}`);
-
   return {
     document,
     mode,
+    text,
+    asset_url,
     action,
     pinnedAddons,
     breadcrumbs,

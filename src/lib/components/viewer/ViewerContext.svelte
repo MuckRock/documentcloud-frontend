@@ -14,6 +14,7 @@ layouts, stories, and tests.
     Note,
     ViewerMode,
   } from "@/lib/api/types";
+  import { pdfUrl } from "@/lib/api/documents";
 
   export function getDocument(): Document {
     return getContext("document");
@@ -21,6 +22,10 @@ layouts, stories, and tests.
 
   export function getText(): Maybe<DocumentText> {
     return getContext("text");
+  }
+
+  export function getAssetUrl(): URL {
+    return getContext("asset_url");
   }
 
   export function isEmbedded(): boolean {
@@ -44,6 +49,7 @@ layouts, stories, and tests.
 <script lang="ts">
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;
+  export let asset_url: URL = pdfUrl(document);
   export let embed: boolean = false;
   export let page: number = 1;
   export let mode: ViewerMode = "document";
@@ -52,6 +58,7 @@ layouts, stories, and tests.
   // stores we need deeper in the component tree, available via context
   setContext("document", document);
   setContext("text", text);
+  setContext("asset_url", asset_url);
   setContext("embed", embed);
   setContext("currentPage", writable(page));
   setContext("activeNote", writable(note));
