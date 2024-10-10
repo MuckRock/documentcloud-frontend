@@ -9,7 +9,7 @@
   import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
-  import Dropdown from "@/common/Dropdown2.svelte";
+  import Dropdown from "@/lib/components/common/Dropdown.svelte";
   import EditSections from "$lib/components/forms/EditSections.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Menu from "@/common/Menu.svelte";

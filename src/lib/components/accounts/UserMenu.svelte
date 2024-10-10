@@ -3,7 +3,9 @@
 
   import { _ } from "svelte-i18n";
 
-  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Dropdown, {
+    closeDropdown,
+  } from "@/lib/components/common/Dropdown.svelte";
   import Mailkey from "./Mailkey.svelte";
   import Portal from "../layouts/Portal.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";

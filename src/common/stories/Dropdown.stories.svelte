@@ -1,7 +1,9 @@
 <script lang="ts" context="module">
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
-  import Dropdown, { closeDropdown } from "../Dropdown2.svelte";
+  import Dropdown, {
+    closeDropdown,
+  } from "../../lib/components/common/Dropdown.svelte";
   import Menu from "../Menu.svelte";
   import MenuTitle from "../MenuTitle.svelte";
   import MenuItem from "../MenuItem.svelte";

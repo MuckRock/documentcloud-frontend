@@ -27,7 +27,9 @@
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
 
-  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Dropdown, {
+    closeDropdown,
+  } from "@/lib/components/common/Dropdown.svelte";
   import Menu from "@/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import SidebarItem from "../../sidebar/SidebarItem.svelte";
@@ -87,7 +89,7 @@
         {/each}
       </div>
     {:else}
-      <Dropdown2 id="reading-mode" position="bottom left">
+      <Dropdown id="reading-mode" position="bottom left">
         <div class="toolbarItem" slot="title">
           <SidebarItem>
             <svelte:component this={icons[$mode]} slot="start" />
@@ -119,7 +121,7 @@
             {/each}
           {/if}
         </Menu>
-      </Dropdown2>
+      </Dropdown>
     {/if}
   </svelte:fragment>
   <Flex justify="end" slot="right">
@@ -132,14 +134,14 @@
       {/each}
     {/if}
     {#if BREAKPOINTS.SEARCH_MENU}
-      <Dropdown2 id="document-search" position="bottom right">
+      <Dropdown id="document-search" position="bottom right">
         <Button minW={false} ghost slot="title"
           ><Search16 /> {$_("common.search")}</Button
         >
         <Menu>
           <Search name="q" {query} />
         </Menu>
-      </Dropdown2>
+      </Dropdown>
     {:else}
       <Search name="q" {query} />
     {/if}

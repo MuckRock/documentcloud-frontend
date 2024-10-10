@@ -15,7 +15,9 @@
     Search16,
   } from "svelte-octicons";
 
-  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Dropdown, {
+    closeDropdown,
+  } from "@/lib/components/common/Dropdown.svelte";
   import Menu from "@/common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";

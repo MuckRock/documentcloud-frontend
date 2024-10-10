@@ -1,5 +1,5 @@
 <!--
-  Dropdown2.svelte
+  Dropdown.svelte
 
   Every dropdown has a required "id" property. This tracks its opened state.
 

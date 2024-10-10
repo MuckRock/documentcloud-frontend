@@ -1,8 +1,10 @@
 <script lang="ts">
   import { _, locale } from "svelte-i18n";
-  import { Check16, ChevronDown12, ChevronUp12 } from "svelte-octicons";
+  import { ChevronDown12, ChevronUp12 } from "svelte-octicons";
 
-  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Dropdown, {
+    closeDropdown,
+  } from "@/lib/components/common/Dropdown.svelte";
   import Menu from "@/common/Menu.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 

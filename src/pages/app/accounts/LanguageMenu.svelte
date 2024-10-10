@@ -2,7 +2,9 @@
   import { _, locale } from "svelte-i18n";
   import Globe16 from "svelte-octicons/lib/Globe16.svelte";
 
-  import Dropdown, { closeDropdown } from "../../../common/Dropdown2.svelte";
+  import Dropdown, {
+    closeDropdown,
+  } from "../../../lib/components/common/Dropdown.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuItem from "../../../common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";

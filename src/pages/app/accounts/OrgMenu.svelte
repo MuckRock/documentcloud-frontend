@@ -3,7 +3,7 @@
   import Organization16 from "svelte-octicons/lib/Organization16.svelte";
 
   import type { User, Org } from "../../../api/types/orgAndUser";
-  import Dropdown from "../../../common/Dropdown2.svelte";
+  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
   import Menu from "../../../common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Loader from "../../../common/Loader.svelte";
