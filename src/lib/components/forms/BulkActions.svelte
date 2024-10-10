@@ -87,7 +87,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
           show(action);
         }}
       >
-        <svelte:component this={icons[action]} />
+        <svelte:component this={icons[action]} slot="start" />
         {label}
       </SidebarItem>
     {/each}

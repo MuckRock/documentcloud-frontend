@@ -132,7 +132,7 @@
 
 <style>
   .anchor {
-    display: inline-block;
+    display: inline-flex;
     cursor: pointer;
     border-radius: 0.5rem;
     padding: 0.075rem;
@@ -155,7 +155,6 @@
     position: absolute;
     margin: 0.25rem 0;
     width: min-content;
-    max-width: 18rem;
     z-index: var(--z-dropdown);
   }
   .overlay {

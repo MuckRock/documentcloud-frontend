@@ -178,7 +178,7 @@
       <svelte:fragment slot="footer">
         {#if !embed}
           <div class="toolbar" bind:clientWidth={width}>
-            <Flex>
+            <Flex align="center">
               <SidebarItem>
                 <label class="select-all">
                   <input
