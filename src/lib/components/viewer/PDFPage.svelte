@@ -43,8 +43,8 @@ Selectable text can be rendered in one of two ways:
   import EditNote from "../forms/EditNote.svelte";
   import EditSections from "../forms/EditSections.svelte";
   import Flex from "../common/Flex.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
   import Portal from "../layouts/Portal.svelte";

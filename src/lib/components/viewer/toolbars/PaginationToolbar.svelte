@@ -12,8 +12,8 @@
   import Dropdown from "@/lib/components/common/Dropdown.svelte";
   import EditSections from "$lib/components/forms/EditSections.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";

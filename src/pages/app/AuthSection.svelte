@@ -2,7 +2,7 @@
   import { _, locale } from "svelte-i18n";
 
   import Link from "../../router/Link.svelte";
-  import Menu from "../../common/Menu.svelte";
+  import Menu from "../../lib/components/common/Menu.svelte";
   import MenuItem from "../../common/MenuItem.svelte";
   import Dropdown from "../../common/Dropdown.svelte";
 

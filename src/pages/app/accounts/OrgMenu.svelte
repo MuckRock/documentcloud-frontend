@@ -4,7 +4,7 @@
 
   import type { User, Org } from "../../../api/types/orgAndUser";
   import Dropdown from "../../../lib/components/common/Dropdown.svelte";
-  import Menu from "../../../common/Menu.svelte";
+  import Menu from "../../../lib/components/common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Loader from "../../../common/Loader.svelte";
   import OrgMemberList from "./OrgMemberList.svelte";
@@ -20,7 +20,7 @@
   } from "../../../api/orgAndUser";
   import OrgPicker from "./OrgPicker.svelte";
   import PremiumMenu from "./PremiumMenu.svelte";
-  import MenuInsert from "../../../common/MenuInsert.svelte";
+  import MenuInsert from "../../../lib/components/common/MenuInsert.svelte";
   import CreditMeter, {
     formatResetDate,
   } from "../../../premium-credits/CreditMeter.svelte";

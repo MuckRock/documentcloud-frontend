@@ -16,7 +16,7 @@
     ChevronUp12,
     SignOut16,
   } from "svelte-octicons";
-  import Menu from "@/common/Menu.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
 
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
   import Avatar from "./Avatar.svelte";

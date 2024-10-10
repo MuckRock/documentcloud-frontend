@@ -24,7 +24,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Dropdown, {
     closeDropdown,
   } from "@/lib/components/common/Dropdown.svelte";
-  import Menu from "@/common/Menu.svelte";
+  import Menu from "@/lib/components/common/Menu.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";

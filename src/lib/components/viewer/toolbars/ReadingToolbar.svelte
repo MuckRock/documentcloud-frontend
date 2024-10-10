@@ -23,6 +23,8 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
@@ -30,8 +32,6 @@
   import Dropdown, {
     closeDropdown,
   } from "@/lib/components/common/Dropdown.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
   import SidebarItem from "../../sidebar/SidebarItem.svelte";
 
   import { remToPx } from "$lib/utils/layout";

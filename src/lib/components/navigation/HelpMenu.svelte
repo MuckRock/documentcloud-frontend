@@ -18,7 +18,7 @@
   import Dropdown, {
     closeDropdown,
   } from "@/lib/components/common/Dropdown.svelte";
-  import Menu from "@/common/Menu.svelte";
+  import Menu from "@/lib/components/common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";
 

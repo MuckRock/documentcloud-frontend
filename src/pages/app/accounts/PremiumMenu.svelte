@@ -4,8 +4,8 @@
   import Dropdown, {
     closeDropdown,
   } from "../../../lib/components/common/Dropdown.svelte";
-  import Menu from "../../../common/Menu.svelte";
-  import MenuItem from "../../../common/MenuItem.svelte";
+  import Menu from "../../../lib/components/common/Menu.svelte";
+  import MenuItem from "../../../lib/components/common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import Button from "../../../common/Button.svelte";
   import Premium from "../../../common/icons/Premium.svelte";
@@ -17,7 +17,7 @@
   import { Plug16, Organization16 } from "svelte-octicons";
   import { SQUARELET_URL } from "../../../api/auth";
   import type { Org } from "../../../api/types/orgAndUser";
-  import MenuInsert from "../../../common/MenuInsert.svelte";
+  import MenuInsert from "../../../lib/components/common/MenuInsert.svelte";
   import {
     isPremiumOrg,
     // triggerCreditPurchaseFlow,
