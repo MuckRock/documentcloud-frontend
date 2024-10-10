@@ -9,6 +9,8 @@
 
   $: document = data.document;
   $: mode = data.mode;
+  $: text = data.text;
+  $: asset_url = data.asset_url;
   $: canonical_url = canonicalUrl(document).href;
 </script>
 
@@ -40,6 +42,6 @@
   <meta property="og:title" content={document.title} />
 </svelte:head>
 
-<ViewerContext {document} {mode}>
+<ViewerContext {document} {mode} {text} {asset_url}>
   <slot />
 </ViewerContext>

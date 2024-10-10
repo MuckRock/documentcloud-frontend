@@ -13,26 +13,16 @@ import * as documents from "$lib/api/documents";
 import type { ViewerMode, ReadMode } from "$lib/api/types";
 import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed.js";
 
+import loadDocument from "$lib/load/document";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, url, params, depends }) {
-  const { data: document, error: err } = await documents.get(+params.id, fetch);
-
-  if (err) {
-    return error(err.status, err.message);
-  }
-
-  if (!document) {
-    return error(404, "Document not found");
-  }
-
-  depends(`document:${document.id}`);
-
-  let mode: ViewerMode =
-    (url.searchParams.get("mode") as ViewerMode) ?? "document";
-
-  if (!documents.MODES.has(mode)) {
-    mode = documents.MODES[0];
-  }
+  let { document, text, asset_url, mode } = await loadDocument({
+    fetch,
+    url,
+    params,
+    depends,
+  });
 
   // embeds are only readable
   // not sure if there's a better way to lie to typescript here
@@ -45,6 +35,8 @@ export async function load({ fetch, url, params, depends }) {
   return {
     document,
     mode,
+    text,
+    asset_url,
     settings,
   };
 }
