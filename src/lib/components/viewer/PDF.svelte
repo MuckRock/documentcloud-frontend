@@ -95,6 +95,11 @@
 >
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
+    {#if sections[n]}
+      <h3 class="section">
+        {sections[n].title}
+      </h3>
+    {/if}
     <PdfPage
       {document}
       {page_number}
@@ -103,7 +108,6 @@
       {width}
       {height}
       {query}
-      section={sections[n]}
       notes={notes[n]}
     />
   {/each}
@@ -127,5 +131,13 @@
   .lg.pages {
     padding: 4.5rem;
     gap: 2.25rem;
+  }
+  .section {
+    color: var(--gray-4);
+    font-weight: var(--font-semibold);
+    max-width: 66ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>
