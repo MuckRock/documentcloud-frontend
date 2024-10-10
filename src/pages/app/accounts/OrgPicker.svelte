@@ -1,9 +1,7 @@
 <script lang="ts">
   import { Organization16 } from "svelte-octicons";
 
-  import Dropdown, {
-    closeDropdown,
-  } from "../../../lib/components/common/Dropdown.svelte";
+  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
   import Menu from "../../../lib/components/common/Menu.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
   import MenuItem from "../../../lib/components/common/MenuItem.svelte";
@@ -20,7 +18,7 @@
 <div class="container">
   <p class="orgSelectLabel">Switch organization</p>
   <div class="picker">
-    <Dropdown id="orgSelect" border={true}>
+    <Dropdown border={true}>
       <MenuTitle slot="title" label={activeOrg.name}>
         <span slot="icon">
           {#if activeOrg.avatar_url}
@@ -30,14 +28,14 @@
           {/if}
         </span>
       </MenuTitle>
-      <Menu>
+      <Menu let:close slot="default">
         {#if loading}
           <Loader active center />
         {:else}
           {#each orgOptions as org}
             <MenuItem
               on:click={() => {
-                closeDropdown("orgSelect");
+                close();
                 handleChange?.(org);
               }}
               selected={org.id === activeOrg.id}

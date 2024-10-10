@@ -52,8 +52,8 @@
 </script>
 
 {#await getOrgPromise}
-  <Dropdown id="organization">
-    <MenuTitle slot="title" label="Loading…">
+  <Dropdown>
+    <MenuTitle slot="anchor" label="Loading…">
       <Loader active center slot="icon" />
     </MenuTitle>
     <Menu>
@@ -70,8 +70,8 @@
       {/await}
     </PremiumMenu>
   {:else}
-    <Dropdown id="organization">
-      <MenuTitle slot="title" label={activeOrg.name}>
+    <Dropdown>
+      <MenuTitle slot="anchor" label={activeOrg.name}>
         <span slot="icon">
           {#if activeOrg.avatar_url}
             <img src={activeOrg.avatar_url} class="orgAvatar" alt="" />

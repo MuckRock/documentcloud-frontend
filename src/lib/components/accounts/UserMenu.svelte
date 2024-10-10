@@ -4,11 +4,11 @@
   import { _ } from "svelte-i18n";
 
   import Dropdown, {
-    closeDropdown,
-  } from "@/lib/components/common/Dropdown.svelte";
-  import Mailkey from "./Mailkey.svelte";
-  import Portal from "../layouts/Portal.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+    type Placement,
+  } from "$lib/components/common/Dropdown.svelte";
+
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import {
     ChevronDown12,
     Gear16,
@@ -17,6 +17,7 @@
     SignOut16,
   } from "svelte-octicons";
   import Menu from "$lib/components/common/Menu.svelte";
+  import Mailkey from "./Mailkey.svelte";
 
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
   import Avatar from "./Avatar.svelte";
@@ -24,14 +25,9 @@
   import { getUserName } from "@/lib/api/accounts";
 
   export let user: User;
-  export let position = "bottom right";
+  export let position: Placement = "bottom-end";
 
   let width: number;
-
-  const dropdownId = "user-menu";
-  function close() {
-    closeDropdown(dropdownId);
-  }
 
   let mailkeyOpen = false;
   function setMailkeyOpen(open?: boolean) {
@@ -41,8 +37,8 @@
 
 <svelte:window bind:innerWidth={width} />
 
-<Dropdown id={dropdownId} {position}>
-  <SidebarItem slot="title" title="Open Menu">
+<Dropdown {position}>
+  <SidebarItem slot="anchor" title="Open Menu">
     <Avatar {user} slot="start" />
     {#if width > remToPx(48)}
       <span class="name">{getUserName(user)}</span>
@@ -55,7 +51,7 @@
       {/if}
     </div>
   </SidebarItem>
-  <Menu>
+  <Menu slot="default" let:close>
     <SidebarItem href={SQUARELET_BASE} target="_blank" on:click={close}>
       <Gear16 slot="start" />
       {$_("authSection.user.acctSettings")}

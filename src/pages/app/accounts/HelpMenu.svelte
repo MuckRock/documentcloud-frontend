@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
 
   import Link from "../../../router/Link.svelte";
-  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
@@ -20,7 +20,7 @@
 </script>
 
 <!-- Help Menu -->
-<Dropdown id="help" position="right">
+<Dropdown position="bottom-end">
   <MenuTitle slot="title" label={$_("authSection.help.title")}>
     <div class="icon" slot="icon"><Question16 /></div>
   </MenuTitle>

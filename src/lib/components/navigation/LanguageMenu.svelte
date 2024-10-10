@@ -3,7 +3,7 @@
   import { ChevronDown12, ChevronUp12 } from "svelte-octicons";
 
   import Dropdown, {
-    closeDropdown,
+    type Placement,
   } from "@/lib/components/common/Dropdown.svelte";
   import Menu from "@/lib/components/common/Menu.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
@@ -11,7 +11,7 @@
   import langs from "@/langs/langs.json";
   import Flex from "../common/Flex.svelte";
 
-  export let position = "bottom right";
+  export let position: Placement = "bottom-end";
 
   $: currentLang = langs.find(([_, code]) => code == $locale) ?? langs[0];
 
@@ -25,8 +25,8 @@
 
 {#if langs.length > 1}
   <!-- Language Menu -->
-  <Dropdown id="language" {position}>
-    <SidebarItem slot="title">
+  <Dropdown {position}>
+    <SidebarItem slot="anchor">
       <span class="flag" slot="start">{currentLang[2]}</span>
       <!-- <span class="lang">{currentLang[0]}</span> -->
       <div class="dropdownArrow" slot="end">
@@ -37,12 +37,12 @@
         {/if}
       </div>
     </SidebarItem>
-    <Menu>
+    <Menu slot="default" let:close>
       {#each langs as [name, code, flag]}
         <SidebarItem
           on:click={() => {
             updateLanguage(code);
-            closeDropdown("language");
+            close();
           }}
           hover
           active={code === $locale}

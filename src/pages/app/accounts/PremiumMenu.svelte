@@ -1,9 +1,7 @@
 <script lang="ts">
   import { _, locale } from "svelte-i18n";
 
-  import Dropdown, {
-    closeDropdown,
-  } from "../../../lib/components/common/Dropdown.svelte";
+  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
   import Menu from "../../../lib/components/common/Menu.svelte";
   import MenuItem from "../../../lib/components/common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
@@ -26,11 +24,6 @@
 
   export let org: Org;
 
-  const dropdownId = "organization";
-  function close() {
-    closeDropdown(dropdownId);
-  }
-
   $: isPremium = isPremiumOrg(org);
   $: ({
     monthly_credits,
@@ -40,13 +33,13 @@
   } = org);
 </script>
 
-<Dropdown id={dropdownId} titleColor="premium">
-  <span class="premium" slot="title">
+<Dropdown>
+  <span class="premium" slot="anchor">
     <MenuTitle label={$_("authSection.premiumUpgrade.title")}>
       <div class="whiteBg" slot="icon"><Premium size={1.5} /></div>
     </MenuTitle>
   </span>
-  <Menu>
+  <Menu slot="default" let:close>
     {#if isPremium}
       <MenuInsert>
         <CreditMeter

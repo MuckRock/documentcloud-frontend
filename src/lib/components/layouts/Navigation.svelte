@@ -95,17 +95,17 @@
     <SignedIn>
       <Flex>
         {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-          <OrgMenu position="top left" active_org={$org} {orgs} {users} />
+          <OrgMenu position="top-start" active_org={$org} {orgs} {users} />
         {/await}
-        <UserMenu position="top left" user={$me} />
+        <UserMenu position="top-start" user={$me} />
       </Flex>
       <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
         {$_("authSection.user.signIn")}
       </Button>
     </SignedIn>
     <Flex>
-      <LanguageMenu position="top right" />
-      <HelpMenu position="top right" />
+      <LanguageMenu position="top-end" />
+      <HelpMenu position="top-end" />
     </Flex>
   </nav>
 {/if}

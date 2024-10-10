@@ -37,9 +37,7 @@ Selectable text can be rendered in one of two ways:
   // writable ui
   import Action from "../common/Action.svelte";
   import Button from "../common/Button.svelte";
-  import Dropdown, {
-    closeDropdown,
-  } from "@/lib/components/common/Dropdown.svelte";
+  import Dropdown from "@/lib/components/common/Dropdown.svelte";
   import EditNote from "../forms/EditNote.svelte";
   import EditSections from "../forms/EditSections.svelte";
   import Flex from "../common/Flex.svelte";
@@ -296,14 +294,14 @@ Selectable text can be rendered in one of two ways:
           {/if}
         </Flex>
       {:else}
-        <Dropdown id="{id}-actions" position="bottom right">
-          <Button minW={false} slot="title" ghost mode="primary">
+        <Dropdown position="bottom-end">
+          <Button minW={false} slot="anchor" ghost mode="primary">
             <KebabHorizontal16 />
           </Button>
-          <Menu>
+          <Menu slot="default" let:close>
             <MenuItem
               on:click={() => {
-                closeDropdown(`${id}-actions`);
+                close();
                 pageShareOpen = true;
               }}
             >
@@ -313,7 +311,7 @@ Selectable text can be rendered in one of two ways:
             {#if document.edit_access}
               <MenuItem
                 on:click={() => {
-                  closeDropdown(`${id}-actions`);
+                  close();
                   pageNote = true;
                 }}
               >
@@ -323,7 +321,7 @@ Selectable text can be rendered in one of two ways:
 
               <MenuItem
                 on:click={() => {
-                  closeDropdown(`${id}-actions`);
+                  close();
                   editSection = true;
                 }}
               >

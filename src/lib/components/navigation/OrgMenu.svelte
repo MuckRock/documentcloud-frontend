@@ -16,7 +16,7 @@
     formatResetDate,
   } from "@/premium-credits/CreditMeter.svelte";
   import Dropdown, {
-    closeDropdown,
+    type Placement,
   } from "@/lib/components/common/Dropdown.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuInsert from "$lib/components/common/MenuInsert.svelte";
@@ -33,7 +33,7 @@
   export let active_org: Org;
   export let orgs: Org[] = [];
   export let users: User[] = [];
-  export let position = "bottom right";
+  export let position: Placement = "bottom-end";
 
   let width: number;
 
@@ -48,15 +48,13 @@
 
     await setOrg(org.id, csrf_token);
     await invalidateAll();
-
-    closeDropdown("org-menu");
   }
 </script>
 
 <svelte:window bind:innerWidth={width} />
 
-<Dropdown id="org-menu" {position}>
-  <svelte:fragment slot="title">
+<Dropdown {position}>
+  <svelte:fragment slot="anchor">
     {#if active_org.individual}
       <SidebarItem --fill="var(--green-3)" --color="var(--green-5)">
         <PremiumIcon slot="start" />
@@ -94,7 +92,7 @@
       </SidebarItem>
     {/if}
   </svelte:fragment>
-  <Menu>
+  <Menu slot="default" let:close>
     <div class="menu-inner" class:sm={width <= remToPx(32)}>
       {#if isPremium}
         <MenuInsert>
@@ -141,10 +139,7 @@
             {#each users as user}
               {@const href = searchUrl(userDocs(user)).href}
               <li>
-                <SidebarItem
-                  {href}
-                  on:click={(e) => closeDropdown("organization")}
-                >
+                <SidebarItem {href} on:click={close}>
                   <svelte:fragment slot="start">
                     {#if user.avatar_url}
                       <img src={user.avatar_url} class="avatar" alt="" />
@@ -166,8 +161,8 @@
         <p class="switch">
           {$_("authSection.org.changeOrg")}
         </p>
-        <Dropdown id="org-switch">
-          <SidebarItem slot="title">
+        <Dropdown>
+          <SidebarItem slot="anchor">
             <div class="avatar" slot="start">
               <img
                 alt={$_("authSection.org.avatar", {
@@ -181,7 +176,13 @@
           </SidebarItem>
           <Menu>
             {#each otherOrgs as otherOrg}
-              <SidebarItem hover on:click={(e) => switchOrg(otherOrg)}>
+              <SidebarItem
+                hover
+                on:click={(e) => {
+                  switchOrg(otherOrg);
+                  close();
+                }}
+              >
                 {otherOrg.name}
               </SidebarItem>
             {/each}

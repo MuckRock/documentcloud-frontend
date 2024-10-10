@@ -70,18 +70,21 @@
 >
   <div class="sections">
     {#if showPDF && (sections || canEditSections)}
-      <Dropdown id="sections" position="top left" --offset="5px">
-        <div class="toolbarItem" slot="title">
+      <Dropdown position="top-start" --offset="5px">
+        <div class="toolbarItem" slot="anchor">
           <SidebarItem>
             <ListOrdered16 slot="start" />
             Sections
             <ChevronUp12 slot="end" />
           </SidebarItem>
         </div>
-        <Menu>
+        <Menu slot="default" let:close>
           {#each sections as section}
-            <MenuItem on:click={() => gotoPage(section.page_number)}
-              >{section.title}</MenuItem
+            <MenuItem
+              on:click={() => {
+                gotoPage(section.page_number);
+                close();
+              }}>{section.title}</MenuItem
             >
           {:else}
             <Empty icon={ListOrdered24}>

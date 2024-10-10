@@ -1,9 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Dropdown, {
-    closeDropdown,
-  } from "../../../lib/components/common/Dropdown.svelte";
+  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
   import Menu from "../../../lib/components/common/Menu.svelte";
   import MenuItem from "../../../lib/components/common/MenuItem.svelte";
   import MenuTitle from "../../../common/MenuTitle.svelte";
@@ -16,16 +14,11 @@
   import type { User } from "../../../api/types/orgAndUser";
 
   export let user: Maybe<User>;
-
-  const dropdownId = "user";
-  function close() {
-    closeDropdown(dropdownId);
-  }
 </script>
 
 {#if user}
-  <Dropdown id={dropdownId}>
-    <MenuTitle slot="title" label={user.name ?? user.username}>
+  <Dropdown>
+    <MenuTitle slot="anchor" label={user.name ?? user.username}>
       <span slot="icon">
         {#if user.avatar_url}
           <img src={user.avatar_url} class="userAvatar" alt="" />
@@ -34,7 +27,7 @@
         {/if}
       </span>
     </MenuTitle>
-    <Menu>
+    <Menu slot="default" let:close>
       <MenuItem href={SQUARELET_URL} target="_blank" on:click={close}>
         <Gear16 slot="icon" />
         {$_("authSection.user.acctSettings")}
