@@ -71,3 +71,7 @@ export function pageNumber(page: string): number {
   const number = parseInt(match[1]);
   return number;
 }
+
+export function getQuery(url: URL, param: string = "q"): string {
+  return url.searchParams.get(param) ?? "";
+}
