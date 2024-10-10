@@ -3,7 +3,7 @@
 
   import Dropdown from "../../../lib/components/common/Dropdown.svelte";
   import Menu from "../../../lib/components/common/Menu.svelte";
-  import MenuTitle from "../../../common/MenuTitle.svelte";
+  import SidebarItem from "../../../lib/components/sidebar/SidebarItem.svelte";
   import MenuItem from "../../../lib/components/common/MenuItem.svelte";
   import Loader from "../../../common/Loader.svelte";
 
@@ -19,15 +19,16 @@
   <p class="orgSelectLabel">Switch organization</p>
   <div class="picker">
     <Dropdown border={true}>
-      <MenuTitle slot="title" label={activeOrg.name}>
-        <span slot="icon">
+      <SidebarItem slot="title">
+        <span slot="start">
           {#if activeOrg.avatar_url}
             <img src={activeOrg.avatar_url} class="orgAvatar" alt="" />
           {:else}
             <div class="orgIcon"><Organization16 /></div>
           {/if}
         </span>
-      </MenuTitle>
+        {activeOrg.name}
+      </SidebarItem>
       <Menu let:close slot="default">
         {#if loading}
           <Loader active center />

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
-  import Menu from "../../../lib/components/common/Menu.svelte";
-  import MenuItem from "../../../lib/components/common/MenuItem.svelte";
-  import MenuTitle from "../../../common/MenuTitle.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import { Paperclip16, Gear16, SignOut16, Person16 } from "svelte-octicons";
 
@@ -18,15 +18,16 @@
 
 {#if user}
   <Dropdown>
-    <MenuTitle slot="anchor" label={user.name ?? user.username}>
-      <span slot="icon">
+    <SidebarItem slot="anchor">
+      <span slot="start">
         {#if user.avatar_url}
           <img src={user.avatar_url} class="userAvatar" alt="" />
         {:else}
           <div class="userIcon"><Person16 /></div>
         {/if}
       </span>
-    </MenuTitle>
+      {user.name ?? user.username}
+    </SidebarItem>
     <Menu slot="default" let:close>
       <MenuItem href={SQUARELET_URL} target="_blank" on:click={close}>
         <Gear16 slot="icon" />

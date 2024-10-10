@@ -5,7 +5,7 @@
   import Dropdown from "$lib/components/common/Dropdown.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
-  import MenuTitle from "../../../common/MenuTitle.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import {
     CommentDiscussion16,
@@ -21,9 +21,10 @@
 
 <!-- Help Menu -->
 <Dropdown position="bottom-end">
-  <MenuTitle slot="title" label={$_("authSection.help.title")}>
-    <div class="icon" slot="icon"><Question16 /></div>
-  </MenuTitle>
+  <SidebarItem slot="anchor">
+    <Question16 slot="start" />
+    {$_("authSection.help.title")}
+  </SidebarItem>
   <Menu>
     <Link toUrl="/help/faq" color={true}>
       <MenuItem>

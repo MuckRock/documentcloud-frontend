@@ -1,10 +1,11 @@
 <script lang="ts">
   import { _, locale } from "svelte-i18n";
 
-  import Dropdown from "../../../lib/components/common/Dropdown.svelte";
-  import Menu from "../../../lib/components/common/Menu.svelte";
-  import MenuItem from "../../../lib/components/common/MenuItem.svelte";
-  import MenuTitle from "../../../common/MenuTitle.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
+  import MenuInsert from "$lib/components/common/MenuInsert.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import Button from "../../../common/Button.svelte";
   import Premium from "../../../common/icons/Premium.svelte";
   import CreditMeter, {
@@ -15,7 +16,7 @@
   import { Plug16, Organization16 } from "svelte-octicons";
   import { SQUARELET_URL } from "../../../api/auth";
   import type { Org } from "../../../api/types/orgAndUser";
-  import MenuInsert from "../../../lib/components/common/MenuInsert.svelte";
+
   import {
     isPremiumOrg,
     // triggerCreditPurchaseFlow,
@@ -35,9 +36,10 @@
 
 <Dropdown>
   <span class="premium" slot="anchor">
-    <MenuTitle label={$_("authSection.premiumUpgrade.title")}>
-      <div class="whiteBg" slot="icon"><Premium size={1.5} /></div>
-    </MenuTitle>
+    <SidebarItem>
+      <Premium size={1.5} slot="start" />
+      {$_("authSection.premiumUpgrade.title")}
+    </SidebarItem>
   </span>
   <Menu slot="default" let:close>
     {#if isPremium}
@@ -110,14 +112,6 @@
 <style>
   .premium {
     font-weight: 600;
-  }
-  .whiteBg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 1.5rem;
-    width: 1.5rem;
-    background: transparent;
   }
   .learnMore {
     font-size: 0.8em;
