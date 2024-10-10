@@ -44,7 +44,6 @@ Selectable text can be rendered in one of two ways:
 
   export let query: string = ""; // search query
   export let notes: NoteType[] = [];
-  export let section: Section = undefined; // one at most
   export let text: TextPosition[] = [];
 
   const embed = isEmbedded();
@@ -207,14 +206,6 @@ Selectable text can be rendered in one of two ways:
   }}
   bind:width={pageWidth}
 >
-  <svelte:fragment slot="title">
-    {#if section}
-      <h3 class="section">
-        {section.title}
-      </h3>
-    {/if}
-  </svelte:fragment>
-
   {#if page_level_notes.length}
     <div class="page-notes">
       {#each page_level_notes as note}
@@ -274,15 +265,6 @@ Selectable text can be rendered in one of two ways:
 </Page>
 
 <style>
-  .section {
-    color: var(--gray-4);
-    font-weight: var(--font-semibold);
-    max-width: 66ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
   .page-container {
     aspect-ratio: 1 / var(--aspect);
     margin: 0;
