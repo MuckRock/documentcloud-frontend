@@ -4,8 +4,11 @@
 
   It can use *either* a loaded PDF or a document image to render
   a document excerpt.
+
+  Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
+  import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api";
   import type { User } from "@/api/types/orgAndUser";
   import type { Document, Note, Sizes } from "$lib/api/types";
 
@@ -22,7 +25,7 @@
   import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
+  import { width, height, isPageLevel } from "$lib/api/notes";
   import { pageImageUrl } from "$lib/api/documents";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
@@ -30,15 +33,21 @@
   import { getUserName } from "@/lib/api/accounts";
   import {
     getCurrentMode,
+    getDocument,
+    getPDF,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
 
-  export let document: Document;
+  const document = getDocument();
+  const pdf = getPDF();
+  const embed = isEmbedded();
+  const mode = getCurrentMode();
+
   export let note: Note;
-  export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
-  export let embed = isEmbedded();
+
+  type AsyncPDF = typeof $pdf;
 
   const SIZE: Sizes = "large";
 
@@ -60,8 +69,6 @@
     },
   };
 
-  const mode = getCurrentMode();
-
   let canvas: HTMLCanvasElement;
   let renderTask: { promise: Promise<any> };
   let rendering: Promise<any>;
@@ -71,22 +78,27 @@
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
-  $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
+  $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
   $: edit_link = getViewerHref({ document, note, mode: "annotating" });
   $: canEdit = note.edit_access && !embed;
 
   onMount(() => {
-    rendering = render(canvas, document, pdf);
+    rendering = render(canvas, document, $pdf);
   });
 
-  async function render(canvas: HTMLCanvasElement, document: Document, pdf) {
+  async function render(
+    canvas: HTMLCanvasElement,
+    document: Document,
+    pdf: AsyncPDF,
+  ) {
     if (!canvas) return;
     if (rendering) {
       await rendering;
     }
 
     if (pdf) {
-      return renderPDF(canvas, pdf);
+      const resolvedPdf = await pdf;
+      return renderPDF(canvas, resolvedPdf);
     }
 
     if (document && !pdf) {
@@ -126,7 +138,7 @@
     });
   }
 
-  async function renderPDF(canvas: HTMLCanvasElement, pdf) {
+  async function renderPDF(canvas: HTMLCanvasElement, pdf: PDFDocumentProxy) {
     if (renderTask) {
       await renderTask.promise;
     }

@@ -3,16 +3,14 @@ A single page of a PDF document.
 This component exists to manage state and rendering for a single page,
 working with PDF.svelte.
 
+Assumes it's a child of a ViewerContext
+
 Selectable text can be rendered in one of two ways:
 - Extracted from the PDF page (preferred)
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import type {
-    Document,
-    Note as NoteType,
-    TextPosition,
-  } from "$lib/api/types";
+  import type { Note as NoteType, TextPosition } from "$lib/api/types";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { _ } from "svelte-i18n";
@@ -28,26 +26,23 @@ Selectable text can be rendered in one of two ways:
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
   import {
-    isEmbedded,
     getCurrentMode,
     getPDF,
+    getQuery,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { fitPage } from "@/lib/utils/viewer";
 
-  export let document: Document;
   export let page_number: number; // 1-indexed
 
   export let scale: number | "width" | "height";
   export let width: number;
   export let height: number;
-
-  export let query: string = ""; // search query
   export let notes: NoteType[] = [];
   export let text: TextPosition[] = [];
 
-  const embed = isEmbedded();
   const mode = getCurrentMode();
   const pdf = getPDF();
+  const query = getQuery();
 
   // make hidden things visible, for debugging
   export let debug = false;
@@ -194,9 +189,7 @@ Selectable text can be rendered in one of two ways:
 <svelte:document on:visibilitychange={onVisibilityChange} />
 
 <Page
-  {document}
   {page_number}
-  {embed}
   wide={scale === "width"}
   tall={scale === "height"}
   track
@@ -209,7 +202,7 @@ Selectable text can be rendered in one of two ways:
   {#if page_level_notes.length}
     <div class="page-notes">
       {#each page_level_notes as note}
-        <Note {document} {note} />
+        <Note {note} />
       {/each}
     </div>
   {/if}
@@ -245,14 +238,7 @@ Selectable text can be rendered in one of two ways:
     {/if}
 
     {#await $pdf then pdf}
-      <AnnotationLayer
-        {document}
-        {mode}
-        {pdf}
-        notes={in_page_notes}
-        page_number={page_number - 1}
-        {embed}
-      />
+      <AnnotationLayer notes={in_page_notes} page_number={page_number - 1} />
     {/await}
 
     {#if redactions_for_page.length > 0 || $mode === "redacting"}

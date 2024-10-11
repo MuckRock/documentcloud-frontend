@@ -36,20 +36,19 @@
 
 <Story name="fit width" parameters={{ layout: "fullscreen" }}>
   <ViewerContext {document} pdf={writable(load(url))}>
-    <PdfPage {document} page_number={1} scale="width" {width} {height} />
+    <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="embedded text">
   <ViewerContext {document} pdf={writable(load(url))}>
-    <PdfPage {document} page_number={1} scale={1.5} {width} {height} />
+    <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="server text">
   <ViewerContext {document} pdf={writable(load(url))}>
     <PdfPage
-      {document}
       page_number={1}
       scale={1.5}
       text={textPositions}
@@ -61,12 +60,12 @@
 
 <Story name="search results">
   <ViewerContext {document} pdf={writable(load(url))}>
-    <PdfPage {document} page_number={1} scale={1.5} {width} {height} {query} />
+    <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }}>
   <ViewerContext {document} pdf={writable(load(url))}>
-    <PdfPage {document} page_number={1} scale="width" {width} {height} />
+    <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>

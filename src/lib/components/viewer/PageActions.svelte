@@ -7,7 +7,7 @@
     KebabHorizontal16,
   } from "svelte-octicons";
 
-  import type { Document, Section } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
   import Action from "$lib/components/common/Action.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import EditNote from "$lib/components/forms/EditNote.svelte";
@@ -20,11 +20,11 @@
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import { remToPx } from "$lib/utils/layout";
+  import { getSections } from "$lib/utils/viewer";
 
   export let document: Document;
   export let page_number: number;
   export let pageWidth: number;
-  export let section: Section = undefined; // one at most
 
   export let canEdit: boolean = false;
 
@@ -33,9 +33,10 @@
   let editSection = false;
 
   $: id = `page_${page_number}`;
+  $: section = getSections(document)[page_number];
 </script>
 
-<div>
+<div class="page-actions">
   {#if pageWidth > remToPx(32) || !canEdit}
     <Flex align="center">
       <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
@@ -137,3 +138,9 @@
     </Modal>
   </Portal>
 {/if}
+
+<style>
+  .page-actions {
+    flex: 0 0 auto;
+  }
+</style>

@@ -1,28 +1,23 @@
 <!--
   @component
   Text wraps a list of Page components with plain text contents
+  
+  Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Document, DocumentText } from "$lib/api/types";
+  import type { DocumentText } from "$lib/api/types";
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { highlight } from "$lib/utils/search";
 
   import Page from "./Page.svelte";
-  import {
-    getDocument,
-    getText,
-    getCurrentPage,
-    isEmbedded,
-  } from "./ViewerContext.svelte";
+  import { getText, getCurrentPage, getQuery } from "./ViewerContext.svelte";
 
-  export let text: DocumentText = getText();
-  export let document: Document = getDocument();
-  export let query: string = ""; // search query
   export let zoom: number = 1;
 
-  const embed = isEmbedded();
+  const text: DocumentText = getText();
+  const query = getQuery();
   const currentPage = getCurrentPage();
 
   onMount(async () => {
@@ -34,7 +29,7 @@
 
 <div class="textPages" style:--zoom={zoom}>
   {#each text.pages as { page, contents }}
-    <Page {document} {embed} page_number={page + 1} mode="text" track>
+    <Page page_number={page + 1} track>
       <pre>
         {@html highlight(contents, query)}
       </pre>

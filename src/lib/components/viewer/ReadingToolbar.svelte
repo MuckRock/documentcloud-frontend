@@ -1,12 +1,9 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
+<!-- @component
+Assumes it's a child of a ViewerContext
+ -->
 
-  import type {
-    Document,
-    ReadMode,
-    ViewerMode,
-    WriteMode,
-  } from "$lib/api/types";
+<script lang="ts">
+  import type { ReadMode, WriteMode } from "$lib/api/types";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -33,15 +30,19 @@
 
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
-  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
-
-  export let document: Document;
-  export let query: string = "";
-  export let embed = isEmbedded();
+  import {
+    getCurrentMode,
+    getDocument,
+    getQuery,
+    isEmbedded,
+  } from "$lib/components/viewer/ViewerContext.svelte";
 
   let width: number;
 
-  const mode: Writable<ViewerMode> = getContext("currentMode");
+  const document = getDocument();
+  const query = getQuery();
+  const mode = getCurrentMode();
+  const embed = isEmbedded();
 
   $: canWrite = !embed && document.edit_access;
   $: BREAKPOINTS = {

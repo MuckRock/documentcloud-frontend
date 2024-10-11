@@ -6,6 +6,8 @@ This layer needs to coordinate between note coordinates
 and instances of the EditNote form.
 
 Only one note can be added/edited at a time.
+
+Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
   import type { BBox, Document, Note as NoteType } from "$lib/api/types";
@@ -25,21 +27,23 @@ Only one note can be added/edited at a time.
   import {
     getActiveNote,
     getCurrentMode,
+    getDocument,
+    getPDF,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
 
-  export let document: Document;
-  export let notes: NoteType[] = [];
-  export let pdf = null; // PDFDocumentProxy
   export let scale = 1.5;
-  export let embed = isEmbedded();
-  export let mode = getCurrentMode();
 
-  export let page_number: number; // zero-indexed
-
+  const document = getDocument();
+  const pdf = getPDF();
+  const embed = isEmbedded();
+  const mode = getCurrentMode();
   const activeNote = getActiveNote();
+
+  export let notes: NoteType[] = [];
+  export let page_number: number; // zero-indexed
 
   let container: HTMLElement;
   let newNote: Partial<NoteType> & BBox = null; // is this too clever?
@@ -201,7 +205,7 @@ Only one note can be added/edited at a time.
           />
         </div>
       {:else}
-        <Note {document} {note} {pdf} {scale} />
+        <Note {note} {scale} />
       {/if}
     {:else}
       <a

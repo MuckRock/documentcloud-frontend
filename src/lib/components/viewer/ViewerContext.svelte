@@ -41,6 +41,10 @@ layouts, stories, and tests.
     return getContext("asset_url");
   }
 
+  export function getQuery(): string {
+    return getContext("query") ?? "";
+  }
+
   export function isEmbedded(): boolean {
     // are we embedded?
     return getContext("embed") ?? false;
@@ -75,6 +79,7 @@ layouts, stories, and tests.
   export let page: number = 1;
   export let mode: ViewerMode = "document";
   export let note: Nullable<Note> = null;
+  export let query: string = "";
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Writable<Promise<pdfjs.PDFDocumentProxy>> = writable(
@@ -92,6 +97,7 @@ layouts, stories, and tests.
   setContext("text", text);
   setContext("asset_url", asset_url);
   setContext("embed", embed);
+  setContext("query", query);
   setContext("currentPage", writable(page));
   setContext("activeNote", writable(note));
   setContext("currentMode", writable(mode));
