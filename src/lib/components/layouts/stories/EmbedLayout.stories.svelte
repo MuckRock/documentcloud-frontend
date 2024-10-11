@@ -8,6 +8,7 @@
   import txt from "@/test/fixtures/documents/document.txt.json";
   import DocumentEmbed from "../../embeds/DocumentEmbed.svelte";
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
+  import ViewerContext from "../../viewer/ViewerContext.svelte";
 
   const document = doc as Document;
 
@@ -31,13 +32,15 @@
 
 <Story name="With Document" {args} let:args>
   <div class="vh">
-    <EmbedLayout
-      settings={args.settings}
-      canonicalUrl={canonicalUrl(document).href}
-      downloadUrl={pdfUrl(document).href}
-    >
-      <DocumentEmbed settings={args.settings} {document} text={txt} />
-    </EmbedLayout>
+    <ViewerContext {document} text={txt} asset_url={pdfUrl(document)}>
+      <EmbedLayout
+        settings={args.settings}
+        canonicalUrl={canonicalUrl(document).href}
+        downloadUrl={pdfUrl(document).href}
+      >
+        <DocumentEmbed settings={args.settings} />
+      </EmbedLayout>
+    </ViewerContext>
   </div>
 </Story>
 

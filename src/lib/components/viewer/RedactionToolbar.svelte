@@ -1,6 +1,8 @@
-<script lang="ts">
-  import type { Document } from "$lib/api/types";
+<!-- @component
+Assumes it's a child of a ViewerContext 
+-->
 
+<script lang="ts">
   import { goto } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
@@ -22,8 +24,9 @@
 
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
+  import { getDocument } from "./ViewerContext.svelte";
 
-  export let document: Document;
+  const document = getDocument();
 
   let width: number;
   let confirmOpen = false;

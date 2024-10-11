@@ -1,4 +1,4 @@
-import type { Document, Note, ViewerMode } from "$lib/api/types";
+import type { Document, Note, Section, ViewerMode } from "$lib/api/types";
 import { canonicalUrl, pageHashUrl } from "../api/documents";
 import { noteHashUrl } from "../api/notes";
 
@@ -82,4 +82,31 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
 
     return sizes;
   }, Array(parts.length));
+}
+
+/**
+ * Index notes and sections by page
+ */
+export function getNotes(document: Document): Record<number, Note[]> {
+  return (
+    document.notes?.reduce<Record<number, Note[]>>((m, note) => {
+      if (!m[note.page_number]) {
+        m[note.page_number] = [];
+      }
+      m[note.page_number].push(note);
+      return m;
+    }, {}) ?? {}
+  );
+}
+
+/**
+ * Get the sections from a document
+ */
+export function getSections(document: Document): Record<number, Section> {
+  return (
+    document.sections?.reduce((m, section) => {
+      m[section.page_number] = section;
+      return m;
+    }, {}) ?? {}
+  );
 }

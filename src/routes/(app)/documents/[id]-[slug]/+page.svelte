@@ -1,11 +1,13 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Note, ViewerMode } from "$lib/api/types.js";
+<!-- TODO: CONSOLIDATE VIEWER LOGIC -->
 
-  import { afterNavigate, invalidate } from "$app/navigation";
+<!-- @component
+  Assumes it's a child of a ViewerContext
+ -->
+
+<script lang="ts">
+  import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import DocumentLayout from "$lib/components/layouts/DocumentLayout.svelte";
@@ -19,19 +21,21 @@
   } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
+  import {
+    getActiveNote,
+    getCurrentMode,
+    getCurrentPage,
+    getDocument,
+  } from "@/lib/components/viewer/ViewerContext.svelte";
 
   export let data;
 
-  const activeNote: Writable<Note> = getContext("activeNote");
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-  const currentPage: Writable<number> = getContext("currentPage");
+  const document = getDocument();
+  const currentMode = getCurrentMode();
+  const currentPage = getCurrentPage();
+  const activeNote = getActiveNote();
 
-  $: document = data.document;
-  $: asset_url = data.asset_url;
-  $: query = data.query;
-  $: text = data.text;
   $: action = data.action;
-  $: $currentMode = data.mode; // set $currentMode from URL search param
   $: addons = data.pinnedAddons;
 
   // lifecycle
@@ -76,5 +80,5 @@
   {/if}
 </svelte:head>
 
-<DocumentLayout {document} {asset_url} {text} {query} {action} {addons} />
+<DocumentLayout {action} {addons} />
 <GuidedTour />

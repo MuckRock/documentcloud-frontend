@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
+  import { Template, Story } from "@storybook/addon-svelte-csf";
   import type { Document } from "$lib/api/types";
-
-  import { Story } from "@storybook/addon-svelte-csf";
+  import ViewerContext from "../ViewerContext.svelte";
   import Grid from "../Grid.svelte";
 
   export const meta = {
@@ -13,12 +13,24 @@
   import doc from "@/test/fixtures/documents/examples/lefler-thesis.json";
 
   const document = doc as Document;
+
+  let args = {
+    context: {
+      document,
+    },
+    props: {
+      size: "thumbnail",
+    },
+  };
 </script>
 
-<Story name="thumbnail">
-  <Grid {document} />
-</Story>
+<Template let:args>
+  <ViewerContext {...args.context}>
+    <Grid {...args.props} />
+  </ViewerContext>
+</Template>
 
-<Story name="small">
-  <Grid {document} size="small" />
-</Story>
+<Story
+  name="small"
+  args={{ ...args, props: { ...args.props, size: "small" } }}
+/>

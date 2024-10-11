@@ -1,6 +1,8 @@
-<script lang="ts">
-  import type { Document, DocumentText } from "$lib/api/types";
+<!-- @component
+Assumes it's a child of a ViewerContext
+ -->
 
+<script lang="ts">
   import { _ } from "svelte-i18n";
   import { SidebarExpand16 } from "svelte-octicons";
 
@@ -23,18 +25,7 @@
 
   // utils
   import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
-  import { pdfUrl } from "$lib/api/documents";
-  import {
-    getCurrentMode,
-    getDocument,
-    getText,
-    isEmbedded,
-  } from "./ViewerContext.svelte";
-
-  export let document: Document = getDocument();
-  export let text: DocumentText = getText();
-  export let asset_url: URL = pdfUrl(document);
-  export let query: string = "";
+  import { getCurrentMode, isEmbedded } from "./ViewerContext.svelte";
 
   const embed = isEmbedded();
   const currentMode = getCurrentMode();
@@ -63,9 +54,9 @@
       {#if !embed && mode === "annotating"}
         <AnnotationToolbar />
       {:else if !embed && mode === "redacting"}
-        <RedactionToolbar {document} />
+        <RedactionToolbar />
       {:else}
-        <ReadingToolbar {document} {query} {embed} />
+        <ReadingToolbar />
       {/if}
       {#if !embed && $sidebars["action"] === false}
         <div class="toolbar w-auto">
@@ -82,17 +73,17 @@
 
     <!-- content -->
     {#if showPDF}
-      <PDF {document} scale={zoomToScale($zoom)} {query} />
+      <PDF scale={zoomToScale($zoom)} />
     {:else if mode === "text"}
-      <Text {document} {text} zoom={+$zoom || 1} {query} />
+      <Text zoom={+$zoom || 1} />
     {:else if mode === "grid"}
-      <Grid {document} size={zoomToSize($zoom)} />
+      <Grid size={zoomToSize($zoom)} />
     {:else if mode === "notes"}
-      <Notes {document} {asset_url} />
+      <Notes />
     {/if}
     <svelte:fragment slot="footer">
       {#if mode !== "notes"}
-        <PaginationToolbar {document} />
+        <PaginationToolbar />
       {/if}
     </svelte:fragment>
   </ContentLayout>

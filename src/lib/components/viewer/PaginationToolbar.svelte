@@ -1,10 +1,10 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, ViewerMode } from "$lib/api/types";
+<!-- @component
+ Assumes it's a child of a ViewerContext
+-->
 
+<script lang="ts">
   import { replaceState } from "$app/navigation";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
 
@@ -23,16 +23,20 @@
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
+  import {
+    getCurrentMode,
+    getCurrentPage,
+    getDocument,
+    isEmbedded,
+  } from "$lib/components/viewer/ViewerContext.svelte";
 
-  export let document: Document;
-  export let embed = isEmbedded();
+  const document = getDocument();
+  const embed = isEmbedded();
+  const currentMode = getCurrentMode();
+  const currentPage = getCurrentPage();
 
   let sectionsOpen = false;
   let width: number;
-
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-  const currentPage: Writable<number> = getContext("currentPage");
 
   $: BREAKPOINTS = {
     TWO_ROWS: width <= remToPx(34),

@@ -31,13 +31,9 @@
   <ViewerContext {document}>
     <Flex class="pages" direction="column" gap={1}>
       {#each sizes as [width, height], page_number}
-        <Page {document} page_number={page_number + 1}>
+        <Page page_number={page_number + 1}>
           <div class="page-container">
-            <AnnotationLayer
-              {document}
-              {page_number}
-              notes={notes[page_number] || []}
-            />
+            <AnnotationLayer {page_number} notes={notes[page_number] || []} />
           </div>
         </Page>
       {/each}
@@ -49,13 +45,9 @@
   <ViewerContext {document} mode="annotating">
     <Flex class="pages" direction="column" gap={1}>
       {#each sizes as [width, height], page_number}
-        <Page {document} page_number={page_number + 1}>
+        <Page page_number={page_number + 1}>
           <div class="page-container">
-            <AnnotationLayer
-              {document}
-              {page_number}
-              notes={notes[page_number] || []}
-            />
+            <AnnotationLayer {page_number} notes={notes[page_number] || []} />
           </div>
         </Page>
       {/each}

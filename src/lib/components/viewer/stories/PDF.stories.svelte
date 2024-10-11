@@ -26,25 +26,27 @@
 
   const loadingUrl = createApiUrl("loading/");
 
-  const section: Section = { id: 1, page_number: 1, title: "Something uneasy" };
-  const long_section: Section = {
-    id: 1,
-    page_number: 1,
-    title:
-      "What it means is that tonight a Santa Ana will begin to blow, a hot wind from the northeast whining down through the Cajon and SanGorgonio Passes, blowing up sand storms out along Route 66, drying the hills andthe nerves to flash point.",
-  };
+  const sections: Section[] = [
+    { id: 1, page_number: 1, title: "Something uneasy" },
+    {
+      id: 1,
+      page_number: 1,
+      title:
+        "What it means is that tonight a Santa Ana will begin to blow, a hot wind from the northeast whining down through the Cajon and SanGorgonio Passes, blowing up sand storms out along Route 66, drying the hills andthe nerves to flash point.",
+    },
+  ];
 
   let args = {
     context: {
-      document,
-      mode: "document",
-      asset_url: pdfUrl(document),
-    },
-    props: {
       document: {
         ...document,
         notes: [],
       },
+      mode: "document",
+      asset_url: pdfUrl(document),
+    },
+    props: {
+      scale: "width",
     },
   };
 </script>
@@ -61,23 +63,23 @@
 
 <Story
   name="With Notes"
-  args={{ ...args, props: { ...args.props, document } }}
+  args={{ ...args, context: { ...args.context, document } }}
 />
 
-<Story name="Fit width" parameters={{ layout: "fullscreen" }}>
-  <ViewerContext {document} mode="document" asset_url={pdfUrl(document)}>
-    <PDF {document} scale="width" />
-  </ViewerContext>
-</Story>
-
-<Story name="Zoom 200%" parameters={{ layout: "fullscreen" }}>
-  <ViewerContext {document} mode="document" asset_url={pdfUrl(document)}>
-    <PDF {document} scale={2} />
-  </ViewerContext>
-</Story>
+<Story
+  name="Fit width"
+  parameters={{ layout: "fullscreen" }}
+  args={{ ...args, props: { scale: "width" } }}
+/>
 
 <Story
-  name="Missing PDF"
+  name="Zoom 200%"
+  parameters={{ layout: "fullscreen" }}
+  args={{ ...args, props: { scale: 2 } }}
+/>
+
+<Story
+  name="File Loading"
   parameters={{
     msw: {
       handlers: [
@@ -85,43 +87,62 @@
       ],
     },
   }}
-  args={{ ...args, props: { document, asset_url: new URL(loadingUrl) } }}
+  args={{
+    ...args,
+    context: { ...args.context, asset_url: new URL(loadingUrl) },
+  }}
+/>
+
+<Story
+  name="File Error"
+  parameters={{
+    msw: {
+      handlers: [
+        rest.get(loadingUrl, (req, res, ctx) =>
+          res(
+            ctx.status(400, "Ambiguous Error"),
+            ctx.json("Something went horribly wrong."),
+          ),
+        ),
+      ],
+    },
+  }}
+  args={{
+    ...args,
+    context: { ...args.context, asset_url: new URL(loadingUrl) },
+  }}
 />
 
 <Story
   name="Missing page_spec"
   args={{
     ...args,
-    props: {
-      ...args.props,
+    context: {
+      ...args.context,
       document: { ...document, notes: [], page_spec: undefined },
     },
   }}
 />
 
 <Story name="Redactions in-progress">
-  <ViewerContext {document} asset_url={pdfUrl(document)}>
+  <ViewerContext
+    document={{ ...document, notes: [] }}
+    asset_url={pdfUrl(document)}
+  >
     <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
       <button on:click={() => ($redactions = redacted)}>Show redactions</button>
-      <PDF document={{ ...document, notes: [] }} />
+      <PDF />
     </div>
   </ViewerContext>
 </Story>
 
-<Story name="With Section">
-  <ViewerContext {document} asset_url={pdfUrl(document)}>
-    <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-      <button on:click={() => ($redactions = redacted)}>Show redactions</button>
-      <PDF document={{ ...document, notes: [], sections: [section] }} />
-    </div>
-  </ViewerContext>
-</Story>
-
-<Story name="With Long Section">
-  <ViewerContext {document} asset_url={pdfUrl(document)}>
-    <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-      <button on:click={() => ($redactions = redacted)}>Show redactions</button>
-      <PDF document={{ ...document, notes: [], sections: [long_section] }} />
-    </div>
-  </ViewerContext>
-</Story>
+<Story
+  name="With Section"
+  args={{
+    ...args,
+    context: {
+      ...args.context,
+      document: { ...document, notes: [], sections },
+    },
+  }}
+/>

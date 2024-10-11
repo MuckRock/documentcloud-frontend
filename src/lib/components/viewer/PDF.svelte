@@ -4,6 +4,8 @@
   It uses PDF.js to render the actual pages on canvas elements.
 
   This is only the pages of the document, contained inside the larger viewer.
+
+  Assumes it's a child of a ViewerContext
 -->
 
 <script lang="ts">
@@ -11,44 +13,21 @@
 
   import { onMount } from "svelte";
 
-  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
-  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-      "pdfjs-dist/legacy/build/pdf.worker.mjs",
-      import.meta.url,
-    ).href;
-  }
-
   import PdfPage from "./PDFPage.svelte";
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "$lib/utils/layout";
-  import { pageSizes } from "$lib/utils/viewer";
+  import { getNotes, getSections, pageSizes } from "$lib/utils/viewer";
   import { getCurrentPage, getDocument, getPDF } from "./ViewerContext.svelte";
 
-  export let document: Document = getDocument();
   export let scale: number | "width" | "height" = 1;
-  export let query: string = ""; // search query
-
+  const document: Document = getDocument();
   const currentPage = getCurrentPage();
-
   const pdf = getPDF();
 
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
-
-  // index notes and sections by page
-  $: notes = document.notes.reduce((m, note) => {
-    if (!m[note.page_number]) {
-      m[note.page_number] = [];
-    }
-    m[note.page_number].push(note);
-    return m;
-  }, {});
-
-  $: sections = document.sections.reduce((m, section) => {
-    m[section.page_number] = section;
-    return m;
-  }, {});
+  $: notes = getNotes(document);
+  $: sections = getSections(document);
 
   onMount(() => {
     $pdf.then((p) => {
@@ -82,15 +61,7 @@
         {sections[n].title}
       </h3>
     {/if}
-    <PdfPage
-      {document}
-      {page_number}
-      {scale}
-      {width}
-      {height}
-      {query}
-      notes={notes[n]}
-    />
+    <PdfPage {page_number} {scale} {width} {height} notes={notes[n]} />
   {/each}
 </div>
 

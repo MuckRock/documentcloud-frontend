@@ -1,14 +1,14 @@
 <!-- COPIED FROM /documents/[id]-[slug] -->
-<!-- TODO: CONSOLIDATE VIEWER RENDERING LOGIC -->
+<!-- TODO: CONSOLIDATE VIEWER LOGIC -->
+
+<!-- @component
+Assumes it's a child of a ViewerContext
+ -->
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Note, ViewerMode } from "@/lib/api/types.js";
-
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import DocumentEmbed from "@/lib/components/embeds/DocumentEmbed.svelte";
@@ -24,16 +24,19 @@
   } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToPage } from "$lib/utils/scroll";
+  import {
+    getActiveNote,
+    getCurrentMode,
+    getCurrentPage,
+    getDocument,
+  } from "@/lib/components/viewer/ViewerContext.svelte";
 
   export let data;
 
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-  const currentPage: Writable<number> = getContext("currentPage");
-  const activeNote: Writable<Note> = getContext("activeNote");
-
-  $: document = data.document;
-  $: text = data.text;
-  $: $currentMode = data.mode; // set $currentMode from URL search param
+  const document = getDocument();
+  const currentMode = getCurrentMode();
+  const currentPage = getCurrentPage();
+  const activeNote = getActiveNote();
 
   // lifecycle
   afterNavigate(() => {
@@ -82,5 +85,5 @@
   canonicalUrl={canonicalUrl(document).href}
   downloadUrl={pdfUrl(document).href}
 >
-  <DocumentEmbed settings={data.settings} {document} {text} />
+  <DocumentEmbed settings={data.settings} />
 </EmbedLayout>

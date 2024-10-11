@@ -2,9 +2,11 @@
   @component
   Show a grid of thumbnail images for a single document.
   Each image should link to its respective page.
+
+  Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { Document, Sizes } from "$lib/api/types";
+  import type { Sizes } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -13,11 +15,11 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
-  import { isEmbedded } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getDocument } from "$lib/components/viewer/ViewerContext.svelte";
 
-  export let document: Document;
   export let size: Sizes = "thumbnail";
-  export let embed = isEmbedded();
+
+  const document = getDocument();
 
   const SCALE = {
     thumbnail: 1,
@@ -35,7 +37,7 @@
   {#each sizes as aspect, n}
     {@const page_number = n + 1}
     {@const height = width * aspect}
-    <Page {document} {page_number} {embed} let:href>
+    <Page {page_number} let:href>
       <a {href}>
         <img
           src={pageImageUrl(document, page_number, size).href}
