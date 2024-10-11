@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { rest } from "msw";
-  import type { Document, Note, ViewerMode } from "@/lib/api/types";
+  import type { Document, Note, Section, ViewerMode } from "@/lib/api/types";
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
@@ -26,17 +26,25 @@
 
   const loadingUrl = createApiUrl("loading/");
 
+  const section: Section = { id: 1, page_number: 1, title: "Something uneasy" };
+  const long_section: Section = {
+    id: 1,
+    page_number: 1,
+    title:
+      "What it means is that tonight a Santa Ana will begin to blow, a hot wind from the northeast whining down through the Cajon and SanGorgonio Passes, blowing up sand storms out along Route 66, drying the hills andthe nerves to flash point.",
+  };
+
   let args = {
     context: {
       document,
       mode: "document",
+      asset_url: pdfUrl(document),
     },
     props: {
       document: {
         ...document,
         notes: [],
       },
-      asset_url: pdfUrl(document),
     },
   };
 </script>
@@ -57,14 +65,14 @@
 />
 
 <Story name="Fit width" parameters={{ layout: "fullscreen" }}>
-  <ViewerContext {document} mode="document">
-    <PDF {document} asset_url={pdfUrl(document)} scale="width" />
+  <ViewerContext {document} mode="document" asset_url={pdfUrl(document)}>
+    <PDF {document} scale="width" />
   </ViewerContext>
 </Story>
 
 <Story name="Zoom 200%" parameters={{ layout: "fullscreen" }}>
-  <ViewerContext {document} mode="document">
-    <PDF {document} asset_url={pdfUrl(document)} scale={2} />
+  <ViewerContext {document} mode="document" asset_url={pdfUrl(document)}>
+    <PDF {document} scale={2} />
   </ViewerContext>
 </Story>
 
@@ -92,10 +100,28 @@
 />
 
 <Story name="Redactions in-progress">
-  <ViewerContext {document}>
+  <ViewerContext {document} asset_url={pdfUrl(document)}>
     <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
       <button on:click={() => ($redactions = redacted)}>Show redactions</button>
-      <PDF document={{ ...document, notes: [] }} asset_url={pdfUrl(document)} />
+      <PDF document={{ ...document, notes: [] }} />
+    </div>
+  </ViewerContext>
+</Story>
+
+<Story name="With Section">
+  <ViewerContext {document} asset_url={pdfUrl(document)}>
+    <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+      <button on:click={() => ($redactions = redacted)}>Show redactions</button>
+      <PDF document={{ ...document, notes: [], sections: [section] }} />
+    </div>
+  </ViewerContext>
+</Story>
+
+<Story name="With Long Section">
+  <ViewerContext {document} asset_url={pdfUrl(document)}>
+    <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
+      <button on:click={() => ($redactions = redacted)}>Show redactions</button>
+      <PDF document={{ ...document, notes: [], sections: [long_section] }} />
     </div>
   </ViewerContext>
 </Story>

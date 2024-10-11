@@ -77,7 +77,7 @@ layouts, stories, and tests.
   export let note: Nullable<Note> = null;
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
-  let pdf: Writable<Promise<pdfjs.PDFDocumentProxy>> = writable(
+  export let pdf: Writable<Promise<pdfjs.PDFDocumentProxy>> = writable(
     new Promise(() => {}),
   );
   let task: Maybe<Nullable<pdfjs.PDFDocumentLoadingTask>> = null;

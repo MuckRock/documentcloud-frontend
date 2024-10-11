@@ -26,7 +26,6 @@
   import { pageSizes } from "$lib/utils/viewer";
   import { getCurrentPage, getDocument, getPDF } from "./ViewerContext.svelte";
 
-  export let asset_url: URL = null;
   export let document: Document = getDocument();
   export let scale: number | "width" | "height" = 1;
   export let query: string = ""; // search query
