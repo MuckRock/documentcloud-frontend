@@ -24,7 +24,7 @@
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "$lib/utils/layout";
   import { pageSizes } from "$lib/utils/viewer";
-  import { getCurrentPage, getDocument } from "./ViewerContext.svelte";
+  import { getCurrentPage, getDocument, getPDF } from "./ViewerContext.svelte";
 
   export let asset_url: URL = null;
   export let document: Document = getDocument();
@@ -33,9 +33,7 @@
 
   const currentPage = getCurrentPage();
 
-  // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
-  export let pdf: Promise<any> = new Promise(() => {});
-  export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
+  const pdf = getPDF();
 
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
 
@@ -53,23 +51,8 @@
     return m;
   }, {});
 
-  let progress = {
-    loaded: 0,
-    total: 0,
-  };
-
   onMount(() => {
-    // we might move this to a load function
-    if (!task) {
-      task = pdfjs.getDocument({ url: asset_url });
-      pdf = task.promise;
-    }
-
-    task.onProgress = (p) => {
-      progress = p;
-    };
-
-    pdf.then((p) => {
+    $pdf.then((p) => {
       // handle missing page_spec
       if (sizes.length === 0) {
         sizes = Array(p.numPages).fill([0, 0]);
@@ -103,7 +86,6 @@
     <PdfPage
       {document}
       {page_number}
-      {pdf}
       {scale}
       {width}
       {height}

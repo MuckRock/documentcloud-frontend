@@ -3,7 +3,7 @@ Provides context for its children. Useful as a parent of Viewer in
 layouts, stories, and tests.
  -->
 <script lang="ts" context="module">
-  import { getContext, setContext } from "svelte";
+  import { getContext, onMount, setContext } from "svelte";
   import { type Writable, writable } from "svelte/store";
 
   import type {
@@ -15,6 +15,19 @@ layouts, stories, and tests.
     ViewerMode,
   } from "@/lib/api/types";
   import { pdfUrl } from "@/lib/api/documents";
+
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/legacy/build/pdf.worker.mjs",
+      import.meta.url,
+    ).href;
+  }
+
+  interface DocumentLoadProgress {
+    loaded: number;
+    total: number;
+  }
 
   export function getDocument(): Document {
     return getContext("document");
@@ -44,6 +57,14 @@ layouts, stories, and tests.
   export function getActiveNote(): Writable<Note> {
     return getContext("activeNote");
   }
+
+  export function getPDF(): Writable<Promise<pdfjs.PDFDocumentProxy>> {
+    return getContext("pdf");
+  }
+
+  export function getPDFProgress(): Writable<DocumentLoadProgress> {
+    return getContext("progress");
+  }
 </script>
 
 <script lang="ts">
@@ -55,6 +76,17 @@ layouts, stories, and tests.
   export let mode: ViewerMode = "document";
   export let note: Nullable<Note> = null;
 
+  // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
+  let pdf: Writable<Promise<pdfjs.PDFDocumentProxy>> = writable(
+    new Promise(() => {}),
+  );
+  let task: Maybe<Nullable<pdfjs.PDFDocumentLoadingTask>> = null;
+
+  const progress = writable<DocumentLoadProgress>({
+    loaded: 0,
+    total: 0,
+  });
+
   // stores we need deeper in the component tree, available via context
   setContext("document", document);
   setContext("text", text);
@@ -63,6 +95,20 @@ layouts, stories, and tests.
   setContext("currentPage", writable(page));
   setContext("activeNote", writable(note));
   setContext("currentMode", writable(mode));
+  setContext("progress", progress);
+  setContext("pdf", pdf);
+
+  onMount(() => {
+    // we might move this to a load function
+    if (!task) {
+      task = pdfjs.getDocument({ url: asset_url });
+      $pdf = task.promise;
+    }
+
+    task.onProgress = (p: DocumentLoadProgress) => {
+      $progress = p;
+    };
+  });
 </script>
 
 <slot />

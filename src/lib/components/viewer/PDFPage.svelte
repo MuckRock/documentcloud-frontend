@@ -11,7 +11,6 @@ Selectable text can be rendered in one of two ways:
   import type {
     Document,
     Note as NoteType,
-    Section,
     TextPosition,
   } from "$lib/api/types";
 
@@ -31,12 +30,12 @@ Selectable text can be rendered in one of two ways:
   import {
     isEmbedded,
     getCurrentMode,
+    getPDF,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { fitPage } from "@/lib/utils/viewer";
 
   export let document: Document;
   export let page_number: number; // 1-indexed
-  export let pdf: Promise<pdfjs.PDFDocumentProxy>;
 
   export let scale: number | "width" | "height";
   export let width: number;
@@ -48,6 +47,7 @@ Selectable text can be rendered in one of two ways:
 
   const embed = isEmbedded();
   const mode = getCurrentMode();
+  const pdf = getPDF();
 
   // make hidden things visible, for debugging
   export let debug = false;
@@ -71,10 +71,10 @@ Selectable text can be rendered in one of two ways:
 
   // render when anything changes
   $: page =
-    visible && Promise.resolve(pdf).then((pdf) => pdf?.getPage(page_number));
+    visible && Promise.resolve($pdf).then((pdf) => pdf?.getPage(page_number));
 
   // we need to wait on both promises to render on initial load
-  $: Promise.all([pdf, page]).then(([pdf, page]) => {
+  $: Promise.all([$pdf, page]).then(([pdf, page]) => {
     render(page, canvas, container, scale);
     textPromise = renderTextLayer(page, textContainer, container, scale);
   });
@@ -180,7 +180,7 @@ Selectable text can be rendered in one of two ways:
 
   function onVisibilityChange() {
     if (window.document.visibilityState === "visible" && !canvas.hidden) {
-      Promise.all([pdf, page]).then(([pdf, page]) => {
+      Promise.all([$pdf, page]).then(([pdf, page]) => {
         render(page, canvas, container, scale);
       });
     }
@@ -244,7 +244,7 @@ Selectable text can be rendered in one of two ways:
       </div>
     {/if}
 
-    {#await pdf then pdf}
+    {#await $pdf then pdf}
       <AnnotationLayer
         {document}
         {mode}
