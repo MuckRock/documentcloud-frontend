@@ -3,7 +3,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
-  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     "pdfjs-dist/build/pdf.worker.mjs",
     import.meta.url,
@@ -13,6 +13,8 @@
   import doc from "@/test/fixtures/documents/examples/the-santa-anas.json";
   import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
   import pdfFile from "@/test/fixtures/documents/examples/the-santa-anas.pdf";
+  import ViewerContext from "../ViewerContext.svelte";
+  import { writable } from "svelte/store";
 
   const document = { ...doc, edit_access: true } as Document;
 
@@ -27,92 +29,44 @@
   const query = "los angeles";
   const url = new URL(pdfFile, import.meta.url);
 
-  // sections
-  const section: Section = { id: 1, page_number: 1, title: "Something uneasy" };
-  const long_section: Section = {
-    id: 1,
-    page_number: 1,
-    title:
-      "What it means is that tonight a Santa Ana will begin to blow, a hot wind from the northeast whining down through the Cajon and SanGorgonio Passes, blowing up sand storms out along Route 66, drying the hills andthe nerves to flash point.",
-  };
-
-  async function load(url: URL) {
+  async function load(url: URL): Promise<pdfjs.PDFDocumentProxy> {
     return pdfjs.getDocument(url).promise;
   }
 </script>
 
 <Story name="fit width" parameters={{ layout: "fullscreen" }}>
-  {#await load(url) then pdf}
-    <PdfPage
-      {document}
-      page_number={1}
-      scale="width"
-      {pdf}
-      {width}
-      {height}
-      {section}
-    />
-  {/await}
+  <ViewerContext {document} pdf={writable(load(url))}>
+    <PdfPage {document} page_number={1} scale="width" {width} {height} />
+  </ViewerContext>
 </Story>
 
 <Story name="embedded text">
-  {#await load(url) then pdf}
-    <PdfPage {document} page_number={1} scale={1.5} {pdf} {width} {height} />
-  {/await}
+  <ViewerContext {document} pdf={writable(load(url))}>
+    <PdfPage {document} page_number={1} scale={1.5} {width} {height} />
+  </ViewerContext>
 </Story>
 
 <Story name="server text">
-  {#await load(url) then pdf}
+  <ViewerContext {document} pdf={writable(load(url))}>
     <PdfPage
       {document}
       page_number={1}
       scale={1.5}
-      {pdf}
       text={textPositions}
       {width}
       {height}
     />
-  {/await}
+  </ViewerContext>
 </Story>
 
 <Story name="search results">
-  {#await load(url) then pdf}
-    <PdfPage
-      {document}
-      page_number={1}
-      scale={1.5}
-      {pdf}
-      {width}
-      {height}
-      {query}
-    />
-  {/await}
-</Story>
-
-<Story name="section start">
-  {#await load(url) then pdf}
-    <PdfPage
-      {document}
-      page_number={1}
-      scale={1.5}
-      {pdf}
-      {width}
-      {height}
-      {section}
-    />
-  {/await}
+  <ViewerContext {document} pdf={writable(load(url))}>
+    <PdfPage {document} page_number={1} scale={1.5} {width} {height} {query} />
+  </ViewerContext>
 </Story>
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }}>
-  {#await load(url) then pdf}
-    <PdfPage
-      {document}
-      page_number={1}
-      scale="width"
-      {pdf}
-      {width}
-      {height}
-      section={long_section}
-    />
-  {/await}
+  <ViewerContext {document} pdf={writable(load(url))}>
+    <PdfPage {document} page_number={1} scale="width" {width} {height} />
+  </ViewerContext>
 </Story>

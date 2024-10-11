@@ -82,7 +82,7 @@
 
     <!-- content -->
     {#if showPDF}
-      <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} />
+      <PDF {document} scale={zoomToScale($zoom)} {query} />
     {:else if mode === "text"}
       <Text {document} {text} zoom={+$zoom || 1} {query} />
     {:else if mode === "grid"}
