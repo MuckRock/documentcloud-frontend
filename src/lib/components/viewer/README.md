@@ -15,7 +15,6 @@ The values made available by `ViewerContext` are:
 - `embed: boolean`
 - `query: string`
 - `currentPage: Writable<number>`
-- `activeNote: Writable<Note>`
 - `currentMode: Writable<ViewerMode>`
 - `progress: {loaded: number; total: number}`
 - `pdf: Promise<pdfjs.PDFDocumentProxy>`
