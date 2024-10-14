@@ -35,8 +35,8 @@
 
 <Template let:args>
   <div class="vh">
-    <ViewerContext {document} mode={args.mode}>
-      <Viewer {...args} />
+    <ViewerContext {...args}>
+      <Viewer />
     </ViewerContext>
   </div>
 </Template>
