@@ -56,6 +56,9 @@ Assumes it's a child of a ViewerContext
   $: currentNote = notes.find(
     (note) => note?.id && note.id === noteFromHash($page.url.hash),
   );
+  $: {
+    console.log(notes, currentNote, $page.url.hash);
+  }
   $: writing = $mode === "annotating";
   $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
