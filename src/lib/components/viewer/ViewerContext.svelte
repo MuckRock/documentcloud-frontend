@@ -139,8 +139,10 @@ layouts, stories, and tests.
   });
 
   afterNavigate(() => {
+    console.log(mode);
+    $currentMode = mode;
     const { hash } = $pageStore.url;
-    if (shouldPaginate($currentMode)) {
+    if (shouldPaginate(mode)) {
       scrollToHash(hash);
     }
   });
