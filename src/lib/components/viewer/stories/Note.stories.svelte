@@ -13,6 +13,7 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
+  import { writable } from "svelte/store";
 
   const document = doc as Document;
   const notes = document.notes as NoteType[];
@@ -58,5 +59,5 @@
 <Story name="note with HTML" args={{ note: { ...notes[2], content: html } }} />
 <Story
   name="render using PDF"
-  args={{ pdf: load(url), note: { ...notes[2], content: html } }}
+  args={{ pdf: writable(load(url)), note: { ...notes[2], content: html } }}
 />

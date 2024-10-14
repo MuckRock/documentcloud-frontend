@@ -6,7 +6,6 @@
 -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { DocumentText } from "$lib/api/types";
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { highlight } from "$lib/utils/search";
@@ -16,7 +15,7 @@
 
   export let zoom: number = 1;
 
-  const text: DocumentText = getText();
+  const text = getText();
   const query = getQuery();
   const currentPage = getCurrentPage();
 
@@ -28,7 +27,7 @@
 </script>
 
 <div class="textPages" style:--zoom={zoom}>
-  {#each text.pages as { page, contents }}
+  {#each text?.pages as { page, contents }}
     <Page page_number={page + 1} track>
       <pre>
         {@html highlight(contents, query)}
