@@ -24,7 +24,6 @@ Assumes it's a child of a ViewerContext
   import RedactionToolbar from "./RedactionToolbar.svelte";
 
   // utils
-  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
   import { getCurrentMode, isEmbedded } from "./ViewerContext.svelte";
 
   const embed = isEmbedded();
@@ -73,11 +72,11 @@ Assumes it's a child of a ViewerContext
 
     <!-- content -->
     {#if showPDF}
-      <PDF scale={zoomToScale($zoom)} />
+      <PDF />
     {:else if mode === "text"}
-      <Text zoom={+$zoom || 1} />
+      <Text />
     {:else if mode === "grid"}
-      <Grid size={zoomToSize($zoom)} />
+      <Grid />
     {:else if mode === "notes"}
       <Notes />
     {/if}

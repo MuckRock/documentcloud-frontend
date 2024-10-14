@@ -1,0 +1,164 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`getZoomLevels 1`] = `
+[
+  [
+    "width",
+    "zoom.fitWidth",
+  ],
+  [
+    "height",
+    "zoom.fitHeight",
+  ],
+  [
+    0.5,
+    "50%",
+  ],
+  [
+    0.75,
+    "75%",
+  ],
+  [
+    1,
+    "100%",
+  ],
+  [
+    1.25,
+    "125%",
+  ],
+  [
+    1.5,
+    "150%",
+  ],
+  [
+    2,
+    "200%",
+  ],
+]
+`;
+
+exports[`getZoomLevels 2`] = `
+[
+  [
+    0.5,
+    "50%",
+  ],
+  [
+    0.75,
+    "75%",
+  ],
+  [
+    1,
+    "100%",
+  ],
+  [
+    1.25,
+    "125%",
+  ],
+  [
+    1.5,
+    "150%",
+  ],
+  [
+    2,
+    "200%",
+  ],
+]
+`;
+
+exports[`getZoomLevels 3`] = `
+[
+  [
+    "thumbnail",
+    "zoom.thumbnail",
+  ],
+  [
+    "small",
+    "zoom.small",
+  ],
+  [
+    "normal",
+    "zoom.normal",
+  ],
+  [
+    "large",
+    "zoom.large",
+  ],
+]
+`;
+
+exports[`getZoomLevels 4`] = `[]`;
+
+exports[`getZoomLevels 5`] = `
+[
+  [
+    "width",
+    "zoom.fitWidth",
+  ],
+  [
+    "height",
+    "zoom.fitHeight",
+  ],
+  [
+    0.5,
+    "50%",
+  ],
+  [
+    0.75,
+    "75%",
+  ],
+  [
+    1,
+    "100%",
+  ],
+  [
+    1.25,
+    "125%",
+  ],
+  [
+    1.5,
+    "150%",
+  ],
+  [
+    2,
+    "200%",
+  ],
+]
+`;
+
+exports[`getZoomLevels 6`] = `
+[
+  [
+    "width",
+    "zoom.fitWidth",
+  ],
+  [
+    "height",
+    "zoom.fitHeight",
+  ],
+  [
+    0.5,
+    "50%",
+  ],
+  [
+    0.75,
+    "75%",
+  ],
+  [
+    1,
+    "100%",
+  ],
+  [
+    1.25,
+    "125%",
+  ],
+  [
+    1.5,
+    "150%",
+  ],
+  [
+    2,
+    "200%",
+  ],
+]
+`;

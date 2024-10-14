@@ -11,13 +11,17 @@
   import { highlight } from "$lib/utils/search";
 
   import Page from "./Page.svelte";
-  import { getText, getCurrentPage, getQuery } from "./ViewerContext.svelte";
-
-  export let zoom: number = 1;
+  import {
+    getText,
+    getCurrentPage,
+    getQuery,
+    getZoom,
+  } from "./ViewerContext.svelte";
 
   const text = getText();
   const query = getQuery();
   const currentPage = getCurrentPage();
+  const zoom = getZoom();
 
   onMount(async () => {
     if ($currentPage > 1) {
@@ -26,7 +30,7 @@
   });
 </script>
 
-<div class="textPages" style:--zoom={zoom}>
+<div class="textPages" style:--zoom={+$zoom || 1}>
   {#each text?.pages as { page, contents }}
     <Page page_number={page + 1} track>
       <pre>
