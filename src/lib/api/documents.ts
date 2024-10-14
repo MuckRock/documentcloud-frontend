@@ -20,6 +20,7 @@ import type {
   WriteMode,
   ViewerMode,
   ValidationError,
+  Nullable,
 } from "./types";
 
 import { writable, type Writable } from "svelte/store";
@@ -550,13 +551,13 @@ export function pageHashUrl(page: number): string {
  *
  * @param hash URL hash
  */
-export function pageFromHash(hash: string): number {
+export function pageFromHash(hash: string): Nullable<number> {
   const re = /^#document\/p(\d+)/; // match pages and notes
   const match = re.exec(hash);
 
-  if (!match) return 1;
+  if (!match) return null;
 
-  return +match[1] || 1;
+  return +match[1] || null;
 }
 
 /**
