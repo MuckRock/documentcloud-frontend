@@ -79,8 +79,7 @@ layouts, stories, and tests.
 
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
-  import { scrollToPage } from "@/lib/utils/scroll";
-  import { noteFromHash } from "@/lib/api/notes";
+  import type { _ } from "svelte-i18n";
 
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;
@@ -117,6 +116,21 @@ layouts, stories, and tests.
   $: currentMode = getCurrentMode();
   $: currentPage = getCurrentPage();
 
+  function scrollToHash(hash: string) {
+    const page: Nullable<number> = pageFromHash(hash);
+    const el: Maybe<HTMLElement> = window?.document.querySelector(hash);
+    // Scroll to the element, if it's available, and update the current page
+    if (el && page) {
+      el.scrollIntoView();
+      $currentPage = page;
+    }
+  }
+
+  function onHashChange() {
+    const { hash } = window.location;
+    scrollToHash(hash);
+  }
+
   onMount(() => {
     // we might move this to a load function
     if (!task) {
@@ -131,38 +145,10 @@ layouts, stories, and tests.
 
   afterNavigate(() => {
     const { hash } = $pageStore.url;
-    const hashPage = pageFromHash(hash);
-
-    if (
-      hashPage !== $currentPage &&
-      $currentPage > 1 &&
-      shouldPaginate($currentMode)
-    ) {
-      $currentPage = hashPage;
-      scrollToPage(hashPage);
-    }
-
-    const noteId = noteFromHash(hash);
-    if (noteId && window) {
-      const noteEl = window.document.querySelector(hash);
-      noteEl.scrollIntoView();
+    if (shouldPaginate($currentMode)) {
+      scrollToHash(hash);
     }
   });
-
-  // go to currentPage
-  function onHashChange() {
-    const { hash } = window.location;
-    const hashPage = pageFromHash(hash);
-
-    $currentPage = hashPage;
-    scrollToPage(hashPage);
-
-    const noteId = noteFromHash(hash);
-    if (noteId && window) {
-      const noteEl = window.document.querySelector(hash);
-      noteEl.scrollIntoView();
-    }
-  }
 </script>
 
 <svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
