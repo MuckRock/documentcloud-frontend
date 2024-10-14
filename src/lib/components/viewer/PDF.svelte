@@ -57,7 +57,7 @@
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
     {#if sections[n]}
-      <h3 class="section">
+      <h3 class="section" id="">
         {sections[n].title}
       </h3>
     {/if}

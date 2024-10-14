@@ -251,6 +251,8 @@
     border: 1px solid var(--gray-2, #d8dee2);
     background: var(--white, #fff);
 
+    scroll-margin-top: 6rem;
+
     /* shadow-2 */
     box-shadow: 0px 2px 8px 2px var(--shadow-1, rgba(30, 48, 56, 0.15));
   }
