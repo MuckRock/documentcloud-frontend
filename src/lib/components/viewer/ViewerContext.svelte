@@ -113,7 +113,9 @@ layouts, stories, and tests.
 
   function scrollToHash(hash: string) {
     const page: Nullable<number> = pageFromHash(hash);
-    const el: Maybe<HTMLElement> = window?.document.querySelector(hash);
+    const el: Maybe<HTMLElement> = window?.document.getElementById(
+      hash.split("#")[1],
+    );
     // Scroll to the element, if it's available, and update the current page
     if (el && page) {
       el.scrollIntoView();
