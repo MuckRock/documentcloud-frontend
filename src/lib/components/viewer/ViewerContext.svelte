@@ -64,10 +64,6 @@ layouts, stories, and tests.
     return getContext("currentMode");
   }
 
-  export function getActiveNote(): Writable<Note> {
-    return getContext("activeNote");
-  }
-
   export function getPDF(): Writable<Promise<pdfjs.PDFDocumentProxy>> {
     return getContext("pdf");
   }
@@ -108,7 +104,6 @@ layouts, stories, and tests.
   setContext("embed", embed);
   setContext("query", query);
   setContext("currentPage", writable(page));
-  setContext("activeNote", writable(note));
   setContext("currentMode", writable(mode));
   setContext("progress", progress);
   setContext("pdf", pdf);

@@ -10,7 +10,7 @@ Only one note can be added/edited at a time.
 Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { BBox, Document, Note as NoteType } from "$lib/api/types";
+  import type { BBox, Note as NoteType } from "$lib/api/types";
 
   import { pushState } from "$app/navigation";
 
@@ -23,43 +23,48 @@ Assumes it's a child of a ViewerContext
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
-  import { noteHashUrl, width, height, isPageLevel } from "$lib/api/notes";
   import {
-    getActiveNote,
+    noteHashUrl,
+    width,
+    height,
+    isPageLevel,
+    noteFromHash,
+  } from "$lib/api/notes";
+  import {
     getCurrentMode,
     getDocument,
-    getPDF,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
+  import { page } from "$app/stores";
 
   export let scale = 1.5;
 
   const document = getDocument();
-  const pdf = getPDF();
   const embed = isEmbedded();
   const mode = getCurrentMode();
-  const activeNote = getActiveNote();
 
   export let notes: NoteType[] = [];
   export let page_number: number; // zero-indexed
 
   let container: HTMLElement;
   let newNote: Partial<NoteType> & BBox = null; // is this too clever?
-
   let dragging = false;
   let form: EditNote;
 
+  $: currentNote = document.notes.find(
+    (note) => note.id === noteFromHash($page.url.hash),
+  );
   $: writing = $mode === "annotating";
-  $: editing = Boolean($activeNote) || (Boolean(newNote) && !dragging);
+  $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
-    Boolean($activeNote) &&
-    isPageLevel($activeNote) &&
-    $activeNote.page_number === page_number;
+    Boolean(currentNote) &&
+    isPageLevel(currentNote) &&
+    currentNote.page_number === page_number;
 
   function pointerdown(e: PointerEvent) {
-    if ($activeNote || newNote) return;
+    if (currentNote || newNote) return;
 
     dragging = true;
 
@@ -134,15 +139,14 @@ Assumes it's a child of a ViewerContext
     };
   }
 
-  function openNote(e, note: NoteType) {
-    activeNote?.set(note);
+  function openNote(e: MouseEvent, note: NoteType) {
+    const target = e.target as HTMLAnchorElement;
     const href =
-      e.target?.href || getViewerHref({ document, note, mode: $mode, embed });
+      target?.href || getViewerHref({ document, note, mode: $mode, embed });
     pushState(href, {});
   }
 
   function closeNote() {
-    activeNote?.set(null);
     newNote = null;
     dragging = false;
     pushState(window.location.pathname, {});
@@ -168,7 +172,7 @@ Assumes it's a child of a ViewerContext
   on:pointerup|self={pointerup}
 >
   {#each notes || [] as note}
-    {@const is_active = note.id === $activeNote?.id}
+    {@const is_active = note.id === currentNote.id}
     <a
       class="note"
       href={getViewerHref({ document, note, mode: $mode, embed })}
@@ -255,7 +259,7 @@ Assumes it's a child of a ViewerContext
 
       <EditNote
         {document}
-        note={$activeNote}
+        note={currentNote}
         {page_number}
         on:close={closeNote}
       />
