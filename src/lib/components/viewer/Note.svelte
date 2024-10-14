@@ -25,7 +25,7 @@
   import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { width, height, isPageLevel } from "$lib/api/notes";
+  import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
   import { pageImageUrl } from "$lib/api/documents";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
@@ -74,6 +74,8 @@
   let rendering: Promise<any>;
 
   let shareNoteOpen = false;
+
+  $: noteId = noteHashUrl(note).split("#")[1];
 
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
@@ -183,7 +185,7 @@
 </script>
 
 <div
-  id="a{note.id}"
+  id={noteId}
   class="note {note.access} {$mode || 'notes'}"
   class:page_level
   style:--x1={note.x1}
