@@ -1,6 +1,14 @@
-import type { Document, Note, Section, ViewerMode } from "$lib/api/types";
+import type {
+  Document,
+  Note,
+  Section,
+  Sizes,
+  ViewerMode,
+  Zoom,
+} from "$lib/api/types";
 import { canonicalUrl, pageHashUrl } from "../api/documents";
 import { noteHashUrl } from "../api/notes";
+import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 
 interface ViewerHrefOptions {
   document?: Document;
@@ -109,4 +117,87 @@ export function getSections(document: Document): Record<number, Section> {
       return m;
     }, {}) ?? {}
   );
+}
+
+// for typescript
+export function zoomToScale(zoom: any): number | "width" | "height" {
+  if (zoom === "width" || zoom === "height") {
+    return zoom;
+  }
+
+  return +zoom || 1;
+}
+
+export function zoomToSize(zoom: any): Sizes {
+  if (IMAGE_WIDTHS_MAP.has(zoom)) {
+    return zoom;
+  }
+
+  return "small";
+}
+
+/**
+ * Generate a default zoom, based on mode
+ * @param mode
+ */
+export function getDefaultZoom(mode: ViewerMode): Zoom {
+  switch (mode) {
+    case "document":
+      return "width";
+
+    case "annotating":
+      return "width";
+
+    case "redacting":
+      return "width";
+
+    case "grid":
+      return "small";
+
+    default:
+      return 1;
+  }
+}
+
+/**
+ * Generate zoom levels based on mode, since each zooms in a slightly different way
+ */
+export function getZoomLevels(mode: ViewerMode): [string | number, string][] {
+  switch (mode) {
+    case "document":
+    case "annotating":
+    case "redacting":
+      return [
+        ["width", "zoom.fitWidth"],
+        ["height", "zoom.fitHeight"],
+        [0.5, "50%"],
+        [0.75, "75%"],
+        [1, "100%"],
+        [1.25, "125%"],
+        [1.5, "150%"],
+        [2, "200%"],
+      ];
+
+    case "text":
+      return [
+        [0.5, "50%"],
+        [0.75, "75%"],
+        [1, "100%"],
+        [1.25, "125%"],
+        [1.5, "150%"],
+        [2, "200%"],
+      ];
+
+    case "grid":
+      return [
+        ["thumbnail", "zoom.thumbnail"],
+        ["small", "zoom.small"],
+        ["normal", "zoom.normal"],
+        ["large", "zoom.large"],
+      ];
+
+    default:
+      // todo: notes, maybe
+      return [];
+  }
 }

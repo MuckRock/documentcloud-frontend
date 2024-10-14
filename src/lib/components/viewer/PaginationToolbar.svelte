@@ -133,7 +133,7 @@
   {/if}
 
   <div class="zoom">
-    <Zoom mode={$currentMode} />
+    <Zoom />
   </div>
 </div>
 

@@ -1,118 +1,31 @@
 <!-- @component
 Shared zoom component for all viewer routes.
-It exports a $zoom store that can be passed around to other components.
+
+Assumes it's a child of a ViewerContext
 -->
-<script context="module" lang="ts">
-  import { _, unwrapFunctionStore } from "svelte-i18n";
-  import { writable, type Writable } from "svelte/store";
-  import type { Sizes, ViewerMode, Zoom } from "$lib/api/types";
-  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
-
-  const i18n = unwrapFunctionStore(_);
-
-  export const zoom: Writable<Zoom> = writable(1);
-
-  // for typescript
-  export function zoomToScale(zoom: any): number | "width" | "height" {
-    if (zoom === "width" || zoom === "height") {
-      return zoom;
-    }
-
-    return +zoom || 1;
-  }
-
-  export function zoomToSize(zoom: any): Sizes {
-    if (IMAGE_WIDTHS_MAP.has(zoom)) {
-      return zoom;
-    }
-
-    return "small";
-  }
-
-  /**
-   * Generate a default zoom, based on mode
-   * @param mode
-   */
-  export function getDefaultZoom(mode: ViewerMode): Zoom {
-    switch (mode) {
-      case "document":
-        return "width";
-
-      case "annotating":
-        return "width";
-
-      case "redacting":
-        return "width";
-
-      case "grid":
-        return "small";
-
-      default:
-        return 1;
-    }
-  }
-
-  /**
-   * Generate zoom levels based on mode, since each zooms in a slightly different way
-   */
-  export function getZoomLevels(mode: ViewerMode): (string | number)[][] {
-    switch (mode) {
-      case "document":
-      case "annotating":
-      case "redacting":
-        return [
-          ["width", i18n("zoom.fitWidth")],
-          ["height", i18n("zoom.fitHeight")],
-          [0.5, "50%"],
-          [0.75, "75%"],
-          [1, "100%"],
-          [1.25, "125%"],
-          [1.5, "150%"],
-          [2, "200%"],
-        ];
-
-      case "text":
-        return [
-          [0.5, "50%"],
-          [0.75, "75%"],
-          [1, "100%"],
-          [1.25, "125%"],
-          [1.5, "150%"],
-          [2, "200%"],
-        ];
-
-      case "grid":
-        return [
-          ["thumbnail", i18n("zoom.thumbnail")],
-          ["small", i18n("zoom.small")],
-          ["normal", i18n("zoom.normal")],
-          ["large", i18n("zoom.large")],
-        ];
-
-      default:
-        // todo: notes, maybe
-        return [];
-    }
-  }
-</script>
-
 <script lang="ts">
-  export let mode: ViewerMode;
+  import { _ } from "svelte-i18n";
 
-  $: zoomLevels = getZoomLevels(mode);
-  $: $zoom = getDefaultZoom(mode);
+  import { getDefaultZoom, getZoomLevels } from "@/lib/utils/viewer";
+  import { getCurrentMode, getZoom } from "./ViewerContext.svelte";
+
+  const mode = getCurrentMode();
+  const zoom = getZoom();
+
+  $: zoomLevels = getZoomLevels($mode);
+  $: $zoom = getDefaultZoom($mode);
 </script>
 
 {#if zoomLevels.length}
   <label class="zoom">
-    {#if mode === "grid"}
+    {#if $mode === "grid"}
       {$_("zoom.size")}
     {:else}
       {$_("zoom.zoom")}
     {/if}
     <select name="zoom" bind:value={$zoom}>
       {#each zoomLevels as [value, label]}
-        <option {value}>{label}</option>
+        <option {value}>{$_(label)}</option>
       {/each}
     </select>
   </label>

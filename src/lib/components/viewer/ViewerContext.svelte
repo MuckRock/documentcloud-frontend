@@ -14,6 +14,7 @@ layouts, stories, and tests.
     DocumentText,
     Note,
     ViewerMode,
+    Zoom,
   } from "@/lib/api/types";
   import {
     pageFromHash,
@@ -71,6 +72,10 @@ layouts, stories, and tests.
   export function getPDFProgress(): Writable<DocumentLoadProgress> {
     return getContext("progress");
   }
+
+  export function getZoom(): Writable<Zoom> {
+    return getContext("zoom");
+  }
 </script>
 
 <script lang="ts">
@@ -83,8 +88,8 @@ layouts, stories, and tests.
   export let embed: boolean = false;
   export let page: number = 1;
   export let mode: ViewerMode = "document";
-  export let note: Nullable<Note> = null;
   export let query: string = "";
+  export let zoom: Zoom = 1;
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Writable<Promise<pdfjs.PDFDocumentProxy>> = writable(
@@ -107,6 +112,7 @@ layouts, stories, and tests.
   setContext("currentMode", writable(mode));
   setContext("progress", progress);
   setContext("pdf", pdf);
+  setContext("zoom", writable(zoom));
 
   $: currentMode = getCurrentMode();
   $: currentPage = getCurrentPage();

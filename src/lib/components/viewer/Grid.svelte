@@ -15,11 +15,16 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "@/api/pageSize.js";
-  import { getDocument } from "$lib/components/viewer/ViewerContext.svelte";
+  import {
+    getDocument,
+    getZoom,
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { zoomToSize } from "@/lib/utils/viewer";
 
   export let size: Sizes = "thumbnail";
 
   const document = getDocument();
+  const zoom = getZoom();
 
   const SCALE = {
     thumbnail: 1,
@@ -28,6 +33,7 @@
     large: 3,
   };
 
+  $: size = zoomToSize($zoom);
   $: sizes = pageSizesFromSpec(document.page_spec);
   $: scale = SCALE[size] ?? 1;
   $: width = IMAGE_WIDTHS_MAP.get(size) / scale;

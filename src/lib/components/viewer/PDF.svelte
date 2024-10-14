@@ -17,14 +17,25 @@
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "$lib/utils/layout";
-  import { getNotes, getSections, pageSizes } from "$lib/utils/viewer";
-  import { getCurrentPage, getDocument, getPDF } from "./ViewerContext.svelte";
+  import {
+    getNotes,
+    getSections,
+    pageSizes,
+    zoomToScale,
+  } from "$lib/utils/viewer";
+  import {
+    getCurrentPage,
+    getDocument,
+    getPDF,
+    getZoom,
+  } from "./ViewerContext.svelte";
 
-  export let scale: number | "width" | "height" = 1;
   const document: Document = getDocument();
   const currentPage = getCurrentPage();
   const pdf = getPDF();
+  const zoom = getZoom();
 
+  $: scale = zoomToScale($zoom);
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
   $: notes = getNotes(document);
   $: sections = getSections(document);
