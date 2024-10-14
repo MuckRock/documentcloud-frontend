@@ -68,11 +68,11 @@
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
     {#if sections[n]}
-      <h3 class="section" id="">
+      <h3 class="section">
         {sections[n].title}
       </h3>
     {/if}
-    <PdfPage {page_number} {scale} {width} {height} notes={notes[n]} />
+    <PdfPage {page_number} {scale} {width} {height} />
   {/each}
 </div>
 

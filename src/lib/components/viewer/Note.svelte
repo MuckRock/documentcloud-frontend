@@ -13,7 +13,7 @@
   import type { Document, Note, Sizes } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Globe16,
@@ -21,8 +21,8 @@
     Pencil16,
     People16,
     Share16,
+    XCircle16,
   } from "svelte-octicons";
-  import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
@@ -38,14 +38,17 @@
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
+  import Button from "../common/Button.svelte";
 
   const document = getDocument();
   const pdf = getPDF();
   const embed = isEmbedded();
   const mode = getCurrentMode();
 
+  const dispatch = createEventDispatcher();
+
   export let note: Note;
-  export let scale = 1.5;
+  export let scale = 2;
 
   type AsyncPDF = typeof $pdf;
 
@@ -76,7 +79,7 @@
   let shareNoteOpen = false;
 
   $: noteId = noteHashUrl(note).split("#")[1];
-
+  $: editing = $mode === "annotating";
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
@@ -182,6 +185,10 @@
       ALLOWED_ATTR,
     });
   }
+
+  function closeNote() {
+    dispatch("close");
+  }
 </script>
 
 <div
@@ -196,15 +203,17 @@
   style:--note-height={height(note)}
 >
   <header>
-    <h3>{note.title} {canEdit} {document.edit_access} {embed}</h3>
-    <div class="actions">
-      <Action icon={Share16} on:click={() => (shareNoteOpen = true)}>
-        {$_("dialog.share")}
-      </Action>
-      {#if canEdit}
-        <Action icon={Pencil16}>
-          <a href={edit_link}>{$_("dialog.edit")}</a>
-        </Action>
+    {#if !page_level}
+      <Button minW={false} ghost on:click={closeNote}>
+        <XCircle16 />
+      </Button>
+    {/if}
+    <div class="headerText">
+      <h3>{note.title} {canEdit} {document.edit_access} {embed}</h3>
+      {#if user}
+        <p class="author">
+          {$_("annotation.by", { values: { name: getUserName(user) } })}
+        </p>
       {/if}
     </div>
   </header>
@@ -221,12 +230,24 @@
       <svelte:component this={access[note.access].icon} />
       {$_(`access.${access[note.access].value}.title`)}
     </span>
-
-    {#if user}
-      <p class="author">
-        {$_("annotation.by", { values: { name: getUserName(user) } })}
-      </p>
-    {/if}
+    <div class="actions">
+      {#if canEdit}
+        <Button ghost minW={false} mode="primary" size="small" href={edit_link}>
+          <Pencil16 />
+          {$_("dialog.edit")}
+        </Button>
+      {/if}
+      <Button
+        ghost
+        minW={false}
+        mode="primary"
+        size="small"
+        on:click={() => (shareNoteOpen = true)}
+      >
+        <Share16 />
+        {$_("dialog.share")}
+      </Button>
+    </div>
   </footer>
 </div>
 {#if shareNoteOpen}
@@ -244,8 +265,9 @@
     padding: var(--font-xs, 0.75rem) var(--font-md, 1rem);
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--font-xs, 0.75rem);
+    gap: 1rem;
     pointer-events: all;
+    position: relative;
 
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
@@ -286,9 +308,22 @@
 
   header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    gap: 0.5rem;
+  }
+
+  .headerText {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  h3 {
+    flex: 0 1 auto;
+    text-align: left;
+    font-weight: var(--font-semibold);
   }
 
   .actions {
@@ -309,32 +344,37 @@
   }
 
   .public .highlight {
-    border-color: var(--note-public);
+    border-color: var(--yellow-3);
   }
 
   .private .highlight {
-    border-color: var(--note-private);
+    border-color: var(--blue-3);
   }
 
   .organization .highlight {
-    border-color: var(--note-org);
+    border-color: var(--green-3);
+  }
+
+  .content {
+    line-height: 1.5;
+    font-size: var(--font-md);
+  }
+
+  .author {
+    font-size: var(--font-xs);
+    color: var(--gray-5);
   }
 
   canvas {
     max-width: 100%;
-    padding: 0.25rem;
+    padding: 1rem;
   }
 
   footer {
     display: flex;
-    justify-content: space-between;
+    gap: 1rem;
     align-items: center;
     align-self: stretch;
-  }
-
-  footer p {
-    color: var(--gray-4, #5c717c);
-    font-size: var(--font-sm);
   }
 
   span.access {
@@ -342,19 +382,21 @@
     align-items: center;
     gap: 0.5rem;
     font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
   }
 
   span.access.public {
-    fill: var(--note-public);
+    fill: var(--yellow-3);
+    color: var(--yellow-4);
   }
 
   span.access.organization {
-    color: var(--note-org);
-    fill: var(--note-org);
+    fill: var(--green-3);
+    color: var(--green-4);
   }
 
   span.access.private {
-    color: var(--note-private);
-    fill: var(--note-private);
+    color: var(--blue-4);
+    fill: var(--blue-3);
   }
 </style>
