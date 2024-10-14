@@ -2,10 +2,10 @@
   import { _ } from "svelte-i18n";
 
   import Link from "../../../router/Link.svelte";
-  import Dropdown from "../../../common/Dropdown2.svelte";
-  import Menu from "../../../common/Menu.svelte";
-  import MenuItem from "../../../common/MenuItem.svelte";
-  import MenuTitle from "../../../common/MenuTitle.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import {
     CommentDiscussion16,
@@ -20,10 +20,11 @@
 </script>
 
 <!-- Help Menu -->
-<Dropdown id="help" position="right">
-  <MenuTitle slot="title" label={$_("authSection.help.title")}>
-    <div class="icon" slot="icon"><Question16 /></div>
-  </MenuTitle>
+<Dropdown position="bottom-end">
+  <SidebarItem slot="anchor">
+    <Question16 slot="start" />
+    {$_("authSection.help.title")}
+  </SidebarItem>
   <Menu>
     <Link toUrl="/help/faq" color={true}>
       <MenuItem>

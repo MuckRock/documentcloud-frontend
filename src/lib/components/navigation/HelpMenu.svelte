@@ -15,18 +15,16 @@
     Search16,
   } from "svelte-octicons";
 
-  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
-  import Menu from "@/common/Menu.svelte";
+  import Dropdown, {
+    type Placement,
+  } from "@/lib/components/common/Dropdown.svelte";
+  import Menu from "@/lib/components/common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Premium from "@/common/icons/Premium.svelte";
 
   import { startTour, isTourAvailable } from "../onboarding/GuidedTour.svelte";
 
-  export let position = "bottom right";
-
-  function close() {
-    closeDropdown("help");
-  }
+  export let position: Placement = "bottom-end";
 
   function onTourClick() {
     close();
@@ -37,8 +35,8 @@
 </script>
 
 <!-- Help Menu -->
-<Dropdown id="help" {position}>
-  <SidebarItem slot="title">
+<Dropdown {position}>
+  <SidebarItem slot="anchor">
     <Question24 slot="start" />
     <div class="dropdownArrow" slot="end">
       {#if position.includes("bottom")}
@@ -48,7 +46,7 @@
       {/if}
     </div>
   </SidebarItem>
-  <Menu>
+  <Menu slot="default" let:close>
     {#if showTour}
       <SidebarItem hover on:click={onTourClick}>
         <Milestone16 slot="start" />

@@ -9,11 +9,11 @@
   import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
-  import Dropdown from "@/common/Dropdown2.svelte";
+  import Dropdown from "@/lib/components/common/Dropdown.svelte";
   import EditSections from "$lib/components/forms/EditSections.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
@@ -70,18 +70,21 @@
 >
   <div class="sections">
     {#if showPDF && (sections || canEditSections)}
-      <Dropdown id="sections" position="top left" --offset="5px">
-        <div class="toolbarItem" slot="title">
+      <Dropdown position="top-start" --offset="5px">
+        <div class="toolbarItem" slot="anchor">
           <SidebarItem>
             <ListOrdered16 slot="start" />
             Sections
             <ChevronUp12 slot="end" />
           </SidebarItem>
         </div>
-        <Menu>
+        <Menu slot="default" let:close>
           {#each sections as section}
-            <MenuItem on:click={() => gotoPage(section.page_number)}
-              >{section.title}</MenuItem
+            <MenuItem
+              on:click={() => {
+                gotoPage(section.page_number);
+                close();
+              }}>{section.title}</MenuItem
             >
           {:else}
             <Empty icon={ListOrdered24}>

@@ -3,9 +3,10 @@
   import Organization16 from "svelte-octicons/lib/Organization16.svelte";
 
   import type { User, Org } from "../../../api/types/orgAndUser";
-  import Dropdown from "../../../common/Dropdown2.svelte";
-  import Menu from "../../../common/Menu.svelte";
-  import MenuTitle from "../../../common/MenuTitle.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuInsert from "$lib/components/common/MenuInsert.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import Loader from "../../../common/Loader.svelte";
   import OrgMemberList from "./OrgMemberList.svelte";
   import {
@@ -20,7 +21,7 @@
   } from "../../../api/orgAndUser";
   import OrgPicker from "./OrgPicker.svelte";
   import PremiumMenu from "./PremiumMenu.svelte";
-  import MenuInsert from "../../../common/MenuInsert.svelte";
+
   import CreditMeter, {
     formatResetDate,
   } from "../../../premium-credits/CreditMeter.svelte";
@@ -52,10 +53,11 @@
 </script>
 
 {#await getOrgPromise}
-  <Dropdown id="organization">
-    <MenuTitle slot="title" label="Loading…">
-      <Loader active center slot="icon" />
-    </MenuTitle>
+  <Dropdown>
+    <SidebarItem slot="anchor">
+      <Loader active center slot="start" />
+      Loading…
+    </SidebarItem>
     <Menu>
       <p>Getting org data…</p>
     </Menu>
@@ -70,16 +72,17 @@
       {/await}
     </PremiumMenu>
   {:else}
-    <Dropdown id="organization">
-      <MenuTitle slot="title" label={activeOrg.name}>
-        <span slot="icon">
+    <Dropdown>
+      <SidebarItem slot="anchor">
+        <span slot="start">
           {#if activeOrg.avatar_url}
             <img src={activeOrg.avatar_url} class="orgAvatar" alt="" />
           {:else}
             <div class="orgIcon"><Organization16 /></div>
           {/if}
         </span>
-      </MenuTitle>
+        {activeOrg.name}
+      </SidebarItem>
       <Menu>
         <div class="medium-width">
           {#if isPremiumOrg(activeOrg)}

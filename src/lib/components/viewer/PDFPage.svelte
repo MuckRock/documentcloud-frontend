@@ -37,12 +37,12 @@ Selectable text can be rendered in one of two ways:
   // writable ui
   import Action from "../common/Action.svelte";
   import Button from "../common/Button.svelte";
-  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
+  import Dropdown from "@/lib/components/common/Dropdown.svelte";
   import EditNote from "../forms/EditNote.svelte";
   import EditSections from "../forms/EditSections.svelte";
   import Flex from "../common/Flex.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
   import Portal from "../layouts/Portal.svelte";
@@ -294,14 +294,14 @@ Selectable text can be rendered in one of two ways:
           {/if}
         </Flex>
       {:else}
-        <Dropdown2 id="{id}-actions" position="bottom right">
-          <Button minW={false} slot="title" ghost mode="primary">
+        <Dropdown position="bottom-end">
+          <Button minW={false} slot="anchor" ghost mode="primary">
             <KebabHorizontal16 />
           </Button>
-          <Menu>
+          <Menu slot="default" let:close>
             <MenuItem
               on:click={() => {
-                closeDropdown(`${id}-actions`);
+                close();
                 pageShareOpen = true;
               }}
             >
@@ -311,7 +311,7 @@ Selectable text can be rendered in one of two ways:
             {#if document.edit_access}
               <MenuItem
                 on:click={() => {
-                  closeDropdown(`${id}-actions`);
+                  close();
                   pageNote = true;
                 }}
               >
@@ -321,7 +321,7 @@ Selectable text can be rendered in one of two ways:
 
               <MenuItem
                 on:click={() => {
-                  closeDropdown(`${id}-actions`);
+                  close();
                   editSection = true;
                 }}
               >
@@ -334,7 +334,7 @@ Selectable text can be rendered in one of two ways:
               </MenuItem>
             {/if}
           </Menu>
-        </Dropdown2>
+        </Dropdown>
       {/if}
     {/if}
   </div>

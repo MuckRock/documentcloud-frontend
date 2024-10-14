@@ -22,14 +22,14 @@
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import MenuItem from "$lib/components/common/MenuItem.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
 
-  import Dropdown2, { closeDropdown } from "@/common/Dropdown2.svelte";
-  import Menu from "@/common/Menu.svelte";
-  import MenuItem from "@/common/MenuItem.svelte";
   import SidebarItem from "../../sidebar/SidebarItem.svelte";
 
   import { remToPx } from "$lib/utils/layout";
@@ -87,20 +87,18 @@
         {/each}
       </div>
     {:else}
-      <Dropdown2 id="reading-mode" position="bottom left">
-        <div class="toolbarItem" slot="title">
-          <SidebarItem>
-            <svelte:component this={icons[$mode]} slot="start" />
-            {Array.from(readModes).find(([value]) => value === $mode)[1]}
-            <ChevronDown12 slot="end" />
-          </SidebarItem>
-        </div>
-        <Menu>
+      <Dropdown position="bottom-start">
+        <SidebarItem slot="anchor">
+          <svelte:component this={icons[$mode]} slot="start" />
+          {Array.from(readModes).find(([value]) => value === $mode)[1]}
+          <ChevronDown12 slot="end" />
+        </SidebarItem>
+        <Menu slot="default" let:close>
           {#each readModes.entries() as [value, name]}
             <MenuItem
               selected={$mode === value}
               href={getViewerHref({ document, mode: value, embed })}
-              on:click={() => closeDropdown("reading-mode")}
+              on:click={close}
             >
               <svelte:component this={icons[value]} slot="icon" />
               {name}
@@ -111,7 +109,7 @@
               <MenuItem
                 selected={$mode === value}
                 href={getViewerHref({ document, mode: value, embed })}
-                on:click={() => closeDropdown("reading-mode")}
+                on:click={close}
               >
                 <svelte:component this={icons[value]} slot="icon" />
                 {name}
@@ -119,7 +117,7 @@
             {/each}
           {/if}
         </Menu>
-      </Dropdown2>
+      </Dropdown>
     {/if}
   </svelte:fragment>
   <Flex justify="end" slot="right">
@@ -132,14 +130,14 @@
       {/each}
     {/if}
     {#if BREAKPOINTS.SEARCH_MENU}
-      <Dropdown2 id="document-search" position="bottom right">
-        <Button minW={false} ghost slot="title"
+      <Dropdown position="bottom-end">
+        <Button minW={false} ghost slot="anchor"
           ><Search16 /> {$_("common.search")}</Button
         >
         <Menu>
           <Search name="q" {query} />
         </Menu>
-      </Dropdown2>
+      </Dropdown>
     {:else}
       <Search name="q" {query} />
     {/if}

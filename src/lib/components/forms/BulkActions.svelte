@@ -21,8 +21,10 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     Tag16,
   } from "svelte-octicons";
 
-  import Dropdown, { closeDropdown } from "@/common/Dropdown2.svelte";
-  import Menu from "@/common/Menu.svelte";
+  import Dropdown, {
+    type Placement,
+  } from "@/lib/components/common/Dropdown.svelte";
+  import Menu from "@/lib/components/common/Menu.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
@@ -36,12 +38,10 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import { getCurrentUser } from "$lib/utils/permissions";
 
-  export let position = "top left";
+  export let position: Placement = "top-start";
 
   const me = getCurrentUser();
   const selected: Writable<Document[]> = getContext("selected");
-
-  const id = "bulk-actions";
 
   const actions: Record<Action, string> = {
     edit: $_("bulk.actions.edit"),
@@ -63,7 +63,6 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   // svelte 5 will let us do type coercion in templates
   function show(action: string) {
-    closeDropdown(id);
     visible = action as Action;
   }
 
@@ -72,20 +71,23 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   }
 </script>
 
-<Dropdown {id} {position}>
-  <SidebarItem slot="title" disabled={!$me || $selected?.length < 1}>
+<Dropdown {position}>
+  <SidebarItem slot="anchor" disabled={!$me || $selected?.length < 1}>
     {$_("bulk.title")}
     <ChevronUp12 slot="end" />
   </SidebarItem>
 
-  <Menu>
+  <Menu slot="default" let:close>
     {#each Object.entries(actions) as [action, label]}
       <SidebarItem
         hover
         disabled={!$me || $selected?.length < 1}
-        on:click={() => show(action)}
+        on:click={() => {
+          close();
+          show(action);
+        }}
       >
-        <svelte:component this={icons[action]} />
+        <svelte:component this={icons[action]} slot="start" />
         {label}
       </SidebarItem>
     {/each}

@@ -5,7 +5,7 @@
   import Loader from "@/common/Loader.svelte";
   import Button from "@/common/Button.svelte";
   import Dropdown from "@/common/Dropdown.svelte";
-  import Menu from "@/common/Menu.svelte";
+  import Menu from "@/lib/components/common/Menu.svelte";
   import MenuItem from "@/common/MenuItem.svelte";
   import NoWhitespace from "@/common/NoWhitespace.svelte";
 
