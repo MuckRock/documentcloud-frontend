@@ -37,6 +37,12 @@ Assumes it's a child of a ViewerContext
 
   $: id = pageHashUrl(page_number).replace("#", "");
   $: href = getViewerHref({ document, mode: $mode, page: page_number, embed });
+  $: documentHref = getViewerHref({
+    document,
+    mode: "document",
+    page: page_number,
+    embed,
+  });
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(
@@ -113,7 +119,7 @@ Assumes it's a child of a ViewerContext
 
     <PageActions {document} {page_number} pageWidth={width} />
   </header>
-  <slot {id} {href} {visible} />
+  <slot {id} {href} {visible} {documentHref} />
 </div>
 
 <style>
