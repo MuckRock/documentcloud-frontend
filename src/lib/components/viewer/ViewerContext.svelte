@@ -4,7 +4,8 @@ layouts, stories, and tests.
  -->
 <script lang="ts" context="module">
   import { getContext, onMount, setContext } from "svelte";
-  import { type Writable, writable } from "svelte/store";
+  import { get, type Writable, writable } from "svelte/store";
+  import { afterNavigate } from "$app/navigation";
 
   import type {
     Maybe,
@@ -14,7 +15,12 @@ layouts, stories, and tests.
     Note,
     ViewerMode,
   } from "@/lib/api/types";
-  import { pdfUrl } from "@/lib/api/documents";
+  import {
+    pageFromHash,
+    pdfUrl,
+    shouldPaginate,
+    shouldPreload,
+  } from "@/lib/api/documents";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -72,6 +78,10 @@ layouts, stories, and tests.
 </script>
 
 <script lang="ts">
+  import { page as pageStore } from "$app/stores";
+  import { scrollToPage } from "@/lib/utils/scroll";
+  import { noteFromHash } from "@/lib/api/notes";
+
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;
   export let asset_url: URL = pdfUrl(document);
@@ -104,6 +114,9 @@ layouts, stories, and tests.
   setContext("progress", progress);
   setContext("pdf", pdf);
 
+  $: currentMode = getCurrentMode();
+  $: currentPage = getCurrentPage();
+
   onMount(() => {
     // we might move this to a load function
     if (!task) {
@@ -115,6 +128,54 @@ layouts, stories, and tests.
       $progress = p;
     };
   });
+
+  afterNavigate(() => {
+    const { hash } = $pageStore.url;
+    const hashPage = pageFromHash(hash);
+
+    if (
+      hashPage !== $currentPage &&
+      $currentPage > 1 &&
+      shouldPaginate($currentMode)
+    ) {
+      $currentPage = hashPage;
+      scrollToPage(hashPage);
+    }
+
+    const noteId = noteFromHash(hash);
+    if (noteId && window) {
+      const noteEl = window.document.querySelector(hash);
+      noteEl.scrollIntoView();
+    }
+  });
+
+  // go to currentPage
+  function onHashChange() {
+    const { hash } = window.location;
+    const hashPage = pageFromHash(hash);
+
+    $currentPage = hashPage;
+    scrollToPage(hashPage);
+
+    const noteId = noteFromHash(hash);
+    if (noteId && window) {
+      const noteEl = window.document.querySelector(hash);
+      noteEl.scrollIntoView();
+    }
+  }
 </script>
+
+<svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
+<svelte:head>
+  {#if shouldPreload($currentMode)}
+    <link
+      rel="prefetch"
+      href={asset_url.href}
+      as="fetch"
+      crossorigin="anonymous"
+      type="application/pdf"
+    />
+  {/if}
+</svelte:head>
 
 <slot />
