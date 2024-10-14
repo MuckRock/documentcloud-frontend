@@ -37,8 +37,8 @@
   {#each sizes as aspect, n}
     {@const page_number = n + 1}
     {@const height = width * aspect}
-    <Page {page_number} let:href>
-      <a {href}>
+    <Page {page_number} let:documentHref>
+      <a href={documentHref}>
         <img
           src={pageImageUrl(document, page_number, size).href}
           alt="Page {page_number}, {document.title}"
