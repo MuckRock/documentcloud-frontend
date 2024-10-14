@@ -1,24 +1,14 @@
 <script lang="ts">
-  import type { ViewerMode, Note } from "$lib/api/types";
-
-  import { type Writable, writable } from "svelte/store";
-
   import { canonicalUrl } from "$lib/api/documents";
-  import { setContext } from "svelte";
+  import ViewerContext from "@/lib/components/viewer/ViewerContext.svelte";
 
   export let data;
 
   $: document = data.document;
+  $: mode = data.mode;
+  $: text = data.text;
+  $: asset_url = data.asset_url;
   $: canonical_url = canonicalUrl(document).href;
-
-  const activeNote: Writable<Note> = writable(null);
-  const currentPage: Writable<number> = writable(1);
-  const currentMode: Writable<ViewerMode> = writable(data.mode);
-
-  // stores we need deeper in the component tree, available via context
-  setContext("activeNote", activeNote);
-  setContext("currentPage", currentPage);
-  setContext("currentMode", currentMode);
 </script>
 
 <svelte:head>
@@ -32,4 +22,6 @@
   {/if}
 </svelte:head>
 
-<slot />
+<ViewerContext {document} {mode} {text} {asset_url}>
+  <slot />
+</ViewerContext>

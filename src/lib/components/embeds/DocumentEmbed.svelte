@@ -1,6 +1,8 @@
-<script lang="ts">
-  import type { Document, DocumentText } from "$lib/api/types";
+<!-- @component
+  Assumes it's a child of a ViewerContext
+ -->
 
+<script lang="ts">
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -9,10 +11,11 @@
   import Viewer from "../viewer/Viewer.svelte";
 
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
+  import { getDocument } from "../viewer/ViewerContext.svelte";
 
-  export let document: Document;
-  export let text: DocumentText;
   export let settings: Partial<EmbedSettings> = defaultSettings;
+
+  const document = getDocument();
 
   // if we're using this layout, we're embedded
   setContext("embed", true);
@@ -32,7 +35,7 @@
     </header>
   {/if}
   <main>
-    <Viewer {document} {text} />
+    <Viewer />
   </main>
 </div>
 
