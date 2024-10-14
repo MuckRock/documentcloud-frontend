@@ -209,7 +209,7 @@
       </Button>
     {/if}
     <div class="headerText">
-      <h3>{note.title} {canEdit} {document.edit_access} {embed}</h3>
+      <h3>{note.title}</h3>
       {#if user}
         <p class="author">
           {$_("annotation.by", { values: { name: getUserName(user) } })}

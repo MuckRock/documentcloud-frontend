@@ -15,7 +15,6 @@ Assumes it's a child of a ViewerContext
   import { pushState } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
-  import { XCircleFill16 } from "svelte-octicons";
 
   import EditNote from "../forms/EditNote.svelte";
   import NoteTab from "./NoteTab.svelte";
@@ -51,9 +50,11 @@ Assumes it's a child of a ViewerContext
 
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
-  $: currentNote = notes.find(
-    (note) => note?.id && note.id === noteFromHash($page.url.hash),
-  );
+  $: currentId = noteFromHash($page.url.hash ?? "");
+  $: currentNote = notes.find((note) => note.id === currentId);
+  $: {
+    console.log(currentId, currentNote);
+  }
   $: writing = $mode === "annotating";
   $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
@@ -141,14 +142,14 @@ Assumes it's a child of a ViewerContext
     const target = e.target as HTMLAnchorElement;
     const href =
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
-    console.log(target?.href, href, note);
     pushState(href, {});
   }
 
   function closeNote() {
     newNote = null;
     dragging = false;
-    pushState(getViewerHref({ document, mode: $mode, embed }), {});
+    const href = getViewerHref({ document, mode: $mode, embed });
+    pushState(href, {});
   }
 
   function onkeypress(e: KeyboardEvent) {
@@ -169,8 +170,7 @@ Assumes it's a child of a ViewerContext
   on:pointermove|self={pointermove}
   on:pointerup|self={pointerup}
 >
-  {#each notes as note}
-    {@const is_active = note.id === currentNote?.id}
+  {#each notes as note (note.id)}
     <a
       class="note"
       href={getViewerHref({ document, note, mode: $mode, embed })}
@@ -180,7 +180,7 @@ Assumes it's a child of a ViewerContext
     >
       <NoteTab access={note.access} />
     </a>
-    {#if is_active}
+    {#if note.id === currentId}
       <div
         class="box {note.access}"
         style:top="{note.y1 * 100}%"
