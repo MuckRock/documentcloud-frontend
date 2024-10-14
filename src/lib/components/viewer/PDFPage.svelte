@@ -10,7 +10,7 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import type { Note as NoteType, TextPosition } from "$lib/api/types";
+  import type { TextPosition } from "$lib/api/types";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { _ } from "svelte-i18n";
@@ -26,20 +26,21 @@ Selectable text can be rendered in one of two ways:
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
   import {
+    getDocument,
     getCurrentMode,
     getPDF,
     getQuery,
   } from "$lib/components/viewer/ViewerContext.svelte";
-  import { fitPage } from "@/lib/utils/viewer";
+  import { fitPage, getNotes } from "@/lib/utils/viewer";
 
   export let page_number: number; // 1-indexed
 
   export let scale: number | "width" | "height";
   export let width: number;
   export let height: number;
-  export let notes: NoteType[] = [];
   export let text: TextPosition[] = [];
 
+  const document = getDocument();
   const mode = getCurrentMode();
   const pdf = getPDF();
   const query = getQuery();
@@ -90,8 +91,8 @@ Selectable text can be rendered in one of two ways:
     (r) => r.page_number === page_number - 1,
   );
 
-  $: page_level_notes = notes?.filter((n) => isPageLevel(n)) ?? [];
-  $: in_page_notes = notes?.filter((n) => !isPageLevel(n)) ?? [];
+  $: page_level_notes =
+    getNotes(document)[page_number - 1]?.filter((n) => isPageLevel(n)) ?? [];
 
   async function render(
     page, // pdf.getPage
@@ -237,9 +238,7 @@ Selectable text can be rendered in one of two ways:
       </div>
     {/if}
 
-    {#await $pdf then pdf}
-      <AnnotationLayer notes={in_page_notes} page_number={page_number - 1} />
-    {/await}
+    <AnnotationLayer page_number={page_number - 1} />
 
     {#if redactions_for_page.length > 0 || $mode === "redacting"}
       <RedactionLayer

@@ -18,13 +18,6 @@
 
   const document = doc as Document;
   const sizes = pageSizes(document.page_spec);
-  const notes = document.notes.reduce((m, note) => {
-    if (!m[note.page_number]) {
-      m[note.page_number] = [];
-    }
-    m[note.page_number].push(note);
-    return m;
-  }, {});
 </script>
 
 <Story name="Reading">
@@ -33,7 +26,7 @@
       {#each sizes as [width, height], page_number}
         <Page page_number={page_number + 1}>
           <div class="page-container">
-            <AnnotationLayer {page_number} notes={notes[page_number] || []} />
+            <AnnotationLayer {page_number} />
           </div>
         </Page>
       {/each}
@@ -47,7 +40,7 @@
       {#each sizes as [width, height], page_number}
         <Page page_number={page_number + 1}>
           <div class="page-container">
-            <AnnotationLayer {page_number} notes={notes[page_number] || []} />
+            <AnnotationLayer {page_number} />
           </div>
         </Page>
       {/each}

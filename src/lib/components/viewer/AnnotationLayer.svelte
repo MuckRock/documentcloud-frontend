@@ -35,30 +35,25 @@ Assumes it's a child of a ViewerContext
     getDocument,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
-  import { getViewerHref } from "$lib/utils/viewer";
+  import { getNotes, getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
   import { page } from "$app/stores";
 
   export let scale = 1.5;
+  export let page_number: number; // zero-indexed
 
   const document = getDocument();
   const embed = isEmbedded();
   const mode = getCurrentMode();
 
-  export let notes: NoteType[] = [];
-  export let page_number: number; // zero-indexed
-
-  let container: HTMLElement;
   let newNote: Partial<NoteType> & BBox = null; // is this too clever?
   let dragging = false;
-  let form: EditNote;
 
+  $: notes =
+    getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: currentNote = notes.find(
     (note) => note?.id && note.id === noteFromHash($page.url.hash),
   );
-  $: {
-    console.log(notes, currentNote, $page.url.hash);
-  }
   $: writing = $mode === "annotating";
   $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
@@ -146,13 +141,14 @@ Assumes it's a child of a ViewerContext
     const target = e.target as HTMLAnchorElement;
     const href =
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
+    console.log(target?.href, href, note);
     pushState(href, {});
   }
 
   function closeNote() {
     newNote = null;
     dragging = false;
-    pushState(window.location.pathname, {});
+    pushState(getViewerHref({ document, mode: $mode, embed }), {});
   }
 
   function onkeypress(e: KeyboardEvent) {
@@ -165,7 +161,6 @@ Assumes it's a child of a ViewerContext
 <svelte:window on:keydown={onkeypress} />
 
 <div
-  bind:this={container}
   class="notes"
   class:writing
   class:dragging
@@ -174,8 +169,8 @@ Assumes it's a child of a ViewerContext
   on:pointermove|self={pointermove}
   on:pointerup|self={pointerup}
 >
-  {#each notes || [] as note}
-    {@const is_active = note && currentNote && note.id === currentNote.id}
+  {#each notes as note}
+    {@const is_active = note.id === currentNote?.id}
     <a
       class="note"
       href={getViewerHref({ document, note, mode: $mode, embed })}
@@ -184,14 +179,6 @@ Assumes it's a child of a ViewerContext
       on:click={(e) => openNote(e, note)}
     >
       <NoteTab access={note.access} />
-      {#if is_active}
-        <button
-          class="close"
-          on:click|preventDefault|stopPropagation={closeNote}
-        >
-          <XCircleFill16 />
-        </button>
-      {/if}
     </a>
     {#if is_active}
       <div
@@ -203,16 +190,10 @@ Assumes it's a child of a ViewerContext
       ></div>
       {#if writing}
         <div class="note-form" style:top="calc({note.y2} * 100% + 1rem)">
-          <EditNote
-            bind:this={form}
-            {document}
-            bind:note
-            {page_number}
-            on:close={closeNote}
-          />
+          <EditNote bind:note {document} {page_number} on:close={closeNote} />
         </div>
       {:else}
-        <Note {note} {scale} />
+        <Note {note} {scale} on:close={closeNote} />
       {/if}
     {:else}
       <a
@@ -242,7 +223,6 @@ Assumes it's a child of a ViewerContext
     {#if !dragging}
       <div class="note-form" style:top="calc({newNote.y2} * 100% + 1rem)">
         <EditNote
-          bind:this={form}
           {document}
           bind:note={newNote}
           {page_number}
