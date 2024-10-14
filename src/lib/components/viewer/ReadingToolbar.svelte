@@ -125,7 +125,7 @@ Assumes it's a child of a ViewerContext
     {#if !BREAKPOINTS.WRITE_MENU && canWrite}
       {#each writeModes as [value, name]}
         <Button ghost href={getViewerHref({ document, mode: value, embed })}>
-          <svelte:component this={icons[value]} />
+          <span class="icon"><svelte:component this={icons[value]} /></span>
           {name}
         </Button>
       {/each}
@@ -149,5 +149,8 @@ Assumes it's a child of a ViewerContext
   .tabs {
     display: flex;
     padding: 0 1rem;
+  }
+  .icon {
+    flex: 0 0 auto;
   }
 </style>
