@@ -278,25 +278,6 @@ Assumes it's a child of a ViewerContext
     left: -3rem;
   }
 
-  .note button {
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: pointer;
-
-    position: absolute;
-    margin: auto 0;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-
-    display: flex;
-    padding-left: 0.5rem;
-    justify-content: left;
-    align-items: center;
-  }
-
   .note-form {
     position: absolute;
     pointer-events: all;
