@@ -143,7 +143,7 @@ layouts, stories, and tests.
   afterNavigate(() => {
     console.log(mode);
     $currentMode = mode;
-    const { hash } = $pageStore.url;
+    const { hash = "" } = $pageStore.url;
     if (shouldPaginate(mode)) {
       scrollToHash(hash);
     }
