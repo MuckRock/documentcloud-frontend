@@ -152,5 +152,6 @@ Assumes it's a child of a ViewerContext
   }
   .icon {
     flex: 0 0 auto;
+    display: inline-flex;
   }
 </style>
