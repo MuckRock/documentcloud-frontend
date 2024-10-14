@@ -53,8 +53,8 @@ Assumes it's a child of a ViewerContext
   let dragging = false;
   let form: EditNote;
 
-  $: currentNote = document.notes.find(
-    (note) => note.id === noteFromHash($page.url.hash),
+  $: currentNote = notes.find(
+    (note) => note?.id && note.id === noteFromHash($page.url.hash),
   );
   $: writing = $mode === "annotating";
   $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
@@ -172,7 +172,7 @@ Assumes it's a child of a ViewerContext
   on:pointerup|self={pointerup}
 >
   {#each notes || [] as note}
-    {@const is_active = note.id === currentNote.id}
+    {@const is_active = note && currentNote && note.id === currentNote.id}
     <a
       class="note"
       href={getViewerHref({ document, note, mode: $mode, embed })}
