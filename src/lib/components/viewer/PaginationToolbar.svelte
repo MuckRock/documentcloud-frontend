@@ -86,7 +86,7 @@
           {#each sections as section}
             <MenuItem
               on:click={() => {
-                gotoPage(section.page_number);
+                gotoPage(section.page_number + 1);
                 close();
               }}>{section.title}</MenuItem
             >
