@@ -753,7 +753,7 @@
     "update": {
       "label": "Change",
       "confirm": "Change access for {name}",
-      "message": "Select an access level below for {name} in {title}"  
+      "message": "Select an access level for {name} in {title}"  
     },
     "access": {
       "access": "Access",
@@ -772,7 +772,7 @@
     },
     "add": "Add",
     "addCollaborators": "Add Collaborators",
-    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
+    "invite": "Enter the email of an existing DocumentCloud user. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
     "admin": "Admin",
     "view": "View",
     "edit": "Edit",

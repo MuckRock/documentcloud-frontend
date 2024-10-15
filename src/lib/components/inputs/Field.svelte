@@ -35,7 +35,7 @@
   .help {
     margin: 0.5rem 0;
     font-size: var(--font-sm, 0.875em);
-    color: var(--gray-3);
+    color: var(--gray-4);
   }
   .inline.field {
     width: 100%;

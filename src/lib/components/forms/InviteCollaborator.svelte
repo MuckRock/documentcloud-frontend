@@ -1,38 +1,41 @@
 <!-- @component
-Update permissions for a single collaborator on a project
+Invite a new collaborator to a project
 -->
-<script context="module" lang="ts">
-  import type { Project, ProjectUser } from "$lib/api/types";
-</script>
-
 <script lang="ts">
+  import type { Project, ProjectUser } from "$lib/api/types";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import Field from "../inputs/Field.svelte";
+  import Text from "../inputs/Text.svelte";
   import ProjectAccess from "../inputs/ProjectAccess.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
-  import { getUserName } from "$lib/api/accounts";
+
+  export let project: Project;
 
   const dispatch = createEventDispatcher();
 
-  export let project: Project;
-  export let user: ProjectUser;
-
-  $: action = new URL("?/update", canonicalUrl(project)).href;
-  $: name = getUserName(user.user);
-  $: title = project.title;
+  $: action = new URL("?/invite", canonicalUrl(project)).href;
 </script>
 
 <form {action} method="post">
-  <p>{$_("collaborators.update.message", { values: { name, title } })}</p>
+  <Field
+    title={$_("common.emailAddress")}
+    sronly
+    required
+    description={$_("collaborators.invite")}
+  >
+    <Text name="email" placeholder={$_("common.emailAddress")} required />
+  </Field>
 
   <ProjectAccess name="access" />
 
   <Flex class="buttons">
-    <Button type="submit" mode="primary">{$_("dialog.update")}</Button>
+    <Button type="submit" mode="primary">{$_("collaborators.add")}</Button>
     <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
