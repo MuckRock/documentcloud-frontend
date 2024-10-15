@@ -25,12 +25,15 @@ They might get separated later.
   import Avatar from "../accounts/Avatar.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
-  import { getUserName } from "@/lib/api/accounts";
+  import { getUserName } from "$lib/api/accounts";
 
   export let project: Project;
   export let users: ProjectUser[];
 
   const dispatch = createEventDispatcher();
+
+  // set to a user ID to trigger removal flow
+  let remove: number | null = null;
 
   $: canonical = canonicalUrl(project);
   $: action = new URL("?/users", canonical).href;
@@ -44,10 +47,10 @@ They might get separated later.
   );
 
   function sort(users: User[]) {
-    return users.sort((a, b) => a.name.localeCompare(b.name));
+    return users.sort((a, b) => getUserName(a).localeCompare(getUserName(b)));
   }
 
-  function onSubmit({ formElement, formData, action, cancel, submitter }) {
+  function onSubmit({ submitter }) {
     submitter.disabled = true;
     return async ({ result, update }) => {
       submitter.disabled = false;
@@ -91,6 +94,7 @@ They might get separated later.
               <tr class="sr-only">
                 <th>{$_("collaborators.name")}</th>
                 <th>{$_("collaborators.access")}</th>
+                <th>{$_("collaborators.remove.label")}</th>
               </tr>
               {#each sort(group) as user}
                 <tr>
@@ -104,11 +108,13 @@ They might get separated later.
                         <option value="admin">
                           {$_("collaborators.admin")}
                         </option>
-                        <option value="remove">
-                          {$_("collaborators.remove.label")}
-                        </option>
                       </select>
                     </Field>
+                  </td>
+                  <td>
+                    <Button minW={false} ghost mode="danger">
+                      {$_("collaborators.remove.label")}
+                    </Button>
                   </td>
                 </tr>
               {/each}
@@ -146,7 +152,7 @@ They might get separated later.
   td {
     text-align: start;
     margin: 0;
-    padding: 0.25rem 0 0 0;
+    padding: 0.25rem;
 
     color: var(--gray-5, #233944);
     overflow: hidden;

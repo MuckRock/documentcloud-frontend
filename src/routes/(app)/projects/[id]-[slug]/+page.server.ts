@@ -3,11 +3,14 @@ import type { Project, ProjectAccess } from "$lib/api/types";
 
 import { fail, redirect } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
-import * as projects from "$lib/api/projects";
 import * as collaborators from "$lib/api/collaborators";
+import * as projects from "$lib/api/projects";
 
 export const actions = {
-  async delete({ cookies, request, fetch, params }) {
+  /**
+   * Delete this project
+   */
+  async delete({ cookies, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const project_id = +params.id;
 
@@ -20,6 +23,9 @@ export const actions = {
     return redirect(302, "/projects/");
   },
 
+  /**
+   * Edit this project
+   */
   async edit({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
@@ -45,6 +51,7 @@ export const actions = {
     return { success: true, project: updated };
   },
 
+  // remove this
   async users({ request, cookies, params, fetch }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
@@ -78,6 +85,9 @@ export const actions = {
     };
   },
 
+  /**
+   * Invite a collaborator
+   */
   async invite({ request, cookies, params, fetch }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
@@ -100,5 +110,32 @@ export const actions = {
       success: true,
       user,
     };
+  },
+
+  /**
+   * Update a collaborator's permissions
+   */
+  async update() {},
+
+  /**
+   * Remove a collaborator
+   */
+  async remove({ request, cookies, params, fetch }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const form = await request.formData();
+
+    const user = +form.get("user");
+    const project_id = +params.id;
+
+    const { error } = await collaborators.remove(
+      project_id,
+      user,
+      csrf_token,
+      fetch,
+    );
+
+    if (error) {
+      return fail(error.status, { ...error });
+    }
   },
 } satisfies Actions;

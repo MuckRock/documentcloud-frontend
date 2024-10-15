@@ -2,12 +2,12 @@
   import { _ } from "svelte-i18n";
 
   import type {
+    AddOnListItem,
+    APIResponse,
+    DocumentResults,
     Page,
     Project,
     ProjectUser,
-    DocumentResults,
-    AddOnListItem,
-    APIResponse,
   } from "$lib/api/types";
   import AddOns from "$lib/components/common/AddOns.svelte";
   import Collaborators from "$lib/components/projects/Collaborators.svelte";

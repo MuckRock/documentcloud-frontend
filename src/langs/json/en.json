@@ -746,9 +746,29 @@
   },
   "collaborators": {
     "remove": {
-      "label": "Remove user",
+      "label": "Remove",
       "confirm": "Confirm remove user",
       "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
+    },
+    "update": {
+      "label": "Change",
+      "confirm": "Change access for {name}",
+      "message": "Select an access level below for {name} in {title}"  
+    },
+    "access": {
+      "access": "Access",
+      "admin": {
+        "title": "Admin",
+        "description": "Collaborators can edit this project and its documents"
+      },
+      "edit": {
+        "title": "Edit",
+        "description": "Collaborators can edit documents in this project"
+      },
+      "view": {
+        "title": "View",
+        "description": "Collaborators can view documents in this project"
+      }
     },
     "add": "Add",
     "addCollaborators": "Add Collaborators",
@@ -765,7 +785,6 @@
     "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
     "manage": "Manage Collaborators",
     "name": "Name",
-    "access": "Access",
     "you": "(you)",
     "change": "Change access"
   },
