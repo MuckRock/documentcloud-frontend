@@ -764,15 +764,15 @@
       "access": "Access",
       "admin": {
         "title": "Admin",
-        "description": "Collaborators can edit this project and its documents"
+        "description": "Admins can add and remove documents and collaborators to the project"
       },
       "edit": {
-        "title": "Edit",
-        "description": "Collaborators can edit documents in this project"
+        "title": "Editor",
+        "description": "Editors can see and edit project documents owned by project admins"
       },
       "view": {
-        "title": "View",
-        "description": "Collaborators can view documents in this project"
+        "title": "Viewer",
+        "description": "Viewers can see project documents owned by project admins"
       }
     },
     "add": "Add",

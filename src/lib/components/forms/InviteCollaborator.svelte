@@ -79,5 +79,6 @@ Invite a new collaborator to a project
   .error {
     color: var(--error);
     font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
   }
 </style>

@@ -79,31 +79,37 @@
       <SidebarItem small>
         <Avatar user={user.user} slot="start" />
         {getUserName(user.user)}
-        <span class="badge" slot="end">
-          {$_(accessLabels[user.access])}
-
-          {#if project.add_remove_access && !isMe(user, $me)}
-            <Action
-              title={actions.update}
-              on:click={() => {
-                user_to_update = user;
-                show = "update";
-              }}
-            >
-              <Pencil16 />
-            </Action>
-            <Action
-              title={actions.remove}
-              --fill="var(--caution)"
-              on:click={() => {
-                user_to_update = user;
-                show = "remove";
-              }}
-            >
-              <XCircle16 />
-            </Action>
-          {/if}
-        </span>
+      <Flex slot="end">
+        <span class="badge">{$_(accessLabels[user.access])}</span>
+        {#if project.add_remove_access && !isMe(user, $me)}
+          <Button
+            ghost
+            mode="primary"
+            minW={false}
+            size="small"
+            title={actions.update}
+            on:click={() => {
+              user_to_update = user;
+              show = "update";
+            }}
+          >
+            <Pencil16 />
+          </Button>
+          <Button
+            ghost
+            mode="danger"
+            minW={false}
+            size="small"
+            title={actions.remove}
+            on:click={() => {
+              user_to_update = user;
+              show = "remove";
+            }}
+          >
+            <XCircle16 />
+          </Button>
+        {/if}
+      </Flex>
       </SidebarItem>
     {:else}
       <SidebarItem small>
