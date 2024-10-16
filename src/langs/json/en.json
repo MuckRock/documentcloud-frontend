@@ -746,13 +746,37 @@
   },
   "collaborators": {
     "remove": {
-      "label": "Remove user",
+      "label": "Remove collaborator",
       "confirm": "Confirm remove user",
       "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
     },
+    "update": {
+      "label": "Change access",
+      "confirm": "Change access for {name}",
+      "message": "Select an access level for {name} in {title}"  
+    },
+    "invite": {
+      "label": "Invite collaborators",
+      "confirm": "Add a user to this project",
+      "message": "Enter the email of an existing DocumentCloud user. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once."
+    },
+    "access": {
+      "access": "Access",
+      "admin": {
+        "title": "Admin",
+        "description": "Admins can add and remove documents and collaborators to the project"
+      },
+      "edit": {
+        "title": "Editor",
+        "description": "Editors can see and edit project documents owned by project admins"
+      },
+      "view": {
+        "title": "Viewer",
+        "description": "Viewers can see project documents owned by project admins"
+      }
+    },
     "add": "Add",
     "addCollaborators": "Add Collaborators",
-    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
     "admin": "Admin",
     "view": "View",
     "edit": "Edit",
@@ -765,7 +789,6 @@
     "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
     "manage": "Manage Collaborators",
     "name": "Name",
-    "access": "Access",
     "you": "(you)",
     "change": "Change access"
   },

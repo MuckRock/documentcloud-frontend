@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
-  import type { ProjectUser } from "@/lib/api/types";
+  import type { ProjectUser } from "$lib/api/types";
+
   import { Story } from "@storybook/addon-svelte-csf";
   import Collaborators from "../Collaborators.svelte";
 
@@ -20,9 +21,12 @@
 </Story>
 
 <Story name="manage">
-  <Collaborators {users} project={{ ...project, add_remove_access: true }} />
+  <Collaborators
+    {users}
+    project={{ ...project, add_remove_access: true, edit_access: true }}
+  />
 </Story>
 
 <Story name="empty">
-  <Collaborators {project} users={[]} />
+  <Collaborators project={{ ...project, add_remove_access: true }} users={[]} />
 </Story>
