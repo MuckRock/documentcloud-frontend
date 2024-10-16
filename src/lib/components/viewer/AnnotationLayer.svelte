@@ -133,6 +133,7 @@ Assumes it's a child of a ViewerContext
     const target = e.target as HTMLAnchorElement;
     const href =
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
+    $currentNote = note;
     pushState(href, { note });
   }
 
@@ -140,6 +141,7 @@ Assumes it's a child of a ViewerContext
     newNote = null;
     dragging = false;
     const href = getViewerHref({ document, mode: $mode, embed });
+    $currentNote = null;
     pushState(href, {});
   }
 
