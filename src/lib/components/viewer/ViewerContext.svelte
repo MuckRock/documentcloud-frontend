@@ -92,9 +92,11 @@ layouts, stories, and tests.
   import { page as pageStore } from "$app/stores";
   import type { _ } from "svelte-i18n";
   import { noteFromHash } from "@/lib/api/notes";
+  import type { Page } from "@sveltejs/kit";
 
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;
+  export let note: Nullable<Note> = null;
   export let asset_url: URL = pdfUrl(document);
   export let embed: boolean = false;
   export let page: number = 1;
@@ -117,28 +119,26 @@ layouts, stories, and tests.
     console.log($pageStore.url.hash);
   }
 
-  const currentNote = derived(pageStore, ($pageStore) => {
-    const currentId = noteFromHash($pageStore.url.hash ?? "");
-    const note = document.notes.find((note) => note.id === currentId);
-    console.log(currentId, note);
-    return note;
-  });
-
   // stores we need deeper in the component tree, available via context
   setContext("document", document);
   setContext("text", text);
   setContext("asset_url", asset_url);
   setContext("embed", embed);
   setContext("query", query);
-  setContext("currentNote", currentNote);
+  setContext("currentNote", writable(note));
   setContext("currentPage", writable(page));
   setContext("currentMode", writable(mode));
   setContext("progress", progress);
   setContext("pdf", pdf);
   setContext("zoom", writable(zoom));
 
+  $: currentDoc = getDocument();
   $: currentMode = getCurrentMode();
   $: currentPage = getCurrentPage();
+  $: currentNote = getCurrentNote();
+
+  $: noteMatchingPageHash = (note: Note) =>
+    note.id === noteFromHash($pageStore.url.hash);
 
   function scrollToHash(hash: string) {
     const page: Nullable<number> = pageFromHash(hash);
@@ -153,8 +153,22 @@ layouts, stories, and tests.
   }
 
   function onHashChange() {
+    console.log(
+      "onHashChange:",
+      JSON.stringify(
+        {
+          w: window.location.hash,
+          $: $pageStore.url.hash,
+        },
+        null,
+        2,
+      ),
+    );
     const { hash } = window.location;
-    scrollToHash(hash);
+    $currentNote = currentDoc.notes.find(noteMatchingPageHash);
+    if (shouldPaginate($currentMode)) {
+      scrollToHash(hash);
+    }
   }
 
   onMount(() => {
@@ -170,8 +184,22 @@ layouts, stories, and tests.
   });
 
   afterNavigate(() => {
+    console.log(
+      "afterNavigate:",
+      JSON.stringify(
+        {
+          w: window.location.hash,
+          $: $pageStore.url.hash,
+          s: JSON.stringify($pageStore.state, null, 2),
+        },
+        null,
+        2,
+      ),
+    );
+    // refresh stores from URL state
+    const { hash } = $pageStore.url;
     $currentMode = mode;
-    const hash = $pageStore.url.hash ?? "";
+    $currentNote = currentDoc.notes.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate(mode)) {
       scrollToHash(hash);
     }

@@ -48,7 +48,10 @@ Assumes it's a child of a ViewerContext
   $: writing = $mode === "annotating";
   $: editing = Boolean($currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
-    writing && Boolean($currentNote) && isPageLevel($currentNote);
+    writing &&
+    Boolean($currentNote) &&
+    isPageLevel($currentNote) &&
+    page_number === $currentNote.page_number;
 
   function pointerdown(e: PointerEvent) {
     if (currentNote || newNote) return;
