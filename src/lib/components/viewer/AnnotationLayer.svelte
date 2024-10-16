@@ -249,6 +249,7 @@ Assumes it's a child of a ViewerContext
 
   .notes.writing {
     cursor: crosshair;
+    pointer-events: all;
   }
 
   .notes :global(*) {
