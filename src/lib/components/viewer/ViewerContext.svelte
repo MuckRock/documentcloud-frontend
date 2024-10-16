@@ -115,7 +115,9 @@ layouts, stories, and tests.
 
   const currentNote = derived(pageStore, ($pageStore) => {
     const currentId = noteFromHash($pageStore.url.hash ?? "");
-    return document.notes.find((note) => note.id === currentId);
+    const note = document.notes.find((note) => note.id === currentId);
+    console.log(currentId, note);
+    return note;
   });
 
   // stores we need deeper in the component tree, available via context
@@ -164,9 +166,8 @@ layouts, stories, and tests.
   });
 
   afterNavigate(() => {
-    console.log(mode);
     $currentMode = mode;
-    const { hash = "" } = $pageStore.url;
+    const hash = $pageStore.url.hash ?? "";
     if (shouldPaginate(mode)) {
       scrollToHash(hash);
     }
