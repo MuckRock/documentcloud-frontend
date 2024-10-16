@@ -6,8 +6,6 @@
     "error": "An error ocurred",
     "documentCloud": "DocumentCloud",
     "home": "Home",
-    "new": "New",
-    "learnMore": "Learn more",
     "or": "or",
     "explore": "Explore",
     "more": "More",
@@ -33,7 +31,6 @@
     "resultsCount": "Showing {n, number} of {total, number} results"
   },
   "access": {
-    "access": "Access",
     "private": {
       "value": "private",
       "title": "Private",
@@ -48,34 +45,6 @@
       "value": "public",
       "title": "Public",
       "description": "Documents will be publicly visible to everyone"
-    }
-  },
-  "status": {
-    "status": "Status",
-    "success": {
-      "value": "success",
-      "title": "Success",
-      "description": "The document has been succesfully processed"
-    },
-    "readable": {
-      "value": "readable",
-      "title": "Readable",
-      "description": "The document is currently processing, but is readable during the operation"
-    },
-    "pending": {
-      "value": "pending",
-      "title": "Pending",
-      "description": "The document is processing and not currently readable"
-    },
-    "error": {
-      "value": "error",
-      "title": "Error",
-      "description": "There was an error during processing"
-    },
-    "nofile": {
-      "value": "nofile",
-      "title": "No file",
-      "description": "The document was created, but no file has been uploaded yet"
     }
   },
   "notfound": {
@@ -163,8 +132,7 @@
     "noindexHelp": "If you enable this option, search engines like Google's will be told they should not index this document. Also, the document will not appear in searches from DocumentCloud for users that are not logged in.",
     "unchanged": "Access is unchanged. Select a different access level.",
     "future": "Must select a time in the future",
-    "change": "Change",
-    "changeNoindex": "Change visibility to search engines and DocumentCloud search for {n, plural, one {document} other {# documents}}"
+    "change": "Change"
   },
   "dialogCollaboratorDialog": {
     "confirm": "Confirm remove user",
@@ -275,9 +243,6 @@
   "dialogDocumentInformationDialog": {
     "editInformation": "Edit Information for {n, plural, one {document} other {# documents}}"
   },
-  "dialogAddonDispatchDialog": {
-    "setAddonParameters": "Set the parameters for your chosen add-on to run on {n, plural, one {document} other {# documents}}"
-  },
   "dialogRedactDialog": {
     "title": "Confirm redactions",
     "description": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible."
@@ -378,10 +343,7 @@
     "changeTitle": "Change the title or description"
   },
   "dialogProjectEmbedDialog": {
-    "share": "Share “{title}”",
-    "embedDesc": "Copy the HTML code to embed this document within an article or post:",
-    "invalid": "Invalid project",
-    "cannotEmbed": "Cannot embed this project, as it does not appear to exist."
+    "share": "Share “{title}”"
   },
   "dialogRevisionsDialog": {
     "heading": "Revision History",
@@ -402,10 +364,6 @@
   "image": {
     "error": "An error occurred. Try refreshing the page"
   },
-  "omniselect": {
-    "filter": "Type to filter",
-    "noResults": "No results. Click to clear filter."
-  },
   "shareOptions": {
     "errorText": "An unexpected error occurred. Please try again later.",
     "copyHtml": "Copy HTML code",
@@ -414,9 +372,6 @@
     "copyShortcode": "Copy shortcode",
     "copyUrl": "Copy URL"
   },
-  "specialMessage": {
-    "contactUs": "<a href={contact} target=\"_blank\">Contact us</a> with bug reports, questions, and suggestions."
-  },
   "uploadDialog": {
     "title": "Upload documents",
     "description": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
@@ -424,10 +379,8 @@
     "docUploadProj": "Document Upload to {title}",
     "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
     "pdfSizeWarning": "You can only upload PDF files under {size}.",
-    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
     "fileReady": "{n, plural, one {file} other {files}} ready to upload",
     "fileLimitWarning": "You can only upload {limit} files at once.",
-    "moreOptions": "More options",
     "beginUpload": "Begin Upload",
     "selectFiles": "Select files",
     "dragDrop": "Drag and drop files here",
@@ -469,8 +422,7 @@
     "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left.",
     "documentLanguagePlaceholder": "Begin typing to see options",
     "revisionControl": "Revision Control:",
-    "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
-    "empty": "Get started by selecting, pasting or dragging-and-dropping files below"
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download."
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",
@@ -516,7 +468,6 @@
     "org": {
       "avatar": "Avatar: {name}",
       "changeOrg": "Change organization",
-      "personalAcct": "Personal Account",
       "adminRole": "Admin",
       "memberListError": "An error occurred while loading the member list.",
       "memberListEmpty": "This organization has no other members.",
@@ -541,25 +492,14 @@
     "mustBeVerified": "You must be a verified journalist to upload documents",
     "upload": "Upload",
     "dropFile": "Drop file to upload",
-    "open": "Open",
-    "updating": "Updating document...",
     "processing": "Processing",
-    "processingError": "An error occurred trying to process your document",
-    "remove": "Remove",
-    "improper": "Your document was uploaded improperly",
-    "project": "Project",
-    "totalMatchingPages": "{n} of {m} pages matching the query",
-    "showAll": "Show all",
     "matchingPages": "{n, plural, one {# page} other {# pages}} matching the query",
     "matchingNotes": "{n, plural, one {# note} other {# notes}} matching the query",
     "page": "Page",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
     "select": "Select",
-    "source": "Source",
-    "noteCount": "{n, plural, one {# note} other {# notes}}",
-    "noteLink": "See note",
-    "language": "Language"
+    "noteCount": "{n, plural, one {# note} other {# notes}}"
   },
   "documentThumbnail": {
     "pages": "pages",
@@ -567,11 +507,6 @@
   },
   "error": {
     "report": "Report a problem"
-  },
-  "mainContainer": {
-    "error": "Error",
-    "errorMsg": "We could not reach the DocumentCloud server. Please try refreshing the page later.",
-    "refresh": "Refresh"
   },
   "editMenu": {
     "editDocInfo": "Edit Document Information",
@@ -583,10 +518,6 @@
     "changeOwner": "Change Owner",
     "delete": "Delete",
     "diagnosticInfo": "Diagnostic Info"
-  },
-  "manager.documents": {
-    "added": "Successfully added {n, plural, one {# document} other {# documents}} to {project}",
-    "removed": "Successfully removed {n, plural, one {# document} other {# documents}} from {project}"
   },
   "metaFields": {
     "defaultFieldInvalidText": "The document already has this {fieldName}",
@@ -646,10 +577,6 @@
     "empty": "No projects found."
   },
   "addonsMenu": {
-    "newAddon": "Request new Add-on from Staff",
-    "selectDocs": "Select documents to dispatch them in add-ons",
-    "addonsList": "List of Add-Ons",
-    "createAddon": "Choose more documents to use add-ons",
     "addon": "Add-on",
     "learnMore": "Learn more about Add-Ons",
     "browseAll": "Browse Add-Ons",
@@ -697,8 +624,6 @@
     "yourDocuments": "Your Private Documents",
     "yourPubDocuments": "Your Public Documents",
     "orgDocuments": "{name}’s Documents",
-    "newProject": "New Project",
-    "createProject": "Create your first project by clicking “New Project” above.",
     "pinsEmpty": "Pinned projects will appear here for quick access",
     "private": "Private Project",
     "public": "Public Projects",
@@ -712,7 +637,6 @@
     "create": "Create project",
     "edit": "Edit project metadata",
     "share": "Share & embed this project",
-    "users": "Manage Collaborators",
     "add": "Add {n, plural, one {this document} other {# documents}} to a project",
     "access": {
       "public": "Public",
@@ -732,8 +656,6 @@
     },
     "collaborators": {
       "title": "Collaborators",
-      "edit": "Manage",
-      "manage": "Change access",
       "empty": "No collaborators",
       "add": "Invite users to this project"
     },
@@ -747,21 +669,17 @@
   "collaborators": {
     "remove": {
       "label": "Remove collaborator",
-      "confirm": "Confirm remove user",
       "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
     },
     "update": {
       "label": "Change access",
-      "confirm": "Change access for {name}",
       "message": "Select an access level for {name} in {title}"  
     },
     "invite": {
       "label": "Invite collaborators",
-      "confirm": "Add a user to this project",
       "message": "Enter the email of an existing DocumentCloud user. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once."
     },
     "access": {
-      "access": "Access",
       "admin": {
         "title": "Admin",
         "description": "Admins can add and remove documents and collaborators to the project"
@@ -776,24 +694,7 @@
       }
     },
     "add": "Add",
-    "addCollaborators": "Add Collaborators",
-    "admin": "Admin",
-    "view": "View",
-    "edit": "Edit",
-    "help": {
-      "admin": "Collaborators can edit this project and its documents",
-      "edit": "Collaborators can edit documents in this project",
-      "view": "Collaborators can view documents in this project",
-      "remove": "Remove this user from this project"
-    },
-    "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
-    "manage": "Manage Collaborators",
-    "name": "Name",
-    "you": "(you)",
-    "change": "Change access"
-  },
-  "organizations": {
-    "sameOrgUsers": "Users in organization"
+    "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself."
   },
   "embedNote": {
     "viewTheNote": "View the note ‘{title}‘ in its original document context on DocumentCloud in a new window or tab",
@@ -806,9 +707,6 @@
   },
   "entities": {
     "back": "Back",
-    "page": "Page",
-    "of": "of",
-    "totalEntityResult": "{n, plural, one {# total entity result} other {# total entity results}} ",
     "filter": "Filter",
     "applyFilters": "Apply filters",
     "kind": "Kind",
@@ -871,7 +769,6 @@
     "search": "Search Results"
   },
   "mode": {
-    "mode": "Mode",
     "document": "File",
     "text": "Text",
     "grid": "Pages",
@@ -921,7 +818,6 @@
     "insertBegin": "Insert {n, plural, one {# page} other {# pages}} at beginning.",
     "insertEnd": "Insert {n, plural, one {# page} other {# pages}} at end.",
     "insertBetween": "Insert {n, plural, one {# page} other {# pages}} in between page {p0} and {p1}.",
-    "click": "Click in-between pages below to mark where to paste {n, plural, one {# page} other {# pages}}.",
     "insert": "Insert",
     "insertAtEnd": "Insert at end",
     "insertPosition": "Insert pages at position",
@@ -977,7 +873,6 @@
     "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "revisions": "Revision History",
     "revisionsDesc": "Toggle revision history and view previous versions of your document.",
-    "collaborate": "Manage Collaborators",
     "edit": "Edit Metadata",
     "upload": "Upload Documents",
     "uploadToProject": "Upload to Project",
@@ -996,14 +891,11 @@
     },
     "data": {
       "title": "Tags & Data",
-      "empty": "Use tags or key/value data to organize documents",
-      "tags": "Tags",
-      "data": "Data"
+      "empty": "Use tags or key/value data to organize documents"
     },
     "projects": {
       "title": "Projects",
-      "pinned": "Pinned projects will appear here",
-      "empty": "Use projects to organize documents"
+      "pinned": "Pinned projects will appear here"
     },
     "toc": {
       "empty": "Sections organize your document with a table of contents",
@@ -1025,8 +917,7 @@
     "error": "Document has encountered an error",
     "errorDesc": "A processing error has been encountered in the document you requested",
     "accessible": "Document not accessible",
-    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it",
-    "share": "Share"
+    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
   },
   "edit": {
     "title": "Edit document metadata",
@@ -1060,7 +951,6 @@
     "delete": "Delete",
     "cta": {
       "add-note": "Add a page note",
-      "edit-note": "Edit page note",
       "add-section": "Start section",
       "edit-section": "Edit section"
     }
@@ -1101,7 +991,6 @@
     "newkey": "New item",
     "value": "Value",
     "tag": "Tag",
-    "tags": "Tags",
     "update": "Update",
     "delete": "Delete",
     "save": "Save",
@@ -1120,28 +1009,17 @@
     }
   },
   "addonDispatchDialog": {
-    "addons": "Add-Ons",
     "backButton": "Browse Add-Ons",
     "select": "Documents to run this Add-On against:",
     "premium": "This Add-On uses Premium Credits:",
     "premiumSpendLimit": "Set a spending limit",
-    "queryNoSelected": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results. To run it against only selected documents, cancel this and select some, then select the Add-On again.",
-    "noSelected": "You must select some documents to run against.  Cancel this and select some, then select the Add-On again.",
-    "runSelected": "This Add-On will try to run against the {n, plural, one {# currently selected document} other {# currently selected documents}}.",
-    "runQuery": "This Add-On will try to run against the {n, plural, one {# document} other {# documents}} currently included in your search results.",
     "labelSelected": "The {n, plural, one {# currently selected document} other {# currently selected documents}}",
     "labelQuery": "The {n, plural, one {# document} other {# documents}} from the current search results",
-    "learnMore": "<a href=\"/help/add-ons/#document-selection\">Learn more.</a>",
-    "hideAddons": "Hide Scheduled Add-Ons",
-    "showRuns": "Show Runs",
-    "hideRuns": "Hide Runs",
     "showAddons": "Show Scheduled Add-Ons ({n})",
     "scheduled": "Scheduled",
     "runSchedule": "Run on a schedule:",
     "runOnce": "Run once",
     "disable": "Disable",
-    "reset": "Reset",
-    "signIn": "Sign in to use Add-Ons",
     "createdBy": "Created by",
     "categories": "Categories",
     "viewsource": "View Source",
@@ -1166,15 +1044,10 @@
     "title": "Browse Add-Ons",
     "subtitle": "Free automations, shortcuts and power-ups from the DocumentCloud community",
     "categories": "Categories",
-    "browseAll": "Browse All Add-Ons",
     "searchPlaceholder": "Search…",
     "loading": "Loading…",
     "empty": "No add-ons found",
     "retry": "Retry",
-    "active": "Active",
-    "inactive": "Inactive",
-    "next": "Next",
-    "previous": "Previous",
     "viewsource": "View Source",
     "usage": "Usage",
     "pinnedTip": "Quickly access your favorite Add-Ons by clicking the “Pin” icon next to its name. They’ll then be available to run from the Add-Ons dropdown menu.",
@@ -1201,14 +1074,7 @@
     "feedback": "Feedback on this Add-On run",
     "progress": "Add-Ons in progress",
     "thanks": "Thanks for the feedback!",
-    "download": "Download file",
-    "status": {
-      "success": "Success",
-      "failure": "Failure",
-      "queued": "Queued",
-      "in_progress": "In progress",
-      "cancelled": "Cancelled"
-    }
+    "download": "Download file"
   },
   "addonSidebar": {
     "title": "Add-Ons",
@@ -1226,8 +1092,7 @@
     "p1": "This site helps organize, analyze and host millions of records contributed by verified newsrooms, research organizations and other groups that help inform the public through the user of primary source materials. Using the search bar above, you can browse through {n} publicly published documents, with thousands more added ever day.",
     "p2": "If you're part of a newsroom, academic organization, or other public-interest organization that vets and publishes materials in the public interest, <a href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud&next=https%3A%2F%2Fwww.documentcloud.org%2Fhome\">you can register here</a> and request verification to upload materials, or <a href=\"https://www.documentcloud.org/about/\">learn more about DocumentCloud</a> and it's powerful suite of hosting, analysis and publication tools.",
     "p3": "Want more fascinating documents, open data and original reporting to your inbox? Subscribe to MuckRock's newsletter:",
-    "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>.",
-    "subscribe": "Subscribe"
+    "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>."
   },
   "premium": {
     "badge": "Premium"
@@ -1269,7 +1134,6 @@
   "processing": {
     "addons": "Add-Ons",
     "documents": "Documents",
-    "restart": "Restart processing",
     "totalCount": "{n} active {n, plural, one {process} other {processes}}"
   },
   "feedback": {
