@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { getUserName } from "$lib/api/accounts";
   import type { Project, ProjectAccess, ProjectUser } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { Pencil16, People16 } from "svelte-octicons";
+  import { Pencil16, People16, PlusCircle16, XCircle16 } from "svelte-octicons";
 
   import Action from "../common/Action.svelte";
   import Empty from "../common/Empty.svelte";
@@ -11,9 +10,13 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Avatar from "../accounts/Avatar.svelte";
 
-  import ManageCollaborators from "../forms/ManageCollaborators.svelte";
+  import InviteCollaborator from "../forms/InviteCollaborator.svelte";
+  import UpdateCollaborator from "../forms/UpdateCollaborator.svelte";
+  import RemoveCollaborator from "../forms/RemoveCollaborator.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
+
+  import { getUserName } from "$lib/api/accounts";
   import { getCurrentUser } from "@/lib/utils/permissions";
 
   export let project: Project;
@@ -23,13 +26,25 @@
   // Do I belong to this project?
   $: isProjectUser = users.some((u) => u.user.id === $me?.id);
 
-  let edit = false;
-
   const accessLabels: Record<ProjectAccess, string> = {
     admin: "projects.access.admin",
     edit: "projects.access.edit",
     view: "projects.access.view",
   };
+
+  const actions: Record<string, string> = {
+    invite: $_("collaborators.invite.label"),
+    update: $_("collaborators.update.label"),
+    remove: $_("collaborators.remove.label"),
+  };
+
+  let show: "invite" | "update" | "remove" = null;
+  let user_to_update: ProjectUser = null;
+
+  function hide() {
+    show = null;
+    user_to_update = null;
+  }
 
   function sort(users: ProjectUser[]) {
     if (!users) return [];
@@ -46,24 +61,35 @@
     <People16 slot="start" />
     {$_("projects.collaborators.title")}
   </SidebarItem>
-  <svelte:fragment slot="action">
-    {#if project.add_remove_access}
-      <Action
-        icon={Pencil16}
-        title={$_("projects.collaborators.edit")}
-        on:click={() => (edit = true)}
-      >
-        {$_("projects.collaborators.edit")}
-      </Action>
-    {/if}
-  </svelte:fragment>
 
   {#each sort(users) as user}
     {#if isProjectUser || project.edit_access}
       <SidebarItem small>
         <Avatar user={user.user} slot="start" />
         {getUserName(user.user)}
-        <span class="badge" slot="end">{$_(accessLabels[user.access])}</span>
+        <span class="badge" slot="end">
+          {$_(accessLabels[user.access])}
+
+          {#if project.add_remove_access}
+            <Action
+              on:click={() => {
+                user_to_update = user;
+                show = "update";
+              }}
+            >
+              <Pencil16 />
+            </Action>
+            <Action
+              --fill="var(--caution)"
+              on:click={() => {
+                user_to_update = user;
+                show = "remove";
+              }}
+            >
+              <XCircle16 />
+            </Action>
+          {/if}
+        </span>
       </SidebarItem>
     {:else}
       <SidebarItem small>
@@ -74,20 +100,38 @@
   {:else}
     <Empty>
       {$_("projects.collaborators.empty")}
-      {#if $me}
-        <Action on:click={() => (edit = true)}>
+      {#if project.add_remove_access}
+        <Action on:click={() => (show = "invite")}>
           {$_("projects.collaborators.add")}
         </Action>
       {/if}
     </Empty>
   {/each}
+
+  {#if users.length > 0 && project.add_remove_access}
+    <SidebarItem hover small on:click={() => (show = "invite")}>
+      <PlusCircle16 slot="start" />
+      {$_("projects.collaborators.add")}
+    </SidebarItem>
+  {/if}
 </SidebarGroup>
 
-{#if edit}
+{#if show}
   <Portal>
-    <Modal on:close={() => (edit = false)}>
-      <h1 slot="title">{$_("projects.users")}</h1>
-      <ManageCollaborators {project} {users} on:close={() => (edit = false)} />
+    <Modal on:close={hide}>
+      <h1 slot="title">{actions[show]}</h1>
+
+      {#if show === "invite"}
+        <InviteCollaborator {project} on:close={hide} />
+      {/if}
+
+      {#if show === "update"}
+        <UpdateCollaborator {project} user={user_to_update} on:close={hide} />
+      {/if}
+
+      {#if show === "remove"}
+        <RemoveCollaborator {project} user={user_to_update} on:close={hide} />
+      {/if}
     </Modal>
   </Portal>
 {/if}
@@ -99,5 +143,8 @@
     text-transform: uppercase;
     letter-spacing: 0.1ch;
     color: var(--primary);
+
+    display: flex;
+    align-items: center;
   }
 </style>

@@ -25,6 +25,7 @@ Remove a collaborator from a project
 
 <form {action} method="post">
   <p>{$_("collaborators.remove.message", { values: { name, title } })}</p>
+  <input type="hidden" name="user" value={user.user.id} />
   <Flex class="buttons">
     <Button type="submit" mode="danger">{$_("dialog.remove")}</Button>
     <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>

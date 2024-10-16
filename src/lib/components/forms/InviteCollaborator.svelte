@@ -2,7 +2,7 @@
 Invite a new collaborator to a project
 -->
 <script lang="ts">
-  import type { Project, ProjectUser } from "$lib/api/types";
+  import type { Project } from "$lib/api/types";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -27,7 +27,7 @@ Invite a new collaborator to a project
     title={$_("common.emailAddress")}
     sronly
     required
-    description={$_("collaborators.invite")}
+    description={$_("collaborators.invite.message")}
   >
     <Text name="email" placeholder={$_("common.emailAddress")} required />
   </Field>

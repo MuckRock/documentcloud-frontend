@@ -29,7 +29,8 @@ Update permissions for a single collaborator on a project
 <form {action} method="post">
   <p>{$_("collaborators.update.message", { values: { name, title } })}</p>
 
-  <ProjectAccess name="access" />
+  <input type="hidden" name="user" value={user.user.id} />
+  <ProjectAccess name="access" bind:selected={user.access} />
 
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("dialog.update")}</Button>

@@ -107,7 +107,6 @@ export const actions = {
     }
 
     return {
-      success: true,
       user,
     };
   },
@@ -115,7 +114,31 @@ export const actions = {
   /**
    * Update a collaborator's permissions
    */
-  async update() {},
+  async update({ request, cookies, params, fetch }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    const form = await request.formData();
+
+    const user = +form.get("user");
+    const access = form.get("access") as ProjectAccess;
+
+    const project_id = +params.id;
+
+    const { data, error } = await collaborators.update(
+      project_id,
+      user,
+      access,
+      csrf_token,
+      fetch,
+    );
+
+    if (error) {
+      return fail(error.status, { ...error });
+    }
+
+    return {
+      user: data,
+    };
+  },
 
   /**
    * Remove a collaborator
