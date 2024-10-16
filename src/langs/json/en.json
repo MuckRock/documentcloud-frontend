@@ -1232,6 +1232,7 @@
     "save": "Save Settings",
     "customize": "Customize Embed",
     "privateWarning": "This {type} is private.",
+    "orgWarning": "This {type} is only visible within your organization.",
     "privateFix": "Edit metadata",
     "fields": {
       "page": "Pick page",
