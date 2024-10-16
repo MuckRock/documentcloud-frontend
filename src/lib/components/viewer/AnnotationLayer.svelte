@@ -12,7 +12,7 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { BBox, Note as NoteType } from "$lib/api/types";
 
-  import { goto } from "$app/navigation";
+  import { goto, pushState } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
 
@@ -133,14 +133,14 @@ Assumes it's a child of a ViewerContext
     const target = e.target as HTMLAnchorElement;
     const href =
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
-    goto(href);
+    pushState(href, { note });
   }
 
   function closeNote() {
     newNote = null;
     dragging = false;
     const href = getViewerHref({ document, mode: $mode, embed });
-    goto(href);
+    pushState(href, {});
   }
 
   function onkeypress(e: KeyboardEvent) {
