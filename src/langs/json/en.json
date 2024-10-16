@@ -879,7 +879,7 @@
     "close": "Close Drawer"
   },
   "titleHeader": {
-    "contributedBy": "Contributed by {name}"
+    "contributedBy": "Contributed by"
   },
   "annotatePane": {
     "annotateDocument": "Add Note",

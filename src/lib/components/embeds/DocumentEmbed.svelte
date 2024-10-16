@@ -1,16 +1,16 @@
 <script lang="ts">
   import type { Document, DocumentText } from "$lib/api/types";
+  import { type EmbedSettings, defaultSettings } from "$lib/utils/embed";
 
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Alert16 } from "svelte-octicons";
 
-  import { type EmbedSettings, defaultSettings } from "$lib/utils/embed";
   import Metadata from "../common/Metadata.svelte";
   import Viewer from "../viewer/Viewer.svelte";
 
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
-  import { Alert16 } from "svelte-octicons";
-  import { canonicalUrl } from "@/lib/api/documents";
+  import { canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;
   export let text: DocumentText;
@@ -31,15 +31,15 @@
     <div class="banner">
       <Alert16 />
       {$_("embed.document.privacyWarning")}
-      <a href={canonicalUrl(document)} target="_blank"
-        >{$_("embed.document.privacyFix")}</a
-      >
+      <a href={canonicalUrl(document)} target="_blank">
+        {$_("embed.document.privacyFix")}
+      </a>
     </div>
   {/if}
   {#if Boolean(settings.title)}
     <header>
       <h1>{document.title}</h1>
-      <Metadata key="Contributed by">{contributedBy}</Metadata>
+      <Metadata key={$_("titleHeader.contributedBy")}>{contributedBy}</Metadata>
     </header>
   {/if}
   <main>

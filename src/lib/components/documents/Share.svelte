@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   interface NoteOption {
     value: string | number;
@@ -21,28 +21,29 @@
   } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
+  import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
   import Field from "../common/Field.svelte";
   import FieldLabel from "../common/FieldLabel.svelte";
+  import Number from "../inputs/Number.svelte";
+  import Select from "../inputs/Select.svelte";
   import Tab from "../common/Tab.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
-  import Select from "../inputs/Select.svelte";
-  import Number from "../inputs/Number.svelte";
-  import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
+  import Tip from "../common/Tip.svelte";
 
-  import { createEmbedSearchParams } from "@/lib/utils/embed";
+  import Portal from "../layouts/Portal.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import Edit from "../forms/Edit.svelte";
+
+  import { toast } from "../layouts/Toaster.svelte";
+  import { createEmbedSearchParams } from "$lib/utils/embed";
   import {
     canonicalPageUrl,
     canonicalUrl,
     embedUrl,
     pageUrl,
-  } from "@/lib/api/documents";
-  import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
-  import { toast } from "../layouts/Toaster.svelte";
-  import Tip from "../common/Tip.svelte";
-  import Portal from "../layouts/Portal.svelte";
-  import Modal from "../layouts/Modal.svelte";
-  import Edit from "../forms/Edit.svelte";
+  } from "$lib/api/documents";
+  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
 
   export let document: Document;
   export let page: number = 1;
