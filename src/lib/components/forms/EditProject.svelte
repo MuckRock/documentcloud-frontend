@@ -34,6 +34,9 @@ Edit project metadata
   function onSubmit({ submitter }) {
     submitter.disabled = true;
     return ({ result, update }) => {
+      if (result.type === "success") {
+        dispatch("success", result);
+      }
       update(result);
       dispatch("close");
     };
