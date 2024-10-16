@@ -22,6 +22,28 @@
 
 <Story name="Document" args={{ ...args, document }} />
 
+<Story
+  name="Private Document"
+  args={{
+    ...args,
+    document: { ...document, access: "private", edit_access: false },
+  }}
+/>
+<Story
+  name="Organization Document"
+  args={{
+    ...args,
+    document: { ...document, access: "organization", edit_access: false },
+  }}
+/>
+<Story
+  name="Private Document with Edit Access"
+  args={{
+    ...args,
+    document: { ...document, access: "private", edit_access: true },
+  }}
+/>
+
 <Story name="Page" args={{ ...args, document, currentTab: "page" }} />
 
 <Story name="Note" args={{ ...args, document, currentTab: "note" }} />

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   interface NoteOption {
     value: string | number;
@@ -16,27 +16,34 @@
     Hash16,
     Note16,
     Sliders16,
+    ShieldLock24,
+    Organization24,
   } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
+  import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
   import Field from "../common/Field.svelte";
   import FieldLabel from "../common/FieldLabel.svelte";
+  import Number from "../inputs/Number.svelte";
+  import Select from "../inputs/Select.svelte";
   import Tab from "../common/Tab.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
-  import Select from "../inputs/Select.svelte";
-  import Number from "../inputs/Number.svelte";
-  import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
+  import Tip from "../common/Tip.svelte";
 
-  import { createEmbedSearchParams } from "@/lib/utils/embed";
+  import Portal from "../layouts/Portal.svelte";
+  import Modal from "../layouts/Modal.svelte";
+  import Edit from "../forms/Edit.svelte";
+
+  import { toast } from "../layouts/Toaster.svelte";
+  import { createEmbedSearchParams } from "$lib/utils/embed";
   import {
     canonicalPageUrl,
     canonicalUrl,
     embedUrl,
     pageUrl,
-  } from "@/lib/api/documents";
-  import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
-  import { toast } from "../layouts/Toaster.svelte";
+  } from "$lib/api/documents";
+  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
 
   export let document: Document;
   export let page: number = 1;
@@ -63,6 +70,10 @@
   // let wpShortcode: string; is broken in WordPress
 
   let customizeEmbedOpen = false;
+  let editOpen = false;
+  const closeEditing = () => (editOpen = false);
+  const openEditing = () => (editOpen = true);
+  $: isPrivate = document.access === "private";
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
     switch (currentTab) {
@@ -116,6 +127,39 @@
 </script>
 
 <div class="container">
+  {#if isPrivate}
+    <div class="banner">
+      <Tip mode="danger">
+        <ShieldLock24 slot="icon" />
+        <div class="privateWarning">
+          <div style:flex="1 1 auto">
+            {$_("share.privateWarning", { values: { type: "document" } })}
+          </div>
+          {#if document.edit_access}
+            <Button mode="danger" size="small" on:click={openEditing}>
+              {$_("share.privateFix")}
+            </Button>
+          {/if}
+        </div>
+      </Tip>
+    </div>
+  {:else if document.access === "organization"}
+    <div class="banner">
+      <Tip mode="premium">
+        <Organization24 slot="icon" />
+        <div class="privateWarning">
+          <div style:flex="1 1 auto">
+            {$_("share.orgWarning", { values: { type: "document" } })}
+          </div>
+          {#if document.edit_access}
+            <Button mode="danger" size="small" on:click={openEditing}>
+              {$_("share.privateFix")}
+            </Button>
+          {/if}
+        </div>
+      </Tip>
+    </div>
+  {/if}
   <div class="left">
     <div class="tabs" role="tablist">
       <Tab
@@ -265,12 +309,33 @@
     </main>
   </div>
 </div>
+{#if editOpen}
+  <Portal>
+    <Modal on:close={closeEditing}>
+      <h1 slot="title">{$_("documents.edit")}</h1>
+      <Edit {document} on:close={closeEditing} />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   .container {
     width: 100%;
     height: 32rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0 1rem;
+  }
+  .banner {
+    grid-column: 1/3;
+    grid-row: 1/2;
+    margin-bottom: 1rem;
+  }
+  .privateWarning {
+    width: 100%;
     display: flex;
+    align-items: center;
     gap: 1rem;
   }
   .tabs {
@@ -297,6 +362,7 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 12rem;
+    grid-row: 2/3;
   }
   .right {
     flex: 2 1 24rem;

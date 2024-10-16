@@ -869,13 +869,17 @@
   "embed": {
     "download": "Download",
     "enterFullscreen": "Fullscreen",
-    "exitFullscreen": "Exit Fullscreen"
+    "exitFullscreen": "Exit Fullscreen",
+    "document": {
+      "privacyWarning": "This document is not public.",
+      "privacyFix": "Edit privacy settings"
+    }
   },
   "drawer": {
     "close": "Close Drawer"
   },
   "titleHeader": {
-    "contributedBy": "Contributed by {name}"
+    "contributedBy": "Contributed by"
   },
   "annotatePane": {
     "annotateDocument": "Add Note",
@@ -1232,6 +1236,7 @@
     "save": "Save Settings",
     "customize": "Customize Embed",
     "privateWarning": "This {type} is private.",
+    "orgWarning": "This {type} is only visible within your organization.",
     "privateFix": "Edit metadata",
     "fields": {
       "page": "Pick page",
