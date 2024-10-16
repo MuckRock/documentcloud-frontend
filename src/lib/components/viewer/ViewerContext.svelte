@@ -113,6 +113,10 @@ layouts, stories, and tests.
     total: 0,
   });
 
+  $: {
+    console.log($pageStore.url.hash);
+  }
+
   const currentNote = derived(pageStore, ($pageStore) => {
     const currentId = noteFromHash($pageStore.url.hash ?? "");
     const note = document.notes.find((note) => note.id === currentId);
