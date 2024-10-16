@@ -22,21 +22,15 @@ Assumes it's a child of a ViewerContext
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
-  import {
-    noteHashUrl,
-    width,
-    height,
-    isPageLevel,
-    noteFromHash,
-  } from "$lib/api/notes";
+  import { width, height, isPageLevel } from "$lib/api/notes";
   import {
     getCurrentMode,
+    getCurrentNote,
     getDocument,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
-  import { page } from "$app/stores";
 
   export let scale = 1.5;
   export let page_number: number; // zero-indexed
@@ -44,23 +38,17 @@ Assumes it's a child of a ViewerContext
   const document = getDocument();
   const embed = isEmbedded();
   const mode = getCurrentMode();
+  const currentNote = getCurrentNote();
 
   let newNote: Partial<NoteType> & BBox = null; // is this too clever?
   let dragging = false;
 
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
-  $: currentId = noteFromHash($page.url.hash ?? "");
-  $: currentNote = notes.find((note) => note.id === currentId);
-  $: {
-    console.log(currentId, currentNote);
-  }
   $: writing = $mode === "annotating";
   $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
-    Boolean(currentNote) &&
-    isPageLevel(currentNote) &&
-    currentNote.page_number === page_number;
+    writing && Boolean($currentNote) && isPageLevel($currentNote);
 
   function pointerdown(e: PointerEvent) {
     if (currentNote || newNote) return;
@@ -180,7 +168,7 @@ Assumes it's a child of a ViewerContext
     >
       <NoteTab access={note.access} />
     </a>
-    {#if note.id === currentId}
+    {#if note.id === $currentNote.id}
       <div
         class="box {note.access}"
         style:top="{note.y1 * 100}%"
@@ -197,7 +185,7 @@ Assumes it's a child of a ViewerContext
       {/if}
     {:else}
       <a
-        href={noteHashUrl(note)}
+        href={getViewerHref({ document, note, mode: $mode, embed })}
         class="note-highlight {note.access}"
         title={note.title}
         style:top="{note.y1 * 100}%"
@@ -242,7 +230,7 @@ Assumes it's a child of a ViewerContext
 
       <EditNote
         {document}
-        note={currentNote}
+        note={$currentNote}
         {page_number}
         on:close={closeNote}
       />

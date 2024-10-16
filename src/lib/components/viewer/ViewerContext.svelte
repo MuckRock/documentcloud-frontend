@@ -4,7 +4,13 @@ layouts, stories, and tests.
  -->
 <script lang="ts" context="module">
   import { getContext, onMount, setContext } from "svelte";
-  import { get, type Writable, writable } from "svelte/store";
+  import {
+    derived,
+    get,
+    type Readable,
+    type Writable,
+    writable,
+  } from "svelte/store";
   import { afterNavigate } from "$app/navigation";
 
   import type {
@@ -57,6 +63,10 @@ layouts, stories, and tests.
     return getContext("embed") ?? false;
   }
 
+  export function getCurrentNote(): Readable<Note> {
+    return getContext("currentNote");
+  }
+
   export function getCurrentPage(): Writable<number> {
     return getContext("currentPage");
   }
@@ -81,6 +91,7 @@ layouts, stories, and tests.
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
   import type { _ } from "svelte-i18n";
+  import { noteFromHash } from "@/lib/api/notes";
 
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;
@@ -102,12 +113,18 @@ layouts, stories, and tests.
     total: 0,
   });
 
+  const currentNote = derived(pageStore, ($pageStore) => {
+    const currentId = noteFromHash($pageStore.url.hash ?? "");
+    return document.notes.find((note) => note.id === currentId);
+  });
+
   // stores we need deeper in the component tree, available via context
   setContext("document", document);
   setContext("text", text);
   setContext("asset_url", asset_url);
   setContext("embed", embed);
   setContext("query", query);
+  setContext("currentNote", currentNote);
   setContext("currentPage", writable(page));
   setContext("currentMode", writable(mode));
   setContext("progress", progress);
