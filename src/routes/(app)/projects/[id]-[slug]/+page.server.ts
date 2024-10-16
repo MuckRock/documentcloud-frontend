@@ -51,40 +51,6 @@ export const actions = {
     return { success: true, project: updated };
   },
 
-  // remove this
-  async users({ request, cookies, params, fetch }) {
-    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    const form = await request.formData();
-    const project_id = +params.id;
-
-    const users = form.getAll("user").map(Number);
-    const access = form.getAll("access");
-
-    // batch update
-    const updated = await Promise.all(
-      users.map((u, i) => {
-        const a = access[i];
-        if (a === "remove") {
-          // this returns an empty body, so just fire and forget
-          collaborators.remove(project_id, u, csrf_token, fetch);
-        } else {
-          return collaborators.update(
-            project_id,
-            u,
-            a as ProjectAccess,
-            csrf_token,
-            fetch,
-          );
-        }
-      }),
-    );
-
-    return {
-      success: true,
-      users: updated,
-    };
-  },
-
   /**
    * Invite a collaborator
    */
