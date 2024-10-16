@@ -1,5 +1,10 @@
 <script lang="ts">
-  import type { Project, ProjectAccess, ProjectUser } from "$lib/api/types";
+  import type {
+    Project,
+    ProjectAccess,
+    ProjectUser,
+    User,
+  } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Pencil16, People16, PlusCircle16, XCircle16 } from "svelte-octicons";
@@ -23,8 +28,6 @@
   export let users: ProjectUser[];
 
   const me = getCurrentUser();
-  // Do I belong to this project?
-  $: isProjectUser = users.some((u) => u.user.id === $me?.id);
 
   const accessLabels: Record<ProjectAccess, string> = {
     admin: "projects.access.admin",
@@ -40,6 +43,15 @@
 
   let show: "invite" | "update" | "remove" = null;
   let user_to_update: ProjectUser = null;
+
+  // Do I belong to this project?
+  $: isProjectUser = users.some((u) => u.user.id === $me?.id);
+
+  function isMe(user: ProjectUser, me: User | null): boolean {
+    const id = typeof user.user === "object" ? user.user.id : user.user;
+
+    return id === me?.id;
+  }
 
   function hide() {
     show = null;
@@ -70,8 +82,9 @@
         <span class="badge" slot="end">
           {$_(accessLabels[user.access])}
 
-          {#if project.add_remove_access}
+          {#if project.add_remove_access && !isMe(user, $me)}
             <Action
+              title={actions.update}
               on:click={() => {
                 user_to_update = user;
                 show = "update";
@@ -80,6 +93,7 @@
               <Pencil16 />
             </Action>
             <Action
+              title={actions.remove}
               --fill="var(--caution)"
               on:click={() => {
                 user_to_update = user;
@@ -101,7 +115,7 @@
     <Empty>
       {$_("projects.collaborators.empty")}
       {#if project.add_remove_access}
-        <Action on:click={() => (show = "invite")}>
+        <Action title={actions.invite} on:click={() => (show = "invite")}>
           {$_("projects.collaborators.add")}
         </Action>
       {/if}

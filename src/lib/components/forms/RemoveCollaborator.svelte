@@ -2,8 +2,9 @@
 Remove a collaborator from a project
 -->
 <script lang="ts">
-  import type { Project, ProjectUser } from "$lib/api/types";
+  import type { Project, ProjectUser, ValidationError } from "$lib/api/types";
 
+  import { enhance } from "$app/forms";
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -18,12 +19,31 @@ Remove a collaborator from a project
 
   const dispatch = createEventDispatcher();
 
+  let errors: ValidationError = {};
+
   $: action = new URL("?/remove", canonicalUrl(project)).href;
   $: name = getUserName(user.user);
   $: title = project.title;
+
+  /**
+   * @type {import('@sveltejs/kit').SubmitFunction}
+   */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+
+    return ({ result, update }) => {
+      if (result.type === "success") {
+        dispatch("close");
+        return update(result);
+      }
+
+      errors = result.data.errors;
+      submitter.disabled = false;
+    };
+  }
 </script>
 
-<form {action} method="post">
+<form {action} method="post" on:submit={onSubmit}>
   <p>{$_("collaborators.remove.message", { values: { name, title } })}</p>
   <input type="hidden" name="user" value={user.user.id} />
   <Flex class="buttons">

@@ -16,6 +16,7 @@
   {#if description}
     <p class="help">{@html description}</p>
   {/if}
+  <slot name="error" />
 </div>
 
 <style>

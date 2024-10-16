@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  type Action = "edit" | "share" | "users" | "delete";
+  type Action = "edit" | "share" | "delete";
 </script>
 
 <script lang="ts">
@@ -9,26 +9,19 @@
 
   import { _ } from "svelte-i18n";
   import {
-    Alert16,
-    People16,
     Pencil16,
     Search16,
     Share16,
-    Share24,
     Trash16,
     PlusCircle16,
   } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import Empty from "../common/Empty.svelte";
-  import Flex from "../common/Flex.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
   import EditProject from "../forms/EditProject.svelte";
-  import ManageCollaborators from "../forms/ManageCollaborators.svelte";
   import DeleteProject from "../forms/DeleteProject.svelte";
 
   import { projectSearchUrl } from "$lib/utils/search";
@@ -41,7 +34,6 @@
   import ProjectShare from "./ProjectShare.svelte";
 
   export let project: Project;
-  export let users: ProjectUser[];
 
   const me = getCurrentUser();
 
@@ -50,7 +42,6 @@
   const actions: Record<Action, string> = {
     edit: $_("projects.edit"),
     share: $_("projects.share"),
-    users: $_("projects.users"),
     delete: $_("projects.delete.confirm"),
   };
 
@@ -78,12 +69,6 @@
         <Button ghost mode="primary" on:click={() => (show = "edit")}>
           <Pencil16 />
           {$_("sidebar.edit")}
-        </Button>
-      {/if}
-
-      {#if project.add_remove_access}
-        <Button ghost on:click={() => (show = "users")}>
-          <People16 />{$_("sidebar.collaborate")}
         </Button>
       {/if}
 
@@ -120,10 +105,6 @@
 
       {#if show === "share"}
         <ProjectShare {project} on:close={hide} />
-      {/if}
-
-      {#if show === "users"}
-        <ManageCollaborators {project} {users} on:close={hide} />
       {/if}
 
       {#if show === "delete"}

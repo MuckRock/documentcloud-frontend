@@ -2,7 +2,9 @@
 Invite a new collaborator to a project
 -->
 <script lang="ts">
-  import type { Project } from "$lib/api/types";
+  import type { Project, ValidationError } from "$lib/api/types";
+
+  import { enhance } from "$app/forms";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -15,14 +17,33 @@ Invite a new collaborator to a project
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  export let project: Project;
-
   const dispatch = createEventDispatcher();
 
+  export let project: Project;
+
+  let errors: ValidationError = {};
+
   $: action = new URL("?/invite", canonicalUrl(project)).href;
+
+  /**
+   * @type {import('@sveltejs/kit').SubmitFunction}
+   */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+
+    return ({ result, update }) => {
+      if (result.type === "success") {
+        dispatch("close");
+        return update(result);
+      }
+
+      errors = result.data.errors;
+      submitter.disabled = false;
+    };
+  }
 </script>
 
-<form {action} method="post">
+<form {action} method="post" use:enhance={onSubmit}>
   <Field
     title={$_("common.emailAddress")}
     sronly
@@ -30,6 +51,13 @@ Invite a new collaborator to a project
     description={$_("collaborators.invite.message")}
   >
     <Text name="email" placeholder={$_("common.emailAddress")} required />
+    <svelte:fragment slot="error">
+      {#if errors.email}
+        <p class="error">
+          {@html errors.email.join("\n")}
+        </p>
+      {/if}
+    </svelte:fragment>
   </Field>
 
   <ProjectAccess name="access" />
@@ -46,5 +74,10 @@ Invite a new collaborator to a project
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
+  }
+
+  .error {
+    color: var(--error);
+    font-size: var(--font-sm);
   }
 </style>

@@ -48,7 +48,7 @@
   </article>
 
   <svelte:fragment slot="action">
-    <ProjectActions {project} {users} />
+    <ProjectActions {project} />
     <AddOns pinnedAddOns={addons} query={projectQuery} />
   </svelte:fragment>
 </SidebarLayout>
