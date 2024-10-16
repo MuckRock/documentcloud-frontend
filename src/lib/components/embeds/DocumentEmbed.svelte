@@ -9,6 +9,8 @@
   import Viewer from "../viewer/Viewer.svelte";
 
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
+  import { Alert16 } from "svelte-octicons";
+  import { canonicalUrl } from "@/lib/api/documents";
 
   export let document: Document;
   export let text: DocumentText;
@@ -25,6 +27,15 @@
 </script>
 
 <div class="container">
+  {#if document.access !== "public"}
+    <div class="banner">
+      <Alert16 />
+      {$_("embed.document.privacyWarning")}
+      <a href={canonicalUrl(document)} target="_blank"
+        >{$_("embed.document.privacyFix")}</a
+      >
+    </div>
+  {/if}
   {#if Boolean(settings.title)}
     <header>
       <h1>{document.title}</h1>
@@ -60,5 +71,21 @@
     font-size: var(--font-md);
     font-weight: var(--font-semibold);
     max-width: 24rem;
+    margin: 0;
+  }
+  .banner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--orange-1);
+    color: var(--orange-5);
+    fill: var(--orange-3);
+  }
+  .banner a {
+    color: inherit;
+    text-decoration: underline;
   }
 </style>

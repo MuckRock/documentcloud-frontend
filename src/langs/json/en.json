@@ -869,7 +869,11 @@
   "embed": {
     "download": "Download",
     "enterFullscreen": "Fullscreen",
-    "exitFullscreen": "Exit Fullscreen"
+    "exitFullscreen": "Exit Fullscreen",
+    "document": {
+      "privacyWarning": "This document is not public.",
+      "privacyFix": "Edit privacy settings"
+    }
   },
   "drawer": {
     "close": "Close Drawer"

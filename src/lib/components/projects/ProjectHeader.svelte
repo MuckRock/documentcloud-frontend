@@ -52,6 +52,7 @@
     flex: 1 1 100%;
   }
   h1 {
+    margin: 0;
     flex: 1 0 0;
     color: var(--gray-5);
     font-size: var(--font-xl);
