@@ -46,7 +46,7 @@ Assumes it's a child of a ViewerContext
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: writing = $mode === "annotating";
-  $: editing = Boolean(currentNote) || (Boolean(newNote) && !dragging);
+  $: editing = Boolean($currentNote) || (Boolean(newNote) && !dragging);
   $: edit_page_note =
     writing && Boolean($currentNote) && isPageLevel($currentNote);
 
@@ -168,7 +168,7 @@ Assumes it's a child of a ViewerContext
     >
       <NoteTab access={note.access} />
     </a>
-    {#if note.id === $currentNote.id}
+    {#if note.id === $currentNote?.id}
       <div
         class="box {note.access}"
         style:top="{note.y1 * 100}%"
