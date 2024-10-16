@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { transformHighlights, transformPassage } from "./document.js";
 
 const START = "<em>";

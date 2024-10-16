@@ -2,15 +2,9 @@
   const REM = 16;
   export let size = 1;
   export let title = "Premium";
-  export let color = "#24CC99";
 </script>
 
-<svg
-  width={`${size * REM}px`}
-  height={`${size * REM}px`}
-  viewBox="0 0 16 16"
-  style="--premium-color: {color}"
->
+<svg width={`${size * REM}px`} height={`${size * REM}px`} viewBox="0 0 16 16">
   <title>{title}</title>
   <path
     fill-rule="evenodd"
@@ -27,5 +21,6 @@
 <style>
   svg {
     display: block;
+    fill: var(--fill, var(--green, #27c6a2));
   }
 </style>

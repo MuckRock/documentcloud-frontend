@@ -1,9 +1,4 @@
-import type { Document, Page } from "../../api/types";
-
-/*
-
-
-*/
+import type { Document, Page } from "@/api/types";
 
 export const document: Document = {
   id: 24002098,
@@ -12,7 +7,7 @@ export const document: Document = {
   asset_url: "https://s3.documentcloud.org/",
   canonical_url:
     "https://www.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018",
-  created_at: "2023-10-02T00:05:27.632309Z",
+  created_at: "2023-10-02T10:10:27.632309Z",
   data: {},
   description: "",
   edit_access: true,
@@ -32,7 +27,7 @@ export const document: Document = {
   original_extension: "pdf",
   page_count: 20,
   page_spec: "612.0x792.0:0-19",
-  projects: [215678, 208091],
+  projects: [215678, 208091, 200006, 200002],
   publish_at: null,
   published_url: "",
   related_article: "",
@@ -113,7 +108,7 @@ export const documentsList: Page<Document> = {
       original_extension: "pdf",
       page_count: 3,
       page_spec: "",
-      projects: [],
+      projects: [200006, 200002],
       publish_at: null,
       published_url: "",
       related_article: "http://thetyee.ca/News/2012/12/05/test-test/index.html",
@@ -1271,4 +1266,80 @@ export const documentsList: Page<Document> = {
       },
     },
   ],
+};
+
+export const documentExpanded: Document = {
+  id: 2622,
+  access: "public",
+  admin_noindex: false,
+  asset_url: "https://s3.documentcloud.org/",
+  canonical_url:
+    "https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government",
+  created_at: "2010-05-12T15:44:15.278766Z",
+  data: {},
+  description:
+    "<p>This agreement  between Conservatives and Liberal Democrats makes David Cameron the new prime minister and installs Nick Clegg, whose party came in third in last week's election, as his deputy. The document details the long list of compromises between the two parties, who don't share much in terms of ideology but need each other to form a government.</p>\n\n<p>Here, the NewsHour's Simon Marks reads between the lines to explain who won which battles and what each side is giving up.</p>",
+  edit_access: false,
+  file_hash: "",
+  noindex: false,
+  language: "eng",
+  organization: {
+    id: 60,
+    avatar_url: "",
+    individual: false,
+    name: "NewsHour",
+    slug: "newshour",
+    uuid: "23f98aa7-92d4-4edb-bf18-ccf362b29bdf",
+  },
+  original_extension: "pdf",
+  page_count: 7,
+  page_spec: "595.0x842.0:0-6",
+  projects: [
+    {
+      id: 200,
+      created_at: "2020-09-25T13:59:43.519966Z",
+      description: "",
+      edit_access: false,
+      add_remove_access: false,
+      private: false,
+      slug: "british-election",
+      title: "British Election",
+      updated_at: "2020-09-25T13:59:43.526790Z",
+      user: 126,
+    },
+    {
+      id: 6909,
+      created_at: "2020-10-28T17:41:54.481623Z",
+      description: "Documents to use for testing",
+      edit_access: false,
+      add_remove_access: false,
+      private: false,
+      slug: "test-project",
+      title: "Test project",
+      updated_at: "2024-02-14T15:31:38.770237Z",
+      user: 1020,
+    },
+  ],
+  publish_at: null,
+  published_url: "",
+  related_article:
+    "http://www.pbs.org/newshour/rundown/2010/05/the-conservative-libdem-agreement-reading-between-the-lines.html",
+  revision_control: false,
+  slug: "agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government",
+  source: "",
+  status: "success",
+  title:
+    "Agreement between Conservatives and Liberal Democrats to form a Coalition Government",
+  updated_at: "2024-02-14T15:32:52.849946Z",
+  user: {
+    id: 126,
+    avatar_url: "",
+    name: "Chris Amico",
+    organization: 14187,
+    organizations: [14187],
+    admin_organizations: [14187],
+    username: "ChrisAmico_lSozDZNW",
+    uuid: "caea06a2-ee1c-43e6-865a-a09078522bf1",
+    verified_journalist: true,
+  },
 };

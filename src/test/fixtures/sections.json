@@ -1,0 +1,16 @@
+{
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 34582,
+      "page_number": 2,
+      "title": "This is a section"
+    },
+    {
+      "id": 34583,
+      "page_number": 5,
+      "title": "Second section"
+    }
+  ]
+}

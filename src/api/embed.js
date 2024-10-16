@@ -1,4 +1,4 @@
-import session from "./session.js";
+import session from "./session";
 import { apiUrl } from "./base.js";
 import { queryBuilder } from "@/util/url.js";
 

@@ -1,11 +1,23 @@
 {
   "common": {
     "emailAddress": "Email address",
-    "loading": "Loading...",
+    "loading": "Loading…",
+    "empty": "No results",
+    "error": "An error ocurred",
     "documentCloud": "DocumentCloud",
     "home": "Home",
     "new": "New",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "or": "or",
+    "explore": "Explore",
+    "more": "More",
+    "add": "Add",
+    "edit": "Edit",
+    "search": "Search",
+    "feedback": "Feedback"
+  },
+  "search": {
+    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -13,6 +25,58 @@
     "signIn": "Sign in",
     "signUp": "Sign up",
     "goToApp": "Go to app"
+  },
+  "inputs": {
+    "required": "Required",
+    "selectAll": "Select all",
+    "selected": "selected",
+    "resultsCount": "Showing {n, number} of {total, number} results"
+  },
+  "access": {
+    "access": "Access",
+    "private": {
+      "value": "private",
+      "title": "Private",
+      "description": "Documents will only be visible to you"
+    },
+    "organization": {
+      "value": "organization",
+      "title": "Organization",
+      "description": "Documents will only be visible to your organization"
+    },
+    "public": {
+      "value": "public",
+      "title": "Public",
+      "description": "Documents will be publicly visible to everyone"
+    }
+  },
+  "status": {
+    "status": "Status",
+    "success": {
+      "value": "success",
+      "title": "Success",
+      "description": "The document has been succesfully processed"
+    },
+    "readable": {
+      "value": "readable",
+      "title": "Readable",
+      "description": "The document is currently processing, but is readable during the operation"
+    },
+    "pending": {
+      "value": "pending",
+      "title": "Pending",
+      "description": "The document is processing and not currently readable"
+    },
+    "error": {
+      "value": "error",
+      "title": "Error",
+      "description": "There was an error during processing"
+    },
+    "nofile": {
+      "value": "nofile",
+      "title": "No file",
+      "description": "The document was created, but no file has been uploaded yet"
+    }
   },
   "notfound": {
     "title": "Page not found",
@@ -43,7 +107,7 @@
     "show": "Show help text"
   },
   "appearanceDimension": {
-    "responsive": "Automatic (default)",
+    "responsive": "Automatic",
     "fixed": "Fixed"
   },
   "calendar": {
@@ -68,6 +132,7 @@
     "delete": "Delete",
     "done": "Done",
     "edit": "Edit",
+    "share": "Share",
     "remove": "Remove",
     "save": "Save",
     "create": "Create",
@@ -77,7 +142,9 @@
     "dismiss": "Dismiss",
     "continue": "Continue",
     "dispatch": "Dispatch",
-    "submit": "Submit"
+    "submit": "Submit",
+    "organize": "Organize",
+    "run": "Run"
   },
   "dialogAccessDialog": {
     "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
@@ -143,8 +210,9 @@
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
-    "reprocessDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text. Do you wish to continue?",
-    "reprocessSingleDoc": "Proceeding will force the document to reprocess page and image text. Do you wish to continue?",
+    "reprocessDocs": "Proceeding will force the following {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text:",
+    "reprocessSingleDoc": "Proceeding will force the following document to reprocess page and image text:",
+    "continue": "Do you wish to continue?",
     "confirm": "Reprocess"
   },
   "dialogDeleteDialog": {
@@ -166,7 +234,7 @@
   },
   "dialogDocumentEmbedDialog": {
     "responsive": "Responsive",
-    "respOn": "On (default)",
+    "respOn": "On",
     "respOnHelp": "Fill the width of the article container (usually works best)",
     "respOff": "Off",
     "respOffHelp": "The document will fit the sizes specified below",
@@ -177,11 +245,11 @@
     "heightAuto": "The height is based on the size of the document, with no maximum size. If responsive, will be set to the height of the browser window minus 100px",
     "heightFixed": "Set a maximum height if the document is responsive, or set a fixed size if not responsive",
     "sidebarBehavior": "Sidebar behavior",
-    "sbResponsive": "Responsive (default)",
+    "sbResponsive": "Responsive",
     "sbResponsiveHelp": "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
     "hidden": "Hidden",
     "visible": "Visible",
-    "visibleDefault": "Visible (default)",
+    "visibleDefault": "Visible",
     "sbHiddenHelp": "Hide the sidebar by default",
     "sbVisibleHelp": "Show the sidebar by default",
     "titleBehavior": "Title behavior",
@@ -197,7 +265,7 @@
     "tmVisibleHelp": "Show an option to view the document’s text in the view dropdown",
     "tmHiddenHelp": "Hide text mode",
     "contributedByFormat": "Contributed by format",
-    "cbfUserAndOrg": "User and org (default)",
+    "cbfUserAndOrg": "User and org",
     "cbfUserAndOrgHelp": "Show a document’s attribution as the user name followed by the organization",
     "cbfOrgOnly": "Org only",
     "cbfOrgOnlyHelp": "Attribute the document to just the organization",
@@ -349,6 +417,47 @@
   "specialMessage": {
     "contactUs": "<a href={contact} target=\"_blank\">Contact us</a> with bug reports, questions, and suggestions."
   },
+  "uploadDialog": {
+    "title": "Upload documents",
+    "description": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
+    "docUpload": "Document Upload",
+    "docUploadProj": "Document Upload to {title}",
+    "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
+    "pdfSizeWarning": "You can only upload PDF files under {size}.",
+    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
+    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
+    "fileLimitWarning": "You can only upload {limit} files at once.",
+    "moreOptions": "More options",
+    "beginUpload": "Begin Upload",
+    "selectFiles": "Select files",
+    "dragDrop": "Drag and drop files here",
+    "publicMsg": "Document will be publicly visible.",
+    "collabMsg": "Document will be visible to your organization.",
+    "privateMsg": "Document will be visible to you alone.",
+    "collabName": "Organization",
+    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
+    "uploading": "Uploading ... ({uploaded}/{length})",
+    "gettingInfo": "Getting upload information ({percent})",
+    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
+    "errorHeading": "Error occurred while uploading",
+    "errorMsg": "We failed to {errorMessage}. Please try again later.",
+    "editDocInfo": "Edit document information:",
+    "untitled": "Untitled",
+    "uploadFiles": "Upload additional files",
+    "selectMore": "+ Select more files",
+    "dragDropMore": "Drag and drop additional files here",
+    "totalFiles": "Total: {n, plural, one {# file} other {# files}}",
+    "accessLevel": "Access Level",
+    "projects": "Projects",
+    "language": "Language",
+    "ocrEngine": "OCR Engine",
+    "forceOcr": "Force OCR",
+    "revisionControl": "Revision Control",
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
+    "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
+    "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files below"
+  },
   "uploadOptions": {
     "documentLang": "Document language:",
     "forceOcr": "Force OCR:",
@@ -360,7 +469,8 @@
     "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left.",
     "documentLanguagePlaceholder": "Begin typing to see options",
     "revisionControl": "Revision Control:",
-    "revisionControlHelp": "All previous versions to the document will be preserved and available for download."
+    "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files below"
   },
   "actionBar": {
     "selectDocs": "Select some documents to reveal edit actions",
@@ -390,7 +500,7 @@
       "signIn": "Sign in"
     },
     "premiumUpgrade": {
-      "title": "Premium",
+      "title": "Upgrade",
       "heading": "Go Pro with DocumentCloud’s premium tools",
       "orgHeading": "Power your team with DocumentCloud’s premium tools",
       "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
@@ -400,7 +510,11 @@
       "orgs": "Join or start an organization",
       "cta": "Upgrade Plan"
     },
+    "pro": {
+      "title": "Professional"
+    },
     "org": {
+      "avatar": "Avatar: {name}",
       "changeOrg": "Change organization",
       "personalAcct": "Personal Account",
       "adminRole": "Admin",
@@ -422,13 +536,11 @@
     "yourDocuments": "Your Documents",
     "searchResults": "Search Results",
     "accessDocuments": "Your {access}Documents",
-    "nameDocuments": "{name}'s {access}Documents",
+    "nameDocuments": "{name}’s {access}Documents",
     "allDocuments": "All {access}Documents",
     "mustBeVerified": "You must be a verified journalist to upload documents",
     "upload": "Upload",
-    "dropFile": "Drop file to upload"
-  },
-  "document": {
+    "dropFile": "Drop file to upload",
     "open": "Open",
     "updating": "Updating document...",
     "processing": "Processing",
@@ -438,15 +550,23 @@
     "project": "Project",
     "totalMatchingPages": "{n} of {m} pages matching the query",
     "showAll": "Show all",
-    "matchingPages": "{n} pages matching the query",
+    "matchingPages": "{n, plural, one {# page} other {# pages}} matching the query",
+    "matchingNotes": "{n, plural, one {# note} other {# notes}} matching the query",
+    "page": "Page",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
+    "select": "Select",
     "source": "Source",
-    "noteCount": "{n, plural, one {# note} other {# notes}}"
+    "noteCount": "{n, plural, one {# note} other {# notes}}",
+    "noteLink": "See note",
+    "language": "Language"
   },
   "documentThumbnail": {
     "pages": "pages",
     "loading": "Loading progress information..."
+  },
+  "error": {
+    "report": "Report a problem"
   },
   "mainContainer": {
     "error": "Error",
@@ -517,6 +637,9 @@
     "remove": "Remove {n, plural, one {document} other {# documents}} from project",
     "add": "Add {n, plural, one {document} other {# documents}} to project"
   },
+  "documentBrowser": {
+    "dropToUpload": "Drop to upload documents"
+  },
   "projectBrowser": {
     "loading": "Loading projects…",
     "retry": "Retry",
@@ -556,8 +679,9 @@
     "last": "Last Page"
   },
   "processingBar": {
+    "processing": "Processing last upload",
     "doneProcessing": "Done processing",
-    "processingDocuments": "Processing {n, plural, one {document} other {# documents}}"
+    "processingDocuments": "{n, plural, one {# document} other {# documents}} remaining"
   },
   "searchBar": {
     "tips": "Search tips: add filters by typing <code>user:</code>, <code>project:</code>, or <code>organization:</code>, etc. Use <code>sort:</code> to order results.",
@@ -575,38 +699,101 @@
     "orgDocuments": "{name}’s Documents",
     "newProject": "New Project",
     "createProject": "Create your first project by clicking “New Project” above.",
-    "pinsEmpty": "Pinned projects will appear here for quick access"
+    "pinsEmpty": "Pinned projects will appear here for quick access",
+    "private": "Private Project",
+    "public": "Public Projects",
+    "loading": "Loading project documents…",
+    "empty": "This project is empty",
+    "error": "Error loading documents",
+    "viewInSearch": "View in Document Search",
+    "yours": "Your Projects",
+    "shared": "Shared with you",
+    "none": "No projects found",
+    "create": "Create project",
+    "edit": "Edit project metadata",
+    "share": "Share & embed this project",
+    "users": "Manage Collaborators",
+    "add": "Add {n, plural, one {this document} other {# documents}} to a project",
+    "access": {
+      "public": "Public",
+      "private": "Private",
+      "admin": "Admin",
+      "edit": "Editor",
+      "view": "Viewer"
+    },
+    "delete": {
+      "action": "Delete project",
+      "confirm": "Confirm delete",
+      "really": "Are you sure you want to delete this project ({project})?"
+    },
+    "placeholder": {
+      "projects": "Search projects",
+      "documents": "Search documents"
+    },
+    "collaborators": {
+      "title": "Collaborators",
+      "edit": "Manage",
+      "manage": "Change access",
+      "empty": "No collaborators",
+      "add": "Invite users to this project"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "private": "Private Project",
+      "pinned": "Pin project"
+    }
+  },
+  "collaborators": {
+    "remove": {
+      "label": "Remove collaborator",
+      "confirm": "Confirm remove user",
+      "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
+    },
+    "update": {
+      "label": "Change access",
+      "confirm": "Change access for {name}",
+      "message": "Select an access level for {name} in {title}"  
+    },
+    "invite": {
+      "label": "Invite collaborators",
+      "confirm": "Add a user to this project",
+      "message": "Enter the email of an existing DocumentCloud user. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once."
+    },
+    "access": {
+      "access": "Access",
+      "admin": {
+        "title": "Admin",
+        "description": "Admins can add and remove documents and collaborators to the project"
+      },
+      "edit": {
+        "title": "Editor",
+        "description": "Editors can see and edit project documents owned by project admins"
+      },
+      "view": {
+        "title": "Viewer",
+        "description": "Viewers can see project documents owned by project admins"
+      }
+    },
+    "add": "Add",
+    "addCollaborators": "Add Collaborators",
+    "admin": "Admin",
+    "view": "View",
+    "edit": "Edit",
+    "help": {
+      "admin": "Collaborators can edit this project and its documents",
+      "edit": "Collaborators can edit documents in this project",
+      "view": "Collaborators can view documents in this project",
+      "remove": "Remove this user from this project"
+    },
+    "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
+    "manage": "Manage Collaborators",
+    "name": "Name",
+    "you": "(you)",
+    "change": "Change access"
   },
   "organizations": {
     "sameOrgUsers": "Users in organization"
-  },
-  "uploadDialog": {
-    "docUpload": "Document Upload",
-    "docUploadProj": "Document Upload to {title}",
-    "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
-    "pdfSizeWarning": "You can only upload PDF files under {size}.",
-    "nonPdfSizeWarning": "You can only upload non-PDF document files under {size}.",
-    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
-    "fileLimitWarning": "You can only upload {limit} files at once.",
-    "moreOptions": "More options",
-    "beginUpload": "Begin upload",
-    "selectFiles": "+ Select files",
-    "dragDrop": "Drag and drop files here",
-    "publicMsg": "Document will be publicly visible.",
-    "collabMsg": "Document will be visible to your organization.",
-    "privateMsg": "Document will be visible to you alone.",
-    "collabName": "Organization",
-    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
-    "uploading": "Uploading ... ({uploaded}/{length})",
-    "gettingInfo": "Getting upload information ({percent})",
-    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
-    "errorHeading": "Error occurred while uploading",
-    "errorMsg": "We failed to {errorMessage}. Please try again later.",
-    "editDocInfo": "Edit document information:",
-    "untitled": "Untitled",
-    "uploadFiles": "Upload additional files",
-    "selectMore": "+ Select more files",
-    "dragDropMore": "Drag and drop additional files here"
   },
   "embedNote": {
     "viewTheNote": "View the note ‘{title}‘ in its original document context on DocumentCloud in a new window or tab",
@@ -683,15 +870,39 @@
     "notes": "Notes",
     "search": "Search Results"
   },
+  "mode": {
+    "mode": "Mode",
+    "document": "File",
+    "text": "Text",
+    "grid": "Pages",
+    "notes": "Notes",
+    "annotating": "Annotate",
+    "redacting": "Redact"
+  },
   "zoom": {
+    "zoom": "Zoom",
+    "size": "Size",
     "fitWidth": "Fit width",
-    "fitHeight": "Fit height"
+    "fitHeight": "Fit height",
+    "thumbnail": "Tiny",
+    "small": "Small",
+    "normal": "Medium",
+    "large": "Large"
+  },
+  "embed": {
+    "download": "Download",
+    "enterFullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen",
+    "document": {
+      "privacyWarning": "This document is not public.",
+      "privacyFix": "Edit privacy settings"
+    }
   },
   "drawer": {
     "close": "Close Drawer"
   },
   "titleHeader": {
-    "contributedBy": "Contributed by {name}"
+    "contributedBy": "Contributed by"
   },
   "annotatePane": {
     "annotateDocument": "Add Note",
@@ -744,11 +955,13 @@
     "updating": "Updating docucment...",
     "original": "Original Document (PDF) »",
     "related": "Related Article »",
-    "contributed": "Contributed by {name}",
+    "contributed": "Contributed by",
     "source": "Source: {source}",
     "actions": "Document Actions",
     "share": "Share",
+    "shareEmbed": "Share & Embed",
     "shareDesc": "Create an embed or share on social media.",
+    "sharedWith": "Shared with",
     "annotate": "Add Note",
     "annotateDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "redact": "Redact",
@@ -757,14 +970,52 @@
     "modifyDesc": "Rearrange, rotate, delete, insert, and split pages.",
     "info": "Edit Document Info",
     "infoDesc": "Modify document information like description and related URL.",
-    "data": "Edit Tags and Data",
     "dataDesc": "Add tags and key/value pairs to categorize your document.",
     "sections": "Edit Sections",
     "sectionsDesc": "Add sections to organize your document with a table of contents.",
     "privateNote": "Add Private Note",
     "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "revisions": "Revision History",
-    "revisionsDesc": "Toggle revision history and view previous versions of your document."
+    "revisionsDesc": "Toggle revision history and view previous versions of your document.",
+    "collaborate": "Manage Collaborators",
+    "edit": "Edit Metadata",
+    "upload": "Upload Documents",
+    "uploadToProject": "Upload to Project",
+    "download": "Download File",
+    "reprocess": "Reprocess",
+    "created": "Created on",
+    "updated": "Last updated on",
+    "language": "Language",
+    "delete": "Delete",
+    "ocr_engine": "OCR Engine",
+    "addons": {
+      "title": "Add-Ons",
+      "pinned": "Pinned add-ons will appear here",
+      "runs": "Schedule & history",
+      "documents": "This add-on runs on documents"
+    },
+    "data": {
+      "title": "Tags & Data",
+      "empty": "Use tags or key/value data to organize documents",
+      "tags": "Tags",
+      "data": "Data"
+    },
+    "projects": {
+      "title": "Projects",
+      "pinned": "Pinned projects will appear here",
+      "empty": "Use projects to organize documents"
+    },
+    "toc": {
+      "empty": "Sections organize your document with a table of contents",
+      "notes": "Notes",
+      "pageAbbrev": "p.",
+      "sections": "Sections",
+      "cta": "Add sections"
+    }
+  },
+  "notes": {
+    "empty": "Add notes to highlight and comment on your document",
+    "cta": "Annotate this document"
   },
   "viewer": {
     "notFound": "Document not found",
@@ -774,7 +1025,99 @@
     "error": "Document has encountered an error",
     "errorDesc": "A processing error has been encountered in the document you requested",
     "accessible": "Document not accessible",
-    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
+    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it",
+    "share": "Share"
+  },
+  "edit": {
+    "title": "Edit document metadata",
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "source": "Source",
+      "published_url": "Published URL",
+      "related_article": "Related article URL",
+      "noindex": "Hide from search engines and DocumentCloud search",
+      "access": {
+        "title": "Access",
+        "description": "Changing the access setting will reprocess your document."
+      }
+    },
+    "nodocs": "No documents selected. Close this form and select at least one document first.",
+    "many": "Editing {n, plural, one {one document} other {# documents}}. This will add the same values to all selected documents.",
+    "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "annotate": {
+    "title": "Annotate Document",
+    "instructions": "Highlight a portion of the page, or click between pages to create a note.",
+    "fields": {
+      "title": "Title",
+      "content": "Content"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "cta": {
+      "add-note": "Add a page note",
+      "edit-note": "Edit page note",
+      "add-section": "Start section",
+      "edit-section": "Edit section"
+    }
+  },
+  "redact": {
+    "confirm": "Save",
+    "confirmTitle": "Save Redactions",
+    "really": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible.",
+    "title": "Redact Document",
+    "instructions": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
+    "undo": "Undo",
+    "cancel": "Discard",
+    "cancelWarning": "You will lose unsaved redactions. Are you sure you want to cancel?",
+    "error": "Error"
+  },
+  "sections": {
+    "edit": "Edit Sections",
+    "page": "Page",
+    "title": "Title",
+    "delete": "Delete",
+    "new": "Add a new section",
+    "clear": "Clear",
+    "update": "Update section",
+    "overwrite": "There is already a section starting on page {n}."
+  },
+  "delete": {
+    "title": "Confirm delete",
+    "really": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}.",
+    "continue": "Do you wish to continue?",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "error": "Error",
+    "none": "No documents selected. Close this form and select at least one document first."
+  },
+  "data": {
+    "title": "Edit tags and data",
+    "key": "Key",
+    "newkey": "New item",
+    "value": "Value",
+    "tag": "Tag",
+    "tags": "Tags",
+    "update": "Update",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "addNew": "Add new item:",
+    "many": "Saving will add the following data and tags to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
+  },
+  "bulk": {
+    "title": "Edit",
+    "actions": {
+      "edit": "Access and metadata",
+      "data": "Add tags and data",
+      "reprocess": "Reprocess",
+      "delete": "Delete documents",
+      "project": "Add to project"
+    }
   },
   "addonDispatchDialog": {
     "addons": "Add-Ons",
@@ -793,9 +1136,11 @@
     "showRuns": "Show Runs",
     "hideRuns": "Hide Runs",
     "showAddons": "Show Scheduled Add-Ons ({n})",
+    "scheduled": "Scheduled",
     "runSchedule": "Run on a schedule:",
     "runOnce": "Run once",
     "disable": "Disable",
+    "reset": "Reset",
     "signIn": "Sign in to use Add-Ons",
     "createdBy": "Created by",
     "categories": "Categories",
@@ -804,14 +1149,18 @@
     "shareClipboardSuccess": "Copied add-on URL to your clipboard",
     "scheduleSuccess": "Add-on is now scheduled",
     "runSuccess": "Add-on is now running",
-    "selectionHelp": "From the main list, select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
+    "selectionHelp": "Select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
     "cost": "{amount} {unit} per {price, plural, one {credit} other {# credits}}",
+    "editing": "Editing a previously dispatched addon",
+    "instructions": "Instructions",
     "premiumUpgrade": {
       "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
       "callToAction": "Upgrade Plan",
       "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
-    }
+    },
+    "dispatch": "Dispatch",
+    "history": "History"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
@@ -835,10 +1184,10 @@
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
     "previous": "Previous Runs",
-    "runsOn": "Runs {schedule}",
+    "runsOn": "{schedule}",
     "upcoming": {
       "empty": "Scheduled add-ons will appear here",
-      "loading": "Loading…",
+      "loading": "Loading …",
       "retry": "Retry"
     },
     "history": {
@@ -852,7 +1201,14 @@
     "feedback": "Feedback on this Add-On run",
     "progress": "Add-Ons in progress",
     "thanks": "Thanks for the feedback!",
-    "download": "Download file"
+    "download": "Download file",
+    "status": {
+      "success": "Success",
+      "failure": "Failure",
+      "queued": "Queued",
+      "in_progress": "In progress",
+      "cancelled": "Cancelled"
+    }
   },
   "addonSidebar": {
     "title": "Add-Ons",
@@ -875,5 +1231,70 @@
   },
   "premium": {
     "badge": "Premium"
+  },
+  "mailkey": {
+    "title": "Upload via email",
+    "description": "<p>You can upload documents to your account by sending them to to a special email address as attachments.</p><p><strong>For security reasons, this email is only shown to you once. Please copy it to a secure location.</strong></p><p>This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.</p><p>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.</p>",
+    "create": {
+      "button": "Create new email address",
+      "success": "<strong>Upload email address succesfully created</strong>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",
+      "failure": "Failed to create your upload email address. Please try again later."
+    },
+    "destroy": {
+      "button": "Delete existing address",
+      "success": "<strong>Any upload email address has been removed from your account.</strong>",
+      "failure": "Failed to destroy your upload email address. Please try again later."
+    }
+  },
+  "share": {
+    "default": "Default",
+    "document": "Document",
+    "page": "Page",
+    "note": "Note",
+    "copy": "Copy",
+    "copiedToClipboard": "Copied to clipboard",
+    "permalink": "Permalink",
+    "iframe": "Embed HTML iFrame",
+    "preview": "Embed Preview",
+    "save": "Save Settings",
+    "customize": "Customize Embed",
+    "privateWarning": "This {type} is private.",
+    "orgWarning": "This {type} is only visible within your organization.",
+    "privateFix": "Edit metadata",
+    "fields": {
+      "page": "Pick page",
+      "note": "Pick note"
+    }
+  },
+  "processing": {
+    "addons": "Add-Ons",
+    "documents": "Documents",
+    "restart": "Restart processing",
+    "totalCount": "{n} active {n, plural, one {process} other {processes}}"
+  },
+  "feedback": {
+    "title": "Share Your Feedback",
+    "hello": "<p>Thanks for trying out the public preview for the next major version of DocumentCloud! We are still hard at work adding features, fixing bugs, and improving the experience. We welcome your feedback&mdash;comments, ideas, and questions&mdash;to inform our progress. We are a very small team so we cannot guarantee that we will respond to all feedback, but we will read and review all of it.</p>",
+    "defaultPlaceholder": "My feedback is…",
+    "types": {
+      "comment": {
+        "label": "Send a Comment",
+        "placeholder": "I think that…"
+      },
+      "bug": {
+        "label": "Report a Bug",
+        "placeholder": "I want to…"
+      },
+      "question": {
+        "label": "Ask a Question",
+        "placeholder": "How can I…"
+      }
+    },
+    "userIdentity": {
+      "legend": "Attribution",
+      "anonymous": "Anonymous",
+      "shareAnonymously": "Share anonymously"
+    },
+    "success": "We have received your feedback. Thank you!"
   }
 }

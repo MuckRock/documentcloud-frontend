@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Tooltip from "./Tooltip.svelte";
+  import Tooltip from "../lib/components/common/Tooltip.svelte";
 
   export let href: string | null = null;
   export let external = false;
@@ -26,7 +26,7 @@
   export let disabledReason = null;
 </script>
 
-<Tooltip delay={500} show={disabledReason != null} caption={disabledReason}>
+<Tooltip caption={disabledReason}>
   {#if href}
     <a
       {href}

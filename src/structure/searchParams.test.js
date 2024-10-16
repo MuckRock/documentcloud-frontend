@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { SearchParams } from "./searchParams.js";
 
 function params(query) {

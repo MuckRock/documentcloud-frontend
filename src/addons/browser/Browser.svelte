@@ -8,7 +8,7 @@
   import Categories from "./Categories.svelte";
   import { buildParams, buildUrl, filter } from "./browser";
   import Drawer from "../../common/Drawer.svelte";
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
   import Search, { query } from "../../common/SearchInput.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../common/icons/Star.svelte";

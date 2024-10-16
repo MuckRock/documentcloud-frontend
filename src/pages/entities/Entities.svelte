@@ -8,7 +8,7 @@
   import { router } from "@/router/router.js";
   import { getDocument } from "@/api/document.js";
   import { extractEntities } from "@/api/entity.js";
-  import { jsonUrl } from "@/api/viewer.js";
+  import { jsonUrl } from "@/api/viewer";
   import session from "@/api/session.js";
   import { entities, getE } from "@/entities/entities.js";
   import { updateInCollection } from "@/manager/documents.js";
@@ -16,7 +16,7 @@
   import closeSvg from "@/assets/close_inline.svg?raw";
 
   import { SPECIAL_CONTACT } from "../../config/config.js";
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
 
   let loading = true;
   let fullText = null;

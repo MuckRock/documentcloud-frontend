@@ -5,6 +5,8 @@ export function informSize(
   useScrollDimension = true,
   updateStyleProps = false,
 ) {
+  if (!element) return;
+
   // Inform a parent window about an embed size
   const update = () => {
     window.parent.postMessage(

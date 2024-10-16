@@ -5,6 +5,7 @@
 
   export let message: string;
   export let callToAction: string | null = null;
+  export let href: string = null;
 </script>
 
 <div class="container">
@@ -14,7 +15,7 @@
   </div>
   {#if callToAction}
     <div class="action">
-      <Button premium label={callToAction} on:click />
+      <Button premium label={callToAction} {href} on:click />
     </div>
   {/if}
 </div>
