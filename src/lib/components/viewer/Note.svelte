@@ -272,8 +272,10 @@
 
     scroll-margin-top: 6rem;
 
+    z-index: var(--z-note);
+
     /* shadow-2 */
-    box-shadow: 0px 2px 8px 2px var(--shadow-1, rgba(30, 48, 56, 0.15));
+    box-shadow: var(--shadow-2);
   }
 
   /* overlay */

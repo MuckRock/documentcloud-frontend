@@ -6,20 +6,24 @@
 -->
 <script lang="ts">
   import type { Access } from "$lib/api/types";
+  import Tooltip from "../common/Tooltip.svelte";
 
   export let access: Access | "" = "";
   export let size: "small" | "normal" = "normal";
+  export let title: string = undefined;
 </script>
 
-<div class="tab {access} {size}"></div>
+<Tooltip caption={title} placement="right">
+  <div class="tab {access} {size}"></div>
+</Tooltip>
 
 <style>
   .tab {
-    width: 6vw;
-    height: 3vw;
+    width: 5rem;
+    height: 2rem;
     opacity: 0.8;
     background: var(--blue-3, #4294f0);
-    mix-blend-mode: multiply;
+    /* mix-blend-mode: multiply; */
 
     /* Glare 1 */
     box-shadow: var(--glare);
