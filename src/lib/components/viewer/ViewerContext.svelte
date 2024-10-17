@@ -43,11 +43,11 @@ layouts, stories, and tests.
   }
 
   export function getDocument(): Document {
-    return get(getContext("document"));
+    return getContext("document");
   }
 
   export function getText(): Maybe<DocumentText> {
-    return get(getContext("text"));
+    return getContext("text");
   }
 
   export function getAssetUrl(): URL {
@@ -114,24 +114,15 @@ layouts, stories, and tests.
     total: 0,
   });
 
-  // to react to prop changes, values need to be a writable store
-  const stores = {
-    document: writable(document),
-    text: writable(text),
-  };
-  // when a prop changes, update its stored value
-  $: stores.document.set(document);
-  $: stores.text.set(text);
-
   // stores we need deeper in the component tree, available via context
-  setContext("document", stores.document);
-  setContext("text", stores.text);
+  setContext("document", document);
+  setContext("text", text);
   setContext("asset_url", asset_url);
   setContext("embed", embed);
   setContext("query", query);
-  setContext("currentNote", note);
-  setContext("currentPage", page);
-  setContext("currentMode", mode);
+  setContext("currentNote", writable(note));
+  setContext("currentPage", writable(page));
+  setContext("currentMode", writable(mode));
   setContext("zoom", zoom);
   setContext("progress", progress);
   setContext("pdf", pdf);
