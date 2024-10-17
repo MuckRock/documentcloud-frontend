@@ -12,7 +12,7 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { BBox, Note as NoteType, Nullable } from "$lib/api/types";
 
-  import { pushState } from "$app/navigation";
+  import { invalidate, pushState } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
 
@@ -31,6 +31,7 @@ Assumes it's a child of a ViewerContext
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
+  import { setContext } from "svelte";
 
   export let scale = 1.5;
   export let page_number: number; // zero-indexed
@@ -151,7 +152,9 @@ Assumes it's a child of a ViewerContext
   function handleNewNoteSuccess(e: CustomEvent<NoteType>) {
     const note = e.detail;
     // optimistically update document notes
-    notes.push(note);
+    setContext("document", { ...document, notes: [...notes, note] });
+    // invalidate the document
+    invalidate(`document:${document.id}`);
   }
 </script>
 

@@ -8,7 +8,6 @@ Positioning and generating coordinates should happen outside of this form.
   import type { Bounds, Document, Note } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -40,7 +39,6 @@ Positioning and generating coordinates should happen outside of this form.
     return ({ result, update }) => {
       if (result.type === "success") {
         dispatch("success", result.note);
-        // invalidate(`document:${document.id}`);
         update(result);
         dispatch("close");
       }
