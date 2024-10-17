@@ -36,7 +36,7 @@ Assumes it's a child of a ViewerContext
   export let scale = 1.5;
   export let page_number: number; // zero-indexed
 
-  const document = getDocument();
+  let document = getDocument();
   const embed = isEmbedded();
   const mode = getCurrentMode();
   const currentNote = getCurrentNote();
@@ -151,8 +151,6 @@ Assumes it's a child of a ViewerContext
 
   function handleNewNoteSuccess(e: CustomEvent<NoteType>) {
     const note = e.detail;
-    // optimistically update document notes
-    setContext("document", { ...document, notes: [...notes, note] });
     // invalidate the document
     invalidate(`document:${document.id}`);
   }
