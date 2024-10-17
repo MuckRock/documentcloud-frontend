@@ -51,20 +51,20 @@ layouts, stories, and tests.
   }
 
   export function getAssetUrl(): URL {
-    return get(getContext("asset_url"));
+    return getContext("asset_url");
   }
 
   export function getQuery(): string {
-    return get(getContext("query") ?? writable(""));
+    return getContext("query") ?? "";
   }
 
   export function isEmbedded(): boolean {
     // are we embedded?
-    return get(getContext("embed") ?? writable(false));
+    return getContext("embed") ?? false;
   }
 
   export function getCurrentNote(): Readable<Note> {
-    return get(getContext("currentNote"));
+    return getContext("currentNote");
   }
 
   export function getCurrentPage(): Writable<number> {
@@ -118,34 +118,21 @@ layouts, stories, and tests.
   const stores = {
     document: writable(document),
     text: writable(text),
-    note: writable(note),
-    asset_url: writable(asset_url),
-    embed: writable(embed),
-    page: writable(page),
-    mode: writable(mode),
-    query: writable(query),
-    zoom: writable(zoom),
   };
   // when a prop changes, update its stored value
   $: stores.document.set(document);
   $: stores.text.set(text);
-  $: stores.note.set(note);
-  $: stores.asset_url.set(asset_url);
-  $: stores.embed.set(embed);
-  $: stores.page.set(page);
-  $: stores.mode.set(mode);
-  $: stores.query.set(query);
-  $: stores.zoom.set(zoom);
+
   // stores we need deeper in the component tree, available via context
   setContext("document", stores.document);
   setContext("text", stores.text);
-  setContext("asset_url", stores.asset_url);
-  setContext("embed", stores.embed);
-  setContext("query", stores.query);
-  setContext("currentNote", stores.note);
-  setContext("currentPage", stores.page);
-  setContext("currentMode", stores.mode);
-  setContext("zoom", stores.zoom);
+  setContext("asset_url", asset_url);
+  setContext("embed", embed);
+  setContext("query", query);
+  setContext("currentNote", note);
+  setContext("currentPage", page);
+  setContext("currentMode", mode);
+  setContext("zoom", zoom);
   setContext("progress", progress);
   setContext("pdf", pdf);
 
