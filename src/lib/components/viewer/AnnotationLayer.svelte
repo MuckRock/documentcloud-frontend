@@ -31,7 +31,7 @@ Assumes it's a child of a ViewerContext
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
   import Note from "./Note.svelte";
-  import { setContext } from "svelte";
+  import { fly } from "svelte/transition";
 
   export let scale = 1.5;
   export let page_number: number; // zero-indexed
@@ -69,7 +69,6 @@ Assumes it's a child of a ViewerContext
 
   function startDrawingBox(e: PointerEvent) {
     if ($currentNote || newNote) return;
-    console.log("startDrawingBox");
 
     drawing = true;
     $currentNote = null;
@@ -82,7 +81,6 @@ Assumes it's a child of a ViewerContext
       y1: y,
       y2: y,
     };
-    console.log(`drawing: ${drawing}`, newNote);
   }
 
   function continueDrawingBox(e: PointerEvent) {
@@ -170,13 +168,13 @@ Assumes it's a child of a ViewerContext
   {#each notes as note (note.id)}
     <a
       id={getNoteId(note)}
-      class="note"
+      class="note-tab"
       href={getViewerHref({ document, note, mode: $mode, embed })}
       title={note.title}
-      style:top="{note.y1 * 100}%"
+      style:top="calc({note.y1} * 100%)"
       on:click={(e) => openNote(e, note)}
     >
-      <NoteTab access={note.access} />
+      <NoteTab access={note.access} title={note.title} />
     </a>
     <a
       href={getViewerHref({ document, note, mode: $mode, embed })}
@@ -191,19 +189,14 @@ Assumes it's a child of a ViewerContext
       {note.title}
     </a>
     {#if note.id === $currentNote?.id}
-      <div
-        class="box {note.access}"
-        style:top="{note.y1 * 100}%"
-        style:left="{note.x1 * 100}%"
-        style:width="{width(note) * 100}%"
-        style:height="{height(note) * 100}%"
-      ></div>
       {#if writing}
-        <div class="note-form" style:top="calc({note.y2} * 100% + 1rem)">
+        <div class="note-form" style:top="calc({note.y1} * 100% - 3.25rem)">
           <EditNote bind:note {document} {page_number} on:close={closeNote} />
         </div>
       {:else}
-        <Note {note} {scale} on:close={closeNote} />
+        <div class="note-reading" style:top="calc({note.y1} * 100% - 3.25rem)">
+          <Note {note} {scale} on:close={closeNote} />
+        </div>
       {/if}
     {/if}
   {/each}
@@ -218,7 +211,11 @@ Assumes it's a child of a ViewerContext
     ></div>
 
     {#if !drawing}
-      <div class="note-form" style:top="calc({newNote.y2} * 100% + 1rem)">
+      <div
+        class="note-form"
+        style:top="calc({newNote.y2} * 100% + 3rem)"
+        transition:fly={{ duration: 250, y: "-1.1rem" }}
+      >
         <EditNote
           {document}
           bind:note={newNote}
@@ -269,20 +266,29 @@ Assumes it's a child of a ViewerContext
     pointer-events: none;
   }
 
-  .note {
-    transform: translateY(-25%);
+  .note-tab {
+    left: -3rem;
     position: absolute;
     pointer-events: all;
-    left: -3rem;
 
     scroll-margin-top: 6rem;
   }
 
+  .note-reading {
+    position: absolute;
+    left: -1.5rem;
+    width: 44rem;
+    max-width: 100%;
+    z-index: var(--z-note);
+  }
+
   .note-form {
     position: absolute;
+    left: -1.5rem;
+    width: 44rem;
+    max-width: 100%;
+    z-index: var(--z-note);
     pointer-events: all;
-    width: 100%;
-    z-index: 10;
   }
 
   .notes.activeNote {
@@ -292,10 +298,15 @@ Assumes it's a child of a ViewerContext
 
   .box {
     position: absolute;
-    border: 2px dashed var(--gray-4);
+    border: 0.5rem solid var(--note-private);
+    background: var(--note-private);
+    opacity: 0.75;
+    mix-blend-mode: multiply;
+    box-sizing: content-box;
+    pointer-events: stroke;
     padding: 0.5rem;
     border-radius: 0.25rem;
-    background-color: transparent;
+
     /* if we make boxes editable
     cursor: grab;
     resize: both;
@@ -305,14 +316,17 @@ Assumes it's a child of a ViewerContext
 
   .box.public {
     border-color: var(--note-public);
+    background: var(--note-public);
   }
 
   .box.organization {
     border-color: var(--note-org);
+    background: var(--note-org);
   }
 
   .box.private {
     border-color: var(--note-private);
+    background: var(--note-private);
   }
 
   a.note-highlight {
@@ -322,6 +336,9 @@ Assumes it's a child of a ViewerContext
     opacity: 0.5;
     pointer-events: all;
     mix-blend-mode: multiply;
+
+    border: 0.5rem solid var(--gray-4);
+    pointer-events: none;
   }
 
   a.note-highlight.public {

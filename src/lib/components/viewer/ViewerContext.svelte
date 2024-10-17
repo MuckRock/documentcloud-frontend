@@ -135,11 +135,12 @@ layouts, stories, and tests.
   $: noteMatchingPageHash = (note: Note) =>
     note.id === noteFromHash($pageStore.url.hash);
 
-  function scrollToHash(hash: string) {
+  function scrollToHash(hash?: string) {
     const page: Nullable<number> = pageFromHash(hash);
-    const el: Maybe<HTMLElement> = window?.document.getElementById(
-      hash.split("#")[1],
-    );
+    let el: Maybe<HTMLElement>;
+    if (hash) {
+      el = window?.document.getElementById(hash.split("#")[1]);
+    }
     // Scroll to the element, if it's available, and update the current page
     if (el && page) {
       el.scrollIntoView();

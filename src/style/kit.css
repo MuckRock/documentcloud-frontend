@@ -91,14 +91,15 @@ Updated variables and styles for new SvelteKit routes
   --shadow-3: 0 2px 16px 2px rgba(30 48 56 / 0.075);
 
   /* Z-Index Layers */
-  --z-toolbar: 2;
+  --z-toolbar: 5;
+  --z-note: 2;
   --z-navigation: 7;
   --z-drawer: 9;
   --z-modal: 10;
   --z-dropdownBackdrop: 11;
   --z-dropdown: 12;
   --z-toast: 20;
-  --z-tooltip: 21;
+  --z-tooltip: 2;
 }
 
 html,
