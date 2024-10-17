@@ -123,7 +123,7 @@ layouts, stories, and tests.
   setContext("currentNote", writable(note));
   setContext("currentPage", writable(page));
   setContext("currentMode", writable(mode));
-  setContext("zoom", zoom);
+  setContext("zoom", writable(zoom));
   setContext("progress", progress);
   setContext("pdf", pdf);
 
