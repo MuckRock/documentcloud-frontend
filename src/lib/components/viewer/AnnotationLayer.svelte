@@ -151,11 +151,7 @@ Assumes it's a child of a ViewerContext
   function handleNewNoteSuccess(e: CustomEvent<NoteType>) {
     const note = e.detail;
     // optimistically update document notes
-    console.log(
-      notes.some(({ id }) => id === note.id),
-      notes,
-      note,
-    );
+    notes.push(note);
   }
 </script>
 
@@ -222,7 +218,12 @@ Assumes it's a child of a ViewerContext
 
     {#if !drawing}
       <div class="note-form" style:top="calc({newNote.y2} * 100% + 1rem)">
-        <EditNote {document} bind:note={newNote} on:close={closeNote} />
+        <EditNote
+          {document}
+          bind:note={newNote}
+          on:close={closeNote}
+          on:success={handleNewNoteSuccess}
+        />
       </div>
     {/if}
   {/if}
@@ -240,7 +241,6 @@ Assumes it's a child of a ViewerContext
         note={$currentNote}
         {page_number}
         on:close={closeNote}
-        on:success={handleNewNoteSuccess}
       />
     </Modal>
   </Portal>
