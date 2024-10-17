@@ -78,8 +78,6 @@
 
   let shareNoteOpen = false;
 
-  $: noteId = noteHashUrl(note).split("#")[1];
-  $: editing = $mode === "annotating";
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
@@ -192,7 +190,6 @@
 </script>
 
 <div
-  id={noteId}
   class="note {note.access} {$mode || 'notes'}"
   class:page_level
   style:--x1={note.x1}

@@ -22,7 +22,7 @@ Assumes it's a child of a ViewerContext
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
-  import { width, height, isPageLevel } from "$lib/api/notes";
+  import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
   import {
     getCurrentMode,
     getCurrentNote,
@@ -52,6 +52,10 @@ Assumes it's a child of a ViewerContext
     Boolean($currentNote) &&
     isPageLevel($currentNote) &&
     page_number === $currentNote.page_number;
+
+  function getNoteId(note: NoteType) {
+    return noteHashUrl(note).split("#")[1];
+  }
 
   function pointerdown(e: PointerEvent) {
     if (currentNote || newNote) return;
@@ -165,6 +169,7 @@ Assumes it's a child of a ViewerContext
 >
   {#each notes as note (note.id)}
     <a
+      id={getNoteId(note)}
       class="note"
       href={getViewerHref({ document, note, mode: $mode, embed })}
       title={note.title}
@@ -270,6 +275,8 @@ Assumes it's a child of a ViewerContext
     position: absolute;
     pointer-events: all;
     left: -3rem;
+
+    scroll-margin-top: 6rem;
   }
 
   .note-form {
