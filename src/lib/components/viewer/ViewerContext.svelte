@@ -43,28 +43,28 @@ layouts, stories, and tests.
   }
 
   export function getDocument(): Document {
-    return getContext("document");
+    return get(getContext("document"));
   }
 
   export function getText(): Maybe<DocumentText> {
-    return getContext("text");
+    return get(getContext("text"));
   }
 
   export function getAssetUrl(): URL {
-    return getContext("asset_url");
+    return get(getContext("asset_url"));
   }
 
   export function getQuery(): string {
-    return getContext("query") ?? "";
+    return get(getContext("query") ?? writable(""));
   }
 
   export function isEmbedded(): boolean {
     // are we embedded?
-    return getContext("embed") ?? false;
+    return get(getContext("embed") ?? writable(false));
   }
 
   export function getCurrentNote(): Readable<Note> {
-    return getContext("currentNote");
+    return get(getContext("currentNote"));
   }
 
   export function getCurrentPage(): Writable<number> {
@@ -92,7 +92,6 @@ layouts, stories, and tests.
   import { page as pageStore } from "$app/stores";
   import type { _ } from "svelte-i18n";
   import { noteFromHash } from "@/lib/api/notes";
-  import type { Page } from "@sveltejs/kit";
 
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;
@@ -115,22 +114,40 @@ layouts, stories, and tests.
     total: 0,
   });
 
-  $: {
-    console.log($pageStore.url.hash);
-  }
-
+  // to react to prop changes, values need to be a writable store
+  const stores = {
+    document: writable(document),
+    text: writable(text),
+    note: writable(note),
+    asset_url: writable(asset_url),
+    embed: writable(embed),
+    page: writable(page),
+    mode: writable(mode),
+    query: writable(query),
+    zoom: writable(zoom),
+  };
+  // when a prop changes, update its stored value
+  $: stores.document.set(document);
+  $: stores.text.set(text);
+  $: stores.note.set(note);
+  $: stores.asset_url.set(asset_url);
+  $: stores.embed.set(embed);
+  $: stores.page.set(page);
+  $: stores.mode.set(mode);
+  $: stores.query.set(query);
+  $: stores.zoom.set(zoom);
   // stores we need deeper in the component tree, available via context
-  setContext("document", document);
-  setContext("text", text);
-  setContext("asset_url", asset_url);
-  setContext("embed", embed);
-  setContext("query", query);
-  setContext("currentNote", writable(note));
-  setContext("currentPage", writable(page));
-  setContext("currentMode", writable(mode));
+  setContext("document", stores.document);
+  setContext("text", stores.text);
+  setContext("asset_url", stores.asset_url);
+  setContext("embed", stores.embed);
+  setContext("query", stores.query);
+  setContext("currentNote", stores.note);
+  setContext("currentPage", stores.page);
+  setContext("currentMode", stores.mode);
+  setContext("zoom", stores.zoom);
   setContext("progress", progress);
   setContext("pdf", pdf);
-  setContext("zoom", writable(zoom));
 
   $: currentDoc = getDocument();
   $: currentMode = getCurrentMode();
