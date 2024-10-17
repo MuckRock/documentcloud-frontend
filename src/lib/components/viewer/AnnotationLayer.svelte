@@ -181,6 +181,18 @@ Assumes it's a child of a ViewerContext
     >
       <NoteTab access={note.access} />
     </a>
+    <a
+      href={getViewerHref({ document, note, mode: $mode, embed })}
+      class="note-highlight {note.access}"
+      title={note.title}
+      style:top="{note.y1 * 100}%"
+      style:left="{note.x1 * 100}%"
+      style:width="{width(note) * 100}%"
+      style:height="{height(note) * 100}%"
+      on:click={(e) => openNote(e, note)}
+    >
+      {note.title}
+    </a>
     {#if note.id === $currentNote?.id}
       <div
         class="box {note.access}"
@@ -196,19 +208,6 @@ Assumes it's a child of a ViewerContext
       {:else}
         <Note {note} {scale} on:close={closeNote} />
       {/if}
-    {:else}
-      <a
-        href={getViewerHref({ document, note, mode: $mode, embed })}
-        class="note-highlight {note.access}"
-        title={note.title}
-        style:top="{note.y1 * 100}%"
-        style:left="{note.x1 * 100}%"
-        style:width="{width(note) * 100}%"
-        style:height="{height(note) * 100}%"
-        on:click={(e) => openNote(e, note)}
-      >
-        {note.title}
-      </a>
     {/if}
   {/each}
 
