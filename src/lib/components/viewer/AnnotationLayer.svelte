@@ -10,9 +10,9 @@ Only one note can be added/edited at a time.
 Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { BBox, Note as NoteType } from "$lib/api/types";
+  import type { BBox, Note as NoteType, Nullable } from "$lib/api/types";
 
-  import { goto, pushState } from "$app/navigation";
+  import { pushState } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
 
@@ -40,13 +40,13 @@ Assumes it's a child of a ViewerContext
   const mode = getCurrentMode();
   const currentNote = getCurrentNote();
 
-  let newNote: Partial<NoteType> & BBox = null; // is this too clever?
-  let dragging = false;
+  let newNote: Nullable<Partial<NoteType> & BBox> = null;
+  let drawing = false;
 
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: writing = $mode === "annotating";
-  $: editing = Boolean($currentNote) || (Boolean(newNote) && !dragging);
+  $: activeNote = Boolean($currentNote) || (Boolean(newNote) && !drawing);
   $: edit_page_note =
     writing &&
     Boolean($currentNote) &&
@@ -57,49 +57,46 @@ Assumes it's a child of a ViewerContext
     return noteHashUrl(note).split("#")[1];
   }
 
-  function pointerdown(e: PointerEvent) {
-    if (currentNote || newNote) return;
-
-    dragging = true;
-
+  function getLayerPosition(e: PointerEvent): [x: number, y: number] {
+    // pointer position in window
     const { offsetX, offsetY } = e;
+    // page dimensions
     const { clientWidth, clientHeight } = e.target as HTMLDivElement;
-
-    newNote = {
-      x1: offsetX / clientWidth,
-      x2: offsetX / clientWidth,
-      y1: offsetY / clientHeight,
-      y2: offsetY / clientHeight,
-    };
+    // box points
+    return [offsetX / clientWidth, offsetY / clientHeight];
   }
 
-  function pointermove(e: PointerEvent) {
-    if (!dragging) return;
+  function startDrawingBox(e: PointerEvent) {
+    if ($currentNote || newNote) return;
+    console.log("startDrawingBox");
 
-    const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target as HTMLDivElement;
+    drawing = true;
+    $currentNote = null;
+    const [x, y] = getLayerPosition(e);
 
-    let x1: number, x2: number, y1: number, y2: number;
-    let x = offsetX / clientWidth;
-    let y = offsetY / clientHeight;
+    // when starting, the note is a 0px shape
+    newNote = {
+      x1: x,
+      x2: x,
+      y1: y,
+      y2: y,
+    };
+    console.log(`drawing: ${drawing}`, newNote);
+  }
 
-    if (x > newNote.x1) {
-      // moving right
-      x1 = newNote.x1;
-      x2 = x;
-    } else {
-      // moving left
-      x1 = x;
-      x2 = newNote.x2;
-    }
+  function continueDrawingBox(e: PointerEvent) {
+    if (!drawing || !newNote) return;
+    console.log("pointermove");
 
-    if (y > newNote.y1) {
-      y1 = newNote.y1;
-      y2 = y;
-    } else {
-      y1 = y;
-      y2 = newNote.y2;
-    }
+    const [x, y] = getLayerPosition(e);
+
+    const movingRight = x > newNote.x1;
+    const movingDown = y > newNote.y1;
+
+    const x1 = movingRight ? newNote.x1 : x;
+    const x2 = movingRight ? x : newNote.x2;
+    const y1 = movingDown ? newNote.y1 : y;
+    const y2 = movingDown ? y : newNote.y2;
 
     newNote = {
       x1,
@@ -109,28 +106,24 @@ Assumes it's a child of a ViewerContext
     };
   }
 
-  function pointerup(e: PointerEvent) {
-    dragging = false;
+  function finishDrawingBox(e: PointerEvent) {
+    if (!newNote || !drawing) return;
 
-    if (!newNote || editing) return;
-
-    const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target as HTMLDivElement;
-
-    const x = offsetX / clientWidth;
-    const y = offsetY / clientHeight;
+    const [x, y] = getLayerPosition(e);
 
     newNote = {
-      page_number,
       x1: Math.min(newNote.x1, x),
       x2: Math.max(newNote.x2, x),
       y1: Math.min(newNote.y1, y),
       y2: Math.max(newNote.y2, y),
-
+      // now initialize some note values
+      page_number,
       title: "",
       content: "",
       access: "private",
     };
+
+    drawing = false;
   }
 
   function openNote(e: MouseEvent, note: NoteType) {
@@ -142,10 +135,10 @@ Assumes it's a child of a ViewerContext
   }
 
   function closeNote() {
+    drawing = false;
     newNote = null;
-    dragging = false;
-    const href = getViewerHref({ document, mode: $mode, embed });
     $currentNote = null;
+    const href = getViewerHref({ document, mode: $mode, embed });
     pushState(href, {});
   }
 
@@ -154,6 +147,16 @@ Assumes it's a child of a ViewerContext
       closeNote();
     }
   }
+
+  function handleNewNoteSuccess(e: CustomEvent<NoteType>) {
+    const note = e.detail;
+    // optimistically update document notes
+    console.log(
+      notes.some(({ id }) => id === note.id),
+      notes,
+      note,
+    );
+  }
 </script>
 
 <svelte:window on:keydown={onkeypress} />
@@ -161,11 +164,11 @@ Assumes it's a child of a ViewerContext
 <div
   class="notes"
   class:writing
-  class:dragging
-  class:editing
-  on:pointerdown|self={pointerdown}
-  on:pointermove|self={pointermove}
-  on:pointerup|self={pointerup}
+  class:drawing
+  class:activeNote
+  on:pointerdown|self={startDrawingBox}
+  on:pointermove|self={continueDrawingBox}
+  on:pointerup|self={finishDrawingBox}
 >
   {#each notes as note (note.id)}
     <a
@@ -218,14 +221,9 @@ Assumes it's a child of a ViewerContext
       style:height="{height(newNote) * 100}%"
     ></div>
 
-    {#if !dragging}
+    {#if !drawing}
       <div class="note-form" style:top="calc({newNote.y2} * 100% + 1rem)">
-        <EditNote
-          {document}
-          bind:note={newNote}
-          {page_number}
-          on:close={closeNote}
-        />
+        <EditNote {document} bind:note={newNote} on:close={closeNote} />
       </div>
     {/if}
   {/if}
@@ -243,6 +241,7 @@ Assumes it's a child of a ViewerContext
         note={$currentNote}
         {page_number}
         on:close={closeNote}
+        on:success={handleNewNoteSuccess}
       />
     </Modal>
   </Portal>
@@ -266,7 +265,7 @@ Assumes it's a child of a ViewerContext
     pointer-events: all;
   }
 
-  .notes.dragging :global(*) {
+  .notes.drawing :global(*) {
     pointer-events: none;
   }
 
@@ -286,7 +285,7 @@ Assumes it's a child of a ViewerContext
     z-index: 10;
   }
 
-  .notes.editing {
+  .notes.activeNote {
     cursor: auto;
     pointer-events: none;
   }
