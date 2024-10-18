@@ -1,12 +1,9 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
+<!-- @component
+Assumes it's a child of a ViewerContext
+ -->
 
-  import type {
-    Document,
-    ReadMode,
-    ViewerMode,
-    WriteMode,
-  } from "$lib/api/types";
+<script lang="ts">
+  import type { ReadMode, WriteMode } from "$lib/api/types";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -29,20 +26,25 @@
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-
-  import SidebarItem from "../../sidebar/SidebarItem.svelte";
+  import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   import { remToPx } from "$lib/utils/layout";
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
-
-  export let document: Document;
-  export let query: string = "";
-  export let embed = isEmbedded();
+  import { getViewerHref } from "$lib/utils/viewer";
+  import {
+    getCurrentMode,
+    getDocument,
+    getQuery,
+    isEmbedded,
+  } from "$lib/components/viewer/ViewerContext.svelte";
 
   let width: number;
 
-  const mode: Writable<ViewerMode> = getContext("currentMode");
+  const documentStore = getDocument();
+  const query = getQuery();
+  const mode = getCurrentMode();
+  const embed = isEmbedded();
 
+  $: document = $documentStore;
   $: canWrite = !embed && document.edit_access;
   $: BREAKPOINTS = {
     READ_MENU: width > remToPx(52),
@@ -124,7 +126,7 @@
     {#if !BREAKPOINTS.WRITE_MENU && canWrite}
       {#each writeModes as [value, name]}
         <Button ghost href={getViewerHref({ document, mode: value, embed })}>
-          <svelte:component this={icons[value]} />
+          <span class="icon"><svelte:component this={icons[value]} /></span>
           {name}
         </Button>
       {/each}
@@ -148,5 +150,9 @@
   .tabs {
     display: flex;
     padding: 0 1rem;
+  }
+  .icon {
+    flex: 0 0 auto;
+    display: inline-flex;
   }
 </style>

@@ -159,10 +159,7 @@ export function canonicalNoteUrl(document: Document, note: Note): URL {
  * @example https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/#document/p3/a557
  */
 export function noteUrl(document: Document, note: Note): URL {
-  return new URL(
-    `#document/p${note.page_number + 1}/a${note.id}`,
-    canonicalUrl(document),
-  );
+  return new URL(noteHashUrl(note), canonicalUrl(document));
 }
 
 /**

@@ -7,6 +7,7 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
   import { activeAddons } from "@/test/fixtures/addons";
+  import { writable } from "svelte/store";
   const document = doc as Document;
 
   export const meta = {
@@ -25,7 +26,7 @@
   };
 
   let args = {
-    document,
+    document: writable(document),
     mode: "document",
     text: txt,
     query: "",
