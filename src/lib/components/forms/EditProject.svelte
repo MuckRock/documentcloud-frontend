@@ -35,7 +35,7 @@ Edit project metadata
     submitter.disabled = true;
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("success", result);
+        dispatch("success", result.data?.project?.data);
       }
       update(result);
       dispatch("close");

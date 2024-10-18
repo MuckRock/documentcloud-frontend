@@ -14,7 +14,6 @@ and we don't want to do that everywhere.
   import { FileDirectory24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import Flex from "../common/Flex.svelte";
 
   import { getForUser, add, remove } from "$lib/api/projects";
   import { getCsrfToken } from "$lib/utils/api";
@@ -35,6 +34,7 @@ and we don't want to do that everywhere.
   let createProjectOpen = false;
   let common: Set<number>;
 
+  $: sorted = sort(projects);
   $: common = new Set(
     intersection(
       documents.map((d) => d.projects ?? []),
@@ -67,8 +67,8 @@ and we don't want to do that everywhere.
     await invalidateDocs(documents);
   }
 
-  function onCreateSuccess(event: CustomEvent<{ data: { project: Project } }>) {
-    projects = [...projects, event.detail.data.project];
+  function onCreateSuccess(event: CustomEvent<Project>) {
+    projects = [...projects, event.detail];
   }
 
   function sort(projects: Project[]) {
@@ -80,7 +80,7 @@ and we don't want to do that everywhere.
 
 <div class="container">
   <div class="projects">
-    {#each sort(projects) as project}
+    {#each sorted as project}
       <label class="project">
         <input
           type="checkbox"
