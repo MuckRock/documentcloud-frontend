@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
 
-  import Button from "@/common/Button.svelte";
+  import Button from "$lib/components/common/Button.svelte";
 
   // SVG assets
   import mastLogoSvg from "@/assets/mastlogo.svg?raw";
@@ -49,7 +49,7 @@
                 <a href={SIGN_OUT_URL}>{$_("homeTemplate.signOut")}</a>
               </div>
               <a href="/">
-                <Button>{$_("homeTemplate.goToApp")}</Button>
+                <Button mode="primary">{$_("homeTemplate.goToApp")}</Button>
               </a>
             </div>
           {:else}

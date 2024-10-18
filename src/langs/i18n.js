@@ -15,6 +15,8 @@ for (let i = 0; i < langs.length; i++) {
   langDict[lang] = true;
 }
 
+console.log(langDict);
+
 function resolveLocale(locale) {
   if (locale == null) return locale;
   if (langDict[locale] != null) return locale;
