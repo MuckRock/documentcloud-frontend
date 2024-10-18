@@ -153,17 +153,6 @@ layouts, stories, and tests.
   }
 
   function onHashChange() {
-    console.log(
-      "onHashChange:",
-      JSON.stringify(
-        {
-          w: window.location.hash,
-          $: $pageStore.url.hash,
-        },
-        null,
-        2,
-      ),
-    );
     const { hash } = window.location;
     $currentNote = $currentDoc.notes.find(noteMatchingPageHash);
     if (shouldPaginate($currentMode)) {
@@ -184,18 +173,6 @@ layouts, stories, and tests.
   });
 
   afterNavigate(() => {
-    console.log(
-      "afterNavigate:",
-      JSON.stringify(
-        {
-          w: window.location.hash,
-          $: $pageStore.url.hash,
-          s: JSON.stringify($pageStore.state, null, 2),
-        },
-        null,
-        2,
-      ),
-    );
     // refresh stores from URL state
     const { hash } = $pageStore.url;
     $currentMode = mode;

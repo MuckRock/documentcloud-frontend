@@ -38,7 +38,7 @@ Positioning and generating coordinates should happen outside of this form.
     submitter.disabled = true;
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("success", result.note);
+        dispatch("success", result.data.note);
         update(result);
         dispatch("close");
       }

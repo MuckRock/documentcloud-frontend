@@ -10,7 +10,7 @@ Only one note can be added/edited at a time.
 Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { BBox, Note as NoteType, Nullable } from "$lib/api/types";
+  import type { BBox, Maybe, Note as NoteType, Nullable } from "$lib/api/types";
 
   import { invalidate, pushState } from "$app/navigation";
 
@@ -87,7 +87,6 @@ Assumes it's a child of a ViewerContext
 
   function continueDrawingBox(e: PointerEvent) {
     if (!drawing || !newNote) return;
-    console.log("pointermove");
 
     const [x, y] = getLayerPosition(e);
     const [startX, startY] = drawStart;
@@ -146,9 +145,24 @@ Assumes it's a child of a ViewerContext
     }
   }
 
-  function handleNewNoteSuccess(e: CustomEvent<NoteType>) {
-    const note = e.detail;
-    // invalidate the document
+  function onEditNoteSuccess(
+    e: CustomEvent<Maybe<NoteType>>,
+    oldNote: Maybe<NoteType>,
+  ) {
+    const editedNote = e.detail;
+    // Make an optimistic update to the `$documentStore`,
+    // which should be overwritten by invalidation.
+    // Start by removing the old note from the notes array.
+    const newDocNotes = document.notes.filter(
+      (note) => note.id !== oldNote?.id,
+    );
+    // When a note is added or edited, add or replace it in the array.
+    // When it's deleted, `editedNote` will be undefined so we'll skip this.
+    if (editedNote) newDocNotes.push(editedNote);
+    // Update the $documentStore with new value for `document.notes`.
+    documentStore.update((document) => ({ ...document, notes: newDocNotes }));
+    // Finally, invalidate the document. After it's refetched, the
+    // $documentStore will be updated with fresh data from the API.
     invalidate(`document:${document.id}`);
   }
 </script>
@@ -190,7 +204,13 @@ Assumes it's a child of a ViewerContext
     {#if note.id === $currentNote?.id}
       {#if writing}
         <div class="note-form" style:top="calc({note.y1} * 100% - 3.25rem)">
-          <EditNote bind:note {document} {page_number} on:close={closeNote} />
+          <EditNote
+            bind:note
+            {document}
+            {page_number}
+            on:close={closeNote}
+            on:success={(e) => onEditNoteSuccess(e, note)}
+          />
         </div>
       {:else}
         <div class="note-reading" style:top="calc({note.y1} * 100% - 3.25rem)">
@@ -219,7 +239,7 @@ Assumes it's a child of a ViewerContext
           {document}
           bind:note={newNote}
           on:close={closeNote}
-          on:success={handleNewNoteSuccess}
+          on:success={(e) => onEditNoteSuccess(e, undefined)}
         />
       </div>
     {/if}
@@ -238,6 +258,7 @@ Assumes it's a child of a ViewerContext
         note={$currentNote}
         {page_number}
         on:close={closeNote}
+        on:success={(e) => onEditNoteSuccess(e, $currentNote)}
       />
     </Modal>
   </Portal>
