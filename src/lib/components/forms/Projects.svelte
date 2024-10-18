@@ -11,6 +11,7 @@ and we don't want to do that everywhere.
 
   import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
+  import { FileDirectory24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -23,6 +24,7 @@ and we don't want to do that everywhere.
   import EditProject from "./EditProject.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
+  import Empty from "../common/Empty.svelte";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
@@ -77,35 +79,34 @@ and we don't want to do that everywhere.
 </script>
 
 <div class="container">
-  <Button ghost mode="primary" on:click={() => (createProjectOpen = true)}>
-    <PlusCircle16 /> Create Project
-  </Button>
-  {#if projects.length}
-    <hr class="divider" />
-    <Flex direction="column" class="projects">
-      {#each sort(projects) as project}
-        <label class="project">
-          <input
-            type="checkbox"
-            name="project"
-            value={project.id}
-            checked={common.has(project.id)}
-            on:change={(e) => toggle(project, e)}
-          />
-          {project.title}
-        </label>
-      {/each}
-    </Flex>
-    <hr class="divider" />
-  {/if}
-  <Flex class="buttons">
+  <div class="projects">
+    {#each sort(projects) as project}
+      <label class="project">
+        <input
+          type="checkbox"
+          name="project"
+          value={project.id}
+          checked={common.has(project.id)}
+          on:change={(e) => toggle(project, e)}
+        />
+        {project.title}
+      </label>
+    {:else}
+      <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
+    {/each}
+  </div>
+  <footer>
+    <Button ghost mode="primary" on:click={() => (createProjectOpen = true)}>
+      <PlusCircle16 />
+      {$_("projects.create")}
+    </Button>
     <input
       type="hidden"
       name="documents"
       value={documents.map((d) => d.id).join(",")}
     />
     <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
-  </Flex>
+  </footer>
 </div>
 {#if createProjectOpen}
   <Portal>
@@ -127,18 +128,25 @@ and we don't want to do that everywhere.
     width: 100%;
   }
 
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid var(--gray-2);
+    padding: 0.5rem;
+  }
+
   label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
-
-  details {
-    cursor: pointer;
-  }
-
-  summary {
-    cursor: pointer;
-    margin-bottom: 0.5rem;
   }
 </style>
