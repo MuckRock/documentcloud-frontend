@@ -33,11 +33,12 @@
 
   const me = getCurrentUser();
 
-  export let document: Document = getDocument();
+  export let documentStore = getDocument();
   export let text: DocumentText = getText();
   export let action: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
+  $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
 </script>
 

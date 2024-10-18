@@ -42,7 +42,7 @@ layouts, stories, and tests.
     total: number;
   }
 
-  export function getDocument(): Document {
+  export function getDocument(): Writable<Document> {
     return getContext("document");
   }
 
@@ -114,8 +114,12 @@ layouts, stories, and tests.
     total: 0,
   });
 
+  // React to document changes
+  const documentStore = writable(document);
+  $: documentStore.set(document);
+
   // stores we need deeper in the component tree, available via context
-  setContext("document", document);
+  setContext("document", documentStore);
   setContext("text", text);
   setContext("asset_url", asset_url);
   setContext("embed", embed);
@@ -161,7 +165,7 @@ layouts, stories, and tests.
       ),
     );
     const { hash } = window.location;
-    $currentNote = currentDoc.notes.find(noteMatchingPageHash);
+    $currentNote = $currentDoc.notes.find(noteMatchingPageHash);
     if (shouldPaginate($currentMode)) {
       scrollToHash(hash);
     }
@@ -195,7 +199,7 @@ layouts, stories, and tests.
     // refresh stores from URL state
     const { hash } = $pageStore.url;
     $currentMode = mode;
-    $currentNote = currentDoc.notes.find(noteMatchingPageHash) ?? null;
+    $currentNote = $currentDoc.notes.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate(mode)) {
       scrollToHash(hash);
     }

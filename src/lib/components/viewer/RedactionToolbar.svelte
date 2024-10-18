@@ -26,7 +26,8 @@ Assumes it's a child of a ViewerContext
   import { getViewerHref } from "$lib/utils/viewer";
   import { getDocument } from "./ViewerContext.svelte";
 
-  const document = getDocument();
+  const documentStore = getDocument();
+  $: document = $documentStore;
 
   let width: number;
   let confirmOpen = false;

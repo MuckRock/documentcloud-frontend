@@ -39,11 +39,12 @@ Assumes it's a child of a ViewerContext
 
   let width: number;
 
-  const document = getDocument();
+  const documentStore = getDocument();
   const query = getQuery();
   const mode = getCurrentMode();
   const embed = isEmbedded();
 
+  $: document = $documentStore;
   $: canWrite = !embed && document.edit_access;
   $: BREAKPOINTS = {
     READ_MENU: width > remToPx(52),

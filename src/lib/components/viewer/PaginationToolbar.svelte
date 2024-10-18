@@ -30,7 +30,8 @@
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
 
-  const document = getDocument();
+  const documentStore = getDocument();
+  $: document = $documentStore;
   const embed = isEmbedded();
   const currentMode = getCurrentMode();
   const currentPage = getCurrentPage();

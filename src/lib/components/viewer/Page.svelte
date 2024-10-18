@@ -26,7 +26,7 @@ Assumes it's a child of a ViewerContext
 
   const dispatch = createEventDispatcher();
 
-  const document = getDocument();
+  const documentStore = getDocument();
   const currentPage = getCurrentPage();
   const mode = getCurrentMode();
   const embed = isEmbedded();
@@ -35,6 +35,7 @@ Assumes it's a child of a ViewerContext
   let container: HTMLElement;
   let visible: boolean;
 
+  $: document = $documentStore;
   $: id = pageHashUrl(page_number).replace("#", "");
   $: href = getViewerHref({ document, mode: $mode, page: page_number, embed });
   $: documentHref = getViewerHref({

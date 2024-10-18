@@ -36,7 +36,7 @@ Assumes it's a child of a ViewerContext
   export let scale = 1.5;
   export let page_number: number; // zero-indexed
 
-  let document = getDocument();
+  const documentStore = getDocument();
   const embed = isEmbedded();
   const mode = getCurrentMode();
   const currentNote = getCurrentNote();
@@ -44,6 +44,7 @@ Assumes it's a child of a ViewerContext
   let newNote: Nullable<Partial<NoteType> & BBox> = null;
   let drawing = false;
 
+  $: document = $documentStore;
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: writing = $mode === "annotating";

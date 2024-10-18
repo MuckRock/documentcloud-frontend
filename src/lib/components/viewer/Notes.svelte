@@ -15,9 +15,10 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
 
-  const document = getDocument();
+  const documentStore = getDocument();
   const embed = isEmbedded();
 
+  $: document = $documentStore;
   $: notes = document.notes;
   $: annotate = getViewerHref({ document, mode: "annotating" });
 </script>

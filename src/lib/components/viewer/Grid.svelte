@@ -23,7 +23,7 @@
 
   export let size: Sizes = "thumbnail";
 
-  const document = getDocument();
+  const documentStore = getDocument();
   const zoom = getZoom();
 
   const SCALE = {
@@ -33,6 +33,7 @@
     large: 3,
   };
 
+  $: document = $documentStore;
   $: size = zoomToSize($zoom);
   $: sizes = pageSizesFromSpec(document.page_spec);
   $: scale = SCALE[size] ?? 1;

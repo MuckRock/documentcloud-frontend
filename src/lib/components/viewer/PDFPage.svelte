@@ -40,7 +40,7 @@ Selectable text can be rendered in one of two ways:
   export let height: number;
   export let text: TextPosition[] = [];
 
-  const document = getDocument();
+  const documentStore = getDocument();
   const mode = getCurrentMode();
   const pdf = getPDF();
   const query = getQuery();
@@ -61,6 +61,7 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = false;
 
+  $: document = $documentStore;
   $: aspect = height / width;
   $: orientation = height > width ? "vertical" : "horizontal";
   $: numericScale = fitPage(width, height, container, scale);

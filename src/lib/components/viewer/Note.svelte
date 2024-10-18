@@ -40,7 +40,7 @@
   import { getViewerHref } from "$lib/utils/viewer";
   import Button from "../common/Button.svelte";
 
-  const document = getDocument();
+  const documentStore = getDocument();
   const pdf = getPDF();
   const embed = isEmbedded();
   const mode = getCurrentMode();
@@ -78,6 +78,7 @@
 
   let shareNoteOpen = false;
 
+  $: document = $documentStore;
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;

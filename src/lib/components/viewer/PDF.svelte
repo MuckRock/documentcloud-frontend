@@ -30,11 +30,12 @@
     getZoom,
   } from "./ViewerContext.svelte";
 
-  const document: Document = getDocument();
+  const documentStore = getDocument();
   const currentPage = getCurrentPage();
   const pdf = getPDF();
   const zoom = getZoom();
 
+  $: document = $documentStore;
   $: scale = zoomToScale($zoom);
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
   $: notes = getNotes(document);

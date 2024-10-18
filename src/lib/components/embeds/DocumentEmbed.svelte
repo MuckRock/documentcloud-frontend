@@ -17,7 +17,8 @@
 
   export let settings: Partial<EmbedSettings> = defaultSettings;
 
-  const document = getDocument();
+  const documentStore = getDocument();
+  $: document = $documentStore;
 
   // if we're using this layout, we're embedded
   setContext("embed", true);
