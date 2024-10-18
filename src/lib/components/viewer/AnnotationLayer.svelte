@@ -42,6 +42,7 @@ Assumes it's a child of a ViewerContext
   const currentNote = getCurrentNote();
 
   let newNote: Nullable<Partial<NoteType> & BBox> = null;
+  let drawStart: Nullable<[x: number, y: number]> = null;
   let drawing = false;
 
   $: document = $documentStore;
@@ -74,7 +75,7 @@ Assumes it's a child of a ViewerContext
     drawing = true;
     $currentNote = null;
     const [x, y] = getLayerPosition(e);
-
+    drawStart = [x, y];
     // when starting, the note is a 0px shape
     newNote = {
       x1: x,
@@ -89,9 +90,10 @@ Assumes it's a child of a ViewerContext
     console.log("pointermove");
 
     const [x, y] = getLayerPosition(e);
+    const [startX, startY] = drawStart;
 
-    const movingRight = x > newNote.x1;
-    const movingDown = y > newNote.y1;
+    const movingRight = x > startX;
+    const movingDown = y > startY;
 
     const x1 = movingRight ? newNote.x1 : x;
     const x2 = movingRight ? x : newNote.x2;
@@ -109,13 +111,8 @@ Assumes it's a child of a ViewerContext
   function finishDrawingBox(e: PointerEvent) {
     if (!newNote || !drawing) return;
 
-    const [x, y] = getLayerPosition(e);
-
     newNote = {
-      x1: Math.min(newNote.x1, x),
-      x2: Math.max(newNote.x2, x),
-      y1: Math.min(newNote.y1, y),
-      y2: Math.max(newNote.y2, y),
+      ...newNote,
       // now initialize some note values
       page_number,
       title: "",
@@ -123,6 +120,7 @@ Assumes it's a child of a ViewerContext
       access: "private",
     };
 
+    drawStart = null;
     drawing = false;
   }
 
@@ -214,7 +212,7 @@ Assumes it's a child of a ViewerContext
     {#if !drawing}
       <div
         class="note-form"
-        style:top="calc({newNote.y2} * 100% + 3rem)"
+        style:top="calc({newNote.y2} * 100% + 1.5rem)"
         transition:fly={{ duration: 250, y: "-1.1rem" }}
       >
         <EditNote
@@ -299,11 +297,10 @@ Assumes it's a child of a ViewerContext
 
   .box {
     position: absolute;
-    border: 0.5rem solid var(--note-private);
+    border: 1px solid var(--note-private);
     background: var(--note-private);
     opacity: 0.75;
     mix-blend-mode: multiply;
-    box-sizing: content-box;
     pointer-events: stroke;
     padding: 0.5rem;
     border-radius: 0.25rem;
