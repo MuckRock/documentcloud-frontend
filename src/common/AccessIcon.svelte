@@ -13,7 +13,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { Globe16, Organization16, Lock16 } from "svelte-octicons";
-  import Tooltip from "./Tooltip.svelte";
+  import Tooltip from "../lib/components/common/Tooltip.svelte";
 
   export let access: AccessType;
   export let editable = false;

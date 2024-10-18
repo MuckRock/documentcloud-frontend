@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { fieldValid as fv } from "./searchFields.js";
 
 function fieldValid(text) {

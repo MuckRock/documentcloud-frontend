@@ -2,12 +2,12 @@ version: "4"
 
 services:
   documentcloud_frontend:
-    image: node:18
+    image: node:20
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run watch
+    command: npm run dev
     networks:
       default:
         aliases:
@@ -15,14 +15,18 @@ services:
       squarelet_default:
         aliases:
           - internal.www.dev.documentcloud.org
+    environment:
+      DOCKER: true
+      NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
+      NODE_ENV: development
 
   documentcloud_frontend_app:
-    image: node:18
+    image: node:20
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run dev-app
+    command: npm run dev
     networks:
       default:
         aliases:
@@ -32,12 +36,12 @@ services:
           - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_embed:
-    image: node:18
+    image: node:20
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run dev-embed
+    command: npm run dev
     networks:
       default:
         aliases:
@@ -47,7 +51,7 @@ services:
           - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_build:
-    image: node:18
+    image: node:20
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
@@ -62,7 +66,7 @@ services:
           - internal.www.dev.documentcloud.org
 
   documentcloud_frontend_analyze:
-    image: node:18
+    image: node:20
     volumes:
       - nodemodules:/app/node_modules
       - .:/app

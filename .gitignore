@@ -23,12 +23,17 @@ public/notes/*
 public/viewer/*
 public/assets/
 
+static/embed/*
+static/notes/*
+static/viewer/*
+
 # Netlify
 .netlify
 
 # Local test env file
 .env
 .env.*
+.envrc
 playwright-report
 test-results
 coverage
@@ -37,9 +42,19 @@ coverage
 tests/fixtures/development.json
 
 .vscode
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+*.log
+
+# sveltekit
+/build
+/.svelte-kit
+/package
 
 scratch/
 build/
 dist/
 storybook-static/
-.svelte-kit/
+
+# Sentry Config File
+.sentryclirc

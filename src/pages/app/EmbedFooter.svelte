@@ -1,5 +1,5 @@
 <script>
-  import Paginator from "../../common/Paginator.svelte";
+  import Paginator from "../../lib/components/common/Paginator.svelte";
   import Logo from "@/common/Logo.svelte";
 
   export let dialog = false;

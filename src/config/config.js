@@ -28,12 +28,35 @@ if (process.env.NODE_ENV === "production") {
 export { DC_BASE, APP_URL, EMBED_URL, SQUARELET_BASE, STAFF_ONLY_S3_URL };
 
 // these never change
+export const API = "/api/";
+export const BASE_API_URL = DC_BASE + API;
 export const DC_LOGIN = "/accounts/login/squarelet";
 export const DC_LOGOUT = "/accounts/logout/";
 export const SQUARELET_SIGNUP = "/accounts/signup/?intent=documentcloud&next=";
+export const SIGN_IN_URL = new URL(DC_LOGIN, DC_BASE).toString();
+export const SIGN_UP_URL = new URL(SQUARELET_SIGNUP, SQUARELET_BASE).toString();
+export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
+
+export const LANGUAGES = [
+  ["US English", "en", "🇺🇸"],
+  ["Español", "es", "🇪🇸"],
+  ["Français", "fr", "🇫🇷"],
+  ["Deutsche", "de", "🇩🇪"],
+  ["українська", "uk", "🇺🇦"],
+  ["русский", "ru", "🇷🇺"],
+];
+
+export const CSRF_COOKIE_NAME = "csrftoken";
+export const CSRF_HEADER_NAME = "X-CSRFToken";
 
 export const POLL_INTERVAL = 5000;
 
+export const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
+export const ALLOWED_ATTR = ["href"];
+
+/**
+ * @type {Array<[string, number]>}
+ */
 export const IMAGE_WIDTHS_ENTRIES = [
   ["xlarge", 2000],
   ["large", 1000],
@@ -42,13 +65,13 @@ export const IMAGE_WIDTHS_ENTRIES = [
   ["thumbnail", 60],
 ];
 
-export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.map(([name, width]) => [
-  width,
-  name,
-]).sort((a, b) => a[0] - b[0]);
+export const IMAGE_WIDTHS = IMAGE_WIDTHS_ENTRIES.sort(
+  (a, b) => a[1] - b[1],
+).map(([k, v]) => [v, k]);
 
-export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS);
+export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS_ENTRIES);
 
+export const DEFAULT_PER_PAGE = 25;
 export const MAX_PER_PAGE = 100;
 
 export const PDF_SIZE_LIMIT = 525336576;
@@ -64,8 +87,6 @@ export const LEGACY_CUT_OFF = 20000000;
 
 export const HIGHLIGHT_START = "<em>";
 export const HIGHLIGHT_END = "</em>";
-
-export const API = "/api/";
 
 export const UPLOAD_LIMIT = 1000;
 export const UPLOAD_BATCH = 25;
@@ -91,6 +112,11 @@ export const LANGUAGE_NAMES =
     "|",
   );
 export const DEFAULT_LANGUAGE = "eng";
+
+export const LANGUAGE_MAP = LANGUAGE_CODES.reduce((m, code, i) => {
+  m.set(code, LANGUAGE_NAMES[i]);
+  return m;
+}, new Map());
 
 export const DOCUMENT_TYPES =
   "123,602,abw,agd,bmp,cdr,cgm,cmx,csv,cwk,dbf,dif,doc,docx,dot,emf,eps,fb2,fhd,fodg,fodp,fods,fodt,gif,gnm,gnumeric,htm,html,hwp,jpeg,jpg,jtd,jtt,key,kth,mml,numbers,odb,odf,odg,odp,ods,odt,p65,pages,pbm,pcd,pct,pcx,pdf,pgm,plt,pm3,pm4,pm5,pm6,pmd,png,pot,ppm,pps,ppt,pptx,psd,pub,qxp,ras,rlf,rtf,sda,sdc,sdd,sdp,sdw,sgf,sgl,sgv,slk,stc,std,sti,stw,svg,svm,sxc,sxd,sxi,sxm,sxw,tga,tif,tiff,txt,uof,uop,uos,uot,vor,vsd,wb2,wdb,wk1,wk3,wk4,wks,wpd,wps,wq1,wq2,wri,xbm,xls,xlsx,xlt,xlw,xml,xpm,zabw,zmf".split(

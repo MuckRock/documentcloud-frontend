@@ -9,7 +9,7 @@
   import ProgressiveImage from "@/common/ProgressiveImage.svelte";
 
   import session from "@/api/session.js";
-  import { selectableTextUrl } from "@/api/viewer.js";
+  import { selectableTextUrl } from "@/api/viewer";
 
   import { doc, showAnnotation } from "@/viewer/document.js";
   import { layout } from "@/viewer/layout.js";

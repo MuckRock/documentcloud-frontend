@@ -48,7 +48,6 @@
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    min-width: 18rem;
   }
   .text,
   .number {

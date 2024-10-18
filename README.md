@@ -2,13 +2,11 @@
 
 **DocumentCloud Frontend** &middot; [Squarelet][squarelet] &middot; [MuckRock][muckrock] &middot; [DocumentCloud][documentcloud]
 
-The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
+The main frontend for DocumentCloud, written in [SvelteKit](https://kit.svelte.dev/).
 
 ## Usage
 
 This project depends on both [Squarelet](https://github.com/muckrock/squarelet) and the [DocumentCloud (Django)](https://github.com/muckrock/documentcloud). Follow the steps in their READMEs before setting up this project.
-
-This project is a Svelte + Webpack project wrapped in Docker compose.
 
 In order to install dependencies inside the Docker container, run:
 
@@ -34,7 +32,7 @@ Once everything is up and running, you should be able to see the website live at
 
 ## Building for production
 
-Run `make build` to build the production version of the app. The project will be output in the `public` directory.
+Run `make build` to build the production version of the app. The project will be output in the `dist` directory.
 
 ## Architecture
 
@@ -44,9 +42,18 @@ See the [Wiki](https://github.com/MuckRock/documentcloud-frontend/wiki) for info
 
 DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome, FireFox, Safari and Microsoft Edge. Older versions of those browsers will likely work, too, but we can't guarantee a bug-free experience on versions from more than a year ago, or on browsers that no longer receive updates, such as Internet Explorer.
 
+## Environment Variables
+
+- Use `process.env` for things running on a development machine in a Node context, like Vite configs and other dev or build scripts.
+- In SvelteKit:
+  - In a server context, you can use `import {env} from "$env/dynamic/private` to access variables defined in `process.env`.
+  - In a client context, you can only `import {env} from "$env/static/public` to access variables named with a `PUBLIC_` prefix.
+
+_Learn more about using environment variables in [the SvelteKit learning docs](https://learn.svelte.dev/tutorial/env-static-private)._
+
 ## Developing
 
-## Installing new packages
+### Installing new packages
 
 Run the relevant `npm install ...` command and then get the change mirrored on the Docker image by running `make install`.
 
@@ -54,11 +61,14 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 [documentcloud]: https://github.com/MuckRock/documentcloud
 [squarelet]: https://github.com/muckrock/squarelet
 
-## Unit tests
+### Unit tests
 
-Run unit tests with `npm test`.
+Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-run tests as code changes.
 
-## Browser tests
+We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated.
+To update snapshots, run `npm run test:unit -- -u`.
+
+### Browser tests
 
 All of the browser test commands depend on the front end running, so start the app with `make dev` and start the backend and Squarelet as well.
 
@@ -92,6 +102,12 @@ Tests are organized around major parts of the codebase -- `manager`, `pages` and
 
 Tests rely on specific docouments available in each environment, which will have different URLs, so lists of known documents are provided in `development.json`, `staging.json` and `production.json`. Those correspond to the `NODE_ENV` environment variable.
 
+## Legacy embed scripts
+
+Earlier interations of DocumentCloud used scripts to inject the viewer, pages and notes into other web pages. This approach has been deprecated in favor of `iframe`-based embeds, but lots of legacy embeds exist across the internet. To support these older embeds, we've rewritten the original scripts to inject an `iframe` where appropriate.
+
+These scripts live in the `src/embeds` directory and are built with `esbuild`. They're not part of the larger SvelteKit project, so they have a separate build process that may change later. (Our main build tool, Vite, also depends on `esbuild`.)
+
 ## Storybooks
 
 Storybooks are used to create isolated environments for developing, testing and demonstrating the Svelte components that compose the user interface.
@@ -108,7 +124,7 @@ To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh
 
 ```sh
 node -v
-nvm install 16
+nvm install 20
 # or
 nvm install --lts
 ```

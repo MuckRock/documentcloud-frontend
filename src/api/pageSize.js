@@ -38,3 +38,35 @@ export function pageSizesFromSpec(pageSpec) {
 
   return sizes;
 }
+
+/**
+ * Parse page_spec and return an array of [width, height] tuples
+ *
+ * @param {string} pageSpec A string encoding page dimensions in a compact format
+ * @returns {[number, number][]}
+ */
+export function pageSizes(pageSpec) {
+  // Handle empty page spec
+  if (pageSpec.trim().length == 0) return [];
+
+  const parts = pageSpec.split(";");
+
+  return parts.reduce((sizes, part, i) => {
+    const [size, range] = part.split(":");
+    const [width, height] = size.split("x").map(parseFloat);
+
+    range.split(",").forEach((rangePart) => {
+      if (rangePart.includes("-")) {
+        const [start, end] = rangePart.split("-").map((x) => parseInt(x, 10));
+        for (let page = start; page <= end; page++) {
+          sizes[page] = [width, height];
+        }
+      } else {
+        const page = parseInt(rangePart, 10);
+        sizes[page] = [width, height];
+      }
+    });
+
+    return sizes;
+  }, Array(parts.length));
+}

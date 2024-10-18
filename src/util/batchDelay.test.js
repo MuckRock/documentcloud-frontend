@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { batchDelay } from "./batchDelay.js";
 import { timeout } from "./timeout.js";
 
