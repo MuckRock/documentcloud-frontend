@@ -12,6 +12,10 @@
   };
 </script>
 
+<Story name="Without Projects">
+  <Projects projects={[]} documents={[document]} />
+</Story>
+
 <Story name="one document">
   <Projects projects={projectList.results} documents={[document]} />
 </Story>
