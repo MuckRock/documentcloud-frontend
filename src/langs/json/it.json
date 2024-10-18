@@ -10,12 +10,12 @@
     "explore": "Esplorare",
     "more": "Meno",
     "add": "Aglggio",
-    "edit": "\"Edit\" becomes \"Modifica\".",
+    "edit": "Modifica",
     "search": "Cerca",
     "feedback": "Feedback"
   },
   "search": {
-    "matchingResults": "{n, plural, one {# matching result} other {# matching results}} becomes \n\n{n, plural, uno {# risultato corrispondente} altri {# risultati correlati}}"
+    "matchingResults": "{n, plural, one {# risultato corrispondente} other {# risultati correlati}}"
   },
   "homeTemplate": {
     "signedIn": "Non trovato",
@@ -93,7 +93,7 @@
     "nov": "Novembre",
     "dec": "Dicembre",
     "hourShortcode": "HH",
-    "minuteShortcode": "MM becomes \"MM\" since it is a numeric string and doesn't have any characters to translate. In Italian, \"MM\" remains the same."
+    "minuteShortcode": "MM"
   },
   "dialog": {
     "cancel": "Cancellare",
@@ -108,7 +108,7 @@
     "ok": "Ok",
     "reset": "Pulizia",
     "update": "Aggiornamento",
-    "dismiss": "{Dismiss} becomes {Scacciato}",
+    "dismiss": "{Scacciato}",
     "continue": "Continua",
     "dispatch": "Dispacci",
     "submit": "Pubblica",
@@ -452,7 +452,7 @@
       "signIn": "Sign in"
     },
     "premiumUpgrade": {
-      "title": "{Upgrade} becomes {Aggiornamento}",
+      "title": "Aggiornamento",
       "heading": "Go Pro con gli strumenti premium di DocumentCloud.",
       "orgHeading": "Poterai rilasciare il tuo team con gli strumenti premium di DocumentCloud",
       "description": "Aggiorna al piano professionista per cercare le annotazioni dei documenti e accedere agli Add-On Premium come l'OCR avanzato, l'analisi del documento guidata da GPT e molto altro.",
@@ -486,9 +486,9 @@
   "documents": {
     "yourDocuments": "Documenti Tuoi",
     "searchResults": "Risultati della Ricerca",
-    "accessDocuments": "The translated text is:\n\nIl tuo {access}Documenti",
+    "accessDocuments": "Il tuo {access} Documenti",
     "nameDocuments": "{name}\u2019s {access}Documenti",
-    "allDocuments": "Tutti i {documenti}Documenti",
+    "allDocuments": "Tutti i Documenti",
     "mustBeVerified": "Devi essere un giornalista verificato per caricare documenti.",
     "upload": "Caricare",
     "dropFile": "Cambia file per caricare",
@@ -714,11 +714,11 @@
     "consumerGood": "Ben di Consumatore",
     "address": "Indirizzo",
     "date": "Data",
-    "number": "Number becomes \"Numero\"",
+    "number": "Numero",
     "phoneNumber": "Telefono",
     "price": "Prezzo",
     "unknown": "Sconosciuto",
-    "other": "\"Altri\"",
+    "other": "Altri",
     "occurrences": "Occorrenze",
     "proper": "Proper",
     "common": "Common",
@@ -778,7 +778,7 @@
     "fitHeight": "Altezza di forma",
     "thumbnail": "Tiny",
     "small": "Piccolo",
-    "normal": "Medium",
+    "normal": "Normale",
     "large": "Grosso"
   },
   "embed": {
@@ -836,7 +836,7 @@
     "desc": "Seleziona il suono che desideri condividere."
   },
   "searchResults": {
-    "resultPages": "Translated text: \"resulti\" ( singular ) / \"risultati\" (plural) \nacross \"pagine\" (singular) / \"pagine\" (plural)",
+    "resultPages": "resulti",
     "noSearchResults": "No risultati di ricerca. Prova ancora con una richiesta pi\u00f9 ampia.",
     "occurrences": "{n, plural, one {1} other {^2} }"
   },
@@ -855,7 +855,7 @@
     "sharedWith": "Condiviso con",
     "annotate": "Nota aggiunta",
     "annotateDesc": "Lascia un nota pubblica, privata o condivisa, che pu\u00f2 essere inserita all'interno di un articolo.",
-    "redact": "The translation of \"Redact\" to Italian is:\n\nRivedere",
+    "redact": "Rivedere",
     "redactDesc": "Crea tagli e rimozioni nel documento per nascondere testo. Il documento verr\u00e0 riprocessato successivamente.",
     "modify": "Modifica Pagine",
     "modifyDesc": "Ordinare, girare, cancellare, inserire, e suddividere pagine.",
@@ -867,7 +867,7 @@
     "privateNote": "Nota Privata",
     "privateNoteDesc": "Lascia un'annotazione pubblica, privata o condivisa, che pu\u00f2 essere incorporata all'interno di un articolo.",
     "revisions": "Storia di revisione",
-    "revisionsDesc": "{Toggle la revisione della storia e visualizza le versioni precedenti del tuo documento.}",
+    "revisionsDesc": "Toggle la revisione della storia e visualizza le versioni precedenti del tuo documento.",
     "edit": "Edit Metadati",
     "upload": "Caricare Documenti",
     "uploadToProject": "Caricare al Progetto",
@@ -983,7 +983,7 @@
   "data": {
     "title": "{Edit} tagi e dati",
     "key": "Chiave",
-    "newkey": "New item translates to:\n\nNuovo articolo",
+    "newkey": "Nuovo articolo",
     "value": "Valore",
     "tag": "Tag",
     "update": "Aggiornamento",
