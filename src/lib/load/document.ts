@@ -5,11 +5,10 @@ import type { ViewerMode } from "$lib/api/types";
 interface Load {
   fetch: typeof globalThis.fetch;
   params: { id: string };
-  depends: (...deps: Array<`${string}:${string}`>) => void;
   url: URL;
 }
 
-export default async function load({ fetch, params, depends, url }: Load) {
+export default async function load({ fetch, params, url }: Load) {
   const { data: document, error: err } = await documents.get(+params.id, fetch);
 
   if (err) {
@@ -28,8 +27,6 @@ export default async function load({ fetch, params, depends, url }: Load) {
   if (!documents.MODES.has(mode)) {
     mode = documents.MODES[0];
   }
-
-  depends(`document:${document.id}`);
 
   return {
     document,
