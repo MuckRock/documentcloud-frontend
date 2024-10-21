@@ -13,14 +13,9 @@ services:
   install:
     extends:
       service: base
-    command: npm i && npm audit fix
+    command: npm ci && npm audit fix
     environment:
       - NODE_ENV=development
-
-  install-ci:
-    extends:
-      service: base
-    command: npm ci
 
   npmlist:
     extends:
@@ -49,23 +44,6 @@ services:
         aliases:
           - www.dev.documentcloud.org
 
-  build_staging:
-    extends:
-      service: base
-    command: npm run build-staging
-    networks:
-      default:
-        aliases:
-          - www.dev.documentcloud.org
-      squarelet_default:
-        aliases:
-          - www.dev.documentcloud.org
-
-  create-bundles:
-    extends:
-      service: base
-    command: npm run create-bundles
-
   # TODO: Specify that base must be running first.
   browser-test:
     build:
@@ -79,20 +57,6 @@ services:
           - www.dev.documentcloud.org
     environment:
       - NODE_ENV=test
-    command: ./browser-test-all.sh
-
-  browser-test-staging:
-    build:
-      dockerfile: browser-test.Dockerfile
-    networks:
-      default:
-        aliases:
-          - www.dev.documentcloud.org
-      squarelet_default:
-        aliases:
-          - www.dev.documentcloud.org
-    environment:
-      - NODE_ENV=staging
     command: ./browser-test-all.sh
 
 volumes:
