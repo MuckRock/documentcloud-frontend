@@ -11,24 +11,25 @@ and we don't want to do that everywhere.
 
   import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { FileDirectory24 } from "svelte-octicons";
+  import { FileDirectory24, PlusCircle16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
+  import Empty from "../common/Empty.svelte";
 
-  import { getForUser, add, remove } from "$lib/api/projects";
-  import { getCsrfToken } from "$lib/utils/api";
-  import { intersection } from "@/util/array.js";
-  import { getCurrentUser } from "@/lib/utils/permissions";
-  import { PlusCircle16 } from "svelte-octicons";
   import EditProject from "./EditProject.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
-  import Empty from "../common/Empty.svelte";
+
+  import { getForUser, add, remove } from "$lib/api/projects";
+  import { getCsrfToken } from "$lib/utils/api";
+  import { getCurrentUser } from "$lib/utils/permissions";
+  import { intersection } from "@/util/array.js";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
 
   const dispatch = createEventDispatcher();
+
   const me = getCurrentUser();
 
   let createProjectOpen = false;
@@ -108,10 +109,11 @@ and we don't want to do that everywhere.
     <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
   </footer>
 </div>
+
 {#if createProjectOpen}
   <Portal>
     <Modal on:close={() => (createProjectOpen = false)}>
-      <h1 slot="title">Create Project</h1>
+      <h1 slot="title">{$_("projects.create")}</h1>
       <EditProject
         on:close={() => (createProjectOpen = false)}
         on:success={onCreateSuccess}
