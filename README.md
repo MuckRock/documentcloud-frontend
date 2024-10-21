@@ -8,7 +8,7 @@ The main frontend for DocumentCloud, written in [SvelteKit](https://kit.svelte.d
 
 This project depends on both [Squarelet](https://github.com/muckrock/squarelet) and the [DocumentCloud (Django)](https://github.com/muckrock/documentcloud). Follow the steps in their READMEs before setting up this project.
 
-In order to install dependencies inside the Docker container, run:
+In order to install dependencies inside the Docker container and on your host machine, run:
 
 ```bash
 make install
@@ -20,8 +20,6 @@ Once the node modules have been installed, start the app with:
 make dev
 ```
 
-**Warning:** Don't just run `docker compose up` like you would with some of the other repos. The containers listed in `local.yml` aren't intended to be run simultaneously.
-
 Set up your hosts:
 
 ```bash
@@ -32,11 +30,7 @@ Once everything is up and running, you should be able to see the website live at
 
 ## Building for production
 
-Run `make build` to build the production version of the app. The project will be output in the `dist` directory.
-
-## Architecture
-
-See the [Wiki](https://github.com/MuckRock/documentcloud-frontend/wiki) for information on the DocumentCloud architecture.
+Run `make build` to build the production version of the app. The project will be output in the `build` directory. (This happens on Netlify and during Github Actions automatically.)
 
 ## Browser support
 
@@ -65,8 +59,7 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 
 Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-run tests as code changes.
 
-We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated.
-To update snapshots, run `npm run test:unit -- -u`.
+We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated. To update snapshots, run `npm run test:unit -- -u`.
 
 ### Browser tests
 
@@ -78,29 +71,34 @@ Run `npm run test:browser` in another terminal. This will run Playwright using C
 
 ### Development
 
-The functional tests are organized like this:
+The functional tests are colocated with the files they test, like this:
 
 ```
-tests
-├── README.md
-├── anonymous
-│   ├── manager
-│   │   └── app.spec.js
-│   ├── pages
-│   │   └── home.spec.js
-│   └── viewer
-│       └── document.spec.js
-└── fixtures
-    ├── Small pdf.pdf
-    ├── development.json
-    ├── production.json
-    ├── staging.json
-    └── the-nature-of-the-firm-CPEC11.pdf
+src/lib/api/
+├── accounts.ts
+├── addons.ts
+├── collaborators.ts
+├── documents.ts
+├── embed.ts
+├── feedback.ts
+├── flatpages.ts
+├── notes.ts
+├── projects.ts
+├── sections.ts
+├── tests
+│   ├── accounts.test.ts
+│   ├── addons.test.ts
+│   ├── collaborators.test.ts
+│   ├── documents.test.ts
+│   ├── embed.test.ts
+│   ├── flatpages.test.ts
+│   ├── notes.test.ts
+│   ├── projects.test.ts
+│   └── sections.test.ts
+└── types.d.ts
 ```
 
-Tests are organized around major parts of the codebase -- `manager`, `pages` and `viewer`. Tests under `anonymous` don't use an authenticated user.
-
-Tests rely on specific docouments available in each environment, which will have different URLs, so lists of known documents are provided in `development.json`, `staging.json` and `production.json`. Those correspond to the `NODE_ENV` environment variable.
+Component tests use the [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/) and are also colocated near the components they test, usually in a `tests` folder.
 
 ## Legacy embed scripts
 
@@ -120,7 +118,7 @@ To run the Storybook dev server:
 npm run storybook
 ```
 
-To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh/nvm):
+To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh/nvm) or [nodenv](https://github.com/nodenv/nodenv):
 
 ```sh
 node -v
