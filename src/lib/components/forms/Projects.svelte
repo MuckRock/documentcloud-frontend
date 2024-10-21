@@ -5,35 +5,37 @@ because it needs to load all of a user's projects
 and we don't want to do that everywhere.
 -->
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, Project, User } from "$lib/api/types";
+  import type { Document, Project } from "$lib/api/types";
 
-  import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
 
-  import { createEventDispatcher, getContext, onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
+  import { FileDirectory24, PlusCircle16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import Field from "../inputs/Field.svelte";
-  import Flex from "../common/Flex.svelte";
-  import Switch from "../inputs/Switch.svelte";
-  import Text from "../inputs/Text.svelte";
-  import TextArea from "../inputs/TextArea.svelte";
+  import Empty from "../common/Empty.svelte";
+
+  import EditProject from "./EditProject.svelte";
+  import Portal from "../layouts/Portal.svelte";
+  import Modal from "../layouts/Modal.svelte";
 
   import { getForUser, add, remove } from "$lib/api/projects";
   import { getCsrfToken } from "$lib/utils/api";
+  import { getCurrentUser } from "$lib/utils/permissions";
   import { intersection } from "@/util/array.js";
-  import { getCurrentUser } from "@/lib/utils/permissions";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
 
   const dispatch = createEventDispatcher();
+
   const me = getCurrentUser();
 
+  let createProjectOpen = false;
   let common: Set<number>;
 
+  $: sorted = sort(projects);
   $: common = new Set(
     intersection(
       documents.map((d) => d.projects ?? []),
@@ -66,15 +68,8 @@ and we don't want to do that everywhere.
     await invalidateDocs(documents);
   }
 
-  function onSubmit({ submitter }) {
-    submitter.disabled = true;
-    return async ({ result, update }) => {
-      if (result.type === "success") {
-        projects = [...projects, result.data.project];
-        update(result);
-      }
-      submitter.disabled = false;
-    };
+  function onCreateSuccess(event: CustomEvent<Project>) {
+    projects = [...projects, event.detail];
   }
 
   function sort(projects: Project[]) {
@@ -85,82 +80,75 @@ and we don't want to do that everywhere.
 </script>
 
 <div class="container">
-  <form method="post" action="/projects/" use:enhance={onSubmit}>
-    <h2>{$_("projects.create")}</h2>
-    <Field title={$_("projects.fields.title")} required inline>
-      <Text name="title" placeholder={$_("projects.fields.title")} required />
-    </Field>
-
-    <details>
-      <summary>{$_("common.more")} &hellip;</summary>
-      <Flex direction="column">
-        <Field title={$_("projects.fields.description")}>
-          <TextArea name="description" />
-        </Field>
-        <Field title={$_("projects.fields.private")} inline>
-          <Switch name="private" />
-        </Field>
-        <Field title={$_("projects.fields.pinned")} inline>
-          <Switch name="pinned" />
-        </Field>
-      </Flex>
-    </details>
-    <Flex>
-      <Button mode="primary" type="submit">
-        {$_("common.add")} +
-      </Button>
-    </Flex>
-  </form>
-
-  {#if projects.length}
-    <hr class="divider" />
-    <Flex direction="column" class="projects">
-      {#each sort(projects) as project}
-        <label class="project">
-          <input
-            type="checkbox"
-            name="project"
-            value={project.id}
-            checked={common.has(project.id)}
-            on:change={(e) => toggle(project, e)}
-          />
-          {project.title}
-        </label>
-      {/each}
-    </Flex>
-    <hr class="divider" />
-  {/if}
-  <Flex class="buttons">
+  <div class="projects">
+    {#each sorted as project}
+      <label class="project">
+        <input
+          type="checkbox"
+          name="project"
+          value={project.id}
+          checked={common.has(project.id)}
+          on:change={(e) => toggle(project, e)}
+        />
+        {project.title}
+      </label>
+    {:else}
+      <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
+    {/each}
+  </div>
+  <footer>
+    <Button ghost mode="primary" on:click={() => (createProjectOpen = true)}>
+      <PlusCircle16 />
+      {$_("projects.create")}
+    </Button>
     <input
       type="hidden"
       name="documents"
       value={documents.map((d) => d.id).join(",")}
     />
     <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
-  </Flex>
+  </footer>
 </div>
 
+{#if createProjectOpen}
+  <Portal>
+    <Modal on:close={() => (createProjectOpen = false)}>
+      <h1 slot="title">{$_("projects.create")}</h1>
+      <EditProject
+        on:close={() => (createProjectOpen = false)}
+        on:success={onCreateSuccess}
+      />
+    </Modal>
+  </Portal>
+{/if}
+
 <style>
-  form,
   .container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
     width: 100%;
+  }
+
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid var(--gray-2);
+    padding: 0.5rem;
   }
 
   label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
-
-  details {
-    cursor: pointer;
-  }
-
-  summary {
-    cursor: pointer;
-    margin-bottom: 0.5rem;
   }
 </style>
