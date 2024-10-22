@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EmbedSettings } from "@/lib/utils/embed";
+  import type { EmbedSettings } from "$lib/utils/embed";
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";

@@ -3,16 +3,6 @@ Provides context for its children. Useful as a parent of Viewer in
 layouts, stories, and tests.
  -->
 <script lang="ts" context="module">
-  import { getContext, onMount, setContext } from "svelte";
-  import {
-    derived,
-    get,
-    type Readable,
-    type Writable,
-    writable,
-  } from "svelte/store";
-  import { afterNavigate } from "$app/navigation";
-
   import type {
     Maybe,
     Nullable,
@@ -21,13 +11,19 @@ layouts, stories, and tests.
     Note,
     ViewerMode,
     Zoom,
-  } from "@/lib/api/types";
+  } from "$lib/api/types";
+
+  import { afterNavigate } from "$app/navigation";
+
+  import { getContext, onMount, setContext } from "svelte";
+  import { type Readable, type Writable, writable } from "svelte/store";
+
   import {
     pageFromHash,
     pdfUrl,
     shouldPaginate,
     shouldPreload,
-  } from "@/lib/api/documents";
+  } from "$lib/api/documents";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -90,8 +86,7 @@ layouts, stories, and tests.
 
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
-  import type { _ } from "svelte-i18n";
-  import { noteFromHash } from "@/lib/api/notes";
+  import { noteFromHash } from "$lib/api/notes";
 
   export let document: Document;
   export let text: Maybe<DocumentText> = undefined;

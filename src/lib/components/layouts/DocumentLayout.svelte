@@ -6,7 +6,6 @@
   import type {
     AddOnListItem,
     APIResponse,
-    Document,
     DocumentText,
     Page,
     Project,
