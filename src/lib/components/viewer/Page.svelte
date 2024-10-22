@@ -118,7 +118,12 @@ Assumes it's a child of a ViewerContext
       </a>
     </h4>
 
-    <PageActions {document} {page_number} pageWidth={width} />
+    <PageActions
+      {document}
+      {page_number}
+      pageWidth={width}
+      canEdit={document.edit_access}
+    />
   </header>
   <slot {id} {href} {visible} {documentHref} />
 </div>
