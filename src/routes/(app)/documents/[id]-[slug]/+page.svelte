@@ -5,8 +5,6 @@
 <script lang="ts">
   import "@/style/kit.css";
 
-  import { _ } from "svelte-i18n";
-
   import { embedUrl } from "$lib/api/embed";
   import { canonicalUrl, pageImageUrl } from "$lib/api/documents";
 

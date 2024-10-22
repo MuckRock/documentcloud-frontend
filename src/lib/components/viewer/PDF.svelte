@@ -9,20 +9,13 @@
 -->
 
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
-
   import { onMount } from "svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "$lib/utils/layout";
-  import {
-    getNotes,
-    getSections,
-    pageSizes,
-    zoomToScale,
-  } from "$lib/utils/viewer";
+  import { getSections, pageSizes, zoomToScale } from "$lib/utils/viewer";
   import {
     getCurrentPage,
     getDocument,
@@ -38,7 +31,6 @@
   $: document = $documentStore;
   $: scale = zoomToScale($zoom);
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
-  $: notes = getNotes(document);
   $: sections = getSections(document);
 
   onMount(() => {

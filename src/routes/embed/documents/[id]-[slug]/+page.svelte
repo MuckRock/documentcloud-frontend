@@ -3,11 +3,9 @@ Assumes it's a child of a ViewerContext
  -->
 
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-
-  import ViewerContext from "@/lib/components/viewer/ViewerContext.svelte";
-  import DocumentEmbed from "@/lib/components/embeds/DocumentEmbed.svelte";
-  import EmbedLayout from "@/lib/components/layouts/EmbedLayout.svelte";
+  import DocumentEmbed from "$lib/components/embeds/DocumentEmbed.svelte";
+  import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
+  import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
 
   // config and utils
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";

@@ -16,13 +16,12 @@ Selectable text can be rendered in one of two ways:
   import { _ } from "svelte-i18n";
 
   // page parts
+  import AnnotationLayer from "./AnnotationLayer.svelte";
   import Note from "./Note.svelte";
   import Page from "./Page.svelte";
-  import AnnotationLayer from "./AnnotationLayer.svelte";
   import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
 
   // writable ui
-
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
   import {
@@ -56,7 +55,7 @@ Selectable text can be rendered in one of two ways:
   let renderTask;
   let textPromise: Promise<void>; // resolves when text is rendered
   let loaded = false;
-  let textLayer; // TextLayer
+  let textLayer: pdfjs.TextLayer; // TextLayer
 
   // visibility, for loading optimization
   let visible: boolean = false;

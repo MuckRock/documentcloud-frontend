@@ -1,6 +1,7 @@
+import type { ViewerMode } from "$lib/api/types";
+
 import { error } from "@sveltejs/kit";
 import * as documents from "$lib/api/documents";
-import type { ViewerMode } from "$lib/api/types";
 
 interface Load {
   fetch: typeof globalThis.fetch;

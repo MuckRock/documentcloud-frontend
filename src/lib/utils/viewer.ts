@@ -6,6 +6,7 @@ import type {
   ViewerMode,
   Zoom,
 } from "$lib/api/types";
+
 import { canonicalUrl, pageHashUrl } from "../api/documents";
 import { noteHashUrl } from "../api/notes";
 import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
@@ -72,7 +73,7 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
   if (pageSpec.trim().length == 0) return [];
 
   const parts = pageSpec.split(";");
-  return parts.reduce((sizes, part, i) => {
+  return parts.reduce((sizes, part) => {
     const [size, range] = part?.split(":");
     const [width, height] = size?.split("x").map(parseFloat);
 
@@ -93,7 +94,7 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
 }
 
 /**
- * Index notes and sections by page
+ * Index notes by page
  */
 export function getNotes(document: Document): Record<number, Note[]> {
   return (
@@ -108,7 +109,7 @@ export function getNotes(document: Document): Record<number, Note[]> {
 }
 
 /**
- * Get the sections from a document
+ * Index sections by page
  */
 export function getSections(document: Document): Record<number, Section> {
   return (
@@ -197,7 +198,7 @@ export function getZoomLevels(mode: ViewerMode): [string | number, string][] {
       ];
 
     default:
-      // todo: notes, maybe
+      // notes don't zoom
       return [];
   }
 }

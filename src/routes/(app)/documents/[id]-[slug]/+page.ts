@@ -3,9 +3,9 @@
  * We do this in a layout module because sub-routes can use the same
  * document without loading it again.
  */
-import type { Document, ViewerMode, ReadMode } from "@/lib/api/types";
+import type { ReadMode } from "@/lib/api/types";
 
-import { redirect, error } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 
 import * as documents from "$lib/api/documents";
 import { getPinnedAddons } from "$lib/api/addons";

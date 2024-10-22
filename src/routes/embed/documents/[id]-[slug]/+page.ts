@@ -1,9 +1,11 @@
-import { error, redirect } from "@sveltejs/kit";
-import * as documents from "$lib/api/documents";
-import type { ViewerMode, ReadMode } from "$lib/api/types";
-import loadDocument from "$lib/load/document";
+import type { ReadMode } from "$lib/api/types";
+
+import { redirect } from "@sveltejs/kit";
+
 import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed.js";
 import { getQuery } from "$lib/utils/search.js";
+import loadDocument from "$lib/load/document";
+import * as documents from "$lib/api/documents";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, url, params, depends }) {

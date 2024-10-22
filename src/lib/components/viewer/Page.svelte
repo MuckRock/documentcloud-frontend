@@ -8,6 +8,8 @@ Assumes it's a child of a ViewerContext
   import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
+  import PageActions from "./PageActions.svelte";
+
   import { pageHashUrl } from "$lib/api/documents";
   import {
     getCurrentMode,
@@ -16,7 +18,6 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
-  import PageActions from "./PageActions.svelte";
 
   export let page_number: number;
   export let wide = false;
@@ -118,12 +119,7 @@ Assumes it's a child of a ViewerContext
       </a>
     </h4>
 
-    <PageActions
-      {document}
-      {page_number}
-      pageWidth={width}
-      canEdit={document.edit_access}
-    />
+    <PageActions {document} {page_number} pageWidth={width} />
   </header>
   <slot {id} {href} {visible} {documentHref} />
 </div>

@@ -17,11 +17,12 @@ Assumes it's a child of a ViewerContext
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
-  import { redactions, undo, clear } from "./RedactionLayer.svelte";
+
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
+  import { redactions, undo, clear } from "./RedactionLayer.svelte";
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
   import { getDocument } from "./ViewerContext.svelte";

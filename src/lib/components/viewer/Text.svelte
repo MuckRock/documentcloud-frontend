@@ -7,9 +7,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { scrollToPage } from "$lib/utils/scroll";
-  import { highlight } from "$lib/utils/search";
-
   import Page from "./Page.svelte";
   import {
     getText,
@@ -17,6 +14,8 @@
     getQuery,
     getZoom,
   } from "./ViewerContext.svelte";
+  import { scrollToPage } from "$lib/utils/scroll";
+  import { highlight } from "$lib/utils/search";
 
   const text = getText();
   const query = getQuery();

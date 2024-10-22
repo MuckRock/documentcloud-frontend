@@ -5,7 +5,6 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { ReadMode, WriteMode } from "$lib/api/types";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Comment16,
@@ -133,9 +132,10 @@ Assumes it's a child of a ViewerContext
     {/if}
     {#if BREAKPOINTS.SEARCH_MENU}
       <Dropdown position="bottom-end">
-        <Button minW={false} ghost slot="anchor"
-          ><Search16 /> {$_("common.search")}</Button
-        >
+        <Button minW={false} ghost slot="anchor">
+          <Search16 />
+          {$_("common.search")}
+        </Button>
         <Menu>
           <Search name="q" {query} />
         </Menu>

@@ -16,7 +16,7 @@ The values made available by `ViewerContext` are:
 - `query: string`
 - `currentPage: Writable<number>`
 - `currentMode: Writable<ViewerMode>`
-- `progress: {loaded: number; total: number}`
+- `progress: { loaded: number, total: number }`
 - `pdf: Promise<pdfjs.PDFDocumentProxy>`
 
 ## Modes
@@ -49,4 +49,4 @@ Redacting mode extends File mode with an interface for drawing new redactions on
 
 ## Navigation
 
-Navigating the viewer is done through URL, which ensure viewer state flows one way, and that viewer states are linkable.
+Navigating the viewer is done through URL, which ensures viewer state flows one way, and that viewer states are linkable.

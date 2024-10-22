@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Document } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import {
     Share16,
@@ -7,18 +9,18 @@
     KebabHorizontal16,
   } from "svelte-octicons";
 
-  import type { Document } from "$lib/api/types";
   import Action from "$lib/components/common/Action.svelte";
   import Button from "$lib/components/common/Button.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
   import EditNote from "$lib/components/forms/EditNote.svelte";
   import EditSections from "$lib/components/forms/EditSections.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import Modal from "$lib/components/layouts/Modal.svelte";
-  import Share from "$lib/components/documents/Share.svelte";
-  import Portal from "$lib/components/layouts/Portal.svelte";
-  import Dropdown from "$lib/components/common/Dropdown.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Share from "$lib/components/documents/Share.svelte";
+
   import { remToPx } from "$lib/utils/layout";
   import { getSections } from "$lib/utils/viewer";
 
@@ -26,23 +28,20 @@
   export let page_number: number;
   export let pageWidth: number;
 
-  export let canEdit: boolean = false;
-
   let pageShareOpen = false;
   let pageNote = false;
   let editSection = false;
 
-  $: id = `page_${page_number}`;
   $: section = getSections(document)[page_number];
 </script>
 
 <div class="page-actions">
-  {#if pageWidth > remToPx(32) || !canEdit}
+  {#if pageWidth > remToPx(32) || !document.edit_access}
     <Flex align="center">
       <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
         {$_("dialog.share")}
       </Action>
-      {#if canEdit}
+      {#if document.edit_access}
         <div>
           <Action icon={Comment16} on:click={() => (pageNote = true)}>
             {$_("annotate.cta.add-note")}
@@ -73,7 +72,7 @@
           <Share16 slot="icon" />
           {$_("dialog.share")}
         </MenuItem>
-        {#if canEdit}
+        {#if document.edit_access}
           <MenuItem
             on:click={() => {
               close();

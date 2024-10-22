@@ -1,9 +1,10 @@
 <!-- @component
+The document viewer.
+
 Assumes it's a child of a ViewerContext
- -->
+-->
 
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import { SidebarExpand16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
