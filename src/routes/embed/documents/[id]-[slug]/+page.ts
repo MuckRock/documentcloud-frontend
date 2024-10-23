@@ -1,21 +1,38 @@
-import type { DocumentText, ViewerMode } from "@/lib/api/types";
-// load data for a single page embed
-import * as documents from "@/lib/api/documents";
-import * as notesApi from "$lib/api/notes";
+import type { ReadMode } from "$lib/api/types";
+
+import { redirect } from "@sveltejs/kit";
+
+import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed.js";
+import { getQuery } from "$lib/utils/search.js";
+import loadDocument from "$lib/load/document";
+import * as documents from "$lib/api/documents";
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ parent, fetch, url }) {
-  const { document } = await parent();
+export async function load({ fetch, url, params, depends }) {
+  let { document, text, asset_url, mode } = await loadDocument({
+    fetch,
+    url,
+    params,
+  });
 
-  const query = url.searchParams.get("q") ?? "";
+  depends(`document:${document.id}`);
 
-  // load text
-  const text = await documents.text(document, fetch);
-  const asset_url = await documents.assetUrl(document, fetch);
+  // embeds are only readable
+  // not sure if there's a better way to lie to typescript here
+  if (!documents.READING_MODES.has(mode as ReadMode)) {
+    return redirect(302, url.pathname);
+  }
+
+  let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);
+
+  const query = getQuery(url);
 
   return {
-    asset_url,
-    query,
+    document,
+    mode,
     text,
+    asset_url,
+    settings,
+    query,
   };
 }

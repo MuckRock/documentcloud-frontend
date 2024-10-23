@@ -1,33 +1,50 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, ViewerMode } from "$lib/api/types";
+<!-- @component
+Page is a generic container for Viewer content.
 
-  import { createEventDispatcher, onMount, getContext } from "svelte";
+Assumes it's a child of a ViewerContext
+-->
+
+<script lang="ts">
+  import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import { pageHashUrl } from "$lib/api/documents";
-  import { replaceState } from "$app/navigation";
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+  import PageActions from "./PageActions.svelte";
 
-  export let document: Document;
+  import { pageHashUrl } from "$lib/api/documents";
+  import {
+    getCurrentMode,
+    getCurrentPage,
+    getDocument,
+    isEmbedded,
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerHref } from "$lib/utils/viewer";
+
   export let page_number: number;
-  export let mode: ViewerMode = "document";
   export let wide = false;
   export let tall = false;
   export let track: boolean | "once" = false;
   export let width: number = undefined;
-  export let embed = isEmbedded();
 
   const dispatch = createEventDispatcher();
 
-  const currentPage: Writable<number> = getContext("currentPage");
+  const documentStore = getDocument();
+  const currentPage = getCurrentPage();
+  const mode = getCurrentMode();
+  const embed = isEmbedded();
 
   let io: IntersectionObserver;
   let container: HTMLElement;
   let visible: boolean;
 
+  $: document = $documentStore;
   $: id = pageHashUrl(page_number).replace("#", "");
-  $: href = getViewerHref({ document, mode, page: page_number, embed });
+  $: href = getViewerHref({ document, mode: $mode, page: page_number, embed });
+  $: documentHref = getViewerHref({
+    document,
+    mode: "document",
+    page: page_number,
+    embed,
+  });
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(
@@ -102,13 +119,9 @@
       </a>
     </h4>
 
-    {#if $$slots.actions}
-      <div class="actions">
-        <slot name="actions" />
-      </div>
-    {/if}
+    <PageActions {document} {page_number} pageWidth={width} />
   </header>
-  <slot {id} {href} {visible} />
+  <slot {id} {href} {visible} {documentHref} />
 </div>
 
 <style>
@@ -158,9 +171,5 @@
   }
   .title:empty {
     display: none;
-  }
-
-  .actions {
-    flex: 0 0 auto;
   }
 </style>

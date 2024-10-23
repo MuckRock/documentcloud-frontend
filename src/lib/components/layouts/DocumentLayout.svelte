@@ -1,8 +1,11 @@
+<!-- @component
+  Assumes it's a child of a ViewerContext
+ -->
+
 <script lang="ts">
   import type {
     AddOnListItem,
     APIResponse,
-    Document,
     DocumentText,
     Page,
     Project,
@@ -25,17 +28,16 @@
 
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "@/api/types/orgAndUser";
-  import { pdfUrl } from "$lib/api/documents";
+  import { getDocument, getText } from "../viewer/ViewerContext.svelte";
 
   const me = getCurrentUser();
 
-  export let document: Document;
-  export let text: DocumentText;
-  export let asset_url: URL = pdfUrl(document);
-  export let query: string = "";
+  export let documentStore = getDocument();
+  export let text: DocumentText = getText();
   export let action: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
+  $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
 </script>
 
@@ -48,7 +50,7 @@
 
   <article slot="content">
     <header><DocumentHeader {document} /></header>
-    <main><Viewer {document} {asset_url} {text} {query} /></main>
+    <main><Viewer /></main>
   </article>
 
   <aside class="column between" slot="action">

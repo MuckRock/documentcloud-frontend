@@ -1,7 +1,9 @@
+<!-- 
+  @component
+  An embedded document viewer.
+  Assumes it's a child of a ViewerContext
+-->
 <script lang="ts">
-  import type { Document, DocumentText } from "$lib/api/types";
-  import { type EmbedSettings, defaultSettings } from "$lib/utils/embed";
-
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert16 } from "svelte-octicons";
@@ -9,12 +11,16 @@
   import Metadata from "../common/Metadata.svelte";
   import Viewer from "../viewer/Viewer.svelte";
 
+  import { defaultSettings, type EmbedSettings } from "$lib/utils/embed";
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
   import { canonicalUrl } from "$lib/api/documents";
+  import { getDocument } from "../viewer/ViewerContext.svelte";
 
-  export let document: Document;
-  export let text: DocumentText;
   export let settings: Partial<EmbedSettings> = defaultSettings;
+
+  const documentStore = getDocument();
+
+  $: document = $documentStore;
 
   // if we're using this layout, we're embedded
   setContext("embed", true);
@@ -43,7 +49,7 @@
     </header>
   {/if}
   <main>
-    <Viewer {document} {text} />
+    <Viewer />
   </main>
 </div>
 

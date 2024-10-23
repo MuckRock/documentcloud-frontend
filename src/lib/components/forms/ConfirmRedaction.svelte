@@ -20,7 +20,7 @@ This almost certainly lives in a modal.
   import {
     pending,
     redactions,
-  } from "$lib/components/viewer/RedactionPane.svelte";
+  } from "$lib/components/viewer/RedactionLayer.svelte";
   import { canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;
@@ -29,7 +29,7 @@ This almost certainly lives in a modal.
 
   let error: string;
 
-  $: action = canonicalUrl(document).pathname + "?/redact";
+  $: action = new URL("?/redact", canonicalUrl(document)).href;
 
   function onSubmit({ formElement, submitter }) {
     formElement.disabled = true;

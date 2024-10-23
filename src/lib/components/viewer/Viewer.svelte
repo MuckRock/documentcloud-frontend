@@ -1,9 +1,10 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
+<!-- @component
+The document viewer.
 
-  import { getContext } from "svelte";
-  import { _ } from "svelte-i18n";
+Assumes it's a child of a ViewerContext
+-->
+
+<script lang="ts">
   import { SidebarExpand16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -12,29 +13,22 @@
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   // modes
-  import Notes from "./Notes.svelte";
   import PDF from "./PDF.svelte";
   import Text from "./Text.svelte";
-  import ThumbnailGrid from "./ThumbnailGrid.svelte";
+  import Grid from "./Grid.svelte";
+  import Notes from "./Notes.svelte";
 
   // toolbars
-  import AnnotationToolbar from "./toolbars/AnnotationToolbar.svelte";
-  import PaginationToolbar from "./toolbars/PaginationToolbar.svelte";
-  import ReadingToolbar from "./toolbars/ReadingToolbar.svelte";
-  import RedactionToolbar from "./toolbars/RedactionToolbar.svelte";
+  import AnnotationToolbar from "./AnnotationToolbar.svelte";
+  import PaginationToolbar from "./PaginationToolbar.svelte";
+  import ReadingToolbar from "./ReadingToolbar.svelte";
+  import RedactionToolbar from "./RedactionToolbar.svelte";
 
   // utils
-  import { zoomToScale, zoom, zoomToSize } from "./Zoom.svelte";
-  import { pdfUrl } from "$lib/api/documents";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { getCurrentMode, isEmbedded } from "./ViewerContext.svelte";
 
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-
-  export let document: Document;
-  export let asset_url: URL = pdfUrl(document);
-  export let query: string = "";
-  export let text: DocumentText;
-  export let embed = isEmbedded();
+  const embed = isEmbedded();
+  const currentMode = getCurrentMode();
 
   $: mode = $currentMode;
   $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
@@ -60,9 +54,9 @@
       {#if !embed && mode === "annotating"}
         <AnnotationToolbar />
       {:else if !embed && mode === "redacting"}
-        <RedactionToolbar {document} />
+        <RedactionToolbar />
       {:else}
-        <ReadingToolbar {document} {query} {embed} />
+        <ReadingToolbar />
       {/if}
       {#if !embed && $sidebars["action"] === false}
         <div class="toolbar w-auto">
@@ -79,24 +73,17 @@
 
     <!-- content -->
     {#if showPDF}
-      <PDF {document} scale={zoomToScale($zoom)} {asset_url} {query} {embed} />
+      <PDF />
     {:else if mode === "text"}
-      <Text
-        {document}
-        {text}
-        zoom={+$zoom || 1}
-        total={document.page_count}
-        {query}
-        {embed}
-      />
+      <Text />
     {:else if mode === "grid"}
-      <ThumbnailGrid {document} size={zoomToSize($zoom)} {embed} />
+      <Grid />
     {:else if mode === "notes"}
-      <Notes {document} {asset_url} {embed} />
+      <Notes />
     {/if}
     <svelte:fragment slot="footer">
       {#if mode !== "notes"}
-        <PaginationToolbar {document} {embed} />
+        <PaginationToolbar />
       {/if}
     </svelte:fragment>
   </ContentLayout>

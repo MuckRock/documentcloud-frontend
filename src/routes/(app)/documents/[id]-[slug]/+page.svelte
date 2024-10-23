@@ -1,80 +1,58 @@
+<!-- @component
+  Assumes it's a child of a ViewerContext
+ -->
+
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Note, ViewerMode } from "$lib/api/types.js";
+  import "@/style/kit.css";
 
-  import { afterNavigate, invalidate } from "$app/navigation";
-  import { page } from "$app/stores";
-
-  import { getContext } from "svelte";
-  import { _ } from "svelte-i18n";
+  import { embedUrl } from "$lib/api/embed";
+  import { canonicalUrl, pageImageUrl } from "$lib/api/documents";
 
   import DocumentLayout from "$lib/components/layouts/DocumentLayout.svelte";
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
-
-  // config and utils
-  import {
-    shouldPreload,
-    pageFromHash,
-    shouldPaginate,
-  } from "$lib/api/documents";
-  import { noteFromHash } from "$lib/api/notes";
-  import { scrollToPage } from "$lib/utils/scroll";
+  import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
 
   export let data;
 
-  const activeNote: Writable<Note> = getContext("activeNote");
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-  const currentPage: Writable<number> = getContext("currentPage");
-
   $: document = data.document;
-  $: asset_url = data.asset_url;
-  $: query = data.query;
+  $: mode = data.mode;
   $: text = data.text;
+  $: asset_url = data.asset_url;
+  $: canonical_url = canonicalUrl(document).href;
+
   $: action = data.action;
-  $: $currentMode = data.mode; // set $currentMode from URL search param
   $: addons = data.pinnedAddons;
-
-  // lifecycle
-  afterNavigate(() => {
-    const { hash } = $page.url;
-
-    $currentPage = pageFromHash(hash);
-
-    if ($currentPage > 1 && shouldPaginate($currentMode)) {
-      scrollToPage($currentPage);
-    }
-
-    const noteId = noteFromHash(hash);
-    if (noteId) {
-      $activeNote = document.notes.find((note) => note.id === noteId);
-    }
-  });
-
-  // go to page
-  function onHashChange() {
-    const { hash } = window.location;
-    $currentPage = pageFromHash(hash);
-    scrollToPage($currentPage);
-
-    const noteId = noteFromHash(hash);
-    if (noteId) {
-      $activeNote = document.notes.find((note) => note.id === noteId);
-    }
-  }
 </script>
 
-<svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
 <svelte:head>
-  {#if shouldPreload($currentMode)}
-    <link
-      rel="prefetch"
-      href={data.asset_url.href}
-      as="fetch"
-      crossorigin="anonymous"
-      type="application/pdf"
-    />
+  <!-- Insert canonical URL -->
+  <link rel="canonical" href={canonical_url} />
+
+  {#if document.noindex || document.admin_noindex}
+    <meta name="robots" content="noindex" />
   {/if}
+  <title>{document.title} | DocumentCloud</title>
+  <link
+    rel="alternate"
+    type="application/json+oembed"
+    href={embedUrl(document.canonical_url).href}
+    title={document.title}
+  />
+  {#if document.description?.trim().length > 0}
+    <meta name="description" content={document.description} />
+    <meta property="og:description" content={document.description} />
+  {/if}
+  <meta
+    property="og:image"
+    content={pageImageUrl(document, 0, "normal").href}
+  />
+  <!-- Social cards -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content={canonical_url} />
+  <meta property="og:title" content={document.title} />
 </svelte:head>
 
-<DocumentLayout {document} {asset_url} {text} {query} {action} {addons} />
+<ViewerContext {document} {mode} {text} {asset_url}>
+  <DocumentLayout {action} {addons} />
+</ViewerContext>
 <GuidedTour />

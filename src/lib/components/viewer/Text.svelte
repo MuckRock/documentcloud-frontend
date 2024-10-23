@@ -1,27 +1,26 @@
 <!--
   @component
-  Text wraps a list of TextPage components for loading and management
+  Text wraps a list of Page components with plain text contents
+  
+  Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, DocumentText } from "$lib/api/types";
-
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import Page from "./Page.svelte";
-  import TextPage from "./TextPage.svelte";
-
+  import {
+    getText,
+    getCurrentPage,
+    getQuery,
+    getZoom,
+  } from "./ViewerContext.svelte";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { highlight } from "$lib/utils/search";
 
-  export let document: Document;
-  export let query: string = ""; // search query
-  export let text: DocumentText;
-  export let total: number = 0;
-  export let zoom: number = 1;
-  export let embed = isEmbedded();
-
-  const currentPage: Writable<number> = getContext("currentPage");
+  const text = getText();
+  const query = getQuery();
+  const currentPage = getCurrentPage();
+  const zoom = getZoom();
 
   onMount(async () => {
     if ($currentPage > 1) {
@@ -30,19 +29,14 @@
   });
 </script>
 
-<div class="textPages" style:--zoom={zoom}>
-  {#await text}
-    <!-- loading state-->
-    {#each Array(total).fill(null) as p, n}
-      <Page {document} {embed} page_number={n + 1} mode="text">
-        <div class="placeholder"></div>
-      </Page>
-    {/each}
-  {:then { pages }}
-    {#each pages as { page, contents }}
-      <TextPage {document} {page} {contents} {query} {embed} />
-    {/each}
-  {/await}
+<div class="textPages" style:--zoom={+$zoom || 1}>
+  {#each text?.pages as { page, contents }}
+    <Page page_number={page + 1} track>
+      <pre>
+        {@html highlight(contents, query)}
+      </pre>
+    </Page>
+  {/each}
 </div>
 
 <style>
@@ -53,10 +47,22 @@
     width: 100%;
   }
 
-  .placeholder {
-    aspect-ratio: calc(11 / 8.5);
-    background-color: var(--white, white);
+  pre {
+    background-color: var(--white, #fff);
+    margin: 0;
+    padding: 1.5rem;
+    text-wrap: pretty;
+    word-break: break-word;
+
+    color: var(--gray-5, #233944);
+    font-family: var(--font-mono, "Source Code Pro", monospace);
+    font-size: calc(var(--font-xs) * var(--zoom, 1));
+    line-height: calc(1.25rem * var(--zoom, 1));
     box-shadow: var(--shadow-1);
-    width: 66ch;
+    width: 100%;
+  }
+
+  pre :global(mark) {
+    background: var(--note-public, mark);
   }
 </style>

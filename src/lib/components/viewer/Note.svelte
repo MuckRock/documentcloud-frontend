@@ -4,14 +4,16 @@
 
   It can use *either* a loaded PDF or a document image to render
   a document excerpt.
+
+  Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { Writable } from "svelte/store";
+  import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api";
   import type { User } from "@/api/types/orgAndUser";
-  import type { Document, Note, Sizes, ViewerMode } from "$lib/api/types";
+  import type { Document, Note, Sizes } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
-  import { getContext, onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Globe16,
@@ -19,8 +21,8 @@
     Pencil16,
     People16,
     Share16,
+    XCircle16,
   } from "svelte-octicons";
-  import Action from "../common/Action.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
@@ -29,13 +31,26 @@
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
   import { getUserName } from "@/lib/api/accounts";
-  import { getViewerHref, isEmbedded } from "@/lib/utils/viewer";
+  import {
+    getCurrentMode,
+    getDocument,
+    getPDF,
+    isEmbedded,
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerHref } from "$lib/utils/viewer";
+  import Button from "../common/Button.svelte";
 
-  export let document: Document;
+  const documentStore = getDocument();
+  const pdf = getPDF();
+  const embed = isEmbedded();
+  const mode = getCurrentMode();
+
+  const dispatch = createEventDispatcher();
+
   export let note: Note;
-  export let pdf = null; // PDFDocumentProxy
-  export let scale = 1.5;
-  export let embed = isEmbedded();
+  export let scale = 2;
+
+  type AsyncPDF = typeof $pdf;
 
   const SIZE: Sizes = "large";
 
@@ -57,33 +72,32 @@
     },
   };
 
-  const mode: Writable<ViewerMode> = getContext("currentMode");
-
   let canvas: HTMLCanvasElement;
-  let renderTask: { promise: Promise<any> };
   let rendering: Promise<any>;
 
   let shareNoteOpen = false;
 
+  $: document = $documentStore;
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
-  $: rendering = render(canvas, document, pdf); // avoid re-using the same canvas
+  $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
   $: edit_link = getViewerHref({ document, note, mode: "annotating" });
   $: canEdit = note.edit_access && !embed;
 
-  onMount(() => {
-    rendering = render(canvas, document, pdf);
-  });
-
-  async function render(canvas: HTMLCanvasElement, document: Document, pdf) {
+  async function render(
+    canvas: HTMLCanvasElement,
+    document: Document,
+    pdf: AsyncPDF,
+  ) {
     if (!canvas) return;
     if (rendering) {
       await rendering;
     }
 
     if (pdf) {
-      return renderPDF(canvas, pdf);
+      const resolvedPdf = await pdf;
+      return renderPDF(canvas, resolvedPdf);
     }
 
     if (document && !pdf) {
@@ -123,11 +137,7 @@
     });
   }
 
-  async function renderPDF(canvas: HTMLCanvasElement, pdf) {
-    if (renderTask) {
-      await renderTask.promise;
-    }
-
+  async function renderPDF(canvas: HTMLCanvasElement, pdf: PDFDocumentProxy) {
     const context = canvas.getContext("2d");
     const page = await pdf.getPage(page_number);
     const [x, y, w, h] = page.view;
@@ -149,7 +159,7 @@
     canvas.width = Math.floor(noteWidth * dpr);
     canvas.height = Math.floor(noteHeight * dpr);
 
-    renderTask = page.render({
+    const renderTask = page.render({
       canvasContext: context,
       viewport,
       transform,
@@ -165,10 +175,13 @@
       ALLOWED_ATTR,
     });
   }
+
+  function closeNote() {
+    dispatch("close");
+  }
 </script>
 
 <div
-  id="a{note.id}"
   class="note {note.access} {$mode || 'notes'}"
   class:page_level
   style:--x1={note.x1}
@@ -179,15 +192,17 @@
   style:--note-height={height(note)}
 >
   <header>
-    <h3>{note.title}</h3>
-    <div class="actions">
-      <Action icon={Share16} on:click={() => (shareNoteOpen = true)}>
-        {$_("dialog.share")}
-      </Action>
-      {#if canEdit}
-        <Action icon={Pencil16}>
-          <a href={edit_link}>{$_("dialog.edit")}</a>
-        </Action>
+    {#if !page_level && $mode === "document"}
+      <Button minW={false} ghost on:click={closeNote}>
+        <XCircle16 />
+      </Button>
+    {/if}
+    <div class="headerText">
+      <h3>{note.title}</h3>
+      {#if user}
+        <p class="author">
+          {$_("annotation.by", { values: { name: getUserName(user) } })}
+        </p>
       {/if}
     </div>
   </header>
@@ -204,12 +219,24 @@
       <svelte:component this={access[note.access].icon} />
       {$_(`access.${access[note.access].value}.title`)}
     </span>
-
-    {#if user}
-      <p class="author">
-        {$_("annotation.by", { values: { name: getUserName(user) } })}
-      </p>
-    {/if}
+    <div class="actions">
+      {#if canEdit}
+        <Button ghost minW={false} mode="primary" size="small" href={edit_link}>
+          <Pencil16 />
+          {$_("dialog.edit")}
+        </Button>
+      {/if}
+      <Button
+        ghost
+        minW={false}
+        mode="primary"
+        size="small"
+        on:click={() => (shareNoteOpen = true)}
+      >
+        <Share16 />
+        {$_("dialog.share")}
+      </Button>
+    </div>
   </footer>
 </div>
 {#if shareNoteOpen}
@@ -227,15 +254,20 @@
     padding: var(--font-xs, 0.75rem) var(--font-md, 1rem);
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--font-xs, 0.75rem);
+    gap: 1rem;
     pointer-events: all;
+    position: relative;
 
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2, #d8dee2);
     background: var(--white, #fff);
 
+    scroll-margin-top: 6rem;
+
+    z-index: var(--z-note);
+
     /* shadow-2 */
-    box-shadow: 0px 2px 8px 2px var(--shadow-1, rgba(30, 48, 56, 0.15));
+    box-shadow: var(--shadow-2);
   }
 
   /* overlay */
@@ -267,9 +299,22 @@
 
   header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    gap: 0.5rem;
+  }
+
+  .headerText {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  h3 {
+    flex: 0 1 auto;
+    text-align: left;
+    font-weight: var(--font-semibold);
   }
 
   .actions {
@@ -290,32 +335,37 @@
   }
 
   .public .highlight {
-    border-color: var(--note-public);
+    border-color: var(--yellow-3);
   }
 
   .private .highlight {
-    border-color: var(--note-private);
+    border-color: var(--blue-3);
   }
 
   .organization .highlight {
-    border-color: var(--note-org);
+    border-color: var(--green-3);
+  }
+
+  .content {
+    line-height: 1.5;
+    font-size: var(--font-md);
+  }
+
+  .author {
+    font-size: var(--font-xs);
+    color: var(--gray-5);
   }
 
   canvas {
     max-width: 100%;
-    padding: 0.25rem;
+    padding: 1rem;
   }
 
   footer {
     display: flex;
-    justify-content: space-between;
+    gap: 1rem;
     align-items: center;
     align-self: stretch;
-  }
-
-  footer p {
-    color: var(--gray-4, #5c717c);
-    font-size: var(--font-sm);
   }
 
   span.access {
@@ -323,19 +373,21 @@
     align-items: center;
     gap: 0.5rem;
     font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
   }
 
   span.access.public {
-    fill: var(--note-public);
+    fill: var(--yellow-3);
+    color: var(--yellow-4);
   }
 
   span.access.organization {
-    color: var(--note-org);
-    fill: var(--note-org);
+    fill: var(--green-3);
+    color: var(--green-4);
   }
 
   span.access.private {
-    color: var(--note-private);
-    fill: var(--note-private);
+    color: var(--blue-4);
+    fill: var(--blue-3);
   }
 </style>

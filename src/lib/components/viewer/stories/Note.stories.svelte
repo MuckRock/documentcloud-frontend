@@ -7,12 +7,14 @@
     import.meta.url,
   ).href;
 
-  import { Story } from "@storybook/addon-svelte-csf";
-  import { setContext } from "svelte";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import ViewerContext from "../ViewerContext.svelte";
   import Note from "../Note.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
+  import { writable } from "svelte/store";
+  import { pdfUrl } from "@/lib/api/documents";
 
   const document = doc as Document;
   const notes = document.notes as NoteType[];
@@ -36,35 +38,31 @@
 </script>
 
 <script lang="ts">
-  setContext("document", document);
 </script>
 
-<Story name="default">
-  <Note {document} note={notes[0]} />
-</Story>
+<Template let:args>
+  <ViewerContext
+    {document}
+    asset_url={pdfUrl(document)}
+    pdf={args.pdf ?? undefined}
+  >
+    <Note {...args} />
+  </ViewerContext>
+</Template>
 
-<Story name="page-level note">
-  <Note {document} note={page_note} />
-</Story>
-
-<Story name="editable">
-  <Note {document} note={{ ...notes[1], edit_access: true }} />
-</Story>
-
-<Story name="private access">
-  <Note {document} note={{ ...notes[1], access: "private" }} />
-</Story>
-
-<Story name="collaborators access">
-  <Note {document} note={{ ...notes[1], access: "organization" }} />
-</Story>
-
-<Story name="note with HTML">
-  <Note {document} note={{ ...notes[2], content: html }} />
-</Story>
-
-<Story name="render using PDF">
-  {#await load(url) then pdf}
-    <Note {document} note={{ ...notes[2], content: html }} {pdf} />
-  {/await}
-</Story>
+<Story name="default" args={{ note: notes[0] }} />
+<Story name="page-level note" args={{ note: page_note }} />
+<Story name="editable" args={{ note: { ...notes[1], edit_access: true } }} />
+<Story
+  name="private access"
+  args={{ note: { ...notes[1], access: "private" } }}
+/>
+<Story
+  name="collaborators access"
+  args={{ note: { ...notes[1], access: "organization" } }}
+/>
+<Story name="note with HTML" args={{ note: { ...notes[2], content: html } }} />
+<Story
+  name="render using PDF"
+  args={{ pdf: writable(load(url)), note: { ...notes[2], content: html } }}
+/>

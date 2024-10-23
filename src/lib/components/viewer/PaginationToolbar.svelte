@@ -1,10 +1,10 @@
-<script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document, ViewerMode } from "$lib/api/types";
+<!-- @component
+ Assumes it's a child of a ViewerContext
+-->
 
+<script lang="ts">
   import { replaceState } from "$app/navigation";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
 
@@ -18,21 +18,26 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import Zoom from "../Zoom.svelte";
+  import Zoom from "./Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import {
+    getCurrentMode,
+    getCurrentPage,
+    getDocument,
+    isEmbedded,
+  } from "$lib/components/viewer/ViewerContext.svelte";
 
-  export let document: Document;
-  export let embed = isEmbedded();
+  const documentStore = getDocument();
+  $: document = $documentStore;
+  const embed = isEmbedded();
+  const currentMode = getCurrentMode();
+  const currentPage = getCurrentPage();
 
   let sectionsOpen = false;
   let width: number;
-
-  const currentMode: Writable<ViewerMode> = getContext("currentMode");
-  const currentPage: Writable<number> = getContext("currentPage");
 
   $: BREAKPOINTS = {
     TWO_ROWS: width <= remToPx(34),
@@ -82,7 +87,7 @@
           {#each sections as section}
             <MenuItem
               on:click={() => {
-                gotoPage(section.page_number);
+                gotoPage(section.page_number + 1);
                 close();
               }}>{section.title}</MenuItem
             >
@@ -129,7 +134,7 @@
   {/if}
 
   <div class="zoom">
-    <Zoom mode={$currentMode} />
+    <Zoom />
   </div>
 </div>
 

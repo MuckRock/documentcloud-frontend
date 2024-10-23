@@ -4,74 +4,37 @@
   It uses PDF.js to render the actual pages on canvas elements.
 
   This is only the pages of the document, contained inside the larger viewer.
+
+  Assumes it's a child of a ViewerContext
 -->
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-  import type { Document } from "$lib/api/types";
-
-  import { getContext, onMount } from "svelte";
-
-  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
-  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-      "pdfjs-dist/legacy/build/pdf.worker.mjs",
-      import.meta.url,
-    ).href;
-  }
+  import { onMount } from "svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
-  import { pageSizes } from "@/api/pageSize.js";
   import { scrollToPage } from "$lib/utils/scroll";
-  import { remToPx } from "@/lib/utils/layout";
-  import { isEmbedded } from "@/lib/utils/viewer";
+  import { remToPx } from "$lib/utils/layout";
+  import { getSections, pageSizes, zoomToScale } from "$lib/utils/viewer";
+  import {
+    getCurrentPage,
+    getDocument,
+    getPDF,
+    getZoom,
+  } from "./ViewerContext.svelte";
 
-  export let asset_url: URL = null;
-  export let document: Document;
-  export let query: string = ""; // search query
-  export let scale: number | "width" | "height" = 1;
-  export let embed = isEmbedded();
+  const documentStore = getDocument();
+  const currentPage = getCurrentPage();
+  const pdf = getPDF();
+  const zoom = getZoom();
 
-  // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
-  export let pdf: Promise<any> = new Promise(() => {});
-  export let task: ReturnType<typeof pdfjs.getDocument> | undefined = null;
-
-  const currentPage: Writable<number> = getContext("currentPage");
-
+  $: document = $documentStore;
+  $: scale = zoomToScale($zoom);
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
-
-  // index notes and sections by page
-  $: notes = document.notes.reduce((m, note) => {
-    if (!m[note.page_number]) {
-      m[note.page_number] = [];
-    }
-    m[note.page_number].push(note);
-    return m;
-  }, {});
-
-  $: sections = document.sections.reduce((m, section) => {
-    m[section.page_number] = section;
-    return m;
-  }, {});
-
-  let progress = {
-    loaded: 0,
-    total: 0,
-  };
+  $: sections = getSections(document);
 
   onMount(() => {
-    // we might move this to a load function
-    if (!task) {
-      task = pdfjs.getDocument({ url: asset_url });
-      pdf = task.promise;
-    }
-
-    task.onProgress = (p) => {
-      progress = p;
-    };
-
-    pdf.then((p) => {
+    $pdf.then((p) => {
       // handle missing page_spec
       if (sizes.length === 0) {
         sizes = Array(p.numPages).fill([0, 0]);
@@ -97,18 +60,12 @@
 >
   {#each sizes as [width, height], n}
     {@const page_number = n + 1}
-    <PdfPage
-      {document}
-      {page_number}
-      {pdf}
-      {scale}
-      {width}
-      {height}
-      {query}
-      section={sections[n]}
-      notes={notes[n]}
-      {embed}
-    />
+    {#if sections[n]}
+      <h3 class="section">
+        {sections[n].title}
+      </h3>
+    {/if}
+    <PdfPage {page_number} {scale} {width} {height} />
   {/each}
 </div>
 
@@ -130,5 +87,13 @@
   .lg.pages {
     padding: 4.5rem;
     gap: 2.25rem;
+  }
+  .section {
+    color: var(--gray-4);
+    font-weight: var(--font-semibold);
+    max-width: 66ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

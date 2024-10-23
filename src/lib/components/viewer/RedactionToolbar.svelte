@@ -1,6 +1,8 @@
-<script lang="ts">
-  import type { Document } from "$lib/api/types";
+<!-- @component
+Assumes it's a child of a ViewerContext 
+-->
 
+<script lang="ts">
   import { goto } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
@@ -14,17 +16,19 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import { redactions, undo, clear } from "../RedactionPane.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
 
   import ConfirmRedaction from "$lib/components/forms/ConfirmRedaction.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
+  import { redactions, undo, clear } from "./RedactionLayer.svelte";
   import { remToPx } from "$lib/utils/layout";
-  import { getViewerHref } from "@/lib/utils/viewer";
+  import { getViewerHref } from "$lib/utils/viewer";
+  import { getDocument } from "./ViewerContext.svelte";
 
-  export let document: Document;
+  const documentStore = getDocument();
+  $: document = $documentStore;
 
   let width: number;
   let confirmOpen = false;

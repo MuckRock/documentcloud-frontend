@@ -2,11 +2,12 @@
   import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import ViewerContextDecorator from "@/../.storybook/decorators/ViewerContextDecorator.svelte";
+  import ViewerContext from "../ViewerContext.svelte";
   import Viewer from "../Viewer.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
+  import Note from "../Note.svelte";
 
   const document = doc as Document;
 
@@ -34,9 +35,9 @@
 
 <Template let:args>
   <div class="vh">
-    <ViewerContextDecorator mode={args.mode}>
-      <Viewer {...args} />
-    </ViewerContextDecorator>
+    <ViewerContext {...args}>
+      <Viewer />
+    </ViewerContext>
   </div>
 </Template>
 
@@ -44,7 +45,11 @@
   name="Edit Access"
   args={{
     ...args,
-    document: { ...document, edit_access: true },
+    document: {
+      ...document,
+      edit_access: true,
+      notes: document.notes.map((note) => ({ ...note, edit_access: true })),
+    },
   }}
 />
 <Story
