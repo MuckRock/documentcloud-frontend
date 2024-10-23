@@ -73,7 +73,6 @@
   };
 
   let canvas: HTMLCanvasElement;
-  let renderTask: { promise: Promise<any> };
   let rendering: Promise<any>;
 
   let shareNoteOpen = false;
@@ -85,10 +84,6 @@
   $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
   $: edit_link = getViewerHref({ document, note, mode: "annotating" });
   $: canEdit = note.edit_access && !embed;
-
-  onMount(() => {
-    rendering = render(canvas, document, $pdf);
-  });
 
   async function render(
     canvas: HTMLCanvasElement,
@@ -143,10 +138,6 @@
   }
 
   async function renderPDF(canvas: HTMLCanvasElement, pdf: PDFDocumentProxy) {
-    if (renderTask) {
-      await renderTask.promise;
-    }
-
     const context = canvas.getContext("2d");
     const page = await pdf.getPage(page_number);
     const [x, y, w, h] = page.view;
@@ -168,7 +159,7 @@
     canvas.width = Math.floor(noteWidth * dpr);
     canvas.height = Math.floor(noteHeight * dpr);
 
-    renderTask = page.render({
+    const renderTask = page.render({
       canvasContext: context,
       viewport,
       transform,
@@ -201,7 +192,7 @@
   style:--note-height={height(note)}
 >
   <header>
-    {#if !page_level}
+    {#if !page_level && $mode === "document"}
       <Button minW={false} ghost on:click={closeNote}>
         <XCircle16 />
       </Button>
