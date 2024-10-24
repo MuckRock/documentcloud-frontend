@@ -10,7 +10,7 @@ Only one note can be added/edited at a time.
 Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { Maybe, Note as NoteType, Nullable } from "$lib/api/types";
+  import type { BBox, Maybe, Note as NoteType, Nullable } from "$lib/api/types";
 
   import { invalidate, pushState } from "$app/navigation";
 
@@ -131,6 +131,14 @@ Assumes it's a child of a ViewerContext
     drawing = false;
   }
 
+  function positionNote(note: BBox, offset: number) {
+    if (note.y2 > 0.75) {
+      return `bottom: calc(calc(100% - ${note.y1 * 100}%) + ${offset}rem);`;
+    } else {
+      return `top: calc(${note.y2 * 100}% + ${offset}rem);`;
+    }
+  }
+
   function openNote(e: MouseEvent, note: NoteType) {
     const target = e.target as HTMLAnchorElement;
     const href =
@@ -201,6 +209,7 @@ Assumes it's a child of a ViewerContext
     <a
       href={getViewerHref({ document, note, mode: $mode, embed })}
       class="note-highlight {note.access}"
+      class:active={$currentNote?.id === note.id}
       title={note.title}
       style:top="{note.y1 * 100}%"
       style:left="{note.x1 * 100}%"
@@ -210,24 +219,27 @@ Assumes it's a child of a ViewerContext
     >
       {note.title}
     </a>
-    {#if note.id === $currentNote?.id && !Boolean($newNote)}
-      {#if writing}
-        <div class="note-form" style:top="calc({note.y1} * 100% - 3.25rem)">
-          <EditNote
-            bind:note
-            {document}
-            {page_number}
-            on:close={closeNote}
-            on:success={(e) => onEditNoteSuccess(e, note)}
-          />
-        </div>
-      {:else}
-        <div class="note-reading" style:top="calc({note.y1} * 100% - 3.25rem)">
-          <Note {note} {scale} on:close={closeNote} />
-        </div>
-      {/if}
-    {/if}
   {/each}
+
+  {#if $currentNote && !Boolean($newNote)}
+    <div
+      class="note card"
+      style={positionNote($currentNote, 1.5)}
+      transition:fly={{ duration: 250, y: "-1.1rem" }}
+    >
+      {#if writing}
+        <EditNote
+          note={$currentNote}
+          {document}
+          {page_number}
+          on:close={closeNote}
+          on:success={(e) => onEditNoteSuccess(e, $currentNote)}
+        />
+      {:else}
+        <Note note={$currentNote} {scale} on:close={closeNote} />
+      {/if}
+    </div>
+  {/if}
 
   {#if $newNote && $newNote.page_number === page_number}
     <div
@@ -240,8 +252,8 @@ Assumes it's a child of a ViewerContext
 
     {#if !drawing}
       <div
-        class="note-form"
-        style:top="calc({$newNote.y2} * 100% + 1.5rem)"
+        class="note card"
+        style={positionNote($newNote, 1.5)}
         transition:fly={{ duration: 250, y: "-1.1rem" }}
       >
         <EditNote
@@ -308,36 +320,31 @@ Assumes it's a child of a ViewerContext
     scroll-margin-top: 6rem;
   }
 
-  .note-reading {
+  .note {
     position: absolute;
     left: -1.5rem;
     width: 44rem;
     max-width: 100%;
     z-index: var(--z-note);
+    background: var(--white);
+    border: 1px solid var(--gray-2);
+    box-shadow: var(--shadow-2);
   }
 
-  .note-form {
-    position: absolute;
-    left: -1.5rem;
-    width: 44rem;
-    max-width: 100%;
-    z-index: var(--z-note);
-    pointer-events: all;
-    box-shadow: var(--shadow-2);
-    border: 1px solid var(--gray-2);
-    border-radius: 1rem;
-    background: var(--white);
+  .card {
+    padding: 1rem;
   }
 
   .box {
     position: absolute;
-    border: 1px solid var(--note-private);
+    border: 4px solid transparent;
+    border-color: color-mix(in srgb, var(--blue-3), var(--gray-4));
     background: var(--note-private);
     opacity: 0.75;
     mix-blend-mode: multiply;
     pointer-events: stroke;
     padding: 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.125rem;
 
     /* if we make boxes editable
     cursor: grab;
@@ -347,44 +354,49 @@ Assumes it's a child of a ViewerContext
   }
 
   .box.public {
-    border-color: var(--note-public);
-    background: var(--note-public);
+    border-color: color-mix(in srgb, var(--yellow-3), var(--gray-4));
+    background: var(--yellow-3);
   }
 
   .box.organization {
-    border-color: var(--note-org);
-    background: var(--note-org);
+    border-color: color-mix(in srgb, var(--green-3), var(--gray-4));
+    background: var(--green-3);
   }
 
   .box.private {
-    border-color: var(--note-private);
-    background: var(--note-private);
+    border-color: color-mix(in srgb, var(--blue-3), var(--gray-4));
+    background: var(--blue-3);
   }
 
   a.note-highlight {
-    border-radius: 0.25rem;
+    border: 4px solid transparent;
+    border-radius: 0.125rem;
     color: transparent;
     position: absolute;
     opacity: 0.5;
     pointer-events: all;
     mix-blend-mode: multiply;
-
-    border: 0.5rem solid var(--gray-4);
     /* pointer-events: none; */
   }
 
   a.note-highlight.public {
-    background-color: var(--note-public);
-    border-color: var(--note-public);
+    background-color: var(--yellow-3);
+    &.active {
+      border-color: color-mix(in srgb, var(--yellow-3), var(--gray-4));
+    }
   }
 
   a.note-highlight.private {
-    background-color: var(--note-private);
-    border-color: var(--note-private);
+    background-color: var(--blue-3);
+    &.active {
+      border-color: color-mix(in srgb, var(--blue-3), var(--gray-4));
+    }
   }
 
   a.note-highlight.organization {
-    background-color: var(--note-org);
-    border-color: var(--note-org);
+    background-color: var(--green-3);
+    &.active {
+      border-color: color-mix(in srgb, var(--green-3), var(--gray-4));
+    }
   }
 </style>

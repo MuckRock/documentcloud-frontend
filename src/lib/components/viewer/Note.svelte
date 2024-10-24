@@ -251,43 +251,13 @@
 <style>
   .note {
     display: flex;
-    padding: var(--font-xs, 0.75rem) var(--font-md, 1rem);
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
     pointer-events: all;
     position: relative;
-
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2, #d8dee2);
-    background: var(--white, #fff);
-
     scroll-margin-top: 6rem;
-
     z-index: var(--z-note);
-
-    /* shadow-2 */
-    box-shadow: var(--shadow-2);
-  }
-
-  /* overlay */
-  .note.document,
-  .note.annotating,
-  .note.redacting {
-    display: flex;
-    padding: 0.75rem 1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-
-    position: absolute;
-    /* shift up to account for the note header */
-    top: calc(var(--y1) * 100% - 3rem);
-    /* left: calc(var(--x1) * 100% - 1px - var(--font-xs)); */
-    left: 0;
-    max-width: 100%; /* maybe should just be width: 100% */
-
-    z-index: 10;
   }
 
   /* page-level */
