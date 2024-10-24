@@ -32,6 +32,7 @@ Assumes it's a child of a ViewerContext
   import {
     getCurrentMode,
     getDocument,
+    getPDFProgress,
     getQuery,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
@@ -42,8 +43,10 @@ Assumes it's a child of a ViewerContext
   const query = getQuery();
   const mode = getCurrentMode();
   const embed = isEmbedded();
+  const progress = getPDFProgress();
 
   $: document = $documentStore;
+  $: loading = $progress.total > 0 ? $progress.loaded / $progress.total : null;
   $: canWrite = !embed && document.edit_access;
   $: BREAKPOINTS = {
     READ_MENU: width > remToPx(52),
@@ -73,40 +76,37 @@ Assumes it's a child of a ViewerContext
   };
 </script>
 
-<PageToolbar bind:width>
-  <svelte:fragment slot="left">
-    {#if BREAKPOINTS.READ_MENU}
-      <div class="tabs" role="tablist">
-        {#each readModes.entries() as [value, name]}
-          <Tab
-            active={$mode === value}
-            href={getViewerHref({ document, mode: value, embed })}
-          >
-            <svelte:component this={icons[value]} />
-            {name}
-          </Tab>
-        {/each}
-      </div>
-    {:else}
-      <Dropdown position="bottom-start">
-        <SidebarItem slot="anchor">
-          <svelte:component this={icons[$mode]} slot="start" />
-          {Array.from(readModes).find(([value]) => value === $mode)[1]}
-          <ChevronDown12 slot="end" />
-        </SidebarItem>
-        <Menu slot="default" let:close>
+{#if loading && loading < 1}
+  <PageToolbar bind:width>
+    <svelte:fragment slot="center">
+      <p>Loading…</p>
+      <progress value={loading} />
+    </svelte:fragment>
+  </PageToolbar>
+{:else}
+  <PageToolbar bind:width>
+    <svelte:fragment slot="left">
+      {#if BREAKPOINTS.READ_MENU}
+        <div class="tabs" role="tablist">
           {#each readModes.entries() as [value, name]}
-            <MenuItem
-              selected={$mode === value}
+            <Tab
+              active={$mode === value}
               href={getViewerHref({ document, mode: value, embed })}
-              on:click={close}
             >
-              <svelte:component this={icons[value]} slot="icon" />
+              <svelte:component this={icons[value]} />
               {name}
-            </MenuItem>
+            </Tab>
           {/each}
-          {#if BREAKPOINTS.WRITE_MENU && canWrite}
-            {#each writeModes as [value, name]}
+        </div>
+      {:else}
+        <Dropdown position="bottom-start">
+          <SidebarItem slot="anchor">
+            <svelte:component this={icons[$mode]} slot="start" />
+            {Array.from(readModes).find(([value]) => value === $mode)[1]}
+            <ChevronDown12 slot="end" />
+          </SidebarItem>
+          <Menu slot="default" let:close>
+            {#each readModes.entries() as [value, name]}
               <MenuItem
                 selected={$mode === value}
                 href={getViewerHref({ document, mode: value, embed })}
@@ -116,35 +116,47 @@ Assumes it's a child of a ViewerContext
                 {name}
               </MenuItem>
             {/each}
-          {/if}
-        </Menu>
-      </Dropdown>
-    {/if}
-  </svelte:fragment>
-  <Flex justify="end" slot="right">
-    {#if !BREAKPOINTS.WRITE_MENU && canWrite}
-      {#each writeModes as [value, name]}
-        <Button ghost href={getViewerHref({ document, mode: value, embed })}>
-          <span class="icon"><svelte:component this={icons[value]} /></span>
-          {name}
-        </Button>
-      {/each}
-    {/if}
-    {#if BREAKPOINTS.SEARCH_MENU}
-      <Dropdown position="bottom-end">
-        <Button minW={false} ghost slot="anchor">
-          <Search16 />
-          {$_("common.search")}
-        </Button>
-        <Menu>
-          <Search name="q" {query} />
-        </Menu>
-      </Dropdown>
-    {:else}
-      <Search name="q" {query} />
-    {/if}
-  </Flex>
-</PageToolbar>
+            {#if BREAKPOINTS.WRITE_MENU && canWrite}
+              {#each writeModes as [value, name]}
+                <MenuItem
+                  selected={$mode === value}
+                  href={getViewerHref({ document, mode: value, embed })}
+                  on:click={close}
+                >
+                  <svelte:component this={icons[value]} slot="icon" />
+                  {name}
+                </MenuItem>
+              {/each}
+            {/if}
+          </Menu>
+        </Dropdown>
+      {/if}
+    </svelte:fragment>
+    <Flex justify="end" slot="right">
+      {#if !BREAKPOINTS.WRITE_MENU && canWrite}
+        {#each writeModes as [value, name]}
+          <Button ghost href={getViewerHref({ document, mode: value, embed })}>
+            <span class="icon"><svelte:component this={icons[value]} /></span>
+            {name}
+          </Button>
+        {/each}
+      {/if}
+      {#if BREAKPOINTS.SEARCH_MENU}
+        <Dropdown position="bottom-end">
+          <Button minW={false} ghost slot="anchor">
+            <Search16 />
+            {$_("common.search")}
+          </Button>
+          <Menu>
+            <Search name="q" {query} />
+          </Menu>
+        </Dropdown>
+      {:else}
+        <Search name="q" {query} />
+      {/if}
+    </Flex>
+  </PageToolbar>
+{/if}
 
 <style>
   .tabs {
