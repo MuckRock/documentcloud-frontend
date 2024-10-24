@@ -305,15 +305,15 @@
   }
 
   .public .highlight {
-    border-color: var(--yellow-3);
+    border-color: var(--note-public);
   }
 
   .private .highlight {
-    border-color: var(--blue-3);
+    border-color: var(--note-private);
   }
 
   .organization .highlight {
-    border-color: var(--green-3);
+    border-color: var(--note-org);
   }
 
   .content {
@@ -347,17 +347,17 @@
   }
 
   span.access.public {
-    fill: var(--yellow-3);
-    color: var(--yellow-4);
+    fill: var(--note-public);
+    color: color-mix(in srgb, var(--note-public), var(--gray-5));
   }
 
   span.access.organization {
-    fill: var(--green-3);
-    color: var(--green-4);
+    fill: var(--note-org);
+    color: color-mix(in srgb, var(--note-org), var(--gray-5));
   }
 
   span.access.private {
-    color: var(--blue-4);
-    fill: var(--blue-3);
+    fill: var(--note-private);
+    color: color-mix(in srgb, var(--note-private), var(--gray-5));
   }
 </style>

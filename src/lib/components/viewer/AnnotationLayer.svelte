@@ -334,7 +334,7 @@ Assumes it's a child of a ViewerContext
   .box {
     position: absolute;
     border: 4px solid transparent;
-    border-color: color-mix(in srgb, var(--blue-3), var(--gray-4));
+    border-color: color-mix(in srgb, var(--note-private), var(--gray-4));
     background: var(--note-private);
     opacity: 0.75;
     mix-blend-mode: multiply;
@@ -350,18 +350,18 @@ Assumes it's a child of a ViewerContext
   }
 
   .box.public {
-    border-color: color-mix(in srgb, var(--yellow-3), var(--gray-4));
-    background: var(--yellow-3);
+    border-color: color-mix(in srgb, var(--note-public), var(--gray-4));
+    background: var(--note-public);
   }
 
   .box.organization {
-    border-color: color-mix(in srgb, var(--green-3), var(--gray-4));
-    background: var(--green-3);
+    border-color: color-mix(in srgb, var(--note-org), var(--gray-4));
+    background: var(--note-org);
   }
 
   .box.private {
-    border-color: color-mix(in srgb, var(--blue-3), var(--gray-4));
-    background: var(--blue-3);
+    border-color: color-mix(in srgb, var(--note-private), var(--gray-4));
+    background: var(--note-private);
   }
 
   a.note-highlight {
@@ -376,23 +376,23 @@ Assumes it's a child of a ViewerContext
   }
 
   a.note-highlight.public {
-    background-color: var(--yellow-3);
+    background-color: var(--note-public);
     &.active {
       border-color: color-mix(in srgb, var(--yellow-3), var(--gray-4));
     }
   }
 
   a.note-highlight.private {
-    background-color: var(--blue-3);
+    background-color: var(--note-private);
     &.active {
-      border-color: color-mix(in srgb, var(--blue-3), var(--gray-4));
+      border-color: color-mix(in srgb, var(--note-private), var(--gray-4));
     }
   }
 
   a.note-highlight.organization {
-    background-color: var(--green-3);
+    background-color: var(--note-org);
     &.active {
-      border-color: color-mix(in srgb, var(--green-3), var(--gray-4));
+      border-color: color-mix(in srgb, var(--note-org), var(--gray-4));
     }
   }
 </style>
