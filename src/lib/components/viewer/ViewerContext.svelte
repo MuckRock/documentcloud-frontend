@@ -179,6 +179,7 @@ layouts, stories, and tests.
     $currentMode = mode;
     $currentNote = $currentDoc.notes.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate(mode)) {
+      console.log("scroll");
       scrollToHash(hash);
     }
   });

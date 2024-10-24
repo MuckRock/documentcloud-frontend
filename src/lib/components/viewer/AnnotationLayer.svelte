@@ -128,7 +128,9 @@ Assumes it's a child of a ViewerContext
   }
 
   function positionNote(note: BBox, offset: number) {
-    if (note.y2 > 0.75) {
+    console.log(page_number + 1, document.page_count);
+    const isLastPage = page_number + 1 === document.page_count;
+    if (isLastPage && note.y2 > 0.5) {
       return `bottom: calc(calc(100% - ${note.y1 * 100}%) + ${offset}rem);`;
     } else {
       return `top: calc(${note.y2 * 100}% + ${offset}rem);`;
