@@ -25,13 +25,29 @@ Assumes it's a child of a ViewerContext
   import RedactionToolbar from "./RedactionToolbar.svelte";
 
   // utils
-  import { getCurrentMode, isEmbedded } from "./ViewerContext.svelte";
+  import {
+    getCurrentMode,
+    getPDFProgress,
+    isEmbedded,
+  } from "./ViewerContext.svelte";
+  import LoadingToolbar from "./LoadingToolbar.svelte";
+  import { onMount } from "svelte";
 
   const embed = isEmbedded();
   const currentMode = getCurrentMode();
+  const progress = getPDFProgress();
+
+  // only show loading for slow-loading pages
+  let showLoading = false;
 
   $: mode = $currentMode;
   $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
+  $: loading = $progress.total > 0 ? $progress.loaded / $progress.total : null;
+
+  onMount(() => {
+    const timeout = setTimeout(() => (showLoading = true), 500);
+    return () => clearTimeout(timeout);
+  });
 </script>
 
 <div class="container">
@@ -51,7 +67,9 @@ Assumes it's a child of a ViewerContext
           </Button>
         </div>
       {/if}
-      {#if !embed && mode === "annotating"}
+      {#if showLoading && loading && loading < 1}
+        <LoadingToolbar progress={loading} />
+      {:else if !embed && mode === "annotating"}
         <AnnotationToolbar />
       {:else if !embed && mode === "redacting"}
         <RedactionToolbar />
