@@ -176,10 +176,10 @@ layouts, stories, and tests.
   afterNavigate(() => {
     // refresh stores from URL state
     const { hash } = $pageStore.url;
+    const hashPage = pageFromHash(hash);
     $currentMode = mode;
     $currentNote = $currentDoc.notes.find(noteMatchingPageHash) ?? null;
-    if (shouldPaginate(mode)) {
-      console.log("scroll");
+    if (shouldPaginate(mode) && $currentPage !== hashPage) {
       scrollToHash(hash);
     }
   });
