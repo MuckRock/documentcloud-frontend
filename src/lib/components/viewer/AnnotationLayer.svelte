@@ -43,10 +43,6 @@ Assumes it's a child of a ViewerContext
   const currentNote = getCurrentNote();
   const newNote = getNewNote();
 
-  $: {
-    console.log($newNote);
-  }
-
   let drawStart: Nullable<[x: number, y: number]> = null;
   let drawing = false;
 
