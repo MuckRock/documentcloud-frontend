@@ -46,13 +46,7 @@ Positioning and generating coordinates should happen outside of this form.
   }
 </script>
 
-<form
-  {action}
-  method="post"
-  class:page_level
-  class="card"
-  use:enhance={onSubmit}
->
+<form {action} method="post" class:page_level use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <Field title={$_("annotate.fields.title")} required>
       <Text
@@ -98,9 +92,3 @@ Positioning and generating coordinates should happen outside of this form.
     </Flex>
   </Flex>
 </form>
-
-<style>
-  form {
-    box-shadow: var(--shadow-1);
-  }
-</style>

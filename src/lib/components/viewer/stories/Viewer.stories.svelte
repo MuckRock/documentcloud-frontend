@@ -65,6 +65,18 @@
 <Story name="Text" args={{ ...args, mode: "text" }} />
 <Story name="Thumbnails" args={{ ...args, mode: "grid" }} />
 <Story name="Notes" args={{ ...args, mode: "notes" }} />
+<Story
+  name="Annotating"
+  args={{
+    ...args,
+    mode: "annotating",
+    document: {
+      ...document,
+      edit_access: true,
+      notes: document.notes.map((note) => ({ ...note, edit_access: true })),
+    },
+  }}
+/>
 
 <style>
   .vh {

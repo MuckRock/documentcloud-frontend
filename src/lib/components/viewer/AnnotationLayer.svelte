@@ -27,6 +27,7 @@ Assumes it's a child of a ViewerContext
     getCurrentMode,
     getCurrentNote,
     getDocument,
+    getNewNote,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
@@ -40,8 +41,8 @@ Assumes it's a child of a ViewerContext
   const embed = isEmbedded();
   const mode = getCurrentMode();
   const currentNote = getCurrentNote();
+  const newNote = getNewNote();
 
-  let newNote: Nullable<Partial<NoteType> & BBox> = null;
   let drawStart: Nullable<[x: number, y: number]> = null;
   let drawing = false;
 
@@ -49,7 +50,7 @@ Assumes it's a child of a ViewerContext
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: writing = $mode === "annotating";
-  $: activeNote = Boolean($currentNote) || (Boolean(newNote) && !drawing);
+  $: activeNote = Boolean($currentNote) || (Boolean($newNote) && !drawing);
   $: edit_page_note =
     writing &&
     Boolean($currentNote) &&
@@ -70,18 +71,20 @@ Assumes it's a child of a ViewerContext
   }
 
   function startDrawingBox(e: PointerEvent) {
-    if ($currentNote || newNote) return;
+    closeNote();
 
     drawing = true;
     $currentNote = null;
+    $newNote = null;
     const [x, y] = getLayerPosition(e);
     drawStart = [x, y];
     // when starting, the note is a 0px shape
-    newNote = {
+    $newNote = {
       x1: x,
       x2: x,
       y1: y,
       y2: y,
+      page_number,
     };
   }
 
@@ -94,24 +97,25 @@ Assumes it's a child of a ViewerContext
     const movingRight = x > startX;
     const movingDown = y > startY;
 
-    const x1 = movingRight ? newNote.x1 : x;
-    const x2 = movingRight ? x : newNote.x2;
-    const y1 = movingDown ? newNote.y1 : y;
-    const y2 = movingDown ? y : newNote.y2;
+    const x1 = movingRight ? $newNote.x1 : x;
+    const x2 = movingRight ? x : $newNote.x2;
+    const y1 = movingDown ? $newNote.y1 : y;
+    const y2 = movingDown ? y : $newNote.y2;
 
-    newNote = {
+    $newNote = {
       x1,
       x2,
       y1,
       y2,
+      page_number,
     };
   }
 
   function finishDrawingBox(e: PointerEvent) {
     if (!newNote || !drawing) return;
 
-    newNote = {
-      ...newNote,
+    $newNote = {
+      ...$newNote,
       // now initialize some note values
       page_number,
       title: "",
@@ -123,17 +127,27 @@ Assumes it's a child of a ViewerContext
     drawing = false;
   }
 
+  function positionNote(note: BBox, offset: number) {
+    const isLastPage = page_number + 1 === document.page_count;
+    if (isLastPage && note.y2 > 0.5) {
+      return `bottom: calc(calc(100% - ${note.y1 * 100}%) + ${offset}rem);`;
+    } else {
+      return `top: calc(${note.y2 * 100}% + ${offset}rem);`;
+    }
+  }
+
   function openNote(e: MouseEvent, note: NoteType) {
     const target = e.target as HTMLAnchorElement;
     const href =
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
     $currentNote = note;
+    $newNote = null;
     pushState(href, { note });
   }
 
   function closeNote() {
     drawing = false;
-    newNote = null;
+    $newNote = null;
     $currentNote = null;
     const href = getViewerHref({ document, mode: $mode, embed });
     pushState(href, {});
@@ -192,6 +206,7 @@ Assumes it's a child of a ViewerContext
     <a
       href={getViewerHref({ document, note, mode: $mode, embed })}
       class="note-highlight {note.access}"
+      class:active={$currentNote?.id === note.id}
       title={note.title}
       style:top="{note.y1 * 100}%"
       style:left="{note.x1 * 100}%"
@@ -201,43 +216,46 @@ Assumes it's a child of a ViewerContext
     >
       {note.title}
     </a>
-    {#if note.id === $currentNote?.id}
-      {#if writing}
-        <div class="note-form" style:top="calc({note.y1} * 100% - 3.25rem)">
-          <EditNote
-            bind:note
-            {document}
-            {page_number}
-            on:close={closeNote}
-            on:success={(e) => onEditNoteSuccess(e, note)}
-          />
-        </div>
-      {:else}
-        <div class="note-reading" style:top="calc({note.y1} * 100% - 3.25rem)">
-          <Note {note} {scale} on:close={closeNote} />
-        </div>
-      {/if}
-    {/if}
   {/each}
 
-  {#if newNote}
+  {#if $currentNote && !Boolean($newNote) && $currentNote.page_number === page_number}
     <div
-      class="box {newNote.access}"
-      style:top="{newNote.y1 * 100}%"
-      style:left="{newNote.x1 * 100}%"
-      style:width="{width(newNote) * 100}%"
-      style:height="{height(newNote) * 100}%"
+      class="note card"
+      style={positionNote($currentNote, 1.5)}
+      transition:fly={{ duration: 250, y: "-1.1rem" }}
+    >
+      {#if writing}
+        <EditNote
+          note={$currentNote}
+          {document}
+          {page_number}
+          on:close={closeNote}
+          on:success={(e) => onEditNoteSuccess(e, $currentNote)}
+        />
+      {:else}
+        <Note note={$currentNote} {scale} on:close={closeNote} />
+      {/if}
+    </div>
+  {/if}
+
+  {#if $newNote && $newNote.page_number === page_number}
+    <div
+      class="box {$newNote.access}"
+      style:top="{$newNote.y1 * 100}%"
+      style:left="{$newNote.x1 * 100}%"
+      style:width="{width($newNote) * 100}%"
+      style:height="{height($newNote) * 100}%"
     ></div>
 
     {#if !drawing}
       <div
-        class="note-form"
-        style:top="calc({newNote.y2} * 100% + 1.5rem)"
+        class="note card"
+        style={positionNote($newNote, 1.5)}
         transition:fly={{ duration: 250, y: "-1.1rem" }}
       >
         <EditNote
           {document}
-          bind:note={newNote}
+          bind:note={$newNote}
           on:close={closeNote}
           on:success={(e) => onEditNoteSuccess(e, undefined)}
         />
@@ -278,6 +296,11 @@ Assumes it's a child of a ViewerContext
     pointer-events: all;
   }
 
+  /* .notes.activeNote {
+    cursor: default;
+    pointer-events: all;
+  } */
+
   .notes :global(*) {
     pointer-events: all;
   }
@@ -294,37 +317,31 @@ Assumes it's a child of a ViewerContext
     scroll-margin-top: 6rem;
   }
 
-  .note-reading {
+  .note {
     position: absolute;
     left: -1.5rem;
     width: 44rem;
     max-width: 100%;
     z-index: var(--z-note);
+    background: var(--white);
+    border: 1px solid var(--gray-2);
+    box-shadow: var(--shadow-2);
   }
 
-  .note-form {
-    position: absolute;
-    left: -1.5rem;
-    width: 44rem;
-    max-width: 100%;
-    z-index: var(--z-note);
-    pointer-events: all;
-  }
-
-  .notes.activeNote {
-    cursor: auto;
-    pointer-events: none;
+  .card {
+    padding: 1rem;
   }
 
   .box {
     position: absolute;
-    border: 1px solid var(--note-private);
+    border: 4px solid transparent;
+    border-color: color-mix(in srgb, var(--note-private), var(--gray-4));
     background: var(--note-private);
     opacity: 0.75;
     mix-blend-mode: multiply;
     pointer-events: stroke;
     padding: 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.125rem;
 
     /* if we make boxes editable
     cursor: grab;
@@ -334,44 +351,49 @@ Assumes it's a child of a ViewerContext
   }
 
   .box.public {
-    border-color: var(--note-public);
+    border-color: color-mix(in srgb, var(--note-public), var(--gray-4));
     background: var(--note-public);
   }
 
   .box.organization {
-    border-color: var(--note-org);
+    border-color: color-mix(in srgb, var(--note-org), var(--gray-4));
     background: var(--note-org);
   }
 
   .box.private {
-    border-color: var(--note-private);
+    border-color: color-mix(in srgb, var(--note-private), var(--gray-4));
     background: var(--note-private);
   }
 
   a.note-highlight {
-    border-radius: 0.25rem;
+    border: 4px solid transparent;
+    border-radius: 0.125rem;
     color: transparent;
     position: absolute;
     opacity: 0.5;
     pointer-events: all;
     mix-blend-mode: multiply;
-
-    border: 0.5rem solid var(--gray-4);
     /* pointer-events: none; */
   }
 
   a.note-highlight.public {
     background-color: var(--note-public);
-    border-color: var(--note-public);
+    &.active {
+      border-color: color-mix(in srgb, var(--yellow-3), var(--gray-4));
+    }
   }
 
   a.note-highlight.private {
     background-color: var(--note-private);
-    border-color: var(--note-private);
+    &.active {
+      border-color: color-mix(in srgb, var(--note-private), var(--gray-4));
+    }
   }
 
   a.note-highlight.organization {
     background-color: var(--note-org);
-    border-color: var(--note-org);
+    &.active {
+      border-color: color-mix(in srgb, var(--note-org), var(--gray-4));
+    }
   }
 </style>
