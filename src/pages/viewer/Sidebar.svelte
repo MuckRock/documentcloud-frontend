@@ -4,7 +4,7 @@
   import AccessIcon from "../../common/AccessIcon.svelte";
   import HtmlField from "../../common/HtmlField.svelte";
   import session from "../../api/session.js";
-  import { jsonUrl } from "../../api/viewer.js";
+  import { jsonUrl } from "../../api/viewer";
 
   import {
     enterRedactMode,

@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import { parse, highlight, splitAndEscape } from "./parse.js";
 
 const IMPLICIT = "<implicit>";

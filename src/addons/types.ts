@@ -1,4 +1,25 @@
+import type { DefinedError } from "ajv";
+
 type AddOnCategory = "premium" | string;
+
+export type Status =
+  | "success"
+  | "failure"
+  | "queued"
+  | "in_progress"
+  | "cancelled";
+
+import type { PageParams } from "@/api/types/common";
+
+export interface AddOnParams extends PageParams {
+  query?: string;
+  active?: boolean;
+  default?: boolean;
+  featured?: boolean;
+  premium?: boolean;
+  category?: string;
+  repository?: string;
+}
 
 interface AddOnProperty {
   type: string;
@@ -23,6 +44,7 @@ interface AddOnParameters {
   title: string;
   description: string;
   instructions: string;
+  custom_disabled_email_footer: string;
   categories: AddOnCategory[];
   documents: string[];
   required: string[];
@@ -69,14 +91,28 @@ export interface Run {
   uuid: string;
   addon: AddOnListItem;
   user: number;
-  status: "success" | "failure" | "queued" | "in_progress";
+  status: Status;
   progress: number;
   message: string;
   file_url?: string | null;
+  file_expires_at?: string | null;
   dismissed: boolean;
   rating: number;
   comment: string;
   created_at: string;
   updated_at: string;
   credits_spent?: number;
+}
+
+// payload for creating or scheduling an add-on run
+// including the `event` property will schedule runs (or cancel, if it's zero)
+// the `documents` and `query` properties tell the add-on what documents to run against
+export interface AddOnPayload {
+  addon: number;
+  parameters: any;
+  event?: number;
+  documents?: number[] | string[];
+  query?: string;
+  errors?: DefinedError[];
+  valid?: boolean;
 }

@@ -5,7 +5,7 @@
   import TextPage from "./TextPage.svelte";
 
   import session from "@/api/session.js";
-  import { jsonUrl } from "@/api/viewer.js";
+  import { jsonUrl } from "@/api/viewer";
   import { doc } from "@/viewer/document.js";
   import { layout } from "@/viewer/layout.js";
   import { viewer } from "@/viewer/viewer.js";

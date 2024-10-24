@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getMe, getOrganization } from "../../../api/orgAndUser";
+  import { getMe, getOrganization } from "../../../api/orgAndUser.js";
 
   import LanguageMenu from "./LanguageMenu.svelte";
   import HelpMenu from "./HelpMenu.svelte";

@@ -2,15 +2,13 @@
 
 **DocumentCloud Frontend** &middot; [Squarelet][squarelet] &middot; [MuckRock][muckrock] &middot; [DocumentCloud][documentcloud]
 
-The main frontend for DocumentCloud, written in [Svelte](https://svelte.dev/).
+The main frontend for DocumentCloud, written in [SvelteKit](https://kit.svelte.dev/).
 
 ## Usage
 
 This project depends on both [Squarelet](https://github.com/muckrock/squarelet) and the [DocumentCloud (Django)](https://github.com/muckrock/documentcloud). Follow the steps in their READMEs before setting up this project.
 
-This project is a Svelte + Webpack project wrapped in Docker compose.
-
-In order to install dependencies inside the Docker container, run:
+In order to install dependencies inside the Docker container and on your host machine, run:
 
 ```bash
 make install
@@ -22,31 +20,34 @@ Once the node modules have been installed, start the app with:
 make dev
 ```
 
-**Warning:** Don't just run `docker compose up` like you would with some of the other repos. The containers listed in `local.yml` aren't intended to be run simultaneously.
-
 Set up your hosts:
 
 ```bash
 echo "127.0.0.1 www.dev.documentcloud.org" | sudo tee -a /etc/hosts
 ```
 
-Once everything is up and running, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/). Note the frontend is not yet functional.
+Once everything is up and running, you should be able to see the website live at [www.dev.documentcloud.org](http://www.dev.documentcloud.org/).
 
 ## Building for production
 
-Run `make build` to build the production version of the app. The project will be output in the `public` directory.
-
-## Architecture
-
-See the [Wiki](https://github.com/MuckRock/documentcloud-frontend/wiki) for information on the DocumentCloud architecture.
+Run `make build` to build the production version of the app. The project will be output in the `build` directory. (This happens on Netlify and during Github Actions automatically.)
 
 ## Browser support
 
 DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome, FireFox, Safari and Microsoft Edge. Older versions of those browsers will likely work, too, but we can't guarantee a bug-free experience on versions from more than a year ago, or on browsers that no longer receive updates, such as Internet Explorer.
 
+## Environment Variables
+
+- Use `process.env` for things running on a development machine in a Node context, like Vite configs and other dev or build scripts.
+- In SvelteKit:
+  - In a server context, you can use `import {env} from "$env/dynamic/private` to access variables defined in `process.env`.
+  - In a client context, you can only `import {env} from "$env/static/public` to access variables named with a `PUBLIC_` prefix.
+
+_Learn more about using environment variables in [the SvelteKit learning docs](https://learn.svelte.dev/tutorial/env-static-private)._
+
 ## Developing
 
-## Installing new packages
+### Installing new packages
 
 Run the relevant `npm install ...` command and then get the change mirrored on the Docker image by running `make install`.
 
@@ -54,11 +55,13 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 [documentcloud]: https://github.com/MuckRock/documentcloud
 [squarelet]: https://github.com/muckrock/squarelet
 
-## Unit tests
+### Unit tests
 
-Run unit tests with `npm test`.
+Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-run tests as code changes.
 
-## Browser tests
+We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated. To update snapshots, run `npm run test:unit -- -u`.
+
+### Browser tests
 
 All of the browser test commands depend on the front end running, so start the app with `make dev` and start the backend and Squarelet as well.
 
@@ -68,29 +71,40 @@ Run `npm run test:browser` in another terminal. This will run Playwright using C
 
 ### Development
 
-The functional tests are organized like this:
+The functional tests are colocated with the files they test, like this:
 
 ```
-tests
-├── README.md
-├── anonymous
-│   ├── manager
-│   │   └── app.spec.js
-│   ├── pages
-│   │   └── home.spec.js
-│   └── viewer
-│       └── document.spec.js
-└── fixtures
-    ├── Small pdf.pdf
-    ├── development.json
-    ├── production.json
-    ├── staging.json
-    └── the-nature-of-the-firm-CPEC11.pdf
+src/lib/api/
+├── accounts.ts
+├── addons.ts
+├── collaborators.ts
+├── documents.ts
+├── embed.ts
+├── feedback.ts
+├── flatpages.ts
+├── notes.ts
+├── projects.ts
+├── sections.ts
+├── tests
+│   ├── accounts.test.ts
+│   ├── addons.test.ts
+│   ├── collaborators.test.ts
+│   ├── documents.test.ts
+│   ├── embed.test.ts
+│   ├── flatpages.test.ts
+│   ├── notes.test.ts
+│   ├── projects.test.ts
+│   └── sections.test.ts
+└── types.d.ts
 ```
 
-Tests are organized around major parts of the codebase -- `manager`, `pages` and `viewer`. Tests under `anonymous` don't use an authenticated user.
+Component tests use the [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/) and are also colocated near the components they test, usually in a `tests` folder.
 
-Tests rely on specific docouments available in each environment, which will have different URLs, so lists of known documents are provided in `development.json`, `staging.json` and `production.json`. Those correspond to the `NODE_ENV` environment variable.
+## Legacy embed scripts
+
+Earlier interations of DocumentCloud used scripts to inject the viewer, pages and notes into other web pages. This approach has been deprecated in favor of `iframe`-based embeds, but lots of legacy embeds exist across the internet. To support these older embeds, we've rewritten the original scripts to inject an `iframe` where appropriate.
+
+These scripts live in the `src/embeds` directory and are built with `esbuild`. They're not part of the larger SvelteKit project, so they have a separate build process that may change later. (Our main build tool, Vite, also depends on `esbuild`.)
 
 ## Storybooks
 
@@ -104,11 +118,11 @@ To run the Storybook dev server:
 npm run storybook
 ```
 
-To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh/nvm):
+To set and manage your Node version, you can use [NVM](https://github.com/nvm-sh/nvm) or [nodenv](https://github.com/nodenv/nodenv):
 
 ```sh
 node -v
-nvm install 16
+nvm install 20
 # or
 nvm install --lts
 ```

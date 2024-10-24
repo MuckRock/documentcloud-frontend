@@ -1,3 +1,4 @@
+import { beforeEach, expect, test } from "vitest";
 import { modification } from "./modification.js";
 import { ModificationSpec } from "./modifySpec.js";
 

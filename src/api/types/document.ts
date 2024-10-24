@@ -4,6 +4,13 @@ import type { Project } from "./project";
 
 export type DocumentAccess = "public" | "organization" | "private";
 
+export type DocumentStatus =
+  | "success"
+  | "readable"
+  | "pending"
+  | "error"
+  | "nofile";
+
 export interface DocumentRevision {
   version: number;
   user: number;
@@ -19,7 +26,7 @@ export interface Document {
   asset_url: string;
   canonical_url: string;
   created_at: string;
-  data: Record<string, unknown>;
+  data: Record<string, string[]>;
   description: string;
   edit_access: boolean;
   file_hash: string;
@@ -39,7 +46,7 @@ export interface Document {
   revisions?: DocumentRevision[];
   slug: string;
   source: string;
-  status: "success" | "failure" | "queued" | "in_progress";
+  status: DocumentStatus;
   title: string;
   updated_at: string;
   user: User | number;

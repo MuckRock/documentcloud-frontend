@@ -1,14 +1,14 @@
-import path from "node:path";
-import autoPreprocess from "svelte-preprocess";
-import { preprocessOptions } from "../preprocess.config.js";
-
-import type { StorybookConfig } from "@storybook/svelte-webpack5";
+import type { StorybookConfig } from "@storybook/svelte-vite";
 
 const config: StorybookConfig = {
   core: {
     disableTelemetry: true, // 👈 Disables telemetry
   },
-  stories: ["../src/**/*.stories.@(js|jsx|ts|tsx|svelte)"],
+  stories: [
+    "../src/lib/**/*.stories.@(js|jsx|ts|tsx|svelte)",
+    "../src/routes/**/*.stories.@(js|jsx|ts|tsx|svelte)",
+  ],
+  staticDirs: ["../public", "../static"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -17,28 +17,25 @@ const config: StorybookConfig = {
     "storybook-addon-cookie",
   ],
   framework: {
-    name: "@storybook/svelte-webpack5",
-    options: {
-      preprocess: autoPreprocess(preprocessOptions),
-    },
+    name: "@storybook/sveltekit",
+    options: {},
   },
   docs: {
     autodocs: "tag",
   },
-  staticDirs: ["../public"],
-  typescript: {
-    check: false,
-    checkOptions: {},
-  },
-  webpackFinal: async (config) => {
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "@": path.resolve(__dirname, "../src"),
-      };
-    }
 
-    config.devtool = "source-map";
+  viteFinal(config) {
+    config.resolve = {
+      alias: {
+        "@": new URL("../src", import.meta.url).toString(),
+        "@/*": new URL("../src/*", import.meta.url).toString(),
+      },
+    };
+
+    config.build = {
+      ...config.build,
+      target: "esnext",
+    };
 
     return config;
   },

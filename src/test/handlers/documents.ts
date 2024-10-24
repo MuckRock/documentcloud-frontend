@@ -1,7 +1,20 @@
 import { rest } from "msw";
-import { baseApiUrl } from "../../api/base";
+import { BASE_API_URL } from "@/config/config.js";
 
-const documentsUrl = new URL(`/api/documents/*`, baseApiUrl).toString();
+import { documents as docs, pending } from "../fixtures/documents/pending";
+
+const documentsUrl = new URL(`/api/documents/*`, BASE_API_URL).href;
+
+export const documents = {
+  list: rest.get(new URL("documents/", BASE_API_URL).href, (req, res, ctx) =>
+    res(ctx.json(docs)),
+  ),
+  pending: rest.get(
+    new URL("documents/pending/", BASE_API_URL).href,
+    (req, res, ctx) => res(ctx.json(pending)),
+  ),
+};
+
 export const revisionControl = {
   success: rest.patch(documentsUrl, (req, res, ctx) => res()),
   loading: rest.patch(documentsUrl, (req, res, ctx) =>

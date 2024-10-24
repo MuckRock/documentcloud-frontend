@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { baseApiUrl } from "../../api/base.js";
+
 import {
   addonsList,
   run,
@@ -7,6 +7,9 @@ import {
   eventsList,
   scheduled as klaxon,
 } from "../fixtures/addons";
+
+import { progress as scraper } from "../fixtures/addons/progress";
+
 import {
   createApiUrl,
   dataHandler,
@@ -14,7 +17,6 @@ import {
   generateAllHandler,
   generateGetHandler,
 } from "./utils";
-import { emptyList } from "../fixtures/common";
 
 /* Mock Handlers */
 
@@ -28,6 +30,7 @@ export const pin = generateAllHandler(`/api/addons/:id`, {});
 
 const mockListUrl = createApiUrl("/api/addon_runs/");
 const mockUpdateUrl = createApiUrl("/api/addon_runs/:run");
+
 export const progress = [
   rest.get(mockListUrl, (req, res, ctx) => res(ctx.json(runsList))),
   rest.patch(mockUpdateUrl, async (req, res, ctx) => {
@@ -41,4 +44,8 @@ export const progress = [
 export const runs = {
   data: rest.get(createApiUrl("addon_runs/"), dataHandler(runsList)),
   empty: rest.get(createApiUrl("addon_runs/"), emptyHandler()),
+  running: rest.get(
+    createApiUrl("addon_runs/"),
+    dataHandler({ results: scraper }),
+  ),
 };

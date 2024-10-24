@@ -7,4 +7,10 @@ export interface Page<T> {
   next: Nullable<string>;
   previous: Nullable<string>;
   results: T[];
+  escaped?: boolean;
+}
+
+export interface PageParams {
+  cursor?: string;
+  per_page?: number;
 }

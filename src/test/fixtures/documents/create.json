@@ -1,0 +1,32 @@
+[
+  {
+    "id": 20000031,
+    "access": "private",
+    "admin_noindex": false,
+    "asset_url": "https://api.dev.documentcloud.org/files/",
+    "canonical_url": "https://www.dev.documentcloud.org/documents/20000031-finalseasonal-allergies-pollen-and-mold-2023-en",
+    "created_at": "2024-04-15T01:22:45.191803Z",
+    "data": {},
+    "description": "",
+    "edit_access": true,
+    "file_hash": "",
+    "noindex": false,
+    "language": "eng",
+    "organization": 10001,
+    "original_extension": "pdf",
+    "page_count": 0,
+    "page_spec": "",
+    "presigned_url": "https://documentcloud-dev-test.s3.amazonaws.com/documents/20000031/finalseasonal-allergies-pollen-and-mold-2023-en.pdf",
+    "projects": [],
+    "publish_at": null,
+    "published_url": "",
+    "related_article": "",
+    "revision_control": false,
+    "slug": "finalseasonal-allergies-pollen-and-mold-2023-en",
+    "source": "",
+    "status": "nofile",
+    "title": "FINALSeasonal allergies pollen and mold 2023 EN",
+    "updated_at": "2024-04-15T01:22:45.192143Z",
+    "user": 100000
+  }
+]
