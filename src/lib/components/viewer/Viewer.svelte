@@ -45,7 +45,7 @@ Assumes it's a child of a ViewerContext
   $: loading = $progress.total > 0 ? $progress.loaded / $progress.total : null;
 
   onMount(() => {
-    const timeout = setTimeout(() => (showLoading = true), 100);
+    const timeout = setTimeout(() => (showLoading = true), 1000);
     return () => clearTimeout(timeout);
   });
 </script>
