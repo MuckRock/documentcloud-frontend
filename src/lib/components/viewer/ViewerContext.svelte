@@ -11,6 +11,7 @@ layouts, stories, and tests.
     Note,
     ViewerMode,
     Zoom,
+    BBox,
   } from "$lib/api/types";
 
   import { afterNavigate } from "$app/navigation";
@@ -59,7 +60,11 @@ layouts, stories, and tests.
     return getContext("embed") ?? false;
   }
 
-  export function getCurrentNote(): Readable<Note> {
+  export function getNewNote(): Writable<Nullable<Partial<Note> & BBox>> {
+    return getContext("newNote");
+  }
+
+  export function getCurrentNote(): Writable<Nullable<Note>> {
     return getContext("currentNote");
   }
 
@@ -119,6 +124,7 @@ layouts, stories, and tests.
   setContext("asset_url", asset_url);
   setContext("embed", embed);
   setContext("query", query);
+  setContext("newNote", writable(null));
   setContext("currentNote", writable(note));
   setContext("currentPage", writable(page));
   setContext("currentMode", writable(mode));

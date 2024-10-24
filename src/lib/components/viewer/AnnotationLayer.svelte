@@ -10,7 +10,7 @@ Only one note can be added/edited at a time.
 Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import type { BBox, Maybe, Note as NoteType, Nullable } from "$lib/api/types";
+  import type { Maybe, Note as NoteType, Nullable } from "$lib/api/types";
 
   import { invalidate, pushState } from "$app/navigation";
 
@@ -27,6 +27,7 @@ Assumes it's a child of a ViewerContext
     getCurrentMode,
     getCurrentNote,
     getDocument,
+    getNewNote,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
@@ -40,8 +41,12 @@ Assumes it's a child of a ViewerContext
   const embed = isEmbedded();
   const mode = getCurrentMode();
   const currentNote = getCurrentNote();
+  const newNote = getNewNote();
 
-  let newNote: Nullable<Partial<NoteType> & BBox> = null;
+  $: {
+    console.log($newNote);
+  }
+
   let drawStart: Nullable<[x: number, y: number]> = null;
   let drawing = false;
 
@@ -49,7 +54,7 @@ Assumes it's a child of a ViewerContext
   $: notes =
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: writing = $mode === "annotating";
-  $: activeNote = Boolean($currentNote) || (Boolean(newNote) && !drawing);
+  $: activeNote = Boolean($currentNote) || (Boolean($newNote) && !drawing);
   $: edit_page_note =
     writing &&
     Boolean($currentNote) &&
@@ -70,18 +75,20 @@ Assumes it's a child of a ViewerContext
   }
 
   function startDrawingBox(e: PointerEvent) {
-    if ($currentNote || newNote) return;
+    closeNote();
 
     drawing = true;
     $currentNote = null;
+    $newNote = null;
     const [x, y] = getLayerPosition(e);
     drawStart = [x, y];
     // when starting, the note is a 0px shape
-    newNote = {
+    $newNote = {
       x1: x,
       x2: x,
       y1: y,
       y2: y,
+      page_number,
     };
   }
 
@@ -94,24 +101,25 @@ Assumes it's a child of a ViewerContext
     const movingRight = x > startX;
     const movingDown = y > startY;
 
-    const x1 = movingRight ? newNote.x1 : x;
-    const x2 = movingRight ? x : newNote.x2;
-    const y1 = movingDown ? newNote.y1 : y;
-    const y2 = movingDown ? y : newNote.y2;
+    const x1 = movingRight ? $newNote.x1 : x;
+    const x2 = movingRight ? x : $newNote.x2;
+    const y1 = movingDown ? $newNote.y1 : y;
+    const y2 = movingDown ? y : $newNote.y2;
 
-    newNote = {
+    $newNote = {
       x1,
       x2,
       y1,
       y2,
+      page_number,
     };
   }
 
   function finishDrawingBox(e: PointerEvent) {
     if (!newNote || !drawing) return;
 
-    newNote = {
-      ...newNote,
+    $newNote = {
+      ...$newNote,
       // now initialize some note values
       page_number,
       title: "",
@@ -128,12 +136,13 @@ Assumes it's a child of a ViewerContext
     const href =
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
     $currentNote = note;
+    $newNote = null;
     pushState(href, { note });
   }
 
   function closeNote() {
     drawing = false;
-    newNote = null;
+    $newNote = null;
     $currentNote = null;
     const href = getViewerHref({ document, mode: $mode, embed });
     pushState(href, {});
@@ -201,7 +210,7 @@ Assumes it's a child of a ViewerContext
     >
       {note.title}
     </a>
-    {#if note.id === $currentNote?.id}
+    {#if note.id === $currentNote?.id && !Boolean($newNote)}
       {#if writing}
         <div class="note-form" style:top="calc({note.y1} * 100% - 3.25rem)">
           <EditNote
@@ -220,24 +229,24 @@ Assumes it's a child of a ViewerContext
     {/if}
   {/each}
 
-  {#if newNote}
+  {#if $newNote && $newNote.page_number === page_number}
     <div
-      class="box {newNote.access}"
-      style:top="{newNote.y1 * 100}%"
-      style:left="{newNote.x1 * 100}%"
-      style:width="{width(newNote) * 100}%"
-      style:height="{height(newNote) * 100}%"
+      class="box {$newNote.access}"
+      style:top="{$newNote.y1 * 100}%"
+      style:left="{$newNote.x1 * 100}%"
+      style:width="{width($newNote) * 100}%"
+      style:height="{height($newNote) * 100}%"
     ></div>
 
     {#if !drawing}
       <div
         class="note-form"
-        style:top="calc({newNote.y2} * 100% + 1.5rem)"
+        style:top="calc({$newNote.y2} * 100% + 1.5rem)"
         transition:fly={{ duration: 250, y: "-1.1rem" }}
       >
         <EditNote
           {document}
-          bind:note={newNote}
+          bind:note={$newNote}
           on:close={closeNote}
           on:success={(e) => onEditNoteSuccess(e, undefined)}
         />
@@ -278,6 +287,11 @@ Assumes it's a child of a ViewerContext
     pointer-events: all;
   }
 
+  /* .notes.activeNote {
+    cursor: default;
+    pointer-events: all;
+  } */
+
   .notes :global(*) {
     pointer-events: all;
   }
@@ -309,11 +323,10 @@ Assumes it's a child of a ViewerContext
     max-width: 100%;
     z-index: var(--z-note);
     pointer-events: all;
-  }
-
-  .notes.activeNote {
-    cursor: auto;
-    pointer-events: none;
+    box-shadow: var(--shadow-2);
+    border: 1px solid var(--gray-2);
+    border-radius: 1rem;
+    background: var(--white);
   }
 
   .box {
