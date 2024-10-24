@@ -313,7 +313,7 @@ Assumes it's a child of a ViewerContext
     position: absolute;
     pointer-events: all;
 
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 50vh;
   }
 
   .note {
