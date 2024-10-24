@@ -26,13 +26,13 @@ Assumes it's a child of a ViewerContext
 <div class="pages">
   {#each notes as note}
     <div class="note-wrapper">
-      <Note {note} />
-      <h4>
-        <a href={getViewerHref({ document, note, embed })}>
+      <header>
+        <a class="pageNumber" href={getViewerHref({ document, note, embed })}>
           {$_("documents.page")}
           {note.page_number + 1}
         </a>
-      </h4>
+      </header>
+      <div class="card"><Note {note} /></div>
     </div>
   {:else}
     <Empty icon={ListOrdered24}>
@@ -51,24 +51,39 @@ Assumes it's a child of a ViewerContext
     display: flex;
     flex-flow: column;
     align-items: center;
-    gap: 3rem;
+    gap: 2rem;
     margin: 0 auto;
     max-width: 38.0625rem;
+    padding: 2rem 0;
+  }
+
+  .card {
+    border: 1px solid var(--gray-2);
+    box-shadow: var(--shadow-2);
   }
 
   .note-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
   }
 
-  h4,
-  h4 a {
-    text-decoration: none;
+  header {
+    display: flex;
+    padding: 0.5rem;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  a.pageNumber {
+    flex: 0 0 auto;
+    color: var(--gray-4, #5c717c);
+    font-size: var(--font-sm);
     font-weight: var(--font-regular);
-  }
-
-  h4 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 </style>
