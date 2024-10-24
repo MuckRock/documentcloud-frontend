@@ -217,7 +217,7 @@ Assumes it's a child of a ViewerContext
     </a>
   {/each}
 
-  {#if $currentNote && !Boolean($newNote)}
+  {#if $currentNote && !Boolean($newNote) && $currentNote.page_number === page_number}
     <div
       class="note card"
       style={positionNote($currentNote, 1.5)}
