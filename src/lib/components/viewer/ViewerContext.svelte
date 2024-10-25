@@ -165,12 +165,11 @@ layouts, stories, and tests.
     // we might move this to a load function
     if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
+      task.onProgress = (p: DocumentLoadProgress) => {
+        $progress = p;
+      };
       $pdf = task.promise;
     }
-
-    task.onProgress = (p: DocumentLoadProgress) => {
-      $progress = p;
-    };
   });
 
   afterNavigate(() => {
