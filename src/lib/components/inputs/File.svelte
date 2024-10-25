@@ -34,7 +34,7 @@
 </script>
 
 <span class="container" class:disabled>
-  <Button ghost mode={buttonMode} on:click={openFilePicker} {disabled}>
+  <Button mode={buttonMode} on:click={openFilePicker} {disabled}>
     <slot />
   </Button>
   <input

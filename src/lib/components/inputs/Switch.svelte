@@ -35,11 +35,11 @@
     width: 3em;
     height: 1.75em;
     position: relative;
-    background: var(--gray-3);
+    background: var(--gray-2);
     border: none;
     border-radius: 1.5em;
     cursor: pointer;
-    box-shadow: inset 0 1px 4px 0px var(--gray-4);
+    box-shadow: inset 0 1px 4px 0px var(--gray-3);
   }
 
   .switch button::before {
@@ -52,7 +52,7 @@
     right: 1.5em;
     transition: transform 0.3s;
     border-radius: 0.75em;
-    box-shadow: 0 1px 4px 0px var(--gray-4);
+    box-shadow: 0 1px 4px 0px var(--gray-3);
   }
 
   .switch button[aria-checked="true"] {

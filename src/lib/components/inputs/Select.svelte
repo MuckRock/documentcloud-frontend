@@ -55,9 +55,9 @@
   bind:justValue
   showChevron
   --background="var(--white, #fff)"
-  --border="1px solid var(--gray-3, #99a8b3)"
+  --border="1px solid var(--gray-2, #99a8b3)"
   --border-radius="0.5rem"
-  --border-focused="1px solid var(--blue-3, #4294f0)"
+  --border-focused="1px solid var(--blue-2, #4294f0)"
   --padding="0 0 0 0.75rem"
   --item-hover-bg="var(--blue-1, #eef3f9)"
   --item-is-active-bg="var(--blue-3, #4294f0)"
@@ -81,10 +81,13 @@
 
 <style>
   :global(.select.elevated) {
-    box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
+    box-shadow: 0px 2px 0px 0px var(--gray-2, #99a8b3);
+    &:hover {
+      box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
+    }
   }
   :global(.select.elevated.focused) {
-    box-shadow: 0px 2px 0px 0px var(--blue-3, #1367d0);
+    box-shadow: 0px 2px 0px 0px var(--blue-2, #1367d0);
   }
   :global(.select .indicators) {
     fill: var(--gray-5, #233944);
