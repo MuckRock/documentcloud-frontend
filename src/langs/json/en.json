@@ -383,7 +383,7 @@
     "fileLimitWarning": "You can only upload {limit} files at once.",
     "beginUpload": "Begin Upload",
     "selectFiles": "Select files",
-    "dragDrop": "Drag and drop files here",
+    "dragDrop": "Select, drag and drop, or paste files to upload",
     "publicMsg": "Document will be publicly visible.",
     "collabMsg": "Document will be visible to your organization.",
     "privateMsg": "Document will be visible to you alone.",
@@ -409,7 +409,7 @@
     "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
     "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
     "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
-    "empty": "Get started by selecting, pasting or dragging-and-dropping files below"
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files"
   },
   "uploadOptions": {
     "documentLang": "Document language:",
@@ -673,7 +673,7 @@
     },
     "update": {
       "label": "Change access",
-      "message": "Select an access level for {name} in {title}"  
+      "message": "Select an access level for {name} in {title}"
     },
     "invite": {
       "label": "Invite collaborators",
