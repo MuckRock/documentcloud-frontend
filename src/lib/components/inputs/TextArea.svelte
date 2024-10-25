@@ -7,6 +7,7 @@ A text area for writing text
    * and then measuring the amount of overflow.
    */
   export function autoResize(textarea: HTMLTextAreaElement, offset = 2) {
+    if (CSS.supports("field-sizing", "content")) return;
     const resize = () => {
       textarea.style.height = "auto"; // reset the height
       textarea.style.height = `${textarea.scrollHeight + offset}px`;
@@ -21,6 +22,7 @@ A text area for writing text
 
     return {
       destroy: () => {
+        if (CSS.supports("field-sizing", "content")) return;
         textarea.removeEventListener("input", resize);
         window.removeEventListener("resize", resize);
       },
@@ -51,5 +53,6 @@ A text area for writing text
     font-weight: 400;
 
     resize: var(--resize, none);
+    field-sizing: content;
   }
 </style>
