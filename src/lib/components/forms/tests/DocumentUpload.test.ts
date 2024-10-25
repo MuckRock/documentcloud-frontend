@@ -13,7 +13,9 @@ import { PDF_SIZE_LIMIT } from "@/config/config";
 describe("DocumentUpload form", () => {
   it("lists files selected for upload", async () => {
     render(DocumentUploadForm);
-    const dropElement = screen.getByText("Drag and drop files here");
+    const dropElement = screen.getByText(
+      "Select, drag and drop, or paste files to upload",
+    );
     const dropEvent = createEvent.drop(dropElement);
     const fileList = [new File([new ArrayBuffer(128000)], "file.pdf")];
     Object.defineProperty(dropEvent, "dataTransfer", {
@@ -27,7 +29,9 @@ describe("DocumentUpload form", () => {
   });
   it("provides feedback when a file is too large", async () => {
     render(DocumentUploadForm);
-    const dropElement = screen.getByText("Drag and drop files here");
+    const dropElement = screen.getByText(
+      "Select, drag and drop, or paste files to upload",
+    );
     const dropEvent = createEvent.drop(dropElement);
     const fileList = [
       new File([new ArrayBuffer(PDF_SIZE_LIMIT + 1)], "file.pdf"),

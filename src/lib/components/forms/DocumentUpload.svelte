@@ -121,8 +121,8 @@
   import { _ } from "svelte-i18n";
   import {
     Alert16,
-    File16,
-    File24,
+    Paperclip16,
+    Paperclip24,
     Upload16,
     XCircleFill24,
   } from "svelte-octicons";
@@ -193,6 +193,12 @@
     files = files.filter((f, i) => i !== index);
   }
 
+  function onPaste(e: ClipboardEvent) {
+    const { clipboardData } = e;
+    if (!clipboardData) return;
+    addFiles(clipboardData.files);
+  }
+
   // handle uploads client side instead of going through the server
   async function onSubmit(e: SubmitEvent) {
     loading = true;
@@ -227,166 +233,159 @@
   });
 </script>
 
-<form
-  method="post"
-  enctype="multipart/form-data"
-  action="/upload/"
-  on:submit|preventDefault={onSubmit}
->
-  <Flex gap={1} align="stretch" wrap>
-    <div class="files">
-      <!-- Add any header and messaging using this slot -->
-      <slot />
+<svelte:window on:paste={onPaste} />
 
-      <div class="fileList" class:empty={files.length === 0}>
-        {#each files as file, index}
-          <Flex align="center" gap={1} role="listitem">
-            <p class="fileInfo" class:error={!isWithinSizeLimit(file)}>
-              <span class="uppercase"
-                >{getFileExtension(file)} / {filesize(file.size)}</span
-              >
-              {#if !isWithinSizeLimit(file)}
-                <Tooltip
-                  caption="The maximum size for a {getFileExtension(
-                    file,
-                  ).toUpperCase()} is {getFileExtension(file) === 'pdf'
-                    ? '500MB'
-                    : '25MB'}"
+<Dropzone bind:active={fileDropActive} onDrop={addFiles} disabled={loading}>
+  <form
+    method="post"
+    enctype="multipart/form-data"
+    action="/upload/"
+    on:submit|preventDefault={onSubmit}
+  >
+    <Flex gap={1} align="stretch" wrap>
+      <div class="files" class:active={fileDropActive}>
+        <!-- Add any header and messaging using this slot -->
+        <slot />
+
+        <div class="fileList" class:empty={files.length === 0}>
+          {#each files as file, index}
+            <Flex align="center" gap={1} role="listitem">
+              <p class="fileInfo" class:error={!isWithinSizeLimit(file)}>
+                <span class="uppercase"
+                  >{getFileExtension(file)} / {filesize(file.size)}</span
                 >
-                  <Alert16 fill="var(--red-3)" />
-                </Tooltip>
-              {/if}
-            </p>
-            <div class="title">
-              <Text
-                name="title"
-                value={filenameToTitle(file.name)}
-                required
-                disabled={loading}
-              />
-              <input type="hidden" name="filename" value={file.name} />
-            </div>
-            <button
-              class="fileRemove"
-              on:click|preventDefault={() => removeFile(index)}
-            >
-              <XCircleFill24 />
-            </button>
-          </Flex>
-        {:else}
-          <Empty icon={File24}>
-            {$_("uploadDialog.empty")}
-          </Empty>
-        {/each}
-        {#if files.length > 0}
-          <div class="total">
-            <p>
-              {$_("uploadDialog.totalFiles", { values: { n: files.length } })},
-              <span class="uppercase">{filesize(total)}</span>
-            </p>
-          </div>
-        {/if}
-      </div>
-      <div class="fileUpload">
-        <Dropzone
-          bind:active={fileDropActive}
-          onDrop={addFiles}
-          disabled={loading}
-        >
-          <div
-            class="fileDrop"
-            class:active={fileDropActive}
-            class:disabled={loading}
-          >
-            <p class="drop-instructions">{$_("uploadDialog.dragDrop")}</p>
-            <Flex align="center" justify="center">
-              <span class="drop-instructions-or">{$_("common.or")}</span>
-              <FileInput multiple onFileSelect={addFiles} disabled={loading}>
-                <File16 />
-                {$_("uploadDialog.selectFiles")}
-              </FileInput>
+                {#if !isWithinSizeLimit(file)}
+                  <Tooltip
+                    caption="The maximum size for a {getFileExtension(
+                      file,
+                    ).toUpperCase()} is {getFileExtension(file) === 'pdf'
+                      ? '500MB'
+                      : '25MB'}"
+                  >
+                    <Alert16 fill="var(--red-3)" />
+                  </Tooltip>
+                {/if}
+              </p>
+              <div class="title">
+                <Text
+                  name="title"
+                  value={filenameToTitle(file.name)}
+                  required
+                  disabled={loading}
+                />
+                <input type="hidden" name="filename" value={file.name} />
+              </div>
+              <button
+                class="fileRemove"
+                on:click|preventDefault={() => removeFile(index)}
+              >
+                <XCircleFill24 />
+              </button>
             </Flex>
-          </div>
-        </Dropzone>
+          {:else}
+            <Empty icon={Paperclip24}>
+              {$_("uploadDialog.empty")}
+            </Empty>
+          {/each}
+        </div>
+        <div class="fileUpload" class:disabled={loading}>
+          <Flex align="center">
+            <FileInput multiple onFileSelect={addFiles} disabled={loading}>
+              <Paperclip16 />
+              {$_("uploadDialog.selectFiles")}
+            </FileInput>
+            {#if files.length > 0}
+              <div class="total">
+                <p>
+                  {$_("uploadDialog.totalFiles", {
+                    values: { n: files.length },
+                  })},
+                  <span class="uppercase">{filesize(total)}</span>
+                </p>
+              </div>
+            {/if}
+          </Flex>
+          <p class="drop-instructions">{$_("uploadDialog.dragDrop")}</p>
+        </div>
       </div>
-    </div>
-    <div class="sidebar">
-      <Flex gap={1} direction="column">
-        <Field>
-          <FieldLabel>{$_("uploadDialog.accessLevel")}</FieldLabel>
-          <AccessLevel name="access" />
-        </Field>
-        <Field>
-          <FieldLabel>{$_("uploadDialog.projects")}</FieldLabel>
-          <Select
-            name="projects"
-            multiple
-            items={projects}
-            itemId="id"
-            label="title"
-            value={getProjectToUpload()}
-          />
-        </Field>
-        <hr class="divider" />
-        <Field>
-          <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
-          <Language />
-        </Field>
-        <Field>
-          <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
-          <Select
-            name="ocr_engine"
-            items={ocrEngineOptions}
-            bind:value={ocrEngine}
-          />
-          <p slot="help">
-            {@html ocrEngine.help}
-          </p>
-        </Field>
-        <Field inline>
-          <input type="checkbox" name="force_ocr" />
-          <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
-        </Field>
-        <hr class="divider" />
-
-        <Premium>
+      <div class="sidebar">
+        <Flex gap={1} direction="column">
+          <Field>
+            <FieldLabel>{$_("uploadDialog.accessLevel")}</FieldLabel>
+            <AccessLevel name="access" />
+          </Field>
+          <Field>
+            <FieldLabel>{$_("uploadDialog.projects")}</FieldLabel>
+            <Select
+              name="projects"
+              multiple
+              items={projects}
+              itemId="id"
+              label="title"
+              value={getProjectToUpload()}
+            />
+          </Field>
+          <hr class="divider" />
+          <Field>
+            <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
+            <Language />
+          </Field>
+          <Field>
+            <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
+            <Select
+              name="ocr_engine"
+              items={ocrEngineOptions}
+              bind:value={ocrEngine}
+            />
+            <p slot="help">
+              {@html ocrEngine.help}
+            </p>
+          </Field>
           <Field inline>
-            <Switch name="revision_control" />
-            <FieldLabel premium>
-              {$_("uploadDialog.revisionControl")}
-            </FieldLabel>
-            <p slot="help">
-              {$_("uploadDialog.revisionControlHelp")}
-            </p>
+            <input type="checkbox" name="force_ocr" />
+            <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>
           </Field>
-          <Field inline slot="basic">
-            <Switch name="revision_control" disabled />
-            <FieldLabel premium>Revision Control</FieldLabel>
-            <p slot="help">
-              {$_("uploadDialog.revisionControlHelp")}
-            </p>
-          </Field>
-        </Premium>
-      </Flex>
-      <Button
-        type="submit"
-        full
-        mode="primary"
-        disabled={loading || exceedsSizeLimit || !csrf_token}
-      >
-        <Upload16 />{$_("uploadDialog.beginUpload")}
-      </Button>
+          <hr class="divider" />
 
-      <input
-        type="file"
-        name="uploads"
-        multiple
-        bind:this={uploader}
-        accept={DOCUMENT_TYPES.join(",")}
-      />
-    </div>
-  </Flex>
-</form>
+          <Premium>
+            <Field inline>
+              <Switch name="revision_control" />
+              <FieldLabel premium>
+                {$_("uploadDialog.revisionControl")}
+              </FieldLabel>
+              <p slot="help">
+                {$_("uploadDialog.revisionControlHelp")}
+              </p>
+            </Field>
+            <Field inline slot="basic">
+              <Switch name="revision_control" disabled />
+              <FieldLabel premium>Revision Control</FieldLabel>
+              <p slot="help">
+                {$_("uploadDialog.revisionControlHelp")}
+              </p>
+            </Field>
+          </Premium>
+        </Flex>
+        <Button
+          type="submit"
+          full
+          mode="primary"
+          disabled={loading || exceedsSizeLimit || !csrf_token}
+        >
+          <Upload16 />{$_("uploadDialog.beginUpload")}
+        </Button>
+
+        <input
+          type="file"
+          name="uploads"
+          multiple
+          bind:this={uploader}
+          accept={DOCUMENT_TYPES.join(",")}
+        />
+      </div>
+    </Flex>
+  </form>
+</Dropzone>
 
 <style>
   .files {
@@ -396,6 +395,10 @@
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
+
+    border: 1px solid var(--gray-2, #d8dee2);
+    border-radius: 0.5rem;
+    overflow: hidden;
   }
 
   .fileList {
@@ -405,22 +408,12 @@
     gap: 0.75rem;
     align-self: stretch;
     flex: 1 0 0;
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2, #d8dee2);
-    position: relative;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
   }
 
-  .fileList .total {
-    position: absolute;
-    bottom: 0.5rem;
-    left: 0.5rem;
-    background: var(--white);
-    border: 1px solid var(--gray-2);
+  .total {
+    color: var(--gray-4);
     font-size: var(--font-sm);
     font-weight: var(--font-semibold);
-    box-shadow: var(--shadow-1);
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
   }
@@ -433,23 +426,15 @@
   .fileUpload {
     flex: 0 0 0;
     width: 100%;
-  }
-
-  .fileDrop {
     display: flex;
+    flex-wrap: wrap;
     padding: 1rem 1.5rem;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
     align-self: stretch;
 
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2, #d8dee2);
     background: var(--gray-1, #f5f6f7);
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-top: none;
   }
 
   .fileInfo {
@@ -492,24 +477,23 @@
     color: var(--gray-5, #233944);
     text-align: center;
     font-family: "Source Sans Pro";
-    font-size: 1rem;
+    font-size: var(--font-sm);
     font-style: normal;
-    font-weight: 600;
     line-height: 1.25rem; /* 125% */
 
     opacity: 0.75;
   }
 
-  .drop-instructions-or {
-    color: var(--gray-4);
-  }
-
-  .fileDrop.active {
+  .active {
     background: var(--blue-2);
     border-color: var(--blue-3);
   }
 
-  .fileDrop.active .drop-instructions {
+  .active .fileUpload {
+    background: var(--blue-1);
+  }
+
+  .active .drop-instructions {
     color: var(--blue-5);
   }
 
