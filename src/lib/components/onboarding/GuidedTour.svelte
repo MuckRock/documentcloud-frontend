@@ -14,13 +14,10 @@
   import { driver, type Driver, type DriveStep, type Config } from "driver.js";
   import { get } from "svelte/store";
 
-  import { getCurrentUser } from "$lib/utils/permissions";
   import { StorageManager } from "$lib/utils/storage";
   import { scripts } from "./scripts";
 
   const storage = new StorageManager("guided-tour");
-
-  const user = getCurrentUser();
 
   let driverObj: Driver;
 
@@ -63,6 +60,9 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import { getCurrentUser } from "$lib/utils/permissions";
+
+  const user = getCurrentUser();
 
   onMount(() => {
     // do we have a tour?
