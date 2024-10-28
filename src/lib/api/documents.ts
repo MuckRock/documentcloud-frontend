@@ -66,7 +66,9 @@ export async function search(
 ): Promise<APIResponse<DocumentResults, null>> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
-  endpoint.searchParams.set("expand", DEFAULT_EXPAND);
+  const expand = ["user", "organization", "projects"].join(",");
+
+  endpoint.searchParams.set("expand", expand);
   endpoint.searchParams.set("q", query);
 
   for (const [k, v] of Object.entries(options)) {
