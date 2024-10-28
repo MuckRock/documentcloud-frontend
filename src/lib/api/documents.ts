@@ -24,7 +24,6 @@ import type {
 } from "./types";
 
 import { writable, type Writable } from "svelte/store";
-import { DEFAULT_EXPAND } from "@/api/common.js";
 import { getUserName, isOrg } from "./accounts";
 import {
   APP_URL,
