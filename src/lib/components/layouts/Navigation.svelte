@@ -51,16 +51,18 @@
     </slot>
     {#if !BREAKPOINTS.BOTTOM_NAV}
       <SignedIn>
-        <Flex>
-          {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-            <OrgMenu
-              active_org={$org}
-              {orgs}
-              users={inMyOrg($org.id, $me.id, users)}
-            />
-          {/await}
-          <UserMenu user={$me} />
-        </Flex>
+        {#if $me}
+          <Flex>
+            {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
+              <OrgMenu
+                active_org={$org}
+                {orgs}
+                users={inMyOrg($org.id, $me.id, users)}
+              />
+            {/await}
+            <UserMenu user={$me} />
+          </Flex>
+        {/if}
         <Button slot="signedOut" mode="primary" href={sign_in_url.href}>
           {$_("authSection.user.signIn")}
         </Button>
@@ -93,12 +95,14 @@
 {#if BREAKPOINTS.BOTTOM_NAV}
   <nav class="bottom-nav">
     <SignedIn>
-      <Flex>
-        {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-          <OrgMenu position="top-start" active_org={$org} {orgs} {users} />
-        {/await}
-        <UserMenu position="top-start" user={$me} />
-      </Flex>
+      {#if $me}
+        <Flex>
+          {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
+            <OrgMenu position="top-start" active_org={$org} {orgs} {users} />
+          {/await}
+          <UserMenu position="top-start" user={$me} />
+        </Flex>
+      {/if}
       <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
         {$_("authSection.user.signIn")}
       </Button>

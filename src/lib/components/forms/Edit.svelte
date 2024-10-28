@@ -51,12 +51,15 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     </Field>
     <Flex gap={2}>
       <Field title={$_("edit.fields.published_url")}>
-        <Text name="published_url" value={document.published_url.toString()} />
+        <Text
+          name="published_url"
+          value={document.published_url?.toString() ?? ""}
+        />
       </Field>
       <Field title={$_("edit.fields.related_article")}>
         <Text
           name="related_article"
-          value={document.related_article.toString()}
+          value={document.related_article?.toString() ?? ""}
         />
       </Field>
     </Flex>

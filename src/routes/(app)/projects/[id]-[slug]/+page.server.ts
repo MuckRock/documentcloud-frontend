@@ -14,6 +14,10 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const project_id = +params.id;
 
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
     const { error } = await projects.destroy(project_id, csrf_token, fetch);
 
     if (error) {
@@ -29,6 +33,10 @@ export const actions = {
   async edit({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
+
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
 
     const update: Partial<Project> = {
       title: form.get("title") as string,
@@ -58,6 +66,10 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
     const email = form.get("email") as string;
     const access = form.get("access") as ProjectAccess;
 
@@ -84,15 +96,22 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
-    const user = +form.get("user");
-    const access = form.get("access") as ProjectAccess;
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
+    const user = form.get("user");
+    const access = form.get("access");
+    if (!user || !access) {
+      return fail(400, { message: "Missing form data" });
+    }
 
     const project_id = +params.id;
 
     const { data, error } = await collaborators.update(
       project_id,
-      user,
-      access,
+      +user,
+      String(access),
       csrf_token,
       fetch,
     );
@@ -113,12 +132,20 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
-    const user = +form.get("user");
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
+    const user = form.get("user");
     const project_id = +params.id;
+
+    if (!user || !project_id) {
+      return fail(400, { message: "Missing form data" });
+    }
 
     const { error } = await collaborators.remove(
       project_id,
-      user,
+      +user,
       csrf_token,
       fetch,
     );

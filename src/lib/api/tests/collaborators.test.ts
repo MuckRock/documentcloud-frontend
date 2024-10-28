@@ -74,7 +74,7 @@ describe("manage project users", () => {
 
     const { data } = await collaborators.add(
       project.id,
-      { email: me.email, access: "admin" },
+      { email: me.email!, access: "admin" },
       "token",
       mockFetch,
     );
@@ -105,7 +105,7 @@ describe("manage project users", () => {
       const { user, access } = JSON.parse(options.body);
       const updated: ProjectUser = users.results.find(
         (u) => u.user.id === 1020,
-      );
+      )!;
 
       return {
         ok: true,
@@ -119,7 +119,7 @@ describe("manage project users", () => {
       };
     });
 
-    const me = users.results.find((u) => u.user.id === 1020);
+    const me = users.results.find((u) => u.user.id === 1020)!;
 
     const { data: updated } = await collaborators.update(
       project.id,
@@ -154,7 +154,7 @@ describe("manage project users", () => {
       };
     });
 
-    const me = users.results.find((u) => u.user.id === 1020);
+    const me = users.results.find((u) => u.user.id === 1020)!;
     const { data } = await collaborators.remove(
       project.id,
       me.user.id,

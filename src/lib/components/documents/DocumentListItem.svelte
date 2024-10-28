@@ -24,13 +24,13 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     pageImageUrl,
     userOrgString,
   } from "@/lib/api/documents";
-  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { pageSizesFromSpec } from "$lib/utils/pageSize";
 
   export let document: Document;
 
   const embed: boolean = getContext("embed");
 
-  const width = IMAGE_WIDTHS_MAP.get("thumbnail");
+  const width = IMAGE_WIDTHS_MAP.get("thumbnail") ?? 60;
 
   // this can be updated later if we want different icons
   const statusIcons = {
@@ -40,7 +40,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   };
 
   $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : null;
-  $: aspect = sizes ? sizes[0] : 11 / 8.5; // fallback to US letter for now
+  $: aspect = sizes?.[0] ?? 11 / 8.5; // fallback to US letter for now
   $: height = width * aspect;
   $: date = new Date(document.created_at).toDateString();
   $: projects = document.projects?.every((p) => typeof p === "object")
@@ -95,7 +95,9 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     {#if tabs.length > 0}
       <div class="tabs">
         {#each tabs as access}
-          <NoteTab {access} size="small" />
+          {#if access}
+            <NoteTab {access} size="small" />
+          {/if}
         {/each}
       </div>
     {/if}

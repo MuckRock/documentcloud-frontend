@@ -13,7 +13,7 @@
   export let reverse = false;
   export let gap: number = 0.5;
   export let wrap: boolean = false;
-  export let role: AriaRole = null;
+  export let role: null | AriaRole = null;
 
   const alignMap: Record<Align, string> = {
     start: "flex-start",

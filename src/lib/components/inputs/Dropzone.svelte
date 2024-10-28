@@ -31,7 +31,8 @@
 
   function handleDrop(e: DragEvent) {
     if (disabled) return;
-    onDrop(e.dataTransfer.files);
+    const files = e.dataTransfer?.files;
+    if (files) onDrop(files);
     active = false;
   }
 </script>

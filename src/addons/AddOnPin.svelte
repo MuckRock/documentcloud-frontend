@@ -19,6 +19,10 @@
     event.preventDefault();
 
     const csrftoken = getCsrfToken();
+    if (!csrftoken) {
+      console.error("No CSRF token found");
+      return;
+    }
     const options: RequestInit = {
       credentials: "include",
       method: "PATCH", // this component can only update whether an addon is active or not

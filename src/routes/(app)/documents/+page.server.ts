@@ -5,7 +5,6 @@ import { fail } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { destroy_many, edit_many, add_tags } from "$lib/api/documents";
-import { isErrorCode } from "$lib/utils/api";
 
 export function load({ cookies }) {
   const csrf_token = cookies.get(CSRF_COOKIE_NAME);
@@ -16,6 +15,10 @@ export function load({ cookies }) {
 export const actions = {
   async data({ cookies, fetch, request }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
     const form = await request.formData();
     const keys = form.getAll("key") as string[];
     const values = form.getAll("value") as string[];
@@ -58,6 +61,9 @@ export const actions = {
 
   async delete({ cookies, fetch, request }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
 
     const ids = String(form.get("documents")).split(",");
@@ -76,6 +82,9 @@ export const actions = {
 
   async edit({ cookies, fetch, request }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
 
     const ids = String(form.get("documents")).split(",");

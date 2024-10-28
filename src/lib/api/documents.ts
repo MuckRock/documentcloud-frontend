@@ -251,7 +251,7 @@ export async function process(
   }[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<"OK", unknown>> {
+): Promise<APIResponse<null, unknown>> {
   const endpoint = new URL("documents/process/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -560,9 +560,9 @@ export function pageFromHash(hash: string): Nullable<number> {
   const re = /^#document\/p(\d+)/; // match pages and notes
   const match = re.exec(hash);
 
-  if (!match) return null;
+  if (!match || !match[1]) return null;
 
-  return +match[1] || null;
+  return +match[1];
 }
 
 /**

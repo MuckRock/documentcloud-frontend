@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { writable, type Writable } from "svelte/store";
-  import type { Document, DocumentResults } from "$lib/api/types";
+  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
 
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
@@ -23,7 +23,7 @@
   import PageHighlights from "./PageHighlights.svelte";
 
   export let results: Document[] = [];
-  export let count: number = undefined;
+  export let count: Maybe<number> = undefined;
   export let next: string | null = null;
   export let auto = false;
   export let preload: "hover" | "tap" = "hover";
@@ -54,7 +54,7 @@
     const r: DocumentResults = await res.json();
 
     results = [...results, ...r.results];
-    $total = r.count;
+    $total = r.count ?? $total;
     next = r.next;
     loading = false;
     if (auto) watch(end);
@@ -80,7 +80,7 @@
 
   onMount(() => {
     // set initial total, update later
-    $total = count;
+    $total = count ?? 0;
     if (auto) {
       observer = watch(end);
     }
@@ -125,7 +125,9 @@
         ghost
         mode="primary"
         disabled={loading}
-        on:click={(e) => load(new URL(next))}
+        on:click={(e) => {
+          if (next) load(new URL(next));
+        }}
       >
         {#if loading}
           Loading &hellip;

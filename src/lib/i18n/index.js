@@ -5,7 +5,9 @@ import { LANGUAGES } from "@/config/config.js";
 const defaultLocale = "en";
 
 LANGUAGES.forEach(([name, code, flag]) => {
-  register(code, () => import(`@/langs/json/${code}.json`));
+  if (code) {
+    register(code, () => import(`@/langs/json/${code}.json`));
+  }
 });
 
 init({

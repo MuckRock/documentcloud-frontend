@@ -54,8 +54,8 @@ Assumes it's a child of a ViewerContext
   $: edit_page_note =
     writing &&
     Boolean($currentNote) &&
-    isPageLevel($currentNote) &&
-    page_number === $currentNote.page_number;
+    isPageLevel($currentNote ?? {}) &&
+    page_number === $currentNote?.page_number;
 
   function getNoteId(note: NoteType) {
     return noteHashUrl(note).split("#")[1];
@@ -89,7 +89,7 @@ Assumes it's a child of a ViewerContext
   }
 
   function continueDrawingBox(e: PointerEvent) {
-    if (!drawing || !newNote) return;
+    if (!drawing || !newNote || !drawStart || !$newNote) return;
 
     const [x, y] = getLayerPosition(e);
     const [startX, startY] = drawStart;
@@ -112,7 +112,7 @@ Assumes it's a child of a ViewerContext
   }
 
   function finishDrawingBox(e: PointerEvent) {
-    if (!newNote || !drawing) return;
+    if (!newNote || !drawing || !$newNote) return;
 
     $newNote = {
       ...$newNote,
@@ -160,19 +160,19 @@ Assumes it's a child of a ViewerContext
   }
 
   function onEditNoteSuccess(
-    e: CustomEvent<Maybe<NoteType>>,
-    oldNote: Maybe<NoteType>,
+    e: CustomEvent<Maybe<Nullable<NoteType>>>,
+    oldNote: Maybe<Nullable<NoteType>>,
   ) {
     const editedNote = e.detail;
     // Make an optimistic update to the `$documentStore`,
     // which should be overwritten by invalidation.
     // Start by removing the old note from the notes array.
-    const newDocNotes = document.notes.filter(
+    const newDocNotes = document.notes?.filter(
       (note) => note.id !== oldNote?.id,
     );
     // When a note is added or edited, add or replace it in the array.
     // When it's deleted, `editedNote` will be undefined so we'll skip this.
-    if (editedNote) newDocNotes.push(editedNote);
+    if (editedNote) newDocNotes?.push(editedNote);
     // Update the $documentStore with new value for `document.notes`.
     documentStore.update((document) => ({ ...document, notes: newDocNotes }));
     // Finally, invalidate the document. After it's refetched, the
@@ -273,7 +273,7 @@ Assumes it's a child of a ViewerContext
 
       <EditNote
         {document}
-        note={$currentNote}
+        note={$currentNote ?? {}}
         {page_number}
         on:close={closeNote}
         on:success={(e) => onEditNoteSuccess(e, $currentNote)}

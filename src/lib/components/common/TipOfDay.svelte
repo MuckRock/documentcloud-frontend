@@ -6,9 +6,9 @@
 
   const storage = new StorageManager("tip-of-day");
 
-  export function showTip(message: string) {
+  export function showTip(message: string): boolean {
     return message === storage.get("message")
-      ? storage.get<boolean, boolean>("show", true)
+      ? (storage.get<boolean, boolean>("show", true) ?? true)
       : true;
   }
 

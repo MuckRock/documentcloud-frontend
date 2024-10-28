@@ -41,7 +41,7 @@
   ];
 
   export let name: string;
-  export let selected: Access = levels[0].value;
+  export let selected: Access = levels[0]!.value;
   export let direction: "column" | "row" = "column";
 </script>
 

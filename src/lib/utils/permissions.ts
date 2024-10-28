@@ -1,7 +1,7 @@
 /** Checks whether users have permission to view, update, or delete resources. */
 
 import type { Writable } from "svelte/store";
-import type { User } from "@/api/types";
+import type { Nullable, User } from "$lib/api/types";
 
 import { getContext } from "svelte";
 
@@ -20,7 +20,7 @@ export function isSignedIn(user?: User | null): user is User {
 }
 
 /* Checks if the user can upload file. Must be verified journalist or staff. */
-export function canUploadFiles(user?: User): boolean {
+export function canUploadFiles(user?: Nullable<User>): boolean {
   if (!user) return false;
-  return user.verified_journalist || user.is_staff;
+  return Boolean(user.verified_journalist || user.is_staff);
 }

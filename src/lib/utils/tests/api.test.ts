@@ -115,15 +115,15 @@ describe("getApiResponse", () => {
     resp = new Response(JSON.stringify(errors), { status: 400 });
     const response = await getApiResponse(resp);
     expect(response.data).toBeUndefined();
-    expect(response.error.status).toEqual(400);
-    expect(response.error.errors).toEqual(errors);
+    expect(response.error?.status).toEqual(400);
+    expect(response.error?.errors).toEqual(errors);
   });
 
   it("returns a 500 error for an empty response", async () => {
     // no response is a 500
     const response = await getApiResponse();
     expect(response.data).toBeUndefined();
-    expect(response.error.status).toEqual(500);
+    expect(response.error?.status).toEqual(500);
   });
 });
 

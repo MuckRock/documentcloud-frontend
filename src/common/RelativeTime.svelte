@@ -3,7 +3,7 @@
 
   export let date: Date;
 
-  const relativeFormatter = new Intl.RelativeTimeFormat($locale, {
+  const relativeFormatter = new Intl.RelativeTimeFormat($locale ?? "en", {
     style: "long",
   });
 
@@ -24,23 +24,30 @@
 
   function formatTimeAgo(date: Date): string {
     let duration = (date.getTime() - new Date().getTime()) / 1000;
+    let formatted: string = "";
 
     for (let i = 0; i < DIVISIONS.length; i++) {
-      const division = DIVISIONS[i];
+      const division = DIVISIONS[i]!;
       if (Math.abs(duration) < division.amount) {
-        return relativeFormatter.format(Math.round(duration), division.name);
+        formatted = relativeFormatter.format(
+          Math.round(duration),
+          division.name,
+        );
+        break;
       }
       duration /= division.amount;
     }
+
+    return formatted;
   }
 </script>
+
+<time datetime={date.toISOString()} title={date.toISOString()}>
+  {formatTimeAgo(date)}
+</time>
 
 <style>
   time {
     cursor: default;
   }
 </style>
-
-<time datetime={date.toISOString()} title={date.toISOString()}>
-  {formatTimeAgo(date)}
-</time>

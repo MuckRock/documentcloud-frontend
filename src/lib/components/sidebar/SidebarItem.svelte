@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
+
   export let active = false;
   export let disabled = false;
   export let small = false;
@@ -6,10 +8,10 @@
   export let title = "";
   export let inline = false;
   // handling link behavior
-  export let href: string = undefined;
-  export let target: string = undefined;
-  export let rel: string = undefined;
-  export let download: boolean | string = undefined;
+  export let href: Maybe<string> = undefined;
+  export let target: Maybe<string> = undefined;
+  export let rel: Maybe<string> = undefined;
+  export let download: Maybe<boolean | string> = undefined;
 </script>
 
 {#if href}

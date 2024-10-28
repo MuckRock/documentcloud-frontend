@@ -15,6 +15,10 @@ export async function load({ fetch }) {
     getMe(fetch),
   ]);
 
+  if (!page) {
+    return error(404, "Page not found");
+  }
+
   if (err) {
     return error(err.status, { message: err.message });
   }

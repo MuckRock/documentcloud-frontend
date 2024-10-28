@@ -12,6 +12,7 @@ import { projectList } from "../fixtures/projects";
 import projectFixture from "../fixtures/projects/project.json";
 import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
 import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
+import type { Page } from "@/lib/api/types";
 
 const projectUrl = createApiUrl("projects/*");
 export const projects = {
@@ -22,6 +23,9 @@ export const projects = {
   error: rest.get(projectUrl, errorHandler),
   documents: rest.get(
     createApiUrl("projects/*/documents/"),
-    pageHandler(projDocsPage1, projDocsPage2),
+    pageHandler<Page<{ document: Partial<Document> }>>(
+      projDocsPage1,
+      projDocsPage2,
+    ),
   ),
 };

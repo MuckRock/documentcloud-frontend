@@ -8,7 +8,6 @@
   import Button from "../common/Button.svelte";
   import Field from "../common/Field.svelte";
   import FieldLabel from "../common/FieldLabel.svelte";
-  import Flex from "../common/Flex.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
   import { toast } from "../layouts/Toaster.svelte";

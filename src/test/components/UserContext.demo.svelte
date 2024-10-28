@@ -10,4 +10,4 @@
   const user = getCurrentUser();
 </script>
 
-<p>{$user.name}</p>
+<p>{$user?.name}</p>

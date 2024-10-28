@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { LayoutData } from "./$types";
-  import type { Org, User } from "@/api/types/orgAndUser";
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
   import AppLayout from "$lib/components/layouts/AppLayout.svelte";
+  import type { Maybe, Org, User } from "$lib/api/types";
 
   export let data: LayoutData;
 
-  const me: Writable<User> = writable(data.me);
+  const me: Writable<Maybe<User>> = writable(data.me);
   const org: Writable<Org> = writable(data.org);
   const user_orgs: Writable<Promise<Org[]>> = writable(data.user_orgs);
   const org_users: Writable<Promise<User[]>> = writable(data.org_users);

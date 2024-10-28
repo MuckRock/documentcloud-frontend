@@ -1,7 +1,7 @@
 <script lang="ts">
   export let name: string;
   export let defaultValue: string = "";
-  export let value: string = defaultValue || null;
+  export let value: null | string = defaultValue || null;
   export let required: boolean = false;
   export let choices: string[] = [];
 </script>

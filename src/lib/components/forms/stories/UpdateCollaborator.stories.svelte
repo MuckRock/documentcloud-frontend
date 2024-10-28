@@ -9,7 +9,7 @@
   };
 
   import { project, projectUsers } from "@/test/fixtures/projects";
-  const user = projectUsers.results[0];
+  const user = projectUsers.results[0]!;
 </script>
 
 <Story name="default">

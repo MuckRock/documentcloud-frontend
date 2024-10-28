@@ -4,6 +4,8 @@ import type {
   Document,
   Note,
   NoteResults,
+  Nullable,
+  Page,
   ValidationError,
 } from "./types";
 
@@ -22,18 +24,19 @@ import { getApiResponse, isErrorCode } from "../utils";
  * @example https://api.www.documentcloud.org/api/documents/2622/notes/
  * @deprecated
  */
-export async function list(doc_id: number, fetch = globalThis.fetch) {
+export async function list(
+  doc_id: number,
+  fetch = globalThis.fetch,
+): Promise<APIResponse<Page<Note>>> {
   const endpoint = new URL(`documents/${doc_id}/notes/`, BASE_API_URL);
 
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
 
-  const resp = await fetch(endpoint, { credentials: "include" });
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
 
-  if (isErrorCode(resp.status)) {
-    throw new Error(resp.statusText);
-  }
-
-  return resp.json();
+  return getApiResponse<Page<Note>>(resp);
 }
 
 /**
@@ -176,13 +179,12 @@ export function noteHashUrl(note: Note): string {
  * To get the page number, use pageFromHash
  * @param hash
  */
-export function noteFromHash(hash: string): number {
+export function noteFromHash(hash: string): Nullable<number> {
   const re = /^#document\/p(\d+)\/a(\d+)$/;
   const match = re.exec(hash);
 
-  if (!match) return null;
-
-  return +match[2] || null;
+  if (!match || !match[2]) return null;
+  return +match[2];
 }
 
 /** Width of a note, relative to the document */

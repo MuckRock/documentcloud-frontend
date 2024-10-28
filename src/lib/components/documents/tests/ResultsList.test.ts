@@ -6,7 +6,7 @@ import { render, screen, fireEvent } from "@testing-library/svelte";
 import ResultsList, { selected } from "../ResultsList.svelte";
 import searchResults from "@/test/fixtures/documents/search-highlight.json";
 
-const results = searchResults as DocumentResults;
+const results = searchResults as unknown as DocumentResults;
 
 const empty: DocumentResults = {
   results: [],

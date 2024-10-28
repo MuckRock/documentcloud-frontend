@@ -28,7 +28,7 @@
     if (!key || !value) return;
 
     if (key in document.data) {
-      document.data[key] = [...document.data[key], value];
+      document.data[key] = [...(document.data[key] ?? []), value];
     } else {
       document.data[key] = [value];
     }
@@ -39,7 +39,7 @@
   function remove({ key, value }) {
     if (!(key in document.data)) return;
 
-    document.data[key] = document.data[key].filter((v) => v !== value);
+    document.data[key] = (document.data[key] ?? []).filter((v) => v !== value);
   }
 
   function onSubmit() {

@@ -1,11 +1,16 @@
 <script context="module" lang="ts">
-  export function formatResetDate(dateStr: string, locale: string): string {
+  import type { Maybe, Nullable } from "@/lib/api/types";
+
+  export function formatResetDate(
+    dateStr: string,
+    locale: Maybe<Nullable<string>>,
+  ): string {
     const date = new Date(dateStr);
     const options: Intl.DateTimeFormatOptions = {
       day: "numeric",
       month: "numeric",
     };
-    const intl = new Intl.DateTimeFormat(locale, options);
+    const intl = new Intl.DateTimeFormat(locale ?? "en", options);
     return intl.format(date);
   }
 </script>

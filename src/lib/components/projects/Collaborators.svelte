@@ -1,5 +1,6 @@
 <script lang="ts">
   import type {
+    Nullable,
     Project,
     ProjectAccess,
     ProjectUser,
@@ -43,8 +44,8 @@
     remove: $_("collaborators.remove.label"),
   };
 
-  let show: "invite" | "update" | "remove" = null;
-  let user_to_update: ProjectUser = null;
+  let show: Nullable<"invite" | "update" | "remove"> = null;
+  let user_to_update: Nullable<ProjectUser> = null;
 
   // Do I belong to this project?
   $: isProjectUser = users.some((u) => u.user.id === $me?.id);
@@ -147,11 +148,11 @@
         <InviteCollaborator {project} on:close={hide} />
       {/if}
 
-      {#if show === "update"}
+      {#if show === "update" && user_to_update}
         <UpdateCollaborator {project} user={user_to_update} on:close={hide} />
       {/if}
 
-      {#if show === "remove"}
+      {#if show === "remove" && user_to_update}
         <RemoveCollaborator {project} user={user_to_update} on:close={hide} />
       {/if}
     </Modal>

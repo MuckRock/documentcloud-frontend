@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SvgComponent } from "svelte-octicons";
 
-  export let icon: typeof SvgComponent = null;
+  export let icon: null | typeof SvgComponent = null;
 </script>
 
 <div class="container">

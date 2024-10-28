@@ -50,7 +50,7 @@ export function getViewerHref(options: ViewerHrefOptions = {}) {
 export function fitPage(
   width: number,
   height: number,
-  container: HTMLElement,
+  container: HTMLElement | undefined,
   scale: number | "width" | "height",
 ): number {
   if (typeof scale === "number") return scale;
@@ -75,12 +75,12 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
   const parts = pageSpec.split(";");
   return parts.reduce((sizes, part) => {
     const [size, range] = part?.split(":");
-    const [width, height] = size?.split("x").map(parseFloat);
+    const [width, height] = size?.split("x").map(parseFloat) ?? [];
 
     range?.split(",").forEach((rangePart) => {
       if (rangePart.includes("-")) {
         const [start, end] = rangePart.split("-").map((x) => parseInt(x, 10));
-        for (let page = start; page <= end; page++) {
+        for (let page = start ?? 0; page <= (end ?? 0); page++) {
           sizes[page] = [width, height];
         }
       } else {
@@ -99,10 +99,7 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
 export function getNotes(document: Document): Record<number, Note[]> {
   return (
     document.notes?.reduce<Record<number, Note[]>>((m, note) => {
-      if (!m[note.page_number]) {
-        m[note.page_number] = [];
-      }
-      m[note.page_number].push(note);
+      m[note.page_number] = (m[note.page_number] ?? []).concat(note);
       return m;
     }, {}) ?? {}
   );

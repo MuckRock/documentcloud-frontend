@@ -8,7 +8,7 @@ describe("Breadcrumbs", () => {
     const result = render(Breadcrumbs);
     const links = result.getAllByRole("link");
     expect(links[0]).toHaveAttribute("href", "/");
-    expect(links[0].getElementsByTagName("svg")[0]).toEqual(
+    expect(links[0]!.getElementsByTagName("svg")[0]).toEqual(
       render(Logo).container.getElementsByTagName("svg")[0],
     );
   });
@@ -21,8 +21,8 @@ describe("Breadcrumbs", () => {
     const links = result.getAllByRole("link");
     links.forEach((link, index) => {
       if (index > 0) {
-        expect(link).toHaveAttribute("href", trail[index - 1].href);
-        expect(link).toHaveAttribute("title", trail[index - 1].title);
+        expect(link).toHaveAttribute("href", trail[index - 1]!.href);
+        expect(link).toHaveAttribute("title", trail[index - 1]!.title);
       }
     });
   });

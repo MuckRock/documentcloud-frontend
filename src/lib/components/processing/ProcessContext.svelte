@@ -51,7 +51,7 @@ This makes the state of those processes available via context.
 
     // addons
     const { data, error } = await history({ dismissed: false, per_page: 100 });
-    if (!error) {
+    if (!error && data) {
       addons.set(data.results);
     }
   }

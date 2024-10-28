@@ -1,7 +1,7 @@
 <script lang="ts">
   export let key: string = "";
   export let value: string;
-  export let href: string = null;
+  export let href: null | string = null;
   export let inline: boolean = false;
   export let tag: boolean = false;
 </script>

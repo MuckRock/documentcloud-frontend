@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import DomPurify from "dompurify";
   import { onMount } from "svelte";
 

@@ -48,7 +48,7 @@
     document: {
       ...document,
       edit_access: true,
-      notes: document.notes.map((note) => ({ ...note, edit_access: true })),
+      notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
     },
   }}
 />
@@ -73,7 +73,7 @@
     document: {
       ...document,
       edit_access: true,
-      notes: document.notes.map((note) => ({ ...note, edit_access: true })),
+      notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
     },
   }}
 />

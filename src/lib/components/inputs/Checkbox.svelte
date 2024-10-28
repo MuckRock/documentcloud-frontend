@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Check16, Dash16 } from "svelte-octicons";
 
-  export let name: string = undefined;
+  export let name: undefined | string = undefined;
   export let disabled = false;
   export let value = false;
   export let indeterminate = false;

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { pageSizesFromSpec, pageSizes } from "./pageSize.js";
+import { pageSizesFromSpec, pageSizes } from "../pageSize";
 
 describe("pageSizesFromSpec", () => {
   test("page sizes empty", () => {

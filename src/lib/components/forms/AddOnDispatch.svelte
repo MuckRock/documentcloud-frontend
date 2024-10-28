@@ -6,7 +6,7 @@
 
 <script lang="ts">
   import type { Event, EventOptions, Run } from "@/addons/types";
-  import type { Maybe, Nullable } from "@/lib/api/types";
+  import type { Maybe, Nullable } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { afterNavigate } from "$app/navigation";
@@ -40,7 +40,7 @@
   const me = getCurrentUser();
 
   let form: HTMLFormElement;
-  let created: Maybe<Event | Run> = null;
+  let created: Nullable<Event | Run> = null;
   let running = false;
 
   $: validator = ajv.compile({ type: "object", properties, required });

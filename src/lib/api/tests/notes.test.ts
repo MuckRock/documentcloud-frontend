@@ -184,6 +184,7 @@ describe("note helper methods", () => {
   });
 
   test("isPageLevel", ({ note }) => {
+    // @ts-ignore
     const copy: Note = { ...note, x1: null, x2: null, y1: null, y2: null };
 
     expect(notes.isPageLevel(copy)).toBeTruthy();

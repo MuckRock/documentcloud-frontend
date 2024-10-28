@@ -5,7 +5,7 @@
   import Annotation from "./Annotation.svelte";
   import Note from "./Note.svelte";
 
-  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import { APP_URL, IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { informSize } from "@/embed/iframeSizer.js";
   import {
@@ -16,13 +16,14 @@
     userOrgString,
   } from "@/lib/api/documents";
   import { embedUrl } from "$lib/api/embed";
+  import type { Maybe, Note as NoteType, Nullable } from "@/lib/api/types";
 
   export let data;
 
   const dispatch = createEventDispatcher();
 
-  let elem;
-  let active = null;
+  let elem: HTMLElement;
+  let active: Nullable<NoteType> = null;
 
   $: doc = data.document;
   $: slugId = `${doc.id}-${doc.slug}`;
@@ -30,9 +31,9 @@
   $: page = +data.page;
   $: title = `${doc.title} (${$_("documents.pageAbbrev")} ${data.page})`;
   $: url = canonicalPageUrl(doc, page).toString();
-  $: sizes = pageSizesFromSpec(doc.page_spec);
-  $: aspect = sizes[page - 1];
-  $: width = IMAGE_WIDTHS_MAP.get("large");
+  $: sizes = doc.page_spec ? pageSizesFromSpec(doc.page_spec) : [];
+  $: aspect = sizes[page - 1] ?? 11 / 8.5;
+  $: width = IMAGE_WIDTHS_MAP.get("large") ?? 1000;
   $: height = width * aspect;
   $: shimPlacements =
     active === null
@@ -48,6 +49,10 @@
     if (e.key === "Escape") {
       dispatch("close");
     }
+  }
+
+  function getShim(s: Maybe<number>): number {
+    return s ?? 0;
   }
 </script>
 
@@ -113,14 +118,18 @@
 
     <!-- Place shims while note is active -->
     {#each shimPlacements as s}
-      <div
-        class="dc-embed-shim"
-        style="left:{s[0] * 100}%;top:{s[1] * 100}%;right:{(1 - s[2]) *
-          100}%;bottom:{(1 - s[3]) * 100}%"
-        tabindex="-1"
-        role="dialog"
-        aria-modal="true"
-      />
+      {#if s.length > 0}
+        <div
+          class="dc-embed-shim"
+          style="left:{getShim(s[0]) * 100}%;top:{getShim(s[1]) *
+            100}%;right:{(1 - getShim(s[2])) * 100}%;bottom:{(1 -
+            getShim(s[3])) *
+            100}%"
+          tabindex="-1"
+          role="dialog"
+          aria-modal="true"
+        />
+      {/if}
     {/each}
 
     <!-- Show annotation if note is active -->

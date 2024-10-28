@@ -53,10 +53,10 @@ describe("Share", () => {
     // Note tab
     await user.click(screen.getByText("Note"));
     expect(inputs[0]).toHaveValue(
-      noteUrl(document, document.notes[0]).toString(),
+      noteUrl(document, document.notes?.[0]!).toString(),
     );
     expect(inputs[1]).toHaveValue(
-      `<iframe src="${canonicalNoteUrl(document, document.notes[0])}?embed=1" />`,
+      `<iframe src="${canonicalNoteUrl(document, document.notes?.[0]!)}?embed=1" />`,
     );
   });
   it("allows the document embed to be customized, updating the embed URL accordingly", async () => {
@@ -71,13 +71,13 @@ describe("Share", () => {
     expect(screen.getByText("Width")).toBeInTheDocument();
     const radioSelections = screen.getAllByLabelText("Fixed");
     // Width
-    await user.click(radioSelections[0]);
+    await user.click(radioSelections[0]!);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
     expect(inputs[1]).toHaveValue(
       `<iframe src="${embedUrl(document)}&width=500" width="500" />`,
     );
     // Height
-    await user.click(radioSelections[1]);
+    await user.click(radioSelections[1]!);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
     expect(inputs[1]).toHaveValue(
       `<iframe src="${embedUrl(document)}&width=500&height=500" width="500" height="500" />`,

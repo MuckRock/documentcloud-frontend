@@ -30,7 +30,7 @@
 </script>
 
 <div class="textPages" style:--zoom={+$zoom || 1}>
-  {#each text?.pages as { page, contents }}
+  {#each text?.pages ?? [] as { page, contents }}
     <Page page_number={page + 1} track>
       <pre>
         {@html highlight(contents, query)}

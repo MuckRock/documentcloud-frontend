@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { DocumentResults } from "$lib/api/types";
-
   import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";

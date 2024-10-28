@@ -8,12 +8,12 @@
   import * as notes from "@/lib/api/notes";
   import { embedUrl } from "$lib/api/embed";
   import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
-  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 
   export let data;
 
-  const docWidth = IMAGE_WIDTHS_MAP.get("normal");
+  const docWidth = IMAGE_WIDTHS_MAP.get("normal") ?? 700;
 
   let elem: HTMLElement;
 
@@ -21,8 +21,8 @@
   $: note = data.note;
   $: alt = `Page ${note.page_number + 1} of ${doc.title}`;
   $: src = pageImageUrl(doc, note.page_number + 1, "normal").toString();
-  $: sizes = pageSizesFromSpec(doc.page_spec);
-  $: aspect = sizes[note.page_number];
+  $: sizes = doc.page_spec ? pageSizesFromSpec(doc.page_spec) : [];
+  $: aspect = sizes[note.page_number] ?? 11 / 8.5;
   $: url = canonicalNoteUrl(doc, note).toString();
   $: title = `${note.title} (${$_("documents.pageAbbrev")} ${
     note.page_number + 1
@@ -104,7 +104,7 @@
   </div>
 
   <div class="DC-note-body">
-    {@html clean(note.content)}
+    {@html clean(note.content ?? "")}
   </div>
 
   <div class="DC-note-credit">

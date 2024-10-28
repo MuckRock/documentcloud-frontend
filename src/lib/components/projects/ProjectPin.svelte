@@ -29,6 +29,10 @@
   async function toggle(e) {
     e.preventDefault();
     const csrf_token = getCsrfToken();
+    if (!csrf_token) {
+      console.error("No CSRF token found");
+      return;
+    }
     const newPinnedState = !project.pinned;
 
     const { data, error } = await pinProject(
@@ -37,9 +41,9 @@
       csrf_token,
     );
 
-    if (error) {
+    if (error || !data) {
       project.pinned = !project.pinned;
-      console.error(error);
+      console.error(error ?? "Missing data");
     } else {
       project = data;
       await invalidate(canonicalUrl(project));

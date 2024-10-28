@@ -23,7 +23,7 @@
   export let type: "submit" | "reset" | "button" = "submit";
   export let label = "Submit";
 
-  export let disabledReason = null;
+  export let disabledReason = "";
 </script>
 
 <Tooltip caption={disabledReason}>

@@ -10,7 +10,7 @@
 
   export let access: Access | "" = "";
   export let size: "small" | "normal" = "normal";
-  export let title: string = undefined;
+  export let title: string | undefined = undefined;
 </script>
 
 <Tooltip caption={title} placement="right">

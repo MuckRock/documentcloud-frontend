@@ -75,7 +75,7 @@ describe("sections: writing", () => {
   });
 
   test("sections.update", async ({ document, sectionList }) => {
-    const section = sectionList.results[0];
+    const section = sectionList.results[0]!;
 
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       const updated = { ...section, ...JSON.parse(options.body) };
@@ -118,7 +118,7 @@ describe("sections: writing", () => {
   });
 
   test("sections.remove", async ({ document, sectionList }) => {
-    const section = sectionList.results[0];
+    const section = sectionList.results[0]!;
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       return {
         ok: true,

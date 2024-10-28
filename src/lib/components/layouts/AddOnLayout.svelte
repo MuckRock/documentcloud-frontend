@@ -122,11 +122,15 @@
           {#await history}
             <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
           {:then history}
-            <History
-              runs={history.results}
-              next={history.next}
-              previous={history.previous}
-            />
+            {#if history}
+              <History
+                runs={history.results}
+                next={history.next}
+                previous={history.previous}
+              />
+            {:else}
+              <Empty>{$_("addonDispatchDialog.noHistory")}</Empty>
+            {/if}
           {/await}
         </div>
       {:else}

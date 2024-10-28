@@ -3,16 +3,21 @@
 import { error, redirect } from "@sveltejs/kit";
 import { search } from "$lib/api/documents";
 import { get, embedUrl } from "$lib/api/projects";
+import type { Maybe } from "$lib/api/types";
 
 const OLD_PATTERN = /(\D+)-(\d+)/;
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch, url }) {
   // handle old URLs
-  let { project_id, slug } = params;
+  let { project_id, slug }: Record<string, Maybe<string>> = params;
   if (`${project_id}-${slug}`.match(OLD_PATTERN)) {
     const groups = OLD_PATTERN.exec(`${project_id}-${slug}`);
-    project_id = groups[2];
+    project_id = groups?.[2];
+  }
+
+  if (!project_id) {
+    return error(404, "Project not found");
   }
 
   const project = await get(+project_id, fetch);

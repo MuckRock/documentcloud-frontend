@@ -17,15 +17,15 @@
   export let type: "submit" | "reset" | "button" = "button";
   export let label = "Submit";
   // anchor-specific properties
-  export let href: string = undefined;
-  export let target: string = undefined;
-  export let download: boolean | string = undefined;
-  export let rel: string =
+  export let href: undefined | string = undefined;
+  export let target: undefined | string = undefined;
+  export let download: undefined | boolean | string = undefined;
+  export let rel: undefined | string =
     target === "_blank" ? "noopener noreferrer" : undefined;
   // button-specific properties
-  export let name: string = undefined;
+  export let name: undefined | string = undefined;
   export let value: any = undefined;
-  export let formaction: string = undefined;
+  export let formaction: undefined | string = undefined;
 </script>
 
 {#if href}

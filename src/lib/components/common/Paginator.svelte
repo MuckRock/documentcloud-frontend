@@ -23,7 +23,7 @@
   let inputValue = page;
   $: inputWidth = String(inputValue ?? 0).length;
   $: invalidValue =
-    inputValue > totalPages ||
+    (inputValue && totalPages && inputValue > totalPages) ||
     !inputValue ||
     !isInt.test(inputValue.toString());
   $: {
@@ -31,11 +31,11 @@
   }
 
   function previous() {
-    dispatch("previous", page - 1);
+    if (page) dispatch("previous", page - 1);
   }
 
   function next() {
-    dispatch("next", page + 1);
+    if (page) dispatch("next", page + 1);
   }
 
   function goTo(page: number) {

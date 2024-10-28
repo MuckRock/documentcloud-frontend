@@ -6,7 +6,7 @@ This component keeps track of pending items it has seen,
 so we can invalidate documents as they finish processing.
 -->
 <script context="module" lang="ts">
-  import type { Document, Nullable, Pending } from "$lib/api/types";
+  import type { Document, Maybe, Nullable, Pending } from "$lib/api/types";
 
   export function getProgress(process: Pending): number {
     const { texts, images, text_positions, pages } = process;
@@ -55,9 +55,9 @@ so we can invalidate documents as they finish processing.
   let documents: Map<number, Document> = new Map();
   let seen: Set<number> = new Set();
   let finished: number[] = [];
-  let timeout: string | number | NodeJS.Timeout;
+  let timeout: Nullable<string | number | NodeJS.Timeout>;
   let loading = false;
-  let reprocess: Nullable<Document> = null;
+  let reprocess: Nullable<Maybe<Document>> = null;
 
   const current = getPendingDocuments();
 
@@ -72,19 +72,19 @@ so we can invalidate documents as they finish processing.
   // update whenever $current changes
   $: update($current);
 
-  async function update(current: Pending[]) {
+  async function update(current: Maybe<Pending[]>) {
     // track our initial set
-    current.forEach((d) => seen.add(d.doc_id));
+    current?.forEach((d) => seen.add(d.doc_id));
 
-    const ids = new Set(current.map((d) => d.doc_id));
+    const ids = new Set(current?.map((d) => d.doc_id));
     const to_fetch = current
-      .filter((d) => !documents.has(d.doc_id))
+      ?.filter((d) => !documents.has(d.doc_id))
       .map((d) => d.doc_id);
 
-    if (to_fetch.length > 0) {
+    if (to_fetch?.length && to_fetch.length > 0) {
       const { data, error } = await list({ id__in: to_fetch.join(",") });
       if (!error) {
-        data.results.forEach((d) => documents.set(+d.id, d));
+        data?.results.forEach((d) => documents.set(+d.id, d));
         documents = documents;
       }
     }
@@ -106,42 +106,16 @@ so we can invalidate documents as they finish processing.
   async function load() {
     if (loading) return;
     loading = true;
-    if ($current.length === 0 || timeout) {
+    if ($current?.length === 0 || timeout) {
       $current = await pending();
     }
 
     // track our initial set
-    $current.forEach((d) => seen.add(d.doc_id));
-
-    const ids = new Set($current.map((d) => d.doc_id));
-    const to_fetch = $current
-      .filter((d) => !documents.has(d.doc_id))
-      .map((d) => d.doc_id);
-
-    if (to_fetch.length > 0) {
-      const { data, error } = await list({ id__in: to_fetch.join(",") });
-      if (!error) {
-        data.results.forEach((d) => documents.set(+d.id, d));
-        documents = documents;
-      }
-    }
-
-    // finished are seen IDs not in current
-    seen.forEach((id) => {
-      if (!ids.has(id)) {
-        finished.push(id);
-      }
-    });
-
-    // invalidate and empty our queue
-    while (finished.length > 1) {
-      const id = finished.pop();
-      invalidate(`documents:${id}`);
-    }
+    await update($current);
 
     // set the timer for next update if we still have pending
     loading = false;
-    if ($current.length > 0) {
+    if ($current?.length && $current.length > 0) {
       timeout = setTimeout(load, POLL_INTERVAL);
     } else {
       stop();
@@ -149,12 +123,14 @@ so we can invalidate documents as they finish processing.
   }
 
   function stop() {
-    clearTimeout(timeout);
-    timeout = null;
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
   }
 </script>
 
-{#if $current.length}
+{#if $current?.length}
   <SidebarGroup name="processing.documents">
     <SidebarItem slot="title">
       <File16 slot="start" />
@@ -164,7 +140,7 @@ so we can invalidate documents as they finish processing.
       {@const document = documents.get(process.doc_id)}
       <div role="menuitem" animate:flip>
         <Process
-          name={document?.title}
+          name={document?.title ?? $_("processing.unknown")}
           href={document ? canonicalUrl(document).href : undefined}
           status={getStatus(process)}
           progress={getProgress(process)}

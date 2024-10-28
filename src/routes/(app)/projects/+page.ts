@@ -9,7 +9,7 @@ export async function load({ url, parent, fetch }) {
   const { me } = await parent();
   const query = url.searchParams.get("query") ?? "";
   const cursor = url.searchParams.get("cursor") ?? "";
-  const per_page = +url.searchParams.get("per_page") || DEFAULT_PER_PAGE;
+  const per_page = +(url.searchParams.get("per_page") ?? DEFAULT_PER_PAGE);
 
   const params: Record<string, any> = {
     query,
@@ -33,21 +33,21 @@ export async function load({ url, parent, fetch }) {
   let error: unknown;
 
   if (me && filter === "owned") {
-    ({ data: projects, error } = await list(
+    ({ data: projects = projects, error } = await list(
       { ...params, owned_by_user: true },
       fetch,
     ));
   }
 
   if (me && filter === "shared") {
-    ({ data: projects, error } = await list(
+    ({ data: projects = projects, error } = await list(
       { ...params, is_shared: true },
       fetch,
     ));
   }
 
   if (filter === "public") {
-    ({ data: projects, error } = await list(params, fetch));
+    ({ data: projects = projects, error } = await list(params, fetch));
   }
 
   return {

@@ -42,7 +42,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   ];
 
   let ocrEngine = ocrEngineOptions[0];
-  let language: { value: string; label: string } = {
+  let language: { value?: string; label?: string } = {
     value: documents[0]?.language,
     label: LANGUAGE_MAP.get(documents[0]?.language),
   };
@@ -81,7 +81,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     const payload = documents.map((d) => ({
       id: d.id,
       force_ocr,
-      ocr_engine: ocrEngine.value,
+      ocr_engine: ocrEngine?.value,
     }));
 
     const { error } = await process(payload, csrf_token);
@@ -115,7 +115,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     <Flex direction="column" gap={1}>
       <Field>
         <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
-        <Language bind:value={language} />
+        <Language bind:value={language.value} />
       </Field>
       <Field>
         <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
@@ -125,7 +125,7 @@ This will mostly be used inside a modal but isn't dependent on one.
           bind:value={ocrEngine}
         />
         <p slot="help">
-          {@html ocrEngine.help}
+          {@html ocrEngine?.help}
         </p>
       </Field>
       <Field inline>

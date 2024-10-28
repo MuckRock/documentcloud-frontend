@@ -1,5 +1,10 @@
 <script lang="ts">
-  import type { APIResponse, DocumentResults, Project } from "$lib/api/types";
+  import type {
+    APIResponse,
+    DocumentResults,
+    Nullable,
+    Project,
+  } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -60,7 +65,7 @@
 
   export let documents: Promise<APIResponse<DocumentResults, any>>;
   export let query: string = "";
-  export let project: Project = null;
+  export let project: Nullable<Project> = null;
   export let uiText: UITextProps = {
     loading: $_("common.loading"),
     error: $_("common.error"),
@@ -81,20 +86,23 @@
     deleted: Set<string>,
     searchResults?: DocumentResults, // optional params must come second
   ): DocumentResults {
+    if (!searchResults)
+      return { count: 0, results: [], next: null, previous: null };
     if (deleted.size === 0) return searchResults;
 
     const filtered =
-      searchResults?.results.filter((d) => !deleted.has(String(d.id))) ?? [];
+      searchResults.results.filter((d) => !deleted.has(String(d.id))) ?? [];
 
     return {
       ...searchResults,
       results: filtered,
-      count: searchResults.count - deleted.size,
+      count: (searchResults.count ?? filtered.length) - deleted.size,
     };
   }
 
-  function selectAll(e) {
-    if (e.target.checked) {
+  function selectAll(e: Event) {
+    const target = e.target as HTMLInputElement;
+    if (target.checked) {
       $selected = [...$visible];
     } else {
       $selected = [];

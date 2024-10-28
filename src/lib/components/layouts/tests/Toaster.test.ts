@@ -23,8 +23,8 @@ describe("toast", () => {
     const current = get(toasts);
     // Check that the notification has been added with the correct ID
     expect(current).toHaveLength(1);
-    expect(current[0].id).toBe(1620000000000);
-    expect(current[0].contents).toBe("Hello world");
+    expect(current[0]?.id).toBe(1620000000000);
+    expect(current[0]?.contents).toBe("Hello world");
   });
 });
 

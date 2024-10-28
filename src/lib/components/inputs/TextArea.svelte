@@ -4,7 +4,7 @@ A text area for writing text
 <script lang="ts">
   import { textAreaResize } from "@/util/textareaResize.js";
 
-  export let name: string = null;
+  export let name: null | string = null;
   export let value = "";
   export let placeholder = "";
   export let required = false;

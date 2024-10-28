@@ -141,10 +141,13 @@ layouts, stories, and tests.
     note.id === noteFromHash($pageStore.url.hash);
 
   function scrollToHash(hash?: string) {
-    const page: Nullable<number> = pageFromHash(hash);
-    let el: Maybe<HTMLElement>;
+    const page: Nullable<number> = hash ? pageFromHash(hash) : null;
+    let el: Maybe<Nullable<HTMLElement>>;
     if (hash) {
-      el = window?.document.getElementById(hash.split("#")[1]);
+      const id = hash.split("#")[1];
+      if (id) {
+        el = window?.document.getElementById(id);
+      }
     }
     // Scroll to the element, if it's available, and update the current page
     if (el && page) {
@@ -155,7 +158,7 @@ layouts, stories, and tests.
 
   function onHashChange() {
     const { hash } = window.location;
-    $currentNote = $currentDoc.notes.find(noteMatchingPageHash);
+    $currentNote = $currentDoc.notes?.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate($currentMode)) {
       scrollToHash(hash);
     }
@@ -177,7 +180,7 @@ layouts, stories, and tests.
     const { hash } = $pageStore.url;
     const hashPage = pageFromHash(hash);
     $currentMode = mode;
-    $currentNote = $currentDoc.notes.find(noteMatchingPageHash) ?? null;
+    $currentNote = $currentDoc.notes?.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate(mode) && $currentPage !== hashPage) {
       scrollToHash(hash);
     }

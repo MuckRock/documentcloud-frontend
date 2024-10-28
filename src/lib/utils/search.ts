@@ -1,4 +1,4 @@
-import type { User } from "@/api/types";
+import type { Nullable, User } from "$lib/api/types";
 import type { Access } from "../api/types";
 import { APP_URL } from "@/config/config.js";
 import { slugify } from "@/util/string.js";
@@ -19,7 +19,7 @@ export function projectSearchUrl(project): string {
  * @param user
  * @param access
  */
-export function userDocs(user?: User, access?: Access): string {
+export function userDocs(user?: Nullable<User>, access?: Access): string {
   if (!user) return "";
   const username = getUserName(user);
   if (access) {
@@ -67,7 +67,7 @@ export function highlight(contents: string, query: string): string {
 export function pageNumber(page: string): number {
   const PAGE_NO_RE = /^page_no_(\d+)$/;
   const match = PAGE_NO_RE.exec(page);
-  if (!match) return NaN;
+  if (!match || !match[1]) return NaN;
   const number = parseInt(match[1]);
   return number;
 }

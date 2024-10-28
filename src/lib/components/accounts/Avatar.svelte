@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { User, Org } from "@/api/types";
+  import type { User, Org, Maybe } from "$lib/api/types";
   import { Person16, Organization16 } from "svelte-octicons";
 
-  export let user: User = undefined;
-  export let org: Org = undefined;
+  export let user: Maybe<User> = undefined;
+  export let org: Maybe<Org> = undefined;
 </script>
 
 <div class="avatar">

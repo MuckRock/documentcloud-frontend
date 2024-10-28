@@ -26,6 +26,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
+  import type { Nullable } from "$lib/api/types";
 
   const me = getCurrentUser();
 
@@ -39,11 +40,13 @@
   $: previous = data.projects.previous;
   $: list = data.list;
 
-  function paginate(u: URL | string) {
+  function paginate(u: Nullable<URL | string>) {
+    if (!u) return;
     u = new URL(u);
     const target = new URL($page.url);
 
-    target.searchParams.set("cursor", u.searchParams.get("cursor"));
+    const cursorParam = u.searchParams.get("cursor");
+    if (cursorParam) target.searchParams.set("cursor", cursorParam);
     goto(target);
   }
 

@@ -27,7 +27,7 @@
   const running = getRunningAddons();
   const current = getPendingDocuments();
 
-  $: addons = $running.reduce(
+  $: addons = $running?.reduce(
     (acc, cur) => {
       const curCount = acc[cur.status] ?? 0;
       acc[cur.status] = curCount + 1;
@@ -36,7 +36,7 @@
     {} as Record<Status, number>,
   );
 
-  $: documents = $current.reduce(
+  $: documents = $current?.reduce(
     (acc, cur) => {
       const status = getStatus(cur);
       const curCount = acc[status] ?? 0;
@@ -47,7 +47,7 @@
   );
 
   $: for (const status of Object.keys(totalCounts)) {
-    totalCounts[status] = (addons[status] || 0) + (documents[status] || 0);
+    totalCounts[status] = (addons?.[status] || 0) + (documents?.[status] || 0);
   }
 
   $: total = sumCounts(totalCounts);

@@ -12,12 +12,12 @@
     parameters: { layout: "centered" },
   };
 
-  import { pageSizes } from "@/api/pageSize.js";
+  import { pageSizes } from "$lib/utils/pageSize";
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import ViewerContext from "../ViewerContext.svelte";
 
   const document = doc as Document;
-  const sizes = pageSizes(document.page_spec);
+  const sizes = pageSizes(document.page_spec!);
 </script>
 
 <Story name="Reading">

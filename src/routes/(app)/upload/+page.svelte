@@ -10,7 +10,7 @@
 
   $: form = $page.form;
   $: csrf_token = data.csrf_token;
-  $: projects = data.projects.results;
+  $: projects = data.projects?.results ?? [];
 </script>
 
 <svelte:head>

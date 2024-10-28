@@ -8,7 +8,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type { Document } from "$lib/api/types";
+  import type { Document, Nullable } from "$lib/api/types";
 
   import { getContext, type ComponentType } from "svelte";
   import { _ } from "svelte-i18n";
@@ -59,7 +59,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     project: FileDirectory16,
   };
 
-  let visible: Action = null;
+  let visible: Nullable<Action> = null;
 
   // svelte 5 will let us do type coercion in templates
   function show(action: string) {

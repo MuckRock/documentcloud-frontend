@@ -19,7 +19,7 @@ Assumes it's a child of a ViewerContext
   const embed = isEmbedded();
 
   $: document = $documentStore;
-  $: notes = document.notes;
+  $: notes = document.notes ?? [];
   $: annotate = getViewerHref({ document, mode: "annotating" });
 </script>
 

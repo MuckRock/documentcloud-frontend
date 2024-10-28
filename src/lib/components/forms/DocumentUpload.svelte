@@ -14,7 +14,7 @@
     filesToUpload.set([]);
     return files;
   }
-  export const uploadToProject = writable<Project>(null);
+  export const uploadToProject = writable<Nullable<Project>>(null);
   function getProjectToUpload() {
     const project = get(uploadToProject);
     uploadToProject.set(null);
@@ -28,7 +28,7 @@
   export async function upload(
     form: FormData,
     csrf_token: string,
-    user: User,
+    user: Nullable<User>,
     fetch = globalThis.fetch,
   ): Promise<ActionResult> {
     // one per file
@@ -65,10 +65,20 @@
       fetch,
     );
 
+    if (!created || error) {
+      return {
+        type: "error",
+        status: error?.status || 500,
+        error: error?.errors || [{ message: "Unknown error" }],
+      };
+    }
+
     // upload
-    const uploads = created.map((d, i) =>
-      documents.upload(new URL(d.presigned_url), files[i], fetch),
-    );
+    const uploads = created.map((d, i) => {
+      if (!d.presigned_url || !files[i])
+        return Promise.reject("No URL or file");
+      return documents.upload(new URL(d.presigned_url), files[i], fetch);
+    });
 
     // todo: handle retries and errors
     const upload_responses = await Promise.all(uploads);
@@ -109,6 +119,7 @@
   import type {
     Access,
     DocumentUpload,
+    Nullable,
     OCREngine,
     Project,
   } from "$lib/api/types";
@@ -258,7 +269,8 @@
                   <Tooltip
                     caption="The maximum size for a {getFileExtension(
                       file,
-                    ).toUpperCase()} is {getFileExtension(file) === 'pdf'
+                    )?.toUpperCase() ?? 'file'} is {getFileExtension(file) ===
+                    'pdf'
                       ? '500MB'
                       : '25MB'}"
                   >
@@ -330,17 +342,19 @@
             <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
             <Language />
           </Field>
-          <Field>
-            <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
-            <Select
-              name="ocr_engine"
-              items={ocrEngineOptions}
-              bind:value={ocrEngine}
-            />
-            <p slot="help">
-              {@html ocrEngine.help}
-            </p>
-          </Field>
+          {#if ocrEngine}
+            <Field>
+              <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
+              <Select
+                name="ocr_engine"
+                items={ocrEngineOptions}
+                bind:value={ocrEngine}
+              />
+              <p slot="help">
+                {@html ocrEngine.help}
+              </p>
+            </Field>
+          {/if}
           <Field inline>
             <input type="checkbox" name="force_ocr" />
             <FieldLabel>{$_("uploadDialog.forceOcr")}</FieldLabel>

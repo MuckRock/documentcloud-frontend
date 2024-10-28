@@ -49,7 +49,7 @@ export async function add(
 export async function update(
   project_id: number,
   user_id: number,
-  access: ProjectAccess,
+  access: string,
   csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<APIResponse<ProjectUser, ValidationError>> {

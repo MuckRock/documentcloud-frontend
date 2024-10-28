@@ -32,7 +32,7 @@ const test = base.extend({
       "@/test/fixtures/documents/search-highlight.json"
     );
 
-    await use(results as DocumentResults);
+    await use(results as unknown as DocumentResults);
   },
 
   document: async ({}, use: Use<Document>) => {
@@ -300,13 +300,13 @@ describe("document uploads and processing", () => {
       );
 
       const resp = await documents.upload(
-        new URL(doc.presigned_url),
+        new URL(doc.presigned_url!),
         file,
         mockFetch,
       );
 
       expect(resp.ok).toBeTruthy();
-      expect(mockFetch).toHaveBeenCalledWith(new URL(doc.presigned_url), {
+      expect(mockFetch).toHaveBeenCalledWith(new URL(doc.presigned_url!), {
         body: file,
         headers: {
           "Content-Type": file.type,
@@ -508,7 +508,7 @@ describe("document write methods", () => {
       mockFetch,
     );
 
-    expect(updated.title).toStrictEqual("Updated title");
+    expect(updated?.title).toStrictEqual("Updated title");
   });
 
   test("documents.edit_many", async ({ documents: docs }) => {
@@ -570,7 +570,7 @@ describe("document write methods", () => {
       mockFetch,
     );
 
-    expect(data["_tag"]).toEqual(["one", "two"]);
+    expect(data?.["_tag"]).toEqual(["one", "two"]);
     expect(mockFetch).toBeCalledWith(
       new URL(`documents/${document.id}/data/_tag/`, BASE_API_URL),
       {

@@ -2,7 +2,7 @@
   import type { AddOnListItem } from "@/addons/types";
 
   import { _ } from "svelte-i18n";
-  import { MarkGithub16, Share16 } from "svelte-octicons";
+  import { MarkGithub16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "@/lib/components/common/Flex.svelte";
@@ -34,10 +34,6 @@
       <h3>{github_org}</h3>
     </Metadata>
     <Flex>
-      <!-- <Button ghost mode="primary">
-        <Share16 />
-        {$_("addonDispatchDialog.share")}
-      </Button> -->
       <Button ghost mode="primary" href={repo} target="_blank">
         <MarkGithub16 />
         {$_("addonDispatchDialog.viewsource")}

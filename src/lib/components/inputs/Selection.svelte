@@ -8,9 +8,9 @@
   import { _ } from "svelte-i18n";
 
   export let documents = new Set();
-  export let value = null;
-  export let query: string = undefined;
-  export let resultsCount: number = undefined;
+  export let value: null | Record<string, unknown> = null;
+  export let query: undefined | string = undefined;
+  export let resultsCount: undefined | number = undefined;
 
   const selected: Writable<Document[]> = getContext("selected");
 

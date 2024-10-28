@@ -53,7 +53,7 @@
       {#if error}
         <Error>{error.message}</Error>
       {:else}
-        {#each data.results as addon}
+        {#each data?.results ?? [] as addon}
           <SidebarItem small href={getHref(query, addon)}>
             <Pin active={addon.active} slot="start" />
             {addon.name}
