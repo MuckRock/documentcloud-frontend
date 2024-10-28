@@ -148,7 +148,12 @@ export async function text(
   // for private and organization docs, we need to hit the API first
   // with credentials, and then fetch the returned location
   if (document.access !== "public") {
-    url = await getPrivateAsset(url, fetch);
+    try {
+      url = await getPrivateAsset(url, fetch);
+    } catch (e) {
+      console.error(e);
+      return empty;
+    }
   }
 
   const resp = await fetch(url).catch(console.error);
