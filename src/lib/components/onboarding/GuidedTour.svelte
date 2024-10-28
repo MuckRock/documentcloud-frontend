@@ -14,10 +14,13 @@
   import { driver, type Driver, type DriveStep, type Config } from "driver.js";
   import { get } from "svelte/store";
 
+  import { getCurrentUser } from "$lib/utils/permissions";
   import { StorageManager } from "$lib/utils/storage";
   import { scripts } from "./scripts";
 
   const storage = new StorageManager("guided-tour");
+
+  const user = getCurrentUser();
 
   let driverObj: Driver;
 
@@ -74,7 +77,7 @@
       const currentRoute = getRoute();
       const history = getTourHistory();
       const offerTour = history[currentRoute] ?? true;
-      if (offerTour) {
+      if ($user && offerTour) {
         startTour();
       }
     }
