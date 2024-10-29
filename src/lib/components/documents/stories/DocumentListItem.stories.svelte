@@ -5,12 +5,12 @@
   import document from "@/test/fixtures/documents/document.json";
   import expanded from "@/test/fixtures/documents/document-expanded.json";
   import santaanas from "@/test/fixtures/documents/examples/the-santa-anas.json";
+  import { projectList } from "@/test/fixtures/projects";
 
   export const meta = {
     title: "Components / Documents / Document List Item",
     component: DocumentListItem,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
   };
 </script>
 
@@ -18,7 +18,14 @@
   <DocumentListItem {...args} />
 </Template>
 
-<Story name="default" args={{ document: expanded }} />
+<Story name="Basic" args={{ document: expanded }} />
+
+<Story
+  name="Lots of Projects"
+  args={{
+    document: { ...expanded, projects: projectList.results.slice(0, 7) },
+  }}
+/>
 
 <Story name="minimal" args={{ document }} />
 

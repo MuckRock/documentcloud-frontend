@@ -30,7 +30,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   const embed: boolean = getContext("embed");
 
-  const width = IMAGE_WIDTHS_MAP.get("thumbnail");
+  const thumbnailWidth = IMAGE_WIDTHS_MAP.get("thumbnail");
 
   // this can be updated later if we want different icons
   const statusIcons = {
@@ -41,7 +41,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : null;
   $: aspect = sizes ? sizes[0] : 11 / 8.5; // fallback to US letter for now
-  $: height = width * aspect;
+  $: height = thumbnailWidth * aspect;
   $: date = new Date(document.created_at).toDateString();
   $: projects = document.projects?.every((p) => typeof p === "object")
     ? (document.projects as Project[])
@@ -69,19 +69,23 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   function onError() {
     document.status = "error";
   }
+
+  let width: number;
 </script>
 
 <a
   href={canonicalUrl(document).href}
   class="document-list-item"
+  class:small={width < 400}
   target={embed ? "_blank" : undefined}
+  bind:clientWidth={width}
 >
   <div class="thumbnail">
     {#if document.status === "success" || document.status === "readable"}
       <img
         src={pageImageUrl(document, 1, "thumbnail").href}
         alt="Page 1, {document.title}"
-        width="{width}px"
+        width="{thumbnailWidth}px"
         height="{height}px"
         loading="lazy"
         on:error={onError}
@@ -102,7 +106,20 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   </div>
 
   <div class="documentInfo">
-    <h3>{document.title}</h3>
+    <div class="head">
+      <h3 class="title">{document.title}</h3>
+      {#if !embed && level}
+        <div class="access">
+          <DocAccess {level} />
+        </div>
+        <hr class="rule" />
+      {/if}
+    </div>
+    <!-- {#if document.description}
+      <p class="description">
+        {clean(document.description)}
+      </p>
+    {/if} -->
     <p class="meta">
       {$_("documents.pageCount", { values: { n: document.page_count } })} -
       {#if document.notes && document.notes.length > 0}
@@ -113,21 +130,11 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
       {/if}
       {date}
     </p>
-    {#if document.description}
-      <p class="description">
-        {clean(document.description)}
-      </p>
-    {/if}
-    <Flex align="center" gap={0.625} class="actions">
-      {#if !embed && level}
-        <div style="font-size: var(--font-sm)">
-          <DocAccess {level} />
-        </div>
-      {/if}
+    <div class="data" class:hide={width < 400}>
       {#each projects as project}
         <KV key="Project" value={project.title} />
       {/each}
-    </Flex>
+    </div>
   </div>
 </a>
 
@@ -137,7 +144,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     display: flex;
     max-width: 100%;
     min-width: 0;
-    align-items: center;
     align-self: stretch;
     gap: 0.5rem;
     padding: 0.75rem;
@@ -148,10 +154,37 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     border: 1px solid transparent;
   }
 
+  .document-list-item.small {
+    padding: 0.75rem 0.75rem 1.5rem;
+  }
+
+  .head {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  .small .head {
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  .small h3 {
+    flex: 1 1 100%;
+    order: 1;
+  }
+
   .document-list-item:hover,
   .document-list-item:focus {
     background-color: var(--blue-1);
     border-color: var(--blue-2);
+  }
+
+  .small .thumbnail {
+    display: none;
   }
 
   .thumbnail {
@@ -159,6 +192,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     flex-direction: column;
     align-items: center;
     position: relative;
+    margin: 0.5rem 0.5rem 0 0;
   }
 
   .thumbnail img,
@@ -186,21 +220,22 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.25rem;
+    gap: 0.5rem;
     flex: 1 0 0;
     align-self: stretch;
     min-width: 0;
   }
 
   h3 {
+    flex: 1 1 auto;
     color: var(--gray-5, #233944);
     font-size: var(--font-md, 1rem);
     font-style: normal;
     font-weight: var(--font-semibold, 600);
     line-height: normal;
-    overflow: hidden;
+    /* overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: nowrap; */
     max-width: 100%;
   }
 
@@ -208,7 +243,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     color: var(--gray-4, #5c717c);
     font-size: 0.75rem;
     font-style: normal;
-    font-weight: var(--font-regular, 400);
+    font-weight: var(--font-semibold, 600);
     line-height: normal;
   }
 
@@ -225,6 +260,25 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     width: 100%;
   }
 
+  .access {
+    font-size: var(--font-sm);
+  }
+
+  .small .access {
+    align-self: flex-end;
+    flex: 0 1 auto;
+  }
+
+  .rule {
+    display: none;
+  }
+
+  .small .rule {
+    display: block;
+    flex: 1 1 auto;
+    border: 1px solid var(--gray-2);
+  }
+
   .fallback {
     display: flex;
     align-items: center;
@@ -239,5 +293,17 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   .fallback.error {
     fill: var(--red-3, #f00);
+  }
+
+  .data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .hide.data {
+    display: none;
   }
 </style>
