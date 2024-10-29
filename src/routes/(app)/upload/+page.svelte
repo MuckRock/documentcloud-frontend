@@ -4,8 +4,6 @@
 
   import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
 
-  // using $page.form captures the correct type from applyAction
-
   export let data;
 
   $: form = $page.form;
@@ -45,6 +43,7 @@
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    padding: 1rem;
   }
   .form-container {
     margin: 1rem;

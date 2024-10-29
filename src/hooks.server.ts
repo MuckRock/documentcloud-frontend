@@ -11,6 +11,9 @@ import { DC_BASE } from "./config/config.js";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
+  integrations: [
+    Sentry.captureConsoleIntegration({ levels: ["error", "warn"] }),
+  ],
   tracesSampleRate: 1,
 });
 

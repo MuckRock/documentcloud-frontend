@@ -3,7 +3,7 @@
 
   import { get, writable } from "svelte/store";
 
-  import { DEFAULT_LANGUAGE } from "@/config/config.js";
+  import { DEFAULT_LANGUAGE, LANGUAGE_MAP } from "@/config/config.js";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
   import { userDocs } from "$lib/utils/search";
 
@@ -14,6 +14,7 @@
     filesToUpload.set([]);
     return files;
   }
+
   export const uploadToProject = writable<Project>(null);
   function getProjectToUpload() {
     const project = get(uploadToProject);
@@ -21,11 +22,7 @@
     return project;
   }
 
-  /**
-   * Collect form data into documents and do three-step upload.
-   * Exported here for testing and reuse.
-   */
-  export async function upload(
+  /* export async function _upload(
     form: FormData,
     csrf_token: string,
     user: User,
@@ -60,12 +57,14 @@
     });
 
     let { data: created, error } = await documents.create(
+      // @ts-ignore
       docs,
       csrf_token,
       fetch,
     );
 
     // upload
+    // @ts-ignore
     const uploads = created.map((d, i) =>
       documents.upload(new URL(d.presigned_url), files[i], fetch),
     );
@@ -77,6 +76,7 @@
 
     // process
     const process_response = await documents.process(
+      // @ts-ignore
       created.map((d) => ({
         id: d.id,
         force_ocr,
@@ -102,20 +102,22 @@
       status: process_response.error.status,
       error: process_response.error.errors,
     };
-  }
+  } */
 </script>
 
 <script lang="ts">
   import type {
     Access,
+    APIError,
+    Document,
     DocumentUpload,
     OCREngine,
     Project,
   } from "$lib/api/types";
-  import type { User } from "@/api/types/orgAndUser";
 
   import { applyAction } from "$app/forms";
   import { goto } from "$app/navigation";
+
   import { filesize } from "filesize";
   import { afterUpdate } from "svelte";
   import { _ } from "svelte-i18n";
@@ -141,17 +143,24 @@
   import Select, { unwrap } from "../inputs/Select.svelte";
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
 
-  import * as documents from "$lib/api/documents";
   import { DOCUMENT_TYPES } from "@/config/config.js";
+  import * as documents from "$lib/api/documents";
   import {
     filenameToTitle,
     getFileExtension,
     isSupported,
     isWithinSizeLimit,
   } from "$lib/utils/files";
-  import Tooltip from "$lib/components/common/Tooltip.svelte";
   import { getCurrentUser } from "$lib/utils/permissions";
+
+  type UploadStatus = {
+    file?: File;
+    document?: Document;
+    error?: APIError<unknown>;
+    step?: "ready" | "created" | "uploading" | "processing";
+  };
 
   export let csrf_token = "";
   export let files: File[] = getFilesToUpload();
@@ -159,10 +168,20 @@
 
   const me = getCurrentUser();
 
+  // upload status
   let loading = false;
+  let fileDropActive: boolean;
+
+  let status: Record<string, UploadStatus> = {};
+
   let uploader: HTMLInputElement;
 
-  let fileDropActive: boolean;
+  // fields
+  let access: Access = "private";
+  let language: { value: string; label: string } = {
+    value: DEFAULT_LANGUAGE,
+    label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE),
+  };
 
   const ocrEngineOptions = [
     {
@@ -178,12 +197,25 @@
   ];
 
   let ocrEngine = ocrEngineOptions[0];
+  let add_to_projects: Project[] = [];
 
   $: total = files.reduce((t, file) => {
     return t + file.size;
   }, 0);
 
   $: exceedsSizeLimit = files.some((file) => !isWithinSizeLimit(file));
+
+  $: console.log(status);
+
+  /* afterUpdate(() => {
+    const dt = new DataTransfer();
+
+    files.forEach((file) => {
+      dt.items.add(file);
+    });
+
+    uploader.files = dt.files;
+  }); */
 
   function addFiles(filesToAdd: FileList) {
     files = files.concat(Array.from(filesToAdd).filter(isSupported));
@@ -200,12 +232,12 @@
   }
 
   // handle uploads client side instead of going through the server
-  async function onSubmit(e: SubmitEvent) {
+  /* async function _onSubmit(e: SubmitEvent) {
     loading = true;
     const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
 
-    const result = await upload(fd, csrf_token, $me);
+    // const result = await _upload(fd, csrf_token, $me);
 
     // send data up
     await applyAction(result);
@@ -220,17 +252,107 @@
     }
 
     loading = false;
+  } */
+
+  // handle submit and send each file to upload
+  async function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
+    loading = true;
+
+    const form = new FormData(e.target as HTMLFormElement);
+
+    const access = form.get("access") as Access;
+    const titles = form.getAll("title") as string[];
+    const revision_control = form.get("revision_control") === "on";
+
+    const promises = files.map((file, i) =>
+      upload(
+        file,
+        {
+          title: titles[i],
+          original_extension: getFileExtension(file),
+          access,
+          projects: add_to_projects.map((p) => p.id),
+          language: language.value,
+          revision_control,
+        },
+        form,
+      ),
+    );
+
+    // errors are handled within each promise, so we can just wait for all to be settled
+    await Promise.allSettled(promises);
+
+    loading = false;
   }
 
-  afterUpdate(() => {
-    const dt = new DataTransfer();
+  // upload one file
+  async function upload(file: File, metadata: DocumentUpload, form: FormData) {
+    status[file.name] = {
+      file,
+    };
 
-    files.forEach((file) => {
-      dt.items.add(file);
-    });
+    // create
+    let { data: document, error } = await documents.create(
+      metadata,
+      csrf_token,
+    );
 
-    uploader.files = dt.files;
-  });
+    status[file.name] = {
+      file,
+      document,
+      error,
+      step: "created",
+    };
+
+    // bail here on error, console.error to report this to sentry
+    if (error) {
+      return console.error(error);
+    }
+
+    // upload
+    let presigned_url: URL;
+    try {
+      presigned_url = new URL(document.presigned_url);
+    } catch (e) {
+      error = {
+        status: 500,
+        message: "Invalid presigned URL",
+        errors: e,
+      };
+    }
+
+    if (error) {
+      status[file.name].error = error;
+      return console.error(error);
+    }
+
+    status[file.name].step = "uploading";
+    const resp = await documents
+      .upload(new URL(document.presigned_url), file)
+      .catch(console.error);
+
+    if (!resp) {
+      status[file.name].error = {
+        status: 500,
+        message: "Upload failed",
+      };
+      return;
+    }
+
+    // process, if we've made it this far with no errors
+    status[file.name].step = "processing";
+    const force_ocr = form.get("force_ocr") === "on";
+
+    ({ error } = await documents.process(
+      [{ id: document.id, force_ocr, ocr_engine: ocrEngine.value }],
+      csrf_token,
+    ));
+
+    if (error) {
+      status[file.name].error = error;
+    }
+  }
 </script>
 
 <svelte:window on:paste={onPaste} />
@@ -240,7 +362,7 @@
     method="post"
     enctype="multipart/form-data"
     action="/upload/"
-    on:submit|preventDefault={onSubmit}
+    on:submit={onSubmit}
   >
     <Flex gap={1} align="stretch" wrap>
       <div class="files" class:active={fileDropActive}>
@@ -250,10 +372,19 @@
         <div class="fileList" class:empty={files.length === 0}>
           {#each files as file, index}
             <Flex align="center" gap={1} role="listitem">
+              <div class="title">
+                <Text
+                  name="title"
+                  value={filenameToTitle(file.name)}
+                  disabled={!!status[file.name]}
+                  required
+                />
+                <input type="hidden" name="filename" value={file.name} />
+              </div>
               <p class="fileInfo" class:error={!isWithinSizeLimit(file)}>
-                <span class="uppercase"
-                  >{getFileExtension(file)} / {filesize(file.size)}</span
-                >
+                <span class="uppercase">
+                  {getFileExtension(file)} / {filesize(file.size)}
+                </span>
                 {#if !isWithinSizeLimit(file)}
                   <Tooltip
                     caption="The maximum size for a {getFileExtension(
@@ -266,15 +397,6 @@
                   </Tooltip>
                 {/if}
               </p>
-              <div class="title">
-                <Text
-                  name="title"
-                  value={filenameToTitle(file.name)}
-                  required
-                  disabled={loading}
-                />
-                <input type="hidden" name="filename" value={file.name} />
-              </div>
               <button
                 class="fileRemove"
                 on:click|preventDefault={() => removeFile(index)}
@@ -308,11 +430,21 @@
           <p class="drop-instructions">{$_("uploadDialog.dragDrop")}</p>
         </div>
       </div>
+
       <div class="sidebar">
         <Flex gap={1} direction="column">
+          <Button
+            type="submit"
+            full
+            mode="primary"
+            disabled={loading || exceedsSizeLimit || !csrf_token}
+          >
+            <Upload16 />{$_("uploadDialog.beginUpload")}
+          </Button>
+
           <Field>
             <FieldLabel>{$_("uploadDialog.accessLevel")}</FieldLabel>
-            <AccessLevel name="access" />
+            <AccessLevel name="access" bind:selected={access} />
           </Field>
           <Field>
             <FieldLabel>{$_("uploadDialog.projects")}</FieldLabel>
@@ -322,13 +454,13 @@
               items={projects}
               itemId="id"
               label="title"
-              value={getProjectToUpload()}
+              bind:value={add_to_projects}
             />
           </Field>
           <hr class="divider" />
           <Field>
             <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
-            <Language />
+            <Language name="language" bind:value={language} />
           </Field>
           <Field>
             <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
@@ -366,22 +498,14 @@
             </Field>
           </Premium>
         </Flex>
-        <Button
-          type="submit"
-          full
-          mode="primary"
-          disabled={loading || exceedsSizeLimit || !csrf_token}
-        >
-          <Upload16 />{$_("uploadDialog.beginUpload")}
-        </Button>
 
-        <input
+        <!-- <input
           type="file"
           name="uploads"
           multiple
           bind:this={uploader}
           accept={DOCUMENT_TYPES.join(",")}
-        />
+        /> -->
       </div>
     </Flex>
   </form>
@@ -438,7 +562,7 @@
   }
 
   .fileInfo {
-    flex: 1 0 0;
+    flex: 0 1 0;
     font-size: var(--font-xs);
     color: var(--gray-5);
     white-space: nowrap;
@@ -452,7 +576,7 @@
   }
 
   .title {
-    flex: 1 1 auto;
+    flex: 1 0 auto;
   }
 
   .fileRemove {
@@ -510,7 +634,8 @@
     text-transform: uppercase;
   }
 
+  /*
   input[name="uploads"] {
     display: none;
-  }
+  } */
 </style>

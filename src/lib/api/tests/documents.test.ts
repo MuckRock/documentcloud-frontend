@@ -51,12 +51,12 @@ const test = base.extend({
     await use(documents as DocumentResults);
   },
 
-  created: async ({}, use: Use<Document[]>) => {
+  created: async ({}, use: Use<Document>) => {
     const { default: created } = await import(
       "@/test/fixtures/documents/create.json"
     );
 
-    await use(created as Document[]);
+    await use(created[0] as Document);
   },
 
   pending: async ({}, use: Use<Pending[]>) => {
@@ -262,12 +262,12 @@ describe("document uploads and processing", () => {
       },
     }));
 
-    const docs: DocumentUpload[] = created.map((d) => ({
-      title: d.title,
-      access: d.access,
-      language: d.language,
-      original_extension: d.original_extension,
-    }));
+    const docs: DocumentUpload = {
+      title: created.title,
+      access: created.access,
+      language: created.language,
+      original_extension: created.original_extension,
+    };
 
     const { data } = await documents.create(docs, "token", mockFetch);
     expect(data).toMatchObject(created);
@@ -288,31 +288,29 @@ describe("document uploads and processing", () => {
   });
 
   test("documents.upload", async ({ created }) => {
-    created.forEach(async (doc) => {
-      const mockFetch = vi.fn().mockImplementation(async () => ({
-        ok: true,
-      }));
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+    }));
 
-      const file = new File(
-        ["test content"],
-        "finalseasonal-allergies-pollen-and-mold-2023-en.pdf",
-        { type: "application/pdf" },
-      );
+    const file = new File(
+      ["test content"],
+      "finalseasonal-allergies-pollen-and-mold-2023-en.pdf",
+      { type: "application/pdf" },
+    );
 
-      const resp = await documents.upload(
-        new URL(doc.presigned_url),
-        file,
-        mockFetch,
-      );
+    const resp = await documents.upload(
+      new URL(created.presigned_url),
+      file,
+      mockFetch,
+    );
 
-      expect(resp.ok).toBeTruthy();
-      expect(mockFetch).toHaveBeenCalledWith(new URL(doc.presigned_url), {
-        body: file,
-        headers: {
-          "Content-Type": file.type,
-        },
-        method: "PUT",
-      });
+    expect(resp.ok).toBeTruthy();
+    expect(mockFetch).toHaveBeenCalledWith(new URL(created.presigned_url), {
+      body: file,
+      headers: {
+        "Content-Type": file.type,
+      },
+      method: "PUT",
     });
   });
 
@@ -325,7 +323,7 @@ describe("document uploads and processing", () => {
     }));
 
     const { data } = await documents.process(
-      created.map((d) => ({ id: d.id })),
+      [{ id: created.id }],
       "csrf_token",
       mockFetch,
     );
@@ -334,7 +332,7 @@ describe("document uploads and processing", () => {
     expect(mockFetch).toHaveBeenCalledWith(
       new URL("/api/documents/process/", DC_BASE),
       {
-        body: JSON.stringify(created.map((d) => ({ id: d.id }))),
+        body: JSON.stringify([{ id: created.id }]),
         credentials: "include",
         headers: {
           "Content-type": "application/json",

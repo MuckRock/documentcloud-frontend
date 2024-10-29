@@ -58,7 +58,7 @@ This makes the state of those processes available via context.
 
   // throttled load
   export const load: Debounced = throttle(_load, POLL_INTERVAL, {
-    leading: false,
+    leading: true,
     trailing: true,
   }) as Debounced;
 </script>
