@@ -3,15 +3,15 @@
 exports[`DocumentListItem > renders 1`] = `
 <div>
   <a
-    class="document-list-item svelte-o1ttsh"
+    class="document-list-item svelte-6vo7lg"
     href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/"
   >
     <div
-      class="thumbnail svelte-o1ttsh"
+      class="thumbnail svelte-6vo7lg"
     >
       <img
         alt="Page 1, Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018"
-        class="svelte-o1ttsh"
+        class="svelte-6vo7lg"
         height="77.64705882352942px"
         loading="lazy"
         src="https://s3.documentcloud.org/documents/24002098/pages/quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018-p1-thumbnail.gif"
@@ -21,19 +21,19 @@ exports[`DocumentListItem > renders 1`] = `
     </div>
      
     <div
-      class="documentInfo svelte-o1ttsh"
+      class="documentInfo svelte-6vo7lg"
     >
       <div
-        class="head svelte-o1ttsh"
+        class="head svelte-6vo7lg"
       >
         <h3
-          class="title svelte-o1ttsh"
+          class="title svelte-6vo7lg"
         >
           Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018
         </h3>
          
         <div
-          class="access svelte-o1ttsh"
+          class="access svelte-6vo7lg"
         >
           <div
             class="access public svelte-o63adk"
@@ -56,7 +56,7 @@ exports[`DocumentListItem > renders 1`] = `
       </div>
        
       <p
-        class="meta svelte-o1ttsh"
+        class="meta svelte-6vo7lg"
       >
         20 pages
          -
@@ -69,7 +69,7 @@ exports[`DocumentListItem > renders 1`] = `
       </p>
        
       <div
-        class="data svelte-o1ttsh"
+        class="data svelte-6vo7lg"
       />
     </div>
   </a>

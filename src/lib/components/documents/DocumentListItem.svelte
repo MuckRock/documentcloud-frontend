@@ -144,7 +144,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     max-width: 100%;
     min-width: 0;
     align-self: stretch;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 0.75rem;
     border-radius: 0.25rem;
     color: inherit;
@@ -191,7 +191,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin: 0.5rem 0.5rem 0 0;
   }
 
   .thumbnail img,
