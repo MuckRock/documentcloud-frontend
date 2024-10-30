@@ -112,7 +112,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
         <div class="access">
           <DocAccess {level} />
         </div>
-        <hr class="rule" />
       {/if}
     </div>
     <!-- {#if document.description}
@@ -167,14 +166,14 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   }
 
   .small .head {
-    flex-wrap: wrap;
-    flex-direction: row-reverse;
+    flex-direction: column;
     align-items: center;
   }
 
   .small h3 {
     flex: 1 1 100%;
     order: 1;
+    font-size: var(--font-md, 1rem);
   }
 
   .document-list-item:hover,
@@ -265,18 +264,8 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   }
 
   .small .access {
-    align-self: flex-end;
+    align-self: flex-start;
     flex: 0 1 auto;
-  }
-
-  .rule {
-    display: none;
-  }
-
-  .small .rule {
-    display: block;
-    flex: 1 1 auto;
-    border: 1px solid var(--gray-2);
   }
 
   .fallback {
