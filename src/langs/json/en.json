@@ -12,7 +12,8 @@
     "add": "Add",
     "edit": "Edit",
     "search": "Search",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "title": "Title"
   },
   "search": {
     "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
