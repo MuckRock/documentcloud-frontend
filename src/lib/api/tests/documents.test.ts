@@ -168,7 +168,7 @@ describe("document fetching", () => {
     expect(results).toStrictEqual(search);
     expect(mockFetch).toBeCalledWith(
       new URL(
-        "documents/search/?expand=user%2Corganization&q=boston&hl=true",
+        "documents/search/?expand=user%2Corganization%2Cprojects&q=boston&hl=true",
         BASE_API_URL,
       ),
       { credentials: "include" },

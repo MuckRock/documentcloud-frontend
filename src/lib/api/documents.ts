@@ -24,7 +24,6 @@ import type {
 } from "./types";
 
 import { writable, type Writable } from "svelte/store";
-import { DEFAULT_EXPAND } from "@/api/common.js";
 import { getUserName, isOrg } from "./accounts";
 import {
   APP_URL,
@@ -66,7 +65,9 @@ export async function search(
 ): Promise<APIResponse<DocumentResults, null>> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
-  endpoint.searchParams.set("expand", DEFAULT_EXPAND);
+  const expand = ["user", "organization", "projects"].join(",");
+
+  endpoint.searchParams.set("expand", expand);
   endpoint.searchParams.set("q", query);
 
   for (const [k, v] of Object.entries(options)) {
