@@ -167,7 +167,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   .small .head {
     flex-direction: column;
-    align-items: center;
   }
 
   .small h3 {
@@ -231,9 +230,9 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     font-style: normal;
     font-weight: var(--font-semibold, 600);
     line-height: normal;
-    /* overflow: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap; */
+    /* white-space: nowrap; */
     max-width: 100%;
   }
 
