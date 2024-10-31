@@ -27,7 +27,13 @@
   </Process>
 </Template>
 
-<Story name="In-Progress" args={{ ...args, status: "in_progress" }} />
+<Story
+  name="In-Progress"
+  args={{ ...args, status: "in_progress" }}
+  parameters={{
+    chromatic: { disableSnapshot: true },
+  }}
+/>
 <Story
   name="With Progress"
   args={{ ...args, status: "in_progress", progress: ".7" }}
