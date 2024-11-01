@@ -20,12 +20,7 @@
 </script>
 
 <script lang="ts">
-  import type {
-    Access,
-    DocumentUpload,
-    OCREngine,
-    Project,
-  } from "$lib/api/types";
+  import type { Access, DocumentUpload, Project } from "$lib/api/types";
 
   import { filesize } from "filesize";
   import { onMount } from "svelte";
@@ -258,7 +253,6 @@
             <UploadListItem
               {file}
               status={status[file.name]}
-              {loading}
               on:remove={(e) => removeFile(e.detail)}
             />
           {:else}

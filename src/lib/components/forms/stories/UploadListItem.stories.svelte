@@ -26,15 +26,15 @@
 </Story>
 
 <Story name="created">
-  <UploadListItem {file} status={{ step: "created", document }} loading />
+  <UploadListItem {file} status={{ step: "created", document }} />
 </Story>
 
 <Story name="uploading">
-  <UploadListItem {file} status={{ step: "uploading", document }} loading />
+  <UploadListItem {file} status={{ step: "uploading", document }} />
 </Story>
 
 <Story name="processing">
-  <UploadListItem {file} status={{ step: "processing", document }} loading />
+  <UploadListItem {file} status={{ step: "processing", document }} />
 </Story>
 
 <Story name="error status">

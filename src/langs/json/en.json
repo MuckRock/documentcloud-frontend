@@ -410,7 +410,14 @@
     "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
     "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
     "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
-    "empty": "Get started by selecting, pasting or dragging-and-dropping files"
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files",
+    "steps": {
+      "ready": "Ready",
+      "created": "Created",
+      "uploading": "Uploading",
+      "processing": "Processing",
+      "done": "Done"
+    }
   },
   "uploadOptions": {
     "documentLang": "Document language:",

@@ -35,19 +35,19 @@
 
   export let file: File;
   export let status: UploadStatus = { step: "ready" };
-  export let loading = false;
 
   // i18n
   const steps: Record<Step, string> = {
-    ready: "READY",
-    created: "CREATED",
-    uploading: "UPLOADING",
-    processing: "PROCESSING",
-    done: "DONE",
+    ready: $_("uploadDialog.steps.ready"),
+    created: $_("uploadDialog.steps.created"),
+    uploading: $_("uploadDialog.steps.uploading"),
+    processing: $_("uploadDialog.steps.processing"),
+    done: $_("uploadDialog.steps.done"),
   };
 
   $: step = steps[status.step];
   $: description = status?.error ? `${file.name}` : `${file.name}: ${step}`;
+  $: loading = ["created", "uploading"].includes(status.step);
   $: linkable =
     status?.document && ["processing", "done"].includes(status?.step);
 </script>
