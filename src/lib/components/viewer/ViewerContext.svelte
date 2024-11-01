@@ -87,6 +87,10 @@ layouts, stories, and tests.
   export function getZoom(): Writable<Zoom> {
     return getContext("zoom");
   }
+
+  export function getErrors(): Writable<Error[]> {
+    return getContext("errors");
+  }
 </script>
 
 <script lang="ts">
@@ -102,6 +106,7 @@ layouts, stories, and tests.
   export let mode: ViewerMode = "document";
   export let query: string = "";
   export let zoom: Zoom = 1;
+  export let errors: Error[] = [];
 
   // https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentProxy.html
   export let pdf: Writable<Promise<pdfjs.PDFDocumentProxy>> = writable(
@@ -131,11 +136,13 @@ layouts, stories, and tests.
   setContext("zoom", writable(zoom));
   setContext("progress", progress);
   setContext("pdf", pdf);
+  setContext("errors", writable(errors));
 
   $: currentDoc = getDocument();
   $: currentMode = getCurrentMode();
   $: currentPage = getCurrentPage();
   $: currentNote = getCurrentNote();
+  $: currentErrors = getErrors();
 
   $: noteMatchingPageHash = (note: Note) =>
     note.id === noteFromHash($pageStore.url.hash);
@@ -168,7 +175,10 @@ layouts, stories, and tests.
       task.onProgress = (p: DocumentLoadProgress) => {
         $progress = p;
       };
-      $pdf = task.promise;
+      $pdf = task.promise.catch((error) => {
+        $currentErrors = [...$currentErrors, error];
+        return Promise.reject(error);
+      });
     }
   });
 

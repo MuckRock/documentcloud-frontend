@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { rest } from "msw";
-  import type { Document, Note, Section, ViewerMode } from "@/lib/api/types";
+  import type { Document, Section } from "@/lib/api/types";
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
@@ -143,6 +143,20 @@
     context: {
       ...args.context,
       document: { ...document, notes: [], sections },
+    },
+  }}
+/>
+
+<Story
+  name="With Errors"
+  args={{
+    ...args,
+    context: {
+      ...args.context,
+      errors: [
+        new TypeError("Something went wrong :("),
+        new TypeError("And another thing, too!"),
+      ],
     },
   }}
 />

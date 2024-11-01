@@ -19,9 +19,11 @@
   import {
     getCurrentPage,
     getDocument,
+    getErrors,
     getPDF,
     getZoom,
   } from "./ViewerContext.svelte";
+  import Error from "../common/Error.svelte";
 
   const documentStore = getDocument();
   const currentPage = getCurrentPage();
@@ -32,42 +34,55 @@
   $: scale = zoomToScale($zoom);
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
   $: sections = getSections(document);
+  $: errors = getErrors();
 
   onMount(() => {
-    $pdf.then((p) => {
-      // handle missing page_spec
-      if (sizes.length === 0) {
-        sizes = Array(p.numPages).fill([0, 0]);
-      }
+    $pdf
+      .then((p) => {
+        // handle missing page_spec
+        if (sizes.length === 0) {
+          sizes = Array(p.numPages).fill([0, 0]);
+        }
 
-      if ($currentPage > 1) {
-        scrollToPage($currentPage);
-      }
+        if ($currentPage > 1) {
+          scrollToPage($currentPage);
+        }
 
-      // @ts-ignore
-      window.pdf = p;
-    });
+        // @ts-ignore
+        window.pdf = p;
+      })
+      .catch((e) => {
+        errors.update((errs) => [...errs, e]);
+      });
   });
 
   let width: number;
 </script>
 
-<div
-  class="pages"
-  bind:clientWidth={width}
-  class:sm={width < remToPx(35)}
-  class:lg={width > remToPx(70)}
->
-  {#each sizes as [width, height], n}
-    {@const page_number = n + 1}
-    {#if sections[n]}
-      <h3 class="section">
-        {sections[n].title}
-      </h3>
-    {/if}
-    <PdfPage {page_number} {scale} {width} {height} />
-  {/each}
-</div>
+{#if Boolean($errors?.length)}
+  <Error>
+    {#each $errors as error}
+      <p>{String(error)}</p>
+    {/each}
+  </Error>
+{:else}
+  <div
+    class="pages"
+    bind:clientWidth={width}
+    class:sm={width < remToPx(35)}
+    class:lg={width > remToPx(70)}
+  >
+    {#each sizes as [width, height], n}
+      {@const page_number = n + 1}
+      {#if sections[n]}
+        <h3 class="section">
+          {sections[n].title}
+        </h3>
+      {/if}
+      <PdfPage {page_number} {scale} {width} {height} />
+    {/each}
+  </div>
+{/if}
 
 <style>
   .pages {
