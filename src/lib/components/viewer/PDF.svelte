@@ -52,6 +52,7 @@
         window.pdf = p;
       })
       .catch((e) => {
+        console.error(e);
         errors.update((errs) => [...errs, e]);
       });
   });

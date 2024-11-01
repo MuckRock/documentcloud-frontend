@@ -176,6 +176,7 @@ layouts, stories, and tests.
         $progress = p;
       };
       $pdf = task.promise.catch((error) => {
+        console.error(error);
         $currentErrors = [...$currentErrors, error];
         return Promise.reject(error);
       });
