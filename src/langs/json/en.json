@@ -384,7 +384,7 @@
     "fileLimitWarning": "You can only upload {limit} files at once.",
     "beginUpload": "Begin Upload",
     "selectFiles": "Select files",
-    "dragDrop": "Select, drag and drop, or paste files to upload",
+    "dragDrop": "Select, paste or drag and drop files to upload",
     "publicMsg": "Document will be publicly visible.",
     "collabMsg": "Document will be visible to your organization.",
     "privateMsg": "Document will be visible to you alone.",

@@ -14,7 +14,7 @@ describe("DocumentUpload form", () => {
   it("lists files selected for upload", async () => {
     render(DocumentUploadForm);
     const dropElement = screen.getByText(
-      "Select, drag and drop, or paste files to upload",
+      "Select, paste or drag and drop files to upload",
     );
     const dropEvent = createEvent.drop(dropElement);
     const fileList = [new File([new ArrayBuffer(128000)], "file.pdf")];
@@ -30,7 +30,7 @@ describe("DocumentUpload form", () => {
   it("provides feedback when a file is too large", async () => {
     render(DocumentUploadForm);
     const dropElement = screen.getByText(
-      "Select, drag and drop, or paste files to upload",
+      "Select, paste or drag and drop files to upload",
     );
     const dropEvent = createEvent.drop(dropElement);
     const fileList = [

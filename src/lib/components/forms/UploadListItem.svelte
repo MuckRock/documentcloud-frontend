@@ -1,11 +1,13 @@
 <script context="module" lang="ts">
   import type { APIError, Document } from "$lib/api/types";
 
+  type Step = "ready" | "created" | "uploading" | "processing" | "done";
+
   export type UploadStatus = {
     file?: File;
     document?: Document;
     error?: APIError<unknown>;
-    step?: "ready" | "created" | "uploading" | "processing" | "done";
+    step?: Step;
   };
 </script>
 
@@ -35,10 +37,17 @@
   export let status: UploadStatus = { step: "ready" };
   export let loading = false;
 
-  $: description = status?.error
-    ? `${file.name}`
-    : `${file.name}: ${status?.step}`;
+  // i18n
+  const steps: Record<Step, string> = {
+    ready: "READY",
+    created: "CREATED",
+    uploading: "UPLOADING",
+    processing: "PROCESSING",
+    done: "DONE",
+  };
 
+  $: step = steps[status.step];
+  $: description = status?.error ? `${file.name}` : `${file.name}: ${step}`;
   $: linkable =
     status?.document && ["processing", "done"].includes(status?.step);
 </script>

@@ -28,6 +28,7 @@
   } from "$lib/api/types";
 
   import { filesize } from "filesize";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Paperclip16, Paperclip24, Upload16 } from "svelte-octicons";
 
@@ -42,7 +43,7 @@
   import Dropzone from "../inputs/Dropzone.svelte";
   import FileInput from "../inputs/File.svelte";
   import Language from "../inputs/Language.svelte";
-  import Select, { unwrap } from "../inputs/Select.svelte";
+  import Select from "../inputs/Select.svelte";
   import Switch from "../inputs/Switch.svelte";
 
   import UploadListItem, { type UploadStatus } from "./UploadListItem.svelte";
@@ -53,10 +54,12 @@
     isSupported,
     isWithinSizeLimit,
   } from "$lib/utils/files";
+  import { getCsrfToken } from "$lib/utils/api";
 
-  export let csrf_token = "";
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
+
+  let csrf_token: string;
 
   // upload status
   let fileDropActive: boolean;
@@ -93,12 +96,30 @@
 
   $: exceedsSizeLimit = files.some((file) => !isWithinSizeLimit(file));
 
-  function addFiles(filesToAdd: FileList) {
-    files = files.concat(Array.from(filesToAdd).filter(isSupported));
+  onMount(() => {
+    csrf_token = getCsrfToken();
+    addFiles(getFilesToUpload());
+  });
+
+  function addFiles(filesToAdd: FileList | File[]) {
+    files = files
+      .concat(Array.from(filesToAdd).filter(isSupported))
+      .map((file) => {
+        return file;
+      });
+
+    // create a status entry for any new files, skipping things we've started uploading
+    const existing = Object.values(status).map((s) => s.file);
+    files.forEach((file) => {
+      if (!existing.includes(file)) {
+        status[file.name] = { file, step: "ready" };
+      }
+    });
   }
 
   function removeFile(file: File) {
     files = files.filter((f) => f !== file);
+    status[file.name] = null;
   }
 
   function onPaste(e: ClipboardEvent) {
@@ -118,20 +139,23 @@
     const titles = form.getAll("title") as string[];
     const revision_control = form.get("revision_control") === "on";
 
-    const promises = files.map((file, i) =>
-      upload(
-        file,
-        {
-          title: titles[i],
-          original_extension: getFileExtension(file),
-          access,
-          projects: add_to_projects.map((p) => p.id),
-          language: language.value,
-          revision_control,
-        },
-        form,
-      ),
-    );
+    // only run on files that are "ready" and haven't started uploading
+    const promises = Object.values(status)
+      .filter((status) => status.step === "ready")
+      .map((status, i) =>
+        upload(
+          status.file,
+          {
+            title: titles[i],
+            original_extension: getFileExtension(status.file),
+            access,
+            projects: add_to_projects.map((p) => p.id),
+            language: language.value,
+            revision_control,
+          },
+          form,
+        ),
+      );
 
     // errors are handled within each promise, so we can just wait for all to be settled
     await Promise.allSettled(promises);
@@ -220,6 +244,12 @@
   >
     <Flex gap={1} align="stretch" wrap>
       <div class="files" class:active={fileDropActive}>
+        <header>
+          <h1 class="title">{$_("uploadDialog.title")}</h1>
+          <p class="description">
+            {$_("uploadDialog.description")}
+          </p>
+        </header>
         <!-- Add any header and messaging using this slot -->
         <slot />
 
@@ -331,6 +361,23 @@
 </Dropzone>
 
 <style>
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: var(--font-xl);
+    font-weight: var(--font-semibold);
+  }
+
+  .description {
+    opacity: 0.7;
+  }
+
   .files {
     flex: 2 0 20rem;
 
