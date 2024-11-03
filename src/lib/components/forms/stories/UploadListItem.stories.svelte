@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { APIError } from "$lib/api/types";
   import { Story } from "@storybook/addon-svelte-csf";
-  import UploadListItem from "../UploadListItem.svelte";
+  import UploadListItem, { type UploadStatus } from "../UploadListItem.svelte";
 
   export const meta = {
     title: "Forms / Upload List Item",
@@ -19,24 +19,26 @@
     status: 500,
     message: "Error uploading",
   };
+
+  const id = "pretend-random-id";
 </script>
 
-<Story name="no status">
-  <UploadListItem {file} />
+<Story name="ready">
+  <UploadListItem {id} status={{ step: "ready", file }} />
 </Story>
 
 <Story name="created">
-  <UploadListItem {file} status={{ step: "created", document }} />
+  <UploadListItem {id} status={{ step: "created", document, file }} />
 </Story>
 
 <Story name="uploading">
-  <UploadListItem {file} status={{ step: "uploading", document }} />
+  <UploadListItem {id} status={{ step: "uploading", document, file }} />
 </Story>
 
 <Story name="processing">
-  <UploadListItem {file} status={{ step: "processing", document }} />
+  <UploadListItem {id} status={{ step: "processing", document, file }} />
 </Story>
 
 <Story name="error status">
-  <UploadListItem {file} status={{ step: "uploading", error }} />
+  <UploadListItem {id} status={{ step: "uploading", error, file }} />
 </Story>

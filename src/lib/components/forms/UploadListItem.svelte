@@ -3,11 +3,14 @@
 
   type Step = "ready" | "created" | "uploading" | "processing" | "done";
 
+  /**
+   * Keep track of a file as it moves through our three-step upload process
+   */
   export type UploadStatus = {
-    file?: File;
+    file: File;
+    step: Step;
     document?: Document;
     error?: APIError<unknown>;
-    step?: Step;
   };
 </script>
 
@@ -33,8 +36,8 @@
 
   const dispatch = createEventDispatcher();
 
-  export let file: File;
-  export let status: UploadStatus = { step: "ready" };
+  export let id: string;
+  export let status: UploadStatus;
 
   // i18n
   const steps: Record<Step, string> = {
@@ -45,6 +48,7 @@
     done: $_("uploadDialog.steps.done"),
   };
 
+  $: file = status.file;
   $: step = steps[status.step];
   $: description = status?.error ? `${file.name}` : `${file.name}: ${step}`;
   $: loading = ["created", "uploading"].includes(status.step);
@@ -53,7 +57,7 @@
 </script>
 
 <!-- file is ready, uploading or processing -->
-<Flex align="baseline" gap={1} role="listitem" class="upload-list-item">
+<Flex align="baseline" gap={1} role="listitem" class="upload-list-item" {id}>
   <div class="title">
     {#if linkable}
       <a href={canonicalUrl(status.document).href}>{status.document.title}</a>
@@ -72,7 +76,7 @@
               <Button
                 ghost
                 minW={false}
-                on:click={() => dispatch("remove", file)}
+                on:click={() => dispatch("remove", id)}
               >
                 {$_("dialog.remove")}?
               </Button>
@@ -112,7 +116,7 @@
       minW={false}
       ghost
       title={$_("dialog.remove")}
-      on:click={() => dispatch("remove", file)}
+      on:click={() => dispatch("remove", id)}
     >
       <XCircleFill24 />
     </Button>

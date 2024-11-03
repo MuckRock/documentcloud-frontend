@@ -1,3 +1,14 @@
+<!-- @component
+Upload documents to DocumentCloud.
+
+This component works entirely in the client, hitting the API directly 
+and sending files to S3 without passing through our servers.
+
+The component exposes a property called `files`, allowing us to provide
+an initial set of files for upload. This isn't used directly, though.
+All file handling happens through an internal status object that tracks
+progress through the three-part upload process.
+-->
 <script context="module" lang="ts">
   import { get, writable } from "svelte/store";
 
@@ -55,10 +66,17 @@
   export let projects: Project[] = [];
 
   let csrf_token: string;
-
-  // upload status
   let fileDropActive: boolean;
-  let status: Record<string, UploadStatus> = {};
+
+  /**
+   * Upload status
+   *
+   * Each file gets a random, unique ID so we
+   * can track its progress. This also handles cases
+   * where multiple files have the same filename.
+   */
+  let STATUS: Record<string, UploadStatus> = {};
+  let loading = false; // are requests in flight?
 
   // fields
   let access: Access = "private";
@@ -83,38 +101,50 @@
   let ocrEngine = ocrEngineOptions[0];
   let add_to_projects: Project[] = [];
 
-  $: ready = Object.values(status).every((s) => s.step === "ready");
-  $: loading = !ready;
-  $: total = files.reduce((t, file) => {
-    return t + file.size;
+  $: total = Object.values(STATUS).reduce((t, status) => {
+    return t + status.file.size;
   }, 0);
 
+  $: count = Object.keys(STATUS).length;
+  $: empty = count === 0;
+
   $: exceedsSizeLimit = files.some((file) => !isWithinSizeLimit(file));
+
+  // consume any files passed in
+  $: if (files.length > 0) {
+    addFiles(files);
+    files = [];
+  }
 
   onMount(() => {
     csrf_token = getCsrfToken();
     addFiles(getFilesToUpload());
   });
 
-  function addFiles(filesToAdd: FileList | File[]) {
-    files = files
-      .concat(Array.from(filesToAdd).filter(isSupported))
-      .map((file) => {
-        return file;
-      });
-
-    // create a status entry for any new files, skipping things we've started uploading
-    const existing = Object.values(status).map((s) => s.file);
-    files.forEach((file) => {
-      if (!existing.includes(file)) {
-        status[file.name] = { file, step: "ready" };
-      }
-    });
+  function uniqueId(): string {
+    // random enough for a small set
+    return Math.random().toString(32).slice(2);
   }
 
-  function removeFile(file: File) {
-    files = files.filter((f) => f !== file);
-    status[file.name] = null;
+  function addFiles(filesToAdd: FileList | File[]) {
+    STATUS = Array.from(filesToAdd)
+      .filter(isSupported)
+      .reduce((s, file) => {
+        const id = uniqueId();
+
+        s[id] = {
+          file,
+          step: "ready",
+        };
+
+        return s;
+      }, STATUS);
+  }
+
+  function removeFile(id: string) {
+    // splitting this into two lines for readability
+    const entries = Object.entries(STATUS).filter(([uid, s]) => uid !== id);
+    STATUS = Object.fromEntries(entries);
   }
 
   function onPaste(e: ClipboardEvent) {
@@ -135,11 +165,11 @@
     const revision_control = form.get("revision_control") === "on";
 
     // only run on files that are "ready" and haven't started uploading
-    const promises = Object.values(status)
-      .filter((status) => status.step === "ready")
-      .map((status, i) =>
+    const promises = Object.entries(STATUS)
+      .filter(([id, status]) => status.step === "ready")
+      .map(([id, status], i) =>
         upload(
-          status.file,
+          id,
           {
             title: titles[i],
             original_extension: getFileExtension(status.file),
@@ -159,11 +189,8 @@
   }
 
   // upload one file
-  async function upload(file: File, metadata: DocumentUpload, form: FormData) {
-    status[file.name] = {
-      file,
-      step: "ready",
-    };
+  async function upload(id: string, metadata: DocumentUpload, form: FormData) {
+    const file = STATUS[id].file;
 
     // create
     let { data: document, error } = await documents.create(
@@ -171,8 +198,8 @@
       csrf_token,
     );
 
-    status[file.name] = {
-      file,
+    STATUS[id] = {
+      ...STATUS[id],
       document,
       error,
       step: "created",
@@ -196,17 +223,17 @@
     }
 
     if (error) {
-      status[file.name].error = error;
+      STATUS[id].error = error;
       return console.error(error);
     }
 
-    status[file.name].step = "uploading";
+    STATUS[id].step = "uploading";
     const resp = await documents
       .upload(new URL(document.presigned_url), file)
       .catch(console.error);
 
     if (!resp) {
-      status[file.name].error = {
+      STATUS[id].error = {
         status: 500,
         message: "Upload failed",
       };
@@ -214,7 +241,7 @@
     }
 
     // process, if we've made it this far with no errors
-    status[file.name].step = "processing";
+    STATUS[id].step = "processing";
     const force_ocr = form.get("force_ocr") === "on";
 
     ({ error } = await documents.process(
@@ -223,7 +250,7 @@
     ));
 
     if (error) {
-      status[file.name].error = error;
+      STATUS[id].error = error;
     }
   }
 </script>
@@ -248,11 +275,11 @@
         <!-- Add any header and messaging using this slot -->
         <slot />
 
-        <div class="fileList" class:empty={files.length === 0}>
-          {#each files as file}
+        <div class="fileList" class:empty>
+          {#each Object.entries(STATUS) as [id, status] (id)}
             <UploadListItem
-              {file}
-              status={status[file.name]}
+              {id}
+              {status}
               on:remove={(e) => removeFile(e.detail)}
             />
           {:else}
@@ -267,11 +294,11 @@
               <Paperclip16 />
               {$_("uploadDialog.selectFiles")}
             </FileInput>
-            {#if files.length > 0}
+            {#if count > 0}
               <div class="total">
                 <p>
                   {$_("uploadDialog.totalFiles", {
-                    values: { n: files.length },
+                    values: { n: count },
                   })},
                   <span class="uppercase">{filesize(total)}</span>
                 </p>
