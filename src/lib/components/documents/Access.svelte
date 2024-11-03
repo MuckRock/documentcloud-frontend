@@ -37,12 +37,34 @@
   export let level: Level;
 </script>
 
-<SidebarItem
-  inline
-  title={$_(level.description)}
-  --color="var(--gray-5)"
-  --font-size="inherit"
->
-  <svelte:component this={level.icon} height="1em" width="1em" slot="start" />
+<div class="access {level.value}">
+  <svelte:component this={level.icon} height="1em" width="1em" />
   {$_(level.title)}
-</SidebarItem>
+</div>
+
+<style>
+  .access {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    font-weight: var(--font-semibold);
+    color: var(--color, var(--gray-5));
+    fill: var(--fill, var(--gray-4));
+  }
+
+  .access.public {
+    fill: var(--note-public);
+    color: color-mix(in srgb, var(--note-public), var(--gray-5));
+  }
+
+  .access.organization {
+    fill: var(--note-org);
+    color: color-mix(in srgb, var(--note-org), var(--gray-5));
+  }
+
+  .access.private {
+    fill: var(--note-private);
+    color: color-mix(in srgb, var(--note-private), var(--gray-5));
+  }
+</style>

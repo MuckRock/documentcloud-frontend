@@ -11,6 +11,7 @@
 
   let args = {
     name: "textInput",
+    value: "",
   };
 </script>
 
@@ -20,4 +21,13 @@
 
 <Story name="Empty" {args} />
 
-<Story name="With content" args={{ ...args, value: "This is some text…" }} />
+<Story
+  name="With content"
+  args={{ ...args, value: "This is some text\nwith multiple lines" }}
+/>
+
+<style>
+  div {
+    width: 24rem;
+  }
+</style>

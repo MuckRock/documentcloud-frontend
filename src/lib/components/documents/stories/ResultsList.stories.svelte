@@ -22,32 +22,27 @@
     title: "Components / Documents / Results list",
     component: ResultsList,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
   };
 </script>
 
 <Story name="With Results">
-  <div style="width: 36rem"><ResultsList {results} {count} {next} /></div>
+  <ResultsList {results} {count} {next} />
 </Story>
 
 <Story name="Empty">
-  <div style="width: 36rem"><ResultsList /></div>
+  <ResultsList />
 </Story>
 
 <Story name="Infinite">
-  <div style="width: 36rem"><ResultsList {results} {count} {next} auto /></div>
+  <ResultsList {results} {count} {next} auto />
 </Story>
 
 <Story name="Pending documents">
-  <div style="width: 36rem">
-    <ResultsList {results} {count} {next}>
-      <Pending {pending} slot="start" />
-    </ResultsList>
-  </div>
+  <ResultsList {results} {count} {next}>
+    <Pending {pending} slot="start" />
+  </ResultsList>
 </Story>
 
 <Story name="Highlighted">
-  <div style="width: 36rem">
-    <ResultsList results={highlighted} {count} {next} />
-  </div>
+  <ResultsList results={highlighted} {count} {next} />
 </Story>

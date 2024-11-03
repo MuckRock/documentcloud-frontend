@@ -60,6 +60,9 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import { getCurrentUser } from "$lib/utils/permissions";
+
+  const user = getCurrentUser();
 
   onMount(() => {
     // do we have a tour?
@@ -74,7 +77,7 @@
       const currentRoute = getRoute();
       const history = getTourHistory();
       const offerTour = history[currentRoute] ?? true;
-      if (offerTour) {
+      if ($user && offerTour) {
         startTour();
       }
     }
