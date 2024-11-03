@@ -99,7 +99,7 @@ progress through the three-part upload process.
   ];
 
   let ocrEngine = ocrEngineOptions[0];
-  let add_to_projects: Project[] = [];
+  let add_to_projects: Project[] = [getProjectToUpload()].filter(Boolean);
 
   $: total = Object.values(STATUS).reduce((t, status) => {
     return t + status.file.size;
