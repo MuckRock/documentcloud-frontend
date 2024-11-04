@@ -30,7 +30,7 @@ describe("DocumentUpload form", () => {
   it("provides feedback when a file is too large", async () => {
     render(DocumentUploadForm);
     const dropElement = screen.getByText(
-      "Select, paste or drag and drop files to upload",
+      "Select, paste or drag-and-drop files to upload",
     );
     const dropEvent = createEvent.drop(dropElement);
     const fileList = [
