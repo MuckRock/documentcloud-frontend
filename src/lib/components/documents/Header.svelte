@@ -12,6 +12,7 @@
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
   import { remToPx } from "@/lib/utils/layout";
+  import Access, { getLevel } from "./Access.svelte";
 
   export let document: Document;
 
@@ -27,37 +28,52 @@
   function clean(html: string) {
     return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
   }
+
+  $: access = getLevel(document.access);
 </script>
 
-<header bind:clientWidth={width} class:twoColumn={BREAKPOINTS.TWO_COLUMN}>
-  <h1>{document.title}</h1>
+<header bind:clientWidth={width}>
+  {#if access}
+    <div class="access">
+      <Access level={access} />
+    </div>
+  {/if}
+  <h1 class="title">{document.title}</h1>
   {#if description}
-    <div class="description">
+    <div class="description" class:twoColumn={BREAKPOINTS.TWO_COLUMN}>
       {@html description}
     </div>
   {/if}
 </header>
 
 <style>
-  header h1 {
-    display: inline;
-    overflow-wrap: break-word;
-    font-weight: var(--font-semibold);
-    font-size: calc(1.25 * var(--font-xl));
-    line-height: 1.2;
-  }
   header {
     margin: 0 auto;
     max-width: 64rem;
     display: flex;
-    flex-direction: column;
-    gap: 1rem 0;
+    flex-flow: row-reverse wrap;
+    align-items: baseline;
+    /* with row-reverse, align to end instead of start */
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  .title {
+    flex: 1 1 32rem;
+    display: inline;
+    overflow-wrap: break-word;
+    font-weight: var(--font-semibold);
+    font-size: var(--font-xl);
+    line-height: 1.2;
+  }
+  .access {
+    flex: 0 1 auto;
   }
   .description {
+    flex: 1 1 100%;
     line-height: 1.4;
     color: var(--gray-5);
   }
-  .twoColumn .description {
+  .twoColumn.description {
     columns: 2;
     column-gap: 1rem;
   }
