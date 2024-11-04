@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Nullable } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import {
     FileDirectory24,
@@ -26,7 +28,6 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
-  import type { Nullable } from "$lib/api/types";
 
   const me = getCurrentUser();
 
@@ -38,15 +39,14 @@
   $: projects = data.projects.results;
   $: next = data.projects.next;
   $: previous = data.projects.previous;
-  $: list = data.list;
 
   function paginate(u: Nullable<URL | string>) {
     if (!u) return;
     u = new URL(u);
     const target = new URL($page.url);
 
-    const cursorParam = u.searchParams.get("cursor");
-    if (cursorParam) target.searchParams.set("cursor", cursorParam);
+    const cursor = u.searchParams.get("cursor");
+    if (cursor) target.searchParams.set("cursor", cursor);
     goto(target);
   }
 

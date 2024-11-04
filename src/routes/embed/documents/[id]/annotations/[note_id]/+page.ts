@@ -1,7 +1,7 @@
 // load a note for embedding
+import { error } from "@sveltejs/kit";
 import * as documents from "@/lib/api/documents";
 import * as notesApi from "$lib/api/notes";
-import { error } from "@sveltejs/kit";
 
 export async function load({ params, fetch }) {
   const [document, note] = await Promise.all([

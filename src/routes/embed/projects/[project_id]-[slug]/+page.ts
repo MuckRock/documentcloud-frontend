@@ -1,9 +1,9 @@
 // load data for project embeds
+import type { Maybe } from "$lib/api/types";
 
 import { error, redirect } from "@sveltejs/kit";
 import { search } from "$lib/api/documents";
 import { get, embedUrl } from "$lib/api/projects";
-import type { Maybe } from "$lib/api/types";
 
 const OLD_PATTERN = /(\D+)-(\d+)/;
 

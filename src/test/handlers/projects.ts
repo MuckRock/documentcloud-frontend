@@ -1,4 +1,7 @@
+import type { Page } from "$lib/api/types";
+
 import { rest } from "msw";
+
 import {
   dataHandler,
   emptyHandler,
@@ -12,9 +15,9 @@ import { projectList } from "../fixtures/projects";
 import projectFixture from "../fixtures/projects/project.json";
 import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
 import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
-import type { Page } from "@/lib/api/types";
 
 const projectUrl = createApiUrl("projects/*");
+
 export const projects = {
   info: rest.get(createApiUrl("projects/"), dataHandler(projectList)),
   data: rest.get(projectUrl, dataHandler(projectFixture)),

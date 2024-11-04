@@ -1,7 +1,8 @@
 // load data for a single page embed
-import * as documents from "@/lib/api/documents";
-import * as notesApi from "$lib/api/notes";
 import { error } from "@sveltejs/kit";
+
+import * as documents from "$lib/api/documents";
+import * as notesApi from "$lib/api/notes";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {

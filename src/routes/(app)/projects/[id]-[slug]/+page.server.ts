@@ -6,6 +6,18 @@ import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import * as collaborators from "$lib/api/collaborators";
 import * as projects from "$lib/api/projects";
 
+const ACCESS: Set<ProjectAccess> = new Set(["admin", "edit", "view"]);
+
+function getAccess(form: FormData): ProjectAccess {
+  let access = form.get("access")?.toString() as ProjectAccess;
+
+  if (!ACCESS.has(access)) {
+    return "view";
+  }
+
+  return access;
+}
+
 export const actions = {
   /**
    * Delete this project
@@ -71,7 +83,7 @@ export const actions = {
     }
 
     const email = form.get("email") as string;
-    const access = form.get("access") as ProjectAccess;
+    const access = getAccess(form);
 
     const { data: user, error } = await collaborators.add(
       +params.id,
@@ -101,7 +113,8 @@ export const actions = {
     }
 
     const user = form.get("user");
-    const access = form.get("access");
+    const access = getAccess(form);
+
     if (!user || !access) {
       return fail(400, { message: "Missing form data" });
     }
@@ -111,7 +124,7 @@ export const actions = {
     const { data, error } = await collaborators.update(
       project_id,
       +user,
-      String(access),
+      access,
       csrf_token,
       fetch,
     );
