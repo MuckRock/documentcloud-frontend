@@ -12,8 +12,7 @@
 
   export let data;
 
-  $: form = $page.form;
-  $: projects = data.projects.results;
+  $: projects = data.projects?.results ?? [];
 </script>
 
 <svelte:head>

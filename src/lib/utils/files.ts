@@ -7,20 +7,21 @@ import {
 
 const types = new Set(DOCUMENT_TYPES);
 
-export function getFileExtensionFromType(filetype?: string) {
+export function getFileExtensionFromType(filetype?: string): string {
   if (filetype?.includes("/")) {
-    return filetype.split("/")[1];
+    return filetype.split("/")[1] ?? "";
   }
-  return filetype;
+  return filetype ?? "";
 }
 
-export function getFileExtension(file?: File): Maybe<string> {
-  if (!file) return;
+export function getFileExtension(file?: File): string {
+  if (!file) return "";
   if (file.name.includes(".")) {
-    return file.name.toLowerCase().trim().split(".").pop();
+    return file.name.toLowerCase().trim().split(".").pop() ?? "";
   } else if (file.type) {
-    return getFileExtensionFromType(file.type);
+    return getFileExtensionFromType(file.type) ?? "";
   }
+  return "";
 }
 
 export function isSupported(file: File): boolean {

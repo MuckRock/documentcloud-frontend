@@ -31,7 +31,13 @@ progress through the three-part upload process.
 </script>
 
 <script lang="ts">
-  import type { Access, DocumentUpload, Project } from "$lib/api/types";
+  import type {
+    Access,
+    DocumentUpload,
+    Maybe,
+    Nullable,
+    Project,
+  } from "$lib/api/types";
 
   import { filesize } from "filesize";
   import { onMount } from "svelte";
@@ -65,7 +71,7 @@ progress through the three-part upload process.
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
 
-  let csrf_token: string;
+  let csrf_token: Maybe<string>;
   let fileDropActive: boolean;
 
   /**
@@ -99,7 +105,9 @@ progress through the three-part upload process.
   ];
 
   let ocrEngine = ocrEngineOptions[0];
-  let add_to_projects: Project[] = [getProjectToUpload()].filter(Boolean);
+  let add_to_projects: Project[] = [getProjectToUpload()].filter(
+    Boolean,
+  ) as Project[];
 
   $: total = Object.values(STATUS).reduce((t, status) => {
     return t + status.file.size;
@@ -171,7 +179,7 @@ progress through the three-part upload process.
         upload(
           id,
           {
-            title: titles[i],
+            title: titles[i] ?? "",
             original_extension: getFileExtension(status.file),
             access,
             projects: add_to_projects.map((p) => p.id),
@@ -190,6 +198,9 @@ progress through the three-part upload process.
 
   // upload one file
   async function upload(id: string, metadata: DocumentUpload, form: FormData) {
+    if (!csrf_token) return;
+    if (!STATUS[id]) return;
+
     const file = STATUS[id].file;
 
     // create
@@ -210,6 +221,18 @@ progress through the three-part upload process.
       return console.error(error);
     }
 
+    if (!document || !document.presigned_url) {
+      STATUS[id] = {
+        ...STATUS[id],
+        error: {
+          status: 500,
+          message: "API returned invalid document. Please try again.",
+        },
+      };
+
+      return;
+    }
+
     // upload
     let presigned_url: URL;
     try {
@@ -220,16 +243,22 @@ progress through the three-part upload process.
         message: "Invalid presigned URL",
         errors: e,
       };
-    }
 
-    if (error) {
       STATUS[id].error = error;
       return console.error(error);
     }
 
+    if (!presigned_url) {
+      STATUS[id].error = {
+        status: 500,
+        message: "Invalid presigned URL",
+      };
+      return;
+    }
+
     STATUS[id].step = "uploading";
     const resp = await documents
-      .upload(new URL(document.presigned_url), file)
+      .upload(presigned_url, file)
       .catch(console.error);
 
     if (!resp) {
@@ -245,7 +274,7 @@ progress through the three-part upload process.
     const force_ocr = form.get("force_ocr") === "on";
 
     ({ error } = await documents.process(
-      [{ id: document.id, force_ocr, ocr_engine: ocrEngine.value }],
+      [{ id: document?.id, force_ocr, ocr_engine: ocrEngine?.value }],
       csrf_token,
     ));
 

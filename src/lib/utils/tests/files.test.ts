@@ -9,7 +9,7 @@ describe("files.getFileExtensionFromType", () => {
   it("returns the provided input if not a Mimetype", () => {
     expect(files.getFileExtensionFromType("")).toEqual("");
     expect(files.getFileExtensionFromType("pdf")).toEqual("pdf");
-    expect(files.getFileExtensionFromType(undefined)).toEqual(undefined);
+    expect(files.getFileExtensionFromType(undefined)).toEqual("");
   });
 });
 
@@ -33,7 +33,7 @@ describe("files.getFileExtension", () => {
 
   it("returns undefined if neither filename extension nor file type", () => {
     const file = new File([], "filename");
-    expect(files.getFileExtension(file)).toBeUndefined();
+    expect(files.getFileExtension(file)).toEqual("");
   });
 });
 

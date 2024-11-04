@@ -59,8 +59,8 @@
 <!-- file is ready, uploading or processing -->
 <Flex align="baseline" gap={1} role="listitem" class="upload-list-item" {id}>
   <div class="title">
-    {#if linkable}
-      <a href={canonicalUrl(status.document).href}>{status.document.title}</a>
+    {#if linkable && status.document}
+      <a href={canonicalUrl(status.document).href}>{status.document?.title}</a>
     {:else}
       <Field inline sronly title={$_("common.title")} {description}>
         <Text
