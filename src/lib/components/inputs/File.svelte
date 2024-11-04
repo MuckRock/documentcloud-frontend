@@ -8,11 +8,11 @@
   import { DOCUMENT_TYPES } from "@/config/config.js";
   import Button from "$lib/components/common/Button.svelte";
 
-  export let name: string = null;
+  export let name: null | string = null;
   export let onFileSelect: (files: FileList) => void;
   export let multiple = false;
   export let buttonMode: ComponentProps<Button>["mode"] = "primary";
-  export let files: FileList = null;
+  export let files: null | FileList = null;
   export let disabled = false;
 
   // Bound to the file picker input
@@ -24,12 +24,12 @@
 
   function handleFiles() {
     const fileList = picker.files;
-    if (fileList.length > 0) {
+    if (fileList && fileList.length > 0) {
       // Clone the file list so the input can be safely cleared
       const listCopy: FileList = Object.assign([], fileList);
       onFileSelect(listCopy);
     }
-    picker.value = null;
+    picker.value = "";
   }
 </script>
 

@@ -1,4 +1,7 @@
+import type { Page } from "$lib/api/types";
+
 import { rest } from "msw";
+
 import {
   dataHandler,
   emptyHandler,
@@ -14,6 +17,7 @@ import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json"
 import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
 
 const projectUrl = createApiUrl("projects/*");
+
 export const projects = {
   info: rest.get(createApiUrl("projects/"), dataHandler(projectList)),
   data: rest.get(projectUrl, dataHandler(projectFixture)),
@@ -22,6 +26,9 @@ export const projects = {
   error: rest.get(projectUrl, errorHandler),
   documents: rest.get(
     createApiUrl("projects/*/documents/"),
-    pageHandler(projDocsPage1, projDocsPage2),
+    pageHandler<Page<{ document: Partial<Document> }>>(
+      projDocsPage1,
+      projDocsPage2,
+    ),
   ),
 };

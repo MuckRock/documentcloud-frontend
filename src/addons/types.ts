@@ -60,8 +60,8 @@ interface AddOnParameters {
 // https://api.www.documentcloud.org/api/addons/
 export interface AddOnListItem {
   id: number;
-  user: number;
-  organization: number;
+  user: null | number;
+  organization: null | number;
   access: "public" | "private";
   name: string;
   repository: string;

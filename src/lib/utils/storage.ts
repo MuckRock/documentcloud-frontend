@@ -16,7 +16,7 @@ export class StorageManager {
 
   get<R, T>(key: string, defaultValue?: T): R | T | null {
     try {
-      const value = JSON.parse(localStorage.getItem(this.key(key)));
+      const value = JSON.parse(localStorage.getItem(this.key(key)) ?? "null");
       if (value === null) return defaultValue ?? null;
       return value;
     } catch (e) {
@@ -35,7 +35,7 @@ export class StorageManager {
 
   remove(key: string) {
     try {
-      localStorage.removeItem(this.key(key))
+      localStorage.removeItem(this.key(key));
     } catch (e) {
       // Local storage not available
     }

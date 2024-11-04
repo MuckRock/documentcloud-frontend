@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Maybe } from "$lib/api/types";
 
   interface NoteOption {
     value: string | number;
@@ -47,7 +47,7 @@
 
   export let document: Document;
   export let page: number = 1;
-  export let note: string | number = null;
+  export let note: null | string | number = null;
   export let currentTab: "document" | "page" | "note" = "document";
 
   const noteOptions = document.notes?.map<NoteOption>((note) => ({
@@ -55,7 +55,7 @@
     label: `pg. ${note.page_number + 1} – ${note.title}`,
   }));
 
-  let selectedNote: NoteOption = note
+  let selectedNote: Maybe<NoteOption> = note
     ? noteOptions?.find(({ value }) => value === note)
     : noteOptions?.[0];
 
@@ -107,7 +107,7 @@
         break;
       case "note":
         const noteObject = document.notes?.find(
-          ({ id }) => String(id) === String(selectedNote.value),
+          ({ id }) => String(id) === String(selectedNote?.value),
         );
         if (noteObject) {
           permalink = noteUrl(document, noteObject);
@@ -193,7 +193,7 @@
             <Number bind:value={page} min={1} max={document.page_count} />
           </Field>
         </div>
-      {:else if currentTab === "note" && noteOptions.length > 0}
+      {:else if currentTab === "note" && noteOptions && noteOptions.length > 0}
         <div class="subselection">
           <Field>
             <FieldLabel>{$_("share.fields.note")}:</FieldLabel>

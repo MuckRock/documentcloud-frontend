@@ -3,7 +3,9 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "allowJs": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noUncheckedIndexedAccess": true,
+    "strictNullChecks": true
     // "types": ["@testing-library/jest-dom"]
   },
   "include": [

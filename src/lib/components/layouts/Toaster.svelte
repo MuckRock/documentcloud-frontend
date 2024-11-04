@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
-  import type { SvelteComponent } from "svelte";
+  import type { ComponentType, SvelteComponent } from "svelte";
   import { writable } from "svelte/store";
 
-  type ToastContents<P = any> = string | typeof SvelteComponent<P>;
+  type ToastContents = string | ComponentType;
 
   interface ToastOptions<P = any> {
     status?: "info" | "success" | "warning" | "error";
@@ -10,9 +10,9 @@
     props?: P;
   }
 
-  interface ToastItem<P = any> extends ToastOptions {
+  interface ToastItem extends ToastOptions {
     id?: string | number;
-    contents: ToastContents<P>;
+    contents: ToastContents;
   }
 
   function addToast(newToast: ToastItem, prev: ToastItem[]) {
@@ -23,7 +23,7 @@
   export const toasts = writable<ToastItem[]>([]);
 
   export function toast<P>(
-    contents: ToastContents<P>,
+    contents: ToastContents,
     options: ToastOptions<P> = {},
   ) {
     toasts.update((prev) => addToast({ contents, ...options }, prev));

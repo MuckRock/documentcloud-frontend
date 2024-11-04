@@ -20,6 +20,11 @@
   async function create() {
     reset();
     const csrf_token = getCsrfToken();
+    if (!csrf_token) {
+      error = true;
+      message = $_("mailkey.missing_csrf");
+      return;
+    }
     const mailkey = await createMailkey(csrf_token, fetch);
     if (mailkey) {
       message = $_("mailkey.create.success", {
@@ -34,6 +39,11 @@
   async function destroy() {
     reset();
     const csrf_token = getCsrfToken();
+    if (!csrf_token) {
+      error = true;
+      message = $_("mailkey.missing_csrf");
+      return;
+    }
     if (await destroyMailkey(csrf_token, fetch)) {
       message = $_("mailkey.destroy.success");
     } else {

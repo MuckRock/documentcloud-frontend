@@ -74,10 +74,16 @@ export async function get(
 export async function create(
   doc_id: string | number,
   section: { page_number: number; title: string },
-  csrf_token: string,
+  csrf_token: string | undefined,
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Section, ValidationError>> {
   const endpoint = new URL(`documents/${doc_id}/sections/`, BASE_API_URL);
+
+  if (!csrf_token) {
+    return Promise.reject({
+      error: { status: 403, message: "CSRF token required" },
+    });
+  }
 
   const resp = await fetch(endpoint, {
     credentials: "include",
@@ -100,13 +106,19 @@ export async function update(
   doc_id: string | number,
   section_id: string | number,
   section: { page_number?: number; title?: string },
-  csrf_token: string,
+  csrf_token: string | undefined,
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Section, ValidationError>> {
   const endpoint = new URL(
     `documents/${doc_id}/sections/${section_id}/`,
     BASE_API_URL,
   );
+
+  if (!csrf_token) {
+    return Promise.reject({
+      error: { status: 403, message: "CSRF token required" },
+    });
+  }
 
   const resp = await fetch(endpoint, {
     credentials: "include",
@@ -128,13 +140,19 @@ export async function update(
 export async function remove(
   doc_id: string | number,
   section_id: string | number,
-  csrf_token: string,
+  csrf_token: string | undefined,
   fetch = globalThis.fetch,
 ): Promise<APIResponse<null, unknown>> {
   const endpoint = new URL(
     `documents/${doc_id}/sections/${section_id}/`,
     BASE_API_URL,
   );
+
+  if (!csrf_token) {
+    return Promise.reject({
+      error: { status: 403, message: "CSRF token required" },
+    });
+  }
 
   const resp = await fetch(endpoint, {
     credentials: "include",

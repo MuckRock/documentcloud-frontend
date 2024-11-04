@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Nullable } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import {
     FileDirectory24,
@@ -37,13 +39,14 @@
   $: projects = data.projects.results;
   $: next = data.projects.next;
   $: previous = data.projects.previous;
-  $: list = data.list;
 
-  function paginate(u: URL | string) {
+  function paginate(u: Nullable<URL | string>) {
+    if (!u) return;
     u = new URL(u);
     const target = new URL($page.url);
 
-    target.searchParams.set("cursor", u.searchParams.get("cursor"));
+    const cursor = u.searchParams.get("cursor");
+    if (cursor) target.searchParams.set("cursor", cursor);
     goto(target);
   }
 

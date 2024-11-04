@@ -11,11 +11,13 @@ of the $modal store. These are used to set the active modal on any given page.
   import type { ComponentType, SvelteComponent } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
-  export type ModalContext = Writable<{
-    title?: string;
-    component: ComponentType<SvelteComponent>;
-    props?: any;
-  }>;
+  export type ModalContext = Writable<
+    Nullable<{
+      title?: string;
+      component: ComponentType<SvelteComponent>;
+      props?: any;
+    }>
+  >;
 
   export const modal: ModalContext = writable(null);
   export const MODAL = "modal"; // constant for context
@@ -27,6 +29,7 @@ of the $modal store. These are used to set the active modal on any given page.
   import { fade, fly } from "svelte/transition";
   import { XCircle24 } from "svelte-octicons";
   import Button from "../common/Button.svelte";
+  import type { Nullable } from "$lib/api/types";
 
   const dispatch = createEventDispatcher();
 

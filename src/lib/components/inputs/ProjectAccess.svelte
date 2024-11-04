@@ -35,7 +35,7 @@ Project access input
   ];
 
   export let name: string = "access";
-  export let selected = levels[0].value;
+  export let selected = levels[0]?.value;
 </script>
 
 <Flex direction="column" gap={0.5}>

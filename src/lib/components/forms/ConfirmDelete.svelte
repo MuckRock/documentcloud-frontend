@@ -2,7 +2,7 @@
 Confirm deletion or one or more documents.
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
 
@@ -23,14 +23,16 @@ Confirm deletion or one or more documents.
 
   const dispatch = createEventDispatcher();
 
-  let error: string = undefined;
+  let error: Maybe<string> = undefined;
 
   $: ids = documents.map((d) => d.id);
   $: bulk = documents.length !== 1; // if it's zero, handle that elsewhere
   $: count = documents.length;
   $: action = bulk
     ? "/documents/?/delete"
-    : canonicalUrl(documents[0]).href + "?/delete";
+    : documents[0]
+      ? canonicalUrl(documents[0]).href + "?/delete"
+      : "";
 
   function onSubmit({ submitter, cancel }) {
     submitter.disabled = true;

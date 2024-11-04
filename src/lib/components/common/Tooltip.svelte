@@ -11,7 +11,7 @@
     type MiddlewareData,
   } from "@floating-ui/dom";
 
-  export let caption: string | ComponentType;
+  export let caption: string | ComponentType | undefined;
   export let placement: Placement = "bottom";
   export let offset: number = 6;
   export let arrow = false;
@@ -23,14 +23,16 @@
 
   function positionArrow(placement: Placement, middlewareData: MiddlewareData) {
     // Accessing the data
-    const { x: arrowX, y: arrowY } = middlewareData.arrow;
+    const { x: arrowX, y: arrowY } = middlewareData.arrow ?? {};
 
-    const staticSide = {
-      top: "bottom",
-      right: "left",
-      bottom: "top",
-      left: "right",
-    }[placement.split("-")[0]];
+    const placementFirst = placement.split("-")[0] ?? "top";
+    const staticSide =
+      {
+        top: "bottom",
+        right: "left",
+        bottom: "top",
+        left: "right",
+      }[placementFirst] ?? "bottom";
 
     Object.assign(arrowRef.style, {
       left: arrowX != null ? `${arrowX}px` : "",

@@ -7,7 +7,7 @@ export interface Project {
   private: boolean;
   created_at: string;
   updated_at: string;
-  edit_access: boolean;
-  add_remove_access: boolean;
+  edit_access: null | boolean;
+  add_remove_access: null | boolean;
   pinned?: boolean;
 }

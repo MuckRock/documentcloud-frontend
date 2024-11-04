@@ -5,7 +5,7 @@
   and if the user hasn't already taken it, we'll prompt them to take the guided tour.
  -->
 <script lang="ts" context="module">
-  import type { Maybe } from "$lib/api/types";
+  import type { Maybe, Nullable } from "$lib/api/types";
 
   import "driver.js/dist/driver.css";
 
@@ -29,17 +29,18 @@
 
   type Tours = Record<string, boolean>;
 
-  export function getRoute(): Maybe<string> {
+  export function getRoute(): Maybe<Nullable<string>> {
     return get(page)?.route?.id;
   }
 
-  export function getScript(route?: string): Maybe<DriveStep[]> {
+  export function getScript(route?: Nullable<string>): Maybe<DriveStep[]> {
     const currentRoute = route ?? getRoute();
+    if (!currentRoute) return;
     return scripts[currentRoute];
   }
 
   export function getTourHistory(): Tours {
-    return storage.get<Tours, {}>("tours", {});
+    return storage.get<Tours, {}>("tours", {}) ?? {};
   }
 
   export function startTour(): void {
@@ -49,11 +50,12 @@
   export function endTour(): void {
     const route = getRoute();
     const history = getTourHistory();
+    if (!route) return;
     storage.set("tours", { ...history, [route]: false });
     driverObj.destroy();
   }
 
-  export function isTourAvailable(route?: string): boolean {
+  export function isTourAvailable(route?: Nullable<string>): boolean {
     return Boolean(getScript(route));
   }
 </script>
@@ -76,6 +78,7 @@
       // should we start the tour?
       const currentRoute = getRoute();
       const history = getTourHistory();
+      if (!currentRoute) return;
       const offerTour = history[currentRoute] ?? true;
       if ($user && offerTour) {
         startTour();

@@ -1,6 +1,5 @@
 import type { NumericRange } from "@sveltejs/kit";
-import type { Page } from "@/api/types";
-import type { APIError, APIResponse } from "$lib/api/types";
+import type { APIResponse, Maybe, Page } from "$lib/api/types";
 import { CSRF_COOKIE_NAME, MAX_PER_PAGE } from "@/config/config";
 
 export function isErrorCode(status: number): status is NumericRange<400, 599> {
@@ -53,7 +52,7 @@ export async function getApiResponse<T, E = unknown>(
       response.error = {
         status: resp.status,
         message: resp.statusText,
-        errors: null,
+        errors: undefined,
       };
     }
 
@@ -140,14 +139,14 @@ export async function getPrivateAsset(
   return new URL(location);
 }
 
-export function getCsrfToken(document = globalThis.document): string {
+export function getCsrfToken(document = globalThis.document): Maybe<string> {
   if (typeof document === "undefined") return "";
   const [key, token] =
     document.cookie
       ?.split(";")
       ?.map((c) => c.split("="))
       // in case there's spaces in the cookie string, trim the key
-      ?.find(([k, v]) => k.trim() === CSRF_COOKIE_NAME) ?? [];
+      ?.find(([k, v]) => k?.trim() === CSRF_COOKIE_NAME) ?? [];
 
   return token;
 }

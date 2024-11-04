@@ -8,7 +8,7 @@
     "pdfjs-dist/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
-  import { pageSizes } from "@/api/pageSize.js";
+  import { pageSizes } from "$lib/utils/pageSize";
 
   import doc from "@/test/fixtures/documents/examples/the-santa-anas.json";
   import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
@@ -24,8 +24,8 @@
     parameters: { layout: "centered" },
   };
 
-  const sizes = pageSizes(document.page_spec);
-  const [width, height] = sizes[0];
+  const sizes = pageSizes(document.page_spec!);
+  const [width, height] = sizes[0]!;
   const query = "los angeles";
   const url = new URL(pdfFile, import.meta.url);
 

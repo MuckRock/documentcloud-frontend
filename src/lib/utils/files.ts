@@ -1,3 +1,4 @@
+import type { Maybe } from "$lib/api/types";
 import {
   DOCUMENT_TYPES,
   PDF_SIZE_LIMIT,
@@ -6,23 +7,26 @@ import {
 
 const types = new Set(DOCUMENT_TYPES);
 
-export function getFileExtensionFromType(filetype?: string) {
+export function getFileExtensionFromType(filetype?: string): string {
   if (filetype?.includes("/")) {
-    return filetype.split("/")[1];
+    return filetype.split("/")[1] ?? "";
   }
-  return filetype;
+  return filetype ?? "";
 }
 
-export function getFileExtension(file: File) {
+export function getFileExtension(file?: File): string {
+  if (!file) return "";
   if (file.name.includes(".")) {
-    return file.name.toLowerCase().trim().split(".").pop();
+    return file.name.toLowerCase().trim().split(".").pop() ?? "";
   } else if (file.type) {
-    return getFileExtensionFromType(file.type);
+    return getFileExtensionFromType(file.type) ?? "";
   }
+  return "";
 }
 
-export function isSupported(file: File) {
+export function isSupported(file: File): boolean {
   const extension = getFileExtension(file);
+  if (!extension) return false;
   return types.has(extension);
 }
 
@@ -43,5 +47,6 @@ export function isWithinSizeLimit(file: File) {
 
 export function filenameToTitle(filename: string): string {
   const [name, ...ext] = filename.split(".");
+  if (!name) return filename;
   return name.replace(/_/g, " ");
 }

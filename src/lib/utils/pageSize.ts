@@ -10,7 +10,7 @@ export function pageSizesFromSpec(pageSpec) {
   if (pageSpec.trim().length == 0) return [];
 
   const parts = pageSpec.split(";");
-  const sizes = [];
+  const sizes: number[] = [];
   for (let i = 0; i < parts.length; i++) {
     // Go through each part, e.g. 100x200:0-5
     const part = parts[i];

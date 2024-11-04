@@ -22,6 +22,9 @@ export const actions = {
   // like edit but specifically for data
   async data({ cookies, request, fetch, params, url }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const { id } = params;
 
     // array of [['key', '...'], ['value', '...']]
@@ -65,6 +68,9 @@ export const actions = {
 
   async delete({ cookies, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const { id } = params;
 
     console.info(`Deleting document: ${id}`);
@@ -81,6 +87,9 @@ export const actions = {
 
   async edit({ cookies, fetch, request, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
     const { id } = params;
 
@@ -106,6 +115,9 @@ export const actions = {
 
   async redact({ cookies, fetch, request, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
     const redactions = JSON.parse(form.get("redactions") as string);
 
@@ -131,6 +143,9 @@ export const actions = {
 
   async createAnnotation({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
 
     const [x1, x2, y1, y2] = JSON.parse(form.get("coords") as string);
@@ -139,7 +154,9 @@ export const actions = {
       title: form.get("title") as string,
       content: (form.get("content") as string) ?? "",
       access: form.get("access") as Access,
-      page_number: +form.get("page_number"),
+      page_number: form.get("page_number")
+        ? Number(form.get("page_number"))
+        : undefined,
       x1,
       x2,
       y1,
@@ -168,9 +185,12 @@ export const actions = {
 
   async updateAnnotation({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
 
-    const note_id = +form.get("id");
+    const note_id = form.get("id");
 
     // only limited update options for now
     const note: Partial<Note> = {
@@ -181,7 +201,7 @@ export const actions = {
 
     const { data: updated, error } = await notes.update(
       params.id,
-      note_id,
+      Number(note_id),
       note,
       csrf_token,
       fetch,
@@ -202,9 +222,12 @@ export const actions = {
 
   async deleteAnnotation({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
     const form = await request.formData();
 
-    const note_id = +form.get("id");
+    const note_id = Number(form.get("id"));
 
     if (!note_id) return fail(400, { id: "missing" });
 

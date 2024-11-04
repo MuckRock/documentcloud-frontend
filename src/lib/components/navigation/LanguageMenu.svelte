@@ -27,7 +27,7 @@
   <!-- Language Menu -->
   <Dropdown {position}>
     <SidebarItem slot="anchor">
-      <span class="flag" slot="start">{currentLang[2]}</span>
+      <span class="flag" slot="start">{currentLang?.[2]}</span>
       <!-- <span class="lang">{currentLang[0]}</span> -->
       <div class="dropdownArrow" slot="end">
         {#if position.includes("bottom")}

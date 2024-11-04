@@ -24,7 +24,7 @@
   export let document: Document;
   export let open = false;
 
-  $: highlights = Object.entries(document.highlights);
+  $: highlights = Object.entries(document.highlights ?? {});
 
   function pageHref(id: string): string {
     const pageNo = pageNumber(id);

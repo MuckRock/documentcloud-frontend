@@ -29,7 +29,7 @@
 
   $: disabled = event.event === 0;
   $: key = event.addon?.parameters?.eventOptions?.name;
-  $: target = event.parameters[key];
+  $: target = key ? event.parameters[key] : undefined;
 
   function url(event: Event) {
     return `/add-ons/${event.addon.repository}/${event.id}/`;

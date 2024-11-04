@@ -22,15 +22,13 @@
   let edit = false;
   let organize = false;
   let share = false;
+
+  $: toShare = $selected?.length === 1 ? $selected[0] : null;
 </script>
 
 <Flex direction="column">
   <!-- for now, we can only share individual documents or projects -->
-  <SidebarItem
-    hover
-    disabled={$selected?.length !== 1}
-    on:click={(e) => (share = true)}
-  >
+  <SidebarItem hover disabled={!toShare} on:click={(e) => (share = true)}>
     <Share16 slot="start" />{$_("dialog.share")} &hellip;
   </SidebarItem>
   <SidebarItem
@@ -74,12 +72,11 @@
   </Portal>
 {/if}
 
-{#if share}
+{#if share && toShare}
   <Portal>
     <Modal on:close={() => (share = false)}>
-      {@const document = $selected[0]}
       <h1 slot="title">{$_("dialog.share")}</h1>
-      <Share {document} />
+      <Share document={toShare} />
     </Modal>
   </Portal>
 {/if}

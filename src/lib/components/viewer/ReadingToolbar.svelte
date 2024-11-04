@@ -92,7 +92,7 @@ Assumes it's a child of a ViewerContext
       <Dropdown position="bottom-start">
         <SidebarItem slot="anchor">
           <svelte:component this={icons[$mode]} slot="start" />
-          {Array.from(readModes).find(([value]) => value === $mode)[1]}
+          {Array.from(readModes ?? []).find(([value]) => value === $mode)?.[1]}
           <ChevronDown12 slot="end" />
         </SidebarItem>
         <Menu slot="default" let:close>

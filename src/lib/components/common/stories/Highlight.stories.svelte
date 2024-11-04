@@ -7,7 +7,7 @@
   import searchResultsFixture from "@/test/fixtures/documents/search-highlight.json";
 
   const document = searchResultsFixture.results[0];
-  const noteHighlights = document.note_highlights["197010"];
+  const noteHighlights = document?.note_highlights["197010"]!;
 
   export const meta: Meta = {
     title: "Components / Common / Highlight",

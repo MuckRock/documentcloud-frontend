@@ -23,7 +23,7 @@ Assumes it's a child of a ViewerContext
   export let wide = false;
   export let tall = false;
   export let track: boolean | "once" = false;
-  export let width: number = undefined;
+  export let width: number | undefined = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -46,6 +46,12 @@ Assumes it's a child of a ViewerContext
     embed,
   });
 
+  function isDOMRectReadOnly(
+    rect: null | undefined | DOMRect | DOMRectReadOnly,
+  ): rect is DOMRectReadOnly {
+    return Boolean(rect && "readonly" in rect);
+  }
+
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(
       (entries, observer) => {
@@ -65,8 +71,10 @@ Assumes it's a child of a ViewerContext
           const { boundingClientRect, rootBounds } = entry;
 
           if (
-            boundingClientRect?.top > rootBounds?.top &&
-            boundingClientRect?.top < rootBounds?.height / 2 &&
+            isDOMRectReadOnly(boundingClientRect) &&
+            isDOMRectReadOnly(rootBounds) &&
+            boundingClientRect.top > rootBounds.top &&
+            boundingClientRect.top < rootBounds.height / 2 &&
             currentPage // in case context is missing
           ) {
             $currentPage = page_number;

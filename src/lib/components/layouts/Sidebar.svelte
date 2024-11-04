@@ -33,9 +33,11 @@
   export let id: string;
   export let position: "left" | "right" = "left";
 
-  let viewWidth: number = Boolean(browser) ? window.innerWidth : undefined;
+  let viewWidth: undefined | number = Boolean(browser)
+    ? window.innerWidth
+    : undefined;
 
-  $: isSmall = viewWidth < 64 * 16;
+  $: isSmall = viewWidth ? viewWidth < 64 * 16 : false;
   $: {
     $sidebars[id] = isSmall ? false : true;
   }

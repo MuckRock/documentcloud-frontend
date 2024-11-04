@@ -15,7 +15,7 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
 
   const document = doc as Document;
-  const note = document.notes[0];
+  const note = document.notes?.[0]!;
 </script>
 
 <Story name="New note">

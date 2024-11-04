@@ -9,7 +9,8 @@
   import "@/style/global.css";
   import "@/style/kit.css";
 
-  $: useCyrillicCharset = browser ? ["uk", "ru"].includes($locale) : false;
+  $: useCyrillicCharset =
+    browser && $locale ? ["uk", "ru"].includes($locale) : false;
 
   // this checks if the site has been updated and triggers a full page reload
   // on the next navigation to update the cache

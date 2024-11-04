@@ -5,7 +5,6 @@ This component should update on a timer.
 <script lang="ts">
   import type { Run } from "@/addons/types";
 
-  import { afterUpdate, onMount, onDestroy } from "svelte";
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
   import { Plug16, Thumbsdown16, Thumbsup16, XCircle16 } from "svelte-octicons";
@@ -17,12 +16,12 @@ This component should update on a timer.
   import Flex from "../common/Flex.svelte";
   import Process from "./Process.svelte";
 
-  import { POLL_INTERVAL } from "@/config/config";
   import { history, dismiss, cancel, rate } from "$lib/api/addons";
   import { getCsrfToken } from "$lib/utils/api";
   import { getRunningAddons } from "./ProcessContext.svelte";
+  import type { Nullable } from "$lib/api/types";
 
-  let timeout: string | number | NodeJS.Timeout;
+  let timeout: Nullable<string | number | NodeJS.Timeout>;
 
   const running = getRunningAddons();
   /* 
@@ -43,24 +42,30 @@ This component should update on a timer.
   });
  */
   function stop() {
-    clearTimeout(timeout);
-    timeout = null;
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
   }
 
   async function load() {
     const { data, error } = await history({ dismissed: false, per_page: 100 });
     if (!error) {
-      $running = data.results;
+      $running = data?.results;
     }
   }
 
   async function rateRun(rating: number, run: Run) {
     const csrftoken = getCsrfToken();
+    if (!csrftoken) {
+      console.error("No CSRF token");
+      return;
+    }
     const prevRating = run.rating;
     run = { ...run, rating }; // optimistic update
     const { data, error } = await rate(run.uuid, rating, csrftoken);
-    if (error) {
-      console.error(error.errors);
+    if (error || !data) {
+      console.error(error?.errors ?? "No data");
       run = { ...run, rating: prevRating }; // put it back
     } else {
       run = data;
@@ -69,10 +74,14 @@ This component should update on a timer.
 
   async function dismissRun(run: Run) {
     const csrftoken = getCsrfToken();
+    if (!csrftoken) {
+      console.error("No CSRF token");
+      return;
+    }
     run = { ...run, dismissed: true }; // optimistic update
     const { data, error } = await dismiss(run.uuid, csrftoken);
-    if (error) {
-      console.error(error.errors);
+    if (error || !data) {
+      console.error(error?.errors ?? "No data");
       run = { ...run, dismissed: false }; // put it back
     } else {
       run = data;
@@ -82,16 +91,20 @@ This component should update on a timer.
   // todo
   async function cancelRun(run: Run) {
     const csrftoken = getCsrfToken();
+    if (!csrftoken) {
+      console.error("No CSRF token");
+      return;
+    }
     const { status } = run;
     run = { ...run, status: "cancelled" }; // optimistic update
     const { data, error } = await cancel(run.uuid, csrftoken);
-    if (error) {
+    if (error || !data) {
       run = { ...run, status }; // put it back
     }
   }
 </script>
 
-{#if $running.length > 0}
+{#if $running?.length && $running.length > 0}
   <SidebarGroup name="processing.addons">
     <SidebarItem slot="title">
       <Plug16 slot="start" />

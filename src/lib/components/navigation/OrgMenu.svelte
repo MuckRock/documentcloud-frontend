@@ -45,7 +45,10 @@
   // wrapping setOrg here
   async function switchOrg(org: Org) {
     const csrf_token = getCsrfToken();
-
+    if (!csrf_token) {
+      console.error("Missing CSRF token");
+      return;
+    }
     await setOrg(org.id, csrf_token);
     await invalidateAll();
   }
@@ -94,7 +97,7 @@
   </svelte:fragment>
   <Menu slot="default" let:close>
     <div class="menu-inner" class:sm={width <= remToPx(32)}>
-      {#if isPremium}
+      {#if isPremium && active_org.monthly_credits && active_org.credit_reset_date}
         <MenuInsert>
           <CreditMeter
             id="org-credits"

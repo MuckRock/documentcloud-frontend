@@ -5,7 +5,7 @@ This form deals with everything except coordinates, which should be passed in as
 Positioning and generating coordinates should happen outside of this form.
 -->
 <script lang="ts">
-  import type { Bounds, Document, Note } from "$lib/api/types";
+  import type { Bounds, Document, Maybe, Note } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
 
@@ -23,7 +23,7 @@ Positioning and generating coordinates should happen outside of this form.
 
   export let document: Document;
   export let note: Partial<Note> = {}; // for updating
-  export let page_number: number = note.page_number;
+  export let page_number: Maybe<number> = note.page_number;
 
   const dispatch = createEventDispatcher();
 

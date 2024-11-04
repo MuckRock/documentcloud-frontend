@@ -14,7 +14,7 @@
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
-  import { pageSizesFromSpec } from "@/api/pageSize.js";
+  import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import {
     getDocument,
     getZoom,
@@ -37,7 +37,7 @@
   $: size = zoomToSize($zoom);
   $: sizes = pageSizesFromSpec(document.page_spec);
   $: scale = SCALE[size] ?? 1;
-  $: width = IMAGE_WIDTHS_MAP.get(size) / scale;
+  $: width = (IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale;
 </script>
 
 <div class="pages" style:--image-width="{width}px">

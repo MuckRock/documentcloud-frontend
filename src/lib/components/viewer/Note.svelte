@@ -110,6 +110,11 @@
 
   async function renderImage(canvas: HTMLCanvasElement, document: Document) {
     const context = canvas.getContext("2d");
+    if (!context) {
+      console.error("Missing canvas context when rendering image in note.");
+      return;
+    }
+
     const image = new Image();
 
     let src = pageImageUrl(document, page_number, SIZE);
@@ -139,8 +144,18 @@
 
   async function renderPDF(canvas: HTMLCanvasElement, pdf: PDFDocumentProxy) {
     const context = canvas.getContext("2d");
+    if (!context) {
+      console.error("Missing canvas context when rendering PDF in note.");
+      return;
+    }
+
     const page = await pdf.getPage(page_number);
     const [x, y, w, h] = page.view;
+
+    if (!w || !h) {
+      console.error("Missing page dimensions when rendering PDF in note.");
+      return;
+    }
 
     const offsetX = note.x1 * w * scale;
     const offsetY = note.y1 * h * scale;
@@ -153,7 +168,7 @@
     });
 
     const dpr = window?.devicePixelRatio ?? 1;
-    const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null;
+    const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined;
 
     // set the pixel dimensions of the canvas
     canvas.width = Math.floor(noteWidth * dpr);
@@ -211,9 +226,11 @@
       <canvas width="0" height="0" bind:this={canvas}></canvas>
     </div>
   {/if}
-  <div class="content">
-    <p>{@html clean(note.content)}</p>
-  </div>
+  {#if note.content}
+    <div class="content">
+      <p>{@html clean(note.content)}</p>
+    </div>
+  {/if}
   <footer>
     <span class="access {note.access}">
       <svelte:component this={access[note.access].icon} />

@@ -7,7 +7,9 @@
   import search from "@/test/fixtures/documents/search-highlight.json";
 
   // find one document with highlights
-  const document = search.results.find((d) => d.id === "3913417") as Document;
+  const document = search.results.find(
+    (d) => d.id === "3913417",
+  ) as unknown as Document;
 
   export const meta = {
     title: "Components / Documents / Page Highlights",

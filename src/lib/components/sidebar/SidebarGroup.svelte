@@ -4,7 +4,7 @@
   import { ChevronDown16 } from "svelte-octicons";
 
   export let collapsed = false;
-  export let name: string = undefined;
+  export let name: string | undefined = undefined;
 
   $: key = `SidebarGroup:${name}`;
 

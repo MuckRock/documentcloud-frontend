@@ -2,7 +2,7 @@
 One row of the `EditSections.svelte` form, to encapsulate logic.
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Maybe } from "$lib/api/types";
 
   import { invalidate } from "$app/navigation";
 
@@ -19,11 +19,11 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
 
   import { create, update, remove } from "$lib/api/sections";
 
-  export let csrftoken: string;
+  export let csrftoken: Maybe<string> = undefined;
   export let disabled = false;
   export let document: Document;
-  export let id: number | string = undefined;
-  export let page_number: number = undefined;
+  export let id: Maybe<number | string> = undefined;
+  export let page_number: number = 1;
   export let title: string = "";
 
   // store separately to deal with zero-indexed section pages
@@ -33,8 +33,8 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
 
   function reset() {
     title = "";
-    page_number = undefined;
-    display_number = undefined;
+    page_number = 1;
+    display_number = 1;
   }
 </script>
 

@@ -3,7 +3,7 @@ Create, update and delete sections for a single document.
 This form is entirely client-side.
 -->
 <script lang="ts">
-  import type { Document, Section } from "$lib/api/types";
+  import type { Document, Maybe, Section } from "$lib/api/types";
 
   import { beforeUpdate, createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -18,7 +18,7 @@ This form is entirely client-side.
 
   const dispatch = createEventDispatcher();
 
-  let csrftoken: string;
+  let csrftoken: Maybe<string>;
   let table: HTMLTableElement;
 
   $: sections = document.sections ?? [];
@@ -66,14 +66,16 @@ This form is entirely client-side.
         {csrftoken}
         title={section.title}
         page_number={section.page_number}
-        disabled={existing_pages.has(section.page_number)}
+        disabled={Boolean(
+          section.page_number && existing_pages.has(section.page_number),
+        )}
       />
 
-      {#if existing_pages.has(section.page_number)}
+      {#if Boolean(section.page_number && existing_pages.has(section.page_number))}
         <tr class="warning">
           <td colspan="2">
             {$_("sections.overwrite", {
-              values: { n: section.page_number + 1 },
+              values: { n: (section.page_number ?? 0) + 1 },
             })}
           </td>
         </tr>

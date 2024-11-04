@@ -6,6 +6,18 @@ import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import * as collaborators from "$lib/api/collaborators";
 import * as projects from "$lib/api/projects";
 
+const ACCESS: Set<ProjectAccess> = new Set(["admin", "edit", "view"]);
+
+function getAccess(form: FormData): ProjectAccess {
+  let access = form.get("access")?.toString() as ProjectAccess;
+
+  if (!ACCESS.has(access)) {
+    return "view";
+  }
+
+  return access;
+}
+
 export const actions = {
   /**
    * Delete this project
@@ -13,6 +25,10 @@ export const actions = {
   async delete({ cookies, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const project_id = +params.id;
+
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
 
     const { error } = await projects.destroy(project_id, csrf_token, fetch);
 
@@ -29,6 +45,10 @@ export const actions = {
   async edit({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
+
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
 
     const update: Partial<Project> = {
       title: form.get("title") as string,
@@ -58,8 +78,12 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
     const email = form.get("email") as string;
-    const access = form.get("access") as ProjectAccess;
+    const access = getAccess(form);
 
     const { data: user, error } = await collaborators.add(
       +params.id,
@@ -84,14 +108,22 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
-    const user = +form.get("user");
-    const access = form.get("access") as ProjectAccess;
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
+    const user = form.get("user");
+    const access = getAccess(form);
+
+    if (!user || !access) {
+      return fail(400, { message: "Missing form data" });
+    }
 
     const project_id = +params.id;
 
     const { data, error } = await collaborators.update(
       project_id,
-      user,
+      +user,
       access,
       csrf_token,
       fetch,
@@ -113,12 +145,20 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
-    const user = +form.get("user");
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
+    const user = form.get("user");
     const project_id = +params.id;
+
+    if (!user || !project_id) {
+      return fail(400, { message: "Missing form data" });
+    }
 
     const { error } = await collaborators.remove(
       project_id,
-      user,
+      +user,
       csrf_token,
       fetch,
     );

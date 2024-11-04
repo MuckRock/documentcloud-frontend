@@ -1,10 +1,14 @@
 <script lang="ts">
-  export let name = null;
+  import type { Nullable } from "$lib/api/types";
+
+  export let name: Nullable<string> = null;
   export let checked = false;
   export let disabled = false;
 
-  function handleClick(event) {
-    const state = event.target.getAttribute("aria-checked");
+  function handleClick(event: MouseEvent) {
+    const state = (event.target as HTMLButtonElement).getAttribute(
+      "aria-checked",
+    );
     checked = state === "true" ? false : true;
   }
 </script>

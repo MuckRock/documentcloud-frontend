@@ -17,6 +17,10 @@ export const actions = {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     const form = await request.formData();
 
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+
     const project = {
       title: form.get("title") as string,
       description: form.get("description") as string,

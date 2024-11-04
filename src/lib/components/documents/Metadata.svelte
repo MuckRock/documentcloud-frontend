@@ -8,7 +8,7 @@
   - text language
 -->
 <script lang="ts">
-  import type { Document, DocumentText } from "$lib/api/types";
+  import type { Document, DocumentText, Maybe } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -17,7 +17,7 @@
   import Metadata from "../common/Metadata.svelte";
 
   export let document: Document;
-  export let text: DocumentText;
+  export let text: Maybe<DocumentText>;
 
   const ocrEngineMap = {
     tess4: "Tesseract",
@@ -29,8 +29,7 @@
   };
 
   const engines = Object.keys(ocrEngineMap);
-
-  let engine: string;
+  let engine: Maybe<string>;
 
   $: ocrEngine =
     text?.pages

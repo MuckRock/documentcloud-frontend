@@ -4,7 +4,7 @@
   It's slotted for composition based on the page it's on.
 -->
 <script lang="ts">
-  export let width: number = undefined;
+  export let width: undefined | number = undefined;
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>

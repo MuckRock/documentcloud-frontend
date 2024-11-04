@@ -57,7 +57,7 @@ export default defineConfig({
     include: [
       "src/lib/**/*.{test,spec}.{js,ts}",
       "src/routes/**/*.{test,spec}.{js,ts}",
-      "src/api/pageSize.test.js",
+      "src/lib/utils/tests/pageSize.test.ts",
     ],
     exclude: [
       ...configDefaults.exclude,

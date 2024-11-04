@@ -7,12 +7,12 @@
 
   // typescript complains without the type assertion
   import searchResults from "@/test/fixtures/documents/search-highlight.json";
-  const highlighted = searchResults.results as Document[];
+  const highlighted = searchResults.results as unknown as Document[];
   const results = highlighted.map((d) => ({
     ...d,
     highlights: null,
     note_highlights: null,
-  }));
+  })) as unknown as Document[];
   const count = searchResults.count;
   const next = searchResults.next;
 

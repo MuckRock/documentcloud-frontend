@@ -29,6 +29,6 @@ describe("getCurrentUser", () => {
   it("should return the current user from context", () => {
     // Render the mock component to set the context
     render(UserContextDemo);
-    expect(screen.getByText(me.name)).toBeInTheDocument();
+    expect(screen.getByText(me.name!)).toBeInTheDocument();
   });
 });

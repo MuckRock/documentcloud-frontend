@@ -1,14 +1,6 @@
-import {
-  vi,
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-  type Mock,
-} from "vitest";
-import { render, screen, waitFor } from "@testing-library/svelte";
-import { userEvent, type UserEvent } from "@testing-library/user-event";
+import { vi, describe, it, expect } from "vitest";
+import { render } from "@testing-library/svelte";
+import { userEvent } from "@testing-library/user-event";
 import Toast from "../Toast.svelte";
 
 describe("Toast", () => {

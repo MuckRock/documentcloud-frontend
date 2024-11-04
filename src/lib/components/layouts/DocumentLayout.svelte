@@ -6,7 +6,6 @@
   import type {
     AddOnListItem,
     APIResponse,
-    DocumentText,
     Page,
     Project,
   } from "$lib/api/types";
@@ -33,12 +32,13 @@
   const me = getCurrentUser();
 
   export let documentStore = getDocument();
-  export let text: DocumentText = getText();
+  export let text = getText();
   export let action: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
   $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
+  $: access = getLevel(document.access);
 </script>
 
 <SidebarLayout>
@@ -55,9 +55,11 @@
 
   <aside class="column between" slot="action">
     <Flex direction="column" gap={2}>
-      <div style="font-size: var(--font-xl)">
-        <Access level={getLevel(document.access)} />
-      </div>
+      {#if access}
+        <div style="font-size: var(--font-xl)">
+          <Access level={access} />
+        </div>
+      {/if}
       {#if document.access === "organization" && isOrg(document.organization)}
         <Metadata key={$_("sidebar.sharedWith")}>
           <Flex>
@@ -66,7 +68,9 @@
           </Flex>
         </Metadata>
       {/if}
-      <Actions {document} user={$me} {action} />
+      {#if $me}
+        <Actions {document} user={$me} {action} />
+      {/if}
 
       <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
     </Flex>

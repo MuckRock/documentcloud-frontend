@@ -22,6 +22,7 @@
 
   $: action = data.action;
   $: addons = data.pinnedAddons;
+  $: hasDescription = Boolean(document.description?.trim().length);
 </script>
 
 <svelte:head>
@@ -38,7 +39,7 @@
     href={embedUrl(document.canonical_url).href}
     title={document.title}
   />
-  {#if document.description?.trim().length > 0}
+  {#if hasDescription}
     <meta name="description" content={document.description} />
     <meta property="og:description" content={document.description} />
   {/if}

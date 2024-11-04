@@ -3,15 +3,15 @@
   import { enhance } from "$app/forms";
   import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
-  import type { User } from "@/api/types";
+  import type { Nullable, User } from "$lib/api/types";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Avatar from "../accounts/Avatar.svelte";
   import { toast } from "../layouts/Toaster.svelte";
   import { APP_URL } from "@/config/config";
-  import { getUserName } from "@/lib/api/accounts";
+  import { getUserName } from "$lib/api/accounts";
 
-  export let user: User = undefined;
+  export let user: Nullable<User> = null;
 
   let feedback = "";
   export let feedbackType = "Comment";

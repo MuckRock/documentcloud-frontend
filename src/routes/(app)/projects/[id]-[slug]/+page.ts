@@ -18,7 +18,7 @@ export async function load({ params, url, parent, data, fetch }) {
   const id = parseInt(params.id, 10);
 
   const [project, users]: [
-    APIResponse<Nullable<Project>>,
+    Nullable<APIResponse<Project>>,
     Nullable<ProjectUser[]>,
   ] = await Promise.all([
     projects.get(id, fetch),
@@ -27,11 +27,14 @@ export async function load({ params, url, parent, data, fetch }) {
     return [null, null];
   });
 
-  if (project.error) {
-    error(project.error.status, project.error.message);
+  if (project?.error || !project?.data) {
+    error(
+      project?.error?.status ?? 400,
+      project?.error?.message ?? "Unexpected error",
+    );
   }
 
-  if (project.data.slug !== params.slug) {
+  if (project?.data.slug !== params.slug) {
     const canonical = projects.canonicalUrl(project.data);
     redirect(302, canonical);
   }

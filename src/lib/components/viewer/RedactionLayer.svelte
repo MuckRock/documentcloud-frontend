@@ -3,7 +3,7 @@ This is a box to draw redactions on.
 It's layered over a PDF page and allows us to render redactions and draw new ones.
 -->
 <script context="module" lang="ts">
-  import type { Redaction } from "$lib/api/types";
+  import type { Redaction, Nullable } from "$lib/api/types";
   import { get, writable, type Writable } from "svelte/store";
 
   // active redactions
@@ -34,7 +34,7 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   export let page_number: number; // 0-indexed
 
   let container: HTMLElement;
-  let currentRedaction: Redaction = null;
+  let currentRedaction: Nullable<Redaction> = null;
 
   $: redactions_for_page = [...$pending, ...$redactions].filter(
     (r) => r.page_number === page_number,
@@ -43,13 +43,13 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   // handle interaction events
   let dragging = false;
 
-  function pointerdown(e) {
+  function pointerdown(e: PointerEvent) {
     if (!active) return;
 
     dragging = true;
 
     const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target;
+    const { clientWidth, clientHeight } = e.target as HTMLElement;
 
     currentRedaction = {
       page_number,
@@ -60,11 +60,11 @@ It's layered over a PDF page and allows us to render redactions and draw new one
     };
   }
 
-  function pointermove(e) {
-    if (!dragging || !active) return;
+  function pointermove(e: PointerEvent) {
+    if (!dragging || !active || !currentRedaction) return;
 
     const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target;
+    const { clientWidth, clientHeight } = e.target as HTMLElement;
 
     const x = offsetX / clientWidth;
     const y = offsetY / clientHeight;
@@ -78,11 +78,12 @@ It's layered over a PDF page and allows us to render redactions and draw new one
     };
   }
 
-  function pointerup(e) {
+  function pointerup(e: PointerEvent) {
     dragging = false;
+    if (!currentRedaction) return;
 
     const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target;
+    const { clientWidth, clientHeight } = e.target as HTMLElement;
 
     const x = offsetX / clientWidth;
     const y = offsetY / clientHeight;

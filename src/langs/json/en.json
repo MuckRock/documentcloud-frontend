@@ -1046,7 +1046,8 @@
       "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
     },
     "dispatch": "Dispatch",
-    "history": "History"
+    "history": "History",
+    "noHistory": "You have not run this add-on before"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
@@ -1108,6 +1109,7 @@
   "mailkey": {
     "title": "Upload via email",
     "description": "<p>You can upload documents to your account by sending them to to a special email address as attachments.</p><p><strong>For security reasons, this email is only shown to you once. Please copy it to a secure location.</strong></p><p>This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.</p><p>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.</p>",
+    "missing_csrf": "Missing CSRF token",
     "create": {
       "button": "Create new email address",
       "success": "<strong>Upload email address succesfully created</strong>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",
@@ -1142,6 +1144,7 @@
   "processing": {
     "addons": "Add-Ons",
     "documents": "Documents",
+    "unknown": "Unknown",
     "totalCount": "{n} active {n, plural, one {process} other {processes}}"
   },
   "feedback": {

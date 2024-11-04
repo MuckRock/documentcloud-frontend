@@ -9,7 +9,8 @@ export async function load({ fetch }) {
   const org = me?.organization as Org;
   const tipOfDay = me ? await getTipOfDay(fetch) : null;
 
-  let user_orgs: Promise<Org[]>, org_users: Promise<User[]>;
+  let user_orgs: Promise<Org[]> = Promise.resolve([]);
+  let org_users: Promise<User[]> = Promise.resolve([]);
   if (me && org) {
     user_orgs = userOrgs(me, fetch).catch((e) => {
       console.error(e);

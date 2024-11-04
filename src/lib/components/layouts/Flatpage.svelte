@@ -9,9 +9,15 @@
 
   $: markdownContent = renderMarkdown(content);
 
+  interface Heading {
+    text: string;
+    id: string;
+    level: number;
+  }
+
   let contentElem: HTMLElement;
   let sidebarElem: HTMLDivElement;
-  let headers: HTMLHeadingElement[];
+  let headers: Heading[];
 
   onMount(() => {
     headers = injectLinkReferences();
@@ -21,15 +27,15 @@
   function injectLinkReferences() {
     if (!contentElem) {
       console.warn("No content element");
-      return;
+      return [];
     }
 
     const headers = contentElem.querySelectorAll("h1, h2, h3, h4, h5, h6");
 
-    const contents = [];
+    const contents: Heading[] = [];
     headers.forEach((header, i) => {
       contents.push({
-        text: header.textContent.trim(),
+        text: header.textContent?.trim() ?? "",
         id: header.id,
         level: parseInt(header.tagName.substring(1)),
       });
@@ -48,7 +54,7 @@
   }
 
   // Build table of contents
-  function buildToc(headers: HTMLHeadingElement[]) {
+  function buildToc(headers: Heading[]) {
     let root = { children: [] };
 
     const addNode = (node: Node, level: number, tree: HTMLElement) => {
@@ -85,7 +91,7 @@
 
     // Strip single TOC root items
     while (root.children.length === 1) {
-      root = root.children[0];
+      root = root.children[0] ?? { children: [] };
     }
 
     function generateToc(tree, depth = 0, first = true) {

@@ -16,7 +16,7 @@
   $: search = data.searchResults;
   $: scheduled = data.scheduled;
   $: organization =
-    typeof $me.organization === "object" ? $me.organization : null;
+    typeof $me?.organization === "object" ? $me.organization : null;
   $: isPremiumUser = isPremiumOrg(organization);
   $: creditBalance = getCreditBalance(organization) ?? 0;
   $: isPremiumAddon =

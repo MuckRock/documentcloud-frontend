@@ -14,7 +14,7 @@
 
   export let document: Document;
 
-  $: notes = document.notes;
+  $: notes = document.notes ?? [];
   $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 </script>
 

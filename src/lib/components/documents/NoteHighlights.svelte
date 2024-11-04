@@ -27,11 +27,12 @@
   export let document: Document;
   export let open = false;
 
-  $: highlights = Object.entries(document.note_highlights);
-  $: notes = new Map(document.notes.map((n) => [n.id, n]));
+  $: highlights = Object.entries(document.note_highlights ?? {});
+  $: notes = new Map(document.notes?.map((n) => [n.id, n]));
 
   function noteHref(id: string): string {
     const note = notes.get(id);
+    if (!note) return "";
     return noteUrl(document, note).toString();
   }
 </script>

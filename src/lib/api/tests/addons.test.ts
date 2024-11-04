@@ -103,7 +103,7 @@ describe("getAddon", async () => {
 
 describe("addon payloads", () => {
   test("buildPayload single dispatch", () => {
-    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+    const scraper = addonsList.results.find((a) => a.name === "Scraper")!;
     const parameters = {
       site: "https://www.documentcloud.org",
       project: "test",
@@ -118,7 +118,7 @@ describe("addon payloads", () => {
   });
 
   test("buildPayload scheduled event", () => {
-    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+    const scraper = addonsList.results.find((a) => a.name === "Scraper")!;
     const parameters = {
       site: "https://www.documentcloud.org",
       project: "test",
@@ -140,7 +140,7 @@ describe("addon payloads", () => {
   test("buildPayload array param", () => {
     const siteSnapshot = addonsList.results.find(
       (a) => a.name === "Site Snapshot",
-    );
+    )!;
     const parameters = {
       sites: ["https://www.muckrock.com", "https://www.documentcloud.org"],
       project_id: 1,
@@ -159,7 +159,7 @@ describe("addon payloads", () => {
   });
 
   test("buildPayload remove blank values", () => {
-    const scraper = addonsList.results.find((a) => a.name === "Scraper");
+    const scraper = addonsList.results.find((a) => a.name === "Scraper")!;
 
     const parameters = {
       site: "https://www.documentcloud.org",
@@ -187,7 +187,7 @@ describe("addon payloads", () => {
   test("buildPayload with documents", () => {
     const translate = addonsList.results.find(
       (a) => a.name === "Translate Documents",
-    );
+    )!;
     const parameters = {
       access_level: "public",
       project_id: 1,
@@ -219,7 +219,7 @@ describe("addon payloads", () => {
   test("buildPayload with query", () => {
     const translate = addonsList.results.find(
       (a) => a.name === "Translate Documents",
-    );
+    )!;
     const parameters = {
       access_level: "public",
       project_id: 1,

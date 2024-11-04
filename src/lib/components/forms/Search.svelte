@@ -1,11 +1,12 @@
 <script lang="ts">
   import { Search16, XCircleFill24 } from "svelte-octicons";
   import { _ } from "svelte-i18n";
+  import type { Maybe, Nullable } from "$lib/api/types";
 
-  export let name: string = null;
+  export let name: Nullable<string> = null;
   export let query: string = "";
   export let placeholder: string = $_("searchBar.search");
-  export let action: string = undefined;
+  export let action: Maybe<string> = undefined;
 
   let input: HTMLInputElement;
   let form: HTMLFormElement;

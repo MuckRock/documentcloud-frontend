@@ -82,8 +82,9 @@ Selectable text can be rendered in one of two ways:
   // handle 0 sizing when page_spec is unavailable
   $: if (page && width === 0 && height === 0) {
     page.then((p) => {
-      width = p.view[2];
-      height = p.view[3];
+      // It's safe to assume that PDFPageProxy.view is 4 elements long
+      width = p.view[2]!;
+      height = p.view[3]!;
     });
   }
 

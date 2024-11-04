@@ -90,7 +90,7 @@
       {#await addons}
         <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
       {:then { data: page }}
-        {#each page.results as addon}
+        {#each page?.results ?? [] as addon}
           <ListItem {addon} />
         {:else}
           <Empty icon={Plug24}>{$_("addonBrowserDialog.empty")}</Empty>
@@ -105,10 +105,14 @@
             <Paginator />
           {:then { data: page }}
             <Paginator
-              has_next={Boolean(page.next)}
-              has_previous={Boolean(page.previous)}
-              on:next={() => paginate(page.next)}
-              on:previous={() => paginate(page.previous)}
+              has_next={Boolean(page?.next)}
+              has_previous={Boolean(page?.previous)}
+              on:next={() => {
+                if (page?.next) paginate(page.next);
+              }}
+              on:previous={() => {
+                if (page?.previous) paginate(page.previous);
+              }}
             />
           {/await}
         </svelte:fragment>
@@ -120,16 +124,20 @@
       <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
     {:then { data: events }}
       <Scheduled
-        events={events.results}
-        next={events.next}
-        previous={events.previous}
+        events={events?.results ?? []}
+        next={events?.next}
+        previous={events?.previous}
       />
     {/await}
 
     {#await runs}
       <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
     {:then { data: runs }}
-      <History runs={runs.results} next={runs.next} previous={runs.previous} />
+      <History
+        runs={runs?.results ?? []}
+        next={runs?.next}
+        previous={runs?.previous}
+      />
     {/await}
   </aside>
 </div>

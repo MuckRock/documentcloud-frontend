@@ -69,10 +69,11 @@ export async function getAddon(
   const repository = [owner, repo].join("/");
   const { data: addons, error } = await getAddons({ repository }, fetch);
   // there should only be one result, if the addon exists
-  if (error || addons.results.length < 1) {
+
+  if (error || !addons || addons.results.length < 1) {
     return null;
   }
-  return addons.results[0];
+  return addons.results[0] ?? null;
 }
 
 export async function getEvent(
@@ -298,17 +299,15 @@ export function buildPayload(
   const payload: AddOnPayload = { addon: addon.id, parameters };
 
   const selection = formData.get("selection");
+  const documents = formData.get("documents");
+  const query = formData.get("query");
 
-  if (selection === "selected") {
-    payload.documents = formData
-      .get("documents")
-      .toString()
-      .split(",")
-      .map(Number);
+  if (selection === "selected" && documents) {
+    payload.documents = documents.toString().split(",").map(Number);
   }
 
-  if (selection === "query") {
-    payload.query = formData.get("query").toString();
+  if (selection === "query" && query) {
+    payload.query = query.toString();
   }
 
   if (formData.has("event")) {

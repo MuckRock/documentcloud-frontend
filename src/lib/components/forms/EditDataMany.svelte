@@ -29,7 +29,7 @@ This will mostly merge with existing data.
     if (!key || !value) return;
 
     if (key in data) {
-      data[key] = [...data[key], value];
+      data[key] = [...(data[key] ?? []), value];
     } else {
       data[key] = [value];
     }
@@ -40,7 +40,7 @@ This will mostly merge with existing data.
   function remove({ key, value }) {
     if (!(key in data)) return;
 
-    data[key] = data[key].filter((v) => v !== value);
+    data[key] = (data[key] ?? []).filter((v) => v !== value);
   }
 
   function onSubmit() {

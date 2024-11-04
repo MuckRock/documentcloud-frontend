@@ -5,7 +5,9 @@
 
   import search from "@/test/fixtures/documents/search-highlight.json";
 
-  const document = search.results.find((d) => d.id === "1501881") as Document;
+  const document = search.results.find(
+    (d) => d.id === "1501881",
+  ) as unknown as Document;
 
   export const meta = {
     title: "Components / Documents / Note Highlights",

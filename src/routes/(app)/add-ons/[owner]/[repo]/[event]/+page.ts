@@ -16,6 +16,9 @@ export async function load({ params, fetch, parent, url }) {
   if (err) {
     return error(err.status, err.message);
   }
+  if (!event) {
+    return error(404, "Event not found");
+  }
 
   // there's probably something better to use as a breadcrumb title
   const breadcrumbs = await breadcrumbTrail(parent, [

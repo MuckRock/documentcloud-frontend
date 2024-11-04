@@ -60,6 +60,10 @@ and we don't want to do that everywhere.
     const { checked } = e.target;
     const ids = documents.map((d) => d.id);
     const csrf_token = getCsrfToken();
+    if (!csrf_token) {
+      console.error("No CSRF token found");
+      return;
+    }
     if (checked) {
       await add(project.id, ids, csrf_token);
     } else {
@@ -74,7 +78,9 @@ and we don't want to do that everywhere.
 
   function sort(projects: Project[]) {
     return projects.sort(
-      (a, b) => +b.pinned - +a.pinned || a.title.localeCompare(b.title),
+      (a, b) =>
+        +(b.pinned ?? false) - +(a.pinned ?? false) ||
+        a.title.localeCompare(b.title),
     );
   }
 </script>

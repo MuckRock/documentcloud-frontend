@@ -7,8 +7,8 @@
   export let disabled = false;
   export let indent = false;
   export let special = false;
-  export let href = null;
-  export let target = null;
+  export let href: string | null | undefined = null;
+  export let target: string | null | undefined = null;
   export let selected = false;
 
   let className = "";

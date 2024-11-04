@@ -3,7 +3,7 @@
 -->
 
 <script lang="ts">
-  export let name: string = null;
+  export let name: null | string = null;
   export let placeholder = "";
   export let value = "";
   export let autofocus = false;

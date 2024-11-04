@@ -14,21 +14,23 @@
   } from "svelte-octicons";
 
   import { TOAST_LENGTH } from "@/config/config.js";
+  import type { Maybe, Nullable } from "$lib/api/types";
 
-  export let id: string | number = undefined;
-  export let status: "info" | "success" | "warning" | "error" = undefined;
+  type Status = "info" | "success" | "warning" | "error";
+
+  export let id: undefined | string | number = undefined;
+  export let status: Maybe<Status> = undefined;
   export let lifespan: number | null = TOAST_LENGTH;
 
-  let toastTimeout = null;
+  let toastTimeout: Nullable<ReturnType<typeof setTimeout>> = null;
 
-  const statusIcons: Record<typeof status | "undefined", typeof SvgComponent> =
-    {
-      undefined: Circle16,
-      info: Info16,
-      success: CheckCircle16,
-      warning: Alert16,
-      error: Stop16,
-    };
+  const statusIcons: Record<Status | "undefined", typeof SvgComponent> = {
+    undefined: Circle16,
+    info: Info16,
+    success: CheckCircle16,
+    warning: Alert16,
+    error: Stop16,
+  };
 
   const dispatch = createEventDispatcher();
 
@@ -46,13 +48,13 @@
   function reset() {
     dispatch("reset");
     cancel();
-    if (Boolean(lifespan)) {
+    if (lifespan !== null) {
       toastTimeout = setTimeout(close, lifespan);
     }
   }
 
   onMount(() => {
-    if (Boolean(lifespan)) {
+    if (lifespan !== null) {
       toastTimeout = setTimeout(close, lifespan);
     }
   });

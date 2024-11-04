@@ -3,15 +3,15 @@
 -->
 
 <script lang="ts">
-  export let name: string = null;
+  export let name: null | string = null;
   export let placeholder = "";
-  export let value: number = undefined;
+  export let value: undefined | number = undefined;
   export let autofocus = false;
   export let required = false;
   export let disabled = false;
-  export let min: number = undefined;
-  export let max: number = undefined;
-  export let step: number = undefined;
+  export let min: undefined | number = undefined;
+  export let max: undefined | number = undefined;
+  export let step: undefined | number = undefined;
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->

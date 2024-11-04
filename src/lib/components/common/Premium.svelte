@@ -11,9 +11,10 @@
   const me = getContext<Writable<User>>("me");
 
   $: org = $me?.organization;
-  $: isPremium = isOrg(org)
-    ? ["Organization", "Professional"].includes(org.plan)
-    : false;
+  $: isPremium =
+    isOrg(org) && org.plan
+      ? ["Organization", "Professional"].includes(org.plan)
+      : false;
 </script>
 
 {#if isPremium}

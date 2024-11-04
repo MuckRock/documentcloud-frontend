@@ -12,7 +12,7 @@
 
   export let document: Document;
 
-  $: sections = document.sections;
+  $: sections = document.sections ?? [];
   $: empty = sections.length === 0;
   $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
 </script>
