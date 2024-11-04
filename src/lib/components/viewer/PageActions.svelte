@@ -111,7 +111,7 @@
 {/if}
 {#if editSection}
   <Portal>
-    <Modal on:close={close}>
+    <Modal on:close={() => (editSection = false)}>
       <h2 slot="title">
         {#if section}
           {$_("annotate.cta.edit-section")}
@@ -121,7 +121,7 @@
       </h2>
       <EditSections
         {document}
-        on:close={close}
+        on:close={() => (editSection = false)}
         section={section || { page_number: page_number - 1 }}
       />
     </Modal>
@@ -129,11 +129,15 @@
 {/if}
 {#if pageNote}
   <Portal>
-    <Modal on:close={close}>
+    <Modal on:close={() => (pageNote = false)}>
       <h2 slot="title">
         {$_("annotate.cta.add-note")}
       </h2>
-      <EditNote {document} page_number={page_number - 1} on:close={close} />
+      <EditNote
+        {document}
+        page_number={page_number - 1}
+        on:close={() => (pageNote = false)}
+      />
     </Modal>
   </Portal>
 {/if}
