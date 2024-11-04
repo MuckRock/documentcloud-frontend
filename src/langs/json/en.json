@@ -12,7 +12,8 @@
     "add": "Add",
     "edit": "Edit",
     "search": "Search",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "title": "Title"
   },
   "search": {
     "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
@@ -383,7 +384,7 @@
     "fileLimitWarning": "You can only upload {limit} files at once.",
     "beginUpload": "Begin Upload",
     "selectFiles": "Select files",
-    "dragDrop": "Select, drag and drop, or paste files to upload",
+    "dragDrop": "Select, paste or drag-and-drop files to upload",
     "publicMsg": "Document will be publicly visible.",
     "collabMsg": "Document will be visible to your organization.",
     "privateMsg": "Document will be visible to you alone.",
@@ -409,7 +410,14 @@
     "revisionControlHelp": "All previous versions to the document will be preserved and available for download.",
     "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
     "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
-    "empty": "Get started by selecting, pasting or dragging-and-dropping files"
+    "empty": "Get started by selecting, pasting or dragging-and-dropping files",
+    "steps": {
+      "ready": "Ready",
+      "created": "Created",
+      "uploading": "Uploading",
+      "processing": "Processing",
+      "done": "Done"
+    }
   },
   "uploadOptions": {
     "documentLang": "Document language:",

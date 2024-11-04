@@ -4,7 +4,7 @@
 
 import * as projectsApi from "$lib/api/projects";
 
-export async function load({ fetch, parent, data }) {
+export async function load({ fetch, parent }) {
   const { me } = await parent();
 
   if (me) {
@@ -14,7 +14,6 @@ export async function load({ fetch, parent, data }) {
     ]);
 
     return {
-      ...data,
       pinnedProjects: pinned.data?.results,
       projects: projects.data,
     };
@@ -22,7 +21,6 @@ export async function load({ fetch, parent, data }) {
 
   // anonymous gets empty results
   return {
-    ...data,
     pinnedProjects: [],
     projects: { results: [] },
   };

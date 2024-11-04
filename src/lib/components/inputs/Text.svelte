@@ -51,7 +51,12 @@
     font-weight: 400;
     line-height: normal;
   }
+
   input::placeholder {
     color: var(--gray-3, #99a8b3);
+  }
+
+  input:disabled {
+    color: var(--gray-3);
   }
 </style>
