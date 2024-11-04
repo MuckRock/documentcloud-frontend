@@ -52,7 +52,7 @@ export async function getApiResponse<T, E = unknown>(
       response.error = {
         status: resp.status,
         message: resp.statusText,
-        errors: null,
+        errors: undefined,
       };
     }
 
