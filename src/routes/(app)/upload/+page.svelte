@@ -2,14 +2,17 @@
   import { page } from "$app/stores";
   import { _ } from "svelte-i18n";
 
-  import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
+  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
+  import SignedIn from "@/lib/components/common/SignedIn.svelte";
 
-  // using $page.form captures the correct type from applyAction
+  import Documents from "../documents/sidebar/Documents.svelte";
+  import Projects from "../documents/sidebar/Projects.svelte";
+
+  import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
 
   export let data;
 
   $: form = $page.form;
-  $: csrf_token = data.csrf_token;
   $: projects = data.projects.results;
 </script>
 
@@ -17,35 +20,20 @@
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<div class="form-container">
-  <DocumentUpload {csrf_token} {projects}>
-    <header>
-      <h1 class="title">{$_("uploadDialog.title")}</h1>
+<SidebarLayout>
+  <svelte:fragment slot="navigation">
+    <Documents />
+    <SignedIn>
+      <Projects />
+    </SignedIn>
+  </svelte:fragment>
 
-      {#if form?.success}
-        <p class="description">
-          {form?.message}
-        </p>
-      {:else if form?.error}
-        <p class="description error">
-          {form?.error}
-        </p>
-      {:else}
-        <p class="description">
-          {$_("uploadDialog.description")}
-        </p>
-      {/if}
-    </header>
-  </DocumentUpload>
-</div>
+  <div slot="content" class="form-container">
+    <DocumentUpload {projects} />
+  </div>
+</SidebarLayout>
 
 <style>
-  header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
   .form-container {
     margin: 1rem;
     padding: 1rem;
@@ -54,12 +42,5 @@
     background: var(--white);
     overflow-y: auto;
     height: fit-content;
-  }
-  .title {
-    font-size: var(--font-xl);
-    font-weight: var(--font-semibold);
-  }
-  .description {
-    opacity: 0.7;
   }
 </style>

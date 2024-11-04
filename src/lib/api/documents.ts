@@ -194,17 +194,17 @@ export async function textPositions(
 }
 
 /**
- * Create new documents in a batch (or a batch of one).
+ * Create a new document.
  *
- * If documents contain a `file_url` property, the server will attempt to fetch and upload that file.
+ * If document contains a `file_url` property, the server will attempt to fetch and upload that file.
  * Otherwise, the response will contain all documents fields plus a `presigned_url` field, which should
  * be passed to `upload` to store the actual file.
  */
 export async function create(
-  documents: DocumentUpload[],
+  doc: DocumentUpload,
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<Document[], unknown>> {
+): Promise<APIResponse<Document, unknown>> {
   const endpoint = new URL("documents/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -215,10 +215,10 @@ export async function create(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-    body: JSON.stringify(documents),
+    body: JSON.stringify(doc),
   }).catch(console.error);
 
-  return getApiResponse<Document[], unknown>(resp);
+  return getApiResponse<Document, unknown>(resp);
 }
 
 /**
@@ -241,7 +241,7 @@ export async function upload(
 }
 
 /**
- * Tell the backend to begin processing a batch of documents.
+ * Tell the backend to begin processing (or reprocessing) a batch of documents.
  * Only errors are returned here. A null response means success.
  */
 export async function process(

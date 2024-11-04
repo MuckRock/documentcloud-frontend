@@ -19,7 +19,18 @@
 </Template>
 
 <Story name="Empty" {args} />
+
+<Story
+  name="With text"
+  args={{ name: "text", value: "This is a text field" }}
+/>
+
 <Story
   name="With Placeholder"
   args={{ ...args, placeholder: "Enter some text…" }}
+/>
+
+<Story
+  name="Disabled"
+  args={{ ...args, value: "This is disabled", disabled: true }}
 />
