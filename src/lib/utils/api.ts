@@ -39,11 +39,22 @@ export async function getApiResponse<T, E = unknown>(
   }
 
   if (isErrorCode(resp.status)) {
-    response.error = {
-      status: resp.status,
-      message: resp.statusText,
-      errors: resp.json ? await resp.json() : null,
-    };
+    try {
+      response.error = {
+        status: resp.status,
+        message: resp.statusText,
+        errors: resp.json ? await resp.json() : null,
+      };
+    } catch (error) {
+      console.error(error);
+      // if we fail parsing the error's JSON,
+      // just return the status
+      response.error = {
+        status: resp.status,
+        message: resp.statusText,
+        errors: null,
+      };
+    }
 
     return response;
   }
