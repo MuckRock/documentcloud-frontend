@@ -11,7 +11,6 @@ Assumes it's a child of a ViewerContext
   } from "$lib/api/types";
   import { _ } from "svelte-i18n";
 
-  import Access, { getLevel } from "../documents/Access.svelte";
   import Actions from "../documents/Actions.svelte";
   import AddOns from "$lib/components/common/AddOns.svelte";
   import Avatar from "../accounts/Avatar.svelte";
@@ -38,7 +37,6 @@ Assumes it's a child of a ViewerContext
 
   $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
-  $: access = getLevel(document.access);
 </script>
 
 <SidebarLayout>
@@ -55,11 +53,6 @@ Assumes it's a child of a ViewerContext
 
   <aside class="column between" slot="action">
     <Flex direction="column" gap={2}>
-      {#if access}
-        <div style="font-size: var(--font-xl)">
-          <Access level={access} />
-        </div>
-      {/if}
       {#if document.access === "organization" && isOrg(document.organization)}
         <Metadata key={$_("sidebar.sharedWith")}>
           <Flex>

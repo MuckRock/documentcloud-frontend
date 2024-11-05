@@ -32,7 +32,6 @@
 
   import type { Access } from "@/lib/api/types";
   import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   export let level: Level;
 </script>
