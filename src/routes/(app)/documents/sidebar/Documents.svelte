@@ -4,10 +4,15 @@
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Globe16, Infinity16, Lock16, Organization16 } from "svelte-octicons";
+  import {
+    File16,
+    Globe16,
+    Infinity16,
+    Lock16,
+    Organization16,
+  } from "svelte-octicons";
   import { page } from "$app/stores";
 
-  import DocumentIcon from "@/common/icons/Document.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
@@ -48,7 +53,7 @@
 
   <SignedIn>
     <SidebarItem hover href={searchUrl(mine)} active={query === mine}>
-      <DocumentIcon slot="start" />
+      <File16 slot="start" />
       {$_("documents.yourDocuments")}
     </SidebarItem>
 
