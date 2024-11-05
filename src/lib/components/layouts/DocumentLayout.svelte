@@ -1,6 +1,6 @@
 <!-- @component
-  Assumes it's a child of a ViewerContext
- -->
+Assumes it's a child of a ViewerContext
+-->
 
 <script lang="ts">
   import type {

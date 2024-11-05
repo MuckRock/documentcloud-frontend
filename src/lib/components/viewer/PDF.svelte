@@ -30,20 +30,29 @@
   const pdf = getPDF();
   const zoom = getZoom();
 
+  let width: number;
+
   $: document = $documentStore;
   $: scale = zoomToScale($zoom);
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
   $: sections = getSections(document);
   $: errors = getErrors();
 
+  // handle missing page_spec
+  $: $pdf
+    .then((p) => {
+      if (sizes.length === 0) {
+        sizes = Array(p.numPages).fill([0, 0]);
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+      errors.update((errs) => [...errs, e]);
+    });
+
   onMount(() => {
     $pdf
       .then((p) => {
-        // handle missing page_spec
-        if (sizes.length === 0) {
-          sizes = Array(p.numPages).fill([0, 0]);
-        }
-
         if ($currentPage > 1) {
           scrollToPage($currentPage);
         }
@@ -56,8 +65,6 @@
         errors.update((errs) => [...errs, e]);
       });
   });
-
-  let width: number;
 </script>
 
 {#if Boolean($errors?.length)}

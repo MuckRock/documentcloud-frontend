@@ -17,7 +17,7 @@ layouts, stories, and tests.
   import { afterNavigate } from "$app/navigation";
 
   import { getContext, onMount, setContext } from "svelte";
-  import { type Readable, type Writable, writable } from "svelte/store";
+  import { type Writable, writable } from "svelte/store";
 
   import {
     pageFromHash,
@@ -175,13 +175,16 @@ layouts, stories, and tests.
     // we might move this to a load function
     if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
+      $pdf = task.promise;
+
       task.onProgress = (p: DocumentLoadProgress) => {
         $progress = p;
       };
-      $pdf = task.promise.catch((error) => {
+
+      task.promise.then(console.log).catch((error) => {
         console.error(error);
         $currentErrors = [...$currentErrors, error];
-        return Promise.reject(error);
+        throw error;
       });
     }
   });
