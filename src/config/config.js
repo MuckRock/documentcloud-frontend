@@ -44,6 +44,7 @@ export const LANGUAGES = [
   ["Deutsche", "de", "🇩🇪"],
   ["українська", "uk", "🇺🇦"],
   ["русский", "ru", "🇷🇺"],
+  ["Italiano", "it", "🇮🇹"],
 ];
 
 export const CSRF_COOKIE_NAME = "csrftoken";

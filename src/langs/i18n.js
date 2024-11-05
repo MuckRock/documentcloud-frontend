@@ -13,6 +13,7 @@ for (let i = 0; i < langs.length; i++) {
   const lang = langs[i][1];
   register(lang, () => import(`../langs/json/${lang}.json`));
   langDict[lang] = true;
+  console.log(lang);
 }
 
 function resolveLocale(locale) {
