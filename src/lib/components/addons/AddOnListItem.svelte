@@ -1,17 +1,24 @@
 <script lang="ts">
   import type { AddOnListItem } from "@/addons/types";
 
+  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
   import AddOnPin from "@/addons/AddOnPin.svelte";
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
 
+  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+
   export let addon: AddOnListItem;
 
   $: url = `/add-ons/${addon?.repository}/`;
-  $: description = addon?.parameters?.description;
+  $: description = clean(addon?.parameters?.description ?? "");
   $: author = { name: addon?.repository?.split("/")[0] };
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
+
+  function clean(html: string): string {
+    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
+  }
 </script>
 
 <a class="addon-link" href={url}>

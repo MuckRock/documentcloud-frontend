@@ -1,6 +1,9 @@
 <script lang="ts" context="module">
+  import DOMPurify from "isomorphic-dompurify";
   import { writable } from "svelte/store";
-  import { StorageManager } from "@/lib/utils/storage";
+
+  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
+  import { StorageManager } from "$lib/utils/storage";
 
   let show = writable(false);
 
@@ -12,10 +15,14 @@
       : true;
   }
 
-  function hideTip(message) {
+  function hideTip(message: string) {
     show.set(false);
     storage.set("message", message);
     storage.set("show", false);
+  }
+
+  function clean(html: string): string {
+    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
   }
 </script>
 
@@ -33,7 +40,7 @@
 {#if $show}
   <div class="container">
     <div class="message">
-      {@html message}
+      {@html clean(message ?? "")}
     </div>
     <button class="close" title="Hide Tip" on:click={() => hideTip(message)}>
       <X12 />

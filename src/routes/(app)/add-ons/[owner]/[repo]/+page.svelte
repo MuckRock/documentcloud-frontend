@@ -1,9 +1,9 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
+  import AddOnLayout from "$lib/components/layouts/AddOnLayout.svelte";
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
-  import AddOnLayout from "@/lib/components/layouts/AddOnLayout.svelte";
-  import { getCurrentUser } from "@/lib/utils/permissions.js";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
   export let data;
 

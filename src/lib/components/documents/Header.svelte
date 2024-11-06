@@ -25,7 +25,7 @@
     ? clean(document.description)
     : "";
 
-  function clean(html: string) {
+  function clean(html: string): string {
     return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
   }
 
