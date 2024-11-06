@@ -4,18 +4,19 @@
 
   import Dropdown, {
     type Placement,
-  } from "@/lib/components/common/Dropdown.svelte";
-  import Menu from "@/lib/components/common/Menu.svelte";
+  } from "$lib/components/common/Dropdown.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
-  import langs from "@/langs/langs.json";
-  import Flex from "../common/Flex.svelte";
+  import { LANGUAGES } from "@/config/config.js";
 
   export let position: Placement = "bottom-end";
 
-  $: currentLang = langs.find(([_, code]) => code == $locale) ?? langs[0];
+  $: currentLang =
+    LANGUAGES.find(([_, code]) => code === $locale) ?? LANGUAGES[0];
 
-  function updateLanguage(code) {
+  function updateLanguage(code: string) {
     $locale = code;
     try {
       localStorage.setItem("dc-locale", code);
@@ -23,7 +24,7 @@
   }
 </script>
 
-{#if langs.length > 1}
+{#if LANGUAGES.length > 1}
   <!-- Language Menu -->
   <Dropdown {position}>
     <SidebarItem slot="anchor">
@@ -38,10 +39,10 @@
       </div>
     </SidebarItem>
     <Menu slot="default" let:close>
-      {#each langs as [name, code, flag]}
+      {#each LANGUAGES as [name, code, flag]}
         <SidebarItem
           on:click={() => {
-            updateLanguage(code);
+            updateLanguage(code ?? "");
             close();
           }}
           hover

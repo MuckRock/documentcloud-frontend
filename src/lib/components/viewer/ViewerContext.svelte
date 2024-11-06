@@ -181,7 +181,7 @@ layouts, stories, and tests.
         $progress = p;
       };
 
-      task.promise.then(console.log).catch((error) => {
+      task.promise.catch((error) => {
         console.error(error);
         $currentErrors = [...$currentErrors, error];
         throw error;

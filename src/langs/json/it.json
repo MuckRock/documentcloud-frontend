@@ -497,7 +497,7 @@
     "matchingNotes": "{n, plural, one {# note} other {# notes}} corrisponde all'espressione di ricerca",
     "page": "Pagine",
     "pageAbbrev": "p.",
-    "pageCount": "Signed in as {name}.",
+    "pageCount": "{n, plural, one {# pagina} other {# pagine}}",
     "select": "Scegliere",
     "noteCount": "{n, plural, uno {# note} altri {# notes}}"
   },
@@ -981,7 +981,7 @@
     "none": "Non sono selezionati documenti. Chiudi questo form e seleziona almeno un documento prima."
   },
   "data": {
-    "title": "{Edit} tagi e dati",
+    "title": "Modifica tag e dati",
     "key": "Chiave",
     "newkey": "Nuovo articolo",
     "value": "Valore",
@@ -997,7 +997,7 @@
     "title": "Modifica",
     "actions": {
       "edit": "Accesso e metadati",
-      "data": "{Add tags and data}",
+      "data": "Aggiungi tag e dati",
       "reprocess": "Riproposizione",
       "delete": "Cancella documenti",
       "project": "Aggiungi al progetto"

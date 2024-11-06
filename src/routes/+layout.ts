@@ -7,7 +7,9 @@ export const trailingSlash = "always";
 
 export async function load() {
   if (browser) {
-    locale.set(window.navigator.language);
+    const language =
+      localStorage.getItem("dc-locale") || window.navigator.language;
+    locale.set(language);
   }
   await waitLocale();
 }
