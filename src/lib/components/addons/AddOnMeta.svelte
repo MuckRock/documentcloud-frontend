@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { AddOnListItem } from "@/addons/types";
 
+  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
   import { MarkGithub16 } from "svelte-octicons";
 
@@ -8,24 +9,36 @@
   import Flex from "@/lib/components/common/Flex.svelte";
   import Metadata from "../common/Metadata.svelte";
 
+  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+
   export let addon: AddOnListItem;
 
   $: repo = new URL(addon.repository, "https://github.com/").href;
   $: github_org = addon.repository.split("/")[0];
+  $: description = addon.parameters.description
+    ? clean(addon.parameters.description)
+    : "";
+  $: instructions = addon.parameters.instructions
+    ? clean(addon.parameters.instructions)
+    : "";
+
+  function clean(html: string): string {
+    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
+  }
 </script>
 
 <div class="container">
   <h2 class="name">{addon.name}</h2>
   <div class="description">
-    {@html addon.parameters.description}
+    {@html description}
   </div>
-  {#if addon.parameters.instructions}
+  {#if instructions}
     <div class="instructions">
       <details>
         <summary>
           {$_("addonDispatchDialog.instructions")}
         </summary>
-        {@html addon.parameters.instructions}
+        {@html instructions}
       </details>
     </div>
   {/if}

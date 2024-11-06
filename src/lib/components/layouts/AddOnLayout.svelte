@@ -24,6 +24,7 @@
   import Search from "../forms/Search.svelte";
   import Selection from "$lib/components/inputs/Selection.svelte";
   import Tab from "../common/Tab.svelte";
+
   import { schedules } from "../addons/ScheduledEvent.svelte";
 
   export let addon: AddOnListItem;
