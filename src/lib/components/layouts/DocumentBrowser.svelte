@@ -28,6 +28,7 @@
   // Document comopnents
   import ResultsList, {
     selected,
+    selectedIds,
     total,
     visible,
   } from "$lib/components/documents/ResultsList.svelte";
@@ -103,9 +104,9 @@
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
-      $selected = [...$visible];
+      $selectedIds = [...$visible.keys()];
     } else {
-      $selected = [];
+      $selectedIds = [];
     }
   }
 

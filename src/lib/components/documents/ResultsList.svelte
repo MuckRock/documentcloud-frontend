@@ -1,11 +1,21 @@
 <script context="module" lang="ts">
-  import { writable, type Writable } from "svelte/store";
+  import {
+    derived,
+    writable,
+    type Readable,
+    type Writable,
+  } from "svelte/store";
   import type { Document, DocumentResults, Maybe } from "$lib/api/types";
 
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
-  export const selected: Writable<Document[]> = writable([]);
-  export let visible: Writable<Set<Document>> = writable(new Set());
+  export const visible: Writable<Map<string, Document>> = writable(new Map());
+  export const selectedIds: Writable<string[]> = writable([]);
+  export const selected: Readable<Document[]> = derived(
+    [visible, selectedIds],
+    ([$visible, $selectedIds]) =>
+      $selectedIds.map((d) => $visible.get(d)).filter(Boolean) as Document[],
+  );
 
   export let total: Writable<number> = writable(0);
 </script>
@@ -35,7 +45,7 @@
   const embed: boolean = getContext("embed");
 
   // track what's visible so we can compare to $selected
-  $: $visible = new Set(results);
+  $: $visible = new Map(results.map((d) => [String(d.id), d]));
 
   // load the next set of results
   async function load(url: URL) {
@@ -99,7 +109,11 @@
         {#if !embed}
           <label>
             <span class="sr-only">{$_("documents.select")}</span>
-            <input type="checkbox" bind:group={$selected} value={document} />
+            <input
+              type="checkbox"
+              bind:group={$selectedIds}
+              value={document.id}
+            />
           </label>
         {/if}
         <DocumentListItem {document} />
@@ -125,7 +139,7 @@
         ghost
         mode="primary"
         disabled={loading}
-        on:click={(e) => {
+        on:click={() => {
           if (next) load(new URL(next));
         }}
       >

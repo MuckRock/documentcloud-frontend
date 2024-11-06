@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
+  import type { Readable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
   import { getContext } from "svelte";
@@ -17,7 +17,7 @@
   import Projects from "$lib/components/forms/Projects.svelte";
   import Share from "$lib/components/documents/Share.svelte";
 
-  const selected: Writable<Document[]> = getContext("selected");
+  const selected: Readable<Document[]> = getContext("selected");
 
   let edit = false;
   let organize = false;
