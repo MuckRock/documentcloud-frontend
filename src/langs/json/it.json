@@ -116,7 +116,7 @@
     "run": "Corri"
   },
   "dialogAccessDialog": {
-    "changeAccess": "Cambiare l'accesso per {n, plural, uno {documento} altri {# documenti}}",
+    "changeAccess": "Cambiare l'accesso per {n, plural, one {documento} other {# documenti}}",
     "selectAccess": "Seleziona un livello di accesso per il {n, plural, one {documento selezionato} other {# documenti selezionati}}",
     "public": "Accesso pubblico",
     "publicDesc": "Qualsiasi persona su Internet pu\u00f2 visualizzare il documento.",
@@ -192,7 +192,7 @@
     "deleteDocs": "Procedendo, si forzer\u00e0 la {n, plural, one {documento selezionato} other {# documenti selezionati}}, a fermare l'elaborazione. Una volta fermata l'elaborazione, un errore apparir\u00e0 e sar\u00e0 possibile scorrere su \u201cForzare Riproposizionamento\u201d o cancellare la {n, plural, one {documento} other {documenti}} utilizzando il menu Edizione. Vuoi continuare?"
   },
   "dialogDiagnosticDialog": {
-    "staffOnlyInfo": "Informazioni riservate per il personale selezionato {n, plural, uno {documento} altri {# documenti}}",
+    "staffOnlyInfo": "Informazioni riservate per il personale selezionato {n, plural, one {documento} other {# documenti}}",
     "id": "ID",
     "title": "Titolo",
     "actions": "Azioni",
@@ -241,7 +241,7 @@
     "embedDesc": "Copia il codice HTML per inserire questo documento all'interno di un articolo"
   },
   "dialogDocumentInformationDialog": {
-    "editInformation": "Informazione per l'editore: {n, plural, uno {documento} altri {# documenti}}"
+    "editInformation": "Informazione per l'editore: {n, plural, one {documento} other {# documenti}}"
   },
   "dialogRedactDialog": {
     "title": "Vedi conferma di revisioni",
@@ -324,7 +324,7 @@
   "dialogOwnerDialog": {
     "selectUser": "Utente deve essere selezionato",
     "selectOrg": "L'organizzazione deve essere selezionata",
-    "changeOwner": "Cambia proprietario per {n, plural, uno {documento} altri {# documenti}}",
+    "changeOwner": "Cambia proprietario per {n, plural, one {documento} other {# documenti}}",
     "accessWarning": "Avvertenza: potresti perdere l'accesso al documento specificato (1 documento altri # documenti) come risultato di cambiare il proprietario del documento.",
     "user": "Utente:",
     "filterUsers": "Typa per filtrare utenti...",
@@ -466,12 +466,12 @@
       "title": "Esperto"
     },
     "org": {
-      "avatar": "Avatar: {nome}",
+      "avatar": "Avatar: {name}",
       "changeOrg": "Cambia organizzazione",
       "adminRole": "Amministrazione",
       "memberListError": "Errore accaduto mentre si carica la lista dei membri.",
       "memberListEmpty": "Quest'organizzazione non ha altri membri.",
-      "userCount": "{n, plural, uno {# membro dell'organizzazione} altri {# membri dell'organizzazione}}"
+      "userCount": "{n, plural, one {# membro dell'organizzazione} other {# membri dell'organizzazione}}"
     },
     "credits": {
       "monthlyOrg": "Allowanza Org Mese",
@@ -499,7 +499,7 @@
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# pagina} other {# pagine}}",
     "select": "Scegliere",
-    "noteCount": "{n, plural, uno {# note} altri {# notes}}"
+    "noteCount": "{n, plural, one {# note} other {# notes}}"
   },
   "documentThumbnail": {
     "pages": "pagine",
@@ -524,15 +524,15 @@
     "titleFieldTitle": "Titolo",
     "titleFieldName": "nome",
     "titleFieldNameUppercase": "Nome",
-    "titleFieldHeader": "Rinominare {n, plural, uno {# documento} altri {# documenti}}",
-    "titleFieldDescription": "Scegliere un nome di seguito per il {n, plural, uno {documento selezionato} altri {# documenti selezionati}}",
+    "titleFieldHeader": "Rinominare {n, plural, one {# documento} other {# documenti}}",
+    "titleFieldDescription": "Scegliere un nome di seguito per il {n, plural, one {documento selezionato} other {# documenti selezionati}}",
     "titleFieldButton": "Renominare",
     "titleFieldInvalidSameName": "Il documento gi\u00e0 ha questo nome",
     "titleFieldInvalidEmptyName": "Inserisci un nome valido",
     "sourceFieldTitle": "Fonte",
     "sourceFieldName": "La fonte",
     "sourceFieldNameUppercase": "Fonte",
-    "sourceFieldHeader": "Edit source per {n, plural, uno {# documento} altri {# documenti}}",
+    "sourceFieldHeader": "Edit source per {n, plural, one {# documento} other {# documenti}}",
     "sourceFieldDescription": "Inserisci una fonte qui sotto per il {n, plural, one {documento selezionato} other {# documenti selezionati}}",
     "sourceFieldButton": "{Edit}",
     "descriptionFieldTitle": "Descrizione",
@@ -545,13 +545,13 @@
     "relatedArticleFieldName": "Articolo correlato - [URL]",
     "relatedArticleFieldNameUppercase": "URL correlato articolo",
     "relatedArticleFieldHeader": "Edited la URL relata del articolo per `{n, plural, one {# documento} other {# documenti}}`",
-    "relatedArticleFieldDescription": "Ecco il testo tradotto in italiano:\n\nInserisci l'URL dell'articolo correlato di seguito per l'{n, plural, uno {documento selezionato} altri {# documenti selezionati}}",
+    "relatedArticleFieldDescription": "Ecco il testo tradotto in italiano:\n\nInserisci l'URL dell'articolo correlato di seguito per l'{n, plural, one {documento selezionato} other {# documenti selezionati}}",
     "relatedArticleFieldButton": "\"Editare\"",
     "publishedUrlFieldTitle": "URL pubblicato",
     "publishedUrlFieldName": "Pubblicato URL",
     "publishedUrlFieldNameUppercase": "URL pubblicato",
-    "publishedUrlFieldHeader": "Edita l'URL pubblicato per {n, plural, uno {# documento} altri {# documenti}}",
-    "publishedUrlFieldDescription": "Entrare l'URL pubblicato di seguito per il {n, plural, uno {documento selezionato} altri {# documenti selezionati}}",
+    "publishedUrlFieldHeader": "Edita l'URL pubblicato per {n, plural, one {# documento} other {# documenti}}",
+    "publishedUrlFieldDescription": "Entrare l'URL pubblicato di seguito per il {n, plural, one {documento selezionato} other {# documenti selezionati}}",
     "publishedUrlFieldButton": "Edit"
   },
   "projectsMenu": {
@@ -561,7 +561,7 @@
     "selectDocs": "Seleziona i documenti per metterli nei progetti",
     "createProj": "Crea un progetto per organizzare e condividere documenti",
     "remove": "Sviluppa {n, plural=one{documento} other|# documenti} dalla progetto.",
-    "add": "Aggiungi {n, plural, uno {documento} altri {# documenti}} al progetto"
+    "add": "Aggiungi {n, plural, one {documento} other {# documenti}} al progetto"
   },
   "documentBrowser": {
     "dropToUpload": "Dropping per caricare documenti"
@@ -808,9 +808,9 @@
     "rotate": "Ruotare",
     "unselect": "Selezione",
     "remove": "Elimina",
-    "insertPages": "{n, plural, uno {# Pagina} altri {# Pagine}}",
+    "insertPages": "{n, plural, one {# Pagina} other {# Pagine}}",
     "pagesPending": "{n, plural, zero {none} one {# Page} few {# Pages} other {# Pages}} Pendente Aggiunta",
-    "insertBegin": "Inserisci {n, plural, uno {# pagina} altri {# pagine}}, all'inizio.",
+    "insertBegin": "Inserisci {n, plural, one {# pagina} other {# pagine}}, all'inizio.",
     "insertEnd": "Insert {n, plural, one {# page} other {# pages}} all'ultima posizione.",
     "insertBetween": "Insert {n, plural, one {# page} other {# pages}} tra pagina {p0} e {p1}.",
     "insert": "Inserisci",
@@ -973,7 +973,7 @@
   },
   "delete": {
     "title": "Cancella e conferma",
-    "really": "Procedendo, sar\u00e0 permanentemente cancellato il {n, plural, uno {documento selezionato} altri {# documenti selezionati}}.",
+    "really": "Procedendo, sar\u00e0 permanentemente cancellato il {n, plural, one {documento selezionato} other {# documenti selezionati}}.",
     "continue": "Si vuole continuare?",
     "confirm": "C Cancella",
     "cancel": "Cancellare",
@@ -991,7 +991,7 @@
     "save": "Salva",
     "cancel": "Annulla",
     "addNew": "Aggiungi nuovo elemento:",
-    "many": "Il salvataggio aggiunger\u00e0 i seguenti dati e etichette al {n, plurale, uno {il documento selezionato} altri {tutti i # documenti selezionati}}. Nessun tag o dato sar\u00e0 rimosso."
+    "many": "Il salvataggio aggiunger\u00e0 i seguenti dati e etichette al {n, plurale, uno {il documento selezionato} other {tutti i # documenti selezionati}}. Nessun tag o dato sar\u00e0 rimosso."
   },
   "bulk": {
     "title": "Modifica",
@@ -1009,7 +1009,7 @@
     "premium": "Questo Add-On utilizza i Crediti Premium:",
     "premiumSpendLimit": "Impostare un limite di spesa",
     "labelSelected": "Il {n, plural, one {# attualmente selezionato documento} other {# attualmente selezionati documenti}}",
-    "labelQuery": "Il {n, plural, uno {# documento} altri {# documenti}} dalla risultate di ricerca attuali",
+    "labelQuery": "Il {n, plural, one {# documento} other {# documenti}} dalla risultate di ricerca attuali",
     "showAddons": "Visualizza Add-on aggiuntivi programmati ({n})",
     "scheduled": "Pianificato",
     "runSchedule": "Fai routine su un orario",
@@ -1129,7 +1129,7 @@
   "processing": {
     "addons": "Add-Ons",
     "documents": "Documenti",
-    "totalCount": "{n} attivo {n, plural, uno {processo} altri {processi}}"
+    "totalCount": "{n} attivo {n, plural, one {processo} other {processi}}"
   },
   "feedback": {
     "title": "Condividi i tuoi feedback",
