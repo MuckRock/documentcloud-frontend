@@ -195,9 +195,7 @@ exports[`AddOnListItem 2`] = `
       <div
         class="description svelte-1sp09hk"
       >
-        <p>
-          This Add-On uses Azure’s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.
-        </p>
+        This Add-On uses Azure’s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.
       </div>
     </div>
   </a>
