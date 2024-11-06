@@ -7,7 +7,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 </script>
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
+  import type { Readable } from "svelte/store";
   import type { Document, Nullable } from "$lib/api/types";
 
   import { getContext, type ComponentType } from "svelte";
@@ -23,8 +23,8 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import Dropdown, {
     type Placement,
-  } from "@/lib/components/common/Dropdown.svelte";
-  import Menu from "@/lib/components/common/Menu.svelte";
+  } from "$lib/components/common/Dropdown.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
@@ -41,7 +41,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   export let position: Placement = "top-start";
 
   const me = getCurrentUser();
-  const selected: Writable<Document[]> = getContext("selected");
+  const selected: Readable<Document[]> = getContext("selected");
 
   const actions: Record<Action, string> = {
     edit: $_("bulk.actions.edit"),

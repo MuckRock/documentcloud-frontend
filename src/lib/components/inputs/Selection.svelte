@@ -1,7 +1,7 @@
 <svelte:options accessors />
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
+  import type { Readable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
   import { getContext } from "svelte";
@@ -12,7 +12,7 @@
   export let query: undefined | string = undefined;
   export let resultsCount: undefined | number = undefined;
 
-  const selected: Writable<Document[]> = getContext("selected");
+  const selected: Readable<Document[]> = getContext("selected");
 
   // default to the first option, for convenience
   let choice = [...documents][0];

@@ -16,6 +16,7 @@
   import PageToolbar from "../common/PageToolbar.svelte";
   import ResultsList, {
     selected,
+    selectedIds,
     total,
     visible,
   } from "../documents/ResultsList.svelte";
@@ -56,9 +57,9 @@
 
   function selectAll(e) {
     if (e.target.checked) {
-      $selected = [...$visible];
+      $selectedIds = [...$visible.keys()];
     } else {
-      $selected = [];
+      $selectedIds = [];
     }
   }
 

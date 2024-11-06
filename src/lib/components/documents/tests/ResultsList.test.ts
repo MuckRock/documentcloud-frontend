@@ -1,9 +1,9 @@
 import type { DocumentResults } from "$lib/api/types";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { get } from "svelte/store";
 import { render, screen, fireEvent } from "@testing-library/svelte";
 
-import ResultsList, { selected } from "../ResultsList.svelte";
+import ResultsList, { selected, selectedIds } from "../ResultsList.svelte";
 import searchResults from "@/test/fixtures/documents/search-highlight.json";
 
 const results = searchResults as unknown as DocumentResults;
@@ -17,6 +17,10 @@ const empty: DocumentResults = {
 };
 
 describe("ResultsList", () => {
+  beforeEach(() => {
+    selectedIds.set([]);
+  });
+
   it("shows results", () => {
     render(ResultsList, {
       results: results.results,
@@ -43,13 +47,33 @@ describe("ResultsList", () => {
     expect(heading.textContent).toEqual("No search results");
   });
 
-  it("populates $selected store", () => {
+  it("populates $selectedIds store", () => {
     render(ResultsList, {
       results: results.results,
       count: results.count,
       next: results.next,
     });
 
+    expect(get(selectedIds)).toEqual([]);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+
+    // check all the boxes
+    checkboxes.forEach(async (c) => {
+      await fireEvent.click(c);
+    });
+
+    expect(get(selectedIds)).toEqual(results.results.map((d) => String(d.id)));
+  });
+
+  it("builds the $selected store from the $selectedIds and $visible store", () => {
+    render(ResultsList, {
+      results: results.results,
+      count: results.count,
+      next: results.next,
+    });
+
+    expect(get(selectedIds)).toEqual([]);
     expect(get(selected)).toEqual([]);
 
     const checkboxes = screen.getAllByRole("checkbox");
