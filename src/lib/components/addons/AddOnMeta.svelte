@@ -30,7 +30,7 @@
 <div class="container">
   <h2 class="name">{addon.name}</h2>
   <div class="description">
-    {@html description}
+    {@html addon.parameters?.description}
   </div>
   {#if instructions}
     <div class="instructions">
