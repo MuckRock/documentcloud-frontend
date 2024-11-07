@@ -7,6 +7,8 @@ import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 import { userDocs } from "$lib/utils/search";
 
+export const ssr = false;
+
 export async function load({ url, params, fetch, parent }) {
   const { owner, repo } = params;
 

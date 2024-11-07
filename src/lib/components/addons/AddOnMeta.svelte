@@ -6,7 +6,7 @@
   import { MarkGithub16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
-  import Flex from "@/lib/components/common/Flex.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import Metadata from "../common/Metadata.svelte";
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
@@ -15,9 +15,6 @@
 
   $: repo = new URL(addon.repository, "https://github.com/").href;
   $: github_org = addon.repository.split("/")[0];
-  $: description = addon.parameters.description
-    ? clean(addon.parameters.description)
-    : "";
   $: instructions = addon.parameters.instructions
     ? clean(addon.parameters.instructions)
     : "";
