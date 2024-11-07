@@ -9,7 +9,7 @@
 -->
 <script lang="ts">
   import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api";
-  import type { User } from "@/api/types/orgAndUser";
+  import type { User } from "$lib/api/types";
   import type { Document, Note, Sizes } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";

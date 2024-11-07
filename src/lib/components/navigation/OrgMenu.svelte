@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Org, User } from "@/api/types";
+  import type { Org, User } from "$lib/api/types";
 
   import { invalidateAll } from "$app/navigation";
   import { _, locale } from "svelte-i18n";

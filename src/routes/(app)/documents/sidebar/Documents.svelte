@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Org } from "@/api/types/orgAndUser";
+  import type { Org } from "$lib/api/types";
   import type { Writable } from "svelte/store";
 
   import { getContext } from "svelte";

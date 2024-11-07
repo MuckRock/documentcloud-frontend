@@ -25,7 +25,7 @@ Assumes it's a child of a ViewerContext
   import Viewer from "../viewer/Viewer.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
-  import { isOrg } from "@/api/types/orgAndUser";
+  import { isOrg } from "$lib/api/accounts";
   import { getDocument, getText } from "../viewer/ViewerContext.svelte";
 
   const me = getCurrentUser();

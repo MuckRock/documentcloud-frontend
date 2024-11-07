@@ -1,4 +1,4 @@
-import type { Org, User } from "@/api/types/orgAndUser.js";
+import type { Org, User } from "$lib/api/types";
 import { getMe, orgUsers, userOrgs } from "$lib/api/accounts";
 import { getTipOfDay } from "$lib/api/flatpages";
 

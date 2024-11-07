@@ -1,8 +1,7 @@
 <script lang="ts">
   import { APP_URL } from "@/config/config";
   import type { APIResponse } from "@/lib/api/types";
-  import type { Page } from "@/api/types/common";
-  import type { AddOnListItem } from "@/addons/types";
+  import type { Page, AddOnListItem } from "$lib/api/types";
 
   import {
     Book16,

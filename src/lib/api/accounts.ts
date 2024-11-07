@@ -1,4 +1,4 @@
-import type { Maybe, Nullable, User, Org } from "@/api/types";
+import type { Maybe, Nullable, User, Org } from "$lib/api/types";
 import type { APIResponse } from "./types";
 
 import {

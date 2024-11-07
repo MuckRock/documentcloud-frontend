@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { User } from "@/api/types";
+  import type { User } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 

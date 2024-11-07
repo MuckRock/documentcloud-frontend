@@ -17,7 +17,7 @@ import {
 } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/api/common.js";
 import { canonicalUrl } from "./documents";
-import { getApiResponse, isErrorCode } from "../utils";
+import { getApiResponse } from "../utils";
 
 /**
  * Load notes from a single document from the API

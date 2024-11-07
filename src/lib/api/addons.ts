@@ -1,4 +1,4 @@
-import type { Page } from "@/api/types/common";
+import type { Page } from "$lib/api/types";
 import type {
   AddOnParams,
   AddOnListItem,
