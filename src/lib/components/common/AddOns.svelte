@@ -18,9 +18,9 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
-  import Pin from "@/common/Pin.svelte";
-  import Error from "./Error.svelte";
+  import Pin from "$lib/components/common/Pin.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
+  import Error from "./Error.svelte";
 
   export let pinnedAddOns: Promise<APIResponse<Page<AddOnListItem>>>;
   export let query: string = "";

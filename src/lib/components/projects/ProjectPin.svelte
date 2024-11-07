@@ -1,12 +1,11 @@
 <script lang="ts" context="module">
-  import type { Project } from "@/lib/api/types";
+  import { writable, type Writable } from "svelte/store";
 
   import { invalidate } from "$app/navigation";
 
-  import { writable, type Writable } from "svelte/store";
-  import { getCsrfToken } from "$lib/utils/api";
-
   import { canonicalUrl } from "$lib/api/projects";
+  import type { Project } from "$lib/api/types";
+  import { getCsrfToken } from "$lib/utils/api";
 
   export const pinned: Writable<Project[]> = writable([]);
 
@@ -20,7 +19,7 @@
 </script>
 
 <script lang="ts">
-  import Pin from "@/common/Pin.svelte";
+  import Pin from "@/lib/components/common/Pin.svelte";
   import { pinProject } from "$lib/api/projects";
 
   export let project: Project;

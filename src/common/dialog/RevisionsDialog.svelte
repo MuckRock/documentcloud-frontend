@@ -12,7 +12,7 @@
   import Button from "../Button.svelte";
   import ErrorMessage from "../ErrorMessage.svelte";
   import type { Revision } from "../RevisionIcon.svelte";
-  import RelativeTime from "../RelativeTime.svelte";
+  import RelativeTime from "../../lib/components/common/RelativeTime.svelte";
   import Loader from "../Loader.svelte";
 
   export let documentId: string;

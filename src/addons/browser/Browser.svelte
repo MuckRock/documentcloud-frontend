@@ -11,7 +11,7 @@
   import Paginator from "../../lib/components/common/Paginator.svelte";
   import Search, { query } from "../../common/SearchInput.svelte";
   import Pin from "../../common/icons/Pin.svelte";
-  import Star from "../../common/icons/Star.svelte";
+  import Star from "../../lib/components/icons/Star.svelte";
   import Credit from "../../common/icons/Credit.svelte";
   import Flex from "../../common/Flex.svelte";
 

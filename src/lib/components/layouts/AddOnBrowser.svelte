@@ -10,19 +10,19 @@
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
   import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import Scheduled from "$lib/components/addons/Scheduled.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
-  import Pin from "@/common/icons/Pin.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
-  import Scheduled from "$lib/components/addons/Scheduled.svelte";
-  import Search from "$lib/components/forms/Search.svelte";
-  import Star from "@/common/icons/Star.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
+  import Search from "$lib/components/forms/Search.svelte";
+  import Pin from "$lib/components/icons/Pin.svelte";
+  import Premium from "$lib/components/icons/Premium.svelte";
+  import Star from "$lib/components/icons/Star.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
 
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
   export let events: Promise<APIResponse<Page<Event>>>;

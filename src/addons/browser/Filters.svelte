@@ -3,7 +3,7 @@
   import { filter, FILTERS } from "./browser";
   import Filter from "../../common/Filter.svelte";
   import Pin from "../../common/icons/Pin.svelte";
-  import Star from "../../common/icons/Star.svelte";
+  import Star from "../../lib/components/icons/Star.svelte";
   import Infinity from "svelte-octicons/lib/Infinity16.svelte";
   import Premium from "../../common/icons/Premium.svelte";
 

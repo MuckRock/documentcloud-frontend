@@ -2,10 +2,10 @@
   import { _ } from "svelte-i18n";
   import { Infinity16, StarFill16 } from "svelte-octicons";
 
-  import Pin from "@/common/icons/Pin.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import Pin from "$lib/components/icons/Pin.svelte";
+  import Premium from "$lib/components/icons/Premium.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import Flex from "../common/Flex.svelte";
 
   import { CATEGORIES } from "$lib/api/addons";
 

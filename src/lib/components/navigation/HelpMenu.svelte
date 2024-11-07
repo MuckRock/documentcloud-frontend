@@ -17,10 +17,11 @@
 
   import Dropdown, {
     type Placement,
-  } from "@/lib/components/common/Dropdown.svelte";
-  import Menu from "@/lib/components/common/Menu.svelte";
+  } from "$lib/components/common/Dropdown.svelte";
+  import Menu from "$lib/components/common/Menu.svelte";
+  import Premium from "$lib/components/icons/Premium.svelte";
+
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
 
   import { startTour, isTourAvailable } from "../onboarding/GuidedTour.svelte";
 
