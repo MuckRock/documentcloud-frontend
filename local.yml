@@ -19,6 +19,7 @@ services:
       DOCKER: true
       NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
       NODE_ENV: development
+      PUPPETEER_SKIP_DOWNLOAD: true
 
   documentcloud_frontend_app:
     image: node:20

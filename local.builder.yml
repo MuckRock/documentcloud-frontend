@@ -15,7 +15,10 @@ services:
       service: base
     command: npm ci && npm audit fix
     environment:
-      - NODE_ENV=development
+      DOCKER: true
+      NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
+      NODE_ENV: development
+      PUPPETEER_SKIP_DOWNLOAD: true
 
   npmlist:
     extends:

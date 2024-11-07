@@ -1,5 +1,4 @@
 install:
-	npm ci
 	docker volume create nodemodules && docker compose -f local.builder.yml run --rm install
 
 npmlist:
