@@ -16,44 +16,11 @@ This component should update on a timer.
   import Flex from "../common/Flex.svelte";
   import Process from "./Process.svelte";
 
-  import { history, dismiss, cancel, rate } from "$lib/api/addons";
+  import { dismiss, cancel, rate } from "$lib/api/addons";
   import { getCsrfToken } from "$lib/utils/api";
   import { getRunningAddons } from "./ProcessContext.svelte";
-  import type { Nullable } from "$lib/api/types";
-
-  let timeout: Nullable<string | number | NodeJS.Timeout>;
 
   const running = getRunningAddons();
-  /* 
-  onMount(async () => {
-    if ($running.length === 0) {
-      await load();
-    }
-  });
-
-  afterUpdate(() => {
-    if ($running.length > 0) {
-      timeout = setTimeout(load, POLL_INTERVAL);
-    }
-  });
-
-  onDestroy(() => {
-    stop();
-  });
- */
-  function stop() {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-  }
-
-  async function load() {
-    const { data, error } = await history({ dismissed: false, per_page: 100 });
-    if (!error) {
-      $running = data?.results;
-    }
-  }
 
   async function rateRun(rating: number, run: Run) {
     const csrftoken = getCsrfToken();
@@ -73,12 +40,13 @@ This component should update on a timer.
   }
 
   async function dismissRun(run: Run) {
+    run = { ...run, dismissed: true }; // optimistic update
     const csrftoken = getCsrfToken();
     if (!csrftoken) {
       console.error("No CSRF token");
+      run = { ...run, dismissed: false }; // put it back
       return;
     }
-    run = { ...run, dismissed: true }; // optimistic update
     const { data, error } = await dismiss(run.uuid, csrftoken);
     if (error || !data) {
       console.error(error?.errors ?? "No data");

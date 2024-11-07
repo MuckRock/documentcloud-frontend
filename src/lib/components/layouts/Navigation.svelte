@@ -18,6 +18,7 @@
   import TipOfDay from "../common/TipOfDay.svelte";
   import UserMenu from "../accounts/UserMenu.svelte";
 
+  import ProcessDropdown from "$lib/components/processing/ProcessDropdown.svelte";
   import Portal from "./Portal.svelte";
   import Modal from "./Modal.svelte";
   import UserFeedback from "../forms/UserFeedback.svelte";
@@ -49,6 +50,7 @@
     <slot name="breadcrumbs">
       <Breadcrumbs trail={$page.data.breadcrumbs} />
     </slot>
+    <ProcessDropdown />
     {#if !BREAKPOINTS.BOTTOM_NAV}
       <SignedIn>
         {#if $me}
