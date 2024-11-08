@@ -9,7 +9,7 @@
 
   function clean(html: string): string {
     return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ["a", "strong", "em"],
+      ALLOWED_TAGS: ["a", "strong", "em", "code"],
       ALLOWED_ATTR: ["href"],
     });
   }
