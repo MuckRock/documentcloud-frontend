@@ -9,7 +9,7 @@ export type Status =
   | "in_progress"
   | "cancelled";
 
-import type { PageParams } from "@/api/types/common";
+import type { PageParams } from "$lib/api/types";
 
 export interface AddOnParams extends PageParams {
   query?: string;

@@ -5,7 +5,7 @@
 
   export let message: string;
   export let callToAction: string | null = null;
-  export let href: string | null = null;
+  export let href: string | undefined = undefined;
 </script>
 
 <div class="container">

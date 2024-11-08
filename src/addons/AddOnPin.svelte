@@ -6,14 +6,14 @@
 </script>
 
 <script lang="ts">
-  import { getCsrfToken } from "../api/session.js";
-  import { baseApiUrl } from "../api/base.js";
+  import { getCsrfToken } from "$lib/utils/api";
+  import { BASE_API_URL } from "@/config/config";
   import Pin from "../lib/components/common/Pin.svelte";
 
   export let addon: AddOnListItem;
   export let size = 1;
 
-  $: endpoint = new URL(`/api/addons/${addon.id}/`, baseApiUrl);
+  $: endpoint = new URL(`/api/addons/${addon.id}/`, BASE_API_URL);
 
   async function toggle(event) {
     event.preventDefault();

@@ -1,5 +1,6 @@
 import { test, expect } from "vitest";
 import { render } from "@testing-library/svelte";
+
 import AddOnListItem from "../AddOnListItem.svelte";
 import { addon, premiumAddon } from "@/test/fixtures/addons";
 
