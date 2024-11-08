@@ -12,20 +12,18 @@
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
-
   import ConfirmDelete from "$lib/components/forms/ConfirmDelete.svelte";
   import Edit from "$lib/components/forms/Edit.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
   import RevisionControl from "$lib/components/forms/RevisionControl.svelte";
-  import Share from "./Share.svelte";
-
-  import Modal from "$lib/components/layouts/Modal.svelte";
-  import Portal from "$lib/components/layouts/Portal.svelte";
-
-  import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
   import Premium from "$lib/components/icons/Premium.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
+  import UpgradePrompt from "$lib/components/premium-credits/UpgradePrompt.svelte";
+
   import Revisions from "./Revisions.svelte";
-  import UpgradePrompt from "@/premium-credits/UpgradePrompt.svelte";
+  import Share from "./Share.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
   import { pdfUrl } from "$lib/api/documents";
