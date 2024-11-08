@@ -8,7 +8,10 @@
   export let sronly = false;
 
   function clean(html: string): string {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS: ["a", "strong", "em"] });
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ["a", "strong", "em"],
+      ALLOWED_ATTR: ["href"],
+    });
   }
 </script>
 
