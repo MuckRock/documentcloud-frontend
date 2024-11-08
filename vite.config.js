@@ -52,12 +52,6 @@ export default defineConfig({
     origin: "https://www.dev.documentcloud.org",
   },
 
-  preview: {
-    host: "0.0.0.0",
-    port: process.env.DOCKER ? 80 : 4173,
-    origin: "https://www.dev.documentcloud.org",
-  },
-
   test: {
     setupFiles: ["./vitest-setup.js"],
     include: [
