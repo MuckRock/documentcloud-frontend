@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import Badge from "../lib/components/common/Badge.svelte";
-  import Premium from "../common/icons/Premium.svelte";
+  import Premium from "../lib/components/icons/Premium.svelte";
 </script>
 
 <Badge
