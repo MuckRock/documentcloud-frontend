@@ -1,11 +1,11 @@
 import { Svue } from "svue";
 import { router, getPath } from "@/router/router.js";
-import { wrapSeparate } from "@/util/wrapLoad.js";
+import { wrapSeparate } from "@/legacy/util/wrapLoad.js";
 import { layout } from "@/manager/layout.js";
 import { SearchParams } from "@/structure/searchParams.js";
 import { pushUrl } from "@/router/router.js";
-import { queryBuilder } from "@/util/url.js";
-import { slugify } from "@/util/string.js";
+import { queryBuilder } from "@/legacy/util/url.js";
+import { slugify } from "@/legacy/util/string.js";
 import { modifications } from "@/manager/modifications.js";
 import { Results } from "@/structure/results.js";
 import { apiSearchUrl, searchDocumentsUrl } from "@/api/document.js";

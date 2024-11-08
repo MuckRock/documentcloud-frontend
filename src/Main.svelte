@@ -9,7 +9,7 @@
 
   import { router } from "./router/router.js";
   import { routes } from "./router/routes.js";
-  import { currentUrl } from "./util/url.js";
+  import { currentUrl } from "./legacy/util/url.js";
   import "./langs/i18n.js";
 
   // Patch poll events

@@ -1,4 +1,4 @@
-import { extractSlugId, isNumber } from "@/util/string.js";
+import { extractSlugId, isNumber } from "@/legacy/util/string.js";
 import { LANGUAGE_CODES } from "../config/config.js";
 
 export const sortCompletions = [

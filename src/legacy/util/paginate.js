@@ -1,7 +1,7 @@
 import session from "@/api/session";
 import { queryBuilder } from "./url.js";
 
-import { MAX_PER_PAGE } from "../config/config.js";
+import { MAX_PER_PAGE } from "../../config/config.js";
 
 /**
  * Requests the specified URL and paginates through to return all

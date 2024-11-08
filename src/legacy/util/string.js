@@ -25,16 +25,6 @@ export function stripExtension(filename) {
   return parts.slice(0, parts.length - 1).join(".");
 }
 
-export function slugify(str, id = null, maxLength = 25) {
-  const slug = str
-    .substring(0, maxLength)
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
-  if (id != null) return `${slug}-${id}`;
-  return slug;
-}
-
 export function extractSlugId(str) {
   // Must be valid slug
   if (!/^[a-z0-9-]+$/.test(str)) return null;
