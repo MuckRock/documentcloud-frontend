@@ -3,11 +3,11 @@
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import { informSize } from "@/embed/iframeSizer.js";
-  import { pageImageUrl } from "@/lib/api/documents";
-  import * as notes from "@/lib/api/notes";
+  import { informSize } from "$lib/utils/embed";
+  import { pageImageUrl } from "$lib/api/documents";
+  import * as notes from "$lib/api/notes";
   import { embedUrl } from "$lib/api/embed";
-  import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
+  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
   import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 

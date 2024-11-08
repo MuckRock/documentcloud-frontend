@@ -1,3 +1,5 @@
+import { timeoutify } from "@/util/closure.js";
+
 export interface EmbedSettingOption {
   label: string;
   help: string;
@@ -283,4 +285,34 @@ export function reroute({ url }) {
   if (isEmbed(url)) {
     return "/embed" + url.pathname;
   }
+}
+
+export function informSize(
+  element: HTMLElement,
+  useScrollDimension = true,
+  updateStyleProps = false,
+) {
+  if (!element) return;
+
+  // Inform a parent window about an embed size
+  const update = () => {
+    window.parent.postMessage(
+      {
+        width: Math.max(
+          useScrollDimension ? element.scrollWidth : 0,
+          element.offsetWidth,
+        ),
+        height: Math.max(
+          useScrollDimension ? element.scrollHeight : 0,
+          element.offsetHeight,
+        ),
+        updateStyleProps,
+      },
+      "*",
+    );
+  };
+
+  // Trigger event now and any time the window resizes
+  window.addEventListener("resize", timeoutify(update));
+  update();
 }
