@@ -1,5 +1,3 @@
-import { timeoutify } from "@/util/closure.js";
-
 export interface EmbedSettingOption {
   label: string;
   help: string;
@@ -285,6 +283,22 @@ export function reroute({ url }) {
   if (isEmbed(url)) {
     return "/embed" + url.pathname;
   }
+}
+
+export function timeoutify(fn, timeout = 100) {
+  let timer: null | ReturnType<typeof setTimeout> = null;
+
+  return (...args) => {
+    if (timer != null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+
+    timer = setTimeout(() => {
+      timer = null;
+      fn(...args);
+    }, timeout);
+  };
 }
 
 export function informSize(
