@@ -15,7 +15,7 @@ import {
   CSRF_HEADER_NAME,
   EMBED_URL,
 } from "@/config/config.js";
-import { DEFAULT_EXPAND } from "@/api/common.js";
+import { DEFAULT_EXPAND } from "@/config/config.js";
 import { canonicalUrl } from "./documents";
 import { getApiResponse } from "../utils";
 

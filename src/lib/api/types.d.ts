@@ -5,13 +5,6 @@
  * Both modules can be merged later.
  * */
 
-import type { User, Org } from "@/api/types/orgAndUser";
-import type { Project } from "@/api/types/project";
-import type { Page, Maybe, Nullable } from "@/api/types/common";
-
-// re-export these for convenience
-export type { Maybe, Nullable, Page, User, Org, Project };
-
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
 export type ProjectAccess = "view" | "edit" | "admin";
@@ -33,6 +26,18 @@ export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "width" | "height";
 
+export type Maybe<T> = T | undefined;
+
+export type Nullable<T> = T | null;
+
+export interface Page<T> {
+  count?: number;
+  next: Nullable<string>;
+  previous: Nullable<string>;
+  results: T[];
+  escaped?: boolean;
+}
+
 export interface APIError<E> {
   status: number;
   message: string;
@@ -45,6 +50,38 @@ export interface APIError<E> {
 export interface APIResponse<T, E = unknown> {
   data?: T;
   error?: APIError<E>;
+}
+
+export interface User {
+  uuid: string;
+  id: number;
+  email?: string;
+  username: string;
+  name: Maybe<string>;
+  avatar_url: Maybe<string>;
+  organization: number | Org;
+  organizations: number[];
+  admin_organizations: number[];
+  feature_level?: number;
+  verified_journalist?: boolean;
+  is_staff?: boolean;
+}
+
+interface PremiumOrgFields {
+  purchased_credits: number;
+  monthly_credits: number;
+  monthly_credit_allowance: number;
+  credit_reset_date: string;
+}
+
+export interface Org extends Partial<PremiumOrgFields> {
+  uuid: string;
+  id: number;
+  name: string;
+  slug: string;
+  avatar_url: string;
+  individual?: boolean;
+  plan?: "Free" | "Professional" | "Organization";
 }
 
 export interface NoteHighlight {
@@ -102,6 +139,21 @@ export interface AddOnListItem {
   featured: boolean;
   default: boolean;
   usage?: number;
+}
+
+// https://api.www.documentcloud.org/api/projects/
+export interface Project {
+  id: number;
+  user: number;
+  slug: string;
+  title: string;
+  description: string;
+  private: boolean;
+  created_at: string;
+  updated_at: string;
+  edit_access: null | boolean;
+  add_remove_access: null | boolean;
+  pinned?: boolean;
 }
 
 // anything with a box
