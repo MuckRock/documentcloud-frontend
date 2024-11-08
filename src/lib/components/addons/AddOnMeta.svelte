@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AddOnListItem } from "@/addons/types";
+  import type { AddOnListItem } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { writable, type Writable } from "svelte/store";
-  import type { AddOnListItem } from "./types";
+  import type { AddOnListItem } from "$lib/api/types";
 
   export const pinned: Writable<AddOnListItem[]> = writable([]);
 </script>
@@ -8,7 +8,7 @@
 <script lang="ts">
   import { getCsrfToken } from "$lib/utils/api";
   import { BASE_API_URL } from "@/config/config";
-  import Pin from "../lib/components/common/Pin.svelte";
+  import Pin from "../common/Pin.svelte";
 
   export let addon: AddOnListItem;
   export let size = 1;

@@ -1,7 +1,11 @@
 <script lang="ts">
-  import type { Page } from "@/lib/api/types";
-  import type { AddOnListItem, Event, Run } from "@/addons/types";
-  import type { APIResponse } from "$lib/api/types";
+  import type {
+    Page,
+    APIResponse,
+    AddOnListItem,
+    Event,
+    Run,
+  } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";

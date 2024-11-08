@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Maybe, Nullable, Page } from "$lib/api/types";
-  import type { Run } from "@/addons/types";
+  import type { Run } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { History16, History24, Hourglass24 } from "svelte-octicons";
