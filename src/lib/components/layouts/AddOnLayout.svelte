@@ -78,7 +78,7 @@
 
 <div class="container">
   <section class="addon">
-    <!-- <header><AddOnMeta {addon} /></header> -->
+    <header><AddOnMeta {addon} /></header>
     <div class="tabs" role="tablist">
       <Tab
         active={currentTab === "dispatch"}
@@ -136,26 +136,29 @@
           {/await}
         </div>
       {:else}
+        <p>dispatch</p>
+        <!--
         <AddOnDispatch
-          {action}
-          {event}
-          properties={addon.parameters.properties}
-          required={addon.parameters.required}
-          eventOptions={addon.parameters.eventOptions}
-          {disablePremium}
-          on:dispatch={onDispatch}
+        {action}
+        {event}
+        properties={addon.parameters.properties}
+        required={addon.parameters.required}
+        eventOptions={addon.parameters.eventOptions}
+        {disablePremium}
+        on:dispatch={onDispatch}
         >
-          <svelte:fragment slot="selection">
-            {#await search then results}
-              <Selection
-                bind:value={$values["selection"]}
-                documents={new Set(addon.parameters.documents)}
-                resultsCount={results?.count}
-                {query}
-              />
-            {/await}
-          </svelte:fragment>
-        </AddOnDispatch>
+        <svelte:fragment slot="selection">
+          {#await search then results}
+          <Selection
+          bind:value={$values["selection"]}
+          documents={new Set(addon.parameters.documents)}
+          resultsCount={results?.count}
+          {query}
+          />
+          {/await}
+        </svelte:fragment>
+      </AddOnDispatch>
+      -->
       {/if}
     </main>
   </section>
