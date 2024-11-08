@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Credit from "../common/icons/Credit.svelte";
+  import Credit from "../lib/components/icons/Credit.svelte";
 
   export let value: number;
   export let iconSize = 1;

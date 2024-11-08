@@ -12,7 +12,7 @@
   import Search, { query } from "../../common/SearchInput.svelte";
   import Pin from "../../common/icons/Pin.svelte";
   import Star from "../../lib/components/icons/Star.svelte";
-  import Credit from "../../common/icons/Credit.svelte";
+  import Credit from "../../lib/components/icons/Credit.svelte";
   import Flex from "../../common/Flex.svelte";
 
   export let visible = false;

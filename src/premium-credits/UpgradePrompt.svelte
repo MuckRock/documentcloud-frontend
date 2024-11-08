@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import Credit from "../common/icons/Credit.svelte";
-  import Button from "../common/Button.svelte";
+  import Credit from "../lib/components/icons/Credit.svelte";
+  import Button from "../lib/components/common/Button.svelte";
 
   export let message: string;
   export let callToAction: string | null = null;
