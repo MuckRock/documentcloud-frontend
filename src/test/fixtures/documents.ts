@@ -1,4 +1,4 @@
-import type { Document, Page } from "@/api/types";
+import type { Document, Page } from "$lib/api/types";
 
 export const document: Document = {
   id: 24002098,

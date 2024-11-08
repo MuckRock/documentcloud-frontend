@@ -1,5 +1,4 @@
-import type { Org, Page, User } from "../../api/types";
-import type { GroupOrg, IndividualOrg } from "../../api/types/orgAndUser";
+import type { Org, Page, User } from "$lib/api/types";
 
 export const me: User = {
   id: 100012,
@@ -374,7 +373,7 @@ export const organizationsList: Page<Org> = {
   ],
 };
 
-export const organization: GroupOrg = {
+export const organization: Org = {
   uuid: "",
   id: 1,
   avatar_url:
@@ -389,7 +388,7 @@ export const organization: GroupOrg = {
   plan: "Organization",
 };
 
-export const proOrg: IndividualOrg = {
+export const proOrg: Org = {
   uuid: "",
   id: 4,
   avatar_url:
@@ -404,7 +403,7 @@ export const proOrg: IndividualOrg = {
   plan: "Professional",
 };
 
-export const freeOrg: IndividualOrg = {
+export const freeOrg: Org = {
   uuid: "",
   id: 4,
   avatar_url:

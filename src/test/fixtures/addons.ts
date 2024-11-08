@@ -1,4 +1,4 @@
-import type { Page } from "@/api/types";
+import type { Page } from "$lib/api/types";
 import type { AddOnListItem, Event, Run } from "@/addons/types";
 
 export const addon: AddOnListItem = {
