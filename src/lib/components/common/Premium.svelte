@@ -6,7 +6,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import { isOrg, type User } from "@/api/types";
+  import type { User } from "$lib/api/types";
+  import { isOrg } from "$lib/api/accounts";
 
   const me = getContext<Writable<User>>("me");
 

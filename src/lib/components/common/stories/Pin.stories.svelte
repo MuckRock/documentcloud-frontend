@@ -2,7 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
-  import Pin from "../../common/Pin.svelte";
+  import Pin from "../Pin.svelte";
 
   const args = {
     active: false,

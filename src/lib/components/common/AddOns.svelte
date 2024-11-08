@@ -1,8 +1,7 @@
 <script lang="ts">
   import { APP_URL } from "@/config/config";
   import type { APIResponse } from "@/lib/api/types";
-  import type { Page } from "@/api/types/common";
-  import type { AddOnListItem } from "@/addons/types";
+  import type { Page, AddOnListItem } from "$lib/api/types";
 
   import {
     Book16,
@@ -18,9 +17,9 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
-  import Pin from "@/common/Pin.svelte";
-  import Error from "./Error.svelte";
+  import Pin from "$lib/components/common/Pin.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
+  import Error from "./Error.svelte";
 
   export let pinnedAddOns: Promise<APIResponse<Page<AddOnListItem>>>;
   export let query: string = "";

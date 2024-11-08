@@ -11,12 +11,12 @@
   } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
-  import Pin from "@/common/Pin.svelte";
-  import Action from "@/lib/components/common/Action.svelte";
-  import Empty from "@/lib/components/common/Empty.svelte";
-  import Flex from "@/lib/components/common/Flex.svelte";
-  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
+  import Pin from "$lib/components/common/Pin.svelte";
+  import Action from "$lib/components/common/Action.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
 

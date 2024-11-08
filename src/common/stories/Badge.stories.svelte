@@ -2,7 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import Badge from "../Badge.svelte";
-  import Star from "../icons/Star.svelte";
+  import Star from "../../lib/components/icons/Star.svelte";
 
   export const meta = {
     title: "Common / Badge",

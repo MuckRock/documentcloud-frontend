@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Pin from "./icons/Pin.svelte";
+  import Pin from "../icons/Pin.svelte";
 
   export let size: number = 1;
   export let active: boolean = false;

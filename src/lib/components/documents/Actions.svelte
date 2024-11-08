@@ -23,7 +23,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
 
   import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
+  import Premium from "$lib/components/icons/Premium.svelte";
   import Revisions from "./Revisions.svelte";
   import UpgradePrompt from "@/premium-credits/UpgradePrompt.svelte";
 

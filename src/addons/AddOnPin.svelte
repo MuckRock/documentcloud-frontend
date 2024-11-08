@@ -8,7 +8,7 @@
 <script lang="ts">
   import { getCsrfToken } from "../api/session.js";
   import { baseApiUrl } from "../api/base.js";
-  import Pin from "../common/Pin.svelte";
+  import Pin from "../lib/components/common/Pin.svelte";
 
   export let addon: AddOnListItem;
   export let size = 1;

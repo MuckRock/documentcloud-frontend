@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Org, User } from "@/api/types";
+  import type { Org, User } from "$lib/api/types";
 
   import { invalidateAll } from "$app/navigation";
   import { _, locale } from "svelte-i18n";
@@ -22,7 +22,7 @@
   import MenuInsert from "$lib/components/common/MenuInsert.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import PremiumIcon from "@/common/icons/Premium.svelte";
+  import PremiumIcon from "$lib/components/icons/Premium.svelte";
 
   import { SQUARELET_BASE } from "@/config/config";
   import { getUpgradeUrl, getUserName, setOrg } from "$lib/api/accounts";
