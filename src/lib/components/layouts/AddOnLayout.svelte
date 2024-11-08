@@ -78,7 +78,7 @@
 
 <div class="container">
   <section class="addon">
-    <header><AddOnMeta {addon} /></header>
+    <!-- <header><AddOnMeta {addon} /></header> -->
     <div class="tabs" role="tablist">
       <Tab
         active={currentTab === "dispatch"}

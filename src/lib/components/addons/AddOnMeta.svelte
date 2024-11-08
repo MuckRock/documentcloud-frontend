@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { AddOnListItem } from "@/addons/types";
 
-  import { browser } from "$app/environment";
-
   import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
   import { MarkGithub16 } from "svelte-octicons";
@@ -29,9 +27,7 @@
 <div class="container">
   <h2 class="name">{addon.name}</h2>
   <div class="description">
-    {#if browser}
-      {@html addon.parameters?.description}
-    {/if}
+    {@html addon.parameters?.description}
   </div>
   {#if instructions}
     <div class="instructions">

@@ -1,5 +1,3 @@
-import type { DocumentResults } from "$lib/api/types";
-
 import { error } from "@sveltejs/kit";
 
 import * as addons from "$lib/api/addons";
