@@ -38,6 +38,11 @@ export interface Page<T> {
   escaped?: boolean;
 }
 
+export interface PageParams {
+  cursor?: string;
+  per_page?: number;
+}
+
 export interface APIError<E> {
   status: number;
   message: string;
