@@ -13,11 +13,11 @@ build-browser-test:
 dev:
 	docker compose -f local.yml up documentcloud_frontend
 
+preview:
+	docker compose -f local.yml up preview
+
 down:
 	docker compose -f local.yml down
-
-build-serve:
-	docker compose -f local.yml up documentcloud_frontend_build
 
 clean:
 	@echo deleting Webpack chunks

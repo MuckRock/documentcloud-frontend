@@ -15,10 +15,9 @@
 
   export let trail: Breadcrumb[] = [];
 
-  let width: number;
-  $: BREAKPOINTS = {
-    SHOW_BREADCRUMBS: width > remToPx(32),
-  };
+  let width: number = 1000;
+
+  $: SHOW_BREADCRUMBS = width > remToPx(32);
 </script>
 
 <div class="breadcrumbs" bind:clientWidth={width}>
@@ -26,7 +25,7 @@
     <slot name="root">
       <a href="/" class="logo crumb"><Logo /></a>
     </slot>
-    {#if BREAKPOINTS.SHOW_BREADCRUMBS}
+    {#if SHOW_BREADCRUMBS}
       {#each trail as { href, title }}
         <span class="divider"><TriangleRight16 fill="var(--gray-3)" /></span>
         {#if href}

@@ -19,15 +19,14 @@ services:
       DOCKER: true
       NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
       NODE_ENV: development
-      PUPPETEER_SKIP_DOWNLOAD: true
 
-  documentcloud_frontend_app:
+  preview:
     image: node:20
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
     working_dir: /app
-    command: npm run dev
+    command: npm run preview
     networks:
       default:
         aliases:
@@ -35,51 +34,10 @@ services:
       squarelet_default:
         aliases:
           - internal.www.dev.documentcloud.org
-
-  documentcloud_frontend_embed:
-    image: node:20
-    volumes:
-      - nodemodules:/app/node_modules
-      - .:/app
-    working_dir: /app
-    command: npm run dev
-    networks:
-      default:
-        aliases:
-          - internal.www.dev.documentcloud.org
-      squarelet_default:
-        aliases:
-          - internal.www.dev.documentcloud.org
-
-  documentcloud_frontend_build:
-    image: node:20
-    volumes:
-      - nodemodules:/app/node_modules
-      - .:/app
-    working_dir: /app
-    command: npm run build-serve
-    networks:
-      default:
-        aliases:
-          - internal.www.dev.documentcloud.org
-      squarelet_default:
-        aliases:
-          - internal.www.dev.documentcloud.org
-
-  documentcloud_frontend_analyze:
-    image: node:20
-    volumes:
-      - nodemodules:/app/node_modules
-      - .:/app
-    working_dir: /app
-    command: npm run build-analyze
-    networks:
-      default:
-        aliases:
-          - internal.www.dev.documentcloud.org
-      squarelet_default:
-        aliases:
-          - internal.www.dev.documentcloud.org
+    environment:
+      DOCKER: true
+      NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues
+      NODE_ENV: development
 
 volumes:
   nodemodules:

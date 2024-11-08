@@ -1,9 +1,18 @@
 <script lang="ts">
+  import DOMPurify from "isomorphic-dompurify";
+
   export let title: string = "";
   export let description: string = "";
   export let inline = false;
   export let required = false;
   export let sronly = false;
+
+  function clean(html: string): string {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ["a", "strong", "em", "code"],
+      ALLOWED_ATTR: ["href"],
+    });
+  }
 </script>
 
 <div class="field" class:inline class:required>
@@ -14,7 +23,7 @@
     <slot />
   </label>
   {#if description}
-    <p class="help">{@html description}</p>
+    <p class="help">{@html clean(description ?? "")}</p>
   {/if}
   <slot name="error" />
 </div>
