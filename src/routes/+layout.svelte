@@ -6,7 +6,7 @@
   import { locale } from "svelte-i18n";
 
   import "@/style/variables.css";
-  import "@/style/global.css";
+  import "@/style/legacy.css";
   import "@/style/kit.css";
 
   $: useCyrillicCharset =
