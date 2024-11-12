@@ -1,4 +1,4 @@
-import type { AddOnListItem, Run } from "@/addons/types";
+import type { AddOnListItem, Run } from "$lib/api/types";
 
 const addon: AddOnListItem = {
   id: 105,

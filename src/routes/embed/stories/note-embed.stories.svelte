@@ -3,7 +3,7 @@
 
   // legacy css
   import "@/style/variables.css";
-  import "@/style/global.css";
+  import "@/style/legacy.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import NoteEmbed from "../documents/[id]/annotations/[note_id]/+page.svelte";

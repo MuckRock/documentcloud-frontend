@@ -5,7 +5,7 @@ import type {
   Event,
   Run,
   AddOnPayload,
-} from "@/addons/types";
+} from "$lib/api/types";
 import type { APIResponse, ValidationError } from "./types";
 
 import Ajv, { type DefinedError } from "ajv";

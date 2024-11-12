@@ -22,7 +22,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Event } from "@/addons/types";
+  import type { Event } from "$lib/api/types";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   export let event: Event;

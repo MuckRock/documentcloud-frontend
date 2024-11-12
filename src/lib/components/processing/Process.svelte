@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+  import type { ComponentType } from "svelte";
+  import type { Maybe, RunStatus } from "$lib/api/types";
   import {
     Alert16,
     CheckCircle16,
@@ -6,9 +8,7 @@
     CircleSlash16,
   } from "svelte-octicons";
 
-  import type { Status } from "@/addons/types";
-
-  export const icons: Record<Status, ComponentType> = {
+  export const icons: Record<RunStatus, ComponentType> = {
     cancelled: CircleSlash16,
     in_progress: IssueDraft16,
     queued: IssueDraft16,
@@ -18,14 +18,11 @@
 </script>
 
 <script lang="ts">
-  import type { ComponentType } from "svelte";
-  import type { Maybe } from "@/lib/api/types";
-
   import { _ } from "svelte-i18n";
 
   import Flex from "../common/Flex.svelte";
 
-  export let status: Status;
+  export let status: RunStatus;
   export let name: string;
   export let href: Maybe<string> = undefined;
   export let progress: Maybe<number> = undefined;

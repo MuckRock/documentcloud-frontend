@@ -1,6 +1,12 @@
 <script lang="ts">
-  import type { AddOnListItem, Event, Run } from "@/addons/types";
-  import type { DocumentResults, Maybe, Page } from "$lib/api/types";
+  import type {
+    DocumentResults,
+    Maybe,
+    Page,
+    AddOnListItem,
+    Event,
+    Run,
+  } from "$lib/api/types";
 
   import { page } from "$app/stores";
 

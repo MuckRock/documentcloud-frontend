@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Maybe, Nullable, Page } from "$lib/api/types";
-  import type { Event } from "@/addons/types";
+  import type { Maybe, Nullable, Page, Event } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Clock16, Hourglass24 } from "svelte-octicons";

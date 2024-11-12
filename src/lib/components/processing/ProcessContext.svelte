@@ -5,8 +5,7 @@ This makes the state of those processes available via context.
 -->
 
 <script lang="ts" context="module">
-  import type { Run } from "@/addons/types";
-  import type { Maybe, Pending } from "@/lib/api/types";
+  import type { Maybe, Pending, Run } from "$lib/api/types";
 
   import { throttle } from "lodash-es";
   import {

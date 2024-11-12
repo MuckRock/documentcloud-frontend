@@ -1,4 +1,4 @@
-import type { Flatpage, Page } from "@/lib/api/types";
+import type { Flatpage, Page } from "$lib/api/types";
 
 export const flatpage: Flatpage = {
   url: "/help/search/",

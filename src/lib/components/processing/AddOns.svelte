@@ -3,8 +3,6 @@ Fetch and display status of all running add-ons.
 This component should update on a timer.
 -->
 <script lang="ts">
-  import type { Run } from "@/addons/types";
-
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
   import { Plug16, Thumbsdown16, Thumbsup16, XCircle16 } from "svelte-octicons";
@@ -19,7 +17,7 @@ This component should update on a timer.
   import { history, dismiss, cancel, rate } from "$lib/api/addons";
   import { getCsrfToken } from "$lib/utils/api";
   import { getRunningAddons } from "./ProcessContext.svelte";
-  import type { Nullable } from "$lib/api/types";
+  import type { Nullable, Run } from "$lib/api/types";
 
   let timeout: Nullable<string | number | NodeJS.Timeout>;
 

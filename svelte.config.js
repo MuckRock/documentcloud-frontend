@@ -1,26 +1,7 @@
-import path from "node:path";
-import url from "node:url";
-
 import adapter from "@sveltejs/adapter-netlify";
 import sveltePreprocess from "svelte-preprocess";
 import { fastDimension } from "svelte-fast-dimension";
 import autoprefixer from "autoprefixer";
-
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-function scssAliases(aliases) {
-  return (url) => {
-    for (const [alias, aliasPath] of Object.entries(aliases)) {
-      if (url.indexOf(alias) === 0) {
-        return {
-          file: url.replace(alias, aliasPath),
-        };
-      }
-    }
-    return url;
-  };
-}
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
@@ -45,15 +26,6 @@ export default {
   preprocess: [
     fastDimension(),
     sveltePreprocess({
-      scss: {
-        includePaths: ["./src"],
-        importer: [
-          scssAliases({
-            "@": path.resolve(__dirname, "src"),
-          }),
-        ],
-        prependData: '@import "@/style/variables.scss";',
-      },
       postcss: {
         plugins: [autoprefixer],
       },

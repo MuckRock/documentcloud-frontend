@@ -1,5 +1,4 @@
-import type { ProjectUser } from "@/lib/api/types";
-import type { Page, Project } from "../../api/types";
+import type { ProjectUser, Page, Project } from "$lib/api/types";
 
 export let project: Project = {
   id: 29,

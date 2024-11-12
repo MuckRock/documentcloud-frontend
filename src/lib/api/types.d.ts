@@ -4,13 +4,7 @@
  * This is a separate module from what's in src/api to prevent conflicts.
  * Both modules can be merged later.
  * */
-
-import type { User, Org } from "@/api/types/orgAndUser";
-import type { Project } from "@/api/types/project";
-import type { Page, Maybe, Nullable } from "@/api/types/common";
-
-// re-export these for convenience
-export type { Maybe, Nullable, Page, User, Org, Project };
+import type { DefinedError } from "ajv";
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
@@ -33,6 +27,23 @@ export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "width" | "height";
 
+export type Maybe<T> = T | undefined;
+
+export type Nullable<T> = T | null;
+
+export interface Page<T> {
+  count?: number;
+  next: Nullable<string>;
+  previous: Nullable<string>;
+  results: T[];
+  escaped?: boolean;
+}
+
+export interface PageParams {
+  cursor?: string;
+  per_page?: number;
+}
+
 export interface APIError<E> {
   status: number;
   message: string;
@@ -47,61 +58,56 @@ export interface APIResponse<T, E = unknown> {
   error?: APIError<E>;
 }
 
+export interface User {
+  uuid: string;
+  id: number;
+  email?: string;
+  username: string;
+  name: Maybe<string>;
+  avatar_url: Maybe<string>;
+  organization: number | Org;
+  organizations: number[];
+  admin_organizations: number[];
+  feature_level?: number;
+  verified_journalist?: boolean;
+  is_staff?: boolean;
+}
+
+interface PremiumOrgFields {
+  purchased_credits: number;
+  monthly_credits: number;
+  monthly_credit_allowance: number;
+  credit_reset_date: string;
+}
+
+export interface Org extends Partial<PremiumOrgFields> {
+  uuid: string;
+  id: number;
+  name: string;
+  slug: string;
+  avatar_url: string;
+  individual?: boolean;
+  plan?: "Free" | "Professional" | "Organization";
+}
+
 export interface NoteHighlight {
   title: string[];
   description: string[];
 }
 
-type AddOnCategory = "premium" | string;
-
-interface AddOnProperty {
-  type: string;
-  title?: string;
-  description?: string;
-  default?: string | string[] | number;
-  format?: string;
-  enum?: (string | boolean)[];
-  items?: AddOnProperty;
-  maximum?: number;
-  minimum?: number;
-}
-
-interface AddOnParameters {
-  type: string;
-  version: number;
+// https://api.www.documentcloud.org/api/projects/
+export interface Project {
+  id: number;
+  user: number;
+  slug: string;
   title: string;
   description: string;
-  instructions: string;
-  categories: AddOnCategory[];
-  documents: string[];
-  required: string[];
-  properties: Record<string, AddOnProperty>;
-  cost: {
-    amount: number;
-    price?: number;
-    unit: string;
-  };
-  eventOptions: {
-    name?: string;
-    events: string[];
-  };
-}
-
-// API endpoint https://api.www.documentcloud.org/api/addons/
-export interface AddOnListItem {
-  id: number;
-  user: null | number;
-  organization: null | number;
-  access: "public" | "private";
-  name: string;
-  repository: string;
-  parameters: Partial<AddOnParameters>;
+  private: boolean;
   created_at: string;
   updated_at: string;
-  active: boolean;
-  featured: boolean;
-  default: boolean;
-  usage?: number;
+  edit_access: null | boolean;
+  add_remove_access: null | boolean;
+  pinned?: boolean;
 }
 
 // anything with a box
@@ -301,3 +307,120 @@ export interface Flatpage {
 
 // known errors
 export interface ValidationError extends Record<string, string[]> {}
+
+/** Addons */
+
+type AddOnCategory = "premium" | string;
+
+export interface AddOnParams extends PageParams {
+  query?: string;
+  active?: boolean;
+  default?: boolean;
+  featured?: boolean;
+  premium?: boolean;
+  category?: string;
+  repository?: string;
+}
+
+interface AddOnProperty {
+  type: string;
+  title?: string;
+  description?: string;
+  default?: string | string[] | number;
+  format?: string;
+  enum?: (string | boolean)[];
+  items?: AddOnProperty;
+  maximum?: number;
+  minimum?: number;
+}
+
+interface EventOptions {
+  name?: string;
+  events: string[];
+}
+
+interface AddOnParameters {
+  type: string;
+  version: number;
+  title: string;
+  description: string;
+  instructions: string;
+  categories: AddOnCategory[];
+  documents: string[];
+  required: string[];
+  properties: Record<string, AddOnProperty>;
+  cost: {
+    amount: number;
+    price?: number;
+    unit: string;
+  };
+  eventOptions: EventOptions;
+  custom_disabled_email_footer?: string;
+}
+
+// API endpoint https://api.www.documentcloud.org/api/addons/
+export interface AddOnListItem {
+  id: number;
+  user: null | number;
+  organization: null | number;
+  access: "public" | "private";
+  name: string;
+  repository: string;
+  parameters: Partial<AddOnParameters>;
+  created_at: string;
+  updated_at: string;
+  active: boolean;
+  featured: boolean;
+  default: boolean;
+  usage?: number;
+}
+
+export type RunStatus =
+  | "success"
+  | "failure"
+  | "queued"
+  | "in_progress"
+  | "cancelled";
+
+// https://api.www.documentcloud.org/api/addon_runs/?expand=addon
+export interface Run {
+  uuid: string;
+  addon: AddOnListItem;
+  user: number;
+  status: RunStatus;
+  progress: number;
+  message: string;
+  file_url?: string | null;
+  file_expires_at?: string | null;
+  dismissed: boolean;
+  rating: number;
+  comment: string;
+  created_at: string;
+  updated_at: string;
+  credits_spent?: number;
+}
+
+// https://api.www.documentcloud.org/api/addon_events/?expand=addon
+export interface Event {
+  id: number;
+  addon: AddOnListItem;
+  user: number;
+  parameters: any;
+  event: number;
+  scratch: any;
+  created_at: string;
+  updated_at: string;
+}
+
+// payload for creating or scheduling an add-on run
+// including the `event` property will schedule runs (or cancel, if it's zero)
+// the `documents` and `query` properties tell the add-on what documents to run against
+export interface AddOnPayload {
+  addon: number;
+  parameters: any;
+  event?: number;
+  documents?: number[] | string[];
+  query?: string;
+  errors?: DefinedError[];
+  valid?: boolean;
+}
