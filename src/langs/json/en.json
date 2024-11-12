@@ -1,15 +1,10 @@
 {
   "common": {
     "emailAddress": "Email address",
-    "loading": "Loading…",
+    "loading": "Loading …",
     "empty": "No results",
     "error": "An error ocurred",
-    "documentCloud": "DocumentCloud",
-    "home": "Home",
-    "or": "or",
     "explore": "Explore",
-    "more": "More",
-    "add": "Add",
     "edit": "Edit",
     "search": "Search",
     "feedback": "Feedback",
@@ -49,133 +44,26 @@
     }
   },
   "notfound": {
-    "title": "Page not found",
     "content": "Please try another URL"
-  },
-  "accessToggle": {
-    "public": "Note will be visible to anyone with access to the document.",
-    "collaborator": "Note will be visible to anyone who can edit this document.",
-    "private": "Note will be visible to you alone.",
-    "publicName": "Public",
-    "collaboratorName": "Collaborator",
-    "privateName": "Private"
-  },
-  "accessIcon": {
-    "private": "Private Access",
-    "organization": "Private to Your Organization",
-    "public": "Public Access",
-    "privateExplanation": "Only you can view this document",
-    "organizationExplanation": "Only members of your organization can view this document",
-    "publicExplanation": "Anyone can search and view this document"
-  },
-  "revisionIcon": {
-    "tooltip": "Revision control is enabled on this document. It has {count, plural, one {revision} other {# revisions}}"
-  },
-  "appearanceCustomizer": {
-    "customizeAppearance": "Customize Appearance",
-    "hide": "Hide help text",
-    "show": "Show help text"
   },
   "appearanceDimension": {
     "responsive": "Automatic",
     "fixed": "Fixed"
   },
-  "calendar": {
-    "jan": "January",
-    "feb": "February",
-    "mar": "March",
-    "apr": "April",
-    "may": "May",
-    "jun": "June",
-    "jul": "July",
-    "aug": "August",
-    "sep": "September",
-    "oct": "October",
-    "nov": "November",
-    "dec": "December",
-    "hourShortcode": "HH",
-    "minuteShortcode": "MM"
-  },
   "dialog": {
     "cancel": "Cancel",
-    "cancelling": "Cancelling...",
     "delete": "Delete",
     "done": "Done",
     "edit": "Edit",
     "share": "Share",
     "remove": "Remove",
     "save": "Save",
-    "create": "Create",
-    "ok": "Ok",
     "reset": "Reset",
     "update": "Update",
     "dismiss": "Dismiss",
-    "continue": "Continue",
     "dispatch": "Dispatch",
-    "submit": "Submit",
     "organize": "Organize",
     "run": "Run"
-  },
-  "dialogAccessDialog": {
-    "changeAccess": "Change access for {n, plural, one {document} other {# documents}}",
-    "selectAccess": "Select an access level for the {n, plural, one {selected document} other {# selected documents}}",
-    "public": "Public access",
-    "publicDesc": "Anyone on the internet can view the document.",
-    "verifiedHelp": "Only verified users or members of verified organizations can make uploaded documents public. If you're a journalist or otherwise work in publishing vetted materials to inform the public, <a href=\"https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form\" target=\"_blank\">learn more and request verification here.</a>",
-    "privateToOrg": "You can’t change the access level to “Private to your organization” because {n, plural, one {this document is} other {one or more documents are}} associated with your individual account, not an organization. To add {n, plural, one {it} other {them}} to an organization, select {n, plural, one {it} other {them}} from the management view and click “Change Owner.” <a href=\"https://accounts.muckrock.com/organizations/\" target=\"_blank\">You can join or create an organization on this page.</a>",
-    "private": "Private access",
-    "privateDesc": "Only people with explicit permission (via collaboration) have access.",
-    "organization": "Private to your organization",
-    "organizationDesc": "Only the people in your organization have access.",
-    "schedulePublication": "Schedule publication",
-    "scheduleHelp": "This document will be made public at the given date and time.  Publication time is local{timezone}.",
-    "noindexTitle": "Hide from search engines and DocumentCloud search",
-    "noindexHelp": "If you enable this option, search engines like Google's will be told they should not index this document. Also, the document will not appear in searches from DocumentCloud for users that are not logged in.",
-    "unchanged": "Access is unchanged. Select a different access level.",
-    "future": "Must select a time in the future",
-    "change": "Change"
-  },
-  "dialogCollaboratorDialog": {
-    "confirm": "Confirm remove user",
-    "confirmMsg": "Proceeding will remove {name} from {title}. Do you wish to continue?",
-    "addCollaborators": "Add Collaborators",
-    "invite": "Put in the email of an existing DocumentCloud user below. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once.",
-    "admin": "Admin",
-    "view": "View",
-    "adminHelp": "Collaborators can edit this project and its documents",
-    "editHelp": "Collaborators can edit documents in this project",
-    "viewHelp": "Collaborators can view documents in this project",
-    "add": "Add",
-    "empty": "You have not yet added any collaborators to this project. Invite collaborators to grant other users access to the documents shared in this project. You can control whether collaborators have access to view/edit the project’s documents or be an admin with permissions to invite other users and edit the project itself.",
-    "manageCollaborators": "Manage Collaborators",
-    "name": "Name",
-    "access": "Access",
-    "you": "(you)"
-  },
-  "dialogDataDialog": {
-    "confirm": "Confirm remove data point",
-    "removeMsg": "Proceeding will remove the {key}{value} data point from the specified documents. Do you wish to continue?",
-    "addData": "Add Data for {n, plural, one {Document} other {# Documents}}",
-    "tag": "Tag",
-    "value": "Value",
-    "key": "Key",
-    "keyValue": "Key / Value",
-    "tagInfo": "Add custom tags to categorize your documents.",
-    "eg": "e.g.",
-    "exampleTagReport": "report",
-    "exampleTagLawsuit": "lawsuit",
-    "exampleTagEmail": "email",
-    "keyValueInfo": "Add custom key / value pairs for precise categorization of your documents.",
-    "exampleKVState": "state:&nbsp;California",
-    "exampleKVYear": "year:&nbsp;2016",
-    "exampleKVType": "type:&nbsp;memo",
-    "enterTag": "Enter a tag",
-    "enterKey": "Enter a key",
-    "keyInvalid": "Keys can only contain letters, numbers, underscores (_), and dashes (-)",
-    "emptyMsg": "You have not yet added any data to the specified documents. Add tags and key/value pairs to categorize and organize your documents. You can filter and search on document data to give you powerful control over document management.",
-    "manageDocumentData": "Manage Document Data",
-    "valueUnchanged": "Value remains unchanged",
-    "kvCannotBeEmpty": "Key/value cannot be empty"
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
@@ -183,23 +71,6 @@
     "reprocessSingleDoc": "Proceeding will force the following document to reprocess page and image text:",
     "continue": "Do you wish to continue?",
     "confirm": "Reprocess"
-  },
-  "dialogDeleteDialog": {
-    "title": "Confirm delete",
-    "deleteDocs": "Proceeding will permanently delete the {n, plural, one {selected document} other {# selected documents}}. Do you wish to continue?"
-  },
-  "dialogCancelProcessingDialog": {
-    "title": "Cancel processing",
-    "deleteDocs": "Proceeding will force the {n, plural, one {selected document} other {# selected documents}} to stop processing. After processing has been stopped, an error will show after which you can “Force Reprocess” or delete the {n, plural, one {document} other {documents}} using the Edit menu. Do you wish to continue?"
-  },
-  "dialogDiagnosticDialog": {
-    "staffOnlyInfo": "Staff-only info for selected {n, plural, one {document} other {# documents}}",
-    "id": "ID",
-    "title": "Title",
-    "actions": "Actions",
-    "debug": "Debug",
-    "viewErrors": "View errors",
-    "viewS3": "View in S3"
   },
   "dialogDocumentEmbedDialog": {
     "responsive": "Responsive",
@@ -212,7 +83,6 @@
     "widthFixed": "Set a maximum width if the document is responsive, or set a fixed size if not responsive",
     "height": "Height",
     "heightAuto": "The height is based on the size of the document, with no maximum size. If responsive, will be set to the height of the browser window minus 100px",
-    "heightFixed": "Set a maximum height if the document is responsive, or set a fixed size if not responsive",
     "sidebarBehavior": "Sidebar behavior",
     "sbResponsive": "Responsive",
     "sbResponsiveHelp": "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
@@ -237,169 +107,24 @@
     "cbfUserAndOrg": "User and org",
     "cbfUserAndOrgHelp": "Show a document’s attribution as the user name followed by the organization",
     "cbfOrgOnly": "Org only",
-    "cbfOrgOnlyHelp": "Attribute the document to just the organization",
-    "share": "Share “{title}”",
-    "embedDesc": "Copy the HTML code to embed this document within an article"
-  },
-  "dialogDocumentInformationDialog": {
-    "editInformation": "Edit Information for {n, plural, one {document} other {# documents}}"
-  },
-  "dialogRedactDialog": {
-    "title": "Confirm redactions",
-    "description": "Are you sure you wish to redact the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversible."
-  },
-  "dialogModifyDialog": {
-    "title": "Apply modifications",
-    "description": "Are you sure you wish to modify the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the modifications. This change is irreversible.",
-    "closeTitle": "Confirm close",
-    "closeWarning": "You will lose all your unapplied modifications. Are you sure you want to proceed?"
-  },
-  "dialogDeleteNoteDialog": {
-    "title": "Confirm delete",
-    "description": "Are you sure you wish to delete the current note?"
-  },
-  "dialogEditSectionsDialog": {
-    "confirmDelete": "Confirm delete",
-    "proceedingWillRemove": "Proceeding will remove the specified section (p. {page} {title}). Do you wish to continue?",
-    "editSections": "Edit Sections",
-    "manageSections": "Manage sections to organize your document with a table of contents.",
-    "pageAbbrevNo": "p. {n}",
-    "pageAbbrev": "p.",
-    "empty": "You have not added any sections",
-    "edit": "Edit the selected section",
-    "add": "Add a new section",
-    "title": "Title",
-    "missingTitle": "Please enter a title",
-    "updateTitle": "Enter a new title or page number",
-    "uniquePageNumber": "You must enter a unique page number",
-    "invalidPageNumber": "Page number is invalid"
-  },
-  "dialogEmbedDialog": {
-    "updatingDocument": "Updating document...",
-    "makingPublic": "The document is currently being made public. This may take a minute or two.",
-    "wouldMakePublic": "Would you like to make this document public before sharing?",
-    "notPublic": "The document is not currently public. If you embed or link it, only you and collaborators will be able to view it until it is made public. Click below when you’re ready to publish this document to the public.",
-    "makePublic": "Make document public",
-    "leave": "Leave as is",
-    "selectShare": "Select share option",
-    "selectShareHelp": "Choose whether to share the entire document or just a page or note.",
-    "shareDoc": "Share entire document",
-    "shareDocHelp": "Link or embed the entire document. (This is the most commonly used share option.)",
-    "sharePage": "Share specific page",
-    "sharePageHelp": "Link or embed a single page of the document. Useful for highlighting a page excerpt.",
-    "shareNote": "Share specific note",
-    "shareNoteHelpHasNote": "Link or embed a note within the document. Useful for highlighting a region of a page.",
-    "shareNoteHelpNoNote": "Once you add notes to the document, use this feature to link or embed them."
-  },
-  "dialogErrorDialog": {
-    "errorOccurred": "An error occurred",
-    "unexpectedErrorOccurred": "An unexpected error occurred",
-    "tryAgain": "Please try again later.",
-    "close": "Close",
-    "refresh": "Refresh"
-  },
-  "dialogNoteEmbedDialog": {
-    "embedNote": "Embed a note of “{title}”",
-    "embedDesc": "Copy the HTML code to embed this note within an article or post:"
-  },
-  "dialogPageEmbedDialog": {
-    "embedPage": "Embed a page of “{title}”",
-    "embedDesc": "Copy the HTML code to embed this page within an article or post:",
-    "selectPage": "Select the page to embed:",
-    "page": "Page {n} (currently visible)",
-    "otherPage": "Other page",
-    "enterPageNumber": "Enter the page number to embed:"
-  },
-  "dialogProjectAccessDialog": {
-    "changeAccessFor": "Change access for {name}",
-    "selectAccess": "Select an access level below for {name} in {title}",
-    "adminAccess": "Admin Access",
-    "editAccess": "Edit Access",
-    "viewAccess": "View Access",
-    "adminHelp": "This collaborator can edit this project and its documents. The collaborator can invite users, delete users, and remove the project.",
-    "editHelp": "This collaborator can edit documents in this project but cannot edit the project itself.",
-    "viewHelp": "This collaborator can view documents in this project but cannot edit them or the project.",
-    "invalidAccess": "Access is already set to {access}. Select a different access level.",
-    "changeAccess": "Change access"
-  },
-  "dialogOwnerDialog": {
-    "selectUser": "User must be selected",
-    "selectOrg": "Organization must be selected",
-    "changeOwner": "Change owner for {n, plural, one {document} other {# documents}}",
-    "accessWarning": "Warning: You may lose access to the specified {n, plural, one {document} other {# documents}} as a result of changing the document owner",
-    "user": "User:",
-    "filterUsers": "Type to filter users...",
-    "filterOrgs": "Type to filter organizations..."
-  },
-  "dialogProjectDialog": {
-    "confirmDelete": "Confirm delete",
-    "deleteProject": "Are you sure you want to delete this project ({project})?",
-    "editProject": "Edit Project",
-    "createProject": "Create New Project",
-    "title": "Title...",
-    "projectDesc": "Project Description (optional)",
-    "manageCollabs": "Manage Collaborators",
-    "share": "Share / Embed Project",
-    "enterTitle": "Enter a title",
-    "changeTitle": "Change the title or description"
-  },
-  "dialogProjectEmbedDialog": {
-    "share": "Share “{title}”"
+    "cbfOrgOnlyHelp": "Attribute the document to just the organization"
   },
   "dialogRevisionsDialog": {
     "heading": "Revision History",
     "controlLabel": "Save document revision history",
-    "total": "{n} total",
     "download": "Download",
     "empty": "No revisions found",
-    "error": "Error loading revision data. Please contact support for assistance.",
     "upgrade": {
       "message": "Pro and Organization users can record and access the entire version history of their documents.",
-      "nonAdminCta": "Contact your organization administrator about upgrading your account.",
       "adminCta": "Upgrade"
     }
-  },
-  "htmlEditor": {
-    "preview": "Preview:"
-  },
-  "image": {
-    "error": "An error occurred. Try refreshing the page"
-  },
-  "shareOptions": {
-    "errorText": "An unexpected error occurred. Please try again later.",
-    "copyHtml": "Copy HTML code",
-    "addShortcode": "Add this shortcode to your WordPress content —",
-    "pluginRequired": "plugin required",
-    "copyShortcode": "Copy shortcode",
-    "copyUrl": "Copy URL"
   },
   "uploadDialog": {
     "title": "Upload documents",
     "description": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
-    "docUpload": "Document Upload",
-    "docUploadProj": "Document Upload to {title}",
-    "selectDocument": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
-    "pdfSizeWarning": "You can only upload PDF files under {size}.",
-    "fileReady": "{n, plural, one {file} other {files}} ready to upload",
-    "fileLimitWarning": "You can only upload {limit} files at once.",
     "beginUpload": "Begin Upload",
     "selectFiles": "Select files",
     "dragDrop": "Select, paste or drag-and-drop files to upload",
-    "publicMsg": "Document will be publicly visible.",
-    "collabMsg": "Document will be visible to your organization.",
-    "privateMsg": "Document will be visible to you alone.",
-    "collabName": "Organization",
-    "submitting": "Almost done... submitting uploaded files for processing ({percent})",
-    "uploading": "Uploading ... ({uploaded}/{length})",
-    "gettingInfo": "Getting upload information ({percent})",
-    "pleaseLeaveOpen": "Please leave this page open while your documents upload. This dialog will automatically close when they have finished uploading.",
-    "errorHeading": "Error occurred while uploading",
-    "errorMsg": "We failed to {errorMessage}. Please try again later.",
-    "editDocInfo": "Edit document information:",
-    "untitled": "Untitled",
-    "uploadFiles": "Upload additional files",
-    "selectMore": "+ Select more files",
-    "dragDropMore": "Drag and drop additional files here",
     "totalFiles": "Total: {n, plural, one {# file} other {# files}}",
     "accessLevel": "Access Level",
     "projects": "Projects",
@@ -419,29 +144,8 @@
       "done": "Done"
     }
   },
-  "uploadOptions": {
-    "documentLang": "Document language:",
-    "forceOcr": "Force OCR:",
-    "ocrEngine": "OCR Engine:",
-    "tesseract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://tesseract-ocr.github.io/tessdoc/\">Tesseract</a> is an open source OCR engine available free to all DocumentCloud accounts.",
-    "textract": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> is a more powerful OCR engine that can better handle messy text, handwriting and fuzzy scans.",
-    "premiumToutAdmin": "This premium feature is available on <strong>Professional</strong> and <strong>Organization</strong> plans. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{upgradeUrl}\">Upgrade today!</a>",
-    "premiumToutMember": "Contact your organization's admin about upgrading to an <strong>Organization</strong> plan.",
-    "creditHelpText": "Selecting Textract will cost one AI Credit per page in the document.  If you go over, the document will fall back to using Tesseract.  You are currently working on behalf of {organization} and have {n, plural, one {# credit} other {# credits}} left.",
-    "documentLanguagePlaceholder": "Begin typing to see options",
-    "revisionControl": "Revision Control:",
-    "revisionControlHelp": "All previous versions to the document will be preserved and available for download."
-  },
-  "actionBar": {
-    "selectDocs": "Select some documents to reveal edit actions",
-    "noPerms": "You do not have permission to edit all of the selected documents",
-    "editMenu": "Edit",
-    "projectsMenu": "Projects",
-    "addOnsMenu": "Add-Ons"
-  },
   "authSection": {
     "help": {
-      "title": "Help",
       "faq": "FAQ",
       "searchDocs": "Search Documentation",
       "apiDocs": "API Documentation",
@@ -449,9 +153,6 @@
       "premium": "DocumentCloud Premium",
       "donate": "Donate to support DocumentCloud",
       "emailUs": "Email Us"
-    },
-    "language": {
-      "title": "Language"
     },
     "user": {
       "uploadEmail": "Upload via email",
@@ -462,11 +163,8 @@
     "premiumUpgrade": {
       "title": "Upgrade",
       "heading": "Go Pro with DocumentCloud’s premium tools",
-      "orgHeading": "Power your team with DocumentCloud’s premium tools",
       "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
-      "orgDescription": "Upgrade to an Organization plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
       "docs": "Learn more about DocumentCloud Premium",
-      "addons": "Explore premium add-ons",
       "orgs": "Join or start an organization",
       "cta": "Upgrade Plan"
     },
@@ -477,30 +175,21 @@
       "avatar": "Avatar: {name}",
       "changeOrg": "Change organization",
       "adminRole": "Admin",
-      "memberListError": "An error occurred while loading the member list.",
-      "memberListEmpty": "This organization has no other members.",
       "userCount": "{n, plural, one {# organization member} other {# organization members}}"
     },
     "credits": {
       "monthlyOrg": "Monthly Org Allowance",
       "monthlyPro": "Monthly Pro Allowance",
-      "refreshOn": "Credit allowance will reset on {date}",
-      "purchased": "Purchased Credits",
-      "purchasedHelpText": "Purchased credits never expire and will only be used after you run out of monthly credits.",
-      "purchaseCreditsButton": "Purchase Credits",
-      "purchaseCreditsAdminOnly": "Only org admins may purchase additional credits."
+      "refreshOn": "Credit allowance will reset on {date}"
     }
   },
   "documents": {
     "yourDocuments": "Your Documents",
-    "searchResults": "Search Results",
     "accessDocuments": "Your {access}Documents",
     "nameDocuments": "{name}’s {access}Documents",
     "allDocuments": "All {access}Documents",
-    "mustBeVerified": "You must be a verified journalist to upload documents",
     "upload": "Upload",
     "dropFile": "Drop file to upload",
-    "processing": "Processing",
     "matchingPages": "{n, plural, one {# page} other {# pages}} matching the query",
     "matchingNotes": "{n, plural, one {# note} other {# notes}} matching the query",
     "page": "Page",
@@ -509,105 +198,16 @@
     "select": "Select",
     "noteCount": "{n, plural, one {# note} other {# notes}}"
   },
-  "documentThumbnail": {
-    "pages": "pages",
-    "loading": "Loading progress information..."
-  },
   "error": {
     "report": "Report a problem"
   },
-  "editMenu": {
-    "editDocInfo": "Edit Document Information",
-    "changeAccess": "Change Access",
-    "editDocData": "Edit Document Data",
-    "cancelProcessing": "Cancel Processing",
-    "forceReprocess": "Force Reprocess",
-    "entities": "Entities <span class=\"beta\">BETA</span>",
-    "changeOwner": "Change Owner",
-    "delete": "Delete",
-    "diagnosticInfo": "Diagnostic Info"
-  },
-  "metaFields": {
-    "defaultFieldInvalidText": "The document already has this {fieldName}",
-
-    "titleFieldTitle": "Title",
-    "titleFieldName": "name",
-    "titleFieldNameUppercase": "Name",
-    "titleFieldHeader": "Rename {n, plural, one {# document} other {# documents}}",
-    "titleFieldDescription": "Enter a name below for the {n, plural, one {selected document} other {# selected documents}}",
-    "titleFieldButton": "Rename",
-    "titleFieldInvalidSameName": "The document already has this name",
-    "titleFieldInvalidEmptyName": "Enter a valid name",
-
-    "sourceFieldTitle": "Source",
-    "sourceFieldName": "source",
-    "sourceFieldNameUppercase": "Source",
-    "sourceFieldHeader": "Edit source for {n, plural, one {# document} other {# documents}}",
-    "sourceFieldDescription": "Enter a source below for the {n, plural, one {selected document} other {# selected documents}}",
-    "sourceFieldButton": "Edit",
-
-    "descriptionFieldTitle": "Description",
-    "descriptionFieldName": "description",
-    "descriptionFieldNameUppercase": "Description",
-    "descriptionFieldHeader": "Edit description for {n, plural, one {# document} other {# documents}}",
-    "descriptionFieldDescription": "Enter the description below for the {n, plural, one {selected document} other {# selected documents}}",
-    "descriptionFieldButton": "Edit",
-
-    "relatedArticleFieldTitle": "Related Article URL",
-    "relatedArticleFieldName": "related article URL",
-    "relatedArticleFieldNameUppercase": "Related Article URL",
-    "relatedArticleFieldHeader": "Edit the related article URL for {n, plural, one {# document} other {# documents}}",
-    "relatedArticleFieldDescription": "Enter the related article URL below for the {n, plural, one {selected document} other {# selected documents}}",
-    "relatedArticleFieldButton": "Edit",
-
-    "publishedUrlFieldTitle": "Published URL",
-    "publishedUrlFieldName": "published URL",
-    "publishedUrlFieldNameUppercase": "Published URL",
-    "publishedUrlFieldHeader": "Edit the published URL for {n, plural, one {# document} other {# documents}}",
-    "publishedUrlFieldDescription": "Enter the published URL below for the {n, plural, one {selected document} other {# selected documents}}",
-    "publishedUrlFieldButton": "Edit"
-  },
-  "projectsMenu": {
-    "browseProjects": "Browse",
-    "newProject": "New",
-    "projMembership": "Project Membership",
-    "selectDocs": "Select documents to place them in projects",
-    "createProj": "Create a project to organize and share documents",
-    "remove": "Remove {n, plural, one {document} other {# documents}} from project",
-    "add": "Add {n, plural, one {document} other {# documents}} to project"
-  },
-  "documentBrowser": {
-    "dropToUpload": "Drop to upload documents"
-  },
-  "projectBrowser": {
-    "loading": "Loading projects…",
-    "retry": "Retry",
-    "empty": "No projects found."
-  },
-  "addonsMenu": {
-    "addon": "Add-on",
-    "learnMore": "Learn more about Add-Ons",
-    "browseAll": "Browse Add-Ons",
-    "addonRuns": "See past and future Add-On runs"
-  },
   "noDocuments": {
     "noSearchResults": "No search results",
-    "queryNoResults": "Your search query returned no results. Try again with a broader search query.",
-    "welcome": "Welcome to DocumentCloud!",
-    "verify1": "Note that currently your account is <b>not verified to upload</b>. You can search through the public repository, organize documents you're interested in into projects, leave private notes, and collaborate on editing and annotating documents other users invite you to.",
-    "verify2": "If you’d like to upload or publish documents and you're a working journalist or other organization interested in publishing primary source materials in the public interest, you'll need to have your account verified or added to a verified organization. This is a simple process:",
-    "verify3": "First, <a target=\"_blank\" href=\"https://accounts.muckrock.com/organizations/\">see if your organization already exists</a> and, if you find it, click \"Request to Join\" on its page.",
-    "verify4": "If your organization has not been verified yet, or if you're a freelancer, ",
-    "verify5": "request verification here.",
-    "uploadFirst": "Upload your first document",
-    "upload1": "Upload a document file to get started using DocumentCloud. You can drag the file into this window, or click on the blue “Upload” button above.",
-    "upload2": "Once you upload a file, DocumentCloud will process the document and extract its contents. It may take a few minutes for this to complete, but once it’s done your document will be optimized for analysis and sharing on the web.",
-    "requestVerificationAction": "Request Verification to Upload"
+    "queryNoResults": "Your search query returned no results. Try again with a broader search query."
   },
   "paginator": {
     "page": "Page",
     "of": "of",
-    "document": "{n, plural, one {# Document} other {# Documents}}",
     "next": "Next Page",
     "previous": "Previous Page",
     "first": "First Page",
@@ -615,24 +215,10 @@
   },
   "processingBar": {
     "processing": "Processing last upload",
-    "doneProcessing": "Done processing",
     "processingDocuments": "{n, plural, one {# document} other {# documents}} remaining"
-  },
-  "searchBar": {
-    "tips": "Search tips: add filters by typing <code>user:</code>, <code>project:</code>, or <code>organization:</code>, etc. Use <code>sort:</code> to order results.",
-    "learnMore": "Learn more",
-    "search": "Search"
-  },
-  "searchLink": {
-    "search": "Search this document collection"
   },
   "projects": {
     "header": "Projects",
-    "allDocuments": "All Documents",
-    "yourDocuments": "Your Private Documents",
-    "yourPubDocuments": "Your Public Documents",
-    "orgDocuments": "{name}’s Documents",
-    "pinsEmpty": "Pinned projects will appear here for quick access",
     "private": "Private Project",
     "public": "Public Projects",
     "loading": "Loading project documents…",
@@ -713,68 +299,8 @@
     "pageOf": "Page {page} of {title}",
     "gotoDocCloud": "Go to DocumentCloud in new window or tab"
   },
-  "entities": {
-    "back": "Back",
-    "filter": "Filter",
-    "applyFilters": "Apply filters",
-    "kind": "Kind",
-    "clear": "Clear",
-    "person": "Person",
-    "org": "Organization",
-    "location": "Location",
-    "event": "Event",
-    "workOfArt": "Work of Art",
-    "consumerGood": "Consumer Good",
-    "address": "Address",
-    "date": "Date",
-    "number": "Number",
-    "phoneNumber": "Phone Number",
-    "price": "Price",
-    "unknown": "Unknown",
-    "other": "Other",
-    "occurrences": "Occurrences",
-    "proper": "Proper",
-    "common": "Common",
-    "advanced": "Advanced",
-    "relevanceThreshold": "Relevance threshold:",
-    "knowledgeGraph": "Knowledge graph:",
-    "hasKG": "Has a knowledge graph ID",
-    "noKG": "Does not have a knowledge graph ID",
-    "wikiUrl": "Wikipedia URL:",
-    "hasWiki": "Has a Wikipedia URL",
-    "noWiki": "Does not have a Wikipedia URL",
-    "occurrence": "{n, plural, zero {} one {# occurrence} other {# occurrences}}",
-    "wikipedia": "Wikipedia",
-    "entityExtraction": "Entity extraction for “{title}”",
-    "extractingEntities": "Extracting entities...",
-    "welcome": "Welcome to entity extraction! This feature is very much in progress but we want it in your hands early to welcome any <a href={contact} target=\"_blank\">feedback</a> you might have.",
-    "manual": "Right now the process for extracting entities is manual. This document has not had entities extracted yet, so click below to get started.",
-    "error": "An unexpected error occurred",
-    "extract": "Extract entities",
-    "noEntities": "There are no entities. This could happen if the document doesn’t have text, is non-English (only English is supported for now), or some error occurred.",
-    "starting": "Starting extaction..."
-  },
-  "home": {
-    "about": "DocumentCloud is an all-in-one platform for documents: upload, organize, analyze, annotate, search, and embed.",
-    "viewPublicDocs": "View public documents"
-  },
   "annotation": {
-    "title": "Note Title",
-    "description": "Note Description (optional)",
-    "unchanged": "Note remains unchanged",
-    "noTitle": "Enter a title for the note",
-    "org": "This note is only visible to you and others with edit access to this document",
-    "private": "This private note is only visible to you",
-    "by": "Note by {name}",
-    "byOrg": "Note by {name}, {org}",
-    "addPageNote": "Add page note"
-  },
-  "viewDropdown": {
-    "document": "Document",
-    "plainText": "Plain Text",
-    "thumbnail": "Thumbnail",
-    "notes": "Notes",
-    "search": "Search Results"
+    "by": "Note by {name}"
   },
   "mode": {
     "document": "File",
@@ -803,84 +329,15 @@
       "privacyFix": "Edit privacy settings"
     }
   },
-  "drawer": {
-    "close": "Close Drawer"
-  },
   "titleHeader": {
     "contributedBy": "Contributed by"
   },
-  "annotatePane": {
-    "annotateDocument": "Add Note",
-    "desc": "Highlight a portion of the page, or click between pages to create a note."
-  },
-  "modifyPane": {
-    "pagesSelected": "{n, plural, one {# Page} other {# Pages}} Selected",
-    "applyModifications": "Apply Modifications",
-    "duplicate": "Duplicate",
-    "move": "Move",
-    "rotate": "Rotate",
-    "unselect": "Unselect",
-    "remove": "Remove",
-    "insertPages": "Insert {n, plural, one {# Page} other {# Pages}}",
-    "pagesPending": "{n, plural, one {# Page} other {# Pages}} Pending Insertion",
-    "insertBegin": "Insert {n, plural, one {# page} other {# pages}} at beginning.",
-    "insertEnd": "Insert {n, plural, one {# page} other {# pages}} at end.",
-    "insertBetween": "Insert {n, plural, one {# page} other {# pages}} in between page {p0} and {p1}.",
-    "insert": "Insert",
-    "insertAtEnd": "Insert at end",
-    "insertPosition": "Insert pages at position",
-    "insertOtherDoc": "Insert from other document",
-    "modifyPages": "Modify Pages",
-    "select": "Select pages below to apply modifications (page rotation, rearranging, and deletion). Click in-between pages to insert.",
-    "undo": "Undo",
-    "redo": "Redo"
-  },
-  "redactPane": {
-    "redactDoc": "Redact Document",
-    "desc": "Click and drag to draw a black rectangle over each portion of the document you’d like to redact. Associated text will be removed when you save your redactions.",
-    "confirm": "Confirm Redactions",
-    "undo": "Undo"
-  },
-  "searchPane": {
-    "yourQuery": "Your query <em>{search}</em> was found on {n, plural, one {# page} other {# pages}}"
-  },
-  "selectNotePane": {
-    "selectNote": "Select a note",
-    "desc": "Select the note that you want to share."
-  },
-  "searchResults": {
-    "resultPages": "{results, plural, one {# result} other {# results}} across {pages, plural, one {# page} other {# pages}}",
-    "noSearchResults": "No search results. Try again with a broader query.",
-    "occurrences": "{n, plural, one {# occurrence} other {# occurrences}}"
-  },
   "sidebar": {
-    "toggleOpen": "Open Sidebar",
-    "toggleClose": "Close Sidebar",
-    "updating": "Updating docucment...",
-    "original": "Original Document (PDF) »",
-    "related": "Related Article »",
     "contributed": "Contributed by",
-    "source": "Source: {source}",
-    "actions": "Document Actions",
     "share": "Share",
     "shareEmbed": "Share & Embed",
-    "shareDesc": "Create an embed or share on social media.",
     "sharedWith": "Shared with",
-    "annotate": "Add Note",
-    "annotateDesc": "Leave a public, private or shared note, which can be embedded within an article.",
-    "redact": "Redact",
-    "redactDesc": "Create redactions on the document to hide text. The document will reprocess afterwards.",
-    "modify": "Modify Pages",
-    "modifyDesc": "Rearrange, rotate, delete, insert, and split pages.",
-    "info": "Edit Document Info",
-    "infoDesc": "Modify document information like description and related URL.",
-    "dataDesc": "Add tags and key/value pairs to categorize your document.",
-    "sections": "Edit Sections",
-    "sectionsDesc": "Add sections to organize your document with a table of contents.",
-    "privateNote": "Add Private Note",
-    "privateNoteDesc": "Leave a public, private or shared note, which can be embedded within an article.",
     "revisions": "Revision History",
-    "revisionsDesc": "Toggle revision history and view previous versions of your document.",
     "edit": "Edit Metadata",
     "upload": "Upload Documents",
     "uploadToProject": "Upload to Project",
@@ -917,16 +374,6 @@
     "empty": "Add notes to highlight and comment on your document",
     "cta": "Annotate this document"
   },
-  "viewer": {
-    "notFound": "Document not found",
-    "notFoundDesc": "The document you requested either does not exist or you lack permission to access it",
-    "processing": "Document is processing",
-    "processingDesc": "The document you requested is processing and will automatically refresh when it is ready",
-    "error": "Document has encountered an error",
-    "errorDesc": "A processing error has been encountered in the document you requested",
-    "accessible": "Document not accessible",
-    "accessibleDesc": "The document you requested is still processing or you lack permission to access to it"
-  },
   "edit": {
     "title": "Edit document metadata",
     "fields": {
@@ -956,7 +403,6 @@
     },
     "save": "Save",
     "cancel": "Cancel",
-    "delete": "Delete",
     "cta": {
       "add-note": "Add a page note",
       "add-section": "Start section",
@@ -1017,34 +463,19 @@
     }
   },
   "addonDispatchDialog": {
-    "backButton": "Browse Add-Ons",
     "select": "Documents to run this Add-On against:",
-    "premium": "This Add-On uses Premium Credits:",
-    "premiumSpendLimit": "Set a spending limit",
     "labelSelected": "The {n, plural, one {# currently selected document} other {# currently selected documents}}",
     "labelQuery": "The {n, plural, one {# document} other {# documents}} from the current search results",
-    "showAddons": "Show Scheduled Add-Ons ({n})",
     "scheduled": "Scheduled",
     "runSchedule": "Run on a schedule:",
     "runOnce": "Run once",
     "disable": "Disable",
     "createdBy": "Created by",
-    "categories": "Categories",
     "viewsource": "View Source",
-    "share": "Share",
-    "shareClipboardSuccess": "Copied add-on URL to your clipboard",
-    "scheduleSuccess": "Add-on is now scheduled",
-    "runSuccess": "Add-on is now running",
     "selectionHelp": "Select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
-    "cost": "{amount} {unit} per {price, plural, one {credit} other {# credits}}",
     "editing": "Editing a previously dispatched addon",
     "instructions": "Instructions",
-    "premiumUpgrade": {
-      "message": "This Premium Add-On uses AI to perform advanced analysis. Upgrade to a {plan} account to utilize this and other powerful Add-Ons.",
-      "callToAction": "Upgrade Plan",
-      "memberMessage": "This Premium Add-On uses AI to perform advanced analysis. Contact your organization admin about upgrading your plan."
-    },
     "dispatch": "Dispatch",
     "history": "History",
     "noHistory": "You have not run this add-on before"
@@ -1052,13 +483,8 @@
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
     "subtitle": "Free automations, shortcuts and power-ups from the DocumentCloud community",
-    "categories": "Categories",
-    "searchPlaceholder": "Search…",
-    "loading": "Loading…",
     "empty": "No add-ons found",
-    "retry": "Retry",
     "viewsource": "View Source",
-    "usage": "Usage",
     "pinnedTip": "Quickly access your favorite Add-Ons by clicking the “Pin” icon next to its name. They’ll then be available to run from the Add-Ons dropdown menu.",
     "featuredTip": "Here’s some of the DocumentCloud team’s favorite Add-Ons, including both new additions as well as classics we think every user should try.",
     "premiumTip": "Premium add-ons have powerful functionality backed by AI and cloud services. They have an additional cost to run and are only available to Professional and Organizational users."
@@ -1066,42 +492,7 @@
   "addonRuns": {
     "scheduled": "Scheduled Add-Ons",
     "previous": "Previous Runs",
-    "runsOn": "{schedule}",
-    "upcoming": {
-      "empty": "Scheduled add-ons will appear here",
-      "loading": "Loading …",
-      "retry": "Retry"
-    },
-    "history": {
-      "empty": "Previous add-on runs will appear here",
-      "loading": "Loading…",
-      "retry": "Retry"
-    }
-  },
-  "addonProgress": {
-    "timedOut": "Timed out",
-    "feedback": "Feedback on this Add-On run",
-    "progress": "Add-Ons in progress",
-    "thanks": "Thanks for the feedback!",
-    "download": "Download file"
-  },
-  "addonSidebar": {
-    "title": "Add-Ons",
-    "runs": "Schedule & history"
-  },
-  "uploadEmailDialog": {
-    "uploadEmailAddress": "Upload via email",
-    "bodyText": "You can upload documents to your account by sending them to to a special email address as attachments.  For security reasons, this email is only shown to you once. Please copy it to a secure location: It will accept attachments from any email account. You can generate a new upload address at any time (which will disable the old one) or turn off this feature entirely. Documents are uploaded as private.<br><br>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.",
-    "createMsg": "<strong>Upload email address succesfully created</strong>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",
-    "destroyMsg": "<strong>Any upload email address has been removed from your account.</strong>",
-    "disable": "Disable upload via email"
-  },
-  "anonymous": {
-    "title": "Welcome to DocumentCloud, an open document archive from MuckRock!",
-    "p1": "This site helps organize, analyze and host millions of records contributed by verified newsrooms, research organizations and other groups that help inform the public through the user of primary source materials. Using the search bar above, you can browse through {n} publicly published documents, with thousands more added ever day.",
-    "p2": "If you're part of a newsroom, academic organization, or other public-interest organization that vets and publishes materials in the public interest, <a href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud&next=https%3A%2F%2Fwww.documentcloud.org%2Fhome\">you can register here</a> and request verification to upload materials, or <a href=\"https://www.documentcloud.org/about/\">learn more about DocumentCloud</a> and it's powerful suite of hosting, analysis and publication tools.",
-    "p3": "Want more fascinating documents, open data and original reporting to your inbox? Subscribe to MuckRock's newsletter:",
-    "p4": "DocumentCloud is part of a suite of transparency tools from the MuckRock Foundation, a 501c3 registered non-profit. This archive is open to the public and advertisement free thanks to support from readers like you — you can <a href=\"https://www.muckrock.com/about/\">learn more about our work</a> or <a href=\"https://www.muckrock.com/donate/\">make a donation</a>."
+    "runsOn": "{schedule}"
   },
   "premium": {
     "badge": "Premium"
@@ -1145,7 +536,8 @@
     "addons": "Add-Ons",
     "documents": "Documents",
     "unknown": "Unknown",
-    "totalCount": "{n} active {n, plural, one {process} other {processes}}"
+    "totalCount": "{n} active {n, plural, one {process} other {processes}}",
+    "download": "Download file"
   },
   "feedback": {
     "title": "Share Your Feedback",

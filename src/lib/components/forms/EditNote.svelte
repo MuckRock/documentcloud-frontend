@@ -86,7 +86,7 @@ Positioning and generating coordinates should happen outside of this form.
           mode="danger"
           formaction={new URL("?/deleteAnnotation", canonical).href}
         >
-          {$_("annotate.delete")}
+          {$_("dialog.delete")}
         </Button>
       {/if}
     </Flex>

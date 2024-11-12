@@ -40,7 +40,7 @@
         {#if run.file_url}
           <a href={run.file_url} download>
             <Action>
-              <Paperclip16 />{$_("addonProgress.download")}
+              <Paperclip16 />{$_("processing.download")}
             </Action>
           </a>
         {/if}
