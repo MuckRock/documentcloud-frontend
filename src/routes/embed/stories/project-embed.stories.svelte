@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   // legacy css
   import "@/style/variables.css";
-  import "@/style/global.css";
+  import "@/style/legacy.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import ProjectEmbed from "../projects/[project_id]-[slug]/+page.svelte";
