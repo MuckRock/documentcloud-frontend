@@ -8,7 +8,7 @@
   import SignedIn from "$lib/components/common/SignedIn.svelte";
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
 
-  import Actions from "../documents/sidebar/Actions.svelte";
+  import BulkActions from "@/lib/components/documents/BulkActions.svelte";
   import Documents from "../documents/sidebar/Documents.svelte";
   import Projects from "../documents/sidebar/Projects.svelte";
 
@@ -54,7 +54,7 @@
           <PlusCircle16 />{$_("sidebar.upload")}
         </Button>
       {/if}
-      <Actions />
+      <BulkActions />
       <AddOns pinnedAddOns={data.pinnedAddons} />
     {/if}
   </svelte:fragment>

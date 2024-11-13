@@ -455,11 +455,12 @@
   "bulk": {
     "title": "Edit",
     "actions": {
-      "edit": "Access and metadata",
-      "data": "Add tags and data",
+      "share": "Share",
+      "edit": "Edit metadata",
+      "data": "Edit tags & data",
+      "project": "Move to project",
       "reprocess": "Reprocess",
-      "delete": "Delete documents",
-      "project": "Add to project"
+      "delete": "Delete"
     }
   },
   "addonDispatchDialog": {

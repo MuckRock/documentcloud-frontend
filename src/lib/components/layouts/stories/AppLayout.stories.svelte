@@ -10,7 +10,7 @@
   import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
   import Button from "../../common/Button.svelte";
   import { PlusCircle16 } from "svelte-octicons";
-  import Actions from "@/routes/(app)/documents/sidebar/Actions.svelte";
+  import BulkActions from "$lib/components/documents/BulkActions.svelte";
   import AddOns from "$lib/components/common/AddOns.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
@@ -55,7 +55,7 @@
         <Button mode="primary" href="/upload/">
           <PlusCircle16 />{$_("sidebar.upload")}
         </Button>
-        <Actions />
+        <BulkActions />
         <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
       </svelte:fragment>
     </SidebarLayout>
