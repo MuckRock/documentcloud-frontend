@@ -16,7 +16,7 @@ from tqdm import tqdm
 from typing import Generator
 
 SYSTEM = """You are translating text on a website. 
-Translate each string to the given language, returning only the translated text, nothing else.
+Translate each string to the given language, returning only the translated text, nothing else. No explanation. No yapping.
 
 There may be HTML in some strings. Leave that as-is.
 
