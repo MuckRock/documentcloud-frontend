@@ -67,7 +67,7 @@
   },
   "dialogReprocessDialog": {
     "title": "Afirmar reprocesar",
-    "reprocessDocs": "Seguir\u00e1n obligar a los siguientes {n, plural, one {documento seleccionado} otros {# documentos seleccionados}} a reprocesar el texto de la p\u00e1gina y la imagen:",
+    "reprocessDocs": "Seguir\u00e1n obligar a los siguientes {n, plural, one {documento seleccionado} other {# documentos seleccionados}} a reprocesar el texto de la p\u00e1gina y la imagen:",
     "reprocessSingleDoc": "Proceder\u00e1 forzar el siguiente documento a reprender el texto de la p\u00e1gina e imagen:",
     "continue": "Quieres continuar?",
     "confirm": "Reprocesar"
@@ -191,12 +191,12 @@
     "upload": "Cargar",
     "dropFile": "Ejectar archivo para subir",
     "matchingPages": "Mostrando {n, number} de {total, number} resultados coincidente con la solicitud",
-    "matchingNotes": "Seguindo {n, plural, one {nota} otros {notas}} coincidente con la consulta",
+    "matchingNotes": "Seguindo {n, plural, one {nota} other {notas}} coincidente con la consulta",
     "page": "P\u00e1gina",
     "pageAbbrev": "p.",
-    "pageCount": "Segunda {# page} de {# pages}.",
+    "pageCount": "{n, plural, one {# página} other {# páginas}}",
     "select": "Seleccionar",
-    "noteCount": "Segundo {n, plural, one {notas #} otros {notes #}}"
+    "noteCount": "Segundo {n, plural, one {notas #} other {notes #}}"
   },
   "error": {
     "report": "Informar un problema"
@@ -231,7 +231,7 @@
     "create": "Crea proyecto",
     "edit": "Editar metadatos del proyecto",
     "share": "Compartir & enlazar este proyecto",
-    "add": "Agrega {n, plural, one {este documento} otros {# documentos}} a un proyecto",
+    "add": "Agrega {n, plural, one {este documento} other {# documentos}} a un proyecto",
     "access": {
       "public": "P\u00fablico",
       "private": "Privado",
@@ -450,7 +450,7 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "addNew": "A\u00f1adir nuevo elemento.",
-    "many": "Guardar agregar\u00e1 los siguientes datos y etiquetas a {n, plural, one {el documento seleccionado} otros {todos los documentos seleccionados #}}. Ning\u00fan tag ni dato ser\u00e1 eliminado."
+    "many": "Guardar agregar\u00e1 los siguientes datos y etiquetas a {n, plural, one {el documento seleccionado} other {todos los documentos seleccionados #}}. Ning\u00fan tag ni dato ser\u00e1 eliminado."
   },
   "bulk": {
     "title": "Editar",
@@ -465,7 +465,7 @@
   },
   "addonDispatchDialog": {
     "select": "Documentos para correr este Add-On contra:",
-    "labelSelected": "La {n, plural, one {# documento actualmente seleccionado} otros {# documentos actualmente seleccionados}}",
+    "labelSelected": "La {n, plural, one {# documento actualmente seleccionado} other {# documentos actualmente seleccionados}}",
     "labelQuery": "La {n, plural, one {# documento} other {# documentos}} del resultado de b\u00fasqueda actual",
     "scheduled": "Agendado",
     "runSchedule": "Ejecutar seg\u00fan un horario",
