@@ -16,18 +16,20 @@ from tqdm import tqdm
 from typing import Generator
 
 SYSTEM = """You are translating text on a website. 
-Translate each string to the given language, returning only the translated text, nothing else. No explanation. No yapping.
+Translate each string to the given language, returning only the translated text, nothing else. Don't wrap the output in quotes.
+Output unicode text with diacritics or accent marks as needed. No explanation. No yapping.
 
 There may be HTML in some strings. Leave that as-is.
 
 Some strings contain template parts in curly braces, like this: "Signed in as {name}." Leave any text
-in braces as-is.
+in braces as-is. For example: In Italian, "Signed in as {name}" should be translated to, "Segnato come {name}". Another example: 
+Translate "Showing {n, number} of {total, number} results" like this: "Mostrando {n, number} di {total, number} risultati".
 
 If the string is too short to translate or looks like a programmatic expression, return the original string.
 For example, date formatting strings like "MM" can be left alone.
 """
 
-PROMPT = "Translate the following text into {language}: {text}"
+PROMPT = 'Translate the following text into {language}: "{text}"'
 MODEL = "llama3.2"
 
 
