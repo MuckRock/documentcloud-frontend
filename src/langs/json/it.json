@@ -536,7 +536,7 @@
     "addons": "Estensioni",
     "documents": "Documenti",
     "unknown": "Sconosciuto",
-    "totalCount": "{n} attiva {n, plural, one {progetto} other {progetti}}",
+    "totalCount": "{n} {n, plural, one {progetto attivo} other {progetti attivi}}",
     "download": "Scarica file"
   },
   "feedback": {

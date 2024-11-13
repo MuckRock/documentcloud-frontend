@@ -537,7 +537,7 @@
     "addons": "Agregados",
     "documents": "Documentos",
     "unknown": "Desconocido",
-    "totalCount": "Seg\u00fan {n} activas {n, plural, one {proceso} other {procesos}}",
+    "totalCount": "Seg\u00fan {n} {n, plural, one {proceso activo} other {procesos activos}}",
     "download": "Descargar archivo"
   },
   "feedback": {

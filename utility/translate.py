@@ -22,8 +22,11 @@ Output unicode text with diacritics or accent marks as needed. No explanation. N
 There may be HTML in some strings. Leave that as-is.
 
 Some strings contain template parts in curly braces, like this: "Signed in as {name}." Leave any text
-in braces as-is. For example: In Italian, "Signed in as {name}" should be translated to, "Segnato come {name}". Another example: 
-Translate "Showing {n, number} of {total, number} results" like this: "Mostrando {n, number} di {total, number} risultati".
+in braces as-is. Some examples: 
+
+- In Italian, "Signed in as {name}" should be translated to, "Segnato come {name}".
+- Translate "Showing {n, number} of {total, number} results" like this: "Mostrando {n, number} di {total, number} risultati".
+- Translate "{n} active {n, plural, one {process} other {processes}}" to "{n} {n, plural, one {progetto attivo} other {progetti attivi}}"
 
 If the string is too short to translate or looks like a programmatic expression, return the original string.
 For example, date formatting strings like "MM" can be left alone.
