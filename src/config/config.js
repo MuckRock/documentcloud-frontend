@@ -39,12 +39,12 @@ export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
 
 export const LANGUAGES = [
   ["US English", "en", "🇺🇸"],
+  ["Deutsche", "de", "🇩🇪"],
   ["Español", "es", "🇪🇸"],
   ["Français", "fr", "🇫🇷"],
-  ["Deutsche", "de", "🇩🇪"],
-  ["українська", "uk", "🇺🇦"],
-  ["русский", "ru", "🇷🇺"],
   ["Italiano", "it", "🇮🇹"],
+  ["русский", "ru", "🇷🇺"],
+  ["українська", "uk", "🇺🇦"],
 ];
 
 export const CSRF_COOKIE_NAME = "csrftoken";
