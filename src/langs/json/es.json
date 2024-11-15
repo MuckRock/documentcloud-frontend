@@ -525,7 +525,7 @@
     "preview": "Vista de preview de embed",
     "save": "Guardar configuraci\u00f3n",
     "customize": "Personalizar el enlace",
-    "privateWarning": "Esta {tipo} es privada.",
+    "privateWarning": "Esta {type} es privada.",
     "orgWarning": "Esto es solo visible dentro de su organizaci\u00f3n.",
     "privateFix": "Editar metadatos",
     "fields": {
