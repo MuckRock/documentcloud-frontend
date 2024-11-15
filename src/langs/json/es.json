@@ -172,7 +172,7 @@
       "title": "Profesional"
     },
     "org": {
-      "avatar": "Segnato como {nombre}.",
+      "avatar": "Segnato como {name}.",
       "changeOrg": "Cambiar organizaci\u00f3n",
       "adminRole": "Admin",
       "userCount": "Seg\u00fan el n\u00famero {n, number}, hay {total, number} {organization, singular}"
