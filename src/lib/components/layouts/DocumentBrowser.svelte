@@ -130,7 +130,7 @@
         --color="var(--blue-5)"
         --fill="var(--blue-4)"
         --font-size="var(--font-md)"
-        >{$_("documentBrowser.dropToUpload")}
+        >{$_("documents.dropFile")}
       </Empty>
     </div>
     <ContentLayout>

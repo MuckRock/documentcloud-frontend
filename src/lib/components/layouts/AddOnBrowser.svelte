@@ -92,7 +92,7 @@
         </div>
       {/if}
       {#await addons}
-        <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
       {:then { data: page }}
         {#each page?.results ?? [] as addon}
           <ListItem {addon} />
@@ -125,7 +125,7 @@
   </main>
   <aside class="history">
     {#await events}
-      <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then { data: events }}
       <Scheduled
         events={events?.results ?? []}
@@ -135,7 +135,7 @@
     {/await}
 
     {#await runs}
-      <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then { data: runs }}
       <History
         runs={runs?.results ?? []}
