@@ -11,7 +11,7 @@
     "title": "Название"
   },
   "search": {
-    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
+    "matchingResults": "{n, plural, one {# совпадающий результат} other {# результатов соответствия}}"
   },
   "homeTemplate": {
     "signedIn": "Segnato come {name}",
