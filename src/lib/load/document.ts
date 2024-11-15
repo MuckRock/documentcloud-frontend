@@ -13,11 +13,11 @@ export default async function load({ fetch, params, url }: Load) {
   const { data: document, error: err } = await documents.get(+params.id, fetch);
 
   if (err) {
-    throw error(err.status, err.message);
+    return error(err.status, err.message);
   }
 
   if (!document) {
-    throw error(404, "Document not found");
+    return error(404, "Document not found");
   }
 
   let mode: ViewerMode =
