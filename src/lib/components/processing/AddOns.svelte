@@ -144,7 +144,6 @@ This component should update on a timer.
                 ghost
                 minW={false}
                 mode="success"
-                disabled={Boolean(rated[run.uuid])}
                 hover={rated[run.uuid] === 1}
                 on:click={() => rateRun(1, run)}
               >
@@ -155,7 +154,6 @@ This component should update on a timer.
                 ghost
                 minW={false}
                 mode="danger"
-                disabled={Boolean(rated[run.uuid])}
                 hover={rated[run.uuid] === -1}
                 on:click={() => rateRun(-1, run)}
               >
