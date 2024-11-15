@@ -1,568 +1,136 @@
 {
   "common": {
-    "emailAddress": "Почтовый адрес",
-    "loading": "Загрузка…",
-    "empty": "Нет результатов",
-    "error": "Ошибка произошла",
-    "explore": "Раскрыть",
-    "edit": "Изменить",
-    "search": "Искать",
-    "feedback": "Обратная связь",
-    "title": "Название"
-  },
-  "search": {
-    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
+    "emailAddress": "E-mail адрес",
+    "loading": "Загрузка..."
   },
   "homeTemplate": {
-    "signedIn": "Segnato come {name}",
-    "signOut": "Выход",
+    "signedIn": "Вы вошли как {name}",
+    "signOut": "Выйти",
     "signIn": "Войти",
-    "signUp": "Создать аккаунт",
-    "goToApp": "Ходите в приложении."
-  },
-  "inputs": {
-    "required": "Обязателен",
-    "selectAll": "Выбрать все",
-    "selected": "Избранный",
-    "resultsCount": "Моstranvy {n, number} iz {total, number} rezultaty"
-  },
-  "access": {
-    "private": {
-      "value": "Privat",
-      "title": "ОPrivate",
-      "description": "Документы доступны только для вас"
-    },
-    "organization": {
-      "value": "Оrganизация",
-      "title": "ОGANИЗАЦИЯ",
-      "description": "Документы будут доступны только для вашей организации"
-    },
-    "public": {
-      "value": "Общественный",
-      "title": "Общественный",
-      "description": "Документы будут publicly visible to everyone \nДокументы будет доступны для всех"
-    }
-  },
-  "notfound": {
-    "content": "Пожалуйста, попробуйте другой URL."
+    "signUp": "Регистрация",
+    "goToApp": "В приложение"
   },
   "appearanceDimension": {
-    "responsive": "Автоматический",
-    "fixed": "Присвоено"
+    "responsive": "Автоматически (по умолчанию)",
+    "fixed": "Закреплено"
   },
   "dialog": {
-    "cancel": "Отмена",
+    "cancel": "Отменить",
     "delete": "Удалить",
-    "done": "Проведено",
+    "done": "Готово",
     "edit": "Редактировать",
-    "share": "Быть знакомым",
     "remove": "Удалить",
     "save": "Сохранить",
-    "reset": "Сброс",
-    "update": "Обновление",
-    "dismiss": "Отказ",
-    "dispatch": "Диспич",
-    "organize": "Ориентировать",
-    "run": "Бегать"
+    "update": "Обновить",
+    "dismiss": "Скрыть",
+    "dispatch": "Отправить"
   },
   "dialogReprocessDialog": {
-    "title": "Повторить реанимирование",
-    "reprocessDocs": "Проceeding forcedly will force the following {n, plural, one {выбранный документ} other {представлено {selected} dokumentа}} to reprocess page and image text:",
-    "reprocessSingleDoc": "Проceedяте, это приведет к рендерингу документа, который forcing reprocess page и image тексту",
-    "continue": "Но хотите продолжить?",
-    "confirm": "Репrocess"
+    "title": "Подтвердить повторную обработку",
+    "reprocessDocs": "Если вы продолжите, это заставит {n, plural, one {выбранный документ} few {# выбранных документа} many {# выбранных документов} other {# выбранных документов}} повторно обработать страницу и текст изображения. Вы хотите продолжить?",
+    "reprocessSingleDoc": "Если вы продолжите, это заставит документ повторно обработать страницу и текст изображения. Вы хотите продолжить?",
+    "confirm": "Повторная обработка"
   },
   "dialogDocumentEmbedDialog": {
-    "responsive": "Ответственный",
-    "respOn": "ON",
-    "respOnHelp": "Наполните ширину контейнера статьи (обычно funciona лучше)",
-    "respOff": "Оф",
-    "respOffHelp": "Документ будет соответствовать размерам указанным ниже",
-    "width": "Širina",
-    "widthAuto": "Понимает как filled the available space, if the document is set to responsive, otherwise defaults to 700px.",
-    "widthFixed": "Установите максимальную ширину если документ адаптивный, или установите фиксированную размерность в противном случае.",
-    "height": "Расстояние",
-    "heightAuto": "Длина равна по размерам документа, без ограничения размера. Если адаптивная, будет установлена на высоту окна браузера минус 100пс.",
-    "sidebarBehavior": "Sidebar behavior",
-    "sbResponsive": "Ответственный",
-    "sbResponsiveHelp": "Показывать сайдбар по умолчанию на больших экранах и скрывать на мобильных устройствах. В режиме вставки сайдбар будет скрыт.",
-    "hidden": "Скрытный",
-    "visible": "Сбليзненный",
-    "visibleDefault": "Оценible",
-    "sbHiddenHelp": "Упоминайте левый panel по умолчанию",
-    "sbVisibleHelp": "Показывать сайдбар по замовчанню",
-    "titleBehavior": "Навыки 제목а",
-    "tVisibleHelp": "Показать عنوان и авторство в шапке просмотра",
-    "tHiddenHelp": "Скрыть título в заголовке просмотра (еще видимый в Sidebar)",
-    "pdfLink": "Ссылка на PDF",
-    "plVisibleHelp": "Показать ссылку на исходный PDF-документ в правом крае",
-    "plHiddenHelp": "Скрыть ссылку на PDF из сайдбара (файл по-прежнему доступен, если URL известна)",
-    "fullscreenOption": "Полноэкранная опция",
-    "fsVisibleHelp": "Показывать(fullscreen) иконку в правом нижнем углу",
-    "fsHiddenHelp": "Закрыть опцию(fullscreen)",
+    "responsive": "Адаптивный",
+    "respOn": "Вкл (по умолчанию)",
+    "respOnHelp": "Заполнить ширину контейнера статьи (обычно работает лучше всего)",
+    "respOff": "Выкл",
+    "respOffHelp": "Документ будет соответствовать указанным ниже размерам",
+    "width": "Ширина",
+    "widthAuto": "Заполнит доступное место, если документ настроен как адаптивный, иначе значение по умолчанию будет 700px",
+    "widthFixed": "Установите максимальную ширину, если документ адаптивный, или установите фиксированный размер, если не адаптивный",
+    "height": "Высота",
+    "heightAuto": "Высота зависит от размера документа, без максимального размера. Если адаптивный, он будет соответствовать высоте окна браузера минус 100px",
+    "sidebarBehavior": "Поведение боковой панели",
+    "sbResponsive": "Адаптивно (по умолчанию)",
+    "sbResponsiveHelp": "Автоматически показывать боковую панель на больших экранах и скрывать на мобильных устройствах. В режиме вставки боковая панель будет скрыта",
+    "hidden": "Скрытое",
+    "visible": "Видимое",
+    "visibleDefault": "Видимое (по умолчанию)",
+    "sbHiddenHelp": "Скрыть боковую панель по умолчанию",
+    "sbVisibleHelp": "Показывать боковую панель по умолчанию",
+    "titleBehavior": "Параметры заголовка",
+    "tVisibleHelp": "Отображать заголовок и авторство в шапке программы просмотра",
+    "tHiddenHelp": "Скрывать заголовок в шапке программы просмотра (все еще виден в боковой панели)",
+    "pdfLink": "PDF ссылка",
+    "plVisibleHelp": "Показать ссылку на необработанный PDF-документ в боковой панели",
+    "plHiddenHelp": "Скрыть PDF ссылку на боковой панели (файл все еще доступен, если URL-адрес известен)",
+    "fullscreenOption": "Функция полноэкранного режима",
+    "fsVisibleHelp": "Показывать значок полноэкранного режима в правом нижнем углу",
+    "fsHiddenHelp": "Скрыть опцию полноэкранного режима",
     "textMode": "Текстовый режим",
-    "tmVisibleHelp": "Показать опцию для просмотра текста документа в dropdown-view",
-    "tmHiddenHelp": "Склонить текстовое режим",
-    "contributedByFormat": "Contribuирован форматом",
-    "cbfUserAndOrg": "Пользователь и организация",
-    "cbfUserAndOrgHelp": "Показать признание документа в качестве имени пользователя, следовательно, организации",
-    "cbfOrgOnly": "Орг только",
-    "cbfOrgOnlyHelp": "Атрибутируйте документ только organisации"
-  },
-  "dialogRevisionsDialog": {
-    "heading": "Отзывная история",
-    "controlLabel": "Сохранить историю редакций документа",
-    "download": "Скачать",
-    "empty": "Ни одного изменения нет.",
-    "upgrade": {
-      "message": "Модели и организации имеют возможность запечатлять и обходить всю версионную историю своих документов.",
-      "adminCta": "Быстрый обновление"
-    }
-  },
-  "uploadDialog": {
-    "title": "Загрузить документы",
-    "description": "Вы можете выбрать или визвезти документ, чтобы начать процесс загрузки документа. Затем вам будет возможен редактирование информации о документе.",
-    "beginUpload": "Начать загрузка",
-    "selectFiles": "Выберите файлы",
-    "dragDrop": "Сделайте выбор, вставьте или переместите файлы, чтобы uploads.",
-    "totalFiles": "Общее: {n, plural, one {# файл} other {# файлы}}",
-    "accessLevel": "Доступный уровень",
-    "projects": "Проекты",
-    "language": "Язык",
-    "ocrEngine": "OCR-движок",
-    "forceOcr": "Сила OCR",
-    "revisionControl": "Оценка контроля",
-    "revisionControlHelp": "Всые предыдущие версии документа будут сохранены и доступны для скачания.",
-    "tesseract": "Аcktан за открытым link (_blank) со смещением на обновление (noopener noreferrer ) ссылка на https://tesseract-ocr.github.io/tessdoc/ – Tesseract — это_free_open-source OCR_машинка доступна для всех аккаунтов DocumentCloud.",
-    "textract": "Аналогичный сканирующий движок Textract находится в Amazon Web Services: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://aws.amazon.com/textract/\">Textract</a> - это более мощный OCR-двигок, который лучше всего справляется с нечетко написанными текстами, handwriting и сканировками с флуидностью.",
-    "empty": "Получить начало, выбрав, вставив или навязав-выжимая файлы",
-    "steps": {
-      "ready": "Готов",
-      "created": "Создано",
-      "uploading": "Загрузка",
-      "processing": "Обрабатывание",
-      "done": "Сделано"
-    }
+    "tmVisibleHelp": "Показывать опцию для просмотра текста документа в раскрывающемся окне",
+    "tmHiddenHelp": "Скрыть текстовый режим",
+    "contributedByFormat": "Внесено в формате",
+    "cbfUserAndOrg": "Пользователь и организация (по умолчанию)",
+    "cbfUserAndOrgHelp": "Показывать авторство документа как имя пользователя, за которым следует организация",
+    "cbfOrgOnly": "Только организация",
+    "cbfOrgOnlyHelp": "Присвоить документ только организации"
   },
   "authSection": {
-    "help": {
-      "faq": "FAQ",
-      "searchDocs": "Поиск Документация",
-      "apiDocs": "Документация API",
-      "addOns": "Додаткови",
-      "premium": "ДокументКLOUD Премиум",
-      "donate": "Donirovat' dlya sostояnnogo soprobovaniya DocumentCloud",
-      "emailUs": "Контактным адресом для электронного письма является email@domain.com."
-    },
-    "user": {
-      "uploadEmail": "Загрузка посредством электронной почты",
-      "acctSettings": "Установки учетной записи",
-      "signOut": "Выход",
-      "signIn": "Вход"
-    },
-    "premiumUpgrade": {
-      "title": "Упgrade",
-      "heading": "Idi сDocumentCloud's утилитами высшего класса",
-      "description": "Upgrade k professionalnom planu, чтобы искать комментарии к документам и получить доступ к Биске-продаукту, как Advanced OCR, динамический анализ документов на основе GPT, а также и так далее.",
-      "docs": "Навыдите в-depth иehmore about DokumentKloud Preemieyum",
-      "orgs": "Убедиться в принадлежности или создать организацию",
-      "cta": "Новость плана"
-    },
-    "pro": {
-      "title": "Профессиональный"
-    },
-    "org": {
-      "avatar": "Аватар: {name}",
-      "changeOrg": "Смена организации",
-      "adminRole": "Admin",
-      "userCount": "{n, plural, one {#organization member} other {#organization members}}"
-    },
-    "credits": {
-      "monthlyOrg": "Месячная ОрганічнаAllowance",
-      "monthlyPro": "МесячнаяoproизношеннаяAllowance",
-      "refreshOn": "Кредитный отпуск будет reset на {date}."
-    }
+    "help": "Справка"
   },
   "documents": {
     "yourDocuments": "Ваши документы",
-    "accessDocuments": "Ваши {access}Документы",
-    "nameDocuments": "{name}'s {access}Документы",
-    "allDocuments": "Свойства {access}Документы",
-    "upload": "Загрузить",
-    "dropFile": "Скиньте файлом, чтобы uploads.",
-    "matchingPages": "{n, plural, one {#stran{#}} other {#страницы{#}}} совпадająщие по запросу}",
-    "matchingNotes": "{n, plural, one {# note} other {# notes}} соответствует поиску",
-    "page": "Страница",
-    "pageAbbrev": "п",
-    "pageCount": "{n, plural, one {# page} other {# pages}}",
-    "select": "Выбрать",
-    "noteCount": "{n, plural, one {#note} other {#notes}}"
+    "accessDocuments": "Ваши {access}документы",
+    "nameDocuments": "Документы {name} {access}",
+    "allDocuments": "Все {access}документы",
+    "upload": "Загрузка",
+    "dropFile": "Перетащите файл для загрузки"
   },
-  "error": {
-    "report": "Отчет об ошибке"
+  "document": {
+    "remove": "Удалить",
+    "project": "Проект",
+    "source": "Источник"
   },
   "noDocuments": {
-    "noSearchResults": "Нет результатов поиска",
-    "queryNoResults": "Ваш поиск в Returned результатов нет. Повторите поиск с более широкой запросом."
+    "noSearchResults": "Поиск не дал результатов",
+    "queryNoResults": "Ваш поисковый запрос не дал результатов. Попробуйте еще раз с более широким поисковым запросом."
   },
   "paginator": {
-    "page": "Страница",
-    "of": "of",
-    "next": "Далее",
-    "previous": "Назад",
-    "first": "Первая страница",
-    "last": "Последняя страница"
+    "of": "из"
   },
   "processingBar": {
-    "processing": "Процессирование последнего загрузки",
-    "processingDocuments": "{n, plural, one {# doc} other {# docs}} осталось"
+    "processingDocuments": "Обработка {n, plural, one {документа} few {# документов} many {# документов} other {# документов}}"
   },
   "projects": {
-    "header": "Проекты",
-    "private": "Общественный проект",
-    "public": "Остrogenные проекты",
-    "loading": "Загрузка документов проекта…",
-    "empty": "Эта проекта пуста",
-    "error": "Ошибка загрузки документов",
-    "viewInSearch": "Просмотр в документе поиск",
-    "yours": "Ваши проекты",
-    "shared": "Делитесь с вами",
-    "none": "Нет проектов",
-    "create": "Создать проект",
-    "edit": "Редактируйте метаданные проекта.",
-    "share": "Сделай и вставьте этот проект",
-    "add": "Добавьте {n, plural, one {этот документ} other {# документы}}, к(project).",
-    "access": {
-      "public": "Общественный",
-      "private": "Очередной",
-      "admin": "Админ",
-      "edit": "Редактор",
-      "view": "Просматриватель"
-    },
-    "delete": {
-      "action": "Удалить проект",
-      "confirm": "Подтверждать удаление.",
-      "really": "Отечествить ли вы хотите удалить этот проект ({project})?"
-    },
-    "placeholder": {
-      "projects": "Poиск проектов",
-      "documents": "Ищите документы"
-    },
-    "collaborators": {
-      "title": "Сотрудники",
-      "empty": "Ни сотрудников",
-      "add": " Invitovat пользователей к этому проекту"
-    },
-    "fields": {
-      "title": "Название",
-      "description": "Описание",
-      "private": "О privyetnoi proekte",
-      "pinned": "Пин проект"
-    }
+    "header": "Проекты"
   },
-  "collaborators": {
-    "remove": {
-      "label": "Удалить коллаборатора",
-      "message": "Перед началом удалит {name} из {title}. Хотите продолжить?"
-    },
-    "update": {
-      "label": "Сбросить доступ",
-      "message": "Сбросить уровень доступа для {name} в {title}"
-    },
-    "invite": {
-      "label": "Издавай invite",
-      "message": "Войдите в почту существующего пользователя DocumentCloud. Если у них нет учетной записи, hãy зарегистрировать их <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">здесь за free</a>, и затем попроситеthem позволитьатьсяDocumentCloudminimoодин раз."
-    },
-    "access": {
-      "admin": {
-        "title": "Админ",
-        "description": "Администраторы могут добавить и удалить документы и сотрудников проекта."
-      },
-      "edit": {
-        "title": "Редактор",
-        "description": "Редакторы могут видеть и editar проектные документы, принадлежащие администрателям проекта"
-      },
-      "view": {
-        "title": "Просматриватель",
-        "description": "Просматриватели могут видеть документы проекта, принадлежащие administerам проекта."
-      }
-    },
-    "add": "Добавить",
-    "empty": "Вы не добавили еще ни одного сотрудника к этому проекту. Подсказайте сотрудникам, чтобы предоставить другим пользователям доступ к документам, общие в этом проекте. Вы можете контролировать, имеет ли каждый сотрудник доступ для просмотра/редактирования документов проекта или является администратором с разрешением приглашать других пользователей и editsja проект сам.\""
+  "uploadDialog": {
+    "beginUpload": "Начать загрузку",
+    "selectFiles": "+ Выбрать файлы",
+    "dragDrop": "Перетащите файлы сюда"
   },
   "embedNote": {
-    "viewTheNote": "Просмотреть нотатку «{title}» в ее исходном контексте в документе на DocumentCloud через новое окно или вкладку",
-    "viewDoc": "Просматривайте в целом entirety document with \n\n<span class=\"DC-note-logotype-link\">ДокumentКловд</span>"
+    "viewTheNote": "Посмотреть заметку ‘{title}‘ в исходном контексте документа на DocumentCloud в новом окне или вкладке",
+    "viewDoc": "Просмотр всего документа с помощью <span class=\"DC-note-logotype-link\">DocumentCloud</span>"
   },
   "embedPage": {
-    "viewDoc": "Просмотреть всю информацию {title} на DocumentCloud в новом окне или tabs",
+    "viewDoc": "Просмотр всего {title} на DocumentCloud в новом окне или вкладке",
     "pageOf": "Страница {page} из {title}",
-    "gotoDocCloud": "Перейти в документы Cloud в новом окне или вкладке"
+    "gotoDocCloud": "Перейти на DocumentCloud в новом окне или вкладке"
   },
   "annotation": {
-    "by": "Справка по {name}"
-  },
-  "mode": {
-    "document": "Файл",
-    "text": "Текст",
-    "grid": "Страницы",
-    "notes": "Примечания",
-    "annotating": "АнNOTИРОВАТЬ",
-    "redacting": "Редактировать"
+    "by": "Аннотировано {name}"
   },
   "zoom": {
-    "zoom": " Zoom",
-    "size": "Размер",
-    "fitWidth": "Ширина",
-    "fitHeight": "Российская высота",
-    "thumbnail": "Маленький",
-    "small": "Malenkij",
-    "normal": "Средний",
-    "large": "Большой"
-  },
-  "embed": {
-    "download": "Скачать",
-    "enterFullscreen": "Полноэкранное",
-    "exitFullscreen": "Выход из полного экрана",
-    "document": {
-      "privacyWarning": "Этот документ не является общественным.",
-      "privacyFix": "Редактировать настройки конфиденциальности"
-    }
+    "fitWidth": "Подгонять ширину",
+    "fitHeight": "Подгонять высоту"
   },
   "titleHeader": {
-    "contributedBy": "Присвящено"
+    "contributedBy": "Внесено {name}"
   },
   "sidebar": {
-    "contributed": "Contribuировано к",
-    "share": "Разделить",
-    "shareEmbed": "Делиться и вставлять",
-    "sharedWith": "Делиться",
-    "revisions": "Ревизионная история",
-    "edit": "Изменить метаданные",
-    "upload": "Загрузка документов",
-    "uploadToProject": "Загрузить в проект",
-    "download": "Скачать файл",
-    "reprocess": "Репrocess",
-    "created": "Создано в",
-    "updated": "Последняя обновление на",
-    "language": "Язык",
-    "delete": "Удалить",
-    "ocr_engine": "ОКР (OCR) Машина",
-    "addons": {
-      "title": "Добавки",
-      "pinned": "Пинтовые плагины будут появляться здесь",
-      "runs": "План и история",
-      "documents": "Эта расширение работает с документами."
-    },
-    "data": {
-      "title": "Теги & Данные",
-      "empty": "Используйте теги или ключ-значение данные дляorganization of documents"
-    },
-    "projects": {
-      "title": "Проекты",
-      "pinned": "Пиндованные проекты появятся здесь"
-    },
-    "toc": {
-      "empty": "Оделки организуют ваш документ с таблицей содержания",
-      "notes": "Заметки",
-      "pageAbbrev": "п.",
-      "sections": "Одделы",
-      "cta": "Добавлять разделы"
-    }
-  },
-  "notes": {
-    "empty": "Добавляйте примечания для подчеркновения и комментировать свой документ",
-    "cta": "Обежет этот документ"
-  },
-  "edit": {
-    "title": "Редактировать метаданные документа",
-    "fields": {
-      "title": "Название",
-      "description": "Описание",
-      "source": "Источник",
-      "published_url": "Опубликованная URL",
-      "related_article": "Соотносимый статья URL",
-      "noindex": "Сгубить в поисках движков и поиска документы Cloud",
-      "access": {
-        "title": "Доступ",
-        "description": "Менение настроек доступа приведет к повторному процессу документа."
-      }
-    },
-    "nodocs": "Невозможно выбрать ни одной документа. Зашли это форму и выберите как минимум один документ.",
-    "many": "Редактирование {n, plural, one {один документ} other {# документы}}. Это добавит одинаковые значения в все выбранные документы.",
-    "allowedHTML": "Ограниченный HTML можно использовать для форматирования. Просмотреть <a target=\"_blank\" href=\"/help/api\">документацию API</a> для дополнительной информации.",
-    "save": "Сохранить",
-    "cancel": "Отмена"
-  },
-  "annotate": {
-    "title": "Обозначить Документ",
-    "instructions": "Наклоните portions of the page, или нажмите между страницами чтобы создать заметку.",
-    "fields": {
-      "title": "Название",
-      "content": "Содержание"
-    },
-    "save": "Сохранить",
-    "cancel": "Отменить",
-    "cta": {
-      "add-note": "Добавлять запись к странице",
-      "add-section": "Начало раздела",
-      "edit-section": "Редактировать раздел"
-    }
-  },
-  "redact": {
-    "confirm": "Сохранить",
-    "confirmTitle": "Сохранить редакции",
-    "really": "Are you sure you wish to edict the current document? If you continue, the document viewer will be inaccessible temporarily while the document reprocesses with the redactions in place. This change is irreversibly.",
-    "title": "Составить документ",
-    "instructions": "Нажмите и отслеживайте, чтобы нарисовать черный полупустой квадрат над каждым части документа, которое вы хотели бы обкрасить черным цветом. Связанный текст будет удален при сохранении вашей корректировки.",
-    "undo": "Отмень",
-    "cancel": "Убрать",
-    "cancelWarning": "Вы потерите неsaveannye redaktsii. Есть ли уверенность, что вы хотели отменить?",
-    "error": "Ошибка"
-  },
-  "sections": {
-    "edit": "Редактировать разделы",
-    "page": "Строка",
-    "title": "Название",
-    "delete": "Удалить",
-    "new": "Добавьте новый раздел",
-    "clear": "Очистить",
-    "update": "Обновление секции",
-    "overwrite": "Есть уже секция с начала страницы {n}."
-  },
-  "delete": {
-    "title": "CONFIRMIRТЬ УБИЙ",
-    "really": "Предполагается, что этот текст будет навсегда удалить {n, plural, one {выбранное документ} other { # выбранные документы}.",
-    "continue": "Е вы хотите продолжить?",
-    "confirm": "Удалить",
-    "cancel": "Отмена",
-    "error": "Ошибка",
-    "none": "Было выбрано keine Dokumente. Закройте это форму и выберите минимум один документ beforehand."
-  },
-  "data": {
-    "title": "Редактируйте теги и данные",
-    "key": "Ключ",
-    "newkey": "Новый элемент",
-    "value": "Означаемый стоимость",
-    "tag": "Тег",
-    "update": "Обновление",
-    "delete": "Удалить",
-    "save": "Сохранить",
-    "cancel": "Отмена",
-    "addNew": "Добавьте новый элемент",
-    "many": "Сохранение добавляет следующую информацию и теги к {n, plural, one {выбранное документ} other {всех# выбранных документов}}. Нет тегов или информации будет удалено."
-  },
-  "bulk": {
-    "title": "Редактировать",
-    "actions": {
-      "share": "Сделать",
-      "edit": "Редактировать метаданные",
-      "data": "Редактировать тэги и данные",
-      "project": "Продвигать в проект",
-      "reprocess": "Рерпрок",
-      "delete": "Удалить"
-    }
+    "contributed": "Внесено {name}",
+    "share": "Поделиться",
+    "data": "Редактировать теги и данные"
   },
   "addonDispatchDialog": {
-    "select": "Документы для выполнения этого Экسترнального компонента",
-    "labelSelected": "Текст в этом формате: \"{n} active {n, plural, one {progetto attivo} other {progetti attivi}}\"",
-    "labelQuery": "Следующие {n, number} документов от текущих результатов поиска.",
-    "scheduled": "Predostavlen",
-    "runSchedule": "Продолжить по графику",
-    "runOnce": "Пойти один раз",
-    "disable": "Отключить",
-    "createdBy": "Создан oleh",
-    "viewsource": "Просмотреть源ник",
-    "selectionHelp": "Вы можете выбрать отдельные документы или выполнить поиск документов, которые вы хотите, например \"+project:mueller-docs-200005\".",
-    "selectionLearnMore": "Учитывая информацию о том, как работает Додаток,",
-    "editing": "Редактирование предыдущего отправленного мода",
-    "instructions": "Instrукции",
-    "dispatch": "Отправля",
-    "history": "История",
-    "noHistory": "Вам неเคย использовано это плагин"
-  },
-  "addonBrowserDialog": {
-    "title": "Просмотреть Плагины",
-    "subtitle": "Бесплатные автоматизации, краткие методы и бонусы изDocumentCloud сообщества",
-    "empty": "Нет адオンов.",
-    "viewsource": "Просматривать исходный код",
-    "pinnedTip": "Быстрый доступ к αγαtmым Поддобавкам можно получить, кликнув на иконку «Пин»next до ее имени. Затем они станут доступными для запуска из меню Поддобавков.",
-    "featuredTip": "ЕстьsomeoftheDocumentCloudteam'sfavoriteAdd-Ons,nachalnewadditionsaswellasclassicswethinkeveryusershouldtry.",
-    "premiumTip": "Премиумные дополнения имеют мощную функциональность, обуславливаемую АИ и услугами в雲е. Они имеют дополнительный штат, необходим для работы и доступны только пользователям Профессионал и Организационным."
-  },
-  "addonRuns": {
-    "scheduled": "Пlánированные Поддобавки",
-    "previous": "Предыдущие пробеги",
-    "runsOn": "Сchedуля"
-  },
-  "premium": {
-    "badge": "Премиум"
-  },
-  "mailkey": {
-    "title": "Загрузка посредством электронной почты",
-    "description": "Повесить документы в вашем аккаунте можно, отправляя их по специальной электронной почте как приложения. \n\n<p>Для безопасности, эта электронная adresse отображается только вам один раз. Пожалуйста, скопируйте ее в безопасное место.</p>\n\n<p>Этаadresse принимает attachments с любого электронного аккаунта. Документы загружаются по умолчанию. Генерация нового адреса загрузки disables любые ранее созданные adresы.</p>\n\n<p>Мы будем очень благодарны за ваш отзыв и узнаем о креативных случаях использования <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.</p>",
-    "missing_csrf": "Недостающий токен CSRF.",
-    "create": {
-      "button": "Создайте новый адрес электронной почты.",
-      "success": "Оставлено в исходном виде.\n\n<стронг>Зарегистрировано successfulnyj upload email address</стронг>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",
-      "failure": "Невозможно создать свой адрес электронной почты для загрузки. Вспомните это позже."
-    },
-    "destroy": {
-      "button": "Удалить существующий адрес",
-      "success": "Каждый адрес электронной почты для загрузки с удален из учета Ihrer.",
-      "failure": "Несостоявшийся разрыв emailed uploaded address. Напомним вам попробовать позже."
-    }
-  },
-  "share": {
-    "default": "Стандартный",
-    "document": "Документ",
-    "page": "Страница",
-    "note": "Примечание",
-    "copy": "Копировать",
-    "copiedToClipboard": "Copirovano вkladную коробку",
-    "permalink": "Ссылка на permalink",
-    "iframe": "Вставьте HTML iframe",
-    "preview": "Вставочный предвизначение",
-    "save": "Сохранить настройки",
-    "customize": "Накладывать эмбед",
-    "privateWarning": "Эта {тип} — частное.",
-    "orgWarning": "Эта {type} видима только вwithin вашей организации.",
-    "privateFix": "Редактировать метаданные",
-    "fields": {
-      "page": "Выберите страницу",
-      "note": "Выберите нот"
-    }
-  },
-  "processing": {
-    "addons": "Додаток",
-    "documents": "Документы",
-    "unknown": "Непознанный",
-    "totalCount": "{n} attivo {n, plural, one {процесс} other {процессы}}",
-    "download": "Скачать файл"
-  },
-  "feedback": {
-    "title": "Поделитесь своими отзывами",
-    "hello": "Правда, мы хотим вам позволить попробовать общественный previews будущей основной версии DocumentCloud! Мы еще работаем над добавлением функций, исправлением ошибок и улучшением пользовательского интерфейса. Сincerely, Comments, идеи и вопросы - это то, что нам нужно для продолжения нашего развития. На самом деле мы являются очень маленьким командой, так что не можем обеспечить ответ на все обратную связь, но обязательно будем читать и оценивать все отзывы.",
-    "defaultPlaceholder": "Мой отзыв …\n\n(Rus.)",
-    "types": {
-      "comment": {
-        "label": "Отправьте комментарий",
-        "placeholder": "Я думаю, что…"
-      },
-      "bug": {
-        "label": "Отчет о ошибке",
-        "placeholder": "Я хоть и..."
-      },
-      "question": {
-        "label": "Вопрос",
-        "placeholder": "Как я…"
-      }
-    },
-    "userIdentity": {
-      "legend": "Атрибуция",
-      "anonymous": "Нэanonимный",
-      "shareAnonymously": "Паренить безымянно"
-    },
-    "success": "Мы получили ваш отзыв. Благодарим вам!"
+    "select": "Выберите, какие документы вы хотите запустить с этим дополнением:",
+    "labelSelected": "{n, plural, one {# выбранный документ} few {# выбранных документа} many {# выбранных документов} other {#выбранных документов}}",
+    "labelQuery": "{n, plural, one {# документ} few {# документа} many {# документов} other {# документов}} из текущих результатов поиска",
+    "runSchedule": "Запуск по расписанию:",
+    "disable": "Отключить"
   }
 }
