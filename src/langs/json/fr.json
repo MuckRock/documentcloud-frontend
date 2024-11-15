@@ -11,7 +11,7 @@
     "title": "Titre"
   },
   "search": {
-    "matchingResults": "Mostrando un{0, plural, un # r\u00e9sultat enregistr\u00e9 d'autres ; d'autres # r\u00e9sultats enregistr\u00e9s} r\u00e9sultats"
+    "matchingResults": "Mostrando {n, plural, one {# r\u00e9sultat enregistr\u00e9} other {# r\u00e9sultats enregistr\u00e9s}"
   },
   "homeTemplate": {
     "signedIn": "Segnato come {name}",
