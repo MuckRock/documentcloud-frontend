@@ -63,7 +63,7 @@ def translate_json(source, dest, language, debug=False):
 
         nested_set(out, key.split("."), t)
 
-    json.dump(out, dest, indent=2)
+    json.dump(out, dest, indent=2, ensure_ascii=False)
 
 
 @cli.command("python")
