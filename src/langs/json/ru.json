@@ -14,7 +14,7 @@
     "matchingResults": "{n, plural, one {# совпадающий результат} other {# результатов соответствия}}"
   },
   "homeTemplate": {
-    "signedIn": "Segnato come {name}",
+    "signedIn": "Вы вошли как {name}",
     "signOut": "Выход",
     "signIn": "Войти",
     "signUp": "Создать аккаунт",
