@@ -12,6 +12,7 @@
   export let minW = true;
 
   export let disabled = false;
+  export let hover = false; // force hover state
 
   export let title: string = "";
   export let type: "submit" | "reset" | "button" = "button";
@@ -40,6 +41,7 @@
     class:ghost
     class:full
     class:minW
+    class:hover
     {...$$restProps}
   >
     <slot>{label}</slot>
@@ -57,6 +59,7 @@
     class:ghost
     class:full
     class:minW
+    class:hover
     {...$$restProps}
   >
     <slot>{label}</slot>
@@ -123,7 +126,8 @@
     fill: var(--fill, var(--gray-4, #5c717c));
   }
 
-  .ghost:hover {
+  .ghost:hover,
+  .ghost.hover {
     background: var(--background, var(--gray-1, #eef3f9));
   }
 
@@ -132,7 +136,8 @@
     fill: var(--blue-3, #1367d0);
   }
 
-  .ghost.primary:hover {
+  .ghost.primary:hover,
+  .ghost.primary.hover {
     background: var(--blue-1, #eef3f9);
   }
 
@@ -141,7 +146,8 @@
     fill: var(--orange-3, #ec7b6b);
   }
 
-  .ghost.danger:hover {
+  .ghost.danger:hover,
+  .ghost.danger.hover {
     background: var(--orange-1, #fff0ee);
   }
 
@@ -152,7 +158,9 @@
   }
 
   .ghost.premium:hover,
-  .ghost.success:hover {
+  .ghost.premium.hover,
+  .ghost.success:hover,
+  .ghost.success.hover {
     background: var(--green-1, #ebf9f6);
   }
 
@@ -161,7 +169,8 @@
     fill: var(--red-3);
   }
 
-  .ghost.failure:hover {
+  .ghost.failure:hover,
+  .ghost.failure.hover {
     background: var(--red-1);
   }
 
@@ -169,7 +178,8 @@
     box-shadow: none;
   }
 
-  .ghost:hover {
+  .ghost:hover,
+  .ghost.hover {
     background: var(--background, var(--blue-1, #eef3f9));
   }
 
@@ -179,7 +189,8 @@
     box-shadow: inset var(--shadow-3);
   }
 
-  .small:hover {
+  .small:hover,
+  .small.hover {
     box-shadow: none;
   }
 
@@ -188,7 +199,8 @@
   }
 
   @media (hover: none) {
-    .ghost:hover {
+    .ghost:hover,
+    .ghost.hover {
       background: transparent;
     }
   }
@@ -203,7 +215,8 @@
     color: var(--gray-4, #5c717c);
     fill: var(--gray-4, #5c717c);
   }
-  .ghost:disabled:hover {
+  .ghost:disabled:hover,
+  .ghost:disabled.hover {
     background: transparent;
   }
 
