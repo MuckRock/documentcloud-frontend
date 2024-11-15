@@ -11,7 +11,7 @@
     "title": "T\u00edtulo"
   },
   "search": {
-    "matchingResults": "Segundo {# matching result}."
+    "matchingResults": "{n, plural, one {# resultados coincidente} other {# resultados coincidentes}}"
   },
   "homeTemplate": {
     "signedIn": "Segnato como {name}",
