@@ -11,7 +11,7 @@
     "title": "Titolo"
   },
   "search": {
-    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
+    "matchingResults": "{n, plural, one {# risultato corrispondente} other {# risultati correlati}}"
   },
   "homeTemplate": {
     "signedIn": "Segnato come {name}.",
