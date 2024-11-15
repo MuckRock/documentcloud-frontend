@@ -29,14 +29,16 @@
   const running = getRunningAddons();
   const current = getPendingDocuments();
 
-  $: addons = $running?.reduce(
-    (acc, cur) => {
-      const curCount = acc[cur.status] ?? 0;
-      acc[cur.status] = curCount + 1;
-      return acc;
-    },
-    {} as Record<Status, number>,
-  );
+  $: addons = $running
+    ?.filter((r) => !r.dismissed)
+    .reduce(
+      (acc, cur) => {
+        const curCount = acc[cur.status] ?? 0;
+        acc[cur.status] = curCount + 1;
+        return acc;
+      },
+      {} as Record<Status, number>,
+    );
 
   $: documents = $current?.reduce(
     (acc, cur) => {
