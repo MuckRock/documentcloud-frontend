@@ -196,7 +196,7 @@
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# página} other {# páginas}}",
     "select": "Seleccionar",
-    "noteCount": "Segundo {n, plural, one {notas #} other {notes #}}"
+    "noteCount": "{n, plural, one {# nota} other {# notas}}"
   },
   "error": {
     "report": "Informar un problema"
