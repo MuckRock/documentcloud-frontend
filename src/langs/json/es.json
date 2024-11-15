@@ -11,7 +11,7 @@
     "title": "T\u00edtulo"
   },
   "search": {
-    "matchingResults": "Segundo {# matching result}."
+    "matchingResults": "{n, plural, one {# resultados coincidente} other {# resultados coincidentes}}"
   },
   "homeTemplate": {
     "signedIn": "Segnato como {name}",
@@ -172,7 +172,7 @@
       "title": "Profesional"
     },
     "org": {
-      "avatar": "Segnato como {nombre}.",
+      "avatar": "Segnato como {name}.",
       "changeOrg": "Cambiar organizaci\u00f3n",
       "adminRole": "Admin",
       "userCount": "Seg\u00fan el n\u00famero {n, number}, hay {total, number} {organization, singular}"
@@ -196,7 +196,7 @@
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# página} other {# páginas}}",
     "select": "Seleccionar",
-    "noteCount": "Segundo {n, plural, one {notas #} other {notes #}}"
+    "noteCount": "{n, plural, one {# nota} other {# notas}}"
   },
   "error": {
     "report": "Informar un problema"
@@ -525,7 +525,7 @@
     "preview": "Vista de preview de embed",
     "save": "Guardar configuraci\u00f3n",
     "customize": "Personalizar el enlace",
-    "privateWarning": "Esta {tipo} es privada.",
+    "privateWarning": "Esta {type} es privada.",
     "orgWarning": "Esto es solo visible dentro de su organizaci\u00f3n.",
     "privateFix": "Editar metadatos",
     "fields": {

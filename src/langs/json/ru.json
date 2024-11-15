@@ -1,11 +1,21 @@
 {
   "common": {
-    "emailAddress": "E-mail адрес",
-    "loading": "Загрузка..."
+    "emailAddress": "Почтовый адрес",
+    "loading": "Загрузка…",
+    "empty": "Нет результатов",
+    "error": "Ошибка произошла",
+    "explore": "Раскрыть",
+    "edit": "Изменить",
+    "search": "Искать",
+    "feedback": "Обратная связь",
+    "title": "Название"
+  },
+  "search": {
+    "matchingResults": "{n, plural, one {# совпадающий результат} other {# результатов соответствия}}"
   },
   "homeTemplate": {
     "signedIn": "Вы вошли как {name}",
-    "signOut": "Выйти",
+    "signOut": "Выход",
     "signIn": "Войти",
     "signUp": "Регистрация",
     "goToApp": "В приложение"
