@@ -14,6 +14,9 @@ import { breadcrumbTrail } from "$lib/utils/index";
 import loadDocument from "$lib/load/document";
 import { getQuery } from "$lib/utils/search";
 
+// just for testing
+export const ssr = false;
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params, parent, depends, url }) {
   const { document, text, asset_url, mode } = await loadDocument({
