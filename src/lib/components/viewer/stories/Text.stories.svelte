@@ -14,7 +14,7 @@
 </script>
 
 <Story name="default">
-  <ViewerContext {document} {text}>
+  <ViewerContext {document} text={Promise.resolve(text)}>
     <Text />
   </ViewerContext>
 </Story>

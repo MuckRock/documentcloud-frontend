@@ -6,7 +6,7 @@
   import "@/style/kit.css";
 
   import { embedUrl } from "$lib/api/embed";
-  import { canonicalUrl, pageImageUrl } from "$lib/api/documents";
+  import * as documents from "$lib/api/documents";
 
   import DocumentLayout from "$lib/components/layouts/DocumentLayout.svelte";
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
@@ -16,9 +16,9 @@
 
   $: document = data.document;
   $: mode = data.mode;
-  $: text = data.text;
+  $: text = documents.text(document);
   $: asset_url = data.asset_url;
-  $: canonical_url = canonicalUrl(document).href;
+  $: canonical_url = documents.canonicalUrl(document).href;
 
   $: action = data.action;
   $: addons = data.pinnedAddons;
@@ -45,7 +45,7 @@
   {/if}
   <meta
     property="og:image"
-    content={pageImageUrl(document, 0, "normal").href}
+    content={documents.pageImageUrl(document, 0, "normal").href}
   />
   <!-- Social cards -->
   <meta property="twitter:card" content="summary_large_image" />

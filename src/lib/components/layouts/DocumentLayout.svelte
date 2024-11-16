@@ -67,7 +67,9 @@ Assumes it's a child of a ViewerContext
 
       <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
     </Flex>
-    <DocumentMetadata {document} {text} />
+    {#await text then text}
+      <DocumentMetadata {document} {text} />
+    {/await}
   </aside>
 </SidebarLayout>
 

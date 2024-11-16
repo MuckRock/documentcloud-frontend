@@ -11,6 +11,7 @@
   import ViewerContext from "../../viewer/ViewerContext.svelte";
 
   const document = doc as Document;
+  const text = Promise.resolve(txt);
 
   export const meta = {
     title: "Layout / Embed",
@@ -32,7 +33,7 @@
 
 <Story name="With Document" {args} let:args>
   <div class="vh">
-    <ViewerContext {document} text={txt} asset_url={pdfUrl(document)}>
+    <ViewerContext {document} {text} asset_url={pdfUrl(document)}>
       <EmbedLayout
         settings={args.settings}
         canonicalUrl={canonicalUrl(document).href}
