@@ -16,7 +16,7 @@ import { getQuery } from "$lib/utils/search";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params, parent, depends, url }) {
-  let { document, text, asset_url, mode } = await loadDocument({
+  const { document, text, asset_url, mode } = await loadDocument({
     fetch,
     params,
     url,

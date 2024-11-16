@@ -172,6 +172,7 @@ layouts, stories, and tests.
   }
 
   onMount(() => {
+    console.log("ViewerContext");
     // we might move this to a load function
     if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
