@@ -109,7 +109,8 @@
       {:else}
         <span class="pageNumber">{page}</span>
       {/if}
-      {#if totalPages}<span class="rest">
+      {#if totalPages}
+        <span class="rest">
           {$_("paginator.of")}
           {totalPages.toLocaleString()}
         </span>
