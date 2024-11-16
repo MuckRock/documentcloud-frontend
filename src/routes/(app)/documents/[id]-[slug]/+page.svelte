@@ -5,6 +5,8 @@
 <script lang="ts">
   import "@/style/kit.css";
 
+  import { browser } from "$app/environment";
+
   import { embedUrl } from "$lib/api/embed";
   import * as documents from "$lib/api/documents";
 
@@ -16,7 +18,9 @@
 
   $: document = data.document;
   $: mode = data.mode;
-  $: text = documents.text(document);
+  $: text = browser
+    ? documents.text(document)
+    : Promise.resolve({ pages: [], updated: 0 });
   $: asset_url = data.asset_url;
   $: canonical_url = documents.canonicalUrl(document).href;
 
