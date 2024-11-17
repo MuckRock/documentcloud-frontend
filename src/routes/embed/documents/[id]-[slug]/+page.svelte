@@ -28,6 +28,14 @@ Assumes it's a child of a ViewerContext
   {#if document.noindex || document.admin_noindex}
     <meta name="robots" content="noindex" />
   {/if}
+
+  <link
+    rel="prefetch"
+    href={asset_url.href}
+    as="fetch"
+    crossorigin="anonymous"
+    type="application/pdf"
+  />
 </svelte:head>
 
 <ViewerContext {document} {mode} {text} {asset_url}>
