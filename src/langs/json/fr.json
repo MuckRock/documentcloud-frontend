@@ -194,9 +194,9 @@
     "matchingNotes": "Segnant des notes correspondant \u00e0 la requ\u00eate",
     "page": "Page",
     "pageAbbrev": "p",
-    "pageCount": "Segnato comme une{# page} de{# pages}.",
+    "pageCount": "{n, plural, one {# page} other {# pages}}",
     "select": "S\u00e9lection",
-    "noteCount": "Segnato comme un{# note} ou des{# notes}."
+    "noteCount": "{n, plural, one {# note} other {# notes}}"
   },
   "error": {
     "report": "Signaler un probl\u00e8me"
@@ -295,8 +295,8 @@
     "viewDoc": "Regarder l'int\u00e9gralit\u00e9 du document avec <span class=\"DC-note-logotype-link\">DocumentCloud</span>"
   },
   "embedPage": {
-    "viewDoc": "Voir l'ensemble de {titre} sur le site Internet DocumentCloud dans une nouvelle fen\u00eatre ou un nouvel onglet",
-    "pageOf": "Page {page} de {titre}",
+    "viewDoc": "Voir l'ensemble de {title} sur le site Internet DocumentCloud dans une nouvelle fen\u00eatre ou un nouvel onglet",
+    "pageOf": "Page {page} de {title}",
     "gotoDocCloud": "Allez dans le Cloud des documents en nouvelle fen\u00eatre ou onglet."
   },
   "annotation": {
