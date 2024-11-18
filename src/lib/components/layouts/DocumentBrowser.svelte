@@ -15,6 +15,7 @@
     Hourglass24,
     Upload24,
     SidebarExpand16,
+    ChevronUp12,
   } from "svelte-octicons";
 
   // Common components
@@ -35,7 +36,7 @@
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
-  import BulkActions from "$lib/components/forms/BulkActions.svelte";
+  import BulkActions from "@/lib/components/documents/BulkActions.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
@@ -51,6 +52,8 @@
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
+  import Dropdown from "../common/Dropdown.svelte";
+  import Menu from "../common/Menu.svelte";
 
   setContext("selected", selected);
 
@@ -127,7 +130,7 @@
         --color="var(--blue-5)"
         --fill="var(--blue-4)"
         --font-size="var(--font-md)"
-        >{$_("documentBrowser.dropToUpload")}
+        >{$_("documents.dropFile")}
       </Empty>
     </div>
     <ContentLayout>
@@ -206,7 +209,19 @@
                   {/if}
                 </label>
               </SidebarItem>
-              <BulkActions />
+              <Dropdown position="top-start">
+                <SidebarItem
+                  slot="anchor"
+                  disabled={!$me || $selected?.length < 1}
+                >
+                  {$_("bulk.title")}
+                  <ChevronUp12 slot="end" />
+                </SidebarItem>
+
+                <Menu slot="default" let:close>
+                  <BulkActions afterClick={() => close()} />
+                </Menu>
+              </Dropdown>
             </Flex>
             {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
               <p class="resultsCount">

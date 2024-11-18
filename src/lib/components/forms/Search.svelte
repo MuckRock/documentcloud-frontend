@@ -5,7 +5,7 @@
 
   export let name: Nullable<string> = null;
   export let query: string = "";
-  export let placeholder: string = $_("searchBar.search");
+  export let placeholder: string = $_("common.search");
   export let action: Maybe<string> = undefined;
 
   let input: HTMLInputElement;

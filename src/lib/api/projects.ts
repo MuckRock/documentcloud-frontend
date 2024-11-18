@@ -1,5 +1,5 @@
 // api methods for projects
-import type { Page } from "@/api/types";
+import type { Page } from "$lib/api/types";
 import type {
   APIResponse,
   Document,

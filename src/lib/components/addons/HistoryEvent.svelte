@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Run } from "@/addons/types";
+  import type { Run } from "$lib/api/types";
   import { _ } from "svelte-i18n";
   import {
     CheckCircle24,
@@ -10,7 +10,7 @@
     Sync24,
   } from "svelte-octicons";
   import Action from "$lib/components/common/Action.svelte";
-  import Price from "@/premium-credits/Price.svelte";
+  import Price from "$lib/components/premium-credits/Price.svelte";
 
   export let run: Run;
 
@@ -40,7 +40,7 @@
         {#if run.file_url}
           <a href={run.file_url} download>
             <Action>
-              <Paperclip16 />{$_("addonProgress.download")}
+              <Paperclip16 />{$_("processing.download")}
             </Action>
           </a>
         {/if}

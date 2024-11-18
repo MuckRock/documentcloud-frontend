@@ -4,7 +4,7 @@
   import { _ } from "svelte-i18n";
 
   import Button from "$lib/components/common/Button.svelte";
-  import RelativeTime from "@/common/RelativeTime.svelte";
+  import RelativeTime from "$lib/components/common/RelativeTime.svelte";
   import { Download16, History24 } from "svelte-octicons";
   import Empty from "../common/Empty.svelte";
 

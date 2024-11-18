@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Status } from "@/addons/types";
+  import type { RunStatus } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -14,7 +14,7 @@
   import Menu from "../common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
-  const totalCounts: Record<Status, number> = {
+  const totalCounts: Record<RunStatus, number> = {
     queued: 0,
     in_progress: 0,
     cancelled: 0,
@@ -22,7 +22,7 @@
     failure: 0,
   };
 
-  function sumCounts(counts: Record<Status, number>) {
+  function sumCounts(counts: Record<RunStatus, number>) {
     return Object.values(counts).reduce((acc, cur) => acc + cur, 0);
   }
 
@@ -37,7 +37,7 @@
         acc[cur.status] = curCount + 1;
         return acc;
       },
-      {} as Record<Status, number>,
+      {} as Record<RunStatus, number>,
     );
 
   $: documents = $current?.reduce(
@@ -47,7 +47,7 @@
       acc[status] = curCount + 1;
       return acc;
     },
-    {} as Record<Status, number>,
+    {} as Record<RunStatus, number>,
   );
 
   $: for (const status of Object.keys(totalCounts)) {

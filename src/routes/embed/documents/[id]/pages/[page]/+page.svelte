@@ -5,9 +5,9 @@
   import Annotation from "./Annotation.svelte";
   import Note from "./Note.svelte";
 
+  import { informSize } from "$lib/utils/embed";
   import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import { APP_URL, IMAGE_WIDTHS_MAP } from "@/config/config.js";
-  import { informSize } from "@/embed/iframeSizer.js";
   import {
     canonicalPageUrl,
     pageImageUrl,

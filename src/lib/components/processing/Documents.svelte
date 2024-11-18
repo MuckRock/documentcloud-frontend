@@ -6,7 +6,13 @@ This component keeps track of pending items it has seen,
 so we can invalidate documents as they finish processing.
 -->
 <script context="module" lang="ts">
-  import type { Document, Maybe, Nullable, Pending } from "$lib/api/types";
+  import type {
+    Document,
+    Maybe,
+    Nullable,
+    Pending,
+    RunStatus,
+  } from "$lib/api/types";
 
   export function getProgress(process: Pending): number {
     const { texts, images, text_positions, pages } = process;
@@ -17,7 +23,7 @@ so we can invalidate documents as they finish processing.
     return (pages - remaining) / pages;
   }
 
-  export function getStatus(process: Pending): Status {
+  export function getStatus(process: Pending): RunStatus {
     switch (getProgress(process)) {
       case 1:
         return "success";
@@ -28,8 +34,6 @@ so we can invalidate documents as they finish processing.
 </script>
 
 <script lang="ts">
-  import type { Status } from "@/addons/types";
-
   import { invalidate } from "$app/navigation";
 
   import { onMount, onDestroy } from "svelte";

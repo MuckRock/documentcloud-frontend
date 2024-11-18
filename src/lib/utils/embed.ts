@@ -284,3 +284,49 @@ export function reroute({ url }) {
     return "/embed" + url.pathname;
   }
 }
+
+export function timeoutify(fn, timeout = 100) {
+  let timer: null | ReturnType<typeof setTimeout> = null;
+
+  return (...args) => {
+    if (timer != null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+
+    timer = setTimeout(() => {
+      timer = null;
+      fn(...args);
+    }, timeout);
+  };
+}
+
+export function informSize(
+  element: HTMLElement,
+  useScrollDimension = true,
+  updateStyleProps = false,
+) {
+  if (!element) return;
+
+  // Inform a parent window about an embed size
+  const update = () => {
+    window.parent.postMessage(
+      {
+        width: Math.max(
+          useScrollDimension ? element.scrollWidth : 0,
+          element.offsetWidth,
+        ),
+        height: Math.max(
+          useScrollDimension ? element.scrollHeight : 0,
+          element.offsetHeight,
+        ),
+        updateStyleProps,
+      },
+      "*",
+    );
+  };
+
+  // Trigger event now and any time the window resizes
+  window.addEventListener("resize", timeoutify(update));
+  update();
+}

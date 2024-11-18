@@ -39,12 +39,12 @@ export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
 
 export const LANGUAGES = [
   ["US English", "en", "🇺🇸"],
+  ["Deutsche", "de", "🇩🇪"],
   ["Español", "es", "🇪🇸"],
   ["Français", "fr", "🇫🇷"],
-  ["Deutsche", "de", "🇩🇪"],
-  ["українська", "uk", "🇺🇦"],
-  ["русский", "ru", "🇷🇺"],
   ["Italiano", "it", "🇮🇹"],
+  ["русский", "ru", "🇷🇺"],
+  ["українська", "uk", "🇺🇦"],
 ];
 
 export const CSRF_COOKIE_NAME = "csrftoken";
@@ -141,3 +141,9 @@ export const PROJECT_REDIRECT_HASH_URL =
   "https://s3.amazonaws.com/s3.documentcloud.org/legacy/project_redirects.bin";
 export const ORG_REDIRECT_HASH_URL =
   "https://s3.amazonaws.com/s3.documentcloud.org/legacy/org_redirects.bin";
+
+export const DEFAULT_ORDERING = "-created_at";
+
+export const USER_EXPAND = "user";
+export const ORG_EXPAND = "organization";
+export const DEFAULT_EXPAND = [USER_EXPAND, ORG_EXPAND].join(",");

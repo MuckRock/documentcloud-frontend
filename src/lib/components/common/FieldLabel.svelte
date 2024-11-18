@@ -5,7 +5,7 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
+  import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import Flex from "./Flex.svelte";
 
   export let required = false;
@@ -35,7 +35,7 @@
     color: var(--gray-5, #233944);
     font-weight: 600;
     font-size: var(--font-md);
-    font-feature-settings: 'ss04' on;
+    font-feature-settings: "ss04" on;
   }
   .required {
     font-size: var(--font-xs);

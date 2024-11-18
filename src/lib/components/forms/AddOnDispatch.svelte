@@ -5,8 +5,13 @@
 </script>
 
 <script lang="ts">
-  import type { Event, EventOptions, Run } from "@/addons/types";
-  import type { Maybe, Nullable } from "$lib/api/types";
+  import type {
+    Maybe,
+    Nullable,
+    Event,
+    EventOptions,
+    Run,
+  } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { afterNavigate } from "$app/navigation";

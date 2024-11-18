@@ -2,7 +2,7 @@
   import type { Document, Note, ViewerMode } from "$lib/api/types";
   // legacy css
   import "@/style/variables.css";
-  import "@/style/global.css";
+  import "@/style/legacy.css";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";

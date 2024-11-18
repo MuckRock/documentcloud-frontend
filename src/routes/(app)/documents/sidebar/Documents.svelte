@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Org } from "@/api/types/orgAndUser";
+  import type { Org } from "$lib/api/types";
   import type { Writable } from "svelte/store";
 
   import { getContext } from "svelte";
@@ -18,7 +18,7 @@
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
   import { APP_URL } from "@/config/config";
-  import { slugify } from "@/util/string.js";
+  import { slugify } from "$lib/utils/slugify";
   import { userDocs } from "$lib/utils/search";
   import { getCurrentUser } from "@/lib/utils/permissions";
 

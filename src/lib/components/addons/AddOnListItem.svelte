@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { AddOnListItem } from "@/addons/types";
+  import type { AddOnListItem } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
-  import AddOnPin from "@/addons/AddOnPin.svelte";
-  import PremiumBadge from "@/premium-credits/PremiumBadge.svelte";
+  import AddOnPin from "$lib/components/addons/AddOnPin.svelte";
+  import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
 

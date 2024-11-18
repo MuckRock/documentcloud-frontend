@@ -23,7 +23,7 @@ and we don't want to do that everywhere.
   import { getForUser, add, remove } from "$lib/api/projects";
   import { getCsrfToken } from "$lib/utils/api";
   import { getCurrentUser } from "$lib/utils/permissions";
-  import { intersection } from "@/util/array.js";
+  import { intersection } from "$lib/utils/array";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
@@ -40,7 +40,19 @@ and we don't want to do that everywhere.
     intersection(
       documents.map((d) => d.projects ?? []),
       (a, b) => {
-        return a.id === b?.id;
+        // If a is a number, not a project
+        if (typeof a === "number") {
+          if (typeof b === "number") {
+            return a === b;
+          }
+          return a === b.id;
+        }
+        // If b is a number, not a project
+        if (typeof b === "number") {
+          return a.id === b;
+        }
+        // a and b are both projects
+        return a.id === b.id;
       },
     ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
   );

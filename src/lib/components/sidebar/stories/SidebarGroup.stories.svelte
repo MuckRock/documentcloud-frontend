@@ -1,17 +1,19 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
-  import SidebarGroup from "../SidebarGroup.svelte";
-  import SidebarItem from "../SidebarItem.svelte";
-  import Flex from "$lib/components/common/Flex.svelte";
-  import Pin from "@/common/Pin.svelte";
   import {
     Book16,
     FileDirectory16,
     ListOrdered16,
     Pencil16,
   } from "svelte-octicons";
-  import Action from "../../common/Action.svelte";
-  import { default as EmptyComponent } from "../../common/Empty.svelte";
+
+  import Action from "$lib/components/common/Action.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
+  import { default as EmptyComponent } from "$lib/components/common/Empty.svelte";
+  import Pin from "$lib/components/common/Pin.svelte";
+
+  import SidebarGroup from "../SidebarGroup.svelte";
+  import SidebarItem from "../SidebarItem.svelte";
 
   export const meta = {
     title: "Components / Sidebar / Group",

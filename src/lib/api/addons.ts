@@ -1,11 +1,11 @@
-import type { Page } from "@/api/types/common";
+import type { Page } from "$lib/api/types";
 import type {
   AddOnParams,
   AddOnListItem,
   Event,
   Run,
   AddOnPayload,
-} from "@/addons/types";
+} from "$lib/api/types";
 import type { APIResponse, ValidationError } from "./types";
 
 import Ajv, { type DefinedError } from "ajv";

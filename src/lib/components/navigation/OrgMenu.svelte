@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Org, User } from "@/api/types";
+  import type { Org, User } from "$lib/api/types";
 
   import { invalidateAll } from "$app/navigation";
   import { _, locale } from "svelte-i18n";
@@ -11,24 +11,24 @@
     Organization16,
   } from "svelte-octicons";
 
-  import Button from "../common/Button.svelte";
+  import Button from "$lib/components/common/Button.svelte";
   import CreditMeter, {
     formatResetDate,
-  } from "@/premium-credits/CreditMeter.svelte";
+  } from "$lib/components/premium-credits/CreditMeter.svelte";
   import Dropdown, {
     type Placement,
-  } from "@/lib/components/common/Dropdown.svelte";
+  } from "$lib/components/common/Dropdown.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuInsert from "$lib/components/common/MenuInsert.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import PremiumIcon from "@/common/icons/Premium.svelte";
+  import PremiumIcon from "$lib/components/icons/Premium.svelte";
 
   import { SQUARELET_BASE } from "@/config/config";
   import { getUpgradeUrl, getUserName, setOrg } from "$lib/api/accounts";
   import { searchUrl, userDocs } from "$lib/utils/search";
   import { getCsrfToken } from "$lib/utils/api";
-  import { remToPx } from "@/lib/utils/layout";
+  import { remToPx } from "$lib/utils/layout";
 
   export let active_org: Org;
   export let orgs: Org[] = [];

@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import Tip from "../Tip.svelte";
-  import Pin from "@/common/icons/Pin.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
+  import Pin from "$lib/components/icons/Pin.svelte";
+  import Premium from "$lib/components/icons/Premium.svelte";
   import { Info24, Alert24 } from "svelte-octicons";
   import Flex from "../Flex.svelte";
 

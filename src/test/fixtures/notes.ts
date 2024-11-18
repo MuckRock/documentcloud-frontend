@@ -1,4 +1,4 @@
-import type { Note, Page } from "@/lib/api/types";
+import type { Note, Page } from "$lib/api/types";
 
 export const note: Note = {
   id: 557,

@@ -1,7 +1,7 @@
-import type { Nullable, User } from "$lib/api/types";
+import type { Nullable, Project, User } from "$lib/api/types";
 import type { Access } from "../api/types";
 import { APP_URL } from "@/config/config.js";
-import { slugify } from "@/util/string.js";
+import { slugify } from "$lib/utils/slugify";
 import { getUserName } from "../api/accounts";
 
 export function searchUrl(query: string): URL {
@@ -10,7 +10,7 @@ export function searchUrl(query: string): URL {
   return href;
 }
 
-export function projectSearchUrl(project): string {
+export function projectSearchUrl(project: Project): string {
   return searchUrl(`+project:${project.id} `).href;
 }
 

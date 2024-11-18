@@ -1,7 +1,11 @@
 <script lang="ts">
-  import type { Page } from "@/lib/api/types";
-  import type { AddOnListItem, Event, Run } from "@/addons/types";
-  import type { APIResponse } from "$lib/api/types";
+  import type {
+    Page,
+    APIResponse,
+    AddOnListItem,
+    Event,
+    Run,
+  } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
@@ -10,19 +14,19 @@
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
   import AddOnsNavigation from "$lib/components/addons/AddOnsNavigation.svelte";
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import Scheduled from "$lib/components/addons/Scheduled.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
-  import Pin from "@/common/icons/Pin.svelte";
-  import Premium from "@/common/icons/Premium.svelte";
-  import Scheduled from "$lib/components/addons/Scheduled.svelte";
-  import Search from "$lib/components/forms/Search.svelte";
-  import Star from "@/common/icons/Star.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
+  import Search from "$lib/components/forms/Search.svelte";
+  import Pin from "$lib/components/icons/Pin.svelte";
+  import Premium from "$lib/components/icons/Premium.svelte";
+  import Star from "$lib/components/icons/Star.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
 
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
   export let events: Promise<APIResponse<Page<Event>>>;
@@ -88,7 +92,7 @@
         </div>
       {/if}
       {#await addons}
-        <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
       {:then { data: page }}
         {#each page?.results ?? [] as addon}
           <ListItem {addon} />
@@ -121,7 +125,7 @@
   </main>
   <aside class="history">
     {#await events}
-      <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then { data: events }}
       <Scheduled
         events={events?.results ?? []}
@@ -131,7 +135,7 @@
     {/await}
 
     {#await runs}
-      <Empty icon={Hourglass24}>{$_("addonBrowserDialog.loading")}</Empty>
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then { data: runs }}
       <History
         runs={runs?.results ?? []}

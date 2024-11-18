@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Maybe, Nullable, Page } from "$lib/api/types";
-  import type { Event } from "@/addons/types";
+  import type { Maybe, Nullable, Page, Event } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Clock16, Hourglass24 } from "svelte-octicons";
@@ -47,13 +46,13 @@
   </SidebarItem>
 
   {#if loading}
-    <Empty icon={Hourglass24}>{$_("addonRuns.upcoming.loading")}</Empty>
+    <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
   {:else}
     {#each events as event}
       <ScheduledEvent {event} />
     {:else}
       <Empty>
-        {$_("addonRuns.upcoming.empty")}
+        {$_("common.empty")}
       </Empty>
     {/each}
   {/if}
