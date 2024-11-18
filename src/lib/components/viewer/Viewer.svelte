@@ -51,7 +51,7 @@ Assumes it's a child of a ViewerContext
 </script>
 
 <div class="container">
-  <ContentLayout>
+  <ContentLayout noBgColor>
     <!-- toolbars -->
     <Flex slot="header">
       {#if !embed && $sidebars["navigation"] === false}

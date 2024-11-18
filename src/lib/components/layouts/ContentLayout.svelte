@@ -1,4 +1,8 @@
-<div class="container">
+<script lang="ts">
+  export let noBgColor = false;
+</script>
+
+<div class="container" class:noBgColor>
   {#if $$slots.header}
     <header>
       <slot name="header" />
@@ -27,6 +31,10 @@
     min-height: 100%;
     background: var(--gray-1);
     box-shadow: inset var(--shadow-2);
+  }
+  .container.noBgColor {
+    background: unset;
+    box-shadow: unset;
   }
   header {
     flex: 0 0 0;
