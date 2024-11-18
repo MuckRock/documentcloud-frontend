@@ -7,8 +7,8 @@
   <div class="special">
     <p>
       This is the legacy version of DocumentCloud. Check out the new and
-      improved version at <a href="www.documentcloud.org">
-        https://www.documentcloud.org
+      improved version at <a href="https://www.documentcloud.org">
+        www.documentcloud.org
       </a>
       or
       <a target="_blank" rel="noopener noreferrer" href={SPECIAL_CONTACT}>
