@@ -30,13 +30,15 @@
 </script>
 
 <div class="textPages" style:--zoom={+$zoom || 1}>
-  {#each text?.pages ?? [] as { page, contents }}
-    <Page page_number={page + 1} track>
-      <pre>
-        {@html highlight(contents, query)}
-      </pre>
-    </Page>
-  {/each}
+  {#await text then text}
+    {#each text?.pages ?? [] as { page, contents }}
+      <Page page_number={page + 1} track>
+        <pre>
+      {@html highlight(contents, query)}
+    </pre>
+      </Page>
+    {/each}
+  {/await}
 </div>
 
 <style>

@@ -19,12 +19,7 @@ layouts, stories, and tests.
   import { getContext, onMount, setContext } from "svelte";
   import { type Writable, writable } from "svelte/store";
 
-  import {
-    pageFromHash,
-    pdfUrl,
-    shouldPaginate,
-    shouldPreload,
-  } from "$lib/api/documents";
+  import { pageFromHash, pdfUrl, shouldPaginate } from "$lib/api/documents";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -43,7 +38,7 @@ layouts, stories, and tests.
     return getContext("document");
   }
 
-  export function getText(): Maybe<DocumentText> {
+  export function getText(): Promise<Maybe<DocumentText>> {
     return getContext("text");
   }
 
@@ -98,7 +93,7 @@ layouts, stories, and tests.
   import { noteFromHash } from "$lib/api/notes";
 
   export let document: Document;
-  export let text: Maybe<DocumentText> = undefined;
+  export let text: Promise<Maybe<DocumentText>> = new Promise(() => {});
   export let note: Nullable<Note> = null;
   export let asset_url: URL = pdfUrl(document);
   export let embed: boolean = false;
@@ -202,16 +197,5 @@ layouts, stories, and tests.
 </script>
 
 <svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
-<svelte:head>
-  {#if shouldPreload($currentMode)}
-    <link
-      rel="prefetch"
-      href={asset_url.href}
-      as="fetch"
-      crossorigin="anonymous"
-      type="application/pdf"
-    />
-  {/if}
-</svelte:head>
 
 <slot />

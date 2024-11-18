@@ -11,7 +11,6 @@ This will mostly be used inside a modal but isn't dependent on one.
   import { IssueReopened16 } from "svelte-octicons";
 
   import { invalidateAll } from "$app/navigation";
-  import { page } from "$app/stores";
 
   import Button from "../common/Button.svelte";
   import Field from "../common/Field.svelte";
@@ -20,9 +19,10 @@ This will mostly be used inside a modal but isn't dependent on one.
   import Language from "../inputs/Language.svelte";
   import Select from "../inputs/Select.svelte";
 
-  import { LANGUAGE_MAP } from "@/config/config.js";
+  import { DEFAULT_LANGUAGE, LANGUAGE_MAP } from "@/config/config.js";
   import { process, cancel, edit } from "$lib/api/documents";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
+  import { getCsrfToken } from "$lib/utils/api";
 
   export let documents: Document[] = [];
 
@@ -42,8 +42,8 @@ This will mostly be used inside a modal but isn't dependent on one.
   ];
 
   let ocrEngine = ocrEngineOptions[0];
-  let language: { value?: string; label?: string } = {
-    value: documents[0]?.language,
+  let language: { value: string; label: string } = {
+    value: documents[0]?.language ?? DEFAULT_LANGUAGE,
     label: LANGUAGE_MAP.get(documents[0]?.language),
   };
 
@@ -54,11 +54,13 @@ This will mostly be used inside a modal but isn't dependent on one.
 
   // todo: warn if documents are in more than one language
   $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
+  $: console.log(language);
 
   async function onSubmit(e: SubmitEvent) {
+    e.preventDefault();
     submitting = true; // while submitting
 
-    const { csrf_token } = $page.data;
+    const csrf_token = getCsrfToken();
     if (!csrf_token) {
       throw new Error("missing csrf_token");
     }
@@ -97,7 +99,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   }
 </script>
 
-<form method="post" on:submit|preventDefault={onSubmit} bind:this={form}>
+<form method="post" on:submit={onSubmit} bind:this={form}>
   <Flex direction="column" gap={1.5}>
     <!-- Add any header and messaging using this slot -->
     <slot />
@@ -115,7 +117,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     <Flex direction="column" gap={1}>
       <Field>
         <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
-        <Language bind:value={language.value} />
+        <Language bind:value={language} />
       </Field>
       <Field>
         <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
@@ -156,7 +158,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <Button disabled={submitting} type="submit" full mode="danger"
         ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
-      <Button full on:click={(e) => dispatch("close")}
+      <Button full on:click={() => dispatch("close")}
         >{$_("edit.cancel")}
       </Button>
     </Flex>

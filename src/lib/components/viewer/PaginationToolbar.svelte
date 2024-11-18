@@ -89,8 +89,10 @@
               on:click={() => {
                 gotoPage(section.page_number + 1);
                 close();
-              }}>{section.title}</MenuItem
+              }}
             >
+              {section.title}
+            </MenuItem>
           {:else}
             <Empty icon={ListOrdered24}>
               <p>{$_("sidebar.toc.empty")}</p>
@@ -102,15 +104,17 @@
                 ghost
                 mode="primary"
                 on:click={() => (sectionsOpen = true)}
-                >{$_("sidebar.toc.cta")}</Button
               >
+                {$_("sidebar.toc.cta")}
+              </Button>
             {:else}
               <Button
                 ghost
                 mode="primary"
                 on:click={() => (sectionsOpen = true)}
-                >{$_("sections.edit")}</Button
               >
+                {$_("sections.edit")}
+              </Button>
             {/if}
           {/if}
         </Menu>

@@ -4,6 +4,7 @@
     DEFAULT_LANGUAGE,
     LANGUAGE_CODES,
     LANGUAGE_NAMES,
+    LANGUAGE_MAP,
   } from "@/config/config.js";
 
   interface Item {
@@ -12,7 +13,10 @@
   }
 
   export let name = "language";
-  export let value: string | string[] | Item = DEFAULT_LANGUAGE;
+  export let value: Item = {
+    value: DEFAULT_LANGUAGE,
+    label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE),
+  };
   export let required = false;
   export let placeholder: string = "";
   export let multiple = false;

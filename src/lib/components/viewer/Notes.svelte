@@ -55,6 +55,7 @@ Assumes it's a child of a ViewerContext
     margin: 0 auto;
     max-width: 38.0625rem;
     padding: 2rem 0;
+    min-height: 100%;
   }
 
   .card {

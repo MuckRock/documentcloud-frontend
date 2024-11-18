@@ -10,7 +10,9 @@ export default {
   },
 
   kit: {
-    adapter: adapter({}),
+    adapter: adapter({
+      preprocess: true,
+    }),
     alias: {
       "@": "./src",
       "@/*": "./src/*",

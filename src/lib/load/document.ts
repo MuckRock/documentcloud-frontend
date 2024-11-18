@@ -9,6 +9,9 @@ interface Load {
   url: URL;
 }
 
+/**
+ * Load a document and its assets
+ */
 export default async function load({ fetch, params, url }: Load) {
   const { data: document, error: err } = await documents.get(+params.id, fetch);
 
@@ -22,7 +25,6 @@ export default async function load({ fetch, params, url }: Load) {
 
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
-  const text = await documents.text(document, fetch);
   const asset_url = await documents.assetUrl(document, fetch);
 
   if (!documents.MODES.has(mode)) {
@@ -31,7 +33,6 @@ export default async function load({ fetch, params, url }: Load) {
 
   return {
     document,
-    text,
     asset_url,
     mode,
   };
