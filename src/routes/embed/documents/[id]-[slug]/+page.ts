@@ -9,7 +9,7 @@ import * as documents from "$lib/api/documents";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, url, params, depends }) {
-  let { document, text, asset_url, mode } = await loadDocument({
+  let { document, asset_url, mode } = await loadDocument({
     fetch,
     url,
     params,
@@ -30,7 +30,6 @@ export async function load({ fetch, url, params, depends }) {
   return {
     document,
     mode,
-    text,
     asset_url,
     settings,
     query,

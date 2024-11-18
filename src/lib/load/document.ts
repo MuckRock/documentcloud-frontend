@@ -25,7 +25,6 @@ export default async function load({ fetch, params, url }: Load) {
 
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
-  const text = { updated: 0, pages: [] }; // await documents.text(document, fetch);
   const asset_url = await documents.assetUrl(document, fetch);
 
   if (!documents.MODES.has(mode)) {
@@ -34,7 +33,6 @@ export default async function load({ fetch, params, url }: Load) {
 
   return {
     document,
-    text,
     asset_url,
     mode,
   };

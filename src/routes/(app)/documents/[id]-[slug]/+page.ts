@@ -16,7 +16,7 @@ import { getQuery } from "$lib/utils/search";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params, parent, depends, url }) {
-  const { document, text, asset_url, mode } = await loadDocument({
+  const { document, asset_url, mode } = await loadDocument({
     fetch,
     params,
     url,
@@ -47,7 +47,6 @@ export async function load({ fetch, params, parent, depends, url }) {
   return {
     document,
     mode,
-    text,
     asset_url,
     action,
     pinnedAddons,
