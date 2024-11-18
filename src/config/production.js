@@ -1,5 +1,5 @@
 export const DC_BASE = "https://api.www.documentcloud.org";
-export const APP_URL = "https://www.documentcloud.org/";
+export const APP_URL = "https://legacy.www.documentcloud.org/";
 export const EMBED_URL = "https://embed.documentcloud.org/";
 export const SQUARELET_BASE = "https://accounts.muckrock.com";
 export const STAFF_ONLY_S3_URL =
