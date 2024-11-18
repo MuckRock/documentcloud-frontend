@@ -12,7 +12,7 @@ exports[`Mailkey 1`] = `
         class="svelte-65lbzd"
       >
         <button
-          class="primary normal ghost svelte-141617s"
+          class="primary normal ghost svelte-12ugz1l"
           title=""
           type="button"
         >
@@ -74,7 +74,7 @@ exports[`Mailkey 1`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal minW svelte-141617s"
+            class="primary normal minW svelte-12ugz1l"
             title=""
             type="button"
           >
@@ -83,7 +83,7 @@ exports[`Mailkey 1`] = `
           
            
           <button
-            class="danger normal minW svelte-141617s"
+            class="danger normal minW svelte-12ugz1l"
             title=""
             type="button"
           >
@@ -109,7 +109,7 @@ exports[`Mailkey 2`] = `
         class="svelte-65lbzd"
       >
         <button
-          class="primary normal ghost svelte-141617s"
+          class="primary normal ghost svelte-12ugz1l"
           title=""
           type="button"
         >
@@ -176,7 +176,7 @@ exports[`Mailkey 2`] = `
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
           <button
-            class="primary normal minW svelte-141617s"
+            class="primary normal minW svelte-12ugz1l"
             title=""
             type="button"
           >
@@ -185,7 +185,7 @@ exports[`Mailkey 2`] = `
           
            
           <button
-            class="danger normal minW svelte-141617s"
+            class="danger normal minW svelte-12ugz1l"
             title=""
             type="button"
           >
