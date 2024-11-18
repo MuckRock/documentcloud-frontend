@@ -175,7 +175,7 @@
       "avatar": "Segnato como {name}.",
       "changeOrg": "Cambiar organizaci\u00f3n",
       "adminRole": "Admin",
-      "userCount": "Seg\u00fan el n\u00famero {n, number}, hay {total, number} {organization, singular}"
+      "userCount": "{n, plural, one {# miembro de la organización} other {# miembros de la organización}}"
     },
     "credits": {
       "monthlyOrg": "Allowancia mensual de organizaci\u00f3n",

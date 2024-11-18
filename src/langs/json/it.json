@@ -175,7 +175,7 @@
       "avatar": "Avatar: {name}",
       "changeOrg": "Cambio organizzazione",
       "adminRole": "Amministrazione",
-      "userCount": "{n, plural, one {#organization member} other {#organization members}}"
+      "userCount": "{n, plural, one {# membro dell'organizzazione} other {# membri dell'organizzazione}}"
     },
     "credits": {
       "monthlyOrg": "Allora che questo \u00e8",
@@ -215,7 +215,7 @@
   },
   "processingBar": {
     "processing": "Elaborazione dell'ultima caricamento",
-    "processingDocuments": "{n, plural, one {#document} other {#documents}} rimanenti"
+    "processingDocuments": "{n, plural, one {# document} other {# documenti}} rimanenti"
   },
   "projects": {
     "header": "Progetti",
@@ -231,7 +231,7 @@
     "create": "Crea progetto",
     "edit": "Cambia le metadati del progetto",
     "share": "Condividi & embedding questo progetto",
-    "add": "Aggiungi {n, plural, one {documenti} other {documenti} a un progetto",
+    "add": "Aggiungi {n, plural, one {documenti} other {documenti}} a un progetto",
     "access": {
       "public": "Pubblico",
       "private": "Private",
