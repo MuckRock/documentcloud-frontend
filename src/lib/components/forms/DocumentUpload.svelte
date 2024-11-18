@@ -67,6 +67,7 @@ progress through the three-part upload process.
     isWithinSizeLimit,
   } from "$lib/utils/files";
   import { getCsrfToken } from "$lib/utils/api";
+  import { getProcessLoader } from "../processing/ProcessContext.svelte";
 
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
@@ -83,6 +84,9 @@ progress through the three-part upload process.
    */
   let STATUS: Record<string, UploadStatus> = {};
   let loading = false; // are requests in flight?
+
+  // Get load function from processing context
+  const loadProcessing = getProcessLoader();
 
   // fields
   let access: Access = "private";
@@ -281,6 +285,8 @@ progress through the three-part upload process.
     if (error) {
       STATUS[id].error = error;
     }
+    // trigger process load request
+    loadProcessing?.();
   }
 </script>
 

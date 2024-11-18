@@ -5,6 +5,7 @@ This component should update on a timer.
 <script lang="ts">
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
+  import { derived, writable } from "svelte/store";
   import { Plug16, Thumbsdown16, Thumbsup16, XCircle16 } from "svelte-octicons";
 
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
@@ -14,43 +15,43 @@ This component should update on a timer.
   import Flex from "../common/Flex.svelte";
   import Process from "./Process.svelte";
 
-  import { history, dismiss, cancel, rate } from "$lib/api/addons";
+  import { dismiss, cancel, rate } from "$lib/api/addons";
+  import type { Maybe, Nullable, Run } from "$lib/api/types";
   import { getCsrfToken } from "$lib/utils/api";
   import { getRunningAddons } from "./ProcessContext.svelte";
-  import type { Nullable, Run } from "$lib/api/types";
 
   let timeout: Nullable<string | number | NodeJS.Timeout>;
 
   const running = getRunningAddons();
-  /* 
-  onMount(async () => {
-    if ($running.length === 0) {
-      await load();
-    }
-  });
+  // derive a list of running add-ons that are not dismissed
+  const undismissed = derived(running ?? writable([]), ($running) =>
+    $running?.filter((run) => !run.dismissed),
+  );
 
-  afterUpdate(() => {
-    if ($running.length > 0) {
-      timeout = setTimeout(load, POLL_INTERVAL);
-    }
-  });
+  let rated: Record<string, number> = {};
 
-  onDestroy(() => {
-    stop();
-  });
- */
-  function stop() {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-  }
-
-  async function load() {
-    const { data, error } = await history({ dismissed: false, per_page: 100 });
-    if (!error) {
-      $running = data?.results;
-    }
+  function optimisticUpdate(run: Run) {
+    let originalValue: Maybe<Run> = undefined;
+    // Replace the run in the store with the updated value
+    running?.update((runs) => {
+      const index = runs.findIndex((r) => r.uuid === run.uuid);
+      // We aren't adding runs here, only update existing ones.
+      // So if the index can't be found, just return the existing array.
+      if (index === -1) return runs;
+      originalValue = runs[index];
+      runs[index] = run;
+      return runs;
+    });
+    // Return a function that lets us restore the original value
+    return () => {
+      running?.update((runs) => {
+        const index = runs.findIndex(
+          (r) => originalValue && r.uuid === originalValue.uuid,
+        );
+        if (originalValue && index !== -1) runs[index] = originalValue;
+        return runs;
+      });
+    };
   }
 
   async function rateRun(rating: number, run: Run) {
@@ -59,30 +60,32 @@ This component should update on a timer.
       console.error("No CSRF token");
       return;
     }
-    const prevRating = run.rating;
-    run = { ...run, rating }; // optimistic update
+    const restore = optimisticUpdate({ ...run, rating });
+    rated[run.uuid] = rating;
     const { data, error } = await rate(run.uuid, rating, csrftoken);
     if (error || !data) {
       console.error(error?.errors ?? "No data");
-      run = { ...run, rating: prevRating }; // put it back
+      restore();
+      delete rated[run.uuid];
     } else {
-      run = data;
+      optimisticUpdate(data);
     }
   }
 
   async function dismissRun(run: Run) {
+    const restore = optimisticUpdate({ ...run, dismissed: true });
     const csrftoken = getCsrfToken();
     if (!csrftoken) {
       console.error("No CSRF token");
+      restore();
       return;
     }
-    run = { ...run, dismissed: true }; // optimistic update
     const { data, error } = await dismiss(run.uuid, csrftoken);
     if (error || !data) {
       console.error(error?.errors ?? "No data");
-      run = { ...run, dismissed: false }; // put it back
+      restore();
     } else {
-      run = data;
+      optimisticUpdate(data);
     }
   }
 
@@ -93,23 +96,22 @@ This component should update on a timer.
       console.error("No CSRF token");
       return;
     }
-    const { status } = run;
-    run = { ...run, status: "cancelled" }; // optimistic update
+    const restore = optimisticUpdate({ ...run, status: "cancelled" });
     const { data, error } = await cancel(run.uuid, csrftoken);
     if (error || !data) {
-      run = { ...run, status }; // put it back
+      restore();
     }
   }
 </script>
 
-{#if $running?.length && $running.length > 0}
+{#if $undismissed?.length && $undismissed.length > 0}
   <SidebarGroup name="processing.addons">
     <SidebarItem slot="title">
       <Plug16 slot="start" />
       {$_("processing.addons")}
     </SidebarItem>
 
-    {#each $running as run (run.uuid)}
+    {#each $undismissed as run (run.uuid)}
       <div role="menuitem" animate:flip>
         <Process
           name={run.addon?.name ?? "Unnamed Run"}
@@ -142,6 +144,7 @@ This component should update on a timer.
                 ghost
                 minW={false}
                 mode="success"
+                hover={rated[run.uuid] === 1}
                 on:click={() => rateRun(1, run)}
               >
                 <Thumbsup16 />
@@ -151,6 +154,7 @@ This component should update on a timer.
                 ghost
                 minW={false}
                 mode="danger"
+                hover={rated[run.uuid] === -1}
                 on:click={() => rateRun(-1, run)}
               >
                 <Thumbsdown16 />

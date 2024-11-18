@@ -2,7 +2,6 @@
   import Navigation from "./Navigation.svelte";
   import PlausibleTracker from "../common/PlausibleTracker.svelte";
   import ProcessContext from "../processing/ProcessContext.svelte";
-  import ProcessDrawer from "../processing/ProcessDrawer.svelte";
   import Toaster from "./Toaster.svelte";
 </script>
 
@@ -15,7 +14,6 @@
         </div>
       </Navigation>
       <Toaster />
-      <ProcessDrawer />
     </div>
   </ProcessContext>
 </PlausibleTracker>

@@ -47,6 +47,7 @@
     "@storybook/testing-library": "^0.2.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/svelte": "^4.1.0",
+    "@types/lodash-es": "^4.17.12",
     "@types/lucene": "^2.1.7",
     "@vitest/coverage-v8": "^2.1.4",
     "chromatic": "^9.1.0",

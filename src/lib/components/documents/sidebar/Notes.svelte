@@ -53,6 +53,7 @@
   ol {
     list-style: none;
     padding: 0;
+    margin-bottom: 1rem;
   }
 
   span.page_number {

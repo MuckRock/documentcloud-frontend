@@ -7,7 +7,7 @@ This makes the state of those processes available via context.
 <script lang="ts" context="module">
   import type { Maybe, Pending, Run } from "$lib/api/types";
 
-  import { throttle } from "lodash-es";
+  import throttle from "lodash-es/throttle";
   import {
     getContext,
     setContext,
@@ -24,6 +24,7 @@ This makes the state of those processes available via context.
   interface ProcessContext {
     documents: Writable<Pending[]>;
     addons: Writable<Run[]>;
+    load: () => void;
   }
 
   interface Debounced {
@@ -38,6 +39,10 @@ This makes the state of those processes available via context.
 
   export function getRunningAddons(): Maybe<Writable<Run[]>> {
     return getContext<ProcessContext>("processing")?.addons;
+  }
+
+  export function getProcessLoader(): Maybe<() => void> {
+    return getContext<ProcessContext>("processing")?.load;
   }
 
   export let addons: Writable<Run[]> = writable([]);
@@ -64,7 +69,7 @@ This makes the state of those processes available via context.
 
 <script lang="ts">
   // stores we need deeper in the component tree, available via context
-  setContext<ProcessContext>("processing", { addons, documents });
+  setContext<ProcessContext>("processing", { addons, documents, load });
 
   onMount(() => {
     load();

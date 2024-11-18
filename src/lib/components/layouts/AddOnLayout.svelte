@@ -32,6 +32,7 @@
   import Tab from "../common/Tab.svelte";
 
   import { schedules } from "../addons/ScheduledEvent.svelte";
+  import { getProcessLoader } from "../processing/ProcessContext.svelte";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
@@ -70,6 +71,8 @@
     }
   }
 
+  const load = getProcessLoader();
+
   // go to the correct tab after submitting
   function onDispatch({ detail }) {
     if (detail.type === "event") {
@@ -78,6 +81,8 @@
 
     if (detail.type === "run") {
       currentTab = "history";
+      // load processing data
+      load?.();
     }
   }
 </script>
