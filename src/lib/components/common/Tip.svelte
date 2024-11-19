@@ -33,6 +33,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: var(--font-md);
   }
   .tip.normal {
     color: var(--yellow-5);

@@ -184,6 +184,16 @@
       "refreshOn": "Credit allowance will reset on {date}"
     }
   },
+  "unverified": {
+    "noSearchResults": "No search results",
+    "queryNoResults": "Your search query returned no results. Try again with a broader search query.",
+    "welcome": "Welcome to DocumentCloud!",
+    "verify": "Before you can upload documents, you need to be verify your account. You can do this by joining a verified news organization or by requesting verification for yourself.",
+    "allowed_actions": "Until you're verified, you can search through the public repository, organize documents you're interested in into projects, leave private notes, and collaborate on editing and annotating documents other users invite you to.",
+    "requestVerificationAction": "Request verification",
+    "orgs": "Search organizations",
+    "faq": "Read more about verification in our FAQ"
+  },
   "documents": {
     "yourDocuments": "Your Documents",
     "accessDocuments": "Your {access}Documents",
