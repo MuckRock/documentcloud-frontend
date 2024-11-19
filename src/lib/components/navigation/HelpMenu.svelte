@@ -88,7 +88,7 @@
       {$_("authSection.help.emailUs")}
     </SidebarItem>
     <SidebarItem href="https://legacy.www.documentcloud.org">
-      <Undo16 />
+      <Undo16 slot="start" />
       {$_("authSection.help.legacy")}
     </SidebarItem>
   </Menu>
