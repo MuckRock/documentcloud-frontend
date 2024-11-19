@@ -152,7 +152,8 @@
       "addOns": "Add-Ons",
       "premium": "DocumentCloud Premium",
       "donate": "Donate to support DocumentCloud",
-      "emailUs": "Email Us"
+      "emailUs": "Email Us",
+      "legacy": "Legacy DocumentCloud"
     },
     "user": {
       "uploadEmail": "Upload via email",
