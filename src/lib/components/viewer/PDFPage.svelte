@@ -12,6 +12,8 @@ Selectable text can be rendered in one of two ways:
 <script lang="ts">
   import type { TextPosition } from "$lib/api/types";
 
+  import { page as pageStore } from "$app/stores";
+
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { _ } from "svelte-i18n";
 
@@ -28,9 +30,9 @@ Selectable text can be rendered in one of two ways:
     getDocument,
     getCurrentMode,
     getPDF,
-    getQuery,
   } from "$lib/components/viewer/ViewerContext.svelte";
-  import { fitPage, getNotes } from "@/lib/utils/viewer";
+  import { getQuery } from "$lib/utils/search";
+  import { fitPage, getNotes } from "$lib/utils/viewer";
 
   export let page_number: number; // 1-indexed
 
@@ -38,11 +40,11 @@ Selectable text can be rendered in one of two ways:
   export let width: number;
   export let height: number;
   export let text: TextPosition[] = [];
+  export let query: string = getQuery($pageStore.url, "q");
 
   const documentStore = getDocument();
   const mode = getCurrentMode();
   const pdf = getPDF();
-  const query = getQuery();
 
   // make hidden things visible, for debugging
   export let debug = false;
@@ -60,6 +62,7 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = false;
 
+  $: query = getQuery($pageStore.url, "q");
   $: document = $documentStore;
   $: aspect = height / width;
   $: orientation = height > width ? "vertical" : "horizontal";

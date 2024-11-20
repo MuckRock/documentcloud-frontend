@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
   import type { Document, Section } from "$lib/api/types";
+  import { writable } from "svelte/store";
   import { Story } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
@@ -14,7 +15,6 @@
   import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
   import pdfFile from "@/test/fixtures/documents/examples/the-santa-anas.pdf";
   import ViewerContext from "../ViewerContext.svelte";
-  import { writable } from "svelte/store";
 
   const document = { ...doc, edit_access: true } as Document;
 
@@ -59,7 +59,8 @@
 </Story>
 
 <Story name="search results">
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} pdf={writable(load(url))} {query}>
+    <p>Query: {query}</p>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>

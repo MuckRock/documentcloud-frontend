@@ -32,7 +32,6 @@ Assumes it's a child of a ViewerContext
   import {
     getCurrentMode,
     getDocument,
-    getPDFProgress,
     getQuery,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
