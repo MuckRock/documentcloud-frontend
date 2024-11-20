@@ -22,7 +22,7 @@
   import { pageNumber } from "$lib/utils/search";
 
   export let document: Document;
-  export let open = false;
+  export let open = true;
 
   $: highlights = Object.entries(document.highlights ?? {});
 
