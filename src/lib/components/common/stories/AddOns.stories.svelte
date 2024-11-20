@@ -11,7 +11,7 @@
   };
 
   let args = {
-    pinnedAddOns: Promise.resolve(activeAddons),
+    pinnedAddOns: Promise.resolve({ data: activeAddons }),
   };
 </script>
 
@@ -27,5 +27,9 @@
 <Story name="With Data" {args} />
 <Story
   name="With Error"
-  args={{ pinnedAddOns: Promise.reject("Something went wrong") }}
+  args={{
+    pinnedAddOns: Promise.resolve({
+      error: { message: "Something went wrong" },
+    }),
+  }}
 />

@@ -55,7 +55,7 @@
         </Button>
       {/if}
       <BulkActions />
-      <AddOns pinnedAddOns={data.pinnedAddons} />
+      <AddOns pinnedAddOns={data.pinnedAddons} {query} />
     {/if}
   </svelte:fragment>
 </SidebarLayout>

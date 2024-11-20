@@ -39,9 +39,9 @@
 </script>
 
 <SidebarGroup name="addons">
-  <SidebarItem slot="title"
-    ><Plug16 slot="start" />{$_("sidebar.addons.title")}</SidebarItem
-  >
+  <SidebarItem slot="title">
+    <Plug16 slot="start" />{$_("sidebar.addons.title")}
+  </SidebarItem>
   <a href={getHref(query)} slot="action">
     <Action icon={Book16}>{$_("common.explore")}</Action>
   </a>
