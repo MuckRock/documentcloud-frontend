@@ -13,8 +13,9 @@ a user who is logged in but has `verified_journalist = false`.
   import Tip from "../common/Tip.svelte";
 
   import {
-    VERIFICATION_FORM_URL,
+    APP_URL,
     SQUARELET_ORGS_URL,
+    VERIFICATION_FORM_URL,
   } from "@/config/config.js";
   import { isOrg } from "$lib/api/accounts";
 
