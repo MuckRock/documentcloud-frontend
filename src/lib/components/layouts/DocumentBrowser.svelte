@@ -36,7 +36,7 @@
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
-  import BulkActions from "@/lib/components/documents/BulkActions.svelte";
+  import BulkActions from "$lib/components/documents/BulkActions.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
@@ -44,7 +44,10 @@
   } from "$lib/components/forms/DocumentUpload.svelte";
 
   // Layout comopnents
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
+  import ContentLayout from "./ContentLayout.svelte";
+  import Dropdown from "../common/Dropdown.svelte";
+  import Menu from "../common/Menu.svelte";
+  import Unverified from "../accounts/Unverified.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   // Utilities
@@ -52,8 +55,6 @@
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
-  import Dropdown from "../common/Dropdown.svelte";
-  import Menu from "../common/Menu.svelte";
 
   setContext("selected", selected);
 
@@ -182,7 +183,13 @@
             next={documentsResults.next}
             count={documentsResults.count}
             auto
-          />
+          >
+            <svelte:fragment slot="start">
+              {#if $me && !canUploadFiles($me)}
+                <Unverified user={$me} />
+              {/if}
+            </svelte:fragment>
+          </ResultsList>
         {/if}
       {:catch}
         <Error>{uiText.error}</Error>

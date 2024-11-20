@@ -17,7 +17,7 @@ a user who is logged in but has `verified_journalist = false`.
   } from "@/config/config.js";
   import { isOrg } from "$lib/api/accounts";
 
-  export let user: Nullable<User>;
+  export let user: Nullable<User> = null;
 
   const FAQ = "https://www.documentcloud.org/help/faq#verification";
 

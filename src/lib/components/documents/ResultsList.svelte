@@ -102,9 +102,9 @@
 </script>
 
 <div class="container" data-sveltekit-preload-data={preload}>
-  <slot name="start" />
-  {#each results as document (document.id)}
-    <Flex direction="column">
+  <Flex direction="column">
+    <slot name="start" />
+    {#each results as document (document.id)}
       <Flex gap={0.625} align="center">
         {#if !embed}
           <label>
@@ -126,13 +126,14 @@
       {#if document.note_highlights}
         <NoteHighlights {document} />
       {/if}
-    </Flex>
-  {:else}
-    <Empty icon={Search24}>
-      <h2>{$_("noDocuments.noSearchResults")}</h2>
-      <p>{$_("noDocuments.queryNoResults")}</p>
-    </Empty>
-  {/each}
+    {:else}
+      <Empty icon={Search24}>
+        <h2>{$_("noDocuments.noSearchResults")}</h2>
+        <p>{$_("noDocuments.queryNoResults")}</p>
+      </Empty>
+    {/each}
+  </Flex>
+
   <div bind:this={end} class="end">
     {#if next}
       <Button

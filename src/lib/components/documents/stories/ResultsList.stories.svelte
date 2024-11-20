@@ -4,6 +4,9 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import ResultsList from "../ResultsList.svelte";
   import Pending from "../Pending.svelte";
+  import Unverified from "../../accounts/Unverified.svelte";
+
+  import { me } from "@/test/fixtures/accounts";
 
   // typescript complains without the type assertion
   import searchResults from "@/test/fixtures/documents/search-highlight.json";
@@ -23,6 +26,8 @@
     component: ResultsList,
     tags: ["autodocs"],
   };
+
+  const user = { ...me, verified_journalist: false };
 </script>
 
 <Story name="With Results">
@@ -45,4 +50,10 @@
 
 <Story name="Highlighted">
   <ResultsList results={highlighted} {count} {next} />
+</Story>
+
+<Story name="Unverified user">
+  <ResultsList {results} {count} {next}>
+    <Unverified {user} slot="start" />
+  </ResultsList>
 </Story>
