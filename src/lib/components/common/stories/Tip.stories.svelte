@@ -24,7 +24,7 @@
 
 <Story name="With Icon" let:args>
   <Tip {...args}>
-    <Pin slot="icon" />
+    <Pin size={1.5} slot="icon" />
     Pinned items will appear here.
   </Tip>
 </Story>

@@ -6,6 +6,7 @@ a user who is logged in but has `verified_journalist = false`.
   import type { Nullable, User } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
+  import { Unverified24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -45,6 +46,7 @@ a user who is logged in but has `verified_journalist = false`.
 </script>
 
 <Tip>
+  <Unverified24 slot="icon" />
   <p>{$_("unverified.verify")}</p>
   <Flex class="buttons" gap={1}>
     <Button href={SQUARELET_ORGS_URL} target="_blank">
