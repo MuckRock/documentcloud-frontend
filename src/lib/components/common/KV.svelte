@@ -48,5 +48,6 @@
   .value {
     color: var(--blue-5, #153359);
     font-style: normal;
+    word-break: break-all;
   }
 </style>

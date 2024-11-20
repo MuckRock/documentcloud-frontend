@@ -25,7 +25,7 @@
   import HighlightGroup from "../common/HighlightGroup.svelte";
 
   export let document: Document;
-  export let open = false;
+  export let open = true;
 
   $: highlights = Object.entries(document.note_highlights ?? {});
   $: notes = new Map(document.notes?.map((n) => [n.id, n]));

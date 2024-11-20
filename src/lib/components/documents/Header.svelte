@@ -64,6 +64,7 @@
     font-weight: var(--font-semibold);
     font-size: var(--font-xl);
     line-height: 1.2;
+    word-break: break-all;
   }
   .access {
     flex: 0 1 auto;

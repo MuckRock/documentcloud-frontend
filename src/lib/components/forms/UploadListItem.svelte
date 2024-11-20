@@ -125,8 +125,10 @@
 
 <style>
   .title {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
+    max-width: 100%;
   }
+
   .fileInfo {
     flex: 0 1 0;
     font-size: var(--font-xs);

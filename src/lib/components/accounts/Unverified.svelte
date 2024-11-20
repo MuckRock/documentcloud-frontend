@@ -50,10 +50,14 @@ a user who is logged in but has `verified_journalist = false`.
   <Unverified24 slot="icon" />
   <p>{$_("unverified.verify")}</p>
   <Flex class="buttons" gap={1}>
-    <Button href={SQUARELET_ORGS_URL} target="_blank">
+    <Button mode="primary" href={SQUARELET_ORGS_URL} target="_blank">
       {$_("unverified.orgs")}
     </Button>
-    <Button href={prefill(VERIFICATION_FORM_URL, user)} target="_blank">
+    <Button
+      mode="primary"
+      href={prefill(VERIFICATION_FORM_URL, user)}
+      target="_blank"
+    >
       {$_("unverified.requestVerificationAction")}
     </Button>
   </Flex>
