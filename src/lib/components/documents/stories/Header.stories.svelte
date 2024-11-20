@@ -32,3 +32,14 @@
   name="With HTML description"
   args={{ document: { ...document, description: html } }}
 />
+
+<Story
+  name="With Long Title"
+  args={{
+    document: {
+      ...document,
+      title:
+        "This%20is%20an%20unbroken%20title%20that%20just%20goes%20on%20and%20on%20and%20on%20why%20did%20nobody%20edit%20it%3F",
+    },
+  }}
+/>
