@@ -3,7 +3,7 @@ This component displays anywhere we need to explain verification to
 a user who is logged in but has `verified_journalist = false`.
 -->
 <script lang="ts">
-  import type { Maybe, User } from "$lib/api/types";
+  import type { Nullable, User } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -17,16 +17,15 @@ a user who is logged in but has `verified_journalist = false`.
   } from "@/config/config.js";
   import { isOrg } from "$lib/api/accounts";
 
-  export let user: Maybe<User> = undefined;
+  export let user: Nullable<User>;
 
   const FAQ = "https://www.documentcloud.org/help/faq#verification";
 
-  function prefill(form_url: string, user?: User) {
+  function prefill(form_url: string, user: Nullable<User>) {
     if (!user) return form_url;
 
     const url = new URL(form_url);
 
-    //`${baseUrl}?prefill_MR+User+Email=${email}&prefill_MR+User+Name=${username}&prefill_MR+User+Account+URL=${accountUrl}&prefill_MR+Organization+Name=${orgSlug}&prefill_MR+Organization+Account+URL=${orgAccountUrl}`;
     const accountUrl = `https://accounts.muckrock.com/users/${user.username}/`;
     const orgAccountUrl = isOrg(user.organization)
       ? `https://accounts.muckrock.com/organizations/${user.organization.slug}`

@@ -50,6 +50,7 @@ progress through the three-part upload process.
   import FieldLabel from "../common/FieldLabel.svelte";
   import Flex from "../common/Flex.svelte";
   import Premium from "../common/Premium.svelte";
+  import Unverified from "../accounts/Unverified.svelte";
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Dropzone from "../inputs/Dropzone.svelte";
@@ -67,10 +68,12 @@ progress through the three-part upload process.
     isWithinSizeLimit,
   } from "$lib/utils/files";
   import { getCsrfToken } from "$lib/utils/api";
+  import { getCurrentUser } from "$lib/utils/permissions";
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
 
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
+  export let user = getCurrentUser();
 
   let csrf_token: Maybe<string>;
   let fileDropActive: boolean;
@@ -122,6 +125,8 @@ progress through the three-part upload process.
 
   $: exceedsSizeLimit = files.some((file) => !isWithinSizeLimit(file));
 
+  $: disabled = !$user?.verified_journalist || loading || !csrf_token;
+
   // consume any files passed in
   $: if (files.length > 0) {
     addFiles(files);
@@ -160,6 +165,7 @@ progress through the three-part upload process.
   }
 
   function onPaste(e: ClipboardEvent) {
+    if (disabled) return;
     const { clipboardData } = e;
     if (!clipboardData) return;
     addFiles(clipboardData.files);
@@ -292,7 +298,7 @@ progress through the three-part upload process.
 
 <svelte:window on:paste={onPaste} />
 
-<Dropzone bind:active={fileDropActive} onDrop={addFiles} disabled={loading}>
+<Dropzone bind:active={fileDropActive} onDrop={addFiles} {disabled}>
   <form
     method="post"
     enctype="multipart/form-data"
@@ -302,14 +308,15 @@ progress through the three-part upload process.
     <Flex gap={1} align="stretch" wrap>
       <div class="files" class:active={fileDropActive}>
         <header>
-          <h1 class="title">{$_("uploadDialog.title")}</h1>
-          <p class="description">
-            {$_("uploadDialog.description")}
-          </p>
+          {#if $user?.verified_journalist}
+            <h1 class="title">{$_("uploadDialog.title")}</h1>
+            <p class="description">
+              {$_("uploadDialog.description")}
+            </p>
+          {:else}
+            <Unverified user={$user} />
+          {/if}
         </header>
-        <!-- Add any header and messaging using this slot -->
-        <slot />
-
         <div class="fileList" class:empty>
           {#each Object.entries(STATUS) as [id, status] (id)}
             <UploadListItem
@@ -323,9 +330,9 @@ progress through the three-part upload process.
             </Empty>
           {/each}
         </div>
-        <div class="fileUpload" class:disabled={loading}>
+        <div class="fileUpload" class:disabled>
           <Flex align="center">
-            <FileInput multiple onFileSelect={addFiles} disabled={loading}>
+            <FileInput multiple onFileSelect={addFiles} {disabled}>
               <Paperclip16 />
               {$_("uploadDialog.selectFiles")}
             </FileInput>
@@ -350,7 +357,7 @@ progress through the three-part upload process.
             type="submit"
             full
             mode="primary"
-            disabled={loading || exceedsSizeLimit || !csrf_token}
+            disabled={disabled || exceedsSizeLimit}
           >
             <Upload16 />{$_("uploadDialog.beginUpload")}
           </Button>
@@ -406,7 +413,9 @@ progress through the three-part upload process.
             </Field>
             <Field inline slot="basic">
               <Switch name="revision_control" disabled />
-              <FieldLabel premium>Revision Control</FieldLabel>
+              <FieldLabel premium>
+                {$_("uploadDialog.revisionControl")}
+              </FieldLabel>
               <p slot="help">
                 {$_("uploadDialog.revisionControlHelp")}
               </p>
