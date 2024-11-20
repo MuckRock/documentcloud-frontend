@@ -74,8 +74,8 @@ progress through the three-part upload process.
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
   export let user = getCurrentUser();
+  export let csrf_token: Maybe<string> = undefined;
 
-  let csrf_token: Maybe<string>;
   let fileDropActive: boolean;
 
   /**
