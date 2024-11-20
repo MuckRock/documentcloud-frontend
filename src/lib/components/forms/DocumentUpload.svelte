@@ -172,8 +172,8 @@ progress through the three-part upload process.
 
     const form = new FormData(e.target as HTMLFormElement);
 
-    const access = form.get("access") as Access;
-    const titles = form.getAll("title") as string[];
+    const access = (form.get("access") as Access) ?? "private";
+    const titles = (form.getAll("title") as string[]) ?? [];
     const revision_control = form.get("revision_control") === "on";
 
     // only run on files that are "ready" and haven't started uploading
@@ -357,7 +357,7 @@ progress through the three-part upload process.
 
           <Field>
             <FieldLabel>{$_("uploadDialog.accessLevel")}</FieldLabel>
-            <AccessLevel name="access" bind:selected={access} />
+            <AccessLevel name="access" bind:selected={access} required />
           </Field>
           <Field>
             <FieldLabel>{$_("uploadDialog.projects")}</FieldLabel>

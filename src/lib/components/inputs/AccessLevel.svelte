@@ -43,30 +43,39 @@
   export let name: string;
   export let selected: Access = levels[0]!.value;
   export let direction: "column" | "row" = "column";
+  export let required = false;
 </script>
 
-<Flex {direction} gap={0.5}>
-  {#each levels as level}
-    <div class="option" class:selected={level.value === selected}>
-      <input
-        class="sr-only"
-        type="radio"
-        {name}
-        id={level.value}
-        bind:group={selected}
-        value={level.value}
-      />
-      <label for={level.value} class="detail">
-        <Flex gap={0.5}>
-          <svelte:component this={level.icon} />
-          <Flex direction="column" gap={0.125}>
-            <p class="title">{level.title}</p>
-            <p class="description">{level.description}</p>
+<Flex direction="column">
+  {#if required && !selected}
+    <p class="error">
+      {$_("dialog.required")}
+    </p>
+  {/if}
+  <Flex {direction} gap={0.5}>
+    {#each levels as level}
+      <div class="option" class:selected={level.value === selected}>
+        <label for={level.value} class="detail">
+          <Flex gap={0.5}>
+            <svelte:component this={level.icon} />
+            <Flex direction="column" gap={0.125}>
+              <p class="title">{level.title}</p>
+              <p class="description">{level.description}</p>
+            </Flex>
           </Flex>
-        </Flex>
-      </label>
-    </div>
-  {/each}
+          <input
+            class="sr-only"
+            type="radio"
+            {name}
+            id={level.value}
+            bind:group={selected}
+            value={level.value}
+            {required}
+          />
+        </label>
+      </div>
+    {/each}
+  </Flex>
 </Flex>
 
 <style>
@@ -96,6 +105,10 @@
     font-size: var(--font-xs);
     opacity: 0.7;
   }
+  .error {
+    color: var(--error);
+  }
+
   .sr-only {
     position: absolute;
     clip: rect(1px, 1px, 1px, 1px);

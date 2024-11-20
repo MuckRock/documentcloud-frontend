@@ -22,3 +22,4 @@
 <Story name="Organization" args={{ ...args, selected: "organization" }} />
 <Story name="Public" args={{ ...args, selected: "public" }} />
 <Story name="Row" args={{ ...args, direction: "row" }} />
+<Story name="Required" args={{ required: true, selected: null }} />

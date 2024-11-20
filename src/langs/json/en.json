@@ -63,7 +63,8 @@
     "dismiss": "Dismiss",
     "dispatch": "Dispatch",
     "organize": "Organize",
-    "run": "Run"
+    "run": "Run",
+    "required": "This field is required"
   },
   "dialogReprocessDialog": {
     "title": "Confirm reprocess",
