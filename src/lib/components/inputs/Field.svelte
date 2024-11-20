@@ -46,6 +46,7 @@
     margin: 0.5rem 0;
     font-size: var(--font-sm, 0.875em);
     color: var(--gray-4);
+    word-break: break-all;
   }
   .inline.field {
     width: 100%;
