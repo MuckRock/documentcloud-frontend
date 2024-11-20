@@ -20,7 +20,7 @@ a user who is logged in but has `verified_journalist = false`.
 
   export let user: Nullable<User> = null;
 
-  const FAQ = "https://www.documentcloud.org/help/faq#verification";
+  const FAQ = `${APP_URL}help/faq#verification`;
 
   function prefill(form_url: string, user: Nullable<User>) {
     if (!user) return form_url;
