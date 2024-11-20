@@ -357,7 +357,7 @@ progress through the three-part upload process.
             type="submit"
             full
             mode="primary"
-            disabled={disabled || exceedsSizeLimit}
+            disabled={disabled || exceedsSizeLimit || empty}
           >
             <Upload16 />{$_("uploadDialog.beginUpload")}
           </Button>
