@@ -62,8 +62,6 @@
     "update": "Update",
     "dismiss": "Dismiss",
     "dispatch": "Dispatch",
-    "organize": "Organize",
-    "run": "Run",
     "required": "This field is required"
   },
   "dialogReprocessDialog": {
@@ -186,11 +184,8 @@
     }
   },
   "unverified": {
-    "noSearchResults": "No search results",
-    "queryNoResults": "Your search query returned no results. Try again with a broader search query.",
-    "welcome": "Welcome to DocumentCloud!",
-    "verify": "Before you can upload documents, you need to verify your account. You can do this by joining a verified news organization or by requesting verification for yourself.",
-    "allowed_actions": "Until you're verified, you can search through the public repository, organize documents you're interested in into projects, leave private notes, and collaborate on editing and annotating documents other users invite you to.",
+    "verify": "Before you can upload documents, we need to verify your account. DocumentCloud verification is available to newsrooms, academic institutions, researchers, legal clinics and non-profits that have a track record of posting vetted primary source materials in the public interest. If you are working with an eligible organization, please join their organization account.",
+    "allowed_actions": "If you are not eligible for verification, you can still search the public repository, organize documents you're interested in into projects, make private notes, and collaborate on editing and annotating documents other users invite you to.",
     "requestVerificationAction": "Request verification",
     "orgs": "Search organizations",
     "faq": "Read more about verification in our FAQ"
@@ -549,7 +544,6 @@
     "addons": "Add-Ons",
     "documents": "Documents",
     "unknown": "Unknown",
-    "totalCount": "{n} active {n, plural, one {process} other {processes}}",
     "download": "Download file"
   },
   "feedback": {
