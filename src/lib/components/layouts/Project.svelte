@@ -22,7 +22,6 @@
   export let query: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
-  $: projectQuery = `+project:${project.id}`;
   $: combinedQuery = `+project:${project.id} ${query}`.trim();
 </script>
 
