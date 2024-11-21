@@ -22,7 +22,7 @@
   export let query: string = "";
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
-  $: projectQuery = `+project:${project.id}`;
+  $: combinedQuery = `+project:${project.id} ${query}`.trim();
 </script>
 
 <SidebarLayout>
@@ -49,7 +49,7 @@
 
   <svelte:fragment slot="action">
     <ProjectActions {project} />
-    <AddOns pinnedAddOns={addons} query={projectQuery} />
+    <AddOns pinnedAddOns={addons} query={combinedQuery} />
   </svelte:fragment>
 </SidebarLayout>
 

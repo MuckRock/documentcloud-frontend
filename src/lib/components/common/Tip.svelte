@@ -14,6 +14,7 @@
 <style>
   .tip {
     display: flex;
+    align-items: flex-start;
     gap: var(--gap, 1rem);
     padding: var(--padding, 1rem);
     border-radius: var(--border-radius, 1rem);
@@ -21,18 +22,18 @@
     fill: var(--fill, var(--gray-4, #5c717c));
     background-color: var(--background-color, var(--gray-1, #f5f6f7));
     border: 1px solid var(--border-color, var(--gray-3, #99a8b3));
-
-    font-weight: var(--font-semibold);
   }
   .icon {
     display: flex;
     align-items: center;
   }
   .inner {
+    margin-top: 0.125rem;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: var(--font-md);
   }
   .tip.normal {
     color: var(--yellow-5);

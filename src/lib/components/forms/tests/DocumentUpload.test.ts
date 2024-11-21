@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { writable } from "svelte/store";
 import {
   act,
   render,
@@ -9,10 +10,11 @@ import {
 
 import DocumentUploadForm from "../DocumentUpload.svelte";
 import { PDF_SIZE_LIMIT } from "@/config/config";
+import { me } from "@/test/fixtures/accounts";
 
 describe("DocumentUpload form", () => {
   it("lists files selected for upload", async () => {
-    render(DocumentUploadForm);
+    render(DocumentUploadForm, { user: writable(me), csrf_token: "token" });
     const dropElement = screen.getByText(
       "Select, paste or drag-and-drop files to upload",
     );
@@ -25,10 +27,11 @@ describe("DocumentUpload form", () => {
     });
     await act(() => fireEvent(dropElement, dropEvent));
     const fileListItem = screen.getByRole("listitem");
-    expect(fileListItem).toContainHTML("128 kB");
+    expect(fileListItem.textContent).toContain("128 kB");
   });
+
   it("provides feedback when a file is too large", async () => {
-    render(DocumentUploadForm);
+    render(DocumentUploadForm, { user: writable(me), csrf_token: "token" });
     const dropElement = screen.getByText(
       "Select, paste or drag-and-drop files to upload",
     );
@@ -43,6 +46,8 @@ describe("DocumentUpload form", () => {
     });
     await act(() => fireEvent(dropElement, dropEvent));
     const fileListItem = screen.getByRole("listitem");
-    expect(fileListItem).toContainHTML("The maximum size for a PDF is 500MB");
+    expect(fileListItem.textContent).toContain(
+      "The maximum size for a PDF is 500MB",
+    );
   });
 });
