@@ -7,8 +7,8 @@
 
   Assumes it's a child of a ViewerContext
 -->
-
 <script lang="ts">
+  import { browser } from "$app/environment";
   import { onMount } from "svelte";
 
   import PdfPage from "./PDFPage.svelte";
@@ -80,7 +80,7 @@
     class:sm={width < remToPx(35)}
     class:lg={width > remToPx(70)}
   >
-    {#await $pdf then _}
+    {#if browser}
       {#each sizes as [width, height], n}
         {@const page_number = n + 1}
         {#if sections[n]}
@@ -90,7 +90,7 @@
         {/if}
         <PdfPage {page_number} {scale} {width} {height} />
       {/each}
-    {/await}
+    {/if}
   </div>
 {/if}
 
