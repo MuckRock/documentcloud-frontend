@@ -35,8 +35,11 @@ async function language({ event, resolve }) {
   const lang =
     event.request.headers.get("accept-language")?.split(",")[0] ?? "en";
 
-  if (lang) {
-    locale.set(lang);
+  // use en.json for en-US and such
+  const [language, ...tags] = lang.split("-");
+
+  if (language) {
+    locale.set(language);
   }
 
   return resolve(event, {
