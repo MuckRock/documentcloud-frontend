@@ -30,7 +30,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Access } from "@/lib/api/types";
+  import type { Access } from "$lib/api/types";
   import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
 
   export let level: Level;

@@ -42,12 +42,12 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   const selected: Readable<Document[]> = getContext("selected");
 
   const actions: Record<Action, ActionDetail> = {
-    share: [$_("bulk.actions.share"), Share16],
-    edit: [$_("bulk.actions.edit"), Pencil16],
-    data: [$_("bulk.actions.data"), Tag16],
-    project: [$_("bulk.actions.project"), FileDirectory16],
-    reprocess: [$_("bulk.actions.reprocess"), IssueReopened16],
-    delete: [$_("bulk.actions.delete"), Alert16],
+    share: ["bulk.actions.share", Share16],
+    edit: ["bulk.actions.edit", Pencil16],
+    data: ["bulk.actions.data", Tag16],
+    project: ["bulk.actions.project", FileDirectory16],
+    reprocess: ["bulk.actions.reprocess", IssueReopened16],
+    delete: ["bulk.actions.delete", Alert16],
   };
 
   let visible: Nullable<Action> = null;
@@ -76,7 +76,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     }}
   >
     <svelte:component this={icon} slot="start" />
-    {label}
+    {$_(label)}
   </SidebarItem>
 {/each}
 
