@@ -48,7 +48,7 @@ export async function load({ params, url, parent, data, fetch }) {
   const per_page = +(url.searchParams.get("per_page") || DEFAULT_PER_PAGE);
   const documents = search(
     query,
-    { cursor, project: project.data.id, per_page },
+    { cursor, project: project.data.id, per_page, hl: Boolean(query) },
     fetch,
   );
 
