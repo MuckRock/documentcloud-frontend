@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Maybe, Nullable } from "$lib/api/types";
+  import type { Maybe } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";

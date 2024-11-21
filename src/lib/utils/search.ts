@@ -72,7 +72,7 @@ export function pageNumber(page: string): number {
   return number;
 }
 
-export function getQuery(url: URL, param: string = "q"): string {
+export function getQuery(url?: Nullable<URL>, param: string = "q"): string {
   if (!url) {
     console.error("Missing URL");
   }
