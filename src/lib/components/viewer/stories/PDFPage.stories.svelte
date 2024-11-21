@@ -1,5 +1,9 @@
 <script context="module" lang="ts">
-  import type { Document, Section } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
+
+  import { page } from "$app/stores";
+
+  import { writable } from "svelte/store";
   import { Story } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
@@ -14,7 +18,6 @@
   import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
   import pdfFile from "@/test/fixtures/documents/examples/the-santa-anas.pdf";
   import ViewerContext from "../ViewerContext.svelte";
-  import { writable } from "svelte/store";
 
   const document = { ...doc, edit_access: true } as Document;
 
@@ -58,8 +61,23 @@
   </ViewerContext>
 </Story>
 
-<Story name="search results">
+<Story
+  name="search results"
+  parameters={{
+    sveltekit_experimental: {
+      stores: {
+        page: {
+          url: new URL(
+            `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,
+          ),
+        },
+      },
+    },
+  }}
+>
   <ViewerContext {document} pdf={writable(load(url))}>
+    <p>Query: {query}</p>
+    <p>URL: {$page.url}</p>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>

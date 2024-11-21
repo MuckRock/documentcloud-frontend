@@ -1,9 +1,13 @@
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
+
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+
   import { Search16, XCircleFill24 } from "svelte-octicons";
   import { _ } from "svelte-i18n";
-  import type { Maybe, Nullable } from "$lib/api/types";
 
-  export let name: Nullable<string> = null;
+  export let name: string = "q";
   export let query: string = "";
   export let placeholder: string = $_("common.search");
   export let action: Maybe<string> = undefined;
@@ -11,14 +15,43 @@
   let input: HTMLInputElement;
   let form: HTMLFormElement;
 
-  function clear() {
+  function clear(): Promise<void> {
     query = "";
     input.focus();
+
+    const url = new URL($page.url);
+    url.searchParams.delete(name);
+    return goto(url);
+  }
+
+  function search(e: Event): Promise<void> {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const fd = new FormData(form);
+    const q = fd.get(name) as string;
+    const url = new URL($page.url);
+
+    if (q) {
+      url.searchParams.set(name, q);
+    } else {
+      url.searchParams.delete(name);
+    }
+
+    return goto(url);
   }
 </script>
 
-<form class="container" {action} on:submit on:reset bind:this={form}>
-  <label for="query" title="Search"><Search16 /></label>
+<form
+  class="container"
+  {action}
+  on:submit={search}
+  on:reset={clear}
+  bind:this={form}
+>
+  <label for="query" title="Search">
+    <Search16 />
+    <span class="sr-only">{$_("common.search")}</span>
+  </label>
   <input
     type="search"
     id="query"
@@ -29,7 +62,6 @@
     bind:this={input}
     on:change
     on:input
-    on:reset
   />
   <button
     title="Clear Search"

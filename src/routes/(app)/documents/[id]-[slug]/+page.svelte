@@ -27,6 +27,7 @@
   $: action = data.action;
   $: addons = data.pinnedAddons;
   $: hasDescription = Boolean(document.description?.trim().length);
+  $: query = data.query || "";
 </script>
 
 <svelte:head>

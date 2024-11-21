@@ -49,28 +49,6 @@
     if (cursor) target.searchParams.set("cursor", cursor);
     goto(target);
   }
-
-  function search(e: Event) {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const fd = new FormData(form);
-    const q = fd.get("query") as string;
-    const url = new URL($page.url);
-
-    if (q) {
-      url.searchParams.set("query", q);
-    } else {
-      url.searchParams.delete("query");
-    }
-
-    return goto(url);
-  }
-
-  function reset() {
-    const url = new URL($page.url);
-    url.searchParams.delete("query");
-    return goto(url);
-  }
 </script>
 
 <svelte:head>
@@ -104,8 +82,6 @@
         name="query"
         placeholder={$_("projects.placeholder.projects")}
         {query}
-        on:submit={search}
-        on:reset={reset}
       />
     </PageToolbar>
 

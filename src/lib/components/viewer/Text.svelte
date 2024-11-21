@@ -5,21 +5,19 @@
   Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
+  import { page } from "$app/stores";
   import { onMount } from "svelte";
 
   import Page from "./Page.svelte";
-  import {
-    getText,
-    getCurrentPage,
-    getQuery,
-    getZoom,
-  } from "./ViewerContext.svelte";
+  import { getText, getCurrentPage, getZoom } from "./ViewerContext.svelte";
   import { scrollToPage } from "$lib/utils/scroll";
   import { highlight } from "$lib/utils/search";
+  import { getQuery } from "$lib/utils/search";
 
-  const text = getText();
-  const query = getQuery();
+  export let query = getQuery($page.url, "q");
+
   const currentPage = getCurrentPage();
+  const text = getText();
   const zoom = getZoom();
 
   onMount(async () => {
