@@ -23,7 +23,7 @@
   export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
   $: projectQuery = `+project:${project.id}`;
-  $: combinedQuery = `${projectQuery} ${query}`.trim();
+  $: combinedQuery = `+project:${project.id} ${query}`.trim();
 </script>
 
 <SidebarLayout>
