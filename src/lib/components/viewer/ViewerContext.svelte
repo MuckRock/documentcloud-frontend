@@ -46,10 +46,6 @@ layouts, stories, and tests.
     return getContext("asset_url");
   }
 
-  export function getQuery(): string {
-    return getContext("query") ?? "";
-  }
-
   export function isEmbedded(): boolean {
     // are we embedded?
     return getContext("embed") ?? false;
@@ -99,7 +95,6 @@ layouts, stories, and tests.
   export let embed: boolean = false;
   export let page: number = 1;
   export let mode: ViewerMode = "document";
-  export let query: string = "";
   export let zoom: Zoom = 1;
   export let errors: Error[] = [];
 
@@ -123,7 +118,6 @@ layouts, stories, and tests.
   setContext("text", text);
   setContext("asset_url", asset_url);
   setContext("embed", embed);
-  setContext("query", query);
   setContext("newNote", writable(null));
   setContext("currentNote", writable(note));
   setContext("currentPage", writable(page));

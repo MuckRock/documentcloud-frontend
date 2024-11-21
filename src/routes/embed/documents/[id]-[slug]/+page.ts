@@ -25,7 +25,7 @@ export async function load({ fetch, url, params, depends }) {
 
   let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);
 
-  const query = getQuery(url);
+  const query = getQuery(url, "q");
 
   return {
     document,

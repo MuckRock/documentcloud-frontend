@@ -5,6 +5,8 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { ReadMode, WriteMode } from "$lib/api/types";
 
+  import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
   import {
     Comment16,
@@ -29,17 +31,18 @@ Assumes it's a child of a ViewerContext
 
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
+  import { getQuery } from "$lib/utils/search";
   import {
     getCurrentMode,
     getDocument,
-    getQuery,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
+
+  export let query = getQuery($page.url, "q");
 
   let width: number;
 
   const documentStore = getDocument();
-  const query = getQuery();
   const mode = getCurrentMode();
   const embed = isEmbedded();
 

@@ -66,7 +66,7 @@
   />
 </svelte:head>
 
-<ViewerContext {document} {mode} {text} {asset_url} {query}>
+<ViewerContext {document} {mode} {text} {asset_url}>
   <DocumentLayout {action} {addons} />
 </ViewerContext>
 <GuidedTour />
