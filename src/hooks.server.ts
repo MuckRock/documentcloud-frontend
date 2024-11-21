@@ -33,7 +33,7 @@ export const handleError = Sentry.handleErrorWithSentry();
 /** @type {import('@sveltejs/kit').Handle} */
 async function language({ event, resolve }) {
   const lang =
-    event.request.headers.get("accept-language")?.split(",")[0] ?? "en-US";
+    event.request.headers.get("accept-language")?.split(",")[0] ?? "en";
 
   if (lang) {
     locale.set(lang);
