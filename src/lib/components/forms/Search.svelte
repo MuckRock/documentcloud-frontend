@@ -11,6 +11,7 @@
   export let query: string = "";
   export let placeholder: string = $_("common.search");
   export let action: Maybe<string> = undefined;
+  export let id = "query";
 
   let input: HTMLInputElement;
   let form: HTMLFormElement;
@@ -48,50 +49,46 @@
   on:reset={clear}
   bind:this={form}
 >
-  <label for="query" title="Search">
+  <label for={id} title={$_("common.search")}>
     <Search16 />
     <span class="sr-only">{$_("common.search")}</span>
+    <input
+      type="search"
+      {id}
+      autocomplete="off"
+      spellcheck="false"
+      {name}
+      {placeholder}
+      bind:value={query}
+      bind:this={input}
+      on:change
+      on:input
+    />
+    <button
+      title={$_("search.reset")}
+      type="reset"
+      class:hidden={!query}
+      on:click={clear}
+    >
+      <XCircleFill24 />
+    </button>
   </label>
-  <input
-    type="search"
-    id="query"
-    autocomplete="off"
-    {name}
-    {placeholder}
-    bind:value={query}
-    bind:this={input}
-    on:change
-    on:input
-  />
-  <button
-    title="Clear Search"
-    type="reset"
-    class:hidden={!query}
-    on:click={clear}
-  >
-    <XCircleFill24 />
-  </button>
+  {#if $$slots.help}<div class="help"><slot name="help" /></div>{/if}
 </form>
 
 <style>
   form {
     display: flex;
+    flex-direction: column;
     align-self: stretch;
+    align-items: baseline;
     gap: 0.25rem;
-    padding: 0 0.5rem;
+    margin: 0.25rem;
 
     color: var(--gray-5, #233944);
     fill: var(--gray-5, #233944);
-    border: 1px solid var(--gray-2);
-    border-radius: 0.5rem;
+  }
 
-    overflow: hidden;
-  }
-  form:focus-within {
-    outline: inherit;
-    border-color: var(--blue-3);
-    box-shadow: 0 0 0 1px var(--blue-3);
-  }
   input {
     flex: 1 0 0;
     appearance: none;
@@ -103,21 +100,39 @@
     font-size: var(--font-md, 1rem);
     box-shadow: none;
   }
+
   input:focus {
     outline: none;
   }
+
   input::placeholder {
     color: var(--gray-4, #5c717c);
   }
+
   input[type="search"]::-webkit-search-cancel-button,
   input[type="search"]::-webkit-search-decoration {
     -webkit-appearance: none;
     appearance: none;
   }
+
   label {
     display: flex;
     align-items: center;
+    width: 100%;
+
+    border: 1px solid var(--gray-2);
+    border-radius: 0.5rem;
+    padding: 0 0.5rem;
+
+    overflow: hidden;
   }
+
+  label:focus-within {
+    outline: inherit;
+    border-color: var(--blue-3);
+    box-shadow: 0 0 0 1px var(--blue-3);
+  }
+
   button {
     flex: 0 0 0;
     appearance: none;
@@ -139,6 +154,7 @@
       opacity 0.125s linear,
       visibility 0s;
   }
+
   button.hidden {
     visibility: hidden;
     opacity: 0;
@@ -148,5 +164,11 @@
       opacity 0.125s linear,
       visibility 0s linear 0.25s,
       position 0s linear 0.25s;
+  }
+
+  .help {
+    flex: 1 1 100%;
+    font-size: var(--font-s);
+    color: var(--gray-4);
   }
 </style>
