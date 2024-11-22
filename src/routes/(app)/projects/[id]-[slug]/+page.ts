@@ -52,9 +52,6 @@ export async function load({ params, url, parent, data, fetch }) {
     fetch,
   );
 
-  // stream this
-  const pinnedAddons = getPinnedAddons(fetch);
-
   return {
     ...(data ?? {}), // include csrf_token
     breadcrumbs,
@@ -62,6 +59,5 @@ export async function load({ params, url, parent, data, fetch }) {
     query,
     project: project.data,
     users,
-    pinnedAddons,
   };
 }

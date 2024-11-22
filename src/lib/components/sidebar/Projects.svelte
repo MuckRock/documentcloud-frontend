@@ -5,12 +5,10 @@
 
   import {
     FileDirectory16,
-    FileDirectory24,
     Hourglass24,
     People16,
     Person16,
     Pin16,
-    Pin24,
     Search16,
   } from "svelte-octicons";
   import { _ } from "svelte-i18n";
@@ -21,10 +19,9 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
-  import { getCurrentUser } from "$lib/utils/permissions";
   import Button from "../common/Button.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
 
-  const me = getCurrentUser();
   let pinned: Project[] | Promise<Project[]> = [];
 
   $: pinned = $page.data.pinnedProjects || [];
@@ -34,22 +31,22 @@
   }
 </script>
 
-<SidebarGroup name="projects">
-  <SidebarItem slot="title">
-    <FileDirectory16 slot="start" />{$_("sidebar.projects.title")}
-  </SidebarItem>
-  <Button
-    ghost
-    mode="primary"
-    size="small"
-    minW={false}
-    href="/projects?list=public"
-    slot="action"
-  >
-    <Search16 height={14} width={14} />
-    {$_("common.explore")}
-  </Button>
-  {#if $me}
+<SignedIn>
+  <SidebarGroup name="projects">
+    <SidebarItem slot="title">
+      <FileDirectory16 slot="start" />{$_("sidebar.projects.title")}
+    </SidebarItem>
+    <Button
+      ghost
+      mode="primary"
+      size="small"
+      minW={false}
+      href="/projects?list=public"
+      slot="action"
+    >
+      <Search16 height={14} width={14} />
+      {$_("common.explore")}
+    </Button>
     <SidebarItem
       small
       active={$page.url.searchParams?.get("list") === "owned"}
@@ -66,20 +63,20 @@
       <People16 height={14} width={14} slot="start" />
       {$_("projects.shared")}
     </SidebarItem>
-  {/if}
-  {#await pinned}
-    <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-  {:then projects}
-    {#each sort(projects) as project}
-      <SidebarItem small href={canonicalUrl(project).href}>
-        <Pin size={0.875} active={project.pinned} slot="start" />
-        {project.title}
-      </SidebarItem>
-    {:else}
-      <SidebarItem small disabled>
-        <Pin16 slot="start" />
-        {$_("sidebar.projects.pinned")}
-      </SidebarItem>
-    {/each}
-  {/await}
-</SidebarGroup>
+    {#await pinned}
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+    {:then projects}
+      {#each sort(projects) as project}
+        <SidebarItem small href={canonicalUrl(project).href}>
+          <Pin size={0.875} active={project.pinned} slot="start" />
+          {project.title}
+        </SidebarItem>
+      {:else}
+        <SidebarItem small disabled>
+          <Pin16 slot="start" />
+          {$_("sidebar.projects.pinned")}
+        </SidebarItem>
+      {/each}
+    {/await}
+  </SidebarGroup>
+</SignedIn>

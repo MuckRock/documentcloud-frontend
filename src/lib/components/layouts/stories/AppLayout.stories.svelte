@@ -30,6 +30,9 @@
         stores: {
           page: {
             url: "/",
+            data: {
+              pinnedAddons: Promise.resolve({ data: activeAddons }),
+            },
           },
         },
       },
@@ -47,7 +50,7 @@
       <svelte:fragment slot="navigation">
         <Documents />
         <Projects />
-        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
+        <AddOns />
       </svelte:fragment>
 
       <DocumentBrowser slot="content" {documents} />

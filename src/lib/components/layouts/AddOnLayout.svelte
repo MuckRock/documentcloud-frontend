@@ -12,7 +12,13 @@
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
-  import { Clock16, History16, Hourglass24, Play16 } from "svelte-octicons";
+  import {
+    Clock16,
+    History16,
+    Hourglass24,
+    Play16,
+    SidebarExpand16,
+  } from "svelte-octicons";
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
@@ -33,6 +39,13 @@
 
   import { schedules } from "../addons/ScheduledEvent.svelte";
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
+  import SidebarLayout from "./SidebarLayout.svelte";
+  import Documents from "../sidebar/Documents.svelte";
+  import Projects from "../sidebar/Projects.svelte";
+  import AddOns from "../sidebar/AddOns.svelte";
+  import Flex from "../common/Flex.svelte";
+  import { sidebars } from "./Sidebar.svelte";
+  import Button from "../common/Button.svelte";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
@@ -87,141 +100,179 @@
   }
 </script>
 
-<div class="container">
-  <section class="addon">
-    <header><AddOnMeta {addon} /></header>
-    <div class="tabs" role="tablist">
-      <Tab
-        active={currentTab === "dispatch"}
-        on:click={() => (currentTab = "dispatch")}
-      >
-        <Play16 />
-        {$_("addonDispatchDialog.dispatch")}
-      </Tab>
-
-      <Tab
-        active={currentTab === "history"}
-        on:click={() => (currentTab = "history")}
-      >
-        <History16 />
-        {$_("addonDispatchDialog.history")}
-      </Tab>
-
-      {#if canSchedule}
+<SidebarLayout>
+  <svelte:fragment slot="navigation">
+    <Documents />
+    <Projects />
+    <AddOns />
+  </svelte:fragment>
+  <div class="container" slot="content">
+    <section class="addon">
+      <header>
+        {#if !addon.parameters.documents && $sidebars["navigation"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["navigation"] = true)}
+            >
+              <span class="flipV">
+                <SidebarExpand16 />
+              </span>
+            </Button>
+          </div>
+        {/if}
+        <AddOnMeta {addon} />
+      </header>
+      <div class="tabs" role="tablist">
         <Tab
-          active={currentTab === "scheduled"}
-          on:click={() => (currentTab = "scheduled")}
+          active={currentTab === "dispatch"}
+          on:click={() => (currentTab = "dispatch")}
         >
-          <Clock16 />
-          {$_("addonDispatchDialog.scheduled")}
+          <Play16 />
+          {$_("addonDispatchDialog.dispatch")}
         </Tab>
-      {/if}
-    </div>
-    <main>
-      {#if currentTab === "scheduled"}
-        {#await scheduled}
-          <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-        {:then scheduled}
-          {#if scheduled}
-            <Scheduled
-              events={scheduled.results}
-              next={scheduled.next}
-              previous={scheduled.previous}
-            />
-          {/if}
-        {/await}
-      {:else if currentTab === "history"}
-        <div class="padding">
-          {#await history}
+
+        <Tab
+          active={currentTab === "history"}
+          on:click={() => (currentTab = "history")}
+        >
+          <History16 />
+          {$_("addonDispatchDialog.history")}
+        </Tab>
+
+        {#if canSchedule}
+          <Tab
+            active={currentTab === "scheduled"}
+            on:click={() => (currentTab = "scheduled")}
+          >
+            <Clock16 />
+            {$_("addonDispatchDialog.scheduled")}
+          </Tab>
+        {/if}
+      </div>
+      <main>
+        {#if currentTab === "scheduled"}
+          {#await scheduled}
             <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-          {:then history}
-            {#if history}
-              <History
-                runs={history.results}
-                next={history.next}
-                previous={history.previous}
+          {:then scheduled}
+            {#if scheduled}
+              <Scheduled
+                events={scheduled.results}
+                next={scheduled.next}
+                previous={scheduled.previous}
               />
-            {:else}
-              <Empty>{$_("addonDispatchDialog.noHistory")}</Empty>
             {/if}
           {/await}
-        </div>
-      {:else}
-        <AddOnDispatch
-          {action}
-          {event}
-          properties={addon.parameters.properties}
-          required={addon.parameters.required}
-          eventOptions={addon.parameters.eventOptions}
-          {disablePremium}
-          on:dispatch={onDispatch}
-        >
-          <svelte:fragment slot="selection">
-            {#await search then results}
-              <Selection
-                bind:value={$values["selection"]}
-                documents={new Set(addon.parameters.documents)}
-                resultsCount={results?.count}
-                {query}
+        {:else if currentTab === "history"}
+          <div class="padding">
+            {#await history}
+              <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+            {:then history}
+              {#if history}
+                <History
+                  runs={history.results}
+                  next={history.next}
+                  previous={history.previous}
+                />
+              {:else}
+                <Empty>{$_("addonDispatchDialog.noHistory")}</Empty>
+              {/if}
+            {/await}
+          </div>
+        {:else}
+          <AddOnDispatch
+            {action}
+            {event}
+            properties={addon.parameters.properties}
+            required={addon.parameters.required}
+            eventOptions={addon.parameters.eventOptions}
+            {disablePremium}
+            on:dispatch={onDispatch}
+          >
+            <svelte:fragment slot="selection">
+              {#await search then results}
+                <Selection
+                  bind:value={$values["selection"]}
+                  documents={new Set(addon.parameters.documents)}
+                  resultsCount={results?.count}
+                  {query}
+                />
+              {/await}
+            </svelte:fragment>
+          </AddOnDispatch>
+        {/if}
+      </main>
+    </section>
+    {#if addon.parameters.documents}
+      <div class="docs">
+        <ContentLayout>
+          <Flex slot="header">
+            {#if $sidebars["navigation"] === false}
+              <div class="toolbar w-auto">
+                <Button
+                  ghost
+                  minW={false}
+                  on:click={() => ($sidebars["navigation"] = true)}
+                >
+                  <span class="flipV">
+                    <SidebarExpand16 />
+                  </span>
+                </Button>
+              </div>
+            {/if}
+            <PageToolbar>
+              <Search name="q" {query} slot="center" />
+            </PageToolbar>
+          </Flex>
+          <svelte:fragment>
+            {#await search}
+              <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+            {:then search}
+              <ResultsList
+                results={search?.results}
+                next={search?.next}
+                count={search?.count}
+                auto
               />
             {/await}
           </svelte:fragment>
-        </AddOnDispatch>
-      {/if}
-    </main>
-  </section>
-  {#if addon.parameters.documents}
-    <div class="docs">
-      <ContentLayout>
-        <PageToolbar slot="header">
-          <Search name="q" {query} slot="center" />
-        </PageToolbar>
-        <svelte:fragment>
-          {#await search}
-            <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-          {:then search}
-            <ResultsList
-              results={search?.results}
-              next={search?.next}
-              count={search?.count}
-              auto
-            />
-          {/await}
-        </svelte:fragment>
 
-        <PageToolbar slot="footer">
-          <label slot="left" class="select-all">
-            <input
-              type="checkbox"
-              name="select_all"
-              checked={$selected.length === $visible.size}
-              indeterminate={$selected.length > 0 &&
-                $selected.length < $visible.size}
-              on:change={selectAll}
-            />
-            {#if $selected.length > 0}
-              {$selected.length.toLocaleString()} {$_("inputs.selected")}
-            {:else}
-              {$_("inputs.selectAll")}
-            {/if}
-          </label>
+          <PageToolbar slot="footer">
+            <label slot="left" class="select-all">
+              <input
+                type="checkbox"
+                name="select_all"
+                checked={$selected.length === $visible.size}
+                indeterminate={$selected.length > 0 &&
+                  $selected.length < $visible.size}
+                on:change={selectAll}
+              />
+              {#if $selected.length > 0}
+                {$selected.length.toLocaleString()} {$_("inputs.selected")}
+              {:else}
+                {$_("inputs.selectAll")}
+              {/if}
+            </label>
 
-          <svelte:fragment slot="right">
-            {#if $visible && $total}
-              {$_("inputs.resultsCount", {
-                values: { n: $visible.size, total: $total },
-              })}
-            {/if}
-          </svelte:fragment>
-        </PageToolbar>
-      </ContentLayout>
-    </div>
-  {/if}
-</div>
+            <svelte:fragment slot="right">
+              {#if $visible && $total}
+                {$_("inputs.resultsCount", {
+                  values: { n: $visible.size, total: $total },
+                })}
+              {/if}
+            </svelte:fragment>
+          </PageToolbar>
+        </ContentLayout>
+      </div>
+    {/if}
+  </div>
+</SidebarLayout>
 
 <style>
   .container {
     display: flex;
+    flex-direction: row-reverse;
     justify-content: center;
     width: 100%;
     height: 100%;
@@ -251,11 +302,21 @@
     border-bottom: 1px solid var(--gray-2);
   }
   .docs {
+    margin: 1rem;
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
     border-radius: var(--radius, 0.5rem);
   }
   .padding {
     padding: 1rem;
+  }
+  .flipV {
+    display: flex;
+    transform: rotate(180deg);
+  }
+  header .toolbar {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
   }
 </style>

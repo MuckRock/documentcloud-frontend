@@ -2,15 +2,12 @@
   import { _ } from "svelte-i18n";
 
   import type {
-    AddOnListItem,
     APIResponse,
     DocumentResults,
-    Page,
     Project,
     ProjectUser,
   } from "$lib/api/types";
   import AddOns from "@/lib/components/sidebar/AddOns.svelte";
-  import ProjectCollaborators from "$lib/components/projects/Collaborators.svelte";
   import ProjectActions from "$lib/components/sidebar/ProjectActions.svelte";
   import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";
   import DocumentBrowser from "./DocumentBrowser.svelte";
@@ -24,7 +21,6 @@
   export let users: ProjectUser[];
   export let documents: Promise<APIResponse<DocumentResults>>;
   export let query: string = "";
-  export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
   $: combinedQuery = `+project:${project.id} ${query}`.trim();
 </script>
@@ -33,7 +29,7 @@
   <svelte:fragment slot="navigation">
     <Documents />
     <Projects />
-    <AddOns pinnedAddOns={addons} query={combinedQuery} />
+    <AddOns query={combinedQuery} />
   </svelte:fragment>
 
   <article slot="content">

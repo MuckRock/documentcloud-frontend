@@ -1,11 +1,11 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import SignedIn from "$lib/components/common/SignedIn.svelte";
   import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
   import Documents from "$lib/components/sidebar/Documents.svelte";
   import Projects from "$lib/components/sidebar/Projects.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
 
   export let data;
 
@@ -19,9 +19,8 @@
 <SidebarLayout>
   <svelte:fragment slot="navigation">
     <Documents />
-    <SignedIn>
-      <Projects />
-    </SignedIn>
+    <Projects />
+    <AddOns />
   </svelte:fragment>
 
   <div slot="content" class="form-container">

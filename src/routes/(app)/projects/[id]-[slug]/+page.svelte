@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
+  import { selected } from "$lib/components/documents/ResultsList.svelte";
   import Project from "$lib/components/layouts/Project.svelte";
 
   import * as projects from "$lib/api/projects";
@@ -12,10 +14,11 @@
   $: documents = data.documents;
   $: query = data.query;
   $: users = data.users ?? [];
-  $: addons = data.pinnedAddons;
 
   $: canonical_url = projects.canonicalUrl(project);
   $: embed_url = embedUrl(canonical_url);
+
+  setContext("selected", selected);
 </script>
 
 <svelte:head>
@@ -36,4 +39,4 @@
   {/if}
 </svelte:head>
 
-<Project {project} {users} {documents} {query} {addons} />
+<Project {project} {users} {documents} {query} />

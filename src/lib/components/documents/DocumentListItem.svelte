@@ -236,6 +236,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     text-overflow: ellipsis;
     /* white-space: nowrap; */
     max-width: 100%;
+    margin: 0;
   }
 
   .meta {

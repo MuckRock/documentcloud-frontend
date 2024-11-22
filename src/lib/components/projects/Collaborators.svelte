@@ -109,9 +109,11 @@
   </span>
 
   {#each Object.entries(group(sort(users))) as [key, members]}
-    <header>
-      <h4>{$_(accessLabels[key])}</h4>
-    </header>
+    {#if members.length}
+      <header>
+        <h4>{$_(accessLabels[key])}</h4>
+      </header>
+    {/if}
     {#each members as user}
       {#if isProjectUser || project.edit_access}
         <SidebarItem small>

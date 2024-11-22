@@ -4,7 +4,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 -->
 <script context="module" lang="ts">
   type Action = "share" | "edit" | "data" | "reprocess" | "delete" | "project";
-  type ActionDetail = [label: string, icon: ComponentType];
+  type ActionDetail = [
+    label: string,
+    icon: ComponentType,
+    mode: "primary" | "standard" | "danger",
+  ];
 </script>
 
 <script lang="ts">
@@ -36,6 +40,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import { getCurrentUser } from "$lib/utils/permissions";
   import Share from "../documents/Share.svelte";
   import Flex from "../common/Flex.svelte";
+  import Button from "../common/Button.svelte";
 
   export let afterClick: Maybe<() => void> = undefined;
 
@@ -43,12 +48,12 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   const selected: Readable<Document[]> = getContext("selected");
 
   const actions: Record<Action, ActionDetail> = {
-    share: ["sidebar.shareEmbed", Share16],
-    edit: ["bulk.actions.edit", Pencil16],
-    data: ["bulk.actions.data", Tag16],
-    project: ["bulk.actions.project", FileDirectory16],
-    reprocess: ["bulk.actions.reprocess", IssueReopened16],
-    delete: ["bulk.actions.delete", Alert16],
+    share: ["sidebar.shareEmbed", Share16, "standard"],
+    edit: ["bulk.actions.edit", Pencil16, "primary"],
+    data: ["bulk.actions.data", Tag16, "primary"],
+    project: ["bulk.actions.project", FileDirectory16, "primary"],
+    reprocess: ["bulk.actions.reprocess", IssueReopened16, "danger"],
+    delete: ["bulk.actions.delete", Alert16, "danger"],
   };
 
   let visible: Nullable<Action> = null;
@@ -65,10 +70,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 </script>
 
 <!-- for now, we can only share individual documents -->
-<Flex direction="column">
-  {#each Object.entries(actions) as [action, [label, icon]]}
-    <SidebarItem
-      hover
+<Flex direction="column" align="start">
+  {#each Object.entries(actions) as [action, [label, icon, mode]]}
+    <Button
+      {mode}
+      ghost
       disabled={action === "share"
         ? $selected?.length !== 1
         : !$me || !$selected?.length}
@@ -77,9 +83,9 @@ Most actual actions are deferred to their own forms, so this is more of a switch
         afterClick?.();
       }}
     >
-      <svelte:component this={icon} slot="start" />
+      <svelte:component this={icon} />
       {$_(label)}
-    </SidebarItem>
+    </Button>
   {/each}
 </Flex>
 

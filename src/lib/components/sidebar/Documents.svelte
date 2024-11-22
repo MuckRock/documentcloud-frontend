@@ -8,13 +8,11 @@
     Search16,
     File16,
     Globe16,
-    Person16,
-    ShieldLock16,
+    Lock16,
     Organization16,
   } from "svelte-octicons";
   import { page } from "$app/stores";
 
-  import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
@@ -23,7 +21,6 @@
   import { userDocs } from "$lib/utils/search";
   import { getCurrentUser } from "@/lib/utils/permissions";
   import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
-  import { size } from "lodash-es";
   import Button from "@/lib/components/common/Button.svelte";
 
   const me = getCurrentUser();
@@ -31,7 +28,6 @@
 
   $: query = $page.url.searchParams?.get("q") || "";
 
-  $: mine = $me ? userDocs($me) : "";
   $: minePublic = $me ? userDocs($me, "public") : "";
   $: minePrivate = $me ? userDocs($me, "private") : "";
 
@@ -70,9 +66,20 @@
       href={searchUrl(minePrivate)}
       active={query === minePrivate}
     >
-      <ShieldLock16 height={14} width={14} slot="start" />
+      <Lock16 height={14} width={14} slot="start" />
       {$_("documents.accessDocuments", {
         values: { access: "Private " },
+      })}
+    </SidebarItem>
+    <SidebarItem
+      small
+      hover
+      href={searchUrl(minePublic)}
+      active={query === minePublic}
+    >
+      <Globe16 height={14} width={14} slot="start" />
+      {$_("documents.accessDocuments", {
+        values: { access: "Public " },
       })}
     </SidebarItem>
     {#if $org && !$org.individual}
@@ -88,16 +95,5 @@
         })}
       </SidebarItem>
     {/if}
-    <SidebarItem
-      small
-      hover
-      href={searchUrl(minePublic)}
-      active={query === minePublic}
-    >
-      <Globe16 height={14} width={14} slot="start" />
-      {$_("documents.accessDocuments", {
-        values: { access: "Public " },
-      })}
-    </SidebarItem>
   </SignedIn>
 </SidebarGroup>
