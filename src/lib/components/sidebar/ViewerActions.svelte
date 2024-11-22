@@ -22,8 +22,8 @@
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import UpgradePrompt from "$lib/components/premium-credits/UpgradePrompt.svelte";
 
-  import Revisions from "./Revisions.svelte";
-  import Share from "./Share.svelte";
+  import Revisions from "$lib/components/documents/Revisions.svelte";
+  import Share from "$lib/components/documents/Share.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
   import { pdfUrl } from "$lib/api/documents";
@@ -44,6 +44,16 @@
 </script>
 
 <div class="actions wideGap">
+  <div class="actions">
+    <Button ghost on:click={() => (shareOpen = true)}>
+      <Share16 />
+      {$_("sidebar.shareEmbed")}
+    </Button>
+    <Button ghost href={pdfUrl(document).href} download target="_blank">
+      <Download16 />
+      {$_("sidebar.download")}
+    </Button>
+  </div>
   {#if document.edit_access}
     <div class="actions">
       <Button
@@ -66,18 +76,6 @@
         <Premium />
       </Button>
     </div>
-  {/if}
-  <div class="actions">
-    <Button ghost on:click={() => (shareOpen = true)}>
-      <Share16 />
-      {$_("sidebar.shareEmbed")}
-    </Button>
-    <Button ghost href={pdfUrl(document).href} download target="_blank">
-      <Download16 />
-      {$_("sidebar.download")}
-    </Button>
-  </div>
-  {#if document.edit_access}
     <div class="actions">
       <Button
         ghost

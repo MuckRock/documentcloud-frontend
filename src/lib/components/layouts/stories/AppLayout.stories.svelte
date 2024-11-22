@@ -10,7 +10,7 @@
   import Projects from "@/lib/components/sidebar/Projects.svelte";
   import Button from "../../common/Button.svelte";
   import { PlusCircle16 } from "svelte-octicons";
-  import BulkActions from "$lib/components/documents/BulkActions.svelte";
+  import BulkActions from "@/lib/components/sidebar/DocumentActions.svelte";
   import AddOns from "@/lib/components/sidebar/AddOns.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
@@ -47,6 +47,7 @@
       <svelte:fragment slot="navigation">
         <Documents />
         <Projects />
+        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
       </svelte:fragment>
 
       <DocumentBrowser slot="content" {documents} />
@@ -56,7 +57,6 @@
           <PlusCircle16 />{$_("sidebar.upload")}
         </Button>
         <BulkActions />
-        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
       </svelte:fragment>
     </SidebarLayout>
   </AppLayout>

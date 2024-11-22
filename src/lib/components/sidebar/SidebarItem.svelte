@@ -87,7 +87,7 @@
   .container.hover:hover,
   .container.hover:focus {
     cursor: pointer;
-    background: var(--hover-background, var(--gray-1, #d8dee2));
+    background: var(--hover-background, var(--blue-1, #d8dee2));
     color: var(--hover-color, var(--color, inherit));
     fill: var(--hover-fill, var(--fill, inherit));
   }

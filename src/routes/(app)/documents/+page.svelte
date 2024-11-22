@@ -3,14 +3,14 @@
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
 
-  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
 
-  import BulkActions from "@/lib/components/documents/BulkActions.svelte";
-  import Documents from "$lib/components/sidebar/Documents.svelte";
-  import Projects from "$lib/components/sidebar/Projects.svelte";
+  import DocumentActions from "@/lib/components/sidebar/DocumentActions.svelte";
+  import DocumentNavigation from "$lib/components/sidebar/Documents.svelte";
+  import ProjectNavigation from "$lib/components/sidebar/Projects.svelte";
+  import AddOnsNavigation from "@/lib/components/sidebar/AddOns.svelte";
 
   import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
@@ -23,6 +23,7 @@
 
   // stores
   import { selected } from "$lib/components/documents/ResultsList.svelte";
+  import UploadButton from "@/lib/components/sidebar/UploadButton.svelte";
 
   export let data;
 
@@ -39,23 +40,19 @@
 
 <SidebarLayout>
   <svelte:fragment slot="navigation">
-    <Documents />
+    <DocumentNavigation />
     <SignedIn>
-      <Projects />
+      <ProjectNavigation />
     </SignedIn>
+    <AddOnsNavigation pinnedAddOns={data.pinnedAddons} {query} />
   </svelte:fragment>
 
   <DocumentBrowser slot="content" documents={data.searchResults} {query} />
 
   <svelte:fragment slot="action">
     {#if isSignedIn($me)}
-      {#if canUploadFiles($me)}
-        <Button mode="primary" href="/upload/">
-          <PlusCircle16 />{$_("sidebar.upload")}
-        </Button>
-      {/if}
-      <BulkActions />
-      <AddOns pinnedAddOns={data.pinnedAddons} {query} />
+      <UploadButton />
+      <DocumentActions />
     {/if}
   </svelte:fragment>
 </SidebarLayout>

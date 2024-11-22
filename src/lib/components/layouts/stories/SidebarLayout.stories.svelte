@@ -2,15 +2,14 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import { _ } from "svelte-i18n";
-  import { PlusCircle16 } from "svelte-octicons";
 
   import SidebarLayout from "../SidebarLayout.svelte";
   import DocumentBrowser from "../DocumentBrowser.svelte";
-  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
-  import Button from "$lib/components/common/Button.svelte";
-  import BulkActions from "$lib/components/documents/BulkActions.svelte";
-  import Documents from "$lib/components/sidebar/Documents.svelte";
-  import Projects from "$lib/components/sidebar/Projects.svelte";
+  import UploadButton from "$lib/components/sidebar/UploadButton.svelte";
+  import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
+  import AddOnsNavigation from "$lib/components/sidebar/AddOns.svelte";
+  import DocumentsNavigation from "$lib/components/sidebar/Documents.svelte";
+  import ProjectsNavigation from "$lib/components/sidebar/Projects.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { activeAddons } from "@/test/fixtures/addons";
@@ -43,18 +42,18 @@
   <div class="vh-100 vw-100">
     <SidebarLayout {...args}>
       <svelte:fragment slot="navigation">
-        <Documents />
-        <Projects />
+        <DocumentsNavigation />
+        <ProjectsNavigation />
+        <AddOnsNavigation
+          pinnedAddOns={Promise.resolve({ data: activeAddons })}
+        />
       </svelte:fragment>
       <svelte:fragment slot="content">
         <DocumentBrowser {documents} />
       </svelte:fragment>
       <svelte:fragment slot="action">
-        <Button mode="primary" href="/upload/">
-          <PlusCircle16 />{$_("sidebar.upload")}
-        </Button>
-        <BulkActions />
-        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
+        <UploadButton />
+        <DocumentActions />
       </svelte:fragment>
     </SidebarLayout>
   </div>

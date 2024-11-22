@@ -258,7 +258,7 @@
     "collaborators": {
       "title": "Collaborators",
       "empty": "No collaborators",
-      "add": "Invite users to this project"
+      "add": "Invite"
     },
     "fields": {
       "title": "Title",
@@ -343,9 +343,11 @@
     "contributed": "Contributed by",
     "share": "Share",
     "shareEmbed": "Share & Embed",
+    "shareEmbedProject": "Share & Embed Project",
     "sharedWith": "Shared with",
     "revisions": "Revision History",
     "edit": "Edit Metadata",
+    "editProject": "Edit Project Metadata",
     "upload": "Upload Documents",
     "uploadToProject": "Upload to Project",
     "download": "Download File",

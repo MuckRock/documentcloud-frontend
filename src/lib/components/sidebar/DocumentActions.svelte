@@ -24,7 +24,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import SidebarItem from "./SidebarItem.svelte";
 
   // forms
   import ConfirmDelete from "../forms/ConfirmDelete.svelte";
@@ -34,7 +34,8 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Projects from "../forms/Projects.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
-  import Share from "./Share.svelte";
+  import Share from "../documents/Share.svelte";
+  import Flex from "../common/Flex.svelte";
 
   export let afterClick: Maybe<() => void> = undefined;
 
@@ -42,7 +43,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   const selected: Readable<Document[]> = getContext("selected");
 
   const actions: Record<Action, ActionDetail> = {
-    share: ["bulk.actions.share", Share16],
+    share: ["sidebar.shareEmbed", Share16],
     edit: ["bulk.actions.edit", Pencil16],
     data: ["bulk.actions.data", Tag16],
     project: ["bulk.actions.project", FileDirectory16],
@@ -53,7 +54,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   let visible: Nullable<Action> = null;
 
   // svelte 5 will let us do type coercion in templates
-  $: toShare = $selected[0]!;
+  $: toShare = $selected?.[0]!;
   function show(action: string) {
     visible = action as Action;
   }
@@ -64,21 +65,23 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 </script>
 
 <!-- for now, we can only share individual documents -->
-{#each Object.entries(actions) as [action, [label, icon]]}
-  <SidebarItem
-    hover
-    disabled={action === "share"
-      ? $selected?.length !== 1
-      : !$me || !$selected?.length}
-    on:click={() => {
-      show(action);
-      afterClick?.();
-    }}
-  >
-    <svelte:component this={icon} slot="start" />
-    {$_(label)}
-  </SidebarItem>
-{/each}
+<Flex direction="column">
+  {#each Object.entries(actions) as [action, [label, icon]]}
+    <SidebarItem
+      hover
+      disabled={action === "share"
+        ? $selected?.length !== 1
+        : !$me || !$selected?.length}
+      on:click={() => {
+        show(action);
+        afterClick?.();
+      }}
+    >
+      <svelte:component this={icon} slot="start" />
+      {$_(label)}
+    </SidebarItem>
+  {/each}
+</Flex>
 
 {#if visible}
   <Portal>

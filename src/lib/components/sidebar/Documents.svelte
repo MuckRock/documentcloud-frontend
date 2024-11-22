@@ -8,8 +8,8 @@
     Search16,
     File16,
     Globe16,
-    Infinity16,
-    Lock16,
+    Person16,
+    ShieldLock16,
     Organization16,
   } from "svelte-octicons";
   import { page } from "$app/stores";
@@ -49,52 +49,55 @@
 
 <SidebarGroup name="documents">
   <SidebarItem slot="title">
-    <File16 slot="start">Documents</File16>
-    <Button ghost mode="primary" size="small" href="/documents">
-      <Search16 height="12" width="12" />
-      Explore
-    </Button>
+    <File16 slot="start" />
+    Documents
   </SidebarItem>
-  <SidebarItem hover href={searchUrl("")} active={query === ""}>
-    <Infinity16 slot="start" />
-    {$_("documents.allDocuments", {
-      values: { access: "" },
-    })}
-  </SidebarItem>
-
+  <Button
+    slot="action"
+    ghost
+    minW={false}
+    mode="primary"
+    size="small"
+    href="/documents"
+  >
+    <Search16 height="14" width="14" />
+    {$_("common.explore")}
+  </Button>
   <SignedIn>
-    <SidebarItem hover href={searchUrl(mine)} active={query === mine}>
-      <File16 slot="start" />
-      {$_("documents.yourDocuments")}
-    </SidebarItem>
-
     <SidebarItem
-      hover
-      href={searchUrl(minePublic)}
-      active={query === minePublic}
-    >
-      <Globe16 slot="start" />
-      {$_("documents.accessDocuments", {
-        values: { access: "Public " },
-      })}
-    </SidebarItem>
-    <SidebarItem
+      small
       hover
       href={searchUrl(minePrivate)}
       active={query === minePrivate}
     >
-      <Lock16 slot="start" />
+      <ShieldLock16 height={14} width={14} slot="start" />
       {$_("documents.accessDocuments", {
         values: { access: "Private " },
       })}
     </SidebarItem>
     {#if $org && !$org.individual}
-      <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
-        <Organization16 slot="start" />
+      <SidebarItem
+        small
+        hover
+        href={searchUrl(orgDocs)}
+        active={query === orgDocs}
+      >
+        <Organization16 height={14} width={14} slot="start" />
         {$_("documents.nameDocuments", {
           values: { name: $org.name, access: "" },
         })}
       </SidebarItem>
     {/if}
+    <SidebarItem
+      small
+      hover
+      href={searchUrl(minePublic)}
+      active={query === minePublic}
+    >
+      <Globe16 height={14} width={14} slot="start" />
+      {$_("documents.accessDocuments", {
+        values: { access: "Public " },
+      })}
+    </SidebarItem>
   </SignedIn>
 </SidebarGroup>

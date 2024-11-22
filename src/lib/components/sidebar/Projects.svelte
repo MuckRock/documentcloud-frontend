@@ -4,22 +4,27 @@
   import { page } from "$app/stores";
 
   import {
-    Book16,
     FileDirectory16,
     FileDirectory24,
     Hourglass24,
+    People16,
+    Person16,
+    Pin16,
+    Pin24,
+    Search16,
   } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
   import Pin from "$lib/components/common/Pin.svelte";
-  import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Flex from "$lib/components/common/Flex.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
+  import { getCurrentUser } from "$lib/utils/permissions";
+  import Button from "../common/Button.svelte";
 
+  const me = getCurrentUser();
   let pinned: Project[] | Promise<Project[]> = [];
 
   $: pinned = $page.data.pinnedProjects || [];
@@ -33,21 +38,48 @@
   <SidebarItem slot="title">
     <FileDirectory16 slot="start" />{$_("sidebar.projects.title")}
   </SidebarItem>
-  <a href="/projects/" slot="action">
-    <Action icon={Book16}>{$_("common.explore")}</Action>
-  </a>
-  <Flex direction="column" gap={0}>
-    {#await pinned}
-      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-    {:then projects}
-      {#each sort(projects) as project}
-        <SidebarItem small href={canonicalUrl(project).href}>
-          <Pin active={project.pinned} slot="start" />
-          {project.title}
-        </SidebarItem>
-      {:else}
-        <Empty icon={FileDirectory24}>{$_("sidebar.projects.pinned")}</Empty>
-      {/each}
-    {/await}
-  </Flex>
+  <Button
+    ghost
+    mode="primary"
+    size="small"
+    minW={false}
+    href="/projects?list=public"
+    slot="action"
+  >
+    <Search16 height={14} width={14} />
+    {$_("common.explore")}
+  </Button>
+  {#if $me}
+    <SidebarItem
+      small
+      active={$page.url.searchParams?.get("list") === "owned"}
+      href="/projects?list=owned"
+    >
+      <Person16 height={14} width={14} slot="start" />
+      {$_("projects.yours")}
+    </SidebarItem>
+    <SidebarItem
+      small
+      active={$page.url.searchParams?.get("list") === "shared"}
+      href="/projects?list=shared"
+    >
+      <People16 height={14} width={14} slot="start" />
+      {$_("projects.shared")}
+    </SidebarItem>
+  {/if}
+  {#await pinned}
+    <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+  {:then projects}
+    {#each sort(projects) as project}
+      <SidebarItem small href={canonicalUrl(project).href}>
+        <Pin size={0.875} active={project.pinned} slot="start" />
+        {project.title}
+      </SidebarItem>
+    {:else}
+      <SidebarItem small disabled>
+        <Pin16 slot="start" />
+        {$_("sidebar.projects.pinned")}
+      </SidebarItem>
+    {/each}
+  {/await}
 </SidebarGroup>

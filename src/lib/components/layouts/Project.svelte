@@ -10,11 +10,15 @@
     ProjectUser,
   } from "$lib/api/types";
   import AddOns from "@/lib/components/sidebar/AddOns.svelte";
-  import Collaborators from "$lib/components/projects/Collaborators.svelte";
-  import ProjectActions from "$lib/components/projects/ProjectActions.svelte";
+  import ProjectCollaborators from "$lib/components/projects/Collaborators.svelte";
+  import ProjectActions from "$lib/components/sidebar/ProjectActions.svelte";
   import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";
   import DocumentBrowser from "./DocumentBrowser.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
+  import Collaborators from "$lib/components/projects/Collaborators.svelte";
+  import Documents from "../sidebar/Documents.svelte";
+  import Projects from "../sidebar/Projects.svelte";
+  import DocumentActions from "../sidebar/DocumentActions.svelte";
 
   export let project: Project;
   export let users: ProjectUser[];
@@ -27,7 +31,9 @@
 
 <SidebarLayout>
   <svelte:fragment slot="navigation">
-    <Collaborators {users} {project} />
+    <Documents />
+    <Projects />
+    <AddOns pinnedAddOns={addons} query={combinedQuery} />
   </svelte:fragment>
 
   <article slot="content">
@@ -48,8 +54,11 @@
   </article>
 
   <svelte:fragment slot="action">
+    <h4>Document Actions</h4>
+    <DocumentActions />
+    <h4>Project Actions</h4>
     <ProjectActions {project} />
-    <AddOns pinnedAddOns={addons} query={combinedQuery} />
+    <Collaborators {users} {project} />
   </svelte:fragment>
 </SidebarLayout>
 
@@ -71,5 +80,14 @@
     border-radius: 0.25rem;
     border: 1px solid var(--gray-2);
     box-shadow: inset var(--shadow-2);
+  }
+  h4 {
+    margin: 0;
+    font-size: var(--font-xs);
+    font-weight: 600;
+    color: var(--gray-4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.5rem;
   }
 </style>

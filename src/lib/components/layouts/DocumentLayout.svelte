@@ -11,8 +11,8 @@ Assumes it's a child of a ViewerContext
   } from "$lib/api/types";
   import { _ } from "svelte-i18n";
 
-  import Actions from "../documents/Actions.svelte";
-  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
+  import ViewerActions from "$lib/components/sidebar/ViewerActions.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import Avatar from "../accounts/Avatar.svelte";
   import Data from "../documents/Data.svelte";
   import DocumentHeader from "../documents/Header.svelte";
@@ -62,9 +62,8 @@ Assumes it's a child of a ViewerContext
         </Metadata>
       {/if}
       {#if $me}
-        <Actions {document} user={$me} {action} />
+        <ViewerActions {document} user={$me} {action} />
       {/if}
-
       <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
     </Flex>
     {#await text then text}
