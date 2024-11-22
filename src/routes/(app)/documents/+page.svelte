@@ -3,14 +3,14 @@
   import { _ } from "svelte-i18n";
   import { PlusCircle16 } from "svelte-octicons";
 
-  import AddOns from "$lib/components/common/AddOns.svelte";
+  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
 
   import BulkActions from "@/lib/components/documents/BulkActions.svelte";
-  import Documents from "../documents/sidebar/Documents.svelte";
-  import Projects from "../documents/sidebar/Projects.svelte";
+  import Documents from "$lib/components/sidebar/Documents.svelte";
+  import Projects from "$lib/components/sidebar/Projects.svelte";
 
   import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";

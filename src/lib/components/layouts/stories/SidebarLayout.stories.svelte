@@ -6,12 +6,11 @@
 
   import SidebarLayout from "../SidebarLayout.svelte";
   import DocumentBrowser from "../DocumentBrowser.svelte";
+  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
   import Button from "$lib/components/common/Button.svelte";
-
   import BulkActions from "$lib/components/documents/BulkActions.svelte";
-  import AddOns from "@/lib/components/common/AddOns.svelte";
-  import Documents from "@/routes/(app)/documents/sidebar/Documents.svelte";
-  import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
+  import Documents from "$lib/components/sidebar/Documents.svelte";
+  import Projects from "$lib/components/sidebar/Projects.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { activeAddons } from "@/test/fixtures/addons";

@@ -48,20 +48,9 @@
   function hide() {
     show = null;
   }
-
-  function onUploadClick() {
-    $uploadToProject = project;
-    goto("/upload/");
-  }
 </script>
 
 <div class="actions wideGap">
-  {#if isSignedIn($me) && canUploadFiles($me) && project.edit_access}
-    <Button full mode="primary" on:click={onUploadClick}>
-      <PlusCircle16 />{$_("sidebar.uploadToProject")}
-    </Button>
-  {/if}
-
   {#if project.edit_access || project.add_remove_access}
     <!-- Admin & Editor Actions -->
     <div class="actions">
@@ -85,10 +74,6 @@
   <div class="actions">
     <Button ghost on:click={() => (show = "share")}>
       <Share16 />{$_("sidebar.shareEmbed")}
-    </Button>
-
-    <Button ghost href={projectSearchUrl(project)}>
-      <Search16 />{$_("projects.viewInSearch")}
     </Button>
   </div>
 </div>

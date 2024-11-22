@@ -19,7 +19,7 @@
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import Pin from "$lib/components/common/Pin.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
-  import Error from "./Error.svelte";
+  import Error from "../common/Error.svelte";
 
   export let pinnedAddOns: Promise<APIResponse<Page<AddOnListItem>>>;
   export let query: string = "";

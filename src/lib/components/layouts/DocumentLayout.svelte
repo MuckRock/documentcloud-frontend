@@ -12,7 +12,7 @@ Assumes it's a child of a ViewerContext
   import { _ } from "svelte-i18n";
 
   import Actions from "../documents/Actions.svelte";
-  import AddOns from "$lib/components/common/AddOns.svelte";
+  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
   import Avatar from "../accounts/Avatar.svelte";
   import Data from "../documents/Data.svelte";
   import DocumentHeader from "../documents/Header.svelte";

@@ -9,7 +9,7 @@
     Project,
     ProjectUser,
   } from "$lib/api/types";
-  import AddOns from "$lib/components/common/AddOns.svelte";
+  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
   import Collaborators from "$lib/components/projects/Collaborators.svelte";
   import ProjectActions from "$lib/components/projects/ProjectActions.svelte";
   import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";

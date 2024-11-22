@@ -6,12 +6,12 @@
 
   import DocumentBrowser from "../DocumentBrowser.svelte";
   import SidebarLayout from "../SidebarLayout.svelte";
-  import Documents from "@/routes/(app)/documents/sidebar/Documents.svelte";
-  import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
+  import Documents from "@/lib/components/sidebar/Documents.svelte";
+  import Projects from "@/lib/components/sidebar/Projects.svelte";
   import Button from "../../common/Button.svelte";
   import { PlusCircle16 } from "svelte-octicons";
   import BulkActions from "$lib/components/documents/BulkActions.svelte";
-  import AddOns from "$lib/components/common/AddOns.svelte";
+  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { addons } from "@/test/handlers/addons";

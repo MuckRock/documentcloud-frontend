@@ -5,6 +5,7 @@
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
+    Search16,
     File16,
     Globe16,
     Infinity16,
@@ -21,6 +22,9 @@
   import { slugify } from "$lib/utils/slugify";
   import { userDocs } from "$lib/utils/search";
   import { getCurrentUser } from "@/lib/utils/permissions";
+  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
+  import { size } from "lodash-es";
+  import Button from "@/lib/components/common/Button.svelte";
 
   const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
@@ -43,7 +47,14 @@
   }
 </script>
 
-<Flex direction="column">
+<SidebarGroup name="documents">
+  <SidebarItem slot="title">
+    <File16 slot="start">Documents</File16>
+    <Button ghost mode="primary" size="small" href="/documents">
+      <Search16 height="12" width="12" />
+      Explore
+    </Button>
+  </SidebarItem>
   <SidebarItem hover href={searchUrl("")} active={query === ""}>
     <Infinity16 slot="start" />
     {$_("documents.allDocuments", {
@@ -86,4 +97,4 @@
       </SidebarItem>
     {/if}
   </SignedIn>
-</Flex>
+</SidebarGroup>
