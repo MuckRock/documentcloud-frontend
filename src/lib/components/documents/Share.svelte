@@ -363,6 +363,7 @@
     flex-direction: column;
     flex: 1 1 12rem;
     grid-row: 2/3;
+    min-width: 0;
   }
   .right {
     flex: 2 1 24rem;
