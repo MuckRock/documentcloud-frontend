@@ -1,6 +1,16 @@
-import type { Org, User } from "$lib/api/types";
+import type {
+  AddOnListItem,
+  APIResponse,
+  Nullable,
+  Org,
+  Page,
+  Project,
+  User,
+} from "$lib/api/types";
 import { getMe, orgUsers, userOrgs } from "$lib/api/accounts";
 import { getTipOfDay } from "$lib/api/flatpages";
+import { getPinnedAddons } from "$lib/api/addons";
+import { list as listProjects } from "$lib/api/projects";
 
 export const trailingSlash = "always";
 
@@ -11,6 +21,9 @@ export async function load({ fetch }) {
 
   let user_orgs: Promise<Org[]> = Promise.resolve([]);
   let org_users: Promise<User[]> = Promise.resolve([]);
+  let pinnedAddons: Promise<Nullable<APIResponse<Page<AddOnListItem>>>> =
+    Promise.resolve(null);
+  let pinnedProjects: Promise<Project[]> = Promise.resolve([]);
   if (me && org) {
     user_orgs = userOrgs(me, fetch).catch((e) => {
       console.error(e);
@@ -21,6 +34,18 @@ export async function load({ fetch }) {
       return [];
     });
   }
+  if (me) {
+    pinnedAddons = getPinnedAddons(fetch).catch((e) => {
+      console.error(e);
+      return null;
+    });
+    pinnedProjects = listProjects({ pinned: true }, fetch)
+      .then((r) => r.data?.results ?? [])
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
+  }
 
   return {
     me,
@@ -29,5 +54,7 @@ export async function load({ fetch }) {
     breadcrumbs: [],
     user_orgs,
     org_users,
+    pinnedAddons,
+    pinnedProjects,
   };
 }

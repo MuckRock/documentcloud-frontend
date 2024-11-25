@@ -130,7 +130,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    gap: 1rem;
+    gap: 0.5rem;
     height: 100%;
     z-index: 0;
   }

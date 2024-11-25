@@ -3,16 +3,11 @@ Assumes it's a child of a ViewerContext
 -->
 
 <script lang="ts">
-  import type {
-    AddOnListItem,
-    APIResponse,
-    Page,
-    Project,
-  } from "$lib/api/types";
+  import type { Project } from "$lib/api/types";
   import { _ } from "svelte-i18n";
 
-  import Actions from "../documents/Actions.svelte";
-  import AddOns from "$lib/components/common/AddOns.svelte";
+  import ViewerActions from "$lib/components/sidebar/ViewerActions.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import Avatar from "../accounts/Avatar.svelte";
   import Data from "../documents/Data.svelte";
   import DocumentHeader from "../documents/Header.svelte";
@@ -33,7 +28,6 @@ Assumes it's a child of a ViewerContext
   export let documentStore = getDocument();
   export let text = getText();
   export let action: string = "";
-  export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
 
   $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
@@ -62,10 +56,9 @@ Assumes it's a child of a ViewerContext
         </Metadata>
       {/if}
       {#if $me}
-        <Actions {document} user={$me} {action} />
+        <ViewerActions {document} user={$me} {action} />
       {/if}
-
-      <AddOns pinnedAddOns={addons} query="+document:{document.id}" />
+      <AddOns query="+document:{document.id}" />
     </Flex>
     {#await text then text}
       <DocumentMetadata {document} {text} />

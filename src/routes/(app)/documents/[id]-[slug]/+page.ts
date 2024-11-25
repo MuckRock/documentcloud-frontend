@@ -8,7 +8,6 @@ import type { ReadMode } from "@/lib/api/types";
 import { redirect } from "@sveltejs/kit";
 
 import * as documents from "$lib/api/documents";
-import { getPinnedAddons } from "$lib/api/addons";
 import { breadcrumbTrail } from "$lib/utils/index";
 
 import loadDocument from "$lib/load/document";
@@ -39,9 +38,6 @@ export async function load({ fetch, params, parent, depends, url }) {
     { href: canonical.pathname, title: document.title },
   ]);
 
-  // stream this
-  const pinnedAddons = getPinnedAddons(fetch);
-
   const query = getQuery(url);
 
   return {
@@ -49,7 +45,6 @@ export async function load({ fetch, params, parent, depends, url }) {
     mode,
     asset_url,
     action,
-    pinnedAddons,
     breadcrumbs,
     query,
   };

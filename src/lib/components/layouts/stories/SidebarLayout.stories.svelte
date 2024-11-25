@@ -2,16 +2,14 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   import { _ } from "svelte-i18n";
-  import { PlusCircle16 } from "svelte-octicons";
 
   import SidebarLayout from "../SidebarLayout.svelte";
   import DocumentBrowser from "../DocumentBrowser.svelte";
-  import Button from "$lib/components/common/Button.svelte";
-
-  import BulkActions from "$lib/components/documents/BulkActions.svelte";
-  import AddOns from "@/lib/components/common/AddOns.svelte";
-  import Documents from "@/routes/(app)/documents/sidebar/Documents.svelte";
-  import Projects from "@/routes/(app)/documents/sidebar/Projects.svelte";
+  import UploadButton from "$lib/components/sidebar/UploadButton.svelte";
+  import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
+  import AddOnsNavigation from "$lib/components/sidebar/AddOns.svelte";
+  import DocumentsNavigation from "$lib/components/sidebar/Documents.svelte";
+  import ProjectsNavigation from "$lib/components/sidebar/Projects.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { activeAddons } from "@/test/fixtures/addons";
@@ -29,6 +27,9 @@
         stores: {
           page: {
             url: "/",
+            data: {
+              pinnedAddons: Promise.resolve({ data: activeAddons }),
+            },
           },
         },
       },
@@ -44,18 +45,16 @@
   <div class="vh-100 vw-100">
     <SidebarLayout {...args}>
       <svelte:fragment slot="navigation">
-        <Documents />
-        <Projects />
+        <DocumentsNavigation />
+        <ProjectsNavigation />
+        <AddOnsNavigation />
       </svelte:fragment>
       <svelte:fragment slot="content">
         <DocumentBrowser {documents} />
       </svelte:fragment>
       <svelte:fragment slot="action">
-        <Button mode="primary" href="/upload/">
-          <PlusCircle16 />{$_("sidebar.upload")}
-        </Button>
-        <BulkActions />
-        <AddOns pinnedAddOns={Promise.resolve({ data: activeAddons })} />
+        <UploadButton />
+        <DocumentActions />
       </svelte:fragment>
     </SidebarLayout>
   </div>

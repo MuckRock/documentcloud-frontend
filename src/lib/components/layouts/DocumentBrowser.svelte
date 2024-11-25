@@ -36,7 +36,7 @@
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
-  import BulkActions from "$lib/components/documents/BulkActions.svelte";
+  import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
@@ -233,7 +233,7 @@
                 </SidebarItem>
 
                 <Menu slot="default" let:close>
-                  <BulkActions afterClick={() => close()} />
+                  <DocumentActions afterClick={() => close()} />
                 </Menu>
               </Dropdown>
             </Flex>

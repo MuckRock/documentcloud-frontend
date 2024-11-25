@@ -5,6 +5,7 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import { remToPx } from "$lib/utils/layout";
   import ProjectPin from "./ProjectPin.svelte";
+  import Access, { getLevel } from "../common/Access.svelte";
 
   export let project: Project;
   export let show = {
@@ -29,9 +30,9 @@
     {#if show.access}
       <div class="access">
         {#if project.private}
-          <Flex align="center"><Lock16 /> {$_("projects.access.private")}</Flex>
+          <Access level={getLevel("private")} />
         {:else}
-          <Flex align="center"><Globe16 /> {$_("projects.access.public")}</Flex>
+          <Access level={getLevel("public")} />
         {/if}
       </div>
     {/if}

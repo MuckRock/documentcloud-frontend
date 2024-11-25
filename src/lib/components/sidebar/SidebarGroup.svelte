@@ -48,7 +48,12 @@
         <ChevronDown16 />
       </span>
       {#if $$slots.title}<span class="title"><slot name="title" /></span>{/if}
-      <slot name="action" />
+      {#if $$slots.action}<span
+          role="button"
+          tabindex="0"
+          on:click|stopPropagation
+          on:keydown|stopPropagation><slot name="action" /></span
+        >{/if}
     </header>
   {/if}
   {#if !collapsed}
@@ -63,6 +68,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    padding-bottom: 1rem;
   }
   header {
     flex: 1 0 0;

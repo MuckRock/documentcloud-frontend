@@ -12,7 +12,7 @@
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
   import { remToPx } from "@/lib/utils/layout";
-  import Access, { getLevel } from "./Access.svelte";
+  import Access, { getLevel } from "../common/Access.svelte";
 
   export let document: Document;
 

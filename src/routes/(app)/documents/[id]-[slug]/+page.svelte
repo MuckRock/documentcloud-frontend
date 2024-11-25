@@ -25,7 +25,6 @@
   $: canonical_url = documents.canonicalUrl(document).href;
 
   $: action = data.action;
-  $: addons = data.pinnedAddons;
   $: hasDescription = Boolean(document.description?.trim().length);
   $: query = data.query || "";
 </script>
@@ -67,6 +66,6 @@
 </svelte:head>
 
 <ViewerContext {document} {mode} {text} {asset_url}>
-  <DocumentLayout {action} {addons} />
+  <DocumentLayout {action} />
 </ViewerContext>
 <GuidedTour />

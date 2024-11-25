@@ -13,8 +13,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   import { _ } from "svelte-i18n";
   import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
-  import DocAccess, { getLevel } from "../documents/Access.svelte";
-  import Flex from "../common/Flex.svelte";
+  import DocAccess, { getLevel } from "../common/Access.svelte";
   import KV from "../common/KV.svelte";
   import NoteTab from "../viewer/NoteTab.svelte";
 
@@ -236,6 +235,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     text-overflow: ellipsis;
     /* white-space: nowrap; */
     max-width: 100%;
+    margin: 0;
   }
 
   .meta {
