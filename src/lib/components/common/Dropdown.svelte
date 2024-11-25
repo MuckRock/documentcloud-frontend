@@ -89,10 +89,14 @@
     return clickInsideDropdown || clickInsideAnchor;
   }
 
+  function isInSubtree(element: Element) {
+    return dropdown.contains(element) || anchor.contains(element);
+  }
+
   // Close the dropdown when a click or escape is made outside its subtree
   function closeOnEventOutside(event: MouseEvent) {
     if (event.target instanceof Element) {
-      if (!isInBoundingRect(event)) {
+      if (!isInSubtree(event.target) && !isInBoundingRect(event)) {
         close();
       }
     }
