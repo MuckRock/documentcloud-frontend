@@ -5,6 +5,7 @@ Assumes it's a child of a ViewerContext
 -->
 
 <script lang="ts">
+  import { onMount } from "svelte";
   import { SidebarExpand16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -31,7 +32,6 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "./ViewerContext.svelte";
   import LoadingToolbar from "./LoadingToolbar.svelte";
-  import { onMount } from "svelte";
 
   const embed = isEmbedded();
   const currentMode = getCurrentMode();
