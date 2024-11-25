@@ -13,6 +13,10 @@ export const documents = {
     new URL("documents/pending/", BASE_API_URL).href,
     (req, res, ctx) => res(ctx.json(pending)),
   ),
+  error: rest.get(
+    new URL("documents/search/", "https://api.www.documentcloud.org/api/").href,
+    (req, res, ctx) => res(ctx.status(500, "Something went wrong")),
+  ),
 };
 
 export const revisionControl = {

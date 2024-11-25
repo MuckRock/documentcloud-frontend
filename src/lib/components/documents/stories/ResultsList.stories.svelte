@@ -7,6 +7,7 @@
   import Unverified from "../../accounts/Unverified.svelte";
 
   import { me } from "@/test/fixtures/accounts";
+  import { documents as mock } from "@/test/handlers/documents";
 
   // typescript complains without the type assertion
   import searchResults from "@/test/fixtures/documents/search-highlight.json";
@@ -24,7 +25,6 @@
   export const meta = {
     title: "Components / Documents / Results list",
     component: ResultsList,
-    tags: ["autodocs"],
   };
 
   const user = { ...me, verified_journalist: false };
@@ -56,4 +56,8 @@
   <ResultsList {results} {count} {next}>
     <Unverified {user} slot="start" />
   </ResultsList>
+</Story>
+
+<Story name="Loading error" parameters={{ msw: { handlers: [mock.error] } }}>
+  <ResultsList {results} {count} {next} auto />
 </Story>

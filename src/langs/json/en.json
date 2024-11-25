@@ -206,7 +206,9 @@
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
     "select": "Select",
-    "noteCount": "{n, plural, one {# note} other {# notes}}"
+    "noteCount": "{n, plural, one {# note} other {# notes}}",
+    "more": "Load more",
+    "retry": "Please try again."
   },
   "error": {
     "report": "Report a problem"
