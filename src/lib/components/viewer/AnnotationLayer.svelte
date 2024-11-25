@@ -14,8 +14,10 @@ Assumes it's a child of a ViewerContext
 
   import { invalidate, pushState } from "$app/navigation";
 
+  import { fly } from "svelte/transition";
   import { _ } from "svelte-i18n";
 
+  import Note from "./Note.svelte";
   import EditNote from "../forms/EditNote.svelte";
   import NoteTab from "./NoteTab.svelte";
 
@@ -31,8 +33,6 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
-  import Note from "./Note.svelte";
-  import { fly } from "svelte/transition";
 
   export let scale = 1.5;
   export let page_number: number; // zero-indexed

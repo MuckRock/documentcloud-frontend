@@ -3,7 +3,7 @@
   import type { Run } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { History16, History24, Hourglass24 } from "svelte-octicons";
+  import { Alert24, History16, History24, Hourglass24 } from "svelte-octicons";
 
   import HistoryEvent from "./HistoryEvent.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
@@ -11,11 +11,15 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Empty from "../common/Empty.svelte";
 
+  import { getApiResponse } from "$lib/utils/api";
+
   export let runs: Run[];
   export let previous: Maybe<Nullable<string>> = undefined;
   export let next: Maybe<Nullable<string>> = undefined;
 
   export let loading = false;
+
+  let error: string = "";
 
   $: empty = runs.length === 0;
 
@@ -23,21 +27,22 @@
   async function load(url: URL) {
     loading = true;
 
-    // todo: better error handling
-    const res = await fetch(url, { credentials: "include" }).catch(
+    const resp = await fetch(url, { credentials: "include" }).catch(
       console.error,
     );
-    if (!res) return console.error("API error");
-    if (!res.ok) {
-      console.error(res.statusText);
-      loading = false;
+
+    const { data: results, error: err } = await getApiResponse<Page<Run>>(resp);
+
+    if (err) {
+      error = err.message;
     }
 
-    const results: Page<Run> = await res.json();
+    if (results) {
+      runs = results.results;
+      next = results.next;
+      previous = results.previous;
+    }
 
-    runs = results.results;
-    next = results.next;
-    previous = results.previous;
     loading = false;
   }
 </script>
@@ -50,6 +55,10 @@
 
   {#if loading}
     <Empty icon={Hourglass24}>Loading past runs…</Empty>
+  {:else if error}
+    <Empty icon={Alert24}>
+      {error}
+    </Empty>
   {:else}
     {#each runs as run}
       <HistoryEvent {run} />
@@ -62,10 +71,10 @@
     <Paginator
       has_next={Boolean(next)}
       has_previous={Boolean(previous)}
-      on:next={(e) => {
+      on:next={() => {
         if (next) load(new URL(next));
       }}
-      on:previous={(e) => {
+      on:previous={() => {
         if (previous) load(new URL(previous));
       }}
     />

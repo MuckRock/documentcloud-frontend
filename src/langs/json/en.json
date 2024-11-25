@@ -11,7 +11,10 @@
     "title": "Title"
   },
   "search": {
-    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}"
+    "matchingResults": "{n, plural, one {# matching result} other {# matching results}}",
+    "reset": "Clear Search",
+    "help": "Use filters like <code>user:</code>, <code>project:</code> or <code>organization:</code> to refine searches. Use <code>sort:</code> to order results.",
+    "more": "Learn more"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -203,7 +206,9 @@
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
     "select": "Select",
-    "noteCount": "{n, plural, one {# note} other {# notes}}"
+    "noteCount": "{n, plural, one {# note} other {# notes}}",
+    "more": "Load more",
+    "retry": "Please try again."
   },
   "error": {
     "report": "Report a problem"

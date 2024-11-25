@@ -23,7 +23,7 @@
   export let documents: Promise<APIResponse<DocumentResults>>;
   export let query: string = "";
 
-  $: combinedQuery = `+project:${project.id} ${query}`.trim();
+  $: combinedQuery = `+project:${project.slug}-${project.id} ${query}`.trim();
 </script>
 
 <SidebarLayout>
