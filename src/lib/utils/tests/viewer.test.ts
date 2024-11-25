@@ -15,8 +15,8 @@ import {
   pageHashUrl,
   READING_MODES,
   WRITING_MODES,
-} from "@/lib/api/documents";
-import { noteHashUrl } from "@/lib/api/notes";
+} from "$lib/api/documents";
+import { noteHashUrl } from "$lib/api/notes";
 
 describe("getViewerHref", () => {
   const docUrl = canonicalUrl(document);

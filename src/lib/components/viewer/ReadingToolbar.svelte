@@ -83,7 +83,7 @@ Assumes it's a child of a ViewerContext
         {#each readModes.entries() as [value, name]}
           <Tab
             active={$mode === value}
-            href={getViewerHref({ document, mode: value, embed })}
+            href={getViewerHref({ document, mode: value, embed, query })}
           >
             <svelte:component this={icons[value]} />
             {name}
@@ -127,7 +127,10 @@ Assumes it's a child of a ViewerContext
   <Flex justify="end" slot="right">
     {#if !BREAKPOINTS.WRITE_MENU && canWrite}
       {#each writeModes as [value, name]}
-        <Button ghost href={getViewerHref({ document, mode: value, embed })}>
+        <Button
+          ghost
+          href={getViewerHref({ document, mode: value, embed, query })}
+        >
           <span class="icon"><svelte:component this={icons[value]} /></span>
           {name}
         </Button>

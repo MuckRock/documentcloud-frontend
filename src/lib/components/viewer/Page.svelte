@@ -5,6 +5,8 @@ Assumes it's a child of a ViewerContext
 -->
 
 <script lang="ts">
+  import { page } from "$app/stores";
+
   import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -17,6 +19,7 @@ Assumes it's a child of a ViewerContext
     getDocument,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
 
   export let page_number: number;
@@ -44,6 +47,7 @@ Assumes it's a child of a ViewerContext
     mode: "document",
     page: page_number,
     embed,
+    query: getQuery($page.url, "q"),
   });
 
   function isDOMRectReadOnly(
@@ -121,7 +125,7 @@ Assumes it's a child of a ViewerContext
   <div class="title"><slot name="title" /></div>
   <header>
     <h4 class="pageNumber">
-      <a {href}>
+      <a href={documentHref}>
         {$_("documents.pageAbbrev")}
         {page_number}
       </a>
