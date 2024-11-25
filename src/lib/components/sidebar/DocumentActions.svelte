@@ -48,7 +48,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   const selected: Readable<Document[]> = getContext("selected");
 
   const actions: Record<Action, ActionDetail> = {
-    share: ["sidebar.shareEmbed", Share16, "standard"],
+    share: ["bulk.actions.share", Share16, "standard"],
     edit: ["bulk.actions.edit", Pencil16, "primary"],
     data: ["bulk.actions.data", Tag16, "primary"],
     project: ["bulk.actions.project", FileDirectory16, "primary"],

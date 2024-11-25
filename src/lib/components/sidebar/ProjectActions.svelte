@@ -50,7 +50,7 @@
     {#if project.edit_access}
       <Button ghost mode="danger" on:click={() => (show = "delete")}>
         <Trash16 />
-        {$_("projects.delete.action")}
+        {$_("sidebar.deleteProject")}
       </Button>
     {/if}
   {/if}

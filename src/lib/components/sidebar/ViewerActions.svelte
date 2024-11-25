@@ -45,13 +45,13 @@
 
 <div class="actions wideGap">
   <div class="actions">
-    <Button ghost on:click={() => (shareOpen = true)}>
-      <Share16 />
-      {$_("sidebar.shareEmbed")}
-    </Button>
     <Button ghost href={pdfUrl(document).href} download target="_blank">
       <Download16 />
       {$_("sidebar.download")}
+    </Button>
+    <Button ghost on:click={() => (shareOpen = true)}>
+      <Share16 />
+      {$_("sidebar.shareEmbed")}
     </Button>
   </div>
   {#if document.edit_access}
