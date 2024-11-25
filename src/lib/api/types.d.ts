@@ -1,9 +1,7 @@
 /**
  * API response types
- *
- * This is a separate module from what's in src/api to prevent conflicts.
- * Both modules can be merged later.
- * */
+ */
+
 import type { DefinedError } from "ajv";
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
