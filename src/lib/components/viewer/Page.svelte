@@ -131,7 +131,9 @@ Assumes it's a child of a ViewerContext
       </a>
     </h4>
 
-    <PageActions {document} {page_number} pageWidth={width} />
+    {#if !embed}
+      <PageActions {document} {page_number} pageWidth={width} />
+    {/if}
   </header>
   <slot {id} {href} {visible} {documentHref} />
 </div>
