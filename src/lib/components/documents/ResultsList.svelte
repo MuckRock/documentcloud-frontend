@@ -1,11 +1,11 @@
 <script context="module" lang="ts">
+  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
   import {
     derived,
     writable,
     type Readable,
     type Writable,
   } from "svelte/store";
-  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
 
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
@@ -32,6 +32,8 @@
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
 
+  import { getApiResponse } from "$lib/utils/api";
+
   export let results: Document[] = [];
   export let count: Maybe<number> = undefined;
   export let next: string | null = null;
@@ -41,6 +43,7 @@
   let loading = false;
   let end: HTMLElement;
   let observer: IntersectionObserver;
+  let error: string = "";
 
   const embed: boolean = getContext("embed");
 
@@ -50,24 +53,25 @@
   // load the next set of results
   async function load(url: URL) {
     loading = true;
-    const res = await fetch(url, { credentials: "include" }).catch(
+    const resp = await fetch(url, { credentials: "include" }).catch(
       console.error,
     );
 
-    // todo: better error handling
-    if (!res) return console.error("API error");
-    if (!res.ok) {
-      console.error(res.statusText);
-      loading = false;
+    const { data, error: err } = await getApiResponse<DocumentResults>(resp);
+
+    if (err) {
+      // show an error message, but let the user try loading more
+      error = err.message;
     }
 
-    const r: DocumentResults = await res.json();
+    if (data) {
+      results = [...results, ...data.results];
+      $total = data.count ?? $total;
+      next = data.next;
+      if (auto) watch(end);
+    }
 
-    results = [...results, ...r.results];
-    $total = r.count ?? $total;
-    next = r.next;
     loading = false;
-    if (auto) watch(end);
   }
 
   function watch(el: HTMLElement) {
@@ -145,11 +149,16 @@
         }}
       >
         {#if loading}
-          Loading &hellip;
+          {$_("common.loading")}
         {:else}
-          Load more
+          {$_("documents.more")}
         {/if}
       </Button>
+    {/if}
+
+    {#if error}
+      <p class="error">{error}</p>
+      <p class="error">{$_("documents.retry")}</p>
     {/if}
   </div>
 
@@ -177,6 +186,12 @@
 
   .end {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .error {
+    color: var(--error, red);
   }
 </style>
