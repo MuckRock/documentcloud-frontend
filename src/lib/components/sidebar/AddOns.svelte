@@ -23,7 +23,7 @@
 
   export let query: string = "";
 
-  let pinnedAddOns = $page.data.pinnedAddOns ?? [];
+  let pinnedAddOns = $page.data.pinnedAddons ?? [];
 
   function getHref(query: string, addon?: AddOnListItem): string {
     let path = "/add-ons/";
