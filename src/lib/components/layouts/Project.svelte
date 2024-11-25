@@ -16,6 +16,7 @@
   import Documents from "../sidebar/Documents.svelte";
   import Projects from "../sidebar/Projects.svelte";
   import DocumentActions from "../sidebar/DocumentActions.svelte";
+  import UploadButton from "../sidebar/UploadButton.svelte";
 
   export let project: Project;
   export let users: ProjectUser[];
@@ -50,6 +51,7 @@
   </article>
 
   <svelte:fragment slot="action">
+    <UploadButton {project} />
     <h4>Document Actions</h4>
     <DocumentActions />
     <h4>Project Actions</h4>
