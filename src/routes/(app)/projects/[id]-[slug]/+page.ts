@@ -12,7 +12,6 @@ import * as projects from "$lib/api/projects";
 import * as collaborators from "$lib/api/collaborators";
 import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
-import { getPinnedAddons } from "$lib/api/addons";
 
 export async function load({ params, url, parent, data, fetch }) {
   const id = parseInt(params.id, 10);
