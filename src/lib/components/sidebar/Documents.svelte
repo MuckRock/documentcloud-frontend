@@ -63,7 +63,7 @@
   </Button>
   <SignedIn>
     <SidebarItem small hover href={searchUrl(mine)} active={query === mine}>
-      <Person16 slot="start" />
+      <Person16 height={14} width={14} slot="start" />
       {$_("documents.yourDocuments")}
     </SidebarItem>
     <SidebarItem
