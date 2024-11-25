@@ -192,6 +192,7 @@
   }
 
   .error {
+    text-align: center;
     color: var(--error, red);
   }
 </style>

@@ -3,7 +3,7 @@
   import type { Run } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { Alert16, History16, History24, Hourglass24 } from "svelte-octicons";
+  import { Alert24, History16, History24, Hourglass24 } from "svelte-octicons";
 
   import HistoryEvent from "./HistoryEvent.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
@@ -56,7 +56,7 @@
   {#if loading}
     <Empty icon={Hourglass24}>Loading past runs…</Empty>
   {:else if error}
-    <Empty icon={Alert16}>
+    <Empty icon={Alert24}>
       {error}
     </Empty>
   {:else}

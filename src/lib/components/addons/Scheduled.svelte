@@ -2,7 +2,7 @@
   import type { Maybe, Nullable, Page, Event } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { Alert16, Clock16, Hourglass24 } from "svelte-octicons";
+  import { Alert24, Clock16, Hourglass24 } from "svelte-octicons";
 
   import ScheduledEvent from "./ScheduledEvent.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
@@ -54,7 +54,7 @@
   {#if loading}
     <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
   {:else if error}
-    <Empty icon={Alert16}>
+    <Empty icon={Alert24}>
       {error}
     </Empty>
   {:else}
