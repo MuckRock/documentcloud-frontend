@@ -168,7 +168,7 @@
 
   .help {
     flex: 1 1 100%;
-    font-size: var(--font-s);
+    font-size: var(--font-sm);
     color: var(--gray-4);
   }
 </style>
