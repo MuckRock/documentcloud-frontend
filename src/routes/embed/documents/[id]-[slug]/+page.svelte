@@ -3,6 +3,8 @@ Assumes it's a child of a ViewerContext
  -->
 
 <script lang="ts">
+  import { browser } from "$app/environment";
+
   import DocumentEmbed from "$lib/components/embeds/DocumentEmbed.svelte";
   import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
   import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
@@ -14,7 +16,9 @@ Assumes it's a child of a ViewerContext
 
   $: document = data.document;
   $: mode = data.mode;
-  $: text = documents.text(document);
+  $: text = browser
+    ? documents.text(document)
+    : Promise.resolve({ pages: [], updated: 0 });
   $: asset_url = data.asset_url;
   $: canonical_url = documents.canonicalUrl(document).href;
 </script>

@@ -26,7 +26,6 @@
 
   $: action = data.action;
   $: hasDescription = Boolean(document.description?.trim().length);
-  $: query = data.query || "";
 </script>
 
 <svelte:head>
