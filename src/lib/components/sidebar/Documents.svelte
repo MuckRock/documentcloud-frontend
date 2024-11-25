@@ -10,6 +10,7 @@
     Globe16,
     Lock16,
     Organization16,
+    Person16,
   } from "svelte-octicons";
   import { page } from "$app/stores";
 
@@ -28,6 +29,7 @@
 
   $: query = $page.url.searchParams?.get("q") || "";
 
+  $: mine = $me ? userDocs($me) : "";
   $: minePublic = $me ? userDocs($me, "public") : "";
   $: minePrivate = $me ? userDocs($me, "private") : "";
 
@@ -60,6 +62,10 @@
     {$_("common.explore")}
   </Button>
   <SignedIn>
+    <SidebarItem small hover href={searchUrl(mine)} active={query === mine}>
+      <Person16 slot="start" />
+      {$_("documents.yourDocuments")}
+    </SidebarItem>
     <SidebarItem
       small
       hover
