@@ -1,7 +1,8 @@
 import type { Actions } from "./$types";
 import type { Access, Document, Note } from "$lib/api/types";
 
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
+import { setFlash, redirect } from "sveltekit-flash-message/server";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { destroy, edit, redact } from "$lib/api/documents";
@@ -54,12 +55,13 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, {
         message: error.message,
         error: error.errors,
       });
     }
-
+    setFlash({ message: "Data saved", status: "success" }, cookies);
     return {
       success: true,
       document,
@@ -79,10 +81,16 @@ export const actions = {
     const { error } = await destroy(id, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { message: error.message });
     }
 
-    return redirect(302, "/documents/");
+    return redirect(
+      302,
+      "/documents/",
+      { message: "Document deleted", status: "success" },
+      cookies,
+    );
   },
 
   async edit({ cookies, fetch, request, params }) {
@@ -93,7 +101,7 @@ export const actions = {
     const form = await request.formData();
     const { id } = params;
 
-    const update: Partial<Document> = Object.fromEntries(form);
+    const update: Partial<Document> = Object.fromEntries(form.entries());
 
     // noindex is a boolean so needs special treatment
     update.noindex = form.get("noindex") === "on";
@@ -101,12 +109,14 @@ export const actions = {
     const { data: document, error } = await edit(id, update, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, {
         message: error.message,
         errors: error.errors,
       });
     }
 
+    setFlash({ message: "Metadata saved", status: "success" }, cookies);
     return {
       success: true,
       document,
@@ -127,14 +137,22 @@ export const actions = {
 
     // probably the API is down
     if (!resp) {
+      setFlash(
+        { message: "Redactions failed to save.", status: "error" },
+        cookies,
+      );
       return fail(500, { error: "Something went wrong." });
     }
 
     // something else broke
     if (isErrorCode(resp.status)) {
+      setFlash(
+        { message: "Redactions failed to save.", status: "error" },
+        cookies,
+      );
       return fail(resp.status, await resp.json());
     }
-
+    setFlash({ message: "Redactions saved", status: "success" }, cookies);
     return {
       success: true,
       redactions: await resp.json(), // this should be the same as above
@@ -171,12 +189,14 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, {
         message: error.message,
         errors: error.errors,
       });
     }
 
+    setFlash({ message: "Note created", status: "success" }, cookies);
     return {
       success: true,
       note: created,
@@ -208,12 +228,14 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, {
         message: error.message,
         errors: error.errors,
       });
     }
 
+    setFlash({ message: "Note updated", status: "success" }, cookies);
     return {
       success: true,
       note: updated,
@@ -234,9 +256,11 @@ export const actions = {
     const { error } = await notes.remove(params.id, note_id, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { message: error.message });
     }
 
+    setFlash({ message: "Note deleted", status: "success" }, cookies);
     return {
       success: true,
     };

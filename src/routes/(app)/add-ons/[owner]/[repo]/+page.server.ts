@@ -4,6 +4,7 @@ import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
 import { getAddon, buildPayload, dispatch } from "$lib/api/addons";
+import { setFlash } from "sveltekit-flash-message/server";
 
 export const actions = {
   async dispatch({ cookies, fetch, request, params }) {
@@ -33,10 +34,13 @@ export const actions = {
     const { data, error } = await dispatch(payload, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
 
     const type = payload.event ? "event" : "run";
+    const message = payload.event ? "Event scheduled" : "Run dispatched";
+    setFlash({ message, status: "success" }, cookies);
     return {
       type,
       [type]: data,

@@ -32,20 +32,7 @@
 
 <script lang="ts">
   import { flip } from "svelte/animate";
-  import { getFlash } from "sveltekit-flash-message";
-  import { page } from "$app/stores";
-
   import Toast from "$lib/components/common/Toast.svelte";
-
-  const flash = getFlash(page);
-  $: if ($flash) {
-    toast($flash.message, {
-      status: $flash.status,
-      lifespan: $flash.lifespan,
-    });
-    // Clear the flash message to avoid double-toasting.
-    $flash = undefined;
-  }
 </script>
 
 <div id="toaster">

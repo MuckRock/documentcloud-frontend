@@ -5,6 +5,7 @@ import { fail } from "@sveltejs/kit";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import { destroy_many, edit_many, add_tags } from "$lib/api/documents";
+import { setFlash } from "sveltekit-flash-message/server";
 
 export function load({ cookies }) {
   const csrf_token = cookies.get(CSRF_COOKIE_NAME);
@@ -51,9 +52,21 @@ export const actions = {
     const errors = results.filter((r) => r.error);
 
     if (errors.length) {
+      errors.forEach((r) => {
+        if (r.error) {
+          setFlash({ message: r.error.message, status: "error" }, cookies);
+        }
+      });
       return fail(400, { errors });
     }
 
+    setFlash(
+      {
+        message: `Data saved to ${results.filter((r) => !r.error).length} documents`,
+        status: "success",
+      },
+      cookies,
+    );
     return {
       success: true,
     };
@@ -71,9 +84,12 @@ export const actions = {
     const { error } = await destroy_many(ids, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
 
+    const message = ids.length === 1 ? "Document deleted" : "Documents deleted";
+    setFlash({ message, status: "success" }, cookies);
     return {
       success: true,
       count: ids.length,
@@ -100,9 +116,15 @@ export const actions = {
     const { error } = await edit_many(docs, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
 
+    const message =
+      ids.length === 1
+        ? "Saved edits to one document"
+        : `Saved edits to ${ids.length} documents`;
+    setFlash({ message, status: "success" }, cookies);
     return {
       success: true,
       count: ids.length,

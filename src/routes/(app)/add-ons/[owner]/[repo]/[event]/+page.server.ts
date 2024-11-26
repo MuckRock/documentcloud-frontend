@@ -4,6 +4,7 @@ import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
 import { getEvent, buildPayload, update } from "$lib/api/addons";
+import { setFlash } from "sveltekit-flash-message/server";
 
 export const actions = {
   async update({ cookies, fetch, params, request }) {
@@ -35,9 +36,11 @@ export const actions = {
     const { data, error } = await update(id, payload, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
 
+    setFlash({ message: "Event updated", status: "success" }, cookies);
     return {
       type: "event",
       event: data,
