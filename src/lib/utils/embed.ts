@@ -28,7 +28,7 @@ export interface EmbedSettingConfig {
 }
 
 export let settings = {
-  responsive: null,
+  // responsive: null,
   width: null,
   height: null,
   sidebar: null,
@@ -42,7 +42,7 @@ export let settings = {
 export type EmbedSettings = Record<keyof typeof settings, null | number>;
 
 export const defaultSettings: EmbedSettings = {
-  responsive: 1,
+  // responsive: 1,
   width: null,
   height: null,
   sidebar: null,
@@ -88,7 +88,7 @@ function truthy(
 }
 
 export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
-  responsive: {
+  /*   responsive: {
     storageIndex: 8, // out-of-order because added later
     defaultValue: 1,
     field: {
@@ -108,6 +108,7 @@ export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
       ],
     },
   },
+ */
   width: {
     storageIndex: 1,
     defaultValue: null,

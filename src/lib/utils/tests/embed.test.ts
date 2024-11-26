@@ -14,9 +14,7 @@ describe("embed settings", () => {
   });
 
   test("createEmbedSearchParams", () => {
-    expect(createEmbedSearchParams({ responsive: null }).toString()).toEqual(
-      "",
-    );
+    expect(createEmbedSearchParams({ title: null }).toString()).toEqual("");
   });
 
   test("getEmbedSettings", () => {

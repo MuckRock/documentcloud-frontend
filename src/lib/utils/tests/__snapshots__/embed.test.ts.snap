@@ -80,26 +80,6 @@ exports[`embed settings > settingsConfig 1`] = `
     },
     "storageIndex": 4,
   },
-  "responsive": {
-    "defaultValue": 1,
-    "field": {
-      "label": "dialogDocumentEmbedDialog.responsive",
-      "options": [
-        {
-          "help": "dialogDocumentEmbedDialog.respOnHelp",
-          "label": "dialogDocumentEmbedDialog.respOn",
-          "value": 1,
-        },
-        {
-          "help": "dialogDocumentEmbedDialog.respOffHelp",
-          "label": "dialogDocumentEmbedDialog.respOff",
-          "value": 0,
-        },
-      ],
-      "type": "toggle",
-    },
-    "storageIndex": 8,
-  },
   "sidebar": {
     "defaultValue": null,
     "field": {
