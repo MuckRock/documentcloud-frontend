@@ -73,12 +73,30 @@
     }
   }
 
+  function isInBoundingRect(event: MouseEvent) {
+    const dropdownRect = dropdown.getBoundingClientRect();
+    const anchorRect = anchor.getBoundingClientRect();
+    const clickInsideDropdown =
+      event.clientX >= dropdownRect.left &&
+      event.clientX <= dropdownRect.right &&
+      event.clientY >= dropdownRect.top &&
+      event.clientY <= dropdownRect.bottom;
+    const clickInsideAnchor =
+      event.clientX >= anchorRect.left &&
+      event.clientX <= anchorRect.right &&
+      event.clientY >= anchorRect.top &&
+      event.clientY <= anchorRect.bottom;
+    return clickInsideDropdown || clickInsideAnchor;
+  }
+
+  function isInSubtree(element: Element) {
+    return dropdown.contains(element) || anchor.contains(element);
+  }
+
   // Close the dropdown when a click or escape is made outside its subtree
   function closeOnEventOutside(event: MouseEvent) {
     if (event.target instanceof Element) {
-      const outside = !dropdown.contains(event.target);
-      const notTitle = !anchor.contains(event.target);
-      if (outside && notTitle) {
+      if (!isInSubtree(event.target) && !isInBoundingRect(event)) {
         close();
       }
     }

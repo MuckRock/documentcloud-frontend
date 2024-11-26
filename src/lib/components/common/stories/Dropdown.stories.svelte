@@ -77,3 +77,27 @@
     </Menu>
   </Dropdown>
 </Story>
+
+<Story name="With Nested Dropdown">
+  <Dropdown position="right">
+    <SidebarItem slot="anchor">
+      <Globe16 slot="start" />
+      Open Dropdown
+      <ChevronRight12 slot="end" />
+    </SidebarItem>
+    <Menu slot="default" let:close>
+      <SidebarItem on:click={close}>Item 1</SidebarItem>
+      <SidebarItem on:click={close}>Item 2</SidebarItem>
+      <Dropdown position="right">
+        <SidebarItem slot="anchor">
+          Item 3
+          <ChevronRight12 slot="end" />
+        </SidebarItem>
+        <Menu slot="default">
+          <MenuItem>Item 1</MenuItem>
+          <MenuItem>Item 2</MenuItem>
+        </Menu>
+      </Dropdown>
+    </Menu>
+  </Dropdown>
+</Story>
