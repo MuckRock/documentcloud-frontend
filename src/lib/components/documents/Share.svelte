@@ -67,7 +67,6 @@
   let permalink: URL;
   let embedSrc: URL;
   let iframe: string;
-  // let wpShortcode: string; is broken in WordPress
 
   let customizeEmbedOpen = false;
   let editOpen = false;
@@ -82,14 +81,6 @@
         embedSrc = embedUrl(document, embedUrlParams);
 
         iframe = `<iframe src="${embedSrc.href}"`;
-        /*
-        wpShortcode = `[documentcloud url="${embedSrc.href}" ${Array.from(
-          embedUrlParams,
-        )
-          .slice(1)
-          .map(([key, value]) => `${key}="${value}"`)
-          .join(" ")}]`;
-        */
         if ($embedSettings.width) {
           iframe += ` width="${$embedSettings.width}"`;
         }
@@ -103,7 +94,6 @@
         embedSrc = canonicalPageUrl(document, page);
         embedSrc.searchParams.set("embed", "1");
         iframe = `<iframe src="${embedSrc.href}" />`;
-        // wpShortcode = `[documentcloud url="${embedSrc}"]`;
         break;
       case "note":
         const noteObject = document.notes?.find(
@@ -114,7 +104,6 @@
           embedSrc = canonicalNoteUrl(document, noteObject);
           embedSrc.searchParams.set("embed", "1");
           iframe = `<iframe src="${embedSrc.href}" />`;
-          // wpShortcode = `[documentcloud url="${embedSrc}"]`;
         }
         break;
     }
@@ -222,27 +211,6 @@
           --font-size="var(--font-sm)"
         />
       </Field>
-      <!-- wp shortcode is broken at the moment
-      <Field>
-        <FieldLabel>
-          WordPress Shortcode
-          <Button
-            slot="action"
-            size="small"
-            ghost mode="primary"
-            on:click={() => copy(wpShortcode)}
-            disabled={!navigator.clipboard}
-          >
-            <Copy16 /> Copy
-          </Button>
-        </FieldLabel>
-        <Text
-          value={wpShortcode}
-          --font-family="var(--font-mono)"
-          --font-size="var(--font-sm)"
-        />
-      </Field> 
-      -->
 
       <Field>
         <FieldLabel>

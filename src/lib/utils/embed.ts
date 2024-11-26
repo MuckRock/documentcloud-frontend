@@ -28,7 +28,7 @@ export interface EmbedSettingConfig {
 }
 
 export let settings = {
-  responsive: null,
+  // responsive: null,
   width: null,
   height: null,
   sidebar: null,
@@ -42,7 +42,7 @@ export let settings = {
 export type EmbedSettings = Record<keyof typeof settings, null | number>;
 
 export const defaultSettings: EmbedSettings = {
-  responsive: 1,
+  // responsive: 1,
   width: null,
   height: null,
   sidebar: null,
@@ -68,14 +68,27 @@ export function getEmbedSettings(searchParams: URLSearchParams): EmbedSettings {
   const embedSettings = Object.assign({}, defaultSettings);
   Object.keys(embedSettings).forEach((key) => {
     if (searchParams.has(key)) {
-      embedSettings[key] = searchParams.get(key);
+      embedSettings[key] = truthy(searchParams.get(key));
     }
   });
   return embedSettings;
 }
 
+function truthy(
+  value: string | number | boolean | null | undefined,
+): boolean | number {
+  if (value === undefined) return false;
+  if (value === null) return false;
+
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value;
+  if (typeof value === "string") return JSON.parse(value);
+
+  return false;
+}
+
 export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
-  responsive: {
+  /*   responsive: {
     storageIndex: 8, // out-of-order because added later
     defaultValue: 1,
     field: {
@@ -95,6 +108,7 @@ export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
       ],
     },
   },
+ */
   width: {
     storageIndex: 1,
     defaultValue: null,

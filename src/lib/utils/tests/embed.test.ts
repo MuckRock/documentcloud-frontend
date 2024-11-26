@@ -14,19 +14,19 @@ describe("embed settings", () => {
   });
 
   test("createEmbedSearchParams", () => {
-    expect(createEmbedSearchParams({ responsive: null }).toString()).toEqual(
-      "",
-    );
+    expect(createEmbedSearchParams({ title: null }).toString()).toEqual("");
   });
 
   test("getEmbedSettings", () => {
-    const url = new URL("", "https://www.documentcloud.org");
+    const url = new URL("https://www.documentcloud.org");
     url.searchParams.set("pdf", "false");
     url.searchParams.set("onlyshoworg", "true");
+    url.searchParams.set("title", "0");
     expect(getEmbedSettings(url.searchParams)).toEqual({
       ...defaultSettings,
-      pdf: "false",
-      onlyshoworg: "true",
+      pdf: false,
+      onlyshoworg: true,
+      title: 0,
     });
   });
 });
