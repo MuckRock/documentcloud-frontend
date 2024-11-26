@@ -86,7 +86,7 @@ export const PDF_SIZE_LIMIT_READABLE = "500 MB";
 export const DOCUMENT_SIZE_LIMIT = 27262976;
 export const DOCUMENT_SIZE_LIMIT_READABLE = "25 MB";
 
-export const TOAST_LENGTH = 5000;
+export const TOAST_LENGTH = 2500;
 export const TOAST_FADE = 800;
 
 export const LEGACY_CUT_OFF = 20000000;
