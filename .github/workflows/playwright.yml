@@ -1,3 +1,5 @@
+# this workflow still refers to the legacy codebase
+# tests need to be updated before this is useful again
 name: Playwright Tests
 
 on:
