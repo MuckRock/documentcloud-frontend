@@ -15,9 +15,6 @@
   export const meta = {
     title: "Components / Navigation / Org Menu",
     component: OrgMenu,
-    parameters: {
-      layout: "centered",
-    },
   };
 </script>
 

@@ -177,7 +177,7 @@
             <p class="orgname">{active_org.name}</p>
             <span class="arrow" slot="end"><ChevronDown12 /></span>
           </SidebarItem>
-          <Menu>
+          <Menu --max-height="24rem">
             {#each otherOrgs as otherOrg}
               <SidebarItem
                 hover
@@ -225,7 +225,6 @@
     color: var(--black, #233944);
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-semibold, 600);
-    line-height: 1rem;
     margin-bottom: 0;
   }
 

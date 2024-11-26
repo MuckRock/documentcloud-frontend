@@ -17,6 +17,8 @@
     padding: 0.25rem;
     gap: 0.25rem;
     min-width: 16rem;
+    max-height: var(--max-height, auto);
+    overflow-y: scroll;
   }
   :global(.menu.small) {
     color: var(--gray-3);
