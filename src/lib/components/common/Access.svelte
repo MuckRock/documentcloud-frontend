@@ -22,7 +22,7 @@
     },
   ];
 
-  export function getLevel(access: Access): Level | undefined {
+  export function getLevel(access: Access): Maybe<Level> {
     return levels.find((level) => level.value === access);
   }
 </script>
@@ -30,16 +30,18 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Access } from "@/lib/api/types";
+  import type { Access, Maybe } from "$lib/api/types";
   import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
 
-  export let level: Level;
+  export let level: Maybe<Level> = undefined;
 </script>
 
-<div class="access {level.value}">
-  <svelte:component this={level.icon} height="1em" width="1em" />
-  {$_(level.title)}
-</div>
+{#if level}
+  <div class="access {level.value}">
+    <svelte:component this={level.icon} height="1em" width="1em" />
+    {$_(level.title)}
+  </div>
+{/if}
 
 <style>
   .access {

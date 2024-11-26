@@ -4,7 +4,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 -->
 <script context="module" lang="ts">
   type Action = "share" | "edit" | "data" | "reprocess" | "delete" | "project";
-  type ActionDetail = [label: string, icon: ComponentType];
+  type ActionDetail = [
+    label: string,
+    icon: ComponentType,
+    mode: "primary" | "standard" | "danger",
+  ];
 </script>
 
 <script lang="ts">
@@ -24,7 +28,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import SidebarItem from "./SidebarItem.svelte";
 
   // forms
   import ConfirmDelete from "../forms/ConfirmDelete.svelte";
@@ -34,7 +38,9 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Projects from "../forms/Projects.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
-  import Share from "./Share.svelte";
+  import Share from "../documents/Share.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Button from "../common/Button.svelte";
 
   export let afterClick: Maybe<() => void> = undefined;
 
@@ -42,18 +48,18 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   const selected: Readable<Document[]> = getContext("selected");
 
   const actions: Record<Action, ActionDetail> = {
-    share: [$_("bulk.actions.share"), Share16],
-    edit: [$_("bulk.actions.edit"), Pencil16],
-    data: [$_("bulk.actions.data"), Tag16],
-    project: [$_("bulk.actions.project"), FileDirectory16],
-    reprocess: [$_("bulk.actions.reprocess"), IssueReopened16],
-    delete: [$_("bulk.actions.delete"), Alert16],
+    share: ["bulk.actions.share", Share16, "standard"],
+    edit: ["bulk.actions.edit", Pencil16, "primary"],
+    data: ["bulk.actions.data", Tag16, "primary"],
+    project: ["bulk.actions.project", FileDirectory16, "primary"],
+    reprocess: ["bulk.actions.reprocess", IssueReopened16, "danger"],
+    delete: ["bulk.actions.delete", Alert16, "danger"],
   };
 
   let visible: Nullable<Action> = null;
 
   // svelte 5 will let us do type coercion in templates
-  $: toShare = $selected[0]!;
+  $: toShare = $selected?.[0]!;
   function show(action: string) {
     visible = action as Action;
   }
@@ -64,21 +70,24 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 </script>
 
 <!-- for now, we can only share individual documents -->
-{#each Object.entries(actions) as [action, [label, icon]]}
-  <SidebarItem
-    hover
-    disabled={action === "share"
-      ? $selected?.length !== 1
-      : !$me || !$selected?.length}
-    on:click={() => {
-      show(action);
-      afterClick?.();
-    }}
-  >
-    <svelte:component this={icon} slot="start" />
-    {label}
-  </SidebarItem>
-{/each}
+<Flex direction="column" align="start">
+  {#each Object.entries(actions) as [action, [label, icon, mode]]}
+    <Button
+      {mode}
+      ghost
+      disabled={action === "share"
+        ? $selected?.length !== 1
+        : !$me || !$selected?.length}
+      on:click={() => {
+        show(action);
+        afterClick?.();
+      }}
+    >
+      <svelte:component this={icon} />
+      {$_(label)}
+    </Button>
+  {/each}
+</Flex>
 
 {#if visible}
   <Portal>

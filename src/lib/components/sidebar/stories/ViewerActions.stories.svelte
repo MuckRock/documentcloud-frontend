@@ -1,14 +1,14 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import Actions from "../Actions.svelte";
+  import ViewerActions from "../ViewerActions.svelte";
   import type { Document } from "@/lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Documents / Actions",
-    component: Actions,
+    title: "Components / Sidebar / Viewer Actions",
+    component: ViewerActions,
     parameters: {
       layout: "centered",
     },
@@ -21,7 +21,7 @@
 </script>
 
 <Template let:args>
-  <Actions {...args} />
+  <ViewerActions {...args} />
 </Template>
 
 <Story

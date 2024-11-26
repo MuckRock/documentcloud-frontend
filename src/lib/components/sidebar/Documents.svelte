@@ -5,15 +5,15 @@
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
+    Search16,
     File16,
     Globe16,
-    Infinity16,
     Lock16,
     Organization16,
+    Person16,
   } from "svelte-octicons";
   import { page } from "$app/stores";
 
-  import Flex from "$lib/components/common/Flex.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
@@ -21,6 +21,8 @@
   import { slugify } from "$lib/utils/slugify";
   import { userDocs } from "$lib/utils/search";
   import { getCurrentUser } from "@/lib/utils/permissions";
+  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
+  import Button from "@/lib/components/common/Button.svelte";
 
   const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
@@ -43,47 +45,61 @@
   }
 </script>
 
-<Flex direction="column">
-  <SidebarItem hover href={searchUrl("")} active={query === ""}>
-    <Infinity16 slot="start" />
-    {$_("documents.allDocuments", {
-      values: { access: "" },
-    })}
+<SidebarGroup name="documents">
+  <SidebarItem slot="title">
+    <File16 slot="start" />
+    Documents
   </SidebarItem>
-
+  <Button
+    slot="action"
+    ghost
+    minW={false}
+    mode="primary"
+    size="small"
+    href="/documents"
+  >
+    <Search16 height="14" width="14" />
+    {$_("common.explore")}
+  </Button>
   <SignedIn>
-    <SidebarItem hover href={searchUrl(mine)} active={query === mine}>
-      <File16 slot="start" />
+    <SidebarItem small hover href={searchUrl(mine)} active={query === mine}>
+      <Person16 height={14} width={14} slot="start" />
       {$_("documents.yourDocuments")}
     </SidebarItem>
-
     <SidebarItem
-      hover
-      href={searchUrl(minePublic)}
-      active={query === minePublic}
-    >
-      <Globe16 slot="start" />
-      {$_("documents.accessDocuments", {
-        values: { access: "Public " },
-      })}
-    </SidebarItem>
-    <SidebarItem
+      small
       hover
       href={searchUrl(minePrivate)}
       active={query === minePrivate}
     >
-      <Lock16 slot="start" />
+      <Lock16 height={14} width={14} slot="start" />
       {$_("documents.accessDocuments", {
         values: { access: "Private " },
       })}
     </SidebarItem>
+    <SidebarItem
+      small
+      hover
+      href={searchUrl(minePublic)}
+      active={query === minePublic}
+    >
+      <Globe16 height={14} width={14} slot="start" />
+      {$_("documents.accessDocuments", {
+        values: { access: "Public " },
+      })}
+    </SidebarItem>
     {#if $org && !$org.individual}
-      <SidebarItem hover href={searchUrl(orgDocs)} active={query === orgDocs}>
-        <Organization16 slot="start" />
+      <SidebarItem
+        small
+        hover
+        href={searchUrl(orgDocs)}
+        active={query === orgDocs}
+      >
+        <Organization16 height={14} width={14} slot="start" />
         {$_("documents.nameDocuments", {
           values: { name: $org.name, access: "" },
         })}
       </SidebarItem>
     {/if}
   </SignedIn>
-</Flex>
+</SidebarGroup>

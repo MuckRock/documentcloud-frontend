@@ -36,7 +36,7 @@
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
-  import BulkActions from "$lib/components/documents/BulkActions.svelte";
+  import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
@@ -72,10 +72,10 @@
   export let query: string = "";
   export let project: Nullable<Project> = null;
   export let uiText: UITextProps = {
-    loading: $_("common.loading"),
-    error: $_("common.error"),
-    empty: $_("common.empty"),
-    search: $_("common.search"),
+    loading: "common.loading",
+    error: "common.error",
+    empty: "common.empty",
+    search: "common.search",
   };
 
   let width: number;
@@ -154,7 +154,14 @@
             <PageToolbar>
               <Flex slot="right">
                 <div style:flex="1 1 auto">
-                  <Search name="q" {query} placeholder={uiText.search} />
+                  <Search name="q" {query} placeholder={$_(uiText.search)}>
+                    <span slot="help">
+                      {@html $_("search.help")}
+                      <a target="_blank" href="/help/search/">
+                        {$_("search.more")}
+                      </a>
+                    </span>
+                  </Search>
                 </div>
               </Flex>
             </PageToolbar>
@@ -173,10 +180,10 @@
         {/if}
       </svelte:fragment>
       {#await searchResults}
-        <Empty icon={Hourglass24}>{uiText.loading}</Empty>
+        <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
       {:then documentsResults}
         {#if !query && !documentsResults.results?.length}
-          <Empty icon={FileDirectory24}>{uiText.empty}</Empty>
+          <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
         {:else}
           <ResultsList
             results={documentsResults.results}
@@ -192,7 +199,7 @@
           </ResultsList>
         {/if}
       {:catch}
-        <Error>{uiText.error}</Error>
+        <Error>{$_(uiText.error)}</Error>
       {/await}
       <svelte:fragment slot="footer">
         {#if !embed}
@@ -226,7 +233,7 @@
                 </SidebarItem>
 
                 <Menu slot="default" let:close>
-                  <BulkActions afterClick={() => close()} />
+                  <DocumentActions afterClick={() => close()} />
                 </Menu>
               </Dropdown>
             </Flex>

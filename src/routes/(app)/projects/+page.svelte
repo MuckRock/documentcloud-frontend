@@ -2,30 +2,27 @@
   import type { Nullable } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import {
-    FileDirectory24,
-    People16,
-    Person16,
-    Globe16,
-  } from "svelte-octicons";
+  import { FileDirectory24, SidebarExpand16 } from "svelte-octicons";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
   import Button from "$lib/components/common/Button.svelte";
-  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
-  import ProjectListItem from "$lib/components/projects/ProjectListItem.svelte";
+  import EditProject from "$lib/components/forms/EditProject.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import SidebarLayout from "@/lib/components/layouts/SidebarLayout.svelte";
-
-  import EditProject from "@/lib/components/forms/EditProject.svelte";
+  import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
+  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
+  import ProjectListItem from "$lib/components/projects/ProjectListItem.svelte";
+  import Documents from "$lib/components/sidebar/Documents.svelte";
+  import Projects from "$lib/components/sidebar/Projects.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
+  import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
 
@@ -57,33 +54,48 @@
 
 <SidebarLayout>
   <svelte:fragment slot="navigation">
-    <Flex direction="column">
-      {#if $me}
-        <SidebarItem active={data.list === "owned"} href="?list=owned">
-          <Person16 slot="start" />
-          {$_("projects.yours")}
-        </SidebarItem>
-        <SidebarItem active={data.list === "shared"} href="?list=shared">
-          <People16 slot="start" />
-          {$_("projects.shared")}
-        </SidebarItem>
-      {/if}
-      <SidebarItem active={data.list === "public"} href="?list=public">
-        <Globe16 slot="start" />
-        {$_("projects.public")}
-      </SidebarItem>
-    </Flex>
+    <Documents />
+    <Projects />
+    <AddOns />
   </svelte:fragment>
 
   <ContentLayout slot="content">
-    <PageToolbar slot="header">
-      <Search
-        slot="center"
-        name="query"
-        placeholder={$_("projects.placeholder.projects")}
-        {query}
-      />
-    </PageToolbar>
+    <svelte:fragment slot="header">
+      <Flex>
+        {#if $sidebars["navigation"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["navigation"] = true)}
+            >
+              <span class="flipV">
+                <SidebarExpand16 />
+              </span>
+            </Button>
+          </div>
+        {/if}
+        <PageToolbar>
+          <Search
+            slot="center"
+            name="query"
+            placeholder={$_("projects.placeholder.projects")}
+            {query}
+          />
+        </PageToolbar>
+        {#if $sidebars["action"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["action"] = true)}
+            >
+              <SidebarExpand16 />
+            </Button>
+          </div>
+        {/if}
+      </Flex>
+    </svelte:fragment>
 
     {#each projects as project}
       <ProjectListItem {project} />
@@ -119,3 +131,18 @@
     </Modal>
   </Portal>
 {/if}
+
+<style>
+  .flipV {
+    display: flex;
+    transform: rotate(180deg);
+  }
+
+  .toolbar {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .w-auto {
+    width: auto;
+  }
+</style>

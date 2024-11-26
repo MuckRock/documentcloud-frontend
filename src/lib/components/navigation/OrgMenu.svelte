@@ -226,6 +226,7 @@
     font-family: var(--font-sans, "Source Sans Pro");
     font-weight: var(--font-semibold, 600);
     line-height: 1rem;
+    margin-bottom: 0;
   }
 
   .arrow {
