@@ -28,7 +28,6 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
-  import SidebarItem from "./SidebarItem.svelte";
 
   // forms
   import ConfirmDelete from "../forms/ConfirmDelete.svelte";
@@ -92,7 +91,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 {#if visible}
   <Portal>
     <Modal on:close={close}>
-      <h1 slot="title">{actions[visible][0]}</h1>
+      <h1 slot="title">{$_(actions[visible][0])}</h1>
 
       {#if visible === "share"}
         <Share document={toShare} />
