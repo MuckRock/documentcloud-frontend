@@ -66,7 +66,7 @@
   on:mouseenter={cancel}
   on:mouseleave={reset}
   role="dialog"
-  transition:fly={{ duration: 750, easing: quintOut, y: 20 }}
+  transition:fly={{ duration: 750, easing: quintOut, y: -20 }}
 >
   <div class="icon">
     <svelte:component this={statusIcons[String(status)]} />
