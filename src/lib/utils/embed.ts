@@ -68,10 +68,23 @@ export function getEmbedSettings(searchParams: URLSearchParams): EmbedSettings {
   const embedSettings = Object.assign({}, defaultSettings);
   Object.keys(embedSettings).forEach((key) => {
     if (searchParams.has(key)) {
-      embedSettings[key] = searchParams.get(key);
+      embedSettings[key] = truthy(searchParams.get(key));
     }
   });
   return embedSettings;
+}
+
+function truthy(
+  value: string | number | boolean | null | undefined,
+): boolean | number {
+  if (value === undefined) return false;
+  if (value === null) return false;
+
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value;
+  if (typeof value === "string") return JSON.parse(value);
+
+  return false;
 }
 
 export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {

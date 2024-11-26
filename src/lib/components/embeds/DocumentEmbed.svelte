@@ -30,6 +30,8 @@
     ? document.organization.name
     : undefined;
   $: contributedBy = settings.onlyshoworg ? org : `${user} (${org})`;
+
+  $: console.log(settings);
 </script>
 
 <div class="container">
