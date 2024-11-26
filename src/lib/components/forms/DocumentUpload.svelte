@@ -70,6 +70,7 @@ progress through the three-part upload process.
   import { getCsrfToken } from "$lib/utils/api";
   import { getCurrentUser } from "$lib/utils/permissions";
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
+  import { toast } from "../layouts/Toaster.svelte";
 
   export let files: File[] = getFilesToUpload();
   export let projects: Project[] = [];
@@ -202,6 +203,7 @@ progress through the three-part upload process.
 
     // errors are handled within each promise, so we can just wait for all to be settled
     await Promise.allSettled(promises);
+    toast($_("uploadDialog.success"), { status: "success" });
 
     loading = false;
   }
@@ -228,6 +230,7 @@ progress through the three-part upload process.
 
     // bail here on error, console.error to report this to sentry
     if (error) {
+      toast($_("uploadDialog.error"), { status: "error" });
       return console.error(error);
     }
 
@@ -239,7 +242,7 @@ progress through the three-part upload process.
           message: "API returned invalid document. Please try again.",
         },
       };
-
+      toast($_("uploadDialog.error"), { status: "error" });
       return;
     }
 
@@ -255,6 +258,7 @@ progress through the three-part upload process.
       };
 
       STATUS[id].error = error;
+      toast($_("uploadDialog.error"), { status: "error" });
       return console.error(error);
     }
 
@@ -263,6 +267,7 @@ progress through the three-part upload process.
         status: 500,
         message: "Invalid presigned URL",
       };
+      toast($_("uploadDialog.error"), { status: "error" });
       return;
     }
 
@@ -276,6 +281,7 @@ progress through the three-part upload process.
         status: 500,
         message: "Upload failed",
       };
+      toast($_("uploadDialog.error"), { status: "error" });
       return;
     }
 
@@ -289,6 +295,7 @@ progress through the three-part upload process.
     ));
 
     if (error) {
+      toast($_("uploadDialog.error"), { status: "error" });
       STATUS[id].error = error;
     }
     // trigger process load request

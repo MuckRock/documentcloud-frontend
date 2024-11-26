@@ -22,7 +22,7 @@ export async function handleFetch({ event, request, fetch }) {
   if (request.url.startsWith(DC_BASE)) {
     // handle docker issues
     event.url.protocol = "https";
-    request.headers.set("cookie", event.request.headers.get("cookie") ?? "");
+    request.headers.append("cookie", event.request.headers.get("cookie") ?? "");
   }
 
   return fetch(request);

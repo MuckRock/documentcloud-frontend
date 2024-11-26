@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
-  import type { ComponentType, SvelteComponent } from "svelte";
+  import type { ComponentType } from "svelte";
   import { writable } from "svelte/store";
 
   type ToastContents = string | ComponentType;
 
   interface ToastOptions<P = any> {
     status?: "info" | "success" | "warning" | "error";
-    lifespan?: number;
+    lifespan?: number | null;
     props?: P;
   }
 
@@ -49,7 +49,7 @@
         }}
       >
         {#if typeof toast.contents === "string"}
-          {@html toast.contents}
+          {toast.contents}
         {:else}
           <svelte:component this={toast.contents} {...toast.props} />
         {/if}
@@ -61,12 +61,13 @@
 <style>
   #toaster {
     position: fixed;
-    bottom: 2.5rem;
-    right: 0;
+    top: 1rem;
+    right: 50%;
+    transform: translateX(50%);
     z-index: var(--z-toast);
     margin: 0.5rem;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 0.5rem;
     max-width: 48rem;
     min-width: 24rem;

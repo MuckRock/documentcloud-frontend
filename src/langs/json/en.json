@@ -144,7 +144,9 @@
       "uploading": "Uploading",
       "processing": "Processing",
       "done": "Done"
-    }
+    },
+    "success": "Upload complete. Your documents will process in the background.",
+    "error": "Error during upload. See upload list for more details."
   },
   "authSection": {
     "help": {
@@ -407,7 +409,8 @@
     "many": "Editing {n, plural, one {one document} other {# documents}}. This will add the same values to all selected documents.",
     "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "success": "Metadata saved"
   },
   "annotate": {
     "title": "Annotate Document",
@@ -433,6 +436,7 @@
     "undo": "Undo",
     "cancel": "Discard",
     "cancelWarning": "You will lose unsaved redactions. Are you sure you want to cancel?",
+    "success": "Redactions saved",
     "error": "Error"
   },
   "sections": {
@@ -451,6 +455,7 @@
     "continue": "Do you wish to continue?",
     "confirm": "Delete",
     "cancel": "Cancel",
+    "success": "{n, plural, one {Document deleted} other {Documents deleted}}",
     "error": "Error",
     "none": "No documents selected. Close this form and select at least one document first."
   },
@@ -490,11 +495,12 @@
     "viewsource": "View Source",
     "selectionHelp": "Select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
     "selectionLearnMore": "Learn more about how Add-Ons work",
-    "editing": "Editing a previously dispatched addon",
+    "editing": "Editing a previously dispatched Add-On",
     "instructions": "Instructions",
     "dispatch": "Dispatch",
     "history": "History",
-    "noHistory": "You have not run this add-on before"
+    "noHistory": "You have not run this Add-On before",
+    "success": "Add-On dispatched"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",

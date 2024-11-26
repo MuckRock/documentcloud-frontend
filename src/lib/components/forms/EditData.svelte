@@ -11,6 +11,7 @@
   import KeyValue from "$lib/components/inputs/KeyValue.svelte";
 
   import { canonicalUrl } from "$lib/api/documents";
+  import { toast } from "../layouts/Toaster.svelte";
 
   export let document: Document;
 
@@ -53,6 +54,10 @@
       // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
       dispatch("close");
       update(result);
+      if (result.type === "success") {
+        // do something
+        toast($_("edit.success"), { status: "success" });
+      }
     };
   }
 </script>

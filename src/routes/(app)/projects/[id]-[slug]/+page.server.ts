@@ -1,7 +1,8 @@
 import type { Actions } from "./$types";
 import type { Project, ProjectAccess } from "$lib/api/types";
 
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
+import { redirect, setFlash } from "sveltekit-flash-message/server";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import * as collaborators from "$lib/api/collaborators";
 import * as projects from "$lib/api/projects";
@@ -33,10 +34,16 @@ export const actions = {
     const { error } = await projects.destroy(project_id, csrf_token, fetch);
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { message: error.message });
     }
 
-    return redirect(302, "/projects/");
+    return redirect(
+      302,
+      "/projects/",
+      { message: "Project deleted", status: "success" },
+      cookies,
+    );
   },
 
   /**
@@ -65,9 +72,11 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { message: error.message });
     }
 
+    setFlash({ message: "Edits saved", status: "success" }, cookies);
     return { success: true, project: updated };
   },
 
@@ -93,9 +102,11 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
 
+    setFlash({ message: "Invitation sent", status: "success" }, cookies);
     return {
       user,
     };
@@ -130,9 +141,14 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
 
+    setFlash(
+      { message: "Updated collaborator settings", status: "success" },
+      cookies,
+    );
     return {
       user: data,
     };
@@ -164,7 +180,13 @@ export const actions = {
     );
 
     if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { ...error });
     }
+
+    setFlash(
+      { message: "Collaborator removed from project", status: "success" },
+      cookies,
+    );
   },
 } satisfies Actions;

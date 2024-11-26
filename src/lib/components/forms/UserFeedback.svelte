@@ -7,7 +7,6 @@
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Avatar from "../accounts/Avatar.svelte";
-  import { toast } from "../layouts/Toaster.svelte";
   import { APP_URL } from "@/config/config";
   import { getUserName } from "$lib/api/accounts";
 
@@ -54,13 +53,9 @@
     return async ({ result }) => {
       if (result.type === "success") {
         status = "success";
-        toast($_("feedback.success"), {
-          status: "success",
-        });
         dispatch("close");
       } else if (result.type === "failure") {
         status = "error";
-        toast(result.error, { status: "error" });
       }
     };
   }

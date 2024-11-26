@@ -29,7 +29,7 @@
     >
     <Button
       on:click={() =>
-        toast("I won't go away on my own", { status: "info", lifespan: 0 })}
+        toast("I won't go away on my own", { status: "info", lifespan: null })}
     >
       Permanent Toast
     </Button>
