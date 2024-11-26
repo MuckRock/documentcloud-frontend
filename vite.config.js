@@ -54,11 +54,7 @@ export default defineConfig({
 
   test: {
     setupFiles: ["./vitest-setup.js"],
-    include: [
-      "src/lib/**/*.{test,spec}.{js,ts}",
-      "src/routes/**/*.{test,spec}.{js,ts}",
-      "src/lib/utils/tests/pageSize.test.ts",
-    ],
+    include: ["src/**/*.{test,spec}.{js,ts}"],
     exclude: [
       ...configDefaults.exclude,
       "storybook-static",
