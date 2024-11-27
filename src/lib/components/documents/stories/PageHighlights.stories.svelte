@@ -17,13 +17,6 @@
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
   };
-
-  setContext(
-    "highlightState",
-    writable({
-      allOpen: true,
-    }),
-  );
 </script>
 
 <script lang="ts">
