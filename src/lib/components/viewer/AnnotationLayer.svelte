@@ -374,7 +374,7 @@ Assumes it's a child of a ViewerContext
     opacity: 0.5;
     pointer-events: all;
     mix-blend-mode: multiply;
-    /* pointer-events: none; */
+    pointer-events: none;
   }
 
   a.note-highlight.public {
