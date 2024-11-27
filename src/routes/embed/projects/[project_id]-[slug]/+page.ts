@@ -2,13 +2,15 @@
 import type { Maybe } from "$lib/api/types";
 
 import { error, redirect } from "@sveltejs/kit";
+
+import { EMBED_MAX_AGE } from "@/config/config.js";
 import { search } from "$lib/api/documents";
 import { get, embedUrl } from "$lib/api/projects";
 
 const OLD_PATTERN = /(\D+)-(\d+)/;
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ params, fetch, url }) {
+export async function load({ params, fetch, url, setHeaders }) {
   // handle old URLs
   let { project_id, slug }: Record<string, Maybe<string>> = params;
   if (`${project_id}-${slug}`.match(OLD_PATTERN)) {
@@ -34,6 +36,11 @@ export async function load({ params, fetch, url }) {
   if (url.pathname !== embedUrl(project.data).pathname) {
     return redirect(302, embedUrl(project.data));
   }
+
+  setHeaders({
+    "cache-control": `public, max-age=${EMBED_MAX_AGE}`,
+    "last-modified": new Date(project.data.updated_at).toUTCString(),
+  });
 
   return {
     documents,
