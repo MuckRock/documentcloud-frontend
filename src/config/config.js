@@ -38,6 +38,8 @@ export const SIGN_UP_URL = new URL(SQUARELET_SIGNUP, SQUARELET_BASE).toString();
 export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
 
 export const EMBED_MAX_AGE = 60 * 10;
+export const PAGE_MAX_AGE = 60 * 10;
+export const VIEWER_MAX_AGE = 60 * 10;
 
 export const VERIFICATION_FORM_URL =
   "https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form";
