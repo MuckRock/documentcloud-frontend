@@ -18,10 +18,16 @@
   );
 
   export let total: Writable<number> = writable(0);
+
+  // In order for the highlight state to be shared between components, we need to
+  // create a writable store and set it in the context.
+  export const highlightState: Writable<{ allOpen: boolean }> = writable({
+    allOpen: true,
+  });
 </script>
 
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { getContext, onMount, setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
 
@@ -46,6 +52,14 @@
   let error: string = "";
 
   const embed: boolean = getContext("embed");
+
+  setContext("highlightState", highlightState);
+  function collapseAll() {
+    highlightState.update((state) => ({ ...state, allOpen: false }));
+  }
+  function expandAll() {
+    highlightState.update((state) => ({ ...state, allOpen: true }));
+  }
 
   // track what's visible so we can compare to $selected
   $: $visible = new Map(results.map((d) => [String(d.id), d]));
@@ -123,13 +137,20 @@
         <DocumentListItem {document} />
       </Flex>
 
-      {#if document.highlights}
-        <PageHighlights {document} />
-      {/if}
-
-      {#if document.note_highlights}
-        <NoteHighlights {document} />
-      {/if}
+          {#if document.highlights}
+            <PageHighlights
+              {document}
+              on:collapseAll={collapseAll}
+              on:expandAll={expandAll}
+            />
+          {/if}
+          {#if document.note_highlights}
+            <NoteHighlights
+              {document}
+              on:collapseAll={collapseAll}
+              on:expandAll={expandAll}
+            />
+          {/if}
     {:else}
       <Empty icon={Search24}>
         <h2>{$_("noDocuments.noSearchResults")}</h2>
