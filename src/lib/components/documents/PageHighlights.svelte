@@ -39,6 +39,7 @@
   <svelte:fragment let:id let:highlight>
     <Highlight
       title="{$_('documents.pageAbbrev')} {pageNumber(id)}"
+      inlineTitle
       segments={highlight}
     />
   </svelte:fragment>

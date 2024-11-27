@@ -3,13 +3,14 @@
 
   export let title: string = "";
   export let segments: string[] = [];
+  export let inlineTitle: boolean = false;
 
   function sanitize(s: string): string {
     return DOMPurify.sanitize(s, { ALLOWED_TAGS: ["em"] });
   }
 </script>
 
-<div class="container">
+<div class="container" class:inlineTitle>
   {#if title}<h4 class="ellipsis">{@html sanitize(title)}</h4>{/if}
   {#if segments.length > 0}
     <blockquote>
@@ -23,6 +24,9 @@
 <style>
   .container {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .container blockquote {
     margin: 0;
@@ -31,11 +35,10 @@
     overflow: hidden;
   }
   .container h4 {
-    flex: 0 0 4rem;
     color: var(--gray-4);
     font-weight: var(--font-semibold);
     font-size: var(--font-sm);
-    margin-bottom: 0.5rem;
+    /* margin-bottom: 0.5rem; */
   }
   .ellipsis {
     white-space: nowrap;
@@ -47,5 +50,11 @@
     background-color: var(--yellow-2);
     box-shadow: 0 0 0 0.125rem var(--yellow-2);
     font-style: normal;
+  }
+  .container.inlineTitle {
+    flex-direction: row;
+  }
+  .container.inlineTitle h4 {
+    flex: 0 0 4rem;
   }
 </style>
