@@ -1,6 +1,4 @@
 <script context="module" lang="ts">
-  import { setContext } from "svelte";
-  import { writable } from "svelte/store";
   import { Story } from "@storybook/addon-svelte-csf";
 
   import type { Document } from "$lib/api/types";
@@ -18,6 +16,11 @@
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
   };
+</script>
+
+<script lang="ts">
+  import { setContext } from "svelte";
+  import { writable } from "svelte/store";
 
   setContext(
     "highlightState",
