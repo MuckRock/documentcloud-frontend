@@ -16,6 +16,7 @@
   export let open = false;
   export let highlights: [string, H][] = [];
   export let getHref: (id: string) => string;
+  export let showAll = false;
 
   let clientWidth = 1000;
   $: isSmall = clientWidth < remToPx(27);
@@ -46,28 +47,30 @@
           {$_("search.matchingResults", { values: { n: highlights.length } })}
         </slot>
       </div>
-      <div class="right">
-        <Button
-          minW={false}
-          size="small"
-          ghost
-          on:click={collapseAll}
-          title={$_("search.collapseAll")}
-        >
-          <Fold16 height={12} width={12} />
-          {#if !isSmall}{$_("search.collapseAll")}{/if}
-        </Button>
-        <Button
-          minW={false}
-          size="small"
-          ghost
-          on:click={expandAll}
-          title={$_("search.expandAll")}
-        >
-          <Unfold16 height={12} width={12} />
-          {#if !isSmall}{$_("search.expandAll")}{/if}
-        </Button>
-      </div>
+      {#if showAll}
+        <div class="right">
+          <Button
+            minW={false}
+            size="small"
+            ghost
+            on:click={collapseAll}
+            title={$_("search.collapseAll")}
+          >
+            <Fold16 height={12} width={12} />
+            {#if !isSmall}{$_("search.collapseAll")}{/if}
+          </Button>
+          <Button
+            minW={false}
+            size="small"
+            ghost
+            on:click={expandAll}
+            title={$_("search.expandAll")}
+          >
+            <Unfold16 height={12} width={12} />
+            {#if !isSmall}{$_("search.expandAll")}{/if}
+          </Button>
+        </div>
+      {/if}
     </summary>
     <ul>
       {#each highlights as [id, highlight]}

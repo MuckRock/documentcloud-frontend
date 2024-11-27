@@ -27,8 +27,8 @@
   export let open = true;
 
   const { subscribe } =
-    getContext<Writable<{ allOpen: boolean }>>("highlightState");
-  $: subscribe((state) => {
+    getContext<Writable<{ allOpen: boolean }>>("highlightState") ?? {};
+  $: subscribe?.((state) => {
     open = state.allOpen;
   });
   $: highlights = Object.entries(document.highlights ?? {});
@@ -43,6 +43,7 @@
   {highlights}
   getHref={pageHref}
   bind:open
+  showAll={Boolean(subscribe)}
   on:collapseAll
   on:expandAll
 >
