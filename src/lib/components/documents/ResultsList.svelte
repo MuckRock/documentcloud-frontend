@@ -120,10 +120,13 @@
 </script>
 
 <div class="container" data-sveltekit-preload-data={preload}>
-  <Flex direction="column">
+  <Flex direction="column" gap={0}>
     <slot name="start" />
     {#each results as document (document.id)}
-      <Flex gap={0.625} align="center">
+      <div
+        class="result-row"
+        class:selected={$selectedIds.includes(String(document.id))}
+      >
         {#if !embed}
           <label>
             <span class="sr-only">{$_("documents.select")}</span>
@@ -134,9 +137,8 @@
             />
           </label>
         {/if}
-        <DocumentListItem {document} />
-      </Flex>
-
+        <div class="result-content">
+          <DocumentListItem {document} />
           {#if document.highlights}
             <PageHighlights
               {document}
@@ -151,6 +153,8 @@
               on:expandAll={expandAll}
             />
           {/if}
+        </div>
+      </div>
     {:else}
       <Empty icon={Search24}>
         <h2>{$_("noDocuments.noSearchResults")}</h2>
@@ -191,6 +195,24 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
+    width: 100%;
+  }
+
+  .result-row {
+    width: 100%;
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+    padding-bottom: 0.5rem;
+  }
+
+  .result-row.selected {
+    background-color: var(--blue-1, #f0f0f0);
+  }
+
+  .result-content {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   label {
@@ -198,9 +220,11 @@
     align-items: center;
     gap: 0.5rem;
     padding-left: 0.5rem;
+    margin-top: 1.25rem;
   }
 
   input[type="checkbox"] {
+    margin: 0;
     height: 1.25rem;
     width: 1.25rem;
   }
