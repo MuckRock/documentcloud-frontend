@@ -9,7 +9,7 @@ export async function load({ parent, setHeaders }) {
 
   if (!me) {
     setHeaders({
-      "max-age": `public, max-age=${VIEWER_MAX_AGE}`,
+      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
     });
   }
 
