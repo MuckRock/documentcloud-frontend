@@ -25,9 +25,10 @@ Assumes it's a child of a ViewerContext
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import Tab from "$lib/components/common/Tab.svelte";
+  import Tooltip from "../common/Tooltip.svelte";
 
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
@@ -147,7 +148,11 @@ Assumes it's a child of a ViewerContext
         </Menu>
       </Dropdown>
     {:else}
-      <Search name="q" {query} otherParams={{ mode: "search" }} />
+      <Tooltip
+        caption="For advanced searches, view in legacy DocumentCloud for now."
+      >
+        <Search name="q" {query} otherParams={{ mode: "search" }} />
+      </Tooltip>
     {/if}
   </Flex>
 </PageToolbar>

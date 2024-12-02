@@ -6,7 +6,6 @@ Assumes it's a child of a ViewerContext
   import type { Project } from "$lib/api/types";
   import { _ } from "svelte-i18n";
 
-  import ViewerActions from "$lib/components/sidebar/ViewerActions.svelte";
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import Avatar from "../accounts/Avatar.svelte";
   import Data from "../documents/Data.svelte";
@@ -18,6 +17,7 @@ Assumes it's a child of a ViewerContext
   import Projects from "../documents/Projects.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
   import Viewer from "../viewer/Viewer.svelte";
+  import ViewerActions from "$lib/components/sidebar/ViewerActions.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "$lib/api/accounts";
