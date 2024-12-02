@@ -94,7 +94,8 @@ export async function searchWithin(
   },
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Highlights, null>> {
-  const endpoint = new URL(`/documents/${id}/search/`, BASE_API_URL);
+  const endpoint = new URL(`documents/${id}/search/`, BASE_API_URL);
+  endpoint.searchParams.set("q", query);
   for (const [k, v] of Object.entries(options)) {
     if (v) {
       endpoint.searchParams.set(k, String(v));
