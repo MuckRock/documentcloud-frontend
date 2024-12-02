@@ -7,13 +7,13 @@ import type {
 
 import { error, redirect } from "@sveltejs/kit";
 
-import { DEFAULT_PER_PAGE } from "@/config/config.js";
+import { DEFAULT_PER_PAGE, VIEWER_MAX_AGE } from "@/config/config.js";
 import * as projects from "$lib/api/projects";
 import * as collaborators from "$lib/api/collaborators";
 import { search } from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/navigation";
 
-export async function load({ params, url, parent, data, fetch }) {
+export async function load({ params, url, parent, data, fetch, setHeaders }) {
   const id = parseInt(params.id, 10);
 
   const [project, users]: [
@@ -42,6 +42,8 @@ export async function load({ params, url, parent, data, fetch }) {
     { href: url.pathname, title: project.data.title },
   ]);
 
+  const { me } = await parent();
+
   const query = url.searchParams.get("q") ?? "";
   const cursor = url.searchParams.get("cursor") ?? "";
   const per_page = +(url.searchParams.get("per_page") || DEFAULT_PER_PAGE);
@@ -50,6 +52,13 @@ export async function load({ params, url, parent, data, fetch }) {
     { cursor, project: project.data.id, per_page, hl: Boolean(query) },
     fetch,
   );
+
+  if (!me) {
+    setHeaders({
+      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
+      "last-modified": new Date(project.data.updated_at).toUTCString(),
+    });
+  }
 
   return {
     ...(data ?? {}), // include csrf_token

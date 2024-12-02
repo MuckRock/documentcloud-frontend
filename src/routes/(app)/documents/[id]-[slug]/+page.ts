@@ -7,14 +7,20 @@ import type { ReadMode } from "@/lib/api/types";
 
 import { redirect } from "@sveltejs/kit";
 
+import { VIEWER_MAX_AGE } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/index";
-
 import loadDocument from "$lib/load/document";
-import { getQuery } from "$lib/utils/search";
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params, parent, depends, url }) {
+export async function load({
+  fetch,
+  params,
+  parent,
+  depends,
+  url,
+  setHeaders,
+}) {
   const { document, asset_url, mode } = await loadDocument({
     fetch,
     params,
@@ -34,11 +40,19 @@ export async function load({ fetch, params, parent, depends, url }) {
 
   let action = url.searchParams.get("action");
 
-  const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: canonical.pathname, title: document.title },
+  const [breadcrumbs, { me }] = await Promise.all([
+    breadcrumbTrail(parent, [
+      { href: canonical.pathname, title: document.title },
+    ]),
+    parent(),
   ]);
 
-  const query = getQuery(url);
+  if (!me) {
+    setHeaders({
+      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
+      "last-modified": new Date(document.updated_at).toUTCString(),
+    });
+  }
 
   return {
     document,
@@ -46,6 +60,5 @@ export async function load({ fetch, params, parent, depends, url }) {
     asset_url,
     action,
     breadcrumbs,
-    query,
   };
 }
