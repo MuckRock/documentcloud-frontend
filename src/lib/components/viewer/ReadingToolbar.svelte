@@ -143,11 +143,11 @@ Assumes it's a child of a ViewerContext
           {$_("common.search")}
         </Button>
         <Menu>
-          <Search name="q" {query} />
+          <Search name="q" {query} otherParams={{ mode: "search" }} />
         </Menu>
       </Dropdown>
     {:else}
-      <Search name="q" {query} />
+      <Search name="q" {query} otherParams={{ mode: "search" }} />
     {/if}
   </Flex>
 </PageToolbar>

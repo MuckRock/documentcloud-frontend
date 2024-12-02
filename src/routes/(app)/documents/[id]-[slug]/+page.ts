@@ -21,7 +21,7 @@ export async function load({
   url,
   setHeaders,
 }) {
-  const { document, asset_url, mode } = await loadDocument({
+  const { document, asset_url, mode, search } = await loadDocument({
     fetch,
     params,
     url,
@@ -58,6 +58,7 @@ export async function load({
     document,
     mode,
     asset_url,
+    search,
     action,
     breadcrumbs,
   };
