@@ -138,7 +138,7 @@
 
   {#if $orgsAndUsers.me !== null}<script
       defer
-      data-domain="documentcloud.org"
+      data-domain="legacy.www.documentcloud.org"
       src="https://plausible.io/js/script.manual.tagged-events.js"
     ></script>{/if}
 </svelte:head>
