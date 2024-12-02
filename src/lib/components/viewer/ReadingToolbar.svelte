@@ -149,7 +149,7 @@ Assumes it's a child of a ViewerContext
       </Dropdown>
     {:else}
       <Tooltip
-        caption="Updated search functionality is coming soon. For advanced searches, use legacy mode for now."
+        caption="For advanced searches, view in legacy DocumentCloud for now."
       >
         <Search name="q" {query} />
       </Tooltip>
