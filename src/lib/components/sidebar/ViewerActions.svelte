@@ -9,6 +9,7 @@
     Pencil16,
     Share16,
     Trash16,
+    Undo16,
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -26,7 +27,7 @@
   import Share from "$lib/components/documents/Share.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
-  import { pdfUrl } from "$lib/api/documents";
+  import { pdfUrl, canonicalUrl } from "$lib/api/documents";
 
   export let document: Document;
   export let user: User;
@@ -41,6 +42,11 @@
   $: organization =
     typeof user?.organization === "object" ? (user.organization as Org) : null;
   $: plan = organization?.plan ?? "Free";
+  $: canonical = canonicalUrl(document);
+  $: legacy = new URL(
+    canonical.pathname,
+    "https://legacy.www.documentcloud.org",
+  );
 </script>
 
 <div class="actions wideGap">
@@ -52,6 +58,10 @@
     <Button ghost on:click={() => (shareOpen = true)}>
       <Share16 />
       {$_("sidebar.shareEmbed")}
+    </Button>
+    <Button ghost href={legacy.href} minW={false}>
+      <Undo16 />
+      <span class="legacy">View in Legacy DocumentCloud</span>
     </Button>
   </div>
   {#if document.edit_access}
@@ -169,5 +179,8 @@
   }
   .wideGap {
     gap: 1rem;
+  }
+  .legacy {
+    text-align: left;
   }
 </style>
