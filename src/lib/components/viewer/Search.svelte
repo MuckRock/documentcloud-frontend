@@ -19,7 +19,7 @@ Assumes it's a child of a ViewerContext
   import Error from "../common/Error.svelte";
 
   const document = getDocument();
-  let query = getQuery($page.url, "q");
+  let search: Promise<[number, string[]][]>;
 
   // Format page numbers, highlight search results, and remove invalid pages
   function formatResults(results: APIResponse<Highlights>) {
@@ -34,7 +34,7 @@ Assumes it's a child of a ViewerContext
       .filter(([page]) => !isNaN(page));
   }
 
-  let search: Promise<[number, string[]][]>;
+  $: query = getQuery($page.url, "q");
   $: search = searchWithin($document.id, query).then(formatResults);
 </script>
 
@@ -46,7 +46,12 @@ Assumes it's a child of a ViewerContext
   {:then resultsPages}
     {#each resultsPages as [pageNumber, resultsList]}
       <a
-        href={getViewerHref({ page: pageNumber, mode: "document", query })}
+        href={getViewerHref({
+          document: $document,
+          page: pageNumber,
+          mode: "document",
+          query,
+        })}
         class="card"
       >
         <Highlight
