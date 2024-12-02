@@ -40,6 +40,7 @@ export const READING_MODES = new Set<ReadMode>([
   "text",
   "grid",
   "notes",
+  "search",
 ]);
 
 export const WRITING_MODES = new Set<WriteMode>(["annotating", "redacting"]);

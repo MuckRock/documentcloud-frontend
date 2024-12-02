@@ -103,7 +103,7 @@ Assumes it's a child of a ViewerContext
       <Search />
     {/if}
     <svelte:fragment slot="footer">
-      {#if mode !== "notes"}
+      {#if !["notes", "search"].includes(mode)}
         <PaginationToolbar />
       {/if}
     </svelte:fragment>

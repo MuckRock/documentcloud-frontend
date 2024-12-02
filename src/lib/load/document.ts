@@ -39,16 +39,9 @@ export default async function load({ fetch, params, url }: Load) {
   // If in search mode, get the query from the URL and
   // initialize a Promise for the first page of search results
   let search: Maybe<APIResponse<Highlights, null>> = undefined;
-  if (mode === "search") {
-    const query = url.searchParams.get("query");
-    if (query) {
-      search = await documents.searchWithin(
-        document.id,
-        query,
-        undefined,
-        fetch,
-      );
-    }
+  const query = url.searchParams.get("q");
+  if (query) {
+    search = await documents.searchWithin(document.id, query, undefined, fetch);
   }
 
   return {
