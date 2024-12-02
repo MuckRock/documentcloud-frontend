@@ -15,18 +15,28 @@
     contents: ToastContents;
   }
 
-  function addToast(newToast: ToastItem, prev: ToastItem[]) {
-    const id = Date.now();
-    return [...prev, { ...newToast, id }];
-  }
-
   export const toasts = writable<ToastItem[]>([]);
 
   export function toast<P>(
     contents: ToastContents,
     options: ToastOptions<P> = {},
-  ) {
-    toasts.update((prev) => addToast({ contents, ...options }, prev));
+  ): number {
+    const newToast = { id: Date.now(), contents, ...options };
+    toasts.update((prev) => [...prev, newToast]);
+    // Return the ID so we can update the toast later
+    return newToast.id;
+  }
+
+  export function updateToast<P>(
+    id: number,
+    contents: ToastContents,
+    options: ToastOptions<P> = {},
+  ): void {
+    toasts.update((prev) =>
+      prev.map((toast) =>
+        toast.id === id ? { ...toast, contents, ...options } : toast,
+      ),
+    );
   }
 </script>
 

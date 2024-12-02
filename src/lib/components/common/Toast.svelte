@@ -81,7 +81,7 @@
   .toast {
     padding: 0.5rem 0.5rem;
     border-radius: 0.5rem;
-    box-shadow: var(--shadow-3);
+    box-shadow: var(--shadow-2);
     display: inline-flex;
     align-items: flex-start;
     width: 100%;
