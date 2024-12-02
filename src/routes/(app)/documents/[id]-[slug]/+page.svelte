@@ -18,7 +18,6 @@
 
   $: document = data.document;
   $: mode = data.mode;
-  $: search = data.search;
   $: text = browser
     ? documents.text(document)
     : Promise.resolve({ pages: [], updated: 0 });
@@ -65,7 +64,7 @@
   />
 </svelte:head>
 
-<ViewerContext {document} {mode} {text} {asset_url} {search}>
+<ViewerContext {document} {mode} {text} {asset_url}>
   <DocumentLayout {action} />
 </ViewerContext>
 <GuidedTour />

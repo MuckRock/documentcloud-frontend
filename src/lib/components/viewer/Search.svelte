@@ -3,58 +3,65 @@ Assumes it's a child of a ViewerContext
  -->
 
 <script lang="ts">
-  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Search24 } from "svelte-octicons";
+  import { Hourglass24, Search24 } from "svelte-octicons";
 
   import { page } from "$app/stores";
 
   import Empty from "../common/Empty.svelte";
 
-  import {
-    getCurrentPage,
-    getSearch,
-  } from "$lib/components/viewer/ViewerContext.svelte";
   import { getQuery, highlight, pageNumber } from "$lib/utils/search";
-  import { scrollToPage } from "$lib/utils/scroll";
   import { getViewerHref } from "$lib/utils/viewer";
   import Highlight from "../common/Highlight.svelte";
+  import type { APIResponse, Highlights } from "@/lib/api/types";
+  import { getDocument } from "./ViewerContext.svelte";
+  import { searchWithin } from "@/lib/api/documents";
+  import Error from "../common/Error.svelte";
 
-  const search = getSearch();
-  const currentPage = getCurrentPage();
+  const document = getDocument();
   let query = getQuery($page.url, "q");
 
   // Format page numbers, highlight search results, and remove invalid pages
-  $: resultsPages = Object.entries(search?.data ?? {})
-    .map<[number, string[]]>(([page, results]) => [
-      pageNumber(page),
-      results.map((result) => highlight(result, query)),
-    ])
-    .filter(([page]) => !isNaN(page));
+  function formatResults(results: APIResponse<Highlights>) {
+    if (results.error) throw new TypeError(results.error.message);
+    if (!results || !results.data)
+      throw new TypeError("Failed to get search results");
+    return Object.entries(results?.data ?? {})
+      .map<[number, string[]]>(([page, results]) => [
+        pageNumber(page),
+        results.map((result) => highlight(result, query)),
+      ])
+      .filter(([page]) => !isNaN(page));
+  }
 
-  onMount(async () => {
-    if ($currentPage > 1) {
-      scrollToPage($currentPage);
-    }
-  });
+  let search: Promise<[number, string[]][]>;
+  $: search = searchWithin($document.id, query).then(formatResults);
 </script>
 
 <div class="pages">
-  {#each resultsPages as [pageNumber, resultsList]}
-    <a
-      href={getViewerHref({ page: pageNumber, mode: "document", query })}
-      class="card"
-    >
-      <Highlight
-        title="{$_('documents.pageAbbrev')} {pageNumber}"
-        segments={resultsList}
-      />
-    </a>
-  {:else}
-    <Empty icon={Search24}>
-      <h2>{$_("search.empty")}</h2>
+  {#await search}
+    <Empty icon={Hourglass24}>
+      {$_("search.loading")}
     </Empty>
-  {/each}
+  {:then resultsPages}
+    {#each resultsPages as [pageNumber, resultsList]}
+      <a
+        href={getViewerHref({ page: pageNumber, mode: "document", query })}
+        class="card"
+      >
+        <Highlight
+          title="{$_('documents.pageAbbrev')} {pageNumber}"
+          segments={resultsList}
+        />
+      </a>
+    {:else}
+      <Empty icon={Search24}>
+        {$_("search.empty")}
+      </Empty>
+    {/each}
+  {:catch err}
+    <Error>{err.message}</Error>
+  {/await}
 </div>
 
 <style>

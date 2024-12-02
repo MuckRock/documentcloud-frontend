@@ -48,10 +48,6 @@ layouts, stories, and tests.
     return getContext("asset_url");
   }
 
-  export function getSearch(): Maybe<APIResponse<Highlights, null>> {
-    return getContext("search");
-  }
-
   export function isEmbedded(): boolean {
     // are we embedded?
     return getContext("embed") ?? false;
@@ -98,7 +94,6 @@ layouts, stories, and tests.
   export let text: Promise<Maybe<DocumentText>> = new Promise(() => {});
   export let note: Nullable<Note> = null;
   export let asset_url: URL = pdfUrl(document);
-  export let search: Maybe<APIResponse<Highlights, null>> = undefined;
   export let embed: boolean = false;
   export let page: number = 1;
   export let mode: ViewerMode = "document";
@@ -124,7 +119,6 @@ layouts, stories, and tests.
   setContext("document", documentStore);
   setContext("text", text);
   setContext("asset_url", asset_url);
-  setContext("search", search);
   setContext("embed", embed);
   setContext("newNote", writable(null));
   setContext("currentNote", writable(note));
