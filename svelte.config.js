@@ -12,6 +12,7 @@ export default {
   kit: {
     adapter: adapter({
       preprocess: true,
+      edge: true,
     }),
     alias: {
       "@": "./src",
