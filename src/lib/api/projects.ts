@@ -96,6 +96,15 @@ export async function getShared(
 }
 
 /**
+ * Get all pinned projects for a user
+ */
+export async function getPinnedProjects(fetch = globalThis.fetch) {
+  const endpoint = new URL("projects/", BASE_API_URL);
+  endpoint.searchParams.set("pinned", "true");
+  return getAll<Project>(endpoint, undefined, fetch);
+}
+
+/**
  * Set the pinned status of a project.
  * When requesting PATCH on the project endpoint,
  * it returns the updated project object.
