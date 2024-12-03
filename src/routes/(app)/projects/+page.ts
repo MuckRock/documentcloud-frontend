@@ -1,7 +1,7 @@
-import type { ProjectResults } from "$lib/api/types";
+import type { Maybe, ProjectResults } from "$lib/api/types";
 
 import { DEFAULT_PER_PAGE } from "@/config/config.js";
-import { getOwned, getShared, list } from "$lib/api/projects";
+import { list } from "$lib/api/projects";
 
 type ProjectFilter = "owned" | "shared" | "public";
 
@@ -24,36 +24,31 @@ export async function load({ url, parent, fetch }) {
     filter = "public";
   }
 
-  let projects: ProjectResults = {
+  const defaultProjects: ProjectResults = {
     results: [],
     next: null,
     previous: null,
   };
 
+  let data: Maybe<ProjectResults>;
   let error: unknown;
 
   if (me && filter === "owned") {
-    ({ data: projects = projects, error } = await list(
-      { ...params, owned_by_user: true },
-      fetch,
-    ));
+    ({ data, error } = await list({ ...params, owned_by_user: true }, fetch));
   }
 
   if (me && filter === "shared") {
-    ({ data: projects = projects, error } = await list(
-      { ...params, is_shared: true },
-      fetch,
-    ));
+    ({ data, error } = await list({ ...params, is_shared: true }, fetch));
   }
 
   if (filter === "public") {
-    ({ data: projects = projects, error } = await list(params, fetch));
+    ({ data, error } = await list(params, fetch));
   }
 
   return {
     error,
     list: filter,
-    projects,
+    projects: data ?? defaultProjects,
     query,
     cursor,
     per_page,
