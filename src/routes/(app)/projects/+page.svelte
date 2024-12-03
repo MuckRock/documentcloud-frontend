@@ -37,6 +37,8 @@
   $: next = data.projects.next; // this will be an API url with a cursor
   $: previous = data.projects.previous; // this will be an API url with a cursor
 
+  $: console.log(data.projects);
+
   function paginate(u: Nullable<URL | string>) {
     if (!u) return;
     const pageUrl = new URL(u);
