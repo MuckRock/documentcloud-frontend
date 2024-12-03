@@ -9,9 +9,9 @@
   <div class="container" slot="center">
     <p>Loading PDF…</p>
     {#if progress}
-      <progress value={progress} />
+      <progress value={progress} data-chromatic="ignore" />
     {:else}
-      <progress />
+      <progress data-chromatic="ignore" />
     {/if}
   </div>
 </PageToolbar>
