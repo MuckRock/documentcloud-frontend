@@ -37,8 +37,6 @@
   $: next = data.projects.next; // this will be an API url with a cursor
   $: previous = data.projects.previous; // this will be an API url with a cursor
 
-  $: console.log(data.projects);
-
   function paginate(u: Nullable<URL | string>) {
     if (!u) return;
     const pageUrl = new URL(u);
@@ -46,7 +44,6 @@
     // get the cursor out of the pageUrl, pass it to the gotoUrl
     const cursor = pageUrl.searchParams.get("cursor");
     if (cursor) gotoUrl.searchParams.set("cursor", cursor);
-    console.log(gotoUrl.toString());
     goto(gotoUrl);
   }
 </script>
