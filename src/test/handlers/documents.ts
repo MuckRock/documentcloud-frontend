@@ -2,6 +2,8 @@ import { rest } from "msw";
 import { BASE_API_URL } from "@/config/config.js";
 
 import { documents as docs, pending } from "../fixtures/documents/pending";
+import { searchWithin as searchWithinResults } from "../fixtures/documents";
+import { generateGetHandler } from "./utils";
 
 const documentsUrl = new URL(`/api/documents/*`, BASE_API_URL).href;
 
@@ -31,3 +33,8 @@ export const revisionControl = {
     ),
   ),
 };
+
+export const searchWithin = generateGetHandler(
+  "documents/:id/search",
+  searchWithinResults,
+);

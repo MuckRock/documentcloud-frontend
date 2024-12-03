@@ -11,10 +11,12 @@
     "title": "Title"
   },
   "search": {
+    "loading": "Searching…",
     "matchingResults": "{n, plural, one {# matching result} other {# matching results}}",
     "reset": "Clear Search",
     "help": "Use filters like <code>user:</code>, <code>project:</code> or <code>organization:</code> to refine searches. Use <code>sort:</code> to order results.",
-    "more": "Learn more"
+    "more": "Learn more",
+    "empty": "No matching results found."
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",

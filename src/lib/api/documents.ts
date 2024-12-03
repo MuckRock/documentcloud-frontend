@@ -21,6 +21,7 @@ import type {
   ViewerMode,
   ValidationError,
   Nullable,
+  Highlights,
 } from "./types";
 
 import { writable, type Writable } from "svelte/store";
@@ -39,6 +40,7 @@ export const READING_MODES = new Set<ReadMode>([
   "text",
   "grid",
   "notes",
+  "search",
 ]);
 
 export const WRITING_MODES = new Set<WriteMode>(["annotating", "redacting"]);
@@ -81,6 +83,28 @@ export async function search(
   );
 
   return getApiResponse<DocumentResults, null>(resp);
+}
+
+/** Search within a single document */
+export async function searchWithin(
+  id: string | number,
+  query = "",
+  options: SearchOptions = {
+    hl: Boolean(query),
+  },
+  fetch = globalThis.fetch,
+): Promise<APIResponse<Highlights, null>> {
+  const endpoint = new URL(`documents/${id}/search/`, BASE_API_URL);
+  endpoint.searchParams.set("q", query);
+  for (const [k, v] of Object.entries(options)) {
+    if (v) {
+      endpoint.searchParams.set(k, String(v));
+    }
+  }
+  const resp = await fetch(endpoint, { credentials: "include" }).catch(
+    console.error,
+  );
+  return getApiResponse<Highlights, null>(resp);
 }
 
 /**
@@ -682,7 +706,9 @@ export function shouldPreload(mode: ViewerMode): boolean {
  * @returns {boolean}
  */
 export function shouldPaginate(mode: ViewerMode): boolean {
-  return ["document", "text", "annotating", "redacting"].includes(mode);
+  return ["document", "text", "annotating", "redacting", "search"].includes(
+    mode,
+  );
 }
 
 /**

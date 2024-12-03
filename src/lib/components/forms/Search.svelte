@@ -12,6 +12,7 @@
   export let placeholder: string = $_("common.search");
   export let action: Maybe<string> = undefined;
   export let id = "query";
+  export let otherParams = {};
 
   let input: HTMLInputElement;
   let form: HTMLFormElement;
@@ -36,6 +37,10 @@
       url.searchParams.set(name, q);
     } else {
       url.searchParams.delete(name);
+    }
+
+    for (const [key, value] of Object.entries(otherParams)) {
+      url.searchParams.set(key, String(value));
     }
 
     return goto(url);

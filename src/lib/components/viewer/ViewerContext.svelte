@@ -12,6 +12,8 @@ layouts, stories, and tests.
     ViewerMode,
     Zoom,
     BBox,
+    APIResponse,
+    Highlights,
   } from "$lib/api/types";
 
   import { afterNavigate } from "$app/navigation";
@@ -182,6 +184,9 @@ layouts, stories, and tests.
     // refresh stores from URL state
     const { hash } = $pageStore.url;
     const hashPage = pageFromHash(hash);
+    if (hashPage) {
+      $currentPage = hashPage;
+    }
     $currentMode = mode;
     $currentNote = $currentDoc.notes?.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate(mode) && $currentPage !== hashPage) {
