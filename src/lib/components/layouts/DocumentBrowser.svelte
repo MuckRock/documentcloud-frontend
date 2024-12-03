@@ -78,10 +78,11 @@
     search: "common.search",
   };
 
-  let width: number;
+  let headerToolbarWidth: number;
+  let footerToolbarWidth: number;
 
   $: BREAKPOINTS = {
-    HIDE_COUNT: width < remToPx(26),
+    HIDE_COUNT: footerToolbarWidth < remToPx(26),
   };
 
   $: searchResults = documents.then((r) => excludeDeleted($deleted, r.data));
@@ -151,17 +152,16 @@
                 </Button>
               </div>
             {/if}
-            <PageToolbar>
+            <PageToolbar bind:width={headerToolbarWidth}>
               <Flex slot="right">
                 <div style:flex="1 1 auto">
-                  <Search name="q" {query} placeholder={$_(uiText.search)}>
-                    <span slot="help">
-                      {@html $_("search.help")}
-                      <a target="_blank" href="/help/search/">
-                        {$_("search.more")}
-                      </a>
-                    </span>
-                  </Search>
+                  <Search name="q" {query} placeholder={$_(uiText.search)} />
+                  <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
+                    {@html $_("search.help")}
+                    <a target="_blank" href="/help/search/">
+                      {$_("search.more")}
+                    </a>
+                  </p>
                 </div>
               </Flex>
             </PageToolbar>
@@ -203,7 +203,7 @@
       {/await}
       <svelte:fragment slot="footer">
         {#if !embed}
-          <div class="toolbar" bind:clientWidth={width}>
+          <div class="toolbar" bind:clientWidth={footerToolbarWidth}>
             <Flex align="center">
               <SidebarItem>
                 <label class="select-all">
@@ -308,5 +308,15 @@
   .select-all {
     min-width: 7rem;
     margin: 0.25rem 0;
+  }
+  .help {
+    flex: 1 1 100%;
+    font-size: var(--font-xs);
+    margin: 0.25rem;
+    color: var(--gray-4);
+    text-align: left;
+  }
+  .hide {
+    display: none;
   }
 </style>
