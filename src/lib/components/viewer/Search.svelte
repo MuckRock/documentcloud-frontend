@@ -3,20 +3,21 @@ Assumes it's a child of a ViewerContext
  -->
 
 <script lang="ts">
+  import type { APIResponse, Highlights } from "@/lib/api/types";
+
   import { _ } from "svelte-i18n";
   import { Hourglass24, Search24 } from "svelte-octicons";
 
   import { page } from "$app/stores";
 
   import Empty from "../common/Empty.svelte";
+  import Error from "../common/Error.svelte";
+  import Highlight from "../common/Highlight.svelte";
 
+  import { getDocument } from "./ViewerContext.svelte";
   import { getQuery, highlight, pageNumber } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
-  import Highlight from "../common/Highlight.svelte";
-  import type { APIResponse, Highlights } from "@/lib/api/types";
-  import { getDocument } from "./ViewerContext.svelte";
-  import { searchWithin } from "@/lib/api/documents";
-  import Error from "../common/Error.svelte";
+  import { searchWithin } from "$lib/api/documents";
 
   const document = getDocument();
   let search: Promise<[number, string[]][]>;
@@ -45,15 +46,14 @@ Assumes it's a child of a ViewerContext
     </Empty>
   {:then resultsPages}
     {#each resultsPages as [pageNumber, resultsList]}
-      <a
-        href={getViewerHref({
-          document: $document,
-          page: pageNumber,
-          mode: "document",
-          query,
-        })}
-        class="card"
-      >
+      {@const href = getViewerHref({
+        document: $document,
+        page: pageNumber,
+        mode: "document",
+        query,
+      })}
+
+      <a {href} class="card">
         <Highlight
           title="{$_('documents.pageAbbrev')} {pageNumber}"
           segments={resultsList}
@@ -79,9 +79,6 @@ Assumes it's a child of a ViewerContext
     max-width: 38.0625rem;
     padding: 2rem 0;
     min-height: 100%;
-  }
-  h2 {
-    font-weight: var(--font-semibold);
   }
   .card {
     color: inherit;
