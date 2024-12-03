@@ -61,7 +61,7 @@ export const CSRF_HEADER_NAME = "X-CSRFToken";
 
 export const POLL_INTERVAL = 5000;
 
-export const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
+export const ALLOWED_TAGS = ["a", "strong", "em", "b", "i", "code", "p"];
 export const ALLOWED_ATTR = ["href"];
 
 /**

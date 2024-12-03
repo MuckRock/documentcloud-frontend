@@ -63,7 +63,7 @@
   .message {
     flex: 1 1 auto;
     line-height: 1.5;
-    max-width: 48rem;
+    max-width: 80rem;
     padding: 0 1.5rem;
   }
   .close {
