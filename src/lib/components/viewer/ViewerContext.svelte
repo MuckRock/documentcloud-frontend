@@ -138,8 +138,6 @@ layouts, stories, and tests.
   $: noteMatchingPageHash = (note: Note) =>
     note.id === noteFromHash($pageStore.url.hash);
 
-  $: console.log(`Page ${$currentPage}`);
-
   function scrollToHash(hash?: string) {
     const page: Nullable<number> = hash ? pageFromHash(hash) : null;
     let el: Maybe<Nullable<HTMLElement>>;
