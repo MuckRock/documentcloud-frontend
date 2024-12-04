@@ -22,7 +22,16 @@ export async function handleFetch({ event, request, fetch }) {
   if (request.url.startsWith(DC_BASE)) {
     // handle docker issues
     event.url.protocol = "https";
+
+    // pass through session cookie
     request.headers.append("cookie", event.request.headers.get("cookie") ?? "");
+
+    // tell the API who we are
+    request.headers.append("x-forwarded-for", event.getClientAddress());
+    request.headers.set(
+      "x-bypass-rate-limit",
+      env.BYPASS_RATE_LIMIT_SECRET ?? "",
+    );
   }
 
   return fetch(request);
