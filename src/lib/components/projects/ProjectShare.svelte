@@ -5,16 +5,16 @@
   import type { Project } from "$lib/api/types";
   import { canonicalUrl, embedUrl } from "$lib/api/projects";
 
-  import Button from "../common/Button.svelte";
-  import Field from "../common/Field.svelte";
-  import FieldLabel from "../common/FieldLabel.svelte";
-  import Text from "../inputs/Text.svelte";
-  import TextArea from "../inputs/TextArea.svelte";
-  import { toast } from "../layouts/Toaster.svelte";
-  import Tip from "../common/Tip.svelte";
-  import Portal from "../layouts/Portal.svelte";
-  import Modal from "../layouts/Modal.svelte";
-  import EditProject from "../forms/EditProject.svelte";
+  import Button from "$lib/components/common/Button.svelte";
+  import Field from "$lib/components/common/Field.svelte";
+  import FieldLabel from "$lib/components/common/FieldLabel.svelte";
+  import Text from "$lib/components/inputs/Text.svelte";
+  import TextArea from "$lib/components/inputs/TextArea.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import EditProject from "$lib/components/forms/EditProject.svelte";
+  import copy from "$lib/utils/copy";
 
   export let project: Project;
 
@@ -27,11 +27,6 @@
   $: permalink = canonicalUrl(project);
   $: embedSrc = embedUrl(project);
   $: iframe = `<iframe src="${embedUrl(project).href}" />`;
-
-  async function copy(text: string) {
-    await navigator.clipboard.writeText(text);
-    toast($_("share.copiedToClipboard"));
-  }
 </script>
 
 <div class="share">

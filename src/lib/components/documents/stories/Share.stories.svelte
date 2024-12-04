@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
+  import Toaster from "../../layouts/Toaster.svelte";
 
   import document from "@/test/fixtures/documents/document-expanded.json";
 
@@ -18,6 +19,7 @@
 
 <Template let:args>
   <Share {document} {...args} />
+  <Toaster />
 </Template>
 
 <Story name="Document" args={{ ...args, document }} />
