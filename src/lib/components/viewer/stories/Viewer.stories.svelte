@@ -7,7 +7,7 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
-  import Note from "../Note.svelte";
+  import { searchWithin } from "@/test/handlers/documents";
 
   const document = doc as Document;
 
@@ -70,6 +70,30 @@
   args={{
     ...args,
     mode: "annotating",
+    document: {
+      ...document,
+      edit_access: true,
+      notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
+    },
+  }}
+/>
+<Story
+  name="Search"
+  parameters={{
+    msw: { handlers: [searchWithin.data] },
+    sveltekit_experimental: {
+      stores: {
+        page: {
+          url: new URL(
+            `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=Trump`,
+          ),
+        },
+      },
+    },
+  }}
+  args={{
+    ...args,
+    mode: "search",
     document: {
       ...document,
       edit_access: true,
