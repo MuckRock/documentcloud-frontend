@@ -15,6 +15,7 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
   import EditProject from "$lib/components/forms/EditProject.svelte";
   import copy from "$lib/utils/copy";
+  import Copy from "../common/Copy.svelte";
 
   export let project: Project;
 
@@ -49,41 +50,35 @@
         </Tip>
       </div>
     {/if}
+
     <Field>
       <FieldLabel>
         {$_("share.permalink")}
-        <Button
-          slot="action"
-          size="small"
-          ghost
-          mode="primary"
-          on:click={() => copy(String(permalink))}
-          disabled={!navigator.clipboard}
-        >
-          <Copy16 />
-          {$_("share.copy")}
-        </Button>
+        <Copy slot="action" text={permalink.href} />
       </FieldLabel>
       <Text
-        value={String(permalink)}
+        value={permalink.href}
         --font-family="var(--font-mono)"
         --font-size="var(--font-sm)"
       />
     </Field>
+
+    <Field>
+      <FieldLabel>
+        {$_("share.embed")}
+        <Copy slot="action" text={embedSrc.href} />
+      </FieldLabel>
+      <Text
+        value={embedSrc.href}
+        --font-family="var(--font-mono)"
+        --font-size="var(--font-sm)"
+      />
+    </Field>
+
     <Field>
       <FieldLabel>
         {$_("share.iframe")}
-        <Button
-          slot="action"
-          size="small"
-          ghost
-          mode="primary"
-          on:click={() => copy(iframe)}
-          disabled={!navigator.clipboard}
-        >
-          <Copy16 />
-          {$_("share.copy")}
-        </Button>
+        <Copy slot="action" text={iframe} />
       </FieldLabel>
       <TextArea
         value={iframe}
