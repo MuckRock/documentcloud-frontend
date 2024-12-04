@@ -2,6 +2,11 @@
 
 import { redirect } from "@sveltejs/kit";
 
-export function load() {
-  return redirect(302, "/");
+export function load({ url }) {
+  const u = new URL(url);
+
+  // change the path but preserve other parts of the URL
+  u.pathname = "/documents/";
+
+  return redirect(302, u);
 }
