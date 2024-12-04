@@ -110,16 +110,14 @@ Assumes it's a child of a ViewerContext
         </SidebarItem>
         <Menu slot="default" let:close>
           {#each readModeDropdownItems.entries() as [value, name]}
-            {#if value !== "search"}
-              <MenuItem
-                selected={$mode === value}
-                href={getViewerHref({ document, mode: value, embed })}
-                on:click={close}
-              >
-                <svelte:component this={icons[value]} slot="icon" />
-                {name}
-              </MenuItem>
-            {/if}
+            <MenuItem
+              selected={$mode === value}
+              href={getViewerHref({ document, mode: value, embed, query })}
+              on:click={close}
+            >
+              <svelte:component this={icons[value]} slot="icon" />
+              {name}
+            </MenuItem>
           {/each}
           {#if BREAKPOINTS.WRITE_MENU && canWrite}
             {#each writeModes as [value, name]}
