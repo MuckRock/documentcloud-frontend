@@ -74,10 +74,11 @@ Assumes it's a child of a ViewerContext
     display: flex;
     flex-flow: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     margin: 0 auto;
+    width: 100%;
     max-width: 38.0625rem;
-    padding: 2rem 0;
+    padding: 1rem 1rem;
     min-height: 100%;
   }
   .card {

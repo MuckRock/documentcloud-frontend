@@ -13,10 +13,8 @@
   import text from "@/test/fixtures/documents/document.txt.json";
 
   import ViewerContext from "../ViewerContext.svelte";
-  import type { APIResponse, Highlights } from "@/lib/api/types";
 
   const query = "Trump";
-  const empty: APIResponse<Highlights, null> = { data: {} };
 </script>
 
 <Story
