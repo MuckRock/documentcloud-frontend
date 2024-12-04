@@ -544,6 +544,7 @@
     "note": "Note",
     "copy": "Copy",
     "copiedToClipboard": "Copied to clipboard",
+    "couldNotCopyToClipboard": "Could not copy to clipboard",
     "permalink": "Permalink",
     "iframe": "Embed HTML iFrame",
     "preview": "Embed Preview",

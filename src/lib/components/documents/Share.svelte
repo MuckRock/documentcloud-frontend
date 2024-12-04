@@ -20,22 +20,22 @@
     Organization24,
   } from "svelte-octicons";
 
-  import Button from "../common/Button.svelte";
+  import Button from "$lib/components/common/Button.svelte";
   import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
-  import Field from "../common/Field.svelte";
-  import FieldLabel from "../common/FieldLabel.svelte";
-  import Number from "../inputs/Number.svelte";
-  import Select from "../inputs/Select.svelte";
-  import Tab from "../common/Tab.svelte";
-  import Text from "../inputs/Text.svelte";
-  import TextArea from "../inputs/TextArea.svelte";
-  import Tip from "../common/Tip.svelte";
+  import Field from "$lib/components/common/Field.svelte";
+  import FieldLabel from "$lib/components/common/FieldLabel.svelte";
+  import Number from "$lib/components/inputs/Number.svelte";
+  import Select from "$lib/components/inputs/Select.svelte";
+  import Tab from "$lib/components/common/Tab.svelte";
+  import Text from "$lib/components/inputs/Text.svelte";
+  import TextArea from "$lib/components/inputs/TextArea.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
 
-  import Portal from "../layouts/Portal.svelte";
-  import Modal from "../layouts/Modal.svelte";
-  import Edit from "../forms/Edit.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Edit from "$lib/components/forms/Edit.svelte";
 
-  import { toast } from "../layouts/Toaster.svelte";
+  import copy from "$lib/utils/copy";
   import { createEmbedSearchParams } from "$lib/utils/embed";
   import {
     canonicalPageUrl,
@@ -107,11 +107,6 @@
         }
         break;
     }
-  }
-
-  async function copy(text: string) {
-    await navigator.clipboard.writeText(text);
-    toast($_("share.copiedToClipboard"));
   }
 </script>
 
