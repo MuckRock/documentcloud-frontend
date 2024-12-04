@@ -59,6 +59,7 @@ Assumes it's a child of a ViewerContext
     ["text", $_("mode.text")],
     ["grid", $_("mode.grid")],
     ["notes", $_("mode.notes")],
+    ["search", $_("mode.search")],
   ]);
 
   const writeModes: Map<WriteMode, string> = new Map([
