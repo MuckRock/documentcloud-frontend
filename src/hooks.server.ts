@@ -27,7 +27,7 @@ export async function handleFetch({ event, request, fetch }) {
     request.headers.append("cookie", event.request.headers.get("cookie") ?? "");
 
     // tell the API who we are
-    request.headers.append("x-real-ip", event.getClientAddress());
+    request.headers.append("x-forwarded-for", event.getClientAddress());
     request.headers.set(
       "x-bypass-rate-limit",
       env.BYPASS_RATE_LIMIT_SECRET ?? "",
