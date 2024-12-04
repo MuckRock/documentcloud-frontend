@@ -6,6 +6,7 @@ import {
   defaultSettings,
   isEmbed,
   reroute,
+  truthy,
 } from "../embed";
 
 describe("embed settings", () => {
@@ -77,4 +78,35 @@ describe("embed utilities", () => {
       expect(reroute({ url })).toEqual(rewritten);
     }
   });
+});
+
+test("truthy", () => {
+  // Test undefined
+  expect(truthy(undefined)).toBe(false);
+
+  // Test null
+  expect(truthy(null)).toBe(false);
+
+  // Test boolean inputs
+  expect(truthy(true)).toBe(true);
+  expect(truthy(false)).toBe(false);
+
+  // Test number inputs
+  expect(truthy(1)).toBe(1);
+  expect(truthy(0)).toBe(0);
+
+  // Test string inputs for boolean values
+  expect(truthy("true")).toBe(true);
+  expect(truthy("false")).toBe(false);
+
+  // Test string inputs for number values
+  expect(truthy("1")).toBe(1);
+  expect(truthy("0")).toBe(0);
+
+  // Test JSON parsing
+  expect(truthy('{"key": "value"}')).toEqual(true);
+  expect(truthy("[1, 2, 3]")).toEqual(true);
+
+  // Test invalid JSON string
+  expect(truthy("invalid")).toBe(false);
 });
