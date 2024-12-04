@@ -246,6 +246,9 @@ describe("document fetching", () => {
     const t = await documents.textPositions(document, 1, mockFetch);
 
     expect(t).toMatchObject(textPositions);
+
+    mockFetch.mockRejectedValue(new Error("Failed to fetch"));
+    expect(await documents.textPositions(document, 1, mockFetch)).toEqual([]);
   });
 });
 

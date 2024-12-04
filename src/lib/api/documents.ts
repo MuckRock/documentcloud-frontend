@@ -209,12 +209,14 @@ export async function textPositions(
     }
   }
 
-  const resp = await fetch(url).catch(console.error);
-  if (!resp || isErrorCode(resp.status)) {
+  try {
+    const resp = await fetch(url);
+    if (!resp || isErrorCode(resp.status)) return [];
+    return resp.json();
+  } catch (e) {
+    console.error(e);
     return [];
   }
-
-  return resp.json();
 }
 
 /**
