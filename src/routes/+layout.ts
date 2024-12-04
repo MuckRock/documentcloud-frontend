@@ -8,7 +8,12 @@ export const trailingSlash = "always";
 
 export async function load() {
   if (browser) {
-    const lang = localStorage.getItem("dc-locale") || window.navigator.language;
+    let lang: string;
+    try {
+      lang = localStorage.getItem("dc-locale") || window.navigator.language;
+    } catch {
+      lang = window.navigator.language;
+    }
 
     // use en.json for en-US and such
     const language = getLanguage(lang, "en");
