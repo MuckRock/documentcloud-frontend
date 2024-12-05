@@ -1,21 +1,22 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { Copy16, ShieldLock24 } from "svelte-octicons";
-
   import type { Project } from "$lib/api/types";
-  import { canonicalUrl, embedUrl } from "$lib/api/projects";
+
+  import { _ } from "svelte-i18n";
+  import { ShieldLock24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
+  import Copy from "../common/Copy.svelte";
   import Field from "$lib/components/common/Field.svelte";
   import FieldLabel from "$lib/components/common/FieldLabel.svelte";
   import Text from "$lib/components/inputs/Text.svelte";
   import TextArea from "$lib/components/inputs/TextArea.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
+
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import EditProject from "$lib/components/forms/EditProject.svelte";
-  import copy from "$lib/utils/copy";
-  import Copy from "../common/Copy.svelte";
+
+  import { canonicalUrl, embedUrl } from "$lib/api/projects";
 
   export let project: Project;
 
@@ -27,7 +28,7 @@
 
   $: permalink = canonicalUrl(project);
   $: embedSrc = embedUrl(project);
-  $: iframe = `<iframe src="${embedUrl(project).href}" />`;
+  $: iframe = `<iframe src="${embedSrc.href}" />`;
 </script>
 
 <div class="share">

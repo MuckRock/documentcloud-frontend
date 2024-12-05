@@ -1,8 +1,10 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import copy from "$lib/utils/copy";
   import { Copy16 } from "svelte-octicons";
+
   import Button from "./Button.svelte";
+
+  import copy from "$lib/utils/copy";
 
   export let text: string;
   export let hideLabel = false;

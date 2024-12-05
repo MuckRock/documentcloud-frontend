@@ -20,6 +20,7 @@
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
+  import Copy from "../common/Copy.svelte";
   import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
   import Field from "$lib/components/common/Field.svelte";
   import FieldLabel from "$lib/components/common/FieldLabel.svelte";
@@ -42,7 +43,6 @@
     pageUrl,
   } from "$lib/api/documents";
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
-  import Copy from "../common/Copy.svelte";
 
   export let document: Document;
   export let page: number = 1;
