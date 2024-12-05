@@ -54,7 +54,7 @@
   async function load(url: URL) {
     loading = true;
     const resp = await fetch(url, { credentials: "include" }).catch(
-      console.error,
+      console.warn,
     );
 
     const { data, error: err } = await getApiResponse<DocumentResults>(resp);

@@ -38,7 +38,7 @@ export async function add(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<ProjectUser, ValidationError>(resp);
 }
@@ -67,7 +67,7 @@ export async function update(
       Referer: APP_URL,
     },
     method: "PATCH",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<ProjectUser, ValidationError>(resp);
 }
@@ -91,7 +91,7 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null, any>(resp);
 }

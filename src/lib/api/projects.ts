@@ -27,7 +27,7 @@ export async function get(
   const endpoint = new URL(`projects/${id}/`, BASE_API_URL);
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Project>(resp);
@@ -47,7 +47,7 @@ export async function list(
   }
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<ProjectResults>(resp);
@@ -129,7 +129,7 @@ export async function pinProject(
   const resp = await fetch(endpoint, {
     ...options,
     body: JSON.stringify({ pinned }),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Project>(resp);
 }
@@ -159,7 +159,7 @@ export async function create(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Project, ValidationError>(resp);
 }
@@ -181,7 +181,7 @@ export async function edit(
       Referer: APP_URL,
     },
     method: "PATCH",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Project, ValidationError>(resp);
 }
@@ -204,7 +204,7 @@ export async function destroy(
       Referer: APP_URL,
     },
     method: "DELETE",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null>(resp);
 }
@@ -234,7 +234,7 @@ export async function add(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<ProjectMembershipItem[]>(resp);
 }
@@ -259,7 +259,7 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null>(resp);
 }
@@ -283,7 +283,7 @@ export async function documents(
   endpoint.searchParams.set("per_page", "12");
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   if (!resp) {

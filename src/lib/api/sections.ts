@@ -21,7 +21,7 @@ export async function list(
   const endpoint = new URL(`documents/${doc_id}/sections.json`, BASE_API_URL);
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   if (!resp) {
@@ -52,7 +52,7 @@ export async function get(
   );
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   if (!resp) {

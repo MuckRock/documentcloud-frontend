@@ -88,7 +88,7 @@ export async function setOrg(
       [CSRF_HEADER_NAME]: csrf_token,
     },
     method: "PATCH",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<User>(resp);
 }

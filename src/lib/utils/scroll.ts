@@ -9,6 +9,6 @@ export function scrollToPage(n: number): void {
   const pageId = pageHashUrl(n).replace("#", "");
   const heading = window.document.getElementById(pageId);
 
-  if (!heading) return console.error(`Missing page ${n}`);
+  if (!heading) return console.warn(`Missing page ${n}`);
   heading.scrollIntoView();
 }
