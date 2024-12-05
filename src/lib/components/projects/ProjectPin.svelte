@@ -46,7 +46,7 @@
 
     if (error || !data) {
       project.pinned = !project.pinned;
-      console.error(error ?? "Missing data");
+      console.warn(error ?? "Missing data");
     } else {
       project = data;
       await invalidate(canonicalUrl(project));

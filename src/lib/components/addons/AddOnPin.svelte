@@ -46,7 +46,7 @@
     if (!resp.ok) {
       // reset active state
       addon.active = !addon.active;
-      console.error(`Problem updating add-on: ${resp.statusText}`);
+      console.warn(`Problem updating add-on: ${resp.statusText}`);
     }
 
     // now that we've updated, set $pinned

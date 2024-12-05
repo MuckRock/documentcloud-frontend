@@ -79,7 +79,7 @@ export async function search(
   }
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<DocumentResults, null>(resp);
@@ -102,7 +102,7 @@ export async function searchWithin(
     }
   }
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
   return getApiResponse<Highlights, null>(resp);
 }
@@ -127,7 +127,7 @@ export async function get(
   endpoint.searchParams.set("expand", expand.join(","));
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Document, null>(resp);
@@ -151,7 +151,7 @@ export async function list(
   }
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<DocumentResults>(resp);
@@ -176,12 +176,12 @@ export async function text(
     try {
       url = await getPrivateAsset(url, fetch);
     } catch (e) {
-      console.error(e);
+      console.warn(e);
       return empty;
     }
   }
 
-  const resp = await fetch(url).catch(console.error);
+  const resp = await fetch(url).catch(console.warn);
   if (!resp || isErrorCode(resp.status)) {
     return empty;
   }
@@ -204,7 +204,7 @@ export async function textPositions(
     try {
       url = await getPrivateAsset(url);
     } catch (e) {
-      console.error(e);
+      console.warn(e);
       return [];
     }
   }
@@ -214,7 +214,7 @@ export async function textPositions(
     if (!resp || isErrorCode(resp.status)) return [];
     return resp.json();
   } catch (e) {
-    console.error(e);
+    console.warn(e);
     return [];
   }
 }
@@ -242,7 +242,7 @@ export async function create(
       Referer: APP_URL,
     },
     body: JSON.stringify(doc),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Document, unknown>(resp);
 }
@@ -290,7 +290,7 @@ export async function process(
       Referer: APP_URL,
     },
     body: JSON.stringify(documents),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null, unknown>(resp);
 }
@@ -317,7 +317,7 @@ export async function cancel(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null, any>(resp);
 }
@@ -339,7 +339,7 @@ export async function destroy(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null, any>(resp);
 }
@@ -366,7 +366,7 @@ export async function destroy_many(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null, unknown>(resp);
 }
@@ -397,7 +397,7 @@ export async function edit(
       Referer: APP_URL,
     },
     body: JSON.stringify(data),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Document, ValidationError>(resp);
 }
@@ -426,7 +426,7 @@ export async function edit_many(
       Referer: APP_URL,
     },
     body: JSON.stringify(documents),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<DocumentResults>(resp);
 }
@@ -453,7 +453,7 @@ export async function add_tags(
       Referer: APP_URL,
     },
     body: JSON.stringify(data),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Data, any>(resp);
 }
@@ -513,8 +513,8 @@ export async function assetUrl(
   // assets still processing are in private storage until finished
   if (document.access !== "public" || String(asset_url).startsWith(DC_BASE)) {
     asset_url = await getPrivateAsset(asset_url, fetch).catch((e) => {
-      console.error(e);
-      console.error(asset_url.href);
+      console.warn(e);
+      console.warn(asset_url.href);
       return asset_url;
     });
   }

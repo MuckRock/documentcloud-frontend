@@ -33,7 +33,7 @@ export async function list(
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Page<Note>>(resp);
@@ -56,7 +56,7 @@ export async function get(
   endpoint.searchParams.set("expand", DEFAULT_EXPAND);
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Note>(resp);
@@ -84,7 +84,7 @@ export async function create(
       Referer: APP_URL,
     },
     method: "POST",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Note, ValidationError>(resp);
 }
@@ -113,7 +113,7 @@ export async function update(
       Referer: APP_URL,
     },
     method: "PATCH",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Note, ValidationError>(resp);
 }
@@ -140,7 +140,7 @@ export async function remove(
       Referer: APP_URL,
     },
     method: "DELETE",
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null>(resp);
 }

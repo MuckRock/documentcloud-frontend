@@ -46,7 +46,7 @@
       }
     })
     .catch((e) => {
-      console.error(e);
+      console.warn(e);
       errors.update((errs) => [...errs, e]);
     });
 
@@ -61,7 +61,7 @@
         window.pdf = p;
       })
       .catch((e) => {
-        console.error(e);
+        console.warn(e);
         errors.update((errs) => [...errs, e]);
       });
   });

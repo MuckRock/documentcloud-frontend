@@ -171,7 +171,7 @@ describe("addon payloads", () => {
     const payload = addons.buildPayload(scraper, form, true);
 
     if (payload.errors) {
-      console.error(payload.errors);
+      console.warn(payload.errors);
     }
     expect(payload.valid).toBeTruthy();
 
@@ -203,7 +203,7 @@ describe("addon payloads", () => {
     const payload = addons.buildPayload(translate, form, true);
 
     if (!payload.valid) {
-      console.error(payload.errors);
+      console.warn(payload.errors);
     }
 
     // put this after the above test so we can see errors on failure
@@ -235,7 +235,7 @@ describe("addon payloads", () => {
     const payload = addons.buildPayload(translate, form, true);
 
     if (!payload.valid) {
-      console.error(payload.errors);
+      console.warn(payload.errors);
     }
 
     // put this after the above test so we can see errors on failure

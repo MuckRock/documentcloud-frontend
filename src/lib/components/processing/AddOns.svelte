@@ -64,7 +64,7 @@ This component should update on a timer.
     rated[run.uuid] = rating;
     const { data, error } = await rate(run.uuid, rating, csrftoken);
     if (error || !data) {
-      console.error(error?.errors ?? "No data");
+      console.warn(error?.errors ?? "No data");
       restore();
       delete rated[run.uuid];
     } else {
@@ -76,13 +76,13 @@ This component should update on a timer.
     const restore = optimisticUpdate({ ...run, dismissed: true });
     const csrftoken = getCsrfToken();
     if (!csrftoken) {
-      console.error("No CSRF token");
+      console.warn("No CSRF token");
       restore();
       return;
     }
     const { data, error } = await dismiss(run.uuid, csrftoken);
     if (error || !data) {
-      console.error(error?.errors ?? "No data");
+      console.warn(error?.errors ?? "No data");
       restore();
     } else {
       optimisticUpdate(data);
