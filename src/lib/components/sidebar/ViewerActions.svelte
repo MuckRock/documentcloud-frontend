@@ -1,3 +1,5 @@
+<!-- Assumes its a child of ViewerContext -->
+
 <script lang="ts">
   import type { Document, Org, User } from "$lib/api/types";
 
@@ -28,10 +30,13 @@
 
   import { getUpgradeUrl } from "$lib/api/accounts";
   import { pdfUrl, canonicalUrl } from "$lib/api/documents";
+  import { getCurrentPage } from "../viewer/ViewerContext.svelte";
 
   export let document: Document;
   export let user: User;
   export let action: string = "";
+
+  const page = getCurrentPage();
 
   $: shareOpen = action === "share";
   $: editOpen = action === "edit";
@@ -141,7 +146,7 @@
   <Portal>
     <Modal on:close={() => (shareOpen = false)}>
       <h1 slot="title">{$_("sidebar.shareEmbed")}</h1>
-      <Share {document} />
+      <Share {document} page={$page} />
     </Modal>
   </Portal>
 {/if}
