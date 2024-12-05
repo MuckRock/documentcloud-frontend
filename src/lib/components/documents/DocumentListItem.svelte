@@ -10,8 +10,8 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     fullTitle: boolean;
     meta: boolean;
     thumbnail: boolean;
-    description: boolean;
     projects: boolean;
+    description: boolean;
     data: boolean;
   }
 
@@ -19,8 +19,8 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     fullTitle: true,
     meta: true,
     thumbnail: true,
-    description: false,
     projects: true,
+    description: false,
     data: false,
   };
 </script>
