@@ -173,7 +173,7 @@ layouts, stories, and tests.
       };
 
       task.promise.catch((error) => {
-        console.warn(error);
+        console.error(error);
         $currentErrors = [...$currentErrors, error];
         throw error;
       });

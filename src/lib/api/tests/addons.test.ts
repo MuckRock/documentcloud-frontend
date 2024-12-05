@@ -170,9 +170,6 @@ describe("addon payloads", () => {
     const form = buildForm(parameters);
     const payload = addons.buildPayload(scraper, form, true);
 
-    if (payload.errors) {
-      console.warn(payload.errors);
-    }
     expect(payload.valid).toBeTruthy();
 
     expect(payload).toMatchObject({
