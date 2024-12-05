@@ -18,6 +18,17 @@
   );
 
   export let total: Writable<number> = writable(0);
+
+  // Allow users to customize the visible fields in document list items
+  const storage = new StorageManager("document-browser");
+  const userDefaultVisible = storage.get<VisibleFields, VisibleFields>(
+    "visibleFields",
+    defaultVisibleFields,
+  );
+  export const visibleFields: Writable<VisibleFields> = writable(
+    Object.assign({}, defaultVisibleFields, userDefaultVisible),
+  );
+  visibleFields.subscribe((val) => storage.set("visibleFields", val));
 </script>
 
 <script lang="ts">
@@ -26,13 +37,17 @@
   import { Search24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import DocumentListItem from "./DocumentListItem.svelte";
+  import DocumentListItem, {
+    defaultVisibleFields,
+    type VisibleFields,
+  } from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
 
   import { getApiResponse } from "$lib/utils/api";
+  import { StorageManager } from "@/lib/utils/storage";
 
   export let results: Document[] = [];
   export let count: Maybe<number> = undefined;
@@ -46,6 +61,9 @@
   let error: string = "";
 
   const embed: boolean = getContext("embed");
+  const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
+
+  $: console.log($visibleFields);
 
   // track what's visible so we can compare to $selected
   $: $visible = new Map(results.map((d) => [String(d.id), d]));
@@ -120,7 +138,7 @@
             />
           </label>
         {/if}
-        <DocumentListItem {document} />
+        <DocumentListItem {document} visibleFields={$visibleFields} />
       </Flex>
 
       {#if document.highlights}
