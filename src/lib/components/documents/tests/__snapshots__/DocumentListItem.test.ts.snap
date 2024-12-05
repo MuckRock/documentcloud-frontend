@@ -2,25 +2,29 @@
 
 exports[`DocumentListItem > renders 1`] = `
 <div>
-  <a
-    class="document-list-item svelte-1y641k7"
-    href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/"
+  <div
+    class="document-list-item svelte-1m3ox9s"
   >
      
     <div
-      class="documentInfo svelte-1y641k7"
+      class="document-info svelte-1m3ox9s"
     >
       <div
-        class="head svelte-1y641k7"
+        class="head svelte-1m3ox9s"
       >
         <h3
-          class="title svelte-1y641k7"
+          class="title svelte-1m3ox9s"
         >
-          Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018
+          <a
+            class="document-link title-link svelte-1m3ox9s"
+            href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/"
+          >
+            Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018
+          </a>
         </h3>
          
         <div
-          class="access svelte-1y641k7"
+          class="access svelte-1m3ox9s"
         >
           <div
             class="access public svelte-o63adk"
@@ -44,11 +48,17 @@ exports[`DocumentListItem > renders 1`] = `
       </div>
        
       <p
-        class="meta svelte-1y641k7"
+        class="meta svelte-1m3ox9s"
       >
-        20 pages
-         -
-      
+        <a
+          class="document-link svelte-1m3ox9s"
+          href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/?mode=grid"
+        >
+          20 pages
+        </a>
+        
+        -
+        
          
         Mitchell Kotler (MuckRock)
          -
@@ -56,10 +66,14 @@ exports[`DocumentListItem > renders 1`] = `
         Mon Oct 02 2023
       </p>
        
+       
       <div
-        class="data svelte-1y641k7"
-      />
+        class="data svelte-1m3ox9s"
+      >
+        
+         
+      </div>
     </div>
-  </a>
+  </div>
 </div>
 `;
