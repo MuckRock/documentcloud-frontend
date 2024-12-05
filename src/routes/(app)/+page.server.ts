@@ -1,8 +1,10 @@
-import { _ } from "svelte-i18n";
-import { createFeedback, type Feedback } from "@/lib/api/feedback";
 import type { Actions } from "./$types";
+
+import { _ } from "svelte-i18n";
 import { fail } from "@sveltejs/kit";
 import { setFlash } from "sveltekit-flash-message/server";
+
+import { createFeedback, type Feedback } from "$lib/api/feedback";
 
 export const actions = {
   feedback: async ({ request, cookies, fetch }) => {

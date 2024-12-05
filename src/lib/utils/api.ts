@@ -46,7 +46,7 @@ export async function getApiResponse<T, E = unknown>(
         errors: resp.json ? await resp.json() : null,
       };
     } catch (error) {
-      console.error(error);
+      console.warn(error);
       // if we fail parsing the error's JSON,
       // just return the status
       response.error = {
@@ -121,7 +121,7 @@ export async function getPrivateAsset(
     headers: {
       Accept: "application/json",
     },
-  }).catch(console.error);
+  }).catch(console.warn);
 
   // should this be an API response?
   if (!resp) {

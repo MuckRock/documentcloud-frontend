@@ -11,12 +11,14 @@
     "title": "Title"
   },
   "search": {
+    "loading": "Searching…",
     "matchingResults": "{n, plural, one {# matching result} other {# matching results}}",
     "reset": "Clear Search",
     "help": "Use filters like <code>user:</code>, <code>project:</code> or <code>organization:</code> to refine searches. Use <code>sort:</code> to order results.",
     "more": "Learn more",
     "collapseAll": "Collapse all",
-    "expandAll": "Expand all"
+    "expandAll": "Expand all",
+    "empty": "No matching results found"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
@@ -324,7 +326,8 @@
     "grid": "Pages",
     "notes": "Notes",
     "annotating": "Annotate",
-    "redacting": "Redact"
+    "redacting": "Redact",
+    "search": "Results"
   },
   "zoom": {
     "zoom": "Zoom",
@@ -543,8 +546,10 @@
     "note": "Note",
     "copy": "Copy",
     "copiedToClipboard": "Copied to clipboard",
+    "couldNotCopyToClipboard": "Could not copy to clipboard",
     "permalink": "Permalink",
-    "iframe": "Embed HTML iFrame",
+    "embed": "Embed URL",
+    "iframe": "HTML iFrame",
     "preview": "Embed Preview",
     "save": "Save Settings",
     "customize": "Customize Embed",

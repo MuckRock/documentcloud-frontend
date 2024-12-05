@@ -32,6 +32,7 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "./ViewerContext.svelte";
   import LoadingToolbar from "./LoadingToolbar.svelte";
+  import Search from "./Search.svelte";
 
   const embed = isEmbedded();
   const currentMode = getCurrentMode();
@@ -98,9 +99,11 @@ Assumes it's a child of a ViewerContext
       <Grid />
     {:else if mode === "notes"}
       <Notes />
+    {:else if mode === "search"}
+      <Search />
     {/if}
     <svelte:fragment slot="footer">
-      {#if mode !== "notes"}
+      {#if !["notes", "search"].includes(mode)}
         <PaginationToolbar />
       {/if}
     </svelte:fragment>

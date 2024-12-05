@@ -43,11 +43,15 @@ describe("Share", () => {
     // Document tab
     await user.click(screen.getByText("Document"));
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(`<iframe src="${embedUrl(document)}" />`);
+    expect(inputs[1]).toHaveValue(embedUrl(document).href);
+    expect(inputs[2]).toHaveValue(`<iframe src="${embedUrl(document)}" />`);
     // Page tab
     await user.click(screen.getByText("Page"));
     expect(inputs[0]).toHaveValue(pageUrl(document, 1).toString());
     expect(inputs[1]).toHaveValue(
+      canonicalPageUrl(document, 1).href + "?embed=1",
+    );
+    expect(inputs[2]).toHaveValue(
       `<iframe src="${canonicalPageUrl(document, 1)}?embed=1" />`,
     );
     // Note tab
@@ -56,6 +60,9 @@ describe("Share", () => {
       noteUrl(document, document.notes?.[0]!).toString(),
     );
     expect(inputs[1]).toHaveValue(
+      `${canonicalNoteUrl(document, document.notes?.[0]!)}?embed=1`,
+    );
+    expect(inputs[2]).toHaveValue(
       `<iframe src="${canonicalNoteUrl(document, document.notes?.[0]!)}?embed=1" />`,
     );
   });
@@ -65,7 +72,8 @@ describe("Share", () => {
     let inputs = screen.getAllByRole("textbox");
     // Default settings
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(`<iframe src="${embedUrl(document)}" />`);
+    expect(inputs[1]).toHaveValue(embedUrl(document).href);
+    expect(inputs[2]).toHaveValue(`<iframe src="${embedUrl(document)}" />`);
     // Customize width and height
     await user.click(screen.getByText("Customize Embed"));
     expect(screen.getByText("Width")).toBeInTheDocument();
@@ -73,13 +81,15 @@ describe("Share", () => {
     // Width
     await user.click(radioSelections[0]!);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(
+    expect(inputs[1]).toHaveValue(`${embedUrl(document)}&width=500`);
+    expect(inputs[2]).toHaveValue(
       `<iframe src="${embedUrl(document)}&width=500" width="500" />`,
     );
     // Height
     await user.click(radioSelections[1]!);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(
+    expect(inputs[1]).toHaveValue(`${embedUrl(document)}&width=500&height=500`);
+    expect(inputs[2]).toHaveValue(
       `<iframe src="${embedUrl(document)}&width=500&height=500" width="500" height="500" />`,
     );
   });

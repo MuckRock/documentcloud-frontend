@@ -40,6 +40,12 @@
     font-size: var(--font-sm);
     /* margin-bottom: 0.5rem; */
   }
+  .segment {
+    margin-bottom: 0.5rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
   .ellipsis {
     white-space: nowrap;
     overflow: hidden;

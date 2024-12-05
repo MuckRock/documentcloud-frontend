@@ -37,6 +37,10 @@ export const SIGN_IN_URL = new URL(DC_LOGIN, DC_BASE).toString();
 export const SIGN_UP_URL = new URL(SQUARELET_SIGNUP, SQUARELET_BASE).toString();
 export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
 
+export const EMBED_MAX_AGE = 60 * 10;
+export const PAGE_MAX_AGE = 60 * 10;
+export const VIEWER_MAX_AGE = 60 * 10;
+
 export const VERIFICATION_FORM_URL =
   "https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form";
 export const SQUARELET_ORGS_URL =
@@ -57,7 +61,7 @@ export const CSRF_HEADER_NAME = "X-CSRFToken";
 
 export const POLL_INTERVAL = 5000;
 
-export const ALLOWED_TAGS = ["a", "strong", "em", "b", "i"];
+export const ALLOWED_TAGS = ["a", "strong", "em", "b", "i", "code", "p"];
 export const ALLOWED_ATTR = ["href"];
 
 /**
@@ -86,7 +90,7 @@ export const PDF_SIZE_LIMIT_READABLE = "500 MB";
 export const DOCUMENT_SIZE_LIMIT = 27262976;
 export const DOCUMENT_SIZE_LIMIT_READABLE = "25 MB";
 
-export const TOAST_LENGTH = 2500;
+export const TOAST_LENGTH = 3000;
 export const TOAST_FADE = 800;
 
 export const LEGACY_CUT_OFF = 20000000;

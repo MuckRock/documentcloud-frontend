@@ -46,7 +46,7 @@ export async function getAddons(
     endpoint.searchParams.set(key, String(value));
   });
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Page<AddOnListItem>>(resp);
@@ -83,7 +83,7 @@ export async function getEvent(
   const endpoint = new URL(`addon_events/${id}/?expand=addon`, BASE_API_URL);
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Event>(resp);
@@ -108,7 +108,7 @@ export async function history(
   }
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Page<Run>>(resp);
@@ -127,7 +127,7 @@ export async function scheduled(
   }
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(
-    console.error,
+    console.warn,
   );
 
   return getApiResponse<Page<Event>>(resp);
@@ -154,7 +154,7 @@ export async function dispatch(
       Referer: APP_URL,
     },
     body: JSON.stringify(payload),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Run | Event, ValidationError>(resp);
 }
@@ -178,7 +178,7 @@ export async function update(
       Referer: APP_URL,
     },
     body: JSON.stringify(payload),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Event, ValidationError>(resp);
 }
@@ -208,7 +208,7 @@ export async function dismiss(
       Referer: APP_URL,
     },
     body: JSON.stringify({ dismissed: true }),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Run>(resp);
 }
@@ -234,7 +234,7 @@ export async function cancel(
       [CSRF_HEADER_NAME]: csrf_token,
       Referer: APP_URL,
     },
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<null>(resp);
 }
@@ -268,7 +268,7 @@ export async function rate(
       Referer: APP_URL,
     },
     body: JSON.stringify({ rating: value }),
-  }).catch(console.error);
+  }).catch(console.warn);
 
   return getApiResponse<Run>(resp);
 }

@@ -1,12 +1,16 @@
 import { redirect } from "@sveltejs/kit";
-import { searchUrl, userDocs } from "$lib/utils/search";
+import { userDocs } from "$lib/utils/search";
 
-export async function load({ parent }) {
+export async function load({ parent, url }) {
   const { me } = await parent();
+  const u = new URL(url);
 
   if (me) {
-    return redirect(302, searchUrl(userDocs(me)));
+    u.pathname = "/documents/";
+    u.searchParams.set("q", userDocs(me));
+    return redirect(302, u);
   }
 
-  return redirect(302, "/home/");
+  u.pathname = "/home/";
+  return redirect(302, u);
 }

@@ -31,11 +31,11 @@
   }
 
   function previous() {
-    if (page) dispatch("previous", page - 1);
+    if (has_previous) dispatch("previous", (page ?? 0) - 1);
   }
 
   function next() {
-    if (page) dispatch("next", page + 1);
+    if (has_next) dispatch("next", (page ?? 0) + 1);
   }
 
   function goTo(page: number) {

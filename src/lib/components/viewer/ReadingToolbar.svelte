@@ -25,9 +25,9 @@ Assumes it's a child of a ViewerContext
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import PageToolbar from "$lib/components/common/PageToolbar.svelte";
-  import Tab from "$lib/components/common/Tab.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import Tab from "$lib/components/common/Tab.svelte";
 
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
@@ -54,11 +54,19 @@ Assumes it's a child of a ViewerContext
     SEARCH_MENU: width < remToPx(24),
   };
 
-  const readModes: Map<ReadMode, string> = new Map([
+  const readModeTabs: Map<ReadMode, string> = new Map([
     ["document", $_("mode.document")],
     ["text", $_("mode.text")],
     ["grid", $_("mode.grid")],
     ["notes", $_("mode.notes")],
+  ]);
+
+  const readModeDropdownItems: Map<ReadMode, string> = new Map([
+    ["document", $_("mode.document")],
+    ["text", $_("mode.text")],
+    ["grid", $_("mode.grid")],
+    ["notes", $_("mode.notes")],
+    ["search", $_("mode.search")],
   ]);
 
   const writeModes: Map<WriteMode, string> = new Map([
@@ -73,6 +81,7 @@ Assumes it's a child of a ViewerContext
     notes: Note16,
     annotating: Comment16,
     redacting: EyeClosed16,
+    search: Search16,
   };
 </script>
 
@@ -80,7 +89,7 @@ Assumes it's a child of a ViewerContext
   <svelte:fragment slot="left">
     {#if BREAKPOINTS.READ_MENU}
       <div class="tabs" role="tablist">
-        {#each readModes.entries() as [value, name]}
+        {#each readModeTabs.entries() as [value, name]}
           <Tab
             active={$mode === value}
             href={getViewerHref({ document, mode: value, embed, query })}
@@ -94,14 +103,16 @@ Assumes it's a child of a ViewerContext
       <Dropdown position="bottom-start">
         <SidebarItem slot="anchor">
           <svelte:component this={icons[$mode]} slot="start" />
-          {Array.from(readModes ?? []).find(([value]) => value === $mode)?.[1]}
+          {Array.from(readModeDropdownItems ?? []).find(
+            ([value]) => value === $mode,
+          )?.[1]}
           <ChevronDown12 slot="end" />
         </SidebarItem>
         <Menu slot="default" let:close>
-          {#each readModes.entries() as [value, name]}
+          {#each readModeDropdownItems.entries() as [value, name]}
             <MenuItem
               selected={$mode === value}
-              href={getViewerHref({ document, mode: value, embed })}
+              href={getViewerHref({ document, mode: value, embed, query })}
               on:click={close}
             >
               <svelte:component this={icons[value]} slot="icon" />
@@ -143,11 +154,11 @@ Assumes it's a child of a ViewerContext
           {$_("common.search")}
         </Button>
         <Menu>
-          <Search name="q" {query} />
+          <Search name="q" {query} otherParams={{ mode: "search" }} />
         </Menu>
       </Dropdown>
     {:else}
-      <Search name="q" {query} />
+      <Search name="q" {query} otherParams={{ mode: "search" }} />
     {/if}
   </Flex>
 </PageToolbar>

@@ -50,12 +50,6 @@ Assumes it's a child of a ViewerContext
     query: getQuery($page.url, "q"),
   });
 
-  function isDOMRectReadOnly(
-    rect: null | undefined | DOMRect | DOMRectReadOnly,
-  ): rect is DOMRectReadOnly {
-    return Boolean(rect && "readonly" in rect);
-  }
-
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(
       (entries, observer) => {
@@ -73,10 +67,8 @@ Assumes it's a child of a ViewerContext
           }
 
           const { boundingClientRect, rootBounds } = entry;
-
           if (
-            isDOMRectReadOnly(boundingClientRect) &&
-            isDOMRectReadOnly(rootBounds) &&
+            rootBounds &&
             boundingClientRect.top > rootBounds.top &&
             boundingClientRect.top < rootBounds.height / 2 &&
             currentPage // in case context is missing

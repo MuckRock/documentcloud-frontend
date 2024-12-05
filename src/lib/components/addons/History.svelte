@@ -28,7 +28,7 @@
     loading = true;
 
     const resp = await fetch(url, { credentials: "include" }).catch(
-      console.error,
+      console.warn,
     );
 
     const { data: results, error: err } = await getApiResponse<Page<Run>>(resp);

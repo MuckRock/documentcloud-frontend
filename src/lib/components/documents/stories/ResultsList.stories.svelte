@@ -48,9 +48,11 @@
   </ResultsList>
 </Story>
 
-<Story name="Highlighted">
-  <ResultsList results={highlighted} {count} {next} />
-</Story>
+<!-- too big to render
+  <Story name="Highlighted">
+    <ResultsList results={highlighted} {count} {next} />
+  </Story>
+-->
 
 <Story name="Unverified user">
   <ResultsList {results} {count} {next}>

@@ -34,17 +34,17 @@
 
   $: query = data.query;
   $: projects = data.projects.results;
-  $: next = data.projects.next;
-  $: previous = data.projects.previous;
+  $: next = data.projects.next; // this will be an API url with a cursor
+  $: previous = data.projects.previous; // this will be an API url with a cursor
 
   function paginate(u: Nullable<URL | string>) {
     if (!u) return;
-    u = new URL(u);
-    const target = new URL($page.url);
-
-    const cursor = u.searchParams.get("cursor");
-    if (cursor) target.searchParams.set("cursor", cursor);
-    goto(target);
+    const pageUrl = new URL(u);
+    const gotoUrl = new URL($page.url);
+    // get the cursor out of the pageUrl, pass it to the gotoUrl
+    const cursor = pageUrl.searchParams.get("cursor");
+    if (cursor) gotoUrl.searchParams.set("cursor", cursor);
+    goto(gotoUrl);
   }
 </script>
 
@@ -108,8 +108,8 @@
         slot="center"
         has_next={Boolean(next)}
         has_previous={Boolean(previous)}
-        on:next={(e) => paginate(next)}
-        on:previous={(e) => paginate(previous)}
+        on:next={() => paginate(next)}
+        on:previous={() => paginate(previous)}
       />
     </PageToolbar>
   </ContentLayout>

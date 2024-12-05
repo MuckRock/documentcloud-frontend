@@ -47,13 +47,13 @@
     {/if}
   </div>
   {#if ["success", "failure", "cancelled"].includes(status)}
-    <progress value={1} />
+    <progress value={1} data-chromatic="ignore" />
   {:else if status === "queued"}
-    <progress value={0} />
+    <progress value={0} data-chromatic="ignore" />
   {:else if progress}
-    <progress value={progress} />
+    <progress value={progress} data-chromatic="ignore" />
   {:else}
-    <progress />
+    <progress data-chromatic="ignore" />
   {/if}
 </div>
 

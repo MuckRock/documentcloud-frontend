@@ -74,7 +74,7 @@ export function getEmbedSettings(searchParams: URLSearchParams): EmbedSettings {
   return embedSettings;
 }
 
-function truthy(
+export function truthy(
   value: string | number | boolean | null | undefined,
 ): boolean | number {
   if (value === undefined) return false;
@@ -82,7 +82,16 @@ function truthy(
 
   if (typeof value === "boolean") return value;
   if (typeof value === "number") return value;
-  if (typeof value === "string") return JSON.parse(value);
+  if (typeof value === "string") {
+    try {
+      const jsonValue = JSON.parse(value);
+      if (typeof jsonValue === "boolean") return jsonValue;
+      if (typeof jsonValue === "number") return jsonValue;
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   return false;
 }

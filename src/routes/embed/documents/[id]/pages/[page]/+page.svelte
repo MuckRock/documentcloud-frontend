@@ -100,13 +100,13 @@
 
   <div class="dc-embed-container" class:active={Boolean(active)}>
     <img
-      src={pageImageUrl(doc, page, "large").toString()}
+      src={pageImageUrl(doc, page, "large").href}
       alt={$_("embedPage.pageOf", {
         values: { page: page, title: doc.title },
       })}
       width="{width}px"
       height="{height}px"
-      on:load={(e) => informSize(elem)}
+      on:load={() => informSize(elem)}
     />
 
     <!-- Place notes on image -->
@@ -138,7 +138,7 @@
         note={active}
         {slugId}
         {page}
-        on:close={(e) => (active = null)}
+        on:close={() => (active = null)}
       />
       <Note active={true} note={active} />
     {/if}
@@ -169,7 +169,7 @@
     or
     <a
       style="color: #5a76a0; text-decoration: underline;"
-      href={textUrl(doc, page - 1).toString()}
+      href={textUrl(doc, page).href}
       title="Read the text of page {page} of {doc.title} on DocumentCloud in
       new window or tab"
       target="_blank"

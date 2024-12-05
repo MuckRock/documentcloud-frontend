@@ -1,20 +1,22 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { Copy16, ShieldLock24 } from "svelte-octicons";
-
   import type { Project } from "$lib/api/types";
-  import { canonicalUrl, embedUrl } from "$lib/api/projects";
 
-  import Button from "../common/Button.svelte";
-  import Field from "../common/Field.svelte";
-  import FieldLabel from "../common/FieldLabel.svelte";
-  import Text from "../inputs/Text.svelte";
-  import TextArea from "../inputs/TextArea.svelte";
-  import { toast } from "../layouts/Toaster.svelte";
-  import Tip from "../common/Tip.svelte";
-  import Portal from "../layouts/Portal.svelte";
-  import Modal from "../layouts/Modal.svelte";
-  import EditProject from "../forms/EditProject.svelte";
+  import { _ } from "svelte-i18n";
+  import { ShieldLock24 } from "svelte-octicons";
+
+  import Button from "$lib/components/common/Button.svelte";
+  import Copy from "../common/Copy.svelte";
+  import Field from "$lib/components/common/Field.svelte";
+  import FieldLabel from "$lib/components/common/FieldLabel.svelte";
+  import Text from "$lib/components/inputs/Text.svelte";
+  import TextArea from "$lib/components/inputs/TextArea.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
+
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import EditProject from "$lib/components/forms/EditProject.svelte";
+
+  import { canonicalUrl, embedUrl } from "$lib/api/projects";
 
   export let project: Project;
 
@@ -26,12 +28,7 @@
 
   $: permalink = canonicalUrl(project);
   $: embedSrc = embedUrl(project);
-  $: iframe = `<iframe src="${embedUrl(project).href}" />`;
-
-  async function copy(text: string) {
-    await navigator.clipboard.writeText(text);
-    toast($_("share.copiedToClipboard"));
-  }
+  $: iframe = `<iframe src="${embedSrc.href}" />`;
 </script>
 
 <div class="share">
@@ -54,41 +51,35 @@
         </Tip>
       </div>
     {/if}
+
     <Field>
       <FieldLabel>
         {$_("share.permalink")}
-        <Button
-          slot="action"
-          size="small"
-          ghost
-          mode="primary"
-          on:click={() => copy(String(permalink))}
-          disabled={!navigator.clipboard}
-        >
-          <Copy16 />
-          {$_("share.copy")}
-        </Button>
+        <Copy slot="action" text={permalink.href} />
       </FieldLabel>
       <Text
-        value={String(permalink)}
+        value={permalink.href}
         --font-family="var(--font-mono)"
         --font-size="var(--font-sm)"
       />
     </Field>
+
+    <Field>
+      <FieldLabel>
+        {$_("share.embed")}
+        <Copy slot="action" text={embedSrc.href} />
+      </FieldLabel>
+      <Text
+        value={embedSrc.href}
+        --font-family="var(--font-mono)"
+        --font-size="var(--font-sm)"
+      />
+    </Field>
+
     <Field>
       <FieldLabel>
         {$_("share.iframe")}
-        <Button
-          slot="action"
-          size="small"
-          ghost
-          mode="primary"
-          on:click={() => copy(iframe)}
-          disabled={!navigator.clipboard}
-        >
-          <Copy16 />
-          {$_("share.copy")}
-        </Button>
+        <Copy slot="action" text={iframe} />
       </FieldLabel>
       <TextArea
         value={iframe}
