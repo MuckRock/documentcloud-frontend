@@ -49,26 +49,29 @@
       </div>
       {#if showAll}
         <div class="right">
-          <Button
-            minW={false}
-            size="small"
-            ghost
-            on:click={collapseAll}
-            title={$_("search.collapseAll")}
-          >
-            <Fold16 height={12} width={12} />
-            {#if !isSmall}{$_("search.collapseAll")}{/if}
-          </Button>
-          <Button
-            minW={false}
-            size="small"
-            ghost
-            on:click={expandAll}
-            title={$_("search.expandAll")}
-          >
-            <Unfold16 height={12} width={12} />
-            {#if !isSmall}{$_("search.expandAll")}{/if}
-          </Button>
+          {#if open}
+            <Button
+              minW={false}
+              size="small"
+              ghost
+              on:click={collapseAll}
+              title={$_("search.collapseAll")}
+            >
+              <Fold16 height={14} width={14} />
+              {#if !isSmall}{$_("search.collapseAll")}{/if}
+            </Button>
+          {:else}
+            <Button
+              minW={false}
+              size="small"
+              ghost
+              on:click={expandAll}
+              title={$_("search.expandAll")}
+            >
+              <Unfold16 height={14} width={14} />
+              {#if !isSmall}{$_("search.expandAll")}{/if}
+            </Button>
+          {/if}
         </div>
       {/if}
     </summary>
@@ -92,8 +95,8 @@
   .highlights summary {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-between;
-    gap: 0.25rem;
+    justify-content: flex-start;
+    gap: 1rem;
     color: var(--gray-4);
     fill: var(--gray-4);
     padding: 0.5rem 0.75rem;
@@ -106,6 +109,14 @@
     align-items: center;
     gap: 0.5rem;
     white-space: no-wrap;
+    padding: 0 0.5rem 0 0.25rem;
+    border-radius: 0.5rem;
+  }
+  summary .left:hover,
+  summary .left:focus,
+  summary:hover .left,
+  summary:focus .left {
+    background-color: var(--blue-1);
   }
   .highlights ul {
     list-style-type: none;
