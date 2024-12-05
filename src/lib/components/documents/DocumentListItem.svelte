@@ -6,67 +6,31 @@ It's deliberately minimal and can be wrapped in other components to add addition
 If we're in an embed, we want to open links to documents in new tabs and hide the access label.
 -->
 <script lang="ts">
-  import type { Access, Document, Project } from "$lib/api/types";
+  import type { Document, Project } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
   import DocAccess, { getLevel } from "../common/Access.svelte";
   import KV from "../common/KV.svelte";
-  import NoteTab from "../viewer/NoteTab.svelte";
+  import { canonicalUrl, userOrgString } from "@/lib/api/documents";
 
-  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
-  import {
-    canonicalUrl,
-    pageImageUrl,
-    userOrgString,
-  } from "@/lib/api/documents";
-  import { pageSizesFromSpec } from "$lib/utils/pageSize";
+  import Thumbnail from "./Thumbnail.svelte";
 
   export let document: Document;
 
   const embed: boolean = getContext("embed");
 
-  const thumbnailWidth = IMAGE_WIDTHS_MAP.get("thumbnail") ?? 60;
-
-  // this can be updated later if we want different icons
-  const statusIcons = {
-    error: Alert24,
-    nofile: File24,
-    pending: Hourglass24,
-  };
-
-  $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : null;
-  $: aspect = sizes?.[0] ?? 11 / 8.5; // fallback to US letter for now
-  $: height = thumbnailWidth * aspect;
   $: date = new Date(document.created_at).toDateString();
   $: projects = document.projects?.every((p) => typeof p === "object")
     ? (document.projects as Project[])
     : []; // only show projects if we've loaded them
 
-  $: hasPublicNotes = document.notes?.some((note) => note.access === "public");
-  $: hasOrgNotes = document.notes?.some(
-    (note) => note.access === "organization",
-  );
-  $: hasPrivateNotes = document.notes?.some(
-    (note) => note.access === "private",
-  );
   $: level = getLevel(document.access);
-
-  $: tabs = [
-    hasPublicNotes && ("public" as Access),
-    hasOrgNotes && ("organization" as Access),
-    hasPrivateNotes && ("private" as Access),
-  ].filter(Boolean);
 
   function clean(html: string) {
     return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
-  }
-
-  function onError() {
-    document.status = "error";
   }
 
   let width: number;
@@ -79,32 +43,9 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   target={embed ? "_blank" : undefined}
   bind:clientWidth={width}
 >
-  <div class="thumbnail">
-    {#if document.status === "success" || document.status === "readable"}
-      <img
-        src={pageImageUrl(document, 1, "thumbnail").href}
-        alt="Page 1, {document.title}"
-        width="{thumbnailWidth}px"
-        height="{height}px"
-        loading="lazy"
-        on:error={onError}
-      />
-    {:else}
-      <div class="fallback {document.status}">
-        <svelte:component this={statusIcons[document.status]} />
-      </div>
-    {/if}
-
-    {#if tabs.length > 0}
-      <div class="tabs">
-        {#each tabs as access}
-          {#if access}
-            <NoteTab {access} size="small" />
-          {/if}
-        {/each}
-      </div>
-    {/if}
-  </div>
+  {#if width >= 400}
+    <Thumbnail {document} />
+  {/if}
 
   <div class="documentInfo">
     <div class="head">
@@ -182,38 +123,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     border-color: var(--blue-2);
   }
 
-  .small .thumbnail {
-    display: none;
-  }
-
-  .thumbnail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-
-  .thumbnail img,
-  .thumbnail .fallback {
-    border-radius: 0.125rem;
-    border: 1px solid var(--gray-2, #cbcbcb);
-    background: var(--white, #fff);
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
-    /* Constrain tall documents */
-    max-height: 4.875rem;
-    object-fit: cover;
-    object-fit: top center;
-  }
-
-  .thumbnail .tabs {
-    position: absolute;
-    left: -0.5rem;
-    top: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-  }
-
   .documentInfo {
     display: flex;
     flex-direction: column;
@@ -266,22 +175,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   .small .access {
     align-self: flex-start;
     flex: 0 1 auto;
-  }
-
-  .fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background-color: var(--white);
-    fill: var(--gray-3);
-    /* US letter size, thumbnail width */
-    height: calc(60px * 11 / 8.5);
-    width: 60px;
-  }
-
-  .fallback.error {
-    fill: var(--red-3, #f00);
   }
 
   .data {
