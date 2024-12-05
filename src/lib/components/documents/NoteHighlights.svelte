@@ -17,14 +17,16 @@
 -->
 
 <script lang="ts">
-  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
+  import type { Document } from "$lib/api/types";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import type { Document } from "$lib/api/types";
-  import { noteUrl } from "$lib/api/notes";
   import Highlight from "../common/Highlight.svelte";
   import HighlightGroup from "../common/HighlightGroup.svelte";
+
+  import { noteUrl } from "$lib/api/notes";
 
   export let document: Document;
   export let open = true;
@@ -41,7 +43,7 @@
   function noteHref(id: string): string {
     const note = notes.get(id);
     if (!note) return "";
-    return noteUrl(document, note).toString();
+    return noteUrl(document, note).href;
   }
 </script>
 

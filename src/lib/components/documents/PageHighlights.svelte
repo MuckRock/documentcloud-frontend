@@ -11,10 +11,10 @@
   ```
 -->
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
   import { getContext } from "svelte";
-  import type { Writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
   import Highlight from "../common/Highlight.svelte";
@@ -35,7 +35,7 @@
 
   function pageHref(id: string): string {
     const pageNo = pageNumber(id);
-    return pageUrl(document, pageNo).toString();
+    return pageUrl(document, pageNo).href;
   }
 </script>
 

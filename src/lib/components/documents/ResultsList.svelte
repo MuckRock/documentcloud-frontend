@@ -54,9 +54,11 @@
   const embed: boolean = getContext("embed");
 
   setContext("highlightState", highlightState);
+
   function collapseAll() {
     highlightState.update((state) => ({ ...state, allOpen: false }));
   }
+
   function expandAll() {
     highlightState.update((state) => ({ ...state, allOpen: true }));
   }
