@@ -33,6 +33,7 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
+  import Tooltip from "../common/Tooltip.svelte";
 
   export let scale = 1.5;
   export let page_number: number; // zero-indexed
@@ -201,7 +202,7 @@ Assumes it's a child of a ViewerContext
       style:top="calc({note.y1} * 100%)"
       on:click={(e) => openNote(e, note)}
     >
-      <NoteTab access={note.access} title={note.title} />
+      <Tooltip caption={note.title}><NoteTab access={note.access} /></Tooltip>
     </a>
     <a
       href={getViewerHref({ document, note, mode: $mode, embed })}
