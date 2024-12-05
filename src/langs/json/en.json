@@ -13,6 +13,7 @@
   "search": {
     "loading": "Searching…",
     "matchingResults": "{n, plural, one {# matching result} other {# matching results}}",
+    "viewerResults": "{results, plural, one {# matching result} other {# matching results}} found across {pages, plural, one {# page} other {# pages}}",
     "reset": "Clear Search",
     "help": "Use filters like <code>user:</code>, <code>project:</code> or <code>organization:</code> to refine searches. Use <code>sort:</code> to order results.",
     "more": "Learn more",
