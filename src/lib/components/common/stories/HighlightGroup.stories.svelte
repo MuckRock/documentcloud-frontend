@@ -25,3 +25,11 @@
     </svelte:fragment>
   </HighlightGroup>
 </Story>
+
+<Story name="With All Controls">
+  <HighlightGroup {highlights} {getHref} showAll>
+    <svelte:fragment let:id let:highlight>
+      <Highlight title={id} segments={highlight} />
+    </svelte:fragment>
+  </HighlightGroup>
+</Story>

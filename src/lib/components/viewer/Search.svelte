@@ -37,6 +37,10 @@ Assumes it's a child of a ViewerContext
 
   $: query = getQuery($page.url, "q");
   $: search = searchWithin($document.id, query).then(formatResults);
+
+  function countResults(results: [number, string[]][]) {
+    return results.reduce((acc, [, segments]) => acc + segments.length, 0);
+  }
 </script>
 
 <div class="pages">
@@ -45,6 +49,18 @@ Assumes it's a child of a ViewerContext
       {$_("search.loading")}
     </Empty>
   {:then resultsPages}
+    {#if resultsPages.length > 0}
+      <header>
+        <h2>
+          {$_("search.viewerResults", {
+            values: {
+              results: countResults(resultsPages),
+              pages: resultsPages.length,
+            },
+          })}
+        </h2>
+      </header>
+    {/if}
     {#each resultsPages as [pageNumber, resultsList]}
       {@const href = getViewerHref({
         document: $document,
@@ -92,5 +108,13 @@ Assumes it's a child of a ViewerContext
   .card:focus {
     border-color: var(--blue-2);
     background-color: var(--blue-1);
+  }
+  header {
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-size: var(--font-lg);
+    font-weight: var(--font-semibold);
+    color: var(--gray-5);
   }
 </style>
