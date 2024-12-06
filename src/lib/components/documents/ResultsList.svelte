@@ -18,10 +18,16 @@
   );
 
   export let total: Writable<number> = writable(0);
+
+  // In order for the highlight state to be shared between components, we need to
+  // create a writable store and set it in the context.
+  export const highlightState: Writable<{ allOpen: boolean }> = writable({
+    allOpen: true,
+  });
 </script>
 
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { getContext, onMount, setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
 
@@ -46,6 +52,16 @@
   let error: string = "";
 
   const embed: boolean = getContext("embed");
+
+  setContext("highlightState", highlightState);
+
+  function collapseAll() {
+    highlightState.update((state) => ({ ...state, allOpen: false }));
+  }
+
+  function expandAll() {
+    highlightState.update((state) => ({ ...state, allOpen: true }));
+  }
 
   // track what's visible so we can compare to $selected
   $: $visible = new Map(results.map((d) => [String(d.id), d]));
@@ -106,10 +122,13 @@
 </script>
 
 <div class="container" data-sveltekit-preload-data={preload}>
-  <Flex direction="column">
+  <Flex direction="column" gap={0}>
     <slot name="start" />
     {#each results as document (document.id)}
-      <Flex gap={0.625} align="center">
+      <div
+        class="result-row"
+        class:selected={$selectedIds.includes(String(document.id))}
+      >
         {#if !embed}
           <label>
             <span class="sr-only">{$_("documents.select")}</span>
@@ -120,16 +139,24 @@
             />
           </label>
         {/if}
-        <DocumentListItem {document} />
-      </Flex>
-
-      {#if document.highlights}
-        <PageHighlights {document} />
-      {/if}
-
-      {#if document.note_highlights}
-        <NoteHighlights {document} />
-      {/if}
+        <div class="result-content">
+          <DocumentListItem {document} />
+          {#if document.highlights}
+            <PageHighlights
+              {document}
+              on:collapseAll={collapseAll}
+              on:expandAll={expandAll}
+            />
+          {/if}
+          {#if document.note_highlights}
+            <NoteHighlights
+              {document}
+              on:collapseAll={collapseAll}
+              on:expandAll={expandAll}
+            />
+          {/if}
+        </div>
+      </div>
     {:else}
       <Empty icon={Search24}>
         <h2>{$_("noDocuments.noSearchResults")}</h2>
@@ -170,6 +197,24 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
+    width: 100%;
+  }
+
+  .result-row {
+    width: 100%;
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+    padding-bottom: 0.5rem;
+  }
+
+  .result-row.selected {
+    background-color: var(--blue-1, #f0f0f0);
+  }
+
+  .result-content {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   label {
@@ -177,9 +222,11 @@
     align-items: center;
     gap: 0.5rem;
     padding-left: 0.5rem;
+    margin-top: 1.25rem;
   }
 
   input[type="checkbox"] {
+    margin: 0;
     height: 1.25rem;
     width: 1.25rem;
   }

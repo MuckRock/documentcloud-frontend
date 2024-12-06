@@ -17,7 +17,9 @@
     "reset": "Clear Search",
     "help": "Use filters like <code>user:</code>, <code>project:</code> or <code>organization:</code> to refine searches. Use <code>sort:</code> to order results.",
     "more": "Learn more",
-    "empty": "No matching results found."
+    "collapseAll": "Collapse all",
+    "expandAll": "Expand all",
+    "empty": "No matching results found"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",

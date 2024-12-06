@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
-  import type { Document } from "$lib/api/types";
   import { Story } from "@storybook/addon-svelte-csf";
+
+  import type { Document } from "$lib/api/types";
   import NoteHighlights from "../NoteHighlights.svelte";
 
   import search from "@/test/fixtures/documents/search-highlight.json";
@@ -15,6 +16,18 @@
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
   };
+</script>
+
+<script lang="ts">
+  import { setContext } from "svelte";
+  import { writable } from "svelte/store";
+
+  setContext(
+    "highlightState",
+    writable({
+      allOpen: true,
+    }),
+  );
 </script>
 
 <Story name="closed">

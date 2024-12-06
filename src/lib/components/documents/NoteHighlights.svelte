@@ -17,15 +17,25 @@
 -->
 
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+  import type { Document } from "$lib/api/types";
+
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import type { Document } from "$lib/api/types";
-  import { noteUrl } from "$lib/api/notes";
   import Highlight from "../common/Highlight.svelte";
   import HighlightGroup from "../common/HighlightGroup.svelte";
 
+  import { noteUrl } from "$lib/api/notes";
+
   export let document: Document;
   export let open = true;
+
+  const { subscribe } =
+    getContext<Writable<{ allOpen: boolean }>>("highlightState") ?? {};
+  $: subscribe?.((state) => {
+    open = state.allOpen;
+  });
 
   $: highlights = Object.entries(document.note_highlights ?? {});
   $: notes = new Map(document.notes?.map((n) => [n.id, n]));
@@ -33,11 +43,18 @@
   function noteHref(id: string): string {
     const note = notes.get(id);
     if (!note) return "";
-    return noteUrl(document, note).toString();
+    return noteUrl(document, note).href;
   }
 </script>
 
-<HighlightGroup {highlights} getHref={noteHref} bind:open>
+<HighlightGroup
+  {highlights}
+  getHref={noteHref}
+  bind:open
+  showAll={Boolean(subscribe)}
+  on:collapseAll
+  on:expandAll
+>
   <svelte:fragment slot="summary">
     {$_("documents.matchingNotes", { values: { n: highlights.length } })}
   </svelte:fragment>

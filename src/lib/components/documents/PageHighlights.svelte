@@ -11,8 +11,10 @@
   ```
 -->
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Highlight from "../common/Highlight.svelte";
@@ -24,21 +26,34 @@
   export let document: Document;
   export let open = true;
 
+  const { subscribe } =
+    getContext<Writable<{ allOpen: boolean }>>("highlightState") ?? {};
+  $: subscribe?.((state) => {
+    open = state.allOpen;
+  });
   $: highlights = Object.entries(document.highlights ?? {});
 
   function pageHref(id: string): string {
     const pageNo = pageNumber(id);
-    return pageUrl(document, pageNo).toString();
+    return pageUrl(document, pageNo).href;
   }
 </script>
 
-<HighlightGroup {highlights} getHref={pageHref} bind:open>
+<HighlightGroup
+  {highlights}
+  getHref={pageHref}
+  bind:open
+  showAll={Boolean(subscribe)}
+  on:collapseAll
+  on:expandAll
+>
   <svelte:fragment slot="summary">
     {$_("documents.matchingPages", { values: { n: highlights.length } })}
   </svelte:fragment>
   <svelte:fragment let:id let:highlight>
     <Highlight
       title="{$_('documents.pageAbbrev')} {pageNumber(id)}"
+      inlineTitle
       segments={highlight}
     />
   </svelte:fragment>
