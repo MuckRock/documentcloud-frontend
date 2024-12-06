@@ -285,8 +285,4 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     max-width: 100%;
     overflow-x: auto;
   }
-
-  .hide.data {
-    display: none;
-  }
 </style>
