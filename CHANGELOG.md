@@ -7,7 +7,12 @@ DocumentCloud is a running application used by thousands of journalists around t
 ## 2024-12-06 Viewer search imrpovements and post-launch bugfixes
 
 - Viewer search now uses Solr and displays results in a dedicated mode (`?mode=search`), so results can be linked and shared.
--
+- Redirect old embed paths to new routes
+- Add a field to copy an embed URL, for content management systems that don't allow full iframes
+- Default to the viewer's current page when opening share tools
+- Search highlights can all be expanded or collapsed in one click
+
+All merged PRs: https://github.com/MuckRock/documentcloud-frontend/pulls?q=is%3Apr+is%3Aclosed+created%3A%3E2024-12-02+updated%3A%3C2024-12-07
 
 ## 2024-12-02 DocumentCloud on SvelteKit released
 
