@@ -8,17 +8,11 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import { ChevronDown12, Paintbrush16 } from "svelte-octicons";
   import Menu from "../common/Menu.svelte";
-  import { type Writable } from "svelte/store";
-  import { getContext } from "svelte";
-  import { type VisibleFields } from "../documents/DocumentListItem.svelte";
-  import FieldLabel from "../common/FieldLabel.svelte";
+  import VisibleFields from "../documents/VisibleFields.svelte";
 
   export let query: string = "";
 
   let headerToolbarWidth: number;
-
-  const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
-  $: console.log($visibleFields);
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
@@ -30,18 +24,7 @@
         <ChevronDown12 slot="end" />
       </SidebarItem>
       <Menu>
-        <form>
-          {#each Object.entries($visibleFields) as [key, value], index}
-            <label class="visibleField">
-              <input
-                type="checkbox"
-                name={key}
-                bind:checked={$visibleFields[key]}
-              />
-              <FieldLabel>{key}</FieldLabel>
-            </label>
-          {/each}
-        </form>
+        <VisibleFields />
       </Menu>
     </Dropdown>
   </Flex>
@@ -59,11 +42,6 @@
 </PageToolbar>
 
 <style>
-  .visibleField {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
   .help {
     flex: 1 1 100%;
     font-size: var(--font-xs);
