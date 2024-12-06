@@ -1,14 +1,12 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import VisibleFieldsComponent from "../VisibleFields.svelte";
-  import type { Document } from "@/lib/api/types";
+  import VisibleFieldsComponent, {
+    defaultVisibleFields,
+  } from "../VisibleFields.svelte";
 
-  import doc from "@/test/fixtures/documents/document-expanded.json";
-  import santaanas from "@/test/fixtures/documents/examples/the-santa-anas.json";
+  import { documentExpanded, data } from "@/test/fixtures/documents";
   import { setContext } from "svelte";
-  import { defaultVisibleFields } from "../VisibleFields.svelte";
   import { writable } from "svelte/store";
-  const document = doc as Document;
 
   export const meta = {
     title: "Components / Documents / Visible Fields",
@@ -20,11 +18,29 @@
 </script>
 
 <script lang="ts">
-  setContext("visibleFields", writable(defaultVisibleFields));
+  import DocumentListItem from "../DocumentListItem.svelte";
+
+  const visibleFields = writable(defaultVisibleFields);
+  setContext("visibleFields", visibleFields);
 </script>
 
 <Template let:args>
-  <VisibleFieldsComponent {...args} />
+  <div class="wrapper">
+    <VisibleFieldsComponent {...args} />
+    <DocumentListItem
+      document={{ ...documentExpanded, data }}
+      visibleFields={$visibleFields}
+    />
+  </div>
 </Template>
 
-<Story name="Basic" args={{ document }} />
+<Story name="Balanced" />
+
+<style>
+  .wrapper {
+    max-width: 24rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+</style>

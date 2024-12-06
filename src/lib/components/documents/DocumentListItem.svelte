@@ -7,21 +7,25 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 -->
 <script lang="ts" context="module">
   export interface VisibleFields {
-    fullTitle: boolean;
-    meta: boolean;
+    access: boolean;
     thumbnail: boolean;
-    projects: boolean;
+    meta: boolean;
     description: boolean;
+    projects: boolean;
     data: boolean;
+    fullTitle: boolean;
+    fullDescription: boolean;
   }
 
   export const defaultVisibleFields: VisibleFields = {
-    fullTitle: true,
-    meta: true,
+    access: true,
     thumbnail: true,
-    projects: true,
+    meta: true,
     description: false,
+    projects: true,
     data: false,
+    fullTitle: true,
+    fullDescription: false,
   };
 </script>
 
@@ -64,7 +68,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   class:small={width < 400}
   bind:clientWidth={width}
 >
-  {#if width >= 400 && visible.thumbnail}
+  {#if visible.thumbnail}
     <a
       href={canonicalUrl(document).href}
       class="document-link thumbnail-link"
@@ -83,7 +87,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
           target={embed ? "_blank" : undefined}>{document.title}</a
         >
       </h3>
-      {#if !embed && level}
+      {#if !embed && level && visible.access}
         <div class="access">
           <DocAccess {level} />
         </div>
@@ -115,11 +119,11 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
       </p>
     {/if}
     {#if document.description && visible.description}
-      <p class="description">
+      <p class="description" class:fullDescription={visible.fullDescription}>
         {clean(document.description)}
       </p>
     {/if}
-    <div class="data" class:hide={width < 400}>
+    <div class="data">
       {#if visible.projects}
         {#each projects as project}
           <KV
@@ -216,7 +220,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   }
 
   h3 {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     color: var(--gray-5, #233944);
     font-size: var(--font-md, 1rem);
     font-style: normal;
@@ -256,6 +260,11 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     -webkit-box-orient: vertical;
     max-width: 100ch;
     width: 100%;
+  }
+
+  .fullDescription {
+    line-clamp: unset;
+    -webkit-line-clamp: unset;
   }
 
   .access {
