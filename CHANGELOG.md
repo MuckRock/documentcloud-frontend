@@ -4,6 +4,11 @@ Significant changes to DocumentCloud's frontend will be noted in this file. We a
 
 DocumentCloud is a running application used by thousands of journalists around the world, so updates here are organized by date, not by version number. The goal of this file is to keep a record of features added, updated and removed.
 
+## 2024-12-06 Viewer search imrpovements and post-launch bugfixes
+
+- Viewer search now uses Solr and displays results in a dedicated mode (`?mode=search`), so results can be linked and shared.
+-
+
 ## 2024-12-02 DocumentCloud on SvelteKit released
 
 This is the latest iteration of DocumentCloud, bringing the frontend to SvelteKit and updating the UI.
