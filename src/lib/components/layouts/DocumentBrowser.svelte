@@ -32,6 +32,7 @@
     selectedIds,
     total,
     visible,
+    visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
 
   // Form components
@@ -55,8 +56,10 @@
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
+  import DocumentListToolbar from "./DocumentListToolbar.svelte";
 
   setContext("selected", selected);
+  setContext("visibleFields", visibleFields);
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
@@ -78,7 +81,6 @@
     search: "common.search",
   };
 
-  let headerToolbarWidth: number;
   let footerToolbarWidth: number;
 
   $: BREAKPOINTS = {
@@ -152,19 +154,7 @@
                 </Button>
               </div>
             {/if}
-            <PageToolbar bind:width={headerToolbarWidth}>
-              <Flex slot="right">
-                <div style:flex="1 1 auto">
-                  <Search name="q" {query} placeholder={$_(uiText.search)} />
-                  <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
-                    {@html $_("search.help")}
-                    <a target="_blank" href="/help/search/">
-                      {$_("search.more")}
-                    </a>
-                  </p>
-                </div>
-              </Flex>
-            </PageToolbar>
+            <DocumentListToolbar {query} />
             {#if $sidebars["action"] === false}
               <div class="toolbar w-auto">
                 <Button
@@ -308,15 +298,5 @@
   .select-all {
     min-width: 7rem;
     margin: 0.25rem 0;
-  }
-  .help {
-    flex: 1 1 100%;
-    font-size: var(--font-xs);
-    margin: 0.25rem;
-    color: var(--gray-4);
-    text-align: left;
-  }
-  .hide {
-    display: none;
   }
 </style>

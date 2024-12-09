@@ -15,7 +15,7 @@
   };
 
   const args = {
-    documents: Promise.resolve(documentsList),
+    documents: Promise.resolve({ data: documentsList }),
   };
 </script>
 

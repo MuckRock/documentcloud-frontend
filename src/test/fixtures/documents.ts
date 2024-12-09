@@ -1,4 +1,14 @@
-import type { Document, Highlights, Page } from "$lib/api/types";
+import type { Data, Document, Highlights, Page } from "$lib/api/types";
+
+export const data: Data = {
+  date: ["2009-02-12"],
+  chair: ["Christopher Dodd"],
+  hearing: ["111-48"],
+  committee: ["Banking, Housing, and Urban Affairs"],
+  subcommittee: ["Financial Institutions", "Housing and Urban Affairs"],
+  witnesses: ["Ben Bernanke", "Timothy Geithner"],
+  topics: ["Economic Crisis", "Regulatory Reform"],
+};
 
 export const document: Document = {
   id: 24002098,

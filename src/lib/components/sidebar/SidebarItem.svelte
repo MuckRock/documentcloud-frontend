@@ -91,13 +91,7 @@
     color: var(--hover-color, var(--color, inherit));
     fill: var(--hover-fill, var(--fill, inherit));
   }
-  @media (hover: none) {
-    a.container:hover,
-    .container.hover:hover {
-      cursor: default;
-      background: transparent;
-    }
-  }
+
   a.container.disabled:hover,
   a.container.disabled:focus,
   .container.disabled.hover:hover,
@@ -112,6 +106,20 @@
     background: var(--active-background, var(--blue-1, #b5ceed));
     color: var(--active-color, var(--blue-5, inherit));
     fill: var(--active-fill, var(--blue-4, inherit));
+  }
+
+  @media (hover: none) {
+    a.container:hover,
+    .container.hover:hover {
+      cursor: inherit;
+      background: transparent;
+    }
+    a.container.active:hover,
+    .container.active:hover {
+      background: var(--active-background, var(--blue-1, #b5ceed));
+      color: var(--active-color, var(--blue-5, inherit));
+      fill: var(--active-fill, var(--blue-4, inherit));
+    }
   }
 
   /* Small */

@@ -6,16 +6,13 @@
 -->
 <script lang="ts">
   import type { Access } from "$lib/api/types";
-  import Tooltip from "../common/Tooltip.svelte";
 
   export let access: Access | "" = "";
   export let size: "small" | "normal" = "normal";
-  export let title: string | undefined = undefined;
+  // export let title: string | undefined = undefined;
 </script>
 
-<Tooltip caption={title} placement="right">
-  <div class="tab {access} {size}"></div>
-</Tooltip>
+<div class="tab {access} {size}"></div>
 
 <style>
   .tab {
