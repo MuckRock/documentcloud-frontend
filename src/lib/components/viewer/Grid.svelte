@@ -3,11 +3,14 @@
   Show a grid of thumbnail images for a single document.
   Each image should link to its respective page.
 
-  Assumes it's a child of a ViewerContext
+  Assumes it's a child of a ViewerContext.
+
+  Pages are only rendered in the browser to limit server-side page size.
 -->
 <script lang="ts">
   import type { Sizes } from "$lib/api/types";
 
+  import { browser } from "$app/environment";
   import { _ } from "svelte-i18n";
 
   import Page from "./Page.svelte";
@@ -41,22 +44,25 @@
 </script>
 
 <div class="pages" style:--image-width="{width}px">
-  {#each sizes as aspect, n}
-    {@const page_number = n + 1}
-    {@const height = width * aspect}
-    <Page {page_number} let:documentHref>
-      <a href={documentHref}>
-        <img
-          src={pageImageUrl(document, page_number, size).href}
-          alt="Page {page_number}, {document.title}"
-          title="Page {page_number}, {document.title}"
-          width="{width}px"
-          height="{height}px"
-          loading="lazy"
-        />
-      </a>
-    </Page>
-  {/each}
+  {#if browser}
+    {#each sizes as aspect, n}
+      {@const page_number = n + 1}
+      {@const height = width * aspect}
+      {@const src = pageImageUrl(document, page_number, size).href}
+      <Page {page_number} let:documentHref>
+        <a href={documentHref}>
+          <img
+            {src}
+            alt="Page {page_number}, {document.title}"
+            title="Page {page_number}, {document.title}"
+            width="{width}px"
+            height="{height}px"
+            loading="lazy"
+          />
+        </a>
+      </Page>
+    {/each}
+  {/if}
 </div>
 
 <style>
