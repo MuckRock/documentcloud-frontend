@@ -72,11 +72,12 @@
 </script>
 
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
+
   import deepEqual from "fast-deep-equal";
-  import FieldLabel from "../common/FieldLabel.svelte";
+  import { getContext } from "svelte";
+  import { _ } from "svelte-i18n";
+
   import {
     ListUnordered24,
     Note24,
@@ -84,8 +85,10 @@
     Rows24,
     type SvgComponent,
   } from "svelte-octicons";
+
+  import FieldLabel from "../common/FieldLabel.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import { remToPx } from "@/lib/utils/layout";
+  import { remToPx } from "$lib/utils/layout";
 
   const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
 

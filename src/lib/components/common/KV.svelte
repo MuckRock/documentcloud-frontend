@@ -6,15 +6,11 @@
   export let tag: boolean = false;
 
   let el = href ? "a" : "span";
+
+  $: props = { ...$$restProps, href };
 </script>
 
-<svelte:element
-  this={el}
-  class="kv"
-  class:link={href}
-  class:inline
-  {...$$restProps}
->
+<svelte:element this={el} class="kv" class:link={href} class:inline {...props}>
   {#if !tag}
     <span class="key">{key}</span>
   {/if}

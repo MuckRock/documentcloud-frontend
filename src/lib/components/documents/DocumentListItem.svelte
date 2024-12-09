@@ -38,10 +38,11 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   import DocAccess, { getLevel } from "../common/Access.svelte";
   import KV from "../common/KV.svelte";
-  import { canonicalUrl, userOrgString } from "@/lib/api/documents";
-  import { canonicalUrl as projectUrl } from "@/lib/api/projects";
-
   import Thumbnail from "./Thumbnail.svelte";
+
+  import { canonicalUrl, userOrgString } from "$lib/api/documents";
+  import { canonicalUrl as projectUrl } from "$lib/api/projects";
+  import { searchUrl, kv } from "$lib/utils/search";
 
   export let document: Document;
   export let visibleFields: Partial<VisibleFields> = defaultVisibleFields;
@@ -98,19 +99,21 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
         <a
           class="document-link"
           href={`${canonicalUrl(document).href}?mode=grid`}
-          >{$_("documents.pageCount", {
-            values: { n: document.page_count },
-          })}</a
         >
+          {$_("documents.pageCount", {
+            values: { n: document.page_count },
+          })}
+        </a>
         -
         {#if document.notes && document.notes.length > 0}
           <a
             class="document-link"
             href={`${canonicalUrl(document).href}?mode=notes`}
-            >{$_("documents.noteCount", {
+          >
+            {$_("documents.noteCount", {
               values: { n: document.notes.length },
-            })}</a
-          > -
+            })}
+          </a> -
         {/if}
         {#if userOrgString(document)}
           {userOrgString(document)} -
@@ -139,7 +142,12 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
         {#if visible.data}
           {#each Object.entries(document.data) as [key, values]}
             {#each values as value}
-              <KV {key} {value} />
+              <KV
+                {key}
+                {value}
+                tag={key === "_tag"}
+                href={searchUrl(kv(key, value)).href}
+              />
             {/each}
           {/each}
         {/if}

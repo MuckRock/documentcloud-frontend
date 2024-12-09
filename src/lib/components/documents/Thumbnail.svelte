@@ -1,11 +1,12 @@
 <script lang="ts">
+  import type { Access, Document } from "$lib/api/types";
+
   import { Alert24, Hourglass24, File24 } from "svelte-octicons";
 
-  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
-
-  import type { Access, Document } from "$lib/api/types";
-  import { canonicalUrl, pageImageUrl } from "$lib/api/documents";
   import NoteTab from "$lib/components/viewer/NoteTab.svelte";
+
+  import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
+  import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "$lib/utils/pageSize";
 
   export let document: Document;

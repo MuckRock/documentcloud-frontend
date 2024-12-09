@@ -53,7 +53,7 @@
   import PageHighlights from "./PageHighlights.svelte";
 
   import { getApiResponse } from "$lib/utils/api";
-  import { StorageManager } from "@/lib/utils/storage";
+  import { StorageManager } from "$lib/utils/storage";
 
   export let results: Document[] = [];
   export let count: Maybe<number> = undefined;
@@ -68,8 +68,6 @@
 
   const embed: boolean = getContext("embed");
   const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
-
-  $: console.log($visibleFields);
 
   setContext("highlightState", highlightState);
 
@@ -129,7 +127,7 @@
   onMount(() => {
     // set initial total, update later
     $total = count ?? 0;
-    if (auto) {
+    if (auto && end) {
       observer = watch(end);
     }
 
