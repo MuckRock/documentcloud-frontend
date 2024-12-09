@@ -123,26 +123,28 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
         {clean(document.description)}
       </p>
     {/if}
-    <div class="data">
-      {#if visible.projects}
-        {#each projects as project}
-          <KV
-            key="Project"
-            value={project.title}
-            href={projectUrl(project).href}
-            title={project.title}
-            target={embed ? "_blank" : undefined}
-          />
-        {/each}
-      {/if}
-      {#if visible.data}
-        {#each Object.entries(document.data) as [key, values]}
-          {#each values as value}
-            <KV {key} {value} />
+    {#if visible.projects || visible.data}
+      <div class="data">
+        {#if visible.projects}
+          {#each projects as project}
+            <KV
+              key="Project"
+              value={project.title}
+              href={projectUrl(project).href}
+              title={project.title}
+              target={embed ? "_blank" : undefined}
+            />
           {/each}
-        {/each}
-      {/if}
-    </div>
+        {/if}
+        {#if visible.data}
+          {#each Object.entries(document.data) as [key, values]}
+            {#each values as value}
+              <KV {key} {value} />
+            {/each}
+          {/each}
+        {/if}
+      </div>
+    {/if}
   </div>
 </div>
 

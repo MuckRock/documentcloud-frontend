@@ -140,7 +140,7 @@
 </script>
 
 <div class="container" data-sveltekit-preload-data={preload}>
-  <Flex direction="column" gap={0}>
+  <Flex direction="column" gap={1}>
     <slot name="start" />
     {#each results as document (document.id)}
       <div
@@ -238,9 +238,10 @@
   label {
     display: flex;
     align-items: center;
+    align-self: center;
     gap: 0.5rem;
     padding-left: 0.5rem;
-    margin-top: 1.25rem;
+    margin-top: 0;
   }
 
   input[type="checkbox"] {
