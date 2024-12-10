@@ -11,8 +11,9 @@
   import { _ } from "svelte-i18n";
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
-  import { remToPx } from "@/lib/utils/layout";
-  import Access, { getLevel } from "../common/Access.svelte";
+  import Access, { getLevel } from "$lib/components/common/Access.svelte";
+  import { remToPx } from "$lib/utils/layout";
+  import SignedIn from "../common/SignedIn.svelte";
 
   export let document: Document;
 
@@ -33,11 +34,13 @@
 </script>
 
 <header bind:clientWidth={width}>
-  {#if access}
-    <div class="access">
-      <Access level={access} />
-    </div>
-  {/if}
+  <SignedIn>
+    {#if access}
+      <div class="access">
+        <Access level={access} />
+      </div>
+    {/if}
+  </SignedIn>
   <h1 class="title">{document.title}</h1>
   {#if description}
     <div class="description" class:twoColumn={BREAKPOINTS.TWO_COLUMN}>

@@ -1,9 +1,12 @@
 <script lang="ts">
   import Sidebar from "./Sidebar.svelte";
+
+  export let hideNavigation = false;
+  export let hideActions = false;
 </script>
 
 <div class="sidebarLayoutContainer">
-  {#if $$slots.navigation}
+  {#if $$slots.navigation && !hideNavigation}
     <Sidebar position="left" id="navigation">
       <slot name="navigation" />
     </Sidebar>
@@ -13,7 +16,7 @@
     <slot name="content" />
   </div>
 
-  {#if $$slots.action}
+  {#if $$slots.action && !hideActions}
     <Sidebar position="right" id="action">
       <slot name="action" />
     </Sidebar>

@@ -22,6 +22,7 @@ Assumes it's a child of a ViewerContext
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "$lib/api/accounts";
   import { getDocument, getText } from "../viewer/ViewerContext.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
 
   const me = getCurrentUser();
 
@@ -33,7 +34,7 @@ Assumes it's a child of a ViewerContext
   $: projects = (document.projects ?? []) as Project[];
 </script>
 
-<SidebarLayout>
+<SidebarLayout hideNavigation={!$me}>
   <nav class="column" slot="navigation">
     <Projects {projects} {document} />
     <Data {document} />
@@ -55,10 +56,10 @@ Assumes it's a child of a ViewerContext
           </Flex>
         </Metadata>
       {/if}
-      {#if $me}
-        <ViewerActions {document} user={$me} {action} />
-      {/if}
-      <AddOns query="+document:{document.id}" />
+      <ViewerActions {document} user={$me} {action} />
+      <SignedIn>
+        <AddOns query="+document:{document.id}" />
+      </SignedIn>
     </Flex>
     {#await text then text}
       <DocumentMetadata {document} {text} />
