@@ -14,6 +14,7 @@
   } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { page } from "$app/stores";
   import { afterNavigate } from "$app/navigation";
 
   import Ajv from "ajv";
@@ -60,6 +61,12 @@
         event: schedules[event.event],
       };
     }
+    // prefill values from search params
+    new URLSearchParams($page.url.searchParams).forEach((v, k) => {
+      if (k in properties) {
+        $values[k] = v;
+      }
+    });
   });
 
   function objectify(params: any) {
