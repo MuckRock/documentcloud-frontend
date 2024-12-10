@@ -8,7 +8,8 @@
     "edit": "Edit",
     "search": "Search",
     "feedback": "Feedback",
-    "title": "Title"
+    "title": "Title",
+    "customize": "Customize"
   },
   "search": {
     "loading": "Searching…",
@@ -235,6 +236,21 @@
   "processingBar": {
     "processing": "Processing last upload",
     "processingDocuments": "{n, plural, one {# document} other {# documents}} remaining"
+  },
+  "documentBrowser": {
+    "fieldsAnchor": "View",
+    "fields": {
+      "concise": "Concise",
+      "detailed": "Detailed",
+      "customize": "Customize",
+      "access": "Access",
+      "meta": "Metadata",
+      "thumbnail": "Thumbnail",
+      "description": "Description",
+      "projects": "Projects",
+      "data": "Data",
+      "wrapTitle": "Wrap Title"
+    }
   },
   "projects": {
     "header": "Projects",

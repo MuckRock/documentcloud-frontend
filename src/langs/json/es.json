@@ -144,6 +144,21 @@
       "done": "Hacido"
     }
   },
+  "documentBrowser": {
+    "fieldsAnchor": "Vista",
+    "fields": {
+      "concise": "Conciso",
+      "detailed": "Detallado",
+      "customize": "Personalizar",
+      "access": "Acceso",
+      "meta": "Metadatos",
+      "thumbnail": "Miniatura",
+      "description": "Descripción",
+      "projects": "Proyectos",
+      "data": "Datos",
+      "wrapTitle": "Ajustar título"
+    }
+  },
   "authSection": {
     "help": {
       "faq": "Preguntas Frecuentes",

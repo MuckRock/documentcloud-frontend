@@ -7,6 +7,11 @@
     type Writable,
   } from "svelte/store";
 
+  import {
+    defaultVisibleFields,
+    type VisibleFields,
+  } from "./VisibleFields.svelte";
+
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
   export const visible: Writable<Map<string, Document>> = writable(new Map());
@@ -18,6 +23,17 @@
   );
 
   export let total: Writable<number> = writable(0);
+
+  // Allow users to customize the visible fields in document list items
+  const storage = new StorageManager("document-browser");
+  const userDefaultVisible = storage.get<VisibleFields, VisibleFields>(
+    "visibleFields",
+    defaultVisibleFields,
+  );
+  export const visibleFields: Writable<VisibleFields> = writable(
+    Object.assign({}, defaultVisibleFields, userDefaultVisible),
+  );
+  visibleFields.subscribe((val) => storage.set("visibleFields", val));
 
   // In order for the highlight state to be shared between components, we need to
   // create a writable store and set it in the context.
@@ -39,6 +55,7 @@
   import PageHighlights from "./PageHighlights.svelte";
 
   import { getApiResponse } from "$lib/utils/api";
+  import { StorageManager } from "$lib/utils/storage";
 
   export let results: Document[] = [];
   export let count: Maybe<number> = undefined;
@@ -52,6 +69,7 @@
   let error: string = "";
 
   const embed: boolean = getContext("embed");
+  const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
 
   setContext("highlightState", highlightState);
 
@@ -111,7 +129,7 @@
   onMount(() => {
     // set initial total, update later
     $total = count ?? 0;
-    if (auto) {
+    if (auto && end) {
       observer = watch(end);
     }
 
@@ -122,7 +140,7 @@
 </script>
 
 <div class="container" data-sveltekit-preload-data={preload}>
-  <Flex direction="column" gap={0}>
+  <Flex direction="column" gap={1}>
     <slot name="start" />
     {#each results as document (document.id)}
       <div
@@ -140,7 +158,7 @@
           </label>
         {/if}
         <div class="result-content">
-          <DocumentListItem {document} />
+          <DocumentListItem {document} visibleFields={$visibleFields} />
           {#if document.highlights}
             <PageHighlights
               {document}
@@ -220,9 +238,10 @@
   label {
     display: flex;
     align-items: center;
+    align-self: center;
     gap: 0.5rem;
     padding-left: 0.5rem;
-    margin-top: 1.25rem;
+    margin-top: 0;
   }
 
   input[type="checkbox"] {

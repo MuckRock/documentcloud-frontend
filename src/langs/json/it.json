@@ -46,6 +46,21 @@
   "notfound": {
     "content": "Perci\u00f2 prova un altro indirizzo URL."
   },
+  "documentBrowser": {
+    "fieldsAnchor": "Vista",
+    "fields": {
+      "concise": "Conciso",
+      "detailed": "Dettaglio",
+      "customize": "Personalizza",
+      "access": "Accesso",
+      "meta": "Metadati",
+      "thumbnail": "Miniatura",
+      "description": "Descrizione",
+      "projects": "Progetti",
+      "data": "Dati",
+      "wrapTitle": "Adatta titolo"
+    }
+  },
   "appearanceDimension": {
     "responsive": "Automatico",
     "fixed": "Fissato"

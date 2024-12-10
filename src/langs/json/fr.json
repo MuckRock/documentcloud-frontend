@@ -26,6 +26,21 @@
     "selected": "S\u00e9lectionn\u00e9",
     "resultsCount": "Mostrando {n, number} de {total, number} r\u00e9sultats"
   },
+  "documentBrowser": {
+    "fieldsAnchor": "Vue",
+    "fields": {
+      "concise": "Concis",
+      "detailed": "Détaillé",
+      "customize": "Personnaliser",
+      "access": "Accès",
+      "meta": "Métadonnées",
+      "thumbnail": "Miniature",
+      "description": "Description",
+      "projects": "Projets",
+      "data": "Données",
+      "wrapTitle": "Ajuster le titre"
+    }
+  },
   "access": {
     "private": {
       "value": "priv\u00e9",

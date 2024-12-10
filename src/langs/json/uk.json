@@ -31,6 +31,21 @@
     "reprocessSingleDoc": "Продовження призведе до того, що документ повторно обробить сторінку та текст зображення. Бажаєте продовжити?",
     "confirm": "Повторна обробка"
   },
+  "documentBrowser": {
+    "fieldsAnchor": "Вигляд",
+    "fields": {
+      "concise": "Стислий",
+      "detailed": "Детально",
+      "customize": "Налаштувати",
+      "access": "Доступ",
+      "meta": "Метадані",
+      "thumbnail": "Мініатюра",
+      "description": "Опис",
+      "projects": "Проекти",
+      "data": "Дані",
+      "wrapTitle": "Обгорнути заголовок"
+    }
+  },
   "dialogDocumentEmbedDialog": {
     "responsive": "Адаптивне",
     "respOn": "Ввімкнено (за замовчуванням)",

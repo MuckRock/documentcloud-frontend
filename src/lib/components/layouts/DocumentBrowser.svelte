@@ -23,7 +23,6 @@
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   // Document comopnents
@@ -32,12 +31,12 @@
     selectedIds,
     total,
     visible,
+    visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
   import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
-  import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
     uploadToProject,
@@ -45,6 +44,7 @@
 
   // Layout comopnents
   import ContentLayout from "./ContentLayout.svelte";
+  import DocumentListToolbar from "./DocumentListToolbar.svelte";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import Unverified from "../accounts/Unverified.svelte";
@@ -57,6 +57,7 @@
   import { remToPx } from "$lib/utils/layout";
 
   setContext("selected", selected);
+  setContext("visibleFields", visibleFields);
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
@@ -78,7 +79,6 @@
     search: "common.search",
   };
 
-  let headerToolbarWidth: number;
   let footerToolbarWidth: number;
 
   $: BREAKPOINTS = {
@@ -152,19 +152,7 @@
                 </Button>
               </div>
             {/if}
-            <PageToolbar bind:width={headerToolbarWidth}>
-              <Flex slot="right">
-                <div style:flex="1 1 auto">
-                  <Search name="q" {query} placeholder={$_(uiText.search)} />
-                  <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
-                    {@html $_("search.help")}
-                    <a target="_blank" href="/help/search/">
-                      {$_("search.more")}
-                    </a>
-                  </p>
-                </div>
-              </Flex>
-            </PageToolbar>
+            <DocumentListToolbar {query} />
             {#if $sidebars["action"] === false}
               <div class="toolbar w-auto">
                 <Button
@@ -308,15 +296,5 @@
   .select-all {
     min-width: 7rem;
     margin: 0.25rem 0;
-  }
-  .help {
-    flex: 1 1 100%;
-    font-size: var(--font-xs);
-    margin: 0.25rem;
-    color: var(--gray-4);
-    text-align: left;
-  }
-  .hide {
-    display: none;
   }
 </style>
