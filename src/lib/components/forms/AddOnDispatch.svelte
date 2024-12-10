@@ -14,6 +14,7 @@
   } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { page } from "$app/stores";
   import { afterNavigate } from "$app/navigation";
 
   import Ajv from "ajv";
@@ -51,6 +52,12 @@
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
   $: hasFields = Object.keys(properties).length > 0;
+  // prefill values from search params
+  $: new URLSearchParams($page.url.searchParams).forEach((v, k) => {
+    if (k in properties) {
+      $values[k] = v;
+    }
+  });
 
   afterNavigate(() => {
     // set initial values

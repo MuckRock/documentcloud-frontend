@@ -5,6 +5,7 @@
   import Flex from "$lib/components/common/Flex.svelte";
 
   import { addonsList } from "@/test/fixtures/addons";
+  import { APP_URL } from "@/config/config";
 
   const addons = addonsList.results;
 
@@ -26,7 +27,7 @@
       required={addon.parameters.required}
       eventOptions={addon.parameters.eventOptions}
     />
-    <div class="values" style="max-width: 88ch">
+    <div class="values" style="max-width: 88ch" data-chromatic="ignore">
       <h2><code>$values</code></h2>
       <pre><code>{JSON.stringify($values, null, 2)}</code></pre>
     </div>
@@ -46,3 +47,20 @@
 <Story name="Bad Redactions" args={addons[5]} />
 
 <Story name="Site Snapshot" args={addons[6]} />
+
+<Story
+  name="Prefill Fields (Scraper)"
+  args={addons[1]}
+  parameters={{
+    sveltekit_experimental: {
+      stores: {
+        page: {
+          url: new URL(
+            "/?site=https://example.com&project=123&keywords=foo,bar&notAfield=hahagotya",
+            APP_URL,
+          ),
+        },
+      },
+    },
+  }}
+/>
