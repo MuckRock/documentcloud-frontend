@@ -34,14 +34,12 @@ Assumes it's a child of a ViewerContext
   $: projects = (document.projects ?? []) as Project[];
 </script>
 
-<SidebarLayout>
-  <SignedIn slot="navigation">
-    <nav class="column">
-      <Projects {projects} {document} />
-      <Data {document} />
-      <Notes {document} />
-    </nav>
-  </SignedIn>
+<SidebarLayout hideNavigation={!$me}>
+  <nav class="column" slot="navigation">
+    <Projects {projects} {document} />
+    <Data {document} />
+    <Notes {document} />
+  </nav>
 
   <article slot="content">
     <header><DocumentHeader {document} /></header>
