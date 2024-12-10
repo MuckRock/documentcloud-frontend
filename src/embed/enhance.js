@@ -39,5 +39,4 @@ embeds.forEach((embed) => {
   setupResizeEvent(iframe);
 
   embed.appendChild(iframe);
-  iframe.style.height = iframe.clientHeight;
 });
