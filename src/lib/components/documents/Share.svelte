@@ -43,6 +43,8 @@
     pageUrl,
   } from "$lib/api/documents";
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
+  import { pageSizesFromSpec } from "@/lib/utils/pageSize";
+  import { IMAGE_WIDTHS_MAP } from "@/config/config";
 
   export let document: Document;
   export let page: number = 1;
@@ -62,10 +64,19 @@
   $: {
     note = selectedNote?.value ?? null;
   }
+  // get dimensions for page embeds
+  $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : [];
+  $: aspect = sizes[page - 1] ?? 11 / 8.5;
+  $: width = IMAGE_WIDTHS_MAP.get("large") ?? 1000;
+  $: height = width * aspect;
 
   let permalink: URL;
   let embedSrc: URL;
   let iframe: string;
+  const styles = {
+    document: `display: block; width: 100%; height: ${height}px; max-height: 100vh;`,
+    page: `display: block; width: 100%; max-width: 600px; height: ${height}px;`,
+  };
 
   let customizeEmbedOpen = false;
   let editOpen = false;
@@ -86,13 +97,13 @@
         if ($embedSettings.height) {
           iframe += ` height="${$embedSettings.height}"`;
         }
-        iframe += " />";
+        iframe += ` style="${styles.document}" />`;
         break;
       case "page":
         permalink = pageUrl(document, page);
         embedSrc = canonicalPageUrl(document, page);
         embedSrc.searchParams.set("embed", "1");
-        iframe = `<iframe src="${embedSrc.href}" />`;
+        iframe = `<iframe src="${embedSrc.href}" style="${styles.page}" />`;
         break;
       case "note":
         const noteObject = document.notes?.find(
