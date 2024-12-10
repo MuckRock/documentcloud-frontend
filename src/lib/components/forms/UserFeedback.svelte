@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { enhance } from "$app/forms";
-  import { page } from "$app/page";
+  import { page } from "$app/stores";
   import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
   import type { Nullable, User } from "$lib/api/types";
