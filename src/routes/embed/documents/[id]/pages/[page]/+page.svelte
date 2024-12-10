@@ -81,9 +81,9 @@
   />
 </svelte:head>
 
-<svelte:window on:keydown={onKeyup} />
+<svelte:window on:keydown={onKeyup} on:load={() => informSize(elem)} />
 
-<div class="dc-embed">
+<div class="dc-embed" bind:this={elem}>
   <div class="dc-page">
     Page
     {page}
