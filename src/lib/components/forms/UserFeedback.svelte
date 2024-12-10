@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { enhance } from "$app/forms";
+  import { page } from "$app/stores";
   import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
   import type { Nullable, User } from "$lib/api/types";
@@ -108,6 +109,7 @@
       </label>
     </fieldset>
   {/if}
+  <input type="text" name="url" value={$page.url.href} hidden />
   <textarea
     class="feedback"
     name="message"

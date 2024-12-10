@@ -9,6 +9,7 @@ export interface Feedback {
   Type: string;
   Message: string;
   User: string;
+  URL: string;
 }
 
 export interface CreateFeedbackResponse {
@@ -22,6 +23,7 @@ export interface CreateFeedbackResponse {
     color: string;
   };
   User: string;
+  URL: string;
 }
 
 export async function createFeedback(
