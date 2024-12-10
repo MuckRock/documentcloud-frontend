@@ -23,7 +23,6 @@
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   // Document comopnents
@@ -38,7 +37,6 @@
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
   import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
-  import Search from "$lib/components/forms/Search.svelte";
   import {
     filesToUpload,
     uploadToProject,
@@ -46,6 +44,7 @@
 
   // Layout comopnents
   import ContentLayout from "./ContentLayout.svelte";
+  import DocumentListToolbar from "./DocumentListToolbar.svelte";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import Unverified from "../accounts/Unverified.svelte";
@@ -56,7 +55,6 @@
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
-  import DocumentListToolbar from "./DocumentListToolbar.svelte";
 
   setContext("selected", selected);
   setContext("visibleFields", visibleFields);

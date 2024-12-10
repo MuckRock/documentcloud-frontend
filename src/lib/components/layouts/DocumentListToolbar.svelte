@@ -1,14 +1,15 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import Flex from "../common/Flex.svelte";
+  import { ChevronDown12, Eye16 } from "svelte-octicons";
+
+  import Dropdown from "../common/Dropdown.svelte";
+  import Menu from "../common/Menu.svelte";
   import PageToolbar from "../common/PageToolbar.svelte";
   import Search from "../forms/Search.svelte";
-  import { remToPx } from "$lib/utils/layout";
-  import Dropdown from "../common/Dropdown.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import { ChevronDown12, Eye16, Paintbrush16 } from "svelte-octicons";
-  import Menu from "../common/Menu.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
+
+  import { remToPx } from "$lib/utils/layout";
 
   export let query: string = "";
 
