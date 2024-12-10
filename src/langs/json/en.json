@@ -241,7 +241,6 @@
     "fieldsAnchor": "Fields",
     "fields": {
       "concise": "Concise",
-      "balanced": "Balanced",
       "detailed": "Detailed",
       "customize": "Customize",
       "access": "Access",
@@ -250,8 +249,7 @@
       "description": "Description",
       "projects": "Projects",
       "data": "Data",
-      "fullTitle": "Full Title",
-      "fullDescription": "Full Description"
+      "wrapTitle": "Wrap Title"
     }
   },
   "projects": {

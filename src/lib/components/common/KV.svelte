@@ -41,6 +41,7 @@
     color: var(--blue-5, #153359);
     border-color: var(--blue-2);
     background: var(--blue-1);
+    text-decoration: none;
   }
   .link.kv:hover {
     cursor: pointer;

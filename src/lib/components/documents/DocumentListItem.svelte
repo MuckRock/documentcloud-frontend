@@ -5,30 +5,6 @@ It's deliberately minimal and can be wrapped in other components to add addition
 
 If we're in an embed, we want to open links to documents in new tabs and hide the access label.
 -->
-<script lang="ts" context="module">
-  export interface VisibleFields {
-    access: boolean;
-    thumbnail: boolean;
-    meta: boolean;
-    description: boolean;
-    projects: boolean;
-    data: boolean;
-    fullTitle: boolean;
-    fullDescription: boolean;
-  }
-
-  export const defaultVisibleFields: VisibleFields = {
-    access: true,
-    thumbnail: true,
-    meta: true,
-    description: false,
-    projects: true,
-    data: false,
-    fullTitle: true,
-    fullDescription: false,
-  };
-</script>
-
 <script lang="ts">
   import type { Document, Project } from "$lib/api/types";
 
@@ -43,6 +19,10 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   import { canonicalUrl, userOrgString } from "$lib/api/documents";
   import { canonicalUrl as projectUrl } from "$lib/api/projects";
   import { searchUrl, kv } from "$lib/utils/search";
+  import {
+    defaultVisibleFields,
+    type VisibleFields,
+  } from "./VisibleFields.svelte";
 
   export let document: Document;
   export let visibleFields: Partial<VisibleFields> = defaultVisibleFields;
@@ -81,7 +61,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   <div class="document-info">
     <div class="head">
-      <h3 class="title" class:ellipsis={!visible.fullTitle}>
+      <h3 class="title" class:ellipsis={!visible.wrapTitle}>
         <a
           href={canonicalUrl(document).href}
           class="document-link title-link"
@@ -122,7 +102,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
       </p>
     {/if}
     {#if document.description && visible.description}
-      <p class="description" class:fullDescription={visible.fullDescription}>
+      <p class="description">
         {clean(document.description)}
       </p>
     {/if}
@@ -278,7 +258,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   }
 
   .access {
-    flex: 0 0 8rem;
+    flex: 0 0 auto;
     font-size: var(--font-sm);
     transform: translateY(0.125em);
   }

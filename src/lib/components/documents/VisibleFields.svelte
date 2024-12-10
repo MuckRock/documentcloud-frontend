@@ -6,20 +6,8 @@
     description: boolean;
     projects: boolean;
     data: boolean;
-    fullTitle: boolean;
-    fullDescription: boolean;
+    wrapTitle: boolean;
   }
-
-  export const defaultVisibleFields: VisibleFields = {
-    access: true,
-    thumbnail: true,
-    meta: true,
-    description: false,
-    projects: true,
-    data: false,
-    fullTitle: true,
-    fullDescription: false,
-  };
 
   export const defaultViews: Array<{
     label: string;
@@ -36,27 +24,12 @@
         description: false,
         projects: false,
         data: false,
-        fullTitle: true,
-        fullDescription: false,
-      },
-    },
-    {
-      label: "documentBrowser.fields.balanced",
-      icon: Rows24,
-      fields: {
-        access: true,
-        thumbnail: true,
-        meta: true,
-        description: false,
-        projects: true,
-        data: false,
-        fullTitle: true,
-        fullDescription: false,
+        wrapTitle: false,
       },
     },
     {
       label: "documentBrowser.fields.detailed",
-      icon: Note24,
+      icon: Rows24,
       fields: {
         access: true,
         thumbnail: true,
@@ -64,11 +37,12 @@
         description: true,
         projects: true,
         data: true,
-        fullTitle: true,
-        fullDescription: false,
+        wrapTitle: true,
       },
     },
   ];
+
+  export const defaultVisibleFields = defaultViews[1]?.fields!;
 </script>
 
 <script lang="ts">
@@ -80,7 +54,6 @@
 
   import {
     ListUnordered24,
-    Note24,
     Paintbrush16,
     Rows24,
     type SvgComponent,
@@ -90,17 +63,18 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import { remToPx } from "$lib/utils/layout";
 
-  const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
+  export let showAdvanced = false;
+  export let visibleFields: Writable<VisibleFields> =
+    getContext("visibleFields");
 
   const labels: Record<keyof VisibleFields, string> = {
     access: "documentBrowser.fields.access",
-    fullTitle: "documentBrowser.fields.fullTitle",
     meta: "documentBrowser.fields.meta",
     thumbnail: "documentBrowser.fields.thumbnail",
     description: "documentBrowser.fields.description",
     projects: "documentBrowser.fields.projects",
     data: "documentBrowser.fields.data",
-    fullDescription: "documentBrowser.fields.fullDescription",
+    wrapTitle: "documentBrowser.fields.wrapTitle",
   };
 
   let width: number;
@@ -125,20 +99,26 @@
       </div>
     {/each}
   </div>
-  <fieldset class="fields">
-    <legend>
-      <SidebarItem small>
-        <Paintbrush16 slot="start" height={14} width={14} />
-        {$_("documentBrowser.fields.customize")}
-      </SidebarItem>
-    </legend>
-    {#each Object.keys($visibleFields) as key}
-      <label class="field">
-        <input type="checkbox" name={key} bind:checked={$visibleFields[key]} />
-        <FieldLabel>{$_(labels[key])}</FieldLabel>
-      </label>
-    {/each}
-  </fieldset>
+  {#if showAdvanced}
+    <fieldset class="fields">
+      <legend>
+        <SidebarItem small>
+          <Paintbrush16 slot="start" height={14} width={14} />
+          {$_("documentBrowser.fields.customize")}
+        </SidebarItem>
+      </legend>
+      {#each Object.keys($visibleFields) as key}
+        <label class="field">
+          <input
+            type="checkbox"
+            name={key}
+            bind:checked={$visibleFields[key]}
+          />
+          <FieldLabel>{$_(labels[key])}</FieldLabel>
+        </label>
+      {/each}
+    </fieldset>
+  {/if}
 </div>
 
 <style>
