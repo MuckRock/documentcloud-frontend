@@ -1,7 +1,7 @@
 <!-- Assumes its a child of ViewerContext -->
 
 <script lang="ts">
-  import type { Document, Org, User } from "$lib/api/types";
+  import type { Document, Nullable, Org, User } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import {
@@ -33,7 +33,7 @@
   import { getCurrentPage } from "../viewer/ViewerContext.svelte";
 
   export let document: Document;
-  export let user: User;
+  export let user: Nullable<User>;
   export let action: string = "";
 
   const page = getCurrentPage();

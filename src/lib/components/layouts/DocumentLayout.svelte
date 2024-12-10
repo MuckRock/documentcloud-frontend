@@ -22,6 +22,7 @@ Assumes it's a child of a ViewerContext
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "$lib/api/accounts";
   import { getDocument, getText } from "../viewer/ViewerContext.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
 
   const me = getCurrentUser();
 
@@ -34,11 +35,13 @@ Assumes it's a child of a ViewerContext
 </script>
 
 <SidebarLayout>
-  <nav class="column" slot="navigation">
-    <Projects {projects} {document} />
-    <Data {document} />
-    <Notes {document} />
-  </nav>
+  <SignedIn>
+    <nav class="column" slot="navigation">
+      <Projects {projects} {document} />
+      <Data {document} />
+      <Notes {document} />
+    </nav>
+  </SignedIn>
 
   <article slot="content">
     <header><DocumentHeader {document} /></header>
@@ -55,10 +58,10 @@ Assumes it's a child of a ViewerContext
           </Flex>
         </Metadata>
       {/if}
-      {#if $me}
-        <ViewerActions {document} user={$me} {action} />
-      {/if}
-      <AddOns query="+document:{document.id}" />
+      <ViewerActions {document} user={$me} {action} />
+      <SignedIn>
+        <AddOns query="+document:{document.id}" />
+      </SignedIn>
     </Flex>
     {#await text then text}
       <DocumentMetadata {document} {text} />
