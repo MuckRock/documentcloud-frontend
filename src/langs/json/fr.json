@@ -27,7 +27,7 @@
     "resultsCount": "Mostrando {n, number} de {total, number} r\u00e9sultats"
   },
   "documentBrowser": {
-    "fieldsAnchor": "Champs",
+    "fieldsAnchor": "Vue",
     "fields": {
       "concise": "Concis",
       "detailed": "Détaillé",

@@ -238,7 +238,7 @@
     "processingDocuments": "{n, plural, one {# document} other {# documents}} remaining"
   },
   "documentBrowser": {
-    "fieldsAnchor": "Fields",
+    "fieldsAnchor": "View",
     "fields": {
       "concise": "Concise",
       "detailed": "Detailed",

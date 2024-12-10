@@ -32,7 +32,7 @@
     "confirm": "Повторна обробка"
   },
   "documentBrowser": {
-    "fieldsAnchor": "Поля",
+    "fieldsAnchor": "Вигляд",
     "fields": {
       "concise": "Стислий",
       "detailed": "Детально",
