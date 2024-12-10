@@ -18,6 +18,15 @@
 
 <PageToolbar bind:width={headerToolbarWidth}>
   <div class="items" slot="center">
+    <div style:flex="1 1 auto">
+      <Search name="q" {query} placeholder={$_("common.search")} />
+      <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
+        {@html $_("search.help")}
+        <a target="_blank" href="/help/search/">
+          {$_("search.more")}
+        </a>
+      </p>
+    </div>
     <div class="margin-xs">
       <Dropdown>
         <SidebarItem slot="anchor">
@@ -29,15 +38,6 @@
           <VisibleFields />
         </Menu>
       </Dropdown>
-    </div>
-    <div style:flex="1 1 auto">
-      <Search name="q" {query} placeholder={$_("common.search")} />
-      <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
-        {@html $_("search.help")}
-        <a target="_blank" href="/help/search/">
-          {$_("search.more")}
-        </a>
-      </p>
     </div>
   </div>
 </PageToolbar>
