@@ -35,8 +35,8 @@ Assumes it's a child of a ViewerContext
 </script>
 
 <SidebarLayout>
-  <SignedIn>
-    <nav class="column" slot="navigation">
+  <SignedIn slot="navigation">
+    <nav class="column">
       <Projects {projects} {document} />
       <Data {document} />
       <Notes {document} />
