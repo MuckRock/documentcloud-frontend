@@ -25,6 +25,21 @@
     "dismiss": "Verwerfen",
     "dispatch": "Senden"
   },
+  "documentBrowser": {
+    "fieldsAnchor": "Felder",
+    "fields": {
+      "concise": "Prägnant",
+      "detailed": "Detailliert",
+      "customize": "Anpassen",
+      "access": "Zugriff",
+      "meta": "Metadaten",
+      "thumbnail": "Miniaturansicht",
+      "description": "Beschreibung",
+      "projects": "Projekte",
+      "data": "Daten",
+      "wrapTitle": "Titel umbrechen"
+    }
+  },
   "dialogReprocessDialog": {
     "title": "Wiederaufbereitung bestätigen",
     "reprocessDocs": "Wenn Sie fortfahren, {n, plural, one {wird das ausgewählte Dokument} other {werden die # ausgewählten Dokumente}} den Seiten- und Bildtext erzwungermaßen wiederaufbereiten. Möchten Sie fortfahren?",

@@ -41,6 +41,21 @@
     "reprocessSingleDoc": "Если вы продолжите, это заставит документ повторно обработать страницу и текст изображения. Вы хотите продолжить?",
     "confirm": "Повторная обработка"
   },
+  "documentBrowser": {
+    "fieldsAnchor": "Поля",
+    "fields": {
+      "concise": "Кратко",
+      "detailed": "Подробно",
+      "customize": "Настроить",
+      "access": "Доступ",
+      "meta": "Метаданные",
+      "thumbnail": "Миниатюра",
+      "description": "Описание",
+      "projects": "Проекты",
+      "data": "Данные",
+      "wrapTitle": "Оборачивать заголовок"
+    }
+  },
   "dialogDocumentEmbedDialog": {
     "responsive": "Адаптивный",
     "respOn": "Вкл (по умолчанию)",
