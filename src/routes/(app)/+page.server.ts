@@ -14,6 +14,7 @@ export const actions = {
       Type: String(data.get("type")) ?? "",
       Message: String(data.get("message")) ?? "",
       User: String(data.get("user")) ?? "",
+      URL: String(data.get("url")) ?? "",
     };
     try {
       await createFeedback(feedback, fetch);
