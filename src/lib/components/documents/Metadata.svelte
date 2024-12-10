@@ -15,6 +15,7 @@
   import { LANGUAGE_MAP } from "@/config/config.js";
   import { userOrgString } from "$lib/api/documents";
   import Metadata from "../common/Metadata.svelte";
+  import { LinkExternal16 } from "svelte-octicons";
 
   export let document: Document;
   export let text: Maybe<DocumentText>;
@@ -44,6 +45,19 @@
 </script>
 
 <div class="meta">
+  {#if document.published_url}
+    <Metadata key={$_("edit.fields.published_url")}>
+      <a href={document.published_url} class="publishedUrl" target="_blank">
+        {new URL(document.published_url).hostname}
+        <LinkExternal16 height={12} width={12} />
+      </a>
+    </Metadata>
+  {/if}
+  {#if document.source}
+    <Metadata key={$_("edit.fields.source")}>
+      {document.source}
+    </Metadata>
+  {/if}
   <Metadata key={$_("sidebar.contributed")}>
     {userOrgString(document)}
   </Metadata>
@@ -69,5 +83,11 @@
     flex-direction: column;
     gap: 1rem;
     padding: 0 0.5rem 1rem 0;
+  }
+  .publishedUrl {
+    display: flex;
+    align-items: center;
+    fill: var(--blue-3);
+    gap: 0.25rem;
   }
 </style>
