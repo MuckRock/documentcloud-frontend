@@ -252,10 +252,10 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     width: 100%;
   }
 
-  .fullDescription {
+  /* .fullDescription {
     line-clamp: unset;
     -webkit-line-clamp: unset;
-  }
+  } */
 
   .access {
     flex: 0 0 auto;

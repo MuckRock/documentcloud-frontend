@@ -7,6 +7,11 @@
     type Writable,
   } from "svelte/store";
 
+  import {
+    defaultVisibleFields,
+    type VisibleFields,
+  } from "./VisibleFields.svelte";
+
   // IDs might be strings or numbers, depending on the API endpoint
   // enforce type consistency here to avoid comparison bugs later
   export const visible: Writable<Map<string, Document>> = writable(new Map());
@@ -43,10 +48,7 @@
   import { Search24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
-  import DocumentListItem, {
-    defaultVisibleFields,
-    type VisibleFields,
-  } from "./DocumentListItem.svelte";
+  import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
   import NoteHighlights from "./NoteHighlights.svelte";

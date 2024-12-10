@@ -1,8 +1,7 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import DocumentListItem, {
-    defaultVisibleFields,
-  } from "../DocumentListItem.svelte";
+  import DocumentListItem from "../DocumentListItem.svelte";
+  import { defaultVisibleFields } from "../VisibleFields.svelte";
 
   import document from "@/test/fixtures/documents/document.json";
   import expanded from "@/test/fixtures/documents/document-expanded.json";
