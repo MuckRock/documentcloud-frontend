@@ -111,7 +111,9 @@ So this layer is only showing unsaved redactions.
     if ($redactions.length > 0) {
       if (!confirm($_("redact.cancelWarning"))) {
         cancel();
+        return;
       }
+      clear();
     }
   });
 
