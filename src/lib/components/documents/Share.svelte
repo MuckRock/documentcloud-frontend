@@ -43,6 +43,8 @@
     pageUrl,
   } from "$lib/api/documents";
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
+  import { pageSizesFromSpec } from "@/lib/utils/pageSize";
+  import { IMAGE_WIDTHS_MAP } from "@/config/config";
 
   export let document: Document;
   export let page: number = 1;
@@ -62,10 +64,16 @@
   $: {
     note = selectedNote?.value ?? null;
   }
+  // get dimensions for page embeds
+  $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : [];
+  $: aspect = sizes[page - 1] ?? 11 / 8.5;
+  $: width = IMAGE_WIDTHS_MAP.get("large") ?? 1000;
+  $: height = width * aspect;
 
   let permalink: URL;
   let embedSrc: URL;
   let iframe: string;
+  const style = "border: 1px solid #d8dee2; border-radius: 0.5rem;";
 
   let customizeEmbedOpen = false;
   let editOpen = false;
@@ -78,21 +86,13 @@
       case "document":
         permalink = canonicalUrl(document);
         embedSrc = embedUrl(document, embedUrlParams);
-
-        iframe = `<iframe src="${embedSrc.href}"`;
-        if ($embedSettings.width) {
-          iframe += ` width="${$embedSettings.width}"`;
-        }
-        if ($embedSettings.height) {
-          iframe += ` height="${$embedSettings.height}"`;
-        }
-        iframe += " />";
+        iframe = `<iframe src="${embedSrc.href}" width="${$embedSettings.width ?? "100%"}" height="${$embedSettings.height ?? "600px"}" style="${style}" />`;
         break;
       case "page":
         permalink = pageUrl(document, page);
         embedSrc = canonicalPageUrl(document, page);
         embedSrc.searchParams.set("embed", "1");
-        iframe = `<iframe src="${embedSrc.href}" />`;
+        iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px" style="${style}" />`;
         break;
       case "note":
         const noteObject = document.notes?.find(
@@ -102,7 +102,7 @@
           permalink = noteUrl(document, noteObject);
           embedSrc = canonicalNoteUrl(document, noteObject);
           embedSrc.searchParams.set("embed", "1");
-          iframe = `<iframe src="${embedSrc.href}" />`;
+          iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px" style="${style}" />`;
         }
         break;
     }
