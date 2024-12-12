@@ -8,6 +8,8 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
   import { searchWithin } from "@/test/handlers/documents";
+  import { simulatePDF403Error } from "@/test/handlers/viewer";
+  import { pdfUrl } from "@/lib/api/documents";
 
   const document = doc as Document;
 
@@ -98,6 +100,21 @@
       ...document,
       edit_access: true,
       notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
+    },
+  }}
+/>
+
+<Story
+  name="With 403 Error"
+  parameters={{
+    msw: { handlers: [simulatePDF403Error(pdfUrl(document).href)] },
+  }}
+  args={{
+    ...args,
+    mode: "document",
+    document: {
+      ...document,
+      access: "private",
     },
   }}
 />
