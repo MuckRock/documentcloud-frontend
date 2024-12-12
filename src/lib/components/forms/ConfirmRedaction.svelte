@@ -44,6 +44,7 @@ This almost certainly lives in a modal.
       if (result.type === "success") {
         // need to invalidate before navigating
         await invalidate(`document:${document.id}`);
+        $redactions = [];
         $pending = result.data.redactions;
         goto("?mode=document");
         dispatch("close");

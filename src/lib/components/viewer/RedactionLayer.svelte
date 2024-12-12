@@ -28,13 +28,13 @@ So this layer is only showing unsaved redactions.
 
   export function clear() {
     redactions.set([]);
+    pending.set([]);
   }
 </script>
 
 <script lang="ts">
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { beforeNavigate } from "$app/navigation";
 
   export let active = false;
   export let page_number: number; // 0-indexed
@@ -105,18 +105,6 @@ So this layer is only showing unsaved redactions.
     $redactions = [...$redactions, currentRedaction];
     currentRedaction = null;
   }
-
-  beforeNavigate(({ cancel }) => {
-    // if there's redactions, confirm before navigating away
-    if ($redactions.length > 0) {
-      if (confirm($_("redact.leaveWarning"))) {
-        clear();
-        return;
-      } else {
-        cancel();
-      }
-    }
-  });
 
   onMount(() => {
     // before unmounting the component, clear the current redactions
