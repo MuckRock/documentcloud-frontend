@@ -1,6 +1,8 @@
 <!-- @component
 This is a box to draw redactions on.
 It's layered over a PDF page and allows us to render redactions and draw new ones.
+When saved, redactions are burned into the PDF.
+So this layer is only showing unsaved redactions.
 -->
 <script context="module" lang="ts">
   import type { Redaction, Nullable } from "$lib/api/types";
@@ -26,10 +28,15 @@ It's layered over a PDF page and allows us to render redactions and draw new one
 
   export function clear() {
     redactions.set([]);
+    pending.set([]);
   }
 </script>
 
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
+  import { beforeNavigate } from "$app/navigation";
+
   export let active = false;
   export let page_number: number; // 0-indexed
 
@@ -103,6 +110,23 @@ It's layered over a PDF page and allows us to render redactions and draw new one
     drawStart = null;
     drawing = false;
   }
+
+  beforeNavigate(({ cancel }) => {
+    if ($redactions.length > 0) {
+      if (!confirm($_("redact.leaveWarning"))) {
+        cancel();
+        return;
+      }
+      clear();
+    }
+  });
+
+  onMount(() => {
+    // before unmounting the component, clear the current redactions
+    return () => {
+      clear();
+    };
+  });
 </script>
 
 <div
