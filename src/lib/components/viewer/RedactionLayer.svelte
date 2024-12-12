@@ -109,7 +109,7 @@ So this layer is only showing unsaved redactions.
 
   beforeNavigate(({ cancel }) => {
     if ($redactions.length > 0) {
-      if (!confirm($_("redact.cancelWarning"))) {
+      if (!confirm($_("redact.leaveWarning"))) {
         cancel();
         return;
       }
