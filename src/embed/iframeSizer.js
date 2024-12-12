@@ -9,16 +9,18 @@ export function informSize(
 
   // Inform a parent window about an embed size
   const update = () => {
+    const width = Math.max(
+      useScrollDimension ? element.scrollWidth : 0,
+      element.offsetWidth,
+    );
+    const height = Math.max(
+      useScrollDimension ? element.scrollHeight : 0,
+      element.offsetHeight,
+    );
     window.parent.postMessage(
       {
-        width: Math.max(
-          useScrollDimension ? element.scrollWidth : 0,
-          element.offsetWidth,
-        ),
-        height: Math.max(
-          useScrollDimension ? element.scrollHeight : 0,
-          element.offsetHeight,
-        ),
+        width,
+        height,
         updateStyleProps,
       },
       "*",
