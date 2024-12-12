@@ -41,63 +41,67 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   );
 
   // handle interaction events
-  let dragging = false;
+  let drawStart: Nullable<[x: number, y: number]> = null;
+  let drawing = false;
 
-  function pointerdown(e: PointerEvent) {
+  function getLayerPosition(e: PointerEvent): [x: number, y: number] {
+    // pointer position in window
+    const { offsetX, offsetY } = e;
+    // page dimensions
+    const { clientWidth, clientHeight } = e.target as HTMLDivElement;
+    // box points
+    return [offsetX / clientWidth, offsetY / clientHeight];
+  }
+
+  function startDrawingBox(e: PointerEvent) {
     if (!active) return;
 
-    dragging = true;
+    const [x, y] = getLayerPosition(e);
 
-    const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target as HTMLElement;
-
+    drawing = true;
+    drawStart = [x, y];
+    // at the beginning, the box is just a point
     currentRedaction = {
       page_number,
-      x1: offsetX / clientWidth,
-      x2: offsetX / clientWidth,
-      y1: offsetY / clientHeight,
-      y2: offsetY / clientHeight,
+      x1: x,
+      x2: x,
+      y1: y,
+      y2: y,
     };
   }
 
-  function pointermove(e: PointerEvent) {
-    if (!dragging || !active || !currentRedaction) return;
+  function continueDrawingBox(e: PointerEvent) {
+    if (!active || !drawing || !drawStart || !currentRedaction) return;
 
-    const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target as HTMLElement;
+    const [x, y] = getLayerPosition(e);
+    const [startX, startY] = drawStart;
 
-    const x = offsetX / clientWidth;
-    const y = offsetY / clientHeight;
+    const movingRight = x > startX;
+    const movingDown = y > startY;
+
+    const x1 = movingRight ? startX : x;
+    const x2 = movingRight ? x : startX;
+    const y1 = movingDown ? startY : y;
+    const y2 = movingDown ? y : startY;
 
     currentRedaction = {
       page_number,
-      x1: Math.min(currentRedaction.x1, x),
-      x2: Math.max(currentRedaction.x2, x),
-      y1: Math.min(currentRedaction.y1, y),
-      y2: Math.max(currentRedaction.y2, y),
+      x1,
+      x2,
+      y1,
+      y2,
     };
   }
 
-  function pointerup(e: PointerEvent) {
-    dragging = false;
-    if (!currentRedaction) return;
-
-    const { offsetX, offsetY } = e;
-    const { clientWidth, clientHeight } = e.target as HTMLElement;
-
-    const x = offsetX / clientWidth;
-    const y = offsetY / clientHeight;
-
-    currentRedaction = {
-      page_number,
-      x1: Math.min(currentRedaction.x1, x),
-      x2: Math.max(currentRedaction.x2, x),
-      y1: Math.min(currentRedaction.y1, y),
-      y2: Math.max(currentRedaction.y2, y),
-    };
+  function finishDrawingBox(e: PointerEvent) {
+    if (!active || !drawing || !currentRedaction) return;
 
     $redactions = [...$redactions, currentRedaction];
+
+    // reset drawing state
     currentRedaction = null;
+    drawStart = null;
+    drawing = false;
   }
 </script>
 
@@ -105,9 +109,9 @@ It's layered over a PDF page and allows us to render redactions and draw new one
   class="redactions"
   class:active
   bind:this={container}
-  on:pointerdown={pointerdown}
-  on:pointermove={pointermove}
-  on:pointerup={pointerup}
+  on:pointerdown={startDrawingBox}
+  on:pointermove={continueDrawingBox}
+  on:pointerup={finishDrawingBox}
 >
   {#each redactions_for_page as redaction}
     <span

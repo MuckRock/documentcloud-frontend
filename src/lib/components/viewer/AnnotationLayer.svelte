@@ -98,10 +98,10 @@ Assumes it's a child of a ViewerContext
     const movingRight = x > startX;
     const movingDown = y > startY;
 
-    const x1 = movingRight ? $newNote.x1 : x;
-    const x2 = movingRight ? x : $newNote.x2;
-    const y1 = movingDown ? $newNote.y1 : y;
-    const y2 = movingDown ? y : $newNote.y2;
+    const x1 = movingRight ? startX : x;
+    const x2 = movingRight ? x : startX;
+    const y1 = movingDown ? startY : y;
+    const y2 = movingDown ? y : startY;
 
     $newNote = {
       x1,
