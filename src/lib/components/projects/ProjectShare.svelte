@@ -28,11 +28,11 @@
 
   $: permalink = canonicalUrl(project);
   $: embedSrc = embedUrl(project);
-  $: iframe = `<iframe src="${embedSrc.href}" />`;
+  $: iframe = `<iframe src="${embedSrc.href}"></iframe>`;
 </script>
 
 <div class="share">
-  <iframe class="embed" title="Embed Preview" src={embedSrc.href} />
+  <iframe class="embed" title="Embed Preview" src={embedSrc.href}></iframe>
   <div class="fields">
     {#if isPrivate}
       <div class="banner">
