@@ -119,6 +119,7 @@
     align-items: flex-end;
     justify-content: center;
     gap: 1rem;
+    overflow-y: auto;
   }
   .fields {
     flex: 1 1 auto;
@@ -128,7 +129,7 @@
     gap: 1rem;
   }
   .embed {
-    min-height: 32rem;
+    min-height: 24rem;
     flex: 1 1 26rem;
     border: 1px solid var(--gray-2);
     border-radius: 1rem;
