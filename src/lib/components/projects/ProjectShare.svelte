@@ -28,7 +28,7 @@
 
   $: permalink = canonicalUrl(project);
   $: embedSrc = embedUrl(project);
-  $: iframe = `<iframe src="${embedSrc.href}"></iframe>`;
+  $: iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px"></iframe>`;
 </script>
 
 <div class="share">
