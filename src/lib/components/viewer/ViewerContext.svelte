@@ -21,7 +21,12 @@ layouts, stories, and tests.
   import { getContext, onMount, setContext } from "svelte";
   import { type Writable, writable } from "svelte/store";
 
-  import { pageFromHash, pdfUrl, shouldPaginate } from "$lib/api/documents";
+  import {
+    pageFromHash,
+    pdfUrl,
+    shouldPaginate,
+    assetUrl,
+  } from "$lib/api/documents";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -162,8 +167,8 @@ layouts, stories, and tests.
     }
   }
 
-  onMount(() => {
-    // we might move this to a load function
+  let retriesOn403Error = 0;
+  function loadPDF(asset_url: URL) {
     if (!task) {
       task = pdfjs.getDocument({ url: asset_url });
       $pdf = task.promise;
@@ -172,12 +177,25 @@ layouts, stories, and tests.
         $progress = p;
       };
 
-      task.promise.catch((error) => {
-        console.error(error);
-        $currentErrors = [...$currentErrors, error];
-        throw error;
+      task.promise.catch(async (error) => {
+        if (error.status === 403 && retriesOn403Error < 5) {
+          // try to load the document again using a fresh asset_url
+          const fresh_asset_url = await assetUrl(document);
+          task = null;
+          retriesOn403Error++;
+          loadPDF(fresh_asset_url);
+        } else {
+          console.error(error);
+          $currentErrors = [...$currentErrors, error];
+          throw error;
+        }
       });
     }
+  }
+
+  onMount(() => {
+    // we might move this to a load function
+    loadPDF(asset_url);
   });
 
   afterNavigate(() => {
