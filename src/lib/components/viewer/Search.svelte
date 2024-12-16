@@ -3,12 +3,13 @@ Assumes it's a child of a ViewerContext
  -->
 
 <script lang="ts">
-  import type { APIResponse, Highlights } from "@/lib/api/types";
-
-  import { _ } from "svelte-i18n";
-  import { Hourglass24, Search24 } from "svelte-octicons";
+  import type { APIResponse, Highlights } from "$lib/api/types";
 
   import { page } from "$app/stores";
+
+  import { getContext } from "svelte";
+  import { _ } from "svelte-i18n";
+  import { Hourglass24, Search24 } from "svelte-octicons";
 
   import Empty from "../common/Empty.svelte";
   import Error from "../common/Error.svelte";
@@ -17,10 +18,16 @@ Assumes it's a child of a ViewerContext
   import { getDocument } from "./ViewerContext.svelte";
   import { getQuery, highlight, pageNumber } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
+  import { qs } from "$lib/utils/navigation";
   import { searchWithin } from "$lib/api/documents";
 
   const document = getDocument();
+  const embed: boolean = getContext("embed");
+
   let search: Promise<[number, string[]][]>;
+
+  $: query = getQuery($page.url, "q");
+  $: search = searchWithin($document.id, query).then(formatResults);
 
   // Format page numbers, highlight search results, and remove invalid pages
   function formatResults(results: APIResponse<Highlights>) {
@@ -34,9 +41,6 @@ Assumes it's a child of a ViewerContext
       ])
       .filter(([page]) => !isNaN(page));
   }
-
-  $: query = getQuery($page.url, "q");
-  $: search = searchWithin($document.id, query).then(formatResults);
 
   function countResults(results: [number, string[]][]) {
     return results.reduce((acc, [, segments]) => acc + segments.length, 0);
@@ -69,7 +73,7 @@ Assumes it's a child of a ViewerContext
         query,
       })}
 
-      <a {href} class="card">
+      <a use:qs {href} class="card">
         <Highlight
           title="{$_('documents.pageAbbrev')} {pageNumber}"
           segments={resultsList}

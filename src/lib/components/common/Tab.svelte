@@ -1,4 +1,10 @@
+<!-- @component
+A tab component for navigating within a page.
+Note that links will preserve querystrings where possible.
+-->
 <script lang="ts">
+  import { qs } from "$lib/utils/navigation";
+
   export let active = false;
   export let disabled = false;
   export let href: string = "";
@@ -6,7 +12,7 @@
 
 <div class="tab" role="tab" class:active class:disabled>
   {#if href}
-    <a {href} class:disabled>
+    <a {href} class:disabled use:qs>
       <slot />
     </a>
   {:else}
