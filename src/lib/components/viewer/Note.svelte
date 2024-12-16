@@ -13,7 +13,7 @@
   import type { Document, Note, Sizes } from "$lib/api/types";
 
   import DOMPurify from "isomorphic-dompurify";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Globe16,
@@ -24,29 +24,30 @@
     XCircle16,
   } from "svelte-octicons";
 
-  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
-  import { pageImageUrl } from "$lib/api/documents";
+  import Button from "../common/Button.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
-  import { getUserName } from "@/lib/api/accounts";
+
+  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
+  import { width, height, isPageLevel } from "$lib/api/notes";
+  import { pageImageUrl } from "$lib/api/documents";
+  import { getUserName } from "$lib/api/accounts";
+  import { getViewerHref } from "$lib/utils/viewer";
   import {
     getCurrentMode,
     getDocument,
     getPDF,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
-  import { getViewerHref } from "$lib/utils/viewer";
-  import Button from "../common/Button.svelte";
 
-  const documentStore = getDocument();
   const pdf = getPDF();
   const embed = isEmbedded();
   const mode = getCurrentMode();
 
   const dispatch = createEventDispatcher();
 
+  export let document = getDocument();
   export let note: Note;
   export let scale = 2;
 
@@ -77,13 +78,14 @@
 
   let shareNoteOpen = false;
 
-  $: document = $documentStore;
+  $: doc = $document;
   $: page_level = isPageLevel(note);
   $: page_number = note.page_number + 1; // note pages are 0-indexed
   $: user = typeof note.user === "object" ? (note.user as User) : null;
-  $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
-  $: edit_link = getViewerHref({ document, note, mode: "annotating" });
+  $: rendering = render(canvas, doc, $pdf); // avoid re-using the same canvas
+  $: edit_link = getViewerHref({ document: doc, note, mode: "annotating" });
   $: canEdit = note.edit_access && !embed;
+  $: note_url = getViewerHref({ document: doc, note });
 
   async function render(
     canvas: HTMLCanvasElement,
@@ -207,13 +209,18 @@
   style:--note-height={height(note)}
 >
   <header>
-    {#if !page_level && $mode === "document"}
+    {#if !embed && !page_level && $mode === "document"}
       <Button minW={false} ghost on:click={closeNote}>
         <XCircle16 />
       </Button>
     {/if}
     <div class="headerText">
-      <h3>{note.title}</h3>
+      <h3>
+        <a href={note_url} target={embed ? "_blank" : null}>
+          {note.title}
+          {#if embed}({$_("documents.pageAbbrev")} {page_number}){/if}
+        </a>
+      </h3>
       {#if user}
         <p class="author">
           {$_("annotation.by", { values: { name: getUserName(user) } })}
@@ -231,36 +238,44 @@
       <p>{@html clean(note.content)}</p>
     </div>
   {/if}
-  <footer>
-    <span class="access {note.access}">
-      <svelte:component this={access[note.access].icon} />
-      {$_(`access.${access[note.access].value}.title`)}
-    </span>
-    <div class="actions">
-      {#if canEdit}
-        <Button ghost minW={false} mode="primary" size="small" href={edit_link}>
-          <Pencil16 />
-          {$_("dialog.edit")}
+  {#if !embed}
+    <footer>
+      <span class="access {note.access}">
+        <svelte:component this={access[note.access].icon} />
+        {$_(`access.${access[note.access].value}.title`)}
+      </span>
+      <div class="actions">
+        {#if canEdit}
+          <Button
+            ghost
+            minW={false}
+            mode="primary"
+            size="small"
+            href={edit_link}
+          >
+            <Pencil16 />
+            {$_("dialog.edit")}
+          </Button>
+        {/if}
+        <Button
+          ghost
+          minW={false}
+          mode="primary"
+          size="small"
+          on:click={() => (shareNoteOpen = true)}
+        >
+          <Share16 />
+          {$_("dialog.share")}
         </Button>
-      {/if}
-      <Button
-        ghost
-        minW={false}
-        mode="primary"
-        size="small"
-        on:click={() => (shareNoteOpen = true)}
-      >
-        <Share16 />
-        {$_("dialog.share")}
-      </Button>
-    </div>
-  </footer>
+      </div>
+    </footer>
+  {/if}
 </div>
-{#if shareNoteOpen}
+{#if !embed && shareNoteOpen}
   <Portal>
     <Modal on:close={() => (shareNoteOpen = false)}>
       <h1 slot="title">{$_("dialog.share")}</h1>
-      <Share {document} note={note.id} currentTab="note" />
+      <Share document={doc} note={note.id} currentTab="note" />
     </Modal>
   </Portal>
 {/if}
