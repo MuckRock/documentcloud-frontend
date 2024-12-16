@@ -46,14 +46,6 @@ Assumes it's a child of a ViewerContext
   const mode = getCurrentMode();
   const embed = isEmbedded();
 
-  $: document = $documentStore;
-  $: canWrite = !embed && document.edit_access;
-  $: BREAKPOINTS = {
-    READ_MENU: width > remToPx(52),
-    WRITE_MENU: width < remToPx(37),
-    SEARCH_MENU: width < remToPx(24),
-  };
-
   const readModeTabs: Map<ReadMode, string> = new Map([
     ["document", $_("mode.document")],
     ["text", $_("mode.text")],
@@ -83,6 +75,18 @@ Assumes it's a child of a ViewerContext
     redacting: EyeClosed16,
     search: Search16,
   };
+
+  $: document = $documentStore;
+  $: canWrite = !embed && document.edit_access;
+  $: BREAKPOINTS = {
+    READ_MENU: width > remToPx(52),
+    WRITE_MENU: width < remToPx(37),
+    SEARCH_MENU: width < remToPx(24),
+  };
+
+  $: current = Array.from(readModeDropdownItems ?? []).find(
+    ([value]) => value === $mode,
+  )?.[1];
 </script>
 
 <PageToolbar bind:width>
@@ -103,9 +107,7 @@ Assumes it's a child of a ViewerContext
       <Dropdown position="bottom-start">
         <SidebarItem slot="anchor">
           <svelte:component this={icons[$mode]} slot="start" />
-          {Array.from(readModeDropdownItems ?? []).find(
-            ([value]) => value === $mode,
-          )?.[1]}
+          {current}
           <ChevronDown12 slot="end" />
         </SidebarItem>
         <Menu slot="default" let:close>
