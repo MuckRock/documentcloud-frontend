@@ -84,6 +84,7 @@
   $: rendering = render(canvas, doc, $pdf); // avoid re-using the same canvas
   $: edit_link = getViewerHref({ document: doc, note, mode: "annotating" });
   $: canEdit = note.edit_access && !embed;
+  $: note_url = getViewerHref({ document: doc, note });
 
   async function render(
     canvas: HTMLCanvasElement,
@@ -213,7 +214,12 @@
       </Button>
     {/if}
     <div class="headerText">
-      <h3>{note.title}</h3>
+      <h3>
+        <a href={note_url} target={embed ? "_blank" : null}>
+          {note.title}
+          {#if embed}({$_("documents.pageAbbrev")} {page_number}){/if}
+        </a>
+      </h3>
       {#if user}
         <p class="author">
           {$_("annotation.by", { values: { name: getUserName(user) } })}
