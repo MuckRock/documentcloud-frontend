@@ -3,12 +3,13 @@
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
+  import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
+  import Note from "$lib/components/viewer/Note.svelte";
+
   import { informSize } from "$lib/utils/embed";
   import { pageImageUrl } from "$lib/api/documents";
   import { embedUrl } from "$lib/api/embed";
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
-  import Note from "$lib/components/viewer/Note.svelte";
-  import EmbedLayout from "@/lib/components/layouts/EmbedLayout.svelte";
 
   export let data;
 

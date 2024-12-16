@@ -12,8 +12,6 @@ layouts, stories, and tests.
     ViewerMode,
     Zoom,
     BBox,
-    APIResponse,
-    Highlights,
   } from "$lib/api/types";
 
   import { afterNavigate } from "$app/navigation";

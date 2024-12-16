@@ -24,21 +24,22 @@
     XCircle16,
   } from "svelte-octicons";
 
-  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { width, height, isPageLevel } from "$lib/api/notes";
-  import { pageImageUrl } from "$lib/api/documents";
+  import Button from "../common/Button.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Share from "../documents/Share.svelte";
-  import { getUserName } from "@/lib/api/accounts";
+
+  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
+  import { width, height, isPageLevel } from "$lib/api/notes";
+  import { pageImageUrl } from "$lib/api/documents";
+  import { getUserName } from "$lib/api/accounts";
+  import { getViewerHref } from "$lib/utils/viewer";
   import {
     getCurrentMode,
     getDocument,
     getPDF,
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
-  import { getViewerHref } from "$lib/utils/viewer";
-  import Button from "../common/Button.svelte";
 
   const pdf = getPDF();
   const embed = isEmbedded();
