@@ -48,7 +48,7 @@
   {/if}
   <meta
     property="og:image"
-    content={documents.pageImageUrl(document, 0, "normal").href}
+    content={documents.pageImageUrl(document, 1, "normal").href}
   />
   <!-- Social cards -->
   <meta property="twitter:card" content="summary_large_image" />
