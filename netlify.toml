@@ -3,8 +3,8 @@ command = "npm run build"
 publish = "build"
 
 
-# [[context.production.plugins]]
-# package = "/plugins/cache-bust"
+[[context.production.plugins]]
+package = "/plugins/cache-bust"
 
 [[plugins]]
 package = "@netlify/plugin-lighthouse"
