@@ -31,7 +31,6 @@
   } from "$lib/components/viewer/ViewerContext.svelte";
 
   const documentStore = getDocument();
-  $: document = $documentStore;
   const embed = isEmbedded();
   const currentMode = getCurrentMode();
   const currentPage = getCurrentPage();
@@ -43,6 +42,7 @@
     TWO_ROWS: width <= remToPx(34),
   };
 
+  $: document = $documentStore;
   $: sections = document.sections ?? [];
   $: totalPages = document.page_count;
   $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
