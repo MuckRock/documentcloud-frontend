@@ -3,7 +3,7 @@ command = "npm run build"
 publish = "build"
 
 
-[[context.production.plugins]]
+# [[context.production.plugins]]
 # package = "/plugins/cache-bust"
 
 [[plugins]]
