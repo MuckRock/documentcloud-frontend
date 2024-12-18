@@ -4,7 +4,7 @@ publish = "build"
 
 
 [[context.production.plugins]]
-# package = "/plugins/cache-bust"
+package = "/plugins/cache-bust"
 
 [[plugins]]
 package = "@netlify/plugin-lighthouse"
