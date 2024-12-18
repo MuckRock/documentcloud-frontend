@@ -5,9 +5,9 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { APIResponse, Highlights } from "$lib/api/types";
 
+  import { browser } from "$app/environment";
   import { page } from "$app/stores";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Hourglass24, Search24 } from "svelte-octicons";
 
@@ -22,12 +22,13 @@ Assumes it's a child of a ViewerContext
   import { searchWithin } from "$lib/api/documents";
 
   const document = getDocument();
-  const embed: boolean = getContext("embed");
 
   let search: Promise<[number, string[]][]>;
 
   $: query = getQuery($page.url, "q");
-  $: search = searchWithin($document.id, query).then(formatResults);
+  $: search = browser
+    ? searchWithin($document.id, query).then(formatResults)
+    : new Promise(() => {});
 
   // Format page numbers, highlight search results, and remove invalid pages
   function formatResults(results: APIResponse<Highlights>) {
