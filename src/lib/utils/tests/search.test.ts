@@ -3,7 +3,14 @@ import { test, expect, describe } from "vitest";
 import { APP_URL } from "@/config/config.js";
 import { slugify } from "$lib/utils/slugify";
 import { me } from "@/test/fixtures/accounts";
-import { userDocs, tag, kv, searchUrl, highlight } from "../search";
+import {
+  userDocs,
+  tag,
+  kv,
+  searchUrl,
+  highlight,
+  objectToSearchParams,
+} from "../search";
 
 describe("search utilities", () => {
   test("search URL", () => {
@@ -13,14 +20,12 @@ describe("search utilities", () => {
   });
 
   test("userDocs", () => {
-    expect(userDocs(me)).toStrictEqual(`+user:${slugify(me.name!)}-${me.id}`);
+    expect(userDocs(me)).toStrictEqual(`user:${me.id}`);
 
-    expect(userDocs(me, "public")).toStrictEqual(
-      `+user:${slugify(me.name!)}-${me.id} access:public`,
-    );
+    expect(userDocs(me, "public")).toStrictEqual(`user:${me.id} access:public`);
 
     expect(userDocs(me, "private")).toStrictEqual(
-      `+user:${slugify(me.name!)}-${me.id} access:private`,
+      `user:${me.id} access:private`,
     );
   });
 
@@ -46,4 +51,32 @@ describe("search utilities", () => {
 
     expect(highlight(text, query)).toStrictEqual(marked);
   });
+});
+
+test("objectToSearchParams", () => {
+  expect(
+    objectToSearchParams({
+      query: "test",
+      page: 1,
+      perPage: 20,
+      sort: "created_at",
+    }).toString(),
+  ).toBe("query=test&page=1&perPage=20&sort=created_at");
+
+  expect(
+    objectToSearchParams({
+      q: "search term",
+      filter: undefined,
+      count: null,
+      include: true,
+    }).toString(),
+  ).toBe("q=search+term&include=true");
+
+  expect(
+    objectToSearchParams({
+      empty: "",
+      spaces: "has spaces",
+      special: "!@#$",
+    }).toString(),
+  ).toBe("empty=&spaces=has+spaces&special=%21%40%23%24");
 });
