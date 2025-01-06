@@ -257,6 +257,20 @@
       "projects": "Projects",
       "data": "Data",
       "wrapTitle": "Wrap Title"
+    },
+    "sort": {
+      "label": "Sort",
+      "fields": {
+        "score": "Relevance",
+        "created_at": "Date Created",
+        "updated_at": "Date Updated",
+        "page_count": "Total Pages",
+        "title": "Title"
+      },
+      "order": {
+        "asc": "Ascending",
+        "desc": "Descending"
+      }
     }
   },
   "projects": {
