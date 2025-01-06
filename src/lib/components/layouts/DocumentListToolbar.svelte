@@ -8,12 +8,25 @@
   import Search from "../forms/Search.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
-
+  import Sort, {
+    type SortOrder,
+    type SortField,
+  } from "../documents/Sort.svelte";
   import { remToPx } from "$lib/utils/layout";
 
   export let query: string = "";
 
+  let sort: SortField;
+  let order: SortOrder = "desc";
+  let fields: Array<SortField> = [
+    "updated_at",
+    "created_at",
+    "page_count",
+    "title",
+  ];
   let headerToolbarWidth: number;
+
+  $: sort = query ? "score" : "updated_at";
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
@@ -28,6 +41,7 @@
       </p>
     </div>
     <div class="margin-xs">
+      <Sort bind:sort bind:order {fields} {query} />
       <Dropdown>
         <SidebarItem slot="anchor">
           <Eye16 slot="start" />
