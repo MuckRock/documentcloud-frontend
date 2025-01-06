@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => ({
     exclude: [
       ...configDefaults.exclude,
       "storybook-static",
-      "./src/legacy",
+      "./src/legacy/modification",
       "node_modules",
       "./src/config/*",
       "./src/**/*.stories.@(js|jsx|ts|tsx|svelte)",

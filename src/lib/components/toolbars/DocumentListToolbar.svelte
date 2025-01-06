@@ -5,11 +5,18 @@
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import PageToolbar from "./PageToolbar.svelte";
-  import Search from "../forms/Search.svelte";
   import NavItem from "../common/NavItem.svelte";
+  import DocumentSearch from "../documents/search/Search.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
-
+  import Sort, {
+    type SortDirection,
+    type SortField,
+  } from "../documents/Sort.svelte";
   import { remToPx } from "$lib/utils/layout";
+  import Filter, {
+    defaultFilters,
+    type FilterFields,
+  } from "../documents/Filter.svelte";
 
   interface Props {
     query?: string;
@@ -56,15 +63,5 @@
   }
   .margin-xs {
     margin: 0.25rem;
-  }
-  .help {
-    flex: 1 1 100%;
-    font-size: var(--font-xs);
-    margin: 0.25rem;
-    color: var(--gray-4);
-    text-align: left;
-  }
-  .hide {
-    display: none;
   }
 </style>
