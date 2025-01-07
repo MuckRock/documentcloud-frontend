@@ -6,6 +6,7 @@
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
 import { build, files, version } from "$service-worker";
+import { DC_BASE } from "@/config/config.js";
 
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
@@ -14,6 +15,9 @@ const ASSETS = [
   ...build, // the app itself
   ...files, // everything in `static`
 ];
+
+// API endpoint for private assets, which shouldn't be cached
+const PRIVATE_PREFIX = new URL("/files", DC_BASE).href;
 
 sw.addEventListener("install", (event) => {
   // Create a new cache and add all files to it
@@ -40,6 +44,9 @@ sw.addEventListener("fetch", (event) => {
   // ignore POST requests and browser extensions
   if (event.request.method !== "GET" || !event.request.url.startsWith("http"))
     return;
+
+  // ignore requests for private assets
+  if (event.request.url.startsWith(PRIVATE_PREFIX)) return;
 
   async function respond() {
     const url = new URL(event.request.url);

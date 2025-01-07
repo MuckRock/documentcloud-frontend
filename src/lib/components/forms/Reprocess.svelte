@@ -54,7 +54,6 @@ This will mostly be used inside a modal but isn't dependent on one.
 
   // todo: warn if documents are in more than one language
   $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
-  $: console.log(language);
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
