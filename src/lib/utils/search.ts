@@ -5,6 +5,18 @@ import { APP_URL } from "@/config/config.js";
 import { slugify } from "$lib/utils/slugify";
 import { getUserName } from "../api/accounts";
 
+export function objectToSearchParams<
+  T extends Record<string, string | number | boolean | null | undefined>,
+>(obj: T): URLSearchParams {
+  const params = new URLSearchParams();
+  Object.entries(obj).forEach(([key, value]) => {
+    if (value != null && value !== undefined) {
+      params.set(key, String(value));
+    }
+  });
+  return params;
+}
+
 export function searchUrl(query: string): URL {
   const href = new URL("documents/", APP_URL);
   href.searchParams.set("q", query);

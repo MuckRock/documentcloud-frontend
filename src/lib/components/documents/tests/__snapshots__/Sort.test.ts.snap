@@ -58,7 +58,7 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
     style="left: 0px; top: 0px; display: block;"
   >
     <div
-      class="menu svelte-nrjt2v"
+      class="menu svelte-uikadd"
       role="menu"
     >
       <div

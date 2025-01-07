@@ -1,0 +1,479 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Filter.svelte > renders and opens menu for snapshot 1`] = `
+<div>
+   
+  <div
+    class="anchor svelte-v01npp open"
+    role="button"
+    tabindex="0"
+  >
+    <span
+      class="sidebarItem container svelte-1epk331"
+      role="button"
+      tabindex="0"
+      title=""
+    >
+      <svg
+        class="octicon octicon-filter"
+        height="16"
+        slot="start"
+        viewBox="0 0 16 16"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M.75 3h14.5a.75.75 0 0 1 0 1.5H.75a.75.75 0 0 1 0-1.5ZM3 7.75A.75.75 0 0 1 3.75 7h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 7.75Zm3 4a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"
+        />
+      </svg>
+       
+      <span
+        class="label svelte-1epk331"
+      >
+        Filter
+      </span>
+       
+      <svg
+        class="octicon octicon-chevron-down"
+        height="16"
+        slot="end"
+        viewBox="0 0 16 16"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"
+        />
+      </svg>
+    </span>
+    
+  </div>
+   
+  <div
+    class="dropdown svelte-v01npp open"
+    style="left: 0px; top: 0px; display: block;"
+  >
+    <div
+      style="display: contents; --overflow-y: visible;"
+    >
+      <div
+        class="menu svelte-uikadd"
+        role="menu"
+      >
+        <div
+          class="filters svelte-1d0hgn"
+        >
+          <div
+            style="display: contents; --background: var(--white, #fff); --border: 1px solid var(--gray-2, #99a8b3); --border-radius: 0.5rem; --border-focused: 1px solid var(--blue-3); --padding: 0 0 0 0.5rem; --item-hover-bg: var(--blue-1, #eef3f9); --item-is-active-bg: var(--blue-3, #4294f0); --list-shadow: var(--shadow-2); --list-border: 1px solid var(--gray-2, #d8dee2); --multi-item-bg: var(--blue-1, #eef3f9); --multi-item-color: var(--blue-5, #053775); --multi-item-clear-icon-color: var(--blue-5, #053775); --multi-item-outline: var(--blue-2, #b5ceed); --multi-select-input-margin: 0; --multi-select-padding: 0 0 0 0.5rem;"
+          >
+            <div
+              class="svelte-select select elevated sourceCodePro gray-4 svelte-pqu2zo show-chevron"
+              role="none"
+              style=""
+            >
+               
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="a11y-text svelte-pqu2zo"
+              />
+               
+              <div
+                class="prepend svelte-pqu2zo"
+              >
+                <svg
+                  class="octicon octicon-eye"
+                  height="16"
+                  slot="prepend"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"
+                  />
+                </svg>
+              </div>
+               
+              <div
+                class="value-container svelte-pqu2zo"
+              >
+                 
+                <input
+                  aria-autocomplete="list"
+                  autocapitalize="none"
+                  autocomplete="off"
+                  autocorrect="off"
+                  class="svelte-pqu2zo"
+                  placeholder="Access"
+                  spellcheck="false"
+                  style=""
+                  tabindex="0"
+                  type="text"
+                />
+              </div>
+               
+              <div
+                class="indicators svelte-pqu2zo"
+              >
+                 
+                 
+                <div
+                  aria-hidden="true"
+                  class="icon chevron svelte-pqu2zo"
+                >
+                  <svg
+                    class="octicon octicon-chevron-down"
+                    height="16"
+                    slot="chevron-icon"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+               
+              <input
+                class="svelte-pqu2zo"
+                name="access"
+                type="hidden"
+                value=""
+              />
+               
+            </div>
+          </div>
+           
+          <div
+            style="display: contents; --background: var(--white, #fff); --border: 1px solid var(--gray-2, #99a8b3); --border-radius: 0.5rem; --border-focused: 1px solid var(--blue-3); --padding: 0 0 0 0.5rem; --item-hover-bg: var(--blue-1, #eef3f9); --item-is-active-bg: var(--blue-3, #4294f0); --list-shadow: var(--shadow-2); --list-border: 1px solid var(--gray-2, #d8dee2); --multi-item-bg: var(--blue-1, #eef3f9); --multi-item-color: var(--blue-5, #053775); --multi-item-clear-icon-color: var(--blue-5, #053775); --multi-item-outline: var(--blue-2, #b5ceed); --multi-select-input-margin: 0; --multi-select-padding: 0 0 0 0.5rem;"
+          >
+            <div
+              class="svelte-select select elevated sourceCodePro gray-4 svelte-pqu2zo multi show-chevron"
+              role="none"
+              style=""
+            >
+               
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="a11y-text svelte-pqu2zo"
+              />
+               
+              <div
+                class="prepend svelte-pqu2zo"
+              >
+                <svg
+                  class="octicon octicon-person"
+                  height="16"
+                  slot="prepend"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"
+                  />
+                </svg>
+              </div>
+               
+              <div
+                class="value-container svelte-pqu2zo"
+              >
+                 
+                <input
+                  aria-autocomplete="list"
+                  autocapitalize="none"
+                  autocomplete="off"
+                  autocorrect="off"
+                  class="svelte-pqu2zo"
+                  placeholder="Users"
+                  spellcheck="false"
+                  style=""
+                  tabindex="0"
+                  type="text"
+                />
+              </div>
+               
+              <div
+                class="indicators svelte-pqu2zo"
+              >
+                 
+                 
+                <div
+                  aria-hidden="true"
+                  class="icon chevron svelte-pqu2zo"
+                >
+                  <svg
+                    class="octicon octicon-chevron-down"
+                    height="16"
+                    slot="chevron-icon"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+               
+              <input
+                class="svelte-pqu2zo"
+                name="users"
+                type="hidden"
+                value="[]"
+              />
+               
+            </div>
+          </div>
+           
+          <div
+            style="display: contents; --background: var(--white, #fff); --border: 1px solid var(--gray-2, #99a8b3); --border-radius: 0.5rem; --border-focused: 1px solid var(--blue-3); --padding: 0 0 0 0.5rem; --item-hover-bg: var(--blue-1, #eef3f9); --item-is-active-bg: var(--blue-3, #4294f0); --list-shadow: var(--shadow-2); --list-border: 1px solid var(--gray-2, #d8dee2); --multi-item-bg: var(--blue-1, #eef3f9); --multi-item-color: var(--blue-5, #053775); --multi-item-clear-icon-color: var(--blue-5, #053775); --multi-item-outline: var(--blue-2, #b5ceed); --multi-select-input-margin: 0; --multi-select-padding: 0 0 0 0.5rem;"
+          >
+            <div
+              class="svelte-select select elevated sourceCodePro gray-4 svelte-pqu2zo multi show-chevron"
+              role="none"
+              style=""
+            >
+               
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="a11y-text svelte-pqu2zo"
+              />
+               
+              <div
+                class="prepend svelte-pqu2zo"
+              >
+                <svg
+                  class="octicon octicon-organization"
+                  height="16"
+                  slot="prepend"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.75 16A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0h8.5C11.216 0 12 .784 12 1.75v12.5c0 .085-.006.168-.018.25h2.268a.25.25 0 0 0 .25-.25V8.285a.25.25 0 0 0-.111-.208l-1.055-.703a.749.749 0 1 1 .832-1.248l1.055.703c.487.325.779.871.779 1.456v5.965A1.75 1.75 0 0 1 14.25 16h-3.5a.766.766 0 0 1-.197-.026c-.099.017-.2.026-.303.026h-3a.75.75 0 0 1-.75-.75V14h-1v1.25a.75.75 0 0 1-.75.75Zm-.25-1.75c0 .138.112.25.25.25H4v-1.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v1.25h2.25a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25ZM3.75 6h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 3.75A.75.75 0 0 1 3.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 3.75Zm4 3A.75.75 0 0 1 7.75 6h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7 6.75ZM7.75 3h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 9.75A.75.75 0 0 1 3.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 9.75ZM7.75 9h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"
+                  />
+                </svg>
+              </div>
+               
+              <div
+                class="value-container svelte-pqu2zo"
+              >
+                 
+                <input
+                  aria-autocomplete="list"
+                  autocapitalize="none"
+                  autocomplete="off"
+                  autocorrect="off"
+                  class="svelte-pqu2zo"
+                  placeholder="Organizations"
+                  spellcheck="false"
+                  style=""
+                  tabindex="0"
+                  type="text"
+                />
+              </div>
+               
+              <div
+                class="indicators svelte-pqu2zo"
+              >
+                 
+                 
+                <div
+                  aria-hidden="true"
+                  class="icon chevron svelte-pqu2zo"
+                >
+                  <svg
+                    class="octicon octicon-chevron-down"
+                    height="16"
+                    slot="chevron-icon"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+               
+              <input
+                class="svelte-pqu2zo"
+                name="orgs"
+                type="hidden"
+                value="[]"
+              />
+               
+            </div>
+          </div>
+           
+          <div
+            style="display: contents; --background: var(--white, #fff); --border: 1px solid var(--gray-2, #99a8b3); --border-radius: 0.5rem; --border-focused: 1px solid var(--blue-3); --padding: 0 0 0 0.5rem; --item-hover-bg: var(--blue-1, #eef3f9); --item-is-active-bg: var(--blue-3, #4294f0); --list-shadow: var(--shadow-2); --list-border: 1px solid var(--gray-2, #d8dee2); --multi-item-bg: var(--blue-1, #eef3f9); --multi-item-color: var(--blue-5, #053775); --multi-item-clear-icon-color: var(--blue-5, #053775); --multi-item-outline: var(--blue-2, #b5ceed); --multi-select-input-margin: 0; --multi-select-padding: 0 0 0 0.5rem;"
+          >
+            <div
+              class="svelte-select select elevated sourceCodePro gray-4 svelte-pqu2zo multi show-chevron"
+              role="none"
+              style=""
+            >
+               
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="a11y-text svelte-pqu2zo"
+              />
+               
+              <div
+                class="prepend svelte-pqu2zo"
+              >
+                <svg
+                  class="octicon octicon-file-directory"
+                  height="16"
+                  slot="prepend"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 2.75C0 1.784.784 1 1.75 1H5c.55 0 1.07.26 1.4.7l.9 1.2a.25.25 0 0 0 .2.1h6.75c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25Zm1.75-.25a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25H7.5c-.55 0-1.07-.26-1.4-.7l-.9-1.2a.25.25 0 0 0-.2-.1Z"
+                  />
+                </svg>
+              </div>
+               
+              <div
+                class="value-container svelte-pqu2zo"
+              >
+                 
+                <input
+                  aria-autocomplete="list"
+                  autocapitalize="none"
+                  autocomplete="off"
+                  autocorrect="off"
+                  class="svelte-pqu2zo"
+                  placeholder="Projects"
+                  spellcheck="false"
+                  style=""
+                  tabindex="0"
+                  type="text"
+                />
+              </div>
+               
+              <div
+                class="indicators svelte-pqu2zo"
+              >
+                 
+                 
+                <div
+                  aria-hidden="true"
+                  class="icon chevron svelte-pqu2zo"
+                >
+                  <svg
+                    class="octicon octicon-chevron-down"
+                    height="16"
+                    slot="chevron-icon"
+                    viewBox="0 0 16 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+               
+              <input
+                class="svelte-pqu2zo"
+                name="projects"
+                type="hidden"
+                value="[]"
+              />
+               
+            </div>
+          </div>
+        </div>
+         
+        <fieldset
+          class="pageCounts svelte-1d0hgn"
+        >
+          <label
+            class="min pages svelte-1d0hgn"
+          >
+            <svg
+              class="octicon octicon-hash"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6.368 1.01a.75.75 0 0 1 .623.859L6.57 4.5h3.98l.46-2.868a.75.75 0 0 1 1.48.237L12.07 4.5h2.18a.75.75 0 0 1 0 1.5h-2.42l-.64 4h2.56a.75.75 0 0 1 0 1.5h-2.8l-.46 2.869a.75.75 0 0 1-1.48-.237l.42-2.632H5.45l-.46 2.869a.75.75 0 0 1-1.48-.237l.42-2.632H1.75a.75.75 0 0 1 0-1.5h2.42l.64-4H2.25a.75.75 0 0 1 0-1.5h2.8l.46-2.868a.75.75 0 0 1 .858-.622ZM9.67 10l.64-4H6.33l-.64 4Z"
+              />
+            </svg>
+             
+            <input
+              min="1"
+              placeholder="Min. Pages"
+              type="number"
+            />
+          </label>
+           
+          <label
+            class="max pages svelte-1d0hgn"
+          >
+            <svg
+              class="octicon octicon-hash"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6.368 1.01a.75.75 0 0 1 .623.859L6.57 4.5h3.98l.46-2.868a.75.75 0 0 1 1.48.237L12.07 4.5h2.18a.75.75 0 0 1 0 1.5h-2.42l-.64 4h2.56a.75.75 0 0 1 0 1.5h-2.8l-.46 2.869a.75.75 0 0 1-1.48-.237l.42-2.632H5.45l-.46 2.869a.75.75 0 0 1-1.48-.237l.42-2.632H1.75a.75.75 0 0 1 0-1.5h2.42l.64-4H2.25a.75.75 0 0 1 0-1.5h2.8l.46-2.868a.75.75 0 0 1 .858-.622ZM9.67 10l.64-4H6.33l-.64 4Z"
+              />
+            </svg>
+             
+            <input
+              min="1"
+              placeholder="Max. Pages"
+              type="number"
+            />
+          </label>
+        </fieldset>
+         
+        <button
+          class="primary normal ghost minW svelte-12ugz1l"
+          title=""
+          type="button"
+        >
+          <svg
+            class="octicon octicon-link-external"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"
+            />
+          </svg>
+           
+          Advanced search syntax
+        </button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+`;

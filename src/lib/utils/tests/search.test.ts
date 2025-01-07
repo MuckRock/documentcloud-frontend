@@ -3,7 +3,14 @@ import { test, expect, describe } from "vitest";
 import { APP_URL } from "@/config/config.js";
 import { slugify } from "$lib/utils/slugify";
 import { me } from "@/test/fixtures/accounts";
-import { userDocs, tag, kv, searchUrl, highlight } from "../search";
+import {
+  userDocs,
+  tag,
+  kv,
+  searchUrl,
+  highlight,
+  objectToSearchParams,
+} from "../search";
 
 describe("search utilities", () => {
   test("search URL", () => {
@@ -46,4 +53,32 @@ describe("search utilities", () => {
 
     expect(highlight(text, query)).toStrictEqual(marked);
   });
+});
+
+test("objectToSearchParams", () => {
+  expect(
+    objectToSearchParams({
+      query: "test",
+      page: 1,
+      perPage: 20,
+      sort: "created_at",
+    }).toString(),
+  ).toBe("query=test&page=1&perPage=20&sort=created_at");
+
+  expect(
+    objectToSearchParams({
+      q: "search term",
+      filter: undefined,
+      count: null,
+      include: true,
+    }).toString(),
+  ).toBe("q=search+term&include=true");
+
+  expect(
+    objectToSearchParams({
+      empty: "",
+      spaces: "has spaces",
+      special: "!@#$",
+    }).toString(),
+  ).toBe("empty=&spaces=has+spaces&special=%21%40%23%24");
 });
