@@ -107,6 +107,7 @@ export const actions = {
 
     form.delete("documents");
 
+    // @ts-ignore
     const update: Partial<Document> = Object.fromEntries(form);
 
     const docs = ids.map((id) => {

@@ -101,6 +101,7 @@ export const actions = {
     const form = await request.formData();
     const { id } = params;
 
+    // @ts-ignore
     const update: Partial<Document> = Object.fromEntries(form.entries());
 
     // noindex is a boolean so needs special treatment
