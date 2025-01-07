@@ -13,6 +13,10 @@
     type SortField,
   } from "../documents/Sort.svelte";
   import { remToPx } from "$lib/utils/layout";
+  import Filter, {
+    defaultFilters,
+    type FilterFields,
+  } from "../documents/Filter.svelte";
 
   export let query: string = "";
 
@@ -24,6 +28,8 @@
     "page_count",
     "title",
   ];
+  let filters: FilterFields = defaultFilters;
+
   let headerToolbarWidth: number;
 
   $: sort = query ? "score" : "updated_at";
@@ -33,14 +39,9 @@
   <div class="items" slot="center">
     <div style:flex="1 1 auto">
       <Search name="q" {query} placeholder={$_("common.search")} />
-      <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
-        {@html $_("search.help")}
-        <a target="_blank" href="/help/search/">
-          {$_("search.more")}
-        </a>
-      </p>
     </div>
     <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
+      <Filter bind:filters />
       <Sort bind:sort bind:order {fields} {query} />
       <Dropdown>
         <NavItem slot="anchor">
@@ -64,15 +65,5 @@
   }
   .margin-xs {
     margin: 0.25rem;
-  }
-  .help {
-    flex: 1 1 100%;
-    font-size: var(--font-xs);
-    margin: 0.25rem;
-    color: var(--gray-4);
-    text-align: left;
-  }
-  .hide {
-    display: none;
   }
 </style>
