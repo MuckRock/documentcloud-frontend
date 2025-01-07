@@ -255,6 +255,19 @@
       "data": "Data",
       "wrapTitle": "Wrap Title"
     },
+    "filter": {
+      "label": "Filter",
+      "advancedHelp": "Advanced search syntax",
+      "access": {
+        "public": "Public",
+        "private": "Private"
+      },
+      "users": "Users",
+      "orgs": "Organizations",
+      "projects": "Projects",
+      "minPages": "Min. Pages",
+      "maxPages": "Max. Pages"
+    },
     "sort": {
       "label": "Sort",
       "fields": {

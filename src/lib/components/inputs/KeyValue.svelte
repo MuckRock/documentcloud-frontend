@@ -173,13 +173,6 @@ This uses `svelte-select` to let users more easily choose existing keys.
   input.value::placeholder {
     color: var(--gray-3, #99a8b3);
   }
-
-  :global(.select.elevated) {
-    box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
-  }
-  :global(.select.elevated.focused) {
-    box-shadow: 0px 2px 0px 0px var(--blue-3, #1367d0);
-  }
   :global(.select .indicators) {
     fill: var(--gray-5, #233944);
   }

@@ -24,13 +24,15 @@
   }
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
   import Select from "svelte-select";
   import { ChevronDown16, X12, X16 } from "svelte-octicons";
+  import type { Maybe } from "@/lib/api/types";
 
   export let name: string;
   export let required = false;
-  export let items: any[];
+  export let items: Maybe<T[]> = undefined;
+  export let loadOptions: Maybe<(text: string) => Promise<T[]>> = undefined;
   export let itemId: string = "value";
   export let label: string = "label";
   export let value: any = null;
@@ -45,6 +47,7 @@
   {name}
   {required}
   {items}
+  {loadOptions}
   {multiple}
   {clearable}
   {placeholder}
@@ -57,37 +60,37 @@
   --background="var(--white, #fff)"
   --border="1px solid var(--gray-2, #99a8b3)"
   --border-radius="0.5rem"
-  --border-focused="1px solid var(--blue-2, #4294f0)"
-  --padding="0 0 0 0.75rem"
+  --border-focused="1px solid var(--blue-3)"
+  --padding="0 0 0 0.5rem"
   --item-hover-bg="var(--blue-1, #eef3f9)"
   --item-is-active-bg="var(--blue-3, #4294f0)"
-  --list-shadow="var(--shadow-1)"
+  --list-shadow="var(--shadow-2)"
   --list-border="1px solid var(--gray-2, #d8dee2)"
   --multi-item-bg="var(--blue-1, #eef3f9)"
   --multi-item-color="var(--blue-5, #053775)"
   --multi-item-clear-icon-color="var(--blue-5, #053775)"
   --multi-item-outline="var(--blue-2, #b5ceed)"
   --multi-select-input-margin="0"
-  --multi-select-padding="0 0 0 0.75rem"
+  --multi-select-padding="0 0 0 0.5rem"
   class="select elevated sourceCodePro gray-4"
 >
+  <slot name="prepend" slot="prepend" />
   <ChevronDown16 slot="chevron-icon" />
   <X16 slot="clear-icon" />
   <X12 slot="multi-clear-icon" fill="var(--multi-item-clear-icon-color)" />
-  <div slot="item" let:item>
+  <slot slot="item" name="item" let:item>
     <p>{item[label]}</p>
-  </div>
+  </slot>
 </Select>
 
 <style>
-  :global(.select.elevated) {
-    box-shadow: 0px 2px 0px 0px var(--gray-2, #99a8b3);
-    &:hover {
-      box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
-    }
-  }
-  :global(.select.elevated.focused) {
-    box-shadow: 0px 2px 0px 0px var(--blue-2, #1367d0);
+  :global(.select) {
+    display: flex;
+    gap: 0.5rem;
+    color: var(--gray-5);
+    fill: var(--gray-4);
+    font-size: var(--font-sm);
+    box-shadow: 0px 2px 1px 0px var(--gray-1, #d8dee2) inset;
   }
   :global(.select .indicators) {
     fill: var(--gray-5, #233944);
@@ -96,12 +99,9 @@
     fill: var(--blue-5, #053775);
   }
   :global(.select input, .select .selected-item) {
-    color: var(--gray-5, #233944);
     font-family: "Source Sans Pro";
-    font-size: 1rem;
     font-style: normal;
     line-height: normal;
-    box-shadow: none;
   }
   :global(.select.focused input, .select.focused .selected-item) {
     color: var(--blue-5, #053775) !important;
