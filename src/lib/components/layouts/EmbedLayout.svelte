@@ -45,7 +45,7 @@
   </main>
   <footer>
     <Tooltip caption="View on DocumentCloud">
-      <a href={canonicalUrl} class="logo">
+      <a href={canonicalUrl} class="logo" target="_blank">
         <Logo />
       </a>
     </Tooltip>
