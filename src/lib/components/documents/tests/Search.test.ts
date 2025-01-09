@@ -1,22 +1,35 @@
-import { vi, describe, it, expect } from "vitest";
+import { vi, describe, it, expect, type Mock } from "vitest";
 import { serialize, deserialize, type SearchProps } from "../Search.svelte";
-import type { Project, User } from "@/lib/api/types";
-import { usersList } from "@/test/fixtures/accounts";
+import type { Org, Project, User } from "@/lib/api/types";
+import { organizationsList, usersList } from "@/test/fixtures/accounts";
 import { projectList } from "@/test/fixtures/projects";
+import { listUsers, listOrgs } from "@/lib/api/accounts";
 
 const mockUser = usersList.results[0];
 const mockProjects = projectList.results.slice(0, 2);
-vi.mock("@/lib/api/accounts", () => ({
-  listUsers: () =>
-    Promise.resolve({
-      data: {
-        count: 1,
-        next: null,
-        previous: null,
-        results: [mockUser],
-      },
-    }),
-}));
+const mockOrgs = organizationsList.results.slice(0, 2);
+
+vi.mock("@/lib/api/accounts");
+
+const mockListOrgs = vi.fn().mockResolvedValue({
+  data: {
+    count: 1,
+    next: null,
+    previous: null,
+    results: mockOrgs,
+  },
+});
+const mockListUsers = vi.fn().mockResolvedValue({
+  data: {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [mockUser],
+  },
+});
+
+vi.mocked(listOrgs).mockImplementation(mockListOrgs);
+vi.mocked(listUsers).mockImplementation(mockListUsers);
 
 vi.mock("@/lib/api/projects", () => ({
   list: () =>
@@ -41,9 +54,10 @@ describe("serialize", () => {
       query: "document",
       filters: {
         users: [{ id: 12345, name: "Test User" }] as User[],
+        orgs: [{ id: 12345, name: "Test Org" }] as Org[],
       },
     };
-    expect(serialize(props)).toBe("document user:12345");
+    expect(serialize(props)).toBe("document user:12345 organization:12345");
   });
 
   it("should serialize multiple filters with OR", () => {
@@ -129,6 +143,20 @@ describe("deserialize", () => {
       sort: undefined,
       order: undefined,
     });
+    expect(mockListUsers).toHaveBeenCalledWith({ id__in: "12345" });
+  });
+
+  it("should deserialize organization filters", async () => {
+    const query = "document organization:12345 organization:67890";
+    expect(await deserialize(query)).toEqual({
+      query: "document",
+      filters: {
+        orgs: mockOrgs,
+      },
+      sort: undefined,
+      order: undefined,
+    });
+    expect(mockListOrgs).toHaveBeenCalledWith({ id__in: "12345,67890" });
   });
 
   it("should deserialize multiple project filters", async () => {
