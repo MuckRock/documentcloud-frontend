@@ -5,44 +5,19 @@
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import PageToolbar from "../common/PageToolbar.svelte";
-  import Search from "../forms/Search.svelte";
+  import DocumentSearch from "../documents/Search.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
-  import Sort, {
-    type SortOrder,
-    type SortField,
-  } from "../documents/Sort.svelte";
-  import { remToPx } from "$lib/utils/layout";
-  import Filter, {
-    defaultFilters,
-    type FilterFields,
-  } from "../documents/Filter.svelte";
-
-  export let query: string = "";
-
-  let sort: SortField;
-  let order: SortOrder = "desc";
-  let fields: Array<SortField> = [
-    "updated_at",
-    "created_at",
-    "page_count",
-    "title",
-  ];
-  let filters: FilterFields = defaultFilters;
 
   let headerToolbarWidth: number;
-
-  $: sort = query ? "score" : "updated_at";
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
   <div class="items" slot="center">
     <div style:flex="1 1 auto">
-      <Search name="q" {query} placeholder={$_("common.search")} />
+      <DocumentSearch />
     </div>
     <div class="margin-xs">
-      <Filter bind:filters />
-      <Sort bind:sort bind:order {fields} {query} />
       <Dropdown>
         <SidebarItem slot="anchor">
           <Eye16 slot="start" />
