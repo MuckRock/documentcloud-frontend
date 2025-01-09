@@ -192,6 +192,7 @@ export interface ListUsersParams
   extends Record<string, Maybe<string | number>> {
   name?: string;
   name__istartswith?: string;
+  id__in?: string;
   username?: string;
   organization?: string;
   project?: string;
@@ -211,6 +212,7 @@ export async function listUsers(
 export interface ListOrgsParams extends Record<string, Maybe<string>> {
   name?: string;
   name__istartswith?: string;
+  id__in?: string;
 }
 
 export async function listOrgs(

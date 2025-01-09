@@ -1,6 +1,22 @@
 <script lang="ts" context="module">
-  export type SortField = "score" | keyof Document;
+  export type SortField =
+    | "score"
+    | "title"
+    | "created_at"
+    | "updated_at"
+    | "page_count";
   export type SortOrder = "asc" | "desc";
+
+  export function isSortField(s?: string): s is SortField {
+    if (!s) return false;
+    return [
+      "score",
+      "title",
+      "created_at",
+      "updated_at",
+      "page_count",
+    ].includes(s);
+  }
 </script>
 
 <script lang="ts">
@@ -9,7 +25,6 @@
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import type { Document } from "@/lib/api/types";
 
   export let order: SortOrder;
   export let sort: SortField;
