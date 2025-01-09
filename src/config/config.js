@@ -39,8 +39,13 @@ export const SIGN_IN_URL = new URL(DC_LOGIN, DC_BASE).toString();
 export const SIGN_UP_URL = new URL(SQUARELET_SIGNUP, SQUARELET_BASE).toString();
 export const SIGN_OUT_URL = new URL(DC_LOGOUT, DC_BASE).toString();
 
+// @ts-ignore
 export const EMBED_MAX_AGE = +env.PUBLIC_EMBED_MAX_AGE || 60 * 60 * 24;
+
+// @ts-ignore
 export const PAGE_MAX_AGE = +env.PUBLIC_PAGE_MAX_AGE || 60 * 60 * 24;
+
+// @ts-ignore
 export const VIEWER_MAX_AGE = +env.PUBLIC_VIEWER_MAX_AGE || 60 * 60;
 
 export const VERIFICATION_FORM_URL =
