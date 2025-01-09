@@ -5,8 +5,8 @@
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import PageToolbar from "./PageToolbar.svelte";
-  import Search from "../forms/Search.svelte";
   import NavItem from "../common/NavItem.svelte";
+  import DocumentSearch from "../documents/Search.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
   import Sort, {
     type SortOrder,
@@ -38,7 +38,7 @@
 <PageToolbar bind:width={headerToolbarWidth}>
   <div class="items" slot="center">
     <div style:flex="1 1 auto">
-      <Search name="q" {query} placeholder={$_("common.search")} />
+      <DocumentSearch />
     </div>
     <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
       <Filter bind:filters />
