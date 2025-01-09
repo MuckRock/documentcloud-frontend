@@ -30,6 +30,7 @@
   export let sort: SortField;
   export let fields: SortField[];
   export let query: string = "";
+  export let onChange: (sort: SortField, order: SortOrder) => void = () => {};
 </script>
 
 <Dropdown>
@@ -48,13 +49,23 @@
     <div class="field options">
       {#if query}
         <label class="field option" class:active={sort === "score"}>
-          <input type="radio" bind:group={sort} value="score" />
+          <input
+            type="radio"
+            bind:group={sort}
+            value="score"
+            on:change={() => onChange(sort, order)}
+          />
           {$_(`documentBrowser.sort.fields.score`)}
         </label>
       {/if}
       {#each fields as f}
         <label class="field option" class:active={sort === f}>
-          <input type="radio" bind:group={sort} value={f} />
+          <input
+            type="radio"
+            bind:group={sort}
+            value={f}
+            on:change={() => onChange(sort, order)}
+          />
           {$_(`documentBrowser.sort.fields.${f}`)}
         </label>
       {/each}
@@ -62,12 +73,22 @@
     <div class="order options">
       <label class="order option desc" class:active={order === "desc"}>
         <SortDesc16 />
-        <input type="radio" bind:group={order} value="desc" />
+        <input
+          type="radio"
+          bind:group={order}
+          value="desc"
+          on:change={() => onChange(sort, order)}
+        />
         {$_(`documentBrowser.sort.order.desc`)}
       </label>
       <label class="order option asc" class:active={order === "asc"}>
         <SortAsc16 />
-        <input type="radio" bind:group={order} value="asc" />
+        <input
+          type="radio"
+          bind:group={order}
+          value="asc"
+          on:change={() => onChange(sort, order)}
+        />
         {$_(`documentBrowser.sort.order.asc`)}
       </label>
     </div>

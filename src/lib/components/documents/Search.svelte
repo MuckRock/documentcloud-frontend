@@ -185,20 +185,49 @@
     type SortField,
     type SortOrder,
   } from "./Sort.svelte";
-  import type { Maybe } from "@/lib/api/types";
+  import type { Maybe, Nullable } from "@/lib/api/types";
+  import { page } from "$app/stores";
 
   export let query = "";
   export let filters: FilterFields = defaultFilters;
-  export let sort: SortField = "created_at";
+  export let sort: SortField = "score";
   export let order: SortOrder = "desc";
-  export let fields: SortField[] = ["created_at", "title", "page_count"];
+  export let fields: SortField[] = [
+    "score",
+    "updated_at",
+    "created_at",
+    "page_count",
+    "title",
+  ];
+
+  let form: Nullable<HTMLFormElement>;
+
+  async function updatePropsFromQuery(pageUrlQuery: string) {
+    const deserializedProps = await deserialize(pageUrlQuery);
+    query = deserializedProps.query ?? query;
+    sort = deserializedProps.sort ?? sort;
+    order = deserializedProps.order ?? order;
+    filters = Object.assign({}, filters, deserializedProps.filters);
+  }
+
+  function onChange() {
+    form?.submit();
+  }
+
+  $: formatSearchString = (query: string) =>
+    serialize({ query, filters, sort, order });
+  $: {
+    updatePropsFromQuery($page.url.searchParams?.get("q") ?? "");
+  }
 </script>
 
 <div class="search">
-  <Search bind:query name="q" />
+  <div class="text">
+    <Search bind:query bind:form {formatSearchString} name="q" />
+  </div>
   <div class="controls">
-    <Filter bind:filters />
-    <Sort bind:order bind:sort {fields} {query} />
+    <Filter bind:filters {onChange} />
+    <Sort bind:order bind:sort {fields} {query} {onChange} />
   </div>
 </div>
 
@@ -208,6 +237,10 @@
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .text {
+    flex: 1;
   }
 
   .controls {

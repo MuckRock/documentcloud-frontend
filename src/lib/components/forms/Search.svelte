@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Maybe } from "$lib/api/types";
+  import type { Maybe, Nullable } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
@@ -14,8 +14,10 @@
   export let id = "query";
   export let otherParams = {};
 
+  export let formatSearchString: (query: string) => string = (query) => query;
+
   let input: HTMLInputElement;
-  let form: HTMLFormElement;
+  export let form: Nullable<HTMLFormElement> = null;
 
   function clear(): Promise<void> {
     query = "";
@@ -34,7 +36,7 @@
     const url = new URL($page.url);
 
     if (q) {
-      url.searchParams.set(name, q);
+      url.searchParams.set(name, formatSearchString(q));
     } else {
       url.searchParams.delete(name);
     }
