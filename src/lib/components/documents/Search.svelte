@@ -144,7 +144,7 @@
     // and update the filters object with the fetched data
     if (filtersToFetch.users?.length) {
       // fetch users and add to filters
-      const id__in = (filtersToFetch.users ?? []).join(",");
+      const id__in = filtersToFetch.users.join(",");
       const { data, error } = await listUsers({ id__in });
       if (data && !error) {
         filters.users = data.results;
@@ -152,7 +152,7 @@
     }
     if (filtersToFetch.orgs?.length) {
       // fetch orgs and add to filters
-      const id__in = (filtersToFetch.orgs ?? []).join(",");
+      const id__in = filtersToFetch.orgs.join(",");
       const { data, error } = await listOrgs({ id__in });
       if (data && !error) {
         filters.orgs = data.results;
@@ -160,7 +160,7 @@
     }
     if (filtersToFetch.projects?.length) {
       // fetch projects and add to filters
-      const id__in = (filtersToFetch.projects ?? []).join(",");
+      const id__in = filtersToFetch.projects.join(",");
       const { data, error } = await listProjects({ id__in });
       if (data && !error) {
         filters.projects = data.results;
