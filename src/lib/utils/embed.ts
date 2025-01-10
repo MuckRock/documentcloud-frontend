@@ -288,7 +288,9 @@ export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
  */
 export function isEmbed(url: URL): Boolean {
   return (
-    url.searchParams.has("embed") || url.hostname === "embed.documentcloud.org"
+    url.searchParams.has("embed") ||
+    url.hostname === "embed.documentcloud.org" ||
+    url.pathname.match(/\.html(?:\/)?$/) !== null
   );
 }
 

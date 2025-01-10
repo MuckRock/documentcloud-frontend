@@ -34,7 +34,7 @@ describe("embed settings", () => {
 
 describe("embed utilities", () => {
   test("isEmbed", () => {
-    const urls: [string, boolean][] = [
+    const urls: [string | string[], boolean][] = [
       [
         "https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/",
         false,
@@ -55,10 +55,25 @@ describe("embed utilities", () => {
         "https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/?embed",
         true,
       ],
+      [
+        [
+          "https://www.documentcloud.org/documents/6165132-Text-Messages-Between-Sean-Hannity-Paul-Manafort.html",
+          "https://www.documentcloud.org/documents/6165132-Text-Messages-Between-Sean-Hannity-Paul-Manafort.html/",
+          "https://www.documentcloud.org/documents/6165132-Text-Messages-Between-Sean-Hannity-Paul-Manafort.html?q=foo",
+          "https://www.documentcloud.org/documents/6165132-Text-Messages-Between-Sean-Hannity-Paul-Manafort.html/?q=foo",
+        ],
+        true,
+      ],
     ];
 
     for (const [url, embed] of urls) {
-      expect(isEmbed(new URL(url))).toEqual(embed);
+      if (Array.isArray(url)) {
+        for (const u of url) {
+          expect(isEmbed(new URL(u))).toEqual(embed);
+        }
+      } else {
+        expect(isEmbed(new URL(url))).toEqual(embed);
+      }
     }
   });
 
