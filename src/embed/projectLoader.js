@@ -1,6 +1,6 @@
 import { setupResizeEvent } from "./iframeSizer.js";
 import { queryBuilder } from "@/legacy/util/url.js";
-import { EMBED_URL } from "../config/config.js";
+import { EMBED_URL } from "../config/embed.js";
 
 function logInvalidQuery(options, container) {
   const q = options.q;

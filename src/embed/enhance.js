@@ -1,5 +1,5 @@
 import { setupResizeEvent } from "./iframeSizer.js";
-import { APP_URL } from "../config/config.js";
+import { APP_URL } from "../config/embed.js";
 
 const embeds = document.querySelectorAll(".DC-embed");
 const enhanced = "DC-embed-enhanced";
