@@ -11,9 +11,9 @@
   };
 
   const args = {
-    sort: "updated_at",
+    sort: "created_at",
     order: "desc",
-    fields: ["updated_at", "created_at", "page_count", "title"],
+    fields: ["created_at", "page_count", "title"],
   };
 </script>
 
@@ -21,7 +21,7 @@
   <SortComponent {...args} />
 </Template>
 
-<Story name="Updated At, Descending (default)" {args} />
+<Story name="Created At, Descending (default)" {args} />
 
 <Story
   name="Title, Ascending"

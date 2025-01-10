@@ -219,7 +219,6 @@
   export let order: SortOrder = "desc";
   export let fields: SortField[] = [
     "score",
-    "updated_at",
     "created_at",
     "page_count",
     "title",

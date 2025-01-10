@@ -1,21 +1,10 @@
 <script lang="ts" context="module">
-  export type SortField =
-    | "score"
-    | "title"
-    | "created_at"
-    | "updated_at"
-    | "page_count";
+  export type SortField = "score" | "title" | "created_at" | "page_count";
   export type SortOrder = "asc" | "desc";
 
   export function isSortField(s?: string): s is SortField {
     if (!s) return false;
-    return [
-      "score",
-      "title",
-      "created_at",
-      "updated_at",
-      "page_count",
-    ].includes(s);
+    return ["score", "title", "created_at", "page_count"].includes(s);
   }
 </script>
 
