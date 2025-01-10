@@ -2,10 +2,6 @@
 command = "npm run build"
 publish = "build"
 
-
-[[context.production.plugins]]
-package = "/plugins/cache-bust"
-
 [[plugins]]
 package = "@netlify/plugin-lighthouse"
 # https://github.com/netlify/netlify-plugin-lighthouse
