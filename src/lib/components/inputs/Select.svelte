@@ -102,6 +102,7 @@
     font-family: "Source Sans Pro";
     font-style: normal;
     line-height: normal;
+    box-shadow: none;
   }
   :global(.select.focused input, .select.focused .selected-item) {
     color: var(--blue-5, #053775) !important;

@@ -3,6 +3,8 @@
     access?: string;
     minPages?: number;
     maxPages?: number;
+    minDate?: string;
+    maxDate?: string;
     projects?: Project[];
     users?: User[];
     orgs?: Org[];
@@ -12,6 +14,8 @@
     access: "",
     minPages: undefined,
     maxPages: undefined,
+    minDate: undefined,
+    maxDate: undefined,
     projects: [],
     users: [],
     orgs: [],
@@ -19,7 +23,6 @@
 </script>
 
 <script lang="ts">
-  import deepEqual from "fast-deep-equal";
   import { _ } from "svelte-i18n";
   import {
     ChevronDown16,
@@ -144,7 +147,31 @@
         <FileDirectory16 slot="prepend" />
       </Select>
     </div>
+    <fieldset class="dates">
+      <legend>Date Created</legend>
+      <label class="min date">
+        {$_("documentBrowser.filter.minDate")}
+        <input
+          type="date"
+          placeholder={$_("documentBrowser.filter.minDate")}
+          bind:value={filters.minDate}
+          max={filters.maxDate || ""}
+          on:change={() => onChange(filters)}
+        />
+      </label>
+      <label class="max date">
+        {$_("documentBrowser.filter.maxDate")}
+        <input
+          type="date"
+          placeholder={$_("documentBrowser.filter.maxDate")}
+          bind:value={filters.maxDate}
+          min={filters.minDate || ""}
+          on:change={() => onChange(filters)}
+        />
+      </label>
+    </fieldset>
     <fieldset class="pageCounts">
+      <legend>Page Count</legend>
       <label class="min pages">
         <Hash16 />
         <input
@@ -183,14 +210,49 @@
     gap: 0.5rem;
     padding: 0.25rem;
   }
+  fieldset {
+    margin: 0.25rem;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid var(--gray-2);
+    border-radius: 0.5rem;
+  }
+  fieldset legend {
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: var(--font-semibold);
+    color: var(--gray-4);
+    padding: 0 0.5rem;
+  }
   .pageCounts {
-    margin: 0;
-    padding: 0;
-    border: none;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0 0.25rem 0.25rem;
+  }
+  .dates {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    & label {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: var(--font-sm);
+      font-weight: var(--font-semibold);
+      color: var(--gray-4);
+    }
+    & input {
+      font-family: var(--font-sans);
+      font-size: var(--font-md);
+      box-shadow: none;
+      border-radius: 0.5rem;
+      border: 1px solid var(--gray-2);
+      padding: 0.25rem;
+      &::placeholder {
+        color: var(--gray-4);
+      }
+    }
   }
   .pages {
     flex: 1 1 8rem;
@@ -218,6 +280,7 @@
       background: transparent;
       font-family: var(--font-sans);
       font-size: var(--font-md);
+      box-shadow: none;
       &:focus {
         outline: none;
       }

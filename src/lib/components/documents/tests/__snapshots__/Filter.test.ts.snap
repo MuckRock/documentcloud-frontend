@@ -61,7 +61,7 @@ exports[`Filter.svelte > renders and opens menu for snapshot 1`] = `
         role="menu"
       >
         <div
-          class="filters svelte-1d0hgn"
+          class="filters svelte-1ps2nf1"
         >
           <div
             style="display: contents; --background: var(--white, #fff); --border: 1px solid var(--gray-2, #99a8b3); --border-radius: 0.5rem; --border-focused: 1px solid var(--blue-3); --padding: 0 0 0 0.5rem; --item-hover-bg: var(--blue-1, #eef3f9); --item-is-active-bg: var(--blue-3, #4294f0); --list-shadow: var(--shadow-2); --list-border: 1px solid var(--gray-2, #d8dee2); --multi-item-bg: var(--blue-1, #eef3f9); --multi-item-color: var(--blue-5, #053775); --multi-item-clear-icon-color: var(--blue-5, #053775); --multi-item-outline: var(--blue-2, #b5ceed); --multi-select-input-margin: 0; --multi-select-padding: 0 0 0 0.5rem;"
@@ -405,10 +405,50 @@ exports[`Filter.svelte > renders and opens menu for snapshot 1`] = `
         </div>
          
         <fieldset
-          class="pageCounts svelte-1d0hgn"
+          class="dates svelte-1ps2nf1"
         >
+          <legend
+            class="svelte-1ps2nf1"
+          >
+            Date Created
+          </legend>
+           
           <label
-            class="min pages svelte-1d0hgn"
+            class="min date"
+          >
+            Start
+             
+            <input
+              max=""
+              placeholder="Start"
+              type="date"
+            />
+          </label>
+           
+          <label
+            class="max date"
+          >
+            End
+             
+            <input
+              min=""
+              placeholder="End"
+              type="date"
+            />
+          </label>
+        </fieldset>
+         
+        <fieldset
+          class="pageCounts svelte-1ps2nf1"
+        >
+          <legend
+            class="svelte-1ps2nf1"
+          >
+            Page Count
+          </legend>
+           
+          <label
+            class="min pages svelte-1ps2nf1"
           >
             <svg
               class="octicon octicon-hash"
@@ -430,7 +470,7 @@ exports[`Filter.svelte > renders and opens menu for snapshot 1`] = `
           </label>
            
           <label
-            class="max pages svelte-1d0hgn"
+            class="max pages svelte-1ps2nf1"
           >
             <svg
               class="octicon octicon-hash"

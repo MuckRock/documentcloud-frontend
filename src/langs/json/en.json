@@ -266,7 +266,9 @@
       "orgs": "Organizations",
       "projects": "Projects",
       "minPages": "Min. Pages",
-      "maxPages": "Max. Pages"
+      "maxPages": "Max. Pages",
+      "minDate": "Start",
+      "maxDate": "End"
     },
     "sort": {
       "label": "Sort",
