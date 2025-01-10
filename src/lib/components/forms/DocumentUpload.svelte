@@ -41,6 +41,7 @@ progress through the three-part upload process.
 
   import { filesize } from "filesize";
   import { onMount } from "svelte";
+  import { beforeNavigate } from "$app/navigation";
   import { _ } from "svelte-i18n";
   import { Paperclip16, Paperclip24, Upload16 } from "svelte-octicons";
 
@@ -137,6 +138,14 @@ progress through the three-part upload process.
   onMount(() => {
     csrf_token = getCsrfToken();
     addFiles(getFilesToUpload());
+  });
+
+  beforeNavigate((navigation) => {
+    if (!empty && !loading) {
+      if (!window.confirm($_("uploadDialog.confirmLeave"))) {
+        navigation.cancel();
+      }
+    }
   });
 
   function uniqueId(): string {
