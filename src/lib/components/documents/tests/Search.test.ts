@@ -104,6 +104,34 @@ describe("serialize", () => {
     expect(serialize(props)).toBe("long pages:[* TO 20]");
   });
 
+  it("should serialize date filters", () => {
+    // with both min and max
+    let props: SearchProps = {
+      query: "old",
+      filters: {
+        minDate: "2023-01-01",
+        maxDate: "2023-12-31",
+      },
+    };
+    expect(serialize(props)).toBe(
+      "old created_at:[2023-01-01T00:00:00Z TO 2023-12-31T23:59:59Z]",
+    );
+
+    // with only min date
+    props = {
+      query: "old",
+      filters: { minDate: "2023-01-01" },
+    };
+    expect(serialize(props)).toBe("old created_at:[2023-01-01T00:00:00Z TO *]");
+
+    // with only max date
+    props = {
+      query: "old",
+      filters: { maxDate: "2023-12-31" },
+    };
+    expect(serialize(props)).toBe("old created_at:[* TO 2023-12-31T23:59:59Z]");
+  });
+
   it("should serialize sort and order", () => {
     // in ascending order, the sort is positive
     let props: SearchProps = {
@@ -197,6 +225,29 @@ describe("deserialize", () => {
     expect(await deserialize(query)).toEqual({
       query: "long",
       filters: { maxPages: 10 },
+      order: undefined,
+      sort: undefined,
+    });
+  });
+
+  it("should deserialize date filters", async () => {
+    // with both min and max
+    let query = "old created_at:[2023-01-01T00:00:00Z TO 2023-12-31T23:59:59Z]";
+    expect(await deserialize(query)).toEqual({
+      query: "old",
+      filters: { minDate: "2023-01-01", maxDate: "2023-12-31" },
+    });
+    // with only min
+    query = "old created_at:[2023-01-01T00:00:00Z TO *]";
+    expect(await deserialize(query)).toEqual({
+      query: "old",
+      filters: { minDate: "2023-01-01" },
+    });
+    // with only max
+    query = "old created_at:[* TO 2023-12-31T23:59:59Z]";
+    expect(await deserialize(query)).toEqual({
+      query: "old",
+      filters: { maxDate: "2023-12-31" },
       order: undefined,
       sort: undefined,
     });

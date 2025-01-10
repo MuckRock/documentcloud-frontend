@@ -35,6 +35,21 @@
         parts.push(`pages:[* TO ${filters.maxPages}]`);
       }
 
+      // Add date filters
+      if (filters.minDate && filters.maxDate) {
+        parts.push(
+          `created_at:[${filters.minDate.split("T")[0]}T00:00:00Z TO ${filters.maxDate.split("T")[0]}T23:59:59Z]`,
+        );
+      } else if (filters.minDate) {
+        parts.push(
+          `created_at:[${filters.minDate.split("T")[0]}T00:00:00Z TO *]`,
+        );
+      } else if (filters.maxDate) {
+        parts.push(
+          `created_at:[* TO ${filters.maxDate.split("T")[0]}T23:59:59Z]`,
+        );
+      }
+
       // Add user filters
       if (filters.users?.length) {
         const userPart = filters.users.map((u) => `user:${u.id}`).join(" OR ");
@@ -109,6 +124,16 @@
             filters.minPages = parseInt(range[1]);
           if (range[2] && range[2] !== "*")
             filters.maxPages = parseInt(range[2]);
+        }
+      } else if (part.startsWith("created_at:[")) {
+        const range = part.match(
+          /created_at:\[([0-9-]+T[0-9:]+Z|\*)\sTO\s([0-9-]+T[0-9:]+Z|\*)\]/,
+        );
+        if (range) {
+          if (range[1] && range[1] !== "*")
+            filters.minDate = range[1].split("T")[0];
+          if (range[2] && range[2] !== "*")
+            filters.maxDate = range[2].split("T")[0];
         }
       } else if (part.startsWith("(")) {
         // Handle grouped conditions

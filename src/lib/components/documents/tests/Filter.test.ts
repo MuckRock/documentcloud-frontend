@@ -23,6 +23,10 @@ describe("Filter.svelte", () => {
     expect(getByPlaceholderText("Min. Pages")).toBeDefined();
     expect(getByPlaceholderText("Max. Pages")).toBeDefined();
 
+    // Verify all date inputs are present
+    expect(getByPlaceholderText("Start")).toBeDefined();
+    expect(getByPlaceholderText("End")).toBeDefined();
+
     // Verify advanced link is present
     expect(getByText("Advanced search syntax")).toBeDefined();
 
