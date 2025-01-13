@@ -10,8 +10,6 @@
   export let placeholder: string = $_("common.search");
   export let otherParams = {};
 
-  export let formatSearchString: (query: string) => string = (query) => query;
-
   function clear(): Promise<void> {
     const url = new URL($page.url);
     url.searchParams.delete(name);
@@ -26,7 +24,7 @@
     const url = new URL($page.url);
 
     if (q) {
-      url.searchParams.set(name, formatSearchString(q));
+      url.searchParams.set(name, query);
     } else {
       url.searchParams.delete(name);
     }
