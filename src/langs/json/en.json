@@ -276,15 +276,26 @@
     "sort": {
       "label": "Sort",
       "fields": {
-        "score": "Relevance",
-        "created_at": "Date Created",
-        "updated_at": "Date Updated",
-        "page_count": "Total Pages",
-        "title": "Title"
-      },
-      "order": {
-        "asc": "Ascending",
-        "desc": "Descending"
+        "score": {
+          "label": "Relevance",
+          "forward": "Highest",
+          "reverse": "Lowest"
+        },
+        "created_at": {
+          "label": "Date Created",
+          "forward": "Newest",
+          "reverse": "Oldest"
+        },
+        "page_count": {
+          "label": "Page Count",
+          "forward": "Most",
+          "reverse": "Least"
+        },
+        "title": {
+          "label": "Title",
+          "forward": "A–Z",
+          "reverse": "Z–A"
+        }
       }
     }
   },
