@@ -24,7 +24,7 @@ export function searchUrl(query: string): URL {
 }
 
 export function projectSearchUrl(project: Project): string {
-  return searchUrl(`+project:${project.slug}-${project.id} `).href;
+  return searchUrl(`project:${project.id} `).href;
 }
 
 /**
@@ -36,10 +36,10 @@ export function userDocs(user?: Nullable<User>, access?: Access): string {
   if (!user) return "";
   const username = getUserName(user);
   if (access) {
-    return `+user:${slugify(username)}-${user.id} access:${access}`;
+    return `user:${user.id} access:${access}`;
   }
 
-  return `+user:${slugify(username)}-${user.id}`;
+  return `user:${user.id}`;
 }
 
 /**
@@ -48,7 +48,7 @@ export function userDocs(user?: Nullable<User>, access?: Access): string {
  * @returns formatted query
  */
 export function tag(t: string): string {
-  return `+tag:"${t}"`;
+  return `tag:"${t}"`;
 }
 
 /**
@@ -58,7 +58,7 @@ export function tag(t: string): string {
  * @returns formatted query
  */
 export function kv(key: string, value: string): string {
-  return `+data_${key}:"${value}"`;
+  return `data_${key}:"${value}"`;
 }
 
 /**
