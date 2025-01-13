@@ -102,7 +102,8 @@
             value: "public",
           },
         ]}
-        bind:value={filters.access}
+        value={filters.access}
+        bind:justValue={filters.access}
         on:change={() => onChange(filters)}
         name="access"
         placeholder="Access"
