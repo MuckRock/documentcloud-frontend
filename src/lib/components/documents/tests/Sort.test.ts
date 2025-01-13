@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { render, fireEvent } from "@testing-library/svelte";
 import Sort from "../Sort.svelte";
-import type { SortField, SortOrder } from "../Sort.svelte";
+import type { SortField, SortDirection } from "../Sort.svelte";
 
 describe("Sort.svelte", () => {
   const defaultProps = {
-    order: "desc" as SortOrder,
+    direction: "forward" as SortDirection,
     sort: "created_at" as SortField,
     fields: ["created_at", "title", "page_count"] as SortField[],
     query: "",
@@ -19,19 +19,19 @@ describe("Sort.svelte", () => {
     await fireEvent.click(sortButton);
 
     // Verify all radio inputs are present
-    expect(getByLabelText("Ascending")).toBeDefined();
-    expect(getByLabelText("Descending")).toBeDefined();
+    expect(getByLabelText("Oldest")).toBeDefined();
+    expect(getByLabelText("Newest")).toBeDefined();
     expect(getByLabelText("Date Created")).toBeDefined();
     expect(getByLabelText("Title")).toBeDefined();
-    expect(getByLabelText("Total Pages")).toBeDefined();
+    expect(getByLabelText("Page Count")).toBeDefined();
 
     expect(container).toMatchSnapshot();
   });
 
-  it("updates sort and order when selecting options", async () => {
+  it("updates sort and direction when selecting options", async () => {
     const { getByText, getByLabelText } = render(Sort, {
       ...defaultProps,
-      order: "desc",
+      direction: "reverse",
       sort: "created_at",
     });
 
@@ -43,14 +43,14 @@ describe("Sort.svelte", () => {
     const titleOption = getByLabelText("Title");
     await fireEvent.click(titleOption);
 
-    // Change order to ascending
-    const ascOption = getByLabelText("Ascending");
-    await fireEvent.click(ascOption);
+    // Change direction to forward
+    const forwardOption = getByLabelText("A–Z");
+    await fireEvent.click(forwardOption);
 
     // Check if radio inputs are selected
     const titleInput = titleOption.parentNode?.querySelector("input");
-    const ascInput = ascOption.parentNode?.querySelector("input");
+    const forwardInput = forwardOption.parentNode?.querySelector("input");
     expect(titleInput?.checked).toBe(true);
-    expect(ascInput?.checked).toBe(true);
+    expect(forwardInput?.checked).toBe(true);
   });
 });

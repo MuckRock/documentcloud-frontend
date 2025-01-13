@@ -137,14 +137,14 @@ describe("serialize", () => {
     let props: SearchProps = {
       query: "test",
       sort: "title",
-      order: "asc",
+      direction: "forward",
     };
     expect(serialize(props)).toBe("test sort:title");
     // in descending order, the sort is negative
     props = {
       query: "test",
       sort: "title",
-      order: "desc",
+      direction: "reverse",
     };
     expect(serialize(props)).toBe("test sort:-title");
   });
@@ -259,14 +259,14 @@ describe("deserialize", () => {
       filters: {},
       query: "test",
       sort: "title",
-      order: "asc",
+      direction: "forward",
     });
     query = "test sort:-title";
     expect(await deserialize(query)).toEqual({
       filters: {},
       query: "test",
       sort: "title",
-      order: "desc",
+      direction: "reverse",
     });
   });
 

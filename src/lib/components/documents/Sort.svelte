@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   export type SortField = "score" | "title" | "created_at" | "page_count";
-  export type SortOrder = "asc" | "desc";
+  export type SortDirection = "forward" | "reverse";
 
   export function isSortField(s?: string): s is SortField {
     if (!s) return false;
@@ -15,23 +15,26 @@
   import Menu from "../common/Menu.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
-  export let order: SortOrder;
+  export let direction: SortDirection;
   export let sort: SortField;
   export let fields: SortField[];
   export let query: string = "";
-  export let onChange: (sort: SortField, order: SortOrder) => void = () => {};
+  export let onChange: (
+    sort: SortField,
+    direction: SortDirection,
+  ) => void = () => {};
 </script>
 
 <Dropdown>
   <SidebarItem slot="anchor">
     <div class="labelIcon" slot="start">
-      {#if order === "asc"}
-        <SortAsc16 />
-      {:else}
+      {#if direction === "forward"}
         <SortDesc16 />
+      {:else}
+        <SortAsc16 />
       {/if}
     </div>
-    {$_("documentBrowser.sort.label")}
+    {$_(`documentBrowser.sort.label`)}
     <ChevronDown16 slot="end" />
   </SidebarItem>
   <Menu>
@@ -42,9 +45,9 @@
             type="radio"
             bind:group={sort}
             value="score"
-            on:change={() => onChange(sort, order)}
+            on:change={() => onChange(sort, direction)}
           />
-          {$_(`documentBrowser.sort.fields.score`)}
+          {$_(`documentBrowser.sort.fields.score.label`)}
         </label>
       {/if}
       {#each fields as f}
@@ -53,32 +56,38 @@
             type="radio"
             bind:group={sort}
             value={f}
-            on:change={() => onChange(sort, order)}
+            on:change={() => onChange(sort, direction)}
           />
-          {$_(`documentBrowser.sort.fields.${f}`)}
+          {$_(`documentBrowser.sort.fields.${f}.label`)}
         </label>
       {/each}
     </div>
-    <div class="order options">
-      <label class="order option desc" class:active={order === "desc"}>
+    <div class="direction options">
+      <label
+        class="direction option forward"
+        class:active={direction === "forward"}
+      >
         <SortDesc16 />
         <input
           type="radio"
-          bind:group={order}
-          value="desc"
-          on:change={() => onChange(sort, order)}
+          bind:group={direction}
+          value="forward"
+          on:change={() => onChange(sort, direction)}
         />
-        {$_(`documentBrowser.sort.order.desc`)}
+        {$_(`documentBrowser.sort.fields.${sort}.forward`)}
       </label>
-      <label class="order option asc" class:active={order === "asc"}>
+      <label
+        class="direction option reverse"
+        class:active={direction === "reverse"}
+      >
         <SortAsc16 />
         <input
           type="radio"
-          bind:group={order}
-          value="asc"
-          on:change={() => onChange(sort, order)}
+          bind:group={direction}
+          value="reverse"
+          on:change={() => onChange(sort, direction)}
         />
-        {$_(`documentBrowser.sort.order.asc`)}
+        {$_(`documentBrowser.sort.fields.${sort}.reverse`)}
       </label>
     </div>
   </Menu>
@@ -99,7 +108,7 @@
     padding: 0.5rem 0;
   }
 
-  .order.options {
+  .direction.options {
     display: flex;
     gap: 0;
     padding: 0 0.25rem 0.25rem;
@@ -123,7 +132,7 @@
     margin: 0;
   }
 
-  .order.option {
+  .direction.option {
     display: flex;
     padding: 0.375rem 0.5rem;
     justify-content: center;

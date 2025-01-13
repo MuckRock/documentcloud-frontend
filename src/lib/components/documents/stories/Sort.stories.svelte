@@ -11,9 +11,9 @@
   };
 
   const args = {
-    sort: "created_at",
-    order: "desc",
-    fields: ["created_at", "page_count", "title"],
+    sort: "score",
+    direction: "forward",
+    fields: ["score", "created_at", "page_count", "title"],
   };
 </script>
 
@@ -21,9 +21,9 @@
   <SortComponent {...args} />
 </Template>
 
-<Story name="Created At, Descending (default)" {args} />
+<Story name="Score (default)" {args} />
 
 <Story
-  name="Title, Ascending"
-  args={{ ...args, sort: "title", order: "asc" }}
+  name="Title, Z to A"
+  args={{ ...args, sort: "title", direction: "reverse" }}
 />

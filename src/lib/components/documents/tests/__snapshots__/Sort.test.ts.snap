@@ -15,7 +15,7 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
       title=""
     >
       <div
-        class="labelIcon svelte-6mnr72"
+        class="labelIcon svelte-rgzym"
         slot="start"
       >
         <svg
@@ -62,14 +62,14 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
       role="menu"
     >
       <div
-        class="field options svelte-6mnr72"
+        class="field options svelte-rgzym"
       >
          
         <label
-          class="field option svelte-6mnr72 active"
+          class="field option svelte-rgzym active"
         >
           <input
-            class="svelte-6mnr72"
+            class="svelte-rgzym"
             type="radio"
             value="created_at"
           />
@@ -78,10 +78,10 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
            
         </label>
         <label
-          class="field option svelte-6mnr72"
+          class="field option svelte-rgzym"
         >
           <input
-            class="svelte-6mnr72"
+            class="svelte-rgzym"
             type="radio"
             value="title"
           />
@@ -90,24 +90,24 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
            
         </label>
         <label
-          class="field option svelte-6mnr72"
+          class="field option svelte-rgzym"
         >
           <input
-            class="svelte-6mnr72"
+            class="svelte-rgzym"
             type="radio"
             value="page_count"
           />
            
-          Total Pages
+          Page Count
            
         </label>
       </div>
        
       <div
-        class="order options svelte-6mnr72"
+        class="direction options svelte-rgzym"
       >
         <label
-          class="order option desc svelte-6mnr72 active"
+          class="direction option forward svelte-rgzym active"
         >
           <svg
             class="octicon octicon-sort-desc"
@@ -122,16 +122,16 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
           </svg>
            
           <input
-            class="svelte-6mnr72"
+            class="svelte-rgzym"
             type="radio"
-            value="desc"
+            value="forward"
           />
            
-          Descending
+          Newest
         </label>
          
         <label
-          class="order option asc svelte-6mnr72"
+          class="direction option reverse svelte-rgzym"
         >
           <svg
             class="octicon octicon-sort-asc"
@@ -146,12 +146,12 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
           </svg>
            
           <input
-            class="svelte-6mnr72"
+            class="svelte-rgzym"
             type="radio"
-            value="asc"
+            value="reverse"
           />
            
-          Ascending
+          Oldest
         </label>
       </div>
     </div>
