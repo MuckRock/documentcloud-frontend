@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
-  import { listOrgs, listUsers } from "@/lib/api/accounts";
-  import { list as listProjects } from "@/lib/api/projects";
+  import { listOrgs, listUsers } from "$lib/api/accounts";
+  import { list as listProjects } from "$lib/api/projects";
 
   export interface SearchProps {
     query?: string;
@@ -202,11 +202,14 @@
 </script>
 
 <script lang="ts">
-  import { _ } from "svelte-i18n";
+  import type { Maybe } from "$lib/api/types";
+
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { browser } from "$app/environment";
-  import type { Maybe } from "$lib/api/types";
+
+  import { _ } from "svelte-i18n";
+
   import Search from "../inputs/Search.svelte";
   import Filter, { type FilterFields, defaultFilters } from "./Filter.svelte";
   import Sort, {
@@ -254,13 +257,13 @@
   }
 
   // We should call the submit function when the search parameters change
-  $: {
+  /*   $: {
     const search = serialize({ query, filters, sort, direction });
     if (browser) {
       submit(search);
     }
   }
-
+ */
   // DEBUG LOGGING STRINGS: REMOVE BEFORE MERGE
   // $: {
   //   console.log({
@@ -277,12 +280,12 @@
 </script>
 
 <form class="search" bind:this={form} on:submit={handleSearch}>
-  <div class="text">
-    <Search name="q" bind:value={query} />
-  </div>
   <div class="controls">
     <Filter bind:filters />
     <Sort bind:direction bind:sort {fields} />
+  </div>
+  <div class="text">
+    <Search name="q" bind:value={query} />
   </div>
 </form>
 
