@@ -232,21 +232,25 @@
     filters = Object.assign({}, filters, deserializedProps.filters);
   }
 
+  function submit(search: string) {
+    const url = new URL($page.url);
+    url.search = search;
+    Object.entries(otherParams).forEach(([key, value]) => {
+      url.searchParams.set(key, String(value));
+    });
+    return goto(url);
+  }
+
   // When the page URL updates, we should update the query, filters, and sorting
   $: {
     updatePropsFromQuery($page.url.searchParams?.get("q") ?? "");
   }
 
-  // We should update the submit function when the search parameters change
-  $: submit = (e: Event) => {
-    e.preventDefault();
-    const url = new URL($page.url);
-    url.search = serialize({ query, filters, sort, direction });
-    Object.entries(otherParams).forEach(([key, value]) => {
-      url.searchParams.set(key, String(value));
-    });
-    return goto(url);
-  };
+  // We should call the submit function when the search parameters change
+  $: {
+    const search = serialize({ query, filters, sort, direction });
+    submit(search);
+  }
 
   // DEBUG LOGGING STRINGS: REMOVE BEFORE MERGE
   // $: {
