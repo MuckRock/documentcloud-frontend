@@ -203,22 +203,25 @@
 
 <script lang="ts">
   import { _ } from "svelte-i18n";
-  import Search from "../forms/Search.svelte";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+  import type { Maybe } from "$lib/api/types";
+  import Search from "../inputs/Search.svelte";
   import Filter, { type FilterFields, defaultFilters } from "./Filter.svelte";
   import Sort, {
     isSortField,
     type SortField,
     type SortDirection,
   } from "./Sort.svelte";
-  import type { Maybe, Nullable } from "@/lib/api/types";
-  import { page } from "$app/stores";
 
   export let query = "";
   export let filters: FilterFields = defaultFilters;
   export let sort: SortField = "score";
   export let direction: SortDirection = "forward";
+  export let otherParams: Record<string, string> = {};
 
-  let form: Nullable<HTMLFormElement>;
+  let form: HTMLFormElement;
+
   const fields: SortField[] = ["score", "created_at", "page_count", "title"];
 
   async function updatePropsFromQuery(pageUrlQuery: string) {
@@ -229,26 +232,46 @@
     filters = Object.assign({}, filters, deserializedProps.filters);
   }
 
-  function onChange() {
-    form?.submit();
-  }
-
-  $: formatSearchString = (query: string) =>
-    serialize({ query, filters, sort, direction });
+  // When the page URL updates, we should update the query, filters, and sorting
   $: {
     updatePropsFromQuery($page.url.searchParams?.get("q") ?? "");
   }
+
+  // We should update the submit function when the search parameters change
+  $: submit = (e: Event) => {
+    e.preventDefault();
+    const url = new URL($page.url);
+    url.search = serialize({ query, filters, sort, direction });
+    Object.entries(otherParams).forEach(([key, value]) => {
+      url.searchParams.set(key, String(value));
+    });
+    return goto(url);
+  };
+
+  // DEBUG LOGGING STRINGS: REMOVE BEFORE MERGE
+  // $: {
+  //   console.log({
+  //     query,
+  //     filters,
+  //     sort,
+  //     direction,
+  //     // searchString: formatSearchString(query),
+  //   });
+  // }
+  // $: {
+  //   console.log(formatSearchString(query));
+  // }
 </script>
 
-<div class="search">
+<form class="search" bind:this={form} on:submit={submit}>
   <div class="text">
-    <Search bind:query bind:form {formatSearchString} name="q" />
+    <Search name="q" bind:value={query} />
   </div>
   <div class="controls">
-    <Filter bind:filters {onChange} />
-    <Sort bind:direction bind:sort {fields} {query} {onChange} />
+    <Filter bind:filters />
+    <Sort bind:direction bind:sort {fields} />
   </div>
-</div>
+</form>
 
 <style>
   .search {

@@ -44,7 +44,6 @@
   import Select from "../inputs/Select.svelte";
 
   export let filters: FilterFields = defaultFilters;
-  export let onChange: (filters: FilterFields) => void = () => {};
 
   async function loadProjects(text: string): Promise<Project[]> {
     const { data, error } = await listProjects({ query: text });
@@ -104,7 +103,6 @@
         ]}
         value={filters.access}
         bind:justValue={filters.access}
-        on:change={() => onChange(filters)}
         name="access"
         placeholder="Access"
         clearable
@@ -114,7 +112,6 @@
       <Select
         loadOptions={loadUsers}
         bind:value={filters.users}
-        on:change={() => onChange(filters)}
         name="users"
         placeholder={$_("documentBrowser.filter.users")}
         itemId="id"
@@ -126,7 +123,6 @@
       <Select
         loadOptions={loadOrgs}
         bind:value={filters.orgs}
-        on:change={() => onChange(filters)}
         name="orgs"
         placeholder={$_("documentBrowser.filter.orgs")}
         itemId="id"
@@ -138,7 +134,6 @@
       <Select
         loadOptions={loadProjects}
         bind:value={filters.projects}
-        on:change={() => onChange(filters)}
         name="projects"
         placeholder={$_("documentBrowser.filter.projects")}
         itemId="id"
@@ -157,7 +152,6 @@
           placeholder={$_("documentBrowser.filter.minDate")}
           bind:value={filters.minDate}
           max={filters.maxDate || ""}
-          on:change={() => onChange(filters)}
         />
       </label>
       <label class="max date">
@@ -167,7 +161,6 @@
           placeholder={$_("documentBrowser.filter.maxDate")}
           bind:value={filters.maxDate}
           min={filters.minDate || ""}
-          on:change={() => onChange(filters)}
         />
       </label>
     </fieldset>
@@ -180,7 +173,6 @@
           min="1"
           placeholder={$_("documentBrowser.filter.minPages")}
           bind:value={filters.minPages}
-          on:change={() => onChange(filters)}
         />
       </label>
       <label class="max pages">
@@ -190,7 +182,6 @@
           min="1"
           placeholder={$_("documentBrowser.filter.maxPages")}
           bind:value={filters.maxPages}
-          on:change={() => onChange(filters)}
         />
       </label>
     </fieldset>
