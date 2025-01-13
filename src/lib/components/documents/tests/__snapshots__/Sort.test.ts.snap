@@ -64,7 +64,6 @@ exports[`Sort.svelte > renders and opens menu for snapshot 1`] = `
       <div
         class="field options svelte-rgzym"
       >
-         
         <label
           class="field option svelte-rgzym active"
         >
