@@ -241,6 +241,12 @@
     return goto(url);
   }
 
+  function handleSearch(e: Event) {
+    e.preventDefault();
+    const search = serialize({ query, filters, sort, direction });
+    submit(search);
+  }
+
   // When the page URL updates, we should update the query, filters, and sorting
   $: {
     updatePropsFromQuery($page.url.searchParams?.get("q") ?? "");
@@ -267,7 +273,7 @@
   // }
 </script>
 
-<form class="search" bind:this={form} on:submit={submit}>
+<form class="search" bind:this={form} on:submit={handleSearch}>
   <div class="text">
     <Search name="q" bind:value={query} />
   </div>
@@ -283,6 +289,7 @@
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+    padding: 0.25rem 0;
   }
 
   .text {
