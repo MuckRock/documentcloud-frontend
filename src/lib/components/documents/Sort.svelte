@@ -18,11 +18,6 @@
   export let direction: SortDirection;
   export let sort: SortField;
   export let fields: SortField[];
-  export let query: string = "";
-  export let onChange: (
-    sort: SortField,
-    direction: SortDirection,
-  ) => void = () => {};
 </script>
 
 <Dropdown>
@@ -39,25 +34,9 @@
   </SidebarItem>
   <Menu>
     <div class="field options">
-      {#if query}
-        <label class="field option" class:active={sort === "score"}>
-          <input
-            type="radio"
-            bind:group={sort}
-            value="score"
-            on:change={() => onChange(sort, direction)}
-          />
-          {$_(`documentBrowser.sort.fields.score.label`)}
-        </label>
-      {/if}
       {#each fields as f}
         <label class="field option" class:active={sort === f}>
-          <input
-            type="radio"
-            bind:group={sort}
-            value={f}
-            on:change={() => onChange(sort, direction)}
-          />
+          <input type="radio" bind:group={sort} value={f} />
           {$_(`documentBrowser.sort.fields.${f}.label`)}
         </label>
       {/each}
@@ -68,12 +47,7 @@
         class:active={direction === "forward"}
       >
         <SortDesc16 />
-        <input
-          type="radio"
-          bind:group={direction}
-          value="forward"
-          on:change={() => onChange(sort, direction)}
-        />
+        <input type="radio" bind:group={direction} value="forward" />
         {$_(`documentBrowser.sort.fields.${sort}.forward`)}
       </label>
       <label
@@ -81,12 +55,7 @@
         class:active={direction === "reverse"}
       >
         <SortAsc16 />
-        <input
-          type="radio"
-          bind:group={direction}
-          value="reverse"
-          on:change={() => onChange(sort, direction)}
-        />
+        <input type="radio" bind:group={direction} value="reverse" />
         {$_(`documentBrowser.sort.fields.${sort}.reverse`)}
       </label>
     </div>
