@@ -6,14 +6,14 @@
     query?: string;
     filters?: FilterFields;
     sort?: SortField;
-    order?: SortOrder;
+    direction?: SortDirection;
   }
 
   export function serialize({
     query,
     filters,
     sort,
-    order = "asc",
+    direction = "forward",
   }: SearchProps): string {
     const parts: string[] = [];
 
@@ -76,7 +76,7 @@
     }
 
     if (sort) {
-      if (order === "asc") {
+      if (direction === "forward") {
         parts.push(`sort:${sort}`);
       } else {
         parts.push(`sort:-${sort}`);
@@ -90,7 +90,7 @@
     const filters: FilterFields = {};
     let mainQuery: string[] = [];
     let sort: Maybe<SortField>;
-    let order: Maybe<SortOrder>;
+    let direction: Maybe<SortDirection>;
     const filtersToFetch: Record<string, string[]> = {
       users: [],
       projects: [],
@@ -106,14 +106,14 @@
     for (const part of parts) {
       if (part.startsWith("sort:")) {
         let value: Maybe<string> = part.split(":")[1];
-        let valueOrder: SortOrder = "asc";
+        let valueDirection: SortDirection = "forward";
         if (value?.startsWith("-")) {
           value = value.slice(1);
-          valueOrder = "desc";
+          valueDirection = "reverse";
         }
         if (isSortField(value)) {
           sort = value;
-          order = valueOrder;
+          direction = valueDirection;
         }
       } else if (part.startsWith("access:")) {
         filters.access = part.split(":")[1];
@@ -196,7 +196,7 @@
       query: mainQuery.join(" "),
       filters,
       sort,
-      order,
+      direction,
     };
   }
 </script>
@@ -208,7 +208,7 @@
   import Sort, {
     isSortField,
     type SortField,
-    type SortOrder,
+    type SortDirection,
   } from "./Sort.svelte";
   import type { Maybe, Nullable } from "@/lib/api/types";
   import { page } from "$app/stores";
@@ -216,21 +216,16 @@
   export let query = "";
   export let filters: FilterFields = defaultFilters;
   export let sort: SortField = "score";
-  export let order: SortOrder = "desc";
-  export let fields: SortField[] = [
-    "score",
-    "created_at",
-    "page_count",
-    "title",
-  ];
+  export let direction: SortDirection = "forward";
 
   let form: Nullable<HTMLFormElement>;
+  const fields: SortField[] = ["score", "created_at", "page_count", "title"];
 
   async function updatePropsFromQuery(pageUrlQuery: string) {
     const deserializedProps = await deserialize(pageUrlQuery);
     query = deserializedProps.query ?? query;
     sort = deserializedProps.sort ?? sort;
-    order = deserializedProps.order ?? order;
+    direction = deserializedProps.direction ?? direction;
     filters = Object.assign({}, filters, deserializedProps.filters);
   }
 
@@ -239,7 +234,7 @@
   }
 
   $: formatSearchString = (query: string) =>
-    serialize({ query, filters, sort, order });
+    serialize({ query, filters, sort, direction });
   $: {
     updatePropsFromQuery($page.url.searchParams?.get("q") ?? "");
   }
@@ -251,7 +246,7 @@
   </div>
   <div class="controls">
     <Filter bind:filters {onChange} />
-    <Sort bind:order bind:sort {fields} {query} {onChange} />
+    <Sort bind:direction bind:sort {fields} {query} {onChange} />
   </div>
 </div>
 
