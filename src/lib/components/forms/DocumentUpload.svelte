@@ -39,9 +39,10 @@ progress through the three-part upload process.
     Project,
   } from "$lib/api/types";
 
+  import { beforeNavigate } from "$app/navigation";
+
   import { filesize } from "filesize";
   import { onMount } from "svelte";
-  import { beforeNavigate } from "$app/navigation";
   import { _ } from "svelte-i18n";
   import { Paperclip16, Paperclip24, Upload16 } from "svelte-octicons";
 
