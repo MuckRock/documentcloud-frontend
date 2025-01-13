@@ -205,6 +205,7 @@
   import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
+  import { browser } from "$app/environment";
   import type { Maybe } from "$lib/api/types";
   import Search from "../inputs/Search.svelte";
   import Filter, { type FilterFields, defaultFilters } from "./Filter.svelte";
@@ -255,7 +256,9 @@
   // We should call the submit function when the search parameters change
   $: {
     const search = serialize({ query, filters, sort, direction });
-    submit(search);
+    if (browser) {
+      submit(search);
+    }
   }
 
   // DEBUG LOGGING STRINGS: REMOVE BEFORE MERGE
