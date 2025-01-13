@@ -20,14 +20,12 @@ describe("search utilities", () => {
   });
 
   test("userDocs", () => {
-    expect(userDocs(me)).toStrictEqual(`+user:${slugify(me.name!)}-${me.id}`);
+    expect(userDocs(me)).toStrictEqual(`user:${me.id}`);
 
-    expect(userDocs(me, "public")).toStrictEqual(
-      `+user:${slugify(me.name!)}-${me.id} access:public`,
-    );
+    expect(userDocs(me, "public")).toStrictEqual(`user:${me.id} access:public`);
 
     expect(userDocs(me, "private")).toStrictEqual(
-      `+user:${slugify(me.name!)}-${me.id} access:private`,
+      `user:${me.id} access:private`,
     );
   });
 

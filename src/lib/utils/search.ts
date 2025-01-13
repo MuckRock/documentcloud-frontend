@@ -48,7 +48,7 @@ export function userDocs(user?: Nullable<User>, access?: Access): string {
  * @returns formatted query
  */
 export function tag(t: string): string {
-  return `tag:"${t}"`;
+  return `+tag:"${t}"`;
 }
 
 /**
@@ -58,7 +58,7 @@ export function tag(t: string): string {
  * @returns formatted query
  */
 export function kv(key: string, value: string): string {
-  return `data_${key}:"${value}"`;
+  return `+data_${key}:"${value}"`;
 }
 
 /**
