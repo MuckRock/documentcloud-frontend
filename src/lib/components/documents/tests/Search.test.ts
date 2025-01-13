@@ -1,15 +1,15 @@
 import { vi, describe, it, expect, type Mock } from "vitest";
 import { serialize, deserialize, type SearchProps } from "../Search.svelte";
-import type { Org, Project, User } from "@/lib/api/types";
+import type { Org, Project, User } from "$lib/api/types";
 import { organizationsList, usersList } from "@/test/fixtures/accounts";
 import { projectList } from "@/test/fixtures/projects";
-import { listUsers, listOrgs } from "@/lib/api/accounts";
+import { listUsers, listOrgs } from "$lib/api/accounts";
 
 const mockUser = usersList.results[0];
 const mockProjects = projectList.results.slice(0, 2);
 const mockOrgs = organizationsList.results.slice(0, 2);
 
-vi.mock("@/lib/api/accounts");
+vi.mock("$lib/api/accounts");
 
 const mockListOrgs = vi.fn().mockResolvedValue({
   data: {
@@ -31,7 +31,7 @@ const mockListUsers = vi.fn().mockResolvedValue({
 vi.mocked(listOrgs).mockImplementation(mockListOrgs);
 vi.mocked(listUsers).mockImplementation(mockListUsers);
 
-vi.mock("@/lib/api/projects", () => ({
+vi.mock("$lib/api/projects", () => ({
   list: () =>
     Promise.resolve({
       data: {
