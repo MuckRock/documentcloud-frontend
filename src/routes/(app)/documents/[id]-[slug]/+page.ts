@@ -29,7 +29,7 @@ export async function load({
 
   depends(`document:${document.id}`);
 
-  const canonical = new URL(document.canonical_url);
+  const canonical = documents.canonicalUrl(document);
   if (document.slug !== params.slug) {
     redirect(302, canonical.pathname);
   }
