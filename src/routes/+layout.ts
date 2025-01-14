@@ -4,8 +4,6 @@ import { getLanguage } from "$lib/utils/language";
 
 import "$lib/i18n/index.js"; // Import to initialize. Important :)
 
-export const trailingSlash = "always";
-
 export async function load() {
   if (browser) {
     let lang: string;
