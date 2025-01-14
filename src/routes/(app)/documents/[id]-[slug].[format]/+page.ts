@@ -6,7 +6,7 @@ import * as documents from "$lib/api/documents";
 export const trailingSlash = "never";
 
 export async function load({ params, fetch }) {
-  const { id, slug, format } = params;
+  const { id, format } = params;
 
   const { data: document, error: err } = await documents.get(id, fetch);
 
@@ -17,8 +17,6 @@ export async function load({ params, fetch }) {
   if (!document) {
     return error(404, "Not found");
   }
-
-  const canonical = `/documents/${id}-${slug}/`;
 
   let url: URL;
 
@@ -40,6 +38,6 @@ export async function load({ params, fetch }) {
 
     // fallback: redirect to the canonical path, on the same host
     default:
-      return redirect(302, canonical);
+      return redirect(302, documents.canonicalUrl(document));
   }
 }
