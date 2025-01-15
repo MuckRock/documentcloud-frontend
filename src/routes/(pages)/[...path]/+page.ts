@@ -4,6 +4,8 @@ import { error } from "@sveltejs/kit";
 import { PAGE_MAX_AGE } from "@/config/config.js";
 import * as flatpages from "$lib/api/flatpages";
 
+export const trailingSlash = "ignore";
+
 export async function load({ fetch, params, setHeaders }) {
   const { data, error: err } = await flatpages.get(params.path, fetch);
 
