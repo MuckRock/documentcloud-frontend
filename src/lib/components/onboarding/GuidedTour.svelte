@@ -61,6 +61,7 @@
 </script>
 
 <script lang="ts">
+  import { afterNavigate } from "$app/navigation";
   import { onMount } from "svelte";
   import { getCurrentUser } from "$lib/utils/permissions";
 
@@ -84,6 +85,11 @@
         startTour();
       }
     }
+  });
+
+  afterNavigate(() => {
+    // if we navigate anywhere else, end the tour
+    endTour();
   });
 </script>
 
