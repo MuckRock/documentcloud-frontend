@@ -20,6 +20,7 @@ export async function load({
   depends,
   url,
   setHeaders,
+  data,
 }) {
   const { document, asset_url, mode } = await loadDocument({
     fetch,
@@ -55,6 +56,7 @@ export async function load({
   }
 
   return {
+    ...data,
     document,
     mode,
     asset_url,

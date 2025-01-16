@@ -4,12 +4,21 @@ import type { Access, Document, Note } from "$lib/api/types";
 import { fail } from "@sveltejs/kit";
 import { setFlash, redirect } from "sveltekit-flash-message/server";
 
-import { CSRF_COOKIE_NAME } from "@/config/config.js";
+import { CSRF_COOKIE_NAME, EMBED_URL } from "@/config/config.js";
 import { destroy, edit, redact } from "$lib/api/documents";
 import * as notes from "$lib/api/notes";
 import { isErrorCode } from "$lib/utils/api";
 
-export function load({ cookies }) {
+export function load({ cookies, request, url }) {
+  const inIframe = request.headers.get("Sec-Fetch-Dest") === "iframe";
+  if (inIframe) {
+    const embed = new URL(url);
+
+    embed.host = new URL(EMBED_URL).host;
+    embed.searchParams.set("embed", "1");
+    return redirect(307, embed);
+  }
+
   const csrf_token = cookies.get(CSRF_COOKIE_NAME);
 
   return { csrf_token };

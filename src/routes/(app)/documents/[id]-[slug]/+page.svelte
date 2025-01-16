@@ -3,10 +3,11 @@
  -->
 
 <script lang="ts">
-  import "@/style/kit.css";
-
   import { browser } from "$app/environment";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
 
+  import { onMount } from "svelte";
   import { embedUrl } from "$lib/api/embed";
   import * as documents from "$lib/api/documents";
 
@@ -26,6 +27,15 @@
 
   $: action = data.action;
   $: hasDescription = Boolean(document.description?.trim().length);
+
+  onMount(() => {
+    // if we're in an iframe, redirect to the embed route
+    const inIframe = window.self !== window.top;
+    if (inIframe) {
+      const embedUrl = documents.embedUrl(document, $page.url.searchParams);
+      goto(embedUrl);
+    }
+  });
 </script>
 
 <svelte:head>
