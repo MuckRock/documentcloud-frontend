@@ -62,7 +62,7 @@ async function logRequest({ event, resolve }) {
   const response = await resolve(event);
 
   // logging happens after the response is generated
-  log(response.status, event);
+  log(event, response);
   return response;
 }
 
