@@ -8,6 +8,7 @@ import * as Sentry from "@sentry/sveltekit";
 import { locale } from "svelte-i18n";
 
 import { DC_BASE } from "./config/config.js";
+import { log } from "$lib/utils/logging";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
@@ -56,4 +57,17 @@ async function language({ event, resolve }) {
   });
 }
 
-export const handle: Handle = sequence(Sentry.sentryHandle(), language);
+/** @type {import('@sveltejs/kit').Handle} */
+async function logRequest({ event, resolve }) {
+  const response = await resolve(event);
+
+  // logging happens after the response is generated
+  log(event, response);
+  return response;
+}
+
+export const handle: Handle = sequence(
+  Sentry.sentryHandle(),
+  language,
+  logRequest,
+);

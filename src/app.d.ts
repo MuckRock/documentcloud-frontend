@@ -12,7 +12,9 @@ declare global {
       };
     }
     // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      context: any;
+    }
   }
 
   namespace svelteHTML {
