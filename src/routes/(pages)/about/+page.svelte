@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Flatpage from "@/lib/components/layouts/Flatpage.svelte";
+  import Flatpage from "$lib/components/layouts/Flatpage.svelte";
 
   export let data;
 
