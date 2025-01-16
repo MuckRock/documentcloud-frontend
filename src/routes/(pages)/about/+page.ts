@@ -1,13 +1,14 @@
-// load data for flatpages
 import { error } from "@sveltejs/kit";
 
 import { PAGE_MAX_AGE } from "@/config/config.js";
 import * as flatpages from "$lib/api/flatpages";
 
-export const trailingSlash = "ignore";
+export const trailingSlash = "always";
 
-export async function load({ fetch, params, setHeaders }) {
-  const { data, error: err } = await flatpages.get(params.path, fetch);
+const path = "/about/";
+
+export async function load({ fetch, setHeaders }) {
+  const { data, error: err } = await flatpages.get(path, fetch);
 
   if (err) {
     return error(err.status, { message: err.message });
