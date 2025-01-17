@@ -33,7 +33,7 @@
     const inIframe = window.self !== window.top;
     if (inIframe) {
       const embedUrl = documents.embedUrl(document, $page.url.searchParams);
-      goto(embedUrl);
+      window.location.href = embedUrl.href;
     }
   });
 </script>
