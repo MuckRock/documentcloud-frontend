@@ -21,6 +21,7 @@ export default async function load({ fetch, params, url }: Load) {
   const { data: document, error: err } = await documents.get(+params.id, fetch);
 
   if (err) {
+    console.warn(err.status, url.href);
     return error(err.status, err.message);
   }
 

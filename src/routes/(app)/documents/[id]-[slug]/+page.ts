@@ -32,11 +32,11 @@ export async function load({
 
   const canonical = documents.canonicalUrl(document);
   if (document.slug !== params.slug) {
-    redirect(302, canonical.pathname);
+    redirect(307, canonical.pathname);
   }
 
   if (!document.edit_access && !documents.READING_MODES.has(mode as ReadMode)) {
-    return redirect(302, canonical);
+    return redirect(307, canonical);
   }
 
   let action = url.searchParams.get("action");
