@@ -117,7 +117,7 @@ describe("document fetching", () => {
     expect(result).toStrictEqual(document);
     expect(mockFetch).toBeCalledWith(
       new URL(
-        `documents/${document.id}.json?expand=user%2Corganization%2Cprojects%2Crevisions%2Csections%2Cnotes.user`,
+        `documents/${document.id}/?expand=user%2Corganization%2Cprojects%2Crevisions%2Csections%2Cnotes.user`,
         BASE_API_URL,
       ),
       {
