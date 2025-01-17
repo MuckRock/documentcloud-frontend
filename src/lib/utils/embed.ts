@@ -287,6 +287,7 @@ export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
  * @param url
  */
 export function isEmbed(url: URL): Boolean {
+  if (!url.pathname.match(/^\/(documents|projects)/)) return false;
   return (
     url.searchParams.has("embed") || url.hostname === "embed.documentcloud.org"
   );

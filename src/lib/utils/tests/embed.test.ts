@@ -55,6 +55,10 @@ describe("embed utilities", () => {
         "https://www.documentcloud.org/documents/2622-agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government/?embed",
         true,
       ],
+      [
+        "https://embed.documentcloud.org/_app/immutable/chunks/navigation.CziXxwWJ.js",
+        false,
+      ],
     ];
 
     for (const [url, embed] of urls) {
