@@ -115,7 +115,7 @@ export async function get(
   id: string | number,
   fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<APIResponse<Document, null>> {
-  const endpoint = new URL(`documents/${id}.json`, BASE_API_URL);
+  const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
   const expand = [
     "user",
     "organization",
