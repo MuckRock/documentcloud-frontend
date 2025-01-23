@@ -42,7 +42,6 @@
   import { sidebars } from "./Sidebar.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
   import DocumentList from "../addons/DocumentList.svelte";
-  import Modal from "./Modal.svelte";
   import Flex from "../common/Flex.svelte";
   import { fade, slide } from "svelte/transition";
 
@@ -221,11 +220,12 @@
           <header>
             <h2>{$_("addonDispatchDialog.selectDocuments")}</h2>
             <Button
+              mode="primary"
               ghost
               on:click={() => (docSelectModalOpen = false)}
               minW={false}
             >
-              <XCircle24 />
+              {$_("dialog.done")}
             </Button>
           </header>
           <main>
