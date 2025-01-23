@@ -493,7 +493,8 @@
     "instructions": "Istruzioni",
     "dispatch": "Dispach",
     "history": "Storia",
-    "noHistory": "Hai gi\u00e0 utilizzato questo estensione."
+    "noHistory": "Hai gi\u00e0 utilizzato questo estensione.",
+    "selectDocuments": "Seleziona documenti"
   },
   "addonBrowserDialog": {
     "title": "Cerca Add-On",

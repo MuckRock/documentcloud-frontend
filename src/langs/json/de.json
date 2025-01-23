@@ -146,6 +146,7 @@
     "labelSelected": "{n, plural, one {Das # derzeit ausgewählte Dokument} other {Die # derzeit ausgewählten Dokumente}}",
     "labelQuery": "{n, plural, one {Das # Dokument} other {Die # Dokumente}} aus den derzeitigen Suchergebnissen",
     "runSchedule": "Planmäßig ausführen:",
-    "disable": "Deaktivieren"
+    "disable": "Deaktivieren",
+    "selectDocuments": "Dokumente auswählen"
   }
 }
