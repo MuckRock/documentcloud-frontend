@@ -22,30 +22,25 @@
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
   import AddOnMeta from "../addons/AddOnMeta.svelte";
-  import ContentLayout from "./ContentLayout.svelte";
-  import Empty from "../common/Empty.svelte";
   import History from "../addons/History.svelte";
-  import PageToolbar from "../common/PageToolbar.svelte";
-  import ResultsList, {
-    selected,
-    selectedIds,
-    total,
-    visible,
-  } from "../documents/ResultsList.svelte";
   import Scheduled from "../addons/Scheduled.svelte";
-  import Search from "../forms/Search.svelte";
-  import Selection from "$lib/components/inputs/Selection.svelte";
-  import Tab from "../common/Tab.svelte";
 
-  import { schedules } from "../addons/ScheduledEvent.svelte";
-  import { getProcessLoader } from "../processing/ProcessContext.svelte";
-  import SidebarLayout from "./SidebarLayout.svelte";
+  import Button from "../common/Button.svelte";
+  import Empty from "../common/Empty.svelte";
+  import Tab from "../common/Tab.svelte";
+  import Selection from "../inputs/Selection.svelte";
+  import { remToPx } from "$lib/utils/layout";
+
   import Documents from "../sidebar/Documents.svelte";
   import Projects from "../sidebar/Projects.svelte";
   import AddOns from "../sidebar/AddOns.svelte";
-  import Flex from "../common/Flex.svelte";
+
+  import { schedules } from "../addons/ScheduledEvent.svelte";
+  import { selected } from "../documents/ResultsList.svelte";
+  import { getProcessLoader } from "../processing/ProcessContext.svelte";
   import { sidebars } from "./Sidebar.svelte";
-  import Button from "../common/Button.svelte";
+  import SidebarLayout from "./SidebarLayout.svelte";
+  import DocumentList from "../addons/DocumentList.svelte";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
@@ -66,6 +61,9 @@
 
   let currentTab: Tab = getDefaultTab();
 
+  let clientWidth: number;
+  const SMALL_BREAKPOINT = remToPx(30);
+
   setContext("selected", selected);
 
   $: action = event
@@ -75,14 +73,6 @@
   $: canSchedule = addon.parameters.eventOptions?.events.some((event) =>
     schedules.includes(event),
   );
-
-  function selectAll(e) {
-    if (e.target.checked) {
-      $selectedIds = [...$visible.keys()];
-    } else {
-      $selectedIds = [];
-    }
-  }
 
   const load = getProcessLoader();
 
@@ -106,7 +96,7 @@
     <Projects />
     <AddOns />
   </svelte:fragment>
-  <div class="container" slot="content">
+  <div class="container" slot="content" bind:clientWidth>
     <section class="addon">
       <header>
         {#if !addon.parameters.documents && $sidebars["navigation"] === false}
@@ -204,66 +194,9 @@
         {/if}
       </main>
     </section>
-    {#if addon.parameters.documents}
+    {#if addon.parameters.documents && clientWidth > SMALL_BREAKPOINT}
       <div class="docs">
-        <ContentLayout>
-          <Flex slot="header">
-            {#if $sidebars["navigation"] === false}
-              <div class="toolbar w-auto">
-                <Button
-                  ghost
-                  minW={false}
-                  on:click={() => ($sidebars["navigation"] = true)}
-                >
-                  <span class="flipV">
-                    <SidebarExpand16 />
-                  </span>
-                </Button>
-              </div>
-            {/if}
-            <PageToolbar>
-              <Search name="q" {query} slot="center" />
-            </PageToolbar>
-          </Flex>
-          <svelte:fragment>
-            {#await search}
-              <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-            {:then search}
-              <ResultsList
-                results={search?.results}
-                next={search?.next}
-                count={search?.count}
-                auto
-              />
-            {/await}
-          </svelte:fragment>
-
-          <PageToolbar slot="footer">
-            <label slot="left" class="select-all">
-              <input
-                type="checkbox"
-                name="select_all"
-                checked={$selected.length === $visible.size}
-                indeterminate={$selected.length > 0 &&
-                  $selected.length < $visible.size}
-                on:change={selectAll}
-              />
-              {#if $selected.length > 0}
-                {$selected.length.toLocaleString()} {$_("inputs.selected")}
-              {:else}
-                {$_("inputs.selectAll")}
-              {/if}
-            </label>
-
-            <svelte:fragment slot="right">
-              {#if $visible && $total}
-                {$_("inputs.resultsCount", {
-                  values: { n: $visible.size, total: $total },
-                })}
-              {/if}
-            </svelte:fragment>
-          </PageToolbar>
-        </ContentLayout>
+        <DocumentList {search} {query} />
       </div>
     {/if}
   </div>

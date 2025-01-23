@@ -51,6 +51,14 @@
 
 <Story name="With Event" args={{ ...args, event }} />
 
+<Story
+  name="Mobile Layout"
+  parameters={{
+    viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
+  }}
+  {args}
+/>
+
 <style>
   .vh {
     height: 100vh;
