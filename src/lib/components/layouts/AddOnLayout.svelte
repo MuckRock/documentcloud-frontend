@@ -18,6 +18,7 @@
     Hourglass24,
     Play16,
     SidebarExpand16,
+    XCircle24,
   } from "svelte-octicons";
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
@@ -41,6 +42,9 @@
   import { sidebars } from "./Sidebar.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
   import DocumentList from "../addons/DocumentList.svelte";
+  import Modal from "./Modal.svelte";
+  import Flex from "../common/Flex.svelte";
+  import { fade, slide } from "svelte/transition";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
@@ -63,6 +67,7 @@
 
   let clientWidth: number;
   const SMALL_BREAKPOINT = remToPx(30);
+  let docSelectModalOpen = false;
 
   setContext("selected", selected);
 
@@ -181,6 +186,17 @@
             on:dispatch={onDispatch}
           >
             <svelte:fragment slot="selection">
+              {#if addon.parameters.documents && clientWidth <= SMALL_BREAKPOINT}
+                <Flex justify="center">
+                  <Button
+                    ghost
+                    mode="primary"
+                    on:click={() => (docSelectModalOpen = true)}
+                  >
+                    {$_("addonDispatchDialog.selectDocuments")}
+                  </Button>
+                </Flex>
+              {/if}
               {#await search then results}
                 <Selection
                   bind:value={$values["selection"]}
@@ -194,10 +210,29 @@
         {/if}
       </main>
     </section>
-    {#if addon.parameters.documents && clientWidth > SMALL_BREAKPOINT}
-      <div class="docs">
-        <DocumentList {search} {query} />
-      </div>
+    {#if addon.parameters.documents}
+      {#if clientWidth > SMALL_BREAKPOINT}
+        <div class="docs">
+          <DocumentList {search} {query} />
+        </div>
+      {:else if docSelectModalOpen}
+        <div class="backdrop" transition:fade></div>
+        <div class="doc-picker-drawer" transition:slide>
+          <header>
+            <h2>{$_("addonDispatchDialog.selectDocuments")}</h2>
+            <Button
+              ghost
+              on:click={() => (docSelectModalOpen = false)}
+              minW={false}
+            >
+              <XCircle24 />
+            </Button>
+          </header>
+          <main>
+            <DocumentList {search} {query} />
+          </main>
+        </div>
+      {/if}
     {/if}
   </div>
 </SidebarLayout>
@@ -251,5 +286,44 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
+  }
+  .backdrop {
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-drawer);
+    background: rgba(92, 113, 124, 0.5);
+    backdrop-filter: blur(2px);
+  }
+  .doc-picker-drawer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 90vh;
+    z-index: var(--z-drawer);
+    display: flex;
+    flex-direction: column;
+  }
+  .doc-picker-drawer header {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: var(--white);
+    border-top: 1px solid var(--gray-3);
+    border-bottom: 1px solid var(--gray-2);
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    & h2 {
+      font-weight: 600;
+      font-size: var(--font-lg);
+    }
+  }
+  .doc-picker-drawer main {
+    flex: 1 1 auto;
+    overflow-y: auto;
   }
 </style>
