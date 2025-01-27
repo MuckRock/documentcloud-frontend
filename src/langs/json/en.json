@@ -524,7 +524,8 @@
     "dispatch": "Dispatch",
     "history": "History",
     "noHistory": "You have not run this Add-On before",
-    "success": "Add-On dispatched"
+    "success": "Add-On dispatched",
+    "selectDocuments": "Select documents"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",

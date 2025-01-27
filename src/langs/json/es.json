@@ -494,7 +494,8 @@
     "instructions": "Instrucciones",
     "dispatch": "Entrega",
     "history": "Historia",
-    "noHistory": "No has ejecutado esta adici\u00f3n antes."
+    "noHistory": "No has ejecutado esta adici\u00f3n antes.",
+    "selectDocuments": "Seleccionar documentos"
   },
   "addonBrowserDialog": {
     "title": "Visualizar Adiciones",

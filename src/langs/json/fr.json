@@ -493,7 +493,8 @@
     "instructions": "Instructions",
     "dispatch": "D\u00e9p\u00f4t",
     "history": "Histoire",
-    "noHistory": "Vous n'avez pas encore utilis\u00e9 cet ajout"
+    "noHistory": "Vous n'avez pas encore utilis\u00e9 cet ajout",
+    "selectDocuments": "Sélectionner les documents"
   },
   "addonBrowserDialog": {
     "title": "Cliquez sur les extensions",
