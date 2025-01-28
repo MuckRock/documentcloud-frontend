@@ -558,7 +558,7 @@
   },
   "feedback": {
     "title": "Compartir tu retroalimentaci\u00f3n",
-    "hello": "Agradecemos que hayas probado la versi\u00f3n de prueba p\u00fablica del pr\u00f3ximo gran espacio de DocumentCloud! Estamos trabajando duramente para agregar nuevas funcionalidades, solucionar errores y mejorar tu experiencia. Agradezcemos tus comentarios\u2013comentarios, ideas y preguntas\u2013para que puedan informar nuestro progreso. Como estamos un equipo muy peque\u00f1o, no podemos garantizar que respondamos a todos los comentarios, pero leeremos y revisaremos todos de ellos.",
+    "hello": "<p>Agradezcemos tus comentarios\u2013comentarios, ideas y preguntas\u2013para que puedan informar nuestro progreso. Como estamos un equipo muy peque\u00f1o, no podemos garantizar que respondamos a todos los comentarios, pero leeremos y revisaremos todos de ellos.</p>",
     "defaultPlaceholder": "Mi retroalimentaci\u00f3n es\u2026",
     "types": {
       "comment": {
