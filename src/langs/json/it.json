@@ -557,7 +557,7 @@
   },
   "feedback": {
     "title": "Condividi la tua opinione",
-    "hello": "<p>Grazie per aver provato la versione preview pubblica della prossima maggiore versione di DocumentCloud! Stiamo ancora impegnati nel aggiungere funzionalit\u00e0, risolvere bug e migliorare l'esperienza. Siamo aperti alla vostra feedback&mdash;commenti, idee e domande&mdash;per informarci del nostro progresso. Siamo un team molto piccolo cos\u00ec non possiamo garantire che rispondiamo a tutti i feedback, ma leggeremo e revisioneremo tutti.</p>",
+    "hello": "<p>Siamo aperti alla vostra feedback&mdash;commenti, idee e domande&mdash;per informarci del nostro progresso. Siamo un team molto piccolo cos\u00ec non possiamo garantire che rispondiamo a tutti i feedback, ma leggeremo e revisioneremo tutti.</p>",
     "defaultPlaceholder": "Il mio feedback \u00e8\u2026",
     "types": {
       "comment": {
