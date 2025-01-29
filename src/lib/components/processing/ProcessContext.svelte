@@ -7,6 +7,8 @@ This makes the state of those processes available via context.
 <script lang="ts" context="module">
   import type { Maybe, Pending, Run } from "$lib/api/types";
 
+  import { invalidate } from "$app/navigation";
+
   import throttle from "lodash-es/throttle";
   import {
     getContext,
@@ -68,17 +70,36 @@ This makes the state of those processes available via context.
 </script>
 
 <script lang="ts">
+  // keep track of processed documents
+  let started: number[] = [];
+
+  $: currentIds = new Set($documents.map((d) => d.doc_id));
+
   // stores we need deeper in the component tree, available via context
   setContext<ProcessContext>("processing", { addons, documents, load });
 
-  onMount(() => {
-    load();
+  onMount(async () => {
+    await load();
+    started = $documents.map((d) => d.doc_id);
   });
 
   afterUpdate(() => {
     if ($documents.length > 0 || $addons.length > 0) {
       load();
     }
+
+    started = started
+      .map((d) => {
+        if (currentIds.has(d)) {
+          return d;
+        }
+
+        // invalidate finished
+        invalidate(`document:${d}`);
+        // filter these out
+        return 0;
+      })
+      .filter(Boolean);
   });
 
   onDestroy(() => {

@@ -380,6 +380,7 @@
     "uploadToProject": "Upload to Project",
     "download": "Download File",
     "reprocess": "Reprocess",
+    "processing": "Processing",
     "delete": "Delete",
     "shareEmbedProject": "Share & Embed Project",
     "editProject": "Edit Project Metadata",
@@ -585,7 +586,8 @@
     "addons": "Add-Ons",
     "documents": "Documents",
     "unknown": "Unknown",
-    "download": "Download file"
+    "download": "Download file",
+    "document": "This document is processing. Some features may not be available yet."
   },
   "feedback": {
     "title": "Share Your Feedback",
