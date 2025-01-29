@@ -67,7 +67,8 @@ export async function getApiResponse<T, E = unknown>(
   }
 
   try {
-    response.data = await resp.json();
+    // redactions return an empty 200 response
+    response.data = resp.json ? await resp.json() : {};
   } catch (e) {
     switch (e.name) {
       case "SyntaxError": // provide more specific error

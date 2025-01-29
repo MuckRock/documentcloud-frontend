@@ -38,11 +38,13 @@ Assumes it's a child of a ViewerContext
     X_SMALL: width < remToPx(24),
   };
 
+  $: hasRedactions = $redactions[document.id]?.length ?? -1 > 0;
+
   function onCancel() {
     const href = getViewerHref({ document });
-    if ($redactions.length > 0) {
+    if (hasRedactions) {
       if (confirm($_("redact.cancelWarning"))) {
-        clear();
+        clear(document.id.toString());
         goto(href);
       }
     } else {
@@ -75,10 +77,10 @@ Assumes it's a child of a ViewerContext
     <Button
       size="small"
       ghost
-      disabled={$redactions.length === 0}
+      disabled={!hasRedactions}
       title={$_("redact.undo")}
       minW={false}
-      on:click={undo}
+      on:click={(e) => undo(document.id.toString())}
     >
       <Undo16 />
       {#if BREAKPOINTS.SHOW_LABELS}

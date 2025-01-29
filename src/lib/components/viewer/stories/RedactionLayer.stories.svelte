@@ -10,16 +10,18 @@
     component: RedactionLayer,
     parameters: { layout: "centered" },
   };
+
+  const id = "1";
 </script>
 
 <script lang="ts">
   import { onMount } from "svelte";
 
   onMount(() => {
-    $redactions = redacted;
+    $redactions = { [id]: redacted };
 
     return () => {
-      $redactions = [];
+      $redactions[id] = [];
     };
   });
 </script>
@@ -28,7 +30,7 @@
   <Flex class="pages" direction="column" gap={1}>
     {#each redacted as page}
       <div class="page">
-        <RedactionLayer {...args} page_number={page.page_number} />
+        <RedactionLayer {...args} page_number={page.page_number} {id} />
       </div>
     {/each}
   </Flex>

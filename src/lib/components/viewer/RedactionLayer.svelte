@@ -6,13 +6,17 @@ So this layer is only showing unsaved redactions.
 -->
 <script context="module" lang="ts">
   import type { Redaction, Nullable } from "$lib/api/types";
-  import { get, writable, type Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
+  import { saveStore } from "$lib/utils/storage";
+
+  // redactions, namespaced by document
+  export type RedactionIndex = Record<string, Redaction[]>;
 
   // active redactions
-  export const redactions: Writable<Redaction[]> = writable([]);
+  export const redactions: Writable<RedactionIndex> = writable({});
 
   // redactions being processed on the server
-  export const pending: Writable<Redaction[]> = writable([]);
+  export const pending: Writable<RedactionIndex> = writable({});
 
   function width(redaction: Redaction): number {
     return Math.abs(redaction.x2 - redaction.x1);
@@ -22,13 +26,19 @@ So this layer is only showing unsaved redactions.
     return Math.abs(redaction.y2 - redaction.y1);
   }
 
-  export function undo() {
-    redactions.set(get(redactions).slice(0, -1));
+  export function undo(id: string) {
+    redactions.update((r) => {
+      if (!r[id]) return r;
+      r[id] = r[id].slice(0, -1);
+      return r;
+    });
   }
 
-  export function clear() {
-    redactions.set([]);
-    pending.set([]);
+  export function clear(id: string) {
+    redactions.update((r) => {
+      r[id] = [];
+      return r;
+    });
   }
 </script>
 
@@ -39,13 +49,17 @@ So this layer is only showing unsaved redactions.
 
   export let active = false;
   export let page_number: number; // 0-indexed
+  export let id: string; // document ID, for namespacing
+
+  const KEY = "redactions";
 
   let container: HTMLElement;
   let currentRedaction: Nullable<Redaction> = null;
 
-  $: redactions_for_page = [...$pending, ...$redactions].filter(
-    (r) => r.page_number === page_number,
-  );
+  $: redactions_for_page = [
+    ...($pending[id] ?? []),
+    ...($redactions[id] ?? []),
+  ].filter((r) => r.page_number === page_number);
 
   // handle interaction events
   let drawStart: Nullable<[x: number, y: number]> = null;
@@ -103,7 +117,7 @@ So this layer is only showing unsaved redactions.
   function finishDrawingBox(e: PointerEvent) {
     if (!active || !drawing || !currentRedaction) return;
 
-    $redactions = [...$redactions, currentRedaction];
+    $redactions[id] = [...($redactions[id] ?? []), currentRedaction];
 
     // reset drawing state
     currentRedaction = null;
@@ -112,19 +126,23 @@ So this layer is only showing unsaved redactions.
   }
 
   beforeNavigate(({ cancel }) => {
-    if ($redactions.length > 0) {
+    const current = $redactions[id] ?? [];
+    if (current.length > 0) {
       if (!confirm($_("redact.leaveWarning"))) {
         cancel();
         return;
       }
-      clear();
+      clear(id);
     }
   });
 
   onMount(() => {
+    // restore from local storage
+    saveStore(pending, KEY, { storage: localStorage });
+
     // before unmounting the component, clear the current redactions
     return () => {
-      clear();
+      clear(id);
     };
   });
 </script>

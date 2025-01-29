@@ -38,14 +38,15 @@ This almost certainly lives in a modal.
     return async ({ result }) => {
       // `result` is an `ActionResult` object
       if (result.type === "failure") {
+        console.error(result);
         error = result.data.error;
       }
 
       if (result.type === "success") {
         // need to invalidate before navigating
         await invalidate(`document:${document.id}`);
-        $redactions = [];
-        $pending = result.data.redactions;
+        $redactions[document.id] = [];
+        $pending[document.id] = result.data.redactions;
         goto("?mode=document");
         dispatch("close");
       }
@@ -67,7 +68,7 @@ This almost certainly lives in a modal.
     <input
       type="hidden"
       name="redactions"
-      value={JSON.stringify($redactions)}
+      value={JSON.stringify($redactions[document.id])}
     />
 
     <Flex>
