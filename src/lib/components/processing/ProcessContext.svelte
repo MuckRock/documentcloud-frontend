@@ -17,7 +17,7 @@ This makes the state of those processes available via context.
     afterUpdate,
     onDestroy,
   } from "svelte";
-  import { type Writable, writable } from "svelte/store";
+  import { type Writable, writable, derived } from "svelte/store";
 
   import { history } from "$lib/api/addons";
   import { pending } from "$lib/api/documents";
@@ -73,7 +73,10 @@ This makes the state of those processes available via context.
   // keep track of processed documents
   let started: number[] = [];
 
-  $: currentIds = new Set($documents.map((d) => d.doc_id));
+  const currentIds = derived(
+    documents,
+    ($documents) => new Set($documents.map((d) => d.doc_id)),
+  );
 
   // stores we need deeper in the component tree, available via context
   setContext<ProcessContext>("processing", { addons, documents, load });
@@ -90,7 +93,7 @@ This makes the state of those processes available via context.
 
     started = started
       .map((d) => {
-        if (currentIds.has(d)) {
+        if ($currentIds.has(d)) {
           return d;
         }
 
