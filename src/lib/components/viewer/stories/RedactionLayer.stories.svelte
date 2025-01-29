@@ -18,10 +18,10 @@
   import { onMount } from "svelte";
 
   onMount(() => {
-    $redactions = { [id]: redacted };
+    $redactions = redacted;
 
     return () => {
-      $redactions[id] = [];
+      $redactions = [];
     };
   });
 </script>

@@ -45,7 +45,7 @@ This almost certainly lives in a modal.
       if (result.type === "success") {
         // need to invalidate before navigating
         await invalidate(`document:${document.id}`);
-        $redactions[document.id] = [];
+        $redactions = [];
         $pending[document.id] = result.data.redactions;
         goto("?mode=document");
         dispatch("close");
@@ -68,7 +68,7 @@ This almost certainly lives in a modal.
     <input
       type="hidden"
       name="redactions"
-      value={JSON.stringify($redactions[document.id])}
+      value={JSON.stringify($redactions)}
     />
 
     <Flex>

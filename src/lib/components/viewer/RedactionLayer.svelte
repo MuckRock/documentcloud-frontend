@@ -13,7 +13,7 @@ So this layer is only showing unsaved redactions.
   export type RedactionIndex = Record<string, Redaction[]>;
 
   // active redactions
-  export const redactions: Writable<RedactionIndex> = writable({});
+  export const redactions: Writable<Redaction[]> = writable([]);
 
   // redactions being processed on the server
   export const pending: Writable<RedactionIndex> = writable({});
@@ -26,19 +26,12 @@ So this layer is only showing unsaved redactions.
     return Math.abs(redaction.y2 - redaction.y1);
   }
 
-  export function undo(id: string) {
-    redactions.update((r) => {
-      if (!r[id]) return r;
-      r[id] = r[id].slice(0, -1);
-      return r;
-    });
+  export function undo() {
+    redactions.update((r) => r.slice(0, -1));
   }
 
-  export function clear(id: string) {
-    redactions.update((r) => {
-      r[id] = [];
-      return r;
-    });
+  export function clear() {
+    redactions.set([]);
   }
 </script>
 
@@ -56,10 +49,9 @@ So this layer is only showing unsaved redactions.
   let container: HTMLElement;
   let currentRedaction: Nullable<Redaction> = null;
 
-  $: redactions_for_page = [
-    ...($pending[id] ?? []),
-    ...($redactions[id] ?? []),
-  ].filter((r) => r.page_number === page_number);
+  $: redactions_for_page = [...($pending[id] ?? []), ...$redactions].filter(
+    (r) => r.page_number === page_number,
+  );
 
   // handle interaction events
   let drawStart: Nullable<[x: number, y: number]> = null;
@@ -117,7 +109,7 @@ So this layer is only showing unsaved redactions.
   function finishDrawingBox(e: PointerEvent) {
     if (!active || !drawing || !currentRedaction) return;
 
-    $redactions[id] = [...($redactions[id] ?? []), currentRedaction];
+    $redactions = [...$redactions, currentRedaction];
 
     // reset drawing state
     currentRedaction = null;
@@ -126,13 +118,12 @@ So this layer is only showing unsaved redactions.
   }
 
   beforeNavigate(({ cancel }) => {
-    const current = $redactions[id] ?? [];
-    if (current.length > 0) {
+    if ($redactions.length > 0) {
       if (!confirm($_("redact.leaveWarning"))) {
         cancel();
         return;
       }
-      clear(id);
+      clear();
     }
   });
 
@@ -142,7 +133,7 @@ So this layer is only showing unsaved redactions.
 
     // before unmounting the component, clear the current redactions
     return () => {
-      clear(id);
+      clear();
     };
   });
 </script>
