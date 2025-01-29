@@ -358,6 +358,7 @@
     "uploadToProject": "Cargar al proyecto",
     "download": "Descargar archivo",
     "reprocess": "Reprocesar",
+    "processing": "Procesando",
     "created": "Creado en",
     "updated": "Ultimo actualizado el",
     "language": "Lengua",
@@ -554,7 +555,8 @@
     "documents": "Documentos",
     "unknown": "Desconocido",
     "totalCount": "Seg\u00fan {n} {n, plural, one {proceso activo} other {procesos activos}}",
-    "download": "Descargar archivo"
+    "download": "Descargar archivo",
+    "document": "Este documento está en proceso. Algunas funciones pueden no estar disponibles aún."
   },
   "feedback": {
     "title": "Compartir tu retroalimentaci\u00f3n",

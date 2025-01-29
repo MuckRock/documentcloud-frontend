@@ -358,6 +358,7 @@
     "uploadToProject": "T\u00e9l\u00e9verser vers un projet",
     "download": "T\u00e9l\u00e9charger le fichier",
     "reprocess": "R\u00e9processement",
+    "processing": "Traitement",
     "created": "Cr\u00e9\u00e9 le",
     "updated": "Dernierement mis \u00e0 jour le",
     "language": "Langue",
@@ -553,7 +554,8 @@
     "documents": "Documents",
     "unknown": "Inconnu",
     "totalCount": "{n} {n, plural, one {processus actif} other {processus actifs}}",
-    "download": "T\u00e9l\u00e9charger le fichier"
+    "download": "T\u00e9l\u00e9charger le fichier",
+    "document": "Ce document est en cours de traitement. Certaines fonctionnalités peuvent ne pas être encore disponibles."
   },
   "feedback": {
     "title": "Partager vos retours",
