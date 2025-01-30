@@ -1,14 +1,15 @@
-/**
- * A localStorage utility class that can be
- * used to remember keyed preferences/options
- */
+import { type Writable } from "svelte/store";
 
-const KEY_PREFIX = "__documentcloud_";
+export const KEY_PREFIX = "__documentcloud_";
 
 export interface StorageManager {
   key: (subkey: string) => string;
 }
 
+/**
+ * A localStorage utility class that can be
+ * used to remember keyed preferences/options
+ */
 export class StorageManager {
   constructor(key: string) {
     this.key = (subkey) => `${KEY_PREFIX}${key}_${subkey}`;
@@ -40,4 +41,30 @@ export class StorageManager {
       // Local storage not available
     }
   }
+}
+
+/**
+ * Persist a store value to localStorage or sessionStorage.
+ * This will update `store` from `key` on first load.
+ */
+export function saveStore<T>(
+  store: Writable<T>,
+  key: string,
+  {
+    storage = sessionStorage,
+    serialize = JSON.stringify,
+    deserialize = JSON.parse,
+  },
+) {
+  if (!store || !key) return;
+
+  const prefixedKey = `${KEY_PREFIX}${key}`;
+  const saved = storage.getItem(prefixedKey);
+  if (saved) {
+    store.set(deserialize(saved));
+  }
+
+  return store.subscribe(($value) => {
+    storage.setItem(prefixedKey, serialize($value));
+  });
 }

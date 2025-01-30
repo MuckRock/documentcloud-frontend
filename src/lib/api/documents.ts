@@ -466,11 +466,11 @@ export async function redact(
   redactions: Redaction[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response> {
+): Promise<APIResponse<Redaction[], ValidationError>> {
   const endpoint = new URL(`documents/${id}/redactions/`, BASE_API_URL);
 
   // redaction is a fire-and-reprocess method, so all we have to go on is a response
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "POST",
     headers: {
@@ -480,6 +480,8 @@ export async function redact(
     },
     body: JSON.stringify(redactions),
   });
+
+  return getApiResponse<Redaction[], ValidationError>(resp);
 }
 
 /**

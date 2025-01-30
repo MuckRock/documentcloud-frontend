@@ -358,6 +358,7 @@
     "uploadToProject": "Caricare al Progetto",
     "download": "ScaricaFile",
     "reprocess": "Riproduzione",
+    "processing": "Elaborazione",
     "created": "Creato il",
     "updated": "Ultimo aggiornamento il",
     "language": "Linguaggio",
@@ -553,7 +554,8 @@
     "documents": "Documenti",
     "unknown": "Sconosciuto",
     "totalCount": "{n} {n, plural, one {progetto attivo} other {progetti attivi}}",
-    "download": "Scarica file"
+    "download": "Scarica file",
+    "document": "Questo documento è in elaborazione. Alcune funzionalità potrebbero non essere ancora disponibili."
   },
   "feedback": {
     "title": "Condividi la tua opinione",

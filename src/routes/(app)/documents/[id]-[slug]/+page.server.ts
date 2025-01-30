@@ -141,31 +141,25 @@ export const actions = {
     const form = await request.formData();
     const redactions = JSON.parse(form.get("redactions") as string);
 
-    const resp = await redact(params.id, redactions, csrf_token, fetch).catch(
-      console.error,
+    const { data, error: err } = await redact(
+      params.id,
+      redactions,
+      csrf_token,
+      fetch,
     );
 
     // probably the API is down
-    if (!resp) {
+    if (err) {
       setFlash(
         { message: "Redactions failed to save.", status: "error" },
         cookies,
       );
-      return fail(500, { error: "Something went wrong." });
+      return fail(500, { error: err.message, errors: err.errors });
     }
 
-    // something else broke
-    if (isErrorCode(resp.status)) {
-      setFlash(
-        { message: "Redactions failed to save.", status: "error" },
-        cookies,
-      );
-      return fail(resp.status, await resp.json());
-    }
     setFlash({ message: "Redactions saved", status: "success" }, cookies);
     return {
-      success: true,
-      redactions: await resp.json(), // this should be the same as above
+      redactions: data, // this should be the same as above
     };
   },
 

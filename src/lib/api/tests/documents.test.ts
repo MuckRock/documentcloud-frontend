@@ -605,15 +605,15 @@ describe("document write methods", () => {
       };
     });
 
-    const resp = await documents.redact(
+    const { data, error } = await documents.redact(
       document.id,
       redactions,
       "token",
       mockFetch,
     );
 
-    expect(resp.status).toStrictEqual(201);
-    expect(await resp.json()).toStrictEqual(redactions);
+    expect(error).toBeUndefined();
+    expect(data).toStrictEqual(redactions);
 
     expect(mockFetch).toHaveBeenCalledWith(
       new URL(`documents/${document.id}/redactions/`, BASE_API_URL),
