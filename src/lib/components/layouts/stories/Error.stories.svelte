@@ -9,12 +9,7 @@
   };
 </script>
 
-<script lang="ts">
-  import { setContext } from "svelte";
-  setContext("me", null);
-</script>
-
-<Story name="With Message">
+<Story name="500 Error">
   <div class="vh-100">
     <Error>
       <p slot="status">500 Error</p>
@@ -23,19 +18,7 @@
   </div>
 </Story>
 
-<Story
-  name="With Action"
-  parameters={{
-    sveltekit_experimental: {
-      stores: {
-        page: {
-          url: new URL("http://localhost:3000/missing-page"),
-          status: 404,
-        },
-      },
-    },
-  }}
->
+<Story name="404 Error">
   <div class="vh-100">
     <Error>
       <p slot="status">404 Error</p>
