@@ -29,6 +29,7 @@
     sveltekit_experimental: {
       stores: {
         page: {
+          url: new URL("http://localhost:3000/missing-page"),
           status: 404,
         },
       },
