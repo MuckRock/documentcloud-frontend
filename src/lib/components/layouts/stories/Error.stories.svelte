@@ -11,8 +11,7 @@
 
 <Story name="Error 500">
   <div class="vh-100">
-    <Error>
-      <p slot="status">500 Error</p>
+    <Error status={500}>
       <p slot="message">Something broke on our end!</p>
     </Error>
   </div>
@@ -20,8 +19,7 @@
 
 <Story name="Error 404">
   <div class="vh-100">
-    <Error>
-      <p slot="status">404 Error</p>
+    <Error status={404}>
       <p slot="message">Page not found</p>
     </Error>
   </div>

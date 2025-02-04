@@ -26,6 +26,7 @@
     {#if status}
       <h1 class="status-code">
         {status}
+        {$_("error.error")}
       </h1>
     {/if}
     <slot name="message" />

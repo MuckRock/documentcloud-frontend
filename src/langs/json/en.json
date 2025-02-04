@@ -220,6 +220,7 @@
     "retry": "Please try again."
   },
   "error": {
+    "error": "Error",
     "report": "Report a problem",
     "signIn": "To access private content, <a href=\"{href}\">sign in first</a>."
   },
