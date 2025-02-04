@@ -220,7 +220,8 @@
     "retry": "Please try again."
   },
   "error": {
-    "report": "Report a problem"
+    "report": "Report a problem",
+    "signIn": "To access private content, <a href=\"{href}\">sign in first</a>."
   },
   "noDocuments": {
     "noSearchResults": "No search results",

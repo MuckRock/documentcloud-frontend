@@ -30,8 +30,7 @@
   <slot />
   {#if $page.status === 404 && !me}
     <p class="signInMessage">
-      To access private content,
-      <a href={sign_in_url.href}>sign in first</a>.
+      {@html $_("error.signIn", { values: { href: sign_in_url.href } })}
     </p>
   {/if}
   <Button
