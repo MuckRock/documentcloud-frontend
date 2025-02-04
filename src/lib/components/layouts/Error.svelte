@@ -1,5 +1,6 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
+  import { page } from "$app/stores";
 
   import Button from "../common/Button.svelte";
   import Error from "../common/Error.svelte";
@@ -8,10 +9,13 @@
   import UserFeedback from "../forms/UserFeedback.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
+  import { APP_URL, SIGN_IN_URL } from "@/config/config";
 
   const me = getCurrentUser();
 
   let feedbackOpen = false;
+
+  $: sign_in_url = new URL(`?next=${APP_URL}`, SIGN_IN_URL);
 </script>
 
 <div class="container">
@@ -24,6 +28,12 @@
     <slot name="message" />
   </Error>
   <slot />
+  {#if $page.status === 404 && !me}
+    <p class="signInMessage">
+      To access private content,
+      <a href={sign_in_url.href}>sign in first</a>.
+    </p>
+  {/if}
   <Button
     ghost
     size="small"
@@ -60,5 +70,10 @@
   .status-code {
     font-size: var(--font-xl);
     font-weight: var(--font-semibold);
+  }
+  .signInMessage {
+    margin: 0;
+    font-size: var(--font-sm);
+    color: var(--gray-5);
   }
 </style>

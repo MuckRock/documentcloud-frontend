@@ -1,13 +1,17 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import Error from "../Error.svelte";
-  import Button from "../../common/Button.svelte";
 
   export const meta = {
     title: "Layout / Error",
     component: Error,
     parameters: { layout: "fullscreen" },
   };
+</script>
+
+<script lang="ts">
+  import { setContext } from "svelte";
+  setContext("me", null);
 </script>
 
 <Story name="With Message">
@@ -19,12 +23,22 @@
   </div>
 </Story>
 
-<Story name="With Action">
+<Story
+  name="With Action"
+  parameters={{
+    sveltekit_experimental: {
+      stores: {
+        page: {
+          status: 404,
+        },
+      },
+    },
+  }}
+>
   <div class="vh-100">
     <Error>
       <p slot="status">404 Error</p>
       <p slot="message">Page not found</p>
-      <Button mode="primary">Go home</Button>
     </Error>
   </div>
 </Story>
