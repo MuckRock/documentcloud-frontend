@@ -9,7 +9,7 @@
   };
 </script>
 
-<Story name="500 Error">
+<Story name="Error 500">
   <div class="vh-100">
     <Error>
       <p slot="status">500 Error</p>
@@ -18,7 +18,7 @@
   </div>
 </Story>
 
-<Story name="404 Error">
+<Story name="Error 404">
   <div class="vh-100">
     <Error>
       <p slot="status">404 Error</p>
