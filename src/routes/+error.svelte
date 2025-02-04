@@ -28,3 +28,9 @@
     {/if}
   </div>
 </Error>
+
+<style>
+  .signInMessage {
+    margin: 1rem 0;
+  }
+</style>
