@@ -20,7 +20,10 @@
 
   let feedbackOpen = false;
 
-  $: sign_in_url = new URL(`?next=${$page.url.href}`, SIGN_IN_URL);
+  $: sign_in_url = new URL(
+    `?next=${encodeURIComponent($page.url.href)}`,
+    SIGN_IN_URL,
+  );
 </script>
 
 <div class="container">
