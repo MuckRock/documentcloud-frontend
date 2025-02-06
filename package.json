@@ -72,7 +72,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development vite dev",
-    "dev:remote": "NODE_ENV=staging vite dev",
+    "dev:remote": "NODE_ENV=remote vite dev",
     "build": "vite build && node embeds.js",
     "preview": "vite preview",
     "sync": "svelte-kit sync",
