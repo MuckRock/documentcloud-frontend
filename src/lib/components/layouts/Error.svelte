@@ -1,4 +1,8 @@
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
+
+  import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -8,22 +12,36 @@
   import UserFeedback from "../forms/UserFeedback.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
+  import { SIGN_IN_URL } from "@/config/config.js";
 
   const me = getCurrentUser();
 
+  export let status: Maybe<number> = undefined;
+
   let feedbackOpen = false;
+
+  $: sign_in_url = new URL(
+    `?next=${encodeURIComponent($page.url.href)}`,
+    SIGN_IN_URL,
+  );
 </script>
 
 <div class="container">
   <Error>
-    {#if $$slots.status}
-      <div class="status-code">
-        <slot name="status" />
-      </div>
+    {#if status}
+      <h1 class="status-code">
+        {status}
+        {$_("error.error")}
+      </h1>
     {/if}
     <slot name="message" />
   </Error>
   <slot />
+  {#if status === 404 && !$me}
+    <p class="signInMessage">
+      {@html $_("error.signIn", { values: { href: sign_in_url.href } })}
+    </p>
+  {/if}
   <Button
     ghost
     size="small"
@@ -60,5 +78,10 @@
   .status-code {
     font-size: var(--font-xl);
     font-weight: var(--font-semibold);
+  }
+  .signInMessage {
+    margin: 0;
+    font-size: var(--font-sm);
+    color: var(--gray-5);
   }
 </style>

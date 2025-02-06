@@ -4,11 +4,7 @@
   import Error from "$lib/components/layouts/Error.svelte";
 </script>
 
-<Error>
-  <h1 slot="status">
-    {$page.status}
-  </h1>
-
+<Error status={$page.status}>
   <p slot="message">
     {#if $page.status === 404}
       {$_("notfound.content")}

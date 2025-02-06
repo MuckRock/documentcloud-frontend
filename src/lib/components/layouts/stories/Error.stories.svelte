@@ -1,7 +1,6 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import Error from "../Error.svelte";
-  import Button from "../../common/Button.svelte";
 
   export const meta = {
     title: "Layout / Error",
@@ -10,21 +9,18 @@
   };
 </script>
 
-<Story name="With Message">
+<Story name="Error 500">
   <div class="vh-100">
-    <Error>
-      <p slot="status">500 Error</p>
+    <Error status={500}>
       <p slot="message">Something broke on our end!</p>
     </Error>
   </div>
 </Story>
 
-<Story name="With Action">
+<Story name="Error 404">
   <div class="vh-100">
-    <Error>
-      <p slot="status">404 Error</p>
+    <Error status={404}>
       <p slot="message">Page not found</p>
-      <Button mode="primary">Go home</Button>
     </Error>
   </div>
 </Story>
