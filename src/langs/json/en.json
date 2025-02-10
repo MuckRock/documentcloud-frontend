@@ -253,6 +253,46 @@
       "projects": "Projects",
       "data": "Data",
       "wrapTitle": "Wrap Title"
+    },
+    "filter": {
+      "label": "Filter",
+      "advancedHelp": "Advanced search syntax",
+      "access": {
+        "public": "Public",
+        "private": "Private"
+      },
+      "users": "Users",
+      "orgs": "Organizations",
+      "projects": "Projects",
+      "minPages": "Min. Pages",
+      "maxPages": "Max. Pages",
+      "minDate": "Start",
+      "maxDate": "End"
+    },
+    "sort": {
+      "label": "Sort",
+      "fields": {
+        "score": {
+          "label": "Relevance",
+          "forward": "Highest",
+          "reverse": "Lowest"
+        },
+        "created_at": {
+          "label": "Date Created",
+          "forward": "Newest",
+          "reverse": "Oldest"
+        },
+        "page_count": {
+          "label": "Page Count",
+          "forward": "Most",
+          "reverse": "Least"
+        },
+        "title": {
+          "label": "Title",
+          "forward": "A–Z",
+          "reverse": "Z–A"
+        }
+      }
     }
   },
   "projects": {
