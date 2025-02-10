@@ -1,3 +1,4 @@
+import * as remote from "./remote.js";
 import * as staging from "./staging.js";
 import * as production from "./production.js";
 
@@ -10,6 +11,14 @@ let EMBED_URL = "https://www.dev.documentcloud.org/";
 let SQUARELET_BASE = "https://dev.squarelet.com";
 let STAFF_ONLY_S3_URL =
   "http://minio.documentcloud.org:9000/minio/documents/documents/$$ID$$/";
+
+if (process.env.NODE_ENV === "remote") {
+  DC_BASE = remote.DC_BASE;
+  APP_URL = remote.APP_URL;
+  EMBED_URL = remote.EMBED_URL;
+  SQUARELET_BASE = remote.SQUARELET_BASE;
+  STAFF_ONLY_S3_URL = remote.STAFF_ONLY_S3_URL;
+}
 
 if (process.env.NODE_ENV === "staging") {
   DC_BASE = staging.DC_BASE;
