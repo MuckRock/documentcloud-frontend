@@ -4,6 +4,7 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Logo from "$lib/components/common/Logo.svelte";
+  import PlausibleTracker from "$lib/components/common/PlausibleTracker.svelte";
 
   // SVG assets
 
@@ -517,6 +518,9 @@
 
   <footer />
 </div>
+
+<!-- this just needs to be on the page -->
+<PlausibleTracker />
 
 <style>
   :global(.masthead) {

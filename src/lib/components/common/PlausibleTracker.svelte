@@ -1,10 +1,12 @@
 <script lang="ts">
-  import Plausible from "plausible-tracker";
-
-  import { getContext, onMount } from "svelte";
   import type { Writable } from "svelte/store";
-  import { afterNavigate } from "$app/navigation";
+
   import { browser } from "$app/environment";
+  import { afterNavigate } from "$app/navigation";
+
+  import Plausible from "plausible-tracker";
+  import { getContext, onMount } from "svelte";
+
   import { getCurrentUser } from "$lib/utils/permissions";
 
   let plausible;
