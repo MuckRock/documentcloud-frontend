@@ -142,7 +142,7 @@ progress through the three-part upload process.
   });
 
   beforeNavigate((navigation) => {
-    if (!empty && !loading) {
+    if (!empty && loading) {
       if (!window.confirm($_("uploadDialog.confirmLeave"))) {
         navigation.cancel();
       }
