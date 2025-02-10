@@ -24,6 +24,21 @@ const remoteServer = {
   },
 };
 
+const plugins =
+  process.env.NODE_ENV === "remote"
+    ? [sveltekit()]
+    : [
+        sentrySvelteKit({
+          sourceMapsUploadOptions: {
+            org: process.env.SENTRY_ORG,
+            project:
+              process.env.SENTRY_PROJECT ?? "documentcloud-frontend-staging",
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+          },
+        }),
+        sveltekit(),
+      ];
+
 export default defineConfig({
   build: {
     sourcemap: true,
@@ -37,16 +52,7 @@ export default defineConfig({
     ),
   },
 
-  plugins: [
-    sentrySvelteKit({
-      sourceMapsUploadOptions: {
-        org: process.env.SENTRY_ORG,
-        project: process.env.SENTRY_PROJECT ?? "documentcloud-frontend-staging",
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-      },
-    }),
-    sveltekit(),
-  ],
+  plugins,
 
   // allow top-level await
   optimizeDeps: {
