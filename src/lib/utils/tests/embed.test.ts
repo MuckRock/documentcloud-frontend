@@ -16,6 +16,10 @@ describe("embed settings", () => {
 
   test("createEmbedSearchParams", () => {
     expect(createEmbedSearchParams({ title: null }).toString()).toEqual("");
+    expect(createEmbedSearchParams({ title: 1 }).toString()).toEqual("title=1");
+    expect(createEmbedSearchParams({ title: 1, pdf: 0 }).toString()).toEqual(
+      "title=1&pdf=0",
+    );
   });
 
   test("getEmbedSettings", () => {
