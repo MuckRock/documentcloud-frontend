@@ -184,6 +184,9 @@ describe("document fetching", () => {
     }));
 
     const endpoint = documents.jsonUrl(document);
+    const updated = Date.parse(document.updated_at);
+
+    endpoint.searchParams.set("t", updated.toString());
 
     const t = await documents.text(document, mockFetch);
     expect(t).toMatchObject(text);
@@ -194,6 +197,7 @@ describe("document fetching", () => {
   test("documents.text private", async ({ document, text }) => {
     const { asset_url } = document;
     const privateText = new URL("private.txt.json", asset_url);
+
     const privateDoc = {
       ...document,
       access: "private",

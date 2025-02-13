@@ -166,7 +166,7 @@ export interface Document {
   source?: string;
   status: Status;
   title: string;
-  updated_at: string | Date;
+  updated_at: string;
   user: number | User;
 
   // for uploads

@@ -43,21 +43,27 @@ export function pageSizesFromSpec(pageSpec) {
  * Parse page_spec and return an array of [width, height] tuples
  *
  * @param {string} pageSpec A string encoding page dimensions in a compact format
+ * @example "612.0x792.0:0-427,429-431,433-447;611.9999389648438x792.0:428,432"
  * @returns {[number, number][]}
  */
-export function pageSizes(pageSpec) {
+export function pageSizes(pageSpec: string): [number, number][] {
   // Handle empty page spec
   if (pageSpec.trim().length == 0) return [];
 
   const parts = pageSpec.split(";");
 
-  return parts.reduce((sizes, part, i) => {
-    const [size, range] = part.split(":");
-    const [width, height] = size.split("x").map(parseFloat);
+  return parts.reduce((sizes, part) => {
+    const [size, ranges] = part.split(":");
+    if (!size || !ranges) return sizes;
 
-    range.split(",").forEach((rangePart) => {
+    const [width, height] = size.split("x").map(parseFloat);
+    if (!width || !height) return sizes;
+
+    ranges.split(",").forEach((rangePart) => {
       if (rangePart.includes("-")) {
         const [start, end] = rangePart.split("-").map((x) => parseInt(x, 10));
+        if (start === undefined || end === undefined) return;
+
         for (let page = start; page <= end; page++) {
           sizes[page] = [width, height];
         }
