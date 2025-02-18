@@ -184,6 +184,9 @@ describe("document fetching", () => {
     }));
 
     const endpoint = documents.jsonUrl(document);
+    const updated = Date.parse(document.updated_at);
+
+    endpoint.searchParams.set("t", updated.toString());
 
     const t = await documents.text(document, mockFetch);
     expect(t).toMatchObject(text);
@@ -194,6 +197,7 @@ describe("document fetching", () => {
   test("documents.text private", async ({ document, text }) => {
     const { asset_url } = document;
     const privateText = new URL("private.txt.json", asset_url);
+
     const privateDoc = {
       ...document,
       access: "private",
@@ -672,9 +676,11 @@ describe("document helper methods", () => {
     });
 
     let asset_url = await documents.assetUrl(document, mockFetch);
-
+    const updated = Date.parse(document.updated_at);
+    const public_url = documents.pdfUrl(document);
+    public_url.searchParams.set("t", updated.toString());
     // for public documents, these are the same
-    expect(asset_url).toStrictEqual(documents.pdfUrl(document));
+    expect(asset_url).toStrictEqual(public_url);
     expect(mockFetch).toBeCalledTimes(0); // didn't use it
 
     // for private documents and those still processing, the URL should be private

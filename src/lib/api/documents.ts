@@ -179,6 +179,9 @@ export async function text(
       console.warn(e);
       return empty;
     }
+  } else {
+    const updated = Date.parse(document.updated_at);
+    url.searchParams.set("t", updated.toString());
   }
 
   const resp = await fetch(url).catch(console.warn);
@@ -207,6 +210,9 @@ export async function textPositions(
       console.warn(e);
       return [];
     }
+  } else {
+    const updated = Date.parse(document.updated_at);
+    url.searchParams.set("t", updated.toString());
   }
 
   try {
@@ -519,6 +525,9 @@ export async function assetUrl(
       console.warn(asset_url.href);
       return asset_url;
     });
+  } else {
+    const updated = Date.parse(document.updated_at);
+    asset_url.searchParams.set("t", updated.toString());
   }
 
   return asset_url;
