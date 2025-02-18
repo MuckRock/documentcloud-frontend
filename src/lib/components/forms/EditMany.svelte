@@ -4,6 +4,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
   import type { Document } from "$lib/api/types";
+
   import { enhance } from "$app/forms";
 
   import { createEventDispatcher } from "svelte";
@@ -20,6 +21,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import TextArea from "../inputs/TextArea.svelte";
   import Tip from "../common/Tip.svelte";
 
+  import { MAX_EDIT_BATCH } from "@/config/config.js";
+
   export let documents: Document[];
 
   const dispatch = createEventDispatcher();
@@ -27,6 +30,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   const action = "/documents/?/edit";
 
   $: ids = documents?.map((d) => d.id) ?? [];
+  $: disabled = documents.length < 1 || documents.length >= MAX_EDIT_BATCH;
 
   function onSubmit() {
     dispatch("close");
@@ -46,6 +50,15 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       >
         <Alert24 slot="icon" />
         {$_("edit.nodocs")}
+      </Tip>
+    {:else if documents.length >= MAX_EDIT_BATCH}
+      <Tip
+        --background-color="var(--caution)"
+        --color="var(--gray-1)"
+        --fill="var(--gray-1)"
+      >
+        <Alert24 slot="icon" />
+        {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
       </Tip>
     {/if}
 
@@ -84,10 +97,10 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <input type="hidden" name="documents" value={ids.join(",")} />
 
     <Flex class="buttons">
-      <Button type="submit" mode="primary" full disabled={documents.length < 1}>
+      <Button type="submit" mode="primary" full {disabled}>
         {$_("edit.save")}
       </Button>
-      <Button full on:click={(e) => dispatch("close")}>
+      <Button full on:click={() => dispatch("close")}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

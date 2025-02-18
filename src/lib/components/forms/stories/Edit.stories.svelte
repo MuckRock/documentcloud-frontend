@@ -51,3 +51,16 @@
     </EditMany>
   </div>
 </Story>
+
+<Story name="Bulk edit, too many documents">
+  <div style="min-width: 600px;">
+    <EditMany documents={Array(100).fill(document)}>
+      <header>
+        <h2>{$_("edit.title")}</h2>
+        <p>
+          This will edit all documents to have the same data. Use carefully.
+        </p>
+      </header>
+    </EditMany>
+  </div>
+</Story>
