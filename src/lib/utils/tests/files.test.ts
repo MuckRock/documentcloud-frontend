@@ -103,3 +103,8 @@ test("files.filenameToTitle", () => {
     "This.Is.My.Boomstick",
   );
 });
+
+test("files.stripExtension", () => {
+  expect(files.stripExtension("file.pdf")).toEqual("file");
+  expect(files.stripExtension("file.unknown")).toEqual("file.unknown");
+});
