@@ -1,4 +1,3 @@
-import type { Maybe } from "$lib/api/types";
 import {
   DOCUMENT_TYPES,
   PDF_SIZE_LIMIT,
@@ -46,7 +45,21 @@ export function isWithinSizeLimit(file: File) {
 }
 
 export function filenameToTitle(filename: string): string {
-  const [name, ...ext] = filename.split(".");
-  if (!name) return filename;
+  const name = stripExtension(filename);
   return name.replace(/_/g, " ");
+}
+
+/**
+ * Strips the extension part of a filename
+ * @param {string} filename The filename
+ */
+export function stripExtension(filename: string) {
+  const parts = filename.split(".");
+  const ext = parts[parts.length - 1] ?? "";
+
+  // strip only known extensions
+  if (types.has(ext)) {
+    return parts.slice(0, parts.length - 1).join(".");
+  }
+  return filename;
 }

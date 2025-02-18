@@ -1,11 +1,11 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import DocumentUpload from "$lib/components/forms/DocumentUpload.svelte";
-  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import Documents from "$lib/components/sidebar/Documents.svelte";
   import Projects from "$lib/components/sidebar/Projects.svelte";
-  import AddOns from "$lib/components/sidebar/AddOns.svelte";
+  import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
+  import Upload from "$lib/components/forms/Upload.svelte";
 
   export let data;
 
@@ -24,7 +24,7 @@
   </svelte:fragment>
 
   <div slot="content" class="form-container">
-    <DocumentUpload {projects} />
+    <Upload {projects} />
   </div>
 </SidebarLayout>
 
