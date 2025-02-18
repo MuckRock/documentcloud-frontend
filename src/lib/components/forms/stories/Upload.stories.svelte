@@ -1,14 +1,14 @@
 <script context="module" lang="ts">
   import { writable } from "svelte/store";
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import DocumentUpload from "../DocumentUpload.svelte";
+  import Upload from "../Upload.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
 
   import { me } from "@/test/fixtures/accounts";
 
   export const meta = {
     title: "Forms / Document Upload",
-    component: DocumentUpload,
+    component: Upload,
     parameters: { layout: "centered" },
   };
 
@@ -20,7 +20,7 @@
 </script>
 
 <Template let:args>
-  <DocumentUpload {...args} />
+  <Upload {...args} />
 </Template>
 
 <Story name="Empty" {args} />

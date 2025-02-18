@@ -1,15 +1,19 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { goto } from "$app/navigation";
   import type { Maybe, Project } from "$lib/api/types";
+
+  import { goto } from "$app/navigation";
+
+  import { _ } from "svelte-i18n";
+  import { PlusCircle16 } from "svelte-octicons";
+
   import Button from "$lib/components/common/Button.svelte";
-  import { uploadToProject } from "$lib/components/forms/DocumentUpload.svelte";
+
   import {
     canUploadFiles,
     getCurrentUser,
     isSignedIn,
   } from "$lib/utils/permissions";
-  import { PlusCircle16 } from "svelte-octicons";
+  import { uploadToProject } from "$lib/components/forms/Upload.svelte";
 
   export let project: Maybe<Project> = undefined;
   const me = getCurrentUser();
