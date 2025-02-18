@@ -40,7 +40,7 @@
   import {
     filesToUpload,
     uploadToProject,
-  } from "@/lib/components/forms/Upload.svelte";
+  } from "$lib/components/forms/Upload.svelte";
 
   // Layout comopnents
   import ContentLayout from "./ContentLayout.svelte";
