@@ -15,6 +15,14 @@
     type: "application/pdf",
   });
 
+  const weirdFilename = new File(
+    [new ArrayBuffer(128000)],
+    "test.with.dots.pdf",
+    {
+      type: "application/pdf",
+    },
+  );
+
   const error: APIError<unknown> = {
     status: 500,
     message: "Error uploading",
@@ -25,6 +33,10 @@
 
 <Story name="ready">
   <UploadListItem {id} status={{ step: "ready", file }} />
+</Story>
+
+<Story name="handling file names">
+  <UploadListItem {id} status={{ step: "ready", file: weirdFilename }} />
 </Story>
 
 <Story name="created">
