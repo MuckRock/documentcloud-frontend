@@ -43,44 +43,53 @@
       <fieldset>
         <legend>{$_(config.field.label)}</legend>
         {#if config.field.type === "dimension"}
-          <Flex>
-            <div class="flexItem">
-              <Field inline>
-                <label>
-                  <input
-                    type="radio"
-                    {name}
-                    value={config.field.automatic.value}
-                    bind:group={$embedSettings[name]}
-                  />
-                  {$_(config.field.automatic.label)}
-                  {#if config.defaultValue === config.field.automatic.value}
-                    <span class="default">{$_("share.default")}</span>
-                  {/if}
-                </label>
-                <p slot="help">{$_(config.field.automatic.help)}</p>
-              </Field>
-            </div>
-            <div class="flexItem">
-              <Field inline>
-                <label>
-                  <input
-                    type="radio"
-                    {name}
-                    value={$embedSettings[name] >= 1
-                      ? $embedSettings[name]
-                      : config.field.fixed.value}
-                    bind:group={$embedSettings[name]}
-                  />
-                  {$_(config.field.fixed.label)}
-                  {#if config.defaultValue === config.field.fixed.value}
-                    <span class="default">{$_("share.default")}</span>
-                  {/if}
-                </label>
-                <p slot="help">{$_(config.field.fixed.help)}</p>
-              </Field>
-            </div>
-          </Flex>
+          {#if config.field.automatic}
+            <Flex>
+              <div class="flexItem">
+                <Field inline>
+                  <label>
+                    <input
+                      type="radio"
+                      {name}
+                      value={config.field.automatic.value}
+                      bind:group={$embedSettings[name]}
+                    />
+                    {$_(config.field.automatic.label)}
+                    {#if config.defaultValue === config.field.automatic.value}
+                      <span class="default">{$_("share.default")}</span>
+                    {/if}
+                  </label>
+                  <p slot="help">
+                    {$_(config.field.automatic.help)}
+                  </p>
+                </Field>
+              </div>
+
+              <div class="flexItem">
+                <Field inline>
+                  <label>
+                    <input
+                      type="radio"
+                      {name}
+                      value={$embedSettings[name] >= 1
+                        ? $embedSettings[name]
+                        : config.field.fixed.value}
+                      bind:group={$embedSettings[name]}
+                    />
+                    {$_(config.field.fixed.label)}
+
+                    {#if config.defaultValue === config.field.fixed.value}
+                      <span class="default">{$_("share.default")}</span>
+                    {/if}
+                  </label>
+
+                  <p slot="help">
+                    {$_(config.field.fixed.help)}
+                  </p>
+                </Field>
+              </div>
+            </Flex>
+          {/if}
           {#if $embedSettings[name] >= 1}
             <div class="number-input">
               <NumberInput min={1} {name} bind:value={$embedSettings[name]} />
@@ -125,7 +134,7 @@
     padding: 0 0.5rem;
   }
   .number-input {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
   .default {
     font-size: var(--font-xs);

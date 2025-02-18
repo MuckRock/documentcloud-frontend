@@ -23,17 +23,12 @@ exports[`embed settings > settingsConfig 1`] = `
     "storageIndex": 5,
   },
   "height": {
-    "defaultValue": null,
+    "defaultValue": 600,
     "field": {
-      "automatic": {
-        "help": "dialogDocumentEmbedDialog.heightAuto",
-        "label": "appearanceDimension.responsive",
-        "value": null,
-      },
       "fixed": {
-        "help": "dialogDocumentEmbedDialog.widthFixed",
+        "help": "dialogDocumentEmbedDialog.heightFixed",
         "label": "appearanceDimension.fixed",
-        "value": 500,
+        "value": 600,
       },
       "label": "dialogDocumentEmbedDialog.height",
       "type": "dimension",
@@ -79,51 +74,6 @@ exports[`embed settings > settingsConfig 1`] = `
       "type": "toggle",
     },
     "storageIndex": 4,
-  },
-  "sidebar": {
-    "defaultValue": null,
-    "field": {
-      "label": "dialogDocumentEmbedDialog.sidebarBehavior",
-      "options": [
-        {
-          "help": "dialogDocumentEmbedDialog.sbResponsiveHelp",
-          "label": "dialogDocumentEmbedDialog.sbResponsive",
-          "value": null,
-        },
-        {
-          "help": "dialogDocumentEmbedDialog.sbHiddenHelp",
-          "label": "dialogDocumentEmbedDialog.hidden",
-          "value": 0,
-        },
-        {
-          "help": "dialogDocumentEmbedDialog.sbVisibleHelp",
-          "label": "dialogDocumentEmbedDialog.visible",
-          "value": 1,
-        },
-      ],
-      "type": "toggle",
-    },
-    "storageIndex": 0,
-  },
-  "text": {
-    "defaultValue": null,
-    "field": {
-      "label": "dialogDocumentEmbedDialog.textMode",
-      "options": [
-        {
-          "help": "dialogDocumentEmbedDialog.tmVisibleHelp",
-          "label": "dialogDocumentEmbedDialog.visibleDefault",
-          "value": null,
-        },
-        {
-          "help": "dialogDocumentEmbedDialog.tmHiddenHelp",
-          "label": "dialogDocumentEmbedDialog.hidden",
-          "value": 0,
-        },
-      ],
-      "type": "toggle",
-    },
-    "storageIndex": 6,
   },
   "title": {
     "defaultValue": 1,

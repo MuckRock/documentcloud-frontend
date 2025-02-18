@@ -17,7 +17,7 @@ export interface ToggleField {
 export interface DimensionField {
   type: "dimension";
   label: string;
-  automatic: EmbedSettingOption;
+  automatic?: EmbedSettingOption;
   fixed: EmbedSettingOption;
 }
 
@@ -28,13 +28,10 @@ export interface EmbedSettingConfig {
 }
 
 export let settings = {
-  // responsive: null,
   width: null,
   height: null,
-  sidebar: null,
   title: null,
   pdf: null,
-  text: null,
   fullscreen: null,
   onlyshoworg: null,
 };
@@ -42,13 +39,10 @@ export let settings = {
 export type EmbedSettings = Record<keyof typeof settings, null | number>;
 
 export const defaultSettings: EmbedSettings = {
-  // responsive: 1,
   width: null,
-  height: null,
-  sidebar: null,
+  height: 600,
   title: 1,
-  pdf: 0,
-  text: null,
+  pdf: 1,
   fullscreen: 1,
   onlyshoworg: 0,
 };
@@ -97,27 +91,6 @@ export function truthy(
 }
 
 export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
-  /*   responsive: {
-    storageIndex: 8, // out-of-order because added later
-    defaultValue: 1,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.responsive",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.respOn",
-          help: "dialogDocumentEmbedDialog.respOnHelp",
-          value: 1,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.respOff",
-          help: "dialogDocumentEmbedDialog.respOffHelp",
-          value: 0,
-        },
-      ],
-    },
-  },
- */
   width: {
     storageIndex: 1,
     defaultValue: null,
@@ -138,45 +111,15 @@ export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
   },
   height: {
     storageIndex: 2,
-    defaultValue: null,
+    defaultValue: 600,
     field: {
       type: "dimension",
       label: "dialogDocumentEmbedDialog.height",
-      automatic: {
-        label: "appearanceDimension.responsive",
-        help: "dialogDocumentEmbedDialog.heightAuto",
-        value: null,
-      },
       fixed: {
         label: "appearanceDimension.fixed",
-        help: "dialogDocumentEmbedDialog.widthFixed",
-        value: 500,
+        help: "dialogDocumentEmbedDialog.heightFixed",
+        value: 600,
       },
-    },
-  },
-  sidebar: {
-    storageIndex: 0,
-    defaultValue: null,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.sidebarBehavior",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.sbResponsive",
-          help: "dialogDocumentEmbedDialog.sbResponsiveHelp",
-          value: null,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.hidden",
-          help: "dialogDocumentEmbedDialog.sbHiddenHelp",
-          value: 0,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.visible",
-          help: "dialogDocumentEmbedDialog.sbVisibleHelp",
-          value: 1,
-        },
-      ],
     },
   },
   title: {
@@ -214,26 +157,6 @@ export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
         {
           label: "dialogDocumentEmbedDialog.hidden",
           help: "dialogDocumentEmbedDialog.plHiddenHelp",
-          value: 0,
-        },
-      ],
-    },
-  },
-  text: {
-    storageIndex: 6,
-    defaultValue: null,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.textMode",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.visibleDefault",
-          help: "dialogDocumentEmbedDialog.tmVisibleHelp",
-          value: null,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.hidden",
-          help: "dialogDocumentEmbedDialog.tmHiddenHelp",
           value: 0,
         },
       ],
