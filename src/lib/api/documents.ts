@@ -50,6 +50,8 @@ export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
 // for keeping track of deleted documents that haven't been purged from search yet
 export const deleted: Writable<Set<string>> = writable(new Set());
 
+const DEFAULT_EXPAND = ["user", "organization", "projects"];
+
 /**
  * Search documents
  * https://www.documentcloud.org/help/search/
@@ -67,9 +69,7 @@ export async function search(
 ): Promise<APIResponse<DocumentResults, null>> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
-  const expand = ["user", "organization", "projects"].join(",");
-
-  endpoint.searchParams.set("expand", expand);
+  endpoint.searchParams.set("expand", DEFAULT_EXPAND.join(","));
   endpoint.searchParams.set("q", query);
 
   for (const [k, v] of Object.entries(options)) {
@@ -423,6 +423,9 @@ export async function edit_many(
 ) {
   const endpoint = new URL("documents/", BASE_API_URL);
 
+  // return the same data we get from search
+  endpoint.searchParams.set("expand", DEFAULT_EXPAND.join(","));
+
   const resp = await fetch(endpoint, {
     credentials: "include",
     method: "PATCH",
@@ -434,7 +437,7 @@ export async function edit_many(
     body: JSON.stringify(documents),
   }).catch(console.warn);
 
-  return getApiResponse<DocumentResults>(resp);
+  return getApiResponse<DocumentResults, ValidationError>(resp);
 }
 
 /**

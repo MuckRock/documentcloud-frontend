@@ -30,10 +30,19 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   const action = "/documents/?/edit";
 
   $: ids = documents?.map((d) => d.id) ?? [];
-  $: disabled = documents.length < 1 || documents.length >= MAX_EDIT_BATCH;
+  $: disabled = documents.length < 1 || documents.length > MAX_EDIT_BATCH;
 
-  function onSubmit() {
-    dispatch("close");
+  /**
+   * @type {import('@sveltejs/kit').SubmitFunction}
+   */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+
+    return async ({ result, update }) => {
+      submitter.disabled = false;
+      update(result);
+      dispatch("close");
+    };
   }
 </script>
 
@@ -51,7 +60,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
         <Alert24 slot="icon" />
         {$_("edit.nodocs")}
       </Tip>
-    {:else if documents.length >= MAX_EDIT_BATCH}
+    {:else if documents.length > MAX_EDIT_BATCH}
       <Tip
         --background-color="var(--caution)"
         --color="var(--gray-1)"

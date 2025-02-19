@@ -114,7 +114,7 @@ export const actions = {
       return { ...update, id };
     });
 
-    const { error } = await edit_many(docs, csrf_token, fetch);
+    const { error, data } = await edit_many(docs, csrf_token, fetch);
 
     if (error) {
       setFlash({ message: error.message, status: "error" }, cookies);
@@ -127,8 +127,8 @@ export const actions = {
         : `Saved edits to ${ids.length} documents`;
     setFlash({ message, status: "success" }, cookies);
     return {
-      success: true,
       count: ids.length,
+      data,
     };
   },
 } satisfies Actions;
