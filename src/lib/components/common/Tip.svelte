@@ -1,7 +1,8 @@
 <script lang="ts">
   import { LightBulb24 } from "svelte-octicons";
 
-  export let mode: "normal" | "primary" | "premium" | "danger" = "normal";
+  export let mode: "normal" | "primary" | "premium" | "danger" | "error" =
+    "normal";
 </script>
 
 <aside class="tip {mode}">
@@ -56,7 +57,8 @@
     border-color: var(--green-2);
     background: var(--green-1);
   }
-  .tip.danger {
+  .tip.danger,
+  .tip.error {
     color: var(--orange-5);
     fill: var(--orange-3);
     background-color: var(--orange-3);
