@@ -2,17 +2,19 @@
 Confirm deletion or one or more documents.
 -->
 <script lang="ts">
-  import type { Document, Maybe } from "$lib/api/types";
+  import type { APIError, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { Trash16 } from "svelte-octicons";
+  import { Alert24, Trash16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import Tip from "../common/Tip.svelte";
 
+  import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { canonicalUrl, deleted } from "$lib/api/documents";
   import { getCurrentUser } from "$lib/utils/permissions";
 
@@ -23,11 +25,12 @@ Confirm deletion or one or more documents.
 
   const dispatch = createEventDispatcher();
 
-  let error: Maybe<string> = undefined;
+  let error: Maybe<APIError<null>> = undefined;
 
   $: ids = documents.map((d) => d.id);
   $: bulk = documents.length !== 1; // if it's zero, handle that elsewhere
   $: count = documents.length;
+  $: disabled = count > MAX_EDIT_BATCH || count === 0 || !$me;
   $: action = bulk
     ? "/documents/?/delete"
     : documents[0]
@@ -44,7 +47,7 @@ Confirm deletion or one or more documents.
         ids.forEach((d) => $deleted.add(String(d)));
         dispatch("close");
       } else {
-        console.error(result);
+        error = result.data.error;
       }
       dispatch("close");
       update(result);
@@ -55,9 +58,14 @@ Confirm deletion or one or more documents.
 
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
-    {#if count}
+    {#if count > 0 && count <= MAX_EDIT_BATCH}
       <p>{$_("delete.really", { values: { n: count } })}</p>
       <p>{$_("delete.continue", { values: { n: count } })}</p>
+    {:else if count > MAX_EDIT_BATCH}
+      <Tip mode="danger">
+        <Alert24 slot="icon" />
+        {$_("delete.toomany", { values: { n: MAX_EDIT_BATCH } })}
+      </Tip>
     {:else}
       <p>{$_("delete.none")}</p>
     {/if}
@@ -65,7 +73,7 @@ Confirm deletion or one or more documents.
     {#if error}
       <p class="error">
         <span>{$_("delete.error")}:</span>
-        {error}
+        {error.message}
       </p>
     {/if}
 
@@ -74,7 +82,7 @@ Confirm deletion or one or more documents.
     {/if}
 
     <Flex>
-      <Button type="submit" mode="danger" disabled={count === 0 || !$me}>
+      <Button type="submit" mode="danger" {disabled}>
         <Trash16 />
         {$_("delete.confirm")}
       </Button>

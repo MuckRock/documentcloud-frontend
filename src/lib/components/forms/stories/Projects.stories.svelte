@@ -23,3 +23,10 @@
 <Story name="many documents">
   <Projects projects={projectList.results} documents={documentsList.results} />
 </Story>
+
+<Story name="too many documents">
+  <Projects
+    projects={projectList.results}
+    documents={Array(100).fill(document)}
+  />
+</Story>

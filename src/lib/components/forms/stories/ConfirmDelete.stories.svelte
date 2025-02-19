@@ -34,3 +34,9 @@
     <ConfirmDelete documents={[]} />
   </div>
 </Story>
+
+<Story name="bulk delete, too many">
+  <div style="max-width: 66ch;">
+    <ConfirmDelete documents={Array(100).fill(document)} />
+  </div>
+</Story>

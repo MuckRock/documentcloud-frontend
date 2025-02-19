@@ -486,7 +486,8 @@
     "cancel": "Cancel",
     "success": "{n, plural, one {Document deleted} other {Documents deleted}}",
     "error": "Error",
-    "none": "No documents selected. Close this form and select at least one document first."
+    "none": "No documents selected. Close this form and select at least one document first.",
+    "toomany": "Bulk actions are limited to {n} documents at a time."
   },
   "data": {
     "title": "Edit Tags & Data",

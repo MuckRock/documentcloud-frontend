@@ -11,15 +11,17 @@ and we don't want to do that everywhere.
 
   import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { FileDirectory24, PlusCircle16 } from "svelte-octicons";
+  import { Alert24, FileDirectory24, PlusCircle16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
+  import Tip from "../common/Tip.svelte";
 
   import EditProject from "./EditProject.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
 
+  import { MAX_EDIT_BATCH } from "@/config/config";
   import { getForUser, add, remove } from "$lib/api/projects";
   import { getCsrfToken } from "$lib/utils/api";
   import { getCurrentUser } from "$lib/utils/permissions";
@@ -35,6 +37,7 @@ and we don't want to do that everywhere.
   let createProjectOpen = false;
   let common: Set<number>;
 
+  $: disabled = documents.length < 1 || documents.length > MAX_EDIT_BATCH;
   $: sorted = sort(projects);
   $: common = new Set(
     intersection(
@@ -98,6 +101,18 @@ and we don't want to do that everywhere.
 </script>
 
 <div class="container">
+  {#if documents.length < 1}
+    <Tip mode="error">
+      <Alert24 slot="icon" />
+      {$_("edit.nodocs")}
+    </Tip>
+  {:else if documents.length > MAX_EDIT_BATCH}
+    <Tip mode="danger">
+      <Alert24 slot="icon" />
+      {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
+    </Tip>
+  {/if}
+
   <div class="projects">
     {#each sorted as project}
       <label class="project">
@@ -107,6 +122,7 @@ and we don't want to do that everywhere.
           value={project.id}
           checked={common.has(project.id)}
           on:change={(e) => toggle(project, e)}
+          {disabled}
         />
         {project.title}
       </label>
