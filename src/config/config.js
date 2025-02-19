@@ -100,6 +100,9 @@ export const IMAGE_WIDTHS_MAP = new Map(IMAGE_WIDTHS_ENTRIES);
 export const DEFAULT_PER_PAGE = 25;
 export const MAX_PER_PAGE = 100;
 
+// export const EDIT_BATCH_SIZE = 25; // batching isn't supported yet
+export const MAX_EDIT_BATCH = 25;
+
 export const PDF_SIZE_LIMIT = 525336576;
 export const PDF_SIZE_LIMIT_READABLE = "500 MB";
 
