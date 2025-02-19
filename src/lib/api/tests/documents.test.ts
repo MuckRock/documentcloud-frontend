@@ -537,7 +537,7 @@ describe("document write methods", () => {
     expect(error).toBeUndefined();
 
     expect(mockFetch).toHaveBeenCalledWith(
-      new URL("documents/", BASE_API_URL),
+      new URL("documents/?expand=user%2Corganization%2Cprojects", BASE_API_URL),
       {
         credentials: "include",
         method: "PATCH",
