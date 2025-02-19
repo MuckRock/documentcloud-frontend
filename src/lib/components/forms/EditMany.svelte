@@ -21,13 +21,13 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Field from "../inputs/Field.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
-  import ShowSize from "../common/ShowSize.svelte";
 
   export let documents: Document[];
 

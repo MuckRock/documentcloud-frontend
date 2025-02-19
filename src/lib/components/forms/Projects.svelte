@@ -15,6 +15,7 @@ and we don't want to do that everywhere.
 
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
   import Tip from "../common/Tip.svelte";
 
   import EditProject from "./EditProject.svelte";
@@ -26,7 +27,6 @@ and we don't want to do that everywhere.
   import { getCsrfToken } from "$lib/utils/api";
   import { getCurrentUser } from "$lib/utils/permissions";
   import { intersection } from "$lib/utils/array";
-  import ShowSize from "../common/ShowSize.svelte";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];

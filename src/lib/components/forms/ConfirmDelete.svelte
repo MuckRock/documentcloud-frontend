@@ -12,12 +12,12 @@ Confirm deletion or one or more documents.
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { canonicalUrl, deleted } from "$lib/api/documents";
   import { getCurrentUser } from "$lib/utils/permissions";
-  import ShowSize from "../common/ShowSize.svelte";
 
   const me = getCurrentUser();
 

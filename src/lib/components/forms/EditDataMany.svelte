@@ -20,10 +20,10 @@ This will mostly merge with existing data.
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import KeyValue from "$lib/components/inputs/KeyValue.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
-  import ShowSize from "../common/ShowSize.svelte";
 
   export let documents: Document[];
   export let error: Maybe<APIError<ValidationError>> = undefined;
