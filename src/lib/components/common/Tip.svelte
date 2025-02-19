@@ -57,12 +57,19 @@
     border-color: var(--green-2);
     background: var(--green-1);
   }
-  .tip.danger,
-  .tip.error {
+  .tip.danger {
     color: var(--orange-5);
     fill: var(--orange-3);
     background-color: var(--orange-3);
     border-color: var(--orange-2);
     background: var(--orange-1);
+  }
+
+  .tip.error {
+    color: var(--red-5);
+    fill: var(--red-3);
+    background-color: var(--red-3);
+    border-color: var(--red-2);
+    background: var(--red-1);
   }
 </style>

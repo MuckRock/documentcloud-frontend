@@ -1,15 +1,15 @@
 <script context="module" lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
+  import { Info24, Alert24 } from "svelte-octicons";
+
   import Tip from "../Tip.svelte";
   import Pin from "$lib/components/icons/Pin.svelte";
   import Premium from "$lib/components/icons/Premium.svelte";
-  import { Info24, Alert24 } from "svelte-octicons";
   import Flex from "../Flex.svelte";
 
   export const meta = {
     title: "Components / Common / Tip",
     component: Tip,
-    tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
 
@@ -43,6 +43,10 @@
     <Tip {...args} mode="danger">
       <Alert24 slot="icon" />
       Watch out ahead!
+    </Tip>
+    <Tip {...args} mode="error">
+      <Alert24 slot="icon" />
+      Something went wrong!
     </Tip>
   </Flex>
 </Story>
