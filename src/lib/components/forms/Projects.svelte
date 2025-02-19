@@ -26,6 +26,7 @@ and we don't want to do that everywhere.
   import { getCsrfToken } from "$lib/utils/api";
   import { getCurrentUser } from "$lib/utils/permissions";
   import { intersection } from "$lib/utils/array";
+  import ShowSize from "../common/ShowSize.svelte";
 
   export let documents: Document[] = [];
   export let projects: Project[] = [];
@@ -101,17 +102,17 @@ and we don't want to do that everywhere.
 </script>
 
 <div class="container">
-  {#if documents.length < 1}
-    <Tip mode="error">
+  <ShowSize size={documents.length}>
+    <p>{$_("edit.many", { values: { n: documents.length } })}</p>
+    <Tip mode="error" slot="empty">
       <Alert24 slot="icon" />
       {$_("edit.nodocs")}
     </Tip>
-  {:else if documents.length > MAX_EDIT_BATCH}
-    <Tip mode="danger">
+    <Tip mode="danger" slot="oversize">
       <Alert24 slot="icon" />
       {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
     </Tip>
-  {/if}
+  </ShowSize>
 
   <div class="projects">
     {#each sorted as project}

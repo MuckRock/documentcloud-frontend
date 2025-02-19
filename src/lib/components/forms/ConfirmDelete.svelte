@@ -17,6 +17,7 @@ Confirm deletion or one or more documents.
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { canonicalUrl, deleted } from "$lib/api/documents";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import ShowSize from "../common/ShowSize.svelte";
 
   const me = getCurrentUser();
 
@@ -58,17 +59,17 @@ Confirm deletion or one or more documents.
 
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
-    {#if count > 0 && count <= MAX_EDIT_BATCH}
-      <p>{$_("delete.really", { values: { n: count } })}</p>
-      <p>{$_("delete.continue", { values: { n: count } })}</p>
-    {:else if count > MAX_EDIT_BATCH}
-      <Tip mode="danger">
+    <ShowSize size={count}>
+      <div>
+        <p>{$_("delete.really", { values: { n: count } })}</p>
+        <p>{$_("delete.continue", { values: { n: count } })}</p>
+      </div>
+      <Tip mode="danger" slot="oversize">
         <Alert24 slot="icon" />
         {$_("delete.toomany", { values: { n: MAX_EDIT_BATCH } })}
       </Tip>
-    {:else}
-      <p>{$_("delete.none")}</p>
-    {/if}
+      <p slot="empty">{$_("delete.none")}</p>
+    </ShowSize>
 
     {#if error}
       <p class="error">

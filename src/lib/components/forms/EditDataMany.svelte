@@ -3,7 +3,6 @@ Edit data for many documents at once.
 This will mostly merge with existing data.
 -->
 <script lang="ts">
-  import type { ActionResult } from "@sveltejs/kit";
   import type {
     APIError,
     Document,
@@ -24,6 +23,7 @@ This will mostly merge with existing data.
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
+  import ShowSize from "../common/ShowSize.svelte";
 
   export let documents: Document[];
   export let error: Maybe<APIError<ValidationError>> = undefined;
@@ -77,19 +77,17 @@ This will mostly merge with existing data.
 </script>
 
 <form {action} class="card" method="post" use:enhance={onSubmit}>
-  <p>{$_("data.many", { values: { n: documents.length } })}</p>
-
-  {#if documents.length < 1}
-    <Tip mode="error">
+  <ShowSize size={documents.length}>
+    <p>{$_("data.many", { values: { n: documents.length } })}</p>
+    <Tip mode="error" slot="empty">
       <Alert24 slot="icon" />
       {$_("edit.nodocs")}
     </Tip>
-  {:else if documents.length > MAX_EDIT_BATCH}
-    <Tip mode="danger">
+    <Tip mode="danger" slot="oversize">
       <Alert24 slot="icon" />
       {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
     </Tip>
-  {/if}
+  </ShowSize>
 
   {#if error}
     <Tip mode="error">
