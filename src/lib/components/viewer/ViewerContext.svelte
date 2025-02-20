@@ -175,6 +175,12 @@ layouts, stories, and tests.
         $progress = p;
       };
 
+      task.promise.then(() => {
+        // Clear the task when the loading is complete,
+        // so we can reload the document if needed
+        task = null;
+      });
+
       task.promise.catch(async (error) => {
         if (error.status === 403 && retriesOn403Error < 5) {
           // try to load the document again using a fresh asset_url
@@ -196,7 +202,7 @@ layouts, stories, and tests.
     loadPDF(asset_url);
   });
 
-  function onPageShow() {
+  function onTabVisible() {
     loadPDF(asset_url);
   }
 
@@ -215,10 +221,7 @@ layouts, stories, and tests.
   });
 </script>
 
-<svelte:window
-  on:hashchange={onHashChange}
-  on:popstate={onHashChange}
-  on:pageshow={onPageShow}
-/>
+<svelte:document on:visibilitychange={onTabVisible} />
+<svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
 
 <slot />
