@@ -196,6 +196,10 @@ layouts, stories, and tests.
     loadPDF(asset_url);
   });
 
+  function onPageShow() {
+    loadPDF(asset_url);
+  }
+
   afterNavigate(() => {
     // refresh stores from URL state
     const { hash } = $pageStore.url;
@@ -211,6 +215,10 @@ layouts, stories, and tests.
   });
 </script>
 
-<svelte:window on:hashchange={onHashChange} on:popstate={onHashChange} />
+<svelte:window
+  on:hashchange={onHashChange}
+  on:popstate={onHashChange}
+  on:pageshow={onPageShow}
+/>
 
 <slot />
