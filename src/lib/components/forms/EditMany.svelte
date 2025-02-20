@@ -21,6 +21,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Field from "../inputs/Field.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
@@ -65,18 +66,16 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
     <slot />
-
-    {#if documents.length < 1}
-      <Tip mode="error">
+    <ShowSize size={documents.length}>
+      <Tip mode="error" slot="empty">
         <Alert24 slot="icon" />
         {$_("edit.nodocs")}
       </Tip>
-    {:else if documents.length > MAX_EDIT_BATCH}
-      <Tip mode="danger">
+      <Tip mode="danger" slot="oversize">
         <Alert24 slot="icon" />
         {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
       </Tip>
-    {/if}
+    </ShowSize>
 
     {#if error}
       <Tip mode="error">

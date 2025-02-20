@@ -91,7 +91,6 @@ export const actions = {
     const message = ids.length === 1 ? "Document deleted" : "Documents deleted";
     setFlash({ message, status: "success" }, cookies);
     return {
-      success: true,
       count: ids.length,
     };
   },
