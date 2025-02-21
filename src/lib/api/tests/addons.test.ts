@@ -117,6 +117,27 @@ describe("addon payloads", () => {
     });
   });
 
+  test("buildPayload with booleans", () => {
+    const scraper = addonsList.results.find((a) => a.name === "Scraper")!;
+
+    const parameters = {
+      site: "https://www.documentcloud.org",
+      project: "test",
+      filecoin: "on",
+    };
+    const form = buildForm(parameters);
+    const payload = addons.buildPayload(scraper, form);
+
+    expect(payload).toMatchObject({
+      addon: scraper.id,
+      parameters: {
+        site: "https://www.documentcloud.org",
+        project: "test",
+        filecoin: true,
+      },
+    });
+  });
+
   test("buildPayload scheduled event", () => {
     const scraper = addonsList.results.find((a) => a.name === "Scraper")!;
     const parameters = {
