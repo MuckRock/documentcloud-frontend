@@ -290,10 +290,15 @@ export function buildPayload(
   for (const [field, params] of Object.entries(
     addon.parameters?.properties ?? {},
   )) {
-    const value =
+    let value =
       params.type === "array" ? formData.getAll(field) : formData.get(field);
 
-    parameters[field] = value;
+    // checkbox values are "on"
+    if (params.type === "boolean") {
+      parameters[field] = value === "on";
+    } else {
+      parameters[field] = value;
+    }
   }
 
   const payload: AddOnPayload = { addon: addon.id, parameters };

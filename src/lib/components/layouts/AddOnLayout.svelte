@@ -12,13 +12,13 @@
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
+  import { fade, slide } from "svelte/transition";
   import {
     Clock16,
     History16,
     Hourglass24,
     Play16,
     SidebarExpand16,
-    XCircle24,
   } from "svelte-octicons";
 
   import AddOnDispatch, { values } from "../forms/AddOnDispatch.svelte";
@@ -28,22 +28,21 @@
 
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
-  import Tab from "../common/Tab.svelte";
+  import Flex from "../common/Flex.svelte";
   import Selection from "../inputs/Selection.svelte";
-  import { remToPx } from "$lib/utils/layout";
+  import Tab from "../common/Tab.svelte";
 
-  import Documents from "../sidebar/Documents.svelte";
-  import Projects from "../sidebar/Projects.svelte";
   import AddOns from "../sidebar/AddOns.svelte";
+  import Documents from "../sidebar/Documents.svelte";
+  import DocumentList from "../addons/DocumentList.svelte";
+  import Projects from "../sidebar/Projects.svelte";
+  import SidebarLayout from "./SidebarLayout.svelte";
 
   import { schedules } from "../addons/ScheduledEvent.svelte";
-  import { selected } from "../documents/ResultsList.svelte";
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
+  import { remToPx } from "$lib/utils/layout";
+  import { selected } from "../documents/ResultsList.svelte";
   import { sidebars } from "./Sidebar.svelte";
-  import SidebarLayout from "./SidebarLayout.svelte";
-  import DocumentList from "../addons/DocumentList.svelte";
-  import Flex from "../common/Flex.svelte";
-  import { fade, slide } from "svelte/transition";
 
   export let addon: AddOnListItem;
   export let event: Event | null = null;
