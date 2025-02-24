@@ -5,8 +5,8 @@
   "private": true,
   "dependencies": {
     "@floating-ui/dom": "^1.6.11",
-    "@sentry/svelte": "^7.66.0",
-    "@sentry/sveltekit": "^8.25.0",
+    "@sentry/svelte": "^9.1.0",
+    "@sentry/sveltekit": "^9.1.0",
     "@sveltejs/adapter-netlify": "^4.1.0",
     "@sveltejs/kit": "^2.5.10",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
