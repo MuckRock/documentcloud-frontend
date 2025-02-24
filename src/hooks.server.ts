@@ -10,6 +10,7 @@ import { locale } from "svelte-i18n";
 import { DC_BASE } from "./config/config.js";
 import { log } from "$lib/utils/logging";
 
+/*
 Sentry.init({
   dsn: env.SENTRY_DSN,
   integrations: [
@@ -17,6 +18,7 @@ Sentry.init({
   ],
   tracesSampleRate: 1,
 });
+*/
 
 /** @type {import('@sveltejs/kit').HandleFetch} */
 export async function handleFetch({ event, request, fetch }) {
@@ -68,6 +70,11 @@ async function logRequest({ event, resolve }) {
 
 export const handle: Handle = sequence(
   Sentry.sentryHandle(),
+  Sentry.initCloudflareSentryHandle({
+    dsn: env.SENTRY_DSN,
+    integrations: [Sentry.captureConsoleIntegration({ levels: ["error"] })],
+    tracesSampleRate: 1,
+  }),
   language,
   logRequest,
 );
