@@ -1,4 +1,4 @@
-import adapter from "@sveltejs/adapter-netlify";
+import adapter from "amplify-adapter";
 import sveltePreprocess from "svelte-preprocess";
 import { fastDimension } from "svelte-fast-dimension";
 import autoprefixer from "autoprefixer";
