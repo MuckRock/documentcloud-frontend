@@ -1,4 +1,4 @@
-import adapter from "@sveltejs/adapter-netlify";
+import adapter from "@sveltejs/adapter-cloudflare";
 import sveltePreprocess from "svelte-preprocess";
 import { fastDimension } from "svelte-fast-dimension";
 import autoprefixer from "autoprefixer";
@@ -12,6 +12,18 @@ export default {
   kit: {
     adapter: adapter({
       preprocess: true,
+
+      // cloudflare
+      routes: {
+        include: ["/*"],
+        exclude: ["<all>"],
+      },
+      platformProxy: {
+        configPath: "wrangler.toml",
+        environment: undefined,
+        experimentalJsonConfig: false,
+        persist: false,
+      },
     }),
     alias: {
       "@": "./src",

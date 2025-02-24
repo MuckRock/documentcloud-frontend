@@ -45,6 +45,7 @@
     "@storybook/svelte": "^7.6.10",
     "@storybook/sveltekit": "^7.6.10",
     "@storybook/testing-library": "^0.2.2",
+    "@sveltejs/adapter-cloudflare": "^5.0.3",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/svelte": "^4.1.0",
     "@types/lodash-es": "^4.17.12",
@@ -68,7 +69,8 @@
     "svelte-fast-dimension": "^1.1.0",
     "sveltekit-flash-message": "^2.4.4",
     "vite": "^5.4.11",
-    "vitest": "^v2.1.6"
+    "vitest": "^v2.1.6",
+    "wrangler": "^3.109.3"
   },
   "scripts": {
     "dev": "NODE_ENV=development vite dev",
