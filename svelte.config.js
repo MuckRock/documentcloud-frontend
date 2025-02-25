@@ -28,6 +28,7 @@ export default {
     alias: {
       "@": "./src",
       "@/*": "./src/*",
+      "isomorphic-dompurify": "./node_modules/isomorphic-dompurify/index.js",
     },
     csrf: {
       // BUG: https://github.com/sveltejs/kit/issues/8026
