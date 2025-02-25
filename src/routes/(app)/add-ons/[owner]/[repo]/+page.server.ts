@@ -39,8 +39,6 @@ export const actions = {
       return fail(403, { message: "Missing CSRF token" });
     }
 
-    const promises = [];
-
     // dispatch
     const run = await dispatch(payload, csrf_token, fetch);
 
