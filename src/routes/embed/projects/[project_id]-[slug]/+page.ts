@@ -18,7 +18,10 @@ export async function load({ params, fetch, url, setHeaders }) {
   // so we want to give 404s a chance to try again
   if (project.error) {
     // try again with IDs switched
-    if (`${project_id}-${slug}`.match(OLD_PATTERN)) {
+    if (
+      project.error.status === 404 &&
+      `${project_id}-${slug}`.match(OLD_PATTERN)
+    ) {
       const groups = OLD_PATTERN.exec(`${project_id}-${slug}`);
       project_id = groups?.[2]!;
       const retry = await get(+project_id, fetch);
