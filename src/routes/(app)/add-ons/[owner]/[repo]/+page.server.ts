@@ -1,4 +1,11 @@
 import type { Actions } from "@sveltejs/kit";
+import type {
+  APIResponse,
+  Run,
+  Event,
+  Maybe,
+  ValidationError,
+} from "@/lib/api/types";
 
 import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
@@ -7,6 +14,7 @@ import { getAddon, buildPayload, dispatch } from "$lib/api/addons";
 import { setFlash } from "sveltekit-flash-message/server";
 
 export const actions = {
+  // create an add-on run, and possibly schedule an event
   async dispatch({ cookies, fetch, request, params }) {
     const { owner, repo } = params;
     if (!owner || !repo) {
@@ -21,7 +29,7 @@ export const actions = {
       return fail(404, { message: "Add-On not found" });
     }
 
-    const payload = buildPayload(addon, form, true);
+    const { event, ...payload } = buildPayload(addon, form, true);
     if (!payload.valid) {
       return fail(400, { errors: payload.errors });
     }
@@ -31,19 +39,36 @@ export const actions = {
       return fail(403, { message: "Missing CSRF token" });
     }
 
-    const { data, error } = await dispatch(payload, csrf_token, fetch);
+    const promises = [];
 
-    if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
-      return fail(error.status, { ...error });
+    // dispatch
+    const run = await dispatch(payload, csrf_token, fetch);
+
+    // maybe schedule
+    let scheduled: Maybe<APIResponse<Run | Event, ValidationError>> = undefined;
+    if (event) {
+      scheduled = await dispatch({ event, ...payload }, csrf_token, fetch);
+      if (scheduled.error) {
+        setFlash(
+          { message: scheduled.error.message, status: "error" },
+          cookies,
+        );
+        return fail(scheduled.error.status, { ...run.error });
+      }
     }
 
-    const type = payload.event ? "event" : "run";
-    const message = payload.event ? "Event scheduled" : "Run dispatched";
+    if (run.error) {
+      setFlash({ message: run.error.message, status: "error" }, cookies);
+      return fail(run.error.status, { ...run.error });
+    }
+
+    const type = event ? "event" : "run";
+    const message = event ? "Event scheduled" : "Run dispatched";
     setFlash({ message, status: "success" }, cookies);
     return {
       type,
-      [type]: data,
+      run: run.data,
+      event: scheduled?.data ?? {},
     };
   },
 } satisfies Actions;
