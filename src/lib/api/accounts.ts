@@ -140,7 +140,7 @@ export async function createMailkey(
         [CSRF_HEADER_NAME]: csrf_token,
       },
     });
-    const data = await resp.json();
+    const data = (await resp.json()) as { mailkey: string };
     return data.mailkey;
   } catch (e) {
     return null;

@@ -42,6 +42,6 @@ export async function createFeedback(
     },
   );
   const data = await res.json();
-  if (!res.ok) throw new Error(`${data.detail}`);
-  return data;
+  // if (!res.ok) throw new Error(`${data.detail}`);
+  return data as CreateFeedbackResponse;
 }

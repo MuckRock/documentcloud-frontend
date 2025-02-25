@@ -43,7 +43,7 @@ export async function getApiResponse<T, E = unknown>(
       response.error = {
         status: resp.status,
         message: resp.statusText,
-        errors: resp.json ? await resp.json() : null,
+        errors: resp.json ? ((await resp.json()) as E) : undefined,
       };
     } catch (error) {
       console.warn(error);
@@ -68,7 +68,7 @@ export async function getApiResponse<T, E = unknown>(
 
   try {
     // redactions return an empty 200 response
-    response.data = resp.json ? await resp.json() : {};
+    response.data = resp.json ? ((await resp.json()) as T) : ({} as T);
   } catch (e) {
     switch (e.name) {
       case "SyntaxError": // provide more specific error
@@ -134,7 +134,7 @@ export async function getPrivateAsset(
   }
 
   // {"location": "s3 URL with credentials"}
-  const { location } = await resp.json();
+  const { location } = (await resp.json()) as { location: string };
 
   // if this isn't a valid URL, it's an error
   return new URL(location);

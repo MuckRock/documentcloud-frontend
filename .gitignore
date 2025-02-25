@@ -30,6 +30,9 @@ static/viewer/*
 # Netlify
 .netlify
 
+# Cloudflare
+.wrangler
+
 # Local test env file
 .env
 .env.*
