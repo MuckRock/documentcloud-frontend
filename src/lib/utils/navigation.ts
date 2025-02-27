@@ -1,5 +1,3 @@
-import type { Action } from "svelte/action";
-
 type Breadcrumb = { href?: string; title: string };
 type Parent = () => Promise<{ breadcrumbs?: Array<Breadcrumb> }>;
 
@@ -18,10 +16,12 @@ export async function breadcrumbTrail(
  * Make a link preserve existing query params and merge in new ones
  *
  * @type {Action}
- * @param node
+ * @param {HTMLAnchorElement} node
+ * @param {boolean} enable
  */
-export function qs(node: HTMLAnchorElement) {
+export function qs(node: HTMLAnchorElement, enable = true): void {
   if (typeof window === "undefined") return;
+  if (!enable) return;
 
   const href = new URL(node.href);
   const params = new URLSearchParams(window.location.search);

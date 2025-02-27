@@ -1,5 +1,6 @@
 <script lang="ts">
   import { CheckCircleFill16 } from "svelte-octicons";
+  import { qs } from "$lib/utils/navigation";
 
   export let danger = false;
   export let selectable = true;
@@ -13,12 +14,16 @@
 
   let className = "";
   export { className as class };
+
+  export let preserveQS = false;
 </script>
 
 {#if href}
   <a
     {target}
     {href}
+    role="menuitem"
+    tabindex="0"
     class="item {className}"
     class:selectable
     class:selected
@@ -28,8 +33,7 @@
     class:indent
     class:special
     on:click
-    role="menuitem"
-    tabindex="0"
+    use:qs={preserveQS}
   >
     <slot name="icon" />
     <span class="label"><slot>Define an item</slot></span>
