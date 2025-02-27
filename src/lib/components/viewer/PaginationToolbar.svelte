@@ -74,7 +74,7 @@
   bind:clientWidth={width}
 >
   <div class="sections">
-    {#if showPDF && (sections || canEditSections)}
+    {#if showPDF && (sections.length > 0 || canEditSections)}
       <Dropdown position="top-start" --offset="5px">
         <div class="toolbarItem" slot="anchor">
           <SidebarItem>
