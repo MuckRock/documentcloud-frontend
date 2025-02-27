@@ -59,4 +59,19 @@ describe("querystring links", () => {
       expect(new URL(a.href).search).toEqual(fixed[i]);
     });
   });
+
+  it("is a noop if enabled = false", () => {
+    const href =
+      "https://www.dev.documentcloud.org/documents/20000065-creating-adaptable-skills-a-nonlinear-pedagogy-approach-to-mental-imagery/?mode=document#document/p1";
+
+    // create the link
+    let a = document.createElement("a");
+    a.href = href;
+    a.textContent = "test";
+
+    // fix the link, but not really
+    qs(a, false);
+
+    expect(a.href).toEqual(href);
+  });
 });
