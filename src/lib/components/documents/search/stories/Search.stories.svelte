@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { Template, Story } from "@storybook/addon-svelte-csf";
-  import SearchComponent from "../Search.svelte";
+  import SearchComponent from "../../search/Search.svelte";
   import { projects } from "@/test/handlers/projects";
   import { organizations, users } from "@/test/handlers/accounts";
 
