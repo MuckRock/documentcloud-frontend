@@ -1,5 +1,5 @@
 import { extractSlugId, isNumber } from "@/legacy/util/string.js";
-import { LANGUAGE_CODES } from "../config/config.js";
+import { LANGUAGE_CODES } from "@/config/config.js";
 
 export const sortCompletions = [
   {
