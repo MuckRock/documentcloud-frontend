@@ -6,10 +6,10 @@
   import Menu from "../common/Menu.svelte";
   import PageToolbar from "./PageToolbar.svelte";
   import NavItem from "../common/NavItem.svelte";
-  import DocumentSearch from "../documents/Search.svelte";
+  import DocumentSearch from "../documents/search/Search.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
   import Sort, {
-    type SortOrder,
+    type SortDirection,
     type SortField,
   } from "../documents/Sort.svelte";
   import { remToPx } from "$lib/utils/layout";
@@ -21,9 +21,9 @@
   export let query: string = "";
 
   let sort: SortField;
-  let order: SortOrder = "desc";
+  let direction: SortDirection = "reverse";
   let fields: Array<SortField> = [
-    "updated_at",
+    "score",
     "created_at",
     "page_count",
     "title",
@@ -32,7 +32,7 @@
 
   let headerToolbarWidth: number;
 
-  $: sort = query ? "score" : "updated_at";
+  $: sort = query ? "score" : "created_at";
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
@@ -42,7 +42,7 @@
     </div>
     <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
       <Filter bind:filters />
-      <Sort bind:sort bind:order {fields} {query} />
+      <Sort bind:sort bind:direction {fields} />
       <Dropdown>
         <NavItem slot="anchor">
           <Eye16 slot="start" />

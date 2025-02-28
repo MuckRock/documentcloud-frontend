@@ -13,7 +13,7 @@
   import { ChevronDown16, SortAsc16, SortDesc16 } from "svelte-octicons";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "../common/NavItem.svelte";
 
   export let direction: SortDirection;
   export let sort: SortField;
@@ -21,7 +21,7 @@
 </script>
 
 <Dropdown>
-  <SidebarItem slot="anchor">
+  <NavItem slot="anchor">
     <div class="labelIcon" slot="start">
       {#if direction === "forward"}
         <SortDesc16 />
@@ -31,7 +31,7 @@
     </div>
     {$_(`documentBrowser.sort.label`)}
     <ChevronDown16 slot="end" />
-  </SidebarItem>
+  </NavItem>
   <Menu>
     <div class="field options">
       {#each fields as f}
