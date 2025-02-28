@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
 import { fieldValid as fv } from "./searchFields.js";
 
-function fieldValid(text) {
+function fieldValid(text: string) {
   // use example mode for tests
   expect(fv(text, true).valid).toBeTruthy();
 }
 
-function fieldInvalid(text) {
+function fieldInvalid(text: string) {
   expect(fv(text, true).valid).toBeFalsy();
 }
 
