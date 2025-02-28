@@ -331,7 +331,7 @@ test("split and escape", () => {
   ];
 
   cases.forEach(([query, expectation]) => {
-    const escaped = splitAndEscape(query).escaped.trim();
+    const escaped = splitAndEscape(query!).escaped.trim();
     expect(escaped).toBe(expectation);
   });
 });
