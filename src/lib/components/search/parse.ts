@@ -43,6 +43,18 @@ interface Clause {
   raw?: string;
 }
 
+interface Chunk {
+  type: string;
+  position: Pair;
+}
+
+interface Highlight {
+  type: string;
+  text?: string;
+  field?: Nullable<string>;
+  value?: Nullable<string>;
+}
+
 type Pair = [Nullable<number>, Nullable<number>];
 
 const OPERATORS: lucene.Operator[] = ["AND", "OR", "NOT"];
@@ -133,11 +145,6 @@ export function parseHighlight(query: string, parsed: lucene.AST) {
     });
     return [posMin, posMax];
   };
-
-  interface Chunk {
-    type: string;
-    position: Pair;
-  }
 
   const getChunks = (parsed: lucene.AST | lucene.Node) => {
     // Grab all field and term locations recursively
@@ -232,13 +239,6 @@ export function parseHighlight(query: string, parsed: lucene.AST) {
     }
     return 0;
   });
-
-  interface Highlight {
-    type: string;
-    text?: string;
-    field?: Nullable<string>;
-    value?: Nullable<string>;
-  }
 
   let pos = 0;
   const highlights: Array<Highlight> = [];

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { parse, highlight, splitAndEscape } from "./parse.js";
+import { parse, highlight, splitAndEscape } from "../parse.js";
 
 const IMPLICIT = "<implicit>";
 
