@@ -135,12 +135,8 @@
   <slot name="before" />
   {#if event}
     <div class="tip">
-      <Tip
-        --color="var(--yellow-5)"
-        --fill="var(--yellow-4)"
-        --border-color="var(--yellow-2)"
-        --background-color="var(--yellow-1)"
-        ><Pencil24 slot="icon" />
+      <Tip mode="normal">
+        <Pencil24 slot="icon" />
         {$_("addonDispatchDialog.editing")}
       </Tip>
     </div>

@@ -8,6 +8,7 @@
     Run,
   } from "$lib/api/types";
 
+  import { afterNavigate } from "$app/navigation";
   import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
@@ -63,8 +64,8 @@
 
   let currentTab: Tab = getDefaultTab();
 
-  let clientWidth: number;
   const SMALL_BREAKPOINT = remToPx(30);
+  let clientWidth: number;
   let docSelectModalOpen = false;
 
   setContext("selected", selected);
@@ -91,6 +92,10 @@
       load?.();
     }
   }
+
+  afterNavigate(() => {
+    currentTab = "dispatch";
+  });
 </script>
 
 <SidebarLayout>
