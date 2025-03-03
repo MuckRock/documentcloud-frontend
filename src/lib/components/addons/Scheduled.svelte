@@ -28,17 +28,16 @@
       console.warn,
     );
 
-    const { data: results, error: err } =
-      await getApiResponse<Page<Event>>(resp);
+    const { data, error: err } = await getApiResponse<Page<Event>>(resp);
 
     if (err) {
       error = err.message;
     }
 
-    if (results) {
-      events = results.results;
-      next = results.next;
-      previous = results.previous;
+    if (data) {
+      events = data.results;
+      next = data.next;
+      previous = data.previous;
     }
 
     loading = false;
