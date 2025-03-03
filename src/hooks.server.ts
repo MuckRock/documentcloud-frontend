@@ -12,10 +12,8 @@ import { log } from "$lib/utils/logging";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
-  integrations: [
-    Sentry.captureConsoleIntegration({ levels: ["error", "warn"] }),
-  ],
-  tracesSampleRate: 1,
+  integrations: [Sentry.captureConsoleIntegration({ levels: ["error"] })],
+  tracesSampleRate: 0.5,
 });
 
 /** @type {import('@sveltejs/kit').HandleFetch} */
