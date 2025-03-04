@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { parse, highlight, splitAndEscape } from "./parse.js";
+import { parse, highlight, splitAndEscape } from "../parse.js";
 
 const IMPLICIT = "<implicit>";
 
@@ -331,7 +331,7 @@ test("split and escape", () => {
   ];
 
   cases.forEach(([query, expectation]) => {
-    const escaped = splitAndEscape(query).escaped.trim();
+    const escaped = splitAndEscape(query!).escaped.trim();
     expect(escaped).toBe(expectation);
   });
 });
