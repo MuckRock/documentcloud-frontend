@@ -9,10 +9,27 @@ import {
   type SortDirection,
 } from "../Sort.svelte";
 import type { Maybe } from "@/lib/api/types";
+import {
+  isAST,
+  isBinaryAST,
+  isNodeRangedTerm,
+  isNodeTerm,
+  parse,
+} from "./parse";
+import lucene from "lucene";
+
+/** Walk the tree and apply a function to each leaf node. */
+function walkTree(
+  node: lucene.AST | lucene.Node,
+  fn: (node: lucene.Node) => void,
+) {
+  if (isAST(node) && node.left) walkTree(node.left, fn);
+  if (isBinaryAST(node) && node.right) walkTree(node.right, fn);
+  if (isNodeTerm(node) || isNodeRangedTerm(node)) fn(node);
+}
 
 export async function deserialize(queryString: string): Promise<SearchProps> {
   const filters: FilterFields = {};
-  let mainQuery: string[] = [];
   let sort: Maybe<SortField>;
   let direction: Maybe<SortDirection>;
   const filtersToFetch: Record<string, string[]> = {
@@ -21,71 +38,43 @@ export async function deserialize(queryString: string): Promise<SearchProps> {
     orgs: [],
   };
 
-  // Split on whitespace that's not inside parentheses, brackets, or double quotation marks
-  const parts =
-    queryString.match(
-      /(?:[^\s:]+:[^\s\[\]()]*\[[^\]]*\]|\([^)]*\)|"[^"]*"|[^:\s\[\]()]+(?:[^\s\[\]()]+)?)/g,
-    ) || [];
-
-  for (const part of parts) {
-    if (part.startsWith("sort:")) {
-      let value: Maybe<string> = part.split(":")[1];
-      let valueDirection: SortDirection = "forward";
-      if (value?.startsWith("-")) {
-        value = value.slice(1);
-        valueDirection = "reverse";
+  const addToFilters = (node: lucene.Node) => {
+    if (isNodeTerm(node)) {
+      switch (node.field) {
+        case "<implicit>":
+          break;
+        case "user":
+          filtersToFetch.users?.push(node.term);
+          break;
+        case "organization":
+          filtersToFetch.orgs?.push(node.term);
+          break;
+        case "project":
+          filtersToFetch.projects?.push(node.term);
+          break;
+        case "access":
+          filters.access = node.term;
+          break;
+        case "sort":
+          sort = node.term as SortField;
+          direction = node.prefix === "-" ? "reverse" : "forward";
+          break;
       }
-      if (isSortField(value)) {
-        sort = value;
-        direction = valueDirection;
+    } else if (isNodeRangedTerm(node)) {
+      switch (node.field) {
+        case "pages":
+        case "page_count":
+          filters.minPages = parseInt(node.term_min, 10);
+          filters.maxPages = parseInt(node.term_max, 10);
+          break;
+        case "created_at":
+          filters.minDate = node.term_min;
+          filters.maxDate = node.term_max;
+          break;
       }
-    } else if (part.startsWith("access:")) {
-      filters.access = part.split(":")[1];
-    } else if (part.startsWith("pages:[")) {
-      const range = part.match(/pages:\[(\d+|\*)\sTO\s(\d+|\*)\]/);
-      if (range) {
-        if (range[1] && range[1] !== "*") filters.minPages = parseInt(range[1]);
-        if (range[2] && range[2] !== "*") filters.maxPages = parseInt(range[2]);
-      }
-    } else if (part.startsWith("created_at:[")) {
-      const range = part.match(
-        /created_at:\[([0-9-]+T[0-9:]+Z|\*)\sTO\s([0-9-]+T[0-9:]+Z|\*)\]/,
-      );
-      if (range) {
-        if (range[1] && range[1] !== "*")
-          filters.minDate = range[1].split("T")[0];
-        if (range[2] && range[2] !== "*")
-          filters.maxDate = range[2].split("T")[0];
-      }
-    } else if (part.startsWith("(")) {
-      // Handle grouped conditions
-      const group = part.slice(1, -1);
-      const items = group.split(" OR ");
-      items.forEach((item) => {
-        const [type, id] = item.split(":");
-        if (type === "user" && id) {
-          filtersToFetch.users?.push(id);
-        } else if (type === "organization" && id) {
-          filtersToFetch.orgs?.push(id);
-        } else if (type === "project" && id) {
-          filtersToFetch.projects?.push(id);
-        }
-      });
-    } else if (part.endsWith(")")) {
-      // Ignore closing parenthesis
-    } else if (!part.startsWith('"') && part.includes(":")) {
-      const [type, id] = part.split(":");
-      if (type === "user" && id) {
-        filtersToFetch.users?.push(id);
-      } else if (type === "organization" && id) {
-        filtersToFetch.orgs?.push(id);
-      } else if (type === "project" && id) {
-        filtersToFetch.projects?.push(id);
-      }
-    } else {
-      mainQuery.push(part);
     }
-  }
+  };
+  walkTree(parse(queryString), addToFilters);
 
   // Now, need to fetch the users, projects, and orgs by their IDs
   // and update the filters object with the fetched data
@@ -115,7 +104,7 @@ export async function deserialize(queryString: string): Promise<SearchProps> {
   }
 
   return {
-    query: mainQuery.join(" "),
+    query: queryString,
     filters,
     sort,
     direction,

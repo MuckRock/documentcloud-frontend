@@ -77,28 +77,28 @@ export function highlight(query: string) {
   return parseHighlight(query, parsed);
 }
 
-function isAST(ast: unknown): ast is lucene.AST {
+export function isAST(ast: unknown): ast is lucene.AST {
   if (typeof ast === "object" && ast != null) {
     return Object.hasOwn(ast, "left");
   }
   return false;
 }
 
-function isBinaryAST(ast: unknown): ast is lucene.BinaryAST {
+export function isBinaryAST(ast: unknown): ast is lucene.BinaryAST {
   if (typeof ast === "object" && ast != null) {
     return Object.hasOwn(ast, "right");
   }
   return false;
 }
 
-function isNodeTerm(n: unknown): n is lucene.NodeTerm {
+export function isNodeTerm(n: unknown): n is lucene.NodeTerm {
   if (typeof n === "object" && n != null) {
     return Object.hasOwn(n, "term");
   }
   return false;
 }
 
-function isNodeRangedTerm(n: unknown): n is lucene.NodeRangedTerm {
+export function isNodeRangedTerm(n: unknown): n is lucene.NodeRangedTerm {
   if (typeof n === "object" && n != null) {
     return Object.hasOwn(n, "term_max");
   }
