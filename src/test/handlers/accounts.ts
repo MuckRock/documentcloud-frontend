@@ -21,7 +21,7 @@ import {
 export const urls = {
   users: createApiUrl("users/*"),
   me: createApiUrl("users/me/"),
-  orgs: createApiUrl("organizations/"),
+  orgs: createApiUrl("organizations/*"),
   org: createApiUrl("organizations/:id/*"),
   mailkey: createApiUrl("users/mailkey/"),
 };
