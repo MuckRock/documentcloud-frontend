@@ -38,7 +38,7 @@
 <PageToolbar bind:width={headerToolbarWidth}>
   <div class="items" slot="center">
     <div style:flex="1 1 auto">
-      <DocumentSearch />
+      <DocumentSearch {query} />
     </div>
     <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
       <Filter bind:filters />

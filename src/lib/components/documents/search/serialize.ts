@@ -5,7 +5,7 @@ export function serialize({
   filters,
   sort,
   direction = "forward",
-}: SearchProps): string {
+}: { query: string } & SearchProps): string {
   const parts: string[] = [];
 
   // Add main query

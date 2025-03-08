@@ -241,7 +241,7 @@
                 </Button>
               </div>
             {/if}
-            <DocumentListToolbar />
+            <DocumentListToolbar {query} />
             {#if $sidebars["action"] === false}
               <div class="toolbar w-auto">
                 <Button

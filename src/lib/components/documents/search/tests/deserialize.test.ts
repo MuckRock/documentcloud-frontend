@@ -48,7 +48,6 @@ describe("deserialize", () => {
     const query = "foobar";
     expect(await deserialize(query)).toEqual({
       filters: {},
-      query,
       sort: undefined,
       order: undefined,
     });
@@ -57,7 +56,6 @@ describe("deserialize", () => {
   it("should deserialize user filters", async () => {
     const query = "document user:12345";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: {
         users: [mockUser],
       },
@@ -70,7 +68,6 @@ describe("deserialize", () => {
   it("should deserialize organization filters", async () => {
     const query = "document organization:12345 organization:67890";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: {
         orgs: mockOrgs,
       },
@@ -83,7 +80,6 @@ describe("deserialize", () => {
   it("should deserialize multiple project filters", async () => {
     const query = "report (project:45678 OR project:121212)";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: {
         projects: mockProjects,
       },
@@ -95,7 +91,6 @@ describe("deserialize", () => {
   it("should deserialize access filter", async () => {
     const query = "secret access:private";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: { access: "private" },
     });
   });
@@ -104,19 +99,16 @@ describe("deserialize", () => {
     // with both min and max
     let query = "long pages:[10 TO 20]";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: { minPages: 10, maxPages: 20 },
     });
     // with only min
     query = "long pages:[10 TO *]";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: { minPages: 10, maxPages: NaN },
     });
     // with only max
     query = "long pages:[* TO 10]";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: { minPages: NaN, maxPages: 10 },
       order: undefined,
       sort: undefined,
@@ -127,7 +119,6 @@ describe("deserialize", () => {
     // with both min and max
     let query = "old created_at:[2023-01-01T00:00:00Z TO 2023-12-31T23:59:59Z]";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: {
         minDate: "2023-01-01T00:00:00Z",
         maxDate: "2023-12-31T23:59:59Z",
@@ -136,13 +127,11 @@ describe("deserialize", () => {
     // with only min
     query = "old created_at:[2023-01-01T00:00:00Z TO *]";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: { minDate: "2023-01-01T00:00:00Z", maxDate: "*" },
     });
     // with only max
     query = "old created_at:[* TO 2023-12-31T23:59:59Z]";
     expect(await deserialize(query)).toEqual({
-      query,
       filters: { minDate: "*", maxDate: "2023-12-31T23:59:59Z" },
       order: undefined,
       sort: undefined,
@@ -153,14 +142,12 @@ describe("deserialize", () => {
     let query = "test sort:title";
     expect(await deserialize(query)).toEqual({
       filters: {},
-      query,
       sort: "title",
       direction: "forward",
     });
     query = "test sort:-title";
     expect(await deserialize(query)).toEqual({
       filters: {},
-      query,
       sort: "title",
       direction: "reverse",
     });
@@ -170,7 +157,6 @@ describe("deserialize", () => {
     const query = 'test "user:12345"';
     expect(await deserialize(query)).toEqual({
       filters: {},
-      query,
       sort: undefined,
       order: undefined,
     });

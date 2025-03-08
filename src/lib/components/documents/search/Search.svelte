@@ -22,7 +22,6 @@
 
   async function updatePropsFromQuery(pageUrlQuery: string) {
     const deserializedProps = await deserialize(pageUrlQuery);
-    query = deserializedProps.query ?? query;
     sort = deserializedProps.sort ?? sort;
     direction = deserializedProps.direction ?? direction;
     filters = Object.assign({}, filters, deserializedProps.filters);

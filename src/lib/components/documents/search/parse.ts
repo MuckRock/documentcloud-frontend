@@ -1,5 +1,11 @@
-import type { Nullable } from "@/lib/api/types";
 import lucene from "lucene";
+import type { Nullable } from "$lib/api/types";
+import {
+  isAST,
+  isBinaryAST,
+  isNodeRangedTerm,
+  isNodeTerm,
+} from "$lib/utils/search";
 
 const validFields = [
   /^id$/,
@@ -75,34 +81,6 @@ export function validField(field: string): boolean {
 export function highlight(query: string) {
   const parsed = parse(query);
   return parseHighlight(query, parsed);
-}
-
-export function isAST(ast: unknown): ast is lucene.AST {
-  if (typeof ast === "object" && ast != null) {
-    return Object.hasOwn(ast, "left");
-  }
-  return false;
-}
-
-export function isBinaryAST(ast: unknown): ast is lucene.BinaryAST {
-  if (typeof ast === "object" && ast != null) {
-    return Object.hasOwn(ast, "right");
-  }
-  return false;
-}
-
-export function isNodeTerm(n: unknown): n is lucene.NodeTerm {
-  if (typeof n === "object" && n != null) {
-    return Object.hasOwn(n, "term");
-  }
-  return false;
-}
-
-export function isNodeRangedTerm(n: unknown): n is lucene.NodeRangedTerm {
-  if (typeof n === "object" && n != null) {
-    return Object.hasOwn(n, "term_max");
-  }
-  return false;
 }
 
 export function parseHighlight(query: string, parsed: lucene.AST) {
