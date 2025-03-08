@@ -27,7 +27,16 @@
     "svelte-i18n": "^4.0.1",
     "svelte-octicons": "^18.20.0",
     "svelte-preprocess": "^6.0.3",
-    "sveltekit-flash-message": "^2.4.6"
+    "sveltekit-flash-message": "^2.4.6",
+    "prosemirror-commands": "^1.7.0",
+    "prosemirror-history": "^1.4.1",
+    "prosemirror-keymap": "^1.2.2",
+    "prosemirror-model": "^1.24.1",
+    "prosemirror-schema-basic": "^1.2.3",
+    "prosemirror-state": "^1.4.3",
+    "prosemirror-view": "^1.38.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^5.0.3"
   },
   "devDependencies": {
     "@netlify/plugin-lighthouse": "^6.0.4",
