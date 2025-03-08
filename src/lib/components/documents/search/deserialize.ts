@@ -3,30 +3,11 @@ import { list as listProjects } from "$lib/api/projects";
 
 import type { SearchProps } from "./types";
 import { type FilterFields } from "../Filter.svelte";
-import {
-  isSortField,
-  type SortField,
-  type SortDirection,
-} from "../Sort.svelte";
+import { type SortField, type SortDirection } from "../Sort.svelte";
 import type { Maybe } from "@/lib/api/types";
-import {
-  isAST,
-  isBinaryAST,
-  isNodeRangedTerm,
-  isNodeTerm,
-  parse,
-} from "./parse";
-import lucene from "lucene";
-
-/** Walk the tree and apply a function to each leaf node. */
-function walkTree(
-  node: lucene.AST | lucene.Node,
-  fn: (node: lucene.Node) => void,
-) {
-  if (isAST(node) && node.left) walkTree(node.left, fn);
-  if (isBinaryAST(node) && node.right) walkTree(node.right, fn);
-  if (isNodeTerm(node) || isNodeRangedTerm(node)) fn(node);
-}
+import { walkTree, isNodeRangedTerm, isNodeTerm } from "$lib/utils/search";
+import { parse } from "./parse";
+import type { Node } from "lucene";
 
 export async function deserialize(queryString: string): Promise<SearchProps> {
   const filters: FilterFields = {};
@@ -38,7 +19,7 @@ export async function deserialize(queryString: string): Promise<SearchProps> {
     orgs: [],
   };
 
-  const addToFilters = (node: lucene.Node) => {
+  const addToFilters = (node: Node) => {
     if (isNodeTerm(node)) {
       switch (node.field) {
         case "<implicit>":
@@ -104,7 +85,6 @@ export async function deserialize(queryString: string): Promise<SearchProps> {
   }
 
   return {
-    query: queryString,
     filters,
     sort,
     direction,

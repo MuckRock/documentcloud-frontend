@@ -10,12 +10,13 @@
   import VisibleFields from "../documents/VisibleFields.svelte";
 
   let headerToolbarWidth: number;
+  export let query: string = "";
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
   <div class="items" slot="center">
     <div style:flex="1 1 auto">
-      <DocumentSearch />
+      <DocumentSearch {query} />
     </div>
     <div class="margin-xs">
       <Dropdown>

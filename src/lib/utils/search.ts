@@ -1,3 +1,5 @@
+import lucene from "lucene";
+
 import type { Nullable, Project, User } from "$lib/api/types";
 import type { Access } from "../api/types";
 
@@ -90,4 +92,45 @@ export function getQuery(url?: Nullable<URL>, param: string = "q"): string {
     console.warn("Missing URL");
   }
   return url?.searchParams?.get(param) ?? "";
+}
+
+/* Lucene is used to parse and construct Solr search queries. */
+/* We have a number of helpers that make it easier to work with the AST. */
+
+export function isAST(ast: unknown): ast is lucene.AST {
+  if (typeof ast === "object" && ast != null) {
+    return Object.hasOwn(ast, "left");
+  }
+  return false;
+}
+
+export function isBinaryAST(ast: unknown): ast is lucene.BinaryAST {
+  if (typeof ast === "object" && ast != null) {
+    return Object.hasOwn(ast, "right");
+  }
+  return false;
+}
+
+export function isNodeTerm(n: unknown): n is lucene.NodeTerm {
+  if (typeof n === "object" && n != null) {
+    return Object.hasOwn(n, "term");
+  }
+  return false;
+}
+
+export function isNodeRangedTerm(n: unknown): n is lucene.NodeRangedTerm {
+  if (typeof n === "object" && n != null) {
+    return Object.hasOwn(n, "term_max");
+  }
+  return false;
+}
+
+/** Walk the tree and apply a function to each leaf node. */
+export function walkTree(
+  node: lucene.AST | lucene.Node,
+  fn: (node: lucene.Node) => void,
+) {
+  if (isAST(node) && node.left) walkTree(node.left, fn);
+  if (isBinaryAST(node) && node.right) walkTree(node.right, fn);
+  if (isNodeTerm(node) || isNodeRangedTerm(node)) fn(node);
 }
