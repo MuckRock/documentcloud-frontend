@@ -36,6 +36,146 @@ const validFields = [
   /^order$/, // maps to order
 ];
 
+export interface ParsedTerm {
+  type: "term";
+  value: string;
+  field?: string;
+  boost?: number;
+  prefix?: string;
+  quoted: boolean;
+}
+
+export interface ParsedRange {
+  type: "range";
+  field: string;
+  lowerBound?: string;
+  upperBound?: string;
+  inclusive: [boolean, boolean];
+}
+
+export interface ParsedExpression {
+  type: "expression";
+  operator?: string;
+  left: ParsedNode;
+  right?: ParsedNode;
+}
+
+export type ParsedNode = ParsedTerm | ParsedRange | ParsedExpression;
+
+export function parseQuery(query: string): ParsedNode {
+  try {
+    const ast = parse(query) as lucene.AST | lucene.Node;
+    return processNode(ast);
+  } catch (error) {
+    console.error("Failed to parse query:", error);
+    // Return a simple term as fallback
+    return { type: "term", value: query, quoted: false };
+  }
+}
+
+function processNode(node: any): ParsedNode {
+  if (!node) return { type: "term", value: "", quoted: false };
+
+  // Handle term nodes
+  if (node.type === "term") {
+    return {
+      type: "term",
+      value: node.value || "",
+      field: node.field,
+      boost: node.boost,
+      prefix: node.prefix,
+      quoted: node.quoted || false,
+    };
+  }
+
+  // Handle range nodes
+  if (node.type === "range") {
+    return {
+      type: "range",
+      field: node.field || "",
+      lowerBound: node.term_min,
+      upperBound: node.term_max,
+      inclusive: [
+        node.inclusive_min !== undefined ? node.inclusive_min : true,
+        node.inclusive_max !== undefined ? node.inclusive_max : true,
+      ],
+    };
+  }
+
+  // Handle expression nodes (binary operators like AND, OR, etc.)
+  if ("left" in node) {
+    const result: ParsedExpression = {
+      type: "expression",
+      left: processNode(node.left),
+    };
+
+    if (node.operator) {
+      result.operator = node.operator;
+    }
+
+    if (node.right) {
+      result.right = processNode(node.right);
+    }
+
+    return result;
+  }
+
+  // Fallback
+  return { type: "term", value: "", quoted: false };
+}
+
+// Helper function to convert the parsed AST back to a string
+export function stringifyParsedNode(node: ParsedNode): string {
+  if (node.type === "term") {
+    const { field, value, boost, prefix, quoted } = node;
+    let result = "";
+
+    if (field) {
+      result += `${field}:`;
+    }
+
+    if (prefix) {
+      result += prefix;
+    }
+
+    if (quoted) {
+      result += `"${value}"`;
+    } else {
+      result += value;
+    }
+
+    if (boost) {
+      result += `^${boost}`;
+    }
+
+    return result;
+  }
+
+  if (node.type === "range") {
+    const { field, lowerBound, upperBound, inclusive } = node;
+    const start = inclusive[0] ? "[" : "{";
+    const end = inclusive[1] ? "]" : "}";
+
+    return `${field}:${start}${lowerBound || ""} TO ${upperBound || ""}${end}`;
+  }
+
+  if (node.type === "expression") {
+    const { left, operator, right } = node;
+    const leftStr = stringifyParsedNode(left);
+
+    if (!right) {
+      return leftStr;
+    }
+
+    const rightStr = stringifyParsedNode(right);
+    const op = operator ? ` ${operator} ` : " ";
+
+    return `${leftStr}${op}${rightStr}`;
+  }
+
+  return "";
+}
+
 interface Clause {
   must?: Nullable<string>;
   field?: Nullable<string>;
