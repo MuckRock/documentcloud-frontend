@@ -37,8 +37,9 @@
   import { history, undo, redo } from "prosemirror-history";
   import { validateQuery } from "./parse";
   import { parseQuery, type ParsedNode, IMPLICIT } from "$lib/utils/search";
-  import { Alert16, Stop16 } from "svelte-octicons";
+  import { Alert16, Search16, Stop16 } from "svelte-octicons";
   import Tooltip from "../../common/Tooltip.svelte";
+  import Button from "../../common/Button.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -821,74 +822,93 @@
   }
 </script>
 
-<div class="search-editor-container">
-  <div bind:this={editorRef} class="prosemirror-editor"></div>
-  <div class="search-editor-status">
+<form class="search-editor-container">
+  <div
+    class="search-editor-status"
+    class:error={$parserError.hasError}
+    class:warning={queryWarning}
+  >
     {#if $parserError.hasError}
       <div class="error-message">
         <Tooltip caption={$parserError.message} placement="bottom-end">
           <Stop16 />
         </Tooltip>
       </div>
-    {/if}
-    {#if queryWarning}
+    {:else if queryWarning}
       <div class="warning-message">
         <Tooltip caption={queryWarning}>
           <Alert16 />
         </Tooltip>
       </div>
+    {:else}
+      <Search16 />
     {/if}
   </div>
-</div>
+  <div bind:this={editorRef} class="prosemirror-editor"></div>
+  <input type="hidden" name="q" value={currentQuery} />
+  <Button
+    type="submit"
+    mode="primary"
+    ghost
+    minW={false}
+    disabled={!currentQuery || $parserError.hasError}>Search</Button
+  >
+</form>
 {#if view}
   <div class="debug-panel">
     <details open>
       <summary>Debug Information</summary>
       <button on:click={updateDocStructure}> Refresh Doc View </button>
-      <div class="debug-section">
-        <h4>Initial Query</h4>
-        <pre>{initialQuery}</pre>
-      </div>
+      <section>
+        <div class="debug-section">
+          <h4>Initial Query</h4>
+          <pre>{initialQuery}</pre>
+        </div>
 
-      <div class="debug-section">
-        <h4>Current Query</h4>
-        <pre>{currentQuery}</pre>
-      </div>
+        <div class="debug-section">
+          <h4>Current Query</h4>
+          <pre>{currentQuery}</pre>
+        </div>
 
-      <div class="debug-section">
-        <h4>Warnings</h4>
-        <pre>{queryWarning || "No warnings"}</pre>
-        <h4>Error Recovery Mode</h4>
-        <pre>{isErrorRecoveryMode}</pre>
-        <h4>Parsing Error</h4>
-        <pre>{JSON.stringify($parserError, null, 2)}</pre>
-      </div>
+        <div class="debug-section">
+          <h4>Editor Status</h4>
+          <pre>{isErrorRecoveryMode
+              ? "Error Recovery Mode"
+              : queryWarning || "OK"}</pre>
+        </div>
 
-      <div class="debug-section">
-        <h4>Parsed Query Structure</h4>
-        <pre>
+        <div class="debug-section">
+          <h4>Parsing Error</h4>
+          <pre>{JSON.stringify($parserError, null, 2)}</pre>
+        </div>
+
+        <div class="debug-section">
+          <h4>Parsed Query Structure</h4>
+          <pre>
             {#if true}
-            {(() => {
-              try {
-                const parsedQ = parseQuery(currentQuery);
-                return JSON.stringify(parsedQ, null, 2);
-              } catch (error) {
-                return `Error: ${error.message}`;
-              }
-            })()}
-          {/if}</pre>
-      </div>
+              {(() => {
+                try {
+                  const parsedQ = parseQuery(currentQuery);
+                  return JSON.stringify(parsedQ, null, 2);
+                } catch (error) {
+                  return `Error: ${error.message}`;
+                }
+              })()}
+            {/if}
+        </pre>
+        </div>
 
-      <div class="debug-section">
-        <h4>Document Structure</h4>
-        <pre>{JSON.stringify($docStructure, null, 2)}</pre>
-      </div>
+        <div class="debug-section">
+          <h4>Document Structure</h4>
+          <pre>{JSON.stringify($docStructure, null, 2)}</pre>
+        </div>
 
-      <div class="debug-section">
-        <h4>Selection</h4>
-        <pre>From: {view.state.selection.from}, To: {view.state.selection
-            .to}</pre>
-      </div>
+        <!-- <div class="debug-section">
+          <h4>Selection</h4>
+          <pre>From: {view.state.selection.from}, To: {view.state.selection
+              .to}</pre>
+        </div> -->
+      </section>
     </details>
   </div>
 {/if}
@@ -898,23 +918,22 @@
     width: 100%;
     min-width: 32rem;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: white;
     position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 0.25rem 0 1rem;
   }
 
   .search-editor-status {
+    flex: 0 0 auto;
     display: flex;
-    gap: 1rem;
     align-items: center;
-    padding: 1rem;
-    position: absolute;
-    top: 0;
-    height: 100%;
-    right: 0;
   }
 
   .prosemirror-editor {
+    flex: 1 1 auto;
     padding: 10px;
     min-height: 36px;
   }
@@ -973,25 +992,52 @@
     min-width: 6px; /* Ensure it's selectable/visible */
   }
 
-  .error-message {
+  .okay {
+  }
+  .error {
     fill: var(--red-3);
   }
-  .warning-message {
+  .warning {
     fill: var(--orange-3);
   }
 
   /* Debug panel styles */
   .debug-panel {
     width: 100%;
-    margin-top: 10px;
     border-top: 1px dashed #ccc;
-    padding-top: 10px;
-    font-family: monospace;
+    padding: 1rem;
+    font-family: var(--font-mono);
     font-size: 12px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+
+  .debug-panel section {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 1rem;
+  }
+
+  .debug-panel summary {
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .debug-panel button {
+    margin: 1rem 0;
+    position: absolute;
+    top: 0;
+    right: 1rem;
   }
 
   .debug-section {
-    margin-bottom: 12px;
+    margin-bottom: 2rem;
   }
 
   .debug-section h4 {
@@ -1000,7 +1046,10 @@
   }
 
   pre {
+    display: block;
     width: 100%;
+    max-width: 100%;
+    height: 100%;
     background-color: #f5f5f5;
     padding: 8px;
     border-radius: 4px;
