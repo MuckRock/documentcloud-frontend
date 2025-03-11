@@ -36,144 +36,75 @@ const validFields = [
   /^order$/, // maps to order
 ];
 
-export interface ParsedTerm {
-  type: "term";
-  value: string;
-  field?: string;
-  boost?: number;
-  prefix?: string;
-  quoted: boolean;
+interface ValidQueryResponse {
+  isValid: true;
 }
 
-export interface ParsedRange {
-  type: "range";
-  field: string;
-  lowerBound?: string;
-  upperBound?: string;
-  inclusive: [boolean, boolean];
+interface InvalidQueryResponse {
+  isValid: false;
+  error: string;
+  position?: number;
 }
 
-export interface ParsedExpression {
-  type: "expression";
-  operator?: string;
-  left: ParsedNode;
-  right?: ParsedNode;
-}
+export function validateQuery(
+  query: string,
+): ValidQueryResponse | InvalidQueryResponse {
+  // Empty queries are valid
+  if (!query || !query.trim()) {
+    return { isValid: true };
+  }
 
-export type ParsedNode = ParsedTerm | ParsedRange | ParsedExpression;
-
-export function parseQuery(query: string): ParsedNode {
   try {
-    const ast = parse(query) as lucene.AST | lucene.Node;
-    return processNode(ast);
+    // Basic parse to catch syntax errors
+    parse(query);
+
+    // Additional validation logic for common mistakes
+    if (query.includes('""')) {
+      return {
+        isValid: false,
+        error: "Empty quotes are not allowed in queries",
+      };
+    }
+
+    // Check for unbalanced quotes
+    const quoteCount = (query.match(/"/g) || []).length;
+    if (quoteCount % 2 !== 0) {
+      return {
+        isValid: false,
+        error: "Unbalanced quotes in query",
+      };
+    }
+
+    // Check for incomplete range queries
+    if (query.includes("[") && !query.includes("]")) {
+      return {
+        isValid: false,
+        error: "Incomplete range query: missing closing bracket",
+      };
+    }
+
+    return { isValid: true };
   } catch (error) {
-    console.error("Failed to parse query:", error);
-    // Return a simple term as fallback
-    return { type: "term", value: query, quoted: false };
-  }
-}
+    console.error("Error parsing query:", error);
+    // Catch any initial commmon error cases
 
-function processNode(node: any): ParsedNode {
-  if (!node) return { type: "term", value: "", quoted: false };
-
-  // Handle term nodes
-  if (node.type === "term") {
+    // Return catch-all error message
+    let message = "Invalid query syntax";
+    // Get position of error
+    let position: number | undefined = undefined;
+    if (error instanceof Error) {
+      message = error.message;
+      const posMatch = error.message.match(/at character (\d+)/i);
+      if (posMatch && posMatch[1]) {
+        position = parseInt(posMatch[1], 10);
+      }
+    }
     return {
-      type: "term",
-      value: node.value || "",
-      field: node.field,
-      boost: node.boost,
-      prefix: node.prefix,
-      quoted: node.quoted || false,
+      isValid: false,
+      error: error instanceof Error ? error.message : "Invalid query syntax",
+      position,
     };
   }
-
-  // Handle range nodes
-  if (node.type === "range") {
-    return {
-      type: "range",
-      field: node.field || "",
-      lowerBound: node.term_min,
-      upperBound: node.term_max,
-      inclusive: [
-        node.inclusive_min !== undefined ? node.inclusive_min : true,
-        node.inclusive_max !== undefined ? node.inclusive_max : true,
-      ],
-    };
-  }
-
-  // Handle expression nodes (binary operators like AND, OR, etc.)
-  if ("left" in node) {
-    const result: ParsedExpression = {
-      type: "expression",
-      left: processNode(node.left),
-    };
-
-    if (node.operator) {
-      result.operator = node.operator;
-    }
-
-    if (node.right) {
-      result.right = processNode(node.right);
-    }
-
-    return result;
-  }
-
-  // Fallback
-  return { type: "term", value: "", quoted: false };
-}
-
-// Helper function to convert the parsed AST back to a string
-export function stringifyParsedNode(node: ParsedNode): string {
-  if (node.type === "term") {
-    const { field, value, boost, prefix, quoted } = node;
-    let result = "";
-
-    if (field) {
-      result += `${field}:`;
-    }
-
-    if (prefix) {
-      result += prefix;
-    }
-
-    if (quoted) {
-      result += `"${value}"`;
-    } else {
-      result += value;
-    }
-
-    if (boost) {
-      result += `^${boost}`;
-    }
-
-    return result;
-  }
-
-  if (node.type === "range") {
-    const { field, lowerBound, upperBound, inclusive } = node;
-    const start = inclusive[0] ? "[" : "{";
-    const end = inclusive[1] ? "]" : "}";
-
-    return `${field}:${start}${lowerBound || ""} TO ${upperBound || ""}${end}`;
-  }
-
-  if (node.type === "expression") {
-    const { left, operator, right } = node;
-    const leftStr = stringifyParsedNode(left);
-
-    if (!right) {
-      return leftStr;
-    }
-
-    const rightStr = stringifyParsedNode(right);
-    const op = operator ? ` ${operator} ` : " ";
-
-    return `${leftStr}${op}${rightStr}`;
-  }
-
-  return "";
 }
 
 interface Clause {

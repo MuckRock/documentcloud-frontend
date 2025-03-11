@@ -16,7 +16,7 @@
   };
 
   const args = {
-    query: "example query",
+    initialQuery: "example query",
   };
 </script>
 
@@ -24,4 +24,11 @@
   <SearchEditorComponent {...args} />
 </Template>
 
-<Story name="Default" {args} />
+<Story name="Plain Text" {args} />
+<Story
+  name="Date Query"
+  args={{
+    ...args,
+    initialQuery: 'date:[2020-01-01 TO 2020-05-01] "steve jobs"',
+  }}
+/>
