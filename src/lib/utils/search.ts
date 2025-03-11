@@ -178,7 +178,7 @@ export const IMPLICIT = "<implicit>";
 export function parseQuery(query: string): ParsedNode {
   // Handle empty queries directly
   if (!query || !query.trim()) {
-    return { type: "term", value: "", quoted: false };
+    return { type: "text", text: "", quoted: false, regex: false };
   }
 
   try {
@@ -187,7 +187,7 @@ export function parseQuery(query: string): ParsedNode {
     return processNode(ast);
   } catch (error) {
     console.error("Failed to parse query:", error);
-    // Allow errors to bubble up
+    // Allow errors to propagate up
     throw error;
   }
 }

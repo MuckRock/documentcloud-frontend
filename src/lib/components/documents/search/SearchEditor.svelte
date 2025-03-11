@@ -359,7 +359,15 @@
           );
         }
 
-        result.push(...parsedNodeToPM(parsedNode.right));
+        // Check if the right side is just whitespace
+        const isRightOnlyWhitespace =
+          parsedNode.right.type === "text" &&
+          /^\s+$/.test(parsedNode.right.text);
+        console.log("Right side is only whitespace:", isRightOnlyWhitespace);
+        // Only include the right side if it's not just whitespace
+        if (!isRightOnlyWhitespace) {
+          result.push(...parsedNodeToPM(parsedNode.right));
+        }
       }
 
       return result;
@@ -426,6 +434,7 @@
         error instanceof Error
           ? error.message
           : "Error converting document to query";
+      // We don't enter recovery mode here, since the document is valid
       setParserError(errorMessage);
       return "";
     }
@@ -470,7 +479,9 @@
 
     // If we got here, try to parse and process the query
     try {
+      console.debug("About to parse query…");
       const parsedNode = parseQuery(query);
+      console.debug("Parsed node: ", parsedNode);
       const paragraphContent = parsedNodeToPM(parsedNode);
 
       return searchSchema.node("doc", {}, [
@@ -484,8 +495,7 @@
         error instanceof Error ? error.message : "Error parsing query";
 
       if (!isErrorRecoveryMode) {
-        setParserError(errorMessage);
-        enterErrorRecoveryMode(query);
+        enterErrorRecoveryMode(query, errorMessage);
       }
 
       // Return plain text in error recovery mode
@@ -519,6 +529,21 @@
             currentQuery = pluginState.query;
             // Check for warnings on each query change
             queryWarning = checkQueryWarnings(currentQuery);
+            // Validate the query after each change
+            try {
+              parseQuery(currentQuery);
+              if (isErrorRecoveryMode) {
+                clearParserError();
+              }
+            } catch (error) {
+              if (!isErrorRecoveryMode) {
+                const errorMessage =
+                  error instanceof Error
+                    ? error.message
+                    : "Error parsing query";
+                enterErrorRecoveryMode(currentQuery, errorMessage);
+              }
+            }
             dispatch("queryChange", { query: currentQuery });
           }
         },
@@ -570,15 +595,9 @@
                 // Delete the text after the quotes
                 tr.delete(pos + quoteEndPos, pos + node.text.length);
 
-                // Insert a space before, unless the character already starts with a space
-                if (!textAfter.startsWith(" ")) {
-                  textAfter = " " + textAfter;
-                }
-                // Create a new text node without the quoted mark
-                const newTextNode = newState.schema.text(textAfter);
-
-                // Insert at the position of the closing quote
-                tr.insert(pos + quoteEndPos, newTextNode);
+                // Create a new text node without the quoted mark,
+                // inserted at the position of the closing quote
+                tr.insert(pos + quoteEndPos, newState.schema.text(textAfter));
 
                 modified = true;
 
@@ -641,20 +660,39 @@
   }
 
   // Function to enter error recovery mode
-  function enterErrorRecoveryMode(query: string) {
+  function enterErrorRecoveryMode(query: string, message: string) {
+    // Guard against re-entry
+    if (isErrorRecoveryMode) {
+      console.log("Already in error recovery mode");
+      return;
+    }
     isErrorRecoveryMode = true;
     errorQuery = query;
     console.log("Entered error recovery mode with query:", query);
+    setParserError(message);
   }
 
   // Function to exit error recovery mode
   function exitErrorRecoveryMode() {
     if (!isErrorRecoveryMode) return;
 
-    console.log("Exiting error recovery mode");
     isErrorRecoveryMode = false;
 
+    // Test if current query is valid
+    console.log("Attempting exit from recovery mode.");
+    try {
+      parseQuery(currentQuery);
+    } catch (error) {
+      console.log("Query is still invalid; staying in recovery mode.");
+      // Update the error message
+      const errorMessage =
+        error instanceof Error ? error.message : "Error parsing query";
+      setParserError(errorMessage);
+      return;
+    }
+
     // Reinitialize the editor with structured nodes
+    console.log("Query is valid; exiting error recovery mode");
     if (view) {
       try {
         // Attempt to reparse the current query
@@ -677,7 +715,7 @@
   // Subscribe to the parser error store to handle transitions between modes
   const unsubscribeParserError = parserError.subscribe(($error) => {
     if ($error.hasError && !isErrorRecoveryMode) {
-      enterErrorRecoveryMode(currentQuery);
+      enterErrorRecoveryMode(currentQuery, $error.message);
     } else if (!$error.hasError && isErrorRecoveryMode) {
       exitErrorRecoveryMode();
     }
@@ -772,7 +810,7 @@
       if (!isErrorRecoveryMode) {
         const errorMessage =
           error instanceof Error ? error.message : "Error updating query";
-        setParserError(errorMessage);
+        enterErrorRecoveryMode(query, errorMessage);
       }
     }
   }
@@ -785,70 +823,95 @@
 
 <div class="search-editor-container">
   <div bind:this={editorRef} class="prosemirror-editor"></div>
-  {#if $parserError.hasError}
-    <div class="error-message">
-      <Tooltip caption={$parserError.message}>
-        <Stop16 />
-      </Tooltip>
-    </div>
-  {/if}
-  {#if queryWarning}
-    <div class="warning-message">
-      <Tooltip caption={queryWarning}>
-        <Alert16 />
-      </Tooltip>
-    </div>
-  {/if}
-  {#if view}
-    <div class="debug-panel">
-      <details open>
-        <summary>Debug Information</summary>
-        <button on:click={updateDocStructure}> Refresh Doc View </button>
-        <div class="debug-section">
-          <h4>Initial Query</h4>
-          <pre>{initialQuery}</pre>
-        </div>
-
-        <div class="debug-section">
-          <h4>Current Query</h4>
-          <pre>{currentQuery}</pre>
-        </div>
-
-        <div class="debug-section">
-          <h4>Warnings</h4>
-          <pre>{queryWarning || "No warnings"}</pre>
-          <h4>Error Recovery Mode</h4>
-          <pre>{isErrorRecoveryMode}</pre>
-          <h4>Parsing Error</h4>
-          <pre>{JSON.stringify($parserError, null, 2)}</pre>
-        </div>
-
-        <div class="debug-section">
-          <h4>Parsed Query Structure</h4>
-          <pre>{JSON.stringify(parseQuery(currentQuery), null, 2)}</pre>
-        </div>
-
-        <div class="debug-section">
-          <h4>Document Structure</h4>
-          <pre>{JSON.stringify($docStructure, null, 2)}</pre>
-        </div>
-
-        <div class="debug-section">
-          <h4>Selection</h4>
-          <pre>From: {view.state.selection.from}, To: {view.state.selection
-              .to}</pre>
-        </div>
-      </details>
-    </div>
-  {/if}
+  <div class="search-editor-status">
+    {#if $parserError.hasError}
+      <div class="error-message">
+        <Tooltip caption={$parserError.message} placement="bottom-end">
+          <Stop16 />
+        </Tooltip>
+      </div>
+    {/if}
+    {#if queryWarning}
+      <div class="warning-message">
+        <Tooltip caption={queryWarning}>
+          <Alert16 />
+        </Tooltip>
+      </div>
+    {/if}
+  </div>
 </div>
+{#if view}
+  <div class="debug-panel">
+    <details open>
+      <summary>Debug Information</summary>
+      <button on:click={updateDocStructure}> Refresh Doc View </button>
+      <div class="debug-section">
+        <h4>Initial Query</h4>
+        <pre>{initialQuery}</pre>
+      </div>
+
+      <div class="debug-section">
+        <h4>Current Query</h4>
+        <pre>{currentQuery}</pre>
+      </div>
+
+      <div class="debug-section">
+        <h4>Warnings</h4>
+        <pre>{queryWarning || "No warnings"}</pre>
+        <h4>Error Recovery Mode</h4>
+        <pre>{isErrorRecoveryMode}</pre>
+        <h4>Parsing Error</h4>
+        <pre>{JSON.stringify($parserError, null, 2)}</pre>
+      </div>
+
+      <div class="debug-section">
+        <h4>Parsed Query Structure</h4>
+        <pre>
+            {#if true}
+            {(() => {
+              try {
+                const parsedQ = parseQuery(currentQuery);
+                return JSON.stringify(parsedQ, null, 2);
+              } catch (error) {
+                return `Error: ${error.message}`;
+              }
+            })()}
+          {/if}</pre>
+      </div>
+
+      <div class="debug-section">
+        <h4>Document Structure</h4>
+        <pre>{JSON.stringify($docStructure, null, 2)}</pre>
+      </div>
+
+      <div class="debug-section">
+        <h4>Selection</h4>
+        <pre>From: {view.state.selection.from}, To: {view.state.selection
+            .to}</pre>
+      </div>
+    </details>
+  </div>
+{/if}
 
 <style>
   .search-editor-container {
+    width: 100%;
     min-width: 32rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: white;
+    position: relative;
+  }
+
+  .search-editor-status {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    right: 0;
   }
 
   .prosemirror-editor {
@@ -919,6 +982,7 @@
 
   /* Debug panel styles */
   .debug-panel {
+    width: 100%;
     margin-top: 10px;
     border-top: 1px dashed #ccc;
     padding-top: 10px;
@@ -936,6 +1000,7 @@
   }
 
   pre {
+    width: 100%;
     background-color: #f5f5f5;
     padding: 8px;
     border-radius: 4px;
