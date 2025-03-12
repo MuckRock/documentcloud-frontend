@@ -81,6 +81,9 @@
   import Tooltip from "../../common/Tooltip.svelte";
   import Button from "../../common/Button.svelte";
 
+  import { autocompletePlugin } from "./plugins/autocomplete";
+  import "./plugins/autocomplete.css";
+
   const dispatch = createEventDispatcher();
 
   // Set up the editor
@@ -761,6 +764,7 @@
         }),
         keymap(baseKeymap),
         queryTrackingPlugin,
+        // autocompletePlugin, // WIP, enabling adds buggy behaviors
       ],
     });
 
