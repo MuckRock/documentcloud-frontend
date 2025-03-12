@@ -15,7 +15,7 @@
   {#if segments.length > 0}
     <blockquote>
       {#each segments as segment}
-        <p class="segment ellipsis">{@html sanitize(segment)}</p>
+        <p class="segment">{@html sanitize(segment)}</p>
       {/each}
     </blockquote>
   {/if}
