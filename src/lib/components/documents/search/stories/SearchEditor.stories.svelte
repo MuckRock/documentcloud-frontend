@@ -24,7 +24,15 @@
   <SearchEditorComponent {...args} />
 </Template>
 
-<Story name="Plain Text" {args} />
+<Story name="Single Term" args={{ ...args, initialQuery: "documents" }} />
+<Story
+  name="Multiple Terms"
+  args={{ ...args, initialQuery: "multi term query" }}
+/>
+<Story
+  name="Complex Terms"
+  args={{ ...args, initialQuery: 'iPhone "steve jobs" -iPad +mac^3' }}
+/>
 <Story
   name="Date Query"
   args={{

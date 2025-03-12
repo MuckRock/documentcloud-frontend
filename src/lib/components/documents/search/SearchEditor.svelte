@@ -2,6 +2,45 @@
   import { writable } from "svelte/store";
   import type { Maybe } from "@/lib/api/types";
 
+  export interface ParsedText {
+    type: "text";
+    text: string;
+    quoted: boolean;
+    regex: boolean;
+    boost?: number;
+    prefix?: string;
+  }
+
+  export interface ParsedTerm {
+    type: "term";
+    value: string;
+    field?: string;
+    boost?: number;
+    prefix?: string;
+    quoted: boolean;
+  }
+
+  export interface ParsedRange {
+    type: "range";
+    field: string;
+    lowerBound?: string;
+    upperBound?: string;
+    inclusive: [boolean, boolean];
+  }
+
+  export interface ParsedExpression {
+    type: "expression";
+    operator?: string;
+    left: ParsedNode;
+    right?: ParsedNode;
+  }
+
+  export type ParsedNode =
+    | ParsedText
+    | ParsedTerm
+    | ParsedRange
+    | ParsedExpression;
+
   interface ParserError {
     hasError: boolean;
     message: string;
@@ -18,11 +57,13 @@
 </script>
 
 <script lang="ts">
+  import { parse, type AST, type Node } from "lucene";
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
   import {
     EditorState,
     Plugin,
     PluginKey,
+    TextSelection,
     Transaction,
   } from "prosemirror-state";
   import { EditorView } from "prosemirror-view";
@@ -36,7 +77,6 @@
   import { baseKeymap } from "prosemirror-commands";
   import { history, undo, redo } from "prosemirror-history";
   import { validateQuery } from "./parse";
-  import { parseQuery, type ParsedNode, IMPLICIT } from "$lib/utils/search";
   import { Alert16, Search16, Stop16 } from "svelte-octicons";
   import Tooltip from "../../common/Tooltip.svelte";
   import Button from "../../common/Button.svelte";
@@ -89,48 +129,6 @@
       text: {
         group: "inline",
       },
-      // textToken: {
-      //   group: "inline",
-      //   inline: true,
-      //   attrs: {
-      //     text: { default: "" },
-      //     prefix: { default: null },
-      //     quoted: { default: false },
-      //     regex: { default: false },
-      //   },
-      //   parseDOM: [
-      //     {
-      //       tag: "span.search-text",
-      //       getAttrs(dom) {
-      //         if (!(dom instanceof HTMLElement)) return null;
-      //         return {
-      //           text: dom.getAttribute("data-text") || dom.textContent || "",
-      //           prefix: dom.getAttribute("data-prefix"),
-      //           quoted: dom.getAttribute("data-quoted") === "true",
-      //           regex: dom.getAttribute("data-regex") === "true",
-      //         };
-      //       },
-      //     },
-      //   ],
-      //   toDOM(node) {
-      //     const attrs = {
-      //       class: "search-text",
-      //       "data-text": node.attrs.text,
-      //     };
-      //     if (node.attrs.prefix) attrs["data-prefix"] = node.attrs.prefix;
-      //     if (node.attrs.quoted) attrs["data-quoted"] = "true";
-      //     if (node.attrs.regex) attrs["data-regex"] = "true";
-
-      //     // Render out the node's text
-      //     let displayText = node.attrs.text;
-      //     if (node.attrs.quoted) {
-      //       displayText = `"${displayText}"`;
-      //     }
-      //     if (node.attrs.prefix) displayText += node.attrs.prefix;
-
-      //     return ["span", attrs, displayText];
-      //   },
-      // },
       // Basic term
       term: {
         group: "inline",
@@ -261,7 +259,7 @@
       },
     },
     marks: {
-      textToken: {
+      implicitTerm: {
         attrs: {
           quoted: { default: false },
           regex: { default: false },
@@ -291,13 +289,105 @@
           return ["span", attrs, 0];
         },
       },
+      implicitOperator: {
+        attrs: {},
+        parseDOM: [
+          {
+            tag: "span.implicit-operator",
+          },
+        ],
+        toDOM() {
+          return ["span", { class: "implicit-operator" }, 0];
+        },
+      },
     },
   });
 
-  // Convert ParsedNode to ProseMirror nodes
+  const IMPLICIT = "<implicit>";
+
+  /* We process the AST into our own intermediate ParsedNode format.
+   * This provides us stronger typing and more control over the structure.
+   * The intermediate format also provides a layer of abstraction, so that
+   * if we replace Lucene with another AST in the future, we only have to
+   * modify this file. (TODO: Stricter typing on incoming node as AST)
+   */
+  function processNode(node: any): ParsedNode {
+    if (!node) return { type: "term", value: "", quoted: false };
+
+    // Handle raw nodes
+    if (node.field === IMPLICIT) {
+      return {
+        type: "text",
+        text: node.term,
+        quoted: node.quoted,
+        regex: node.regex,
+        prefix: node.prefix,
+        boost: node.boost,
+      };
+    }
+
+    // Handle range nodes
+    if ("term_min" in node && "term_max" in node) {
+      return {
+        type: "range",
+        field: node.field || "",
+        lowerBound: node.term_min,
+        upperBound: node.term_max,
+        inclusive: [
+          node.inclusive_min !== undefined ? node.inclusive_min : true,
+          node.inclusive_max !== undefined ? node.inclusive_max : true,
+        ],
+      };
+    }
+
+    // Handle term nodes
+    if ("term" in node) {
+      return {
+        type: "term",
+        value: node.term || "",
+        field: node.field,
+        boost: node.boost,
+        prefix: node.prefix,
+        quoted: node.quoted || false,
+      };
+    }
+
+    // Handle expression nodes (binary operators like AND, OR, etc.)
+    if ("left" in node) {
+      const result: ParsedExpression = {
+        type: "expression",
+        left: processNode(node.left),
+      };
+
+      // Handle explicit operators (AND, OR, NOT) and the implicit operator
+      if (node.operator) {
+        result.operator = node.operator;
+      } else if (node.right) {
+        // If there's a right side but no explicit operator, it's an implicit operator
+        result.operator = IMPLICIT;
+      }
+
+      if (node.right) {
+        result.right = processNode(node.right);
+      }
+
+      return result;
+    }
+
+    // Fallback
+    return { type: "term", value: "", quoted: false };
+  }
+
+  /** Then, we convert convert ParsedNode to ProseMirror nodes.
+   *  - For explicit fields, we use term nodes.
+   *  - For explicit fields with ranges, we use range nodes. (Might consolidate onto term nodes later)
+   *  - For explicit operators, we use operator nodes.
+   *  - For implicit operators, we use text nodes with the implicitOperator mark.
+   *  - For implicit fields, we use text nodes with the implicitTerm marks.
+   */
   function parsedNodeToPM(parsedNode: ParsedNode): ProseMirrorNode[] {
+    // For text, create a text node with a implicitTerm mark
     if (parsedNode.type === "text") {
-      // For text, create a text node with a textToken mark
       let text = parsedNode.text;
       // Apply quotation marks for display if quoted
       if (parsedNode.quoted) {
@@ -305,18 +395,35 @@
       }
       // Apply prefix if present
       if (parsedNode.prefix) {
-        text += parsedNode.prefix;
+        text = parsedNode.prefix + text;
+      }
+      // Apply boost if present
+      if (parsedNode.boost) {
+        text += `^${parsedNode.boost}`;
       }
       // Create text node with appropriate mark
-      let mark: Mark[] | null = null;
-      if (parsedNode.quoted || parsedNode.regex || parsedNode.prefix) {
-        mark = [
-          searchSchema.mark("textToken", {
-            quoted: parsedNode.quoted,
-            regex: parsedNode.regex,
-            prefix: parsedNode.prefix,
-          }),
-        ];
+      let mark: Mark[] = [
+        searchSchema.mark("implicitTerm", {
+          quoted: parsedNode.quoted,
+          regex: parsedNode.regex,
+          prefix: parsedNode.prefix,
+        }),
+      ];
+      // If not quoted, not a regex, and contains spaces, split into multiple nodes
+      if (!parsedNode.quoted && !parsedNode.regex && text.includes(" ")) {
+        const parts = text.split(/( )/);
+        const nodes = parts.reduce<ProseMirrorNode[]>((acc, part, idx) => {
+          if (part) {
+            // preserve the marks on just the first part
+            if (idx === 0) {
+              acc.push(searchSchema.text(part, mark));
+            } else {
+              acc.push(searchSchema.text(part));
+            }
+          }
+          return acc;
+        }, []);
+        return nodes;
       }
       return [searchSchema.text(text, mark)];
     }
@@ -350,7 +457,9 @@
       if (parsedNode.operator && parsedNode.right) {
         if (parsedNode.operator === IMPLICIT) {
           // Implicit operators are just space characters
-          result.push(searchSchema.text(" "));
+          result.push(
+            searchSchema.text(" ", [searchSchema.mark("implicitOperator")]),
+          );
         } else {
           // Explicit operators are nodes
           result.push(
@@ -360,15 +469,16 @@
           );
         }
 
+        result.push(...parsedNodeToPM(parsedNode.right));
         // Check if the right side is just whitespace
-        const isRightOnlyWhitespace =
-          parsedNode.right.type === "text" &&
-          /^\s+$/.test(parsedNode.right.text);
-        console.log("Right side is only whitespace:", isRightOnlyWhitespace);
-        // Only include the right side if it's not just whitespace
-        if (!isRightOnlyWhitespace) {
-          result.push(...parsedNodeToPM(parsedNode.right));
-        }
+        // const isRightOnlyWhitespace =
+        //   parsedNode.right.type === "text" &&
+        //   /^\s+$/.test(parsedNode.right.text);
+        // console.log("Right side is only whitespace:", isRightOnlyWhitespace);
+        // // Only include the right side if it's not just whitespace
+        // if (!isRightOnlyWhitespace) {
+        //   result.push(...parsedNodeToPM(parsedNode.right));
+        // }
       }
 
       return result;
@@ -377,71 +487,10 @@
     return [];
   }
 
-  // Convert a ProseMirror document to a Lucene query string
-  // CONSIDER CONVERTING PROSEMIRROR NODES TO LUCENE AST NODES, THEN CALLING toString
-  function pmDocToQueryString(doc: ProseMirrorNode): string {
-    // Clear previous errors
-    if (!isErrorRecoveryMode) {
-      clearParserError();
-    }
-
-    try {
-      let query = "";
-
-      doc.descendants((node) => {
-        if (node.isText) {
-          query += node.text;
-          return false;
-        }
-
-        if (node.type.name === "term") {
-          const { field, value, boost, prefix, quoted } = node.attrs;
-
-          if (field) query += `${field}:`;
-          if (prefix) query += prefix;
-
-          if (quoted) {
-            query += `"${value}"`;
-          } else {
-            query += value;
-          }
-
-          if (boost) query += `^${boost}`;
-
-          return false;
-        }
-
-        if (node.type.name === "range") {
-          const { field, lowerBound, upperBound, inclusive } = node.attrs;
-          const start = inclusive[0] ? "[" : "{";
-          const end = inclusive[1] ? "]" : "}";
-
-          query += `${field}:${start}${lowerBound || ""} TO ${upperBound || ""}${end}`;
-
-          return false;
-        }
-
-        if (node.type.name === "operator") {
-          query += ` ${node.attrs.value} `; // Explicit operators with spaces
-          return false;
-        }
-
-        return true;
-      });
-
-      return query;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Error converting document to query";
-      // We don't enter recovery mode here, since the document is valid
-      setParserError(errorMessage);
-      return "";
-    }
-  }
-
-  // Create a new document from a query string
+  /** Combines all the stepwise functions into a single function that
+   *  transforms a query string into a ProseMirror document, catching
+   *  any errors that come up during the process.
+   */
   function createDocFromQuery(query: string): ProseMirrorNode {
     // Clear previous warnings/errors first
     queryWarning = null;
@@ -454,15 +503,6 @@
     if (warning) {
       queryWarning = warning;
     }
-
-    // // Check for validation errors
-    // const validation = validateQuery(query);
-    // if (!validation.isValid && !isErrorRecoveryMode) {
-    //   setParserError(
-    //     validation.error || "Invalid query syntax",
-    //     validation.position,
-    //   );
-    // }
 
     // For empty queries, return an empty document
     if (!query || !query.trim()) {
@@ -481,9 +521,15 @@
     // If we got here, try to parse and process the query
     try {
       console.debug("About to parse query…");
-      const parsedNode = parseQuery(query);
-      console.debug("Parsed node: ", parsedNode);
+
+      const parsedAST = parse(query);
+      console.debug("Parsed AST: ", parsedAST);
+
+      const parsedNode = processNode(parsedAST);
+      console.debug("Parsed Node: ", parsedAST);
+
       const paragraphContent = parsedNodeToPM(parsedNode);
+      console.debug("ProseMirror Nodes: ", paragraphContent);
 
       return searchSchema.node("doc", {}, [
         searchSchema.node("paragraph", {}, paragraphContent),
@@ -506,7 +552,62 @@
     }
   }
 
-  // Plugin to track changes and update the query
+  /** Convert a ProseMirror document back into a query string
+   *  to be reparsed by Lucene. We might benefit from some additional
+   *  reverse processing functions to go from:
+   *  ProseMirrorNode -> ParsedNode -> Lucene AST -> Lucene Query String
+   *  For now, we go immediately from PM Node to Lucene Query String.
+   */
+  function createQueryFromDoc(doc: ProseMirrorNode): string {
+    let query = "";
+
+    doc.descendants((node) => {
+      if (node.isText) {
+        query += node.text;
+        return false;
+      }
+
+      if (node.type.name === "term") {
+        const { field, value, boost, prefix, quoted } = node.attrs;
+
+        if (field) query += `${field}:`;
+        if (prefix) query += prefix;
+
+        if (quoted) {
+          query += `"${value}"`;
+        } else {
+          query += value;
+        }
+
+        if (boost) query += `^${boost}`;
+
+        return false;
+      }
+
+      if (node.type.name === "range") {
+        const { field, lowerBound, upperBound, inclusive } = node.attrs;
+        const start = inclusive[0] ? "[" : "{";
+        const end = inclusive[1] ? "]" : "}";
+
+        query += `${field}:${start}${lowerBound || ""} TO ${upperBound || ""}${end}`;
+
+        return false;
+      }
+
+      if (node.type.name === "operator") {
+        query += ` ${node.attrs.value} `; // Explicit operators with spaces
+        return false;
+      }
+
+      return true;
+    });
+
+    return query;
+  }
+
+  // This plugin is core to the editor's update loop.
+  // When the document changes in a way that changes the query,
+  // we rebuild the document based on parsing the new query structure.
   const queryTrackingPluginKey = new PluginKey("queryTracking");
   const queryTrackingPlugin = new Plugin({
     key: queryTrackingPluginKey,
@@ -515,8 +616,14 @@
         return { query: initialQuery };
       },
       apply(tr, value) {
+        // Skip recomputation if this is a rebuild transaction
+        if (tr.getMeta("rebuild")) {
+          return value;
+        }
+        // For a new transaction that changes the doc,
+        // figure out if the query has changed
         if (tr.docChanged) {
-          const newQuery = pmDocToQueryString(tr.doc);
+          const newQuery = createQueryFromDoc(tr.doc);
           return { query: newQuery };
         }
         return value;
@@ -528,119 +635,37 @@
           const pluginState = queryTrackingPluginKey.getState(view.state);
           if (pluginState.query !== currentQuery) {
             currentQuery = pluginState.query;
-            // Check for warnings on each query change
-            queryWarning = checkQueryWarnings(currentQuery);
-            // Validate the query after each change
-            try {
-              parseQuery(currentQuery);
-              if (isErrorRecoveryMode) {
-                clearParserError();
-              }
-            } catch (error) {
-              if (!isErrorRecoveryMode) {
-                const errorMessage =
-                  error instanceof Error
-                    ? error.message
-                    : "Error parsing query";
-                enterErrorRecoveryMode(currentQuery, errorMessage);
-              }
+            // Rebuild the document on each query change
+            const newDoc = createDocFromQuery(currentQuery);
+            // Store the current selection
+            const { from, to, head, anchor } = view.state.selection;
+            // Replace the current document with this one
+            // as a new transaction to avoid recursion
+            const tr = view.state.tr.replaceWith(
+              0,
+              view.state.doc.content.size,
+              newDoc.content,
+            );
+            // Set a meta flag to indicate this is a rebuild
+            // and we don't need to rerun the tracking plugin
+            tr.setMeta("rebuild", true);
+            // Preserve selection if possible
+            if (view.state.selection.empty) {
+              // If it's just a cursor position, try to maintain it
+              const newPos = Math.min(head, newDoc.content.size);
+              tr.setSelection(TextSelection.create(tr.doc, newPos));
+            } else {
+              // If it's a text selection, try to maintain both anchor and head
+              const newAnchor = Math.min(anchor, newDoc.content.size);
+              const newHead = Math.min(head, newDoc.content.size);
+              tr.setSelection(TextSelection.create(tr.doc, newAnchor, newHead));
             }
+            // Apply the transaction
+            view.dispatch(tr);
             dispatch("queryChange", { query: currentQuery });
           }
         },
       };
-    },
-  });
-
-  // Plugin to ensure mark boundaries are maintained
-  const markBoundaryPlugin = new Plugin({
-    key: new PluginKey("markBoundary"),
-
-    // This runs after a transaction but before it's applied to create the new state
-    appendTransaction(transactions, oldState, newState) {
-      // Only proceed if content changed
-      if (!transactions.some((tr) => tr.docChanged)) return null;
-
-      let tr: Transaction | null = null;
-      let modified = false;
-
-      // Split on closing quotes
-      function splitOnQuotations(node: ProseMirrorNode, pos: number) {
-        // Check if this node has the textToken mark with quoted=true
-        const quotedMark = node.marks.find(
-          (m) => m.type.name === "textToken" && m.attrs.quoted,
-        );
-        if (!quotedMark || !node.text) return;
-
-        // Start by finding a balanced pair of quotes
-        let quoteStartPos = -1;
-        let quoteEndPos = -1;
-        let inQuote = false;
-
-        for (let i = 0; i < node.text.length; i++) {
-          if (node.text[i] === '"') {
-            if (!inQuote) {
-              // We've entered a quoted string
-              quoteStartPos = i;
-              inQuote = true;
-            } else {
-              // We are existing a quoted string
-              quoteEndPos = i;
-              inQuote = false;
-
-              // If there's content after the closing quote, we need to split
-              if (quoteEndPos < node.text.length - 1) {
-                if (!tr) tr = newState.tr;
-                let textAfter = node.text.substring(quoteEndPos + 1);
-
-                // Delete the text after the quotes
-                tr.delete(pos + quoteEndPos, pos + node.text.length);
-
-                // Create a new text node without the quoted mark,
-                // inserted at the position of the closing quote
-                tr.insert(pos + quoteEndPos, newState.schema.text(textAfter));
-
-                modified = true;
-
-                // We've handled this split, so break out of the loop
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      // Helper function to process text nodes
-      function processTextNode(node: ProseMirrorNode, pos: number) {
-        splitOnQuotations(node, pos);
-      }
-
-      // Process a node and its children recursively
-      function processNode(node: ProseMirrorNode, pos: number) {
-        // If this is a text node, process it
-        if (node.isText) {
-          processTextNode(node, pos);
-          return;
-        }
-
-        // If this node has content, process each child
-        if (node.content && node.content.size > 0) {
-          // Process each child node
-          let childPos = pos + 1; // +1 to account for the node's opening tag
-
-          node.content.forEach((childNode, offset) => {
-            // Process this child
-            processNode(childNode, childPos);
-            // Move position past this child
-            childPos += childNode.nodeSize;
-          });
-        }
-      }
-
-      // Start processing from the root node
-      processNode(newState.doc, 0);
-
-      return modified ? tr : null;
     },
   });
 
@@ -664,12 +689,12 @@
   function enterErrorRecoveryMode(query: string, message: string) {
     // Guard against re-entry
     if (isErrorRecoveryMode) {
-      console.log("Already in error recovery mode");
+      console.debug("Already in error recovery mode");
       return;
     }
     isErrorRecoveryMode = true;
     errorQuery = query;
-    console.log("Entered error recovery mode with query:", query);
+    console.warn("Entered error recovery mode with query:", query);
     setParserError(message);
   }
 
@@ -680,11 +705,11 @@
     isErrorRecoveryMode = false;
 
     // Test if current query is valid
-    console.log("Attempting exit from recovery mode.");
+    console.debug("Attempting exit from recovery mode.");
     try {
-      parseQuery(currentQuery);
+      parse(currentQuery);
     } catch (error) {
-      console.log("Query is still invalid; staying in recovery mode.");
+      console.debug("Query is still invalid; staying in recovery mode.");
       // Update the error message
       const errorMessage =
         error instanceof Error ? error.message : "Error parsing query";
@@ -693,11 +718,11 @@
     }
 
     // Reinitialize the editor with structured nodes
-    console.log("Query is valid; exiting error recovery mode");
+    console.debug("Query is valid; exiting error recovery mode");
     if (view) {
       try {
         // Attempt to reparse the current query
-        const currentQuery = pmDocToQueryString(view.state.doc);
+        const currentQuery = createQueryFromDoc(view.state.doc);
         const doc = createDocFromQuery(currentQuery);
         view.dispatch(
           view.state.tr.replaceWith(
@@ -706,7 +731,7 @@
             doc.content,
           ),
         );
-        console.log("Successfully rebuilt editor after error recovery");
+        console.debug("Successfully rebuilt editor after error recovery");
       } catch (e) {
         console.error("Failed to rebuild editor after error recovery:", e);
       }
@@ -736,7 +761,6 @@
         }),
         keymap(baseKeymap),
         queryTrackingPlugin,
-        markBoundaryPlugin,
       ],
     });
 
@@ -750,7 +774,7 @@
           updateDocStructure();
           // Attempt to validate the query
           if (isErrorRecoveryMode) {
-            const currentQuery = pmDocToQueryString(newState.doc);
+            const currentQuery = createQueryFromDoc(newState.doc);
             const validation = validateQuery(currentQuery);
 
             // If valid, attempt to exit error recovery mode
@@ -883,19 +907,35 @@
         </div>
 
         <div class="debug-section">
-          <h4>Parsed Query Structure</h4>
+          <h4>Lucene AST</h4>
           <pre>
             {#if true}
               {(() => {
                 try {
-                  const parsedQ = parseQuery(currentQuery);
+                  const parsed = parse(currentQuery);
+                  return JSON.stringify(parsed, null, 2);
+                } catch (error) {
+                  return `Error: ${error.message}`;
+                }
+              })()}
+            {/if}
+          </pre>
+        </div>
+
+        <div class="debug-section">
+          <h4>ParsedNodes</h4>
+          <pre>
+            {#if true}
+              {(() => {
+                try {
+                  const parsedQ = processNode(parse(currentQuery));
                   return JSON.stringify(parsedQ, null, 2);
                 } catch (error) {
                   return `Error: ${error.message}`;
                 }
               })()}
             {/if}
-        </pre>
+          </pre>
         </div>
 
         <div class="debug-section">
@@ -951,10 +991,19 @@
     background-color: transparent;
     border-radius: 3px;
   }
+
   :global(.search-text[data-quoted]) {
     background-color: #eee;
     padding: 2px 4px;
     padding: 0;
+  }
+
+  :global(.search-text[data-prefix="+"]) {
+    background-color: var(--green-1);
+  }
+
+  :global(.search-text[data-prefix="-"]) {
+    background-color: var(--red-1);
   }
 
   :global(.search-term) {
@@ -992,8 +1041,6 @@
     min-width: 6px; /* Ensure it's selectable/visible */
   }
 
-  .okay {
-  }
   .error {
     fill: var(--red-3);
   }
