@@ -12,7 +12,7 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { BBox, Maybe, Note as NoteType, Nullable } from "$lib/api/types";
 
-  import { invalidate, pushState } from "$app/navigation";
+  import { invalidate, goto } from "$app/navigation";
 
   import { fly } from "svelte/transition";
   import { _ } from "svelte-i18n";
@@ -20,9 +20,6 @@ Assumes it's a child of a ViewerContext
   import Note from "./Note.svelte";
   import EditNote from "../forms/EditNote.svelte";
   import NoteTab from "./NoteTab.svelte";
-
-  import Modal from "../layouts/Modal.svelte";
-  import Portal from "../layouts/Portal.svelte";
 
   import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
   import {
@@ -52,11 +49,6 @@ Assumes it's a child of a ViewerContext
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
   $: writing = $mode === "annotating";
   $: activeNote = Boolean($currentNote) || (Boolean($newNote) && !drawing);
-  $: edit_page_note =
-    writing &&
-    Boolean($currentNote) &&
-    isPageLevel($currentNote ?? {}) &&
-    page_number === $currentNote?.page_number;
 
   function getNoteId(note: NoteType) {
     return noteHashUrl(note).split("#")[1];
@@ -143,7 +135,8 @@ Assumes it's a child of a ViewerContext
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
     $currentNote = note;
     $newNote = null;
-    pushState(href, { note });
+    // pushState(href, { note });
+    goto(href);
   }
 
   function closeNote() {
@@ -151,7 +144,8 @@ Assumes it's a child of a ViewerContext
     $newNote = null;
     $currentNote = null;
     const href = getViewerHref({ document, mode: $mode, embed });
-    pushState(href, {});
+    // pushState(href, {});
+    goto(href);
   }
 
   function onkeypress(e: KeyboardEvent) {
@@ -264,24 +258,6 @@ Assumes it's a child of a ViewerContext
     {/if}
   {/if}
 </div>
-
-{#if edit_page_note}
-  <Portal>
-    <Modal on:close={closeNote}>
-      <h2 slot="title">
-        {$_("annotate.cta.add-note")}
-      </h2>
-
-      <EditNote
-        {document}
-        note={$currentNote ?? {}}
-        {page_number}
-        on:close={closeNote}
-        on:success={(e) => onEditNoteSuccess(e, $currentNote)}
-      />
-    </Modal>
-  </Portal>
-{/if}
 
 <style>
   .notes {

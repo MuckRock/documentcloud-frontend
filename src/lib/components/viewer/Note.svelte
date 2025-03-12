@@ -120,11 +120,6 @@
     const image = new Image();
 
     let src = pageImageUrl(document, page_number, SIZE);
-    /* not sure we need this
-    if (document.access !== "public") {
-      src = await getPrivateAsset(src);
-    }
-    */
 
     image.src = src.href;
     image.addEventListener("load", (e) => {
