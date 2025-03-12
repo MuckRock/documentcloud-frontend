@@ -6,6 +6,7 @@ Sentry.init({
   // @ts-ignore
   dsn: env.PUBLIC_SENTRY_DSN,
   tracesSampleRate: 0.5,
+  environment: window.location.hostname,
 
   // Capture Replay for 10% of all sessions,
   replaysSessionSampleRate: 0.1,
