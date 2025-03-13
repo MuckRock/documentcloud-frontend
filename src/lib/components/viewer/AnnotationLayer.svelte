@@ -135,7 +135,6 @@ Assumes it's a child of a ViewerContext
       target?.href || getViewerHref({ document, note, mode: $mode, embed });
     $currentNote = note;
     $newNote = null;
-    // pushState(href, { note });
     goto(href);
   }
 
@@ -144,7 +143,6 @@ Assumes it's a child of a ViewerContext
     $newNote = null;
     $currentNote = null;
     const href = getViewerHref({ document, mode: $mode, embed });
-    // pushState(href, {});
     goto(href);
   }
 
