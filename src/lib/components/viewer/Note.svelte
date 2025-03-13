@@ -211,10 +211,14 @@
     {/if}
     <div class="headerText">
       <h3>
-        <a href={note_url} target={embed ? "_blank" : null}>
+        {#if page_level}
           {note.title}
-          {#if embed}({$_("documents.pageAbbrev")} {page_number}){/if}
-        </a>
+        {:else}
+          <a href={note_url} target={embed ? "_blank" : null}>
+            {note.title}
+            {#if embed}({$_("documents.pageAbbrev")} {page_number}){/if}
+          </a>
+        {/if}
       </h3>
       {#if user}
         <p class="author">
@@ -280,7 +284,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.75rem;
     pointer-events: all;
     position: relative;
     scroll-margin-top: 6rem;
@@ -289,6 +293,11 @@
 
   /* page-level */
   .note.page_level {
+    background-color: var(--white, white);
+    border: 1px solid var(--gray-2);
+    box-shadow: var(--shadow-3);
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
     position: relative;
     width: 100%;
     z-index: inherit;
