@@ -86,7 +86,7 @@ exports[`UserMenu 1`] = `
         <span
           class="label svelte-1epk331"
         >
-          Account settings
+          Account Settings
         </span>
          
       </a>
@@ -114,7 +114,7 @@ exports[`UserMenu 1`] = `
         <span
           class="label svelte-1epk331"
         >
-          Upload via email
+          Upload via Email
         </span>
          
       </span>
@@ -141,7 +141,7 @@ exports[`UserMenu 1`] = `
         <span
           class="label svelte-1epk331"
         >
-          Sign out
+          Sign Out
         </span>
          
       </a>
