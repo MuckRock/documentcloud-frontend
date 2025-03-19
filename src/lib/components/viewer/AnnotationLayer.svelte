@@ -50,10 +50,6 @@ Assumes it's a child of a ViewerContext
   $: writing = $mode === "annotating";
   $: activeNote = Boolean($currentNote) || (Boolean($newNote) && !drawing);
 
-  function getNoteId(note: NoteType) {
-    return noteHashUrl(note).split("#")[1];
-  }
-
   function getLayerPosition(e: PointerEvent): [x: number, y: number] {
     // pointer position in window
     const { offsetX, offsetY } = e;
@@ -187,11 +183,10 @@ Assumes it's a child of a ViewerContext
 >
   {#each notes as note (note.id)}
     <a
-      id={getNoteId(note)}
-      class="note-tab"
       href={getViewerHref({ document, note, mode: $mode, embed })}
-      title={note.title}
+      class="note-tab"
       style:top="calc({note.y1} * 100%)"
+      title={note.title}
       on:click={(e) => openNote(e, note)}
     >
       <Tooltip caption={note.title}><NoteTab access={note.access} /></Tooltip>
@@ -200,34 +195,40 @@ Assumes it's a child of a ViewerContext
       href={getViewerHref({ document, note, mode: $mode, embed })}
       class="note-highlight {note.access}"
       class:active={$currentNote?.id === note.id}
-      title={note.title}
       style:top="{note.y1 * 100}%"
       style:left="{note.x1 * 100}%"
       style:width="{width(note) * 100}%"
       style:height="{height(note) * 100}%"
+      title={note.title}
       on:click={(e) => openNote(e, note)}
     >
       {note.title}
     </a>
   {/each}
 
-  {#if $currentNote && !Boolean($newNote) && $currentNote.page_number === page_number}
+  {#if $currentNote && !Boolean($newNote) && $currentNote.page_number === page_number && !isPageLevel($currentNote)}
     <div
       class="note card"
-      style={positionNote($currentNote, 1.5)}
+      style={positionNote($currentNote, 0.5)}
       transition:fly={{ duration: 250, y: "-1.1rem" }}
     >
-      {#if writing}
-        <EditNote
-          note={$currentNote}
-          {document}
-          {page_number}
-          on:close={closeNote}
-          on:success={(e) => onEditNoteSuccess(e, $currentNote)}
-        />
-      {:else}
-        <Note note={$currentNote} {scale} on:close={closeNote} />
-      {/if}
+      <Note note={$currentNote} {scale} on:close={closeNote} />
+    </div>
+  {/if}
+
+  {#if writing && $currentNote}
+    <div
+      class="note card"
+      style={positionNote($currentNote, 0.5)}
+      transition:fly={{ duration: 250, y: "-1.1rem" }}
+    >
+      <EditNote
+        note={$currentNote}
+        {document}
+        {page_number}
+        on:close={closeNote}
+        on:success={(e) => onEditNoteSuccess(e, $currentNote)}
+      />
     </div>
   {/if}
 

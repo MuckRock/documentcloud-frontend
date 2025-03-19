@@ -30,7 +30,7 @@
   import Share from "../documents/Share.svelte";
 
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import { width, height, isPageLevel } from "$lib/api/notes";
+  import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
   import { pageImageUrl } from "$lib/api/documents";
   import { getUserName } from "$lib/api/accounts";
   import { getViewerHref } from "$lib/utils/viewer";
@@ -86,6 +86,7 @@
   $: edit_link = getViewerHref({ document: doc, note, mode: "annotating" });
   $: canEdit = note.edit_access && !embed;
   $: note_url = getViewerHref({ document: doc, note });
+  $: id = noteHashUrl(note).split("#")[1];
 
   async function render(
     canvas: HTMLCanvasElement,
@@ -194,6 +195,7 @@
 </script>
 
 <div
+  {id}
   class="note {note.access} {$mode || 'notes'}"
   class:page_level
   style:--x1={note.x1}
