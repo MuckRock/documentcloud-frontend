@@ -39,7 +39,7 @@ export const actions = {
     }, {});
 
     const ids = String(form.get("documents")).split(",");
-
+    console.log(`BULK DATA: ${form.get("documents")}`);
     // send a request for each key on each document
     // this might be a bunch of requests all at once
     const promises = Object.entries(data)
@@ -80,6 +80,7 @@ export const actions = {
     const form = await request.formData();
 
     const ids = String(form.get("documents")).split(",");
+    console.log(`BULK DELETE: ${form.get("documents")}`);
 
     const { error } = await destroy_many(ids, csrf_token, fetch);
 
@@ -103,7 +104,7 @@ export const actions = {
     const form = await request.formData();
 
     const ids = String(form.get("documents")).split(",");
-
+    console.log(`BULK EDIT: ${form.get("documents")}`);
     form.delete("documents");
 
     // @ts-ignore
