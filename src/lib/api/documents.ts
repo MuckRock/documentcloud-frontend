@@ -423,9 +423,6 @@ export async function edit_many(
 ) {
   const endpoint = new URL("documents/", BASE_API_URL);
 
-  // return the same data we get from search
-  endpoint.searchParams.set("expand", DEFAULT_EXPAND.join(","));
-
   const resp = await fetch(endpoint, {
     credentials: "include",
     method: "PATCH",

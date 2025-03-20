@@ -51,7 +51,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       submitter.disabled = false;
       if (result.type === "failure") {
         console.error(result);
-        error = result.data.error;
+        error = result.data;
       }
 
       if (result.type === "success") {
