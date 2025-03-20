@@ -656,6 +656,13 @@
             if (view.state.selection.empty) {
               // If it's just a cursor position, try to maintain it
               const newPos = Math.min(head, newDoc.content.size);
+              console.log(
+                JSON.stringify(
+                  { newPos, length: newDoc.content.size, head, anchor },
+                  null,
+                  2,
+                ),
+              );
               tr.setSelection(TextSelection.create(tr.doc, newPos));
             } else {
               // If it's a text selection, try to maintain both anchor and head
