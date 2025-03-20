@@ -20,7 +20,7 @@ exports[`AddOnListItem 1`] = `
             style="display: contents; --fill: var(--gray-3);"
           >
             <button
-              class="pin svelte-1pb8719"
+              class="pin svelte-ne3jki"
               style="--padding:0.25em; --border-radius:4px;"
             >
               <svg
@@ -101,7 +101,7 @@ exports[`AddOnListItem 2`] = `
             style="display: contents; --fill: var(--gray-3);"
           >
             <button
-              class="pin svelte-1pb8719"
+              class="pin svelte-ne3jki"
               style="--padding:0.25em; --border-radius:4px;"
             >
               <svg
