@@ -19,7 +19,7 @@ export default {
     },
     csrf: {
       // BUG: https://github.com/sveltejs/kit/issues/8026
-      checkOrigin: process.env.NODE_ENV === "development" ? false : true,
+      checkOrigin: process.env.DOCKER === "true" ? false : true,
     },
   },
 

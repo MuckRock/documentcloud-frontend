@@ -130,7 +130,9 @@
     asset_url={pdfUrl(document)}
   >
     <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-      <button on:click={() => ($redactions = redacted)}>Show redactions</button>
+      <button on:click={() => ($redactions[document.id] = redacted)}
+        >Show redactions</button
+      >
       <PDF />
     </div>
   </ViewerContext>

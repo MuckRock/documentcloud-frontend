@@ -3,19 +3,18 @@ import type { Handle } from "@sveltejs/kit";
 
 import { env } from "$env/dynamic/private";
 
+import { locale } from "svelte-i18n";
 import { sequence } from "@sveltejs/kit/hooks";
 import * as Sentry from "@sentry/sveltekit";
-import { locale } from "svelte-i18n";
 
 import { DC_BASE } from "./config/config.js";
 import { log } from "$lib/utils/logging";
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
-  integrations: [
-    Sentry.captureConsoleIntegration({ levels: ["error", "warn"] }),
-  ],
-  tracesSampleRate: 1,
+  integrations: [Sentry.captureConsoleIntegration({ levels: ["error"] })],
+  tracesSampleRate: 0.5,
+  environment: "server",
 });
 
 /** @type {import('@sveltejs/kit').HandleFetch} */

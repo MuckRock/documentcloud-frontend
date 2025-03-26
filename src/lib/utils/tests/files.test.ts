@@ -91,10 +91,20 @@ describe("files.isWithinSizeLimit", () => {
 });
 
 test("files.filenameToTitle", () => {
-  expect(files.filenameToTitle("foobar.zip")).toEqual("foobar");
-  expect(files.filenameToTitle("foo.bar.baz.zip")).toEqual("foo");
+  expect(files.filenameToTitle("foobar.zip")).toEqual("foobar.zip");
+  expect(files.filenameToTitle("foo.bar.baz.doc")).toEqual("foo.bar.baz");
   expect(files.filenameToTitle("BIP bim_bAp")).toEqual("BIP bim bAp");
   expect(files.filenameToTitle("PDF_FINAL_FINAL 2")).toEqual(
     "PDF FINAL FINAL 2",
   );
+
+  // strip known extensions
+  expect(files.filenameToTitle("This.Is.My.Boomstick.pdf")).toEqual(
+    "This.Is.My.Boomstick",
+  );
+});
+
+test("files.stripExtension", () => {
+  expect(files.stripExtension("file.pdf")).toEqual("file");
+  expect(files.stripExtension("file.unknown")).toEqual("file.unknown");
 });

@@ -36,7 +36,7 @@ exports[`Mailkey 1`] = `
         <h1
           slot="title"
         >
-          Upload via email
+          Upload via Email
         </h1>
       </header>
        
@@ -78,7 +78,7 @@ exports[`Mailkey 1`] = `
             title=""
             type="button"
           >
-            Create new email address
+            Create New Email Address
           </button>
           
            
@@ -87,7 +87,7 @@ exports[`Mailkey 1`] = `
             title=""
             type="button"
           >
-            Delete existing address
+            Delete Existing Address
           </button>
           
         </div>
@@ -133,7 +133,7 @@ exports[`Mailkey 2`] = `
         <h1
           slot="title"
         >
-          Upload via email
+          Upload via Email
         </h1>
       </header>
        
@@ -180,7 +180,7 @@ exports[`Mailkey 2`] = `
             title=""
             type="button"
           >
-            Create new email address
+            Create New Email Address
           </button>
           
            
@@ -189,7 +189,7 @@ exports[`Mailkey 2`] = `
             title=""
             type="button"
           >
-            Delete existing address
+            Delete Existing Address
           </button>
           
         </div>

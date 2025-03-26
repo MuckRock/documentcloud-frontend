@@ -1,9 +1,9 @@
 {
   "common": {
-    "emailAddress": "Email address",
+    "emailAddress": "Email Address",
     "loading": "Loading …",
-    "empty": "No results",
-    "error": "An error ocurred",
+    "empty": "No Results",
+    "error": "An Error Ocurred",
     "explore": "Explore",
     "edit": "Edit",
     "search": "Search",
@@ -17,23 +17,23 @@
     "viewerResults": "{results, plural, one {# matching result} other {# matching results}} found across {pages, plural, one {# page} other {# pages}}",
     "reset": "Clear Search",
     "help": "Use filters like <code>user:</code>, <code>project:</code> or <code>organization:</code> to refine searches. Use <code>sort:</code> to order results.",
-    "more": "Learn more",
-    "collapseAll": "Collapse all",
-    "expandAll": "Expand all",
+    "more": "Learn More",
+    "collapseAll": "Collapse All",
+    "expandAll": "Expand All",
     "empty": "No matching results found"
   },
   "homeTemplate": {
     "signedIn": "Signed in as {name}",
-    "signOut": "Sign out",
-    "signIn": "Sign in",
-    "signUp": "Sign up",
-    "goToApp": "Go to app"
+    "signOut": "Sign Out",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "goToApp": "Go to App"
   },
   "inputs": {
     "required": "Required",
-    "selectAll": "Select all",
-    "selected": "selected",
-    "resultsCount": "Showing {n, number} of {total, number} results"
+    "selectAll": "Select All",
+    "selected": "Selected",
+    "resultsCount": "Showing {n, number} of {total, number} Results"
   },
   "access": {
     "private": {
@@ -88,9 +88,10 @@
     "respOffHelp": "The document will fit the sizes specified below",
     "width": "Width",
     "widthAuto": "Will fill the available space",
-    "widthFixed": "Set a maximum width, in pixels",
+    "widthFixed": "Set a fixed width, in pixels",
     "height": "Height",
     "heightAuto": "The height is based on the size of the document, with no maximum size",
+    "heightFixed": "Set a fixed height, in pixels",
     "sidebarBehavior": "Sidebar behavior",
     "sbResponsive": "Responsive",
     "sbResponsiveHelp": "Show sidebar automatically on large screens and hide on mobile devices. In embed mode, the sidebar will be hidden",
@@ -103,8 +104,8 @@
     "tVisibleHelp": "Display the title and attribution in the header of the viewer",
     "tHiddenHelp": "Hide the title in the header of the viewer (still visible in the sidebar)",
     "pdfLink": "PDF link",
-    "plVisibleHelp": "Show a link to the raw PDF document in the sidebar",
-    "plHiddenHelp": "Hide the sidebar PDF link (file is still accessible if the URL is known)",
+    "plVisibleHelp": "Show a link to the raw PDF document in the footer",
+    "plHiddenHelp": "Hide the footer PDF link (file is still accessible if the URL is known)",
     "fullscreenOption": "Fullscreen option",
     "fsVisibleHelp": "Show a fullscreen icon in the bottom-right corner",
     "fsHiddenHelp": "Hide the fullscreen option",
@@ -128,10 +129,10 @@
     }
   },
   "uploadDialog": {
-    "title": "Upload documents",
+    "title": "Upload Documents",
     "description": "Select or drag a document to begin the document upload process. You will then be able to edit document information.",
     "beginUpload": "Begin Upload",
-    "selectFiles": "Select files",
+    "selectFiles": "Select Files",
     "dragDrop": "Select, paste or drag-and-drop files to upload",
     "totalFiles": "Total: {n, plural, one {# file} other {# files}}",
     "accessLevel": "Access Level",
@@ -162,22 +163,22 @@
       "apiDocs": "API Documentation",
       "addOns": "Add-Ons",
       "premium": "DocumentCloud Premium",
-      "donate": "Donate to support DocumentCloud",
+      "donate": "Donate to Support DocumentCloud",
       "emailUs": "Email Us",
       "legacy": "Legacy DocumentCloud"
     },
     "user": {
-      "uploadEmail": "Upload via email",
-      "acctSettings": "Account settings",
-      "signOut": "Sign out",
-      "signIn": "Sign in"
+      "uploadEmail": "Upload via Email",
+      "acctSettings": "Account Settings",
+      "signOut": "Sign Out",
+      "signIn": "Sign In"
     },
     "premiumUpgrade": {
       "title": "Upgrade",
       "heading": "Go Pro with DocumentCloud’s premium tools",
       "description": "Upgrade to a Professional plan to search document annotations and access Premium Add-Ons like advanced OCR, GPT-driven document analysis, and more.",
-      "docs": "Learn more about DocumentCloud Premium",
-      "orgs": "Join or start an organization",
+      "docs": "Learn More about DocumentCloud Premium",
+      "orgs": "Join or Start an Organization",
       "cta": "Upgrade Plan"
     },
     "pro": {
@@ -185,7 +186,7 @@
     },
     "org": {
       "avatar": "Avatar: {name}",
-      "changeOrg": "Change organization",
+      "changeOrg": "Change Organization",
       "adminRole": "Admin",
       "userCount": "{n, plural, one {# organization member} other {# organization members}}"
     },
@@ -199,7 +200,7 @@
     "verify": "Before you can upload documents, we need to verify your account. DocumentCloud verification is available to newsrooms, academic institutions, researchers, legal clinics and non-profits that have a track record of posting vetted primary source materials in the public interest. If you are working with an eligible organization, please join their organization account.",
     "allowed_actions": "If you are not eligible for verification, you can still search the public repository, organize documents you're interested in into projects, make private notes, and collaborate on editing and annotating documents other users invite you to.",
     "requestVerificationAction": "Request verification",
-    "orgs": "Search organizations",
+    "orgs": "Search Organizations",
     "faq": "Read more about verification in our FAQ"
   },
   "documents": {
@@ -220,7 +221,9 @@
     "retry": "Please try again."
   },
   "error": {
-    "report": "Report a problem"
+    "error": "Error",
+    "report": "Report a problem",
+    "signIn": "To access private content, <a href=\"{href}\">sign in first</a>."
   },
   "noDocuments": {
     "noSearchResults": "No search results",
@@ -262,10 +265,10 @@
     "error": "Error loading documents",
     "viewInSearch": "View in Document Search",
     "yours": "Your Projects",
-    "shared": "Shared with you",
+    "shared": "Shared with You",
     "none": "No projects found",
-    "create": "Create project",
-    "edit": "Edit project metadata",
+    "create": "Create Project",
+    "edit": "Edit Project Metadata",
     "share": "Share & embed this project",
     "add": "Add {n, plural, one {this document} other {# documents}} to a project",
     "access": {
@@ -277,7 +280,7 @@
     },
     "delete": {
       "action": "Delete Project",
-      "confirm": "Confirm delete",
+      "confirm": "Confirm Delete",
       "really": "Are you sure you want to delete this project ({project})?"
     },
     "placeholder": {
@@ -293,20 +296,20 @@
       "title": "Title",
       "description": "Description",
       "private": "Private Project",
-      "pinned": "Pin project"
+      "pinned": "Pin Project"
     }
   },
   "collaborators": {
     "remove": {
-      "label": "Remove collaborator",
+      "label": "Remove Collaborator",
       "message": "Proceeding will remove {name} from {title}. Do you wish to continue?"
     },
     "update": {
-      "label": "Change access",
+      "label": "Change Access",
       "message": "Select an access level for {name} in {title}"
     },
     "invite": {
-      "label": "Invite collaborators",
+      "label": "Invite Collaborators",
       "message": "Enter the email of an existing DocumentCloud user. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once."
     },
     "access": {
@@ -350,8 +353,8 @@
   "zoom": {
     "zoom": "Zoom",
     "size": "Size",
-    "fitWidth": "Fit width",
-    "fitHeight": "Fit height",
+    "fitWidth": "Fit Width",
+    "fitHeight": "Fit Height",
     "thumbnail": "Tiny",
     "small": "Small",
     "normal": "Medium",
@@ -363,7 +366,7 @@
     "exitFullscreen": "Exit Fullscreen",
     "document": {
       "privacyWarning": "This document is not public.",
-      "privacyFix": "Edit privacy settings"
+      "privacyFix": "Edit Privacy Settings"
     }
   },
   "titleHeader": {
@@ -380,6 +383,7 @@
     "uploadToProject": "Upload to Project",
     "download": "Download File",
     "reprocess": "Reprocess",
+    "processing": "Processing",
     "delete": "Delete",
     "shareEmbedProject": "Share & Embed Project",
     "editProject": "Edit Project Metadata",
@@ -391,7 +395,7 @@
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here",
-      "runs": "Schedule & history",
+      "runs": "Schedule & History",
       "documents": "This add-on runs on documents"
     },
     "data": {
@@ -407,12 +411,12 @@
       "notes": "Notes",
       "pageAbbrev": "p.",
       "sections": "Sections",
-      "cta": "Add sections"
+      "cta": "Add Sections"
     }
   },
   "notes": {
     "empty": "Add notes to highlight and comment on your document",
-    "cta": "Annotate this document"
+    "cta": "Annotate this Document"
   },
   "edit": {
     "title": "Edit Document Metadata",
@@ -430,10 +434,11 @@
     },
     "nodocs": "No documents selected. Close this form and select at least one document first.",
     "many": "Editing {n, plural, one {one document} other {# documents}}. This will add the same values to all selected documents.",
+    "toomany": "Bulk editing is limited to {n} documents at a time.",
     "allowedHTML": "Limited HTML can be used for formatting. See <a target=\"_blank\" href=\"/help/api\">API documentation</a> for details.",
     "save": "Save",
     "cancel": "Cancel",
-    "success": "Metadata saved"
+    "success": "Metadata Saved"
   },
   "annotate": {
     "title": "Annotate Document",
@@ -445,9 +450,9 @@
     "save": "Save",
     "cancel": "Cancel",
     "cta": {
-      "add-note": "Add a page note",
-      "add-section": "Start section",
-      "edit-section": "Edit section"
+      "add-note": "Add a Page Note",
+      "add-section": "Start Section",
+      "edit-section": "Edit Section"
     }
   },
   "redact": {
@@ -460,7 +465,7 @@
     "cancel": "Discard",
     "cancelWarning": "You will lose unsaved redactions. Are you sure you want to discard?",
     "leaveWarning": "You have unsaved redactions. Are you sure you want to leave?",
-    "success": "Redactions saved",
+    "success": "Redactions Saved",
     "error": "Error"
   },
   "sections": {
@@ -470,7 +475,7 @@
     "delete": "Delete",
     "new": "Add New Section",
     "clear": "Clear",
-    "update": "Update section",
+    "update": "Update Section",
     "overwrite": "There is already a section starting on page {n}."
   },
   "delete": {
@@ -481,19 +486,20 @@
     "cancel": "Cancel",
     "success": "{n, plural, one {Document deleted} other {Documents deleted}}",
     "error": "Error",
-    "none": "No documents selected. Close this form and select at least one document first."
+    "none": "No documents selected. Close this form and select at least one document first.",
+    "toomany": "Bulk actions are limited to {n} documents at a time."
   },
   "data": {
     "title": "Edit Tags & Data",
     "key": "Key",
-    "newkey": "New item",
+    "newkey": "New Item",
     "value": "Value",
     "tag": "Tag",
     "update": "Update",
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
-    "addNew": "Add new item:",
+    "addNew": "Add New Item:",
     "many": "Saving will add the following tags and data to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
   },
   "bulk": {
@@ -518,13 +524,14 @@
     "createdBy": "Created by",
     "viewsource": "View Source",
     "selectionHelp": "Select individual documents or run a search for the documents you want, for example “+project:mueller-docs-200005”.",
-    "selectionLearnMore": "Learn more about how Add-Ons work",
+    "selectionLearnMore": "Learn More about How Add-Ons Work",
     "editing": "Editing a previously dispatched Add-On",
     "instructions": "Instructions",
     "dispatch": "Dispatch",
     "history": "History",
     "noHistory": "You have not run this Add-On before",
-    "success": "Add-On dispatched"
+    "success": "Add-On Dispatched",
+    "selectDocuments": "Select documents"
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
@@ -544,16 +551,16 @@
     "badge": "Premium"
   },
   "mailkey": {
-    "title": "Upload via email",
+    "title": "Upload via Email",
     "description": "<p>You can upload documents to your account by sending them to to a special email address as attachments.</p><p><strong>For security reasons, this email is only shown to you once. Please copy it to a secure location.</strong></p><p>This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.</p><p>We’d love your feedback and to hear about creative use cases at <a href=\"mailto:info@documentcloud.org\" target=\"_blank\">info@documentcloud.org</a>.</p>",
     "missing_csrf": "Missing CSRF token",
     "create": {
-      "button": "Create new email address",
+      "button": "Create New Email Address",
       "success": "<strong>Upload email address succesfully created</strong>:<br> <a href=\"mailto:{mailkey}@uploads.documentcloud.org\" target=\"_blank\">{mailkey}@uploads.documentcloud.org</a>",
       "failure": "Failed to create your upload email address. Please try again later."
     },
     "destroy": {
-      "button": "Delete existing address",
+      "button": "Delete Existing Address",
       "success": "<strong>Any upload email address has been removed from your account.</strong>",
       "failure": "Failed to destroy your upload email address. Please try again later."
     }
@@ -584,11 +591,12 @@
     "addons": "Add-Ons",
     "documents": "Documents",
     "unknown": "Unknown",
-    "download": "Download file"
+    "download": "Download File",
+    "document": "This document is processing. Some features may not be available yet."
   },
   "feedback": {
     "title": "Share Your Feedback",
-    "hello": "<p>Thanks for trying out the public preview for the next major version of DocumentCloud! We are still hard at work adding features, fixing bugs, and improving the experience. We welcome your feedback&mdash;comments, ideas, and questions&mdash;to inform our progress. We are a very small team so we cannot guarantee that we will respond to all feedback, but we will read and review all of it.</p>",
+    "hello": "<p>We welcome your feedback&mdash;comments, ideas, and questions&mdash;to inform our progress. We are a very small team so we cannot guarantee that we will respond to all feedback, but we will read and review all of it.</p>",
     "defaultPlaceholder": "My feedback is…",
     "types": {
       "comment": {
@@ -607,7 +615,7 @@
     "userIdentity": {
       "legend": "Attribution",
       "anonymous": "Anonymous",
-      "shareAnonymously": "Share anonymously"
+      "shareAnonymously": "Share Anonymously"
     },
     "success": "We have received your feedback. Thank you!"
   }

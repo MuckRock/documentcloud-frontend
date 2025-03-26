@@ -20,9 +20,10 @@
 </script>
 
 <script lang="ts">
+  import type { Event } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
 
-  import type { Event } from "$lib/api/types";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
 
   export let event: Event;
@@ -36,7 +37,7 @@
   }
 </script>
 
-<SidebarItem href={url(event)}>
+<SidebarItem href={url(event)} on:click>
   <div class="info" class:disabled>
     <p class="name">
       {event.addon.name}

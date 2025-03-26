@@ -358,6 +358,7 @@
     "uploadToProject": "Caricare al Progetto",
     "download": "ScaricaFile",
     "reprocess": "Riproduzione",
+    "processing": "Elaborazione",
     "created": "Creato il",
     "updated": "Ultimo aggiornamento il",
     "language": "Linguaggio",
@@ -493,7 +494,8 @@
     "instructions": "Istruzioni",
     "dispatch": "Dispach",
     "history": "Storia",
-    "noHistory": "Hai gi\u00e0 utilizzato questo estensione."
+    "noHistory": "Hai gi\u00e0 utilizzato questo estensione.",
+    "selectDocuments": "Seleziona documenti"
   },
   "addonBrowserDialog": {
     "title": "Cerca Add-On",
@@ -552,11 +554,12 @@
     "documents": "Documenti",
     "unknown": "Sconosciuto",
     "totalCount": "{n} {n, plural, one {progetto attivo} other {progetti attivi}}",
-    "download": "Scarica file"
+    "download": "Scarica file",
+    "document": "Questo documento è in elaborazione. Alcune funzionalità potrebbero non essere ancora disponibili."
   },
   "feedback": {
     "title": "Condividi la tua opinione",
-    "hello": "<p>Grazie per aver provato la versione preview pubblica della prossima maggiore versione di DocumentCloud! Stiamo ancora impegnati nel aggiungere funzionalit\u00e0, risolvere bug e migliorare l'esperienza. Siamo aperti alla vostra feedback&mdash;commenti, idee e domande&mdash;per informarci del nostro progresso. Siamo un team molto piccolo cos\u00ec non possiamo garantire che rispondiamo a tutti i feedback, ma leggeremo e revisioneremo tutti.</p>",
+    "hello": "<p>Siamo aperti alla vostra feedback&mdash;commenti, idee e domande&mdash;per informarci del nostro progresso. Siamo un team molto piccolo cos\u00ec non possiamo garantire che rispondiamo a tutti i feedback, ma leggeremo e revisioneremo tutti.</p>",
     "defaultPlaceholder": "Il mio feedback \u00e8\u2026",
     "types": {
       "comment": {

@@ -358,6 +358,7 @@
     "uploadToProject": "T\u00e9l\u00e9verser vers un projet",
     "download": "T\u00e9l\u00e9charger le fichier",
     "reprocess": "R\u00e9processement",
+    "processing": "Traitement",
     "created": "Cr\u00e9\u00e9 le",
     "updated": "Dernierement mis \u00e0 jour le",
     "language": "Langue",
@@ -493,7 +494,8 @@
     "instructions": "Instructions",
     "dispatch": "D\u00e9p\u00f4t",
     "history": "Histoire",
-    "noHistory": "Vous n'avez pas encore utilis\u00e9 cet ajout"
+    "noHistory": "Vous n'avez pas encore utilis\u00e9 cet ajout",
+    "selectDocuments": "Sélectionner les documents"
   },
   "addonBrowserDialog": {
     "title": "Cliquez sur les extensions",
@@ -552,11 +554,12 @@
     "documents": "Documents",
     "unknown": "Inconnu",
     "totalCount": "{n} {n, plural, one {processus actif} other {processus actifs}}",
-    "download": "T\u00e9l\u00e9charger le fichier"
+    "download": "T\u00e9l\u00e9charger le fichier",
+    "document": "Ce document est en cours de traitement. Certaines fonctionnalités peuvent ne pas être encore disponibles."
   },
   "feedback": {
     "title": "Partager vos retours",
-    "hello": "Merci de tenter l'examen du pr\u00e9vu public pour la prochaine version majeure de DocumentCloud! On est encore tr\u00e8s occup\u00e9 \u00e0 ajouter des fonctionnalit\u00e9s, \u00e0 corriger les bugs et \u00e0 am\u00e9liorer l'exp\u00e9rience. Nous accueillons avec plaisir vos retours - commentaires, id\u00e9es et questions - afin d'informer notre progression. On est un \u00e9quipe tr\u00e8s petite, nous ne pouvons pas garantir qu'on r\u00e9pondra \u00e0 tous les retours, mais on lira et rev\u00e9rera tous d'entre eux.",
+    "hello": "<p>Nous accueillons avec plaisir vos retours - commentaires, id\u00e9es et questions - afin d'informer notre progression. On est un \u00e9quipe tr\u00e8s petite, nous ne pouvons pas garantir qu'on r\u00e9pondra \u00e0 tous les retours, mais on lira et rev\u00e9rera tous d'entre eux.</p>",
     "defaultPlaceholder": "Mon avis est\u2026",
     "types": {
       "comment": {

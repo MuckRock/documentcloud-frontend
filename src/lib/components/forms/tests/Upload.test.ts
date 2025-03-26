@@ -8,7 +8,7 @@ import {
   createEvent,
 } from "@testing-library/svelte";
 
-import DocumentUploadForm from "../DocumentUpload.svelte";
+import DocumentUploadForm from "../Upload.svelte";
 import { PDF_SIZE_LIMIT } from "@/config/config";
 import { me } from "@/test/fixtures/accounts";
 

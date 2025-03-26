@@ -22,6 +22,7 @@
   import Premium from "$lib/components/icons/Premium.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import UpgradePrompt from "$lib/components/premium-credits/UpgradePrompt.svelte";
 
@@ -31,12 +32,14 @@
   import { getUpgradeUrl } from "$lib/api/accounts";
   import { pdfUrl, canonicalUrl } from "$lib/api/documents";
   import { getCurrentPage } from "../viewer/ViewerContext.svelte";
+  import { getPendingDocuments } from "$lib/components/processing/ProcessContext.svelte";
 
   export let document: Document;
   export let user: Nullable<User>;
   export let action: string = "";
 
   const page = getCurrentPage();
+  const pending = getPendingDocuments();
 
   $: shareOpen = action === "share";
   $: editOpen = action === "edit";
@@ -52,6 +55,7 @@
     canonical.pathname,
     "https://legacy.www.documentcloud.org",
   );
+  $: processing = $pending?.map((d) => d.doc_id).includes(+document.id);
 </script>
 
 <div class="actions wideGap">
@@ -98,13 +102,25 @@
         disabled={document.status === "nofile"}
         on:click={() => (reprocessOpen = true)}
       >
-        <IssueReopened16 />
-        {$_("sidebar.reprocess")}
+        {#if processing}
+          <IssueReopened16 class="spin" />
+          {$_("sidebar.processing")}
+        {:else}
+          <IssueReopened16 />
+          {$_("sidebar.reprocess")}
+        {/if}
       </Button>
       <Button ghost mode="danger" on:click={() => (deleteOpen = true)}>
         <Trash16 />
         {$_("sidebar.delete")}
       </Button>
+
+      {#if processing}
+        <Tip>
+          <span slot="icon"></span>
+          {$_("processing.document")}
+        </Tip>
+      {/if}
     </div>
   {/if}
 </div>

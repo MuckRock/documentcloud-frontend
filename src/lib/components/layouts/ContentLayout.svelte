@@ -1,8 +1,9 @@
 <script lang="ts">
   export let noBgColor = false;
+  export let clientWidth: number | undefined = undefined;
 </script>
 
-<div class="container" class:noBgColor>
+<div class="container" class:noBgColor bind:clientWidth>
   {#if $$slots.header}
     <header>
       <slot name="header" />

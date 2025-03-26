@@ -10,17 +10,17 @@ Assumes it's a child of a ViewerContext
   import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
 
   // config and utils
-  import * as documents from "$lib/api/documents";
+  import { text as textData, canonicalUrl, pdfUrl } from "$lib/api/documents";
 
   export let data;
 
   $: document = data.document;
   $: mode = data.mode;
   $: text = browser
-    ? documents.text(document)
+    ? textData(document)
     : Promise.resolve({ pages: [], updated: 0 });
   $: asset_url = data.asset_url;
-  $: canonical_url = documents.canonicalUrl(document).href;
+  $: canonical_url = canonicalUrl(document).href;
 </script>
 
 <svelte:head>
@@ -46,7 +46,7 @@ Assumes it's a child of a ViewerContext
   <EmbedLayout
     settings={data.settings}
     canonicalUrl={canonical_url}
-    downloadUrl={documents.pdfUrl(document).href}
+    downloadUrl={pdfUrl(document).href}
   >
     <DocumentEmbed settings={data.settings} />
   </EmbedLayout>

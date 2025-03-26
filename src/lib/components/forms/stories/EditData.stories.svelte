@@ -23,3 +23,7 @@
 <Story name="many documents">
   <EditDataMany documents={[document]} />
 </Story>
+
+<Story name="too many documents">
+  <EditDataMany documents={Array(100).fill(document)} />
+</Story>

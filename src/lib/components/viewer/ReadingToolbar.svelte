@@ -30,8 +30,8 @@ Assumes it's a child of a ViewerContext
   import Tab from "$lib/components/common/Tab.svelte";
 
   import { remToPx } from "$lib/utils/layout";
-  import { getViewerHref } from "$lib/utils/viewer";
   import { getQuery } from "$lib/utils/search";
+  import { getViewerHref } from "$lib/utils/viewer";
   import {
     getCurrentMode,
     getDocument,
@@ -115,6 +115,7 @@ Assumes it's a child of a ViewerContext
             <MenuItem
               selected={$mode === value}
               href={getViewerHref({ document, mode: value, embed, query })}
+              preserveQS
               on:click={close}
             >
               <svelte:component this={icons[value]} slot="icon" />

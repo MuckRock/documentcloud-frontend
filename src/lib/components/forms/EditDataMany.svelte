@@ -3,18 +3,30 @@ Edit data for many documents at once.
 This will mostly merge with existing data.
 -->
 <script lang="ts">
-  import type { ActionResult } from "@sveltejs/kit";
-  import type { Document, Data } from "$lib/api/types";
+  import type {
+    APIError,
+    Document,
+    Data,
+    Maybe,
+    ValidationError,
+  } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Alert24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import KeyValue from "$lib/components/inputs/KeyValue.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
+  import Tip from "../common/Tip.svelte";
+
+  import { MAX_EDIT_BATCH } from "@/config/config.js";
 
   export let documents: Document[];
+  export let error: Maybe<APIError<ValidationError>> = undefined;
 
   const dispatch = createEventDispatcher();
   const action = "/documents/?/data";
@@ -43,23 +55,56 @@ This will mostly merge with existing data.
     data[key] = (data[key] ?? []).filter((v) => v !== value);
   }
 
-  function onSubmit() {
-    return async ({
-      result,
-      update,
-    }: {
-      result: ActionResult;
-      update: (options?: Record<string, any>) => void;
-    }) => {
-      // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-      dispatch("close");
-      update(result);
+  /**
+   * @type {import('@sveltejs/kit').SubmitFunction}
+   */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+
+    return async ({ result, update }) => {
+      submitter.disabled = false;
+      if (result.type === "failure") {
+        console.error(result);
+        error = result.data.error;
+      }
+
+      if (result.type === "success") {
+        update(result);
+        dispatch("close");
+      }
     };
   }
 </script>
 
 <form {action} class="card" method="post" use:enhance={onSubmit}>
-  <p>{$_("data.many", { values: { n: documents.length } })}</p>
+  <ShowSize size={documents.length}>
+    <p>{$_("data.many", { values: { n: documents.length } })}</p>
+    <Tip mode="error" slot="empty">
+      <Alert24 slot="icon" />
+      {$_("edit.nodocs")}
+    </Tip>
+    <Tip mode="danger" slot="oversize">
+      <Alert24 slot="icon" />
+      {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
+    </Tip>
+  </ShowSize>
+
+  {#if error}
+    <Tip mode="error">
+      <Alert24 slot="icon" />
+      <p>{error.message}</p>
+      {#if Object.keys(error.errors ?? {}).length}
+        <ul>
+          {#each Object.entries(error.errors ?? {}) as [field, errs]}
+            <li>
+              <strong>{field}</strong>: {errs.join(";")}
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </Tip>
+  {/if}
+
   <table>
     <thead>
       <tr>

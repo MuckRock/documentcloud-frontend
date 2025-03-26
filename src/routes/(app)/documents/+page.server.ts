@@ -39,7 +39,7 @@ export const actions = {
     }, {});
 
     const ids = String(form.get("documents")).split(",");
-
+    console.log(`BULK DATA: ${form.get("documents")}`);
     // send a request for each key on each document
     // this might be a bunch of requests all at once
     const promises = Object.entries(data)
@@ -80,6 +80,7 @@ export const actions = {
     const form = await request.formData();
 
     const ids = String(form.get("documents")).split(",");
+    console.log(`BULK DELETE: ${form.get("documents")}`);
 
     const { error } = await destroy_many(ids, csrf_token, fetch);
 
@@ -91,7 +92,6 @@ export const actions = {
     const message = ids.length === 1 ? "Document deleted" : "Documents deleted";
     setFlash({ message, status: "success" }, cookies);
     return {
-      success: true,
       count: ids.length,
     };
   },
@@ -104,7 +104,7 @@ export const actions = {
     const form = await request.formData();
 
     const ids = String(form.get("documents")).split(",");
-
+    console.log(`BULK EDIT: ${form.get("documents")}`);
     form.delete("documents");
 
     // @ts-ignore
@@ -114,7 +114,7 @@ export const actions = {
       return { ...update, id };
     });
 
-    const { error } = await edit_many(docs, csrf_token, fetch);
+    const { error, data } = await edit_many(docs, csrf_token, fetch);
 
     if (error) {
       setFlash({ message: error.message, status: "error" }, cookies);
@@ -127,8 +127,8 @@ export const actions = {
         : `Saved edits to ${ids.length} documents`;
     setFlash({ message, status: "success" }, cookies);
     return {
-      success: true,
       count: ids.length,
+      data,
     };
   },
 } satisfies Actions;

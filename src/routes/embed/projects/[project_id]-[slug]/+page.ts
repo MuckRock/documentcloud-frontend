@@ -11,27 +11,33 @@ const OLD_PATTERN = /(\D+)-(\d+)/;
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch, url, setHeaders }) {
-  // handle old URLs
   let { project_id, slug }: Record<string, Maybe<string>> = params;
-  if (`${project_id}-${slug}`.match(OLD_PATTERN)) {
-    const groups = OLD_PATTERN.exec(`${project_id}-${slug}`);
-    project_id = groups?.[2];
-  }
+  let project = await get(+project_id, fetch);
 
-  if (!project_id) {
-    return error(404, "Project not found");
-  }
-
-  const project = await get(+project_id, fetch);
-  const documents = search(`+project:${project_id}`, undefined, fetch);
-
+  // old project embeds used a pattern of <slug>-<id>
+  // so we want to give 404s a chance to try again
   if (project.error) {
-    return error(project.error.status, project.error.message);
+    // try again with IDs switched
+    if (
+      project.error.status === 404 &&
+      `${project_id}-${slug}`.match(OLD_PATTERN)
+    ) {
+      const groups = OLD_PATTERN.exec(`${project_id}-${slug}`);
+      project_id = groups?.[2]!;
+      const retry = await get(+project_id, fetch);
+      if (retry.data) {
+        project = retry;
+      }
+    } else {
+      return error(project.error.status, project.error.message);
+    }
   }
 
   if (!project.data) {
     return error(404, "Project not found");
   }
+
+  const documents = search(`+project:${project_id}`, undefined, fetch);
 
   if (url.pathname !== embedUrl(project.data).pathname) {
     return redirect(302, embedUrl(project.data));

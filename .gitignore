@@ -37,6 +37,7 @@ static/viewer/*
 playwright-report
 test-results
 coverage
+certs
 
 # local fixtures, everyone should generate their own
 tests/fixtures/development.json

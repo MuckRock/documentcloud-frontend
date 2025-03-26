@@ -92,9 +92,9 @@ describe("Share", () => {
     // Height
     await user.click(radioSelections[1]!);
     expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(`${embedUrl(document)}&width=500&height=500`);
+    expect(inputs[1]).toHaveValue(`${embedUrl(document)}&width=500`);
     expect((inputs[2] as HTMLInputElement).value).toContain(
-      `<iframe src="${embedUrl(document)}&width=500&height=500" width="500" height="500"`,
+      `<iframe src="${embedUrl(document)}&width=500" width="500" height="600px"`,
     );
   });
   it("disables customization of page and note embeds", async () => {

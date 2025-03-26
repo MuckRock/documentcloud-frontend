@@ -50,6 +50,8 @@ export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
 // for keeping track of deleted documents that haven't been purged from search yet
 export const deleted: Writable<Set<string>> = writable(new Set());
 
+const DEFAULT_EXPAND = ["user", "organization", "projects"];
+
 /**
  * Search documents
  * https://www.documentcloud.org/help/search/
@@ -67,9 +69,7 @@ export async function search(
 ): Promise<APIResponse<DocumentResults, null>> {
   const endpoint = new URL("documents/search/", BASE_API_URL);
 
-  const expand = ["user", "organization", "projects"].join(",");
-
-  endpoint.searchParams.set("expand", expand);
+  endpoint.searchParams.set("expand", DEFAULT_EXPAND.join(","));
   endpoint.searchParams.set("q", query);
 
   for (const [k, v] of Object.entries(options)) {
@@ -179,6 +179,9 @@ export async function text(
       console.warn(e);
       return empty;
     }
+  } else {
+    const updated = Date.parse(document.updated_at);
+    url.searchParams.set("t", updated.toString());
   }
 
   const resp = await fetch(url).catch(console.warn);
@@ -207,6 +210,9 @@ export async function textPositions(
       console.warn(e);
       return [];
     }
+  } else {
+    const updated = Date.parse(document.updated_at);
+    url.searchParams.set("t", updated.toString());
   }
 
   try {
@@ -428,7 +434,7 @@ export async function edit_many(
     body: JSON.stringify(documents),
   }).catch(console.warn);
 
-  return getApiResponse<DocumentResults>(resp);
+  return getApiResponse<DocumentResults, ValidationError>(resp);
 }
 
 /**
@@ -466,11 +472,11 @@ export async function redact(
   redactions: Redaction[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<Response> {
+): Promise<APIResponse<Redaction[], ValidationError>> {
   const endpoint = new URL(`documents/${id}/redactions/`, BASE_API_URL);
 
   // redaction is a fire-and-reprocess method, so all we have to go on is a response
-  return fetch(endpoint, {
+  const resp = await fetch(endpoint, {
     credentials: "include",
     method: "POST",
     headers: {
@@ -480,6 +486,8 @@ export async function redact(
     },
     body: JSON.stringify(redactions),
   });
+
+  return getApiResponse<Redaction[], ValidationError>(resp);
 }
 
 /**
@@ -517,6 +525,9 @@ export async function assetUrl(
       console.warn(asset_url.href);
       return asset_url;
     });
+  } else {
+    const updated = Date.parse(document.updated_at);
+    asset_url.searchParams.set("t", updated.toString());
   }
 
   return asset_url;

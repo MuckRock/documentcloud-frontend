@@ -22,6 +22,7 @@ This almost certainly lives in a modal.
     redactions,
   } from "$lib/components/viewer/RedactionLayer.svelte";
   import { canonicalUrl } from "$lib/api/documents";
+  import { load } from "$lib/components/processing/ProcessContext.svelte";
 
   export let document: Document;
 
@@ -38,6 +39,7 @@ This almost certainly lives in a modal.
     return async ({ result }) => {
       // `result` is an `ActionResult` object
       if (result.type === "failure") {
+        console.error(result);
         error = result.data.error;
       }
 
@@ -45,7 +47,11 @@ This almost certainly lives in a modal.
         // need to invalidate before navigating
         await invalidate(`document:${document.id}`);
         $redactions = [];
-        $pending = result.data.redactions;
+        pending.update((p) => {
+          p[document.id] = result.data.redactions;
+          return p;
+        });
+        load();
         goto("?mode=document");
         dispatch("close");
       }

@@ -92,9 +92,10 @@ Selectable text can be rendered in one of two ways:
     });
   }
 
-  $: redactions_for_page = [...$pending, ...$redactions].filter(
-    (r) => r.page_number === page_number - 1,
-  );
+  $: redactions_for_page = [
+    ...($pending[document.id] ?? []),
+    ...($redactions[document.id] ?? []),
+  ].filter((r) => r.page_number === page_number - 1);
 
   $: page_level_notes =
     getNotes(document)[page_number - 1]?.filter((n) => isPageLevel(n)) ?? [];
@@ -277,6 +278,7 @@ Selectable text can be rendered in one of two ways:
       <RedactionLayer
         page_number={page_number - 1}
         active={$mode === "redacting"}
+        id={document.id.toString()}
       />
     {/if}
   </div>
