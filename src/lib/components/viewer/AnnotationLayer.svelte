@@ -271,11 +271,6 @@ Assumes it's a child of a ViewerContext
     pointer-events: all;
   }
 
-  /* .notes.activeNote {
-    cursor: default;
-    pointer-events: all;
-  } */
-
   .notes :global(*) {
     pointer-events: all;
   }
@@ -348,7 +343,7 @@ Assumes it's a child of a ViewerContext
     opacity: 0.5;
     pointer-events: all;
     mix-blend-mode: multiply;
-    /* pointer-events: none; */
+    pointer-events: none;
   }
 
   a.note-highlight.public {

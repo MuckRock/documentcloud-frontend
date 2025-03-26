@@ -175,6 +175,28 @@ Selectable text can be rendered in one of two ways:
     });
   }
 
+  // if I click on a note, pass click events through to underlying note text
+  function checkForHighlightClick(click: MouseEvent) {
+    const clickX = click.clientX;
+    const clickY = click.clientY;
+
+    const highlights: NodeListOf<HTMLElement> =
+      container.querySelectorAll(".note-highlight");
+    highlights.forEach((highlight) => {
+      const { top, left, right, bottom } = highlight.getBoundingClientRect();
+      const isSelectionClick = window.getSelection()?.type === "Range";
+      const isNoteClick =
+        clickX >= left &&
+        clickX <= right &&
+        clickY >= top &&
+        clickY <= bottom &&
+        !isSelectionClick;
+      if (isNoteClick) {
+        highlight.click();
+      }
+    });
+  }
+
   function onResize() {
     numericScale = fitPage(width, height, container, scale);
   }
@@ -223,6 +245,10 @@ Selectable text can be rendered in one of two ways:
     style:--width="{width}px"
     style:--height="{height}px"
     data-loaded={loaded}
+    on:click={checkForHighlightClick}
+    on:keydown={checkForHighlightClick}
+    role="none"
+    tabindex="-1"
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
 
