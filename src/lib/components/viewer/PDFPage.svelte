@@ -10,7 +10,6 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import { onMount } from "svelte";
   import type { TextPosition } from "$lib/api/types";
 
   import { page as pageStore } from "$app/stores";
@@ -176,6 +175,7 @@ Selectable text can be rendered in one of two ways:
     });
   }
 
+  // if I click on a note, pass click events through to underlying note text
   function checkForHighlightClick(click: MouseEvent) {
     const clickX = click.clientX;
     const clickY = click.clientY;
@@ -196,13 +196,6 @@ Selectable text can be rendered in one of two ways:
       }
     });
   }
-
-  onMount(() => {
-    container.addEventListener("click", checkForHighlightClick);
-    return () => {
-      container.removeEventListener("click", checkForHighlightClick);
-    };
-  });
 
   function onResize() {
     numericScale = fitPage(width, height, container, scale);
@@ -252,6 +245,10 @@ Selectable text can be rendered in one of two ways:
     style:--width="{width}px"
     style:--height="{height}px"
     data-loaded={loaded}
+    on:click={checkForHighlightClick}
+    on:keydown={checkForHighlightClick}
+    role="none"
+    tabindex="-1"
   >
     <canvas bind:this={canvas} {width} {height}></canvas>
 

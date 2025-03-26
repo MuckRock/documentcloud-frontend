@@ -271,11 +271,6 @@ Assumes it's a child of a ViewerContext
     pointer-events: all;
   }
 
-  /* .notes.activeNote {
-    cursor: default;
-    pointer-events: all;
-  } */
-
   .notes :global(*) {
     pointer-events: all;
   }
