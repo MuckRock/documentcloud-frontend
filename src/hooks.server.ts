@@ -5,17 +5,8 @@ import { env } from "$env/dynamic/private";
 
 import { locale } from "svelte-i18n";
 import { sequence } from "@sveltejs/kit/hooks";
-import * as Sentry from "@sentry/sveltekit";
-
 import { DC_BASE } from "./config/config.js";
 import { log } from "$lib/utils/logging";
-
-Sentry.init({
-  dsn: env.SENTRY_DSN,
-  integrations: [Sentry.captureConsoleIntegration({ levels: ["error"] })],
-  tracesSampleRate: 0.5,
-  environment: "server",
-});
 
 /** @type {import('@sveltejs/kit').HandleFetch} */
 export async function handleFetch({ event, request, fetch }) {
@@ -36,8 +27,6 @@ export async function handleFetch({ event, request, fetch }) {
 
   return fetch(request);
 }
-
-export const handleError = Sentry.handleErrorWithSentry();
 
 /** @type {import('@sveltejs/kit').Handle} */
 async function language({ event, resolve }) {
@@ -65,8 +54,4 @@ async function logRequest({ event, resolve }) {
   return response;
 }
 
-export const handle: Handle = sequence(
-  Sentry.sentryHandle(),
-  language,
-  logRequest,
-);
+export const handle: Handle = sequence(language, logRequest);
