@@ -8,7 +8,7 @@
     "@sentry/svelte": "^9.10.1",
     "@sentry/sveltekit": "^9.10.1",
     "@sveltejs/adapter-netlify": "^4.1.0",
-    "@sveltejs/kit": "^2.20.2",
+    "@sveltejs/kit": "^2.5.10",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@tsconfig/svelte": "^5.0.4",
     "ajv": "^8.12.0",
