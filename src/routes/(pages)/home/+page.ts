@@ -9,6 +9,7 @@ import * as flatpages from "$lib/api/flatpages";
 import { getMe } from "$lib/api/accounts";
 
 marked.use(gfmHeadingId());
+marked.use({ async: false });
 
 export const trailingSlash = "always";
 
@@ -41,5 +42,6 @@ export async function load({ fetch, setHeaders }) {
 }
 
 function render(content: string): string {
-  return DOMPurify.sanitize(marked.parse(content));
+  // we set async: false above
+  return DOMPurify.sanitize(marked.parse(content) as string);
 }

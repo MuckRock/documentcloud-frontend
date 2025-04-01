@@ -34,6 +34,7 @@ const plugins =
             project:
               process.env.SENTRY_PROJECT ?? "documentcloud-frontend-staging",
             authToken: process.env.SENTRY_AUTH_TOKEN,
+            telemetry: false,
           },
         }),
         sveltekit(),
