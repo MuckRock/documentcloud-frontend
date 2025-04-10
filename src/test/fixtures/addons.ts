@@ -1469,7 +1469,7 @@ export const run: Run = {
   progress: 0,
   message: "Scraping complete!",
   file_url: null,
-  dismissed: true,
+  dismissed: false,
   rating: 0,
   comment: "",
   created_at: "2023-03-10T17:02:02.123686Z",

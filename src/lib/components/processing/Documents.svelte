@@ -143,25 +143,29 @@ so we can invalidate documents as they finish processing.
     {#each $current as process (process.doc_id)}
       {@const document = documents.get(process.doc_id)}
       <div role="menuitem" animate:flip>
-        <Process
-          name={document?.title ?? $_("processing.unknown")}
-          href={document ? canonicalUrl(document).href : undefined}
-          status={getStatus(process)}
-          progress={getProgress(process)}
-        >
-          <Flex slot="actions">
-            <Tooltip caption={$_("bulk.actions.reprocess")}>
-              <Button
-                ghost
-                minW={false}
-                mode="danger"
-                on:click={() => (reprocess = document)}
-              >
-                <IssueReopened16 />
-              </Button>
-            </Tooltip>
-          </Flex>
-        </Process>
+        {#if document}
+          <Process
+            status={getStatus(process)}
+            progress={getProgress(process)}
+            spin
+          >
+            <a href={canonicalUrl(document).href} class="name">
+              {document?.title}
+            </a>
+            <Flex slot="actions">
+              <Tooltip caption={$_("bulk.actions.reprocess")}>
+                <Button
+                  ghost
+                  minW={false}
+                  mode="danger"
+                  on:click={() => (reprocess = document)}
+                >
+                  <IssueReopened16 />
+                </Button>
+              </Tooltip>
+            </Flex>
+          </Process>
+        {/if}
       </div>
     {/each}
   </SidebarGroup>
@@ -174,3 +178,14 @@ so we can invalidate documents as they finish processing.
     </Modal>
   </Portal>
 {/if}
+
+<style>
+  .name {
+    flex: 1 1 auto;
+    font-weight: var(--font-semibold);
+    color: var(--gray-5);
+  }
+  a.name:hover {
+    color: var(--blue-3);
+  }
+</style>

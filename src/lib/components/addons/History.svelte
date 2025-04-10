@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Maybe, Nullable, Page } from "$lib/api/types";
-  import type { Run } from "$lib/api/types";
+  import type { Maybe, Nullable, Page, Run } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Alert24, History16, History24, Hourglass24 } from "svelte-octicons";
@@ -11,6 +10,7 @@
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Empty from "../common/Empty.svelte";
 
+  import { getRunningAddons } from "$lib/components/processing/ProcessContext.svelte";
   import { getApiResponse } from "$lib/utils/api";
 
   export let runs: Run[];
@@ -19,9 +19,21 @@
 
   export let loading = false;
 
+  const addons = getRunningAddons();
   let error: string = "";
 
   $: empty = runs.length === 0;
+  $: running = $addons?.reduce(
+    (m, run) => {
+      m[run.uuid] = run;
+      return m;
+    },
+    {} as Record<string, Run>,
+  );
+
+  $: if ($addons?.length && running) {
+    runs = runs.map((r) => running[r.uuid] || r);
+  }
 
   // load the next set of results
   async function load(url: URL) {
@@ -54,7 +66,7 @@
   </SidebarItem>
 
   {#if loading}
-    <Empty icon={Hourglass24}>Loading past runs…</Empty>
+    <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
   {:else if error}
     <Empty icon={Alert24}>
       {error}
@@ -63,7 +75,7 @@
     {#each runs as run}
       <HistoryEvent {run} />
     {:else}
-      <Empty icon={History24}>No past runs</Empty>
+      <Empty icon={History24}>{$_("addonDispatchDialog.noHistory")}</Empty>
     {/each}
   {/if}
 

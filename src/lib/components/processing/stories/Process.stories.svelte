@@ -13,12 +13,12 @@
 
   let args = {
     status: "in_progress",
-    name: "Example process",
   };
 </script>
 
 <Template let:args>
   <Process {...args}>
+    <span class="name">Example process</span>
     <Flex slot="actions" align="center">
       <Button ghost mode="danger" size="small" minW={false}>
         <XCircle16 />
@@ -43,7 +43,8 @@
 <Story name="Failure" args={{ ...args, status: "failure" }} />
 <Story name="Cancelled" args={{ ...args, status: "cancelled" }} />
 <Story name="With Actions">
-  <Process name="Completed Run" status="success">
+  <Process status="success">
+    <span class="name">Completed event</span>
     <Flex slot="actions">
       <Button size="small" ghost>Dismiss</Button>
       <Button size="small" ghost minW={false} mode="success">
