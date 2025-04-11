@@ -69,6 +69,7 @@
     font-size: var(--font-xl);
     line-height: 1.2;
     word-break: normal;
+    overflow-x: auto;
   }
   .access {
     flex: 0 1 auto;
