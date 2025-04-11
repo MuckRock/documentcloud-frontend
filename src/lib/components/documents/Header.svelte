@@ -10,10 +10,11 @@
   import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
-  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
   import Access, { getLevel } from "$lib/components/common/Access.svelte";
-  import { remToPx } from "$lib/utils/layout";
   import SignedIn from "../common/SignedIn.svelte";
+
+  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+  import { remToPx } from "$lib/utils/layout";
 
   export let document: Document;
 
@@ -67,7 +68,8 @@
     font-weight: var(--font-semibold);
     font-size: var(--font-xl);
     line-height: 1.2;
-    word-break: break-all;
+    word-break: normal;
+    overflow-x: auto;
   }
   .access {
     flex: 0 1 auto;
