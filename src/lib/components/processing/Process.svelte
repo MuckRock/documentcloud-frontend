@@ -22,24 +22,26 @@
 
   import Flex from "../common/Flex.svelte";
 
-  export let status: RunStatus;
-  export let name: string;
-  export let href: Maybe<string> = undefined;
+  export let dismissed = false;
+  export let id: Maybe<string> = undefined;
   export let progress: Maybe<number> = undefined;
+  export let spin = false;
+  export let status: RunStatus;
 
   $: isRunning = ["in_progress", "queued"].includes(status);
 </script>
 
-<div class="{status} process">
+<div {id} class="{status} process" class:dismissed>
   <div class="info">
-    <div class="icon" class:spin={status === "in_progress"}>
-      <svelte:component this={icons[status]} />
+    <div class="icon" class:spin>
+      <slot name="icon">
+        <svelte:component this={icons[status]} />
+      </slot>
     </div>
-    {#if href}
-      <a {href} class="name">{name}</a>
-    {:else}
-      <span class="name">{name}</span>
-    {/if}
+
+    <div class="details">
+      <slot />
+    </div>
     {#if $$slots.actions}
       <Flex slot="end">
         <slot name="actions" {isRunning} />
@@ -65,6 +67,10 @@
     gap: 0.5rem;
     padding: 0.5rem;
     min-width: 20rem;
+  }
+
+  .dismissed {
+    opacity: 0.75;
   }
 
   .queued.process,
@@ -95,12 +101,10 @@
     font-weight: var(--font-semibold);
     color: var(--gray-5);
   }
-  a.name:hover {
-    color: var(--blue-3);
-  }
 
   progress {
     width: 100%;
+    height: var(--height, 8px);
   }
 
   .icon {

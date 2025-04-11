@@ -1,38 +1,91 @@
 <script lang="ts">
-  import type { Run } from "$lib/api/types";
+  import type { Maybe, Run, RunStatus } from "$lib/api/types";
+  import { onMount, type ComponentType } from "svelte";
+
   import { _ } from "svelte-i18n";
   import {
     CheckCircle24,
     Paperclip16,
     Hourglass24,
     Alert24,
-    Question24,
     Sync24,
+    X24,
+    XCircle16,
   } from "svelte-octicons";
-  import Action from "$lib/components/common/Action.svelte";
-  import Price from "$lib/components/premium-credits/Price.svelte";
+
+  import Action from "../common/Action.svelte";
+  import Button from "../common/Button.svelte";
+  import Flex from "../common/Flex.svelte";
+  import Price from "../premium-credits/Price.svelte";
+  import Process from "../processing/Process.svelte";
+
+  import * as addons from "$lib/api/addons";
+  import { getCsrfToken } from "$lib/utils/api";
 
   export let run: Run;
+  export let dismissable = false;
+
+  let csrftoken: Maybe<string> = undefined;
 
   $: ranAt = new Date(run.created_at);
+  $: isRunning = ["in_progress", "queued"].includes(run.status);
+
+  const icons: Record<RunStatus, ComponentType> = {
+    success: CheckCircle24,
+    failure: Alert24,
+    queued: Hourglass24,
+    in_progress: Sync24,
+    cancelled: X24,
+  };
+
+  onMount(() => {
+    csrftoken = getCsrfToken();
+  });
+
+  async function cancelRun() {
+    if (!csrftoken) return;
+
+    // optimistic update
+    const prior = run.status;
+    run.status = "cancelled";
+
+    const { data, error } = await addons.cancel(run.uuid, csrftoken);
+
+    if (error) {
+      // todo: show error
+      run.status = prior;
+    }
+
+    if (data) {
+      run = data;
+    }
+  }
+
+  async function dismissRun() {
+    if (!csrftoken) return;
+
+    run.dismissed = true;
+
+    const { data, error } = await addons.dismiss(run.uuid, csrftoken);
+
+    if (error) {
+      // todo: show error
+      run.dismissed = false;
+    }
+
+    if (data) {
+      run = data;
+    }
+  }
 </script>
 
-<div class="addon-run" id="run-{run.uuid}">
-  <div class="status">
-    {#if run.status === "success"}
-      <span class="success icon" title="Success"><CheckCircle24 /></span>
-    {:else if run.status === "failure"}
-      <span class="failure icon" title="Failure"><Alert24 /></span>
-    {:else if run.status === "queued"}
-      <span class="queued icon" title="Queued"><Hourglass24 /></span>
-    {:else if run.status === "in_progress"}
-      <span class="in-progress icon" title="In Progress"><Sync24 /></span>
-    {:else}
-      <span class="unknown-status icon" title="Unknown Status">
-        <Question24 />
-      </span>
-    {/if}
-  </div>
+<Process
+  id="run-{run.uuid}"
+  status={run.status}
+  progress={run.progress}
+  dismissed={dismissable && run.dismissed}
+>
+  <svelte:component this={icons[run.status]} slot="icon" />
   <div class="info">
     <div class="row">
       <div class="primary-info">
@@ -64,7 +117,34 @@
       {/if}
     </div>
   </div>
-</div>
+
+  <Flex slot="actions">
+    {#if isRunning}
+      <!-- Cancel -->
+      <Button
+        minW={false}
+        mode="danger"
+        ghost
+        disabled={!csrftoken}
+        on:click={() => cancelRun()}
+        title={$_("dialog.cancel")}
+      >
+        <XCircle16 />
+      </Button>
+    {:else if dismissable && !run.dismissed}
+      <Button
+        size="small"
+        minW={false}
+        ghost
+        disabled={!csrftoken}
+        on:click={() => dismissRun()}
+      >
+        {$_("dialog.dismiss")}
+      </Button>
+      <!-- todo: retry -->
+    {/if}
+  </Flex>
+</Process>
 
 <style>
   @keyframes spin {
@@ -74,38 +154,6 @@
     100% {
       transform: rotate(360deg);
     }
-  }
-  .addon-run {
-    margin: 0.5em;
-    display: flex;
-    align-items: flex-start;
-    gap: 1em;
-  }
-  .status {
-    flex: 0 1 auto;
-    margin: 0;
-  }
-  .success.icon {
-    fill: var(--green-3);
-  }
-  .failure.icon {
-    fill: var(--caution);
-  }
-  .queued.icon {
-    fill: var(--gray-3);
-  }
-  .in-progress.icon {
-    display: block;
-    fill: var(--primary);
-    transform-origin: center center;
-    animation: spin 2s linear infinite reverse;
-    animation-play-state: running;
-    & svg {
-      display: block;
-    }
-  }
-  .unknown-status.icon {
-    fill: var(--gray-3);
   }
   .row {
     display: flex;
