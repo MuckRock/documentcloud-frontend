@@ -1,7 +1,7 @@
 // https://kit.svelte.dev/docs/hooks#server-hooks
 import type { Handle } from "@sveltejs/kit";
 
-import { env } from "$env/dynamic/private";
+import * as env from "$env/static/private";
 
 import { locale } from "svelte-i18n";
 import { sequence } from "@sveltejs/kit/hooks";
@@ -10,8 +10,10 @@ import * as Sentry from "@sentry/sveltekit";
 import { DC_BASE } from "./config/config.js";
 import { log } from "$lib/utils/logging";
 
+const SENTRY_DSN = env["SENTRY_DSN"];
+
 Sentry.init({
-  dsn: env.SENTRY_DSN,
+  dsn: SENTRY_DSN,
   integrations: [Sentry.captureConsoleIntegration({ levels: ["error"] })],
   tracesSampleRate: 0.5,
   environment: "server",
