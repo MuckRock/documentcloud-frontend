@@ -40,7 +40,7 @@ export function getViewerHref(options: ViewerHrefOptions = {}) {
 
   if (document) {
     // If we have the document, we can provide an absolute URL
-    let url = embed ? canonicalUrl(document) : embedUrl(document);
+    let url = embed ? embedUrl(document) : canonicalUrl(document);
     url.search = new URLSearchParams(params).toString();
     if (hash) url.hash = hash;
     return url.href;
