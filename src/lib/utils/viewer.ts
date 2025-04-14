@@ -7,7 +7,7 @@ import type {
   Zoom,
 } from "$lib/api/types";
 
-import { canonicalUrl, pageHashUrl } from "../api/documents";
+import { canonicalUrl, embedUrl, pageHashUrl } from "../api/documents";
 import { noteHashUrl } from "../api/notes";
 import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
 
@@ -40,7 +40,7 @@ export function getViewerHref(options: ViewerHrefOptions = {}) {
 
   if (document) {
     // If we have the document, we can provide an absolute URL
-    let url = canonicalUrl(document);
+    let url = embed ? embedUrl(document) : canonicalUrl(document);
     url.search = new URLSearchParams(params).toString();
     if (hash) url.hash = hash;
     return url.href;
