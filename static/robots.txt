@@ -4,6 +4,7 @@ Allow: /*
 Crawl-delay: 5
 
 Disallow: /*?
+Disallow: /cdn-cgi/
 
 User-agent: ChatGPT-User
 Allow: /home/$
