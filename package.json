@@ -73,7 +73,7 @@
   "scripts": {
     "dev": "NODE_ENV=development vite dev",
     "dev:remote": "NODE_ENV=remote vite dev --host local.muckcloud.com",
-    "build": "vite build && node embeds.js",
+    "build": "./build.sh",
     "preview": "vite preview",
     "sync": "svelte-kit sync",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
