@@ -49,6 +49,7 @@ Confirm deletion or one or more documents.
       switch (result.type) {
         case "error":
           error = result.data.error;
+          submitter.disabled = false;
           break;
 
         case "success":
@@ -61,7 +62,7 @@ Confirm deletion or one or more documents.
           ids.forEach((d) => $deleted.add(String(d)));
           if (count === 1) {
             // go back home for single deletes
-            return goto(searchUrl(userDocs($me)), { invalidateAll: true });
+            goto(searchUrl(userDocs($me)), { invalidateAll: true });
           } else {
             // don't redirect for bulk deletes
             invalidateAll();
