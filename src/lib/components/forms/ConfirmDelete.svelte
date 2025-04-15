@@ -5,6 +5,7 @@ Confirm deletion or one or more documents.
   import type { APIError, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { invalidateAll, goto } from "$app/navigation";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -18,6 +19,7 @@ Confirm deletion or one or more documents.
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { canonicalUrl, deleted } from "$lib/api/documents";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import { searchUrl, userDocs } from "$lib/utils/search";
 
   const me = getCurrentUser();
 
@@ -44,15 +46,28 @@ Confirm deletion or one or more documents.
       return cancel();
     }
     return ({ result, update }) => {
-      if (result.type === "success") {
-        ids.forEach((d) => $deleted.add(String(d)));
-        dispatch("close");
-      } else {
-        error = result.data.error;
+      switch (result.type) {
+        case "error":
+          error = result.data.error;
+          break;
+
+        case "success":
+          ids.forEach((d) => $deleted.add(String(d)));
+          dispatch("close");
+          update(result);
+          submitter.disabled = false;
+
+        case "redirect":
+          ids.forEach((d) => $deleted.add(String(d)));
+          if (count === 1) {
+            // go back home for single deletes
+            return goto(searchUrl(userDocs($me)), { invalidateAll: true });
+          } else {
+            // don't redirect for bulk deletes
+            invalidateAll();
+          }
+          dispatch("close");
       }
-      dispatch("close");
-      update(result);
-      submitter.disabled = false;
     };
   }
 </script>
