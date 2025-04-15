@@ -1,0 +1,3 @@
+# manual redirects
+
+/_app/* /_app/:splat
