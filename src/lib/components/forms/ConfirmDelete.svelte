@@ -43,8 +43,9 @@ Confirm deletion or one or more documents.
     if (!$me) {
       return cancel();
     }
-    return ({ result, update }) => {
-      if (result.type === "success") {
+    return async ({ result, update }) => {
+      console.log(result);
+      if (result.type !== "error") {
         ids.forEach((d) => $deleted.add(String(d)));
         dispatch("close");
       } else {
