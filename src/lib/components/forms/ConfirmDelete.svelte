@@ -6,7 +6,6 @@ Confirm deletion or one or more documents.
 
   import { enhance } from "$app/forms";
   import { invalidateAll, goto } from "$app/navigation";
-  import { page } from "$app/stores";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -20,6 +19,7 @@ Confirm deletion or one or more documents.
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { canonicalUrl, deleted } from "$lib/api/documents";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import { searchUrl, userDocs } from "$lib/utils/search";
 
   const me = getCurrentUser();
 
@@ -59,10 +59,13 @@ Confirm deletion or one or more documents.
 
         case "redirect":
           ids.forEach((d) => $deleted.add(String(d)));
-          if (result.location !== $page.url.pathname) {
-            return goto(result.location, { invalidateAll: true });
+          if (count === 1) {
+            // go back home for single deletes
+            return goto(searchUrl(userDocs($me)), { invalidateAll: true });
+          } else {
+            // don't redirect for bulk deletes
+            invalidateAll();
           }
-          invalidateAll();
           dispatch("close");
       }
     };
