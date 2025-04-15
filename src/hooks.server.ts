@@ -58,6 +58,7 @@ async function language({ event, resolve }) {
 
 /** @type {import('@sveltejs/kit').Handle} */
 async function logRequest({ event, resolve }) {
+  console.debug(event.request.url);
   const response = await resolve(event);
 
   // logging happens after the response is generated
