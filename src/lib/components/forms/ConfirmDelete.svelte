@@ -5,6 +5,8 @@ Confirm deletion or one or more documents.
   import type { APIError, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { invalidateAll, goto } from "$app/navigation";
+  import { page } from "$app/stores";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -43,17 +45,26 @@ Confirm deletion or one or more documents.
     if (!$me) {
       return cancel();
     }
-    return async ({ result, update }) => {
-      console.log(result);
-      if (result.type !== "error") {
-        ids.forEach((d) => $deleted.add(String(d)));
-        dispatch("close");
-      } else {
-        error = result.data.error;
+    return ({ result, update }) => {
+      switch (result.type) {
+        case "error":
+          error = result.data.error;
+          break;
+
+        case "success":
+          ids.forEach((d) => $deleted.add(String(d)));
+          dispatch("close");
+          update(result);
+          submitter.disabled = false;
+
+        case "redirect":
+          ids.forEach((d) => $deleted.add(String(d)));
+          if (result.location !== $page.url.pathname) {
+            return goto(result.location, { invalidateAll: true });
+          }
+          invalidateAll();
+          dispatch("close");
       }
-      dispatch("close");
-      update(result);
-      submitter.disabled = false;
     };
   }
 </script>
