@@ -1,6 +1,10 @@
 # we don't have any of these
 /.well-known/* /404.html 404
+/ads.txt /404.html 404
 
 # sometimes asset paths get mislaid
 /documents/_app/* /_app/:splat
 /documents/:id/_app/* /_app/:splat
+
+# old URLs
+/search/ /documents/
