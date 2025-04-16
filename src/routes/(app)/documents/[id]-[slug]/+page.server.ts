@@ -7,7 +7,6 @@ import { setFlash, redirect } from "sveltekit-flash-message/server";
 import { CSRF_COOKIE_NAME, EMBED_URL } from "@/config/config.js";
 import { destroy, edit, redact } from "$lib/api/documents";
 import * as notes from "$lib/api/notes";
-import { isErrorCode } from "$lib/utils/api";
 
 export function load({ cookies, request, url }) {
   const inIframe = request.headers.get("Sec-Fetch-Dest") === "iframe";
