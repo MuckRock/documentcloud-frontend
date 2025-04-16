@@ -5,6 +5,12 @@
 # sometimes asset paths get mislaid
 /documents/_app/* /_app/:splat
 /documents/:id/_app/* /_app/:splat
+/documents/service-worker.js /service-worker.js
 
 # old URLs
 /search/ /documents/
+/api/oembed.json https://api.www.documentcloud.org/api/oembed/
+
+# old embeds
+/documents/:doc_id-:slug/annotations/:id https://embed.documentcloud.org/documents/:doc_id/annotations/:id/
+/documents/:doc_id-:slug/pages/:n https://embed.documentcloud.org/documents/:doc_id/pages/:n/
