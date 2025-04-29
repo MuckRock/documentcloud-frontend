@@ -90,7 +90,7 @@
         break;
       case "page":
         permalink = pageUrl(document, page);
-        embedSrc = canonicalPageUrl(document, page);
+        embedSrc = canonicalPageUrl(document, page, true);
         embedSrc.searchParams.set("embed", "1");
         iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px" style="${style}"></iframe>`;
         break;
