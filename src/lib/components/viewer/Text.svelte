@@ -51,7 +51,7 @@
     background-color: var(--white, #fff);
     margin: 0;
     padding: 1.5rem;
-    text-wrap: pretty;
+    text-wrap: balance;
     word-break: break-word;
 
     color: var(--gray-5, #233944);
