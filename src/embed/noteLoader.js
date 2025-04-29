@@ -1,5 +1,5 @@
 import { setupResizeEvent } from "./iframeSizer.js";
-import { APP_URL } from "../config/embed.js";
+import { EMBED_URL } from "../config/embed.js";
 
 const enhanced = "DC-embed-enhanced";
 
@@ -22,7 +22,10 @@ function loadNote(src) {
     // Create the iframe
     const iframe = document.createElement("iframe");
     iframe.style = "border: none; width: 100%;";
-    iframe.src = new URL(`documents/${id}/annotations/${noteId}`, APP_URL).href;
+    iframe.src = new URL(
+      `/documents/${id}/annotations/${noteId}/`,
+      EMBED_URL,
+    ).href;
     setupResizeEvent(iframe);
 
     noteElem.appendChild(iframe);

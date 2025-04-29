@@ -1,5 +1,5 @@
 import { setupResizeEvent } from "./iframeSizer.js";
-import { APP_URL } from "../config/embed.js";
+import { EMBED_URL } from "../config/embed.js";
 
 const embeds = document.querySelectorAll(".DC-embed");
 const enhanced = "DC-embed-enhanced";
@@ -23,6 +23,7 @@ embeds.forEach((embed) => {
   const parts = slugId.split("/").filter((x) => x.trim().length > 0);
   if (parts.length < 2) return;
   slugId = parts[parts.length - 1];
+  const [id] = slugId.split("-", 1);
   let page = hash.split("/");
   if (page.length != 2) return;
   page = parseInt(page[1].substr(1));
@@ -35,7 +36,7 @@ embeds.forEach((embed) => {
   // Create the iframe
   const iframe = document.createElement("iframe");
   iframe.style = "border: none; width: 100%;";
-  iframe.src = new URL(`documents/${slugId}/pages/${page}`, APP_URL).href;
+  iframe.src = new URL(`/documents/${id}/pages/${page}/`, EMBED_URL).href;
   setupResizeEvent(iframe);
 
   embed.appendChild(iframe);
