@@ -575,8 +575,13 @@ export function canonicalUrl(document: Document): URL {
  * @param {number} page
  * @returns {URL}
  */
-export function canonicalPageUrl(document: Document, page: number): URL {
-  return new URL(`/documents/${document.id}/pages/${page}/`, APP_URL);
+export function canonicalPageUrl(
+  document: Document,
+  page: number,
+  embed: boolean = false,
+): URL {
+  const base = embed ? EMBED_URL : APP_URL;
+  return new URL(`/documents/${document.id}/pages/${page}/`, base);
 }
 
 /**

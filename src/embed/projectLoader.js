@@ -48,7 +48,7 @@ function injectIframe(options, container) {
   if (slug.trim() == "") {
     slugId = id;
   } else {
-    slugId = [slug, id].join("-");
+    slugId = [id, slug].join("-");
   }
 
   // Set up query params
@@ -82,7 +82,7 @@ function injectIframe(options, container) {
   // Set up iframe
   const iframe = document.createElement("iframe");
   iframe.src = queryBuilder(
-    new URL(`projects/${slugId}`, EMBED_URL).href,
+    new URL(`projects/${slugId}/`, EMBED_URL).href,
     queryParams,
   );
   iframe.style = style;
