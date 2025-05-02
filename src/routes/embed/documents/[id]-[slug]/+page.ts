@@ -24,6 +24,7 @@ export async function load({ fetch, url, params, depends, setHeaders }) {
   }
 
   let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);
+  console.log(settings.fullscreen);
 
   setHeaders({
     "cache-control": `public, max-age=${EMBED_MAX_AGE}`,

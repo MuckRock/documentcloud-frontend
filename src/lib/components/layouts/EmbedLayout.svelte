@@ -64,7 +64,8 @@
           </Button>
         </Tooltip>
       {/if}
-      {#if settings.fullscreen && isFullscreenSupported}
+      <!-- Fullscreen must be explictly disabled in settings -->
+      {#if settings.fullscreen !== 0 && isFullscreenSupported}
         <Tooltip
           caption={$_(
             isFullscreen ? "embed.exitFullscreen" : "embed.enterFullscreen",
