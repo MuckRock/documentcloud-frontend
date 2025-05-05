@@ -31,13 +31,13 @@
       </td>
     </tr>
   {:else}
-    <tr class="empty"
-      ><td>
+    <tr class="empty">
+      <td>
         <Empty icon={History24}>
           {$_("dialogRevisionsDialog.empty")}
         </Empty>
-      </td></tr
-    >
+      </td>
+    </tr>
   {/each}
 </table>
 
