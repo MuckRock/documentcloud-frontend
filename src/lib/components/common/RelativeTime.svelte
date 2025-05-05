@@ -42,7 +42,11 @@
   }
 </script>
 
-<time datetime={date.toISOString()} title={date.toISOString()}>
+<time
+  datetime={date.toISOString()}
+  title={date.toISOString()}
+  data-chromatic="ignore"
+>
   {formatTimeAgo(date)}
 </time>
 
