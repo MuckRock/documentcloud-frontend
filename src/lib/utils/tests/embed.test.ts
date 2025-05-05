@@ -32,6 +32,7 @@ describe("embed settings", () => {
       pdf: false,
       onlyshoworg: true,
       title: 0,
+      fullscreen: 1
     });
   });
 });
