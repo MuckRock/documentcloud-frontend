@@ -16,7 +16,7 @@ export async function load({ params, fetch, url }) {
   if (!document) {
     return error(404, "Document not found");
   }
-  const canonical = documents.embedUrl(document);
+  const canonical = documents.embedUrl(document, url.searchParams);
 
   return redirect(308, canonical);
 }
