@@ -8,5 +8,5 @@ export function load({ url }) {
   // change the path but preserve other parts of the URL
   u.pathname = "/documents/";
 
-  return redirect(302, u);
+  return redirect(308, u);
 }

@@ -8,3 +8,5 @@
 
 # old URLs
 /search/ /documents/
+/app /documents/
+/api/oembed.json https://api.www.documentcloud.org/api/oembed/

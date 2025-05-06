@@ -10,7 +10,7 @@ import { getMe } from "$lib/api/accounts";
 
 marked.use(gfmHeadingId());
 
-export const trailingSlash = "always";
+export const trailingSlash = "ignore";
 
 export async function load({ fetch, setHeaders }) {
   const [{ data: page, error: err }, me] = await Promise.all([
