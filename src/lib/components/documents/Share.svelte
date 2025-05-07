@@ -86,7 +86,7 @@
       case "document":
         permalink = canonicalUrl(document);
         embedSrc = embedUrl(document, embedUrlParams);
-        iframe = `<iframe src="${embedSrc.href}" width="${$embedSettings.width ?? "100%"}" height="${$embedSettings.height ?? "600px"}" style="${style}"></iframe>`;
+        iframe = `<iframe src="${embedSrc.href}" width="${$embedSettings.width ?? "100%"}" height="${$embedSettings.height ?? "600px"}" style="${style}" allow="fullscreen"></iframe>`;
         break;
       case "page":
         permalink = pageUrl(document, page);
