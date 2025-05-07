@@ -13,7 +13,7 @@ import { log } from "$lib/utils/logging";
 Sentry.init({
   dsn: env.SENTRY_DSN,
   integrations: [Sentry.captureConsoleIntegration({ levels: ["error"] })],
-  tracesSampleRate: 0.5,
+  tracesSampleRate: 0.05,
   environment: "server",
 });
 

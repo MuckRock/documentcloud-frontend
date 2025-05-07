@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/sveltekit";
 Sentry.init({
   // @ts-ignore
   dsn: env.PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 0.5,
+  tracesSampleRate: 0.05,
   environment: window.location.hostname,
 
   // Capture Replay for 10% of all sessions,
@@ -16,7 +16,7 @@ Sentry.init({
 
   // If you don't want to use Session Replay, just remove the line below:
   integrations: [
-    replayIntegration(),
+    // replayIntegration(),
     Sentry.captureConsoleIntegration({ levels: ["error"] }),
   ],
 });
