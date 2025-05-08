@@ -14,8 +14,10 @@ export function log(event: RequestEvent, response: Response): void {
 
   const { method, url } = event.request;
 
-  // @ts-ignore
-  const headers = Object.fromEntries([...response.headers]);
+  const headers = Object.fromEntries(
+    // @ts-ignore
+    [...response.headers].filter(([k, v]) => k !== "link"),
+  );
 
   const row = {
     timestamp: new Date().toJSON(),
