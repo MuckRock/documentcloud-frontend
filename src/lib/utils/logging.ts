@@ -13,21 +13,11 @@ export function log(event: RequestEvent, response: Response): void {
   const f = status >= 400 ? console.warn : console.info;
 
   const { method, url } = event.request;
-  const cache = response.headers.get("cache-control") ?? "";
-  const etag = response.headers.get("etag") ?? "";
-  const last_modified = response.headers.get("Last-Modified") ?? "";
-  /* 
-  const row = [
-    new Date(),
-    method,
-    url,
-    status,
-    event.route.id,
-    etag,
-    cache,
-  ].filter(Boolean);
 
-  f(...row); */
+  const headers = Object.fromEntries(
+    // @ts-ignore
+    [...response.headers].filter(([k, v]) => k !== "link"),
+  );
 
   const row = {
     timestamp: new Date().toJSON(),
@@ -35,9 +25,7 @@ export function log(event: RequestEvent, response: Response): void {
     url,
     status,
     route: event.route.id,
-    etag,
-    cache,
-    last_modified,
+    headers,
   };
 
   f(JSON.stringify(row));
