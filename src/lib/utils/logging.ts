@@ -15,7 +15,8 @@ export function log(event: RequestEvent, response: Response): void {
   const { method, url } = event.request;
   const cache = response.headers.get("cache-control") ?? "";
   const etag = response.headers.get("etag") ?? "";
-
+  const last_modified = response.headers.get("Last-Modified") ?? "";
+  /* 
   const row = [
     new Date(),
     method,
@@ -26,5 +27,18 @@ export function log(event: RequestEvent, response: Response): void {
     cache,
   ].filter(Boolean);
 
-  f(...row);
+  f(...row); */
+
+  const row = {
+    timestamp: new Date().toJSON(),
+    method,
+    url,
+    status,
+    route: event.route.id,
+    etag,
+    cache,
+    last_modified,
+  };
+
+  f(JSON.stringify(row));
 }
