@@ -73,6 +73,7 @@
       <HelpMenu />
     {/if}
 
+    <SignedIn>
     <Button
       minW={false}
       ghost
@@ -82,6 +83,7 @@
     >
       {$_("common.feedback")}
     </Button>
+    </SignedIn>
 
     {#if feedbackOpen}
       <Portal>
