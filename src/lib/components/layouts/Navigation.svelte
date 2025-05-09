@@ -73,15 +73,17 @@
       <HelpMenu />
     {/if}
 
-    <Button
-      minW={false}
-      ghost
-      mode="primary"
-      on:click={() => (feedbackOpen = true)}
-      id="feedback"
-    >
-      {$_("common.feedback")}
-    </Button>
+    <SignedIn>
+      <Button
+        minW={false}
+        ghost
+        mode="primary"
+        on:click={() => (feedbackOpen = true)}
+        id="feedback"
+      >
+        {$_("common.feedback")}
+      </Button>
+    </SignedIn>
 
     {#if feedbackOpen}
       <Portal>
