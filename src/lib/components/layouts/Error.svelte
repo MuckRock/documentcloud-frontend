@@ -7,6 +7,7 @@
 
   import Button from "../common/Button.svelte";
   import Error from "../common/Error.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
   import Modal from "./Modal.svelte";
   import Portal from "./Portal.svelte";
   import UserFeedback from "../forms/UserFeedback.svelte";
@@ -42,14 +43,16 @@
       {@html $_("error.signIn", { values: { href: sign_in_url.href } })}
     </p>
   {/if}
-  <Button
-    ghost
-    size="small"
-    mode="primary"
-    on:click={() => (feedbackOpen = true)}
-  >
-    {$_("error.report")}
-  </Button>
+  <SignedIn>
+    <Button
+      ghost
+      size="small"
+      mode="primary"
+      on:click={() => (feedbackOpen = true)}
+    >
+      {$_("error.report")}
+    </Button>
+  </SignedIn>
 </div>
 
 {#if feedbackOpen}
