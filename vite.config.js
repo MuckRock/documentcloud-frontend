@@ -1,4 +1,3 @@
-import { sentrySvelteKit } from "@sentry/sveltekit";
 import path from "node:path";
 import url from "node:url";
 
@@ -24,20 +23,7 @@ const remoteServer = {
   },
 };
 
-const plugins =
-  process.env.NODE_ENV === "remote"
-    ? [sveltekit()]
-    : [
-        sentrySvelteKit({
-          sourceMapsUploadOptions: {
-            org: process.env.SENTRY_ORG,
-            project:
-              process.env.SENTRY_PROJECT ?? "documentcloud-frontend-staging",
-            authToken: process.env.SENTRY_AUTH_TOKEN,
-          },
-        }),
-        sveltekit(),
-      ];
+const plugins = [sveltekit()];
 
 export default defineConfig({
   build: {
