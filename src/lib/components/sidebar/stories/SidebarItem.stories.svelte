@@ -81,6 +81,17 @@
   </div>
 </Story>
 
+<Story name="Absurdly long name">
+  <SidebarItem>
+    The International Consortium for the Real-Time Dissemination of Verified,
+    Unbiased, Cross-Platform, Community-Sourced, Multilingual, Deep-Dive
+    Investigative Journalism and Global News Analysis Network for Socioeconomic,
+    Environmental, Political, Technological, and Humanitarian Affairs Reporting
+    and Strategic Public Information Engagement Across All Media Channels
+    Initiative
+  </SidebarItem>
+</Story>
+
 <style>
   .maxW-16 {
     max-width: 16rem;
