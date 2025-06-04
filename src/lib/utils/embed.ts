@@ -28,8 +28,6 @@ export interface EmbedSettingConfig {
 }
 
 export let settings = {
-  width: null,
-  height: null,
   title: null,
   pdf: null,
   fullscreen: null,
@@ -39,8 +37,6 @@ export let settings = {
 export type EmbedSettings = Record<keyof typeof settings, null | number>;
 
 export const defaultSettings: EmbedSettings = {
-  width: null,
-  height: 600,
   title: 1,
   pdf: 1,
   fullscreen: 1,
@@ -91,37 +87,6 @@ export function truthy(
 }
 
 export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
-  width: {
-    storageIndex: 1,
-    defaultValue: null,
-    field: {
-      type: "dimension",
-      label: "dialogDocumentEmbedDialog.width",
-      automatic: {
-        label: "appearanceDimension.responsive",
-        help: "dialogDocumentEmbedDialog.widthAuto",
-        value: null,
-      },
-      fixed: {
-        label: "appearanceDimension.fixed",
-        help: "dialogDocumentEmbedDialog.widthFixed",
-        value: 500,
-      },
-    },
-  },
-  height: {
-    storageIndex: 2,
-    defaultValue: 600,
-    field: {
-      type: "dimension",
-      label: "dialogDocumentEmbedDialog.height",
-      fixed: {
-        label: "appearanceDimension.fixed",
-        help: "dialogDocumentEmbedDialog.heightFixed",
-        value: 600,
-      },
-    },
-  },
   title: {
     storageIndex: 3,
     defaultValue: 1,

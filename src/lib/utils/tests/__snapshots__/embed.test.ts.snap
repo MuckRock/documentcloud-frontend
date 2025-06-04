@@ -22,19 +22,6 @@ exports[`embed settings > settingsConfig 1`] = `
     },
     "storageIndex": 5,
   },
-  "height": {
-    "defaultValue": 600,
-    "field": {
-      "fixed": {
-        "help": "dialogDocumentEmbedDialog.heightFixed",
-        "label": "appearanceDimension.fixed",
-        "value": 600,
-      },
-      "label": "dialogDocumentEmbedDialog.height",
-      "type": "dimension",
-    },
-    "storageIndex": 2,
-  },
   "onlyshoworg": {
     "defaultValue": null,
     "field": {
@@ -94,24 +81,6 @@ exports[`embed settings > settingsConfig 1`] = `
       "type": "toggle",
     },
     "storageIndex": 3,
-  },
-  "width": {
-    "defaultValue": null,
-    "field": {
-      "automatic": {
-        "help": "dialogDocumentEmbedDialog.widthAuto",
-        "label": "appearanceDimension.responsive",
-        "value": null,
-      },
-      "fixed": {
-        "help": "dialogDocumentEmbedDialog.widthFixed",
-        "label": "appearanceDimension.fixed",
-        "value": 500,
-      },
-      "label": "dialogDocumentEmbedDialog.width",
-      "type": "dimension",
-    },
-    "storageIndex": 1,
   },
 }
 `;

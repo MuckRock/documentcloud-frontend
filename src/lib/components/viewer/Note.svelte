@@ -274,7 +274,7 @@
   <Portal>
     <Modal on:close={() => (shareNoteOpen = false)}>
       <h1 slot="title">{$_("dialog.share")}</h1>
-      <Share document={doc} note={note.id} currentTab="note" />
+      <Share document={doc} note_id={note.id} currentTab="note" />
     </Modal>
   </Portal>
 {/if}

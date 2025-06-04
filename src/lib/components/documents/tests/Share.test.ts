@@ -78,24 +78,6 @@ describe("Share", () => {
     expect((inputs[2] as HTMLInputElement).value).toContain(
       `src="${embedUrl(document)}"`,
     );
-    // Customize width and height
-    await user.click(screen.getByText("Customize Embed"));
-    expect(screen.getByText("Width")).toBeInTheDocument();
-    const radioSelections = screen.getAllByLabelText("Fixed");
-    // Width
-    await user.click(radioSelections[0]!);
-    expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(`${embedUrl(document)}&width=500`);
-    expect((inputs[2] as HTMLInputElement).value).toContain(
-      `<iframe src="${embedUrl(document)}&width=500" width="500"`,
-    );
-    // Height
-    await user.click(radioSelections[1]!);
-    expect(inputs[0]).toHaveValue(canonicalUrl(document).toString());
-    expect(inputs[1]).toHaveValue(`${embedUrl(document)}&width=500`);
-    expect((inputs[2] as HTMLInputElement).value).toContain(
-      `<iframe src="${embedUrl(document)}&width=500" width="500" height="600px"`,
-    );
   });
   it("disables customization of page and note embeds", async () => {
     render(Share, { document });
