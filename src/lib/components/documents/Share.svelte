@@ -61,9 +61,9 @@
 
   // get dimensions for document and page embeds
   $: sizes = document.page_spec ? pageSizes(document.page_spec) : [[8.5, 11]];
-  $: first = sizes[0] ?? [];
-  $: width = first[0] ?? 8.5;
-  $: height = first[1] ?? 11;
+  $: page_size = sizes[page - 1] ?? [];
+  $: width = page_size[0] ?? 8.5;
+  $: height = page_size[1] ?? 11;
   $: style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: ${width} / ${height}`;
 
   // bind the selected note to the note prop
