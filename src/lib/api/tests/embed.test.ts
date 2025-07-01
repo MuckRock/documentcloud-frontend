@@ -42,7 +42,7 @@ describe("embed tests", () => {
 
   test("page embed", () => {
     const iframe = embed.page(document, 1);
-    const result = `<iframe src="${EMBED_URL}documents/24002098/pages/1/?embed=1" width="612" height="792" style="border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: 612 / 792"></iframe>`;
+    const result = `<iframe src="${EMBED_URL}documents/24002098/pages/1/?embed=1" width="612" height="792" style="border: none; width: 100%; height: 100%; aspect-ratio: 612 / 792"></iframe>`;
 
     expect(iframe).toEqual(result);
   });

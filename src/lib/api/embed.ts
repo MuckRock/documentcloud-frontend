@@ -39,7 +39,7 @@ export function page(document: Document, page: number = 1): string {
   const page_size = sizes[page - 1] ?? [];
   const width = page_size[0] ?? 8.5;
   const height = page_size[1] ?? 11;
-  const style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: ${width} / ${height}`;
+  const style = `border: none; width: 100%; height: 100%; aspect-ratio: ${width} / ${height}`;
 
   const embedSrc = documents.canonicalPageUrl(document, page, true);
   embedSrc.searchParams.set("embed", "1");
