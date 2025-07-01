@@ -56,7 +56,7 @@ describe("embed tests", () => {
 
   test("project embed", () => {
     const iframe = embed.project(project);
-    const result = `<iframe src="${EMBED_URL}projects/29-miltary-contractors/?embed=1" width="100%" height="600px"></iframe>`;
+    const result = `<iframe src="${EMBED_URL}projects/215178-ocr-reprise/?embed=1" width="100%" height="600px"></iframe>`;
 
     expect(iframe).toEqual(result);
   });
