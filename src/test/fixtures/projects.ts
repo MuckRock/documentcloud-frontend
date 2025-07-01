@@ -1,17 +1,23 @@
-import type { ProjectUser, Page, Project } from "$lib/api/types";
+import type {
+  ProjectMembershipList,
+  ProjectUser,
+  Page,
+  Project,
+} from "$lib/api/types";
+import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
+import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
 
 export let project: Project = {
-  id: 29,
-  created_at: "2020-10-23T15:59:33.779478Z",
+  id: 215178,
+  created_at: "2023-09-21T14:36:10.910337Z",
   description: "",
-  edit_access: null,
-  add_remove_access: null,
+  edit_access: false,
+  add_remove_access: false,
   private: false,
-  slug: "miltary-contractors",
-  title: "Miltary Contractors",
-  updated_at: "2020-10-23T15:59:33.896698Z",
-  user: 1,
-  pinned: false,
+  slug: "ocr-reprise",
+  title: "OCR Reprise",
+  updated_at: "2023-09-21T14:36:10.911299Z",
+  user: 102112,
 };
 
 export let editableProject: Project = {
@@ -549,4 +555,9 @@ export const projectUsers: Page<ProjectUser> = {
       access: "view",
     },
   ],
+};
+
+export const paginatedDocs = {
+  one: projDocsPage1 as ProjectMembershipList,
+  two: projDocsPage2 as ProjectMembershipList,
 };
