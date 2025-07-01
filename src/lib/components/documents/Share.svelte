@@ -41,9 +41,9 @@
     embedUrl,
     pageUrl,
   } from "$lib/api/documents";
-  import { createEmbedSearchParams } from "$lib/utils/embed";
+  import * as embed from "$lib/api/embed";
   import * as notes from "$lib/api/notes";
-  import { pageSizes } from "$lib/utils/pageSize";
+  import { createEmbedSearchParams } from "$lib/utils/embed";
 
   export let document: Document;
   export let page: number = 1;
@@ -59,19 +59,9 @@
     ? noteOptions?.find(({ value }) => value === note_id)
     : noteOptions?.[0];
 
-  // get dimensions for document and page embeds
-  $: sizes = document.page_spec ? pageSizes(document.page_spec) : [[8.5, 11]];
-  $: page_size = sizes[page - 1] ?? [];
-  $: width = page_size[0] ?? 8.5;
-  $: height = page_size[1] ?? 11;
-  $: style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: ${width} / ${height}`;
-
   // bind the selected note to the note prop
   $: note_id = selectedNote?.value ?? null;
   $: note = document.notes?.find((n) => n.id === note_id);
-  $: note_width = note ? notes.width(note) * width : null;
-  $: note_height = note ? notes.height(note) * height : null;
-  $: note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: ${note_width} / ${note_height};`;
 
   // dimensions and style for note embeds
 
@@ -91,20 +81,20 @@
       case "document":
         permalink = canonicalUrl(document);
         embedSrc = embedUrl(document, embedUrlParams);
-        iframe = `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}" allow="fullscreen"></iframe>`;
+        iframe = embed.document(document, embedUrlParams);
         break;
       case "page":
         permalink = pageUrl(document, page);
         embedSrc = canonicalPageUrl(document, page, true);
         embedSrc.searchParams.set("embed", "1");
-        iframe = `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}"></iframe>`;
+        iframe = embed.page(document, page);
         break;
       case "note":
         if (note) {
           permalink = notes.noteUrl(document, note);
           embedSrc = notes.canonicalNoteUrl(document, note);
           embedSrc.searchParams.set("embed", "1");
-          iframe = `<iframe src="${embedSrc.href}" width="${note_width}" height="${note_height}" style="${note_style}"></iframe>`;
+          iframe = embed.note(document, note);
         }
         break;
     }
