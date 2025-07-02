@@ -1,10 +1,12 @@
 // api utilities for embeds
 import type { Document, Note, Project } from "./types";
-import { BASE_API_URL } from "@/config/config.js";
+import { BASE_API_URL, EMBED_URL } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
 import * as notes from "$lib/api/notes";
 import * as projects from "$lib/api/projects";
 import { pageSizes } from "$lib/utils/pageSize";
+
+const resize = new URL("/embed/resize.js", EMBED_URL);
 
 /**
  * Generate an oembed URL for a given DocumentCloud URL
@@ -43,7 +45,8 @@ export function page(document: Document, page: number = 1): string {
 
   const embedSrc = documents.canonicalPageUrl(document, page, true);
   embedSrc.searchParams.set("embed", "1");
-  return `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}"></iframe>`;
+  return `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}"></iframe>
+<script defer src="${resize.href}"></script>`;
 }
 
 export function note(document: Document, note: Note) {
@@ -61,7 +64,8 @@ export function note(document: Document, note: Note) {
 
   const embedSrc = notes.canonicalNoteUrl(document, note);
   embedSrc.searchParams.set("embed", "1");
-  return `<iframe src="${embedSrc.href}" width="${note_width}" height="${note_height}" style="${note_style}"></iframe>`;
+  return `<iframe src="${embedSrc.href}" width="${note_width}" height="${note_height}" style="${note_style}"></iframe>
+<script defer src="${resize.href}"></script>`;
 }
 
 export function project(project: Project) {

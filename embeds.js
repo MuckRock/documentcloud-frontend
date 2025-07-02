@@ -14,6 +14,7 @@ const targets = [
     "build/embed",
     "loader.js",
   ] /* was search embed, but now only project embeds */,
+  ["./src/embed/resize.js", "build/embed", "resize.js"], // generic resizer
 ];
 
 async function build(src, dir, filename) {

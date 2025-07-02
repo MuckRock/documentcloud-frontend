@@ -197,7 +197,7 @@ export function reroute({ url }) {
   }
 }
 
-export function timeoutify(fn, timeout = 100) {
+export function timeoutify(fn: Function, timeout = 100) {
   let timer: null | ReturnType<typeof setTimeout> = null;
 
   return (...args) => {
@@ -233,6 +233,7 @@ export function informSize(
           element.offsetHeight,
         ),
         updateStyleProps,
+        href: window.location.href,
       },
       "*",
     );
