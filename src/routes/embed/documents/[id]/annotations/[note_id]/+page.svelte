@@ -53,7 +53,7 @@
 </svelte:head>
 
 <svelte:window
-  on:load|once={() => informSize({ element: elem, continuous: false })}
+  on:load={() => informSize({ element: elem, continuous: false })}
 />
 
 <div bind:this={elem}>
