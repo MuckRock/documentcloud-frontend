@@ -52,7 +52,9 @@
   <meta property="og:image" content={src} />
 </svelte:head>
 
-<svelte:window on:load={() => informSize(elem)} />
+<svelte:window
+  on:load|once={() => informSize({ element: elem, continuous: false })}
+/>
 
 <div bind:this={elem}>
   <EmbedLayout canonicalUrl={viewerUrl}>

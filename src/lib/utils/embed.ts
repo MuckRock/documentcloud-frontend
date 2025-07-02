@@ -213,11 +213,21 @@ export function timeoutify(fn: Function, timeout = 100) {
   };
 }
 
-export function informSize(
-  element: HTMLElement,
+/**
+ * Use postMessage to inform parent windows of the size of an embedded iframe.
+ * Set continuous: true to send a new message on each resize event.
+ */
+export function informSize({
+  element,
   useScrollDimension = true,
   updateStyleProps = false,
-) {
+  continuous = true,
+}: {
+  element: HTMLElement;
+  useScrollDimension?: boolean;
+  updateStyleProps?: boolean;
+  continuous?: boolean;
+}) {
   if (!element) return;
 
   // Inform a parent window about an embed size
@@ -238,8 +248,9 @@ export function informSize(
       "*",
     );
   };
-
-  // Trigger event now and any time the window resizes
-  window.addEventListener("resize", timeoutify(update));
+  if (continuous) {
+    // Trigger event now and any time the window resizes
+    window.addEventListener("resize", timeoutify(update));
+  }
   update();
 }
