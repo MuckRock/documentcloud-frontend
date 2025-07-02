@@ -10,6 +10,10 @@ window.addEventListener("message", ({ origin, data }) => {
   // find all the iframe with this href
   const iframes = document.querySelectorAll(`iframe[src="${data.href}"]`);
 
+  if (iframes.length === 0) {
+    console.warn(`No iframe matched href: ${data.href}`);
+  }
+
   iframes.forEach((iframe) => {
     Object.assign(iframe, {
       width: data.width,
@@ -17,5 +21,6 @@ window.addEventListener("message", ({ origin, data }) => {
     });
 
     iframe.style.aspectRatio = `${data.width} / ${data.height}`;
+    iframe.dataset.resized = Date.now();
   });
 });
