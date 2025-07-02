@@ -28,8 +28,6 @@ export interface EmbedSettingConfig {
 }
 
 export let settings = {
-  width: null,
-  height: null,
   title: null,
   pdf: null,
   fullscreen: null,
@@ -39,8 +37,6 @@ export let settings = {
 export type EmbedSettings = Record<keyof typeof settings, null | number>;
 
 export const defaultSettings: EmbedSettings = {
-  width: null,
-  height: 600,
   title: 1,
   pdf: 1,
   fullscreen: 1,
@@ -91,37 +87,6 @@ export function truthy(
 }
 
 export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
-  width: {
-    storageIndex: 1,
-    defaultValue: null,
-    field: {
-      type: "dimension",
-      label: "dialogDocumentEmbedDialog.width",
-      automatic: {
-        label: "appearanceDimension.responsive",
-        help: "dialogDocumentEmbedDialog.widthAuto",
-        value: null,
-      },
-      fixed: {
-        label: "appearanceDimension.fixed",
-        help: "dialogDocumentEmbedDialog.widthFixed",
-        value: 500,
-      },
-    },
-  },
-  height: {
-    storageIndex: 2,
-    defaultValue: 600,
-    field: {
-      type: "dimension",
-      label: "dialogDocumentEmbedDialog.height",
-      fixed: {
-        label: "appearanceDimension.fixed",
-        help: "dialogDocumentEmbedDialog.heightFixed",
-        value: 600,
-      },
-    },
-  },
   title: {
     storageIndex: 3,
     defaultValue: 1,
@@ -232,7 +197,7 @@ export function reroute({ url }) {
   }
 }
 
-export function timeoutify(fn, timeout = 100) {
+export function timeoutify(fn: Function, timeout = 100) {
   let timer: null | ReturnType<typeof setTimeout> = null;
 
   return (...args) => {
@@ -248,11 +213,21 @@ export function timeoutify(fn, timeout = 100) {
   };
 }
 
-export function informSize(
-  element: HTMLElement,
+/**
+ * Use postMessage to inform parent windows of the size of an embedded iframe.
+ * Set continuous: true to send a new message on each resize event.
+ */
+export function informSize({
+  element,
   useScrollDimension = true,
   updateStyleProps = false,
-) {
+  continuous = true,
+}: {
+  element: HTMLElement;
+  useScrollDimension?: boolean;
+  updateStyleProps?: boolean;
+  continuous?: boolean;
+}) {
   if (!element) return;
 
   // Inform a parent window about an embed size
@@ -268,12 +243,14 @@ export function informSize(
           element.offsetHeight,
         ),
         updateStyleProps,
+        href: window.location.href,
       },
       "*",
     );
   };
-
-  // Trigger event now and any time the window resizes
-  window.addEventListener("resize", timeoutify(update));
+  if (continuous) {
+    // Trigger event now and any time the window resizes
+    window.addEventListener("resize", timeoutify(update));
+  }
   update();
 }

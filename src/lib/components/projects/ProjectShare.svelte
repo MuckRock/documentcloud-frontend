@@ -17,6 +17,7 @@
   import EditProject from "$lib/components/forms/EditProject.svelte";
 
   import { canonicalUrl, embedUrl } from "$lib/api/projects";
+  import * as embed from "$lib/api/embed";
 
   export let project: Project;
 
@@ -28,7 +29,7 @@
 
   $: permalink = canonicalUrl(project);
   $: embedSrc = embedUrl(project);
-  $: iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px"></iframe>`;
+  $: iframe = embed.project(project);
 </script>
 
 <div class="share">

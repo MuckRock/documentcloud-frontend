@@ -35,20 +35,19 @@
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Edit from "$lib/components/forms/Edit.svelte";
 
-  import { createEmbedSearchParams } from "$lib/utils/embed";
   import {
     canonicalPageUrl,
     canonicalUrl,
     embedUrl,
     pageUrl,
   } from "$lib/api/documents";
-  import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
-  import { pageSizesFromSpec } from "@/lib/utils/pageSize";
-  import { IMAGE_WIDTHS_MAP } from "@/config/config";
+  import * as embed from "$lib/api/embed";
+  import * as notes from "$lib/api/notes";
+  import { createEmbedSearchParams } from "$lib/utils/embed";
 
   export let document: Document;
   export let page: number = 1;
-  export let note: null | string | number = null;
+  export let note_id: null | string | number = null;
   export let currentTab: "document" | "page" | "note" = "document";
 
   const noteOptions = document.notes?.map<NoteOption>((note) => ({
@@ -56,29 +55,25 @@
     label: `pg. ${note.page_number + 1} – ${note.title}`,
   }));
 
-  let selectedNote: Maybe<NoteOption> = note
-    ? noteOptions?.find(({ value }) => value === note)
+  let selectedNote: Maybe<NoteOption> = note_id
+    ? noteOptions?.find(({ value }) => value === note_id)
     : noteOptions?.[0];
 
   // bind the selected note to the note prop
-  $: {
-    note = selectedNote?.value ?? null;
-  }
-  // get dimensions for page embeds
-  $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : [];
-  $: aspect = sizes[page - 1] ?? 11 / 8.5;
-  $: width = IMAGE_WIDTHS_MAP.get("large") ?? 1000;
-  $: height = width * aspect;
+  $: note_id = selectedNote?.value ?? null;
+  $: note = document.notes?.find((n) => n.id === note_id);
+
+  // dimensions and style for note embeds
 
   let permalink: URL;
   let embedSrc: URL;
   let iframe: string;
-  const style = "border: 1px solid #d8dee2; border-radius: 0.5rem;";
 
   let customizeEmbedOpen = false;
   let editOpen = false;
   const closeEditing = () => (editOpen = false);
   const openEditing = () => (editOpen = true);
+
   $: isPrivate = document.access === "private";
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
@@ -86,23 +81,20 @@
       case "document":
         permalink = canonicalUrl(document);
         embedSrc = embedUrl(document, embedUrlParams);
-        iframe = `<iframe src="${embedSrc.href}" width="${$embedSettings.width ?? "100%"}" height="${$embedSettings.height ?? "600px"}" style="${style}" allow="fullscreen"></iframe>`;
+        iframe = embed.document(document, embedUrlParams);
         break;
       case "page":
         permalink = pageUrl(document, page);
         embedSrc = canonicalPageUrl(document, page, true);
         embedSrc.searchParams.set("embed", "1");
-        iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px" style="${style}"></iframe>`;
+        iframe = embed.page(document, page);
         break;
       case "note":
-        const noteObject = document.notes?.find(
-          ({ id }) => String(id) === String(selectedNote?.value),
-        );
-        if (noteObject) {
-          permalink = noteUrl(document, noteObject);
-          embedSrc = canonicalNoteUrl(document, noteObject);
+        if (note) {
+          permalink = notes.noteUrl(document, note);
+          embedSrc = notes.canonicalNoteUrl(document, note);
           embedSrc.searchParams.set("embed", "1");
-          iframe = `<iframe src="${embedSrc.href}" width="100%" height="600px" style="${style}"></iframe>`;
+          iframe = embed.note(document, note);
         }
         break;
     }

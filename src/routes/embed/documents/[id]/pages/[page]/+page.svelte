@@ -1,12 +1,12 @@
 <script lang="ts">
+  import type { Maybe, Note as NoteType, Nullable } from "$lib/api/types";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Annotation from "./Annotation.svelte";
   import Note from "./Note.svelte";
 
-  import { informSize } from "$lib/utils/embed";
-  import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import { APP_URL, IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import {
     canonicalPageUrl,
@@ -14,9 +14,10 @@
     pageUrl,
     textUrl,
     userOrgString,
-  } from "@/lib/api/documents";
+  } from "$lib/api/documents";
   import { embedUrl } from "$lib/api/embed";
-  import type { Maybe, Note as NoteType, Nullable } from "@/lib/api/types";
+  import { informSize } from "$lib/utils/embed";
+  import { pageSizesFromSpec } from "$lib/utils/pageSize";
 
   export let data;
 
@@ -81,7 +82,10 @@
   />
 </svelte:head>
 
-<svelte:window on:keydown={onKeyup} on:load={() => informSize(elem)} />
+<svelte:window
+  on:keydown={onKeyup}
+  on:load={() => informSize({ element: elem })}
+/>
 
 <div class="dc-embed" bind:this={elem}>
   <div class="dc-page">
@@ -106,7 +110,7 @@
       })}
       width="{width}px"
       height="{height}px"
-      on:load={() => informSize(elem)}
+      on:load={() => informSize({ element: elem, continuous: false })}
     />
 
     <!-- Place notes on image -->

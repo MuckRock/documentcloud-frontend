@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, setContext } from "svelte";
+  import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -23,10 +23,6 @@
   $: title = `${note.title} (${$_("documents.pageAbbrev")} ${
     note.page_number + 1
   })`;
-
-  onMount(() => {
-    informSize(elem);
-  });
 
   setContext("document", writable(doc));
   setContext("embed", true);
@@ -55,6 +51,10 @@
   {/if}
   <meta property="og:image" content={src} />
 </svelte:head>
+
+<svelte:window
+  on:load={() => informSize({ element: elem, continuous: false })}
+/>
 
 <div bind:this={elem}>
   <EmbedLayout canonicalUrl={viewerUrl}>

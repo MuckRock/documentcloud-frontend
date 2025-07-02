@@ -8,9 +8,11 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import NoteEmbed from "../documents/[id]/annotations/[note_id]/+page.svelte";
 
-  import document from "@/test/fixtures/documents/document-expanded.json";
-  import note from "@/test/fixtures/notes/note-expanded.json";
-  import notes from "@/test/fixtures/notes/notes-expanded.json";
+  import { documentExpanded } from "@/test/fixtures/documents";
+
+  const notes = documentExpanded.notes ?? [];
+  const note = notes[0] as Note;
+  const bigNote = notes[1] as Note;
 
   export const meta = {
     title: "Embed / Note",
@@ -19,11 +21,9 @@
     parameters: { layout: "centered" },
   };
 
-  const bigNote = notes.results[1] as Note;
-
   const data = {
     note: note as Note,
-    document: document as Document,
+    document: documentExpanded,
     embed: true,
     mode: "document" as ViewerMode,
     me: null,
