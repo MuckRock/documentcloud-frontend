@@ -8,7 +8,7 @@ window.addEventListener("message", ({ origin, data }) => {
   if (![data.width, data.height, data.href].every(Boolean)) return;
 
   // find all the iframe with this href
-  const iframes = document.querySelectorAll(`iframe[src*="${data.href}"]`);
+  const iframes = document.querySelectorAll(`iframe[src="${data.href}"]`);
 
   iframes.forEach((iframe) => {
     Object.assign(iframe, {
