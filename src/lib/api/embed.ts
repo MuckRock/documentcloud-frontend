@@ -31,7 +31,7 @@ export function document(document: Document, params: URLSearchParams): string {
 
   const embedSrc = documents.embedUrl(document, params);
   embedSrc.searchParams.set("embed", "1");
-  return `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}"></iframe>`;
+  return `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}" allow="fullscreen"></iframe>`;
 }
 
 export function page(document: Document, page: number = 1): string {
