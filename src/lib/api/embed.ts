@@ -6,7 +6,7 @@ import * as notes from "$lib/api/notes";
 import * as projects from "$lib/api/projects";
 import { pageSizes } from "$lib/utils/pageSize";
 
-const resize = new URL("/embed/resize.js", EMBED_URL);
+const resize = new URL("/embed/dc-resize.js", EMBED_URL);
 
 /**
  * Generate an oembed URL for a given DocumentCloud URL

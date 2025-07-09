@@ -43,7 +43,7 @@ describe("embed tests", () => {
   test("page embed", () => {
     const iframe = embed.page(document, 1);
     const result = `<iframe src="${EMBED_URL}documents/24002098/pages/1/?embed=1" width="612" height="792" style="border: none; width: 100%; height: 100%; aspect-ratio: 612 / 792"></iframe>
-<script src="${EMBED_URL}embed/resize.js"></script>`;
+<script src="${EMBED_URL}embed/dc-resize.js"></script>`;
 
     expect(iframe).toEqual(result);
   });
@@ -51,7 +51,7 @@ describe("embed tests", () => {
   test("note embed", () => {
     const iframe = embed.note(document, note);
     const result = `<iframe src="${EMBED_URL}documents/24002098/annotations/557/?embed=1" width="366.32571428571424" height="15.19097387173396" style="border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: 366.32571428571424 / 15.19097387173396;"></iframe>
-<script src="${EMBED_URL}embed/resize.js"></script>`;
+<script src="${EMBED_URL}embed/dc-resize.js"></script>`;
 
     expect(iframe).toEqual(result);
   });
