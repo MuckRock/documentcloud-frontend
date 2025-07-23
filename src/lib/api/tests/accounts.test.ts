@@ -18,6 +18,7 @@ import {
   MAX_PER_PAGE,
   SQUARELET_BASE,
 } from "@/config/config";
+
 import * as fixtures from "@/test/fixtures/accounts";
 
 import {
@@ -143,8 +144,9 @@ describe("orgUsers", () => {
   beforeEach(() => {
     mockFetch = vi.fn();
   });
-  it("returns an empty list when the org is individual", () => {
-    expect(orgUsers(fixtures.proOrg, mockFetch)).resolves.toEqual([]);
+  it("returns an empty list when the org is individual", async () => {
+    const users = await orgUsers(fixtures.proOrg, mockFetch);
+    expect(users).toEqual([]);
     expect(mockFetch).not.toHaveBeenCalled();
   });
   it("fetches a list of all users in a group org", async () => {

@@ -1,0 +1,19 @@
+{
+  "svelte": {
+    "entry": [
+      "svelte.config.js",
+      "vite.config.{js,mjs,ts,cjs,mts,cts}",
+      "src/routes/**/+{page,server,page.server,error,layout,layout.server}{,@*}.{js,ts,svelte}",
+      "src/hooks.{server,client}.{js,ts}",
+      "src/params/*.{js,ts}",
+      "src/embed/*",
+      "src/**/*.test.{js,ts}",
+      ".storybook/*.ts",
+      "src/**/stories/*.stories.{js,ts,svelte}",
+      "vitest-setup.js"
+    ]
+  },
+  "project": [
+    "src/lib/**/*",
+    "!src/legacy"]
+}
