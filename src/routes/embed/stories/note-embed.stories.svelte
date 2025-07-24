@@ -1,9 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document, Note, ViewerMode } from "$lib/api/types";
-
-  // legacy css
-  import "@/style/variables.css";
-  import "@/style/legacy.css";
+  import type { Note, ViewerMode } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
   import NoteEmbed from "../documents/[id]/annotations/[note_id]/+page.svelte";
