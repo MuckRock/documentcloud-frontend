@@ -28,18 +28,18 @@
   }
 
   .dc-embed-note.public {
-    border: var(--annotationBorderWidth) solid var(--annotationBorder);
+    border: var(--annotationBorderWidth, 3px) solid var(--note-public);
     background: rgba(var(--annotationBorder), 0.2);
   }
 
   .dc-embed-note.organization {
-    border: var(--annotationBorderWidth) solid var(--organizationAnnotation);
-    background: rgba(var(--organizationAnnotation), 0.2);
+    border: var(--annotationBorderWidth, 3px) solid var(--note-org);
+    background: rgba(var(--note-org), 0.2);
   }
 
   .dc-embed-note.private {
-    border: var(--annotationBorderWidth) solid var(--privateAnnotation);
-    background: rgba(var(--privateAnnotation), 0.2);
+    border: var(--annotationBorderWidth, 3px) solid var(--note-private);
+    background: rgba(var(--note-private), 0.2);
   }
 
   .dc-embed-note.active {

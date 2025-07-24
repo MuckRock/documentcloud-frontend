@@ -6,8 +6,6 @@
   import { locale } from "svelte-i18n";
   import { getFlash } from "sveltekit-flash-message";
 
-  import "@/style/variables.css";
-  import "@/style/legacy.css";
   import "@/style/kit.css";
 
   import { toast } from "@/lib/components/layouts/Toaster.svelte";
