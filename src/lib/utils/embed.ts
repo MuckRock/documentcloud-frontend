@@ -1,27 +1,27 @@
-export interface EmbedSettingOption {
+interface EmbedSettingOption {
   label: string;
   help: string;
   value: null | number;
 }
 
-export interface HiddenField {
+interface HiddenField {
   type: "hidden";
 }
 
-export interface ToggleField {
+interface ToggleField {
   type: "toggle";
   label: string;
   options: EmbedSettingOption[];
 }
 
-export interface DimensionField {
+interface DimensionField {
   type: "dimension";
   label: string;
   automatic?: EmbedSettingOption;
   fixed: EmbedSettingOption;
 }
 
-export interface EmbedSettingConfig {
+interface EmbedSettingConfig {
   storageIndex: number;
   defaultValue: null | number;
   field: ToggleField | DimensionField | HiddenField;

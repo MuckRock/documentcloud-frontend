@@ -12,7 +12,7 @@ export interface Feedback {
   URL: string;
 }
 
-export interface CreateFeedbackResponse {
+interface CreateFeedbackResponse {
   id: number;
   order: number;
   ID: string;

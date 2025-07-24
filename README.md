@@ -37,20 +37,20 @@ It's possible to run the frontend against the staging API, instead of a locally 
 To run the dev server locally against the staging API, take the following steps:
 
 1. Update your hosts file
-    ```bash
-    echo "127.0.0.1 local.muckcloud.com" | sudo tee -a /etc/hosts
-    ```
+   ```bash
+   echo "127.0.0.1 local.muckcloud.com" | sudo tee -a /etc/hosts
+   ```
 2. Make a local certificate in a `certs` directory
-    ```bash
-    mkdir certs && cd certs
-    mkcert -install
-    mkcert local.muckcloud.com
-    ```
+   ```bash
+   mkdir certs && cd certs
+   mkcert -install
+   mkcert local.muckcloud.com
+   ```
 3. Use NPM to install and run the `dev:remote` script
-    ```bash
-    npm install
-    npm run dev:remote
-    ```
+   ```bash
+   npm install
+   npm run dev:remote
+   ```
 
 Now, you should have a dev server accessible at `https://local.muckcloud.com:5173` that connects to the staging DocumentCloud API (https://api.muckcloud.com) and staging authentication service (https://squarelet-staging.herokuapp.com).
 
@@ -80,6 +80,10 @@ Run the relevant `npm install ...` command and then get the change mirrored on t
 [muckrock]: https://github.com/MuckRock/muckrock
 [documentcloud]: https://github.com/MuckRock/documentcloud
 [squarelet]: https://github.com/muckrock/squarelet
+
+#### Cleaning up dependencies
+
+We've added [knip](https://knip.dev/) to our workflow to help clean up unused files and dependencies. Run it with `npm run knip` to lint the codebase. Knip is an imperfect tool, so be sure to check for errors before committing and pushing changes. It's generally safe to leave unused files in the codebase.
 
 ### Unit tests
 
@@ -125,6 +129,14 @@ src/lib/api/
 ```
 
 Component tests use the [Svelte Testing Library](https://testing-library.com/docs/svelte-testing-library/intro/) and are also colocated near the components they test, usually in a `tests` folder.
+
+With any change, be sure to:
+
+- develop it on a branch
+- run tests and type checks locally (`npm run test` and `npm run check`)
+- ensure `npm run build` finishes without errors
+
+Our CI process _should_ catch any regressions, but it's always worth checking things locally.
 
 ## Legacy embed scripts
 
