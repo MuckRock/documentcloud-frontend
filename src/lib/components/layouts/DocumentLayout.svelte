@@ -13,7 +13,7 @@ Assumes it's a child of a ViewerContext
   import DocumentMetadata from "../documents/Metadata.svelte";
   import Flex from "../common/Flex.svelte";
   import Metadata from "../common/Metadata.svelte";
-  import Notes from "../documents/sidebar/Notes.svelte";
+  import Notes from "../viewer/sidebar/Notes.svelte";
   import Projects from "../documents/Projects.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
   import Viewer from "../viewer/Viewer.svelte";
