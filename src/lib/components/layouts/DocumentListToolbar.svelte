@@ -27,7 +27,7 @@
         </a>
       </p>
     </div>
-    <div class="margin-xs">
+    <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
       <Dropdown>
         <SidebarItem slot="anchor">
           <Eye16 slot="start" />
