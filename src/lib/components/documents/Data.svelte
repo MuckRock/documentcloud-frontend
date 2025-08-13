@@ -2,7 +2,7 @@
   import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { ChevronDown12, Pencil16, Tag16, Tag24 } from "svelte-octicons";
+  import { Pencil16, Tag16, Tag24 } from "svelte-octicons";
 
   import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
@@ -11,7 +11,7 @@
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
   // editing UI
-  import EditData from "@/lib/components/forms/EditData.svelte";
+  import EditData from "$lib/components/forms/EditData.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
 

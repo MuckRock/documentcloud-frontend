@@ -4,14 +4,14 @@
   import { _ } from "svelte-i18n";
   import { FileDirectory16, FileDirectory24, Pencil16 } from "svelte-octicons";
 
-  import Action from "@/lib/components/common/Action.svelte";
-  import Empty from "@/lib/components/common/Empty.svelte";
-  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
+  import Action from "$lib/components/common/Action.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
-  import Modal from "@/lib/components/layouts/Modal.svelte";
-  import Portal from "@/lib/components/layouts/Portal.svelte";
-  import Projects from "@/lib/components/forms/Projects.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Projects from "$lib/components/forms/Projects.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
 

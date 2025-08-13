@@ -4,13 +4,13 @@
   import { _ } from "svelte-i18n";
   import { Note16, Note24 } from "svelte-octicons";
 
-  import Button from "../../common/Button.svelte";
-  import Empty from "@/lib/components/common/Empty.svelte";
-  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
-  import SidebarItem from "@/lib/components/sidebar/SidebarItem.svelte";
+  import Button from "$lib/components/common/Button.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
+  import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
+  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
-  import { noteUrl } from "$lib/api/notes";
+  import { canonicalUrl, pageUrl } from "$lib/api/documents";
+  import { noteUrl, isPageLevel } from "$lib/api/notes";
 
   export let document: Document;
 
@@ -26,8 +26,11 @@
 
   <ol class="notes">
     {#each notes as note}
+      {@const href = isPageLevel(note)
+        ? pageUrl(document, note.page_number + 1).href
+        : noteUrl(document, note).href}
       <li>
-        <SidebarItem href={noteUrl(document, note).href} small>
+        <SidebarItem {href} small>
           <span class="note_title">{note.title}</span>
           <span class="page_number" slot="start">
             {$_("sidebar.toc.pageAbbrev")}
