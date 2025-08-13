@@ -191,7 +191,7 @@
     padding: 18px 20px;
     box-sizing: border-box;
     border: solid 1px gainsboro;
-    border-radius: var(--radius);
+    border-radius: var(--radius, 3px);
   }
 
   .dc-embed a {
