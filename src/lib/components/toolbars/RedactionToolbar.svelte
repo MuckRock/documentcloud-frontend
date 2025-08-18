@@ -22,10 +22,10 @@ Assumes it's a child of a ViewerContext
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
-  import { redactions, undo, clear } from "./RedactionLayer.svelte";
+  import { redactions, undo, clear } from "../viewer/RedactionLayer.svelte";
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
-  import { getDocument } from "./ViewerContext.svelte";
+  import { getDocument } from "../viewer/ViewerContext.svelte";
 
   const documentStore = getDocument();
   $: document = $documentStore;

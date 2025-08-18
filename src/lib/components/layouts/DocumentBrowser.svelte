@@ -44,7 +44,7 @@
 
   // Layout comopnents
   import ContentLayout from "./ContentLayout.svelte";
-  import DocumentListToolbar from "./DocumentListToolbar.svelte";
+  import DocumentListToolbar from "../toolbars/DocumentListToolbar.svelte";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import Unverified from "../accounts/Unverified.svelte";

@@ -20,10 +20,10 @@ Assumes it's a child of a ViewerContext
   import Notes from "./Notes.svelte";
 
   // toolbars
-  import AnnotationToolbar from "./AnnotationToolbar.svelte";
-  import PaginationToolbar from "./PaginationToolbar.svelte";
-  import ReadingToolbar from "./ReadingToolbar.svelte";
-  import RedactionToolbar from "./RedactionToolbar.svelte";
+  import AnnotationToolbar from "../toolbars/AnnotationToolbar.svelte";
+  import PaginationToolbar from "../toolbars/PaginationToolbar.svelte";
+  import ReadingToolbar from "../toolbars/ReadingToolbar.svelte";
+  import RedactionToolbar from "../toolbars/RedactionToolbar.svelte";
 
   // utils
   import {
@@ -31,7 +31,7 @@ Assumes it's a child of a ViewerContext
     getPDFProgress,
     isEmbedded,
   } from "./ViewerContext.svelte";
-  import LoadingToolbar from "./LoadingToolbar.svelte";
+  import LoadingToolbar from "../toolbars/LoadingToolbar.svelte";
   import Search from "./Search.svelte";
 
   const embed = isEmbedded();

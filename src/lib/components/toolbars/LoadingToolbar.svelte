@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Nullable } from "$lib/api/types";
-  import PageToolbar from "../common/PageToolbar.svelte";
+  import PageToolbar from "./PageToolbar.svelte";
 
   export let progress: Nullable<number> = null;
 </script>

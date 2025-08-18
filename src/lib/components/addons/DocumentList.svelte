@@ -6,7 +6,7 @@
   import Flex from "../common/Flex.svelte";
   import Empty from "../common/Empty.svelte";
   import Button from "../common/Button.svelte";
-  import PageToolbar from "../common/PageToolbar.svelte";
+  import PageToolbar from "../toolbars/PageToolbar.svelte";
   import ResultsList, {
     selected,
     selectedIds,
