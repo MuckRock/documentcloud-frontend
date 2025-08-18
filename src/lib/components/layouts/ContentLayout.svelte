@@ -33,18 +33,23 @@
     background: var(--gray-1);
     box-shadow: inset var(--shadow-2);
   }
+
   .container.noBgColor {
     background: unset;
     box-shadow: unset;
   }
+
   header {
     flex: 0 0 0;
     width: 100%;
     position: sticky;
     top: 0;
     z-index: var(--z-toolbar);
-    padding: 0.625rem;
+    background: var(--white, white);
+    box-shadow: var(--shadow-2);
+    border-bottom: 1px solid var(--gray-2);
   }
+
   main {
     flex: 1 0 0;
     width: 100%;
@@ -52,13 +57,15 @@
     flex-direction: column;
     justify-content: flex-start;
   }
+
   footer {
     flex: 0 0 0;
     width: 100%;
     position: sticky;
     bottom: 0;
     z-index: var(--z-toolbar);
-    padding: 0.625rem;
+    border-top: 1px solid var(--gray-2);
+    box-shadow: var(--shadow-2);
   }
 
   header:empty,

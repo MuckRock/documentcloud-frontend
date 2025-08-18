@@ -84,8 +84,6 @@ Assumes it's a child of a ViewerContext
   main {
     flex: 1 1 auto;
     background: var(--gray-1);
-    border: 1px solid var(--gray-2);
-    border-radius: var(--radius, 0.5rem);
     box-shadow: inset var(--shadow-2);
   }
 
