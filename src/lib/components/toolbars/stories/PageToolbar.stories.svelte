@@ -5,7 +5,7 @@
   import Paginator from "@/lib/components/common/Paginator.svelte";
 
   export const meta = {
-    title: "Components / Common / Page Toolbar",
+    title: "Toolbars / Page Toolbar",
     component: PageToolbar,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

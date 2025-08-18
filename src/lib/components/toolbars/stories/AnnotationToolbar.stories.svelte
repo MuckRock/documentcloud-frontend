@@ -6,7 +6,7 @@
   import { document } from "@/test/fixtures/documents";
 
   export const meta: Meta = {
-    title: "Components / Viewer / Toolbars / Annotation",
+    title: "Toolbars / Annotation",
     component: AnnotationToolbar,
     parameters: {
       layout: "fullscreen",
