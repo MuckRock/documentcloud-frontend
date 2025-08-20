@@ -274,10 +274,9 @@
     border-bottom: 1px solid var(--gray-2);
   }
   .docs {
-    margin: 1rem;
+    margin: 0;
     background-color: var(--gray-1);
-    border: 1px solid var(--gray-2);
-    /* border-radius: var(--radius, 0.5rem); */
+    border-right: 1px solid var(--gray-2);
   }
   .padding {
     padding: 1rem;
