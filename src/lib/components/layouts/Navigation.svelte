@@ -123,9 +123,8 @@
     display: flex;
     justify-content: center;
     background: var(--white, #ffffff);
-    border-bottom: 1px solid var(--gray-1, #d8dee2);
+    border-bottom: 1px solid var(--gray-2, #d8dee2);
     flex: 0 0 auto;
-    box-shadow: var(--shadow-1);
     z-index: var(--z-navigation);
   }
   .inner {

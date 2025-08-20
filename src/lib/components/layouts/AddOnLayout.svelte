@@ -277,7 +277,7 @@
     margin: 1rem;
     background-color: var(--gray-1);
     border: 1px solid var(--gray-2);
-    border-radius: var(--radius, 0.5rem);
+    /* border-radius: var(--radius, 0.5rem); */
   }
   .padding {
     padding: 1rem;

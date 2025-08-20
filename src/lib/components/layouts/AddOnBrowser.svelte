@@ -177,6 +177,7 @@
     overflow-y: auto;
     background: var(--gray-1);
     box-shadow: inset var(--shadow-2);
+    border-right: 1px solid var(--gray-2);
   }
   .history {
     max-width: unset;

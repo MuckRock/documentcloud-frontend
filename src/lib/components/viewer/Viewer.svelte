@@ -119,4 +119,7 @@ Assumes it's a child of a ViewerContext
     display: flex;
     transform: rotate(180deg);
   }
+  .toolbar {
+    align-self: center;
+  }
 </style>
