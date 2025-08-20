@@ -22,10 +22,10 @@ Assumes it's a child of a ViewerContext
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
 
-  import { redactions, undo, clear } from "./RedactionLayer.svelte";
+  import { redactions, undo, clear } from "../viewer/RedactionLayer.svelte";
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
-  import { getDocument } from "./ViewerContext.svelte";
+  import { getDocument } from "../viewer/ViewerContext.svelte";
 
   const documentStore = getDocument();
   $: document = $documentStore;
@@ -113,7 +113,15 @@ Assumes it's a child of a ViewerContext
 
 <style>
   .toolbar {
+    display: inline-flex;
+    min-height: 2.5rem;
+    padding: 0 0.25rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    position: unset;
+    background: var(--white);
   }
   .title {
     font-weight: var(--font-semibold);

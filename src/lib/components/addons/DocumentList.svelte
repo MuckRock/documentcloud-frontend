@@ -6,7 +6,7 @@
   import Flex from "../common/Flex.svelte";
   import Empty from "../common/Empty.svelte";
   import Button from "../common/Button.svelte";
-  import PageToolbar from "../common/PageToolbar.svelte";
+  import PageToolbar from "../toolbars/PageToolbar.svelte";
   import ResultsList, {
     selected,
     selectedIds,
@@ -15,8 +15,9 @@
   } from "../documents/ResultsList.svelte";
   import Search from "../forms/Search.svelte";
   import ContentLayout from "../layouts/ContentLayout.svelte";
+
   import { sidebars } from "../layouts/Sidebar.svelte";
-  import { remToPx } from "@/lib/utils/layout";
+  import { remToPx } from "$lib/utils/layout";
 
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
@@ -32,7 +33,7 @@
   let clientWidth: number;
 </script>
 
-<div bind:clientWidth>
+<div bind:clientWidth class="outer">
   <ContentLayout>
     <Flex slot="header">
       {#if $sidebars["navigation"] === false && clientWidth > remToPx(30)}
@@ -92,3 +93,9 @@
     </PageToolbar>
   </ContentLayout>
 </div>
+
+<style>
+  .outer {
+    height: 100%;
+  }
+</style>

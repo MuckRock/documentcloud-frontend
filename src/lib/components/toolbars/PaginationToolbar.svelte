@@ -9,7 +9,7 @@
   import { ChevronUp12, ListOrdered16, ListOrdered24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
-  import Dropdown from "@/lib/components/common/Dropdown.svelte";
+  import Dropdown from "$lib/components/common/Dropdown.svelte";
   import EditSections from "$lib/components/forms/EditSections.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
@@ -18,7 +18,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
-  import Zoom from "./Zoom.svelte";
+  import Zoom from "../viewer/Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
@@ -153,8 +153,16 @@
 
 <style>
   .toolbar {
+    display: inline-flex;
+    min-height: 2.5rem;
+    padding: 0 0.25rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    background: var(--white);
   }
+
   .paginator {
     flex: 1 1 auto;
   }

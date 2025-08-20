@@ -66,17 +66,13 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    max-height: 100%;
+    overflow-y: auto;
   }
   header {
     padding: 1rem;
   }
   main {
     flex: 1 0 0;
-    max-height: 100%;
-    overflow-y: auto;
-    border-radius: 0.25rem;
-    border: 1px solid var(--gray-2);
     box-shadow: inset var(--shadow-2);
   }
   h4 {

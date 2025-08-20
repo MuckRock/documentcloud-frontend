@@ -4,7 +4,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
 
   export const meta: Meta = {
-    title: "Components / Viewer / Toolbars / Loading",
+    title: "Toolbars / Loading",
     component: LoadingToolbar,
     parameters: {
       layout: "fullscreen",

@@ -10,7 +10,7 @@
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import PageToolbar from "$lib/components/common/PageToolbar.svelte";
+  import PageToolbar from "$lib/components/toolbars/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import EditProject from "$lib/components/forms/EditProject.svelte";
   import Search from "$lib/components/forms/Search.svelte";

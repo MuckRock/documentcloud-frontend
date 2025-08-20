@@ -44,7 +44,7 @@
 
   // Layout comopnents
   import ContentLayout from "./ContentLayout.svelte";
-  import DocumentListToolbar from "./DocumentListToolbar.svelte";
+  import DocumentListToolbar from "../toolbars/DocumentListToolbar.svelte";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import Unverified from "../accounts/Unverified.svelte";
@@ -281,9 +281,18 @@
   }
 
   .toolbar {
+    display: inline-flex;
+    min-height: 2.5rem;
+    padding: 0 0.25rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    position: unset;
+    background: var(--white);
     flex-wrap: wrap;
   }
+
   .w-auto {
     width: auto;
   }

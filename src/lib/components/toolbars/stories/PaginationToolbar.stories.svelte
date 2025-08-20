@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
   import type { Meta } from "@storybook/svelte";
-  import AnnotationToolbar from "../AnnotationToolbar.svelte";
+  import PaginationToolbar from "../PaginationToolbar.svelte";
   import { Template, Story } from "@storybook/addon-svelte-csf";
 
   import { document } from "@/test/fixtures/documents";
 
   export const meta: Meta = {
-    title: "Components / Viewer / Toolbars / Annotation",
-    component: AnnotationToolbar,
+    title: "Toolbars / Pagination",
+    component: PaginationToolbar,
     parameters: {
       layout: "fullscreen",
     },
@@ -19,7 +19,9 @@
 </script>
 
 <Template let:args>
-  <AnnotationToolbar {...args} />
+  <div class="vh justify-end">
+    <PaginationToolbar {...args} />
+  </div>
 </Template>
 
 <Story name="Default" {args} />
@@ -57,3 +59,14 @@
   }}
   {args}
 />
+
+<style>
+  .vh {
+    height: 100vh;
+  }
+  .justify-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+</style>

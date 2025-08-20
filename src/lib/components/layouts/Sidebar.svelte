@@ -38,9 +38,7 @@
     : undefined;
 
   $: isSmall = viewWidth ? viewWidth < 64 * 16 : false;
-  $: {
-    $sidebars[id] = isSmall ? false : true;
-  }
+  $: $sidebars[id] = isSmall ? false : true;
   $: isOpen = $sidebars[id];
 
   $: flyOptions = {
@@ -98,6 +96,14 @@
     position: sticky;
     top: 0;
     background: var(--white);
+  }
+
+  .sidebarContainer.left {
+    border-right: 1px solid var(--gray-2);
+  }
+
+  .sidebarContainer.right {
+    border-left: 1px solid var(--gray-2);
   }
 
   header {

@@ -4,7 +4,7 @@
 
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
-  import PageToolbar from "../common/PageToolbar.svelte";
+  import PageToolbar from "./PageToolbar.svelte";
   import Search from "../forms/Search.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
