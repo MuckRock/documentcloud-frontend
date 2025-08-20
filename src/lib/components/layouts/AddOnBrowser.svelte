@@ -18,7 +18,7 @@
   import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
-  import PageToolbar from "@/lib/components/toolbars/PageToolbar.svelte";
+  import PageToolbar from "$lib/components/toolbars/PageToolbar.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
   import Search from "$lib/components/forms/Search.svelte";

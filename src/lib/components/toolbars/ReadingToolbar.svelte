@@ -24,7 +24,7 @@ Assumes it's a child of a ViewerContext
   import Flex from "$lib/components/common/Flex.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
-  import PageToolbar from "@/lib/components/toolbars/PageToolbar.svelte";
+  import PageToolbar from "$lib/components/toolbars/PageToolbar.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import SidebarItem from "../sidebar/SidebarItem.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
