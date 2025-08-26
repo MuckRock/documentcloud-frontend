@@ -27,6 +27,7 @@
 
   // Document comopnents
   import ResultsList, {
+    editable,
     selected,
     selectedIds,
     total,
@@ -56,6 +57,7 @@
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
 
+  setContext("editable", editable);
   setContext("selected", selected);
   setContext("visibleFields", visibleFields);
 
@@ -214,7 +216,7 @@
               <Dropdown position="top-start">
                 <SidebarItem
                   slot="anchor"
-                  disabled={!$me || $selected?.length < 1}
+                  disabled={!$me || $selected?.length < 1 || !$editable}
                 >
                   {$_("bulk.title")}
                   <ChevronUp12 slot="end" />
