@@ -26,6 +26,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   // forms
   import ConfirmDelete from "../forms/ConfirmDelete.svelte";
+  import Edit from "../forms/Edit.svelte";
   import EditDataMany from "../forms/EditDataMany.svelte";
   import EditMany from "../forms/EditMany.svelte";
   import Reprocess from "../forms/Reprocess.svelte";
@@ -63,6 +64,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   function close() {
     visible = null;
+  }
+
+  // typescript needs redundancy sometimes
+  function single(selected: Document[]): Document {
+    return selected[0] as Document;
   }
 </script>
 
@@ -138,11 +144,15 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "edit"}
-        <EditMany documents={$selected} on:close={close}>
-          {#if $selected?.length}
-            <p>{$_("edit.many", { values: { n: $selected?.length } })}</p>
-          {/if}
-        </EditMany>
+        {#if $selected.length === 1}
+          <Edit document={single($selected)} on:close={close} />
+        {:else}
+          <EditMany documents={$selected} on:close={close}>
+            {#if $selected?.length}
+              <p>{$_("edit.many", { values: { n: $selected?.length } })}</p>
+            {/if}
+          </EditMany>
+        {/if}
       {/if}
 
       {#if visible === "delete"}
