@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import type {
@@ -7,7 +8,7 @@
     Project,
     ProjectUser,
   } from "$lib/api/types";
-  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import ProjectActions from "$lib/components/sidebar/ProjectActions.svelte";
   import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";
   import DocumentBrowser from "./DocumentBrowser.svelte";
@@ -17,6 +18,14 @@
   import Projects from "../sidebar/Projects.svelte";
   import DocumentActions from "../sidebar/DocumentActions.svelte";
   import UploadButton from "../sidebar/UploadButton.svelte";
+
+  import {
+    editable,
+    selected,
+  } from "$lib/components/documents/ResultsList.svelte";
+
+  setContext("editable", editable);
+  setContext("selected", selected);
 
   export let project: Project;
   export let users: ProjectUser[];
