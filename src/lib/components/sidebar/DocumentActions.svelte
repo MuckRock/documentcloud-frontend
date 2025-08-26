@@ -77,7 +77,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     on:click={() => show("share")}
-    disabled={$selected.length !== 1}
+    disabled={$selected?.length !== 1}
   >
     <Share16 />
     {$_("bulk.actions.share")}
@@ -107,7 +107,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     ghost
     mode="primary"
     on:click={() => show("project")}
-    disabled={$selected.length < 1}
+    disabled={$selected?.length < 1}
   >
     <FileDirectory16 />
     {$_("bulk.actions.project")}
