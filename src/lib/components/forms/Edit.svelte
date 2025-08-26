@@ -26,7 +26,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import TextArea from "../inputs/TextArea.svelte";
   import Tip from "../common/Tip.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl, edited } from "$lib/api/documents";
 
   export let document: Document;
   export let error: Maybe<APIError<ValidationError>> = undefined;
@@ -49,6 +49,12 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       }
 
       if (result.type === "success") {
+        // save edits
+        edited.update((m) => {
+          const d = result.data.document;
+          m.set(String(d.id), d);
+          return m;
+        });
         update(result);
         dispatch("close");
       }
