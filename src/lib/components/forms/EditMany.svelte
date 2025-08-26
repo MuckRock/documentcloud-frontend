@@ -28,6 +28,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
+  import { edited } from "$lib/api/documents";
 
   export let documents: Document[];
 
@@ -55,6 +56,14 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       }
 
       if (result.type === "success") {
+        // save edits
+        edited.update((m) => {
+          result.data.documents?.forEach((d) => {
+            m.set(String(d.id), d);
+          });
+          return m;
+        });
+
         update(result);
         dispatch("close");
       }
