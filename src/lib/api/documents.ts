@@ -53,9 +53,6 @@ export const deleted: Writable<Set<string>> = writable(new Set());
 // for tracking edited documents before solr updates
 export const edited: Writable<Map<string, Document>> = writable(new Map());
 
-// debug
-edited.subscribe(console.log);
-
 export const DEFAULT_EXPAND = ["user", "organization", "projects"];
 
 /**
