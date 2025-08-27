@@ -22,6 +22,15 @@
       $selectedIds.map((d) => $visible.get(d)).filter(Boolean) as Document[],
   );
 
+  // this selection is editable if every document in it is editable
+  export const editable: Readable<boolean> = derived(
+    [selected],
+    ([$selected]) =>
+      $selected &&
+      $selected?.length > 0 &&
+      $selected?.every((d) => d.edit_access),
+  );
+
   export let total: Writable<number> = writable(0);
 
   // Allow users to customize the visible fields in document list items

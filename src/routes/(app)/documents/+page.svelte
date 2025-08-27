@@ -14,10 +14,14 @@
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
 
   // stores
-  import { selected } from "$lib/components/documents/ResultsList.svelte";
+  import {
+    editable,
+    selected,
+  } from "$lib/components/documents/ResultsList.svelte";
 
   export let data;
 
+  setContext("editable", editable);
   setContext("selected", selected);
 
   $: query = data.query;

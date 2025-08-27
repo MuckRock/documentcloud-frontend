@@ -4,18 +4,13 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 -->
 <script context="module" lang="ts">
   type Action = "share" | "edit" | "data" | "reprocess" | "delete" | "project";
-  type ActionDetail = [
-    label: string,
-    icon: ComponentType,
-    mode: "primary" | "standard" | "danger",
-  ];
 </script>
 
 <script lang="ts">
   import type { Readable } from "svelte/store";
   import type { Document, Maybe, Nullable } from "$lib/api/types";
 
-  import { getContext, type ComponentType } from "svelte";
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Alert16,
@@ -31,78 +26,133 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   // forms
   import ConfirmDelete from "../forms/ConfirmDelete.svelte";
+  import Edit from "../forms/Edit.svelte";
   import EditDataMany from "../forms/EditDataMany.svelte";
   import EditMany from "../forms/EditMany.svelte";
   import Reprocess from "../forms/Reprocess.svelte";
   import Projects from "../forms/Projects.svelte";
 
-  import { getCurrentUser } from "$lib/utils/permissions";
   import Share from "../documents/Share.svelte";
   import Flex from "../common/Flex.svelte";
   import Button from "../common/Button.svelte";
 
   export let afterClick: Maybe<() => void> = undefined;
 
-  const me = getCurrentUser();
+  const editable: Readable<boolean> = getContext("editable");
   const selected: Readable<Document[]> = getContext("selected");
 
-  const actions: Record<Action, ActionDetail> = {
-    share: ["bulk.actions.share", Share16, "standard"],
-    edit: ["bulk.actions.edit", Pencil16, "primary"],
-    data: ["bulk.actions.data", Tag16, "primary"],
-    project: ["bulk.actions.project", FileDirectory16, "primary"],
-    reprocess: ["bulk.actions.reprocess", IssueReopened16, "danger"],
-    delete: ["bulk.actions.delete", Alert16, "danger"],
+  const labels: Record<Action, string> = {
+    share: "bulk.actions.share",
+    edit: "bulk.actions.edit",
+    data: "bulk.actions.data",
+    project: "bulk.actions.project",
+    reprocess: "bulk.actions.reprocess",
+    delete: "bulk.actions.delete",
   };
 
   let visible: Nullable<Action> = null;
 
-  // svelte 5 will let us do type coercion in templates
   $: toShare = $selected?.[0]!;
+
+  // svelte 5 will let us do type coercion in templates
   function show(action: string) {
     visible = action as Action;
+    if (afterClick) {
+      afterClick();
+    }
   }
 
   function close() {
     visible = null;
   }
+
+  // typescript needs redundancy sometimes
+  function single(selected: Document[]): Document {
+    return selected[0] as Document;
+  }
 </script>
 
 <!-- for now, we can only share individual documents -->
 <Flex direction="column" align="start">
-  {#each Object.entries(actions) as [action, [label, icon, mode]]}
-    <Button
-      {mode}
-      ghost
-      disabled={action === "share"
-        ? $selected?.length !== 1
-        : !$me || !$selected?.length}
-      on:click={() => {
-        show(action);
-        afterClick?.();
-      }}
-    >
-      <svelte:component this={icon} />
-      {$_(label)}
-    </Button>
-  {/each}
+  <Button
+    ghost
+    on:click={() => show("share")}
+    disabled={$selected?.length !== 1}
+  >
+    <Share16 />
+    {$_("bulk.actions.share")}
+  </Button>
+
+  <Button
+    ghost
+    mode="primary"
+    on:click={() => show("edit")}
+    disabled={!$editable}
+  >
+    <Pencil16 />
+    {$_("bulk.actions.edit")}
+  </Button>
+
+  <Button
+    ghost
+    mode="primary"
+    on:click={() => show("data")}
+    disabled={!$editable}
+  >
+    <Tag16 />
+    {$_("bulk.actions.data")}
+  </Button>
+
+  <Button
+    ghost
+    mode="primary"
+    on:click={() => show("project")}
+    disabled={$selected?.length < 1}
+  >
+    <FileDirectory16 />
+    {$_("bulk.actions.project")}
+  </Button>
+
+  <Button
+    ghost
+    mode="danger"
+    on:click={() => show("reprocess")}
+    disabled={!$editable}
+  >
+    <IssueReopened16 />
+    {$_("bulk.actions.reprocess")}
+  </Button>
+
+  <Button
+    ghost
+    mode="danger"
+    on:click={() => show("delete")}
+    disabled={!$editable}
+  >
+    <Alert16 />
+    {$_("bulk.actions.delete")}
+  </Button>
 </Flex>
 
 {#if visible}
   <Portal>
     <Modal on:close={close}>
-      <h1 slot="title">{$_(actions[visible][0])}</h1>
+      <h1 slot="title">{$_(labels[visible])}</h1>
 
       {#if visible === "share"}
         <Share document={toShare} />
       {/if}
 
       {#if visible === "edit"}
-        <EditMany documents={$selected} on:close={close}>
-          {#if $selected?.length}
-            <p>{$_("edit.many", { values: { n: $selected?.length } })}</p>
-          {/if}
-        </EditMany>
+        {#if $selected.length === 1}
+          <Edit document={single($selected)} on:close={close} />
+        {:else}
+          <EditMany documents={$selected} on:close={close}>
+            {#if $selected?.length}
+              <p>{$_("edit.many", { values: { n: $selected?.length } })}</p>
+            {/if}
+          </EditMany>
+        {/if}
       {/if}
 
       {#if visible === "delete"}

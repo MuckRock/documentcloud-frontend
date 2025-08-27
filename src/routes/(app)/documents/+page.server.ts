@@ -128,7 +128,7 @@ export const actions = {
     setFlash({ message, status: "success" }, cookies);
     return {
       count: ids.length,
-      data,
+      documents: data,
     };
   },
 } satisfies Actions;

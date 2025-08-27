@@ -3,12 +3,18 @@ Edit the metadata for one document. This touches all top-level data.
 Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type {
+    Document,
+    Maybe,
+    APIError,
+    ValidationError,
+  } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Alert24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -18,17 +24,41 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
+  import Tip from "../common/Tip.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl, edited } from "$lib/api/documents";
 
   export let document: Document;
+  export let error: Maybe<APIError<ValidationError>> = undefined;
 
   const dispatch = createEventDispatcher();
 
   $: action = new URL("?/edit", canonicalUrl(document)).href;
 
-  function onSubmit() {
-    dispatch("close");
+  /**
+   * @type {import('@sveltejs/kit').SubmitFunction}
+   */
+  function onSubmit({ submitter }) {
+    submitter.disabled = true;
+
+    return async ({ result, update }) => {
+      submitter.disabled = false;
+      if (result.type === "failure") {
+        console.error(result);
+        error = result.data;
+      }
+
+      if (result.type === "success") {
+        // save edits
+        edited.update((m) => {
+          const d = result.data.document;
+          m.set(String(d.id), d);
+          return m;
+        });
+        update(result);
+        dispatch("close");
+      }
+    };
   }
 </script>
 
@@ -36,6 +66,23 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
     <slot />
+
+    {#if error}
+      <Tip mode="error">
+        <Alert24 slot="icon" />
+        <p>{error.message}</p>
+        {#if Object.keys(error.errors ?? {}).length}
+          <ul>
+            {#each Object.entries(error.errors ?? {}) as [field, errs]}
+              <li>
+                <strong>{field}</strong>: {errs.join(";")}
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </Tip>
+    {/if}
+
     <Field title={$_("edit.fields.title")} required>
       <Text name="title" value={document.title} required autofocus />
     </Field>

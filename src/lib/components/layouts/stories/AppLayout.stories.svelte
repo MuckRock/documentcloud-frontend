@@ -3,15 +3,15 @@
   import AppLayout from "../AppLayout.svelte";
 
   import { _ } from "svelte-i18n";
+  import { PlusCircle16 } from "svelte-octicons";
 
   import DocumentBrowser from "../DocumentBrowser.svelte";
   import SidebarLayout from "../SidebarLayout.svelte";
-  import Documents from "@/lib/components/sidebar/Documents.svelte";
-  import Projects from "@/lib/components/sidebar/Projects.svelte";
+  import Documents from "$lib/components/sidebar/Documents.svelte";
+  import Projects from "$lib/components/sidebar/Projects.svelte";
   import Button from "../../common/Button.svelte";
-  import { PlusCircle16 } from "svelte-octicons";
-  import BulkActions from "@/lib/components/sidebar/DocumentActions.svelte";
-  import AddOns from "@/lib/components/sidebar/AddOns.svelte";
+  import BulkActions from "$lib/components/sidebar/DocumentActions.svelte";
+  import AddOns from "$lib/components/sidebar/AddOns.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { addons } from "@/test/handlers/addons";

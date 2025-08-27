@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {
     APIResponse,
+    Document,
     DocumentResults,
     Nullable,
     Project,
@@ -27,6 +28,7 @@
 
   // Document comopnents
   import ResultsList, {
+    editable,
     selected,
     selectedIds,
     total,
@@ -51,11 +53,12 @@
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   // Utilities
-  import { deleted } from "$lib/api/documents";
+  import { deleted, edited, DEFAULT_EXPAND } from "$lib/api/documents";
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
 
+  setContext("editable", editable);
   setContext("selected", selected);
   setContext("visibleFields", visibleFields);
 
@@ -85,7 +88,17 @@
     HIDE_COUNT: footerToolbarWidth < remToPx(26),
   };
 
-  $: searchResults = documents.then((r) => excludeDeleted($deleted, r.data));
+  $: searchResults = fixResults(documents, $deleted, $edited);
+
+  function fixResults(
+    documents: Promise<APIResponse<DocumentResults, any>>,
+    deleted: Set<string>,
+    edited: Map<string, Document>,
+  ): Promise<DocumentResults> {
+    return documents
+      .then((r) => excludeDeleted(deleted, r.data))
+      .then((r) => patchEdited(edited, r));
+  }
 
   // filter out deleted documents that haven't been purged from search yet
   function excludeDeleted(
@@ -103,6 +116,38 @@
       ...searchResults,
       results: filtered,
       count: (searchResults.count ?? filtered.length) - deleted.size,
+    };
+  }
+
+  function patchEdited(
+    edited: Map<string, Document>,
+    searchResults?: DocumentResults,
+  ): DocumentResults {
+    if (!searchResults)
+      return { count: 0, results: [], next: null, previous: null };
+
+    if (edited.size === 0) return searchResults;
+
+    console.debug(`Patching ${edited.size} documents`);
+    const updated = searchResults.results.map((d) => {
+      const edit = edited.get(String(d.id));
+
+      if (edit && edit.updated_at > d.updated_at) {
+        console.debug(`Patching: ${edit.title}`);
+        for (const [k, v] of Object.entries(edit)) {
+          // ignore expandable fields and id
+          if (![...DEFAULT_EXPAND, "id"].includes(k)) {
+            d[k] = v;
+          }
+        }
+      }
+
+      return d;
+    });
+
+    return {
+      ...searchResults,
+      results: updated,
     };
   }
 
@@ -214,7 +259,7 @@
               <Dropdown position="top-start">
                 <SidebarItem
                   slot="anchor"
-                  disabled={!$me || $selected?.length < 1}
+                  disabled={!$me || $selected?.length < 1 || !$editable}
                 >
                   {$_("bulk.title")}
                   <ChevronUp12 slot="end" />

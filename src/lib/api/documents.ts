@@ -50,7 +50,10 @@ export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
 // for keeping track of deleted documents that haven't been purged from search yet
 export const deleted: Writable<Set<string>> = writable(new Set());
 
-const DEFAULT_EXPAND = ["user", "organization", "projects"];
+// for tracking edited documents before solr updates
+export const edited: Writable<Map<string, Document>> = writable(new Map());
+
+export const DEFAULT_EXPAND = ["user", "organization", "projects"];
 
 /**
  * Search documents
