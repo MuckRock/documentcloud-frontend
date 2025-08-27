@@ -84,7 +84,7 @@
 
 <svelte:window
   on:keydown={onKeyup}
-  on:load={() => informSize({ element: elem })}
+  on:load={() => informSize({ element: elem, timeout: 500 })}
 />
 
 <div class="dc-embed" bind:this={elem}>
@@ -110,7 +110,7 @@
       })}
       width="{width}px"
       height="{height}px"
-      on:load={() => informSize({ element: elem, continuous: false })}
+      on:load={() => informSize({ element: elem, timeout: false })}
     />
 
     <!-- Place notes on image -->

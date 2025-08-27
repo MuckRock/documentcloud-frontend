@@ -215,18 +215,18 @@ export function timeoutify(fn: Function, timeout = 100) {
 
 /**
  * Use postMessage to inform parent windows of the size of an embedded iframe.
- * Set continuous: true to send a new message on each resize event.
+ * Set timeout: number to send a new message on each resize event, buffered by a timer.
  */
 export function informSize({
   element,
   useScrollDimension = true,
   updateStyleProps = false,
-  continuous = true,
+  timeout = 500,
 }: {
   element: HTMLElement;
   useScrollDimension?: boolean;
   updateStyleProps?: boolean;
-  continuous?: boolean;
+  timeout?: number | false;
 }) {
   if (!element) return;
 
@@ -248,9 +248,9 @@ export function informSize({
       "*",
     );
   };
-  if (continuous) {
+  if (timeout) {
     // Trigger event now and any time the window resizes
-    window.addEventListener("resize", timeoutify(update));
+    window.addEventListener("resize", timeoutify(update, timeout));
   }
   update();
 }
