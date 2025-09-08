@@ -549,6 +549,16 @@ describe("document write methods", () => {
         body: JSON.stringify(update),
       },
     );
+
+    const nothing = await documents.edit_many([], "token", mockFetch);
+
+    expect(error).toBeUndefined();
+    expect(nothing.data).toEqual({
+      results: [],
+      count: 0,
+      next: null,
+      previous: null,
+    });
   });
 
   test("documents.add_tags", async ({ document }) => {

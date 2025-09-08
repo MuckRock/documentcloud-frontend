@@ -4,11 +4,11 @@ Reprocess a document, with options to force OCR and set a new language.
 This will mostly be used inside a modal but isn't dependent on one.
 -->
 <script lang="ts">
-  import type { Document, Status } from "$lib/api/types";
+  import type { Document, Status, APIError, Maybe } from "$lib/api/types";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { IssueReopened16 } from "svelte-octicons";
+  import { Alert24, IssueReopened16 } from "svelte-octicons";
 
   import { invalidateAll } from "$app/navigation";
 
@@ -18,9 +18,10 @@ This will mostly be used inside a modal but isn't dependent on one.
   import Flex from "../common/Flex.svelte";
   import Language from "../inputs/Language.svelte";
   import Select from "../inputs/Select.svelte";
+  import Tip from "../common/Tip.svelte";
 
   import { DEFAULT_LANGUAGE, LANGUAGE_MAP } from "@/config/config.js";
-  import { process, cancel, edit } from "$lib/api/documents";
+  import { process, cancel, edit, edit_many } from "$lib/api/documents";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
   import { getCsrfToken } from "$lib/utils/api";
 
@@ -47,7 +48,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     label: LANGUAGE_MAP.get(documents[0]?.language),
   };
 
-  let errors: unknown;
+  let errors: Maybe<APIError<string[]>>;
   let force_ocr = false;
   let form: HTMLFormElement;
   let submitting = false;
@@ -61,7 +62,13 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     const csrf_token = getCsrfToken();
     if (!csrf_token) {
-      throw new Error("missing csrf_token");
+      errors = {
+        status: 403,
+        message:
+          "Could not begin reprocessing. Please refresh this page and try again.",
+        errors: ["Missing CSRF token"],
+      };
+      return console.error(errors);
     }
 
     const pending = documents.filter((d) =>
@@ -72,11 +79,34 @@ This will mostly be used inside a modal but isn't dependent on one.
     await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch();
 
     // maybe update language
-    await Promise.all(
-      documents
-        .filter((d) => d.language !== language.value)
-        .map((d) => edit(d.id, { language: language.value }, csrf_token)),
-    ).catch(console.error);
+    // await Promise.all(
+    //   documents
+    //     .filter((d) => d.language !== language.value)
+    //     .map((d) => edit(d.id, { language: language.value }, csrf_token)),
+    // );
+
+    const language_updates = documents
+      .filter((d) => d.language !== language.value)
+      .map((d) => ({ id: d.id, language: language.value }));
+
+    if (language_updates.length > 0) {
+      const { error: edit_error } = await edit_many(
+        documents
+          .filter((d) => d.language !== language.value)
+          .map((d) => ({ id: d.id, language: language.value })),
+        csrf_token,
+      );
+
+      if (edit_error) {
+        errors = {
+          message: edit_error.message,
+          status: edit_error.status,
+        };
+
+        // can't proceed, so bail
+        return console.error(errors);
+      }
+    }
 
     // send it
     const payload = documents.map((d) => ({
@@ -92,6 +122,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       await invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
     } else {
+      errors = error;
       console.error(error);
       submitting = false; // now you can try again
     }
@@ -102,17 +133,19 @@ This will mostly be used inside a modal but isn't dependent on one.
   <Flex direction="column" gap={1.5}>
     <!-- Add any header and messaging using this slot -->
     <slot />
-    <!-- todo: figure out what errors are possible with reprocessing
-      {#if errors.length > 0}
-      <div class="errors">
-        <ul>
-          {#each errors as e}
-          <li>{e}</li>
-          {/each}
-        </ul>
-      </div>
-      {/if}
-      -->
+    {#if errors}
+      <Tip mode="error">
+        <Alert24 slot="icon" />
+        <p>{errors.message}</p>
+        {#if errors.errors}
+          <ul>
+            {#each errors.errors as e}
+              <li>{e}</li>
+            {/each}
+          </ul>
+        {/if}
+      </Tip>
+    {/if}
     <Flex direction="column" gap={1}>
       <Field>
         <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
@@ -177,10 +210,4 @@ This will mostly be used inside a modal but isn't dependent on one.
     color: var(--gray-4);
     font-size: var(--font-md);
   }
-
-  /*
-  .errors li {
-    color: var(--red-3);
-  }
-  */
 </style>
