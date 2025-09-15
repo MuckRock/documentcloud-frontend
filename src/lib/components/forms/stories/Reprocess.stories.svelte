@@ -1,14 +1,32 @@
 <script context="module" lang="ts">
-  import { _ } from "svelte-i18n";
-  import type { Document } from "$lib/api/types";
+  import type { APIError } from "$lib/api/types";
+
   import { Story } from "@storybook/addon-svelte-csf";
   import Reprocess from "../Reprocess.svelte";
 
-  import doc from "@/test/fixtures/documents/document-expanded.json";
-  import docs from "@/test/fixtures/documents/documents-expanded.json";
+  import { document, documentsList } from "@/test/fixtures/documents";
 
-  const document = doc as Document;
-  const documents = docs.results as Document[];
+  const documents = documentsList.results;
+
+  const multilingual = documents.map((d, i) => {
+    return {
+      ...d,
+      language: i % 2 ? d.language : "it",
+    };
+  });
+
+  const pending = documents.map((d, i) => {
+    return {
+      ...d,
+      status: i === 0 ? "pending" : d.status,
+    };
+  });
+
+  const errors: APIError<string[]> = {
+    status: 400,
+    message: "FAIL!",
+    errors: ["This is what an error looks like", "There can be more than one"],
+  };
 
   export const meta = {
     title: "Forms / Reprocess",
@@ -18,21 +36,21 @@
 </script>
 
 <Story name="Single Document">
-  <Reprocess documents={[document]}>
-    <header>
-      <h2>
-        {$_("dialogReprocessDialog.title")}
-      </h2>
-    </header>
-  </Reprocess>
+  <Reprocess documents={[document]} />
 </Story>
 
 <Story name="Multiple Documents">
-  <Reprocess {documents}>
-    <header>
-      <h2>
-        {$_("dialogReprocessDialog.title")}
-      </h2>
-    </header>
-  </Reprocess>
+  <Reprocess {documents} />
+</Story>
+
+<Story name="Errors">
+  <Reprocess {documents} {errors} />
+</Story>
+
+<Story name="Multilingual">
+  <Reprocess documents={multilingual} />
+</Story>
+
+<Story name="Pending documents">
+  <Reprocess documents={pending} />
 </Story>
