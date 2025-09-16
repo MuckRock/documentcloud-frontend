@@ -32,6 +32,8 @@ Assumes it's a child of a ViewerContext
 
   $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
+
+  $: console.log(document.status);
 </script>
 
 <SidebarLayout hideNavigation={!$me}>

@@ -7,7 +7,7 @@ This makes the state of those processes available via context.
 <script lang="ts" context="module">
   import type { Maybe, Pending, Run } from "$lib/api/types";
 
-  import { invalidate } from "$app/navigation";
+  import { invalidate, invalidateAll } from "$app/navigation";
 
   import throttle from "lodash-es/throttle";
   import {
@@ -25,6 +25,7 @@ This makes the state of those processes available via context.
 
   interface ProcessContext {
     documents: Writable<Pending[]>;
+    finished: Writable<Set<number>>;
     addons: Writable<Run[]>;
     load: () => void;
   }
@@ -39,6 +40,10 @@ This makes the state of those processes available via context.
     return getContext<ProcessContext>("processing")?.documents;
   }
 
+  export function getFinishedDocuments(): Maybe<Writable<Set<number>>> {
+    return getContext<ProcessContext>("processing")?.finished;
+  }
+
   export function getRunningAddons(): Maybe<Writable<Run[]>> {
     return getContext<ProcessContext>("processing")?.addons;
   }
@@ -49,11 +54,20 @@ This makes the state of those processes available via context.
 
   export let addons: Writable<Run[]> = writable([]);
   export let documents: Writable<Pending[]> = writable([]);
+  export let finished: Writable<Set<number>> = writable(new Set());
 
   // loading, exported so other components can restart this process
-
   async function _load() {
-    documents.set(await pending());
+    const inProgress = await pending();
+    documents.set(inProgress);
+
+    // if we've processed these docs before, take them out of finished
+    if (inProgress.length > 0) {
+      finished.update((f) => {
+        inProgress.forEach((d) => f.delete(d.doc_id));
+        return f;
+      });
+    }
 
     // addons
     const { data, error } = await history({ dismissed: false, per_page: 100 });
@@ -71,7 +85,7 @@ This makes the state of those processes available via context.
 
 <script lang="ts">
   // keep track of processed documents
-  let started: number[] = [];
+  let started: Set<number> = new Set();
 
   const currentIds = derived(
     documents,
@@ -79,30 +93,36 @@ This makes the state of those processes available via context.
   );
 
   // stores we need deeper in the component tree, available via context
-  setContext<ProcessContext>("processing", { addons, documents, load });
-
-  onMount(async () => {
-    await load();
-    started = $documents.map((d) => d.doc_id);
+  setContext<ProcessContext>("processing", {
+    addons,
+    documents,
+    load,
+    finished,
   });
+
+  onMount(() => {
+    load();
+    // started = $documents.map((d) => d.doc_id);
+    return documents.subscribe((docs) => {
+      started = new Set([...started, ...docs.map((d) => d.doc_id)]);
+    });
+  });
+
+  $: console.log({ $currentIds, $finished, started });
 
   afterUpdate(() => {
     if ($documents.length > 0 || $addons.length > 0) {
       load();
     }
 
-    started = started
-      .map((d) => {
-        if ($currentIds.has(d)) {
-          return d;
-        }
-
+    started.forEach((d) => {
+      if (!$currentIds.has(d) && !$finished.has(d)) {
         // invalidate finished
+        console.log(`Finished: ${d}`);
+        finished.update((f) => new Set([...f, d]));
         invalidate(`document:${d}`);
-        // filter these out
-        return 0;
-      })
-      .filter(Boolean);
+      }
+    });
   });
 
   onDestroy(() => {

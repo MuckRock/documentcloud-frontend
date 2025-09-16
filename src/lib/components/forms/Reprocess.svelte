@@ -116,7 +116,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     if (!error) {
       load();
-      await invalidateAll(); // just refetch all the things
+      invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
     } else {
       errors = error;

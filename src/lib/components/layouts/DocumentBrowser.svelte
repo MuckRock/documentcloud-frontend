@@ -3,6 +3,7 @@
     APIResponse,
     Document,
     DocumentResults,
+    Maybe,
     Nullable,
     Project,
   } from "$lib/api/types";
@@ -50,7 +51,12 @@
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import Unverified from "../accounts/Unverified.svelte";
+
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
+  import {
+    getPendingDocuments,
+    getFinishedDocuments,
+  } from "$lib/components/processing/ProcessContext.svelte";
 
   // Utilities
   import { deleted, edited, DEFAULT_EXPAND } from "$lib/api/documents";
@@ -58,19 +64,22 @@
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
 
-  setContext("editable", editable);
-  setContext("selected", selected);
-  setContext("visibleFields", visibleFields);
-
-  const embed: boolean = getContext("embed");
-  const me = getCurrentUser();
-
   interface UITextProps {
     loading: string;
     error: string;
     empty: string;
     search: string;
   }
+
+  // these just pass through
+  setContext("editable", editable);
+  setContext("selected", selected);
+  setContext("visibleFields", visibleFields);
+
+  const embed: boolean = getContext("embed");
+  const me = getCurrentUser();
+  const pending = getPendingDocuments();
+  const finished = getFinishedDocuments();
 
   export let documents: Promise<APIResponse<DocumentResults, any>>;
   export let query: string = "";
@@ -88,16 +97,27 @@
     HIDE_COUNT: footerToolbarWidth < remToPx(26),
   };
 
-  $: searchResults = fixResults(documents, $deleted, $edited);
+  $: pending_ids = new Set($pending?.map((d) => String(d.doc_id)));
+
+  $: searchResults = fixResults(
+    documents,
+    $deleted,
+    $edited,
+    pending_ids,
+    $finished,
+  );
 
   function fixResults(
     documents: Promise<APIResponse<DocumentResults, any>>,
     deleted: Set<string>,
     edited: Map<string, Document>,
+    pending_ids: Set<string>,
+    finished: Maybe<Set<number>>,
   ): Promise<DocumentResults> {
     return documents
       .then((r) => excludeDeleted(deleted, r.data))
-      .then((r) => patchEdited(edited, r));
+      .then((r) => patchEdited(edited, r))
+      .then((r) => setPendingStatus(r, pending_ids, finished));
   }
 
   // filter out deleted documents that haven't been purged from search yet
@@ -147,6 +167,30 @@
 
     return {
       ...searchResults,
+      results: updated,
+    };
+  }
+
+  function setPendingStatus(
+    documents: DocumentResults,
+    pending_ids: Set<string>,
+    finished: Maybe<Set<number>>,
+  ): DocumentResults {
+    if (pending_ids.size === 0 && finished?.size === 0) return documents;
+
+    const updated = documents.results.map((d) => {
+      if (pending_ids.has(String(d.id))) {
+        d.status = "pending";
+      }
+
+      if (finished?.has(+d.id)) {
+        d.status = "success";
+      }
+      return d;
+    });
+
+    return {
+      ...documents,
       results: updated,
     };
   }
