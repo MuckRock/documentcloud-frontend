@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { LayoutData } from "./$types";
+  import type { Maybe, Org, User } from "$lib/api/types";
 
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
   import AppLayout from "$lib/components/layouts/AppLayout.svelte";
-  import type { Maybe, Org, User } from "$lib/api/types";
 
   export let data: LayoutData;
 

@@ -2,6 +2,7 @@
  * Lots of duplicated code here that should get consolidated at some point.
  */
 import type {
+  APIError,
   APIResponse,
   Data,
   DataUpdate,
@@ -287,7 +288,7 @@ export async function process(
   }[],
   csrf_token: string,
   fetch = globalThis.fetch,
-): Promise<APIResponse<null, unknown>> {
+): Promise<APIResponse<null, string[]>> {
   const endpoint = new URL("documents/process/", BASE_API_URL);
 
   const resp = await fetch(endpoint, {
@@ -301,7 +302,7 @@ export async function process(
     body: JSON.stringify(documents),
   }).catch(console.warn);
 
-  return getApiResponse<null, unknown>(resp);
+  return getApiResponse<null, string[]>(resp);
 }
 
 /**
@@ -423,8 +424,11 @@ export async function edit_many(
   documents: Partial<Document>[],
   csrf_token: string,
   fetch = globalThis.fetch,
-) {
+): Promise<APIResponse<DocumentResults, ValidationError>> {
   const endpoint = new URL("documents/", BASE_API_URL);
+
+  if (documents.length === 0)
+    return { data: { results: [], count: 0, next: null, previous: null } };
 
   const resp = await fetch(endpoint, {
     credentials: "include",

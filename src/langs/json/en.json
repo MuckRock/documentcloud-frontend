@@ -78,7 +78,9 @@
     "reprocessDocs": "Proceeding will force the following {n, plural, one {selected document} other {# selected documents}} to reprocess page and image text:",
     "reprocessSingleDoc": "Proceeding will force the following document to reprocess page and image text:",
     "continue": "Do you wish to continue?",
-    "confirm": "Reprocess"
+    "confirm": "Reprocess",
+    "multilingual": "Selected documents are in different languages. Reprocessing will set them all to the same language. Proceed with caution.",
+    "pending": "Some selected documents are still processing. This will cancel and restart processing, which may affect redactions or other operations in-progress. Proceed with caution."
   },
   "dialogDocumentEmbedDialog": {
     "responsive": "Responsive",

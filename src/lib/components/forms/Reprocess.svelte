@@ -4,11 +4,11 @@ Reprocess a document, with options to force OCR and set a new language.
 This will mostly be used inside a modal but isn't dependent on one.
 -->
 <script lang="ts">
-  import type { Document, Status } from "$lib/api/types";
+  import type { Document, Status, APIError, Maybe } from "$lib/api/types";
 
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { IssueReopened16 } from "svelte-octicons";
+  import { Alert24, IssueReopened16 } from "svelte-octicons";
 
   import { invalidateAll } from "$app/navigation";
 
@@ -18,9 +18,10 @@ This will mostly be used inside a modal but isn't dependent on one.
   import Flex from "../common/Flex.svelte";
   import Language from "../inputs/Language.svelte";
   import Select from "../inputs/Select.svelte";
+  import Tip from "../common/Tip.svelte";
 
   import { DEFAULT_LANGUAGE, LANGUAGE_MAP } from "@/config/config.js";
-  import { process, cancel, edit } from "$lib/api/documents";
+  import { process, cancel, edit_many } from "$lib/api/documents";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
   import { getCsrfToken } from "$lib/utils/api";
 
@@ -47,13 +48,15 @@ This will mostly be used inside a modal but isn't dependent on one.
     label: LANGUAGE_MAP.get(documents[0]?.language),
   };
 
-  let errors: unknown;
+  // exported for testing and demos
+  export let errors: Maybe<APIError<string[]>> = undefined;
+
   let force_ocr = false;
-  let form: HTMLFormElement;
   let submitting = false;
 
   // todo: warn if documents are in more than one language
   $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
+  $: pending = documents.filter((d) => d.status === "pending");
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -61,7 +64,13 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     const csrf_token = getCsrfToken();
     if (!csrf_token) {
-      throw new Error("missing csrf_token");
+      errors = {
+        status: 403,
+        message:
+          "Could not begin reprocessing. Please refresh this page and try again.",
+        errors: ["Missing CSRF token"],
+      };
+      return console.error(errors);
     }
 
     const pending = documents.filter((d) =>
@@ -69,14 +78,33 @@ This will mostly be used inside a modal but isn't dependent on one.
     );
 
     // cancel anything pending, with an empty catch because they might be done by the time this runs
-    await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch();
+    await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch(
+      console.error,
+    );
 
     // maybe update language
-    await Promise.all(
-      documents
-        .filter((d) => d.language !== language.value)
-        .map((d) => edit(d.id, { language: language.value }, csrf_token)),
-    ).catch(console.error);
+    const language_updates = documents
+      .filter((d) => d.language !== language.value)
+      .map((d) => ({ id: d.id, language: language.value }));
+
+    if (language_updates.length > 0) {
+      const { error: edit_error } = await edit_many(
+        documents
+          .filter((d) => d.language !== language.value)
+          .map((d) => ({ id: d.id, language: language.value })),
+        csrf_token,
+      );
+
+      if (edit_error) {
+        errors = {
+          message: edit_error.message,
+          status: edit_error.status,
+        };
+
+        // can't proceed, so bail
+        return console.error(errors);
+      }
+    }
 
     // send it
     const payload = documents.map((d) => ({
@@ -89,30 +117,59 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     if (!error) {
       load();
-      await invalidateAll(); // just refetch all the things
+      invalidateAll(); // just refetch all the things
       dispatch("close"); // closing destroys the component
     } else {
+      errors = error;
       console.error(error);
       submitting = false; // now you can try again
     }
   }
 </script>
 
-<form method="post" on:submit={onSubmit} bind:this={form}>
+<form method="post" on:submit={onSubmit}>
   <Flex direction="column" gap={1.5}>
     <!-- Add any header and messaging using this slot -->
-    <slot />
-    <!-- todo: figure out what errors are possible with reprocessing
-      {#if errors.length > 0}
-      <div class="errors">
+    <slot>
+      <header>
+        <h2>
+          {$_("dialogReprocessDialog.title")}
+        </h2>
+      </header>
+    </slot>
+    {#if errors}
+      <Tip mode="error">
+        <Alert24 slot="icon" />
+        <p>{errors.message}</p>
+        {#if errors.errors}
+          <ul>
+            {#each errors.errors as e}
+              <li>{e}</li>
+            {/each}
+          </ul>
+        {/if}
+      </Tip>
+    {/if}
+
+    {#if pending.length > 0}
+      <Tip mode="error">
+        <Alert24 slot="icon" />
+        <p>{$_("dialogReprocessDialog.pending")}</p>
         <ul>
-          {#each errors as e}
-          <li>{e}</li>
+          {#each pending as document}
+            <li>{document.title}</li>
           {/each}
         </ul>
-      </div>
-      {/if}
-      -->
+      </Tip>
+    {/if}
+
+    {#if multilingual}
+      <Tip mode="danger">
+        <Alert24 slot="icon" />
+        <p>{$_("dialogReprocessDialog.multilingual")}</p>
+      </Tip>
+    {/if}
+
     <Flex direction="column" gap={1}>
       <Field>
         <FieldLabel>{$_("uploadDialog.language")}</FieldLabel>
@@ -148,17 +205,22 @@ This will mostly be used inside a modal but isn't dependent on one.
       {/if}
       <ul class="documents">
         {#each documents as document}
-          <li>{document.title}</li>
+          <li class:pending={document.status === "pending"}>
+            {document.title}
+            {#if document.status === "pending"}
+              (pending)
+            {/if}
+          </li>
         {/each}
       </ul>
       <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
     </Flex>
     <Flex class="buttons">
-      <Button disabled={submitting} type="submit" full mode="danger"
-        ><IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
+      <Button disabled={submitting} type="submit" full mode="danger">
+        <IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
-      <Button full on:click={() => dispatch("close")}
-        >{$_("edit.cancel")}
+      <Button full on:click={() => dispatch("close")}>
+        {$_("edit.cancel")}
       </Button>
     </Flex>
   </Flex>
@@ -178,9 +240,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     font-size: var(--font-md);
   }
 
-  /*
-  .errors li {
-    color: var(--red-3);
+  li.pending {
+    color: var(--error);
   }
-  */
 </style>
