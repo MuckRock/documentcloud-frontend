@@ -102,13 +102,11 @@ This makes the state of those processes available via context.
 
   onMount(() => {
     load();
-    // started = $documents.map((d) => d.doc_id);
+    // started grows indefinitely, so we need to manage it here
     return documents.subscribe((docs) => {
       started = new Set([...started, ...docs.map((d) => d.doc_id)]);
     });
   });
-
-  $: console.log({ $currentIds, $finished, started });
 
   afterUpdate(() => {
     if ($documents.length > 0 || $addons.length > 0) {
@@ -118,7 +116,6 @@ This makes the state of those processes available via context.
     started.forEach((d) => {
       if (!$currentIds.has(d) && !$finished.has(d)) {
         // invalidate finished
-        console.log(`Finished: ${d}`);
         finished.update((f) => new Set([...f, d]));
         invalidate(`document:${d}`);
       }

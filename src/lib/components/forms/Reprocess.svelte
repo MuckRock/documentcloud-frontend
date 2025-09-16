@@ -57,7 +57,6 @@ This will mostly be used inside a modal but isn't dependent on one.
   // todo: warn if documents are in more than one language
   $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
   $: pending = documents.filter((d) => d.status === "pending");
-  $: disabled = submitting || pending.length > 0;
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -79,7 +78,9 @@ This will mostly be used inside a modal but isn't dependent on one.
     );
 
     // cancel anything pending, with an empty catch because they might be done by the time this runs
-    await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch();
+    await Promise.all(pending.map((d) => cancel(d, csrf_token))).catch(
+      console.error,
+    );
 
     // maybe update language
     const language_updates = documents
@@ -215,7 +216,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
     </Flex>
     <Flex class="buttons">
-      <Button {disabled} type="submit" full mode="danger">
+      <Button disabled={submitting} type="submit" full mode="danger">
         <IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
       <Button full on:click={() => dispatch("close")}>
