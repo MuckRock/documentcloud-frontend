@@ -222,31 +222,34 @@ export function informSize({
   useScrollDimension = true,
   updateStyleProps = false,
   timeout = 500,
+  debug = false,
 }: {
   element: HTMLElement;
   useScrollDimension?: boolean;
   updateStyleProps?: boolean;
   timeout?: number | false;
+  debug?: boolean;
 }) {
   if (!element) return;
 
   // Inform a parent window about an embed size
   const update = () => {
-    window.parent.postMessage(
-      {
-        width: Math.max(
-          useScrollDimension ? element.scrollWidth : 0,
-          element.offsetWidth,
-        ),
-        height: Math.max(
-          useScrollDimension ? element.scrollHeight : 0,
-          element.offsetHeight,
-        ),
-        updateStyleProps,
-        href: window.location.href,
-      },
-      "*",
-    );
+    const message = {
+      width: Math.max(
+        useScrollDimension ? element.scrollWidth : 0,
+        element.offsetWidth,
+      ),
+      height: Math.max(
+        useScrollDimension ? element.scrollHeight : 0,
+        element.offsetHeight,
+      ),
+      updateStyleProps,
+      href: window.location.href,
+    };
+    window.parent.postMessage(message, "*");
+    if (debug) {
+      console.log(message);
+    }
   };
   if (timeout) {
     // Trigger event now and any time the window resizes

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
@@ -23,6 +24,7 @@
   $: title = `${note.title} (${$_("documents.pageAbbrev")} ${
     note.page_number + 1
   })`;
+  $: debug = $page.url.searchParams.has("debug");
 
   setContext("document", writable(doc));
   setContext("embed", true);
@@ -52,7 +54,9 @@
   <meta property="og:image" content={src} />
 </svelte:head>
 
-<svelte:window on:load={() => informSize({ element: elem, timeout: 500 })} />
+<svelte:window
+  on:load={() => informSize({ element: elem, timeout: 500, debug })}
+/>
 
 <div bind:this={elem}>
   <EmbedLayout canonicalUrl={viewerUrl}>
