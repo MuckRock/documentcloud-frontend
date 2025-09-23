@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Maybe, Note as NoteType, Nullable } from "$lib/api/types";
 
+  import { page as pageStore } from "$app/stores";
+
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -46,6 +48,8 @@
           [0, active.y2, 1, 1], // bottom
         ];
 
+  $: debug = $pageStore?.url?.searchParams?.has("debug") ?? false;
+
   function onKeyup(e) {
     if (e.key === "Escape") {
       dispatch("close");
@@ -84,7 +88,7 @@
 
 <svelte:window
   on:keydown={onKeyup}
-  on:load={() => informSize({ element: elem, timeout: 500 })}
+  on:load={() => informSize({ element: elem, timeout: 500, debug })}
 />
 
 <div class="dc-embed" bind:this={elem}>
@@ -110,7 +114,7 @@
       })}
       width="{width}px"
       height="{height}px"
-      on:load={() => informSize({ element: elem, timeout: false })}
+      on:load={() => informSize({ element: elem, timeout: false, debug })}
     />
 
     <!-- Place notes on image -->
