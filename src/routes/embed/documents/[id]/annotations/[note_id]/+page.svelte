@@ -24,7 +24,7 @@
   $: title = `${note.title} (${$_("documents.pageAbbrev")} ${
     note.page_number + 1
   })`;
-  $: debug = $page.url.searchParams.has("debug");
+  $: debug = $page?.url?.searchParams?.has("debug") ?? false;
 
   setContext("document", writable(doc));
   setContext("embed", true);
