@@ -230,7 +230,7 @@ export function informSize({
   timeout?: number | false;
   debug?: boolean;
 }) {
-  if (!element) return;
+  if (!element) return console.warn("No target element");
 
   // Inform a parent window about an embed size
   const update = () => {
