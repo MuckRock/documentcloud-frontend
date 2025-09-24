@@ -33,9 +33,18 @@
 </script>
 
 <Story name="default">
-  <NoteEmbed {data} />
+  <div class="vh100">
+    <NoteEmbed {data} />
+  </div>
 </Story>
 
 <Story name="bigger note">
   <NoteEmbed data={{ ...data, note: bigNote }} />
 </Story>
+
+<style>
+  .vh100 {
+    height: 100vh;
+    margin: 0;
+  }
+</style>
