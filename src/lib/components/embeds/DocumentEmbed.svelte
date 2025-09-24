@@ -48,9 +48,7 @@
       <Metadata key={$_("titleHeader.contributedBy")}>{contributedBy}</Metadata>
     </header>
   {/if}
-  <main>
-    <Viewer />
-  </main>
+  <Viewer />
 </div>
 
 <style>
@@ -67,10 +65,6 @@
     justify-content: space-between;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--gray-2);
-  }
-  main {
-    flex: 1 1 auto;
-    overflow-y: auto;
   }
   h1 {
     flex: 0 1 auto;

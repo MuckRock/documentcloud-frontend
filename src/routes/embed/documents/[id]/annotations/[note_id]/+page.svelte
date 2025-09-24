@@ -64,15 +64,28 @@
   on:load={() => informSize({ element: elem, timeout: 500, debug })}
 />
 
-<div bind:this={elem}>
+<div class="embed-container" bind:this={elem}>
   <EmbedLayout canonicalUrl={viewerUrl}>
-    <div class="card">
-      <Note document={writable(doc)} {note} />
+    <div class="note-container">
+      <div class="card">
+        <Note document={writable(doc)} {note} />
+      </div>
     </div>
   </EmbedLayout>
 </div>
 
 <style>
+  .embed-container {
+    height: 100%;
+  }
+  .note-container {
+    min-height: 100%;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
   .card {
     margin: 1rem;
     width: calc(100% - 2rem);
