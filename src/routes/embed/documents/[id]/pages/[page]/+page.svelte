@@ -3,7 +3,7 @@
 
   import { page as pageStore } from "$app/stores";
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Annotation from "./Annotation.svelte";
@@ -49,6 +49,12 @@
         ];
 
   $: debug = $pageStore?.url?.searchParams?.has("debug") ?? false;
+
+  onMount(() => {
+    if (window.document.readyState === "complete") {
+      informSize({ element: elem, timeout: 500, debug });
+    }
+  });
 
   function onKeyup(e) {
     if (e.key === "Escape") {
