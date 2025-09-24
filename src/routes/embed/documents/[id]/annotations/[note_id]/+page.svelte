@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { setContext } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
 
@@ -30,6 +30,12 @@
   setContext("embed", true);
   setContext("currentMode", writable("note"));
   setContext("pdf", undefined);
+
+  onMount(() => {
+    if (window.document.readyState === "complete") {
+      informSize({ element: elem, timeout: 500, debug });
+    }
+  });
 </script>
 
 <svelte:head>
