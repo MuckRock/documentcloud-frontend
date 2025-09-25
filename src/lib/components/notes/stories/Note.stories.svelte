@@ -8,7 +8,7 @@
   ).href;
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
-  import ViewerContext from "../ViewerContext.svelte";
+  import ViewerContext from "../../viewer/ViewerContext.svelte";
   import Note from "../Note.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
@@ -27,7 +27,7 @@
   will present a budget to Parliament that calls for emergency actions to reduce Britain's forecast $280 billion deficit.`;
 
   export const meta = {
-    title: "Components / Viewer / Note",
+    title: "Components / Note",
     component: Note,
     parameters: { layout: "centered" },
   };
