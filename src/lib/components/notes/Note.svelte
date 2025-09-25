@@ -10,8 +10,6 @@
   To improve:
 
   - https://github.com/MuckRock/documentcloud-frontend/issues/1137
-  - https://github.com/MuckRock/documentcloud-frontend/issues/774
-
 
   To add:
 
