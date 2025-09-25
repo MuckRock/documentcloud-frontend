@@ -341,7 +341,9 @@
     "gotoDocCloud": "Go to DocumentCloud in new window or tab"
   },
   "annotation": {
-    "by": "Note by {name}"
+    "by": "Note by {name}",
+    "edited": "Last edited {date}",
+    "created": "Created {date}"
   },
   "mode": {
     "document": "File",

@@ -7,7 +7,7 @@ Assumes it's a child of a ViewerContext
   import { ListOrdered24 } from "svelte-octicons";
 
   import Empty from "../common/Empty.svelte";
-  import Note from "./Note.svelte";
+  import Note from "../notes/Note.svelte";
 
   import { getViewerHref } from "$lib/utils/viewer";
   import {

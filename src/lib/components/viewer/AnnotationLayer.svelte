@@ -17,7 +17,7 @@ Assumes it's a child of a ViewerContext
   import { fly } from "svelte/transition";
   import { _ } from "svelte-i18n";
 
-  import Note from "./Note.svelte";
+  import Note from "../notes/Note.svelte";
   import EditNote from "../forms/EditNote.svelte";
   import NoteTab from "./NoteTab.svelte";
 
