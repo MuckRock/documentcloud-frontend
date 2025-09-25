@@ -50,6 +50,7 @@
   export let document = getDocument();
   export let note: Note;
   export let scale = 2;
+  export let showExcerpt = true;
 
   // We may want to move the share modal into
   // the viewer, then set its visibility through context.
@@ -84,7 +85,7 @@
     </Button>
     {/if}
   </header>
-  {#if !page_level}
+  {#if !page_level && showExcerpt}
   <NoteExcerpt {note} {scale} />
   {/if}
   <NoteContent {note} />

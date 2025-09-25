@@ -10,13 +10,9 @@ Assumes it's a child of a ViewerContext
   import Note from "../notes/Note.svelte";
 
   import { getViewerHref } from "$lib/utils/viewer";
-  import {
-    getDocument,
-    isEmbedded,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getDocument } from "$lib/components/viewer/ViewerContext.svelte";
 
   const documentStore = getDocument();
-  const embed = isEmbedded();
 
   $: document = $documentStore;
   $: notes = document.notes ?? [];
@@ -26,13 +22,9 @@ Assumes it's a child of a ViewerContext
 <div class="pages">
   {#each notes as note}
     <div class="note-wrapper">
-      <header>
-        <a class="pageNumber" href={getViewerHref({ document, note, embed })}>
-          {$_("documents.page")}
-          {note.page_number + 1}
-        </a>
-      </header>
-      <div class="card"><Note {note} /></div>
+      <div class="card">
+        <Note {note} />
+      </div>
     </div>
   {:else}
     <Empty icon={ListOrdered24}>
@@ -66,25 +58,5 @@ Assumes it's a child of a ViewerContext
   .note-wrapper {
     display: flex;
     flex-direction: column;
-  }
-
-  header {
-    display: flex;
-    padding: 0.5rem;
-    gap: 1rem;
-    justify-content: space-between;
-    align-items: center;
-    align-self: stretch;
-  }
-
-  a.pageNumber {
-    flex: 0 0 auto;
-    color: var(--gray-4, #5c717c);
-    font-size: var(--font-sm);
-    font-weight: var(--font-regular);
-    text-decoration: none;
-    &:hover {
-      text-decoration: underline;
-    }
   }
 </style>

@@ -226,7 +226,9 @@ Assumes it's a child of a ViewerContext
           on:success={(e) => onEditNoteSuccess(e, $currentNote)}
         />
       {:else}
-        <Note note={$currentNote} {scale} on:close={closeNote} />
+        {#key $currentNote.id}
+          <Note note={$currentNote} showExcerpt={false} {scale} on:close={closeNote} />
+        {/key}
       {/if}
     </div>
   {/if}
