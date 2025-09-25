@@ -50,7 +50,7 @@ describe("embed tests", () => {
 
   test("note embed", () => {
     const iframe = embed.note(document, note);
-    const result = `<iframe src="${EMBED_URL}documents/24002098/annotations/557/?embed=1" width="366.32571428571424" height="15.19097387173396" style="border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: 366.32571428571424 / 15.19097387173396;"></iframe>
+    const result = `<iframe src="${EMBED_URL}documents/24002098/annotations/557/?embed=1" style="border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px;"></iframe>
 <script src="${EMBED_URL}embed/dc-resize.js"></script>`;
 
     expect(iframe).toEqual(result);

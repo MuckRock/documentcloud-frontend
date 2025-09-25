@@ -50,21 +50,10 @@ export function page(document: Document, page: number = 1): string {
 }
 
 export function note(document: Document, note: Note) {
-  const page = note.page_number;
-  const sizes = document.page_spec
-    ? pageSizes(document.page_spec)
-    : [[8.5, 11]];
-  const page_size = sizes[page - 1] ?? [];
-  const width = page_size[0] ?? 8.5;
-  const height = page_size[1] ?? 11;
-
-  const note_width = note ? notes.width(note) * width : null;
-  const note_height = note ? notes.height(note) * height : null;
-  const note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 100%; aspect-ratio: ${note_width} / ${note_height};`;
-
+  const note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px;`;
   const embedSrc = notes.canonicalNoteUrl(document, note);
   embedSrc.searchParams.set("embed", "1");
-  return `<iframe src="${embedSrc.href}" width="${note_width}" height="${note_height}" style="${note_style}"></iframe>
+  return `<iframe src="${embedSrc.href}" style="${note_style}"></iframe>
 <script src="${resize.href}"></script>`;
 }
 
