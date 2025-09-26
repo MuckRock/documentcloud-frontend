@@ -14,8 +14,18 @@ export default {
       preprocess: true,
     }),
     alias: {
-      "@": "./src",
-      "@/*": "./src/*",
+      "@/routes": "./src/routes",
+      "@/routes/*": "./src/routes/*",
+      "@/config": "./src/config",
+      "@/config/*": "./src/config/*",
+      "@/langs": "./src/langs",
+      "@/langs/*": "./src/langs/*",
+      "@/legacy": "./src/legacy",
+      "@/legacy/*": "./src/legacy/*",
+      "@/embed": "./src/embed",
+      "@/embed/*": "./src/embed/*",
+      "@/test": "./src/test",
+      "@/test/*": "./src/test/*",
     },
     csrf: {
       // BUG: https://github.com/sveltejs/kit/issues/8026
