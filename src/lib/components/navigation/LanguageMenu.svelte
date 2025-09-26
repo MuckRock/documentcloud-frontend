@@ -7,7 +7,7 @@
   } from "$lib/components/common/Dropdown.svelte";
   import Flex from "../common/Flex.svelte";
   import Menu from "$lib/components/common/Menu.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   import { LANGUAGES } from "@/config/config.js";
 
@@ -27,7 +27,7 @@
 {#if LANGUAGES.length > 1}
   <!-- Language Menu -->
   <Dropdown {position}>
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <span class="flag" slot="start">{currentLang?.[2]}</span>
       <!-- <span class="lang">{currentLang[0]}</span> -->
       <div class="dropdownArrow" slot="end">
@@ -37,10 +37,10 @@
           <ChevronUp12 />
         {/if}
       </div>
-    </SidebarItem>
+    </NavItem>
     <Menu slot="default" let:close>
       {#each LANGUAGES as [name, code, flag]}
-        <SidebarItem
+        <NavItem
           on:click={() => {
             updateLanguage(code ?? "");
             close();
@@ -52,7 +52,7 @@
             <span class="flag">{flag}</span>
             <span class="lang">{name}</span>
           </Flex>
-        </SidebarItem>
+        </NavItem>
       {/each}
     </Menu>
   </Dropdown>

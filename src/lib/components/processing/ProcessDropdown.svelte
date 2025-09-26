@@ -12,7 +12,7 @@
   import ProcessSummary from "./ProcessSummary.svelte";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   const totalCounts: Record<RunStatus, number> = {
     queued: 0,
@@ -59,9 +59,9 @@
 
 {#if total > 0}
   <Dropdown>
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <ProcessSummary counts={totalCounts} />
-    </SidebarItem>
+    </NavItem>
     <Menu>
       <AddOns />
       <Documents />

@@ -6,7 +6,7 @@
 
   import ScheduledEvent from "./ScheduledEvent.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import Empty from "../common/Empty.svelte";
 
@@ -45,10 +45,10 @@
 </script>
 
 <SidebarGroup>
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <Clock16 slot="start" />
     {$_("addonRuns.scheduled")}
-  </SidebarItem>
+  </NavItem>
 
   {#if loading}
     <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>

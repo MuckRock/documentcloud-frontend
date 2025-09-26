@@ -34,10 +34,17 @@
 <form {action} method="post" use:enhance={onSubmit} bind:this={formRef}>
   <Flex gap={1} align="center" justify="between">
     <Field inline title={$_("dialogRevisionsDialog.controlLabel")}>
-      <Switch name="revision_control" checked={document.revision_control} on:change={() => formRef.submit()} {disabled} />
+      <Switch
+        name="revision_control"
+        checked={document.revision_control}
+        on:change={() => formRef.submit()}
+        {disabled}
+      />
     </Field>
     <Flex class="buttons">
-      <Button size="small" type="submit" mode="primary" {disabled}>{$_("dialog.save")}</Button>
+      <Button size="small" type="submit" mode="primary" {disabled}>
+        {$_("dialog.save")}
+      </Button>
     </Flex>
   </Flex>
 </form>

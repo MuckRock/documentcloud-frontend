@@ -7,7 +7,7 @@
   import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
@@ -26,10 +26,10 @@
 </script>
 
 <SidebarGroup name="projects:viewer">
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <FileDirectory16 slot="start" />
     {$_("projects.header")}
-  </SidebarItem>
+  </NavItem>
   <div slot="action">
     {#if document.edit_access}
       <Action on:click={() => (edit = true)} icon={Pencil16}>
@@ -39,9 +39,9 @@
   </div>
 
   {#each projects as project}
-    <SidebarItem small href={canonicalUrl(project).href}>
+    <NavItem small href={canonicalUrl(project).href}>
       {project.title}
-    </SidebarItem>
+    </NavItem>
   {:else}
     <Empty icon={FileDirectory24}>
       {#if document.edit_access}

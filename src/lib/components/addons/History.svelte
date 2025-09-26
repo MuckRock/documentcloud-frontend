@@ -7,7 +7,7 @@
   import HistoryEvent from "./HistoryEvent.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import Empty from "../common/Empty.svelte";
 
   import { getRunningAddons } from "$lib/components/processing/ProcessContext.svelte";
@@ -60,10 +60,10 @@
 </script>
 
 <SidebarGroup>
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <History16 slot="start" />
     {$_("addonRuns.previous")}
-  </SidebarItem>
+  </NavItem>
 
   {#if loading}
     <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>

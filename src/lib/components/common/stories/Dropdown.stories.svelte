@@ -3,7 +3,7 @@
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Dropdown from "$lib/components/common/Dropdown.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import { ChevronDown12, ChevronRight12, Globe16 } from "svelte-octicons";
 
   export const meta = {
@@ -20,11 +20,11 @@
 
 <Story name="Basic">
   <Dropdown>
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <Globe16 slot="start" />
       Open Dropdown
       <ChevronDown12 slot="end" />
-    </SidebarItem>
+    </NavItem>
     <Menu slot="default" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
@@ -35,11 +35,11 @@
 
 <Story name="With Border">
   <Dropdown border>
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <Globe16 slot="start" />
       Open Dropdown
       <ChevronDown12 slot="end" />
-    </SidebarItem>
+    </NavItem>
     <Menu slot="default" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
@@ -50,11 +50,11 @@
 
 <Story name="With Overlay">
   <Dropdown overlay>
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <Globe16 slot="start" />
       Open Dropdown
       <ChevronDown12 slot="end" />
-    </SidebarItem>
+    </NavItem>
     <Menu slot="default" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
@@ -65,11 +65,11 @@
 
 <Story name="Right Position">
   <Dropdown position="right">
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <Globe16 slot="start" />
       Open Dropdown
       <ChevronRight12 slot="end" />
-    </SidebarItem>
+    </NavItem>
     <Menu slot="default" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
@@ -80,19 +80,19 @@
 
 <Story name="With Nested Dropdown">
   <Dropdown position="right">
-    <SidebarItem slot="anchor">
+    <NavItem slot="anchor">
       <Globe16 slot="start" />
       Open Dropdown
       <ChevronRight12 slot="end" />
-    </SidebarItem>
+    </NavItem>
     <Menu slot="default" let:close>
-      <SidebarItem on:click={close}>Item 1</SidebarItem>
-      <SidebarItem on:click={close}>Item 2</SidebarItem>
+      <NavItem on:click={close}>Item 1</NavItem>
+      <NavItem on:click={close}>Item 2</NavItem>
       <Dropdown position="right">
-        <SidebarItem slot="anchor">
+        <NavItem slot="anchor">
           Item 3
           <ChevronRight12 slot="end" />
-        </SidebarItem>
+        </NavItem>
         <Menu slot="default">
           <MenuItem>Item 1</MenuItem>
           <MenuItem>Item 2</MenuItem>

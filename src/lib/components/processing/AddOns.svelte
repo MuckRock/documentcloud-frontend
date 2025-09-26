@@ -8,7 +8,7 @@ This component should update on a timer.
   import { Plug16 } from "svelte-octicons";
 
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   import HistoryEvent from "../addons/HistoryEvent.svelte";
 
@@ -20,10 +20,10 @@ This component should update on a timer.
 
 {#if $running?.length && $running.length > 0}
   <SidebarGroup name="processing.addons">
-    <SidebarItem slot="title">
+    <NavItem slot="title">
       <Plug16 slot="start" />
       {$_("processing.addons")}
-    </SidebarItem>
+    </NavItem>
 
     {#each $running as run (run.uuid)}
       <div role="menuitem" animate:flip><HistoryEvent {run} dismissable /></div>

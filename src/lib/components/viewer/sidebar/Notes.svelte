@@ -7,7 +7,7 @@
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   import { canonicalUrl, pageUrl } from "$lib/api/documents";
   import { noteUrl, isPageLevel } from "$lib/api/notes";
@@ -19,10 +19,10 @@
 </script>
 
 <SidebarGroup name="notes">
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <Note16 slot="start" />
     {$_("sidebar.toc.notes")}
-  </SidebarItem>
+  </NavItem>
 
   <ol class="notes">
     {#each notes as note}
@@ -30,13 +30,13 @@
         ? pageUrl(document, note.page_number + 1).href
         : noteUrl(document, note).href}
       <li>
-        <SidebarItem {href} small>
+        <NavItem {href} small>
           <span class="note_title">{note.title}</span>
           <span class="page_number" slot="start">
             {$_("sidebar.toc.pageAbbrev")}
             {note.page_number + 1}
           </span>
-        </SidebarItem>
+        </NavItem>
       </li>
     {:else}
       <Empty>
