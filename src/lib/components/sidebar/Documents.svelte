@@ -89,12 +89,7 @@
       })}
     </NavItem>
     {#if $org && !$org.individual}
-      <NavItem
-        small
-        hover
-        href={searchUrl(orgDocs)}
-        active={query === orgDocs}
-      >
+      <NavItem small hover href={searchUrl(orgDocs)} active={query === orgDocs}>
         <Organization16 height={14} width={14} slot="start" />
         {$_("documents.nameDocuments", {
           values: { name: $org.name, access: "" },
