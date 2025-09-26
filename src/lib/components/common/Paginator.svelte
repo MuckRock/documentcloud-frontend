@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import Button from "@/lib/components/common/Button.svelte";
+  import Button from "$lib/components/common/Button.svelte";
   import {
     ArrowLeft16,
     ArrowRight16,

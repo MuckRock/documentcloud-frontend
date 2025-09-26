@@ -3,7 +3,7 @@
 
   import { _ } from "svelte-i18n";
 
-  import AddOnBrowser from "@/lib/components/layouts/AddOnBrowser.svelte";
+  import AddOnBrowser from "$lib/components/layouts/AddOnBrowser.svelte";
 
   export let data;
 
