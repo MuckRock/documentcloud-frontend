@@ -20,9 +20,9 @@
   import { APP_URL } from "@/config/config";
   import { slugify } from "$lib/utils/slugify";
   import { userDocs } from "$lib/utils/search";
-  import { getCurrentUser } from "@/lib/utils/permissions";
-  import SidebarGroup from "@/lib/components/sidebar/SidebarGroup.svelte";
-  import Button from "@/lib/components/common/Button.svelte";
+  import { getCurrentUser } from "$lib/utils/permissions";
+  import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
+  import Button from "$lib/components/common/Button.svelte";
 
   const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");

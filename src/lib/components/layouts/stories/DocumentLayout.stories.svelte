@@ -2,7 +2,7 @@
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import DocumentLayout from "../DocumentLayout.svelte";
 
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";

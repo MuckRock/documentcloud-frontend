@@ -4,8 +4,8 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import EmbedLayout from "../../layouts/EmbedLayout.svelte";
-  import { canonicalUrl } from "@/lib/api/documents";
-  import type { Document } from "@/lib/api/types";
+  import { canonicalUrl } from "$lib/api/documents";
+  import type { Document } from "$lib/api/types";
 
   const document = doc as Document;
 

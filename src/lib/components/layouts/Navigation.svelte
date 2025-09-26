@@ -24,7 +24,7 @@
   import UserFeedback from "../forms/UserFeedback.svelte";
 
   import { APP_URL, SIGN_IN_URL } from "@/config/config";
-  import { remToPx } from "@/lib/utils/layout";
+  import { remToPx } from "$lib/utils/layout";
   import { inMyOrg } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
 

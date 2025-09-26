@@ -7,7 +7,7 @@ import TipOfDayContextDecorator from "./decorators/TipOfDayContextDecorator.svel
 import ViewerContextDecorator from "./decorators/ViewerContextDecorator.svelte";
 
 import "@/style/kit.css";
-import "@/lib/i18n/index.js";
+import "$lib/i18n/index.js";
 
 // Initialize MSW
 initialize({

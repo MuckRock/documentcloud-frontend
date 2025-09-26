@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import HeaderComponent from "../Header.svelte";
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   const document = doc as Document;

@@ -3,7 +3,7 @@
  * We do this in a layout module because sub-routes can use the same
  * document without loading it again.
  */
-import type { ReadMode } from "@/lib/api/types";
+import type { ReadMode } from "$lib/api/types";
 
 import { redirect } from "@sveltejs/kit";
 

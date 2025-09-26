@@ -3,7 +3,7 @@
   import Projects from "../Projects.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
   const document = doc as Document;
 
   export const meta = {

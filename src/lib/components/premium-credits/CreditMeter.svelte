@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Maybe, Nullable } from "@/lib/api/types";
+  import type { Maybe, Nullable } from "$lib/api/types";
 
   export function formatResetDate(
     dateStr: string,

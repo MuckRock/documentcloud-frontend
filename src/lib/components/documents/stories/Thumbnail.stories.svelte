@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import ThumbnailComponent from "../Thumbnail.svelte";
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import santaanas from "@/test/fixtures/documents/examples/the-santa-anas.json";

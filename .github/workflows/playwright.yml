@@ -37,6 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      - run: npm run sync
 
       - name: Install Playwright
         run: npx playwright install --with-deps
