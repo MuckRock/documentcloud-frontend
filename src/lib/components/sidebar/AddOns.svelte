@@ -14,7 +14,7 @@
   import { _ } from "svelte-i18n";
 
   import Empty from "$lib/components/common/Empty.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
   import Pin from "$lib/components/common/Pin.svelte";
   import Error from "../common/Error.svelte";
@@ -40,9 +40,9 @@
 </script>
 
 <SidebarGroup name="addons">
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <Plug16 slot="start" />{$_("sidebar.addons.title")}
-  </SidebarItem>
+  </NavItem>
   <Button
     ghost
     mode="primary"
@@ -54,14 +54,14 @@
     <Search16 width={14} height={14} />
     {$_("common.explore")}
   </Button>
-  <SidebarItem small href="/add-ons/?featured=true">
+  <NavItem small href="/add-ons/?featured=true">
     <Star16 width={14} height={14} slot="start" />
     Featured
-  </SidebarItem>
-  <SidebarItem small href="/add-ons/?premium=true">
+  </NavItem>
+  <NavItem small href="/add-ons/?premium=true">
     <Zap16 width={14} height={14} slot="start" />
     Premium
-  </SidebarItem>
+  </NavItem>
   <SignedIn>
     {#await pinnedAddOns}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
@@ -70,15 +70,15 @@
         <Error>{error.message}</Error>
       {:else}
         {#each data?.results ?? [] as addon}
-          <SidebarItem small href={getHref(query, addon)}>
+          <NavItem small href={getHref(query, addon)}>
             <Pin size={0.875} active={addon.active} slot="start" />
             {addon.name}
-          </SidebarItem>
+          </NavItem>
         {:else}
-          <SidebarItem small disabled>
+          <NavItem small disabled>
             <Pin16 slot="start" />
             {$_("sidebar.addons.pinned")}
-          </SidebarItem>
+          </NavItem>
         {/each}
       {/if}
     {:catch error}

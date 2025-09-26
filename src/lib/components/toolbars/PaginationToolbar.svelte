@@ -17,7 +17,7 @@
   import Paginator from "$lib/components/common/Paginator.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import Zoom from "../viewer/Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
@@ -77,11 +77,11 @@
     {#if showPDF && (sections.length > 0 || canEditSections)}
       <Dropdown position="top-start" --offset="5px">
         <div class="toolbarItem" slot="anchor">
-          <SidebarItem>
+          <NavItem>
             <ListOrdered16 slot="start" />
             Sections
             <ChevronUp12 slot="end" />
-          </SidebarItem>
+          </NavItem>
         </div>
         <Menu slot="default" let:close>
           {#each sections as section}

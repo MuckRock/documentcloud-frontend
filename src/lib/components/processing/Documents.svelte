@@ -41,7 +41,7 @@ so we can invalidate documents as they finish processing.
   import { _ } from "svelte-i18n";
   import { File16, IssueReopened16 } from "svelte-octicons";
 
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
 
   import Button from "../common/Button.svelte";
@@ -136,10 +136,10 @@ so we can invalidate documents as they finish processing.
 
 {#if $current?.length}
   <SidebarGroup name="processing.documents">
-    <SidebarItem slot="title">
+    <NavItem slot="title">
       <File16 slot="start" />
       {$_("processing.documents")}
-    </SidebarItem>
+    </NavItem>
     {#each $current as process (process.doc_id)}
       {@const document = documents.get(process.doc_id)}
       <div role="menuitem" animate:flip>

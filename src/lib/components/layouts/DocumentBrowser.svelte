@@ -25,7 +25,7 @@
   import Empty from "$lib/components/common/Empty.svelte";
   import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   // Document comopnents
   import ResultsList, {
@@ -282,7 +282,7 @@
         {#if !embed}
           <div class="toolbar" bind:clientWidth={footerToolbarWidth}>
             <Flex align="center">
-              <SidebarItem>
+              <NavItem>
                 <label class="select-all">
                   <input
                     type="checkbox"
@@ -299,15 +299,15 @@
                     {$_("inputs.selectAll")}
                   {/if}
                 </label>
-              </SidebarItem>
+              </NavItem>
               <Dropdown position="top-start">
-                <SidebarItem
+                <NavItem
                   slot="anchor"
                   disabled={!$me || $selected?.length < 1 || !$editable}
                 >
                   {$_("bulk.title")}
                   <ChevronUp12 slot="end" />
-                </SidebarItem>
+                </NavItem>
 
                 <Menu slot="default" let:close>
                   <DocumentActions afterClick={() => close()} />

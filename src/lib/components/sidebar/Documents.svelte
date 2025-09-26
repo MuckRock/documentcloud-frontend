@@ -14,7 +14,7 @@
   } from "svelte-octicons";
   import { page } from "$app/stores";
 
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
 
   import { APP_URL } from "@/config/config";
@@ -46,10 +46,10 @@
 </script>
 
 <SidebarGroup name="documents">
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <File16 slot="start" />
     Documents
-  </SidebarItem>
+  </NavItem>
   <Button
     slot="action"
     ghost
@@ -62,11 +62,11 @@
     {$_("common.explore")}
   </Button>
   <SignedIn>
-    <SidebarItem small hover href={searchUrl(mine)} active={query === mine}>
+    <NavItem small hover href={searchUrl(mine)} active={query === mine}>
       <Person16 height={14} width={14} slot="start" />
       {$_("documents.yourDocuments")}
-    </SidebarItem>
-    <SidebarItem
+    </NavItem>
+    <NavItem
       small
       hover
       href={searchUrl(minePrivate)}
@@ -76,8 +76,8 @@
       {$_("documents.accessDocuments", {
         values: { access: "Private " },
       })}
-    </SidebarItem>
-    <SidebarItem
+    </NavItem>
+    <NavItem
       small
       hover
       href={searchUrl(minePublic)}
@@ -87,9 +87,9 @@
       {$_("documents.accessDocuments", {
         values: { access: "Public " },
       })}
-    </SidebarItem>
+    </NavItem>
     {#if $org && !$org.individual}
-      <SidebarItem
+      <NavItem
         small
         hover
         href={searchUrl(orgDocs)}
@@ -99,7 +99,7 @@
         {$_("documents.nameDocuments", {
           values: { name: $org.name, access: "" },
         })}
-      </SidebarItem>
+      </NavItem>
     {/if}
   </SignedIn>
 </SidebarGroup>
