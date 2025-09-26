@@ -8,12 +8,12 @@
     Paintbrush16,
     FileDirectory16,
   } from "svelte-octicons";
-  import SidebarItem from "../SidebarItem.svelte";
+  import NavItem from "../NavItem.svelte";
   import Flex from "../../common/Flex.svelte";
 
   export const meta = {
     title: "Components / Sidebar / Item",
-    component: SidebarItem,
+    component: NavItem,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
   };
@@ -23,73 +23,73 @@
 </script>
 
 <Story name="Text Only">
-  <SidebarItem>Example</SidebarItem>
+  <NavItem>Example</NavItem>
 </Story>
 
 <Story name="Text and Icon">
-  <SidebarItem>
+  <NavItem>
     <Comment16 slot="start" /> Add a note…
-  </SidebarItem>
+  </NavItem>
 </Story>
 
 <Story name="Link">
-  <SidebarItem href="/" on:click={click} on:keydown={keydown}>
+  <NavItem href="/" on:click={click} on:keydown={keydown}>
     <Home16 slot="start" /> Go Home
-  </SidebarItem>
+  </NavItem>
 </Story>
 
 <Story name="Hover">
-  <SidebarItem hover>
+  <NavItem hover>
     <Home16 slot="start" /> Go Home
-  </SidebarItem>
+  </NavItem>
 </Story>
 
 <Story name="Active">
   <Flex>
-    <SidebarItem active>Static</SidebarItem>
-    <SidebarItem active href="#">
+    <NavItem active>Static</NavItem>
+    <NavItem active href="#">
       <Link16 slot="start" /> Link
-    </SidebarItem>
-    <SidebarItem
+    </NavItem>
+    <NavItem
       active
       --active-background="var(--orange-2)"
       --active-color="var(--orange-4)"
       --active-fill="var(--orange-3)"
     >
       <Paintbrush16 slot="start" /> Custom Active Colors
-    </SidebarItem>
+    </NavItem>
   </Flex>
 </Story>
 
 <Story name="Small">
-  <SidebarItem small>
+  <NavItem small>
     <Comment16 slot="start" /> Add a note…
-  </SidebarItem>
+  </NavItem>
 </Story>
 
 <Story name="Disabled">
-  <SidebarItem disabled>
+  <NavItem disabled>
     <Comment16 slot="start" /> Add a note…
-  </SidebarItem>
+  </NavItem>
 </Story>
 
 <Story name="With Overflow">
   <div class="maxW-16">
-    <SidebarItem disabled>
+    <NavItem disabled>
       <FileDirectory16 slot="start" /> A very long sidebar item maybe a project
-    </SidebarItem>
+    </NavItem>
   </div>
 </Story>
 
 <Story name="Absurdly long name">
-  <SidebarItem>
+  <NavItem>
     The International Consortium for the Real-Time Dissemination of Verified,
     Unbiased, Cross-Platform, Community-Sourced, Multilingual, Deep-Dive
     Investigative Journalism and Global News Analysis Network for Socioeconomic,
     Environmental, Political, Technological, and Humanitarian Affairs Reporting
     and Strategic Public Information Engagement Across All Media Channels
     Initiative
-  </SidebarItem>
+  </NavItem>
 </Story>
 
 <style>

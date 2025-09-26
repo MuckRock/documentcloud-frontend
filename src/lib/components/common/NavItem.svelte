@@ -21,7 +21,7 @@
     {rel}
     {download}
     {title}
-    class="sidebarItem container"
+    class="navItem container"
     class:active
     class:disabled
     class:small
@@ -36,7 +36,7 @@
 {:else}
   <span
     {title}
-    class="sidebarItem container"
+    class="navItem container"
     class:active
     class:hover
     class:disabled
@@ -145,7 +145,7 @@
     display: none;
   }
 
-  :global(.sidebarItem svg) {
+  :global(.navItem svg) {
     flex: 0 0 auto;
   }
 </style>
