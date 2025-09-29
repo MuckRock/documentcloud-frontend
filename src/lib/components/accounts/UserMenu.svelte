@@ -8,7 +8,7 @@
   } from "$lib/components/common/Dropdown.svelte";
 
   import Portal from "$lib/components/layouts/Portal.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import {
     ChevronDown12,
     Gear16,
@@ -38,7 +38,7 @@
 <svelte:window bind:innerWidth={width} />
 
 <Dropdown {position}>
-  <SidebarItem slot="anchor" title="Open Menu">
+  <NavItem slot="anchor" title="Open Menu">
     <Avatar {user} slot="start" />
     {#if width > remToPx(48)}
       <span class="name">{getUserName(user)}</span>
@@ -50,13 +50,13 @@
         <ChevronUp12 />
       {/if}
     </div>
-  </SidebarItem>
+  </NavItem>
   <Menu slot="default" let:close>
-    <SidebarItem href={SQUARELET_BASE} target="_blank" on:click={close}>
+    <NavItem href={SQUARELET_BASE} target="_blank" on:click={close}>
       <Gear16 slot="start" />
       {$_("authSection.user.acctSettings")}
-    </SidebarItem>
-    <SidebarItem
+    </NavItem>
+    <NavItem
       hover
       on:click={() => {
         setMailkeyOpen(true);
@@ -65,11 +65,11 @@
     >
       <Paperclip16 slot="start" />
       {$_("authSection.user.uploadEmail")}
-    </SidebarItem>
-    <SidebarItem href={SIGN_OUT_URL} on:click={close}>
+    </NavItem>
+    <NavItem href={SIGN_OUT_URL} on:click={close}>
       <SignOut16 slot="start" />
       {$_("authSection.user.signOut")}
-    </SidebarItem>
+    </NavItem>
   </Menu>
 </Dropdown>
 {#if mailkeyOpen}

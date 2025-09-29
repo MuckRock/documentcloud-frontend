@@ -22,7 +22,7 @@
   import Menu from "$lib/components/common/Menu.svelte";
   import Premium from "$lib/components/icons/Premium.svelte";
 
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   import { startTour, isTourAvailable } from "../onboarding/GuidedTour.svelte";
 
@@ -38,7 +38,7 @@
 
 <!-- Help Menu -->
 <Dropdown {position}>
-  <SidebarItem slot="anchor">
+  <NavItem slot="anchor">
     <Question24 slot="start" />
     <div class="dropdownArrow" slot="end">
       {#if position.includes("bottom")}
@@ -47,50 +47,50 @@
         <ChevronUp12 />
       {/if}
     </div>
-  </SidebarItem>
+  </NavItem>
   <Menu slot="default" let:close>
     {#if showTour}
-      <SidebarItem hover on:click={onTourClick}>
+      <NavItem hover on:click={onTourClick}>
         <Milestone16 slot="start" />
         Guided Tour
-      </SidebarItem>
+      </NavItem>
     {/if}
-    <SidebarItem href="/help/faq/" on:click={close}>
+    <NavItem href="/help/faq/" on:click={close}>
       <CommentDiscussion16 slot="start" />
       {$_("authSection.help.faq")}
-    </SidebarItem>
-    <SidebarItem href="/help/search/" on:click={close}>
+    </NavItem>
+    <NavItem href="/help/search/" on:click={close}>
       <Search16 slot="start" />
       {$_("authSection.help.searchDocs")}
-    </SidebarItem>
-    <SidebarItem href="/help/api/" on:click={close}>
+    </NavItem>
+    <NavItem href="/help/api/" on:click={close}>
       <Code16 slot="start" />
       {$_("authSection.help.apiDocs")}
-    </SidebarItem>
-    <SidebarItem href="/help/add-ons/" on:click={close}>
+    </NavItem>
+    <NavItem href="/help/add-ons/" on:click={close}>
       <Plug16 slot="start" />
       {$_("authSection.help.addOns")}
-    </SidebarItem>
-    <SidebarItem href="/help/premium/" on:click={close}>
+    </NavItem>
+    <NavItem href="/help/premium/" on:click={close}>
       <Premium slot="start" />
       {$_("authSection.help.premium")}
-    </SidebarItem>
-    <SidebarItem href="https://www.muckrock.com/donate/" on:click={close}>
+    </NavItem>
+    <NavItem href="https://www.muckrock.com/donate/" on:click={close}>
       <Gift16 slot="start" />
       {$_("authSection.help.donate")}
-    </SidebarItem>
-    <SidebarItem
+    </NavItem>
+    <NavItem
       href="mailto:info@documentcloud.org"
       target="_blank"
       on:click={close}
     >
       <Mail16 slot="start" />
       {$_("authSection.help.emailUs")}
-    </SidebarItem>
-    <SidebarItem href="https://legacy.www.documentcloud.org">
+    </NavItem>
+    <NavItem href="https://legacy.www.documentcloud.org">
       <Undo16 slot="start" />
       {$_("authSection.help.legacy")}
-    </SidebarItem>
+    </NavItem>
   </Menu>
 </Dropdown>
 

@@ -4,6 +4,6 @@ import { me as meFixture } from "@/test/fixtures/accounts";
 import UserMenu from "../UserMenu.svelte";
 
 test("UserMenu", async () => {
-  let result = render(UserMenu, {user: meFixture});
+  let result = render(UserMenu, { user: meFixture });
   expect(result.container).toMatchSnapshot();
 });

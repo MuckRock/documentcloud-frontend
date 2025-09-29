@@ -8,7 +8,7 @@
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import KV from "$lib/components/common/KV.svelte";
-  import SidebarItem from "$lib/components/sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   // editing UI
   import EditData from "$lib/components/forms/EditData.svelte";
@@ -28,10 +28,10 @@
 </script>
 
 <SidebarGroup name="projects:viewer">
-  <SidebarItem slot="title">
+  <NavItem slot="title">
     <Tag16 slot="start" />
     {$_("sidebar.data.title")}
-  </SidebarItem>
+  </NavItem>
   <div slot="action">
     {#if document.edit_access}
       <Action on:click={() => (edit = true)} icon={Pencil16}>

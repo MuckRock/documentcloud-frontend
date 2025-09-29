@@ -6,7 +6,7 @@
   import Menu from "../common/Menu.svelte";
   import PageToolbar from "./PageToolbar.svelte";
   import Search from "../forms/Search.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "../common/NavItem.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
 
   import { remToPx } from "$lib/utils/layout";
@@ -29,11 +29,11 @@
     </div>
     <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
       <Dropdown>
-        <SidebarItem slot="anchor">
+        <NavItem slot="anchor">
           <Eye16 slot="start" />
           {$_("documentBrowser.fieldsAnchor")}
           <ChevronDown12 slot="end" />
-        </SidebarItem>
+        </NavItem>
         <Menu>
           <VisibleFields />
         </Menu>
