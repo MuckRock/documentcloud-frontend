@@ -10,7 +10,7 @@
     freeOrg,
     me,
   } from "@/test/fixtures/accounts";
-  import { inMyOrg } from "@/lib/api/accounts";
+  import { inMyOrg } from "$lib/api/accounts";
 
   export const meta = {
     title: "Components / Navigation / Org Menu",

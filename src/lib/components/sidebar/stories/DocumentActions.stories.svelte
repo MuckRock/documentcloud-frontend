@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document } from "@/lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   import { writable, type Writable } from "svelte/store";
   import { Story } from "@storybook/addon-svelte-csf";

@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { rest } from "msw";
-  import type { Document, Section } from "@/lib/api/types";
+  import type { Document, Section } from "$lib/api/types";
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
 

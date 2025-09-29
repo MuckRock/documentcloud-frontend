@@ -9,7 +9,7 @@
   import txt from "@/test/fixtures/documents/document.txt.json";
   import { searchWithin } from "@/test/handlers/documents";
   import { simulatePDF403Error } from "@/test/handlers/viewer";
-  import { pdfUrl } from "@/lib/api/documents";
+  import { pdfUrl } from "$lib/api/documents";
 
   const document = doc as Document;
 

@@ -22,7 +22,7 @@
     getDocument,
     getZoom,
   } from "$lib/components/viewer/ViewerContext.svelte";
-  import { zoomToSize } from "@/lib/utils/viewer";
+  import { zoomToSize } from "$lib/utils/viewer";
 
   export let size: Sizes = "thumbnail";
 

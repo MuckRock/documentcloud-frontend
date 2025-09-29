@@ -25,7 +25,7 @@
   import Portal from "../layouts/Portal.svelte";
 
   import { getUserName } from "$lib/api/accounts";
-  import { getCurrentUser } from "@/lib/utils/permissions";
+  import { getCurrentUser } from "$lib/utils/permissions";
   import Tooltip from "../common/Tooltip.svelte";
 
   export let project: Project;

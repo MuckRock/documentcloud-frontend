@@ -8,7 +8,7 @@
 
   import "@/style/kit.css";
 
-  import { toast } from "@/lib/components/layouts/Toaster.svelte";
+  import { toast } from "$lib/components/layouts/Toaster.svelte";
 
   $: useCyrillicCharset =
     browser && $locale ? ["uk", "ru"].includes($locale) : false;

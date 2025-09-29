@@ -4,7 +4,7 @@
   The "signedOut" slot is available as a fallback.
 -->
 <script lang="ts">
-  import { getCurrentUser, isSignedIn } from "@/lib/utils/permissions";
+  import { getCurrentUser, isSignedIn } from "$lib/utils/permissions";
 
   const me = getCurrentUser();
 </script>

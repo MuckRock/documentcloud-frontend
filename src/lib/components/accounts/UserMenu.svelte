@@ -21,8 +21,8 @@
 
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
   import Avatar from "./Avatar.svelte";
-  import { remToPx } from "@/lib/utils/layout";
-  import { getUserName } from "@/lib/api/accounts";
+  import { remToPx } from "$lib/utils/layout";
+  import { getUserName } from "$lib/api/accounts";
 
   export let user: User;
   export let position: Placement = "bottom-end";

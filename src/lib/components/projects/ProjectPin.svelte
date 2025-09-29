@@ -21,7 +21,7 @@
   import { getCsrfToken } from "$lib/utils/api";
   import { getCurrentUser } from "$lib/utils/permissions";
 
-  import Pin from "@/lib/components/common/Pin.svelte";
+  import Pin from "$lib/components/common/Pin.svelte";
   import { pinProject } from "$lib/api/projects";
 
   export let project: Project;
