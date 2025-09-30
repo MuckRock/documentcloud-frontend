@@ -26,7 +26,7 @@ export async function load({ fetch, url, params, depends, setHeaders }) {
   let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);
 
   setHeaders({
-    "cache-control": `public, max-age=${EMBED_MAX_AGE}`,
+    "Cloudflare-CDN-Cache-Control": `public, max-age=${EMBED_MAX_AGE}`,
     "last-modified": new Date(document.updated_at).toUTCString(),
   });
 
