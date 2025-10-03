@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { Note, User } from "$lib/api/types";
   import { _ } from "svelte-i18n";
   import { getUserName } from "$lib/api/accounts";
-  import type { Note, User } from "$lib/api/types";
 
   export let note: Note;
 

@@ -16,19 +16,6 @@ import {
   DEFAULT_FALLBACK_COLOR,
 } from "../notes";
 
-// Set up mock handlers and data
-vi.mock("$lib/api/notes", () => ({
-  width: (note: any) => note.x2 - note.x1,
-  height: (note: any) => note.y2 - note.y1,
-}));
-const mockDocument = {
-  documentElement: {
-    style: {
-      getPropertyValue: vi.fn(),
-    },
-  },
-};
-const mockGetComputedStyle = vi.fn();
 const mockNote: Note = {
   id: 1,
   page_number: 0,
@@ -44,12 +31,6 @@ const mockNote: Note = {
   created_at: "2023-01-01T00:00:00Z",
   updated_at: "2023-01-01T00:00:00Z",
 };
-
-beforeEach(() => {
-  vi.stubGlobal("document", mockDocument);
-  vi.stubGlobal("getComputedStyle", mockGetComputedStyle);
-  vi.stubGlobal("window", { devicePixelRatio: 1 });
-});
 
 afterEach(() => {
   vi.restoreAllMocks();

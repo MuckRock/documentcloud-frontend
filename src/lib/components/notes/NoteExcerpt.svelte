@@ -40,7 +40,7 @@
     }
 
     if (document && !pdf) {
-      return renderImage(note, scale, canvas, document);
+      return renderImage(note, canvas, document);
     }
 
     // we don't have a pdf or a document, for some reason
@@ -49,9 +49,10 @@
 </script>
 
 <div class="note-excerpt">
-  <a class="page-number" href={page_url}
-    >{$_("documents.pageAbbrev")} {page_number}</a
-  >
+  <a class="page-number" href={page_url}>
+    {$_("documents.pageAbbrev")}
+    {page_number}
+  </a>
   <div class="highlight {note.access}">
     <canvas width="0" height="0" bind:this={canvas}></canvas>
   </div>

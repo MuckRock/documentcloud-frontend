@@ -152,7 +152,6 @@ export function transformNoteCoordinates(
 
 export async function renderImage(
   note: Note,
-  scale: number,
   canvas: HTMLCanvasElement,
   document: Document,
 ) {
