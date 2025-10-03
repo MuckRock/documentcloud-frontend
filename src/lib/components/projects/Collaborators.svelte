@@ -15,7 +15,7 @@
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import Avatar from "../accounts/Avatar.svelte";
 
   import InviteCollaborator from "../forms/InviteCollaborator.svelte";
@@ -25,7 +25,7 @@
   import Portal from "../layouts/Portal.svelte";
 
   import { getUserName } from "$lib/api/accounts";
-  import { getCurrentUser } from "@/lib/utils/permissions";
+  import { getCurrentUser } from "$lib/utils/permissions";
   import Tooltip from "../common/Tooltip.svelte";
 
   export let project: Project;
@@ -88,10 +88,10 @@
 
 {#if users.length > 0 || project.add_remove_access}
   <SidebarGroup name="collaborators">
-    <SidebarItem slot="title">
+    <NavItem slot="title">
       <People16 slot="start" />
       {$_("projects.collaborators.title")}
-    </SidebarItem>
+    </NavItem>
 
     <span slot="action">
       {#if project.add_remove_access}
@@ -117,7 +117,7 @@
       {/if}
       {#each members as user}
         {#if isProjectUser || project.edit_access}
-          <SidebarItem small>
+          <NavItem small>
             <Avatar user={user.user} slot="start" />
             {getUserName(user.user)}
             <Flex gap={0} slot="end">
@@ -154,12 +154,12 @@
                 </Tooltip>
               {/if}
             </Flex>
-          </SidebarItem>
+          </NavItem>
         {:else}
-          <SidebarItem small>
+          <NavItem small>
             <Avatar user={user.user} slot="start" />
             {getUserName(user.user)}
-          </SidebarItem>
+          </NavItem>
         {/if}
       {/each}
     {:else}

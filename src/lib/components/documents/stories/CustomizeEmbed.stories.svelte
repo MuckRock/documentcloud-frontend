@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import CustomizeEmbed, { embedSettings } from "../CustomizeEmbed.svelte";
-  import { createEmbedSearchParams } from "@/lib/utils/embed";
+  import { createEmbedSearchParams } from "$lib/utils/embed";
 
   let args = {};
 

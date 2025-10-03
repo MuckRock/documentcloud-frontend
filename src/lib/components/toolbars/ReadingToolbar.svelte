@@ -26,7 +26,7 @@ Assumes it's a child of a ViewerContext
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import PageToolbar from "$lib/components/toolbars/PageToolbar.svelte";
   import Search from "$lib/components/forms/Search.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
 
   import { remToPx } from "$lib/utils/layout";
@@ -105,11 +105,11 @@ Assumes it's a child of a ViewerContext
       </div>
     {:else}
       <Dropdown position="bottom-start">
-        <SidebarItem slot="anchor">
+        <NavItem slot="anchor">
           <svelte:component this={icons[$mode]} slot="start" />
           {current}
           <ChevronDown12 slot="end" />
-        </SidebarItem>
+        </NavItem>
         <Menu slot="default" let:close>
           {#each readModeDropdownItems.entries() as [value, name]}
             <MenuItem

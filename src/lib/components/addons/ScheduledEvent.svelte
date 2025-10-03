@@ -24,7 +24,7 @@
 
   import { _ } from "svelte-i18n";
 
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
 
   export let event: Event;
 
@@ -37,7 +37,7 @@
   }
 </script>
 
-<SidebarItem href={url(event)} on:click>
+<NavItem href={url(event)} on:click>
   <div class="info" class:disabled>
     <p class="name">
       {event.addon.name}
@@ -55,7 +55,7 @@
       </p>
     {/if}
   </div>
-</SidebarItem>
+</NavItem>
 
 <style>
   .info.disabled {

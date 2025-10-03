@@ -60,7 +60,7 @@
   } from "svelte-octicons";
 
   import FieldLabel from "../common/FieldLabel.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import { remToPx } from "$lib/utils/layout";
 
   export let showAdvanced = false;
@@ -88,24 +88,24 @@
   <div class="views">
     {#each defaultViews as view}
       <div class="view">
-        <SidebarItem
+        <NavItem
           active={deepEqual(view.fields, $visibleFields)}
           hover
           on:click={() => visibleFields.set(view.fields)}
         >
           <svelte:component this={view.icon} slot="start" />
           {$_(view.label)}
-        </SidebarItem>
+        </NavItem>
       </div>
     {/each}
   </div>
   {#if showAdvanced}
     <fieldset class="fields">
       <legend>
-        <SidebarItem small>
+        <NavItem small>
           <Paintbrush16 slot="start" height={14} width={14} />
           {$_("documentBrowser.fields.customize")}
-        </SidebarItem>
+        </NavItem>
       </legend>
       {#each Object.keys($visibleFields) as key}
         <label class="field">

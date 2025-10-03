@@ -28,7 +28,7 @@ export async function load({ fetch, setHeaders }) {
 
   if (!me) {
     setHeaders({
-      "cache-control": `public, max-age=${PAGE_MAX_AGE}`,
+      "Cloudflare-CDN-Cache-Control": `public, max-age=${PAGE_MAX_AGE}`,
     });
   }
 

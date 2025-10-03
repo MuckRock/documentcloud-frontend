@@ -6,7 +6,7 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import { getDefaultZoom, getZoomLevels } from "@/lib/utils/viewer";
+  import { getDefaultZoom, getZoomLevels } from "$lib/utils/viewer";
   import { getCurrentMode, getZoom } from "./ViewerContext.svelte";
 
   const mode = getCurrentMode();

@@ -14,7 +14,7 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
   import { writable } from "svelte/store";
-  import { pdfUrl } from "@/lib/api/documents";
+  import { pdfUrl } from "$lib/api/documents";
 
   const document = doc as Document;
   const notes = document.notes as NoteType[];

@@ -2,7 +2,7 @@
   import { Story } from "@storybook/addon-svelte-csf";
   import PageToolbar from "../PageToolbar.svelte";
   import Checkbox from "../../inputs/Checkbox.svelte";
-  import Paginator from "@/lib/components/common/Paginator.svelte";
+  import Paginator from "$lib/components/common/Paginator.svelte";
 
   export const meta = {
     title: "Toolbars / Page Toolbar",

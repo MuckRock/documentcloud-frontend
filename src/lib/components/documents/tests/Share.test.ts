@@ -4,15 +4,15 @@ import { userEvent } from "@testing-library/user-event";
 
 import Share from "../Share.svelte";
 
-import type { Document } from "@/lib/api/types";
+import type { Document } from "$lib/api/types";
 import documentFixture from "@/test/fixtures/documents/document-expanded.json";
 import {
   canonicalPageUrl,
   canonicalUrl,
   embedUrl,
   pageUrl,
-} from "@/lib/api/documents";
-import { canonicalNoteUrl, noteUrl } from "@/lib/api/notes";
+} from "$lib/api/documents";
+import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
 
 describe("Share", () => {
   let document: Document;

@@ -21,7 +21,7 @@
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuInsert from "$lib/components/common/MenuInsert.svelte";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
+  import NavItem from "$lib/components/common/NavItem.svelte";
   import PremiumIcon from "$lib/components/icons/Premium.svelte";
 
   import { SQUARELET_BASE } from "@/config/config";
@@ -59,7 +59,7 @@
 <Dropdown {position}>
   <svelte:fragment slot="anchor">
     {#if active_org.individual}
-      <SidebarItem --fill="var(--green-3)" --color="var(--green-5)">
+      <NavItem --fill="var(--green-3)" --color="var(--green-5)">
         <PremiumIcon slot="start" />
         {isPro
           ? $_("authSection.pro.title")
@@ -71,9 +71,9 @@
             <ChevronUp12 />
           {/if}
         </div>
-      </SidebarItem>
+      </NavItem>
     {:else}
-      <SidebarItem>
+      <NavItem>
         <div class="avatar" slot="start">
           <img
             alt={$_("authSection.org.avatar", {
@@ -92,7 +92,7 @@
             <ChevronUp12 />
           {/if}
         </div>
-      </SidebarItem>
+      </NavItem>
     {/if}
   </svelte:fragment>
   <Menu slot="default" let:close>
@@ -134,15 +134,15 @@
 
       {#if users.length}
         <SidebarGroup>
-          <SidebarItem slot="title">
+          <NavItem slot="title">
             <People16 slot="start" />
             {$_("authSection.org.userCount", { values: { n: users.length } })}
-          </SidebarItem>
+          </NavItem>
           <ul class="user-list">
             {#each users as user}
               {@const href = searchUrl(userDocs(user)).href}
               <li>
-                <SidebarItem {href} on:click={close}>
+                <NavItem {href} on:click={close}>
                   <svelte:fragment slot="start">
                     {#if user.avatar_url}
                       <img src={user.avatar_url} class="avatar" alt="" />
@@ -154,7 +154,7 @@
                   {#if user.admin_organizations.includes(active_org.id)}
                     <span class="badge">{$_("authSection.org.adminRole")}</span>
                   {/if}
-                </SidebarItem>
+                </NavItem>
               </li>
             {/each}
           </ul>
@@ -165,7 +165,7 @@
           {$_("authSection.org.changeOrg")}
         </p>
         <Dropdown>
-          <SidebarItem slot="anchor">
+          <NavItem slot="anchor">
             <div class="avatar" slot="start">
               <img
                 alt={$_("authSection.org.avatar", {
@@ -176,10 +176,10 @@
             </div>
             <p class="orgname">{active_org.name}</p>
             <span class="arrow" slot="end"><ChevronDown12 /></span>
-          </SidebarItem>
+          </NavItem>
           <Menu --max-height="24rem">
             {#each otherOrgs as otherOrg}
-              <SidebarItem
+              <NavItem
                 hover
                 on:click={(e) => {
                   switchOrg(otherOrg);
@@ -187,7 +187,7 @@
                 }}
               >
                 {otherOrg.name}
-              </SidebarItem>
+              </NavItem>
             {/each}
           </Menu>
         </Dropdown>

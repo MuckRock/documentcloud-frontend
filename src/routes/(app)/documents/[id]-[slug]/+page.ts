@@ -3,7 +3,7 @@
  * We do this in a layout module because sub-routes can use the same
  * document without loading it again.
  */
-import type { ReadMode } from "@/lib/api/types";
+import type { ReadMode } from "$lib/api/types";
 
 import { redirect } from "@sveltejs/kit";
 
@@ -50,7 +50,7 @@ export async function load({
 
   if (!me) {
     setHeaders({
-      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
+      "Cloudflare-CDN-Cache-Control": `public, max-age=${VIEWER_MAX_AGE}`,
       "last-modified": new Date(document.updated_at).toUTCString(),
     });
   }
