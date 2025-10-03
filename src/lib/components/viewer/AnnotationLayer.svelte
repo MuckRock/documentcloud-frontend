@@ -17,7 +17,7 @@ Assumes it's a child of a ViewerContext
   import { fly } from "svelte/transition";
   import { _ } from "svelte-i18n";
 
-  import Note from "./Note.svelte";
+  import Note from "../notes/Note.svelte";
   import EditNote from "../forms/EditNote.svelte";
   import NoteTab from "./NoteTab.svelte";
 
@@ -226,7 +226,9 @@ Assumes it's a child of a ViewerContext
           on:success={(e) => onEditNoteSuccess(e, $currentNote)}
         />
       {:else}
-        <Note note={$currentNote} {scale} on:close={closeNote} />
+        {#key $currentNote.id}
+          <Note note={$currentNote} showExcerpt={false} {scale} on:close={closeNote} />
+        {/key}
       {/if}
     </div>
   {/if}
