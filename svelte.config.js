@@ -29,10 +29,6 @@ export default {
       "@/test": "./src/test",
       "@/test/*": "./src/test/*",
     },
-    csrf: {
-      // BUG: https://github.com/sveltejs/kit/issues/8026
-      checkOrigin: process.env.DOCKER === "true" ? false : true,
-    },
   },
 
   // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
