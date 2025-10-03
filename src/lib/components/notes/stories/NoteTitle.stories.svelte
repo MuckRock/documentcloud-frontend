@@ -23,7 +23,10 @@
 <Story name="Default" args={{ doc: document, note: notes[0] }} />
 <Story
   name="Page Level Note"
-  args={{ doc: document, note: { ...notes[0], x1: null, x2: null, y1: null, y2: null } }}
+  args={{
+    doc: document,
+    note: { ...notes[0], x1: null, x2: null, y1: null, y2: null },
+  }}
 />
 <Story
   name="Embedded Title"
@@ -31,5 +34,12 @@
 />
 <Story
   name="Long Title"
-  args={{ doc: document, note: { ...notes[0], title: "This is a very long note title that should wrap properly and demonstrate how the component handles lengthy text content" } }}
+  args={{
+    doc: document,
+    note: {
+      ...notes[0],
+      title:
+        "This is a very long note title that should wrap properly and demonstrate how the component handles lengthy text content",
+    },
+  }}
 />

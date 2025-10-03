@@ -20,18 +20,33 @@
   <NoteActions {...args} />
 </Template>
 
-<Story name="Default" args={{ doc: document, note: notes[0], onShare: () => {} }} />
+<Story
+  name="Default"
+  args={{ doc: document, note: notes[0], onShare: () => {} }}
+/>
 <Story
   name="Private Access"
-  args={{ doc: document, note: { ...notes[0], access: "private" }, onShare: () => {} }}
+  args={{
+    doc: document,
+    note: { ...notes[0], access: "private" },
+    onShare: () => {},
+  }}
 />
 <Story
   name="Organization Access"
-  args={{ doc: document, note: { ...notes[0], access: "organization" }, onShare: () => {} }}
+  args={{
+    doc: document,
+    note: { ...notes[0], access: "organization" },
+    onShare: () => {},
+  }}
 />
 <Story
   name="Public Access"
-  args={{ doc: document, note: { ...notes[0], access: "public" }, onShare: () => {} }}
+  args={{
+    doc: document,
+    note: { ...notes[0], access: "public" },
+    onShare: () => {},
+  }}
 />
 <Story
   name="With Edit Permission"
@@ -43,9 +58,21 @@
 />
 <Story
   name="Edit and Share Enabled"
-  args={{ doc: document, note: notes[0], canEdit: true, canShare: true, onShare: () => {} }}
+  args={{
+    doc: document,
+    note: notes[0],
+    canEdit: true,
+    canShare: true,
+    onShare: () => {},
+  }}
 />
 <Story
   name="No Actions Available"
-  args={{ doc: document, note: notes[0], canEdit: false, canShare: false, onShare: () => {} }}
+  args={{
+    doc: document,
+    note: notes[0],
+    canEdit: false,
+    canShare: false,
+    onShare: () => {},
+  }}
 />

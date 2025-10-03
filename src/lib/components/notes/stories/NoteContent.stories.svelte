@@ -27,9 +27,20 @@
 <Story name="Default" args={{ note: { ...notes[2], content: html } }} />
 <Story
   name="Plain Text"
-  args={{ note: { ...notes[0], content: "This is a simple plain text note without any HTML formatting." } }}
+  args={{
+    note: {
+      ...notes[0],
+      content: "This is a simple plain text note without any HTML formatting.",
+    },
+  }}
 />
 <Story
   name="Rich HTML"
-  args={{ note: { ...notes[0], content: '<p>This note contains <strong>bold text</strong>, <em>italic text</em>, and <a href="https://example.com">links</a>.</p><ul><li>Item 1</li><li>Item 2</li></ul>' } }}
+  args={{
+    note: {
+      ...notes[0],
+      content:
+        '<p>This note contains <strong>bold text</strong>, <em>italic text</em>, and <a href="https://example.com">links</a>.</p><ul><li>Item 1</li><li>Item 2</li></ul>',
+    },
+  }}
 />
