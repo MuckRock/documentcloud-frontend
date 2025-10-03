@@ -10,9 +10,9 @@
 
 <div class="note-metadata">
   {#if user}
-  <p class="created-by">
-    {$_("annotation.by", { values: { name: getUserName(user) } })}
-  </p>
+    <p class="created-by">
+      {$_("annotation.by", { values: { name: getUserName(user) } })}
+    </p>
   {/if}
   <p class="last-modified">
     {#if note.updated_at && note.updated_at !== note.created_at}

@@ -1,7 +1,9 @@
 <script lang="ts">
+  import type { Note } from "$lib/api/types";
+
   import DOMPurify from "isomorphic-dompurify";
+
   import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
-  import type { Note } from "@/lib/api/types";
 
   export let note: Note;
 

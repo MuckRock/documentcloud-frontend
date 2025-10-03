@@ -1,16 +1,20 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import type { Document, Note } from "$lib/api/types";
-  import { getDocument, getPDF } from "$lib/components/viewer/ViewerContext.svelte";
-  import { getViewerHref } from "@/lib/utils/viewer";
-  import { renderImage, renderPDF } from "@/lib/utils/notes";
+
+  import { _ } from "svelte-i18n";
+  import {
+    getDocument,
+    getPDF,
+  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerHref } from "$lib/utils/viewer";
+  import { renderImage, renderPDF } from "$lib/utils/notes";
 
   export let document = getDocument();
   export let note: Note;
   export let scale = 2;
-  
+
   const pdf = getPDF();
-  
+
   let canvas: HTMLCanvasElement;
   let rendering: Promise<any>;
   type AsyncPDF = typeof $pdf;
@@ -24,7 +28,8 @@
     canvas: HTMLCanvasElement,
     document: Document,
     pdf: AsyncPDF,
-  ) {    if (!canvas) return;
+  ) {
+    if (!canvas) return;
     if (rendering) {
       await rendering;
     }
@@ -33,7 +38,7 @@
       const resolvedPdf = await pdf;
       return renderPDF(note, scale, canvas, resolvedPdf);
     }
-    
+
     if (document && !pdf) {
       return renderImage(note, scale, canvas, document);
     }
@@ -44,7 +49,9 @@
 </script>
 
 <div class="note-excerpt">
-  <a class="page-number" href={page_url}>{$_("documents.pageAbbrev")} {page_number}</a>
+  <a class="page-number" href={page_url}
+    >{$_("documents.pageAbbrev")} {page_number}</a
+  >
   <div class="highlight {note.access}">
     <canvas width="0" height="0" bind:this={canvas}></canvas>
   </div>

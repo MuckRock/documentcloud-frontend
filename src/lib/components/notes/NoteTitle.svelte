@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import type { Document, Note } from "$lib/api/types";
-  import { getViewerHref } from "@/lib/utils/viewer";
-  import { isPageLevel } from "@/lib/api/notes";
+
+  import { _ } from "svelte-i18n";
+  import { getViewerHref } from "$lib/utils/viewer";
+  import { isPageLevel } from "$lib/api/notes";
 
   export let doc: Document;
   export let note: Note;

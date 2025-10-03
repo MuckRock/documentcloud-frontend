@@ -1,16 +1,24 @@
 <script lang="ts">
+  import type { Document, Note } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
-  import type { Document, Note } from "@/lib/api/types";
-  import { getViewerHref } from "@/lib/utils/viewer";
+  import {
+    Globe16,
+    Lock16,
+    Pencil16,
+    People16,
+    Share16,
+  } from "svelte-octicons";
+
   import Button from "../common/Button.svelte";
-  import { Globe16, Lock16, Pencil16, People16, Share16 } from "svelte-octicons";
+  import { getViewerHref } from "$lib/utils/viewer";
 
   export let doc: Document;
   export let note: Note;
   export let canEdit: boolean = false;
   export let canShare: boolean = true;
   export let onShare: () => void;
-  
+
   $: edit_link = getViewerHref({ document: doc, note, mode: "annotating" });
 
   const access = {
@@ -38,25 +46,13 @@
     {$_(`access.${access[note.access].value}.title`)}
   </span>
   {#if canEdit}
-    <Button
-      ghost
-      minW={false}
-      mode="primary"
-      size="small"
-      href={edit_link}
-    >
+    <Button ghost minW={false} mode="primary" size="small" href={edit_link}>
       <Pencil16 />
       {$_("dialog.edit")}
     </Button>
   {/if}
   {#if canShare}
-    <Button
-      ghost
-      minW={false}
-      mode="primary"
-      size="small"
-      on:click={onShare}
-    >
+    <Button ghost minW={false} mode="primary" size="small" on:click={onShare}>
       <Share16 />
       {$_("dialog.share")}
     </Button>

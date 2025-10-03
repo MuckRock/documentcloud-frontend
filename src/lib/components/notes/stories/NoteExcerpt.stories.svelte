@@ -12,7 +12,7 @@
   import NoteExcerpt from "../NoteExcerpt.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
-  import { pdfUrl } from "@/lib/api/documents";
+  import { pdfUrl } from "$lib/api/documents";
 
   const document = doc as Document;
   const notes = document.notes as NoteType[];
@@ -25,10 +25,7 @@
 </script>
 
 <Template let:args>
-  <ViewerContext
-    document={document}
-    asset_url={pdfUrl(document)}
-  >
+  <ViewerContext {document} asset_url={pdfUrl(document)}>
     <NoteExcerpt {...args} />
   </ViewerContext>
 </Template>
