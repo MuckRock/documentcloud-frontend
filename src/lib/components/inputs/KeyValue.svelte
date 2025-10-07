@@ -13,10 +13,10 @@ This uses `svelte-select` to let users more easily choose existing keys.
   import Button from "../common/Button.svelte";
 
   export let keys: string[] = ["_tag"];
-  // export let values: string[] = [];
   export let key: string = "";
   export let value: string = "";
   export let add = false;
+  export let disabled = false;
 
   const dispatch = createEventDispatcher();
 
@@ -66,6 +66,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
       on:blur
       on:clear
       on:filter={onFilter}
+      {disabled}
     >
       <ChevronDown12 slot="chevron-icon" />
       <X12 slot="clear-icon" />
@@ -87,6 +88,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
         bind:value
         on:change
         on:input
+        {disabled}
       />
     </label>
   </td>
@@ -98,8 +100,8 @@ This uses `svelte-select` to let users more easily choose existing keys.
         title={$_("data.update")}
         minW={false}
         value="add"
-        disabled={!key || !value}
-        on:click={(e) => dispatch("add", { key, value })}
+        disabled={!key || !value || disabled}
+        on:click={() => dispatch("add", { key, value })}
       >
         <PlusCircle16 />
       </Button>
@@ -110,7 +112,8 @@ This uses `svelte-select` to let users more easily choose existing keys.
         title={$_("data.delete")}
         minW={false}
         value="delete"
-        on:click={(e) => dispatch("delete", { key, value })}
+        {disabled}
+        on:click={() => dispatch("delete", { key, value })}
         --fill="var(--caution)"
         --background="var(--orange-2)"
       >

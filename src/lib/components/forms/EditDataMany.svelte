@@ -36,6 +36,7 @@ This will mostly merge with existing data.
 
   $: keys = documents.map((d) => Object.keys(d.data)).flat();
   $: tags = documents.map((d) => d.data["_tag"] ?? []).flat();
+  $: disabled = documents.length > MAX_EDIT_BATCH;
 
   function add({ key, value }) {
     if (!key || !value) return;
@@ -129,6 +130,7 @@ This will mostly merge with existing data.
         {keys}
         key="_tag"
         value={tag}
+        {disabled}
         on:delete={(e) => remove(e.detail)}
       />
     {/each}
@@ -138,7 +140,13 @@ This will mostly merge with existing data.
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} bind:this={kv} add on:add={(e) => add(e.detail)} />
+      <KeyValue
+        {keys}
+        bind:this={kv}
+        add
+        on:add={(e) => add(e.detail)}
+        {disabled}
+      />
     </tfoot>
   </table>
 
@@ -149,7 +157,7 @@ This will mostly merge with existing data.
   />
 
   <Flex class="buttons">
-    <Button type="submit" mode="primary">{$_("data.save")}</Button>
+    <Button type="submit" mode="primary" {disabled}>{$_("data.save")}</Button>
     <Button on:click={() => dispatch("close")}>{$_("data.cancel")}</Button>
   </Flex>
 </form>

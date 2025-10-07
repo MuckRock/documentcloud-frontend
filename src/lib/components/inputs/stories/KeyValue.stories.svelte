@@ -26,4 +26,9 @@
 
 <Story name="Tag with value" args={{ key: "_tag", value: "California" }} />
 
+<Story
+  name="Disabled"
+  args={{ key: "_tag", value: "California", disabled: true }}
+/>
+
 <Story name="Empty" />
