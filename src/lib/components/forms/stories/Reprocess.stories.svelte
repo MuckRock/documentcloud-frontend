@@ -18,7 +18,7 @@
   const pending = documents.map((d, i) => {
     return {
       ...d,
-      status: i === 0 ? "pending" : d.status,
+      status: i % 2 ? "pending" : d.status,
     };
   });
 
@@ -53,4 +53,8 @@
 
 <Story name="Pending documents">
   <Reprocess documents={pending} />
+</Story>
+
+<Story name="Too many documents">
+  <Reprocess documents={documents.concat(document)} />
 </Story>

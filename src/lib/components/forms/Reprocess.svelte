@@ -207,17 +207,6 @@ This will mostly be used inside a modal but isn't dependent on one.
           {$_("dialogReprocessDialog.reprocessDocs", {
             values: { n: documents.length },
           })}
-          <ul class="documents">
-            {#each documents as document}
-              <li class:pending={document.status === "pending"}>
-                {document.title}
-                {#if document.status === "pending"}
-                  (pending)
-                {/if}
-              </li>
-            {/each}
-          </ul>
-          <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
 
           <Tip mode="danger" slot="oversize">
             <Alert24 slot="icon" />
@@ -226,6 +215,19 @@ This will mostly be used inside a modal but isn't dependent on one.
             })}
           </Tip>
         </ShowSize>
+      {/if}
+      <ul class="documents">
+        {#each documents as document}
+          <li class:pending={document.status === "pending"}>
+            {document.title}
+            {#if document.status === "pending"}
+              (pending)
+            {/if}
+          </li>
+        {/each}
+      </ul>
+      {#if documents.length <= MAX_EDIT_BATCH}
+        <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
       {/if}
     </Flex>
     <Flex class="buttons">
