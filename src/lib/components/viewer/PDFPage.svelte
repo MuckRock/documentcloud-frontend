@@ -19,7 +19,7 @@ Selectable text can be rendered in one of two ways:
 
   // page parts
   import AnnotationLayer from "./AnnotationLayer.svelte";
-  import Note from "./Note.svelte";
+  import Note from "../notes/Note.svelte";
   import Page from "./Page.svelte";
   import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
 

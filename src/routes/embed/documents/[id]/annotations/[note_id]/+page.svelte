@@ -5,7 +5,7 @@
   import { _ } from "svelte-i18n";
 
   import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
-  import Note from "$lib/components/viewer/Note.svelte";
+  import Note from "$lib/components/notes/Note.svelte";
 
   import { informSize } from "$lib/utils/embed";
   import { pageImageUrl } from "$lib/api/documents";
