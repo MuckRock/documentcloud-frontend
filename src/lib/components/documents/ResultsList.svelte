@@ -127,7 +127,12 @@
       });
     });
 
-    io.observe(el);
+    try {
+      // sometimes this breaks, so just let the user click the button
+      io.observe(el);
+    } catch (e) {
+      console.error(e);
+    }
     return io;
   }
 
