@@ -18,9 +18,14 @@ This will mostly be used inside a modal but isn't dependent on one.
   import Flex from "../common/Flex.svelte";
   import Language from "../inputs/Language.svelte";
   import Select from "../inputs/Select.svelte";
+  import ShowSize from "../common/ShowSize.svelte";
   import Tip from "../common/Tip.svelte";
 
-  import { DEFAULT_LANGUAGE, LANGUAGE_MAP } from "@/config/config.js";
+  import {
+    DEFAULT_LANGUAGE,
+    LANGUAGE_MAP,
+    MAX_EDIT_BATCH,
+  } from "@/config/config.js";
   import { process, cancel, edit_many } from "$lib/api/documents";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
   import { getCsrfToken } from "$lib/utils/api";
@@ -57,6 +62,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   // todo: warn if documents are in more than one language
   $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
   $: pending = documents.filter((d) => d.status === "pending");
+  $: disabled = submitting || documents.length > MAX_EDIT_BATCH;
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -197,26 +203,33 @@ This will mostly be used inside a modal but isn't dependent on one.
           {$_("dialogReprocessDialog.reprocessSingleDoc")}
         </p>
       {:else}
-        <p class="disclaimer">
+        <ShowSize size={documents.length}>
           {$_("dialogReprocessDialog.reprocessDocs", {
             values: { n: documents.length },
           })}
-        </p>
+          <ul class="documents">
+            {#each documents as document}
+              <li class:pending={document.status === "pending"}>
+                {document.title}
+                {#if document.status === "pending"}
+                  (pending)
+                {/if}
+              </li>
+            {/each}
+          </ul>
+          <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
+
+          <Tip mode="danger" slot="oversize">
+            <Alert24 slot="icon" />
+            {$_("dialogReprocessDialog.toomany", {
+              values: { max: MAX_EDIT_BATCH, n: documents.length },
+            })}
+          </Tip>
+        </ShowSize>
       {/if}
-      <ul class="documents">
-        {#each documents as document}
-          <li class:pending={document.status === "pending"}>
-            {document.title}
-            {#if document.status === "pending"}
-              (pending)
-            {/if}
-          </li>
-        {/each}
-      </ul>
-      <p class="disclaimer">{$_("dialogReprocessDialog.continue")}</p>
     </Flex>
     <Flex class="buttons">
-      <Button disabled={submitting} type="submit" full mode="danger">
+      <Button {disabled} type="submit" full mode="danger">
         <IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
       <Button full on:click={() => dispatch("close")}>

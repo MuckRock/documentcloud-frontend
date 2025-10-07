@@ -80,7 +80,8 @@
     "continue": "Do you wish to continue?",
     "confirm": "Reprocess",
     "multilingual": "Selected documents are in different languages. Reprocessing will set them all to the same language. Proceed with caution.",
-    "pending": "Some selected documents are still processing. This will cancel and restart processing, which may affect redactions or other operations in-progress. Proceed with caution."
+    "pending": "Some selected documents are still processing. This will cancel and restart processing, which may affect redactions or other operations in-progress. Proceed with caution.",
+    "toomany":"Bulk processing is limited to {max} documents at a time, {n} selected."
   },
   "dialogDocumentEmbedDialog": {
     "responsive": "Responsive",
