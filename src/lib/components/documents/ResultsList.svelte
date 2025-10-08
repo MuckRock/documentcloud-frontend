@@ -113,6 +113,7 @@
     if (err) {
       // show an error message, but let the user try loading more
       error = err.message;
+      auto = false;
     }
 
     if (data) {
@@ -121,7 +122,7 @@
       next = data.next;
       if (auto) watch(end);
     }
-
+    error = "";
     loading = false;
   }
 
@@ -130,7 +131,10 @@
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && next) {
-          await load(next);
+          await load(next).catch((e) => {
+            loading = false;
+            error = e.message;
+          });
           observer?.unobserve(el);
         }
       });
@@ -141,6 +145,7 @@
       io.observe(el);
     } catch (e) {
       console.warn(e);
+      auto = false; // turn off auto if IO is failing
     }
     return io;
   }
@@ -215,7 +220,11 @@
         mode="primary"
         disabled={loading}
         on:click={() => {
-          if (next) load(next);
+          if (next)
+            load(next).catch((e) => {
+              error = e.message;
+              loading = false;
+            });
         }}
       >
         {#if loading}
