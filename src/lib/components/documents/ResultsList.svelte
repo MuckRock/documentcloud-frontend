@@ -74,7 +74,7 @@
 
   let loading = false;
   let end: HTMLElement;
-  let observer: IntersectionObserver;
+  let observer: Maybe<IntersectionObserver>;
   let error: string = "";
 
   const embed: boolean = getContext("embed");
@@ -94,7 +94,15 @@
   $: $visible = new Map(results.map((d) => [String(d.id), d]));
 
   // load the next set of results
-  async function load(url: URL) {
+  async function load(url: string | URL) {
+    try {
+      url = new URL(url);
+    } catch (e) {
+      error = e.message;
+      loading = false;
+      return console.warn(e);
+    }
+
     loading = true;
     const resp = await fetch(url, { credentials: "include" }).catch(
       console.warn,
@@ -117,11 +125,12 @@
     loading = false;
   }
 
-  function watch(el: HTMLElement) {
+  function watch(el: HTMLElement): Maybe<IntersectionObserver> {
+    if (!el) return;
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && next) {
-          await load(new URL(next));
+          await load(next);
           observer?.unobserve(el);
         }
       });
@@ -131,7 +140,7 @@
       // sometimes this breaks, so just let the user click the button
       io.observe(el);
     } catch (e) {
-      console.error(e);
+      console.warn(e);
     }
     return io;
   }
@@ -148,7 +157,9 @@
     }
 
     return () => {
-      unwatch(observer, end);
+      if (observer) {
+        unwatch(observer, end);
+      }
     };
   });
 </script>
@@ -204,7 +215,7 @@
         mode="primary"
         disabled={loading}
         on:click={() => {
-          if (next) load(new URL(next));
+          if (next) load(next);
         }}
       >
         {#if loading}
