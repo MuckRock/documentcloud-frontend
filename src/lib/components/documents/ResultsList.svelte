@@ -103,6 +103,9 @@
       return console.warn(e);
     }
 
+    // only one at a time
+    if (loading) return;
+
     loading = true;
     const resp = await fetch(url, { credentials: "include" }).catch(
       console.warn,
@@ -114,15 +117,16 @@
       // show an error message, but let the user try loading more
       error = err.message;
       auto = false;
+      loading = false;
     }
 
     if (data) {
       results = [...results, ...data.results];
       $total = data.count ?? $total;
       next = data.next;
+      error = "";
       if (auto) watch(end);
     }
-    error = "";
     loading = false;
   }
 
