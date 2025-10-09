@@ -12,7 +12,7 @@
 
 <div class="container" class:inlineTitle>
   {#if title}<h4 class="ellipsis">{@html sanitize(title)}</h4>{/if}
-  {#if segments.length > 0}
+  {#if segments?.length > 0}
     <blockquote>
       {#each segments as segment}
         <p class="segment">{@html sanitize(segment)}</p>
