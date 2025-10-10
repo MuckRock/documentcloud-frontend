@@ -1,8 +1,6 @@
-version: "4"
-
 services:
   documentcloud_frontend:
-    image: node:20
+    image: node:22
     volumes:
       - nodemodules:/app/node_modules
       - .:/app
@@ -21,7 +19,7 @@ services:
       NODE_ENV: development
 
   preview:
-    image: node:20
+    image: node:22
     volumes:
       - nodemodules:/app/node_modules
       - .:/app

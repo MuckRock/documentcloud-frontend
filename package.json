@@ -86,7 +86,7 @@
     "storybook": "storybook dev -p 6006",
     "knip": "knip"
   },
-  "engine": 20,
+  "engine": 22,
   "browserslist": "> 0.25%, not dead",
   "msw": {
     "workerDirectory": "./public"
