@@ -74,7 +74,7 @@
 
   let loading = false;
   let end: HTMLElement;
-  let observer: Maybe<IntersectionObserver>;
+  let observer: IntersectionObserver;
   let error: string = "";
 
   const embed: boolean = getContext("embed");
@@ -94,18 +94,7 @@
   $: $visible = new Map(results.map((d) => [String(d.id), d]));
 
   // load the next set of results
-  async function load(url: string | URL) {
-    try {
-      url = new URL(url);
-    } catch (e) {
-      error = e.message;
-      loading = false;
-      return console.warn(e);
-    }
-
-    // only one at a time
-    if (loading) return;
-
+  async function load(url: URL) {
     loading = true;
     const resp = await fetch(url, { credentials: "include" }).catch(
       console.warn,
@@ -116,30 +105,24 @@
     if (err) {
       // show an error message, but let the user try loading more
       error = err.message;
-      auto = false;
-      loading = false;
     }
 
     if (data) {
       results = [...results, ...data.results];
       $total = data.count ?? $total;
       next = data.next;
-      error = "";
       if (auto) watch(end);
     }
+
     loading = false;
   }
 
-  function watch(el: HTMLElement): Maybe<IntersectionObserver> {
-    if (!el) return;
+  function watch(el: HTMLElement) {
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && next) {
+          await load(new URL(next));
           observer?.unobserve(el);
-          await load(next).catch((e) => {
-            loading = false;
-            error = e.message;
-          });
         }
       });
     });
@@ -148,8 +131,7 @@
       // sometimes this breaks, so just let the user click the button
       io.observe(el);
     } catch (e) {
-      console.warn(e);
-      auto = false; // turn off auto if IO is failing
+      console.error(e);
     }
     return io;
   }
@@ -166,9 +148,7 @@
     }
 
     return () => {
-      if (observer) {
-        unwatch(observer, end);
-      }
+      unwatch(observer, end);
     };
   });
 </script>
@@ -224,11 +204,7 @@
         mode="primary"
         disabled={loading}
         on:click={() => {
-          if (next)
-            load(next).catch((e) => {
-              error = e.message;
-              loading = false;
-            });
+          if (next) load(new URL(next));
         }}
       >
         {#if loading}
