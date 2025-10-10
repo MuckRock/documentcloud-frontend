@@ -135,11 +135,11 @@
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && next) {
+          observer?.unobserve(el);
           await load(next).catch((e) => {
             loading = false;
             error = e.message;
           });
-          observer?.unobserve(el);
         }
       });
     });
