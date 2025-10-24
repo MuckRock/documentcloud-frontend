@@ -15,15 +15,21 @@ export async function handleFetch({ event, request, fetch }) {
     // handle docker issues
     event.url.protocol = "https";
 
+    // Create new headers with the cookies and other required headers
+    const headers = new Headers(request.headers);
+
     // pass through session cookie
-    request.headers.append("cookie", event.request.headers.get("cookie") ?? "");
+    headers.append("cookie", event.request.headers.get("cookie") ?? "");
 
     // tell the API who we are
-    request.headers.append("x-forwarded-for", event.getClientAddress());
-    request.headers.set(
+    headers.append("x-forwarded-for", event.getClientAddress());
+    headers.set(
       "x-bypass-rate-limit",
       env.BYPASS_RATE_LIMIT_SECRET ?? "",
     );
+
+    // Create a new request with the modified headers
+    request = new Request(request, { headers });
   }
 
   return fetch(request);
