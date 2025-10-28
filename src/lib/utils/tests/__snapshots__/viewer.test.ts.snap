@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`getZoomLevels 1`] = `
+exports[`zoom > getZoomLevels 1`] = `
 [
   [
     "width",
@@ -37,7 +37,7 @@ exports[`getZoomLevels 1`] = `
 ]
 `;
 
-exports[`getZoomLevels 2`] = `
+exports[`zoom > getZoomLevels 2`] = `
 [
   [
     0.5,
@@ -66,7 +66,7 @@ exports[`getZoomLevels 2`] = `
 ]
 `;
 
-exports[`getZoomLevels 3`] = `
+exports[`zoom > getZoomLevels 3`] = `
 [
   [
     "thumbnail",
@@ -87,9 +87,9 @@ exports[`getZoomLevels 3`] = `
 ]
 `;
 
-exports[`getZoomLevels 4`] = `[]`;
+exports[`zoom > getZoomLevels 4`] = `[]`;
 
-exports[`getZoomLevels 5`] = `
+exports[`zoom > getZoomLevels 5`] = `
 [
   [
     "width",
@@ -126,7 +126,7 @@ exports[`getZoomLevels 5`] = `
 ]
 `;
 
-exports[`getZoomLevels 6`] = `
+exports[`zoom > getZoomLevels 6`] = `
 [
   [
     "width",
