@@ -4,16 +4,22 @@ Shared zoom component for all viewer routes.
 Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
+  import { page } from "$app/stores";
   import { _ } from "svelte-i18n";
 
-  import { getDefaultZoom, getZoomLevels } from "$lib/utils/viewer";
+  import {
+    getDefaultZoom,
+    getZoomLevels,
+    getInitialZoom,
+  } from "$lib/utils/viewer";
   import { getCurrentMode, getZoom } from "./ViewerContext.svelte";
 
   const mode = getCurrentMode();
   const zoom = getZoom();
 
   $: zoomLevels = getZoomLevels($mode);
-  $: $zoom = getDefaultZoom($mode);
+  $: initial = getInitialZoom($page.url, $mode);
+  $: $zoom = initial || getDefaultZoom($mode);
 </script>
 
 {#if zoomLevels.length}

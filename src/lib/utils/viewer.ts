@@ -1,10 +1,12 @@
 import type {
   Document,
+  Maybe,
   Note,
   Section,
   Sizes,
   ViewerMode,
   Zoom,
+  ZoomLevels,
 } from "$lib/api/types";
 
 import { canonicalUrl, embedUrl, pageHashUrl } from "../api/documents";
@@ -172,7 +174,7 @@ export function getDefaultZoom(mode: ViewerMode): Zoom {
 /**
  * Generate zoom levels based on mode, since each zooms in a slightly different way
  */
-export function getZoomLevels(mode: ViewerMode): [string | number, string][] {
+export function getZoomLevels(mode: ViewerMode): ZoomLevels {
   switch (mode) {
     case "document":
     case "annotating":
@@ -210,4 +212,28 @@ export function getZoomLevels(mode: ViewerMode): [string | number, string][] {
       // notes don't zoom
       return [];
   }
+}
+
+export function getInitialZoom(url: URL, mode: ViewerMode): Maybe<Zoom> {
+  const zoom = url.searchParams.get("zoom");
+
+  if (!zoom) return undefined;
+
+  const numeric = new Set(["document", "text", "annotating", "redacting"]);
+
+  if (numeric.has(mode) && zoom.match(/\d+/)) {
+    return +zoom;
+  }
+
+  // Check if the zoom value matches any of the valid levels
+  const match = getZoomLevels(mode).find(([value, _label]) => {
+    return String(value) === zoom;
+  });
+
+  if (match) {
+    return match[0] as Zoom;
+  }
+
+  // fallback
+  return undefined;
 }
