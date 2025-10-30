@@ -9,7 +9,6 @@ import { get, embedUrl } from "$lib/api/projects";
 
 const OLD_PATTERN = /(\D+)-(\d+)/;
 
-/** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch, url, setHeaders }) {
   let { project_id, slug }: Record<string, Maybe<string>> = params;
   let project = await get(+project_id, fetch);
