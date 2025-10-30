@@ -14,7 +14,7 @@
 
   export let data;
 
-  let elem: HTMLElement;
+  let noteContainer: HTMLElement;
 
   $: doc = data.document;
   $: note = data.note;
@@ -33,7 +33,7 @@
 
   onMount(() => {
     if (window.document.readyState === "complete") {
-      informSize({ element: elem, timeout: 500, debug });
+      informSize({ element: noteContainer, timeout: 500, debug });
     }
   });
 </script>
@@ -61,12 +61,12 @@
 </svelte:head>
 
 <svelte:window
-  on:load={() => informSize({ element: elem, timeout: 500, debug })}
+  on:load={() => informSize({ element: noteContainer, timeout: 500, debug })}
 />
 
-<div class="embed-container" bind:this={elem}>
+<div class="embed-container">
   <EmbedLayout canonicalUrl={viewerUrl}>
-    <div class="note-container">
+    <div class="note-container" bind:this={noteContainer}>
       <div class="card">
         <Note document={writable(doc)} {note} />
       </div>
@@ -85,6 +85,8 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    /* Allow the container to grow beyond min-height to fit content */
+    height: fit-content;
   }
   .card {
     margin: 1rem;

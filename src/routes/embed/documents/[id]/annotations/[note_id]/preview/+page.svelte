@@ -5,7 +5,8 @@
 
   $: document = data.document;
   $: note = data.note;
-  $: iframe = embed.note(document, note);
+  $: debug = data.debug;
+  $: iframe = embed.note(document, note, debug);
 </script>
 
 <svelte:head>
