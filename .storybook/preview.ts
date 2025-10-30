@@ -10,9 +10,12 @@ import OrgContextDecorator from "./decorators/OrgContextDecorator.svelte";
 import TipOfDayContextDecorator from "./decorators/TipOfDayContextDecorator.svelte";
 import ViewerContextDecorator from "./decorators/ViewerContextDecorator.svelte";
 
-// Initialize MSW
+// Initialize MSW (v2 API)
 initialize({
   onUnhandledRequest: "bypass",
+  serviceWorker: {
+    url: "./mockServiceWorker.js",
+  },
 });
 
 const preview: Preview = {
