@@ -78,26 +78,26 @@
   <header>
     <NoteTitle {doc} {note} {embed} />
     {#if canClose}
-    <Button minW={false} ghost on:click={closeNote}>
-      <XCircle16 />
-    </Button>
+      <Button minW={false} ghost on:click={closeNote}>
+        <XCircle16 />
+      </Button>
     {/if}
   </header>
   {#if !page_level && showExcerpt}
-  <NoteExcerpt {note} {scale} />
+    <NoteExcerpt document={doc} {note} {scale} />
   {/if}
   <NoteContent {note} />
   {#if !embed}
-  <footer>
-    <NoteActions
-      {doc}
-      {note}
-      {canEdit}
-      {canShare}
-      onShare={() => (shareNoteOpen = true)}
-    />
-    <NoteMetadata {note} />
-  </footer>
+    <footer>
+      <NoteActions
+        {doc}
+        {note}
+        {canEdit}
+        {canShare}
+        onShare={() => (shareNoteOpen = true)}
+      />
+      <NoteMetadata {note} />
+    </footer>
   {/if}
 </div>
 {#if !embed && shareNoteOpen}

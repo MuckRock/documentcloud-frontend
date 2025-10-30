@@ -9,7 +9,7 @@
   import { getViewerHref } from "$lib/utils/viewer";
   import { renderImage, renderPDF } from "$lib/utils/notes";
 
-  export let document = getDocument();
+  export let document: Document;
   export let note: Note;
   export let scale = 2;
 
@@ -19,10 +19,9 @@
   let rendering: Promise<any>;
   type AsyncPDF = typeof $pdf;
 
-  $: doc = $document;
   $: page_number = note.page_number + 1; // note pages are 0-indexed
-  $: rendering = render(canvas, doc, $pdf); // avoid re-using the same canvas
-  $: page_url = getViewerHref({ document: doc, page: page_number });
+  $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
+  $: page_url = getViewerHref({ document: document, page: page_number });
 
   async function render(
     canvas: HTMLCanvasElement,
@@ -31,7 +30,7 @@
   ) {
     if (!canvas) return;
     if (rendering) {
-      await rendering;
+      await rendering.catch(console.error);
     }
 
     if (pdf) {
@@ -45,6 +44,7 @@
 
     // we don't have a pdf or a document, for some reason
     console.error(`Can't render note ${note.id} on page ${page_number}.`);
+    console.error({ document, pdf });
   }
 </script>
 
