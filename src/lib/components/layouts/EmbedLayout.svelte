@@ -86,22 +86,21 @@
 
 <style>
   .container {
-    max-height: 100vh;
-    height: 100%;
     display: flex;
     flex-direction: column;
     background: var(--white);
+    min-height: 100vh;
   }
   .logo {
     height: 1.25rem;
   }
   main {
     flex: 1 1 auto;
-    overflow-y: auto;
     background: var(--gray-1);
   }
   footer {
-    flex: 0 0 2.5rem;
+    flex: 0 0 auto;
+    height: 2.5rem;
     padding: 0.25rem 0.75rem;
     border-top: 1px solid var(--gray-2);
     display: flex;
