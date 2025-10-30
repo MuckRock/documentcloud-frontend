@@ -34,7 +34,7 @@ const mockUpdateUrl = createApiUrl("/api/addon_runs/:run");
 export const progress = [
   http.get(mockListUrl, () => HttpResponse.json(runsList)),
   http.patch(mockUpdateUrl, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     console.log(JSON.stringify(body));
     return HttpResponse.json({ ...run, ...body });
   }),

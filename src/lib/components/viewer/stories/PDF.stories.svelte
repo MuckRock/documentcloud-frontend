@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { rest } from "msw";
+  import { http, HttpResponse, delay } from "msw";
   import type { Document, Section } from "$lib/api/types";
 
   import { Story, Template } from "@storybook/addon-svelte-csf";
@@ -83,7 +83,10 @@
   parameters={{
     msw: {
       handlers: [
-        rest.get(loadingUrl, (req, res, ctx) => res(ctx.delay("infinite"))),
+        http.get(loadingUrl, async () => {
+          await delay("infinite");
+          return new HttpResponse(null, { status: 200 });
+        }),
       ],
     },
   }}
@@ -98,12 +101,12 @@
   parameters={{
     msw: {
       handlers: [
-        rest.get(loadingUrl, (req, res, ctx) =>
-          res(
-            ctx.status(400, "Ambiguous Error"),
-            ctx.json("Something went horribly wrong."),
-          ),
-        ),
+        http.get(loadingUrl, () => {
+          return HttpResponse.json("Something went horribly wrong.", {
+            status: 400,
+            statusText: "Ambiguous Error",
+          });
+        }),
       ],
     },
   }}

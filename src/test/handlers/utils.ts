@@ -49,6 +49,6 @@ export function pageHandler<T>(one: T, two: T) {
   let page = 0;
   return () => {
     const data = page++ % 2 ? two : one;
-    return HttpResponse.json(data);
+    return HttpResponse.json(data as any);
   };
 }
