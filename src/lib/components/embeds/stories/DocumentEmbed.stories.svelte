@@ -17,7 +17,7 @@
   export const meta = {
     title: "Embed / Document",
     component: DocumentEmbed,
-    parameters: { layout: "fullscreen" },
+    parameters: { layout: "fullscreen", chromatic: { viewports: [320, 1200] } },
   };
 </script>
 
