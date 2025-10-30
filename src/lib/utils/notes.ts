@@ -155,7 +155,7 @@ export async function renderImage(
   canvas: HTMLCanvasElement,
   document: Document,
 ) {
-  const page_number = note.page_number;
+  const page_number = note.page_number + 1;
   const context = getCanvasContext(canvas);
   if (!context) {
     return;
