@@ -10,6 +10,10 @@
   $: iframe = embed.document(document, params);
 </script>
 
+<svelte:head>
+  <title>Embed preview: {document.title}</title>
+</svelte:head>
+
 <div class="container">
   <h2>I</h2>
   <p>
@@ -100,8 +104,10 @@
     <a
       href="https://www.gutenberg.org/cache/epub/64317/pg64317-images.html"
       target="_blank"
-      rel="noopener noreferrer">Read more</a
+      rel="noopener noreferrer"
     >
+      Read more
+    </a>
   </p>
 </div>
 
