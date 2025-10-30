@@ -6,6 +6,7 @@ import { EMBED_MAX_AGE } from "@/config/config.js";
 import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed";
 import loadDocument from "$lib/load/document";
 import * as documents from "$lib/api/documents";
+import { createEmbedSearchParams } from "$lib/utils/embed";
 
 export async function load({ fetch, url, params, depends, setHeaders }) {
   let { document, asset_url, mode } = await loadDocument({
