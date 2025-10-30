@@ -1,4 +1,4 @@
-import { rest } from "msw";
+import { http } from "msw";
 import {
   dataHandler,
   emptyHandler,
@@ -9,8 +9,8 @@ import {
 const API_URL = "https://api.baserow.io/api/database/rows/table/*/*";
 
 export const feedback = {
-  data: rest.post(API_URL, dataHandler({})),
-  empty: rest.post(API_URL, emptyHandler()),
-  loading: rest.post(API_URL, loadingHandler),
-  error: rest.post(API_URL, errorHandler),
+  data: http.post(API_URL, dataHandler({})),
+  empty: http.post(API_URL, emptyHandler()),
+  loading: http.post(API_URL, loadingHandler),
+  error: http.post(API_URL, errorHandler),
 };

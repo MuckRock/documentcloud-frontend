@@ -6,7 +6,7 @@
     "downlevelIteration": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
     "src/**/*.ts",

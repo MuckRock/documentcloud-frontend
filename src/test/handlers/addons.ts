@@ -1,4 +1,4 @@
-import { rest } from "msw";
+import { http, HttpResponse } from "msw";
 
 import {
   addonsList,
@@ -32,19 +32,19 @@ const mockListUrl = createApiUrl("/api/addon_runs/");
 const mockUpdateUrl = createApiUrl("/api/addon_runs/:run");
 
 export const progress = [
-  rest.get(mockListUrl, (req, res, ctx) => res(ctx.json(runsList))),
-  rest.patch(mockUpdateUrl, async (req, res, ctx) => {
-    const body = await req.json();
+  http.get(mockListUrl, () => HttpResponse.json(runsList)),
+  http.patch(mockUpdateUrl, async ({ request }) => {
+    const body = (await request.json()) as Record<string, any>;
     console.log(JSON.stringify(body));
-    return res(ctx.json({ ...run, ...body }));
+    return HttpResponse.json({ ...run, ...body });
   }),
-  rest.delete(mockUpdateUrl, (req, res, ctx) => res(ctx.json({}))),
+  http.delete(mockUpdateUrl, () => HttpResponse.json({})),
 ];
 
 export const runs = {
-  data: rest.get(createApiUrl("addon_runs/"), dataHandler(runsList)),
-  empty: rest.get(createApiUrl("addon_runs/"), emptyHandler()),
-  running: rest.get(
+  data: http.get(createApiUrl("addon_runs/"), dataHandler(runsList)),
+  empty: http.get(createApiUrl("addon_runs/"), emptyHandler()),
+  running: http.get(
     createApiUrl("addon_runs/"),
     dataHandler({ results: scraper }),
   ),
