@@ -1,4 +1,4 @@
-import { rest } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import { BASE_API_URL } from "@/config/config.js";
 
 import { documents as docs, pending } from "../fixtures/documents/pending";
@@ -8,30 +8,40 @@ import { generateGetHandler } from "./utils";
 const documentsUrl = new URL(`/api/documents/*`, BASE_API_URL).href;
 
 export const documents = {
-  list: rest.get(new URL("documents/", BASE_API_URL).href, (req, res, ctx) =>
-    res(ctx.json(docs)),
-  ),
-  pending: rest.get(
+  list: http.get(new URL("documents/", BASE_API_URL).href, () => {
+    return HttpResponse.json(docs);
+  }),
+  pending: http.get(
     new URL("documents/pending/", BASE_API_URL).href,
-    (req, res, ctx) => res(ctx.json(pending)),
+    () => {
+      return HttpResponse.json(pending);
+    },
   ),
-  error: rest.get(
+  error: http.get(
     new URL("documents/search/", "https://api.www.documentcloud.org/api/").href,
-    (req, res, ctx) => res(ctx.status(500, "Something went wrong")),
+    () => {
+      return new HttpResponse(null, {
+        status: 500,
+        statusText: "Something went wrong",
+      });
+    },
   ),
 };
 
 export const revisionControl = {
-  success: rest.patch(documentsUrl, (req, res, ctx) => res()),
-  loading: rest.patch(documentsUrl, (req, res, ctx) =>
-    res(ctx.delay("infinite")),
-  ),
-  error: rest.patch(documentsUrl, (req, res, ctx) =>
-    res(
-      ctx.status(400, "Ambiguous Error"),
-      ctx.json("Something went horribly wrong."),
-    ),
-  ),
+  success: http.patch(documentsUrl, () => {
+    return new HttpResponse(null, { status: 200 });
+  }),
+  loading: http.patch(documentsUrl, async () => {
+    await delay("infinite");
+    return new HttpResponse(null, { status: 200 });
+  }),
+  error: http.patch(documentsUrl, () => {
+    return HttpResponse.json("Something went horribly wrong.", {
+      status: 400,
+      statusText: "Ambiguous Error",
+    });
+  }),
 };
 
 export const searchWithin = generateGetHandler(

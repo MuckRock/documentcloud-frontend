@@ -1,6 +1,6 @@
 import type { Page } from "$lib/api/types";
 
-import { rest } from "msw";
+import { http } from "msw";
 
 import {
   dataHandler,
@@ -20,12 +20,12 @@ import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
 const projectUrl = createApiUrl("projects/*");
 
 export const projects = {
-  info: rest.get(createApiUrl("projects/"), dataHandler(projectList)),
-  data: rest.get(projectUrl, dataHandler(projectFixture)),
-  empty: rest.get(projectUrl, emptyHandler(emptyList)),
-  loading: rest.get(projectUrl, loadingHandler),
-  error: rest.get(projectUrl, errorHandler),
-  documents: rest.get(
+  info: http.get(createApiUrl("projects/"), dataHandler(projectList)),
+  data: http.get(projectUrl, dataHandler(projectFixture)),
+  empty: http.get(projectUrl, emptyHandler(emptyList)),
+  loading: http.get(projectUrl, loadingHandler),
+  error: http.get(projectUrl, errorHandler),
+  documents: http.get(
     createApiUrl("projects/*/documents/"),
     pageHandler<Page<{ document: Partial<Document> }>>(
       projDocsPage1,
