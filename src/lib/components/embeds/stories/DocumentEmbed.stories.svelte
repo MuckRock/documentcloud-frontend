@@ -2,12 +2,10 @@
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import DocumentEmbed from "../DocumentEmbed.svelte";
 
-  import doc from "@/test/fixtures/documents/document-expanded.json";
   import EmbedLayout from "../../layouts/EmbedLayout.svelte";
+  import ViewerContext from "../../viewer/ViewerContext.svelte";
   import { canonicalUrl } from "$lib/api/documents";
-  import type { Document } from "$lib/api/types";
-
-  const document = doc as Document;
+  import { documentExpanded as document } from "@/test/fixtures/documents";
 
   let args = {
     document,
@@ -17,19 +15,22 @@
   export const meta = {
     title: "Embed / Document",
     component: DocumentEmbed,
-    parameters: { layout: "fullscreen" },
+    parameters: { layout: "fullscreen", chromatic: { viewports: [320, 1200] } },
   };
 </script>
 
 <Template let:args>
   <div class="vh-100">
-    <EmbedLayout canonicalUrl={canonicalUrl(document).href}>
-      <DocumentEmbed {...args} />
+    <EmbedLayout canonicalUrl={canonicalUrl(args.document).href}>
+      <ViewerContext document={args.document}>
+        <DocumentEmbed />
+      </ViewerContext>
     </EmbedLayout>
   </div>
 </Template>
 
 <Story name="Public" {args} />
+
 <Story
   name="Private"
   args={{ ...args, document: { ...document, access: "private" } }}
@@ -37,6 +38,7 @@
 
 <style>
   .vh-100 {
-    height: 100vh;
+    max-height: 100vh;
+    max-width: 1200px;
   }
 </style>

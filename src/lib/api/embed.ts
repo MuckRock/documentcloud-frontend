@@ -34,7 +34,11 @@ export function document(document: Document, params: URLSearchParams): string {
   return `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}" allow="fullscreen"></iframe>`;
 }
 
-export function page(document: Document, page: number = 1): string {
+export function page(
+  document: Document,
+  page: number = 1,
+  debug: boolean = false,
+): string {
   const sizes = document.page_spec
     ? pageSizes(document.page_spec)
     : [[8.5, 11]];
@@ -45,14 +49,20 @@ export function page(document: Document, page: number = 1): string {
 
   const embedSrc = documents.canonicalPageUrl(document, page, true);
   embedSrc.searchParams.set("embed", "1");
+  if (debug) {
+    embedSrc.searchParams.set("debug", "1");
+  }
   return `<iframe src="${embedSrc.href}" width="${width}" height="${height}" style="${style}"></iframe>
 <script src="${resize.href}"></script>`;
 }
 
-export function note(document: Document, note: Note) {
-  const note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px;`;
+export function note(document: Document, note: Note, debug: boolean = false) {
+  const note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px; box-sizing: content-box;`;
   const embedSrc = notes.canonicalNoteUrl(document, note);
   embedSrc.searchParams.set("embed", "1");
+  if (debug) {
+    embedSrc.searchParams.set("debug", "1");
+  }
   return `<iframe src="${embedSrc.href}" style="${note_style}"></iframe>
 <script src="${resize.href}"></script>`;
 }

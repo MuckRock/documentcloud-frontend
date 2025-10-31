@@ -1,4 +1,5 @@
 import * as path from "node:path";
+import * as fs from "node:fs";
 import * as esbuild from "esbuild";
 
 const targets = [
@@ -37,12 +38,31 @@ async function build(src, dir, filename) {
   });
 }
 
+async function copyToStatic() {
+  // Copy built files to static directory for dev server access
+  const buildDirs = ["build/embed", "build/notes", "build/viewer"];
+
+  for (const buildDir of buildDirs) {
+    const targetDir = buildDir.replace("build/", "static/");
+    await fs.promises.mkdir(targetDir, { recursive: true });
+
+    const files = await fs.promises.readdir(buildDir);
+    for (const file of files) {
+      const src = path.join(buildDir, file);
+      const dest = path.join(targetDir, file);
+      await fs.promises.copyFile(src, dest);
+      console.log(`Copied ${src} -> ${dest}`);
+    }
+  }
+}
+
 async function main() {
   const promises = targets.map(async ([src, dir, filename]) =>
     build(src, dir, filename),
   );
 
-  return Promise.all(promises);
+  await Promise.all(promises);
+  await copyToStatic();
 }
 
 main().catch(console.error);

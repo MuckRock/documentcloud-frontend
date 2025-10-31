@@ -5,7 +5,8 @@
 
   $: document = data.document;
   $: page = data.page;
-  $: iframe = embed.page(document, page);
+  $: debug = data.debug;
+  $: iframe = embed.page(document, page, debug);
 </script>
 
 <svelte:head>

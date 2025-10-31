@@ -5,7 +5,7 @@ import { EMBED_MAX_AGE } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
 import * as notesApi from "$lib/api/notes";
 
-export async function load({ params, fetch, setHeaders }) {
+export async function load({ params, fetch, setHeaders, url }) {
   const [document, note] = await Promise.all([
     documents.get(+params.id, fetch),
     notesApi.get(+params.id, parseInt(params.note_id), fetch),
@@ -23,5 +23,6 @@ export async function load({ params, fetch, setHeaders }) {
   return {
     document: document.data,
     note: note.data,
+    debug: url.searchParams.has("debug"),
   };
 }
