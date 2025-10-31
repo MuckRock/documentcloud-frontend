@@ -25,7 +25,6 @@ window.addEventListener("message", ({ origin, data }) => {
     // clear default height
     iframe.style.height = "";
     iframe.style.aspectRatio = `${data.width} / ${data.height}`;
-    iframe.style.boxSizing = "content-box";
     iframe.dataset.resized = Date.now();
   });
 });

@@ -57,7 +57,7 @@ export function page(
 }
 
 export function note(document: Document, note: Note, debug: boolean = false) {
-  const note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px;`;
+  const note_style = `border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px; box-sizing: content-box;`;
   const embedSrc = notes.canonicalNoteUrl(document, note);
   embedSrc.searchParams.set("embed", "1");
   if (debug) {
