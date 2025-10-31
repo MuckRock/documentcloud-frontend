@@ -89,7 +89,7 @@
     display: flex;
     flex-direction: column;
     background: var(--white);
-    min-height: 100vh;
+    height: 100vh;
   }
   .logo {
     height: 1.25rem;
@@ -97,6 +97,7 @@
   main {
     flex: 1 1 auto;
     background: var(--gray-1);
+    overflow: auto;
   }
   footer {
     flex: 0 0 auto;
