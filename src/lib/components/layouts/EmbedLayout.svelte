@@ -13,6 +13,8 @@
   export let canonicalUrl: string;
   export let downloadUrl: string = "";
   export let settings: Partial<EmbedSettings> = {};
+  export let type: "document" | "page" | "note" | "project" | undefined =
+    undefined;
 
   let embedRef: HTMLDivElement;
   let isFullscreen = false;
@@ -36,7 +38,7 @@
 </script>
 
 <div
-  class="container"
+  class="container {type}"
   bind:this={embedRef}
   on:fullscreenchange={handleFullscreenChange}
 >

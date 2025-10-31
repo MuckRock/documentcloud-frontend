@@ -11,6 +11,7 @@
   import { pageImageUrl } from "$lib/api/documents";
   import { embedUrl } from "$lib/api/embed";
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
+  import { SIZE } from "$lib/utils/notes";
 
   export let data;
 
@@ -58,15 +59,17 @@
     <meta property="og:description" content={note.content} />
   {/if}
   <meta property="og:image" content={src} />
+
+  <link rel="prefetch" href={pageImageUrl(doc, note.page_number + 1, SIZE)} />
 </svelte:head>
 
 <svelte:window
   on:load={() => informSize({ element: embedContainer, timeout: 500, debug })}
 />
 
-<div class="embed-container" bind:this={embedContainer}>
-  <EmbedLayout canonicalUrl={viewerUrl}>
-    <div class="note-container">
+<div class="embed-container">
+  <EmbedLayout canonicalUrl={viewerUrl} type="note">
+    <div class="note-container" bind:this={embedContainer}>
       <div class="card">
         <Note document={writable(doc)} {note} />
       </div>
@@ -85,6 +88,7 @@
     flex-direction: column;
     align-items: center;
     height: fit-content;
+    padding-bottom: 2.5rem;
   }
   .card {
     margin: 1rem;
