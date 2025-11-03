@@ -4,7 +4,7 @@ import type { Access, Document, Note, Sizes } from "$lib/api/types";
 import { pageImageUrl } from "$lib/api/documents";
 import { width, height } from "$lib/api/notes";
 
-const SIZE: Sizes = "large";
+export const SIZE: Sizes = "large";
 const PADDING = 50; // vertical padding in pixels
 
 export function getCanvasContext(

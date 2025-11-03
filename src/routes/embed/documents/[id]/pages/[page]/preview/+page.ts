@@ -4,7 +4,7 @@ import { error } from "@sveltejs/kit";
 import { EMBED_MAX_AGE } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
 
-export async function load({ params, fetch, setHeaders }) {
+export async function load({ params, fetch, setHeaders, url }) {
   const page = +params.page;
   let document = await documents.get(+params.id, fetch);
 
@@ -20,5 +20,6 @@ export async function load({ params, fetch, setHeaders }) {
   return {
     document: document.data,
     page: +page,
+    debug: url.searchParams.has("debug"),
   };
 }

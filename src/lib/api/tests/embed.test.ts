@@ -48,9 +48,17 @@ describe("embed tests", () => {
     expect(iframe).toEqual(result);
   });
 
+  test("page embed debug", () => {
+    const iframe = embed.page(document, 1, true);
+    const result = `<iframe src="${EMBED_URL}documents/24002098/pages/1/?embed=1&debug=1" width="612" height="792" style="border: none; width: 100%; height: 100%; aspect-ratio: 612 / 792"></iframe>
+<script src="${EMBED_URL}embed/dc-resize.js"></script>`;
+
+    expect(iframe).toEqual(result);
+  });
+
   test("note embed", () => {
-    const iframe = embed.note(document, note);
-    const result = `<iframe src="${EMBED_URL}documents/24002098/annotations/557/?embed=1" style="border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px;"></iframe>
+    const iframe = embed.note(document, note, true);
+    const result = `<iframe src="${EMBED_URL}documents/24002098/annotations/557/?embed=1&debug=1" style="border: 1px solid #d8dee2; border-radius: 0.5rem; width: 100%; height: 300px; box-sizing: content-box;"></iframe>
 <script src="${EMBED_URL}embed/dc-resize.js"></script>`;
 
     expect(iframe).toEqual(result);

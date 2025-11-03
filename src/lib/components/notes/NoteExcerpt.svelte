@@ -2,10 +2,7 @@
   import type { Document, Note } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import {
-    getDocument,
-    getPDF,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getPDF } from "$lib/components/viewer/ViewerContext.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
   import { renderImage, renderPDF } from "$lib/utils/notes";
 
