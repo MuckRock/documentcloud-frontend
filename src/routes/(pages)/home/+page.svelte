@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
   import { page } from "$app/stores";
+
+  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
 
   import Button from "$lib/components/common/Button.svelte";
   import Logo from "$lib/components/common/Logo.svelte";
-  import PlausibleTracker from "$lib/components/common/PlausibleTracker.svelte";
 
   // SVG assets
 
@@ -23,6 +24,14 @@
 
   $: me = data.me;
   $: sign_in_url = new URL(`?next=${APP_URL}`, SIGN_IN_URL);
+
+  onMount(async () => {
+    const { init } = await import("@plausible-analytics/tracker");
+    init({
+      domain: "documentcloud.org",
+      autoCapturePageviews: true,
+    });
+  });
 </script>
 
 <svelte:head>
@@ -518,9 +527,6 @@
 
   <footer />
 </div>
-
-<!-- this just needs to be on the page -->
-<PlausibleTracker />
 
 <style>
   :global(.masthead) {

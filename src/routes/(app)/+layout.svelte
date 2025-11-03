@@ -1,13 +1,12 @@
 <script lang="ts">
-  import type { LayoutData } from "./$types";
   import type { Maybe, Org, User } from "$lib/api/types";
 
-  import { setContext } from "svelte";
+  import { setContext, onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
   import AppLayout from "$lib/components/layouts/AppLayout.svelte";
 
-  export let data: LayoutData;
+  export let data;
 
   const me: Writable<Maybe<User>> = writable(data.me);
   const org: Writable<Org> = writable(data.org);
@@ -27,6 +26,16 @@
   setContext("user_orgs", user_orgs);
   setContext("org_users", org_users);
   setContext("tipOfDay", data.tipOfDay);
+
+  onMount(async () => {
+    if (data.me) {
+      const { init } = await import("@plausible-analytics/tracker");
+      init({
+        domain: "documentcloud.org",
+        autoCapturePageviews: true,
+      });
+    }
+  });
 </script>
 
 <AppLayout>
