@@ -1,9 +1,16 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
+import type { PlausibleEventOptions } from "@plausible-analytics/tracker";
+
 declare global {
+  interface Window {
+    plausible(eventName: string, options: PlausibleEventOptions): void;
+  }
+
   namespace App {
     // interface Error {}
     // interface Locals {}
+
     interface PageData {
       flash?: {
         message: string;

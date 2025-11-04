@@ -60,6 +60,12 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     if (afterClick) {
       afterClick();
     }
+
+    if (window.plausible) {
+      window.plausible("bulk action", {
+        props: { action },
+      });
+    }
   }
 
   function close() {

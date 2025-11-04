@@ -1,22 +1,19 @@
 <script lang="ts">
   import Navigation from "./Navigation.svelte";
-  import PlausibleTracker from "../common/PlausibleTracker.svelte";
   import ProcessContext from "../processing/ProcessContext.svelte";
   import Toaster from "./Toaster.svelte";
 </script>
 
-<PlausibleTracker>
-  <ProcessContext>
-    <div class="app">
-      <Navigation>
-        <div class="inner">
-          <slot />
-        </div>
-      </Navigation>
-      <Toaster />
-    </div>
-  </ProcessContext>
-</PlausibleTracker>
+<ProcessContext>
+  <div class="app">
+    <Navigation>
+      <div class="inner">
+        <slot />
+      </div>
+    </Navigation>
+    <Toaster />
+  </div>
+</ProcessContext>
 
 <style>
   .app {
