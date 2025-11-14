@@ -139,7 +139,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: var(--max-width, 20ch);
   }
   .label:empty {
     display: none;
