@@ -37,6 +37,14 @@ export default defineConfig({
     trace: "on-first-retry",
   },
 
+  // Web server for Storybook tests
+  webServer: {
+    command: "npm run storybook",
+    url: "http://localhost:6006",
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000, // 2 minutes for Storybook to start
+  },
+
   // Options specific to each project.
   projects: [
     {
