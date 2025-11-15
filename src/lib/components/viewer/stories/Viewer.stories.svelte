@@ -6,12 +6,14 @@
   import Viewer from "../Viewer.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
+  import leflerThesis from "@/test/fixtures/documents/examples/lefler-thesis.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
   import { searchWithin } from "@/test/handlers/documents";
   import { simulatePDF403Error } from "@/test/handlers/viewer";
   import { pdfUrl } from "$lib/api/documents";
 
   const document = doc as Document;
+  const longDocument = leflerThesis as Document;
 
   export const meta = {
     title: "Components / Viewer / Viewer",
@@ -116,6 +118,14 @@
       ...document,
       access: "private",
     },
+  }}
+/>
+
+<Story
+  name="Long Document"
+  args={{
+    ...args,
+    document: longDocument,
   }}
 />
 
