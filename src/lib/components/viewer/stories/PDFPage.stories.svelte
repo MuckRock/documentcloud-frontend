@@ -22,7 +22,7 @@
   const document = { ...doc, edit_access: true } as Document;
 
   export const meta = {
-    title: "Components / Viewer / PDF Page",
+    title: "Viewer / PDF Page",
     component: PdfPage,
     parameters: { layout: "centered" },
   };

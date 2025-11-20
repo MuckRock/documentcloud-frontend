@@ -3,7 +3,7 @@
   import Search from "../Search.svelte";
 
   export const meta = {
-    title: "Components / Viewer / Search",
+    title: "Viewer / Search",
     component: Search,
     parameters: { layout: "centered" },
   };

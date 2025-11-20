@@ -5,7 +5,7 @@
   import { project } from "@/test/fixtures/projects";
 
   export const meta = {
-    title: "Components / Sidebar / Project Actions",
+    title: "Navigation / Project Actions",
     component: ProjectActions,
     parameters: { layout: "centered" },
   };

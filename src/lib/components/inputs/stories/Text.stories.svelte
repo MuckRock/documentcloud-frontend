@@ -3,7 +3,7 @@
   import Text from "../Text.svelte";
 
   export const meta = {
-    title: "Components / Inputs / Text",
+    title: "Forms / Inputs /Text",
     component: Text,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

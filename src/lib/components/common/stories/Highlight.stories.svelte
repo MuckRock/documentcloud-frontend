@@ -10,7 +10,7 @@
   const noteHighlights = document?.note_highlights["197010"]!;
 
   export const meta: Meta = {
-    title: "Components / Common / Highlight",
+    title: "Common / Highlight",
     component: Component,
   };
 

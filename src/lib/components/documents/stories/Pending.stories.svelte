@@ -5,7 +5,7 @@
   import pending from "@/test/fixtures/documents/pending.json";
 
   export const meta = {
-    title: "Components / Documents / Pending",
+    title: "Documents / Pending",
     component: Pending,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

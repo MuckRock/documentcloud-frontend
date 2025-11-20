@@ -11,7 +11,7 @@
   ) as unknown as Document;
 
   export const meta = {
-    title: "Components / Documents / Note Highlights",
+    title: "Documents / Note Highlights",
     component: NoteHighlights,
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },

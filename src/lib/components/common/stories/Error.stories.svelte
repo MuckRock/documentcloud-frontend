@@ -3,7 +3,7 @@
   import { default as ErrorComponent } from "../Error.svelte";
 
   export const meta = {
-    title: "Components / Common / Error",
+    title: "Common / Error",
     component: ErrorComponent,
     parameters: { layout: "centered" },
   };

@@ -6,7 +6,7 @@
   import * as mock from "@/test/handlers/documents";
 
   export const meta = {
-    title: "Components / Processing / Documents",
+    title: "Processing / Documents",
     component: Documents,
     parameters: {
       layout: "centered",

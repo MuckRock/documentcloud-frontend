@@ -4,7 +4,7 @@
   import Action from "../Action.svelte";
 
   export const meta = {
-    title: "Components / Common / Action",
+    title: "Common / Action",
     component: Action,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

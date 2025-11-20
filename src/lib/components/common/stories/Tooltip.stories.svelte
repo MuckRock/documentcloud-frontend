@@ -4,7 +4,7 @@
   import Tooltip from "../Tooltip.svelte";
 
   export const meta = {
-    title: "Components / Common / Tooltip",
+    title: "Common / Tooltip",
     component: Tooltip,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

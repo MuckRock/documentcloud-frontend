@@ -3,7 +3,7 @@
   import Card from "../Card.svelte";
 
   export const meta = {
-    title: "Components / Common / Card",
+    title: "Common / Card",
     component: Card,
   };
 </script>

@@ -5,7 +5,7 @@
   import { eventsList } from "@/test/fixtures/addons";
 
   export const meta = {
-    title: "Components / Add-Ons / Scheduled",
+    title: "Add-Ons /Scheduled",
     parameters: {
       layout: "centered",
     },

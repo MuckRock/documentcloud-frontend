@@ -6,7 +6,7 @@
   import redacted from "@/test/fixtures/documents/redactions.json";
 
   export const meta = {
-    title: "Components / Viewer / Redaction Layer",
+    title: "Viewer / Redaction Layer",
     component: RedactionLayer,
     parameters: { layout: "centered" },
   };

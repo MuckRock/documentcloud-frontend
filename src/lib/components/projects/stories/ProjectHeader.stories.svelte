@@ -5,7 +5,7 @@
   import { project } from "@/test/fixtures/projects";
 
   export const meta = {
-    title: "Components / Projects / Header",
+    title: "Projects / Header",
     component: ProjectHeader,
     parameters: { layout: "centered" },
   };

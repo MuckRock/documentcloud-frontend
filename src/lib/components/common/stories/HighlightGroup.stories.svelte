@@ -13,7 +13,7 @@
   const getHref = (id: string) => id;
 
   export const meta = {
-    title: "Components / Common / Highlight Group",
+    title: "Common / Highlight Group",
     component: HighlightGroup,
   };
 </script>

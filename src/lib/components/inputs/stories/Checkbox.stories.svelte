@@ -3,7 +3,7 @@
   import Checkbox from "../Checkbox.svelte";
 
   export const meta = {
-    title: "Components / Inputs / Checkbox",
+    title: "Forms / Inputs /Checkbox",
     component: Checkbox,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

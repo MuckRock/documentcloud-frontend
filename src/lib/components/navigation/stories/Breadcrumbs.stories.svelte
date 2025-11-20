@@ -3,7 +3,7 @@
   import Breadcrumbs from "../Breadcrumbs.svelte";
 
   export const meta = {
-    title: "Components / Navigation / Breadcrumbs",
+    title: "Navigation / Breadcrumbs",
     component: Breadcrumbs,
     parameters: { layout: "fullscreen" },
   };

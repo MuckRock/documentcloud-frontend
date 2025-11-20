@@ -3,7 +3,7 @@
   import Logo from "../Logo.svelte";
 
   export const meta = {
-    title: "Components / Common / Logo",
+    title: "Common / Logo",
     component: Logo,
     parameters: { layout: "centered" },
   };

@@ -4,7 +4,7 @@
   import Revisions from "../Revisions.svelte";
 
   export const meta = {
-    title: "Components / Documents / Revisions",
+    title: "Documents / Revisions",
     component: Revisions,
     parameters: { layout: "padded" },
   };

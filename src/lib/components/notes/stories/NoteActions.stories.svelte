@@ -10,7 +10,7 @@
   const notes = document.notes as NoteType[];
 
   export const meta = {
-    title: "Components / Note / Actions",
+    title: "Note / Actions",
     component: NoteActions,
     parameters: { layout: "centered" },
   };

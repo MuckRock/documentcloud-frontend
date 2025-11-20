@@ -4,7 +4,7 @@
   import Button from "../Button.svelte";
 
   export const meta = {
-    title: "Components / Common / Button",
+    title: "Common / Button",
     component: Button,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

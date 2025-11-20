@@ -8,7 +8,7 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Documents / Thumbnail",
+    title: "Documents / Thumbnail",
     component: ThumbnailComponent,
     parameters: {
       layout: "centered",

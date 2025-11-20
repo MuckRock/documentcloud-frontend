@@ -11,7 +11,7 @@
 
   export const meta = {
     component: Paginator,
-    title: "Components / Common / Paginator",
+    title: "Common / Paginator",
     tags: ["autodocs"],
     parameters: {
       layout: "centered",

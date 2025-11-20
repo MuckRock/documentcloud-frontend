@@ -5,7 +5,7 @@
   import Collaborators from "../Collaborators.svelte";
 
   export const meta = {
-    title: "Components / Projects / Collaborators",
+    title: "Projects / Collaborators",
     component: Collaborators,
     parameters: { layout: "centered" },
   };

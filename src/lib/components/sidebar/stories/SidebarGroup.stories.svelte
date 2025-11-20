@@ -16,7 +16,7 @@
   import SidebarGroup from "../SidebarGroup.svelte";
 
   export const meta = {
-    title: "Components / Sidebar / Group",
+    title: "Navigation / Group",
     component: SidebarGroup,
     parameters: { layout: "centered" },
     argTypes: {

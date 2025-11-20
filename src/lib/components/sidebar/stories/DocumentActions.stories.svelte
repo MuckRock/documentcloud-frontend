@@ -11,7 +11,7 @@
   const selected: Writable<Document[]> = writable(documents);
 
   export const meta = {
-    title: "Components / Sidebar / Document Actions",
+    title: "Navigation / Document Actions",
     component: DocumentActions,
     parameters: { layout: "centered" },
   };

@@ -3,7 +3,7 @@
   import AccessLevel from "../AccessLevel.svelte";
 
   export const meta = {
-    title: "Components / Inputs / Access Level",
+    title: "Forms / Inputs /Access Level",
     component: AccessLevel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

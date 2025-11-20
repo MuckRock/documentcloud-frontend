@@ -3,7 +3,7 @@
   import Language from "../Language.svelte";
 
   export const meta = {
-    title: "Components / Inputs / Language",
+    title: "Forms / Inputs /Language",
     component: Language,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

@@ -42,6 +42,14 @@ const preview: Preview = {
         },
       },
     },
+    options: {
+      storySort: {
+        method: "alphabetical",
+      },
+    },
+    sidebar: {
+      showRoots: false,
+    },
   },
 };
 

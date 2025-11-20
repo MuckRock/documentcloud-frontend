@@ -7,7 +7,7 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Documents / Metadata",
+    title: "Documents / Metadata",
     component: MetadataComponent,
     parameters: {
       layout: "centered",

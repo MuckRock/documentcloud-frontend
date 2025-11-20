@@ -3,7 +3,7 @@
   import TextArea from "../TextArea.svelte";
 
   export const meta = {
-    title: "Components / Inputs / TextArea",
+    title: "Forms / Inputs /TextArea",
     component: TextArea,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

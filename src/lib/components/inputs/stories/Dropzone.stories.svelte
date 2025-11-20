@@ -10,7 +10,7 @@
   };
 
   export const meta = {
-    title: "Components / Inputs / Dropzone",
+    title: "Forms / Inputs /Dropzone",
     component: Dropzone,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

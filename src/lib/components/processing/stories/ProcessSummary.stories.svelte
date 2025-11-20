@@ -4,7 +4,7 @@
   import ProcessSummary from "../ProcessSummary.svelte";
 
   export const meta: Meta = {
-    title: "Components / Processing / Process Summary",
+    title: "Processing / Process Summary",
     component: ProcessSummary,
     parameters: {
       layout: "centered",

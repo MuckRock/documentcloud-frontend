@@ -5,7 +5,7 @@
   import Metadata from "../Metadata.svelte";
 
   export const meta = {
-    title: "Components / Common / Metadata",
+    title: "Common / Metadata",
     component: Metadata,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

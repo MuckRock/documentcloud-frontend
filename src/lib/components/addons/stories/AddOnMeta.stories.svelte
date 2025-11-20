@@ -3,7 +3,7 @@
   import AddOnMeta from "../AddOnMeta.svelte";
 
   export const meta = {
-    title: "Components / Add-Ons / Metadata",
+    title: "Add-Ons /Metadata",
     component: AddOnMeta,
   };
 

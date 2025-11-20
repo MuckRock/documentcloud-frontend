@@ -9,7 +9,7 @@
   const reset = action("reset");
 
   export const meta = {
-    title: "Components / Common / Toast",
+    title: "Common / Toast",
     component: Toast,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

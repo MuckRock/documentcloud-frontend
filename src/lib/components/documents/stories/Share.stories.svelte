@@ -11,7 +11,7 @@
   };
 
   export const meta = {
-    title: "Components / Documents / Share",
+    title: "Documents / Share",
     component: Share,
     parameters: { layout: "centered" },
   };

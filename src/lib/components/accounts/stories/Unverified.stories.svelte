@@ -5,7 +5,7 @@
   import { me } from "@/test/fixtures/accounts";
 
   export const meta = {
-    title: "Components / Accounts / Unverified",
+    title: "Accounts / Unverified",
     component: Unverified,
     parameters: { layout: "centered" },
   };

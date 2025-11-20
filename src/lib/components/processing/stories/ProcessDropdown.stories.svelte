@@ -7,7 +7,7 @@
   import * as mock from "@/test/handlers/documents";
 
   export const meta = {
-    title: "Components / Processing / Dropdown",
+    title: "Processing / Dropdown",
     component: ProcessDropdown,
     parameters: { layout: "fullscreen" },
   };

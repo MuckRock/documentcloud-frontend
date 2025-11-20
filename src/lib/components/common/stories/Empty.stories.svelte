@@ -4,7 +4,7 @@
   import Empty from "../Empty.svelte";
 
   export const meta = {
-    title: "Components / Common / Empty",
+    title: "Common / Empty",
     component: Empty,
     parameters: { layout: "centered" },
   };

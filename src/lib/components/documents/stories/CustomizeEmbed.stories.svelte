@@ -6,7 +6,7 @@
   let args = {};
 
   export const meta = {
-    title: "Components / Documents / Customize Embed",
+    title: "Documents / Customize Embed",
     component: CustomizeEmbed,
     parameters: { layout: "centered" },
   };

@@ -10,7 +10,7 @@
   import { data } from "@/test/fixtures/documents";
 
   export const meta = {
-    title: "Components / Documents / Document List Item",
+    title: "Documents / Document List Item",
     component: DocumentListItem,
     tags: ["autodocs"],
     parameters: {

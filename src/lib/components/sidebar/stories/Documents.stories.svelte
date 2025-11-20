@@ -5,7 +5,7 @@
   import type { Meta } from "@storybook/svelte";
 
   export const meta: Meta = {
-    title: "Components / Sidebar / Documents",
+    title: "Navigation / Documents",
     component: Documents,
     parameters: { layout: "centered" },
   };

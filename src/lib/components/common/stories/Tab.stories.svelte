@@ -5,7 +5,7 @@
   import Tab from "../Tab.svelte";
 
   export const meta = {
-    title: "Components / Common / Tab",
+    title: "Common / Tab",
     component: Tab,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

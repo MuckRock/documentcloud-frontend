@@ -23,7 +23,7 @@
   import pending from "@/test/fixtures/documents/pending.json";
 
   export const meta = {
-    title: "Components / Documents / Results list",
+    title: "Documents / Results list",
     component: ResultsList,
   };
 
