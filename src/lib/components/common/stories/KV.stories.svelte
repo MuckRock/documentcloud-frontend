@@ -3,7 +3,7 @@
   import KV from "../KV.svelte";
 
   export const meta = {
-    title: "Components / Common / KV",
+    title: "Common / KV",
     component: KV,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

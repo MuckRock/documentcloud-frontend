@@ -27,7 +27,7 @@
   };
 
   export const meta = {
-    title: "Components / Documents / Menus / Data",
+    title: "Documents / Menus / Data",
     component: Data,
     parameters: {
       layout: "centered",

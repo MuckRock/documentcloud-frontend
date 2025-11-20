@@ -11,7 +11,7 @@
   };
 
   export const meta = {
-    title: "Components / Add-Ons / History",
+    title: "Add-Ons /History",
     component: History,
     parameters: { layout: "centered" },
   };

@@ -4,7 +4,7 @@
   import LanguageMenu from "../LanguageMenu.svelte";
 
   export const meta = {
-    title: "Components / Navigation / Language Menu",
+    title: "Navigation / Language Menu",
     component: LanguageMenu,
     parameters: { layout: "centered" },
   };

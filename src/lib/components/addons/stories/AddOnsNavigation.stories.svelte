@@ -3,7 +3,7 @@
   import AddOnNavigation from "../AddOnsNavigation.svelte";
 
   export const meta = {
-    title: "Components / Add-Ons / Navigation",
+    title: "Add-Ons /Navigation",
     component: AddOnNavigation,
     parameters: { layout: "centered" },
   };

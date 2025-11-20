@@ -7,7 +7,7 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Documents / Header",
+    title: "Documents / Header",
     component: HeaderComponent,
     parameters: {
       layout: "centered",

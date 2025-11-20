@@ -5,7 +5,7 @@
   import Star from "$lib/components/icons/Star.svelte";
 
   export const meta = {
-    title: "Components / Common / Badge",
+    title: "Common / Badge",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: Badge,

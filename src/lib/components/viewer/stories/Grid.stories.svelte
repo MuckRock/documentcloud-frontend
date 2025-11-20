@@ -5,7 +5,7 @@
   import Grid from "../Grid.svelte";
 
   export const meta = {
-    title: "Components / Viewer / Grid",
+    title: "Viewer / Grid",
     component: Grid,
     parameters: { layout: "fullscreen" },
   };

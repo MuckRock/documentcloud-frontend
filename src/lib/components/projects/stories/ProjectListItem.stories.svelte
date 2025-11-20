@@ -7,7 +7,7 @@
   const args = { project };
 
   export const meta = {
-    title: "Components / Projects / List Item",
+    title: "Projects / List Item",
     component: ProjectListItem,
     parameters: { layout: "centered" },
   };

@@ -14,7 +14,7 @@
   will present a budget to Parliament that calls for emergency actions to reduce Britain's forecast $280 billion deficit.`;
 
   export const meta = {
-    title: "Components / Note / Content",
+    title: "Note / Content",
     component: NoteContent,
     parameters: { layout: "centered" },
   };

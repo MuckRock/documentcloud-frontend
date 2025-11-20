@@ -17,7 +17,7 @@
   import redacted from "@/test/fixtures/documents/redactions.json";
 
   export const meta = {
-    title: "Components / Viewer / PDF Viewer",
+    title: "Viewer / PDF Viewer",
     component: PDF,
     parameters: { layout: "centered" },
   };

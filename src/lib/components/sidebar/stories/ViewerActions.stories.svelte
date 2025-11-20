@@ -7,7 +7,7 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Sidebar / Viewer Actions",
+    title: "Navigation / Viewer Actions",
     component: ViewerActions,
     parameters: {
       layout: "centered",

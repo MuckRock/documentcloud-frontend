@@ -7,7 +7,7 @@
   import Flex from "../../common/Flex.svelte";
 
   export const meta: Meta = {
-    title: "Components / Processing / Process",
+    title: "Processing / Process",
     component: Process,
   };
 

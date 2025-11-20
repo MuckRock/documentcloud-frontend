@@ -12,7 +12,7 @@
   ) as unknown as Document;
 
   export const meta = {
-    title: "Components / Documents / Page Highlights",
+    title: "Documents / Page Highlights",
     component: PageHighlights,
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },

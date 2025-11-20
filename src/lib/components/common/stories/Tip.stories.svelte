@@ -8,7 +8,7 @@
   import Flex from "../Flex.svelte";
 
   export const meta = {
-    title: "Components / Common / Tip",
+    title: "Common / Tip",
     component: Tip,
     parameters: { layout: "centered" },
   };

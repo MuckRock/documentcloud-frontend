@@ -13,7 +13,7 @@
   import { inMyOrg } from "$lib/api/accounts";
 
   export const meta = {
-    title: "Components / Navigation / Org Menu",
+    title: "Navigation / Org Menu",
     component: OrgMenu,
   };
 </script>

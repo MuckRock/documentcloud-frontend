@@ -6,7 +6,7 @@
   import { runs } from "@/test/handlers/addons";
 
   export const meta = {
-    title: "Components / Processing / Running Add-Ons",
+    title: "Processing / Running Add-Ons",
     component: AddOns,
     parameters: { layout: "centered" },
   };

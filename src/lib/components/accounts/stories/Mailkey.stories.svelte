@@ -6,7 +6,7 @@
   import { mailkey } from "@/test/handlers/accounts";
 
   export const meta = {
-    title: "Components / Accounts / Mailkey",
+    title: "Accounts / Mailkey",
     component: Mailkey,
     parameters: { layout: "fullscreen" },
   };

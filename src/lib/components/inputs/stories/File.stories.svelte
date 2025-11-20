@@ -4,7 +4,7 @@
   import File from "../File.svelte";
 
   export const meta = {
-    title: "Components / Inputs / File",
+    title: "Forms / Inputs /File",
     component: File,
     tags: ["autodocs"],
   };

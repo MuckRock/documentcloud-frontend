@@ -3,7 +3,7 @@
   import KeyValue from "../KeyValue.svelte";
 
   export const meta = {
-    title: "Components / Inputs / Key-Value",
+    title: "Forms / Inputs /Key-Value",
     component: KeyValue,
     parameters: { layout: "centered" },
     tags: ["autodocs"],

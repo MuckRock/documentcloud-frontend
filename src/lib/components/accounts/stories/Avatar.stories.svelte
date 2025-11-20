@@ -6,7 +6,7 @@
   import Avatar from "../Avatar.svelte";
 
   export const meta = {
-    title: "Components / Accounts / Avatar",
+    title: "Accounts / Avatar",
     component: Avatar,
     parameters: { layout: "centered" },
   };

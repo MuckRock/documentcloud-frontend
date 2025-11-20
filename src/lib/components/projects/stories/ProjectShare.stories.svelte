@@ -6,7 +6,7 @@
   import Toaster from "../../layouts/Toaster.svelte";
 
   export const meta = {
-    title: "Components / Projects / Share",
+    title: "Projects / Share",
     component: ProjectShare,
     parameters: { layout: "centered" },
   };

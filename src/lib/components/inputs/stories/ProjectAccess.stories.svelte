@@ -3,7 +3,7 @@
   import ProjectAccess from "../ProjectAccess.svelte";
 
   export const meta = {
-    title: "Components / Inputs / Project access",
+    title: "Forms / Inputs /Project access",
     component: ProjectAccess,
     parameters: { layout: "centered" },
   };

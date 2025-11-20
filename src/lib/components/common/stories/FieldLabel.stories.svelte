@@ -4,7 +4,7 @@
   import { Infinity16 } from "svelte-octicons";
 
   export const meta = {
-    title: "Components / Common / Field Label",
+    title: "Common / Field Label",
     component: FieldLabel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

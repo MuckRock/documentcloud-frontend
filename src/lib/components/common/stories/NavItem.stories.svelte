@@ -12,7 +12,7 @@
   import Flex from "../../common/Flex.svelte";
 
   export const meta = {
-    title: "Components / Sidebar / Item",
+    title: "Navigation / Item",
     component: NavItem,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
@@ -86,10 +86,10 @@
     <NavItem>
       The International Consortium for the Real-Time Dissemination of Verified,
       Unbiased, Cross-Platform, Community-Sourced, Multilingual, Deep-Dive
-      Investigative Journalism and Global News Analysis Network for Socioeconomic,
-      Environmental, Political, Technological, and Humanitarian Affairs Reporting
-      and Strategic Public Information Engagement Across All Media Channels
-      Initiative
+      Investigative Journalism and Global News Analysis Network for
+      Socioeconomic, Environmental, Political, Technological, and Humanitarian
+      Affairs Reporting and Strategic Public Information Engagement Across All
+      Media Channels Initiative
     </NavItem>
   </div>
 </Story>

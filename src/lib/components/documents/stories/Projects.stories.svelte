@@ -7,7 +7,7 @@
   const document = doc as Document;
 
   export const meta = {
-    title: "Components / Documents / Menus / Projects",
+    title: "Documents / Menus / Projects",
     component: Projects,
     parameters: {
       layout: "centered",

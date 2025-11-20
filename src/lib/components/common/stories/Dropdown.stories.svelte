@@ -7,7 +7,7 @@
   import { ChevronDown12, ChevronRight12, Globe16 } from "svelte-octicons";
 
   export const meta = {
-    title: "Components / Common / Dropdown",
+    title: "Common / Dropdown",
     component: Dropdown,
     tags: ["autodocs"],
     parameters: { layout: "centered" },

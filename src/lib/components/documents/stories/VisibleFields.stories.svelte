@@ -10,7 +10,7 @@
   import { get, writable } from "svelte/store";
 
   export const meta = {
-    title: "Components / Documents / Visible Fields",
+    title: "Documents / Visible Fields",
     component: VisibleFieldsComponent,
     parameters: {
       layout: "centered",
