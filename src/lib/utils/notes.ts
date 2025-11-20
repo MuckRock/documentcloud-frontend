@@ -7,16 +7,6 @@ import { width, height } from "$lib/api/notes";
 export const SIZE: Sizes = "large";
 const PADDING = 50; // vertical padding in pixels
 
-export function getCanvasContext(
-  canvas: HTMLCanvasElement,
-): CanvasRenderingContext2D | null {
-  const context = canvas.getContext("2d");
-  if (!context) {
-    console.error("Missing canvas context when rendering note.");
-  }
-  return context;
-}
-
 interface ContextDimensions {
   sourceY: number;
   sourceHeight: number;
@@ -95,16 +85,8 @@ export const DEFAULT_COLORS: Record<Access, string> = {
 
 export const DEFAULT_FALLBACK_COLOR = "#d8dee2";
 
-export function isServerSide(): boolean {
-  return typeof window === "undefined";
-}
-
-export function getAccessColor(access: Access): string {
-  return DEFAULT_COLORS[access];
-}
-
 function getHighlightColor(note: Note): string {
-  if (isServerSide()) {
+  if (typeof window === "undefined") {
     return DEFAULT_COLORS[note.access] || DEFAULT_FALLBACK_COLOR;
   }
 
@@ -156,9 +138,9 @@ export async function renderImage(
   document: Document,
 ) {
   const page_number = note.page_number + 1;
-  const context = getCanvasContext(canvas);
+  const context = canvas.getContext("2d");
   if (!context) {
-    return;
+    return console.error("Missing canvas context when rendering note.");
   }
 
   const src = pageImageUrl(document, page_number, SIZE);
@@ -203,9 +185,9 @@ export async function renderPDF(
   pdf: PDFDocumentProxy,
 ) {
   const page_number = note.page_number + 1; // note pages are 0-indexed
-  const context = getCanvasContext(canvas);
+  const context = canvas.getContext("2d");
   if (!context) {
-    return;
+    return console.error("Missing canvas context when rendering note.");
   }
 
   const page = await pdf.getPage(page_number);

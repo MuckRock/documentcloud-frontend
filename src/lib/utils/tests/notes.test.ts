@@ -3,13 +3,10 @@ import type { Note, Access } from "$lib/api/types";
 import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
 
 import {
-  getCanvasContext,
   calculateImageContextDimensions,
   calculatePDFContextDimensions,
   drawHighlight,
   setupCanvas,
-  isServerSide,
-  getAccessColor,
   loadImage,
   transformNoteCoordinates,
   DEFAULT_COLORS,
@@ -51,26 +48,6 @@ describe("Canvas utilities", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-  });
-
-  test("getCanvasContext returns context when available", () => {
-    const result = getCanvasContext(mockCanvas);
-    expect(result).toBe(mockContext);
-    expect(mockCanvas.getContext).toHaveBeenCalledWith("2d");
-  });
-
-  test("getCanvasContext returns null and logs error when context unavailable", () => {
-    // Set up
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const mockCanvas = {
-      getContext: vi.fn().mockReturnValue(null),
-    } as any;
-    // Execute
-    const result = getCanvasContext(mockCanvas);
-    expect(result).toBeNull();
-    expect(consoleSpy).toHaveBeenCalledWith(expect.any(String));
-    // Clean up
-    consoleSpy.mockRestore();
   });
 
   test("setupCanvas sets dimensions correctly", () => {
@@ -148,22 +125,6 @@ describe("Highlight drawing", () => {
 });
 
 describe("Color utilities", () => {
-  test("isServerSide returns true when window is undefined", () => {
-    vi.stubGlobal("window", undefined);
-    expect(isServerSide()).toBe(true);
-  });
-
-  test("isServerSide returns false when window is defined", () => {
-    vi.stubGlobal("window", {});
-    expect(isServerSide()).toBe(false);
-  });
-
-  test("getAccessColor returns correct colors for each access type", () => {
-    expect(getAccessColor("public" as Access)).toBe("#eccb6b");
-    expect(getAccessColor("private" as Access)).toBe("#4294f0");
-    expect(getAccessColor("organization" as Access)).toBe("#27c6a2");
-  });
-
   test("DEFAULT_COLORS contains expected values", () => {
     expect(DEFAULT_COLORS.public).toBe("#eccb6b");
     expect(DEFAULT_COLORS.private).toBe("#4294f0");

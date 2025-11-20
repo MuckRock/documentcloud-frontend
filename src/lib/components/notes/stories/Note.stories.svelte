@@ -12,6 +12,7 @@
   import Note from "../Note.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
+  import cji from "@/test/fixtures/documents/examples/cji.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
   import { writable } from "svelte/store";
   import { pdfUrl } from "$lib/api/documents";
@@ -35,9 +36,11 @@
   async function load(url: URL) {
     return pdfjs.getDocument(url).promise;
   }
-</script>
 
-<script lang="ts">
+  const CJI = {
+    document: cji as Document,
+    note: cji.notes.find((n) => n.id === 2587355) as NoteType,
+  };
 </script>
 
 <Template let:args>
@@ -51,18 +54,30 @@
 </Template>
 
 <Story name="default" args={{ note: notes[0] }} />
+
 <Story name="page-level note" args={{ note: page_note }} />
+
 <Story name="editable" args={{ note: { ...notes[1], edit_access: true } }} />
+
 <Story
   name="private access"
   args={{ note: { ...notes[1], access: "private" } }}
 />
+
 <Story
   name="collaborators access"
   args={{ note: { ...notes[1], access: "organization" } }}
 />
+
 <Story name="note with HTML" args={{ note: { ...notes[2], content: html } }} />
+
 <Story
   name="render using PDF"
   args={{ pdf: writable(load(url)), note: { ...notes[2], content: html } }}
 />
+
+<Story name="Example: CJI">
+  <ViewerContext document={CJI.document} asset_url={pdfUrl(CJI.document)}>
+    <Note document={writable(CJI.document)} note={CJI.note} scale={2} />
+  </ViewerContext>
+</Story>
