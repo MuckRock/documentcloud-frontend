@@ -78,7 +78,7 @@
   args={{ pdf: writable(load(url)), note: { ...notes[2], content: html } }}
 />
 
-<Story name="Example: CJI">
+<Story name="Excerpt from rotated page">
   <ViewerContext
     document={CJI.document}
     asset_url={pdfUrl(CJI.document)}
