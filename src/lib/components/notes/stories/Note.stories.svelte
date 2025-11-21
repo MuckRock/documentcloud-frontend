@@ -12,8 +12,9 @@
   import Note from "../Note.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
-  import cji from "@/test/fixtures/documents/examples/cji.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
+  import cji from "@/test/fixtures/documents/examples/cji.json";
+  import cjiPdf from "@/test/fixtures/documents/examples/signed-fair-fight-foundation-settlement-2024.pdf";
   import { writable } from "svelte/store";
   import { pdfUrl } from "$lib/api/documents";
 
@@ -40,6 +41,7 @@
   const CJI = {
     document: cji as Document,
     note: cji.notes.find((n) => n.id === 2587355) as NoteType,
+    url: new URL(cjiPdf, import.meta.url),
   };
 </script>
 
@@ -77,7 +79,11 @@
 />
 
 <Story name="Example: CJI">
-  <ViewerContext document={CJI.document} asset_url={pdfUrl(CJI.document)}>
+  <ViewerContext
+    document={CJI.document}
+    asset_url={pdfUrl(CJI.document)}
+    pdf={writable(load(CJI.url))}
+  >
     <Note document={writable(CJI.document)} note={CJI.note} scale={2} />
   </ViewerContext>
 </Story>

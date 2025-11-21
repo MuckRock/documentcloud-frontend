@@ -191,7 +191,9 @@ export async function renderPDF(
   }
 
   const page = await pdf.getPage(page_number);
-  const [, , w, h] = page.view;
+  const defaultViewport = page.getViewport({ scale: 1 });
+  const w = defaultViewport.width;
+  const h = defaultViewport.height;
 
   if (!w || !h) {
     console.error("Missing page dimensions when rendering PDF in note.");
