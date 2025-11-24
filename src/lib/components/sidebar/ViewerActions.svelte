@@ -68,10 +68,6 @@
       <Share16 />
       {$_("sidebar.shareEmbed")}
     </Button>
-    <Button ghost href={legacy.href} minW={false}>
-      <Undo16 />
-      <span class="legacy">View in Legacy DocumentCloud</span>
-    </Button>
   </div>
   {#if document.edit_access}
     <div class="actions">
@@ -200,8 +196,5 @@
   }
   .wideGap {
     gap: 1rem;
-  }
-  .legacy {
-    text-align: left;
   }
 </style>
