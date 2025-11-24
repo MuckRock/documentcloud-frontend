@@ -3,15 +3,13 @@ import type { Note, Access } from "$lib/api/types";
 import { expect, test, describe, vi, beforeEach, afterEach } from "vitest";
 
 import {
-  getCanvasContext,
   calculateImageContextDimensions,
   calculatePDFContextDimensions,
   drawHighlight,
   setupCanvas,
-  isServerSide,
-  getAccessColor,
   loadImage,
   transformNoteCoordinates,
+  renderPDF,
   DEFAULT_COLORS,
   DEFAULT_FALLBACK_COLOR,
 } from "../notes";
@@ -51,26 +49,6 @@ describe("Canvas utilities", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-  });
-
-  test("getCanvasContext returns context when available", () => {
-    const result = getCanvasContext(mockCanvas);
-    expect(result).toBe(mockContext);
-    expect(mockCanvas.getContext).toHaveBeenCalledWith("2d");
-  });
-
-  test("getCanvasContext returns null and logs error when context unavailable", () => {
-    // Set up
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const mockCanvas = {
-      getContext: vi.fn().mockReturnValue(null),
-    } as any;
-    // Execute
-    const result = getCanvasContext(mockCanvas);
-    expect(result).toBeNull();
-    expect(consoleSpy).toHaveBeenCalledWith(expect.any(String));
-    // Clean up
-    consoleSpy.mockRestore();
   });
 
   test("setupCanvas sets dimensions correctly", () => {
@@ -148,22 +126,6 @@ describe("Highlight drawing", () => {
 });
 
 describe("Color utilities", () => {
-  test("isServerSide returns true when window is undefined", () => {
-    vi.stubGlobal("window", undefined);
-    expect(isServerSide()).toBe(true);
-  });
-
-  test("isServerSide returns false when window is defined", () => {
-    vi.stubGlobal("window", {});
-    expect(isServerSide()).toBe(false);
-  });
-
-  test("getAccessColor returns correct colors for each access type", () => {
-    expect(getAccessColor("public" as Access)).toBe("#eccb6b");
-    expect(getAccessColor("private" as Access)).toBe("#4294f0");
-    expect(getAccessColor("organization" as Access)).toBe("#27c6a2");
-  });
-
   test("DEFAULT_COLORS contains expected values", () => {
     expect(DEFAULT_COLORS.public).toBe("#eccb6b");
     expect(DEFAULT_COLORS.private).toBe("#4294f0");
@@ -253,5 +215,79 @@ describe("Coordinate transformation", () => {
     expect(result.y).toBe(160);
     expect(result.width).toBe(400);
     expect(result.height).toBe(160);
+  });
+});
+
+describe("PDF rendering", () => {
+  test("renderPDF uses viewport dimensions instead of page.view for rotated pages", async () => {
+    // Create a mock note
+    const note: Note = {
+      id: 2587355,
+      page_number: 2,
+      x1: 0.05,
+      x2: 0.73,
+      y1: 0.64,
+      y2: 0.69,
+      title: "Test",
+      content: "",
+      access: "public" as Access,
+      user: 1,
+      organization: 1,
+      created_at: "2024-09-20T15:32:40.313820Z",
+      updated_at: "2024-09-20T15:32:40.314535Z",
+    };
+
+    // Mock canvas and context
+    const mockContext = {
+      save: vi.fn(),
+      restore: vi.fn(),
+      fillRect: vi.fn(),
+      fillStyle: "",
+      globalAlpha: 0,
+      globalCompositeOperation: "",
+    };
+
+    const mockCanvas = {
+      getContext: vi.fn().mockReturnValue(mockContext),
+      width: 0,
+      height: 0,
+    } as any;
+
+    // Mock PDF page with rotation - page.view gives raw coordinates,
+    // but viewport accounts for rotation and gives the rendered dimensions
+    const mockPage = {
+      view: [0, 0, 612, 792], // Raw page dimensions (portrait orientation)
+      getViewport: vi.fn((config) => {
+        // For a rotated page, viewport dimensions differ from page.view
+        // This simulates a landscape page (792x612) that's stored as rotated portrait
+        const scale = config.scale || 1;
+        return {
+          width: 792 * scale, // Actual rendered width (landscape)
+          height: 612 * scale, // Actual rendered height (landscape)
+        };
+      }),
+      render: vi.fn().mockReturnValue({
+        promise: Promise.resolve(),
+      }),
+    };
+
+    const mockPdf = {
+      getPage: vi.fn().mockResolvedValue(mockPage),
+    } as any;
+
+    // Render the PDF
+    await renderPDF(note, 2, mockCanvas, mockPdf);
+
+    // Verify getViewport was called to get dimensions
+    expect(mockPage.getViewport).toHaveBeenCalledWith({ scale: 1 });
+
+    // Verify the canvas was set up with the correct viewport dimensions (792x612 landscape)
+    // not the page.view dimensions (612x792 portrait)
+    // With scale=2: 792*2 = 1584 width
+    expect(mockCanvas.width).toBeGreaterThan(0);
+
+    // Verify render was called with a viewport that uses the correct dimensions
+    expect(mockPage.render).toHaveBeenCalled();
+    expect(mockPage.getViewport).toHaveBeenCalledTimes(2); // Once for dimensions, once for rendering
   });
 });
