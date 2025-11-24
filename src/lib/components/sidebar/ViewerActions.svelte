@@ -11,7 +11,6 @@
     Pencil16,
     Share16,
     Trash16,
-    Undo16,
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -50,11 +49,6 @@
   $: organization =
     typeof user?.organization === "object" ? (user.organization as Org) : null;
   $: plan = organization?.plan ?? "Free";
-  $: canonical = canonicalUrl(document);
-  $: legacy = new URL(
-    canonical.pathname,
-    "https://legacy.www.documentcloud.org",
-  );
   $: processing = $pending?.map((d) => d.doc_id).includes(+document.id);
 </script>
 
