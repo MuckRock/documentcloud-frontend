@@ -20,11 +20,72 @@ export const me: User = {
     monthly_credit_allowance: 10000,
     plan: "Organization",
   },
-  organizations: [19198, 170, 125],
+  organizations: [19198, 170, 125, 684],
   admin_organizations: [19198, 170],
   username: "chrisamico",
   uuid: "800bbb85-ea7a-46e9-8f56-16f862e66e52",
   verified_journalist: true,
+};
+
+export const myOrgs: Page<Org> = {
+  next: null,
+  previous: null,
+  results: [
+    {
+      id: 125,
+      avatar_url: "https://cdn.muckrock.com/media/org_avatars/logo.png",
+      individual: false,
+      name: "MuckRock Staff",
+      slug: "muckrock",
+      uuid: "97109cc6-e52e-41e7-adb7-834ab7c6819c",
+      monthly_credits: 10000,
+      purchased_credits: 0,
+      credit_reset_date: "2025-12-25",
+      monthly_credit_allowance: 10000,
+      plan: "Admin",
+    },
+    {
+      id: 170,
+      avatar_url:
+        "https://cdn.muckrock.com/static/images/avatars/organization.png",
+      individual: false,
+      name: "Homicide Watch D.C.",
+      slug: "homicide-watch",
+      uuid: "a2ce8fb8-ff21-4dfb-95c9-e840b0a94605",
+      monthly_credits: 0,
+      purchased_credits: 0,
+      credit_reset_date: null,
+      monthly_credit_allowance: 0,
+      plan: "Free",
+    },
+    {
+      id: 684,
+      avatar_url:
+        "https://cdn.muckrock.com/static/images/avatars/organization.png",
+      individual: false,
+      name: "David McKie's Research Methods",
+      slug: "researchmethods",
+      uuid: "a4117af5-ba23-4ba7-a73d-cef3f1e26d43",
+      monthly_credits: 0,
+      purchased_credits: 0,
+      credit_reset_date: null,
+      monthly_credit_allowance: 0,
+      plan: "Free",
+    },
+    {
+      id: 19198,
+      avatar_url: "https://cdn.muckrock.com/media/avatars/profile.jpeg",
+      individual: true,
+      name: "chrisamico",
+      slug: "chrisamico",
+      uuid: "800bbb85-ea7a-46e9-8f56-16f862e66e52",
+      monthly_credits: 0,
+      purchased_credits: 0,
+      credit_reset_date: null,
+      monthly_credit_allowance: 0,
+      plan: "Free",
+    },
+  ],
 };
 
 export const usersList: Page<User> = {
