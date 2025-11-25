@@ -162,6 +162,42 @@ export const actions = {
     };
   },
 
+  async change_owner({ cookies, fetch, params, request }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+    const form = await request.formData();
+
+    const id = params.id;
+    const user = form.get("user");
+    const organization = form.get("organization");
+
+    console.log(
+      `CHANGE OWNER: ${form.get("documents")}, User: ${user}, Org: ${organization}`,
+    );
+
+    const update: Partial<Document> = {};
+
+    if (user) {
+      update.user = +user;
+    }
+
+    if (organization) {
+      update.organization = +organization;
+    }
+
+    const { error, data } = await edit(id, update, csrf_token, fetch);
+
+    if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
+      return fail(error.status, { ...error });
+    }
+
+    setFlash({ message: "Updated ownership", status: "success" }, cookies);
+    return data;
+  },
+
   async createAnnotation({ cookies, request, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     if (!csrf_token) {

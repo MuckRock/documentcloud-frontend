@@ -30,9 +30,7 @@ Change owner of one or more documents.
   const dispatch = createEventDispatcher();
 
   let error: Maybe<APIError<null>> = undefined;
-  let user: Maybe<{ value: number; label: string; user?: User }> = $me
-    ? { value: $me?.id, label: getUserName($me), user: $me }
-    : undefined;
+  let user: Maybe<{ value: number; label: string; user?: User }> = undefined;
   let org: Maybe<{ value: number; label: string; org?: Org }> =
     $me && isOrg($me.organization)
       ? { value: $me.organization.id, label: $me.organization.name }
@@ -40,7 +38,9 @@ Change owner of one or more documents.
 
   let userOptions: Promise<{ value: number; label: string; user?: User }[]> =
     Promise.resolve([]);
-  let orgOptions: { value: number; label: string; org?: Org }[] = [];
+  let orgOptions: { value: number; label: string; org?: Org }[] = org
+    ? [org]
+    : [];
   let loading = true;
 
   $: ids = documents.map((d) => d.id);
@@ -59,18 +59,29 @@ Change owner of one or more documents.
   onMount(async () => {
     if ($me) {
       // Load organizations the user belongs to
-      const orgs = await userOrgs($me);
-      orgOptions = orgs.map((org) => ({
-        value: org.id,
-        label: org.name,
-        org,
-      }));
+      orgOptions = await getOrgOptions($me);
+
+      // don't await, because we expect this to be a promise
+      // userOptions = getUserOptions($me.organization as Org);
     }
     loading = false;
   });
 
-  async function getUserOptions(org: Maybe<Org>) {
-    if (!org) return [];
+  async function getOrgOptions(
+    me: User,
+  ): Promise<{ value: number; label: string; org: Org }[]> {
+    const orgs = await userOrgs(me);
+    return orgs.map((org) => ({
+      value: org.id,
+      label: org.individual ? `${org.name} (individual)` : org.name,
+      org,
+    }));
+  }
+
+  async function getUserOptions(
+    org: Maybe<Org>,
+  ): Promise<{ label: string; value: number; user: User }[]> {
+    if (!org || org.individual) return [];
 
     const users = await orgUsers(org);
 
@@ -89,10 +100,15 @@ Change owner of one or more documents.
     if (!$me) {
       return cancel();
     }
-    formData.set("organization", org?.value);
-    formData.set("user", user?.value);
+    if (org) {
+      formData.set("organization", org?.value);
+    }
+    if (user) {
+      formData.set("user", user?.value);
+    }
 
     return ({ result }) => {
+      console.log(result);
       switch (result.type) {
         case "error":
           error = result.data.error;
