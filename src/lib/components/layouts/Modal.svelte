@@ -24,12 +24,14 @@ of the $modal store. These are used to set the active modal on any given page.
 </script>
 
 <script lang="ts">
+  import type { Nullable } from "$lib/api/types";
+
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { fade, fly } from "svelte/transition";
   import { XCircle24 } from "svelte-octicons";
+
   import Button from "../common/Button.svelte";
-  import type { Nullable } from "$lib/api/types";
 
   const dispatch = createEventDispatcher();
 

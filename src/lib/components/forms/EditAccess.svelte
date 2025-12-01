@@ -88,7 +88,14 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     </Field>
 
     <Flex class="buttons">
-      <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
+      <Button
+        type="submit"
+        mode="primary"
+        full
+        disabled={!document.edit_access}
+      >
+        {$_("edit.save")}
+      </Button>
       <Button full on:click={() => dispatch("close")}>
         {$_("edit.cancel")}
       </Button>
