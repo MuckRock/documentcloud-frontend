@@ -1,7 +1,7 @@
 /** Checks whether users have permission to view, update, or delete resources. */
 
 import type { Writable } from "svelte/store";
-import type { Document, Nullable, User } from "$lib/api/types";
+import type { Document, Maybe, Nullable, User } from "$lib/api/types";
 
 import { getContext } from "svelte";
 
@@ -32,10 +32,10 @@ export function canUploadFiles(user?: Nullable<User>): boolean {
  */
 export function canChangeOwner(
   user: Nullable<User>,
-  documents: Document[],
+  documents: Maybe<Document[]>,
 ): Boolean {
   if (!user) return false;
-  if (documents.length === 0) return false;
+  if (!documents?.length) return false;
 
   return documents.every((d) => {
     if (d.access === "public") return false;
