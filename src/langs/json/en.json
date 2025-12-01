@@ -50,7 +50,8 @@
       "value": "public",
       "title": "Public",
       "description": "Documents will be publicly visible to everyone"
-    }
+    },
+    "edit": "Change document access"
   },
   "notfound": {
     "content": "Please try another URL"

@@ -69,6 +69,9 @@
 {#if edit}
   <Portal>
     <Modal on:close={close}>
+      <h2 slot="title">
+        {$_("access.edit")}
+      </h2>
       <EditAccess {document} on:close={close} />
     </Modal>
   </Portal>
