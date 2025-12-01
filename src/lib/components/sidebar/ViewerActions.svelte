@@ -1,6 +1,12 @@
 <!-- Assumes its a child of ViewerContext -->
 <script context="module" lang="ts">
-  type Action = "share" | "edit" | "revisions" | "reprocess" | "delete";
+  type Action =
+    | "share"
+    | "edit"
+    | "revisions"
+    | "reprocess"
+    | "delete"
+    | "change_owner";
 </script>
 
 <script lang="ts">
@@ -12,11 +18,13 @@
     History16,
     IssueReopened16,
     Pencil16,
+    Person16,
     Share16,
     Trash16,
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
+  import ChangeOwner from "$lib/components/forms/ChangeOwner.svelte";
   import ConfirmDelete from "$lib/components/forms/ConfirmDelete.svelte";
   import Edit from "$lib/components/forms/Edit.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
@@ -31,10 +39,12 @@
   import Revisions from "$lib/components/documents/Revisions.svelte";
   import Share from "$lib/components/documents/Share.svelte";
 
-  import { getUpgradeUrl } from "$lib/api/accounts";
-  import { pdfUrl } from "$lib/api/documents";
   import { getCurrentPage } from "../viewer/ViewerContext.svelte";
   import { getPendingDocuments } from "$lib/components/processing/ProcessContext.svelte";
+
+  import { getUpgradeUrl } from "$lib/api/accounts";
+  import { pdfUrl } from "$lib/api/documents";
+  import { canChangeOwner } from "$lib/utils/permissions";
 
   export let document: Document;
   export let user: Nullable<User>;
@@ -48,6 +58,7 @@
     revisions: "dialogRevisionsDialog.heading",
     reprocess: "dialogReprocessDialog.title",
     delete: "delete.title",
+    change_owner: "bulk.actions.change_owner",
   };
 
   let visible: Nullable<Action> = null;
@@ -114,6 +125,18 @@
         {$_("sidebar.delete")}
       </Button>
 
+      {#if canChangeOwner(user, [document])}
+        <Button
+          ghost
+          mode="danger"
+          on:click={() => show("change_owner")}
+          disabled={!canChangeOwner(user, [document])}
+        >
+          <Person16 />
+          {$_("bulk.actions.change_owner")}
+        </Button>
+      {/if}
+
       {#if processing}
         <Tip>
           <span slot="icon"></span>
@@ -164,6 +187,10 @@
 
       {#if visible === "delete"}
         <ConfirmDelete documents={[document]} on:close={close} />
+      {/if}
+
+      {#if visible === "change_owner"}
+        <ChangeOwner documents={[document]} on:close={close} />
       {/if}
     </Modal>
   </Portal>
