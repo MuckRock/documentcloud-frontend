@@ -13,7 +13,6 @@
     Plug16,
     Question24,
     Search16,
-    Undo16,
   } from "svelte-octicons";
 
   import Dropdown, {
@@ -86,10 +85,6 @@
     >
       <Mail16 slot="start" />
       {$_("authSection.help.emailUs")}
-    </NavItem>
-    <NavItem href="https://legacy.www.documentcloud.org">
-      <Undo16 slot="start" />
-      {$_("authSection.help.legacy")}
     </NavItem>
   </Menu>
 </Dropdown>
