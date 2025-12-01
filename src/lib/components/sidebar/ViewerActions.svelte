@@ -1,4 +1,7 @@
 <!-- Assumes its a child of ViewerContext -->
+<script context="module" lang="ts">
+  type Action = "share" | "edit" | "revisions" | "reprocess" | "delete";
+</script>
 
 <script lang="ts">
   import type { Document, Nullable, Org, User } from "$lib/api/types";
@@ -29,27 +32,38 @@
   import Share from "$lib/components/documents/Share.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
-  import { pdfUrl, canonicalUrl } from "$lib/api/documents";
+  import { pdfUrl } from "$lib/api/documents";
   import { getCurrentPage } from "../viewer/ViewerContext.svelte";
   import { getPendingDocuments } from "$lib/components/processing/ProcessContext.svelte";
 
   export let document: Document;
   export let user: Nullable<User>;
-  export let action: string = "";
 
   const page = getCurrentPage();
   const pending = getPendingDocuments();
 
-  $: shareOpen = action === "share";
-  $: editOpen = action === "edit";
-  $: revisionsOpen = action === "revisions";
-  $: reprocessOpen = action === "reprocess";
-  $: deleteOpen = action === "delete";
+  const labels: Record<Action, string> = {
+    share: "sidebar.shareEmbed",
+    edit: "edit.title",
+    revisions: "dialogRevisionsDialog.heading",
+    reprocess: "dialogReprocessDialog.title",
+    delete: "delete.title",
+  };
+
+  let visible: Nullable<Action> = null;
 
   $: organization =
     typeof user?.organization === "object" ? (user.organization as Org) : null;
   $: plan = organization?.plan ?? "Free";
   $: processing = $pending?.map((d) => d.doc_id).includes(+document.id);
+
+  function show(action: Action) {
+    visible = action;
+  }
+
+  function close() {
+    visible = null;
+  }
 </script>
 
 <div class="actions wideGap">
@@ -58,19 +72,14 @@
       <Download16 />
       {$_("sidebar.download")}
     </Button>
-    <Button ghost on:click={() => (shareOpen = true)}>
+    <Button ghost on:click={() => show("share")}>
       <Share16 />
       {$_("sidebar.shareEmbed")}
     </Button>
   </div>
   {#if document.edit_access}
     <div class="actions">
-      <Button
-        ghost
-        mode="primary"
-        minW={false}
-        on:click={() => (editOpen = true)}
-      >
+      <Button ghost mode="primary" minW={false} on:click={() => show("edit")}>
         <Pencil16 />
         {$_("sidebar.edit")}
       </Button>
@@ -78,7 +87,7 @@
         ghost
         mode="premium"
         minW={false}
-        on:click={() => (revisionsOpen = true)}
+        on:click={() => show("revisions")}
       >
         <History16 />
         {$_("sidebar.revisions")}
@@ -90,7 +99,7 @@
         ghost
         mode="danger"
         disabled={document.status === "nofile"}
-        on:click={() => (reprocessOpen = true)}
+        on:click={() => show("reprocess")}
       >
         {#if processing}
           <IssueReopened16 class="spin" />
@@ -100,7 +109,7 @@
           {$_("sidebar.reprocess")}
         {/if}
       </Button>
-      <Button ghost mode="danger" on:click={() => (deleteOpen = true)}>
+      <Button ghost mode="danger" on:click={() => show("delete")}>
         <Trash16 />
         {$_("sidebar.delete")}
       </Button>
@@ -115,68 +124,47 @@
   {/if}
 </div>
 
-{#if document.edit_access && editOpen}
+{#if visible}
   <Portal>
-    <Modal on:close={() => (editOpen = false)}>
-      <h1 slot="title">{$_("edit.title")}</h1>
-      <Edit {document} on:close={() => (editOpen = false)} />
-    </Modal>
-  </Portal>
-{/if}
-
-{#if revisionsOpen}
-  <Portal>
-    <Modal on:close={() => (revisionsOpen = false)}>
+    <Modal on:close={close}>
       <h1 slot="title">
-        {$_("dialogRevisionsDialog.heading")}
-        <PremiumBadge />
-      </h1>
-      <div>
-        {#if plan !== "Free"}
-          <RevisionControl {document} />
-          <hr class="divider" />
-          <Revisions {document} />
-        {:else}
-          <UpgradePrompt
-            message={$_("dialogRevisionsDialog.upgrade.message")}
-            callToAction={$_("dialogRevisionsDialog.upgrade.adminCta")}
-            href={getUpgradeUrl(organization).href}
-          />
+        {$_(labels[visible])}
+        {#if visible === "revisions"}
+          <PremiumBadge />
         {/if}
-      </div>
-    </Modal>
-  </Portal>
-{/if}
+      </h1>
 
-{#if shareOpen}
-  <Portal>
-    <Modal on:close={() => (shareOpen = false)}>
-      <h1 slot="title">{$_("sidebar.shareEmbed")}</h1>
-      <Share {document} page={$page} />
-    </Modal>
-  </Portal>
-{/if}
+      {#if visible === "share"}
+        <Share {document} page={$page} />
+      {/if}
 
-{#if reprocessOpen}
-  <Portal>
-    <Modal on:close={() => (reprocessOpen = false)}>
-      <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
-      <Reprocess
-        documents={[document]}
-        on:close={() => (reprocessOpen = false)}
-      />
-    </Modal>
-  </Portal>
-{/if}
+      {#if visible === "edit"}
+        <Edit {document} on:close={close} />
+      {/if}
 
-{#if deleteOpen}
-  <Portal>
-    <Modal on:close={() => (deleteOpen = false)}>
-      <h1 slot="title">{$_("delete.title")}</h1>
-      <ConfirmDelete
-        documents={[document]}
-        on:close={() => (deleteOpen = false)}
-      />
+      {#if visible === "revisions"}
+        <div>
+          {#if plan !== "Free"}
+            <RevisionControl {document} />
+            <hr class="divider" />
+            <Revisions {document} />
+          {:else}
+            <UpgradePrompt
+              message={$_("dialogRevisionsDialog.upgrade.message")}
+              callToAction={$_("dialogRevisionsDialog.upgrade.adminCta")}
+              href={getUpgradeUrl(organization).href}
+            />
+          {/if}
+        </div>
+      {/if}
+
+      {#if visible === "reprocess"}
+        <Reprocess documents={[document]} on:close={close} />
+      {/if}
+
+      {#if visible === "delete"}
+        <ConfirmDelete documents={[document]} on:close={close} />
+      {/if}
     </Modal>
   </Portal>
 {/if}

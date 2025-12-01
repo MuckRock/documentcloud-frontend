@@ -28,7 +28,6 @@ Assumes it's a child of a ViewerContext
 
   export let documentStore = getDocument();
   export let text = getText();
-  export let action: string = "";
 
   $: document = $documentStore;
   $: projects = (document.projects ?? []) as Project[];
@@ -56,7 +55,7 @@ Assumes it's a child of a ViewerContext
           </Flex>
         </Metadata>
       {/if}
-      <ViewerActions {document} user={$me} {action} />
+      <ViewerActions {document} user={$me} />
       <SignedIn>
         <AddOns query="+document:{document.id}" />
       </SignedIn>
