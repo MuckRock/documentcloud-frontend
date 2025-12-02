@@ -38,6 +38,7 @@
   import {
     canonicalPageUrl,
     canonicalUrl,
+    edited,
     embedUrl,
     pageUrl,
   } from "$lib/api/documents";
@@ -64,7 +65,6 @@
   $: note = document.notes?.find((n) => n.id === note_id);
 
   // dimensions and style for note embeds
-
   let permalink: URL;
   let embedSrc: URL;
   let iframe: string;
@@ -72,7 +72,7 @@
   let customizeEmbedOpen = false;
   let editOpen = false;
 
-  $: isPrivate = document.access === "private";
+  $: access = $edited.get(String(document.id))?.access ?? document.access;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
     switch (currentTab) {
@@ -108,7 +108,7 @@
 </script>
 
 <div class="container">
-  {#if isPrivate}
+  {#if access === "private"}
     <div class="banner">
       <Tip mode="danger">
         <ShieldLock24 slot="icon" />
@@ -124,7 +124,7 @@
         </div>
       </Tip>
     </div>
-  {:else if document.access === "organization"}
+  {:else if access === "organization"}
     <div class="banner">
       <Tip mode="premium">
         <Organization24 slot="icon" />

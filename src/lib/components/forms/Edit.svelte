@@ -38,7 +38,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
    */
-  function onSubmit({ submitter }) {
+  function onSubmit({ submitter, formData }) {
     submitter.disabled = true;
 
     return async ({ result, update }) => {
@@ -52,10 +52,11 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
         // save edits
         edited.update((m) => {
           const d = result.data.document;
+          d.access = formData.get("access"); // this is often a step behind, so force it here
           m.set(String(d.id), d);
           return m;
         });
-        update(result);
+        await update(result);
         dispatch("close");
       }
     };
